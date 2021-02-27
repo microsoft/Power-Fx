@@ -1,10 +1,12 @@
 # Power Fx
 
-**Welcome to Power Fx!**
+![simple formula using Notify to produce a "Hello, World!" message](docs/media/root/hello-world.png)
 
-Power Fx is a low code general-purpose programming language based on spreadsheet formulas.  It is strongly typed, declarative, and functional language, with imperative and state management available.  Power Fx started with Power Apps canvas apps and will be used to express logic across the Microsoft Power Platform.
+Power Fx is a low-code general purpose programming language based on spreadsheet-like formulas.  It is a strongly typed, declarative, and functional language, with imperative logic and state management as needed.  The "Fx" in the name is a reference to the *fx* icon that appears before formula bars in most spreadsheets and refers to formulas or functions, both of which are the heart of this language.
 
-At present, only the spec for the language can be found here.  We will be making source code for the language available here in time.
+Power Fx started with Power Apps canvas apps and that is where [you can experience it now](https://powerapps.microsoft.com/en-us/).  We in the process of extracting the language from that product so that we can use it in more Microsoft Power Platform products and so we can make it available here for you to use.  That's going to take some time and we will report on our progress on the [Power Apps blog](https://powerapps.microsoft.com/en-us/blog/).  
+
+The documentation for Power Fx is also being extracted from the Power Apps documentation, and that too is going to take some time.  As a work in progress, it is [available here now](docs/overview.md) and will be improved as we make progress.
 
 ## Contributing
 
