@@ -27,7 +27,12 @@ The lexical and syntactic grammars are presented using grammar productions. Each
 The first line of a grammar production is the name of the non-terminal symbol being defined, followed by a colon. Each successive indented line contains a possible expansion of the non-terminal given as a sequence of non-terminal or terminal symbols. For example, the production:
 
 &emsp;&emsp;*GlobalIdentifier* **:**<br>
+<<<<<<< HEAD
 &emsp;&emsp;&emsp;&emsp;`[@`&emsp;*Identifier*&emsp;`]`<br>
+=======
+&emsp;&emsp;&emsp;&emsp;`[@`&emsp;*Identifier*&emsp;`]`
+
+>>>>>>> 168292d982a88d07974d8121df4aaa16427c2eb8
 defines a *GlobalIdentifier* to consist of the token `[@`, followed by an *Identifier*, followed by the token `]`
 
 When there is more than one possible expansion of a non-terminal symbol, the alternatives are listed on separate lines. A subscripted suffix "opt" is used to indicate an optional symbol. For example,the production:
