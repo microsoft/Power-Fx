@@ -26,8 +26,8 @@ The lexical and syntactic grammars are presented using grammar productions. Each
 
 The first line of a grammar production is the name of the non-terminal symbol being defined, followed by a colon. Each successive indented line contains a possible expansion of the non-terminal given as a sequence of non-terminal or terminal symbols. For example, the production:
 
-&emsp;&emsp;*GlobalIdentifier* **:**
-&emsp;&emsp;&emsp;&emsp;`[@`&emsp;*Identifier*&emsp;`]`
+&emsp;&emsp;*GlobalIdentifier* **:**<br>
+&emsp;&emsp;&emsp;&emsp;`[@`&emsp;*Identifier*&emsp;`]`<br>
 defines a *GlobalIdentifier* to consist of the token `[@`, followed by an *Identifier*, followed by the token `]`
 
 When there is more than one possible expansion of a non-terminal symbol, the alternatives are listed on separate lines. A subscripted suffix "opt" is used to indicate an optional symbol. For example,the production:
@@ -65,17 +65,17 @@ is shorthand for:
 ### Lexical analysis 
 The lexical-unit production defines the lexical grammar for a Power Fx expression. Every valid Power Fx expression conforms to this grammar.
 
-&emsp;&emsp;<a name="ExpressionUnit"></a>*ExpressionUnit* **:**
-&emsp;&emsp;&emsp;&emsp;*[ExpressionElements](#ExpressionElements)*<sub>opt</sub>
+&emsp;&emsp;<a name="ExpressionUnit"></a>*ExpressionUnit* **:**<br>
+&emsp;&emsp;&emsp;&emsp;*[ExpressionElements](#ExpressionElements)*<sub>opt</sub><br>
 
-&emsp;&emsp;<a name="ExpressionElements"></a>*ExpressionElements* **:**
-&emsp;&emsp;&emsp;&emsp;*[ExpressionElement](#ExpressionElement)*
-&emsp;&emsp;&emsp;&emsp;*[ExpressionElement](#ExpressionElement)*&emsp;*[ExpressionElements](#ExpressionElements)*<sub>opt</sub>
+&emsp;&emsp;<a name="ExpressionElements"></a>*ExpressionElements* **:**<br>
+&emsp;&emsp;&emsp;&emsp;*[ExpressionElement](#ExpressionElement)*<br>
+&emsp;&emsp;&emsp;&emsp;*[ExpressionElement](#ExpressionElement)*&emsp;*[ExpressionElements](#ExpressionElements)*<sub>opt</sub><br>
 
-&emsp;&emsp;<a name="ExpressionElement"></a>*ExpressionElement* **:**
-&emsp;&emsp;&emsp;&emsp;*[Whitespace](#Whitespace)*
-&emsp;&emsp;&emsp;&emsp;*[Comment](#Comment)*
-&emsp;&emsp;&emsp;&emsp;*[Token](#Token)*
+&emsp;&emsp;<a name="ExpressionElement"></a>*ExpressionElement* **:**<br>
+&emsp;&emsp;&emsp;&emsp;*[Whitespace](#Whitespace)*<br>
+&emsp;&emsp;&emsp;&emsp;*[Comment](#Comment)*<br>
+&emsp;&emsp;&emsp;&emsp;*[Token](#Token)*<br>
 
 At the lexical level, a Power Fx expression consists of a stream of *Whitespace*, *Comment*, and *Token* elements. Each of these productions is covered in the following sections. Only *Token* elements are significant in the syntactic grammar.
 
@@ -83,16 +83,16 @@ At the lexical level, a Power Fx expression consists of a stream of *Whitespace*
 
 Whitespace is used to separate comments and tokens within a PowerApps document. 
 
-&emsp;&emsp;<a name="Whitespace"></a>*Whitespace* **:**
-&emsp;&emsp;&emsp;&emsp;any Unicode Space separator (class Zs)
-&emsp;&emsp;&emsp;&emsp;any Unicode Line separator (class Zl)
-&emsp;&emsp;&emsp;&emsp;any Unicode Paragraph separator (class Zp)
-&emsp;&emsp;&emsp;&emsp;Horizontal tab character (U+0009)
-&emsp;&emsp;&emsp;&emsp;Line feed character (U+000A)
-&emsp;&emsp;&emsp;&emsp;Vertical tab character (U+000B)
-&emsp;&emsp;&emsp;&emsp;Form feed character (U+000C)
-&emsp;&emsp;&emsp;&emsp;Carriage return character (U+000D)
-&emsp;&emsp;&emsp;&emsp;Next line character (U+0085)
+&emsp;&emsp;<a name="Whitespace"></a>*Whitespace* **:**<br>
+&emsp;&emsp;&emsp;&emsp;any Unicode Space separator (class Zs)<br>
+&emsp;&emsp;&emsp;&emsp;any Unicode Line separator (class Zl)<br>
+&emsp;&emsp;&emsp;&emsp;any Unicode Paragraph separator (class Zp)<br>
+&emsp;&emsp;&emsp;&emsp;Horizontal tab character (U+0009)<br>
+&emsp;&emsp;&emsp;&emsp;Line feed character (U+000A)<br>
+&emsp;&emsp;&emsp;&emsp;Vertical tab character (U+000B)<br>
+&emsp;&emsp;&emsp;&emsp;Form feed chracter (U+000C)<br>
+&emsp;&emsp;&emsp;&emsp;Carriage return character (U+000D)<br>
+&emsp;&emsp;&emsp;&emsp;Next line character (U+0085)<br>
 
 ### Comments 
 
@@ -100,36 +100,36 @@ Two forms of comments are supported:
 - Single-line comments that start with the characters // and extend to the end of the source line. 
 - Delimited comments that start with the characters /* and end with the characters */. Delimited comments may span multiple lines.
 
-&emsp;&emsp;<a name="Comment"></a>*Comment* **:**
-&emsp;&emsp;&emsp;&emsp;*[DelimitedComment](#DelimitedComment)*
-&emsp;&emsp;&emsp;&emsp;*[SingleLineComment](#SingleLineComment)*
+&emsp;&emsp;<a name="Comment"></a>*Comment* **:**<br>
+&emsp;&emsp;&emsp;&emsp;*[DelimitedComment](#DelimitedComment)*<br>
+&emsp;&emsp;&emsp;&emsp;*[SingleLineComment](#SingleLineComment)*<br>
 
-&emsp;&emsp;<a name="SingleLineComment"></a>*SingleLineComment* **:**
-&emsp;&emsp;&emsp;&emsp;`//`&emsp;*[SingleLineCommentCharacters](#SingleLineCommentCharacters)*<sub>opt</sub>
+&emsp;&emsp;<a name="SingleLineComment"></a>*SingleLineComment* **:**<br>
+&emsp;&emsp;&emsp;&emsp;`//`&emsp;*[SingleLineCommentCharacters](#SingleLineCommentCharacters)*<sub>opt</sub><br>
 
-&emsp;&emsp;<a name="SingleLineCommentCharacters"></a>*SingleLineCommentCharacters* **:**
-&emsp;&emsp;&emsp;&emsp;*[SingleLineCommentCharacter](#SingleLineCommentCharacter)*
-&emsp;&emsp;&emsp;&emsp;*[SingleLineCommentCharacter](#SingleLineCommentCharacter)*&emsp;*[SingleLineCommentCharacters](#SingleLineCommentCharacters)*<sub>opt</sub>
+&emsp;&emsp;<a name="SingleLineCommentCharacters"></a>*SingleLineCommentCharacters* **:**<br>
+&emsp;&emsp;&emsp;&emsp;*[SingleLineCommentCharacter](#SingleLineCommentCharacter)*<br>
+&emsp;&emsp;&emsp;&emsp;*[SingleLineCommentCharacter](#SingleLineCommentCharacter)*&emsp;*[SingleLineCommentCharacters](#SingleLineCommentCharacters)*<sub>opt</sub><br>
 
-&emsp;&emsp;<a name="SingleLineCommentCharacter"></a>*SingleLineCommentCharacter* **:**
-&emsp;&emsp;&emsp;&emsp;any Unicode characters except a NewLineCharacter
+&emsp;&emsp;<a name="SingleLineCommentCharacter"></a>*SingleLineCommentCharacter* **:**<br>
+&emsp;&emsp;&emsp;&emsp;any Unicode characters except a NewLineCharacter<br>
 
-&emsp;&emsp;<a name="DelimitedComment"></a>*DelimitedComment* **:**
-&emsp;&emsp;&emsp;&emsp;`/*`&emsp;*[DelimitedCommentCharacters](#DelimitedCommentCharacters)*<sub>opt</sub>&emsp;`*/`
+&emsp;&emsp;<a name="DelimitedComment"></a>*DelimitedComment* **:**<br>
+&emsp;&emsp;&emsp;&emsp;`/*`&emsp;*[DelimitedCommentCharacters](#DelimitedCommentCharacters)*<sub>opt</sub>&emsp;`*/`<br>
 
-&emsp;&emsp;<a name="DelimitedCommentCharacters"></a>*DelimitedCommentCharacters* **:**
-&emsp;&emsp;&emsp;&emsp;*[DelimitedCommentCharactersNoAsterisk](#DelimitedCommentCharactersNoAsterisk)*&emsp;*[DelimitedCommentCharacters](#DelimitedCommentCharacters)*<sub>opt</sub>
-&emsp;&emsp;&emsp;&emsp;`*`&emsp;*[DelimitedCommentAfterAsteriskCharacters](#DelimitedCommentAfterAsteriskCharacters)*
+&emsp;&emsp;<a name="DelimitedCommentCharacters"></a>*DelimitedCommentCharacters* **:**<br>
+&emsp;&emsp;&emsp;&emsp;*[DelimitedCommentCharactersNoAsterisk](#DelimitedCommentCharactersNoAsterisk)*&emsp;*[DelimitedCommentCharacters](#DelimitedCommentCharacters)*<sub>opt</sub><br>
+&emsp;&emsp;&emsp;&emsp;`*`&emsp;*[DelimitedCommentAfterAsteriskCharacters](#DelimitedCommentAfterAsteriskCharacters)*<br>
 
-&emsp;&emsp;<a name="DelimitedCommentAfterAsteriskCharacters"></a>*DelimitedCommentAfterAsteriskCharacters* **:**
-&emsp;&emsp;&emsp;&emsp;*[DelimitedCommentNoSlashAsteriskCharacter](#DelimitedCommentNoSlashAsteriskCharacter)*&emsp;*[DelimitedCommentCharacters](#DelimitedCommentCharacters)*<sub>opt</sub>
-&emsp;&emsp;&emsp;&emsp;`*`&emsp;*[DelimitedCommentAfterAsteriskCharacters](#DelimitedCommentAfterAsteriskCharacters)*
+&emsp;&emsp;<a name="DelimitedCommentAfterAsteriskCharacters"></a>*DelimitedCommentAfterAsteriskCharacters* **:**<br>
+&emsp;&emsp;&emsp;&emsp;*[DelimitedCommentNoSlashAsteriskCharacter](#DelimitedCommentNoSlashAsteriskCharacter)*&emsp;*[DelimitedCommentCharacters](#DelimitedCommentCharacters)*<sub>opt</sub><br>
+&emsp;&emsp;&emsp;&emsp;`*`&emsp;*[DelimitedCommentAfterAsteriskCharacters](#DelimitedCommentAfterAsteriskCharacters)*<br>
 
-&emsp;&emsp;<a name="DelimitedCommentCharactersNoAsterisk"></a>*DelimitedCommentCharactersNoAsterisk* **:**
-&emsp;&emsp;&emsp;&emsp;any Unicode character except * (asterisk)
+&emsp;&emsp;<a name="DelimitedCommentCharactersNoAsterisk"></a>*DelimitedCommentCharactersNoAsterisk* **:**<br>
+&emsp;&emsp;&emsp;&emsp;any Unicode character except * (asterisk)<br>
 
-&emsp;&emsp;<a name="DelimitedCommentNoSlashAsteriskCharacter"></a>*DelimitedCommentNoSlashAsteriskCharacter* **:**
-&emsp;&emsp;&emsp;&emsp;any Unicode character except a / (slash) or * (asterisk)
+&emsp;&emsp;<a name="DelimitedCommentNoSlashAsteriskCharacter"></a>*DelimitedCommentNoSlashAsteriskCharacter* **:**<br>
+&emsp;&emsp;&emsp;&emsp;any Unicode character except a / (slash) or * (asterisk)<br>
 
 Comments do not nest. The character sequences `/*` and `*/` have no special meaning within a *single-line-comment*, and the character sequences `//` and `/*` have no special meaning within a *delimited-comment*.
 
@@ -155,42 +155,42 @@ The following examples include three single-line comments:
 
 A literal is a source code representation of a value.
 
-&emsp;&emsp;<a name="Literal"></a>*Literal* **:**
-&emsp;&emsp;&emsp;&emsp;*[LogicalLiteral](#LogicalLiteral)*
-&emsp;&emsp;&emsp;&emsp;*[NumberLiteral](#NumberLiteral)*
-&emsp;&emsp;&emsp;&emsp;*[TextLiteral](#TextLiteral)*
+&emsp;&emsp;<a name="Literal"></a>*Literal* **:**<br>
+&emsp;&emsp;&emsp;&emsp;*[LogicalLiteral](#LogicalLiteral)*<br>
+&emsp;&emsp;&emsp;&emsp;*[NumberLiteral](#NumberLiteral)*<br>
+&emsp;&emsp;&emsp;&emsp;*[TextLiteral](#TextLiteral)*<br>
 
 #### Logical literals 
 
 A logical literal is used to write the values true and false and produces a logical value.
 
-&emsp;&emsp;<a name="LogicalLiteral"></a>*LogicalLiteral* **:** **one of**
-&emsp;&emsp;&emsp;&emsp;`true`&emsp;`false`
+&emsp;&emsp;<a name="LogicalLiteral"></a>*LogicalLiteral* **:** **one of**<br>
+&emsp;&emsp;&emsp;&emsp;`true`&emsp;`false`<br>
 
 #### Number literals 
 
 A number literal is used to write a numeric value and produces a number value.
 
-&emsp;&emsp;<a name="NumberLiteral"></a>*NumberLiteral* **:**
-&emsp;&emsp;&emsp;&emsp;*[DecimalDigits](#DecimalDigits)*&emsp;*[ExponentPart](#ExponentPart)*<sub>opt</sub>
-&emsp;&emsp;&emsp;&emsp;*[DecimalDigits](#DecimalDigits)*&emsp;*[DecimalSeparator](#DecimalSeparator)*&emsp;*[DecimalDigits](#DecimalDigits)*<sub>opt</sub>&emsp;*[ExponentPart](#ExponentPart)*<sub>opt</sub>
-&emsp;&emsp;&emsp;&emsp;*[DecimalSeparator](#DecimalSeparator)*&emsp;*[DecimalDigits](#DecimalDigits)*&emsp;*[ExponentPart](#ExponentPart)*<sub>opt</sub>
+&emsp;&emsp;<a name="NumberLiteral"></a>*NumberLiteral* **:**<br>
+&emsp;&emsp;&emsp;&emsp;*[DecimalDigits](#DecimalDigits)*&emsp;*[ExponentPart](#ExponentPart)*<sub>opt</sub><br>
+&emsp;&emsp;&emsp;&emsp;*[DecimalDigits](#DecimalDigits)*&emsp;*[DecimalSeparator](#DecimalSeparator)*&emsp;*[DecimalDigits](#DecimalDigits)*<sub>opt</sub>&emsp;*[ExponentPart](#ExponentPart)*<sub>opt</sub><br>
+&emsp;&emsp;&emsp;&emsp;*[DecimalSeparator](#DecimalSeparator)*&emsp;*[DecimalDigits](#DecimalDigits)*&emsp;*[ExponentPart](#ExponentPart)*<sub>opt</sub><br>
 
-&emsp;&emsp;<a name="DecimalDigits"></a>*DecimalDigits* **:**
-&emsp;&emsp;&emsp;&emsp;*[DecimalDigit](#DecimalDigit)*
-&emsp;&emsp;&emsp;&emsp;*[DecimalDigits](#DecimalDigits)*&emsp;*[DecimalDigit](#DecimalDigit)*
+&emsp;&emsp;<a name="DecimalDigits"></a>*DecimalDigits* **:**<br>
+&emsp;&emsp;&emsp;&emsp;*[DecimalDigit](#DecimalDigit)*<br>
+&emsp;&emsp;&emsp;&emsp;*[DecimalDigits](#DecimalDigits)*&emsp;*[DecimalDigit](#DecimalDigit)*<br>
 
-&emsp;&emsp;<a name="DecimalDigit"></a>*DecimalDigit* **:** **one of**
-&emsp;&emsp;&emsp;&emsp;`0`&emsp;`1`&emsp;`2`&emsp;`3`&emsp;`4`&emsp;`5`&emsp;`6`&emsp;`7`&emsp;`8`&emsp;`9`
+&emsp;&emsp;<a name="DecimalDigit"></a>*DecimalDigit* **:** **one of**<br>
+&emsp;&emsp;&emsp;&emsp;`0`&emsp;`1`&emsp;`2`&emsp;`3`&emsp;`4`&emsp;`5`&emsp;`6`&emsp;`7`&emsp;`8`&emsp;`9`<br>
 
-&emsp;&emsp;<a name="ExponentPart"></a>*ExponentPart* **:**
-&emsp;&emsp;&emsp;&emsp;*[ExponentIndicator](#ExponentIndicator)*&emsp;*[Sign](#Sign)*<sub>opt</sub>&emsp;*[DecimalDigits](#DecimalDigits)*
+&emsp;&emsp;<a name="ExponentPart"></a>*ExponentPart* **:**<br>
+&emsp;&emsp;&emsp;&emsp;*[ExponentIndicator](#ExponentIndicator)*&emsp;*[Sign](#Sign)*<sub>opt</sub>&emsp;*[DecimalDigits](#DecimalDigits)*<br>
 
-&emsp;&emsp;<a name="ExponentIndicator"></a>*ExponentIndicator* **:** **one of**
-&emsp;&emsp;&emsp;&emsp;`e`&emsp;`E`
+&emsp;&emsp;<a name="ExponentIndicator"></a>*ExponentIndicator* **:** **one of**<br>
+&emsp;&emsp;&emsp;&emsp;`e`&emsp;`E`<br>
 
-&emsp;&emsp;<a name="Sign"></a>*Sign* **:** **one of**
-&emsp;&emsp;&emsp;&emsp;`+`&emsp;`-`
+&emsp;&emsp;<a name="Sign"></a>*Sign* **:** **one of**<br>
+&emsp;&emsp;&emsp;&emsp;`+`&emsp;`-`<br>
 
 #### Text literals 
 
@@ -200,104 +200,104 @@ A text literal is used to write a sequence of Unicode characters and produces a 
 "The ""quoted"" text" // The "quoted" text
 ```
 
-&emsp;&emsp;<a name="TextLiteral"></a>*TextLiteral* **:**
-&emsp;&emsp;&emsp;&emsp;`"`&emsp;*[TextLiteralCharacters](#TextLiteralCharacters)*<sub>opt</sub>&emsp;`"`
+&emsp;&emsp;<a name="TextLiteral"></a>*TextLiteral* **:**<br>
+&emsp;&emsp;&emsp;&emsp;`"`&emsp;*[TextLiteralCharacters](#TextLiteralCharacters)*<sub>opt</sub>&emsp;`"`<br>
 
-&emsp;&emsp;<a name="TextLiteralCharacters"></a>*TextLiteralCharacters* **:**
-&emsp;&emsp;&emsp;&emsp;*[TextLiteralCharacter](#TextLiteralCharacter)*&emsp;*[TextLiteralCharacters](#TextLiteralCharacters)*<sub>opt</sub>
+&emsp;&emsp;<a name="TextLiteralCharacters"></a>*TextLiteralCharacters* **:**<br>
+&emsp;&emsp;&emsp;&emsp;*[TextLiteralCharacter](#TextLiteralCharacter)*&emsp;*[TextLiteralCharacters](#TextLiteralCharacters)*<sub>opt</sub><br>
 
-&emsp;&emsp;<a name="TextLiteralCharacter"></a>*TextLiteralCharacter* **:**
-&emsp;&emsp;&emsp;&emsp;*[TextCharacterNoDoubleQuote](#TextCharacterNoDoubleQuote)*
-&emsp;&emsp;&emsp;&emsp;*[DoubleQuoteEscapeSequence](#DoubleQuoteEscapeSequence)*
+&emsp;&emsp;<a name="TextLiteralCharacter"></a>*TextLiteralCharacter* **:**<br>
+&emsp;&emsp;&emsp;&emsp;*[TextCharacterNoDoubleQuote](#TextCharacterNoDoubleQuote)*<br>
+&emsp;&emsp;&emsp;&emsp;*[DoubleQuoteEscapeSequence](#DoubleQuoteEscapeSequence)*<br>
 
-&emsp;&emsp;<a name="TextCharacterNoDoubleQuote"></a>*TextCharacterNoDoubleQuote* **:**
-&emsp;&emsp;&emsp;&emsp;any Unicode code point except double quote
+&emsp;&emsp;<a name="TextCharacterNoDoubleQuote"></a>*TextCharacterNoDoubleQuote* **:**<br>
+&emsp;&emsp;&emsp;&emsp;any Unicode code point except double quote<br>
 
-&emsp;&emsp;<a name="DoubleQuoteEscapeSequence"></a>*DoubleQuoteEscapeSequence* **:**
-&emsp;&emsp;&emsp;&emsp;`"`&emsp;`"`
+&emsp;&emsp;<a name="DoubleQuoteEscapeSequence"></a>*DoubleQuoteEscapeSequence* **:**<br>
+&emsp;&emsp;&emsp;&emsp;`"`&emsp;`"`<br>
 
 ## Identifiers 
 
 An identifier is a name used to refer to a value. Identifiers can either be regular identifiers or single quoted identifiers.
 
-&emsp;&emsp;<a name="Identifier"></a>*Identifier* **:**
-&emsp;&emsp;&emsp;&emsp;*[IdentifierName](#IdentifierName)* **but** **not** *[Operator](#Operator)* **or** *[ContextKeyword](#ContextKeyword)*
+&emsp;&emsp;<a name="Identifier"></a>*Identifier* **:**<br>
+&emsp;&emsp;&emsp;&emsp;*[IdentifierName](#IdentifierName)* **but** **not** *[Operator](#Operator)* **or** *[ContextKeyword](#ContextKeyword)*<br>
 
-&emsp;&emsp;<a name="IdentifierName"></a>*IdentifierName* **:**
-&emsp;&emsp;&emsp;&emsp;*[IdentifierStartCharacter](#IdentifierStartCharacter)*&emsp;*[IdentifierContinueCharacters](#IdentifierContinueCharacters)*<sub>opt</sub>
-&emsp;&emsp;&emsp;&emsp;*[SingleQuotedIdentifier](#SingleQuotedIdentifier)*
+&emsp;&emsp;<a name="IdentifierName"></a>*IdentifierName* **:**<br>
+&emsp;&emsp;&emsp;&emsp;*[IdentifierStartCharacter](#IdentifierStartCharacter)*&emsp;*[IdentifierContinueCharacters](#IdentifierContinueCharacters)*<sub>opt</sub><br>
+&emsp;&emsp;&emsp;&emsp;*[SingleQuotedIdentifier](#SingleQuotedIdentifier)*<br>
 
-&emsp;&emsp;<a name="IdentifierStartCharacter"></a>*IdentifierStartCharacter* **:**
-&emsp;&emsp;&emsp;&emsp;*[LetterCharacter](#LetterCharacter)*
-&emsp;&emsp;&emsp;&emsp;`_`
+&emsp;&emsp;<a name="IdentifierStartCharacter"></a>*IdentifierStartCharacter* **:**<br>
+&emsp;&emsp;&emsp;&emsp;*[LetterCharacter](#LetterCharacter)*<br>
+&emsp;&emsp;&emsp;&emsp;`_`<br>
 
-&emsp;&emsp;<a name="IdentifierContinueCharacter"></a>*IdentifierContinueCharacter* **:**
-&emsp;&emsp;&emsp;&emsp;*[IdentifierStartCharacter](#IdentifierStartCharacter)*
-&emsp;&emsp;&emsp;&emsp;*[DecimalDigitCharacter](#DecimalDigitCharacter)*
-&emsp;&emsp;&emsp;&emsp;*[ConnectingCharacter](#ConnectingCharacter)*
-&emsp;&emsp;&emsp;&emsp;*[CombiningCharacter](#CombiningCharacter)*
-&emsp;&emsp;&emsp;&emsp;*[FormattingCharacter](#FormattingCharacter)*
+&emsp;&emsp;<a name="IdentifierContinueCharacter"></a>*IdentifierContinueCharacter* **:**<br>
+&emsp;&emsp;&emsp;&emsp;*[IdentifierStartCharacter](#IdentifierStartCharacter)*<br>
+&emsp;&emsp;&emsp;&emsp;*[DecimalDigitCharacter](#DecimalDigitCharacter)*<br>
+&emsp;&emsp;&emsp;&emsp;*[ConnectingCharacter](#ConnectingCharacter)*<br>
+&emsp;&emsp;&emsp;&emsp;*[CombiningCharacter](#CombiningCharacter)*<br>
+&emsp;&emsp;&emsp;&emsp;*[FormattingCharacter](#FormattingCharacter)*<br>
 
-&emsp;&emsp;<a name="IdentifierContinueCharacters"></a>*IdentifierContinueCharacters* **:**
-&emsp;&emsp;&emsp;&emsp;*[IdentifierContinueCharacter](#IdentifierContinueCharacter)*&emsp;*[IdentifierContinueCharacters](#IdentifierContinueCharacters)*<sub>opt</sub>
+&emsp;&emsp;<a name="IdentifierContinueCharacters"></a>*IdentifierContinueCharacters* **:**<br>
+&emsp;&emsp;&emsp;&emsp;*[IdentifierContinueCharacter](#IdentifierContinueCharacter)*&emsp;*[IdentifierContinueCharacters](#IdentifierContinueCharacters)*<sub>opt</sub><br>
 
-&emsp;&emsp;<a name="LetterCharacter"></a>*LetterCharacter* **:**
-&emsp;&emsp;&emsp;&emsp;any Unicode character of the classes Uppercase letter (Lu), Lowercase letter (Ll)
-&emsp;&emsp;&emsp;&emsp;any Unicode character of the class Titlecase letter (Lt)
-&emsp;&emsp;&emsp;&emsp;any Unicode character of the classes Letter modifier (Lm), Letter other (Lo)
-&emsp;&emsp;&emsp;&emsp;any Unicode character of the class Number letter (Nl)
+&emsp;&emsp;<a name="LetterCharacter"></a>*LetterCharacter* **:**<br>
+&emsp;&emsp;&emsp;&emsp;any Unicode character of the classes Uppercase letter (Lu), Lowercase letter (Ll)<br>
+&emsp;&emsp;&emsp;&emsp;any Unicode character of the class Titlecase letter (Lt)<br>
+&emsp;&emsp;&emsp;&emsp;any Unicode character of the classes Letter modifier (Lm), Letter other (Lo)<br>
+&emsp;&emsp;&emsp;&emsp;any Unicode character of the class Number letter (Nl)<br>
 
-&emsp;&emsp;<a name="CombiningCharacter"></a>*CombiningCharacter* **:**
-&emsp;&emsp;&emsp;&emsp;any Unicode character of the classes Non-spacing mark (Mn), Spacing combining mark (Mc)
+&emsp;&emsp;<a name="CombiningCharacter"></a>*CombiningCharacter* **:**<br>
+&emsp;&emsp;&emsp;&emsp;any Unicode character of the classes Non-spacing mark (Mn), Spacing combining mark (Mc)<br>
 
-&emsp;&emsp;<a name="DecimalDigitCharacter"></a>*DecimalDigitCharacter* **:**
-&emsp;&emsp;&emsp;&emsp;any Unicode character of the class Decimal digit (Nd)
+&emsp;&emsp;<a name="DecimalDigitCharacter"></a>*DecimalDigitCharacter* **:**<br>
+&emsp;&emsp;&emsp;&emsp;any Unicode character of the class Decimal digit (Nd)<br>
 
-&emsp;&emsp;<a name="ConnectingCharacter"></a>*ConnectingCharacter* **:**
-&emsp;&emsp;&emsp;&emsp;any Unicode character of the class Connector punctuation (Pc)
+&emsp;&emsp;<a name="ConnectingCharacter"></a>*ConnectingCharacter* **:**<br>
+&emsp;&emsp;&emsp;&emsp;any Unicode character of the class Connector punctuation (Pc)<br>
 
-&emsp;&emsp;<a name="FormattingCharacter"></a>*FormattingCharacter* **:**
-&emsp;&emsp;&emsp;&emsp;any Unicode character of the class Format (Cf)
+&emsp;&emsp;<a name="FormattingCharacter"></a>*FormattingCharacter* **:**<br>
+&emsp;&emsp;&emsp;&emsp;any Unicode character of the class Format (Cf)<br>
 
 #### Single quoted identifiers 
 
 A *SingleQuotedIdentifier* can contain any sequence of Unicode characters to be used as an identifier, including keywords, whitespace, comments, and operators.  Single quote characters are supported with a double single quote escape sequence.
 
-&emsp;&emsp;<a name="SingleQuotedIdentifier"></a>*SingleQuotedIdentifier* **:**
-&emsp;&emsp;&emsp;&emsp;*[SingleQuotedIdentifierCharacters](#SingleQuotedIdentifierCharacters)*
+&emsp;&emsp;<a name="SingleQuotedIdentifier"></a>*SingleQuotedIdentifier* **:**<br>
+&emsp;&emsp;&emsp;&emsp;*[SingleQuotedIdentifierCharacters](#SingleQuotedIdentifierCharacters)*<br>
 
-&emsp;&emsp;<a name="SingleQuotedIdentifierCharacters"></a>*SingleQuotedIdentifierCharacters* **:**
-&emsp;&emsp;&emsp;&emsp;*[SingleQuotedIdentifierCharacter](#SingleQuotedIdentifierCharacter)*&emsp;*[SingleQuotedIdentifierCharacters](#SingleQuotedIdentifierCharacters)*<sub>opt</sub>
+&emsp;&emsp;<a name="SingleQuotedIdentifierCharacters"></a>*SingleQuotedIdentifierCharacters* **:**<br>
+&emsp;&emsp;&emsp;&emsp;*[SingleQuotedIdentifierCharacter](#SingleQuotedIdentifierCharacter)*&emsp;*[SingleQuotedIdentifierCharacters](#SingleQuotedIdentifierCharacters)*<sub>opt</sub><br>
 
-&emsp;&emsp;<a name="SingleQuotedIdentifierCharacter"></a>*SingleQuotedIdentifierCharacter* **:**
-&emsp;&emsp;&emsp;&emsp;*[TextCharactersNoSingleQuote](#TextCharactersNoSingleQuote)*
-&emsp;&emsp;&emsp;&emsp;*[SingleQuoteEscapeSequence](#SingleQuoteEscapeSequence)*
+&emsp;&emsp;<a name="SingleQuotedIdentifierCharacter"></a>*SingleQuotedIdentifierCharacter* **:**<br>
+&emsp;&emsp;&emsp;&emsp;*[TextCharactersNoSingleQuote](#TextCharactersNoSingleQuote)*<br>
+&emsp;&emsp;&emsp;&emsp;*[SingleQuoteEscapeSequence](#SingleQuoteEscapeSequence)*<br>
 
-&emsp;&emsp;<a name="TextCharactersNoSingleQuote"></a>*TextCharactersNoSingleQuote* **:**
-&emsp;&emsp;&emsp;&emsp;any Unicode character except ' (U+0027)
+&emsp;&emsp;<a name="TextCharactersNoSingleQuote"></a>*TextCharactersNoSingleQuote* **:**<br>
+&emsp;&emsp;&emsp;&emsp;any Unicode character except ' (U+0027)<br>
 
-&emsp;&emsp;<a name="SingleQuoteEscapeSequence"></a>*SingleQuoteEscapeSequence* **:**
-&emsp;&emsp;&emsp;&emsp;`'`&emsp;`'`
+&emsp;&emsp;<a name="SingleQuoteEscapeSequence"></a>*SingleQuoteEscapeSequence* **:**<br>
+&emsp;&emsp;&emsp;&emsp;`'`&emsp;`'`<br>
 
 #### Disambiguated identifier 
 
-&emsp;&emsp;<a name="DisambiguatedIdentifier"></a>*DisambiguatedIdentifier* **:**
-&emsp;&emsp;&emsp;&emsp;*[TableColumnIdentifier](#TableColumnIdentifier)*
-&emsp;&emsp;&emsp;&emsp;*[GlobalIdentifier](#GlobalIdentifier)*
+&emsp;&emsp;<a name="DisambiguatedIdentifier"></a>*DisambiguatedIdentifier* **:**<br>
+&emsp;&emsp;&emsp;&emsp;*[TableColumnIdentifier](#TableColumnIdentifier)*<br>
+&emsp;&emsp;&emsp;&emsp;*[GlobalIdentifier](#GlobalIdentifier)*<br>
 
-&emsp;&emsp;<a name="TableColumnIdentifier"></a>*TableColumnIdentifier* **:**
-&emsp;&emsp;&emsp;&emsp;*[Identifier](#Identifier)*&emsp;`[@`&emsp;*[Identifier](#Identifier)*&emsp;`]`
+&emsp;&emsp;<a name="TableColumnIdentifier"></a>*TableColumnIdentifier* **:**<br>
+&emsp;&emsp;&emsp;&emsp;*[Identifier](#Identifier)*&emsp;`[@`&emsp;*[Identifier](#Identifier)*&emsp;`]`<br>
 
-&emsp;&emsp;<a name="GlobalIdentifier"></a>*GlobalIdentifier* **:**
-&emsp;&emsp;&emsp;&emsp;`[@`&emsp;*[Identifier](#Identifier)*&emsp;`]`
+&emsp;&emsp;<a name="GlobalIdentifier"></a>*GlobalIdentifier* **:**<br>
+&emsp;&emsp;&emsp;&emsp;`[@`&emsp;*[Identifier](#Identifier)*&emsp;`]`<br>
 
 #### Context keywords 
 
-&emsp;&emsp;<a name="ContextKeyword"></a>*ContextKeyword* **:**
-&emsp;&emsp;&emsp;&emsp;`Parent`
-&emsp;&emsp;&emsp;&emsp;`Self`
-&emsp;&emsp;&emsp;&emsp;`ThisItem`
-&emsp;&emsp;&emsp;&emsp;`ThisRecord`
+&emsp;&emsp;<a name="ContextKeyword"></a>*ContextKeyword* **:**<br>
+&emsp;&emsp;&emsp;&emsp;`Parent`<br>
+&emsp;&emsp;&emsp;&emsp;`Self`<br>
+&emsp;&emsp;&emsp;&emsp;`ThisItem`<br>
+&emsp;&emsp;&emsp;&emsp;`ThisRecord`<br>
 
 #### Case sensitivity 
 
@@ -305,117 +305,117 @@ Power Apps identifiers are case-sensitive.  The authoring tool will auto correct
 
 ## Separators 
 
-&emsp;&emsp;<a name="DecimalSeparator"></a>*DecimalSeparator* **:**
-&emsp;&emsp;&emsp;&emsp;`.` (dot) for language that uses a dot as the separator for decimal numbers, for example `1.23`
-&emsp;&emsp;&emsp;&emsp;`,` (comma) for languages that use a comma as the separator for decimal numbers, for example `1,23`
+&emsp;&emsp;<a name="DecimalSeparator"></a>*DecimalSeparator* **:**<br>
+&emsp;&emsp;&emsp;&emsp;`.` (dot) for language that use a dot as the seperator for decimal numbers, for example `1.23`<br>
+&emsp;&emsp;&emsp;&emsp;`,` (comma) for languages that use a comma as the seperator for decimal numbers, for example `1,23`<br>
 
-&emsp;&emsp;<a name="ListSeparator"></a>*ListSeparator* **:**
-&emsp;&emsp;&emsp;&emsp;`,` (comma) if *[DecimalSeparator](#DecimalSeparator)* is `.` (dot)
-&emsp;&emsp;&emsp;&emsp;`;` (semi-colon) if *[DecimalSeparator](#DecimalSeparator)* is `,` (comma)
+&emsp;&emsp;<a name="ListSeparator"></a>*ListSeparator* **:**<br>
+&emsp;&emsp;&emsp;&emsp;`,` (comma) if *[DecimalSeparator](#DecimalSeparator)* is `.` (dot)<br>
+&emsp;&emsp;&emsp;&emsp;`;` (semi-colon) if *[DecimalSeparator](#DecimalSeparator)* is `,` (comma)<br>
 
-&emsp;&emsp;<a name="ChainingSeparator"></a>*ChainingSeparator* **:**
-&emsp;&emsp;&emsp;&emsp;`;` (semi-colon) if *[DecimalSeparator](#DecimalSeparator)* is `.` (dot)
-&emsp;&emsp;&emsp;&emsp;`;;` (double semi-colon) if *[DecimalSeparator](#DecimalSeparator)* is `,` (comma)
+&emsp;&emsp;<a name="ChainingSeparator"></a>*ChainingSeparator* **:**<br>
+&emsp;&emsp;&emsp;&emsp;`;` (semi-colon) if *[DecimalSeparator](#DecimalSeparator)* is `.` (dot)<br>
+&emsp;&emsp;&emsp;&emsp;`;;` (double semi-colon) if *[DecimalSeparator](#DecimalSeparator)* is `,` (comma)<br>
 
 ## Operators 
 
 Operators are used in formulas to describe operations involving one or more operands. For example, the expression `a + b` uses the `+` operator to add the two operands `a` and `b`. 
 
-&emsp;&emsp;<a name="Operator"></a>*Operator* **:**
-&emsp;&emsp;&emsp;&emsp;*[BinaryOperator](#BinaryOperator)*
-&emsp;&emsp;&emsp;&emsp;*[BinaryOperatorRequiresWhitespace](#BinaryOperatorRequiresWhitespace)*
-&emsp;&emsp;&emsp;&emsp;*[PrefixOperator](#PrefixOperator)*
-&emsp;&emsp;&emsp;&emsp;*[PrefixOperatorRequiresWhitespace](#PrefixOperatorRequiresWhitespace)*
-&emsp;&emsp;&emsp;&emsp;*[PostfixOperator](#PostfixOperator)*
+&emsp;&emsp;<a name="Operator"></a>*Operator* **:**<br>
+&emsp;&emsp;&emsp;&emsp;*[BinaryOperator](#BinaryOperator)*<br>
+&emsp;&emsp;&emsp;&emsp;*[BinaryOperatorRequiresWhitespace](#BinaryOperatorRequiresWhitespace)*<br>
+&emsp;&emsp;&emsp;&emsp;*[PrefixOperator](#PrefixOperator)*<br>
+&emsp;&emsp;&emsp;&emsp;*[PrefixOperatorRequiresWhitespace](#PrefixOperatorRequiresWhitespace)*<br>
+&emsp;&emsp;&emsp;&emsp;*[PostfixOperator](#PostfixOperator)*<br>
 
-&emsp;&emsp;<a name="BinaryOperator"></a>*BinaryOperator* **:** **one of**
-&emsp;&emsp;&emsp;&emsp;`=`&emsp;`<`&emsp;`<=`&emsp;`>`&emsp;`>=`&emsp;`<>`
-&emsp;&emsp;&emsp;&emsp;`+`&emsp;`-`&emsp;`*`&emsp;`/`&emsp;`^`
-&emsp;&emsp;&emsp;&emsp;`&`
-&emsp;&emsp;&emsp;&emsp;`&&`&emsp;`||`
-&emsp;&emsp;&emsp;&emsp;`in`&emsp;`exactin`
+&emsp;&emsp;<a name="BinaryOperator"></a>*BinaryOperator* **:** **one of**<br>
+&emsp;&emsp;&emsp;&emsp;`=`&emsp;`<`&emsp;`<=`&emsp;`>`&emsp;`>=`&emsp;`<>`<br>
+&emsp;&emsp;&emsp;&emsp;`+`&emsp;`-`&emsp;`*`&emsp;`/`&emsp;`^`<br>
+&emsp;&emsp;&emsp;&emsp;`&`<br>
+&emsp;&emsp;&emsp;&emsp;`&&`&emsp;`||`<br>
+&emsp;&emsp;&emsp;&emsp;`in`&emsp;`exactin`<br>
 
-&emsp;&emsp;<a name="BinaryOperatorRequiresWhitespace"></a>*BinaryOperatorRequiresWhitespace* **:**
-&emsp;&emsp;&emsp;&emsp;`And`&emsp;*[Whitespace](#Whitespace)*
-&emsp;&emsp;&emsp;&emsp;`Or`&emsp;*[Whitespace](#Whitespace)*
+&emsp;&emsp;<a name="BinaryOperatorRequiresWhitespace"></a>*BinaryOperatorRequiresWhitespace* **:**<br>
+&emsp;&emsp;&emsp;&emsp;`And`&emsp;*[Whitespace](#Whitespace)*<br>
+&emsp;&emsp;&emsp;&emsp;`Or`&emsp;*[Whitespace](#Whitespace)*<br>
 
-&emsp;&emsp;<a name="PrefixOperator"></a>*PrefixOperator* **:**
-&emsp;&emsp;&emsp;&emsp;`!`
+&emsp;&emsp;<a name="PrefixOperator"></a>*PrefixOperator* **:**<br>
+&emsp;&emsp;&emsp;&emsp;`!`<br>
 
-&emsp;&emsp;<a name="PrefixOperatorRequiresWhitespace"></a>*PrefixOperatorRequiresWhitespace* **:**
-&emsp;&emsp;&emsp;&emsp;`Not`&emsp;*[Whitespace](#Whitespace)*
+&emsp;&emsp;<a name="PrefixOperatorRequiresWhitespace"></a>*PrefixOperatorRequiresWhitespace* **:**<br>
+&emsp;&emsp;&emsp;&emsp;`Not`&emsp;*[Whitespace](#Whitespace)*<br>
 
-&emsp;&emsp;<a name="PostfixOperator"></a>*PostfixOperator* **:**
-&emsp;&emsp;&emsp;&emsp;`%`
+&emsp;&emsp;<a name="PostfixOperator"></a>*PostfixOperator* **:**<br>
+&emsp;&emsp;&emsp;&emsp;`%`<br>
 
 ### Reference operator 
 
-&emsp;&emsp;<a name="ReferenceOperator"></a>*ReferenceOperator* **:** **one of**
-&emsp;&emsp;&emsp;&emsp;`.`&emsp;`!`
+&emsp;&emsp;<a name="ReferenceOperator"></a>*ReferenceOperator* **:** **one of**<br>
+&emsp;&emsp;&emsp;&emsp;`.`&emsp;`!`<br>
 
 ### Object reference 
 
-&emsp;&emsp;<a name="Reference"></a>*Reference* **:**
-&emsp;&emsp;&emsp;&emsp;*[BaseReference](#BaseReference)*
-&emsp;&emsp;&emsp;&emsp;*[BaseReference](#BaseReference)*&emsp;*[ReferenceOperator](#ReferenceOperator)*&emsp;*[ReferenceList](#ReferenceList)*
+&emsp;&emsp;<a name="Reference"></a>*Reference* **:**<br>
+&emsp;&emsp;&emsp;&emsp;*[BaseReference](#BaseReference)*<br>
+&emsp;&emsp;&emsp;&emsp;*[BaseReference](#BaseReference)*&emsp;*[ReferenceOperator](#ReferenceOperator)*&emsp;*[ReferenceList](#ReferenceList)*<br>
 
-&emsp;&emsp;<a name="BaseReference"></a>*BaseReference* **:**
-&emsp;&emsp;&emsp;&emsp;*[Identifier](#Identifier)*
-&emsp;&emsp;&emsp;&emsp;*[DisambiguatedIdentifier](#DisambiguatedIdentifier)*
-&emsp;&emsp;&emsp;&emsp;*[ContextKeyword](#ContextKeyword)*
+&emsp;&emsp;<a name="BaseReference"></a>*BaseReference* **:**<br>
+&emsp;&emsp;&emsp;&emsp;*[Identifier](#Identifier)*<br>
+&emsp;&emsp;&emsp;&emsp;*[DisambiguatedIdentifier](#DisambiguatedIdentifier)*<br>
+&emsp;&emsp;&emsp;&emsp;*[ContextKeyword](#ContextKeyword)*<br>
 
-&emsp;&emsp;<a name="ReferenceList"></a>*ReferenceList* **:**
-&emsp;&emsp;&emsp;&emsp;*[Identifier](#Identifier)*
-&emsp;&emsp;&emsp;&emsp;*[Identifier](#Identifier)*&emsp;*[ReferenceOperator](#ReferenceOperator)*&emsp;*[ReferenceList](#ReferenceList)*
+&emsp;&emsp;<a name="ReferenceList"></a>*ReferenceList* **:**<br>
+&emsp;&emsp;&emsp;&emsp;*[Identifier](#Identifier)*<br>
+&emsp;&emsp;&emsp;&emsp;*[Identifier](#Identifier)*&emsp;*[ReferenceOperator](#ReferenceOperator)*&emsp;*[ReferenceList](#ReferenceList)*<br>
 
 ### Inline record 
 
-&emsp;&emsp;<a name="InlineRecord"></a>*InlineRecord* **:**
-&emsp;&emsp;&emsp;&emsp;`{`&emsp;*[InlineRecordList](#InlineRecordList)*<sub>opt</sub>&emsp;`}`
+&emsp;&emsp;<a name="InlineRecord"></a>*InlineRecord* **:**<br>
+&emsp;&emsp;&emsp;&emsp;`{`&emsp;*[InlineRecordList](#InlineRecordList)*<sub>opt</sub>&emsp;`}`<br>
 
-&emsp;&emsp;<a name="InlineRecordList"></a>*InlineRecordList* **:**
-&emsp;&emsp;&emsp;&emsp;*[Identifier](#Identifier)*&emsp;`:`&emsp;*[Expression](#Expression)*
-&emsp;&emsp;&emsp;&emsp;*[Identifier](#Identifier)*&emsp;`:`&emsp;*[Expression](#Expression)*&emsp;*[ListSeparator](#ListSeparator)*&emsp;*[InlineRecordList](#InlineRecordList)*
+&emsp;&emsp;<a name="InlineRecordList"></a>*InlineRecordList* **:**<br>
+&emsp;&emsp;&emsp;&emsp;*[Identifier](#Identifier)*&emsp;`:`&emsp;*[Expression](#Expression)*<br>
+&emsp;&emsp;&emsp;&emsp;*[Identifier](#Identifier)*&emsp;`:`&emsp;*[Expression](#Expression)*&emsp;*[ListSeparator](#ListSeparator)*&emsp;*[InlineRecordList](#InlineRecordList)*<br>
 
 ### Inline table 
 
-&emsp;&emsp;<a name="InlineTable"></a>*InlineTable* **:**
-&emsp;&emsp;&emsp;&emsp;`[`&emsp;*[InlineTableList](#InlineTableList)*<sub>opt</sub>&emsp;`]`
+&emsp;&emsp;<a name="InlineTable"></a>*InlineTable* **:**<br>
+&emsp;&emsp;&emsp;&emsp;`[`&emsp;*[InlineTableList](#InlineTableList)*<sub>opt</sub>&emsp;`]`<br>
 
-&emsp;&emsp;<a name="InlineTableList"></a>*InlineTableList* **:**
-&emsp;&emsp;&emsp;&emsp;*[Expression](#Expression)*
-&emsp;&emsp;&emsp;&emsp;*[Expression](#Expression)*&emsp;*[ListSeparator](#ListSeparator)*&emsp;*[InlineTableList](#InlineTableList)*
+&emsp;&emsp;<a name="InlineTableList"></a>*InlineTableList* **:**<br>
+&emsp;&emsp;&emsp;&emsp;*[Expression](#Expression)*<br>
+&emsp;&emsp;&emsp;&emsp;*[Expression](#Expression)*&emsp;*[ListSeparator](#ListSeparator)*&emsp;*[InlineTableList](#InlineTableList)*<br>
 
 ## Expression 
 
-&emsp;&emsp;<a name="Expression"></a>*Expression* **:**
-&emsp;&emsp;&emsp;&emsp;*[Literal](#Literal)*
-&emsp;&emsp;&emsp;&emsp;*[Reference](#Reference)*
-&emsp;&emsp;&emsp;&emsp;*[InlineRecord](#InlineRecord)*
-&emsp;&emsp;&emsp;&emsp;*[InlineTable](#InlineTable)*
-&emsp;&emsp;&emsp;&emsp;*[FunctionCall](#FunctionCall)*
-&emsp;&emsp;&emsp;&emsp;`(`&emsp;*[Expression](#Expression)*&emsp;`)`
-&emsp;&emsp;&emsp;&emsp;*[PrefixOperator](#PrefixOperator)*&emsp;*[Expression](#Expression)*
-&emsp;&emsp;&emsp;&emsp;*[Expression](#Expression)*&emsp;*[PostfixOperator](#PostfixOperator)*
-&emsp;&emsp;&emsp;&emsp;*[Expression](#Expression)*&emsp;*[BinaryOperator](#BinaryOperator)*&emsp;*[Expression](#Expression)*
+&emsp;&emsp;<a name="Expression"></a>*Expression* **:**<br>
+&emsp;&emsp;&emsp;&emsp;*[Literal](#Literal)*<br>
+&emsp;&emsp;&emsp;&emsp;*[Reference](#Reference)*<br>
+&emsp;&emsp;&emsp;&emsp;*[InlineRecord](#InlineRecord)*<br>
+&emsp;&emsp;&emsp;&emsp;*[InlineTable](#InlineTable)*<br>
+&emsp;&emsp;&emsp;&emsp;*[FunctionCall](#FunctionCall)*<br>
+&emsp;&emsp;&emsp;&emsp;`(`&emsp;*[Expression](#Expression)*&emsp;`)`<br>
+&emsp;&emsp;&emsp;&emsp;*[PrefixOperator](#PrefixOperator)*&emsp;*[Expression](#Expression)*<br>
+&emsp;&emsp;&emsp;&emsp;*[Expression](#Expression)*&emsp;*[PostfixOperator](#PostfixOperator)*<br>
+&emsp;&emsp;&emsp;&emsp;*[Expression](#Expression)*&emsp;*[BinaryOperator](#BinaryOperator)*&emsp;*[Expression](#Expression)*<br>
 
 ### Chained expressions 
 
-&emsp;&emsp;<a name="ChainedExpression"></a>*ChainedExpression* **:**
-&emsp;&emsp;&emsp;&emsp;*[Expression](#Expression)*
-&emsp;&emsp;&emsp;&emsp;*[Expression](#Expression)*&emsp;*[ChainingSeparator](#ChainingSeparator)*&emsp;*[ChainedExpression](#ChainedExpression)*<sub>opt</sub>
+&emsp;&emsp;<a name="ChainedExpression"></a>*ChainedExpression* **:**<br>
+&emsp;&emsp;&emsp;&emsp;*[Expression](#Expression)*<br>
+&emsp;&emsp;&emsp;&emsp;*[Expression](#Expression)*&emsp;*[ChainingSeparator](#ChainingSeparator)*&emsp;*[ChainedExpression](#ChainedExpression)*<sub>opt</sub><br>
 
 ### Function call
 
-&emsp;&emsp;<a name="FunctionCall"></a>*FunctionCall* **:**
-&emsp;&emsp;&emsp;&emsp;*[FunctionIdentifier](#FunctionIdentifier)*&emsp;`(`&emsp;*[FunctionArguments](#FunctionArguments)*<sub>opt</sub>&emsp;`)`
+&emsp;&emsp;<a name="FunctionCall"></a>*FunctionCall* **:**<br>
+&emsp;&emsp;&emsp;&emsp;*[FunctionIdentifier](#FunctionIdentifier)*&emsp;`(`&emsp;*[FunctionArguments](#FunctionArguments)*<sub>opt</sub>&emsp;`)`<br>
 
-&emsp;&emsp;<a name="FunctionIdentifier"></a>*FunctionIdentifier* **:**
-&emsp;&emsp;&emsp;&emsp;*[Identifier](#Identifier)*
-&emsp;&emsp;&emsp;&emsp;*[Identifier](#Identifier)*&emsp;`.`&emsp;*[FunctionIdentifier](#FunctionIdentifier)*
+&emsp;&emsp;<a name="FunctionIdentifier"></a>*FunctionIdentifier* **:**<br>
+&emsp;&emsp;&emsp;&emsp;*[Identifier](#Identifier)*<br>
+&emsp;&emsp;&emsp;&emsp;*[Identifier](#Identifier)*&emsp;`.`&emsp;*[FunctionIdentifier](#FunctionIdentifier)*<br>
 
-&emsp;&emsp;<a name="FunctionArguments"></a>*FunctionArguments* **:**
-&emsp;&emsp;&emsp;&emsp;*[ChainedExpression](#ChainedExpression)*
-&emsp;&emsp;&emsp;&emsp;*[ChainedExpression](#ChainedExpression)*&emsp;*[ListSeparator](#ListSeparator)*&emsp;*[FunctionArguments](#FunctionArguments)*
+&emsp;&emsp;<a name="FunctionArguments"></a>*FunctionArguments* **:**<br>
+&emsp;&emsp;&emsp;&emsp;*[ChainedExpression](#ChainedExpression)*<br>
+&emsp;&emsp;&emsp;&emsp;*[ChainedExpression](#ChainedExpression)*&emsp;*[ListSeparator](#ListSeparator)*&emsp;*[FunctionArguments](#FunctionArguments)*<br>
 
 
