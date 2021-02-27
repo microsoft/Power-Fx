@@ -2,12 +2,17 @@
 # =================================================================================
 # Replaces grammar productions in a .md file from a .grammar file
 #
-
 $ErrorActionPreference = "Stop"
 
-$gpath = "expression-grammar.grammar"
-$mdpath = "expression-grammar.md"
-$backup = "c:\temp\powerfx-expression-grammar-backup.md"
+if( -not ($args[0] -match '\.grammar$') -or -not ($args[1] -match '\.md') ) 
+{
+	Write-Error "usage: grammar.ps1 source.grammar replacedin.md [backup.md]"
+	break
+}
+
+$gpath = $args[0]
+$mdpath = $args[1]
+$backup = $args[2]
 
 $prods = @{}
 
@@ -197,7 +202,10 @@ $out = ""
 	#break;
 #}
 
-Set-Content -Path $backup $original
+if( $backup )
+{
+	Set-Content -Path $backup $original
+}
 
 Set-Content -Path $mdpath $out
 
