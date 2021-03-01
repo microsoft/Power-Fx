@@ -1,31 +1,19 @@
----
-title: Operators and Identifiers | Microsoft Docs
-description: Reference information, including syntax and examples, for the operators and identifiers in Power Fx
-author: gregli-msft
-manager: kvivek
-ms.service: power-fx
-ms.topic: reference
-ms.reviewer: nabuthuk
-ms.date: 07/17/2020
-ms.author: gregli
-search.audienceType: 
-  - maker
-search.app: 
-  - PowerApps
----
 # Operators and Identifiers
+
+> [!NOTE]
+> Power Fx is the new name for canvas apps formula language.  These articles are work in progress as we extract the language from canvas apps, integrate it with other products of the Power Platform, and make available as open source.  Start with the [Power Fx Overview](overview.md) for an introduction to the language.    
 
 Some of these operators are dependent on the language of the author.  See [Global apps](global-apps.md) for more information.
 
 
-|                               Symbol                                |                        Type                         |                                                                                    Syntax                                                                                    |                                                                                                                           Description                                                                                                                            |
-|---------------------------------------------------------------------|-----------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-|                                **.**                                |                  Property Selector                  |                                                               **Slider1.Value<br>Color.Red**                                                               |                                               Extracts a property from a [table](../working-with-tables.md), control, or enumeration.  For backward compatibility, **!** may also be used.                                                |
-| **.**<br>[[language dependent](../global-apps.md)]  |                  Decimal separator                  |                                                             **1.23**                                                           |                                                                              Separator between whole and fractional parts of a number. The character depends on the language.                                                                              |
-|                               **( )**                               |                     Parentheses                     |                                                               **Filter(T, A &lt; 10)**<br><br>**(1 + 2) \* 3**                                                               |                                                                                           Enforces precedence order, and groups subexpressions in a larger expression                                                                                           |
-|                                **+**                                |                Arithmetic operators                 |                                                                                  **1 + 2**                                                                                   |                                                                                                                             Addition                                                                                                                             |
-|                                **-**                                |                       &nbsp;                        |                                                                                  **2 - 1**                                                                                   |                                                                                                                       Subtraction and sign                                                                                                                       |
-|                              *                               |                       &nbsp;                        |                                                                                  **2 \* 3**                                                                                  |                                                                                                                          Multiplication                                                                                                                          |
+|  Symbol   |      Type      |    Syntax      |        Description       |
+|-------------------|--------------|------------------|-----------------------|
+|   **.**       |       Property Selector        |      **Slider1.Value<br>Color.Red**      |    Extracts a property from a [table](../working-with-tables.md), control, or enumeration.  For backward compatibility, **!** can be used.   |
+| **.**<br>[[language dependent](../global-apps.md)]  |    Decimal separator   |      **1.23**   |  Separator between whole and fractional parts of a number. The character depends on the language.    |
+|  **( )**    |   Parentheses   |  **Filter(T, A &lt; 10)**<br><br>**(1 + 2) \* 3**   |      Enforces precedence order, and groups sub expressions in a larger expression  |
+|   **+**     |  Arithmetic operators   |    **1 + 2**     |       Addition     |
+|   **-**    |    &nbsp;    |   **2 - 1**    |   Subtraction and sign   |
+| *   |   &nbsp;   |   **2 \* 3**      |       Multiplication    |
 |                                **/**                                |                       &nbsp;                        |                                                                                  **2 / 3**                                                                                   |                                                                                                   Division (also see the **[Mod](function-mod.md)** function)                                                                                                    |
 |                                **^**                                |                       &nbsp;                        |                                                                                  **2 ^ 3**                                                                                   |                                                                                          Exponentiation, equivalent to the **[Power](function-numericals.md)** function                                                                                          |
 |                                **%**                                |                       &nbsp;                        |                                                                                   **20%**                                                                                    |                                                                                                         Percentage (equivalent to &quot;\* 1/100&quot;)                                                                                                          |
@@ -45,7 +33,7 @@ Some of these operators are dependent on the language of the author.  See [Globa
 |                               **in**                                |                       &nbsp;                        |                                                      **&quot;The&quot; in &quot;The keyboard and the monitor...&quot;**                                                      |                                                                                                                Substring test (case-insensitive)                                                                                                                 |
 |                                **@**                                | [Disambiguation operator](#disambiguation-operator) |                                                                           **MyTable[@fieldname]**                                                                            |                                                                                                                       Field disambiguation                                                                                                                       |
 |                                **@**                                |                       &nbsp;                        |                                                                              **[@MyVariable]**                                                                               |                                                                                                                      Global disambiguation                                                                                                                       |
-| **,**<br>[[language dependent](../global-apps.md)]  |                   List separator                    | **If( X < 10, "Low", "Good" )**<br>**{ X: 12, Y: 32 }**<br>**[ 1, 2, 3 ]** | Separates: <ul><li>arguments in function calls</li><li>fields in a [record](../working-with-tables.md#elements-of-a-table)</li><li>records in a [table](../working-with-tables.md#inline-value-tables)</li></ul> This character depends on the language. |
+| **,**<br>[[language dependent](../global-apps.md)]  |                   List separator                    | **If(X < 10, "Low", "Good")**<br>**{ X: 12, Y: 32 }**<br>**[ 1, 2, 3 ]** | Separates: <ul><li>arguments in function calls</li><li>fields in a [record](../working-with-tables.md#elements-of-a-table)</li><li>records in a [table](../working-with-tables.md#inline-value-tables)</li></ul> This character depends on the language. |
 | **;**<br>[[language dependent](../global-apps.md)] |                  Formula chaining                   |                                     **Collect(T, A); Navigate(S1, &quot;&quot;)**                                     |                                                                          Separate invocations of functions in behavior properties. The chaining operator depends on the language.                                                                          |
 |                             **As**                              |         [As operator](#as-operator)         |                                                                               **AllCustomers As Customer**                                                                                |                                                                                                           Overrides **ThisItem** and **ThisRecord** in galleries and record scope functions.  **As** is useful for providing a better, specific name and is especially important in nested  scenarios.                                                                                                             |
 |                             **Self**                              |         [Self operator](#self-and-parent-operators)         |                                                                               **Self.Fill**                                                                                |                                                                                                           Access to properties of the current control                                                                                                             |
@@ -68,6 +56,7 @@ Use the **[in](operators.md#in-and-exactin-operators)** and **[exactin](operator
     The gallery shows only Europa because only its name contains the letter that you specified in the case that you specified.
 
 ## ThisItem, ThisRecord, and As operators
+
 A few controls and functions apply formulas to individual records of a table.  To refer to the individual record in a formula, use one of the following:
 
 | Operator | Applies to | Description |
@@ -191,6 +180,7 @@ Setting a **Label** control's **Text** property to this formula displays:
 > ![Chessboard text shown in a label control](media/operators/as-forall-nesting.png)
 
 Let's unpack what is happening here:
+
 - We start by iterating an unnamed table of 8 numbered records from the [**Sequence**](function-sequence.md) function.  This loop is for each row of the board, which is commonly referred to as **Rank** and so we give it this name.
 - For each row, we iterate another unnamed table of 8 columns, and we give the common name **File**.
 - If **Rank.Value + File.Value** is an odd number, the square gets an **X**, otherwise a dot.  This part of the formula is referencing both **ForAll** loops, made possible by using the **As** operator.
@@ -269,7 +259,7 @@ For example, imagine you have added a **Custom Field** to an entity in Dataverse
 > [!div class="mx-imgBorder"]  
 > ![Accounts entity with Custom Field added, showing a display name of "Custom Field" and a logical name of "cr5e3_customfield"](media/operators/customfield_portal.png)
 
-When authoring a reference to a field of Accounts, the suggestion will be made to use **'Custom Field'** since this is the display name.  Note that the single quotes must be used because this name has a space in it:
+When authoring a reference to a field of Accounts, the suggestion will be made to use **'Custom Field'** since this is the display name. The single quotes must be used because this name has a space in it:
 
 > [!div class="mx-imgBorder"]  
 > ![Studio formula bar showing suggestions for field names of Accounts with the display name 'Custom Field' highlighted](media/operators/customfield_suggest_display.png)
@@ -279,7 +269,7 @@ After selecting the suggestion, 'Custom Field' is shown in the formula bar and t
 > [!div class="mx-imgBorder"]  
 > ![Studio formula bar showing the use of the display name 'Custom Field' for the field](media/operators/customfield_display.png)
 
-Although it is not suggested, we could also use the logical name for this field.  This will result in the same data being retrieved.  Note that no single quotes are required since this name does not contain spaces or special characters:
+Although it is not suggested, we could also use the logical name for this field.  This will result in the same data being retrieved.  No single quotes are required since this name does not contain spaces or special characters:
 
 > [!div class="mx-imgBorder"]  
 > ![Studio formula bar showing the use of the logical name cr5e3_customfield for the field](media/operators/customfield_logical.png)

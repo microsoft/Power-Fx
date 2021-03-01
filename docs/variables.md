@@ -1,19 +1,7 @@
----
-title: Understand variables in Power Fx | Microsoft Docs
-description: Reference information about working with global variables and collections in Power Fx
-author: gregli-msft
-manager: kvivek
-ms.service: power-fx
-ms.topic: conceptual
-ms.reviewer: nabuthuk
-ms.date: 02/26/2021
-ms.author: gregli
-search.audienceType: 
-  - maker
-search.app: 
-  - PowerApps
----
 # Variables
+
+> [!NOTE]
+> Power Fx is the new name for canvas apps formula language.  These articles are work in progress as we extract the language from canvas apps, integrate it with other products of the Power Platform, and make available as open source.  Start with the [Power Fx Overview](overview.md) for an introduction to the language.   
 
 If you've used another programming tool, such as Visual Basic or JavaScript, you may be asking: **Where are the variables?** Power Fx is a little different and requires a different approach. Instead of reaching for a variable when you write a formula, ask yourself: **What would I do in a spreadsheet?**
 

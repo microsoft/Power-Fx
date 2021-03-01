@@ -1,22 +1,9 @@
----
-title: Power Fx Expression Grammar | Microsoft Docs
-description: Annotated grammar for the Power Fx language
-author: gregli-msft
-manager: kvivek
-ms.reviewer: nabuthuk
-ms.service: powerapps
-ms.topic: reference
-ms.custom: canvas
-ms.date: 02/24/2021
-ms.author: gregli
-search.audienceType: 
-  - maker
-search.app: 
-  - PowerApps
----
 # Power Fx Expression Grammar
 
-Power Fx is based on formulas that binds a name to an expression.  Just like a spreadsheet, as inbound dependencies to the expression change, the expression is recalculated and the value of the name changes, possibly cascading the recalculation into other formulas.  
+> [!NOTE]
+> Power Fx is the new name for canvas apps formula language.  These articles are work in progress as we extract the language from canvas apps, integrate it with other products of the Power Platform, and make available as open source.  Start with the [Power Fx Overview](overview.md) for an introduction to the language.     
+
+Power Fx is based on formulas that binds a name to an expression.  Just like in spreadsheet, as inbound dependencies to the expression change, the expression is recalculated and the value of the name changes, possibly cascading the recalculation into other formulas.  
 
 This grammar covers the expression part of the formula. Binding to a name to create a formula is dependent on how Power Fx is integrated. In spreadsheets, the binding syntax is not exposed and is implied by where the expression is written, for example `typing =B1` in the A1 cell. In some cases, no binding is required at all and Power Fx is used as an expression evaluator, for example in supporting calculated columns of a database table. For Power Apps, the binding is implied when in Power Apps Studio with [a serialization format based on YAML for use outside Power Apps Studio](expression-grammar.md).
 
@@ -26,23 +13,22 @@ The lexical and syntactic grammars are presented using grammar productions. Each
 
 The first line of a grammar production is the name of the non-terminal symbol being defined, followed by a colon. Each successive indented line contains a possible expansion of the non-terminal given as a sequence of non-terminal or terminal symbols. For example, the production:
 
-&emsp;&emsp;*GlobalIdentifier* **:**<br>
-&emsp;&emsp;&emsp;&emsp;`[@`&emsp;*Identifier*&emsp;`]`<br>
-
+&emsp;&emsp;*GlobalIdentifier* **:**
+&emsp;&emsp;&emsp;&emsp;`[@`&emsp;*Identifier*&emsp;`]`
 defines a *GlobalIdentifier* to consist of the token `[@`, followed by an *Identifier*, followed by the token `]`
 
-When there is more than one possible expansion of a non-terminal symbol, the alternatives are listed on separate lines. A subscripted suffix "opt" is used to indicate an optional symbol. For example,the production:
+When there is more than one possible expansion of a non-terminal symbol, the alternatives are listed on separate lines. A subscripted suffix "opt" is used to indicate an optional symbol. For example, the production:
 
 &emsp;&emsp;*FunctionCall* **:**
 &emsp;&emsp;&emsp;&emsp;*FunctionIdentifier*&emsp;`(`&emsp;*FunctionArguments*<sub>opt</sub>&emsp;`)`
 
 is shorthand for:
 
-&emsp;&emsp;*FunctionCall* **:**
+&emsp;&emsp;*FunctionCall***:**
 &emsp;&emsp;&emsp;&emsp;*FunctionIdentifier*&emsp;`(`&emsp;`)`
 &emsp;&emsp;&emsp;&emsp;*FunctionIdentifier*&emsp;`(`&emsp;*FunctionArguments*&emsp;`)`
 
-Alternatives are normally listed on separate lines, though in cases where there are many alternatives, the phrase "one of" may precede a list of expansions given on a single line. This is simply shorthand for listing each of the alternatives on a separate line. 
+Alternatives are normally listed on separate lines, though in cases where there are many alternatives, the phrase "one of" may precede a list of expansions given on a single line. This is simply shorthand for listing each of the alternatives on a separate line.
 
 For example, the production:
 
@@ -51,7 +37,7 @@ For example, the production:
 
 is shorthand for:
 
-&emsp;&emsp;*DecimalDigit* **:** 
+&emsp;&emsp;*DecimalDigit* **:**
 &emsp;&emsp;&emsp;&emsp;`0`
 &emsp;&emsp;&emsp;&emsp;`1`
 &emsp;&emsp;&emsp;&emsp;`2`
@@ -63,7 +49,8 @@ is shorthand for:
 &emsp;&emsp;&emsp;&emsp;`8`
 &emsp;&emsp;&emsp;&emsp;`9`
 
-### Lexical analysis 
+### Lexical analysis
+
 The lexical-unit production defines the lexical grammar for a Power Fx expression. Every valid Power Fx expression conforms to this grammar.
 
 &emsp;&emsp;<a name="ExpressionUnit"></a>*ExpressionUnit* **:**<br>
@@ -80,9 +67,9 @@ The lexical-unit production defines the lexical grammar for a Power Fx expressio
 
 At the lexical level, a Power Fx expression consists of a stream of *Whitespace*, *Comment*, and *Token* elements. Each of these productions is covered in the following sections. Only *Token* elements are significant in the syntactic grammar.
 
-### Whitespace 
+### Whitespace
 
-Whitespace is used to separate comments and tokens within a PowerApps document. 
+Whitespace is used to separate comments and tokens within a Power Apps document.
 
 &emsp;&emsp;<a name="Whitespace"></a>*Whitespace* **:**<br>
 &emsp;&emsp;&emsp;&emsp;any Unicode Space separator (class Zs)<br>
@@ -91,15 +78,16 @@ Whitespace is used to separate comments and tokens within a PowerApps document.
 &emsp;&emsp;&emsp;&emsp;Horizontal tab character (U+0009)<br>
 &emsp;&emsp;&emsp;&emsp;Line feed character (U+000A)<br>
 &emsp;&emsp;&emsp;&emsp;Vertical tab character (U+000B)<br>
-&emsp;&emsp;&emsp;&emsp;Form feed chracter (U+000C)<br>
+&emsp;&emsp;&emsp;&emsp;Form feed character (U+000C)<br>
 &emsp;&emsp;&emsp;&emsp;Carriage return character (U+000D)<br>
 &emsp;&emsp;&emsp;&emsp;Next line character (U+0085)<br>
 
-### Comments 
+### Comments
 
-Two forms of comments are supported: 
-- Single-line comments that start with the characters // and extend to the end of the source line. 
-- Delimited comments that start with the characters /* and end with the characters */. Delimited comments may span multiple lines.
+Two forms of comments are supported:
+
+- Single-line comments that start with the characters // and extend to the end of the source line.
+- Delimited comments that start with the characters /\* and end with the characters \*/. Delimited comments may span multiple lines.
 
 &emsp;&emsp;<a name="Comment"></a>*Comment* **:**<br>
 &emsp;&emsp;&emsp;&emsp;*[DelimitedComment](#DelimitedComment)*<br>
@@ -152,7 +140,7 @@ The following examples include three single-line comments:
 "Hello, world"    // This is an example of a text literal
 ```
 
-### Literals 
+### Literals
 
 A literal is a source code representation of a value.
 
@@ -161,14 +149,14 @@ A literal is a source code representation of a value.
 &emsp;&emsp;&emsp;&emsp;*[NumberLiteral](#NumberLiteral)*<br>
 &emsp;&emsp;&emsp;&emsp;*[TextLiteral](#TextLiteral)*<br>
 
-#### Logical literals 
+#### Logical literals
 
 A logical literal is used to write the values true and false and produces a logical value.
 
 &emsp;&emsp;<a name="LogicalLiteral"></a>*LogicalLiteral* **:** **one of**<br>
 &emsp;&emsp;&emsp;&emsp;`true`&emsp;`false`<br>
 
-#### Number literals 
+#### Number literals
 
 A number literal is used to write a numeric value and produces a number value.
 
@@ -193,7 +181,7 @@ A number literal is used to write a numeric value and produces a number value.
 &emsp;&emsp;<a name="Sign"></a>*Sign* **:** **one of**<br>
 &emsp;&emsp;&emsp;&emsp;`+`&emsp;`-`<br>
 
-#### Text literals 
+#### Text literals
 
 A text literal is used to write a sequence of Unicode characters and produces a text value.  Text literals are enclosed in double quotes.  To include double quotes in the text value, the double quote mark is repeated:
 
@@ -217,7 +205,7 @@ A text literal is used to write a sequence of Unicode characters and produces a 
 &emsp;&emsp;<a name="DoubleQuoteEscapeSequence"></a>*DoubleQuoteEscapeSequence* **:**<br>
 &emsp;&emsp;&emsp;&emsp;`"`&emsp;`"`<br>
 
-## Identifiers 
+## Identifiers
 
 An identifier is a name used to refer to a value. Identifiers can either be regular identifiers or single quoted identifiers.
 
@@ -260,7 +248,7 @@ An identifier is a name used to refer to a value. Identifiers can either be regu
 &emsp;&emsp;<a name="FormattingCharacter"></a>*FormattingCharacter* **:**<br>
 &emsp;&emsp;&emsp;&emsp;any Unicode character of the class Format (Cf)<br>
 
-#### Single quoted identifiers 
+### Single quoted identifiers
 
 A *SingleQuotedIdentifier* can contain any sequence of Unicode characters to be used as an identifier, including keywords, whitespace, comments, and operators.  Single quote characters are supported with a double single quote escape sequence.
 
@@ -280,116 +268,116 @@ A *SingleQuotedIdentifier* can contain any sequence of Unicode characters to be 
 &emsp;&emsp;<a name="SingleQuoteEscapeSequence"></a>*SingleQuoteEscapeSequence* **:**<br>
 &emsp;&emsp;&emsp;&emsp;`'`&emsp;`'`<br>
 
-#### Disambiguated identifier 
+### Disambiguated identifier
 
-&emsp;&emsp;<a name="DisambiguatedIdentifier"></a>*DisambiguatedIdentifier* **:**<br>
+&emsp;&emsp;<a name="DisambiguatedIdentifier"></a>*DisambiguatedIdentifier:*<br>
 &emsp;&emsp;&emsp;&emsp;*[TableColumnIdentifier](#TableColumnIdentifier)*<br>
 &emsp;&emsp;&emsp;&emsp;*[GlobalIdentifier](#GlobalIdentifier)*<br>
 
 &emsp;&emsp;<a name="TableColumnIdentifier"></a>*TableColumnIdentifier* **:**<br>
 &emsp;&emsp;&emsp;&emsp;*[Identifier](#Identifier)*&emsp;`[@`&emsp;*[Identifier](#Identifier)*&emsp;`]`<br>
 
-&emsp;&emsp;<a name="GlobalIdentifier"></a>*GlobalIdentifier* **:**<br>
+&emsp;&emsp;<a name="GlobalIdentifier"></a>*GlobalIdentifier:*<br>
 &emsp;&emsp;&emsp;&emsp;`[@`&emsp;*[Identifier](#Identifier)*&emsp;`]`<br>
 
-#### Context keywords 
+### Context keywords
 
-&emsp;&emsp;<a name="ContextKeyword"></a>*ContextKeyword* **:**<br>
+&emsp;&emsp;<a name="ContextKeyword"></a>*ContextKeyword:*<br>
 &emsp;&emsp;&emsp;&emsp;`Parent`<br>
 &emsp;&emsp;&emsp;&emsp;`Self`<br>
 &emsp;&emsp;&emsp;&emsp;`ThisItem`<br>
 &emsp;&emsp;&emsp;&emsp;`ThisRecord`<br>
 
-#### Case sensitivity 
+### Case sensitivity
 
 Power Apps identifiers are case-sensitive.  The authoring tool will auto correct to the correct case when a formula is being written.
 
-## Separators 
+## Separators
 
-&emsp;&emsp;<a name="DecimalSeparator"></a>*DecimalSeparator* **:**<br>
-&emsp;&emsp;&emsp;&emsp;`.` (dot) for language that use a dot as the seperator for decimal numbers, for example `1.23`<br>
-&emsp;&emsp;&emsp;&emsp;`,` (comma) for languages that use a comma as the seperator for decimal numbers, for example `1,23`<br>
+&emsp;&emsp;<a name="DecimalSeparator"></a>*DecimalSeparator:*<br>
+&emsp;&emsp;&emsp;&emsp;`.` (dot) for language that uses a dot as the separator for decimal numbers, for example `1.23`<br>
+&emsp;&emsp;&emsp;&emsp;`,` (comma) for languages that use a comma as the separator for decimal numbers, for example `1,23`<br>
 
-&emsp;&emsp;<a name="ListSeparator"></a>*ListSeparator* **:**<br>
+&emsp;&emsp;<a name="ListSeparator"></a>*ListSeparator:*<br>
 &emsp;&emsp;&emsp;&emsp;`,` (comma) if *[DecimalSeparator](#DecimalSeparator)* is `.` (dot)<br>
 &emsp;&emsp;&emsp;&emsp;`;` (semi-colon) if *[DecimalSeparator](#DecimalSeparator)* is `,` (comma)<br>
 
-&emsp;&emsp;<a name="ChainingSeparator"></a>*ChainingSeparator* **:**<br>
+&emsp;&emsp;<a name="ChainingSeparator"></a>*ChainingSeparator:*<br>
 &emsp;&emsp;&emsp;&emsp;`;` (semi-colon) if *[DecimalSeparator](#DecimalSeparator)* is `.` (dot)<br>
 &emsp;&emsp;&emsp;&emsp;`;;` (double semi-colon) if *[DecimalSeparator](#DecimalSeparator)* is `,` (comma)<br>
 
-## Operators 
+## Operators
 
-Operators are used in formulas to describe operations involving one or more operands. For example, the expression `a + b` uses the `+` operator to add the two operands `a` and `b`. 
+Operators are used in formulas to describe operations involving one or more operands. For example, the expression `a + b` uses the `+` operator to add the two operands `a` and `b`.
 
-&emsp;&emsp;<a name="Operator"></a>*Operator* **:**<br>
+&emsp;&emsp;<a name="Operator"></a>*Operator:*<br>
 &emsp;&emsp;&emsp;&emsp;*[BinaryOperator](#BinaryOperator)*<br>
 &emsp;&emsp;&emsp;&emsp;*[BinaryOperatorRequiresWhitespace](#BinaryOperatorRequiresWhitespace)*<br>
 &emsp;&emsp;&emsp;&emsp;*[PrefixOperator](#PrefixOperator)*<br>
 &emsp;&emsp;&emsp;&emsp;*[PrefixOperatorRequiresWhitespace](#PrefixOperatorRequiresWhitespace)*<br>
 &emsp;&emsp;&emsp;&emsp;*[PostfixOperator](#PostfixOperator)*<br>
 
-&emsp;&emsp;<a name="BinaryOperator"></a>*BinaryOperator* **:** **one of**<br>
+&emsp;&emsp;<a name="BinaryOperator"></a>*BinaryOperator:* **one of**<br>
 &emsp;&emsp;&emsp;&emsp;`=`&emsp;`<`&emsp;`<=`&emsp;`>`&emsp;`>=`&emsp;`<>`<br>
 &emsp;&emsp;&emsp;&emsp;`+`&emsp;`-`&emsp;`*`&emsp;`/`&emsp;`^`<br>
 &emsp;&emsp;&emsp;&emsp;`&`<br>
 &emsp;&emsp;&emsp;&emsp;`&&`&emsp;`||`<br>
 &emsp;&emsp;&emsp;&emsp;`in`&emsp;`exactin`<br>
 
-&emsp;&emsp;<a name="BinaryOperatorRequiresWhitespace"></a>*BinaryOperatorRequiresWhitespace* **:**<br>
+&emsp;&emsp;<a name="BinaryOperatorRequiresWhitespace"></a>*BinaryOperatorRequiresWhitespace:*<br>
 &emsp;&emsp;&emsp;&emsp;`And`&emsp;*[Whitespace](#Whitespace)*<br>
 &emsp;&emsp;&emsp;&emsp;`Or`&emsp;*[Whitespace](#Whitespace)*<br>
 
-&emsp;&emsp;<a name="PrefixOperator"></a>*PrefixOperator* **:**<br>
+&emsp;&emsp;<a name="PrefixOperator"></a>*PrefixOperator:*<br>
 &emsp;&emsp;&emsp;&emsp;`!`<br>
 
-&emsp;&emsp;<a name="PrefixOperatorRequiresWhitespace"></a>*PrefixOperatorRequiresWhitespace* **:**<br>
+&emsp;&emsp;<a name="PrefixOperatorRequiresWhitespace"></a>*PrefixOperatorRequiresWhitespace:*<br>
 &emsp;&emsp;&emsp;&emsp;`Not`&emsp;*[Whitespace](#Whitespace)*<br>
 
-&emsp;&emsp;<a name="PostfixOperator"></a>*PostfixOperator* **:**<br>
+&emsp;&emsp;<a name="PostfixOperator"></a>*PostfixOperator:*<br>
 &emsp;&emsp;&emsp;&emsp;`%`<br>
 
-### Reference operator 
+### Reference operator
 
-&emsp;&emsp;<a name="ReferenceOperator"></a>*ReferenceOperator* **:** **one of**<br>
+&emsp;&emsp;<a name="ReferenceOperator"></a>*ReferenceOperator:* **one of**<br>
 &emsp;&emsp;&emsp;&emsp;`.`&emsp;`!`<br>
 
-### Object reference 
+### Object reference
 
-&emsp;&emsp;<a name="Reference"></a>*Reference* **:**<br>
+&emsp;&emsp;<a name="Reference"></a>*Reference:*<br>
 &emsp;&emsp;&emsp;&emsp;*[BaseReference](#BaseReference)*<br>
 &emsp;&emsp;&emsp;&emsp;*[BaseReference](#BaseReference)*&emsp;*[ReferenceOperator](#ReferenceOperator)*&emsp;*[ReferenceList](#ReferenceList)*<br>
 
-&emsp;&emsp;<a name="BaseReference"></a>*BaseReference* **:**<br>
+&emsp;&emsp;<a name="BaseReference"></a>*BaseReference:*<br>
 &emsp;&emsp;&emsp;&emsp;*[Identifier](#Identifier)*<br>
 &emsp;&emsp;&emsp;&emsp;*[DisambiguatedIdentifier](#DisambiguatedIdentifier)*<br>
 &emsp;&emsp;&emsp;&emsp;*[ContextKeyword](#ContextKeyword)*<br>
 
-&emsp;&emsp;<a name="ReferenceList"></a>*ReferenceList* **:**<br>
+&emsp;&emsp;<a name="ReferenceList"></a>*ReferenceList:*<br>
 &emsp;&emsp;&emsp;&emsp;*[Identifier](#Identifier)*<br>
 &emsp;&emsp;&emsp;&emsp;*[Identifier](#Identifier)*&emsp;*[ReferenceOperator](#ReferenceOperator)*&emsp;*[ReferenceList](#ReferenceList)*<br>
 
-### Inline record 
+### Inline record
 
-&emsp;&emsp;<a name="InlineRecord"></a>*InlineRecord* **:**<br>
+&emsp;&emsp;<a name="InlineRecord"></a>*InlineRecord:*<br>
 &emsp;&emsp;&emsp;&emsp;`{`&emsp;*[InlineRecordList](#InlineRecordList)*<sub>opt</sub>&emsp;`}`<br>
 
-&emsp;&emsp;<a name="InlineRecordList"></a>*InlineRecordList* **:**<br>
+&emsp;&emsp;<a name="InlineRecordList"></a>*InlineRecordList:*<br>
 &emsp;&emsp;&emsp;&emsp;*[Identifier](#Identifier)*&emsp;`:`&emsp;*[Expression](#Expression)*<br>
 &emsp;&emsp;&emsp;&emsp;*[Identifier](#Identifier)*&emsp;`:`&emsp;*[Expression](#Expression)*&emsp;*[ListSeparator](#ListSeparator)*&emsp;*[InlineRecordList](#InlineRecordList)*<br>
 
-### Inline table 
+### Inline table
 
-&emsp;&emsp;<a name="InlineTable"></a>*InlineTable* **:**<br>
+&emsp;&emsp;<a name="InlineTable"></a>*InlineTable:*<br>
 &emsp;&emsp;&emsp;&emsp;`[`&emsp;*[InlineTableList](#InlineTableList)*<sub>opt</sub>&emsp;`]`<br>
 
-&emsp;&emsp;<a name="InlineTableList"></a>*InlineTableList* **:**<br>
+&emsp;&emsp;<a name="InlineTableList"></a>*InlineTableList:*<br>
 &emsp;&emsp;&emsp;&emsp;*[Expression](#Expression)*<br>
 &emsp;&emsp;&emsp;&emsp;*[Expression](#Expression)*&emsp;*[ListSeparator](#ListSeparator)*&emsp;*[InlineTableList](#InlineTableList)*<br>
 
-## Expression 
+## Expression
 
-&emsp;&emsp;<a name="Expression"></a>*Expression* **:**<br>
+&emsp;&emsp;<a name="Expression"></a>*Expression:*<br>
 &emsp;&emsp;&emsp;&emsp;*[Literal](#Literal)*<br>
 &emsp;&emsp;&emsp;&emsp;*[Reference](#Reference)*<br>
 &emsp;&emsp;&emsp;&emsp;*[InlineRecord](#InlineRecord)*<br>
@@ -400,23 +388,21 @@ Operators are used in formulas to describe operations involving one or more oper
 &emsp;&emsp;&emsp;&emsp;*[Expression](#Expression)*&emsp;*[PostfixOperator](#PostfixOperator)*<br>
 &emsp;&emsp;&emsp;&emsp;*[Expression](#Expression)*&emsp;*[BinaryOperator](#BinaryOperator)*&emsp;*[Expression](#Expression)*<br>
 
-### Chained expressions 
+### Chained expressions
 
-&emsp;&emsp;<a name="ChainedExpression"></a>*ChainedExpression* **:**<br>
+&emsp;&emsp;<a name="ChainedExpression"></a>*ChainedExpression:*<br>
 &emsp;&emsp;&emsp;&emsp;*[Expression](#Expression)*<br>
 &emsp;&emsp;&emsp;&emsp;*[Expression](#Expression)*&emsp;*[ChainingSeparator](#ChainingSeparator)*&emsp;*[ChainedExpression](#ChainedExpression)*<sub>opt</sub><br>
 
 ### Function call
 
-&emsp;&emsp;<a name="FunctionCall"></a>*FunctionCall* **:**<br>
+&emsp;&emsp;<a name="FunctionCall"></a>*FunctionCall:*<br>
 &emsp;&emsp;&emsp;&emsp;*[FunctionIdentifier](#FunctionIdentifier)*&emsp;`(`&emsp;*[FunctionArguments](#FunctionArguments)*<sub>opt</sub>&emsp;`)`<br>
 
-&emsp;&emsp;<a name="FunctionIdentifier"></a>*FunctionIdentifier* **:**<br>
+&emsp;&emsp;<a name="FunctionIdentifier"></a>*FunctionIdentifier:*<br>
 &emsp;&emsp;&emsp;&emsp;*[Identifier](#Identifier)*<br>
 &emsp;&emsp;&emsp;&emsp;*[Identifier](#Identifier)*&emsp;`.`&emsp;*[FunctionIdentifier](#FunctionIdentifier)*<br>
 
-&emsp;&emsp;<a name="FunctionArguments"></a>*FunctionArguments* **:**<br>
+&emsp;&emsp;<a name="FunctionArguments"></a>*FunctionArguments:*<br>
 &emsp;&emsp;&emsp;&emsp;*[ChainedExpression](#ChainedExpression)*<br>
 &emsp;&emsp;&emsp;&emsp;*[ChainedExpression](#ChainedExpression)*&emsp;*[ListSeparator](#ListSeparator)*&emsp;*[FunctionArguments](#FunctionArguments)*<br>
-
-

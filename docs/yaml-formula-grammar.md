@@ -1,23 +1,10 @@
----
-title: Power Fx YAML Formula Grammar | Microsoft Docs
-description: Power Fx YAML formula syntax
-author: gregli-msft
-manager: kvivek
-ms.reviewer: nabuthuk
-ms.service: powerapps
-ms.topic: reference
-ms.custom: canvas
-ms.date: 02/24/2021
-ms.author: gregli
-search.audienceType: 
-  - maker
-search.app: 
-  - PowerApps
----
 
-# Power Fx YAML Formula Grammar
+# Power Fx YAML formula grammar
 
-The Power Apps formula language has a well-established grammar for expressions based on Excel. However, it lacks the syntax for binding an expression to a property, this has always been handled behind the scenes by the hosting app.
+> [!NOTE]
+> Power Fx is the new name for canvas apps formula language.  These articles are work in progress as we extract the language from canvas apps, integrate it with other products of the Power Platform, and make available as open source.  Start with the [Power Fx Overview](overview.md) for an introduction to the language.   
+
+Power Fx has a well-established grammar for expressions based on Excel. However, when used in Power Apps and other hosts where UI provides the name-to-expression binding for a formula, there is no standard way of editing the formula binding as text.  
 
 We have selected the industry standard [YAML](https://yaml.org/spec/1.2/spec.html) as our language for this binding. There are already a large number of editors, tools, and libraries for working with YAML.  This article describes how we represent formulas in YAML.
 

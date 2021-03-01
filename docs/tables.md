@@ -1,19 +1,7 @@
----
-title: Tables in Power Fx | Microsoft Docs
-description: Reference information about working with tables, columns, and records in Power Fx
-author: gregli-msft
-manager: kvivek
-ms.service: power-fx
-ms.topic: conceptual
-ms.reviewer: nabuthuk
-ms.date: 02/26/2021
-ms.author: gregli
-search.audienceType: 
-  - maker
-search.app: 
-  - PowerApps
----
 # Tables
+
+> [!NOTE]
+> Power Fx is the new name for canvas apps formula language.  These articles are work in progress as we extract the language from canvas apps, integrate it with other products of the Power Platform, and make available as open source.  Start with the [Power Fx Overview](overview.md) for an introduction to the language.   
 
 In Power Fx, you can write a formula that accesses information in Microsoft Excel, SharePoint, SQL Server, and several other sources that store data in records and tables. To work most effectively with this kind of data, review the concepts that underlie these structures.
 

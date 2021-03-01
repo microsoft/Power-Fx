@@ -1,19 +1,6 @@
----
-title: Understand imperative logic in a canvas app | Microsoft Docs
-description: Reference information about working with imperative logic, which can change state in Power Fx
-author: gregli-msft
-manager: kvivek
-ms.service: powerapps
-ms.topic: conceptual
-ms.reviewer: nabuthuk
-ms.date: 02/26/2021
-ms.author: gregli
-search.audienceType: 
-  - maker
-search.app: 
-  - PowerApps
----
 # Imperative logic
+
+> Power Fx is the new name for canvas apps formula language.  These articles are work in progress as we extract the language from canvas apps, integrate it with other products of the Power Platform, and make available as open source.  Start with the [Power Fx Overview](overview.md) for an introduction to the language.   
 
 Most formulas calculate a value.  Like an Excel spreadsheet, recalculation happens automatically as values change.  For example, you might want to show the value in a **Label** control in red if the value is less than zero or in black otherwise. So you can set the **Color** property of that control to this formula:
 
