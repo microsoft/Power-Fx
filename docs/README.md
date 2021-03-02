@@ -1,6 +1,6 @@
-# Power Fx documentation
+# Microsoft Power Fx documentation
 
-Power Fx is the low-code language that will be used across the Microsoft Power Platform. It is a general-purpose, strong typed, declarative, and functional programming language.  Power Fx is the new name for the Power Apps canvas formula language.  
+Microsoft Power Fx is the low-code language that will be used across the Microsoft Power Platform. It is a general-purpose, strong typed, declarative, and functional programming language.  Power Fx is the new name for the Power Apps canvas formula language.  
 
 This folder contains early documentation, largely taken from the Power Apps canvas documentation.  Like the implementation itself, this is a work in progress as we extract Power Fx from the Power Apps home it grew up in.  
 
