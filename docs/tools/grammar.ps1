@@ -1,7 +1,9 @@
-
 # =================================================================================
 # Replaces grammar productions in a .md file from a .grammar file
 #
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT license.
+
 $ErrorActionPreference = "Stop"
 
 if( -not ($args[0] -match '\.grammar$') -or -not ($args[1] -match '\.md') ) 
