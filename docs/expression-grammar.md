@@ -4,7 +4,9 @@
 
 Power Fx is based on formulas that binds a name to an expression.  Just like in spreadsheet, as inbound dependencies to the expression change, the expression is recalculated and the value of the name changes, possibly cascading the recalculation into other formulas.  
 
-This grammar covers the expression part of the formula. Binding to a name to create a formula is dependent on how Power Fx is integrated. In spreadsheets, the binding syntax is not exposed and is implied by where the expression is written, for example `typing =B1` in the A1 cell. In some cases, no binding is required at all and Power Fx is used as an expression evaluator, for example in supporting calculated columns of a database table. For Power Apps, the binding is implied when in Power Apps Studio with [a serialization format based on YAML for use outside Power Apps Studio](expression-grammar.md).
+This grammar covers the expression part of the formula. Binding to a name to create a formula is dependent on how Power Fx is integrated. In spreadsheets, the binding syntax is not exposed and is implied by where the expression is written, for example `typing =B1` in the A1 cell. In some cases, no binding is required at all and Power Fx is used as an expression evaluator, for example in supporting calculated columns of a database table. For Power Apps, the binding is implied when in Power Apps Studio with [a serialization format based on YAML for use outside Power Apps Studio](yaml-formula-grammar.md).
+
+This article is an annotated version of the grammar.  The raw grammar, suitable for use with tools, is also [available as a .grammar file](expression-grammar.grammar).
 
 ## Grammar conventions
 
@@ -12,41 +14,42 @@ The lexical and syntactic grammars are presented using grammar productions. Each
 
 The first line of a grammar production is the name of the non-terminal symbol being defined, followed by a colon. Each successive indented line contains a possible expansion of the non-terminal given as a sequence of non-terminal or terminal symbols. For example, the production:
 
-&emsp;&emsp;*GlobalIdentifier* **:**
-&emsp;&emsp;&emsp;&emsp;`[@`&emsp;*Identifier*&emsp;`]`
+&emsp;&emsp;*GlobalIdentifier* **:**<br>
+&emsp;&emsp;&emsp;&emsp;`[@`&emsp;*Identifier*&emsp;`]`<br>
+
 defines a *GlobalIdentifier* to consist of the token `[@`, followed by an *Identifier*, followed by the token `]`
 
 When there is more than one possible expansion of a non-terminal symbol, the alternatives are listed on separate lines. A subscripted suffix "opt" is used to indicate an optional symbol. For example, the production:
 
-&emsp;&emsp;*FunctionCall* **:**
+&emsp;&emsp;*FunctionCall* **:**<br>
 &emsp;&emsp;&emsp;&emsp;*FunctionIdentifier*&emsp;`(`&emsp;*FunctionArguments*<sub>opt</sub>&emsp;`)`
 
 is shorthand for:
 
-&emsp;&emsp;*FunctionCall***:**
-&emsp;&emsp;&emsp;&emsp;*FunctionIdentifier*&emsp;`(`&emsp;`)`
-&emsp;&emsp;&emsp;&emsp;*FunctionIdentifier*&emsp;`(`&emsp;*FunctionArguments*&emsp;`)`
+&emsp;&emsp;*FunctionCall***:**<br>
+&emsp;&emsp;&emsp;&emsp;*FunctionIdentifier*&emsp;`(`&emsp;`)`<br>
+&emsp;&emsp;&emsp;&emsp;*FunctionIdentifier*&emsp;`(`&emsp;*FunctionArguments*&emsp;`)`<br>
 
 Alternatives are normally listed on separate lines, though in cases where there are many alternatives, the phrase "one of" may precede a list of expansions given on a single line. This is simply shorthand for listing each of the alternatives on a separate line.
 
 For example, the production:
 
-&emsp;&emsp;*DecimalDigit* **:** **one of**
+&emsp;&emsp;*DecimalDigit* **:** **one of**<br>
 &emsp;&emsp;&emsp;&emsp;`0`&emsp;`1`&emsp;`2`&emsp;`3`&emsp;`4`&emsp;`5`&emsp;`6`&emsp;`7`&emsp;`8`&emsp;`9`
 
 is shorthand for:
 
-&emsp;&emsp;*DecimalDigit* **:**
-&emsp;&emsp;&emsp;&emsp;`0`
-&emsp;&emsp;&emsp;&emsp;`1`
-&emsp;&emsp;&emsp;&emsp;`2`
-&emsp;&emsp;&emsp;&emsp;`3`
-&emsp;&emsp;&emsp;&emsp;`4`
-&emsp;&emsp;&emsp;&emsp;`5`
-&emsp;&emsp;&emsp;&emsp;`6`
-&emsp;&emsp;&emsp;&emsp;`7`
-&emsp;&emsp;&emsp;&emsp;`8`
-&emsp;&emsp;&emsp;&emsp;`9`
+&emsp;&emsp;*DecimalDigit* **:**<br>
+&emsp;&emsp;&emsp;&emsp;`0`<br>
+&emsp;&emsp;&emsp;&emsp;`1`<br>
+&emsp;&emsp;&emsp;&emsp;`2`<br>
+&emsp;&emsp;&emsp;&emsp;`3`<br>
+&emsp;&emsp;&emsp;&emsp;`4`<br>
+&emsp;&emsp;&emsp;&emsp;`5`<br>
+&emsp;&emsp;&emsp;&emsp;`6`<br>
+&emsp;&emsp;&emsp;&emsp;`7`<br>
+&emsp;&emsp;&emsp;&emsp;`8`<br>
+&emsp;&emsp;&emsp;&emsp;`9`<br>
 
 ### Lexical analysis
 
