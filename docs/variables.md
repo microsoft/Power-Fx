@@ -26,17 +26,17 @@ Excel doesn't have variables. The value of a cell that contains a formula change
 
 Logic that you create in Power Fx behaves very much like Excel. Instead of updating cells, you can add controls wherever you want on a screen and name them for use in formulas.
 
-For example in Power Apps, you can replicate the Excel behavior in an app by adding a **[Label](controls/control-text-box.md)** control, named **Label1**, and two **[Text input](controls/control-text-input.md)** controls, named **TextInput1** and **TextInput2**. If you then set the **[Text](controls/properties-core.md)** property of **Label1** to **TextInput1 + TextInput2**, it will always show the sum of whatever numbers are in **TextInput1** and **TextInput2** automatically.
+For example in Power Apps, you can replicate the Excel behavior in an app by adding a **Label** control, named **Label1**, and two **Text input** controls, named **TextInput1** and **TextInput2**. If you then set the **Text** property of **Label1** to **TextInput1 + TextInput2**, it will always show the sum of whatever numbers are in **TextInput1** and **TextInput2** automatically.
 
 ![Calculating the sum of two numbers in Power Fx](media/variables/recalc1.png)
 
-Notice that the **Label1** control is selected, showing its **[Text](controls/properties-core.md)** formula in the formula bar at the top of the screen. Here we find the formula **TextInput1 + TextInput2**. This formula creates a dependency between these controls, just as dependencies are created between cells in an Excel workbook.  Let's change the value of **TextInput1**:
+Notice that the **Label1** control is selected, showing its **Text** formula in the formula bar at the top of the screen. Here we find the formula **TextInput1 + TextInput2**. This formula creates a dependency between these controls, just as dependencies are created between cells in an Excel workbook.  Let's change the value of **TextInput1**:
 
 ![Animation of calculating the sum of two numbers in Power Fx](media/variables/recalc2.gif)
 
 The formula for **Label1** has been automatically recalculated, showing the new value.
 
-In Power Fx, you can use formulas to determine not only the primary value of a control but also properties such as formatting. In the next example, a formula for the **[Color](controls/properties-color-border.md)** property of the label will automatically show negative values in red. The **[If](functions/function-if.md)** function should look familiar from Excel:
+In Power Fx, you can use formulas to determine not only the primary value of a control but also properties such as formatting. In the next example, a formula for the **Color** property of the label will automatically show negative values in red. The **If** function should look familiar from Excel:
 
 `If( Value(Label1.Text) < 0, Red, Black )`
 
@@ -45,7 +45,7 @@ In Power Fx, you can use formulas to determine not only the primary value of a c
 You can use formulas for a wide variety of scenarios:
 
 * By using your device's GPS, a map control can display your current location with a formula that uses **Location.Latitude** and **Location.Longitude**.  As you move, the map will automatically track your location.
-* Other users can update data sources.  For example, others on your team might update items in a SharePoint list.  When you refresh a data source, any dependent formulas are automatically recalculated to reflect the updated data. Furthering the example, you might set a gallery's **[Items](controls/properties-core.md)** property to the formula **Filter( SharePointList )**, which will automatically display the newly filtered set of [records](tables.md#records).
+* Other users can update data sources.  For example, others on your team might update items in a SharePoint list.  When you refresh a data source, any dependent formulas are automatically recalculated to reflect the updated data. Furthering the example, you might set a gallery's **Items** property to the formula **Filter( SharePointList )**, which will automatically display the newly filtered set of [records](tables.md#records).
 
 ### Benefits
 
@@ -53,7 +53,7 @@ Using formulas to build apps has many advantages:
 
 * If you know Excel, you know Power Fx. The model and formula language are the same.
 * If you've used other programming tools, think about how much code would be required to accomplish these examples.  In Visual Basic, you'd need to write an event handler for the change event on each text-input control.  The code to perform the calculation in each of these is redundant and could get out of sync, or you'd need to write a common subroutine.  In Power Fx, you accomplished all of that with a single, one-line formula.
-* To understand where **Label1**'s text is coming from, you know exactly where to look: the formula in the **[Text](controls/properties-core.md)** property.  There's no other way to affect the text of this control.  In a traditional programming tool, any event handler or subroutine could change the value of the label, from anywhere in the program.  This can make it hard to track down when and where a variable was changed.
+* To understand where **Label1**'s text is coming from, you know exactly where to look: the formula in the **Text** property.  There's no other way to affect the text of this control.  In a traditional programming tool, any event handler or subroutine could change the value of the label, from anywhere in the program.  This can make it hard to track down when and where a variable was changed.
 * If the user changes a slider control and then changes their mind, they can change the slider back to its original value.  And it's as if nothing had ever changed: the app shows the same control values as it did before.  There are no ramifications for experimenting and asking "what if," just as there are none in Excel.  
 
 In general, if you can achieve an effect by using a formula, you'll be better off. Let the formula engine in Power Fx do the work for you.  
@@ -84,7 +84,7 @@ To create our adding machine, we require a variable to hold the running total. T
 
 How global variables work:
 
-* You set the value of the global variable with the **[Set](functions/function-set.md)** function.  **Set( MyVar, 1 )** sets the global variable **MyVar** to a value of **1**.
+* You set the value of the global variable with the **Set** function.  **Set( MyVar, 1 )** sets the global variable **MyVar** to a value of **1**.
 * You use the global variable by referencing the name used with the **Set** function.  In this case, **MyVar** will return **1**.
 * Global variables can hold any value, including strings, numbers, records, and [tables](tables.md).
 
@@ -100,7 +100,7 @@ Let's rebuild our adding machine by using a global variable:
 
     The mere existence of this formula establishes **RunningTotal** as a global variable that holds a number because of the **+** operator. You can reference **RunningTotal** anywhere in the app. Whenever the user opens this app, **RunningTotal** has an initial value of *blank*.
 
-    The first time that a user selects the **Add** button and **[Set](functions/function-set.md)** runs, **RunningTotal** is set to the value **RunningTotal + TextInput1**.
+    The first time that a user selects the **Add** button and **Set** runs, **RunningTotal** is set to the value **RunningTotal + TextInput1**.
 
     ![OnSelect property of the Add button is set to Set function](media/variables/global-variable-1.png)
 
@@ -134,14 +134,14 @@ Power Fx has two types of variables:
 
 | Variables type | Scope | Description | Functions that establish |
 | --- | --- | --- | --- |
-| Global variables |App |Simplest to use. Holds a number, text string, Boolean, record, table, etc. that can be references from anywhere in the app. |[**Set**](functions/function-set.md) |
-| Collections |App |Holds a table that can be referenced from anywhere in the app. Allows the contents of the table to be modified rather than being set as a whole. Can be saved to the local device for later use. |[**Collect**](functions/function-clear-collect-clearcollect.md)<br>[**ClearCollect**](functions/function-clear-collect-clearcollect.md) |
+| Global variables |App |Simplest to use. Holds a number, text string, Boolean, record, table, etc. that can be references from anywhere in the app. |**Set** |
+| Collections |App |Holds a table that can be referenced from anywhere in the app. Allows the contents of the table to be modified rather than being set as a whole. Can be saved to the local device for later use. |**Collect**<br>**ClearCollect** |
 
 When used in Power Apps, there is a third type of variable:
 
 | Variables type | Scope | Description | Functions that establish |
 | --- | --- | --- | --- |
-| Context variables |Screen |Great for passing values to a screen, much like parameters to a procedure in other languages. Can be referenced from only one screen. |[**UpdateContext**](functions/function-updatecontext.md)<br>[**Navigate**](functions/function-navigate.md) |
+| Context variables |Screen |Great for passing values to a screen, much like parameters to a procedure in other languages. Can be referenced from only one screen. |**UpdateContext**<br>**Navigate** |
 
 ## Create and remove variables
 
@@ -157,7 +157,7 @@ You remove a variable by removing all the **Set**, **UpdateContext**, **Navigate
 
 All variables are held in memory while the app runs. After the app closes, the values that the variables held are lost.
 
-You can store the contents of a variable in a data source by using the **Patch** or **Collect** functions. You can also store values in collections on the local device by using the [**SaveData**](functions/function-savedata-loaddata.md) function.
+You can store the contents of a variable in a data source by using the **Patch** or **Collect** functions. You can also store values in collections on the local device by using the **SaveData** function.
 
 When the user opens the app, all variables have an initial value of *blank*.
 
@@ -171,7 +171,7 @@ Then you can simply use **Radius** anywhere that you can use a number, and it wi
 
 `Pi() * Power( Radius, 2 )`
 
-If you give a context variable the same name as a global variable or a collection, the context variable takes precedence. However, you can still reference the global variable or collection if you use the [disambiguation operator](functions/operators.md#disambiguation-operator) **[@Radius]**.
+If you give a context variable the same name as a global variable or a collection, the context variable takes precedence. However, you can still reference the global variable or collection if you use the [disambiguation operator](operators.md#disambiguation-operator) **[@Radius]**.
 
 ## Use a context variable (Power Apps only)
 
@@ -197,7 +197,7 @@ Let's rebuild our adding machine by using a context variable:
 
     The mere existence of this formula establishes **RunningTotal** as a context variable that holds a number because of the **+** operator. You can reference **RunningTotal** anywhere in this screen. Whenever the user opens this app, **RunningTotal** has an initial value of *blank*.
 
-    The first time that the user selects the **Add** button and **[UpdateContext](functions/function-updatecontext.md)** runs, **RunningTotal** is set to the value **RunningTotal + TextInput1**.
+    The first time that the user selects the **Add** button and **UpdateContext** runs, **RunningTotal** is set to the value **RunningTotal + TextInput1**.
 
     ![OnSelect property of the Add button](media/variables/context-variable-1.png)
 
@@ -205,7 +205,7 @@ Let's rebuild our adding machine by using a context variable:
 
     **UpdateContext( { RunningTotal: 0 } )**
 
-    Again, **[UpdateContext](functions/function-updatecontext.md)** is used with the formula **UpdateContext( { RunningTotal: 0 } )**.
+    Again, **UpdateContext** is used with the formula **UpdateContext( { RunningTotal: 0 } )**.
 
     ![OnSelect property of the Clear button](media/variables/context-variable-2.png)
 
@@ -263,13 +263,13 @@ Let's recreate our adding machine by using a collection:
 
     ![OnSelect property of the Add button](media/variables/papertape-1.png)
 
-4. To clear the paper tape when the user selects the **Clear** button, set its **[OnSelect](controls/properties-core.md)** property to this formula:
+4. To clear the paper tape when the user selects the **Clear** button, set its **OnSelect** property to this formula:
 
     **Clear( PaperTape )**
 
     ![OnSelect property of the Clear button](media/variables/papertape-2.png)
 
-5. To display the running total, add a label, and set its **[Text](controls/properties-core.md)** property to this formula:
+5. To display the running total, add a label, and set its **Text** property to this formula:
 
     **Sum( PaperTape, Value )**
 
@@ -281,7 +281,7 @@ Let's recreate our adding machine by using a collection:
 
 7. To return to the default workspace, press the Esc key.
 
-8. To display the paper tape, insert a **Data table** control, and set its **[Items](controls/properties-core.md)** property to this formula:
+8. To display the paper tape, insert a **Data table** control, and set its **Items** property to this formula:
 
     **PaperTape**
 

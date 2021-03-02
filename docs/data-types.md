@@ -19,9 +19,9 @@ This article provides details for the data types that Power Fx supports. When ex
 | **Media** | A URI text string to a video or audio recording. | **MyVideo** added as an app resource<br>**"https://northwindtraders.com/intro.mp4"**<br>**"appres://blobmanager/3ba411c..."** |
 | **Number** | A floating-point number. | **123**<br>**-4.567**<br>**8.903e121** |
 | **Option set** | A choice from a set of options, backed by a number. This data type combines a localizable text label with a numeric value. The label appears in the app, and the numeric value is stored and used for comparisons. | **ThisItem.OrderStatus** |
-| **Record** | A record of data values. This compound data type contains instances of other data types that are listed in this topic. More information: [Working with tables](../working-with-tables.md). | **{ Company: "Northwind Traders",<br>Staff: 35, <br>NonProfit: false }** |
-| **Record reference** | A reference to a record in an entity. Such references are often used with polymorphic lookups. More information: [Working with references](../working-with-references.md).| **First(Accounts).Owner** |
-| **Table** | A table of records.  All of the records must have the same names for their fields with the same data types, and omitted fields are treated as *blank*. This compound data type contains instances of other data types that are listed in this topic. More information: [Working with tables](../working-with-tables.md). | **Table( { FirstName: "Sidney",<br>LastName: "Higa" }, <br>{ FirstName: "Nancy",<br>LastName: "Anderson" } )**
+| **Record** | A record of data values. This compound data type contains instances of other data types that are listed in this topic. More information: [Working with tables](tables.md). | **{ Company: "Northwind Traders",<br>Staff: 35, <br>NonProfit: false }** |
+| **Record reference** | A reference to a record in an entity. Such references are often used with polymorphic lookups. | **First(Accounts).Owner** |
+| **Table** | A table of records.  All of the records must have the same names for their fields with the same data types, and omitted fields are treated as *blank*. This compound data type contains instances of other data types that are listed in this topic. More information: [Working with tables](tables.md). | **Table( { FirstName: "Sidney",<br>LastName: "Higa" }, <br>{ FirstName: "Nancy",<br>LastName: "Anderson" } )**
 | **Text** | A Unicode text string. | **"Hello, World"** |
 | **Time** | A time without a date, in the time zone of the app's user. | **Time( 11, 23, 45 )** |
 | **Two option** | A choice from a set of two options, backed by a boolean value. This data type combines a localizable text label with a boolean value. The label appears in the app, and the boolean value is stored and used for comparisons. | **ThisItem.Taxable** |
@@ -34,7 +34,7 @@ All data types can have a value of *blank* (in other words, no value). The term 
 
 Use the **Blank** function with the **Set** or **Patch** function to set a variable or field to *blank*. For example, **Set( x, Blank() )** removes any value in the global variable **x**.  
 
-Test for a *blank* value by using the [**IsBlank**](function-isblank-isempty.md) function. Replace possible *blank* values with non-*blank* values by using the [**Coalesce**](function-isblank-isempty.md) function.
+Test for a *blank* value by using the **IsBlank** function. Replace possible *blank* values with non-*blank* values by using the **Coalesce** function.
 
 Because all data types support *blank*, the **Boolean** and **Two option** data types effectively have three possible values.
 
@@ -44,7 +44,7 @@ All four of these data types are based on a [Unicode](https://en.wikipedia.org/w
 
 ### Embedded text
 
-Embedded text strings in a formula are enclosed in double quotation marks.  Use two double quotes together to represent a single double quote in the text string.  For example, using the following formula in the **OnSelect** property of a [**Button**](../controls/control-button.md) control:
+Embedded text strings in a formula are enclosed in double quotation marks.  Use two double quotes together to represent a single double quote in the text string.  For example, using the following formula in the **OnSelect** property of a **Button** control:
 
 ```powerapps-dot
 Notify( "Jane said ""Hello, World!""" )
@@ -62,13 +62,13 @@ Through the **File** menu, you can add image, video, and audio files as app reso
 
 ![Northwind resource](media/data-types/nwind-resource.png "Northwind resource")
 
-To use this resource in an app, specify it in the **Image** property of an [**Image**](../controls/control-image.md) control:
+To use this resource in an app, specify it in the **Image** property of an **Image** control:
 
 ![Northwind image](media/data-types/nwind-image.png "Northwind image")
 
 ### URIs for images and other media
 
-You can dig a little deeper into that last example by setting the **Text** property of a [**Label**](../controls/control-text-box.md) control to **nwindlogo**. The label shows a text string:
+You can dig a little deeper into that last example by setting the **Text** property of a **Label** control to **nwindlogo**. The label shows a text string:
 
 ![Northwind text](media/data-types/nwind-text.png "Northwind text")
 
@@ -84,7 +84,7 @@ That URI displays a scaled-up version of two purple diamonds:
 
 ![Double diamonds](media/data-types/double-diamonds.png "Double diamonds")
 
-You can show the most recent image captured in a [**Camera**](../controls/control-camera.md) control if you set the **Image** property of an image control to the **Photo** property of the camera control. The app holds the image in memory, and the **Photo** property of the camera control returns a URI reference to the image. For example, you might take a picture, and the camera's **Photo** property could return **"appres://blobmanager/7b12ffa2ea4547e5b3812cb1c7b0a2a0/1"**.
+You can show the most recent image captured in a **Camera** control if you set the **Image** property of an image control to the **Photo** property of the camera control. The app holds the image in memory, and the **Photo** property of the camera control returns a URI reference to the image. For example, you might take a picture, and the camera's **Photo** property could return **"appres://blobmanager/7b12ffa2ea4547e5b3812cb1c7b0a2a0/1"**.
 
 You use a URI to reference an image or another media file stored in a database. That way, the app doesn't retrieve the actual data until it's needed. For example, an attachment in a Microsoft Dataverse entity might return **"appres://datasources/Contacts/table/..."** As in the camera example, you can display this image by setting the **Image** property of an image control to this reference, which retrieves the binary data.
 
@@ -163,11 +163,11 @@ If you need the Unix time in a **Date** value for further calculations or displa
 
 ### SQL Server
 
-SQL Server has [**Datetime**, **Datetime2**, and other date/time data types](https://docs.microsoft.com/sql/t-sql/functions/date-and-time-data-types-and-functions-transact-sql?view=sql-server-2017) that don't include a time-zone offset and don't indicate which time zone they're in. Power Fx assumes these values are stored in UTC and treat them as **User local**. If the values are meant to be,  time-zone independent, correct for the UTC translations by using the [**TimeZoneOffset**](function-dateadd-datediff.md#converting-to-utc) function.
+SQL Server has [**Datetime**, **Datetime2**, and other date/time data types](https://docs.microsoft.com/sql/t-sql/functions/date-and-time-data-types-and-functions-transact-sql?view=sql-server-2017) that don't include a time-zone offset and don't indicate which time zone they're in. Power Fx assumes these values are stored in UTC and treat them as **User local**. If the values are meant to be,  time-zone independent, correct for the UTC translations by using the **TimeZoneOffset** function.
 
 Power Fx uses the included time-zone information in **Datetimeoffset** fields when converting a value to the app's internal UTC representation. The apps always use UTC as the time zone (zero time zone offset) when they write data.
 
-Power Fx reads and writes values of the [**Time**](https://docs.microsoft.com/sql/t-sql/data-types/time-transact-sql) data type in SQL Server as text strings in the [ISO 8601 duration format](https://en.wikipedia.org/wiki/ISO_8601#Durations). For example, you must parse this string format and use the [**Time**](function-date-time.md) function to convert the text string **"PT2H1M39S"** to a **Time** value:
+Power Fx reads and writes values of the [**Time**](https://docs.microsoft.com/sql/t-sql/data-types/time-transact-sql) data type in SQL Server as text strings in the [ISO 8601 duration format](https://en.wikipedia.org/wiki/ISO_8601#Durations). For example, you must parse this string format and use the **Time** function to convert the text string **"PT2H1M39S"** to a **Time** value:
 
 ```powerapps-dot
 With( 
@@ -184,7 +184,7 @@ With(
 
 A **Date** value can include time information with it, which is usually midnight. A **Time** value can carry date information, which is usually January 1, 1970. Dataverse also stores time information with a **Date Only** field but shows only the date information by default. Similarly, Power Fx sometimes distinguish between these data types to determine default formats and controls.
 
-Adding and subtracting date and time values directly isn't recommended because time-zone and other conversions could cause confusing results. Either use the **Value** function to convert date/time values to milliseconds first and take into account the app user's time zone, or use the [**DateAdd**](function-dateadd-datediff.md) and [**DateDiff**](function-dateadd-datediff.md) functions to add or subtract from one of these values.
+Adding and subtracting date and time values directly isn't recommended because time-zone and other conversions could cause confusing results. Either use the **Value** function to convert date/time values to milliseconds first and take into account the app user's time zone, or use the **DateAdd** and **DateDiff** functions to add or subtract from one of these values.
 
 ## Option sets and Two options
 
