@@ -31,7 +31,7 @@ When there is more than one possible expansion of a non-terminal symbol, the alt
 
 is shorthand for:
 
-&emsp;&emsp;*FunctionCall***:**<br>
+&emsp;&emsp;*FunctionCall* **:**<br>
 &emsp;&emsp;&emsp;&emsp;*FunctionIdentifier*&emsp;`(`&emsp;`)`<br>
 &emsp;&emsp;&emsp;&emsp;*FunctionIdentifier*&emsp;`(`&emsp;*FunctionArguments*&emsp;`)`<br>
 
