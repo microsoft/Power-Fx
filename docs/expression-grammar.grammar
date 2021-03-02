@@ -1,0 +1,281 @@
+
+// Lexical 
+
+ExpressionUnit :
+    ExpressionElements?
+
+ExpressionElements :
+    ExpressionElement
+    ExpressionElement ExpressionElements?
+
+ExpressionElement :
+    Whitespace
+    Comment    
+    Token
+
+// Whitepsace
+
+Whitespace :
+    > any Unicode Space separator (class Zs)
+    > any Unicode Line separator (class Zl)
+    > any Unicode Paragraph separator (class Zp)
+    > Horizontal tab character (U+0009)
+    > Line feed character (U+000A)
+    > Vertical tab character (U+000B)
+    > Form feed chracter (U+000C)
+    > Carriage return character (U+000D)
+    > Next line character (U+0085)
+
+// Comments
+
+Comment :
+    DelimitedComment
+    SingleLineComment
+
+SingleLineComment :
+    `//` SingleLineCommentCharacters?
+
+SingleLineCommentCharacters :
+    SingleLineCommentCharacter 
+    SingleLineCommentCharacter SingleLineCommentCharacters?
+
+SingleLineCommentCharacter :
+    > any Unicode characters except a NewLineCharacter
+
+DelimitedComment :
+    `/*` DelimitedCommentCharacters? `*/`
+
+DelimitedCommentCharacters :
+    DelimitedCommentCharactersNoAsterisk DelimitedCommentCharacters?
+    `*` DelimitedCommentAfterAsteriskCharacters
+
+DelimitedCommentAfterAsteriskCharacters :
+    DelimitedCommentNoSlashAsteriskCharacter DelimitedCommentCharacters?
+    `*` DelimitedCommentAfterAsteriskCharacters
+
+DelimitedCommentCharactersNoAsterisk :
+    > any Unicode character except * (asterisk)
+
+DelimitedCommentNoSlashAsteriskCharacter :
+    > any Unicode character except a / (slash) or * (asterisk)
+
+// Literals
+
+Literal :
+    LogicalLiteral
+    NumberLiteral
+    TextLiteral
+
+LogicalLiteral : one of
+    `true` `false`
+
+NumberLiteral :
+    DecimalDigits ExponentPart?
+    DecimalDigits DecimalSeparator DecimalDigits? ExponentPart?
+    DecimalSeparator DecimalDigits ExponentPart?
+
+DecimalDigits :
+    DecimalDigit
+    DecimalDigits DecimalDigit
+
+DecimalDigit : one of
+    `0` `1` `2` `3` `4` `5` `6` `7` `8` `9`
+
+ExponentPart :
+    ExponentIndicator Sign? DecimalDigits
+
+ExponentIndicator : one of
+    `e` `E`
+
+Sign : one of
+    `+` `-`
+
+TextLiteral :
+    `"` TextLiteralCharacters? `"`
+
+TextLiteralCharacters :
+    TextLiteralCharacter TextLiteralCharacters?
+
+TextLiteralCharacter :
+    TextCharacterNoDoubleQuote
+    DoubleQuoteEscapeSequence
+
+TextCharacterNoDoubleQuote :
+    > any Unicode code point except double quote
+
+DoubleQuoteEscapeSequence :
+    `"` `"`
+
+// Identifiers
+
+Identifier :
+    IdentifierName but not Operator or ContextKeyword
+
+IdentifierName :
+    IdentifierStartCharacter IdentifierContinueCharacters?
+    SingleQuotedIdentifier
+
+IdentifierStartCharacter :
+    LetterCharacter
+    `_`
+
+IdentifierContinueCharacter :
+    IdentifierStartCharacter
+    DecimalDigitCharacter
+    ConnectingCharacter
+    CombiningCharacter
+    FormattingCharacter
+
+IdentifierContinueCharacters :
+    IdentifierContinueCharacter IdentifierContinueCharacters?
+
+LetterCharacter :
+    > any Unicode character of the classes Uppercase letter (Lu), Lowercase letter (Ll)
+    > any Unicode character of the class Titlecase letter (Lt)
+    > any Unicode character of the classes Letter modifier (Lm), Letter other (Lo)
+    > any Unicode character of the class Number letter (Nl)
+
+CombiningCharacter :
+    > any Unicode character of the classes Non-spacing mark (Mn), Spacing combining mark (Mc)
+
+DecimalDigitCharacter :
+    > any Unicode character of the class Decimal digit (Nd)
+
+ConnectingCharacter :
+    > any Unicode character of the class Connector punctuation (Pc)
+
+FormattingCharacter :
+    > any Unicode character of the class Format (Cf)
+
+SingleQuotedIdentifier :
+    SingleQuotedIdentifierCharacters
+
+TextCharactersNoSingleQuote :
+    > any Unicode character except ' (U+0027)
+
+SingleQuoteEscapeSequence :
+    `'` `'`
+
+SingleQuotedIdentifierCharacter :
+    TextCharactersNoSingleQuote
+    SingleQuoteEscapeSequence
+
+SingleQuotedIdentifierCharacters :
+    SingleQuotedIdentifierCharacter SingleQuotedIdentifierCharacters?
+
+ContextKeyword :
+    `Parent`
+    `Self`
+    `ThisItem`
+    `ThisRecord`
+
+// Operators
+
+DecimalSeparator :
+    > `.` (dot) for language that use a dot as the seperator for decimal numbers, for example `1.23`
+    > `,` (comma) for languages that use a comma as the seperator for decimal numbers, for example `1,23`
+
+ListSeparator :
+    > `,` (comma) if DecimalSeparator is `.` (dot)
+    > `;` (semi-colon) if DecimalSeparator is `,` (comma)
+
+ChainingSeparator :
+    > `;`  (semi-colon) if DecimalSeparator is `.` (dot)
+    > `;;` (double semi-colon) if DecimalSeparator is `,` (comma)
+
+Operator :
+    BinaryOperator
+    BinaryOperatorRequiresWhitespace
+    PrefixOperator
+    PrefixOperatorRequiresWhitespace
+    PostfixOperator
+
+BinaryOperator : one of
+    `=` `<` `<=` `>` `>=` `<>`
+    `+` `-` `*` `/` `^`
+    `&`
+    `&&` `||`
+    `in` `exactin`
+
+BinaryOperatorRequiresWhitespace :
+    `And` Whitespace
+    `Or` Whitespace
+
+PrefixOperator :
+    `!`
+
+PrefixOperatorRequiresWhitespace :
+    `Not` Whitespace
+
+PostfixOperator :
+    `%`
+
+ReferenceOperator : one of
+    `.` `!`
+
+// Function call
+
+FunctionCall :
+    FunctionIdentifier `(` FunctionArguments? `)`
+
+FunctionIdentifier :
+    Identifier
+    Identifier `.` FunctionIdentifier
+
+FunctionArguments :
+    ChainedExpression
+    ChainedExpression ListSeparator FunctionArguments
+
+ChainedExpression :
+    Expression
+    Expression ChainingSeparator ChainedExpression?
+
+Expression :
+    Literal
+    Reference
+    InlineRecord
+    InlineTable
+    FunctionCall
+    `(` Expression `)`
+    PrefixOperator Expression
+    Expression PostfixOperator
+    Expression BinaryOperator Expression
+
+Reference :
+    BaseReference
+    BaseReference ReferenceOperator ReferenceList
+
+BaseReference :
+    Identifier
+    DisambiguatedIdentifier
+    ContextKeyword
+
+ReferenceList :
+    Identifier
+    Identifier ReferenceOperator ReferenceList
+
+InlineRecord :
+    `{` InlineRecordList? `}`
+
+InlineRecordList :
+    Identifier `:` Expression
+    Identifier `:` Expression ListSeparator InlineRecordList
+
+InlineTable :
+    `[` InlineTableList? `]`
+
+InlineTableList :
+    Expression
+    Expression ListSeparator InlineTableList
+
+DisambiguatedIdentifier :
+    TableColumnIdentifier
+    GlobalIdentifier
+
+TableColumnIdentifier :
+    Identifier `[@` Identifier `]`
+
+GlobalIdentifier :
+    `[@` Identifier `]`
+
+
