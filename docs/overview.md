@@ -41,29 +41,25 @@ For example, this formula from [Stack Overflow](https://stackoverflow.com/questi
 
 Power Fx works with this same formula, with the cell references replaced with control property references:
 
-> [!div class="mx-imgBorder"]
-> ![Power Fx reverse search](media/overview/reverse-search-power-apps.gif "Power Fx reverse search")
+![Power Fx reverse search](media/overview/reverse-search-power-apps.gif "Power Fx reverse search")
 
 As the `Input` control value is changed, the `Label` control automatically recalculates the formula and shows the new value. There are no `OnChange` event handlers here as would be common in other languages.
 
 Another example that uses a formula for the `Fill` color of the screen.  As the sliders that control Red, Green, and Blue are changed, the background color automatically changes, as it is being recalculated.
 
-> [!div class="mx-imgBorder"]
-> ![Color slider](media/overview/color-sliders-power-apps.gif "Color slider")
+![Color slider](media/overview/color-sliders-power-apps.gif "Color slider")
 
 There are no `OnChange` events for the slider controls as would be common in other languages.  There is no way to explicitly set the `Fill` property value at all. If the color isn’t working as expected, you need to look at this one formula to understand why is it not working. You don’t need to search through the app to find a piece of code that sets the property at an unexpected time. There is no time element, the correct formula values are always maintained.
 
 As the sliders are set to a dark color, the labels for Red, Green, and Blue change to white to compensate.  This is done through a simple formula on each label control's `Color` property.
 
-> [!div class="mx-imgBorder"]
-> ![Power Fx color sliders](media/overview/color-sliders-power-apps-labels.png "Power Fx color sliders")
+![Power Fx color sliders](media/overview/color-sliders-power-apps-labels.png "Power Fx color sliders")
 
 What's great about this is that it is isolated from what is happening for the `Fill` color,  these are two entirely different calculations.  Instead of large monolithic procedures, Power Fx logic is typically lots of smaller formulas that are independent.  That's easier to understand and enables enhancements without disturbing existing logic.
 
 Power Fx is a declarative language, just as Excel is. The maker defines what behavior they want, but it is up to the system to determine and optimize how and when to accomplish it. To make that practical, most work is done through pure functions without side effects, making Power Fx also a functional language, again just as Excel is.
 
-> [!NOTE]
-> In this article, we refer to makers when referring to a feature that could be used by either end of the spectrum.  We refer to the user as a developer if the feature is more advanced and is beyond the scope of an Excel user.
+*NOTE: In this article, we refer to makers when referring to a feature that could be used by either end of the spectrum.  We refer to the user as a developer if the feature is more advanced and is beyond the scope of an Excel user.*
 
 
 ## Always live
@@ -74,8 +70,7 @@ The same thing is implemented with Power Fx as well. An incremental compiler is 
 
 In the animation below, the order number is displayed in a label control dependent on the slider control, even though there are two errors on the labels below it.  The app is very much alive and interactive.  The first attempt at fixing the formula with `.InvalidName` results in an immediate red line and error displayed as it should, but the app keeps running.
 
-> [!div class="mx-imgBorder"]
-> ![Always live](media/overview/always-live.gif "Always live")
+![Always live](media/overview/always-live.gif "Always live")
 
 When `.Employee` is typed in. This causes the `Data` pane to add the Employees table, metadata for this table is retrieved, and suggestions for columns are immediately offered.  We just walked across a relationship from one table to another and the system made the needed adjustments to the app’s references. The same thing happens when adding `.Customer`.
 
@@ -87,8 +82,7 @@ Power Fx describes business logic in concise, yet powerful, formulas.  Most logi
 
 For example, to look up the first name of the employee for an order, one would write the following Power Fx.  Beyond Excel concepts, the only added concept used here is **"."** notation for drilling into a data structure, in this case for `.Employee.'First Name'`.  The gif shows the mapping between the parts of the Power Fx formula and the concepts that need to be explicitly coded in the equivalent JavaScript.
 
-> [!div class="mx-imgBorder"]
-> ![Low code JavaScript](media/overview/low-code-javascript.gif "Low code JavaScript")
+![Low code JavaScript](media/overview/low-code-javascript.gif "Low code JavaScript")
 
 Let’s look more in-depth at all the things that Power Fx is doing for us and the freedom it has to optimize because the formula was declarative:
 
@@ -113,8 +107,7 @@ One does not need to read and write Power Fx to start expressing logic.  There a
 
 Let’s take a look at some examples.  In Power Apps, the property panel provides “no-code” switches and knobs for the properties of the controls.  In practice most property values are static.  We’ll use the color builder to change the background color of the `Gallery`.  What you will notice is that the formula bar reflects this change, updating the formula to a different `RGBA` call.  At any time, the maker can go to the formula bar and take this a step further. In this example using `ColorFade` to adjust the color.  The color property still shows in the properties panel, but an fx appears on hover and the maker is directed to the formula bar.  This is fully two ways, removing the `ColorFade` call returns the color to something the property panel can understand and we can again use it to set a color.
 
-> [!div class="mx-imgBorder"]
-> ![No code color](media/overview/no-code-color.gif "No code color")
+![No code color](media/overview/no-code-color.gif "No code color")
 
 Here’s a more complicated example.  The gallery is showing a list of Employees from Dataverse.  Dataverse provides views over table data.  We can select one of these and the formula is changed to use the `Filter` function with this view name.  The two dropdowns can be used to dial in the correct table and view without touching the formula bar.  But, as in this example, let’s say you want to go further and add a sort.  We can do that in the formula bar and the property panel again shows an fx icon and directs modifications to the formula bar.  And again, if we simplify the formula to something the property panel can read and write, it again can be used.
 
@@ -128,11 +121,9 @@ Low-code makers build things that sometimes require the help of an expert or are
 
 Professionals want to use professional tools to be most productive. Power Fx formulas can be stored in [YAML source files](yaml-formula-grammar.md) that are easy to edit using Visual Studio Code, Visual Studio, or any other text editor and enables Power Fx to be put under source control with GitHub, Azure DevOps, or any other source code control system.
 
-> [!div class="mx-imgBorder"]
-> ![Pro code vscode](media/overview/pro-code-vscode.gif "Pro code vscode")
+![Pro code vscode](media/overview/pro-code-vscode.gif "Pro code vscode")
 
-> [!div class="mx-imgBorder"]
-> ![Pro code GitHub](media/overview/pro-code-github.gif "Pro code GitHub")
+![Pro code GitHub](media/overview/pro-code-github.gif "Pro code GitHub")
 
 Power Fx supports formula-based components for sharing and reuse.  A few weeks ago we announced support for parameters to component properties, enabling the creation of pure user-defined functions with more enhancements on the way.
 
