@@ -1,8 +1,8 @@
-# Power Fx overview
+# Microsoft Power Fx overview
 
-*NOTE: Power Fx is the new name for canvas apps formula language.  This overview article and the associated articles are a work in progress as we extract the language from canvas apps, integrate it with other products of the Power Platform, and make it available as open source.  To learn more about and experience the language today, start with [get started with formulas in Power Apps](https://docs.microsoft.com/powerapps/maker/canvas-apps/working-with-formulas) and sign up for a free [Power Apps trial](https://powerapps.microsoft.com).*
+*NOTE: Microsoft Power Fx is the new name for canvas apps formula language.  This overview article and the associated articles are a work in progress as we extract the language from canvas apps, integrate it with other products of the Power Platform, and make it available as open source.  To learn more about and experience the language today, start with [get started with formulas in Power Apps](https://docs.microsoft.com/powerapps/maker/canvas-apps/working-with-formulas) and sign up for a free [Power Apps trial](https://powerapps.microsoft.com).*
 
-Power Fx is the low-code language that will be used across the Microsoft Power Platform. It is a general-purpose, strong typed, declarative, and functional programming language.
+Microsoft Power Fx is the low-code language that will be used across the Microsoft Power Platform. It is a general-purpose, strong typed, declarative, and functional programming language.
 
 Power Fx is expressed in a human-friendly text. It is a low-code language that makers can work with directly in an Excel-like formula bar or Visual Studio Code text window. The "low" is due to the concise and simple nature of the language, making common programming tasks easy for both makers and developers.  It enables the full spectrum of development from "no-code" for those who have never programmed before to "pro code" for the seasoned professional, with no learning or rewriting cliffs in between, enabling diverse teams to collaborate and save time and expense. 
 
