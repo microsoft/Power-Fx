@@ -1,8 +1,8 @@
 # Variables
 
-*NOTE: Power Fx is the new name for canvas apps formula language.  These articles are work in progress as we extract the language from canvas apps, integrate it with other products of the Power Platform, and make available as open source.  Start with the [Power Fx Overview](overview.md) for an introduction to the language.*
+*NOTE: Microsoft Power Fx is the new name for canvas apps formula language.  These articles are work in progress as we extract the language from canvas apps, integrate it with other products of the Power Platform, and make available as open source.  Start with the [Power Fx Overview](overview.md) for an introduction to the language.*
 
-If you've used another programming tool, such as Visual Basic or JavaScript, you may be asking: **Where are the variables?** Power Fx is a little different and requires a different approach. Instead of reaching for a variable when you write a formula, ask yourself: **What would I do in a spreadsheet?**
+If you've used another programming tool, such as Visual Basic or JavaScript, you may be asking: **Where are the variables?**  Microsoft Power Fx is a little different and requires a different approach. Instead of reaching for a variable when you write a formula, ask yourself: **What would I do in a spreadsheet?**
 
 In other tools, you may have explicitly performed a calculation and stored the result in a variable. However, Power Fx and Excel both automatically recalculate formulas as the input data changes, so you usually don't need to create and update variables. By taking this approach whenever possible, you can  more easily create, understand, and maintain your app.
 
