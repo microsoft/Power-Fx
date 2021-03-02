@@ -32,13 +32,13 @@ Most elements in formula are always in English:
 
 As the authoring experience is localized, control and other object names will appear in the native language of the author.  In Spanish, some of the control names appear as:
 
-![Control names in Spanish](media/global-apps/insert-controls-es.png "Control names in Spanish")
+![Control names in Spanish](media/global/insert-controls-es.png "Control names in Spanish")
 
 When you insert one of these controls into your app, their name will default to English.  This change is done for consistency with the control property names and the rest of the formula.  For example, **Casilla** listed above is inserted as **Checkbox1**.  
 
 After a control is inserted, you can change the name to whatever you like.  While selected, the far left-hand side of the "Content" ribbon displays the name of the control.  Selecting this name drops down a text box where you can edit the name:
 
-![Experience in Spanish](media/global-apps/control-rename.png "Experience in Spanish")
+![Experience in Spanish](media/global/control-rename.png "Experience in Spanish")
 
 If you like, here you can rename the control to **Casilla1**.  The red squiggly, in this case displayed by a browser, is because the name isn't a Spanish word and is of no concern.
 
@@ -64,11 +64,11 @@ The change in the Power Apps list separator is consistent with what happens to t
 
 For example, consider the following formula expressed in a language and region that uses dot or period as the decimal separator, such as Japan or the United Kingdom:
 
-![Power Apps formula If open paren slider1 dot value greater than 12 dot 59 comma notify open paren double-quote Valid! double-quote comma success close paren semi-colon Navigate open paren double-quote NextScreen double-quote comma None close paren comma notify open paren double-quote Invalid, try again double-quote comma error close paren close paren](media/global-apps/operators-dot.png)
+![Power Apps formula If open paren slider1 dot value greater than 12 dot 59 comma notify open paren double-quote Valid! double-quote comma success close paren semi-colon Navigate open paren double-quote NextScreen double-quote comma None close paren comma notify open paren double-quote Invalid, try again double-quote comma error close paren close paren](media/global/operators-dot.png)
 
 Now view this same formula in a language and region where a comma is used for the decimal separator, such as France or Spain:
 
-![Power Apps formula If open paren slider1 dot value greater than 12 comma 59 semi-colon notify open paren double-quote Valid! double-quote semi-colon success close paren double semi-colon Navigate open paren double-quote NextScreen double-quote semi-colon None close paren semi-colon notify open paren double-quote Invalid, try again double-quote semi-colon error close paren close paren](media/global-apps/operators-comma.png)
+![Power Apps formula If open paren slider1 dot value greater than 12 comma 59 semi-colon notify open paren double-quote Valid! double-quote semi-colon success close paren double semi-colon Navigate open paren double-quote NextScreen double-quote semi-colon None close paren semi-colon notify open paren double-quote Invalid, try again double-quote semi-colon error close paren close paren](media/global/operators-comma.png)
 
 The highlight shows the operators that change between the two versions. The property selection operator **.** (dot or period) in **Slider1.Value** is always the same, no matter what the decimal separator is.
 
@@ -82,7 +82,7 @@ The **Language** function returns the language tag of the current user.  For exa
 
 Among other things, you can use **Language** to display translated text for your users.  Your app can include a table of translated values in your app:
 
-![Table with localized text](media/global-apps/loc-table.png "Table with localized text")
+![Table with localized text](media/global/loc-table.png "Table with localized text")
 
 And then use a formula such as the following to pull translated strings from the table:
 
