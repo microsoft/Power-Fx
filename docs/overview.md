@@ -1,7 +1,6 @@
 # Power Fx overview
 
-> [!NOTE]
-> Power Fx is the new name for canvas apps formula language.  This overview article and the associated articles are a work in progress as we extract the language from canvas apps, integrate it with other products of the Power Platform, and make it available as open source.  To learn more about and experience the language today, start with [get started with formulas in Power Apps](https://docs.microsoft.com/powerapps/maker/canvas-apps/working-with-formulas) and sign up for a free [Power Apps trial](https://powerapps.microsoft.com).  
+*Note: Power Fx is the new name for canvas apps formula language.  This overview article and the associated articles are a work in progress as we extract the language from canvas apps, integrate it with other products of the Power Platform, and make it available as open source.  To learn more about and experience the language today, start with [get started with formulas in Power Apps](https://docs.microsoft.com/powerapps/maker/canvas-apps/working-with-formulas) and sign up for a free [Power Apps trial](https://powerapps.microsoft.com).*
 
 Power Fx is the low-code language that will be used across the Microsoft Power Platform. It is a general-purpose, strong typed, declarative, and functional programming language.
 
@@ -38,8 +37,7 @@ Power Fx takes this a step further. An expression by itself says nothing about w
 
 For example, this formula from [Stack Overflow](https://stackoverflow.com/questions/350264/how-can-i-perform-a-reverse-string-search-in-excel-without-using-vba) that searches a string in reverse order.  In Excel, it looks like this:
 
-> [!div class="mx-imgBorder"]
-> ![Reverse search](media/overview/reverse-search-excel.png "Reverse search")
+![Reverse search](media/overview/reverse-search-excel.png "Reverse search")
 
 Power Fx works with this same formula, with the cell references replaced with control property references:
 
@@ -120,8 +118,7 @@ Let’s take a look at some examples.  In Power Apps, the property panel provide
 
 Here’s a more complicated example.  The gallery is showing a list of Employees from Dataverse.  Dataverse provides views over table data.  We can select one of these and the formula is changed to use the `Filter` function with this view name.  The two dropdowns can be used to dial in the correct table and view without touching the formula bar.  But, as in this example, let’s say you want to go further and add a sort.  We can do that in the formula bar and the property panel again shows an fx icon and directs modifications to the formula bar.  And again, if we simplify the formula to something the property panel can read and write, it again can be used.
 
-> [!div class="mx-imgBorder"]
-> ![No code sort](media/overview/no-code-sort.gif "No code sort")
+![No code sort](media/overview/no-code-sort.gif "No code sort")
 
 These have been simple examples.  We believe Power Fx makes a great language for describing no code interactions.  It is concise, powerful, and easy to parse, and provides the headroom that is so often needed with “no cliffs” up to low-code.
 
