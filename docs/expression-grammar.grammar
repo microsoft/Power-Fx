@@ -17,7 +17,7 @@ ExpressionElement :
     Comment    
     Token
 
-// Whitepsace
+// Whitespace
 
 Whitespace :
     > any Unicode Space separator (class Zs)
