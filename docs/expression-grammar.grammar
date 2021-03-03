@@ -176,8 +176,8 @@ ContextKeyword :
 // Operators
 
 DecimalSeparator :
-    > `.` (dot) for language that use a dot as the seperator for decimal numbers, for example `1.23`
-    > `,` (comma) for languages that use a comma as the seperator for decimal numbers, for example `1,23`
+    > `.` (dot) for language that use a dot as the separator for decimal numbers, for example `1.23`
+    > `,` (comma) for languages that use a comma as the separator for decimal numbers, for example `1,23`
 
 ListSeparator :
     > `,` (comma) if DecimalSeparator is `.` (dot)
