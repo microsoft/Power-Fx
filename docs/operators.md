@@ -282,7 +282,3 @@ Some functions create [record scopes](../working-with-tables.md#record-scope) fo
 * To access global values, such as data sources, collections, and context variables, use the pattern **[@**_ObjectName_**]** (without a table designation).
 
 For more information and examples, see [record scopes](../working-with-tables.md#record-scope).
-
-
-
-[!INCLUDE[footer-include](../../../includes/footer-banner.md)]
