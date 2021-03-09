@@ -42,23 +42,23 @@ Power Fx takes this a step further. An expression by itself says nothing about w
 
 For example, this formula from [Stack Overflow](https://stackoverflow.com/questions/350264/how-can-i-perform-a-reverse-string-search-in-excel-without-using-vba) that searches a string in reverse order.  In Excel, it looks like this:
 
-![Reverse search](media/overview/reverse-search-excel.png "Reverse search")
+![Excel with the formula A2=Right(A1,Len(A1)-Find("|",Substitute(A1," ","|",Len(A1-Len(Substitute(A1," ",""))))), A1 has the value "Hello World! It is great to meet you!" and A2 shows the calculated value "you!"](media/overview/reverse-search-excel.png "Reverse search")
 
 Power Fx works with this same formula, with the cell references replaced with control property references:
 
-![Power Fx reverse search](media/overview/reverse-search-power-apps.gif "Power Fx reverse search")
+![Power Fx with the formula Label.Text=Right(Input.Text,Len(Input.Text)-Find("|",Substitute(Input.Text," ","|",Len(Input.text-Len(Substitute(Input.Text," ",""))))), Input shows typing of "Hello World! It is great to meet you!" and Label shows reverse search wit the final result being the same as Excel with "you!"](media/overview/reverse-search-power-apps.gif "Power Fx reverse search")
 
 As the `Input` control value is changed, the `Label` control automatically recalculates the formula and shows the new value. There are no `OnChange` event handlers here as would be common in other languages.
 
 Another example that uses a formula for the `Fill` color of the screen.  As the sliders that control Red, Green, and Blue are changed, the background color automatically changes, as it is being recalculated.
 
-![Color slider](media/overview/color-sliders-power-apps.gif "Color slider")
+![Power Apps canvas with the formula Screen.Fill=RGBA(RedSlider.Value, GreenSlider.Value, BlueSlider.Value, 100%), as the color sliders are moved the formula recalcs and the background color changes](media/overview/color-sliders-power-apps.gif "Color slider")
 
 There are no `OnChange` events for the slider controls as would be common in other languages.  There is no way to explicitly set the `Fill` property value at all. If the color isn’t working as expected, you need to look at this one formula to understand why is it not working. You don’t need to search through the app to find a piece of code that sets the property at an unexpected time. There is no time element, the correct formula values are always maintained.
 
 As the sliders are set to a dark color, the labels for Red, Green, and Blue change to white to compensate.  This is done through a simple formula on each label control's `Color` property.
 
-![Power Fx color sliders](media/overview/color-sliders-power-apps-labels.png "Power Fx color sliders")
+![Power Apps canvas with the labels for the three slider controls selected, each with the formula Color=If(BlueSlider.Value+GreenSlider.Value+RedSlider.Value < 150, White, Black), and each of the labels showing as Black as the sliders together are beyond the 150 bright threshold.](media/overview/color-sliders-power-apps-labels.png "Power Fx color sliders")
 
 What's great about this is that it is isolated from what is happening for the `Fill` color,  these are two entirely different calculations.  Instead of large monolithic procedures, Power Fx logic is typically lots of smaller formulas that are independent.  That's easier to understand and enables enhancements without disturbing existing logic.
 
@@ -75,7 +75,7 @@ The same thing is implemented with Power Fx as well. An incremental compiler is 
 
 In the animation below, the order number is displayed in a label control dependent on the slider control, even though there are two errors on the labels below it.  The app is very much alive and interactive.  The first attempt at fixing the formula with `.InvalidName` results in an immediate red line and error displayed as it should, but the app keeps running.
 
-![Always live](media/overview/always-live.gif "Always live")
+![In Power Apps canvas, a slider is moved that updates the order number label, even though there are errors present.  As formulas are typed in, data sources are automatically added and the app keeps running, adding the additional information.  At no time does the maker need to "run" the app, it is always running.](media/overview/always-live.gif "Always live")
 
 When `.Employee` is typed in. This causes the `Data` pane to add the Employees table, metadata for this table is retrieved, and suggestions for columns are immediately offered.  We just walked across a relationship from one table to another and the system made the needed adjustments to the app’s references. The same thing happens when adding `.Customer`.
 
