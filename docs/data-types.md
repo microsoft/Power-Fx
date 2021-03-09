@@ -127,7 +127,7 @@ Date/time values fall in these categories:
 This table shows some examples:
 
 | Date/time type | Value stored in the database | Value displayed and entered 7 hours west of UTC | Value displayed and entered 4 hours east of UTC |
-|--------------------------|------------------------------|------------------------------|
+|--------------------------|------------------------------|------------------------------|------------------------------|
 | **User local** | Sunday,&nbsp;May&nbsp;19,&nbsp;2019<br>4:00 AM | Saturday,&nbsp;May&nbsp;18,&nbsp;2019<br>9:00 PM | Sunday,&nbsp;May&nbsp;19,&nbsp;2019<br>8:00 AM |
 | **Time zone independent** | Sunday,&nbsp;May&nbsp;19,&nbsp;2019<br>4:00 AM | Sunday,&nbsp;May&nbsp;19,&nbsp;2019<br>4:00 AM | Sunday,&nbsp;May&nbsp;19,&nbsp;2019<br>4:00 AM | 
 
@@ -148,7 +148,7 @@ Because every date/time value is held in UTC, the formula **Value( Date( 1970, 1
 Returning to our example from above:
 
 | Date/time type | Value stored in the database | Value displayed and entered 7 hours west of UTC | **Value** function returns |
-|--------------------------|------------------------------|------------------------------|
+|--------------------------|------------------------------|------------------------------|------------------------------|
 | **User local** | Sunday,&nbsp;May&nbsp;19,&nbsp;2019<br>4:00 AM | Saturday,&nbsp;May&nbsp;18,&nbsp;2019<br>9:00 PM | 1,558,238,400,000<br> (Sunday,&nbsp;May&nbsp;19,&nbsp;2019<br>4:00 AM UTC) |
 | **Time zone independent** | Sunday,&nbsp;May&nbsp;19,&nbsp;2019<br>4:00 AM | Sunday,&nbsp;May&nbsp;19,&nbsp;2019<br>4:00 AM |1,558,263,600,000<br> (Sunday,&nbsp;May&nbsp;19,&nbsp;2019<br>11:00 AM UTC) |
 
