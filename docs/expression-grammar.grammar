@@ -260,6 +260,7 @@ ReferenceList :
 
 InlineRecord :
     `{` InlineRecordList? `}`
+    Identifier `@` `{` InlineRecordList `}`
 
 InlineRecordList :
     Identifier `:` Expression
