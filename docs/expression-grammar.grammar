@@ -117,7 +117,7 @@ Identifier :
 
 IdentifierName :
     IdentifierStartCharacter IdentifierContinueCharacters?
-    SingleQuotedIdentifier
+    `'` SingleQuotedIdentifier `'`
 
 IdentifierStartCharacter :
     LetterCharacter

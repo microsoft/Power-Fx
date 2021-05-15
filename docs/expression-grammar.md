@@ -221,7 +221,7 @@ An identifier is a name used to refer to a value. Identifiers can either be regu
 
 &emsp;&emsp;<a name="IdentifierName"></a>*IdentifierName* **:**<br>
 &emsp;&emsp;&emsp;&emsp;*[IdentifierStartCharacter](#IdentifierStartCharacter)*&emsp;*[IdentifierContinueCharacters](#IdentifierContinueCharacters)*<sub>opt</sub><br>
-&emsp;&emsp;&emsp;&emsp;*[SingleQuotedIdentifier](#SingleQuotedIdentifier)*<br>
+&emsp;&emsp;&emsp;&emsp;`'`&emsp;*[SingleQuotedIdentifier](#SingleQuotedIdentifier)*&emsp;`'`<br>
 
 &emsp;&emsp;<a name="IdentifierStartCharacter"></a>*IdentifierStartCharacter* **:**<br>
 &emsp;&emsp;&emsp;&emsp;*[LetterCharacter](#LetterCharacter)*<br>
