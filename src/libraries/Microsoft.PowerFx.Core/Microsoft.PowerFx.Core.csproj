@@ -1,0 +1,43 @@
+﻿<Project Sdk="Microsoft.NET.Sdk" ToolsVersion="15.0">
+	<PropertyGroup>
+		<Version Condition=" '$(ReleasePackageVersion)' == '' ">$(LocalPackageVersion)</Version>
+		<Version Condition=" '$(ReleasePackageVersion)' != '' ">$(ReleasePackageVersion)</Version>
+		<PackageVersion Condition=" '$(ReleasePackageVersion)' == '' ">$(LocalPackageVersion)</PackageVersion>
+		<PackageVersion Condition=" '$(ReleasePackageVersion)' != '' ">$(ReleasePackageVersion)</PackageVersion>
+		<Configurations>Debug;Release</Configurations>
+		<DocumentationFile>bin\$(Configuration)\netstandard2.0\Microsoft.PowerFx.xml</DocumentationFile>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+		<DebugType>Full</DebugType>
+		<DebugSymbols>true</DebugSymbols>
+	</PropertyGroup>
+
+	<!-- Nuget Properties -->
+	<PropertyGroup>
+		<TargetFramework>netstandard2.0</TargetFramework>
+		<PackageId>Microsoft.PowerFx.Core</PackageId>
+		<Title>Microsoft Power Fx Compiler</Title>
+		<Description>The core library for all Microsoft Power Fx Compiler targets</Description>
+		<Summary>The core library for all Microsoft Power Fx Compiler targets</Summary>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="System.Text.Json" Version="4.7.2" />
+		<PackageReference Include="System.Collections.Immutable" Version="5.0.0" />
+		<PackageReference Include="System.Memory" Version="4.5.4" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<EmbeddedResource Include="$(SolutionDir)\strings\**\PowerFxResources.resw" Condition="'$(Configuration)' == 'Debug'">
+			<Link>Strings\%(RecursiveDir)%(Filename)%(Extension)</Link>
+		</EmbeddedResource>
+		<EmbeddedResource Include="$(SolutionDir)\strings\**\PowerFxResources.resw" Exclude="$(SolutionDir)\strings\qps-ploc\**" Condition="'$(Configuration)' == 'Release'">
+			<Link>Strings\%(RecursiveDir)%(Filename)%(Extension)</Link>
+		</EmbeddedResource>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\Microsoft.PowerFx.Transport.Attributes\Microsoft.PowerFx.Transport.Attributes.csproj" />
+	</ItemGroup>
+</Project>

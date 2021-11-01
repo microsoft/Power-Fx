@@ -1,0 +1,30 @@
+﻿<Project Sdk="Microsoft.NET.Sdk" ToolsVersion="15.0">
+	<PropertyGroup>
+		<Version Condition=" '$(ReleasePackageVersion)' == '' ">$(LocalPackageVersion)</Version>
+		<Version Condition=" '$(ReleasePackageVersion)' != '' ">$(ReleasePackageVersion)</Version>
+		<PackageVersion Condition=" '$(ReleasePackageVersion)' == '' ">$(LocalPackageVersion)</PackageVersion>
+		<PackageVersion Condition=" '$(ReleasePackageVersion)' != '' ">$(ReleasePackageVersion)</PackageVersion>
+		<Configurations>Debug;Release</Configurations>
+		<DocumentationFile>bin\$(Configuration)\netstandard2.0\Microsoft.PowerFx.xml</DocumentationFile>
+	</PropertyGroup>
+
+	<!-- Nuget Properties -->
+	<PropertyGroup>
+		<TargetFramework>netstandard2.0</TargetFramework>
+		<PackageId>Microsoft.PowerFx.LanguageServerProtocol</PackageId>
+		<Title>Microsoft Power Fx LanguageServerProtocol</Title>
+		<Description>The LanguageServerProtocol of the Power Fx compiler. See more from https://microsoft.github.io/language-server-protocol/ </Description>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="System.Text.Json" Version="4.7.2" />
+		<PackageReference Include="System.Collections.Immutable" Version="5.0.0" />
+		<PackageReference Include="System.Memory" Version="4.5.4" />
+		<PackageReference Include="Microsoft.PowerFx.Core" Condition=" '$(ReleasePackageVersion)' == '' " Version="$(LocalPackageVersion)" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\Microsoft.PowerFx.Core\Microsoft.PowerFx.Core.csproj" />
+	</ItemGroup>
+
+</Project>

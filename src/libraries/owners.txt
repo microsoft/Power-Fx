@@ -1,0 +1,7 @@
+;This is an example owners.txt file. You can add comments using ; as prefix. Enumerate each owner on a separate line with an alias.​
+; * indicates "no spam" - this alias will not automatically be added as a reviewer to pull requests, to reduce notification noise
+; (this alias still has approval privileges just like any other code owner)
+; (note that this option is intended for individual aliases, not SGs - OE always adds owner SGs to applicable PRs so that it can recognize approvals by SG members)
+; @ indicates "alert only" - this alias is not an owner (approval won't affect OE) but will be added to pull requests in order to be notified​
+
+paauthoringfxeng

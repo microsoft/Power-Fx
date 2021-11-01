@@ -1,0 +1,84 @@
+﻿// Text function 
+// https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-text
+
+>> Text(123)
+"123"
+
+>> Text(123.4)
+"123.4"
+
+>> Text(10*10)
+"100"
+
+>> Text(1/2)
+"0.5"
+
+>> Text(123.4, "#.000")
+/*InterpreterRunner*/ #Skip
+"123.400"
+
+>> Text(Blank(), "#.000")
+""
+
+>> Text(123.4, Blank())
+""
+
+>> Text(1/0, "#.000")
+#Error
+
+>> Text(0.5, ".##")
+/*InterpreterRunner*/ #Skip
+".5"
+
+>> Text(1.5, "000")
+/*InterpreterRunner*/ #Skip
+"002"
+
+>> Text(123456789, "#,#")
+/*InterpreterRunner*/ #Skip
+"123,456,789"
+
+>> Text(123456789, "#,###")
+/*InterpreterRunner*/ #Skip
+"123,456,789"
+
+>> Text(123456789, "0,0.0")
+/*InterpreterRunner*/ #Skip
+"123,456,789.0"
+
+>> Text(123456789, "0,00.0")
+/*InterpreterRunner*/ #Skip
+"123,456,789.0"
+
+>> Text(123456789, "0,")
+/*InterpreterRunner*/ #Skip
+"123456789,"
+
+>> Text(100, "#%‰'eE:")
+/*InterpreterRunner*/ #Skip
+"100%‰'eE:"
+
+>> Text(567, "!#!#!#!#!")
+/*InterpreterRunner*/ #Skip
+"!!5!6!7!"
+
+>> Text(true)
+"true"
+
+>> Text(false)
+"false"
+
+>> Text("abc")
+"abc"
+
+>> Char(65)
+"A"
+
+>> Char(Blank())
+Blank()
+
+>> Char(660/10)
+"B"
+
+>> Char(1/0)
+#Error
