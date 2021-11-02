@@ -1,0 +1,105 @@
+﻿
+
+// Blank is type compatible with other types
+>> If(true, 2,Blank())
+2
+
+>> If(false, 2,Blank())
+Blank()
+
+>> If(false, Blank(), "hi")
+"hi"
+
+//-----------------------------------------------
+// Numerically, Blank() evaulates to 0
+
+>> Blank() - Blank()
+0
+
+>> Blank() + Blank()
+0
+
+>> -5 < Blank()
+true
+
+>> 5 < Blank()
+false
+
+>> Blank()%
+0
+
+// But Blank is not 0 
+>> Blank() =0 
+false
+
+>> Blank() <> 0
+true
+
+>> 0 = Blank()
+false
+
+>> 0 <> Blank()
+true
+
+>> IsBlank(0)
+false
+
+// https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-isblank-isempty
+
+>> Blank()
+Blank()
+
+//-----------------------------------------------
+// String 
+>> IsBlank("")
+true
+
+// whitespace 
+>> IsBlank(" ")
+false
+
+>> IsBlank(Blank())
+true
+
+//-----------------------------------------------
+// Booleans 
+>> Not(Blank())
+true
+
+>> IsBlank(false)
+false
+
+>> IsBlank(true)
+false
+
+// Blank is interesting because some functions return that when the arg is missing. 
+// An If function with no ElseResult. Because the condition is always false, this If always returns blank.
+>> IsBlank( If( false, false ) )
+true
+
+// Acts like a number
+>> 5 + Blank()
+5
+
+// Acts like "", but still not a string  
+>> "A" & Blank() & "B"
+"AB"
+
+>> Len(Blank()) 
+0
+
+>> Blank() = Blank()
+/*InterpreterRunner*/ #Skip
+true
+
+>> Blank() = ""
+false
+
+>> Blank() <> ""
+true
+
+>> IsBlank(Blank() + Blank())
+false
+
+
+

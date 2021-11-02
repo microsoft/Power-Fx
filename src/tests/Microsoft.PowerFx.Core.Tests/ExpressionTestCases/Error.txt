@@ -1,0 +1,44 @@
+﻿>> 1/0
+#Error
+
+>> Sqrt(-1)
+#Error
+
+>> IsError(1/0)
+true
+
+>> IsError(1)
+false
+
+>> IsError(Error({Kind: ErrorKind.Validation}))
+true
+
+>> IsError(Error({Kind: 11}))
+true
+
+>> IsError(Error({Kind: "Validation"}))
+true
+
+>> IfError(1/0, 3)
+3
+
+>> IfError(0, 1, Sqrt(-2), 2)
+2
+
+>> IfError(0, 1, Error({Kind: ErrorKind.Unknown}), 2)
+2
+
+>> IfError(1, 2)
+1
+
+>> IfError(1, 2, 3)
+3
+
+>> IfError(1, 2, 3, 4)
+3
+
+>> IsBlank(1/0)
+#Error
+
+>> Not(IsBlank(1/0))
+#Error
