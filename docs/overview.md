@@ -13,9 +13,9 @@ Power Fx is expressed in a human-friendly text. It is a low-code language that m
 
 Power Fx binds objects together with declarative spreadsheet-like formulas. For example, think of a UI control's **Visible** property as a spreadsheet cell, with an associated formula that calculates its value based on other control's properties. The formula logic recalculates automatically similar to how a spreadsheet does which affects the control's visibility.  
 
-Also, Power Fx offers imperative logic when needed. Spreadsheets don't typically have buttons, that can submit changes to a database, but apps often do. The same expression language is used for both declarative and imperative logic.
+Also, Power Fx offers imperative logic when needed. Spreadsheets don't typically have buttons that can submit changes to a database, but apps often do. The same expression language is used for both declarative and imperative logic.
 
-Power Fx will be made available as an open-source. It is currently integrated into canvas apps where you can experience it today.  We are in the process of extracting it from Power Apps and use it in other Power Platform products and as an open-source.  More information: [Power Fx open-source](https://github.com/microsoft/power-fx).  
+Power Fx will be made available as an open-source. It is currently integrated into canvas apps where you can experience it today.  We are in the process of extracting it from Power Apps and using it in other Power Platform products and as an open-source.  More information: [Power Fx open-source](https://github.com/microsoft/power-fx).  
 
 This article is an overview of the language and its design principles. To learn more about Power Fx, see the following articles:
 
@@ -34,13 +34,13 @@ What if you could build an app as easily as you build a spreadsheet?
 
 What if you could leverage your existing spreadsheet knowledge?
 
-These were the questions that inspired the creation of Power Apps and Power Fx.  Hundreds of millions of people create spreadsheets with Excel every day, let’s bring app creation to them that is easy and leverages Excel concepts that they already know. By breaking Power Fx out of Power Apps, we are going to answer these questions for building automation, or a virtual agent, or other domains.
+These were the questions that inspired the creation of Power Apps and Power Fx.  Hundreds of millions of people create spreadsheets with Excel every day. Let’s bring app creation to them that is easy and leverages Excel concepts that they already know. By breaking Power Fx out of Power Apps, we are going to answer these questions for building automation, or a virtual agent, or other domains.
 
 All programming languages, including Power Fx, have expressions: a way to represent a calculation over numbers, strings, and other data types. For example, `mass * acceleration` in most languages expresses multiplication of `mass` and `acceleration`.  The result of an expression can be placed in a variable, used as an argument to a procedure, or nested in a bigger expression.
 
-Power Fx takes this a step further. An expression by itself says nothing about what it is calculating. It is up to the maker to place it in a variable or pass it to a function. In Power Fx, instead of only writing an expression that has no specific meaning, one writes a *formula* that binds the expression to an identifier.  One writes `force = mass * acceleration` as a formula, in the mathematical sense, for calculating `force` that is always true.  As `mass` or `acceleration` changes, `force` automatically update to a new value.  An expression described a calculation, a formula gives that calculation a name and uses it as a recipe. This is why we refer to Power Fx as a formula language.
+Power Fx takes this a step further. An expression by itself says nothing about what it is calculating. It is up to the maker to place it in a variable or pass it to a function. In Power Fx, instead of only writing an expression that has no specific meaning, one writes a *formula* that binds the expression to an identifier.  One writes `force = mass * acceleration` as a formula, in the mathematical sense, for calculating `force` that is always true.  As `mass` or `acceleration` changes, `force` automatically updates to a new value.  An expression describes a calculation, a formula gives that calculation a name and uses it as a recipe. This is why we refer to Power Fx as a formula language.
 
-For example, this formula from [Stack Overflow](https://stackoverflow.com/questions/350264/how-can-i-perform-a-reverse-string-search-in-excel-without-using-vba) that searches a string in reverse order.  In Excel, it looks like this:
+For example, this formula from [Stack Overflow](https://stackoverflow.com/questions/350264/how-can-i-perform-a-reverse-string-search-in-excel-without-using-vba) searches a string in reverse order.  In Excel, it looks like this:
 
 ![Excel with the formula A2=Right(A1,Len(A1)-Find("|",Substitute(A1," ","|",Len(A1-Len(Substitute(A1," ",""))))), A1 has the value "Hello World! It is great to meet you!" and A2 shows the calculated value "you!"](media/overview/reverse-search-excel.png "Reverse search")
 
@@ -60,7 +60,7 @@ As the sliders are set to a dark color, the labels for Red, Green, and Blue chan
 
 ![Power Apps canvas with the labels for the three slider controls selected, each with the formula Color=If(BlueSlider.Value+GreenSlider.Value+RedSlider.Value < 150, White, Black), and each of the labels showing as Black as the sliders together are beyond the 150 bright threshold.](media/overview/color-sliders-power-apps-labels.png "Power Fx color sliders")
 
-What's great about this is that it is isolated from what is happening for the `Fill` color,  these are two entirely different calculations.  Instead of large monolithic procedures, Power Fx logic is typically lots of smaller formulas that are independent.  That's easier to understand and enables enhancements without disturbing existing logic.
+What's great about this is that it is isolated from what is happening for the `Fill` color;  these are two entirely different calculations.  Instead of large monolithic procedures, Power Fx logic is typically lots of smaller formulas that are independent.  That's easier to understand and enables enhancements without disturbing existing logic.
 
 Power Fx is a declarative language, just as Excel is. The maker defines what behavior they want, but it is up to the system to determine and optimize how and when to accomplish it. To make that practical, most work is done through pure functions without side effects, making Power Fx also a functional language, again just as Excel is.
 
