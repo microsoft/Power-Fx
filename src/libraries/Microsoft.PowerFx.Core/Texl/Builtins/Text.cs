@@ -83,7 +83,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 }
             }
 
-            if (!isValidNumber && !isValidString)
+            if (!isValidNumber && !isValidString && !arg0Type.IsCustomObject)
             {
                 errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrNumberOrStringExpected);
                 isValid = false;

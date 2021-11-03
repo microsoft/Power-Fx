@@ -58,7 +58,9 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction DateDiff = _library.Append(new DateDiffFunction());
         public static readonly TexlFunction DateDiffT = _library.Append(new DateDiffTFunction());
         public static readonly TexlFunction DateTimeValue = _library.Append(new DateTimeValueFunction());
+        public static readonly TexlFunction DateTimeValue_CO = _library.Append(new DateTimeValueFunction_CO());
         public static readonly TexlFunction DateValue = _library.Append(new DateValueFunction());
+        public static readonly TexlFunction DateValue_CO = _library.Append(new DateValueFunction_CO());
         public static readonly TexlFunction Day = _library.Append(new DayFunction());
         public static readonly TexlFunction Degrees = _library.Append(new DegreesFunction());
         public static readonly TexlFunction DegreesT = _library.Append(new DegreesTableFunction());
@@ -72,6 +74,8 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction First = _library.Append(new FirstLastFunction(isFirst: true));
         public static readonly TexlFunction FirstN = _library.Append(new FirstLastNFunction(isFirst: true));
         public static readonly TexlFunction ForAll = _library.Append(new ForAllFunction());
+        public static readonly TexlFunction GetAt = _library.Append(new GetAtFunction());
+        public static readonly TexlFunction GetField = _library.Append(new GetFieldFunction());
         public static readonly TexlFunction Hour = _library.Append(new HourFunction());
         public static readonly TexlFunction If = _library.Append(new IfFunction());
         public static readonly TexlFunction IfError = _library.Append(new IfErrorFunction());
@@ -111,6 +115,7 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction Not = _library.Append(new NotFunction());
         public static readonly TexlFunction Now = _library.Append(new NowFunction());
         public static readonly TexlFunction Or = _library.Append(new VariadicLogicalFunction(isAnd: false));
+        public static readonly TexlFunction ParseJson = _library.Append(new ParseJsonFunction());
         public static readonly TexlFunction Power = _library.Append(new PowerFunction());
         public static readonly TexlFunction PowerT = _library.Append(new PowerTFunction());
         public static readonly TexlFunction Pi = _library.Append(new PiFunction());
@@ -157,6 +162,7 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction TanT = _library.Append(new TanTableFunction());
         public static readonly TexlFunction Time = _library.Append(new TimeFunction());
         public static readonly TexlFunction TimeValue = _library.Append(new TimeValueFunction());
+        public static readonly TexlFunction TimeValue_CO = _library.Append(new TimeValueFunction_CO());
         public static readonly TexlFunction TimeZoneOffset = _library.Append(new TimeZoneOffsetFunction());
         public static readonly TexlFunction Today = _library.Append(new TodayFunction());
         public static readonly TexlFunction Trim = _library.Append(new TrimFunction());

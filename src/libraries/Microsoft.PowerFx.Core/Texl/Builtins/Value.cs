@@ -50,16 +50,19 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             var isValid = true;
             var argType = argTypes[0];
-            if (!DType.Number.Accepts(argType) && !DType.String.Accepts(argType))
+            if (!argType.IsCustomObject)
             {
-                if (argType.CoercesTo(DType.DateTime) && !argType.IsControl)
+                if (!DType.Number.Accepts(argType) && !DType.String.Accepts(argType))
                 {
-                    CollectionUtils.Add(ref nodeToCoercedTypeMap, args[0], DType.DateTime);
-                }
-                else
-                {
-                    errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrNumberOrStringExpected);
-                    isValid = false;
+                    if (argType.CoercesTo(DType.DateTime) && !argType.IsControl)
+                    {
+                        CollectionUtils.Add(ref nodeToCoercedTypeMap, args[0], DType.DateTime);
+                    }
+                    else
+                    {
+                        errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrNumberOrStringExpected);
+                        isValid = false;
+                    }
                 }
             }
 

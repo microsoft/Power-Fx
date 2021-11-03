@@ -38,6 +38,8 @@ namespace Microsoft.PowerFx.Core.Public.Types
 
         public static FormulaType OptionSetValue { get; } = new OptionSetValueType();
 
+        public static FormulaType CustomObject { get; } = new CustomObjectType();
+
         // chained by derived type 
         internal FormulaType(DType type)
         {
@@ -71,6 +73,9 @@ namespace Microsoft.PowerFx.Core.Public.Types
                 // This isn't quite right, but once we're in the IR, an option set acts more like a record with optionsetvalue fields. 
                 case DKind.OptionSet:
                     return new RecordType(DType.CreateRecord(type.GetAllNames(DPath.Root)));
+
+                case DKind.CustomObject:
+                    return CustomObject;
 
                 default:
                     throw new NotImplementedException($"Not implemented type: {type}");
