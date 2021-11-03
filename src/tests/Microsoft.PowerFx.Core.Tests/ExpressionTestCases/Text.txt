@@ -75,9 +75,6 @@ Blank()
 >> Char(1/0)
 #Error
 
->> Text(DateTimeValue("03/15/2018 12:00:00"), "yyyy-MM-ddTHH:mm:ss")
-"2018-03-15T12:00:00"
-
 >> Text(DateValue("03/15/2018 12:00:00"), "yyyy-MM-dd")
 "2018-03-15"
 
