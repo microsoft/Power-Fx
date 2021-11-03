@@ -14,7 +14,6 @@
 "0.5"
 
 >> Text(123.4, "#.000")
-/*InterpreterRunner*/ #Skip
 "123.400"
 
 >> Text(Blank(), "#.000")
@@ -27,39 +26,31 @@
 #Error
 
 >> Text(0.5, ".##")
-/*InterpreterRunner*/ #Skip
 ".5"
 
 >> Text(1.5, "000")
-/*InterpreterRunner*/ #Skip
 "002"
 
 >> Text(123456789, "#,#")
-/*InterpreterRunner*/ #Skip
 "123,456,789"
 
 >> Text(123456789, "#,###")
-/*InterpreterRunner*/ #Skip
 "123,456,789"
 
 >> Text(123456789, "0,0.0")
-/*InterpreterRunner*/ #Skip
 "123,456,789.0"
 
 >> Text(123456789, "0,00.0")
-/*InterpreterRunner*/ #Skip
 "123,456,789.0"
 
 >> Text(123456789, "0,")
-/*InterpreterRunner*/ #Skip
-"123456789,"
+"123457"
 
 >> Text(100, "#%‰'eE:")
 /*InterpreterRunner*/ #Skip
 "100%‰'eE:"
 
 >> Text(567, "!#!#!#!#!")
-/*InterpreterRunner*/ #Skip
 "!!5!6!7!"
 
 >> Text(true)
@@ -82,3 +73,15 @@ Blank()
 
 >> Char(1/0)
 #Error
+
+>> Text(DateTimeValue("03/15/2018 12:00:00"), "yyyy-MM-ddTHH:mm:ss")
+"2018-03-15T12:00:00"
+
+>> Text(DateValue("03/15/2018 12:00:00"), "yyyy-MM-dd")
+"2018-03-15"
+
+>> Text(DateValue("03/15/2018"), "yyyy-MM-dd")
+"2018-03-15"
+
+>> Text(DateValue("03/15/2018"), "MM-dd-yyyy")
+"03-15-2018"

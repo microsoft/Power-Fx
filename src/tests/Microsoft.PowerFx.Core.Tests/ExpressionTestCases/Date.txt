@@ -7,9 +7,11 @@
 >> Date(Blank(), 2, 3)
 Blank()
 
+>> Date(80, 1, 2)
+1/2/1980
+
 // dates before 1900 get converted to post-1900
 >> Text(Date(80, 1, 2))
-/*InterpreterRunner*/ #Skip
 "1/2/1980"
 
 // months and days overflow (but not for SQL)
@@ -386,6 +388,9 @@ true
 true
 
 >> DateValue("02/14/2001") = DateValue("2001-02-14")
+true
+
+>> DateValue("2018-03-15T13:00:00.000Z") = DateValue("2018/03/15")
 true
 
 // time zone offset

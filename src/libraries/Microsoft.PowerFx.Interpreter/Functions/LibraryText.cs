@@ -115,45 +115,47 @@ namespace Microsoft.PowerFx.Functions
         // https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-text
         public static FormulaValue Text(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args)
         {
-            if (args.Length > 1)
+            // only DateValue and DateTimeValue are supported for now with custom format strings.
+            if (args.Length > 1 && args[0] is StringValue)
             {
-                return CommonErrors.NotYetImplementedError(irContext, "Text() doesn't support format args");
+                return CommonErrors.NotYetImplementedError(irContext, "Text() doesn't support format args for type StringValue");
             }
 
-            // $$$ combine with a ToString()? 
-            // $$$ Should these be handled by coercion?
-            string str = null;
-            var arg0 = args[0];
-            if (arg0 is NumberValue num)
+            string resultString = null;
+            string formatString = null;
+
+            if (args.Length > 1 && args[1] is StringValue)
             {
-                str = num.Value.ToString();
-            }
-            else if (arg0 is StringValue s)
-            {
-                str = s.Value;
-            }
-            else if (arg0 is DateValue d)
-            {
-                // $$$ Use real format string
-                str = d.Value.ToString("M/d/yyyy", runner.CultureInfo);
-            }
-            else if (arg0 is DateTimeValue dt)
-            {
-                // $$$ Use real format string
-                str = dt.Value.ToString("g", runner.CultureInfo);
-            }
-            else if (arg0 is TimeValue t)
-            {
-                var tDate = new DateTime().Add(t.Value);
-                str = tDate.ToString("t", runner.CultureInfo);
+                formatString = ((StringValue)args[1]).Value;
             }
 
-            if (str != null)
+            switch (args[0])
             {
-                return new StringValue(irContext, str);
+                case NumberValue num:
+                    resultString = num.Value.ToString(formatString ?? "g", runner.CultureInfo);
+                    break;
+                case StringValue s:
+                    resultString = s.Value;
+                    break;
+                case DateValue d:
+                    resultString = d.Value.ToString(formatString ?? "M/d/yyyy", runner.CultureInfo);
+                    break;
+                case DateTimeValue dt:
+                    resultString = dt.Value.ToString(formatString ?? "g", runner.CultureInfo);
+                    break;
+                case TimeValue t:
+                    resultString = new DateTime().Add(t.Value).ToString(formatString ?? "t", runner.CultureInfo);
+                    break;
+                default:
+                    break;
             }
 
-            return CommonErrors.NotYetImplementedError(irContext, $"Text format for {arg0.GetType().Name}");
+            if (resultString != null)
+            {
+                return new StringValue(irContext, resultString);
+            }
+
+            return CommonErrors.NotYetImplementedError(irContext, $"Text format for {args[0]?.GetType().Name}");
         }
 
         // https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-isblank-isempty

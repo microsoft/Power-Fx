@@ -79,6 +79,10 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             {
                 sb.Append(n.Value);
             }
+            else if (result is DateValue d)
+            {
+                sb.Append(d.Value.ToString("d"));
+            }
             else if (result is BooleanValue b)
             {
                 sb.Append(b.Value ? "true" : "false");
