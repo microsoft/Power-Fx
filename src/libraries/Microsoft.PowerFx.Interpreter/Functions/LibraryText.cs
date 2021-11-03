@@ -124,9 +124,9 @@ namespace Microsoft.PowerFx.Functions
             string resultString = null;
             string formatString = null;
 
-            if (args.Length > 1 && args[1] is StringValue)
+            if (args.Length > 1 && args[1] is StringValue sv)
             {
-                formatString = ((StringValue)args[1]).Value;
+                formatString = sv.Value;
             }
 
             switch (args[0])

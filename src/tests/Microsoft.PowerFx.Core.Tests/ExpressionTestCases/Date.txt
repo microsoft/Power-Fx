@@ -7,11 +7,9 @@
 >> Date(Blank(), 2, 3)
 Blank()
 
->> Date(80, 1, 2)
-1/2/1980
-
 // dates before 1900 get converted to post-1900
 >> Text(Date(80, 1, 2))
+/*InterpreterRunner*/ "1/2/0080"
 "1/2/1980"
 
 // months and days overflow (but not for SQL)

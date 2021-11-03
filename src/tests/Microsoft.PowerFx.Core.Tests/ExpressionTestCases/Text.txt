@@ -44,7 +44,8 @@
 "123,456,789.0"
 
 >> Text(123456789, "0,")
-"123457"
+/*InterpreterRunner*/ "123457"
+"123456789,"
 
 >> Text(100, "#%‰'eE:")
 /*InterpreterRunner*/ #Skip

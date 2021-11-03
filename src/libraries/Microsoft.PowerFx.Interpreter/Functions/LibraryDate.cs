@@ -324,11 +324,6 @@ namespace Microsoft.PowerFx.Functions
             var month = (int)args[1].Value;
             var day = (int)args[2].Value;
 
-            if (year <= 1899)
-            {
-                year = 1900 + year;
-            }
-
             // The final date is built up this way to allow for inputs which overflow,
             // such as: Date(2000, 25, 69) -> 3/10/2002
             var result = new DateTime(year, 1, 1)
