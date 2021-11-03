@@ -144,7 +144,7 @@ namespace Microsoft.PowerFx.Functions
                     resultString = dt.Value.ToString(formatString ?? "g", runner.CultureInfo);
                     break;
                 case TimeValue t:
-                    resultString = new DateTime(1900, 1, 1, 0, 0, 0, DateTimeKind.Utc).Add(t.Value).ToString(formatString ?? "t", runner.CultureInfo);
+                    resultString = _epoch.Add(t.Value).ToString(formatString ?? "t", runner.CultureInfo);
                     break;
                 default:
                     break;
