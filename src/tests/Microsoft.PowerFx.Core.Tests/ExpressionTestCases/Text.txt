@@ -75,11 +75,11 @@ Blank()
 >> Char(1/0)
 #Error
 
->> Text(DateValue("03/15/2018 12:00:00"), "yyyy-MM-dd")
+>> Text(Date(2018, 3, 15), "yyyy-MM-dd")
 "2018-03-15"
 
->> Text(DateValue("03/15/2018"), "yyyy-MM-dd")
+>> Text(Date(2018, 3, 15), "yyyy-MM-dd")
 "2018-03-15"
 
->> Text(DateValue("03/15/2018"), "MM-dd-yyyy")
+>> Text(Date(2018, 3, 15), "MM-dd-yyyy")
 "03-15-2018"
