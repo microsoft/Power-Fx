@@ -1,0 +1,467 @@
+﻿>> Text(Date(-1, 2, 3))
+#Error
+
+>> Date(-1, 2, 3)
+#Error
+
+>> Date(Blank(), 2, 3)
+Blank()
+
+// dates before 1900 get converted to post-1900
+>> Text(Date(80, 1, 2))
+/*InterpreterRunner*/ #Skip
+"1/2/1980"
+
+// months and days overflow (but not for SQL)
+>> Text(Date(2000, 25, 69))
+/*SqlRunner*/ #Error
+"3/10/2002"
+
+>> Text(Date(2000, 2, -1))
+/*SqlRunner*/ #Error
+"1/30/2000"
+
+>> Text(Date(2000, -2, 1))
+/*SqlRunner*/ #Error
+"10/1/1999"
+
+>> Text(Date(2000, -2, -1))
+/*SqlRunner*/ #Error
+"9/29/1999"
+
+>> IsToday(Today())
+true
+
+>> IsToday(Now())
+true
+
+>> IsToday(Date(-1, 2, 3))
+#Error
+
+>> IsToday(Date(Blank(), 2, 3))
+false
+
+>> IsToday(Date(2012,1,1))
+false
+
+>> IsToday(DateAdd(Today(),-1))
+false
+
+>> Month(Date(2011,5,12))
+5
+
+>> Year(Date(2011,5,12))
+2011
+
+>> Day(Date(2011,5,12))
+12
+
+>> DateDiff(Date(2011,1,15) , Date(2011,1,30))
+15
+
+>> DateDiff(Date(-1, 2, 3), Date(2011,1,30))
+#Error
+
+>> DateDiff(Date(Blank(), 2, 3), Date(2011,1,30))
+Blank()
+
+>> DateDiff(Date(2011,1,15), Date(Blank(), 2, 3))
+Blank()
+
+>> DateDiff(Date(2011,1,15) , Date(2011,1,30), Blank())
+/*SqlRunner*/ One or more errors occurred. (Failed to compile)
+15
+
+>> DateDiff(Date(2013,1,15) , Date(2012,1,30))
+-351
+
+>> DateDiff(Date(2011,1,15) , Date(2011,1,30), TimeUnit.Days)
+15
+
+>> DateDiff(Date(2011,1,15) , Date(2011,1,30), "Days")
+15
+
+>> DateDiff(Date(2011,1,15) , Date(2011,1,30), "days")
+15
+
+>> DateDiff(Date(2011,1,15) , Date(2011,1,30), "DaYs")
+15
+
+>> DateDiff(Date(2013,1,15) , Date(2012,1,30), TimeUnit.Days)
+-351
+
+>> DateDiff(Date(2011,1,15) , Date(2011,1,30), "milliseconds")
+1296000000
+
+>> DateDiff(Date(2011,1,15) , Date(2011,1,30), "seconds")
+1296000
+
+>> DateDiff(Date(2011,1,15) , Date(2011,1,30), "minutes")
+21600
+
+>> DateDiff(Date(2011,1,15) , Date(2011,1,30), "hours")
+360
+
+>> DateDiff(Date(2011,1,15) , Date(2011,1,30), "quarters")
+0
+
+>> DateDiff(Date(2011,1,15) , Date(2011,7,30), "quarters")
+2
+
+>> DateDiff(Date(2011,1,15) , Date(2011,1,30), TimeUnit.Milliseconds)
+1296000000
+
+>> DateDiff(Date(2011,1,15) , Date(2011,1,30), TimeUnit.Seconds)
+1296000
+
+>> DateDiff(Date(2011,1,15) , Date(2011,1,30), TimeUnit.Minutes)
+21600
+
+>> DateDiff(Date(2011,1,15) , Date(2011,1,30), TimeUnit.Hours)
+360
+
+>> DateDiff(Date(2011,1,15) , Date(2011,1,30), TimeUnit.Quarters)
+0
+
+>> DateDiff(Date(2011,1,15) , Date(2011,7,30), TimeUnit.Quarters)
+2
+
+>> DateDiff(Date(2021,1,1), Date(2000,1,1), TimeUnit.Years)
+-21
+
+>> DateDiff(Date(2021,1,1), Date(2000,1,1), "Years")
+-21
+
+>> DateDiff(Date(2021,1,1), Date(2021,2,1), TimeUnit.Months)
+1
+
+>> DateDiff(Date(2021,1,1), Date(2021,2,1), "Months")
+1
+
+>> DateDiff(Date(2021,1,1), Date(2021,1,20), TimeUnit.Months)
+0
+
+>> DateDiff(Now(), Today(), TimeUnit.Minutes) <> 0
+/*SqlRunner*/ One or more errors occurred. (Failed to compile)
+true
+
+// Leap year 
+>> Text(DateAdd(Date(2012,2,28), 1))
+"2/29/2012"
+
+>> Text(DateAdd(Date(2013,2,28), 1))
+"3/1/2013"
+
+// Date comparisons
+>> Date(2011,1,15) < Date(2011,1,30)
+true
+
+>> Date(2011,1,15) < Date(2011,1,15)
+false
+
+>> Date(2011,1,15) <= Date(2011,1,30)
+true
+
+>> Date(2011,1,15) <= Date(2011,1,15)
+true
+
+>> Date(2011,1,30) < Date(2011,1,15)
+false
+
+>> Date(2011,1,30) <= Date(2011,1,15)
+false
+
+>> Date(2011,1,15) > Date(2011,1,30)
+false
+
+>> Date(2011,1,15) > Date(2011,1,15)
+false
+
+>> Date(2011,1,15) >= Date(2011,1,30)
+false
+
+>> Date(2011,1,15) >= Date(2011,1,15)
+true
+
+>> Date(2011,1,30) > Date(2011,1,15)
+true
+
+>> Date(2011,1,30) >= Date(2011,1,15)
+true
+
+// DateTime comparisons
+>> DateAdd(Date(2011,1,15), 3) < DateAdd(Date(2011,1,30), 3)
+true
+
+>> DateAdd(Date(2011,1,15), 3) < DateAdd(Date(2011,1,15), 3)
+false
+
+>> DateAdd(Date(2011,1,15), 3) <= DateAdd(Date(2011,1,30), 3)
+true
+
+>> DateAdd(Date(2011,1,15), 3) <= DateAdd(Date(2011,1,15), 3)
+true
+
+>> DateAdd(Date(2011,1,30), 3) < DateAdd(Date(2011,1,15), 3)
+false
+
+>> DateAdd(Date(2011,1,30), 3) <= DateAdd(Date(2011,1,15), 3)
+false
+
+>> DateAdd(Date(2011,1,15), 3) > DateAdd(Date(2011,1,30), 3)
+false
+
+>> DateAdd(Date(2011,1,15), 3) > DateAdd(Date(2011,1,15), 3)
+false
+
+>> DateAdd(Date(2011,1,15), 3) >= DateAdd(Date(2011,1,30), 3)
+false
+
+>> DateAdd(Date(2011,1,15), 3) >= DateAdd(Date(2011,1,15), 3)
+true
+
+>> DateAdd(Date(2011,1,30), 3) > DateAdd(Date(2011,1,15), 3)
+true
+
+>> DateAdd(Date(2011,1,30), 3) >= DateAdd(Date(2011,1,15), 3)
+true
+
+// Blank Date comparisons
+>> Date(Blank(), 2, 3) < Date(2011,1,30)
+true
+
+>> Date(Blank(), 2, 3) <= Date(2011,1,30)
+true
+
+>> Date(Blank(), 2, 3) > Date(2011,1,30)
+false
+
+>> Date(Blank(), 2, 3) >= Date(2011,1,30)
+false
+
+// Blank DateTime comparisons
+>> DateAdd(Date(Blank(), 2, 3), 3) < DateAdd(Date(2011,1,30), 3)
+true
+
+>> DateAdd(Date(Blank(), 2, 3), 3) <= DateAdd(Date(2011,1,30), 3)
+true
+
+>> DateAdd(Date(Blank(), 2, 3), 3) > DateAdd(Date(2011,1,30), 3)
+false
+
+>> DateAdd(Date(Blank(), 2, 3), 3) >= DateAdd(Date(2011,1,30), 3)
+false
+
+// Error Date comparisons
+>> Date(1/0, 2, 3) < Date(2011,1,30)
+#Error
+
+>> Date(1/0, 2, 3) <= Date(2011,1,30)
+#Error
+
+>> Date(1/0, 2, 3) > Date(2011,1,30)
+#Error
+
+>> Date(1/0, 2, 3) >= Date(2011,1,30)
+#Error
+
+// Error DateTime comparisons
+>> DateAdd(Date(1/0, 2, 3), 3) < DateAdd(Date(2011,1,30), 3)
+#Error
+
+>> DateAdd(Date(1/0, 2, 3), 3) <= DateAdd(Date(2011,1,30), 3)
+#Error
+
+>> DateAdd(Date(1/0, 2, 3), 3) > DateAdd(Date(2011,1,30), 3)
+#Error
+
+>> DateAdd(Date(1/0, 2, 3), 3) >= DateAdd(Date(2011,1,30), 3)
+#Error
+
+>> Date(2001,2,14) = Date(2001,2,14)
+true
+
+// date add and part
+>> Day(DateAdd(Date(2001,1,1), 3))
+4
+
+>> Day(DateAdd(Date(2001,1,1), 3, Blank()))
+/*SqlRunner*/ One or more errors occurred. (Failed to compile)
+4
+
+>> Day(DateAdd(Date(2001,1,1), Blank()))
+1
+
+>> DateAdd(Date(-1, 2, 3), 3)
+#Error
+
+>> DateAdd(Date(Blank(), 2, 3), 3)
+Blank()
+
+>> Day(DateAdd(Date(2001,1,1), 4, TimeUnit.Days))
+5
+
+>> Text(DateAdd(Date(2011,1,15), 100000000, "milliseconds"))
+"1/16/2011"
+
+>> Text(DateAdd(Date(2011,1,15), 100000000, TimeUnit.Milliseconds))
+"1/16/2011"
+
+// DateAddDay tests
+>> Day(Date(2011,1,15) + 1)
+16
+
+>> Day(1 + Date(2011,1,15))
+16
+
+>> Day(Date(2011,1,15) - 1)
+14
+
+// DateTimeAddDay tests
+>> Day((Date(2011,1,15) + 1) + 1)
+17
+
+>> Day((1 + Date(2011,1,15)) + 1)
+17
+
+>> Day((Date(2011,1,15) - 1) - 1)
+13
+
+>> Day(Date(-1, 2, 3))
+#Error
+
+>> Day(Blank())
+0
+
+>> Month(DateAdd(Date(2001,1,1), 12, TimeUnit.Months))
+1
+
+>> Month(DateAdd(Date(2001,1,1), 3, TimeUnit.Quarters))
+10
+
+>> Month(DateAdd(Date(2001,1,1), 3, "Quarters"))
+10
+
+>> Month(DateAdd(Date(2001,1,1), 3, "quarters"))
+10
+
+>> Month(DateAdd(Date(2001,1,1), 3, "quaRTers"))
+10
+
+>> Month(Date(-1, 2, 3))
+#Error
+
+>> Month(Blank())
+1
+
+>> Year(DateAdd(Date(2001,1,1), 1, TimeUnit.Years))
+2002
+
+>> Year(Date(-1, 2, 3))
+#Error
+
+>> Year(Blank())
+1900
+
+>> Hour(DateAdd(DateTimeValue("01-01-2001 1:10:20"), 1, TimeUnit.Hours))
+/*SqlRunner*/ One or more errors occurred. (Failed to compile)
+2
+
+>> Minute(DateAdd(DateTimeValue("01-01-2001 1:10:20"), 1, TimeUnit.Minutes))
+/*SqlRunner*/ One or more errors occurred. (Failed to compile)
+11
+
+>> Second(DateAdd(DateTimeValue("01-01-2001 1:10:20"), 1, "Seconds"))
+/*SqlRunner*/ One or more errors occurred. (Failed to compile)
+21
+
+>> Text(DateTimeValue("01-01-2001 1:10:20"))
+/*SqlRunner*/ One or more errors occurred. (Failed to compile)
+"1/1/2001 1:10 AM"
+
+>> Date(2001, 2, 14) = DateValue("2001-02-14")
+true
+
+>> DateValue("02-14-01") = DateValue("02/14/01")
+true
+
+>> DateValue("02/14/2001") = DateValue("2001-02-14")
+true
+
+// time zone offset
+>> Hour(DateAdd(DateAdd(DateTimeValue("01-01-2001 1:10:20"), TimeZoneOffset(), TimeUnit.Minutes), -TimeZoneOffset(), "Minutes"))
+/*SqlRunner*/ One or more errors occurred. (Failed to compile)
+/*InterpreterRunner*/ #Skip
+1
+
+>> Weekday(Date(2020,7,16))
+/*InterpreterRunner*/ #Skip
+5
+
+>> WeekNum(Date(2019,1,6))
+/*InterpreterRunner*/ #Skip
+2
+
+>> ISOWeekNum(Date(2019,1,6))
+/*InterpreterRunner*/ #Skip
+1
+
+// Excel-style date math
+>> Text(Date(2001, 2, 14) + 2)
+"2/16/2001"
+
+// SQL does not support DateTimeValue
+>> Text(DateTimeValue("02/14/2001 6:00 AM") - 0.5)
+/*SqlRunner*/ One or more errors occurred. (Failed to compile)
+"2/13/2001 6:00 PM"
+
+>> Text(DateTimeValue("02/14/2001 6:00 AM") + 0.0417)
+/*SqlRunner*/ One or more errors occurred. (Failed to compile)
+"2/14/2001 7:00 AM"
+
+>> Text(DateTimeValue("02/14/2001 6:00 AM") + 7e-4)
+/*SqlRunner*/ One or more errors occurred. (Failed to compile)
+"2/14/2001 6:01 AM"
+
+>> Second(DateTimeValue("02/14/2001 6:00 AM") - 1.1574e-5)
+/*SqlRunner*/ One or more errors occurred. (Failed to compile)
+59
+
+>> Date(Year(Today()), Month(Today()), Day(Today())) = Today()
+true
+
+>> Year(Date(2011, 2, 3) + Time(1, 2, 3))
+2011
+
+>> Month(Date(2011, 2, 3) + Time(1, 2, 3))
+2
+
+>> Day(Date(2011, 2, 3) + Time(1, 2, 3))
+3
+
+>> Hour(Date(2011, 2, 3) + Time(1, 2, 3))
+1
+
+>> Minute(Date(2011, 2, 3) + Time(1, 2, 3))
+2
+
+>> Second(Date(2011, 2, 3) + Time(1, 2, 3))
+3
+
+>> Year(Time(1, 2, 3) + Date(2011, 2, 3))
+2011
+
+>> Month(Time(1, 2, 3) + Date(2011, 2, 3))
+2
+
+>> Day(Time(1, 2, 3) + Date(2011, 2, 3))
+3
+
+>> Hour(Time(1, 2, 3) + Date(2011, 2, 3))
+1
+
+>> Minute(Time(1, 2, 3) + Date(2011, 2, 3))
+2
+
+>> Second(Time(1, 2, 3) + Date(2011, 2, 3))
+3

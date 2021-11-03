@@ -1,0 +1,60 @@
+{
+  "Signatures": [
+    {
+      "Label": "If(logical_test, true_value)",
+      "Documentation": "Checks if any one of the specified conditions are met and returns the corresponding value. If none of the conditions are met, the function returns the specified default value.",
+      "Parameters": [
+        {
+          "Label": "logical_test",
+          "Documentation": "A condition that results in a boolean value."
+        },
+        {
+          "Label": "true_value",
+          "Documentation": "An expression that provides the result of If when the condition is true."
+        }
+      ]
+    },
+    {
+      "Label": "If(logical_test, true_value, else_value)",
+      "Documentation": "Checks if any one of the specified conditions are met and returns the corresponding value. If none of the conditions are met, the function returns the specified default value.",
+      "Parameters": [
+        {
+          "Label": "logical_test",
+          "Documentation": "A condition that results in a boolean value."
+        },
+        {
+          "Label": "true_value",
+          "Documentation": "An expression that provides the result of If when the condition is true."
+        },
+        {
+          "Label": "else_value",
+          "Documentation": "An expression that provides the result of If when all specified conditions are false."
+        }
+      ]
+    },
+    {
+      "Label": "If(logical_test, true_value, logical_test, true_value)",
+      "Documentation": "Checks if any one of the specified conditions are met and returns the corresponding value. If none of the conditions are met, the function returns the specified default value.",
+      "Parameters": [
+        {
+          "Label": "logical_test",
+          "Documentation": "A condition that results in a boolean value."
+        },
+        {
+          "Label": "true_value",
+          "Documentation": "An expression that provides the result of If when the condition is true."
+        },
+        {
+          "Label": "logical_test",
+          "Documentation": "A condition that results in a boolean value."
+        },
+        {
+          "Label": "true_value",
+          "Documentation": "An expression that provides the result of If when the condition is true."
+        }
+      ]
+    }
+  ],
+  "ActiveSignature": 0,
+  "ActiveParameter": 1
+}

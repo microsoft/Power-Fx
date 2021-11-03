@@ -1,0 +1,44 @@
+﻿>> Last([1, 2, 3, 4, 5])
+{Value:5}
+
+>> Last(Blank())
+Blank()
+
+>> Last([1, 1/0, 3])
+{Value:3}
+
+>> Last([1, 2, 1/0]).Value
+#Error
+
+>> Last(Sort([-2, -1, 0, 1, 2], 1 / Value))
+#Error
+
+>> LastN([1, 2, 3, 4, 5], 2)
+[4,5]
+
+>> LastN([1, 2, 3, 4, 5], 6)
+[1,2,3,4,5]
+
+>> LastN([1, 2, 3, 4, 5], -1)
+[]
+
+>> LastN([1, 2, 3, 4, 5], Blank())
+Blank()
+
+>> LastN(Blank(), 2)
+Blank()
+
+>> LastN(Sort([-2, -1, 0, 1, 2], 1 / Value), 2)
+#Error
+
+>> LastN([1, 2, 3, 4, 5], 1/0)
+#Error
+
+>> LastN(Table({a:1, b:101}, {a:2}, {a:3}), 2)
+[{a:2},{a:3}]
+
+>> LastN(Table({a:1}, {a:2}, {a:3}), 2)
+[{a:2},{a:3}]
+
+>> LastN(Table({Value:1,Zulu:1}, {Value:2,Zulu:2}, {Value:3,Zulu:3}), 2)
+[{Value:2,Zulu:2},{Value:3,Zulu:3}]

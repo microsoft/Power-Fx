@@ -1,0 +1,89 @@
+﻿>> Text(Time(1, 2, 3))
+"1:02 AM"
+
+>> Hour(Time(1, 2, 3))
+1
+
+>> Minute(Time(1, 2, 3))
+2
+
+>> Second(Time(1, 2, 3))
+3
+
+>> Text(Time(Blank(), 2, 3))
+"12:02 AM"
+
+>> Time(1/0, 2, 3)
+#Error
+
+>> Time(8,1,15) < Time(8,1,30)
+true
+
+>> Time(8,1,15) < Time(8,1,15)
+false
+
+>> Time(8,1,15) <= Time(8,1,30)
+true
+
+>> Time(8,1,15) <= Time(8,1,15)
+true
+
+>> Time(8,1,30) < Time(8,1,15)
+false
+
+>> Time(8,1,30) <= Time(8,1,15)
+false
+
+>> Time(8,1,15) > Time(8,1,30)
+false
+
+>> Time(8,1,15) > Time(8,1,15)
+false
+
+>> Time(8,1,15) >= Time(8,1,30)
+false
+
+>> Time(8,1,15) >= Time(8,1,15)
+true
+
+>> Time(8,1,30) > Time(8,1,15)
+true
+
+>> Time(8,1,30) >= Time(8,1,15)
+true
+
+>> Time(Blank(), 2, 3) < Time(8,1,30)
+true
+
+>> Time(Blank(), 2, 3) <= Time(8,1,30)
+true
+
+>> Time(Blank(), 2, 3) > Time(8,1,30)
+false
+
+>> Time(Blank(), 2, 3) >= Time(8,1,30)
+false
+
+>> Time(1/0, 2, 3) < Time(8,1,30)
+#Error
+
+>> Time(1/0, 2, 3) <= Time(8,1,30)
+#Error
+
+>> Time(1/0, 2, 3) > Time(8,1,30)
+#Error
+
+>> Time(1/0, 2, 3) >= Time(8,1,30)
+#Error
+
+>> Text(Time(10, 70, 360))
+"11:16 AM"
+
+>> Text(Time(10, -30, 360))
+"9:36 AM"
+
+>> Text(Time(10, 30, -360))
+"10:24 AM"
+
+>> Text(Time(10, -30, -360))
+"9:24 AM"
