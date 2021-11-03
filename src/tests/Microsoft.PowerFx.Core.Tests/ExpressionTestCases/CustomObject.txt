@@ -1,0 +1,8 @@
+﻿>> Value(GetField(ParseJson("{""a"": 5}"), "a"))
+5
+
+>> Value(GetAt(ParseJson("[5]"), 0))
+5
+
+>> Value(ParseJson("5"))
+5
