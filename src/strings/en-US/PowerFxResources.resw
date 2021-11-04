@@ -1,45 +1,104 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
         <xsd:choice maxOccurs="unbounded">
           <xsd:element name="metadata">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
               </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string"/>
-              <xsd:attribute name="type" type="xsd:string"/>
-              <xsd:attribute name="mimetype" type="xsd:string"/>
-              <xsd:attribute ref="xml:space"/>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="assembly">
             <xsd:complexType>
-              <xsd:attribute name="alias" type="xsd:string"/>
-              <xsd:attribute name="name" type="xsd:string"/>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="data">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
-              <xsd:attribute ref="xml:space"/>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="resheader">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required"/>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
             </xsd:complexType>
           </xsd:element>
         </xsd:choice>
@@ -5486,7 +5545,6 @@
   </data>
   <data name="ErrorResource_ErrBadToken_LongMessage" xml:space="preserve">
     <value>For example, the character '\' isn't expected after a number, like this: '32\'. A space ('32') would be expected so that it's just the number 32, or another number (as in '323') would be expected.</value>
-    <comment/>
   </data>
   <data name="ErrorResource_ErrBadToken_HowToFix_1" xml:space="preserve">
     <value>Remove or replace the unexpected characters.</value>
@@ -5506,11 +5564,9 @@
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_LongMessage" xml:space="preserve">
     <value>For example, the character '\' isn't expected after a number, like this: '32\'. A space ('32') would be expected so that it's just the number 32, or another number (as in '323') would be expected.</value>
-    <comment/>
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_HowToFix_1" xml:space="preserve">
     <value>Remove or replace the unexpected character.</value>
-    <comment/>
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_Link_1" xml:space="preserve">
     <value>Article: Formula reference for Power Apps</value>
@@ -5526,7 +5582,6 @@
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_LongMessage" xml:space="preserve">
     <value>Each block comment must start with '/*' and end with '*/'. If you don't end each block comment properly, all code after the comment becomes part of that comment. If a comment comprises only one line, you can start it with '//' and not identify the end of the comment.</value>
-    <comment/>
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_HowToFix_1" xml:space="preserve">
     <value>Add '*/' to the end of your block comment, or change it to a set of line comments.</value>
@@ -5546,7 +5601,6 @@
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_LongMessage" xml:space="preserve">
     <value>This error occurs if, for example, a formula contains '{{Val@ 7}}' instead of '{{Val: 7}}'. When you set a variable, the syntax requires a colon instead of an "at" symbol.</value>
-    <comment/>
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_HowToFix_1" xml:space="preserve">
     <value>Remove or replace the unexpected characters with an expected character.</value>
@@ -5566,7 +5620,6 @@
   </data>
   <data name="ErrorResource_ErrInvalidName_LongMessage" xml:space="preserve">
     <value>This error appears most commonly when a formula refers to something that no longer exists (for example, a control that you've deleted).</value>
-    <comment/>
   </data>
   <data name="ErrorResource_ErrInvalidName_HowToFix_1" xml:space="preserve">
     <value>Remove or correct the reference to the name that isn't valid.</value>
@@ -5586,7 +5639,6 @@
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_LongMessage" xml:space="preserve">
     <value>This error appears when a formula refers to component behavior properties with invalid syntax. (For example, Component.OnCustomChange instead of Component.OnCustomChange())</value>
-    <comment/>
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_HowToFix_1" xml:space="preserve">
     <value>Use correct syntax to refer to component behavior property. For example, Component.OnCustomChange()</value>
@@ -5606,7 +5658,6 @@
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_LongMessage" xml:space="preserve">
     <value>You can't use the Parent operator with a control that doesn't have a parent control. This operator refers to the control that hosts the given control and makes all of its properties available.</value>
-    <comment/>
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_HowToFix_1" xml:space="preserve">
     <value>Remove the 'Parent' operator.</value>
@@ -5626,7 +5677,6 @@
   </data>
   <data name="ErrorResource_ErrTooManyUps_LongMessage" xml:space="preserve">
     <value>Complexity increases with each nesting level, so Power Apps supports row-scope nesting only up to 63 levels.</value>
-    <comment/>
   </data>
   <data name="ErrorResource_ErrTooManyUps_HowToFix_1" xml:space="preserve">
     <value>Rewrite the formula with fewer nesting levels.</value>
@@ -5638,7 +5688,6 @@
   </data>
   <data name="ErrorResource_ErrRuleNestedTooDeeply_LongMessage" xml:space="preserve">
     <value>Power Apps supports expression nesting up to only 50 levels. An expression this deep is difficult to understand and maintain.</value>
-    <comment/>
   </data>
   <data name="ErrorResource_ErrRuleNestedTooDeeply_HowToFix_1" xml:space="preserve">
     <value>Rewrite the formula with fewer nesting levels.</value>
@@ -5650,7 +5699,6 @@
   </data>
   <data name="ErrorResource_ErrOperatorExpected_LongMessage" xml:space="preserve">
     <value>Operators join two operands together. This error occurs if you put two functions (operands) together with no operator between them -- for example, Len("mytext")Len("mytext").</value>
-    <comment/>
   </data>
   <data name="ErrorResource_ErrOperatorExpected_HowToFix_1" xml:space="preserve">
     <value>Edit your formula so that it includes an operator between the operands.</value>
@@ -5670,7 +5718,6 @@
   </data>
   <data name="ErrorResource_ErrNumberExpected_LongMessage" xml:space="preserve">
     <value>This error will occur if you use a function that requires a number but you supply, for example, an image instead.</value>
-    <comment/>
   </data>
   <data name="ErrorResource_ErrNumberExpected_HowToFix_1" xml:space="preserve">
     <value>Edit your formula so that it evaluates to a number at this point in the formula.</value>
@@ -5690,7 +5737,6 @@
   </data>
   <data name="ErrorResource_ErrBooleanExpected_LongMessage" xml:space="preserve">
     <value>A boolean is also known as a true/false value in applications such as Microsoft Excel. This error will occur if you use a function that requires a boolean but you supply, for example, a date instead.</value>
-    <comment/>
   </data>
   <data name="ErrorResource_ErrBooleanExpected_HowToFix_1" xml:space="preserve">
     <value>Edit your formula so that it evaluates to a boolean at this point in the formula.</value>
@@ -5710,7 +5756,6 @@
   </data>
   <data name="ErrorResource_ErrColonExpected_LongMessage" xml:space="preserve">
     <value>A colon separates a field name, sometimes called a column name, from a field value in a record (for example, {Month:"1"}, {Month:"2"} …). A colon also separates hours from minutes and seconds (for example, "3:04").</value>
-    <comment/>
   </data>
   <data name="ErrorResource_ErrColonExpected_HowToFix_1" xml:space="preserve">
     <value>Edit your formula so that it includes a colon.</value>
@@ -5730,7 +5775,6 @@
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_LongMessage" xml:space="preserve">
     <value>Behavior functions change the state of the app by changing values elsewhere in the app. 'Navigate', 'Patch', 'UpdateContext', and 'Collect' are common behavior functions. 'OnSelect', 'OnVisible', and other 'On …' properties are common behavior-based properties.</value>
-    <comment/>
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_HowToFix_1" xml:space="preserve">
     <value>Move the behavior function to a behavior-based property.</value>
@@ -5750,7 +5794,6 @@
   </data>
   <data name="ErrorResource_ErrTestPropertyExpected_LongMessage" xml:space="preserve">
     <value>Test functions are those that can be used to simulate user input when testing an app. 'SetProperty', 'SelectRow', and 'Assert' are common test functions. They can only be used in the in test cases.</value>
-    <comment/>
   </data>
   <data name="ErrorResource_ErrTestPropertyExpected_HowToFix_1" xml:space="preserve">
     <value>Use the function in a test case, not in the app itself.</value>
@@ -5762,7 +5805,6 @@
   </data>
   <data name="ErrorResource_ErrCannotCoerce_SourceType_TargetType_LongMessage" xml:space="preserve">
     <value>Power Apps can convert some types of data in your formula to other types for you. For example, it can convert "1" (a string) to a 1 (a number), but it can't all data types to all other data type. For example, it can't convert an image to a number.</value>
-    <comment/>
   </data>
   <data name="ErrorResource_ErrCannotCoerce_SourceType_TargetType_HowToFix_1" xml:space="preserve">
     <value>Edit your formula so that you convert the data in question to the expected type.</value>
@@ -5774,7 +5816,6 @@
   </data>
   <data name="ErrorResource_ErrStringExpected_LongMessage" xml:space="preserve">
     <value>This error occurs if you use a function that requires a text (or string) argument and you supply, for example, a date instead.</value>
-    <comment/>
   </data>
   <data name="ErrorResource_ErrStringExpected_HowToFix_1" xml:space="preserve">
     <value>Edit your formula so that it evaluates to text at this point in the formula.</value>
@@ -5794,7 +5835,6 @@
   </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_LongMessage" xml:space="preserve">
     <value>This error will occur if you use a function that requires either text or a number but you supply, for example, a boolean (true/false) value.</value>
-    <comment/>
   </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_HowToFix_1" xml:space="preserve">
     <value>Edit your formula so that it evaluates to text or a number at this point in the formula.</value>
@@ -5814,7 +5854,6 @@
   </data>
   <data name="ErrorResource_ErrClosingBracketExpected_LongMessage" xml:space="preserve">
     <value>A closing bracket indicates the end of a record (for example, {Month:"1"}, {Month:"2"} …).</value>
-    <comment/>
   </data>
   <data name="ErrorResource_ErrClosingBracketExpected_HowToFix_1" xml:space="preserve">
     <value>Edit your formula so that it includes a bracket.</value>
@@ -5834,7 +5873,6 @@
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_LongMessage" xml:space="preserve">
     <value>We can't evaluate your formula because the values being compared in the formula aren’t the same type.</value>
-    <comment/>
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_HowToFix_1" xml:space="preserve">
     <value>You might need to convert the value to be the same type, such as converting a date string (e.g., "12/31/2018") to a date value.</value>
@@ -5946,7 +5984,6 @@
   </data>
   <data name="ErrorResource_ErrTypeError_LongMessage" xml:space="preserve">
     <value>The data may not match the expected type. (text, number, date, table, record.)</value>
-    <comment/>
   </data>
   <data name="ErrorResource_ErrTypeError_HowToFix_1" xml:space="preserve">
     <value>Check the types of the values involved in the formula and ensure the types match.</value>
@@ -5974,7 +6011,6 @@
   </data>
   <data name="ErrorResource_ErrDateExpected_LongMessage" xml:space="preserve">
     <value>This error will occur if you use a function that requires a date but you supply, for example, text instead.</value>
-    <comment/>
   </data>
   <data name="ErrorResource_ErrDateExpected_HowToFix_1" xml:space="preserve">
     <value>Edit your formula so that it evaluates to a date at this point in the formula.</value>
@@ -5994,7 +6030,6 @@
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_LongMessage" xml:space="preserve">
     <value>The data source might not be able to process the formula and might return an incomplete data set. Your application might not return correct results or behave correctly if the data set is incomplete.</value>
-    <comment/>
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_HowToFix_1" xml:space="preserve">
     <value>If your data set exceeds the 500 record limit but contains less than 2,000 records, try resetting the limit.</value>
@@ -6030,7 +6065,6 @@
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_LongMessage" xml:space="preserve">
     <value>The data source might not be able to process the formula and might return an incomplete data set. Your application might not return correct results or behave correctly if the data set is incomplete.</value>
-    <comment/>
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_HowToFix_1" xml:space="preserve">
     <value>If your data set exceeds the 500 record limit but contains less than 2,000 records, try resetting the limit.</value>
@@ -6066,7 +6100,6 @@
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_LongMessage" xml:space="preserve">
     <value> The right side of the "in" operator should be a column name from the correct data source. The data source might not be able to process the formula and might return an incomplete data set. Your application might not return correct results or behave correctly if the data set is incomplete.</value>
-    <comment/>
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_1" xml:space="preserve">
     <value>Change the item to the right of the "in" operator to be a column from the correct data source.</value>
@@ -6107,7 +6140,6 @@
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_LongMessage" xml:space="preserve">
     <value> The right side of the "in" operator is not a column from the correct data source . The data source might not be able to process the formula and might return an incomplete data set. Your application might not return correct results or behave correctly if the data set is incomplete.
       </value>
-    <comment/>
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_1" xml:space="preserve">
     <value>Change the item to the right of the "in" operator to be a column from the correct data source.</value>
@@ -6213,5 +6245,17 @@
   <data name="ErrorResource_ErrAsNotInContext_ShortMessage" xml:space="preserve">
     <value>As is not permitted in this context</value>
     <comment>{Locked=As} This is an error message that shows up when the As keyword is used but is not valid</comment>
+  </data>
+  <data name="ErrNamedFormula_CircularReference" xml:space="preserve">
+    <value>Named formulas cannot contain circular references.</value>
+    <comment>A circular reference is where the expression contains the identifier: For example, a=a+10.</comment>
+  </data>
+  <data name="ErrNamedFormula_MissingExpression" xml:space="preserve">
+    <value>Named formula does not contain an expression.</value>
+    <comment>An expression is the content in a named formula after the identifier. For example, in a=b+10, "=b+10" is the expression.</comment>
+  </data>
+  <data name="ErrNamedFormula_MissingIdentifier" xml:space="preserve">
+    <value>Named formula does not contain an identifier.</value>
+    <comment>An identifier is the content in the named formula before the "=". Fore example, in "a=b+10", "a" is the identifier.</comment>
   </data>
 </root>
