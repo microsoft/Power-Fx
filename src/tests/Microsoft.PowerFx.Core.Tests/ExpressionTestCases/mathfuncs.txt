@@ -65,11 +65,9 @@ Blank()
 
 // use Text to ignore precision issues
 >> Text(Exp(Ln(2)), "#")
-/*InterpreterRunner*/ #Skip
 "2"
 
 >> Text(Ln(Exp(2)), "#")
-/*InterpreterRunner*/ #Skip
 "2"
 
 >> Ln(0)
