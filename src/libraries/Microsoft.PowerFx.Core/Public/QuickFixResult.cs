@@ -9,12 +9,12 @@ namespace Microsoft.PowerFx.Core.Public
     public class QuickFixResult
     {
         /// <summary>
-        /// Gets or sets title.
+        /// Gets or sets title to be displayed on quick fix suggestion.
         /// </summary>
         public string Title { get; set; }
 
         /// <summary>
-        /// Gets or sets text.
+        /// Gets or sets quick fix expression text to be applied.
         /// </summary>
         public string Text { get; set; }
     }

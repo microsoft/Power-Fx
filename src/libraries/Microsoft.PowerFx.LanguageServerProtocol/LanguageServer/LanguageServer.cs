@@ -11,7 +11,6 @@ using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Public;
 using Microsoft.PowerFx.Core.Texl.Intellisense;
 using Microsoft.PowerFx.Core.Utils;
-using static Microsoft.PowerFx.LanguageServerProtocol.Constants;
 
 namespace Microsoft.PowerFx.LanguageServerProtocol
 {

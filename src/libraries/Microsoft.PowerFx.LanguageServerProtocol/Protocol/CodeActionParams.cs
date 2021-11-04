@@ -16,8 +16,14 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
             Context = new CodeActionContext();
         }
 
+        /// <summary>
+        /// Gets or sets text document object.
+        /// </summary>
         public TextDocumentIdentifier TextDocument { get; set; }
 
+        /// <summary>
+        /// Gets or sets current editor value range object.
+        /// </summary>
         public Range Range { get; set; }
 
         /// <summary>

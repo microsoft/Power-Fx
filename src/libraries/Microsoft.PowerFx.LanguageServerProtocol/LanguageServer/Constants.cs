@@ -3,11 +3,14 @@
 
 namespace Microsoft.PowerFx.LanguageServerProtocol
 {
-    internal class Constants
+    /// <summary>
+    /// Code action kind constants
+    /// </summary>
+    public class CodeActionKind
     {
-        public class CodeActionKind
-        {
-            public const string QuickFix = "quickfix";
-        }
+        /// <summary>
+        /// Code action kind quickfix.
+        /// </summary>
+        public const string QuickFix = "quickfix";
     }
 }

@@ -4,7 +4,7 @@
 namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
 {
     /// <summary>
-    /// 
+    /// Code action context object model.
     /// </summary>
     public class CodeActionContext
     {
