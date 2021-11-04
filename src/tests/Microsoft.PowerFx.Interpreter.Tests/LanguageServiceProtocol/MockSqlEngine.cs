@@ -19,6 +19,11 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             throw new System.NotImplementedException();
         }
 
+        public QuickFixResult[] QuickFix(string expression)
+        {
+            throw new System.NotImplementedException();
+        }
+
         public string TranslateToDisplayName(string expression)
         {
             return expression.Replace("new_price", "Price").Replace("new_quantity", "Quantity");

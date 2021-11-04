@@ -21,5 +21,12 @@ namespace Microsoft.PowerFx.Core.Public
         /// Provide intellisense for expression
         /// </summary>
         IIntellisenseResult Suggest(string expression, int cursorPosition);
+
+        /// <summary>
+        /// Provider quick fix suggesions.
+        /// </summary>
+        /// <param name="expression">The formula expression.</param>
+        /// <returns>Collection of quick fixes.</returns>
+        QuickFixResult[] QuickFix(string expression);
     }
 }

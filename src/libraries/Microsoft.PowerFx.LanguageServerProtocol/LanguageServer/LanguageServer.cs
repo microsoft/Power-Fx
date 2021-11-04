@@ -11,6 +11,7 @@ using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Public;
 using Microsoft.PowerFx.Core.Texl.Intellisense;
 using Microsoft.PowerFx.Core.Utils;
+using static Microsoft.PowerFx.LanguageServerProtocol.Constants;
 
 namespace Microsoft.PowerFx.LanguageServerProtocol
 {
@@ -96,6 +97,9 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
                             break;
                         case CustomProtocolNames.InitialFixup:
                             HandleInitialFixupRequest(id, paramsJson);
+                            break;
+                        case TextDocumentNames.CodeAction:
+                            HandleCodeActionRequest(id, paramsJson);
                             break;
                         default:
                             _sendToClient(JsonRpcHelper.CreateErrorResult(id, JsonRpcHelper.ErrorCode.MethodNotFound));
@@ -210,7 +214,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
                 isIncomplete = false
             }));
         }
-        
+
         private void HandleSignatureHelpRequest(string id, string paramsJson)
         {
             if (id == null)
@@ -279,9 +283,72 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
             }));
         }
 
+        private void HandleCodeActionRequest(string id, string paramsJson)
+        {
+            if (id == null)
+            {
+                _sendToClient(JsonRpcHelper.CreateErrorResult(id, JsonRpcHelper.ErrorCode.InvalidRequest));
+                return;
+            }
+
+            Contracts.AssertValue(id);
+            Contracts.AssertValue(paramsJson);
+
+            if (!TryParseParams(paramsJson, out CodeActionParams codeActionParams))
+            {
+                _sendToClient(JsonRpcHelper.CreateErrorResult(id, JsonRpcHelper.ErrorCode.ParseError));
+                return;
+            }
+
+            var documentUri = codeActionParams.TextDocument.Uri;
+            var scope = _scopeFactory.GetOrCreateInstance(documentUri);
+
+            var uri = new Uri(documentUri);
+            var expression = HttpUtility.ParseQueryString(uri.Query).Get("expression");
+            if (expression == null)
+            {
+                _sendToClient(JsonRpcHelper.CreateErrorResult(id, JsonRpcHelper.ErrorCode.InvalidParams));
+                return;
+            }
+
+            var codeActions = new Dictionary<string, CodeAction[]>();
+            foreach (var codeActionKind in codeActionParams.Context.Only)
+            {
+                switch (codeActionKind)
+                {
+                    case CodeActionKind.QuickFix:
+                        var result = scope.QuickFix(expression);
+
+                        var items = new List<CodeAction>();
+
+                        foreach (var item in result)
+                        {
+                            items.Add(new CodeAction()
+                            {
+                                Title = item.Title,
+                                Kind = codeActionKind,
+                                Edit = new WorkspaceEdit
+                                {
+                                    Changes = new Dictionary<string, TextEdit[]> { { documentUri, new[] { new TextEdit { Range = codeActionParams.Range, NewText = item.Text } } } }
+                                }
+                            });
+                        }
+
+                        codeActions.Add(codeActionKind, items.ToArray());
+
+                        break;
+                    default:
+                        // No action.
+                        return;
+                }
+            }
+
+            _sendToClient(JsonRpcHelper.CreateSuccessResult(id, codeActions));
+        }
+
         private CompletionItemKind GetCompletionItemKind(SuggestionKind kind)
         {
-            switch(kind)
+            switch (kind)
             {
                 case SuggestionKind.Function:
                     return CompletionItemKind.Method;
