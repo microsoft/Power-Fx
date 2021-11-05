@@ -8,459 +8,481 @@ using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Parser;
 using Microsoft.PowerFx.Core.Syntax;
 using Microsoft.PowerFx.Core.Syntax.Nodes;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 
 namespace DocumentServer.Core.Tests.Formulas
 {
-    [TestClass]
     public class ParseTests
     {
-        [TestMethod, Owner("ragru")]
-        public void TexlParseNumericLiterals()
+        [Theory]
+        [InlineData("0")]
+        [InlineData("-0")]
+        [InlineData("1")]
+        [InlineData("-1")]
+        [InlineData("1.0", "1")]
+        [InlineData("-1.0", "-1")]
+        [InlineData("1.123456789")]
+        [InlineData("-1.123456789")]
+        [InlineData("0.0", "0")]
+        [InlineData("0.000000", "0")]
+        [InlineData("0.000001", "1E-06")]
+        [InlineData("0.123456789")]
+        [InlineData("-0.0", "-0")]
+        [InlineData("-0.000000", "-0")]
+        [InlineData("-0.000001", "-1E-06")]
+        [InlineData("-0.123456789")]
+        [InlineData("0.99999999")]
+        [InlineData("9.99999999")]
+        [InlineData("-0.99999999")]
+        [InlineData("-9.99999999")]
+        [InlineData("-100")]
+        [InlineData("10e4", "100000")]
+        [InlineData("10e-4", "0.001")]
+        [InlineData("10e+4", "100000")]
+        [InlineData("-10e4", "-100000")]
+        [InlineData("-10e-4", "-0.001")]
+        [InlineData("-10e+4", "-100000")]
+        [InlineData("123456789")]
+        [InlineData("-123456789")]
+        [InlineData("123456789.987654321", "123456789.98765433")]
+        [InlineData("-123456789.987654321", "-123456789.98765433")]
+        [InlineData("2.E5", "200000")]
+        public void TexlParseNumericLiterals(string script, string expected = null)
         {
-            TestRoundtrip("0");
-            TestRoundtrip("-0");
-            TestRoundtrip("1");
-            TestRoundtrip("-1");
-            TestRoundtrip("1.0", "1");
-            TestRoundtrip("-1.0", "-1");
-            TestRoundtrip("1.123456789");
-            TestRoundtrip("-1.123456789");
-            TestRoundtrip("0.0", "0");
-            TestRoundtrip("0.000000", "0");
-            TestRoundtrip("0.000001", "1E-06");
-            TestRoundtrip("0.123456789");
-            TestRoundtrip("-0.0", "-0");
-            TestRoundtrip("-0.000000", "-0");
-            TestRoundtrip("-0.000001", "-1E-06");
-            TestRoundtrip("-0.123456789");
-            TestRoundtrip("0.99999999");
-            TestRoundtrip("9.99999999");
-            TestRoundtrip("-0.99999999");
-            TestRoundtrip("-9.99999999");
-            TestRoundtrip("-100");
-            TestRoundtrip("10e4", "100000");
-            TestRoundtrip("10e-4", "0.001");
-            TestRoundtrip("10e+4", "100000");
-            TestRoundtrip("-10e4", "-100000");
-            TestRoundtrip("-10e-4", "-0.001");
-            TestRoundtrip("-10e+4", "-100000");
-            TestRoundtrip("123456789");
-            TestRoundtrip("-123456789");
-            TestRoundtrip("123456789.987654321", "123456789.98765433");
-            TestRoundtrip("-123456789.987654321", "-123456789.98765433");
-            TestRoundtrip("2.E5", "200000");
+            TestRoundtrip(script, expected);
+
         }
 
-        [DataTestMethod, Owner("ragru")]
-        [DataRow("1.2.3")]
-        [DataRow(".2.3")]
-        [DataRow("2eee5")]
-        [DataRow("2EEE5")]
-        [DataRow("2e.5")]
+        [Theory]
+        [InlineData("1.2.3")]
+        [InlineData(".2.3")]
+        [InlineData("2eee5")]
+        [InlineData("2EEE5")]
+        [InlineData("2e.5")]
         public void TexlParseNumericLiterals_Negative(string script)
         {
             TestParseErrors(script, 1, StringResources.Get(TexlStrings.ErrOperatorExpected));
         }
 
-        [DataTestMethod, Owner("ragru")]
-        [DataRow("2e999")]
-        [DataRow("4E88888")]
-        [DataRow("-123e4567")]
-        [DataRow("7E1111111")]
+        [Theory]
+        [InlineData("2e999")]
+        [InlineData("4E88888")]
+        [InlineData("-123e4567")]
+        [InlineData("7E1111111")]
         public void TexlParseLargeNumerics_Negative(string script)
         {
             TestParseErrors(script, 1, StringResources.Get(TexlStrings.ErrNumberTooLarge));
         }
 
-        [TestMethod, Owner("ragru")]
-        public void TexlParseBoolLiterals()
+        [Theory]
+        [InlineData("true")]
+        [InlineData("false")]
+        public void TexlParseBoolLiterals(string script)
         {
-            TestRoundtrip("true");
-            TestRoundtrip("false");
+            TestRoundtrip(script);
         }
 
-        [TestMethod, Owner("ragru")]
-        public void TexlParseStringLiterals()
+        [Theory]
+        [InlineData("\"\"")]
+        [InlineData("\"\"\"\"")]
+        [InlineData("\" \"")]
+        [InlineData("\"                                             \"")]
+        [InlineData("\"hello world from Texl\"")]
+        [InlineData("\"12345\"")]
+        [InlineData("\"12345.12345\"")]
+        [InlineData("\"true\"")]
+        [InlineData("\"false\"")]
+        [InlineData("\"Not an 'identifier' but a string\"")]
+        [InlineData("\"Expert's opinion\"")]
+        [InlineData("\"String with \"\"escaped\"\" \\\\ chars...\"")]
+        [InlineData("\"\\n\\f\\r\\t\\v\\b\"")]
+        public void TexlParseStringLiterals(string script)
         {
-            TestRoundtrip("\"\"");
-            TestRoundtrip("\"\"\"\"");
-            TestRoundtrip("\" \"");
-            TestRoundtrip("\"                                             \"");
-            TestRoundtrip("\"hello world from Texl\"");
-            TestRoundtrip("\"12345\"");
-            TestRoundtrip("\"12345.12345\"");
-            TestRoundtrip("\"true\"");
-            TestRoundtrip("\"false\"");
-            TestRoundtrip("\"Not an 'identifier' but a string\"");
-            TestRoundtrip("\"Expert's opinion\"");
-            TestRoundtrip("\"String with \"\"escaped\"\" \\\\ chars...\"");
-            TestRoundtrip("\"\\n\\f\\r\\t\\v\\b\"");
+            TestRoundtrip(script);
         }
 
-        [TestMethod, Owner("ragru")]
-        public void TexlParseStringLiteralsWithEscapableCharacters()
+        [Theory]
+        [InlineData("\"Newline  \n characters   \r   galore  \u00085\"")]
+        [InlineData("\"And \u2028    some   \u2029   more!\"")]
+        [InlineData("\"Other supported ones:  \t\b\v\f\0\'     \"")]
+        public void TexlParseStringLiteralsWithEscapableCharacters(string script)
         {
-            TestRoundtrip("\"Newline  \n characters   \r   galore  \u00085\"");
-            TestRoundtrip("\"And \u2028    some   \u2029   more!\"");
-            TestRoundtrip("\"Other supported ones:  \t\b\v\f\0\'     \"");
+            TestRoundtrip(script);
         }
 
-        [TestMethod, Owner("ragru")]
-        public void TexlParseArithmeticOperators()
+        [Theory]
+        [InlineData("1 + 1")]
+        [InlineData("1 + 2 + 3 + 4")]
+        [InlineData("1 * 2 + 3 * 4")]
+        [InlineData("1 * 2 * 3 + 4 * 5")]
+        [InlineData("1 * 2 * 3 * 4 * 5")]
+        [InlineData("2 - 1", "2 + -1")]
+        [InlineData("2 - 1 - 2 - 3 - 4", "2 + -1 + -2 + -3 + -4")]
+        [InlineData("2^3")]
+        [InlineData("123.456^9")]
+        [InlineData("123.456^-9")]
+        [InlineData("2 / 3")]
+        [InlineData("2 / 0")]
+        [InlineData("1234e3 / 1234", "1234000 / 1234")]
+        [InlineData("1234e-3 / 1234.5678", "1.234 / 1234.5678")]
+        public void TexlParseArithmeticOperators(string script, string expected = null)
         {
-            TestRoundtrip("1 + 1");
-            TestRoundtrip("1 + 2 + 3 + 4");
-            TestRoundtrip("1 * 2 + 3 * 4");
-            TestRoundtrip("1 * 2 * 3 + 4 * 5");
-            TestRoundtrip("1 * 2 * 3 * 4 * 5");
-            TestRoundtrip("2 - 1", "2 + -1");
-            TestRoundtrip("2 - 1 - 2 - 3 - 4", "2 + -1 + -2 + -3 + -4");
-            TestRoundtrip("2^3");
-            TestRoundtrip("123.456^9");
-            TestRoundtrip("123.456^-9");
-            TestRoundtrip("2 / 3");
-            TestRoundtrip("2 / 0");
-            TestRoundtrip("1234e3 / 1234", "1234000 / 1234");
-            TestRoundtrip("1234e-3 / 1234.5678", "1.234 / 1234.5678");
+            TestRoundtrip(script, expected);
         }
 
-        [TestMethod, Owner("ragru")]
-        public void TexlParseLogicalOperators()
-        {
-            TestRoundtrip("A || B");
-            TestRoundtrip("A || B || C");
-            TestRoundtrip("A && B");
-            TestRoundtrip("A && B && C");
-            TestRoundtrip("A && B || C && D");
-            TestRoundtrip("A || B && C || D");
-            TestRoundtrip("(A || B) && (C || D)");
-            TestRoundtrip("!A");
-            TestRoundtrip("! A", expected: "!A");
-            TestRoundtrip("!!!!!!!!!A");
-            TestRoundtrip("! ! ! ! ! ! ! ! ! A", expected: "!!!!!!!!!A");
-            TestRoundtrip("!    !    !!!!    !!!     A", expected: "!!!!!!!!!A");
-            TestRoundtrip("!A || !B || D");
-            TestRoundtrip("!(A || B) && !(C && D)");
-            TestRoundtrip("!!!!!!!!!(A || B || C && D)");
+        //[Theory]
+        //[InlineData("A || B")]
+        //[InlineData("A || B || C")]
+        //[InlineData("A && B")]
+        //[InlineData("A && B && C")]
+        //[InlineData("A && B || C && D")]
+        //[InlineData("A || B && C || D")]
+        //[InlineData("(A || B) && (C || D)")]
+        //[InlineData("!A")]
+        //[InlineData("! A", "!A")]
+        //[InlineData("!!!!!!!!!A")]
+        //[InlineData("! ! ! ! ! ! ! ! ! A", "!!!!!!!!!A")]
+        //[InlineData("!    !    !!!!    !!!     A", "!!!!!!!!!A")]
+        //[InlineData("!A || !B || D")]
+        //[InlineData("!(A || B) && !(C && D)")]
+        //[InlineData("!!!!!!!!!(A || B || C && D)")]
 
-            TestRoundtrip("!false");
-            TestRoundtrip("!true");
-            TestRoundtrip("true || true");
-            TestRoundtrip("true || false");
-            TestRoundtrip("false || false");
-            TestRoundtrip("false || true");
-            TestRoundtrip("true && true");
-            TestRoundtrip("true && false");
-            TestRoundtrip("false && true");
-            TestRoundtrip("false && false");
-            TestRoundtrip("true && true && true && true && true");
-            TestRoundtrip("false && false && false && false && false");
+        //[InlineData("!false")]
+        //[InlineData("!true")]
+        //[InlineData("true || true")]
+        //[InlineData("true || false")]
+        //[InlineData("false || false")]
+        //[InlineData("false || true")]
+        //[InlineData("true && true")]
+        //[InlineData("true && false")]
+        //[InlineData("false && true")]
+        //[InlineData("false && false")]
+        //[InlineData("true && true && true && true && true")]
+        //[InlineData("false && false && false && false && false")]
 
-            TestRoundtrip("Price = 1200");
-            TestRoundtrip("Gender = \"Female\"");
+        //[InlineData("Price = 1200")]
+        //[InlineData("Gender = \"Female\"")]
 
-            TestRoundtrip("A = B");
-            TestRoundtrip("A < B");
-            TestRoundtrip("A <= B");
-            TestRoundtrip("A >= B");
-            TestRoundtrip("A > B");
-            TestRoundtrip("A <> B");
+        //[InlineData("A = B")]
+        //[InlineData("A < B")]
+        //[InlineData("A <= B")]
+        //[InlineData("A >= B")]
+        //[InlineData("A > B")]
+        //[InlineData("A <> B")]
 
-            // Note that we are parsing these, but internally they will be binary trees: "((1 < 2) < 3) < 4", etc.
-            TestRoundtrip("1 < 2 < 3 < 4", expectedNodeKind: NodeKind.BinaryOp);
-            TestRoundtrip("1 < 2 >= 3 < 4", expectedNodeKind: NodeKind.BinaryOp);
-            TestRoundtrip("1 <= 2 < 3 <= 4", expectedNodeKind: NodeKind.BinaryOp);
-            TestRoundtrip("4 > 3 > 2 > 1", expectedNodeKind: NodeKind.BinaryOp);
-            TestRoundtrip("4 > 3 >= 2 > 1", expectedNodeKind: NodeKind.BinaryOp);
-            TestRoundtrip("1 < 2 = 3 <> 4", expectedNodeKind: NodeKind.BinaryOp);
+        //// Note that we are parsing these, but internally they will be binary trees: "((1 < 2) < 3) < 4", etc.
+        //[InlineData("1 < 2 < 3 < 4", null, NodeKind.BinaryOp)]
+        //[InlineData("1 < 2 >= 3 < 4", null, NodeKind.BinaryOp)]
+        //[InlineData("1 <= 2 < 3 <= 4", null, NodeKind.BinaryOp)]
+        //[InlineData("4 > 3 > 2 > 1", null, NodeKind.BinaryOp)]
+        //[InlineData("4 > 3 >= 2 > 1", null, NodeKind.BinaryOp)]
+        //[InlineData("1 < 2 = 3 <> 4", null, NodeKind.BinaryOp)]
 
-            TestRoundtrip("true = false");
-            TestRoundtrip("true <> false");
-            TestRoundtrip("Gender <> \"Male\"");
-        }
+        //[InlineData("true = false")]
+        //[InlineData("true <> false")]
+        //[InlineData("Gender <> \"Male\"")]
+        //public void TexlParseLogicalOperators(string script, string expected = null, NodeKind expectedNodeKind = NodeKind.Error)
+        //{
+        //    TestRoundtrip(script, expected, expectedNodeKind);
+        //}
 
-        [TestMethod, Owner("lesaltzm")]
-        [DataRow("A Or B")]
-        [DataRow("A Or B Or C")]
-        [DataRow("A And B")]
-        [DataRow("A And B And C")]
-        [DataRow("A And B || C And D")]
-        [DataRow("A Or B And C Or D")]
-        [DataRow("(A Or B) And (C Or D)")]
-        [DataRow("Not A")]
-        [DataRow("Not Not Not Not A")]
-        [DataRow("Not A Or Not B Or D")]
-        [DataRow("Not (A Or B) And Not (C And D)")]
-        [DataRow("Not Not Not Not Not (A Or B Or C And D)")]
+        [Theory]
+        [InlineData("A Or B")]
+        [InlineData("A Or B Or C")]
+        [InlineData("A And B")]
+        [InlineData("A And B And C")]
+        [InlineData("A And B || C And D")]
+        [InlineData("A Or B And C Or D")]
+        [InlineData("(A Or B) And (C Or D)")]
+        [InlineData("Not A")]
+        [InlineData("Not Not Not Not A")]
+        [InlineData("Not A Or Not B Or D")]
+        [InlineData("Not (A Or B) And Not (C And D)")]
+        [InlineData("Not Not Not Not Not (A Or B Or C And D)")]
         public void TexlParseKeywordLogicalOperators(string script)
         {
             TestRoundtrip(script);
         }
 
-        [TestMethod, Owner("lesaltzm")]
-        [DataRow("Or(A, B)")]
-        [DataRow("Or(A, B Or C)")]
-        [DataRow("And(A, B)")]
-        [DataRow("And(A && C, B || D)")]
-        [DataRow("And(A And B, C)")]
-        [DataRow("Not(A)")]
-        [DataRow("And(Not(A Or B), Not(C And D))")]
-        [DataRow("Not(Not !Not(Not (A Or B Or C And D)))")]
+        [Theory]
+        [InlineData("Or(A, B)")]
+        [InlineData("Or(A, B Or C)")]
+        [InlineData("And(A, B)")]
+        [InlineData("And(A && C, B || D)")]
+        [InlineData("And(A And B, C)")]
+        [InlineData("Not(A)")]
+        [InlineData("And(Not(A Or B), Not(C And D))")]
+        [InlineData("Not(Not !Not(Not (A Or B Or C And D)))")]
         public void TexlParseLogicalOperatorsAndFunctions(string script)
         {
             TestRoundtrip(script);
         }
 
-        [TestMethod, Owner("lesaltzm")]
-        [DataRow("A As B")]
-        [DataRow("A As B As C")]
-        [DataRow("F(A, B, C) As D")]
-        [DataRow("A && B As C")]
-        [DataRow("A.B As C")]
-        [DataRow("F(A As B, C)")]
-        [DataRow("A * B As C")]
-        [DataRow("A As B * C")]
+        [Theory]
+        [InlineData("A As B")]
+        [InlineData("A As B As C")]
+        [InlineData("F(A, B, C) As D")]
+        [InlineData("A && B As C")]
+        [InlineData("A.B As C")]
+        [InlineData("F(A As B, C)")]
+        [InlineData("A * B As C")]
+        [InlineData("A As B * C")]
         public void TexlParseAsOperator(string script)
         {
             TestRoundtrip(script);
         }
 
-        [TestMethod, Owner("lesaltzm")]
-        [DataRow("A As (B As C)")]
-        [DataRow("A As F(B)")]
-        [DataRow("A As (((B)))")]
+        [Theory]
+        [InlineData("A As (B As C)")]
+        [InlineData("A As F(B)")]
+        [InlineData("A As (((B)))")]
         public void TexlParseAsOperator_Negative(string script)
         {
             TestParseErrors(script);
         }
 
-        [TestMethod, Owner("ragru")]
-        public void TexlParseDoubleAmpVsSingleAmp()
+        //[Theory]
+        //public void TexlParseDoubleAmpVsSingleAmp()
+        //{
+        //    // Test the correct parsing of double- vs. single-ampersand.
+
+        //    // Double-ampersand should resolve to the logical conjunction operator.
+        //    TestRoundtrip("A && B",
+        //        expectedNodeKind: NodeKind.BinaryOp,
+        //        customTest: node =>
+        //        {
+        //            Assert.Equal(BinaryOp.And, node.AsBinaryOp().Op);
+        //        });
+
+        //    // Single-ampersand should resolve to the concatenation operator.
+        //    TestRoundtrip("A & B",
+        //        expectedNodeKind: NodeKind.BinaryOp,
+        //        customTest: node =>
+        //        {
+        //            Assert.Equal(BinaryOp.Concat, node.AsBinaryOp().Op);
+        //        });
+
+        //    // A triple-amp on the other hand should trigger a parse error.
+        //    TestParseErrors("A &&& B", count: 1);
+        //}
+
+        //[Theory]
+        //[InlineData("", "", NodeKind.Blank)]
+        //public void TexlParseBlank(string script, string expected, NodeKind expectedNodeKind)
+        //{
+        //    // Test the correct parsing of Blank node.
+        //    TestRoundtrip(script, expected, expectedNodeKind);
+        //}
+
+        [Theory]
+        // Unqualified identifiers
+        [InlineData("A")]
+        [InlineData("A12345")]
+        [InlineData("'The name of a table'")]
+        [InlineData("'A000'")]
+        [InlineData("'__ '")]
+        [InlineData("'A                                           _'")]
+        [InlineData("'A                                           A'")]
+        [InlineData("'A                                           123'")]
+
+        // Identifiers with bangs (e.g. qualified entity names)
+        [InlineData("A!B")]
+        [InlineData("A!B!C")]
+        [InlineData("A!'Some Column'!C")]
+        [InlineData("'Some Table'!'Some Column'")]
+        [InlineData("GlobalTable!B!C!D")]
+        [InlineData("'My Table'!ColA!ColB!'ColC'")]
+
+        // Disambiguated global identifiers
+        [InlineData("[@foo]")]
+        [InlineData("[@'foo with blanks']")]
+        [InlineData("[@foo123]")]
+        [InlineData("[@'A!B!C']")]
+        [InlineData("[@'A!B!C']!X")]
+        [InlineData("[@'A!B!C']!X!Y!Z")]
+
+        // Disambiguated scope fields
+        [InlineData("foo[@bar]")]
+        [InlineData("foo[@bar]!X")]
+        [InlineData("foo[@bar]!X!Y!Z")]
+        public void TexlParseIdentifiers(string script)
         {
-            // Test the correct parsing of double- vs. single-ampersand.
-
-            // Double-ampersand should resolve to the logical conjunction operator.
-            TestRoundtrip("A && B",
-                expectedNodeKind: NodeKind.BinaryOp,
-                customTest: node =>
-                {
-                    Assert.AreEqual(BinaryOp.And, node.AsBinaryOp().Op);
-                });
-
-            // Single-ampersand should resolve to the concatenation operator.
-            TestRoundtrip("A & B",
-                expectedNodeKind: NodeKind.BinaryOp,
-                customTest: node =>
-                {
-                    Assert.AreEqual(BinaryOp.Concat, node.AsBinaryOp().Op);
-                });
-
-            // A triple-amp on the other hand should trigger a parse error.
-            TestParseErrors("A &&& B", count: 1);
+            TestRoundtrip(script);
         }
 
-        [TestMethod, Owner("hekum")]
-        public void TexlParseBlank()
+        [Theory]
+        [InlineData("A.B.C")]
+        [InlineData("A.'Some Column'.C")]
+        [InlineData("'Some Table'.'Some Column'")]
+        [InlineData("GlobalTable.B.C.D")]
+        [InlineData("'My Table'.ColA.ColB.'ColC'")]
+        public void TexlParseDottedIdentifiers(string script)
         {
-            // Test the correct parsing of Blank node.
-            TestRoundtrip("", "", expectedNodeKind: NodeKind.Blank);
+            TestRoundtrip(script);
         }
 
-        [TestMethod, Owner("ragru")]
-        public void TexlParseIdentifiers()
-        {
-            // Unqualified identifiers
-            TestRoundtrip("A");
-            TestRoundtrip("A12345");
-            TestRoundtrip("'The name of a table'");
-            TestRoundtrip("'A000'");
-            TestRoundtrip("'__ '");
-            TestRoundtrip("'A                                           _'");
-            TestRoundtrip("'A                                           A'");
-            TestRoundtrip("'A                                           123'");
+        [Theory]
+        // Identifiers can't be all-blank.
+        [InlineData("' '")]
+        [InlineData("'     '")]
+        [InlineData("'                                          '")]
 
-            // Identifiers with bangs (e.g. qualified entity names)
-            TestRoundtrip("A!B");
-            TestRoundtrip("A!B!C");
-            TestRoundtrip("A!'Some Column'!C");
-            TestRoundtrip("'Some Table'!'Some Column'");
-            TestRoundtrip("GlobalTable!B!C!D");
-            TestRoundtrip("'My Table'!ColA!ColB!'ColC'");
+        // Can't mix dot and bang within the same identifier.
+        [InlineData("A!B.C")]
+        [InlineData("A.B!C")]
+        [InlineData("A.B.C.D.E.F.G!H")]
+        [InlineData("A!B!C!D!E!F!G.H")]
 
-            // Disambiguated global identifiers
-            TestRoundtrip("[@foo]");
-            TestRoundtrip("[@'foo with blanks']");
-            TestRoundtrip("[@foo123]");
-            TestRoundtrip("[@'A!B!C']");
-            TestRoundtrip("[@'A!B!C']!X");
-            TestRoundtrip("[@'A!B!C']!X!Y!Z");
+        // Missing delimiters
+        [InlineData("'foo")]
+        [InlineData("foo'")]
 
-            // Disambiguated scope fields
-            TestRoundtrip("foo[@bar]");
-            TestRoundtrip("foo[@bar]!X");
-            TestRoundtrip("foo[@bar]!X!Y!Z");
-        }
-
-        [TestMethod, Owner("ragru")]
-        public void TexlParseDottedIdentifiers()
-        {
-            TestRoundtrip("A.B.C");
-            TestRoundtrip("A.'Some Column'.C");
-            TestRoundtrip("'Some Table'.'Some Column'");
-            TestRoundtrip("GlobalTable.B.C.D");
-            TestRoundtrip("'My Table'.ColA.ColB.'ColC'");
-        }
-
-        [TestMethod, Owner("ragru")]
-        public void TexlParseIdentifiersNegative()
+        // Disambiguated identifiers and scope fields
+        [InlineData("@")]
+        [InlineData("@[]")]
+        [InlineData("[@@@@@@@@@@]")]
+        [InlineData("[@]")]
+        [InlineData("[@    ]")]
+        [InlineData("[@foo!bar]")]
+        [InlineData("[@foo.bar]")]
+        [InlineData("[@'']")]
+        [InlineData("[@\"\"]")]
+        [InlineData("[@1234]")]
+        [InlineData("X![@foo]")]
+        [InlineData("X.[@foo]")]
+        [InlineData("X!Y!Z![@foo]")]
+        [InlineData("X.Y.Z.[@foo]")]
+        [InlineData("X!Y!Z[@foo]")]
+        [InlineData("X.Y.Z[@foo]")]
+        [InlineData("[@foo][@bar]")]
+        public void TexlParseIdentifiersNegative(string script)
         {
             // Identifiers can't be all-blank.
-            TestParseErrors("' '");
-            TestParseErrors("'     '");
-            TestParseErrors("'                                          '");
-
-            // Can't mix dot and bang within the same identifier.
-            TestParseErrors("A!B.C");
-            TestParseErrors("A.B!C");
-            TestParseErrors("A.B.C.D.E.F.G!H");
-            TestParseErrors("A!B!C!D!E!F!G.H");
-
-            // Missing delimiters
-            TestParseErrors("'foo");
-            TestParseErrors("foo'");
-
-            // Disambiguated identifiers and scope fields
-            TestParseErrors("@");
-            TestParseErrors("@[]");
-            TestParseErrors("[@@@@@@@@@@]");
-            TestParseErrors("[@]");
-            TestParseErrors("[@    ]");
-            TestParseErrors("[@foo!bar]");
-            TestParseErrors("[@foo.bar]");
-            TestParseErrors("[@'']");
-            TestParseErrors("[@\"\"]");
-            TestParseErrors("[@1234]");
-            TestParseErrors("X![@foo]");
-            TestParseErrors("X.[@foo]");
-            TestParseErrors("X!Y!Z![@foo]");
-            TestParseErrors("X.Y.Z.[@foo]");
-            TestParseErrors("X!Y!Z[@foo]");
-            TestParseErrors("X.Y.Z[@foo]");
-            TestParseErrors("[@foo][@bar]");
+            TestParseErrors(script);           
         }
 
-        [TestMethod, Owner("ragru")]
-        public void TexlParseNull()
+        //[Theory]
+        //// The language does not / no longer supports a null constant.
+        //// Out-of-context nulls are parsed as unbound identifiers.
+        //[InlineData("null", NodeKind.FirstName)]
+        //[InlineData("null && null")]
+        //[InlineData("null || null")]
+        //[InlineData("!null")]
+        //[InlineData("A = null")]
+        //[InlineData("A < null")]
+        //[InlineData("B > null")]
+        //[InlineData("NULL", NodeKind.FirstName)]
+        //[InlineData("Null", NodeKind.FirstName)]
+        //[InlineData("nuLL", NodeKind.FirstName)]
+        //public void TexlParseNull(string script, NodeKind expectedNodeKind = NodeKind.Blank)
+        //{
+        //    // The language does not / no longer supports a null constant.
+        //    // Out-of-context nulls are parsed as unbound identifiers.
+        //    TestRoundtrip(script, expectedNodeKind: expectedNodeKind);
+        //}
+
+        [Theory]
+        [InlineData("ThisItem")]
+        [InlineData("ThisItem!Price")]
+        [InlineData("ThisItem.Price")]
+        public void TexlParseThisItem(string script)
         {
-            // The language does not / no longer supports a null constant.
-            // Out-of-context nulls are parsed as unbound identifiers.
-            TestRoundtrip("null", expectedNodeKind: NodeKind.FirstName);
-            TestRoundtrip("null && null");
-            TestRoundtrip("null || null");
-            TestRoundtrip("!null");
-            TestRoundtrip("A = null");
-            TestRoundtrip("A < null");
-            TestRoundtrip("B > null");
-            TestRoundtrip("NULL", expectedNodeKind: NodeKind.FirstName);
-            TestRoundtrip("Null", expectedNodeKind: NodeKind.FirstName);
-            TestRoundtrip("nuLL", expectedNodeKind: NodeKind.FirstName);
+            TestRoundtrip(script);
         }
 
-        [TestMethod, Owner("ragru")]
-        public void TexlParseThisItem()
+        //[Theory]
+        //[InlineData("Parent", NodeKind.Parent)]
+        //[InlineData("Parent!Width")]
+        //[InlineData("Parent.Width")]
+        //public void TexlParseParent(string script, NodeKind expectedNodeKind = NodeKind.Blank)
+        //{
+        //    TestRoundtrip(script, expectedNodeKind: expectedNodeKind);
+
+        //}
+
+        //[Theory]
+        //[InlineData("Self", NodeKind.Self)]
+        //[InlineData("Self!Width")]
+        //[InlineData("Self.Width")]
+        //[InlineData("If(Self.Width < 2, Self.Height, Self.X)")]
+        //public void TexlParseSelf(string script, NodeKind expectedNodeKind = NodeKind.Blank)
+        //{
+        //    TestRoundtrip(script, null, expectedNodeKind);
+        //}
+
+        [Theory]
+        [InlineData("Concatenate(A, B)")]
+        [InlineData("Abs(-12)")]
+        [InlineData("If(A < 2, A, 2)")]
+        [InlineData("Count(A!B!C)")]
+        [InlineData("Count(A.B.C)")]
+        [InlineData("Abs(12) + Abs(-12) + Abs(45) + Abs(-45)")]
+        public void TexlParseFunctionCalls(string script)
         {
-            TestRoundtrip("ThisItem");
-            TestRoundtrip("ThisItem!Price");
-            TestRoundtrip("ThisItem.Price");
+            TestRoundtrip(script);
         }
 
-        [TestMethod, Owner("ragru")]
-        public void TexlParseParent()
+        [Theory]
+        [InlineData("DateValue(,", 2)]
+        [InlineData("DateValue(,,", 3)]
+        [InlineData("DateValue(,,,,,,,,,", 10)]
+        [InlineData("DateValue(Now(),,", 2)]
+        public void TexlParseFunctionCallsNegative(string script, int expected)
         {
-            TestRoundtrip("Parent", expectedNodeKind: NodeKind.Parent);
-            TestRoundtrip("Parent!Width");
-            TestRoundtrip("Parent.Width");
+            TestParseErrors(script, expected);
         }
 
-        [TestMethod, Owner("lesaltzm")]
-        public void TexlParseSelf()
+
+        [Theory]
+        [InlineData("Facebook!GetFriends()", "Facebook.GetFriends()")]
+        [InlineData("Facebook.GetFriends()")]
+        [InlineData("Netflix!CatalogServices!GetRecentlyAddedTitles()", "Netflix.CatalogServices.GetRecentlyAddedTitles()")]
+        [InlineData("Netflix.CatalogServices.GetRecentlyAddedTitles()")]
+        public void TexlParseNamespaceQualifiedFunctionCalls(string script, string expected = null)
         {
-            TestRoundtrip("Self", expectedNodeKind: NodeKind.Self);
-            TestRoundtrip("Self!Width");
-            TestRoundtrip("Self.Width");
-            TestRoundtrip("If(Self.Width < 2, Self.Height, Self.X)");
+            TestRoundtrip(script, expected);
         }
 
-        [TestMethod, Owner("ragru")]
-        public void TexlParseFunctionCalls()
-        {
-            TestRoundtrip("Concatenate(A, B)");
-            TestRoundtrip("Abs(-12)");
-            TestRoundtrip("If(A < 2, A, 2)");
-            TestRoundtrip("Count(A!B!C)");
-            TestRoundtrip("Count(A.B.C)");
-            TestRoundtrip("Abs(12) + Abs(-12) + Abs(45) + Abs(-45)");
+        //[Theory]
+        //public void TexlCallHeadNodes()
+        //{
+        //    TestRoundtrip("GetSomething()",
+        //        customTest: node =>
+        //        {
+        //            Assert.True(node is CallNode);
+        //            Assert.Null(node.AsCall().HeadNode);
+        //            Assert.NotNull(node.AsCall().Head);
+        //            Assert.True(node.AsCall().Head is Identifier);
+        //            Assert.True((node.AsCall().Head as Identifier).Namespace.IsRoot);
+        //        });
+
+        //    TestRoundtrip("Netflix!Services!GetMovieCatalog()", expected: "Netflix.Services.GetMovieCatalog()",
+        //        customTest: node =>
+        //        {
+        //            Assert.True(node is CallNode);
+
+        //            Assert.NotNull(node.AsCall().Head);
+        //            Assert.True(node.AsCall().Head is Identifier);
+        //            Assert.False((node.AsCall().Head as Identifier).Namespace.IsRoot);
+        //            Assert.Equal("Netflix.Services", (node.AsCall().Head as Identifier).Namespace.ToDottedSyntax("."));
+
+        //            Assert.NotNull(node.AsCall().HeadNode);
+        //            Assert.True(node.AsCall().HeadNode is DottedNameNode);
+        //            Assert.Equal("Netflix.Services.GetMovieCatalog", node.AsCall().HeadNode.AsDottedName().ToDPath().ToDottedSyntax("."));
+        //        });
+        //}
+
+        [Theory]
+        // "As" Ident cannot be a reserved keyword
+        [InlineData("Filter([1,2,3] As Self, 'Self'.Value > 2)", 3)]
+        public void TestReservedAsIdentifier(string script, int expected)
+        {            
+            TestParseErrors(script, expected);
         }
 
-        [TestMethod, Owner("ragru")]
-        public void TexlParseFunctionCallsNegative()
-        {
-            TestParseErrors("DateValue(,", 2);
-            TestParseErrors("DateValue(,,", 3);
-            TestParseErrors("DateValue(,,,,,,,,,", 10);
-            TestParseErrors("DateValue(Now(),,", 2);
-        }
-
-
-        [TestMethod, Owner("ragru")]
-        public void TexlParseNamespaceQualifiedFunctionCalls()
-        {
-            TestRoundtrip("Facebook!GetFriends()", expected: "Facebook.GetFriends()");
-            TestRoundtrip("Facebook.GetFriends()");
-            TestRoundtrip("Netflix!CatalogServices!GetRecentlyAddedTitles()", expected: "Netflix.CatalogServices.GetRecentlyAddedTitles()");
-            TestRoundtrip("Netflix.CatalogServices.GetRecentlyAddedTitles()");
-        }
-
-        [TestMethod, Owner("ragru")]
-        public void TexlCallHeadNodes()
-        {
-            TestRoundtrip("GetSomething()",
-                customTest: node =>
-                {
-                    Assert.IsTrue(node is CallNode);
-                    Assert.IsNull(node.AsCall().HeadNode);
-                    Assert.IsNotNull(node.AsCall().Head);
-                    Assert.IsTrue(node.AsCall().Head is Identifier);
-                    Assert.IsTrue((node.AsCall().Head as Identifier).Namespace.IsRoot);
-                });
-
-            TestRoundtrip("Netflix!Services!GetMovieCatalog()", expected: "Netflix.Services.GetMovieCatalog()",
-                customTest: node =>
-                {
-                    Assert.IsTrue(node is CallNode);
-
-                    Assert.IsNotNull(node.AsCall().Head);
-                    Assert.IsTrue(node.AsCall().Head is Identifier);
-                    Assert.IsFalse((node.AsCall().Head as Identifier).Namespace.IsRoot);
-                    Assert.AreEqual("Netflix.Services", (node.AsCall().Head as Identifier).Namespace.ToDottedSyntax("."));
-
-                    Assert.IsNotNull(node.AsCall().HeadNode);
-                    Assert.IsTrue(node.AsCall().HeadNode is DottedNameNode);
-                    Assert.AreEqual("Netflix.Services.GetMovieCatalog", node.AsCall().HeadNode.AsDottedName().ToDPath().ToDottedSyntax("."));
-                });
-        }
-
-        [TestMethod, Owner("lesaltzm")]
-        public void TestReservedAsIdentifier()
-        {
-            // "As" Ident cannot be a reserved keyword
-            TestParseErrors("Filter([1,2,3] As Self, 'Self'.Value > 2)", 3);
-        }
-
-        [Timeout(1000)]
-        [DataTestMethod, Owner("ragru")]
-        [DataRow(
+        //[Timeout(1000)]
+        [Theory]
+        [InlineData(
             "Text(Text(Text(Text(Text(Text(Text(Text(Text(Text(Text(Text(Text(Text(Text(Text(Text(Text(Text(Text(" +
             "Text(Text(Text(Text(Text(Text(Text(Text(Text(Text(Text(Text(Text(Text(Text(Text(Text(Text(Text(Text(" +
             "Text(Text(Text(Text(Text(Text(Text(Text(Text(Text(Text(Text(Text(Text(Text(Text(Text(Text(Text(Text(" +
@@ -471,7 +493,7 @@ namespace DocumentServer.Core.Tests.Formulas
             "Text(Text(Text(Text(Text(Text(Text(Text(Text(Text(Text(Text(Text(Text(Text(Text(Text(Text(Text(Text(" +
             "Text(Text(Text(Text(Text(Text(Text(Text(Text(Text(Text(Text(Text(Text(Text(Text(Text(Text(Text(Text(" +
             "Text(Text(Text(Text(Text(Text(Text(Text(Text(Text(Text(Text(Text(Text(Text(Text(Text(Text(Text(Text(")]
-        [DataRow(
+        [InlineData(
             "0+(1+(2+(3+(4+(5+(6+(7+(8+(9+(0+(1+(2+(3+(4+(5+(6+(7+(8+(9+(0+(1+(2+(3+(4+(5+(6+(7+(8+(9+(0+(1+(2+(3+(4+(5+(6+(7+(8+(9+(" +
             "0+(1+(2+(3+(4+(5+(6+(7+(8+(9+(0+(1+(2+(3+(4+(5+(6+(7+(8+(9+(0+(1+(2+(3+(4+(5+(6+(7+(8+(9+(0+(1+(2+(3+(4+(5+(6+(7+(8+(9+(" +
             "0+(1+(2+(3+(4+(5+(6+(7+(8+(9+(0+(1+(2+(3+(4+(5+(6+(7+(8+(9+(0+(1+(2+(3+(4+(5+(6+(7+(8+(9+(0+(1+(2+(3+(4+(5+(6+(7+(8+(9+(" +
@@ -481,180 +503,189 @@ namespace DocumentServer.Core.Tests.Formulas
             "0+(1+(2+(3+(4+(5+(6+(7+(8+(9+(0+(1+(2+(3+(4+(5+(6+(7+(8+(9+(0+(1+(2+(3+(4+(5+(6+(7+(8+(9+(0+(1+(2+(3+(4+(5+(6+(7+(8+(9+(" +
             "0+(1+(2+(3+(4+(5+(6+(7+(8+(9+(0+(1+(2+(3+(4+(5+(6+(7+(8+(9+(0+(1+(2+(3+(4+(5+(6+(7+(8+(9+(0+(1+(2+(3+(4+(5+(6+(7+(8+(9+(" +
             "0+(1+(2+(3+(4+(5+(6+(7+(8+(9+(0+(1+(2+(3+(4+(5+(6+(7+(8+(9+(0+(1+(2+(3+(4+(5+(6+(7+(8+(9+(0+(1+(2+(3+(4+(5+(6+(7+(8+(9+(")]
-        [DataRow("A!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")]
-        [DataRow("A!A!A!A!A!A!A!A!A!A!A!A!A!A!A!A!A!A!A!A!A!A!A!A!A!A!A!A!A!A!A!A!A!A!A!A!A!A!A!A!A!A!A!A!A!A!A!A!A!A!A!A!A!A!A!A!A!A!A!A!A")]
-        [DataRow("A............................................................")]
-        [DataRow("A.A.A.A.A.A.A.A.A.A.A.A.A.A.A.A.A.A.A.A.A.A.A.A.A.A.A.A.A.A.A.A.A.A.A.A.A.A.A.A.A.A.A.A.A.A.A.A.A.A.A.A.A.A.A.A.A.A.A.A.A")]
+        [InlineData("A!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")]
+        [InlineData("A!A!A!A!A!A!A!A!A!A!A!A!A!A!A!A!A!A!A!A!A!A!A!A!A!A!A!A!A!A!A!A!A!A!A!A!A!A!A!A!A!A!A!A!A!A!A!A!A!A!A!A!A!A!A!A!A!A!A!A!A")]
+        [InlineData("A............................................................")]
+        [InlineData("A.A.A.A.A.A.A.A.A.A.A.A.A.A.A.A.A.A.A.A.A.A.A.A.A.A.A.A.A.A.A.A.A.A.A.A.A.A.A.A.A.A.A.A.A.A.A.A.A.A.A.A.A.A.A.A.A.A.A.A.A")]
         public void TexlExcessivelyDeepRules(string script)
         {
             TestParseErrors(script, count: 1, errorMessage: StringResources.Get(TexlStrings.ErrRuleNestedTooDeeply));
         }
 
-        [DataTestMethod, Owner("janewby")]
-        [DataRow("")]
-        [DataRow("  ")]
-        [DataRow("//LineComment")]
-        [DataRow("/* Block Comment Closed */")]
+        [Theory]
+        [InlineData("")]
+        [InlineData("  ")]
+        [InlineData("//LineComment")]
+        [InlineData("/* Block Comment Closed */")]
         public void TestBlankNodesAndCommentNodeOnlys(string script)
         {
             var result = TexlParser.ParseScript(script);
             var node = result.Root;
 
-            Assert.IsNotNull(node);
-            Assert.IsNull(result.Errors);
+            Assert.NotNull(node);
+            Assert.Null(result.Errors);
         }
 
-        [DataTestMethod, Owner("janewby")]
-        [DataRow("/* Block Comment no end")]
+        [Theory]
+        [InlineData("/* Block Comment no end")]
         public void TexlTestCommentingSemantics_Negative(string script)
         {
             TestParseErrors(script);
         }
 
-        [TestMethod, Owner("lesaltzm")]
-        [DataRow("true and false")]
-        [DataRow("\"a\" In \"astring\"")]
-        [DataRow("\"a\" ExaCtIn \"astring\"")]
-        [DataRow("true ANd false")]
+        [Theory]
+        [InlineData("true and false")]
+        [InlineData("\"a\" In \"astring\"")]
+        [InlineData("\"a\" ExaCtIn \"astring\"")]
+        [InlineData("true ANd false")]
         public void TestBinaryOpCaseParseErrors(string script)
         {
             TestParseErrors(script);
         }
 
-        [DataTestMethod, Owner("ragru")]
-        [DataRow("a!b", "a.b")]
-        [DataRow("a.b", "a.b")]
-        [DataRow("a[@b]", "a.b")]
-        [DataRow("a!b!c", "a.b.c")]
-        [DataRow("a.b.c", "a.b.c")]
-        [DataRow("a!b!c!d!e!f!g!h!i!j!k!l!m!n!o!p!q!r!s!t!w!x!y!z", "a.b.c.d.e.f.g.h.i.j.k.l.m.n.o.p.q.r.s.t.w.x.y.z")]
-        [DataRow("a.b.c.d.e.f.g.h.i.j.k.l.m.n.o.p.q.r.s.t.w.x.y.z", "a.b.c.d.e.f.g.h.i.j.k.l.m.n.o.p.q.r.s.t.w.x.y.z")]
+        [Theory]
+        [InlineData("a!b", "a.b")]
+        [InlineData("a.b", "a.b")]
+        [InlineData("a[@b]", "a.b")]
+        [InlineData("a!b!c", "a.b.c")]
+        [InlineData("a.b.c", "a.b.c")]
+        [InlineData("a!b!c!d!e!f!g!h!i!j!k!l!m!n!o!p!q!r!s!t!w!x!y!z", "a.b.c.d.e.f.g.h.i.j.k.l.m.n.o.p.q.r.s.t.w.x.y.z")]
+        [InlineData("a.b.c.d.e.f.g.h.i.j.k.l.m.n.o.p.q.r.s.t.w.x.y.z", "a.b.c.d.e.f.g.h.i.j.k.l.m.n.o.p.q.r.s.t.w.x.y.z")]
         public void TestNodeToDPath(string script, string dpath)
         {
             var result = TexlParser.ParseScript(script);
             var node = result.Root;
 
-            Assert.IsNotNull(node);
-            Assert.IsNull(result.Errors);
-            Assert.IsTrue(node is DottedNameNode);
+            Assert.NotNull(node);
+            Assert.Null(result.Errors);
+            Assert.True(node is DottedNameNode);
 
             DottedNameNode dotted = node as DottedNameNode;
-            Assert.AreEqual(dpath, dotted.ToDPath().ToDottedSyntax(punctuator: "."));
+            Assert.Equal(dpath, dotted.ToDPath().ToDottedSyntax(punctuator: "."));
         }
 
-        [TestMethod, Owner("ragru")]
-        public void TestParseRecords()
-        {
-            TestRoundtrip("{}", "{  }");
-            TestRoundtrip("{  }");
-            TestRoundtrip("{ A:10 }");
-            TestRoundtrip("{ WhateverIdentifierHere:10 }");
-            TestRoundtrip("{ 'someFieldName':10 }");
-            TestRoundtrip("{ 'somefield   weird identifier with spaces and stuff...':10, 'some...and another one':true }");
-            TestRoundtrip("{ A:10, B:\"hello\", C:true }");
-            TestRoundtrip("{ A:Abs(12) + Abs(-12) + Abs(45) + Abs(-45), B:Nz(A), C:X!Y + Y!Z }");
-            TestRoundtrip("{ A:Abs(12) + Abs(-12) + Abs(45) + Abs(-45), B:Nz(A), C:X.Y + Y.Z }");
+        [Theory]
+        [InlineData("{}", "{  }")]
+        [InlineData("{  }")]
+        [InlineData("{ A:10 }")]
+        [InlineData("{ WhateverIdentifierHere:10 }")]
+        [InlineData("{ 'someFieldName':10 }")]
+        [InlineData("{ 'somefield   weird identifier with spaces and stuff...':10, 'some...and another one':true }")]
+        [InlineData("{ A:10, B:\"hello\", C:true }")]
+        [InlineData("{ A:Abs(12) + Abs(-12) + Abs(45) + Abs(-45), B:Nz(A), C:X!Y + Y!Z }")]
+        [InlineData("{ A:Abs(12) + Abs(-12) + Abs(45) + Abs(-45), B:Nz(A), C:X.Y + Y.Z }")]
 
-            // Nested
-            TestRoundtrip("{ A:{  }, B:{  }, C:{  } }");
-            TestRoundtrip("{ A:{ X:10, Y:true }, B:{ Z:\"Hello\" }, C:{ W:{  } } }");
-            TestRoundtrip("{ A:{ X:10, Y:true }, B:{ 'ZZZZZ':\"Hello\" }, C:{ 'WWW WWWW WWWW':{  } } }");
+        // Nested
+        [InlineData("{ A:{  }, B:{  }, C:{  } }")]
+        [InlineData("{ A:{ X:10, Y:true }, B:{ Z:\"Hello\" }, C:{ W:{  } } }")]
+        [InlineData("{ A:{ X:10, Y:true }, B:{ 'ZZZZZ':\"Hello\" }, C:{ 'WWW WWWW WWWW':{  } } }")]
+        public void TestParseRecords(string script, string expected = null)
+        {
+            TestRoundtrip(script, expected);
         }
 
-        [TestMethod, Owner("ragru")]
-        public void TestParseRecordsNegative()
+        [Theory]
+            [InlineData("{{}}")]
+            [InlineData("{ , }")]
+            [InlineData("{A:1, }")]
+            [InlineData("{A:1,,, }")]
+            [InlineData("{A:1, B:2,,, }")]
+            [InlineData("{ . . . }")]
+            [InlineData("{ some identifiers }")]
+            [InlineData("{ {some identifiers} }")]
+            [InlineData("{{}, {}, {}}")]
+            [InlineData("{ 10 20 30 }")]
+            [InlineData("{10, 20, 30}")]
+            [InlineData("{A; B; C}")]
+            [InlineData("{A:1, B C}")]
+            [InlineData("{A, B, C}")]
+            [InlineData("{A B C}")]
+            [InlineData("{true, false, true, true, false}")]
+            [InlineData("{\"a\", \"b\", \"c\"}")]
+            [InlineData("{:, :, :}")]
+            [InlineData("{A:10; B:30; C:40}")]
+            [InlineData("{A:10, , , , C:30}")]
+            [InlineData("{{}:A}")]
+            [InlineData("{10:B, 20:C}")]
+            [InlineData("{A:10 B:20 C:30}")]
+            [InlineData("{A:10 . B:20 . C:30}")]
+            [InlineData("{A;10, B;20, C;30}")]
+            [InlineData("{A=20, B=30, C=40}")]
+            [InlineData("{A:=20, B:=30, C:=true}")]
+            [InlineData("{A:20+}")]
+            [InlineData("{A:20, B:30; }")]
+            [InlineData("{A:20, B:30 ++ }")]
+        public void TestParseRecordsNegative(string script)
         {
-            TestParseErrors("{{}}");
-            TestParseErrors("{ , }");
-            TestParseErrors("{A:1, }");
-            TestParseErrors("{A:1,,, }");
-            TestParseErrors("{A:1, B:2,,, }");
-            TestParseErrors("{ . . . }");
-            TestParseErrors("{ some identifiers }");
-            TestParseErrors("{ {some identifiers} }");
-            TestParseErrors("{{}, {}, {}}");
-            TestParseErrors("{ 10 20 30 }");
-            TestParseErrors("{10, 20, 30}");
-            TestParseErrors("{A; B; C}");
-            TestParseErrors("{A:1, B C}");
-            TestParseErrors("{A, B, C}");
-            TestParseErrors("{A B C}");
-            TestParseErrors("{true, false, true, true, false}");
-            TestParseErrors("{\"a\", \"b\", \"c\"}");
-            TestParseErrors("{:, :, :}");
-            TestParseErrors("{A:10; B:30; C:40}");
-            TestParseErrors("{A:10, , , , C:30}");
-            TestParseErrors("{{}:A}");
-            TestParseErrors("{10:B, 20:C}");
-            TestParseErrors("{A:10 B:20 C:30}");
-            TestParseErrors("{A:10 . B:20 . C:30}");
-            TestParseErrors("{A;10, B;20, C;30}");
-            TestParseErrors("{A=20, B=30, C=40}");
-            TestParseErrors("{A:=20, B:=30, C:=true}");
-            TestParseErrors("{A:20+}");
-            TestParseErrors("{A:20, B:30; }");
-            TestParseErrors("{A:20, B:30 ++ }");
+            TestParseErrors(script);
         }
 
-        [TestMethod, Owner("ragru")]
-        public void TestParseTables()
+        [Theory]
+        [InlineData("[]", "[  ]")]
+        [InlineData("[  ]")]
+        [InlineData("[ 1, 2, 3, 4, 5 ]")]
+        [InlineData("[ Abs(12), Abs(-12), Abs(45), Abs(-45), X!Y + Y!Z ]")]
+        [InlineData("[ Abs(12), Abs(-12), Abs(45), Abs(-45), X.Y + Y.Z ]")]
+        [InlineData("[ \"a\", \"b\", \"c\" ]")]
+
+        // Nested
+        [InlineData("[ [ 1, 2, 3 ], [ 4, 5, 6 ], [ \"a\", \"b\", \"c\" ] ]")]
+        public void TestParseTables(string script, string expected = null)
         {
-            TestRoundtrip("[]", "[  ]");
-            TestRoundtrip("[  ]");
-            TestRoundtrip("[ 1, 2, 3, 4, 5 ]");
-            TestRoundtrip("[ Abs(12), Abs(-12), Abs(45), Abs(-45), X!Y + Y!Z ]");
-            TestRoundtrip("[ Abs(12), Abs(-12), Abs(45), Abs(-45), X.Y + Y.Z ]");
-            TestRoundtrip("[ \"a\", \"b\", \"c\" ]");
+            TestRoundtrip(script, expected);
 
             // Nested
             TestRoundtrip("[ [ 1, 2, 3 ], [ 4, 5, 6 ], [ \"a\", \"b\", \"c\" ] ]");
         }
 
-        [TestMethod, Owner("ragru")]
-        public void TestParseTables_Negative()
+        [Theory]
+        [InlineData("[a:10]")]
+        [InlineData("[a:10, b:20]")]
+        [InlineData("[10; 20; 30]")]
+        [InlineData("[10 20 30]")]
+        public void TestParseTables_Negative(string script)
         {
-            TestParseErrors("[a:10]");
-            TestParseErrors("[a:10, b:20]");
-            TestParseErrors("[10; 20; 30]");
-            TestParseErrors("[10 20 30]");
+            TestParseErrors(script);
         }
 
-        [TestMethod, Owner("emhommer")]
-        public void TestFormulasParse()
+        [Theory]
+        [InlineData("a=10;")]
+        [InlineData("a=b=10;")]
+        [InlineData("a=10;c=20;")]
+        public void TestFormulasParse(string script)
         {
-            TestFormulasParseRoundtrip("a=10;");
-            TestFormulasParseRoundtrip("a=b=10;");
-            TestFormulasParseRoundtrip("a=10;c=20;");
+            TestFormulasParseRoundtrip(script);
         }
 
-        [TestMethod, Owner("emhommer")]
-        public void TestFormulasParse_Negative()
+        [Theory]
+        [InlineData("a=10")]
+        [InlineData("a;")]
+        [InlineData(";")]
+        [InlineData("a=a=10")]
+        public void TestFormulasParse_Negative(string script)
         {
-            TestFormulasParseError("a=10"); // missing ;
-            TestFormulasParseError("a;"); // missing = and expression
-            TestFormulasParseError(";"); // missing identifier and expression
-            TestFormulasParseError("a=a=10;"); // circular reference
+            TestFormulasParseError(script);
         }
 
         internal void TestRoundtrip(string script, string expected = null, NodeKind expectedNodeKind = NodeKind.Error, Action<TexlNode> customTest = null)
         {
             var result = TexlParser.ParseScript(script);
             var node = result.Root;
-            Assert.IsNotNull(node);
-            Assert.IsFalse(result.HasError);
+            Assert.NotNull(node);
+            Assert.False(result.HasError);
 
             int startid = node.Id;
             // Test cloning
             TexlNode clone = node.Clone(ref startid, default(Span));
-            Assert.AreEqual(TexlPretty.PrettyPrint(node), TexlPretty.PrettyPrint(clone), false);
+            Assert.Equal(TexlPretty.PrettyPrint(node), TexlPretty.PrettyPrint(clone), false);
 
             if (expected == null)
                 expected = script;
 
-            Assert.AreEqual(expected, TexlPretty.PrettyPrint(node), false);
+            Assert.Equal(expected, TexlPretty.PrettyPrint(node), false);
 
             if (expectedNodeKind != NodeKind.Error)
-                Assert.AreEqual(expectedNodeKind, node.Kind);
+                Assert.Equal(expectedNodeKind, node.Kind);
 
             if (customTest != null)
                 customTest(node);
@@ -663,26 +694,26 @@ namespace DocumentServer.Core.Tests.Formulas
         internal void TestParseErrors(string script, int count = 1, string errorMessage = null)
         {
             var result = TexlParser.ParseScript(script);
-            Assert.IsNotNull(result.Root);
-            Assert.IsTrue(result.HasError);
-            Assert.IsTrue(result.Errors.Count >= count);
+            Assert.NotNull(result.Root);
+            Assert.True(result.HasError);
+            Assert.True(result.Errors.Count >= count);
             //Assert.IsTrue(result.Errors.All(err => err.ErrorKind == DocumentErrorKind.AXL && err.TextSpan != null));
-            Assert.IsTrue(errorMessage == null || result.Errors.Any(err => err.ShortMessage == errorMessage));
+            Assert.True(errorMessage == null || result.Errors.Any(err => err.ShortMessage == errorMessage));
         }
 
         internal void TestFormulasParseRoundtrip(string script, string expected = null, NodeKind expectedNodeKind = NodeKind.Error, Action<TexlNode> customTest = null)
         {
             var result = TexlParser.ParseFormulasScript(script);
 
-            Assert.IsTrue(result.NamedFormulas.Count > 0);
-            Assert.IsFalse(result.HasError);
+            Assert.True(result.NamedFormulas.Count > 0);
+            Assert.False(result.HasError);
         }
 
         internal void TestFormulasParseError(string script, string expected = null, NodeKind expectedNodeKind = NodeKind.Error, Action<TexlNode> customTest = null)
         {
             var result = TexlParser.ParseFormulasScript(script);
 
-            Assert.IsTrue(result.NamedFormulas.Count == 0 || result.HasError);
+            Assert.True(result.NamedFormulas.Count == 0 || result.HasError);
         }
     }
 }
