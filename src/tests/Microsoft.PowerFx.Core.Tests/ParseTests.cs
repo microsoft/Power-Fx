@@ -130,61 +130,61 @@ namespace DocumentServer.Core.Tests.Formulas
             TestRoundtrip(script, expected);
         }
 
-        //[Theory]
-        //[InlineData("A || B")]
-        //[InlineData("A || B || C")]
-        //[InlineData("A && B")]
-        //[InlineData("A && B && C")]
-        //[InlineData("A && B || C && D")]
-        //[InlineData("A || B && C || D")]
-        //[InlineData("(A || B) && (C || D)")]
-        //[InlineData("!A")]
-        //[InlineData("! A", "!A")]
-        //[InlineData("!!!!!!!!!A")]
-        //[InlineData("! ! ! ! ! ! ! ! ! A", "!!!!!!!!!A")]
-        //[InlineData("!    !    !!!!    !!!     A", "!!!!!!!!!A")]
-        //[InlineData("!A || !B || D")]
-        //[InlineData("!(A || B) && !(C && D)")]
-        //[InlineData("!!!!!!!!!(A || B || C && D)")]
+        [Theory]
+        [InlineData("A || B")]
+        [InlineData("A || B || C")]
+        [InlineData("A && B")]
+        [InlineData("A && B && C")]
+        [InlineData("A && B || C && D")]
+        [InlineData("A || B && C || D")]
+        [InlineData("(A || B) && (C || D)")]
+        [InlineData("!A")]
+        [InlineData("! A", "!A")]
+        [InlineData("!!!!!!!!!A")]
+        [InlineData("! ! ! ! ! ! ! ! ! A", "!!!!!!!!!A")]
+        [InlineData("!    !    !!!!    !!!     A", "!!!!!!!!!A")]
+        [InlineData("!A || !B || D")]
+        [InlineData("!(A || B) && !(C && D)")]
+        [InlineData("!!!!!!!!!(A || B || C && D)")]
 
-        //[InlineData("!false")]
-        //[InlineData("!true")]
-        //[InlineData("true || true")]
-        //[InlineData("true || false")]
-        //[InlineData("false || false")]
-        //[InlineData("false || true")]
-        //[InlineData("true && true")]
-        //[InlineData("true && false")]
-        //[InlineData("false && true")]
-        //[InlineData("false && false")]
-        //[InlineData("true && true && true && true && true")]
-        //[InlineData("false && false && false && false && false")]
+        [InlineData("!false")]
+        [InlineData("!true")]
+        [InlineData("true || true")]
+        [InlineData("true || false")]
+        [InlineData("false || false")]
+        [InlineData("false || true")]
+        [InlineData("true && true")]
+        [InlineData("true && false")]
+        [InlineData("false && true")]
+        [InlineData("false && false")]
+        [InlineData("true && true && true && true && true")]
+        [InlineData("false && false && false && false && false")]
 
-        //[InlineData("Price = 1200")]
-        //[InlineData("Gender = \"Female\"")]
+        [InlineData("Price = 1200")]
+        [InlineData("Gender = \"Female\"")]
 
-        //[InlineData("A = B")]
-        //[InlineData("A < B")]
-        //[InlineData("A <= B")]
-        //[InlineData("A >= B")]
-        //[InlineData("A > B")]
-        //[InlineData("A <> B")]
+        [InlineData("A = B")]
+        [InlineData("A < B")]
+        [InlineData("A <= B")]
+        [InlineData("A >= B")]
+        [InlineData("A > B")]
+        [InlineData("A <> B")]
 
-        //// Note that we are parsing these, but internally they will be binary trees: "((1 < 2) < 3) < 4", etc.
-        //[InlineData("1 < 2 < 3 < 4", null, NodeKind.BinaryOp)]
-        //[InlineData("1 < 2 >= 3 < 4", null, NodeKind.BinaryOp)]
-        //[InlineData("1 <= 2 < 3 <= 4", null, NodeKind.BinaryOp)]
-        //[InlineData("4 > 3 > 2 > 1", null, NodeKind.BinaryOp)]
-        //[InlineData("4 > 3 >= 2 > 1", null, NodeKind.BinaryOp)]
-        //[InlineData("1 < 2 = 3 <> 4", null, NodeKind.BinaryOp)]
+        // Note that we are parsing these, but internally they will be binary trees: "((1 < 2) < 3) < 4", etc.
+        [InlineData("1 < 2 < 3 < 4", null, NodeKind.BinaryOp)]
+        [InlineData("1 < 2 >= 3 < 4", null, NodeKind.BinaryOp)]
+        [InlineData("1 <= 2 < 3 <= 4", null, NodeKind.BinaryOp)]
+        [InlineData("4 > 3 > 2 > 1", null, NodeKind.BinaryOp)]
+        [InlineData("4 > 3 >= 2 > 1", null, NodeKind.BinaryOp)]
+        [InlineData("1 < 2 = 3 <> 4", null, NodeKind.BinaryOp)]
 
-        //[InlineData("true = false")]
-        //[InlineData("true <> false")]
-        //[InlineData("Gender <> \"Male\"")]
-        //public void TexlParseLogicalOperators(string script, string expected = null, NodeKind expectedNodeKind = NodeKind.Error)
-        //{
-        //    TestRoundtrip(script, expected, expectedNodeKind);
-        //}
+        [InlineData("true = false")]
+        [InlineData("true <> false")]
+        [InlineData("Gender <> \"Male\"")]
+        internal void TexlParseLogicalOperators(string script, string expected = null, NodeKind expectedNodeKind = NodeKind.Error)
+        {
+            TestRoundtrip(script, expected, expectedNodeKind);
+        }
 
         [Theory]
         [InlineData("A Or B")]
@@ -241,38 +241,38 @@ namespace DocumentServer.Core.Tests.Formulas
             TestParseErrors(script);
         }
 
-        //[Theory]
-        //public void TexlParseDoubleAmpVsSingleAmp()
-        //{
-        //    // Test the correct parsing of double- vs. single-ampersand.
+        [Fact]
+        public void TexlParseDoubleAmpVsSingleAmp()
+        {
+            // Test the correct parsing of double- vs. single-ampersand.
 
-        //    // Double-ampersand should resolve to the logical conjunction operator.
-        //    TestRoundtrip("A && B",
-        //        expectedNodeKind: NodeKind.BinaryOp,
-        //        customTest: node =>
-        //        {
-        //            Assert.Equal(BinaryOp.And, node.AsBinaryOp().Op);
-        //        });
+            // Double-ampersand should resolve to the logical conjunction operator.
+            TestRoundtrip("A && B",
+                expectedNodeKind: NodeKind.BinaryOp,
+                customTest: node =>
+                {
+                    Assert.Equal(BinaryOp.And, node.AsBinaryOp().Op);
+                });
 
-        //    // Single-ampersand should resolve to the concatenation operator.
-        //    TestRoundtrip("A & B",
-        //        expectedNodeKind: NodeKind.BinaryOp,
-        //        customTest: node =>
-        //        {
-        //            Assert.Equal(BinaryOp.Concat, node.AsBinaryOp().Op);
-        //        });
+            // Single-ampersand should resolve to the concatenation operator.
+            TestRoundtrip("A & B",
+                expectedNodeKind: NodeKind.BinaryOp,
+                customTest: node =>
+                {
+                    Assert.Equal(BinaryOp.Concat, node.AsBinaryOp().Op);
+                });
 
-        //    // A triple-amp on the other hand should trigger a parse error.
-        //    TestParseErrors("A &&& B", count: 1);
-        //}
+            // A triple-amp on the other hand should trigger a parse error.
+            TestParseErrors("A &&& B", count: 1);
+        }
 
-        //[Theory]
-        //[InlineData("", "", NodeKind.Blank)]
-        //public void TexlParseBlank(string script, string expected, NodeKind expectedNodeKind)
-        //{
-        //    // Test the correct parsing of Blank node.
-        //    TestRoundtrip(script, expected, expectedNodeKind);
-        //}
+        [Theory]
+        [InlineData("", "", NodeKind.Blank)]
+        internal void TexlParseBlank(string script, string expected, NodeKind expectedNodeKind)
+        {
+            // Test the correct parsing of Blank node.
+            TestRoundtrip(script, expected, expectedNodeKind);
+        }
 
         [Theory]
         // Unqualified identifiers
@@ -361,25 +361,25 @@ namespace DocumentServer.Core.Tests.Formulas
             TestParseErrors(script);           
         }
 
-        //[Theory]
-        //// The language does not / no longer supports a null constant.
-        //// Out-of-context nulls are parsed as unbound identifiers.
-        //[InlineData("null", NodeKind.FirstName)]
-        //[InlineData("null && null")]
-        //[InlineData("null || null")]
-        //[InlineData("!null")]
-        //[InlineData("A = null")]
-        //[InlineData("A < null")]
-        //[InlineData("B > null")]
-        //[InlineData("NULL", NodeKind.FirstName)]
-        //[InlineData("Null", NodeKind.FirstName)]
-        //[InlineData("nuLL", NodeKind.FirstName)]
-        //public void TexlParseNull(string script, NodeKind expectedNodeKind = NodeKind.Blank)
-        //{
-        //    // The language does not / no longer supports a null constant.
-        //    // Out-of-context nulls are parsed as unbound identifiers.
-        //    TestRoundtrip(script, expectedNodeKind: expectedNodeKind);
-        //}
+        [Theory]
+        // The language does not / no longer supports a null constant.
+        // Out-of-context nulls are parsed as unbound identifiers.
+        [InlineData("null", NodeKind.FirstName)]
+        [InlineData("null && null")]
+        [InlineData("null || null")]
+        [InlineData("!null")]
+        [InlineData("A = null")]
+        [InlineData("A < null")]
+        [InlineData("B > null")]
+        [InlineData("NULL", NodeKind.FirstName)]
+        [InlineData("Null", NodeKind.FirstName)]
+        [InlineData("nuLL", NodeKind.FirstName)]
+        internal void TexlParseNull(string script, NodeKind expectedNodeKind = NodeKind.Error)
+        {
+            // The language does not / no longer supports a null constant.
+            // Out-of-context nulls are parsed as unbound identifiers.
+            TestRoundtrip(script, expectedNodeKind: expectedNodeKind);
+        }
 
         [Theory]
         [InlineData("ThisItem")]
@@ -390,25 +390,25 @@ namespace DocumentServer.Core.Tests.Formulas
             TestRoundtrip(script);
         }
 
-        //[Theory]
-        //[InlineData("Parent", NodeKind.Parent)]
-        //[InlineData("Parent!Width")]
-        //[InlineData("Parent.Width")]
-        //public void TexlParseParent(string script, NodeKind expectedNodeKind = NodeKind.Blank)
-        //{
-        //    TestRoundtrip(script, expectedNodeKind: expectedNodeKind);
+        [Theory]
+        [InlineData("Parent", NodeKind.Parent)]
+        [InlineData("Parent!Width")]
+        [InlineData("Parent.Width")]
+        internal void TexlParseParent(string script, NodeKind expectedNodeKind = NodeKind.Error)
+        {
+            TestRoundtrip(script, expectedNodeKind: expectedNodeKind);
 
-        //}
+        }
 
-        //[Theory]
-        //[InlineData("Self", NodeKind.Self)]
-        //[InlineData("Self!Width")]
-        //[InlineData("Self.Width")]
-        //[InlineData("If(Self.Width < 2, Self.Height, Self.X)")]
-        //public void TexlParseSelf(string script, NodeKind expectedNodeKind = NodeKind.Blank)
-        //{
-        //    TestRoundtrip(script, null, expectedNodeKind);
-        //}
+        [Theory]
+        [InlineData("Self", NodeKind.Self)]
+        [InlineData("Self!Width")]
+        [InlineData("Self.Width")]
+        [InlineData("If(Self.Width < 2, Self.Height, Self.X)")]
+        internal void TexlParseSelf(string script, NodeKind expectedNodeKind = NodeKind.Error)
+        {
+            TestRoundtrip(script, null, expectedNodeKind);
+        }
 
         [Theory]
         [InlineData("Concatenate(A, B)")]
@@ -443,34 +443,34 @@ namespace DocumentServer.Core.Tests.Formulas
             TestRoundtrip(script, expected);
         }
 
-        //[Theory]
-        //public void TexlCallHeadNodes()
-        //{
-        //    TestRoundtrip("GetSomething()",
-        //        customTest: node =>
-        //        {
-        //            Assert.True(node is CallNode);
-        //            Assert.Null(node.AsCall().HeadNode);
-        //            Assert.NotNull(node.AsCall().Head);
-        //            Assert.True(node.AsCall().Head is Identifier);
-        //            Assert.True((node.AsCall().Head as Identifier).Namespace.IsRoot);
-        //        });
+        [Fact]
+        public void TexlCallHeadNodes()
+        {
+            TestRoundtrip("GetSomething()",
+                customTest: node =>
+                {
+                    Assert.True(node is CallNode);
+                    Assert.Null(node.AsCall().HeadNode);
+                    Assert.NotNull(node.AsCall().Head);
+                    Assert.True(node.AsCall().Head is Identifier);
+                    Assert.True((node.AsCall().Head as Identifier).Namespace.IsRoot);
+                });
 
-        //    TestRoundtrip("Netflix!Services!GetMovieCatalog()", expected: "Netflix.Services.GetMovieCatalog()",
-        //        customTest: node =>
-        //        {
-        //            Assert.True(node is CallNode);
+            TestRoundtrip("Netflix!Services!GetMovieCatalog()", expected: "Netflix.Services.GetMovieCatalog()",
+                customTest: node =>
+                {
+                    Assert.True(node is CallNode);
 
-        //            Assert.NotNull(node.AsCall().Head);
-        //            Assert.True(node.AsCall().Head is Identifier);
-        //            Assert.False((node.AsCall().Head as Identifier).Namespace.IsRoot);
-        //            Assert.Equal("Netflix.Services", (node.AsCall().Head as Identifier).Namespace.ToDottedSyntax("."));
+                    Assert.NotNull(node.AsCall().Head);
+                    Assert.True(node.AsCall().Head is Identifier);
+                    Assert.False((node.AsCall().Head as Identifier).Namespace.IsRoot);
+                    Assert.Equal("Netflix.Services", (node.AsCall().Head as Identifier).Namespace.ToDottedSyntax("."));
 
-        //            Assert.NotNull(node.AsCall().HeadNode);
-        //            Assert.True(node.AsCall().HeadNode is DottedNameNode);
-        //            Assert.Equal("Netflix.Services.GetMovieCatalog", node.AsCall().HeadNode.AsDottedName().ToDPath().ToDottedSyntax("."));
-        //        });
-        //}
+                    Assert.NotNull(node.AsCall().HeadNode);
+                    Assert.True(node.AsCall().HeadNode is DottedNameNode);
+                    Assert.Equal("Netflix.Services.GetMovieCatalog", node.AsCall().HeadNode.AsDottedName().ToDPath().ToDottedSyntax("."));
+                });
+        }
 
         [Theory]
         // "As" Ident cannot be a reserved keyword
