@@ -5,6 +5,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
 {
     /// <summary>
     /// Code action object model.
+    /// https://docs.microsoft.com/en-us/dotnet/api/microsoft.visualstudio.languageserver.protocol.codeaction?view=visualstudiosdk-2019
     /// </summary>
     public class CodeAction
     {
@@ -32,11 +33,6 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
         public Diagnostic[] Diagnostics { get; set; }
 
         /// <summary>
-        /// Code action is preferred or not.
-        /// </summary>
-        public bool IsPreferred { get; set; }
-
-        /// <summary>
         /// Gets or sets supported code action edits.
         /// </summary>
         public WorkspaceEdit Edit { get; set; }
@@ -45,10 +41,5 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
         /// Gets or sets code action command.
         /// </summary>
         public CodeActionCommand Command { get; set; }
-
-        /// <summary>
-        /// Gets or sets addtional data.
-        /// </summary>
-        public object Data { get; set; }
     }
 }

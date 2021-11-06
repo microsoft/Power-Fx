@@ -23,7 +23,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
         public Diagnostic[] Diagnostics { get; set; }
 
         /// <summary>
-        /// List code code action kind string values.
+        /// List of code action kind string values.
         /// </summary>
         public string[] Only { get; set; }
     }
