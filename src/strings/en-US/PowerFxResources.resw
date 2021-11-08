@@ -812,6 +812,10 @@
     <value>Returns the current date and time.</value>
     <comment>Description of 'Now' function.</comment>
   </data>
+  <data name="AboutUTCNow" xml:space="preserve">
+    <value>Returns the current date and time in UTC time.</value>
+    <comment>Description of 'UTCNow' function.</comment>
+  </data>
   <data name="AboutTimeZoneOffset" xml:space="preserve">
     <value>Returns the time difference between UTC time and local time, in minutes.For example, If your time zone is UTC+2, -120 will be returned.</value>
     <comment>Description of 'TimeZoneOffset' function.</comment>
@@ -827,6 +831,10 @@
   <data name="AboutToday" xml:space="preserve">
     <value>Returns the current date.</value>
     <comment>Description of 'Today' function.</comment>
+  </data>
+  <data name="AboutUTCToday" xml:space="preserve">
+    <value>Returns the current date in UTC time.</value>
+    <comment>Description of 'UTCToday' function.</comment>
   </data>
   <data name="AboutWeekNum" xml:space="preserve">
     <value>Returns the week number for a given date.</value>
@@ -3372,6 +3380,18 @@
   <data name="IsTodayFuncArg1" xml:space="preserve">
     <value>date</value>
     <comment>function_parameter - First argument to the IsToday function - the date to be tested.</comment>
+  </data>
+  </data>
+  <data name="AboutIsUTCToday" xml:space="preserve">
+    <value>Checks whether the given date is today in UTC, and returns true or false.</value>
+    <comment>Description of 'IsUTCToday' function</comment>
+  </data>
+  <data name="AboutIsUTCToday_date" xml:space="preserve">
+    <value>The date value to test.</value>
+  </data>
+  <data name="IsUTCTodayFuncArg1" xml:space="preserve">
+    <value>date</value>
+    <comment>function_parameter - First argument to the IsUTCToday function - the date to be tested.</comment>
   </data>
   <data name="AboutMod" xml:space="preserve">
     <value>Returns the remainder after a number is divided by a divisor. The result has the same sign as the divisor.</value>
