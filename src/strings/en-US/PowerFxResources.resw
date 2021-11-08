@@ -2261,6 +2261,53 @@
   <data name="AboutChar_column_of_numbers" xml:space="preserve">
     <value>A column of code numbers from the character set on your platform.</value>
   </data>
+  <data name="AboutParseJson" xml:space="preserve">
+    <value>Converts a JSON string into a loosely-typed object.</value>
+    <comment>Description of 'ParseJson' function.</comment>
+  </data>
+  <data name="ParseJsonArg1" xml:space="preserve">
+    <value>input</value>
+    <comment>function_parameter - First argument of the ParseJson function - String type.</comment>
+  </data>
+  <data name="AboutParseJson_input" xml:space="preserve">
+    <value>A JSON string to process.</value>
+  </data>
+  <data name="AboutGetField" xml:space="preserve">
+    <value>Indexes into a loosely-typed object by field name. Returns a loosely-typed object.</value>
+    <comment>Description of 'ParseJson' function.</comment>
+  </data>
+  <data name="GetFieldArg1" xml:space="preserve">
+    <value>obj</value>
+    <comment>function_parameter - First argument of the GetField function - CustomObject type.</comment>
+  </data>
+  <data name="GetFieldArg2" xml:space="preserve">
+    <value>field</value>
+    <comment>function_parameter - Second argument of the GetField function - String type.</comment>
+  </data>
+  <data name="AboutGetField_obj" xml:space="preserve">
+    <value>A loosely-typed object.</value>
+  </data>
+  <data name="AboutGetField_field" xml:space="preserve">
+    <value>The name of a field.</value>
+  </data>
+  <data name="AboutGetAt" xml:space="preserve">
+    <value>Indexes into a loosely-typed object using an integer. Returns a loosely-typed object.</value>
+    <comment>Description of 'ParseJson' function.</comment>
+  </data>
+  <data name="GetAtArg1" xml:space="preserve">
+    <value>obj</value>
+    <comment>function_parameter - First argument of the GetAt function - CustomObject type.</comment>
+  </data>
+  <data name="GetAtArg2" xml:space="preserve">
+    <value>index</value>
+    <comment>function_parameter - Second argument of the GetAt function - Number type.</comment>
+  </data>
+  <data name="AboutGetAt_obj" xml:space="preserve">
+    <value>A loosely-typed object.</value>
+  </data>
+  <data name="AboutGetAt_index" xml:space="preserve">
+    <value>An integer index.</value>
+  </data>
   <data name="FormMode_Edit_Name" xml:space="preserve">
     <value>Edit</value>
     <comment>{Locked} Enum value</comment>
