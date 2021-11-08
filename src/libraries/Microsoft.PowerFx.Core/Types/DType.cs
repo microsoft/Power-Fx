@@ -1970,7 +1970,7 @@ namespace Microsoft.PowerFx.Core.Types
                               type.Kind == DKind.Unknown;
                     break;
                 case DKind.CustomObject:
-                    accepts = type.Kind == DKind.CustomObject;
+                    accepts = type.Kind == DKind.CustomObject || type.Kind == DKind.Unknown;
                     break;
                 default:
                     Contracts.Assert(false);
