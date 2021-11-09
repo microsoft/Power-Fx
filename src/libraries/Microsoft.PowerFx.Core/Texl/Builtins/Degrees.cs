@@ -10,6 +10,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Equivalent Excel function: Degrees
     internal sealed class DegreesFunction : MathOneArgFunction
     {
+        public override bool RequiresErrorContext => true;
+
         public DegreesFunction()
             : base("Degrees", TexlStrings.AboutDegrees, FunctionCategories.MathAndStat)
         { }
@@ -19,6 +21,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Table overload that computes the degrees values of each item in the input table.
     internal sealed class DegreesTableFunction : MathOneArgTableFunction
     {
+        public override bool RequiresErrorContext => true;
+
         public DegreesTableFunction()
             : base("Degrees", TexlStrings.AboutDegreesT, FunctionCategories.Table)
         { }
