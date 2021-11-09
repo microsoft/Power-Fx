@@ -42,7 +42,7 @@ namespace Microsoft.PowerFx.Functions
 
         private class MinAgg : IAggregator
         {
-            protected double _minValue = Double.MaxValue;
+            protected double _minValue = double.MaxValue;
             protected int _count;
 
             public void Apply(FormulaValue value)
@@ -65,7 +65,7 @@ namespace Microsoft.PowerFx.Functions
 
         private class MaxAgg : IAggregator
         {
-            protected double _maxValue = Double.MinValue;
+            protected double _maxValue = double.MinValue;
             protected int _count;
 
             public void Apply(FormulaValue value)
@@ -90,7 +90,7 @@ namespace Microsoft.PowerFx.Functions
         {
             public override FormulaValue GetResult(IRContext irContext)
             {
-                if (_count == 0) { return new BlankValue(irContext); }
+                if (_count == 0) { return CommonErrors.DivByZeroError(irContext); }
                 return new NumberValue(irContext, _accumulator / _count);
             }
         }

@@ -510,10 +510,10 @@ namespace Microsoft.PowerFx.Functions
                 BuiltinFunctionsCore.Mod,
                 StandardErrorHandling<NumberValue>(
                     expandArguments: NoArgExpansion,
-                    replaceBlankValues: DoNotReplaceBlank,
+                    replaceBlankValues: ReplaceBlankWithZero,
                     checkRuntimeTypes: ExactValueTypeOrBlank<NumberValue>,
                     checkRuntimeValues: DivideByZeroChecker,
-                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: Mod
                     )
             },
