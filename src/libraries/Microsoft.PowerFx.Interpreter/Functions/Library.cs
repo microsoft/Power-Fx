@@ -511,7 +511,7 @@ namespace Microsoft.PowerFx.Functions
                 StandardErrorHandling<NumberValue>(
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: ReplaceBlankWithZero,
-                    checkRuntimeTypes: ExactValueTypeOrBlank<NumberValue>,
+                    checkRuntimeTypes: ExactValueType<NumberValue>,
                     checkRuntimeValues: DivideByZeroChecker,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: Mod
