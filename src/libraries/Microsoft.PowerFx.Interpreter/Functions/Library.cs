@@ -784,6 +784,17 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: TimeParse
                 )
             },
+            {
+                BuiltinFunctionsCore.TimeZoneOffset,
+                StandardErrorHandling<FormulaValue>(
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: DateOrDateTime,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
+                    targetFunction: TimeZoneOffset
+                )
+            },
             { BuiltinFunctionsCore.Today, Today },
             {
                 BuiltinFunctionsCore.Trim,

@@ -391,7 +391,6 @@ true
 // time zone offset
 >> Hour(DateAdd(DateAdd(DateTimeValue("01-01-2001 1:10:20"), TimeZoneOffset(), TimeUnit.Minutes), -TimeZoneOffset(), "Minutes"))
 /*SqlRunner*/ One or more errors occurred. (Failed to compile)
-/*InterpreterRunner*/ #Skip
 1
 
 >> Weekday(Date(2020,7,16))
