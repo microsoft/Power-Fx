@@ -8,7 +8,6 @@
 
 // With new error semantics, blank yields error.
 >> Average(Blank())
-/*InterpreterRunner*/ #Skip
 #Error
 
 >> Average(1,Blank(),5)
@@ -32,11 +31,9 @@
 1
 
 >> Mod(Blank(),3)
-/*InterpreterRunner*/ #Skip
 0
 
 >> Mod(7,Blank())
-/*InterpreterRunner*/ #Skip
 #Error
 
 >> Mod(7,1/0)
