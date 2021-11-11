@@ -35,11 +35,9 @@ true
 
 // can coorce text to bool via logical operators
 >> "true" && "anything"
-/*InterpreterRunner*/ #Skip
 false
 
 >> "anything" || "true"
-/*InterpreterRunner*/ #Skip
 true
 
 // blank coorces to false via logical operators

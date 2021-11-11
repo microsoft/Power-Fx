@@ -48,16 +48,13 @@ true
 
 // leading and trailing whitespace ignored
 >> Value(" %10")
-/*InterpreterRunner*/ #Skip
 0.1
 
 >> Value("10% ")
-/*InterpreterRunner*/ #Skip
 0.1
 
 // percent can also be a prefix
 >> Value("%10")
-/*InterpreterRunner*/ #Skip
 0.1
 
 // inner percent not handled
@@ -66,7 +63,6 @@ true
 
 // currency and percent can't both be provided
 >> Value("$10%")
-/*InterpreterRunner*/ #Skip
 #Error
 
 // Value on a number is just passthrough

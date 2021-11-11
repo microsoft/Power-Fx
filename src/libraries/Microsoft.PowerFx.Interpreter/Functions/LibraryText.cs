@@ -83,7 +83,8 @@ namespace Microsoft.PowerFx.Functions
                 return DateTimeToNumber(irContext, new DateTimeValue[] { dtv });
             }
 
-            var str = ((StringValue)arg0).Value;
+            var str = ((StringValue)arg0).Value.Trim();
+            var styles = NumberStyles.Any;
 
             if (string.IsNullOrEmpty(str))
             {
@@ -95,9 +96,16 @@ namespace Microsoft.PowerFx.Functions
             {
                 str = str.Substring(0, str.Length - 1);
                 div = 100;
+                styles = NumberStyles.Number;
+            }
+            else if (str[0] == '%')
+            {
+                str = str.Substring(1, str.Length - 1);
+                div = 100;
+                styles = NumberStyles.Number;
             }
 
-            if (!double.TryParse(str, NumberStyles.Any, runner.CultureInfo, out var val))
+            if (!double.TryParse(str, styles, runner.CultureInfo, out var val))
             {
                 return CommonErrors.InvalidNumberFormatError(irContext);
             }
