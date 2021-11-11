@@ -48,9 +48,7 @@ true
 
 // Erroneous Date -> Bool coercion
 >> Date(2000,1,2) && 1
-/*JScriptRunner*/ One or more errors occurred. ((4,5) Node: Date(2000, 1, 2), Microsoft.PowerFx.Core.Localization.TexlStrings+StringGetterInvalid argument type. Expecting one of the following: Boolean, Number, Text, OptionSetValue.|)
-Errors: Error 0-14: Invalid argument type. Expecting one of the following: Boolean, Number, Text, OptionSetValue.
+Compile Error
 
 >> If(Date(2000,1,1),1,2)
-/*JScriptRunner*/ One or more errors occurred. ((7,8) Node: Date(2000, 1, 1), Microsoft.PowerFx.Core.Localization.TexlStrings+StringGetterInvalid argument type (Date). Expecting a Boolean value instead.|(2,3) Node: If(Date(2000, 1, 1), 1, 2), Microsoft.PowerFx.Core.Localization.TexlStrings+StringGetterThe function 'If' has some invalid arguments.|)
-Errors: Error 3-17: Invalid argument type (Date). Expecting a Boolean value instead.|Error 0-22: The function 'If' has some invalid arguments.
+Compile Error
