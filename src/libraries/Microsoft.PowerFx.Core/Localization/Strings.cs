@@ -160,7 +160,7 @@ namespace Microsoft.PowerFx.Core.Localization
         public static StringGetter RandBetweenArg2 = (b) => StringResources.Get("RandBetweenArg2", b);
 
         public static StringGetter AboutNow = (b) => StringResources.Get("AboutNow", b);
-        public static StringGetter AboutUTCNow = (b) => StringResources.Get("AboutNow", b);
+        public static StringGetter AboutUTCNow = (b) => StringResources.Get("AboutUTCNow", b);
         public static StringGetter AboutToday = (b) => StringResources.Get("AboutToday", b);
         public static StringGetter AboutUTCToday = (b) => StringResources.Get("AboutUTCToday", b);
         public static StringGetter AboutGUID = (b) => StringResources.Get("AboutGUID", b);
