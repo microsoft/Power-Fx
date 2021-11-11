@@ -28,6 +28,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             string actualStr;
             FormulaValue result = null;
+            bool exceptionThrown = false;
             try
             {
                 result = _runner.RunAsync(testCase.Input).Result;
@@ -36,9 +37,10 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             catch (Exception e)
             {
                 actualStr = e.Message.Replace("\r\n", "|");
+                exceptionThrown = true;
             }
 
-            if (result != null && testCase.GetExpected(nameof(InterpreterRunner)) == "#Error" && _runner.IsError(result))
+            if ((exceptionThrown && testCase.GetExpected(nameof(InterpreterRunner)) == "Compile Error") || (result != null && testCase.GetExpected(nameof(InterpreterRunner)) == "#Error" && _runner.IsError(result)))
             {
                 // Pass as test is expected to return an error
                 return;
