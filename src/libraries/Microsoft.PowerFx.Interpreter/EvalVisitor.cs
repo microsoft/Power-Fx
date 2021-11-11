@@ -275,10 +275,11 @@ namespace Microsoft.PowerFx
                     if (row.IsValue)
                     {
                         List<NamedValue> fields = new List<NamedValue>();
+                        var scopeContext = context.WithScope(node.Scope);
                         foreach (var coercion in node.FieldCoercions)
                         {
                             var record = row.Value;
-                            var newScope = context.WithScope(node.Scope).WithScopeValues(record);
+                            var newScope = scopeContext.WithScopeValues(record);
 
                             var newValue = coercion.Value.Accept(this, newScope);
                             var name = coercion.Key;
