@@ -671,28 +671,24 @@ namespace Microsoft.PowerFx.Core.Parser
         private TexlNode ParseStringInterpolation()
         {
             Contracts.Assert(_curs.TidCur == TokKind.StrInterpStart);
+            var startToken = _curs.TokMove();
 
-            _curs.TokMove();
-
-            var args = new Stack<TexlNode>();
-            var trivia = new Stack<ITexlSource>();
-            var ops = new Stack<Token>();
+            var args = new Stack<(ITexlSource, TexlNode, ITexlSource)>();
 
             while (_curs.TidCur != TokKind.StrInterpEnd)
             {
                 switch (_curs.TidCur)
                 {
                     case TokKind.StrLit:
-                        args.Push(new StrLitNode(ref _idNext, _curs.TokMove().As<StrLitToken>()));
+                        var strLit = new StrLitNode(ref _idNext, _curs.TokMove().As<StrLitToken>());
+                        args.Push((ParseTrivia(), strLit, ParseTrivia()));
                         break;
                     case TokKind.IslandStart:
                     case TokKind.IslandEnd:
-                        var token = _curs.TokMove();
-                        trivia.Push(new TokenSource(token));
-                        ops.Push(new KeyToken(TokKind.Ampersand, token.Span));
+                        _curs.TokMove();
                         break;
                     default:
-                        args.Push(ParseExpr(Precedence.None));
+                        args.Push((ParseTrivia(), ParseExpr(Precedence.None), ParseTrivia()));
                         break;
                 }
             }
@@ -702,12 +698,15 @@ namespace Microsoft.PowerFx.Core.Parser
             {
                 var first = args.Pop();
                 var second = args.Pop();
-                binaryNode = MakeBinary(BinaryOp.Concat, second, trivia.Peek(), ops.Pop(), trivia.Pop(), first);
-                args.Push(binaryNode);
+
+                var triviaLeft = second.Item3;
+                var triviaRight = first.Item1;
+
+                binaryNode = MakeBinary(BinaryOp.Concat, second.Item2, triviaLeft, new KeyToken(TokKind.Ampersand, startToken.Span), triviaRight, first.Item2);
+                args.Push((second.Item1, binaryNode, first.Item3));
             }
 
             Contracts.Assert(_curs.TidCur == TokKind.StrInterpEnd);
-
             _curs.TokMove();
 
             return binaryNode;

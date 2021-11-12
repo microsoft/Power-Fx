@@ -610,6 +610,29 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.Equal(TokKind.StrLit, tokens[13].Kind);
             Assert.Equal(TokKind.StrInterpEnd, tokens[14].Kind);
             Assert.Equal(TokKind.Eof, tokens[15].Kind);
+
+            value = "$\"One {$\"Two {\"Three\"}\"} Four\"";
+            tokens = TexlLexer.LocalizedInstance.LexSource(value);
+            Assert.NotNull(tokens);
+            Assert.Equal(13, tokens.Length);
+            Assert.Equal(TokKind.StrInterpStart, tokens[0].Kind);
+            Assert.Equal(TokKind.StrLit, tokens[1].Kind);
+            Assert.Equal(TokKind.IslandStart, tokens[2].Kind);
+
+            Assert.Equal(TokKind.StrInterpStart, tokens[3].Kind);
+            Assert.Equal(TokKind.StrLit, tokens[4].Kind);
+            Assert.Equal(TokKind.IslandStart, tokens[5].Kind);
+
+            Assert.Equal(TokKind.StrLit, tokens[6].Kind);
+
+            Assert.Equal(TokKind.IslandEnd, tokens[7].Kind);
+            Assert.Equal(TokKind.StrInterpEnd, tokens[8].Kind);
+
+            Assert.Equal(TokKind.IslandEnd, tokens[9].Kind);
+
+            Assert.Equal(TokKind.StrLit, tokens[10].Kind);
+            Assert.Equal(TokKind.StrInterpEnd, tokens[11].Kind);
+            Assert.Equal(TokKind.Eof, tokens[12].Kind);
         }
     }
 }
