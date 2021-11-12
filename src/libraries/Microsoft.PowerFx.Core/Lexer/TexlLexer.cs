@@ -1495,13 +1495,22 @@ namespace Microsoft.PowerFx.Core.Lexer
                         // If we are here, we are seeing a double quote followed immediately by another
                         // double quote. That is an escape sequence for double quote characters.
                         _sb.Append(ch);
+                        NextChar();
                     }
                     else if (IsCurlyOpen(ch))
                     {
-                        // Island start, do not call NextChar()
-                        if (Eof)
-                            return new ErrorToken(GetTextSpan());
-                        return new StrLitToken(_sb.ToString(), GetTextSpan());
+                        char nextCh;
+                        if (Eof || CharacterUtils.IsLineTerm(nextCh = PeekChar(1)) || !IsCurlyOpen(nextCh))
+                        {
+                            // Island start, do not call NextChar()
+                            if (Eof)
+                                return new ErrorToken(GetTextSpan());
+                            return new StrLitToken(_sb.ToString(), GetTextSpan());
+                        }
+                        // If we are here, we are seeing a open curly followed immediately by another
+                        // open curly. That is an escape sequence for open curly characters.
+                        _sb.Append(ch);
+                        NextChar();
                     }
                     else if (!CharacterUtils.IsFormatCh(ch))
                         _sb.Append(ch);
