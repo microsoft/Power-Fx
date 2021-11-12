@@ -587,10 +587,10 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.Equal(TokKind.StrInterpEnd, tokens[5].Kind);
             Assert.Equal(TokKind.Eof, tokens[6].Kind);
 
-            value = "$\"Hello {Table({a: 5})}\"";
+            value = "$\"Hello {Table({a: 5})} World!\"";
             tokens = TexlLexer.LocalizedInstance.LexSource(value);
             Assert.NotNull(tokens);
-            Assert.Equal(15, tokens.Length);
+            Assert.Equal(16, tokens.Length);
             Assert.Equal(TokKind.StrInterpStart, tokens[0].Kind);
             Assert.Equal(TokKind.StrLit, tokens[1].Kind);
             Assert.Equal(TokKind.IslandStart, tokens[2].Kind);
@@ -607,8 +607,9 @@ namespace Microsoft.PowerFx.Core.Tests
 
 
             Assert.Equal(TokKind.IslandEnd, tokens[12].Kind);
-            Assert.Equal(TokKind.StrInterpEnd, tokens[13].Kind);
-            Assert.Equal(TokKind.Eof, tokens[14].Kind);
+            Assert.Equal(TokKind.StrLit, tokens[13].Kind);
+            Assert.Equal(TokKind.StrInterpEnd, tokens[14].Kind);
+            Assert.Equal(TokKind.Eof, tokens[15].Kind);
         }
     }
 }

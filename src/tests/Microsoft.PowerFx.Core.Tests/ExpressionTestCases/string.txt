@@ -376,3 +376,6 @@ Microsoft.PowerFx.Core.Public.Values.ErrorValue
 
 >> Concatenate(["a","b","c","d"], "-", ["1", "2"], "-", ["x", "y", "z"], "!")
 [{Result:"a-1-x!"},{Result:"b-2-y!"},{Result:"c--z!"},{Result:"d--!"}]
+
+>> $"Hello {"World!"}"
+"Hello World!"

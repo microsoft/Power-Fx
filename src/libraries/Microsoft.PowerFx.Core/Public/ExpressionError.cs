@@ -13,6 +13,11 @@ namespace Microsoft.PowerFx.Core.Public
         public ErrorKind Kind { get; set; }
         public DocumentErrorSeverity Severity { get; set; }
 
+        public ExpressionError()
+        {
+
+        }
+
         public override string ToString()
         {
             return $"Error {Span.Min}-{Span.Lim}: {Message}";

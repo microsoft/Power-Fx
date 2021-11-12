@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation.
+﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
 using System;
@@ -513,6 +513,8 @@ namespace Microsoft.PowerFx.Core.Parser
                 case TokKind.True:
                 case TokKind.False:
                     return new BoolLitNode(ref _idNext, _curs.TokMove());
+                case TokKind.StrInterpStart:
+                    return ParseStringInterpolation();
                 case TokKind.StrLit:
                     return new StrLitNode(ref _idNext, _curs.TokMove().As<StrLitToken>());
 
@@ -664,6 +666,51 @@ namespace Microsoft.PowerFx.Core.Parser
             }
 
             return new Identifier(at, tok);
+        }
+
+        private TexlNode ParseStringInterpolation()
+        {
+            Contracts.Assert(_curs.TidCur == TokKind.StrInterpStart);
+
+            _curs.TokMove();
+
+            var args = new Stack<TexlNode>();
+            var trivia = new Stack<ITexlSource>();
+            var ops = new Stack<Token>();
+
+            while (_curs.TidCur != TokKind.StrInterpEnd)
+            {
+                switch (_curs.TidCur)
+                {
+                    case TokKind.StrLit:
+                        args.Push(new StrLitNode(ref _idNext, _curs.TokMove().As<StrLitToken>()));
+                        break;
+                    case TokKind.IslandStart:
+                    case TokKind.IslandEnd:
+                        var token = _curs.TokMove();
+                        trivia.Push(new TokenSource(token));
+                        ops.Push(new KeyToken(TokKind.Ampersand, token.Span));
+                        break;
+                    default:
+                        args.Push(ParseExpr(Precedence.None));
+                        break;
+                }
+            }
+
+            TexlNode binaryNode = null;
+            while (args.Count > 1)
+            {
+                var first = args.Pop();
+                var second = args.Pop();
+                binaryNode = MakeBinary(BinaryOp.Concat, second, trivia.Peek(), ops.Pop(), trivia.Pop(), first);
+                args.Push(binaryNode);
+            }
+
+            Contracts.Assert(_curs.TidCur == TokKind.StrInterpEnd);
+
+            _curs.TokMove();
+
+            return binaryNode;
         }
 
         // Parse a namespace-qualified invocation, e.g. Facebook.GetFriends()
