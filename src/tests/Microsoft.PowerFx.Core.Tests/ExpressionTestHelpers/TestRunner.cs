@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation.
+﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
 using System;
@@ -140,6 +140,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
                     string actualStr;
                     FormulaValue result = null;
+                    bool exceptionThrown = false;
                     try
                     {
                         result = runner.RunAsync(test.Input).Result;
@@ -148,10 +149,11 @@ namespace Microsoft.PowerFx.Core.Tests
                     catch (Exception e)
                     {
                         actualStr = e.Message.Replace("\r\n", "|");
+                        exceptionThrown = true;
                     }
 
                     var expected = test.GetExpected(engineName);
-                    if (result != null && expected == "#Error" && (runner.IsError(result)))
+                    if ((exceptionThrown && expected == "Compile Error") || (result != null && expected == "#Error" && runner.IsError(result)))
                     {
                         // Pass!
                         pass++;

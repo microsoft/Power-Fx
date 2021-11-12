@@ -69,7 +69,7 @@ Blank()
 Blank()
 
 >> DateDiff(Date(2011,1,15) , Date(2011,1,30), Blank())
-/*SqlRunner*/ One or more errors occurred. (Failed to compile)
+/*SqlRunner*/ Compile Error
 15
 
 >> DateDiff(Date(2013,1,15) , Date(2012,1,30))
@@ -142,7 +142,7 @@ Blank()
 0
 
 >> DateDiff(Now(), Today(), TimeUnit.Minutes) <> 0
-/*SqlRunner*/ One or more errors occurred. (Failed to compile)
+/*SqlRunner*/ Compile Error
 true
 
 // Leap year 
@@ -286,7 +286,7 @@ true
 4
 
 >> Day(DateAdd(Date(2001,1,1), 3, Blank()))
-/*SqlRunner*/ One or more errors occurred. (Failed to compile)
+/*SqlRunner*/ Compile Error
 4
 
 >> Day(DateAdd(Date(2001,1,1), Blank()))
@@ -364,19 +364,19 @@ Blank()
 1900
 
 >> Hour(DateAdd(DateTimeValue("01-01-2001 1:10:20"), 1, TimeUnit.Hours))
-/*SqlRunner*/ One or more errors occurred. (Failed to compile)
+/*SqlRunner*/ Compile Error
 2
 
 >> Minute(DateAdd(DateTimeValue("01-01-2001 1:10:20"), 1, TimeUnit.Minutes))
-/*SqlRunner*/ One or more errors occurred. (Failed to compile)
+/*SqlRunner*/ Compile Error
 11
 
 >> Second(DateAdd(DateTimeValue("01-01-2001 1:10:20"), 1, "Seconds"))
-/*SqlRunner*/ One or more errors occurred. (Failed to compile)
+/*SqlRunner*/ Compile Error
 21
 
 >> Text(DateTimeValue("01-01-2001 1:10:20"))
-/*SqlRunner*/ One or more errors occurred. (Failed to compile)
+/*SqlRunner*/ Compile Error
 "1/1/2001 1:10 AM"
 
 >> Date(2001, 2, 14) = DateValue("2001-02-14")
@@ -390,7 +390,7 @@ true
 
 // time zone offset
 >> Hour(DateAdd(DateAdd(DateTimeValue("01-01-2001 1:10:20"), TimeZoneOffset(), TimeUnit.Minutes), -TimeZoneOffset(), "Minutes"))
-/*SqlRunner*/ One or more errors occurred. (Failed to compile)
+/*SqlRunner*/ Compile Error
 /*InterpreterRunner*/ #Skip
 1
 
@@ -412,19 +412,19 @@ true
 
 // SQL does not support DateTimeValue
 >> Text(DateTimeValue("02/14/2001 6:00 AM") - 0.5)
-/*SqlRunner*/ One or more errors occurred. (Failed to compile)
+/*SqlRunner*/ Compile Error
 "2/13/2001 6:00 PM"
 
 >> Text(DateTimeValue("02/14/2001 6:00 AM") + 0.0417)
-/*SqlRunner*/ One or more errors occurred. (Failed to compile)
+/*SqlRunner*/ Compile Error
 "2/14/2001 7:00 AM"
 
 >> Text(DateTimeValue("02/14/2001 6:00 AM") + 7e-4)
-/*SqlRunner*/ One or more errors occurred. (Failed to compile)
+/*SqlRunner*/ Compile Error
 "2/14/2001 6:01 AM"
 
 >> Second(DateTimeValue("02/14/2001 6:00 AM") - 1.1574e-5)
-/*SqlRunner*/ One or more errors occurred. (Failed to compile)
+/*SqlRunner*/ Compile Error
 59
 
 >> Date(Year(Today()), Month(Today()), Day(Today())) = Today()
