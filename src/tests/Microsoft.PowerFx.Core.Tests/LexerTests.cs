@@ -568,5 +568,47 @@ namespace Microsoft.PowerFx.Core.Tests
 
             CultureInfo.CurrentCulture = oldCulture;
         }
+
+        [Fact]
+        public void TestStringInterpolation()
+        {
+            Token[] tokens;
+            string value;
+
+            value = "$\"Hello {name}\"";
+            tokens = TexlLexer.LocalizedInstance.LexSource(value);
+            Assert.NotNull(tokens);
+            Assert.Equal(7, tokens.Length);
+            Assert.Equal(TokKind.StrInterpStart, tokens[0].Kind);
+            Assert.Equal(TokKind.StrLit, tokens[1].Kind);
+            Assert.Equal(TokKind.IslandStart, tokens[2].Kind);
+            Assert.Equal(TokKind.Ident, tokens[3].Kind);
+            Assert.Equal(TokKind.IslandEnd, tokens[4].Kind);
+            Assert.Equal(TokKind.StrInterpEnd, tokens[5].Kind);
+            Assert.Equal(TokKind.Eof, tokens[6].Kind);
+
+            value = "$\"Hello {Table({a: 5})}\"";
+            tokens = TexlLexer.LocalizedInstance.LexSource(value);
+            Assert.NotNull(tokens);
+            Assert.Equal(15, tokens.Length);
+            Assert.Equal(TokKind.StrInterpStart, tokens[0].Kind);
+            Assert.Equal(TokKind.StrLit, tokens[1].Kind);
+            Assert.Equal(TokKind.IslandStart, tokens[2].Kind);
+
+            Assert.Equal(TokKind.Ident, tokens[3].Kind);
+            Assert.Equal(TokKind.ParenOpen, tokens[4].Kind);
+            Assert.Equal(TokKind.CurlyOpen, tokens[5].Kind);
+            Assert.Equal(TokKind.Ident, tokens[6].Kind);
+            Assert.Equal(TokKind.Colon, tokens[7].Kind);
+            Assert.Equal(TokKind.Whitespace, tokens[8].Kind);
+            Assert.Equal(TokKind.NumLit, tokens[9].Kind);
+            Assert.Equal(TokKind.CurlyClose, tokens[10].Kind);
+            Assert.Equal(TokKind.ParenClose, tokens[11].Kind);
+
+
+            Assert.Equal(TokKind.IslandEnd, tokens[12].Kind);
+            Assert.Equal(TokKind.StrInterpEnd, tokens[13].Kind);
+            Assert.Equal(TokKind.Eof, tokens[14].Kind);
+        }
     }
 }
