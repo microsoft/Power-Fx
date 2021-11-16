@@ -385,3 +385,12 @@ Microsoft.PowerFx.Core.Public.Values.ErrorValue
 
 >> $"One {$"Two {"Three"}"} Four"
 "One Two Three Four"
+
+>> $"This string {{{"has"}}} curly braces"
+"This string {has} curly braces"
+
+>> $"This string {{ has }} curly braces"
+"This string { has } curly braces"
+
+>> "This string {{ has }} curly braces"
+"This string {{ has }} curly braces"

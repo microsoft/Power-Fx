@@ -740,7 +740,7 @@ namespace Microsoft.PowerFx.Core.Parser
                 else if (_curs.TidCur == TokKind.IslandEnd)
                 {
                     var peek1 = _curs.TidPeek(1);
-                    if (peek1 != TokKind.StrInterpEnd)
+                    if (peek1 != TokKind.StrInterpEnd && peek1 != TokKind.IslandStart)
                     {
                         var comma = _curs.TokMove();
                         rgtokCommas.Add(comma);

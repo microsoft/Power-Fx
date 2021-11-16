@@ -21,7 +21,7 @@ namespace Microsoft.PowerFx.Core.Lexer.Tokens
             : this(val, span, false, false)
         {
             Contracts.AssertValue(val);
-            //Contracts.Assert(val.Length == span.Lim - span.Min);
+            Contracts.Assert(val.Length == span.Lim - span.Min || val == "Concatenate");
             _value = val;
             Name = DName.MakeValid(val, out IsModified);
         }

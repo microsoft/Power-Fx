@@ -1512,6 +1512,18 @@ namespace Microsoft.PowerFx.Core.Lexer
                         _sb.Append(ch);
                         NextChar();
                     }
+                    else if (IsCurlyClose(ch))
+                    {
+                        char nextCh;
+                        if (Eof || CharacterUtils.IsLineTerm(nextCh = PeekChar(1)) || !IsCurlyClose(nextCh))
+                        {
+                            return new ErrorToken(GetTextSpan());
+                        }
+                        // If we are here, we are seeing a close curly followed immediately by another
+                        // close curly. That is an escape sequence for close curly characters.
+                        _sb.Append(ch);
+                        NextChar();
+                    }
                     else if (!CharacterUtils.IsFormatCh(ch))
                         _sb.Append(ch);
 

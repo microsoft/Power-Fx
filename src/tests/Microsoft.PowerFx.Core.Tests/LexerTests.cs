@@ -16,6 +16,14 @@ namespace Microsoft.PowerFx.Core.Tests
 {
     public sealed class LexerTest
     {
+        private void AssertTokens(string value, params TokKind[] tokKinds)
+        {
+            Token[] tokens = TexlLexer.LocalizedInstance.LexSource(value);
+            Assert.NotNull(tokens);
+            Assert.Equal(tokKinds.Length, tokens.Length);
+            Assert.True(tokens.Zip(tokKinds, (t, k) => t.Kind == k).All(b => b));
+        }
+
         [Fact]
         public void TestTryNameOrIdentifierToName()
         {
@@ -570,69 +578,70 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Fact]
-        public void TestStringInterpolation()
+        public void TestBasicStringInterpolation()
         {
-            Token[] tokens;
-            string value;
+            AssertTokens("$\"Hello {name}\"",
+                TokKind.StrInterpStart,
+                TokKind.StrLit,
+                TokKind.IslandStart,
+                TokKind.Ident,
+                TokKind.IslandEnd,
+                TokKind.StrInterpEnd,
+                TokKind.Eof);
+        }
 
-            value = "$\"Hello {name}\"";
-            tokens = TexlLexer.LocalizedInstance.LexSource(value);
-            Assert.NotNull(tokens);
-            Assert.Equal(7, tokens.Length);
-            Assert.Equal(TokKind.StrInterpStart, tokens[0].Kind);
-            Assert.Equal(TokKind.StrLit, tokens[1].Kind);
-            Assert.Equal(TokKind.IslandStart, tokens[2].Kind);
-            Assert.Equal(TokKind.Ident, tokens[3].Kind);
-            Assert.Equal(TokKind.IslandEnd, tokens[4].Kind);
-            Assert.Equal(TokKind.StrInterpEnd, tokens[5].Kind);
-            Assert.Equal(TokKind.Eof, tokens[6].Kind);
+        [Fact]
+        public void TestEscapeStringInterpolation()
+        {
+            AssertTokens("$\"Hello {{name}} {name}\"",
+                TokKind.StrInterpStart,
+                TokKind.StrLit,
+                TokKind.IslandStart,
+                TokKind.Ident,
+                TokKind.IslandEnd,
+                TokKind.StrInterpEnd,
+                TokKind.Eof);
+        }
 
-            value = "$\"Hello {Table({a: 5})} World!\"";
-            tokens = TexlLexer.LocalizedInstance.LexSource(value);
-            Assert.NotNull(tokens);
-            Assert.Equal(16, tokens.Length);
-            Assert.Equal(TokKind.StrInterpStart, tokens[0].Kind);
-            Assert.Equal(TokKind.StrLit, tokens[1].Kind);
-            Assert.Equal(TokKind.IslandStart, tokens[2].Kind);
+        [Fact]
+        public void TestStringInterpolationWithTable()
+        {
+            AssertTokens("$\"Hello {Table({a: 5})} World!\"",
+                TokKind.StrInterpStart,
+                TokKind.StrLit,
+                TokKind.IslandStart,
+                TokKind.Ident,
+                TokKind.ParenOpen,
+                TokKind.CurlyOpen,
+                TokKind.Ident,
+                TokKind.Colon,
+                TokKind.Whitespace,
+                TokKind.NumLit,
+                TokKind.CurlyClose,
+                TokKind.ParenClose,
+                TokKind.IslandEnd,
+                TokKind.StrLit,
+                TokKind.StrInterpEnd,
+                TokKind.Eof);
+        }
 
-            Assert.Equal(TokKind.Ident, tokens[3].Kind);
-            Assert.Equal(TokKind.ParenOpen, tokens[4].Kind);
-            Assert.Equal(TokKind.CurlyOpen, tokens[5].Kind);
-            Assert.Equal(TokKind.Ident, tokens[6].Kind);
-            Assert.Equal(TokKind.Colon, tokens[7].Kind);
-            Assert.Equal(TokKind.Whitespace, tokens[8].Kind);
-            Assert.Equal(TokKind.NumLit, tokens[9].Kind);
-            Assert.Equal(TokKind.CurlyClose, tokens[10].Kind);
-            Assert.Equal(TokKind.ParenClose, tokens[11].Kind);
-
-
-            Assert.Equal(TokKind.IslandEnd, tokens[12].Kind);
-            Assert.Equal(TokKind.StrLit, tokens[13].Kind);
-            Assert.Equal(TokKind.StrInterpEnd, tokens[14].Kind);
-            Assert.Equal(TokKind.Eof, tokens[15].Kind);
-
-            value = "$\"One {$\"Two {\"Three\"}\"} Four\"";
-            tokens = TexlLexer.LocalizedInstance.LexSource(value);
-            Assert.NotNull(tokens);
-            Assert.Equal(13, tokens.Length);
-            Assert.Equal(TokKind.StrInterpStart, tokens[0].Kind);
-            Assert.Equal(TokKind.StrLit, tokens[1].Kind);
-            Assert.Equal(TokKind.IslandStart, tokens[2].Kind);
-
-            Assert.Equal(TokKind.StrInterpStart, tokens[3].Kind);
-            Assert.Equal(TokKind.StrLit, tokens[4].Kind);
-            Assert.Equal(TokKind.IslandStart, tokens[5].Kind);
-
-            Assert.Equal(TokKind.StrLit, tokens[6].Kind);
-
-            Assert.Equal(TokKind.IslandEnd, tokens[7].Kind);
-            Assert.Equal(TokKind.StrInterpEnd, tokens[8].Kind);
-
-            Assert.Equal(TokKind.IslandEnd, tokens[9].Kind);
-
-            Assert.Equal(TokKind.StrLit, tokens[10].Kind);
-            Assert.Equal(TokKind.StrInterpEnd, tokens[11].Kind);
-            Assert.Equal(TokKind.Eof, tokens[12].Kind);
+        [Fact]
+        public void TestNestedStringInterpolation()
+        {
+            AssertTokens("$\"One {$\"Two {\"Three\"}\"} Four\"",
+                TokKind.StrInterpStart,
+                TokKind.StrLit,
+                TokKind.IslandStart,
+                TokKind.StrInterpStart,
+                TokKind.StrLit,
+                TokKind.IslandStart,
+                TokKind.StrLit,
+                TokKind.IslandEnd,
+                TokKind.StrInterpEnd,
+                TokKind.IslandEnd,
+                TokKind.StrLit,
+                TokKind.StrInterpEnd,
+                TokKind.Eof);
         }
     }
 }
