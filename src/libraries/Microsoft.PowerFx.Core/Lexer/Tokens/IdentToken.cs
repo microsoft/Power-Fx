@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation.
+﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
 using System.Text;
@@ -21,7 +21,7 @@ namespace Microsoft.PowerFx.Core.Lexer.Tokens
             : this(val, span, false, false)
         {
             Contracts.AssertValue(val);
-            Contracts.Assert(val.Length == span.Lim - span.Min);
+            //Contracts.Assert(val.Length == span.Lim - span.Min);
             _value = val;
             Name = DName.MakeValid(val, out IsModified);
         }
