@@ -261,6 +261,47 @@ namespace Microsoft.PowerFx
             return CommonErrors.UnreachableCodeError(node.IRContext);
         }
 
+        public override FormulaValue Visit(AggregateCoercionNode node, SymbolContext context)
+        {
+            var arg1 = node.Child.Accept(this, context);
+
+            if (node.Op == UnaryOpKind.TableToTable)
+            {
+                var table = (TableValue)arg1;
+                var tableType = (TableType)node.IRContext.ResultType;
+                var resultRows = new List<DValue<RecordValue>>();
+                foreach (var row in table.Rows)
+                {
+                    if (row.IsValue)
+                    {
+                        List<NamedValue> fields = new List<NamedValue>();
+                        var scopeContext = context.WithScope(node.Scope);
+                        foreach (var coercion in node.FieldCoercions)
+                        {
+                            var record = row.Value;
+                            var newScope = scopeContext.WithScopeValues(record);
+
+                            var newValue = coercion.Value.Accept(this, newScope);
+                            var name = coercion.Key;
+                            fields.Add(new NamedValue(name.Value, newValue));
+                        }
+                        resultRows.Add(DValue<RecordValue>.Of(new InMemoryRecordValue(IRContext.NotInSource(tableType.ToRecord()), fields)));
+                    }
+                    else if (row.IsBlank)
+                    {
+                        resultRows.Add(DValue<RecordValue>.Of(row.Blank));
+                    }
+                    else
+                    {
+                        resultRows.Add(DValue<RecordValue>.Of(row.Error));
+                    }
+                }
+                return new InMemoryTableValue(node.IRContext, resultRows);
+            }
+
+            return CommonErrors.UnreachableCodeError(node.IRContext);
+        }
+
         public override FormulaValue Visit(ScopeAccessNode node, SymbolContext context)
         {
             if (node.Value is ScopeAccessSymbol s1)
