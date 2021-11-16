@@ -686,34 +686,9 @@ namespace Microsoft.PowerFx.Core.Parser
 
             if (_curs.TidCur == TokKind.StrInterpEnd)
             {
-                var rightParen = _curs.TokMove();
-                var right = new ListNode(
-                    ref _idNext,
-                    _curs.TokCur,
-                    new TexlNode[0],
-                    null,
-                    new SourceList(
-                        new TokenSource(leftParen),
-                        leftTrivia,
-                        new TokenSource(rightParen)));
-
-                var sources = new List<ITexlSource>();
-                if (headNode != null)
-                    sources.Add(new NodeSource(headNode));
-                else
-                    sources.Add(new IdentifierSource(head));
-
-                sources.Add(headTrivia);
-                sources.Add(new NodeSource(right));
-
-                return new CallNode(
-                    ref _idNext,
-                    leftParen,
-                    new SourceList(sources),
-                    head,
-                    headNode,
-                    right,
-                    rightParen);
+                var strLitToken = new StrLitToken("", headToken.Span);
+                _curs.TokMove();
+                return new StrLitNode(ref _idNext, strLitToken);
             }
 
             var rgtokCommas = new List<Token>();

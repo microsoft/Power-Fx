@@ -394,3 +394,6 @@ Microsoft.PowerFx.Core.Public.Values.ErrorValue
 
 >> "This string {{ has }} curly braces"
 "This string {{ has }} curly braces"
+
+>> $""
+""
