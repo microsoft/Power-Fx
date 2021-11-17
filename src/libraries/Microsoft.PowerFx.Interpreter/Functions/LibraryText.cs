@@ -17,11 +17,56 @@ namespace Microsoft.PowerFx.Functions
     internal static partial class Library
     {
         // Char is used for PA string escaping 
-        public static FormulaValue Char(IRContext irContext, NumberValue[] args)
+        public static StringValue Char(IRContext irContext, NumberValue[] args)
         {
             var arg0 = args[0];
             var str = new string((char)arg0.Value, 1);
             return new StringValue(irContext, str);
+        }
+
+        public static FormulaValue CharT(IRContext irContext, TableValue[] args)
+        {
+            var tableType = (TableType)irContext.ResultType;
+            var resultType = tableType.ToRecord();
+
+            var arg0 = args[0];
+            var resultRows = new List<DValue<RecordValue>>();
+            foreach (var row in arg0.Rows)
+            {
+                if (row.IsValue)
+                {
+                    var value = row.Value.GetField(BuiltinFunction.ColumnName_ValueStr);
+                    NamedValue namedValue;
+                    if (value is NumberValue nv)
+                    {
+                        var str = Char(IRContext.NotInSource(FormulaType.String), new NumberValue[] { nv });
+                        namedValue = new NamedValue(BuiltinFunction.OneColumnTableResultNameStr, str);
+                    }
+                    else if (value is BlankValue bv)
+                    {
+                        namedValue = new NamedValue(BuiltinFunction.OneColumnTableResultNameStr, bv);
+                    }
+                    else if (value is ErrorValue ev)
+                    {
+                        namedValue = new NamedValue(BuiltinFunction.OneColumnTableResultNameStr, ev);
+                    }
+                    else
+                    {
+                        namedValue = new NamedValue(BuiltinFunction.OneColumnTableResultNameStr, CommonErrors.RuntimeTypeMismatch(IRContext.NotInSource(FormulaType.Number)));
+                    }
+                    var record = new InMemoryRecordValue(IRContext.NotInSource(resultType), new List<NamedValue>() { namedValue });
+                    resultRows.Add(DValue<RecordValue>.Of(record));
+                }
+                else if (row.IsBlank)
+                {
+                    resultRows.Add(DValue<RecordValue>.Of(row.Blank));
+                }
+                else
+                {
+                    resultRows.Add(DValue<RecordValue>.Of(row.Error));
+                }
+            }
+            return new InMemoryTableValue(irContext, resultRows);
         }
 
         public static FormulaValue Concat(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args)
@@ -83,7 +128,8 @@ namespace Microsoft.PowerFx.Functions
                 return DateTimeToNumber(irContext, new DateTimeValue[] { dtv });
             }
 
-            var str = ((StringValue)arg0).Value;
+            var str = ((StringValue)arg0).Value.Trim();
+            var styles = NumberStyles.Any;
 
             if (string.IsNullOrEmpty(str))
             {
@@ -95,9 +141,16 @@ namespace Microsoft.PowerFx.Functions
             {
                 str = str.Substring(0, str.Length - 1);
                 div = 100;
+                styles = NumberStyles.Number;
+            }
+            else if (str[0] == '%')
+            {
+                str = str.Substring(1, str.Length - 1);
+                div = 100;
+                styles = NumberStyles.Number;
             }
 
-            if (!double.TryParse(str, NumberStyles.Any, runner.CultureInfo, out var val))
+            if (!double.TryParse(str, styles, runner.CultureInfo, out var val))
             {
                 return CommonErrors.InvalidNumberFormatError(irContext);
             }

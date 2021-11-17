@@ -29,7 +29,7 @@ namespace Microsoft.PowerFx.Functions
             });
         }
 
-        public static FormulaValue DivByZeroError(IRContext irContext)
+        public static ErrorValue DivByZeroError(IRContext irContext)
         {
             return new ErrorValue(irContext, new ExpressionError()
             {
@@ -39,7 +39,7 @@ namespace Microsoft.PowerFx.Functions
             });
         }
 
-        public static FormulaValue InvalidDateTimeError(IRContext irContext)
+        public static ErrorValue InvalidDateTimeError(IRContext irContext)
         {
             return new ErrorValue(irContext, new ExpressionError()
             {
@@ -49,7 +49,7 @@ namespace Microsoft.PowerFx.Functions
             });
         }
 
-        public static FormulaValue InvalidNumberFormatError(IRContext irContext)
+        public static ErrorValue InvalidNumberFormatError(IRContext irContext)
         {
             return new ErrorValue(irContext, new ExpressionError()
             {
@@ -59,7 +59,7 @@ namespace Microsoft.PowerFx.Functions
             });
         }
 
-        public static FormulaValue UnreachableCodeError(IRContext irContext)
+        public static ErrorValue UnreachableCodeError(IRContext irContext)
         {
             return new ErrorValue(irContext, new ExpressionError()
             {
@@ -69,7 +69,7 @@ namespace Microsoft.PowerFx.Functions
             });
         }
 
-        public static FormulaValue NotYetImplementedError(IRContext irContext, string message)
+        public static ErrorValue NotYetImplementedError(IRContext irContext, string message)
         {
             return new ErrorValue(irContext, new ExpressionError()
             {
