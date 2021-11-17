@@ -388,15 +388,15 @@ namespace Microsoft.PowerFx.Functions
             if (args.Length == 0)
             {
                 var tzOffsetMinutes = tzInfo.GetUtcOffset(DateTime.Now).TotalMinutes;
-                return new NumberValue(irContext, tzOffsetMinutes * -1);
+                return new NumberValue(irContext, tzOffsetMinutes / 1440.0 * -1);
             }
 
             switch (args[0])
             {
                 case DateTimeValue dtv:
-                    return new NumberValue(irContext, tzInfo.GetUtcOffset(dtv.Value.ToUniversalTime()).TotalMinutes * -1);
+                    return new NumberValue(irContext, tzInfo.GetUtcOffset(dtv.Value.ToUniversalTime()).TotalMinutes / 1440.0 * -1);
                 case DateValue dv:
-                    return new NumberValue(irContext, tzInfo.GetUtcOffset(dv.Value.ToUniversalTime()).TotalMinutes * -1);
+                    return new NumberValue(irContext, tzInfo.GetUtcOffset(dv.Value.ToUniversalTime()).TotalMinutes / 1440.0 * -1);
                 default:
                     return CommonErrors.InvalidDateTimeError(irContext);
             }
