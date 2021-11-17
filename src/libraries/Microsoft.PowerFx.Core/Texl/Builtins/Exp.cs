@@ -11,6 +11,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class ExpFunction : MathOneArgFunction
     {
         public override bool HasPreciseErrors => true;
+        public override bool RequiresErrorContext => true;
 
         public ExpFunction()
             : base("Exp", TexlStrings.AboutExp, FunctionCategories.MathAndStat)
@@ -22,6 +23,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class ExpTableFunction : MathOneArgTableFunction
     {
         public override bool HasPreciseErrors => true;
+        public override bool RequiresErrorContext => true;
 
         public ExpTableFunction()
             : base("Exp", TexlStrings.AboutExpT, FunctionCategories.Table)
