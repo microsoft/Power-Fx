@@ -10,6 +10,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Equivalent Excel function: Atan
     internal sealed class AtanFunction : MathOneArgFunction
     {
+        public override bool RequiresErrorContext => true;
+
         public AtanFunction()
             : base("Atan", TexlStrings.AboutAtan, FunctionCategories.MathAndStat)
         { }
@@ -19,6 +21,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Table overload that computes the arc tangent of each item in the input table.
     internal sealed class AtanTableFunction : MathOneArgTableFunction
     {
+        public override bool RequiresErrorContext => true;
+
         public AtanTableFunction()
             : base("Atan", TexlStrings.AboutAtanT, FunctionCategories.Table)
         { }

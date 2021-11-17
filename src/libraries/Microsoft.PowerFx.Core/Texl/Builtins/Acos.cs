@@ -10,6 +10,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Equivalent Excel function: acos
     internal sealed class AcosFunction : MathOneArgFunction
     {
+        public override bool RequiresErrorContext => true;
+
         public AcosFunction()
             : base("Acos", TexlStrings.AboutAcos, FunctionCategories.MathAndStat)
         { }
@@ -19,6 +21,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Table overload that computes the arc cosine of each item in the input table.
     internal sealed class AcosTableFunction : MathOneArgTableFunction
     {
+        public override bool RequiresErrorContext => true;
+
         public AcosTableFunction()
             : base("Acos", TexlStrings.AboutAcosT, FunctionCategories.Table)
         { }

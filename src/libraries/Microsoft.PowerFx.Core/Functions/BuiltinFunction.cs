@@ -11,13 +11,21 @@ namespace Microsoft.PowerFx.Core.Functions
     // Abstract base class for all Texl builtin functions.
     internal abstract class BuiltinFunction : TexlFunction
     {
-        public static readonly DName OneColumnTableResultName = new DName("Result");
-        public static readonly DName ColumnName_Name = new DName("Name");
-        public static readonly DName ColumnName_Address = new DName("Address");
-        public static readonly DName ColumnName_Value = new DName("Value");
-        public static readonly DName ColumnName_FullMatch = new DName("FullMatch");
-        public static readonly DName ColumnName_SubMatches = new DName("SubMatches");
-        public static readonly DName ColumnName_StartMatch = new DName("StartMatch");
+        public const string OneColumnTableResultNameStr = "Result";
+        public const string ColumnName_NameStr = "Name";
+        public const string ColumnName_AddressStr = "Address";
+        public const string ColumnName_ValueStr = "Value";
+        public const string ColumnName_FullMatchStr = "FullMatch";
+        public const string ColumnName_SubMatchesStr = "SubMatches";
+        public const string ColumnName_StartMatchStr = "StartMatch";
+
+        public static readonly DName OneColumnTableResultName = new DName(OneColumnTableResultNameStr);
+        public static readonly DName ColumnName_Name = new DName(ColumnName_NameStr);
+        public static readonly DName ColumnName_Address = new DName(ColumnName_AddressStr);
+        public static readonly DName ColumnName_Value = new DName(ColumnName_ValueStr);
+        public static readonly DName ColumnName_FullMatch = new DName(ColumnName_FullMatchStr);
+        public static readonly DName ColumnName_SubMatches = new DName(ColumnName_SubMatchesStr);
+        public static readonly DName ColumnName_StartMatch = new DName(ColumnName_StartMatchStr);
 
         public BuiltinFunction(DPath theNamespace, string name, string localeSpecificName, TexlStrings.StringGetter description, FunctionCategories functionCategories, DType returnType, BigInteger maskLambdas, int arityMin, int arityMax, params DType[] paramTypes)
             : base(theNamespace, name, localeSpecificName, description, functionCategories, returnType, maskLambdas, arityMin, arityMax, paramTypes)

@@ -18,6 +18,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override bool SupportsParamCoercion => true;
         public override bool IsSelfContained => true;
         public override bool HasPreciseErrors => true;
+        public override bool RequiresErrorContext => true;
 
 
         public LogFunction()
@@ -37,7 +38,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     {
         public override bool SupportsParamCoercion => true;
         public override bool IsSelfContained => true;
-
+        public override bool RequiresErrorContext => true;
 
         public LogTFunction()
             : base("Log", TexlStrings.AboutLogT, FunctionCategories.MathAndStat, DType.EmptyTable, 0, 1, 2)
