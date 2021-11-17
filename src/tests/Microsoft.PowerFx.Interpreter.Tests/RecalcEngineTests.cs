@@ -155,7 +155,6 @@ namespace Microsoft.PowerFx.Tests
             Assert.Throws<NotSupportedException>(() =>
                 engine.UpdateVariable("a", FormulaValue.New("str"))
             );
-
         }
 
         [Fact]
@@ -204,7 +203,8 @@ namespace Microsoft.PowerFx.Tests
         public void CheckSuccess()
         {
             var engine = new RecalcEngine();
-            var result = engine.Check("3*2+x",
+            var expr = "3*2+x";
+            var result = engine.Check(expr,
                 new RecordType().Add(
                     new NamedFormulaType("x", FormulaType.Number)));
 
@@ -212,6 +212,9 @@ namespace Microsoft.PowerFx.Tests
             Assert.True(result.ReturnType is NumberType);
             Assert.Single(result.TopLevelIdentifiers);
             Assert.Equal("x", result.TopLevelIdentifiers.First());
+            Assert.Single(result.ReferencedIdentifiers);
+            var referencesIdentifierStrings = ReferencedIdentifersSet(result.ReferencedIdentifiers, expr);
+            Assert.Equal("x", referencesIdentifierStrings.First());
         }
 
         [Fact]
@@ -223,6 +226,7 @@ namespace Microsoft.PowerFx.Tests
             Assert.False(result.IsSuccess);
             Assert.Single(result.Errors);
             Assert.StartsWith("Error 4-4: Expected an operand", result.Errors[0].ToString());
+            Assert.Empty(result.ReferencedIdentifiers);
         }
 
         [Fact]
@@ -274,6 +278,95 @@ namespace Microsoft.PowerFx.Tests
                 var val = x.Value * y.Value;
                 return FormulaValue.New(val);
             }
+        }
+
+        private HashSet<string> ReferencedIdentifersSet(HashSet<Core.Localization.Span> spans, string expressionText)
+        {
+
+            var referencedIdentifiers = new HashSet<string>();
+            foreach (var span in spans)
+            {
+                referencedIdentifiers.Add(expressionText.Substring(span.Min, span.Lim - span.Min));
+            }
+            return referencedIdentifiers;
+        }
+
+        [Fact]
+        public void UnknownVariables()
+        {
+            var engine = new RecalcEngine();
+            var expr = "3*2+x+y";
+            var result = engine.Check(expr,
+                new RecordType().Add(
+                    new NamedFormulaType("x", FormulaType.Number)));
+
+            Assert.False(result.IsSuccess);
+            var referencesIdentifierStrings = ReferencedIdentifersSet(result.ReferencedIdentifiers, expr);
+            Assert.Equal(2, result.ReferencedIdentifiers.Count);
+            Assert.Contains("x", referencesIdentifierStrings);
+            Assert.Contains("y", referencesIdentifierStrings);
+        }
+
+        [Fact]
+        public void UnknownDottedVariable()
+        {
+            var engine = new RecalcEngine();
+            var expr = "3*2+user.age";
+            var result = engine.Check(expr,
+                new RecordType().Add(
+                    new NamedFormulaType("user", new RecordType())));
+
+            Assert.False(result.IsSuccess);
+            Assert.Single(result.ReferencedIdentifiers);
+            var referencesIdentifierStrings = ReferencedIdentifersSet(result.ReferencedIdentifiers, expr);
+            Assert.Equal("user.age", referencesIdentifierStrings.First());
+        }
+
+        [Fact]
+        public void UnknownDottedDottedVariable()
+        {
+            var engine = new RecalcEngine();
+            var expr = "3*2+user.car.age";
+            var result = engine.Check(expr,
+                new RecordType().Add(
+                    new NamedFormulaType("user", new RecordType())));
+
+            Assert.False(result.IsSuccess);
+            Assert.Single(result.ReferencedIdentifiers);
+            var referencesIdentifierStrings = ReferencedIdentifersSet(result.ReferencedIdentifiers, expr);
+            Assert.Equal("user.car.age", referencesIdentifierStrings.First());
+        }
+
+        [Fact]
+        public void FunctionVariable()
+        {
+            var engine = new RecalcEngine();
+            var expr = "sum(user.age)";
+            var result = engine.Check(expr,
+                new RecordType().Add(
+                    new NamedFormulaType("user", new RecordType())));
+
+            Assert.False(result.IsSuccess);
+            Assert.Single(result.ReferencedIdentifiers);
+            var referencesIdentifierStrings = ReferencedIdentifersSet(result.ReferencedIdentifiers, expr);
+            Assert.Equal("user.age", referencesIdentifierStrings.First());
+        }
+
+        [Fact]
+        public void ManyVariables()
+        {
+            var engine = new RecalcEngine();
+            var expr = "(27/x * test(user.age) - global.shoeSize) ^ exponent";
+            var result = engine.Check(expr,
+                new RecordType().Add(
+                    new NamedFormulaType("user", new RecordType())));
+
+            Assert.False(result.IsSuccess);
+            var referencesIdentifierStrings = ReferencedIdentifersSet(result.ReferencedIdentifiers, expr);
+            Assert.Contains("user.age", referencesIdentifierStrings);
+            Assert.Contains("global.shoeSize", referencesIdentifierStrings);
+            Assert.Contains("x", referencesIdentifierStrings);
+            Assert.Contains("exponent", referencesIdentifierStrings);
         }
 
         #region Test

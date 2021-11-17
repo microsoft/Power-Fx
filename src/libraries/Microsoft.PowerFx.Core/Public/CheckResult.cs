@@ -28,6 +28,12 @@ namespace Microsoft.PowerFx.Core.Public
         public HashSet<string> TopLevelIdentifiers { get; set; }
 
         /// <summary>
+        /// Spans of all fields that this formula uses. 
+        /// null if unavailable.  
+        /// </summary>
+        public HashSet<Localization.Span> ReferencedIdentifiers { get; set; }
+
+        /// <summary>
         /// null on success, else contains errors. 
         /// </summary>
         public ExpressionError[] Errors { get; set; }

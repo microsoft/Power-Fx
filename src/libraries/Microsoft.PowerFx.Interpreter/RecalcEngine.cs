@@ -169,6 +169,8 @@ namespace Microsoft.PowerFx
                 if (binding.ResultType.Kind != DKind.Enum)
                     result.ReturnType = FormulaType.Build(binding.ResultType);
             }
+            // We find nexted identifiers even if there were errors in the expression.
+            result.ReferencedIdentifiers = AllDependencyFinder.FindAllDependencies(binding.Top);
 
             return result;
         }
