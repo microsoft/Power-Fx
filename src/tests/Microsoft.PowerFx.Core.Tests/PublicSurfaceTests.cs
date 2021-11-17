@@ -27,7 +27,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Core.Texl.Intellisense.SignatureHelp.SignatureHelp",
                 "Microsoft.PowerFx.Core.Texl.Intellisense.SignatureHelp.SignatureInformation",
                 "Microsoft.PowerFx.Core.Public.CheckResult",
-                "Microsoft.PowerFx.Core.Public.QuickFixResult",
+                "Microsoft.PowerFx.Core.Public.CodeActionResult",
                 "Microsoft.PowerFx.Core.Public.ErrorKind",
                 "Microsoft.PowerFx.Core.Public.ExpressionError",
                 "Microsoft.PowerFx.Core.Public.FormulaWithParameters",
