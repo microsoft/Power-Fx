@@ -56,7 +56,7 @@ namespace Microsoft.PowerFx
         }
 
         /// <inheritdoc />
-        public QuickFixResult[] QuickFix(string expression)
+        public CodeActionResult[] QuickFix(string expression)
         {
             return _engine.QuickFix(expression, _contextType);
         }

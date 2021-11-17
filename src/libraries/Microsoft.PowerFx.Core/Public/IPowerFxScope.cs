@@ -27,6 +27,6 @@ namespace Microsoft.PowerFx.Core.Public
         /// </summary>
         /// <param name="expression">The formula expression.</param>
         /// <returns>Collection of quick fixes.</returns>
-        QuickFixResult[] QuickFix(string expression);
+        CodeActionResult[] QuickFix(string expression);
     }
 }

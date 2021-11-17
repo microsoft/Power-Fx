@@ -19,7 +19,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             throw new System.NotImplementedException();
         }
 
-        public QuickFixResult[] QuickFix(string expression)
+        public CodeActionResult[] QuickFix(string expression)
         {
             throw new System.NotImplementedException();
         }

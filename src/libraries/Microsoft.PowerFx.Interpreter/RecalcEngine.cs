@@ -125,9 +125,9 @@ namespace Microsoft.PowerFx
         /// <param name="expression">The formula expression.</param>
         /// <param name="parameterType">The formula context.</param>
         /// <returns>Collection of quick fixes.</returns>
-        public virtual QuickFixResult[] QuickFix(string expression, FormulaType parameterType)
+        public virtual CodeActionResult[] QuickFix(string expression, FormulaType parameterType)
         {
-            return new QuickFixResult[] { };
+            return new CodeActionResult[] { };
         }
 
         private CheckResult CheckInternal(string expressionText, FormulaType parameterType = null, bool intellisense = false)

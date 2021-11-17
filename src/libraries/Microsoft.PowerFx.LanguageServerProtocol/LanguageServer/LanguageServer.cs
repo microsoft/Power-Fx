@@ -322,13 +322,26 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
 
                         foreach (var item in result)
                         {
+                            var range = item.Range != null ? new Range()
+                            {
+                                Start = new Position
+                                {
+                                    Line = item.Range.LineStart,
+                                    Character = item.Range.CharPositionStart
+                                },
+                                End = new Position
+                                {
+                                    Line = item.Range.LineEnd,
+                                    Character = item.Range.CharPositionEnd
+                                }
+                            } : codeActionParams.Range;
                             items.Add(new CodeAction()
                             {
                                 Title = item.Title,
                                 Kind = codeActionKind,
                                 Edit = new WorkspaceEdit
                                 {
-                                    Changes = new Dictionary<string, TextEdit[]> { { documentUri, new[] { new TextEdit { Range = codeActionParams.Range, NewText = item.Text } } } }
+                                    Changes = new Dictionary<string, TextEdit[]> { { documentUri, new[] { new TextEdit { Range = range, NewText = item.Text } } } }
                                 }
                             });
                         }
