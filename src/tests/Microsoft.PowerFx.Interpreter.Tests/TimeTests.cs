@@ -12,12 +12,6 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         RecalcEngine engine = new RecalcEngine();
 
         [Fact]
-        public void MiscTest()
-        {
-            var result = engine.Eval("Text(DateTimeValue(\"2018-03-15T00:00:00.000Z\"),\"UTC\")");
-        }
-
-        [Fact]
         public void TestTimeZoneOffsetNonDST()
         {
             TimeZoneInfo tzInfo = TimeZoneInfo.Local;
