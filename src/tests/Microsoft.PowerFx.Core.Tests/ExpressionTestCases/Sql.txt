@@ -83,37 +83,37 @@ false
 false
 
 // date overflow
->> Text(Date(9999, 12, 31))
-"12/31/9999"
+>>Year(Date(9999, 12, 31))
+9999
 
->> Text(Date(10000, 1, 1))
+>> Year(Date(10000, 1, 1))
 /*InterpreterRunner*/ #Skip
 #Error
 
 // Date doesn't support inputting years earlier than 1900, so use subtraction to create min supported value
->> Text(DateAdd(Date(1953, 1, 1), -200, TimeUnit.Years))
-"1/1/1753"
+>> Year(DateAdd(Date(1953, 1, 1), -200, TimeUnit.Years))
+1753
 
 // Date Add overflow
->> Text(DateAdd(Date(9999, 12, 31), 1))
+>> Year(DateAdd(Date(9999, 12, 31), 1))
 /*SqlRunner*/ #Error
 /*InterpreterRunner*/ #Skip
-"1/1/10000"
+10000
 
->> IsError(Text(DateAdd(Date(9999, 12, 31), 1)))
+>> IsError(DateAdd(Date(9999, 12, 31), 1))
 /*SqlRunner*/ true
 /*InterpreterRunner*/ #Skip
 false
 
->> Text(DateAdd(Date(1952, 12, 31), -200, TimeUnit.Years))
+>> Year(DateAdd(Date(1952, 12, 31), -200, TimeUnit.Years))
 /*SqlRunner*/ #Error
-"12/31/1752"
+1752
 
->> IsError(Text(DateAdd(Date(1952, 12, 31), -200, TimeUnit.Years)))
+>> IsError(DateAdd(Date(1952, 12, 31), -200, TimeUnit.Years))
 /*SqlRunner*/ true
 false
 
->> IsError(Text(Date(2001, 2, 14) + 99999999999.9))
+>> IsError(Date(2001, 2, 14) + 99999999999.9)
 true
 
 // date diff overflow
