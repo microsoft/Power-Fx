@@ -7,6 +7,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
 {
     /// <summary>
     /// Workpsace edit object model.
+    /// https://microsoft.github.io/language-server-protocol/specifications/specification-3-17/#workspaceEdit
     /// </summary>
     public class WorkspaceEdit
     {
