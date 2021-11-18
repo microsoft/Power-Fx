@@ -146,25 +146,13 @@ namespace Microsoft.PowerFx.Functions
                     {
                         var value = row.Value.GetField(BuiltinFunction.ColumnName_ValueStr);
                         NamedValue namedValue;
-                        switch (value)
+                        namedValue = value switch
                         {
-                            case T t:
-                                {
-                                    var str = targetFunction(runner, symbolContext, IRContext.NotInSource(itemType), new T[] { t });
-                                    namedValue = new NamedValue(BuiltinFunction.OneColumnTableResultNameStr, str);
-                                    break;
-                                }
-
-                            case BlankValue bv:
-                                namedValue = new NamedValue(BuiltinFunction.OneColumnTableResultNameStr, bv);
-                                break;
-                            case ErrorValue ev:
-                                namedValue = new NamedValue(BuiltinFunction.OneColumnTableResultNameStr, ev);
-                                break;
-                            default:
-                                namedValue = new NamedValue(BuiltinFunction.OneColumnTableResultNameStr, CommonErrors.RuntimeTypeMismatch(IRContext.NotInSource(itemType)));
-                                break;
-                        }
+                            T t => new NamedValue(BuiltinFunction.OneColumnTableResultNameStr, targetFunction(runner, symbolContext, IRContext.NotInSource(itemType), new T[] { t })),
+                            BlankValue bv => new NamedValue(BuiltinFunction.OneColumnTableResultNameStr, bv),
+                            ErrorValue ev => new NamedValue(BuiltinFunction.OneColumnTableResultNameStr, ev),
+                            _ => new NamedValue(BuiltinFunction.OneColumnTableResultNameStr, CommonErrors.RuntimeTypeMismatch(IRContext.NotInSource(itemType)))
+                        };
                         var record = new InMemoryRecordValue(IRContext.NotInSource(resultType), new List<NamedValue>() { namedValue });
                         resultRows.Add(DValue<RecordValue>.Of(record));
                     }
