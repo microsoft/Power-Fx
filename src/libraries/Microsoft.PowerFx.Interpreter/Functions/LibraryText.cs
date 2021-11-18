@@ -24,51 +24,6 @@ namespace Microsoft.PowerFx.Functions
             return new StringValue(irContext, str);
         }
 
-        public static FormulaValue CharT(IRContext irContext, TableValue[] args)
-        {
-            var tableType = (TableType)irContext.ResultType;
-            var resultType = tableType.ToRecord();
-
-            var arg0 = args[0];
-            var resultRows = new List<DValue<RecordValue>>();
-            foreach (var row in arg0.Rows)
-            {
-                if (row.IsValue)
-                {
-                    var value = row.Value.GetField(BuiltinFunction.ColumnName_ValueStr);
-                    NamedValue namedValue;
-                    if (value is NumberValue nv)
-                    {
-                        var str = Char(IRContext.NotInSource(FormulaType.String), new NumberValue[] { nv });
-                        namedValue = new NamedValue(BuiltinFunction.OneColumnTableResultNameStr, str);
-                    }
-                    else if (value is BlankValue bv)
-                    {
-                        namedValue = new NamedValue(BuiltinFunction.OneColumnTableResultNameStr, bv);
-                    }
-                    else if (value is ErrorValue ev)
-                    {
-                        namedValue = new NamedValue(BuiltinFunction.OneColumnTableResultNameStr, ev);
-                    }
-                    else
-                    {
-                        namedValue = new NamedValue(BuiltinFunction.OneColumnTableResultNameStr, CommonErrors.RuntimeTypeMismatch(IRContext.NotInSource(FormulaType.Number)));
-                    }
-                    var record = new InMemoryRecordValue(IRContext.NotInSource(resultType), new List<NamedValue>() { namedValue });
-                    resultRows.Add(DValue<RecordValue>.Of(record));
-                }
-                else if (row.IsBlank)
-                {
-                    resultRows.Add(DValue<RecordValue>.Of(row.Blank));
-                }
-                else
-                {
-                    resultRows.Add(DValue<RecordValue>.Of(row.Error));
-                }
-            }
-            return new InMemoryTableValue(irContext, resultRows);
-        }
-
         public static FormulaValue Concat(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args)
         {// Streaming 
             var arg0 = (TableValue)args[0];
