@@ -381,5 +381,25 @@ namespace Microsoft.PowerFx.Functions
             else
                 return CommonErrors.InvalidDateTimeError(irContext);
         }
+
+        public static FormulaValue TimeZoneOffset(IRContext irContext, FormulaValue[] args)
+        {
+            TimeZoneInfo tzInfo = TimeZoneInfo.Local;
+            if (args.Length == 0)
+            {
+                var tzOffsetDays = tzInfo.GetUtcOffset(DateTime.Now).TotalDays;
+                return new NumberValue(irContext, tzOffsetDays  * -1);
+            }
+
+            switch (args[0])
+            {
+                case DateTimeValue dtv:
+                    return new NumberValue(irContext, tzInfo.GetUtcOffset(dtv.Value.ToUniversalTime()).TotalDays * -1);
+                case DateValue dv:
+                    return new NumberValue(irContext, tzInfo.GetUtcOffset(dv.Value.ToUniversalTime()).TotalDays * -1);
+                default:
+                    return CommonErrors.InvalidDateTimeError(irContext);
+            }
+        }
     }
 }
