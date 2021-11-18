@@ -16,10 +16,10 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         {
             TimeZoneInfo tzInfo = TimeZoneInfo.Local;
             var testDate = new DateTime(2021, 6, 1);
-            var tzOffsetMinutes = tzInfo.GetUtcOffset(testDate).TotalMinutes / 1440.0 * -1;
+            var tzOffsetDays = tzInfo.GetUtcOffset(testDate).TotalDays * -1;
             var numberValue = engine.Eval("TimeZoneOffset(Date(2021, 6, 1))") as NumberValue;
             Assert.NotNull(numberValue);
-            Assert.Equal(numberValue.Value, tzOffsetMinutes);
+            Assert.Equal(numberValue.Value, tzOffsetDays);
         }
 
         [Fact]
@@ -27,10 +27,10 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         {
             TimeZoneInfo tzInfo = TimeZoneInfo.Local;
             var testDate = new DateTime(2021, 12, 1);
-            var tzOffsetMinutes = tzInfo.GetUtcOffset(testDate).TotalMinutes / 1440.0 * -1;
+            var tzOffsetDays = tzInfo.GetUtcOffset(testDate).TotalDays * -1;
             var numberValue = engine.Eval("TimeZoneOffset(Date(2021, 12, 1))") as NumberValue;
             Assert.NotNull(numberValue);
-            Assert.Equal(numberValue.Value, tzOffsetMinutes);
+            Assert.Equal(numberValue.Value, tzOffsetDays);
         }
 
 
@@ -38,11 +38,10 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         public void TestCurrentTimeZoneOffset()
         {
             TimeZoneInfo tzInfo = TimeZoneInfo.Local;
-            var tzOffsetMinutes = tzInfo.GetUtcOffset(DateTime.Now).TotalMinutes * -1;
-            var dayFraction = tzOffsetMinutes / 1440.0;
+            var tzOffsetDays = tzInfo.GetUtcOffset(DateTime.Now).TotalDays * -1;
             var numberValue = engine.Eval("TimeZoneOffset()") as NumberValue;
             Assert.NotNull(numberValue);
-            Assert.Equal(numberValue.Value, dayFraction);
+            Assert.Equal(numberValue.Value, tzOffsetDays);
         }
 
         [Fact]
