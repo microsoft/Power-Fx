@@ -98,13 +98,13 @@ namespace Microsoft.PowerFx.Functions
             },
             {
                 BuiltinFunctionsCore.CharT,
-                StandardErrorHandling<TableValue>(
+                StandardErrorHandling(
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: DoNotReplaceBlank,
                     checkRuntimeTypes: ExactValueTypeOrBlank<TableValue>,
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
-                    targetFunction: CharT
+                    targetFunction: StandardSingleColumnTable<NumberValue>(Char)
                     )
             },
             {
@@ -402,6 +402,17 @@ namespace Microsoft.PowerFx.Functions
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: Len
+                    )
+            },
+            {
+                BuiltinFunctionsCore.LenT,
+                StandardErrorHandling(
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<TableValue>,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: StandardSingleColumnTable<StringValue>(Len)
                     )
             },
             {
