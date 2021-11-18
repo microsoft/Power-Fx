@@ -130,12 +130,13 @@ namespace Microsoft.PowerFx.Functions
         }
 
         #region Single Column Table Functions
-        public static Func<EvalVisitor, SymbolContext, IRContext, TableValue[], FormulaValue> StandardSingleColumnTable<T>(FormulaType itemType, Func<EvalVisitor, SymbolContext, IRContext, T[], FormulaValue> targetFunction) where T : FormulaValue
+        public static Func<EvalVisitor, SymbolContext, IRContext, TableValue[], FormulaValue> StandardSingleColumnTable<T>(Func<EvalVisitor, SymbolContext, IRContext, T[], FormulaValue> targetFunction) where T : FormulaValue
         {
             return (runner, symbolContext, irContext, args) =>
             {
                 var tableType = (TableType)irContext.ResultType;
                 var resultType = tableType.ToRecord();
+                var itemType = resultType.GetFieldType(BuiltinFunction.OneColumnTableResultNameStr);
 
                 var arg0 = args[0];
                 var resultRows = new List<DValue<RecordValue>>();
@@ -145,22 +146,24 @@ namespace Microsoft.PowerFx.Functions
                     {
                         var value = row.Value.GetField(BuiltinFunction.ColumnName_ValueStr);
                         NamedValue namedValue;
-                        if (value is T t)
+                        switch (value)
                         {
-                            var str = targetFunction(runner, symbolContext, IRContext.NotInSource(itemType), new T[] { t });
-                            namedValue = new NamedValue(BuiltinFunction.OneColumnTableResultNameStr, str);
-                        }
-                        else if (value is BlankValue bv)
-                        {
-                            namedValue = new NamedValue(BuiltinFunction.OneColumnTableResultNameStr, bv);
-                        }
-                        else if (value is ErrorValue ev)
-                        {
-                            namedValue = new NamedValue(BuiltinFunction.OneColumnTableResultNameStr, ev);
-                        }
-                        else
-                        {
-                            namedValue = new NamedValue(BuiltinFunction.OneColumnTableResultNameStr, CommonErrors.RuntimeTypeMismatch(IRContext.NotInSource(itemType)));
+                            case T t:
+                                {
+                                    var str = targetFunction(runner, symbolContext, IRContext.NotInSource(itemType), new T[] { t });
+                                    namedValue = new NamedValue(BuiltinFunction.OneColumnTableResultNameStr, str);
+                                    break;
+                                }
+
+                            case BlankValue bv:
+                                namedValue = new NamedValue(BuiltinFunction.OneColumnTableResultNameStr, bv);
+                                break;
+                            case ErrorValue ev:
+                                namedValue = new NamedValue(BuiltinFunction.OneColumnTableResultNameStr, ev);
+                                break;
+                            default:
+                                namedValue = new NamedValue(BuiltinFunction.OneColumnTableResultNameStr, CommonErrors.RuntimeTypeMismatch(IRContext.NotInSource(itemType)));
+                                break;
                         }
                         var record = new InMemoryRecordValue(IRContext.NotInSource(resultType), new List<NamedValue>() { namedValue });
                         resultRows.Add(DValue<RecordValue>.Of(record));
@@ -178,9 +181,9 @@ namespace Microsoft.PowerFx.Functions
             };
         }
 
-        public static Func<EvalVisitor, SymbolContext, IRContext, TableValue[], FormulaValue> StandardSingleColumnTable<T>(FormulaType itemType, Func<IRContext, T[], FormulaValue> targetFunction) where T : FormulaValue
+        public static Func<EvalVisitor, SymbolContext, IRContext, TableValue[], FormulaValue> StandardSingleColumnTable<T>(Func<IRContext, T[], FormulaValue> targetFunction) where T : FormulaValue
         {
-            return StandardSingleColumnTable<T>(itemType, (runner, symbolContext, irContext, args) => targetFunction(irContext, args));
+            return StandardSingleColumnTable<T>((runner, symbolContext, irContext, args) => targetFunction(irContext, args));
         }
         #endregion
 

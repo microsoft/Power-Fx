@@ -104,7 +104,7 @@ namespace Microsoft.PowerFx.Functions
                     checkRuntimeTypes: ExactValueTypeOrBlank<TableValue>,
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
-                    targetFunction: StandardSingleColumnTable<NumberValue>(FormulaType.String, Char)
+                    targetFunction: StandardSingleColumnTable<NumberValue>(Char)
                     )
             },
             {
@@ -412,7 +412,7 @@ namespace Microsoft.PowerFx.Functions
                     checkRuntimeTypes: ExactValueTypeOrBlank<TableValue>,
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
-                    targetFunction: StandardSingleColumnTable<StringValue>(FormulaType.Number, Len)
+                    targetFunction: StandardSingleColumnTable<StringValue>(Len)
                     )
             },
             {
