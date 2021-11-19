@@ -30,7 +30,6 @@ false
 4
 
 >> Len([123, -2344566, 0567])
-/*InterpreterRunner*/ #Skip
 [{Result:3},{Result:8},{Result:3}]
 
 >> Day(Average(Date(1900, 1, 2), Date(1900, 1, 4)))
