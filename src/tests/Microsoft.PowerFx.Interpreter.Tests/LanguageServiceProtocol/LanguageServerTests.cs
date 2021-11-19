@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
-using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.LanguageServerProtocol.Protocol;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +11,7 @@ using Xunit;
 
 namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
 {
-    public class LanguageServerTests 
+    public class LanguageServerTests
     {
         protected static readonly JsonSerializerOptions _jsonSerializerOptions = new JsonSerializerOptions()
         {
@@ -231,7 +230,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
         public void TestDidOpenSeverityFormula()
         {
             var formula = "Count([\"test\"])";
-            var expectedDiagnostics = new []
+            var expectedDiagnostics = new[]
             {
                 new Diagnostic()
                 {
@@ -365,6 +364,44 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             Assert.Equal("2.0", errorResponse.Jsonrpc);
             Assert.Equal("123", errorResponse.Id);
             Assert.Equal(-32602, errorResponse.Error.Code);
+        }
+
+        [Fact]
+        public void TestCodeAction()
+        {
+            _sendToClientData.Clear();
+            _testServer.OnDataReceived(JsonSerializer.Serialize(new
+            {
+                jsonrpc = "2.0",
+                id = "testDocument1",
+                method = "textDocument/codeAction",
+                @params = new CodeActionParams()
+                {
+                    TextDocument = new TextDocumentIdentifier()
+                    {
+                        Uri = "powerfx://test?expression=IsBlank(&context={}"
+                    },
+                    Range = new Range()
+                    {
+                        Start = new Position
+                        {
+                            Line = 0,
+                            Character = 0
+                        },
+                        End = new Position
+                        {
+                            Line = 0,
+                            Character = 10
+                        }
+                    },
+                    Context = new CodeActionContext() { Only = new[] { "quickfix" } }
+                }
+            }));
+            Assert.Single(_sendToClientData);
+            var response = JsonSerializer.Deserialize<JsonRpcCodeActionResponse>(_sendToClientData[0], _jsonSerializerOptions);
+            Assert.Equal("2.0", response.Jsonrpc);
+            Assert.Equal("testDocument1", response.Id);
+            Assert.True(0 == response.Result["quickfix"].Length, "Quick fix found which is not expected.");
         }
 
         [Theory]
