@@ -148,6 +148,7 @@ true
 false
 
 >> StartsWith("foobar", Text(1/0))
+/*SqlRunner*/ Compile Error
 #Error
 
 >> EndsWith("foobar", "bar")
@@ -163,6 +164,7 @@ true
 false
 
 >> EndsWith("foobar", Text(1/0))
+/*SqlRunner*/ Compile Error
 #Error
 
 >> TrimEnds("   Hello     World   ")
@@ -189,7 +191,7 @@ false
 >> Lower(Blank())
 ""
 
->> Lower(Text(1/0, "#.000"))
+>> Lower(Text(1/0, "000"))
 #Error
 
 >> Upper("Important!")
@@ -198,7 +200,7 @@ false
 >> Upper(Blank())
 ""
 
->> Upper(Text(1/0, "#.000"))
+>> Upper(Text(1/0, "000"))
 #Error
 
 >> Substitute("abcabcabc", "ab", "xx")
@@ -230,6 +232,15 @@ false
 
 >> Substitute("abcabcabc", Blank(), "xx")
 "abcabcabc"
+
+>> Substitute("abcabcabc", Blank(), "xx", 2)
+"abcabcabc"
+
+>> Substitute("abcabcabc", "ab", Blank())
+"ccc"
+
+>> Substitute("abcabcabc", "ab", Blank(), 2)
+"abccabc"
 
 >> Substitute("abcabcabc", "", "xx")
 "abcabcabc"
@@ -279,5 +290,5 @@ true
 >> Concatenate("a", "b", Blank())
 "ab"
 
->> Concatenate(Text(1/0, "#.000"), "b", Text(7))
+>> Concatenate(Text(1/0, "000"), "b", Text(7))
 #Error

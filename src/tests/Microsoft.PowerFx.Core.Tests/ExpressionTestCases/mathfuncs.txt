@@ -76,16 +76,22 @@ Blank()
 >> Ln(1/0)
 #Error
 
+// Log is not implemented for SQL
+
 >> Log(100)
+/*SqlRunner*/ Compile Error
 2
 
 >> Log(0)
+/*SqlRunner*/ Compile Error
 #Error
 
 >> Log(Blank())
+/*SqlRunner*/ Compile Error
 Blank()
 
 >> Log(1/0)
+/*SqlRunner*/ Compile Error
 #Error
 
 >> IsError(Ln(0))

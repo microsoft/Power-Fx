@@ -1,4 +1,5 @@
 ﻿>> Text(Date(-1, 2, 3))
+/*SqlRunner*/ Compile Error
 #Error
 
 >> Date(-1, 2, 3)
@@ -9,42 +10,49 @@ Blank()
 
 // dates before 1900 get converted to post-1900
 >> Text(Date(80, 1, 2))
+/*SqlRunner*/ Compile Error
 /*InterpreterRunner*/ "1/2/0080"
 "1/2/1980"
 
 // months and days overflow (but not for SQL)
 >> Text(Date(2000, 25, 69))
-/*SqlRunner*/ #Error
+/*SqlRunner*/ Compile Error
 "3/10/2002"
 
 >> Text(Date(2000, 2, -1))
-/*SqlRunner*/ #Error
+/*SqlRunner*/ Compile Error
 "1/30/2000"
 
 >> Text(Date(2000, -2, 1))
-/*SqlRunner*/ #Error
+/*SqlRunner*/ Compile Error
 "10/1/1999"
 
 >> Text(Date(2000, -2, -1))
-/*SqlRunner*/ #Error
+/*SqlRunner*/ Compile Error
 "9/29/1999"
 
 >> IsToday(Today())
+/*SqlRunner*/ Compile Error
 true
 
 >> IsToday(Now())
+/*SqlRunner*/ Compile Error
 true
 
 >> IsToday(Date(-1, 2, 3))
+/*SqlRunner*/ Compile Error
 #Error
 
 >> IsToday(Date(Blank(), 2, 3))
+/*SqlRunner*/ Compile Error
 false
 
 >> IsToday(Date(2012,1,1))
+/*SqlRunner*/ Compile Error
 false
 
 >> IsToday(DateAdd(Today(),-1))
+/*SqlRunner*/ Compile Error
 false
 
 >> Month(Date(2011,5,12))
@@ -91,6 +99,7 @@ Blank()
 -351
 
 >> DateDiff(Date(2011,1,15) , Date(2011,1,30), "milliseconds")
+/*SqlRunner*/ Compile Error
 1296000000
 
 >> DateDiff(Date(2011,1,15) , Date(2011,1,30), "seconds")
@@ -109,6 +118,7 @@ Blank()
 2
 
 >> DateDiff(Date(2011,1,15) , Date(2011,1,30), TimeUnit.Milliseconds)
+/*SqlRunner*/ Compile Error
 1296000000
 
 >> DateDiff(Date(2011,1,15) , Date(2011,1,30), TimeUnit.Seconds)
@@ -147,10 +157,18 @@ true
 
 // Leap year 
 >> Text(DateAdd(Date(2012,2,28), 1))
+/*SqlRunner*/ Compile Error
 "2/29/2012"
 
 >> Text(DateAdd(Date(2013,2,28), 1))
+/*SqlRunner*/ Compile Error
 "3/1/2013"
+
+>> Day(DateAdd(Date(2012,2,28), 1))
+29
+
+>> Month(DateAdd(Date(2013,2,28), 1))
+3
 
 // Date comparisons
 >> Date(2011,1,15) < Date(2011,1,30)
@@ -227,10 +245,13 @@ true
 true
 
 // Blank Date comparisons
+// SQL Null comparisons are always false
 >> Date(Blank(), 2, 3) < Date(2011,1,30)
+/*SqlRunner*/ false
 true
 
 >> Date(Blank(), 2, 3) <= Date(2011,1,30)
+/*SqlRunner*/ false
 true
 
 >> Date(Blank(), 2, 3) > Date(2011,1,30)
@@ -241,15 +262,19 @@ false
 
 // Blank DateTime comparisons
 >> DateAdd(Date(Blank(), 2, 3), 3) < DateAdd(Date(2011,1,30), 3)
+/*SqlRunner*/ false
 true
 
 >> DateAdd(Date(Blank(), 2, 3), 3) <= DateAdd(Date(2011,1,30), 3)
+/*SqlRunner*/ false
 true
 
 >> DateAdd(Date(Blank(), 2, 3), 3) > DateAdd(Date(2011,1,30), 3)
+/*SqlRunner*/ false
 false
 
 >> DateAdd(Date(Blank(), 2, 3), 3) >= DateAdd(Date(2011,1,30), 3)
+/*SqlRunner*/ false
 false
 
 // Error Date comparisons
@@ -302,9 +327,11 @@ Blank()
 5
 
 >> Text(DateAdd(Date(2011,1,15), 100000000, "milliseconds"))
+/*SqlRunner*/ Compile Error
 "1/16/2011"
 
 >> Text(DateAdd(Date(2011,1,15), 100000000, TimeUnit.Milliseconds))
+/*SqlRunner*/ Compile Error
 "1/16/2011"
 
 // DateAddDay tests
@@ -331,6 +358,7 @@ Blank()
 #Error
 
 >> Day(Blank())
+/*SqlRunner*/ Blank()
 0
 
 >> Month(DateAdd(Date(2001,1,1), 12, TimeUnit.Months))
@@ -352,6 +380,7 @@ Blank()
 #Error
 
 >> Month(Blank())
+/*SqlRunner*/ Blank()
 1
 
 >> Year(DateAdd(Date(2001,1,1), 1, TimeUnit.Years))
@@ -361,6 +390,7 @@ Blank()
 #Error
 
 >> Year(Blank())
+/*SqlRunner*/ Blank()
 1900
 
 >> Hour(DateAdd(DateTimeValue("01-01-2001 1:10:20"), 1, TimeUnit.Hours))
@@ -380,12 +410,15 @@ Blank()
 "1/1/2001 1:10 AM"
 
 >> Date(2001, 2, 14) = DateValue("2001-02-14")
+/*SqlRunner*/ Compile Error
 true
 
 >> DateValue("02-14-01") = DateValue("02/14/01")
+/*SqlRunner*/ Compile Error
 true
 
 >> DateValue("02/14/2001") = DateValue("2001-02-14")
+/*SqlRunner*/ Compile Error
 true
 
 // time zone offset
@@ -408,6 +441,7 @@ true
 
 // Excel-style date math
 >> Text(Date(2001, 2, 14) + 2)
+/*SqlRunner*/ Compile Error
 "2/16/2001"
 
 // SQL does not support DateTimeValue
@@ -428,40 +462,53 @@ true
 59
 
 >> Date(Year(Today()), Month(Today()), Day(Today())) = Today()
+/*SqlRunner*/ Compile Error
 true
 
 >> Year(Date(2011, 2, 3) + Time(1, 2, 3))
+/*SqlRunner*/ Compile Error
 2011
 
 >> Month(Date(2011, 2, 3) + Time(1, 2, 3))
+/*SqlRunner*/ Compile Error
 2
 
 >> Day(Date(2011, 2, 3) + Time(1, 2, 3))
+/*SqlRunner*/ Compile Error
 3
 
 >> Hour(Date(2011, 2, 3) + Time(1, 2, 3))
+/*SqlRunner*/ Compile Error
 1
 
 >> Minute(Date(2011, 2, 3) + Time(1, 2, 3))
+/*SqlRunner*/ Compile Error
 2
 
 >> Second(Date(2011, 2, 3) + Time(1, 2, 3))
+/*SqlRunner*/ Compile Error
 3
 
 >> Year(Time(1, 2, 3) + Date(2011, 2, 3))
+/*SqlRunner*/ Compile Error
 2011
 
 >> Month(Time(1, 2, 3) + Date(2011, 2, 3))
+/*SqlRunner*/ Compile Error
 2
 
 >> Day(Time(1, 2, 3) + Date(2011, 2, 3))
+/*SqlRunner*/ Compile Error
 3
 
 >> Hour(Time(1, 2, 3) + Date(2011, 2, 3))
+/*SqlRunner*/ Compile Error
 1
 
 >> Minute(Time(1, 2, 3) + Date(2011, 2, 3))
+/*SqlRunner*/ Compile Error
 2
 
 >> Second(Time(1, 2, 3) + Date(2011, 2, 3))
+/*SqlRunner*/ Compile Error
 3
