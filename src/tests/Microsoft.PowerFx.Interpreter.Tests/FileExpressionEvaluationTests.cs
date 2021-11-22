@@ -28,6 +28,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             string actualStr;
             FormulaValue result = null;
+            bool exceptionThrown = false;
             try
             {
                 result = _runner.RunAsync(testCase.Input).Result;
@@ -36,9 +37,10 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             catch (Exception e)
             {
                 actualStr = e.Message.Replace("\r\n", "|");
+                exceptionThrown = true;
             }
 
-            if (result != null && testCase.GetExpected(nameof(InterpreterRunner)) == "#Error" && (_runner.IsError(result)))
+            if ((exceptionThrown && testCase.GetExpected(nameof(InterpreterRunner)) == "Compile Error") || (result != null && testCase.GetExpected(nameof(InterpreterRunner)) == "#Error" && _runner.IsError(result)))
             {
                 // Pass as test is expected to return an error
                 return;
@@ -47,7 +49,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             if (testCase.GetExpected(nameof(InterpreterRunner)) == "#Skip")
             {
                 var goodResult = testCase.GetExpected("-");
-                Assert.False(goodResult == actualStr, "Test marked to skip returned correct result");
+                Assert.False(goodResult == actualStr || goodResult == "#Error" && _runner.IsError(result), "Test marked to skip returned correct result");
 
                 // Since test is marked to skip and it didn't return a result that matched the baseline
                 // expected result then we can marked it skipped here

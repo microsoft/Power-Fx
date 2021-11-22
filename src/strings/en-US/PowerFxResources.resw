@@ -871,6 +871,10 @@
     <value>Returns the current date and time.</value>
     <comment>Description of 'Now' function.</comment>
   </data>
+  <data name="AboutUTCNow" xml:space="preserve">
+    <value>Returns the current date and time in UTC time.</value>
+    <comment>Description of 'UTCNow' function.</comment>
+  </data>
   <data name="AboutTimeZoneOffset" xml:space="preserve">
     <value>Returns the time difference between UTC time and local time, in minutes.For example, If your time zone is UTC+2, -120 will be returned.</value>
     <comment>Description of 'TimeZoneOffset' function.</comment>
@@ -886,6 +890,10 @@
   <data name="AboutToday" xml:space="preserve">
     <value>Returns the current date.</value>
     <comment>Description of 'Today' function.</comment>
+  </data>
+  <data name="AboutUTCToday" xml:space="preserve">
+    <value>Returns the current date in UTC time.</value>
+    <comment>Description of 'UTCToday' function.</comment>
   </data>
   <data name="AboutWeekNum" xml:space="preserve">
     <value>Returns the week number for a given date.</value>
@@ -3432,6 +3440,17 @@
     <value>date</value>
     <comment>function_parameter - First argument to the IsToday function - the date to be tested.</comment>
   </data>
+  <data name="AboutIsUTCToday" xml:space="preserve">
+    <value>Checks whether the given date is today in UTC, and returns true or false.</value>
+    <comment>Description of 'IsUTCToday' function</comment>
+  </data>
+  <data name="AboutIsUTCToday_date" xml:space="preserve">
+    <value>The date value to test.</value>
+  </data>
+  <data name="IsUTCTodayFuncArg1" xml:space="preserve">
+    <value>date</value>
+    <comment>function_parameter - First argument to the IsUTCToday function - the date to be tested.</comment>
+  </data>
   <data name="AboutMod" xml:space="preserve">
     <value>Returns the remainder after a number is divided by a divisor. The result has the same sign as the divisor.</value>
     <comment>Description of 'Mod' function.</comment>
@@ -5527,9 +5546,21 @@
     <value>Only the short date and time format strings are supported in formula columns.</value>
     <comment>Error Message. Used in formula columns for scenarios where the maker supplies an invalid format string</comment>
   </data>
-  <data name="FormulaColumns_UtcResultWarning" xml:space="preserve">
-    <value>The "{0}" part of this formula might not work as expected depending on the user's time zone, as the operation will be performed in Universal Coordinated Time (UTC) in formula columns.</value>
-    <comment>Error Message. Used as a warning in formula columns for scenarios where the operation will be performed in UTC instead of the user's local time zone. The {0} will be the name of the function.</comment>
+  <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
+    <value>Locale-specific formatting tokens such as "." and "," are not supported in formula columns.</value>
+    <comment>Error Message. Used in formula columns for scenarios where the maker supplies an invalid format string</comment>
+  </data>
+  <data name="FormulaColumns_FunctionNotSupported" xml:space="preserve">
+    <value>{0} is not supported in formula columns, use {1} instead.</value>
+    <comment>Error Message. Used in formula columns for scenarios where the maker attempts to use a function that is not supported, providing an alternate function name.  The {0} will be the name of the function that is not supported, and {1} is the name of the suggested alternate.</comment>
+  </data>
+  <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
+    <value>This result type {0} is not supported in formula columns.</value>
+    <comment>Error Message. Used in formula columns for a formula that returns a type which is not supported.</comment>
+  </data>
+  <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
+    <value>The result type for this formula is expected to be {0}, but the actual result type is {1}. The result type of a formula column cannot be changed.</value>
+    <comment>Error Message. Used in formula columns for a formula that returns an unexpected result type during editing. The {0} will be the name of the required type. The {1} will be the name of the incorrect type.</comment>
   </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
     <value>Expected an operand. The formula or expression expects a valid operand. For example, you can add the operand '2' to the expression ' 1 +_' so that the result is '3'. Or, you can add the operand "there" to the expression '"Hi "&amp; _ ' so that the result is 'Hi there'.</value>

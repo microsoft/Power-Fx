@@ -71,6 +71,11 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
             var intellisense = IntellisenseProvider.GetIntellisense();
             var suggestions = intellisense.Suggest(context, binding, formula);
 
+            if (suggestions.Exception != null)
+            {
+                throw suggestions.Exception;
+            }
+
             return suggestions;
         }
     }

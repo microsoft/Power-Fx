@@ -97,6 +97,17 @@ namespace Microsoft.PowerFx.Functions
                     )
             },
             {
+                BuiltinFunctionsCore.CharT,
+                StandardErrorHandling(
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<TableValue>,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: StandardSingleColumnTable<NumberValue>(Char)
+                    )
+            },
+            {
                 BuiltinFunctionsCore.Concatenate,
                 StandardErrorHandling<StringValue>(
                     expandArguments: NoArgExpansion,
@@ -394,6 +405,17 @@ namespace Microsoft.PowerFx.Functions
                     )
             },
             {
+                BuiltinFunctionsCore.LenT,
+                StandardErrorHandling(
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<TableValue>,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: StandardSingleColumnTable<StringValue>(Len)
+                    )
+            },
+            {
                 BuiltinFunctionsCore.Ln,
                 StandardErrorHandling<NumberValue>(
                     expandArguments: NoArgExpansion,
@@ -510,10 +532,10 @@ namespace Microsoft.PowerFx.Functions
                 BuiltinFunctionsCore.Mod,
                 StandardErrorHandling<NumberValue>(
                     expandArguments: NoArgExpansion,
-                    replaceBlankValues: DoNotReplaceBlank,
-                    checkRuntimeTypes: ExactValueTypeOrBlank<NumberValue>,
+                    replaceBlankValues: ReplaceBlankWithZero,
+                    checkRuntimeTypes: ExactValueType<NumberValue>,
                     checkRuntimeValues: DivideByZeroChecker,
-                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: Mod
                     )
             },
@@ -784,6 +806,17 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: TimeParse
                 )
             },
+            {
+                BuiltinFunctionsCore.TimeZoneOffset,
+                StandardErrorHandling<FormulaValue>(
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: DateOrDateTime,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
+                    targetFunction: TimeZoneOffset
+                )
+            },
             { BuiltinFunctionsCore.Today, Today },
             {
                 BuiltinFunctionsCore.Trim,
@@ -876,7 +909,7 @@ namespace Microsoft.PowerFx.Functions
             return StandardTableNodeRecordsCore(irContext, args, columnName);
         }
 
-        private static IEnumerable<DValue<RecordValue>> StandardTableNodeRecordsCore(IRContext irContext, FormulaValue[] args, string columnName = "Value")
+        private static IEnumerable<DValue<RecordValue>> StandardTableNodeRecordsCore(IRContext irContext, FormulaValue[] args, string columnName = BuiltinFunction.ColumnName_ValueStr)
         {
             var tableType = (TableType)irContext.ResultType;
             var recordType = tableType.ToRecord();
