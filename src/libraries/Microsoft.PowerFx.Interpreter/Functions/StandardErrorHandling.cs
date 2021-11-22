@@ -173,6 +173,97 @@ namespace Microsoft.PowerFx.Functions
         {
             return StandardSingleColumnTable<T>((runner, symbolContext, irContext, args) => targetFunction(irContext, args));
         }
+
+        public static Func<EvalVisitor, SymbolContext, IRContext, FormulaValue[], FormulaValue> DoubleSingleColumnTable<T>(Func<EvalVisitor, SymbolContext, IRContext, T[], FormulaValue> targetFunction) where T : FormulaValue
+        {
+            return (runner, symbolContext, irContext, args) =>
+            {
+                var tableType = (TableType)irContext.ResultType;
+                var resultType = tableType.ToRecord();
+                var itemType = resultType.GetFieldType(BuiltinFunction.OneColumnTableResultNameStr);
+
+                var arg0 = args[0];
+                var arg1 = args[1];
+
+                KeyValuePair<IEnumerable<DValue<RecordValue>>, IEnumerable<DValue<RecordValue>>> allRows;
+                if (arg0 is TableValue both0 && arg1 is TableValue both1)
+                {
+                    if (both0.Rows.Count() == both1.Rows.Count())
+                    {
+                        allRows = new KeyValuePair<IEnumerable<DValue<RecordValue>>, IEnumerable<DValue<RecordValue>>>(both0.Rows, both1.Rows);
+                    }
+                    else
+                    {
+                        return CommonErrors.UnreachableCodeError(irContext);
+                    }
+                }
+                else if (arg0 is TableValue tv0)
+                {
+                    var inputRecordType = new RecordType().Add(BuiltinFunction.ColumnName_ValueStr, arg1.Type);
+                    var inputRecordNamedValue = new NamedValue(BuiltinFunction.ColumnName_ValueStr, arg1);
+                    var inputRecord = new InMemoryRecordValue(IRContext.NotInSource(inputRecordType), new List<NamedValue>() { inputRecordNamedValue });
+                    var inputDValue = DValue<RecordValue>.Of(inputRecord);
+                    var inputRows = tv0.Rows.Select(_ => inputDValue);
+                    allRows = new KeyValuePair<IEnumerable<DValue<RecordValue>>, IEnumerable<DValue<RecordValue>>>(tv0.Rows, inputRows);
+                }
+                else if (arg1 is TableValue tv1)
+                {
+                    var inputRecordType = new RecordType().Add(BuiltinFunction.ColumnName_ValueStr, arg0.Type);
+                    var inputRecordNamedValue = new NamedValue(BuiltinFunction.ColumnName_ValueStr, arg0);
+                    var inputRecord = new InMemoryRecordValue(IRContext.NotInSource(inputRecordType), new List<NamedValue>() { inputRecordNamedValue });
+                    var inputDValue = DValue<RecordValue>.Of(inputRecord);
+                    var inputRows = tv1.Rows.Select(_ => inputDValue);
+                    allRows = new KeyValuePair<IEnumerable<DValue<RecordValue>>, IEnumerable<DValue<RecordValue>>>(inputRows, tv1.Rows);
+                }
+                else
+                {
+                    return CommonErrors.UnreachableCodeError(irContext);
+                }
+
+                var zipped = allRows.Key.Zip(allRows.Value, (a, b) => new KeyValuePair<DValue<RecordValue>, DValue<RecordValue>>(a, b));
+                var resultRows = new List<DValue<RecordValue>>();
+                foreach (var pair in zipped)
+                {
+                    if (pair.Key.IsValue && pair.Value.IsValue)
+                    {
+                        var value0 = pair.Key.Value.GetField(BuiltinFunction.ColumnName_ValueStr);
+                        var value1 = pair.Value.Value.GetField(BuiltinFunction.ColumnName_ValueStr);
+                        NamedValue namedValue;
+                        namedValue = (value0, value1) switch
+                        {
+                            (T t0, T t1) => new NamedValue(BuiltinFunction.OneColumnTableResultNameStr, targetFunction(runner, symbolContext, IRContext.NotInSource(itemType), new T[] { t0, t1 })),
+                            (BlankValue bv0, _) => new NamedValue(BuiltinFunction.OneColumnTableResultNameStr, bv0),
+                            (ErrorValue ev0, _) => new NamedValue(BuiltinFunction.OneColumnTableResultNameStr, ev0),
+                            (_, BlankValue bv1) => new NamedValue(BuiltinFunction.OneColumnTableResultNameStr, bv1),
+                            (_, ErrorValue ev1) => new NamedValue(BuiltinFunction.OneColumnTableResultNameStr, ev1),
+                            _ => new NamedValue(BuiltinFunction.OneColumnTableResultNameStr, CommonErrors.RuntimeTypeMismatch(IRContext.NotInSource(itemType)))
+                        };
+                    }
+                    else if (pair.Key.IsBlank)
+                    {
+                        resultRows.Add(DValue<RecordValue>.Of(pair.Key.Blank));
+                    }
+                    else if (pair.Value.IsBlank)
+                    {
+                        resultRows.Add(DValue<RecordValue>.Of(pair.Value.Blank));
+                    }
+                    else if (pair.Key.IsError)
+                    {
+                        resultRows.Add(DValue<RecordValue>.Of(pair.Key.Error));
+                    }
+                    else
+                    {
+                        resultRows.Add(DValue<RecordValue>.Of(pair.Value.Error));
+                    }
+                }
+                return new InMemoryTableValue(irContext, resultRows);
+            };
+        }
+
+        public static Func<EvalVisitor, SymbolContext, IRContext, FormulaValue[], FormulaValue> DoubleSingleColumnTable<T>(Func<IRContext, T[], FormulaValue> targetFunction) where T : FormulaValue
+        {
+            return DoubleSingleColumnTable<T>((runner, symbolContext, irContext, args) => targetFunction(irContext, args));
+        }
         #endregion
 
         #region Common Arg Expansion Pipeline Stages
