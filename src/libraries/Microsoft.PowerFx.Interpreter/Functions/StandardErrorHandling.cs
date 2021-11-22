@@ -238,6 +238,8 @@ namespace Microsoft.PowerFx.Functions
                             (_, ErrorValue ev1) => new NamedValue(BuiltinFunction.OneColumnTableResultNameStr, ev1),
                             _ => new NamedValue(BuiltinFunction.OneColumnTableResultNameStr, CommonErrors.RuntimeTypeMismatch(IRContext.NotInSource(itemType)))
                         };
+                        var record = new InMemoryRecordValue(IRContext.NotInSource(resultType), new List<NamedValue>() { namedValue });
+                        resultRows.Add(DValue<RecordValue>.Of(record));
                     }
                     else if (pair.Key.IsBlank)
                     {
