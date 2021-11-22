@@ -178,10 +178,6 @@ namespace Microsoft.PowerFx.Functions
         {
             return (runner, symbolContext, irContext, args) =>
             {
-                var tableType = (TableType)irContext.ResultType;
-                var resultType = tableType.ToRecord();
-                var itemType = resultType.GetFieldType(BuiltinFunction.OneColumnTableResultNameStr);
-
                 var arg0 = args[0];
                 var arg1 = args[1];
 
@@ -217,8 +213,12 @@ namespace Microsoft.PowerFx.Functions
                 }
                 else
                 {
-                    return CommonErrors.UnreachableCodeError(irContext);
+                    return targetFunction(runner, symbolContext, irContext, (T[])args);
                 }
+
+                var tableType = (TableType)irContext.ResultType;
+                var resultType = tableType.ToRecord();
+                var itemType = resultType.GetFieldType(BuiltinFunction.OneColumnTableResultNameStr);
 
                 var zipped = allRows.Key.Zip(allRows.Value, (a, b) => new KeyValuePair<DValue<RecordValue>, DValue<RecordValue>>(a, b));
                 var resultRows = new List<DValue<RecordValue>>();
@@ -353,6 +353,18 @@ namespace Microsoft.PowerFx.Functions
             else
             {
                 return ExactValueType<T>(irContext, index, arg);
+            }
+        }
+
+        private static FormulaValue ExactValueTypeOrTable<T>(IRContext irContext, int index, FormulaValue arg) where T : FormulaValue
+        {
+            if (arg is TableValue)
+            {
+                return arg;
+            }
+            else
+            {
+                return ExactValueTypeOrBlank<T>(irContext, index, arg);
             }
         }
 

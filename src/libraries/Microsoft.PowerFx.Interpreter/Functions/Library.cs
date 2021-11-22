@@ -109,13 +109,13 @@ namespace Microsoft.PowerFx.Functions
             },
             {
                 BuiltinFunctionsCore.Concatenate,
-                StandardErrorHandling<StringValue>(
+                StandardErrorHandling<FormulaValue>(
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: ReplaceBlankWithEmptyString,
-                    checkRuntimeTypes: ExactValueType<StringValue>,
+                    checkRuntimeTypes: ExactValueTypeOrTable<StringValue>,
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
-                    targetFunction: Concatenate
+                    targetFunction: DoubleSingleColumnTable<StringValue>(Concatenate)
                     )
             },
             {
