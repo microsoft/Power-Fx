@@ -292,3 +292,6 @@ true
 
 >> Concatenate(Text(1/0, "000"), "b", Text(7))
 #Error
+
+>> Concatenate(Table({a:"a"},{a:"b"}), Table({b:"1"},{b:"2"}))
+[{Result:"a1"},{Result:"b2"}]
