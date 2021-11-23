@@ -5,6 +5,7 @@ using System.Linq;
 using Microsoft.PowerFx.Core.Public.Types;
 using Microsoft.PowerFx.Core.Public.Values;
 using Microsoft.PowerFx.Core.Public;
+using Microsoft.PowerFx.Core.Functions;
 
 namespace Microsoft.PowerFx.Functions
 {
@@ -127,6 +128,52 @@ namespace Microsoft.PowerFx.Functions
                 return targetFunction(irContext, args);
             });
         }
+
+        #region Single Column Table Functions
+        public static Func<EvalVisitor, SymbolContext, IRContext, TableValue[], FormulaValue> StandardSingleColumnTable<T>(Func<EvalVisitor, SymbolContext, IRContext, T[], FormulaValue> targetFunction) where T : FormulaValue
+        {
+            return (runner, symbolContext, irContext, args) =>
+            {
+                var tableType = (TableType)irContext.ResultType;
+                var resultType = tableType.ToRecord();
+                var itemType = resultType.GetFieldType(BuiltinFunction.OneColumnTableResultNameStr);
+
+                var arg0 = args[0];
+                var resultRows = new List<DValue<RecordValue>>();
+                foreach (var row in arg0.Rows)
+                {
+                    if (row.IsValue)
+                    {
+                        var value = row.Value.GetField(BuiltinFunction.ColumnName_ValueStr);
+                        NamedValue namedValue;
+                        namedValue = value switch
+                        {
+                            T t => new NamedValue(BuiltinFunction.OneColumnTableResultNameStr, targetFunction(runner, symbolContext, IRContext.NotInSource(itemType), new T[] { t })),
+                            BlankValue bv => new NamedValue(BuiltinFunction.OneColumnTableResultNameStr, bv),
+                            ErrorValue ev => new NamedValue(BuiltinFunction.OneColumnTableResultNameStr, ev),
+                            _ => new NamedValue(BuiltinFunction.OneColumnTableResultNameStr, CommonErrors.RuntimeTypeMismatch(IRContext.NotInSource(itemType)))
+                        };
+                        var record = new InMemoryRecordValue(IRContext.NotInSource(resultType), new List<NamedValue>() { namedValue });
+                        resultRows.Add(DValue<RecordValue>.Of(record));
+                    }
+                    else if (row.IsBlank)
+                    {
+                        resultRows.Add(DValue<RecordValue>.Of(row.Blank));
+                    }
+                    else
+                    {
+                        resultRows.Add(DValue<RecordValue>.Of(row.Error));
+                    }
+                }
+                return new InMemoryTableValue(irContext, resultRows);
+            };
+        }
+
+        public static Func<EvalVisitor, SymbolContext, IRContext, TableValue[], FormulaValue> StandardSingleColumnTable<T>(Func<IRContext, T[], FormulaValue> targetFunction) where T : FormulaValue
+        {
+            return StandardSingleColumnTable<T>((runner, symbolContext, irContext, args) => targetFunction(irContext, args));
+        }
+        #endregion
 
         #region Common Arg Expansion Pipeline Stages
         private static Func<IRContext, IEnumerable<FormulaValue>, IEnumerable<FormulaValue>> InsertDefaultValues(int outputArgsCount, FormulaValue fillWith)
