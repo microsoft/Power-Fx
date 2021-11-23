@@ -9,13 +9,13 @@ namespace Microsoft.PowerFx.Core.Parser
 {
     internal class ParseFormulasResult
     {
-        internal Dictionary<DName, ParseResult> NamedFormulas { get; }
+        internal Dictionary<DName, string> NamedFormulas { get; }
         internal List<TexlError> Errors { get; }
         internal bool HasError { get; }
-        public ParseFormulasResult(Dictionary<DName, ParseResult> namedFormulas, List<TexlError> errors, bool hasError)
+        public ParseFormulasResult(Dictionary<DName, string> namedFormulas, List<TexlError> errors, bool hasError)
         {
             Contracts.AssertValue(namedFormulas);
-            Contracts.Assert(errors.Count > 0 ? hasError : true);
+            Contracts.Assert(errors == null || hasError);
             NamedFormulas = namedFormulas;
             Errors = errors;
             HasError = hasError;

@@ -661,7 +661,7 @@ namespace DocumentServer.Core.Tests.Formulas
         [InlineData("a=10")]
         [InlineData("a;")]
         [InlineData(";")]
-        [InlineData("a=a=10")]
+        [InlineData("a=a=10;")]
         public void TestFormulasParse_Negative(string script)
         {
             TestFormulasParseError(script);

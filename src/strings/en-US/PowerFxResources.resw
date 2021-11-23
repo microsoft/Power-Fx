@@ -6289,4 +6289,8 @@
     <value>Named formula does not contain an identifier.</value>
     <comment>An identifier is the content in the named formula before the "=". Fore example, in "a=b+10", "a" is the identifier.</comment>
   </data>
+  <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
+    <value>Named formula must end with a semicolon.</value>
+    <comment>A semicolon must terminate named formulas. For example, a=10;</comment>
+  </data>
 </root>
