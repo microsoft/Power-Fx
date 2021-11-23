@@ -295,3 +295,9 @@ true
 
 >> Concatenate(Table({a:"a"},{a:"b"}), Table({b:"1"},{b:"2"}))
 [{Result:"a1"},{Result:"b2"}]
+
+>> Concatenate(Table({a:"a"},{a:"b"},{a:"c"}), Table({b:"1"},{b:"2"}))
+[{Result:"a1"},{Result:"b2"},{Result:"c"}]
+
+>> Concatenate(Table({a:"a"},{a:"b"}), Table({b:"1"},{b:"2"},{b:"3"}))
+[{Result:"a1"},{Result:"b2"},{Result:"3"}]
