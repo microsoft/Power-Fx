@@ -2,6 +2,7 @@
 // Licensed under the MIT License.
 
 using System.Diagnostics.Contracts;
+using System.Linq;
 using Microsoft.PowerFx.Core.Types;
 
 namespace Microsoft.PowerFx.Core.Public.Types
@@ -34,6 +35,9 @@ namespace Microsoft.PowerFx.Core.Public.Types
             var newType = _type.Add(field._typedName);
             return new TableType(newType);
         }
+
+        public string SingleColumnFieldName => GetNames().First().Name;
+        public FormulaType SingleColumnFieldType => GetNames().First().Type;
 
         public RecordType ToRecord()
         {

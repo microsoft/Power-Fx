@@ -174,37 +174,56 @@ namespace Microsoft.PowerFx.Functions
             return StandardSingleColumnTable<T>((runner, symbolContext, irContext, args) => targetFunction(irContext, args));
         }
 
-        public static Func<EvalVisitor, SymbolContext, IRContext, FormulaValue[], FormulaValue> DoubleSingleColumnTable<T>(Func<EvalVisitor, SymbolContext, IRContext, T[], FormulaValue> targetFunction) where T : FormulaValue
+        public static Func<EvalVisitor, SymbolContext, IRContext, FormulaValue[], FormulaValue> DoubleSingleColumnTable(FunctionPtr targetFunction)
         {
             return (runner, symbolContext, irContext, args) =>
             {
                 var arg0 = args[0];
                 var arg1 = args[1];
 
+                string name0;
+                string name1;
+
                 KeyValuePair<IEnumerable<DValue<RecordValue>>, IEnumerable<DValue<RecordValue>>> allRows;
                 if (arg0 is TableValue both0 && arg1 is TableValue both1)
                 {
+                    var both0Type = (TableType)both0.Type;
+                    var both1Type = (TableType)both1.Type;
+
+                    name0 = both0Type.SingleColumnFieldName;
+                    name1 = both1Type.SingleColumnFieldName;
                     if (both0.Rows.Count() == both1.Rows.Count())
                     {
                         allRows = new KeyValuePair<IEnumerable<DValue<RecordValue>>, IEnumerable<DValue<RecordValue>>>(both0.Rows, both1.Rows);
                     }
                     else if (both0.Rows.Count() > both1.Rows.Count())
                     {
-                        var inputDValue = DValue<RecordValue>.Of(new BlankValue(IRContext.NotInSource(FormulaType.Blank)));
+                        var inputRecordType = both1Type.ToRecord();
+                        var inputRecordNamedValue = new NamedValue(name1, new BlankValue(IRContext.NotInSource(FormulaType.Blank)));
+                        var inputRecord = new InMemoryRecordValue(IRContext.NotInSource(inputRecordType), new List<NamedValue>() { inputRecordNamedValue });
+                        var inputDValue = DValue<RecordValue>.Of(inputRecord);
                         var repeated = Enumerable.Repeat(inputDValue, both0.Rows.Count() - both1.Rows.Count());
                         allRows = new KeyValuePair<IEnumerable<DValue<RecordValue>>, IEnumerable<DValue<RecordValue>>>(both0.Rows, both1.Rows.Concat(repeated));
                     }
                     else
                     {
-                        var inputDValue = DValue<RecordValue>.Of(new BlankValue(IRContext.NotInSource(FormulaType.Blank)));
+                        var inputRecordType = both0Type.ToRecord();
+                        var inputRecordNamedValue = new NamedValue(name0, new BlankValue(IRContext.NotInSource(FormulaType.Blank)));
+                        var inputRecord = new InMemoryRecordValue(IRContext.NotInSource(inputRecordType), new List<NamedValue>() { inputRecordNamedValue });
+                        var inputDValue = DValue<RecordValue>.Of(inputRecord);
                         var repeated = Enumerable.Repeat(inputDValue, both1.Rows.Count() - both0.Rows.Count());
                         allRows = new KeyValuePair<IEnumerable<DValue<RecordValue>>, IEnumerable<DValue<RecordValue>>>(both0.Rows.Concat(repeated), both1.Rows);
                     }
                 }
                 else if (arg0 is TableValue tv0)
                 {
-                    var inputRecordType = new RecordType().Add(BuiltinFunction.ColumnName_ValueStr, arg1.Type);
-                    var inputRecordNamedValue = new NamedValue(BuiltinFunction.ColumnName_ValueStr, arg1);
+                    var tv0Type = (TableType)tv0.Type;
+
+                    name0 = tv0Type.SingleColumnFieldName;
+                    name1 = BuiltinFunction.ColumnName_ValueStr;
+
+                    var inputRecordType = new RecordType().Add(name1, arg1.Type);
+                    var inputRecordNamedValue = new NamedValue(name1, arg1);
                     var inputRecord = new InMemoryRecordValue(IRContext.NotInSource(inputRecordType), new List<NamedValue>() { inputRecordNamedValue });
                     var inputDValue = DValue<RecordValue>.Of(inputRecord);
                     var inputRows = Enumerable.Repeat(inputDValue, tv0.Rows.Count());
@@ -212,8 +231,13 @@ namespace Microsoft.PowerFx.Functions
                 }
                 else if (arg1 is TableValue tv1)
                 {
-                    var inputRecordType = new RecordType().Add(BuiltinFunction.ColumnName_ValueStr, arg0.Type);
-                    var inputRecordNamedValue = new NamedValue(BuiltinFunction.ColumnName_ValueStr, arg0);
+                    var tv1Type = (TableType)tv1.Type;
+
+                    name0 = BuiltinFunction.ColumnName_ValueStr;
+                    name1 = tv1Type.SingleColumnFieldName;
+
+                    var inputRecordType = new RecordType().Add(name0, arg0.Type);
+                    var inputRecordNamedValue = new NamedValue(name0, arg0);
                     var inputRecord = new InMemoryRecordValue(IRContext.NotInSource(inputRecordType), new List<NamedValue>() { inputRecordNamedValue });
                     var inputDValue = DValue<RecordValue>.Of(inputRecord);
                     var inputRows = Enumerable.Repeat(inputDValue, tv1.Rows.Count());
@@ -221,7 +245,7 @@ namespace Microsoft.PowerFx.Functions
                 }
                 else
                 {
-                    return targetFunction(runner, symbolContext, irContext, (T[])args);
+                    return targetFunction(runner, symbolContext, irContext, args);
                 }
 
                 var tableType = (TableType)irContext.ResultType;
@@ -234,17 +258,15 @@ namespace Microsoft.PowerFx.Functions
                 {
                     if (pair.Key.IsValue && pair.Value.IsValue)
                     {
-                        var value0 = pair.Key.Value.GetField(BuiltinFunction.ColumnName_ValueStr);
-                        var value1 = pair.Value.Value.GetField(BuiltinFunction.ColumnName_ValueStr);
+                        var value0 = pair.Key.Value.GetField(name0);
+                        var value1 = pair.Value.Value.GetField(name1);
                         NamedValue namedValue;
                         namedValue = (value0, value1) switch
                         {
-                            (T t0, T t1) => new NamedValue(BuiltinFunction.OneColumnTableResultNameStr, targetFunction(runner, symbolContext, IRContext.NotInSource(itemType), new T[] { t0, t1 })),
-                            (BlankValue bv0, _) => new NamedValue(BuiltinFunction.OneColumnTableResultNameStr, bv0),
+                            (ErrorValue eb0, ErrorValue eb1) => new NamedValue(BuiltinFunction.OneColumnTableResultNameStr, ErrorValue.Combine(IRContext.NotInSource(resultType), eb0, eb1)),
                             (ErrorValue ev0, _) => new NamedValue(BuiltinFunction.OneColumnTableResultNameStr, ev0),
-                            (_, BlankValue bv1) => new NamedValue(BuiltinFunction.OneColumnTableResultNameStr, bv1),
                             (_, ErrorValue ev1) => new NamedValue(BuiltinFunction.OneColumnTableResultNameStr, ev1),
-                            _ => new NamedValue(BuiltinFunction.OneColumnTableResultNameStr, CommonErrors.RuntimeTypeMismatch(IRContext.NotInSource(itemType)))
+                            _ => new NamedValue(BuiltinFunction.OneColumnTableResultNameStr, targetFunction(runner, symbolContext, IRContext.NotInSource(itemType), new FormulaValue[] { value0, value1 })),
                         };
                         var record = new InMemoryRecordValue(IRContext.NotInSource(resultType), new List<NamedValue>() { namedValue });
                         resultRows.Add(DValue<RecordValue>.Of(record));
@@ -268,11 +290,6 @@ namespace Microsoft.PowerFx.Functions
                 }
                 return new InMemoryTableValue(irContext, resultRows);
             };
-        }
-
-        public static Func<EvalVisitor, SymbolContext, IRContext, FormulaValue[], FormulaValue> DoubleSingleColumnTable<T>(Func<IRContext, T[], FormulaValue> targetFunction) where T : FormulaValue
-        {
-            return DoubleSingleColumnTable<T>((runner, symbolContext, irContext, args) => targetFunction(irContext, args));
         }
         #endregion
 
