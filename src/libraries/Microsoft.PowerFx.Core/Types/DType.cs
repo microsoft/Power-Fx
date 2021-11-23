@@ -1725,7 +1725,7 @@ namespace Microsoft.PowerFx.Core.Types
                     break;
 
                 case DKind.Enum:
-                    accepts = (Kind != type.Kind && type.Kind == DKind.Unknown) ||
+                    accepts = (Kind != type.Kind && (type.Kind == DKind.Unknown || EnumSuperkind == type.Kind)) ||
                               (EnumSuperkind == type.EnumSuperkind && EnumTreeAccepts(ValueTree, type.ValueTree, exact));
                     break;
 
