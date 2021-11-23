@@ -188,9 +188,17 @@ namespace Microsoft.PowerFx.Functions
                     {
                         allRows = new KeyValuePair<IEnumerable<DValue<RecordValue>>, IEnumerable<DValue<RecordValue>>>(both0.Rows, both1.Rows);
                     }
+                    else if (both0.Rows.Count() > both1.Rows.Count())
+                    {
+                        var inputDValue = DValue<RecordValue>.Of(new BlankValue(IRContext.NotInSource(FormulaType.Blank)));
+                        var repeated = Enumerable.Repeat(inputDValue, both0.Rows.Count() - both1.Rows.Count());
+                        allRows = new KeyValuePair<IEnumerable<DValue<RecordValue>>, IEnumerable<DValue<RecordValue>>>(both0.Rows, both1.Rows.Concat(repeated));
+                    }
                     else
                     {
-                        return CommonErrors.UnreachableCodeError(irContext);
+                        var inputDValue = DValue<RecordValue>.Of(new BlankValue(IRContext.NotInSource(FormulaType.Blank)));
+                        var repeated = Enumerable.Repeat(inputDValue, both1.Rows.Count() - both0.Rows.Count());
+                        allRows = new KeyValuePair<IEnumerable<DValue<RecordValue>>, IEnumerable<DValue<RecordValue>>>(both0.Rows.Concat(repeated), both1.Rows);
                     }
                 }
                 else if (arg0 is TableValue tv0)
@@ -199,7 +207,7 @@ namespace Microsoft.PowerFx.Functions
                     var inputRecordNamedValue = new NamedValue(BuiltinFunction.ColumnName_ValueStr, arg1);
                     var inputRecord = new InMemoryRecordValue(IRContext.NotInSource(inputRecordType), new List<NamedValue>() { inputRecordNamedValue });
                     var inputDValue = DValue<RecordValue>.Of(inputRecord);
-                    var inputRows = tv0.Rows.Select(_ => inputDValue);
+                    var inputRows = Enumerable.Repeat(inputDValue, tv0.Rows.Count());
                     allRows = new KeyValuePair<IEnumerable<DValue<RecordValue>>, IEnumerable<DValue<RecordValue>>>(tv0.Rows, inputRows);
                 }
                 else if (arg1 is TableValue tv1)
@@ -208,7 +216,7 @@ namespace Microsoft.PowerFx.Functions
                     var inputRecordNamedValue = new NamedValue(BuiltinFunction.ColumnName_ValueStr, arg0);
                     var inputRecord = new InMemoryRecordValue(IRContext.NotInSource(inputRecordType), new List<NamedValue>() { inputRecordNamedValue });
                     var inputDValue = DValue<RecordValue>.Of(inputRecord);
-                    var inputRows = tv1.Rows.Select(_ => inputDValue);
+                    var inputRows = Enumerable.Repeat(inputDValue, tv1.Rows.Count());
                     allRows = new KeyValuePair<IEnumerable<DValue<RecordValue>>, IEnumerable<DValue<RecordValue>>>(inputRows, tv1.Rows);
                 }
                 else
