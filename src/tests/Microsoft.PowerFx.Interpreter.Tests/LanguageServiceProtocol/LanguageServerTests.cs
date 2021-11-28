@@ -8,6 +8,7 @@ using System.Text.Json;
 using System.Text.RegularExpressions;
 using Microsoft.PowerFx.Core.Public;
 using Xunit;
+using Microsoft.PowerFx.LanguageServerProtocol;
 
 namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
 {
@@ -369,8 +370,11 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
         [Fact]
         public void TestCodeAction()
         {
-            _sendToClientData.Clear();
-            _testServer.OnDataReceived(JsonSerializer.Serialize(new
+            var scopeFactory = new TestPowerFxScopeFactory((string documentUri) => new MockSqlEngine());
+            var testServer = new TestLanguageServer(_sendToClientData.Add, scopeFactory);
+            var documentUri = "powerfx://test?expression=IsBlank(&context={\"A\":1,\"B\":[1,2,3]}";
+
+            testServer.OnDataReceived(JsonSerializer.Serialize(new
             {
                 jsonrpc = "2.0",
                 id = "testDocument1",
@@ -379,7 +383,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
                 {
                     TextDocument = new TextDocumentIdentifier()
                     {
-                        Uri = "powerfx://test?expression=IsBlank(&context={}"
+                        Uri = documentUri
                     },
                     Range = new Range()
                     {
@@ -394,14 +398,20 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
                             Character = 10
                         }
                     },
-                    Context = new CodeActionContext() { Only = new[] { "quickfix" } }
+                    Context = new CodeActionContext() { Only = new[] { CodeActionKind.QuickFix } }
                 }
             }));
             Assert.Single(_sendToClientData);
             var response = JsonSerializer.Deserialize<JsonRpcCodeActionResponse>(_sendToClientData[0], _jsonSerializerOptions);
             Assert.Equal("2.0", response.Jsonrpc);
             Assert.Equal("testDocument1", response.Id);
-            Assert.True(0 == response.Result["quickfix"].Length, "Quick fix found which is not expected.");
+            Assert.NotEmpty(response.Result);
+            Assert.Contains(CodeActionKind.QuickFix, response.Result.Keys);
+            Assert.True(1 == response.Result[CodeActionKind.QuickFix].Length, "Quick fix didn't return expected suggestion.");
+            Assert.Equal("TestTitle1", response.Result[CodeActionKind.QuickFix][0].Title);
+            Assert.NotEmpty(response.Result[CodeActionKind.QuickFix][0].Edit.Changes);
+            Assert.Contains(documentUri, response.Result[CodeActionKind.QuickFix][0].Edit.Changes.Keys);
+            Assert.Equal("TestText1", response.Result[CodeActionKind.QuickFix][0].Edit.Changes[documentUri][0].NewText);
         }
 
         [Theory]

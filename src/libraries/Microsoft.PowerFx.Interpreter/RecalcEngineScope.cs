@@ -54,11 +54,5 @@ namespace Microsoft.PowerFx
         {
             return _engine.Suggest(expression, _contextType, cursorPosition);
         }
-
-        /// <inheritdoc />
-        public CodeActionResult[] QuickFix(string expression)
-        {
-            return _engine.QuickFix(expression, _contextType);
-        }
     }
 }

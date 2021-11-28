@@ -300,7 +300,6 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
             }
 
             var documentUri = codeActionParams.TextDocument.Uri;
-            var scope = _scopeFactory.GetOrCreateInstance(documentUri);
 
             var uri = new Uri(documentUri);
             var expression = HttpUtility.ParseQueryString(uri.Query).Get("expression");
@@ -316,37 +315,32 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
                 switch (codeActionKind)
                 {
                     case CodeActionKind.QuickFix:
-                        var result = scope.QuickFix(expression);
 
-                        var items = new List<CodeAction>();
+                        var scope = _scopeFactory.GetOrCreateInstance(documentUri);
+                        var scopeQuickFix = scope as IPowerFxScopeQuickFix;
 
-                        foreach (var item in result)
+                        if (scopeQuickFix != null)
                         {
-                            var range = item.Range != null ? new Range()
-                            {
-                                Start = new Position
-                                {
-                                    Line = item.Range.LineStart,
-                                    Character = item.Range.CharPositionStart
-                                },
-                                End = new Position
-                                {
-                                    Line = item.Range.LineEnd,
-                                    Character = item.Range.CharPositionEnd
-                                }
-                            } : codeActionParams.Range;
-                            items.Add(new CodeAction()
-                            {
-                                Title = item.Title,
-                                Kind = codeActionKind,
-                                Edit = new WorkspaceEdit
-                                {
-                                    Changes = new Dictionary<string, TextEdit[]> { { documentUri, new[] { new TextEdit { Range = range, NewText = item.Text } } } }
-                                }
-                            });
-                        }
+                            var result = scopeQuickFix.Suggest(expression);
 
-                        codeActions.Add(codeActionKind, items.ToArray());
+                            var items = new List<CodeAction>();
+
+                            foreach (var item in result)
+                            {
+                                var range = item.Range ?? codeActionParams.Range;
+                                items.Add(new CodeAction()
+                                {
+                                    Title = item.Title,
+                                    Kind = codeActionKind,
+                                    Edit = new WorkspaceEdit
+                                    {
+                                        Changes = new Dictionary<string, TextEdit[]> { { documentUri, new[] { new TextEdit { Range = range, NewText = item.Text } } } }
+                                    }
+                                });
+                            }
+
+                            codeActions.Add(codeActionKind, items.ToArray());
+                        }
 
                         break;
                     default:

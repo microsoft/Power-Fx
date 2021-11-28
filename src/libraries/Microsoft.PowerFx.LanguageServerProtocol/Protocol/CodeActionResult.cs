@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
-namespace Microsoft.PowerFx.Core.Public
+namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
 {
     /// <summary>
     /// Code action response (ex. Quick fix)
@@ -21,6 +21,6 @@ namespace Microsoft.PowerFx.Core.Public
         /// <summary>
         /// Gets or sets code fix range.
         /// </summary>
-        public CodeActionRange Range { get; set; }
+        public Range Range { get; set; }
     }
 }

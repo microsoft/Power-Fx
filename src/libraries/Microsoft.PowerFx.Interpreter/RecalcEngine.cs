@@ -119,17 +119,6 @@ namespace Microsoft.PowerFx
             return CheckInternal(expressionText, parameterType, intellisense: false);
         }
 
-        /// <summary>
-        /// Provides quick fix suggestions.
-        /// </summary>
-        /// <param name="expression">The formula expression.</param>
-        /// <param name="parameterType">The formula context.</param>
-        /// <returns>Collection of quick fixes.</returns>
-        public virtual CodeActionResult[] QuickFix(string expression, FormulaType parameterType)
-        {
-            return new CodeActionResult[] { };
-        }
-
         private CheckResult CheckInternal(string expressionText, FormulaType parameterType = null, bool intellisense = false)
         {
             if (parameterType == null)
