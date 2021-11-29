@@ -293,11 +293,35 @@ true
 >> Concatenate(Text(1/0, "000"), "b", Text(7))
 #Error
 
->> Concatenate(Table({a:"a"},{a:"b"}), Table({b:"1"},{b:"2"}))
-[{Result:"a1"},{Result:"b2"}]
+// Scalar + Table
+>> Concatenate("a", Table({b:"1"},{b:"2"}))
+[{Result:"a1"},{Result:"a2"}]
 
->> Concatenate(Table({a:"a"},{a:"b"},{a:"c"}), Table({b:"1"},{b:"2"}))
-[{Result:"a1"},{Result:"b2"},{Result:"c"}]
+>> Concatenate("a", LastN(Table({b:"1"},{b:"2"}), 0))
+[]
 
->> Concatenate(Table({a:"a"},{a:"b"}), Table({b:"1"},{b:"2"},{b:"3"}))
-[{Result:"a1"},{Result:"b2"},{Result:"3"}]
+>> Concatenate("a", If(1<0, ["txt"]))
+"a"
+
+>> Concatenate("a", If(1/0<2, ["txt"]))
+#Error
+
+>> Concatenate("a", ["hello", Mid("great", -1), "world"])
+[{Result:"ahello"},{Result:"a"},{Result:"aworld"}]
+
+>> Concatenate("a", Table({a:"one"},If(1<0,{a:"two"}),{a:"three"}))
+[{Result:"aone"},{Result:"a"},{Result:"athree"}]
+
+>> Concatenate("a", Table({a:"one"},If(1/0<2,{a:"two"}),{a:"three"}))
+[{Result:"aone"},{Result:Microsoft.PowerFx.Core.Public.Values.ErrorValue},{Result:"athree"}]
+
+>> Concatenate(Blank(), ["hello", Mid("great", -1), "world"])
+[{Result:"ahello"},{Result:"a"},{Result:"aworld"}]
+
+>> Concatenate(Blank(), Table({a:"one"},If(1<0,{a:"two"}),{a:"three"}))
+[{Result:"one"},{Result:""},{Result:"three"}]
+
+>> Concatenate(Blank(), Table({a:"one"},If(1/0<2,{a:"two"}),{a:"three"}))
+[{Result:"one"},{Result:Microsoft.PowerFx.Core.Public.Values.ErrorValue},{Result:"three"}]
+
+// Table + Scalar (Reverse Arguments)
