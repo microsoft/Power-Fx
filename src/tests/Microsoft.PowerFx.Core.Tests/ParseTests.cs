@@ -648,25 +648,6 @@ namespace DocumentServer.Core.Tests.Formulas
             TestParseErrors(script);
         }
 
-        [Theory]
-        [InlineData("a=10;")]
-        [InlineData("a=b=10;")]
-        [InlineData("a=10;c=20;")]
-        public void TestFormulasParse(string script)
-        {
-            TestFormulasParseRoundtrip(script);
-        }
-
-        [Theory]
-        [InlineData("a=10")]
-        [InlineData("a;")]
-        [InlineData(";")]
-        [InlineData("a=a=10;")]
-        public void TestFormulasParse_Negative(string script)
-        {
-            TestFormulasParseError(script);
-        }
-
         internal void TestRoundtrip(string script, string expected = null, NodeKind expectedNodeKind = NodeKind.Error, Action<TexlNode> customTest = null)
         {
             var result = TexlParser.ParseScript(script);
@@ -699,21 +680,6 @@ namespace DocumentServer.Core.Tests.Formulas
             Assert.True(result.Errors.Count >= count);
             //Assert.IsTrue(result.Errors.All(err => err.ErrorKind == DocumentErrorKind.AXL && err.TextSpan != null));
             Assert.True(errorMessage == null || result.Errors.Any(err => err.ShortMessage == errorMessage));
-        }
-
-        internal void TestFormulasParseRoundtrip(string script, string expected = null, NodeKind expectedNodeKind = NodeKind.Error, Action<TexlNode> customTest = null)
-        {
-            var result = TexlParser.ParseFormulasScript(script);
-
-            Assert.True(result.NamedFormulas.Count > 0);
-            Assert.False(result.HasError);
-        }
-
-        internal void TestFormulasParseError(string script, string expected = null, NodeKind expectedNodeKind = NodeKind.Error, Action<TexlNode> customTest = null)
-        {
-            var result = TexlParser.ParseFormulasScript(script);
-
-            Assert.True(result.NamedFormulas.Count == 0 || result.HasError);
         }
     }
 }
