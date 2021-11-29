@@ -1,0 +1,69 @@
+﻿// And/Or have lazy evaluation. 
+// Plus 3 ways to specify And() function / And token / &&  token 
+// Function is variadic
+
+>> And(1/0 = 7, true)
+#Error
+
+>> Or(1/0 = 7, true)
+#Error
+
+>> And(Blank(), true)
+Blank()
+
+>> And(true, true, true, true, Blank(), true)
+Blank()
+
+>> Or(Blank(), true)
+true
+
+>> And(true)
+true
+
+>> Or(false)
+false
+
+>> And(true,false)
+false
+
+>> true And false
+false
+
+>> true && false
+false
+
+>> true And true And false
+false
+
+>> Or(true,false)
+true
+
+>> true Or false
+true
+
+>> true||false
+true
+
+>> false Or false Or true
+true
+
+// Variadic cases
+>> And(true,true,true)
+true
+
+>> And(true,true,false)
+false
+
+>> Or(false,false,false)
+false
+
+>> Or(false,false, true)
+true
+
+-- Test short circuiting. Don't hit args in unevaled params.
+>> And(false, 1/0=1)
+false
+
+-- Test short circuiting...
+>> Or(true, 1/0=1)
+true

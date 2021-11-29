@@ -1,0 +1,48 @@
+﻿// 'As' with Filter
+>> Filter([1,2,3] As X, X.Value > 2)
+[3]
+
+// 'ThisRecord is implicit'
+>> Filter([1,2,3], Value >= 2)
+[2,3]
+
+>> Filter([1,2,3], ThisRecord.Value >= 2)
+[2,3]
+
+>>First([1,4,2,7]).Value
+1
+
+>> First([30,20,10,40])
+{Value:30}
+
+>> Last([30,20,10,40])
+{Value:40}
+
+>> FirstN([30,20,10,40],2)
+[30,20]
+
+>> LastN([30,20,10,40],3)
+[20,10,40]
+
+// $$$ Corner cases like  negative indices, N > length, doubles instead of int, empty. 
+
+>> Filter([1,4,2,7], Value > 2)
+[4,7]
+
+>> First(Filter([1,4,2,7], Value > 2)).Value
+4
+
+>> Filter([1,2,0,3,4], 1/ThisRecord.Value >= 0)
+[1,2,3,4]
+
+>> Filter([1,2,0,3,4], Blank())
+[]
+
+>> Filter(LastN([1,2,3,4], Blank()), 1/ThisRecord.Value >= 0)
+Blank()
+
+>> Filter(Blank(), Blank())
+Blank()
+
+>> Filter(Sort([-2, -1, 0, 1, 2], 1 / Value), 1/ThisRecord.Value >= 0)
+#Error

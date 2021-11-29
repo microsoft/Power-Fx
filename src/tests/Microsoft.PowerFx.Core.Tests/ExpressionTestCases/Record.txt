@@ -1,0 +1,16 @@
+﻿// Blank()
+>> If(true, {x:2},Blank()).x
+2
+
+>> IsBlank(If(false, {x:2},Blank()).x)
+true 
+
+>> With({x:Blank()}, x*x)
+0
+
+>> IsBlank({})
+false
+
+// valid value in a record In records 
+>> IsBlank({ x : Blank(), y : 2}.x)
+true
