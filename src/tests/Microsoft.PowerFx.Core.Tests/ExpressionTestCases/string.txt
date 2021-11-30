@@ -397,3 +397,30 @@ Microsoft.PowerFx.Core.Public.Values.ErrorValue
 
 >> $""
 ""
+
+>> $"Hello"
+"Hello"
+
+>> $"{123}"
+"123"
+
+>> $"{123}{456}"
+"123456"
+
+>> $"{"
+Errors: Error 3-4: Unexpected characters. Characters are used in the formula in an unexpected way.
+
+>> $"}"
+Errors: Error 2-2: Unexpected characters. Characters are used in the formula in an unexpected way.
+
+>> $"{" & ""
+Errors: Error 3-9: Unexpected characters. Characters are used in the formula in an unexpected way.
+
+>> $"}" & ""
+Errors: Error 2-2: Unexpected characters. Characters are used in the formula in an unexpected way.
+
+>> $"{
+Errors: Error 0-2: Invalid number of arguments: received 0, expected 1 or more.
+
+>> $"}
+Errors: Error 2-2: Unexpected characters. Characters are used in the formula in an unexpected way.

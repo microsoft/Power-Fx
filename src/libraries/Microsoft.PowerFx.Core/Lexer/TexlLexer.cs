@@ -978,6 +978,14 @@ namespace Microsoft.PowerFx.Core.Lexer
 
         private sealed class LexerImpl
         {
+            /*
+             * The Mode of the lexer, required because the behavior of the lexer changes
+             * when lexing inside of a String Interpolation, for example $"Hello {"World"}"
+             * has special lexing behavior. In theory, you could do this with just 2 modes,
+             * but we are using a 3rd mode, Island, to help keep track of when we need
+             * to produce IslandStart and IslandEnd tokens, which will be used by the
+             * Parser to correctly organize the string interpolation into a function call.
+            */
             public enum LexerMode
             {
                 Normal,
@@ -1517,7 +1525,9 @@ namespace Microsoft.PowerFx.Core.Lexer
                         char nextCh;
                         if (Eof || CharacterUtils.IsLineTerm(nextCh = PeekChar(1)) || !IsCurlyClose(nextCh))
                         {
-                            return new ErrorToken(GetTextSpan());
+                            var res = new ErrorToken(GetTextSpan());
+                            NextChar();
+                            return res;
                         }
                         // If we are here, we are seeing a close curly followed immediately by another
                         // close curly. That is an escape sequence for close curly characters.

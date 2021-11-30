@@ -673,7 +673,7 @@ namespace Microsoft.PowerFx.Core.Parser
             Contracts.Assert(_curs.TidCur == TokKind.StrInterpStart);
             var startToken = _curs.TokMove();
 
-            IdentToken headToken = new IdentToken("Concatenate", startToken.Span);
+            IdentToken headToken = new IdentToken(IdentToken.StrInterpIdent, startToken.Span);
             Identifier head = new Identifier(headToken);
             ITexlSource headTrivia = ParseTrivia();
             TexlNode headNode = null;
@@ -727,7 +727,7 @@ namespace Microsoft.PowerFx.Core.Parser
                         _curs.TokMove();
                     }
                 }
-                else if (_curs.TidCur == TokKind.StrInterpEnd)
+                else if (_curs.TidCur == TokKind.StrInterpEnd || _curs.TidCur == TokKind.Eof)
                 {
                     break;
                 }
@@ -740,9 +740,11 @@ namespace Microsoft.PowerFx.Core.Parser
                 }
             }
 
-            Contracts.Assert(_curs.TidCur == TokKind.StrInterpEnd);
+            Contracts.Assert(_curs.TidCur == TokKind.StrInterpEnd || _curs.TidCur == TokKind.Eof);
 
-            var parenClose = TokEat(TokKind.StrInterpEnd);
+            Token parenClose = null;
+            if (_curs.TidCur == TokKind.StrInterpEnd)
+                parenClose = TokEat(TokKind.StrInterpEnd);
             if (parenClose != null)
                 sourceList.Add(new TokenSource(parenClose));
 
