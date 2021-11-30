@@ -82,62 +82,75 @@ namespace Microsoft.PowerFx.Core.Parser
             Contracts.AssertValue(script);
             Contracts.AssertValueOrNull(loc);
 
-            Dictionary<DName, string> namedFormulas = new Dictionary<DName, string>();
+            Token[] formulaTokens = TokenizeScript(script, loc, flags);
+            TexlParser parser = new TexlParser(formulaTokens, flags);
+            List<TexlError> errors = null;
+            Dictionary<DName, List<Token>> namedFormulas = parser.ParseFormulas(ref errors);
 
-            Token[] formulaTokens = TokenizeScript(script);
-            TexlParser formulasParser = new TexlParser(formulaTokens, flags);
+            // Transform back into script for expression parsing
+            Dictionary<DName, string> namedFormulasScript = new Dictionary<DName, string>();
+            foreach (KeyValuePair<DName,List<Token>> formula in namedFormulas)
+            {
+                var thisExpression = TexlLexer.NewInstance(loc).GetMinifiedScript(script, formula.Value);
+                namedFormulasScript.Add(formula.Key, thisExpression);
+            }
 
-            while (formulasParser._curs.TokCur.Kind != TokKind.Eof)
+            return new ParseFormulasResult(namedFormulasScript, errors, errors?.Any() ?? false);
+
+        }
+
+        private Dictionary<DName,List<Token>> ParseFormulas(ref List<TexlError> errors)
+        {
+            Dictionary<DName, List<Token>> namedFormulas = new Dictionary<DName, List<Token>>();
+            while (_curs.TokCur.Kind != TokKind.Eof)
             {
                 // Verify identifier
-                Token thisIdentifier = formulasParser.TokEat(TokKind.Ident);
+                Token thisIdentifier = TokEat(TokKind.Ident);
                 if (thisIdentifier != null)
                 {
                     // Verify "="
-                    Token thisEq = formulasParser.TokEat(TokKind.Equ);
+                    Token thisEq = TokEat(TokKind.Equ);
                     if (thisEq != null)
                     {
                         // Extract expression
                         List<Token> expression = new List<Token>();
-                        while (formulasParser._curs.TidCur != TokKind.Semicolon)
+                        while (_curs.TidCur != TokKind.Semicolon)
                         {
                             // Check for a circular reference
-                            if (formulasParser._curs.TidCur == TokKind.Ident && thisIdentifier.As<IdentToken>().Name == formulasParser._curs.TokCur.As<IdentToken>().Name)
+                            if (_curs.TidCur == TokKind.Ident && thisIdentifier.As<IdentToken>().Name == _curs.TokCur.As<IdentToken>().Name)
                             {
-                                formulasParser.CreateError(formulasParser._curs.TokCur, TexlStrings.ErrNamedFormula_CircularReference);
-                                return new ParseFormulasResult(namedFormulas, formulasParser._errors, formulasParser._errors?.Any() ?? false);
+                                CreateError(_curs.TokCur, TexlStrings.ErrNamedFormula_CircularReference);
+                                return namedFormulas;
                             }
                             // Check if we're at EOF before a semicolon is found
-                            if (formulasParser._curs.TidCur == TokKind.Eof)
+                            if (_curs.TidCur == TokKind.Eof)
                             {
-                                formulasParser.CreateError(formulasParser._curs.TokCur, TexlStrings.ErrNamedFormula_MissingSemicolon);
-                                return new ParseFormulasResult(namedFormulas, formulasParser._errors, formulasParser._errors?.Any() ?? false);
+                                CreateError(_curs.TokCur, TexlStrings.ErrNamedFormula_MissingSemicolon);
+                                return namedFormulas;
                             }
 
-                            expression.Add(formulasParser._curs.TokCur);
-                            formulasParser._curs.TokMove();
+                            expression.Add(_curs.TokCur);
+                            _curs.TokMove();
                         }
-                        
-                        var thisExpression = TexlLexer.NewInstance(loc).GetMinifiedScript(script, expression);
-                        namedFormulas.Add(thisIdentifier.As<IdentToken>().Name,thisExpression);
-                        formulasParser._curs.TokMove();
+
+                        namedFormulas.Add(thisIdentifier.As<IdentToken>().Name, expression);
+                        _curs.TokMove();
                     }
                     else
                     {
                         // error - missing '='
-                        formulasParser.CreateError(formulasParser._curs.TokCur, TexlStrings.ErrNamedFormula_MissingExpression);
+                        CreateError(_curs.TokCur, TexlStrings.ErrNamedFormula_MissingExpression);
                         break;
                     }
                 }
                 else
                 {
                     // error - not an identifier
-                    formulasParser.CreateError(formulasParser._curs.TokCur, TexlStrings.ErrNamedFormula_MissingIdentifier);
+                    CreateError(_curs.TokCur, TexlStrings.ErrNamedFormula_MissingIdentifier);
                     break;
                 }
             }
-
-            return new ParseFormulasResult(namedFormulas, formulasParser._errors, formulasParser._errors?.Any() ?? false);
+            return namedFormulas;
         }
 
         private static Token[] TokenizeScript(string script, ILanguageSettings loc = null, Flags flags = Flags.None)
