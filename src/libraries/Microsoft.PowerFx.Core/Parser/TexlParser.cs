@@ -85,23 +85,13 @@ namespace Microsoft.PowerFx.Core.Parser
             Token[] formulaTokens = TokenizeScript(script, loc, flags);
             TexlParser parser = new TexlParser(formulaTokens, flags);
             List<TexlError> errors = null;
-            Dictionary<DName, List<Token>> namedFormulas = parser.ParseFormulas(ref errors);
 
-            // Transform back into script for expression parsing
-            Dictionary<DName, string> namedFormulasScript = new Dictionary<DName, string>();
-            foreach (KeyValuePair<DName,List<Token>> formula in namedFormulas)
-            {
-                var thisExpression = TexlLexer.NewInstance(loc).GetMinifiedScript(script, formula.Value);
-                namedFormulasScript.Add(formula.Key, thisExpression);
-            }
-
-            return new ParseFormulasResult(namedFormulasScript, errors, errors?.Any() ?? false);
-
+            return parser.ParseFormulas(ref errors);
         }
 
-        private Dictionary<DName,List<Token>> ParseFormulas(ref List<TexlError> errors)
+        private ParseFormulasResult ParseFormulas(ref List<TexlError> errors)
         {
-            Dictionary<DName, List<Token>> namedFormulas = new Dictionary<DName, List<Token>>();
+            Dictionary<DName, TexlNode> namedFormulas = new Dictionary<DName, TexlNode>();
             while (_curs.TokCur.Kind != TokKind.Eof)
             {
                 // Verify identifier
@@ -120,20 +110,23 @@ namespace Microsoft.PowerFx.Core.Parser
                             if (_curs.TidCur == TokKind.Ident && thisIdentifier.As<IdentToken>().Name == _curs.TokCur.As<IdentToken>().Name)
                             {
                                 CreateError(_curs.TokCur, TexlStrings.ErrNamedFormula_CircularReference);
-                                return namedFormulas;
+                                return new ParseFormulasResult(namedFormulas, errors, errors?.Any() ?? false);
                             }
                             // Check if we're at EOF before a semicolon is found
                             if (_curs.TidCur == TokKind.Eof)
                             {
                                 CreateError(_curs.TokCur, TexlStrings.ErrNamedFormula_MissingSemicolon);
-                                return namedFormulas;
+                                return new ParseFormulasResult(namedFormulas, errors, errors?.Any() ?? false);
                             }
 
                             expression.Add(_curs.TokCur);
                             _curs.TokMove();
                         }
 
-                        namedFormulas.Add(thisIdentifier.As<IdentToken>().Name, expression);
+                        // Parse expression
+                        
+                        TexlParser expressionParser = new TexlParser(expression.ToArray(),Flags.None);
+                        namedFormulas.Add(thisIdentifier.As<IdentToken>().Name, expressionParser.Parse(ref errors));
                         _curs.TokMove();
                     }
                     else
@@ -150,7 +143,7 @@ namespace Microsoft.PowerFx.Core.Parser
                     break;
                 }
             }
-            return namedFormulas;
+            return new ParseFormulasResult(namedFormulas, errors, errors?.Any() ?? false);
         }
 
         private static Token[] TokenizeScript(string script, ILanguageSettings loc = null, Flags flags = Flags.None)
