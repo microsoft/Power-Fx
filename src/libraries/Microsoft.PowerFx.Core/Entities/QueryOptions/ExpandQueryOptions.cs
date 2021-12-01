@@ -45,7 +45,7 @@ namespace Microsoft.PowerFx.Core.Entities.QueryOptions
                 _selects.Add(select);
 
             var parentDataSource = ExpandInfo.ParentDataSource as IExternalTabularDataSource;
-            var keyColumns = parentDataSource?.GetKeyColumns(ExpandInfo);
+            var keyColumns = parentDataSource?.GetKeyColumns(ExpandInfo) ?? Enumerable.Empty<string>();
             foreach (var keyColumn in keyColumns)
                 _selects.Add(keyColumn);
 
