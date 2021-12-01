@@ -21,12 +21,13 @@ namespace Microsoft.PowerFx.Core.App.Controls
         ConstantData = 3,
         OnDemandData = 4,
         Scope = 5,
+        Formulas = 6,
         /// <summary>
         /// Represents a missing property category when deserializing
         /// Should be cleaned up by document converter, only occurs if 
         /// control template is invalid
         /// </summary>
-        Unknown = 6,
+        Unknown = 7,
     }
 
     /// <summary>
