@@ -52,7 +52,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             for (int i = 0; i < count; i++)
             {
-                var typeChecks = CheckType(args[i], argTypes[i], DType.String, errors, SupportCoercionForArg(i), out DType coercionType);
+                var typeChecks = CheckType(args[i], argTypes[i], DType.String, errors, true, out DType coercionType);
                 if (typeChecks && coercionType != null)
                     CollectionUtils.Add(ref nodeToCoercedTypeMap, args[i], coercionType);
 
@@ -79,14 +79,14 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override bool SupportsParamCoercion => true;
 
         public ConcatenateTableFunction()
-            : base("Concatenate", TexlStrings.AboutConcatenate, FunctionCategories.Table | FunctionCategories.Text, DType.EmptyTable, 0, 2, int.MaxValue)
+            : base("Concatenate", TexlStrings.AboutConcatenateT, FunctionCategories.Table | FunctionCategories.Text, DType.EmptyTable, 0, 2, int.MaxValue)
         { }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
-            yield return new[] { TexlStrings.ConcatenateArg1, TexlStrings.ConcatenateArg1 };
-            yield return new[] { TexlStrings.ConcatenateArg1, TexlStrings.ConcatenateArg1, TexlStrings.ConcatenateArg1 };
-            yield return new[] { TexlStrings.ConcatenateArg1, TexlStrings.ConcatenateArg1, TexlStrings.ConcatenateArg1, TexlStrings.ConcatenateArg1 };
+            yield return new[] { TexlStrings.ConcatenateTArg1, TexlStrings.ConcatenateTArg1 };
+            yield return new[] { TexlStrings.ConcatenateTArg1, TexlStrings.ConcatenateTArg1, TexlStrings.ConcatenateTArg1 };
+            yield return new[] { TexlStrings.ConcatenateTArg1, TexlStrings.ConcatenateTArg1, TexlStrings.ConcatenateTArg1, TexlStrings.ConcatenateTArg1 };
         }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures(int arity)

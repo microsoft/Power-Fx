@@ -447,7 +447,18 @@
     <comment>function_parameter - Argument to the Concatenate function - the text to be concatenated.</comment>
   </data>
   <data name="AboutConcatenate_text" xml:space="preserve">
-    <value>A text or a column of text values, to be concatenated with the rest of the arguments.</value>
+    <value>A text value, to be concatenated with the rest of the arguments.</value>
+  </data>
+  <data name="AboutConcatenateT" xml:space="preserve">
+    <value>Joins several text values or tables into one column of text values.</value>
+    <comment>Description of 'Concatenate' function.</comment>
+  </data>
+  <data name="ConcatenateTArg1" xml:space="preserve">
+    <value>value</value>
+    <comment>function_parameter - Argument to the Concatenate function - the text or table to be concatenated.</comment>
+  </data>
+  <data name="AboutConcatenateT_value" xml:space="preserve">
+    <value>A text value or a column of text values, to be concatenated with the rest of the arguments.</value>
   </data>
   <data name="AboutConcat" xml:space="preserve">
     <value>Joins all text values produced by evaluating the given expression over the given table into one text value.</value>
