@@ -1,0 +1,50 @@
+﻿// Examples from Acumata.
+
+>> RoundUp(Month(Date(2011,5,12))/3,0) & " Q"
+"2 Q"
+
+>> Mid("abc", 2,1)
+"b"
+
+>> Mid("abc", 2)
+"bc"
+
+>> Len("abc")
+3
+
+>> RoundUp(Month(Date(2011,5,12))/3,0)
+2
+
+// Only supports "Days"
+>> DateDiff(Date(2020,3,1), Today()) > 0
+true
+
+>> Year(Date(2011,5,12))
+2011
+
+>> Abs(-5)
+5
+
+>> Coalesce("CurrentValue", "DefaultValue")
+"CurrentValue"
+
+>> Coalesce("", "DefaultValue")
+"DefaultValue"
+
+//Find("Electronics", Current.DocDescr)
+//Substring/Trim
+//Replace(Current.FinPeriodID, " ", "-") // "01 2020" => "01-2021"
+
+//CountRows(Current.DocumentDetails)
+>> CountRows([10,30,20,40])
+4
+
+//CountIf(Current.TaxDetails, TaxAmount > 1000) // TaxDetails is a child table
+>> CountIf([10,50,20,30], Value >= 30 ) // TaxDetails is a child table
+2
+
+//Sum/Average/Max/Min // =Sum(Current.DocumentDetails, Qty*Price)
+
+//Filter(Current.DocumentDetails, Discount > 0)
+>> Filter(Table({Name : "Alpha", Discount : 30 }, {Name:"Beta", Discount :45 }), Discount > 40)
+[{Discount:45,Name:"Beta"}]

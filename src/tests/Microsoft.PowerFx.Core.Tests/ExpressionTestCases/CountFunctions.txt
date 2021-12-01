@@ -1,0 +1,23 @@
+﻿>> CountRows([1, 2, 3, 4, 5])
+5
+
+>> CountRows(Blank())
+Blank()
+
+>> CountRows(Sort([-2, -1, 0, 1, 2], 1 / Value))
+#Error
+
+>> CountRows([1, 2, 1/0, 4, 5])
+5
+
+>> CountIf([1, 2, 3, 4, 5], Value > 2)
+3
+
+>> CountIf(LastN([1,2,3,4], Blank()), Value > 2)
+Blank()
+
+>> CountIf(Sort([-2, -1, 0, 1, 2], 1 / Value), Value > 2)
+#Error
+
+>> CountIf([1, 2, 0, 4, 5], 1/Value > 2)
+#Error

@@ -1,0 +1,70 @@
+﻿>> Concat(ForAll(["a","b","c"], With({x:Value}, x)), Value)
+"abc"
+
+// On name collision, closest scope wins. 
+>> Concat(ForAll(["a","b","c"] As x, With({x:"hide"}, x)), Value)
+"hidehidehide"
+
+>> Concat(ForAll(["a","b","c"] As x, With({y:"hide"}, x)), Value)
+"abc"
+
+// Explicit 'ThisRecord'
+>> Concat(["A", "B", "C"], ThisRecord.Value)
+"ABC"
+
+// Using 'As'
+>> Concat(["A", "B", "C"] As X, X.Value)
+"ABC"
+
+// Implicit 'ThisRecord'
+>> Concat(["A", "B", "C"], Value)
+"ABC"
+
+
+// Good example of nested ForAll
+// https://powerapps.microsoft.com/en-us/blog/formulas-thisrecord-as-and-sequence/
+
+>> Concat(ForAll(["A","B"] As X,Concat(ForAll(["C","D"] As Y,X.Value&Y.Value),Value)),Value)
+"ACADBCBD"
+
+
+// X dst,src = 2,3
+// Y         = 3,3
+// dst,src is tied to internal binder scopes stack. 
+// But Int doesn't want ot walk and resolve itself (Don't duplicate Binder.IsRowScopeField)
+
+// Nested cases.
+// See https://powerapps.microsoft.com/en-us/blog/formulas-thisrecord-as-and-sequence/ 
+>> Concat(
+    ForAll(
+        ["A","B"] As X,
+        Concat(
+            ForAll(["C","D"] As Y,X.Value&Y.Value),
+            Value
+        )
+    ),
+    Value)
+
+"ACADBCBD"
+
+
+>> Concat(ForAll(["A", "B"], ThisRecord), Value)
+"AB"
+
+// In name collision, inner nesting (closest) takes precedence 
+>> Concat(
+    ForAll(
+        ["A","B"],
+        Concat(
+            ["C","D"],
+            Value
+        )
+    ),
+    Value)
+"CDCD"
+
+>> Concat(ForAll(FirstN([60, 61, 62, 63, 64], Blank()), Char(Value)), Value)
+Blank()
+
+>> Concat(ForAll(Sort([60, 61, 0, 63, 64], 1/Value), Char(Value)), Value)
+#Error

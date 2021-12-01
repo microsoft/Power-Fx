@@ -1,0 +1,56 @@
+﻿// "In" operator for Tables
+
+>> 2 in [1,2,3]
+true
+
+>> 4 in [1,2,3]
+false
+
+>> 1/0 in [1,2,3]
+#Error
+
+>> true in [false, true]
+true
+
+>> true in [false, false]
+false
+
+>> "a" in ["aa" ]
+false
+
+>> "a" in ["b", "a" ]
+true
+
+
+>> "A" in ["b", "a" ]
+true
+
+>> "A" exactin ["b", "a" ]
+false
+
+>> "A" exactin ["b", "A" ]
+true
+
+>> "" in ["aa" ]
+false
+
+>> "" in ["" ]
+true
+
+>> If(false,2,Blank()) in [1, Blank(), 2]
+true
+
+// Blank() on LHS is still false and treated liked record. 
+>> Blank() in [1, Blank(), 2] 
+/*InterpreterRunner*/  #Error
+false
+
+>> 3 in [1, Blank(), 2]
+false
+
+
+>> 2 in Table({a:1}, {a:2}, {a:3})
+true
+
+>> "hello" exactin Table({Result:"Hello"},{Result:"World"})
+false

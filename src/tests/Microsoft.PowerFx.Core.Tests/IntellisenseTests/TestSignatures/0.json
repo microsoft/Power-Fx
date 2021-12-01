@@ -1,0 +1,20 @@
+{
+  "Signatures": [
+    {
+      "Label": "ForAll(source, formula)",
+      "Documentation": "Applies a given formula on each row in a data source, then returns a new table with results per row.",
+      "Parameters": [
+        {
+          "Label": "source",
+          "Documentation": "The data source or table to operate on."
+        },
+        {
+          "Label": "formula",
+          "Documentation": "The formula to evaluate for all rows of the table."
+        }
+      ]
+    }
+  ],
+  "ActiveSignature": 0,
+  "ActiveParameter": 0
+}
