@@ -373,7 +373,7 @@ namespace Microsoft.PowerFx.Functions
             }
         }
 
-        private static FormulaValue ExactValueTypeOrTable<T>(IRContext irContext, int index, FormulaValue arg) where T : FormulaValue
+        private static FormulaValue ExactValueTypeOrTableOrBlank<T>(IRContext irContext, int index, FormulaValue arg) where T : FormulaValue
         {
             if (arg is TableValue)
             {

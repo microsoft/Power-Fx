@@ -123,7 +123,7 @@ namespace Microsoft.PowerFx.Functions
                 StandardErrorHandling(
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: DoNotReplaceBlank,
-                    checkRuntimeTypes: ExactValueTypeOrTable<StringValue>,
+                    checkRuntimeTypes: ExactValueTypeOrTableOrBlank<StringValue>,
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: MultiSingleColumnTable(
