@@ -126,7 +126,7 @@ namespace Microsoft.PowerFx.Functions
                     checkRuntimeTypes: ExactValueTypeOrTable<StringValue>,
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
-                    targetFunction: DoubleSingleColumnTable(
+                    targetFunction: MultiSingleColumnTable(
                             StandardErrorHandling<StringValue>(
                                 expandArguments: NoArgExpansion,
                                 replaceBlankValues: ReplaceBlankWithEmptyString,

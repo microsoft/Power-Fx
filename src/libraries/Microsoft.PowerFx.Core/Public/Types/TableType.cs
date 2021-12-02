@@ -4,6 +4,7 @@
 using System.Diagnostics.Contracts;
 using System.Linq;
 using Microsoft.PowerFx.Core.Types;
+using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Core.Public.Types
 {
@@ -36,8 +37,24 @@ namespace Microsoft.PowerFx.Core.Public.Types
             return new TableType(newType);
         }
 
-        public string SingleColumnFieldName => GetNames().First().Name;
-        public FormulaType SingleColumnFieldType => GetNames().First().Type;
+        public string SingleColumnFieldName
+        {
+            get
+            {
+                Contracts.Assert(GetNames().Count() == 1);
+                return GetNames().First().Name;
+            }
+        }
+
+
+        public FormulaType SingleColumnFieldType
+        {
+            get
+            {
+                Contracts.Assert(GetNames().Count() == 1);
+                return GetNames().First().Type;
+            }
+        }
 
         public RecordType ToRecord()
         {

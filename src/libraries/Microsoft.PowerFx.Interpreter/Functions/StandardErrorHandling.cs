@@ -237,22 +237,21 @@ namespace Microsoft.PowerFx.Functions
             }
         }
 
-        private static KeyValuePair<List<string>, List<List<DValue<RecordValue>>>> Transpose(IEnumerable<ExpandToSizeResult> results, int size)
+        private static List<List<DValue<RecordValue>>> Transpose(IEnumerable<ExpandToSizeResult> results, int size)
         {
-            var first = results.Select(result => result.Name).ToList();
             var lists = results.Select(result => result.Rows.ToList()).ToList();
 
-            var second = new List<List<DValue<RecordValue>>>();
+            var result = new List<List<DValue<RecordValue>>>();
 
             for (int i = 0; i < size; i++)
             {
-                second.Add(lists.Select(list => list[i]).ToList());
+                result.Add(lists.Select(list => list[i]).ToList());
             }
 
-            return new KeyValuePair<List<string>, List<List<DValue<RecordValue>>>>(first, second);
+            return result;
         }
 
-        public static Func<EvalVisitor, SymbolContext, IRContext, FormulaValue[], FormulaValue> DoubleSingleColumnTable(FunctionPtr targetFunction)
+        public static Func<EvalVisitor, SymbolContext, IRContext, FormulaValue[], FormulaValue> MultiSingleColumnTable(FunctionPtr targetFunction)
         {
             return (runner, symbolContext, irContext, args) =>
             {
@@ -273,9 +272,10 @@ namespace Microsoft.PowerFx.Functions
                 var itemType = resultType.GetFieldType(BuiltinFunction.OneColumnTableResultNameStr);
 
                 var transposed = Transpose(allResults, maxSize);
-                foreach (var list in transposed.Value)
+                var names = allResults.Select(result => result.Name).ToList();
+                foreach (var list in transposed)
                 {
-                    var targetArgs = list.Select((dv, i) => dv.IsValue ? dv.Value.GetField(transposed.Key[i]) : dv.ToFormulaValue()).ToArray();
+                    var targetArgs = list.Select((dv, i) => dv.IsValue ? dv.Value.GetField(names[i]) : dv.ToFormulaValue()).ToArray();
                     var namedValue = new NamedValue(BuiltinFunction.OneColumnTableResultNameStr, targetFunction(runner, symbolContext, IRContext.NotInSource(itemType), targetArgs));
                     var record = new InMemoryRecordValue(IRContext.NotInSource(resultType), new List<NamedValue>() { namedValue });
                     resultRows.Add(DValue<RecordValue>.Of(record));
