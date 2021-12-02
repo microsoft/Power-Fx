@@ -237,20 +237,30 @@ namespace Microsoft.PowerFx.Functions
             }
         }
 
-        private static List<List<DValue<RecordValue>>> Transpose(IEnumerable<ExpandToSizeResult> results, int size)
+        // Transpose a matrix (list of lists) so that the rows become columns and the columns become rows
+        // The column length is uniform and known
+        private static List<List<T>> Transpose<T>(List<List<T>> columns, int columnSize)
         {
-            var lists = results.Select(result => result.Rows.ToList()).ToList();
+            var rows = new List<List<T>>();
 
-            var result = new List<List<DValue<RecordValue>>>();
-
-            for (int i = 0; i < size; i++)
+            for (int i = 0; i < columnSize; i++)
             {
-                result.Add(lists.Select(list => list[i]).ToList());
+                rows.Add(columns.Select(column => column[i]).ToList());
             }
 
-            return result;
+            return rows;
         }
 
+        /*
+         * A standard error handling wrapper function that handles functions that can accept one or more table values.
+         * The standard behavior for this type of function is to expand all scalars and tables into a set of tables
+         * with the same size, where that size is the length of the longest table, if any. The result is always a table
+         * where some operation has been performed on the transpose of the input tables.
+         * 
+         * For example given the table function F and the operation F' and inputs [a, b] and [c, d], the transpose is [a, c], [b, d]
+         * F([a, b], [c, d]) => [F'([a, c]), F'([b, d])]
+         * As a concrete example, Concatenate(["a", "b"], ["1", "2"]) => ["a1", "b2"]
+        */
         public static Func<EvalVisitor, SymbolContext, IRContext, FormulaValue[], FormulaValue> MultiSingleColumnTable(FunctionPtr targetFunction)
         {
             return (runner, symbolContext, irContext, args) =>
@@ -271,7 +281,7 @@ namespace Microsoft.PowerFx.Functions
                 var resultType = tableType.ToRecord();
                 var itemType = resultType.GetFieldType(BuiltinFunction.OneColumnTableResultNameStr);
 
-                var transposed = Transpose(allResults, maxSize);
+                var transposed = Transpose(allResults.Select(result => result.Rows.ToList()).ToList(), maxSize);
                 var names = allResults.Select(result => result.Name).ToList();
                 foreach (var list in transposed)
                 {
