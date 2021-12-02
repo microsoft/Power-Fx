@@ -109,6 +109,17 @@ namespace Microsoft.PowerFx.Functions
             },
             {
                 BuiltinFunctionsCore.Concatenate,
+                StandardErrorHandling<StringValue>(
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: ReplaceBlankWithEmptyString,
+                    checkRuntimeTypes: ExactValueType<StringValue>,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
+                    targetFunction: Concatenate
+                )
+            },
+            {
+                BuiltinFunctionsCore.ConcatenateT,
                 StandardErrorHandling(
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: DoNotReplaceBlank,

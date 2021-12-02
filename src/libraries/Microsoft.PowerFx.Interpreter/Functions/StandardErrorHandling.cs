@@ -174,119 +174,111 @@ namespace Microsoft.PowerFx.Functions
             return StandardSingleColumnTable<T>((runner, symbolContext, irContext, args) => targetFunction(irContext, args));
         }
 
+        private static int GetMaxTableSize(FormulaValue[] args)
+        {
+            int max = 0;
+
+            foreach (var arg in args)
+            {
+                if (arg is TableValue tv)
+                {
+                    max = Math.Max(max, tv.Rows.Count());
+                }
+            }
+
+            return max;
+        }
+
+        private class ExpandToSizeResult
+        {
+            public readonly string Name;
+            public readonly IEnumerable<DValue<RecordValue>> Rows;
+
+            public ExpandToSizeResult(string name, IEnumerable<DValue<RecordValue>> rows)
+            {
+                Name = name;
+                Rows = rows;
+            }
+        }
+
+        private static ExpandToSizeResult ExpandToSize(FormulaValue arg, int size)
+        {
+            string name = BuiltinFunction.ColumnName_ValueStr;
+            if (arg is TableValue tv)
+            {
+                var tvType = (TableType)tv.Type;
+                name = tvType.SingleColumnFieldName;
+
+                var count = tv.Rows.Count();
+                if (count < size)
+                {
+                    var inputRecordType = tvType.ToRecord();
+                    var inputRecordNamedValue = new NamedValue(name, new BlankValue(IRContext.NotInSource(FormulaType.Blank)));
+                    var inputRecord = new InMemoryRecordValue(IRContext.NotInSource(inputRecordType), new List<NamedValue>() { inputRecordNamedValue });
+                    var inputDValue = DValue<RecordValue>.Of(inputRecord);
+
+                    var repeated = Enumerable.Repeat(inputDValue, size - count);
+                    var rows = tv.Rows.Concat(repeated);
+                    return new ExpandToSizeResult(name, rows);
+                }
+                else
+                {
+                    return new ExpandToSizeResult(name, tv.Rows);
+                }
+            }
+            else
+            {
+                var inputRecordType = new RecordType().Add(name, arg.Type);
+                var inputRecordNamedValue = new NamedValue(name, arg);
+                var inputRecord = new InMemoryRecordValue(IRContext.NotInSource(inputRecordType), new List<NamedValue>() { inputRecordNamedValue });
+                var inputDValue = DValue<RecordValue>.Of(inputRecord);
+                var rows = Enumerable.Repeat(inputDValue, size);
+                return new ExpandToSizeResult(name, rows);
+            }
+        }
+
+        private static KeyValuePair<List<string>, List<List<DValue<RecordValue>>>> Transpose(IEnumerable<ExpandToSizeResult> results, int size)
+        {
+            var first = results.Select(result => result.Name).ToList();
+            var lists = results.Select(result => result.Rows.ToList()).ToList();
+
+            var second = new List<List<DValue<RecordValue>>>();
+
+            for (int i = 0; i < size; i++)
+            {
+                second.Add(lists.Select(list => list[i]).ToList());
+            }
+
+            return new KeyValuePair<List<string>, List<List<DValue<RecordValue>>>>(first, second);
+        }
+
         public static Func<EvalVisitor, SymbolContext, IRContext, FormulaValue[], FormulaValue> DoubleSingleColumnTable(FunctionPtr targetFunction)
         {
             return (runner, symbolContext, irContext, args) =>
             {
-                var arg0 = args[0];
-                var arg1 = args[1];
+                var resultRows = new List<DValue<RecordValue>>();
+                var maxSize = GetMaxTableSize(args);
 
-                string name0;
-                string name1;
-
-                KeyValuePair<IEnumerable<DValue<RecordValue>>, IEnumerable<DValue<RecordValue>>> allRows;
-                if (arg0 is TableValue both0 && arg1 is TableValue both1)
+                if (maxSize == 0)
                 {
-                    var both0Type = (TableType)both0.Type;
-                    var both1Type = (TableType)both1.Type;
-
-                    name0 = both0Type.SingleColumnFieldName;
-                    name1 = both1Type.SingleColumnFieldName;
-                    if (both0.Rows.Count() == both1.Rows.Count())
-                    {
-                        allRows = new KeyValuePair<IEnumerable<DValue<RecordValue>>, IEnumerable<DValue<RecordValue>>>(both0.Rows, both1.Rows);
-                    }
-                    else if (both0.Rows.Count() > both1.Rows.Count())
-                    {
-                        var inputRecordType = both1Type.ToRecord();
-                        var inputRecordNamedValue = new NamedValue(name1, new BlankValue(IRContext.NotInSource(FormulaType.Blank)));
-                        var inputRecord = new InMemoryRecordValue(IRContext.NotInSource(inputRecordType), new List<NamedValue>() { inputRecordNamedValue });
-                        var inputDValue = DValue<RecordValue>.Of(inputRecord);
-                        var repeated = Enumerable.Repeat(inputDValue, both0.Rows.Count() - both1.Rows.Count());
-                        allRows = new KeyValuePair<IEnumerable<DValue<RecordValue>>, IEnumerable<DValue<RecordValue>>>(both0.Rows, both1.Rows.Concat(repeated));
-                    }
-                    else
-                    {
-                        var inputRecordType = both0Type.ToRecord();
-                        var inputRecordNamedValue = new NamedValue(name0, new BlankValue(IRContext.NotInSource(FormulaType.Blank)));
-                        var inputRecord = new InMemoryRecordValue(IRContext.NotInSource(inputRecordType), new List<NamedValue>() { inputRecordNamedValue });
-                        var inputDValue = DValue<RecordValue>.Of(inputRecord);
-                        var repeated = Enumerable.Repeat(inputDValue, both1.Rows.Count() - both0.Rows.Count());
-                        allRows = new KeyValuePair<IEnumerable<DValue<RecordValue>>, IEnumerable<DValue<RecordValue>>>(both0.Rows.Concat(repeated), both1.Rows);
-                    }
+                    // This can happen when we expect a Table at compile time but we recieve Blank() at runtime
+                    // Just return an empty table with the correct type
+                    return new InMemoryTableValue(irContext, resultRows);
                 }
-                else if (arg0 is TableValue tv0)
-                {
-                    var tv0Type = (TableType)tv0.Type;
 
-                    name0 = tv0Type.SingleColumnFieldName;
-                    name1 = BuiltinFunction.ColumnName_ValueStr;
-
-                    var inputRecordType = new RecordType().Add(name1, arg1.Type);
-                    var inputRecordNamedValue = new NamedValue(name1, arg1);
-                    var inputRecord = new InMemoryRecordValue(IRContext.NotInSource(inputRecordType), new List<NamedValue>() { inputRecordNamedValue });
-                    var inputDValue = DValue<RecordValue>.Of(inputRecord);
-                    var inputRows = Enumerable.Repeat(inputDValue, tv0.Rows.Count());
-                    allRows = new KeyValuePair<IEnumerable<DValue<RecordValue>>, IEnumerable<DValue<RecordValue>>>(tv0.Rows, inputRows);
-                }
-                else if (arg1 is TableValue tv1)
-                {
-                    var tv1Type = (TableType)tv1.Type;
-
-                    name0 = BuiltinFunction.ColumnName_ValueStr;
-                    name1 = tv1Type.SingleColumnFieldName;
-
-                    var inputRecordType = new RecordType().Add(name0, arg0.Type);
-                    var inputRecordNamedValue = new NamedValue(name0, arg0);
-                    var inputRecord = new InMemoryRecordValue(IRContext.NotInSource(inputRecordType), new List<NamedValue>() { inputRecordNamedValue });
-                    var inputDValue = DValue<RecordValue>.Of(inputRecord);
-                    var inputRows = Enumerable.Repeat(inputDValue, tv1.Rows.Count());
-                    allRows = new KeyValuePair<IEnumerable<DValue<RecordValue>>, IEnumerable<DValue<RecordValue>>>(inputRows, tv1.Rows);
-                }
-                else
-                {
-                    return targetFunction(runner, symbolContext, irContext, args);
-                }
+                var allResults = args.Select(arg => ExpandToSize(arg, maxSize));
 
                 var tableType = (TableType)irContext.ResultType;
                 var resultType = tableType.ToRecord();
                 var itemType = resultType.GetFieldType(BuiltinFunction.OneColumnTableResultNameStr);
 
-                var zipped = allRows.Key.Zip(allRows.Value, (a, b) => new KeyValuePair<DValue<RecordValue>, DValue<RecordValue>>(a, b));
-                var resultRows = new List<DValue<RecordValue>>();
-                foreach (var pair in zipped)
+                var transposed = Transpose(allResults, maxSize);
+                foreach (var list in transposed.Value)
                 {
-                    if (pair.Key.IsValue && pair.Value.IsValue)
-                    {
-                        var value0 = pair.Key.Value.GetField(name0);
-                        var value1 = pair.Value.Value.GetField(name1);
-                        NamedValue namedValue;
-                        namedValue = (value0, value1) switch
-                        {
-                            (ErrorValue eb0, ErrorValue eb1) => new NamedValue(BuiltinFunction.OneColumnTableResultNameStr, ErrorValue.Combine(IRContext.NotInSource(resultType), eb0, eb1)),
-                            (ErrorValue ev0, _) => new NamedValue(BuiltinFunction.OneColumnTableResultNameStr, ev0),
-                            (_, ErrorValue ev1) => new NamedValue(BuiltinFunction.OneColumnTableResultNameStr, ev1),
-                            _ => new NamedValue(BuiltinFunction.OneColumnTableResultNameStr, targetFunction(runner, symbolContext, IRContext.NotInSource(itemType), new FormulaValue[] { value0, value1 })),
-                        };
-                        var record = new InMemoryRecordValue(IRContext.NotInSource(resultType), new List<NamedValue>() { namedValue });
-                        resultRows.Add(DValue<RecordValue>.Of(record));
-                    }
-                    else if (pair.Key.IsBlank)
-                    {
-                        resultRows.Add(DValue<RecordValue>.Of(pair.Key.Blank));
-                    }
-                    else if (pair.Value.IsBlank)
-                    {
-                        resultRows.Add(DValue<RecordValue>.Of(pair.Value.Blank));
-                    }
-                    else if (pair.Key.IsError)
-                    {
-                        resultRows.Add(DValue<RecordValue>.Of(pair.Key.Error));
-                    }
-                    else
-                    {
-                        resultRows.Add(DValue<RecordValue>.Of(pair.Value.Error));
-                    }
+                    var targetArgs = list.Select((dv, i) => dv.IsValue ? dv.Value.GetField(transposed.Key[i]) : dv.ToFormulaValue()).ToArray();
+                    var namedValue = new NamedValue(BuiltinFunction.OneColumnTableResultNameStr, targetFunction(runner, symbolContext, IRContext.NotInSource(itemType), targetArgs));
+                    var record = new InMemoryRecordValue(IRContext.NotInSource(resultType), new List<NamedValue>() { namedValue });
+                    resultRows.Add(DValue<RecordValue>.Of(record));
                 }
                 return new InMemoryTableValue(irContext, resultRows);
             };
