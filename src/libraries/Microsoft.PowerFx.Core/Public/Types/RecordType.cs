@@ -4,6 +4,7 @@
 using System;
 using System.Diagnostics.Contracts;
 using Microsoft.PowerFx.Core.Types;
+using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Core.Public.Types
 {
@@ -27,6 +28,11 @@ namespace Microsoft.PowerFx.Core.Public.Types
         {
             var newType = _type.Add(field._typedName);
             return new RecordType(newType);
+        }
+
+        public RecordType Add(string name, FormulaType type)
+        {
+            return Add(new NamedFormulaType(new TypedName(type._type, new DName(name))));
         }
 
         public TableType ToTable()

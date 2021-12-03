@@ -116,6 +116,26 @@ namespace Microsoft.PowerFx.Functions
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: Concatenate
+                )
+            },
+            {
+                BuiltinFunctionsCore.ConcatenateT,
+                StandardErrorHandling(
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactValueTypeOrTableOrBlank<StringValue>,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
+                    targetFunction: MultiSingleColumnTable(
+                            StandardErrorHandling<StringValue>(
+                                expandArguments: NoArgExpansion,
+                                replaceBlankValues: ReplaceBlankWithEmptyString,
+                                checkRuntimeTypes: ExactValueType<StringValue>,
+                                checkRuntimeValues: DeferRuntimeValueChecking,
+                                returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
+                                targetFunction: Concatenate
+                            )
+                        )
                     )
             },
             {
