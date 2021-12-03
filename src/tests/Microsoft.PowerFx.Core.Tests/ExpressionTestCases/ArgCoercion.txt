@@ -16,11 +16,9 @@
 "123456"
 
 >> Concatenate(-1, ["456", "abc"] )
-/*InterpreterRunner*/ #Skip
 [{Result:"-1456"},{Result:"-1abc"}]
 
 >> Concatenate([-1, 123], ["456", "abc"] )
-/*InterpreterRunner*/ #Skip
 [{Result:"-1456"},{Result:"123abc"}]
 
 >> IsToday(100)
