@@ -35,6 +35,12 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("If(A, B, C, D, E).P", "A,B.P,C,D.P,E.P")]
         [InlineData("If(A, B, C).Name", "A,B.Name,C.Name")]
         [InlineData("[If(A, B, C).Name,D,E]", "A,B.Name,C.Name,D,E")]
+        [InlineData("Switch(A)", "")] // Error
+        [InlineData("Switch(A, B)", "")] // Error
+        [InlineData("Switch(Slider1.Value, 20, Result1, 10, Result2, 0, Result3)", "Result1,Result2,Result3,Slider1.Value")]
+        [InlineData("Switch(Slider1.Value, 20, Result1, 10, Result2, 0, Result3).Name", "Result1.Name,Result2.Name,Result3.Name,Slider1.Value")]
+        [InlineData("Switch(Slider1.Value, 20, Result1, 10, Result2, 0, Result3, DefaultResult)", "Result1,Result2,Result3,DefaultResult,Slider1.Value")]
+        [InlineData("Switch(Slider1.Value, 20, Result1, 10, Result2, 0, Result3, DefaultResult).Name", "Result1.Name,Result2.Name,Result3.Name,DefaultResult.Name,Slider1.Value")]
         [InlineData("With(A).Name", "")] // error
         [InlineData("With({ B: 1, C: B.Inner } As Y, Y.C)", "B.Inner")]
         [InlineData("With(A, B).Name", "A.B.Name,B.Name")]

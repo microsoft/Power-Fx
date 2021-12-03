@@ -140,6 +140,7 @@ namespace Microsoft.PowerFx.Core.Syntax.Visitors
             switch (functionName.Value.ToLowerInvariant())
             {
                 case "if": return VisitIfCall(node, context);
+                case "switch": return VisitSwitchCall(node, context);
                 case "with": return VisitWithCall(node, context);
                 default:
                     Collect(node.Args.Accept(this, context));
@@ -175,6 +176,23 @@ namespace Microsoft.PowerFx.Core.Syntax.Visitors
             return Array.Empty<DPath>();
         }
 
+        private DPath[] VisitSwitchCall(CallNode node, ImmutableDictionary<DName, DPath[]> context)
+        {
+            // ( Formula, Match1, Result1 [, Match2, Result2, ... [, DefaultResult ] ] )
+
+            var argumentCount = node.Args.Count;
+            if (argumentCount < 3)
+            {
+                // invalid count;
+                return Array.Empty<DPath>();
+            }
+
+            var formula = node.Args.Children[0];
+            Collect(formula.Accept(this, context));
+
+            return HandleConditional(node, context, offset: 1);
+        }
+
         private DPath[] VisitIfCall(CallNode node, ImmutableDictionary<DName, DPath[]> context)
         {
             // https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-if
@@ -189,8 +207,14 @@ namespace Microsoft.PowerFx.Core.Syntax.Visitors
                 return Array.Empty<DPath>();
             }
 
+            return HandleConditional(node, context, offset: 0);
+        }
+
+        private DPath[] HandleConditional(CallNode node, ImmutableDictionary<DName, DPath[]> context, int offset)
+        {
             var result = new List<DPath>();
-            for (int conditionIndex = 0, thenIndex = 1; thenIndex < argumentCount; conditionIndex += 2, thenIndex += 2)
+            var argumentCount = node.Args.Count;
+            for (int conditionIndex = 0 + offset, thenIndex = 1 + offset; thenIndex < argumentCount; conditionIndex += 2, thenIndex += 2)
             {
                 var condition = node.Args.Children[conditionIndex];
                 Collect(condition.Accept(this, context));
@@ -199,7 +223,7 @@ namespace Microsoft.PowerFx.Core.Syntax.Visitors
                 result.AddRange(then.Accept(this, context));
             }
 
-            if (argumentCount % 2 == 1) // odd argument count, there is a default or else case
+            if ((argumentCount - offset) % 2 == 1) // there is a default or else case
             {
                 var defaultCase = node.Args.Children[argumentCount - 1];
                 result.AddRange(defaultCase.Accept(this, context));
