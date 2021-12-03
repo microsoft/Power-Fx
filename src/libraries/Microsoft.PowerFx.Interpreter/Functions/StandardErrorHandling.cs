@@ -173,6 +173,126 @@ namespace Microsoft.PowerFx.Functions
         {
             return StandardSingleColumnTable<T>((runner, symbolContext, irContext, args) => targetFunction(irContext, args));
         }
+
+        private static int GetMaxTableSize(FormulaValue[] args)
+        {
+            int max = 0;
+
+            foreach (var arg in args)
+            {
+                if (arg is TableValue tv)
+                {
+                    max = Math.Max(max, tv.Rows.Count());
+                }
+            }
+
+            return max;
+        }
+
+        private class ExpandToSizeResult
+        {
+            public readonly string Name;
+            public readonly IEnumerable<DValue<RecordValue>> Rows;
+
+            public ExpandToSizeResult(string name, IEnumerable<DValue<RecordValue>> rows)
+            {
+                Name = name;
+                Rows = rows;
+            }
+        }
+
+        private static ExpandToSizeResult ExpandToSize(FormulaValue arg, int size)
+        {
+            string name = BuiltinFunction.ColumnName_ValueStr;
+            if (arg is TableValue tv)
+            {
+                var tvType = (TableType)tv.Type;
+                name = tvType.SingleColumnFieldName;
+
+                var count = tv.Rows.Count();
+                if (count < size)
+                {
+                    var inputRecordType = tvType.ToRecord();
+                    var inputRecordNamedValue = new NamedValue(name, new BlankValue(IRContext.NotInSource(FormulaType.Blank)));
+                    var inputRecord = new InMemoryRecordValue(IRContext.NotInSource(inputRecordType), new List<NamedValue>() { inputRecordNamedValue });
+                    var inputDValue = DValue<RecordValue>.Of(inputRecord);
+
+                    var repeated = Enumerable.Repeat(inputDValue, size - count);
+                    var rows = tv.Rows.Concat(repeated);
+                    return new ExpandToSizeResult(name, rows);
+                }
+                else
+                {
+                    return new ExpandToSizeResult(name, tv.Rows);
+                }
+            }
+            else
+            {
+                var inputRecordType = new RecordType().Add(name, arg.Type);
+                var inputRecordNamedValue = new NamedValue(name, arg);
+                var inputRecord = new InMemoryRecordValue(IRContext.NotInSource(inputRecordType), new List<NamedValue>() { inputRecordNamedValue });
+                var inputDValue = DValue<RecordValue>.Of(inputRecord);
+                var rows = Enumerable.Repeat(inputDValue, size);
+                return new ExpandToSizeResult(name, rows);
+            }
+        }
+
+        // Transpose a matrix (list of lists) so that the rows become columns and the columns become rows
+        // The column length is uniform and known
+        private static List<List<T>> Transpose<T>(List<List<T>> columns, int columnSize)
+        {
+            var rows = new List<List<T>>();
+
+            for (int i = 0; i < columnSize; i++)
+            {
+                rows.Add(columns.Select(column => column[i]).ToList());
+            }
+
+            return rows;
+        }
+
+        /*
+         * A standard error handling wrapper function that handles functions that can accept one or more table values.
+         * The standard behavior for this type of function is to expand all scalars and tables into a set of tables
+         * with the same size, where that size is the length of the longest table, if any. The result is always a table
+         * where some operation has been performed on the transpose of the input tables.
+         * 
+         * For example given the table function F and the operation F' and inputs [a, b] and [c, d], the transpose is [a, c], [b, d]
+         * F([a, b], [c, d]) => [F'([a, c]), F'([b, d])]
+         * As a concrete example, Concatenate(["a", "b"], ["1", "2"]) => ["a1", "b2"]
+        */
+        public static Func<EvalVisitor, SymbolContext, IRContext, FormulaValue[], FormulaValue> MultiSingleColumnTable(FunctionPtr targetFunction)
+        {
+            return (runner, symbolContext, irContext, args) =>
+            {
+                var resultRows = new List<DValue<RecordValue>>();
+                var maxSize = GetMaxTableSize(args);
+
+                if (maxSize == 0)
+                {
+                    // This can happen when we expect a Table at compile time but we recieve Blank() at runtime
+                    // Just return an empty table with the correct type
+                    return new InMemoryTableValue(irContext, resultRows);
+                }
+
+                var allResults = args.Select(arg => ExpandToSize(arg, maxSize));
+
+                var tableType = (TableType)irContext.ResultType;
+                var resultType = tableType.ToRecord();
+                var itemType = resultType.GetFieldType(BuiltinFunction.OneColumnTableResultNameStr);
+
+                var transposed = Transpose(allResults.Select(result => result.Rows.ToList()).ToList(), maxSize);
+                var names = allResults.Select(result => result.Name).ToList();
+                foreach (var list in transposed)
+                {
+                    var targetArgs = list.Select((dv, i) => dv.IsValue ? dv.Value.GetField(names[i]) : dv.ToFormulaValue()).ToArray();
+                    var namedValue = new NamedValue(BuiltinFunction.OneColumnTableResultNameStr, targetFunction(runner, symbolContext, IRContext.NotInSource(itemType), targetArgs));
+                    var record = new InMemoryRecordValue(IRContext.NotInSource(resultType), new List<NamedValue>() { namedValue });
+                    resultRows.Add(DValue<RecordValue>.Of(record));
+                }
+                return new InMemoryTableValue(irContext, resultRows);
+            };
+        }
         #endregion
 
         #region Common Arg Expansion Pipeline Stages
@@ -260,6 +380,18 @@ namespace Microsoft.PowerFx.Functions
             else
             {
                 return ExactValueType<T>(irContext, index, arg);
+            }
+        }
+
+        private static FormulaValue ExactValueTypeOrTableOrBlank<T>(IRContext irContext, int index, FormulaValue arg) where T : FormulaValue
+        {
+            if (arg is TableValue)
+            {
+                return arg;
+            }
+            else
+            {
+                return ExactValueTypeOrBlank<T>(irContext, index, arg);
             }
         }
 
