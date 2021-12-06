@@ -1,11 +1,13 @@
-﻿#nullable enable
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
+
+#nullable enable
 namespace Microsoft.PowerFx.Core.Syntax.Visitors
 {
     using System;
     using System.Collections.Generic;
     using System.Collections.Immutable;
-    using System.Diagnostics;
-    using System.Text;
+    using System.Linq;
     using Microsoft.PowerFx.Core.Syntax.Nodes;
     using Microsoft.PowerFx.Core.Utils;
 
@@ -19,12 +21,13 @@ namespace Microsoft.PowerFx.Core.Syntax.Visitors
     ///  Certain functions create multiple valid state paths from a single node.
     ///  Example: If (A, B, C).Name references both B.Name and C.Name depending on the value of A.
     ///  
-    ///  Context changing operations such as With, As, or Sum, their name are stored 
-    ///  in the dictionary that is input to the visitor. As an example, 
+    ///  Operations such as With, As, or Sum create scopes, which are stored in the dictionary that is 
+    ///  input to the visitor. As an example, the With({x: 5}, x) does not reference any external state,
+    ///  since x is defined within the expression.
     /// </remarks>
     internal class FindDependenciesVisitor : TexlFunctionalVisitor<DPath[], ImmutableDictionary<DName, DPath[]>>
     {
-        public static HashSet<DPath> Run(TexlNode node)
+        public static IEnumerable<DPath> Run(TexlNode node)
         {
             var visitor = new FindDependenciesVisitor();
             var topLevelPaths = node.Accept(visitor, ImmutableDictionary<DName, DPath[]>.Empty);
@@ -33,10 +36,12 @@ namespace Microsoft.PowerFx.Core.Syntax.Visitors
                 visitor.Paths.Add(path);
             }
 
-            return visitor.Paths;
+            return visitor._paths ?? Enumerable.Empty<DPath>();
         }
 
-        public HashSet<DPath> Paths { get; } = new HashSet<DPath>();
+        private HashSet<DPath> _paths;
+
+        private HashSet<DPath> Paths => _paths ??= new HashSet<DPath>();
 
         public override DPath[] Visit(ErrorNode node, ImmutableDictionary<DName, DPath[]> context) => Array.Empty<DPath>();
 
