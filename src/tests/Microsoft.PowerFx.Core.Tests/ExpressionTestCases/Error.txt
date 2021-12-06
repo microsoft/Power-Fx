@@ -42,3 +42,18 @@ true
 
 >> Not(IsBlank(1/0))
 #Error
+
+>> "Result: " & IfError(1/0, -1)
+"Result: -1"
+
+>> "Result: " & IfError(1, "error 1", 2, "error 2", "no error")
+"Result: no error"
+
+>> "Result: " & IfError({a:1, b:"hello"}, {a:2, b:"error"}).b
+"Result: hello"
+
+>> "Result: " & IfError(1, {a:1}, 2, {a:2}, {a:3}).a
+"Result: 3"
+
+>> "Result: " & IfError({a:{a1:true},b:"hello"}, {a:1,b:"error 1"}, {a:{a1:{a2:3}},b:"world"}, {a:1,b:"error 2"}, {a:1,b:"valid"}, {a:1,b:"error 3"}).a
+"Result: 1"
