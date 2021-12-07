@@ -166,15 +166,15 @@ namespace Microsoft.PowerFx.Core.Types.Enums
 #endif
             };
 
-        protected virtual IDictionary<string, string> EnumDict
+        protected virtual ImmutableDictionary<string, string> EnumDict
         {
             get
             {
-                return _enums;
+                return _enums.ToImmutableDictionary();
             }
         }
 
-        public void RegisterTuple(Tuple<string, string, string> tuple, Dictionary<string, string> locInfo = null)
+        internal void RegisterTuple(Tuple<string, string, string> tuple, Dictionary<string, string> locInfo = null)
         {
             string tupleName = tuple.Item1;
             if (!_customEnumDict.ContainsKey(tupleName))
@@ -192,7 +192,7 @@ namespace Microsoft.PowerFx.Core.Types.Enums
             }
         }
 
-        public bool TryGetLocalizedEnumValue(string enumName, string enumValue, out string locValue)
+        internal bool TryGetLocalizedEnumValue(string enumName, string enumValue, out string locValue)
         {
             Contracts.AssertValue(enumName);
             Contracts.AssertValue(enumValue);
@@ -210,7 +210,7 @@ namespace Microsoft.PowerFx.Core.Types.Enums
             return false;
         }
 
-        public void ResetCustomEnums()
+        internal void ResetCustomEnums()
         {
             _customEnumDict = ImmutableDictionary<string, Tuple<string, string, string>>.Empty;
             _customEnumLocDict = ImmutableDictionary<string, Dictionary<string, string>>.Empty;
@@ -318,7 +318,7 @@ namespace Microsoft.PowerFx.Core.Types.Enums
             }
         }
 
-        public bool TryGetEnumSpec(string name, out string dType)
+        internal bool TryGetEnumSpec(string name, out string dType)
         {
             Contracts.AssertNonEmpty(name);
 
