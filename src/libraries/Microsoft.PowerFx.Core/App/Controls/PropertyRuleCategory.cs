@@ -27,6 +27,7 @@ namespace Microsoft.PowerFx.Core.App.Controls
         /// control template is invalid
         /// </summary>
         Unknown = 6,
+        Formulas = 7,
     }
 
     /// <summary>
