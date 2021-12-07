@@ -26,6 +26,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Core.Texl.Intellisense.SignatureHelp.ParameterInformation",
                 "Microsoft.PowerFx.Core.Texl.Intellisense.SignatureHelp.SignatureHelp",
                 "Microsoft.PowerFx.Core.Texl.Intellisense.SignatureHelp.SignatureInformation",
+                "Microsoft.PowerFx.Core.Public.Config.PowerFxConfig",
                 "Microsoft.PowerFx.Core.Public.CheckResult",
                 "Microsoft.PowerFx.Core.Public.ErrorKind",
                 "Microsoft.PowerFx.Core.Public.ExpressionError",
@@ -73,6 +74,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Core.App.DefaultEnabledFeatures",
                 "Microsoft.PowerFx.Core.Utils.DName",
                 "Microsoft.PowerFx.Core.Utils.ICheckable",
+                "Microsoft.PowerFx.Core.Types.Enums.EnumStore",
             };
 
             StringBuilder sb = new StringBuilder();

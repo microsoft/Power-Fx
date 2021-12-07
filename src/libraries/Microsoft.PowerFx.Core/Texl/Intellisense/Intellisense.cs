@@ -8,6 +8,7 @@ using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Binding.BindInfo;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Lexer.Tokens;
+using Microsoft.PowerFx.Core.Public.Config;
 using Microsoft.PowerFx.Core.Syntax;
 using Microsoft.PowerFx.Core.Syntax.Nodes;
 using Microsoft.PowerFx.Core.Texl.Intellisense.IntellisenseData;
@@ -21,11 +22,13 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
     internal partial class Intellisense : IIntellisense
     {
         protected readonly IReadOnlyList<ISuggestionHandler> _suggestionHandlers;
+        protected readonly PowerFxConfig _powerFxConfig;
 
-        public Intellisense(IReadOnlyList<ISuggestionHandler> suggestionHandlers)
+        public Intellisense(PowerFxConfig powerFxConfig, IReadOnlyList<ISuggestionHandler> suggestionHandlers)
         {
             Contracts.AssertValue(suggestionHandlers);
 
+            _powerFxConfig = powerFxConfig;
             _suggestionHandlers = suggestionHandlers;
         }
 
@@ -206,7 +209,7 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
 
         protected internal virtual IntellisenseData.IntellisenseData CreateData(IIntellisenseContext context, DType expectedType, TexlBinding binding, TexlFunction curFunc, TexlNode curNode, int argIndex, int argCount, IsValidSuggestion isValidSuggestionFunc, IList<DType> missingTypes, List<CommentToken> comments)
         {
-            return new IntellisenseData.IntellisenseData(context, expectedType, binding, curFunc, curNode, argIndex, argCount, isValidSuggestionFunc, missingTypes, comments);
+            return new IntellisenseData.IntellisenseData(_powerFxConfig, context, expectedType, binding, curFunc, curNode, argIndex, argCount, isValidSuggestionFunc, missingTypes, comments);
         }
 
         private void GetFunctionAndTypeInformation(IIntellisenseContext context, TexlNode curNode, TexlBinding binding, out TexlFunction curFunc, out int argIndex, out int argCount, out DType expectedType, out IsValidSuggestion isValidSuggestionFunc)

@@ -7,6 +7,7 @@ using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Lexer;
 using Microsoft.PowerFx.Core.Lexer.Tokens;
+using Microsoft.PowerFx.Core.Public.Config;
 using Microsoft.PowerFx.Core.Syntax;
 using Microsoft.PowerFx.Core.Syntax.Nodes;
 using Microsoft.PowerFx.Core.Types;
@@ -18,6 +19,7 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense.IntellisenseData
     // The IntellisenseData class contains the pre-parsed data for Intellisense to provide suggestions
     internal class IntellisenseData : IIntellisenseData
     {
+        private readonly PowerFxConfig _powerFxConfig;
         private readonly DType _expectedType;
         private readonly IntellisenseSuggestionList _suggestions;
         private readonly IntellisenseSuggestionList _substringSuggestions;
@@ -41,7 +43,7 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense.IntellisenseData
         private IList<DType> _missingTypes;
         private readonly List<ISpecialCaseHandler> _cleanupHandlers;
 
-        public IntellisenseData(IIntellisenseContext context, DType expectedType, TexlBinding binding, TexlFunction curFunc, TexlNode curNode, int argIndex, int argCount, IsValidSuggestion isValidSuggestionFunc, IList<DType> missingTypes, List<CommentToken> comments)
+        public IntellisenseData(PowerFxConfig powerFxConfig, IIntellisenseContext context, DType expectedType, TexlBinding binding, TexlFunction curFunc, TexlNode curNode, int argIndex, int argCount, IsValidSuggestion isValidSuggestionFunc, IList<DType> missingTypes, List<CommentToken> comments)
         {
             Contracts.AssertValue(context);
             Contracts.AssertValid(expectedType);
@@ -52,6 +54,7 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense.IntellisenseData
             Contracts.AssertValueOrNull(missingTypes);
             Contracts.AssertValueOrNull(comments);
 
+            _powerFxConfig = powerFxConfig;
             _expectedType = expectedType;
             _suggestions = new IntellisenseSuggestionList();
             _substringSuggestions = new IntellisenseSuggestionList();
@@ -172,7 +175,7 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense.IntellisenseData
         /// </returns>
         internal virtual bool DoesNameCollide(string name)
         {
-            return (from enumSymbol in EnumStore.EnumSymbols
+            return (from enumSymbol in _powerFxConfig.EnumStore.EnumSymbols
                     where (from localizedEnum in enumSymbol.LocalizedEnumValues where localizedEnum == name select localizedEnum).Any()
                     select enumSymbol).Count() > 1;
         }
@@ -211,7 +214,7 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense.IntellisenseData
         /// <summary>
         /// A list of the enum symbols defined for intellisense
         /// </summary>
-        internal virtual IEnumerable<EnumSymbol> EnumSymbols => EnumStore.EnumSymbols;
+        internal virtual IEnumerable<EnumSymbol> EnumSymbols => _powerFxConfig.EnumStore.EnumSymbols;
 
         /// <summary>
         /// Tries to add custom suggestions for a column specified by <see cref="type"/>

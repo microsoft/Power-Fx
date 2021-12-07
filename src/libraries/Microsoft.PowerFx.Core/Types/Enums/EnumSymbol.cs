@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation.
+﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
 using System.Collections.Generic;
@@ -26,7 +26,7 @@ namespace Microsoft.PowerFx.Core.Types.Enums
         
         public string InvariantName { get; set; }
 
-        public EnumSymbol(DName name, DName invariantName, DType invariantType)
+        public EnumSymbol(EnumStore store, DName name, DName invariantName, DType invariantType)
         {
             Contracts.AssertValid(invariantName);
             Contracts.Assert(invariantType.IsEnum);
@@ -58,7 +58,7 @@ namespace Microsoft.PowerFx.Core.Types.Enums
 
                 string custDisplayName;
                 string entityNameValue = name.Value;
-                if (!EnumStore.TryGetLocalizedEnumValue(entityNameValue, invName, out custDisplayName))
+                if (!store.TryGetLocalizedEnumValue(entityNameValue, invName, out custDisplayName))
                     custDisplayName = displayName;
 
                 _valuesInvariantToDisplayName[invName] = custDisplayName;
