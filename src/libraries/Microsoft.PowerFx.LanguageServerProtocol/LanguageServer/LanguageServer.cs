@@ -129,6 +129,8 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
             PublishDiagnosticsNotification(documentUri, expression, result.Errors);
 
             PublishTokens(documentUri, result);
+
+            PublishExpressionType(documentUri, result);
         }
 
         private void HandleDidChangeNotification(string paramsJson)
@@ -158,6 +160,8 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
             PublishDiagnosticsNotification(documentUri, expression, result.Errors);
 
             PublishTokens(documentUri, result);
+
+            PublishExpressionType(documentUri, result);
         }
 
         private void HandleCompletionRequest(string id, string paramsJson)
@@ -401,6 +405,24 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
                     Tokens = tokens
                 }));
         }
+
+        private void PublishExpressionType(string documentUri, CheckResult result)
+        {
+            var uri = new Uri(documentUri);
+            var nameValueCollection = HttpUtility.ParseQueryString(uri.Query);
+            if (!bool.TryParse(nameValueCollection.Get("getExpressionType"), out var enabled) || !enabled)
+            {
+                return;
+            }
+
+            _sendToClient(JsonRpcHelper.CreateNotification(CustomProtocolNames.PublishExpressionType,
+                new PublishExpressionTypeParams()
+                {
+                    Uri = documentUri,
+                    Type = result.ReturnType
+                }));
+        }
+
 
         private bool TryParseParams<T>(string json, out T result)
         {
