@@ -457,7 +457,7 @@
     <value>value</value>
     <comment>function_parameter - Argument to the Concatenate function - the text or table to be concatenated.</comment>
   </data>
-  <data name="AboutConcatenateT_value" xml:space="preserve">
+  <data name="AboutConcatenate_value" xml:space="preserve">
     <value>A text value or a column of text values, to be concatenated with the rest of the arguments.</value>
   </data>
   <data name="AboutConcat" xml:space="preserve">
@@ -1274,6 +1274,12 @@
   <data name="AboutAtan2Arg2" xml:space="preserve">
     <value>y_coordinate</value>
     <comment>function_parameter - Second parameter to the Atan function - the y coordinate for arctangent to be returned. When translating, maintain as a single word (i.e., do not add spaces)</comment>
+  </data>
+  <data name="AboutAtan2_x_coordinate" xml:space="preserve">
+    <value>x-coordinate.</value>
+  </data>
+  <data name="AboutAtan2_y_coordinate" xml:space="preserve">
+    <value>y-coordinate.</value>
   </data>
   <data name="AboutSqrt" xml:space="preserve">
     <value>Returns the square root of a number.</value>
