@@ -6262,10 +6262,6 @@
     <value>As is not permitted in this context</value>
     <comment>{Locked=As} This is an error message that shows up when the As keyword is used but is not valid</comment>
   </data>
-  <data name="ErrNamedFormula_CircularReference" xml:space="preserve">
-    <value>Named formulas cannot contain circular references.</value>
-    <comment>A circular reference is where the expression contains the identifier: For example, a=a+10.</comment>
-  </data>
   <data name="ErrNamedFormula_MissingExpression" xml:space="preserve">
     <value>Named formula does not contain an expression.</value>
     <comment>An expression is the content in a named formula after the identifier. For example, in a=b+10, "=b+10" is the expression.</comment>

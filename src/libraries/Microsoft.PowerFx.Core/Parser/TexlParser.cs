@@ -106,12 +106,6 @@ namespace Microsoft.PowerFx.Core.Parser
                         List<Token> expression = new List<Token>();
                         while (_curs.TidCur != TokKind.Semicolon)
                         {
-                            // Check for a circular reference
-                            if (_curs.TidCur == TokKind.Ident && thisIdentifier.As<IdentToken>().Name == _curs.TokCur.As<IdentToken>().Name)
-                            {
-                                CreateError(_curs.TokCur, TexlStrings.ErrNamedFormula_CircularReference);
-                                return new ParseFormulasResult(namedFormulas, errors, errors?.Any() ?? false);
-                            }
                             // Check if we're at EOF before a semicolon is found
                             if (_curs.TidCur == TokKind.Eof)
                             {
