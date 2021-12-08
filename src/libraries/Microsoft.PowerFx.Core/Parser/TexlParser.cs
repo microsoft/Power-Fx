@@ -514,7 +514,13 @@ namespace Microsoft.PowerFx.Core.Parser
                 case TokKind.False:
                     return new BoolLitNode(ref _idNext, _curs.TokMove());
                 case TokKind.StrInterpStart:
-                    return ParseStringInterpolation();
+                    var res = ParseStringInterpolation();
+                    var tokCur = _curs.TokCur;
+                    if(FeatureFlags.StringInterpolation)
+                    {
+                        return res;
+                    }
+                    return CreateError(tokCur, TexlStrings.ErrBadToken);
                 case TokKind.StrLit:
                     return new StrLitNode(ref _idNext, _curs.TokMove().As<StrLitToken>());
 

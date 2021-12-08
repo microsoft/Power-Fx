@@ -116,6 +116,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         [InlineData("$\"Hello {DisplayMode|} World!\"", "DisplayMode", "DisplayMode.Disabled", "DisplayMode.Edit", "DisplayMode.View")]
         public void TestSuggest(string expression, params string[] expectedSuggestions)
         {
+            FeatureFlags.StringInterpolation = true;
             var actualSuggestions = SuggestStrings(expression);
             Assert.Equal(expectedSuggestions, actualSuggestions);
         }
