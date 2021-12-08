@@ -1,8 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
-using Microsoft.PowerFx.Core.Public.Config;
-
 namespace Microsoft.PowerFx.Core.Texl.Intellisense
 {
     internal static class IntellisenseProvider

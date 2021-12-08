@@ -7,7 +7,6 @@ using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Lexer;
 using Microsoft.PowerFx.Core.Lexer.Tokens;
-using Microsoft.PowerFx.Core.Public.Config;
 using Microsoft.PowerFx.Core.Syntax;
 using Microsoft.PowerFx.Core.Syntax.Nodes;
 using Microsoft.PowerFx.Core.Types;

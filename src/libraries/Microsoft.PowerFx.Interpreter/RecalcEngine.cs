@@ -6,6 +6,7 @@ using Microsoft.PowerFx.Core.IR.Symbols;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Glue;
@@ -17,9 +18,6 @@ using Microsoft.PowerFx.Core.Public.Values;
 using Microsoft.PowerFx.Core.Syntax;
 using Microsoft.PowerFx.Core.Texl.Intellisense;
 using Microsoft.PowerFx.Core.Types;
-using Microsoft.PowerFx.Core.Types.Enums;
-using System.Globalization;
-using Microsoft.PowerFx.Core.Public.Config;
 
 namespace Microsoft.PowerFx
 {
