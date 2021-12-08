@@ -978,14 +978,12 @@ namespace Microsoft.PowerFx.Core.Lexer
 
         private sealed class LexerImpl
         {
-            /*
-             * The Mode of the lexer, required because the behavior of the lexer changes
-             * when lexing inside of a String Interpolation, for example $"Hello {"World"}"
-             * has special lexing behavior. In theory, you could do this with just 2 modes,
-             * but we are using a 3rd mode, Island, to help keep track of when we need
-             * to produce IslandStart and IslandEnd tokens, which will be used by the
-             * Parser to correctly organize the string interpolation into a function call.
-            */
+            // The Mode of the lexer, required because the behavior of the lexer changes
+            // when lexing inside of a String Interpolation, for example $"Hello {"World"}"
+            // has special lexing behavior.In theory, you could do this with just 2 modes,
+            // but we are using a 3rd mode, Island, to help keep track of when we need
+            // to produce IslandStart and IslandEnd tokens, which will be used by the
+            // Parser to correctly organize the string interpolation into a function call.
             public enum LexerMode
             {
                 Normal,
