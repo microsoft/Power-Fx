@@ -648,6 +648,15 @@ namespace Microsoft.PowerFx.Core.Lexer
         // Returns true if the specified character is the start/end identifier delimiter.
         public static bool IsIdentDelimiter(char ch) => ch == IdentifierDelimiter;
 
+        // Returns true if the specified character starts an interpolated string.
+        public static bool IsInterpolatedStringStart(char ch, char nextCh) => ch == '$' && nextCh == '\"';
+
+        // Returns true if the specified character is an open curly bracket, used by interpolated strings.
+        public static bool IsCurlyOpen(char ch) => ch == '{';
+
+        // Returns true if the specified character is an open curly bracket, used by interpolated strings.
+        public static bool IsCurlyClose(char ch) => ch == '}';
+
         // Returns true if the specified character is a valid string delimiter.
         public static bool IsStringDelimiter(char ch) => ch == '\"';
 
@@ -969,11 +978,25 @@ namespace Microsoft.PowerFx.Core.Lexer
 
         private sealed class LexerImpl
         {
+            // The Mode of the lexer, required because the behavior of the lexer changes
+            // when lexing inside of a String Interpolation, for example $"Hello {"World"}"
+            // has special lexing behavior.In theory, you could do this with just 2 modes,
+            // but we are using a 3rd mode, Island, to help keep track of when we need
+            // to produce IslandStart and IslandEnd tokens, which will be used by the
+            // Parser to correctly organize the string interpolation into a function call.
+            public enum LexerMode
+            {
+                Normal,
+                Island,
+                StringInterpolation
+            }
+
             private readonly TexlLexer _lex;
             private readonly string _text;
             private readonly int _charCount;
             private readonly StringBuilder _sb; // Used while building a token.
             private readonly bool _allowReplaceableTokens;
+            private readonly Stack<LexerMode> _modeStack;
 
             private int _currentPos; // Current position.
             private int _currentTokenPos; // The start of the current token.
@@ -989,6 +1012,21 @@ namespace Microsoft.PowerFx.Core.Lexer
                 _charCount = _text.Length;
                 _sb = sb;
                 _allowReplaceableTokens = flags.HasFlag(Flags.AllowReplaceableTokens);
+
+                _modeStack = new Stack<LexerMode>();
+                _modeStack.Push(LexerMode.Normal);
+            }
+
+            private LexerMode CurrentMode => _modeStack.Peek();
+
+            private void EnterMode(LexerMode newMode)
+            {
+                _modeStack.Push(newMode);
+            }
+
+            private void ExitMode()
+            {
+                _modeStack.Pop();
             }
 
             // Whether we've hit the end of input yet. If this returns true, ChCur will be zero.
@@ -1086,28 +1124,49 @@ namespace Microsoft.PowerFx.Core.Lexer
             private Token Dispatch(bool allowContextDependentTokens, bool allowLocalizableTokens)
             {
                 StartToken();
-                char ch = CurrentChar;
-                char nextCh = PeekChar(1);
+                var ch = CurrentChar;
+                var nextCh = PeekChar(1);
 
-                if (_lex.IsNumStart(ch))
-                    return LexNumLit();
-                if (IsIdentStart(ch))
-                    return LexIdent();
-                if (IsStringDelimiter(ch))
-                    return LexStringLit();
-                if (CharacterUtils.IsSpace(ch) || CharacterUtils.IsLineTerm(ch))
-                    return LexSpace();
-
-                if (_allowReplaceableTokens)
+                if (CurrentMode == LexerMode.Normal || CurrentMode == LexerMode.Island)
                 {
-                    if (allowContextDependentTokens && IsContextDependentTokenDelimiter(ch))
-                        return LexContextDependentTokenLit();
+                    if (CurrentMode == LexerMode.Island && IsCurlyClose(ch))
+                    {
+                        // The LexerMode.Normal mode is pushed onto the mode stack every time the '{' character
+                        // appears within the body of an Island, for example when using the Table function inside
+                        // an interpolated string. If we are in the Island mode, it means that all the Normal
+                        // modes have been popped off, i.e. all the '{' inside the Island are paired with '}'
+                        // In that case just end the Island and resume parsing characters as string literals.
+                        return LexIslandEnd();
+                    }
 
-                    if (allowLocalizableTokens && IsLocalizableTokenDelimiter(ch, nextCh))
-                        return LexLocalizableTokenLit();
+                    if (_lex.IsNumStart(ch))
+                        return LexNumLit();
+                    if (IsIdentStart(ch))
+                        return LexIdent();
+                    if (IsInterpolatedStringStart(ch, nextCh))
+                        return LexInterpolatedStringStart();
+                    if (IsStringDelimiter(ch))
+                        return LexStringLit();
+                    if (CharacterUtils.IsSpace(ch) || CharacterUtils.IsLineTerm(ch))
+                        return LexSpace();
+
+                    if (_allowReplaceableTokens)
+                    {
+                        if (allowContextDependentTokens && IsContextDependentTokenDelimiter(ch))
+                            return LexContextDependentTokenLit();
+
+                        if (allowLocalizableTokens && IsLocalizableTokenDelimiter(ch, nextCh))
+                            return LexLocalizableTokenLit();
+                    }
+
+                    return LexOther();
                 }
-
-                return LexOther();
+                else if (IsStringDelimiter(ch))
+                    return LexInterpolatedStringEnd();
+                else if (IsCurlyOpen(ch))
+                    return LexIslandStart();
+                else
+                    return LexInterpolatedStringBody();
             }
 
             private Token LexOther()
@@ -1143,6 +1202,16 @@ namespace Microsoft.PowerFx.Core.Lexer
                     return LexError();
                 while (--punctuatorLength >= 0)
                     NextChar();
+
+                if (tidPunc == TokKind.CurlyOpen)
+                {
+                    EnterMode(LexerMode.Normal);
+                }
+                if (tidPunc == TokKind.CurlyClose)
+                {
+                    ExitMode();
+                }
+
                 return new KeyToken(tidPunc, GetTextSpan());
             }
 
@@ -1363,6 +1432,113 @@ namespace Microsoft.PowerFx.Core.Lexer
                     return new ErrorToken(GetTextSpan());
                 NextChar();
                 return new StrLitToken(_sb.ToString(), GetTextSpan());
+            }
+
+            // Lex an interpolated string body start.
+            private Token LexInterpolatedStringStart()
+            {
+                Contracts.Assert(IsInterpolatedStringStart(CurrentChar, PeekChar(1)));
+
+                NextChar();
+                NextChar();
+                EnterMode(LexerMode.StringInterpolation);
+
+                return new StrInterpStartToken(GetTextSpan());
+            }
+
+            // Lex an interpolated string body end.
+            private Token LexInterpolatedStringEnd()
+            {
+                Contracts.Assert(IsStringDelimiter(CurrentChar));
+
+                NextChar();
+                ExitMode();
+
+                return new StrInterpEndToken(GetTextSpan());
+            }
+
+            // Lex an interpolated string island start.
+            private Token LexIslandStart()
+            {
+                Contracts.Assert(IsCurlyOpen(CurrentChar));
+
+                NextChar();
+                EnterMode(LexerMode.Island);
+
+                return new IslandStartToken(GetTextSpan());
+            }
+
+            // Lex an interpolated string island end.
+            private Token LexIslandEnd()
+            {
+                Contracts.Assert(IsCurlyClose(CurrentChar));
+
+                NextChar();
+                ExitMode();
+
+                return new IslandEndToken(GetTextSpan());
+            }
+
+            // Lex a interpolated string body.
+            private Token LexInterpolatedStringBody()
+            {
+                _sb.Length = 0;
+
+                do
+                {
+                    char ch = CurrentChar;
+
+                    if (IsStringDelimiter(ch))
+                    {
+                        char nextCh;
+                        if (Eof || CharacterUtils.IsLineTerm(nextCh = PeekChar(1)) || !IsStringDelimiter(nextCh))
+                        {
+                            // Interpolated string end, do not call NextChar()
+                            if (Eof)
+                                return new ErrorToken(GetTextSpan());
+                            return new StrLitToken(_sb.ToString(), GetTextSpan());
+                        }
+                        // If we are here, we are seeing a double quote followed immediately by another
+                        // double quote. That is an escape sequence for double quote characters.
+                        _sb.Append(ch);
+                        NextChar();
+                    }
+                    else if (IsCurlyOpen(ch))
+                    {
+                        char nextCh;
+                        if (Eof || CharacterUtils.IsLineTerm(nextCh = PeekChar(1)) || !IsCurlyOpen(nextCh))
+                        {
+                            // Island start, do not call NextChar()
+                            if (Eof)
+                                return new ErrorToken(GetTextSpan());
+                            return new StrLitToken(_sb.ToString(), GetTextSpan());
+                        }
+                        // If we are here, we are seeing a open curly followed immediately by another
+                        // open curly. That is an escape sequence for open curly characters.
+                        _sb.Append(ch);
+                        NextChar();
+                    }
+                    else if (IsCurlyClose(ch))
+                    {
+                        char nextCh;
+                        if (Eof || CharacterUtils.IsLineTerm(nextCh = PeekChar(1)) || !IsCurlyClose(nextCh))
+                        {
+                            var res = new ErrorToken(GetTextSpan());
+                            NextChar();
+                            return res;
+                        }
+                        // If we are here, we are seeing a close curly followed immediately by another
+                        // close curly. That is an escape sequence for close curly characters.
+                        _sb.Append(ch);
+                        NextChar();
+                    }
+                    else if (!CharacterUtils.IsFormatCh(ch))
+                        _sb.Append(ch);
+
+                    NextChar();
+                } while (!Eof);
+
+                return new ErrorToken(GetTextSpan());
             }
 
             // Lex a sequence of spacing characters.
