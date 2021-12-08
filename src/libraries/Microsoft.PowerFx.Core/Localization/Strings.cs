@@ -87,6 +87,8 @@ namespace Microsoft.PowerFx.Core.Localization
 
         public static StringGetter AboutConcatenate = (b) => StringResources.Get("AboutConcatenate", b);
         public static StringGetter ConcatenateArg1 = (b) => StringResources.Get("ConcatenateArg1", b);
+        public static StringGetter AboutConcatenateT = (b) => StringResources.Get("AboutConcatenateT", b);
+        public static StringGetter ConcatenateTArg1 = (b) => StringResources.Get("ConcatenateTArg1", b);
 
         public static StringGetter AboutCoalesce = (b) => StringResources.Get("AboutCoalesce", b);
         public static StringGetter CoalesceArg1 = (b) => StringResources.Get("CoalesceArg1", b);

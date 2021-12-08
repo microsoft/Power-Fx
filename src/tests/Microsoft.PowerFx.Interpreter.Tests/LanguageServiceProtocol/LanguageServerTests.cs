@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
-using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.LanguageServerProtocol.Protocol;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,10 +8,11 @@ using System.Text.Json;
 using System.Text.RegularExpressions;
 using Microsoft.PowerFx.Core.Public;
 using Xunit;
+using Microsoft.PowerFx.LanguageServerProtocol;
 
 namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
 {
-    public class LanguageServerTests 
+    public class LanguageServerTests
     {
         protected static readonly JsonSerializerOptions _jsonSerializerOptions = new JsonSerializerOptions()
         {
@@ -231,7 +231,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
         public void TestDidOpenSeverityFormula()
         {
             var formula = "Count([\"test\"])";
-            var expectedDiagnostics = new []
+            var expectedDiagnostics = new[]
             {
                 new Diagnostic()
                 {
@@ -365,6 +365,53 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             Assert.Equal("2.0", errorResponse.Jsonrpc);
             Assert.Equal("123", errorResponse.Id);
             Assert.Equal(-32602, errorResponse.Error.Code);
+        }
+
+        [Fact]
+        public void TestCodeAction()
+        {
+            var scopeFactory = new TestPowerFxScopeFactory((string documentUri) => new MockSqlEngine());
+            var testServer = new TestLanguageServer(_sendToClientData.Add, scopeFactory);
+            var documentUri = "powerfx://test?expression=IsBlank(&context={\"A\":1,\"B\":[1,2,3]}";
+
+            testServer.OnDataReceived(JsonSerializer.Serialize(new
+            {
+                jsonrpc = "2.0",
+                id = "testDocument1",
+                method = "textDocument/codeAction",
+                @params = new CodeActionParams()
+                {
+                    TextDocument = new TextDocumentIdentifier()
+                    {
+                        Uri = documentUri
+                    },
+                    Range = new Range()
+                    {
+                        Start = new Position
+                        {
+                            Line = 0,
+                            Character = 0
+                        },
+                        End = new Position
+                        {
+                            Line = 0,
+                            Character = 10
+                        }
+                    },
+                    Context = new CodeActionContext() { Only = new[] { CodeActionKind.QuickFix } }
+                }
+            }));
+            Assert.Single(_sendToClientData);
+            var response = JsonSerializer.Deserialize<JsonRpcCodeActionResponse>(_sendToClientData[0], _jsonSerializerOptions);
+            Assert.Equal("2.0", response.Jsonrpc);
+            Assert.Equal("testDocument1", response.Id);
+            Assert.NotEmpty(response.Result);
+            Assert.Contains(CodeActionKind.QuickFix, response.Result.Keys);
+            Assert.True(1 == response.Result[CodeActionKind.QuickFix].Length, "Quick fix didn't return expected suggestion.");
+            Assert.Equal("TestTitle1", response.Result[CodeActionKind.QuickFix][0].Title);
+            Assert.NotEmpty(response.Result[CodeActionKind.QuickFix][0].Edit.Changes);
+            Assert.Contains(documentUri, response.Result[CodeActionKind.QuickFix][0].Edit.Changes.Keys);
+            Assert.Equal("TestText1", response.Result[CodeActionKind.QuickFix][0].Edit.Changes[documentUri][0].NewText);
         }
 
         [Theory]
