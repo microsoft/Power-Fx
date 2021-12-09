@@ -6262,14 +6262,6 @@
     <value>As is not permitted in this context</value>
     <comment>{Locked=As} This is an error message that shows up when the As keyword is used but is not valid</comment>
   </data>
-  <data name="ErrNamedFormula_MissingExpression" xml:space="preserve">
-    <value>Named formula does not contain an expression.</value>
-    <comment>An expression is the content in a named formula after the identifier. For example, in a=b+10, "=b+10" is the expression.</comment>
-  </data>
-  <data name="ErrNamedFormula_MissingIdentifier" xml:space="preserve">
-    <value>Named formula does not contain an identifier.</value>
-    <comment>An identifier is the content in the named formula before the "=". Fore example, in "a=b+10", "a" is the identifier.</comment>
-  </data>
   <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
     <value>Named formula must end with a semicolon.</value>
     <comment>A semicolon must terminate named formulas. For example, a=10;</comment>
