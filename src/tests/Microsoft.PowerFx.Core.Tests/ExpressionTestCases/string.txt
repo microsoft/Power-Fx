@@ -431,14 +431,14 @@ Errors: Error 2-2: Unexpected characters. Characters are used in the formula in 
 >> $"{{"
 "{"
 
->> $"{{a}}" // fail
+>> $"{{a}}"
 "{a}"
 
->> $"-{{a}}-" // pass
+>> $"-{{a}}-"
 "-{a}-"
 
->> $"-{{a}}" // pass
+>> $"-{{a}}"
 "-{a}"
 
->> $"{{a}}-" // fail
+>> $"{{a}}-"
 "{a}-"
