@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation.
+﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
 using System.Linq;
@@ -52,6 +52,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         [InlineData("{'complex record':{column:{}}} |", "As", "exactin", "in")]
         // DottedNameNodeSuggestionHandler
         [InlineData("{a:{},b:{},c:{}}.|", "a", "b", "c")]
+        [InlineData("$\"Hello { {a:{},b:{},c:{}}.| } World\"", "a", "b", "c")]
         [InlineData("{abc:{},ab:{},a:{}}.|ab", "ab", "a", "abc")]
         [InlineData("{abc:{},ab:{},a:{}}.ab|", "ab", "abc")]
         [InlineData("{abc:{},ab:{},a:{}}.ab|c", "abc", "ab")]
@@ -112,8 +113,10 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         [InlineData("Disabled|", "Disabled")]
         [InlineData("DisplayMode.D|", "Disabled", "Edit")]
         [InlineData("DisplayMode|", "DisplayMode", "DisplayMode.Disabled", "DisplayMode.Edit", "DisplayMode.View")]
+        [InlineData("$\"Hello {DisplayMode|} World!\"", "DisplayMode", "DisplayMode.Disabled", "DisplayMode.Edit", "DisplayMode.View")]
         public void TestSuggest(string expression, params string[] expectedSuggestions)
         {
+            FeatureFlags.StringInterpolation = true;
             var actualSuggestions = SuggestStrings(expression);
             Assert.Equal(expectedSuggestions, actualSuggestions);
         }

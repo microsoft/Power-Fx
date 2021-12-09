@@ -287,6 +287,17 @@ namespace Microsoft.PowerFx.Functions
                 IsError
             },
             {
+                BuiltinFunctionsCore.IsNumeric,
+                StandardErrorHandling<FormulaValue>(
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: DeferRuntimeTypeChecking,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
+                    targetFunction: IsNumeric
+                    )
+            },
+            {
                 BuiltinFunctionsCore.IsToday,
                 StandardErrorHandling<FormulaValue>(
                     expandArguments: NoArgExpansion,
@@ -981,6 +992,12 @@ namespace Microsoft.PowerFx.Functions
                 return str.Value.Length == 0;
             }
             return false;
+        }
+
+        public static FormulaValue IsNumeric(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args)
+        {
+            var arg0 = args[0];
+            return new BooleanValue(irContext, arg0 is NumberValue);
         }
 
         public static FormulaValue With(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args)

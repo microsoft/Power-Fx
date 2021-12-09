@@ -48,8 +48,8 @@ namespace Microsoft.PowerFx.Functions
             return new StringValue(irContext, sb.ToString());
         }
 
-        // Scalar 
-        // Operator & maps to this function call. 
+        // Scalar
+        // Operator & maps to this function call.
         public static FormulaValue Concatenate(IRContext irContext, StringValue[] args)
         {
             StringBuilder sb = new StringBuilder();

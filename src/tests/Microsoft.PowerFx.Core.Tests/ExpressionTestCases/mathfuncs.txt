@@ -261,3 +261,33 @@ Blank()
 
 >> Int(1/0)
 #Error
+
+>>IsNumeric("A")
+false
+
+>>IsNumeric(123)
+true
+
+>>IsNumeric(-123)
+true
+
+>>IsNumeric(-123.1)
+true
+
+>>IsNumeric(123.1)
+true
+
+>>IsNumeric("1" + 2)
+true
+
+>>IsNumeric(1/0)
+#Error
+
+>>IsNumeric(Blank())
+false
+
+>>IsNumeric({RecordValue: 123})
+false
+
+>>IsNumeric([1,2,3,4])
+false
