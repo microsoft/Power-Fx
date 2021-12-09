@@ -115,7 +115,7 @@ namespace Microsoft.PowerFx.Core.Parser
                             // Parse expression
                             var result = ParseExpr(Precedence.None);
                             namedFormulas.Add(thisIdentifier.As<IdentToken>().Name, result);
-                        }                        
+                        }
                         _curs.TokMove();
                     }
                     else
