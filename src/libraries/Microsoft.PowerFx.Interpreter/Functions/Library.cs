@@ -996,14 +996,8 @@ namespace Microsoft.PowerFx.Functions
 
         public static FormulaValue IsNumeric(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args)
         {
-            // Blank or empty. 
             var arg0 = args[0];
             return new BooleanValue(irContext, arg0 is NumberValue);
-        }
-
-        public static bool IsNumeric(FormulaValue arg)
-        {
-            return arg is NumberValue;
         }
 
         public static FormulaValue With(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args)
