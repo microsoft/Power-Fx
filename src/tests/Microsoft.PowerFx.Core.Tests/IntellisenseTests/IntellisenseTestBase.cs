@@ -27,7 +27,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         /// <param name="expression"></param>
         /// <param name="contextTypeString"></param>
         /// <returns></returns>
-        internal IIntellisenseResult Suggest(string expression, string contextTypeString = null)
+        internal IIntellisenseResult Suggest(string expression, PowerFxConfig powerFxConfig, string contextTypeString = null)
         {
             Assert.NotNull(expression);
 
@@ -42,7 +42,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
             {
                 DType.TryParse(contextTypeString, out var contextDType);
                 contextType = FormulaType.Build(contextDType) as RecordType;
-                
+
                 Assert.True(contextType != null, "Context type must be a record type");
             }
             else
@@ -51,12 +51,11 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
                 contextType = new RecordType();
             }
 
-            return Suggest(expression, contextType, cursorPosition);
+            return Suggest(expression, contextType, cursorPosition, powerFxConfig);
         }
 
-        internal IIntellisenseResult Suggest(string expression, FormulaType parameterType, int cursorPosition)
+        internal IIntellisenseResult Suggest(string expression, FormulaType parameterType, int cursorPosition, PowerFxConfig powerFxConfig)
         {
-            var powerFxConfig = new PowerFxConfig();
             var formula = new Formula(expression);
             formula.EnsureParsed(TexlParser.Flags.None);
 
