@@ -20,6 +20,7 @@ namespace Microsoft.PowerFx.Core.Parser
         {
             Contracts.AssertValue(namedFormulas);
             Contracts.Assert(errors == null || hasError);
+
             NamedFormulas = namedFormulas;
             Errors = errors;
             HasError = hasError;
