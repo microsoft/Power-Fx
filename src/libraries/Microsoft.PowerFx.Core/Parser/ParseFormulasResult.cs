@@ -5,6 +5,7 @@ using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Syntax.Nodes;
 using Microsoft.PowerFx.Core.Utils;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Microsoft.PowerFx.Core.Parser
 {
@@ -16,14 +17,17 @@ namespace Microsoft.PowerFx.Core.Parser
 
         internal bool HasError { get; }
 
-        public ParseFormulasResult(Dictionary<DName, TexlNode> namedFormulas, List<TexlError> errors, bool hasError)
+        public ParseFormulasResult(Dictionary<DName, TexlNode> namedFormulas, List<TexlError> errors)
         {
             Contracts.AssertValue(namedFormulas);
-            Contracts.Assert(errors == null || hasError);
+
+            if (errors?.Any() ?? false)
+            {
+                Errors = errors;
+                HasError = true;
+            }
 
             NamedFormulas = namedFormulas;
-            Errors = errors;
-            HasError = hasError;
         }
     }
 }

@@ -649,6 +649,7 @@ namespace DocumentServer.Core.Tests.Formulas
         }
 
         [Theory]
+        [InlineData("")]
         [InlineData("a=10;")]
         [InlineData("a=b=10;")]
         [InlineData("a=10;c=20;")]
@@ -665,6 +666,9 @@ namespace DocumentServer.Core.Tests.Formulas
         [InlineData("a=10;b")]
         [InlineData("A=If(true,1;);")]
         [InlineData("A=If(true,1;2);")]
+        [InlineData("1+2);")]
+        [InlineData("1=10")]
+        [InlineData("a.b = c")]
         public void TestFormulasParse_Negative(string script)
         {
             TestFormulasParseError(script);
@@ -704,19 +708,18 @@ namespace DocumentServer.Core.Tests.Formulas
             Assert.True(errorMessage == null || result.Errors.Any(err => err.ShortMessage == errorMessage));
         }
 
-        internal void TestFormulasParseRoundtrip(string script, string expected = null, NodeKind expectedNodeKind = NodeKind.Error, Action<TexlNode> customTest = null)
+        internal void TestFormulasParseRoundtrip(string script)
         {
             var result = TexlParser.ParseFormulasScript(script);
 
-            Assert.True(result.NamedFormulas.Count > 0);
             Assert.False(result.HasError);
         }
 
-        internal void TestFormulasParseError(string script, string expected = null, NodeKind expectedNodeKind = NodeKind.Error, Action<TexlNode> customTest = null)
+        internal void TestFormulasParseError(string script)
         {
             var result = TexlParser.ParseFormulasScript(script);
 
-            Assert.True(result.NamedFormulas.Count == 0 || result.HasError);
+            Assert.True(result.HasError);
         }
     }
 }

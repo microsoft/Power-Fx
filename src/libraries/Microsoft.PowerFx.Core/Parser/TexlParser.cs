@@ -110,7 +110,7 @@ namespace Microsoft.PowerFx.Core.Parser
                             if (_curs.TidCur == TokKind.Eof)
                             {
                                 CreateError(_curs.TokCur, TexlStrings.ErrNamedFormula_MissingSemicolon);
-                                return new ParseFormulasResult(namedFormulas, _errors, _errors?.Any() ?? false);
+                                return new ParseFormulasResult(namedFormulas, _errors);
                             }
                             // Parse expression
                             var result = ParseExpr(Precedence.None);
@@ -128,7 +128,7 @@ namespace Microsoft.PowerFx.Core.Parser
                     break;
                 }
             }
-            return new ParseFormulasResult(namedFormulas, _errors, _errors?.Any() ?? false);
+            return new ParseFormulasResult(namedFormulas, _errors);
         }
 
         private static Token[] TokenizeScript(string script, ILanguageSettings loc = null, Flags flags = Flags.None)
