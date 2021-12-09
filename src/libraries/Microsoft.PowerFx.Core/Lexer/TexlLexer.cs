@@ -1163,7 +1163,7 @@ namespace Microsoft.PowerFx.Core.Lexer
                 }
                 else if (IsStringDelimiter(ch))
                     return LexInterpolatedStringEnd();
-                else if (IsCurlyOpen(ch))
+                else if (IsCurlyOpen(ch) && !IsCurlyOpen(nextCh))
                     return LexIslandStart();
                 else
                     return LexInterpolatedStringBody();
