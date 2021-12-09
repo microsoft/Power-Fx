@@ -29,7 +29,9 @@ namespace Microsoft.PowerFx.Core.Parser
             AllowReplaceableExpressions = 1 << 1,
 
             // All parsing capabilities enabled.
-            All = EnableExpressionChaining | AllowReplaceableExpressions
+            All = EnableExpressionChaining | AllowReplaceableExpressions,
+
+            NamedFormulas = 1 << 2
         }
 
         private readonly TokenCursor _curs;
@@ -83,13 +85,12 @@ namespace Microsoft.PowerFx.Core.Parser
             Contracts.AssertValueOrNull(loc);
 
             Token[] formulaTokens = TokenizeScript(script, loc, flags);
-            TexlParser parser = new TexlParser(formulaTokens, flags);
-            List<TexlError> errors = null;
+            TexlParser parser = new TexlParser(formulaTokens, Flags.NamedFormulas);
 
-            return parser.ParseFormulas(ref errors);
+            return parser.ParseFormulas();
         }
 
-        private ParseFormulasResult ParseFormulas(ref List<TexlError> errors)
+        private ParseFormulasResult ParseFormulas()
         {
             Dictionary<DName, TexlNode> namedFormulas = new Dictionary<DName, TexlNode>();
             while (_curs.TokCur.Kind != TokKind.Eof)
@@ -103,41 +104,35 @@ namespace Microsoft.PowerFx.Core.Parser
                     if (thisEq != null)
                     {
                         // Extract expression
-                        List<Token> expression = new List<Token>();
                         while (_curs.TidCur != TokKind.Semicolon)
                         {
                             // Check if we're at EOF before a semicolon is found
                             if (_curs.TidCur == TokKind.Eof)
                             {
                                 CreateError(_curs.TokCur, TexlStrings.ErrNamedFormula_MissingSemicolon);
-                                return new ParseFormulasResult(namedFormulas, errors, errors?.Any() ?? false);
+                                return new ParseFormulasResult(namedFormulas, _errors, _errors?.Any() ?? false);
                             }
 
-                            expression.Add(_curs.TokCur);
-                            _curs.TokMove();
+                            // Parse expression
+                            TexlNode result = ParseExpr(Precedence.None);
+                            namedFormulas.Add(thisIdentifier.As<IdentToken>().Name, result);
                         }
-
-                        // Parse expression
                         
-                        TexlParser expressionParser = new TexlParser(expression.ToArray(),Flags.None);
-                        namedFormulas.Add(thisIdentifier.As<IdentToken>().Name, expressionParser.Parse(ref errors));
                         _curs.TokMove();
                     }
                     else
                     {
                         // error - missing '='
-                        CreateError(_curs.TokCur, TexlStrings.ErrNamedFormula_MissingExpression);
                         break;
                     }
                 }
                 else
                 {
                     // error - not an identifier
-                    CreateError(_curs.TokCur, TexlStrings.ErrNamedFormula_MissingIdentifier);
                     break;
                 }
             }
-            return new ParseFormulasResult(namedFormulas, errors, errors?.Any() ?? false);
+            return new ParseFormulasResult(namedFormulas, _errors, _errors?.Any() ?? false);
         }
 
         private static Token[] TokenizeScript(string script, ILanguageSettings loc = null, Flags flags = Flags.None)
@@ -458,6 +453,10 @@ namespace Microsoft.PowerFx.Core.Parser
                             break;
 
                         case TokKind.Semicolon:
+                            if (_flags.HasFlag(Flags.NamedFormulas))
+                            {
+                                goto default;
+                            }
                             // Only allow this when expression chaining is enabled (e.g. in behavior rules).
                             if ((_flags & Flags.EnableExpressionChaining) == 0)
                                 goto case TokKind.False;

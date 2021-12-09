@@ -11,8 +11,11 @@ namespace Microsoft.PowerFx.Core.Parser
     internal class ParseFormulasResult
     {
         internal Dictionary<DName, TexlNode> NamedFormulas { get; }
+
         internal List<TexlError> Errors { get; }
+
         internal bool HasError { get; }
+
         public ParseFormulasResult(Dictionary<DName, TexlNode> namedFormulas, List<TexlError> errors, bool hasError)
         {
             Contracts.AssertValue(namedFormulas);
