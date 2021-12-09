@@ -31,7 +31,7 @@ namespace Microsoft.PowerFx
 
         internal Dictionary<string, RecalcFormulaInfo> Formulas { get; } = new Dictionary<string, RecalcFormulaInfo>();
 
-        PowerFxConfig _powerFxConfig;
+        private readonly PowerFxConfig _powerFxConfig;
 
         /// <summary>
         /// Create a new power fx engine. 
