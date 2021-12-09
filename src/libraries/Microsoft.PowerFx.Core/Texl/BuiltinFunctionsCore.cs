@@ -46,6 +46,7 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction ColorValue = _library.Append(new ColorValueFunction());
         public static readonly TexlFunction Concat = _library.Append(new ConcatFunction());
         public static readonly TexlFunction Concatenate = _library.Append(new ConcatenateFunction());
+        public static readonly TexlFunction ConcatenateT = _library.Append(new ConcatenateTableFunction());
         public static readonly TexlFunction Cos = _library.Append(new CosFunction());
         public static readonly TexlFunction CosT = _library.Append(new CosTableFunction());
         public static readonly TexlFunction Cot = _library.Append(new CotFunction());
@@ -179,5 +180,10 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction WeekNum = _library.Append(new WeekNumFunction());
         public static readonly TexlFunction With = _library.Append(new WithFunction());
         public static readonly TexlFunction Year = _library.Append(new YearFunction());
+
+        // NOTE: These functions should not be part of the core library until they are implemented in all runtimes
+        public static readonly TexlFunction IsUTCToday = new IsUTCTodayFunction();
+        public static readonly TexlFunction UTCNow = new UTCNowFunction();
+        public static readonly TexlFunction UTCToday = new UTCTodayFunction();
     }
 }

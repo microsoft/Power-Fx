@@ -10,6 +10,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Equivalent Excel function: Cos
     internal sealed class CosFunction : MathOneArgFunction
     {
+        public override bool RequiresErrorContext => true;
+
         public CosFunction()
             : base("Cos", TexlStrings.AboutCos, FunctionCategories.MathAndStat)
         { }
@@ -19,6 +21,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Table overload that computes the cosine of each item in the input table.
     internal sealed class CosTableFunction : MathOneArgTableFunction
     {
+        public override bool RequiresErrorContext => true;
+
         public CosTableFunction()
             : base("Cos", TexlStrings.AboutCosT, FunctionCategories.Table)
         { }

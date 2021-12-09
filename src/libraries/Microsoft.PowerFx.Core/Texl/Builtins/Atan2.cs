@@ -13,6 +13,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class Atan2Function : BuiltinFunction
     {
         public override bool IsSelfContained => true;
+        public override bool RequiresErrorContext => true;
 
         public Atan2Function()
             : base("Atan2",

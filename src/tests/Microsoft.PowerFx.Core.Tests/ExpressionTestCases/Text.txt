@@ -5,16 +5,18 @@
 "123"
 
 >> Text(123.4)
+/*SqlRunner*/ #Error
 "123.4"
 
 >> Text(10*10)
 "100"
 
 >> Text(1/2)
+/*SqlRunner*/ #Error
 "0.5"
 
 >> Text(123.4, "#.000")
-/*InterpreterRunner*/ #Skip
+/*SqlRunner*/ Compile Error
 "123.400"
 
 >> Text(Blank(), "#.000")
@@ -24,34 +26,35 @@
 ""
 
 >> Text(1/0, "#.000")
+/*SqlRunner*/ Compile Error
 #Error
 
 >> Text(0.5, ".##")
-/*InterpreterRunner*/ #Skip
+/*SqlRunner*/ Compile Error
 ".5"
 
 >> Text(1.5, "000")
-/*InterpreterRunner*/ #Skip
 "002"
 
 >> Text(123456789, "#,#")
-/*InterpreterRunner*/ #Skip
+/*SqlRunner*/ Compile Error
 "123,456,789"
 
 >> Text(123456789, "#,###")
-/*InterpreterRunner*/ #Skip
+/*SqlRunner*/ Compile Error
 "123,456,789"
 
 >> Text(123456789, "0,0.0")
-/*InterpreterRunner*/ #Skip
+/*SqlRunner*/ Compile Error
 "123,456,789.0"
 
 >> Text(123456789, "0,00.0")
-/*InterpreterRunner*/ #Skip
+/*SqlRunner*/ Compile Error
 "123,456,789.0"
 
 >> Text(123456789, "0,")
-/*InterpreterRunner*/ #Skip
+/*InterpreterRunner*/ "123457"
+/*SqlRunner*/ Compile Error
 "123456789,"
 
 >> Text(100, "#%‰'eE:")
@@ -59,7 +62,6 @@
 "100%‰'eE:"
 
 >> Text(567, "!#!#!#!#!")
-/*InterpreterRunner*/ #Skip
 "!!5!6!7!"
 
 >> Text(true)
@@ -82,3 +84,15 @@ Blank()
 
 >> Char(1/0)
 #Error
+
+>> Text(Date(2018, 3, 15), "yyyy-MM-dd")
+/*SqlRunner*/ Compile Error
+"2018-03-15"
+
+>> Text(Date(2018, 3, 15), "yyyy-MM-dd")
+/*SqlRunner*/ Compile Error
+"2018-03-15"
+
+>> Text(Date(2018, 3, 15), "MM-dd-yyyy")
+/*SqlRunner*/ Compile Error
+"03-15-2018"

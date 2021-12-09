@@ -60,6 +60,12 @@ namespace Microsoft.PowerFx.Core.Lexer
         KeyNot,
         As,
 
+        // Interpolation
+        StrInterpStart,
+        StrInterpEnd,
+        IslandStart,
+        IslandEnd,
+
         Lim
     }
 }

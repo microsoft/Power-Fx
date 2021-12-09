@@ -17,7 +17,7 @@ namespace Microsoft.PowerFx.Functions
     internal static partial class Library
     {
         // Char is used for PA string escaping 
-        public static FormulaValue Char(IRContext irContext, NumberValue[] args)
+        public static StringValue Char(IRContext irContext, NumberValue[] args)
         {
             var arg0 = args[0];
             var str = new string((char)arg0.Value, 1);
@@ -48,8 +48,8 @@ namespace Microsoft.PowerFx.Functions
             return new StringValue(irContext, sb.ToString());
         }
 
-        // Scalar 
-        // Operator & maps to this function call. 
+        // Scalar
+        // Operator & maps to this function call.
         public static FormulaValue Concatenate(IRContext irContext, StringValue[] args)
         {
             StringBuilder sb = new StringBuilder();
@@ -83,7 +83,8 @@ namespace Microsoft.PowerFx.Functions
                 return DateTimeToNumber(irContext, new DateTimeValue[] { dtv });
             }
 
-            var str = ((StringValue)arg0).Value;
+            var str = ((StringValue)arg0).Value.Trim();
+            var styles = NumberStyles.Any;
 
             if (string.IsNullOrEmpty(str))
             {
@@ -95,9 +96,16 @@ namespace Microsoft.PowerFx.Functions
             {
                 str = str.Substring(0, str.Length - 1);
                 div = 100;
+                styles = NumberStyles.Number;
+            }
+            else if (str[0] == '%')
+            {
+                str = str.Substring(1, str.Length - 1);
+                div = 100;
+                styles = NumberStyles.Number;
             }
 
-            if (!double.TryParse(str, NumberStyles.Any, runner.CultureInfo, out var val))
+            if (!double.TryParse(str, styles, runner.CultureInfo, out var val))
             {
                 return CommonErrors.InvalidNumberFormatError(irContext);
             }
@@ -115,45 +123,104 @@ namespace Microsoft.PowerFx.Functions
         // https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-text
         public static FormulaValue Text(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args)
         {
-            if (args.Length > 1)
+            // only DateValue and DateTimeValue are supported for now with custom format strings.
+            if (args.Length > 1 && args[0] is StringValue)
             {
-                return CommonErrors.NotYetImplementedError(irContext, "Text() doesn't support format args");
+                return CommonErrors.NotYetImplementedError(irContext, "Text() doesn't support format args for type StringValue");
             }
 
-            // $$$ combine with a ToString()? 
-            // $$$ Should these be handled by coercion?
-            string str = null;
-            var arg0 = args[0];
-            if (arg0 is NumberValue num)
+            string resultString = null;
+            string formatString = null;
+
+            if (args.Length > 1 && args[1] is StringValue fs)
             {
-                str = num.Value.ToString();
-            }
-            else if (arg0 is StringValue s)
-            {
-                str = s.Value;
-            }
-            else if (arg0 is DateValue d)
-            {
-                // $$$ Use real format string
-                str = d.Value.ToString("M/d/yyyy", runner.CultureInfo);
-            }
-            else if (arg0 is DateTimeValue dt)
-            {
-                // $$$ Use real format string
-                str = dt.Value.ToString("g", runner.CultureInfo);
-            }
-            else if (arg0 is TimeValue t)
-            {
-                var tDate = new DateTime().Add(t.Value);
-                str = tDate.ToString("t", runner.CultureInfo);
+                formatString = fs.Value;
             }
 
-            if (str != null)
+
+            CultureInfo suppliedCulture = null;
+            if (args.Length > 2 && args[2] is StringValue locale)
             {
-                return new StringValue(irContext, str);
+                suppliedCulture = new CultureInfo(locale.Value);
             }
 
-            return CommonErrors.NotYetImplementedError(irContext, $"Text format for {arg0.GetType().Name}");
+            switch (args[0])
+            {
+                case NumberValue num:
+                    resultString = num.Value.ToString(formatString ?? "g", suppliedCulture ?? runner.CultureInfo);
+                    break;
+                case StringValue s:
+                    resultString = s.Value;
+                    break;
+                case DateValue d:
+                    formatString = ExpandDateTimeFormatSpecifiers(formatString, suppliedCulture ?? runner.CultureInfo);
+                    resultString = d.Value.ToString(formatString ?? "M/d/yyyy", suppliedCulture ?? runner.CultureInfo);
+                    break;
+                case DateTimeValue dt:
+                    formatString = ExpandDateTimeFormatSpecifiers(formatString, suppliedCulture ?? runner.CultureInfo);
+                    resultString = dt.Value.ToString(formatString ?? "g", suppliedCulture ?? runner.CultureInfo);
+                    break;
+                case TimeValue t:
+                    formatString = ExpandDateTimeFormatSpecifiers(formatString, suppliedCulture ?? runner.CultureInfo);
+                    resultString = _epoch.Add(t.Value).ToString(formatString ?? "t", suppliedCulture ?? runner.CultureInfo);
+                    break;
+                default:
+                    break;
+            }
+
+            if (resultString != null)
+            {
+                return new StringValue(irContext, resultString);
+            }
+
+            return CommonErrors.NotYetImplementedError(irContext, $"Text format for {args[0]?.GetType().Name}");
+        }
+
+        internal static string ExpandDateTimeFormatSpecifiers(string format, CultureInfo culture)
+        {
+            if (format == null)
+                return format;
+
+            var info = DateTimeFormatInfo.GetInstance(culture);
+
+            switch (format.ToLower())
+            {
+                case "shortdatetime24":
+                    // TODO: This might be wrong for some cultures
+                    return ReplaceWith24HourClock(info.ShortDatePattern + " " + info.ShortTimePattern);
+                case "shortdatetime":
+                    // TODO: This might be wrong for some cultures
+                    return info.ShortDatePattern + " " + info.ShortTimePattern;
+                case "shorttime24":
+                    return ReplaceWith24HourClock(info.ShortTimePattern);
+                case "shorttime":
+                    return info.ShortTimePattern;
+                case "shortdate":
+                    return info.ShortDatePattern;
+                case "longdatetime24":
+                    return ReplaceWith24HourClock(info.FullDateTimePattern);
+                case "longdatetime":
+                    return info.FullDateTimePattern;
+                case "longtime24":
+                    return ReplaceWith24HourClock(info.LongTimePattern);
+                case "longtime":
+                    return info.LongTimePattern;
+                case "longdate":
+                    return info.LongDatePattern;
+                case "utc":
+                    return info.UniversalSortableDateTimePattern;
+            }
+
+            return format;
+        }
+
+        private static string ReplaceWith24HourClock(string format)
+        {
+            string pattern = @"^(?<openAMPM>\s*t+\s*)? " +
+                             @"(?(openAMPM) h+(?<nonHours>[^ht]+)$ " +
+                             @"| \s*h+(?<nonHours>[^ht]+)\s*t+)";
+            return Regex.Replace(format, pattern, "HH${nonHours}",
+                                 RegexOptions.IgnorePatternWhitespace);
         }
 
         // https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-isblank-isempty

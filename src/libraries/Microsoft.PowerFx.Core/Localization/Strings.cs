@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation.
+﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
 namespace Microsoft.PowerFx.Core.Localization
@@ -87,6 +87,8 @@ namespace Microsoft.PowerFx.Core.Localization
 
         public static StringGetter AboutConcatenate = (b) => StringResources.Get("AboutConcatenate", b);
         public static StringGetter ConcatenateArg1 = (b) => StringResources.Get("ConcatenateArg1", b);
+        public static StringGetter AboutConcatenateT = (b) => StringResources.Get("AboutConcatenateT", b);
+        public static StringGetter ConcatenateTArg1 = (b) => StringResources.Get("ConcatenateTArg1", b);
 
         public static StringGetter AboutCoalesce = (b) => StringResources.Get("AboutCoalesce", b);
         public static StringGetter CoalesceArg1 = (b) => StringResources.Get("CoalesceArg1", b);
@@ -160,7 +162,9 @@ namespace Microsoft.PowerFx.Core.Localization
         public static StringGetter RandBetweenArg2 = (b) => StringResources.Get("RandBetweenArg2", b);
 
         public static StringGetter AboutNow = (b) => StringResources.Get("AboutNow", b);
+        public static StringGetter AboutUTCNow = (b) => StringResources.Get("AboutUTCNow", b);
         public static StringGetter AboutToday = (b) => StringResources.Get("AboutToday", b);
+        public static StringGetter AboutUTCToday = (b) => StringResources.Get("AboutUTCToday", b);
         public static StringGetter AboutGUID = (b) => StringResources.Get("AboutGUID", b);
         public static StringGetter GUIDArg = (b) => StringResources.Get("GUIDArg", b);
 
@@ -169,6 +173,8 @@ namespace Microsoft.PowerFx.Core.Localization
 
         public static StringGetter AboutIsToday = (b) => StringResources.Get("AboutIsToday", b);
         public static StringGetter IsTodayFuncArg1 = (b) => StringResources.Get("IsTodayFuncArg1", b);
+        public static StringGetter AboutIsUTCToday = (b) => StringResources.Get("AboutIsUTCToday", b);
+        public static StringGetter IsUTCTodayFuncArg1 = (b) => StringResources.Get("IsUTCTodayFuncArg1", b);
 
         public static StringGetter AboutRound = (b) => StringResources.Get("AboutRound", b);
         public static StringGetter AboutRoundUp = (b) => StringResources.Get("AboutRoundUp", b);
