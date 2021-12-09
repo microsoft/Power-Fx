@@ -84,8 +84,10 @@ namespace Microsoft.PowerFx.Core.Parser
             Contracts.AssertValue(script);
             Contracts.AssertValueOrNull(loc);
 
+            flags = Flags.NamedFormulas | flags;
+
             Token[] formulaTokens = TokenizeScript(script, loc, flags);
-            TexlParser parser = new TexlParser(formulaTokens, Flags.NamedFormulas);
+            TexlParser parser = new TexlParser(formulaTokens, flags);
 
             return parser.ParseFormulas();
         }
