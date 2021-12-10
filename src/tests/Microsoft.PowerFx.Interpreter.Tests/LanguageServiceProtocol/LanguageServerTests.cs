@@ -18,6 +18,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
         protected static readonly JsonSerializerOptions _jsonSerializerOptions = new JsonSerializerOptions
         {
             PropertyNameCaseInsensitive = true,
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
             Converters = { new FormulaTypeJsonConverter() }
         };
 
@@ -713,9 +714,11 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
         }
 
         [Theory]
-        [InlineData("{}", "{ A: 1 }", "{\"$type\":\"Record\",\"A\":{\"$type\":\"Number\"}}")]
-        [InlineData("{}", "[1, 2]", "{\"$type\":\"Table\",\"Value\":{\"$type\":\"Number\"}}")]
-        [InlineData("{}", "[{ A: 1 }, { B: true }]", "{\"$type\":\"Table\",\"Value\":{\"$type\":\"Record\",\"A\":{\"$type\":\"Number\"},\"B\":{\"$type\":\"Boolean\"}}}")]
+        [InlineData("{}", "{ A: 1 }", @"{""type"":""Record"",""names"":{""A"":{""type"":""Number""}}}")]
+        [InlineData("{}", "[1, 2]", @"{""type"":""Table"",""names"":{""Value"":{""type"":""Number""}}}")]
+        [InlineData("{}", "[{ A: 1 }, { B: true }]", @"{""type"":""Table"",""names"":{""Value"":{""type"":""Record"",""names"":{""A"":{""type"":""Number""},""B"":{""type"":""Boolean""}}}}}")]
+        [InlineData("{}", "{A: 1, B: { C: { D: \"Qwerty\" }, E: true } }", @"{""type"":""Record"",""names"":{""A"":{""type"":""Number""},""B"":{""type"":""Record"",""names"":{""C"":{""type"":""Record"",""names"":{""D"":{""type"":""String""}}},""E"":{""type"":""Boolean""}}}}}")]
+        [InlineData("{}", "{ type: 123 }", @"{""type"":""Record"",""names"":{""type"":{""type"":""Number""}}}")]
         public void TestPublishExpressionType_AggregateShapes(string context, string expression, string expectedTypeJson)
         {
             var documentUri = $"powerfx://app?context={context}&getExpressionType=true";
