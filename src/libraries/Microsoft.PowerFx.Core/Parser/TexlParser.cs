@@ -80,15 +80,13 @@ namespace Microsoft.PowerFx.Core.Parser
             return new ParseResult(parsetree, errors, errors?.Any() ?? false, parser._comments, parser._before, parser._after);
         }
 
-        public static ParseFormulasResult ParseFormulasScript(string script, ILanguageSettings loc = null, Flags flags = Flags.None)
+        public static ParseFormulasResult ParseFormulasScript(string script, ILanguageSettings loc = null)
         {
             Contracts.AssertValue(script);
             Contracts.AssertValueOrNull(loc);
 
-            flags = Flags.NamedFormulas | flags;
-
-            Token[] formulaTokens = TokenizeScript(script, loc, flags);
-            TexlParser parser = new TexlParser(formulaTokens, flags);
+            Token[] formulaTokens = TokenizeScript(script, loc, Flags.NamedFormulas);
+            TexlParser parser = new TexlParser(formulaTokens, Flags.NamedFormulas);
 
             return parser.ParseFormulas();
         }
