@@ -21,11 +21,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override bool SupportsParamCoercion => true;
 
         public ConcatenateFunction()
-            : base("Concatenate", TexlStrings.AboutConcatenate, FunctionCategories.Text, DType.String, 0, 2, int.MaxValue)
+            : base("Concatenate", TexlStrings.AboutConcatenate, FunctionCategories.Text, DType.String, 0, 1, int.MaxValue)
         { }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
+            yield return new [] { TexlStrings.ConcatenateArg1 };
             yield return new [] { TexlStrings.ConcatenateArg1, TexlStrings.ConcatenateArg1 };
             yield return new [] { TexlStrings.ConcatenateArg1, TexlStrings.ConcatenateArg1, TexlStrings.ConcatenateArg1 };
             yield return new [] { TexlStrings.ConcatenateArg1, TexlStrings.ConcatenateArg1, TexlStrings.ConcatenateArg1, TexlStrings.ConcatenateArg1 };
@@ -43,7 +44,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertValue(args);
             Contracts.AssertValue(argTypes);
             Contracts.Assert(args.Length == argTypes.Length);
-            Contracts.Assert(args.Length >= 2);
+            Contracts.Assert(args.Length >= 1);
             Contracts.AssertValue(errors);
 
             int count = args.Length;
@@ -79,7 +80,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override bool SupportsParamCoercion => true;
 
         public ConcatenateTableFunction()
-            : base("Concatenate", TexlStrings.AboutConcatenateT, FunctionCategories.Table | FunctionCategories.Text, DType.EmptyTable, 0, 2, int.MaxValue)
+            : base("Concatenate", TexlStrings.AboutConcatenateT, FunctionCategories.Table | FunctionCategories.Text, DType.EmptyTable, 0, 1, int.MaxValue)
         { }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
@@ -106,7 +107,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertValue(args);
             Contracts.AssertValue(argTypes);
             Contracts.Assert(args.Length == argTypes.Length);
-            Contracts.Assert(args.Length >= 2);
+            Contracts.Assert(args.Length >= 1);
             Contracts.AssertValue(errors);
 
             nodeToCoercedTypeMap = null;
