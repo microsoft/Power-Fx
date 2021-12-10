@@ -31,6 +31,7 @@ namespace Microsoft.PowerFx.Core.Parser
             // All parsing capabilities enabled.
             All = EnableExpressionChaining | AllowReplaceableExpressions,
 
+            // When specified, this is a named formula to be parsed. Mutually exclusive to EnableExpressionChaining.
             NamedFormulas = 1 << 2
         }
 
