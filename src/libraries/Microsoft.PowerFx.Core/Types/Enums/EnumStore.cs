@@ -12,7 +12,7 @@ namespace Microsoft.PowerFx.Core.Types.Enums
     /// <summary>
     /// Static class used to store built in Power Fx enums
     /// </summary>
-    public class EnumStore
+    internal class EnumStore
     {
         /// <summary>
         /// Key: Enum internal identifier

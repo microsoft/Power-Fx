@@ -74,7 +74,6 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Core.App.DefaultEnabledFeatures",
                 "Microsoft.PowerFx.Core.Utils.DName",
                 "Microsoft.PowerFx.Core.Utils.ICheckable",
-                "Microsoft.PowerFx.Core.Types.Enums.EnumStore",
             };
 
             StringBuilder sb = new StringBuilder();

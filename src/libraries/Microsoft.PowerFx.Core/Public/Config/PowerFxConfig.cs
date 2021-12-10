@@ -14,7 +14,7 @@ namespace Microsoft.PowerFx.Core
         private readonly EnumStore _enumStore;
         private readonly CultureInfo _cultureInfo;
 
-        public EnumStore EnumStore => _enumStore;
+        internal EnumStore EnumStore => _enumStore;
         public CultureInfo CultureInfo => _cultureInfo;
 
         public PowerFxConfig()
@@ -23,7 +23,13 @@ namespace Microsoft.PowerFx.Core
             _cultureInfo = CultureInfo.CurrentCulture;
         }
 
-        public PowerFxConfig(EnumStore enumStore, CultureInfo cultureInfo)
+        public PowerFxConfig(CultureInfo cultureInfo)
+        {
+            _enumStore = new EnumStore();
+            _cultureInfo = cultureInfo;
+        }
+
+        internal PowerFxConfig(EnumStore enumStore, CultureInfo cultureInfo)
         {
             _enumStore = enumStore;
             _cultureInfo = cultureInfo;
