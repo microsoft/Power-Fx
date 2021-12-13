@@ -13,6 +13,9 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
         private static readonly JsonSerializerOptions _jsonSerializerOptions = new JsonSerializerOptions()
         {
             PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+            Converters = {
+                new FormulaTypeJsonConverter()
+            }
         };
 
         public enum ErrorCode
