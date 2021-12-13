@@ -1,10 +1,11 @@
-﻿
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
+
 using System;
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Microsoft.PowerFx.Core.Public.Types;
-using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.LanguageServerProtocol
 {
