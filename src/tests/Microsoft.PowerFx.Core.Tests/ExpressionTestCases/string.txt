@@ -424,3 +424,21 @@ Errors: Error 0-2: Invalid number of arguments: received 0, expected 1 or more.
 
 >> $"}
 Errors: Error 2-2: Unexpected characters. Characters are used in the formula in an unexpected way.
+
+>> $"{1}{2}{{3{{4{{5{{6{{7"
+"12{3{4{5{6{7"
+
+>> $"{{"
+"{"
+
+>> $"{{a}}"
+"{a}"
+
+>> $"-{{a}}-"
+"-{a}-"
+
+>> $"-{{a}}"
+"-{a}"
+
+>> $"{{a}}-"
+"{a}-"

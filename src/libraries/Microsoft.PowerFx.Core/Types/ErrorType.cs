@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation.
+﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
 using System.Collections.Generic;
@@ -19,7 +19,7 @@ namespace Microsoft.PowerFx.Core.Types
         /// The schema for an error value
         /// </returns>
         private static IEnumerable<TypedName> ReifiedErrorSchema => new[] {
-            new TypedName(EnumStore.GetEnum("ErrorKind"), new DName("Kind")),
+            new TypedName(DType.Number, new DName("Kind")),
             new TypedName(DType.String, new DName("Message")),
             new TypedName(DType.String, new DName("Source")),
             new TypedName(DType.String, new DName("Observed")),
