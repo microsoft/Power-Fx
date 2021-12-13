@@ -11,7 +11,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
     public class FormulaTypeJsonConverter : JsonConverter<FormulaType>
     {
         private const string TypeProperty = "Type",
-                             NamesProperty = "Names";
+                             FieldsProperty = "Fields";
 
         private const string Blank = "Blank",
                              Boolean = "Boolean",
@@ -81,7 +81,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
 
         private void WriteRecordContents(Utf8JsonWriter writer, RecordType record, JsonSerializerOptions options)
         {
-            writer.WritePropertyName(options.PropertyNamingPolicy?.ConvertName(NamesProperty) ?? NamesProperty);
+            writer.WritePropertyName(options.PropertyNamingPolicy?.ConvertName(FieldsProperty) ?? FieldsProperty);
             writer.WriteStartObject();
             foreach (var namedFormulaType in record.GetNames())
             {
@@ -125,12 +125,12 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
         {
             var record = new RecordType();
 
-            if (!TryGetPropertyCasingAware(element, NamesProperty, options, out var names))
+            if (!TryGetPropertyCasingAware(element, FieldsProperty, options, out var fields))
             {
                 return record;
             }
 
-            foreach (var pair in names.EnumerateObject())
+            foreach (var pair in fields.EnumerateObject())
             {
                 record = record.Add(pair.Name, FromJson(pair.Value, options));
             }

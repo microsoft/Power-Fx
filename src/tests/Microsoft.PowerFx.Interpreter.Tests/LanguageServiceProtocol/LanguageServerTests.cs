@@ -714,11 +714,11 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
         }
 
         [Theory]
-        [InlineData("{}", "{ A: 1 }", @"{""type"":""Record"",""names"":{""A"":{""type"":""Number""}}}")]
-        [InlineData("{}", "[1, 2]", @"{""type"":""Table"",""names"":{""Value"":{""type"":""Number""}}}")]
-        [InlineData("{}", "[{ A: 1 }, { B: true }]", @"{""type"":""Table"",""names"":{""Value"":{""type"":""Record"",""names"":{""A"":{""type"":""Number""},""B"":{""type"":""Boolean""}}}}}")]
-        [InlineData("{}", "{A: 1, B: { C: { D: \"Qwerty\" }, E: true } }", @"{""type"":""Record"",""names"":{""A"":{""type"":""Number""},""B"":{""type"":""Record"",""names"":{""C"":{""type"":""Record"",""names"":{""D"":{""type"":""String""}}},""E"":{""type"":""Boolean""}}}}}")]
-        [InlineData("{}", "{ type: 123 }", @"{""type"":""Record"",""names"":{""type"":{""type"":""Number""}}}")]
+        [InlineData("{}", "{ A: 1 }", @"{""type"":""Record"",""fields"":{""A"":{""type"":""Number""}}}")]
+        [InlineData("{}", "[1, 2]", @"{""type"":""Table"",""fields"":{""Value"":{""type"":""Number""}}}")]
+        [InlineData("{}", "[{ A: 1 }, { B: true }]", @"{""type"":""Table"",""fields"":{""Value"":{""type"":""Record"",""fields"":{""A"":{""type"":""Number""},""B"":{""type"":""Boolean""}}}}}")]
+        [InlineData("{}", "{A: 1, B: { C: { D: \"Qwerty\" }, E: true } }", @"{""type"":""Record"",""fields"":{""A"":{""type"":""Number""},""B"":{""type"":""Record"",""fields"":{""C"":{""type"":""Record"",""fields"":{""D"":{""type"":""String""}}},""E"":{""type"":""Boolean""}}}}}")]
+        [InlineData("{}", "{ type: 123 }", @"{""type"":""Record"",""fields"":{""type"":{""type"":""Number""}}}")]
         public void TestPublishExpressionType_AggregateShapes(string context, string expression, string expectedTypeJson)
         {
             var documentUri = $"powerfx://app?context={context}&getExpressionType=true";
