@@ -598,6 +598,21 @@ namespace Microsoft.PowerFx.Functions
                     )
             },
             {
+                BuiltinFunctionsCore.Rand,
+                Rand
+            },
+            {
+                BuiltinFunctionsCore.RandBetween,
+                StandardErrorHandling<NumberValue>(
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: ReplaceBlankWithZero,
+                    checkRuntimeTypes: ExactValueType<NumberValue>,
+                    checkRuntimeValues: FiniteChecker,
+                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
+                    targetFunction: RandBetween
+                    )
+            },
+            {
                 BuiltinFunctionsCore.Replace,
                 StandardErrorHandling<FormulaValue>(
                     expandArguments: NoArgExpansion,

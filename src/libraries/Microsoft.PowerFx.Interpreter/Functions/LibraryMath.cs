@@ -13,6 +13,10 @@ namespace Microsoft.PowerFx.Functions
     // Direct ports from JScript. 
     internal static partial class Library
     {
+        private static readonly object _randomizerLock = new object();
+
+        private static Random _random;
+
         // Support for aggregators. Helpers to ensure that Scalar and Tabular behave the same.
         private interface IAggregator
         {
@@ -358,6 +362,32 @@ namespace Microsoft.PowerFx.Functions
             var number = args[0].Value;
             var exponent = args[1].Value;
             return new NumberValue(irContext, Math.Pow(number, exponent));
+        }
+
+        private static FormulaValue Rand(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args)
+        {
+            lock (_randomizerLock)
+            {
+                if (_random == null)
+                {
+                    _random = new Random();
+                }
+                return new NumberValue(irContext, _random.NextDouble());
+            }
+        }
+
+        public static FormulaValue RandBetween(IRContext irContext, NumberValue[] args)
+        {
+            var lower = (int)args[0].Value;
+            var upper = (int)args[1].Value;
+            lock (_randomizerLock)
+            {
+                if (_random == null)
+                {
+                    _random = new Random();
+                }
+                return new NumberValue(irContext, _random.Next(lower, upper));
+            }
         }
     }
 }
