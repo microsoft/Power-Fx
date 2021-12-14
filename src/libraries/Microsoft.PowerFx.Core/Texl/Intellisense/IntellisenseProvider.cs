@@ -21,9 +21,9 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
             new Intellisense.RecordNodeSuggestionHandler(),
         };
 
-        internal static IIntellisense GetIntellisense()
+        internal static IIntellisense GetIntellisense(PowerFxConfig powerFxConfig)
         {
-            return new Intellisense(suggestionHandlers);
+            return new Intellisense(powerFxConfig, suggestionHandlers);
         }
     }
 }

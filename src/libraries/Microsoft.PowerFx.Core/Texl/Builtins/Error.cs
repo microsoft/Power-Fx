@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation.
+﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
 using System.Collections.Generic;
@@ -44,7 +44,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             var reifiedError = ErrorType.ReifiedError();
             var acceptedFields = reifiedError.GetNames(DPath.Root);
             var requiredKindField = acceptedFields.Where(tn => tn.Name == "Kind").First();
-            Contracts.Assert(requiredKindField.Type.IsEnum);
+            Contracts.Assert(requiredKindField.Type.IsEnum || requiredKindField.Type.Kind == DKind.Number);
             var optionalFields = acceptedFields.Where(tn => tn.Name != "Kind");
 
             returnType = DType.ObjNull;
