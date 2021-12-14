@@ -7,6 +7,7 @@ using System.Linq;
 using Microsoft.PowerFx.Core.Public.Types;
 using Microsoft.PowerFx.Core.Public.Values;
 using System;
+using Microsoft.PowerFx.Core.Public;
 
 namespace Microsoft.PowerFx.Functions
 {
@@ -385,6 +386,15 @@ namespace Microsoft.PowerFx.Functions
                 if (_random == null)
                 {
                     _random = new Random();
+                }
+                if (lower > upper)
+                {
+                    return new ErrorValue(irContext, new ExpressionError()
+                    {
+                        Message = $"Lower value cannot be greater than Upper value",
+                        Span = irContext.SourceContext,
+                        Kind = ErrorKind.Numeric
+                    });
                 }
                 return new NumberValue(irContext, _random.Next(lower, upper));
             }

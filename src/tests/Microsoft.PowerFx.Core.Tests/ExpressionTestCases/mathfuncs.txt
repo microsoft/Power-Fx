@@ -296,7 +296,13 @@ false
 1
 
 >>RandBetween(5, 1)
-'minValue' cannot be greater than maxValue. (Parameter 'minValue')
+#Error
+
+>>RandBetween(Blank(),1)
+0
+
+>>RandBetween(1/0, 1)
+#Error
 
 >>RandBetween(100.5, 100.7)
 100
