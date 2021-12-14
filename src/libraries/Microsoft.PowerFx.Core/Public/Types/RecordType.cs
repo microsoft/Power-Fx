@@ -2,6 +2,7 @@
 // Licensed under the MIT License.
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
@@ -10,7 +11,8 @@ namespace Microsoft.PowerFx.Core.Public.Types
 {
     public class RecordType : AggregateType
     {
-        internal RecordType(DType type) : base(type)
+        // For DisplayNameSet the Keys are Logical Names, and the Values are Display Names
+        internal RecordType(DType type, Dictionary<string, string> displayNameSet = null) : base(type, displayNameSet)
         {
             Contract.Assert(type.IsRecord);
         }
@@ -33,6 +35,11 @@ namespace Microsoft.PowerFx.Core.Public.Types
         public RecordType Add(string name, FormulaType type)
         {
             return Add(new NamedFormulaType(new TypedName(type._type, new DName(name))));
+        }
+
+        public RecordType WithDisplayNames(Dictionary<string, string> displayNameSet)
+        {
+            return new RecordType(_type, displayNameSet);
         }
 
         public TableType ToTable()

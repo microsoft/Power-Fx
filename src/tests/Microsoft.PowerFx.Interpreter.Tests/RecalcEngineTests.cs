@@ -265,6 +265,52 @@ namespace Microsoft.PowerFx.Tests
             Assert.Equal(6.0, result.ToObject());
         }
 
+        [Fact]
+        public void ConvertToDisplayNames()
+        {
+            var engine = new RecalcEngine();
+            RecordType r1 = new RecordType()
+                .Add(new NamedFormulaType("Num", FormulaType.Number))
+                .Add(new NamedFormulaType("B", FormulaType.Boolean))
+                .WithDisplayNames(new Dictionary<string, string>() { {"Num", "DisplayNum" }, { "B", "DisplayB" } });
+
+            var displayExpressions = engine.GetDisplayExpression("If(B, Num, 1234)", r1);
+
+            Assert.Equal("If(DisplayB, DisplayNum, 1234)", displayExpressions);
+        }
+
+        
+
+        [Fact]
+        public void ConvertToDisplayNameIsNoOp()
+        {
+            var engine = new RecalcEngine();
+            RecordType r1 = new RecordType()
+                .Add(new NamedFormulaType("Num", FormulaType.Number))
+                .Add(new NamedFormulaType("B", FormulaType.Boolean))
+                .WithDisplayNames(new Dictionary<string, string>() { {"Num", "DisplayNum" }, { "B", "DisplayB" } });
+
+            var displayExpressions = engine.GetDisplayExpression("If(DisplayB, DisplayNum, 1234)", r1);
+
+            Assert.Equal("If(DisplayB, DisplayNum, 1234)", displayExpressions);
+        }
+        
+        [Fact]
+        public void ConvertToInvariantNames()
+        {
+            var engine = new RecalcEngine();
+            RecordType r1 = new RecordType()
+                .Add(new NamedFormulaType("Num", FormulaType.Number))
+                .Add(new NamedFormulaType("B", FormulaType.Boolean))
+                .WithDisplayNames(new Dictionary<string, string>() { {"Num", "DisplayNum" }, { "B", "DisplayB" } });
+            
+            var displayExpressions = engine.GetInvariantExpression("If(DisplayB, DisplayNum, 1234)", r1);
+
+            Assert.Equal("If(B, Num, 1234)", displayExpressions);
+        }
+
+
+
         // Must have "Function" suffix. 
         private class TestCustomFunction : ReflectionFunction
         {

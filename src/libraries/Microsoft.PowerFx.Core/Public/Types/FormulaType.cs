@@ -2,8 +2,10 @@
 // Licensed under the MIT License.
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using Microsoft.PowerFx.Core.Types;
+using Microsoft.PowerFx.Core.UtilityDataStructures;
 using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Core.Public.Types
@@ -34,9 +36,36 @@ namespace Microsoft.PowerFx.Core.Public.Types
         public static FormulaType OptionSetValue { get; } = new OptionSetValueType();
 
         // chained by derived type 
-        internal FormulaType(DType type)
+        internal FormulaType(DType type, Dictionary<string, string> displayNameSet = null)
         {
-            _type = type;
+            if (displayNameSet == null)
+                _type = type;
+            else 
+            {
+                ValidateDisplayNames(displayNameSet);
+                _type = DType.AttachDisplayNameProvider(type, new BidirectionalDictionary<string, string>(displayNameSet));
+            }
+
+        }
+
+        private void ValidateDisplayNames(Dictionary<string, string> displayNameSet)
+        {
+            HashSet<string> displayNames = new();
+            foreach (var kvp in displayNameSet)
+            {
+                // Display names can't collide with other display names
+                if (displayNames.Contains(kvp.Value))
+                {
+                    throw new DisplayNameCollisionException(kvp.Value);
+                }
+                // Display names can't collide with logical names other than their own
+                if (kvp.Key != kvp.Value && displayNameSet.ContainsKey(kvp.Value))
+                {
+                    throw new DisplayNameCollisionException(kvp.Value);
+                }
+
+                displayNames.Add(kvp.Value);
+            }
         }
 
         // Get the correct derived type

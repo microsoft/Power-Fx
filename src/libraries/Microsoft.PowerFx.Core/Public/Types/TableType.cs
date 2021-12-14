@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
+using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using Microsoft.PowerFx.Core.Types;
@@ -10,7 +11,8 @@ namespace Microsoft.PowerFx.Core.Public.Types
 {
     public class TableType : AggregateType
     {
-        internal TableType(DType type) : base(type)
+        // For DisplayNameSet the Keys are Logical Names, and the Values are Display Names
+        internal TableType(DType type, Dictionary<string, string> displayNameSet = null) : base(type, displayNameSet)
         {
             Contract.Assert(type.IsTable);
         }
@@ -35,6 +37,11 @@ namespace Microsoft.PowerFx.Core.Public.Types
         {
             var newType = _type.Add(field._typedName);
             return new TableType(newType);
+        }
+
+        public TableType WithDisplayNames(Dictionary<string, string> displayNameSet)
+        {
+            return new TableType(_type, displayNameSet);
         }
 
         public string SingleColumnFieldName
