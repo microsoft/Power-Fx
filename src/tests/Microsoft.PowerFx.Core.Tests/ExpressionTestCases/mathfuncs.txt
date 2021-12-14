@@ -295,14 +295,17 @@ false
 >>RandBetween(1, 1)
 1
 
->>RandBetween(5, 1)
-#Error
+>>IsError(RandBetween(5, 1))
+true
 
 >>RandBetween(Blank(),1)
 0
 
->>RandBetween(1/0, 1)
-#Error
+>>IsError(RandBetween(1/0, 1))
+true
+
+>>IsError(RandBetween(0, 1/0))
+true
 
 >>RandBetween(100.5, 100.7)
 100
