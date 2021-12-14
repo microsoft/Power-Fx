@@ -32,5 +32,16 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 Assert.True(numberValue.Value <= 100 && numberValue.Value >= 1);
             }
         }
+
+        [Fact]
+        public void TestRandBetweenFunction()
+        {
+            for (int i = 0; i < 100; i++)
+            {
+                var numberValue = engine.Eval("RandBetween(2-1,50+50)") as NumberValue;
+                Assert.NotNull(numberValue);
+                Assert.True(numberValue.Value <= 100 && numberValue.Value >= 1);
+            }
+        }
     }
 }
