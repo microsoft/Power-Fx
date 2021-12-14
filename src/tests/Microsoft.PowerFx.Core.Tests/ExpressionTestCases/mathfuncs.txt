@@ -261,3 +261,21 @@ Blank()
 
 >> Int(1/0)
 #Error
+
+>>RandBetween(1, 1)
+1
+
+>>RandBetween(5, 1)
+'minValue' cannot be greater than maxValue. (Parameter 'minValue')
+
+>>RandBetween(100.5, 100.7)
+100
+
+>> Sum(Sequence(100), With({RandomNumber: RandBetween(1,20)}, If(RandomNumber >=1 && RandomNumber <= 20, 1, 0)))
+100
+
+>> Sum(Sequence(100), With({RandomNumber: RandBetween(2-1,50-30)}, If(RandomNumber >=1 && RandomNumber <= 20, 1, 0)))
+100
+
+>> Sum(Sequence(100), With({RandomNumber: Rand()}, If(RandomNumber > 0 && RandomNumber < 1.0, 1, 0)))
+100
