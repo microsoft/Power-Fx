@@ -381,20 +381,22 @@ namespace Microsoft.PowerFx.Functions
         {
             var lower = (int)args[0].Value;
             var upper = (int)args[1].Value;
+
+            if (lower > upper)
+            {
+                return new ErrorValue(irContext, new ExpressionError()
+                {
+                    Message = $"Lower value cannot be greater than Upper value",
+                    Span = irContext.SourceContext,
+                    Kind = ErrorKind.Numeric
+                });
+            }
+
             lock (_randomizerLock)
             {
                 if (_random == null)
                 {
                     _random = new Random();
-                }
-                if (lower > upper)
-                {
-                    return new ErrorValue(irContext, new ExpressionError()
-                    {
-                        Message = $"Lower value cannot be greater than Upper value",
-                        Span = irContext.SourceContext,
-                        Kind = ErrorKind.Numeric
-                    });
                 }
                 return new NumberValue(irContext, _random.Next(lower, upper));
             }
