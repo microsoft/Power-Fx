@@ -376,3 +376,69 @@ Microsoft.PowerFx.Core.Public.Values.ErrorValue
 
 >> Concatenate(["a","b","c","d"], "-", ["1", "2"], "-", ["x", "y", "z"], "!")
 [{Result:"a-1-x!"},{Result:"b-2-y!"},{Result:"c--z!"},{Result:"d--!"}]
+
+>> $"Hello {"World!"}"
+"Hello World!"
+
+>> $"Hello {"World!"} 2"
+"Hello World! 2"
+
+>> $"One {$"Two {"Three"}"} Four"
+"One Two Three Four"
+
+>> $"This string {{{"has"}}} curly braces"
+"This string {has} curly braces"
+
+>> $"This string {{ has }} curly braces"
+"This string { has } curly braces"
+
+>> "This string {{ has }} curly braces"
+"This string {{ has }} curly braces"
+
+>> $""
+""
+
+>> $"Hello"
+"Hello"
+
+>> $"{123}"
+"123"
+
+>> $"{123}{456}"
+"123456"
+
+>> $"{"
+Errors: Error 3-4: Unexpected characters. Characters are used in the formula in an unexpected way.
+
+>> $"}"
+Errors: Error 2-2: Unexpected characters. Characters are used in the formula in an unexpected way.
+
+>> $"{" & ""
+Errors: Error 3-9: Unexpected characters. Characters are used in the formula in an unexpected way.
+
+>> $"}" & ""
+Errors: Error 2-2: Unexpected characters. Characters are used in the formula in an unexpected way.
+
+>> $"{
+Errors: Error 0-2: Invalid number of arguments: received 0, expected 1 or more.
+
+>> $"}
+Errors: Error 2-2: Unexpected characters. Characters are used in the formula in an unexpected way.
+
+>> $"{1}{2}{{3{{4{{5{{6{{7"
+"12{3{4{5{6{7"
+
+>> $"{{"
+"{"
+
+>> $"{{a}}"
+"{a}"
+
+>> $"-{{a}}-"
+"-{a}-"
+
+>> $"-{{a}}"
+"-{a}"
+
+>> $"{{a}}-"
+"{a}-"

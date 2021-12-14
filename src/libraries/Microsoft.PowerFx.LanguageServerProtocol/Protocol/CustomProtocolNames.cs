@@ -10,5 +10,6 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
     {
         public const string PublishTokens = "$/publishTokens";
         public const string InitialFixup = "$/initialFixup";
+        public const string PublishExpressionType = "$/publishExpressionType";
     }
 }

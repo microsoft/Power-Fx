@@ -6,6 +6,7 @@ using Microsoft.PowerFx.Core.IR.Symbols;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Glue;
@@ -34,15 +35,15 @@ namespace Microsoft.PowerFx
 
         internal Dictionary<string, RecalcFormulaInfo> Formulas { get; } = new Dictionary<string, RecalcFormulaInfo>();
 
-        private readonly CultureInfo _cultureInfo;
+        private readonly PowerFxConfig _powerFxConfig;
 
         /// <summary>
         /// Create a new power fx engine. 
         /// </summary>
-        /// <param name="cultureInfo">The culture used for string and parsing functions. </param>
-        public RecalcEngine(CultureInfo cultureInfo = null)
+        /// <param name="powerFxConfig">Compiler customizations</param>
+        public RecalcEngine(PowerFxConfig powerFxConfig = null)
         {
-            _cultureInfo = cultureInfo ?? CultureInfo.CurrentCulture;
+            _powerFxConfig = powerFxConfig ?? new PowerFxConfig();
         }
 
         /// <summary>
@@ -137,7 +138,7 @@ namespace Microsoft.PowerFx
 
             var extraFunctions = _extraFunctions.Values.ToArray();
 
-            var resolver = new RecalcEngineResolver(this, (RecordType)parameterType, EnumStore.EnumSymbols, extraFunctions);
+            var resolver = new RecalcEngineResolver(this, (RecordType)parameterType, _powerFxConfig.EnumStore.EnumSymbols, extraFunctions);
 
             // $$$ - intellisense only works with ruleScope.
             // So if running for intellisense, pass the parameters in ruleScope. 
@@ -196,7 +197,7 @@ namespace Microsoft.PowerFx
 
             (IntermediateNode irnode, ScopeSymbol ruleScopeSymbol) = IRTranslator.Translate(binding);
 
-            var ev2 = new EvalVisitor(_cultureInfo);
+            var ev2 = new EvalVisitor(_powerFxConfig.CultureInfo);
             FormulaValue newValue = irnode.Accept(ev2, SymbolContext.New().WithGlobals(parameters));
 
             return newValue;
@@ -235,7 +236,7 @@ namespace Microsoft.PowerFx
             formula.EnsureParsed(TexlParser.Flags.None);
 
             var extraFunctions = _extraFunctions.Values.ToArray();
-            var resolver = new RecalcEngineResolver(this, parameters, EnumStore.EnumSymbols, extraFunctions);
+            var resolver = new RecalcEngineResolver(this, parameters, _powerFxConfig.EnumStore.EnumSymbols, extraFunctions);
             var binding = TexlBinding.Run(
                 new Glue2DocumentBinderGlue(),
                 null,
@@ -314,7 +315,7 @@ namespace Microsoft.PowerFx
             var formula = result._formula;
 
             var context = new IntellisenseContext(expression, cursorPosition);
-            var intellisense = IntellisenseProvider.GetIntellisense();
+            var intellisense = IntellisenseProvider.GetIntellisense(_powerFxConfig);
             var suggestions = intellisense.Suggest(context, binding, formula);
 
             return suggestions;

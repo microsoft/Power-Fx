@@ -20,12 +20,11 @@ namespace Microsoft.PowerFx.Core.Public.Types
         // protected isn't enough to let derived classes access this.
         internal readonly DType _type;
 
-
         public static FormulaType Blank { get; } = new BlankType();
 
-        // Well-known types 
-        public static FormulaType Boolean { get; }  = new BooleanType();
-        public static FormulaType Number { get; }  = new NumberType();
+        // Well-known types
+        public static FormulaType Boolean { get; } = new BooleanType();
+        public static FormulaType Number { get; } = new NumberType();
         public static FormulaType String { get; } = new StringType();
 
         public static FormulaType Time { get; } = new TimeType();

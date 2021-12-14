@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation.
+﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
 using System;
@@ -29,7 +29,10 @@ namespace Microsoft.PowerFx.Core.Parser
             AllowReplaceableExpressions = 1 << 1,
 
             // All parsing capabilities enabled.
-            All = EnableExpressionChaining | AllowReplaceableExpressions
+            All = EnableExpressionChaining | AllowReplaceableExpressions,
+
+            // When specified, this is a named formula to be parsed. Mutually exclusive to EnableExpressionChaining.
+            NamedFormulas = 1 << 2
         }
 
         private readonly TokenCursor _curs;
@@ -75,6 +78,58 @@ namespace Microsoft.PowerFx.Core.Parser
             TexlNode parsetree = parser.Parse(ref errors);
 
             return new ParseResult(parsetree, errors, errors?.Any() ?? false, parser._comments, parser._before, parser._after);
+        }
+
+        public static ParseFormulasResult ParseFormulasScript(string script, ILanguageSettings loc = null)
+        {
+            Contracts.AssertValue(script);
+            Contracts.AssertValueOrNull(loc);
+
+            Token[] formulaTokens = TokenizeScript(script, loc, Flags.NamedFormulas);
+            TexlParser parser = new TexlParser(formulaTokens, Flags.NamedFormulas);
+
+            return parser.ParseFormulas();
+        }
+
+        private ParseFormulasResult ParseFormulas()
+        {
+            Dictionary<DName, TexlNode> namedFormulas = new Dictionary<DName, TexlNode>();
+            while (_curs.TokCur.Kind != TokKind.Eof)
+            {
+                // Verify identifier
+                Token thisIdentifier = TokEat(TokKind.Ident);
+                if (thisIdentifier != null)
+                {
+                    // Verify "="
+                    Token thisEq = TokEat(TokKind.Equ);
+                    if (thisEq != null)
+                    {
+                        // Extract expression
+                        while (_curs.TidCur != TokKind.Semicolon)
+                        {
+                            // Check if we're at EOF before a semicolon is found
+                            if (_curs.TidCur == TokKind.Eof)
+                            {
+                                CreateError(_curs.TokCur, TexlStrings.ErrNamedFormula_MissingSemicolon);
+                                return new ParseFormulasResult(namedFormulas, _errors);
+                            }
+                            // Parse expression
+                            var result = ParseExpr(Precedence.None);
+                            namedFormulas.Add(thisIdentifier.As<IdentToken>().Name, result);
+                        }
+                        _curs.TokMove();
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+                else
+                {
+                    break;
+                }
+            }
+            return new ParseFormulasResult(namedFormulas, _errors);
         }
 
         private static Token[] TokenizeScript(string script, ILanguageSettings loc = null, Flags flags = Flags.None)
@@ -395,6 +450,10 @@ namespace Microsoft.PowerFx.Core.Parser
                             break;
 
                         case TokKind.Semicolon:
+                            if (_flags.HasFlag(Flags.NamedFormulas))
+                            {
+                                goto default;
+                            }
                             // Only allow this when expression chaining is enabled (e.g. in behavior rules).
                             if ((_flags & Flags.EnableExpressionChaining) == 0)
                                 goto case TokKind.False;
@@ -513,6 +572,14 @@ namespace Microsoft.PowerFx.Core.Parser
                 case TokKind.True:
                 case TokKind.False:
                     return new BoolLitNode(ref _idNext, _curs.TokMove());
+                case TokKind.StrInterpStart:
+                    var res = ParseStringInterpolation();
+                    var tokCur = _curs.TokCur;
+                    if(FeatureFlags.StringInterpolation)
+                    {
+                        return res;
+                    }
+                    return CreateError(tokCur, TexlStrings.ErrBadToken);
                 case TokKind.StrLit:
                     return new StrLitNode(ref _idNext, _curs.TokMove().As<StrLitToken>());
 
@@ -664,6 +731,110 @@ namespace Microsoft.PowerFx.Core.Parser
             }
 
             return new Identifier(at, tok);
+        }
+
+        private TexlNode ParseStringInterpolation()
+        {
+            Contracts.Assert(_curs.TidCur == TokKind.StrInterpStart);
+            var startToken = _curs.TokMove();
+
+            IdentToken headToken = new IdentToken(IdentToken.StrInterpIdent, startToken.Span);
+            Identifier head = new Identifier(headToken);
+            ITexlSource headTrivia = ParseTrivia();
+            TexlNode headNode = null;
+
+            Contracts.AssertValue(head);
+            Contracts.AssertValueOrNull(headNode);
+
+            Token leftParen = startToken;
+            var leftTrivia = headTrivia;
+
+            if (_curs.TidCur == TokKind.StrInterpEnd)
+            {
+                var strLitToken = new StrLitToken("", headToken.Span);
+                _curs.TokMove();
+                return new StrLitNode(ref _idNext, strLitToken);
+            }
+
+            var rgtokCommas = new List<Token>();
+            var arguments = new List<TexlNode>();
+            var sourceList = new List<ITexlSource>();
+            sourceList.Add(new TokenSource(leftParen));
+            sourceList.Add(leftTrivia);
+            for (var i = 0; ; i++)
+            {
+                if (_curs.TidCur == TokKind.IslandStart)
+                {
+                    if (i != 0)
+                    {
+                        var comma = _curs.TokMove();
+                        rgtokCommas.Add(comma);
+                        sourceList.Add(new TokenSource(comma));
+                        sourceList.Add(ParseTrivia());
+                    }
+                    else
+                    {
+                        _curs.TokMove();
+                    }
+                }
+                else if (_curs.TidCur == TokKind.IslandEnd)
+                {
+                    var peek1 = _curs.TidPeek(1);
+                    if (peek1 != TokKind.StrInterpEnd && peek1 != TokKind.IslandStart)
+                    {
+                        var comma = _curs.TokMove();
+                        rgtokCommas.Add(comma);
+                        sourceList.Add(new TokenSource(comma));
+                        sourceList.Add(ParseTrivia());
+                    }
+                    else
+                    {
+                        _curs.TokMove();
+                    }
+                }
+                else if (_curs.TidCur == TokKind.StrInterpEnd || _curs.TidCur == TokKind.Eof)
+                {
+                    break;
+                }
+                else
+                {
+                    var argument = ParseExpr(Precedence.None);
+                    arguments.Add(argument);
+                    sourceList.Add(new NodeSource(argument));
+                    sourceList.Add(ParseTrivia());
+                }
+            }
+
+            Contracts.Assert(_curs.TidCur == TokKind.StrInterpEnd || _curs.TidCur == TokKind.Eof);
+
+            Token parenClose = null;
+            if (_curs.TidCur == TokKind.StrInterpEnd)
+                parenClose = TokEat(TokKind.StrInterpEnd);
+            if (parenClose != null)
+                sourceList.Add(new TokenSource(parenClose));
+
+            var list = new ListNode(
+                ref _idNext,
+                leftParen,
+                arguments.ToArray(),
+                CollectionUtils.ToArray(rgtokCommas),
+                new SourceList(sourceList));
+
+            ITexlSource headNodeSource = new IdentifierSource(head);
+            if (headNode != null)
+                headNodeSource = new NodeSource(headNode);
+
+            return new CallNode(
+                ref _idNext,
+                leftParen,
+                new SourceList(
+                    headNodeSource,
+                    headTrivia,
+                    new NodeSource(list)),
+                head,
+                headNode,
+                list,
+                parenClose);
         }
 
         // Parse a namespace-qualified invocation, e.g. Facebook.GetFriends()
