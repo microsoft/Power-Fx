@@ -1,0 +1,14 @@
+﻿>> With(Blank(), Blank())
+Blank()
+
+>> With( {y : 3} , y*y)
+9
+
+// Scoping. inner With:
+// 1st arg resolves against outer With. 
+// 2nd arg resolves at record scope
+>> With({x : 5}, With({ x : x*2}, x))
+10
+
+>> With(First(First(LastN(ForAll(Table({Value:1}, {Value:0}, {Value:2}), Table({a: 1/ThisRecord.Value})), 2)).Value), a * a)
+#Error

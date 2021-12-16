@@ -1,0 +1,444 @@
+﻿>> "foo"
+"foo"
+
+>> ""
+""
+
+>> Left("foo", 1)
+"f"
+
+>> Left(Text(100), If(true, 1, 0))
+"1"
+
+>> Left("foo", 100)
+"foo"
+
+>> Left("foo", 0)
+""
+
+>> Left("foo", -1)
+#Error
+
+>> Left("foo", 1/0)
+#Error
+
+>> Left(Blank(), 1)
+""
+
+>> Left("foo", Blank())
+""
+
+>> Right("bar", 1)
+"r"
+
+>> Right(Text(false), 3-2)
+"e"
+
+>> Right("bar", 77)
+"bar"
+
+>> Right("bar", 0)
+""
+
+>> Right("bar", -1)
+#Error
+
+>> Right("foo", 1/0)
+#Error
+
+>> Right(Blank(), 1)
+""
+
+>> Right("foo", Blank())
+""
+
+>> Mid("foobar", 2, 3)
+"oob"
+
+>> Mid("foobar", 3)
+"obar"
+
+// numerical parameters are truncated
+>> Mid("abcdef", 3.1, 1.9)
+"c"
+
+>> Mid("foo" & "bar", If(false, 1, 2), 8/4)
+"oo"
+
+>> Mid("foo", 100)
+""
+
+>> Mid("bar", -1)
+#Error
+
+>> IsError(Mid("bar", -1))
+true
+
+>> Mid("bar", 2, -1)
+#Error
+
+>> IsError(Mid("bar", 2, -1))
+true
+
+>> Mid("foo", 0)
+#Error
+
+Mid(Text(1/0, "#.000"), 1)
+#Error
+
+>> IsError(Mid("foo", 0))
+true
+
+>> Mid("foo", 1, 0)
+""
+
+>> IsError(Mid("foo", 2, 0))
+false
+
+>> Len("foo")
+3
+
+>> Len("foo" & "bar")
+6
+
+>> Len(If(true, "foo", "bar!"))
+3
+
+>> Len(Blank())
+0
+
+Len(Text(1/0, "#.000"))
+#Error
+
+>> "f" in "foo"
+true
+
+>> "f" in "FOO"
+true
+
+>> "F" in "foo"
+true
+
+>> "yes" in "no"
+false
+
+>> "A" exactin "BAR"
+true
+
+>> "a" exactin "BAR"
+false
+
+>> "A" exactin "bar"
+false
+
+>> StartsWith("foo", "f")
+true
+
+>> StartsWith("FOO", "f")
+/*InterpreterRunner*/ #Skip
+true
+
+>> StartsWith("FOO", "O")
+false
+
+>> StartsWith("foo", "")
+true
+
+>> StartsWith("foo", Blank())
+false
+
+>> StartsWith("foobar", Text(1/0))
+/*SqlRunner*/ Compile Error
+#Error
+
+>> EndsWith("foobar", "bar")
+true
+
+>> EndsWith("foobar", "foo")
+false
+
+>> EndsWith("foobar", "")
+true
+
+>> EndsWith("foobar", Blank())
+false
+
+>> EndsWith("foobar", Text(1/0))
+/*SqlRunner*/ Compile Error
+#Error
+
+>> TrimEnds("   Hello     World   ")
+"Hello     World"
+
+>> TrimEnds(Blank())
+""
+
+>> TrimEnds(Text(1/0))
+#Error
+
+>> Trim("   Hello     World   ")
+"Hello World"
+
+>> Trim(Blank())
+""
+
+>> Trim(Text(1/0))
+#Error
+
+>> Lower("E. E. Cummings")
+"e. e. cummings"
+
+>> Lower(Blank())
+""
+
+>> Lower(Text(1/0, "000"))
+#Error
+
+>> Upper("Important!")
+"IMPORTANT!"
+
+>> Upper(Blank())
+""
+
+>> Upper(Text(1/0, "000"))
+#Error
+
+>> Substitute("abcabcabc", "ab", "xx")
+"xxcxxcxxc"
+
+>> Substitute("abcabcabc", "ab", "xx", 2)
+"abcxxcabc"
+
+>> Substitute("abcabcabc", "ab", "xx", Len("ab") + 1)
+"abcabcxxc"
+
+>> Substitute("abcabcabc", "xx", "yy", 1)
+"abcabcabc"
+
+>> Substitute("abcabcabc", "ab", "xx", 4)
+"abcabcabc"
+
+>> Substitute("abcabcabc", "ab", "xx", 0)
+#Error
+
+>> Substitute("abcabcabc", "ab", "xx", 1/0)
+#Error
+
+>> Substitute("abcabcabc", "ab", "xx", 0)
+#Error
+
+>> Substitute("abcabcabc", "ab", "xx", Blank())
+"xxcxxcxxc"
+
+>> Substitute("abcabcabc", Blank(), "xx")
+"abcabcabc"
+
+>> Substitute("abcabcabc", Blank(), "xx", 2)
+"abcabcabc"
+
+>> Substitute("abcabcabc", "ab", Blank())
+"ccc"
+
+>> Substitute("abcabcabc", "ab", Blank(), 2)
+"abccabc"
+
+>> Substitute("abcabcabc", "", "xx")
+"abcabcabc"
+
+>> IsError(Substitute("abcabcabc", "ab", "xx", 0))
+true
+
+>> Substitute("abcabcabc", "ab", "xx", -2)
+#Error
+
+>> IsError(Substitute("abcabcabc", "ab", "xx", -2))
+true
+
+>> Replace("abcabcabc", 4, 2, "xx")
+"abcxxcabc"
+
+>> Replace("abcabcabc", 200, 240, "xx")
+"abcabcabcxx"
+
+>> Replace("abcabcabc", 200, 2, "xx")
+"abcabcabcxx"
+
+>> Replace("abcabcabc", 4, 240, "xx")
+"abcxx"
+
+>> Replace("abcabcabc", 0, 0, "xx")
+#Error
+
+>> IsError(Replace("abcabcabc", 0, 0, "xx"))
+true
+
+>> Replace("abcabcabc", 1, -2, "xx")
+#Error
+
+>> IsError(Replace("abcabcabc", 1, -2, "xx"))
+true
+
+>> Replace("abcabcabc", -1, -2, "xx")
+#Error
+
+>> IsError(Replace("abcabcabc", -1, -2, "xx"))
+true
+
+>> Concatenate("a", "b", Text(7))
+"ab7"
+
+>> Concatenate("a", "b", Blank())
+"ab"
+
+>> Concatenate(Text(1/0, "000"), "b", Text(7))
+#Error
+
+// Scalar + Table
+>> Concatenate("a", Table({b:"1"},{b:"2"}))
+[{Result:"a1"},{Result:"a2"}]
+
+>> Concatenate("a", LastN(Table({b:"1"},{b:"2"}), 0))
+[]
+
+>> Concatenate("a", If(1<0, ["txt"]))
+[]
+
+>> Concatenate("a", If(1/0<2, ["txt"]))
+#Error
+
+>> Concatenate("a", ["hello", Mid("great", -1), "world"])
+[{Result:"ahello"},{Result:Microsoft.PowerFx.Core.Public.Values.ErrorValue},{Result:"aworld"}]
+
+>> Concatenate("a", Table({a:"one"},If(1<0,{a:"two"}),{a:"three"}))
+[{Result:"aone"},{Result:"a"},{Result:"athree"}]
+
+>> Concatenate("a", Table({a:"one"},If(1/0<2,{a:"two"}),{a:"three"}))
+Microsoft.PowerFx.Core.Public.Values.ErrorValue
+
+>> Concatenate(Blank(), ["hello", Mid("great", -1), "world"])
+[{Result:"hello"},{Result:Microsoft.PowerFx.Core.Public.Values.ErrorValue},{Result:"world"}]
+
+>> Concatenate(Blank(), Table({a:"one"},If(1<0,{a:"two"}),{a:"three"}))
+[{Result:"one"},{Result:""},{Result:"three"}]
+
+>> Concatenate(Blank(), Table({a:"one"},If(1/0<2,{a:"two"}),{a:"three"}))
+Microsoft.PowerFx.Core.Public.Values.ErrorValue
+
+// Table + Scalar (Reverse Arguments)
+>> Concatenate(Table({b:"1"},{b:"2"}), "a")
+[{Result:"1a"},{Result:"2a"}]
+
+>> Concatenate(LastN(Table({b:"1"},{b:"2"}), 0), "a")
+[]
+
+>> Concatenate(If(1<0, ["txt"]), "a")
+[]
+
+>> Concatenate(If(1/0<2, ["txt"]), "a")
+#Error
+
+>> Concatenate(["hello", Mid("great", -1), "world"], "a")
+[{Result:"helloa"},{Result:Microsoft.PowerFx.Core.Public.Values.ErrorValue},{Result:"worlda"}]
+
+>> Concatenate(Table({a:"one"},If(1<0,{a:"two"}),{a:"three"}), "a")
+[{Result:"onea"},{Result:"a"},{Result:"threea"}]
+
+>> Concatenate(Table({a:"one"},If(1/0<2,{a:"two"}),{a:"three"}), "a")
+Microsoft.PowerFx.Core.Public.Values.ErrorValue
+
+>> Concatenate(["hello", Mid("great", -1), "world"], Blank())
+[{Result:"hello"},{Result:Microsoft.PowerFx.Core.Public.Values.ErrorValue},{Result:"world"}]
+
+>> Concatenate(Table({a:"one"},If(1<0,{a:"two"}),{a:"three"}), Blank())
+[{Result:"one"},{Result:""},{Result:"three"}]
+
+>> Concatenate(Table({a:"one"},If(1/0<2,{a:"two"}),{a:"three"}), Blank())
+Microsoft.PowerFx.Core.Public.Values.ErrorValue
+
+// Table + Table
+>> Concatenate(["one", "two"], [1, 2, 3, 4])
+[{Result:"one1"},{Result:"two2"},{Result:"3"},{Result:"4"}]
+
+>> Concatenate(["one", "two"], LastN(Table({b:"1"},{b:"2"}), 0))
+[{Result:"one"},{Result:"two"}]
+
+>> Concatenate(["one", "two"], If(1<0, ["txt"]))
+[{Result:"one"},{Result:"two"}]
+
+>> Concatenate(["one", "two"], If(1/0<2, ["txt"]))
+Microsoft.PowerFx.Core.Public.Values.ErrorValue
+
+>> Concatenate(["one", "two"], Table({a:"one"},If(1<0,{a:"two"}),{a:"three"}))
+[{Result:"oneone"},{Result:"two"},{Result:"three"}]
+
+>> Concatenate(["one", "two"], ["hello", Mid("great", -1), "world"])
+[{Result:"onehello"},{Result:Microsoft.PowerFx.Core.Public.Values.ErrorValue},{Result:"world"}]
+
+>> Concatenate(["a","b","c","d"], "-", ["1", "2"], "-", ["x", "y", "z"], "!")
+[{Result:"a-1-x!"},{Result:"b-2-y!"},{Result:"c--z!"},{Result:"d--!"}]
+
+>> $"Hello {"World!"}"
+"Hello World!"
+
+>> $"Hello {"World!"} 2"
+"Hello World! 2"
+
+>> $"One {$"Two {"Three"}"} Four"
+"One Two Three Four"
+
+>> $"This string {{{"has"}}} curly braces"
+"This string {has} curly braces"
+
+>> $"This string {{ has }} curly braces"
+"This string { has } curly braces"
+
+>> "This string {{ has }} curly braces"
+"This string {{ has }} curly braces"
+
+>> $""
+""
+
+>> $"Hello"
+"Hello"
+
+>> $"{123}"
+"123"
+
+>> $"{123}{456}"
+"123456"
+
+>> $"{"
+Errors: Error 3-4: Unexpected characters. Characters are used in the formula in an unexpected way.
+
+>> $"}"
+Errors: Error 2-2: Unexpected characters. Characters are used in the formula in an unexpected way.
+
+>> $"{" & ""
+Errors: Error 3-9: Unexpected characters. Characters are used in the formula in an unexpected way.
+
+>> $"}" & ""
+Errors: Error 2-2: Unexpected characters. Characters are used in the formula in an unexpected way.
+
+>> $"{
+Errors: Error 0-2: Invalid number of arguments: received 0, expected 1 or more.
+
+>> $"}
+Errors: Error 2-2: Unexpected characters. Characters are used in the formula in an unexpected way.
+
+>> $"{1}{2}{{3{{4{{5{{6{{7"
+"12{3{4{5{6{7"
+
+>> $"{{"
+"{"
+
+>> $"{{a}}"
+"{a}"
+
+>> $"-{{a}}-"
+"-{a}-"
+
+>> $"-{{a}}"
+"-{a}"
+
+>> $"{{a}}-"
+"{a}-"

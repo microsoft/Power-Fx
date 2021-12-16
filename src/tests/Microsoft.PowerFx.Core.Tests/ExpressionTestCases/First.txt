@@ -1,0 +1,56 @@
+﻿>> First([1, 2, 3, 4, 5])
+{Value:1}
+
+>> First(Blank())
+Blank()
+
+>> First([1, 1/0, 3])
+{Value:1}
+
+>> First([1/0, 2, 3]).Value
+#Error
+
+>> First(Sort([-2, -1, 0, 1, 2], 1 / Value))
+#Error
+
+>> FirstN([1, 2, 3, 4, 5], 2)
+[1,2]
+
+>> FirstN([1, 2, 3, 4, 5], 6)
+[1,2,3,4,5]
+
+>> FirstN([1, 2, 3, 4, 5], -1)
+[]
+
+>> FirstN([1, 2, 3, 4, 5], Blank())
+Blank()
+
+>> FirstN(Blank(), 2)
+Blank()
+
+>> FirstN(Sort([-2, -1, 0, 1, 2], 1 / Value), 2)
+#Error
+
+>> FirstN([1, 2, 3, 4, 5], 1/0)
+#Error
+
+>> First(Table({a:1,b:2},{c:3})).c
+Blank()
+
+>> First(LastN(Table({a:"1", b:"101"}, {a:"2"}, {a:"3"}), 1)).b
+Blank()
+
+>> First(Table({a:{aa:11,ab:12},b:1},{a:{ac:23},b:2})).a.ac
+Blank()
+
+>> First(Table({a:{aa:11,ab:12},b:1},{a:{ac:23},b:2})).a.aa
+11
+
+>> First(Table({a:{Value:2},b:1},{a:{Value:1},b:2})).a
+{Value:2}
+
+>> First(First(Table({a:{aa:11,ab:12,ad:Table({aaa:1},{aaa:2})},b:1},{a:{ac:23,ad:Table({bbb:1},{bbb:2})},b:2})).a.ad).bbb
+Blank()
+
+>> First(First(Table({a:{aa:11,ab:12,ad:Table({aaa:1},{aaa:2})},b:1},{a:{ac:23,ad:Table({bbb:1},{bbb:2})},b:2})).a.ad).aaa
+1

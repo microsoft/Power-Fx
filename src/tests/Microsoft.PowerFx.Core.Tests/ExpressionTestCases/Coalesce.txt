@@ -1,0 +1,32 @@
+﻿// https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-isblank-isempty
+
+// Colesce works with numbers
+>> Coalesce( Blank(), 1 )
+1
+
+// Not-empty
+>> Coalesce( "", "x" )
+"x"
+
+>> Coalesce( Blank(), "", Blank(), "", "3", "4" )
+"3"
+
+>> Coalesce("")
+Blank()
+
+// Lazy evaluation, doesn't eval all arguements. 
+>> Coalesce( 5, 1/0 )
+5
+
+>> Coalesce(false,true)
+false
+
+>> Coalesce(true,false)
+true
+
+// Hits product bug?
+>> Coalesce(Blank())
+Blank()
+
+>> Coalesce(Blank(), 1/0, 10)
+#Error

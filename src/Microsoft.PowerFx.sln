@@ -1,0 +1,80 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31717.71
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libraries", "Libraries", "{4269F3C3-6B42-419B-B64A-3E6DC0F1574A}"
+	ProjectSection(SolutionItems) = preProject
+		libraries\Directory.Build.props = libraries\Directory.Build.props
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{AD743B78-D61F-4FBF-B620-FA83CE599A50}"
+	ProjectSection(SolutionItems) = preProject
+		tests\Directory.Build.props = tests\Directory.Build.props
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.PowerFx.Core", "libraries\Microsoft.PowerFx.Core\Microsoft.PowerFx.Core.csproj", "{C4AE1B00-36BB-4D5F-8CC9-E51979BE2830}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.PowerFx.Interpreter", "libraries\Microsoft.PowerFx.Interpreter\Microsoft.PowerFx.Interpreter.csproj", "{E59979B0-F267-46DC-B628-941D31C3CB7C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.PowerFx.LanguageServerProtocol", "libraries\Microsoft.PowerFx.LanguageServerProtocol\Microsoft.PowerFx.LanguageServerProtocol.csproj", "{AC286BA6-D439-4EDA-A468-2B18DB53E163}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.PowerFx.Core.Tests", "tests\Microsoft.PowerFx.Core.Tests\Microsoft.PowerFx.Core.Tests.csproj", "{085B4B1A-1F94-4A9C-AEBF-47E0E0B0A983}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.PowerFx.Interpreter.Tests", "tests\Microsoft.PowerFx.Interpreter.Tests\Microsoft.PowerFx.Interpreter.Tests.csproj", "{70C7007C-3288-48F1-A1F0-02F5CC837D4E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{1BF2F760-4DBD-450B-ADED-81548000432D}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		CodeCoverage.runsettings = CodeCoverage.runsettings
+		PowerFx.ruleset = PowerFx.ruleset
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.PowerFx.Transport.Attributes", "libraries\Microsoft.PowerFx.Transport.Attributes\Microsoft.PowerFx.Transport.Attributes.csproj", "{ED98A690-863A-443C-9DBB-8F0F5BCACE2B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C4AE1B00-36BB-4D5F-8CC9-E51979BE2830}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C4AE1B00-36BB-4D5F-8CC9-E51979BE2830}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C4AE1B00-36BB-4D5F-8CC9-E51979BE2830}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C4AE1B00-36BB-4D5F-8CC9-E51979BE2830}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E59979B0-F267-46DC-B628-941D31C3CB7C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E59979B0-F267-46DC-B628-941D31C3CB7C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E59979B0-F267-46DC-B628-941D31C3CB7C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E59979B0-F267-46DC-B628-941D31C3CB7C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AC286BA6-D439-4EDA-A468-2B18DB53E163}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AC286BA6-D439-4EDA-A468-2B18DB53E163}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AC286BA6-D439-4EDA-A468-2B18DB53E163}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AC286BA6-D439-4EDA-A468-2B18DB53E163}.Release|Any CPU.Build.0 = Release|Any CPU
+		{085B4B1A-1F94-4A9C-AEBF-47E0E0B0A983}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{085B4B1A-1F94-4A9C-AEBF-47E0E0B0A983}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{085B4B1A-1F94-4A9C-AEBF-47E0E0B0A983}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{085B4B1A-1F94-4A9C-AEBF-47E0E0B0A983}.Release|Any CPU.Build.0 = Release|Any CPU
+		{70C7007C-3288-48F1-A1F0-02F5CC837D4E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{70C7007C-3288-48F1-A1F0-02F5CC837D4E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{70C7007C-3288-48F1-A1F0-02F5CC837D4E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{70C7007C-3288-48F1-A1F0-02F5CC837D4E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ED98A690-863A-443C-9DBB-8F0F5BCACE2B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ED98A690-863A-443C-9DBB-8F0F5BCACE2B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ED98A690-863A-443C-9DBB-8F0F5BCACE2B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ED98A690-863A-443C-9DBB-8F0F5BCACE2B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{C4AE1B00-36BB-4D5F-8CC9-E51979BE2830} = {4269F3C3-6B42-419B-B64A-3E6DC0F1574A}
+		{E59979B0-F267-46DC-B628-941D31C3CB7C} = {4269F3C3-6B42-419B-B64A-3E6DC0F1574A}
+		{AC286BA6-D439-4EDA-A468-2B18DB53E163} = {4269F3C3-6B42-419B-B64A-3E6DC0F1574A}
+		{085B4B1A-1F94-4A9C-AEBF-47E0E0B0A983} = {AD743B78-D61F-4FBF-B620-FA83CE599A50}
+		{70C7007C-3288-48F1-A1F0-02F5CC837D4E} = {AD743B78-D61F-4FBF-B620-FA83CE599A50}
+		{ED98A690-863A-443C-9DBB-8F0F5BCACE2B} = {4269F3C3-6B42-419B-B64A-3E6DC0F1574A}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {30372F91-B206-4351-A621-F0E2773C337B}
+	EndGlobalSection
+EndGlobal
