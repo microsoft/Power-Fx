@@ -1,45 +1,45 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <root>
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
         <xsd:choice maxOccurs="unbounded">
           <xsd:element name="metadata">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
               </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string"/>
-              <xsd:attribute name="type" type="xsd:string"/>
-              <xsd:attribute name="mimetype" type="xsd:string"/>
-              <xsd:attribute ref="xml:space"/>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="assembly">
             <xsd:complexType>
-              <xsd:attribute name="alias" type="xsd:string"/>
-              <xsd:attribute name="name" type="xsd:string"/>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="data">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
-              <xsd:attribute ref="xml:space"/>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="resheader">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required"/>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
             </xsd:complexType>
           </xsd:element>
         </xsd:choice>
@@ -447,7 +447,18 @@
     <comment>function_parameter - Argument to the Concatenate function - the text to be concatenated.</comment>
   </data>
   <data name="AboutConcatenate_text" xml:space="preserve">
-    <value>Een tekst of een kolom met tekstwaarden die moet worden samengevoegd met de overige argumenten.</value>
+    <value>Een tekstwaarde die moet worden samengevoegd met de rest van de argumenten.</value>
+  </data>
+  <data name="AboutConcatenateT" xml:space="preserve">
+    <value>Voegt verschillende tekstwaarden of tabellen samen in een kolom met tekstwaarden.</value>
+    <comment>Description of 'Concatenate' function.</comment>
+  </data>
+  <data name="ConcatenateTArg1" xml:space="preserve">
+    <value>waarde</value>
+    <comment>function_parameter - Argument to the Concatenate function - the text or table to be concatenated.</comment>
+  </data>
+  <data name="AboutConcatenate_value" xml:space="preserve">
+    <value>Een tekstwaarde of een kolom met tekstwaarden, die moet worden samengevoegd met de rest van de argumenten.</value>
   </data>
   <data name="AboutConcat" xml:space="preserve">
     <value>Hiermee worden alle tekstwaarden die zijn geproduceerd door het evalueren van de opgegeven expressie over de opgegeven tabel in één tekstwaarde samengevoegd.</value>
@@ -812,6 +823,10 @@
     <value>Hiermee worden de huidige datum en tijd geretourneerd.</value>
     <comment>Description of 'Now' function.</comment>
   </data>
+  <data name="AboutUTCNow" xml:space="preserve">
+    <value>Retourneert de huidige datum en tijd in UTC.</value>
+    <comment>Description of 'UTCNow' function.</comment>
+  </data>
   <data name="AboutTimeZoneOffset" xml:space="preserve">
     <value>Hiermee wordt het verschil in tijd tussen UTC-tijd en de lokale tijd geretourneerd in minuten. Als uw tijdzone bijvoorbeeld UTC+2 is, wordt -120 geretourneerd.</value>
     <comment>Description of 'TimeZoneOffset' function.</comment>
@@ -827,6 +842,10 @@
   <data name="AboutToday" xml:space="preserve">
     <value>Hiermee wordt de huidige datum geretourneerd.</value>
     <comment>Description of 'Today' function.</comment>
+  </data>
+  <data name="AboutUTCToday" xml:space="preserve">
+    <value>Retourneert de huidige datum in UTC.</value>
+    <comment>Description of 'UTCToday' function.</comment>
   </data>
   <data name="AboutWeekNum" xml:space="preserve">
     <value>Retourneert het weeknummer voor een bepaalde datum.</value>
@@ -1255,6 +1274,12 @@
   <data name="AboutAtan2Arg2" xml:space="preserve">
     <value>y_coördinaat</value>
     <comment>function_parameter - Second parameter to the Atan function - the y coordinate for arctangent to be returned. When translating, maintain as a single word (i.e., do not add spaces)</comment>
+  </data>
+  <data name="AboutAtan2_x_coordinate" xml:space="preserve">
+    <value>x-coördinaat.</value>
+  </data>
+  <data name="AboutAtan2_y_coordinate" xml:space="preserve">
+    <value>y-coördinaat.</value>
   </data>
   <data name="AboutSqrt" xml:space="preserve">
     <value>Hiermee wordt de vierkantswortel van een getal geretourneerd.</value>
@@ -3373,6 +3398,17 @@
     <value>datum</value>
     <comment>function_parameter - First argument to the IsToday function - the date to be tested.</comment>
   </data>
+  <data name="AboutIsUTCToday" xml:space="preserve">
+    <value>Controleert of de opgegeven datum vandaag in UTC is en retourneert waar of onwaar.</value>
+    <comment>Description of 'IsUTCToday' function</comment>
+  </data>
+  <data name="AboutIsUTCToday_date" xml:space="preserve">
+    <value>De datumwaarde die moet worden getest.</value>
+  </data>
+  <data name="IsUTCTodayFuncArg1" xml:space="preserve">
+    <value>datum</value>
+    <comment>function_parameter - First argument to the IsUTCToday function - the date to be tested.</comment>
+  </data>
   <data name="AboutMod" xml:space="preserve">
     <value>Hiermee wordt het restgetal geretourneerd nadat een getal is gedeeld door een deler. Het resultaat heeft hetzelfde teken als de deler.</value>
     <comment>Description of 'Mod' function.</comment>
@@ -5468,9 +5504,21 @@
     <value>Alleen tekenreeksen voor de korte datum- en tijdnotatie worden ondersteund in formulekolommen.</value>
     <comment>Error Message. Used in formula columns for scenarios where the maker supplies an invalid format string</comment>
   </data>
-  <data name="FormulaColumns_UtcResultWarning" xml:space="preserve">
-    <value>Het onderdeel {0} van deze formule werkt mogelijk niet zoals verwacht, afhankelijk van de tijdzone van de gebruiker, omdat de bewerking wordt uitgevoerd in UTC (Universal Coordinated Time) in formulekolommen.</value>
-    <comment>Error Message. Used as a warning in formula columns for scenarios where the operation will be performed in UTC instead of the user's local time zone. The {0} will be the name of the function.</comment>
+  <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
+    <value>Landspecifieke opmaaktokens, zoals '.' en ',', worden niet ondersteund in formulekolommen.</value>
+    <comment>Error Message. Used in formula columns for scenarios where the maker supplies an invalid format string</comment>
+  </data>
+  <data name="FormulaColumns_FunctionNotSupported" xml:space="preserve">
+    <value>{0} wordt niet ondersteund in formulekolommen. Gebruik {1}.</value>
+    <comment>Error Message. Used in formula columns for scenarios where the maker attempts to use a function that is not supported, providing an alternate function name.  The {0} will be the name of the function that is not supported, and {1} is the name of the suggested alternate.</comment>
+  </data>
+  <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
+    <value>Dit resultaattype {0} wordt niet ondersteund in formulekolommen.</value>
+    <comment>Error Message. Used in formula columns for a formula that returns a type which is not supported.</comment>
+  </data>
+  <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
+    <value>Het resultaattype voor deze formule is waarschijnlijk {0}, maar het werkelijke resultaattype is {1}. Het resultaattype van een formulekolom kan niet worden gewijzigd.</value>
+    <comment>Error Message. Used in formula columns for a formula that returns an unexpected result type during editing. The {0} will be the name of the required type. The {1} will be the name of the incorrect type.</comment>
   </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
     <value>Er wordt een operand verwacht. Voor de formule of expressie wordt een geldige operand verwacht. U kunt bijvoorbeeld de operand 2 toevoegen aan de expressie 1 +_ zodat het resultaat 3 ontstaat. U kunt ook de operand 'daar' toevoegen aan de expressie 'Hallo '&amp; _ voor het resultaat Hallo daar.</value>
@@ -5486,7 +5534,7 @@
   </data>
   <data name="ErrorResource_ErrBadToken_LongMessage" xml:space="preserve">
     <value>Het teken \ wordt bijvoorbeeld niet verwacht na een getal zoals bij 32\. Er wordt een spatie (32 ) verwacht als het alleen het getal 32 betreft, anders wordt er een ander getal (zoals 323) verwacht.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrBadToken_HowToFix_1" xml:space="preserve">
     <value>Verwijder de onverwachte tekens of vervang deze.</value>
@@ -5506,11 +5554,11 @@
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_LongMessage" xml:space="preserve">
     <value>Het teken \ wordt bijvoorbeeld niet verwacht na een getal zoals bij 32\. Er wordt een spatie (32) verwacht als het alleen het getal 32 betreft, anders wordt er een ander getal (zoals 323) verwacht.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_HowToFix_1" xml:space="preserve">
     <value>Verwijder of vervang het onverwachte teken.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_Link_1" xml:space="preserve">
     <value>Artikel: Formuleverwijzing voor Power Apps</value>
@@ -5526,7 +5574,7 @@
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_LongMessage" xml:space="preserve">
     <value>Elke blokopmerking moet beginnen met /* en eindigen met */. Als u niet alle blokopmerkingen juist afsluit, wordt alle code na de opmerking deel van de opmerking. Als een opmerking uit slechts één regel bestaat, kunt u de opmerking beginnen met // en hoeft u geen id te plaatsen aan het einde van de opmerking.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_HowToFix_1" xml:space="preserve">
     <value>Voeg */ toe aan het einde van uw blokopmerking of vervang dit door een set regelopmerkingen.</value>
@@ -5546,7 +5594,7 @@
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_LongMessage" xml:space="preserve">
     <value>Deze fout treedt op als een formule bijvoorbeeld {{Val@ 7}} bevat in plaats van {{Val: 7}}. Wanneer u een variabele instelt, vereist de syntaxis een dubbele punt in plaats van een apenstaartje.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_HowToFix_1" xml:space="preserve">
     <value>Verwijder de onverwachte tekens of vervang deze door een verwacht teken.</value>
@@ -5566,7 +5614,7 @@
   </data>
   <data name="ErrorResource_ErrInvalidName_LongMessage" xml:space="preserve">
     <value>Deze fout treedt meestal op wanneer een formule verwijst naar een entiteit die niet meer bestaat (bijvoorbeeld een besturingselement dat u hebt verwijderd).</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrInvalidName_HowToFix_1" xml:space="preserve">
     <value>Verwijder of corrigeer de verwijzing naar de ongeldige naam.</value>
@@ -5586,7 +5634,7 @@
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_LongMessage" xml:space="preserve">
     <value>Deze fout wordt weergegeven wanneer een formule verwijst naar eigenschappen van componentgedrag met ongeldige syntaxis. (Bijvoorbeeld Component.OnCustomChange in plaats van Component.OnCustomChange())</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_HowToFix_1" xml:space="preserve">
     <value>Gebruik de juiste syntaxis om te verwijzen naar de eigenschap van componentgedrag. Bijvoorbeeld Component.OnCustomChange()</value>
@@ -5606,7 +5654,7 @@
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_LongMessage" xml:space="preserve">
     <value>Deze operator verwijst naar het besturingselement dat host is van het gegeven besturingselement en alle eigenschappen beschikbaar maakt.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_HowToFix_1" xml:space="preserve">
     <value>Verwijder de bovenliggende operator.</value>
@@ -5626,7 +5674,7 @@
   </data>
   <data name="ErrorResource_ErrTooManyUps_LongMessage" xml:space="preserve">
     <value>Bij elke nestniveau neemt de complexiteit toe. In Power Apps wordt het nesten van rijbereiken tot maximaal 63 niveaus ondersteund.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrTooManyUps_HowToFix_1" xml:space="preserve">
     <value>Herschrijf de formule met minder geneste niveaus.</value>
@@ -5638,7 +5686,7 @@
   </data>
   <data name="ErrorResource_ErrRuleNestedTooDeeply_LongMessage" xml:space="preserve">
     <value>Power Apps ondersteunt het nesten van expressies tot maximaal 50 niveaus. Een dergelijk diep geneste expressie is moeilijk te begrijpen en onderhouden.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrRuleNestedTooDeeply_HowToFix_1" xml:space="preserve">
     <value>Herschrijf de formule met minder geneste niveaus.</value>
@@ -5650,7 +5698,7 @@
   </data>
   <data name="ErrorResource_ErrOperatorExpected_LongMessage" xml:space="preserve">
     <value>Met operatoren worden operands samengevoegd. Deze fout doet zich voor als u twee functies (operands) combineert zonder dat hier een operator tussen staat, bijvoorbeeld Len("mijntekst")Len("mijntekst").</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrOperatorExpected_HowToFix_1" xml:space="preserve">
     <value>Bewerk de formule zodat hierin een operator tussen de operands is opgenomen.</value>
@@ -5670,7 +5718,7 @@
   </data>
   <data name="ErrorResource_ErrNumberExpected_LongMessage" xml:space="preserve">
     <value>Deze fout doet zich voor als u een functie gebruikt waarvoor een getal is vereist, maar u bijvoorbeeld een afbeelding opgeeft.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrNumberExpected_HowToFix_1" xml:space="preserve">
     <value>Bewerk de formule zodat de formule op deze positie resulteert in een getal.</value>
@@ -5690,7 +5738,7 @@
   </data>
   <data name="ErrorResource_ErrBooleanExpected_LongMessage" xml:space="preserve">
     <value>Een booleaanse waarde wordt ook wel een waar/onwaar-waarde genoemd in toepassingen zoals Microsoft Excel of een ja/nee-waarde in SharePoint. Deze fout doet zich voor als u een functie gebruikt waarvoor een booleaanse waarde is vereist, maar u bijvoorbeeld een datum opgeeft.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrBooleanExpected_HowToFix_1" xml:space="preserve">
     <value>Bewerk de formule zodat de formule op deze positie resulteert in een booleaanse waarde.</value>
@@ -5710,7 +5758,7 @@
   </data>
   <data name="ErrorResource_ErrColonExpected_LongMessage" xml:space="preserve">
     <value>Met een dubbele punt wordt een veldnaam, soms ook een kolomnaam genoemd, gescheiden van een veldwaarde in een record (bijvoorbeeld {Month:"1"}, {Month:"2"} …). Een dubbele punt wordt ook gebruikt voor de scheiding tussen uren, minuten en seconden (bijvoorbeeld "3:04").</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrColonExpected_HowToFix_1" xml:space="preserve">
     <value>Bewerk de formule zodat deze een dubbele punt bevat.</value>
@@ -5730,7 +5778,7 @@
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_LongMessage" xml:space="preserve">
     <value>Gedragsfuncties wijzigen de status van de app door waarden elders in de app te wijzigen. De functies Navigate, Patch, UpdateContext en Collect zijn veelvoorkomende gedragsfuncties. De eigenschappen OnSelect, OnVisible en andere eigenschappen die beginnen met 'On …', zijn veelvoorkomende op gedrag gebaseerde eigenschappen.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_HowToFix_1" xml:space="preserve">
     <value>De gedragsfunctie verplaatsen naar een op gedrag gebaseerde eigenschap.</value>
@@ -5750,7 +5798,7 @@
   </data>
   <data name="ErrorResource_ErrTestPropertyExpected_LongMessage" xml:space="preserve">
     <value>Testfuncties zijn de functies die kunnen worden gebruikt om gebruikersinvoer te simuleren bij het testen van een app. Veelgebruikte testfuncties zijn SetProperty, SelectRow en Assert. Deze kunnen alleen worden gebruikt in de testcases.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrTestPropertyExpected_HowToFix_1" xml:space="preserve">
     <value>Gebruik de functie in een testcase, maar niet in de app zelf.</value>
@@ -5762,7 +5810,7 @@
   </data>
   <data name="ErrorResource_ErrCannotCoerce_SourceType_TargetType_LongMessage" xml:space="preserve">
     <value>Power Apps kan bepaalde gegevenstypen in de formule voor u converteren naar andere typen. Het is bijvoorbeeld mogelijk om de tekenreeks 1 te converteren naar het getal 1, maar niet alle gegevenstypen kunnen in andere typen worden omgezet. Een afbeelding kan bijvoorbeeld niet naar een getal worden geconverteerd.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrCannotCoerce_SourceType_TargetType_HowToFix_1" xml:space="preserve">
     <value>Bewerk de formule zodat u de betrokken gegevens naar het verwachte type kunt converteren.</value>
@@ -5774,7 +5822,7 @@
   </data>
   <data name="ErrorResource_ErrStringExpected_LongMessage" xml:space="preserve">
     <value>Deze fout doet zich voor als u een functie gebruikt waarvoor een argument met tekst (of een tekenreeks) is vereist, maar u bijvoorbeeld een datum opgeeft.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrStringExpected_HowToFix_1" xml:space="preserve">
     <value>Bewerk de formule zodat de formule op deze positie resulteert in tekst.</value>
@@ -5794,7 +5842,7 @@
   </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_LongMessage" xml:space="preserve">
     <value>Deze fout doet zich voor als u een functie gebruikt waarvoor tekst of een getal is vereist, maar u bijvoorbeeld een booleaanse (waar/onwaar) waarde opgeeft.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_HowToFix_1" xml:space="preserve">
     <value>Bewerk de formule zodat de formule op deze positie resulteert in tekst of een getal.</value>
@@ -5814,7 +5862,7 @@
   </data>
   <data name="ErrorResource_ErrClosingBracketExpected_LongMessage" xml:space="preserve">
     <value>Een afsluitende accolade geeft het einde van een record aan (bijvoorbeeld {Month:"1"}, {Month:"2"} …).</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrClosingBracketExpected_HowToFix_1" xml:space="preserve">
     <value>Bewerk de formule zodanig dat deze een accolade bevat.</value>
@@ -5834,7 +5882,7 @@
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_LongMessage" xml:space="preserve">
     <value>Uw formule kan niet worden geëvalueerd omdat de waarden die in de formule worden vergeleken, niet van hetzelfde type zijn.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_HowToFix_1" xml:space="preserve">
     <value>Mogelijk moet u de waarde converteren om deze van hetzelfde type te maken, bijvoorbeeld door een datumtekenreeks (zoals '12/31/2018') te converteren naar een datumwaarde.</value>
@@ -5946,7 +5994,7 @@
   </data>
   <data name="ErrorResource_ErrTypeError_LongMessage" xml:space="preserve">
     <value>De gegevens komen mogelijk niet overeen met het verwachte type. (tekst, nummer, datum, tabel, record.)</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrTypeError_HowToFix_1" xml:space="preserve">
     <value>Controleer de typen van de waarden die worden gebruikt in de formule en zorg ervoor dat de typen overeenkomen.</value>
@@ -5974,7 +6022,7 @@
   </data>
   <data name="ErrorResource_ErrDateExpected_LongMessage" xml:space="preserve">
     <value>Deze fout doet zich voor als u een functie gebruikt waarvoor een datum is vereist, maar u bijvoorbeeld tekst opgeeft.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrDateExpected_HowToFix_1" xml:space="preserve">
     <value>Bewerk de formule zodat de formule op deze positie resulteert in een datum.</value>
@@ -5994,7 +6042,7 @@
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_LongMessage" xml:space="preserve">
     <value>Mogelijk kan de gegevensbron de formule niet verwerken en wordt er een onvolledige gegevensset geretourneerd. Uw toepassing kan onjuiste resultaten retourneren of zich onjuist gedragen als de gegevensset niet compleet is.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_HowToFix_1" xml:space="preserve">
     <value>Als uw gegevensset meer records bevat dan de limiet van 500, maar minder dan 2000 records, kunt u proberen de limiet opnieuw in te stellen.</value>
@@ -6030,7 +6078,7 @@
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_LongMessage" xml:space="preserve">
     <value>Mogelijk kan de gegevensbron de formule niet verwerken en wordt er een onvolledige gegevensset geretourneerd. Uw toepassing kan onjuiste resultaten retourneren of zich onjuist gedragen als de gegevensset niet compleet is.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_HowToFix_1" xml:space="preserve">
     <value>Als uw gegevensset meer records bevat dan de limiet van 500, maar minder dan 2000 records, kunt u proberen de limiet opnieuw in te stellen.</value>
@@ -6066,7 +6114,7 @@
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_LongMessage" xml:space="preserve">
     <value> De rechterzijde van de operator 'in' moet een kolomnaam zijn uit de juiste gegevensbron. Mogelijk kan de gegevensbron de formule niet verwerken en wordt er een onvolledige gegevensset geretourneerd. Uw toepassing kan onjuiste resultaten retourneren of zich onjuist gedragen als de gegevensset niet compleet is.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_1" xml:space="preserve">
     <value>Wijzig het item rechts van de operator 'in' naar een kolom uit de juiste gegevensbron.</value>
@@ -6107,7 +6155,7 @@
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_LongMessage" xml:space="preserve">
     <value> De rechterzijde van de operator 'in' is geen kolom uit de juiste gegevensbron. Mogelijk kan de gegevensbron de formule niet verwerken en wordt er een onvolledige gegevensset geretourneerd. Uw toepassing kan onjuiste resultaten retourneren of zich onjuist gedragen als de gegevensset niet compleet is.
         </value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_1" xml:space="preserve">
     <value>Wijzig het item rechts van de operator 'in' naar een kolom uit de juiste gegevensbron.</value>
@@ -6213,5 +6261,9 @@
   <data name="ErrorResource_ErrAsNotInContext_ShortMessage" xml:space="preserve">
     <value>De term 'as' is niet toegestaan in deze context</value>
     <comment>{Locked=As} This is an error message that shows up when the As keyword is used but is not valid</comment>
+  </data>
+  <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
+    <value>De genoemde formule moet eindigen met een puntkomma.</value>
+    <comment>A semicolon must terminate named formulas. For example, a=10;</comment>
   </data>
 </root>

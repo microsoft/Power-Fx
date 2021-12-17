@@ -1,45 +1,45 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <root>
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
         <xsd:choice maxOccurs="unbounded">
           <xsd:element name="metadata">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
               </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string"/>
-              <xsd:attribute name="type" type="xsd:string"/>
-              <xsd:attribute name="mimetype" type="xsd:string"/>
-              <xsd:attribute ref="xml:space"/>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="assembly">
             <xsd:complexType>
-              <xsd:attribute name="alias" type="xsd:string"/>
-              <xsd:attribute name="name" type="xsd:string"/>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="data">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
-              <xsd:attribute ref="xml:space"/>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="resheader">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required"/>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
             </xsd:complexType>
           </xsd:element>
         </xsd:choice>
@@ -447,7 +447,18 @@
     <comment>function_parameter - Argument to the Concatenate function - the text to be concatenated.</comment>
   </data>
   <data name="AboutConcatenate_text" xml:space="preserve">
-    <value>Text o columna de valors de text que es concatenaran amb la resta d'arguments.</value>
+    <value>Valor de text que es concatena amb la resta d'arguments.</value>
+  </data>
+  <data name="AboutConcatenateT" xml:space="preserve">
+    <value>Uneix diversos valors de text o taules en una columna de valors de text.</value>
+    <comment>Description of 'Concatenate' function.</comment>
+  </data>
+  <data name="ConcatenateTArg1" xml:space="preserve">
+    <value>valor</value>
+    <comment>function_parameter - Argument to the Concatenate function - the text or table to be concatenated.</comment>
+  </data>
+  <data name="AboutConcatenate_value" xml:space="preserve">
+    <value>Valor de text o columna de valors de text que es concatenen amb la resta d'arguments.</value>
   </data>
   <data name="AboutConcat" xml:space="preserve">
     <value>Uneix en un sol valor de text tots els valors de text que es produeixen mitjançant l'avaluació de l'expressió proporcionada a la taula especificada.</value>
@@ -812,6 +823,10 @@
     <value>Retorna la data i l'hora actual.</value>
     <comment>Description of 'Now' function.</comment>
   </data>
+  <data name="AboutUTCNow" xml:space="preserve">
+    <value>Retorna la data i l'hora actuals en l'hora UTC.</value>
+    <comment>Description of 'UTCNow' function.</comment>
+  </data>
   <data name="AboutTimeZoneOffset" xml:space="preserve">
     <value>Retorna la diferència horària entre l'hora UTC i l'hora local, en minuts. Per exemple, si el vostre fus horari és UTC+2, es retornarà -120.</value>
     <comment>Description of 'TimeZoneOffset' function.</comment>
@@ -827,6 +842,10 @@
   <data name="AboutToday" xml:space="preserve">
     <value>Retorna la data actual.</value>
     <comment>Description of 'Today' function.</comment>
+  </data>
+  <data name="AboutUTCToday" xml:space="preserve">
+    <value>Retorna la data actual en l'hora UTC.</value>
+    <comment>Description of 'UTCToday' function.</comment>
   </data>
   <data name="AboutWeekNum" xml:space="preserve">
     <value>Retorna el nombre de la setmana d'una data determinada.</value>
@@ -1255,6 +1274,12 @@
   <data name="AboutAtan2Arg2" xml:space="preserve">
     <value>coordenada_y</value>
     <comment>function_parameter - Second parameter to the Atan function - the y coordinate for arctangent to be returned. When translating, maintain as a single word (i.e., do not add spaces)</comment>
+  </data>
+  <data name="AboutAtan2_x_coordinate" xml:space="preserve">
+    <value>Coordenada X.</value>
+  </data>
+  <data name="AboutAtan2_y_coordinate" xml:space="preserve">
+    <value>Coordenada Y.</value>
   </data>
   <data name="AboutSqrt" xml:space="preserve">
     <value>Retorna l'arrel quadrada d'un nombre.</value>
@@ -3373,6 +3398,17 @@
     <value>data</value>
     <comment>function_parameter - First argument to the IsToday function - the date to be tested.</comment>
   </data>
+  <data name="AboutIsUTCToday" xml:space="preserve">
+    <value>Comprova si la data especificada és avui en UTC i retorna cert o fals.</value>
+    <comment>Description of 'IsUTCToday' function</comment>
+  </data>
+  <data name="AboutIsUTCToday_date" xml:space="preserve">
+    <value>Valor de data que es provarà.</value>
+  </data>
+  <data name="IsUTCTodayFuncArg1" xml:space="preserve">
+    <value>data</value>
+    <comment>function_parameter - First argument to the IsUTCToday function - the date to be tested.</comment>
+  </data>
   <data name="AboutMod" xml:space="preserve">
     <value>Retorna la resta després de dividir un nombre per un divisor. El resultat té el mateix signe que el divisor.</value>
     <comment>Description of 'Mod' function.</comment>
@@ -5465,12 +5501,24 @@
     <comment>Error Message. Used in formula columns for scenarios where values of different Date Time Behaviors are used together, which is not supported</comment>
   </data>
   <data name="FormulaColumns_DateTimeFormatNotSupported" xml:space="preserve">
-    <value>Només les cadenes de format de data i hora curtes s'admeten a les columnes de la fórmula.</value>
+    <value>Només s'admeten les cadenes de format curt de data i hora a les columnes de fórmula.</value>
     <comment>Error Message. Used in formula columns for scenarios where the maker supplies an invalid format string</comment>
   </data>
-  <data name="FormulaColumns_UtcResultWarning" xml:space="preserve">
-    <value>És possible que la part "{0}" d'aquesta fórmula no funcioni com està previst segons el fus horari de l'usuari, ja que l'operació es realitzarà en l'hora coordinada universal (UTC) a les columnes de la fórmula.</value>
-    <comment>Error Message. Used as a warning in formula columns for scenarios where the operation will be performed in UTC instead of the user's local time zone. The {0} will be the name of the function.</comment>
+  <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
+    <value>Els testimonis de format específics de la configuració regional, com ara "." i "," no s'admeten a les columnes de fórmula.</value>
+    <comment>Error Message. Used in formula columns for scenarios where the maker supplies an invalid format string</comment>
+  </data>
+  <data name="FormulaColumns_FunctionNotSupported" xml:space="preserve">
+    <value>La funció {0} no està admesa a les columnes de fórmula, utilitzeu la funció {1} en el seu lloc.</value>
+    <comment>Error Message. Used in formula columns for scenarios where the maker attempts to use a function that is not supported, providing an alternate function name.  The {0} will be the name of the function that is not supported, and {1} is the name of the suggested alternate.</comment>
+  </data>
+  <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
+    <value>Aquest tipus de resultat {0} no està admès a les columnes de fórmula.</value>
+    <comment>Error Message. Used in formula columns for a formula that returns a type which is not supported.</comment>
+  </data>
+  <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
+    <value>S'espera que el tipus de resultat d'aquesta fórmula sigui {0}, però el tipus de resultat real és {1}. El tipus de resultat d'una columna de fórmula no es pot canviar.</value>
+    <comment>Error Message. Used in formula columns for a formula that returns an unexpected result type during editing. The {0} will be the name of the required type. The {1} will be the name of the incorrect type.</comment>
   </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
     <value>S'espera un operand. La fórmula o l'expressió espera un operand vàlid. Per exemple, podeu afegir l'operand "2" a l'expressió "1 + _" per tal que el resultat sigui "3". També podeu afegir l'operand "com esteu?" a l'expressió "Hola, "&amp; _ " per tal que el resultat sigui "Hola, com esteu?".</value>
@@ -5486,7 +5534,7 @@
   </data>
   <data name="ErrorResource_ErrBadToken_LongMessage" xml:space="preserve">
     <value>Per exemple, el caràcter "\" no s'espera després d'un nombre, com ara: "32\". En canvi, sí que s'esperaria un espai ("32") per tal que només es mostri el número 32, o bé també s'esperaria un altre número (com ara "323").</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrBadToken_HowToFix_1" xml:space="preserve">
     <value>Suprimiu o substituïu els caràcters inesperats.</value>
@@ -5506,11 +5554,11 @@
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_LongMessage" xml:space="preserve">
     <value>Per exemple, el caràcter "\" no s'espera després d'un nombre, com ara: "32\". En canvi, sí que s'esperaria un espai ("32") per tal que només es mostri el número 32, o bé també s'esperaria un altre número (com ara "323").</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_HowToFix_1" xml:space="preserve">
     <value>Suprimiu o substituïu el caràcter inesperat.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_Link_1" xml:space="preserve">
     <value>Article: Referència de fórmules del Power Apps</value>
@@ -5526,7 +5574,7 @@
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_LongMessage" xml:space="preserve">
     <value>Cada comentari de bloc ha de començar per "/*" i acabar per "*/". Si no finalitzeu cada comentari de bloc correctament, tot el codi que vagi seguit del comentari formarà part del comentari. Si un comentari només comprèn una línia, podeu començar per "//" i no identificar el final del comentari.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_HowToFix_1" xml:space="preserve">
     <value>Afegiu "*/" al final del comentari del bloc o canvieu-lo per un conjunt de comentaris de línia.</value>
@@ -5546,7 +5594,7 @@
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_LongMessage" xml:space="preserve">
     <value>Aquest error es produeix si, per exemple, una fórmula conté "{{Val@ 7}}" en lloc de "{{Val: 7}}". Quan definiu una variable, la sintaxi requereix dos punts en lloc del símbol "arrova".</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_HowToFix_1" xml:space="preserve">
     <value>Suprimiu o substituïu els caràcters inesperats per un caràcter esperat.</value>
@@ -5566,7 +5614,7 @@
   </data>
   <data name="ErrorResource_ErrInvalidName_LongMessage" xml:space="preserve">
     <value>Aquest error apareix més habitualment quan una fórmula fa referència a alguna cosa que ja no existeix (per exemple, un control que hàgiu suprimit).</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrInvalidName_HowToFix_1" xml:space="preserve">
     <value>Suprimiu o corregiu la referència al nom que no és vàlid.</value>
@@ -5586,7 +5634,7 @@
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_LongMessage" xml:space="preserve">
     <value>Aquest error apareix quan una fórmula fa referència a propietats del comportament del component amb una sintaxi no vàlida. (Per exemple, Component.OnCustomChange en lloc de Component.OnCustomChange().)</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_HowToFix_1" xml:space="preserve">
     <value>Utilitzeu la sintaxi correcta per referir-vos a la propietat del comportament del component. Per exemple, Component.OnCustomChange().</value>
@@ -5606,7 +5654,7 @@
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_LongMessage" xml:space="preserve">
     <value>No podeu utilitzar l'operador Parent amb un control que no té cap control principal. Aquest operador fa referència al control que allotja el control determinat i posa a disposició totes les propietats.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_HowToFix_1" xml:space="preserve">
     <value>Suprimiu l'operador "Parent".</value>
@@ -5626,7 +5674,7 @@
   </data>
   <data name="ErrorResource_ErrTooManyUps_LongMessage" xml:space="preserve">
     <value>La complexitat augmenta amb cada nivell d'imbricació, per la qual cosa el Power Apps només admet una imbricació d'àmbit de fila de fins a 63 nivells.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrTooManyUps_HowToFix_1" xml:space="preserve">
     <value>Reescriviu la fórmula amb menys nivells d'imbricació.</value>
@@ -5638,7 +5686,7 @@
   </data>
   <data name="ErrorResource_ErrRuleNestedTooDeeply_LongMessage" xml:space="preserve">
     <value>El Power Apps només permet que les expressions s'imbriquin en un màxim de 50 nivells. Una expressió amb tanta profunditat és difícil d'entendre i mantenir.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrRuleNestedTooDeeply_HowToFix_1" xml:space="preserve">
     <value>Reescriviu la fórmula amb menys nivells d'imbricació.</value>
@@ -5650,7 +5698,7 @@
   </data>
   <data name="ErrorResource_ErrOperatorExpected_LongMessage" xml:space="preserve">
     <value>Els operadors uneixen dos operands. Aquest error es produeix si combineu dues funcions (operands) i no les separeu amb cap operador; per exemple, Len("mytext")Len("mytext").</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrOperatorExpected_HowToFix_1" xml:space="preserve">
     <value>Editeu la fórmula perquè inclogui un operador entre els operands.</value>
@@ -5670,7 +5718,7 @@
   </data>
   <data name="ErrorResource_ErrNumberExpected_LongMessage" xml:space="preserve">
     <value>Aquest error es produeix si utilitzeu una funció que requereix un nombre, però proporcioneu, per exemple, una imatge.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrNumberExpected_HowToFix_1" xml:space="preserve">
     <value>Editeu la fórmula de manera que s'utilitzi un nombre en aquest punt.</value>
@@ -5690,7 +5738,7 @@
   </data>
   <data name="ErrorResource_ErrBooleanExpected_LongMessage" xml:space="preserve">
     <value>Un valor booleà també es coneix com a valor "true" o "false" en aplicacions com ara el Microsoft Excel. Aquest error es produeix si utilitzeu una funció que requereix un booleà, però proporcioneu, per exemple, una data.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrBooleanExpected_HowToFix_1" xml:space="preserve">
     <value>Editeu la fórmula de manera que s'utilitzi un booleà en aquest punt.</value>
@@ -5710,7 +5758,7 @@
   </data>
   <data name="ErrorResource_ErrColonExpected_LongMessage" xml:space="preserve">
     <value>Els dos punts separen un nom de camp, de vegades anomenat nom de columna, d'un valor de camp en un registre (per exemple, {Month:"1"}, {Month:"2"}…). Els dos punts també separen les hores dels minuts i els segons (per exemple, "3:04").</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrColonExpected_HowToFix_1" xml:space="preserve">
     <value>Editeu la fórmula de manera que inclogui dos punts.</value>
@@ -5730,7 +5778,7 @@
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_LongMessage" xml:space="preserve">
     <value>Les funcions de comportament canvien l'estat de l'aplicació, ja que canvien els valors dels altres llocs de l'aplicació. "Navigate", "Patch", "UpdateContext" i "Collect" són funcions de comportament comunes. Les propietats "OnSelect", "OnVisible" i altres que comencen per "On..." són propietats comunes basades en el comportament.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_HowToFix_1" xml:space="preserve">
     <value>Desplaceu la funció de comportament a una propietat basada en comportament.</value>
@@ -5750,7 +5798,7 @@
   </data>
   <data name="ErrorResource_ErrTestPropertyExpected_LongMessage" xml:space="preserve">
     <value>Les funcions de prova són aquelles que es poden utilitzar per simular l'entrada de l'usuari en provar una aplicació. "SetProperty", "SelectRow" i "Assert" són funcions comunes de prova i només es poden utilitzar en casos de prova.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrTestPropertyExpected_HowToFix_1" xml:space="preserve">
     <value>Utilitzeu la funció en un cas de prova, en lloc de a la mateixa aplicació.</value>
@@ -5762,7 +5810,7 @@
   </data>
   <data name="ErrorResource_ErrCannotCoerce_SourceType_TargetType_LongMessage" xml:space="preserve">
     <value>El Power Apps pot convertir automàticament alguns tipus de dades de la vostra fórmula en altres tipus. Per exemple, pot convertir "1" (una cadena) en 1 (un nombre), però no pot convertir tots els tipus de dades en qualsevol altre tipus de dades. Per exemple, no pot convertir una imatge en un nombre.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrCannotCoerce_SourceType_TargetType_HowToFix_1" xml:space="preserve">
     <value>Editeu la fórmula per convertir les dades en qüestió al tipus esperat.</value>
@@ -5774,7 +5822,7 @@
   </data>
   <data name="ErrorResource_ErrStringExpected_LongMessage" xml:space="preserve">
     <value>Aquest error es produeix si utilitzeu una funció que requereix un argument de text (o cadena), però proporcioneu, per exemple, una data.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrStringExpected_HowToFix_1" xml:space="preserve">
     <value>Editeu la fórmula de manera que s'utilitzi un text en aquest punt.</value>
@@ -5794,7 +5842,7 @@
   </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_LongMessage" xml:space="preserve">
     <value>Aquest error es produeix si utilitzeu una funció que requereix un text o un nombre, però proporcioneu, per exemple, un valor booleà ("true"/"false").</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_HowToFix_1" xml:space="preserve">
     <value>Editeu la fórmula de manera que s'utilitzi un text o un nombre.</value>
@@ -5814,7 +5862,7 @@
   </data>
   <data name="ErrorResource_ErrClosingBracketExpected_LongMessage" xml:space="preserve">
     <value>Una clau de tancament indica el final d'un registre (per exemple, {Month:"1"}, {Month:"2"}…).</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrClosingBracketExpected_HowToFix_1" xml:space="preserve">
     <value>Editeu la fórmula perquè inclogui un claudàtor.</value>
@@ -5834,7 +5882,7 @@
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_LongMessage" xml:space="preserve">
     <value>No podem avaluar la fórmula perquè els valors de la fórmula que es comparen no són del mateix tipus.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_HowToFix_1" xml:space="preserve">
     <value>És possible que hàgiu de convertir el valor perquè sigui del mateix tipus, per exemple, la conversió d'una cadena de data (com ara "31/12/2018") a un valor de data.</value>
@@ -5946,7 +5994,7 @@
   </data>
   <data name="ErrorResource_ErrTypeError_LongMessage" xml:space="preserve">
     <value>És possible que les dades no coincideixin amb el tipus esperat (text, nombre, data, taula o registre).</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrTypeError_HowToFix_1" xml:space="preserve">
     <value>Comproveu els tipus dels valors que apareixen a la fórmula i assegureu-vos que coincideixin.</value>
@@ -5974,7 +6022,7 @@
   </data>
   <data name="ErrorResource_ErrDateExpected_LongMessage" xml:space="preserve">
     <value>Aquest error es produeix si utilitzeu una funció que requereix una data, però proporcioneu, per exemple, un text.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrDateExpected_HowToFix_1" xml:space="preserve">
     <value>Editeu la fórmula de manera que s'utilitzi una data en aquest punt.</value>
@@ -5994,7 +6042,7 @@
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_LongMessage" xml:space="preserve">
     <value>És possible que la font de dades no pugui processar la fórmula i retorni un conjunt de dades incomplet. Així mateix, és possible que l'aplicació no retorni resultats correctes o que es comporti incorrectament si el conjunt de dades està incomplet.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_HowToFix_1" xml:space="preserve">
     <value>Si el vostre conjunt de dades supera el límit de 500 registres, però en conté menys de 2.000, proveu de restablir el límit.</value>
@@ -6030,7 +6078,7 @@
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_LongMessage" xml:space="preserve">
     <value>És possible que la font de dades no pugui processar la fórmula i retorni un conjunt de dades incomplet. Així mateix, és possible que l'aplicació no retorni resultats correctes o que es comporti incorrectament si el conjunt de dades està incomplet.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_HowToFix_1" xml:space="preserve">
     <value>Si el vostre conjunt de dades supera el límit de 500 registres, però en conté menys de 2.000, proveu de restablir el límit.</value>
@@ -6066,7 +6114,7 @@
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_LongMessage" xml:space="preserve">
     <value> El costat dret de l'operador "in" ha de ser un nom de columna de la font de dades correcta. És possible que la font de dades no pugui processar la fórmula i retorni un conjunt de dades incomplet. Així mateix, és possible que l'aplicació no retorni resultats correctes o que es comporti incorrectament si el conjunt de dades està incomplet.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_1" xml:space="preserve">
     <value>Canvieu l'element de la dreta de l'operador "in" perquè sigui una columna de la font de dades correcta.</value>
@@ -6107,7 +6155,7 @@
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_LongMessage" xml:space="preserve">
     <value> El costat dret de l'operador "in" no és una columna de la font de dades correcta. És possible que la font de dades no pugui processar la fórmula i retorni un conjunt de dades incomplet. Així mateix, és possible que l'aplicació no retorni resultats correctes o que es comporti incorrectament si el conjunt de dades està incomplet.
       </value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_1" xml:space="preserve">
     <value>Canvieu l'element de la dreta de l'operador "in" perquè sigui una columna de la font de dades correcta.</value>
@@ -6213,5 +6261,9 @@
   <data name="ErrorResource_ErrAsNotInContext_ShortMessage" xml:space="preserve">
     <value>La paraula clau "As" no es permet en aquest context.</value>
     <comment>{Locked=As} This is an error message that shows up when the As keyword is used but is not valid</comment>
+  </data>
+  <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
+    <value>La fórmula amb nom ha d'acabar amb un punt i coma.</value>
+    <comment>A semicolon must terminate named formulas. For example, a=10;</comment>
   </data>
 </root>
