@@ -1,45 +1,45 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <root>
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
         <xsd:choice maxOccurs="unbounded">
           <xsd:element name="metadata">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
               </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string"/>
-              <xsd:attribute name="type" type="xsd:string"/>
-              <xsd:attribute name="mimetype" type="xsd:string"/>
-              <xsd:attribute ref="xml:space"/>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="assembly">
             <xsd:complexType>
-              <xsd:attribute name="alias" type="xsd:string"/>
-              <xsd:attribute name="name" type="xsd:string"/>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="data">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
-              <xsd:attribute ref="xml:space"/>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="resheader">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required"/>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
             </xsd:complexType>
           </xsd:element>
         </xsd:choice>
@@ -447,7 +447,18 @@
     <comment>function_parameter - Argument to the Concatenate function - the text to be concatenated.</comment>
   </data>
   <data name="AboutConcatenate_text" xml:space="preserve">
-    <value>Текст или столбец текстовых значений, которые будут объединены с остальными аргументами.</value>
+    <value>Текстовое значение для сцепления с остальными аргументами.</value>
+  </data>
+  <data name="AboutConcatenateT" xml:space="preserve">
+    <value>Объединяет несколько текстовых значений или таблиц в один столбец текстовых значений.</value>
+    <comment>Description of 'Concatenate' function.</comment>
+  </data>
+  <data name="ConcatenateTArg1" xml:space="preserve">
+    <value>значение</value>
+    <comment>function_parameter - Argument to the Concatenate function - the text or table to be concatenated.</comment>
+  </data>
+  <data name="AboutConcatenate_value" xml:space="preserve">
+    <value>Текстовое значение или столбец текстовых значений для сцепления с остальными аргументами.</value>
   </data>
   <data name="AboutConcat" xml:space="preserve">
     <value>Объединяет все текстовые значения, полученным путем вычисления данного выражения для данной таблицы, в одно текстовое значение.</value>
@@ -812,6 +823,10 @@
     <value>Возвращает текущую дату и время.</value>
     <comment>Description of 'Now' function.</comment>
   </data>
+  <data name="AboutUTCNow" xml:space="preserve">
+    <value>Возвращает текущую дату и время в формате UTC.</value>
+    <comment>Description of 'UTCNow' function.</comment>
+  </data>
   <data name="AboutTimeZoneOffset" xml:space="preserve">
     <value>Возвращает разницу между временем в формате UTC и местным временем (в минутах). Например, если ваш часовой пояс — UTC+2, будет возвращено значение –120.</value>
     <comment>Description of 'TimeZoneOffset' function.</comment>
@@ -827,6 +842,10 @@
   <data name="AboutToday" xml:space="preserve">
     <value>Возвращает текущую дату.</value>
     <comment>Description of 'Today' function.</comment>
+  </data>
+  <data name="AboutUTCToday" xml:space="preserve">
+    <value>Возвращает текущую дату в формате UTC.</value>
+    <comment>Description of 'UTCToday' function.</comment>
   </data>
   <data name="AboutWeekNum" xml:space="preserve">
     <value>Возвращает номер недели для заданной даты.</value>
@@ -1255,6 +1274,12 @@
   <data name="AboutAtan2Arg2" xml:space="preserve">
     <value>координата_y</value>
     <comment>function_parameter - Second parameter to the Atan function - the y coordinate for arctangent to be returned. When translating, maintain as a single word (i.e., do not add spaces)</comment>
+  </data>
+  <data name="AboutAtan2_x_coordinate" xml:space="preserve">
+    <value>X-координата.</value>
+  </data>
+  <data name="AboutAtan2_y_coordinate" xml:space="preserve">
+    <value>Y-координата.</value>
   </data>
   <data name="AboutSqrt" xml:space="preserve">
     <value>Возвращает квадратный корень числа.</value>
@@ -3373,6 +3398,17 @@
     <value>дата</value>
     <comment>function_parameter - First argument to the IsToday function - the date to be tested.</comment>
   </data>
+  <data name="AboutIsUTCToday" xml:space="preserve">
+    <value>Проверяет, является ли эта дата сегодняшней датой по UTC, и возвращает значение true или false.</value>
+    <comment>Description of 'IsUTCToday' function</comment>
+  </data>
+  <data name="AboutIsUTCToday_date" xml:space="preserve">
+    <value>Значение даты для проверки.</value>
+  </data>
+  <data name="IsUTCTodayFuncArg1" xml:space="preserve">
+    <value>дата</value>
+    <comment>function_parameter - First argument to the IsUTCToday function - the date to be tested.</comment>
+  </data>
   <data name="AboutMod" xml:space="preserve">
     <value>Возвращает остаток от деления числа на делитель. Результат имеет тот же знак, что и делитель.</value>
     <comment>Description of 'Mod' function.</comment>
@@ -5468,9 +5504,21 @@
     <value>В столбцах формул поддерживаются только строки в коротком формате даты и времени.</value>
     <comment>Error Message. Used in formula columns for scenarios where the maker supplies an invalid format string</comment>
   </data>
-  <data name="FormulaColumns_UtcResultWarning" xml:space="preserve">
-    <value>Часть "{0}" этой формулы может работать не так, как ожидалось с учетом часового пояса пользователя, поскольку эта операция будет выполняться по времени в формате UTC в столбцах в формул.</value>
-    <comment>Error Message. Used as a warning in formula columns for scenarios where the operation will be performed in UTC instead of the user's local time zone. The {0} will be the name of the function.</comment>
+  <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
+    <value>Зависящие от локали лексемы форматирования, такие как "." и "," не поддерживаются в столбцах формул.</value>
+    <comment>Error Message. Used in formula columns for scenarios where the maker supplies an invalid format string</comment>
+  </data>
+  <data name="FormulaColumns_FunctionNotSupported" xml:space="preserve">
+    <value>{0} не поддерживается в столбцах формул. Используйте {1}.</value>
+    <comment>Error Message. Used in formula columns for scenarios where the maker attempts to use a function that is not supported, providing an alternate function name.  The {0} will be the name of the function that is not supported, and {1} is the name of the suggested alternate.</comment>
+  </data>
+  <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
+    <value>Тип результата {0} не поддерживается в столбцах формул.</value>
+    <comment>Error Message. Used in formula columns for a formula that returns a type which is not supported.</comment>
+  </data>
+  <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
+    <value>Ожидаемый тип результата для этой формулы — {0}, однако фактический тип результата — {1}. Изменить тип результата столбца формул невозможно.</value>
+    <comment>Error Message. Used in formula columns for a formula that returns an unexpected result type during editing. The {0} will be the name of the required type. The {1} will be the name of the incorrect type.</comment>
   </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
     <value>Ожидается операнд. В формуле или выражении ожидается допустимый операнд. Например, вы можете добавить операнд "2" в выражение "1 + _", чтобы получить результат "3", или операнд "день" в выражение «"Добрый "&amp; _ », чтобы получить результат "Добрый день".</value>
@@ -5486,7 +5534,7 @@
   </data>
   <data name="ErrorResource_ErrBadToken_LongMessage" xml:space="preserve">
     <value>Например, символ "\" не может идти после числа: "32\". Будет ожидаться либо пробел ("32"), если имеется в виду просто число 32, либо другое число ("323").</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrBadToken_HowToFix_1" xml:space="preserve">
     <value>Удалите или замените непредусмотренные символы.</value>
@@ -5506,11 +5554,11 @@
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_LongMessage" xml:space="preserve">
     <value>Например, символ "\" не может идти после числа: "32\". Будет ожидаться либо пробел ("32"), если имеется в виду просто число 32, либо другое число ("323").</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_HowToFix_1" xml:space="preserve">
     <value>Удалите или замените непредвиденный символ.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_Link_1" xml:space="preserve">
     <value>Статья: "Справка по формулам для Power Apps"</value>
@@ -5526,7 +5574,7 @@
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_LongMessage" xml:space="preserve">
     <value>Каждый блочный комментарий должен начинаться с "/*" и заканчиваться на "*/". Если блочный комментарий не завершен должным образом, весь последующий код будет считаться частью комментария. Если комментарий состоит из одной строки, вы можете начать его с "//" и не указывать ничего в конце.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_HowToFix_1" xml:space="preserve">
     <value>Добавьте "*/" в конец блока комментария или измените его на набор однострочных комментариев.</value>
@@ -5546,7 +5594,7 @@
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_LongMessage" xml:space="preserve">
     <value>Эта ошибка возникает, если, например, формула содержит "{{Val@ 7}}" вместо "{{Val: 7}}". При задании переменной синтаксис требует использовать двоеточие, а не символ "@".</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_HowToFix_1" xml:space="preserve">
     <value>Удалите непредусмотренные символы или замените их ожидаемыми.</value>
@@ -5566,7 +5614,7 @@
   </data>
   <data name="ErrorResource_ErrInvalidName_LongMessage" xml:space="preserve">
     <value>Эта ошибка чаще всего возникает, когда формула ссылается на объект, который больше не существует (например, удаленный элемент управления).</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrInvalidName_HowToFix_1" xml:space="preserve">
     <value>Удалите или исправьте недопустимую ссылку на имя.</value>
@@ -5586,7 +5634,7 @@
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_LongMessage" xml:space="preserve">
     <value>Эта ошибка возникает, когда формула ссылается на свойства поведения компонента с недопустимым синтаксисом (например, Component.OnCustomChange вместо Component.OnCustomChange()).</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_HowToFix_1" xml:space="preserve">
     <value>Используйте правильный синтаксис для ссылки на свойство поведения компонента. Например, Component.OnCustomChange().</value>
@@ -5606,7 +5654,7 @@
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_LongMessage" xml:space="preserve">
     <value>Вы не можете использовать оператор Parent с элементом управления, у которого нет родительского элемента управления. Этот оператор ссылается на элемент управления, в котором размещается указанный элемент, и предоставляет доступ ко всем его свойствам.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_HowToFix_1" xml:space="preserve">
     <value>Удалите оператор "Parent".</value>
@@ -5626,7 +5674,7 @@
   </data>
   <data name="ErrorResource_ErrTooManyUps_LongMessage" xml:space="preserve">
     <value>С каждым уровнем вложенности сложность возрастает, поэтому Power Apps поддерживает не более 63 уровней вложения в области строки.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrTooManyUps_HowToFix_1" xml:space="preserve">
     <value>Перепишите формулу, используя меньше уровней вложения.</value>
@@ -5638,7 +5686,7 @@
   </data>
   <data name="ErrorResource_ErrRuleNestedTooDeeply_LongMessage" xml:space="preserve">
     <value>Power Apps поддерживает не более 50 уровней вложения. Выражения с большей глубиной вложения слишком сложны для разбора и поддержки.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrRuleNestedTooDeeply_HowToFix_1" xml:space="preserve">
     <value>Перепишите формулу, используя меньше уровней вложения.</value>
@@ -5650,7 +5698,7 @@
   </data>
   <data name="ErrorResource_ErrOperatorExpected_LongMessage" xml:space="preserve">
     <value>Операторы соединяют два операнда. Данная ошибка возникает, когда вы ставите рядом две функции (два операнда), но не указываете между ними оператор, например: Len("mytext")Len("mytext").</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrOperatorExpected_HowToFix_1" xml:space="preserve">
     <value>Измените формулу так, чтобы она включала оператор между операндами.</value>
@@ -5670,7 +5718,7 @@
   </data>
   <data name="ErrorResource_ErrNumberExpected_LongMessage" xml:space="preserve">
     <value>Данная ошибка возникает, когда функция требует число, а вы вместо этого передаете ей, например, изображение.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrNumberExpected_HowToFix_1" xml:space="preserve">
     <value>Измените формулу так, чтобы результатом вычисления в этом месте в формуле было число.</value>
@@ -5690,7 +5738,7 @@
   </data>
   <data name="ErrorResource_ErrBooleanExpected_LongMessage" xml:space="preserve">
     <value>Логическое значение также называют значением true/false (истина/ложь) в некоторых приложениях, например в Microsoft Excel. Данная ошибка возникает, когда функция требует значение логического типа, а вы передаете ей другое, например дату.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrBooleanExpected_HowToFix_1" xml:space="preserve">
     <value>Измените формулу так, чтобы результатом вычисления в этом месте в формуле было логическое значение.</value>
@@ -5710,7 +5758,7 @@
   </data>
   <data name="ErrorResource_ErrColonExpected_LongMessage" xml:space="preserve">
     <value>Двоеточие отделяет в записи имя поля, иногда называемое именем столбца, от его значения (например, {Month:"1"}, {Month:"2"}…). Двоеточие также разделяет часы, минуты и секунды (например, "3:04").</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrColonExpected_HowToFix_1" xml:space="preserve">
     <value>Измените формулу так, чтобы она включала двоеточие.</value>
@@ -5730,7 +5778,7 @@
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_LongMessage" xml:space="preserve">
     <value>Функции поведения изменяют состояние приложения путем изменения значений в других его областях. Типичные функции поведения: "Navigate" (Переключение экрана), "Patch" (Изменение или объединение записей), "UpdateContext" (Изменение контекста) или "Collect" (Создание коллекции). Типичные свойства, основанные на поведении: "OnSelect" (При выборе), "OnVisible" (При отображении) и другие свойства вида "On…".</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_HowToFix_1" xml:space="preserve">
     <value>Переместите функцию поведения в основанное на поведении свойство.</value>
@@ -5750,7 +5798,7 @@
   </data>
   <data name="ErrorResource_ErrTestPropertyExpected_LongMessage" xml:space="preserve">
     <value>Функции теста — это те функции, которые можно использовать для имитации вводимых пользователем данных при тестировании приложения. Основные функции теста — "SetProperty", "SelectRow" и "Assert". Их можно использовать только в тестовых случаях.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrTestPropertyExpected_HowToFix_1" xml:space="preserve">
     <value>Используйте функцию в тестовом случае, а не в самом приложении.</value>
@@ -5762,7 +5810,7 @@
   </data>
   <data name="ErrorResource_ErrCannotCoerce_SourceType_TargetType_LongMessage" xml:space="preserve">
     <value>Power Apps может преобразовывать некоторые типы данных в формуле в другие типы. Например, значение "1" (строка) можно преобразовать в 1 (число). Однако это верно не для всех типов данных. Например, преобразовать изображение в число будет невозможно.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrCannotCoerce_SourceType_TargetType_HowToFix_1" xml:space="preserve">
     <value>Измените формулу, чтобы преобразовать эти данные к ожидаемому типу.</value>
@@ -5774,7 +5822,7 @@
   </data>
   <data name="ErrorResource_ErrStringExpected_LongMessage" xml:space="preserve">
     <value>Эта ошибка возникает, когда функция требует аргумент в виде текста (или строки), а вы вместо этого передаете ей, например, дату.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrStringExpected_HowToFix_1" xml:space="preserve">
     <value>Измените формулу так, чтобы результатом вычисления в этом месте в формуле был текст.</value>
@@ -5794,7 +5842,7 @@
   </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_LongMessage" xml:space="preserve">
     <value>Данная ошибка возникает, когда функция требует текст или число, а вы вместо этого передаете ей, например, логическое значение (true/false).</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_HowToFix_1" xml:space="preserve">
     <value>Измените формулу так, чтобы результатом вычисления в этом месте в формуле был текст или число.</value>
@@ -5814,7 +5862,7 @@
   </data>
   <data name="ErrorResource_ErrClosingBracketExpected_LongMessage" xml:space="preserve">
     <value>Закрывающая фигурная скобка показывает конец записи (например, {Month:"1"}, {Month:"2"}…).</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrClosingBracketExpected_HowToFix_1" xml:space="preserve">
     <value>Измените формулу так, чтобы она включала фигурную скобку.</value>
@@ -5834,7 +5882,7 @@
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_LongMessage" xml:space="preserve">
     <value>Невозможно вычислить формулу, так как сравниваемые в формуле значения имеют разные типы.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_HowToFix_1" xml:space="preserve">
     <value>Возможно, следует преобразовать значение в тот же тип, например преобразовать строку даты ("31.12.2018") в значение даты.</value>
@@ -5946,7 +5994,7 @@
   </data>
   <data name="ErrorResource_ErrTypeError_LongMessage" xml:space="preserve">
     <value>Возможно, данные не соответствуют ожидаемому типу (текст, число, дата, таблица, запись).</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrTypeError_HowToFix_1" xml:space="preserve">
     <value>Проверьте типы значений, используемые в формуле: они должны совпадать.</value>
@@ -5974,7 +6022,7 @@
   </data>
   <data name="ErrorResource_ErrDateExpected_LongMessage" xml:space="preserve">
     <value>Данная ошибка возникает, когда функция требует дату, а вы вместо этого передаете ей, например, текст.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrDateExpected_HowToFix_1" xml:space="preserve">
     <value>Измените формулу так, чтобы результатом вычисления в этом месте в формуле была дата.</value>
@@ -5994,7 +6042,7 @@
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_LongMessage" xml:space="preserve">
     <value>Источник данных может не суметь обработать формулу и вернет неполный набор данных. Из-за неполного набора приложение может возвращать неверные результаты или работать некорректно.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_HowToFix_1" xml:space="preserve">
     <value>Если ваши данные превышают предел в 500 записей, но содержат меньше 2000 записей, попробуйте задать новый предел.</value>
@@ -6030,7 +6078,7 @@
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_LongMessage" xml:space="preserve">
     <value>Источник данных может не суметь обработать формулу и вернет неполный набор данных. Из-за неполного набора приложение может возвращать неверные результаты или работать некорректно.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_HowToFix_1" xml:space="preserve">
     <value>Если ваши данные превышают предел в 500 записей, но содержат меньше 2000 записей, попробуйте задать новый предел.</value>
@@ -6066,7 +6114,7 @@
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_LongMessage" xml:space="preserve">
     <value> Элемент справа от оператора "in" должен быть именем столбца из корректного источника данных. Источник может не суметь обработать формулу и вернет неполный набор данных. Из-за неполного набора приложение может возвращать неверные результаты или работать некорректно.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_1" xml:space="preserve">
     <value>Измените элемент справа от оператора "in" на столбец из правильного источника данных.</value>
@@ -6107,7 +6155,7 @@
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_LongMessage" xml:space="preserve">
     <value> Элемент справа от оператора "in" не является столбцом из корректного источника данных. Источник данных может не суметь обработать формулу и вернет неполный набор данных. Из-за неполного набора приложение может возвращать неверные результаты или работать некорректно.
       </value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_1" xml:space="preserve">
     <value>Измените элемент справа от оператора "in" на столбец из правильного источника данных.</value>
@@ -6213,5 +6261,9 @@
   <data name="ErrorResource_ErrAsNotInContext_ShortMessage" xml:space="preserve">
     <value>Ключевое слово "As" не допускается в этом контексте.</value>
     <comment>{Locked=As} This is an error message that shows up when the As keyword is used but is not valid</comment>
+  </data>
+  <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
+    <value>Именованная формула должна заканчиваться точкой с запятой.</value>
+    <comment>A semicolon must terminate named formulas. For example, a=10;</comment>
   </data>
 </root>

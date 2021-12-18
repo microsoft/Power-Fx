@@ -1,45 +1,45 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <root>
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
         <xsd:choice maxOccurs="unbounded">
           <xsd:element name="metadata">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
               </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string"/>
-              <xsd:attribute name="type" type="xsd:string"/>
-              <xsd:attribute name="mimetype" type="xsd:string"/>
-              <xsd:attribute ref="xml:space"/>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="assembly">
             <xsd:complexType>
-              <xsd:attribute name="alias" type="xsd:string"/>
-              <xsd:attribute name="name" type="xsd:string"/>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="data">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
-              <xsd:attribute ref="xml:space"/>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="resheader">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required"/>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
             </xsd:complexType>
           </xsd:element>
         </xsd:choice>
@@ -447,7 +447,18 @@
     <comment>function_parameter - Argument to the Concatenate function - the text to be concatenated.</comment>
   </data>
   <data name="AboutConcatenate_text" xml:space="preserve">
-    <value>Diğer bağımsız değişkenlerle birleştirilecek olan bir metin veya metin değerleri sütunu.</value>
+    <value>Bağımsız değişkenlerin geri kalanıyla kesilecek metin değeri.</value>
+  </data>
+  <data name="AboutConcatenateT" xml:space="preserve">
+    <value>Birkaç metin değerini veya tabloyu bir metin değerleri sütununa ekler.</value>
+    <comment>Description of 'Concatenate' function.</comment>
+  </data>
+  <data name="ConcatenateTArg1" xml:space="preserve">
+    <value>değer</value>
+    <comment>function_parameter - Argument to the Concatenate function - the text or table to be concatenated.</comment>
+  </data>
+  <data name="AboutConcatenate_value" xml:space="preserve">
+    <value>Bağımsız değişkenlerin geri kalanıyla kesilecek metin değeri veya metin değerleri sütunu.</value>
   </data>
   <data name="AboutConcat" xml:space="preserve">
     <value>Sağlanan tabloda belirtilen ifade tarafından değerlendirilen tüm metin değerlerini tek bir metin değeri olarak birleştirir.</value>
@@ -812,6 +823,10 @@
     <value>Geçerli tarihi ve saati döndürür.</value>
     <comment>Description of 'Now' function.</comment>
   </data>
+  <data name="AboutUTCNow" xml:space="preserve">
+    <value>UTC saatinde geçerli tarih ve saati döndürür.</value>
+    <comment>Description of 'UTCNow' function.</comment>
+  </data>
   <data name="AboutTimeZoneOffset" xml:space="preserve">
     <value>UTC saati ile yerel saat arasındaki farkı dakika cinsinden döndürür. Örneğin, yerel saat diliminiz UTC+2 ise -120 döndürülür.</value>
     <comment>Description of 'TimeZoneOffset' function.</comment>
@@ -827,6 +842,10 @@
   <data name="AboutToday" xml:space="preserve">
     <value>Geçerli tarihi döndürür.</value>
     <comment>Description of 'Today' function.</comment>
+  </data>
+  <data name="AboutUTCToday" xml:space="preserve">
+    <value>UTC saatinde geçerli tarihi döndürür.</value>
+    <comment>Description of 'UTCToday' function.</comment>
   </data>
   <data name="AboutWeekNum" xml:space="preserve">
     <value>Belirli bir tarihin hafta numarasını döndürür.</value>
@@ -1255,6 +1274,12 @@
   <data name="AboutAtan2Arg2" xml:space="preserve">
     <value>y_koordinatı</value>
     <comment>function_parameter - Second parameter to the Atan function - the y coordinate for arctangent to be returned. When translating, maintain as a single word (i.e., do not add spaces)</comment>
+  </data>
+  <data name="AboutAtan2_x_coordinate" xml:space="preserve">
+    <value>x koordinatı.</value>
+  </data>
+  <data name="AboutAtan2_y_coordinate" xml:space="preserve">
+    <value>y koordinatı.</value>
   </data>
   <data name="AboutSqrt" xml:space="preserve">
     <value>Bir sayının karekökünü döndürür.</value>
@@ -3373,6 +3398,17 @@
     <value>tarih</value>
     <comment>function_parameter - First argument to the IsToday function - the date to be tested.</comment>
   </data>
+  <data name="AboutIsUTCToday" xml:space="preserve">
+    <value>Belirtilen tarihin UTC'de bugün olup olmadığını denetler ve doğru ya da yanlış değerini döndürür.</value>
+    <comment>Description of 'IsUTCToday' function</comment>
+  </data>
+  <data name="AboutIsUTCToday_date" xml:space="preserve">
+    <value>Test edilecek tarih değeri.</value>
+  </data>
+  <data name="IsUTCTodayFuncArg1" xml:space="preserve">
+    <value>tarih</value>
+    <comment>function_parameter - First argument to the IsUTCToday function - the date to be tested.</comment>
+  </data>
   <data name="AboutMod" xml:space="preserve">
     <value>Bir sayının, bölenle bölümünden kalanı döndürür. Sonuç bölenle aynı işarete sahiptir.</value>
     <comment>Description of 'Mod' function.</comment>
@@ -5468,9 +5504,21 @@
     <value>Formül sütunlarında yalnızca kısa tarih ve saat biçimi dizeleri desteklenmektedir.</value>
     <comment>Error Message. Used in formula columns for scenarios where the maker supplies an invalid format string</comment>
   </data>
-  <data name="FormulaColumns_UtcResultWarning" xml:space="preserve">
-    <value>İşlem formül sütunlarında Eşgüdümlü Evrensel Saat'te (UTC) gerçekleştirileceği için bu formülün "{0}" bölümü, kullanıcının saat dilimine bağlı olarak beklendiği gibi çalışmayabilir.</value>
-    <comment>Error Message. Used as a warning in formula columns for scenarios where the operation will be performed in UTC instead of the user's local time zone. The {0} will be the name of the function.</comment>
+  <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
+    <value>Formül sütunlarında "." ve "," gibi yerel ayara özel biçimlendirme belirteçleri desteklenmiyor.</value>
+    <comment>Error Message. Used in formula columns for scenarios where the maker supplies an invalid format string</comment>
+  </data>
+  <data name="FormulaColumns_FunctionNotSupported" xml:space="preserve">
+    <value>{0}, formül sütunlarında desteklenmiyor, bunun yerine {1} kullanın.</value>
+    <comment>Error Message. Used in formula columns for scenarios where the maker attempts to use a function that is not supported, providing an alternate function name.  The {0} will be the name of the function that is not supported, and {1} is the name of the suggested alternate.</comment>
+  </data>
+  <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
+    <value>Bu {0} sonuç türü, formül sütunlarında desteklenmiyor.</value>
+    <comment>Error Message. Used in formula columns for a formula that returns a type which is not supported.</comment>
+  </data>
+  <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
+    <value>Bu formül için sonuç türünün {0} olması bekleniyordu ancak gerçek sonuç türü {1}. Formül sütununun sonuç türü değiştirilemez.</value>
+    <comment>Error Message. Used in formula columns for a formula that returns an unexpected result type during editing. The {0} will be the name of the required type. The {1} will be the name of the incorrect type.</comment>
   </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
     <value>İşlenen bekleniyordu. Formül veya ifade geçerli bir işlenen bekliyor. Örneğin, sonucun '3' olması için '2' işlenenini '1 + _' ifadesine ekleyebilirsiniz. Veya sonucun "Hoş geldiniz" olması için "geldiniz" işlenenini '"Hoş "&amp; _ ' işlenenine ekleyebilirsiniz.</value>
@@ -5486,7 +5534,7 @@
   </data>
   <data name="ErrorResource_ErrBadToken_LongMessage" xml:space="preserve">
     <value>Örneğin, '\' karakteri bir sayıdan sonra beklenmez (örneğin, '32\'). Yalnızca 32 sayısı olması için bir boşluk ('32 ') veya başka bir sayı ('323' gibi) bekleniyor.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrBadToken_HowToFix_1" xml:space="preserve">
     <value>Beklenmeyen karakterleri kaldırın veya değiştirin.</value>
@@ -5506,11 +5554,11 @@
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_LongMessage" xml:space="preserve">
     <value>Örneğin, '\' karakteri bir sayıdan sonra beklenmez (örneğin, '32\'). Yalnızca 32 sayısı olması için bir boşluk ('32 ') veya başka bir sayı ('323' gibi) bekleniyor.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_HowToFix_1" xml:space="preserve">
     <value>Beklenmeyen karakteri kaldırın veya değiştirin.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_Link_1" xml:space="preserve">
     <value>Makale: Power Apps için formül başvurusu</value>
@@ -5526,7 +5574,7 @@
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_LongMessage" xml:space="preserve">
     <value>Her blok açıklama '/*' ile başlamalı ve '*/' ile bitmelidir. Her blok açıklamayı düzgün şekilde sonlandırmazsanız, açıklamadan sonraki tüm kodlar bu açıklamanın bir parçası olur. Açıklama tek bir satırdan oluşuyorsa, '//' ile başlayarak açıklamanın sonunu belirtmeyebilirsiniz.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_HowToFix_1" xml:space="preserve">
     <value>Blok açıklamanızın sonuna bir '*/' ekleyin veya açıklamanızı bir satır açıklaması kümesine değiştirin.</value>
@@ -5546,7 +5594,7 @@
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_LongMessage" xml:space="preserve">
     <value>Örneğin, bir formül '{{Val: 7}}' yerine '{{Val@ 7}}' içeriyorsa bu hata oluşur. Bir değişken ayarladığınızda, söz dizimi bir "at" simgesi yerine iki nokta üst üste gerektirir.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_HowToFix_1" xml:space="preserve">
     <value>Beklenmeyen karakterleri kaldırın veya beklenen bir karakterle değiştirin.</value>
@@ -5566,7 +5614,7 @@
   </data>
   <data name="ErrorResource_ErrInvalidName_LongMessage" xml:space="preserve">
     <value>Bu hata en yaygın olarak bir formül artık var olmayan bir öğeye (örneğin, silmiş olduğunuz bir denetime) başvurduğunda ortaya çıkar.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrInvalidName_HowToFix_1" xml:space="preserve">
     <value>Geçerli olmayan ad başvurusunu kaldırın veya düzeltin.</value>
@@ -5586,7 +5634,7 @@
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_LongMessage" xml:space="preserve">
     <value>Bu hata, bir formül geçersiz söz dizimine sahip bileşen davranışı özelliklerine başvurduğunda görüntülenir. (ör. Component.OnCustomChange()) yerine Component.OnCustomChange())</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_HowToFix_1" xml:space="preserve">
     <value>Bileşen davranışı özelliğine başvurmak için doğru söz dizimini kullanın. Örneğin, Component.OnCustomChange()</value>
@@ -5606,7 +5654,7 @@
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_LongMessage" xml:space="preserve">
     <value>Parent işlecini bir üst denetimi olmayan bir denetim ile kullanamazsınız. Bu işleç, belirtilen denetimi barındıran denetime başvurur ve tüm özelliklerini kullanılabilir yapar.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_HowToFix_1" xml:space="preserve">
     <value>'Parent' işlecini kaldırın.</value>
@@ -5626,7 +5674,7 @@
   </data>
   <data name="ErrorResource_ErrTooManyUps_LongMessage" xml:space="preserve">
     <value>Her iç içe geçme düzeyinde karmaşıklık arttığından Power Apps yalnızca 63 düzeye kadar satır kapsamı iç içe geçmeyi destekler.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrTooManyUps_HowToFix_1" xml:space="preserve">
     <value>Formülü daha az sayıda iç içe geçme düzeyi ile yeniden yazın.</value>
@@ -5638,7 +5686,7 @@
   </data>
   <data name="ErrorResource_ErrRuleNestedTooDeeply_LongMessage" xml:space="preserve">
     <value>Power Apps yalnızca 50 düzeye kadar iç içe geçmeyi destekler. Bu derinlikte bir ifadeyi anlamak ve korumak zor olabilir.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrRuleNestedTooDeeply_HowToFix_1" xml:space="preserve">
     <value>Formülü daha az sayıda iç içe geçme düzeyi ile yeniden yazın.</value>
@@ -5650,7 +5698,7 @@
   </data>
   <data name="ErrorResource_ErrOperatorExpected_LongMessage" xml:space="preserve">
     <value>İşleçler iki işleneni birbirine ekler. Bu hata, iki işlevi (işleneni) aralarında bir işleç olmadan kullandığınızda oluşur -- örneğin, Len("metnim")Len("metnim").</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrOperatorExpected_HowToFix_1" xml:space="preserve">
     <value>Formülünüzü işlenenler arasında bir işleç içerecek şekilde düzenleyin.</value>
@@ -5670,7 +5718,7 @@
   </data>
   <data name="ErrorResource_ErrNumberExpected_LongMessage" xml:space="preserve">
     <value>Bu hata, bir sayı gerektiren bir işlev kullandığınızda ancak bunun yerine, örneğin, resim sağladığınızda oluşur.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrNumberExpected_HowToFix_1" xml:space="preserve">
     <value>Formülünüzü formülün bu noktasında bir sayı verecek şekilde düzenleyin.</value>
@@ -5690,7 +5738,7 @@
   </data>
   <data name="ErrorResource_ErrBooleanExpected_LongMessage" xml:space="preserve">
     <value>Boole değeri Microsoft Excel gibi uygulamalarda bir true/false değeri olarak da bilinir. Bu hata, Boole gerektiren bir işlev kullandığınızda ancak bunun yerine, örneğin, bir tarih sağladığınızda oluşur.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrBooleanExpected_HowToFix_1" xml:space="preserve">
     <value>Formülünüzü formülün bu noktasında bir boole değeri verecek şekilde düzenleyin.</value>
@@ -5710,7 +5758,7 @@
   </data>
   <data name="ErrorResource_ErrColonExpected_LongMessage" xml:space="preserve">
     <value>İki nokta üst üste bir kayıttaki alan adını (sütun adı olarak da bilinir) alan değerinden ayırır (örneğin, {Month:"1"}, {Month:"2"} …). İki nokta üst üste ayrıca saatler, dakikalar ve saniyeleri de ayırır (örnek, "3:04").</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrColonExpected_HowToFix_1" xml:space="preserve">
     <value>Formülünüzü iki nokta üst üste içerecek şekilde düzenleyin.</value>
@@ -5730,7 +5778,7 @@
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_LongMessage" xml:space="preserve">
     <value>Davranış işlevleri uygulamanın başka bir yerinde değerleri değiştirerek uygulamanın durumunu değiştirir. 'Navigate', 'Patch', 'UpdateContext' ve 'Collect' yaygın davranış işlevleridir. 'OnSelect', 'OnVisible' ve diğer 'On …' özellikleri yaygın davranış tabanlı özelliklerdir.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_HowToFix_1" xml:space="preserve">
     <value>Davranış işlevini davranış tabanlı bir özelliğe taşıyın.</value>
@@ -5750,7 +5798,7 @@
   </data>
   <data name="ErrorResource_ErrTestPropertyExpected_LongMessage" xml:space="preserve">
     <value>Test işlevleri, bir uygulamayı test ederken kullanıcı girişinin benzetimini yapmak için kullanılabilen bağlantılardır. 'SetProperty', 'SelectRow' ve 'Assert', ortak test işlevlerdir. Yalnızca test çalışmaları içinde kullanılabilirler.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrTestPropertyExpected_HowToFix_1" xml:space="preserve">
     <value>İşlevi uygulamanın kendisinde değil, bir test çalışmasında kullanın.</value>
@@ -5762,7 +5810,7 @@
   </data>
   <data name="ErrorResource_ErrCannotCoerce_SourceType_TargetType_LongMessage" xml:space="preserve">
     <value>Power Apps sizin için formülünüzdeki bazı veri türlerini diğer türlere dönüştürebilir. Örneğin, "1" (dize) değerini 1 (sayı) değerine dönüştürebilir ancak tüm veri türlerini diğer tüm veri türlerine dönüştürülemez. Örneğin, bir resmi sayıya dönüştüremez.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrCannotCoerce_SourceType_TargetType_HowToFix_1" xml:space="preserve">
     <value>Formülünüzü söz konusu verileri beklenen türe dönüştürecek şekilde düzenleyin.</value>
@@ -5774,7 +5822,7 @@
   </data>
   <data name="ErrorResource_ErrStringExpected_LongMessage" xml:space="preserve">
     <value>Bu hata, bir metin (veya dize) bağımsız değişkeni gerektiren bir işlev kullandığınızda ancak bunun yerine, örneğin, tarih sağladığınızda oluşur.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrStringExpected_HowToFix_1" xml:space="preserve">
     <value>Formülünüzü formülün bu noktasında bir metin verecek şekilde düzenleyin.</value>
@@ -5794,7 +5842,7 @@
   </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_LongMessage" xml:space="preserve">
     <value>Bu hata, bir metin sayı gerektiren bir işlev kullandığınızda ancak bunun yerine, örneğin, bir boole (true/false) değeri sağladığınızda oluşur.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_HowToFix_1" xml:space="preserve">
     <value>Formülünüzü formülün bu noktasında bir metin veya sayı verecek şekilde düzenleyin.</value>
@@ -5814,7 +5862,7 @@
   </data>
   <data name="ErrorResource_ErrClosingBracketExpected_LongMessage" xml:space="preserve">
     <value>Sağ ayraç bir kaydın sonunu gösterir (örneğin, {Month:"1"}, {Month:"2"} …).</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrClosingBracketExpected_HowToFix_1" xml:space="preserve">
     <value>Formülünüzü ayraç içerecek şekilde düzenleyin.</value>
@@ -5834,7 +5882,7 @@
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_LongMessage" xml:space="preserve">
     <value>Formülde karşılaştırılmakta olan değerler aynı türde olmadığından formülünüzü değerlendiremiyoruz.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_HowToFix_1" xml:space="preserve">
     <value>Bir tarih dizesini (örn. "31/12/2018") tarih değerine dönüştürür gibi, değeri aynı türe dönüştürmeniz gerekebilir.</value>
@@ -5946,7 +5994,7 @@
   </data>
   <data name="ErrorResource_ErrTypeError_LongMessage" xml:space="preserve">
     <value>Veriler beklenen türle eşleşmiyor olabilir. (Metin, sayı, tarih, tablo, kayıt.)</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrTypeError_HowToFix_1" xml:space="preserve">
     <value>Formüle dahil edilen değerlerin türlerini denetleyin ve türlerin eşleştiğinden emin olun.</value>
@@ -5974,7 +6022,7 @@
   </data>
   <data name="ErrorResource_ErrDateExpected_LongMessage" xml:space="preserve">
     <value>Bu hata, bir tarih gerektiren bir işlev kullandığınızda ancak bunun yerine, örneğin, metin sağladığınızda oluşur.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrDateExpected_HowToFix_1" xml:space="preserve">
     <value>Formülünüzü formülün bu noktasında bir tarih verecek şekilde düzenleyin.</value>
@@ -5994,7 +6042,7 @@
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_LongMessage" xml:space="preserve">
     <value>Veri kaynağı, formülü işleyemeyebilir ve eksik bir veri kümesi döndürebilir. Veri kümesi eksikse uygulamanız doğru sonuçlar döndürmeyebilir veya düzgün çalışmayabilir.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_HowToFix_1" xml:space="preserve">
     <value>Veri kümeniz 500 kayıt sınırını aşıyor ancak 2000'den az kayıt içeriyorsa sınırı sıfırlamayı deneyin.</value>
@@ -6030,7 +6078,7 @@
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_LongMessage" xml:space="preserve">
     <value>Veri kaynağı, formülü işleyemeyebilir ve eksik bir veri kümesi döndürebilir. Veri kümesi eksikse uygulamanız doğru sonuçlar döndürmeyebilir veya düzgün çalışmayabilir.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_HowToFix_1" xml:space="preserve">
     <value>Veri kümeniz 500 kayıt sınırını aşıyor ancak 2000'den az kayıt içeriyorsa sınırı sıfırlamayı deneyin.</value>
@@ -6066,7 +6114,7 @@
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_LongMessage" xml:space="preserve">
     <value> "in" işlecinin sağ tarafı doğru veri kaynağından bir sütun adı olmalıdır. Veri kaynağı, formülü işleyemeyebilir ve eksik bir veri kümesi döndürebilir. Veri kümesi eksikse uygulamanız doğru sonuçlar döndürmeyebilir veya düzgün çalışmayabilir.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_1" xml:space="preserve">
     <value>"in" işlecinin sağındaki öğeyi doğru veri kaynağından bir sütun olacak şekilde değiştirin.</value>
@@ -6107,7 +6155,7 @@
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_LongMessage" xml:space="preserve">
     <value> "in" işlecinin sağ tarafı doğru veri kaynağından bir sütun değil. Veri kaynağı, formülü işleyemeyebilir ve eksik bir veri kümesi döndürebilir. Veri kümesi eksikse uygulamanız doğru sonuçlar döndürmeyebilir veya düzgün çalışmayabilir.
       </value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_1" xml:space="preserve">
     <value>"in" işlecinin sağındaki öğeyi doğru veri kaynağından bir sütun olacak şekilde değiştirin.</value>
@@ -6213,5 +6261,9 @@
   <data name="ErrorResource_ErrAsNotInContext_ShortMessage" xml:space="preserve">
     <value>bu bağlamda As'e izin verilmiyor</value>
     <comment>{Locked=As} This is an error message that shows up when the As keyword is used but is not valid</comment>
+  </data>
+  <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
+    <value>Adlandırılmış formül, noktalı virgülle sona ermelidir.</value>
+    <comment>A semicolon must terminate named formulas. For example, a=10;</comment>
   </data>
 </root>
