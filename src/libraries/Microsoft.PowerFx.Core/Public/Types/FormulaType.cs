@@ -20,6 +20,8 @@ namespace Microsoft.PowerFx.Core.Public.Types
         // protected isn't enough to let derived classes access this.
         internal readonly DType _type;
 
+        private protected DisplayNameProvider _displayNameProvider;
+
         public static FormulaType Blank { get; } = new BlankType();
 
         // Well-known types
@@ -35,35 +37,14 @@ namespace Microsoft.PowerFx.Core.Public.Types
         public static FormulaType OptionSetValue { get; } = new OptionSetValueType();
 
         // chained by derived type 
-        internal FormulaType(DType type, Dictionary<string, string> displayNameSet = null)
+        internal FormulaType(DType type, DisplayNameProvider displayNameProvider = null)
         {
-            if (displayNameSet == null)
+            if (displayNameProvider == null)
                 _type = type;
             else 
             {
-                ValidateDisplayNames(displayNameSet);
-                _type = DType.AttachDisplayNameProvider(type, new BidirectionalDictionary<string, string>(displayNameSet));
-            }
-
-        }
-
-        private void ValidateDisplayNames(Dictionary<string, string> displayNameSet)
-        {
-            HashSet<string> displayNames = new();
-            foreach (var kvp in displayNameSet)
-            {
-                // Display names can't collide with other display names
-                if (displayNames.Contains(kvp.Value))
-                {
-                    throw new DisplayNameCollisionException(kvp.Value);
-                }
-                // Display names can't collide with logical names other than their own
-                if (kvp.Key != kvp.Value && displayNameSet.ContainsKey(kvp.Value))
-                {
-                    throw new DisplayNameCollisionException(kvp.Value);
-                }
-
-                displayNames.Add(kvp.Value);
+                _displayNameProvider = displayNameProvider;
+                _type = DType.AttachDisplayNameProvider(type, displayNameProvider);
             }
         }
 

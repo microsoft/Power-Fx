@@ -134,7 +134,7 @@ namespace Microsoft.PowerFx.Core.Types
 
         // Eventually, all display names should come from this centralized source
         // We should not be using individual DataSource/OptionSet/View references
-        internal HashSet<BidirectionalDictionary<string, string>> DisplayNameProviders { get; }
+        internal HashSet<DisplayNameProvider> DisplayNameProviders { get; }
 
         /// <summary>
         /// NamedValueKind is used only for values of kind NamedValue
@@ -168,14 +168,14 @@ namespace Microsoft.PowerFx.Core.Types
             Metadata = null;
             _attachmentType = null;
             AssociatedDataSources = new HashSet<IExternalTabularDataSource>();
-            DisplayNameProviders = new HashSet<BidirectionalDictionary<string, string>>();
+            DisplayNameProviders = new HashSet<DisplayNameProvider>();
             OptionSetInfo = null;
             ViewInfo = null;
             NamedValueKind = null;
             AssertValid();
         }
 
-        private DType(DKind kind, TypeTree tree, HashSet<IExternalTabularDataSource> dataSourceInfo, HashSet<BidirectionalDictionary<string, string>> displayNameProviders = null)
+        private DType(DKind kind, TypeTree tree, HashSet<IExternalTabularDataSource> dataSourceInfo, HashSet<DisplayNameProvider> displayNameProviders = null)
             : this(kind, tree)
         {
             Contracts.AssertValueOrNull(dataSourceInfo);
@@ -184,7 +184,7 @@ namespace Microsoft.PowerFx.Core.Types
                 dataSourceInfo = new HashSet<IExternalTabularDataSource>();
 
             AssociatedDataSources = dataSourceInfo;
-            DisplayNameProviders = displayNameProviders ?? new HashSet<BidirectionalDictionary<string, string>>();
+            DisplayNameProviders = displayNameProviders ?? new HashSet<DisplayNameProvider>();
         }
 
 
@@ -207,7 +207,7 @@ namespace Microsoft.PowerFx.Core.Types
                 OptionSetInfo,
                 ViewInfo,
                 NamedValueKind,
-                new HashSet<BidirectionalDictionary<string, string>>(DisplayNameProviders));
+                new HashSet<DisplayNameProvider>(DisplayNameProviders));
         }
 
         // Constructor for aggregate types (record, table)
@@ -226,7 +226,7 @@ namespace Microsoft.PowerFx.Core.Types
             Metadata = null;
             _attachmentType = null;
             AssociatedDataSources = new HashSet<IExternalTabularDataSource>();
-            DisplayNameProviders = new HashSet<BidirectionalDictionary<string, string>>();
+            DisplayNameProviders = new HashSet<DisplayNameProvider>();
             OptionSetInfo = null;
             ViewInfo = null;
             NamedValueKind = null;
@@ -249,7 +249,7 @@ namespace Microsoft.PowerFx.Core.Types
             Metadata = null;
             _attachmentType = null;
             AssociatedDataSources = new HashSet<IExternalTabularDataSource>();
-            DisplayNameProviders = new HashSet<BidirectionalDictionary<string, string>>();
+            DisplayNameProviders = new HashSet<DisplayNameProvider>();
             OptionSetInfo = null;
             ViewInfo = null;
             NamedValueKind = null;
@@ -270,7 +270,7 @@ namespace Microsoft.PowerFx.Core.Types
             Metadata = null;
             _attachmentType = null;
             AssociatedDataSources = new HashSet<IExternalTabularDataSource>();
-            DisplayNameProviders = new HashSet<BidirectionalDictionary<string, string>>();
+            DisplayNameProviders = new HashSet<DisplayNameProvider>();
             OptionSetInfo = null;
             ViewInfo = null;
             NamedValueKind = null;
@@ -292,7 +292,7 @@ namespace Microsoft.PowerFx.Core.Types
             Metadata = null;
             _attachmentType = null;
             AssociatedDataSources = associatedDataSources ?? new HashSet<IExternalTabularDataSource>();
-            DisplayNameProviders = new HashSet<BidirectionalDictionary<string, string>>();
+            DisplayNameProviders = new HashSet<DisplayNameProvider>();
             OptionSetInfo = null;
             ViewInfo = null;
             AssertValid();
@@ -313,7 +313,7 @@ namespace Microsoft.PowerFx.Core.Types
             Metadata = null;
             _attachmentType = null;
             AssociatedDataSources = associatedDataSources ?? new HashSet<IExternalTabularDataSource>();
-            DisplayNameProviders = new HashSet<BidirectionalDictionary<string, string>>();
+            DisplayNameProviders = new HashSet<DisplayNameProvider>();
             OptionSetInfo = null;
             ViewInfo = null;
             NamedValueKind = null;
@@ -336,7 +336,7 @@ namespace Microsoft.PowerFx.Core.Types
             Metadata = metadata;
             _attachmentType = null;
             AssociatedDataSources = new HashSet<IExternalTabularDataSource>();
-            DisplayNameProviders = new HashSet<BidirectionalDictionary<string, string>>();
+            DisplayNameProviders = new HashSet<DisplayNameProvider>();
             OptionSetInfo = null;
             ViewInfo = null;
             NamedValueKind = null;
@@ -360,7 +360,7 @@ namespace Microsoft.PowerFx.Core.Types
             _isFile = kind == DKind.File;
             _isLargeImage = kind == DKind.LargeImage;
             AssociatedDataSources = new HashSet<IExternalTabularDataSource>();
-            DisplayNameProviders = new HashSet<BidirectionalDictionary<string, string>>();
+            DisplayNameProviders = new HashSet<DisplayNameProvider>();
             OptionSetInfo = null;
             ViewInfo = null;
             NamedValueKind = null;
@@ -383,7 +383,7 @@ namespace Microsoft.PowerFx.Core.Types
             Metadata = null;
             _attachmentType = null;
             AssociatedDataSources = new HashSet<IExternalTabularDataSource>();
-            DisplayNameProviders = new HashSet<BidirectionalDictionary<string, string>>();
+            DisplayNameProviders = new HashSet<DisplayNameProvider>();
             OptionSetInfo = info;
             ViewInfo = null;
             NamedValueKind = null;
@@ -405,7 +405,7 @@ namespace Microsoft.PowerFx.Core.Types
             Metadata = null;
             _attachmentType = null;
             AssociatedDataSources = new HashSet<IExternalTabularDataSource>();
-            DisplayNameProviders = new HashSet<BidirectionalDictionary<string, string>>();
+            DisplayNameProviders = new HashSet<DisplayNameProvider>();
             OptionSetInfo = info;
             ViewInfo = null;
             NamedValueKind = null;
@@ -428,7 +428,7 @@ namespace Microsoft.PowerFx.Core.Types
             Metadata = null;
             _attachmentType = null;
             AssociatedDataSources = new HashSet<IExternalTabularDataSource>();
-            DisplayNameProviders = new HashSet<BidirectionalDictionary<string, string>>();
+            DisplayNameProviders = new HashSet<DisplayNameProvider>();
             OptionSetInfo = null;
             ViewInfo = info;
             NamedValueKind = null;
@@ -450,7 +450,7 @@ namespace Microsoft.PowerFx.Core.Types
             Metadata = null;
             _attachmentType = null;
             AssociatedDataSources = new HashSet<IExternalTabularDataSource>();
-            DisplayNameProviders = new HashSet<BidirectionalDictionary<string, string>>();
+            DisplayNameProviders = new HashSet<DisplayNameProvider>();
             OptionSetInfo = null;
             ViewInfo = info;
             NamedValueKind = null;
@@ -471,7 +471,7 @@ namespace Microsoft.PowerFx.Core.Types
             Metadata = null;
             _attachmentType = null;
             AssociatedDataSources = new HashSet<IExternalTabularDataSource>();
-            DisplayNameProviders = new HashSet<BidirectionalDictionary<string, string>>();
+            DisplayNameProviders = new HashSet<DisplayNameProvider>();
             OptionSetInfo = null;
             ViewInfo = null;
             NamedValueKind = namedValueKind;
@@ -624,7 +624,7 @@ namespace Microsoft.PowerFx.Core.Types
             return returnType;
         }
 
-        public static DType AttachDisplayNameProvider(DType type, BidirectionalDictionary<string, string> displayNames)
+        public static DType AttachDisplayNameProvider(DType type, DisplayNameProvider displayNames)
         {
             type.AssertValid();
             Contracts.AssertValue(displayNames);
@@ -2169,7 +2169,7 @@ namespace Microsoft.PowerFx.Core.Types
             return true;
         }
 
-        internal static DType CreateDTypeWithConnectedDataSourceInfoMetadata(DType type, HashSet<IExternalTabularDataSource> connectedDataSourceInfoSet, HashSet<BidirectionalDictionary<string, string>> displayNameProviders)
+        internal static DType CreateDTypeWithConnectedDataSourceInfoMetadata(DType type, HashSet<IExternalTabularDataSource> connectedDataSourceInfoSet, HashSet<DisplayNameProvider> displayNameProviders)
         {
             type.AssertValid();
             Contracts.AssertValueOrNull(connectedDataSourceInfoSet);
@@ -2235,7 +2235,7 @@ namespace Microsoft.PowerFx.Core.Types
             if (type != null && type.DisplayNameProviders != null && type.DisplayNameProviders.Count == 1)
             { 
                 var displayNameProvider = type.DisplayNameProviders.First();
-                if (displayNameProvider.TryGetFromFirst(logicalName, out displayName))
+                if (displayNameProvider.TryGetDisplayName(logicalName, out displayName))
                     return true;
             }
 
@@ -2296,7 +2296,7 @@ namespace Microsoft.PowerFx.Core.Types
             if (type != null && type.DisplayNameProviders != null && type.DisplayNameProviders.Count == 1)
             { 
                 var displayNameProvider = type.DisplayNameProviders.First();
-                if (displayNameProvider.TryGetFromSecond(displayName, out logicalName))
+                if (displayNameProvider.TryGetLogicalName(displayName, out logicalName))
                     return true;
             }
 
@@ -2412,12 +2412,12 @@ namespace Microsoft.PowerFx.Core.Types
             }
 
             // The DisplayNameProvider path doesn't participate in Display -> Display remapping, just logical -> display and display -> logical.
-            // So in this case, we return the logical name and pretend we're upding display name to the same one we already have.
-            // This allows us to succeed even if we try to converting an expression that already is using display names to display format
+            // So in this case, we return the logical name and pretend we're updating display name to the same one we already have.
+            // This allows us to succeed even if we try to convert to display format an expression that already is using display names 
             if (type != null && type.DisplayNameProviders != null && type.DisplayNameProviders.Count == 1)
             { 
                 var displayNameProvider = type.DisplayNameProviders.First();
-                if (displayNameProvider.TryGetFromSecond(displayName, out logicalName))
+                if (displayNameProvider.TryGetLogicalName(displayName, out logicalName))
                 {
                     newDisplayName = displayName;
                     return true;
@@ -2778,7 +2778,7 @@ namespace Microsoft.PowerFx.Core.Types
             IExternalOptionSet<int> optionSetInfo,
             IExternalViewInfo viewInfo,
             string namedValueKind,
-            HashSet<BidirectionalDictionary<string,string>> displayNameProviders)
+            HashSet<DisplayNameProvider> displayNameProviders)
         {
             Kind = kind;
             TypeTree = typeTree;

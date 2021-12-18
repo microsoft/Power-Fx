@@ -11,8 +11,7 @@ namespace Microsoft.PowerFx.Core.Public.Types
 {
     public class RecordType : AggregateType
     {
-        // For DisplayNameSet the Keys are Logical Names, and the Values are Display Names
-        internal RecordType(DType type, Dictionary<string, string> displayNameSet = null) : base(type, displayNameSet)
+        internal RecordType(DType type, DisplayNameProvider displayNameProvider = null) : base(type, displayNameProvider)
         {
             Contract.Assert(type.IsRecord);
         }
@@ -26,20 +25,25 @@ namespace Microsoft.PowerFx.Core.Public.Types
             vistor.Visit(this);
         }
 
-        public RecordType Add(NamedFormulaType field)
+        public RecordType Add(NamedFormulaType field, string optionalDisplayName = null)
         {
+            var displayNameProvider = _displayNameProvider;
+            if (optionalDisplayName != null)
+            {
+                if (displayNameProvider == null)
+                    displayNameProvider = new DisplayNameProvider();
+
+                if (!displayNameProvider.TryAddField(field.Name, optionalDisplayName))
+                    throw new NameCollisionException(optionalDisplayName);
+            }
+
             var newType = _type.Add(field._typedName);
-            return new RecordType(newType);
+            return new RecordType(newType, displayNameProvider);
         }
 
-        public RecordType Add(string name, FormulaType type)
+        public RecordType Add(string logicalName, FormulaType type, string optionalDisplayName = null)
         {
-            return Add(new NamedFormulaType(new TypedName(type._type, new DName(name))));
-        }
-
-        public RecordType WithDisplayNames(Dictionary<string, string> displayNameSet)
-        {
-            return new RecordType(_type, displayNameSet);
+            return Add(new NamedFormulaType(new TypedName(type._type, new DName(logicalName))), optionalDisplayName);
         }
 
         public TableType ToTable()

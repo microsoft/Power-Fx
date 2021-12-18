@@ -11,8 +11,7 @@ namespace Microsoft.PowerFx.Core.Public.Types
 {
     public class TableType : AggregateType
     {
-        // For DisplayNameSet the Keys are Logical Names, and the Values are Display Names
-        internal TableType(DType type, Dictionary<string, string> displayNameSet = null) : base(type, displayNameSet)
+        internal TableType(DType type, DisplayNameProvider displayNameProvider = null) : base(type, displayNameProvider)
         {
             Contract.Assert(type.IsTable);
         }
@@ -33,15 +32,20 @@ namespace Microsoft.PowerFx.Core.Public.Types
             vistor.Visit(this);
         }
 
-        public TableType Add(NamedFormulaType field)
+        public TableType Add(NamedFormulaType field, string optionalDisplayName = null)
         {
-            var newType = _type.Add(field._typedName);
-            return new TableType(newType);
-        }
+            var displayNameProvider = _displayNameProvider;
+            if (optionalDisplayName != null)
+            {
+                if (displayNameProvider == null)
+                    displayNameProvider = new DisplayNameProvider();
 
-        public TableType WithDisplayNames(Dictionary<string, string> displayNameSet)
-        {
-            return new TableType(_type, displayNameSet);
+                if (!displayNameProvider.TryAddField(field.Name, optionalDisplayName))
+                    throw new NameCollisionException(optionalDisplayName);
+            }
+
+            var newType = _type.Add(field._typedName);
+            return new TableType(newType, displayNameProvider);
         }
 
         public string SingleColumnFieldName
