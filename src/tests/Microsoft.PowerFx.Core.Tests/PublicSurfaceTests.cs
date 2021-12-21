@@ -74,7 +74,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Core.App.DefaultEnabledFeatures",
                 "Microsoft.PowerFx.Core.Utils.DName",
                 "Microsoft.PowerFx.Core.Utils.ICheckable",
-                "Microsoft.PowerFx.Core.DisplayNameCollisionException",
+                "Microsoft.PowerFx.Core.NameCollisionException",
             };
 
             StringBuilder sb = new StringBuilder();
