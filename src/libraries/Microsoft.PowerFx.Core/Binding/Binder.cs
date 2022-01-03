@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation.
+﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
 using System;
@@ -2502,7 +2502,7 @@ namespace Microsoft.PowerFx.Core.Binding
                     return logicalNodeName;
 
                 // Skip trying to match display names if the type isn't associated with a data source, an option set or view, or other display name source
-                if (!type.AssociatedDataSources.Any() && !type.IsOptionSet && !type.IsView && !type.HasExpandInfo && !type.DisplayNameProviders.Any())
+                if (!type.AssociatedDataSources.Any() && !type.IsOptionSet && !type.IsView && !type.HasExpandInfo && type.DisplayNameProvider == null)
                     return logicalNodeName;
 
                 bool useUpdatedDisplayNames = (type.AssociatedDataSources.FirstOrDefault()?.IsConvertingDisplayNameMapping ?? false) || (type.OptionSetInfo?.IsConvertingDisplayNameMapping ?? false) || (type.ViewInfo?.IsConvertingDisplayNameMapping ?? false) || _txb._forceUpdateDisplayNames;
@@ -3388,7 +3388,7 @@ namespace Microsoft.PowerFx.Core.Binding
                     }
                     else
                     {
-                        _txb.SetType(node, DType.CreateDTypeWithConnectedDataSourceInfoMetadata(DType.CreateTable(new TypedName(typeRhs, nameRhs)), typeRhs.AssociatedDataSources, typeRhs.DisplayNameProviders));
+                        _txb.SetType(node, DType.CreateDTypeWithConnectedDataSourceInfoMetadata(DType.CreateTable(new TypedName(typeRhs, nameRhs)), typeRhs.AssociatedDataSources, typeRhs.DisplayNameProvider));
                     }
                 }
                 else
@@ -5178,7 +5178,7 @@ namespace Microsoft.PowerFx.Core.Binding
                     else
                     {
                         dataSourceBoundType = dataSourceInfo.Schema;
-                        nodeType = DType.CreateDTypeWithConnectedDataSourceInfoMetadata(nodeType, dataSourceBoundType.AssociatedDataSources, dataSourceBoundType.DisplayNameProviders);
+                        nodeType = DType.CreateDTypeWithConnectedDataSourceInfoMetadata(nodeType, dataSourceBoundType.AssociatedDataSources, dataSourceBoundType.DisplayNameProvider);
                     }
                 }
 

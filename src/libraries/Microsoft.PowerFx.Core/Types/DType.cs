@@ -134,7 +134,11 @@ namespace Microsoft.PowerFx.Core.Types
 
         // Eventually, all display names should come from this centralized source
         // We should not be using individual DataSource/OptionSet/View references
-        internal HashSet<DisplayNameProvider> DisplayNameProviders { get; }
+        internal DisplayNameProvider DisplayNameProvider { get; private set; }
+
+        // If the type is derived from multiple DisplayNameProviders, disable display names.
+        private bool DisableDisplayNames = false;
+
 
         /// <summary>
         /// NamedValueKind is used only for values of kind NamedValue
@@ -168,14 +172,13 @@ namespace Microsoft.PowerFx.Core.Types
             Metadata = null;
             _attachmentType = null;
             AssociatedDataSources = new HashSet<IExternalTabularDataSource>();
-            DisplayNameProviders = new HashSet<DisplayNameProvider>();
             OptionSetInfo = null;
             ViewInfo = null;
             NamedValueKind = null;
             AssertValid();
         }
 
-        private DType(DKind kind, TypeTree tree, HashSet<IExternalTabularDataSource> dataSourceInfo, HashSet<DisplayNameProvider> displayNameProviders = null)
+        private DType(DKind kind, TypeTree tree, HashSet<IExternalTabularDataSource> dataSourceInfo, DisplayNameProvider displayNameProvider = null)
             : this(kind, tree)
         {
             Contracts.AssertValueOrNull(dataSourceInfo);
@@ -184,7 +187,7 @@ namespace Microsoft.PowerFx.Core.Types
                 dataSourceInfo = new HashSet<IExternalTabularDataSource>();
 
             AssociatedDataSources = dataSourceInfo;
-            DisplayNameProviders = displayNameProviders ?? new HashSet<DisplayNameProvider>();
+            DisplayNameProvider = displayNameProvider;
         }
 
 
@@ -207,7 +210,8 @@ namespace Microsoft.PowerFx.Core.Types
                 OptionSetInfo,
                 ViewInfo,
                 NamedValueKind,
-                new HashSet<DisplayNameProvider>(DisplayNameProviders));
+                DisplayNameProvider,
+                DisableDisplayNames);
         }
 
         // Constructor for aggregate types (record, table)
@@ -226,7 +230,6 @@ namespace Microsoft.PowerFx.Core.Types
             Metadata = null;
             _attachmentType = null;
             AssociatedDataSources = new HashSet<IExternalTabularDataSource>();
-            DisplayNameProviders = new HashSet<DisplayNameProvider>();
             OptionSetInfo = null;
             ViewInfo = null;
             NamedValueKind = null;
@@ -249,7 +252,6 @@ namespace Microsoft.PowerFx.Core.Types
             Metadata = null;
             _attachmentType = null;
             AssociatedDataSources = new HashSet<IExternalTabularDataSource>();
-            DisplayNameProviders = new HashSet<DisplayNameProvider>();
             OptionSetInfo = null;
             ViewInfo = null;
             NamedValueKind = null;
@@ -270,7 +272,6 @@ namespace Microsoft.PowerFx.Core.Types
             Metadata = null;
             _attachmentType = null;
             AssociatedDataSources = new HashSet<IExternalTabularDataSource>();
-            DisplayNameProviders = new HashSet<DisplayNameProvider>();
             OptionSetInfo = null;
             ViewInfo = null;
             NamedValueKind = null;
@@ -292,7 +293,6 @@ namespace Microsoft.PowerFx.Core.Types
             Metadata = null;
             _attachmentType = null;
             AssociatedDataSources = associatedDataSources ?? new HashSet<IExternalTabularDataSource>();
-            DisplayNameProviders = new HashSet<DisplayNameProvider>();
             OptionSetInfo = null;
             ViewInfo = null;
             AssertValid();
@@ -313,7 +313,6 @@ namespace Microsoft.PowerFx.Core.Types
             Metadata = null;
             _attachmentType = null;
             AssociatedDataSources = associatedDataSources ?? new HashSet<IExternalTabularDataSource>();
-            DisplayNameProviders = new HashSet<DisplayNameProvider>();
             OptionSetInfo = null;
             ViewInfo = null;
             NamedValueKind = null;
@@ -336,7 +335,6 @@ namespace Microsoft.PowerFx.Core.Types
             Metadata = metadata;
             _attachmentType = null;
             AssociatedDataSources = new HashSet<IExternalTabularDataSource>();
-            DisplayNameProviders = new HashSet<DisplayNameProvider>();
             OptionSetInfo = null;
             ViewInfo = null;
             NamedValueKind = null;
@@ -360,7 +358,6 @@ namespace Microsoft.PowerFx.Core.Types
             _isFile = kind == DKind.File;
             _isLargeImage = kind == DKind.LargeImage;
             AssociatedDataSources = new HashSet<IExternalTabularDataSource>();
-            DisplayNameProviders = new HashSet<DisplayNameProvider>();
             OptionSetInfo = null;
             ViewInfo = null;
             NamedValueKind = null;
@@ -383,7 +380,6 @@ namespace Microsoft.PowerFx.Core.Types
             Metadata = null;
             _attachmentType = null;
             AssociatedDataSources = new HashSet<IExternalTabularDataSource>();
-            DisplayNameProviders = new HashSet<DisplayNameProvider>();
             OptionSetInfo = info;
             ViewInfo = null;
             NamedValueKind = null;
@@ -405,7 +401,6 @@ namespace Microsoft.PowerFx.Core.Types
             Metadata = null;
             _attachmentType = null;
             AssociatedDataSources = new HashSet<IExternalTabularDataSource>();
-            DisplayNameProviders = new HashSet<DisplayNameProvider>();
             OptionSetInfo = info;
             ViewInfo = null;
             NamedValueKind = null;
@@ -428,7 +423,6 @@ namespace Microsoft.PowerFx.Core.Types
             Metadata = null;
             _attachmentType = null;
             AssociatedDataSources = new HashSet<IExternalTabularDataSource>();
-            DisplayNameProviders = new HashSet<DisplayNameProvider>();
             OptionSetInfo = null;
             ViewInfo = info;
             NamedValueKind = null;
@@ -450,7 +444,6 @@ namespace Microsoft.PowerFx.Core.Types
             Metadata = null;
             _attachmentType = null;
             AssociatedDataSources = new HashSet<IExternalTabularDataSource>();
-            DisplayNameProviders = new HashSet<DisplayNameProvider>();
             OptionSetInfo = null;
             ViewInfo = info;
             NamedValueKind = null;
@@ -471,7 +464,6 @@ namespace Microsoft.PowerFx.Core.Types
             Metadata = null;
             _attachmentType = null;
             AssociatedDataSources = new HashSet<IExternalTabularDataSource>();
-            DisplayNameProviders = new HashSet<DisplayNameProvider>();
             OptionSetInfo = null;
             ViewInfo = null;
             NamedValueKind = namedValueKind;
@@ -630,8 +622,20 @@ namespace Microsoft.PowerFx.Core.Types
             Contracts.AssertValue(displayNames);
 
             DType returnType = type.Clone();
-            returnType.DisplayNameProviders.Add(displayNames);
-
+            if (returnType.DisplayNameProvider == null)
+            {
+                returnType.DisplayNameProvider = displayNames;
+                returnType.DisableDisplayNames = false;
+            } 
+            else if (returnType.DisplayNameProvider.Matches(displayNames))
+            {
+                returnType.DisplayNameProvider = displayNames;
+                return returnType;
+            } 
+            else
+            {
+                returnType.DisableDisplayNames = true;
+            }
             return returnType;
         }
 
@@ -879,7 +883,7 @@ namespace Microsoft.PowerFx.Core.Types
                     if (ExpandInfo != null)
                         return new DType(DKind.Record, ExpandInfo, TypeTree);
                     else
-                        return new DType(DKind.Record, TypeTree, AssociatedDataSources, DisplayNameProviders);
+                        return new DType(DKind.Record, TypeTree, AssociatedDataSources, DisplayNameProvider);
                 case DKind.ObjNull:
                     return EmptyRecord;
                 default:
@@ -953,7 +957,7 @@ namespace Microsoft.PowerFx.Core.Types
                     if (ExpandInfo != null)
                         return new DType(DKind.Record, ExpandInfo, TypeTree);
                     else
-                        return new DType(DKind.Record, TypeTree, AssociatedDataSources, DisplayNameProviders);
+                        return new DType(DKind.Record, TypeTree, AssociatedDataSources, DisplayNameProvider);
                 case DKind.ObjNull:
                     return EmptyRecord;
                 default:
@@ -976,7 +980,7 @@ namespace Microsoft.PowerFx.Core.Types
                     if (ExpandInfo != null)
                         return new DType(DKind.Table, ExpandInfo, TypeTree);
                     else
-                        return new DType(DKind.Table, TypeTree, AssociatedDataSources, DisplayNameProviders);
+                        return new DType(DKind.Table, TypeTree, AssociatedDataSources, DisplayNameProvider);
                 case DKind.ObjNull:
                     return EmptyTable;
                 default:
@@ -996,7 +1000,7 @@ namespace Microsoft.PowerFx.Core.Types
                 case DKind.Record:
                 case DKind.DataEntity:
                 case DKind.Control:
-                    return new DType(DKind.Table, TypeTree, AssociatedDataSources, DisplayNameProviders);
+                    return new DType(DKind.Table, TypeTree, AssociatedDataSources, DisplayNameProvider);
                 case DKind.ObjNull:
                     return EmptyTable;
                 default:
@@ -1172,7 +1176,7 @@ namespace Microsoft.PowerFx.Core.Types
 
                 Contracts.Assert(typeCur.IsRecord || typeCur.IsTable);
                 TypeTree tree = typeCur.TypeTree.SetItem(path.Name, type, skipCompare);
-                type = new DType(typeCur.Kind, tree, typeCur.AssociatedDataSources, typeCur.DisplayNameProviders);
+                type = new DType(typeCur.Kind, tree, typeCur.AssociatedDataSources, typeCur.DisplayNameProvider);
 
                 if (typeCur.HasExpandInfo)
                     type = CopyExpandInfo(type, typeCur);
@@ -1207,7 +1211,7 @@ namespace Microsoft.PowerFx.Core.Types
                 fError = true;
 
             TypeTree tree = typeOuter.TypeTree.SetItem(name, type);
-            var updatedTypeOuter = new DType(typeOuter.Kind, tree, AssociatedDataSources, typeOuter.DisplayNameProviders);
+            var updatedTypeOuter = new DType(typeOuter.Kind, tree, AssociatedDataSources, typeOuter.DisplayNameProvider);
 
             if (typeOuter.HasExpandInfo)
                 updatedTypeOuter = CopyExpandInfo(updatedTypeOuter, typeOuter);
@@ -1225,7 +1229,7 @@ namespace Microsoft.PowerFx.Core.Types
 
             Contracts.Assert(!TypeTree.Contains(name));
             TypeTree tree = TypeTree.SetItem(name, type);
-            var newType = new DType(Kind, tree, AssociatedDataSources, DisplayNameProviders);
+            var newType = new DType(Kind, tree, AssociatedDataSources, DisplayNameProvider);
 
             return newType;
         }
@@ -1273,7 +1277,7 @@ namespace Microsoft.PowerFx.Core.Types
                 tree = tree.SetItem(tn.Name, tn.Type);
             }
 
-            typeOuter = new DType(typeOuter.Kind, tree, AssociatedDataSources, DisplayNameProviders);
+            typeOuter = new DType(typeOuter.Kind, tree, AssociatedDataSources, DisplayNameProvider);
 
             return SetType(ref fError, path, typeOuter);
         }
@@ -1298,7 +1302,7 @@ namespace Microsoft.PowerFx.Core.Types
             if (fError)
                 return this;
 
-            return SetType(ref fError, path, new DType(typeOuter.Kind, tree, AssociatedDataSources, DisplayNameProviders));
+            return SetType(ref fError, path, new DType(typeOuter.Kind, tree, AssociatedDataSources, DisplayNameProvider));
         }
 
         // Drop fields of specified kind.
@@ -1329,7 +1333,7 @@ namespace Microsoft.PowerFx.Core.Types
                 return this;
             }
 
-            return SetType(ref fError, path, new DType(typeOuter.Kind, tree, AssociatedDataSources, DisplayNameProviders));
+            return SetType(ref fError, path, new DType(typeOuter.Kind, tree, AssociatedDataSources, DisplayNameProvider));
         }
 
         public DType DropAllOfTableRelationships(ref bool fError, DPath path)
@@ -1360,7 +1364,7 @@ namespace Microsoft.PowerFx.Core.Types
                 }
             }
 
-            return SetType(ref fError, path, new DType(typeOuter.Kind, tree, AssociatedDataSources, DisplayNameProviders));
+            return SetType(ref fError, path, new DType(typeOuter.Kind, tree, AssociatedDataSources, DisplayNameProvider));
         }
 
         // Drop fields of specified kind from all nested types
@@ -1393,7 +1397,7 @@ namespace Microsoft.PowerFx.Core.Types
                 }
             }
 
-            return SetType(ref fError, path, new DType(typeOuter.Kind, tree, AssociatedDataSources, DisplayNameProviders));
+            return SetType(ref fError, path, new DType(typeOuter.Kind, tree, AssociatedDataSources, DisplayNameProvider));
         }
 
         // Drop the specified names/fields from path's type, and return the resulting type.
@@ -1417,7 +1421,7 @@ namespace Microsoft.PowerFx.Core.Types
 
             TypeTree tree = typeOuter.TypeTree.RemoveItems(ref fError, rgname);
 
-            return SetType(ref fError, path, new DType(typeOuter.Kind, tree, AssociatedDataSources, DisplayNameProviders));
+            return SetType(ref fError, path, new DType(typeOuter.Kind, tree, AssociatedDataSources, DisplayNameProvider));
         }
 
         // Drop everything but the specified names/fields from path's type, and return the resulting type.
@@ -1452,7 +1456,7 @@ namespace Microsoft.PowerFx.Core.Types
                 tree = tree.SetItem(name, typeCur);
             }
 
-            return SetType(ref fError, path, new DType(typeOuter.Kind, tree, AssociatedDataSources, DisplayNameProviders));
+            return SetType(ref fError, path, new DType(typeOuter.Kind, tree, AssociatedDataSources, DisplayNameProvider));
         }
 
         // If a name/field (that was specified to be split) is missing, we are returning a new type
@@ -1490,8 +1494,8 @@ namespace Microsoft.PowerFx.Core.Types
                 }
             }
 
-            typeRest = new DType(Kind, treeRest, AssociatedDataSources, DisplayNameProviders);
-            return new DType(Kind, treeWith, AssociatedDataSources, DisplayNameProviders);
+            typeRest = new DType(Kind, treeRest, AssociatedDataSources, DisplayNameProvider);
+            return new DType(Kind, treeWith, AssociatedDataSources, DisplayNameProvider);
         }
 
         // Get ALL the fields/names at the specified path, including hidden meta fields
@@ -2034,10 +2038,10 @@ namespace Microsoft.PowerFx.Core.Types
             type2.AssertValid();
 
             if (type1.Accepts(type2, useLegacyDateTimeAccepts: useLegacyDateTimeAccepts))
-                return CreateDTypeWithConnectedDataSourceInfoMetadata(type1, type2.AssociatedDataSources, type2.DisplayNameProviders);
+                return CreateDTypeWithConnectedDataSourceInfoMetadata(type1, type2.AssociatedDataSources, type2.DisplayNameProvider);
 
             if (type2.Accepts(type1, useLegacyDateTimeAccepts: useLegacyDateTimeAccepts))
-                return CreateDTypeWithConnectedDataSourceInfoMetadata(type2, type1.AssociatedDataSources, type1.DisplayNameProviders);
+                return CreateDTypeWithConnectedDataSourceInfoMetadata(type2, type1.AssociatedDataSources, type1.DisplayNameProvider);
 
             DKind type1Superkind;
             if (!KindToSuperkindMapping.TryGetValue(type1.Kind, out type1Superkind) || type1Superkind == DKind.Error)
@@ -2169,7 +2173,7 @@ namespace Microsoft.PowerFx.Core.Types
             return true;
         }
 
-        internal static DType CreateDTypeWithConnectedDataSourceInfoMetadata(DType type, HashSet<IExternalTabularDataSource> connectedDataSourceInfoSet, HashSet<DisplayNameProvider> displayNameProviders)
+        internal static DType CreateDTypeWithConnectedDataSourceInfoMetadata(DType type, HashSet<IExternalTabularDataSource> connectedDataSourceInfoSet, DisplayNameProvider displayNameProvider)
         {
             type.AssertValid();
             Contracts.AssertValueOrNull(connectedDataSourceInfoSet);
@@ -2181,7 +2185,7 @@ namespace Microsoft.PowerFx.Core.Types
             foreach (var cds in connectedDataSourceInfoSet)
                 returnType = AttachDataSourceInfo(returnType, cds);
 
-            foreach (var displayNameProvider in displayNameProviders)
+            if (displayNameProvider != null)
                 returnType = AttachDisplayNameProvider(returnType, displayNameProvider);
 
             return returnType;
@@ -2232,10 +2236,9 @@ namespace Microsoft.PowerFx.Core.Types
             // Use the DisplayNameProvider here
             // If there are multiple DisplayNameProviders associated with the type, we may have name conflicts
             // In that case, we block the use of display names from the type
-            if (type != null && type.DisplayNameProviders != null && type.DisplayNameProviders.Count == 1)
+            if (type != null && type.DisplayNameProvider != null && !type.DisableDisplayNames)
             { 
-                var displayNameProvider = type.DisplayNameProviders.First();
-                if (displayNameProvider.TryGetDisplayName(logicalName, out displayName))
+                if (type.DisplayNameProvider.TryGetDisplayName(logicalName, out displayName))
                     return true;
             }
 
@@ -2293,10 +2296,9 @@ namespace Microsoft.PowerFx.Core.Types
             // Use the DisplayNameProvider here
             // If there are multiple DisplayNameProviders associated with the type, we may have name conflicts
             // In that case, we block the use of display names from the type
-            if (type != null && type.DisplayNameProviders != null && type.DisplayNameProviders.Count == 1)
+            if (type != null && type.DisplayNameProvider != null && !type.DisableDisplayNames)
             { 
-                var displayNameProvider = type.DisplayNameProviders.First();
-                if (displayNameProvider.TryGetLogicalName(displayName, out logicalName))
+                if (type.DisplayNameProvider.TryGetLogicalName(displayName, out logicalName))
                     return true;
             }
 
@@ -2414,10 +2416,9 @@ namespace Microsoft.PowerFx.Core.Types
             // The DisplayNameProvider path doesn't participate in Display -> Display remapping, just logical -> display and display -> logical.
             // So in this case, we return the logical name and pretend we're updating display name to the same one we already have.
             // This allows us to succeed even if we try to convert to display format an expression that already is using display names 
-            if (type != null && type.DisplayNameProviders != null && type.DisplayNameProviders.Count == 1)
+            if (type != null && type.DisplayNameProvider != null && !type.DisableDisplayNames)
             { 
-                var displayNameProvider = type.DisplayNameProviders.First();
-                if (displayNameProvider.TryGetLogicalName(displayName, out logicalName))
+                if (type.DisplayNameProvider.TryGetLogicalName(displayName, out logicalName))
                 {
                     newDisplayName = displayName;
                     return true;
@@ -2438,9 +2439,9 @@ namespace Microsoft.PowerFx.Core.Types
             if (type1.IsAggregate && type2.IsAggregate)
             {
                 if (type1 == ObjNull)
-                    return CreateDTypeWithConnectedDataSourceInfoMetadata(type2, type1.AssociatedDataSources, type1.DisplayNameProviders);
+                    return CreateDTypeWithConnectedDataSourceInfoMetadata(type2, type1.AssociatedDataSources, type1.DisplayNameProvider);
                 if (type2 == ObjNull)
-                    return CreateDTypeWithConnectedDataSourceInfoMetadata(type1, type2.AssociatedDataSources, type2.DisplayNameProviders);
+                    return CreateDTypeWithConnectedDataSourceInfoMetadata(type1, type2.AssociatedDataSources, type2.DisplayNameProvider);
 
                 if (type1.Kind != type2.Kind)
                 {
@@ -2448,19 +2449,19 @@ namespace Microsoft.PowerFx.Core.Types
                     return DType.Error;
                 }
 
-                return CreateDTypeWithConnectedDataSourceInfoMetadata(UnionCore(ref fError, type1, type2, useLegacyDateTimeAccepts), type2.AssociatedDataSources, type2.DisplayNameProviders);
+                return CreateDTypeWithConnectedDataSourceInfoMetadata(UnionCore(ref fError, type1, type2, useLegacyDateTimeAccepts), type2.AssociatedDataSources, type2.DisplayNameProvider);
             }
 
             if (type1.Accepts(type2, useLegacyDateTimeAccepts: useLegacyDateTimeAccepts))
             {
                 fError |= type1.IsError;
-                return CreateDTypeWithConnectedDataSourceInfoMetadata(type1, type2.AssociatedDataSources, type2.DisplayNameProviders);
+                return CreateDTypeWithConnectedDataSourceInfoMetadata(type1, type2.AssociatedDataSources, type2.DisplayNameProvider);
             }
 
             if (type2.Accepts(type1, useLegacyDateTimeAccepts: useLegacyDateTimeAccepts))
             {
                 fError |= type2.IsError;
-                return CreateDTypeWithConnectedDataSourceInfoMetadata(type2, type1.AssociatedDataSources, type1.DisplayNameProviders);
+                return CreateDTypeWithConnectedDataSourceInfoMetadata(type2, type1.AssociatedDataSources, type1.DisplayNameProvider);
             }
 
             var result = Supertype(type1, type2, useLegacyDateTimeAccepts);
@@ -2778,7 +2779,8 @@ namespace Microsoft.PowerFx.Core.Types
             IExternalOptionSet<int> optionSetInfo,
             IExternalViewInfo viewInfo,
             string namedValueKind,
-            HashSet<DisplayNameProvider> displayNameProviders)
+            DisplayNameProvider displayNameProvider,
+            bool disableDisplayNames)
         {
             Kind = kind;
             TypeTree = typeTree;
@@ -2794,7 +2796,8 @@ namespace Microsoft.PowerFx.Core.Types
             OptionSetInfo = optionSetInfo;
             ViewInfo = viewInfo;
             NamedValueKind = namedValueKind;
-            DisplayNameProviders = displayNameProviders;
+            DisplayNameProvider = displayNameProvider;
+            DisableDisplayNames = disableDisplayNames;
         }
 
         private static void EscapeJSPropertyName(StringBuilder builder, string name)

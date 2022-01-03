@@ -4,18 +4,19 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
 using Microsoft.PowerFx.Core.UtilityDataStructures;
 
 namespace Microsoft.PowerFx.Core
 {
     internal class DisplayNameProvider
     {
-        // String comparison is case-sensitive by default, and that's the behavior we want
+        // First is Logical Name, Second is Display Name
         private BidirectionalDictionary<string, string> _displayNames;
 
         public DisplayNameProvider()
         {
-            _displayNames = new();
+            _displayNames = new(StringComparer.Ordinal, StringComparer.Ordinal);
         }
 
         public bool TryAddField(string logicalName, string displayName)
@@ -40,14 +41,12 @@ namespace Microsoft.PowerFx.Core
             return _displayNames.TryGetFromFirst(logicalName, out displayName);
         }
 
-        public override bool Equals(object obj)
+        public bool Matches(DisplayNameProvider other)
         {
-            return obj is DisplayNameProvider other && _displayNames.Equals(other._displayNames);
-        }
-
-        public override int GetHashCode()
-        {
-            return _displayNames.GetHashCode();
+            return other != null &&
+                _displayNames.Count() == other._displayNames.Count() &&
+                _displayNames.Keys.All(other._displayNames.ContainsFirstKey) &&
+                _displayNames.Values.Any(other._displayNames.ContainsSecondKey);
         }
     }
 }

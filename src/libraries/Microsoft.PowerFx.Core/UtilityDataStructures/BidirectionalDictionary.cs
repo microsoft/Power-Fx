@@ -18,6 +18,12 @@ namespace Microsoft.PowerFx.Core.UtilityDataStructures
             _secondToFirst = new Dictionary<TSecond, TFirst>();
         }
 
+        public BidirectionalDictionary(IEqualityComparer<TFirst> firstComparer, IEqualityComparer<TSecond> secondComparer)
+        {
+            _firstToSecond = new Dictionary<TFirst, TSecond>(firstComparer);
+            _secondToFirst = new Dictionary<TSecond, TFirst>(secondComparer);
+        }
+
         public BidirectionalDictionary(IDictionary<TFirst, TSecond> input) : this()
         {
             foreach (var kvp in input)
