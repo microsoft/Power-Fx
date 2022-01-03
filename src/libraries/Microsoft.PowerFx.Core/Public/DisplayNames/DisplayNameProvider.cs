@@ -25,15 +25,18 @@ namespace Microsoft.PowerFx.Core
             _displayNames = displayNames.Clone();
         }
 
-        public bool TryAddField(DName logicalName, DName displayName)
+        public DisplayNameProvider AddField(DName logicalName, DName displayName)
         {
             // Check for collisions between display and logical names
             if (_displayNames.ContainsSecondKey(logicalName) || _displayNames.ContainsFirstKey(logicalName) ||
                 _displayNames.ContainsFirstKey(displayName) || _displayNames.ContainsSecondKey(displayName))
             {
-                return false; 
+                throw new NameCollisionException(displayName);
             }
-            return _displayNames.Add(logicalName, displayName);
+
+            var result = Clone();
+            result._displayNames.Add(logicalName, displayName);
+            return result;
         }
 
 
@@ -45,14 +48,6 @@ namespace Microsoft.PowerFx.Core
         public bool TryGetDisplayName(DName logicalName, out DName displayName)
         {
             return _displayNames.TryGetFromFirst(logicalName, out displayName);
-        }
-
-        public bool Matches(DisplayNameProvider other)
-        {
-            return other != null &&
-                _displayNames.Count() == other._displayNames.Count() &&
-                _displayNames.Keys.All(other._displayNames.ContainsFirstKey) &&
-                _displayNames.Values.All(other._displayNames.ContainsSecondKey);
         }
 
         public DisplayNameProvider Clone()

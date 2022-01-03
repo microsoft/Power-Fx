@@ -39,12 +39,8 @@ namespace Microsoft.PowerFx.Core.Public.Types
             {
                 if (displayNameProvider == null)
                     displayNameProvider = new DisplayNameProvider();
-                else 
-                    displayNameProvider = _type.DisplayNameProvider.Clone();
 
-
-                if (!displayNameProvider.TryAddField(field.Name, field.DisplayName))
-                    throw new NameCollisionException(field.DisplayName);
+                displayNameProvider = displayNameProvider.AddField(field.Name, field.DisplayName);
             }
 
             var newType = _type.Add(field._typedName);

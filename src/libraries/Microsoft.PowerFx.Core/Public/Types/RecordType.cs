@@ -32,11 +32,8 @@ namespace Microsoft.PowerFx.Core.Public.Types
             {
                 if (displayNameProvider == null)
                     displayNameProvider = new DisplayNameProvider();
-                else 
-                    displayNameProvider = _type.DisplayNameProvider.Clone();
-
-                if (!displayNameProvider.TryAddField(field.Name, field.DisplayName))
-                    throw new NameCollisionException(field.DisplayName);
+                
+                displayNameProvider = displayNameProvider.AddField(field.Name, field.DisplayName);
             }
 
             var newType = _type.Add(field._typedName);
@@ -50,7 +47,9 @@ namespace Microsoft.PowerFx.Core.Public.Types
 
         public RecordType Add(string logicalName, FormulaType type, string optionalDisplayName = null)
         {
-            return Add(new NamedFormulaType(new TypedName(type._type, new DName(logicalName)), new DName(optionalDisplayName)));
+            if (optionalDisplayName != null)
+                return Add(new NamedFormulaType(new TypedName(type._type, new DName(logicalName)), new DName(optionalDisplayName)));
+            return Add(new NamedFormulaType(new TypedName(type._type, new DName(logicalName))));
         }
 
         public TableType ToTable()

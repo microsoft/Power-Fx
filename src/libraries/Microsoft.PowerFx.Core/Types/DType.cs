@@ -644,7 +644,7 @@ namespace Microsoft.PowerFx.Core.Types
                 returnType.DisplayNameProvider = displayNames;
                 returnType.DisableDisplayNames = false;
             } 
-            else if (returnType.DisplayNameProvider.Matches(displayNames))
+            else if (ReferenceEquals(type.DisplayNameProvider, displayNames))
             {
                 returnType.DisplayNameProvider = displayNames;
                 return returnType;
