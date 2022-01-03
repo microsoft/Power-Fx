@@ -315,7 +315,7 @@ namespace Microsoft.PowerFx
             var formula = result._formula;
 
             var context = new IntellisenseContext(expression, cursorPosition);
-            var intellisense = IntellisenseProvider.GetIntellisense(_powerFxConfig);
+            var intellisense = IntellisenseProvider.GetIntellisense(_powerFxConfig.EnumStore);
             var suggestions = intellisense.Suggest(context, binding, formula);
 
             return suggestions;

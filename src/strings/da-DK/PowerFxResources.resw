@@ -1,45 +1,45 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <root>
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
         <xsd:choice maxOccurs="unbounded">
           <xsd:element name="metadata">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
               </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string"/>
-              <xsd:attribute name="type" type="xsd:string"/>
-              <xsd:attribute name="mimetype" type="xsd:string"/>
-              <xsd:attribute ref="xml:space"/>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="assembly">
             <xsd:complexType>
-              <xsd:attribute name="alias" type="xsd:string"/>
-              <xsd:attribute name="name" type="xsd:string"/>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="data">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
-              <xsd:attribute ref="xml:space"/>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="resheader">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required"/>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
             </xsd:complexType>
           </xsd:element>
         </xsd:choice>
@@ -447,7 +447,18 @@
     <comment>function_parameter - Argument to the Concatenate function - the text to be concatenated.</comment>
   </data>
   <data name="AboutConcatenate_text" xml:space="preserve">
-    <value>En tekst eller en kolonne med tekstværdier, der skal sammenkædes med resten af argumenterne.</value>
+    <value>En tekstværdi, der skal sammenkædes med resten af argumenterne.</value>
+  </data>
+  <data name="AboutConcatenateT" xml:space="preserve">
+    <value>Joinforbinder flere tekstværdier eller tabeller til én kolonne med tekstværdier.</value>
+    <comment>Description of 'Concatenate' function.</comment>
+  </data>
+  <data name="ConcatenateTArg1" xml:space="preserve">
+    <value>værdi</value>
+    <comment>function_parameter - Argument to the Concatenate function - the text or table to be concatenated.</comment>
+  </data>
+  <data name="AboutConcatenate_value" xml:space="preserve">
+    <value>En tekstværdi eller en kolonne med tekstværdier, der skal sammenkædes med resten af argumenterne.</value>
   </data>
   <data name="AboutConcat" xml:space="preserve">
     <value>Forbinder alle tekstværdier, der er produceret ved at evaluere det givne udtryk over den givne tabel, i én tekstværdi.</value>
@@ -812,6 +823,10 @@
     <value>Returnerer den aktuelle dato og klokkeslæt.</value>
     <comment>Description of 'Now' function.</comment>
   </data>
+  <data name="AboutUTCNow" xml:space="preserve">
+    <value>Returnerer den aktuelle dato og det aktuelle klokkeslæt i UTC-klokkeslæt.</value>
+    <comment>Description of 'UTCNow' function.</comment>
+  </data>
   <data name="AboutTimeZoneOffset" xml:space="preserve">
     <value>Returnerer tidsforskellen mellem UTC-tid og lokaltid i minutter. Hvis din tidszone f.eks. er UTC+2, returneres -120.</value>
     <comment>Description of 'TimeZoneOffset' function.</comment>
@@ -827,6 +842,10 @@
   <data name="AboutToday" xml:space="preserve">
     <value>Returnerer den aktuelle dato.</value>
     <comment>Description of 'Today' function.</comment>
+  </data>
+  <data name="AboutUTCToday" xml:space="preserve">
+    <value>Returnerer den aktuelle dato i UTC-klokkeslæt.</value>
+    <comment>Description of 'UTCToday' function.</comment>
   </data>
   <data name="AboutWeekNum" xml:space="preserve">
     <value>Returnerer ugenummeret for en given dato.</value>
@@ -1255,6 +1274,12 @@
   <data name="AboutAtan2Arg2" xml:space="preserve">
     <value>y_koordinat</value>
     <comment>function_parameter - Second parameter to the Atan function - the y coordinate for arctangent to be returned. When translating, maintain as a single word (i.e., do not add spaces)</comment>
+  </data>
+  <data name="AboutAtan2_x_coordinate" xml:space="preserve">
+    <value>x-koordinat.</value>
+  </data>
+  <data name="AboutAtan2_y_coordinate" xml:space="preserve">
+    <value>y-koordinat.</value>
   </data>
   <data name="AboutSqrt" xml:space="preserve">
     <value>Returnerer kvadratroden for et tal.</value>
@@ -3373,6 +3398,17 @@
     <value>dato</value>
     <comment>function_parameter - First argument to the IsToday function - the date to be tested.</comment>
   </data>
+  <data name="AboutIsUTCToday" xml:space="preserve">
+    <value>Kontrollerer, om den givne dato er i dag i UTC, og returnerer sand eller falsk.</value>
+    <comment>Description of 'IsUTCToday' function</comment>
+  </data>
+  <data name="AboutIsUTCToday_date" xml:space="preserve">
+    <value>Datoværdien, der skal testes.</value>
+  </data>
+  <data name="IsUTCTodayFuncArg1" xml:space="preserve">
+    <value>dato</value>
+    <comment>function_parameter - First argument to the IsUTCToday function - the date to be tested.</comment>
+  </data>
   <data name="AboutMod" xml:space="preserve">
     <value>Returnerer resten, efter et tal er divideret med en divisor. Resultatet har samme fortegn som divisoren.</value>
     <comment>Description of 'Mod' function.</comment>
@@ -5468,9 +5504,21 @@
     <value>Det er kun korte strenge til dato- og klokkeslætsformat, der understøttes i formelkolonnerne.</value>
     <comment>Error Message. Used in formula columns for scenarios where the maker supplies an invalid format string</comment>
   </data>
-  <data name="FormulaColumns_UtcResultWarning" xml:space="preserve">
-    <value>Delen "{0}" i denne formel fungerer muligvis ikke som forventet afhængigt af brugerens tidszone, da handlingen udføres i UTC (Universal Coordinated Time) i formelkolonnerne.</value>
-    <comment>Error Message. Used as a warning in formula columns for scenarios where the operation will be performed in UTC instead of the user's local time zone. The {0} will be the name of the function.</comment>
+  <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
+    <value>Landestandardspecifikke formateringstokener som "." og "," understøttes ikke i formelkolonner.</value>
+    <comment>Error Message. Used in formula columns for scenarios where the maker supplies an invalid format string</comment>
+  </data>
+  <data name="FormulaColumns_FunctionNotSupported" xml:space="preserve">
+    <value>{0} understøttes ikke i formelkolonner. Brug {1} i stedet.</value>
+    <comment>Error Message. Used in formula columns for scenarios where the maker attempts to use a function that is not supported, providing an alternate function name.  The {0} will be the name of the function that is not supported, and {1} is the name of the suggested alternate.</comment>
+  </data>
+  <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
+    <value>Denne resultattype {0} understøttes ikke i formelkolonnerne.</value>
+    <comment>Error Message. Used in formula columns for a formula that returns a type which is not supported.</comment>
+  </data>
+  <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
+    <value>Resultattypen for denne formel forventes at være {0}, men den faktiske resultattype er {1}. Resultattypen for en formelkolonne kan ikke ændres.</value>
+    <comment>Error Message. Used in formula columns for a formula that returns an unexpected result type during editing. The {0} will be the name of the required type. The {1} will be the name of the incorrect type.</comment>
   </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
     <value>Der forventedes en operand. Formlen eller udtrykket forventer en gyldig operand. Du kan for eksempel føje operanden '2' til udtrykket '1 + _' så resultatet er '3'. Eller du kan tilføje operanden "der" til udtrykket ' "Hej" &amp; _ ', så resultatet er 'Hej der'.</value>
@@ -5486,7 +5534,7 @@
   </data>
   <data name="ErrorResource_ErrBadToken_LongMessage" xml:space="preserve">
     <value>For eksempel er tegnet "\" ikke forventet efter et tal, som her: "32\". Et mellemrum ("32") ville forventes, så det kun er tallet 32 eller et andet tal (som i "323"), der forventes.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrBadToken_HowToFix_1" xml:space="preserve">
     <value>Fjern eller erstat de uventede tegn.</value>
@@ -5506,11 +5554,11 @@
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_LongMessage" xml:space="preserve">
     <value>For eksempel er tegnet "\" ikke forventet efter et tal, som her: "32\". Et mellemrum ("32") ville forventes, så det kun er tallet 32 eller et andet tal (som i "323"), der forventes.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_HowToFix_1" xml:space="preserve">
     <value>Fjern eller erstat det uventede tegn.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_Link_1" xml:space="preserve">
     <value>Artikel: Formelreference til Power Apps</value>
@@ -5526,7 +5574,7 @@
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_LongMessage" xml:space="preserve">
     <value>Hver blokkommentar skal starte med "/*" og slutte med "*/". Hvis du ikke afslutter hver blokkommentar korrekt, bliver al kode efter kommentaren en del af kommentaren. Hvis en kommentar kun udgør én linje, kan du starte den med "//" og ikke identificere slutningen af kommentaren.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_HowToFix_1" xml:space="preserve">
     <value>Tilføj '*/' til slutningen af din blokkommentar, eller skift den til en række linjekommentarer.</value>
@@ -5546,7 +5594,7 @@
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_LongMessage" xml:space="preserve">
     <value>Denne fejl opstår, hvis en formel f.eks. indeholder "{{Val@ 7}}" i stedet for "{{Val: 7}}". Når du har angivet en variabel, kræver syntaksen et kolon i stedet for et "@"-symbol.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_HowToFix_1" xml:space="preserve">
     <value>Fjern eller erstat de uventede tegn med et forventet tegn.</value>
@@ -5566,7 +5614,7 @@
   </data>
   <data name="ErrorResource_ErrInvalidName_LongMessage" xml:space="preserve">
     <value>Denne fejl forekommer oftest, når en formel refererer til noget, der ikke længere findes (f.eks, et kontrolelement, som du har slettet).</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrInvalidName_HowToFix_1" xml:space="preserve">
     <value>Fjern, eller ret referencen til det navn, der er ikke gyldigt.</value>
@@ -5586,7 +5634,7 @@
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_LongMessage" xml:space="preserve">
     <value>Denne fejl vises, når en formel refererer til egenskaber for komponentfunktionsmåde med ugyldig syntaks. (Eksempelvis Component.OnCustomChange i stedet for Component.OnCustomChange())</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_HowToFix_1" xml:space="preserve">
     <value>Brug korrekt syntaks til at referere til egenskaben for komponentfunktionsmåde. Eksempelvis Component.OnCustomChange()</value>
@@ -5606,7 +5654,7 @@
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_LongMessage" xml:space="preserve">
     <value>Du kan ikke bruge den overordnede operator med en kontrolelement, der ikke har et overordnet kontrolelement. Denne operator refererer til det kontrolelement, som er vært for det givne kontrolelement, og gør alle egenskaberne tilgængelige.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_HowToFix_1" xml:space="preserve">
     <value>Fjern operatoren 'Overordnet'.</value>
@@ -5626,7 +5674,7 @@
   </data>
   <data name="ErrorResource_ErrTooManyUps_LongMessage" xml:space="preserve">
     <value>Kompleksiteten forøges med hvert indlejringsniveau, så Power Apps understøtter kun række-område-indlejring på op til 63 niveauer.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrTooManyUps_HowToFix_1" xml:space="preserve">
     <value>Omskriv formlen med færre indlejringsniveauer.</value>
@@ -5638,7 +5686,7 @@
   </data>
   <data name="ErrorResource_ErrRuleNestedTooDeeply_LongMessage" xml:space="preserve">
     <value>Power Apps understøtter kun udtryksindlejring på op til 50 niveauer. Et så dybt udtryk er svært at forstå og vedligeholde.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrRuleNestedTooDeeply_HowToFix_1" xml:space="preserve">
     <value>Omskriv formlen med færre indlejringsniveauer.</value>
@@ -5650,7 +5698,7 @@
   </data>
   <data name="ErrorResource_ErrOperatorExpected_LongMessage" xml:space="preserve">
     <value>Operatorer joinforbinder to operander. Denne fejl opstår, hvis du sætter to funktioner (operander) sammen uden nogen operator mellem dem, f.eks. Len("mytext")Len("mytext").</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrOperatorExpected_HowToFix_1" xml:space="preserve">
     <value>Rediger formlen, så den indeholder en operator mellem operanderne.</value>
@@ -5670,7 +5718,7 @@
   </data>
   <data name="ErrorResource_ErrNumberExpected_LongMessage" xml:space="preserve">
     <value>Denne fejl vil opstå, hvis du bruger en funktion, der kræver et tal, men du f.eks. angiver et billede i stedet for.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrNumberExpected_HowToFix_1" xml:space="preserve">
     <value>Rediger formlen, så den evalueres til et tal på dette sted i formlen.</value>
@@ -5690,7 +5738,7 @@
   </data>
   <data name="ErrorResource_ErrBooleanExpected_LongMessage" xml:space="preserve">
     <value>En boolesk værdi kaldes også en sand/falsk værdi i programmer som f.eks. Microsoft Excel. Denne fejl kan opstå, hvis du bruger en funktion, som kræver en boolesk værdi, men du f.eks. angiver en dato i stedet for.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrBooleanExpected_HowToFix_1" xml:space="preserve">
     <value>Rediger formlen, så den evalueres til en boolesk værdi på dette sted i formlen.</value>
@@ -5710,7 +5758,7 @@
   </data>
   <data name="ErrorResource_ErrColonExpected_LongMessage" xml:space="preserve">
     <value>Et kolon adskiller et feltnavn, også kaldet et kolonnenavn, fra en feltværdi i en post (f.eks. {måned: "1"}, {Month:"1"}, {Month:"2"} …). Et kolon adskiller også timer fra minutter og sekunder (f.eks. "3:04").</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrColonExpected_HowToFix_1" xml:space="preserve">
     <value>Rediger formlen, så den indeholder et kolon.</value>
@@ -5730,7 +5778,7 @@
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_LongMessage" xml:space="preserve">
     <value>Funktionsmåder ændrer tilstanden for appen ved at ændre værdier et andet sted i appen. Navigate, Patch, UpdateContext og Collect er fælles funktionsmåder. OnSelect, OnVisible og andre "On..."-egenskaber er fælles funktionsmådebaserede egenskaber.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_HowToFix_1" xml:space="preserve">
     <value>Flyt funktionmåden til en funktionsmådebaseret egenskab.</value>
@@ -5750,7 +5798,7 @@
   </data>
   <data name="ErrorResource_ErrTestPropertyExpected_LongMessage" xml:space="preserve">
     <value>Testfunktioner er dem, der kan bruges til at simulere brugerinput, når en app testes. 'SetProperty', 'SelectRow' og 'Assert' er almindelige testfunktioner. De kan kun bruges i testsagerne.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrTestPropertyExpected_HowToFix_1" xml:space="preserve">
     <value>Brug funktionen i en testsag, ikke i selve appen.</value>
@@ -5762,7 +5810,7 @@
   </data>
   <data name="ErrorResource_ErrCannotCoerce_SourceType_TargetType_LongMessage" xml:space="preserve">
     <value>Power Apps kan konvertere nogle datatyper i din formel til andre typer. Den kan f.eks. konvertere "1" (en streng) til 1 (et tal), men den kan ikke konvertere alle datatyper til alle andre datatyper. Den kan f.eks. ikke den konvertere et billede til et tal.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrCannotCoerce_SourceType_TargetType_HowToFix_1" xml:space="preserve">
     <value>Rediger din formel, så du konverterer de pågældende data til den forventede type.</value>
@@ -5774,7 +5822,7 @@
   </data>
   <data name="ErrorResource_ErrStringExpected_LongMessage" xml:space="preserve">
     <value>Denne fejl opstår, hvis du bruger en funktion, der kræver et argument af typen tekst (eller streng), og du f.eks. angiver en dato i stedet for.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrStringExpected_HowToFix_1" xml:space="preserve">
     <value>Rediger formlen, så den evalueres til tekst på dette sted i formlen.</value>
@@ -5794,7 +5842,7 @@
   </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_LongMessage" xml:space="preserve">
     <value>Denne fejl vil opstå, hvis du bruger en funktion, der kræver enten tekst eller et tal, men du f.eks. angiver en boolesk værdi (sand/falsk).</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_HowToFix_1" xml:space="preserve">
     <value>Rediger formlen, så den evalueres til tekst eller tal på dette sted i formlen.</value>
@@ -5814,7 +5862,7 @@
   </data>
   <data name="ErrorResource_ErrClosingBracketExpected_LongMessage" xml:space="preserve">
     <value>En højreparentes angiver slutningen af en post (f.eks. {Month:"1"}, {Month:"2"}...).</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrClosingBracketExpected_HowToFix_1" xml:space="preserve">
     <value>Rediger din formel, så den indeholder en parentes.</value>
@@ -5834,7 +5882,7 @@
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_LongMessage" xml:space="preserve">
     <value>Vi kan ikke evaluere din formel, fordi de værdier, der sammenlignes i formlen, ikke er den samme type.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_HowToFix_1" xml:space="preserve">
     <value>Du skal måske konvertere værdien til samme type, for eksempel konvertere en datostreng (som "31/12/2018") til en datoværdi.</value>
@@ -5946,7 +5994,7 @@
   </data>
   <data name="ErrorResource_ErrTypeError_LongMessage" xml:space="preserve">
     <value>Dataene passer måske ikke til den forventede type (tekst, nummer. dato tabel, post).</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrTypeError_HowToFix_1" xml:space="preserve">
     <value>Kontrollér typerne af de værdier, der er involveret i formlen, og sørg for, at typerne stemmer overens.</value>
@@ -5974,7 +6022,7 @@
   </data>
   <data name="ErrorResource_ErrDateExpected_LongMessage" xml:space="preserve">
     <value>Denne fejl vil opstå, hvis du bruger en funktion, som kræver en dato, men du f.eks. angiver tekst i stedet for.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrDateExpected_HowToFix_1" xml:space="preserve">
     <value>Rediger formlen, så den evalueres til en dato på dette sted i formlen.</value>
@@ -5994,7 +6042,7 @@
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_LongMessage" xml:space="preserve">
     <value>Datakilden kan måske ikke behandle formlen og vil måske returnere et ufuldstændigt datasæt. Programmet kan måske ikke returnere korrekte resultater eller fungere korrekt, hvis datasættet er ufuldstændigt.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_HowToFix_1" xml:space="preserve">
     <value>Hvis datasættet overstiger grænsen på 500 poster men indeholder færre end 2.000 poster, kan du prøve at nulstille grænsen.</value>
@@ -6030,7 +6078,7 @@
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_LongMessage" xml:space="preserve">
     <value>Datakilden kan måske ikke behandle formlen og vil måske returnere et ufuldstændigt datasæt. Programmet kan måske ikke returnere korrekte resultater eller fungere korrekt, hvis datasættet er ufuldstændigt.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_HowToFix_1" xml:space="preserve">
     <value>Hvis datasættet overstiger grænsen på 500 poster men indeholder færre end 2.000 poster, kan du prøve at nulstille grænsen.</value>
@@ -6066,7 +6114,7 @@
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_LongMessage" xml:space="preserve">
     <value>Højre side af operatoren "in" skal være et kolonnenavn fra den korrekte datakilde. Datakilden kan måske ikke behandle formlen og returnerer måske et ufuldstændigt datasæt. Din applikation returnerer måske ikke korrekte resultater eller opfører sig måske ikke korrekt, hvis datasættet er ufuldstændigt.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_1" xml:space="preserve">
     <value>Rediger elementet til højre i operatoren "in", så det er en kolonne fra en korrekt datakilde.</value>
@@ -6107,7 +6155,7 @@
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_LongMessage" xml:space="preserve">
     <value> Højre side af operatoren "in" er ikke en kolonne fra den korrekte datakilde. Datakilden kan måske ikke behandle formlen og returnerer måske et ufuldstændigt datasæt. Din applikation returnerer måske ikke korrekte resultater eller fungerer muligvis ikke korrekt, hvis datasættet er ufuldstændigt.
       </value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_1" xml:space="preserve">
     <value>Rediger elementet til højre i operatoren "in", så det er en kolonne fra en korrekt datakilde.</value>
@@ -6213,5 +6261,9 @@
   <data name="ErrorResource_ErrAsNotInContext_ShortMessage" xml:space="preserve">
     <value>As er ikke tilladt i denne kontekst</value>
     <comment>{Locked=As} This is an error message that shows up when the As keyword is used but is not valid</comment>
+  </data>
+  <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
+    <value>Den navngivne formel skal slutte med et semikolon.</value>
+    <comment>A semicolon must terminate named formulas. For example, a=10;</comment>
   </data>
 </root>

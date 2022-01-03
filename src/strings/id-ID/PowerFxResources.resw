@@ -1,45 +1,45 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <root>
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
         <xsd:choice maxOccurs="unbounded">
           <xsd:element name="metadata">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
               </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string"/>
-              <xsd:attribute name="type" type="xsd:string"/>
-              <xsd:attribute name="mimetype" type="xsd:string"/>
-              <xsd:attribute ref="xml:space"/>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="assembly">
             <xsd:complexType>
-              <xsd:attribute name="alias" type="xsd:string"/>
-              <xsd:attribute name="name" type="xsd:string"/>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="data">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
-              <xsd:attribute ref="xml:space"/>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="resheader">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required"/>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
             </xsd:complexType>
           </xsd:element>
         </xsd:choice>
@@ -447,7 +447,18 @@
     <comment>function_parameter - Argument to the Concatenate function - the text to be concatenated.</comment>
   </data>
   <data name="AboutConcatenate_text" xml:space="preserve">
-    <value>Teks atau kolom nilai teks, akan digabungkan dengan seluruh argumen.</value>
+    <value>Nilai teks, untuk digabungkan dengan argumen lainnya.</value>
+  </data>
+  <data name="AboutConcatenateT" xml:space="preserve">
+    <value>Menggabungkan beberapa nilai teks atau tabel ke satu kolom nilai teks.</value>
+    <comment>Description of 'Concatenate' function.</comment>
+  </data>
+  <data name="ConcatenateTArg1" xml:space="preserve">
+    <value>nilai</value>
+    <comment>function_parameter - Argument to the Concatenate function - the text or table to be concatenated.</comment>
+  </data>
+  <data name="AboutConcatenate_value" xml:space="preserve">
+    <value>Nilai teks atau kolom nilai teks, untuk digabungkan dengan argumen lainnya.</value>
   </data>
   <data name="AboutConcat" xml:space="preserve">
     <value>Menggabungkan semua nilai teks yang dihasilkan dengan mengevaluasi ekspresi atas tabel yang ditentukan menjadi satu nilai teks.</value>
@@ -812,6 +823,10 @@
     <value>Menggembalikan tanggal dan waktu saat ini.</value>
     <comment>Description of 'Now' function.</comment>
   </data>
+  <data name="AboutUTCNow" xml:space="preserve">
+    <value>Menghasilkan tanggal dan waktu saat ini dalam waktu UTC.</value>
+    <comment>Description of 'UTCNow' function.</comment>
+  </data>
   <data name="AboutTimeZoneOffset" xml:space="preserve">
     <value>Menampilkan perbedaan waktu antara waktu UTC dan waktu lokal, dalam satuan menit. Misalnya, Jika zona waktu Anda adalah UTC+2, -120 akan ditampilkan.</value>
     <comment>Description of 'TimeZoneOffset' function.</comment>
@@ -827,6 +842,10 @@
   <data name="AboutToday" xml:space="preserve">
     <value>Menampilkan tanggal saat ini.</value>
     <comment>Description of 'Today' function.</comment>
+  </data>
+  <data name="AboutUTCToday" xml:space="preserve">
+    <value>Menghasilkan tanggal saat ini dalam waktu UTC.</value>
+    <comment>Description of 'UTCToday' function.</comment>
   </data>
   <data name="AboutWeekNum" xml:space="preserve">
     <value>Menampilkan nomor minggu untuk tanggal yang ditentukan.</value>
@@ -1255,6 +1274,12 @@
   <data name="AboutAtan2Arg2" xml:space="preserve">
     <value>koordinat_y</value>
     <comment>function_parameter - Second parameter to the Atan function - the y coordinate for arctangent to be returned. When translating, maintain as a single word (i.e., do not add spaces)</comment>
+  </data>
+  <data name="AboutAtan2_x_coordinate" xml:space="preserve">
+    <value>Koordinat-x.</value>
+  </data>
+  <data name="AboutAtan2_y_coordinate" xml:space="preserve">
+    <value>Koordinat-y.</value>
   </data>
   <data name="AboutSqrt" xml:space="preserve">
     <value>Menampilkan akar kuadrat angka.</value>
@@ -3373,6 +3398,17 @@
     <value>tanggal</value>
     <comment>function_parameter - First argument to the IsToday function - the date to be tested.</comment>
   </data>
+  <data name="AboutIsUTCToday" xml:space="preserve">
+    <value>Memeriksa apakah tanggal yang diberikan adalah hari ini dalam UTC, dan menghasilkan true atau false.</value>
+    <comment>Description of 'IsUTCToday' function</comment>
+  </data>
+  <data name="AboutIsUTCToday_date" xml:space="preserve">
+    <value>Nilai tanggal untuk diuji.</value>
+  </data>
+  <data name="IsUTCTodayFuncArg1" xml:space="preserve">
+    <value>tanggal</value>
+    <comment>function_parameter - First argument to the IsUTCToday function - the date to be tested.</comment>
+  </data>
   <data name="AboutMod" xml:space="preserve">
     <value>Menampilkan pengingat setelah jumlah dibagi dengan pembagi. Hasil memiliki tanda yang sama sebagai pembagi.</value>
     <comment>Description of 'Mod' function.</comment>
@@ -5468,9 +5504,21 @@
     <value>Hanya string format tanggal dan waktu pendek yang didukung di kolom formula.</value>
     <comment>Error Message. Used in formula columns for scenarios where the maker supplies an invalid format string</comment>
   </data>
-  <data name="FormulaColumns_UtcResultWarning" xml:space="preserve">
-    <value>Bagian "{0}" dari formula ini mungkin tidak berfungsi seperti yang diharapkan tergantung pada zona waktu pengguna, karena operasi akan dilakukan dalam Waktu Universal Terkoordinasi (UTC) di kolom formula.</value>
-    <comment>Error Message. Used as a warning in formula columns for scenarios where the operation will be performed in UTC instead of the user's local time zone. The {0} will be the name of the function.</comment>
+  <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
+    <value>Token pemformatan khusus lokal seperti "." dan "," tidak didukung di kolom rumus.</value>
+    <comment>Error Message. Used in formula columns for scenarios where the maker supplies an invalid format string</comment>
+  </data>
+  <data name="FormulaColumns_FunctionNotSupported" xml:space="preserve">
+    <value>{0} tidak didukung di kolom rumus, gunakan {1} sebagai gantinya.</value>
+    <comment>Error Message. Used in formula columns for scenarios where the maker attempts to use a function that is not supported, providing an alternate function name.  The {0} will be the name of the function that is not supported, and {1} is the name of the suggested alternate.</comment>
+  </data>
+  <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
+    <value>Jenis hasil {0} ini tidak didukung di kolom rumus.</value>
+    <comment>Error Message. Used in formula columns for a formula that returns a type which is not supported.</comment>
+  </data>
+  <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
+    <value>Jenis hasil yang diharapkan untuk rumus ini adalah {0}, tetapi jenis hasil aktual adalah {1}. Jenis hasil kolom rumus tidak dapat diubah.</value>
+    <comment>Error Message. Used in formula columns for a formula that returns an unexpected result type during editing. The {0} will be the name of the required type. The {1} will be the name of the incorrect type.</comment>
   </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
     <value>Operand yang diharapkan. Rumus atau ekspresi mengharapkan operand yang valid. Misalnya, Anda dapat menambahkan operand '2' ke ekspresi ' 1 +_' sehingga hasilnya adalah '3'. Atau, Anda dapat menambahkan operand "di sana" ke ekspresi '"Hai "&amp; _ ' sehingga hasilnya adalah 'Hai di sana'.</value>
@@ -5486,7 +5534,7 @@
   </data>
   <data name="ErrorResource_ErrBadToken_LongMessage" xml:space="preserve">
     <value>Misalnya, karakter '\' tidak diharapkan setelah angka, seperti ini: '32\'. Spasi ('32') akan diharapkan sehingga hanya angka 32, atau nomor lain (seperti dalam '323') akan diharapkan.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrBadToken_HowToFix_1" xml:space="preserve">
     <value>Hapus atau ganti karakter yang tidak diinginkan.</value>
@@ -5506,11 +5554,11 @@
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_LongMessage" xml:space="preserve">
     <value>Misalnya, karakter '\' tidak diharapkan setelah angka, seperti ini: '32\'. Spasi ('32') akan diharapkan sehingga hanya angka 32, atau nomor lain (seperti dalam '323') akan diharapkan.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_HowToFix_1" xml:space="preserve">
     <value>Hapus atau ganti karakter yang tidak diharapkan.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_Link_1" xml:space="preserve">
     <value>Artikel: Referensi rumus untuk Power Apps</value>
@@ -5526,7 +5574,7 @@
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_LongMessage" xml:space="preserve">
     <value>Setiap blok komentar harus diawali dengan '/*' dan diakhiri dengan '*/'. Jika Anda tidak mengakhiri setiap blok komentar dengan benar, semua kode setelah komentar menjadi bagian dari komentar tersebut. Jika komentar hanya terdiri dari satu baris, Anda dapat memulainya dengan '//' dan tidak mengidentifikasi akhir komentar.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_HowToFix_1" xml:space="preserve">
     <value>Tambahkan '*/' ke bagian akhir blok komentar Anda, atau ubah ke kumpulan komentar baris.</value>
@@ -5546,7 +5594,7 @@
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_LongMessage" xml:space="preserve">
     <value>Kesalahan ini terjadi jika, misalnya, rumus berisi '{{Val@ 7}}', bukan '{{Val: 7}}'. Ketika Anda membuat variabel, sintaks memerlukan tanda titik dua, bukan simbol "at".</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_HowToFix_1" xml:space="preserve">
     <value>Hapus atau ganti karakter yang tidak diinginkan dengan karakter yang diharapkan.</value>
@@ -5566,7 +5614,7 @@
   </data>
   <data name="ErrorResource_ErrInvalidName_LongMessage" xml:space="preserve">
     <value>Kesalahan ini paling sering muncul saat rumus mengacu pada sesuatu yang tidak ada lagi (misalnya, kontrol yang telah Anda hapus).</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrInvalidName_HowToFix_1" xml:space="preserve">
     <value>Hapus atau perbaiki referensi untuk nama yang tidak valid.</value>
@@ -5586,7 +5634,7 @@
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_LongMessage" xml:space="preserve">
     <value>Kesalahan ini muncul saat rumus merujuk pada properti perilaku komponen dengan sintaks yang tidak valid. (Misalnya, Component.OnCustomChange, dan bukan Component.OnCustomChange())</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_HowToFix_1" xml:space="preserve">
     <value>Gunakan sintaks yang benar untuk merujuk pada properti perilaku komponen. Misalnya, Component.OnCustomChange()</value>
@@ -5606,7 +5654,7 @@
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_LongMessage" xml:space="preserve">
     <value>Anda tidak dapat menggunakan operator Induk dengan kontrol yang tidak memiliki kontrol induk. Operator ini mengacu ke kontrol yang menjadi host kontrol tertentu dan membuat semua propertinya tersedia.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_HowToFix_1" xml:space="preserve">
     <value>Hapus operator 'Induk'.</value>
@@ -5626,7 +5674,7 @@
   </data>
   <data name="ErrorResource_ErrTooManyUps_LongMessage" xml:space="preserve">
     <value>Kerumitan meningkat dengan setiap tingkat tumpukan, sehingga Power Apps mendukung tumpukan lingkup baris hanya sampai 63 tingkat.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrTooManyUps_HowToFix_1" xml:space="preserve">
     <value>Tulis ulang rumus dengan lebih sedikit tingkat tumpukan.</value>
@@ -5638,7 +5686,7 @@
   </data>
   <data name="ErrorResource_ErrRuleNestedTooDeeply_LongMessage" xml:space="preserve">
     <value>Power Apps mendukung penumpukan ekspresi hanya sampai 50 tingkat. Ekspresi sedalam ini sulit untuk dipahami dan dipertahankan.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrRuleNestedTooDeeply_HowToFix_1" xml:space="preserve">
     <value>Tulis ulang rumus dengan lebih sedikit tingkat tumpukan.</value>
@@ -5650,7 +5698,7 @@
   </data>
   <data name="ErrorResource_ErrOperatorExpected_LongMessage" xml:space="preserve">
     <value>Operator menggabungkan dua operand sekaligus. Kesalahan ini terjadi jika Anda memasukkan dua fungsi (operand) sekaligus tanpa operator di antara keduanya -- misalnya, Len("mytext")Len("mytext").</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrOperatorExpected_HowToFix_1" xml:space="preserve">
     <value>Edit rumus Anda agar mencantumkan operator di antara operand.</value>
@@ -5670,7 +5718,7 @@
   </data>
   <data name="ErrorResource_ErrNumberExpected_LongMessage" xml:space="preserve">
     <value>Kesalahan ini akan terjadi jika Anda menggunakan fungsi yang memerlukan angka tetapi Anda memberikan, misalnya, gambar sebagai gantinya.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrNumberExpected_HowToFix_1" xml:space="preserve">
     <value>Edit rumus Anda agar mengevaluasi angka pada titik ini dalam rumus.</value>
@@ -5690,7 +5738,7 @@
   </data>
   <data name="ErrorResource_ErrBooleanExpected_LongMessage" xml:space="preserve">
     <value>Boolean juga dikenal sebagai nilai true/false di aplikasi seperti Microsoft Excel. Kesalahan ini akan terjadi jika Anda menggunakan fungsi yang memerlukan boolean tetapi Anda memberikan, misalnya, tanggal sebagai gantinya.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrBooleanExpected_HowToFix_1" xml:space="preserve">
     <value>Edit rumus Anda agar mengevaluasi boolean pada titik ini dalam rumus.</value>
@@ -5710,7 +5758,7 @@
   </data>
   <data name="ErrorResource_ErrColonExpected_LongMessage" xml:space="preserve">
     <value>Tanda titik dua memisahkan nama bidang, terkadang disebut juga nama kolom, dari nilai bidang dalam catatan (misalnya, {Month:"1"}, {Month:"2"} ...). Tanda titik dua juga memisahkan jam dari menit dan detik (misalnya, "3:04").</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrColonExpected_HowToFix_1" xml:space="preserve">
     <value>Edit rumus Anda agar mencantumkan tanda titik dua.</value>
@@ -5730,7 +5778,7 @@
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_LongMessage" xml:space="preserve">
     <value>Fungsi perilaku mengubah status aplikasi dengan mengubah nilai di tempat lain dalam aplikasi. 'Navigate', 'Patch', 'UpdateContext' dan 'Collect' adalah fungsi perilaku umum. 'OnSelect', 'OnVisible', dan properti 'On...' lainnya adalah properti berbasis perilaku umum.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_HowToFix_1" xml:space="preserve">
     <value>Pindahkan fungsi perilaku ke properti berbasis perilaku.</value>
@@ -5750,7 +5798,7 @@
   </data>
   <data name="ErrorResource_ErrTestPropertyExpected_LongMessage" xml:space="preserve">
     <value>Fungsi uji adalah fungsi yang dapat digunakan untuk melakukan simulasi input pengguna saat menguji aplikasi. 'SetProperty', 'SelectRow', dan 'Assert' adalah fungsi pengujian umum. Ketiganya hanya dapat digunakan dalam kasus uji.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrTestPropertyExpected_HowToFix_1" xml:space="preserve">
     <value>Gunakan fungsi dalam kasus uji, bukan di aplikasi itu sendiri.</value>
@@ -5762,7 +5810,7 @@
   </data>
   <data name="ErrorResource_ErrCannotCoerce_SourceType_TargetType_LongMessage" xml:space="preserve">
     <value>Power Apps dapat mengonversi beberapa tipe data dalam rumus ke tipe lain untuk Anda. Misalnya, Power Apps dapat mengonversi "1" (string) ke 1 (angka), tetapi tidak dapat mengonversi semua tipe data ke semua tipe data lain. Misalnya, Power Apps tidak dapat mengonversi gambar ke angka.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrCannotCoerce_SourceType_TargetType_HowToFix_1" xml:space="preserve">
     <value>Edit rumus sehingga Anda mengonversi data yang dimaksud ke tipe yang diharapkan.</value>
@@ -5774,7 +5822,7 @@
   </data>
   <data name="ErrorResource_ErrStringExpected_LongMessage" xml:space="preserve">
     <value>Kesalahan ini terjadi jika Anda menggunakan fungsi yang memerlukan argumen teks (atau string) dan Anda memberikan, misalnya, tanggal sebagai gantinya.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrStringExpected_HowToFix_1" xml:space="preserve">
     <value>Edit rumus Anda agar mengevaluasi teks pada titik ini dalam rumus.</value>
@@ -5794,7 +5842,7 @@
   </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_LongMessage" xml:space="preserve">
     <value>Kesalahan ini akan terjadi jika Anda menggunakan fungsi yang memerlukan teks atau angka tetapi Anda memberikan, misalnya, nilai boolean (true/false).</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_HowToFix_1" xml:space="preserve">
     <value>Edit rumus Anda agar mengevaluasi teks atau angka pada titik ini dalam rumus.</value>
@@ -5814,7 +5862,7 @@
   </data>
   <data name="ErrorResource_ErrClosingBracketExpected_LongMessage" xml:space="preserve">
     <value>Tanda kurung tutup menunjukkan akhir catatan (misalnya, {Month:"1"}, {Month:"2"} …).</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrClosingBracketExpected_HowToFix_1" xml:space="preserve">
     <value>Edit rumus Anda agar mencantumkan tanda kurung.</value>
@@ -5834,7 +5882,7 @@
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_LongMessage" xml:space="preserve">
     <value>Tidak dapat mengevaluasi rumus Anda karena nilai yang dibandingkan dalam rumus tidak berada dalam tipe yang sama.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_HowToFix_1" xml:space="preserve">
     <value>Anda mungkin perlu mengonversi nilai menjadi jenis yang sama, seperti mengonversi string tanggal (misalnya, "31/12/2018") ke nilai tanggal.</value>
@@ -5946,7 +5994,7 @@
   </data>
   <data name="ErrorResource_ErrTypeError_LongMessage" xml:space="preserve">
     <value>Data mungkin tidak cocok dengan tipe yang diharapkan. (teks, angka, tanggal, tabel, catatan.)</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrTypeError_HowToFix_1" xml:space="preserve">
     <value>Periksa jenis nilai yang termasuk dalam rumus dan pastikan tipe cocok.</value>
@@ -5974,7 +6022,7 @@
   </data>
   <data name="ErrorResource_ErrDateExpected_LongMessage" xml:space="preserve">
     <value>Kesalahan ini akan terjadi jika Anda menggunakan fungsi yang memerlukan tanggal tetapi Anda memberikan, misalnya, teks sebagai gantinya.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrDateExpected_HowToFix_1" xml:space="preserve">
     <value>Edit rumus Anda agar mengevaluasi tanggal pada titik ini dalam rumus.</value>
@@ -5994,7 +6042,7 @@
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_LongMessage" xml:space="preserve">
     <value>Sumber data mungkin tidak dapat memproses rumus dan mungkin menghasilkan himpunan data yang tidak lengkap. Aplikasi Anda mungkin tidak memberikan hasil yang benar atau berperilaku dengan benar jika himpunan data tidak lengkap.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_HowToFix_1" xml:space="preserve">
     <value>Jika himpunan data Anda melebihi batas catatan 500 tetapi berisi kurang dari 2.000 catatan, atur ulang batas.</value>
@@ -6030,7 +6078,7 @@
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_LongMessage" xml:space="preserve">
     <value>Sumber data mungkin tidak dapat memproses rumus dan mungkin menghasilkan himpunan data yang tidak lengkap. Aplikasi Anda mungkin tidak memberikan hasil yang benar atau berperilaku dengan benar jika himpunan data tidak lengkap.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_HowToFix_1" xml:space="preserve">
     <value>Jika himpunan data Anda melebihi batas catatan 500 tetapi berisi kurang dari 2.000 catatan, atur ulang batas.</value>
@@ -6066,7 +6114,7 @@
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_LongMessage" xml:space="preserve">
     <value> Sisi kanan operator "in" harus berupa nama kolom dari sumber data yang benar. Sumber data mungkin tidak dapat memproses rumus dan mungkin menghasilkan himpunan data yang tidak lengkap. Aplikasi Anda mungkin tidak memberikan hasil yang benar atau berperilaku dengan benar jika himpunan data tidak lengkap.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_1" xml:space="preserve">
     <value>Ubah item di sisi kanan operator "in" menjadi kolom dari sumber data yang benar.</value>
@@ -6107,7 +6155,7 @@
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_LongMessage" xml:space="preserve">
     <value> Sisi kanan operator "in" bukan merupakan kolom dari sumber data yang benar. Sumber data mungkin tidak dapat memproses rumus dan mungkin menghasilkan himpunan data yang tidak lengkap. Aplikasi Anda mungkin tidak memberikan hasil yang benar atau berperilaku dengan benar jika himpunan data tidak lengkap.
       </value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_1" xml:space="preserve">
     <value>Ubah item di sisi kanan operator "in" menjadi kolom dari sumber data yang benar.</value>
@@ -6213,5 +6261,9 @@
   <data name="ErrorResource_ErrAsNotInContext_ShortMessage" xml:space="preserve">
     <value>Karena tidak diizinkan dalam konteks ini</value>
     <comment>{Locked=As} This is an error message that shows up when the As keyword is used but is not valid</comment>
+  </data>
+  <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
+    <value>Rumus bernama harus diakhiri dengan titik koma.</value>
+    <comment>A semicolon must terminate named formulas. For example, a=10;</comment>
   </data>
 </root>
