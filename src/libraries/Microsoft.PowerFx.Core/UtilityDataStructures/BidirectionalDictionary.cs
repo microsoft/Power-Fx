@@ -18,12 +18,6 @@ namespace Microsoft.PowerFx.Core.UtilityDataStructures
             _secondToFirst = new Dictionary<TSecond, TFirst>();
         }
 
-        public BidirectionalDictionary(IEqualityComparer<TFirst> firstComparer, IEqualityComparer<TSecond> secondComparer)
-        {
-            _firstToSecond = new Dictionary<TFirst, TSecond>(firstComparer);
-            _secondToFirst = new Dictionary<TSecond, TFirst>(secondComparer);
-        }
-
         public BidirectionalDictionary(IDictionary<TFirst, TSecond> input) : this()
         {
             foreach (var kvp in input)
@@ -110,6 +104,14 @@ namespace Microsoft.PowerFx.Core.UtilityDataStructures
         public override int GetHashCode()
         {
             return _firstToSecond.GetHashCode();
+        }
+
+        public BidirectionalDictionary<TFirst, TSecond> Clone()
+        {
+            var result = new BidirectionalDictionary<TFirst, TSecond>();
+            result._firstToSecond = new Dictionary<TFirst, TSecond>(_firstToSecond);
+            result._secondToFirst = new Dictionary<TSecond, TFirst>(_secondToFirst);
+            return result;
         }
     }
 }

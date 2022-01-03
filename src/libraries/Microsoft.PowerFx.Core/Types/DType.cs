@@ -614,8 +614,25 @@ namespace Microsoft.PowerFx.Core.Types
             }
 
             return returnType;
-        }
+        }              
 
+        /// <summary>
+        /// This should only be used when constructing DTypes from the public surface to replace an existing display name provider
+        /// </summary>
+        public static DType ReplaceDisplayNameProvider(DType type, DisplayNameProvider displayNames)
+        {
+            type.AssertValid();
+            Contracts.AssertValue(displayNames);
+
+            DType returnType = type.Clone();
+            returnType.DisplayNameProvider = displayNames;
+            return returnType;
+        }
+               
+
+        /// <summary>
+        /// This should be used by internal operations to update the set of display name providers associated with a type, i.e. during Union operations.
+        /// </summary>
         public static DType AttachDisplayNameProvider(DType type, DisplayNameProvider displayNames)
         {
             type.AssertValid();
@@ -2238,10 +2255,12 @@ namespace Microsoft.PowerFx.Core.Types
             // In that case, we block the use of display names from the type
             if (type != null && type.DisplayNameProvider != null && !type.DisableDisplayNames)
             { 
-                if (type.DisplayNameProvider.TryGetDisplayName(logicalName, out displayName))
+                if (type.DisplayNameProvider.TryGetDisplayName(new DName(logicalName), out var displayDName))
+                {
+                    displayName = displayDName.Value;
                     return true;
+                }
             }
-
 
             displayName = null;
             return false;
@@ -2298,8 +2317,11 @@ namespace Microsoft.PowerFx.Core.Types
             // In that case, we block the use of display names from the type
             if (type != null && type.DisplayNameProvider != null && !type.DisableDisplayNames)
             { 
-                if (type.DisplayNameProvider.TryGetLogicalName(displayName, out logicalName))
+                if (type.DisplayNameProvider.TryGetLogicalName(new DName(displayName), out var logicalDName))
+                {
+                    logicalName = logicalDName.Value;
                     return true;
+                }
             }
 
             logicalName = null;
@@ -2418,8 +2440,9 @@ namespace Microsoft.PowerFx.Core.Types
             // This allows us to succeed even if we try to convert to display format an expression that already is using display names 
             if (type != null && type.DisplayNameProvider != null && !type.DisableDisplayNames)
             { 
-                if (type.DisplayNameProvider.TryGetLogicalName(displayName, out logicalName))
+                if (type.DisplayNameProvider.TryGetLogicalName(new DName(displayName), out var logicalDName))
                 {
+                    logicalName = logicalDName.Value;
                     newDisplayName = displayName;
                     return true;
                 }

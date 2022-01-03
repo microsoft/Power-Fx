@@ -6,20 +6,26 @@ using System.Collections.Generic;
 using System.Text;
 using System.Linq;
 using Microsoft.PowerFx.Core.UtilityDataStructures;
+using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Core
 {
     internal class DisplayNameProvider
     {
         // First is Logical Name, Second is Display Name
-        private BidirectionalDictionary<string, string> _displayNames;
+        private readonly BidirectionalDictionary<DName, DName> _displayNames;
 
         public DisplayNameProvider()
         {
-            _displayNames = new(StringComparer.Ordinal, StringComparer.Ordinal);
+            _displayNames = new();
         }
 
-        public bool TryAddField(string logicalName, string displayName)
+        private DisplayNameProvider(BidirectionalDictionary<DName, DName> displayNames)
+        {
+            _displayNames = displayNames.Clone();
+        }
+
+        public bool TryAddField(DName logicalName, DName displayName)
         {
             // Check for collisions between display and logical names
             if (_displayNames.ContainsSecondKey(logicalName) || _displayNames.ContainsFirstKey(logicalName) ||
@@ -31,12 +37,12 @@ namespace Microsoft.PowerFx.Core
         }
 
 
-        public bool TryGetLogicalName(string displayName, out string logicalName)
+        public bool TryGetLogicalName(DName displayName, out DName logicalName)
         {
             return _displayNames.TryGetFromSecond(displayName, out logicalName);
         }
         
-        public bool TryGetDisplayName(string logicalName, out string displayName)
+        public bool TryGetDisplayName(DName logicalName, out DName displayName)
         {
             return _displayNames.TryGetFromFirst(logicalName, out displayName);
         }
@@ -46,7 +52,12 @@ namespace Microsoft.PowerFx.Core
             return other != null &&
                 _displayNames.Count() == other._displayNames.Count() &&
                 _displayNames.Keys.All(other._displayNames.ContainsFirstKey) &&
-                _displayNames.Values.Any(other._displayNames.ContainsSecondKey);
+                _displayNames.Values.All(other._displayNames.ContainsSecondKey);
+        }
+
+        public DisplayNameProvider Clone()
+        {
+            return new DisplayNameProvider(_displayNames);
         }
     }
 }

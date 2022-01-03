@@ -6,6 +6,7 @@ using System.Diagnostics.Contracts;
 using System.Linq;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Public.Types;
+using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Core.Public.Values
 {
@@ -23,7 +24,7 @@ namespace Microsoft.PowerFx.Core.Public.Values
             var fieldDictionary = recordType.GetNames().ToDictionary(v => v.Name);
             foreach (var field in fields)
             {
-                _fields[field.Name] = PropagateFieldType(field.Value, fieldDictionary[field.Name].Type);
+                _fields[field.Name] = PropagateFieldType(field.Value, fieldDictionary[new DName(field.Name)].Type);
             }
         }
 

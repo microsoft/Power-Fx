@@ -20,8 +20,6 @@ namespace Microsoft.PowerFx.Core.Public.Types
         // protected isn't enough to let derived classes access this.
         internal readonly DType _type;
 
-        private protected DisplayNameProvider _displayNameProvider;
-
         public static FormulaType Blank { get; } = new BlankType();
 
         // Well-known types
@@ -37,15 +35,9 @@ namespace Microsoft.PowerFx.Core.Public.Types
         public static FormulaType OptionSetValue { get; } = new OptionSetValueType();
 
         // chained by derived type 
-        internal FormulaType(DType type, DisplayNameProvider displayNameProvider = null)
+        internal FormulaType(DType type)
         {
-            if (displayNameProvider == null)
-                _type = type;
-            else 
-            {
-                _displayNameProvider = displayNameProvider;
-                _type = DType.AttachDisplayNameProvider(type, displayNameProvider);
-            }
+            _type = type;
         }
 
         // Get the correct derived type

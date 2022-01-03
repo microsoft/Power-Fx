@@ -11,7 +11,7 @@ namespace Microsoft.PowerFx.Core.Public.Types
 {
     public class RecordType : AggregateType
     {
-        internal RecordType(DType type, DisplayNameProvider displayNameProvider = null) : base(type, displayNameProvider)
+        internal RecordType(DType type) : base(type)
         {
             Contract.Assert(type.IsRecord);
         }
@@ -25,25 +25,32 @@ namespace Microsoft.PowerFx.Core.Public.Types
             vistor.Visit(this);
         }
 
-        public RecordType Add(NamedFormulaType field, string optionalDisplayName = null)
+        public RecordType Add(NamedFormulaType field)
         {
-            var displayNameProvider = _displayNameProvider;
-            if (optionalDisplayName != null)
+            var displayNameProvider = _type.DisplayNameProvider;
+            if (field.DisplayName != default)
             {
                 if (displayNameProvider == null)
                     displayNameProvider = new DisplayNameProvider();
+                else 
+                    displayNameProvider = _type.DisplayNameProvider.Clone();
 
-                if (!displayNameProvider.TryAddField(field.Name, optionalDisplayName))
-                    throw new NameCollisionException(optionalDisplayName);
+                if (!displayNameProvider.TryAddField(field.Name, field.DisplayName))
+                    throw new NameCollisionException(field.DisplayName);
             }
 
             var newType = _type.Add(field._typedName);
-            return new RecordType(newType, displayNameProvider);
+            if (displayNameProvider != null)
+            {
+                newType = DType.ReplaceDisplayNameProvider(newType, displayNameProvider);
+            }
+
+            return new RecordType(newType);
         }
 
         public RecordType Add(string logicalName, FormulaType type, string optionalDisplayName = null)
         {
-            return Add(new NamedFormulaType(new TypedName(type._type, new DName(logicalName))), optionalDisplayName);
+            return Add(new NamedFormulaType(new TypedName(type._type, new DName(logicalName)), new DName(optionalDisplayName)));
         }
 
         public TableType ToTable()

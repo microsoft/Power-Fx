@@ -8,6 +8,7 @@ using System.Text;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Public.Types;
 using Microsoft.PowerFx.Core.Public.Values;
+using Microsoft.PowerFx.Core.Utils;
 using Xunit;
 using Xunit.Sdk;
 
@@ -21,11 +22,11 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         {
             var engine = new RecalcEngine();
             RecordType r1 = new RecordType()
-                .Add(new NamedFormulaType("Num", FormulaType.Number), "DisplayNum");
+                .Add(new NamedFormulaType("Num", FormulaType.Number, new DName("DisplayNum")));
 
-            Assert.Throws<NameCollisionException>(() => r1.Add(new NamedFormulaType("DisplayNum", FormulaType.Date), "NoCollision"));
-            Assert.Throws<NameCollisionException>(() => r1.Add(new NamedFormulaType("NoCollision", FormulaType.Date), "DisplayNum"));
-            Assert.Throws<NameCollisionException>(() => r1.Add(new NamedFormulaType("NoCollision", FormulaType.Date), "Num"));
+            Assert.Throws<NameCollisionException>(() => r1.Add(new NamedFormulaType("DisplayNum", FormulaType.Date, new DName("NoCollision"))));
+            Assert.Throws<NameCollisionException>(() => r1.Add(new NamedFormulaType("NoCollision", FormulaType.Date, new DName("DisplayNum"))));
+            Assert.Throws<NameCollisionException>(() => r1.Add(new NamedFormulaType("NoCollision", FormulaType.Date, new DName("Num"))));
         }
 
         [Fact]
@@ -33,8 +34,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         {
             var engine = new RecalcEngine();
             RecordType r1 = new RecordType()
-                .Add(new NamedFormulaType("Num", FormulaType.Number), "DisplayNum")
-                .Add(new NamedFormulaType("B", FormulaType.Boolean), "DisplayB");
+                .Add(new NamedFormulaType("Num", FormulaType.Number, new DName("DisplayNum")))
+                .Add(new NamedFormulaType("B", FormulaType.Boolean, new DName("DisplayB")));
 
             var displayExpressions = engine.GetDisplayExpression("If(B, Num, 1234)", r1);
 
@@ -60,8 +61,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         {
             var engine = new RecalcEngine();
             RecordType r1 = new RecordType()
-                .Add(new NamedFormulaType("Num", FormulaType.Number), "DisplayNum")
-                .Add(new NamedFormulaType("B", FormulaType.Boolean), "DisplayB");
+                .Add(new NamedFormulaType("Num", FormulaType.Number, new DName("DisplayNum")))
+                .Add(new NamedFormulaType("B", FormulaType.Boolean, new DName("DisplayB")));
 
             var displayExpressions = engine.GetDisplayExpression("If(DisplayB, DisplayNum, 1234)", r1);
 
@@ -74,8 +75,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         {
             var engine = new RecalcEngine();
             RecordType r1 = new RecordType()
-                .Add(new NamedFormulaType("Num", FormulaType.Number), "DisplayNum")
-                .Add(new NamedFormulaType("B", FormulaType.Boolean), "DisplayB");
+                .Add(new NamedFormulaType("Num", FormulaType.Number, new DName("DisplayNum")))
+                .Add(new NamedFormulaType("B", FormulaType.Boolean, new DName("DisplayB")));
 
             var displayExpressions = engine.GetDisplayExpression("If(DisplayB, Num, 1234)", r1);
 
@@ -88,15 +89,30 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         {
             var engine = new RecalcEngine();
             RecordType r1 = new RecordType()
-                .Add(new NamedFormulaType("Num", FormulaType.Number), "DisplayNum")
-                .Add(new NamedFormulaType("B", FormulaType.Boolean), "DisplayB")
+                .Add(new NamedFormulaType("Num", FormulaType.Number, new DName("DisplayNum")))
+                .Add(new NamedFormulaType("B", FormulaType.Boolean, new DName("DisplayB")))
                 .Add(new NamedFormulaType("Nested", new TableType()
-                    .Add(new NamedFormulaType("Inner", FormulaType.Number), "InnerDisplay"))
-                , "NestedDisplay");
+                    .Add(new NamedFormulaType("Inner", FormulaType.Number, new DName("InnerDisplay"))), new DName("NestedDisplay")));
 
             var displayExpressions = engine.GetDisplayExpression("Sum(Nested, Inner)", r1);
 
             Assert.Equal("Sum(NestedDisplay, InnerDisplay)", displayExpressions);
+        }
+            
+
+        [Fact]
+        public void ConvertToDisplayNameWhitespaceAndComments()
+        {
+            var engine = new RecalcEngine();
+            RecordType r1 = new RecordType()
+                .Add(new NamedFormulaType("Num", FormulaType.Number, new DName("DisplayNum")))
+                .Add(new NamedFormulaType("B", FormulaType.Boolean, new DName("DisplayB")))
+                .Add(new NamedFormulaType("Nested", new TableType()
+                    .Add(new NamedFormulaType("Inner", FormulaType.Number, new DName("InnerDisplay"))), new DName("NestedDisplay")));
+
+            var displayExpressions = engine.GetDisplayExpression("Sum(Nested /* The source */ , Inner /* Sum over the InnerDisplay column */)", r1);
+
+            Assert.Equal("Sum(NestedDisplay /* The source */ , InnerDisplay /* Sum over the InnerDisplay column */)", displayExpressions);
         }
         
         [Fact]
@@ -104,8 +120,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         {
             var engine = new RecalcEngine();
             RecordType r1 = new RecordType()
-                .Add(new NamedFormulaType("Num", FormulaType.Number), "DisplayNum")
-                .Add(new NamedFormulaType("B", FormulaType.Boolean), "DisplayB");
+                .Add(new NamedFormulaType("Num", FormulaType.Number, new DName("DisplayNum")))
+                .Add(new NamedFormulaType("B", FormulaType.Boolean, new DName("DisplayB")));
             
             var displayExpressions = engine.GetInvariantExpression("If(DisplayB, DisplayNum, 1234)", r1);
 
@@ -131,8 +147,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         {
             var engine = new RecalcEngine();
             RecordType r1 = new RecordType()
-                .Add(new NamedFormulaType("Num", FormulaType.Number), "DisplayNum")
-                .Add(new NamedFormulaType("B", FormulaType.Boolean), "DisplayB");
+                .Add(new NamedFormulaType("Num", FormulaType.Number, new DName("DisplayNum")))
+                .Add(new NamedFormulaType("B", FormulaType.Boolean, new DName("DisplayB")));
 
             var displayExpressions = engine.GetInvariantExpression("If(B, Num, 1234)", r1);
 
@@ -145,8 +161,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         {
             var engine = new RecalcEngine();
             RecordType r1 = new RecordType()
-                .Add(new NamedFormulaType("Num", FormulaType.Number), "DisplayNum")
-                .Add(new NamedFormulaType("B", FormulaType.Boolean), "DisplayB");
+                .Add(new NamedFormulaType("Num", FormulaType.Number, new DName("DisplayNum")))
+                .Add(new NamedFormulaType("B", FormulaType.Boolean, new DName("DisplayB")));
 
             var displayExpressions = engine.GetInvariantExpression("If(DisplayB, Num, 1234)", r1);
 
@@ -158,15 +174,31 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         {
             var engine = new RecalcEngine();
             RecordType r1 = new RecordType()
-                .Add(new NamedFormulaType("Num", FormulaType.Number), "DisplayNum")
-                .Add(new NamedFormulaType("B", FormulaType.Boolean), "DisplayB")
+                .Add(new NamedFormulaType("Num", FormulaType.Number, new DName("DisplayNum")))
+                .Add(new NamedFormulaType("B", FormulaType.Boolean, new DName("DisplayB")))
                 .Add(new NamedFormulaType("Nested", new TableType()
-                    .Add(new NamedFormulaType("Inner", FormulaType.Number), "InnerDisplay"))
-                , "NestedDisplay");
+                    .Add(new NamedFormulaType("Inner", FormulaType.Number, new DName("InnerDisplay"))), new DName("NestedDisplay")));
+
 
             var displayExpressions = engine.GetInvariantExpression("Sum(NestedDisplay, InnerDisplay)", r1);
 
             Assert.Equal("Sum(Nested, Inner)", displayExpressions);
+        }
+
+        [Fact]
+        public void ConvertToInvariantNameWhitespaceAndComments()
+        {
+            var engine = new RecalcEngine();
+            RecordType r1 = new RecordType()
+                .Add(new NamedFormulaType("Num", FormulaType.Number, new DName("DisplayNum")))
+                .Add(new NamedFormulaType("B", FormulaType.Boolean, new DName("DisplayB")))
+                .Add(new NamedFormulaType("Nested", new TableType()
+                    .Add(new NamedFormulaType("Inner", FormulaType.Number, new DName("InnerDisplay"))), new DName("NestedDisplay")));
+
+
+            var displayExpressions = engine.GetInvariantExpression("Sum(NestedDisplay /* The source */ , InnerDisplay /* Sum over the InnerDisplay column */)", r1);
+
+            Assert.Equal("Sum(Nested /* The source */ , Inner /* Sum over the InnerDisplay column */)", displayExpressions);
         }
     }
 }
