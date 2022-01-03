@@ -1,45 +1,45 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <root>
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
         <xsd:choice maxOccurs="unbounded">
           <xsd:element name="metadata">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
               </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string"/>
-              <xsd:attribute name="type" type="xsd:string"/>
-              <xsd:attribute name="mimetype" type="xsd:string"/>
-              <xsd:attribute ref="xml:space"/>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="assembly">
             <xsd:complexType>
-              <xsd:attribute name="alias" type="xsd:string"/>
-              <xsd:attribute name="name" type="xsd:string"/>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="data">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
-              <xsd:attribute ref="xml:space"/>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="resheader">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required"/>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
             </xsd:complexType>
           </xsd:element>
         </xsd:choice>
@@ -447,7 +447,18 @@
     <comment>function_parameter - Argument to the Concatenate function - the text to be concatenated.</comment>
   </data>
   <data name="AboutConcatenate_text" xml:space="preserve">
-    <value>引数の残りの部分と連結する、テキストまたはテキスト値の列。</value>
+    <value>テキスト値。残りの引数と連結に使用します。</value>
+  </data>
+  <data name="AboutConcatenateT" xml:space="preserve">
+    <value>複数のテキスト値やテーブルを、テキスト値を含む 1 つの列に結合します。</value>
+    <comment>Description of 'Concatenate' function.</comment>
+  </data>
+  <data name="ConcatenateTArg1" xml:space="preserve">
+    <value>値</value>
+    <comment>function_parameter - Argument to the Concatenate function - the text or table to be concatenated.</comment>
+  </data>
+  <data name="AboutConcatenate_value" xml:space="preserve">
+    <value>テキスト値またはテキスト値の列。残りの引数との連結に使用します。</value>
   </data>
   <data name="AboutConcat" xml:space="preserve">
     <value>指定されたテーブルで指定された式を評価することによって生成されたすべてのテキスト値を 1 つのテキスト値に結合します。</value>
@@ -812,6 +823,10 @@
     <value>現在の日付と時刻を返します。</value>
     <comment>Description of 'Now' function.</comment>
   </data>
+  <data name="AboutUTCNow" xml:space="preserve">
+    <value>現在の日時を UTC 時間で返します。</value>
+    <comment>Description of 'UTCNow' function.</comment>
+  </data>
   <data name="AboutTimeZoneOffset" xml:space="preserve">
     <value>UTC 時刻と現地時刻の時差 (分単位) を返します。たとえば、タイム ゾーンが UTC+2 の場合、-120 が返されます。</value>
     <comment>Description of 'TimeZoneOffset' function.</comment>
@@ -827,6 +842,10 @@
   <data name="AboutToday" xml:space="preserve">
     <value>現在の日付を返します。</value>
     <comment>Description of 'Today' function.</comment>
+  </data>
+  <data name="AboutUTCToday" xml:space="preserve">
+    <value>現在の日付を UTC 時間で返します。</value>
+    <comment>Description of 'UTCToday' function.</comment>
   </data>
   <data name="AboutWeekNum" xml:space="preserve">
     <value>指定した日付に対応する週番号を返します。</value>
@@ -1255,6 +1274,12 @@
   <data name="AboutAtan2Arg2" xml:space="preserve">
     <value>y_座標</value>
     <comment>function_parameter - Second parameter to the Atan function - the y coordinate for arctangent to be returned. When translating, maintain as a single word (i.e., do not add spaces)</comment>
+  </data>
+  <data name="AboutAtan2_x_coordinate" xml:space="preserve">
+    <value>X 座標。</value>
+  </data>
+  <data name="AboutAtan2_y_coordinate" xml:space="preserve">
+    <value>Y 座標。</value>
   </data>
   <data name="AboutSqrt" xml:space="preserve">
     <value>数値の平方根を返します。</value>
@@ -3373,6 +3398,17 @@
     <value>日付</value>
     <comment>function_parameter - First argument to the IsToday function - the date to be tested.</comment>
   </data>
+  <data name="AboutIsUTCToday" xml:space="preserve">
+    <value>指定した日付が今日 (UTC) であるかどうかを確認し、true または false を返します。</value>
+    <comment>Description of 'IsUTCToday' function</comment>
+  </data>
+  <data name="AboutIsUTCToday_date" xml:space="preserve">
+    <value>テスト対象の日付の値。</value>
+  </data>
+  <data name="IsUTCTodayFuncArg1" xml:space="preserve">
+    <value>日付</value>
+    <comment>function_parameter - First argument to the IsUTCToday function - the date to be tested.</comment>
+  </data>
   <data name="AboutMod" xml:space="preserve">
     <value>数値を除数で除算した後の剰余を返します。結果には除数と同じ符号が付きます。</value>
     <comment>Description of 'Mod' function.</comment>
@@ -5468,9 +5504,21 @@
     <value>計算式列では、短い文字列形式の日時のみを使用できます。</value>
     <comment>Error Message. Used in formula columns for scenarios where the maker supplies an invalid format string</comment>
   </data>
-  <data name="FormulaColumns_UtcResultWarning" xml:space="preserve">
-    <value>この計算式の "{0}" の部分は、計算式列内の処理が世界協定時刻 (UTC) で実行されるため、ユーザーのタイム ゾーンによっては予期したとおりに動作しない可能性があります。</value>
-    <comment>Error Message. Used as a warning in formula columns for scenarios where the operation will be performed in UTC instead of the user's local time zone. The {0} will be the name of the function.</comment>
+  <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
+    <value>計算式列はロケール固有の書式トークン ("." や "," など) をサポートしていません。</value>
+    <comment>Error Message. Used in formula columns for scenarios where the maker supplies an invalid format string</comment>
+  </data>
+  <data name="FormulaColumns_FunctionNotSupported" xml:space="preserve">
+    <value>計算式列は {0} をサポートしていません。代わりに {1} を使用します。</value>
+    <comment>Error Message. Used in formula columns for scenarios where the maker attempts to use a function that is not supported, providing an alternate function name.  The {0} will be the name of the function that is not supported, and {1} is the name of the suggested alternate.</comment>
+  </data>
+  <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
+    <value>計算式列は、この結果タイプ {0} をサポートしていません。</value>
+    <comment>Error Message. Used in formula columns for a formula that returns a type which is not supported.</comment>
+  </data>
+  <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
+    <value>この計算式の結果タイプは {0} であるはずですが、実際の結果タイプは {1} です。計算式列の結果タイプは変更できません。</value>
+    <comment>Error Message. Used in formula columns for a formula that returns an unexpected result type during editing. The {0} will be the name of the required type. The {1} will be the name of the incorrect type.</comment>
   </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
     <value>オペランドが必要です。数式または式に有効なオペランドが必要です。たとえば、式 '1 + _' にオペランド '2' を追加すると、結果は '3' になります。または、式 '"Hi "&amp; _ ' にオペランド "there" を追加すると、結果は 'Hi there' になります。</value>
@@ -5486,7 +5534,7 @@
   </data>
   <data name="ErrorResource_ErrBadToken_LongMessage" xml:space="preserve">
     <value>たとえば、文字 '\' は、次のように数字の後に置かれることはありません: '32\'。スペースが入る可能性があり ('32 ')、その場合は単に 32 という数値です。または別の数字が入る可能性もあります ('323')。</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrBadToken_HowToFix_1" xml:space="preserve">
     <value>予期しない文字を削除するか、置き換えてください。</value>
@@ -5506,11 +5554,11 @@
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_LongMessage" xml:space="preserve">
     <value>たとえば、文字 '\' は、次のように数字の後に置かれることはありません: '32\'。スペースが入る可能性があり ('32 ')、その場合は単に 32 という数値です。または別の数字が入る可能性もあります ('323')。</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_HowToFix_1" xml:space="preserve">
     <value>予期しない文字を削除するか、置き換えてください。</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_Link_1" xml:space="preserve">
     <value>記事: Power Apps の数式のリファレンス</value>
@@ -5526,7 +5574,7 @@
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_LongMessage" xml:space="preserve">
     <value>ブロック コメントはそれぞれ、'/*' で始まり '*/' で終わる必要があります。各ブロック コメントを正しく終了しない場合、そのコメントの後にあるコードがすべてそのコメントの一部になります。コメントが 1 行のみで構成される場合は、'//' で開始すれば、コメントの終了を指定する必要がありません。</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_HowToFix_1" xml:space="preserve">
     <value>ブロック コメントの末尾に '*/' を追加するか、行コメントのセットに変更してください。</value>
@@ -5546,7 +5594,7 @@
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_LongMessage" xml:space="preserve">
     <value>たとえば、数式に '{{Val: 7}}' の代わりに '{{Val@ 7}}' が含まれている場合は、このエラーが発生します。変数を設定する構文では、"アットマーク" ではなくコロンが必要です。</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_HowToFix_1" xml:space="preserve">
     <value>予期しない文字を削除するか、必要な文字で置き換えてください。</value>
@@ -5566,7 +5614,7 @@
   </data>
   <data name="ErrorResource_ErrInvalidName_LongMessage" xml:space="preserve">
     <value>このエラーが表示されるケースの大半は、存在しなくなったもの (削除したコントロールなど) を数式が参照している場合です。</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrInvalidName_HowToFix_1" xml:space="preserve">
     <value>名前への無効な参照を削除するか、修正してください。</value>
@@ -5586,7 +5634,7 @@
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_LongMessage" xml:space="preserve">
     <value>このエラーは、構文が無効なコンポーネントの動作プロパティを数式が参照している場合に表示されます (例: Component.OnCustomChange() ではなく Component.OnCustomChange)。</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_HowToFix_1" xml:space="preserve">
     <value>正しい構文を使用してコンポーネントの動作プロパティを参照してください。例: Component.OnCustomChange()</value>
@@ -5606,7 +5654,7 @@
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_LongMessage" xml:space="preserve">
     <value>親コントロールを持たないコントロールには、Parent 演算子を使用できません。この演算子は、指定されたコントロールをホストするコントロールを参照し、そのコントロールのすべてのプロパティを利用できるようにします。</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_HowToFix_1" xml:space="preserve">
     <value>'Parent' 演算子を削除してください。</value>
@@ -5626,7 +5674,7 @@
   </data>
   <data name="ErrorResource_ErrTooManyUps_LongMessage" xml:space="preserve">
     <value>入れ子のレベルとともに複雑性が増すため、Power Apps は行スコープの入れ子を 63 レベルまでサポートしています。</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrTooManyUps_HowToFix_1" xml:space="preserve">
     <value>入れ子のレベルが少ない数式に書き直してください。</value>
@@ -5638,7 +5686,7 @@
   </data>
   <data name="ErrorResource_ErrRuleNestedTooDeeply_LongMessage" xml:space="preserve">
     <value>Power Apps では、50 レベルまでの入れ子の式がサポートされています。これほど深くなっている式は、理解するのも管理するのも困難です。</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrRuleNestedTooDeeply_HowToFix_1" xml:space="preserve">
     <value>入れ子のレベルが少ない数式に書き直してください。</value>
@@ -5650,7 +5698,7 @@
   </data>
   <data name="ErrorResource_ErrOperatorExpected_LongMessage" xml:space="preserve">
     <value>演算子は 2 つのオペランドを結合します。このエラーは、2 つの関数 (オペランド) をその間に演算子を指定しないで配置した場合に生じます (例: Len("mytext")Len("mytext"))。</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrOperatorExpected_HowToFix_1" xml:space="preserve">
     <value>数式を編集し、オペランド間に演算子を含めます。</value>
@@ -5670,7 +5718,7 @@
   </data>
   <data name="ErrorResource_ErrNumberExpected_LongMessage" xml:space="preserve">
     <value>このエラーは、数値が必要な関数を使用するときに画像などを指定した場合に生じます。</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrNumberExpected_HowToFix_1" xml:space="preserve">
     <value>数式を編集し、この時点の数式で数値に評価されるようにします。</value>
@@ -5690,7 +5738,7 @@
   </data>
   <data name="ErrorResource_ErrBooleanExpected_LongMessage" xml:space="preserve">
     <value>ブール値は、Microsoft Excel などのアプリケーションでは true/false 値とも呼ばれます。このエラーは、ブール値を必要としている関数を使用しているときに、代わりに日付などを指定した場合に生じます。</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrBooleanExpected_HowToFix_1" xml:space="preserve">
     <value>数式を編集し、この時点の数式でブール値に評価できるようにします。</value>
@@ -5710,7 +5758,7 @@
   </data>
   <data name="ErrorResource_ErrColonExpected_LongMessage" xml:space="preserve">
     <value>コロンは、フィールド名 (列名と呼ばれることもあります) をレコード内のフィールド値から区切ります (例: {Month:"1"}、{Month:"2"} など)。またコロンは、時間を分と秒から区切る場合にも使用します (例: "3:04")。</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrColonExpected_HowToFix_1" xml:space="preserve">
     <value>数式を編集し、コロンが含まれるようにします。</value>
@@ -5730,7 +5778,7 @@
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_LongMessage" xml:space="preserve">
     <value>動作関数は、アプリ内の他の場所にある値を変更することにより、アプリの状態を変更します。一般的な動作関数には、'Navigate'、'Patch'、'UpdateContext'、'Collect' があります。一般的な動作ベースのプロパティには、'OnSelect'、'OnVisible'、その他の 'On …' プロパティがあります。</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_HowToFix_1" xml:space="preserve">
     <value>動作関数を動作ベースのプロパティに移動してください。</value>
@@ -5750,7 +5798,7 @@
   </data>
   <data name="ErrorResource_ErrTestPropertyExpected_LongMessage" xml:space="preserve">
     <value>テスト関数は、アプリをテストするときにユーザー入力のシミュレートに使用できます。'SetProperty'、'SelectRow'、'Assert' は、一般的なテスト関数です。これらはテスト ケースでのみ使用できます。</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrTestPropertyExpected_HowToFix_1" xml:space="preserve">
     <value>この関数は、アプリ自体ではなく、テスト ケースで使用してください。</value>
@@ -5762,7 +5810,7 @@
   </data>
   <data name="ErrorResource_ErrCannotCoerce_SourceType_TargetType_LongMessage" xml:space="preserve">
     <value>Power Apps は、数式のいくつかのデータ型を他の型に変換できます。たとえば、"1" (文字列) を "1" (数値) に変換できますが、すべてのデータ型を他のすべてのデータ型へ変換できるわけではありません。たとえば、画像を数値に変換できません。</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrCannotCoerce_SourceType_TargetType_HowToFix_1" xml:space="preserve">
     <value>数式を編集して、問題のデータを必要な型に変換します。</value>
@@ -5774,7 +5822,7 @@
   </data>
   <data name="ErrorResource_ErrStringExpected_LongMessage" xml:space="preserve">
     <value>このエラーは、テキスト (または文字列) 引数が必要な関数を使用するときに日付などを指定した場合に生じます。</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrStringExpected_HowToFix_1" xml:space="preserve">
     <value>数式を編集し、この時点の数式でテキストに評価されるようにします。</value>
@@ -5794,7 +5842,7 @@
   </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_LongMessage" xml:space="preserve">
     <value>このエラーは、テキストまたは数値が必要な関数を使用するときにブール値 (true/false) などを指定した場合に生じます。</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_HowToFix_1" xml:space="preserve">
     <value>数式を編集し、この時点の数式でテキストまたは数値に評価されるようにします。</value>
@@ -5814,7 +5862,7 @@
   </data>
   <data name="ErrorResource_ErrClosingBracketExpected_LongMessage" xml:space="preserve">
     <value>閉じかっこは、レコードの終わりを示します (例: {Month:"1"}、{Month:"2"} …)。</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrClosingBracketExpected_HowToFix_1" xml:space="preserve">
     <value>数式を編集し、かっこが含まれるようにします。</value>
@@ -5834,7 +5882,7 @@
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_LongMessage" xml:space="preserve">
     <value>数式に含まれる比較対象の値が同じ型ではないため、数式を評価できません。</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_HowToFix_1" xml:space="preserve">
     <value>日付文字列 (例: "12/31/2018") を日付値に変換するなど、同じ型になるように値を変換する必要がある可能性があります。</value>
@@ -5946,7 +5994,7 @@
   </data>
   <data name="ErrorResource_ErrTypeError_LongMessage" xml:space="preserve">
     <value>データが必要な型と一致していない可能性があります。(テキスト、数、日付、テーブル、レコード。)</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrTypeError_HowToFix_1" xml:space="preserve">
     <value>数式に関係する値の型を調べて、型が一致していることを確認してください。</value>
@@ -5974,7 +6022,7 @@
   </data>
   <data name="ErrorResource_ErrDateExpected_LongMessage" xml:space="preserve">
     <value>このエラーは、日付が必要な関数を使用するときに、代わりにテキストなどを指定した場合に生じます。</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrDateExpected_HowToFix_1" xml:space="preserve">
     <value>数式を編集し、この時点の数式で日付に評価されるようにします。</value>
@@ -5994,7 +6042,7 @@
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_LongMessage" xml:space="preserve">
     <value>データ ソースは数式を処理できずに、不完全なデータ セットを返すことがあります。データ セットが不完全な場合、アプリケーションは正しい結果を返さないか、正常に機能しない場合があります。</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_HowToFix_1" xml:space="preserve">
     <value>データ セットが 500 レコードの制限を超えていても、2,000 レコードより少ない場合は、制限を再設定してみてください。</value>
@@ -6030,7 +6078,7 @@
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_LongMessage" xml:space="preserve">
     <value>データ ソースは数式を処理できずに、不完全なデータ セットを返すことがあります。データ セットが不完全な場合、アプリケーションは正しい結果を返さないか、正常に機能しない場合があります。</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_HowToFix_1" xml:space="preserve">
     <value>データ セットが 500 レコードの制限を超えていても、2,000 レコードより少ない場合は、制限を再設定してみてください。</value>
@@ -6066,7 +6114,7 @@
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_LongMessage" xml:space="preserve">
     <value>"in" 演算子の右側は、正しいデータ ソースの列名でなければなりません。データ ソースは数式を処理できずに、不完全なデータ セットを返すことがあります。データ セットが不完全な場合、アプリケーションは正しい結果を返さないか、正常に機能しない場合があります。</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_1" xml:space="preserve">
     <value>"in" 演算子の右側の項目が、正しいデータ ソースの列になるように変更します。</value>
@@ -6107,7 +6155,7 @@
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_LongMessage" xml:space="preserve">
     <value> "in" 演算子の右側が正しいデータ ソースの列になっていません。データ ソースが数式を処理できないため、不完全なデータ セットが返される可能性があります。データ セットが不完全な場合、アプリケーションは正しい結果を返さないか、正常に機能しない場合があります。
 </value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_1" xml:space="preserve">
     <value>"in" 演算子の右側の項目が、正しいデータ ソースの列になるように変更します。</value>
@@ -6213,5 +6261,9 @@
   <data name="ErrorResource_ErrAsNotInContext_ShortMessage" xml:space="preserve">
     <value>As はこのコンテキストで許可されていません</value>
     <comment>{Locked=As} This is an error message that shows up when the As keyword is used but is not valid</comment>
+  </data>
+  <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
+    <value>名前付き計算式はセミコロンで終わる必要があります。</value>
+    <comment>A semicolon must terminate named formulas. For example, a=10;</comment>
   </data>
 </root>

@@ -1,45 +1,45 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <root>
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
         <xsd:choice maxOccurs="unbounded">
           <xsd:element name="metadata">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
               </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string"/>
-              <xsd:attribute name="type" type="xsd:string"/>
-              <xsd:attribute name="mimetype" type="xsd:string"/>
-              <xsd:attribute ref="xml:space"/>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="assembly">
             <xsd:complexType>
-              <xsd:attribute name="alias" type="xsd:string"/>
-              <xsd:attribute name="name" type="xsd:string"/>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="data">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
-              <xsd:attribute ref="xml:space"/>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="resheader">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required"/>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
             </xsd:complexType>
           </xsd:element>
         </xsd:choice>
@@ -447,7 +447,18 @@
     <comment>function_parameter - Argument to the Concatenate function - the text to be concatenated.</comment>
   </data>
   <data name="AboutConcatenate_text" xml:space="preserve">
-    <value>Tekst ili kolona sa tekstualnim vrednostima koje će biti spojene sa ostatkom argumenata.</value>
+    <value>Tekstualna vrednost koja treba da bude spojena sa ostalim argumentima.</value>
+  </data>
+  <data name="AboutConcatenateT" xml:space="preserve">
+    <value>Spaja nekoliko tekstualnih vrednosti ili tabela u jednu kolonu tekstualnih vrednosti.</value>
+    <comment>Description of 'Concatenate' function.</comment>
+  </data>
+  <data name="ConcatenateTArg1" xml:space="preserve">
+    <value>vrednost</value>
+    <comment>function_parameter - Argument to the Concatenate function - the text or table to be concatenated.</comment>
+  </data>
+  <data name="AboutConcatenate_value" xml:space="preserve">
+    <value>Tekstualna vrednost ili kolona tekstualnih vrednosti koja treba da bude spojena sa ostalim argumentima.</value>
   </data>
   <data name="AboutConcat" xml:space="preserve">
     <value>Stvara sve vrednosti teksta stvorene procenom datog izraza nad datom tabelom u jednu vrednost teksta.</value>
@@ -812,6 +823,10 @@
     <value>Vraća trenutni datum i vreme.</value>
     <comment>Description of 'Now' function.</comment>
   </data>
+  <data name="AboutUTCNow" xml:space="preserve">
+    <value>Vraća trenutni datum i vreme u UTC zoni.</value>
+    <comment>Description of 'UTCNow' function.</comment>
+  </data>
   <data name="AboutTimeZoneOffset" xml:space="preserve">
     <value>Vraća vremensku razliku između UTC vremena i lokalnog vremena u minutima. Na primer, ako je vaša vremenska zona UTC+2, biće vraćena vrednost -120.</value>
     <comment>Description of 'TimeZoneOffset' function.</comment>
@@ -827,6 +842,10 @@
   <data name="AboutToday" xml:space="preserve">
     <value>Vraća trenutni datum.</value>
     <comment>Description of 'Today' function.</comment>
+  </data>
+  <data name="AboutUTCToday" xml:space="preserve">
+    <value>Vraća trenutni datum u UTC zoni.</value>
+    <comment>Description of 'UTCToday' function.</comment>
   </data>
   <data name="AboutWeekNum" xml:space="preserve">
     <value>Daje broj sedmice za dati datum.</value>
@@ -1255,6 +1274,12 @@
   <data name="AboutAtan2Arg2" xml:space="preserve">
     <value>y_koordinata</value>
     <comment>function_parameter - Second parameter to the Atan function - the y coordinate for arctangent to be returned. When translating, maintain as a single word (i.e., do not add spaces)</comment>
+  </data>
+  <data name="AboutAtan2_x_coordinate" xml:space="preserve">
+    <value>Koordinata X.</value>
+  </data>
+  <data name="AboutAtan2_y_coordinate" xml:space="preserve">
+    <value>Koordinata Y.</value>
   </data>
   <data name="AboutSqrt" xml:space="preserve">
     <value>Vraća kvadratni koren broja.</value>
@@ -3373,6 +3398,17 @@
     <value>datum</value>
     <comment>function_parameter - First argument to the IsToday function - the date to be tested.</comment>
   </data>
+  <data name="AboutIsUTCToday" xml:space="preserve">
+    <value>Proverava da li je navedeni datum danas u UTC zoni i vraća „tačno“ ili „netačno“.</value>
+    <comment>Description of 'IsUTCToday' function</comment>
+  </data>
+  <data name="AboutIsUTCToday_date" xml:space="preserve">
+    <value>Vrednost datuma za testiranje.</value>
+  </data>
+  <data name="IsUTCTodayFuncArg1" xml:space="preserve">
+    <value>datum</value>
+    <comment>function_parameter - First argument to the IsUTCToday function - the date to be tested.</comment>
+  </data>
   <data name="AboutMod" xml:space="preserve">
     <value>Vraća ostatak pošto je broj podeljen deliocem. Rezultat ima isti znak kao delilac.</value>
     <comment>Description of 'Mod' function.</comment>
@@ -5468,9 +5504,21 @@
     <value>U kolonama formula podržane su samo niske formata kratkog datuma i vremena.</value>
     <comment>Error Message. Used in formula columns for scenarios where the maker supplies an invalid format string</comment>
   </data>
-  <data name="FormulaColumns_UtcResultWarning" xml:space="preserve">
-    <value>„{0} deo ove formule možda neće funkcionisati na očekivani način u zavisnosti od vremenske zone korisnika, jer će operacija biti izvedena u koordinisanom univerzalnom vremenu (UTC) u kolonama formula.</value>
-    <comment>Error Message. Used as a warning in formula columns for scenarios where the operation will be performed in UTC instead of the user's local time zone. The {0} will be the name of the function.</comment>
+  <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
+    <value>Tokeni oblikovanja specifični za lokalni standard, kao što su „.“ i „,“ nisu podržani u kolonama formula.</value>
+    <comment>Error Message. Used in formula columns for scenarios where the maker supplies an invalid format string</comment>
+  </data>
+  <data name="FormulaColumns_FunctionNotSupported" xml:space="preserve">
+    <value>Funkcija {0} nije podržana u kolonama formula, koristite {1} umesto nje.</value>
+    <comment>Error Message. Used in formula columns for scenarios where the maker attempts to use a function that is not supported, providing an alternate function name.  The {0} will be the name of the function that is not supported, and {1} is the name of the suggested alternate.</comment>
+  </data>
+  <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
+    <value>Tip rezultata {0} nije podržan u kolonama formula.</value>
+    <comment>Error Message. Used in formula columns for a formula that returns a type which is not supported.</comment>
+  </data>
+  <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
+    <value>Očekivani tip rezultata za ovu formulu je {0}, ali je stvarni tip rezultata {1}. Nije moguće promeniti tip rezultata kolone formule.</value>
+    <comment>Error Message. Used in formula columns for a formula that returns an unexpected result type during editing. The {0} will be the name of the required type. The {1} will be the name of the incorrect type.</comment>
   </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
     <value>Očekuje se operand. Formula ili izraz očekuju važeći operand. Na primer, možete da dodate operand „2“ u izraz „ 1 + _“ tako da rezultat bude „3“. Ili, možete da dodate operand „kako si“ u izraz „Zdravo, “&amp; _ “ tako da rezultat bude „Zdravo, kako si“.</value>
@@ -5486,7 +5534,7 @@
   </data>
   <data name="ErrorResource_ErrBadToken_LongMessage" xml:space="preserve">
     <value>Na primer, znak „\“ se ne očekuje posle broja, ovako: „32\“. Očekuje se razmak („32 “) kako bi to bio samo broj 32 ili se očekuje neki drugi broj (na primer, „323“).</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrBadToken_HowToFix_1" xml:space="preserve">
     <value>Uklonite ili zamenite neočekivane znakove.</value>
@@ -5506,11 +5554,11 @@
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_LongMessage" xml:space="preserve">
     <value>Na primer, znak „\“ se ne očekuje posle broja, ovako: „32\“. Očekuje se razmak („32 “) kako bi to bio samo broj 32 ili se očekuje neki drugi broj (na primer, „323“).</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_HowToFix_1" xml:space="preserve">
     <value>Uklonite ili zamenite neočekivani znak.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_Link_1" xml:space="preserve">
     <value>Članak: Reference formula za Power Apps</value>
@@ -5526,7 +5574,7 @@
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_LongMessage" xml:space="preserve">
     <value>Svaki blok-komentar mora da počinje sa „/*“ i da se završava sa „*/“. Ako svaki blok-komentar ne završite ispravno, sav kôd nakon komentara postaje deo tog komentara. Ako komentar ima samo jedan red, možete da ga počnete znakom „//“ i ne morate da identifikujete kraj komentara.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_HowToFix_1" xml:space="preserve">
     <value>Dodajte „*/“ na kraj komentara za blokiranje ili ga promenite u skup " na kraj vaš blokiranje comment ili promenite u skup linijskih komentara.</value>
@@ -5546,7 +5594,7 @@
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_LongMessage" xml:space="preserve">
     <value>Ova greška se javlja ukoliko, na primer, formula sadrži „{{Val@ 7}}“ umesto „{{Val: 7}}“. Kada podesite promenljivu, sintaksa zahteva dvotačku umesto simbola „@“.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_HowToFix_1" xml:space="preserve">
     <value>Uklonite ili zamenite neočekivane znakove očekivanim znakom.</value>
@@ -5566,7 +5614,7 @@
   </data>
   <data name="ErrorResource_ErrInvalidName_LongMessage" xml:space="preserve">
     <value>Ova greška se najčešće javlja kad formula upućuje na nešto što više ne postoji (na primer, na kontrolu koju ste izbrisali).</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrInvalidName_HowToFix_1" xml:space="preserve">
     <value>Uklonite ili ispravite referencu na ime koje nije važeće.</value>
@@ -5586,7 +5634,7 @@
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_LongMessage" xml:space="preserve">
     <value>Ova greška se pojavljuje kada formula upućuje na svojstva ponašanja komponenata sa nevažećom sintaksom. (Na primer, Component.OnCustomChange umesto Component.OnCustomChange())</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_HowToFix_1" xml:space="preserve">
     <value>Koristite ispravnu sintaksu pri upućivanju na svojstvo ponašanja komponenata. Na primer, Component.OnCustomChange()</value>
@@ -5606,7 +5654,7 @@
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_LongMessage" xml:space="preserve">
     <value>Ne možete da koristite operator „Parent“ sa kontrolom koja nema nadređenu kontrolu. Ovaj operator upućuje na kontrolu koja hostuje datu kontrolu i čini sva njena svojstva dostupnim.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_HowToFix_1" xml:space="preserve">
     <value>Uklonite operator „Nadređeni“.</value>
@@ -5626,7 +5674,7 @@
   </data>
   <data name="ErrorResource_ErrTooManyUps_LongMessage" xml:space="preserve">
     <value>Složenost se povećava sa svakim nivoom ugnežđivanja, tako da Power Apps podržava ugnežđivanje opsega redova samo do 63 nivoa.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrTooManyUps_HowToFix_1" xml:space="preserve">
     <value>Ponovo napišite formulu sa manje nivoa ugnežđivanja.</value>
@@ -5638,7 +5686,7 @@
   </data>
   <data name="ErrorResource_ErrRuleNestedTooDeeply_LongMessage" xml:space="preserve">
     <value>Power Apps podržava ugnežđivanje izraza samo do 50 nivoa. Izraz koji se nalazi ovako duboko teško je razumeti i održavati.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrRuleNestedTooDeeply_HowToFix_1" xml:space="preserve">
     <value>Ponovo napišite formulu sa manje nivoa ugnežđivanja.</value>
@@ -5650,7 +5698,7 @@
   </data>
   <data name="ErrorResource_ErrOperatorExpected_LongMessage" xml:space="preserve">
     <value>Operatori spajaju dva operanda. Ova greška se javlja ako sastavite dve funkcije (operanda), a između njih ne dodate operator, na primer, Len("mojtekst")Len("mojtekst").</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrOperatorExpected_HowToFix_1" xml:space="preserve">
     <value>Uredite formulu tako da sadrži operator između operanada.</value>
@@ -5670,7 +5718,7 @@
   </data>
   <data name="ErrorResource_ErrNumberExpected_LongMessage" xml:space="preserve">
     <value>Ova greška se javlja ako koristite funkciju koja zahteva broj, a vi, na primer, navedete sliku.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrNumberExpected_HowToFix_1" xml:space="preserve">
     <value>Uredite formulu tako da daje broj kao rezultat u ovom delu formule.</value>
@@ -5690,7 +5738,7 @@
   </data>
   <data name="ErrorResource_ErrBooleanExpected_LongMessage" xml:space="preserve">
     <value>Bulova vrednost je poznata i kao vrednost „tačno/netačno“ u aplikacijama kao što je Microsoft Excel. Ova greška se javlja ako koristite funkciju koja traži Bulovu vrednost, a vi, na primer, navedete datum.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrBooleanExpected_HowToFix_1" xml:space="preserve">
     <value>Uredite formulu tako da daje Bulovu vrednost kao rezultat u ovom delu formule.</value>
@@ -5710,7 +5758,7 @@
   </data>
   <data name="ErrorResource_ErrColonExpected_LongMessage" xml:space="preserve">
     <value>Dvotačka razdvaja ime polja, koje se ponekad naziva ime kolone, od vrednosti polja u zapisu (na primer, {Month:"1"}, {Month:"2"}…). Dvotačka takođe razdvaja sate od minuta i sekundi (na primer, „3:04“).</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrColonExpected_HowToFix_1" xml:space="preserve">
     <value>Uredite formulu tako da sadrži dvotačku.</value>
@@ -5730,7 +5778,7 @@
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_LongMessage" xml:space="preserve">
     <value>Funkcije ponašanja menjaju stanje aplikacije time što menjaju vrednosti drugde u aplikaciji. „Navigate“, „Patch“, „UpdateContext“ i „Collect“ predstavljaju uobičajene funkcije ponašanja. „OnSelect“, „OnVisible“ i druga „On…“ svojstva predstavljaju uobičajena svojstva zasnovana na ponašanju.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_HowToFix_1" xml:space="preserve">
     <value>Premestite funkciju ponašanja u svojstvo zasnovano na ponašanju.</value>
@@ -5750,7 +5798,7 @@
   </data>
   <data name="ErrorResource_ErrTestPropertyExpected_LongMessage" xml:space="preserve">
     <value>Funkcije za testiranje su one koje se mogu koristiti za simulaciju unosa korisnika prilikom testiranja aplikacija. „SetProperty“, „SelectRow“ i „Assert“ česte su funkcije za testiranje. Mogu se koristiti samo tokom testiranja.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrTestPropertyExpected_HowToFix_1" xml:space="preserve">
     <value>Koristite funkciju u probnom slučaju, ne u samoj aplikaciji.</value>
@@ -5762,7 +5810,7 @@
   </data>
   <data name="ErrorResource_ErrCannotCoerce_SourceType_TargetType_LongMessage" xml:space="preserve">
     <value>Power Apps može da konvertuje neke tipove podataka iz formule u druge. Na primer, može da konvertuje „1“ (niska) u 1 (broj), ali ne može da konvertuje sve tipove podataka u sve druge tipove podataka. Na primer, ne može da konvertuje sliku u broj.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrCannotCoerce_SourceType_TargetType_HowToFix_1" xml:space="preserve">
     <value>Uredite formulu tako da konvertujete date podatke u očekivani tip.</value>
@@ -5774,7 +5822,7 @@
   </data>
   <data name="ErrorResource_ErrStringExpected_LongMessage" xml:space="preserve">
     <value>Ova greška se javlja ako koristite funkciju koja zahteva tekstualni argument (ili nisku), a vi, na primer, navedete datum.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrStringExpected_HowToFix_1" xml:space="preserve">
     <value>Uredite formulu tako da daje tekst kao rezultat u ovom delu formule.</value>
@@ -5794,7 +5842,7 @@
   </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_LongMessage" xml:space="preserve">
     <value>Ova greška se javlja ako koristite funkciju koja zahteva tekst ili broj, a vi, na primer, navedete Bulovu vrednost (tačno/netačno).</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_HowToFix_1" xml:space="preserve">
     <value>Uredite formulu tako da daje tekst ili broj kao rezultat u ovom delu formule.</value>
@@ -5814,7 +5862,7 @@
   </data>
   <data name="ErrorResource_ErrClosingBracketExpected_LongMessage" xml:space="preserve">
     <value>Zatvorena zagrada ukazuje na kraj zapisa (na primer, {Month:"1"}, {Month:"2"}…).</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrClosingBracketExpected_HowToFix_1" xml:space="preserve">
     <value>Uredite formulu tako da sadrži zagradu.</value>
@@ -5834,7 +5882,7 @@
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_LongMessage" xml:space="preserve">
     <value>Ne možemo da procenimo formulu zato što vrednosti koje se porede u formuli nisu istog tipa.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_HowToFix_1" xml:space="preserve">
     <value>Možda ćete morati da konvertujete vrednost u isti tip, kao što je konvertovanje niske datuma (npr. „31.12.2018.“) u vrednost datuma.</value>
@@ -5946,7 +5994,7 @@
   </data>
   <data name="ErrorResource_ErrTypeError_LongMessage" xml:space="preserve">
     <value>Podaci se možda ne podudaraju sa očekivanim tipom. (tekst, broj, datum, tabela, zapis.)</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrTypeError_HowToFix_1" xml:space="preserve">
     <value>Proverite tipove vrednosti u formuli i uverite se da se podudaraju.</value>
@@ -5974,7 +6022,7 @@
   </data>
   <data name="ErrorResource_ErrDateExpected_LongMessage" xml:space="preserve">
     <value>Ova greška se javlja ako koristite funkciju koja zahteva datum, a vi, na primer, navedete tekst.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrDateExpected_HowToFix_1" xml:space="preserve">
     <value>Uredite formulu tako da daje datum kao rezultat u ovom delu formule.</value>
@@ -5994,7 +6042,7 @@
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_LongMessage" xml:space="preserve">
     <value>Izvor podataka možda neće moći da obradi formulu i možda će vratiti nepotpun skup podataka. Aplikacija možda neće vratiti ispravne rezultate ili se možda neće ispravno ponašati ako je skup podataka nepotpun.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_HowToFix_1" xml:space="preserve">
     <value>Ako vaš skup podataka premašuje ograničenje od 500 zapisa, ali ih sadrži manje od 2000, probajte da promenite ograničenje.</value>
@@ -6030,7 +6078,7 @@
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_LongMessage" xml:space="preserve">
     <value>Izvor podataka možda neće moći da obradi formulu i možda će vratiti nepotpun skup podataka. Aplikacija možda neće vratiti ispravne rezultate ili se možda neće ispravno ponašati ako je skup podataka nepotpun.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_HowToFix_1" xml:space="preserve">
     <value>Ako vaš skup podataka premašuje ograničenje od 500 zapisa, ali ih sadrži manje od 2000, probajte da promenite ograničenje.</value>
@@ -6066,7 +6114,7 @@
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_LongMessage" xml:space="preserve">
     <value> Desna strana operatora „in“ treba da bude ime kolone iz odgovarajućeg izvora podataka. Izvor podataka možda neće moći da obradi formulu i možda će vratiti nepotpun skup podataka. Aplikacija možda neće vratiti ispravne rezultate ili se možda neće ispravno ponašati ako je skup podataka nepotpun.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_1" xml:space="preserve">
     <value>Promenite stavku sa desne strane operatora „in“ tako da bude kolona iz odgovarajućeg izvora podataka.</value>
@@ -6107,7 +6155,7 @@
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_LongMessage" xml:space="preserve">
     <value> Desna strana operatora „in“ nije kolona iz odgovarajućeg izvora podataka. Izvor podataka možda neće moći da obradi formulu i možda će vratiti nepotpun skup podataka. Aplikacija možda neće vratiti ispravne rezultate ili se možda neće ispravno ponašati ako je skup podataka nepotpun.
       </value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_1" xml:space="preserve">
     <value>Promenite stavku sa desne strane operatora „in“ tako da bude kolona iz odgovarajućeg izvora podataka.</value>
@@ -6213,5 +6261,9 @@
   <data name="ErrorResource_ErrAsNotInContext_ShortMessage" xml:space="preserve">
     <value>Reč „kao“ nije dozvoljena u ovom kontekstu</value>
     <comment>{Locked=As} This is an error message that shows up when the As keyword is used but is not valid</comment>
+  </data>
+  <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
+    <value>Imenovana formula mora da se završi tačkom i zarezom.</value>
+    <comment>A semicolon must terminate named formulas. For example, a=10;</comment>
   </data>
 </root>

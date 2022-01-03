@@ -1,45 +1,45 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <root>
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
         <xsd:choice maxOccurs="unbounded">
           <xsd:element name="metadata">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
               </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string"/>
-              <xsd:attribute name="type" type="xsd:string"/>
-              <xsd:attribute name="mimetype" type="xsd:string"/>
-              <xsd:attribute ref="xml:space"/>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="assembly">
             <xsd:complexType>
-              <xsd:attribute name="alias" type="xsd:string"/>
-              <xsd:attribute name="name" type="xsd:string"/>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="data">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
-              <xsd:attribute ref="xml:space"/>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="resheader">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required"/>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
             </xsd:complexType>
           </xsd:element>
         </xsd:choice>
@@ -447,7 +447,18 @@
     <comment>function_parameter - Argument to the Concatenate function - the text to be concatenated.</comment>
   </data>
   <data name="AboutConcatenate_text" xml:space="preserve">
-    <value>Tekst või tekstväärtuste veerg, mis ühendatakse ülejäänud argumentidega.</value>
+    <value>Tekstiväärtus, mis ühendatakse ülejäänud argumentidega.</value>
+  </data>
+  <data name="AboutConcatenateT" xml:space="preserve">
+    <value>Ühendab mitu tekstiväärtust või tabelit ühte tekstiväärtuste veergu.</value>
+    <comment>Description of 'Concatenate' function.</comment>
+  </data>
+  <data name="ConcatenateTArg1" xml:space="preserve">
+    <value>väärtus</value>
+    <comment>function_parameter - Argument to the Concatenate function - the text or table to be concatenated.</comment>
+  </data>
+  <data name="AboutConcatenate_value" xml:space="preserve">
+    <value>Tekstiväärtus või tekstiväärtuste veerg, mis ühendatakse ülejäänud argumentidega.</value>
   </data>
   <data name="AboutConcat" xml:space="preserve">
     <value>Ühendab kõik antud tabelis määratud avaldise arvutamise teel loodud tekstväärtused üheks tekstväärtuseks.</value>
@@ -812,6 +823,10 @@
     <value>Tagastab praeguse kuupäeva ja kellaaja.</value>
     <comment>Description of 'Now' function.</comment>
   </data>
+  <data name="AboutUTCNow" xml:space="preserve">
+    <value>Tagastab praeguse kuupäeva ja kellaaja UTC ajavööndis.</value>
+    <comment>Description of 'UTCNow' function.</comment>
+  </data>
   <data name="AboutTimeZoneOffset" xml:space="preserve">
     <value>Tagastab UTC-kellaaja ja kohaliku kellaaja vahelise ajavahe, minutites. Nt, kui teie ajavööndiks on UTC+2, tagastatakse –120.</value>
     <comment>Description of 'TimeZoneOffset' function.</comment>
@@ -827,6 +842,10 @@
   <data name="AboutToday" xml:space="preserve">
     <value>Tagastab tänase kuupäeva.</value>
     <comment>Description of 'Today' function.</comment>
+  </data>
+  <data name="AboutUTCToday" xml:space="preserve">
+    <value>Tagastab praeguse kuupäeva UTC ajavööndis.</value>
+    <comment>Description of 'UTCToday' function.</comment>
   </data>
   <data name="AboutWeekNum" xml:space="preserve">
     <value>Tagastab antud kuupäeva nädalanumbri.</value>
@@ -1255,6 +1274,12 @@
   <data name="AboutAtan2Arg2" xml:space="preserve">
     <value>y_koordinaat</value>
     <comment>function_parameter - Second parameter to the Atan function - the y coordinate for arctangent to be returned. When translating, maintain as a single word (i.e., do not add spaces)</comment>
+  </data>
+  <data name="AboutAtan2_x_coordinate" xml:space="preserve">
+    <value>x-koordinaat.</value>
+  </data>
+  <data name="AboutAtan2_y_coordinate" xml:space="preserve">
+    <value>y-koordinaat.</value>
   </data>
   <data name="AboutSqrt" xml:space="preserve">
     <value>Tagastab arvu ruutjuure.</value>
@@ -3373,6 +3398,17 @@
     <value>kuupäev</value>
     <comment>function_parameter - First argument to the IsToday function - the date to be tested.</comment>
   </data>
+  <data name="AboutIsUTCToday" xml:space="preserve">
+    <value>Kontrollib, kas antud kuupäev on täna UTC ajavööndis ja tagastab tõese või väära.</value>
+    <comment>Description of 'IsUTCToday' function</comment>
+  </data>
+  <data name="AboutIsUTCToday_date" xml:space="preserve">
+    <value>Testitav kuupäevaväärtus.</value>
+  </data>
+  <data name="IsUTCTodayFuncArg1" xml:space="preserve">
+    <value>kuupäev</value>
+    <comment>function_parameter - First argument to the IsUTCToday function - the date to be tested.</comment>
+  </data>
   <data name="AboutMod" xml:space="preserve">
     <value>Tagastab jäägi pärast arvu jagamist jagajaga. Tulemusel on sama märk mis jagajal.</value>
     <comment>Description of 'Mod' function.</comment>
@@ -5468,9 +5504,21 @@
     <value>Valemiveergudes toetatakse ainult lühikese vorminguga kuupäeva- ja kellaaja stringe.</value>
     <comment>Error Message. Used in formula columns for scenarios where the maker supplies an invalid format string</comment>
   </data>
-  <data name="FormulaColumns_UtcResultWarning" xml:space="preserve">
-    <value>Selle valemi osa "{0}" ei pruugi olenevalt kasutaja ajavööndist oodatud viisil töötada, kuna toiming tehakse valemiveergudes koordineeritud maailmaaja (UTC) järgi.</value>
-    <comment>Error Message. Used as a warning in formula columns for scenarios where the operation will be performed in UTC instead of the user's local time zone. The {0} will be the name of the function.</comment>
+  <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
+    <value>Lokaadipõhiseid vormingutõendeid (nt "." ja ",") valemiveergudes ei toetata.</value>
+    <comment>Error Message. Used in formula columns for scenarios where the maker supplies an invalid format string</comment>
+  </data>
+  <data name="FormulaColumns_FunctionNotSupported" xml:space="preserve">
+    <value>Üksust {0} ei toetata valemiveergudes, kasutage selle asemel üksust {1}.</value>
+    <comment>Error Message. Used in formula columns for scenarios where the maker attempts to use a function that is not supported, providing an alternate function name.  The {0} will be the name of the function that is not supported, and {1} is the name of the suggested alternate.</comment>
+  </data>
+  <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
+    <value>Seda tulemi tüüpi {0} valemiveergudes ei toetata.</value>
+    <comment>Error Message. Used in formula columns for a formula that returns a type which is not supported.</comment>
+  </data>
+  <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
+    <value>Selle valemi tulemi tüüp peab olema {0}, kuid tegelik tulemi tüüp on {1}. Valemiveeru tulemi tüüpi ei saa muuta.</value>
+    <comment>Error Message. Used in formula columns for a formula that returns an unexpected result type during editing. The {0} will be the name of the required type. The {1} will be the name of the incorrect type.</comment>
   </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
     <value>Eeldati operandi. Valem või väljend eeldab kehtivat operandi. Näiteks saate lisada operandi '2' väljendile ' 1 +_', nii et tulemus on '3'. Või võite lisada operandi "there" väljendile '"Hi "&amp; _ ', nii et tulemus on 'Hi there'.</value>
@@ -5486,7 +5534,7 @@
   </data>
   <data name="ErrorResource_ErrBadToken_LongMessage" xml:space="preserve">
     <value>Näiteks tärki '\' ei eeldata pärast arvu, nt nii: '32\'. Tühik ('32') oleks eeldatud nii, et see oleks ainult number 32 või eeldatakse mõnda muud numbrit (nt '323').</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrBadToken_HowToFix_1" xml:space="preserve">
     <value>Eemaldage või asendage ootamatud märgid.</value>
@@ -5506,11 +5554,11 @@
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_LongMessage" xml:space="preserve">
     <value>Näiteks tärki '\' ei eeldata pärast arvu, nt nii: '32\'. Tühik ('32') oleks eeldatud nii, et see oleks ainult number 32 või eeldatakse mõnda muud numbrit (nt '323').</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_HowToFix_1" xml:space="preserve">
     <value>Eemaldage või asendage ootamatu märk.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_Link_1" xml:space="preserve">
     <value>Artikkel: Power Appsi valemiviide</value>
@@ -5526,7 +5574,7 @@
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_LongMessage" xml:space="preserve">
     <value>Iga plokk-kommentaar peab algama märkidega '/*' ja lõppema märkidega '*/'. Kui te ei lõpeta iga plokk-kommentaari korralikult, muutub kogu kommentaarile järgnev kood kommnetaari osaks. Kui kommentaar koosneb ainult ühest reast, võite seda alustada märkidega '//' ja kommnetaari lõppu pole vaja märkida.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_HowToFix_1" xml:space="preserve">
     <value>Lisage oma plokk-kommentaari lõppu märgid '*/' või muutke see reakommentaaride kogumiks.</value>
@@ -5546,7 +5594,7 @@
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_LongMessage" xml:space="preserve">
     <value>See tõrge ilmneb, kui valem sisaldab näiteks üksuse '{{Val@ 7}}' asemel üksust '{{Val: 7}}'. Muutuja määramisel nõuab süntaks @-sümboli asemel koolonit.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_HowToFix_1" xml:space="preserve">
     <value>Eemaldage või asendage ootamatud märgid eeldatud märkidega.</value>
@@ -5566,7 +5614,7 @@
   </data>
   <data name="ErrorResource_ErrInvalidName_LongMessage" xml:space="preserve">
     <value>See tõrge ilmneb kõige sagedamini siis, kui valem viitab millelegi, mida pole enam olemas (näiteks kustutatud juhtelement).</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrInvalidName_HowToFix_1" xml:space="preserve">
     <value>Eemaldage või parandage viide nimele, mis pole sobiv.</value>
@@ -5586,7 +5634,7 @@
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_LongMessage" xml:space="preserve">
     <value>See tõrge ilmub siis, kui valem viitab komponendi käitumisatribuutidele, millel on sobimatu süntaks. (Näiteks Component.OnCustomChange, mitte Component.OnCustomChange())</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_HowToFix_1" xml:space="preserve">
     <value>Kasutage komponendi käitumisatribuudile viitamiseks õiget süntaksit. Näiteks Component.OnCustomChange()</value>
@@ -5606,7 +5654,7 @@
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_LongMessage" xml:space="preserve">
     <value>Te ei saa kasutada emaoperaatorit juhtelemendiga, millel pole emajuhtelementi. See operaator viitab juhtelemendile, mis hostib antud juhtelementi ja muudab kõik selle atribuudid kättesaadavaks.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_HowToFix_1" xml:space="preserve">
     <value>Eemaldage operaator 'Parent'.</value>
@@ -5626,7 +5674,7 @@
   </data>
   <data name="ErrorResource_ErrTooManyUps_LongMessage" xml:space="preserve">
     <value>Keerukus suureneb iga pesastamistasemega, mis tähendab, et Power Apps toetab reaulatuse pesastamist ainult kuni tasemeni 63.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrTooManyUps_HowToFix_1" xml:space="preserve">
     <value>Kirjutage valem väiksema arvu pesastamistasemetega ümber.</value>
@@ -5638,7 +5686,7 @@
   </data>
   <data name="ErrorResource_ErrRuleNestedTooDeeply_LongMessage" xml:space="preserve">
     <value>Power Apps toetab avaldise pesastamist ainult kuni tasemeni 50. Nii sügavat avaldist on raske mõista ja hallata.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrRuleNestedTooDeeply_HowToFix_1" xml:space="preserve">
     <value>Kirjutage valem väiksema arvu pesastamistasemetega ümber.</value>
@@ -5650,7 +5698,7 @@
   </data>
   <data name="ErrorResource_ErrOperatorExpected_LongMessage" xml:space="preserve">
     <value>Operaatorid liidavad omavahel kahte operandi. Tõrge ilmneb, kui panete kokku kaks funktsiooni (operandi), kuid nende vahel puudub operaator – nt Len("mytext")Len("mytext").</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrOperatorExpected_HowToFix_1" xml:space="preserve">
     <value>Redigeerige oma valemit nii, et see sisaldaks operandide vahel operaatorit.</value>
@@ -5670,7 +5718,7 @@
   </data>
   <data name="ErrorResource_ErrNumberExpected_LongMessage" xml:space="preserve">
     <value>See tõrge ilmneb, kui kasutate funktsiooni, mis nõuab arvu, kuid teie esitate selle asemel nt pildi.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrNumberExpected_HowToFix_1" xml:space="preserve">
     <value>Redigeerige oma valemit nii, et see annab siinkohal valemis tulemuseks arvu.</value>
@@ -5690,7 +5738,7 @@
   </data>
   <data name="ErrorResource_ErrBooleanExpected_LongMessage" xml:space="preserve">
     <value>Kahendmuutuja on rakendustes nagu Microsoft Excel tuntud ka väärtusena tõene/väär. Tõrge ilmneb, kui kasutate funktsiooni, mis nõuab kahendmuutujat, kuid teie esitate selle asemel nt kuupäeva.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrBooleanExpected_HowToFix_1" xml:space="preserve">
     <value>Redigeerige oma valemit nii, et see annab siinkohal valemis tulemuseks kahendmuutuja.</value>
@@ -5710,7 +5758,7 @@
   </data>
   <data name="ErrorResource_ErrColonExpected_LongMessage" xml:space="preserve">
     <value>Koolon eraldab kirjes väljanime (mõnikord nimetatud kui veerunimi) väljaväärtusest (nt {Month:"1"}, {Month:"2"} …). Koolon eraldab ka tunde minutitest ja sekunditest (nt „3:04”).</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrColonExpected_HowToFix_1" xml:space="preserve">
     <value>Redigeerige oma valemit nii, et see sisaldaks koolonit.</value>
@@ -5730,7 +5778,7 @@
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_LongMessage" xml:space="preserve">
     <value>Käitumisfunktsioonid muudavad rakenduse olekut, muutes väärtusi mujal rakenduses. Tavalised käitumisfunktsioonid on 'Navigate', 'Patch', 'UpdateContext' ja 'Collect'. 'OnSelect', 'OnVisible' ning muud algusega 'On …' atribuudid on tavalised käitumispõhised atribuudid.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_HowToFix_1" xml:space="preserve">
     <value>Teisaldage käitumisfunktsioon käitumispõhisesse atribuuti.</value>
@@ -5750,7 +5798,7 @@
   </data>
   <data name="ErrorResource_ErrTestPropertyExpected_LongMessage" xml:space="preserve">
     <value>Testimisfunktsioonid on need, mida saab rakenduse testimisel kasutada kasutajasisestuse simuleerimiseks. 'SetProperty', 'SelectRow' ja 'Assert' on levinud testimisfunktsioonid. Neid saab kasutada ainult testjuhtumites.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrTestPropertyExpected_HowToFix_1" xml:space="preserve">
     <value>Kasutage funktsiooni testjuhtumis, mitte rakenduses endas.</value>
@@ -5762,7 +5810,7 @@
   </data>
   <data name="ErrorResource_ErrCannotCoerce_SourceType_TargetType_LongMessage" xml:space="preserve">
     <value>Power Apps võib teie valemis teisendada mõned andmetüübid teisteks tüüpideks. Näiteks saab see teisendada tüübi "1" (string) tüübiks 1 (arv), kuid see ei saa teisendada kõiki andmetüüpe kõigiks teisteks andmetüüpideks. Näiteks ei saa Power Apps teisendada pilti arvuks.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrCannotCoerce_SourceType_TargetType_HowToFix_1" xml:space="preserve">
     <value>Redigeerige oma valemit nii, et teisendate kõnealused andmed eeldatud tüübiks.</value>
@@ -5774,7 +5822,7 @@
   </data>
   <data name="ErrorResource_ErrStringExpected_LongMessage" xml:space="preserve">
     <value>See tõrge ilmneb, kui kasutate funktsiooni, mis nõuab teksti (või stringi) argumenti, kuid teie esitate selle asemel nt kuupäeva.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrStringExpected_HowToFix_1" xml:space="preserve">
     <value>Redigeerige oma valemit nii, et see annab siinkohal valemis tulemuseks teksti.</value>
@@ -5794,7 +5842,7 @@
   </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_LongMessage" xml:space="preserve">
     <value>See tõrge ilmneb, kui kasutate funktsiooni, mis nõuab teksti või arvu, kuid teie esitate selle asemel nt kahendmuutuja väärtuse (tõene/väär).</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_HowToFix_1" xml:space="preserve">
     <value>Redigeerige oma valemit nii, et see annab siinkohal valemis tulemuseks teksti või arvu.</value>
@@ -5814,7 +5862,7 @@
   </data>
   <data name="ErrorResource_ErrClosingBracketExpected_LongMessage" xml:space="preserve">
     <value>Sulgev sulg tähistab kirje lõppu (nt {Month:"1"}, {Month:"2"} …).</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrClosingBracketExpected_HowToFix_1" xml:space="preserve">
     <value>Redigeerige oma valemit nii, et see sisaldaks sulgu.</value>
@@ -5834,7 +5882,7 @@
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_LongMessage" xml:space="preserve">
     <value>Me ei saa teie valemit hinnata, sest valemis hinnatavad väärtused pole sama tüüpi.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_HowToFix_1" xml:space="preserve">
     <value>Võib-olla peate väärtuse samale tüübile teisendama, nt teisendama kuupäevastringi (nt "12/31/2018") kuupäeva väärtuseks.</value>
@@ -5946,7 +5994,7 @@
   </data>
   <data name="ErrorResource_ErrTypeError_LongMessage" xml:space="preserve">
     <value>Andmed ei pruugi vastata eeldatud tüübile (tekst, arv, kuupäev, tabel, kirje).</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrTypeError_HowToFix_1" xml:space="preserve">
     <value>Kontrollige valemiga seotud väärtuste tüüpe ja veenduge, et tüübid ühtiksid.</value>
@@ -5974,7 +6022,7 @@
   </data>
   <data name="ErrorResource_ErrDateExpected_LongMessage" xml:space="preserve">
     <value>See tõrge ilmneb, kui kasutate funktsiooni, mis nõuab kuupäeva, kuid teie esitate selle asemel nt teksti.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrDateExpected_HowToFix_1" xml:space="preserve">
     <value>Redigeerige oma valemit nii, et see annab siinkohal valemis tulemuseks kuupäeva.</value>
@@ -5994,7 +6042,7 @@
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_LongMessage" xml:space="preserve">
     <value>Võib juhtuda, et andmeallikas ei saa valemit töödelda ja võib tagastada pooliku andmehulga. Kui andmehulk on poolik, võib teie rakendus tagastada valed tulemid või käituda valesti.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_HowToFix_1" xml:space="preserve">
     <value>Kui teie andmehulk ületab 500 kirje piirmäära, kuid sisaldab vähem kui 2000 kirjet, proovige piirmäära lähtestada.</value>
@@ -6030,7 +6078,7 @@
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_LongMessage" xml:space="preserve">
     <value>Võib juhtuda, et andmeallikas ei saa valemit töödelda ja võib tagastada pooliku andmehulga. Kui andmehulk on poolik, võib teie rakendus tagastada valed tulemid või käituda valesti.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_HowToFix_1" xml:space="preserve">
     <value>Kui teie andmehulk ületab 500 kirje piirmäära, kuid sisaldab vähem kui 2000 kirjet, proovige piirmäära lähtestada.</value>
@@ -6066,7 +6114,7 @@
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_LongMessage" xml:space="preserve">
     <value> Tehtemärgi „in” parem pool peab olema õigest andmeallikast pärit veeru nimi. Võib juhtuda, et andmeallikas ei saa valemit töödelda ja võib tagastada pooliku andmehulga. Kui andmehulk on poolik, võib teie rakendus tagastada valed tulemid või käituda valesti.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_1" xml:space="preserve">
     <value>Muutke tehtemärgist „in” paremal olev üksus õigest andmeallikast pärit olevaks veeruks.</value>
@@ -6107,7 +6155,7 @@
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_LongMessage" xml:space="preserve">
     <value> Tehtemärgi "in" parem pool ei ole õigest andmeallikast pärit veerg. Võib juhtuda, et andmeallikas ei saa valemit töödelda ja võib tagastada pooliku andmehulga. Kui andmehulk on poolik, võib teie rakendus tagastada valed tulemid või käituda valesti.
       </value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_1" xml:space="preserve">
     <value>Muutke tehtemärgist „in” paremal olev üksus õigest andmeallikast pärit olevaks veeruks.</value>
@@ -6213,5 +6261,9 @@
   <data name="ErrorResource_ErrAsNotInContext_ShortMessage" xml:space="preserve">
     <value>Märksõna "Kui" pole selles kontekstis lubatud</value>
     <comment>{Locked=As} This is an error message that shows up when the As keyword is used but is not valid</comment>
+  </data>
+  <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
+    <value>Nimetatud valem peab lõppema semikooloniga.</value>
+    <comment>A semicolon must terminate named formulas. For example, a=10;</comment>
   </data>
 </root>
