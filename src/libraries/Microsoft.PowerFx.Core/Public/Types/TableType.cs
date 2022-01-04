@@ -33,8 +33,7 @@ namespace Microsoft.PowerFx.Core.Public.Types
 
         public TableType Add(NamedFormulaType field)
         {
-            var newType = _type.Add(field._typedName);
-            return new TableType(newType);
+            return new TableType(AddFieldToType(field));
         }
 
         public string SingleColumnFieldName

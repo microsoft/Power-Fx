@@ -13,6 +13,7 @@ using Microsoft.PowerFx.Core.Functions.Delegation;
 using Microsoft.PowerFx.Core.Lexer;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Syntax.Nodes;
+using Microsoft.PowerFx.Core.UtilityDataStructures;
 using Microsoft.PowerFx.Core.Utils;
 using Conditional = System.Diagnostics.ConditionalAttribute;
 
@@ -127,9 +128,14 @@ namespace Microsoft.PowerFx.Core.Types
         // This is only used by attachment type. DocumentDataType is used to workaround the issue of having cycles in struct type.
         protected readonly DType _attachmentType;
 
-        internal HashSet<IExternalTabularDataSource> AssociatedDataSources { get; private set; }
+        internal HashSet<IExternalTabularDataSource> AssociatedDataSources { get; }
         internal IExternalOptionSet<int> OptionSetInfo { get; }
         internal IExternalViewInfo ViewInfo { get; }
+
+        // Eventually, all display names should come from this centralized source
+        // We should not be using individual DataSource/OptionSet/View references
+        internal DisplayNameProvider DisplayNameProvider { get; private set; }
+
 
         /// <summary>
         /// NamedValueKind is used only for values of kind NamedValue
@@ -169,7 +175,7 @@ namespace Microsoft.PowerFx.Core.Types
             AssertValid();
         }
 
-        private DType(DKind kind, TypeTree tree, HashSet<IExternalTabularDataSource> dataSourceInfo)
+        private DType(DKind kind, TypeTree tree, HashSet<IExternalTabularDataSource> dataSourceInfo, DisplayNameProvider displayNameProvider = null)
             : this(kind, tree)
         {
             Contracts.AssertValueOrNull(dataSourceInfo);
@@ -178,6 +184,7 @@ namespace Microsoft.PowerFx.Core.Types
                 dataSourceInfo = new HashSet<IExternalTabularDataSource>();
 
             AssociatedDataSources = dataSourceInfo;
+            DisplayNameProvider = displayNameProvider;
         }
 
 
@@ -199,7 +206,8 @@ namespace Microsoft.PowerFx.Core.Types
                 new HashSet<IExternalTabularDataSource>(AssociatedDataSources),
                 OptionSetInfo,
                 ViewInfo,
-                NamedValueKind);
+                NamedValueKind,
+                DisplayNameProvider);
         }
 
         // Constructor for aggregate types (record, table)
@@ -602,6 +610,41 @@ namespace Microsoft.PowerFx.Core.Types
             }
 
             return returnType;
+        }              
+
+        /// <summary>
+        /// This should only be used when constructing DTypes from the public surface to replace an existing display name provider
+        /// </summary>
+        public static DType ReplaceDisplayNameProvider(DType type, DisplayNameProvider displayNames)
+        {
+            type.AssertValid();
+            Contracts.AssertValue(displayNames);
+
+            DType returnType = type.Clone();
+            returnType.DisplayNameProvider = displayNames;
+            return returnType;
+        }
+               
+
+        /// <summary>
+        /// This should be used by internal operations to update the set of display name providers associated with a type, i.e. during Union operations.
+        /// Display name providers are disabled if there's a conflict with an existing provider
+        /// </summary>
+        public static DType AttachOrDisableDisplayNameProvider(DType type, DisplayNameProvider displayNames)
+        {
+            type.AssertValid();
+            Contracts.AssertValue(displayNames);
+
+            DType returnType = type.Clone();
+            if (returnType.DisplayNameProvider == null)
+            {
+                returnType.DisplayNameProvider = displayNames;
+            } 
+            else if (!ReferenceEquals(type.DisplayNameProvider, displayNames))
+            {
+                returnType.DisplayNameProvider = DisabledDisplayNameProvider.Instance;
+            }
+            return returnType;
         }
 
         public DType ExpandEntityType(DType expandedType, HashSet<IExternalTabularDataSource> associatedDatasources)
@@ -848,7 +891,7 @@ namespace Microsoft.PowerFx.Core.Types
                     if (ExpandInfo != null)
                         return new DType(DKind.Record, ExpandInfo, TypeTree);
                     else
-                        return new DType(DKind.Record, TypeTree, AssociatedDataSources);
+                        return new DType(DKind.Record, TypeTree, AssociatedDataSources, DisplayNameProvider);
                 case DKind.ObjNull:
                     return EmptyRecord;
                 default:
@@ -922,7 +965,7 @@ namespace Microsoft.PowerFx.Core.Types
                     if (ExpandInfo != null)
                         return new DType(DKind.Record, ExpandInfo, TypeTree);
                     else
-                        return new DType(DKind.Record, TypeTree, AssociatedDataSources);
+                        return new DType(DKind.Record, TypeTree, AssociatedDataSources, DisplayNameProvider);
                 case DKind.ObjNull:
                     return EmptyRecord;
                 default:
@@ -945,7 +988,7 @@ namespace Microsoft.PowerFx.Core.Types
                     if (ExpandInfo != null)
                         return new DType(DKind.Table, ExpandInfo, TypeTree);
                     else
-                        return new DType(DKind.Table, TypeTree, AssociatedDataSources);
+                        return new DType(DKind.Table, TypeTree, AssociatedDataSources, DisplayNameProvider);
                 case DKind.ObjNull:
                     return EmptyTable;
                 default:
@@ -965,7 +1008,7 @@ namespace Microsoft.PowerFx.Core.Types
                 case DKind.Record:
                 case DKind.DataEntity:
                 case DKind.Control:
-                    return new DType(DKind.Table, TypeTree, AssociatedDataSources);
+                    return new DType(DKind.Table, TypeTree, AssociatedDataSources, DisplayNameProvider);
                 case DKind.ObjNull:
                     return EmptyTable;
                 default:
@@ -1141,7 +1184,7 @@ namespace Microsoft.PowerFx.Core.Types
 
                 Contracts.Assert(typeCur.IsRecord || typeCur.IsTable);
                 TypeTree tree = typeCur.TypeTree.SetItem(path.Name, type, skipCompare);
-                type = new DType(typeCur.Kind, tree, typeCur.AssociatedDataSources);
+                type = new DType(typeCur.Kind, tree, typeCur.AssociatedDataSources, typeCur.DisplayNameProvider);
 
                 if (typeCur.HasExpandInfo)
                     type = CopyExpandInfo(type, typeCur);
@@ -1176,7 +1219,7 @@ namespace Microsoft.PowerFx.Core.Types
                 fError = true;
 
             TypeTree tree = typeOuter.TypeTree.SetItem(name, type);
-            var updatedTypeOuter = new DType(typeOuter.Kind, tree, AssociatedDataSources);
+            var updatedTypeOuter = new DType(typeOuter.Kind, tree, AssociatedDataSources, typeOuter.DisplayNameProvider);
 
             if (typeOuter.HasExpandInfo)
                 updatedTypeOuter = CopyExpandInfo(updatedTypeOuter, typeOuter);
@@ -1194,8 +1237,7 @@ namespace Microsoft.PowerFx.Core.Types
 
             Contracts.Assert(!TypeTree.Contains(name));
             TypeTree tree = TypeTree.SetItem(name, type);
-            var newType = new DType(Kind, tree);
-            newType.AssociatedDataSources = AssociatedDataSources;
+            var newType = new DType(Kind, tree, AssociatedDataSources, DisplayNameProvider);
 
             return newType;
         }
@@ -1243,7 +1285,7 @@ namespace Microsoft.PowerFx.Core.Types
                 tree = tree.SetItem(tn.Name, tn.Type);
             }
 
-            typeOuter = new DType(typeOuter.Kind, tree, AssociatedDataSources);
+            typeOuter = new DType(typeOuter.Kind, tree, AssociatedDataSources, DisplayNameProvider);
 
             return SetType(ref fError, path, typeOuter);
         }
@@ -1268,7 +1310,7 @@ namespace Microsoft.PowerFx.Core.Types
             if (fError)
                 return this;
 
-            return SetType(ref fError, path, new DType(typeOuter.Kind, tree, AssociatedDataSources));
+            return SetType(ref fError, path, new DType(typeOuter.Kind, tree, AssociatedDataSources, DisplayNameProvider));
         }
 
         // Drop fields of specified kind.
@@ -1299,7 +1341,7 @@ namespace Microsoft.PowerFx.Core.Types
                 return this;
             }
 
-            return SetType(ref fError, path, new DType(typeOuter.Kind, tree, AssociatedDataSources));
+            return SetType(ref fError, path, new DType(typeOuter.Kind, tree, AssociatedDataSources, DisplayNameProvider));
         }
 
         public DType DropAllOfTableRelationships(ref bool fError, DPath path)
@@ -1330,7 +1372,7 @@ namespace Microsoft.PowerFx.Core.Types
                 }
             }
 
-            return SetType(ref fError, path, new DType(typeOuter.Kind, tree, AssociatedDataSources));
+            return SetType(ref fError, path, new DType(typeOuter.Kind, tree, AssociatedDataSources, DisplayNameProvider));
         }
 
         // Drop fields of specified kind from all nested types
@@ -1363,7 +1405,7 @@ namespace Microsoft.PowerFx.Core.Types
                 }
             }
 
-            return SetType(ref fError, path, new DType(typeOuter.Kind, tree, AssociatedDataSources));
+            return SetType(ref fError, path, new DType(typeOuter.Kind, tree, AssociatedDataSources, DisplayNameProvider));
         }
 
         // Drop the specified names/fields from path's type, and return the resulting type.
@@ -1387,7 +1429,7 @@ namespace Microsoft.PowerFx.Core.Types
 
             TypeTree tree = typeOuter.TypeTree.RemoveItems(ref fError, rgname);
 
-            return SetType(ref fError, path, new DType(typeOuter.Kind, tree, AssociatedDataSources));
+            return SetType(ref fError, path, new DType(typeOuter.Kind, tree, AssociatedDataSources, DisplayNameProvider));
         }
 
         // Drop everything but the specified names/fields from path's type, and return the resulting type.
@@ -1422,7 +1464,7 @@ namespace Microsoft.PowerFx.Core.Types
                 tree = tree.SetItem(name, typeCur);
             }
 
-            return SetType(ref fError, path, new DType(typeOuter.Kind, tree, AssociatedDataSources));
+            return SetType(ref fError, path, new DType(typeOuter.Kind, tree, AssociatedDataSources, DisplayNameProvider));
         }
 
         // If a name/field (that was specified to be split) is missing, we are returning a new type
@@ -1460,8 +1502,8 @@ namespace Microsoft.PowerFx.Core.Types
                 }
             }
 
-            typeRest = new DType(Kind, treeRest, AssociatedDataSources);
-            return new DType(Kind, treeWith, AssociatedDataSources);
+            typeRest = new DType(Kind, treeRest, AssociatedDataSources, DisplayNameProvider);
+            return new DType(Kind, treeWith, AssociatedDataSources, DisplayNameProvider);
         }
 
         // Get ALL the fields/names at the specified path, including hidden meta fields
@@ -2004,10 +2046,10 @@ namespace Microsoft.PowerFx.Core.Types
             type2.AssertValid();
 
             if (type1.Accepts(type2, useLegacyDateTimeAccepts: useLegacyDateTimeAccepts))
-                return CreateDTypeWithConnectedDataSourceInfoMetadata(type1, type2.AssociatedDataSources);
+                return CreateDTypeWithConnectedDataSourceInfoMetadata(type1, type2.AssociatedDataSources, type2.DisplayNameProvider);
 
             if (type2.Accepts(type1, useLegacyDateTimeAccepts: useLegacyDateTimeAccepts))
-                return CreateDTypeWithConnectedDataSourceInfoMetadata(type2, type1.AssociatedDataSources);
+                return CreateDTypeWithConnectedDataSourceInfoMetadata(type2, type1.AssociatedDataSources, type1.DisplayNameProvider);
 
             DKind type1Superkind;
             if (!KindToSuperkindMapping.TryGetValue(type1.Kind, out type1Superkind) || type1Superkind == DKind.Error)
@@ -2139,7 +2181,7 @@ namespace Microsoft.PowerFx.Core.Types
             return true;
         }
 
-        internal static DType CreateDTypeWithConnectedDataSourceInfoMetadata(DType type, HashSet<IExternalTabularDataSource> connectedDataSourceInfoSet)
+        internal static DType CreateDTypeWithConnectedDataSourceInfoMetadata(DType type, HashSet<IExternalTabularDataSource> connectedDataSourceInfoSet, DisplayNameProvider displayNameProvider)
         {
             type.AssertValid();
             Contracts.AssertValueOrNull(connectedDataSourceInfoSet);
@@ -2150,6 +2192,9 @@ namespace Microsoft.PowerFx.Core.Types
             DType returnType = type;
             foreach (var cds in connectedDataSourceInfoSet)
                 returnType = AttachDataSourceInfo(returnType, cds);
+
+            if (displayNameProvider != null)
+                returnType = AttachOrDisableDisplayNameProvider(returnType, displayNameProvider);
 
             return returnType;
         }
@@ -2193,6 +2238,17 @@ namespace Microsoft.PowerFx.Core.Types
                 var dataSourceInfo = type.AssociatedDataSources.FirstOrDefault();
                 if (dataSourceInfo != null && dataSourceInfo.DisplayNameMapping.TryGetFromFirst(logicalName, out displayName))
                     return true;
+            }
+
+            
+            // Use the DisplayNameProvider here
+            if (type != null && type.DisplayNameProvider != null)
+            { 
+                if (type.DisplayNameProvider.TryGetDisplayName(new DName(logicalName), out var displayDName))
+                {
+                    displayName = displayDName.Value;
+                    return true;
+                }
             }
 
             displayName = null;
@@ -2242,6 +2298,17 @@ namespace Microsoft.PowerFx.Core.Types
                 var dataSourceInfo = type.AssociatedDataSources.FirstOrDefault();
                 if (dataSourceInfo != null && dataSourceInfo.DisplayNameMapping.TryGetFromSecond(displayName, out logicalName))
                     return true;
+            }
+
+            
+            // Use the DisplayNameProvider here
+            if (type != null && type.DisplayNameProvider != null)
+            { 
+                if (type.DisplayNameProvider.TryGetLogicalName(new DName(displayName), out var logicalDName))
+                {
+                    logicalName = logicalDName.Value;
+                    return true;
+                }
             }
 
             logicalName = null;
@@ -2355,6 +2422,18 @@ namespace Microsoft.PowerFx.Core.Types
                 }
             }
 
+            // The DisplayNameProvider path doesn't participate in Display -> Display remapping, just logical -> display and display -> logical.
+            if (type != null && type.DisplayNameProvider != null)
+            { 
+                if (type.DisplayNameProvider.TryGetLogicalName(new DName(displayName), out var logicalDName))
+                {
+                    logicalName = logicalDName.Value;
+                    newDisplayName = displayName;
+                    return true;
+                }
+            }
+
+
             logicalName = null;
             newDisplayName = null;
             return false;
@@ -2368,9 +2447,9 @@ namespace Microsoft.PowerFx.Core.Types
             if (type1.IsAggregate && type2.IsAggregate)
             {
                 if (type1 == ObjNull)
-                    return CreateDTypeWithConnectedDataSourceInfoMetadata(type2, type1.AssociatedDataSources);
+                    return CreateDTypeWithConnectedDataSourceInfoMetadata(type2, type1.AssociatedDataSources, type1.DisplayNameProvider);
                 if (type2 == ObjNull)
-                    return CreateDTypeWithConnectedDataSourceInfoMetadata(type1, type2.AssociatedDataSources);
+                    return CreateDTypeWithConnectedDataSourceInfoMetadata(type1, type2.AssociatedDataSources, type2.DisplayNameProvider);
 
                 if (type1.Kind != type2.Kind)
                 {
@@ -2378,19 +2457,19 @@ namespace Microsoft.PowerFx.Core.Types
                     return DType.Error;
                 }
 
-                return CreateDTypeWithConnectedDataSourceInfoMetadata(UnionCore(ref fError, type1, type2, useLegacyDateTimeAccepts), type2.AssociatedDataSources);
+                return CreateDTypeWithConnectedDataSourceInfoMetadata(UnionCore(ref fError, type1, type2, useLegacyDateTimeAccepts), type2.AssociatedDataSources, type2.DisplayNameProvider);
             }
 
             if (type1.Accepts(type2, useLegacyDateTimeAccepts: useLegacyDateTimeAccepts))
             {
                 fError |= type1.IsError;
-                return CreateDTypeWithConnectedDataSourceInfoMetadata(type1, type2.AssociatedDataSources);
+                return CreateDTypeWithConnectedDataSourceInfoMetadata(type1, type2.AssociatedDataSources, type2.DisplayNameProvider);
             }
 
             if (type2.Accepts(type1, useLegacyDateTimeAccepts: useLegacyDateTimeAccepts))
             {
                 fError |= type2.IsError;
-                return CreateDTypeWithConnectedDataSourceInfoMetadata(type2, type1.AssociatedDataSources);
+                return CreateDTypeWithConnectedDataSourceInfoMetadata(type2, type1.AssociatedDataSources, type1.DisplayNameProvider);
             }
 
             var result = Supertype(type1, type2, useLegacyDateTimeAccepts);
@@ -2707,7 +2786,8 @@ namespace Microsoft.PowerFx.Core.Types
             HashSet<IExternalTabularDataSource> associatedDataSources,
             IExternalOptionSet<int> optionSetInfo,
             IExternalViewInfo viewInfo,
-            string namedValueKind)
+            string namedValueKind,
+            DisplayNameProvider displayNameProvider)
         {
             Kind = kind;
             TypeTree = typeTree;
@@ -2723,6 +2803,7 @@ namespace Microsoft.PowerFx.Core.Types
             OptionSetInfo = optionSetInfo;
             ViewInfo = viewInfo;
             NamedValueKind = namedValueKind;
+            DisplayNameProvider = displayNameProvider;
         }
 
         private static void EscapeJSPropertyName(StringBuilder builder, string name)
