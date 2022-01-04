@@ -628,8 +628,9 @@ namespace Microsoft.PowerFx.Core.Types
 
         /// <summary>
         /// This should be used by internal operations to update the set of display name providers associated with a type, i.e. during Union operations.
+        /// Display name providers are disabled if there's a conflict with an existing provider
         /// </summary>
-        public static DType AttachDisplayNameProvider(DType type, DisplayNameProvider displayNames)
+        public static DType AttachOrDisableDisplayNameProvider(DType type, DisplayNameProvider displayNames)
         {
             type.AssertValid();
             Contracts.AssertValue(displayNames);
@@ -2193,7 +2194,7 @@ namespace Microsoft.PowerFx.Core.Types
                 returnType = AttachDataSourceInfo(returnType, cds);
 
             if (displayNameProvider != null)
-                returnType = AttachDisplayNameProvider(returnType, displayNameProvider);
+                returnType = AttachOrDisableDisplayNameProvider(returnType, displayNameProvider);
 
             return returnType;
         }

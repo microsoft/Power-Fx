@@ -8,6 +8,7 @@ using System.Text;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Public.Types;
 using Microsoft.PowerFx.Core.Public.Values;
+using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Xunit;
 using Xunit.Sdk;
@@ -16,7 +17,6 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 {    
     public class DisplayNameTests 
     {
-
         [Fact]
         public void CollisionsThrow()
         {
@@ -27,6 +27,35 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Assert.Throws<NameCollisionException>(() => r1.Add(new NamedFormulaType("DisplayNum", FormulaType.Date, "NoCollision")));
             Assert.Throws<NameCollisionException>(() => r1.Add(new NamedFormulaType("NoCollision", FormulaType.Date, "DisplayNum")));
             Assert.Throws<NameCollisionException>(() => r1.Add(new NamedFormulaType("NoCollision", FormulaType.Date, "Num")));
+        }
+        
+        [Fact]
+        public void ImmutableDisplayNameProvider()
+        {
+            RecordType r1 = new RecordType();
+
+            var r2 = r1.Add(new NamedFormulaType("Logical", FormulaType.String, "Foo"));
+            var r3 = r1.Add(new NamedFormulaType("Logical", FormulaType.String, "Bar"));
+
+            Assert.False(ReferenceEquals(r2._type.DisplayNameProvider, r3._type.DisplayNameProvider));
+        }
+
+        
+        
+        [Fact]
+        public void DisableDisplayNames()
+        {
+            RecordType r1 = new RecordType()
+                .Add(new NamedFormulaType("Logical", FormulaType.String, "Foo"));
+
+            RecordType r2 = new RecordType()
+                .Add(new NamedFormulaType("Other", FormulaType.String, "Foo"));
+
+            Assert.IsType<SingleSourceDisplayNameProvider>(r1._type.DisplayNameProvider);
+
+            var disabledType = DType.AttachOrDisableDisplayNameProvider(r1._type, r2._type.DisplayNameProvider);
+
+            Assert.IsType<DisabledDisplayNameProvider>(disabledType.DisplayNameProvider);
         }
 
         [Theory]
