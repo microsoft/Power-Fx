@@ -2,7 +2,6 @@
 // Licensed under the MIT License.
 
 using System;
-using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
@@ -27,22 +26,7 @@ namespace Microsoft.PowerFx.Core.Public.Types
 
         public RecordType Add(NamedFormulaType field)
         {
-            var displayNameProvider = _type.DisplayNameProvider;
-            if (field.DisplayName != default)
-            {
-                if (displayNameProvider == null)
-                    displayNameProvider = new DisplayNameProvider();
-                
-                displayNameProvider = displayNameProvider.AddField(field.Name, field.DisplayName);
-            }
-
-            var newType = _type.Add(field._typedName);
-            if (displayNameProvider != null)
-            {
-                newType = DType.ReplaceDisplayNameProvider(newType, displayNameProvider);
-            }
-
-            return new RecordType(newType);
+            return new RecordType(AddFieldToType(field));
         }
 
         public RecordType Add(string logicalName, FormulaType type, string optionalDisplayName = null)

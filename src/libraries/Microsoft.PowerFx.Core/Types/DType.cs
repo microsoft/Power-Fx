@@ -136,9 +136,6 @@ namespace Microsoft.PowerFx.Core.Types
         // We should not be using individual DataSource/OptionSet/View references
         internal DisplayNameProvider DisplayNameProvider { get; private set; }
 
-        // If the type is derived from multiple DisplayNameProviders, disable display names.
-        private bool DisableDisplayNames = false;
-
 
         /// <summary>
         /// NamedValueKind is used only for values of kind NamedValue
@@ -210,8 +207,7 @@ namespace Microsoft.PowerFx.Core.Types
                 OptionSetInfo,
                 ViewInfo,
                 NamedValueKind,
-                DisplayNameProvider,
-                DisableDisplayNames);
+                DisplayNameProvider);
         }
 
         // Constructor for aggregate types (record, table)
@@ -642,16 +638,10 @@ namespace Microsoft.PowerFx.Core.Types
             if (returnType.DisplayNameProvider == null)
             {
                 returnType.DisplayNameProvider = displayNames;
-                returnType.DisableDisplayNames = false;
             } 
-            else if (ReferenceEquals(type.DisplayNameProvider, displayNames))
+            else if (!ReferenceEquals(type.DisplayNameProvider, displayNames))
             {
-                returnType.DisplayNameProvider = displayNames;
-                return returnType;
-            } 
-            else
-            {
-                returnType.DisableDisplayNames = true;
+                returnType.DisplayNameProvider = DisabledDisplayNameProvider.Instance;
             }
             return returnType;
         }
@@ -2251,9 +2241,7 @@ namespace Microsoft.PowerFx.Core.Types
 
             
             // Use the DisplayNameProvider here
-            // If there are multiple DisplayNameProviders associated with the type, we may have name conflicts
-            // In that case, we block the use of display names from the type
-            if (type != null && type.DisplayNameProvider != null && !type.DisableDisplayNames)
+            if (type != null && type.DisplayNameProvider != null)
             { 
                 if (type.DisplayNameProvider.TryGetDisplayName(new DName(logicalName), out var displayDName))
                 {
@@ -2313,9 +2301,7 @@ namespace Microsoft.PowerFx.Core.Types
 
             
             // Use the DisplayNameProvider here
-            // If there are multiple DisplayNameProviders associated with the type, we may have name conflicts
-            // In that case, we block the use of display names from the type
-            if (type != null && type.DisplayNameProvider != null && !type.DisableDisplayNames)
+            if (type != null && type.DisplayNameProvider != null)
             { 
                 if (type.DisplayNameProvider.TryGetLogicalName(new DName(displayName), out var logicalDName))
                 {
@@ -2436,9 +2422,7 @@ namespace Microsoft.PowerFx.Core.Types
             }
 
             // The DisplayNameProvider path doesn't participate in Display -> Display remapping, just logical -> display and display -> logical.
-            // So in this case, we return the logical name and pretend we're updating display name to the same one we already have.
-            // This allows us to succeed even if we try to convert to display format an expression that already is using display names 
-            if (type != null && type.DisplayNameProvider != null && !type.DisableDisplayNames)
+            if (type != null && type.DisplayNameProvider != null)
             { 
                 if (type.DisplayNameProvider.TryGetLogicalName(new DName(displayName), out var logicalDName))
                 {
@@ -2802,8 +2786,7 @@ namespace Microsoft.PowerFx.Core.Types
             IExternalOptionSet<int> optionSetInfo,
             IExternalViewInfo viewInfo,
             string namedValueKind,
-            DisplayNameProvider displayNameProvider,
-            bool disableDisplayNames)
+            DisplayNameProvider displayNameProvider)
         {
             Kind = kind;
             TypeTree = typeTree;
@@ -2820,7 +2803,6 @@ namespace Microsoft.PowerFx.Core.Types
             ViewInfo = viewInfo;
             NamedValueKind = namedValueKind;
             DisplayNameProvider = displayNameProvider;
-            DisableDisplayNames = disableDisplayNames;
         }
 
         private static void EscapeJSPropertyName(StringBuilder builder, string name)

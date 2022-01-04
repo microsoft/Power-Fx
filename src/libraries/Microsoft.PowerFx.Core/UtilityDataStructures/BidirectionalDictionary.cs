@@ -105,13 +105,5 @@ namespace Microsoft.PowerFx.Core.UtilityDataStructures
         {
             return _firstToSecond.GetHashCode();
         }
-
-        public BidirectionalDictionary<TFirst, TSecond> Clone()
-        {
-            var result = new BidirectionalDictionary<TFirst, TSecond>();
-            result._firstToSecond = new Dictionary<TFirst, TSecond>(_firstToSecond);
-            result._secondToFirst = new Dictionary<TSecond, TFirst>(_secondToFirst);
-            return result;
-        }
     }
 }

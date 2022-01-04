@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
-using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using Microsoft.PowerFx.Core.Types;
@@ -34,23 +33,7 @@ namespace Microsoft.PowerFx.Core.Public.Types
 
         public TableType Add(NamedFormulaType field)
         {
-            var displayNameProvider = _type.DisplayNameProvider;
-            if (field.DisplayName != default)
-            {
-                if (displayNameProvider == null)
-                    displayNameProvider = new DisplayNameProvider();
-
-                displayNameProvider = displayNameProvider.AddField(field.Name, field.DisplayName);
-            }
-
-            var newType = _type.Add(field._typedName);
-
-            if (displayNameProvider != null)
-            {
-                newType = DType.ReplaceDisplayNameProvider(newType, displayNameProvider);
-            }
-
-            return new TableType(newType);
+            return new TableType(AddFieldToType(field));
         }
 
         public string SingleColumnFieldName
