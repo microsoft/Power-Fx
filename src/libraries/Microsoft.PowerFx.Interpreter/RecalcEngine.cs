@@ -1,8 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
-using Microsoft.PowerFx.Core.IR;
-using Microsoft.PowerFx.Core.IR.Symbols;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +8,11 @@ using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Glue;
+using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.IR.Nodes;
+using Microsoft.PowerFx.Core.IR.Symbols;
+using Microsoft.PowerFx.Core.Lexer;
+using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Parser;
 using Microsoft.PowerFx.Core.Public;
 using Microsoft.PowerFx.Core.Public.Types;
@@ -18,10 +20,6 @@ using Microsoft.PowerFx.Core.Public.Values;
 using Microsoft.PowerFx.Core.Syntax;
 using Microsoft.PowerFx.Core.Texl.Intellisense;
 using Microsoft.PowerFx.Core.Types;
-using Microsoft.PowerFx.Core.Types.Enums;
-using System.Globalization;
-using Microsoft.PowerFx.Core.Localization;
-using Microsoft.PowerFx.Core.Lexer;
 
 namespace Microsoft.PowerFx
 {
