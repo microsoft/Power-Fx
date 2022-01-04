@@ -11,16 +11,16 @@ namespace Microsoft.PowerFx.Core.Public.Types
     {
         internal readonly TypedName _typedName;
 
-        public NamedFormulaType(string name, FormulaType type, DName displayName = default)
+        public NamedFormulaType(string name, FormulaType type, string displayName = null)
         {
             _typedName = new TypedName(type._type, new DName(name));
-            DisplayName = displayName;
+            DisplayName = displayName == null ? default : new DName(displayName);
         }
 
-        internal NamedFormulaType(TypedName typedName, DName displayName = default)
+        internal NamedFormulaType(TypedName typedName, string displayName = null)
         {
             _typedName = typedName;
-            DisplayName = displayName;
+            DisplayName = displayName == null ? default : new DName(displayName);
         }
 
         public DName Name => _typedName.Name;

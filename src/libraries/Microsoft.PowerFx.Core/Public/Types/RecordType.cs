@@ -31,9 +31,7 @@ namespace Microsoft.PowerFx.Core.Public.Types
 
         public RecordType Add(string logicalName, FormulaType type, string optionalDisplayName = null)
         {
-            if (optionalDisplayName != null)
-                return Add(new NamedFormulaType(new TypedName(type._type, new DName(logicalName)), new DName(optionalDisplayName)));
-            return Add(new NamedFormulaType(new TypedName(type._type, new DName(logicalName))));
+            return Add(new NamedFormulaType(new TypedName(type._type, new DName(logicalName)), optionalDisplayName));
         }
 
         public TableType ToTable()
