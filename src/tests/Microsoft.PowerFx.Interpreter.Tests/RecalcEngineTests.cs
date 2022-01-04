@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Microsoft.PowerFx.Core.Public;
 using Microsoft.PowerFx.Core.Public.Types;
 using Microsoft.PowerFx.Core.Public.Values;
 using Xunit;
@@ -274,6 +275,40 @@ namespace Microsoft.PowerFx.Tests
                 var val = x.Value * y.Value;
                 return FormulaValue.New(val);
             }
+        }
+
+        [Fact]
+        public void CheckBindErrorWithParseExpression()
+        {
+            var engine = new RecalcEngine();
+            IExpression parsedExpression; 
+            var result = engine.ParseExpression("3+foo+2", new RecordType(), out parsedExpression); // foo is undefined 
+
+            Assert.False(result.IsSuccess);
+            Assert.Single(result.Errors);
+            Assert.StartsWith("Error 2-5: Name isn't valid. This identifier isn't recognized", result.Errors[0].ToString());
+        }
+
+        [Fact]
+        public void CheckSuccessWithParsedExpression()
+        {
+            var engine = new RecalcEngine();
+            IExpression parsedExpression;
+            var result = engine.ParseExpression("3*2+x",
+                new RecordType().Add(
+                    new NamedFormulaType("x", FormulaType.Number)), out parsedExpression);
+
+            // Test that parsing worked
+            Assert.True(result.IsSuccess);
+            Assert.True(result.ReturnType is NumberType);
+            Assert.Single(result.TopLevelIdentifiers);
+            Assert.Equal("x", result.TopLevelIdentifiers.First());
+
+            // Test evaluation of parsed expression
+            var recordValue = FormulaValue.RecordFromFields(
+                new NamedValue("x", FormulaValue.New(5)));
+            var formulaValue = parsedExpression.Eval(recordValue);
+            Assert.Equal(11.0, (double) formulaValue.ToObject());
         }
 
         #region Test

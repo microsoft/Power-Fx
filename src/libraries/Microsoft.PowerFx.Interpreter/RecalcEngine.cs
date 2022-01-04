@@ -285,5 +285,29 @@ namespace Microsoft.PowerFx
             var fi = Formulas[name];
             return fi._value;
         }
+
+        /// <summary>
+        /// Returns the parse tree (AST) that Power Fx builds for this expression. 
+        /// </summary>
+        /// <param name="expressionText">The expression we plan to parse</param>
+        /// <param name="recordType">All types available at execution time</param>
+        /// <param name="expression">The parsed expression. Expression will be null if !CheckResult.IsSuccess</param>
+        /// <returns>CheckResult</returns> Returns any errors detected  
+
+        public CheckResult ParseExpression(string expressionText, RecordType recordType, out IExpression expression)
+        {
+            var checkResult = CheckInternal(expressionText, recordType, intellisense: false);
+            if (checkResult.IsSuccess)
+            {
+                (IntermediateNode irnode, ScopeSymbol ruleScopeSymbol) = IRTranslator.Translate(checkResult._binding);
+                expression = new ParsedExpression(irnode);
+            }
+            else
+            {
+                expression = null;
+            }
+                
+            return checkResult;
+        }
     } // end class RecalcEngine
 }
