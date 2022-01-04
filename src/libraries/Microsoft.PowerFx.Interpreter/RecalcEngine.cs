@@ -18,6 +18,10 @@ using Microsoft.PowerFx.Core.Public.Values;
 using Microsoft.PowerFx.Core.Syntax;
 using Microsoft.PowerFx.Core.Texl.Intellisense;
 using Microsoft.PowerFx.Core.Types;
+using Microsoft.PowerFx.Core.Types.Enums;
+using System.Globalization;
+using Microsoft.PowerFx.Core.Localization;
+using Microsoft.PowerFx.Core.Lexer;
 
 namespace Microsoft.PowerFx
 {
@@ -199,6 +203,61 @@ namespace Microsoft.PowerFx
             return newValue;
         }
 
+        
+        /// <summary>
+        /// Convert references in an expression to the invariant form
+        /// </summary>
+        /// <param name="expressionText">textual representation of the formula</param>
+        /// <param name="parameters">Type of parameters for formula. The fields in the parameter record can 
+        /// be acecssed as top-level identifiers in the formula. If DisplayNames are used, make sure to have that mapping
+        /// as part of the RecordType
+        /// <returns>The formula, with all identifiers converted to invariant form</returns>
+        public string GetInvariantExpression(string expressionText, RecordType parameters)
+        {
+            return ConvertExpression(expressionText, parameters, toDisplayNames: false);
+        }
+        
+        /// <summary>
+        /// Convert references in an expression to the display form
+        /// </summary>
+        /// <param name="expressionText">textual representation of the formula</param>
+        /// <param name="parameters">Type of parameters for formula. The fields in the parameter record can 
+        /// be acecssed as top-level identifiers in the formula. If DisplayNames are used, make sure to have that mapping
+        /// as part of the RecordType
+        /// <returns>The formula, with all identifiers converted to display form</returns>
+        public string GetDisplayExpression(string expressionText, RecordType parameters)
+        {
+            return ConvertExpression(expressionText, parameters, toDisplayNames: true);
+        }
+
+        private string ConvertExpression(string expressionText, RecordType parameters, bool toDisplayNames)
+        {
+            var formula = new Formula(expressionText);
+            formula.EnsureParsed(TexlParser.Flags.None);
+
+            var extraFunctions = _extraFunctions.Values.ToArray();
+            var resolver = new RecalcEngineResolver(this, parameters, _powerFxConfig.EnumStore.EnumSymbols, extraFunctions);
+            var binding = TexlBinding.Run(
+                new Glue2DocumentBinderGlue(),
+                null,
+                new Core.Entities.QueryOptions.DataSourceToQueryOptionsMap(),
+                formula.ParseTree,
+                resolver,
+                ruleScope: parameters._type,
+                useThisRecordForRuleScope: false,
+                updateDisplayNames: toDisplayNames,
+                forceUpdateDisplayNames: toDisplayNames
+            );
+
+            Dictionary<Span, string> worklist = new();
+            foreach (var token in binding.NodesToReplace)
+            {
+                worklist.Add(token.Key.Span, TexlLexer.EscapeName(token.Value));
+            }
+
+            return Span.ReplaceSpans(expressionText, worklist);
+        }
+
         // Invoke onUpdate() each time this formula is changed, passing in the new value. 
         public void SetFormula(string name, string expr, Action<string, FormulaValue> onUpdate)
         {
@@ -256,7 +315,7 @@ namespace Microsoft.PowerFx
             var formula = result._formula;
 
             var context = new IntellisenseContext(expression, cursorPosition);
-            var intellisense = IntellisenseProvider.GetIntellisense(_powerFxConfig);
+            var intellisense = IntellisenseProvider.GetIntellisense(_powerFxConfig.EnumStore);
             var suggestions = intellisense.Suggest(context, binding, formula);
 
             return suggestions;

@@ -1,45 +1,45 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <root>
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
         <xsd:choice maxOccurs="unbounded">
           <xsd:element name="metadata">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
               </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string"/>
-              <xsd:attribute name="type" type="xsd:string"/>
-              <xsd:attribute name="mimetype" type="xsd:string"/>
-              <xsd:attribute ref="xml:space"/>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="assembly">
             <xsd:complexType>
-              <xsd:attribute name="alias" type="xsd:string"/>
-              <xsd:attribute name="name" type="xsd:string"/>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="data">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
-              <xsd:attribute ref="xml:space"/>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="resheader">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required"/>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
             </xsd:complexType>
           </xsd:element>
         </xsd:choice>
@@ -447,7 +447,18 @@
     <comment>function_parameter - Argument to the Concatenate function - the text to be concatenated.</comment>
   </data>
   <data name="AboutConcatenate_text" xml:space="preserve">
-    <value>Teksti tai tekstiarvojen sarake, joka liitetään yhteen muiden argumenttien kanssa.</value>
+    <value>Tekstiarvo, joka voidaan liittää muiden argumenttien kanssa.</value>
+  </data>
+  <data name="AboutConcatenateT" xml:space="preserve">
+    <value>Liittää useita tekstiarvoja tai taulukoita yhdeksi tekstiarvojen sarakkeeksi.</value>
+    <comment>Description of 'Concatenate' function.</comment>
+  </data>
+  <data name="ConcatenateTArg1" xml:space="preserve">
+    <value>arvo</value>
+    <comment>function_parameter - Argument to the Concatenate function - the text or table to be concatenated.</comment>
+  </data>
+  <data name="AboutConcatenate_value" xml:space="preserve">
+    <value>Tekstiarvo tai tekstiarvojen sarake, joka voidaan liittää muiden argumenttien kanssa.</value>
   </data>
   <data name="AboutConcat" xml:space="preserve">
     <value>Liittää kaikki annetun lausekkeen annetulle taulukolle arvioinnin tuottamat tekstiarvot yhdeksi tekstiarvoksi.</value>
@@ -812,6 +823,10 @@
     <value>Palauttaa nykyisen päivämäärän ja ajan.</value>
     <comment>Description of 'Now' function.</comment>
   </data>
+  <data name="AboutUTCNow" xml:space="preserve">
+    <value>Palauttaa nykyisen päivämäärän ja ajan UTC-aikana.</value>
+    <comment>Description of 'UTCNow' function.</comment>
+  </data>
   <data name="AboutTimeZoneOffset" xml:space="preserve">
     <value>Palauttaa aikaeron UTC-ajan ja paikallisen ajan välillä minuutteina. Jos aikavyöhykkeesi on esimerkiksi, UTC+2, palautetaan -120.</value>
     <comment>Description of 'TimeZoneOffset' function.</comment>
@@ -827,6 +842,10 @@
   <data name="AboutToday" xml:space="preserve">
     <value>Palauttaa nykyisen päivämäärän.</value>
     <comment>Description of 'Today' function.</comment>
+  </data>
+  <data name="AboutUTCToday" xml:space="preserve">
+    <value>Palauttaa nykyisen päivämäärän UTC-aikana.</value>
+    <comment>Description of 'UTCToday' function.</comment>
   </data>
   <data name="AboutWeekNum" xml:space="preserve">
     <value>Palauttaa tietyn päivämäärän viikon numeron.</value>
@@ -1255,6 +1274,12 @@
   <data name="AboutAtan2Arg2" xml:space="preserve">
     <value>y-koordinaatti</value>
     <comment>function_parameter - Second parameter to the Atan function - the y coordinate for arctangent to be returned. When translating, maintain as a single word (i.e., do not add spaces)</comment>
+  </data>
+  <data name="AboutAtan2_x_coordinate" xml:space="preserve">
+    <value>x-koordinaatti.</value>
+  </data>
+  <data name="AboutAtan2_y_coordinate" xml:space="preserve">
+    <value>y-koordinaatti.</value>
   </data>
   <data name="AboutSqrt" xml:space="preserve">
     <value>Palauttaa luvun neliöjuuren.</value>
@@ -3373,6 +3398,17 @@
     <value>päivämäärä</value>
     <comment>function_parameter - First argument to the IsToday function - the date to be tested.</comment>
   </data>
+  <data name="AboutIsUTCToday" xml:space="preserve">
+    <value>Tarkistaa, onko annettu päivämäärä tämä päivä UTC-muodossa, ja palauttaa arvon tosi vai epätosi.</value>
+    <comment>Description of 'IsUTCToday' function</comment>
+  </data>
+  <data name="AboutIsUTCToday_date" xml:space="preserve">
+    <value>Testattava päivämääräarvo.</value>
+  </data>
+  <data name="IsUTCTodayFuncArg1" xml:space="preserve">
+    <value>päivämäärä</value>
+    <comment>function_parameter - First argument to the IsUTCToday function - the date to be tested.</comment>
+  </data>
   <data name="AboutMod" xml:space="preserve">
     <value>Palauttaa jakojäännöksen, kun luku jaetaan jakajalla. Tuloksella on sama etumerkki kuin jakajalla.</value>
     <comment>Description of 'Mod' function.</comment>
@@ -5468,9 +5504,21 @@
     <value>Kaavasarakkeet tukevat vain lyhyitä päivämäärä- ja aikamuotoisia merkkijonoja.</value>
     <comment>Error Message. Used in formula columns for scenarios where the maker supplies an invalid format string</comment>
   </data>
-  <data name="FormulaColumns_UtcResultWarning" xml:space="preserve">
-    <value>Kaavan osa {0} ei ehkä toimi odotetusti käyttäjän aikavyöhykkeen mukaan, koska toiminto suoritetaan kaavasarakkeissa UTC (Universal Coordinated Time) -muodossa.</value>
-    <comment>Error Message. Used as a warning in formula columns for scenarios where the operation will be performed in UTC instead of the user's local time zone. The {0} will be the name of the function.</comment>
+  <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
+    <value>Kielikohtaiset muotoilutunnukset, kuten "." ja ",", eivät ole tuettuja kaavasarakkeissa.</value>
+    <comment>Error Message. Used in formula columns for scenarios where the maker supplies an invalid format string</comment>
+  </data>
+  <data name="FormulaColumns_FunctionNotSupported" xml:space="preserve">
+    <value>{0} ei tueta kaavasarakkeissa. Käytä sen sijaan {1}.</value>
+    <comment>Error Message. Used in formula columns for scenarios where the maker attempts to use a function that is not supported, providing an alternate function name.  The {0} will be the name of the function that is not supported, and {1} is the name of the suggested alternate.</comment>
+  </data>
+  <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
+    <value>Kaavasarakkeet eivät tue tätä tulostyyppiä {0}.</value>
+    <comment>Error Message. Used in formula columns for a formula that returns a type which is not supported.</comment>
+  </data>
+  <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
+    <value>Tämän kaavan tuloksen tyypin odotetaan olevan {0}, mutta tuloksen todellinen tyyppi on {1}. Kaavasarakkeen tulostyyppiä ei voi muuttaa.</value>
+    <comment>Error Message. Used in formula columns for a formula that returns an unexpected result type during editing. The {0} will be the name of the required type. The {1} will be the name of the incorrect type.</comment>
   </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
     <value>Odotettiin operandia. Kaava tai lauseke odottaa kelvollista operandia. Voit esimerkiksi lisätä operandin 2 lausekkeeseen 1 +_ niin, että tulos on 3. Voit myös lisätä operandin there lausekkeeseen "Hi "&amp; _ niin, että tuloksena on Hi there.</value>
@@ -5486,7 +5534,7 @@
   </data>
   <data name="ErrorResource_ErrBadToken_LongMessage" xml:space="preserve">
     <value>Esimerkiksi merkki \ ei ole odotettu luvun jälkeen (esimerkiksi 32 \). Väliä (32 ) odotettaan niin, että se on luku 32, tai muuten voidaan odottaa toista lukua (kuten 323).</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrBadToken_HowToFix_1" xml:space="preserve">
     <value>Poista tai korvaa odottamattomat merkit.</value>
@@ -5505,12 +5553,12 @@
     <comment>Error Message.</comment>
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_LongMessage" xml:space="preserve">
-    <value>Esimerkiksi merkki \ ei ole odotettu luvun jälkeen (esimerkiksi 32 \). Väliä (32) odotetaan niin, että se on luku 32, tai muuten voidaan odottaa toista lukua (kuten 323).</value>
-    <comment/>
+    <value>Esimerkiksi merkki \ ei ole odotettu luvun jälkeen (esimerkiksi 32 \). Väliä (32 ) odotettaan niin, että se on luku 32, tai muuten voidaan odottaa toista lukua (kuten 323).</value>
+    <comment />
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_HowToFix_1" xml:space="preserve">
     <value>Poista tai korvaa odottamaton merkki.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_Link_1" xml:space="preserve">
     <value>Artikkeli: Power Appsin kaavojen viiteopas</value>
@@ -5526,7 +5574,7 @@
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_LongMessage" xml:space="preserve">
     <value>Jokaisen lohkon kommentin on alettava merkeillä /* ja päätyttävä merkkeihin */. Jos et lopeta jokaista lohkokommenttia oikein, kaikesta kommentin jälkeen olevasta koodista tulee osa kyseistä kommenttia Jos kommentti koostuu vain yhdestä rivistä, voit aloittaa sen merkeillä // ja olla tunnistamatta kommentin loppua.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_HowToFix_1" xml:space="preserve">
     <value>Lisää */ lohkokommenttisi loppuun tai muuta se joukoksi rivikommentteja.</value>
@@ -5546,7 +5594,7 @@
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_LongMessage" xml:space="preserve">
     <value>Tämä virhe ilmenee esimerkiksi silloin, kun kaava sisältää merkkijonon {{Val@ 7}} merkkijonon {{Val: 7}} sijaan. Kun asetat muuttujan, syntaksi vaatii kaksoispisteen at-erikoismerkin sijaan.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_HowToFix_1" xml:space="preserve">
     <value>Poista tai korvaa odottamattomat merkit odotetulla merkillä.</value>
@@ -5566,7 +5614,7 @@
   </data>
   <data name="ErrorResource_ErrInvalidName_LongMessage" xml:space="preserve">
     <value>Tämä virhe esiintyy yleisimmin, kun kaava viittaa johonkin, jota ei enää olemassa (esimerkiksi ohjausobjektiin, jonka olet poistanut).</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrInvalidName_HowToFix_1" xml:space="preserve">
     <value>Poista tai korjaa viittaus nimeen, joka ei ole kelvollinen.</value>
@@ -5586,7 +5634,7 @@
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_LongMessage" xml:space="preserve">
     <value>Tämä virhe tulee näkyviin, kun kaava viittaa osan käyttäytymisen ominaisuuksiin, joiden syntaksi on virheellinen. (Esimerkiksi Component.OnCustomChange kohteen Component.OnCustomChange() sijaan)</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_HowToFix_1" xml:space="preserve">
     <value>Viittaa osan käyttäytymisen ominaisuuteen oikean syntaksin avulla. Esimerkki: Component.OnCustomChange()</value>
@@ -5606,7 +5654,7 @@
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_LongMessage" xml:space="preserve">
     <value>Et voi käyttää Parent-operaattoria ei sellaisen ohjausobjektin kanssa, jolla ei ole ylemmän tason ohjausobjektia. Tämä operaattori viittaa ohjausobjektiin, joka isännöi määritettyä ohjausobjektia ja tekee kaikki sen ominaisuudet käytettäviksi.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_HowToFix_1" xml:space="preserve">
     <value>Poista Parent-operaattori.</value>
@@ -5626,7 +5674,7 @@
   </data>
   <data name="ErrorResource_ErrTooManyUps_LongMessage" xml:space="preserve">
     <value>Monimutkaisuus kasvaa kunkin sisäkkäisyystason myötä, joten Power Apps tukee rivivaikutusalueen sisäkkäisyyttä enintään 63 tasoon saakka.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrTooManyUps_HowToFix_1" xml:space="preserve">
     <value>Kirjoita kaava uudelleen käyttäen entistä harvempia sisäkkäisyystasoja.</value>
@@ -5638,7 +5686,7 @@
   </data>
   <data name="ErrorResource_ErrRuleNestedTooDeeply_LongMessage" xml:space="preserve">
     <value>Power Apps tukee lausekkeen sisäkkäisyyttä vain 50:een tasoon saakka. Näin syvä lauseke on vaikea ymmärtää ja ylläpitää.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrRuleNestedTooDeeply_HowToFix_1" xml:space="preserve">
     <value>Kirjoita kaava uudelleen käyttäen entistä harvempia sisäkkäisyystasoja.</value>
@@ -5650,7 +5698,7 @@
   </data>
   <data name="ErrorResource_ErrOperatorExpected_LongMessage" xml:space="preserve">
     <value>Operaattorit liittävät kaksi operandia toisiinsa. Tämä virhe ilmenee, jos sijoitat kaksi funktiota (operandia) yhteen ilman operaattoria niiden välissä, esimerkiksi Len("omateksti")Len("omateksti").</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrOperatorExpected_HowToFix_1" xml:space="preserve">
     <value>Muokkaa kaavaasi niin, että se sisältää operaattorin operandien välissä.</value>
@@ -5670,7 +5718,7 @@
   </data>
   <data name="ErrorResource_ErrNumberExpected_LongMessage" xml:space="preserve">
     <value>Tämä virhe ilmenee, jos käytät funktiota, joka edellyttää lukua, mutta annat sen sijaan esimerkiksi kuvan.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrNumberExpected_HowToFix_1" xml:space="preserve">
     <value>Muokkaa kaavaasi niin, että se antaa arvioitaessa luvun kaavan tässä kohdassa.</value>
@@ -5690,7 +5738,7 @@
   </data>
   <data name="ErrorResource_ErrBooleanExpected_LongMessage" xml:space="preserve">
     <value>Totuusarvoa kutsutaan myös true/false (tosi/epätosi) -arvoksi sovelluksissa, kuten Microsoft Excelissä. Tämä virhe ilmenee, jos käytät funktiota, joka edellyttää totuusarvoa, mutta annat sen sijaan esimerkiksi päivämäärän.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrBooleanExpected_HowToFix_1" xml:space="preserve">
     <value>Muokkaa kaavaasi niin, että se antaa arvioitaessa totuusarvon kaavan tässä kohdassa.</value>
@@ -5710,7 +5758,7 @@
   </data>
   <data name="ErrorResource_ErrColonExpected_LongMessage" xml:space="preserve">
     <value>Kaksoispiste erottaa kentän nimen, jota kutsutaan joskus sarakkeen nimeksi, kentän arvosta tietueessa (esimerkiksi {Month:"1"}, {Month:"2"} …). Kaksoispiste erottaa myös tunnit minuuteista ja sekunneista englanninkielisissä ajan muodoissa (esimerkiksi 3:04).</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrColonExpected_HowToFix_1" xml:space="preserve">
     <value>Muokkaa kaavaasi niin, että se sisältää kaksoispisteen.</value>
@@ -5730,7 +5778,7 @@
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_LongMessage" xml:space="preserve">
     <value>Toimintafunktiot muuttavat sovelluksen tilaa muuttamalla arvoja muualla sovelluksessa. Navigate, Patch, UpdateContext ja Collect ovat yleisiä toimintafunktioita. OnSelect, OnVisible ja muut On...-ominaisuudet ovat yleisiä toimintaan perustuvia ominaisuuksia.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_HowToFix_1" xml:space="preserve">
     <value>Siirrä käyttäytymisfunktion käyttäytymiseen perustuvaan ominaisuuteen.</value>
@@ -5750,7 +5798,7 @@
   </data>
   <data name="ErrorResource_ErrTestPropertyExpected_LongMessage" xml:space="preserve">
     <value>Testifunktiot ovat kohteita, joiden avulla voidaan simuloida käyttäjän syötteitä sovellusta testattaessa. SetProperty, SelectRow ja Assert ovat yleisiä testifunktioita. Niitä voi käyttää vain testitapauksissa.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrTestPropertyExpected_HowToFix_1" xml:space="preserve">
     <value>Käytä funktiota testitapauksessa, ei itse sovelluksessa.</value>
@@ -5762,7 +5810,7 @@
   </data>
   <data name="ErrorResource_ErrCannotCoerce_SourceType_TargetType_LongMessage" xml:space="preserve">
     <value>Power Apps voi muuntaa kaavasi joidenkin tietojen tyypit muiksi tyypeiksi puolestasi. Se voi esimerkiksi muuntaa kohteen "1" (merkkijono) kohteeksi 1 (luku), mutta se ei muuntaa kaikkia tietotyyppejä kaikiksi muiksi tietotyypeiksi. Se ei esimerkiksi voi muuntaa kuvaa luvuksi.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrCannotCoerce_SourceType_TargetType_HowToFix_1" xml:space="preserve">
     <value>Muokkaa kaavaa niin, että muunnat kyseiset tiedot odotetuksi tyypiksi.</value>
@@ -5774,7 +5822,7 @@
   </data>
   <data name="ErrorResource_ErrStringExpected_LongMessage" xml:space="preserve">
     <value>Tämä virhe ilmenee, jos käytät funktiota, joka edellyttää tekstiargumenttia (tai merkkijonoargumenttia), mutta annat sen sijaan esimerkiksi päivämäärän.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrStringExpected_HowToFix_1" xml:space="preserve">
     <value>Muokkaa kaavaasi niin, että se antaa arvioitaessa tekstin kaavan tässä kohdassa.</value>
@@ -5794,7 +5842,7 @@
   </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_LongMessage" xml:space="preserve">
     <value>Tämä virhe ilmenee, jos käytät funktiota, joka edellyttää tekstiä tai lukua, mutta annat sen sijaan esimerkiksi totuusarvon (true/false).</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_HowToFix_1" xml:space="preserve">
     <value>Muokkaa kaavaasi niin, että se antaa arvioitaessa tekstin tai luvun kaavan tässä kohdassa.</value>
@@ -5814,7 +5862,7 @@
   </data>
   <data name="ErrorResource_ErrClosingBracketExpected_LongMessage" xml:space="preserve">
     <value>Sulkeva aaltosulje ilmaisee tietueen päättymisen (esimerkiksi {Month:"1"}, {Month:"2"}...).</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrClosingBracketExpected_HowToFix_1" xml:space="preserve">
     <value>Muokkaa kaavaasi niin, että se sisältää aaltosulkeen.</value>
@@ -5834,7 +5882,7 @@
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_LongMessage" xml:space="preserve">
     <value>Kaavaasi ei voi arvioida, koska kaavan vertailtavat arvot eivät ole samaa tyyppiä.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_HowToFix_1" xml:space="preserve">
     <value>Saatat joutua muuntamaan arvon samaksi tyypiksi, kuten muuntamaan päivämäärämerkkijonon (esimerkiksi 12/31/2018) päivämääräarvoksi.</value>
@@ -5946,7 +5994,7 @@
   </data>
   <data name="ErrorResource_ErrTypeError_LongMessage" xml:space="preserve">
     <value>Tiedot eivät ehkä vastaa odotettua tyyppiä (teksti, luku, päivämäärä, taulukko tai tietue).</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrTypeError_HowToFix_1" xml:space="preserve">
     <value>Tarkista kaavaan liittyvien arvojen tyypit ja varmista, että tyypit täsmäävät.</value>
@@ -5974,7 +6022,7 @@
   </data>
   <data name="ErrorResource_ErrDateExpected_LongMessage" xml:space="preserve">
     <value>Tämä virhe ilmenee, jos käytät funktiota, joka edellyttää päivämäärää, mutta annat sen sijaan esimerkiksi tekstin.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrDateExpected_HowToFix_1" xml:space="preserve">
     <value>Muokkaa kaavaasi niin, että se antaa arvioitaessa päivämäärän kaavan tässä kohdassa.</value>
@@ -5994,7 +6042,7 @@
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_LongMessage" xml:space="preserve">
     <value>Tietolähde ei ehkä pysty käsittelemään kaavaa ja saattaa palauttaa epätäydellisen tietojoukon. Sovelluksesi ei ehkä palauta oikeita tuloksia tai käyttäydy oikein, jos tietojoukko on epätäydellinen.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_HowToFix_1" xml:space="preserve">
     <value>Jos tietojoukkosi ylittää 500 tietueen rajan, mutta siinä on alle 2 000 tietuetta, kokeile nollata raja.</value>
@@ -6030,7 +6078,7 @@
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_LongMessage" xml:space="preserve">
     <value>Tietolähde ei ehkä pysty käsittelemään kaavaa ja saattaa palauttaa epätäydellisen tietojoukon. Sovelluksesi ei ehkä palauta oikeita tuloksia tai käyttäydy oikein, jos tietojoukko on epätäydellinen.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_HowToFix_1" xml:space="preserve">
     <value>Jos tietojoukkosi ylittää 500 tietueen rajan, mutta siinä on alle 2 000 tietuetta, kokeile nollata raja.</value>
@@ -6066,7 +6114,7 @@
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_LongMessage" xml:space="preserve">
     <value> In-operaattorin oikean puolen on oltava oikean tietolähteen sarakkeen nimi. Tietolähde ei ehkä pysty käsittelemään kaavaa ja saattaa palauttaa epätäydellisen tietojoukon. Sovelluksesi ei ehkä palauta oikeita tuloksia tai toimi oikein, jos tietojoukko on epätäydellinen.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_1" xml:space="preserve">
     <value>Muuta in-operaattorin oikealla puolella oleva kohde sarakkeeksi oikeasta tietolähteestä.</value>
@@ -6107,7 +6155,7 @@
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_LongMessage" xml:space="preserve">
     <value> In-operaattorin oikea puoli ei ole sarake oikeasta tietolähteestä. Tietolähde ei ehkä pysty käsittelemään kaavaa ja saattaa palauttaa epätäydellisen tietojoukon. Sovelluksesi ei ehkä palauta oikeita tuloksia tai toimi oikein, jos tietojoukko on epätäydellinen.
       </value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_1" xml:space="preserve">
     <value>Muuta in-operaattorin oikealla puolella oleva kohde sarakkeeksi oikeasta tietolähteestä.</value>
@@ -6213,5 +6261,9 @@
   <data name="ErrorResource_ErrAsNotInContext_ShortMessage" xml:space="preserve">
     <value>As-kohde ei ole sallittu tässä kontekstissa</value>
     <comment>{Locked=As} This is an error message that shows up when the As keyword is used but is not valid</comment>
+  </data>
+  <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
+    <value>Nimetyn kaavan täytyy päättyä puolipisteeseen.</value>
+    <comment>A semicolon must terminate named formulas. For example, a=10;</comment>
   </data>
 </root>

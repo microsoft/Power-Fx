@@ -12,6 +12,7 @@ using Microsoft.PowerFx.Core.Syntax;
 using Microsoft.PowerFx.Core.Texl.Intellisense;
 using Microsoft.PowerFx.Core.Types;
 using Xunit;
+using Microsoft.PowerFx.Core.Types.Enums;
 
 namespace Microsoft.PowerFx.Tests.IntellisenseTests
 {
@@ -27,7 +28,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         /// <param name="expression"></param>
         /// <param name="contextTypeString"></param>
         /// <returns></returns>
-        internal IIntellisenseResult Suggest(string expression, PowerFxConfig powerFxConfig, string contextTypeString = null)
+        internal IIntellisenseResult Suggest(string expression, EnumStore enumStore, string contextTypeString = null)
         {
             Assert.NotNull(expression);
 
@@ -51,10 +52,10 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
                 contextType = new RecordType();
             }
 
-            return Suggest(expression, contextType, cursorPosition, powerFxConfig);
+            return Suggest(expression, contextType, cursorPosition, enumStore);
         }
 
-        internal IIntellisenseResult Suggest(string expression, FormulaType parameterType, int cursorPosition, PowerFxConfig powerFxConfig)
+        internal IIntellisenseResult Suggest(string expression, FormulaType parameterType, int cursorPosition, EnumStore enumStore)
         {
             var formula = new Formula(expression);
             formula.EnsureParsed(TexlParser.Flags.None);
@@ -62,13 +63,13 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
             var binding = TexlBinding.Run(
                 new Glue2DocumentBinderGlue(),
                 formula.ParseTree,
-                new SimpleResolver(powerFxConfig.EnumStore.EnumSymbols),
+                new SimpleResolver(enumStore.EnumSymbols),
                 ruleScope: parameterType._type,
                 useThisRecordForRuleScope: false
             );
 
             var context = new IntellisenseContext(expression, cursorPosition);
-            var intellisense = IntellisenseProvider.GetIntellisense(powerFxConfig);
+            var intellisense = IntellisenseProvider.GetIntellisense(enumStore);
             var suggestions = intellisense.Suggest(context, binding, formula);
 
             if (suggestions.Exception != null)

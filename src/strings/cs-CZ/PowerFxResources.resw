@@ -1,45 +1,45 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <root>
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
         <xsd:choice maxOccurs="unbounded">
           <xsd:element name="metadata">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
               </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string"/>
-              <xsd:attribute name="type" type="xsd:string"/>
-              <xsd:attribute name="mimetype" type="xsd:string"/>
-              <xsd:attribute ref="xml:space"/>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="assembly">
             <xsd:complexType>
-              <xsd:attribute name="alias" type="xsd:string"/>
-              <xsd:attribute name="name" type="xsd:string"/>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="data">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
-              <xsd:attribute ref="xml:space"/>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="resheader">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required"/>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
             </xsd:complexType>
           </xsd:element>
         </xsd:choice>
@@ -447,7 +447,18 @@
     <comment>function_parameter - Argument to the Concatenate function - the text to be concatenated.</comment>
   </data>
   <data name="AboutConcatenate_text" xml:space="preserve">
-    <value>Text nebo sloupec textových hodnot, které se mají zřetězit se zbylými argumenty</value>
+    <value>Textová hodnota, která má být zřetězena se zbytkem argumentů.</value>
+  </data>
+  <data name="AboutConcatenateT" xml:space="preserve">
+    <value>Spojí několik textových hodnot nebo tabulek do jednoho sloupce textových hodnot.</value>
+    <comment>Description of 'Concatenate' function.</comment>
+  </data>
+  <data name="ConcatenateTArg1" xml:space="preserve">
+    <value>hodnota</value>
+    <comment>function_parameter - Argument to the Concatenate function - the text or table to be concatenated.</comment>
+  </data>
+  <data name="AboutConcatenate_value" xml:space="preserve">
+    <value>Textová hodnota nebo sloupec textových hodnot, které mají být zřetězeny se zbytkem argumentů.</value>
   </data>
   <data name="AboutConcat" xml:space="preserve">
     <value>Spojí všechny textové hodnoty vzniklé vyhodnocením zadaného výrazu v zadané tabulce do jedné textové hodnoty.</value>
@@ -812,6 +823,10 @@
     <value>Vrátí aktuální datum a čas.</value>
     <comment>Description of 'Now' function.</comment>
   </data>
+  <data name="AboutUTCNow" xml:space="preserve">
+    <value>Vrátí aktuální datum a čas v čase UTC.</value>
+    <comment>Description of 'UTCNow' function.</comment>
+  </data>
   <data name="AboutTimeZoneOffset" xml:space="preserve">
     <value>Vrátí rozdíl času mezi časem UTC a místním časem (v minutách). Pokud je vaše časové pásmo třeba UTC+2, vrátí se -120.</value>
     <comment>Description of 'TimeZoneOffset' function.</comment>
@@ -827,6 +842,10 @@
   <data name="AboutToday" xml:space="preserve">
     <value>Vrátí aktuální datum.</value>
     <comment>Description of 'Today' function.</comment>
+  </data>
+  <data name="AboutUTCToday" xml:space="preserve">
+    <value>Vrátí aktuální datum v čase UTC.</value>
+    <comment>Description of 'UTCToday' function.</comment>
   </data>
   <data name="AboutWeekNum" xml:space="preserve">
     <value>Vrátí číslo týdne pro dané datum.</value>
@@ -1255,6 +1274,12 @@
   <data name="AboutAtan2Arg2" xml:space="preserve">
     <value>souřadnice_y</value>
     <comment>function_parameter - Second parameter to the Atan function - the y coordinate for arctangent to be returned. When translating, maintain as a single word (i.e., do not add spaces)</comment>
+  </data>
+  <data name="AboutAtan2_x_coordinate" xml:space="preserve">
+    <value>Souřadnice x.</value>
+  </data>
+  <data name="AboutAtan2_y_coordinate" xml:space="preserve">
+    <value>Souřadnice y.</value>
   </data>
   <data name="AboutSqrt" xml:space="preserve">
     <value>Vrátí druhou odmocninu čísla.</value>
@@ -3373,6 +3398,17 @@
     <value>datum</value>
     <comment>function_parameter - First argument to the IsToday function - the date to be tested.</comment>
   </data>
+  <data name="AboutIsUTCToday" xml:space="preserve">
+    <value>Zkontroluje, zda je dané datum dnes ve formátu UTC, a vrátí hodnotu true nebo false.</value>
+    <comment>Description of 'IsUTCToday' function</comment>
+  </data>
+  <data name="AboutIsUTCToday_date" xml:space="preserve">
+    <value>Hodnota kalendářního data, která se má testovat.</value>
+  </data>
+  <data name="IsUTCTodayFuncArg1" xml:space="preserve">
+    <value>datum</value>
+    <comment>function_parameter - First argument to the IsUTCToday function - the date to be tested.</comment>
+  </data>
   <data name="AboutMod" xml:space="preserve">
     <value>Vrátí zbytek po dělení čísla dělitelem. Výsledek má stejné znaménko jako dělitel.</value>
     <comment>Description of 'Mod' function.</comment>
@@ -5468,9 +5504,21 @@
     <value>Ve sloupcích vzorce jsou podporovány pouze řetězce krátkého formátu data a času.</value>
     <comment>Error Message. Used in formula columns for scenarios where the maker supplies an invalid format string</comment>
   </data>
-  <data name="FormulaColumns_UtcResultWarning" xml:space="preserve">
-    <value>Část "{0}" tohoto vzorce nemusí fungovat očekávaným způsobem v závislosti na časovém pásmu uživatele, protože operace bude provedena ve sloupcích vzorce v univerzálním koordinovaném čase (UTC).</value>
-    <comment>Error Message. Used as a warning in formula columns for scenarios where the operation will be performed in UTC instead of the user's local time zone. The {0} will be the name of the function.</comment>
+  <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
+    <value>Tokeny formátování specifické pro národní prostředí, jako jsou "." a "," nejsou ve sloupcích vzorců podporovány.</value>
+    <comment>Error Message. Used in formula columns for scenarios where the maker supplies an invalid format string</comment>
+  </data>
+  <data name="FormulaColumns_FunctionNotSupported" xml:space="preserve">
+    <value>{0} není ve sloupcích vzorců podporován, použijte místo toho {1}.</value>
+    <comment>Error Message. Used in formula columns for scenarios where the maker attempts to use a function that is not supported, providing an alternate function name.  The {0} will be the name of the function that is not supported, and {1} is the name of the suggested alternate.</comment>
+  </data>
+  <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
+    <value>Tento typ výsledku {0} není ve sloupcích vzorců podporován.</value>
+    <comment>Error Message. Used in formula columns for a formula that returns a type which is not supported.</comment>
+  </data>
+  <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
+    <value>Očekává se, že typ výsledku pro tento vzorec bude {0}, ale skutečný typ výsledku je {1}. Výsledný typ sloupce vzorce nelze změnit.</value>
+    <comment>Error Message. Used in formula columns for a formula that returns an unexpected result type during editing. The {0} will be the name of the required type. The {1} will be the name of the incorrect type.</comment>
   </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
     <value>Očekával se operand. Vzorec nebo výraz očekává platný operand. Například do výrazu 1 + můžete přidat operand 2, aby výsledkem bylo 3. Nebo do výrazu "Dobrý den "&amp; _ můžete přidat operand "všem", aby výsledkem bylo Dobrý den všem.</value>
@@ -5486,7 +5534,7 @@
   </data>
   <data name="ErrorResource_ErrBadToken_LongMessage" xml:space="preserve">
     <value>Například znak \ se neočekává za číslicí, třeba takto: 32\. Očekávalo by se, že se použije mezera (32 ), což by znamenalo prostě číslo 32, nebo by se očekávala jiná číslice (třeba 323).</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrBadToken_HowToFix_1" xml:space="preserve">
     <value>Odeberte nebo nahraďte neočekávané znaky.</value>
@@ -5506,11 +5554,11 @@
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_LongMessage" xml:space="preserve">
     <value>Například znak \ se neočekává za číslicí, třeba takto: 32\. Očekávalo by se, že se použije mezera (32), což by znamenalo prostě číslo 32, nebo by se očekávala jiná číslice (třeba 323).</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_HowToFix_1" xml:space="preserve">
     <value>Odeberte nebo nahraďte neočekávaný znak.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_Link_1" xml:space="preserve">
     <value>Článek: Referenční informace ke vzorcům v Power Apps</value>
@@ -5526,7 +5574,7 @@
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_LongMessage" xml:space="preserve">
     <value>Každý blokový komentář musí začínat znaky /* a končit znaky */. Pokud blokový komentář správně neukončíte, všechen kód za komentářem se stane součástí tohoto komentáře. Pokud má komentář jen jeden řádek, můžete ho začít znaky // a není nutné identifikovat jeho konec.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_HowToFix_1" xml:space="preserve">
     <value>Přidejte na konec blokového komentáře znaky */, nebo ho změňte na sadu řádkových komentářů.</value>
@@ -5546,7 +5594,7 @@
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_LongMessage" xml:space="preserve">
     <value>K této chybě dochází, když vzorec obsahuje například {{Val@ 7}} místo {{Val: 7}}. Když nastavíte proměnnou, syntaxe vyžaduje místo symbolu zavináče dvojtečku.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_HowToFix_1" xml:space="preserve">
     <value>Odeberte nebo nahraďte neočekávané znaky očekávaným znakem.</value>
@@ -5566,7 +5614,7 @@
   </data>
   <data name="ErrorResource_ErrInvalidName_LongMessage" xml:space="preserve">
     <value>K této chybě dochází nejčastěji v případě, že vzorec odkazuje na něco, co už neexistuje (třeba ovládací prvek, který jste odstranili).</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrInvalidName_HowToFix_1" xml:space="preserve">
     <value>Odeberte nebo opravte odkaz na název, který není platný.</value>
@@ -5586,7 +5634,7 @@
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_LongMessage" xml:space="preserve">
     <value>Tato chyba se zobrazí, když se vzorec odkazuje na vlastnosti chování komponenty pomocí neplatné syntaxe. (Příklad: Component.OnCustomChange místo Component.OnCustomChange())</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_HowToFix_1" xml:space="preserve">
     <value>Při odkazování na vlastnost chování komponenty použijte správnou syntaxi. Příklad: Component.OnCustomChange()</value>
@@ -5606,7 +5654,7 @@
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_LongMessage" xml:space="preserve">
     <value>Operátor Parent se nedá použít spolu s ovládacím prvkem, který nemá nadřazený ovládací prvek. Tento operátor odkazuje na prvek, který hostuje daný ovládací prvek a zpřístupňuje všechny jeho vlastnosti.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_HowToFix_1" xml:space="preserve">
     <value>Odeberte operátor Parent.</value>
@@ -5626,7 +5674,7 @@
   </data>
   <data name="ErrorResource_ErrTooManyUps_LongMessage" xml:space="preserve">
     <value>S každou úrovní vnoření se zvyšuje složitost, proto Power Apps podporuje vnořování oborů řádků jen do 63 úrovní.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrTooManyUps_HowToFix_1" xml:space="preserve">
     <value>Přepište vzorec na méně úrovní vnoření.</value>
@@ -5638,7 +5686,7 @@
   </data>
   <data name="ErrorResource_ErrRuleNestedTooDeeply_LongMessage" xml:space="preserve">
     <value>Power Apps podporuje vnořování výrazů jen do 50 úrovní. Takto hluboce vnořený výraz se obtížně čte a udržuje.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrRuleNestedTooDeeply_HowToFix_1" xml:space="preserve">
     <value>Přepište vzorec na méně úrovní vnoření.</value>
@@ -5650,7 +5698,7 @@
   </data>
   <data name="ErrorResource_ErrOperatorExpected_LongMessage" xml:space="preserve">
     <value>Operátory spojují dva operandy. K této chybě dojde, pokud spojíte dvě funkce (operandy) bez toho, abyste mezi ně vložili operátor -- třeba Len("mujtext")Len("mujtext").</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrOperatorExpected_HowToFix_1" xml:space="preserve">
     <value>Upravte svůj vzorec tak, aby mezi operandy obsahoval operátor.</value>
@@ -5670,7 +5718,7 @@
   </data>
   <data name="ErrorResource_ErrNumberExpected_LongMessage" xml:space="preserve">
     <value>K této chybě dojde v případě, že použijete funkci, která vyžaduje číslo, ale místo něj zadáte například obrázek.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrNumberExpected_HowToFix_1" xml:space="preserve">
     <value>Upravte svůj vzorec tak, aby se v této části vzorce vyhodnotil jako číslo.</value>
@@ -5690,7 +5738,7 @@
   </data>
   <data name="ErrorResource_ErrBooleanExpected_LongMessage" xml:space="preserve">
     <value>V některých aplikacích, třeba v Microsoft Excelu, se logické hodnotě říká hodnota pravda/nepravda. K této chybě dojde, když použijete funkci, která vyžaduje logickou hodnotu, ale místo ní zadáte třeba datum.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrBooleanExpected_HowToFix_1" xml:space="preserve">
     <value>Upravte svůj vzorec tak, aby se v této části vzorce vyhodnotil jako logická hodnota.</value>
@@ -5710,7 +5758,7 @@
   </data>
   <data name="ErrorResource_ErrColonExpected_LongMessage" xml:space="preserve">
     <value>Dvojtečka odděluje název pole, kterému se někdy říká název sloupce, od položky pole v záznamu (třeba {Month:"1"}, {Month:"2"}…). Kromě toho dvojtečka odděluje hodiny od minut a sekund (třeba 3:04).</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrColonExpected_HowToFix_1" xml:space="preserve">
     <value>Upravte svůj vzorec tak, aby obsahoval dvojtečku.</value>
@@ -5730,7 +5778,7 @@
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_LongMessage" xml:space="preserve">
     <value>Funkce chování mění stav aplikace tím, že mění hodnoty na jiných místech v aplikaci. Navigate, Patch, UpdateContext a Collect jsou běžné funkce chování. OnSelect, OnVisible a další vlastnosti začínající na On jsou běžné vlastnosti založené na chování.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_HowToFix_1" xml:space="preserve">
     <value>Přesuňte funkci chování do vlastnosti založené na chování.</value>
@@ -5750,7 +5798,7 @@
   </data>
   <data name="ErrorResource_ErrTestPropertyExpected_LongMessage" xml:space="preserve">
     <value>Testovací funkce jsou ty, které se dají použít k simulaci vstupů uživatelů při testování aplikace. Mezi běžné testovací funkce patří SetProperty, SelectRow a Assert. Použít se dají jen v testovacích případech.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrTestPropertyExpected_HowToFix_1" xml:space="preserve">
     <value>Použijte funkci v testovacím případu, nikoli v samotné aplikaci.</value>
@@ -5762,7 +5810,7 @@
   </data>
   <data name="ErrorResource_ErrCannotCoerce_SourceType_TargetType_LongMessage" xml:space="preserve">
     <value>Power Apps může převést některé typy dat ve vzorci na jiné typy za vás. Umí například převést "1" (řetězec) na 1 (číslo), ale ne všechny datové typy se dají převést na jakýkoli jiný. Například obrázek se na číslo převést nedá.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrCannotCoerce_SourceType_TargetType_HowToFix_1" xml:space="preserve">
     <value>Upravte svůj vzorec tak, abyste převedli daná data na očekávaný typ.</value>
@@ -5774,7 +5822,7 @@
   </data>
   <data name="ErrorResource_ErrStringExpected_LongMessage" xml:space="preserve">
     <value>K této chybě dojde v případě, že použijete funkci, která vyžaduje textový (nebo řetězcový) argument, ale místo něj zadáte například datum.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrStringExpected_HowToFix_1" xml:space="preserve">
     <value>Upravte svůj vzorec tak, aby se v této části vzorce vyhodnotil jako text.</value>
@@ -5794,7 +5842,7 @@
   </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_LongMessage" xml:space="preserve">
     <value>K této chybě dojde v případě, že použijete funkci, která vyžaduje buď text, nebo číslo, ale místo nich zadáte například logickou hodnotu (true/false).</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_HowToFix_1" xml:space="preserve">
     <value>Upravte svůj vzorec tak, aby se v této části vzorce vyhodnotil jako text nebo číslo.</value>
@@ -5814,7 +5862,7 @@
   </data>
   <data name="ErrorResource_ErrClosingBracketExpected_LongMessage" xml:space="preserve">
     <value>Pravá složená závorka znamená konec záznamu (třeba {Month:"1"}, {Month:"2"}…).</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrClosingBracketExpected_HowToFix_1" xml:space="preserve">
     <value>Upravte svůj vzorec tak, aby obsahoval složenou závorku.</value>
@@ -5834,7 +5882,7 @@
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_LongMessage" xml:space="preserve">
     <value>Vzorec se nám nepodařilo vyhodnotit, protože hodnoty porovnávané ve vzorci nejsou stejného typu.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_HowToFix_1" xml:space="preserve">
     <value>Možná bude nutné převést hodnotu na stejný typ, např. převést řetězec data (třeba 31.12.2018) na hodnotu data.</value>
@@ -5946,7 +5994,7 @@
   </data>
   <data name="ErrorResource_ErrTypeError_LongMessage" xml:space="preserve">
     <value>Data nemusí odpovídat očekávanému typu (text, číslo, datum, tabulka, záznam).</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrTypeError_HowToFix_1" xml:space="preserve">
     <value>Zkontrolujte typy hodnot používaných ve vzorci a ujistěte se, že se tyto typy shodují.</value>
@@ -5974,7 +6022,7 @@
   </data>
   <data name="ErrorResource_ErrDateExpected_LongMessage" xml:space="preserve">
     <value>K této chybě dojde v případě, že použijete funkci, která vyžaduje datum, ale místo něj zadáte například text.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrDateExpected_HowToFix_1" xml:space="preserve">
     <value>Upravte svůj vzorec tak, aby se v této části vzorce vyhodnotil jako datum.</value>
@@ -5994,7 +6042,7 @@
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_LongMessage" xml:space="preserve">
     <value>Zdroj dat nemusí být schopný zpracovat vzorec a může vrátit neúplnou datovou sadu. Pokud bude datová sada neúplná, aplikace nemusí vrátit správné výsledky nebo se nemusí chovat správně.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_HowToFix_1" xml:space="preserve">
     <value>Pokud vaše sada dat překročí limit 500 záznamů, ale zároveň jich obsahuje méně než 2000, zkuste limit resetovat.</value>
@@ -6030,7 +6078,7 @@
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_LongMessage" xml:space="preserve">
     <value>Zdroj dat nemusí být schopný zpracovat vzorec a může vrátit neúplnou datovou sadu. Pokud bude datová sada neúplná, aplikace nemusí vrátit správné výsledky nebo se nemusí chovat správně.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_HowToFix_1" xml:space="preserve">
     <value>Pokud vaše sada dat překročí limit 500 záznamů, ale zároveň jich obsahuje méně než 2000, zkuste limit resetovat.</value>
@@ -6066,7 +6114,7 @@
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_LongMessage" xml:space="preserve">
     <value> Pravá strana operátoru in by měla být název sloupce ze správného zdroje dat. Zdroj dat nemusí být schopný zpracovat vzorec a může vrátit neúplnou datovou sadu. Pokud bude datová sada neúplná, aplikace nemusí vrátit správné výsledky nebo se nemusí chovat správně.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_1" xml:space="preserve">
     <value>Změňte položku na pravé straně operátoru in tak, aby byla sloupcem ze správného zdroje dat.</value>
@@ -6107,7 +6155,7 @@
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_LongMessage" xml:space="preserve">
     <value> Pravá strana operátoru „in“ není sloupec ze správného zdroje dat. Zdroj dat nemusí být schopný zpracovat vzorec a může vrátit neúplnou datovou sadu. Pokud bude datová sada neúplná, aplikace nemusí vrátit správné výsledky nebo se nemusí chovat správně.
       </value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_1" xml:space="preserve">
     <value>Změňte položku na pravé straně operátoru in tak, aby byla sloupcem ze správného zdroje dat.</value>
@@ -6213,5 +6261,9 @@
   <data name="ErrorResource_ErrAsNotInContext_ShortMessage" xml:space="preserve">
     <value>Jak se v tomto kontextu nepovoluje</value>
     <comment>{Locked=As} This is an error message that shows up when the As keyword is used but is not valid</comment>
+  </data>
+  <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
+    <value>Pojmenovaný vzorec musí končit středníkem.</value>
+    <comment>A semicolon must terminate named formulas. For example, a=10;</comment>
   </data>
 </root>

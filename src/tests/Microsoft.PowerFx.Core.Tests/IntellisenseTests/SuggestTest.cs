@@ -26,11 +26,11 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         /// <returns>
         /// List of string representing suggestions
         /// </returns>
-        private string[] SuggestStrings(string expression, PowerFxConfig powerFxConfig, string contextTypeString = null)
+        private string[] SuggestStrings(string expression, EnumStore enumStore, string contextTypeString = null)
         {
             Assert.NotNull(expression);
 
-            var intellisense = Suggest(expression, powerFxConfig, contextTypeString);
+            var intellisense = Suggest(expression, enumStore, contextTypeString);
             return intellisense.Suggestions.Select(suggestion => suggestion.DisplayText.Text).ToArray();
         }
 
@@ -40,8 +40,8 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
             protected override ImmutableDictionary<string, string> EnumDict => _enumDict;
         }
 
-        private readonly PowerFxConfig _defaultPowerFxConfig = new PowerFxConfig();
-        private readonly PowerFxConfig _emptyPowerFxConfig = new PowerFxConfig(new EmptyEnumStore(), CultureInfo.CurrentCulture);
+        private readonly EnumStore _defaultEnumStore = new EnumStore();
+        private readonly EnumStore _emptyEnumStore = new EmptyEnumStore();
 
         /// <summary>
         /// Compares expected suggestions with suggestions made by PFx Intellisense for a given
@@ -130,7 +130,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         public void TestSuggest(string expression, params string[] expectedSuggestions)
         {
             FeatureFlags.StringInterpolation = true;
-            var actualSuggestions = SuggestStrings(expression, _defaultPowerFxConfig);
+            var actualSuggestions = SuggestStrings(expression, _defaultEnumStore);
             Assert.Equal(expectedSuggestions, actualSuggestions);
         }
 
@@ -151,7 +151,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         public void TestSuggestEmptyEnumList(string expression, params string[] expectedSuggestions)
         {
             FeatureFlags.StringInterpolation = true;
-            var actualSuggestions = SuggestStrings(expression, _emptyPowerFxConfig);
+            var actualSuggestions = SuggestStrings(expression, _emptyEnumStore);
             Assert.Equal(expectedSuggestions, actualSuggestions);
         }
 
@@ -174,7 +174,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         [InlineData("[@|")]
         public void TestNonEmptySuggest(string expression, string context = null)
         {
-            var actualSuggestions = SuggestStrings(expression, _defaultPowerFxConfig, context);
+            var actualSuggestions = SuggestStrings(expression, _defaultEnumStore, context);
             Assert.True(actualSuggestions.Length > 0);
         }
 
@@ -190,7 +190,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         {
             Assert.NotNull(context);
 
-            var actualSuggestions = SuggestStrings(expression, _defaultPowerFxConfig, context);
+            var actualSuggestions = SuggestStrings(expression, _defaultEnumStore, context);
             Assert.Equal(expectedSuggestions, actualSuggestions);
         }
     }

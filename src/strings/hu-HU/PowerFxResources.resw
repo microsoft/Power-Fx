@@ -1,45 +1,45 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <root>
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
         <xsd:choice maxOccurs="unbounded">
           <xsd:element name="metadata">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
               </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string"/>
-              <xsd:attribute name="type" type="xsd:string"/>
-              <xsd:attribute name="mimetype" type="xsd:string"/>
-              <xsd:attribute ref="xml:space"/>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="assembly">
             <xsd:complexType>
-              <xsd:attribute name="alias" type="xsd:string"/>
-              <xsd:attribute name="name" type="xsd:string"/>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="data">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
-              <xsd:attribute ref="xml:space"/>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="resheader">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required"/>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
             </xsd:complexType>
           </xsd:element>
         </xsd:choice>
@@ -447,7 +447,18 @@
     <comment>function_parameter - Argument to the Concatenate function - the text to be concatenated.</comment>
   </data>
   <data name="AboutConcatenate_text" xml:space="preserve">
-    <value>Szöveges érték vagy a szöveges értékek egy oszlopa, amelyet össze kell fűzni a többi argumentummal.</value>
+    <value>Egy szöveges érték, amelyet a többi argumentummal kell összefűzni.</value>
+  </data>
+  <data name="AboutConcatenateT" xml:space="preserve">
+    <value>Több szöveges értéket vagy táblát illeszt egy szöveges érték oszlopba.</value>
+    <comment>Description of 'Concatenate' function.</comment>
+  </data>
+  <data name="ConcatenateTArg1" xml:space="preserve">
+    <value>érték</value>
+    <comment>function_parameter - Argument to the Concatenate function - the text or table to be concatenated.</comment>
+  </data>
+  <data name="AboutConcatenate_value" xml:space="preserve">
+    <value>Egy szöveges érték vagy szöveges értékek oszlopa, amelyet a többi argumentummal kell összefűzni.</value>
   </data>
   <data name="AboutConcat" xml:space="preserve">
     <value>Egyetlen szöveges értékben egyesít minden olyan szöveges értéket, amelyet a megadott kifejezésnek a megadott táblán történő kiértékelése állít elő.</value>
@@ -812,6 +823,10 @@
     <value>A pontos időt és a dátumot adja eredményül.</value>
     <comment>Description of 'Now' function.</comment>
   </data>
+  <data name="AboutUTCNow" xml:space="preserve">
+    <value>Az aktuális dátumot és időt adja vissza UTC-idő szerint.</value>
+    <comment>Description of 'UTCNow' function.</comment>
+  </data>
   <data name="AboutTimeZoneOffset" xml:space="preserve">
     <value>Az egyezményes világidő (UTC) és a helyi idő közötti időkülönbség visszaadása, percben kifejezve. Ha például az időzóna UTC+2, a -120 érték lesz visszaadva.</value>
     <comment>Description of 'TimeZoneOffset' function.</comment>
@@ -827,6 +842,10 @@
   <data name="AboutToday" xml:space="preserve">
     <value>Az aktuális dátumot adja eredményül.</value>
     <comment>Description of 'Today' function.</comment>
+  </data>
+  <data name="AboutUTCToday" xml:space="preserve">
+    <value>Az aktuális dátumot adja vissza UTC-idő szerint.</value>
+    <comment>Description of 'UTCToday' function.</comment>
   </data>
   <data name="AboutWeekNum" xml:space="preserve">
     <value>Visszaadja a megadott dátumnak megfelelő hét számát.</value>
@@ -1255,6 +1274,12 @@
   <data name="AboutAtan2Arg2" xml:space="preserve">
     <value>y_koordináta</value>
     <comment>function_parameter - Second parameter to the Atan function - the y coordinate for arctangent to be returned. When translating, maintain as a single word (i.e., do not add spaces)</comment>
+  </data>
+  <data name="AboutAtan2_x_coordinate" xml:space="preserve">
+    <value>x koordináta.</value>
+  </data>
+  <data name="AboutAtan2_y_coordinate" xml:space="preserve">
+    <value>y koordináta.</value>
   </data>
   <data name="AboutSqrt" xml:space="preserve">
     <value>Egy szám négyzetgyökét adja vissza.</value>
@@ -3373,6 +3398,17 @@
     <value>dátum</value>
     <comment>function_parameter - First argument to the IsToday function - the date to be tested.</comment>
   </data>
+  <data name="AboutIsUTCToday" xml:space="preserve">
+    <value>Ellenőrzi, hogy az adott dátum UTC-ben ma van-e, és igaz vagy hamis értéket ad vissza.</value>
+    <comment>Description of 'IsUTCToday' function</comment>
+  </data>
+  <data name="AboutIsUTCToday_date" xml:space="preserve">
+    <value>A vizsgálandó dátumérték.</value>
+  </data>
+  <data name="IsUTCTodayFuncArg1" xml:space="preserve">
+    <value>dátum</value>
+    <comment>function_parameter - First argument to the IsUTCToday function - the date to be tested.</comment>
+  </data>
   <data name="AboutMod" xml:space="preserve">
     <value>A számnak az osztóval való elosztása után kapott maradékot adja eredményül. Az eredmény az osztóval azonos előjelű.</value>
     <comment>Description of 'Mod' function.</comment>
@@ -5468,9 +5504,21 @@
     <value>Csak a rövid dátum- és időformátumú sztringek támogatottak a képletoszlopokban.</value>
     <comment>Error Message. Used in formula columns for scenarios where the maker supplies an invalid format string</comment>
   </data>
-  <data name="FormulaColumns_UtcResultWarning" xml:space="preserve">
-    <value>Előfordulhat, hogy a képlet „{0}” része nem a várt módon működik a felhasználó időzónájától függően, mert a műveletet az egyezményes világidő (UTC) szerint lesz végrehajtva a képletoszlopokban.</value>
-    <comment>Error Message. Used as a warning in formula columns for scenarios where the operation will be performed in UTC instead of the user's local time zone. The {0} will be the name of the function.</comment>
+  <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
+    <value>A területibeállítás-specifikus formázási tokenek, mint például a "." és a ",", nem támogatottak a képletoszlopokban.</value>
+    <comment>Error Message. Used in formula columns for scenarios where the maker supplies an invalid format string</comment>
+  </data>
+  <data name="FormulaColumns_FunctionNotSupported" xml:space="preserve">
+    <value>A(z) {0} nem támogatott a képletoszlopokban. Használja inkább a következőt: {1}.</value>
+    <comment>Error Message. Used in formula columns for scenarios where the maker attempts to use a function that is not supported, providing an alternate function name.  The {0} will be the name of the function that is not supported, and {1} is the name of the suggested alternate.</comment>
+  </data>
+  <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
+    <value>Ez az eredménytípus ("{0}") nem támogatott a képletoszlopokban.</value>
+    <comment>Error Message. Used in formula columns for a formula that returns a type which is not supported.</comment>
+  </data>
+  <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
+    <value>A képlet várt eredménytípusa {0}, de a tényleges eredménytípus {1}. A képletoszlop eredménytípusa nem módosítható.</value>
+    <comment>Error Message. Used in formula columns for a formula that returns an unexpected result type during editing. The {0} will be the name of the required type. The {1} will be the name of the incorrect type.</comment>
   </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
     <value>A rendszer operandust várt. A képlet vagy kifejezés egy érvényes operandust várt. Hozzáadhatja például a 2 operandust az „1 +” kifejezéshez, hogy az eredmény 3 legyen, vagy hozzáadhatja a "!" operandust az "Üdvözöljük" kifejezéshez, hogy az eredmény "Üdvözöljük!" legyen.</value>
@@ -5486,7 +5534,7 @@
   </data>
   <data name="ErrorResource_ErrBadToken_LongMessage" xml:space="preserve">
     <value>A „\” karakter például váratlan egy szám után, például a következőképpen: „32\”. A szóköz („32 ”) várható, ha csak a 32 számot eredményezi, illetve várható egy másik szám (példa: „323”).</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrBadToken_HowToFix_1" xml:space="preserve">
     <value>Távolítsa el vagy cserélje a váratlan karaktereket.</value>
@@ -5506,11 +5554,11 @@
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_LongMessage" xml:space="preserve">
     <value>A „\” karakter például váratlan egy szám után, például a következőképpen: „32\”. A szóköz („32 ”) várható, ha csak a 32 számot eredményezi, illetve várható egy másik szám (példa: „323”).</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_HowToFix_1" xml:space="preserve">
     <value>Távolítsa el vagy cserélje le a váratlan karaktert.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_Link_1" xml:space="preserve">
     <value>Cikk: Power Apps-képletekkel kapcsolatos segédlet</value>
@@ -5526,7 +5574,7 @@
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_LongMessage" xml:space="preserve">
     <value>Minden megjegyzésblokknak a „/*” sztringgel kell kezdődnie, és a „*/” sztringgel kell végződnie. Ha nem zár le minden megjegyzésblokkot megfelelően, a megjegyzés után szereplő összes kód a megjegyzés része lesz. Ha egy megjegyzés csak egy sorból áll, azt kezdheti a „//” sztringgel, a megjegyzés végének meghatározása nélkül.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_HowToFix_1" xml:space="preserve">
     <value>Szúrja be a „*/” sztringet a megjegyzésblokk végére, vagy módosítsa azt megjegyzéssorok készletére.</value>
@@ -5546,7 +5594,7 @@
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_LongMessage" xml:space="preserve">
     <value>Ez a hiba például akkor fordul elő, ha egy képlet a {{Val@ 7}} kifejezést tartalmazza {{Val: 7}} helyett. Változók beállításakor a szintaxis szerint kettőspontot kell megadni, nem pedig a „kukac” szimbólumot.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_HowToFix_1" xml:space="preserve">
     <value>Távolítsa el a váratlan karaktereket, vagy cserélje azokat várt karakterekre.</value>
@@ -5566,7 +5614,7 @@
   </data>
   <data name="ErrorResource_ErrInvalidName_LongMessage" xml:space="preserve">
     <value>Ez a hiba leggyakrabban akkor jelenik meg, ha a képlet már nem létező dologra (például egy törölt vezérlőre) hivatkozik.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrInvalidName_HowToFix_1" xml:space="preserve">
     <value>Távolítsa el vagy javítsa az érvénytelen névre való hivatkozást.</value>
@@ -5586,7 +5634,7 @@
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_LongMessage" xml:space="preserve">
     <value>Ez a hibaüzenet akkor jelenik meg, ha egy képlet érvénytelen szintaxissal hivatkozik az összetevő viselkedési tulajdonságaira (például a Component.OnCustomChange() függvényhívás helyett a következőt használja: Component.OnCustomChange)</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_HowToFix_1" xml:space="preserve">
     <value>A helyes szintaxis használatával hivatkozzon az összetevő viselkedési tulajdonságára. Példa: Component.OnCustomChange()</value>
@@ -5606,7 +5654,7 @@
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_LongMessage" xml:space="preserve">
     <value>A Parent operátor nem használható olyan vezérlőkhöz, melyeknek nincs szülő vezérlője. Az operátor az adott vezérlőt tároló vezérlőre hivatkozik, és annak minden tulajdonságát elérhetővé teszi.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_HowToFix_1" xml:space="preserve">
     <value>Távolítsa el a Parent operátort.</value>
@@ -5626,7 +5674,7 @@
   </data>
   <data name="ErrorResource_ErrTooManyUps_LongMessage" xml:space="preserve">
     <value>A bonyolultság minden beágyazási szinttel növekszik, ezért a Power Apps csak legfeljebb 63 szintig támogatja a sor hatókörében való beágyazást.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrTooManyUps_HowToFix_1" xml:space="preserve">
     <value>Írja át a képletet kevesebb beágyazási szint használatával.</value>
@@ -5638,7 +5686,7 @@
   </data>
   <data name="ErrorResource_ErrRuleNestedTooDeeply_LongMessage" xml:space="preserve">
     <value>A Power Apps legfeljebb 50 szintig támogatja a kifejezések beágyazását. Egy ennyire mélyen beágyazott kifejezést nehéz megérteni és kezelni.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrRuleNestedTooDeeply_HowToFix_1" xml:space="preserve">
     <value>Írja át a képletet kevesebb beágyazási szint használatával.</value>
@@ -5650,7 +5698,7 @@
   </data>
   <data name="ErrorResource_ErrOperatorExpected_LongMessage" xml:space="preserve">
     <value>Az operátorok két operandust kötnek össze. Ez a hiba akkor fordul elő, ha úgy köt össze két függvényt (operandust), hogy nincs közöttük operátor. Példa: Len("sajátszöveg")Len("sajátszöveg").</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrOperatorExpected_HowToFix_1" xml:space="preserve">
     <value>Módosítsa a képletet úgy, hogy az operandusai között legyen egy operátor.</value>
@@ -5670,7 +5718,7 @@
   </data>
   <data name="ErrorResource_ErrNumberExpected_LongMessage" xml:space="preserve">
     <value>Ez a hiba akkor fordul elő, ha számot igénylő függvényt használ, de szám helyett például képet ad meg.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrNumberExpected_HowToFix_1" xml:space="preserve">
     <value>Módosítsa a képletet úgy, hogy a képlet ezen pontján számot adjon vissza.</value>
@@ -5690,7 +5738,7 @@
   </data>
   <data name="ErrorResource_ErrBooleanExpected_LongMessage" xml:space="preserve">
     <value>A logikai érték igaz/hamis értékként is ismert az olyan alkalmazásokban, mint például a Microsoft Excel. Ez a hiba akkor fordul elő, ha egy logikai értéket igénylő függvényt használ, de a logikai érték helyett mást (például dátumot) ad meg.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrBooleanExpected_HowToFix_1" xml:space="preserve">
     <value>Módosítsa a képletet úgy, hogy a képlet ezen pontján logikai értéket adjon vissza.</value>
@@ -5710,7 +5758,7 @@
   </data>
   <data name="ErrorResource_ErrColonExpected_LongMessage" xml:space="preserve">
     <value>A kettőspont a mezőnevet (más néven oszlopnevet) választja el a mező értékétől egy adott rekordban (például {Month:"1"}, {Month:"2"}…). Kettőspont választja el az órát is a perctől és a másodperctől (például 3:04).</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrColonExpected_HowToFix_1" xml:space="preserve">
     <value>Módosítsa a képletet úgy, hogy kettőspontot tartalmazzon.</value>
@@ -5730,7 +5778,7 @@
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_LongMessage" xml:space="preserve">
     <value>A viselkedési függvények úgy módosítják az alkalmazás állapotát, hogy az alkalmazás más részeiben módosítanak értékeket. A Navigate, a Patch, az UpdateContext és a Collect gyakran használt viselkedési függvények. Az OnSelect, az OnVisible és az egyéb „On ...” kezdetű tulajdonságok gyakran használt viselkedésalapú tulajdonságok.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_HowToFix_1" xml:space="preserve">
     <value>Helyezze át a viselkedési függvényt egy viselkedésalapú tulajdonságba.</value>
@@ -5750,7 +5798,7 @@
   </data>
   <data name="ErrorResource_ErrTestPropertyExpected_LongMessage" xml:space="preserve">
     <value>A tesztfüggvények azok, amelyekkel szimulálhatók a felhasználói bemenetek egy alkalmazás tesztelésekor. A SetProperty, a SelectRow és az Assert gyakran használt tesztfüggvények. Ezek csak a tesztesetekben használhatók.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrTestPropertyExpected_HowToFix_1" xml:space="preserve">
     <value>A függvényt egy tesztesetben használja, ne magában az alkalmazásban.</value>
@@ -5762,7 +5810,7 @@
   </data>
   <data name="ErrorResource_ErrCannotCoerce_SourceType_TargetType_LongMessage" xml:space="preserve">
     <value>A Power Apps a képletben szereplő adattípusok közül néhányat konvertálni tud más típusokra. Az 1 sztringet például konvertálni tudja az 1 számra, de minden adattípust nem tud konvertálni az összes egyéb adattípusra. Nem tud például egy képet számra konvertálni.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrCannotCoerce_SourceType_TargetType_HowToFix_1" xml:space="preserve">
     <value>Módosítsa a képletet úgy, hogy az érintett adatokat a várt típusra konvertálja.</value>
@@ -5774,7 +5822,7 @@
   </data>
   <data name="ErrorResource_ErrStringExpected_LongMessage" xml:space="preserve">
     <value>Ez a hiba akkor fordul elő, ha szöveges (vagy sztring-) argumentumot igénylő függvényt használ, de például dátumot ad meg.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrStringExpected_HowToFix_1" xml:space="preserve">
     <value>Módosítsa a képletet úgy, hogy a képlet ezen pontján szöveget adjon vissza.</value>
@@ -5794,7 +5842,7 @@
   </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_LongMessage" xml:space="preserve">
     <value>Ez a hiba akkor fordul elő, ha szöveget vagy számot igénylő függvényt használ, de például logikai (igaz/hamis) értéket ad meg.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_HowToFix_1" xml:space="preserve">
     <value>Módosítsa a képletet úgy, hogy a képlet ezen pontján szöveget vagy számot adjon vissza.</value>
@@ -5814,7 +5862,7 @@
   </data>
   <data name="ErrorResource_ErrClosingBracketExpected_LongMessage" xml:space="preserve">
     <value>A záró zárójel a rekord végét jelöli (például {Month:"1"}, {Month:"2"}...).</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrClosingBracketExpected_HowToFix_1" xml:space="preserve">
     <value>Módosítsa a képletet úgy, hogy az zárójelet tartalmazzon.</value>
@@ -5834,7 +5882,7 @@
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_LongMessage" xml:space="preserve">
     <value>A képlet nem értékelhető ki, mert a képletben összehasonlított értékek nem azonos típusúak.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_HowToFix_1" xml:space="preserve">
     <value>Lehetséges, hogy a típusegyezés érdekében konvertálnia kell az értéket, például a 12/31/2018 dátumsztringet egy dátumértékre.</value>
@@ -5946,7 +5994,7 @@
   </data>
   <data name="ErrorResource_ErrTypeError_LongMessage" xml:space="preserve">
     <value>Lehetséges, hogy az adatok nem a várt típusúak. (szöveg, szám, dátum, tábla, rekord)</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrTypeError_HowToFix_1" xml:space="preserve">
     <value>Gondoskodjon arról, hogy a képletben szereplő értéktípusok azonosak legyenek.</value>
@@ -5974,7 +6022,7 @@
   </data>
   <data name="ErrorResource_ErrDateExpected_LongMessage" xml:space="preserve">
     <value>Ez a hiba akkor fordul elő, ha dátumot igénylő függvényt használ, de dátum helyett például szöveget ad meg.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrDateExpected_HowToFix_1" xml:space="preserve">
     <value>Módosítsa a képletet úgy, hogy a képlet ezen pontján dátumot adjon vissza.</value>
@@ -5994,7 +6042,7 @@
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_LongMessage" xml:space="preserve">
     <value>Előfordulhat, hogy az adatforrás nem tudja feldolgozni a képletet, és hiányos adathalmazt ad vissza. Ha az adathalmaz hiányos, előfordulhat, hogy az alkalmazás helytelen eredményeket ad vissza, vagy nem a várt módon működik.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_HowToFix_1" xml:space="preserve">
     <value>Ha az adathalmaz a megengedettnél (500) több, de 2000-nél kevesebb rekordot tartalmaz, próbálja meg alaphelyzetbe állítani a határértéket.</value>
@@ -6030,7 +6078,7 @@
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_LongMessage" xml:space="preserve">
     <value>Előfordulhat, hogy az adatforrás nem tudja feldolgozni a képletet, és hiányos adathalmazt ad vissza. Ha az adathalmaz hiányos, előfordulhat, hogy az alkalmazás helytelen eredményeket ad vissza, vagy nem a várt módon működik.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_HowToFix_1" xml:space="preserve">
     <value>Ha az adathalmaz a megengedettnél (500) több, de 2000-nél kevesebb rekordot tartalmaz, próbálja meg alaphelyzetbe állítani a határértéket.</value>
@@ -6066,7 +6114,7 @@
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_LongMessage" xml:space="preserve">
     <value> Az in operátortól jobbra lévő elemnek a helyes adatforrás egyik oszlopnevének kell lennie. Előfordulhat, hogy az adatforrás nem tudja feldolgozni a képletet, és hiányos adathalmazt ad vissza. Ha az adathalmaz hiányos, az alkalmazás helytelen eredményeket adhat vissza, vagy nem a várt módon működik.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_1" xml:space="preserve">
     <value>Módosítsa az in operátortól jobbra lévő elemet úgy, hogy az a helyes adatforrás egyik oszlopa legyen.</value>
@@ -6107,7 +6155,7 @@
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_LongMessage" xml:space="preserve">
     <value> Az „in” operátor jobb oldala nem a megfelelő adatforrásból származó oszlop. Előfordulhat, hogy az adatforrás nem képes feldolgozni a képletet, és hiányos adathalmazt adhat vissza. Elképzelhető, hogy az alkalmazás helytelen eredményt ad vissza, vagy nem megfelelően működik hiányos adathalmaz esetén.
       </value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_1" xml:space="preserve">
     <value>Módosítsa az in operátortól jobbra lévő elemet úgy, hogy az a helyes adatforrás egyik oszlopa legyen.</value>
@@ -6213,5 +6261,9 @@
   <data name="ErrorResource_ErrAsNotInContext_ShortMessage" xml:space="preserve">
     <value>Az As nem engedélyezett ebben a környezetben</value>
     <comment>{Locked=As} This is an error message that shows up when the As keyword is used but is not valid</comment>
+  </data>
+  <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
+    <value>A megnevezett képletnek pontosvesszővel kell végződnie.</value>
+    <comment>A semicolon must terminate named formulas. For example, a=10;</comment>
   </data>
 </root>
