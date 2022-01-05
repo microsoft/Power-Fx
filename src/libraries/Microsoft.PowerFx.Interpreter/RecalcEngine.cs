@@ -1,8 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
-using Microsoft.PowerFx.Core.IR;
-using Microsoft.PowerFx.Core.IR.Symbols;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +8,11 @@ using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Glue;
+using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.IR.Nodes;
+using Microsoft.PowerFx.Core.IR.Symbols;
+using Microsoft.PowerFx.Core.Lexer;
+using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Parser;
 using Microsoft.PowerFx.Core.Public;
 using Microsoft.PowerFx.Core.Public.Types;
@@ -18,10 +20,6 @@ using Microsoft.PowerFx.Core.Public.Values;
 using Microsoft.PowerFx.Core.Syntax;
 using Microsoft.PowerFx.Core.Texl.Intellisense;
 using Microsoft.PowerFx.Core.Types;
-using Microsoft.PowerFx.Core.Types.Enums;
-using System.Globalization;
-using Microsoft.PowerFx.Core.Localization;
-using Microsoft.PowerFx.Core.Lexer;
 
 namespace Microsoft.PowerFx
 {
@@ -164,6 +162,7 @@ namespace Microsoft.PowerFx
             if (errors != null && errors.Any())
             {
                 result.SetErrors(errors.ToArray());
+                result.Expression = null;
             }
             else
             {
@@ -171,6 +170,9 @@ namespace Microsoft.PowerFx
                 // TODO: Fix FormulaType.Build to not throw exceptions for Enum types then remove this check
                 if (binding.ResultType.Kind != DKind.Enum)
                     result.ReturnType = FormulaType.Build(binding.ResultType);
+
+                (IntermediateNode irnode, ScopeSymbol ruleScopeSymbol) = IRTranslator.Translate(result._binding);
+                result.Expression = new ParsedExpression(irnode);
             }
 
             return result;
@@ -192,14 +194,7 @@ namespace Microsoft.PowerFx
             var check = Check(expressionText, parameters.IRContext.ResultType);
             check.ThrowOnErrors();
 
-            var binding = check._binding;
-
-
-            (IntermediateNode irnode, ScopeSymbol ruleScopeSymbol) = IRTranslator.Translate(binding);
-
-            var ev2 = new EvalVisitor(_powerFxConfig.CultureInfo);
-            FormulaValue newValue = irnode.Accept(ev2, SymbolContext.New().WithGlobals(parameters));
-
+            FormulaValue newValue = check.Expression.Eval(parameters);
             return newValue;
         }
 
