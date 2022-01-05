@@ -31,6 +31,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Core.Public.ErrorKind",
                 "Microsoft.PowerFx.Core.Public.ExpressionError",
                 "Microsoft.PowerFx.Core.Public.FormulaWithParameters",
+                "Microsoft.PowerFx.Core.Public.IExpression",
                 "Microsoft.PowerFx.Core.Public.IPowerFxScope",
                 "Microsoft.PowerFx.Core.Public.IPowerFxScopeDisplayName",
                 "Microsoft.PowerFx.Core.Public.TokenResultType",

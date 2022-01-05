@@ -162,6 +162,7 @@ namespace Microsoft.PowerFx
             if (errors != null && errors.Any())
             {
                 result.SetErrors(errors.ToArray());
+                result.Expression = null;
             }
             else
             {
@@ -169,6 +170,9 @@ namespace Microsoft.PowerFx
                 // TODO: Fix FormulaType.Build to not throw exceptions for Enum types then remove this check
                 if (binding.ResultType.Kind != DKind.Enum)
                     result.ReturnType = FormulaType.Build(binding.ResultType);
+
+                (IntermediateNode irnode, ScopeSymbol ruleScopeSymbol) = IRTranslator.Translate(result._binding);
+                result.Expression = new ParsedExpression(irnode);
             }
 
             return result;
@@ -190,14 +194,7 @@ namespace Microsoft.PowerFx
             var check = Check(expressionText, parameters.IRContext.ResultType);
             check.ThrowOnErrors();
 
-            var binding = check._binding;
-
-
-            (IntermediateNode irnode, ScopeSymbol ruleScopeSymbol) = IRTranslator.Translate(binding);
-
-            var ev2 = new EvalVisitor(_powerFxConfig.CultureInfo);
-            FormulaValue newValue = irnode.Accept(ev2, SymbolContext.New().WithGlobals(parameters));
-
+            FormulaValue newValue = check.Expression.Eval(parameters);
             return newValue;
         }
 
@@ -341,30 +338,6 @@ namespace Microsoft.PowerFx
         {
             var fi = Formulas[name];
             return fi._value;
-        }
-
-        /// <summary>
-        /// Returns the parse tree (AST) that Power Fx builds for this expression. 
-        /// </summary>
-        /// <param name="expressionText">The expression we plan to parse</param>
-        /// <param name="recordType">All types available at execution time</param>
-        /// <param name="expression">The parsed expression. Expression will be null if !CheckResult.IsSuccess</param>
-        /// <returns>CheckResult</returns> Returns any errors detected  
-
-        public CheckResult ParseExpression(string expressionText, RecordType recordType, out IExpression expression)
-        {
-            var checkResult = CheckInternal(expressionText, recordType, intellisense: false);
-            if (checkResult.IsSuccess)
-            {
-                (IntermediateNode irnode, ScopeSymbol ruleScopeSymbol) = IRTranslator.Translate(checkResult._binding);
-                expression = new ParsedExpression(irnode);
-            }
-            else
-            {
-                expression = null;
-            }
-                
-            return checkResult;
         }
     } // end class RecalcEngine
 }

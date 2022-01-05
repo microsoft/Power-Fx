@@ -1,4 +1,6 @@
 ﻿using Microsoft.PowerFx.Core.Public.Values;
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
 
 namespace Microsoft.PowerFx.Core.Public
 {

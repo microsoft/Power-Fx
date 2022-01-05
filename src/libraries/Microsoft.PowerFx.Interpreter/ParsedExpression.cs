@@ -1,4 +1,7 @@
-﻿using System.Globalization;
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
+
+using System.Globalization;
 using Microsoft.PowerFx.Core.IR.Nodes;
 using Microsoft.PowerFx.Core.Public;
 using Microsoft.PowerFx.Core.Public.Values;
