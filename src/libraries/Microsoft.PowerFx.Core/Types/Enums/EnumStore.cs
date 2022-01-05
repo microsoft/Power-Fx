@@ -166,11 +166,11 @@ namespace Microsoft.PowerFx.Core.Types.Enums
 #endif
             };
 
-        protected virtual ImmutableDictionary<string, string> EnumDict
+        protected virtual IDictionary<string, string> EnumDict
         {
             get
             {
-                return _enums.ToImmutableDictionary();
+                return _enums;
             }
         }
 
