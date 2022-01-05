@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Globalization;
 using System.Linq;
@@ -36,8 +37,8 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
 
         private class EmptyEnumStore : EnumStore
         {
-            private ImmutableDictionary<string, string> _enumDict = ImmutableDictionary<string, string>.Empty;
-            protected override ImmutableDictionary<string, string> EnumDict => _enumDict;
+            private IDictionary<string, string> _enumDict = new Dictionary<string, string>();
+            protected override IDictionary<string, string> EnumDict => _enumDict;
         }
 
         private readonly EnumStore _defaultEnumStore = new EnumStore();
