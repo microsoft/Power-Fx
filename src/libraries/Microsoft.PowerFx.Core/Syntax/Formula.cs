@@ -45,6 +45,17 @@ namespace Microsoft.PowerFx.Core.Syntax
             AssertValid();
         }
 
+        public Formula(string script, TexlNode tree, ILanguageSettings loc = null)
+        {
+            Contracts.AssertValue(script);
+            Contracts.AssertValueOrNull(loc);
+
+            Script = script;
+            _tree = tree;
+            Loc = loc;
+            AssertValid();
+        }
+
         [Conditional("DEBUG")]
         private void AssertValid()
         {
