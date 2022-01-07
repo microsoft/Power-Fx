@@ -11,6 +11,55 @@ namespace Microsoft.PowerFx.Functions
 {
     internal static partial class Library
     {
+        internal class JsonCustomObject : ICustomObject
+        {
+            private readonly JsonElement _element;
+
+            public JsonCustomObject(JsonElement element)
+            {
+                _element = element;
+            }
+
+            public ICustomObject this[int index] => new JsonCustomObject(_element[index]);
+
+            public bool IsArray => _element.ValueKind == JsonValueKind.Array;
+
+            public bool IsNull => _element.ValueKind == JsonValueKind.Null;
+
+            public bool IsObject => _element.ValueKind == JsonValueKind.Object;
+
+            public bool IsString => _element.ValueKind == JsonValueKind.String;
+
+            public bool IsNumber => _element.ValueKind == JsonValueKind.Number;
+
+            public int GetArrayLength()
+            {
+                return _element.GetArrayLength();
+            }
+
+            public double GetDouble()
+            {
+                return _element.GetDouble();
+            }
+
+            public string GetString()
+            {
+                return _element.GetString();
+            }
+
+            public object ToObject()
+            {
+                return _element.GetRawText();
+            }
+
+            public bool TryGetProperty(string value, out ICustomObject result)
+            {
+                var res = _element.TryGetProperty(value, out var je);
+                result = new JsonCustomObject(je);
+                return res;
+            }
+        }
+
         public static FormulaValue ParseJson(IRContext irContext, StringValue[] args)
         {
             var json = args[0].Value;
@@ -30,7 +79,7 @@ namespace Microsoft.PowerFx.Functions
                     return new BlankValue(IRContext.NotInSource(FormulaType.Blank));
                 }
 
-                return new CustomObjectValue(irContext, result);
+                return new CustomObjectValue(irContext, new JsonCustomObject(result));
             }
             catch (JsonException ex)
             {
@@ -48,9 +97,9 @@ namespace Microsoft.PowerFx.Functions
             var arg0 = (CustomObjectValue)args[0];
             var arg1 = (NumberValue)args[1];
 
-            var element = arg0.Element;
+            var element = arg0.Impl;
 
-            if (element.ValueKind == JsonValueKind.Array)
+            if (element.IsArray)
             {
                 var len = element.GetArrayLength();
                 var index = (int)arg1.Value;
@@ -60,7 +109,7 @@ namespace Microsoft.PowerFx.Functions
                     var result = element[index];
 
                     // Map null to blank
-                    if (result.ValueKind == JsonValueKind.Null)
+                    if (result.IsNull)
                     {
                         return new BlankValue(IRContext.NotInSource(FormulaType.Blank));
                     }
@@ -88,14 +137,14 @@ namespace Microsoft.PowerFx.Functions
             var arg0 = (CustomObjectValue)args[0];
             var arg1 = (StringValue)args[1];
 
-            var element = arg0.Element;
+            var element = arg0.Impl;
 
-            if (element.ValueKind == JsonValueKind.Object)
+            if (element.IsObject)
             {
                 if (element.TryGetProperty(arg1.Value, out var result))
                 {
                     // Map null to blank
-                    if (result.ValueKind == JsonValueKind.Null)
+                    if (result.IsNull)
                     {
                         return new BlankValue(IRContext.NotInSource(FormulaType.Blank));
                     }

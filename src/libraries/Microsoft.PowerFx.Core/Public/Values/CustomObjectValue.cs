@@ -8,22 +8,47 @@ using Microsoft.PowerFx.Core.Public.Types;
 
 namespace Microsoft.PowerFx.Core.Public.Values
 {
+    public interface ICustomObject
+    {
+        bool IsArray { get; }
+
+        bool IsNull { get; }
+
+        bool IsObject { get; }
+
+        bool IsString { get; }
+
+        bool IsNumber { get; }
+
+        object ToObject();
+
+        int GetArrayLength();
+
+        ICustomObject this[int index] { get; }
+
+        bool TryGetProperty(string value, out ICustomObject result);
+
+        string GetString();
+
+        double GetDouble();
+    }
+
     public class CustomObjectValue : ValidFormulaValue
     {
-        protected readonly JsonElement _element;
+        protected readonly ICustomObject _impl;
 
-        public JsonElement Element => _element;
+        public ICustomObject Impl => _impl;
 
-        internal CustomObjectValue(IRContext irContext, JsonElement element)
+        internal CustomObjectValue(IRContext irContext, ICustomObject impl)
             : base(irContext)
         {
             Contract.Assert(IRContext.ResultType == FormulaType.CustomObject);
-            _element = element;
+            _impl = impl;
         }
 
         public override object ToObject()
         {
-            return _element.GetRawText();
+            return _impl.ToObject();
         }
 
         public override void Visit(IValueVisitor visitor)

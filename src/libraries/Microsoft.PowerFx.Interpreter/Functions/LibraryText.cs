@@ -88,16 +88,18 @@ namespace Microsoft.PowerFx.Functions
             string str = null;
             if (arg0 is CustomObjectValue cov)
             {
-                var element = cov.Element;
-                switch (element.ValueKind)
+                var element = cov.Impl;
+                if (element.IsString)
                 {
-                    case JsonValueKind.String:
-                        str = element.GetString();
-                        break;
-                    case JsonValueKind.Number:
-                        return new NumberValue(irContext, element.GetDouble());
-                    case JsonValueKind.Null:
-                        return new BlankValue(irContext);
+                    str = element.GetString();
+                }
+                else if (element.IsNumber)
+                {
+                    return new NumberValue(irContext, element.GetDouble());
+                }
+                else if (element.IsNull)
+                {
+                    return new BlankValue(irContext);
                 }
             }
 
