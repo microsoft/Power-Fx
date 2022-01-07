@@ -1,15 +1,18 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
-using Microsoft.PowerFx.Core.IR;
-using Microsoft.PowerFx.Core.IR.Symbols;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Glue;
+using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.IR.Nodes;
+using Microsoft.PowerFx.Core.IR.Symbols;
+using Microsoft.PowerFx.Core.Lexer;
+using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Parser;
 using Microsoft.PowerFx.Core.Public;
 using Microsoft.PowerFx.Core.Public.Types;
@@ -17,8 +20,6 @@ using Microsoft.PowerFx.Core.Public.Values;
 using Microsoft.PowerFx.Core.Syntax;
 using Microsoft.PowerFx.Core.Texl.Intellisense;
 using Microsoft.PowerFx.Core.Types;
-using Microsoft.PowerFx.Core.Types.Enums;
-using System.Globalization;
 
 namespace Microsoft.PowerFx
 {
@@ -32,15 +33,15 @@ namespace Microsoft.PowerFx
 
         internal Dictionary<string, RecalcFormulaInfo> Formulas { get; } = new Dictionary<string, RecalcFormulaInfo>();
 
-        private readonly CultureInfo _cultureInfo;
+        private readonly PowerFxConfig _powerFxConfig;
 
         /// <summary>
         /// Create a new power fx engine. 
         /// </summary>
-        /// <param name="cultureInfo">The culture used for string and parsing functions. </param>
-        public RecalcEngine(CultureInfo cultureInfo = null)
+        /// <param name="powerFxConfig">Compiler customizations</param>
+        public RecalcEngine(PowerFxConfig powerFxConfig = null)
         {
-            _cultureInfo = cultureInfo ?? CultureInfo.CurrentCulture;
+            _powerFxConfig = powerFxConfig ?? new PowerFxConfig();
         }
 
         /// <summary>
@@ -135,7 +136,7 @@ namespace Microsoft.PowerFx
 
             var extraFunctions = _extraFunctions.Values.ToArray();
 
-            var resolver = new RecalcEngineResolver(this, (RecordType)parameterType, EnumStore.EnumSymbols, extraFunctions);
+            var resolver = new RecalcEngineResolver(this, (RecordType)parameterType, _powerFxConfig.EnumStore.EnumSymbols, extraFunctions);
 
             // $$$ - intellisense only works with ruleScope.
             // So if running for intellisense, pass the parameters in ruleScope. 
@@ -161,6 +162,7 @@ namespace Microsoft.PowerFx
             if (errors != null && errors.Any())
             {
                 result.SetErrors(errors.ToArray());
+                result.Expression = null;
             }
             else
             {
@@ -168,6 +170,9 @@ namespace Microsoft.PowerFx
                 // TODO: Fix FormulaType.Build to not throw exceptions for Enum types then remove this check
                 if (binding.ResultType.Kind != DKind.Enum)
                     result.ReturnType = FormulaType.Build(binding.ResultType);
+
+                (IntermediateNode irnode, ScopeSymbol ruleScopeSymbol) = IRTranslator.Translate(result._binding);
+                result.Expression = new ParsedExpression(irnode);
             }
 
             return result;
@@ -189,15 +194,63 @@ namespace Microsoft.PowerFx
             var check = Check(expressionText, parameters.IRContext.ResultType);
             check.ThrowOnErrors();
 
-            var binding = check._binding;
-
-
-            (IntermediateNode irnode, ScopeSymbol ruleScopeSymbol) = IRTranslator.Translate(binding);
-
-            var ev2 = new EvalVisitor(_cultureInfo);
-            FormulaValue newValue = irnode.Accept(ev2, SymbolContext.New().WithGlobals(parameters));
-
+            FormulaValue newValue = check.Expression.Eval(parameters);
             return newValue;
+        }
+
+        
+        /// <summary>
+        /// Convert references in an expression to the invariant form
+        /// </summary>
+        /// <param name="expressionText">textual representation of the formula</param>
+        /// <param name="parameters">Type of parameters for formula. The fields in the parameter record can 
+        /// be acecssed as top-level identifiers in the formula. If DisplayNames are used, make sure to have that mapping
+        /// as part of the RecordType
+        /// <returns>The formula, with all identifiers converted to invariant form</returns>
+        public string GetInvariantExpression(string expressionText, RecordType parameters)
+        {
+            return ConvertExpression(expressionText, parameters, toDisplayNames: false);
+        }
+        
+        /// <summary>
+        /// Convert references in an expression to the display form
+        /// </summary>
+        /// <param name="expressionText">textual representation of the formula</param>
+        /// <param name="parameters">Type of parameters for formula. The fields in the parameter record can 
+        /// be acecssed as top-level identifiers in the formula. If DisplayNames are used, make sure to have that mapping
+        /// as part of the RecordType
+        /// <returns>The formula, with all identifiers converted to display form</returns>
+        public string GetDisplayExpression(string expressionText, RecordType parameters)
+        {
+            return ConvertExpression(expressionText, parameters, toDisplayNames: true);
+        }
+
+        private string ConvertExpression(string expressionText, RecordType parameters, bool toDisplayNames)
+        {
+            var formula = new Formula(expressionText);
+            formula.EnsureParsed(TexlParser.Flags.None);
+
+            var extraFunctions = _extraFunctions.Values.ToArray();
+            var resolver = new RecalcEngineResolver(this, parameters, _powerFxConfig.EnumStore.EnumSymbols, extraFunctions);
+            var binding = TexlBinding.Run(
+                new Glue2DocumentBinderGlue(),
+                null,
+                new Core.Entities.QueryOptions.DataSourceToQueryOptionsMap(),
+                formula.ParseTree,
+                resolver,
+                ruleScope: parameters._type,
+                useThisRecordForRuleScope: false,
+                updateDisplayNames: toDisplayNames,
+                forceUpdateDisplayNames: toDisplayNames
+            );
+
+            Dictionary<Span, string> worklist = new();
+            foreach (var token in binding.NodesToReplace)
+            {
+                worklist.Add(token.Key.Span, TexlLexer.EscapeName(token.Value));
+            }
+
+            return Span.ReplaceSpans(expressionText, worklist);
         }
 
         // Invoke onUpdate() each time this formula is changed, passing in the new value. 
@@ -257,7 +310,7 @@ namespace Microsoft.PowerFx
             var formula = result._formula;
 
             var context = new IntellisenseContext(expression, cursorPosition);
-            var intellisense = IntellisenseProvider.GetIntellisense();
+            var intellisense = IntellisenseProvider.GetIntellisense(_powerFxConfig.EnumStore);
             var suggestions = intellisense.Suggest(context, binding, formula);
 
             return suggestions;

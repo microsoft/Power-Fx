@@ -572,6 +572,14 @@ namespace Microsoft.PowerFx.Core.Parser
                 case TokKind.True:
                 case TokKind.False:
                     return new BoolLitNode(ref _idNext, _curs.TokMove());
+                case TokKind.StrInterpStart:
+                    var res = ParseStringInterpolation();
+                    var tokCur = _curs.TokCur;
+                    if(FeatureFlags.StringInterpolation)
+                    {
+                        return res;
+                    }
+                    return CreateError(tokCur, TexlStrings.ErrBadToken);
                 case TokKind.StrLit:
                     return new StrLitNode(ref _idNext, _curs.TokMove().As<StrLitToken>());
 
@@ -723,6 +731,110 @@ namespace Microsoft.PowerFx.Core.Parser
             }
 
             return new Identifier(at, tok);
+        }
+
+        private TexlNode ParseStringInterpolation()
+        {
+            Contracts.Assert(_curs.TidCur == TokKind.StrInterpStart);
+            var startToken = _curs.TokMove();
+
+            IdentToken headToken = new IdentToken(IdentToken.StrInterpIdent, startToken.Span);
+            Identifier head = new Identifier(headToken);
+            ITexlSource headTrivia = ParseTrivia();
+            TexlNode headNode = null;
+
+            Contracts.AssertValue(head);
+            Contracts.AssertValueOrNull(headNode);
+
+            Token leftParen = startToken;
+            var leftTrivia = headTrivia;
+
+            if (_curs.TidCur == TokKind.StrInterpEnd)
+            {
+                var strLitToken = new StrLitToken("", headToken.Span);
+                _curs.TokMove();
+                return new StrLitNode(ref _idNext, strLitToken);
+            }
+
+            var rgtokCommas = new List<Token>();
+            var arguments = new List<TexlNode>();
+            var sourceList = new List<ITexlSource>();
+            sourceList.Add(new TokenSource(leftParen));
+            sourceList.Add(leftTrivia);
+            for (var i = 0; ; i++)
+            {
+                if (_curs.TidCur == TokKind.IslandStart)
+                {
+                    if (i != 0)
+                    {
+                        var comma = _curs.TokMove();
+                        rgtokCommas.Add(comma);
+                        sourceList.Add(new TokenSource(comma));
+                        sourceList.Add(ParseTrivia());
+                    }
+                    else
+                    {
+                        _curs.TokMove();
+                    }
+                }
+                else if (_curs.TidCur == TokKind.IslandEnd)
+                {
+                    var peek1 = _curs.TidPeek(1);
+                    if (peek1 != TokKind.StrInterpEnd && peek1 != TokKind.IslandStart)
+                    {
+                        var comma = _curs.TokMove();
+                        rgtokCommas.Add(comma);
+                        sourceList.Add(new TokenSource(comma));
+                        sourceList.Add(ParseTrivia());
+                    }
+                    else
+                    {
+                        _curs.TokMove();
+                    }
+                }
+                else if (_curs.TidCur == TokKind.StrInterpEnd || _curs.TidCur == TokKind.Eof)
+                {
+                    break;
+                }
+                else
+                {
+                    var argument = ParseExpr(Precedence.None);
+                    arguments.Add(argument);
+                    sourceList.Add(new NodeSource(argument));
+                    sourceList.Add(ParseTrivia());
+                }
+            }
+
+            Contracts.Assert(_curs.TidCur == TokKind.StrInterpEnd || _curs.TidCur == TokKind.Eof);
+
+            Token parenClose = null;
+            if (_curs.TidCur == TokKind.StrInterpEnd)
+                parenClose = TokEat(TokKind.StrInterpEnd);
+            if (parenClose != null)
+                sourceList.Add(new TokenSource(parenClose));
+
+            var list = new ListNode(
+                ref _idNext,
+                leftParen,
+                arguments.ToArray(),
+                CollectionUtils.ToArray(rgtokCommas),
+                new SourceList(sourceList));
+
+            ITexlSource headNodeSource = new IdentifierSource(head);
+            if (headNode != null)
+                headNodeSource = new NodeSource(headNode);
+
+            return new CallNode(
+                ref _idNext,
+                leftParen,
+                new SourceList(
+                    headNodeSource,
+                    headTrivia,
+                    new NodeSource(list)),
+                head,
+                headNode,
+                list,
+                parenClose);
         }
 
         // Parse a namespace-qualified invocation, e.g. Facebook.GetFriends()

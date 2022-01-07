@@ -26,13 +26,12 @@ namespace Microsoft.PowerFx.Core.Public.Types
 
         public RecordType Add(NamedFormulaType field)
         {
-            var newType = _type.Add(field._typedName);
-            return new RecordType(newType);
+            return new RecordType(AddFieldToType(field));
         }
 
-        public RecordType Add(string name, FormulaType type)
+        public RecordType Add(string logicalName, FormulaType type, string optionalDisplayName = null)
         {
-            return Add(new NamedFormulaType(new TypedName(type._type, new DName(name))));
+            return Add(new NamedFormulaType(new TypedName(type._type, new DName(logicalName)), optionalDisplayName));
         }
 
         public TableType ToTable()

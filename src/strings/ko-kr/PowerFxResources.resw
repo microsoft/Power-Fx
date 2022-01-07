@@ -1,45 +1,45 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <root>
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
         <xsd:choice maxOccurs="unbounded">
           <xsd:element name="metadata">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
               </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string"/>
-              <xsd:attribute name="type" type="xsd:string"/>
-              <xsd:attribute name="mimetype" type="xsd:string"/>
-              <xsd:attribute ref="xml:space"/>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="assembly">
             <xsd:complexType>
-              <xsd:attribute name="alias" type="xsd:string"/>
-              <xsd:attribute name="name" type="xsd:string"/>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="data">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
-              <xsd:attribute ref="xml:space"/>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="resheader">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required"/>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
             </xsd:complexType>
           </xsd:element>
         </xsd:choice>
@@ -447,7 +447,18 @@
     <comment>function_parameter - Argument to the Concatenate function - the text to be concatenated.</comment>
   </data>
   <data name="AboutConcatenate_text" xml:space="preserve">
-    <value>나머지 인수와 연결할, 텍스트나 텍스트 값의 열입니다.</value>
+    <value>나머지 인수와 연결될 텍스트 값입니다.</value>
+  </data>
+  <data name="AboutConcatenateT" xml:space="preserve">
+    <value>여러 텍스트 값 또는 테이블을 하나의 텍스트 값 열로 합칩니다.</value>
+    <comment>Description of 'Concatenate' function.</comment>
+  </data>
+  <data name="ConcatenateTArg1" xml:space="preserve">
+    <value>값</value>
+    <comment>function_parameter - Argument to the Concatenate function - the text or table to be concatenated.</comment>
+  </data>
+  <data name="AboutConcatenate_value" xml:space="preserve">
+    <value>나머지 인수와 연결될 텍스트 값 또는 텍스트 값의 열입니다.</value>
   </data>
   <data name="AboutConcat" xml:space="preserve">
     <value>지정된 테이블에 대해 지정된 식을 평가하여 생성된 모든 텍스트 값을 하나의 텍스트 값으로 결합합니다.</value>
@@ -812,6 +823,10 @@
     <value>현재 날짜 및 시간을 반환합니다.</value>
     <comment>Description of 'Now' function.</comment>
   </data>
+  <data name="AboutUTCNow" xml:space="preserve">
+    <value>현재 날짜 및 시간을 UTC 시간으로 반환합니다.</value>
+    <comment>Description of 'UTCNow' function.</comment>
+  </data>
   <data name="AboutTimeZoneOffset" xml:space="preserve">
     <value>UTC 시간과 현지 시간의 시간 차이(분)를 반환합니다. 예를 들어 표준 시간대가 UTC+2인 경우 -120이 반환됩니다.</value>
     <comment>Description of 'TimeZoneOffset' function.</comment>
@@ -827,6 +842,10 @@
   <data name="AboutToday" xml:space="preserve">
     <value>현재 날짜를 반환합니다.</value>
     <comment>Description of 'Today' function.</comment>
+  </data>
+  <data name="AboutUTCToday" xml:space="preserve">
+    <value>현재 날짜를 UTC 시간으로 반환합니다.</value>
+    <comment>Description of 'UTCToday' function.</comment>
   </data>
   <data name="AboutWeekNum" xml:space="preserve">
     <value>지정된 날짜의 주 번호를 반환합니다.</value>
@@ -973,7 +992,7 @@
     <comment>function_parameter - Second argument to the Round function - the number of digits to apply the rounding. Translate this string. Maintain as a single word (do not add spaces).</comment>
   </data>
   <data name="AboutRGBA" xml:space="preserve">
-    <value>색의 빨간색, 녹색, 파란색 및 알파 구성 요소에 대한 숫자 값을 가져오고 특정 색을 생성합니다. R, G, B 는 0 ~ 255 사이의 숫자이고 알파는 0 ~ 1사이의 소수입니다.</value>
+    <value>색의 빨간색, 녹색, 파란색 및 알파 구성 요소에 대한 숫자 값을 가져오고 특정 색을 생성합니다. R, G, B 는 0 ~007E; 255 사이의 숫자이고 알파는 0 ~007E; 1사이의 소수입니다.</value>
     <comment>Description of 'RGBA' function.</comment>
   </data>
   <data name="RGBAArg1" xml:space="preserve">
@@ -1255,6 +1274,12 @@
   <data name="AboutAtan2Arg2" xml:space="preserve">
     <value>Y_좌표</value>
     <comment>function_parameter - Second parameter to the Atan function - the y coordinate for arctangent to be returned. When translating, maintain as a single word (i.e., do not add spaces)</comment>
+  </data>
+  <data name="AboutAtan2_x_coordinate" xml:space="preserve">
+    <value>X좌표입니다.</value>
+  </data>
+  <data name="AboutAtan2_y_coordinate" xml:space="preserve">
+    <value>Y좌표입니다.</value>
   </data>
   <data name="AboutSqrt" xml:space="preserve">
     <value>숫자의 제곱근을 반환합니다.</value>
@@ -1887,7 +1912,7 @@
     <value>초 구성 요소가 추출되는 날짜 또는 시간 값입니다.</value>
   </data>
   <data name="AboutWeekday" xml:space="preserve">
-    <value>날짜시간 값의 요일을 반환합니다. 기본적으로 이 결과 범위는 1(일요일) ~ 7(토요일)입니다. StartOfWeek 열거 값이나 Microsoft Excel Weekday 함수 코드를 사용하여 다른 범위를 지정할 수 있습니다.</value>
+    <value>날짜시간 값의 요일을 반환합니다. 기본적으로 이 결과 범위는 1(일요일) ~007E; 7(토요일)입니다. StartOfWeek 열거 값이나 Microsoft Excel Weekday 함수 코드를 사용하여 다른 범위를 지정할 수 있습니다.</value>
     <comment>Description of 'Weekday' function.</comment>
   </data>
   <data name="WeekdayArg1" xml:space="preserve">
@@ -3372,6 +3397,17 @@
   <data name="IsTodayFuncArg1" xml:space="preserve">
     <value>날짜</value>
     <comment>function_parameter - First argument to the IsToday function - the date to be tested.</comment>
+  </data>
+  <data name="AboutIsUTCToday" xml:space="preserve">
+    <value>지정된 날짜가 오늘(UTC 기준)인지 확인하고 true 또는 false를 반환합니다.</value>
+    <comment>Description of 'IsUTCToday' function</comment>
+  </data>
+  <data name="AboutIsUTCToday_date" xml:space="preserve">
+    <value>테스트할 날짜 값입니다.</value>
+  </data>
+  <data name="IsUTCTodayFuncArg1" xml:space="preserve">
+    <value>날짜</value>
+    <comment>function_parameter - First argument to the IsUTCToday function - the date to be tested.</comment>
   </data>
   <data name="AboutMod" xml:space="preserve">
     <value>숫자가 제수로 나눠진 후 나머지를 반환합니다. 결과에는 제수와 같은 부호가 포함됩니다.</value>
@@ -5468,9 +5504,21 @@
     <value>수식 열에는 짧은 날짜 및 시간 형식 문자열만 지원됩니다.</value>
     <comment>Error Message. Used in formula columns for scenarios where the maker supplies an invalid format string</comment>
   </data>
-  <data name="FormulaColumns_UtcResultWarning" xml:space="preserve">
-    <value>수식 열의 작업이 협정 세계시(UTC)로 수행되므로 사용자의 표준 시간대에 따라 이 수식의 "{0}" 부분이 정상적으로 수행되지 않을 수 있습니다.</value>
-    <comment>Error Message. Used as a warning in formula columns for scenarios where the operation will be performed in UTC instead of the user's local time zone. The {0} will be the name of the function.</comment>
+  <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
+    <value>"." 및 "," 등의 로캘별 서식 토큰은 수식 열에 지원되지 않습니다.</value>
+    <comment>Error Message. Used in formula columns for scenarios where the maker supplies an invalid format string</comment>
+  </data>
+  <data name="FormulaColumns_FunctionNotSupported" xml:space="preserve">
+    <value>{0}은(는) 수식 열에 지원되지 않습니다. 대신 {1}을(를) 사용하세요.</value>
+    <comment>Error Message. Used in formula columns for scenarios where the maker attempts to use a function that is not supported, providing an alternate function name.  The {0} will be the name of the function that is not supported, and {1} is the name of the suggested alternate.</comment>
+  </data>
+  <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
+    <value>이 결과 유형 {0}은(는) 수식 열에 지원되지 않습니다.</value>
+    <comment>Error Message. Used in formula columns for a formula that returns a type which is not supported.</comment>
+  </data>
+  <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
+    <value>이 수식에 기대되는 결과 유형은 {0}이지만, 실제 결과 유형은 {1}입니다. 수식 열의 결과 유형을 변경할 수 없습니다.</value>
+    <comment>Error Message. Used in formula columns for a formula that returns an unexpected result type during editing. The {0} will be the name of the required type. The {1} will be the name of the incorrect type.</comment>
   </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
     <value>피연산자가 필요합니다. 수식 또는 식에는 유효한 피연산자가 필요합니다. 예를 들어, 식 ' 1 +_'에 피연산자 '2'를 추가하여 결과 값이 '3'이 되게 만들 수 있습니다. 또는 식 '"Hi "&amp; _ '에 피연산자 "there"를 추가하여 'Hi there' 결과 값을 얻을 수 있습니다.</value>
@@ -5486,7 +5534,7 @@
   </data>
   <data name="ErrorResource_ErrBadToken_LongMessage" xml:space="preserve">
     <value>예를 들어, 숫자 뒤에 문자 '\'는 필요하지 않습니다(예: '32\'). 숫자 32 또는 다른 숫자(예: '323')가 오도록 공백('32')이 필요합니다.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrBadToken_HowToFix_1" xml:space="preserve">
     <value>예기치 않은 문자를 제거하거나 바꿉니다.</value>
@@ -5506,11 +5554,11 @@
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_LongMessage" xml:space="preserve">
     <value>예를 들어, 숫자 뒤에 문자 '\'는 필요하지 않습니다(예: '32\'). 숫자 32 또는 다른 숫자(예: '323')가 오도록 공백('32')이 필요합니다.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_HowToFix_1" xml:space="preserve">
     <value>예기치 않은 문자를 제거하거나 바꿉니다.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_Link_1" xml:space="preserve">
     <value>문서: Power Apps에 대한 수식 참조</value>
@@ -5526,7 +5574,7 @@
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_LongMessage" xml:space="preserve">
     <value>각 블록 주석은 '/*'로 시작하고 '*/'로 끝나야 합니다. 블록 주석을 올바르게 끝내지 않는 경우 주석 뒤의 모든 코드가 주석의 일부가 됩니다. 주석이 한 줄인 경우 '//'로 시작하고 주석 끝은 식별하지 않아도 됩니다.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_HowToFix_1" xml:space="preserve">
     <value>블록 주석 끝에 '*/'를 추가하거나 여러 줄의 주석으로 변경합니다.</value>
@@ -5546,7 +5594,7 @@
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_LongMessage" xml:space="preserve">
     <value>이 오류는 예를 들어 수식에 '{{Val: 7}}' 대신 '{{Val@ 7}}'이(가) 있는 경우에 발생합니다. 변수를 설정할 때는 구문에 "골뱅이표" 기호 대신 콜론이 필요합니다.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_HowToFix_1" xml:space="preserve">
     <value>예기치 않은 문자를 제거하거나 필요한 문자로 바꿉니다.</value>
@@ -5566,7 +5614,7 @@
   </data>
   <data name="ErrorResource_ErrInvalidName_LongMessage" xml:space="preserve">
     <value>이 오류는 일반적으로 수식이 존재하지 않는 항목(예: 삭제한 컨트롤)을 참조하는 경우에 나타납니다.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrInvalidName_HowToFix_1" xml:space="preserve">
     <value>잘못된 이름에 대한 참조를 제거하거나 수정합니다.</value>
@@ -5586,7 +5634,7 @@
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_LongMessage" xml:space="preserve">
     <value>이 오류는 수식에서 잘못된 구문이 있는 구성 요소 동작 속성을 참조하는 경우에 표시됩니다(예: Component.OnCustomChange() 대신 Component.OnCustomChange).</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_HowToFix_1" xml:space="preserve">
     <value>올바른 구문을 사용하여 구성 요소 동작 속성을 참조하세요(예: Component.OnCustomChange()).</value>
@@ -5606,7 +5654,7 @@
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_LongMessage" xml:space="preserve">
     <value>부모 컨트롤이 없는 컨트롤에 부모 연산자를 사용할 수 없습니다. 이 연산자는 지정된 컨트롤을 호스트하고 해당 속성을 모두 사용할 수 있게 만드는 컨트롤을 참조합니다.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_HowToFix_1" xml:space="preserve">
     <value>'부모' 연산자를 제거합니다.</value>
@@ -5626,7 +5674,7 @@
   </data>
   <data name="ErrorResource_ErrTooManyUps_LongMessage" xml:space="preserve">
     <value>각 중첩 수준으로 복잡성이 증가하므로 Power Apps는 행 범위 중첩을 최대 63단계까지만 지원합니다.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrTooManyUps_HowToFix_1" xml:space="preserve">
     <value>수식의 중첩 수준이 더 적어지게 다시 작성합니다.</value>
@@ -5638,7 +5686,7 @@
   </data>
   <data name="ErrorResource_ErrRuleNestedTooDeeply_LongMessage" xml:space="preserve">
     <value>Power Apps는 식의 중첩을 최대 50단계까지만 지원합니다. 이렇게 깊은 식은 이해하고 유지하기가 어렵습니다.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrRuleNestedTooDeeply_HowToFix_1" xml:space="preserve">
     <value>수식의 중첩 수준이 더 적어지게 다시 작성합니다.</value>
@@ -5650,7 +5698,7 @@
   </data>
   <data name="ErrorResource_ErrOperatorExpected_LongMessage" xml:space="preserve">
     <value>연산자는 두 개의 피연산자를 결합합니다. 이 오류는 두 개의 함수(피연산자) 사이에 연산자를 넣지 않는 경우(예: Len("mytext")Len("mytext"))에 발생합니다.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrOperatorExpected_HowToFix_1" xml:space="preserve">
     <value>피연산자 사이에 연산자가 포함되도록 수식을 편집합니다.</value>
@@ -5670,7 +5718,7 @@
   </data>
   <data name="ErrorResource_ErrNumberExpected_LongMessage" xml:space="preserve">
     <value>이 오류는 숫자가 필요한 함수를 사용하는데 이미지 등을 입력하는 경우에 발생합니다.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrNumberExpected_HowToFix_1" xml:space="preserve">
     <value>수식의 이 지점에서 숫자로 평가되도록 수식을 편집합니다.</value>
@@ -5690,7 +5738,7 @@
   </data>
   <data name="ErrorResource_ErrBooleanExpected_LongMessage" xml:space="preserve">
     <value>Microsoft Excel 등의 애플리케이션에서는 부울을 true/false 값이라고도 합니다. 이 오류는 부울 값이 필요한 함수를 사용하는데 날짜 등을 입력하는 경우에 발생합니다.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrBooleanExpected_HowToFix_1" xml:space="preserve">
     <value>수식의 이 지점에서 부울로 평가되도록 수식을 편집합니다.</value>
@@ -5710,7 +5758,7 @@
   </data>
   <data name="ErrorResource_ErrColonExpected_LongMessage" xml:space="preserve">
     <value>콜론은 레코드에서 필드 이름(열 이름이라고도 함)과 필드 값을 구분합니다(예: {Month:"1"}, {Month:"2"}…). 또한 콜론은 시간, 분, 초를 구분합니다(예: "3:04").</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrColonExpected_HowToFix_1" xml:space="preserve">
     <value>수식에 콜론이 포함되도록 편집합니다.</value>
@@ -5730,7 +5778,7 @@
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_LongMessage" xml:space="preserve">
     <value>동작 함수는 앱의 다른 곳에서 값을 변경하여 앱의 상태를 변경합니다. 'Navigate', 'Patch', 'UpdateContext' 및 'Collect'는 일반적인 동작 함수입니다. 'OnSelect', 'OnVisible' 및 기타 'On …' 속성은 일반적인 동작 기반 속성입니다.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_HowToFix_1" xml:space="preserve">
     <value>동작 함수를 동작 기반 속성으로 이동합니다.</value>
@@ -5750,7 +5798,7 @@
   </data>
   <data name="ErrorResource_ErrTestPropertyExpected_LongMessage" xml:space="preserve">
     <value>테스트 함수는 앱을 테스트할 때 사용자 입력을 시뮬레이션하는 데 사용할 수 있는 함수입니다. 'SetProperty', 'SelectRow' 및 'Assert'는 일반적인 테스트 함수로, 테스트 사례에서만 사용할 수 있습니다.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrTestPropertyExpected_HowToFix_1" xml:space="preserve">
     <value>앱 자체가 아니라 테스트 사례에서 함수를 사용하세요.</value>
@@ -5762,7 +5810,7 @@
   </data>
   <data name="ErrorResource_ErrCannotCoerce_SourceType_TargetType_LongMessage" xml:space="preserve">
     <value>Power Apps에서는 수식에 있는 일부 데이터 형식을 다른 형식으로 변환할 수 있습니다. 예를 들어 "1"(문자열)을 1(숫자)로 변환할 수 있지만, 일부 데이터 형식은 다른 데이터 형식으로 변환할 수 없습니다. 예를 들어 이미지를 숫자로 변환할 수는 없습니다.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrCannotCoerce_SourceType_TargetType_HowToFix_1" xml:space="preserve">
     <value>요청한 데이터를 필요한 형식으로 변환하도록 수식을 편집합니다.</value>
@@ -5774,7 +5822,7 @@
   </data>
   <data name="ErrorResource_ErrStringExpected_LongMessage" xml:space="preserve">
     <value>이 오류는 텍스트(또는 문자열) 인수가 필요한 함수를 사용하는데 날짜 등을 입력하는 경우에 발생합니다.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrStringExpected_HowToFix_1" xml:space="preserve">
     <value>수식의 이 지점에서 텍스트로 평가되도록 수식을 편집합니다.</value>
@@ -5794,7 +5842,7 @@
   </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_LongMessage" xml:space="preserve">
     <value>이 오류는 텍스트 또는 숫자가 필요한 함수를 사용하는데 부울(true/false) 값 등을 입력하는 경우에 발생합니다.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_HowToFix_1" xml:space="preserve">
     <value>수식의 이 지점에서 텍스트 또는 숫자로 평가되도록 수식을 편집합니다.</value>
@@ -5814,7 +5862,7 @@
   </data>
   <data name="ErrorResource_ErrClosingBracketExpected_LongMessage" xml:space="preserve">
     <value>닫는 대괄호는 레코드의 끝을 나타냅니다(예: {Month:"1"}, {Month:"2"}…).</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrClosingBracketExpected_HowToFix_1" xml:space="preserve">
     <value>수식에 대괄호가 포함되도록 편집합니다.</value>
@@ -5834,7 +5882,7 @@
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_LongMessage" xml:space="preserve">
     <value>수식에서 비교되는 값이 동일한 형식이 아니므로 수식을 평가할 수 없습니다.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_HowToFix_1" xml:space="preserve">
     <value>날짜 문자열(예: "12/31/2018")을 날짜 값으로 변환하는 것과 같이 값을 동일한 형식으로 변환해야 할 수도 있습니다.</value>
@@ -5946,7 +5994,7 @@
   </data>
   <data name="ErrorResource_ErrTypeError_LongMessage" xml:space="preserve">
     <value>데이터가 필요한 형식(텍스트, 숫자, 날짜, 테이블, 레코드)과 일치하지 않을 수 있습니다.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrTypeError_HowToFix_1" xml:space="preserve">
     <value>수식에 포함된 값의 유형을 확인하고 유형이 일치하는지 확인합니다.</value>
@@ -5974,7 +6022,7 @@
   </data>
   <data name="ErrorResource_ErrDateExpected_LongMessage" xml:space="preserve">
     <value>이 오류는 날짜가 필요한 함수를 사용하는데 텍스트 등을 입력하는 경우에 발생합니다.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_ErrDateExpected_HowToFix_1" xml:space="preserve">
     <value>수식의 이 지점에서 날짜로 평가되도록 수식을 편집합니다.</value>
@@ -5994,7 +6042,7 @@
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_LongMessage" xml:space="preserve">
     <value>데이터 원본이 수식을 처리하지 못할 수 있으며 불완전한 데이터 세트를 반환할 수도 있습니다. 데이터 세트가 불완전하면 애플리케이션이 올바른 결과를 반환할 수 없거나 제대로 동작하지 않을 수 있습니다.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_HowToFix_1" xml:space="preserve">
     <value>데이터 집합이 500개 레코드 제한을 초과하지만 2,000개 레코드 미만인 경우 한계를 재설정합니다.</value>
@@ -6030,7 +6078,7 @@
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_LongMessage" xml:space="preserve">
     <value>데이터 원본이 수식을 처리하지 못할 수 있으며 불완전한 데이터 세트를 반환할 수도 있습니다. 데이터 세트가 불완전하면 애플리케이션이 올바른 결과를 반환할 수 없거나 제대로 동작하지 않을 수 있습니다.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_HowToFix_1" xml:space="preserve">
     <value>데이터 집합이 500개 레코드 제한을 초과하지만 2,000개 레코드 미만인 경우 한계를 재설정합니다.</value>
@@ -6066,7 +6114,7 @@
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_LongMessage" xml:space="preserve">
     <value>"in" 연산자의 오른쪽에 있는 항목은 올바른 데이터 원본의 열 이름이어야 합니다. 데이터 원본이 수식을 처리하지 못할 수 있으며 불완전한 데이터 세트를 반환할 수도 있습니다. 데이터 세트가 불완전하면 애플리케이션이 올바른 결과를 반환할 수 없거나 제대로 동작하지 않을 수 있습니다.</value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_1" xml:space="preserve">
     <value>"in" 연산자의 오른쪽에 있는 항목이 올바른 데이터 원본의 열이 되도록 변경합니다.</value>
@@ -6107,7 +6155,7 @@
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_LongMessage" xml:space="preserve">
     <value> "in" 연산자의 오른쪽에 있는 항목은 올바른 데이터 원본의 열이 아닙니다. 데이터 원본이 수식을 처리하지 못할 수 있으며 불완전한 데이터 세트를 반환할 수도 있습니다. 데이터 세트가 불완전하면 애플리케이션이 올바른 결과를 반환할 수 없거나 제대로 동작하지 않을 수 있습니다.
       </value>
-    <comment/>
+    <comment />
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_1" xml:space="preserve">
     <value>"in" 연산자의 오른쪽에 있는 항목이 올바른 데이터 원본의 열이 되도록 변경합니다.</value>
@@ -6213,5 +6261,9 @@
   <data name="ErrorResource_ErrAsNotInContext_ShortMessage" xml:space="preserve">
     <value>이 컨텍스트에서는 As가 허용되지 않음</value>
     <comment>{Locked=As} This is an error message that shows up when the As keyword is used but is not valid</comment>
+  </data>
+  <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
+    <value>이름이 지정된 수식은 세미콜론으로 끝나야 합니다.</value>
+    <comment>A semicolon must terminate named formulas. For example, a=10;</comment>
   </data>
 </root>

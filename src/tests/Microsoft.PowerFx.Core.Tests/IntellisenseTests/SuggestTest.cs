@@ -1,7 +1,12 @@
-// Copyright (c) Microsoft Corporation.
+﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
+using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.Globalization;
 using System.Linq;
+using Microsoft.PowerFx.Core;
+using Microsoft.PowerFx.Core.Types.Enums;
 using Xunit;
 
 namespace Microsoft.PowerFx.Tests.IntellisenseTests
@@ -22,13 +27,22 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         /// <returns>
         /// List of string representing suggestions
         /// </returns>
-        private string[] SuggestStrings(string expression, string contextTypeString = null)
+        private string[] SuggestStrings(string expression, EnumStore enumStore, string contextTypeString = null)
         {
             Assert.NotNull(expression);
 
-            var intellisense = Suggest(expression, contextTypeString);
+            var intellisense = Suggest(expression, enumStore, contextTypeString);
             return intellisense.Suggestions.Select(suggestion => suggestion.DisplayText.Text).ToArray();
         }
+
+        private class EmptyEnumStore : EnumStore
+        {
+            private IDictionary<string, string> _enumDict = new Dictionary<string, string>();
+            protected override IDictionary<string, string> EnumDict => _enumDict;
+        }
+
+        private readonly EnumStore _defaultEnumStore = new EnumStore();
+        private readonly EnumStore _emptyEnumStore = new EmptyEnumStore();
 
         /// <summary>
         /// Compares expected suggestions with suggestions made by PFx Intellisense for a given
@@ -52,6 +66,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         [InlineData("{'complex record':{column:{}}} |", "As", "exactin", "in")]
         // DottedNameNodeSuggestionHandler
         [InlineData("{a:{},b:{},c:{}}.|", "a", "b", "c")]
+        [InlineData("$\"Hello { {a:{},b:{},c:{}}.| } World\"", "a", "b", "c")]
         [InlineData("{abc:{},ab:{},a:{}}.|ab", "ab", "a", "abc")]
         [InlineData("{abc:{},ab:{},a:{}}.ab|", "ab", "abc")]
         [InlineData("{abc:{},ab:{},a:{}}.ab|c", "abc", "ab")]
@@ -112,9 +127,32 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         [InlineData("Disabled|", "Disabled")]
         [InlineData("DisplayMode.D|", "Disabled", "Edit")]
         [InlineData("DisplayMode|", "DisplayMode", "DisplayMode.Disabled", "DisplayMode.Edit", "DisplayMode.View")]
+        [InlineData("$\"Hello {DisplayMode|} World!\"", "DisplayMode", "DisplayMode.Disabled", "DisplayMode.Edit", "DisplayMode.View")]
         public void TestSuggest(string expression, params string[] expectedSuggestions)
         {
-            var actualSuggestions = SuggestStrings(expression);
+            FeatureFlags.StringInterpolation = true;
+            var actualSuggestions = SuggestStrings(expression, _defaultEnumStore);
+            Assert.Equal(expectedSuggestions, actualSuggestions);
+        }
+
+        /// <summary>
+        /// In cases for Intellisense with an empty enum store
+        /// </summary>
+        [Theory]
+        [InlineData("Color.AliceBl|")]
+        [InlineData("Color.Pale|")]
+        [InlineData("Edit|")]
+        [InlineData("DisplayMode.E|")]
+        [InlineData("Disabled|")]
+        [InlineData("DisplayMode.D|")]
+        [InlineData("DisplayMode|")]
+        // Calendar is a namespace for functions, not an enum
+        [InlineData("Calendar.|", "MonthsLong", "MonthsShort", "WeekdaysLong", "WeekdaysShort")]
+        [InlineData("Calendar.Months|", "MonthsLong", "MonthsShort")]
+        public void TestSuggestEmptyEnumList(string expression, params string[] expectedSuggestions)
+        {
+            FeatureFlags.StringInterpolation = true;
+            var actualSuggestions = SuggestStrings(expression, _emptyEnumStore);
             Assert.Equal(expectedSuggestions, actualSuggestions);
         }
 
@@ -137,7 +175,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         [InlineData("[@|")]
         public void TestNonEmptySuggest(string expression, string context = null)
         {
-            var actualSuggestions = SuggestStrings(expression, context);
+            var actualSuggestions = SuggestStrings(expression, _defaultEnumStore, context);
             Assert.True(actualSuggestions.Length > 0);
         }
 
@@ -153,7 +191,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         {
             Assert.NotNull(context);
 
-            var actualSuggestions = SuggestStrings(expression, context);
+            var actualSuggestions = SuggestStrings(expression, _defaultEnumStore, context);
             Assert.Equal(expectedSuggestions, actualSuggestions);
         }
     }
