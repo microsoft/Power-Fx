@@ -1031,7 +1031,8 @@ namespace Microsoft.PowerFx.Core.Lexer
 
             private void ExitMode()
             {
-                _modeStack.Pop();
+                if(_modeStack.Count != 0)
+                    _modeStack.Pop();
             }
 
             // Whether we've hit the end of input yet. If this returns true, ChCur will be zero.
