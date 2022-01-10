@@ -479,6 +479,9 @@ namespace Microsoft.PowerFx.Core.Lexer
                 while ((tok = impl.GetNextToken()) != null)
                     tokens.Add(tok);
 
+                if (impl.UnmatchedCurly)
+                    tokens.Add(new ErrorToken(impl.GetTextSpan(), TexlStrings.ErrUnmatchedCurly));
+
                 tokens.Add(impl.GetEof());
             }
             finally
@@ -1018,6 +1021,8 @@ namespace Microsoft.PowerFx.Core.Lexer
             }
 
             private LexerMode CurrentMode => _modeStack.Peek();
+            private bool IsModeStackEmpty => _modeStack.Count == 0;
+            internal bool UnmatchedCurly => _modeStack.Count != 1;
 
             private void EnterMode(LexerMode newMode)
             {
@@ -1090,7 +1095,7 @@ namespace Microsoft.PowerFx.Core.Lexer
                 _currentPos = _currentTokenPos;
             }
 
-            private Span GetTextSpan()
+            internal Span GetTextSpan()
             {
                 return new Span(_currentTokenPos, _currentPos);
             }
@@ -1210,6 +1215,10 @@ namespace Microsoft.PowerFx.Core.Lexer
                 if (tidPunc == TokKind.CurlyClose)
                 {
                     ExitMode();
+                    if (IsModeStackEmpty)
+                    {
+                        return LexError(TexlStrings.ErrUnmatchedCurly);
+                    }
                 }
 
                 return new KeyToken(tidPunc, GetTextSpan());
@@ -1453,6 +1462,10 @@ namespace Microsoft.PowerFx.Core.Lexer
 
                 NextChar();
                 ExitMode();
+                if (IsModeStackEmpty)
+                {
+                    return LexError(TexlStrings.ErrUnmatchedCurly);
+                }
 
                 return new StrInterpEndToken(GetTextSpan());
             }
@@ -1475,6 +1488,10 @@ namespace Microsoft.PowerFx.Core.Lexer
 
                 NextChar();
                 ExitMode();
+                if (IsModeStackEmpty)
+                {
+                    return LexError(TexlStrings.ErrUnmatchedCurly);
+                }
 
                 return new IslandEndToken(GetTextSpan());
             }
@@ -1565,7 +1582,7 @@ namespace Microsoft.PowerFx.Core.Lexer
                 string commentEnd = _sb.ToString().StartsWith("/*") ? "*/" : "\n";
 
                 // Comment initiation takes up two chars, so must - 1 to get start
-                int startingPosition =  _currentPos-1;
+                int startingPosition = _currentPos - 1;
 
                 while (_currentPos < _text.Length)
                 {
@@ -1694,20 +1711,26 @@ namespace Microsoft.PowerFx.Core.Lexer
                 return new ReplaceableToken(_sb.ToString(), GetTextSpan());
             }
 
-            // Returns specialized token for unexpected character errors.
-            private Token LexError()
+            private Token LexError(ErrorResourceKey errorResourceKey)
             {
                 if (CurrentChar > 255)
                 {
                     var position = _currentPos;
                     var unexpectedChar = Convert.ToUInt16(CurrentChar).ToString("X4");
                     NextChar();
-                    return new ErrorToken(GetTextSpan(), TexlStrings.UnexpectedCharacterToken, String.Concat(UnicodePrefix, unexpectedChar), position);
+                    return new ErrorToken(GetTextSpan(), errorResourceKey, String.Concat(UnicodePrefix, unexpectedChar), position);
                 }
-                else {
+                else
+                {
                     NextChar();
                     return new ErrorToken(GetTextSpan());
                 }
+            }
+
+            // Returns specialized token for unexpected character errors.
+            private Token LexError()
+            {
+                return LexError(TexlStrings.UnexpectedCharacterToken);
             }
         }
     }
