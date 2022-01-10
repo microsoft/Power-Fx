@@ -80,9 +80,9 @@ namespace Microsoft.PowerFx.Core.Utils
             if (string.IsNullOrWhiteSpace(input))
                 return input;
 
-            int length = input.Length;
-            int lengthForBuilder = EstimateEscapedStringLength(length) + 2 /* for the quotes */;
-            StringBuilder sb = StringBuilderCache.Acquire(lengthForBuilder);
+            var length = input.Length;
+            var lengthForBuilder = EstimateEscapedStringLength(length) + 2 /* for the quotes */;
+            var sb = StringBuilderCache.Acquire(lengthForBuilder);
 
             sb.Append("\"");
             InternalEscapeString(input, length, /* lengthForBuilder */ 0, ref sb, finalizeBuilder: false); // 'lengthForBuilder' will not be used.
@@ -96,17 +96,19 @@ namespace Microsoft.PowerFx.Core.Utils
         {
             Contracts.AssertNonEmpty(name);
 
-            int length = name.Length;
-            int estimatedLength = EstimateEscapedStringLength(length);
-            int charsToAdd = 0;
+            var length = name.Length;
+            var estimatedLength = EstimateEscapedStringLength(length);
+            var charsToAdd = 0;
             StringBuilder sb = null;
 
-            for (int i = 0; i < length; i++)
+            for (var i = 0; i < length; i++)
             {
-                char ch = name[i];
+                var ch = name[i];
 
                 if (IsLatinAlpha(ch))
+                {
                     charsToAdd++;
+                }
                 else if (ch == '_')
                 {
                     UpdateEscapeInternals("__", name, estimatedLength, i, ref charsToAdd, ref sb);
@@ -140,8 +142,8 @@ namespace Microsoft.PowerFx.Core.Utils
         {
             Contracts.AssertValue(value);
 
-            int length = value.Length;
-            int lengthForBuilder = EstimateEscapedStringLength(length);
+            var length = value.Length;
+            var lengthForBuilder = EstimateEscapedStringLength(length);
             StringBuilder sb = null;
 
             return InternalEscapeString(value, length, lengthForBuilder, ref sb, finalizeBuilder: true);
@@ -151,12 +153,12 @@ namespace Microsoft.PowerFx.Core.Utils
         {
             Contracts.AssertValue(value);
 
-            int length = value.Length;
-            int lengthForBuilder = EstimateEscapedStringLength(length);
-            int charsToAdd = 0;
+            var length = value.Length;
+            var lengthForBuilder = EstimateEscapedStringLength(length);
+            var charsToAdd = 0;
             StringBuilder sb = null;
 
-            for (int i = 0; i < length; i++)
+            for (var i = 0; i < length; i++)
             {
                 switch (value[i])
                 {
@@ -230,9 +232,9 @@ namespace Microsoft.PowerFx.Core.Utils
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool HasSpaces(string str)
         {
-            int length = str.Length;
+            var length = str.Length;
 
-            for (int i = 0; i < length; i++)
+            for (var i = 0; i < length; i++)
             {
                 if (IsSpace(str[i]))
                     return true;
@@ -270,9 +272,9 @@ namespace Microsoft.PowerFx.Core.Utils
 
         private static string InternalEscapeString(string value, int length, int lengthForBuilder, ref StringBuilder sb, bool finalizeBuilder)
         {
-            int charsToAdd = 0;
+            var charsToAdd = 0;
 
-            for (int i = 0; i < length; i++)
+            for (var i = 0; i < length; i++)
             {
                 switch (value[i])
                 {

@@ -54,24 +54,23 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertValue(errors);
             Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
 
-            bool fArgsValid = base.CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            var fArgsValid = base.CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
 
             // The first arg determines the scope type for the lambda params, and the return type.
-            DType typeScope;
-            fArgsValid &= ScopeInfo.CheckInput(args[0], argTypes[0], errors, out typeScope);
+            fArgsValid &= ScopeInfo.CheckInput(args[0], argTypes[0], errors, out var typeScope);
             Contracts.Assert(typeScope.IsRecord);
 
             // The result type has N additional columns, as specified by (args[1],args[2]), (args[3],args[4]), ... etc.
             returnType = typeScope.ToTable();
 
-            int count = args.Length;
+            var count = args.Length;
             if ((count & 1) == 0)
                 errors.EnsureError(DocumentErrorSeverity.Severe, args[0].Parent.CastList().Parent.CastCall(), TexlStrings.ErrBadArityOdd, count);
 
             for (var i = 1; i < count; i += 2)
             {
-                TexlNode nameArg = args[i];
-                DType nameArgType = argTypes[i];
+                var nameArg = args[i];
+                var nameArgType = argTypes[i];
 
                 // Verify we have a string literal for the column name. Accd to spec, we don't support
                 // arbitrary expressions that evaluate to string values, because these values contribute to
@@ -93,15 +92,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     continue;
                 }
 
-                DName columnName = new DName(nameNode.Value);
-                string colName;
-                if (DType.TryGetDisplayNameForColumn(typeScope, columnName, out colName))
+                var columnName = new DName(nameNode.Value);
+                if (DType.TryGetDisplayNameForColumn(typeScope, columnName, out var colName))
                     columnName = new DName(colName);
 
                 // Verify that the name doesn't already exist as either a logical or display name
-                DType columnType;
-                string unused;
-                if (typeScope.TryGetType(columnName, out columnType) || DType.TryGetLogicalNameForColumn(typeScope, columnName, out unused))
+                if (typeScope.TryGetType(columnName, out var columnType) || DType.TryGetLogicalNameForColumn(typeScope, columnName, out var unused))
                 {
                     fArgsValid = false;
                     errors.EnsureError(DocumentErrorSeverity.Moderate, nameArg, TexlStrings.ErrColExists_Name, columnName);
@@ -115,7 +111,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
                 // Augment the result type to include the specified column, and verify that it
                 // hasn't been specified already within the same invocation.
-                bool fError = false;
+                var fError = false;
                 returnType = returnType.Add(ref fError, DPath.Root, columnName, columnType);
                 if (fError)
                 {
@@ -139,13 +135,13 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             var overloads = new List<TexlStrings.StringGetter[]>(OverloadCount);
             // Limit the argCount avoiding potential OOM
-            int argCount = arity > SignatureConstraint.RepeatTopLength ? SignatureConstraint.RepeatTopLength : arity;
-            for (int ioverload = 0; ioverload < OverloadCount; ioverload++)
+            var argCount = arity > SignatureConstraint.RepeatTopLength ? SignatureConstraint.RepeatTopLength : arity;
+            for (var ioverload = 0; ioverload < OverloadCount; ioverload++)
             {
-                int iArgCount = (argCount | 1) + ioverload * 2;
+                var iArgCount = (argCount | 1) + ioverload * 2;
                 var overload = new TexlStrings.StringGetter[iArgCount];
                 overload[0] = TexlStrings.AddColumnsArg1;
-                for (int iarg = 1; iarg < iArgCount; iarg += 2)
+                for (var iarg = 1; iarg < iArgCount; iarg += 2)
                 {
                     overload[iarg] = TexlStrings.AddColumnsArg2;
                     overload[iarg + 1] = TexlStrings.AddColumnsArg3;

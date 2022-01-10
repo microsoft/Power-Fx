@@ -41,7 +41,7 @@ namespace Microsoft.PowerFx.Core.Localization
         internal static bool IsTagMultivalue(string tag) => tag == HowToFixTag || tag == LinkTag;
 
 
-        private Dictionary<string, IList<string>> TagToValues;
+        private readonly Dictionary<string, IList<string>> TagToValues;
         public IList<IErrorHelpLink> HelpLinks { get; }
 
         private ErrorResource()
@@ -59,7 +59,7 @@ namespace Microsoft.PowerFx.Core.Localization
             // Parse each sub-element into the TagToValues dictionary.
             foreach (var tag in errorXml.Elements())
             {
-                string tagName = tag.Name.LocalName;
+                var tagName = tag.Name.LocalName;
 
                 // Links are specialized because they are a two-part resource.
                 if (tagName == LinkTag)

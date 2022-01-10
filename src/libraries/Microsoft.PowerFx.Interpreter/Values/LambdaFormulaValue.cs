@@ -19,12 +19,12 @@ namespace Microsoft.PowerFx
         public LambdaFormulaValue(IRContext irContext, IntermediateNode node)
             : base(irContext)
         {
-            this._tree = node;
+            _tree = node;
         }
 
         public FormulaValue Eval(EvalVisitor runner, SymbolContext context)
         {
-            FormulaValue result = _tree.Accept(runner, context);
+            var result = _tree.Accept(runner, context);
             return result;
         }
 

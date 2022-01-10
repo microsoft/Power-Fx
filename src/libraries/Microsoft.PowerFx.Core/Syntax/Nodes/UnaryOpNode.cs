@@ -54,7 +54,7 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
             return visitor.Visit(this, context);
         }
 
-        public override NodeKind Kind { get { return NodeKind.UnaryOp; } }
+        public override NodeKind Kind => NodeKind.UnaryOp;
 
         public override UnaryOpNode CastUnaryOp()
         {
@@ -70,9 +70,9 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
         {
             // For syntax coloring regarding percentages
             if (IsPercent)
-                return new Span(this.Child.Token.VerifyValue().Span.Min, this.Child.Token.VerifyValue().Span.Lim + TexlLexer.PunctuatorPercent.Length);
+                return new Span(Child.Token.VerifyValue().Span.Min, Child.Token.VerifyValue().Span.Lim + TexlLexer.PunctuatorPercent.Length);
             else
-                return new Span(this.Token.VerifyValue().Span.Min, this.Child.VerifyValue().GetCompleteSpan().Lim);
+                return new Span(Token.VerifyValue().Span.Min, Child.VerifyValue().GetCompleteSpan().Lim);
         }
     }
 }

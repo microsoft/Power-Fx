@@ -20,7 +20,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override bool IsSelfContained => true;
         public override bool SupportsParamCoercion => false;
 
-        public override DelegationCapability FunctionDelegationCapability { get { return DelegationCapability.Count; } }
+        public override DelegationCapability FunctionDelegationCapability => DelegationCapability.Count;
 
         public CountRowsFunction()
             : base("CountRows", TexlStrings.AboutCountRows, FunctionCategories.Table | FunctionCategories.MathAndStat, DType.Number, 0, 1, 1, DType.EmptyTable)
@@ -41,8 +41,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             if (!CheckArgsCount(callNode, binding))
                 return false;
 
-            DelegationCapability preferredFunctionDelegationCapability;
-            return TryGetValidDataSourceForDelegation(callNode, binding, out var dataSource, out preferredFunctionDelegationCapability);
+            return TryGetValidDataSourceForDelegation(callNode, binding, out var dataSource, out var preferredFunctionDelegationCapability);
         }
 
         // See if CountDistinct delegation is available. If true, we can make use of it on primary key as a workaround for CountRows delegation
@@ -60,7 +59,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             {
                 // Check that target table is not an expanded entity (1-N/N-N relationships)
                 // TASK 9966488: Enable CountRows/CountIf delegation for table relationships
-                TexlNode[] args = callNode.Args.Children.VerifyValue();
+                var args = callNode.Args.Children.VerifyValue();
                 if (args.Length > 0)
                 {
                     if (binding.GetType(args[0]).HasExpandInfo)
@@ -69,7 +68,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                         return false;
                     }
                     else
+                    {
                         return true;
+                    }
                 }
             }
 

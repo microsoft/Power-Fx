@@ -14,7 +14,7 @@ namespace Microsoft.PowerFx.Core.Texl
     /// </summary>
     internal sealed class ViewFinderVisitor : TexlVisitor
     {
-        private TexlBinding _txb;
+        private readonly TexlBinding _txb;
         public bool ContainsView { get; private set; }
 
         public ViewFinderVisitor(TexlBinding binding)

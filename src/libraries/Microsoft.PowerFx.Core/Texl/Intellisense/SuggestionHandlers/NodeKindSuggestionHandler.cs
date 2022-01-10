@@ -9,7 +9,7 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense{
     {
         internal abstract class NodeKindSuggestionHandler : ISuggestionHandler
         {
-            private NodeKind _kind;
+            private readonly NodeKind _kind;
 
             public NodeKindSuggestionHandler(NodeKind kind)
             {

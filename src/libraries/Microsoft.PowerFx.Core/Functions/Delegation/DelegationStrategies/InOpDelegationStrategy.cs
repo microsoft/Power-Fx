@@ -32,7 +32,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
             Contracts.AssertValue(metadata);
             Contracts.AssertValue(binding);
 
-            BinaryOpNode binaryOpNode = node?.AsBinaryOp();
+            var binaryOpNode = node?.AsBinaryOp();
             if (binaryOpNode == null)
                 return false;
 
@@ -41,11 +41,11 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
             DName columnName = default;
             FirstNameInfo info = null;
 
-            bool isFullyQualifiedFieldAccess = CheckForFullyQualifiedFieldAccess(isRHSDelegableTable, binaryOpNode, binding, node, ref columnName, ref info);
+            var isFullyQualifiedFieldAccess = CheckForFullyQualifiedFieldAccess(isRHSDelegableTable, binaryOpNode, binding, node, ref columnName, ref info);
             if (!isFullyQualifiedFieldAccess)
                 return false;
 
-            bool isRowScopedOrLambda = IsRowScopedOrLambda(binding, node, info, columnName, metadata);
+            var isRowScopedOrLambda = IsRowScopedOrLambda(binding, node, info, columnName, metadata);
             if (!isRowScopedOrLambda)
                 return false;
 

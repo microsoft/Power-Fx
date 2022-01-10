@@ -49,7 +49,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         }
 
         // And / Or functions are implicit here if filter capability is supported. Hence we just declare capability filter here.
-        public override DelegationCapability FunctionDelegationCapability { get { return DelegationCapability.Filter; } }
+        public override DelegationCapability FunctionDelegationCapability => DelegationCapability.Filter;
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures(int arity)
         {
@@ -68,11 +68,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
 
             nodeToCoercedTypeMap = new Dictionary<TexlNode, DType>();
-            int count = args.Length;
+            var count = args.Length;
 
             // Check the args.
-            bool fArgsValid = true;
-            for (int i = 0; i < count; i++)
+            var fArgsValid = true;
+            for (var i = 0; i < count; i++)
             {
                 fArgsValid &= CheckType(args[i], argTypes[i], DType.Boolean, errors, out var matchedWithCoercion);
                 if (matchedWithCoercion)
@@ -93,18 +93,20 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             if (binding.ErrorContainer.HasErrors(callNode) ||
                 !CheckArgsCount(callNode, binding) ||
                 !binding.IsRowScope(callNode))
+            {
                 return false;
+            }
 
-            TexlNode[] args = callNode.Args.Children.VerifyValue();
+            var args = callNode.Args.Children.VerifyValue();
             Contracts.Assert(args.Length >= MinArity);
 
-            DelegationCapability funcDelegationCapability = FunctionDelegationCapability | (_isAnd ? DelegationCapability.And : DelegationCapability.Or);
+            var funcDelegationCapability = FunctionDelegationCapability | (_isAnd ? DelegationCapability.And : DelegationCapability.Or);
             if (!metadata.IsDelegationSupportedByTable(funcDelegationCapability))
                 return false;
 
             foreach (var arg in args)
             {
-                NodeKind argKind = arg.VerifyValue().Kind;
+                var argKind = arg.VerifyValue().Kind;
                 switch (argKind)
                 {
                 case NodeKind.FirstName:
@@ -139,7 +141,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     }
                 case NodeKind.BinaryOp:
                     {
-                        BinaryOpNode opNode = arg.AsBinaryOp();
+                        var opNode = arg.AsBinaryOp();
                         var binaryOpNodeValidationStrategy = GetOpDelegationStrategy(opNode.Op, opNode);
                         if (!binaryOpNodeValidationStrategy.IsSupportedOpNode(opNode, metadata, binding))
                         {
@@ -151,7 +153,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     }
                 case NodeKind.UnaryOp:
                     {
-                        UnaryOpNode opNode = arg.AsUnaryOpLit();
+                        var opNode = arg.AsUnaryOpLit();
                         var unaryOpNodeValidationStrategy = GetOpDelegationStrategy(opNode.Op);
                         if (!unaryOpNodeValidationStrategy.IsSupportedOpNode(opNode, metadata, binding))
                         {

@@ -15,9 +15,9 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
     // O(1) for this class instead of an O(N) search.
     internal sealed class IntellisenseSuggestionList : IList<IntellisenseSuggestion>
     {
-        private Dictionary<string, int> _displayNameToCount;
-        private Dictionary<string, List<IntellisenseSuggestion>> _textToSuggestions;
-        private List<IntellisenseSuggestion> _backingList;
+        private readonly Dictionary<string, int> _displayNameToCount;
+        private readonly Dictionary<string, List<IntellisenseSuggestion>> _textToSuggestions;
+        private readonly List<IntellisenseSuggestion> _backingList;
 
         public int Count => ((IList<IntellisenseSuggestion>)_backingList).Count;
 
@@ -32,7 +32,7 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
 
         public IntellisenseSuggestion this[int index]
         {
-            get { return _backingList[index]; }
+            get => _backingList[index];
             set
             {
                 DecrementDictionaries(this[index]);
@@ -66,7 +66,7 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
 
         public void RemoveRange(int index, int count)
         {
-            for (int i = index; i < index + count; i++)
+            for (var i = index; i < index + count; i++)
                 DecrementDictionaries(this[i]);
 
             _backingList.RemoveRange(index, count);
@@ -129,12 +129,12 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
 
         private void IncrementDictionaries(IntellisenseSuggestion item)
         {
-            string displayText = item.DisplayText.Text;
+            var displayText = item.DisplayText.Text;
             if (!_displayNameToCount.ContainsKey(displayText))
                 _displayNameToCount[displayText] = 0;
             _displayNameToCount[displayText] += 1;
 
-            string sugText = item.Text;
+            var sugText = item.Text;
             if (!_textToSuggestions.ContainsKey(sugText))
                 _textToSuggestions[sugText] = new List<IntellisenseSuggestion>();
 
@@ -146,12 +146,12 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
             Contracts.Assert(_displayNameToCount.ContainsKey(item.DisplayText.Text));
             Contracts.Assert(_textToSuggestions.ContainsKey(item.Text));
 
-            string displayText = item.DisplayText.Text;
+            var displayText = item.DisplayText.Text;
             _displayNameToCount[displayText] -= 1;
             if (_displayNameToCount[displayText] == 0)
                 _displayNameToCount.Remove(displayText);
 
-            string sugText = item.Text;
+            var sugText = item.Text;
             _textToSuggestions[sugText].Remove(item);
             if (_textToSuggestions[sugText].Count() == 0)
                 _textToSuggestions.Remove(sugText);

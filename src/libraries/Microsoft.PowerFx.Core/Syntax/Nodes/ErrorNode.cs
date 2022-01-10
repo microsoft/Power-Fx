@@ -45,7 +45,7 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
             return visitor.Visit(this, context);
         }
 
-        public override NodeKind Kind { get { return NodeKind.Error; } }
+        public override NodeKind Kind => NodeKind.Error;
 
         public override ErrorNode AsError()
         {

@@ -44,8 +44,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             nodeToCoercedTypeMap = null;
 
-            bool isValid = true;
-            DType argType = argTypes[0];
+            var isValid = true;
+            var argType = argTypes[0];
             if (!DType.Number.Accepts(argType) && !DType.String.Accepts(argType))
             {
                 if (argType.CoercesTo(DType.DateTime) && !argType.IsControl)

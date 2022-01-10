@@ -36,16 +36,18 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationMetadata
 
         }
 
-        protected override Dictionary<DPath, DelegationCapability> ColumnRestrictions { get { return _columnRestrictions; } }
+        protected override Dictionary<DPath, DelegationCapability> ColumnRestrictions => _columnRestrictions;
 
-        public override DelegationCapability DefaultColumnCapabilities { get { return _defaultCapabilities; } }
+        public override DelegationCapability DefaultColumnCapabilities => _defaultCapabilities;
 
         public override DelegationCapability TableCapabilities
         {
             get
             {
                 if (_filterFunctionsSupportedByTable.HasValue)
+                {
                     return _filterFunctionsSupportedByTable.Value;
+                }
                 else
                 {
                     // If there are no capabilities defined at column level then filter is not supported.
@@ -70,8 +72,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationMetadata
 
             // If metadata specified any restrictions for this column then apply those
             // before returning capabilities.
-            DelegationCapability restrictions;
-            if (TryGetColumnRestrictions(columnPath, out restrictions))
+            if (TryGetColumnRestrictions(columnPath, out var restrictions))
                 capabilities &= ~restrictions;
 
             return true;

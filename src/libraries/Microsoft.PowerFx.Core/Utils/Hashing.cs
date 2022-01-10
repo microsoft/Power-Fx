@@ -52,9 +52,9 @@ namespace Microsoft.PowerFx.Core.Utils
             Contracts.AssertValue(str);
 
             uint hash1 = 5381;
-            uint hash2 = hash1;
+            var hash2 = hash1;
 
-            for (int ich = str.Length; ich > 0; )
+            for (var ich = str.Length; ich > 0; )
             {
                 hash1 = ((hash1 << 5) + hash1) ^ str[--ich];
                 if (ich <= 0)
@@ -67,7 +67,7 @@ namespace Microsoft.PowerFx.Core.Utils
 
         public static uint HashUint(uint u)
         {
-            ulong uu = u * 0x7ff19519UL; // this number is prime.
+            var uu = u * 0x7ff19519UL; // this number is prime.
             return GetLo(uu) + GetHi(uu);
         }
 

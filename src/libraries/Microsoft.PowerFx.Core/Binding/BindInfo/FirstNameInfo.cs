@@ -16,7 +16,7 @@ namespace Microsoft.PowerFx.Core.Binding.BindInfo
     /// </summary>
     internal sealed class FirstNameInfo : NameInfo
     {
-        public override DName Name { get { return Node.AsFirstName().Ident.Name; } }
+        public override DName Name => Node.AsFirstName().Ident.Name;
 
         // Nesting level of where this name is defined.
         // Negative values mean "up".
@@ -38,11 +38,11 @@ namespace Microsoft.PowerFx.Core.Binding.BindInfo
         public readonly DName DataControlName;
 
         private readonly Lazy<Dictionary<ExpandPath, ExpandQueryOptions>> _dataQueryOptions;
-        public Dictionary<ExpandPath, ExpandQueryOptions> DataQueryOptions { get { return _dataQueryOptions.Value; } }
+        public Dictionary<ExpandPath, ExpandQueryOptions> DataQueryOptions => _dataQueryOptions.Value;
 
         // The number of containing scopes up where the name is defined.
         // 0 refers to the current/innermost scope, a higher number refers to a parent/ancestor scope.
-        public int UpCount { get { return NestSrc - NestDst; } }
+        public int UpCount => NestSrc - NestDst;
 
         private FirstNameInfo(BindKind kind, FirstNameNode node, int nestDst, int nestCur, DPath path, object data, DName dataControlName, bool isDataControlAccess)
             : base(kind, node)

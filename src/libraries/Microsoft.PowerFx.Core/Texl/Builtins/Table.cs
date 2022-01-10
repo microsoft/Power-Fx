@@ -47,14 +47,14 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertValue(errors);
             Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
 
-            bool isValid = base.CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            var isValid = base.CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
             Contracts.Assert(returnType.IsTable);
 
             // Ensure that all args (if any) are records with compatible schemas.
-            DType rowType = DType.EmptyRecord;
-            for (int i = 0; i < argTypes.Length; i++)
+            var rowType = DType.EmptyRecord;
+            for (var i = 0; i < argTypes.Length; i++)
             {
-                DType argType = argTypes[i];
+                var argType = argTypes[i];
                 if (!argType.IsRecord)
                 {
                     errors.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.ErrNeedRecord);
@@ -67,7 +67,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 }
                 else
                 {
-                    bool isUnionError = false;
+                    var isUnionError = false;
                     rowType = DType.Union(ref isUnionError, rowType, argType);
                     Contracts.Assert(!isUnionError);
                     Contracts.Assert(rowType.IsRecord);

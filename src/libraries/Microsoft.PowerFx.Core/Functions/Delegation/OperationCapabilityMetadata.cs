@@ -57,18 +57,16 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation
     // Base class for all implementations of delegatable operation metadata.
     internal abstract class OperationCapabilityMetadata
     {
-        private readonly DType _tableSchema;
-
         public OperationCapabilityMetadata(DType schema)
         {
             Contracts.AssertValid(schema);
 
-            _tableSchema = schema;
+            Schema = schema;
         }
 
-        protected virtual Dictionary<DPath, DelegationCapability> ColumnRestrictions { get { return new Dictionary<DPath, DelegationCapability>(); } }
+        protected virtual Dictionary<DPath, DelegationCapability> ColumnRestrictions => new Dictionary<DPath, DelegationCapability>();
 
-        public virtual Dictionary<DPath, DPath> QueryPathReplacement { get { return new Dictionary<DPath, DPath>(); } }
+        public virtual Dictionary<DPath, DPath> QueryPathReplacement => new Dictionary<DPath, DPath>();
 
         public abstract DelegationCapability DefaultColumnCapabilities { get; }
 
@@ -85,7 +83,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation
             return false;
         }
 
-        public DType Schema { get { return _tableSchema; } }
+        public DType Schema { get; }
 
         public virtual bool TryGetColumnCapabilities(DPath columnPath, out DelegationCapability capabilities)
         {
@@ -93,7 +91,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation
 
             // Check if it's a valid column name. As capabilities are not defined for all columns, we need to do this check.
             DType _;
-            if (!_tableSchema.TryGetType(columnPath, out _))
+            if (!Schema.TryGetType(columnPath, out _))
             {
                 capabilities = DelegationCapability.None;
                 return false;
@@ -101,8 +99,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation
 
             capabilities = DefaultColumnCapabilities;
 
-            DelegationCapability restrictions;
-            if (TryGetColumnRestrictions(columnPath, out restrictions))
+            if (TryGetColumnRestrictions(columnPath, out var restrictions))
                 capabilities &= ~restrictions;
 
             return true;
@@ -113,19 +110,17 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation
             Contracts.AssertValid(columnPath);
 
             // Only the first part of the path can have been renamed
-            string logicalName;
-            if (DType.TryGetLogicalNameForColumn(_tableSchema, columnPath[0], out logicalName))
+            if (DType.TryGetLogicalNameForColumn(Schema, columnPath[0], out var logicalName))
             {
                 var renamedColumnPath = DPath.Root;
                 renamedColumnPath = renamedColumnPath.Append(new DName(logicalName));
-                for (int i = 1; i < columnPath.Length; ++i)
+                for (var i = 1; i < columnPath.Length; ++i)
                     renamedColumnPath = renamedColumnPath.Append(new DName(columnPath[i]));
 
                 columnPath = renamedColumnPath;
             }
 
-            DelegationCapability columnCapabilities;
-            return TryGetColumnCapabilities(columnPath, out columnCapabilities) && columnCapabilities.HasCapability(delegationCapability.Capabilities);
+            return TryGetColumnCapabilities(columnPath, out var columnCapabilities) && columnCapabilities.HasCapability(delegationCapability.Capabilities);
         }
 
         public virtual bool IsDelegationSupportedByTable(DelegationCapability delegationCapability)

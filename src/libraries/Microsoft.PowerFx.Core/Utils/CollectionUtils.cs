@@ -11,7 +11,7 @@ namespace Microsoft.PowerFx.Core.Utils
     {
         public static void Swap<T>(ref T a, ref T b)
         {
-            T c = a;
+            var c = a;
             a = b;
             b = c;
         }
@@ -71,7 +71,7 @@ namespace Microsoft.PowerFx.Core.Utils
             Contracts.AssertValueOrNull(map);
             if (map == null)
             {
-                value = default(V);
+                value = default;
                 return false;
             }
             return map.TryGetValue(key, out value);
@@ -142,7 +142,7 @@ namespace Microsoft.PowerFx.Core.Utils
         public static T[] ToArray<T>(List<T> list)
         {
             Contracts.AssertValueOrNull(list);
-            return list == null ? null : list.ToArray();
+            return list?.ToArray();
         }
 
         public static void Sort<T>(List<T> list)

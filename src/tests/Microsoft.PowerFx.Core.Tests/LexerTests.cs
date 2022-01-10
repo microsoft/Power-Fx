@@ -19,9 +19,8 @@ namespace Microsoft.PowerFx.Core.Tests
         [Fact]
         public void TestTryNameOrIdentifierToName()
         {
-            DName name;
 
-            Assert.True(TexlLexer.TryNameOrIdentifierToName(" Name   ", out name));
+            Assert.True(TexlLexer.TryNameOrIdentifierToName(" Name   ", out var name));
             Assert.Equal("Name", name);
 
             Assert.True(TexlLexer.TryNameOrIdentifierToName(" Name   Abcd ", out name));
@@ -68,7 +67,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
         internal static bool IsInRangeInclusive(char ch, Tuple<char, char>[] range)
         {
-            for (int i = 0; i < range.Length; i++)
+            for (var i = 0; i < range.Length; i++)
             {
                 if (range[i].Item1 <= ch && ch <= range[i].Item2)
                     return true;
@@ -79,16 +78,16 @@ namespace Microsoft.PowerFx.Core.Tests
         [Fact]
         public void TestIsIdentStart()
         {
-            Tuple<char, char>[] identStartRanges = new Tuple<char, char>[] {
+            var identStartRanges = new Tuple<char, char>[] {
                 Tuple.Create('A', 'Z'),
                 Tuple.Create('a', 'z'),
                 Tuple.Create('_', '_'),
                 Tuple.Create('\'', '\''),
             };
 
-            for (int i = 0; i < 128; i++)
+            for (var i = 0; i < 128; i++)
             {
-                char ch = (char)i;
+                var ch = (char)i;
                 Assert.Equal(LexerTest.IsInRangeInclusive(ch, identStartRanges), TexlLexer.IsIdentStart(ch));
             }
         }
@@ -414,7 +413,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("abc", 0, 3, "abc")]
         public void TestLexGetFragment(string script, int min, int lim, string fragment)
         {
-            Span span = new Span(min, lim);
+            var span = new Span(min, lim);
             Assert.Equal(fragment, span.GetFragment(script));
         }
 
@@ -444,9 +443,9 @@ namespace Microsoft.PowerFx.Core.Tests
         {
             // GetUnaryOperatorKeywords
 
-            string[] unaryOperatorKeywords = TexlLexer.LocalizedInstance.GetUnaryOperatorKeywords();
+            var unaryOperatorKeywords = TexlLexer.LocalizedInstance.GetUnaryOperatorKeywords();
 
-            int expectedUOKeywordLength = 1;
+            var expectedUOKeywordLength = 1;
             Assert.True(unaryOperatorKeywords.Contains(TexlLexer.KeywordNot));
             expectedUOKeywordLength += 1;
 
@@ -454,8 +453,8 @@ namespace Microsoft.PowerFx.Core.Tests
 
             // GetBinaryOperatorKeywords
 
-            string[] binaryOperatorKeywords = TexlLexer.LocalizedInstance.GetBinaryOperatorKeywords();
-            int expectedBOKeywordLength = 17;
+            var binaryOperatorKeywords = TexlLexer.LocalizedInstance.GetBinaryOperatorKeywords();
+            var expectedBOKeywordLength = 17;
 
             expectedBOKeywordLength += 2;
             Assert.True(binaryOperatorKeywords.Contains(TexlLexer.KeywordAnd));
@@ -483,9 +482,9 @@ namespace Microsoft.PowerFx.Core.Tests
             // GetOperatorKeywords
 
             // Primitive type.
-            string[] primitiveOperatorKeywords = TexlLexer.LocalizedInstance.GetOperatorKeywords(new DType(DKind.Boolean));
+            var primitiveOperatorKeywords = TexlLexer.LocalizedInstance.GetOperatorKeywords(new DType(DKind.Boolean));
 
-            int expectedPOKeywordLength = 17;
+            var expectedPOKeywordLength = 17;
 
             expectedPOKeywordLength += 2;
             Assert.True(primitiveOperatorKeywords.Contains(TexlLexer.KeywordAnd));
@@ -511,19 +510,19 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.True(primitiveOperatorKeywords.Contains(TexlLexer.KeywordExactin));
 
             // Aggregate/Control type.
-            string[] aggregateOperatorKeywords = TexlLexer.LocalizedInstance.GetOperatorKeywords(new DType(DKind.Table));
+            var aggregateOperatorKeywords = TexlLexer.LocalizedInstance.GetOperatorKeywords(new DType(DKind.Table));
             Assert.True(aggregateOperatorKeywords?.Length == 3);
             Assert.True(aggregateOperatorKeywords.Contains(TexlLexer.KeywordIn));
             Assert.True(aggregateOperatorKeywords.Contains(TexlLexer.KeywordExactin));
             Assert.True(aggregateOperatorKeywords.Contains(TexlLexer.KeywordAs));
 
             // Not a primitive nor an aggregate type.
-            string[] errorOperatorKeywords = TexlLexer.LocalizedInstance.GetOperatorKeywords(new DType(DKind.Error));
+            var errorOperatorKeywords = TexlLexer.LocalizedInstance.GetOperatorKeywords(new DType(DKind.Error));
             Assert.True(errorOperatorKeywords?.Length == 0);
 
             // GetConstantKeywords
 
-            string[] constantKeywords = TexlLexer.LocalizedInstance.GetConstantKeywords(getParent: false);
+            var constantKeywords = TexlLexer.LocalizedInstance.GetConstantKeywords(getParent: false);
             Assert.True(constantKeywords?.Length == 3);
             Assert.True(constantKeywords.Contains(TexlLexer.KeywordFalse));
             Assert.True(constantKeywords.Contains(TexlLexer.KeywordTrue));
@@ -538,7 +537,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
             // GetPunctuatorsAndInvariants
 
-            IDictionary<string, string> punctuatorsAndInvariants = TexlLexer.LocalizedInstance.GetPunctuatorsAndInvariants();
+            var punctuatorsAndInvariants = TexlLexer.LocalizedInstance.GetPunctuatorsAndInvariants();
             Assert.True(punctuatorsAndInvariants?.Count == 3);
             Assert.True(punctuatorsAndInvariants.ContainsKey(TexlLexer.LocalizedInstance.LocalizedPunctuatorDecimalSeparator));
             Assert.True(punctuatorsAndInvariants.ContainsKey(TexlLexer.LocalizedInstance.LocalizedPunctuatorListSeparator));
@@ -557,7 +556,7 @@ namespace Microsoft.PowerFx.Core.Tests
             CultureInfo.CurrentCulture = newCulture;
 
             // The lexer should fall back to the invariant separator.
-            TexlLexer lexer = TexlLexer.NewInstance(null);
+            var lexer = TexlLexer.NewInstance(null);
             Assert.Equal(lexer.LocalizedPunctuatorDecimalSeparator, TexlLexer.PunctuatorDecimalSeparatorInvariant);
 
             tokens = lexer.LexSource("123456.78");

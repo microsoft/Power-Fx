@@ -100,8 +100,7 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
                 requiresSuggestionEscaping = false;
                 foreach (var name in enumInfo.EnumType.GetNames(DPath.Root))
                 {
-                    string locName;
-                    enumInfo.TryGetLocValueName(name.Name.Value, out locName).Verify();
+                    enumInfo.TryGetLocValueName(name.Name.Value, out var locName).Verify();
                     retVal.Add(new KeyValuePair<string, DType>(TexlLexer.EscapeName(enumInfo.Name) + TexlLexer.PunctuatorDot + TexlLexer.EscapeName(locName), name.Type));
                 }
 
@@ -166,8 +165,7 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
                 Contracts.AssertValue(enumInfo);
                 foreach (var name in enumInfo.EnumType.GetNames(DPath.Root))
                 {
-                    string locName;
-                    enumInfo.TryGetLocValueName(name.Name.Value, out locName).Verify();
+                    enumInfo.TryGetLocValueName(name.Name.Value, out var locName).Verify();
                     if (suggestUnqualifedEnums)
                     {
                         retVal.Add(new KeyValuePair<string, DType>(TexlLexer.EscapeName(locName), name.Type));

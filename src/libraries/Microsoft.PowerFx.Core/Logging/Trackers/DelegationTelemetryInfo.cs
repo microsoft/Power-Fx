@@ -14,16 +14,14 @@ namespace Microsoft.PowerFx.Core.Logging.Trackers
 {
     internal sealed class DelegationTelemetryInfo
     {
-        private readonly string _info;
-
         private DelegationTelemetryInfo(string info)
         {
             Contracts.AssertValue(info);
 
-            _info = info;
+            Info = info;
         }
 
-        public string Info => _info;
+        public string Info { get; }
 
         public static DelegationTelemetryInfo CreateEmptyDelegationTelemetryInfo()
         {

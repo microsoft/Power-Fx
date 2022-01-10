@@ -23,7 +23,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     {
         public override bool RequiresErrorContext => true;
 
-        public override DelegationCapability FunctionDelegationCapability { get { return DelegationCapability.Sum; } }
+        public override DelegationCapability FunctionDelegationCapability => DelegationCapability.Sum;
 
         public SumTableFunction()
             : base("Sum", TexlStrings.AboutSumT, FunctionCategories.Table)

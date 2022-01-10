@@ -56,10 +56,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
 
             // Check if table arg referrs to a connected data source.
-            TexlNode tableArg = args[1];
-            FirstNameInfo tableInfo;
+            var tableArg = args[1];
             IExternalDataSource tableDsInfo;
-            if (!binding.TryGetFirstNameInfo(tableArg.Id, out tableInfo) ||
+            if (!binding.TryGetFirstNameInfo(tableArg.Id, out var tableInfo) ||
                 (tableDsInfo = (tableInfo.Data as IExternalDataSource)) == null ||
                 !(tableDsInfo is IExternalTabularDataSource))
             {

@@ -414,15 +414,15 @@ namespace Microsoft.PowerFx.Functions
 
         private static BooleanValue AreEqual(IRContext irContext, FormulaValue[] args)
         {
-            FormulaValue arg1 = args[0];
-            FormulaValue arg2 = args[1];
+            var arg1 = args[0];
+            var arg2 = args[1];
             return new BooleanValue(irContext, RuntimeHelpers.AreEqual(arg1, arg2));
         }
 
         private static BooleanValue NotEqual(IRContext irContext, FormulaValue[] args)
         {
-            FormulaValue arg1 = args[0];
-            FormulaValue arg2 = args[1];
+            var arg1 = args[0];
+            var arg2 = args[1];
             return new BooleanValue(irContext, !RuntimeHelpers.AreEqual(arg1, arg2));
         }
 
@@ -466,7 +466,7 @@ namespace Microsoft.PowerFx.Functions
                     left = strLhs.ToLower();
                 }
 
-                TableValue source = (TableValue)right;
+                var source = (TableValue)right;
 
                 foreach (var row in source.Rows)
                 {

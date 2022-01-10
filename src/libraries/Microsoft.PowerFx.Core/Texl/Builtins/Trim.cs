@@ -32,7 +32,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             : base("TrimEnds", TexlStrings.AboutTrimEnds, FunctionCategories.Text)
         { }
 
-        public override DelegationCapability FunctionDelegationCapability { get { return DelegationCapability.Trim; } }
+        public override DelegationCapability FunctionDelegationCapability => DelegationCapability.Trim;
 
         public override bool IsRowScopedServerDelegatable(CallNode callNode, TexlBinding binding, OperationCapabilityMetadata metadata)
         {

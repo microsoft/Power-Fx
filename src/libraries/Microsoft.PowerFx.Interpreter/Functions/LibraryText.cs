@@ -74,7 +74,7 @@ namespace Microsoft.PowerFx.Functions
             var arg0 = (TableValue)args[0];
             var arg1 = (LambdaFormulaValue)args[1];
 
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
 
             foreach (var row in arg0.Rows)
             {
@@ -97,7 +97,7 @@ namespace Microsoft.PowerFx.Functions
         // Operator & maps to this function call. 
         public static FormulaValue Concatenate(IRContext irContext, StringValue[] args)
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
 
             foreach (var arg in args)
             {
@@ -264,13 +264,13 @@ namespace Microsoft.PowerFx.Functions
         public static FormulaValue Mid(IRContext irContext, FormulaValue[] args)
         {
             var errors = new List<ErrorValue>();
-            NumberValue start = (NumberValue)args[1];
+            var start = (NumberValue)args[1];
             if (double.IsNaN(start.Value) || double.IsInfinity(start.Value) || start.Value <= 0)
             {
                 errors.Add(CommonErrors.ArgumentOutOfRange(start.IRContext));
             }
 
-            NumberValue count = (NumberValue)args[2];
+            var count = (NumberValue)args[2];
             if (double.IsNaN(count.Value) || double.IsInfinity(count.Value) || count.Value < 0)
             {
                 errors.Add(CommonErrors.ArgumentOutOfRange(count.IRContext));
@@ -281,7 +281,7 @@ namespace Microsoft.PowerFx.Functions
                 return ErrorValue.Combine(irContext, errors);
             }
 
-            StringValue source = (StringValue)args[0];
+            var source = (StringValue)args[0];
             var start0Based = (int)(start.Value - 1);
             if (source.Value == "" || start0Based >= source.Value.Length)
             {
@@ -296,8 +296,8 @@ namespace Microsoft.PowerFx.Functions
 
         public static FormulaValue Left(IRContext irContext, FormulaValue[] args)
         {
-            StringValue source = (StringValue)args[0];
-            NumberValue count = (NumberValue)args[1];
+            var source = (StringValue)args[0];
+            var count = (NumberValue)args[1];
 
             if (count.Value >= source.Value.Length)
             {
@@ -309,8 +309,8 @@ namespace Microsoft.PowerFx.Functions
 
         public static FormulaValue Right(IRContext irContext, FormulaValue[] args)
         {
-            StringValue source = (StringValue)args[0];
-            NumberValue count = (NumberValue)args[1];
+            var source = (StringValue)args[0];
+            var count = (NumberValue)args[1];
 
             if(count.Value == 0)
             {
@@ -327,10 +327,10 @@ namespace Microsoft.PowerFx.Functions
 
         private static FormulaValue Replace(IRContext irContext, FormulaValue[] args)
         {
-            StringValue source = (StringValue)args[0];
-            NumberValue start = (NumberValue)args[1];
-            NumberValue count = (NumberValue)args[2];
-            StringValue replacement = (StringValue)args[3];
+            var source = (StringValue)args[0];
+            var start = (NumberValue)args[1];
+            var count = (NumberValue)args[2];
+            var replacement = (StringValue)args[3];
 
             var start0Based = (int)(start.Value - 1);
             var prefix = start0Based < source.Value.Length ? source.Value.Substring(0, start0Based) : source.Value;
@@ -357,17 +357,17 @@ namespace Microsoft.PowerFx.Functions
 
         private static FormulaValue Substitute(IRContext irContext, FormulaValue[] args)
         {
-            StringValue source = (StringValue)args[0];
+            var source = (StringValue)args[0];
 
             if (args[1] is BlankValue || (args[1] is StringValue sv && string.IsNullOrEmpty(sv.Value)))
             {
                 return source;
             }
 
-            StringValue match = (StringValue)args[1];
-            StringValue replacement = (StringValue)args[2];
+            var match = (StringValue)args[1];
+            var replacement = (StringValue)args[2];
 
-            int instanceNum = -1;
+            var instanceNum = -1;
             if (args[3] is NumberValue nv)
             {
                 instanceNum = (int)nv.Value;
@@ -419,23 +419,23 @@ namespace Microsoft.PowerFx.Functions
 
         public static FormulaValue StartsWith(IRContext irContext, StringValue[] args)
         {
-            StringValue text = args[0];
-            StringValue start = args[1];
+            var text = args[0];
+            var start = args[1];
 
             return new BooleanValue(irContext, text.Value.StartsWith(start.Value));
         }
 
         public static FormulaValue EndsWith(IRContext irContext, StringValue[] args)
         {
-            StringValue text = args[0];
-            StringValue end = args[1];
+            var text = args[0];
+            var end = args[1];
 
             return new BooleanValue(irContext, text.Value.EndsWith(end.Value));
         }
 
         public static FormulaValue Trim(IRContext irContext, StringValue[] args)
         {
-            StringValue text = args[0];
+            var text = args[0];
 
             // Remove all whitespace except ASCII 10, 11, 12, 13 and 160, then trim to follow Excel's behavior
             var regex = new Regex(@"[^\S\xA0\n\v\f\r]+");
@@ -447,7 +447,7 @@ namespace Microsoft.PowerFx.Functions
 
         public static FormulaValue TrimEnds(IRContext irContext, StringValue[] args)
         {
-            StringValue text = args[0];
+            var text = args[0];
 
             var result = text.Value.Trim();
 

@@ -10,7 +10,7 @@ namespace Microsoft.PowerFx.Core.Utils
     {
         public readonly object Object;
 
-        public bool IsValid { get { return Object != null; } }
+        public bool IsValid => Object != null;
 
         public EquatableObject(object obj)
         {
@@ -43,7 +43,7 @@ namespace Microsoft.PowerFx.Core.Utils
 
         public override int GetHashCode()
         {
-            int hash = 0x54A0F261;
+            var hash = 0x54A0F261;
             if (Object != null)
                 hash = Hashing.CombineHash(hash, Object.GetHashCode());
             return hash;
@@ -54,7 +54,7 @@ namespace Microsoft.PowerFx.Core.Utils
             Contracts.AssertValue(sb);
             if (Object == null)
                 sb.Append("null");
-            bool isString = Object is string;
+            var isString = Object is string;
             if (isString)
                 sb.Append("\"");
             sb.Append(Object);

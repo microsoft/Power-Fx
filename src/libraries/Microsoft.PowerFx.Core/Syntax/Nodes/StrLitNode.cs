@@ -36,7 +36,7 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
             return visitor.Visit(this, context);
         }
 
-        public override NodeKind Kind { get { return NodeKind.StrLit; } }
+        public override NodeKind Kind => NodeKind.StrLit;
 
         public override StrLitNode AsStrLit()
         {

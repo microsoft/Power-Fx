@@ -17,10 +17,10 @@ namespace Microsoft.PowerFx.Core.Utils
             if (ivLim - ivMin <= 1)
                 return;
 
-            int ivDst = ivMin + 1;
-            for (int ivSrc = ivMin + 1; ivSrc < ivLim; ivSrc++)
+            var ivDst = ivMin + 1;
+            for (var ivSrc = ivMin + 1; ivSrc < ivLim; ivSrc++)
             {
-                T itemCur = rgv[ivSrc];
+                var itemCur = rgv[ivSrc];
                 if (!cmp(rgv[ivDst - 1], itemCur))
                 {
                     if (ivDst < ivSrc)

@@ -19,8 +19,8 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense{
             {
                 Contracts.AssertValue(intellisenseData);
 
-                TexlNode curNode = intellisenseData.CurNode;
-                int cursorPos = intellisenseData.CursorPos;
+                var curNode = intellisenseData.CurNode;
+                var cursorPos = intellisenseData.CursorPos;
 
                 var tokenSpan = curNode.Token.Span;
 

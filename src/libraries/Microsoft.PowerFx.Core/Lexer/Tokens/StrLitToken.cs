@@ -8,13 +8,11 @@ namespace Microsoft.PowerFx.Core.Lexer.Tokens
 {
     internal class StrLitToken : Token
     {
-        private readonly string _val;
-
         public StrLitToken(string val, Span span)
             : base(TokKind.StrLit, span)
         {
             Contracts.AssertValue(val);
-            _val = val;
+            Value = val;
         }
 
         /// <summary>
@@ -29,10 +27,10 @@ namespace Microsoft.PowerFx.Core.Lexer.Tokens
 
         public override string ToString()
         {
-            return _val;
+            return Value;
         }
 
-        public string Value { get { return _val; } }
+        public string Value { get; }
 
         public override Token Clone(Span ts)
         {

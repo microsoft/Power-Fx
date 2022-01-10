@@ -32,7 +32,7 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
             return new ParentNode(ref idNext, Token.Clone(ts));
         }
 
-        public override NodeKind Kind { get { return NodeKind.Parent; } }
+        public override NodeKind Kind => NodeKind.Parent;
 
         public override ParentNode AsParent()
         {

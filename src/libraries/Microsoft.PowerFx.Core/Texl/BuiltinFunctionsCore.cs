@@ -13,10 +13,7 @@ namespace Microsoft.PowerFx.Core.Texl
     // - just functions that are ported over to Language.Core
     internal class BuiltinFunctionsCore
     {
-        public static IEnumerable<TexlFunction> BuiltinFunctionsLibrary
-        {
-            get { return _library; }
-        }
+        public static IEnumerable<TexlFunction> BuiltinFunctionsLibrary => _library;
 
         private static readonly List<TexlFunction> _library = new List<TexlFunction>(200);
 

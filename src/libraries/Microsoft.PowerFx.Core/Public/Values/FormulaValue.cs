@@ -185,7 +185,7 @@ namespace Microsoft.PowerFx.Core.Public.Values
                 using var document = JsonDocument.Parse(jsonString);
                 using var jsonMemStream = new MemoryStream();
                 using var paJsonWriter = new Utf8JsonWriter(jsonMemStream);
-                JsonElement propBag = document.RootElement;
+                var propBag = document.RootElement;
 
                 return FromJson(propBag);
             }
@@ -241,7 +241,7 @@ namespace Microsoft.PowerFx.Core.Public.Values
 
         public static RecordValue RecordFromProperties(object obj, Type type)
         {
-            RecordValue r = RecordFromFields(
+            var r = RecordFromFields(
                 from prop in type.GetProperties(BindingFlags.Public | BindingFlags.Instance)
                 let fieldValue = prop.GetValue(obj)
                 select new NamedValue(prop.Name, New(fieldValue, prop.PropertyType)));
@@ -284,13 +284,13 @@ namespace Microsoft.PowerFx.Core.Public.Values
         {
             Contract.Assert(element.ValueKind == JsonValueKind.Object);
 
-            List<NamedValue> fields = new List<NamedValue>();
+            var fields = new List<NamedValue>();
             var type = new RecordType();
 
             foreach (var pair in element.EnumerateObject())
             {
                 var name = pair.Name;
-                JsonElement value = pair.Value;
+                var value = pair.Value;
 
                 var paValue = FromJson(value);
                 fields.Add(new NamedValue(name, paValue));
@@ -358,7 +358,7 @@ namespace Microsoft.PowerFx.Core.Public.Values
             // Handle the single-column-table case. 
             var defaultField = new NamedValue("Value", rawVal);
 
-            RecordValue val = RecordFromFields(defaultField);
+            var val = RecordFromFields(defaultField);
             return val;
         }
 
@@ -370,7 +370,7 @@ namespace Microsoft.PowerFx.Core.Public.Values
         {
             Contract.Assert(array.ValueKind == JsonValueKind.Array);
 
-            List<RecordValue> records = new List<RecordValue>();
+            var records = new List<RecordValue>();
 
             for (var i = 0; i < array.GetArrayLength(); ++i)
             {

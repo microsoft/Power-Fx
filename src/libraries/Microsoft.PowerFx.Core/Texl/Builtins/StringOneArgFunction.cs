@@ -47,8 +47,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 return false;
             }
 
-            TexlNode[] args = callNode.Args.Children.VerifyValue();
-            NodeKind argKind = args[0].VerifyValue().Kind;
+            var args = callNode.Args.Children.VerifyValue();
+            var argKind = args[0].VerifyValue().Kind;
 
             switch (argKind)
             {
@@ -106,7 +106,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.Assert(args.Length == 1);
             Contracts.AssertValue(errors);
 
-            bool fValid = base.CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            var fValid = base.CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
             Contracts.Assert(returnType.IsTable);
 
             // Typecheck the input table

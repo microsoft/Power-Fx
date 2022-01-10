@@ -20,7 +20,7 @@ namespace Microsoft.PowerFx.Core.Public.Values
         {
             Contract.Assert(value != null);
 
-            this._value = value;
+            _value = value;
         }
 
         public override object ToObject()

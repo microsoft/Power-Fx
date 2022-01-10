@@ -37,10 +37,7 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
         }
 
         // This may be null, in which case, NumValue should be used.
-        public NumLitToken Value
-        {
-            get { return Token as NumLitToken; }
-        }
+        public NumLitToken Value => Token as NumLitToken;
 
         public override void Accept(TexlVisitor visitor)
         {
@@ -53,7 +50,7 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
             return visitor.Visit(this, context);
         }
 
-        public override NodeKind Kind { get { return NodeKind.NumLit; } }
+        public override NodeKind Kind => NodeKind.NumLit;
 
         public override NumLitNode AsNumLit()
         {

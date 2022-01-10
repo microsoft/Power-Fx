@@ -9,8 +9,8 @@ namespace Microsoft.PowerFx.Core.UtilityDataStructures
 {
     internal class BidirectionalDictionary<TFirst, TSecond>: IEnumerable<KeyValuePair<TFirst,TSecond>>
     {
-        private IDictionary<TFirst, TSecond> _firstToSecond;
-        private IDictionary<TSecond, TFirst> _secondToFirst;
+        private readonly IDictionary<TFirst, TSecond> _firstToSecond;
+        private readonly IDictionary<TSecond, TFirst> _secondToFirst;
 
         public BidirectionalDictionary()
         {
@@ -56,8 +56,7 @@ namespace Microsoft.PowerFx.Core.UtilityDataStructures
 
         public bool TryRemoveFromFirst(TFirst first)
         {
-            TSecond second;
-            if (_firstToSecond.TryGetValue(first, out second))
+            if (_firstToSecond.TryGetValue(first, out var second))
             {
                 return _firstToSecond.Remove(first) && _secondToFirst.Remove(second);
             }
@@ -66,8 +65,7 @@ namespace Microsoft.PowerFx.Core.UtilityDataStructures
 
         public bool TryRemoveFromSecond(TSecond second)
         {
-            TFirst first;
-            if (_secondToFirst.TryGetValue(second, out first))
+            if (_secondToFirst.TryGetValue(second, out var first))
             {
                 return _firstToSecond.Remove(first) && _secondToFirst.Remove(second);
             }
@@ -90,15 +88,13 @@ namespace Microsoft.PowerFx.Core.UtilityDataStructures
             return _firstToSecond.GetEnumerator();
         }
 
-        public IEnumerable<TFirst> Keys { get { return _firstToSecond.Keys; } }
+        public IEnumerable<TFirst> Keys => _firstToSecond.Keys;
 
-        public IEnumerable<TSecond> Values { get { return _firstToSecond.Values; } }
+        public IEnumerable<TSecond> Values => _firstToSecond.Values;
 
         public override bool Equals(object obj)
         {
-            var other = obj as BidirectionalDictionary<TFirst, TSecond>;
-
-            return other != null && other._firstToSecond.Count == _firstToSecond.Count && !other._firstToSecond.Except(_firstToSecond).Any();
+            return obj is BidirectionalDictionary<TFirst, TSecond> other && other._firstToSecond.Count == _firstToSecond.Count && !other._firstToSecond.Except(_firstToSecond).Any();
         }
 
         public override int GetHashCode()

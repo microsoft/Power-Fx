@@ -12,12 +12,12 @@ namespace Microsoft.PowerFx.Functions
 {
     partial class Library
     {
-        private static DateTime _epoch = new DateTime(1899, 12, 30, 0, 0, 0, 0);
+        private static readonly DateTime _epoch = new DateTime(1899, 12, 30, 0, 0, 0, 0);
 
         public static IReadOnlyDictionary<UnaryOpKind, FunctionPtr> UnaryOps => _unaryOps;
 
         #region Standard Error Handling Wrappers for Unary Operators
-        private static Dictionary<UnaryOpKind, FunctionPtr> _unaryOps = new Dictionary<UnaryOpKind, FunctionPtr>()
+        private static readonly Dictionary<UnaryOpKind, FunctionPtr> _unaryOps = new Dictionary<UnaryOpKind, FunctionPtr>()
         {
             {
                 UnaryOpKind.Negate,

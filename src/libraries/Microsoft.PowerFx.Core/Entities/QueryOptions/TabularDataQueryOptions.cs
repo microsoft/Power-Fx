@@ -13,15 +13,15 @@ namespace Microsoft.PowerFx.Core.Entities.QueryOptions
     internal sealed class TabularDataQueryOptions
     {
         public IExternalTabularDataSource TabularDataSourceInfo { get; }
-        
-        public IEnumerable<string> Selects { get { return _selects; } }
+
+        public IEnumerable<string> Selects => _selects;
 
         private HashSet<string> _selects { get; }
 
         /// <summary>
         /// List of navigation datasources and their query options
         /// </summary>
-        public IReadOnlyDictionary<ExpandPath, ExpandQueryOptions> Expands { get { return _expandQueryOptions; } }
+        public IReadOnlyDictionary<ExpandPath, ExpandQueryOptions> Expands => _expandQueryOptions;
 
         private Dictionary<ExpandPath, ExpandQueryOptions> _expandQueryOptions { get; }
 
@@ -82,7 +82,7 @@ namespace Microsoft.PowerFx.Core.Entities.QueryOptions
             var selectColumnNames = new HashSet<string>(_selects);
             foreach (var select in selectColumnNames)
             {
-                if (cdsDataSourceInfo.TryGetRelatedColumn(select, out string additionalColumnName) && !_selects.Contains(additionalColumnName))
+                if (cdsDataSourceInfo.TryGetRelatedColumn(select, out var additionalColumnName) && !_selects.Contains(additionalColumnName))
                 {
                     // Add the Annotated value in case a navigation field is referred in selects. (ex: if the Datasource is Accounts and primarycontactid is in selects also append _primarycontactid_value)
                     _selects.Add(additionalColumnName);
@@ -110,7 +110,7 @@ namespace Microsoft.PowerFx.Core.Entities.QueryOptions
                 return false;
             var CdsDataSourceInfo = TabularDataSourceInfo as IExternalCdsDataSource;
             if (_selects.Contains(selectColumnName)
-                || !CdsDataSourceInfo.TryGetRelatedColumn(selectColumnName, out string additionalColumnName) || additionalColumnName == null
+                || !CdsDataSourceInfo.TryGetRelatedColumn(selectColumnName, out var additionalColumnName) || additionalColumnName == null
                 || _selects.Contains(additionalColumnName))
             {
                 return false;
@@ -139,7 +139,7 @@ namespace Microsoft.PowerFx.Core.Entities.QueryOptions
 
         private bool AddExpand(ExpandPath expandPath, ExpandQueryOptions expandQueryOptions)
         {
-            this._expandQueryOptions.Add(expandPath, expandQueryOptions);
+            _expandQueryOptions.Add(expandPath, expandQueryOptions);
             return true;
         }
 
@@ -196,7 +196,7 @@ namespace Microsoft.PowerFx.Core.Entities.QueryOptions
                 return false;
             }
 
-            bool isOriginalModified = false;
+            var isOriginalModified = false;
             // Update selectedfields first.
             foreach (var selectedFieldToAdd in added.Selects)
             {

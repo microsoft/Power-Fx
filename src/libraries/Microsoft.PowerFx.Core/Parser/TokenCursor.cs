@@ -101,7 +101,7 @@ namespace Microsoft.PowerFx.Core.Parser
         public Token TokMove()
         {
             AssertValid();
-            Token tok = _currentToken;
+            var tok = _currentToken;
             if (_currentTokenId != TokKind.Eof)
                 MoveTo(_currentTokenIndex + 1);
             return tok;
@@ -121,7 +121,7 @@ namespace Microsoft.PowerFx.Core.Parser
         {
             AssertValid();
 
-            int itok = ItokPeek(ditok);
+            var itok = ItokPeek(ditok);
             Contracts.AssertIndex(_currentTokenIndex, _tokenCount);
             return _tokens[itok].Kind;
         }
@@ -146,7 +146,7 @@ namespace Microsoft.PowerFx.Core.Parser
         {
             AssertValid();
 
-            int itokPeek = _currentTokenIndex + ditok;
+            var itokPeek = _currentTokenIndex + ditok;
             if (itokPeek >= _tokenCount)
                 return _tokenCount - 1;
             if (itokPeek < 0)

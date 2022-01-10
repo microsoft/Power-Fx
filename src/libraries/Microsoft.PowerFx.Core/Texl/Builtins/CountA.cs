@@ -37,10 +37,10 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertValue(errors);
             Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
 
-            bool fValid = base.CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            var fValid = base.CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
 
             // The argument should be a table of one column.
-            DType argType = argTypes[0];
+            var argType = argTypes[0];
             if (!argType.IsTable)
             {
                 fValid = false;

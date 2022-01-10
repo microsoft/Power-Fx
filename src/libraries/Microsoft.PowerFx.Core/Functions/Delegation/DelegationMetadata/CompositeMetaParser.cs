@@ -23,7 +23,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationMetadata
             {
                 Contracts.AssertValid(schema);
 
-                List<OperationCapabilityMetadata> capabilities = new List<OperationCapabilityMetadata>();
+                var capabilities = new List<OperationCapabilityMetadata>();
                 foreach (var parser in _metaParsers)
                 {
                     var capabilityMetadata = parser.Parse(dataServiceCapabilitiesJsonObject, schema);

@@ -16,7 +16,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationMetadata
             {
                 Contracts.AssertValid(schema);
 
-                Dictionary<DPath, DelegationCapability> columnRestrictions = new Dictionary<DPath, DelegationCapability>();
+                var columnRestrictions = new Dictionary<DPath, DelegationCapability>();
                 if (!dataServiceCapabilitiesJsonObject.TryGetProperty(CapabilitiesConstants.Sort_Restriction, out var sortRestrictionJsonObject))
                     return null;
 

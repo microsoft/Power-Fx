@@ -20,7 +20,7 @@ namespace Microsoft.PowerFx.Core.Syntax.SourceInformation
         public IdentifierSource(Identifier identifier)
         {
             Contracts.AssertValue(identifier);
-            this.Identifier = identifier;
+            Identifier = identifier;
         }
 
         public ITexlSource Clone(Dictionary<TexlNode, TexlNode> newNodes, Span span)

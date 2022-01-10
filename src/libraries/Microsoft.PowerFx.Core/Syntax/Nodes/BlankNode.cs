@@ -11,7 +11,7 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
 {
     internal sealed class BlankNode : TexlNode
     {
-        public override NodeKind Kind { get { return NodeKind.Blank; } }
+        public override NodeKind Kind => NodeKind.Blank;
 
         public BlankNode(ref int idNext, Token primaryToken)
             : base(ref idNext, primaryToken, new SourceList(primaryToken))

@@ -19,11 +19,11 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense{
             {
                 Contracts.AssertValue(intellisenseData);
 
-                TexlNode curNode = intellisenseData.CurNode;
-                int cursorPos = intellisenseData.CursorPos;
+                var curNode = intellisenseData.CurNode;
+                var cursorPos = intellisenseData.CursorPos;
                 // Cursor is in the operation token or before.
                 // Suggest all value possibilities.
-                UnaryOpNode unaryOpNode = curNode.CastUnaryOp();
+                var unaryOpNode = curNode.CastUnaryOp();
                 var tokenSpan = unaryOpNode.Token.Span;
 
                 if (cursorPos < tokenSpan.Min)
@@ -31,7 +31,7 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense{
 
                 Contracts.Assert(cursorPos >= tokenSpan.Min || cursorPos <= tokenSpan.Lim);
 
-                string keyword = TexlParser.GetTokString(unaryOpNode.Token.Kind);
+                var keyword = TexlParser.GetTokString(unaryOpNode.Token.Kind);
                 Contracts.Assert(intellisenseData.MatchingLength <= keyword.Length);
 
                 var replacementLength = tokenSpan.Min == cursorPos ? 0 : tokenSpan.Lim - tokenSpan.Min;

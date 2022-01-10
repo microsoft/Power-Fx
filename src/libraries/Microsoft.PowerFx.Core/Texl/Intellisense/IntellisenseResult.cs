@@ -79,16 +79,16 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
             else
             {
                 IsFunctionScope = true;
-                int highlightStart = -1;
-                int highlightEnd = -1;
-                int minMatchingArgCount = int.MaxValue;
+                var highlightStart = -1;
+                var highlightEnd = -1;
+                var minMatchingArgCount = int.MaxValue;
                 foreach (var signature in func.GetSignatures(argCount))
                 {
-                    int signatureIndex = 0;
-                    string argumentSeparator = string.Empty;
-                    string highlightedFuncParamDescription = string.Empty;
-                    string listSep = TexlLexer.LocalizedInstance.LocalizedPunctuatorListSeparator + " ";
-                    StringBuilder funcDisplayString = new StringBuilder(func.Name);
+                    var signatureIndex = 0;
+                    var argumentSeparator = string.Empty;
+                    var highlightedFuncParamDescription = string.Empty;
+                    var listSep = TexlLexer.LocalizedInstance.LocalizedPunctuatorListSeparator + " ";
+                    var funcDisplayString = new StringBuilder(func.Name);
                     funcDisplayString.Append('(');
 
                     var parameters = new List<ParameterInformation>();
@@ -226,7 +226,6 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
 
             int highlightStart;
             int highlightEnd;
-            string funcParamDescription;
             var func = data.CurFunc;
             var argIndex = data.ArgIndex;
 
@@ -242,7 +241,7 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
             }
 
             // MUST use the invariant parameter name here
-            func.TryGetParamDescription(invariantParamName, out funcParamDescription);
+            func.TryGetParamDescription(invariantParamName, out var funcParamDescription);
 
             // Apply optional suffix provided via argument
             funcParamDescription += data.GenerateParameterDescriptionSuffix(func, paramName);
@@ -305,7 +304,7 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
         {
             get
             {
-                for (int i = 0; i < _suggestions.Count; i++)
+                for (var i = 0; i < _suggestions.Count; i++)
                     yield return _suggestions[i];
             }
         }
@@ -318,7 +317,7 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
         {
             get
             {
-                for (int i = 0; i < _functionOverloads.Count; i++)
+                for (var i = 0; i < _functionOverloads.Count; i++)
                     yield return _functionOverloads[i];
             }
         }

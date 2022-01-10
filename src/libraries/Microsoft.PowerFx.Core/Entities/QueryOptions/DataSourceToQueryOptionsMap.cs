@@ -28,7 +28,9 @@ namespace Microsoft.PowerFx.Core.Entities.QueryOptions
         {
             if (tabularDataSourceInfo == null
                 || _tabularDataQueryOptionsSet.ContainsKey(tabularDataSourceInfo.EntityName))
+            {
                 return false;
+            }
 
             _tabularDataQueryOptionsSet.Add(tabularDataSourceInfo.EntityName, new TabularDataQueryOptions(tabularDataSourceInfo));
             return true;

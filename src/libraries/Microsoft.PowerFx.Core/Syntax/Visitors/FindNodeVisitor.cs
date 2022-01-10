@@ -42,13 +42,13 @@ namespace Microsoft.PowerFx.Core.Syntax.Visitors
             Contracts.AssertValue(node);
             Contracts.Assert(node.Children.Length > 0);
 
-            int numTokens = CollectionUtils.Size(node.OpTokens);
+            var numTokens = CollectionUtils.Size(node.OpTokens);
 
             Contracts.Assert(node.Children.Length == numTokens + 1 || node.Children.Length == numTokens);
 
-            for (int i = 0; i < numTokens; i++)
+            for (var i = 0; i < numTokens; i++)
             {
-                Token token = node.OpTokens[i];
+                var token = node.OpTokens[i];
 
                 // Cursor position is inside ith child.
 
@@ -146,9 +146,9 @@ namespace Microsoft.PowerFx.Core.Syntax.Visitors
             Contracts.Assert(node.Children.Length > 0);
             Contracts.Assert(node.Children.Length == CollectionUtils.Size(node.Delimiters) + 1);
 
-            for (int i = 0; i < CollectionUtils.Size(node.Delimiters); i++)
+            for (var i = 0; i < CollectionUtils.Size(node.Delimiters); i++)
             {
-                Token tokDel = node.Delimiters[i];
+                var tokDel = node.Delimiters[i];
 
                 // Cursor position is inside ith child.
                 if (_cursorPosition <= tokDel.Span.Min)
@@ -194,11 +194,11 @@ namespace Microsoft.PowerFx.Core.Syntax.Visitors
             }
 
             // Cursor is between the open and closed curly.
-            int length = CollectionUtils.Size(node.Commas);
+            var length = CollectionUtils.Size(node.Commas);
 
-            for (int i = 0; i < length; i++)
+            for (var i = 0; i < length; i++)
             {
-                Token tokComma = node.Commas[i];
+                var tokComma = node.Commas[i];
 
                 // Cursor position is inside ith child.
                 if (_cursorPosition <= tokComma.Span.Min)
@@ -234,7 +234,7 @@ namespace Microsoft.PowerFx.Core.Syntax.Visitors
             }
 
             // Cursor is between the open and closed bracket.
-            for (int i = 0; i < node.Children.Length; i++)
+            for (var i = 0; i < node.Children.Length; i++)
             {
                 // Cursor position is inside ith child.
                 if (_cursorPosition <= node.Children[i].Token.Span.Lim)

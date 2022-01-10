@@ -26,7 +26,7 @@ namespace Microsoft.PowerFx.Core.Types
 
         public override string ToString()
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             sb.Append(Name);
             sb.Append(":");
             Type.AppendTo(sb);
@@ -61,6 +61,6 @@ namespace Microsoft.PowerFx.Core.Types
             return Hashing.CombineHash(Type.GetHashCode(), Name.GetHashCode());
         }
 
-        public bool IsValid { get { return Name.IsValid && Type.IsValid; } }
+        public bool IsValid => Name.IsValid && Type.IsValid;
     }
 }

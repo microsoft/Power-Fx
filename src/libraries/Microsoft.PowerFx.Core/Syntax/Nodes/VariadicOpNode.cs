@@ -31,7 +31,7 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
         {
             var children = CloneChildren(ref idNext, ts);
             var newNodes = new Dictionary<TexlNode, TexlNode>();
-            for (int i = 0; i < Children.Length; ++i)
+            for (var i = 0; i < Children.Length; ++i)
                 newNodes.Add(Children[i], children[i]);
 
             return new VariadicOpNode(ref idNext, Op, children, Clone(OpTokens, ts), SourceList.Clone(ts, newNodes));
@@ -52,7 +52,7 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
             return visitor.Visit(this, context);
         }
 
-        public override NodeKind Kind { get { return NodeKind.VariadicOp; } }
+        public override NodeKind Kind => NodeKind.VariadicOp;
 
         public override VariadicOpNode AsVariadicOp()
         {

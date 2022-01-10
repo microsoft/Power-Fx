@@ -42,8 +42,7 @@ namespace Microsoft.PowerFx.Core.Entities
 
         public static DataFormat[] GetValidDataFormats(DKind dkind)
         {
-            DataFormat[] validFormats;
-            return _validDataFormatsPerDKind.TryGetValue(dkind, out validFormats) ? validFormats : NoValidFormat;
+            return _validDataFormatsPerDKind.TryGetValue(dkind, out var validFormats) ? validFormats : NoValidFormat;
         }
     }
 
@@ -155,8 +154,8 @@ namespace Microsoft.PowerFx.Core.Entities
         public bool IsReadOnly { get; }
         public bool IsKey { get; }
         public bool IsRequired { get; }
-        public bool IsHidden { get { return _visibility == ColumnVisibility.Hidden || _visibility == ColumnVisibility.Internal; } }
-        public bool IsServerGenerated { get { return _kind == ColumnCreationKind.ServerGenerated; } }
+        public bool IsHidden => _visibility == ColumnVisibility.Hidden || _visibility == ColumnVisibility.Internal;
+        public bool IsServerGenerated => _kind == ColumnCreationKind.ServerGenerated;
         public AllowedValuesMetadata AllowedValues { get; }
         public string TitleColumnName { get; }
         public string SubtitleColumnName { get; }

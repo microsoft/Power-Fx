@@ -29,7 +29,7 @@ namespace Microsoft.PowerFx.Core.UtilityDataStructures
         public LazyList(T value)
         {
             Contracts.Assert(value != null);
-            this.values = new[] { value };
+            values = new[] { value };
         }
 
         /// <summary>

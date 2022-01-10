@@ -8,20 +8,18 @@ namespace Microsoft.PowerFx.Core.Lexer.Tokens
 {
     internal class ReplaceableToken : Token
     {
-        private readonly string _val;
-
         public ReplaceableToken(string val, Span span)
             : base(TokKind.ReplaceableLit, span)
         {
             Contracts.AssertValue(val);
-            _val = val;
+            Value = val;
         }
 
         protected ReplaceableToken(string value, TokKind kind, Span span)
             : base(kind, span)
         {
             Contracts.AssertValue(value);
-            _val = value;
+            Value = value;
         }
 
         protected ReplaceableToken(ReplaceableToken tok, Span newSpan)
@@ -29,9 +27,9 @@ namespace Microsoft.PowerFx.Core.Lexer.Tokens
         {
         }
 
-        public string Value => _val;
+        public string Value { get; }
 
-        public override string ToString() => _val;
+        public override string ToString() => Value;
 
         public override Token Clone(Span ts) => new ReplaceableToken(this, ts);
 

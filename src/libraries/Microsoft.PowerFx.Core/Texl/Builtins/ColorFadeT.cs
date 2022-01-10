@@ -45,12 +45,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertValue(errors);
             Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
 
-            bool fValid = base.CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            var fValid = base.CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
 
-            DType type0 = argTypes[0];
-            DType type1 = argTypes[1];
+            var type0 = argTypes[0];
+            var type1 = argTypes[1];
 
-            DType otherType = DType.Invalid;
+            var otherType = DType.Invalid;
             TexlNode otherArg = null;
 
             // At least one of the arguments has to be a table.

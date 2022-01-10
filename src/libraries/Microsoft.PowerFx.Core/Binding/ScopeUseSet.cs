@@ -18,7 +18,7 @@ namespace Microsoft.PowerFx.Core.Binding
         // maximum algorithmic complexity of O(n^64).
         public const int MaxUpCount = 63;
 
-        public static readonly ScopeUseSet GlobalsOnly = default(ScopeUseSet);
+        public static readonly ScopeUseSet GlobalsOnly = default;
 
         // 0 means only globals are used (default).
         // A value other than zero means lambda parameters are used, as follows:
@@ -58,7 +58,7 @@ namespace Microsoft.PowerFx.Core.Binding
             if (_levels == 0)
                 return ScopeUseSet.GlobalScopeLevel;
 
-            for (int i = 0; i <= MaxUpCount; i++)
+            for (var i = 0; i <= MaxUpCount; i++)
             {
                 if ((_levels & (1L << i)) != 0)
                     return i;
@@ -74,9 +74,9 @@ namespace Microsoft.PowerFx.Core.Binding
             if (IsGlobalOnlyScope)
                 return "{{Global}}";
 
-            StringBuilder sb = new StringBuilder("{");
-            string sep = string.Empty;
-            for (int i = 0; i <= MaxUpCount; i++)
+            var sb = new StringBuilder("{");
+            var sep = string.Empty;
+            for (var i = 0; i <= MaxUpCount; i++)
             {
                 if ((_levels & (1L << i)) != 0)
                 {

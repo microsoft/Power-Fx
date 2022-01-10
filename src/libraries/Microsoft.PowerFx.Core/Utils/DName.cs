@@ -20,9 +20,9 @@ namespace Microsoft.PowerFx.Core.Utils
             _value = value;
         }
 
-        public string Value { get { return _value ?? string.Empty; } }
+        public string Value => _value ?? string.Empty;
 
-        public bool IsValid { get { return _value != null; } }
+        public bool IsValid => _value != null;
 
         public static implicit operator string(DName name)
         {
@@ -102,9 +102,9 @@ namespace Microsoft.PowerFx.Core.Utils
             if (string.IsNullOrEmpty(strName))
                 return false;
 
-            for (int i = 0; i < strName.Length; i++)
+            for (var i = 0; i < strName.Length; i++)
             {
-                char ch = strName[i];
+                var ch = strName[i];
                 if (!CharacterUtils.IsSpace(ch))
                     return true;
             }
@@ -125,10 +125,10 @@ namespace Microsoft.PowerFx.Core.Utils
                 return new DName(StrUnderscore);
             }
 
-            bool fAllSpaces = true;
+            var fAllSpaces = true;
             fModified = false;
 
-            for (int i = 0; i < strName.Length; i++)
+            for (var i = 0; i < strName.Length; i++)
             {
                 fAllSpaces = fAllSpaces && (strName[i] == ChSpace);
             }

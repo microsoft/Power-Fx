@@ -9,11 +9,7 @@ namespace Microsoft.PowerFx.Core.Types.Enums
 {
     internal static class ColorTable
     {
-        // There is a copy of this dictionary in \js\AppMagic.Common\Utility\ColorUtility.ts under the name _colorTable
-        // So to keep things consistent all changes should be done in both the places.
-        // Transparent is "Transparent Black" consistent with w3c CSS color module level 3 definition (https://www.w3.org/TR/css-color-3/#transparent)
-        private static readonly Dictionary<string, uint> _invariantNameToHexMap =
-            new Dictionary<string, uint> {
+        public static Dictionary<string, uint> InvariantNameToHexMap { get; } = new Dictionary<string, uint> {
                 {"AliceBlue", 0xFFF0F8FF}, {"AntiqueWhite", 0xFFFAEBD7}, {"Aqua", 0xFF00FFFF}, {"Aquamarine", 0xFF7FFFD4}, {"Azure", 0xFFF0FFFF}, {"Beige", 0xFFF5F5DC}, { "Bisque", 0xFFFFE4C4},
                 {"Black", 0xFF000000}, {"BlanchedAlmond", 0xFFFFEBCD}, {"Blue", 0xFF0000FF}, {"BlueViolet", 0xFF8A2BE2}, {"Brown", 0xFFA52A2A}, {"BurlyWood", 0xFFDEB887}, {"CadetBlue", 0xFF5F9EA0},
                 {"Chartreuse", 0xFF7FFF00}, {"Chocolate", 0xFFD2691E}, {"Coral", 0xFFFF7F50}, {"CornflowerBlue", 0xFF6495ED}, {"Cornsilk", 0xFFFFF8DC}, {"Crimson", 0xFFDC143C}, {"Cyan", 0xFF00FFFF},
@@ -36,13 +32,11 @@ namespace Microsoft.PowerFx.Core.Types.Enums
                 {"Wheat", 0xFFF5DEB3}, {"White", 0xFFFFFFFF}, {"WhiteSmoke", 0xFFF5F5F5}, {"Yellow", 0xFFFFFF00}, {"YellowGreen", 0xFF9ACD32}
             };
 
-        public static Dictionary<string, uint> InvariantNameToHexMap => _invariantNameToHexMap;
-
         internal static new string ToString()
         {
-            Contracts.Assert(_invariantNameToHexMap.All(x => !CharacterUtils.HasSpaces(x.Key)));
+            Contracts.Assert(InvariantNameToHexMap.All(x => !CharacterUtils.HasSpaces(x.Key)));
 
-            var colorText = string.Join(", ", _invariantNameToHexMap.Select(x => x.Key + ":#" + string.Format("{0:X6}", x.Value)));
+            var colorText = string.Join(", ", InvariantNameToHexMap.Select(x => x.Key + ":#" + string.Format("{0:X6}", x.Value)));
             return "%c[" + colorText + "]";
         }
     }

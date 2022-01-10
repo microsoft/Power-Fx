@@ -86,7 +86,7 @@ namespace Microsoft.PowerFx.Core.IR
                 Contracts.AssertValue(context);
 
                 var values = new Dictionary<DName, IntermediateNode>();
-                for (int i = 0; i < node.Count; i++)
+                for (var i = 0; i < node.Count; i++)
                 {
                     var childNode = node.Children[i];
                     var identifierName = context.Binding.TryGetReplacedIdentName(node.Ids[i], out var newIdent) ? new DName(newIdent) : node.Ids[i].Name;
@@ -143,8 +143,8 @@ namespace Microsoft.PowerFx.Core.IR
                 var left = node.Left.Accept(this, context);
                 var right = node.Right.Accept(this, context);
 
-                DType leftType = context.Binding.GetType(node.Left);
-                DType rightType = context.Binding.GetType(node.Right);
+                var leftType = context.Binding.GetType(node.Left);
+                var rightType = context.Binding.GetType(node.Right);
 
                 IntermediateNode binaryOpResult;
 
@@ -245,8 +245,8 @@ namespace Microsoft.PowerFx.Core.IR
                 Contracts.AssertValue(node);
                 Contracts.AssertValue(context);
 
-                CallInfo info = context.Binding.GetInfo(node);
-                int carg = node.Args.Count;
+                var info = context.Binding.GetInfo(node);
+                var carg = node.Args.Count;
                 var func = (TexlFunction)info.Function;
 
                 var resultType = context.Binding.GetType(node);
@@ -261,7 +261,7 @@ namespace Microsoft.PowerFx.Core.IR
                 if (func.ScopeInfo != null)
                     scope = GetNewScope();
 
-                for (int i = 0; i < carg; ++i)
+                for (var i = 0; i < carg; ++i)
                 {
                     var arg = node.Args.Children[i];
                     if (func.IsLazyEvalParam(i))
@@ -287,7 +287,7 @@ namespace Microsoft.PowerFx.Core.IR
                 Contracts.AssertValue(node);
                 Contracts.AssertValue(context);
 
-                FirstNameInfo info = context.Binding.GetInfo(node);
+                var info = context.Binding.GetInfo(node);
                 if (info == null)
                 {
                     // Binding previously failed for this node, we don't know enough to do something useful here
@@ -295,7 +295,7 @@ namespace Microsoft.PowerFx.Core.IR
                     return new ErrorNode(context.GetIRContext(node), node.ToString());
                 }
 
-                DName nodeName = context.Binding.TryGetReplacedIdentName(node.Ident, out var newIdent) ? new DName(newIdent) : node.Ident.Name;
+                var nodeName = context.Binding.TryGetReplacedIdentName(node.Ident, out var newIdent) ? new DName(newIdent) : node.Ident.Name;
 
                 IntermediateNode result;
                 switch (info.Kind)
@@ -342,8 +342,8 @@ namespace Microsoft.PowerFx.Core.IR
                 Contracts.AssertValue(node);
                 Contracts.AssertValue(context);
 
-                DType typeLhs = context.Binding.GetType(node.Left);
-                DName nameRhs = context.Binding.TryGetReplacedIdentName(node.Right, out var newIdent) ? new DName(newIdent) : node.Right.Name;
+                var typeLhs = context.Binding.GetType(node.Left);
+                var nameRhs = context.Binding.TryGetReplacedIdentName(node.Right, out var newIdent) ? new DName(newIdent) : node.Right.Name;
 
                 var resultType = context.Binding.GetType(node);
                 IntermediateNode result;
@@ -542,8 +542,7 @@ namespace Microsoft.PowerFx.Core.IR
                 var scope = GetNewScope();
                 foreach (var fromField in fromType.GetNames(DPath.Root))
                 {
-                    DType toFieldType;
-                    if (!toType.TryGetType(fromField.Name, out toFieldType) || toFieldType.Accepts(fromField.Type))
+                    if (!toType.TryGetType(fromField.Name, out var toFieldType) || toFieldType.Accepts(fromField.Type))
                     {
                         continue;
                     }

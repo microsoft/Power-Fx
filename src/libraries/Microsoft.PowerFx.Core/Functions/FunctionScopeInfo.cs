@@ -59,17 +59,17 @@ namespace Microsoft.PowerFx.Core.Functions
         // True indicates that this function cannot guarantee that it will iterate over the datasource in order.
         // This means it should not allow lambdas that operate on the same data multiple times, as this will
         // cause nondeterministic behavior.
-        public bool HasNondeterministicOperationOrder { get { return IteratesOverScope && SupportsAsyncLambdas; } }
+        public bool HasNondeterministicOperationOrder => IteratesOverScope && SupportsAsyncLambdas;
 
         public FunctionScopeInfo(TexlFunction function, bool usesAllFieldsInScope = true, bool supportsAsyncLambdas = true, bool acceptsLiteralPredicates = true, bool iteratesOverScope = true, DType scopeType = null, Func<int, bool> appliesToArgument = null)
         {
-            this.UsesAllFieldsInScope = usesAllFieldsInScope;
-            this.SupportsAsyncLambdas = supportsAsyncLambdas;
-            this.AcceptsLiteralPredicates = acceptsLiteralPredicates;
-            this.IteratesOverScope = iteratesOverScope;
-            this.ScopeType = scopeType;
-            this._function = function;
-            this.AppliesToArgument = appliesToArgument ?? (i => i > 0);
+            UsesAllFieldsInScope = usesAllFieldsInScope;
+            SupportsAsyncLambdas = supportsAsyncLambdas;
+            AcceptsLiteralPredicates = acceptsLiteralPredicates;
+            IteratesOverScope = iteratesOverScope;
+            ScopeType = scopeType;
+            _function = function;
+            AppliesToArgument = appliesToArgument ?? (i => i > 0);
         }
 
         // Typecheck an input for this function, and get the cursor type for an invocation with that input.
@@ -84,12 +84,12 @@ namespace Microsoft.PowerFx.Core.Functions
             Contracts.Assert(inputSchema.IsValid);
             Contracts.AssertValue(errors);
 
-            CallNode callNode = inputNode.Parent.CastList().Parent.CastCall();
+            var callNode = inputNode.Parent.CastList().Parent.CastCall();
             Contracts.AssertValue(callNode);
 
             typeScope = inputSchema;
 
-            bool fArgsValid = true;
+            var fArgsValid = true;
 
             if (_function.ParamTypes.Length == 0)
             {
@@ -116,7 +116,7 @@ namespace Microsoft.PowerFx.Core.Functions
                 }
                 // This assumes that the lambdas operate on the individual records
                 // of the table, not the entire table.
-                bool fError = false;
+                var fError = false;
                 typeScope = typeScope.ToRecord(ref fError);
                 fArgsValid &= !fError;
             }
@@ -126,7 +126,7 @@ namespace Microsoft.PowerFx.Core.Functions
                 if (!typeScope.IsRecord)
                 {
                     errors.Error(callNode, TexlStrings.ErrNeedRecord_Func, _function.Name);
-                    bool fError = false;
+                    var fError = false;
                     typeScope = typeScope.ToRecord(ref fError);
                     fArgsValid = false;
                 }
@@ -148,7 +148,7 @@ namespace Microsoft.PowerFx.Core.Functions
 
             if (!AcceptsLiteralPredicates)
             {
-                for (int i = 0; i < args.Length; i++)
+                for (var i = 0; i < args.Length; i++)
                 {
                     if (_function.IsLambdaParam(i))
                     {

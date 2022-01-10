@@ -241,8 +241,7 @@ namespace Microsoft.PowerFx.Core.Utils
 
         public static void CheckXmlDocumentString(string text, string paramName)
         {
-            XDocument parsedXDocument;
-            CheckXmlDocumentString(text, paramName, out parsedXDocument);
+            CheckXmlDocumentString(text, paramName, out var parsedXDocument);
         }
 
         public static void CheckXmlDocumentStringOrNull(string text, string paramName)
@@ -253,7 +252,7 @@ namespace Microsoft.PowerFx.Core.Utils
 
         public static void CheckAllNonEmpty(IList<string> args, string paramName)
         {
-            for (int i = 0; i < Size(args); i++)
+            for (var i = 0; i < Size(args); i++)
             {
                 if (string.IsNullOrEmpty(args[i]))
                     throw ExceptEmpty(paramName);
@@ -262,7 +261,7 @@ namespace Microsoft.PowerFx.Core.Utils
 
         public static void CheckAllValues<T>(IList<T> args, string paramName) where T : class
         {
-            for (int i = 0; i < Size(args); i++)
+            for (var i = 0; i < Size(args); i++)
             {
                 if (object.ReferenceEquals(args[i], null))
                     throw ExceptParam(paramName);
@@ -295,7 +294,7 @@ namespace Microsoft.PowerFx.Core.Utils
 
         public static void CheckAll<T>(IList<T> args, string paramName) where T : struct, ICheckable
         {
-            for (int i = 0; i < Size(args); i++)
+            for (var i = 0; i < Size(args); i++)
             {
                 if (!args[i].IsValid)
                     throw ExceptValid(paramName);
@@ -854,7 +853,7 @@ namespace Microsoft.PowerFx.Core.Utils
         public static void AssertAllNonEmpty(IList<string> args)
         {
 #if DEBUG
-            for (int i = 0; i < Size(args); i++)
+            for (var i = 0; i < Size(args); i++)
             {
                 if (string.IsNullOrEmpty(args[i]))
                     DbgFail();
@@ -898,7 +897,7 @@ namespace Microsoft.PowerFx.Core.Utils
         public static void AssertAllNonEmpty(IList<string> args, string msg)
         {
 #if DEBUG
-            for (int i = 0; i < Size(args); i++)
+            for (var i = 0; i < Size(args); i++)
             {
                 if (string.IsNullOrEmpty(args[i]))
                     DbgFail(msg);
@@ -925,7 +924,7 @@ namespace Microsoft.PowerFx.Core.Utils
         public static void AssertAllValues<T>(IList<T> args) where T : class
         {
 #if DEBUG
-            for (int i = 0; i < Size(args); i++)
+            for (var i = 0; i < Size(args); i++)
             {
                 if (object.ReferenceEquals(args[i], null))
                     DbgFail();
@@ -937,7 +936,7 @@ namespace Microsoft.PowerFx.Core.Utils
         public static void AssertAllValues<T>(IList<T> args, string msg) where T : class
         {
 #if DEBUG
-            for (int i = 0; i < Size(args); i++)
+            for (var i = 0; i < Size(args); i++)
             {
                 if (object.ReferenceEquals(args[i], null))
                     DbgFail(msg);
@@ -964,7 +963,7 @@ namespace Microsoft.PowerFx.Core.Utils
         public static void AssertAll<T>(IList<T> args) where T : ICheckable
         {
 #if DEBUG
-            for (int i = 0; i < Size(args); i++)
+            for (var i = 0; i < Size(args); i++)
             {
                 if (object.ReferenceEquals(args[i], null) || !args[i].IsValid)
                     DbgFail();
@@ -1009,7 +1008,7 @@ namespace Microsoft.PowerFx.Core.Utils
         public static void AssertAllValid<T>(IEnumerable<T> args) where T : ICheckable
         {
 #if DEBUG
-            foreach (T arg in args)
+            foreach (var arg in args)
             {
                 if (object.ReferenceEquals(arg, null) || !arg.IsValid)
                     DbgFailValid();
@@ -1021,7 +1020,7 @@ namespace Microsoft.PowerFx.Core.Utils
         public static void AssertAllValid<T>(IList<T> args) where T : ICheckable
         {
 #if DEBUG
-            for (int i = 0; i < Size(args); i++)
+            for (var i = 0; i < Size(args); i++)
             {
                 if (object.ReferenceEquals(args[i], null) || !args[i].IsValid)
                     DbgFailValid();
@@ -1033,7 +1032,7 @@ namespace Microsoft.PowerFx.Core.Utils
         public static void AssertAllValid<T>(IList<T> args, string msg) where T : ICheckable
         {
 #if DEBUG
-            for (int i = 0; i < Size(args); i++)
+            for (var i = 0; i < Size(args); i++)
             {
                 if (object.ReferenceEquals(args[i], null) || !args[i].IsValid)
                     DbgFailValid(msg);
@@ -1094,7 +1093,7 @@ namespace Microsoft.PowerFx.Core.Utils
 
             if (_assertFailExCtor != null)
             {
-                Exception ex = (Exception)_assertFailExCtor.Invoke(new object[] { msg });
+                var ex = (Exception)_assertFailExCtor.Invoke(new object[] { msg });
                 throw ex;
             }
         }

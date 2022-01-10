@@ -13,7 +13,7 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
     {
         public readonly Identifier Ident;
 
-        public bool IsLhs { get { return Parent != null && Parent.AsDottedName() != null; } }
+        public bool IsLhs => Parent != null && Parent.AsDottedName() != null;
 
         public FirstNameNode(ref int idNext, Token tok, SourceList sourceList, Identifier ident)
             : base(ref idNext, tok, sourceList)
@@ -44,7 +44,7 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
             return visitor.Visit(this, context);
         }
 
-        public override NodeKind Kind { get { return NodeKind.FirstName; } }
+        public override NodeKind Kind => NodeKind.FirstName;
 
         public override FirstNameNode CastFirstName()
         {

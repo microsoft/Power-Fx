@@ -43,7 +43,7 @@ namespace Microsoft.PowerFx.Core.Parser
         private int _depth;
         private const int _maxAllowedExpressionDepth = 50;
 
-        private List<CommentToken> _comments = new List<CommentToken>();
+        private readonly List<CommentToken> _comments = new List<CommentToken>();
         private SourceList _before;
         private SourceList _after;
 
@@ -69,10 +69,10 @@ namespace Microsoft.PowerFx.Core.Parser
             Contracts.AssertValue(script);
             Contracts.AssertValueOrNull(loc);
 
-            Token[] tokens = TokenizeScript(script, loc, flags);
-            TexlParser parser = new TexlParser(tokens, flags);
+            var tokens = TokenizeScript(script, loc, flags);
+            var parser = new TexlParser(tokens, flags);
             List<TexlError> errors = null;
-            TexlNode parsetree = parser.Parse(ref errors);
+            var parsetree = parser.Parse(ref errors);
 
             return new ParseResult(parsetree, errors, errors?.Any() ?? false, parser._comments, parser._before, parser._after);
         }
@@ -82,7 +82,7 @@ namespace Microsoft.PowerFx.Core.Parser
             Contracts.AssertValue(script);
             Contracts.AssertValueOrNull(loc);
 
-            TexlLexer.Flags lexerFlags = flags.HasFlag(Flags.AllowReplaceableExpressions) ? TexlLexer.Flags.AllowReplaceableTokens : TexlLexer.Flags.None;
+            var lexerFlags = flags.HasFlag(Flags.AllowReplaceableExpressions) ? TexlLexer.Flags.AllowReplaceableTokens : TexlLexer.Flags.None;
 
             if (loc == null)
                 return TexlLexer.LocalizedInstance.LexSource(script, lexerFlags);
@@ -96,7 +96,7 @@ namespace Microsoft.PowerFx.Core.Parser
 
             _errors = errors;
             TexlNode node;
-            Token firstToken = _curs.TokCur;
+            var firstToken = _curs.TokCur;
             _before = new SourceList(ParseTrivia());
 
             if (_curs.TidCur == TokKind.Eof)
@@ -132,7 +132,7 @@ namespace Microsoft.PowerFx.Core.Parser
 
         private void PostBlockCommentMissingClosingError()
         {
-            CommentToken openBlockComment = _comments.LastOrDefault(cm => cm.IsOpenBlock == true);
+            var openBlockComment = _comments.LastOrDefault(cm => cm.IsOpenBlock == true);
 
             if(openBlockComment != null)
                 PostError(openBlockComment, TexlStrings.ErrMissingEndOfBlockComment);
@@ -232,8 +232,7 @@ namespace Microsoft.PowerFx.Core.Parser
                         case TokKind.Dot:
                         case TokKind.Bang:
                             Contracts.Assert(precMin <= Precedence.Primary);
-                            DottedNameNode leftDotted;
-                            if ((leftDotted = node as DottedNameNode) != null && leftDotted.Token.Kind != _curs.TidCur && leftDotted.Token.Kind != TokKind.BracketOpen)
+                            if (node is DottedNameNode leftDotted && leftDotted.Token.Kind != _curs.TidCur && leftDotted.Token.Kind != TokKind.BracketOpen)
                                 // Can't mix and match separators. E.g. A.B!C is invalid.
                                 goto case TokKind.False;
                             tok = _curs.TokMove();
@@ -366,8 +365,7 @@ namespace Microsoft.PowerFx.Core.Parser
                             break;
 
                         case TokKind.ParenOpen:
-                            DottedNameNode dotted;
-                            if ((dotted = node as DottedNameNode) == null ||
+                            if (node is not DottedNameNode dotted ||
                                 !dotted.HasPossibleNamespaceQualifier)
                             {
                                 goto default;
@@ -405,8 +403,7 @@ namespace Microsoft.PowerFx.Core.Parser
 
                         case TokKind.BracketOpen:
                             // Note we explicitly forbid [@foo][@bar], and also A!B!C[@foo], since these are syntactically nonsensical at the moment.
-                            FirstNameNode first;
-                            if ((first = node as FirstNameNode) == null || first.Ident.AtToken != null || _curs.TidPeek() != TokKind.At)
+                            if (node is not FirstNameNode first || first.Ident.AtToken != null || _curs.TidPeek() != TokKind.At)
                                 goto default;
                             node = ParseScopeField(first);
                             break;
@@ -518,7 +515,7 @@ namespace Microsoft.PowerFx.Core.Parser
 
                 // Names
                 case TokKind.Ident:
-                    Identifier ident = ParseIdentifier();
+                    var ident = ParseIdentifier();
 
                     if (AfterSpaceTokenId() == TokKind.ParenOpen)
                     {
@@ -596,11 +593,11 @@ namespace Microsoft.PowerFx.Core.Parser
             Contracts.Assert(_curs.TidCur == TokKind.BracketOpen);
             Contracts.Assert(_curs.TidPeek() == TokKind.At);
 
-            Token bracketOpen = _curs.TokMove();
-            Token at = _curs.TokMove();
+            var bracketOpen = _curs.TokMove();
+            var at = _curs.TokMove();
 
-            Identifier ident = ParseIdentifier(at);
-            Token bracketClose = _curs.TokMove();
+            var ident = ParseIdentifier(at);
+            var bracketClose = _curs.TokMove();
 
             if (bracketClose.Kind != TokKind.BracketClose)
                 ErrorTid(bracketClose, TokKind.BracketClose);
@@ -623,10 +620,10 @@ namespace Microsoft.PowerFx.Core.Parser
             Contracts.Assert(_curs.TidCur == TokKind.BracketOpen);
             Contracts.Assert(_curs.TidPeek() == TokKind.At);
 
-            Token bracketOpen = _curs.TokCur;
+            var bracketOpen = _curs.TokCur;
 
             // Parse the rhs of the dotted name
-            FirstNameNode rhs = ParseBracketIdentifierAsFirstName();
+            var rhs = ParseBracketIdentifierAsFirstName();
 
             // Form the dotted name
             return new DottedNameNode(
@@ -659,7 +656,7 @@ namespace Microsoft.PowerFx.Core.Parser
             else
             {
                 ErrorTid(_curs.TokCur, TokKind.Ident);
-                int ich = _curs.TokCur.Span.Min;
+                var ich = _curs.TokCur.Span.Min;
                 tok = new IdentToken(string.Empty, new Span(ich, ich));
             }
 
@@ -671,12 +668,12 @@ namespace Microsoft.PowerFx.Core.Parser
         {
             Contracts.Assert(dotted.HasPossibleNamespaceQualifier);
 
-            DPath path = dotted.ToDPath();
+            var path = dotted.ToDPath();
             Contracts.Assert(path.IsValid);
             Contracts.Assert(!path.IsRoot);
             Contracts.Assert(!path.Parent.IsRoot);
 
-            Identifier head = new Identifier(path.Parent, null, dotted.Right.Token);
+            var head = new Identifier(path.Parent, null, dotted.Right.Token);
             Contracts.Assert(_curs.TidCur == TokKind.ParenOpen);
 
             return ParseInvocation(head, ParseTrivia(), dotted);
@@ -688,7 +685,7 @@ namespace Microsoft.PowerFx.Core.Parser
             Contracts.AssertValueOrNull(headNode);
             Contracts.Assert(_curs.TidCur == TokKind.ParenOpen);
 
-            Token leftParen = _curs.TokMove();
+            var leftParen = _curs.TokMove();
             var leftTrivia = ParseTrivia();
             if (_curs.TidCur == TokKind.ParenClose)
             {
@@ -731,7 +728,7 @@ namespace Microsoft.PowerFx.Core.Parser
             {
                 while (_curs.TidCur == TokKind.Comma)
                 {
-                    Token commaToken = _curs.TokMove();
+                    var commaToken = _curs.TokMove();
                     arguments.Add(CreateError(commaToken, TexlStrings.ErrBadToken));
                     sourceList.Add(new TokenSource(commaToken));
                     sourceList.Add(ParseTrivia());
@@ -833,7 +830,7 @@ namespace Microsoft.PowerFx.Core.Parser
             var sourceList = new List<ITexlSource>();
             TexlNode sourceRestrictionNode = null;
 
-            Token primaryToken = _curs.TokMove();
+            var primaryToken = _curs.TokMove();
 
             if (primaryToken.Kind == TokKind.At)
             {
@@ -875,7 +872,7 @@ namespace Microsoft.PowerFx.Core.Parser
             while (_curs.TidCur != TokKind.CurlyClose)
             {
                 // id
-                Identifier ident = ParseIdentifier();
+                var ident = ParseIdentifier();
                 sourceList.Add(new IdentifierSource(ident));
                 sourceList.Add(ParseTrivia());
 
@@ -898,7 +895,7 @@ namespace Microsoft.PowerFx.Core.Parser
 
                 // expr
                 // SingleExpr here means we don't want chains, but individual expressions.
-                TexlNode expr = ParseExpr(Precedence.SingleExpr);
+                var expr = ParseExpr(Precedence.SingleExpr);
 
                 ids.Add(ident);
                 exprs.Add(expr);
@@ -924,8 +921,8 @@ namespace Microsoft.PowerFx.Core.Parser
 
             Contracts.Assert(ids.Count == exprs.Count);
 
-            Token[] commaArray = (commas != null) ? commas.ToArray() : null;
-            Token[] colonArray = (colons != null) ? colons.ToArray() : null;
+            var commaArray = commas?.ToArray();
+            var colonArray = colons?.ToArray();
 
             curlyClose = TokEat(TokKind.CurlyClose);
             if (curlyClose != null)
@@ -949,7 +946,7 @@ namespace Microsoft.PowerFx.Core.Parser
             Contracts.Assert(_curs.TidCur == TokKind.BracketOpen);
             var sourceList = new List<ITexlSource>();
 
-            Token tok = _curs.TokMove();
+            var tok = _curs.TokMove();
             sourceList.Add(new TokenSource(tok));
             sourceList.Add(ParseTrivia());
 
@@ -974,7 +971,7 @@ namespace Microsoft.PowerFx.Core.Parser
                 sourceList.Add(ParseTrivia());
             }
 
-            Token[] commaArray = (commas != null) ? commas.ToArray() : null;
+            var commaArray = commas?.ToArray();
 
             var bracketClose = TokEat(TokKind.BracketClose);
             if (bracketClose != null)
@@ -997,7 +994,7 @@ namespace Microsoft.PowerFx.Core.Parser
             var before = ParseTrivia();
 
             // SingleExpr here means we don't want chains, but individual expressions.
-            TexlNode node = ParseExpr(Precedence.SingleExpr);
+            var node = ParseExpr(Precedence.SingleExpr);
             var after = ParseTrivia();
             var close = TokEat(TokKind.ParenClose);
 
@@ -1019,12 +1016,14 @@ namespace Microsoft.PowerFx.Core.Parser
         {
             Contracts.Assert(_curs.TidCur == TokKind.ReplaceableLit);
 
-            ReplaceableToken tok = _curs.TokMove().As<ReplaceableToken>();
+            var tok = _curs.TokMove().As<ReplaceableToken>();
             Contracts.AssertValue(tok);
 
             if (tok.Value.StartsWith(TexlLexer.LocalizedTokenDelimiterStr, StringComparison.OrdinalIgnoreCase) ||
                 tok.Value.StartsWith(TexlLexer.ContextDependentTokenDelimiterStr, StringComparison.OrdinalIgnoreCase))
+            {
                 return new ReplaceableNode(ref _idNext, tok);
+            }
 
             return CreateError(tok, TexlStrings.ErrBadToken);
         }
@@ -1051,7 +1050,7 @@ namespace Microsoft.PowerFx.Core.Parser
             Contracts.AssertValue(tok);
             Contracts.AssertValue(errKey.Key);
 
-            TexlError err = new TexlError(tok, DocumentErrorSeverity.Critical, errKey);
+            var err = new TexlError(tok, DocumentErrorSeverity.Critical, errKey);
             CollectionUtils.Add(ref _errors, err);
             return err;
         }
@@ -1062,7 +1061,7 @@ namespace Microsoft.PowerFx.Core.Parser
             Contracts.AssertValue(errKey.Key);
             Contracts.AssertValueOrNull(args);
 
-            TexlError err = new TexlError(tok, DocumentErrorSeverity.Critical, errKey, args);
+            var err = new TexlError(tok, DocumentErrorSeverity.Critical, errKey, args);
             CollectionUtils.Add(ref _errors, err);
 
             return err;

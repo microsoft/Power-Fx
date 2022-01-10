@@ -133,7 +133,7 @@ namespace Microsoft.PowerFx.Functions
         {
             return (irContext, args) =>
             {
-                List<FormulaValue> res = new List<FormulaValue>(args);
+                var res = new List<FormulaValue>(args);
                 while (res.Count < outputArgsCount)
                 {
                     res.Add(fillWith);
@@ -144,7 +144,7 @@ namespace Microsoft.PowerFx.Functions
 
         private static IEnumerable<FormulaValue> MidFunctionExpandArgs(IRContext irContext, IEnumerable<FormulaValue> args)
         {
-            List<FormulaValue> res = new List<FormulaValue>(args);
+            var res = new List<FormulaValue>(args);
             while (res.Count < 3)
             {
                 // The third argument to Mid can only ever be used if the first argument is a string

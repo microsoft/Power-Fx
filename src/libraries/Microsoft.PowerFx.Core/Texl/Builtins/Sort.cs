@@ -50,12 +50,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertValue(errors);
             Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
 
-            bool fValid = base.CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            var fValid = base.CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
             Contracts.Assert(returnType.IsTable);
 
             returnType = argTypes[0];
 
-            DType exprType = argTypes[1];
+            var exprType = argTypes[1];
             if (!exprType.IsPrimitive || exprType.IsOptionSet)
             {
                 fValid = false;
@@ -126,9 +126,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 return false;
 
             SortOpMetadata metadata = null;
-            IDelegationMetadata delegationMetadata = null;
-            IExternalDataSource dataSource;
-            if (TryGetEntityMetadata(callNode, binding, out delegationMetadata))
+            if (TryGetEntityMetadata(callNode, binding, out IDelegationMetadata delegationMetadata))
             {
                 if (!binding.Document.Properties.EnabledFeatures.IsEnhancedDelegationEnabled ||
                     !TryGetValidDataSourceForDelegation(callNode, binding, DelegationCapability.ArrayLookup, out _))
@@ -141,18 +139,18 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
             else
             {
-                if (!TryGetValidDataSourceForDelegation(callNode, binding, DelegationCapability.Sort, out dataSource))
+                if (!TryGetValidDataSourceForDelegation(callNode, binding, DelegationCapability.Sort, out var dataSource))
                     return false;
 
                 metadata = dataSource.DelegationMetadata.SortDelegationMetadata;
             }
 
-            TexlNode[] args = callNode.Args.Children.VerifyValue();
-            TexlNode arg1 = args[1].VerifyValue();
+            var args = callNode.Args.Children.VerifyValue();
+            var arg1 = args[1].VerifyValue();
 
             // For now, we are only supporting delegation for Sort operations where second argument is column name.
             // For example, Sort(CDS, Value)
-            FirstNameNode firstName = arg1.AsFirstName();
+            var firstName = arg1.AsFirstName();
             if (firstName == null)
             {
                 SuggestDelegationHint(arg1, binding);
@@ -161,11 +159,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 return false;
             }
 
-            FirstNameInfo firstNameInfo = binding.GetInfo(firstName);
+            var firstNameInfo = binding.GetInfo(firstName);
             if (firstNameInfo == null)
                 return false;
 
-            DPath columnName = DPath.Root.Append(firstNameInfo.Name);
+            var columnName = DPath.Root.Append(firstNameInfo.Name);
             if (!metadata.IsDelegationSupportedByColumn(columnName, DelegationCapability.Sort))
             {
                 SuggestDelegationHint(firstName, binding);
@@ -174,7 +172,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
 
             const string defaultSortOrder = LanguageConstants.AscendingSortOrderString;
-            int cargs = args.Count();
+            var cargs = args.Count();
 
             // Verify that the third argument (If present) is an Enum or string literal.
             if (cargs < 3 && IsSortOrderSuppportedByColumn(callNode, binding, defaultSortOrder, metadata, columnName))
@@ -182,7 +180,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             // TASK: 6237100 - Binder: Propagate errors in subtree of the callnode to the call node itself
             // Only FirstName, DottedName and StrLit non-async nodes are supported for arg2.
-            TexlNode arg2 = args[2].VerifyValue();
+            var arg2 = args[2].VerifyValue();
             if (!IsValidSortOrderNode(arg2, metadata, binding, columnName))
             {
                 SuggestDelegationHint(arg2, binding);
@@ -224,7 +222,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.Assert(sourceType.IsTable);
 
             var allColumns = sourceType.GetNames(DPath.Root);
-            string separator = string.Empty;
+            var separator = string.Empty;
 
             var primitiveColumnsAndComparatorIds = new StringBuilder();
             primitiveColumnsAndComparatorIds.Append("{");

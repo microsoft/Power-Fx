@@ -8,7 +8,7 @@ namespace Microsoft.PowerFx.Core.Public.Values
 {
     public class ErrorValue : FormulaValue
     {
-        private List<ExpressionError> _errors = new List<ExpressionError>();
+        private readonly List<ExpressionError> _errors = new List<ExpressionError>();
 
         internal ErrorValue(IRContext irContext) : base(irContext)
         {

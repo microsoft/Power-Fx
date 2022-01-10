@@ -20,14 +20,14 @@ namespace Microsoft.PowerFx.Tests
             var asm = typeof(RecalcEngine).Assembly;
 
             var ns = "Microsoft.PowerFx";
-            HashSet<string> allowed = new HashSet<string>()
+            var allowed = new HashSet<string>()
             {
                 $"{ns}.{nameof(RecalcEngine)}",
                 $"{ns}.{nameof(ReflectionFunction)}",
                 $"{ns}.{nameof(RecalcEngineScope)}"
             };
 
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             foreach (var type in asm.GetTypes().Where(t => t.IsPublic))
             {
                 var name = type.FullName;
@@ -278,7 +278,7 @@ namespace Microsoft.PowerFx.Tests
 
         #region Test
 
-        StringBuilder _updates = new StringBuilder();
+        readonly StringBuilder _updates = new StringBuilder();
 
 
         void AssertUpdate(string expected)

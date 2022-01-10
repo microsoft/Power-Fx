@@ -33,6 +33,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             yield return new [] { TexlStrings.AboutAtan2Arg1, TexlStrings.AboutAtan2Arg2 };
         }
 
-        public override bool SupportsParamCoercion { get { return true; } }
+        public override bool SupportsParamCoercion => true;
     }
 }

@@ -17,14 +17,14 @@ namespace Microsoft.PowerFx.Tests
     {
         public static string Normalize(string jsonStr)
         {
-            JsonElement je = JsonDocument.Parse(jsonStr).RootElement;
+            var je = JsonDocument.Parse(jsonStr).RootElement;
             return Normalize(je);
         }
 
         public static string Normalize(JsonElement je)
         {
             var ms = new MemoryStream();
-            JsonWriterOptions opts = new JsonWriterOptions
+            var opts = new JsonWriterOptions
             {
                 Indented = true,
                 Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
@@ -46,7 +46,7 @@ namespace Microsoft.PowerFx.Tests
                 case JsonValueKind.Object:
                     writer.WriteStartObject();
 
-                    foreach (JsonProperty x in je.EnumerateObject().OrderBy(prop => prop.Name))
+                    foreach (var x in je.EnumerateObject().OrderBy(prop => prop.Name))
                     {
                         writer.WritePropertyName(x.Name);
                         Write(x.Value, writer);
@@ -58,7 +58,7 @@ namespace Microsoft.PowerFx.Tests
                 // When normalizing... original msapp arrays can be in any order...
                 case JsonValueKind.Array:
                     writer.WriteStartArray();
-                    foreach (JsonElement x in je.EnumerateArray())
+                    foreach (var x in je.EnumerateArray())
                     {
                         Write(x, writer);
                     }

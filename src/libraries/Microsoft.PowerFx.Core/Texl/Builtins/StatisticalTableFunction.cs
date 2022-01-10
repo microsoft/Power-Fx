@@ -52,8 +52,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             if (!CheckArgsCount(callNode, binding))
                 return false;
 
-            IExternalDataSource dataSource;
-            if (!TryGetValidDataSourceForDelegation(callNode, binding, FunctionDelegationCapability, out dataSource))
+            if (!TryGetValidDataSourceForDelegation(callNode, binding, FunctionDelegationCapability, out var dataSource))
             {
                 if (dataSource != null && dataSource.IsDelegatable)
                     binding.ErrorContainer.EnsureError(DocumentErrorSeverity.Warning, callNode, TexlStrings.OpNotSupportedByServiceSuggestionMessage_OpNotSupportedByService, Name);

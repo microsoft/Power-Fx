@@ -23,7 +23,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override bool RequiresErrorContext => true;
         public override bool SupportsParamCoercion => false;
 
-        public override DelegationCapability FunctionDelegationCapability { get { return DelegationCapability.Filter | DelegationCapability.Count; } }
+        public override DelegationCapability FunctionDelegationCapability => DelegationCapability.Filter | DelegationCapability.Count;
         public CountIfFunction()
             : base("CountIf", TexlStrings.AboutCountIf, FunctionCategories.Table | FunctionCategories.MathAndStat, DType.Number, -2, 2, int.MaxValue, DType.EmptyTable, DType.Boolean)
         {
@@ -53,11 +53,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.Assert(args.Length == argTypes.Length);
             Contracts.AssertValue(errors);
 
-            bool fValid = base.CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            var fValid = base.CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
             Contracts.Assert(returnType == DType.Number);
 
             // Ensure that all the args starting at index 1 are booleans.
-            for (int i = 1; i < args.Length; i++)
+            for (var i = 1; i < args.Length; i++)
             {
                 if (!DType.Boolean.Accepts(argTypes[i]))
                 {
@@ -87,7 +87,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 return false;
             }
 
-            TexlNode[] args = callNode.Args.Children.VerifyValue();
+            var args = callNode.Args.Children.VerifyValue();
 
             if (args.Length == 0)
                 return false;
@@ -100,9 +100,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 return false;
             }
 
-            FilterOpMetadata metadata = dataSource.DelegationMetadata.FilterDelegationMetadata;
+            var metadata = dataSource.DelegationMetadata.FilterDelegationMetadata;
             // Validate for each predicate node.
-            for (int i = 1; i < args.Length; i++)
+            for (var i = 1; i < args.Length; i++)
             {
                 if (!IsValidDelegatableFilterPredicateNode(args[i], binding, metadata))
                 {

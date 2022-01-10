@@ -28,7 +28,7 @@ namespace Microsoft.PowerFx
     public class RecalcEngine : IScope
     {
         // User-provided functions 
-        private Dictionary<string, TexlFunction> _extraFunctions = new Dictionary<string, TexlFunction>(StringComparer.OrdinalIgnoreCase);
+        private readonly Dictionary<string, TexlFunction> _extraFunctions = new Dictionary<string, TexlFunction>(StringComparer.OrdinalIgnoreCase);
 
         internal Dictionary<string, RecalcFormulaInfo> Formulas { get; } = new Dictionary<string, RecalcFormulaInfo>();
 
@@ -192,10 +192,10 @@ namespace Microsoft.PowerFx
             var binding = check._binding;
 
 
-            (IntermediateNode irnode, ScopeSymbol ruleScopeSymbol) = IRTranslator.Translate(binding);
+            (var irnode, var ruleScopeSymbol) = IRTranslator.Translate(binding);
 
             var ev2 = new EvalVisitor(_cultureInfo);
-            FormulaValue newValue = irnode.Accept(ev2, SymbolContext.New().WithGlobals(parameters));
+            var newValue = irnode.Accept(ev2, SymbolContext.New().WithGlobals(parameters));
 
             return newValue;
         }
@@ -226,7 +226,7 @@ namespace Microsoft.PowerFx
             // We can't have cycles because:
             // - formulas can only refer to already-defined values
             // - formulas can't be redefined.  
-            HashSet<string> dependsOn = check.TopLevelIdentifiers;
+            var dependsOn = check.TopLevelIdentifiers;
 
             var type = FormulaType.Build(binding.ResultType);
             var info = new RecalcFormulaInfo
@@ -252,7 +252,7 @@ namespace Microsoft.PowerFx
         /// </summary>
         public IIntellisenseResult Suggest(string expression, FormulaType parameterType, int cursorPosition)
         {
-            var result = this.CheckInternal(expression, parameterType, intellisense: true);
+            var result = CheckInternal(expression, parameterType, intellisense: true);
             var binding = result._binding;
             var formula = result._formula;
 

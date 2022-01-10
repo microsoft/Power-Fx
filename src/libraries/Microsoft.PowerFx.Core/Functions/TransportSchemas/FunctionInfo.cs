@@ -19,10 +19,10 @@ namespace Microsoft.PowerFx.Core.Functions.TransportSchemas
         {
             return new FunctionInfo()
             {
-                Label = this.Label,
-                Detail = this.Detail,
-                Documentation = this.Documentation,
-                Signatures = this.Signatures.Concat(with.Signatures).ToArray()
+                Label = Label,
+                Detail = Detail,
+                Documentation = Documentation,
+                Signatures = Signatures.Concat(with.Signatures).ToArray()
             };
         }
     }

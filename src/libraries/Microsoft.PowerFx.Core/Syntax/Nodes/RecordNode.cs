@@ -51,11 +51,11 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
         {
             var children = CloneChildren(ref idNext, ts);
             var newNodes = new Dictionary<TexlNode, TexlNode>();
-            for (int i = 0; i < Children.Length; ++i)
+            for (var i = 0; i < Children.Length; ++i)
                 newNodes.Add(Children[i], children[i]);
 
-            Identifier[] newIdentifiers = new Identifier[Ids.Length];
-            for (int x = 0; x < Ids.Length; x++)
+            var newIdentifiers = new Identifier[Ids.Length];
+            for (var x = 0; x < Ids.Length; x++)
                 newIdentifiers[x] = Ids[x].Clone(ts);
             return new RecordNode(ref idNext, Token.Clone(ts), SourceList.Clone(ts, newNodes), newIdentifiers, children, Clone(Commas, ts), Clone(Colons, ts), CurlyClose.Clone(ts), SourceRestriction?.Clone(ref idNext, ts));
         }
@@ -78,7 +78,7 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
             return visitor.Visit(this, context);
         }
 
-        public override NodeKind Kind { get { return NodeKind.Record; } }
+        public override NodeKind Kind => NodeKind.Record;
 
         public override RecordNode CastRecord()
         {
@@ -92,13 +92,13 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
 
         public override Span GetTextSpan()
         {
-            int lim = CurlyClose == null ? Token.VerifyValue().Span.Lim : CurlyClose.Span.Lim;
+            var lim = CurlyClose == null ? Token.VerifyValue().Span.Lim : CurlyClose.Span.Lim;
             return new Span(Token.VerifyValue().Span.Min, lim);
         }
 
         public override Span GetCompleteSpan()
         {
-            return new Span(this.GetTextSpan());
+            return new Span(GetTextSpan());
         }
     }
 }

@@ -107,7 +107,7 @@ namespace Microsoft.PowerFx.Functions
             var sources = (TableValue)args[0];
             var filter = (LambdaFormulaValue)args[1];
 
-            int count = 0;
+            var count = 0;
 
             var errors = new List<ErrorValue>();
 
@@ -124,7 +124,7 @@ namespace Microsoft.PowerFx.Functions
                         continue;
                     }
 
-                    bool include = ((BooleanValue)result).Value;
+                    var include = ((BooleanValue)result).Value;
 
                     if (include)
                     {
@@ -260,7 +260,7 @@ namespace Microsoft.PowerFx.Functions
 
                     // Filter evals to a boolean 
                     var result = filter.Eval(runner, childContext);
-                    bool include = false;
+                    var include = false;
                     if (result is BooleanValue booleanValue)
                     {
                         include = booleanValue.Value;
@@ -284,9 +284,9 @@ namespace Microsoft.PowerFx.Functions
 
             public static NamedLambda[] Parse(FormulaValue[] args)
             {
-                List<NamedLambda> l = new List<NamedLambda>();
+                var l = new List<NamedLambda>();
 
-                for (int i = 1; i < args.Length; i += 2)
+                for (var i = 1; i < args.Length; i += 2)
                 {
                     var columnName = ((StringValue)args[1]).Value;
                     var arg1 = (LambdaFormulaValue)args[2];

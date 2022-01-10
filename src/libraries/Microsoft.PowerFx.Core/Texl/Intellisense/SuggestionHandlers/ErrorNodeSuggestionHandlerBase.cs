@@ -20,7 +20,7 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense{
 
                 // For Error Kind, suggest top level values only in the context of a callNode and
                 // ThisItemProperties only in the context of thisItem.
-                TexlNode curNode = intellisenseData.CurNode;
+                var curNode = intellisenseData.CurNode;
 
                 // Three methods that implement custom behavior here, one that adds suggestions before
                 // top level suggestions are added, one after, and one to handle the case where there aren't

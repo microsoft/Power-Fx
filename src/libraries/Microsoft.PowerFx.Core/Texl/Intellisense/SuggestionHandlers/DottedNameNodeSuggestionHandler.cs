@@ -26,21 +26,21 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
             {
                 Contracts.AssertValue(intellisenseData);
 
-                TexlNode curNode = intellisenseData.CurNode;
-                int cursorPos = intellisenseData.CursorPos;
+                var curNode = intellisenseData.CurNode;
+                var cursorPos = intellisenseData.CursorPos;
                 // Cursor position is after the dot (If it was before the dot FindNode would have returned the left node).
                 Contracts.Assert(curNode.Token.IsDottedNamePunctuator);
                 Contracts.Assert(curNode.Token.Span.Lim <= cursorPos);
 
-                DottedNameNode dottedNameNode = curNode.CastDottedName();
-                Identifier ident = dottedNameNode.Right;
+                var dottedNameNode = curNode.CastDottedName();
+                var ident = dottedNameNode.Right;
                 string identName = ident.Name;
                 var leftNode = dottedNameNode.Left;
-                DType leftType = intellisenseData.Binding.GetType(leftNode);
+                var leftType = intellisenseData.Binding.GetType(leftNode);
 
                 intellisenseData.BeforeAddSuggestionsForDottedNameNode(leftNode);
 
-                bool isOneColumnTable = leftType.IsColumn
+                var isOneColumnTable = leftType.IsColumn
                                         && leftNode.Kind == NodeKind.DottedName
                                         && leftType.Accepts(intellisenseData.Binding.GetType(((DottedNameNode) leftNode).Left));
 
@@ -82,15 +82,15 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
 
                 if (!intellisenseData.TryAddSuggestionsForLeftNodeScope(leftNode))
                 {
-                    if (TryGetEnumInfo(intellisenseData, leftNode, intellisenseData.Binding, out EnumSymbol enumInfo))
+                    if (TryGetEnumInfo(intellisenseData, leftNode, intellisenseData.Binding, out var enumInfo))
                     {
                         IntellisenseHelper.AddSuggestionsForEnum(intellisenseData, enumInfo);
                     }
-                    else if (TryGetNamespaceFunctions(leftNode, intellisenseData.Binding, out IEnumerable<TexlFunction> namespaceFunctions))
+                    else if (TryGetNamespaceFunctions(leftNode, intellisenseData.Binding, out var namespaceFunctions))
                     {
                         AddSuggestionsForNamespace(intellisenseData, namespaceFunctions);
                     }
-                    else if (TryGetLocalScopeInfo(leftNode, intellisenseData.Binding, out ScopedNameLookupInfo info))
+                    else if (TryGetLocalScopeInfo(leftNode, intellisenseData.Binding, out var info))
                     {
                         IntellisenseHelper.AddTopLevelSuggestions(intellisenseData, info.Type);
                     }
@@ -123,7 +123,7 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
 
                 if (node.Kind == NodeKind.FirstName)
                 {
-                    FirstNameNode curNode = node.CastFirstName();
+                    var curNode = node.CastFirstName();
                     var firstNameInfo = binding.GetInfo(curNode);
                     if (firstNameInfo.Kind == BindKind.ScopeArgument)
                     {
@@ -141,14 +141,14 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
                 Contracts.AssertValue(node);
                 Contracts.AssertValue(binding);
 
-                FirstNameNode curNode = node.AsFirstName();
+                var curNode = node.AsFirstName();
                 if (curNode == null)
                 {
                     enumSymbol = null;
                     return false;
                 }
 
-                FirstNameInfo firstNameInfo = binding.GetInfo(curNode).VerifyValue();
+                var firstNameInfo = binding.GetInfo(curNode).VerifyValue();
                 if (firstNameInfo.Kind != BindKind.Enum)
                 {
                     enumSymbol = null;
@@ -163,17 +163,17 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
                 Contracts.AssertValue(node);
                 Contracts.AssertValue(binding);
 
-                FirstNameNode curNode = node.AsFirstName();
+                var curNode = node.AsFirstName();
                 if (curNode == null)
                 {
                     functions = EmptyEnumerator<TexlFunction>.Instance;
                     return false;
                 }
 
-                FirstNameInfo firstNameInfo = binding.GetInfo(curNode).VerifyValue();
+                var firstNameInfo = binding.GetInfo(curNode).VerifyValue();
                 Contracts.AssertValid(firstNameInfo.Name);
 
-                DPath namespacePath = new DPath().Append(firstNameInfo.Name);
+                var namespacePath = new DPath().Append(firstNameInfo.Name);
                 functions = binding.NameResolver.LookupFunctionsInNamespace(namespacePath);
 
                 return functions.Any();

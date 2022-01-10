@@ -24,14 +24,11 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
 
         public SourceList SourceList { get; private set; }
 
-        public int Depth { get { return _depth; } }
+        public int Depth => _depth;
 
         public TexlNode Parent
         {
-            get
-            {
-                return _parent;
-            }
+            get => _parent;
             set
             {
                 Contracts.Assert(_parent == null);
@@ -86,7 +83,7 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
 
         public virtual Span GetCompleteSpan()
         {
-            return new Span(this.GetTextSpan());
+            return new Span(GetTextSpan());
         }
 
         public Span GetSourceBasedSpan()
@@ -259,7 +256,7 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
 
         internal TexlNode FindTopMostDottedParentOrSelf()
         {
-            TexlNode parent = this;
+            var parent = this;
 
             while (parent != null && parent.Parent != null && parent.Parent.Kind == NodeKind.DottedName)
             {

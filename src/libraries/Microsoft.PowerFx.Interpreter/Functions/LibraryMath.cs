@@ -109,7 +109,7 @@ namespace Microsoft.PowerFx.Functions
             var arg0 = (TableValue)args[0];
             var arg1 = (LambdaFormulaValue)args[1];
 
-            foreach (DValue<RecordValue> row in arg0.Rows)
+            foreach (var row in arg0.Rows)
             {
                 if (row.IsValue)
                 {
@@ -209,9 +209,9 @@ namespace Microsoft.PowerFx.Functions
         // https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-sequence
         public static FormulaValue Sequence(IRContext irContext, NumberValue[] args)
         {
-            double records = args[0].Value;
-            double start = args[1].Value;
-            double step = args[2].Value;
+            var records = args[0].Value;
+            var start = args[1].Value;
+            var step = args[2].Value;
 
             var rows = LazySequence(records, start, step).Select(n => new NumberValue(IRContext.NotInSource(FormulaType.Number), n));
 
@@ -220,8 +220,8 @@ namespace Microsoft.PowerFx.Functions
 
         private static IEnumerable<double> LazySequence(double records, double start, double step)
         {
-            double x = start;
-            for (int i = 1; i <= records; i++)
+            var x = start;
+            for (var i = 1; i <= records; i++)
             {
                 yield return x;
                 x += step;
@@ -280,7 +280,7 @@ namespace Microsoft.PowerFx.Functions
                 return number < 0 ? Math.Floor(number) : Math.Ceiling(number);
             }
 
-            double multiplier = Math.Pow(10, digits < 0 ? Math.Ceiling(digits) : Math.Floor(digits));
+            var multiplier = Math.Pow(10, digits < 0 ? Math.Ceiling(digits) : Math.Floor(digits));
             // Contracts.Assert(multiplier != 0);
 
             // Deal with catastrophic loss of precision

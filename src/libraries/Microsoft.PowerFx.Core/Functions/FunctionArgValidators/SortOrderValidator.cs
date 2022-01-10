@@ -59,7 +59,7 @@ namespace Microsoft.PowerFx.Core.Functions.FunctionArgValidators
             Contracts.AssertValue(binding);
 
             sortOrder = "";
-            TexlNode lhsNode = node.Left;
+            var lhsNode = node.Left;
             var orderEnum = lhsNode.AsFirstName();
             if (orderEnum == null)
                 return false;
@@ -68,7 +68,7 @@ namespace Microsoft.PowerFx.Core.Functions.FunctionArgValidators
             if (!VerifyFirstNameNodeIsValidSortOrderEnum(orderEnum, binding))
                 return false;
 
-            string order = node.Right.Name.Value;
+            var order = node.Right.Name.Value;
             return IsValidOrderString(order, out sortOrder);
         }
 
@@ -82,8 +82,7 @@ namespace Microsoft.PowerFx.Core.Functions.FunctionArgValidators
             if (info.Kind != BindKind.Enum)
                 return false;
 
-            string order = info.Data as string;
-            if (order == null)
+            if (info.Data is not string order)
                 return false;
 
             return IsValidOrderString(order, out sortOrder);
@@ -93,7 +92,7 @@ namespace Microsoft.PowerFx.Core.Functions.FunctionArgValidators
         {
             Contracts.AssertValue(node);
 
-            string order = node.Value;
+            var order = node.Value;
             return IsValidOrderString(order, out sortOrder);
         }
 
@@ -110,7 +109,7 @@ namespace Microsoft.PowerFx.Core.Functions.FunctionArgValidators
             if (!binding.NameResolver.TryLookupEnum(new DName(LanguageConstants.SortOrderEnumStringInvariant), out var lookupInfo))
                 return false;
 
-            DType type = binding.GetType(node);
+            var type = binding.GetType(node);
 
             return type == lookupInfo.Type;
         }

@@ -59,7 +59,7 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
             return visitor.Visit(this, context);
         }
 
-        public override NodeKind Kind { get { return NodeKind.As; } }
+        public override NodeKind Kind => NodeKind.As;
 
         public override AsNode AsAsNode()
         {

@@ -26,20 +26,20 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense{
             Contracts.AssertValue(intellisenseData);
             Contracts.AssertValue(suggestions);
 
-            string script = context.InputText;
+            var script = context.InputText;
             Contracts.Assert(_tokenStartIndex < script.Length);
 
             if (_requireTokenStartWithQuote && script[_tokenStartIndex] != '"')
                 return false;
 
-            int matchEndIndex = -1;
-            bool foundAny = false;
+            var matchEndIndex = -1;
+            var foundAny = false;
             var iterateSuggestions = suggestions.ToArray();
 
             foreach (var suggestion in iterateSuggestions)
             {
                 int i, j;
-                bool found = false;
+                var found = false;
 
                 for (i = _tokenStartIndex, j = 0; i < script.Length; i++, j++)
                 {
@@ -52,7 +52,7 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense{
 
                     if (script[i] != suggestion.Text[j])
                     {
-                        string curChar = script.Substring(i, 1);
+                        var curChar = script.Substring(i, 1);
                         if (curChar != TexlLexer.PunctuatorParenClose && curChar != TexlLexer.LocalizedInstance.LocalizedPunctuatorListSeparator)
                             found = false;
                         break;

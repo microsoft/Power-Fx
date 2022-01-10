@@ -59,13 +59,13 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertValue(errors);
             Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
 
-            bool fValid = base.CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            var fValid = base.CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
 
-            DType type0 = argTypes[0];
-            DType type1 = argTypes[1];
+            var type0 = argTypes[0];
+            var type1 = argTypes[1];
 
-            TexlNode arg0 = args[0];
-            TexlNode arg1 = args[1];
+            var arg0 = args[0];
+            var arg1 = args[1];
 
             // Arg0 should be either a number or a column of number (coercion is ok).
             bool matchedWithCoercion;

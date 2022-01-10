@@ -9,14 +9,13 @@ namespace Microsoft.PowerFx.Core.Lexer.Tokens
 {
     internal class ErrorToken : Token
     {
-        private readonly ErrorResourceKey? _detailErrorKey;
         private readonly object[] _resourceKeyFormatStringArgs;
 
         // May produce null, if there is no available detail for this error token.
-        public ErrorResourceKey? DetailErrorKey { get { return _detailErrorKey; } }
+        public ErrorResourceKey? DetailErrorKey { get; }
 
         // Args for ErrorResourceKey("UnexpectedCharacterToken")'s format string used in UnexpectedCharacterTokenError/LexError inside Lexer.cs.
-        public object[] ResourceKeyFormatStringArgs { get { return _resourceKeyFormatStringArgs; } }
+        public object[] ResourceKeyFormatStringArgs => _resourceKeyFormatStringArgs;
 
         public ErrorToken(Span span)
             : this(span, null)
@@ -27,7 +26,7 @@ namespace Microsoft.PowerFx.Core.Lexer.Tokens
         {
             Contracts.AssertValueOrNull(detailErrorKey);
 
-            _detailErrorKey = detailErrorKey;
+            DetailErrorKey = detailErrorKey;
         }
 
         public ErrorToken(Span span, ErrorResourceKey? detailErrorKey, params object[] args)
@@ -36,7 +35,7 @@ namespace Microsoft.PowerFx.Core.Lexer.Tokens
             Contracts.AssertValueOrNull(detailErrorKey);
             Contracts.AssertValueOrNull(args);
 
-            _detailErrorKey = detailErrorKey;
+            DetailErrorKey = detailErrorKey;
             _resourceKeyFormatStringArgs = args;
         }
 
@@ -46,7 +45,7 @@ namespace Microsoft.PowerFx.Core.Lexer.Tokens
         /// <param name="tok">The token to be copied</param>
         /// <param name="newSpan">The new span</param>
         private ErrorToken(ErrorToken tok, Span newSpan)
-            : this(newSpan, tok._detailErrorKey)
+            : this(newSpan, tok.DetailErrorKey)
         {
         }
 
@@ -59,11 +58,10 @@ namespace Microsoft.PowerFx.Core.Lexer.Tokens
         {
             Contracts.AssertValue(that);
 
-            ErrorToken other = that as ErrorToken;
-            if (other == null)
+            if (that is not ErrorToken other)
                 return false;
 
-            return _detailErrorKey?.Key == other._detailErrorKey?.Key && base.Equals(other) && Enumerable.SequenceEqual(_resourceKeyFormatStringArgs, other.ResourceKeyFormatStringArgs);
+            return DetailErrorKey?.Key == other.DetailErrorKey?.Key && base.Equals(other) && Enumerable.SequenceEqual(_resourceKeyFormatStringArgs, other.ResourceKeyFormatStringArgs);
         }
     }
 }

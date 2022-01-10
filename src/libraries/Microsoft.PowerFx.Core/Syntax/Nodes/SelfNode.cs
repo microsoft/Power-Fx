@@ -32,7 +32,7 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
             return new SelfNode(ref idNext, Token.Clone(ts));
         }
 
-        public override NodeKind Kind { get { return NodeKind.Self; } }
+        public override NodeKind Kind => NodeKind.Self;
 
         public override SelfNode AsSelf()
         {

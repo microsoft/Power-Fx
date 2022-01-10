@@ -19,7 +19,7 @@ namespace Microsoft.PowerFx.Functions
         public static IEnumerable<TexlFunction> FunctionList => _funcsByName.Keys;
 
         // Some TexlFunctions are overloaded
-        private static Dictionary<TexlFunction, FunctionPtr> _funcsByName = new Dictionary<TexlFunction, FunctionPtr>
+        private static readonly Dictionary<TexlFunction, FunctionPtr> _funcsByName = new Dictionary<TexlFunction, FunctionPtr>
         {
             {
                 BuiltinFunctionsCore.Abs,
@@ -958,7 +958,7 @@ namespace Microsoft.PowerFx.Functions
         // If(Condition, Then, Condition2, Then2, Default)
         public static FormulaValue If(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args)
         {
-            for (int i = 0; i < args.Length - 1; i += 2)
+            for (var i = 0; i < args.Length - 1; i += 2)
             {
                 var res = runner.EvalArg<BooleanValue>(args[i], symbolContext, args[i].IRContext);
 
@@ -996,7 +996,7 @@ namespace Microsoft.PowerFx.Functions
 
         public static FormulaValue IfError(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args)
         {
-            for (int i = 0; i < args.Length - 1; i += 2)
+            for (var i = 0; i < args.Length - 1; i += 2)
             {
                 var res = runner.EvalArg<ValidFormulaValue>(args[i], symbolContext, args[i].IRContext);
 
@@ -1037,7 +1037,7 @@ namespace Microsoft.PowerFx.Functions
                 errors.Add(te);
             }
 
-            for (int i = 1; i < args.Length - 1; i += 2)
+            for (var i = 1; i < args.Length - 1; i += 2)
             {
                 var match = (LambdaFormulaValue)args[i];
                 var matchValue = match.Eval(runner, symbolContext);
@@ -1047,7 +1047,7 @@ namespace Microsoft.PowerFx.Functions
                     errors.Add(mve);
                 }
 
-                bool equal = RuntimeHelpers.AreEqual(test, matchValue);
+                var equal = RuntimeHelpers.AreEqual(test, matchValue);
                 // Comparison? 
 
                 if (equal)

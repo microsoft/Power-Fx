@@ -22,9 +22,9 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
             Contracts.AssertValue(children);
             Children = children;
 
-            int maxDepth = 0;
+            var maxDepth = 0;
 
-            foreach (TexlNode child in children)
+            foreach (var child in children)
             {
                 Contracts.AssertValue(child);
                 child.Parent = this;
@@ -40,8 +40,8 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
 
         public TexlNode[] CloneChildren(ref int idNext, Span ts)
         {
-            TexlNode[] clones = new TexlNode[Children.Length];
-            for (int x = 0; x < clones.Length; x++)
+            var clones = new TexlNode[Children.Length];
+            for (var x = 0; x < clones.Length; x++)
             {
                 clones[x] = Children[x].Clone(ref idNext, ts);
             }
@@ -53,13 +53,13 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
             Contracts.AssertValueOrNull(toks);
             if (toks == null)
                 return null;
-            Token[] newToks = new Token[toks.Length];
-            for (int x = 0; x < toks.Length; x++)
+            var newToks = new Token[toks.Length];
+            for (var x = 0; x < toks.Length; x++)
                 newToks[x] = toks[x].Clone(ts);
             return newToks;
         }
 
-        public int Count { get { return Children.Length; } }
+        public int Count => Children.Length;
 
         public void AcceptChildren(TexlVisitor visitor)
         {

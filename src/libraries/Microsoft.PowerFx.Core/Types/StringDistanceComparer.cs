@@ -18,7 +18,7 @@ namespace Microsoft.PowerFx.Core.Types
 
         private readonly Dictionary<string, float> _cache = new Dictionary<string, float>();
 
-        public StringDistanceComparer(string original, int maxLength = Int32.MaxValue)
+        public StringDistanceComparer(string original, int maxLength = int.MaxValue)
         {
             _original = original;
             _maxLength = maxLength;
@@ -60,17 +60,17 @@ namespace Microsoft.PowerFx.Core.Types
         {
            var distances = new float[left.Length + 1, right.Length + 1];
 
-           for (int i = 1; i < left.Length + 1; ++i)
+           for (var i = 1; i < left.Length + 1; ++i)
                distances[i, 0] = i;
 
-           for (int j = 1; j < right.Length + 1; ++j)
+           for (var j = 1; j < right.Length + 1; ++j)
                distances[0, j] = j;
 
-           for (int j = 1; j < right.Length + 1; ++j)
+           for (var j = 1; j < right.Length + 1; ++j)
            {
-               for (int i = 1; i < left.Length + 1; ++i)
+               for (var i = 1; i < left.Length + 1; ++i)
                {
-                   float substitute = distances[i - 1, j - 1];
+                   var substitute = distances[i - 1, j - 1];
                    if (left[i - 1] != right[j - 1])
                    {
                        substitute +=

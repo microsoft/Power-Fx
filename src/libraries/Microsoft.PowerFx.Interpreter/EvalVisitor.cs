@@ -67,11 +67,11 @@ namespace Microsoft.PowerFx
         {
             // single-column table. 
 
-            int len = node.Values.Count;
+            var len = node.Values.Count;
 
             // Were pushed left-to-right
             var args = new FormulaValue[len];
-            for (int i = 0; i < len; i++)
+            for (var i = 0; i < len; i++)
             {
                 var child = node.Values[i];
                 var arg = child.Accept(this, context);
@@ -86,14 +86,14 @@ namespace Microsoft.PowerFx
 
         public override FormulaValue Visit(RecordNode node, SymbolContext context)
         {
-            List<NamedValue> fields = new List<NamedValue>();
+            var fields = new List<NamedValue>();
 
             foreach (var field in node.Fields)
             {
                 var name = field.Key;
-                IntermediateNode value = field.Value;
+                var value = field.Value;
 
-                FormulaValue rhsValue = value.Accept(this, context);
+                var rhsValue = value.Accept(this, context);
                 fields.Add(new NamedValue(name.Value, rhsValue));
             }
 
@@ -113,14 +113,14 @@ namespace Microsoft.PowerFx
 
             var func = node.Function;
 
-            int carg = node.Args.Count;
+            var carg = node.Args.Count;
 
-            FormulaValue[] args = new FormulaValue[carg];
+            var args = new FormulaValue[carg];
 
-            for (int i = 0; i < carg; i++)
+            for (var i = 0; i < carg; i++)
             {
                 var child = node.Args[i];
-                bool isLambda = node.IsLambdaArg(i);
+                var isLambda = node.IsLambdaArg(i);
 
                 if (!isLambda)
                 {
@@ -136,15 +136,14 @@ namespace Microsoft.PowerFx
 
             if (func is CustomTexlFunction customFunc)
             {
-                FormulaValue result = customFunc.Invoke(args);
+                var result = customFunc.Invoke(args);
                 return result;
             }
             else
             {
-                FunctionPtr ptr;
-                if (FuncsByName.TryGetValue(func, out ptr))
+                if (FuncsByName.TryGetValue(func, out var ptr))
                 {
-                    FormulaValue result = ptr(this, childContext, node.IRContext, args);
+                    var result = ptr(this, childContext, node.IRContext, args);
 
                     Contract.Assert(result.IRContext.ResultType == node.IRContext.ResultType || result is ErrorValue || result.IRContext.ResultType is BlankType);
 
@@ -253,7 +252,7 @@ namespace Microsoft.PowerFx
             var arg1 = node.Child.Accept(this, context);
             var args = new FormulaValue[] { arg1 };
 
-            if (Library.UnaryOps.TryGetValue(node.Op, out Library.FunctionPtr unaryOp))
+            if (Library.UnaryOps.TryGetValue(node.Op, out var unaryOp))
             {
                 return unaryOp(this, context, node.IRContext, args);
             }
@@ -274,7 +273,7 @@ namespace Microsoft.PowerFx
                 {
                     if (row.IsValue)
                     {
-                        List<NamedValue> fields = new List<NamedValue>();
+                        var fields = new List<NamedValue>();
                         var scopeContext = context.WithScope(node.Scope);
                         foreach (var coercion in node.FieldCoercions)
                         {
@@ -306,14 +305,14 @@ namespace Microsoft.PowerFx
         {
             if (node.Value is ScopeAccessSymbol s1)
             {
-                ScopeSymbol scope = s1.Parent;
+                var scope = s1.Parent;
 
                 var val = context.GetScopeVar(scope, s1.Name);
                 return val;
             }
             if (node.Value is ScopeSymbol s2) // Binds to whole scope
             {
-                IScope r = context.ScopeValues[s2.Id];
+                var r = context.ScopeValues[s2.Id];
                 var r2 = (RecordScope)r;
                 return r2._context;
             }

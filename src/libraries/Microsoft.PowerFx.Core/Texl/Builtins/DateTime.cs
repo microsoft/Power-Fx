@@ -88,7 +88,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             : base("Year", TexlStrings.AboutYear, FunctionCategories.DateTime, DType.Number, 0, 1, 1, DType.DateTime)
         { }
 
-        public override DelegationCapability FunctionDelegationCapability { get { return DelegationCapability.Year | DelegationCapability.Add; } }
+        public override DelegationCapability FunctionDelegationCapability => DelegationCapability.Year | DelegationCapability.Add;
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
@@ -104,7 +104,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             : base("Month", TexlStrings.AboutMonth, FunctionCategories.DateTime, DType.Number, 0, 1, 1, DType.DateTime)
         { }
 
-        public override DelegationCapability FunctionDelegationCapability { get { return DelegationCapability.Month | DelegationCapability.Add; } }
+        public override DelegationCapability FunctionDelegationCapability => DelegationCapability.Month | DelegationCapability.Add;
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
@@ -120,7 +120,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             : base("Day", TexlStrings.AboutDay, FunctionCategories.DateTime, DType.Number, 0, 1, 1, DType.DateTime)
         { }
 
-        public override DelegationCapability FunctionDelegationCapability { get { return DelegationCapability.Day | DelegationCapability.Add; } }
+        public override DelegationCapability FunctionDelegationCapability => DelegationCapability.Day | DelegationCapability.Add;
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
@@ -137,7 +137,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             : base("Hour", TexlStrings.AboutHour, FunctionCategories.DateTime, DType.Number, 0, 1, 1, DType.DateTime)
         { }
 
-        public override DelegationCapability FunctionDelegationCapability { get { return DelegationCapability.Hour | DelegationCapability.Add; } }
+        public override DelegationCapability FunctionDelegationCapability => DelegationCapability.Hour | DelegationCapability.Add;
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
@@ -153,7 +153,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             : base("Minute", TexlStrings.AboutMinute, FunctionCategories.DateTime, DType.Number, 0, 1, 1, DType.DateTime)
         { }
 
-        public override DelegationCapability FunctionDelegationCapability { get { return DelegationCapability.Minute | DelegationCapability.Add; } }
+        public override DelegationCapability FunctionDelegationCapability => DelegationCapability.Minute | DelegationCapability.Add;
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
@@ -169,7 +169,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             : base("Second", TexlStrings.AboutSecond, FunctionCategories.DateTime, DType.Number, 0, 1, 1, DType.DateTime)
         { }
 
-        public override DelegationCapability FunctionDelegationCapability { get { return DelegationCapability.Second | DelegationCapability.Add; } }
+        public override DelegationCapability FunctionDelegationCapability => DelegationCapability.Second | DelegationCapability.Add;
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
@@ -338,10 +338,10 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertValue(errors);
             Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
 
-            bool fValid = base.CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            var fValid = base.CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
             Contracts.Assert(returnType == DType.DateTime);
 
-            DType type0 = argTypes[0];
+            var type0 = argTypes[0];
 
             if (fValid)
             {
@@ -399,10 +399,10 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertValue(errors);
             Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
 
-            bool fValid = base.CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            var fValid = base.CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
 
-            DType type0 = argTypes[0];
-            DType type1 = argTypes[1];
+            var type0 = argTypes[0];
+            var type1 = argTypes[1];
 
             // Arg0 should be either a date/dateTime or a column of dates/dateTimes.
             // Its type dictates the function return type.
@@ -454,7 +454,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 }
             }
 
-            bool hasUnits = args.Length == 3;
+            var hasUnits = args.Length == 3;
             if (hasUnits && !DType.String.Accepts(argTypes[2]))
             {
                 // Arg2 should be a string
@@ -532,10 +532,10 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertValue(errors);
             Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
 
-            bool fValid = base.CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            var fValid = base.CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
 
-            DType type0 = argTypes[0];
-            DType type1 = argTypes[1];
+            var type0 = argTypes[0];
+            var type1 = argTypes[1];
 
             returnType = DType.CreateTable(new TypedName(DType.Number, OneColumnTableResultName));
 
@@ -577,7 +577,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 }
             }
 
-            bool hasUnits = args.Length == 3;
+            var hasUnits = args.Length == 3;
             if (hasUnits && !DType.String.Accepts(argTypes[2]))
             {
                 // Arg2 should be a string

@@ -21,12 +21,12 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
             {
                 Contracts.AssertValue(intellisenseData);
 
-                TexlNode curNode = intellisenseData.CurNode;
-                int cursorPos = intellisenseData.CursorPos;
+                var curNode = intellisenseData.CurNode;
+                var cursorPos = intellisenseData.CursorPos;
 
-                CallNode callNode = curNode.CastCall();
-                int spanMin = callNode.Head.Token.Span.Min;
-                int spanLim = callNode.Head.Token.Span.Lim;
+                var callNode = curNode.CastCall();
+                var spanMin = callNode.Head.Token.Span.Min;
+                var spanLim = callNode.Head.Token.Span.Lim;
 
                 // Handling the special case for service functions with non-empty namespaces.
                 // We have to consider the namespace as the begining of the callNode for intellisense purposes.
@@ -49,7 +49,7 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
                     // Cursor is in the head.
                     // Suggest function names.
                     // Get the matching string as a substring from the script so that the whitespace is preserved.
-                    int replacementLength = IntellisenseHelper.GetReplacementLength(intellisenseData, spanMin, spanLim, intellisenseData.Binding.NameResolver.Functions.Select(function => function.Name));
+                    var replacementLength = IntellisenseHelper.GetReplacementLength(intellisenseData, spanMin, spanLim, intellisenseData.Binding.NameResolver.Functions.Select(function => function.Name));
 
                     // If we are replacing the full token, also include the opening paren (since this will be provided by the suggestion)
                     if (replacementLength == spanLim - spanMin)
@@ -60,10 +60,12 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
                     IntellisenseHelper.AddSuggestionsForFunctions(intellisenseData);
                 }
                 else if (callNode.Token.Span.Lim > cursorPos || callNode.ParenClose == null)
+                {
                     // Handling the erroneous case when user enters a space after functionName and cursor is after space.
                     // Cursor is before the open paren of the function.
                     // Eg: "Filter | (" AND "Filter | (some Table, some predicate)"
                     return false;
+                }
                 else
                 {
                     // If there was no closed parenthesis we would have an error node.

@@ -17,7 +17,7 @@ namespace Microsoft.PowerFx.Core.Lexer.Tokens
 
         public TokKind Kind { get; }
         public Span Span { get; }
-        public virtual bool IsDottedNamePunctuator { get { return false; } }
+        public virtual bool IsDottedNamePunctuator => false;
 
         public abstract Token Clone(Span ts);
 

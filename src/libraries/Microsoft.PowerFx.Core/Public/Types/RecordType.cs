@@ -31,13 +31,13 @@ namespace Microsoft.PowerFx.Core.Public.Types
 
         public TableType ToTable()
         {
-            return new TableType(this._type.ToTable());
+            return new TableType(_type.ToTable());
         }
 
         public FormulaType MaybeGetFieldType(string fieldName)
         {
             // $$$ Better lookup
-            foreach (var field in this.GetNames())
+            foreach (var field in GetNames())
             {
                 if (field.Name == fieldName)
                 {

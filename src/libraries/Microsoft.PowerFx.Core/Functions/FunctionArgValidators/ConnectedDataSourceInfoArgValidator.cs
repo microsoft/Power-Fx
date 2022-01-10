@@ -50,7 +50,7 @@ namespace Microsoft.PowerFx.Core.Functions.FunctionArgValidators
             if (function == null)
                 return false;
 
-            bool success = function.TryGetDataSource(callNode, binding, out var external);
+            var success = function.TryGetDataSource(callNode, binding, out var external);
             dsInfo = (IExternalDataSource)external;
             return success;
         }
@@ -81,8 +81,7 @@ namespace Microsoft.PowerFx.Core.Functions.FunctionArgValidators
             if (dottedNameNode == null || !binding.HasExpandInfo(dottedNameNode))
                 return false;
 
-            IExpandInfo info;
-            binding.TryGetEntityInfo(dottedNameNode, out info).Verify();
+            binding.TryGetEntityInfo(dottedNameNode, out var info).Verify();
             dsInfo = info.ParentDataSource;
             return true;
         }

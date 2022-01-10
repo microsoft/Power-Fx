@@ -17,7 +17,7 @@ namespace Microsoft.PowerFx.Core.Public.Types
         // Enumerate fields
         public IEnumerable<NamedFormulaType> GetNames()
         {
-            IEnumerable<TypedName> names = this._type.GetAllNames(DPath.Root);
+            var names = _type.GetAllNames(DPath.Root);
             return from name in names select new NamedFormulaType(name);
         }
     }

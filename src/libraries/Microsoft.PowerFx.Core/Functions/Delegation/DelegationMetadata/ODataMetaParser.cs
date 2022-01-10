@@ -18,7 +18,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationMetadata
             {
                 Contracts.AssertValid(schema);
 
-                Dictionary<DPath, DPath> oDataReplacement = new Dictionary<DPath, DPath>();
+                var oDataReplacement = new Dictionary<DPath, DPath>();
 
                 if (dataServiceCapabilitiesJsonObject.TryGetProperty(CapabilitiesConstants.ColumnsCapabilities, out var columnCapabilitiesJsonObj))
                 {

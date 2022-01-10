@@ -17,7 +17,7 @@ namespace Microsoft.PowerFx.Core.Texl
     internal sealed class ViewFilterDataSourceVisitor : TexlVisitor
     {
         const string FilterFunctionName = "Filter";
-        private TexlBinding _txb;
+        private readonly TexlBinding _txb;
         public IExternalCdsDataSource cdsDataSourceInfo { get; private set; }
         public bool ContainsViewFilter { get; private set; }
 

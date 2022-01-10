@@ -33,7 +33,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             yield return new[] { TexlStrings.LogicalFuncParam };
         }
 
-        public override DelegationCapability FunctionDelegationCapability { get { return DelegationCapability.Not | DelegationCapability.Filter; } }
+        public override DelegationCapability FunctionDelegationCapability => DelegationCapability.Not | DelegationCapability.Filter;
 
         // For binary op node args, we need to use filter delegation strategy. Hence we override this method here.
         public override IOpDelegationStrategy GetOpDelegationStrategy(BinaryOp op, BinaryOpNode opNode)
@@ -64,8 +64,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 return false;
             }
 
-            TexlNode[] args = callNode.Args.Children.VerifyValue();
-            NodeKind argKind = args[0].VerifyValue().Kind;
+            var args = callNode.Args.Children.VerifyValue();
+            var argKind = args[0].VerifyValue().Kind;
 
             var opStrategy = GetOpDelegationStrategy(UnaryOp.Not);
             var firstNameStrategy = GetFirstNameNodeDelegationStrategy();
@@ -89,8 +89,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                         if (!opStrategy.IsOpSupportedByTable(metadata, callNode, binding))
                             return false;
 
-                        BinaryOpNode opNode = args[0].AsBinaryOp();
-                        IOpDelegationStrategy binaryOpNodeValidationStrategy = GetOpDelegationStrategy(opNode.Op, opNode);
+                        var opNode = args[0].AsBinaryOp();
+                        var binaryOpNodeValidationStrategy = GetOpDelegationStrategy(opNode.Op, opNode);
                         return binaryOpNodeValidationStrategy.IsSupportedOpNode(opNode, metadata, binding);
                     }
                 case NodeKind.UnaryOp:
@@ -98,7 +98,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                         if (!opStrategy.IsOpSupportedByTable(metadata, callNode, binding))
                             return false;
 
-                        UnaryOpNode opNode = args[0].AsUnaryOpLit();
+                        var opNode = args[0].AsUnaryOpLit();
                         var unaryOpNodeValidationStrategy = GetOpDelegationStrategy(opNode.Op);
                         return unaryOpNodeValidationStrategy.IsSupportedOpNode(opNode, metadata, binding);
                     }

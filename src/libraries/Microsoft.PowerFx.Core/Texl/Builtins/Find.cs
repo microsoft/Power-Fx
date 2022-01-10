@@ -63,10 +63,10 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertValue(errors);
             Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
 
-            bool fValid = base.CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            var fValid = base.CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
 
-            DType type0 = argTypes[0];
-            DType type1 = argTypes[1];
+            var type0 = argTypes[0];
+            var type1 = argTypes[1];
 
             // Arg0 should be either a string or a column of strings.
             if (type0.IsTable)
@@ -107,11 +107,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             returnType = DType.CreateTable(new TypedName(DType.Number, OneColumnTableResultName));
 
-            bool hasStartIndex = argTypes.Length == 3;
+            var hasStartIndex = argTypes.Length == 3;
 
             if (hasStartIndex)
             {
-                DType type2 = argTypes[2];
+                var type2 = argTypes[2];
 
                 // Arg2 should be either a number or a column of numbers.
                 if (argTypes[2].IsTable)

@@ -96,7 +96,7 @@ namespace Microsoft.PowerFx.Core.App.ErrorContainers
             Contracts.AssertValue(node);
             Contracts.AssertValue(args);
 
-            TexlError err = new TexlError(node, severity, errKey, args);
+            var err = new TexlError(node, severity, errKey, args);
             CollectionUtils.Add(ref _errors, err);
             return err;
         }

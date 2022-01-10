@@ -29,7 +29,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             yield return new [] { TexlStrings.LenArg1 };
         }
 
-        public override DelegationCapability FunctionDelegationCapability { get { return DelegationCapability.Length; } }
+        public override DelegationCapability FunctionDelegationCapability => DelegationCapability.Length;
 
         public override bool IsRowScopedServerDelegatable(CallNode callNode, TexlBinding binding, OperationCapabilityMetadata metadata)
         {
@@ -66,7 +66,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertValue(errors);
             Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
 
-            bool fValid = base.CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            var fValid = base.CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
             Contracts.Assert(returnType.IsTable);
 
             // Typecheck the input table

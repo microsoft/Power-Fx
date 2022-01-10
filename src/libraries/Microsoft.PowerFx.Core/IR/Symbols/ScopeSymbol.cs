@@ -12,7 +12,7 @@ namespace Microsoft.PowerFx.Core.IR.Symbols
         public int Id { get; }
         public IReadOnlyList<DName> AccessedFields => _fields;
             
-        private List<DName> _fields = new List<DName>();
+        private readonly List<DName> _fields = new List<DName>();
 
         public ScopeSymbol(int id)
         {

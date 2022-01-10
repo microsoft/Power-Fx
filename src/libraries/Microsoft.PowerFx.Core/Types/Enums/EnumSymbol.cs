@@ -42,23 +42,20 @@ namespace Microsoft.PowerFx.Core.Types.Enums
 
             foreach (var typedName in EnumType.GetNames(DPath.Root))
             {
-                string invName = typedName.Name.Value;
+                var invName = typedName.Name.Value;
 
-                string locName;
-                if (!StringResources.TryGet($"{InvariantName}_{typedName.Name.Value}_Name", out locName))
+                if (!StringResources.TryGet($"{InvariantName}_{typedName.Name.Value}_Name", out var locName))
                     locName = invName;
 
                 Contracts.Assert(DName.IsValidDName(invName));
                 _valuesInvariantToLoc[invName] = locName;
                 _valuesLocToInvariant[locName] = invName;
 
-                string displayName;
-                if (!StringResources.TryGet($"{InvariantName}_{typedName.Name.Value}_DisplayName", out displayName))
+                if (!StringResources.TryGet($"{InvariantName}_{typedName.Name.Value}_DisplayName", out var displayName))
                     displayName = locName;
 
-                string custDisplayName;
-                string entityNameValue = name.Value;
-                if (!EnumStore.TryGetLocalizedEnumValue(entityNameValue, invName, out custDisplayName))
+                var entityNameValue = name.Value;
+                if (!EnumStore.TryGetLocalizedEnumValue(entityNameValue, invName, out var custDisplayName))
                     custDisplayName = displayName;
 
                 _valuesInvariantToDisplayName[invName] = custDisplayName;

@@ -378,7 +378,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
         [InlineData("123\n567{\n}890", 3)]
         public void TestGetCharPosition(string expression, int expected)
         {
-            string pattern = @"\{[0-9|\n]\}";
+            var pattern = @"\{[0-9|\n]\}";
             var re = new Regex(pattern);
             var matches = re.Matches(expression);
             Assert.Single(matches);

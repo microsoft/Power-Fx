@@ -21,7 +21,7 @@ namespace Microsoft.PowerFx.Core.Logging
 
         private StructuralPrint(TexlBinding binding = null)
         {
-            this._binding = binding;
+            _binding = binding;
         }
 
         // Public entry point for prettyprinting TEXL parse trees
@@ -66,7 +66,7 @@ namespace Microsoft.PowerFx.Core.Logging
         {
             Contracts.AssertValue(node);
 
-            NumLitToken nlt = node.Value;
+            var nlt = node.Value;
             return LazyList<string>.Of("#$number$#");
         }
 
@@ -99,15 +99,17 @@ namespace Microsoft.PowerFx.Core.Logging
         {
             Contracts.AssertValue(node);
 
-            string separator = TexlParser.GetTokString(node.Token.Kind);
+            var separator = TexlParser.GetTokString(node.Token.Kind);
 
             var values = node.Left.Accept(this, Precedence.Primary);
             values = values.With(separator);
             if (node.Right.AtToken != null || node.UsesBracket)
                 values = values.With("#$disambiguation$#");
             else
+            {
                 values = values.With(node.RightNode?.Accept(this, parentPrecedence) ??
                      LazyList<string>.Of("#$righthandid$#"));
+            }
 
             return ApplyPrecedence(parentPrecedence, Precedence.Primary, values);
         }
@@ -216,7 +218,7 @@ namespace Microsoft.PowerFx.Core.Logging
                 var count = node.Count;
                 var result = LazyList<string>.Empty;
 
-                for (int i = 0; i < count; i++)
+                for (var i = 0; i < count; i++)
                 {
                     result = result
                         .With(node.Children[i].Accept(this, Precedence.None));
@@ -258,9 +260,9 @@ namespace Microsoft.PowerFx.Core.Logging
         {
             Contracts.AssertValue(node);
 
-            string listSep = TexlLexer.LocalizedInstance.LocalizedPunctuatorListSeparator + " ";
+            var listSep = TexlLexer.LocalizedInstance.LocalizedPunctuatorListSeparator + " ";
             var result = LazyList<string>.Empty;
-            for (int i = 0; i < node.Children.Length; ++i)
+            for (var i = 0; i < node.Children.Length; ++i)
             {
                 result = result
                     .With(node.Children[i].Accept(this, Precedence.None));
@@ -274,9 +276,9 @@ namespace Microsoft.PowerFx.Core.Logging
         {
             Contracts.AssertValue(node);
 
-            string listSep = TexlLexer.LocalizedInstance.LocalizedPunctuatorListSeparator + " ";
+            var listSep = TexlLexer.LocalizedInstance.LocalizedPunctuatorListSeparator + " ";
             var result = LazyList<string>.Empty;
-            for (int i = 0; i < node.Children.Length; ++i)
+            for (var i = 0; i < node.Children.Length; ++i)
             {
                 result = result
                     .With(
@@ -303,9 +305,9 @@ namespace Microsoft.PowerFx.Core.Logging
         {
             Contracts.AssertValue(node);
 
-            string listSep = TexlLexer.LocalizedInstance.LocalizedPunctuatorListSeparator + " ";
+            var listSep = TexlLexer.LocalizedInstance.LocalizedPunctuatorListSeparator + " ";
             var result = LazyList<string>.Empty;
-            for (int i = 0; i < node.Children.Length; ++i)
+            for (var i = 0; i < node.Children.Length; ++i)
             {
                 result = result.With(node.Children[i].Accept(this, Precedence.SingleExpr));
                 if (i != node.Children.Length - 1)

@@ -44,21 +44,20 @@ namespace Microsoft.PowerFx.Core.Types
             return new ValueTree(RedBlackNode<EquatableObject>.Create(items));
         }
 
-        public bool IsEmpty { get { return _root == null; } }
+        public bool IsEmpty => _root == null;
 
-        public int Count { get { return _root == null ? 0 : _root.Count; } }
+        public int Count => _root == null ? 0 : _root.Count;
 
         public bool Contains(string key)
         {
             Contracts.AssertValue(key);
-            EquatableObject value;
-            return TryGetValue(key, out value);
+            return TryGetValue(key, out var value);
         }
 
         public bool TryGetValue(string key, out EquatableObject value)
         {
             Contracts.AssertValue(key);
-            bool fRet = RedBlackNode<EquatableObject>.TryGetValue(_root, key, out value);
+            var fRet = RedBlackNode<EquatableObject>.TryGetValue(_root, key, out value);
             Contracts.Assert(fRet == (value.Object != null));
             return fRet;
         }
@@ -90,7 +89,7 @@ namespace Microsoft.PowerFx.Core.Types
             Contracts.AssertNonEmpty(names);
             Contracts.AssertAllValid(names);
 
-            RedBlackNode<EquatableObject> root = _root;
+            var root = _root;
             foreach (string name in names)
             {
                 Contracts.AssertNonEmpty(name);
@@ -124,7 +123,7 @@ namespace Microsoft.PowerFx.Core.Types
 
         public override int GetHashCode()
         {
-            int hash = 0x79B70F13;
+            var hash = 0x79B70F13;
             if (_root != null)
             {
                 if (_hashCodeCache.ContainsKey(_root))

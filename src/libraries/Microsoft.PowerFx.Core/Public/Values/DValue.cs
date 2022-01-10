@@ -10,14 +10,12 @@ namespace Microsoft.PowerFx.Core.Public.Values
     /// </summary>
     public class DValue<T> where T : ValidFormulaValue
     {
-        private T _value;
-        private BlankValue _blank;
-        private ErrorValue _error;
+        private readonly ErrorValue _error;
 
         private DValue(T value, BlankValue blank, ErrorValue error)
         {
-            _value = value;
-            _blank = blank;
+            Value = value;
+            Blank = blank;
             _error = error;
         }
 
@@ -36,12 +34,12 @@ namespace Microsoft.PowerFx.Core.Public.Values
             return new DValue<T>(null, null, error);
         }
 
-        public bool IsValue => _value != null;
-        public bool IsBlank => _blank != null;
+        public bool IsValue => Value != null;
+        public bool IsBlank => Blank != null;
         public bool IsError => _error != null;
 
-        public T Value => _value;
-        public BlankValue Blank => _blank;
+        public T Value { get; }
+        public BlankValue Blank { get; }
         public ErrorValue Error => _error;
 
         public FormulaValue ToFormulaValue()

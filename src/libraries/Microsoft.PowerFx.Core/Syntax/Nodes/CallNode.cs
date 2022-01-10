@@ -45,7 +45,7 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
             Args.Parent = this;
             ParenClose = tokParenClose;
 
-            int headDepth = HeadNode == null ? 0 : HeadNode.Depth;
+            var headDepth = HeadNode == null ? 0 : HeadNode.Depth;
             _depth = 1 + (args.Depth > headDepth ? args.Depth : headDepth);
 
             if (headNode != null)
@@ -58,7 +58,7 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
             // A volatile field should not normally be passed using a ref or out parameter, since it will not be treated
             // as volatile within the scope of the function. There are exceptions to this, such as when calling an interlocked API.
             // Hence disabling the warning for this instance.
-            int invocationId = Interlocked.Increment(ref _uniqueInvocationIdNext);
+            var invocationId = Interlocked.Increment(ref _uniqueInvocationIdNext);
 #pragma warning restore 420
 
             // We need to generate a globally unique name for this function invocation, so we use
@@ -100,7 +100,7 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
             return visitor.Visit(this, context);
         }
 
-        public override NodeKind Kind { get { return NodeKind.Call; } }
+        public override NodeKind Kind => NodeKind.Call;
 
         public override CallNode CastCall()
         {
@@ -132,7 +132,9 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
             // If we have a close paren, then the call node is complete.
             // If not, then the call node ends with the end of the last argument.
             if (ParenClose != null)
+            {
                 limit = ParenClose.Span.Lim;
+            }
             else
             {
                 limit = Args.GetCompleteSpan().Lim;

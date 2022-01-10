@@ -37,7 +37,7 @@ namespace Microsoft.PowerFx.Core.Public.Types
 
         public RecordType ToRecord()
         {
-            return new RecordType(this._type.ToRecord());
+            return new RecordType(_type.ToRecord());
         }
     }
 }

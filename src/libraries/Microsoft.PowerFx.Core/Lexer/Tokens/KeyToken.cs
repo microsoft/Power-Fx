@@ -22,7 +22,7 @@ namespace Microsoft.PowerFx.Core.Lexer.Tokens
         {
         }
 
-        public override bool IsDottedNamePunctuator { get { return Kind == TokKind.Dot || Kind == TokKind.Bang || Kind == TokKind.BracketOpen; } }
+        public override bool IsDottedNamePunctuator => Kind == TokKind.Dot || Kind == TokKind.Bang || Kind == TokKind.BracketOpen;
 
         public override Token Clone(Span ts)
         {

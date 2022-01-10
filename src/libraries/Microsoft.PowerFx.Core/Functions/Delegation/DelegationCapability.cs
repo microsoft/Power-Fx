@@ -185,7 +185,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation
             return (_capabilities & delegationCapability) == delegationCapability;
         }
 
-        public BigInteger Capabilities { get { return _capabilities; } }
+        public BigInteger Capabilities => _capabilities;
 
         public static bool IsValid(BigInteger capabilityConstant)
         {
@@ -193,28 +193,10 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation
                 !(capabilityConstant & DelegationCapability.SupportsAll).IsZero;
         }
 
-        public static Dictionary<BinaryOp, DelegationCapability> BinaryOpToDelegationCapabilityMap
-        {
-            get
-            {
-                return _binaryOpToDelegationCapabilityMap.Value;
-            }
-        }
+        public static Dictionary<BinaryOp, DelegationCapability> BinaryOpToDelegationCapabilityMap => _binaryOpToDelegationCapabilityMap.Value;
 
-        public static Dictionary<UnaryOp, DelegationCapability> UnaryOpToDelegationCapabilityMap
-        {
-            get
-            {
-                return _unaryOpToDelegationCapabilityMap.Value;
-            }
-        }
+        public static Dictionary<UnaryOp, DelegationCapability> UnaryOpToDelegationCapabilityMap => _unaryOpToDelegationCapabilityMap.Value;
 
-        public static Dictionary<string, DelegationCapability> OperatorToDelegationCapabilityMap
-        {
-            get
-            {
-                return _operatorToDelegationCapabilityMap.Value;
-            }
-        }
+        public static Dictionary<string, DelegationCapability> OperatorToDelegationCapabilityMap => _operatorToDelegationCapabilityMap.Value;
     }
 }

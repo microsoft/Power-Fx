@@ -87,7 +87,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             if (!CheckArgsCount(callNode, binding))
                 return false;
 
-            TexlNode[] args = callNode.Args.Children.VerifyValue();
+            var args = callNode.Args.Children.VerifyValue();
             var opStrategy = GetOpDelegationStrategy(BinaryOp.Equal, null);
 
             if (binding.IsFullRecordRowScopeAccess(args[0]))
@@ -95,8 +95,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 return GetDottedNameNodeDelegationStrategy().IsValidDottedNameNode(args[0] as DottedNameNode, binding, metadata, opStrategy);
             }
 
-            FirstNameNode node = args[0] as FirstNameNode;
-            if (node == null)
+            if (args[0] is not FirstNameNode node)
             {
                 var message = string.Format("Arg1 is not a firstname node, instead it is {0}", args[0].Kind);
                 AddSuggestionMessageToTelemetry(message, args[0], binding);

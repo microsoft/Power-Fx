@@ -16,7 +16,7 @@ namespace Microsoft.PowerFx.Core.Types
             Contracts.AssertNonEmpty(columnName);
             Contracts.AssertValue(columnType);
 
-            bool retval = false;
+            var retval = false;
             if (self.HasExpandInfo && self.ExpandInfo != null && !skipExpands)
             {
                 var qOptions = dataSourceToQueryOptionsMap.GetOrCreateQueryOptions(self.ExpandInfo.ParentDataSource as IExternalTabularDataSource);

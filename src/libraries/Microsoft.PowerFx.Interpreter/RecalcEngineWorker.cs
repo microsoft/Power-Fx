@@ -69,12 +69,12 @@ namespace Microsoft.PowerFx
             {
                 var binding = fi._binding;
 
-                (IntermediateNode irnode, ScopeSymbol ruleScopeSymbol) = IRTranslator.Translate(binding);
+                (var irnode, var ruleScopeSymbol) = IRTranslator.Translate(binding);
 
                 var scope = this;
                 var v = new EvalVisitor(_cultureInfo);
 
-                FormulaValue newValue = irnode.Accept(v, SymbolContext.New());
+                var newValue = irnode.Accept(v, SymbolContext.New());
 
                 var equal = fi._value != null &&  // null on initial run. 
                     RuntimeHelpers.AreEqual(newValue, fi._value);

@@ -18,17 +18,16 @@ namespace Microsoft.PowerFx.Core.Functions.FunctionArgValidators
             Contracts.AssertValue(binding);
 
             dsNodes = new List<FirstNameNode>();
-            FirstNameNode dsNode;
             switch (argNode.Kind)
             {
-            case NodeKind.FirstName:
-                if (TryGetDsNode(argNode.AsFirstName(), binding, out dsNode))
-                    dsNodes.Add(dsNode);
-                break;
-            case NodeKind.Call:
-                return TryGetDsNodes(argNode.AsCall(), binding, out dsNodes);
-            case NodeKind.DottedName:
-                return TryGetDsNode(argNode.AsDottedName(), binding, out dsNodes);
+                case NodeKind.FirstName:
+                    if (TryGetDsNode(argNode.AsFirstName(), binding, out var dsNode))
+                        dsNodes.Add(dsNode);
+                    break;
+                case NodeKind.Call:
+                    return TryGetDsNodes(argNode.AsCall(), binding, out dsNodes);
+                case NodeKind.DottedName:
+                    return TryGetDsNode(argNode.AsDottedName(), binding, out dsNodes);
             }
 
             return dsNodes.Count > 0;

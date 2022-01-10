@@ -18,27 +18,10 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense.IntellisenseData
     // The IntellisenseData class contains the pre-parsed data for Intellisense to provide suggestions
     internal class IntellisenseData : IIntellisenseData
     {
-        private readonly DType _expectedType;
-        private readonly IntellisenseSuggestionList _suggestions;
         private readonly IntellisenseSuggestionList _substringSuggestions;
-        private readonly TexlBinding _binding;
-        private readonly List<CommentToken> _comments;
-        private readonly TexlFunction _curFunc;
-        private readonly TexlNode _curNode;
-        private readonly string _script;
-        private readonly int _cursorPos;
-        private readonly int _argIndex;
         private readonly int _argCount;
-        private IsValidSuggestion _isValidSuggestionFunc;
         private string _matchingStr;
-        // _matchingLength will be different from the length of _matchingStr when _matchingStr contains delimiters.
-        // For matching purposes we escape the delimeters and match against the internal DName.
-        private int _matchingLength;
         private int _replacementStartIndex;
-        // There will be a separate replacement length when we want to replace an entire node and not just the
-        // preceding portion which is used for matching.
-        private int _replacementLength;
-        private IList<DType> _missingTypes;
         private readonly List<ISpecialCaseHandler> _cleanupHandlers;
 
         public IntellisenseData(IIntellisenseContext context, DType expectedType, TexlBinding binding, TexlFunction curFunc, TexlNode curNode, int argIndex, int argCount, IsValidSuggestion isValidSuggestionFunc, IList<DType> missingTypes, List<CommentToken> comments)
@@ -52,63 +35,63 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense.IntellisenseData
             Contracts.AssertValueOrNull(missingTypes);
             Contracts.AssertValueOrNull(comments);
 
-            _expectedType = expectedType;
-            _suggestions = new IntellisenseSuggestionList();
+            ExpectedType = expectedType;
+            Suggestions = new IntellisenseSuggestionList();
             _substringSuggestions = new IntellisenseSuggestionList();
-            _binding = binding;
-            _comments = comments;
-            _curFunc = curFunc;
-            _curNode = curNode;
-            _script = context.InputText;
-            _cursorPos = context.CursorPosition;
-            _argIndex = argIndex;
+            Binding = binding;
+            Comments = comments;
+            CurFunc = curFunc;
+            CurNode = curNode;
+            Script = context.InputText;
+            CursorPos = context.CursorPosition;
+            ArgIndex = argIndex;
             _argCount = argCount;
-            _isValidSuggestionFunc = isValidSuggestionFunc;
+            IsValidSuggestionFunc = isValidSuggestionFunc;
             _matchingStr = string.Empty;
-            _matchingLength = 0;
+            MatchingLength = 0;
             _replacementStartIndex = context.CursorPosition;
-            _missingTypes = missingTypes;
+            MissingTypes = missingTypes;
             BoundTo = string.Empty;
             _cleanupHandlers = new List<ISpecialCaseHandler>();
         }
 
-        internal DType ExpectedType { get { return _expectedType; } }
+        internal DType ExpectedType { get; }
 
-        internal IntellisenseSuggestionList Suggestions { get { return _suggestions; } }
+        internal IntellisenseSuggestionList Suggestions { get; }
 
-        internal IntellisenseSuggestionList SubstringSuggestions { get { return _substringSuggestions; } }
+        internal IntellisenseSuggestionList SubstringSuggestions => _substringSuggestions;
 
-        internal TexlBinding Binding { get { return _binding; } }
+        internal TexlBinding Binding { get; }
 
-        internal List<CommentToken> Comments { get { return _comments; } }
+        internal List<CommentToken> Comments { get; }
 
-        public TexlFunction CurFunc { get { return _curFunc; } }
+        public TexlFunction CurFunc { get; }
 
-        internal TexlNode CurNode { get { return _curNode; } }
+        internal TexlNode CurNode { get; }
 
-        public string Script { get { return _script; } }
+        public string Script { get; }
 
-        internal int CursorPos { get { return _cursorPos; } }
+        internal int CursorPos { get; }
 
-        public int ArgIndex { get { return _argIndex; } }
+        public int ArgIndex { get; }
 
-        public int ArgCount { get { return _argCount; } }
+        public int ArgCount => _argCount;
 
-        internal IsValidSuggestion IsValidSuggestionFunc { get { return _isValidSuggestionFunc; } }
+        internal IsValidSuggestion IsValidSuggestionFunc { get; }
 
-        internal string MatchingStr { get { return _matchingStr; } }
+        internal string MatchingStr => _matchingStr;
 
-        internal int MatchingLength { get { return _matchingLength; } }
+        internal int MatchingLength { get; private set; }
 
-        public int ReplacementStartIndex { get { return _replacementStartIndex; } }
+        public int ReplacementStartIndex => _replacementStartIndex;
 
-        public int ReplacementLength { get { return _replacementLength; } }
+        public int ReplacementLength { get; private set; }
 
         internal string BoundTo { get; set; }
 
-        internal IList<DType> MissingTypes { get { return _missingTypes; } }
+        internal IList<DType> MissingTypes { get; }
 
-        internal List<ISpecialCaseHandler> CleanupHandlers { get { return _cleanupHandlers; } }
+        internal List<ISpecialCaseHandler> CleanupHandlers => _cleanupHandlers;
 
         /// <summary>
         /// Type that defines valid symbols in the formula
@@ -458,7 +441,7 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense.IntellisenseData
 
         internal bool SetMatchArea(int startIndex, int endIndex, int replacementLength = -1)
         {
-            Contracts.Assert(0 <= startIndex && startIndex <= endIndex && endIndex <= _script.Length);
+            Contracts.Assert(0 <= startIndex && startIndex <= endIndex && endIndex <= Script.Length);
 
             // If we have already provided suggestions, we can't set the match area
             if (Suggestions.Count > 0 || SubstringSuggestions.Count > 0)
@@ -469,9 +452,9 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense.IntellisenseData
                 startIndex++;
 
             _replacementStartIndex = startIndex;
-            _matchingLength = endIndex - startIndex;
-            _replacementLength = replacementLength < 0 ? _matchingLength : replacementLength;
-            _matchingStr = TexlLexer.UnescapeName(_script.Substring(startIndex, _matchingLength));
+            MatchingLength = endIndex - startIndex;
+            ReplacementLength = replacementLength < 0 ? MatchingLength : replacementLength;
+            _matchingStr = TexlLexer.UnescapeName(Script.Substring(startIndex, MatchingLength));
 
             return true;
         }

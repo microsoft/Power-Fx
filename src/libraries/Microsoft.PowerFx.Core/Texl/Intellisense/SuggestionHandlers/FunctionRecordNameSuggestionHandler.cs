@@ -22,29 +22,29 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense{
             {
                 Contracts.AssertValue(intellisenseData);
 
-                if (!TryGetRecordNodeWithinACallNode(intellisenseData.CurNode, out RecordNode recordNode, out CallNode callNode))
+                if (!TryGetRecordNodeWithinACallNode(intellisenseData.CurNode, out var recordNode, out var callNode))
                     return false;
 
                 // For the special case of an identifier of a record which is an argument of a function, we can
                 // utilize the data provided to suggest relevant column names
-                int cursorPos = intellisenseData.CursorPos;
+                var cursorPos = intellisenseData.CursorPos;
 
-                bool suggestionsAdded = false;
+                var suggestionsAdded = false;
                 Contracts.AssertValue(recordNode);
                 Contracts.AssertValue(callNode);
 
-                Identifier columnName = GetRecordIdentifierForCursorPosition(cursorPos, recordNode, intellisenseData.Script);
+                var columnName = GetRecordIdentifierForCursorPosition(cursorPos, recordNode, intellisenseData.Script);
                 if (columnName == null)
                     return false;
 
                 if (columnName.Token.Span.Min <= cursorPos)
                 {
                     var tokenSpan = columnName.Token.Span;
-                    int replacementLength = tokenSpan.Min == cursorPos ? 0 : tokenSpan.Lim - tokenSpan.Min;
+                    var replacementLength = tokenSpan.Min == cursorPos ? 0 : tokenSpan.Lim - tokenSpan.Min;
                     intellisenseData.SetMatchArea(tokenSpan.Min, cursorPos, replacementLength);
                 }
 
-                CallInfo info = intellisenseData.Binding.GetInfo(callNode);
+                var info = intellisenseData.Binding.GetInfo(callNode);
                 var func = info.Function;
                 if (func == null || !intellisenseData.IsFunctionElligibleForRecordSuggestions(func))
                     return false;
@@ -52,26 +52,25 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense{
                 // Adding suggestions for callNode arguments which reference a collection's columns
                 if (func.CanSuggestInputColumns)
                 {
-                    DType aggregateType = GetAggregateType(func, callNode, intellisenseData);
+                    var aggregateType = GetAggregateType(func, callNode, intellisenseData);
                     if (aggregateType.HasErrors || !aggregateType.IsAggregate)
                         return false;
 
                     if(aggregateType.ContainsDataEntityType(DPath.Root))
                     {
-                        bool error = false;
+                        var error = false;
                         aggregateType = aggregateType.DropAllOfTableRelationships(ref error, DPath.Root);
                         if (error)
                             return false;
                     }
 
-                    foreach (TypedName tName in aggregateType.GetNames(DPath.Root))
+                    foreach (var tName in aggregateType.GetNames(DPath.Root))
                     {
                         var usedName = tName.Name;
-                        string maybeDisplayName;
-                        if (DType.TryGetDisplayNameForColumn(aggregateType, usedName, out maybeDisplayName))
+                        if (DType.TryGetDisplayNameForColumn(aggregateType, usedName, out var maybeDisplayName))
                             usedName = new DName(maybeDisplayName);
 
-                        string suggestion = TexlLexer.EscapeName(usedName.Value) + (IntellisenseHelper.IsPunctuatorColonNextToCursor(cursorPos, intellisenseData.Script) ? "" : TexlLexer.PunctuatorColon);
+                        var suggestion = TexlLexer.EscapeName(usedName.Value) + (IntellisenseHelper.IsPunctuatorColonNextToCursor(cursorPos, intellisenseData.Script) ? "" : TexlLexer.PunctuatorColon);
                         suggestionsAdded |= IntellisenseHelper.AddSuggestion(intellisenseData, suggestion, SuggestionKind.Field, SuggestionIconKind.Other, DType.String, requiresSuggestionEscaping: false);
                     }
 
@@ -97,7 +96,7 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense{
             {
                 Contracts.AssertValue(node);
 
-                TexlNode parentNode = node;
+                var parentNode = node;
                 while (parentNode != null)
                 {
                     if (parentNode.Kind == NodeKind.Record)
@@ -170,7 +169,7 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense{
             {
                 Contracts.AssertValue(node);
 
-                if(!TryGetParentRecordNode(node, out recordNode) || !TryGetParentListNode(recordNode, out ListNode listNode))
+                if(!TryGetParentRecordNode(node, out recordNode) || !TryGetParentListNode(recordNode, out var listNode))
                 {
                     callNode = null;
                     return false;

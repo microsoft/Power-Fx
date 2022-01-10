@@ -11,14 +11,14 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
 {
     public class SignatureHelpTest : IntellisenseTestBase
     {
-        static bool RegenerateSignatureHelp = false;
+        static readonly bool RegenerateSignatureHelp = false;
 
         /// <summary>
         /// Resolves to the directory in the src folder that corresponds to the current directory, which may
         /// instead include the subpath bin/(Debug|Release).AnyCPU, depending on whether the assembly was
         /// built in debug or release mode
         /// </summary>
-        private static string _signatureHelpDirectory = Path.Join(Directory.GetCurrentDirectory(), "IntellisenseTests", "TestSignatures")
+        private static readonly string _signatureHelpDirectory = Path.Join(Directory.GetCurrentDirectory(), "IntellisenseTests", "TestSignatures")
             .Replace(Path.Join("bin", "Debug.AnyCPU"), "src")
             .Replace(Path.Join("bin", "Release.AnyCPU"), "src");
 

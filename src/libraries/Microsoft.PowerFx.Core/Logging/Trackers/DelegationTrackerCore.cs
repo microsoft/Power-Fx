@@ -21,10 +21,9 @@ namespace Microsoft.PowerFx.Core.Logging.Trackers
             Contracts.AssertValue(func);
             Contracts.AssertValueOrNull(logInfo);
 
-            IExternalRule rule;
             // The rule need not exist on ControlInfo yet. This happens when we are attempting
             // to create a namemap in which case we try to bind the rule before adding it to the control.
-            if (!TryGetCurrentRule(binding, out rule))
+            if (!TryGetCurrentRule(binding, out var rule))
                 return;
 
             rule.SetDelegationTrackerStatus(node, status, logInfo ?? DelegationTelemetryInfo.CreateEmptyDelegationTelemetryInfo(), func);
@@ -37,7 +36,7 @@ namespace Microsoft.PowerFx.Core.Logging.Trackers
             rule = null;
 
             var entity = binding.NameResolver?.CurrentEntity;
-            DName? currentProperty = binding.NameResolver?.CurrentProperty;
+            var currentProperty = binding.NameResolver?.CurrentProperty;
             if (entity == null || !currentProperty.HasValue || !currentProperty.Value.IsValid)
                 return false;
 

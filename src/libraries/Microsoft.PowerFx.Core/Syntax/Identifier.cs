@@ -31,7 +31,7 @@ namespace Microsoft.PowerFx.Core.Syntax
         {
             return new Identifier(
                 Namespace,
-                AtToken == null ? null : AtToken.Clone(ts),
+                AtToken?.Clone(ts),
                 Token.Clone(ts).As<IdentToken>());
         }
 

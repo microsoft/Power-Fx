@@ -40,13 +40,13 @@ namespace Microsoft.PowerFx.Core.Utils
             return this;
         }
 
-        T IEnumerator<T>.Current { get { throw Contracts.Except(); } }
+        T IEnumerator<T>.Current => throw Contracts.Except();
 
         void IDisposable.Dispose()
         {
         }
 
-        object System.Collections.IEnumerator.Current { get { throw Contracts.Except(); } }
+        object System.Collections.IEnumerator.Current => throw Contracts.Except();
 
         bool System.Collections.IEnumerator.MoveNext()
         {

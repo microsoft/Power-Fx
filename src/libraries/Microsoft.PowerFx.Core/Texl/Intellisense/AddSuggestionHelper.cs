@@ -18,14 +18,14 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
             if (!intellisenseData.DetermineSuggestibility(suggestion, type))
                 return false;
 
-            IntellisenseSuggestionList suggestions = intellisenseData.Suggestions;
-            IntellisenseSuggestionList substringSuggestions = intellisenseData.SubstringSuggestions;
-            int matchingLength = intellisenseData.MatchingLength;
-            string matchingStr = intellisenseData.MatchingStr;
-            string boundTo = intellisenseData.BoundTo;
+            var suggestions = intellisenseData.Suggestions;
+            var substringSuggestions = intellisenseData.SubstringSuggestions;
+            var matchingLength = intellisenseData.MatchingLength;
+            var matchingStr = intellisenseData.MatchingStr;
+            var boundTo = intellisenseData.BoundTo;
 
             var valueToSuggest = requiresSuggestionEscaping ? TexlLexer.EscapeName(suggestion) : suggestion;
-            int highlightStart = suggestion.IndexOf(matchingStr, StringComparison.OrdinalIgnoreCase);
+            var highlightStart = suggestion.IndexOf(matchingStr, StringComparison.OrdinalIgnoreCase);
             // If the suggestion has special characters we need to find the highlightStart index by escaping the matching string as well.
             // Because, the suggestion could be something like 'Ident with Space' and the user might have typed Ident. In this case,
             // we want to highlight only Ident while displaying 'Ident with Space'.
@@ -34,7 +34,7 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
             else
                 matchingLength--;
 
-            int highlightEnd = highlightStart + matchingStr.Length;
+            var highlightEnd = highlightStart + matchingStr.Length;
             if (IntellisenseHelper.IsMatch(suggestion, matchingStr))
             {
                 // In special circumstance where the user escapes an identifier where they don't have to, the matching length will
@@ -42,8 +42,8 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
                 // Hence we have to count for that fact.
                 if (matchingLength > 0 & matchingLength > matchingStr.Length)
                     highlightEnd = matchingLength > valueToSuggest.Length ? valueToSuggest.Length : matchingLength;
-                UIString UIsuggestion = ConstructUIString(suggestionKind, type, suggestions, valueToSuggest, highlightStart, highlightEnd);
-                IntellisenseSuggestion candidate = new IntellisenseSuggestion(UIsuggestion,
+                var UIsuggestion = ConstructUIString(suggestionKind, type, suggestions, valueToSuggest, highlightStart, highlightEnd);
+                var candidate = new IntellisenseSuggestion(UIsuggestion,
                     suggestionKind,
                     iconKind,
                     type,
@@ -56,8 +56,8 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
             }
             if (highlightStart > -1)
             {
-                UIString UIsuggestion = ConstructUIString(suggestionKind, type, substringSuggestions, valueToSuggest, highlightStart, highlightEnd);
-                IntellisenseSuggestion candidate = new IntellisenseSuggestion(UIsuggestion,
+                var UIsuggestion = ConstructUIString(suggestionKind, type, substringSuggestions, valueToSuggest, highlightStart, highlightEnd);
+                var candidate = new IntellisenseSuggestion(UIsuggestion,
                     suggestionKind,
                     iconKind,
                     type,

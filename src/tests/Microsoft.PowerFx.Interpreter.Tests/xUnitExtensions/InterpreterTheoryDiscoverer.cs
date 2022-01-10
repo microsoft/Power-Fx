@@ -22,8 +22,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests.xUnitExtensions
 
         public IEnumerable<IXunitTestCase> Discover(ITestFrameworkDiscoveryOptions discoveryOptions, ITestMethod testMethod, IAttributeInfo factAttribute)
         {
-            object[]? firstArgument = (object[])factAttribute.GetConstructorArguments().FirstOrDefault();
-            Type[]? skippingExceptions = firstArgument?.Cast<Type>().ToArray() ?? Type.EmptyTypes;
+            var firstArgument = (object[])factAttribute.GetConstructorArguments().FirstOrDefault();
+            var skippingExceptions = firstArgument?.Cast<Type>().ToArray() ?? Type.EmptyTypes;
             Array.Resize(ref skippingExceptions, skippingExceptions.Length + 1);
             skippingExceptions[skippingExceptions.Length - 1] = typeof(SkipException);
 

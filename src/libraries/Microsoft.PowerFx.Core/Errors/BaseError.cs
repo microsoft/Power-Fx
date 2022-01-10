@@ -35,7 +35,7 @@ namespace Microsoft.PowerFx.Core.Errors
         /// Returns the key of the error message to be consumed by UI.
         /// </summary>
         public string MessageKey { get; }
-        public ErrorResourceKey ErrorResourceKey { get { return new ErrorResourceKey(MessageKey); } }
+        public ErrorResourceKey ErrorResourceKey => new ErrorResourceKey(MessageKey);
 
         /// <summary>
         /// Returns the args of the error message. Used for building new errors out of existing ones, in some cases.
@@ -135,10 +135,9 @@ namespace Microsoft.PowerFx.Core.Errors
             // We expect errKey to be the key for an error resource object within string resources.
             // We fall back to using a basic content string within string resources, for errors
             // that haven't yet been converted to an ErrorResource in the Resources.pares file.
-            ErrorResource errorResource;
             string shortMessage;
             string longMessage;
-            if (!StringResources.TryGetErrorResource(errKey, out errorResource))
+            if (!StringResources.TryGetErrorResource(errKey, out var errorResource))
             {
                 errorResource = null;
                 shortMessage = StringResources.Get(errKey.Key);
@@ -179,7 +178,9 @@ namespace Microsoft.PowerFx.Core.Errors
                 }
             }
             else
+            {
                 sb.Append(message);
+            }
 
             return sb.ToString();
         }
@@ -199,14 +200,12 @@ namespace Microsoft.PowerFx.Core.Errors
 
             // Look for singular Message_HowToFix
             var howToFixSingularKey = messageKey + HowToFixSuffix;
-            string howToFixSingularMessage;
-            if (StringResources.TryGet(howToFixSingularKey, out howToFixSingularMessage, locale))
+            if (StringResources.TryGet(howToFixSingularKey, out var howToFixSingularMessage, locale))
                 return new List<string> { howToFixSingularMessage };
 
             // Look for multiple how to fix messages: Message_HowToFix1, Message_HowToFix2...
             var messages = new List<string>();
-            string howToFixMessage;
-            for (int messageIndex = 1; StringResources.TryGet(howToFixSingularKey + messageIndex, out howToFixMessage, locale); messageIndex++)
+            for (var messageIndex = 1; StringResources.TryGet(howToFixSingularKey + messageIndex, out var howToFixMessage, locale); messageIndex++)
                 messages.Add(howToFixMessage);
 
             return messages.Count == 0 ? null : messages;
@@ -215,7 +214,7 @@ namespace Microsoft.PowerFx.Core.Errors
         private void Format(StringBuilder sb)
         {
 #if DEBUG
-            int lenStart = sb.Length;
+            var lenStart = sb.Length;
 #endif
             FormatCore(sb);
 #if DEBUG

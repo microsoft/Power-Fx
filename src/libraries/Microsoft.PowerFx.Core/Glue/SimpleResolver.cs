@@ -79,7 +79,7 @@ namespace Microsoft.PowerFx.Core.Glue
 
             // See TexlFunctionsLibrary.Lookup
             // return _functionLibrary.Lookup(theNamespace, name, localeInvariant, null);            
-            IEnumerable<TexlFunction> functionLibrary = _library.Where(func => func.Namespace == theNamespace && name == (localeInvariant ? func.LocaleInvariantName : func.Name)); // Base filter
+            var functionLibrary = _library.Where(func => func.Namespace == theNamespace && name == (localeInvariant ? func.LocaleInvariantName : func.Name)); // Base filter
             return functionLibrary;
         }
 
@@ -103,7 +103,7 @@ namespace Microsoft.PowerFx.Core.Glue
             }
 
             // Not found
-            enumName = default(DName);
+            enumName = default;
             enumType = null;
             value = null;
 

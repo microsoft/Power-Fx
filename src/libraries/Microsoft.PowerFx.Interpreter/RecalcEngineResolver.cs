@@ -37,7 +37,7 @@ namespace Microsoft.PowerFx
             // - global formula
             // - parameters 
 
-            string str = name.Value;
+            var str = name.Value;
 
             var parameter = _parameters.MaybeGetFieldType(str);
             if (parameter != null)

@@ -15,26 +15,20 @@ namespace Microsoft.PowerFx
     // of this class in the bodies of the various .visit methods
     internal sealed class SymbolContext
     {
-        // Global top-level parameters.
-        private readonly RecordValue _globals;
-
         private readonly ScopeSymbol _currentScope = null;
-
-        // Map from scope Id to scope
-        private readonly Dictionary<int, IScope> _scopeValues = null;
 
         public SymbolContext(RecordValue globals, ScopeSymbol currentScope, Dictionary<int, IScope> scopeValues)
         {
-            _globals = globals;
+            Globals = globals;
             _currentScope = currentScope;
-            _scopeValues = scopeValues;
+            ScopeValues = scopeValues;
         }
 
-        public RecordValue Globals => _globals;
+        public RecordValue Globals { get; }
 
         public ScopeSymbol CurrentScope => _currentScope;
 
-        public Dictionary<int, IScope> ScopeValues => _scopeValues;
+        public Dictionary<int, IScope> ScopeValues { get; } = null;
 
         public static SymbolContext New()
         {
@@ -65,7 +59,7 @@ namespace Microsoft.PowerFx
 
         public FormulaValue GetScopeVar(ScopeSymbol scope, string name)
         {
-            IScope record = ScopeValues[scope.Id];
+            var record = ScopeValues[scope.Id];
             return record.Resolve(name); // Binder should ensure success.
         }
     }

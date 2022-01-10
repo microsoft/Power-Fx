@@ -28,7 +28,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             string actualStr;
             FormulaValue result = null;
-            bool exceptionThrown = false;
+            var exceptionThrown = false;
             try
             {
                 result = _runner.RunAsync(testCase.Input).Result;
@@ -61,7 +61,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
         internal string TestToString(FormulaValue result)
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             try
             {
                 TestToString(result, sb);
@@ -98,7 +98,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             {
                 sb.Append('[');
 
-                string dil = "";
+                var dil = "";
                 foreach (var row in t.Rows)
                 {
                     sb.Append(dil);
@@ -131,7 +131,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 Array.Sort(fields, (a, b) => string.CompareOrdinal(a.Name, b.Name));
 
                 sb.Append('{');
-                string dil = "";
+                var dil = "";
 
                 foreach (var field in fields)
                 {

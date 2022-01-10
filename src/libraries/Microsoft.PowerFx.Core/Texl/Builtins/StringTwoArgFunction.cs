@@ -36,9 +36,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             if (binding.ErrorContainer.HasErrors(callNode) ||
                 !CheckArgsCount(callNode, binding) ||
                 !binding.IsRowScope(callNode))
+            {
                 return false;
+            }
 
-            TexlNode[] args = callNode.Args.Children.VerifyValue();
+            var args = callNode.Args.Children.VerifyValue();
             Contracts.Assert(args.Length == MinArity);
 
             if (binding.IsRowScope(args[1]))
@@ -49,7 +51,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             foreach (var arg in args)
             {
-                NodeKind argKind = arg.VerifyValue().Kind;
+                var argKind = arg.VerifyValue().Kind;
                 switch (argKind)
                 {
                 case NodeKind.FirstName:

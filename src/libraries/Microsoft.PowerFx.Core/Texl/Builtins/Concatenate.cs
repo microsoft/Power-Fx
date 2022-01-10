@@ -48,16 +48,15 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             nodeToCoercedTypeMap = null;
 
-            int count = args.Length;
-            bool hasTableArg = false;
-            bool fArgsValid = true;
+            var count = args.Length;
+            var hasTableArg = false;
+            var fArgsValid = true;
 
             // Type check the args
             // If any one input argument is of table type, then the returnType will be table type.
-            for (int i = 0; i < count; i++)
+            for (var i = 0; i < count; i++)
             {
-                bool isTable;
-                fArgsValid &= CheckParamIsTypeOrSingleColumnTable(DType.String, args[i], argTypes[i], errors, out isTable, ref nodeToCoercedTypeMap);
+                fArgsValid &= CheckParamIsTypeOrSingleColumnTable(DType.String, args[i], argTypes[i], errors, out var isTable, ref nodeToCoercedTypeMap);
                 hasTableArg |= isTable;
             }
 

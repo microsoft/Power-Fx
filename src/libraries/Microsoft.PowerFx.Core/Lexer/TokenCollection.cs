@@ -36,16 +36,16 @@ namespace Microsoft.PowerFx.Core.Lexer
             Contracts.Assert(needle.Contents[needle.Contents.Length - 1] is EofToken);
 
             // Ignore the EofToken at the end of the needle tokenstring
-            int needleLength = needle.Contents.Length - 1;
-            Queue<Span> matches = new Queue<Span>();
+            var needleLength = needle.Contents.Length - 1;
+            var matches = new Queue<Span>();
 
             // Cycle through the current TokenString looking for substring matches
-            for (int haystackIndex = 0; haystackIndex <= Contents.Length - needleLength; )
+            for (var haystackIndex = 0; haystackIndex <= Contents.Length - needleLength; )
             {
-                bool doMatch = true;
+                var doMatch = true;
 
                 // Compare the needle with the current region of the haystack looking for a match
-                for (int needleIndex = 0; needleIndex < needleLength; needleIndex++)
+                for (var needleIndex = 0; needleIndex < needleLength; needleIndex++)
                 {
                     if (!Contents[haystackIndex + needleIndex].Equals(needle.Contents[needleIndex]))
                     {
@@ -60,8 +60,8 @@ namespace Microsoft.PowerFx.Core.Lexer
                 {
                     // The (- 1) portion of the below expression accounts for the fact that we want the
                     // lim of the TextSpan to be the lim of the last token that matches the needle
-                    int spanLim = Contents[haystackIndex + needleLength - 1].Span.Lim;
-                    int spanMin = Contents[haystackIndex].Span.Min;
+                    var spanLim = Contents[haystackIndex + needleLength - 1].Span.Lim;
+                    var spanMin = Contents[haystackIndex].Span.Min;
                     matches.Enqueue(new Span(spanMin, spanLim));
                     haystackIndex += needle.Contents.Length - 1;
                 }

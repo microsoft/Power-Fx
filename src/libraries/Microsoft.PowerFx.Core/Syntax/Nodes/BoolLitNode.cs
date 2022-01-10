@@ -24,7 +24,7 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
             return new BoolLitNode(ref idNext, Token.Clone(ts));
         }
 
-        public bool Value { get { return Token.Kind == TokKind.True; } }
+        public bool Value => Token.Kind == TokKind.True;
 
         public override void Accept(TexlVisitor visitor)
         {

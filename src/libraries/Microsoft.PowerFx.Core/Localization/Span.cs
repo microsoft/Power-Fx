@@ -72,7 +72,7 @@ namespace Microsoft.PowerFx.Core.Localization
             try
             {
                 sb = StringBuilderCache.Acquire(script.Length);
-                int index = 0;
+                var index = 0;
 
                 foreach (var pair in worklist.OrderBy(kvp => kvp.Key.Min))
                 {
@@ -102,7 +102,7 @@ namespace Microsoft.PowerFx.Core.Localization
 
         public override int GetHashCode()
         {
-            int hashCode = -1160472096;
+            var hashCode = -1160472096;
             hashCode = hashCode * -1521134295 + Min.GetHashCode();
             hashCode = hashCode * -1521134295 + Lim.GetHashCode();
             return hashCode;

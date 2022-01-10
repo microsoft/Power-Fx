@@ -25,7 +25,7 @@ namespace Microsoft.PowerFx.Core.Errors
         // TextSpan for the rule error.
         public override Span TextSpan { get; }
 
-        public override IEnumerable<string> SinkTypeErrors { get { return _nameMapIDs; } }
+        public override IEnumerable<string> SinkTypeErrors => _nameMapIDs;
 
         public TexlError(Token tok, DocumentErrorSeverity severity, ErrorResourceKey errKey, params object[] args)
             : base(null, null, DocumentErrorKind.AXL, severity, errKey, args)

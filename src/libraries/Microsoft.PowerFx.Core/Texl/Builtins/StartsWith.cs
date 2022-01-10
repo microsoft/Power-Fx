@@ -14,7 +14,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Checks if the text starts with the start string.
     internal sealed class StartsWithFunction : StringTwoArgFunction
     {
-        public override DelegationCapability FunctionDelegationCapability {  get { return DelegationCapability.StartsWith;  } }
+        public override DelegationCapability FunctionDelegationCapability => DelegationCapability.StartsWith;
 
         public StartsWithFunction()
             : base("StartsWith", TexlStrings.AboutStartsWith)

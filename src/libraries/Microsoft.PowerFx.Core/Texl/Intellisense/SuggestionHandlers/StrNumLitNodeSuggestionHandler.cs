@@ -26,21 +26,21 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense{
                 if (intellisenseData.CurNode.Kind != NodeKind.StrLit && intellisenseData.CurNode.Kind != NodeKind.NumLit)
                     return false;
 
-                TexlNode curNode = intellisenseData.CurNode;
-                int cursorPos = intellisenseData.CursorPos;
+                var curNode = intellisenseData.CurNode;
+                var cursorPos = intellisenseData.CursorPos;
                 var tokenSpan = curNode.Token.Span;
                 // Should not suggest anything if the cursor is before the string/number.
                 if (cursorPos > tokenSpan.Lim && IntellisenseHelper.CanSuggestAfterValue(cursorPos, intellisenseData.Script))
                 {
                     // Cursor is after the current node's token.
                     // Suggest binary kewords.
-                    DType operandType = curNode.Kind == NodeKind.StrLit ? DType.String : DType.Number;
+                    var operandType = curNode.Kind == NodeKind.StrLit ? DType.String : DType.Number;
                     IntellisenseHelper.AddSuggestionsForAfterValue(intellisenseData, operandType);
                 }
                 else if (cursorPos > tokenSpan.Min)
                 {
                     // Cursor is in the middle of the token, Suggest Globals matching the input string or number.
-                    int replacementLength = tokenSpan.Lim - tokenSpan.Min;
+                    var replacementLength = tokenSpan.Lim - tokenSpan.Min;
                     intellisenseData.SetMatchArea(tokenSpan.Min, cursorPos, replacementLength);
                     IntellisenseHelper.AddSuggestionsForGlobals(intellisenseData);
                 }

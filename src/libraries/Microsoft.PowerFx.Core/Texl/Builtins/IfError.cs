@@ -60,25 +60,25 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertValue(errors);
             Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
 
-            int count = args.Length;
+            var count = args.Length;
             nodeToCoercedTypeMap = null;
 
             // Check the predicates.
-            bool fArgsValid = true;
-            DType type = ReturnType;
+            var fArgsValid = true;
+            var type = ReturnType;
 
-            bool isBehavior = binding.IsBehavior;
+            var isBehavior = binding.IsBehavior;
 
             Contracts.Assert(type == DType.Unknown);
-            for (int i = 0; i < count;)
+            for (var i = 0; i < count;)
             {
-                TexlNode nodeArg = args[i];
-                DType typeArg = argTypes[i];
+                var nodeArg = args[i];
+                var typeArg = argTypes[i];
 
                 if (typeArg.IsError)
                     errors.EnsureError(args[i], TexlStrings.ErrTypeError);
 
-                DType typeSuper = DType.Supertype(type, typeArg);
+                var typeSuper = DType.Supertype(type, typeArg);
 
                 if (!typeSuper.IsError)
                 {
@@ -94,7 +94,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 {
                     // Types don't resolve normally, coercion needed
                     if (typeArg.CoercesTo(type))
+                    {
                         CollectionUtils.Add(ref nodeToCoercedTypeMap, nodeArg, type);
+                    }
                     else if (!isBehavior || !IsArgTypeInconsequential(nodeArg))
                     {
                         errors.EnsureError(DocumentErrorSeverity.Severe, nodeArg, TexlStrings.ErrBadType_ExpectedType_ProvidedType,
@@ -128,12 +130,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.Assert(arg.Parent.Parent is CallNode);
             Contracts.Assert(arg.Parent.Parent.AsCall().Head.Name == Name);
 
-            CallNode call = arg.Parent.Parent.AsCall().VerifyValue();
+            var call = arg.Parent.Parent.AsCall().VerifyValue();
 
             // Pattern: OnSelect = IfError(arg1, arg2, ... argK)
             // Pattern: OnSelect = IfError(arg1, IfError(arg1, arg2,...), ... argK)
             // ...etc.
-            CallNode ancestor = call;
+            var ancestor = call;
             while (ancestor.Head.Name == Name)
             {
                 if (ancestor.Parent == null && ancestor.Args.Children.Length > 0)
@@ -156,7 +158,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                         return false;
 
                     // Only the last chain segment is consequential.
-                    int numSegments = chainNode.Children.Length;
+                    var numSegments = chainNode.Children.Length;
                     if (numSegments > 0 && !arg.InTree(chainNode.Children[numSegments - 1]))
                         return true;
                     // The node is in the last segment of a chain nested within a larger invocation.

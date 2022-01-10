@@ -24,16 +24,11 @@ namespace Microsoft.PowerFx.Core.Syntax
         // The language settings used for parsing this script.
         // May be null if the script is to be parsed in the current locale.
         public readonly ILanguageSettings Loc;
-
-        // The parse tree and parse errors.
-        private TexlNode _tree;
         private List<TexlError> _errors;
 
-        private List<CommentToken> _comments;
-
         // This may be null if the script hasn't yet been parsed.
-        internal TexlNode ParseTree { get { return _tree; } }
-        internal List<CommentToken> Comments { get { return _comments; } }
+        internal TexlNode ParseTree { get; private set; }
+        internal List<CommentToken> Comments { get; private set; }
 
         public Formula(string script, ILanguageSettings loc = null)
         {
@@ -50,26 +45,26 @@ namespace Microsoft.PowerFx.Core.Syntax
         {
             Contracts.AssertValue(Script);
             Contracts.Assert(_errors == null || _errors.Count > 0);
-            Contracts.Assert(_tree != null || _errors == null);
+            Contracts.Assert(ParseTree != null || _errors == null);
         }
 
         public bool HasParseErrors { get; private set; }
 
         // True if the formula has already been parsed.
-        public bool IsParsed { get { return _tree != null; } }
+        public bool IsParsed => ParseTree != null;
 
         public bool EnsureParsed(TexlParser.Flags flags)
         {
             AssertValid();
 
-            if (_tree == null)
+            if (ParseTree == null)
             {
                 var result = TexlParser.ParseScript(Script, loc: Loc, flags: flags);
-                _tree = result.Root;
+                ParseTree = result.Root;
                 _errors = result.Errors;
-                _comments = result.Comments;
+                Comments = result.Comments;
                 HasParseErrors = result.HasError;
-                Contracts.AssertValue(_tree);
+                Contracts.AssertValue(ParseTree);
                 AssertValid();
             }
             return _errors == null;

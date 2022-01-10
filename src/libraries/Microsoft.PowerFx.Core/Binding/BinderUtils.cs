@@ -14,9 +14,8 @@ namespace Microsoft.PowerFx.Core.Binding
 
             if (node.Left is DottedNameNode && TryConvertNodeToDPath(binding, node.Left as DottedNameNode, out path))
             {
-                DName rightNodeName = node.Right.Name;
-                string possibleRename;
-                if (binding.TryGetReplacedIdentName(node.Right, out possibleRename))
+                var rightNodeName = node.Right.Name;
+                if (binding.TryGetReplacedIdentName(node.Right, out var possibleRename))
                     rightNodeName = new DName(possibleRename);
 
                 path = path.Append(rightNodeName);
@@ -26,8 +25,8 @@ namespace Microsoft.PowerFx.Core.Binding
             {
                 if (binding.GetInfo(firstName).Kind == BindKind.LambdaFullRecord)
                 {
-                    DName rightNodeName = node.Right.Name;
-                    if (binding.TryGetReplacedIdentName(node.Right, out string rename))
+                    var rightNodeName = node.Right.Name;
+                    if (binding.TryGetReplacedIdentName(node.Right, out var rename))
                         rightNodeName = new DName(rename);
 
                     path = DPath.Root.Append(rightNodeName);
@@ -35,9 +34,8 @@ namespace Microsoft.PowerFx.Core.Binding
                 }
 
                 // Check if the access was renamed:
-                DName leftNodeName = firstName.Ident.Name;
-                string possibleRename;
-                if (binding.TryGetReplacedIdentName(firstName.Ident, out possibleRename))
+                var leftNodeName = firstName.Ident.Name;
+                if (binding.TryGetReplacedIdentName(firstName.Ident, out var possibleRename))
                     leftNodeName = new DName(possibleRename);
 
                 path = DPath.Root.Append(leftNodeName).Append(node.Right.Name);

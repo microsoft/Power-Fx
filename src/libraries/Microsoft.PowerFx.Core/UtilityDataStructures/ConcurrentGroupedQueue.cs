@@ -108,10 +108,9 @@ namespace Microsoft.PowerFx.Core.UtilityDataStructures
 
         private readonly RunItemAction _runItemAction;
         private readonly GroupEndAction _groupEndAction;
-        private Queue<ItemGroup> _itemGroupQueue;
-        private ItemGroup _currentGroup;
+        private readonly Queue<ItemGroup> _itemGroupQueue;
 
-        internal ItemGroup CurrentGroup => _currentGroup;
+        internal ItemGroup CurrentGroup { get; private set; }
 
         public delegate void RunItemAction(T change);
         public delegate void GroupEndAction();
@@ -133,24 +132,24 @@ namespace Microsoft.PowerFx.Core.UtilityDataStructures
 
         public void Enqueue(T change)
         {
-            if (_currentGroup == null || !_currentGroup.IsOpenGroup)
+            if (CurrentGroup == null || !CurrentGroup.IsOpenGroup)
             {
-                _currentGroup = CreateNewItemGroup(change);
-                _itemGroupQueue.Enqueue(_currentGroup);
+                CurrentGroup = CreateNewItemGroup(change);
+                _itemGroupQueue.Enqueue(CurrentGroup);
             }
-            else if(_currentGroup.IsBlocking != change.IsBlocking)
+            else if(CurrentGroup.IsBlocking != change.IsBlocking)
             {
-                _currentGroup.CloseGroup();
-                _currentGroup = CreateNewItemGroup(change);
-                _itemGroupQueue.Enqueue(_currentGroup);
+                CurrentGroup.CloseGroup();
+                CurrentGroup = CreateNewItemGroup(change);
+                _itemGroupQueue.Enqueue(CurrentGroup);
             }
 
-            _currentGroup.Enqueue(change);
+            CurrentGroup.Enqueue(change);
         }
 
         public void Run()
         {
-            _currentGroup.CloseGroup();
+            CurrentGroup.CloseGroup();
 
             while (_itemGroupQueue.Count > 0)
             {
@@ -167,15 +166,9 @@ namespace Microsoft.PowerFx.Core.UtilityDataStructures
                 group.Clear();
             }
             _itemGroupQueue.Clear();
-            _currentGroup = null;
+            CurrentGroup = null;
         }
 
-        public int Count
-        {
-            get
-            {
-                return _itemGroupQueue.Sum(group => group.Count);
-            }
-        }
+        public int Count => _itemGroupQueue.Sum(group => group.Count);
     }
 }

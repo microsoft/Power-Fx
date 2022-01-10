@@ -262,15 +262,15 @@ namespace Microsoft.PowerFx.Core.IR
 
         private static CoercionKind GetToStringCoercion(DType fromType)
         {
-            bool _number = DType.Number.Accepts(fromType);
-            bool _datetime = DType.DateTime.Accepts(fromType);
-            bool _date = DType.Date.Accepts(fromType);
-            bool _time = DType.Time.Accepts(fromType);
-            bool _boolean = DType.Boolean.Accepts(fromType);
-            bool _string = DType.String.Accepts(fromType);
-            bool _guid = DType.Guid.Accepts(fromType);
-            bool _optionSet = DType.OptionSetValue.Accepts(fromType);
-            bool _viewValue = DType.ViewValue.Accepts(fromType);
+            var _number = DType.Number.Accepts(fromType);
+            var _datetime = DType.DateTime.Accepts(fromType);
+            var _date = DType.Date.Accepts(fromType);
+            var _time = DType.Time.Accepts(fromType);
+            var _boolean = DType.Boolean.Accepts(fromType);
+            var _string = DType.String.Accepts(fromType);
+            var _guid = DType.Guid.Accepts(fromType);
+            var _optionSet = DType.OptionSetValue.Accepts(fromType);
+            var _viewValue = DType.ViewValue.Accepts(fromType);
             Contracts.Assert(_number || _boolean || _datetime || _date || _time || _string || _guid || _optionSet || _viewValue, "Unsupported type coercion");
 
             if (DType.Number.Accepts(fromType) || DType.DateTime.Accepts(fromType))
@@ -285,7 +285,9 @@ namespace Microsoft.PowerFx.Core.IR
                 return CoercionKind.NumberToText;
             }
             else if (DType.Boolean.Accepts(fromType))
+            {
                 return CoercionKind.BooleanToText;
+            }
             else if (DType.Hyperlink.Accepts(fromType))
             {
                 switch (fromType.Kind)
@@ -301,11 +303,17 @@ namespace Microsoft.PowerFx.Core.IR
                 }
             }
             else if (DType.OptionSetValue.Accepts(fromType))
+            {
                 return CoercionKind.OptionSetToText;
+            }
             else if (DType.ViewValue.Accepts(fromType))
+            {
                 return CoercionKind.ViewToText;
+            }
             else
+            {
                 return CoercionKind.None; // Implicit coercion?
+            }
         }
     }
 }

@@ -93,7 +93,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 return false;
             }
 
-            bool valid = true;
+            var valid = true;
 
             var record = argument.AsRecord();
             foreach (var name in names)

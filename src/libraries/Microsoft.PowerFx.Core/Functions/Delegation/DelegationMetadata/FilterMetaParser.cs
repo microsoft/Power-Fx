@@ -76,7 +76,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationMetadata
                     }
                 }
 
-                Dictionary<DPath, DelegationCapability> columnCapabilities = new Dictionary<DPath, DelegationCapability>();
+                var columnCapabilities = new Dictionary<DPath, DelegationCapability>();
                 if (!columnCapabilitiesExists)
                     return new FilterOpMetadata(schema, columnRestrictions, columnCapabilities, filterFunctionsSupportedByAllColumns, filterFunctionsSupportedByTable);
 

@@ -44,8 +44,8 @@ namespace Microsoft.PowerFx.Core.Utils
             // base date is still the base date, and a half day displacement from midnight is noon.
             // See ToOADate and the MSDN Online Library at http://MSDN.Microsoft.com/library/default.asp for more information on OLE Automation.
 
-            double integral = Math.Truncate(value);
-            double frac = Math.Abs(value) - Math.Abs(integral);
+            var integral = Math.Truncate(value);
+            var frac = Math.Abs(value) - Math.Abs(integral);
 
             const int HoursPerDay = 24;
             const int MinutesPerDay = 24 * 60;
@@ -61,7 +61,7 @@ namespace Microsoft.PowerFx.Core.Utils
             catch (ArgumentOutOfRangeException)
             {
                 // Value could be invalid for TimeSpan.
-                result = default(DateTime);
+                result = default;
                 return false;
             }
             return true;

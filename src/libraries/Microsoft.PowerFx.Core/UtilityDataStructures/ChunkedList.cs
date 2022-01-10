@@ -19,46 +19,45 @@ namespace Microsoft.PowerFx.Core.UtilityDataStructures
         private readonly List<List<T>> _chunks = new List<List<T>>();
         internal const int ChunkSize = 8192;
         private const int FirstChunkInitialSize = 4;
-        private int _counter = 0;
         private int _version;
-        private Stack<Action> onClear = new Stack<Action>();
+        private readonly Stack<Action> onClear = new Stack<Action>();
 
         public T this[int index]
         {
             get
             {
-                Contracts.Assert(index >= 0 && index < _counter);
+                Contracts.Assert(index >= 0 && index < Count);
 
-                int chunk = index / ChunkSize;
-                int idx = index % ChunkSize;
+                var chunk = index / ChunkSize;
+                var idx = index % ChunkSize;
                 return _chunks[chunk][idx];
             }
             set
             {
-                Contracts.Assert(index >= 0 && index < _counter);
+                Contracts.Assert(index >= 0 && index < Count);
 
-                int chunk = index / ChunkSize;
-                int idx = index % ChunkSize;
+                var chunk = index / ChunkSize;
+                var idx = index % ChunkSize;
                 _chunks[chunk][idx] = value;
                 _version++;
             }
         }
 
-        public int Count => _counter;
+        public int Count { get; private set; } = 0;
 
         public bool IsReadOnly { get; } = false;
 
         public void Add(T item)
         {
-            int chunk = _counter / ChunkSize;
-            int idx = _counter % ChunkSize;
+            var chunk = Count / ChunkSize;
+            var idx = Count % ChunkSize;
 
             // Allocate default capacity for first list to have dynamic allocation for small list.
             if (idx == 0)
                 _chunks.Add(new List<T>((chunk == 0) ? FirstChunkInitialSize : ChunkSize));
 
             _chunks[chunk].Add(item);
-            _counter++;
+            Count++;
             _version++;
         }
 
@@ -69,7 +68,7 @@ namespace Microsoft.PowerFx.Core.UtilityDataStructures
                 action();
             }
             _chunks.Clear();
-            _counter = 0;
+            Count = 0;
             _version++;
         }
 
@@ -130,17 +129,16 @@ namespace Microsoft.PowerFx.Core.UtilityDataStructures
 
         internal class ChunkedListEnumerator : IEnumerator<T>, System.Collections.IEnumerator
         {
-            private ChunkedList<T> list;
+            private readonly ChunkedList<T> list;
             private int index;
-            private int version;
-            private T current;
+            private readonly int version;
 
             internal ChunkedListEnumerator(ChunkedList<T> list)
             {
                 this.list = list;
                 index = 0;
                 version = list._version;
-                current = default(T);
+                Current = default;
             }
 
             public void Dispose()
@@ -150,11 +148,11 @@ namespace Microsoft.PowerFx.Core.UtilityDataStructures
             public bool MoveNext()
             {
 
-                ChunkedList<T> localList = list;
+                var localList = list;
 
                 if (version == localList._version && ((uint)index < (uint)localList.Count))
                 {
-                    current = localList[index];
+                    Current = localList[index];
                     index++;
                     return true;
                 }
@@ -169,19 +167,13 @@ namespace Microsoft.PowerFx.Core.UtilityDataStructures
                 }
 
                 index = list.Count + 1;
-                current = default(T);
+                Current = default;
                 return false;
             }
 
-            public T Current
-            {
-                get
-                {
-                    return current;
-                }
-            }
+            public T Current { get; private set; }
 
-            Object System.Collections.IEnumerator.Current
+            object System.Collections.IEnumerator.Current
             {
                 get
                 {
@@ -201,7 +193,7 @@ namespace Microsoft.PowerFx.Core.UtilityDataStructures
                 }
 
                 index = 0;
-                current = default(T);
+                Current = default;
             }
         }
     }

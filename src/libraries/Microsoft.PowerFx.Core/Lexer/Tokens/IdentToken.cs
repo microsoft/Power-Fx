@@ -61,12 +61,12 @@ namespace Microsoft.PowerFx.Core.Lexer.Tokens
         }
 
         // REVIEW ragru: having a property for every possible error isn't scalable.
-        public bool HasDelimiters { get { return HasDelimiterStart; } }
-        public bool HasErrors { get { return IsModified || (HasDelimiterStart && !HasDelimiterEnd); } }
+        public bool HasDelimiters => HasDelimiterStart;
+        public bool HasErrors => IsModified || (HasDelimiterStart && !HasDelimiterEnd);
 
         public override string ToString()
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             Format(sb);
             return sb.ToString();
         }
@@ -86,9 +86,9 @@ namespace Microsoft.PowerFx.Core.Lexer.Tokens
             if (HasDelimiterStart)
                 sb.Append(TexlLexer.IdentifierDelimiter);
 
-            for (int i = 0; i < _value.Length; i++)
+            for (var i = 0; i < _value.Length; i++)
             {
-                char ch = _value[i];
+                var ch = _value[i];
                 sb.Append(ch);
 
                 if (ch == TexlLexer.IdentifierDelimiter)

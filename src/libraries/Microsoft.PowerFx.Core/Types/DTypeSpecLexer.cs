@@ -48,17 +48,19 @@ namespace Microsoft.PowerFx.Core.Types
             }
             else
             {
-                StringBuilder tok = new StringBuilder();
+                var tok = new StringBuilder();
 
-                char quote = '0';
+                var quote = '0';
                 while (!Eol)
                 {
-                    char c = CurChar;
+                    var c = CurChar;
                     if ((c == '"' && (quote == '"' || quote == '0')) ||
                         (c == '\'' && (quote == '\'' || quote == '0')))
                     {
                         if (quote == '0')
+                        {
                             quote = c;
+                        }
                         else
                         {
                             tok.Append(c);
@@ -75,7 +77,9 @@ namespace Microsoft.PowerFx.Core.Types
                         }
                     }
                     else if ((quote == '0') && (CharacterUtils.IsSpace(c) || punctuators.IndexOf(c) >= 0))
+                    {
                         break;
+                    }
 
                     tok.Append(c);
                     ++_cursor;

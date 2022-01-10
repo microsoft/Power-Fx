@@ -37,10 +37,9 @@ namespace Microsoft.PowerFx.Core.Localization
             Contracts.CheckValue(resourceKey.Key, "action");
             Contracts.CheckValueOrNull(locale, "locale");
 
-            ErrorResource resourceValue;
 
             // As foreign languages can lag behind en-US while being localized, if we can't find it then always look in the en-US locale
-            if (!TryGetErrorResource(resourceKey, out resourceValue, locale) && !TryGetErrorResource(resourceKey, out resourceValue, FallbackLocale))
+            if (!TryGetErrorResource(resourceKey, out var resourceValue, locale) && !TryGetErrorResource(resourceKey, out resourceValue, FallbackLocale))
             {
                 Debug.WriteLine(string.Format("ERROR error resource {0} not found", resourceKey));
                 if (ShouldThrowIfMissing)
@@ -60,18 +59,16 @@ namespace Microsoft.PowerFx.Core.Localization
             Contracts.CheckValue(resourceKey, "action");
             Contracts.CheckValueOrNull(locale, "locale");
 
-            string resourceValue;
 
             // As foreign languages can lag behind en-US while being localized, if we can't find it then always look in the en-US locale
-            if (!TryGet(resourceKey, out resourceValue, locale) && !TryGet(resourceKey, out resourceValue, FallbackLocale))
+            if (!TryGet(resourceKey, out var resourceValue, locale) && !TryGet(resourceKey, out resourceValue, FallbackLocale))
             {
                 // Prior to ErrorResources, error messages were fetched like other string resources.
                 // The resource associated with the key corresponds to the ShortMessage of the new
                 // ErrorResource objects. For backwards compatibility with tests/telemetry that fetched
                 // the error message manually (as opposed to going through the DocError class), we check
                 // if there is an error resource associated with this key if we did not find it normally.
-                ErrorResource potentialErrorResource;
-                if (TryGetErrorResource(new ErrorResourceKey(resourceKey), out potentialErrorResource, locale) || TryGetErrorResource(new ErrorResourceKey(resourceKey), out potentialErrorResource, FallbackLocale))
+                if (TryGetErrorResource(new ErrorResourceKey(resourceKey), out var potentialErrorResource, locale) || TryGetErrorResource(new ErrorResourceKey(resourceKey), out potentialErrorResource, FallbackLocale))
                     return potentialErrorResource.GetSingleValue(ErrorResource.ShortMessageTag);
 
                 Debug.WriteLine(string.Format("ERROR resource string {0} not found", resourceKey));
@@ -83,15 +80,15 @@ namespace Microsoft.PowerFx.Core.Localization
         }
 
         // One resource dictionary per locale
-        private static Dictionary<string, Dictionary<string, string>> Strings = new Dictionary<string, Dictionary<string, string>>();
-        private static Dictionary<string, Dictionary<string, ErrorResource>> ErrorResources = new Dictionary<string, Dictionary<string, ErrorResource>>();
-        private static Object dictionaryLock = new object();
+        private static readonly Dictionary<string, Dictionary<string, string>> Strings = new Dictionary<string, Dictionary<string, string>>();
+        private static readonly Dictionary<string, Dictionary<string, ErrorResource>> ErrorResources = new Dictionary<string, Dictionary<string, ErrorResource>>();
+        private static readonly object dictionaryLock = new object();
 
         private class TypeFromThisAssembly
         { }
 
-        private static string ResourceNamePrefix = "Microsoft.PowerFx.Core.Strings.";
-        private static string ResourceFileName = "PowerFxResources.resw";
+        private static readonly string ResourceNamePrefix = "Microsoft.PowerFx.Core.Strings.";
+        private static readonly string ResourceFileName = "PowerFxResources.resw";
 
         public static bool TryGetErrorResource(ErrorResourceKey resourceKey, out ErrorResource resourceValue, string locale = null)
         {
@@ -104,14 +101,12 @@ namespace Microsoft.PowerFx.Core.Localization
                 Contracts.CheckNonEmpty(locale, "currentLocale");
             }
 
-            Dictionary<string, ErrorResource> errorResources;
 
-            if (!ErrorResources.TryGetValue(locale, out errorResources))
+            if (!ErrorResources.TryGetValue(locale, out var errorResources))
             {
                 lock (dictionaryLock)
                 {
-                    Dictionary<string, string> strings;
-                    LoadFromResource(locale, ResourceNamePrefix, typeof(TypeFromThisAssembly), ResourceFileName, ResourceFormat.Resw, out strings, out errorResources);
+                    LoadFromResource(locale, ResourceNamePrefix, typeof(TypeFromThisAssembly), ResourceFileName, ResourceFormat.Resw, out var strings, out errorResources);
                     Strings[locale] = strings;
                     ErrorResources[locale] = errorResources;
                 }
@@ -131,12 +126,10 @@ namespace Microsoft.PowerFx.Core.Localization
                 Contracts.CheckNonEmpty(locale, "currentLocale");
             }
 
-            Dictionary<string, string> strings;
 
-            if (!Strings.TryGetValue(locale, out strings))
+            if (!Strings.TryGetValue(locale, out var strings))
             {
-                Dictionary<string, ErrorResource> errorResources;
-                LoadFromResource(locale, ResourceNamePrefix, typeof(TypeFromThisAssembly), ResourceFileName, ResourceFormat.Resw, out strings, out errorResources);
+                LoadFromResource(locale, ResourceNamePrefix, typeof(TypeFromThisAssembly), ResourceFileName, ResourceFormat.Resw, out strings, out var errorResources);
                 Strings[locale] = strings;
                 ErrorResources[locale] = errorResources;
             }
@@ -185,8 +178,7 @@ namespace Microsoft.PowerFx.Core.Localization
 
                         foreach (var item in loadedStrings)
                         {
-                            string type;
-                            if (item.TryGetNonEmptyAttributeValue("type", out type) && type == ErrorResource.XmlType)
+                            if (item.TryGetNonEmptyAttributeValue("type", out var type) && type == ErrorResource.XmlType)
                                 errorResources[item.Attribute("name").Value] = ErrorResource.Parse(item);
                             else
                                 strings[item.Attribute("name").Value] = item.Element("value").Value;

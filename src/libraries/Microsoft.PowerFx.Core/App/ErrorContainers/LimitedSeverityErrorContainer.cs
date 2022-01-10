@@ -16,8 +16,8 @@ namespace Microsoft.PowerFx.Core.App.ErrorContainers
     /// </summary>
     internal class LimitedSeverityErrorContainer : IErrorContainer
     {
-        private IErrorContainer errors;
-        private DocumentErrorSeverity maximumSeverity;
+        private readonly IErrorContainer errors;
+        private readonly DocumentErrorSeverity maximumSeverity;
 
         public DocumentErrorSeverity DefaultSeverity => errors.DefaultSeverity;
 
@@ -38,7 +38,7 @@ namespace Microsoft.PowerFx.Core.App.ErrorContainers
 
         public TexlError EnsureError(DocumentErrorSeverity severity, TexlNode node, ErrorResourceKey errKey, params object[] args)
         {
-            if (severity <= this.maximumSeverity)
+            if (severity <= maximumSeverity)
             {
                 return errors.EnsureError(severity, node, errKey, args);
             }
@@ -56,7 +56,7 @@ namespace Microsoft.PowerFx.Core.App.ErrorContainers
 
         public TexlError Error(DocumentErrorSeverity severity, TexlNode node, ErrorResourceKey errKey, params object[] args)
         {
-            if (severity <= this.maximumSeverity)
+            if (severity <= maximumSeverity)
             {
                 return errors.Error(severity, node, errKey, args);
             }
@@ -65,7 +65,7 @@ namespace Microsoft.PowerFx.Core.App.ErrorContainers
 
         public void Errors(TexlNode node, DType nodeType, KeyValuePair<string, DType> schemaDifference, DType schemaDifferenceType)
         {
-            if (DocumentErrorSeverity.Severe <= this.maximumSeverity)
+            if (DocumentErrorSeverity.Severe <= maximumSeverity)
             {
                 errors.Errors(node, nodeType, schemaDifference, schemaDifferenceType);
             }

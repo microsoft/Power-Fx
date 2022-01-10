@@ -22,25 +22,16 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationMetadata
         public Dictionary<DPath, DPath> ODataPathReplacementMap
         {
             get {
-                ODataOpMetadata op = _compositeMetadata.OfType<ODataOpMetadata>().SingleOrDefault();
+                var op = _compositeMetadata.OfType<ODataOpMetadata>().SingleOrDefault();
                 return op != null? op.QueryPathReplacement : new Dictionary<DPath, DPath>();
             }
         }
 
-        public FilterOpMetadata FilterDelegationMetadata
-        {
-            get { return _compositeMetadata.OfType<FilterOpMetadata>().SingleOrDefault(); }
-        }
+        public FilterOpMetadata FilterDelegationMetadata => _compositeMetadata.OfType<FilterOpMetadata>().SingleOrDefault();
 
-        public SortOpMetadata SortDelegationMetadata
-        {
-            get { return _compositeMetadata.OfType<SortOpMetadata>().SingleOrDefault(); }
-        }
+        public SortOpMetadata SortDelegationMetadata => _compositeMetadata.OfType<SortOpMetadata>().SingleOrDefault();
 
-        public GroupOpMetadata GroupDelegationMetadata
-        {
-            get { return _compositeMetadata.OfType<GroupOpMetadata>().SingleOrDefault();  }
-        }
+        public GroupOpMetadata GroupDelegationMetadata => _compositeMetadata.OfType<GroupOpMetadata>().SingleOrDefault();
 
         public override DelegationCapability TableCapabilities
         {

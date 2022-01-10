@@ -32,7 +32,7 @@ namespace Microsoft.PowerFx.Core.Public
         /// </summary>
         public ExpressionError[] Errors { get; set; }
 
-        public virtual bool IsSuccess => this.Errors == null;
+        public virtual bool IsSuccess => Errors == null;
 
         internal TexlBinding _binding;
 
@@ -50,7 +50,7 @@ namespace Microsoft.PowerFx.Core.Public
         {
             if (!IsSuccess)
             {
-                var msg = String.Join("\r\n", Errors.Select(err => err.ToString()).ToArray());
+                var msg = string.Join("\r\n", Errors.Select(err => err.ToString()).ToArray());
                 throw new InvalidOperationException($"Errors: " + msg);
             }
         }

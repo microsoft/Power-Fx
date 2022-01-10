@@ -13,7 +13,7 @@ namespace Microsoft.PowerFx.Core.Binding.BindInfo
     /// </summary>
     internal sealed class SelfInfo : ControlKeywordInfo
     {
-        public override DName Name { get { return new DName(TexlLexer.KeywordSelf); } }
+        public override DName Name => new DName(TexlLexer.KeywordSelf);
 
         public SelfInfo(SelfNode node, DPath path, IExternalControl data)
             : base(node, path, data) { }

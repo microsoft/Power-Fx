@@ -46,15 +46,14 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertValue(errors);
             Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
 
-            bool fValid = base.CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            var fValid = base.CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
             Contracts.Assert(returnType == DType.Number);
 
-            bool matchedWithCoercion;
 
             // Ensure that all the arguments are numeric/coercible to numeric.
-            for (int i = 0; i < argTypes.Length; i++)
+            for (var i = 0; i < argTypes.Length; i++)
             {
-                if (CheckType(args[i], argTypes[i], DType.Number, DefaultErrorContainer, out matchedWithCoercion))
+                if (CheckType(args[i], argTypes[i], DType.Number, DefaultErrorContainer, out var matchedWithCoercion))
                 {
                     if (matchedWithCoercion)
                         CollectionUtils.Add(ref nodeToCoercedTypeMap, args[i], DType.Number, allowDupes: true);

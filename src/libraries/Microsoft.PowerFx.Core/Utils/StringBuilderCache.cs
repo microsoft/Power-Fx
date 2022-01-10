@@ -54,7 +54,7 @@ namespace Microsoft.PowerFx.Core.Utils
         {
             if (capacity <= MaxBuilderSize)
             {
-                StringBuilder sb = CachedInstance;
+                var sb = CachedInstance;
 
                 // Avoid stringbuilder block fragmentation by getting a new StringBuilder
                 // when the requested size is larger than the current capacity
@@ -79,7 +79,7 @@ namespace Microsoft.PowerFx.Core.Utils
 
         public static string GetStringAndRelease(StringBuilder sb)
         {
-            string result = sb.ToString();
+            var result = sb.ToString();
             Release(sb);
             return result;
         }

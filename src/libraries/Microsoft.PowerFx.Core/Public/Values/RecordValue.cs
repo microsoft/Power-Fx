@@ -36,7 +36,7 @@ namespace Microsoft.PowerFx.Core.Public.Values
         internal virtual FormulaValue GetField(IRContext irContext, string name)
         {
             // Derived class can have more optimized lookup.
-            foreach (var field in this.Fields)
+            foreach (var field in Fields)
             {
                 if (name == field.Name)
                 {
@@ -51,8 +51,8 @@ namespace Microsoft.PowerFx.Core.Public.Values
         public override object ToObject()
         {
             var e = new ExpandoObject();
-            IDictionary<String, Object> dict = e;
-            foreach (var field in this.Fields)
+            IDictionary<string, object> dict = e;
+            foreach (var field in Fields)
             {
                 dict[field.Name] = field.Value?.ToObject();
             }

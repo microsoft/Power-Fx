@@ -64,16 +64,16 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
                 using (var doc = JsonDocument.Parse(jsonRpcPayload))
                 {
                     var element = doc.RootElement;
-                    if (element.TryGetProperty("id", out JsonElement idElement))
+                    if (element.TryGetProperty("id", out var idElement))
                     {
                         id = idElement.GetString();
                     }
-                    if (!element.TryGetProperty("method", out JsonElement methodElement))
+                    if (!element.TryGetProperty("method", out var methodElement))
                     {
                         _sendToClient(JsonRpcHelper.CreateErrorResult(id, JsonRpcHelper.ErrorCode.InvalidRequest));
                         return;
                     }
-                    if (!element.TryGetProperty("params", out JsonElement paramsElement))
+                    if (!element.TryGetProperty("params", out var paramsElement))
                     {
                         _sendToClient(JsonRpcHelper.CreateErrorResult(id, JsonRpcHelper.ErrorCode.InvalidRequest));
                         return;
@@ -266,8 +266,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
             var scope = _scopeFactory.GetOrCreateInstance(documentUri);
 
             var expression = initialFixupParams.TextDocument.Text;
-            var scopeDisplayName = scope as IPowerFxScopeDisplayName;
-            if (scopeDisplayName != null)
+            if (scope is IPowerFxScopeDisplayName scopeDisplayName)
             {
                 expression = scopeDisplayName.TranslateToDisplayName(expression);
             }
@@ -382,7 +381,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
         {
             var uri = new Uri(documentUri);
             var nameValueCollection = HttpUtility.ParseQueryString(uri.Query);
-            if (!uint.TryParse(nameValueCollection.Get("getTokensFlags"), out uint flags))
+            if (!uint.TryParse(nameValueCollection.Get("getTokensFlags"), out var flags))
             {
                 return;
             }
@@ -431,7 +430,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
             Contracts.AssertValue(expression);
             Contracts.Assert(position >= 0);
 
-            int column = (position < expression.Length && expression[position] == EOL) ? 0 : 1;
+            var column = (position < expression.Length && expression[position] == EOL) ? 0 : 1;
             position--;
             while (position >= 0 && expression[position] != EOL)
             {
@@ -452,9 +451,9 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
             Contracts.Assert(line >= 0);
             Contracts.Assert(character >= 0);
 
-            int position = 0;
-            int currentLine = 0;
-            int currentCharacter = 0;
+            var position = 0;
+            var currentLine = 0;
+            var currentCharacter = 0;
             while (position < expression.Length)
             {
                 if (line == currentLine && character == currentCharacter)

@@ -36,7 +36,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             SignatureConstraint =  new SignatureConstraint(omitStartIndex: 5, repeatSpan: 2, endNonRepeatCount: 0, repeatTopLength: 9);
         }
 
-        public override bool RequiresErrorContext { get { return true; } }
+        public override bool RequiresErrorContext => true;
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
@@ -61,16 +61,16 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertValue(errors);
             Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
 
-            bool fValid = base.CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            var fValid = base.CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
             Contracts.Assert(returnType.IsTable);
 
             returnType = argTypes[0];
 
-            DType sourceType = argTypes[0];
-            for (int i = 1; i < args.Length; i += 2)
+            var sourceType = argTypes[0];
+            for (var i = 1; i < args.Length; i += 2)
             {
-                TexlNode colNameArg = args[i];
-                DType colNameArgType = argTypes[i];
+                var colNameArg = args[i];
+                var colNameArgType = argTypes[i];
                 StrLitNode nameNode;
 
                 if (colNameArgType.Kind != DKind.String)
@@ -83,11 +83,10 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     // Verify that the name is valid.
                     if (DName.IsValidDName(nameNode.Value))
                     {
-                        DName columnName = new DName(nameNode.Value);
+                        var columnName = new DName(nameNode.Value);
 
                         // Verify that the name exists.
-                        DType columnType;
-                        if (!sourceType.TryGetType(columnName, out columnType))
+                        if (!sourceType.TryGetType(columnName, out var columnType))
                         {
                             sourceType.ReportNonExistingName(FieldNameKind.Logical, errors, columnName, args[i]);
                             fValid = false;
@@ -105,7 +104,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     }
                 }
 
-                int nextArgIdx = i + 1;
+                var nextArgIdx = i + 1;
                 if (nextArgIdx < args.Length && argTypes[nextArgIdx] != DType.String)
                 {
                     fValid = false;
@@ -130,7 +129,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertValue(binding);
             Contracts.AssertValue(sortMetadata);
 
-            DPath columnPath = DPath.Root.Append(new DName(node.Value));
+            var columnPath = DPath.Root.Append(new DName(node.Value));
             if (!sortMetadata.IsDelegationSupportedByColumn(columnPath, DelegationCapability.Sort))
             {
                 SuggestDelegationHint(node, binding);
@@ -203,9 +202,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 return false;
 
             SortOpMetadata metadata = null;
-            IDelegationMetadata delegationMetadata = null;
-            IExternalDataSource dataSource;
-            if (TryGetEntityMetadata(callNode, binding, out delegationMetadata))
+            if (TryGetEntityMetadata(callNode, binding, out IDelegationMetadata delegationMetadata))
             {
                 if (!binding.Document.Properties.EnabledFeatures.IsEnhancedDelegationEnabled ||
                     !TryGetValidDataSourceForDelegation(callNode, binding, DelegationCapability.ArrayLookup, out _))
@@ -218,18 +215,18 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
             else
             {
-                if (!TryGetValidDataSourceForDelegation(callNode, binding, DelegationCapability.Sort, out dataSource))
+                if (!TryGetValidDataSourceForDelegation(callNode, binding, DelegationCapability.Sort, out var dataSource))
                     return false;
 
                 metadata = dataSource.DelegationMetadata.SortDelegationMetadata;
             }
 
-            TexlNode[] args = callNode.Args.Children.VerifyValue();
-            int cargs = args.Count();
+            var args = callNode.Args.Children.VerifyValue();
+            var cargs = args.Count();
 
             const string defaultSortOrder = Microsoft.PowerFx.Core.Utils.LanguageConstants.AscendingSortOrderString;
 
-            for (int i = 1; i < cargs; i += 2)
+            for (var i = 1; i < cargs; i += 2)
             {
                 if (!IsValidSortableColumnNode(args[i], binding, metadata))
                 {
@@ -237,9 +234,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     return false;
                 }
 
-                string columnName = args[i].AsStrLit().VerifyValue().Value;
-                TexlNode sortOrderNode = (i + 1) < cargs ? args[i + 1] : null;
-                string sortOrder = sortOrderNode == null ? defaultSortOrder : "";
+                var columnName = args[i].AsStrLit().VerifyValue().Value;
+                var sortOrderNode = (i + 1) < cargs ? args[i + 1] : null;
+                var sortOrder = sortOrderNode == null ? defaultSortOrder : "";
                 if (sortOrderNode != null)
                 {
                     if (!IsValidSortOrderNode(sortOrderNode, metadata, binding, DPath.Root.Append(new DName(columnName))))
@@ -279,13 +276,13 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             var overloads = new List<TexlStrings.StringGetter[]>(OverloadCount);
 
             // Limit the argCount avoiding potential OOM
-            int argCount = arity > SignatureConstraint.RepeatTopLength ? SignatureConstraint.RepeatTopLength : arity;
-            for (int ioverload = 0; ioverload < OverloadCount; ioverload++)
+            var argCount = arity > SignatureConstraint.RepeatTopLength ? SignatureConstraint.RepeatTopLength : arity;
+            for (var ioverload = 0; ioverload < OverloadCount; ioverload++)
             {
-                int iArgCount = argCount + ioverload;
+                var iArgCount = argCount + ioverload;
                 var overload = new TexlStrings.StringGetter[iArgCount];
                 overload[0] = TexlStrings.SortByColumnsArg1;
-                for (int iarg = 1; iarg < iArgCount; iarg += 2)
+                for (var iarg = 1; iarg < iArgCount; iarg += 2)
                 {
                     overload[iarg] = TexlStrings.SortByColumnsArg2;
 
@@ -298,7 +295,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return new ReadOnlyCollection<TexlStrings.StringGetter[]>(overloads);
         }
 
-        public override bool AffectsDataSourceQueryOptions { get { return true; } }
+        public override bool AffectsDataSourceQueryOptions => true;
 
         public override bool UpdateDataQuerySelects(CallNode callNode, TexlBinding binding, DataSourceToQueryOptionsMap dataSourceToQueryOptionsMap)
         {
@@ -308,23 +305,23 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             if (!CheckArgsCount(callNode, binding, DocumentErrorSeverity.Moderate))
                 return false;
 
-            TexlNode[] args = callNode.Args.Children.VerifyValue();
+            var args = callNode.Args.Children.VerifyValue();
 
-            DType dsType = binding.GetType(args[0]);
+            var dsType = binding.GetType(args[0]);
             if (dsType.AssociatedDataSources == null)
                 return false;
 
-            bool retval = false;
+            var retval = false;
 
-            for (int i = 1; i < args.Length; i += 2)
+            for (var i = 1; i < args.Length; i += 2)
             {
-                DType columnType = binding.GetType(args[i]);
-                StrLitNode columnNode = args[i].AsStrLit();
+                var columnType = binding.GetType(args[i]);
+                var columnNode = args[i].AsStrLit();
                 if (columnType.Kind != DKind.String || columnNode == null)
                 {
                     continue;
                 }
-                string columnName = columnNode.Value;
+                var columnName = columnNode.Value;
 
                 Contracts.Assert(dsType.Contains(new DName(columnName)));
 
@@ -343,7 +340,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             : base("SortByColumns", TexlStrings.AboutSortByColumnsWithOrderValues, FunctionCategories.Table, DType.EmptyTable, 0, 3, 3, DType.EmptyTable, DType.String, DType.EmptyTable)
         { }
 
-        public override bool RequiresErrorContext { get { return true; } }
+        public override bool RequiresErrorContext => true;
 
         public override string GetUniqueTexlRuntimeName(bool isPrefetching = false)
         {
@@ -364,15 +361,15 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertValue(errors);
             Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
 
-            bool fValid = base.CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            var fValid = base.CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
             Contracts.Assert(returnType.IsTable);
 
             returnType = argTypes[0];
-            DType sourceType = argTypes[0];
-            TexlNode nameArg = args[1];
-            DType nameArgType = argTypes[1];
+            var sourceType = argTypes[0];
+            var nameArg = args[1];
+            var nameArgType = argTypes[1];
             StrLitNode nameNode = null;
-            DType columnType = DType.Invalid;
+            var columnType = DType.Invalid;
 
             if (nameArgType.Kind != DKind.String)
             {
@@ -384,7 +381,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 // Verify that the name is valid.
                 if (DName.IsValidDName(nameNode.Value))
                 {
-                    DName columnName = new DName(nameNode.Value);
+                    var columnName = new DName(nameNode.Value);
 
                     // Verify that the name exists.
                     if (!sourceType.TryGetType(columnName, out columnType))
@@ -405,7 +402,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 }
             }
 
-            TexlNode valuesArg = args[2];
+            var valuesArg = args[2];
             IEnumerable<TypedName> columns;
             if ((columns = argTypes[2].GetNames(DPath.Root)).Count() != 1)
             {
@@ -413,7 +410,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 return false;
             }
 
-            TypedName column = columns.Single();
+            var column = columns.Single();
             if (nameNode != null && columnType.IsValid && !columnType.Accepts(column.Type))
             {
                 errors.EnsureError(DocumentErrorSeverity.Severe, valuesArg, TexlStrings.ErrTypeError_Arg_Expected_Found, nameNode.Value,
@@ -432,7 +429,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return argumentIndex == 0 || argumentIndex == 1;
         }
 
-        public override bool AffectsDataSourceQueryOptions { get { return true; } }
+        public override bool AffectsDataSourceQueryOptions => true;
 
         public override bool UpdateDataQuerySelects(CallNode callNode, TexlBinding binding, DataSourceToQueryOptionsMap dataSourceToQueryOptionsMap)
         {
@@ -443,19 +440,19 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             if (!CheckArgsCount(callNode, binding, DocumentErrorSeverity.Moderate))
                 return false;
 
-            TexlNode[] args = callNode.Args.Children.VerifyValue();
+            var args = callNode.Args.Children.VerifyValue();
 
-            DType dsType = binding.GetType(args[0]);
+            var dsType = binding.GetType(args[0]);
             if (dsType.AssociatedDataSources == null)
                 return false;
 
-            DType columnType = binding.GetType(args[1]);
-            StrLitNode columnNode = args[1].AsStrLit();
+            var columnType = binding.GetType(args[1]);
+            var columnNode = args[1].AsStrLit();
             if (columnType.Kind != DKind.String || columnNode == null)
             {
                 return false;
             }
-            string columnName = columnNode.Value;
+            var columnName = columnNode.Value;
 
             Contracts.Assert(dsType.Contains(new DName(columnName)));
 

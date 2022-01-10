@@ -11,7 +11,7 @@ namespace Microsoft.PowerFx.Core.Tests
     internal class TestCase
     {
         // Formula string to run 
-        public string? Input;
+        public string Input;
 
         // Expected Result, indexed by runner name
         public Dictionary<string, string> _expected = new Dictionary<string, string>();
@@ -22,7 +22,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
         public override string ToString()
         {
-            return $"{Path.GetFileName(this.SourceFile)}:{this.SourceLine}: {Input}";
+            return $"{Path.GetFileName(SourceFile)}:{SourceLine}: {Input}";
         }
 
         public void SetExpected(string expected, string engineName = null)

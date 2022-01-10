@@ -14,7 +14,6 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
 {
     internal abstract class BinaryOpDelegationStrategy : DelegationValidationStrategy, IOpDelegationStrategy
     {
-        private readonly BinaryOp _binaryOp;
         private readonly TexlFunction _function;
 
         public BinaryOpDelegationStrategy(BinaryOp op, TexlFunction function)
@@ -22,17 +21,17 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
         {
             Contracts.AssertValue(function);
 
-            _binaryOp = op;
+            Op = op;
             _function = function;
         }
 
-        public BinaryOp Op => _binaryOp;
+        public BinaryOp Op { get; }
 
         protected string FormatTelemetryMessage(string message)
         {
             Contracts.AssertNonEmpty(message);
 
-            return string.Format("Op:{0}, {1}", _binaryOp, message);
+            return string.Format("Op:{0}, {1}", Op, message);
         }
 
         public virtual bool IsOpSupportedByColumn(OperationCapabilityMetadata metadata, TexlNode column, DPath columnPath, TexlBinding binder)
@@ -41,7 +40,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
             Contracts.AssertValue(column);
             Contracts.AssertValue(binder);
 
-            var result = metadata.IsBinaryOpInDelegationSupportedByColumn(_binaryOp, columnPath);
+            var result = metadata.IsBinaryOpInDelegationSupportedByColumn(Op, columnPath);
             if (!result)
             {
                 TrackingProvider.Instance.AddSuggestionMessage(FormatTelemetryMessage("Operator not supported by column."), column, binder);
@@ -57,15 +56,15 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
             Contracts.AssertValue(node);
             Contracts.AssertValue(binding);
 
-            if (!metadata.IsBinaryOpInDelegationSupported(_binaryOp))
+            if (!metadata.IsBinaryOpInDelegationSupported(Op))
             {
-                SuggestDelegationHint(node, binding, TexlStrings.OpNotSupportedByClientSuggestionMessage_OpNotSupportedByClient, _binaryOp.ToString());
+                SuggestDelegationHint(node, binding, TexlStrings.OpNotSupportedByClientSuggestionMessage_OpNotSupportedByClient, Op.ToString());
                 return false;
             }
 
-            if (!metadata.IsBinaryOpSupportedByTable(_binaryOp))
+            if (!metadata.IsBinaryOpSupportedByTable(Op))
             {
-                SuggestDelegationHint(node, binding, TexlStrings.OpNotSupportedByServiceSuggestionMessage_OpNotSupportedByService, _binaryOp.ToString());
+                SuggestDelegationHint(node, binding, TexlStrings.OpNotSupportedByServiceSuggestionMessage_OpNotSupportedByService, Op.ToString());
                 return false;
             }
 
@@ -132,7 +131,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
                         return false;
 
                     var unaryopNode = node.AsUnaryOpLit();
-                    IOpDelegationStrategy unaryOpNodeDelegationStrategy = _function.GetOpDelegationStrategy(unaryopNode.Op);
+                    var unaryOpNodeDelegationStrategy = _function.GetOpDelegationStrategy(unaryopNode.Op);
                     return unaryOpNodeDelegationStrategy.IsSupportedOpNode(unaryopNode, metadata, binding);
                 }
             case NodeKind.BinaryOp:
@@ -185,8 +184,8 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
             Contracts.AssertValue(metadata);
             Contracts.AssertValue(binding);
 
-            DType leftType = binding.GetType(binaryOpNode.Left);
-            DType rightType = binding.GetType(binaryOpNode.Right);
+            var leftType = binding.GetType(binaryOpNode.Left);
+            var rightType = binding.GetType(binaryOpNode.Right);
 
             switch (leftType.Kind)
             {
@@ -233,11 +232,11 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
             Contracts.AssertValue(metadata);
             Contracts.AssertValue(binding);
 
-            BinaryOpNode binaryOpNode = node.AsBinaryOp();
+            var binaryOpNode = node.AsBinaryOp();
             if (binaryOpNode == null)
                 return false;
 
-            IOpDelegationStrategy opDelStrategy = _function.GetOpDelegationStrategy(binaryOpNode.Op, binaryOpNode);
+            var opDelStrategy = _function.GetOpDelegationStrategy(binaryOpNode.Op, binaryOpNode);
             var binaryOpDelStrategy = (opDelStrategy as BinaryOpDelegationStrategy).VerifyValue();
             Contracts.Assert(binaryOpNode.Op == binaryOpDelStrategy.Op);
 
@@ -272,8 +271,8 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
                 return false;
             }
 
-            DType leftType = binding.GetType(binaryOpNode.Left);
-            DType rightType = binding.GetType(binaryOpNode.Right);
+            var leftType = binding.GetType(binaryOpNode.Left);
+            var rightType = binding.GetType(binaryOpNode.Right);
             if ((leftType.IsPolymorphic && rightType.IsRecord) || (leftType.IsRecord && rightType.IsPolymorphic))
             {
                 return true;
@@ -291,7 +290,6 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
 
     internal abstract class UnaryOpDelegationStrategy : DelegationValidationStrategy, IOpDelegationStrategy
     {
-        private readonly UnaryOp _unaryOp;
         private readonly TexlFunction _function;
 
         public UnaryOpDelegationStrategy(UnaryOp op, TexlFunction function)
@@ -299,17 +297,17 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
         {
             Contracts.AssertValue(function);
 
-            _unaryOp = op;
+            Op = op;
             _function = function;
         }
 
-        public UnaryOp Op => _unaryOp;
+        public UnaryOp Op { get; }
 
         protected string FormatTelemetryMessage(string message)
         {
             Contracts.AssertNonEmpty(message);
 
-            return string.Format("Op:{0}, {1}", _unaryOp, message);
+            return string.Format("Op:{0}, {1}", Op, message);
         }
 
         public virtual bool IsOpSupportedByColumn(OperationCapabilityMetadata metadata, TexlNode column, DPath columnPath, TexlBinding binder)
@@ -318,7 +316,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
             Contracts.AssertValue(column);
             Contracts.AssertValue(binder);
 
-            var result = metadata.IsUnaryOpInDelegationSupportedByColumn(_unaryOp, columnPath);
+            var result = metadata.IsUnaryOpInDelegationSupportedByColumn(Op, columnPath);
             if (!result)
                 TrackingProvider.Instance.AddSuggestionMessage(FormatTelemetryMessage("Operator not supported by column."), column, binder);
 
@@ -331,15 +329,15 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
             Contracts.AssertValue(node);
             Contracts.AssertValue(binding);
 
-            if (!metadata.IsUnaryOpInDelegationSupported(_unaryOp))
+            if (!metadata.IsUnaryOpInDelegationSupported(Op))
             {
-                SuggestDelegationHint(node, binding, TexlStrings.OpNotSupportedByClientSuggestionMessage_OpNotSupportedByClient, _unaryOp.ToString());
+                SuggestDelegationHint(node, binding, TexlStrings.OpNotSupportedByClientSuggestionMessage_OpNotSupportedByClient, Op.ToString());
                 return false;
             }
 
-            if (!metadata.IsUnaryOpSupportedByTable(_unaryOp))
+            if (!metadata.IsUnaryOpSupportedByTable(Op))
             {
-                SuggestDelegationHint(node, binding, TexlStrings.OpNotSupportedByServiceSuggestionMessage_OpNotSupportedByService, _unaryOp.ToString());
+                SuggestDelegationHint(node, binding, TexlStrings.OpNotSupportedByServiceSuggestionMessage_OpNotSupportedByService, Op.ToString());
                 return false;
             }
 
@@ -385,7 +383,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
                     if (!opDelStrategy.IsOpSupportedByTable(metadata, node, binding))
                         return false;
 
-                    UnaryOpNode unaryOpNode = node.AsUnaryOpLit().VerifyValue();
+                    var unaryOpNode = node.AsUnaryOpLit().VerifyValue();
                     opDelStrategy = _function.GetOpDelegationStrategy(unaryOpNode.Op).VerifyValue();
 
                     var unaryOpDelStrategy = (opDelStrategy as UnaryOpDelegationStrategy).VerifyValue();
@@ -405,7 +403,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
                         return false;
 
                     var binaryOpNode = node.AsBinaryOp().VerifyValue();
-                    IOpDelegationStrategy binaryOpNodeDelValidationStrategy = _function.GetOpDelegationStrategy(binaryOpNode.Op, binaryOpNode);
+                    var binaryOpNodeDelValidationStrategy = _function.GetOpDelegationStrategy(binaryOpNode.Op, binaryOpNode);
                     return binaryOpNodeDelValidationStrategy.IsSupportedOpNode(node.AsBinaryOp(), metadata, binding);
                 }
             }
@@ -420,14 +418,14 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
             Contracts.AssertValue(metadata);
             Contracts.AssertValue(binding);
 
-            UnaryOpNode unaryOpNode = node.AsUnaryOpLit();
+            var unaryOpNode = node.AsUnaryOpLit();
             if (unaryOpNode == null)
                 return false;
 
             if (!IsValidNode(node, binding))
                 return false;
 
-            IOpDelegationStrategy opDelStrategy = _function.GetOpDelegationStrategy(unaryOpNode.Op);
+            var opDelStrategy = _function.GetOpDelegationStrategy(unaryOpNode.Op);
             var unaryOpDelStrategy = (opDelStrategy as UnaryOpDelegationStrategy).VerifyValue();
             Contracts.Assert(unaryOpDelStrategy.Op == unaryOpNode.Op);
 

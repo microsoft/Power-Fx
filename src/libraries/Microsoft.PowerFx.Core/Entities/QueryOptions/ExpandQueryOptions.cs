@@ -59,13 +59,7 @@ namespace Microsoft.PowerFx.Core.Entities.QueryOptions
             return _keyColumns.Count == _selects.Count;
         }
 
-        public IEnumerable<string> Selects
-        {
-            get
-            {
-                return _selects;
-            }
-        }
+        public IEnumerable<string> Selects => _selects;
 
         // List of entities reachable from this node.
         public IReadOnlyCollection<ExpandQueryOptions> Expands => _expands;
@@ -92,7 +86,7 @@ namespace Microsoft.PowerFx.Core.Entities.QueryOptions
             var selectColumnNames = new HashSet<string>(_selects);
             foreach (var select in selectColumnNames)
             {
-                if (CdsDataSourceInfo.TryGetRelatedColumn(select, out string additionalColumnName) && !_selects.Contains(additionalColumnName))
+                if (CdsDataSourceInfo.TryGetRelatedColumn(select, out var additionalColumnName) && !_selects.Contains(additionalColumnName))
                 {
                     // Add the Annotated value in case a navigation field is referred in selects. (ex: if the Datasource is Accounts and primarycontactid is in selects also append _primarycontactid_value)
                     _selects.Add(additionalColumnName);
@@ -119,7 +113,7 @@ namespace Microsoft.PowerFx.Core.Entities.QueryOptions
             {
                 return false;
             }
-            parentDataSource.TryGetRelatedColumn(selectColumnName, out string additionalColumnName, expandDataSourceInfo.TableDefinition);
+            parentDataSource.TryGetRelatedColumn(selectColumnName, out var additionalColumnName, expandDataSourceInfo.TableDefinition);
             if (additionalColumnName == null || _selects.Contains(additionalColumnName))
             {
                 return false;
@@ -200,7 +194,7 @@ namespace Microsoft.PowerFx.Core.Entities.QueryOptions
             if (original == added)
                 return false;
 
-            bool isOriginalModified = false;
+            var isOriginalModified = false;
 
             // Update selectedfields first.
             foreach (var selectedFieldToAdd in added.Selects)

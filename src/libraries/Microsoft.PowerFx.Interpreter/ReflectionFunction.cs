@@ -75,8 +75,8 @@ namespace Microsoft.PowerFx
         // Necessary for Tables/Records
         protected ReflectionFunction(string name, FormulaType returnType, params FormulaType[] paramTypes)
         {
-            var t = this.GetType();
-            MethodInfo m = t.GetMethod("Execute", BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance);
+            var t = GetType();
+            var m = t.GetMethod("Execute", BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance);
             if (m == null)
             {
                 throw new InvalidOperationException($"Missing Execute method");
@@ -107,12 +107,12 @@ namespace Microsoft.PowerFx
             {
                 var info = new FunctionDescr();
 
-                var t = this.GetType();
+                var t = GetType();
 
                 var suffix = "Function";
                 info.name = t.Name.Substring(0, t.Name.Length - suffix.Length);
 
-                MethodInfo m = t.GetMethod("Execute", BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance);
+                var m = t.GetMethod("Execute", BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance);
                 if (m == null)
                 {
                     throw new InvalidOperationException($"Missing Execute method");
@@ -136,16 +136,16 @@ namespace Microsoft.PowerFx
 
         internal TexlFunction GetTexlFunction()
         {
-            var info = this.Scan();
+            var info = Scan();
             return new CustomTexlFunction(info.name, info.retType, info.paramTypes)
             {
-                _impl = (args) => this.Invoke(args)
+                _impl = (args) => Invoke(args)
             };
         }
 
         public FormulaValue Invoke(FormulaValue[] args)
         {
-            this.Scan();
+            Scan();
             var result = _info._method.Invoke(this, args);
 
             return (FormulaValue)result;

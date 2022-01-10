@@ -168,7 +168,7 @@ namespace Microsoft.PowerFx.Core.Types.Enums
 
         public static void RegisterTuple(Tuple<string, string, string> tuple, Dictionary<string, string> locInfo = null)
         {
-            string tupleName = tuple.Item1;
+            var tupleName = tuple.Item1;
             if (!_customEnumDict.ContainsKey(tupleName))
             {
                 _customEnumDict = _customEnumDict.Add(tupleName, tuple);
@@ -192,7 +192,7 @@ namespace Microsoft.PowerFx.Core.Types.Enums
             locValue = enumValue;
             if (_customEnumLocDict.ContainsKey(enumName))
             {
-                Dictionary<string, string> thisEnum = _customEnumLocDict[enumName];
+                var thisEnum = _customEnumLocDict[enumName];
                 if (thisEnum.ContainsKey(enumValue))
                 {
                     locValue = thisEnum[enumValue];
@@ -254,8 +254,7 @@ namespace Microsoft.PowerFx.Core.Types.Enums
                 Contracts.Assert(DName.IsValidDName(enumSpec.Item1));
                 Contracts.Assert(DName.IsValidDName(enumSpec.Item2));
 
-                DType type;
-                if (!enumTypes.TryGetValue(enumSpec.Item1, out type))
+                if (!enumTypes.TryGetValue(enumSpec.Item1, out var type))
                 {
                     DType.TryParse(enumSpec.Item3, out type).Verify();
                     enumTypes[enumSpec.Item2] = type;
@@ -268,16 +267,10 @@ namespace Microsoft.PowerFx.Core.Types.Enums
         /// <summary>
         /// Static list of all enum specs
         /// </summary>
-        private static Dictionary<string, string> EnumSpec
-        {
-            get
-            {
-                return CollectionUtils.EnsureInstanceCreated(ref _enumSpec, () =>
-                {
-                    return RegenerateEnumSpec();
-                });
-            }
-        }
+        private static Dictionary<string, string> EnumSpec => CollectionUtils.EnsureInstanceCreated(ref _enumSpec, () =>
+                                                                            {
+                                                                                return RegenerateEnumSpec();
+                                                                            });
 
         /// <summary>
         /// Enumerates the default enum declarations
@@ -341,12 +334,10 @@ namespace Microsoft.PowerFx.Core.Types.Enums
         {
             Contracts.AssertValue(name);
 
-            string enumString;
-            TryGetEnumSpec(name, out enumString);
+            TryGetEnumSpec(name, out var enumString);
             Contracts.AssertValue(enumString, nameof(enumString));
 
-            DType enumKind;
-            DType.TryParse(enumString, out enumKind);
+            DType.TryParse(enumString, out var enumKind);
             Contracts.AssertValue(enumKind, nameof(enumKind));
             return enumKind;
         }

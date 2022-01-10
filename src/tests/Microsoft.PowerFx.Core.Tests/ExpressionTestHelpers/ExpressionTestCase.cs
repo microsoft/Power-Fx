@@ -11,7 +11,7 @@ namespace Microsoft.PowerFx.Core.Tests
     // Describe a test case in the file. 
     public class ExpressionTestCase : IXunitSerializable
     {
-        private string _engineName = null;
+        private readonly string _engineName = null;
 
         public ExpressionTestCase()
         {
@@ -35,7 +35,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
         public override string ToString()
         {
-            return $"{Path.GetFileName(this.SourceFile)} : {this.SourceLine.ToString("000")} - {Input} = {GetExpected(_engineName)}";
+            return $"{Path.GetFileName(SourceFile)} : {SourceLine.ToString("000")} - {Input} = {GetExpected(_engineName)}";
         }
 
         public void SetExpected(string expected, string engineName = null)
@@ -59,18 +59,18 @@ namespace Microsoft.PowerFx.Core.Tests
         public void Deserialize(IXunitSerializationInfo info)
         {
             _expected = JsonConvert.DeserializeObject<Dictionary<string, string>>(info.GetValue<string>("expected"));
-            this.Input = info.GetValue<string>("input");
-            this.SourceFile = info.GetValue<string>("sourceFile");
-            this.SourceLine = info.GetValue<int>("sourceLine");
+            Input = info.GetValue<string>("input");
+            SourceFile = info.GetValue<string>("sourceFile");
+            SourceLine = info.GetValue<int>("sourceLine");
         }
 
         public void Serialize(IXunitSerializationInfo info)
         {
-            string expectedJSON = JsonConvert.SerializeObject(_expected);
+            var expectedJSON = JsonConvert.SerializeObject(_expected);
             info.AddValue("expected", expectedJSON, typeof(string));
-            info.AddValue("input", this.Input, typeof(string));
-            info.AddValue("sourceFile", this.SourceFile, typeof(string));
-            info.AddValue("sourceLine", this.SourceLine, typeof(int));
+            info.AddValue("input", Input, typeof(string));
+            info.AddValue("sourceFile", SourceFile, typeof(string));
+            info.AddValue("sourceLine", SourceLine, typeof(int));
         }
     }
 }

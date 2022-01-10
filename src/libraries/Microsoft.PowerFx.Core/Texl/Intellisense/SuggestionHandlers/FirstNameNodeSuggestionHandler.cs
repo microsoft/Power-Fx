@@ -23,13 +23,13 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense{
             {
                 Contracts.AssertValue(intellisenseData);
 
-                TexlNode curNode = intellisenseData.CurNode;
-                int cursorPos = intellisenseData.CursorPos;
+                var curNode = intellisenseData.CurNode;
+                var cursorPos = intellisenseData.CursorPos;
 
-                FirstNameNode firstNameNode = curNode.CastFirstName();
-                Identifier ident = firstNameNode.Ident;
-                int min = ident.Token.Span.Min;
-                IdentToken tok = ident.Token;
+                var firstNameNode = curNode.CastFirstName();
+                var ident = firstNameNode.Ident;
+                var min = ident.Token.Span.Min;
+                var tok = ident.Token;
 
                 if (cursorPos < min)
                 {
@@ -42,12 +42,12 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense{
                 {
                     // Cursor is part of the identifier or global token if present.
                     // Get the matching string as a substring from the script so that the whitespace is preserved.
-                    IEnumerable<string> possibleFirstNames = intellisenseData.Binding.GetFirstNames().Select(firstNameInfo => firstNameInfo.Name.Value)
+                    var possibleFirstNames = intellisenseData.Binding.GetFirstNames().Select(firstNameInfo => firstNameInfo.Name.Value)
                         .Union(intellisenseData.Binding.GetGlobalNames().Select(firstNameInfo => firstNameInfo.Name.Value))
                         .Union(intellisenseData.Binding.GetAliasNames().Select(firstNameInfo => firstNameInfo.Name.Value))
                         .Union(intellisenseData.SuggestableFirstNames);
 
-                    int replacementLength = IntellisenseHelper.GetReplacementLength(intellisenseData, tok.Span.Min, tok.Span.Lim, possibleFirstNames);
+                    var replacementLength = IntellisenseHelper.GetReplacementLength(intellisenseData, tok.Span.Min, tok.Span.Lim, possibleFirstNames);
                     intellisenseData.SetMatchArea(tok.Span.Min, cursorPos, replacementLength);
                     intellisenseData.BoundTo = intellisenseData.Binding.ErrorContainer.HasErrors(firstNameNode) ? string.Empty : ident.Name;
 
@@ -72,7 +72,9 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense{
                     intellisenseData.AddAdditionalSuggestionsForKeywordSymbols(curNode);
                 }
                 else if (IsBracketOpen(tok.Span.Lim, cursorPos, intellisenseData.Script))
+                {
                     AddSuggestionsForScopeFields(intellisenseData, intellisenseData.Binding.GetType(firstNameNode));
+                }
                 else if (IntellisenseHelper.CanSuggestAfterValue(cursorPos, intellisenseData.Script))
                 {
                     // Verify that cursor is after a space after the identifier.
@@ -106,8 +108,8 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense{
                 if (begin < 0 || script.Length < cursorPos)
                     return false;
 
-                int bracketOpenCount = 0;
-                for (int i = begin; i < cursorPos; i++)
+                var bracketOpenCount = 0;
+                for (var i = begin; i < cursorPos; i++)
                 {
                     if (TexlLexer.PunctuatorBracketOpen.Equals(script[i].ToString()))
                         bracketOpenCount++;

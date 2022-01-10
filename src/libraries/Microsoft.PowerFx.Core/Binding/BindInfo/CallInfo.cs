@@ -26,7 +26,7 @@ namespace Microsoft.PowerFx.Core.Binding.BindInfo
         public readonly bool RequiresScopeIdentifier;
 
 
-        public readonly Object Data;
+        public readonly object Data;
 
         public CallInfo(CallNode node)
         {
@@ -44,7 +44,7 @@ namespace Microsoft.PowerFx.Core.Binding.BindInfo
             Node = node;
         }
 
-        public CallInfo(TexlFunction function, CallNode node, Object data)
+        public CallInfo(TexlFunction function, CallNode node, object data)
         {
             Contracts.AssertValue(function);
             Contracts.AssertValue(node);

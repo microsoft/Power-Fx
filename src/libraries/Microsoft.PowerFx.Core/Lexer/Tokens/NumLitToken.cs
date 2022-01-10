@@ -44,7 +44,7 @@ namespace Microsoft.PowerFx.Core.Lexer.Tokens
 
             if (!(that is NumLitToken))
                 return false;
-            NumLitToken thatNumLitToken = that.As<NumLitToken>();
+            var thatNumLitToken = that.As<NumLitToken>();
             return Value == thatNumLitToken.Value && base.Equals(that);
         }
     }

@@ -60,12 +60,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertValue(errors);
             Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
 
-            bool fValid = base.CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            var fValid = base.CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
 
-            DType type0 = argTypes[0];
-            DType type1 = argTypes[1];
-            DType type2 = argTypes[2];
-            DType type3 = argTypes[3];
+            var type0 = argTypes[0];
+            var type1 = argTypes[1];
+            var type2 = argTypes[2];
+            var type3 = argTypes[3];
 
             // Arg0 should be either a string or a column of strings.
             // Its type dictates the function return type.
@@ -95,7 +95,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             // Arg1 should be either a number or a column of numbers.
             if (type1.IsTable)
+            {
                 fValid &= CheckNumericColumnType(type1, args[1], errors, ref nodeToCoercedTypeMap);
+            }
             else if (!DType.Number.Accepts(type1))
             {
                 if (type1.CoercesTo(DType.Number))
@@ -111,7 +113,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             // Arg2 should be either a number or a column of numbers.
             if (type2.IsTable)
+            {
                 fValid &= CheckNumericColumnType(type2, args[2], errors, ref nodeToCoercedTypeMap);
+            }
             else if (!DType.Number.Accepts(type2))
             {
                 if (type2.CoercesTo(DType.Number))
@@ -127,7 +131,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             // Arg3 should be either a string or a column of strings.
             if (type3.IsTable)
+            {
                 fValid &= CheckStringColumnType(type3, args[3], errors, ref nodeToCoercedTypeMap);
+            }
             else if (!DType.String.Accepts(type3))
             {
                 if (type3.CoercesTo(DType.String))
