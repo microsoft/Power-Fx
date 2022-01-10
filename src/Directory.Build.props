@@ -17,7 +17,6 @@
   </PropertyGroup>
 
   <!-- <PropertyGroup>
-    <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)PowerFx.ruleset</CodeAnalysisRuleSet>
     <RunSettingsFilePath>$(MSBuildThisFileDirectory)\CodeCoverage.runsettings</RunSettingsFilePath>
   </PropertyGroup> -->
 
@@ -26,6 +25,7 @@
   </ItemGroup>
   <PropertyGroup>
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+    <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)PowerFx.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
 
   <PropertyGroup>
