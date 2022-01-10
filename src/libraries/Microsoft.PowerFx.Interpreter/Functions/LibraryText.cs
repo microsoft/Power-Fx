@@ -86,22 +86,6 @@ namespace Microsoft.PowerFx.Functions
 
             var styles = NumberStyles.Any;
             string str = null;
-            if (arg0 is CustomObjectValue cov)
-            {
-                var element = cov.Impl;
-                if (element.IsString)
-                {
-                    str = element.GetString();
-                }
-                else if (element.IsNumber)
-                {
-                    return new NumberValue(irContext, element.GetDouble());
-                }
-                else if (element.IsNull)
-                {
-                    return new BlankValue(irContext);
-                }
-            }
 
             if (arg0 is StringValue sv)
             {
@@ -140,6 +124,11 @@ namespace Microsoft.PowerFx.Functions
             val /= div;
 
             return new NumberValue(irContext, val);
+        }
+
+        public static FormulaValue Value_CO(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, CustomObjectValue[] args)
+        {
+            return new NumberValue(irContext, args[0].Impl.GetDouble());
         }
 
         // https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-text
@@ -195,6 +184,11 @@ namespace Microsoft.PowerFx.Functions
             }
 
             return CommonErrors.NotYetImplementedError(irContext, $"Text format for {args[0]?.GetType().Name}");
+        }
+
+        public static FormulaValue Text_CO(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, CustomObjectValue[] args)
+        {
+            return new StringValue(irContext, args[0].Impl.GetString());
         }
 
         internal static string ExpandDateTimeFormatSpecifiers(string format, CultureInfo culture)

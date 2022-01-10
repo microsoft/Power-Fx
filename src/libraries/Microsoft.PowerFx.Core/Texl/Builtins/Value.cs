@@ -50,19 +50,16 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             var isValid = true;
             var argType = argTypes[0];
-            if (!argType.IsCustomObject)
+            if (!DType.Number.Accepts(argType) && !DType.String.Accepts(argType))
             {
-                if (!DType.Number.Accepts(argType) && !DType.String.Accepts(argType))
+                if (argType.CoercesTo(DType.DateTime) && !argType.IsControl)
                 {
-                    if (argType.CoercesTo(DType.DateTime) && !argType.IsControl)
-                    {
-                        CollectionUtils.Add(ref nodeToCoercedTypeMap, args[0], DType.DateTime);
-                    }
-                    else
-                    {
-                        errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrNumberOrStringExpected);
-                        isValid = false;
-                    }
+                    CollectionUtils.Add(ref nodeToCoercedTypeMap, args[0], DType.DateTime);
+                }
+                else
+                {
+                    errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrNumberOrStringExpected);
+                    isValid = false;
                 }
             }
 
@@ -83,6 +80,26 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override bool HasSuggestionsForParam(int index)
         {
             return index == 1;
+        }
+    }
+
+    // Value(arg:O)
+    internal sealed class ValueFunction_CO : BuiltinFunction
+    {
+        public override bool RequiresErrorContext => true;
+
+        public override bool IsSelfContained => true;
+
+        public override bool SupportsParamCoercion => false;
+
+        public ValueFunction_CO()
+            : base(ValueFunction.ValueInvariantFunctionName, TexlStrings.AboutValue, FunctionCategories.CustomObject, DType.Number, 0, 1, 1, DType.CustomObject)
+        {
+        }
+
+        public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
+        {
+            yield return new[] { TexlStrings.ValueArg1 };
         }
     }
 }

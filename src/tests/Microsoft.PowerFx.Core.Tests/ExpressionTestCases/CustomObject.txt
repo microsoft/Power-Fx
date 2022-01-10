@@ -6,3 +6,12 @@
 
 >> Value(ParseJson("5"))
 5
+
+>> Text(GetField(ParseJson("{""a"": ""s""}"), "a"))
+"s"
+
+>> Text(GetAt(ParseJson("[""s""]"), 0))
+"s"
+
+>> Text(ParseJson("s"))
+"s"

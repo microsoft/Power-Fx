@@ -282,25 +282,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         }
     }
 
-    internal abstract class DateTimeCustomObjectFunction : BuiltinFunction
-    {
-        public override bool RequiresErrorContext => true;
-
-        public override bool IsSelfContained => true;
-
-        public override bool HasPreciseErrors => true;
-
-        protected DateTimeCustomObjectFunction(string name, TexlStrings.StringGetter description, DType returnType)
-            : base(name, description, FunctionCategories.DateTime | FunctionCategories.CustomObject, returnType, 0, 1, 2, DType.CustomObject, DType.String)
-        {
-        }
-
-        public override string GetUniqueTexlRuntimeName(bool isPrefetching = false)
-        {
-            return GetUniqueTexlRuntimeName(suffix: "_CO");
-        }
-    }
-
     // DateValue(date_text:s, [languageCode:s]) : D
     internal sealed class DateValueFunction : DateTimeGenericFunction
     {
@@ -347,63 +328,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override bool SupportsParamCoercion => true;
 
         public DateTimeValueFunction()
-            : base("DateTimeValue", TexlStrings.AboutDateTimeValue, DType.DateTime)
-        {
-        }
-
-        public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
-        {
-            yield return new[] { TexlStrings.DateTimeValueArg1 };
-            yield return new[] { TexlStrings.DateTimeValueArg1, TexlStrings.DateTimeValueArg2 };
-        }
-    }
-
-    // DateValue(date_text:s, [languageCode:s]) : D
-    internal sealed class DateValueFunction_CO : DateTimeCustomObjectFunction
-    {
-        public override bool HasPreciseErrors => true;
-
-        public override bool SupportsParamCoercion => true;
-
-        public DateValueFunction_CO()
-            : base("DateValue", TexlStrings.AboutDateValue, DType.Date)
-        {
-        }
-
-        public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
-        {
-            yield return new[] { TexlStrings.DateValueArg1 };
-            yield return new[] { TexlStrings.DateValueArg1, TexlStrings.DateValueArg2 };
-        }
-    }
-
-    // TimeValue(time_text:s, [languageCode:s]) : T
-    internal sealed class TimeValueFunction_CO : DateTimeCustomObjectFunction
-    {
-        public override bool HasPreciseErrors => true;
-
-        public override bool SupportsParamCoercion => true;
-
-        public TimeValueFunction_CO()
-            : base("TimeValue", TexlStrings.AboutTimeValue, DType.Time)
-        {
-        }
-
-        public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
-        {
-            yield return new[] { TexlStrings.TimeValueArg1 };
-            yield return new[] { TexlStrings.TimeValueArg1, TexlStrings.TimeValueArg2 };
-        }
-    }
-
-    // DateTimeValue(time_text:s, [languageCode:s]) : d
-    internal sealed class DateTimeValueFunction_CO : DateTimeCustomObjectFunction
-    {
-        public override bool HasPreciseErrors => true;
-
-        public override bool SupportsParamCoercion => true;
-
-        public DateTimeValueFunction_CO()
             : base("DateTimeValue", TexlStrings.AboutDateTimeValue, DType.DateTime)
         {
         }

@@ -776,6 +776,16 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: Text)
             },
             {
+                BuiltinFunctionsCore.Text_CO,
+                StandardErrorHandling<CustomObjectValue>(
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<CustomObjectValue>,
+                    checkRuntimeValues: CustomObjectStringChecker,
+                    returnBehavior: ReturnBehavior.ReturnEmptyStringIfAnyArgIsBlank,
+                    targetFunction: Text_CO)
+            },
+            {
                 BuiltinFunctionsCore.Time,
                 StandardErrorHandling<NumberValue>(
                     expandArguments: InsertDefaultValues(outputArgsCount: 4, fillWith: new NumberValue(IRContext.NotInSource(FormulaType.Number), 0)),
@@ -855,6 +865,16 @@ namespace Microsoft.PowerFx.Functions
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
                     targetFunction: Value)
+            },
+            {
+                BuiltinFunctionsCore.Value_CO,
+                StandardErrorHandling<CustomObjectValue>(
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<CustomObjectValue>,
+                    checkRuntimeValues: CustomObjectNumberChecker,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: Value_CO)
             },
             {
                 BuiltinFunctionsCore.With,

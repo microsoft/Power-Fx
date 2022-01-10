@@ -83,7 +83,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 }
             }
 
-            if (!isValidNumber && !isValidString && !arg0Type.IsCustomObject)
+            if (!isValidNumber && !isValidString)
             {
                 errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrNumberOrStringExpected);
                 isValid = false;
@@ -163,6 +163,26 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.Assert(argumentIndex >= 0);
 
             return argumentIndex == 1 || argumentIndex == 2;
+        }
+    }
+
+    // Text(arg:O)
+    internal sealed class TextFunction_CO : BuiltinFunction
+    {
+        public override bool SupportsParamCoercion => false;
+
+        public override bool RequiresErrorContext => true;
+
+        public override bool IsSelfContained => true;
+
+        public TextFunction_CO()
+            : base("Text", TexlStrings.AboutText, FunctionCategories.CustomObject, DType.String, 0, 1, 1, DType.CustomObject)
+        {
+        }
+
+        public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
+        {
+            yield return new[] { TexlStrings.TextArg1 };
         }
     }
 }

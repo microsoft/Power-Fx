@@ -58,9 +58,7 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction DateDiff = _library.Append(new DateDiffFunction());
         public static readonly TexlFunction DateDiffT = _library.Append(new DateDiffTFunction());
         public static readonly TexlFunction DateTimeValue = _library.Append(new DateTimeValueFunction());
-        public static readonly TexlFunction DateTimeValue_CO = _library.Append(new DateTimeValueFunction_CO());
         public static readonly TexlFunction DateValue = _library.Append(new DateValueFunction());
-        public static readonly TexlFunction DateValue_CO = _library.Append(new DateValueFunction_CO());
         public static readonly TexlFunction Day = _library.Append(new DayFunction());
         public static readonly TexlFunction Degrees = _library.Append(new DegreesFunction());
         public static readonly TexlFunction DegreesT = _library.Append(new DegreesTableFunction());
@@ -162,7 +160,6 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction TanT = _library.Append(new TanTableFunction());
         public static readonly TexlFunction Time = _library.Append(new TimeFunction());
         public static readonly TexlFunction TimeValue = _library.Append(new TimeValueFunction());
-        public static readonly TexlFunction TimeValue_CO = _library.Append(new TimeValueFunction_CO());
         public static readonly TexlFunction TimeZoneOffset = _library.Append(new TimeZoneOffsetFunction());
         public static readonly TexlFunction Today = _library.Append(new TodayFunction());
         public static readonly TexlFunction Trim = _library.Append(new TrimFunction());
@@ -174,9 +171,11 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction Upper = _library.Append(new LowerUpperFunction(isLower: false));
         public static readonly TexlFunction UpperT = _library.Append(new LowerUpperTFunction(isLower: false));
         public static readonly TexlFunction Value = _library.Append(new ValueFunction());
+        public static readonly TexlFunction Value_CO = _library.Append(new ValueFunction_CO());
         public static readonly TexlFunction VarP = _library.Append(new VarPFunction());
         public static readonly TexlFunction VarPT = _library.Append(new VarPTableFunction());
         public static readonly TexlFunction Text = _library.Append(new TextFunction());
+        public static readonly TexlFunction Text_CO = _library.Append(new TextFunction_CO());
         public static readonly TexlFunction Weekday = _library.Append(new WeekdayFunction());
         public static readonly TexlFunction WeekdaysLong = _library.Append(new WeekdaysLongFunction());
         public static readonly TexlFunction WeekdaysShort = _library.Append(new WeekdaysShortFunction());
