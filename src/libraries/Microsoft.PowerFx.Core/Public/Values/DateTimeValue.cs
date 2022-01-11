@@ -9,7 +9,7 @@ using System.Diagnostics.Contracts;
 namespace Microsoft.PowerFx.Core.Public.Values
 {
     /// <summary>
-    /// Represents a Date and Time together, in the local time zone
+    /// Represents a Date and Time together, in the local time zone.
     /// </summary>
     public class DateTimeValue : PrimitiveValue<DateTime>
     {

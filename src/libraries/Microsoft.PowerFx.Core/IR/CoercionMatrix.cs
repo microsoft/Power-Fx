@@ -74,10 +74,14 @@ namespace Microsoft.PowerFx.Core.IR
 
                 case DKind.Image:
                     if (fromType.IsLargeImage)
+                    {
                         return CoercionKind.LargeImageToImage;
+                    }
 
                     if (fromType.Kind != DKind.Media && fromType.Kind != DKind.Blob && DType.String.Accepts(fromType))
+                    {
                         return CoercionKind.TextToImage;
+                    }
 
                     Contracts.Assert(false, "Unsupported type coercion");
                     break;
@@ -109,14 +113,20 @@ namespace Microsoft.PowerFx.Core.IR
                 case DKind.Boolean:
                     Contracts.Assert(DType.Number.Accepts(fromType) || DType.String.Accepts(fromType) || (DType.OptionSetValue.Accepts(fromType) && (fromType.OptionSetInfo?.IsBooleanValued ?? false)), "Unsupported type coercion");
                     if (DType.Number.Accepts(fromType))
-                        return CoercionKind.NumberToBoolean; 
-                    
+                    {
+                        return CoercionKind.NumberToBoolean;
+                    }
+
                     if (DType.String.Accepts(fromType))
+                    {
                         return CoercionKind.TextToBoolean;
+                    }
 
                     if (DType.OptionSetValue.Accepts(fromType) && (fromType.OptionSetInfo?.IsBooleanValued ?? false))
+                    {
                         return CoercionKind.BooleanOptionSetToBoolean;
-                    
+                    }
+
                     return CoercionKind.None; // Implicit coercion?
 
                 case DKind.Record:
@@ -130,11 +140,15 @@ namespace Microsoft.PowerFx.Core.IR
                     Contracts.Assert(fromType.Kind == DKind.Table || fromType.Kind == DKind.Record);
 
                     if (fromType.Kind == DKind.Table)
+                    {
                         return CoercionKind.TableToTable;
+                    }
 
                     if (fromType.Kind == DKind.Record)
+                    {
                         return CoercionKind.RecordToTable;
-                    
+                    }
+
                     Contracts.Assert(false, "Unexpected type for coercion.");
                     break;
 
@@ -153,6 +167,7 @@ namespace Microsoft.PowerFx.Core.IR
                     {
                         return CoercionKind.TimeToDateTime;
                     }
+
                     return CoercionKind.TextToDateTime;
 
                 case DKind.Time:
@@ -169,6 +184,7 @@ namespace Microsoft.PowerFx.Core.IR
                     {
                         return CoercionKind.DateTimeToTime;
                     }
+
                     return CoercionKind.TextToTime;
 
                 case DKind.Date:
@@ -185,13 +201,16 @@ namespace Microsoft.PowerFx.Core.IR
                     {
                         return CoercionKind.DateTimeToDate;
                     }
+
                     return CoercionKind.TextToDate;
 
                 case DKind.OptionSetValue:
                     Contracts.Assert(DType.OptionSetValue.Accepts(fromType) || (DType.Boolean.Accepts(fromType) && (toType.OptionSetInfo?.IsBooleanValued ?? false)), "Unsupported type coercion");
 
                     if (DType.Boolean.Accepts(fromType) && (toType.OptionSetInfo?.IsBooleanValued ?? false))
+                    {
                         return CoercionKind.BooleanToOptionSet;
+                    }
 
                     return CoercionKind.None; // Implicit coercion?
 
@@ -203,47 +222,61 @@ namespace Microsoft.PowerFx.Core.IR
                     Contracts.Assert(false, "Unsupported type coercion");
                     break;
             }
+
             // This should be impossible, the caller can catch and treat it as CoercionKind.None but should investigate.
             throw new InvalidCoercionException($"Attempting to generate invalid coercion from {fromType.GetKindString()} to {toType.GetKindString()}");
         }
 
         private static CoercionKind GetToNumberCoercion(DType fromType)
         {
-            Contracts.Assert(DType.String.Accepts(fromType) || DType.Boolean.Accepts(fromType) || DType.Number.Accepts(fromType) ||
-                DType.DateTime.Accepts(fromType) || DType.Time.Accepts(fromType) || DType.Date.Accepts(fromType) || DType.DateTimeNoTimeZone.Accepts(fromType) || 
+            Contracts.Assert(
+                DType.String.Accepts(fromType) || DType.Boolean.Accepts(fromType) || DType.Number.Accepts(fromType) ||
+                DType.DateTime.Accepts(fromType) || DType.Time.Accepts(fromType) || DType.Date.Accepts(fromType) || DType.DateTimeNoTimeZone.Accepts(fromType) ||
                 fromType.IsControl || (DType.OptionSetValue.Accepts(fromType) && (fromType.OptionSetInfo?.IsBooleanValued ?? false)), "Unsupported type coercion");
-            
-            
+
+
             if (DType.String.Accepts(fromType))
+            {
                 return CoercionKind.TextToNumber;
+            }
 
             if (DType.Boolean.Accepts(fromType))
+            {
                 return CoercionKind.BooleanToNumber;
+            }
 
             if (fromType.Kind == DKind.DateTime || fromType.Kind == DKind.DateTimeNoTimeZone)
+            {
                 return CoercionKind.DateTimeToNumber;
+            }
 
             if (fromType.Kind == DKind.Time)
+            {
                 return CoercionKind.TimeToNumber;
+            }
 
             if (fromType.Kind == DKind.Date)
+            {
                 return CoercionKind.DateToNumber;
+            }
 
             if (DType.OptionSetValue.Accepts(fromType) && (fromType.OptionSetInfo?.IsBooleanValued ?? false))
+            {
                 return CoercionKind.BooleanOptionSetToNumber;
+            }
 
             return CoercionKind.None;
 
         }
 
         /// <summary>
-        /// Resolves the coercion type for any type to a type with <see cref="DKind.Enum"/> kind
+        /// Resolves the coercion type for any type to a type with <see cref="DKind.Enum"/> kind.
         /// </summary>
         /// <param name="fromType">
-        /// Type that is being coerced to an enum type
+        /// Type that is being coerced to an enum type.
         /// </param>
         /// <param name="toType">
-        /// An enum type that a value of <see cref="fromType"/> is being coerced to
+        /// An enum type that a value of <see cref="fromType"/> is being coerced to.
         /// </param>
         /// <returns>
         /// The result will generally resemble the coercion kind whose meaning resembles "fromType to
@@ -276,11 +309,17 @@ namespace Microsoft.PowerFx.Core.IR
             if (DType.Number.Accepts(fromType) || DType.DateTime.Accepts(fromType))
             {
                 if (fromType.Kind == DKind.Date)
+                {
                     return CoercionKind.DateToText;
+                }
                 else if (fromType.Kind == DKind.Time)
+                {
                     return CoercionKind.TimeToText;
+                }
                 else if (fromType.Kind == DKind.DateTime)
+                {
                     return CoercionKind.DateTimeToText;
+                }
 
                 return CoercionKind.NumberToText;
             }

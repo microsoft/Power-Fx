@@ -34,11 +34,15 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertValue(errors);
 
             if (!base.CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap))
+            {
                 return false;
+            }
 
             // Option Set values need to be checked with their own function since they have a special return for "blank" values.
             if (argTypes[0].Kind == DKind.OptionSetValue)
+            {
                 return false;
+            }
 
             if (argTypes[0] is IExternalControlType controlType)
             {
@@ -50,7 +54,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 if (primaryOutputProperty != null)
                 {
                     if (nodeToCoercedTypeMap == null)
+                    {
                         nodeToCoercedTypeMap = new Dictionary<TexlNode, DType>();
+                    }
 
                     nodeToCoercedTypeMap.Add(args[0], primaryOutputProperty.GetOpaqueType());
                 }
@@ -82,10 +88,14 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertValue(metadata);
 
             if (binding.ErrorContainer.HasErrors(callNode))
+            {
                 return false;
+            }
 
             if (!CheckArgsCount(callNode, binding))
+            {
                 return false;
+            }
 
             var args = callNode.Args.Children.VerifyValue();
             var opStrategy = GetOpDelegationStrategy(BinaryOp.Equal, null);
@@ -103,7 +113,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
 
             if (!binding.IsRowScope(node))
+            {
                 return false;
+            }
 
             var firstNameNodeValidationStrategy = GetFirstNameNodeDelegationStrategy();
             return firstNameNodeValidationStrategy.IsValidFirstNameNode(node, binding, opStrategy);

@@ -6,7 +6,8 @@ using Microsoft.PowerFx.Core.Syntax;
 using Microsoft.PowerFx.Core.Syntax.Nodes;
 using Microsoft.PowerFx.Core.Utils;
 
-namespace Microsoft.PowerFx.Core.Texl.Intellisense{
+namespace Microsoft.PowerFx.Core.Texl.Intellisense
+{
     internal partial class Intellisense
     {
         internal sealed class UnaryOpNodeSuggestionHandler : NodeKindSuggestionHandler
@@ -27,7 +28,9 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense{
                 var tokenSpan = unaryOpNode.Token.Span;
 
                 if (cursorPos < tokenSpan.Min)
+                {
                     return false;
+                }
 
                 Contracts.Assert(cursorPos >= tokenSpan.Min || cursorPos <= tokenSpan.Lim);
 

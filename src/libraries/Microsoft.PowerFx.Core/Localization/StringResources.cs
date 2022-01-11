@@ -43,7 +43,9 @@ namespace Microsoft.PowerFx.Core.Localization
             {
                 Debug.WriteLine(string.Format("ERROR error resource {0} not found", resourceKey));
                 if (ShouldThrowIfMissing)
+                {
                     throw new System.IO.FileNotFoundException(resourceKey.Key);
+                }
             }
 
             return resourceValue;
@@ -69,11 +71,15 @@ namespace Microsoft.PowerFx.Core.Localization
                 // the error message manually (as opposed to going through the DocError class), we check
                 // if there is an error resource associated with this key if we did not find it normally.
                 if (TryGetErrorResource(new ErrorResourceKey(resourceKey), out var potentialErrorResource, locale) || TryGetErrorResource(new ErrorResourceKey(resourceKey), out potentialErrorResource, FallbackLocale))
+                {
                     return potentialErrorResource.GetSingleValue(ErrorResource.ShortMessageTag);
+                }
 
                 Debug.WriteLine(string.Format("ERROR resource string {0} not found", resourceKey));
                 if (ShouldThrowIfMissing)
+                {
                     throw new System.IO.FileNotFoundException(resourceKey);
+                }
             }
 
             return resourceValue;
@@ -179,9 +185,13 @@ namespace Microsoft.PowerFx.Core.Localization
                         foreach (var item in loadedStrings)
                         {
                             if (item.TryGetNonEmptyAttributeValue("type", out var type) && type == ErrorResource.XmlType)
+                            {
                                 errorResources[item.Attribute("name").Value] = ErrorResource.Parse(item);
+                            }
                             else
+                            {
                                 strings[item.Attribute("name").Value] = item.Element("value").Value;
+                            }
                         }
                     }
                     else if (resourceFormat == ResourceFormat.Resw)
@@ -191,10 +201,15 @@ namespace Microsoft.PowerFx.Core.Localization
                         {
                             var itemName = item.Attribute("name").Value;
                             if (itemName.StartsWith(ErrorResource.ReswErrorResourcePrefix, StringComparison.OrdinalIgnoreCase))
+                            {
                                 separatedResourceKeys[itemName] = item.Element("value").Value;
+                            }
                             else
+                            {
                                 strings[itemName] = item.Element("value").Value;
+                            }
                         }
+
                         errorResources = PostProcessErrorResources(separatedResourceKeys);
                     }
                     else
@@ -215,6 +230,7 @@ namespace Microsoft.PowerFx.Core.Localization
                 index = int.Parse(match.Groups[1].Value);
                 return true;
             }
+
             suffix = null;
             index = 0;
             return false;
@@ -234,16 +250,20 @@ namespace Microsoft.PowerFx.Core.Localization
                 }
                 else
                 {
-                    tagNumberToValuesDict = new Dictionary<int, string>();
-                    tagNumberToValuesDict.Add(index, resourceValue);
+                    tagNumberToValuesDict = new Dictionary<int, string>
+                    {
+                        { index, resourceValue }
+                    };
                     tagToValuesDict.Add(tag, tagNumberToValuesDict);
                 }
             }
             else
             {
                 tagToValuesDict = new Dictionary<string, Dictionary<int, string>>(StringComparer.OrdinalIgnoreCase);
-                var tagNumberToValuesDict = new Dictionary<int, string>();
-                tagNumberToValuesDict.Add(index, resourceValue);
+                var tagNumberToValuesDict = new Dictionary<int, string>
+                {
+                    { index, resourceValue }
+                };
                 tagToValuesDict.Add(tag, tagNumberToValuesDict);
                 errorResources.Add(resourceName, tagToValuesDict);
             }
@@ -257,18 +277,24 @@ namespace Microsoft.PowerFx.Core.Localization
             foreach (var resource in separateResourceKeys)
             {
                 if (!resource.Key.StartsWith(ErrorResource.ReswErrorResourcePrefix, StringComparison.OrdinalIgnoreCase))
+                {
                     continue;
+                }
 
                 // Skip URLs, we'll handle that paired with the link tag
                 if (resource.Key.EndsWith(ErrorResource.LinkTagUrlTag, StringComparison.OrdinalIgnoreCase))
+                {
                     continue;
+                }
 
                 foreach (var tag in ErrorResource.ErrorResourceTagToReswSuffix)
                 {
                     if (!ErrorResource.IsTagMultivalue(tag.Key))
                     {
                         if (!resource.Key.EndsWith(tag.Value, StringComparison.OrdinalIgnoreCase))
+                        {
                             continue;
+                        }
 
                         // Single valued tag, we use index=0 here when inserting
                         var resourceName = resource.Key.Substring(ErrorResource.ReswErrorResourcePrefix.Length, resource.Key.Length - (ErrorResource.ReswErrorResourcePrefix.Length + tag.Value.Length));
@@ -278,7 +304,9 @@ namespace Microsoft.PowerFx.Core.Localization
                     else
                     {
                         if (!TryGetMultiValueSuffix(resource.Key, tag.Value, out var suffix, out var index))
+                        {
                             continue;
+                        }
 
                         var resourceName = resource.Key.Substring(ErrorResource.ReswErrorResourcePrefix.Length, resource.Key.Length - (ErrorResource.ReswErrorResourcePrefix.Length + suffix.Length));
                         UpdateErrorResource(resourceName, resource.Value, tag.Key, index, errorResources);
@@ -290,6 +318,7 @@ namespace Microsoft.PowerFx.Core.Localization
                             separateResourceKeys.TryGetValue(resource.Key + "_url", out var urlValue).Verify();
                             UpdateErrorResource(resourceName, urlValue, ErrorResource.LinkTagUrlTag, index, errorResources);
                         }
+
                         break;
                     }
                 }

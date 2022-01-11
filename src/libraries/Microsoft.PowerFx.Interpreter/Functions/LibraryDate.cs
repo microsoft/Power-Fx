@@ -94,9 +94,13 @@ namespace Microsoft.PowerFx.Functions
                 }
 
                 if (args[0] is DateTimeValue)
+                {
                     return new DateTimeValue(irContext, newDate);
+                }
                 else
+                {
                     return new DateValue(irContext, newDate.Date);
+                }
             }
             catch
             {
@@ -359,27 +363,39 @@ namespace Microsoft.PowerFx.Functions
         {
             var str = args[0].Value;
             if (DateTime.TryParse(str, runner.CultureInfo, DateTimeStyles.None, out var result))
+            {
                 return new DateValue(irContext, result.Date);
+            }
             else
+            {
                 return CommonErrors.InvalidDateTimeError(irContext);
+            }
         }
 
         public static FormulaValue DateTimeParse(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, StringValue[] args)
         {
             var str = args[0].Value;
             if (DateTime.TryParse(str, runner.CultureInfo, DateTimeStyles.None, out var result))
+            {
                 return new DateTimeValue(irContext, result);
+            }
             else
+            {
                 return CommonErrors.InvalidDateTimeError(irContext);
+            }
         }
 
         public static FormulaValue TimeParse(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, StringValue[] args)
         {
             var str = args[0].Value;
             if (TimeSpan.TryParse(str, runner.CultureInfo, out var result))
+            {
                 return new TimeValue(irContext, result);
+            }
             else
+            {
                 return CommonErrors.InvalidDateTimeError(irContext);
+            }
         }
     }
 }

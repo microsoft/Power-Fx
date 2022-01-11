@@ -131,6 +131,7 @@ namespace Microsoft.PowerFx.Functions
                         count++;
                     }
                 }
+
                 if (row.IsError)
                 {
                     errors.Add(row.Error);
@@ -180,6 +181,7 @@ namespace Microsoft.PowerFx.Functions
                     var childContext = symbolContext.WithScopeValues(row.Value);
                     return new KeyValuePair<DValue<RecordValue>, FormulaValue>(row, arg1.Eval(runner, childContext));
                 }
+
                 return new KeyValuePair<DValue<RecordValue>, FormulaValue>(row, row.ToFormulaValue());
             }).ToList();
 
@@ -220,7 +222,8 @@ namespace Microsoft.PowerFx.Functions
             }
         }
 
-        private static bool IsValueTypeErrorOrBlank<T>(FormulaValue val) where T : FormulaValue
+        private static bool IsValueTypeErrorOrBlank<T>(FormulaValue val)
+            where T : FormulaValue
         {
             return val is T || val is BlankValue || val is ErrorValue;
         }
@@ -239,6 +242,7 @@ namespace Microsoft.PowerFx.Functions
                 {
                     return -1;
                 }
+
                 var n1 = a.Value as T;
                 var n2 = b.Value as T;
                 return n1.Value.CompareTo(n2.Value) * compareToResultModifier;
@@ -247,7 +251,8 @@ namespace Microsoft.PowerFx.Functions
             return new InMemoryTableValue(irContext, pairs.Select(pair => pair.Key));
         }
 
-        private static IEnumerable<DValue<RecordValue>> LazyFilter(EvalVisitor runner,
+        private static IEnumerable<DValue<RecordValue>> LazyFilter(
+            EvalVisitor runner,
             SymbolContext context,
             IEnumerable<DValue<RecordValue>> sources,
             LambdaFormulaValue filter)

@@ -32,7 +32,9 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationMetadata
             Contracts.AssertValid(columnPath);
 
             if (!TryGetColumnRestrictions(columnPath, out var columnRestrictions))
+            {
                 return false;
+            }
 
             return columnRestrictions.HasCapability(DelegationCapability.SortAscendingOnly);
         }

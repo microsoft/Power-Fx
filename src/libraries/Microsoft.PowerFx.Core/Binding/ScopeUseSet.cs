@@ -56,23 +56,29 @@ namespace Microsoft.PowerFx.Core.Binding
         public int GetInnermost()
         {
             if (_levels == 0)
-                return ScopeUseSet.GlobalScopeLevel;
+            {
+                return GlobalScopeLevel;
+            }
 
             for (var i = 0; i <= MaxUpCount; i++)
             {
                 if ((_levels & (1L << i)) != 0)
+                {
                     return i;
+                }
             }
 
             // Can never get here.
             Contracts.Assert(false, "We should never get here.");
-            return ScopeUseSet.GlobalScopeLevel;
+            return GlobalScopeLevel;
         }
 
         public override string ToString()
         {
             if (IsGlobalOnlyScope)
+            {
                 return "{{Global}}";
+            }
 
             var sb = new StringBuilder("{");
             var sep = string.Empty;

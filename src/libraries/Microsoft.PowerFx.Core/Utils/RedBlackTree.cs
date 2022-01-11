@@ -28,24 +28,32 @@ namespace Microsoft.PowerFx.Core.Utils
             var count = rgkvp.Length;
             switch (count)
             {
-            case 0:
-                return null;
-            case 1:
-                return new LeafNode(rgkvp[0]);
+                case 0:
+                    return null;
+                case 1:
+                    return new LeafNode(rgkvp[0]);
             }
 
             var rgikvp = new int[count];
             for (var iikvp = 0; iikvp < count; ++iikvp)
+            {
                 rgikvp[iikvp] = iikvp;
+            }
 
             Sorting.Sort(rgikvp, 0, count,
                 (ikvp1, ikvp2) =>
                 {
                     if (ikvp1 == ikvp2)
+                    {
                         return 0;
+                    }
+
                     var cmp = Compare(rgkvp[ikvp1].Key, rgkvp[ikvp2].Key);
                     if (cmp != 0)
+                    {
                         return cmp;
+                    }
+
                     // Secondary sort order is _descending_ by index, so when there are dups,
                     // we keep the _last_.
                     return ikvp2 - ikvp1;
@@ -70,6 +78,7 @@ namespace Microsoft.PowerFx.Core.Utils
                 value = root.Value;
                 return true;
             }
+
             value = default;
             return false;
         }
@@ -79,11 +88,13 @@ namespace Microsoft.PowerFx.Core.Utils
             Contracts.AssertValueOrNull(root);
 
             if (root == null)
+            {
                 yield break;
+            }
 
             var stack = new Stack<RedBlackNode<V>>();
             var node = root;
-        LStart:
+LStart:
             if (node.Left != null)
             {
                 stack.Push(node);
@@ -91,7 +102,7 @@ namespace Microsoft.PowerFx.Core.Utils
                 goto LStart;
             }
 
-        LYieldSelf:
+LYieldSelf:
             yield return new KeyValuePair<string, V>(node.Key, node.Value);
 
             if (node.Right != null)
@@ -101,7 +112,9 @@ namespace Microsoft.PowerFx.Core.Utils
             }
 
             if (stack.Count == 0)
+            {
                 yield break;
+            }
 
             node = stack.Pop();
             goto LYieldSelf;
@@ -113,7 +126,9 @@ namespace Microsoft.PowerFx.Core.Utils
             Contracts.AssertValue(name);
 
             if (root == null)
+            {
                 return new LeafNode(name, value);
+            }
 
             // Any red-red violations at the root don't matter because the root gets forced to black.
             AddItemCore(ref root, Color.Black, name, value, skipCompare);
@@ -127,7 +142,9 @@ namespace Microsoft.PowerFx.Core.Utils
             Contracts.AssertValue(name);
 
             if (RemoveItemCore(ref root, Color.Black, name, hashCodeCache) == RemoveCoreResult.ItemNotFound)
+            {
                 fError = true;
+            }
 
             return root;
         }
@@ -140,13 +157,19 @@ namespace Microsoft.PowerFx.Core.Utils
             Contracts.AssertValueOrNull(root2);
 
             if (root1 == root2)
+            {
                 return true;
+            }
 
             if (root1 == null || root2 == null)
+            {
                 return false;
+            }
 
             if (root1.Count != root2.Count)
+            {
                 return false;
+            }
 
             using (var ator1 = GetPairs(root1).GetEnumerator())
             using (var ator2 = GetPairs(root2).GetEnumerator())
@@ -157,9 +180,14 @@ namespace Microsoft.PowerFx.Core.Utils
                     Contracts.Assert(fTmp);
 
                     if (ator1.Current.Key != ator2.Current.Key)
+                    {
                         return false;
+                    }
+
                     if (!ator1.Current.Value.Equals(ator2.Current.Value))
+                    {
                         return false;
+                    }
                 }
             }
 
@@ -175,7 +203,10 @@ namespace Microsoft.PowerFx.Core.Utils
         public override bool Equals(object obj)
         {
             if (obj is not RedBlackNode<V> other)
+            {
                 return false;
+            }
+
             return this == other;
         }
 
@@ -187,6 +218,7 @@ namespace Microsoft.PowerFx.Core.Utils
                 hash = Hashing.CombineHash(hash, kvp.Key.GetHashCode());
                 hash = Hashing.CombineHash(hash, kvp.Value.GetHashCode());
             }
+
             return hash;
         }
     }
@@ -334,11 +366,13 @@ namespace Microsoft.PowerFx.Core.Utils
                     _left = left;
                     _count += _left.Count;
                 }
+
                 if (right != null)
                 {
                     _right = right;
                     _count += _right.Count;
                 }
+
                 _leftColor = leftColor;
                 _rightColor = rightColor;
 
@@ -372,7 +406,9 @@ namespace Microsoft.PowerFx.Core.Utils
             Contracts.AssertValueOrNull(right);
 
             if (left != null || right != null)
+            {
                 return new InteriorNode(key, value, left, right, leftColor, rightColor);
+            }
 
             Contracts.Assert(leftColor == Color.Black && rightColor == Color.Black);
             return new LeafNode(key, value);
@@ -444,7 +480,7 @@ namespace Microsoft.PowerFx.Core.Utils
         {
             Contracts.AssertValue(rgkvp);
             Contracts.AssertValue(rgikvp);
-            Contracts.Assert(0 <= iikvpMin && iikvpMin <= rgkvp.Length && iikvpLim <= rgkvp.Length && iikvpMin <= iikvpLim);
+            Contracts.Assert(iikvpMin >= 0 && iikvpMin <= rgkvp.Length && iikvpLim <= rgkvp.Length && iikvpMin <= iikvpLim);
             Contracts.Assert(iikvpMin <= rgikvp.Length && iikvpLim <= rgikvp.Length);
 
             var nodeCount = iikvpLim - iikvpMin;
@@ -477,31 +513,34 @@ namespace Microsoft.PowerFx.Core.Utils
             // if N is 2 less than a power of 2, then (N+2)&(N+1) must be 0
             switch (nodeCount)
             {
-            case 0:
-                return null;
-            case 1:
-                return new LeafNode(rgkvp[rgikvp[iikvpMin]]);
-            case 2:
-                left = new LeafNode(rgkvp[rgikvp[iikvpMin]]);
-                return new InteriorNode(rgkvp[rgikvp[iikvpMin + 1]], left, null, Color.Red, Color.Black);
-            case 3:
-                left = new LeafNode(rgkvp[rgikvp[iikvpMin]]);
-                right = new LeafNode(rgkvp[rgikvp[iikvpMin + 2]]);
-                return new InteriorNode(rgkvp[rgikvp[iikvpMin + 1]], left, right, Color.Black, Color.Black);
-            default:
-                if ((nodeCount & 1) == 1)
+                case 0:
+                    return null;
+                case 1:
+                    return new LeafNode(rgkvp[rgikvp[iikvpMin]]);
+                case 2:
+                    left = new LeafNode(rgkvp[rgikvp[iikvpMin]]);
+                    return new InteriorNode(rgkvp[rgikvp[iikvpMin + 1]], left, null, Color.Red, Color.Black);
+                case 3:
+                    left = new LeafNode(rgkvp[rgikvp[iikvpMin]]);
+                    right = new LeafNode(rgkvp[rgikvp[iikvpMin + 2]]);
+                    return new InteriorNode(rgkvp[rgikvp[iikvpMin + 1]], left, right, Color.Black, Color.Black);
+                default:
+                    if ((nodeCount & 1) == 1)
                     {
                         half = nodeCount / 2;
                     }
                     else
-                {
-                    half = (nodeCount + 1) / 2;
-                    if (((nodeCount + 2) & (nodeCount + 1)) == 0)
-                        leftColor = Color.Red;
-                }
-                left = CreateFromArraySorted(rgkvp, rgikvp, iikvpMin, iikvpMin + half);
-                right = CreateFromArraySorted(rgkvp, rgikvp, iikvpMin + half + 1, iikvpLim);
-                return new InteriorNode(rgkvp[rgikvp[iikvpMin + half]], left, right, leftColor, Color.Black);
+                    {
+                        half = (nodeCount + 1) / 2;
+                        if (((nodeCount + 2) & (nodeCount + 1)) == 0)
+                        {
+                            leftColor = Color.Red;
+                        }
+                    }
+
+                    left = CreateFromArraySorted(rgkvp, rgikvp, iikvpMin, iikvpMin + half);
+                    right = CreateFromArraySorted(rgkvp, rgikvp, iikvpMin + half + 1, iikvpLim);
+                    return new InteriorNode(rgkvp[rgikvp[iikvpMin + half]], left, right, leftColor, Color.Black);
             }
         }
 
@@ -515,7 +554,10 @@ namespace Microsoft.PowerFx.Core.Utils
             {
                 var cmp = Compare(key, node.Key);
                 if (cmp == 0)
+                {
                     return true;
+                }
+
                 node = (cmp < 0) ? node.Left : node.Right;
             }
 
@@ -531,7 +573,10 @@ namespace Microsoft.PowerFx.Core.Utils
             if (cmp == 0)
             {
                 if (!skipCompare && value.Equals(root.Value))
+                {
                     return AddCoreResult.ItemPresent; // Don't build a new tree.
+                }
+
                 root = root.CloneStructure(value);
                 return AddCoreResult.ItemUpdated; // Build a new tree, don't change the count.
             }
@@ -561,47 +606,47 @@ namespace Microsoft.PowerFx.Core.Utils
                 result = AddItemCore(ref left, root.LeftColor, key, value, skipCompare: skipCompare);
                 switch (result)
                 {
-                case AddCoreResult.ItemUpdated:
-                case AddCoreResult.ItemAdded:
-                    root = new InteriorNode(root.Key, root.Value, left, right, root.LeftColor, root.RightColor);
-                    return result;
-                case AddCoreResult.NewNodeIsRed:
-                    root = new InteriorNode(root.Key, root.Value, left, right, Color.Red, root.RightColor);
-                    // Check for double red violation and warn the caller.
-                    return (rootColor == Color.Red) ? AddCoreResult.DoubleRedLeftChild : AddCoreResult.ItemAdded;
-                case AddCoreResult.DoubleRedLeftChild:
-                    //     [Z]     
-                    //     / \
-                    //    Y   4           Y
-                    //   /\              /  \
-                    //  X  3     =>   [X]   [Z]
-                    //  /\            /  \  /  \
-                    // 1 2           1   2 3   4
-                    Contracts.Assert(rootColor == Color.Black);
+                    case AddCoreResult.ItemUpdated:
+                    case AddCoreResult.ItemAdded:
+                        root = new InteriorNode(root.Key, root.Value, left, right, root.LeftColor, root.RightColor);
+                        return result;
+                    case AddCoreResult.NewNodeIsRed:
+                        root = new InteriorNode(root.Key, root.Value, left, right, Color.Red, root.RightColor);
+                        // Check for double red violation and warn the caller.
+                        return (rootColor == Color.Red) ? AddCoreResult.DoubleRedLeftChild : AddCoreResult.ItemAdded;
+                    case AddCoreResult.DoubleRedLeftChild:
+                        //     [Z]     
+                        //     / \
+                        //    Y   4           Y
+                        //   /\              /  \
+                        //  X  3     =>   [X]   [Z]
+                        //  /\            /  \  /  \
+                        // 1 2           1   2 3   4
+                        Contracts.Assert(rootColor == Color.Black);
 
-                    newLeft = left.Left;
-                    newRight = Create(root.Key, root.Value, left.Right, root.Right, left.RightColor, root.RightColor);
-                    root = new InteriorNode(left.Key, left.Value, newLeft, newRight, Color.Black, Color.Black);
-                    return AddCoreResult.NewNodeIsRed;
-                case AddCoreResult.DoubleRedRightChild:
-                    //    [Z]     
-                    //    / \
-                    //   X   4           Y
-                    //  /\              /  \
-                    // 1  Y     =>   [X]   [Z]
-                    //    /\         /  \  /  \
-                    //   2 3        1   2 3   4
-                    Contracts.Assert(rootColor == Color.Black);
+                        newLeft = left.Left;
+                        newRight = Create(root.Key, root.Value, left.Right, root.Right, left.RightColor, root.RightColor);
+                        root = new InteriorNode(left.Key, left.Value, newLeft, newRight, Color.Black, Color.Black);
+                        return AddCoreResult.NewNodeIsRed;
+                    case AddCoreResult.DoubleRedRightChild:
+                        //    [Z]     
+                        //    / \
+                        //   X   4           Y
+                        //  /\              /  \
+                        // 1  Y     =>   [X]   [Z]
+                        //    /\         /  \  /  \
+                        //   2 3        1   2 3   4
+                        Contracts.Assert(rootColor == Color.Black);
 
-                    var leftRight = left.Right;
-                    Contracts.AssertValue(leftRight);
-                    newLeft = Create(left.Key, left.Value, left.Left, leftRight.Left, left.LeftColor, leftRight.LeftColor);
-                    newRight = Create(root.Key, root.Value, leftRight.Right, right, leftRight.RightColor, root.RightColor);
-                    root = new InteriorNode(leftRight.Key, leftRight.Value, newLeft, newRight, Color.Black, Color.Black);
-                    return AddCoreResult.NewNodeIsRed;
-                default:
-                    Contracts.Assert(result == AddCoreResult.ItemPresent);
-                    return AddCoreResult.ItemPresent;
+                        var leftRight = left.Right;
+                        Contracts.AssertValue(leftRight);
+                        newLeft = Create(left.Key, left.Value, left.Left, leftRight.Left, left.LeftColor, leftRight.LeftColor);
+                        newRight = Create(root.Key, root.Value, leftRight.Right, right, leftRight.RightColor, root.RightColor);
+                        root = new InteriorNode(leftRight.Key, leftRight.Value, newLeft, newRight, Color.Black, Color.Black);
+                        return AddCoreResult.NewNodeIsRed;
+                    default:
+                        Contracts.Assert(result == AddCoreResult.ItemPresent);
+                        return AddCoreResult.ItemPresent;
                 }
             }
             else
@@ -622,58 +667,61 @@ namespace Microsoft.PowerFx.Core.Utils
                 result = AddItemCore(ref right, root.RightColor, key, value, skipCompare: skipCompare);
                 switch (result)
                 {
-                case AddCoreResult.ItemUpdated:
-                case AddCoreResult.ItemAdded:
-                    root = new InteriorNode(root.Key, root.Value, left, right, root.LeftColor, root.RightColor);
-                    return result;
-                case AddCoreResult.NewNodeIsRed:
-                    root = new InteriorNode(root.Key, root.Value, left, right, root.LeftColor, Color.Red);
-                    // Check for double red violation and warn the caller.
-                    return (rootColor == Color.Red) ? AddCoreResult.DoubleRedRightChild : AddCoreResult.ItemAdded;
-                case AddCoreResult.DoubleRedRightChild:
-                    //    [X]        
-                    //    / \
-                    //   1   Y              Y
-                    //      / \           /   \
-                    //     2  Z    =>   [X]   [Z]
-                    //        /\        / \   / \
-                    //       3 4       1   2 3   4
-                    Contracts.Assert(rootColor == Color.Black);
+                    case AddCoreResult.ItemUpdated:
+                    case AddCoreResult.ItemAdded:
+                        root = new InteriorNode(root.Key, root.Value, left, right, root.LeftColor, root.RightColor);
+                        return result;
+                    case AddCoreResult.NewNodeIsRed:
+                        root = new InteriorNode(root.Key, root.Value, left, right, root.LeftColor, Color.Red);
+                        // Check for double red violation and warn the caller.
+                        return (rootColor == Color.Red) ? AddCoreResult.DoubleRedRightChild : AddCoreResult.ItemAdded;
+                    case AddCoreResult.DoubleRedRightChild:
+                        //    [X]        
+                        //    / \
+                        //   1   Y              Y
+                        //      / \           /   \
+                        //     2  Z    =>   [X]   [Z]
+                        //        /\        / \   / \
+                        //       3 4       1   2 3   4
+                        Contracts.Assert(rootColor == Color.Black);
 
-                    newLeft = Create(root.Key, root.Value, root.Left, right.Left, root.LeftColor, right.LeftColor);
-                    newRight = right.Right;
-                    root = new InteriorNode(right.Key, right.Value, newLeft, newRight, Color.Black, Color.Black);
-                    return AddCoreResult.NewNodeIsRed;
-                case AddCoreResult.DoubleRedLeftChild:
-                    //    [X]        
-                    //    / \
-                    //   1   Z              Y
-                    //      / \           /   \
-                    //     Y  4    =>   [X]   [Z]
-                    //     /\           / \   / \
-                    //     2 3         1   2 3   4
-                    Contracts.Assert(rootColor == Color.Black);
+                        newLeft = Create(root.Key, root.Value, root.Left, right.Left, root.LeftColor, right.LeftColor);
+                        newRight = right.Right;
+                        root = new InteriorNode(right.Key, right.Value, newLeft, newRight, Color.Black, Color.Black);
+                        return AddCoreResult.NewNodeIsRed;
+                    case AddCoreResult.DoubleRedLeftChild:
+                        //    [X]        
+                        //    / \
+                        //   1   Z              Y
+                        //      / \           /   \
+                        //     Y  4    =>   [X]   [Z]
+                        //     /\           / \   / \
+                        //     2 3         1   2 3   4
+                        Contracts.Assert(rootColor == Color.Black);
 
-                    var rightLeft = right.Left;
-                    Contracts.AssertValue(rightLeft);
-                    newLeft = Create(root.Key, root.Value, root.Left, rightLeft.Left, root.LeftColor, rightLeft.LeftColor);
-                    newRight = Create(right.Key, right.Value, rightLeft.Right, right.Right, rightLeft.RightColor, right.RightColor);
-                    root = new InteriorNode(rightLeft.Key, rightLeft.Value, newLeft, newRight, Color.Black, Color.Black);
-                    return AddCoreResult.NewNodeIsRed;
-                default:
-                    Contracts.Assert(result == AddCoreResult.ItemPresent);
-                    return AddCoreResult.ItemPresent;
+                        var rightLeft = right.Left;
+                        Contracts.AssertValue(rightLeft);
+                        newLeft = Create(root.Key, root.Value, root.Left, rightLeft.Left, root.LeftColor, rightLeft.LeftColor);
+                        newRight = Create(right.Key, right.Value, rightLeft.Right, right.Right, rightLeft.RightColor, right.RightColor);
+                        root = new InteriorNode(rightLeft.Key, rightLeft.Value, newLeft, newRight, Color.Black, Color.Black);
+                        return AddCoreResult.NewNodeIsRed;
+                    default:
+                        Contracts.Assert(result == AddCoreResult.ItemPresent);
+                        return AddCoreResult.ItemPresent;
                 }
             }
         }
 
-        private static RemoveCoreResult RemoveItemCore(ref RedBlackNode<V> root, Color rootColor, string key, Dictionary<RedBlackNode<V>, int> hashCodeCache) { 
-        
+        private static RemoveCoreResult RemoveItemCore(ref RedBlackNode<V> root, Color rootColor, string key, Dictionary<RedBlackNode<V>, int> hashCodeCache)
+        {
+
             Contracts.AssertValueOrNull(root);
             Contracts.AssertValue(key);
 
             if (root == null)
+            {
                 return RemoveCoreResult.ItemNotFound;
+            }
 
             var cmp = Compare(key, root.Key);
             if (cmp == 0)
@@ -686,7 +734,10 @@ namespace Microsoft.PowerFx.Core.Utils
                     // If the removed node or its only child is red, just color it black
                     // and we are done, no black height violations.
                     if (rootColor == Color.Red || rightColor == Color.Red)
+                    {
                         return RemoveCoreResult.NewNodeIsBlack;
+                    }
+
                     // Mark the new node as a fake 'double black' to maintain the black height,
                     // callers will do fixup.
                     return RemoveCoreResult.NewNodeIsDoubleBlack;
@@ -699,7 +750,10 @@ namespace Microsoft.PowerFx.Core.Utils
                     // If the removed node or its only child is red, just color it black
                     // and we are done, no black height violations.
                     if (rootColor == Color.Red || leftColor == Color.Red)
+                    {
                         return RemoveCoreResult.NewNodeIsBlack;
+                    }
+
                     // Mark the new node as a fake 'double black' to maintain the black height,
                     // callers will do fixup.
                     return RemoveCoreResult.NewNodeIsDoubleBlack;
@@ -713,15 +767,15 @@ namespace Microsoft.PowerFx.Core.Utils
 
                 switch (result)
                 {
-                case RemoveCoreResult.ItemRemoved:
-                    root = new InteriorNode(leftMost.Key, leftMost.Value, root.Left, newRight, root.LeftColor, root.RightColor);
-                    return RemoveCoreResult.ItemRemoved;
-                case RemoveCoreResult.NewNodeIsBlack:
-                    root = new InteriorNode(leftMost.Key, leftMost.Value, root.Left, newRight, root.LeftColor, Color.Black);
-                    return RemoveCoreResult.ItemRemoved;
-                default:
-                    Contracts.Assert(result == RemoveCoreResult.NewNodeIsDoubleBlack);
-                    return RemoveFixupRight(ref root, leftMost, rootColor, newRight);
+                    case RemoveCoreResult.ItemRemoved:
+                        root = new InteriorNode(leftMost.Key, leftMost.Value, root.Left, newRight, root.LeftColor, root.RightColor);
+                        return RemoveCoreResult.ItemRemoved;
+                    case RemoveCoreResult.NewNodeIsBlack:
+                        root = new InteriorNode(leftMost.Key, leftMost.Value, root.Left, newRight, root.LeftColor, Color.Black);
+                        return RemoveCoreResult.ItemRemoved;
+                    default:
+                        Contracts.Assert(result == RemoveCoreResult.NewNodeIsDoubleBlack);
+                        return RemoveFixupRight(ref root, leftMost, rootColor, newRight);
                 }
             }
 
@@ -732,17 +786,17 @@ namespace Microsoft.PowerFx.Core.Utils
                 var result = RemoveItemCore(ref left, root.LeftColor, key, hashCodeCache);
                 switch (result)
                 {
-                case RemoveCoreResult.ItemRemoved:
-                    root = Create(root.Key, root.Value, left, root.Right, root.LeftColor, root.RightColor);
-                    return RemoveCoreResult.ItemRemoved;
-                case RemoveCoreResult.NewNodeIsBlack:
-                    root = Create(root.Key, root.Value, left, root.Right, Color.Black, root.RightColor);
-                    return RemoveCoreResult.ItemRemoved;
-                case RemoveCoreResult.NewNodeIsDoubleBlack:
-                    return RemoveFixupLeft(ref root, rootColor, left);
-                default:
-                    Contracts.Assert(result == RemoveCoreResult.ItemNotFound);
-                    return RemoveCoreResult.ItemNotFound;
+                    case RemoveCoreResult.ItemRemoved:
+                        root = Create(root.Key, root.Value, left, root.Right, root.LeftColor, root.RightColor);
+                        return RemoveCoreResult.ItemRemoved;
+                    case RemoveCoreResult.NewNodeIsBlack:
+                        root = Create(root.Key, root.Value, left, root.Right, Color.Black, root.RightColor);
+                        return RemoveCoreResult.ItemRemoved;
+                    case RemoveCoreResult.NewNodeIsDoubleBlack:
+                        return RemoveFixupLeft(ref root, rootColor, left);
+                    default:
+                        Contracts.Assert(result == RemoveCoreResult.ItemNotFound);
+                        return RemoveCoreResult.ItemNotFound;
                 }
             }
             else
@@ -752,17 +806,17 @@ namespace Microsoft.PowerFx.Core.Utils
                 var result = RemoveItemCore(ref right, root.RightColor, key, hashCodeCache);
                 switch (result)
                 {
-                case RemoveCoreResult.ItemRemoved:
-                    root = Create(root.Key, root.Value, root.Left, right, root.LeftColor, root.RightColor);
-                    return RemoveCoreResult.ItemRemoved;
-                case RemoveCoreResult.NewNodeIsBlack:
-                    root = Create(root.Key, root.Value, root.Left, right, root.LeftColor, Color.Black);
-                    return RemoveCoreResult.ItemRemoved;
-                case RemoveCoreResult.NewNodeIsDoubleBlack:
-                    return RemoveFixupRight(ref root, root, rootColor, right);
-                default:
-                    Contracts.Assert(result == RemoveCoreResult.ItemNotFound);
-                    return RemoveCoreResult.ItemNotFound;
+                    case RemoveCoreResult.ItemRemoved:
+                        root = Create(root.Key, root.Value, root.Left, right, root.LeftColor, root.RightColor);
+                        return RemoveCoreResult.ItemRemoved;
+                    case RemoveCoreResult.NewNodeIsBlack:
+                        root = Create(root.Key, root.Value, root.Left, right, root.LeftColor, Color.Black);
+                        return RemoveCoreResult.ItemRemoved;
+                    case RemoveCoreResult.NewNodeIsDoubleBlack:
+                        return RemoveFixupRight(ref root, root, rootColor, right);
+                    default:
+                        Contracts.Assert(result == RemoveCoreResult.ItemNotFound);
+                        return RemoveCoreResult.ItemNotFound;
                 }
             }
         }
@@ -783,7 +837,10 @@ namespace Microsoft.PowerFx.Core.Utils
                 // If the removed node or its only child is red, just color it black
                 // and we are done, no black height violations.
                 if (rootColor == Color.Red || rightColor == Color.Red)
+                {
                     return RemoveCoreResult.NewNodeIsBlack;
+                }
+
                 // Mark the new node as a fake 'double black' to maintain the black height,
                 // callers will do fixup.
                 return RemoveCoreResult.NewNodeIsDoubleBlack;
@@ -795,15 +852,15 @@ namespace Microsoft.PowerFx.Core.Utils
 
             switch (result)
             {
-            case RemoveCoreResult.ItemRemoved:
-                root = Create(root.Key, root.Value, left, root.Right, root.LeftColor, root.RightColor);
-                return RemoveCoreResult.ItemRemoved;
-            case RemoveCoreResult.NewNodeIsBlack:
-                root = Create(root.Key, root.Value, left, root.Right, Color.Black, root.RightColor);
-                return RemoveCoreResult.ItemRemoved;
-            default:
-                Contracts.Assert(result == RemoveCoreResult.NewNodeIsDoubleBlack);
-                return RemoveFixupLeft(ref root, rootColor, left);
+                case RemoveCoreResult.ItemRemoved:
+                    root = Create(root.Key, root.Value, left, root.Right, root.LeftColor, root.RightColor);
+                    return RemoveCoreResult.ItemRemoved;
+                case RemoveCoreResult.NewNodeIsBlack:
+                    root = Create(root.Key, root.Value, left, root.Right, Color.Black, root.RightColor);
+                    return RemoveCoreResult.ItemRemoved;
+                default:
+                    Contracts.Assert(result == RemoveCoreResult.NewNodeIsDoubleBlack);
+                    return RemoveFixupLeft(ref root, rootColor, left);
             }
         }
 

@@ -10,6 +10,7 @@ namespace Microsoft.PowerFx.Core.Public.Types
         internal OptionSetValueType() : base(new DType(DKind.OptionSetValue))
         {
         }
+
         public override void Visit(ITypeVistor vistor)
         {
             vistor.Visit(this);

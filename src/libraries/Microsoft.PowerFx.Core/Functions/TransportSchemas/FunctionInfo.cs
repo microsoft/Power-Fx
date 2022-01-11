@@ -14,7 +14,7 @@ namespace Microsoft.PowerFx.Core.Functions.TransportSchemas
         public string Documentation;
         public FunctionSignature[] Signatures;
 
-        
+
         internal FunctionInfo Merge(FunctionInfo with)
         {
             return new FunctionInfo()

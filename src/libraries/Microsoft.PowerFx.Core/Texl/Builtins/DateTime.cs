@@ -30,7 +30,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
-            yield return new [] { TexlStrings.DateArg1, TexlStrings.DateArg2, TexlStrings.DateArg3 };
+            yield return new[] { TexlStrings.DateArg1, TexlStrings.DateArg2, TexlStrings.DateArg3 };
         }
     }
 
@@ -56,7 +56,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertValue(binding);
             Contracts.AssertValue(metadata);
 
-            return base.IsRowScopedServerDelegatable(callNode, binding, metadata);            
+            return base.IsRowScopedServerDelegatable(callNode, binding, metadata);
         }
     }
 
@@ -75,8 +75,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
-            yield return new [] { TexlStrings.TimeArg1, TexlStrings.TimeArg2, TexlStrings.TimeArg3 };
-            yield return new [] { TexlStrings.TimeArg1, TexlStrings.TimeArg2, TexlStrings.TimeArg3, TexlStrings.TimeArg4 };
+            yield return new[] { TexlStrings.TimeArg1, TexlStrings.TimeArg2, TexlStrings.TimeArg3 };
+            yield return new[] { TexlStrings.TimeArg1, TexlStrings.TimeArg2, TexlStrings.TimeArg3, TexlStrings.TimeArg4 };
         }
     }
 
@@ -108,7 +108,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
-            yield return new [] { TexlStrings.MonthArg1 };
+            yield return new[] { TexlStrings.MonthArg1 };
         }
     }
 
@@ -124,7 +124,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
-            yield return new [] { TexlStrings.DayArg1 };
+            yield return new[] { TexlStrings.DayArg1 };
         }
     }
 
@@ -141,7 +141,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
-            yield return new [] { TexlStrings.HourArg1 };
+            yield return new[] { TexlStrings.HourArg1 };
         }
     }
 
@@ -157,7 +157,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
-            yield return new [] { TexlStrings.MinuteArg1 };
+            yield return new[] { TexlStrings.MinuteArg1 };
         }
     }
 
@@ -173,7 +173,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
-            yield return new [] { TexlStrings.SecondArg1 };
+            yield return new[] { TexlStrings.SecondArg1 };
         }
     }
 
@@ -192,8 +192,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
-            yield return new [] { TexlStrings.WeekdayArg1 };
-            yield return new [] { TexlStrings.WeekdayArg1, TexlStrings.WeekdayArg2 };
+            yield return new[] { TexlStrings.WeekdayArg1 };
+            yield return new[] { TexlStrings.WeekdayArg1, TexlStrings.WeekdayArg2 };
         }
     }
 
@@ -317,14 +317,14 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
-            yield return new [] { TexlStrings.DateAddArg1, TexlStrings.DateAddArg2 };
-            yield return new [] { TexlStrings.DateAddArg1, TexlStrings.DateAddArg2, TexlStrings.DateAddArg3 };
+            yield return new[] { TexlStrings.DateAddArg1, TexlStrings.DateAddArg2 };
+            yield return new[] { TexlStrings.DateAddArg1, TexlStrings.DateAddArg2, TexlStrings.DateAddArg3 };
         }
 
         // This method returns true if there are special suggestions for a particular parameter of the function.
         public override bool HasSuggestionsForParam(int argumentIndex)
         {
-            Contracts.Assert(0 <= argumentIndex);
+            Contracts.Assert(argumentIndex >= 0);
 
             return argumentIndex == 2;
         }
@@ -338,7 +338,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertValue(errors);
             Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
 
-            var fValid = base.CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            var fValid = CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
             Contracts.Assert(returnType == DType.DateTime);
 
             var type0 = argTypes[0];
@@ -381,8 +381,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
-            yield return new [] { TexlStrings.DateAddTArg1, TexlStrings.DateAddTArg2 };
-            yield return new [] { TexlStrings.DateAddTArg1, TexlStrings.DateAddTArg2, TexlStrings.DateAddTArg3 };
+            yield return new[] { TexlStrings.DateAddTArg1, TexlStrings.DateAddTArg2 };
+            yield return new[] { TexlStrings.DateAddTArg1, TexlStrings.DateAddTArg2, TexlStrings.DateAddTArg3 };
         }
 
         public override string GetUniqueTexlRuntimeName(bool isPrefetching = false)
@@ -399,7 +399,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertValue(errors);
             Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
 
-            var fValid = base.CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            var fValid = CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
 
             var type0 = argTypes[0];
             var type1 = argTypes[1];
@@ -471,7 +471,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
 
             return fValid;
-        }        
+        }
     }
 
     // DateDiff(startdate: d, enddate : d, [ unit: TimeUnits ]) : n
@@ -488,14 +488,14 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
-            yield return new [] { TexlStrings.DateDiffArg1, TexlStrings.DateDiffArg2 };
-            yield return new [] { TexlStrings.DateDiffArg1, TexlStrings.DateDiffArg2, TexlStrings.DateDiffArg3 };
+            yield return new[] { TexlStrings.DateDiffArg1, TexlStrings.DateDiffArg2 };
+            yield return new[] { TexlStrings.DateDiffArg1, TexlStrings.DateDiffArg2, TexlStrings.DateDiffArg3 };
         }
 
         // This method returns true if there are special suggestions for a particular parameter of the function.
         public override bool HasSuggestionsForParam(int argumentIndex)
         {
-            Contracts.Assert(0 <= argumentIndex);
+            Contracts.Assert(argumentIndex >= 0);
 
             return argumentIndex == 2;
         }
@@ -514,8 +514,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
-            yield return new [] { TexlStrings.DateDiffTArg1, TexlStrings.DateDiffTArg2 };
-            yield return new [] { TexlStrings.DateDiffTArg1, TexlStrings.DateDiffTArg2, TexlStrings.DateDiffTArg3 };
+            yield return new[] { TexlStrings.DateDiffTArg1, TexlStrings.DateDiffTArg2 };
+            yield return new[] { TexlStrings.DateDiffTArg1, TexlStrings.DateDiffTArg2, TexlStrings.DateDiffTArg3 };
         }
 
         public override string GetUniqueTexlRuntimeName(bool isPrefetching = false)
@@ -532,7 +532,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertValue(errors);
             Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
 
-            var fValid = base.CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            var fValid = CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
 
             var type0 = argTypes[0];
             var type1 = argTypes[1];

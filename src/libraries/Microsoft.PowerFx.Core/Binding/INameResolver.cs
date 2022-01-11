@@ -47,7 +47,7 @@ namespace Microsoft.PowerFx.Core.Binding
         IEnumerable<TexlFunction> LookupFunctions(DPath theNamespace, string name, bool localeInvariant = false);
 
         /// <returns>
-        /// List of functions in <see cref="nameSpace"/>
+        /// List of functions in <see cref="nameSpace"/>.
         /// </returns>
         IEnumerable<TexlFunction> LookupFunctionsInNamespace(DPath nameSpace);
 

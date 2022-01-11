@@ -56,7 +56,7 @@ namespace Microsoft.PowerFx.Core.Utils
                 result = OleAutomationEpoch + new TimeSpan((int)integral, (int)(frac * HoursPerDay) % HoursPerDay, (int)(frac * MinutesPerDay) % 60, (int)(frac * SecondsPerDay) % 60);
 
                 // Excel stores dates as if they were always UTC, we need to treat as local time.
-                result = System.DateTime.SpecifyKind(result, DateTimeKind.Local).ToUniversalTime();
+                result = DateTime.SpecifyKind(result, DateTimeKind.Local).ToUniversalTime();
             }
             catch (ArgumentOutOfRangeException)
             {
@@ -64,6 +64,7 @@ namespace Microsoft.PowerFx.Core.Utils
                 result = default;
                 return false;
             }
+
             return true;
         }
 

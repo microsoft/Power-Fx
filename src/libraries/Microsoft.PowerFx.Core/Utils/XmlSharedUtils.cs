@@ -26,7 +26,9 @@ namespace Microsoft.PowerFx.Core.Utils
 
             var xattr = element.GetRequiredNonEmptyAttribute(name);
             if (!Guid.TryParse((string)xattr, out var guid))
+            {
                 throw new InvalidXmlException(string.Format(StringResources.Get("InvalidXml_AttributeValueInvalidGuid_AttrName_Value"), xattr.Name, xattr.Value), xattr);
+            }
 
             return guid;
         }
@@ -42,7 +44,9 @@ namespace Microsoft.PowerFx.Core.Utils
 
             var xattr = element.GetRequiredAttribute(name);
             if (string.IsNullOrEmpty(xattr.Value))
+            {
                 throw new InvalidXmlException(string.Format(StringResources.Get("InvalidXml_AttributeCannotBeEmpty_AttrName"), xattr.Name), xattr);
+            }
 
             return xattr;
         }
@@ -70,7 +74,9 @@ namespace Microsoft.PowerFx.Core.Utils
 
             var xattr = element.Attribute(name);
             if (xattr == null)
+            {
                 throw new InvalidXmlException(string.Format(StringResources.Get("InvalidXml_ElementMissingAttribute_ElemName_AttrName"), element.Name, name), element);
+            }
 
             return xattr;
         }

@@ -25,15 +25,18 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
-            yield return new [] { TexlStrings.TableArg1 };
-            yield return new [] { TexlStrings.TableArg1, TexlStrings.TableArg1 };
-            yield return new [] { TexlStrings.TableArg1, TexlStrings.TableArg1, TexlStrings.TableArg1 };
+            yield return new[] { TexlStrings.TableArg1 };
+            yield return new[] { TexlStrings.TableArg1, TexlStrings.TableArg1 };
+            yield return new[] { TexlStrings.TableArg1, TexlStrings.TableArg1, TexlStrings.TableArg1 };
         }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures(int arity)
         {
             if (arity > 2)
+            {
                 return GetGenericSignatures(arity, TexlStrings.TableArg1);
+            }
+
             return base.GetSignatures(arity);
         }
 

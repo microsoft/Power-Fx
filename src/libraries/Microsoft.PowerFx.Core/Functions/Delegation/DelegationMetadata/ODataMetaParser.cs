@@ -38,7 +38,9 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationMetadata
                         }
 
                         if (!capabilitiesDefinedByColumn.TryGetProperty(CapabilitiesConstants.Properties, out var propertyCapabilities))
+                        {
                             continue;
+                        }
 
                         foreach (var property in propertyCapabilities.EnumerateObject())
                         {
@@ -46,11 +48,13 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationMetadata
                             var capabilitiesDefinedByColumnProperty = property.Value;
 
                             if (!capabilitiesDefinedByColumnProperty.TryGetProperty(CapabilitiesConstants.Capabilities, out var propertyCapabilityJsonObject))
+                            {
                                 continue;
+                            }
 
                             if (propertyCapabilityJsonObject.TryGetProperty(CapabilitiesConstants.PropertyQueryAlias, out var alias))
                             {
-                                oDataReplacement.Add(propertyPath, getReplacementPath(alias.GetString(), columnPath));
+                                oDataReplacement.Add(propertyPath, GetReplacementPath(alias.GetString(), columnPath));
                             }
                         }
                     }
@@ -59,7 +63,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationMetadata
                 return new ODataOpMetadata(schema, oDataReplacement);
             }
 
-            private DPath getReplacementPath(string alias, DPath currentColumnPath)
+            private DPath GetReplacementPath(string alias, DPath currentColumnPath)
             {
                 if (alias.Contains("/"))
                 {

@@ -31,6 +31,7 @@ namespace Microsoft.PowerFx.Core.Tests
             {
                 engineName = "-";
             }
+
             _expected[engineName] = expected;
         }
 
@@ -40,6 +41,7 @@ namespace Microsoft.PowerFx.Core.Tests
             {
                 return _expected["-"];
             }
+
             return expected;
         }
     }

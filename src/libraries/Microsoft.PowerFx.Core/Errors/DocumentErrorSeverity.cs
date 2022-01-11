@@ -8,7 +8,7 @@ namespace Microsoft.PowerFx.Core.Errors
     [TransportType(TransportKind.Enum)]
     public enum DocumentErrorSeverity
     {
-        _Min = Verbose,
+        Min = Verbose,
 
         /// <summary>
         /// A suggestion about possible high-level improvements or refactoring that may help the user
@@ -53,6 +53,6 @@ namespace Microsoft.PowerFx.Core.Errors
         /// </summary>
         Critical,
 
-        _Lim = Critical,
+        Lim = Critical,
     }
 }

@@ -7,7 +7,7 @@ namespace Microsoft.PowerFx.Core.Entities
     {
         string Name { get; }
         bool IsBooleanValued { get; }
-        
+
         string RelatedEntityName { get; }
         string RelatedColumnInvariantName { get; }
         bool IsGlobal { get; }

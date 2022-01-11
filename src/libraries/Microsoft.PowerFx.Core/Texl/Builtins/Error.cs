@@ -102,9 +102,14 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 {
                     // If they have a record literal, we can position the errors for rejected fields.
                     if (record != null)
+                    {
                         errors.EnsureError(record.Children.Where((_, i) => record.Ids[i].Name == name.Name).FirstOrDefault() ?? record, TexlStrings.ErrErrorIrrelevantField);
+                    }
                     else
+                    {
                         errors.EnsureError(argument, TexlStrings.ErrErrorIrrelevantField);
+                    }
+
                     valid = false;
                 }
             }

@@ -5,7 +5,8 @@ using System.Collections.Generic;
 using Microsoft.PowerFx.Core.Lexer;
 using Microsoft.PowerFx.Core.Utils;
 
-namespace Microsoft.PowerFx.Core.Texl.Intellisense{
+namespace Microsoft.PowerFx.Core.Texl.Intellisense
+{
     internal sealed class StringSuggestionHandler : ISpecialCaseHandler
     {
         private readonly int _tokenStartIndex;
@@ -13,7 +14,7 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense{
 
         public StringSuggestionHandler(int startIndex, bool requireTokenStartWithQuote = true)
         {
-            Contracts.Assert(0 <= startIndex);
+            Contracts.Assert(startIndex >= 0);
 
             _tokenStartIndex = startIndex;
             _requireTokenStartWithQuote = requireTokenStartWithQuote;
@@ -30,7 +31,9 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense{
             Contracts.Assert(_tokenStartIndex < script.Length);
 
             if (_requireTokenStartWithQuote && script[_tokenStartIndex] != '"')
+            {
                 return false;
+            }
 
             var matchEndIndex = -1;
             var foundAny = false;
@@ -54,7 +57,10 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense{
                     {
                         var curChar = script.Substring(i, 1);
                         if (curChar != TexlLexer.PunctuatorParenClose && curChar != TexlLexer.LocalizedInstance.LocalizedPunctuatorListSeparator)
+                        {
                             found = false;
+                        }
+
                         break;
                     }
 
@@ -64,14 +70,20 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense{
                 foundAny |= found;
 
                 if (found && matchEndIndex < i)
+                {
                     matchEndIndex = i;
+                }
 
                 if (!found && i != script.Length)
+                {
                     suggestions.Remove(suggestion);
+                }
             }
 
             if (!foundAny || matchEndIndex <= _tokenStartIndex)
+            {
                 return false;
+            }
 
             intellisenseData.Suggestions.Clear();
             intellisenseData.SubstringSuggestions.Clear();

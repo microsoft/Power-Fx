@@ -23,7 +23,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override bool SupportCoercionForArg(int argIndex)
         {
             if (!base.SupportCoercionForArg(argIndex))
+            {
                 return false;
+            }
 
             // For first arg we don't support coercion.
             return argIndex != 0;
@@ -32,7 +34,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         // This method returns true if there are special suggestions for a particular parameter of the function.
         public override bool HasSuggestionsForParam(int argumentIndex)
         {
-            Contracts.Assert(0 <= argumentIndex);
+            Contracts.Assert(argumentIndex >= 0);
 
             return argumentIndex == 0;
         }

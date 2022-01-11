@@ -28,11 +28,11 @@ namespace Microsoft.PowerFx.Tests
 
             // Test op==
             Assert.True(r1 == r2);
-            Assert.False(null == r2);
+            Assert.False(r2 == null);
             Assert.False(r1 == null);
 
             Assert.True(r1 != null);
-            Assert.True(null != r1);
+            Assert.True(r1 != null);
             Assert.False(r1 != r2);
 
             Assert.True(r1.Equals(r2));
@@ -40,6 +40,6 @@ namespace Microsoft.PowerFx.Tests
 
 
             Assert.Equal(r1.GetHashCode(), r2.GetHashCode());
-        }        
+        }
     }
 }

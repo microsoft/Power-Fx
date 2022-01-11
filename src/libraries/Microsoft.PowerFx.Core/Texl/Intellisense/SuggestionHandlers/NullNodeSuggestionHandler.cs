@@ -3,7 +3,8 @@
 
 using Microsoft.PowerFx.Core.Utils;
 
-namespace Microsoft.PowerFx.Core.Texl.Intellisense{
+namespace Microsoft.PowerFx.Core.Texl.Intellisense
+{
     internal partial class Intellisense
     {
         internal sealed class NullNodeSuggestionHandler : ISuggestionHandler
@@ -19,7 +20,9 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense{
                 Contracts.AssertValue(intellisenseData);
 
                 if (intellisenseData.CurNode != null)
+                {
                     return false;
+                }
 
                 return IntellisenseHelper.AddSuggestionsForValuePossibilities(intellisenseData, null);
             }

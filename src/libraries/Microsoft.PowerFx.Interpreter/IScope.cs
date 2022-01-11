@@ -32,6 +32,7 @@ namespace Microsoft.PowerFx
                     return field.Value;
                 }
             }
+
             return null;
         }
     }

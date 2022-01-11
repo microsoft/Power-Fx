@@ -104,67 +104,80 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
 
             switch (node.Kind)
             {
-            case NodeKind.DottedName:
-                {
-                    if (!opDelStrategy.IsOpSupportedByTable(metadata, node, binding))
-                        return false;
-
-                    var dottedNodeValStrategy = _function.GetDottedNameNodeDelegationStrategy();
-                    return dottedNodeValStrategy.IsValidDottedNameNode(node.AsDottedName(), binding, metadata, opDelStrategy);
-                }
-            case NodeKind.Call:
-                {
-                    if (!opDelStrategy.IsOpSupportedByTable(metadata, node, binding))
-                        return false;
-
-                    var cNodeValStrategy = _function.GetCallNodeDelegationStrategy();
-                    return cNodeValStrategy.IsValidCallNode(node.AsCall(), binding, metadata);
-                }
-            case NodeKind.FirstName:
-                {
-                    var firstNameNodeValStrategy = _function.GetFirstNameNodeDelegationStrategy();
-                    return firstNameNodeValStrategy.IsValidFirstNameNode(node.AsFirstName(), binding, opDelStrategy);
-                }
-            case NodeKind.UnaryOp:
-                {
-                    if (!opDelStrategy.IsOpSupportedByTable(metadata, node, binding))
-                        return false;
-
-                    var unaryopNode = node.AsUnaryOpLit();
-                    var unaryOpNodeDelegationStrategy = _function.GetOpDelegationStrategy(unaryopNode.Op);
-                    return unaryOpNodeDelegationStrategy.IsSupportedOpNode(unaryopNode, metadata, binding);
-                }
-            case NodeKind.BinaryOp:
-                {
-                    if (!opDelStrategy.IsOpSupportedByTable(metadata, node, binding))
-                        return false;
-
-                    var binaryOpNode = node.AsBinaryOp().VerifyValue();
-                    opDelStrategy = _function.GetOpDelegationStrategy(binaryOpNode.Op, binaryOpNode);
-
-                    var binaryOpDelStrategy = (opDelStrategy as BinaryOpDelegationStrategy).VerifyValue();
-                    Contracts.Assert(binaryOpNode.Op == binaryOpDelStrategy.Op);
-
-                    if (!opDelStrategy.IsSupportedOpNode(node, metadata, binding))
+                case NodeKind.DottedName:
                     {
-                        SuggestDelegationHint(binaryOpNode, binding);
-                        return false;
+                        if (!opDelStrategy.IsOpSupportedByTable(metadata, node, binding))
+                        {
+                            return false;
+                        }
+
+                        var dottedNodeValStrategy = _function.GetDottedNameNodeDelegationStrategy();
+                        return dottedNodeValStrategy.IsValidDottedNameNode(node.AsDottedName(), binding, metadata, opDelStrategy);
                     }
 
-                    break;
-                }
-            default:
-                {
-                    var kind = node.Kind;
-                    if (kind != NodeKind.BoolLit && kind != NodeKind.StrLit && kind != NodeKind.NumLit)
+                case NodeKind.Call:
                     {
-                        var telemetryMessage = string.Format("NodeKind {0} unsupported.", kind);
-                        SuggestDelegationHintAndAddTelemetryMessage(node, binding, telemetryMessage);
-                        return false;
+                        if (!opDelStrategy.IsOpSupportedByTable(metadata, node, binding))
+                        {
+                            return false;
+                        }
+
+                        var cNodeValStrategy = _function.GetCallNodeDelegationStrategy();
+                        return cNodeValStrategy.IsValidCallNode(node.AsCall(), binding, metadata);
                     }
 
-                    break;
-                }
+                case NodeKind.FirstName:
+                    {
+                        var firstNameNodeValStrategy = _function.GetFirstNameNodeDelegationStrategy();
+                        return firstNameNodeValStrategy.IsValidFirstNameNode(node.AsFirstName(), binding, opDelStrategy);
+                    }
+
+                case NodeKind.UnaryOp:
+                    {
+                        if (!opDelStrategy.IsOpSupportedByTable(metadata, node, binding))
+                        {
+                            return false;
+                        }
+
+                        var unaryopNode = node.AsUnaryOpLit();
+                        var unaryOpNodeDelegationStrategy = _function.GetOpDelegationStrategy(unaryopNode.Op);
+                        return unaryOpNodeDelegationStrategy.IsSupportedOpNode(unaryopNode, metadata, binding);
+                    }
+
+                case NodeKind.BinaryOp:
+                    {
+                        if (!opDelStrategy.IsOpSupportedByTable(metadata, node, binding))
+                        {
+                            return false;
+                        }
+
+                        var binaryOpNode = node.AsBinaryOp().VerifyValue();
+                        opDelStrategy = _function.GetOpDelegationStrategy(binaryOpNode.Op, binaryOpNode);
+
+                        var binaryOpDelStrategy = (opDelStrategy as BinaryOpDelegationStrategy).VerifyValue();
+                        Contracts.Assert(binaryOpNode.Op == binaryOpDelStrategy.Op);
+
+                        if (!opDelStrategy.IsSupportedOpNode(node, metadata, binding))
+                        {
+                            SuggestDelegationHint(binaryOpNode, binding);
+                            return false;
+                        }
+
+                        break;
+                    }
+
+                default:
+                    {
+                        var kind = node.Kind;
+                        if (kind != NodeKind.BoolLit && kind != NodeKind.StrLit && kind != NodeKind.NumLit)
+                        {
+                            var telemetryMessage = string.Format("NodeKind {0} unsupported.", kind);
+                            SuggestDelegationHintAndAddTelemetryMessage(node, binding, telemetryMessage);
+                            return false;
+                        }
+
+                        break;
+                    }
             }
 
             return true;
@@ -189,38 +202,46 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
 
             switch (leftType.Kind)
             {
-            case DKind.Date:
-                if (rightType.Kind == DKind.DateTime)
-                {
-                    // If rhs is a column of type DateTime and lhs is row scoped then we will need to apply the coercion on rhs. So check if coercion function date is supported or not.
-                    if (IsColumnNode(binaryOpNode.Right, binding) && binding.IsRowScope(binaryOpNode.Left))
-                        return IsDelegatableColumnNode(binaryOpNode.Right.AsFirstName(), binding, null, DelegationCapability.Date);
+                case DKind.Date:
+                    if (rightType.Kind == DKind.DateTime)
+                    {
+                        // If rhs is a column of type DateTime and lhs is row scoped then we will need to apply the coercion on rhs. So check if coercion function date is supported or not.
+                        if (IsColumnNode(binaryOpNode.Right, binding) && binding.IsRowScope(binaryOpNode.Left))
+                        {
+                            return IsDelegatableColumnNode(binaryOpNode.Right.AsFirstName(), binding, null, DelegationCapability.Date);
+                        }
 
-                    // If lhs is rowscoped but not a field reference and rhs is rowscoped then we need to check if it's supported at table level.
-                    if (binding.IsRowScope(binaryOpNode.Left) && binding.IsRowScope(binaryOpNode.Right))
-                        return metadata.IsDelegationSupportedByTable(DelegationCapability.Date);
+                        // If lhs is rowscoped but not a field reference and rhs is rowscoped then we need to check if it's supported at table level.
+                        if (binding.IsRowScope(binaryOpNode.Left) && binding.IsRowScope(binaryOpNode.Right))
+                        {
+                            return metadata.IsDelegationSupportedByTable(DelegationCapability.Date);
+                        }
 
-                    return true;
-                }
+                        return true;
+                    }
 
-                break;
-            case DKind.DateTime:
-                if (rightType.Kind == DKind.Date)
-                {
-                    // If lhs is a column of type DateTime and RHS is also row scoped then check if coercion function date is supported or not.
-                    if (IsColumnNode(binaryOpNode.Left, binding) && binding.IsRowScope(binaryOpNode.Right))
-                        return IsDelegatableColumnNode(binaryOpNode.Left.AsFirstName(), binding, null, DelegationCapability.Date);
+                    break;
+                case DKind.DateTime:
+                    if (rightType.Kind == DKind.Date)
+                    {
+                        // If lhs is a column of type DateTime and RHS is also row scoped then check if coercion function date is supported or not.
+                        if (IsColumnNode(binaryOpNode.Left, binding) && binding.IsRowScope(binaryOpNode.Right))
+                        {
+                            return IsDelegatableColumnNode(binaryOpNode.Left.AsFirstName(), binding, null, DelegationCapability.Date);
+                        }
 
-                    // If lhs is rowscoped but not a field reference and rhs is rowscoped then we need to check if it's supported at table level.
-                    if (binding.IsRowScope(binaryOpNode.Left) && binding.IsRowScope(binaryOpNode.Right))
-                        return metadata.IsDelegationSupportedByTable(DelegationCapability.Date);
+                        // If lhs is rowscoped but not a field reference and rhs is rowscoped then we need to check if it's supported at table level.
+                        if (binding.IsRowScope(binaryOpNode.Left) && binding.IsRowScope(binaryOpNode.Right))
+                        {
+                            return metadata.IsDelegationSupportedByTable(DelegationCapability.Date);
+                        }
 
-                    return true;
-                }
+                        return true;
+                    }
 
-                break;
-            default:
-                break;
+                    break;
+                default:
+                    break;
             }
 
             return true;
@@ -234,7 +255,9 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
 
             var binaryOpNode = node.AsBinaryOp();
             if (binaryOpNode == null)
+            {
                 return false;
+            }
 
             var opDelStrategy = _function.GetOpDelegationStrategy(binaryOpNode.Op, binaryOpNode);
             var binaryOpDelStrategy = (opDelStrategy as BinaryOpDelegationStrategy).VerifyValue();
@@ -318,7 +341,9 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
 
             var result = metadata.IsUnaryOpInDelegationSupportedByColumn(Op, columnPath);
             if (!result)
+            {
                 TrackingProvider.Instance.AddSuggestionMessage(FormatTelemetryMessage("Operator not supported by column."), column, binder);
+            }
 
             return result;
         }
@@ -352,60 +377,73 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
             Contracts.AssertValue(opDelStrategy);
 
             if (!binding.IsRowScope(node))
+            {
                 return true;
+            }
 
             switch (node.Kind)
             {
-            case NodeKind.DottedName:
-                {
-                    if (!opDelStrategy.IsOpSupportedByTable(metadata, node, binding))
-                        return false;
-
-                    var dottedNodeValStrategy = _function.GetDottedNameNodeDelegationStrategy();
-                    return dottedNodeValStrategy.IsValidDottedNameNode(node.AsDottedName(), binding, metadata, opDelStrategy);
-                }
-            case NodeKind.Call:
-                {
-                    if (!opDelStrategy.IsOpSupportedByTable(metadata, node, binding))
-                        return false;
-
-                    var cNodeValStrategy = _function.GetCallNodeDelegationStrategy();
-                    return cNodeValStrategy.IsValidCallNode(node.AsCall(), binding, metadata);
-                }
-
-            case NodeKind.FirstName:
-                {
-                    var firstNameNodeValStrategy = _function.GetFirstNameNodeDelegationStrategy();
-                    return firstNameNodeValStrategy.IsValidFirstNameNode(node.AsFirstName(), binding, opDelStrategy);
-                }
-            case NodeKind.UnaryOp:
-                {
-                    if (!opDelStrategy.IsOpSupportedByTable(metadata, node, binding))
-                        return false;
-
-                    var unaryOpNode = node.AsUnaryOpLit().VerifyValue();
-                    opDelStrategy = _function.GetOpDelegationStrategy(unaryOpNode.Op).VerifyValue();
-
-                    var unaryOpDelStrategy = (opDelStrategy as UnaryOpDelegationStrategy).VerifyValue();
-                    Contracts.Assert(unaryOpDelStrategy.Op == unaryOpNode.Op);
-
-                    if (!opDelStrategy.IsSupportedOpNode(node, metadata, binding))
+                case NodeKind.DottedName:
                     {
-                        SuggestDelegationHint(node, binding);
-                        return false;
+                        if (!opDelStrategy.IsOpSupportedByTable(metadata, node, binding))
+                        {
+                            return false;
+                        }
+
+                        var dottedNodeValStrategy = _function.GetDottedNameNodeDelegationStrategy();
+                        return dottedNodeValStrategy.IsValidDottedNameNode(node.AsDottedName(), binding, metadata, opDelStrategy);
                     }
 
-                    return true;
-                }
-            case NodeKind.BinaryOp:
-                {
-                    if (!opDelStrategy.IsOpSupportedByTable(metadata, node, binding))
-                        return false;
+                case NodeKind.Call:
+                    {
+                        if (!opDelStrategy.IsOpSupportedByTable(metadata, node, binding))
+                        {
+                            return false;
+                        }
 
-                    var binaryOpNode = node.AsBinaryOp().VerifyValue();
-                    var binaryOpNodeDelValidationStrategy = _function.GetOpDelegationStrategy(binaryOpNode.Op, binaryOpNode);
-                    return binaryOpNodeDelValidationStrategy.IsSupportedOpNode(node.AsBinaryOp(), metadata, binding);
-                }
+                        var cNodeValStrategy = _function.GetCallNodeDelegationStrategy();
+                        return cNodeValStrategy.IsValidCallNode(node.AsCall(), binding, metadata);
+                    }
+
+                case NodeKind.FirstName:
+                    {
+                        var firstNameNodeValStrategy = _function.GetFirstNameNodeDelegationStrategy();
+                        return firstNameNodeValStrategy.IsValidFirstNameNode(node.AsFirstName(), binding, opDelStrategy);
+                    }
+
+                case NodeKind.UnaryOp:
+                    {
+                        if (!opDelStrategy.IsOpSupportedByTable(metadata, node, binding))
+                        {
+                            return false;
+                        }
+
+                        var unaryOpNode = node.AsUnaryOpLit().VerifyValue();
+                        opDelStrategy = _function.GetOpDelegationStrategy(unaryOpNode.Op).VerifyValue();
+
+                        var unaryOpDelStrategy = (opDelStrategy as UnaryOpDelegationStrategy).VerifyValue();
+                        Contracts.Assert(unaryOpDelStrategy.Op == unaryOpNode.Op);
+
+                        if (!opDelStrategy.IsSupportedOpNode(node, metadata, binding))
+                        {
+                            SuggestDelegationHint(node, binding);
+                            return false;
+                        }
+
+                        return true;
+                    }
+
+                case NodeKind.BinaryOp:
+                    {
+                        if (!opDelStrategy.IsOpSupportedByTable(metadata, node, binding))
+                        {
+                            return false;
+                        }
+
+                        var binaryOpNode = node.AsBinaryOp().VerifyValue();
+                        var binaryOpNodeDelValidationStrategy = _function.GetOpDelegationStrategy(binaryOpNode.Op, binaryOpNode);
+                        return binaryOpNodeDelValidationStrategy.IsSupportedOpNode(node.AsBinaryOp(), metadata, binding);
+                    }
             }
 
             SuggestDelegationHint(node, binding);
@@ -420,10 +458,14 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
 
             var unaryOpNode = node.AsUnaryOpLit();
             if (unaryOpNode == null)
+            {
                 return false;
+            }
 
             if (!IsValidNode(node, binding))
+            {
                 return false;
+            }
 
             var opDelStrategy = _function.GetOpDelegationStrategy(unaryOpNode.Op);
             var unaryOpDelStrategy = (opDelStrategy as UnaryOpDelegationStrategy).VerifyValue();

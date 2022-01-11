@@ -28,8 +28,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
-            yield return new [] { TexlStrings.ValueArg1 };
-            yield return new [] { TexlStrings.ValueArg1, TexlStrings.ValueArg2 };
+            yield return new[] { TexlStrings.ValueArg1 };
+            yield return new[] { TexlStrings.ValueArg1, TexlStrings.ValueArg2 };
         }
 
         public override bool CheckInvocation(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)

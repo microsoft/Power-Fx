@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation.
+﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
 using System;
@@ -82,9 +82,13 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
         public override Span GetCompleteSpan()
         {
             if (Token.Kind == TokKind.PercentSign && Right.Token.Span.Lim < Left.Token.Span.Min)
+            {
                 return new Span(Right.Token.Span.Min, Left.Token.Span.Lim);
+            }
             else
+            {
                 return new Span(Left.VerifyValue().GetCompleteSpan().Min, Right.VerifyValue().GetCompleteSpan().Lim);
+            }
         }
     }
 }

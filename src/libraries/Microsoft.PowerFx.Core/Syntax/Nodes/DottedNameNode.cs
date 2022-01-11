@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation.
+﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
 using System;
@@ -61,7 +61,7 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
             Contracts.AssertValid(leftIdentifier);
             Contracts.AssertValid(rightIdentifier);
 
-            return (Left is FirstNameNode leftName && leftName.Ident.Name == leftIdentifier && Right.Name == rightIdentifier);
+            return Left is FirstNameNode leftName && leftName.Ident.Name == leftIdentifier && Right.Name == rightIdentifier;
         }
 
         public override TexlNode Clone(ref int idNext, Span ts)
@@ -73,7 +73,9 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
             };
             var rightNode = RightNode?.Clone(ref idNext, ts);
             if (rightNode != null)
+            {
                 newNodes.Add(RightNode, rightNode);
+            }
 
             var clonedNode = new DottedNameNode(
                 ref idNext,
@@ -143,19 +145,27 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
                 }
 
                 if (reachedLeft)
+                {
                     break;
+                }
 
                 pointer = left as DottedNameNode;
                 if (pointer != null)
+                {
                     names.Push(pointer.Right.Name);
+                }
                 else
+                {
                     Contracts.Assert(false, "Can only do this for dotted names consisting of identifiers");
+                }
             }
 
             // For the DPath by unwinding the names stack
             var path = DPath.Root;
             while (names.Count > 0)
+            {
                 path = path.Append(names.Pop());
+            }
 
             return path;
         }
@@ -182,6 +192,7 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
                     break;
                 }
             }
+
             return new Span(min, Right.VerifyValue().Token.VerifyValue().Span.Lim);
         }
     }

@@ -16,10 +16,10 @@ namespace Microsoft.PowerFx.Core.Lexer.Tokens
         }
 
         /// <summary>
-        /// Copy Ctor for StrLitToken used by Clone
+        /// Copy Ctor for StrLitToken used by Clone.
         /// </summary>
-        /// <param name="tok">The token to be copied</param>
-        /// <param name="newSpan">The new span</param>
+        /// <param name="tok">The token to be copied.</param>
+        /// <param name="newSpan">The new span.</param>
         private StrLitToken(StrLitToken tok, Span newSpan)
             : this(tok.Value, newSpan)
         {
@@ -42,7 +42,10 @@ namespace Microsoft.PowerFx.Core.Lexer.Tokens
             Contracts.AssertValue(that);
 
             if (!(that is StrLitToken))
+            {
                 return false;
+            }
+
             return Value == that.As<StrLitToken>().Value && base.Equals(that);
         }
     }

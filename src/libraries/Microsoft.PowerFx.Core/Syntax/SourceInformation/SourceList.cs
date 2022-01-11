@@ -58,6 +58,7 @@ namespace Microsoft.PowerFx.Core.Syntax.SourceInformation
                 newItems[i] = source.Clone(newNodes, span);
                 i += 1;
             }
+
             return new SourceList(newItems);
         }
     }

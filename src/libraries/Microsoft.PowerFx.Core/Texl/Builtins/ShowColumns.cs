@@ -34,7 +34,10 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures(int arity)
         {
             if (arity > 2)
+            {
                 return GetGenericSignatures(arity, TexlStrings.ShowColumnsArg1, TexlStrings.ShowColumnsArg2);
+            }
+
             return base.GetSignatures(arity);
         }
 
@@ -46,7 +49,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertValue(errors);
             Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
 
-            var isValidInvocation = base.CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            var isValidInvocation = CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
             Contracts.Assert(returnType.IsTable);
 
             if (!argTypes[0].IsTable)
@@ -122,13 +125,17 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertValue(binding);
 
             if (!CheckArgsCount(callNode, binding))
+            {
                 return false;
+            }
 
             var args = callNode.Args.Children.VerifyValue();
 
             var dsType = binding.GetType(args[0]);
             if (dsType.AssociatedDataSources == null)
+            {
                 return false;
+            }
 
             var resultType = binding.GetType(callNode).VerifyValue();
 
@@ -142,13 +149,14 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
                 retval |= dsType.AssociateDataSourcesToSelect(dataSourceToQueryOptionsMap, columnName, columnType, true);
             }
+
             return retval;
         }
 
         // This method returns true if there are special suggestions for a particular parameter of the function.
         public override bool HasSuggestionsForParam(int argumentIndex)
         {
-            Contracts.Assert(0 <= argumentIndex);
+            Contracts.Assert(argumentIndex >= 0);
 
             return argumentIndex >= 0;
         }

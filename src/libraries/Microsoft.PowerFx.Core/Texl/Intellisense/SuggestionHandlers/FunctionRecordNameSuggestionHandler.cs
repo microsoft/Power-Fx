@@ -9,7 +9,8 @@ using Microsoft.PowerFx.Core.Syntax.Nodes;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 
-namespace Microsoft.PowerFx.Core.Texl.Intellisense{
+namespace Microsoft.PowerFx.Core.Texl.Intellisense
+{
     internal partial class Intellisense
     {
         internal sealed class FunctionRecordNameSuggestionHandler : ISuggestionHandler
@@ -23,7 +24,9 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense{
                 Contracts.AssertValue(intellisenseData);
 
                 if (!TryGetRecordNodeWithinACallNode(intellisenseData.CurNode, out var recordNode, out var callNode))
+                {
                     return false;
+                }
 
                 // For the special case of an identifier of a record which is an argument of a function, we can
                 // utilize the data provided to suggest relevant column names
@@ -35,7 +38,9 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense{
 
                 var columnName = GetRecordIdentifierForCursorPosition(cursorPos, recordNode, intellisenseData.Script);
                 if (columnName == null)
+                {
                     return false;
+                }
 
                 if (columnName.Token.Span.Min <= cursorPos)
                 {
@@ -47,30 +52,38 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense{
                 var info = intellisenseData.Binding.GetInfo(callNode);
                 var func = info.Function;
                 if (func == null || !intellisenseData.IsFunctionElligibleForRecordSuggestions(func))
+                {
                     return false;
+                }
 
                 // Adding suggestions for callNode arguments which reference a collection's columns
                 if (func.CanSuggestInputColumns)
                 {
                     var aggregateType = GetAggregateType(func, callNode, intellisenseData);
                     if (aggregateType.HasErrors || !aggregateType.IsAggregate)
+                    {
                         return false;
+                    }
 
-                    if(aggregateType.ContainsDataEntityType(DPath.Root))
+                    if (aggregateType.ContainsDataEntityType(DPath.Root))
                     {
                         var error = false;
                         aggregateType = aggregateType.DropAllOfTableRelationships(ref error, DPath.Root);
                         if (error)
+                        {
                             return false;
+                        }
                     }
 
                     foreach (var tName in aggregateType.GetNames(DPath.Root))
                     {
                         var usedName = tName.Name;
                         if (DType.TryGetDisplayNameForColumn(aggregateType, usedName, out var maybeDisplayName))
+                        {
                             usedName = new DName(maybeDisplayName);
+                        }
 
-                        var suggestion = TexlLexer.EscapeName(usedName.Value) + (IntellisenseHelper.IsPunctuatorColonNextToCursor(cursorPos, intellisenseData.Script) ? "" : TexlLexer.PunctuatorColon);
+                        var suggestion = TexlLexer.EscapeName(usedName.Value) + (IntellisenseHelper.IsPunctuatorColonNextToCursor(cursorPos, intellisenseData.Script) ? string.Empty : TexlLexer.PunctuatorColon);
                         suggestionsAdded |= IntellisenseHelper.AddSuggestion(intellisenseData, suggestion, SuggestionKind.Field, SuggestionIconKind.Other, DType.String, requiresSuggestionEscaping: false);
                     }
 
@@ -87,7 +100,9 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense{
                 Contracts.AssertValue(intellisenseData);
 
                 if (intellisenseData.TryGetSpecialFunctionType(func, callNode, out var type))
+                {
                     return type;
+                }
 
                 return intellisenseData.Binding.GetType(callNode.Args.Children[0]);
             }
@@ -169,13 +184,13 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense{
             {
                 Contracts.AssertValue(node);
 
-                if(!TryGetParentRecordNode(node, out recordNode) || !TryGetParentListNode(recordNode, out var listNode))
+                if (!TryGetParentRecordNode(node, out recordNode) || !TryGetParentListNode(recordNode, out var listNode))
                 {
                     callNode = null;
                     return false;
                 }
 
-                if(!(listNode.Parent is CallNode cNode))
+                if (!(listNode.Parent is CallNode cNode))
                 {
                     callNode = null;
                     return false;
@@ -192,16 +207,22 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense{
                 Contracts.AssertValue(parent);
 
                 if (cursorPos > script.Length)
+                {
                     return null;
+                }
 
                 foreach (var identifier in parent.Ids)
                 {
                     // Handle special case for whitespaces in formula.
                     if (cursorPos < identifier.Token.Span.Min && string.IsNullOrWhiteSpace(script.Substring(cursorPos, identifier.Token.Span.Min - cursorPos)))
+                    {
                         return identifier;
+                    }
 
                     if (identifier.Token.Span.Min <= cursorPos && cursorPos <= identifier.Token.Span.Lim)
+                    {
                         return identifier;
+                    }
                 }
 
                 return null;

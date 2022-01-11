@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation.
+﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
 using Microsoft.PowerFx.Core.Lexer;
@@ -32,7 +32,10 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
         public override TexlNode Clone(ref int idNext, Span ts)
         {
             if (Value == null)
+            {
                 return new NumLitNode(ref idNext, Token.Clone(ts), SourceList.Clone(ts, null), NumValue);
+            }
+
             return new NumLitNode(ref idNext, Value.Clone(ts).As<NumLitToken>());
         }
 

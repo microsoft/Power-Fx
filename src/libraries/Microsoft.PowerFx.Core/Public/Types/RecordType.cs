@@ -44,6 +44,7 @@ namespace Microsoft.PowerFx.Core.Public.Types
                     return field.Type;
                 }
             }
+
             return null;
         }
 

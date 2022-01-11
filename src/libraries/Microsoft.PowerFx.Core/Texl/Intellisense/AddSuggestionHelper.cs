@@ -16,7 +16,9 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
             Contracts.AssertValue(suggestion);
 
             if (!intellisenseData.DetermineSuggestibility(suggestion, type))
+            {
                 return false;
+            }
 
             var suggestions = intellisenseData.Suggestions;
             var substringSuggestions = intellisenseData.SubstringSuggestions;
@@ -30,9 +32,13 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
             // Because, the suggestion could be something like 'Ident with Space' and the user might have typed Ident. In this case,
             // we want to highlight only Ident while displaying 'Ident with Space'.
             if (requiresSuggestionEscaping && !string.IsNullOrEmpty(matchingStr) && valueToSuggest != suggestion && highlightStart == 0)
+            {
                 highlightStart++;
+            }
             else
+            {
                 matchingLength--;
+            }
 
             var highlightEnd = highlightStart + matchingStr.Length;
             if (IntellisenseHelper.IsMatch(suggestion, matchingStr))
@@ -41,9 +47,13 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
                 // include the starting delimiter that user provided, where as the suggestion would not include any delimiters.
                 // Hence we have to count for that fact.
                 if (matchingLength > 0 & matchingLength > matchingStr.Length)
+                {
                     highlightEnd = matchingLength > valueToSuggest.Length ? valueToSuggest.Length : matchingLength;
+                }
+
                 var UIsuggestion = ConstructUIString(suggestionKind, type, suggestions, valueToSuggest, highlightStart, highlightEnd);
-                var candidate = new IntellisenseSuggestion(UIsuggestion,
+                var candidate = new IntellisenseSuggestion(
+                    UIsuggestion,
                     suggestionKind,
                     iconKind,
                     type,
@@ -54,10 +64,12 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
                     sortPriority);
                 return CheckAndAddSuggestion(suggestions, candidate);
             }
+
             if (highlightStart > -1)
             {
                 var UIsuggestion = ConstructUIString(suggestionKind, type, substringSuggestions, valueToSuggest, highlightStart, highlightEnd);
-                var candidate = new IntellisenseSuggestion(UIsuggestion,
+                var candidate = new IntellisenseSuggestion(
+                    UIsuggestion,
                     suggestionKind,
                     iconKind,
                     type,
@@ -80,7 +92,8 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
 
         protected virtual UIString ConstructUIString(SuggestionKind suggestionKind, DType type, IntellisenseSuggestionList suggestions, string valueToSuggest, int highlightStart, int highlightEnd)
         {
-            return IntellisenseHelper.DisambiguateGlobals(suggestions,
+            return IntellisenseHelper.DisambiguateGlobals(
+                suggestions,
                 new UIString(valueToSuggest, highlightStart, highlightEnd),
                 suggestionKind,
                 type);

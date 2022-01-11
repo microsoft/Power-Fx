@@ -37,15 +37,18 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
             // Enumerate just the base overloads (the first 3 possibilities).
-            yield return new [] { TexlStrings.IfArgCond, TexlStrings.IfArgTrueValue };
-            yield return new [] { TexlStrings.IfArgCond, TexlStrings.IfArgTrueValue, TexlStrings.IfArgElseValue };
-            yield return new [] { TexlStrings.IfArgCond, TexlStrings.IfArgTrueValue, TexlStrings.IfArgCond, TexlStrings.IfArgTrueValue };
+            yield return new[] { TexlStrings.IfArgCond, TexlStrings.IfArgTrueValue };
+            yield return new[] { TexlStrings.IfArgCond, TexlStrings.IfArgTrueValue, TexlStrings.IfArgElseValue };
+            yield return new[] { TexlStrings.IfArgCond, TexlStrings.IfArgTrueValue, TexlStrings.IfArgCond, TexlStrings.IfArgTrueValue };
         }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures(int arity)
         {
             if (arity > 2)
+            {
                 return GetOverloadsIf(arity);
+            }
+
             return base.GetSignatures(arity);
         }
 
@@ -74,8 +77,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 fArgsValid &= CheckType(args[i], argTypes[i], DType.Boolean, errors, true, out bool withCoercion);
 
                 if (withCoercion)
-                   CollectionUtils.Add(ref nodeToCoercedTypeMap, args[i], DType.Boolean);
-
+                {
+                    CollectionUtils.Add(ref nodeToCoercedTypeMap, args[i], DType.Boolean);
+                }
             }
 
             var type = ReturnType;
@@ -85,12 +89,14 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             // Compute the result type by joining the types of all non-predicate args.
             Contracts.Assert(type == DType.Unknown);
-            for (var i = 1; i < count; )
+            for (var i = 1; i < count;)
             {
                 var nodeArg = args[i];
                 var typeArg = argTypes[i];
                 if (typeArg.IsError)
+                {
                     errors.EnsureError(args[i], TexlStrings.ErrTypeError);
+                }
 
                 var typeSuper = DType.Supertype(type, typeArg);
 
@@ -126,7 +132,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 // If there are an odd number of args, the last arg also participates.
                 i += 2;
                 if (i == count)
+                {
                     i--;
+                }
             }
 
             // Update the return type based on the specified invocation args.
@@ -138,7 +146,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         // This method returns true if there are special suggestions for a particular parameter of the function.
         public override bool HasSuggestionsForParam(int argumentIndex)
         {
-            Contracts.Assert(0 <= argumentIndex);
+            Contracts.Assert(argumentIndex >= 0);
 
             return argumentIndex > 1;
         }
@@ -169,8 +177,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                         // then it's NOT inconsequential. Note that the very last arg to an If
                         // is not a condition -- it's the "else" branch, hence the test below.
                         if (i != ancestor.Args.Children.Length - 1 && arg.InTree(ancestor.Args.Children[i]))
+                        {
                             return false;
+                        }
                     }
+
                     return true;
                 }
 
@@ -184,14 +195,23 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 {
                     // Top-level chain in a behavior rule.
                     if (chainNode.Parent == null)
+                    {
                         return true;
+                    }
+
                     // A chain nested within a larger non-call structure.
                     if (!(chainNode.Parent is ListNode) || !(chainNode.Parent.Parent is CallNode))
+                    {
                         return false;
+                    }
+
                     // Only the last chain segment is consequential.
                     var numSegments = chainNode.Children.Length;
                     if (numSegments > 0 && !arg.InTree(chainNode.Children[numSegments - 1]))
+                    {
                         return true;
+                    }
+
                     // The node is in the last segment of a chain nested within a larger invocation.
                     ancestor = chainNode.Parent.Parent.AsCall();
                     continue;
@@ -199,7 +219,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
                 // Walk up the parent chain to the outer invocation.
                 if (!(ancestor.Parent is ListNode) || !(ancestor.Parent.Parent is CallNode))
+                {
                     return false;
+                }
 
                 ancestor = ancestor.Parent.Parent.AsCall();
             }
@@ -213,7 +235,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         // since its max arity is int.MaxSize.
         private IEnumerable<TexlStrings.StringGetter[]> GetOverloadsIf(int arity)
         {
-            Contracts.Assert(3 <= arity);
+            Contracts.Assert(arity >= 3);
 
             // REVIEW ragru: What should be the number of overloads for functions like these?
             // Once we decide should we just hardcode the number instead of having the outer loop?
@@ -235,7 +257,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 }
 
                 if (fOdd)
+                {
                     signature[cargCur] = TexlStrings.IfArgElseValue;
+                }
 
                 argCount++;
                 overloads.Add(signature);
@@ -256,14 +280,19 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 if (ArgValidators.DataSourceArgNodeValidator.TryGetValidValue(nodeArg, binding, out var tmpDsNodes))
                 {
                     foreach (var node in tmpDsNodes)
+                    {
                         dsNodes.Add(node);
+                    }
                 }
 
                 // If there are an odd number of args, the last arg also participates.
                 i += 2;
                 if (i == count)
+                {
                     i--;
+                }
             }
+
             return dsNodes.Any();
         }
 
@@ -274,7 +303,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             dsNodes = new List<FirstNameNode>();
             if (callNode.Args.Count < 2)
+            {
                 return false;
+            }
 
             var args = callNode.Args.Children.VerifyValue();
             return TryGetDSNodes(binding, args, out dsNodes);
@@ -283,7 +314,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override bool SupportsPaging(CallNode callNode, TexlBinding binding)
         {
             if (!TryGetDataSourceNodes(callNode, binding, out var dsNodes))
+            {
                 return false;
+            }
 
             var args = callNode.Args.Children.VerifyValue();
             var count = args.Count();
@@ -291,12 +324,16 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             for (var i = 1; i < count;)
             {
                 if (!binding.IsPageable(args[i]))
+                {
                     return false;
+                }
 
                 // If there are an odd number of args, the last arg also participates.
                 i += 2;
                 if (i == count)
+                {
                     i--;
+                }
             }
 
             return true;

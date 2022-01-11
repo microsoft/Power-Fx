@@ -9,7 +9,7 @@ using Microsoft.PowerFx.Core.Public.Types;
 namespace Microsoft.PowerFx.Core.Public.Values
 {
     /// <summary>
-    /// Represents a Date only, without a time component, in the local time zone
+    /// Represents a Date only, without a time component, in the local time zone.
     /// </summary>
     public class DateValue : PrimitiveValue<DateTime>
     {

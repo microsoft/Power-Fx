@@ -10,6 +10,7 @@ namespace Microsoft.PowerFx.Core.Public.Types
         internal BooleanType() : base(new DType(DKind.Boolean))
         {
         }
+
         public override void Visit(ITypeVistor vistor)
         {
             vistor.Visit(this);

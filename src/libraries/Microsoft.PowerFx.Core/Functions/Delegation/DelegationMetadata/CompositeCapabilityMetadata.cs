@@ -21,9 +21,10 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationMetadata
 
         public Dictionary<DPath, DPath> ODataPathReplacementMap
         {
-            get {
+            get
+            {
                 var op = _compositeMetadata.OfType<ODataOpMetadata>().SingleOrDefault();
-                return op != null? op.QueryPathReplacement : new Dictionary<DPath, DPath>();
+                return op != null ? op.QueryPathReplacement : new Dictionary<DPath, DPath>();
             }
         }
 
@@ -39,7 +40,9 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationMetadata
             {
                 DelegationCapability capabilities = DelegationCapability.None;
                 foreach (var metadata in _compositeMetadata)
+                {
                     capabilities |= metadata.TableCapabilities;
+                }
 
                 return capabilities;
             }
@@ -51,7 +54,9 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationMetadata
             {
                 DelegationCapability capabilities = DelegationCapability.None;
                 foreach (var metadata in _compositeMetadata)
+                {
                     capabilities |= metadata.DefaultColumnCapabilities;
+                }
 
                 return capabilities;
             }
@@ -63,7 +68,9 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationMetadata
             {
                 DelegationCapability capabilities = DelegationCapability.None;
                 foreach (var metadata in _compositeMetadata)
+                {
                     capabilities |= metadata.DefaultColumnCapabilities;
+                }
 
                 return capabilities;
             }

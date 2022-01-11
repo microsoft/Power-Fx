@@ -27,15 +27,20 @@ namespace Microsoft.PowerFx.Core.Utils
         public static void Check(bool f, string sid)
         {
             if (!f)
+            {
                 throw Except(sid);
+            }
         }
 
         public static void CheckNonEmpty(string s, string paramName)
         {
             if (string.IsNullOrEmpty(s))
             {
-                if (object.ReferenceEquals(s, null))
+                if (ReferenceEquals(s, null))
+                {
                     throw ExceptValue(paramName);
+                }
+
                 throw ExceptEmpty(paramName);
             }
         }
@@ -44,8 +49,11 @@ namespace Microsoft.PowerFx.Core.Utils
         {
             if (string.IsNullOrEmpty(s))
             {
-                if (object.ReferenceEquals(s, null))
+                if (ReferenceEquals(s, null))
+                {
                     throw ExceptValue(paramName, sid);
+                }
+
                 throw ExceptEmpty(paramName, sid);
             }
         }
@@ -53,7 +61,9 @@ namespace Microsoft.PowerFx.Core.Utils
         public static void CheckNonEmpty(Guid g, string paramName)
         {
             if (g == Guid.Empty)
+            {
                 throw ExceptEmpty(paramName);
+            }
         }
 
         public static void CheckNonEmpty(Guid? g, string paramName)
@@ -65,162 +75,221 @@ namespace Microsoft.PowerFx.Core.Utils
         public static void CheckNonEmpty<T>(IList<T> args, string paramName)
         {
             if (Size(args) == 0)
+            {
                 throw ExceptEmpty(paramName);
+            }
         }
 
         public static void CheckNonEmptyOrNull(string s, string paramName)
         {
             if (s != null && s.Length == 0)
+            {
                 throw ExceptEmpty(paramName);
+            }
         }
 
         public static void CheckNonEmptyOrNull(Guid? g, string paramName)
         {
             if (g.HasValue && g.Value == Guid.Empty)
+            {
                 throw ExceptEmpty(paramName);
+            }
         }
 
         public static void CheckRange(bool f, string paramName)
         {
             if (!f)
+            {
                 throw ExceptRange(paramName);
+            }
         }
 
         public static void CheckRange(bool f, string paramName, string sid)
         {
             if (!f)
+            {
                 throw ExceptRange(paramName, sid);
+            }
         }
 
         public static void CheckIndexRange(int index, int count, int available, string paramName)
         {
             if (!IsValid(index, count, available))
+            {
                 throw ExceptRange(paramName);
+            }
         }
 
         public static void CheckIndexRange(int index, int count, int available, string paramName, string sid)
         {
             if (!IsValid(index, count, available))
+            {
                 throw ExceptRange(paramName, sid);
+            }
         }
 
         public static void CheckIndexRange(long index, long count, long available, string paramName)
         {
             if (!IsValid(index, count, available))
+            {
                 throw ExceptRange(paramName);
+            }
         }
 
         public static void CheckIndexRange(long index, long count, long available, string paramName, string sid)
         {
             if (!IsValid(index, count, available))
+            {
                 throw ExceptRange(paramName, sid);
+            }
         }
 
         public static void CheckIndex(int index, int available, string paramName)
         {
             if (!IsValidIndex(index, available))
+            {
                 throw ExceptRange(paramName);
+            }
         }
 
         public static void CheckIndex(int index, int available, string paramName, string sid)
         {
             if (!IsValidIndex(index, available))
+            {
                 throw ExceptRange(paramName, sid);
+            }
         }
 
         public static void CheckIndex(long index, long available, string paramName)
         {
             if (!IsValidIndex(index, available))
+            {
                 throw ExceptRange(paramName);
+            }
         }
 
         public static void CheckIndex(long index, long available, string paramName, string sid)
         {
             if (!IsValidIndex(index, available))
+            {
                 throw ExceptRange(paramName, sid);
+            }
         }
 
         public static void CheckIndexInclusive(int index, int available, string paramName)
         {
             if (!IsValidIndexInclusive(index, available))
+            {
                 throw ExceptRange(paramName);
+            }
         }
 
         public static void CheckIndexInclusive(int index, int available, string paramName, string sid)
         {
             if (!IsValidIndexInclusive(index, available))
+            {
                 throw ExceptRange(paramName, sid);
+            }
         }
 
         public static void CheckIndexInclusive(long index, long available, string paramName)
         {
             if (!IsValidIndexInclusive(index, available))
+            {
                 throw ExceptRange(paramName);
+            }
         }
 
         public static void CheckIndexInclusive(long index, long available, string paramName, string sid)
         {
             if (!IsValidIndexInclusive(index, available))
+            {
                 throw ExceptRange(paramName, sid);
+            }
         }
 
         public static void CheckParam(bool f, string paramName)
         {
             if (!f)
+            {
                 throw ExceptParam(paramName);
+            }
         }
 
         public static void CheckParam(bool f, string paramName, string sid)
         {
             if (!f)
+            {
                 throw ExceptParam(paramName, sid);
+            }
         }
 
-        public static void CheckValue<T>(T val, string paramName) where T : class
+        public static void CheckValue<T>(T val, string paramName)
+            where T : class
         {
-            if (object.ReferenceEquals(val, null))
+            if (ReferenceEquals(val, null))
+            {
                 throw ExceptValue(paramName);
+            }
         }
 
-        public static void CheckValue<T>(T val, string paramName, string sid) where T : class
+        public static void CheckValue<T>(T val, string paramName, string sid)
+            where T : class
         {
-            if (object.ReferenceEquals(val, null))
+            if (ReferenceEquals(val, null))
+            {
                 throw ExceptValue(paramName, sid);
+            }
         }
 
-        public static void CheckValue<T>(T? val, string paramName) where T : struct
+        public static void CheckValue<T>(T? val, string paramName)
+            where T : struct
         {
             if (!val.HasValue)
+            {
                 throw ExceptValue(paramName);
+            }
         }
 
-        public static void CheckNull<T>(T val, string paramName) where T : class
+        public static void CheckNull<T>(T val, string paramName)
+            where T : class
         {
-            if (!object.ReferenceEquals(val, null))
+            if (!ReferenceEquals(val, null))
+            {
                 throw ExceptNull(paramName);
+            }
         }
 
-        public static void CheckNull<T>(T val, string paramName, string sid) where T : class
+        public static void CheckNull<T>(T val, string paramName, string sid)
+            where T : class
         {
-            if (!object.ReferenceEquals(val, null))
+            if (!ReferenceEquals(val, null))
+            {
                 throw ExceptNull(paramName, sid);
+            }
         }
 
-        public static void CheckNull<T>(T? val, string paramName) where T : struct
+        public static void CheckNull<T>(T? val, string paramName)
+            where T : struct
         {
             if (val != null)
+            {
                 throw ExceptNull(paramName);
+            }
         }
 
-        public static void CheckNull<T>(T? val, string paramName, string sid) where T : struct
+        public static void CheckNull<T>(T? val, string paramName, string sid)
+            where T : struct
         {
             if (val != null)
+            {
                 throw ExceptNull(paramName, sid);
+            }
         }
 
         public static void CheckXmlDocumentString(string text, string paramName, out XDocument parsedXDocument)
         {
-            Contracts.CheckNonEmpty(text, paramName);
+            CheckNonEmpty(text, paramName);
             try
             {
                 parsedXDocument = XDocument.Parse(text, LoadOptions.None);
@@ -234,9 +303,13 @@ namespace Microsoft.PowerFx.Core.Utils
         public static void CheckXmlDocumentStringOrNull(string text, string paramName, out XDocument parsedXDocument)
         {
             if (text == null)
+            {
                 parsedXDocument = null;
+            }
             else
+            {
                 CheckXmlDocumentString(text, paramName, out parsedXDocument);
+            }
         }
 
         public static void CheckXmlDocumentString(string text, string paramName)
@@ -247,7 +320,9 @@ namespace Microsoft.PowerFx.Core.Utils
         public static void CheckXmlDocumentStringOrNull(string text, string paramName)
         {
             if (text != null)
+            {
                 CheckXmlDocumentString(text, paramName);
+            }
         }
 
         public static void CheckAllNonEmpty(IList<string> args, string paramName)
@@ -255,81 +330,105 @@ namespace Microsoft.PowerFx.Core.Utils
             for (var i = 0; i < Size(args); i++)
             {
                 if (string.IsNullOrEmpty(args[i]))
+                {
                     throw ExceptEmpty(paramName);
+                }
             }
         }
 
-        public static void CheckAllValues<T>(IList<T> args, string paramName) where T : class
+        public static void CheckAllValues<T>(IList<T> args, string paramName)
+            where T : class
         {
             for (var i = 0; i < Size(args); i++)
             {
-                if (object.ReferenceEquals(args[i], null))
+                if (ReferenceEquals(args[i], null))
+                {
                     throw ExceptParam(paramName);
+                }
             }
         }
 
-        public static void CheckAllValues<T>(IEnumerable<T> args, string paramName) where T : class
+        public static void CheckAllValues<T>(IEnumerable<T> args, string paramName)
+            where T : class
         {
-            if (!object.ReferenceEquals(args, null))
+            if (!ReferenceEquals(args, null))
             {
                 foreach (var arg in args)
                 {
-                    if (object.ReferenceEquals(arg, null))
+                    if (ReferenceEquals(arg, null))
+                    {
                         throw ExceptParam(paramName);
+                    }
                 }
             }
         }
 
-        public static void CheckAllValues<TKey, TValue>(IDictionary<TKey, TValue> args, string paramName) where TValue : class
+        public static void CheckAllValues<TKey, TValue>(IDictionary<TKey, TValue> args, string paramName)
+            where TValue : class
         {
-            if (!object.ReferenceEquals(args, null))
+            if (!ReferenceEquals(args, null))
             {
                 foreach (var arg in args.Values)
                 {
-                    if (object.ReferenceEquals(arg, null))
+                    if (ReferenceEquals(arg, null))
+                    {
                         throw ExceptParam(paramName);
+                    }
                 }
             }
         }
 
-        public static void CheckAll<T>(IList<T> args, string paramName) where T : struct, ICheckable
+        public static void CheckAll<T>(IList<T> args, string paramName)
+            where T : struct, ICheckable
         {
             for (var i = 0; i < Size(args); i++)
             {
                 if (!args[i].IsValid)
+                {
                     throw ExceptValid(paramName);
+                }
             }
         }
 
-        public static void CheckValid<T>(T val, string paramName) where T : struct, ICheckable
+        public static void CheckValid<T>(T val, string paramName)
+            where T : struct, ICheckable
         {
             if (!val.IsValid)
+            {
                 throw ExceptValid(paramName);
+            }
         }
 
-        public static void CheckValid<T>(T val, string paramName, string sid) where T : struct, ICheckable
+        public static void CheckValid<T>(T val, string paramName, string sid)
+            where T : struct, ICheckable
         {
             if (!val.IsValid)
+            {
                 throw ExceptValid(paramName, sid);
+            }
         }
 
         [Conditional("INVARIANT_CHECKS")]
-        public static void CheckValueOrNull<T>(T val) where T : class
+        public static void CheckValueOrNull<T>(T val)
+            where T : class
         {
         }
 
         [Conditional("INVARIANT_CHECKS")]
-        public static void CheckValueOrNull<T>(T val, string paramName) where T : class
+        public static void CheckValueOrNull<T>(T val, string paramName)
+            where T : class
         {
         }
 
         [Conditional("INVARIANT_CHECKS")]
-        public static void CheckValueOrNull<T>(T val, string name, string sid) where T : class
+        public static void CheckValueOrNull<T>(T val, string name, string sid)
+            where T : class
         {
         }
 
         [Conditional("INVARIANT_CHECKS")]
-        public static void CheckValueOrNull<T>(T? val, string paramName) where T : struct
+        public static void CheckValueOrNull<T>(T? val, string paramName)
+            where T : struct
         {
         }
 
@@ -604,7 +703,8 @@ namespace Microsoft.PowerFx.Core.Utils
         /// instead.
         /// </summary>
         [Conditional("DEBUG")]
-        public static void AssertValueType<T>(T val) where T : struct
+        public static void AssertValueType<T>(T val)
+            where T : struct
         {
 #if DEBUG
             // No-op: This provides compile-time check.
@@ -612,7 +712,8 @@ namespace Microsoft.PowerFx.Core.Utils
         }
 
         [Conditional("DEBUG")]
-        public static void AssertValue<T>(T? val) where T : struct
+        public static void AssertValue<T>(T? val)
+            where T : struct
         {
 #if DEBUG
             if (!val.HasValue)
@@ -621,61 +722,68 @@ namespace Microsoft.PowerFx.Core.Utils
         }
 
         [Conditional("DEBUG")]
-        public static void AssertValue<T>(T val) where T : class
+        public static void AssertValue<T>(T val)
+            where T : class
         {
 #if DEBUG
-            if (object.ReferenceEquals(val, null))
+            if (ReferenceEquals(val, null))
                 DbgFailValue();
 #endif
         }
 
         [Conditional("DEBUG")]
-        public static void AssertValue<T>(T val, string name) where T : class
+        public static void AssertValue<T>(T val, string name)
+            where T : class
         {
 #if DEBUG
-            if (object.ReferenceEquals(val, null))
+            if (ReferenceEquals(val, null))
                 DbgFailValue(name);
 #endif
         }
 
         [Conditional("DEBUG")]
-        public static void AssertValue<T>(T val, string name, string msg) where T : class
+        public static void AssertValue<T>(T val, string name, string msg)
+            where T : class
         {
 #if DEBUG
-            if (object.ReferenceEquals(val, null))
+            if (ReferenceEquals(val, null))
                 DbgFailValue(name, msg);
 #endif
         }
 
         [Conditional("DEBUG")]
-        public static void AssertNull<T>(T val) where T : class
+        public static void AssertNull<T>(T val)
+            where T : class
         {
 #if DEBUG
-            if (!object.ReferenceEquals(val, null))
+            if (!ReferenceEquals(val, null))
                 DbgFailNull();
 #endif
         }
 
         [Conditional("DEBUG")]
-        public static void AssertNull<T>(T val, string name) where T : class
+        public static void AssertNull<T>(T val, string name)
+            where T : class
         {
 #if DEBUG
-            if (!object.ReferenceEquals(val, null))
+            if (!ReferenceEquals(val, null))
                 DbgFailNull(name);
 #endif
         }
 
         [Conditional("DEBUG")]
-        public static void AssertNull<T>(T val, string name, string msg) where T : class
+        public static void AssertNull<T>(T val, string name, string msg)
+            where T : class
         {
 #if DEBUG
-            if (!object.ReferenceEquals(val, null))
+            if (!ReferenceEquals(val, null))
                 DbgFailNull(name, msg);
 #endif
         }
 
         [Conditional("DEBUG")]
-        public static void AssertNull<T>(T? val) where T : struct
+        public static void AssertNull<T>(T? val)
+            where T : struct
         {
 #if DEBUG
             if (val != null)
@@ -684,7 +792,8 @@ namespace Microsoft.PowerFx.Core.Utils
         }
 
         [Conditional("DEBUG")]
-        public static void AssertNull<T>(T? val, string name) where T : struct
+        public static void AssertNull<T>(T? val, string name)
+            where T : struct
         {
 #if DEBUG
             if (val != null)
@@ -693,7 +802,8 @@ namespace Microsoft.PowerFx.Core.Utils
         }
 
         [Conditional("DEBUG")]
-        public static void AssertNull<T>(T? val, string name, string msg) where T : struct
+        public static void AssertNull<T>(T? val, string name, string msg)
+            where T : struct
         {
 #if DEBUG
             if (val != null)
@@ -705,7 +815,7 @@ namespace Microsoft.PowerFx.Core.Utils
         public static void AssertXmlDocumentString(string text)
         {
 #if DEBUG
-            Contracts.AssertNonEmpty(text);
+            AssertNonEmpty(text);
             try
             {
                 XDocument.Parse(text, LoadOptions.None);
@@ -731,7 +841,8 @@ namespace Microsoft.PowerFx.Core.Utils
         /// This uses the default equality operator for the type.
         /// </summary>
         [Conditional("DEBUG")]
-        public static void AssertOneOf<T>(T val, params T[] expectedPossibilities) where T : class
+        public static void AssertOneOf<T>(T val, params T[] expectedPossibilities)
+            where T : class
         {
 #if DEBUG
             AssertOneOf(val, (IEnumerable<T>)expectedPossibilities);
@@ -743,23 +854,27 @@ namespace Microsoft.PowerFx.Core.Utils
         /// This uses the default equality operator for the type.
         /// </summary>
         [Conditional("DEBUG")]
-        public static void AssertOneOf<T>(T val, IEnumerable<T> expectedPossibilities) where T : class
+        public static void AssertOneOf<T>(T val, IEnumerable<T> expectedPossibilities)
+            where T : class
         {
 #if DEBUG
-            Contracts.AssertValue(val);
-            Contracts.AssertValue(expectedPossibilities);
-            Contracts.AssertAllValues(expectedPossibilities);
+            AssertValue(val);
+            AssertValue(expectedPossibilities);
+            AssertAllValues(expectedPossibilities);
 
             if (!expectedPossibilities.Contains(val))
+            {
                 DbgFail(string.Concat("The value is not one of the allowed possibilities: ", val));
+            }
 #endif
         }
 
         [Conditional("DEBUG")]
-        public static void AssertOneOfOrNull<T>(T val, params T[] expectedPossibilities) where T : class
+        public static void AssertOneOfOrNull<T>(T val, params T[] expectedPossibilities)
+            where T : class
         {
 #if DEBUG
-            if (!object.ReferenceEquals(val, null))
+            if (!ReferenceEquals(val, null))
                 AssertOneOf(val, expectedPossibilities);
 #endif
         }
@@ -769,16 +884,18 @@ namespace Microsoft.PowerFx.Core.Utils
         /// This uses the default equality operator for the type.
         /// </summary>
         [Conditional("DEBUG")]
-        public static void AssertOneOfOrNull<T>(T val, IEnumerable<T> expectedPossibilities) where T : class
+        public static void AssertOneOfOrNull<T>(T val, IEnumerable<T> expectedPossibilities)
+            where T : class
         {
 #if DEBUG
-            if (!object.ReferenceEquals(val, null))
+            if (!ReferenceEquals(val, null))
                 AssertOneOf(val, expectedPossibilities);
 #endif
         }
 
         [Conditional("DEBUG")]
-        public static void AssertOneOfValueType<T>(T val, params T[] expectedPossibilities) where T : struct
+        public static void AssertOneOfValueType<T>(T val, params T[] expectedPossibilities)
+            where T : struct
         {
 #if DEBUG
             AssertOneOfValueType(val, (IEnumerable<T>)expectedPossibilities);
@@ -786,18 +903,22 @@ namespace Microsoft.PowerFx.Core.Utils
         }
 
         [Conditional("DEBUG")]
-        public static void AssertOneOfValueType<T>(T val, IEnumerable<T> expectedPossibilities) where T : struct
+        public static void AssertOneOfValueType<T>(T val, IEnumerable<T> expectedPossibilities)
+            where T : struct
         {
 #if DEBUG
-            Contracts.AssertValue(expectedPossibilities);
+            AssertValue(expectedPossibilities);
 
             if (!expectedPossibilities.Contains(val))
+            {
                 DbgFail(string.Concat("The value is not one of the allowed possibilities: ", val));
+            }
 #endif
         }
 
         [Conditional("DEBUG")]
-        public static void AssertOneOfValueTypeOrNull<T>(T? val, params T[] expectedPossibilities) where T : struct
+        public static void AssertOneOfValueTypeOrNull<T>(T? val, params T[] expectedPossibilities)
+            where T : struct
         {
 #if DEBUG
             if (val.HasValue)
@@ -806,7 +927,8 @@ namespace Microsoft.PowerFx.Core.Utils
         }
 
         [Conditional("DEBUG")]
-        public static void AssertOneOfValueTypeOrNull<T>(T? val, IEnumerable<T> expectedPossibilities) where T : struct
+        public static void AssertOneOfValueTypeOrNull<T>(T? val, IEnumerable<T> expectedPossibilities)
+            where T : struct
         {
 #if DEBUG
             if (val.HasValue)
@@ -819,16 +941,19 @@ namespace Microsoft.PowerFx.Core.Utils
         /// This uses the default equality operator for the type.
         /// </summary>
         [Conditional("DEBUG")]
-        public static void AssertAllOneOf<T>(IEnumerable<T> values, IEnumerable<T> expectedPossibilities) where T : class
+        public static void AssertAllOneOf<T>(IEnumerable<T> values, IEnumerable<T> expectedPossibilities)
+            where T : class
         {
 #if DEBUG
-            Contracts.AssertValue(expectedPossibilities);
-            Contracts.AssertAllValues(expectedPossibilities);
+            AssertValue(expectedPossibilities);
+            AssertAllValues(expectedPossibilities);
 
             if (values != null)
             {
                 foreach (var val in values)
+                {
                     AssertOneOf(val, expectedPossibilities);
+                }
             }
 #endif
         }
@@ -838,14 +963,17 @@ namespace Microsoft.PowerFx.Core.Utils
         /// This uses the default equality operator for the type.
         /// </summary>
         [Conditional("DEBUG")]
-        public static void AssertNullOrOneOf<T>(T val, IEnumerable<T> expectedPossibilities) where T : class
+        public static void AssertNullOrOneOf<T>(T val, IEnumerable<T> expectedPossibilities)
+            where T : class
         {
 #if DEBUG
-            Contracts.AssertValue(expectedPossibilities);
-            Contracts.AssertAllValues(expectedPossibilities);
+            AssertValue(expectedPossibilities);
+            AssertAllValues(expectedPossibilities);
 
-            if (!object.ReferenceEquals(val, null))
+            if (!ReferenceEquals(val, null))
+            {
                 AssertOneOf<T>(val, expectedPossibilities);
+            }
 #endif
         }
 
@@ -856,7 +984,9 @@ namespace Microsoft.PowerFx.Core.Utils
             for (var i = 0; i < Size(args); i++)
             {
                 if (string.IsNullOrEmpty(args[i]))
+                {
                     DbgFail();
+                }
             }
 #endif
         }
@@ -866,12 +996,14 @@ namespace Microsoft.PowerFx.Core.Utils
         public static void AssertAllNonEmpty(IEnumerable<string> args, string msg)
         {
 #if DEBUG
-            if (!object.ReferenceEquals(args, null))
+            if (!ReferenceEquals(args, null))
             {
                 foreach (var arg in args)
                 {
                     if (string.IsNullOrEmpty(arg))
+                    {
                         DbgFail(msg);
+                    }
                 }
             }
 #endif
@@ -882,12 +1014,14 @@ namespace Microsoft.PowerFx.Core.Utils
         public static void AssertAllNonEmpty(IEnumerable<string> args)
         {
 #if DEBUG
-            if (!object.ReferenceEquals(args, null))
+            if (!ReferenceEquals(args, null))
             {
                 foreach (var arg in args)
                 {
                     if (string.IsNullOrEmpty(arg))
+                    {
                         DbgFail();
+                    }
                 }
             }
 #endif
@@ -900,158 +1034,192 @@ namespace Microsoft.PowerFx.Core.Utils
             for (var i = 0; i < Size(args); i++)
             {
                 if (string.IsNullOrEmpty(args[i]))
+                {
                     DbgFail(msg);
+                }
             }
 #endif
         }
 
         [Conditional("DEBUG")]
-        public static void AssertAllValues<T>(IEnumerable<T> args) where T : class
+        public static void AssertAllValues<T>(IEnumerable<T> args)
+            where T : class
         {
 #if DEBUG
             if (args != null)
             {
                 foreach (var arg in args)
                 {
-                    if (object.ReferenceEquals(arg, null))
+                    if (ReferenceEquals(arg, null))
+                    {
                         DbgFail();
+                    }
                 }
             }
 #endif
         }
 
         [Conditional("DEBUG")]
-        public static void AssertAllValues<T>(IList<T> args) where T : class
+        public static void AssertAllValues<T>(IList<T> args)
+            where T : class
         {
 #if DEBUG
             for (var i = 0; i < Size(args); i++)
             {
-                if (object.ReferenceEquals(args[i], null))
+                if (ReferenceEquals(args[i], null))
+                {
                     DbgFail();
+                }
             }
 #endif
         }
 
         [Conditional("DEBUG")]
-        public static void AssertAllValues<T>(IList<T> args, string msg) where T : class
+        public static void AssertAllValues<T>(IList<T> args, string msg)
+            where T : class
         {
 #if DEBUG
             for (var i = 0; i < Size(args); i++)
             {
-                if (object.ReferenceEquals(args[i], null))
+                if (ReferenceEquals(args[i], null))
+                {
                     DbgFail(msg);
-            }
-#endif
-        }
-
-        [Conditional("DEBUG")]
-        public static void AssertAllValues<TKey, TValue>(IDictionary<TKey, TValue> args) where TValue : class
-        {
-#if DEBUG
-            if (!object.ReferenceEquals(args, null))
-            {
-                foreach (var arg in args.Values)
-                {
-                    if (object.ReferenceEquals(arg, null))
-                        DbgFail();
                 }
             }
 #endif
         }
 
         [Conditional("DEBUG")]
-        public static void AssertAll<T>(IList<T> args) where T : ICheckable
+        public static void AssertAllValues<TKey, TValue>(IDictionary<TKey, TValue> args)
+            where TValue : class
+        {
+#if DEBUG
+            if (!ReferenceEquals(args, null))
+            {
+                foreach (var arg in args.Values)
+                {
+                    if (ReferenceEquals(arg, null))
+                    {
+                        DbgFail();
+                    }
+                }
+            }
+#endif
+        }
+
+        [Conditional("DEBUG")]
+        public static void AssertAll<T>(IList<T> args)
+            where T : ICheckable
         {
 #if DEBUG
             for (var i = 0; i < Size(args); i++)
             {
-                if (object.ReferenceEquals(args[i], null) || !args[i].IsValid)
-                    DbgFail();
-            }
-#endif
-        }
-
-        [Conditional("DEBUG")]
-        public static void AssertAll<K, V>(IDictionary<K, V> args) where V : ICheckable
-        {
-#if DEBUG
-            if (!object.ReferenceEquals(args, null))
-            {
-                foreach (var arg in args.Values)
+                if (ReferenceEquals(args[i], null) || !args[i].IsValid)
                 {
-                    if (object.ReferenceEquals(arg, null) || !arg.IsValid)
-                        DbgFail();
+                    DbgFail();
                 }
             }
 #endif
         }
 
         [Conditional("DEBUG")]
-        public static void AssertValid<T>(T val) where T : ICheckable
+        public static void AssertAll<K, V>(IDictionary<K, V> args)
+            where V : ICheckable
         {
 #if DEBUG
-            if (object.ReferenceEquals(val, null) || !val.IsValid)
+            if (!ReferenceEquals(args, null))
+            {
+                foreach (var arg in args.Values)
+                {
+                    if (ReferenceEquals(arg, null) || !arg.IsValid)
+                    {
+                        DbgFail();
+                    }
+                }
+            }
+#endif
+        }
+
+        [Conditional("DEBUG")]
+        public static void AssertValid<T>(T val)
+            where T : ICheckable
+        {
+#if DEBUG
+            if (ReferenceEquals(val, null) || !val.IsValid)
                 DbgFailValid();
 #endif
         }
 
         [Conditional("DEBUG")]
-        public static void AssertValid<T>(T val, string name) where T : ICheckable
+        public static void AssertValid<T>(T val, string name)
+            where T : ICheckable
         {
 #if DEBUG
-            if (object.ReferenceEquals(val, null) || !val.IsValid)
+            if (ReferenceEquals(val, null) || !val.IsValid)
                 DbgFailValid(name);
 #endif
         }
 
         [Conditional("DEBUG")]
-        public static void AssertAllValid<T>(IEnumerable<T> args) where T : ICheckable
+        public static void AssertAllValid<T>(IEnumerable<T> args)
+            where T : ICheckable
         {
 #if DEBUG
             foreach (var arg in args)
             {
-                if (object.ReferenceEquals(arg, null) || !arg.IsValid)
+                if (ReferenceEquals(arg, null) || !arg.IsValid)
+                {
                     DbgFailValid();
+                }
             }
 #endif
         }
 
         [Conditional("DEBUG")]
-        public static void AssertAllValid<T>(IList<T> args) where T : ICheckable
+        public static void AssertAllValid<T>(IList<T> args)
+            where T : ICheckable
         {
 #if DEBUG
             for (var i = 0; i < Size(args); i++)
             {
-                if (object.ReferenceEquals(args[i], null) || !args[i].IsValid)
+                if (ReferenceEquals(args[i], null) || !args[i].IsValid)
+                {
                     DbgFailValid();
+                }
             }
 #endif
         }
 
         [Conditional("DEBUG")]
-        public static void AssertAllValid<T>(IList<T> args, string msg) where T : ICheckable
+        public static void AssertAllValid<T>(IList<T> args, string msg)
+            where T : ICheckable
         {
 #if DEBUG
             for (var i = 0; i < Size(args); i++)
             {
-                if (object.ReferenceEquals(args[i], null) || !args[i].IsValid)
+                if (ReferenceEquals(args[i], null) || !args[i].IsValid)
+                {
                     DbgFailValid(msg);
+                }
             }
 #endif
         }
 
         [Conditional("INVARIANT_CHECKS")]
-        public static void AssertValueOrNull<T>(T val) where T : class
+        public static void AssertValueOrNull<T>(T val)
+            where T : class
         {
         }
 
         [Conditional("INVARIANT_CHECKS")]
-        public static void AssertValueOrNull<T>(T? val) where T : struct
+        public static void AssertValueOrNull<T>(T? val)
+            where T : struct
         {
         }
 
         [Conditional("INVARIANT_CHECKS")]
-        public static void AssertValueOrNull<T>(T val, string msg) where T : class
+        public static void AssertValueOrNull<T>(T val, string msg)
+            where T : class
         {
         }
 
@@ -1067,20 +1235,23 @@ namespace Microsoft.PowerFx.Core.Utils
             if (_assertFailExCtor == null)
             {
                 // Try first to get the VS UnitTestFramework constructor
-                _assertFailExCtor = GetTestExceptionConstructor("Microsoft.VisualStudio.TestPlatform.UnitTestFramework",
+                _assertFailExCtor = GetTestExceptionConstructor(
+                    "Microsoft.VisualStudio.TestPlatform.UnitTestFramework",
                     "Microsoft.VisualStudio.TestPlatform.UnitTestFramework.AssertFailedException");
 
                 // Otherwise, check for...
                 if (_assertFailExCtor == null)
                 {
-                    _assertFailExCtor = GetTestExceptionConstructor("xunit.assert",
-                       "Xunit.Sdk.XunitException");
+                    _assertFailExCtor = GetTestExceptionConstructor(
+                        "xunit.assert",
+                        "Xunit.Sdk.XunitException");
                 }
 
                 if (_assertFailExCtor == null)
                 {
-                    _assertFailExCtor = GetTestExceptionConstructor("Microsoft.VisualStudio.TestPlatform.TestFramework",
-                       "Microsoft.VisualStudio.TestTools.UnitTesting.AssertFailedException");
+                    _assertFailExCtor = GetTestExceptionConstructor(
+                        "Microsoft.VisualStudio.TestPlatform.TestFramework",
+                        "Microsoft.VisualStudio.TestTools.UnitTesting.AssertFailedException");
                 }
             }
 
@@ -1089,7 +1260,9 @@ namespace Microsoft.PowerFx.Core.Utils
             Console.Error.WriteLine($"Server debug failure: {msg}. Callstack: {Environment.StackTrace}");
 
             if (_assertFailExCtor == null)
+            {
                 Debug.Assert(false, msg);
+            }
 
             if (_assertFailExCtor != null)
             {
@@ -1192,24 +1365,26 @@ namespace Microsoft.PowerFx.Core.Utils
         {
             if (string.IsNullOrWhiteSpace(message))
             {
-                Contracts.Assert(f);
+                Assert(f);
             }
             else
             {
-                Contracts.Assert(f, message);
+                Assert(f, message);
             }
+
             return f;
         }
 
-        public static T VerifyValue<T>(this T val) where T : class
+        public static T VerifyValue<T>(this T val)
+            where T : class
         {
-            Contracts.AssertValue(val);
+            AssertValue(val);
             return val;
         }
 
         public static string VerifyNonEmpty(this string val)
         {
-            Contracts.AssertNonEmpty(val);
+            AssertNonEmpty(val);
             return val;
         }
 

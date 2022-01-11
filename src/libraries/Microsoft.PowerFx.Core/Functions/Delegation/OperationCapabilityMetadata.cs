@@ -77,7 +77,9 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation
             Contracts.AssertValid(columnPath);
 
             if (ColumnRestrictions.TryGetValue(columnPath, out restrictions))
+            {
                 return true;
+            }
 
             restrictions = DelegationCapability.None;
             return false;
@@ -100,7 +102,9 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation
             capabilities = DefaultColumnCapabilities;
 
             if (TryGetColumnRestrictions(columnPath, out var restrictions))
+            {
                 capabilities &= ~restrictions;
+            }
 
             return true;
         }
@@ -115,7 +119,9 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation
                 var renamedColumnPath = DPath.Root;
                 renamedColumnPath = renamedColumnPath.Append(new DName(logicalName));
                 for (var i = 1; i < columnPath.Length; ++i)
+                {
                     renamedColumnPath = renamedColumnPath.Append(new DName(columnPath[i]));
+                }
 
                 columnPath = renamedColumnPath;
             }
@@ -131,7 +137,9 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation
         public virtual bool IsUnaryOpSupportedByTable(UnaryOp op)
         {
             if (!IsUnaryOpInDelegationSupported(op))
+            {
                 return false;
+            }
 
             Contracts.Assert(DelegationCapability.UnaryOpToDelegationCapabilityMap.ContainsKey(op));
 
@@ -141,7 +149,9 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation
         public virtual bool IsBinaryOpSupportedByTable(BinaryOp op)
         {
             if (!IsBinaryOpInDelegationSupported(op))
+            {
                 return false;
+            }
 
             Contracts.Assert(DelegationCapability.BinaryOpToDelegationCapabilityMap.ContainsKey(op));
 
@@ -153,11 +163,11 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation
             // Check if unary op is supported
             switch (op)
             {
-            case UnaryOp.Not:
-            case UnaryOp.Minus:
-                break;
-            default:
-                return false;
+                case UnaryOp.Not:
+                case UnaryOp.Minus:
+                    break;
+                default:
+                    return false;
             }
 
             return true;
@@ -168,21 +178,21 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation
             // Check if binary op is supported
             switch (op)
             {
-            case BinaryOp.Equal:
-            case BinaryOp.NotEqual:
-            case BinaryOp.Less:
-            case BinaryOp.LessEqual:
-            case BinaryOp.Greater:
-            case BinaryOp.GreaterEqual:
-            case BinaryOp.And:
-            case BinaryOp.Or:
-            case BinaryOp.In:
-            case BinaryOp.Add:
-            case BinaryOp.Mul:
-            case BinaryOp.Div:
-                break;
-            default:
-                return false;
+                case BinaryOp.Equal:
+                case BinaryOp.NotEqual:
+                case BinaryOp.Less:
+                case BinaryOp.LessEqual:
+                case BinaryOp.Greater:
+                case BinaryOp.GreaterEqual:
+                case BinaryOp.And:
+                case BinaryOp.Or:
+                case BinaryOp.In:
+                case BinaryOp.Add:
+                case BinaryOp.Mul:
+                case BinaryOp.Div:
+                    break;
+                default:
+                    return false;
             }
 
             return true;
@@ -193,7 +203,9 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation
             Contracts.AssertValid(columnPath);
 
             if (!IsBinaryOpInDelegationSupported(op))
+            {
                 return false;
+            }
 
             Contracts.Assert(DelegationCapability.BinaryOpToDelegationCapabilityMap.ContainsKey(op));
 
@@ -206,7 +218,9 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation
             Contracts.AssertValid(columnPath);
 
             if (!IsUnaryOpInDelegationSupported(op))
+            {
                 return false;
+            }
 
             Contracts.Assert(DelegationCapability.UnaryOpToDelegationCapabilityMap.ContainsKey(op));
 

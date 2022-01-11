@@ -80,33 +80,42 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 case NodeKind.Call:
                     {
                         if (!opStrategy.IsOpSupportedByTable(metadata, callNode, binding))
+                        {
                             return false;
+                        }
 
                         return cNodeStrategy.IsValidCallNode(args[0].AsCall(), binding, metadata);
                     }
+
                 case NodeKind.BinaryOp:
                     {
                         if (!opStrategy.IsOpSupportedByTable(metadata, callNode, binding))
+                        {
                             return false;
+                        }
 
                         var opNode = args[0].AsBinaryOp();
                         var binaryOpNodeValidationStrategy = GetOpDelegationStrategy(opNode.Op, opNode);
                         return binaryOpNodeValidationStrategy.IsSupportedOpNode(opNode, metadata, binding);
                     }
+
                 case NodeKind.UnaryOp:
                     {
                         if (!opStrategy.IsOpSupportedByTable(metadata, callNode, binding))
+                        {
                             return false;
+                        }
 
                         var opNode = args[0].AsUnaryOpLit();
                         var unaryOpNodeValidationStrategy = GetOpDelegationStrategy(opNode.Op);
                         return unaryOpNodeValidationStrategy.IsSupportedOpNode(opNode, metadata, binding);
                     }
+
                 case NodeKind.DottedName:
                     return dottedStrategy.IsValidDottedNameNode(args[0].AsDottedName(), binding, metadata, opStrategy);
 
                 default:
-                    return (argKind == NodeKind.BoolLit);
+                    return argKind == NodeKind.BoolLit;
             }
         }
     }

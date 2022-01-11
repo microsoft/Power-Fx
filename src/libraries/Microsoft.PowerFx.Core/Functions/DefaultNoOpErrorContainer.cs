@@ -14,7 +14,7 @@ namespace Microsoft.PowerFx.Core.Functions
     // See the TexlFunction.DefaultErrorContainer property and its uses for more info.
     internal sealed class DefaultNoOpErrorContainer : IErrorContainer
     {
-        public DocumentErrorSeverity DefaultSeverity => DocumentErrorSeverity._Min;
+        public DocumentErrorSeverity DefaultSeverity => DocumentErrorSeverity.Min;
 
         public TexlError EnsureError(TexlNode node, ErrorResourceKey errKey, params object[] args)
         {

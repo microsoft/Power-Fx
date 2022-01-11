@@ -13,13 +13,13 @@ namespace Microsoft.PowerFx.Core.Public.Values
     {
         public string Name { get; }
         public FormulaValue Value { get; }
-        
+
         public NamedValue(KeyValuePair<string, FormulaValue> pair)
             : this(pair.Key, pair.Value)
         {
         }
 
-        public NamedValue(string name, FormulaValue value)            
+        public NamedValue(string name, FormulaValue value)
         {
             Name = name ?? throw new ArgumentNullException(nameof(name));
             Value = value;

@@ -6,7 +6,8 @@ using Microsoft.PowerFx.Core.Syntax.Nodes;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 
-namespace Microsoft.PowerFx.Core.Texl.Intellisense{
+namespace Microsoft.PowerFx.Core.Texl.Intellisense
+{
     internal partial class Intellisense
     {
         internal sealed class StrNumLitNodeSuggestionHandler : ISuggestionHandler
@@ -24,7 +25,9 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense{
                 Contracts.AssertValue(intellisenseData.CurNode);
 
                 if (intellisenseData.CurNode.Kind != NodeKind.StrLit && intellisenseData.CurNode.Kind != NodeKind.NumLit)
+                {
                     return false;
+                }
 
                 var curNode = intellisenseData.CurNode;
                 var cursorPos = intellisenseData.CursorPos;
@@ -44,6 +47,7 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense{
                     intellisenseData.SetMatchArea(tokenSpan.Min, cursorPos, replacementLength);
                     IntellisenseHelper.AddSuggestionsForGlobals(intellisenseData);
                 }
+
                 return true;
             }
         }

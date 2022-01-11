@@ -17,12 +17,12 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationMetadata
                 Contracts.AssertValid(schema);
 
                 var columnRestrictions = new Dictionary<DPath, DelegationCapability>();
-                if (!dataServiceCapabilitiesJsonObject.TryGetProperty(CapabilitiesConstants.Group_Restriction, out var groupRestrictionJsonObject ))
+                if (!dataServiceCapabilitiesJsonObject.TryGetProperty(CapabilitiesConstants.Group_Restriction, out var groupRestrictionJsonObject))
                 {
                     return null;
                 }
 
-                if (groupRestrictionJsonObject.TryGetProperty(CapabilitiesConstants.Group_UngroupableProperties, out var ungroupablePropertiesJsonArray ))
+                if (groupRestrictionJsonObject.TryGetProperty(CapabilitiesConstants.Group_UngroupableProperties, out var ungroupablePropertiesJsonArray))
                 {
                     foreach (var prop in ungroupablePropertiesJsonArray.EnumerateArray())
                     {

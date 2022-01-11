@@ -27,8 +27,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
-            yield return new [] { TexlStrings.MathFuncArg1 };
-            yield return new [] { TexlStrings.MathFuncArg1, TexlStrings.LogBase };
+            yield return new[] { TexlStrings.MathFuncArg1 };
+            yield return new[] { TexlStrings.MathFuncArg1, TexlStrings.LogBase };
         }
     }
 
@@ -46,7 +46,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
-            yield return new [] { TexlStrings.MathFuncArg1 };
+            yield return new[] { TexlStrings.MathFuncArg1 };
         }
 
         public override string GetUniqueTexlRuntimeName(bool isPrefetching = false)

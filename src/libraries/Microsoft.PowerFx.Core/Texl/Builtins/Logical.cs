@@ -54,7 +54,10 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures(int arity)
         {
             if (arity > 2)
+            {
                 return GetGenericSignatures(arity, TexlStrings.LogicalFuncParam);
+            }
+
             return base.GetSignatures(arity);
         }
 
@@ -76,7 +79,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             {
                 fArgsValid &= CheckType(args[i], argTypes[i], DType.Boolean, errors, out var matchedWithCoercion);
                 if (matchedWithCoercion)
+                {
                     CollectionUtils.Add(ref nodeToCoercedTypeMap, args[i], DType.Boolean);
+                }
             }
 
             returnType = ReturnType;
@@ -102,71 +107,80 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             var funcDelegationCapability = FunctionDelegationCapability | (_isAnd ? DelegationCapability.And : DelegationCapability.Or);
             if (!metadata.IsDelegationSupportedByTable(funcDelegationCapability))
+            {
                 return false;
+            }
 
             foreach (var arg in args)
             {
                 var argKind = arg.VerifyValue().Kind;
                 switch (argKind)
                 {
-                case NodeKind.FirstName:
-                    {
-                        var firstNameStrategy = GetFirstNameNodeDelegationStrategy();
-                        if (!firstNameStrategy.IsValidFirstNameNode(arg.AsFirstName(), binding, null))
-                            return false;
-
-                        break;
-                    }
-                case NodeKind.Call:
-                    {
-                        var cNodeStrategy = GetCallNodeDelegationStrategy();
-                        if (!cNodeStrategy.IsValidCallNode(arg.AsCall(), binding, metadata))
+                    case NodeKind.FirstName:
                         {
-                            SuggestDelegationHint(arg, binding);
-                            return false;
+                            var firstNameStrategy = GetFirstNameNodeDelegationStrategy();
+                            if (!firstNameStrategy.IsValidFirstNameNode(arg.AsFirstName(), binding, null))
+                            {
+                                return false;
+                            }
+
+                            break;
                         }
 
-                        break;
-                    }
-                case NodeKind.DottedName:
-                    {
-                        var dottedStrategy = GetDottedNameNodeDelegationStrategy();
-                        if (!dottedStrategy.IsValidDottedNameNode(arg.AsDottedName(), binding, metadata, null))
+                    case NodeKind.Call:
                         {
-                            SuggestDelegationHint(arg, binding);
-                            return false;
+                            var cNodeStrategy = GetCallNodeDelegationStrategy();
+                            if (!cNodeStrategy.IsValidCallNode(arg.AsCall(), binding, metadata))
+                            {
+                                SuggestDelegationHint(arg, binding);
+                                return false;
+                            }
+
+                            break;
                         }
 
-                        break;
-                    }
-                case NodeKind.BinaryOp:
-                    {
-                        var opNode = arg.AsBinaryOp();
-                        var binaryOpNodeValidationStrategy = GetOpDelegationStrategy(opNode.Op, opNode);
-                        if (!binaryOpNodeValidationStrategy.IsSupportedOpNode(opNode, metadata, binding))
+                    case NodeKind.DottedName:
                         {
-                            SuggestDelegationHint(arg, binding);
-                            return false;
+                            var dottedStrategy = GetDottedNameNodeDelegationStrategy();
+                            if (!dottedStrategy.IsValidDottedNameNode(arg.AsDottedName(), binding, metadata, null))
+                            {
+                                SuggestDelegationHint(arg, binding);
+                                return false;
+                            }
+
+                            break;
                         }
 
-                        break;
-                    }
-                case NodeKind.UnaryOp:
-                    {
-                        var opNode = arg.AsUnaryOpLit();
-                        var unaryOpNodeValidationStrategy = GetOpDelegationStrategy(opNode.Op);
-                        if (!unaryOpNodeValidationStrategy.IsSupportedOpNode(opNode, metadata, binding))
+                    case NodeKind.BinaryOp:
                         {
-                            SuggestDelegationHint(arg, binding);
-                            return false;
+                            var opNode = arg.AsBinaryOp();
+                            var binaryOpNodeValidationStrategy = GetOpDelegationStrategy(opNode.Op, opNode);
+                            if (!binaryOpNodeValidationStrategy.IsSupportedOpNode(opNode, metadata, binding))
+                            {
+                                SuggestDelegationHint(arg, binding);
+                                return false;
+                            }
+
+                            break;
                         }
 
+                    case NodeKind.UnaryOp:
+                        {
+                            var opNode = arg.AsUnaryOpLit();
+                            var unaryOpNodeValidationStrategy = GetOpDelegationStrategy(opNode.Op);
+                            if (!unaryOpNodeValidationStrategy.IsSupportedOpNode(opNode, metadata, binding))
+                            {
+                                SuggestDelegationHint(arg, binding);
+                                return false;
+                            }
+
+                            break;
+                        }
+
+                    case NodeKind.BoolLit:
                         break;
-                    }
-                case NodeKind.BoolLit:
-                    break;
-                default:
-                    return false;
+                    default:
+                        return false;
                 }
             }
 

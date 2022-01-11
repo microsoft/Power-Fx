@@ -1,17 +1,17 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
-using Microsoft.PowerFx.Core.IR;
-using Microsoft.PowerFx.Core.IR.Symbols;
-using Microsoft.PowerFx.Functions;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
+using System.Globalization;
+using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.IR.Nodes;
+using Microsoft.PowerFx.Core.IR.Symbols;
 using Microsoft.PowerFx.Core.Public;
 using Microsoft.PowerFx.Core.Public.Types;
 using Microsoft.PowerFx.Core.Public.Values;
-using System.Globalization;
+using Microsoft.PowerFx.Functions;
 using static Microsoft.PowerFx.Functions.Library;
 
 namespace Microsoft.PowerFx
@@ -26,7 +26,8 @@ namespace Microsoft.PowerFx
         }
 
         // Helper to eval an arg that might be a lambda. 
-        internal DValue<T> EvalArg<T>(FormulaValue arg, SymbolContext context, IRContext irContext) where T : ValidFormulaValue
+        internal DValue<T> EvalArg<T>(FormulaValue arg, SymbolContext context, IRContext irContext)
+            where T : ValidFormulaValue
         {
             if (arg is LambdaFormulaValue lambda)
             {
@@ -39,6 +40,7 @@ namespace Microsoft.PowerFx
                     _ => DValue<T>.Of(CommonErrors.RuntimeTypeMismatch(irContext))
                 };
             }
+
             return arg switch
             {
                 T t => DValue<T>.Of(t),
@@ -79,7 +81,7 @@ namespace Microsoft.PowerFx
             }
 
             // Children are on the stack.
-            var tableValue = new InMemoryTableValue(node.IRContext, Library.StandardTableNodeRecords(node.IRContext, args));
+            var tableValue = new InMemoryTableValue(node.IRContext, StandardTableNodeRecords(node.IRContext, args));
 
             return tableValue;
         }
@@ -149,6 +151,7 @@ namespace Microsoft.PowerFx
 
                     return result;
                 }
+
                 return CommonErrors.NotYetImplementedError(node.IRContext, $"Missing func: {func.Name}");
             }
         }
@@ -162,11 +165,11 @@ namespace Microsoft.PowerFx
             switch (node.Op)
             {
                 case BinaryOpKind.AddNumbers:
-                    return Library.OperatorBinaryAdd(this, context, node.IRContext, args);
+                    return OperatorBinaryAdd(this, context, node.IRContext, args);
                 case BinaryOpKind.MulNumbers:
-                    return Library.OperatorBinaryMul(this, context, node.IRContext, args);
+                    return OperatorBinaryMul(this, context, node.IRContext, args);
                 case BinaryOpKind.DivNumbers:
-                    return Library.OperatorBinaryDiv(this, context, node.IRContext, args);
+                    return OperatorBinaryDiv(this, context, node.IRContext, args);
 
                 case BinaryOpKind.EqNumbers:
                 case BinaryOpKind.EqBoolean:
@@ -181,66 +184,66 @@ namespace Microsoft.PowerFx
                 case BinaryOpKind.EqMedia:
                 case BinaryOpKind.EqBlob:
                 case BinaryOpKind.EqGuid:
-                    return Library.OperatorBinaryEq(this, context, node.IRContext, args);
+                    return OperatorBinaryEq(this, context, node.IRContext, args);
 
                 case BinaryOpKind.NeqNumbers:
                 case BinaryOpKind.NeqText:
-                    return Library.OperatorBinaryNeq(this, context, node.IRContext, args);
+                    return OperatorBinaryNeq(this, context, node.IRContext, args);
 
                 case BinaryOpKind.GtNumbers:
-                    return Library.OperatorBinaryGt(this, context, node.IRContext, args);
+                    return OperatorBinaryGt(this, context, node.IRContext, args);
                 case BinaryOpKind.GeqNumbers:
-                    return Library.OperatorBinaryGeq(this, context, node.IRContext, args);
+                    return OperatorBinaryGeq(this, context, node.IRContext, args);
                 case BinaryOpKind.LtNumbers:
-                    return Library.OperatorBinaryLt(this, context, node.IRContext, args);
+                    return OperatorBinaryLt(this, context, node.IRContext, args);
                 case BinaryOpKind.LeqNumbers:
-                    return Library.OperatorBinaryLeq(this, context, node.IRContext, args);
+                    return OperatorBinaryLeq(this, context, node.IRContext, args);
 
                 case BinaryOpKind.InText:
-                    return Library.OperatorTextIn(this, context, node.IRContext, args);
+                    return OperatorTextIn(this, context, node.IRContext, args);
                 case BinaryOpKind.ExactInText:
-                    return Library.OperatorTextInExact(this, context, node.IRContext, args);
+                    return OperatorTextInExact(this, context, node.IRContext, args);
 
                 case BinaryOpKind.InScalarTable:
-                    return Library.OperatorScalarTableIn(this, context, node.IRContext, args);
+                    return OperatorScalarTableIn(this, context, node.IRContext, args);
 
                 case BinaryOpKind.ExactInScalarTable:
-                    return Library.OperatorScalarTableInExact(this, context, node.IRContext, args);
+                    return OperatorScalarTableInExact(this, context, node.IRContext, args);
 
                 case BinaryOpKind.AddDateAndTime:
-                    return Library.OperatorAddDateAndTime(this, context, node.IRContext, args);
+                    return OperatorAddDateAndTime(this, context, node.IRContext, args);
                 case BinaryOpKind.AddDateAndDay:
-                    return Library.OperatorAddDateAndDay(this, context, node.IRContext, args);
+                    return OperatorAddDateAndDay(this, context, node.IRContext, args);
                 case BinaryOpKind.AddDateTimeAndDay:
-                    return Library.OperatorAddDateTimeAndDay(this, context, node.IRContext, args);
+                    return OperatorAddDateTimeAndDay(this, context, node.IRContext, args);
                 case BinaryOpKind.DateDifference:
-                    return Library.OperatorDateDifference(this, context, node.IRContext, args);
+                    return OperatorDateDifference(this, context, node.IRContext, args);
                 case BinaryOpKind.TimeDifference:
-                    return Library.OperatorTimeDifference(this, context, node.IRContext, args);
+                    return OperatorTimeDifference(this, context, node.IRContext, args);
                 case BinaryOpKind.LtDateTime:
-                    return Library.OperatorLtDateTime(this, context, node.IRContext, args);
+                    return OperatorLtDateTime(this, context, node.IRContext, args);
                 case BinaryOpKind.LeqDateTime:
-                    return Library.OperatorLeqDateTime(this, context, node.IRContext, args);
+                    return OperatorLeqDateTime(this, context, node.IRContext, args);
                 case BinaryOpKind.GtDateTime:
-                    return Library.OperatorGtDateTime(this, context, node.IRContext, args);
+                    return OperatorGtDateTime(this, context, node.IRContext, args);
                 case BinaryOpKind.GeqDateTime:
-                    return Library.OperatorGeqDateTime(this, context, node.IRContext, args);
+                    return OperatorGeqDateTime(this, context, node.IRContext, args);
                 case BinaryOpKind.LtDate:
-                    return Library.OperatorLtDate(this, context, node.IRContext, args);
+                    return OperatorLtDate(this, context, node.IRContext, args);
                 case BinaryOpKind.LeqDate:
-                    return Library.OperatorLeqDate(this, context, node.IRContext, args);
+                    return OperatorLeqDate(this, context, node.IRContext, args);
                 case BinaryOpKind.GtDate:
-                    return Library.OperatorGtDate(this, context, node.IRContext, args);
+                    return OperatorGtDate(this, context, node.IRContext, args);
                 case BinaryOpKind.GeqDate:
-                    return Library.OperatorGeqDate(this, context, node.IRContext, args);
+                    return OperatorGeqDate(this, context, node.IRContext, args);
                 case BinaryOpKind.LtTime:
-                    return Library.OperatorLtTime(this, context, node.IRContext, args);
+                    return OperatorLtTime(this, context, node.IRContext, args);
                 case BinaryOpKind.LeqTime:
-                    return Library.OperatorLeqTime(this, context, node.IRContext, args);
+                    return OperatorLeqTime(this, context, node.IRContext, args);
                 case BinaryOpKind.GtTime:
-                    return Library.OperatorGtTime(this, context, node.IRContext, args);
+                    return OperatorGtTime(this, context, node.IRContext, args);
                 case BinaryOpKind.GeqTime:
-                    return Library.OperatorGeqTime(this, context, node.IRContext, args);
+                    return OperatorGeqTime(this, context, node.IRContext, args);
 
                 default:
                     return CommonErrors.UnreachableCodeError(node.IRContext);
@@ -252,7 +255,7 @@ namespace Microsoft.PowerFx
             var arg1 = node.Child.Accept(this, context);
             var args = new FormulaValue[] { arg1 };
 
-            if (Library.UnaryOps.TryGetValue(node.Op, out var unaryOp))
+            if (UnaryOps.TryGetValue(node.Op, out var unaryOp))
             {
                 return unaryOp(this, context, node.IRContext, args);
             }
@@ -284,6 +287,7 @@ namespace Microsoft.PowerFx
                             var name = coercion.Key;
                             fields.Add(new NamedValue(name.Value, newValue));
                         }
+
                         resultRows.Add(DValue<RecordValue>.Of(new InMemoryRecordValue(IRContext.NotInSource(tableType.ToRecord()), fields)));
                     }
                     else if (row.IsBlank)
@@ -295,6 +299,7 @@ namespace Microsoft.PowerFx
                         resultRows.Add(DValue<RecordValue>.Of(row.Error));
                     }
                 }
+
                 return new InMemoryTableValue(node.IRContext, resultRows);
             }
 
@@ -310,7 +315,9 @@ namespace Microsoft.PowerFx
                 var val = context.GetScopeVar(scope, s1.Name);
                 return val;
             }
-            if (node.Value is ScopeSymbol s2) // Binds to whole scope
+
+            // Binds to whole scope
+            if (node.Value is ScopeSymbol s2) 
             {
                 var r = context.ScopeValues[s2.Id];
                 var r2 = (RecordScope)r;
@@ -328,7 +335,8 @@ namespace Microsoft.PowerFx
             {
                 return new BlankValue(node.IRContext);
             }
-            if(left is ErrorValue)
+
+            if (left is ErrorValue)
             {
                 return left;
             }
@@ -373,6 +381,7 @@ namespace Microsoft.PowerFx
                 var value = context.Globals.GetField(node.IRContext, paramName);
                 return value;
             }
+
             if (node.Value is RecalcFormulaInfo fi)
             {
                 var value = fi._value;

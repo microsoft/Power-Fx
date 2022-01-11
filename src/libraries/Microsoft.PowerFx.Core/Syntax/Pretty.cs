@@ -82,7 +82,9 @@ namespace Microsoft.PowerFx.Core.Syntax
             Contracts.AssertValue(node);
 
             if (node.Ident.AtToken == null)
+            {
                 return LazyList<string>.Of(node.Ident.Token.ToString());
+            }
             else
             {
                 return LazyList<string>.Of(
@@ -114,10 +116,15 @@ namespace Microsoft.PowerFx.Core.Syntax
             var values = node.Left.Accept(this, Precedence.Primary);
             values = values.With(separator);
             if (node.Right.AtToken != null)
+            {
                 values = values.With(TexlLexer.PunctuatorAt);
+            }
+
             values = values.With(GetRightToken(node.Left, node.Right));
             if (node.UsesBracket)
+            {
                 values = values.With(TexlLexer.PunctuatorBracketClose);
+            }
 
             return ApplyPrecedence(parentPrecedence, Precedence.Primary, values);
         }
@@ -131,22 +138,27 @@ namespace Microsoft.PowerFx.Core.Syntax
             LazyList<string> result;
             switch (node.Op)
             {
-            case UnaryOp.Not:
-                if (node.Token.Kind == TokKind.KeyNot)
-                    result = LazyList<string>.Of(TexlLexer.KeywordNot, " ").With(child);
-                else
-                    result = LazyList<string>.Of(TexlLexer.PunctuatorBang).With(child);
-                break;
-            case UnaryOp.Minus:
-                result = LazyList<string>.Of(TexlLexer.PunctuatorSub).With(child);
-                break;
-             case UnaryOp.Percent:
-                result = LazyList<string>.Of(child).With(TexlLexer.PunctuatorPercent);
-                break;
-             default:
-                Contracts.Assert(false);
-                result = LazyList<string>.Of("<error>").With(child);
-                break;
+                case UnaryOp.Not:
+                    if (node.Token.Kind == TokKind.KeyNot)
+                    {
+                        result = LazyList<string>.Of(TexlLexer.KeywordNot, " ").With(child);
+                    }
+                    else
+                    {
+                        result = LazyList<string>.Of(TexlLexer.PunctuatorBang).With(child);
+                    }
+
+                    break;
+                case UnaryOp.Minus:
+                    result = LazyList<string>.Of(TexlLexer.PunctuatorSub).With(child);
+                    break;
+                case UnaryOp.Percent:
+                    result = LazyList<string>.Of(child).With(TexlLexer.PunctuatorPercent);
+                    break;
+                default:
+                    Contracts.Assert(false);
+                    result = LazyList<string>.Of("<error>").With(child);
+                    break;
             }
 
             return ApplyPrecedence(parentPrecedence, Precedence.PrefixUnary, result);
@@ -158,51 +170,61 @@ namespace Microsoft.PowerFx.Core.Syntax
 
             switch (node.Op)
             {
-            case BinaryOp.Or:
-                if (node.Token.Kind == TokKind.KeyOr)
-                    return PrettyBinary(SpacedOper(TexlLexer.KeywordOr), parentPrecedence, Precedence.Or, node.Left, node.Right);
-                else
-                    return PrettyBinary(SpacedOper(TexlLexer.PunctuatorOr), parentPrecedence, Precedence.Or, node.Left, node.Right);
-            case BinaryOp.And:
-                if (node.Token.Kind == TokKind.KeyAnd)
-                    return PrettyBinary(SpacedOper(TexlLexer.KeywordAnd), parentPrecedence, Precedence.And, node.Left, node.Right);
-                else
-                    return PrettyBinary(SpacedOper(TexlLexer.PunctuatorAnd), parentPrecedence, Precedence.And, node.Left, node.Right);
-            case BinaryOp.Concat:
-                return PrettyBinary(SpacedOper(TexlLexer.PunctuatorAmpersand), parentPrecedence, Precedence.Concat, node.Left, node.Right);
-            case BinaryOp.Add:
-                return PrettyBinary(SpacedOper(TexlLexer.PunctuatorAdd), parentPrecedence, Precedence.Add, node.Left, node.Right);
-            case BinaryOp.Mul:
-                return PrettyBinary(SpacedOper(TexlLexer.PunctuatorMul), parentPrecedence, Precedence.Mul, node.Left, node.Right);
-            case BinaryOp.Div:
-                return PrettyBinary(SpacedOper(TexlLexer.PunctuatorDiv), parentPrecedence, Precedence.Mul, node.Left, node.Right);
-            case BinaryOp.In:
-                return PrettyBinary(SpacedOper(TexlLexer.KeywordIn), parentPrecedence, Precedence.In, node.Left, node.Right);
-            case BinaryOp.Exactin:
-                return PrettyBinary(SpacedOper(TexlLexer.KeywordExactin), parentPrecedence, Precedence.In, node.Left, node.Right);
+                case BinaryOp.Or:
+                    if (node.Token.Kind == TokKind.KeyOr)
+                    {
+                        return PrettyBinary(SpacedOper(TexlLexer.KeywordOr), parentPrecedence, Precedence.Or, node.Left, node.Right);
+                    }
+                    else
+                    {
+                        return PrettyBinary(SpacedOper(TexlLexer.PunctuatorOr), parentPrecedence, Precedence.Or, node.Left, node.Right);
+                    }
 
-            case BinaryOp.Power:
-                return PrettyBinary(TexlLexer.PunctuatorCaret, parentPrecedence, Precedence.Power, Precedence.PrefixUnary, node.Left, node.Right);
-            case BinaryOp.Error:
-                return PrettyBinary(" <error> ", parentPrecedence, Precedence.Error, node.Left, node.Right);
+                case BinaryOp.And:
+                    if (node.Token.Kind == TokKind.KeyAnd)
+                    {
+                        return PrettyBinary(SpacedOper(TexlLexer.KeywordAnd), parentPrecedence, Precedence.And, node.Left, node.Right);
+                    }
+                    else
+                    {
+                        return PrettyBinary(SpacedOper(TexlLexer.PunctuatorAnd), parentPrecedence, Precedence.And, node.Left, node.Right);
+                    }
 
-            case BinaryOp.Equal:
-                return PrettyBinary(SpacedOper(TexlLexer.PunctuatorEqual), parentPrecedence, Precedence.Compare, node.Left, node.Right);
-            case BinaryOp.NotEqual:
-                return PrettyBinary(SpacedOper(TexlLexer.PunctuatorNotEqual), parentPrecedence, Precedence.Compare, node.Left, node.Right);
-            case BinaryOp.Less:
-                return PrettyBinary(SpacedOper(TexlLexer.PunctuatorLess), parentPrecedence, Precedence.Compare, node.Left, node.Right);
-            case BinaryOp.LessEqual:
-                return PrettyBinary(SpacedOper(TexlLexer.PunctuatorLessOrEqual), parentPrecedence, Precedence.Compare, node.Left, node.Right);
-            case BinaryOp.Greater:
-                return PrettyBinary(SpacedOper(TexlLexer.PunctuatorGreater), parentPrecedence, Precedence.Compare, node.Left, node.Right);
-            case BinaryOp.GreaterEqual:
-                return PrettyBinary(SpacedOper(TexlLexer.PunctuatorGreaterOrEqual), parentPrecedence, Precedence.Compare, node.Left, node.Right);
+                case BinaryOp.Concat:
+                    return PrettyBinary(SpacedOper(TexlLexer.PunctuatorAmpersand), parentPrecedence, Precedence.Concat, node.Left, node.Right);
+                case BinaryOp.Add:
+                    return PrettyBinary(SpacedOper(TexlLexer.PunctuatorAdd), parentPrecedence, Precedence.Add, node.Left, node.Right);
+                case BinaryOp.Mul:
+                    return PrettyBinary(SpacedOper(TexlLexer.PunctuatorMul), parentPrecedence, Precedence.Mul, node.Left, node.Right);
+                case BinaryOp.Div:
+                    return PrettyBinary(SpacedOper(TexlLexer.PunctuatorDiv), parentPrecedence, Precedence.Mul, node.Left, node.Right);
+                case BinaryOp.In:
+                    return PrettyBinary(SpacedOper(TexlLexer.KeywordIn), parentPrecedence, Precedence.In, node.Left, node.Right);
+                case BinaryOp.Exactin:
+                    return PrettyBinary(SpacedOper(TexlLexer.KeywordExactin), parentPrecedence, Precedence.In, node.Left, node.Right);
+
+                case BinaryOp.Power:
+                    return PrettyBinary(TexlLexer.PunctuatorCaret, parentPrecedence, Precedence.Power, Precedence.PrefixUnary, node.Left, node.Right);
+                case BinaryOp.Error:
+                    return PrettyBinary(" <error> ", parentPrecedence, Precedence.Error, node.Left, node.Right);
+
+                case BinaryOp.Equal:
+                    return PrettyBinary(SpacedOper(TexlLexer.PunctuatorEqual), parentPrecedence, Precedence.Compare, node.Left, node.Right);
+                case BinaryOp.NotEqual:
+                    return PrettyBinary(SpacedOper(TexlLexer.PunctuatorNotEqual), parentPrecedence, Precedence.Compare, node.Left, node.Right);
+                case BinaryOp.Less:
+                    return PrettyBinary(SpacedOper(TexlLexer.PunctuatorLess), parentPrecedence, Precedence.Compare, node.Left, node.Right);
+                case BinaryOp.LessEqual:
+                    return PrettyBinary(SpacedOper(TexlLexer.PunctuatorLessOrEqual), parentPrecedence, Precedence.Compare, node.Left, node.Right);
+                case BinaryOp.Greater:
+                    return PrettyBinary(SpacedOper(TexlLexer.PunctuatorGreater), parentPrecedence, Precedence.Compare, node.Left, node.Right);
+                case BinaryOp.GreaterEqual:
+                    return PrettyBinary(SpacedOper(TexlLexer.PunctuatorGreaterOrEqual), parentPrecedence, Precedence.Compare, node.Left, node.Right);
 
 
-            default:
-                Contracts.Assert(false);
-                return PrettyBinary(" <error> ", parentPrecedence, Precedence.Atomic + 1, node.Left, node.Right);
+                default:
+                    Contracts.Assert(false);
+                    return PrettyBinary(" <error> ", parentPrecedence, Precedence.Atomic + 1, node.Left, node.Right);
             }
         }
 
@@ -224,22 +246,25 @@ namespace Microsoft.PowerFx.Core.Syntax
 
             switch (node.Op)
             {
-            case VariadicOp.Chain:
-                var op = SpacedOper(TexlLexer.LocalizedInstance.LocalizedPunctuatorChainingSeparator);
-                var count = node.Count;
-                var result = LazyList<string>.Empty;
+                case VariadicOp.Chain:
+                    var op = SpacedOper(TexlLexer.LocalizedInstance.LocalizedPunctuatorChainingSeparator);
+                    var count = node.Count;
+                    var result = LazyList<string>.Empty;
 
-                for (var i = 0; i < count; i++)
-                {
-                    result = result
-                        .With(node.Children[i].Accept(this, Precedence.None));
-                    if (i != count -1)
-                        result = result.With(SpacedOper(TexlLexer.LocalizedInstance.LocalizedPunctuatorChainingSeparator));
-                }
-                return result;
-            default:
-                Contracts.Assert(false);
-                return LazyList<string>.Of("<error>");
+                    for (var i = 0; i < count; i++)
+                    {
+                        result = result
+                            .With(node.Children[i].Accept(this, Precedence.None));
+                        if (i != count - 1)
+                        {
+                            result = result.With(SpacedOper(TexlLexer.LocalizedInstance.LocalizedPunctuatorChainingSeparator));
+                        }
+                    }
+
+                    return result;
+                default:
+                    Contracts.Assert(false);
+                    return LazyList<string>.Of("<error>");
             }
         }
 
@@ -255,6 +280,7 @@ namespace Microsoft.PowerFx.Core.Syntax
                     node.Head.Namespace.ToDottedSyntax(),
                     TexlLexer.PunctuatorDot);
             }
+
             result = result
                 .With(
                     node.Head.Token.ToString(),
@@ -276,8 +302,11 @@ namespace Microsoft.PowerFx.Core.Syntax
                 result = result
                     .With(node.Children[i].Accept(this, Precedence.None));
                 if (i != node.Children.Length - 1)
+                {
                     result = result.With(listSep);
+                }
             }
+
             return result;
         }
 
@@ -295,7 +324,9 @@ namespace Microsoft.PowerFx.Core.Syntax
                         TexlLexer.PunctuatorColon)
                     .With(node.Children[i].Accept(this, Precedence.SingleExpr));
                 if (i != node.Children.Length - 1)
+                {
                     result = result.With(listSep);
+                }
             }
 
             result =
@@ -307,6 +338,7 @@ namespace Microsoft.PowerFx.Core.Syntax
             {
                 result = LazyList<string>.Of(TexlLexer.PunctuatorAt).With(result);
             }
+
             return ApplyPrecedence(parentPrecedence, Precedence.SingleExpr, result);
         }
 
@@ -320,8 +352,11 @@ namespace Microsoft.PowerFx.Core.Syntax
             {
                 result = result.With(node.Children[i].Accept(this, Precedence.SingleExpr));
                 if (i != node.Children.Length - 1)
+                {
                     result = result.With(listSep);
+                }
             }
+
             result = LazyList<string>.Of(TexlLexer.PunctuatorBracketOpen, " ")
                 .With(result)
                 .With(" ", TexlLexer.PunctuatorBracketClose);
@@ -343,6 +378,7 @@ namespace Microsoft.PowerFx.Core.Syntax
                 result = result.With(TexlLexer.PunctuatorParenClose);
                 return result;
             }
+
             return strings;
         }
 
@@ -419,7 +455,9 @@ namespace Microsoft.PowerFx.Core.Syntax
         private LazyList<string> CommentsOf(SourceList list)
         {
             if (list == null)
+            {
                 return LazyList<string>.Empty;
+            }
 
             return LazyList<string>
                 .Of(list.Sources
@@ -435,11 +473,17 @@ namespace Microsoft.PowerFx.Core.Syntax
                     .SelectMany(source =>
                     {
                         if (source is NodeSource nodeSource)
+                        {
                             return nodeSource.Node.Accept(this, context);
+                        }
                         else if (source is WhitespaceSource)
+                        {
                             return LazyList<string>.Of(" ");
+                        }
                         else
+                        {
                             return source.Tokens.Select(GetScriptForToken);
+                        }
                     }));
         }
 
@@ -496,7 +540,9 @@ namespace Microsoft.PowerFx.Core.Syntax
             Contracts.AssertValue(node);
 
             if (node.Ident.AtToken == null)
+            {
                 return LazyList<string>.Of(node.Ident.Token.ToString());
+            }
             else
             {
                 return LazyList<string>.Of(
@@ -540,7 +586,9 @@ namespace Microsoft.PowerFx.Core.Syntax
             Contracts.AssertValue(node);
 
             if (node.Token.Kind == TokKind.PercentSign)
+            {
                 return Basic(node, context);
+            }
 
             if (!binaryPrecedence.TryGetValue(node.Op, out var precedence))
             {
@@ -599,8 +647,11 @@ namespace Microsoft.PowerFx.Core.Syntax
                             .With(GetNewLine(context.IndentDepth + 1));
                     }
                     else
+                    {
                         result = result.With(source.Tokens.Select(GetScriptForToken));
+                    }
                 }
+
                 return result;
             }
 
@@ -627,7 +678,9 @@ namespace Microsoft.PowerFx.Core.Syntax
             foreach (var source in node.SourceList.Sources)
             {
                 if (source is WhitespaceSource)
+                {
                     continue;
+                }
 
                 var nodeSource = source as NodeSource;
                 if (nodeSource != null && useNewlines)
@@ -637,7 +690,9 @@ namespace Microsoft.PowerFx.Core.Syntax
                         .With(generatedNodes[nodeSource]);
                 }
                 else if (nodeSource != null)
+                {
                     result = result.With(nodeSource.Node.Accept(this, context));
+                }
                 else if (source is TokenSource tokenSource && tokenSource.Token.Kind == TokKind.ParenClose && useNewlines)
                 {
                     result = result
@@ -645,8 +700,11 @@ namespace Microsoft.PowerFx.Core.Syntax
                         .With(GetScriptForToken(tokenSource.Token));
                 }
                 else
+                {
                     result = result.With(source.Tokens.Select(GetScriptForToken));
+                }
             }
+
             return result;
         }
 
@@ -663,7 +721,10 @@ namespace Microsoft.PowerFx.Core.Syntax
             foreach (var source in node.SourceList.Sources)
             {
                 if (source is WhitespaceSource)
+                {
                     continue;
+                }
+
                 var tokenSource = source as TokenSource;
                 var commentToken = tokenSource?.Token as CommentToken;
                 if (source is NodeSource nodeSource)
@@ -711,6 +772,7 @@ namespace Microsoft.PowerFx.Core.Syntax
 
                 previousToken = tokenSource?.Token;
             }
+
             return result;
         }
 
@@ -762,6 +824,7 @@ namespace Microsoft.PowerFx.Core.Syntax
                     result = result.With(source.Tokens.Select(GetScriptForToken));
                 }
             }
+
             return result; ;
         }
 
@@ -798,6 +861,7 @@ namespace Microsoft.PowerFx.Core.Syntax
         {
             return "\n" + GetNewLineIndent(indentation);
         }
+
         private string GetNewLineIndent(int indentation)
         {
             return string.Concat(Enumerable.Repeat("    ", indentation - 1));

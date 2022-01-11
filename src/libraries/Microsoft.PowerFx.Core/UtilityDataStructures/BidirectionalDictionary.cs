@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace Microsoft.PowerFx.Core.UtilityDataStructures
 {
-    internal class BidirectionalDictionary<TFirst, TSecond>: IEnumerable<KeyValuePair<TFirst,TSecond>>
+    internal class BidirectionalDictionary<TFirst, TSecond> : IEnumerable<KeyValuePair<TFirst, TSecond>>
     {
         private readonly IDictionary<TFirst, TSecond> _firstToSecond;
         private readonly IDictionary<TSecond, TFirst> _secondToFirst;
@@ -21,13 +21,18 @@ namespace Microsoft.PowerFx.Core.UtilityDataStructures
         public BidirectionalDictionary(IDictionary<TFirst, TSecond> input) : this()
         {
             foreach (var kvp in input)
+            {
                 Add(kvp.Key, kvp.Value);
+            }
         }
 
         public bool Add(TFirst first, TSecond second)
         {
             if (_firstToSecond.ContainsKey(first) || _secondToFirst.ContainsKey(second))
+            {
                 return false;
+            }
+
             _firstToSecond.Add(first, second);
             _secondToFirst.Add(second, first);
 
@@ -60,6 +65,7 @@ namespace Microsoft.PowerFx.Core.UtilityDataStructures
             {
                 return _firstToSecond.Remove(first) && _secondToFirst.Remove(second);
             }
+
             return false;
         }
 
@@ -69,6 +75,7 @@ namespace Microsoft.PowerFx.Core.UtilityDataStructures
             {
                 return _firstToSecond.Remove(first) && _secondToFirst.Remove(second);
             }
+
             return false;
         }
 

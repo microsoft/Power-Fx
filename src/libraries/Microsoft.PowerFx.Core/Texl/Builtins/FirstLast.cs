@@ -19,7 +19,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class FirstLastFunction : FunctionWithTableInput
     {
         public override bool RequiresErrorContext => _isFirst;
-        public override bool IsSelfContained => true;        
+        public override bool IsSelfContained => true;
         public override bool SupportsParamCoercion => false;
 
         private readonly bool _isFirst;
@@ -36,7 +36,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
-            yield return new [] { TexlStrings.FirstLastArg1 };
+            yield return new[] { TexlStrings.FirstLastArg1 };
         }
 
         public override bool CheckInvocation(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
@@ -46,7 +46,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.Assert(args.Length == argTypes.Length);
             Contracts.AssertValue(errors);
 
-            var fArgsValid = base.CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            var fArgsValid = CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
 
             var arg0Type = argTypes[0];
             if (arg0Type.IsTable)
@@ -70,7 +70,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             // Only delegate First, not last
             if (!_isFirst)
+            {
                 return false;
+            }
 
             // If has top capability (e.g. Dataverse)
             if (TryGetValidDataSourceForDelegation(callNode, binding, FunctionDelegationCapability, out var dataSource))
@@ -79,12 +81,15 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
 
             // If is a client-side pageable data source
-            if (TryGetDataSource(callNode, binding, out dataSource) && dataSource.Kind == DataSourceKind.Connected && dataSource.IsPageable) {
+            if (TryGetDataSource(callNode, binding, out dataSource) && dataSource.Kind == DataSourceKind.Connected && dataSource.IsPageable)
+            {
                 return true;
             }
 
             if (dataSource != null && dataSource.IsDelegatable)
+            {
                 binding.ErrorContainer.EnsureError(DocumentErrorSeverity.Warning, callNode, TexlStrings.OpNotSupportedByServiceSuggestionMessage_OpNotSupportedByService, Name);
+            }
 
             return false;
         }

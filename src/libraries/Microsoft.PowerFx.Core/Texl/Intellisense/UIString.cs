@@ -16,7 +16,7 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
         public UIString(string text, int highlightStart, int highlightEnd)
         {
             Contracts.AssertNonEmpty(text);
-            Contracts.Assert(-1 <= highlightStart && highlightStart  <= highlightEnd);
+            Contracts.Assert(highlightStart >= -1 && highlightStart <= highlightEnd);
 
             Text = text;
             HighlightStart = highlightStart;

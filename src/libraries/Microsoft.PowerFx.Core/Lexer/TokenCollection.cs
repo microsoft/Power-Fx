@@ -40,7 +40,7 @@ namespace Microsoft.PowerFx.Core.Lexer
             var matches = new Queue<Span>();
 
             // Cycle through the current TokenString looking for substring matches
-            for (var haystackIndex = 0; haystackIndex <= Contents.Length - needleLength; )
+            for (var haystackIndex = 0; haystackIndex <= Contents.Length - needleLength;)
             {
                 var doMatch = true;
 

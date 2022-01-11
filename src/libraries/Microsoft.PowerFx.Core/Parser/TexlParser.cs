@@ -85,7 +85,9 @@ namespace Microsoft.PowerFx.Core.Parser
             var lexerFlags = flags.HasFlag(Flags.AllowReplaceableExpressions) ? TexlLexer.Flags.AllowReplaceableTokens : TexlLexer.Flags.None;
 
             if (loc == null)
+            {
                 return TexlLexer.LocalizedInstance.LexSource(script, lexerFlags);
+            }
 
             return TexlLexer.NewInstance(loc).LexSource(script, lexerFlags);
         }
@@ -101,12 +103,14 @@ namespace Microsoft.PowerFx.Core.Parser
 
             if (_curs.TidCur == TokKind.Eof)
             {
-                if (firstToken.Kind == TokKind.Comment && firstToken.As<CommentToken>().IsOpenBlock) {
+                if (firstToken.Kind == TokKind.Comment && firstToken.As<CommentToken>().IsOpenBlock)
+                {
 
                     // This provides an error message for when a block comment missing a closing '*/' is the only token in the formula bar
                     PostBlockCommentMissingClosingError();
                     errors = _errors;
-                };
+                }
+                ;
 
                 node = new BlankNode(ref _idNext, _curs.TokCur);
             }
@@ -114,7 +118,9 @@ namespace Microsoft.PowerFx.Core.Parser
             {
                 node = ParseExpr(Precedence.None);
                 if (_curs.TidCur != TokKind.Eof)
+                {
                     PostError(_curs.TokCur, TexlStrings.ErrBadToken);
+                }
 
                 _after = _after == null ? new SourceList(ParseTrivia()) : new SourceList(new SpreadSource(_after.Sources), new SpreadSource(ParseTrivia()));
 
@@ -134,8 +140,10 @@ namespace Microsoft.PowerFx.Core.Parser
         {
             var openBlockComment = _comments.LastOrDefault(cm => cm.IsOpenBlock == true);
 
-            if(openBlockComment != null)
+            if (openBlockComment != null)
+            {
                 PostError(openBlockComment, TexlStrings.ErrMissingEndOfBlockComment);
+            }
         }
 
         private ITexlSource ParseTrivia(TokenCursor cursor = null)
@@ -159,13 +167,16 @@ namespace Microsoft.PowerFx.Core.Parser
                     sources.Add(new WhitespaceSource(tokens));
                     triviaFound = true;
                 }
+
                 if (cursor.TidCur == TokKind.Comment)
                 {
                     var comment = cursor.TokMove().As<CommentToken>();
                     sources.Add(new TokenSource(comment));
 
                     if (comment.IsOpenBlock)
+                    {
                         PostError(comment, TexlStrings.ErrMissingEndOfBlockComment);
+                    }
 
                     _comments.Add(comment);
                     triviaFound = true;
@@ -173,17 +184,25 @@ namespace Microsoft.PowerFx.Core.Parser
             } while (triviaFound);
 
             if (sources.Count() == 1)
+            {
                 return sources.Single();
+            }
             else
+            {
                 return new SpreadSource(sources);
+            }
         }
 
         private void AddExtraTrivia(ITexlSource trivia)
         {
             if (_extraTrivia == null)
+            {
                 _extraTrivia = trivia;
+            }
             else
+            {
                 _extraTrivia = new SpreadSource(_extraTrivia, trivia);
+            }
         }
 
         // Parses the next (maximal) expression with precedence >= precMin.
@@ -191,7 +210,7 @@ namespace Microsoft.PowerFx.Core.Parser
         {
             // ParseOperand may accept PrefixUnary and higher, so ParseExpr should never be called
             // with precMin > Precedence.PrefixUnary - it will not correctly handle those cases.
-            Contracts.Assert(Precedence.None <= precMin && precMin <= Precedence.PrefixUnary);
+            Contracts.Assert(precMin >= Precedence.None && precMin <= Precedence.PrefixUnary);
 
             try
             {
@@ -202,14 +221,16 @@ namespace Microsoft.PowerFx.Core.Parser
                 if (node == null)
                 {
                     if (++_depth > _maxAllowedExpressionDepth)
+                    {
                         return CreateError(_curs.TokMove(), TexlStrings.ErrRuleNestedTooDeeply);
+                    }
 
                     // Get the left operand.
                     node = ParseOperand();
                 }
 
                 // Process operators and right operands as long as the precedence bound is satisfied.
-                for (;;)
+                for (; ;)
                 {
                     var leftTrivia = ParseTrivia();
                     Contracts.AssertValue(node);
@@ -233,8 +254,11 @@ namespace Microsoft.PowerFx.Core.Parser
                         case TokKind.Bang:
                             Contracts.Assert(precMin <= Precedence.Primary);
                             if (node is DottedNameNode leftDotted && leftDotted.Token.Kind != _curs.TidCur && leftDotted.Token.Kind != TokKind.BracketOpen)
+                            {
                                 // Can't mix and match separators. E.g. A.B!C is invalid.
                                 goto case TokKind.False;
+                            }
+
                             tok = _curs.TokMove();
                             rightTrivia = ParseTrivia();
                             identifier = ParseIdentifier();
@@ -250,7 +274,10 @@ namespace Microsoft.PowerFx.Core.Parser
                                 identifier,
                                 null);
                             if (node.Depth > _maxAllowedExpressionDepth)
+                            {
                                 return CreateError(node.Token, TexlStrings.ErrRuleNestedTooDeeply);
+                            }
+
                             break;
 
                         case TokKind.Caret:
@@ -260,13 +287,19 @@ namespace Microsoft.PowerFx.Core.Parser
 
                         case TokKind.Mul:
                             if (precMin > Precedence.Mul)
+                            {
                                 goto default;
+                            }
+
                             node = ParseBinary(node, leftTrivia, BinaryOp.Mul, Precedence.Mul + 1);
                             break;
 
                         case TokKind.Div:
                             if (precMin > Precedence.Mul)
+                            {
                                 goto default;
+                            }
+
                             tok = _curs.TokMove();
                             rightTrivia = ParseTrivia();
                             right = ParseExpr(Precedence.Mul + 1);
@@ -275,7 +308,10 @@ namespace Microsoft.PowerFx.Core.Parser
 
                         case TokKind.Sub:
                             if (precMin > Precedence.Add)
+                            {
                                 goto default;
+                            }
+
                             tok = _curs.TokMove();
                             rightTrivia = ParseTrivia();
                             right = ParseExpr(Precedence.Add + 1);
@@ -285,27 +321,39 @@ namespace Microsoft.PowerFx.Core.Parser
 
                         case TokKind.Add:
                             if (precMin > Precedence.Add)
+                            {
                                 goto default;
+                            }
+
                             node = ParseBinary(node, leftTrivia, BinaryOp.Add, Precedence.Add + 1);
                             break;
 
                         case TokKind.Ampersand:
                             if (precMin > Precedence.Concat)
+                            {
                                 goto default;
+                            }
+
                             node = ParseBinary(node, leftTrivia, BinaryOp.Concat, Precedence.Concat + 1);
                             break;
 
                         case TokKind.KeyAnd:
                         case TokKind.And:
                             if (precMin > Precedence.And)
+                            {
                                 goto default;
+                            }
+
                             node = ParseBinary(node, leftTrivia, BinaryOp.And, Precedence.And + 1);
                             break;
 
                         case TokKind.KeyOr:
                         case TokKind.Or:
                             if (precMin > Precedence.Or)
+                            {
                                 goto default;
+                            }
+
                             node = ParseBinary(node, leftTrivia, BinaryOp.Or, Precedence.Or + 1);
                             break;
 
@@ -314,41 +362,59 @@ namespace Microsoft.PowerFx.Core.Parser
                         // expr <> expr
                         case TokKind.Equ:
                             if (precMin > Precedence.Compare)
+                            {
                                 goto default;
+                            }
+
                             node = ParseBinary(node, leftTrivia, BinaryOp.Equal, Precedence.Compare + 1);
                             break;
 
                         case TokKind.LssGrt:
                             if (precMin > Precedence.Compare)
+                            {
                                 goto default;
+                            }
+
                             node = ParseBinary(node, leftTrivia, BinaryOp.NotEqual, Precedence.Compare + 1);
                             break;
 
                         // expr < expr
                         case TokKind.Lss:
                             if (precMin > Precedence.Compare)
+                            {
                                 goto default;
+                            }
+
                             node = ParseBinary(node, leftTrivia, BinaryOp.Less, Precedence.Compare + 1);
                             break;
 
                         // expr <= expr
                         case TokKind.LssEqu:
                             if (precMin > Precedence.Compare)
+                            {
                                 goto default;
+                            }
+
                             node = ParseBinary(node, leftTrivia, BinaryOp.LessEqual, Precedence.Compare + 1);
                             break;
 
                         // expr > expr
                         case TokKind.Grt:
                             if (precMin > Precedence.Compare)
+                            {
                                 goto default;
+                            }
+
                             node = ParseBinary(node, leftTrivia, BinaryOp.Greater, Precedence.Compare + 1);
                             break;
 
                         // expr >= expr
                         case TokKind.GrtEqu:
                             if (precMin > Precedence.Compare)
+                            {
                                 goto default;
+                            }
+
                             node = ParseBinary(node, leftTrivia, BinaryOp.GreaterEqual, Precedence.Compare + 1);
                             break;
 
@@ -370,41 +436,60 @@ namespace Microsoft.PowerFx.Core.Parser
                             {
                                 goto default;
                             }
+
                             node = ParseInvocationWithNamespace(dotted);
                             break;
 
                         case TokKind.In:
                             if (precMin > Precedence.In)
+                            {
                                 goto default;
+                            }
+
                             node = ParseBinary(node, leftTrivia, BinaryOp.In, Precedence.In + 1);
                             break;
 
                         case TokKind.Exactin:
                             if (precMin > Precedence.In)
+                            {
                                 goto default;
+                            }
+
                             node = ParseBinary(node, leftTrivia, BinaryOp.Exactin, Precedence.In + 1);
                             break;
 
 
                         case TokKind.As:
                             if (precMin > Precedence.As)
+                            {
                                 goto default;
+                            }
+
                             node = ParseAs(node, leftTrivia);
                             break;
 
                         case TokKind.Semicolon:
                             // Only allow this when expression chaining is enabled (e.g. in behavior rules).
                             if ((_flags & Flags.EnableExpressionChaining) == 0)
+                            {
                                 goto case TokKind.False;
+                            }
+
                             if (precMin > Precedence.None)
+                            {
                                 goto default;
+                            }
+
                             node = ParseExprChain(node, leftTrivia);
                             break;
 
                         case TokKind.BracketOpen:
                             // Note we explicitly forbid [@foo][@bar], and also A!B!C[@foo], since these are syntactically nonsensical at the moment.
                             if (node is not FirstNameNode first || first.Ident.AtToken != null || _curs.TidPeek() != TokKind.At)
+                            {
                                 goto default;
+                            }
+
                             node = ParseScopeField(first);
                             break;
 
@@ -415,9 +500,14 @@ namespace Microsoft.PowerFx.Core.Parser
 
                         case TokKind.Eof:
                             if (_after == null)
+                            {
                                 _after = new SourceList(leftTrivia);
+                            }
                             else
+                            {
                                 _after = new SourceList(new SpreadSource(_after.Sources), new SpreadSource(leftTrivia));
+                            }
+
                             return node;
                         default:
                             AddExtraTrivia(leftTrivia);
@@ -492,7 +582,10 @@ namespace Microsoft.PowerFx.Core.Parser
                 // [@name]
                 case TokKind.BracketOpen:
                     if (_curs.TidPeek() == TokKind.At)
+                    {
                         return ParseBracketIdentifierAsFirstName(accountForAllPrecedenceTokens: true);
+                    }
+
                     return ParseTableExpr();
 
                 // -Expr
@@ -522,6 +615,7 @@ namespace Microsoft.PowerFx.Core.Parser
                         trivia = ParseTrivia();
                         return ParseInvocation(ident, trivia, null);
                     }
+
                     if (AfterSpaceTokenId() == TokKind.At)
                     {
                         trivia = ParseTrivia();
@@ -548,8 +642,11 @@ namespace Microsoft.PowerFx.Core.Parser
                 case TokKind.Error:
                     var errorToken = _curs.TokMove().As<ErrorToken>();
                     var args = errorToken.ResourceKeyFormatStringArgs;
-                    if(args == null || args.Length == 0)
+                    if (args == null || args.Length == 0)
+                    {
                         return CreateError(errorToken, errorToken.DetailErrorKey ?? TexlStrings.ErrBadToken);
+                    }
+
                     return CreateError(errorToken, errorToken.DetailErrorKey ?? TexlStrings.ErrBadToken, args);
 
                 case TokKind.Comment:
@@ -600,7 +697,9 @@ namespace Microsoft.PowerFx.Core.Parser
             var bracketClose = _curs.TokMove();
 
             if (bracketClose.Kind != TokKind.BracketClose)
+            {
                 ErrorTid(bracketClose, TokKind.BracketClose);
+            }
 
             return new FirstNameNode(
                 ref _idNext,
@@ -645,9 +744,13 @@ namespace Microsoft.PowerFx.Core.Parser
             {
                 tok = _curs.TokMove().As<IdentToken>();
                 if (tok.HasDelimiterStart && !tok.HasDelimiterEnd)
+                {
                     PostError(tok, TexlStrings.ErrClosingBracketExpected);
+                }
                 else if (tok.IsModified)
+                {
                     PostError(tok, TexlStrings.ErrEmptyInvalidIdentifier);
+                }
             }
             else if (_curs.TidCur == TokKind.ReplaceableLit)
             {
@@ -702,9 +805,13 @@ namespace Microsoft.PowerFx.Core.Parser
 
                 var sources = new List<ITexlSource>();
                 if (headNode != null)
+                {
                     sources.Add(new NodeSource(headNode));
+                }
                 else
+                {
                     sources.Add(new IdentifierSource(head));
+                }
 
                 sources.Add(headTrivia);
                 sources.Add(new NodeSource(right));
@@ -721,10 +828,12 @@ namespace Microsoft.PowerFx.Core.Parser
 
             var rgtokCommas = new List<Token>();
             var arguments = new List<TexlNode>();
-            var sourceList = new List<ITexlSource>();
-            sourceList.Add(new TokenSource(leftParen));
-            sourceList.Add(leftTrivia);
-            for (;;)
+            var sourceList = new List<ITexlSource>
+            {
+                new TokenSource(leftParen),
+                leftTrivia
+            };
+            for (; ;)
             {
                 while (_curs.TidCur == TokKind.Comma)
                 {
@@ -741,7 +850,10 @@ namespace Microsoft.PowerFx.Core.Parser
                 sourceList.Add(ParseTrivia());
 
                 if (_curs.TidCur != TokKind.Comma)
+                {
                     break;
+                }
+
                 var comma = _curs.TokMove();
                 rgtokCommas.Add(comma);
                 sourceList.Add(new TokenSource(comma));
@@ -750,7 +862,9 @@ namespace Microsoft.PowerFx.Core.Parser
 
             var parenClose = TokEat(TokKind.ParenClose);
             if (parenClose != null)
+            {
                 sourceList.Add(new TokenSource(parenClose));
+            }
 
             var list = new ListNode(
                 ref _idNext,
@@ -761,7 +875,9 @@ namespace Microsoft.PowerFx.Core.Parser
 
             ITexlSource headNodeSource = new IdentifierSource(head);
             if (headNode != null)
+            {
                 headNodeSource = new NodeSource(headNode);
+            }
 
             return new CallNode(
                 ref _idNext,
@@ -782,12 +898,16 @@ namespace Microsoft.PowerFx.Core.Parser
             Contracts.Assert(_curs.TidCur == TokKind.Semicolon);
 
             var delimiters = new List<Token>(1);
-            var expressions = new List<TexlNode>(2);
-            expressions.Add(node);
+            var expressions = new List<TexlNode>(2)
+            {
+                node
+            };
 
-            var sourceList = new List<ITexlSource>();
-            sourceList.Add(new NodeSource(node));
-            sourceList.Add(leftTrivia);
+            var sourceList = new List<ITexlSource>
+            {
+                new NodeSource(node),
+                leftTrivia
+            };
 
             while (_curs.TidCur == TokKind.Semicolon)
             {
@@ -797,7 +917,9 @@ namespace Microsoft.PowerFx.Core.Parser
                 sourceList.Add(ParseTrivia());
 
                 if (_curs.TidCur == TokKind.Eof || _curs.TidCur == TokKind.Comma || _curs.TidCur == TokKind.ParenClose)
+                {
                     break;
+                }
 
                 // SingleExpr here means we don't want chains on the RHS, but individual expressions.
                 var expression = ParseExpr(Precedence.SingleExpr);
@@ -888,6 +1010,7 @@ namespace Microsoft.PowerFx.Core.Parser
                     exprs.Add(errorExp);
                     break;
                 }
+
                 var colon = _curs.TokMove();
                 colons.Add(colon);
                 sourceList.Add(new TokenSource(colon));
@@ -904,7 +1027,9 @@ namespace Microsoft.PowerFx.Core.Parser
 
                 // ,
                 if (_curs.TidCur != TokKind.Comma)
+                {
                     break;
+                }
 
                 var comma = _curs.TokMove();
                 commas.Add(comma);
@@ -926,7 +1051,9 @@ namespace Microsoft.PowerFx.Core.Parser
 
             curlyClose = TokEat(TokKind.CurlyClose);
             if (curlyClose != null)
+            {
                 sourceList.Add(new TokenSource(curlyClose));
+            }
 
             return new RecordNode(
                 ref _idNext,
@@ -964,7 +1091,10 @@ namespace Microsoft.PowerFx.Core.Parser
 
                 // ,
                 if (_curs.TidCur != TokKind.Comma)
+                {
                     break;
+                }
+
                 var comma = _curs.TokMove();
                 commas.Add(comma);
                 sourceList.Add(new TokenSource(comma));
@@ -975,7 +1105,9 @@ namespace Microsoft.PowerFx.Core.Parser
 
             var bracketClose = TokEat(TokKind.BracketClose);
             if (bracketClose != null)
+            {
                 sourceList.Add(new TokenSource(bracketClose));
+            }
 
             return new TableNode(
                 ref _idNext,
@@ -1006,7 +1138,9 @@ namespace Microsoft.PowerFx.Core.Parser
                 after
             };
             if (close != null)
+            {
                 sources.Add(new TokenSource(close));
+            }
 
             node.Parser_SetSourceList(new SourceList(new SpreadSource(sources)));
             return node;
@@ -1034,7 +1168,7 @@ namespace Microsoft.PowerFx.Core.Parser
             Contracts.AssertValue(args);
 
             var err = PostError(tok, errKey, args);
-            return new ErrorNode(ref _idNext, tok, err.ShortMessage,args);
+            return new ErrorNode(ref _idNext, tok, err.ShortMessage, args);
         }
 
         private ErrorNode CreateError(Token tok, ErrorResourceKey errKey)
@@ -1076,6 +1210,7 @@ namespace Microsoft.PowerFx.Core.Parser
                 _curs.TokMove();
                 return true;
             }
+
             ErrorTid(_curs.TokCur, tid);
             return false;
         }
@@ -1085,7 +1220,9 @@ namespace Microsoft.PowerFx.Core.Parser
         private Token TokEat(TokKind tid)
         {
             if (_curs.TidCur == tid)
+            {
                 return _curs.TokMove();
+            }
 
             ErrorTid(_curs.TokCur, tid);
             return null;
@@ -1164,7 +1301,9 @@ namespace Microsoft.PowerFx.Core.Parser
 
             // Can't pretty print a script with errors.
             if (result.HasError)
+            {
                 return text;
+            }
 
             return PrettyPrintVisitor.Format(result.Root, result.Before, result.After, text);
         }

@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation.
+﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
 using Microsoft.PowerFx.Core.Lexer;
@@ -101,7 +101,8 @@ namespace Microsoft.PowerFx.Core.Syntax.Visitors
             Contracts.AssertValue(node);
 
             // Cursor is inside the operation token.
-            if (node.Token.Kind == TokKind.PercentSign) {
+            if (node.Token.Kind == TokKind.PercentSign)
+            {
                 var span = node.GetSourceBasedSpan();
 
                 if (node.Token.Span.Min <= _cursorPosition && _cursorPosition <= node.Token.Span.Lim || _cursorPosition <= span.Min || _cursorPosition >= span.Lim)
@@ -109,7 +110,9 @@ namespace Microsoft.PowerFx.Core.Syntax.Visitors
                     _result = node;
                     return false;
                 }
-            } else {
+            }
+            else
+            {
                 if (_cursorPosition <= node.Token.Span.Lim)
                 {
                     _result = node;

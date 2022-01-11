@@ -44,7 +44,9 @@ namespace Microsoft.PowerFx.Core.Utils
             Contracts.AssertValueOrNull(obj);
 
             if (!(obj is DName))
+            {
                 return false;
+            }
 
             return Equals((DName)obj);
         }
@@ -60,10 +62,7 @@ namespace Microsoft.PowerFx.Core.Utils
             return Value == other;
         }
 
-        public static bool operator ==(DName name1, DName name2)
-        {
-            return name1.Value == name2.Value;
-        }
+        public static bool operator ==(DName name1, DName name2) => name1.Value == name2.Value;
 
         public static bool operator ==(string str, DName name)
         {
@@ -77,10 +76,7 @@ namespace Microsoft.PowerFx.Core.Utils
             return name.Value == str;
         }
 
-        public static bool operator !=(DName name1, DName name2)
-        {
-            return name1.Value != name2.Value;
-        }
+        public static bool operator !=(DName name1, DName name2) => name1.Value != name2.Value;
 
         public static bool operator !=(string str, DName name)
         {
@@ -100,13 +96,17 @@ namespace Microsoft.PowerFx.Core.Utils
             Contracts.AssertValueOrNull(strName);
 
             if (string.IsNullOrEmpty(strName))
+            {
                 return false;
+            }
 
             for (var i = 0; i < strName.Length; i++)
             {
                 var ch = strName[i];
                 if (!CharacterUtils.IsSpace(ch))
+                {
                     return true;
+                }
             }
 
             return false;
@@ -134,7 +134,9 @@ namespace Microsoft.PowerFx.Core.Utils
             }
 
             if (!fAllSpaces)
+            {
                 return new DName(strName);
+            }
 
             fModified = true;
 

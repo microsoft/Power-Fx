@@ -25,6 +25,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             : base("Trim", TexlStrings.AboutTrim, FunctionCategories.Table)
         { }
     }
+
     // TrimEnds(arg:s)
     internal sealed class TrimEndsFunction : StringOneArgFunction
     {

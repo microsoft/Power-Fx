@@ -40,14 +40,18 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 var metadataProvider = entityInfo.ParentDataSource.DataEntityMetadataProvider;
 
                 if (!metadataProvider.TryGetEntityMetadata(entityInfo.Identity, out var entityMetadata))
+                {
                     return false;
+                }
 
                 metadata = entityMetadata.DelegationMetadata.VerifyValue();
                 return true;
             }
 
             if (!TryGetValidDataSourceForDelegation(node, binding, FunctionDelegationCapability, out var ds))
+            {
                 return false;
+            }
 
             metadata = ds.DelegationMetadata;
             return true;
@@ -68,62 +72,75 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             switch (kind)
             {
-            case NodeKind.BinaryOp:
-                {
-                    var opNode = dsNode.AsBinaryOp();
-                    var binaryOpNodeValidationStrategy = GetOpDelegationStrategy(opNode.Op, opNode);
-                    Contracts.AssertValue(opNode);
-
-                    if (!binaryOpNodeValidationStrategy.IsSupportedOpNode(opNode, filterMetadata, binding))
-                        return false;
-
-                    break;
-                }
-            case NodeKind.FirstName:
-                {
-                    if (!firstNameStrategy.IsValidFirstNameNode(dsNode.AsFirstName(), binding, null))
-                        return false;
-
-                    break;
-                }
-            case NodeKind.DottedName:
-                {
-                    if (!dottedNameStrategy.IsValidDottedNameNode(dsNode.AsDottedName(), binding, filterMetadata, null))
-                        return false;
-
-                    break;
-                }
-            case NodeKind.UnaryOp:
-                {
-                    var opNode = dsNode.AsUnaryOpLit();
-                    var unaryOpNodeValidationStrategy = GetOpDelegationStrategy(opNode.Op);
-                    Contracts.AssertValue(opNode);
-
-                    if (!unaryOpNodeValidationStrategy.IsSupportedOpNode(opNode, filterMetadata, binding))
+                case NodeKind.BinaryOp:
                     {
-                        SuggestDelegationHint(dsNode, binding);
-                        return false;
+                        var opNode = dsNode.AsBinaryOp();
+                        var binaryOpNodeValidationStrategy = GetOpDelegationStrategy(opNode.Op, opNode);
+                        Contracts.AssertValue(opNode);
+
+                        if (!binaryOpNodeValidationStrategy.IsSupportedOpNode(opNode, filterMetadata, binding))
+                        {
+                            return false;
+                        }
+
+                        break;
                     }
 
-                    break;
-                }
-            case NodeKind.Call:
-                {
-                    if (!cNodeStrategy.IsValidCallNode(dsNode.AsCall(), binding, filterMetadata))
-                        return false;
-
-                    break;
-                }
-            default:
-                {
-                    if (kind != NodeKind.BoolLit)
+                case NodeKind.FirstName:
                     {
-                        SuggestDelegationHint(dsNode, binding, string.Format("Not supported node {0}.", kind));
-                        return false;
+                        if (!firstNameStrategy.IsValidFirstNameNode(dsNode.AsFirstName(), binding, null))
+                        {
+                            return false;
+                        }
+
+                        break;
                     }
 
-                    break;
-                }
+                case NodeKind.DottedName:
+                    {
+                        if (!dottedNameStrategy.IsValidDottedNameNode(dsNode.AsDottedName(), binding, filterMetadata, null))
+                        {
+                            return false;
+                        }
+
+                        break;
+                    }
+
+                case NodeKind.UnaryOp:
+                    {
+                        var opNode = dsNode.AsUnaryOpLit();
+                        var unaryOpNodeValidationStrategy = GetOpDelegationStrategy(opNode.Op);
+                        Contracts.AssertValue(opNode);
+
+                        if (!unaryOpNodeValidationStrategy.IsSupportedOpNode(opNode, filterMetadata, binding))
+                        {
+                            SuggestDelegationHint(dsNode, binding);
+                            return false;
+                        }
+
+                        break;
+                    }
+
+                case NodeKind.Call:
+                    {
+                        if (!cNodeStrategy.IsValidCallNode(dsNode.AsCall(), binding, filterMetadata))
+                        {
+                            return false;
+                        }
+
+                        break;
+                    }
+
+                default:
+                    {
+                        if (kind != NodeKind.BoolLit)
+                        {
+                            SuggestDelegationHint(dsNode, binding, string.Format("Not supported node {0}.", kind));
+                            return false;
+                        }
+
+                        break;
+                    }
             }
 
             return true;

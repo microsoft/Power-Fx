@@ -6,7 +6,8 @@ using Microsoft.PowerFx.Core.Syntax.Nodes;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 
-namespace Microsoft.PowerFx.Core.Texl.Intellisense{
+namespace Microsoft.PowerFx.Core.Texl.Intellisense
+{
     internal partial class Intellisense
     {
         internal sealed class TableNodeSuggestionHandler : NodeKindSuggestionHandler
@@ -26,7 +27,9 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense{
 
                 // Only suggest after table nodes
                 if (cursorPos <= tokenSpan.Lim)
+                {
                     return true;
+                }
 
                 if (IntellisenseHelper.CanSuggestAfterValue(cursorPos, intellisenseData.Script))
                 {

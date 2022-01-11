@@ -6,16 +6,17 @@ using Microsoft.PowerFx.Core.Syntax.Nodes;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 
-namespace Microsoft.PowerFx.Core.Texl.Intellisense{
+namespace Microsoft.PowerFx.Core.Texl.Intellisense
+{
     internal partial class Intellisense
     {
         /// <summary>
-        /// Suggests operators that can be used on a value of type record or table.  E.g. In, As 
+        /// Suggests operators that can be used on a value of type record or table.  E.g. In, As. 
         /// </summary>
         internal sealed class RecordNodeSuggestionHandler : NodeKindSuggestionHandler
         {
-            public RecordNodeSuggestionHandler() 
-                : base(NodeKind.Record) 
+            public RecordNodeSuggestionHandler()
+                : base(NodeKind.Record)
             { }
 
             internal override bool TryAddSuggestionsForNodeKind(IntellisenseData.IntellisenseData intellisenseData)
@@ -29,7 +30,9 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense{
 
                 // Only suggest after record nodes
                 if (cursorPos <= tokenSpan.Lim)
+                {
                     return true;
+                }
 
                 if (IntellisenseHelper.CanSuggestAfterValue(cursorPos, intellisenseData.Script))
                 {

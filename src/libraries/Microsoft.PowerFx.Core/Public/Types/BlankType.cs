@@ -13,6 +13,7 @@ namespace Microsoft.PowerFx.Core.Public.Types
         internal BlankType() : base(new DType(DKind.ObjNull))
         {
         }
+
         public override void Visit(ITypeVistor vistor)
         {
             vistor.Visit(this);

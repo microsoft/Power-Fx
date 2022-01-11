@@ -27,8 +27,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
-            yield return new [] { TexlStrings.FindArg1, TexlStrings.FindArg2 };
-            yield return new [] { TexlStrings.FindArg1, TexlStrings.FindArg2, TexlStrings.FindArg3 };
+            yield return new[] { TexlStrings.FindArg1, TexlStrings.FindArg2 };
+            yield return new[] { TexlStrings.FindArg1, TexlStrings.FindArg2, TexlStrings.FindArg3 };
         }
     }
 
@@ -45,8 +45,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
-            yield return new [] { TexlStrings.FindTArg1, TexlStrings.FindTArg2 };
-            yield return new [] { TexlStrings.FindTArg1, TexlStrings.FindTArg2, TexlStrings.FindTArg3 };
+            yield return new[] { TexlStrings.FindTArg1, TexlStrings.FindTArg2 };
+            yield return new[] { TexlStrings.FindTArg1, TexlStrings.FindTArg2, TexlStrings.FindTArg3 };
         }
 
         public override string GetUniqueTexlRuntimeName(bool isPrefetching = false)
@@ -63,7 +63,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertValue(errors);
             Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
 
-            var fValid = base.CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            var fValid = CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
 
             var type0 = argTypes[0];
             var type1 = argTypes[1];
@@ -134,7 +134,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             // At least one arg has to be a table.
             if (!(type0.IsTable || type1.IsTable) && (!hasStartIndex || !argTypes[2].IsTable))
+            {
                 fValid = false;
+            }
 
             return fValid;
         }

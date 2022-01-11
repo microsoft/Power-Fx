@@ -20,6 +20,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 b = arg1.ToObject().Equals(arg2.ToObject());
             }
+
             return b;
         }
 

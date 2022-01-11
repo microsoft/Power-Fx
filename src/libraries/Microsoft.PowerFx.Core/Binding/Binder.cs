@@ -122,7 +122,7 @@ namespace Microsoft.PowerFx.Core.Binding
         public const int MaxSelectsToInclude = 100;
 
         /// <summary>
-        /// Default name used to access a Lambda scope
+        /// Default name used to access a Lambda scope.
         /// </summary>
         internal DName ThisRecordDefaultName => new DName("ThisRecord");
 
@@ -185,7 +185,7 @@ namespace Microsoft.PowerFx.Core.Binding
         public bool HasControlReferences { get; private set; }
 
         /// <summary>
-        /// UsedControlProperties  is for processing edges required for indirect control property references
+        /// UsedControlProperties  is for processing edges required for indirect control property references.
         /// </summary>
         public HashSet<DName> UsedControlProperties { get; } = new HashSet<DName>();
 
@@ -286,7 +286,9 @@ namespace Microsoft.PowerFx.Core.Binding
 
             // Determine if a rename has occured at the top level
             if (txb.Top is AsNode asNode)
+            {
                 txb._renamedOutputAccessor = txb.GetInfo(asNode).AsIdentifier;
+            }
 
             return txb;
         }
@@ -389,13 +391,13 @@ namespace Microsoft.PowerFx.Core.Binding
         }
 
         /// <summary>
-        /// See documentation for <see cref="GetVolatileVariables"/> for more information
+        /// See documentation for <see cref="GetVolatileVariables"/> for more information.
         /// </summary>
         /// <param name="node">
-        /// Node to which volatile variables are being added
+        /// Node to which volatile variables are being added.
         /// </param>
         /// <param name="variables">
-        /// The variables that are to be added to the list associated with <see cref="node"/>
+        /// The variables that are to be added to the list associated with <see cref="node"/>.
         /// </param>
         private void AddVolatileVariables(TexlNode node, ImmutableHashSet<string> variables)
         {
@@ -410,10 +412,10 @@ namespace Microsoft.PowerFx.Core.Binding
         /// See documentation for <see cref="GetVolatileVariables"/> for more information.
         /// </summary>
         /// <param name="node">
-        /// Node whose liftability will be altered by this invocation
+        /// Node whose liftability will be altered by this invocation.
         /// </param>
         /// <param name="value">
-        /// The value that the node's liftability should assume by the invocation of this method
+        /// The value that the node's liftability should assume by the invocation of this method.
         /// </param>
         private void SetIsUnliftable(TexlNode node, bool value)
         {
@@ -430,7 +432,9 @@ namespace Microsoft.PowerFx.Core.Binding
             var info = GetInfo(node).VerifyValue();
             var function = info.Function;
             if (function == null)
+            {
                 return false;
+            }
 
             var isServerDelegatable = function.IsServerDelegatable(node, this);
             BinderUtils.LogTelemetryForFunction(function, node, this, isServerDelegatable);
@@ -451,7 +455,9 @@ namespace Microsoft.PowerFx.Core.Binding
 
             // One To N Relationships are pagable using nextlinks
             if (info.Kind == BindKind.DeprecatedImplicitThisItem && (GetType(node).ExpandInfo?.IsTable ?? false))
+            {
                 return true;
+            }
 
             return false;
         }
@@ -489,7 +495,9 @@ namespace Microsoft.PowerFx.Core.Binding
             info = null;
             var dottedNameNode = node.AsDottedName();
             if (dottedNameNode == null)
+            {
                 return false;
+            }
 
             info = GetInfo(dottedNameNode)?.Data as IExpandInfo;
             return info != null;
@@ -502,7 +510,9 @@ namespace Microsoft.PowerFx.Core.Binding
             info = null;
             var firstNameNode = node.AsFirstName();
             if (firstNameNode == null)
+            {
                 return false;
+            }
 
             info = GetInfo(firstNameNode)?.Data as IExpandInfo;
             return info != null;
@@ -515,7 +525,9 @@ namespace Microsoft.PowerFx.Core.Binding
             info = null;
             var callNode = node.AsCall();
             if (callNode == null)
+            {
                 return false;
+            }
 
             // It is possible for function to be null here if it referred to
             // a service function from a service we are in the process of
@@ -542,6 +554,7 @@ namespace Microsoft.PowerFx.Core.Binding
                     tabularDataQueryOptionsMap = null;
                     return false;
                 }
+
                 node = node.AsCall().Args.Children[0];
 
                 // Call nodes may have As nodes as the lhs, make sure query options are pulled from the lhs of the as node
@@ -560,7 +573,10 @@ namespace Microsoft.PowerFx.Core.Binding
             TexlNode topNode = null;
             foreach (var top in TopChain)
             {
-                if (!node.InTree(top)) continue;
+                if (!node.InTree(top))
+                {
+                    continue;
+                }
 
                 topNode = top;
                 break;
@@ -582,11 +598,17 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 foreach (var x in Rule.TexlNodeQueryOptions)
                 {
-                    if (topNode.MinChildID > x.Key || x.Key > topNode.Id) continue;
+                    if (topNode.MinChildID > x.Key || x.Key > topNode.Id)
+                    {
+                        continue;
+                    }
 
                     var qo = x.Value.GetQueryOptions(tabularDs);
 
-                    if (qo == null) continue;
+                    if (qo == null)
+                    {
+                        continue;
+                    }
 
                     tabularDataQueryOptionsMap.GetQueryOptions(tabularDs).Merge(qo);
                 }
@@ -606,10 +628,14 @@ namespace Microsoft.PowerFx.Core.Binding
             Contracts.AssertValueOrNull(nameResolver);
 
             if (nameResolver == null || nameResolver.CurrentEntity == null)
+            {
                 return null;
+            }
 
             if (!nameResolver.CurrentEntity.IsControl || !nameResolver.LookupParent(out var lookupInfo))
+            {
                 return null;
+            }
 
             return lookupInfo.Data as IExternalControl;
         }
@@ -620,10 +646,14 @@ namespace Microsoft.PowerFx.Core.Binding
             Contracts.AssertValueOrNull(nameResolver);
 
             if (nameResolver == null || nameResolver.CurrentEntity == null)
+            {
                 return null;
+            }
 
             if (!nameResolver.LookupSelf(out var lookupInfo))
+            {
                 return null;
+            }
 
             return lookupInfo.Data as IExternalControl;
         }
@@ -653,7 +683,9 @@ namespace Microsoft.PowerFx.Core.Binding
             Contracts.AssertValueOrNull(visitor);
 
             if (nameResolver == null || !(dottedNameNode.Left is FirstNameNode lhsNode))
+            {
                 return null;
+            }
 
             if (!nameResolver.LookupGlobalEntity(lhsNode.Ident.Name, out var lookupInfo) ||
                 (!IsDataComponentDataSource(lookupInfo) &&
@@ -664,11 +696,15 @@ namespace Microsoft.PowerFx.Core.Binding
             }
 
             if (GetInfo(lhsNode) == null)
+            {
                 lhsNode.Accept(visitor);
+            }
 
             var lhsInfo = GetInfo(lhsNode);
             if (lhsInfo?.Data is IExternalControl dataCtrlInfo)
+            {
                 return dataCtrlInfo;
+            }
 
             if (lhsInfo?.Kind == BindKind.Data &&
                 _glue.TryGetCdsDataSourceByBind(lhsInfo.Data, out var info))
@@ -706,22 +742,30 @@ namespace Microsoft.PowerFx.Core.Binding
         internal IEnumerable<string> GetDataQuerySelects(TexlNode node)
         {
             if (!Document.Properties.EnabledFeatures.IsProjectionMappingEnabled)
+            {
                 return Enumerable.Empty<string>();
+            }
 
             if (!TryGetDataQueryOptions(node, true, out var tabularDataQueryOptionsMap))
+            {
                 return Enumerable.Empty<string>();
+            }
 
             var currNodeQueryOptions = tabularDataQueryOptionsMap.GetQueryOptions();
 
             if (currNodeQueryOptions.Count() == 0)
+            {
                 return Enumerable.Empty<string>();
+            }
 
             if (currNodeQueryOptions.Count() == 1)
             {
                 var ds = currNodeQueryOptions.First().TabularDataSourceInfo;
 
                 if (!ds.IsSelectable)
+                {
                     return Enumerable.Empty<string>();
+                }
 
                 var ruleQueryOptions = Rule.Binding.QueryOptions.GetQueryOptions(ds);
                 if (ruleQueryOptions != null)
@@ -731,10 +775,13 @@ namespace Microsoft.PowerFx.Core.Binding
                         var nodeQOSelects = nodeQO.Value.GetQueryOptions(ds)?.Selects;
                         ruleQueryOptions.AddSelectMultiple(nodeQOSelects);
                     }
+
                     ruleQueryOptions.AddRelatedColumns();
 
                     if (ruleQueryOptions.HasNonKeySelects())
+                    {
                         return ruleQueryOptions.Selects;
+                    }
                 }
                 else
                 {
@@ -831,7 +878,10 @@ namespace Microsoft.PowerFx.Core.Binding
                     var callNode = node.AsCall().VerifyValue();
                     var callFunction = GetInfo(callNode)?.Function;
                     if (callFunction != null)
+                    {
                         return callFunction.TryGetDataSource(callNode, this, out dataSourceInfo);
+                    }
+
                     break;
                 case NodeKind.FirstName:
                     var firstNameNode = node.AsFirstName().VerifyValue();
@@ -844,6 +894,7 @@ namespace Microsoft.PowerFx.Core.Binding
                         dataSourceInfo = info.ParentDataSource;
                         return dataSourceInfo != null;
                     }
+
                     break;
                 case NodeKind.As:
                     return TryGetDataSourceInfo(node.AsAsNode().Left, out dataSourceInfo);
@@ -860,7 +911,9 @@ namespace Microsoft.PowerFx.Core.Binding
             Contracts.AssertValue(node);
 
             if (HasExpandInfo(node) && SupportsPaging(node.Left))
+            {
                 return true;
+            }
 
             return TryGetEntityInfo(node, out var entityInfo) && entityInfo.IsTable;
         }
@@ -1069,7 +1122,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
                         if (parameters.Count == callNode.Args.Count)
                         {
-                            nodeValue = string.Join("", parameters);
+                            nodeValue = string.Join(string.Empty, parameters);
                             return true;
                         }
                     }
@@ -1137,10 +1190,10 @@ namespace Microsoft.PowerFx.Core.Binding
         /// expressions.
         /// </summary>
         /// <param name="node">
-        /// The node of which volatile variables are being requested
+        /// The node of which volatile variables are being requested.
         /// </param>
         /// <returns>
-        /// A list containing the volatile variables of <see cref="node"/>
+        /// A list containing the volatile variables of <see cref="node"/>.
         /// </returns>
         private ImmutableHashSet<string> GetVolatileVariables(TexlNode node)
         {
@@ -1160,14 +1213,20 @@ namespace Microsoft.PowerFx.Core.Binding
             firstNameInfo = null;
 
             if (!(node is DottedNameNode dottedNameNode))
+            {
                 return false;
+            }
 
             if (!(dottedNameNode.Left is FirstNameNode fullRecordAccess))
+            {
                 return false;
+            }
 
             var info = GetInfo(fullRecordAccess);
             if (info?.Kind != BindKind.LambdaFullRecord)
+            {
                 return false;
+            }
 
             firstNameInfo = info;
             return true;
@@ -1175,7 +1234,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
         /// <summary>
         /// Gets the renamed ident and returns true if the node is an AsNode
-        /// Otherwise returns false and sets scopeIdent to the default
+        /// Otherwise returns false and sets scopeIdent to the default.
         /// </summary>
         /// <returns></returns>
         private bool GetScopeIdent(TexlNode node, out DName scopeIdent)
@@ -1186,6 +1245,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 scopeIdent = GetInfo(asNode).AsIdentifier;
                 return true;
             }
+
             return false;
         }
 
@@ -1210,17 +1270,23 @@ namespace Microsoft.PowerFx.Core.Binding
             Contracts.AssertValue(node);
 
             if (node == null)
+            {
                 return false;
+            }
 
             // No need to go further if node is outside row scope.
             if (!IsRowScope(node))
+            {
                 return false;
+            }
 
             var parentNode = node;
             while ((parentNode = parentNode.Parent) != null)
             {
                 if (_isEcsExcemptLambda.Get(parentNode.Id))
+                {
                     return true;
+                }
             }
 
             return false;
@@ -1275,7 +1341,9 @@ namespace Microsoft.PowerFx.Core.Binding
 
             // Ensure we don't exceed the supported up-count limit.
             if (upCount > ScopeUseSet.MaxUpCount)
+            {
                 ErrorContainer.Error(node, TexlStrings.ErrTooManyUps);
+            }
 
             SetScopeUseSet(node, new ScopeUseSet(upCount));
         }
@@ -1311,11 +1379,15 @@ namespace Microsoft.PowerFx.Core.Binding
             Contracts.AssertIndex(node.Id, _lambdaScopingMap.Length);
 
             if (node == null)
+            {
                 return false;
+            }
 
             // No need to go further if the lambda scope is global.
             if (!IsLambdaScoped(node))
+            {
                 return false;
+            }
 
             TryGetFirstNameInfo(node.Id, out var info);
             var upCount = info.UpCount;
@@ -1328,10 +1400,14 @@ namespace Microsoft.PowerFx.Core.Binding
                 }
 
                 if (upCount < 0)
+                {
                     return false;
+                }
 
                 if (_supportsRowScopedParamDelegationExempted.Get(parentNode.Id) && upCount == 0)
+                {
                     return true;
+                }
             }
 
             return false;
@@ -1411,7 +1487,7 @@ namespace Microsoft.PowerFx.Core.Binding
         }
 
         private BinderNodesVisitor _lazyInitializedBinderNodesVisitor = null;
-        private BinderNodesVisitor _binderNodesVisitor
+        private BinderNodesVisitor BinderNodesVisitor
         {
             get
             {
@@ -1419,18 +1495,20 @@ namespace Microsoft.PowerFx.Core.Binding
                 {
                     _lazyInitializedBinderNodesVisitor = BinderNodesVisitor.Run(Top);
                 }
+
                 return _lazyInitializedBinderNodesVisitor;
             }
         }
+
         private BinderNodesMetadataArgTypeVisitor BinderNodeMetadataArgTypeVisitor { get; }
 
-        public IEnumerable<BinaryOpNode> GetBinaryOperators() { return _binderNodesVisitor.BinaryOperators; }
-        public IEnumerable<VariadicOpNode> GetVariadicOperators() { return _binderNodesVisitor.VariadicOperators; }
-        public IEnumerable<NodeKind> GetKeywords() { return _binderNodesVisitor.Keywords; }
-        public IEnumerable<BoolLitNode> GetBooleanLiterals() { return _binderNodesVisitor.BooleanLiterals; }
-        public IEnumerable<NumLitNode> GetNumericLiterals() { return _binderNodesVisitor.NumericLiterals; }
-        public IEnumerable<StrLitNode> GetStringLiterals() { return _binderNodesVisitor.StringLiterals; }
-        public IEnumerable<UnaryOpNode> GetUnaryOperators() { return _binderNodesVisitor.UnaryOperators; }
+        public IEnumerable<BinaryOpNode> GetBinaryOperators() { return BinderNodesVisitor.BinaryOperators; }
+        public IEnumerable<VariadicOpNode> GetVariadicOperators() { return BinderNodesVisitor.VariadicOperators; }
+        public IEnumerable<NodeKind> GetKeywords() { return BinderNodesVisitor.Keywords; }
+        public IEnumerable<BoolLitNode> GetBooleanLiterals() { return BinderNodesVisitor.BooleanLiterals; }
+        public IEnumerable<NumLitNode> GetNumericLiterals() { return BinderNodesVisitor.NumericLiterals; }
+        public IEnumerable<StrLitNode> GetStringLiterals() { return BinderNodesVisitor.StringLiterals; }
+        public IEnumerable<UnaryOpNode> GetUnaryOperators() { return BinderNodesVisitor.UnaryOperators; }
 
         public bool IsEmpty => !_infoMap.Any(info => info != null);
 
@@ -1438,7 +1516,10 @@ namespace Microsoft.PowerFx.Core.Binding
         {
             get
             {
-                if (IsEmpty) return Enumerable.Empty<TexlNode>();
+                if (IsEmpty)
+                {
+                    return Enumerable.Empty<TexlNode>();
+                }
 
                 if (Top is VariadicBase)
                 {
@@ -1469,7 +1550,9 @@ namespace Microsoft.PowerFx.Core.Binding
         public IEnumerable<FirstNameInfo> GetGlobalNames()
         {
             if (!UsesGlobals && !UsesResources)
+            {
                 return Enumerable.Empty<FirstNameInfo>();
+            }
 
             return _infoMap
                 .OfType<FirstNameInfo>()
@@ -1486,7 +1569,9 @@ namespace Microsoft.PowerFx.Core.Binding
         public IEnumerable<FirstNameInfo> GetGlobalControlNames()
         {
             if (!UsesGlobals)
+            {
                 return Enumerable.Empty<FirstNameInfo>();
+            }
 
             return _infoMap
                 .OfType<FirstNameInfo>()
@@ -1496,7 +1581,9 @@ namespace Microsoft.PowerFx.Core.Binding
         public IEnumerable<ControlKeywordInfo> GetControlKeywordInfos()
         {
             if (!UsesGlobals)
+            {
                 return Enumerable.Empty<ControlKeywordInfo>();
+            }
 
             return _infoMap.OfType<ControlKeywordInfo>();
         }
@@ -1507,7 +1594,9 @@ namespace Microsoft.PowerFx.Core.Binding
 
             firstName = null;
             if (!UsesGlobals && !UsesResources)
+            {
                 return false;
+            }
 
             foreach (var info in _infoMap.OfType<FirstNameInfo>())
             {
@@ -1526,7 +1615,9 @@ namespace Microsoft.PowerFx.Core.Binding
         public IEnumerable<FirstNameInfo> GetAliasNames()
         {
             if (!UsesAliases)
+            {
                 return Enumerable.Empty<FirstNameInfo>();
+            }
 
             return _infoMap
                 .OfType<FirstNameInfo>()
@@ -1536,7 +1627,9 @@ namespace Microsoft.PowerFx.Core.Binding
         public IEnumerable<FirstNameInfo> GetScopeVariableNames()
         {
             if (!UsesScopeVariables)
+            {
                 return Enumerable.Empty<FirstNameInfo>();
+            }
 
             return _infoMap
                 .OfType<FirstNameInfo>()
@@ -1546,7 +1639,9 @@ namespace Microsoft.PowerFx.Core.Binding
         public IEnumerable<FirstNameInfo> GetScopeCollectionNames()
         {
             if (!UsesScopeCollections)
+            {
                 return Enumerable.Empty<FirstNameInfo>();
+            }
 
             return _infoMap
                 .OfType<FirstNameInfo>()
@@ -1556,7 +1651,9 @@ namespace Microsoft.PowerFx.Core.Binding
         public IEnumerable<FirstNameInfo> GetThisItemFirstNames()
         {
             if (!HasThisItemReference)
+            {
                 return Enumerable.Empty<FirstNameInfo>();
+            }
 
             return _infoMap.OfType<FirstNameInfo>().Where(info => info.Kind == BindKind.ThisItem);
         }
@@ -1564,7 +1661,9 @@ namespace Microsoft.PowerFx.Core.Binding
         public IEnumerable<FirstNameInfo> GetImplicitThisItemFirstNames()
         {
             if (!HasThisItemReference)
+            {
                 return Enumerable.Empty<FirstNameInfo>();
+            }
 
             return _infoMap.OfType<FirstNameInfo>().Where(info => info.Kind == BindKind.DeprecatedImplicitThisItem);
         }
@@ -1573,7 +1672,9 @@ namespace Microsoft.PowerFx.Core.Binding
         {
             Contracts.Assert(nest >= 0);
             if (_lambdaParams.TryGetValue(nest, out var infos))
+            {
                 return infos;
+            }
 
             return Enumerable.Empty<FirstNameInfo>();
         }
@@ -1595,7 +1696,9 @@ namespace Microsoft.PowerFx.Core.Binding
             for (var id = 0; id < IdLim; id++)
             {
                 if (_infoMap[id] is DottedNameInfo info)
+                {
                     yield return info;
+                }
             }
         }
 
@@ -1616,7 +1719,9 @@ namespace Microsoft.PowerFx.Core.Binding
             for (var id = 0; id < IdLim; id++)
             {
                 if (_infoMap[id] is CallInfo info)
+                {
                     yield return info;
+                }
             }
         }
 
@@ -1627,7 +1732,9 @@ namespace Microsoft.PowerFx.Core.Binding
             for (var id = 0; id < IdLim; id++)
             {
                 if (_infoMap[id] is CallInfo info && info.Function == function)
+                {
                     yield return info;
+                }
             }
         }
 
@@ -1682,7 +1789,8 @@ namespace Microsoft.PowerFx.Core.Binding
             return info != null;
         }
 
-        public bool TryGetInfo<T>(int nodeId, out T info) where T : class
+        public bool TryGetInfo<T>(int nodeId, out T info)
+            where T : class
         {
             if (nodeId < 0 || nodeId > IdLim)
             {
@@ -1717,7 +1825,9 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 // Reduce the type if the table is being sliced.
                 if (node.Parent != null && node.Parent.Kind == NodeKind.DottedName)
+                {
                     currentRecordType = GetType(node.Parent).ToRecord();
+                }
 
                 // Walk up the parse tree to find the first CallNode, then determine if the
                 // required type can be reduced to scope fields.
@@ -1787,15 +1897,22 @@ namespace Microsoft.PowerFx.Core.Binding
                     {
                         // Get the param type accumulated so far
                         if (!fields.TryGetType(name.Name, out var accParamType))
+                        {
                             accParamType = DType.EmptyRecord;
+                        }
+
                         // Get the RHS property type reported by the scope
                         var tempRhsType = lambdaParamType.IsControl ? lambdaParamType.ToRecord() : lambdaParamType;
                         if (!tempRhsType.TryGetType(dotted.Right.Name, out var propertyType))
+                        {
                             propertyType = DType.Unknown;
+                        }
+
                         // Accumulate into the param type
                         accParamType = accParamType.Add(ref fError, DPath.Root, dotted.Right.Name, propertyType);
                         lambdaParamType = accParamType;
                     }
+
                     fields = DType.Union(fields, DType.EmptyRecord.Add(ref fError, DPath.Root, name.Name, lambdaParamType));
                 }
             }
@@ -1814,7 +1931,9 @@ namespace Microsoft.PowerFx.Core.Binding
             if (info.Kind == BindKind.LambdaField || info.Kind == BindKind.LambdaFullRecord)
             {
                 if (!_lambdaParams.ContainsKey(info.NestDst))
+                {
                     _lambdaParams[info.NestDst] = new List<FirstNameInfo>();
+                }
 
                 _lambdaParams[info.NestDst].Add(info);
             }
@@ -1885,18 +2004,26 @@ namespace Microsoft.PowerFx.Core.Binding
             {
                 // If the invocation is async then the whole call path is async.
                 if (markIfAsync && function.IsAsyncInvocation(node, this))
+                {
                     FlagPathAsAsync(node);
+                }
 
                 // If the invocation affects aliases, cache that info.
                 if (function.AffectsAliases)
+                {
                     AffectsAliases = true;
+                }
 
                 // If the invocation affects scope varialbe, cache that info.
                 if (function.AffectsScopeVariable)
+                {
                     AffectsScopeVariable = true;
+                }
 
                 if (function.AffectsDataSourceQueryOptions)
+                {
                     AffectsTabularDataSources = true;
+                }
             }
         }
 
@@ -1909,15 +2036,22 @@ namespace Microsoft.PowerFx.Core.Binding
             var retVal = false;
 
             if (type.AssociatedDataSources == null)
+            {
                 return retVal;
+            }
 
             foreach (var associatedDataSource in type.AssociatedDataSources)
             {
-                if (!associatedDataSource.IsSelectable) continue;
+                if (!associatedDataSource.IsSelectable)
+                {
+                    continue;
+                }
 
                 // If this is accessing datasource itself then we don't need to capture this.
                 if (associatedDataSource.Name == fieldName)
+                {
                     continue;
+                }
 
                 retVal |= QueryOptions.AddSelect(associatedDataSource, new DName(fieldName));
 
@@ -1931,7 +2065,9 @@ namespace Microsoft.PowerFx.Core.Binding
         {
             var rhsName = ident.Name;
             if (!UpdateDisplayNames && TryGetReplacedIdentName(ident, out var rhsLogicalName))
+            {
                 rhsName = new DName(rhsLogicalName);
+            }
 
             return rhsName;
         }
@@ -2051,10 +2187,14 @@ namespace Microsoft.PowerFx.Core.Binding
             Contracts.AssertValid(type);
 
             if (_typesNeedingMetadata == null)
+            {
                 _typesNeedingMetadata = new List<DType>();
+            }
 
             if (!_typesNeedingMetadata.Contains(type))
+            {
                 _typesNeedingMetadata.Add(type);
+            }
         }
 
         internal List<DType> GetExpandEntitiesMissingMetadata()
@@ -2112,7 +2252,9 @@ namespace Microsoft.PowerFx.Core.Binding
                     Nest = parent?.Nest ?? 0;
                     // Scopes created for record scope only do not increase lambda param nesting
                     if (createsRowScope)
+                    {
                         Nest += 1;
+                    }
                 }
 
                 public Scope Up(int upCount)
@@ -2159,7 +2301,10 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 var scope = _currentScope;
                 while (scope != null && scope != _topScope)
+                {
                     scope = scope.Parent;
+                }
+
                 Contracts.Assert(scope == _topScope, "_topScope should be in the parent chain of _currentScope.");
 #endif
             }
@@ -2173,8 +2318,8 @@ namespace Microsoft.PowerFx.Core.Binding
             /// <summary>
             /// Helper for Lt/leq/geq/gt type checking. Restricts type to be one of the provided set, without coercion (except for primary output props).
             /// </summary>
-            /// <param name="node">Node for which we are checking the type</param>
-            /// <param name="alternateTypes">List of acceptable types for this operation, in order of suitability</param>
+            /// <param name="node">Node for which we are checking the type.</param>
+            /// <param name="alternateTypes">List of acceptable types for this operation, in order of suitability.</param>
             /// <returns></returns>
             private bool CheckComparisonTypeOneOf(TexlNode node, params DType[] alternateTypes)
             {
@@ -2186,7 +2331,9 @@ namespace Microsoft.PowerFx.Core.Binding
                 foreach (var altType in alternateTypes)
                 {
                     if (!altType.Accepts(type))
+                    {
                         continue;
+                    }
 
                     return true;
                 }
@@ -2226,7 +2373,10 @@ namespace Microsoft.PowerFx.Core.Binding
                 if (typeWant.Accepts(type))
                 {
                     if (type.RequiresExplicitCast(typeWant))
+                    {
                         _txb.SetCoercedType(node, typeWant);
+                    }
+
                     return true;
                 }
 
@@ -2234,11 +2384,15 @@ namespace Microsoft.PowerFx.Core.Binding
                 foreach (var altType in alternateTypes)
                 {
                     if (!altType.Accepts(type))
+                    {
                         continue;
+                    }
 
                     // Ensure that booleans only match bool valued option sets
                     if (typeWant.Kind == DKind.Boolean && altType.Kind == DKind.OptionSetValue && !(type.OptionSetInfo?.IsBooleanValued ?? false))
+                    {
                         continue;
+                    }
 
                     // We found an alternate type that is accepted and will be coerced.
                     _txb.SetCoercedType(node, typeWant);
@@ -2261,7 +2415,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 }
 
                 var messageKey = alternateTypes.Length == 0 ? TexlStrings.ErrBadType_ExpectedType : TexlStrings.ErrBadType_ExpectedTypesCSV;
-                var messageArg = alternateTypes.Length == 0 ? typeWant.GetKindString() : string.Join(", ", (new[] { typeWant }).Concat(alternateTypes).Select(t => t.GetKindString()));
+                var messageArg = alternateTypes.Length == 0 ? typeWant.GetKindString() : string.Join(", ", new[] { typeWant }.Concat(alternateTypes).Select(t => t.GetKindString()));
 
                 _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Severe, node, messageKey, messageArg);
                 return false;
@@ -2309,13 +2463,18 @@ namespace Microsoft.PowerFx.Core.Binding
                                 return false;
                             }
                         }
+
                         if (DType.String.Accepts(typeLeft))
+                        {
                             return true;
+                        }
+
                         if (!typeLeft.CoercesTo(DType.String))
                         {
                             _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Severe, left, TexlStrings.ErrCannotCoerce_SourceType_TargetType, typeLeft.GetKindString(), DType.String.GetKindString());
                             return false;
                         }
+
                         // Coerce LHS to a string type, to facilitate subsequent substring checks.
                         _txb.SetCoercedType(left, DType.String);
                         return true;
@@ -2333,12 +2492,16 @@ namespace Microsoft.PowerFx.Core.Binding
 
                         var typedName = names.Single();
                         if (typedName.Type.Accepts(typeLeft) || typeLeft.Accepts(typedName.Type))
+                        {
                             return true;
+                        }
+
                         if (!typeLeft.CoercesTo(typedName.Type))
                         {
                             _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Severe, left, TexlStrings.ErrCannotCoerce_SourceType_TargetType, typeLeft.GetKindString(), typedName.Type.GetKindString());
                             return false;
                         }
+
                         // Coerce LHS to the table column type, to facilitate subsequent comparison.
                         _txb.SetCoercedType(left, typedName.Type);
                         return true;
@@ -2394,7 +2557,9 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 var set = ScopeUseSet.GlobalsOnly;
                 foreach (var node in nodes)
+                {
                     set = set.Union(_txb.GetScopeUseSet(node));
+                }
 
                 return set;
             }
@@ -2450,7 +2615,9 @@ namespace Microsoft.PowerFx.Core.Binding
                 {
                     // Lookup ThisItem info
                     if (_nameResolver == null || !_nameResolver.TryGetInnermostThisItemScope(out var lookupInfo))
+                    {
                         return;
+                    }
 
                     _txb.AddFieldToQuerySelects(lookupInfo.Type, node.Value);
                 }
@@ -2480,11 +2647,15 @@ namespace Microsoft.PowerFx.Core.Binding
                 newDisplayName = logicalNodeName.Value;
 
                 if (type == DType.Invalid || (!type.IsOptionSet && !type.IsView && type.AssociatedDataSources == default))
+                {
                     return logicalNodeName;
+                }
 
                 // Skip trying to match display names if the type isn't associated with a data source, an option set or view
                 if (!type.AssociatedDataSources.Any() && !type.IsOptionSet && !type.IsView && !type.HasExpandInfo)
+                {
                     return logicalNodeName;
+                }
 
                 var useUpdatedDisplayNames = (type.AssociatedDataSources.FirstOrDefault()?.IsConvertingDisplayNameMapping ?? false) || (type.OptionSetInfo?.IsConvertingDisplayNameMapping ?? false) || (type.ViewInfo?.IsConvertingDisplayNameMapping ?? false) || _txb._forceUpdateDisplayNames;
                 var updatedDisplayNamesType = type;
@@ -2514,7 +2685,9 @@ namespace Microsoft.PowerFx.Core.Binding
                     }
 
                     if (maybeDisplayName != null)
+                    {
                         newDisplayName = new DName(maybeDisplayName);
+                    }
                 }
                 else
                 {
@@ -2547,14 +2720,19 @@ namespace Microsoft.PowerFx.Core.Binding
                 // e.g. With({}, Set(x, 1); Set(y, x + 1)) -- we need to indicate that "x + 1" cannot be cached and
                 // expect to retain the same value throughout the chained operator's scope.
                 if (_txb.GetVolatileVariables(node).Contains(node.Ident.Name))
+                {
                     _txb.SetIsUnliftable(node, true);
+                }
 
                 // [@name]
                 if (node.Ident.AtToken != null)
                 {
                     if (haveNameResolver)
+                    {
                         lookupPrefs |= NameLookupPreferences.GlobalsOnly;
+                    }
                 }
+
                 // name[@field]
                 else if (IsRowScopeAlias(node, out var scope))
                 {
@@ -2566,13 +2744,17 @@ namespace Microsoft.PowerFx.Core.Binding
                     nodeName = GetLogicalNodeNameAndUpdateDisplayNames(scope.Type, node.Ident);
 
                     if (scope.Nest < _currentScope.Nest)
+                    {
                         _txb.SetBlockScopedConstantNode(node);
+                    }
+
                     _txb.SetType(node, scope.Type);
                     _txb.SetInfo(node, info);
                     _txb.SetLambdaScopeLevel(node, info.UpCount);
                     _txb.AddFieldToQuerySelects(scope.Type, nodeName);
                     return;
                 }
+
                 // fieldName (unqualified)
                 else if (IsRowScopeField(node, out scope, out fError, out var isWholeScope))
                 {
@@ -2580,7 +2762,9 @@ namespace Microsoft.PowerFx.Core.Binding
 
                     // Detected access to a pageable dataEntity in row scope, error was set
                     if (fError)
+                    {
                         return;
+                    }
 
                     var nodeType = scope.Type;
 
@@ -2594,7 +2778,9 @@ namespace Microsoft.PowerFx.Core.Binding
                     {
                         info = FirstNameInfo.Create(BindKind.LambdaFullRecord, node, scope.Nest, _currentScope.Nest, scope.Data);
                         if (scope.Nest < _currentScope.Nest)
+                        {
                             _txb.SetBlockScopedConstantNode(node);
+                        }
                     }
 
                     Contracts.Assert(info.UpCount >= 0);
@@ -2629,7 +2815,9 @@ namespace Microsoft.PowerFx.Core.Binding
                 }
 
                 if (node.Parent is DottedNameNode)
+                {
                     lookupPrefs |= NameLookupPreferences.HasDottedNameParent;
+                }
 
                 // Check if this control property has local scope name resolver.
                 var localScopeNameResolver = _txb.LocalRuleScopeResolver;
@@ -2664,6 +2852,7 @@ namespace Microsoft.PowerFx.Core.Binding
                     _txb.SetInfo(node, fnInfo ?? FirstNameInfo.Create(node, default(NameLookupInfo)));
                     return;
                 }
+
                 if (lookupInfo.Kind == BindKind.ThisItem)
                 {
                     _txb._hasThisItemReference = true;
@@ -2693,9 +2882,14 @@ namespace Microsoft.PowerFx.Core.Binding
 
                         var thisItemType = default(DType);
                         if (lookupInfo.Data is IExternalControl outerControl)
+                        {
                             thisItemType = outerControl.ThisItemType;
+                        }
+
                         if (thisItemType != default && thisItemType.HasExpandInfo)
+                        {
                             parentEntityPath = thisItemType.ExpandInfo.ExpandPath.ToString();
+                        }
 
                         lookupType = GetExpandedEntityType(lookupType, parentEntityPath);
                         fnInfo = FirstNameInfo.Create(node, lookupInfo, lookupInfo.Type.ExpandInfo);
@@ -2720,7 +2914,9 @@ namespace Microsoft.PowerFx.Core.Binding
 
                     // If the current property doesn't support global control references, set an error
                     if (_txb.CurrentPropertyRequiresDefaultableReferences)
+                    {
                         _txb.ErrorContainer.EnsureError(node, TexlStrings.ErrInvalidControlReference);
+                    }
                 }
 
                 // Check if we are referencing an errored data source and report the error.
@@ -2736,7 +2932,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 UpdateBindKindUseFlags(lookupInfo.Kind);
 
                 // Update statefulness of global datasources excluding dynamic datasources.
-                if ((lookupInfo.Kind == BindKind.Data && !_txb._glue.IsDynamicDataSourceInfo(lookupInfo.Data)))
+                if (lookupInfo.Kind == BindKind.Data && !_txb._glue.IsDynamicDataSourceInfo(lookupInfo.Data))
                 {
                     _txb.SetStateful(node, true);
                 }
@@ -2753,6 +2949,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 {
                     _txb.ErrorContainer.EnsureError(node, TexlStrings.ErrValueMustBeFullyQualified);
                 }
+
                 // Any connectedDataSourceInfo or option set or view needs to be accessed asynchronously to allow data to be loaded.
                 if (connectedDataSourceInfo != null || lookupInfo.Kind == BindKind.OptionSet || lookupInfo.Kind == BindKind.View)
                 {
@@ -2761,7 +2958,9 @@ namespace Microsoft.PowerFx.Core.Binding
                     // If we have a static declaration of an OptionSet (primarily from tests) there is no entity we need to import
                     // If view no need to verify entity existence
                     if (lookupInfo.Type.OptionSetInfo == null || lookupInfo.Kind == BindKind.View)
+                    {
                         return;
+                    }
 
                     var relatedEntityName = new DName(lookupInfo.Type.OptionSetInfo.RelatedEntityName);
                     if (!haveNameResolver || !_nameResolver.LookupGlobalEntity(relatedEntityName, out var entityLookupInfo))
@@ -2842,7 +3041,9 @@ namespace Microsoft.PowerFx.Core.Binding
                     Contracts.AssertValue(scope);
 
                     if (!scope.CreatesRowScope)
+                    {
                         continue;
+                    }
 
                     // If the scope identifier isn't required, look up implicit accesses
                     if (!scope.RequireScopeIdentifier)
@@ -2855,7 +3056,9 @@ namespace Microsoft.PowerFx.Core.Binding
                             DType.TryGetConvertedDisplayNameAndLogicalNameForColumn(scope.Type, nodeName.Value, out var maybeLogicalName, out _) ||
                             DType.TryGetLogicalNameForColumn(scope.Type, nodeName.Value, out maybeLogicalName);
                         if (usesDisplayName)
+                        {
                             nodeName = new DName(maybeLogicalName);
+                        }
 
                         if (scope.Type.TryGetType(nodeName, out var typeTmp))
                         {
@@ -2864,7 +3067,9 @@ namespace Microsoft.PowerFx.Core.Binding
                             {
                                 var parentEntityPath = string.Empty;
                                 if (scope.Type.HasExpandInfo)
+                                {
                                     parentEntityPath = scope.Type.ExpandInfo.ExpandPath.ToString();
+                                }
 
                                 // We cannot access pageable entities in row-scope, as it will generate too many calls to the connector
                                 // Set an error and skip it.
@@ -2887,6 +3092,7 @@ namespace Microsoft.PowerFx.Core.Binding
                                 var type = scope.Type.SetType(ref fError, DPath.Root.Append(nodeName), expandedEntityType);
                                 scope = new Scope(scope.Call, scope.Parent, type, scope.ScopeIdentifier, scope.RequireScopeIdentifier, expandedEntityType.ExpandInfo);
                             }
+
                             return true;
                         }
                     }
@@ -2909,11 +3115,15 @@ namespace Microsoft.PowerFx.Core.Binding
                 scope = default;
 
                 if (!node.IsLhs)
+                {
                     return false;
+                }
 
                 var dotted = node.Parent.AsDottedName().VerifyValue();
                 if (!dotted.UsesBracket)
+                {
                     return false;
+                }
 
                 // Look up the name as a scope alias.
                 for (scope = _currentScope; scope != null; scope = scope.Parent)
@@ -2921,7 +3131,9 @@ namespace Microsoft.PowerFx.Core.Binding
                     Contracts.AssertValue(scope);
 
                     if (!scope.CreatesRowScope || scope.Call == null)
+                    {
                         continue;
+                    }
 
                     // There is no row scope alias, so we have to rely on a heuristic here.
                     // Look for the first scope whose parent call specifies a matching FirstName arg0.
@@ -2995,7 +3207,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
             private void UpdateBindKindUseFlags(BindKind bindKind)
             {
-                Contracts.Assert(BindKind._Min <= bindKind && bindKind < BindKind._Lim);
+                Contracts.Assert(bindKind >= BindKind.Min && bindKind < BindKind.Lim);
 
                 switch (bindKind)
                 {
@@ -3049,7 +3261,9 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 var volatileVariables = _txb.GetVolatileVariables(node);
                 foreach (var child in node.Children)
+                {
                     _txb.AddVolatileVariables(child, volatileVariables);
+                }
 
                 return true;
             }
@@ -3109,6 +3323,7 @@ namespace Microsoft.PowerFx.Core.Binding
                     {
                         typeRhs = leftType.GetEnumSupertype();
                     }
+
                     // ..otherwise do a slower lookup by type for the remaining 1% of cases,
                     // such as text1!Fill!Rouge, etc.
                     // This is O(n) in the number of registered enums.
@@ -3140,7 +3355,9 @@ namespace Microsoft.PowerFx.Core.Binding
                     var (controlInfo, isIndirectPropertyUsage) = GetLHSControlInfo(node);
 
                     if (isIndirectPropertyUsage)
+                    {
                         _txb.UsedControlProperties.Add(nameRhs);
+                    }
 
                     // Explicitly block accesses to the parent's nested-aware property.
                     if (controlInfo != null && UsesParentsNestedAwareProperty(controlInfo, nameRhs))
@@ -3173,7 +3390,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
                     // We block the property access usage for datasource of the command component.
                     if (template.IsCommandComponent &&
-                        (_txb._glue.IsPrimaryCommandComponentProperty(property)))
+                        _txb._glue.IsPrimaryCommandComponentProperty(property))
                     {
                         SetDottedNameError(node, TexlStrings.ErrInvalidPropertyReference);
                         return;
@@ -3184,7 +3401,7 @@ namespace Microsoft.PowerFx.Core.Binding
                     // We block the property access usage for context property of the command component instance unless it's the same command control.
                     if (lhsControlInfo != null &&
                         lhsControlInfo.IsCommandComponentInstance &&
-                        (_txb._glue.IsContextProperty(property)) &&
+                        _txb._glue.IsContextProperty(property) &&
                         currentControl != null && currentControl != lhsControlInfo)
                     {
                         SetDottedNameError(node, TexlStrings.ErrInvalidPropertyReference);
@@ -3204,6 +3421,7 @@ namespace Microsoft.PowerFx.Core.Binding
                         SetDottedNameError(node, TexlStrings.ErrInvalidControlReference);
                         return;
                     }
+
                     // If the property has pass-through input (e.g. AllItems, Selected, etc), the correct RHS (property)
                     // expando type is not available in the "v" type. We try delay calculating this until we need it as this is
                     // an expensive operation especially for form control which generally has tons of nested controls. So we calculate the type here.
@@ -3260,7 +3478,9 @@ namespace Microsoft.PowerFx.Core.Binding
                     }
 
                     if (property.IsScopedProperty && property.ScopeFunctionPrototype.IsAsync)
+                    {
                         _txb.FlagPathAsAsync(node);
+                    }
                 }
                 else if (!leftType.TryGetType(nameRhs, out typeRhs))
                 {
@@ -3276,6 +3496,7 @@ namespace Microsoft.PowerFx.Core.Binding
                             SetDottedNameError(node, TexlStrings.ErrInvalidName);
                             return;
                         }
+
                         typeRhs = property.Type;
                     }
                     else
@@ -3363,6 +3584,7 @@ namespace Microsoft.PowerFx.Core.Binding
                         {
                             resultType = DType.AttachDataSourceInfo(resultType, cds, attachToNestedType: false);
                         }
+
                         _txb.SetType(node, resultType);
                         canBePageable = false;
                     }
@@ -3387,7 +3609,9 @@ namespace Microsoft.PowerFx.Core.Binding
                 _txb.SetConstant(node, isConstant);
                 _txb.SetSelfContainedConstant(node, leftType.IsEnum || (leftType.IsAggregate && _txb.IsSelfContainedConstant(node.Left)));
                 if (_txb.IsBlockScopedConstant(node.Left))
+                {
                     _txb.SetBlockScopedConstantNode(node);
+                }
 
                 _txb.SetScopeUseSet(node, JoinScopeUseSets(node.Left));
 
@@ -3433,7 +3657,9 @@ namespace Microsoft.PowerFx.Core.Binding
                 var lhsType = _txb.GetType(node.Left);
 
                 if (lhsType.HasExpandInfo)
+                {
                     entityPath = lhsType.ExpandInfo.ExpandPath.ToString();
+                }
 
                 return GetExpandedEntityType(entityType, entityPath);
             }
@@ -3446,7 +3672,10 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 var expandEntityInfo = expandEntityType.ExpandInfo;
 
-                if (expandEntityInfo.ParentDataSource is not IExternalTabularDataSource dsInfo) return expandEntityType;
+                if (expandEntityInfo.ParentDataSource is not IExternalTabularDataSource dsInfo)
+                {
+                    return expandEntityType;
+                }
 
 
                 // This will cache expandend types of entities in QueryOptions
@@ -3506,7 +3735,9 @@ namespace Microsoft.PowerFx.Core.Binding
                 Contracts.Assert(propertyName.IsValid);
 
                 if (_nameResolver == null || _nameResolver.CurrentEntity is not IExternalControl currentControlInfo)
+                {
                     return false;
+                }
 
                 return currentControlInfo.IsReplicable &&
                         !currentControlInfo.Template.HasProperty(_nameResolver.CurrentProperty.Value, PropertyRuleCategory.Behavior) &&
@@ -3547,6 +3778,7 @@ namespace Microsoft.PowerFx.Core.Binding
                                 _txb.SetType(node, DType.Number);
                                 break;
                         }
+
                         break;
                     case UnaryOp.Percent:
                         CheckType(node.Child, DType.Number, /* coerced: */ DType.String, DType.Boolean, DType.Date, DType.Time, DType.DateTimeNoTimeZone, DType.DateTime);
@@ -3691,6 +3923,7 @@ namespace Microsoft.PowerFx.Core.Binding
                                     // DateTime + Date in any other arrangement is an error
                                     ReportInvalidOperation();
                                 }
+
                                 break;
                             case DKind.Time:
                                 // DateTime + Time in any other arrangement is an error
@@ -3702,6 +3935,7 @@ namespace Microsoft.PowerFx.Core.Binding
                                 _txb.SetType(node, DType.DateTime);
                                 break;
                         }
+
                         break;
                     case DKind.Date:
                         switch (rightKind)
@@ -3719,6 +3953,7 @@ namespace Microsoft.PowerFx.Core.Binding
                                     // Date + Date in any other arrangement is an error
                                     ReportInvalidOperation();
                                 }
+
                                 break;
                             case DKind.Time:
                                 unary = node.Right.AsUnaryOpLit();
@@ -3732,6 +3967,7 @@ namespace Microsoft.PowerFx.Core.Binding
                                     // Date + Time = DateTime
                                     _txb.SetType(node, DType.DateTime);
                                 }
+
                                 break;
                             case DKind.DateTime:
                                 // Date + DateTime = number but ONLY if its really subtraction Date + '-DateTime'
@@ -3746,6 +3982,7 @@ namespace Microsoft.PowerFx.Core.Binding
                                     // Date + DateTime in any other arrangement is an error
                                     ReportInvalidOperation();
                                 }
+
                                 break;
                             default:
                                 // Date + number = Date
@@ -3753,6 +3990,7 @@ namespace Microsoft.PowerFx.Core.Binding
                                 _txb.SetType(node, DType.Date);
                                 break;
                         }
+
                         break;
                     case DKind.Time:
                         switch (rightKind)
@@ -3770,6 +4008,7 @@ namespace Microsoft.PowerFx.Core.Binding
                                     // Time + Time in any other arrangement is an error
                                     ReportInvalidOperation();
                                 }
+
                                 break;
                             case DKind.Date:
                                 unary = node.Right.AsUnaryOpLit();
@@ -3783,6 +4022,7 @@ namespace Microsoft.PowerFx.Core.Binding
                                     // Time + Date = DateTime
                                     _txb.SetType(node, DType.DateTime);
                                 }
+
                                 break;
                             case DKind.DateTime:
                                 // Time + DateTime in any other arrangement is an error
@@ -3794,6 +4034,7 @@ namespace Microsoft.PowerFx.Core.Binding
                                 _txb.SetType(node, DType.Time);
                                 break;
                         }
+
                         break;
                     default:
                         switch (rightKind)
@@ -3820,6 +4061,7 @@ namespace Microsoft.PowerFx.Core.Binding
                                 _txb.SetType(node, DType.Number);
                                 break;
                         }
+
                         break;
                 }
             }
@@ -3891,7 +4133,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 Contracts.AssertValue(left);
                 Contracts.AssertValue(right);
                 Contracts.AssertValue(left.Parent);
-                Contracts.Assert(object.ReferenceEquals(left.Parent, right.Parent));
+                Contracts.Assert(ReferenceEquals(left.Parent, right.Parent));
 
                 var typeLeft = _txb.GetType(left);
                 var typeRight = _txb.GetType(right);
@@ -3900,10 +4142,13 @@ namespace Microsoft.PowerFx.Core.Binding
                 if (!(typeLeft.IsPrimitive && typeRight.IsPrimitive) && !(typeLeft.IsPolymorphic && typeRight.IsPolymorphic) && !(typeLeft.IsControl && typeRight.IsControl)
                     && !(typeLeft.IsPolymorphic && typeRight.IsRecord) && !(typeLeft.IsRecord && typeRight.IsPolymorphic))
                 {
-                    var leftTypeDisambiguation = typeLeft.IsOptionSet && typeLeft.OptionSetInfo != null ? $"({typeLeft.OptionSetInfo.Name})" : "";
-                    var rightTypeDisambiguation = typeRight.IsOptionSet && typeRight.OptionSetInfo != null ? $"({typeRight.OptionSetInfo.Name})" : "";
+                    var leftTypeDisambiguation = typeLeft.IsOptionSet && typeLeft.OptionSetInfo != null ? $"({typeLeft.OptionSetInfo.Name})" : string.Empty;
+                    var rightTypeDisambiguation = typeRight.IsOptionSet && typeRight.OptionSetInfo != null ? $"({typeRight.OptionSetInfo.Name})" : string.Empty;
 
-                    _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Severe, left.Parent, TexlStrings.ErrIncompatibleTypesForEquality_Left_Right,
+                    _txb.ErrorContainer.EnsureError(
+                        DocumentErrorSeverity.Severe,
+                        left.Parent,
+                        TexlStrings.ErrIncompatibleTypesForEquality_Left_Right,
                         typeLeft.GetKindString() + leftTypeDisambiguation,
                         typeRight.GetKindString() + rightTypeDisambiguation);
                     return;
@@ -3913,7 +4158,9 @@ namespace Microsoft.PowerFx.Core.Binding
                 if ((typeLeft.Equals(DType.Guid) && !typeRight.Equals(DType.Guid)) ||
                     (typeRight.Equals(DType.Guid) && !typeLeft.Equals(DType.Guid)))
                 {
-                    _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Severe, left.Parent,
+                    _txb.ErrorContainer.EnsureError(
+                        DocumentErrorSeverity.Severe,
+                        left.Parent,
                         TexlStrings.ErrGuidStrictComparison);
                     return;
                 }
@@ -3921,10 +4168,13 @@ namespace Microsoft.PowerFx.Core.Binding
                 // Special case for option set values, it should produce an error when the base option sets are different
                 if (typeLeft.Kind == DKind.OptionSetValue && !typeLeft.Accepts(typeRight))
                 {
-                    var leftTypeDisambiguation = typeLeft.IsOptionSet && typeLeft.OptionSetInfo != null ? $"({typeLeft.OptionSetInfo.Name})" : "";
-                    var rightTypeDisambiguation = typeRight.IsOptionSet && typeRight.OptionSetInfo != null ? $"({typeRight.OptionSetInfo.Name})" : "";
+                    var leftTypeDisambiguation = typeLeft.IsOptionSet && typeLeft.OptionSetInfo != null ? $"({typeLeft.OptionSetInfo.Name})" : string.Empty;
+                    var rightTypeDisambiguation = typeRight.IsOptionSet && typeRight.OptionSetInfo != null ? $"({typeRight.OptionSetInfo.Name})" : string.Empty;
 
-                    _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Severe, left.Parent, TexlStrings.ErrIncompatibleTypesForEquality_Left_Right,
+                    _txb.ErrorContainer.EnsureError(
+                        DocumentErrorSeverity.Severe,
+                        left.Parent,
+                        TexlStrings.ErrIncompatibleTypesForEquality_Left_Right,
                         typeLeft.GetKindString() + leftTypeDisambiguation,
                         typeRight.GetKindString() + rightTypeDisambiguation);
 
@@ -3934,10 +4184,13 @@ namespace Microsoft.PowerFx.Core.Binding
                 // Special case for view values, it should produce an error when the base views are different
                 if (typeLeft.Kind == DKind.ViewValue && !typeLeft.Accepts(typeRight))
                 {
-                    var leftTypeDisambiguation = typeLeft.IsView && typeLeft.ViewInfo != null ? $"({typeLeft.ViewInfo.Name})" : "";
-                    var rightTypeDisambiguation = typeRight.IsView && typeRight.ViewInfo != null ? $"({typeRight.ViewInfo.Name})" : "";
+                    var leftTypeDisambiguation = typeLeft.IsView && typeLeft.ViewInfo != null ? $"({typeLeft.ViewInfo.Name})" : string.Empty;
+                    var rightTypeDisambiguation = typeRight.IsView && typeRight.ViewInfo != null ? $"({typeRight.ViewInfo.Name})" : string.Empty;
 
-                    _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Severe, left.Parent, TexlStrings.ErrIncompatibleTypesForEquality_Left_Right,
+                    _txb.ErrorContainer.EnsureError(
+                        DocumentErrorSeverity.Severe,
+                        left.Parent,
+                        TexlStrings.ErrIncompatibleTypesForEquality_Left_Right,
                         typeLeft.GetKindString() + leftTypeDisambiguation,
                         typeRight.GetKindString() + rightTypeDisambiguation);
 
@@ -3958,7 +4211,10 @@ namespace Microsoft.PowerFx.Core.Binding
                         return;
                     }
 
-                    _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Warning, left.Parent, TexlStrings.ErrIncompatibleTypesForEquality_Left_Right,
+                    _txb.ErrorContainer.EnsureError(
+                        DocumentErrorSeverity.Warning,
+                        left.Parent,
+                        TexlStrings.ErrIncompatibleTypesForEquality_Left_Right,
                         typeLeft.GetKindString(),
                         typeRight.GetKindString());
                 }
@@ -4000,7 +4256,9 @@ namespace Microsoft.PowerFx.Core.Binding
                 _txb.SetSelfContainedConstant(node, isSelfContainedConstant);
 
                 if (isBlockScopedConstant)
+                {
                     _txb.SetBlockScopedConstantNode(node);
+                }
             }
 
             public override void PostVisit(VariadicOpNode node)
@@ -4029,7 +4287,9 @@ namespace Microsoft.PowerFx.Core.Binding
                     isConstant &= _txb.IsConstant(child);
                     isSelfContainedConstant &= _txb.IsSelfContainedConstant(child);
                     if (!isConstant && !isSelfContainedConstant)
+                    {
                         break;
+                    }
                 }
 
                 _txb.SetConstant(node, isConstant);
@@ -4053,7 +4313,9 @@ namespace Microsoft.PowerFx.Core.Binding
                 {
                     // Behavior property is blocked from outside the component.
                     if (isBehaviorOnly)
+                    {
                         return false;
+                    }
 
                     // If current property is output property of the component then access is allowed.
                     // Or if the rhs property is out put property then it's allowed which could only be possible if the current control is component definition.
@@ -4073,7 +4335,9 @@ namespace Microsoft.PowerFx.Core.Binding
                 var currentControl = _txb.Control;
                 var currentProperty = _txb.Property;
                 if (currentControl.IsComponentControl && currentControl.Template.ComponentType != ComponentType.CanvasComponent)
+                {
                     return true;
+                }
 
                 var infoTexlFunction = info.Function;
                 if (_txb._glue.IsComponentScopedPropertyFunction(infoTexlFunction))
@@ -4156,7 +4420,9 @@ namespace Microsoft.PowerFx.Core.Binding
 
                         // Translate the set to the parent (invocation) scope, to indicate that we are moving outside the lambda.
                         if (i <= info.Function.MaxArity && info.Function.IsLambdaParam(i))
+                        {
                             argScopeUseSet = argScopeUseSet.TranslateToParentScope();
+                        }
 
                         set = set.Union(argScopeUseSet);
                     }
@@ -4172,7 +4438,9 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 lookupInfo = default;
                 if (!(node.HeadNode is DottedNameNode dottedNameNode))
+                {
                     return false;
+                }
 
                 if (!(dottedNameNode.Left is FirstNameNode) &&
                     !(dottedNameNode.Left is ParentNode) &&
@@ -4252,11 +4520,17 @@ namespace Microsoft.PowerFx.Core.Binding
             private static void ArityError(int minArity, int maxArity, TexlNode node, int actual, IErrorContainer errors)
             {
                 if (maxArity == int.MaxValue)
+                {
                     errors.Error(node, TexlStrings.ErrBadArityMinimum, actual, minArity);
+                }
                 else if (minArity != maxArity)
+                {
                     errors.Error(node, TexlStrings.ErrBadArityRange, actual, minArity, maxArity);
+                }
                 else
+                {
                     errors.Error(node, TexlStrings.ErrBadArity, actual, minArity);
+                }
             }
 
             public override bool PreVisit(CallNode node)
@@ -4308,13 +4582,17 @@ namespace Microsoft.PowerFx.Core.Binding
                         nodeInp.Accept(this);
 
                         if (nodeInp.Kind == NodeKind.As)
+                        {
                             _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Severe, node, TexlStrings.ErrAsNotInContext);
+                        }
 
                         // Only if there is a projection map associated with this will we need to set a scope
                         var typescope = _txb.GetType(nodeInp);
 
                         if (typescope.AssociatedDataSources.Any() && typescope.IsTable)
+                        {
                             maybeScope = new Scope(node, _currentScope, typescope.ToRecord(), createsRowScope: false);
+                        }
 
                         startArg++;
                     }
@@ -4413,9 +4691,11 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 FirstNameNode dsNode;
                 if (maybeFunc.TryGetDataSourceNodes(node, _txb, out var dsNodes) && ((dsNode = dsNodes.FirstOrDefault()) != default(FirstNameNode)))
+                {
                     _currentScopeDsNodeId = dsNode.Id;
+                }
 
-                var typeInput = (argTypes[0] = _txb.GetType(nodeInput));
+                var typeInput = argTypes[0] = _txb.GetType(nodeInput);
 
                 // Get the cursor type for this arg. Note we're not adding document errors at this point.
                 DType typeScope;
@@ -4481,12 +4761,19 @@ namespace Microsoft.PowerFx.Core.Binding
                     Contracts.Assert(_currentScope == scopeNew || _currentScope == scopeNew.Parent);
 
                     if (maybeFunc.AllowsRowScopedParamDelegationExempted(i))
+                    {
                         _txb.SetSupportingRowScopedDelegationExemptionNode(args[i]);
+                    }
+
                     if (maybeFunc.IsEcsExcemptedLambda(i))
+                    {
                         _txb.SetEcsExcemptLambdaNode(args[i]);
+                    }
 
                     if (volatileVariables != null)
+                    {
                         _txb.AddVolatileVariables(args[i], volatileVariables);
+                    }
 
                     // Use the new scope only for lambda args.
                     _currentScope = (maybeFunc.IsLambdaParam(i) && scopeInfo.AppliesToArgument(i)) ? scopeNew : scopeNew.Parent;
@@ -4510,7 +4797,9 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 // Now check and mark the path as async.
                 if (maybeFunc.IsAsyncInvocation(node, _txb))
+                {
                     _txb.FlagPathAsAsync(node);
+                }
 
                 _currentScope = scopeNew.Parent;
                 PostVisit(node.Args);
@@ -4525,7 +4814,9 @@ namespace Microsoft.PowerFx.Core.Binding
                 // This doesn't need to be done on the other nodes (but can) because their return type doesn't depend
                 // on their argument types.
                 if (!fArgsValid)
+                {
                     _txb.ErrorContainer.Error(DocumentErrorSeverity.Severe, node, TexlStrings.ErrInvalidArgs_Func, maybeFunc.Name);
+                }
 
                 // Set the inferred return type for the node.
                 _txb.SetType(node, returnType);
@@ -4533,7 +4824,9 @@ namespace Microsoft.PowerFx.Core.Binding
                 if (fArgsValid && nodeToCoercedTypeMap != null)
                 {
                     foreach (var nodeToCoercedTypeKvp in nodeToCoercedTypeMap)
+                    {
                         _txb.SetCoercedType(nodeToCoercedTypeKvp.Key, nodeToCoercedTypeKvp.Value);
+                    }
                 }
 
                 FinalizeCall(node);
@@ -4554,23 +4847,28 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 var func = callInfo?.Function;
                 if (func == null)
+                {
                     return;
+                }
 
                 // Invalid datasources always result in error
                 if (func.IsBehaviorOnly && !_txb.IsBehavior)
                 {
                     _txb.ErrorContainer.EnsureError(node, TexlStrings.ErrBehaviorPropertyExpected);
                 }
+
                 // Test-only functions can only be used within test cases.
                 else if (func.IsTestOnly && _txb.Property != null && !_txb.Property.IsTestCaseProperty)
                 {
                     _txb.ErrorContainer.EnsureError(node, TexlStrings.ErrTestPropertyExpected);
                 }
+
                 // Auto-refreshable functions cannot be used in behavior rules.
                 else if (func.IsAutoRefreshable && _txb.IsBehavior)
                 {
                     _txb.ErrorContainer.EnsureError(node, TexlStrings.ErrAutoRefreshNotAllowed);
                 }
+
                 // Give warning if returning dynamic metadata without a known dynamic type
                 else if (func.IsDynamic && _nameResolver.Document.Properties.EnabledFeatures.IsDynamicSchemaEnabled)
                 {
@@ -4584,6 +4882,7 @@ namespace Microsoft.PowerFx.Core.Binding
                     var errorMessage = callInfo.Function.IsBehaviorOnly ? TexlStrings.ErrUnSupportedComponentBehaviorInvocation : TexlStrings.ErrUnSupportedComponentDataPropertyAccess;
                     _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Critical, node, errorMessage);
                 }
+
                 // Apply custom function validation last
                 else if (!func.PostVisitValidation(_txb, node))
                 {
@@ -4606,11 +4905,15 @@ namespace Microsoft.PowerFx.Core.Binding
                 // This node will skip delegation check, be codegened as constant and be simply passed into the delegation query.
                 // e.g. Today() in formula Filter(CDS, CreatedDate < Today())
                 if (func.IsGlobalReliant || (func.IsPure && _txb.IsBlockScopedConstant(node.Args)))
+                {
                     _txb.SetBlockScopedConstantNode(node);
+                }
 
                 // Update field projection info
                 if (_txb.QueryOptions != null)
+                {
                     func.UpdateDataQuerySelects(node, _txb, _txb.QueryOptions);
+                }
             }
 
             private bool IsIncorrectlySideEffectful(CallNode node, out ErrorResourceKey errorKey, out CallNode badAncestor)
@@ -4623,10 +4926,14 @@ namespace Microsoft.PowerFx.Core.Binding
                 var call = _txb.GetInfo(node).VerifyValue();
                 var func = call.Function;
                 if (func == null || func.IsSelfContained)
+                {
                     return false;
+                }
 
                 if (!func.TryGetDataSource(node, _txb, out var ds))
+                {
                     ds = null;
+                }
 
                 var ancestorScope = _currentScope;
                 while (ancestorScope != null)
@@ -4709,12 +5016,18 @@ namespace Microsoft.PowerFx.Core.Binding
                 for (var i = 0; i < argCount; i++)
                 {
                     if (func.IsMetadataTypeArg(i))
+                    {
                         args[i].Accept(_txb.BinderNodeMetadataArgTypeVisitor);
+                    }
                     else
+                    {
                         args[i].Accept(this);
+                    }
 
                     if (args[i].Kind == NodeKind.As)
+                    {
                         _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Severe, node, TexlStrings.ErrAsNotInContext);
+                    }
                 }
 
                 PostVisit(node.Args);
@@ -4745,7 +5058,9 @@ namespace Microsoft.PowerFx.Core.Binding
                 // Typecheck the invocation and infer the return type.
                 fArgsValid = func.CheckInvocation(_txb, args, argTypes, _txb.ErrorContainer, out returnType, out _);
                 if (!fArgsValid)
+                {
                     _txb.ErrorContainer.Error(DocumentErrorSeverity.Severe, node, TexlStrings.ErrInvalidArgs_Func, func.Name);
+                }
 
                 _txb.SetType(node, returnType);
             }
@@ -4774,7 +5089,9 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 TexlFunction funcWithScope = null;
                 if (info != null && info.Function != null && scopeNew != null)
+                {
                     funcWithScope = info.Function;
+                }
 
                 Contracts.Assert(scopeNew == null || funcWithScope != null || overloads.Any(fnc => fnc.RequiresDataSourceScope));
 
@@ -4792,17 +5109,24 @@ namespace Microsoft.PowerFx.Core.Binding
                         // If the function affects app/component variable, update the cache info if it is the arg affects scopeVariableName.
                         _txb.AffectsScopeVariableName = affectScopeVariablefunc.ScopeVariableNameAffectingArg() == i;
                     }
+
                     // Use the new scope only for lambda args and args with datasource scope for display name matching.
                     if (scopeNew != null)
                     {
                         if (overloads.Any(fnc => fnc.ArgMatchesDatasourceType(i)) || (i <= funcWithScope.MaxArity && funcWithScope.IsLambdaParam(i)))
+                        {
                             _currentScope = scopeNew;
+                        }
                         else
+                        {
                             _currentScope = scopeNew.Parent;
+                        }
                     }
 
                     if (volatileVariables != null)
+                    {
                         _txb.AddVolatileVariables(args[i], volatileVariables);
+                    }
 
                     args[i].Accept(this);
 
@@ -4810,17 +5134,23 @@ namespace Microsoft.PowerFx.Core.Binding
                     _txb.AddVolatileVariables(node, _txb.GetVolatileVariables(args[i]));
 
                     if (args[i].Kind == NodeKind.As)
+                    {
                         _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.ErrAsNotInContext);
+                    }
                 }
 
                 if (scopeNew != null)
+                {
                     _currentScope = scopeNew.Parent;
+                }
 
                 // Since variable weight may have changed as we accepted the children, we need to propagate
                 // this value to the args
                 var adjustedVolatileVariables = _txb.GetVolatileVariables(node);
                 if (adjustedVolatileVariables != null)
+                {
                     _txb.AddVolatileVariables(node.Args, adjustedVolatileVariables);
+                }
 
                 PostVisit(node.Args);
 
@@ -4883,7 +5213,9 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 var modifiedIdentifiers = func.GetIdentifierOfModifiedValue(args, out _);
                 if (modifiedIdentifiers != null)
+                {
                     _txb.AddVolatileVariables(node, modifiedIdentifiers.Select(identifier => identifier.Name.ToString()).ToImmutableHashSet());
+                }
 
                 // Typecheck the invocation and infer the return type.
                 var argTypes = args.Select(_txb.GetType).ToArray();
@@ -4893,14 +5225,18 @@ namespace Microsoft.PowerFx.Core.Binding
                 fArgsValid = func.CheckInvocation(_txb, args, argTypes, _txb.ErrorContainer, out returnType, out var nodeToCoercedTypeMap);
 
                 if (!fArgsValid && !func.HasPreciseErrors)
+                {
                     _txb.ErrorContainer.Error(DocumentErrorSeverity.Severe, node, TexlStrings.ErrInvalidArgs_Func, func.Name);
+                }
 
                 _txb.SetType(node, returnType);
 
                 if (fArgsValid && nodeToCoercedTypeMap != null)
                 {
                     foreach (var nodeToCoercedTypeKvp in nodeToCoercedTypeMap)
+                    {
                         _txb.SetCoercedType(nodeToCoercedTypeKvp.Key, nodeToCoercedTypeKvp.Value);
+                    }
                 }
             }
 
@@ -4910,9 +5246,13 @@ namespace Microsoft.PowerFx.Core.Binding
                 Contracts.AssertNonEmpty(name);
 
                 if (_nameResolver != null)
+                {
                     return _nameResolver.LookupFunctions(theNamespace, name);
+                }
                 else
+                {
                     return Enumerable.Empty<TexlFunction>();
+                }
             }
 
             /// <summary>
@@ -4920,26 +5260,26 @@ namespace Microsoft.PowerFx.Core.Binding
             /// returns true if it is found.
             /// </summary>
             /// <param name="txb">
-            /// Binding that will help select the best overload
+            /// Binding that will help select the best overload.
             /// </param>
             /// <param name="node">
-            /// CallNode for which the best overload will be determined
+            /// CallNode for which the best overload will be determined.
             /// </param>
             /// <param name="argTypes">
-            /// List of argument types for <see cref="node.Args"/>
+            /// List of argument types for <see cref="node.Args"/>.
             /// </param>
             /// <param name="overloads">
             /// All overloads for <see cref="node"/>. An element of this list will be returned.
             /// </param>
             /// <param name="bestOverload">
-            /// Set to the best overload when this method completes
+            /// Set to the best overload when this method completes.
             /// </param>
             /// <param name="nodeToCoercedTypeMap">
             /// Set to the types to which <see cref="node.Args"/> must be coerced in order for
-            /// <see cref="bestOverload"/> to be valid
+            /// <see cref="bestOverload"/> to be valid.
             /// </param>
             /// <param name="returnType">
-            /// The return type for <see cref="bestOverload"/>
+            /// The return type for <see cref="bestOverload"/>.
             /// </param>
             /// <returns>
             /// True if a valid overload was found, false if not.
@@ -4965,7 +5305,9 @@ namespace Microsoft.PowerFx.Core.Binding
                     nodeToCoercedTypeMap = null;
 
                     if (carg < maybeFunc.MinArity || carg > maybeFunc.MaxArity)
+                    {
                         continue;
+                    }
 
                     var typeCheckSucceeded = false;
 
@@ -5013,7 +5355,7 @@ namespace Microsoft.PowerFx.Core.Binding
             }
 
             /// <summary>
-            /// Returns best overload in case there are no matches based on first argument and order
+            /// Returns best overload in case there are no matches based on first argument and order.
             /// </summary>
             private TexlFunction FindBestErrorOverload(TexlFunction[] overloads, DType[] argTypes, int cArg)
             {
@@ -5032,6 +5374,7 @@ namespace Microsoft.PowerFx.Core.Binding
                         return candidate;
                     }
                 }
+
                 return candidates.FirstOrDefault();
             }
 
@@ -5056,7 +5399,9 @@ namespace Microsoft.PowerFx.Core.Binding
                     if (nodeToCoercedTypeMap != null)
                     {
                         foreach (var nodeToCoercedTypeKvp in nodeToCoercedTypeMap)
+                        {
                             _txb.SetCoercedType(nodeToCoercedTypeKvp.Key, nodeToCoercedTypeKvp.Value);
+                        }
                     }
 
                     return;
@@ -5078,7 +5423,9 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 // We exhausted the overloads without finding an exact match, so post a document error.
                 if (!someFunc.HasPreciseErrors)
+                {
                     _txb.ErrorContainer.Error(node, TexlStrings.ErrInvalidArgs_Func, someFunc.Name);
+                }
 
                 // The final CheckInvocation call will post all the necessary document errors.
                 someFunc.CheckInvocation(_txb, args, argTypes, _txb.ErrorContainer, out returnType, out _);
@@ -5119,9 +5466,11 @@ namespace Microsoft.PowerFx.Core.Binding
                     }
 
                     if (scope.Type.TryGetType(name, out var tmpType))
+                    {
                         return true;
-
+                    }
                 }
+
                 return false;
             }
 
@@ -5170,8 +5519,13 @@ namespace Microsoft.PowerFx.Core.Binding
                         }
                         else if (!fieldType.Accepts(_txb.GetType(node.Children[i])))
                         {
-                            _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Severe, node.Children[i], TexlStrings.ErrColumnTypeMismatch_ColName_ExpectedType_ActualType,
-                                displayName, fieldType.GetKindString(), _txb.GetType(node.Children[i]).GetKindString());
+                            _txb.ErrorContainer.EnsureError(
+                                DocumentErrorSeverity.Severe,
+                                node.Children[i],
+                                TexlStrings.ErrColumnTypeMismatch_ColName_ExpectedType_ActualType,
+                                displayName,
+                                fieldType.GetKindString(),
+                                _txb.GetType(node.Children[i]).GetKindString());
                             nodeType = DType.Error;
                         }
                     }
@@ -5179,15 +5533,21 @@ namespace Microsoft.PowerFx.Core.Binding
                     {
                         // For local records, check name/type match with scope
                         if (IsRecordScopeFieldName(fieldName, out var maybeScope))
+                        {
                             fieldName = GetLogicalNodeNameAndUpdateDisplayNames(maybeScope.Type, node.Ids[i], out displayName);
+                        }
                     }
 
                     if (nodeType != DType.Error)
                     {
                         if (nodeType.TryGetType(fieldName, out fieldType))
+                        {
                             _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Severe, node.Children[i], TexlStrings.ErrMultipleValuesForField_Name, displayName);
+                        }
                         else
+                        {
                             nodeType = nodeType.Add(fieldName, _txb.GetType(node.Children[i]));
+                        }
                     }
                 }
 
@@ -5210,18 +5570,26 @@ namespace Microsoft.PowerFx.Core.Binding
                     isSelfContainedConstant &= _txb.IsSelfContainedConstant(child);
 
                     if (!exprType.IsValid)
+                    {
                         exprType = childType;
+                    }
                     else if (exprType.CanUnionWith(childType))
+                    {
                         exprType = DType.Union(exprType, childType);
+                    }
                     else if (childType.CoercesTo(exprType))
+                    {
                         _txb.SetCoercedType(child, exprType);
+                    }
                     else
+                    {
                         _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Severe, child, TexlStrings.ErrTableDoesNotAcceptThisType);
+                    }
                 }
 
-                _txb.SetType(node, exprType.IsValid ?
-                    DType.CreateTable(new TypedName(exprType, new DName("Value"))) :
-                    DType.EmptyTable);
+                _txb.SetType(
+                    node, 
+                    exprType.IsValid ? DType.CreateTable(new TypedName(exprType, new DName("Value"))) : DType.EmptyTable);
                 SetVariadicNodePurity(node);
                 _txb.SetScopeUseSet(node, JoinScopeUseSets(node.Children));
                 _txb.SetSelfContainedConstant(node, isSelfContainedConstant);

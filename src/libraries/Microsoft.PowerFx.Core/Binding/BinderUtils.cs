@@ -1,5 +1,5 @@
-﻿using Microsoft.PowerFx.Core.Logging.Trackers;
-using Microsoft.PowerFx.Core.Functions;
+﻿using Microsoft.PowerFx.Core.Functions;
+using Microsoft.PowerFx.Core.Logging.Trackers;
 using Microsoft.PowerFx.Core.Syntax.Nodes;
 using Microsoft.PowerFx.Core.Utils;
 
@@ -16,7 +16,9 @@ namespace Microsoft.PowerFx.Core.Binding
             {
                 var rightNodeName = node.Right.Name;
                 if (binding.TryGetReplacedIdentName(node.Right, out var possibleRename))
+                {
                     rightNodeName = new DName(possibleRename);
+                }
 
                 path = path.Append(rightNodeName);
                 return true;
@@ -27,7 +29,9 @@ namespace Microsoft.PowerFx.Core.Binding
                 {
                     var rightNodeName = node.Right.Name;
                     if (binding.TryGetReplacedIdentName(node.Right, out var rename))
+                    {
                         rightNodeName = new DName(rename);
+                    }
 
                     path = DPath.Root.Append(rightNodeName);
                     return true;
@@ -36,7 +40,9 @@ namespace Microsoft.PowerFx.Core.Binding
                 // Check if the access was renamed:
                 var leftNodeName = firstName.Ident.Name;
                 if (binding.TryGetReplacedIdentName(firstName.Ident, out var possibleRename))
+                {
                     leftNodeName = new DName(possibleRename);
+                }
 
                 path = DPath.Root.Append(leftNodeName).Append(node.Right.Name);
                 return true;

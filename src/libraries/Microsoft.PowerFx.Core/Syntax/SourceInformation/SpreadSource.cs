@@ -46,12 +46,13 @@ namespace Microsoft.PowerFx.Core.Syntax.SourceInformation
                 newItems[i] = source.Clone(newNodes, newSpan);
                 i += 1; ;
             }
+
             return new SpreadSource(newItems);
         }
 
         public override string ToString()
         {
-            return string.Join("", Sources);
+            return string.Join(string.Empty, Sources);
         }
     }
 }

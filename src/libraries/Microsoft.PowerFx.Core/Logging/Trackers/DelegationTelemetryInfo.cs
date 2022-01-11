@@ -50,7 +50,9 @@ namespace Microsoft.PowerFx.Core.Logging.Trackers
             Contracts.AssertValueOrNull(func);
 
             if (func == null)
+            {
                 return CreateEmptyDelegationTelemetryInfo();
+            }
 
             return new DelegationTelemetryInfo(func.Name);
         }

@@ -62,6 +62,7 @@ namespace Microsoft.PowerFx.Tests
                     {
                         Write(x, writer);
                     }
+
                     writer.WriteEndArray();
                     break;
 

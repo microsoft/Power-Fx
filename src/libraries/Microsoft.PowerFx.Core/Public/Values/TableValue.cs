@@ -69,5 +69,5 @@ namespace Microsoft.PowerFx.Core.Public.Values
         {
             visitor.Visit(this);
         }
-    }   
+    }
 }

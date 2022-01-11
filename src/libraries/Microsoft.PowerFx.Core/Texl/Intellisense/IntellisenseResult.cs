@@ -16,23 +16,23 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
     internal class IntellisenseResult : IIntellisenseResult
     {
         /// <summary>
-        /// List of suggestions associated with the result
+        /// List of suggestions associated with the result.
         /// </summary>
         protected readonly List<IntellisenseSuggestion> _suggestions;
 
         /// <summary>
-        /// The script to which the result pertains
+        /// The script to which the result pertains.
         /// </summary>
         protected readonly string _script;
 
         /// <summary>
         /// List of candidate signatures for the Intellisense, compliant with Language Server Protocol
-        /// <see cref="SignatureHelp"/>
+        /// <see cref="SignatureHelp"/>.
         /// </summary>
         private readonly List<SignatureInformation> _functionSignatures;
 
         /// <summary>
-        /// List of candidate signatures for the Intellisense, compliant with Document Server intellisense
+        /// List of candidate signatures for the Intellisense, compliant with Document Server intellisense.
         /// </summary>
         protected readonly List<IntellisenseSuggestion> _functionOverloads;
 
@@ -50,15 +50,15 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
             _script = data.Script;
             Contracts.CheckValue(_script, "script");
             ReplacementStartIndex = data.ReplacementStartIndex;
-            Contracts.CheckParam(0 <= data.ReplacementStartIndex, "replacementStartIndex");
+            Contracts.CheckParam(data.ReplacementStartIndex >= 0, "replacementStartIndex");
 
             ReplacementLength = data.ReplacementLength;
-            Contracts.CheckParam(0 <= data.ReplacementLength, "replacementLength");
+            Contracts.CheckParam(data.ReplacementLength >= 0, "replacementLength");
 
             var argIndex = data.ArgIndex;
             var argCount = data.ArgCount;
-            Contracts.CheckParam(0 <= argIndex, "argIndex");
-            Contracts.CheckParam(0 <= argCount, "argCount");
+            Contracts.CheckParam(argIndex >= 0, "argIndex");
+            Contracts.CheckParam(argCount >= 0, "argCount");
             Contracts.Check(argIndex <= argCount, "argIndex out of bounds.");
 
             var func = data.CurFunc;
@@ -114,7 +114,7 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
                         }
 
                         // For variadic function, we want to generate FuncName(arg1,arg1,...,arg1,...) as description.
-                        if (func.SignatureConstraint != null && argCount > func.SignatureConstraint.RepeatTopLength && canParamOmit(func, argCount, argIndex, signature.Count(), signatureIndex))
+                        if (func.SignatureConstraint != null && argCount > func.SignatureConstraint.RepeatTopLength && CanParamOmit(func, argCount, argIndex, signature.Count(), signatureIndex))
                         {
                             funcDisplayString.Append("...");
                             signatureIndex += func.SignatureConstraint.RepeatSpan;
@@ -124,11 +124,14 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
                             funcDisplayString.Append(signature[signatureIndex]());
                             signatureIndex++;
                         }
+
                         argumentSeparator = listSep;
                     }
 
                     if (func.MaxArity > func.MinArity && func.MaxArity > argCount)
+                    {
                         funcDisplayString.Append(argumentSeparator + "...");
+                    }
 
                     funcDisplayString.Append(')');
                     var signatureInformation = new SignatureInformation()
@@ -179,11 +182,11 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
 
         /// <summary>
         /// Returns a string that represents the full call signature as defined by <see cref="function"/>,
-        /// <see cref="parameters"/>, as well as <see cref="LocalizationUtils.CurrentLocaleListSeparator"/>
+        /// <see cref="parameters"/>, as well as <see cref="LocalizationUtils.CurrentLocaleListSeparator"/>.
         /// </summary>
         /// <param name="functionName"></param>
         /// <param name="parameters">
-        ///     List of parameters in the relevant signature for <see cref="function"/>
+        ///     List of parameters in the relevant signature for <see cref="function"/>.
         /// </param>
         /// <returns>
         /// A label that represents the call signature; e.g. <code>Set(variable, lambda)</code>
@@ -211,7 +214,7 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
         /// function and index.  Provides special augmentation behavior via handlers.
         /// </summary>
         /// <param name="data">
-        /// Data off of which the result is based
+        /// Data off of which the result is based.
         /// </param>
         /// <param name="paramName"></param>
         /// <param name="invariantParamName1></param>
@@ -250,16 +253,18 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
 
         // GroupBy(source, column_name, column_name, ..., column_name, ..., group_name, ...)
         // AddColumns(source, column, expression, column, expression, ..., column, expression, ...)
-        internal bool canParamOmit(TexlFunction func, int argCount, int argIndex, int signatureCount, int signatureIndex)
+        internal bool CanParamOmit(TexlFunction func, int argCount, int argIndex, int signatureCount, int signatureIndex)
         {
             Contracts.AssertValue(func);
             Contracts.Assert(func.MaxArity == int.MaxValue);
             Contracts.Assert(func.SignatureConstraint != null && argCount > func.SignatureConstraint.RepeatTopLength && signatureCount >= func.SignatureConstraint.RepeatTopLength);
 
             if (func.SignatureConstraint == null)
+            {
                 return false;
+            }
 
-            return func.SignatureConstraint.canParamOmit(argCount, argIndex, signatureCount, signatureIndex);
+            return func.SignatureConstraint.CanParamOmit(argCount, argIndex, signatureCount, signatureIndex);
         }
 
         // 1. For a function with limited MaxArity, The first time the count becomes equal to the argIndex, that's the arg we want to highlight
@@ -269,7 +274,9 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
             Contracts.AssertValue(func);
 
             if (func.SignatureConstraint == null || argCount <= func.SignatureConstraint.RepeatTopLength || signatureIndex <= func.SignatureConstraint.OmitStartIndex)
+            {
                 return signatureIndex == argIndex;
+            }
 
             return func.SignatureConstraint.ArgNeedsHighlight(argCount, argIndex, signatureCount, signatureIndex);
         }
@@ -305,7 +312,9 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
             get
             {
                 for (var i = 0; i < _suggestions.Count; i++)
+                {
                     yield return _suggestions[i];
+                }
             }
         }
 
@@ -318,7 +327,9 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
             get
             {
                 for (var i = 0; i < _functionOverloads.Count; i++)
+                {
                     yield return _functionOverloads[i];
+                }
             }
         }
     }

@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation.
+﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
 using System;
@@ -52,11 +52,16 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
             var children = CloneChildren(ref idNext, ts);
             var newNodes = new Dictionary<TexlNode, TexlNode>();
             for (var i = 0; i < Children.Length; ++i)
+            {
                 newNodes.Add(Children[i], children[i]);
+            }
 
             var newIdentifiers = new Identifier[Ids.Length];
             for (var x = 0; x < Ids.Length; x++)
+            {
                 newIdentifiers[x] = Ids[x].Clone(ts);
+            }
+
             return new RecordNode(ref idNext, Token.Clone(ts), SourceList.Clone(ts, newNodes), newIdentifiers, children, Clone(Commas, ts), Clone(Colons, ts), CurlyClose.Clone(ts), SourceRestriction?.Clone(ref idNext, ts));
         }
 
@@ -66,7 +71,9 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
             if (visitor.PreVisit(this))
             {
                 if (SourceRestriction != null)
+                {
                     SourceRestriction.Accept(visitor);
+                }
 
                 AcceptChildren(visitor);
                 visitor.PostVisit(this);

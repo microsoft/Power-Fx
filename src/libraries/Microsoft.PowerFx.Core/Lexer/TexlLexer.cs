@@ -15,7 +15,7 @@ namespace Microsoft.PowerFx.Core.Lexer
 {
     // Used as a temporary storage for LexerImpl class.
     // LexerImpl is private, so we cannot define 'using' for it here - TexlLexer instead.
-    using StringBuilderCache = StringBuilderCache<TexlLexer>;
+    using StringBuilderCache = Microsoft.PowerFx.Core.Utils.StringBuilderCache<Microsoft.PowerFx.Core.Lexer.TexlLexer>;
 
     // TEXL expression lexer
     internal sealed class TexlLexer
@@ -30,13 +30,14 @@ namespace Microsoft.PowerFx.Core.Lexer
         // List and decimal separators.
         // These are the global settings, borrowed from the OS, and will be settable by the user according to their preferences.
         // If there is a collision between the two, the list separator automatically becomes ;.
-        public readonly string LocalizedPunctuatorDecimalSeparator;
-        public readonly string LocalizedPunctuatorListSeparator;
+        public string LocalizedPunctuatorDecimalSeparator { get; }
+        
+        public string LocalizedPunctuatorListSeparator { get; }
 
         // The chaining operator has to be disambiguated accordingly.
-        public readonly string LocalizedPunctuatorChainingSeparator;
+        public string LocalizedPunctuatorChainingSeparator { get; }
 
-        // Locale-invariant syntax.
+    // Locale-invariant syntax.
         public const string KeywordTrue = "true";
         public const string KeywordFalse = "false";
         public const string KeywordIn = "in";
@@ -102,13 +103,13 @@ namespace Microsoft.PowerFx.Core.Lexer
         // These are the decimal separators supported by the language in V1.
         // Unicode 00B7 represents mid-dot.
         // For anything else we'll fall back to invariant.
-        private const string _supportedDecimalSeparators = ".,;`\u00b7";
+        private const string SupportedDecimalSeparators = ".,;`\u00b7";
 
         // Limits the StringBuilderCache TLS memory usage for LexerImpl.
         // Usually our tokens are less than 128 characters long, unless it's a large string.
         private const int DesiredStringBuilderSize = 128;
 
-        public CultureInfo Culture;
+        public CultureInfo Culture { get; private set; }
 
         private Tuple<string, Flags, Token[]> _cache;
 
@@ -128,8 +129,8 @@ namespace Microsoft.PowerFx.Core.Lexer
         private IDictionary<string, string> _punctuatorsAndInvariants;
 
         // Pretty Print defaults
-        public const string fourSpaces = "    ";
-        public const string lineBreakAndfourSpaces = "\n    ";
+        public const string FourSpaces = "    ";
+        public const string LineBreakAndfourSpaces = "\n    ";
 
         static TexlLexer()
         {
@@ -141,7 +142,10 @@ namespace Microsoft.PowerFx.Core.Lexer
             get
             {
                 if (_lex == null)
+                {
                     Interlocked.CompareExchange(ref _lex, new TexlLexer((ILanguageSettings)null), null);
+                }
+
                 return _lex;
             }
 
@@ -173,7 +177,6 @@ namespace Microsoft.PowerFx.Core.Lexer
 
             if (loc != null)
             {
-
                 if (_prebuiltLexers.TryGetValue(loc.CultureName, out var lexer))
                 {
                     // In the common case we can built a fresh Lexer based on an existing one using the same locale
@@ -224,12 +227,19 @@ namespace Microsoft.PowerFx.Core.Lexer
             {
                 // Use the punctuators specified by the given ILanguageSettings instance.
                 // If any are missing, fall back to the default settings.
-                if (!loc.InvariantToLocPunctuatorMap.TryGetValue(PunctuatorDecimalSeparatorInvariant, out LocalizedPunctuatorDecimalSeparator) ||
-                    !loc.InvariantToLocPunctuatorMap.TryGetValue(PunctuatorCommaInvariant, out LocalizedPunctuatorListSeparator) ||
-                    !loc.InvariantToLocPunctuatorMap.TryGetValue(PunctuatorSemicolonInvariant, out LocalizedPunctuatorChainingSeparator))
+                if (!loc.InvariantToLocPunctuatorMap.TryGetValue(PunctuatorDecimalSeparatorInvariant, out var locDecSeparator) ||
+                    !loc.InvariantToLocPunctuatorMap.TryGetValue(PunctuatorCommaInvariant, out var locListSeparator) ||
+                    !loc.InvariantToLocPunctuatorMap.TryGetValue(PunctuatorSemicolonInvariant, out var locChainSeparator))
                 {
+                    locDecSeparator = string.Empty;
+                    locListSeparator = string.Empty;
+                    locChainSeparator = string.Empty;
                     fallBack = true;
                 }
+
+                LocalizedPunctuatorDecimalSeparator = locDecSeparator;
+                LocalizedPunctuatorListSeparator = locListSeparator;
+                LocalizedPunctuatorChainingSeparator = locChainSeparator;
             }
 
             if (fallBack || loc == null)
@@ -349,9 +359,14 @@ namespace Microsoft.PowerFx.Core.Lexer
             if (_punctuators.TryGetValue(str, out var tidCur))
             {
                 if (tidCur == tid)
+                {
                     return true;
+                }
+
                 if (tidCur != TokKind.None)
+                {
                     return false;
+                }
             }
             else
             {
@@ -360,9 +375,12 @@ namespace Microsoft.PowerFx.Core.Lexer
                 {
                     var strTmp = str.Substring(0, ich);
                     if (!_punctuators.TryGetValue(strTmp, out var tidTmp))
+                    {
                         _punctuators.Add(strTmp, TokKind.None);
+                    }
                 }
             }
+
             _punctuators[str] = tid;
             return true;
         }
@@ -458,7 +476,9 @@ namespace Microsoft.PowerFx.Core.Lexer
 
                 // Cache hit
                 if (text == _cache.Item1 && flags == _cache.Item2)
+                {
                     return _cache.Item3;
+                }
             }
 
             // Cache miss
@@ -474,14 +494,18 @@ namespace Microsoft.PowerFx.Core.Lexer
                 var impl = new LexerImpl(this, text, sb, flags);
 
                 while ((tok = impl.GetNextToken()) != null)
+                {
                     tokens.Add(tok);
+                }
 
                 tokens.Add(impl.GetEof());
             }
             finally
             {
                 if (sb != null)
+                {
                     StringBuilderCache.Release(sb);
+                }
             }
 
             // Update the cache and return the result
@@ -497,7 +521,8 @@ namespace Microsoft.PowerFx.Core.Lexer
             Token tok;
             var impl = new LexerImpl(this, text, new StringBuilder(), Flags.None);
             var tokens = new List<Token>();
-            while ((tok = impl.GetNextToken()) != null) {
+            while ((tok = impl.GetNextToken()) != null)
+            {
                 tokens.Add(tok);
             }
 
@@ -524,6 +549,7 @@ namespace Microsoft.PowerFx.Core.Lexer
                     result = false;
                     break;
             }
+
             return result;
         }
 
@@ -563,7 +589,9 @@ namespace Microsoft.PowerFx.Core.Lexer
 
             var tokens = GetTokens(text);
             if (tokens.Count == 1)
+            {
                 return text;
+            }
 
             var textLength = text.Length;
             var result = GetMinifiedScript(text, tokens);
@@ -629,7 +657,10 @@ namespace Microsoft.PowerFx.Core.Lexer
         public static bool IsIdentStart(char ch)
         {
             if (ch >= 128)
+            {
                 return (CharacterUtils.GetUniCatFlags(ch) & CharacterUtils.UniCatFlags.IdentStartChar) != 0;
+            }
+
             return ((uint)(ch - 'a') < 26) || ((uint)(ch - 'A') < 26) || (ch == '_') || (ch == IdentifierDelimiter);
         }
 
@@ -637,7 +668,10 @@ namespace Microsoft.PowerFx.Core.Lexer
         public static bool IsSimpleIdentCh(char ch)
         {
             if (ch >= 128)
+            {
                 return (CharacterUtils.GetUniCatFlags(ch) & CharacterUtils.UniCatFlags.IdentPartChar) != 0;
+            }
+
             return ((uint)(ch - 'a') < 26) || ((uint)(ch - 'A') < 26) || ((uint)(ch - '0') <= 9) || (ch == '_');
         }
 
@@ -672,7 +706,7 @@ namespace Microsoft.PowerFx.Core.Lexer
             Contracts.Assert(DName.IsValidDName(name));
             Contracts.AssertValueOrNull(instance);
 
-            instance = instance ?? TexlLexer.LocalizedInstance;
+            instance = instance ?? LocalizedInstance;
 
             var nameLen = name.Length;
             Contracts.Assert(nameLen > 0);
@@ -692,7 +726,9 @@ namespace Microsoft.PowerFx.Core.Lexer
                     fEscaping = fEscaping || !IsSimpleIdentCh(ch);
 
                     if (!fEscaping)
+                    {
                         continue;
+                    }
 
                     if (fFirst)
                     {
@@ -702,7 +738,9 @@ namespace Microsoft.PowerFx.Core.Lexer
                     }
 
                     if (ch == IdentifierDelimiter)
+                    {
                         sb.Append(ch);
+                    }
 
                     sb.Append(ch);
                 }
@@ -714,7 +752,9 @@ namespace Microsoft.PowerFx.Core.Lexer
                 }
 
                 if (!instance.IsKeyword(name, out var kind))
+                {
                     return name;
+                }
 
                 sb.Length = 0;
                 sb.EnsureCapacity(nameLen + 2);
@@ -728,7 +768,9 @@ namespace Microsoft.PowerFx.Core.Lexer
             finally
             {
                 if (sb != null)
+                {
                     StringBuilderCache.Release(sb);
+                }
             }
         }
 
@@ -739,7 +781,9 @@ namespace Microsoft.PowerFx.Core.Lexer
             Contracts.AssertValueOrNull(name);
 
             if (string.IsNullOrEmpty(name))
+            {
                 return string.Empty;
+            }
 
             var len = name.Length;
             StringBuilder sb = null;
@@ -759,10 +803,14 @@ namespace Microsoft.PowerFx.Core.Lexer
                     else
                     {
                         if (i == 0 || i == len - 1)
+                        {
                             continue;
+                        }
 
                         if (name[i + 1] != IdentifierDelimiter)
+                        {
                             continue;
+                        }
 
                         sb.Append(ch);
                         i++;
@@ -774,7 +822,9 @@ namespace Microsoft.PowerFx.Core.Lexer
             finally
             {
                 if (sb != null)
+                {
                     StringBuilderCache.Release(sb);
+                }
             }
         }
 
@@ -829,20 +879,27 @@ namespace Microsoft.PowerFx.Core.Lexer
                     {
                         var ch = strIn[i];
                         if (!CharacterUtils.IsSpace(ch))
+                        {
                             ichTrailingSpace = -1;
+                        }
                         else if (ichTrailingSpace == -1)
+                        {
                             ichTrailingSpace = i;
+                        }
 
                         sb.Append(ch);
                     }
 
                     // Remove trailing spaces.
                     if (ichTrailingSpace != -1)
+                    {
                         sb.Length = ichTrailingSpace - iStart;
+                    }
 
                     name = new DName(sb.ToString());
                     return true;
                 }
+
                 if (!fIdent)
                 {
                     name = default;
@@ -901,7 +958,9 @@ namespace Microsoft.PowerFx.Core.Lexer
             finally
             {
                 if (sb != null)
+                {
                     StringBuilderCache.Release(sb);
+                }
             }
         }
 
@@ -910,8 +969,10 @@ namespace Microsoft.PowerFx.Core.Lexer
         {
             Contracts.AssertNonEmpty(preferred);
 
-            if (preferred.Length == 1 && _supportedDecimalSeparators.Contains(preferred))
+            if (preferred.Length == 1 && SupportedDecimalSeparators.Contains(preferred))
+            {
                 return preferred;
+            }
 
             return PunctuatorDecimalSeparatorInvariant;
         }
@@ -926,11 +987,15 @@ namespace Microsoft.PowerFx.Core.Lexer
             //      - either the equivalent of Foo(1.23, 3.45)
             //      - or the equivalent of Foo(1, 23, 3, 45)
             if (preferred != LocalizedPunctuatorDecimalSeparator)
+            {
                 return preferred;
+            }
 
             // Try to use PunctuatorCommaDefault, if possible.
             if (preferred != PunctuatorCommaDefault)
+            {
                 return PunctuatorCommaDefault;
+            }
 
             // Both use comma. Choose ; instead.
             return PunctuatorSemicolonDefault;
@@ -945,10 +1010,16 @@ namespace Microsoft.PowerFx.Core.Lexer
             {
                 // Common case, for en-US: use the default chaining punctuator if possible.
                 if (LocalizedPunctuatorListSeparator != PunctuatorSemicolonDefault)
+                {
                     return PunctuatorSemicolonDefault;
+                }
+
                 // Use PunctuatorSemicolonAlt1 if possible.
                 if (LocalizedPunctuatorDecimalSeparator != PunctuatorSemicolonAlt1)
+                {
                     return PunctuatorSemicolonAlt1;
+                }
+
                 // Fallback
                 return PunctuatorSemicolonAlt2;
             }
@@ -956,7 +1027,9 @@ namespace Microsoft.PowerFx.Core.Lexer
             // The default punctuator is not available. Use the PunctuatorSemicolonAlt1 if possible.
             Contracts.Assert(LocalizedPunctuatorDecimalSeparator == PunctuatorSemicolonDefault);
             if (LocalizedPunctuatorListSeparator != PunctuatorSemicolonAlt1)
+            {
                 return PunctuatorSemicolonAlt1;
+            }
 
             // Fallback
             return PunctuatorSemicolonAlt2;
@@ -1007,7 +1080,10 @@ namespace Microsoft.PowerFx.Core.Lexer
                 Contracts.Assert(CurrentPos < _charCount);
 
                 if (++CurrentPos < _charCount)
+                {
                     return _text[CurrentPos];
+                }
+
                 CurrentPos = _charCount;
                 return '\0';
             }
@@ -1034,8 +1110,10 @@ namespace Microsoft.PowerFx.Core.Lexer
                         foundTok = null;
                         break;
                     }
+
                     foundTok = Dispatch(true, true);
                 }
+
                 _currentTokenPos = lookaheadTokenStart;
                 CurrentPos = lookaheadStart;
                 return foundTok;
@@ -1061,13 +1139,18 @@ namespace Microsoft.PowerFx.Core.Lexer
             // Form and return the next token. Returns null to signal end of input.
             public Token GetNextToken()
             {
-                for (; ; )
+                for (; ;)
                 {
                     if (Eof)
+                    {
                         return null;
+                    }
+
                     var tok = Dispatch(true, true);
                     if (tok != null)
+                    {
                         return tok;
+                    }
                 }
             }
 
@@ -1091,21 +1174,36 @@ namespace Microsoft.PowerFx.Core.Lexer
                 var nextCh = PeekChar(1);
 
                 if (_lex.IsNumStart(ch))
+                {
                     return LexNumLit();
+                }
+
                 if (IsIdentStart(ch))
+                {
                     return LexIdent();
+                }
+
                 if (IsStringDelimiter(ch))
+                {
                     return LexStringLit();
+                }
+
                 if (CharacterUtils.IsSpace(ch) || CharacterUtils.IsLineTerm(ch))
+                {
                     return LexSpace();
+                }
 
                 if (_allowReplaceableTokens)
                 {
                     if (allowContextDependentTokens && IsContextDependentTokenDelimiter(ch))
+                    {
                         return LexContextDependentTokenLit();
+                    }
 
                     if (allowLocalizableTokens && IsLocalizableTokenDelimiter(ch, nextCh))
+                    {
                         return LexLocalizableTokenLit();
+                    }
                 }
 
                 return LexOther();
@@ -1118,11 +1216,13 @@ namespace Microsoft.PowerFx.Core.Lexer
 
                 _sb.Length = 0;
                 _sb.Append(CurrentChar);
-                for (; ; )
+                for (; ;)
                 {
                     var str = _sb.ToString();
                     if (!_lex.TryGetPunctuator(str, out var tidCur))
+                    {
                         break;
+                    }
 
                     if (tidCur == TokKind.Comment)
                     {
@@ -1137,12 +1237,20 @@ namespace Microsoft.PowerFx.Core.Lexer
                         tidPunc = tidCur;
                         punctuatorLength = _sb.Length;
                     }
+
                     _sb.Append(PeekChar(_sb.Length));
                 }
+
                 if (punctuatorLength == 0)
+                {
                     return LexError();
+                }
+
                 while (--punctuatorLength >= 0)
+                {
                     NextChar();
+                }
+
                 return new KeyToken(tidPunc, GetTextSpan());
             }
 
@@ -1153,7 +1261,9 @@ namespace Microsoft.PowerFx.Core.Lexer
 
                 // A dot that is not followed by a digit is just a Dot.
                 if (CurrentChar == _lex._decimalSeparator && !CharacterUtils.IsDigit(PeekChar(1)))
+                {
                     return LexOther();
+                }
 
                 // Decimal literal (possible floating point).
                 return LexDecLit();
@@ -1175,7 +1285,7 @@ namespace Microsoft.PowerFx.Core.Lexer
 
                 _sb.Append(CurrentChar);
 
-                for (; ; )
+                for (; ;)
                 {
                     if (NextChar() == _lex._decimalSeparator)
                     {
@@ -1184,6 +1294,7 @@ namespace Microsoft.PowerFx.Core.Lexer
                             isCorrect = false;
                             break;
                         }
+
                         hasDot = true;
                         _sb.Append(CurrentChar);
                     }
@@ -1193,9 +1304,13 @@ namespace Microsoft.PowerFx.Core.Lexer
                         {
                             // TASK: 69508: Globalization: Thousand separator code is disabled.
                             if (CurrentChar != _lex._thousandSeparator || _lex._thousandSeparator == '\0' || !CharacterUtils.IsDigit(PeekChar(1)))
+                            {
                                 break;
+                            }
+
                             NextChar();
                         }
+
                         // Push leading zeros as well. All digits are important.
                         // We'll let the framework deal with the specifics internally.
                         _sb.Append(CurrentChar);
@@ -1291,10 +1406,13 @@ namespace Microsoft.PowerFx.Core.Lexer
 
                 // Accept any characters up to the next unescaped identifier delimiter.
                 // String will be corrected in the IdentToken if needed.
-                for (; ; )
+                for (; ;)
                 {
                     if (Eof)
+                    {
                         break;
+                    }
+
                     if (IsIdentDelimiter(CurrentChar))
                     {
                         if (IsIdentDelimiter(PeekChar(1)))
@@ -1344,7 +1462,10 @@ namespace Microsoft.PowerFx.Core.Lexer
                     {
                         char nextCh;
                         if (Eof || CharacterUtils.IsLineTerm(nextCh = PeekChar(1)) || nextCh != chDelim)
+                        {
                             break;
+                        }
+
                         // If we are here, we are seeing a double quote followed immediately by another
                         // double quote. That is actually an escape sequence for double quote characters
                         // within a string literal. Excel supports the exact same escape sequence.
@@ -1359,7 +1480,10 @@ namespace Microsoft.PowerFx.Core.Lexer
                 }
 
                 if (Eof)
+                {
                     return new ErrorToken(GetTextSpan());
+                }
+
                 NextChar();
                 return new StrLitToken(_sb.ToString(), GetTextSpan());
             }
@@ -1374,6 +1498,7 @@ namespace Microsoft.PowerFx.Core.Lexer
                 {
                     _sb.Append(CurrentChar);
                 }
+
                 return new WhitespaceToken(_sb.ToString(), GetTextSpan());
             }
 
@@ -1382,31 +1507,39 @@ namespace Microsoft.PowerFx.Core.Lexer
                 _sb.Length = 0;
                 _sb.Append(CurrentChar);
                 for (var i = 1; i < commentLength; i++)
+                {
                     _sb.Append(NextChar());
+                }
 
                 Contracts.Assert(_sb.ToString().Equals("/*") || _sb.ToString().Equals("//"));
                 var commentEnd = _sb.ToString().StartsWith("/*") ? "*/" : "\n";
 
                 // Comment initiation takes up two chars, so must - 1 to get start
-                var startingPosition =  CurrentPos-1;
+                var startingPosition = CurrentPos - 1;
 
                 while (CurrentPos < _text.Length)
                 {
                     _sb.Append(NextChar());
                     var str = _sb.ToString();
+
                     // "str.Length >= commentLength + commentEnd.Length"  ensures block comment of "/*/"
                     // does not satisfy starts with "/*" and ends with "*/" conditions
                     if (str.EndsWith(commentEnd) && str.Length >= commentLength + commentEnd.Length)
+                    {
                         break;
+                    }
                 }
 
                 // Trailing comment space
                 while (CurrentPos < _text.Length)
                 {
                     var nxtChar = NextChar();
+
                     // If nxtChar is not whitespace, no need to handle trailing whitespace
                     if (!char.IsWhiteSpace(nxtChar) || commentEnd != "*/")
+                    {
                         break;
+                    }
 
                     // Handle/Preserve trailing white space and line breaks for block comments
                     if (IsNewLineCharacter(nxtChar))
@@ -1422,7 +1555,10 @@ namespace Microsoft.PowerFx.Core.Lexer
                 {
                     var previousChar = _text[startingPosition - 1];
                     if (!char.IsWhiteSpace(previousChar))
+                    {
                         break;
+                    }
+
                     if (IsNewLineCharacter(previousChar))
                     {
                         _sb.Insert(0, previousChar);
@@ -1435,7 +1571,9 @@ namespace Microsoft.PowerFx.Core.Lexer
 
                 var commentToken = new CommentToken(_sb.ToString(), GetTextSpan());
                 if (_sb.ToString().Trim().StartsWith("/*") && !_sb.ToString().Trim().EndsWith("*/"))
+                {
                     commentToken.IsOpenBlock = true;
+                }
 
                 return commentToken;
             }
@@ -1463,7 +1601,9 @@ namespace Microsoft.PowerFx.Core.Lexer
                     }
 
                     if (!CharacterUtils.IsFormatCh(ch))
+                    {
                         _sb.Append(ch);
+                    }
                 }
 
                 if (Eof || _sb.Length < minStringLength)
@@ -1504,7 +1644,9 @@ namespace Microsoft.PowerFx.Core.Lexer
                     }
 
                     if (!CharacterUtils.IsFormatCh(ch))
+                    {
                         _sb.Append(ch);
+                    }
                 }
 
                 if (Eof || _sb.Length < minStringLength)
@@ -1527,7 +1669,8 @@ namespace Microsoft.PowerFx.Core.Lexer
                     NextChar();
                     return new ErrorToken(GetTextSpan(), TexlStrings.UnexpectedCharacterToken, string.Concat(UnicodePrefix, unexpectedChar), position);
                 }
-                else {
+                else
+                {
                     NextChar();
                     return new ErrorToken(GetTextSpan());
                 }

@@ -130,7 +130,9 @@ namespace Microsoft.PowerFx.Core.Glue
             foreach (var info in _enums)
             {
                 if (info.EnumType == enumType)
+                {
                     return info.TryLookupValueByLocName(locName.Value, out _, out value);
+                }
             }
 
             value = null;

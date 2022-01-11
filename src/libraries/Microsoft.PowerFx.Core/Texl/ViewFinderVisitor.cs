@@ -10,7 +10,7 @@ using Microsoft.PowerFx.Core.Utils;
 namespace Microsoft.PowerFx.Core.Texl
 {
     /// <summary>
-    /// This visitor is used to walkthrough the tree to check the existence of a view
+    /// This visitor is used to walkthrough the tree to check the existence of a view.
     /// </summary>
     internal sealed class ViewFinderVisitor : TexlVisitor
     {

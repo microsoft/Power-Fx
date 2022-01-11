@@ -54,7 +54,9 @@ namespace Microsoft.PowerFx.Core.UtilityDataStructures
 
             // Allocate default capacity for first list to have dynamic allocation for small list.
             if (idx == 0)
+            {
                 _chunks.Add(new List<T>((chunk == 0) ? FirstChunkInitialSize : ChunkSize));
+            }
 
             _chunks[chunk].Add(item);
             Count++;
@@ -67,6 +69,7 @@ namespace Microsoft.PowerFx.Core.UtilityDataStructures
             {
                 action();
             }
+
             _chunks.Clear();
             Count = 0;
             _version++;
@@ -156,6 +159,7 @@ namespace Microsoft.PowerFx.Core.UtilityDataStructures
                     index++;
                     return true;
                 }
+
                 return MoveNextRare();
             }
 
@@ -181,6 +185,7 @@ namespace Microsoft.PowerFx.Core.UtilityDataStructures
                     {
                         throw new IndexOutOfRangeException("ChunkedList out of range index accessed");
                     }
+
                     return Current;
                 }
             }

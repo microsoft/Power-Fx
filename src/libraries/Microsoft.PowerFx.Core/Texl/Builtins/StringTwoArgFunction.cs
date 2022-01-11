@@ -54,28 +54,37 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 var argKind = arg.VerifyValue().Kind;
                 switch (argKind)
                 {
-                case NodeKind.FirstName:
-                    var firstNameStrategy = GetFirstNameNodeDelegationStrategy();
-                    if (!firstNameStrategy.IsValidFirstNameNode(arg.AsFirstName(), binding, null))
-                        return false;
-                    break;
-                case NodeKind.Call:
-                    if (!metadata.IsDelegationSupportedByTable(FunctionDelegationCapability))
-                        return false;
+                    case NodeKind.FirstName:
+                        var firstNameStrategy = GetFirstNameNodeDelegationStrategy();
+                        if (!firstNameStrategy.IsValidFirstNameNode(arg.AsFirstName(), binding, null))
+                        {
+                            return false;
+                        }
 
-                    var cNodeStrategy = GetCallNodeDelegationStrategy();
-                    if (!cNodeStrategy.IsValidCallNode(arg.AsCall(), binding, metadata))
+                        break;
+                    case NodeKind.Call:
+                        if (!metadata.IsDelegationSupportedByTable(FunctionDelegationCapability))
+                        {
+                            return false;
+                        }
+
+                        var cNodeStrategy = GetCallNodeDelegationStrategy();
+                        if (!cNodeStrategy.IsValidCallNode(arg.AsCall(), binding, metadata))
+                        {
+                            return false;
+                        }
+
+                        break;
+                    case NodeKind.StrLit:
+                        break;
+                    case NodeKind.DottedName:
+                        {
+                            var dottedStrategy = GetDottedNameNodeDelegationStrategy();
+                            return dottedStrategy.IsValidDottedNameNode(arg.AsDottedName(), binding, metadata, null);
+                        }
+
+                    default:
                         return false;
-                    break;
-                case NodeKind.StrLit:
-                    break;
-                case NodeKind.DottedName:
-                    {
-                        var dottedStrategy = GetDottedNameNodeDelegationStrategy();
-                        return dottedStrategy.IsValidDottedNameNode(arg.AsDottedName(), binding, metadata, null);
-                    }
-                default:
-                    return false;
                 }
             }
 

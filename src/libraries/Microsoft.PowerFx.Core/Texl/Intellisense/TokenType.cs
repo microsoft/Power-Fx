@@ -8,7 +8,7 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
     {
         // default(TokenType) will resolve to Unknown.
         Unknown,
-        _Min = Unknown,
+        Min = Unknown,
 
         // Control entity.
         Control,
@@ -69,6 +69,6 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
 
         // Parent reference
         Parent,
-        _Lim
+        Lim
     }
 }

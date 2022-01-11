@@ -50,7 +50,9 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
         public void AddRange(IEnumerable<IntellisenseSuggestion> items)
         {
             foreach (var item in items)
+            {
                 IncrementDictionaries(item);
+            }
 
             _backingList.AddRange(items);
         }
@@ -59,7 +61,9 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
         {
             var result = _backingList.Remove(item);
             if (result)
+            {
                 DecrementDictionaries(item);
+            }
 
             return result;
         }
@@ -67,7 +71,9 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
         public void RemoveRange(int index, int count)
         {
             for (var i = index; i < index + count; i++)
+            {
                 DecrementDictionaries(this[i]);
+            }
 
             _backingList.RemoveRange(index, count);
         }
@@ -83,7 +89,9 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
             foreach (var item in this)
             {
                 if (pred(item))
+                {
                     DecrementDictionaries(item);
+                }
             }
 
             return _backingList.RemoveAll(pred);
@@ -105,7 +113,9 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
         public void InsertRange(int index, IEnumerable<IntellisenseSuggestion> collection)
         {
             foreach (var item in collection)
+            {
                 IncrementDictionaries(item);
+            }
 
             _backingList.InsertRange(index, collection);
         }
@@ -131,12 +141,17 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
         {
             var displayText = item.DisplayText.Text;
             if (!_displayNameToCount.ContainsKey(displayText))
+            {
                 _displayNameToCount[displayText] = 0;
+            }
+
             _displayNameToCount[displayText] += 1;
 
             var sugText = item.Text;
             if (!_textToSuggestions.ContainsKey(sugText))
+            {
                 _textToSuggestions[sugText] = new List<IntellisenseSuggestion>();
+            }
 
             _textToSuggestions[sugText].Add(item);
         }
@@ -149,12 +164,16 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
             var displayText = item.DisplayText.Text;
             _displayNameToCount[displayText] -= 1;
             if (_displayNameToCount[displayText] == 0)
+            {
                 _displayNameToCount.Remove(displayText);
+            }
 
             var sugText = item.Text;
             _textToSuggestions[sugText].Remove(item);
             if (_textToSuggestions[sugText].Count() == 0)
+            {
                 _textToSuggestions.Remove(sugText);
+            }
         }
 
         public int IndexOf(IntellisenseSuggestion item)

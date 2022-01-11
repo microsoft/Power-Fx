@@ -41,7 +41,9 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
             get
             {
                 if (_usesChains.HasValue)
+                {
                     return _usesChains.Value;
+                }
 
                 _usesChains = ChainTrackerVisitor.Run(this);
                 return _usesChains.Value;
@@ -89,7 +91,9 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
         public Span GetSourceBasedSpan()
         {
             if (SourceList.Tokens.Count() == 0)
+            {
                 return GetCompleteSpan();
+            }
 
             var start = SourceList.Tokens.First().Span.Min;
             var end = SourceList.Tokens.Last().Span.Lim;
@@ -265,5 +269,5 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
 
             return parent;
         }
-   }
+    }
 }

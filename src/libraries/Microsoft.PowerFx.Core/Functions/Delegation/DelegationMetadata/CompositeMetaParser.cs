@@ -28,7 +28,9 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationMetadata
                 {
                     var capabilityMetadata = parser.Parse(dataServiceCapabilitiesJsonObject, schema);
                     if (capabilityMetadata != null)
+                    {
                         capabilities.Add(capabilityMetadata);
+                    }
                 }
 
                 return new CompositeCapabilityMetadata(schema, capabilities);

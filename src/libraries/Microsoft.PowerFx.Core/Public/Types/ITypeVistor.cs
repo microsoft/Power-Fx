@@ -4,7 +4,7 @@
 namespace Microsoft.PowerFx.Core.Public.Types
 {
     /// <summary>
-    /// Visitor for walking <see cref="FormulaType"/>
+    /// Visitor for walking <see cref="FormulaType"/>.
     /// </summary>
     public interface ITypeVistor
     {

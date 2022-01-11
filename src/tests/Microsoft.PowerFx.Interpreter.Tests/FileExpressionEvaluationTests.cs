@@ -98,7 +98,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             {
                 sb.Append('[');
 
-                var dil = "";
+                var dil = string.Empty;
                 foreach (var row in t.Rows)
                 {
                     sb.Append(dil);
@@ -123,6 +123,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
                     dil = ",";
                 }
+
                 sb.Append(']');
             }
             else if (result is RecordValue r)
@@ -131,7 +132,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 Array.Sort(fields, (a, b) => string.CompareOrdinal(a.Name, b.Name));
 
                 sb.Append('{');
-                var dil = "";
+                var dil = string.Empty;
 
                 foreach (var field in fields)
                 {
@@ -142,6 +143,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
                     dil = ",";
                 }
+
                 sb.Append('}');
             }
             else if (result is BlankValue)

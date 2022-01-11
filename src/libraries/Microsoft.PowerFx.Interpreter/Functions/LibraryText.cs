@@ -1,16 +1,16 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
-using Microsoft.PowerFx.Core.IR;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
-using Microsoft.PowerFx.Core.Public.Values;
-using Microsoft.PowerFx.Core.Functions;
-using Microsoft.PowerFx.Core.Public.Types;
 using System.Text.RegularExpressions;
+using Microsoft.PowerFx.Core.Functions;
+using Microsoft.PowerFx.Core.IR;
+using Microsoft.PowerFx.Core.Public.Types;
+using Microsoft.PowerFx.Core.Public.Values;
 
 namespace Microsoft.PowerFx.Functions
 {
@@ -54,6 +54,7 @@ namespace Microsoft.PowerFx.Functions
                     {
                         namedValue = new NamedValue(BuiltinFunction.OneColumnTableResultNameStr, CommonErrors.RuntimeTypeMismatch(IRContext.NotInSource(FormulaType.Number)));
                     }
+
                     var record = new InMemoryRecordValue(IRContext.NotInSource(resultType), new List<NamedValue>() { namedValue });
                     resultRows.Add(DValue<RecordValue>.Of(record));
                 }
@@ -66,6 +67,7 @@ namespace Microsoft.PowerFx.Functions
                     resultRows.Add(DValue<RecordValue>.Of(row.Error));
                 }
             }
+
             return new InMemoryTableValue(irContext, resultRows);
         }
 
@@ -225,23 +227,33 @@ namespace Microsoft.PowerFx.Functions
                 if (res.IsValue)
                 {
                     var val = res.Value;
-                    if (!(val is StringValue str && str.Value == ""))
+                    if (!(val is StringValue str && str.Value == string.Empty))
                     {
                         if (errors.Count == 0)
+                        {
                             return res.ToFormulaValue();
+                        }
                         else
+                        {
                             return ErrorValue.Combine(irContext, errors);
+                        }
                     }
                 }
+
                 if (res.IsError)
                 {
                     errors.Add(res.Error);
                 }
             }
+
             if (errors.Count == 0)
+            {
                 return new BlankValue(irContext);
+            }
             else
+            {
                 return ErrorValue.Combine(irContext, errors);
+            }
         }
 
         public static FormulaValue Lower(IRContext irContext, StringValue[] args)
@@ -283,9 +295,9 @@ namespace Microsoft.PowerFx.Functions
 
             var source = (StringValue)args[0];
             var start0Based = (int)(start.Value - 1);
-            if (source.Value == "" || start0Based >= source.Value.Length)
+            if (source.Value == string.Empty || start0Based >= source.Value.Length)
             {
-                return new StringValue(irContext, "");
+                return new StringValue(irContext, string.Empty);
             }
 
             var minCount = Math.Min((int)count.Value, source.Value.Length - start0Based);
@@ -312,12 +324,12 @@ namespace Microsoft.PowerFx.Functions
             var source = (StringValue)args[0];
             var count = (NumberValue)args[1];
 
-            if(count.Value == 0)
+            if (count.Value == 0)
             {
-                return new StringValue(irContext, "");
+                return new StringValue(irContext, string.Empty);
             }
 
-            if(count.Value >= source.Value.Length)
+            if (count.Value >= source.Value.Length)
             {
                 return source;
             }
@@ -390,6 +402,7 @@ namespace Microsoft.PowerFx.Functions
                     {
                         idx = temp.Length + idx2;
                     }
+
                     sourceValue = temp + sourceValue;
                 }
             }
@@ -414,6 +427,7 @@ namespace Microsoft.PowerFx.Functions
                     sourceValue = sourceValue.Substring(0, idx) + replacement.Value + sourceValue.Substring(idx + match.Value.Length);
                 }
             }
+
             return new StringValue(irContext, sourceValue);
         }
 

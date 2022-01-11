@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation.
+﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
 using System.Collections.Generic;
@@ -20,10 +20,10 @@ namespace Microsoft.PowerFx.Core.Types.Enums
         public IEnumerable<string> LocalizedEnumValues => _valuesLocToInvariant.Keys;
 
         /// <summary>
-        /// The variant name for the enum
+        /// The variant name for the enum.
         /// </summary>
         public string Name { get; set; }
-        
+
         public string InvariantName { get; set; }
 
         public EnumSymbol(DName name, DName invariantName, DType invariantType)
@@ -45,18 +45,24 @@ namespace Microsoft.PowerFx.Core.Types.Enums
                 var invName = typedName.Name.Value;
 
                 if (!StringResources.TryGet($"{InvariantName}_{typedName.Name.Value}_Name", out var locName))
+                {
                     locName = invName;
+                }
 
                 Contracts.Assert(DName.IsValidDName(invName));
                 _valuesInvariantToLoc[invName] = locName;
                 _valuesLocToInvariant[locName] = invName;
 
                 if (!StringResources.TryGet($"{InvariantName}_{typedName.Name.Value}_DisplayName", out var displayName))
+                {
                     displayName = locName;
+                }
 
                 var entityNameValue = name.Value;
                 if (!EnumStore.TryGetLocalizedEnumValue(entityNameValue, invName, out var custDisplayName))
+                {
                     custDisplayName = displayName;
+                }
 
                 _valuesInvariantToDisplayName[invName] = custDisplayName;
             }
@@ -64,7 +70,7 @@ namespace Microsoft.PowerFx.Core.Types.Enums
 
         /// <summary>
         /// Look up an enum value by its locale-specific name.
-        /// For example, locName="Droit" --> invName="Right", value="right"
+        /// For example, locName="Droit" --> invName="Right", value="right".
         /// </summary>
         public bool TryLookupValueByLocName(string locName, out string invName, out object value)
         {
@@ -79,10 +85,10 @@ namespace Microsoft.PowerFx.Core.Types.Enums
 
             return EnumType.TryGetEnumValue(new DName(invName), out value);
         }
-        
+
         /// <summary>
         /// Get the invariant enum value name corresponding to the given locale-specific name.
-        /// For example, locName="Droit" --> invName="Right"For example, locName="Droit" --> invName="Right"
+        /// For example, locName="Droit" --> invName="Right"For example, locName="Droit" --> invName="Right".
         /// </summary>
         public bool TryGetInvariantValueName(string locName, out string invName)
         {

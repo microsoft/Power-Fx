@@ -34,7 +34,9 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
 
             var binaryOpNode = node?.AsBinaryOp();
             if (binaryOpNode == null)
+            {
                 return false;
+            }
 
             var isRHSDelegableTable = IsRHSDelegableTable(binding, binaryOpNode, metadata);
 
@@ -43,16 +45,20 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
 
             var isFullyQualifiedFieldAccess = CheckForFullyQualifiedFieldAccess(isRHSDelegableTable, binaryOpNode, binding, node, ref columnName, ref info);
             if (!isFullyQualifiedFieldAccess)
+            {
                 return false;
+            }
 
             var isRowScopedOrLambda = IsRowScopedOrLambda(binding, node, info, columnName, metadata);
             if (!isRowScopedOrLambda)
+            {
                 return false;
+            }
 
             return base.IsSupportedOpNode(node, metadata, binding);
         }
 
-        public bool IsRHSDelegableTable(TexlBinding binding, BinaryOpNode binaryOpNode, OperationCapabilityMetadata metadata) 
+        public bool IsRHSDelegableTable(TexlBinding binding, BinaryOpNode binaryOpNode, OperationCapabilityMetadata metadata)
         {
             Contracts.AssertValue(binding);
             Contracts.AssertValue(binaryOpNode);
@@ -90,7 +96,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
             }
             else
             {
-                info = binding.GetInfo(firstNameNode); 
+                info = binding.GetInfo(firstNameNode);
                 if (info == null)
                 {
                     SuggestDelegationHint(node, binding, TexlStrings.SuggestRemoteExecutionHint_InOpRhs);
@@ -98,6 +104,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
                     TrackingProvider.Instance.AddSuggestionMessage(FormatTelemetryMessage($"RHS unbound delegation target in rule: {structure}"), _binaryOpNode.Right, binding);
                     return false;
                 }
+
                 columnName = info.Name;
             }
 

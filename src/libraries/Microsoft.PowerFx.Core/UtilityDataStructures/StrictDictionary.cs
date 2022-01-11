@@ -27,7 +27,7 @@ namespace Microsoft.PowerFx.Core.UtilityDataStructures
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return ((IEnumerable) _backingDictionary).GetEnumerator();
+            return ((IEnumerable)_backingDictionary).GetEnumerator();
         }
 
         public void Add(KeyValuePair<K, V> item)

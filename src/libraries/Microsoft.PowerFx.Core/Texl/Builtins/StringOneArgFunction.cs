@@ -30,7 +30,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
-            yield return new [] { TexlStrings.StringFuncArg1 };
+            yield return new[] { TexlStrings.StringFuncArg1 };
         }
 
         public override bool IsRowScopedServerDelegatable(CallNode callNode, TexlBinding binding, OperationCapabilityMetadata metadata)
@@ -52,26 +52,31 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             switch (argKind)
             {
-            case NodeKind.FirstName:
-                {
-                    var firstNameStrategy = GetFirstNameNodeDelegationStrategy();
-                    return firstNameStrategy.IsValidFirstNameNode(args[0].AsFirstName(), binding, null);
-                }
-            case NodeKind.Call:
-                {
-                    if (!metadata.IsDelegationSupportedByTable(FunctionDelegationCapability))
-                        return false;
+                case NodeKind.FirstName:
+                    {
+                        var firstNameStrategy = GetFirstNameNodeDelegationStrategy();
+                        return firstNameStrategy.IsValidFirstNameNode(args[0].AsFirstName(), binding, null);
+                    }
 
-                    var cNodeStrategy = GetCallNodeDelegationStrategy();
-                    return cNodeStrategy.IsValidCallNode(args[0].AsCall(), binding, metadata);
-                }
-            case NodeKind.DottedName:
-                {
-                    var dottedStrategy = GetDottedNameNodeDelegationStrategy();
-                    return dottedStrategy.IsValidDottedNameNode(args[0].AsDottedName(), binding, metadata, null);
-                }
-            default:
-                break;
+                case NodeKind.Call:
+                    {
+                        if (!metadata.IsDelegationSupportedByTable(FunctionDelegationCapability))
+                        {
+                            return false;
+                        }
+
+                        var cNodeStrategy = GetCallNodeDelegationStrategy();
+                        return cNodeStrategy.IsValidCallNode(args[0].AsCall(), binding, metadata);
+                    }
+
+                case NodeKind.DottedName:
+                    {
+                        var dottedStrategy = GetDottedNameNodeDelegationStrategy();
+                        return dottedStrategy.IsValidDottedNameNode(args[0].AsDottedName(), binding, metadata, null);
+                    }
+
+                default:
+                    break;
             }
 
             return false;
@@ -89,7 +94,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
-            yield return new [] { TexlStrings.StringTFuncArg1 };
+            yield return new[] { TexlStrings.StringTFuncArg1 };
         }
 
         public override string GetUniqueTexlRuntimeName(bool isPrefetching = false)

@@ -38,7 +38,9 @@ namespace Microsoft.PowerFx.Core.Lexer.Tokens
             Contracts.AssertValue(that);
 
             if (!(that is ReplaceableToken))
+            {
                 return false;
+            }
 
             return Value == that.As<ReplaceableToken>().Value && base.Equals(that);
         }

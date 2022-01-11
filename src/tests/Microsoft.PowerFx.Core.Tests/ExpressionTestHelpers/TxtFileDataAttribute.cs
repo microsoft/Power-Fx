@@ -51,6 +51,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 {
                     break;
                 }
+
                 var line = lines[i];
                 if (string.IsNullOrWhiteSpace(line) || line.StartsWith("//"))
                 {
@@ -68,6 +69,7 @@ namespace Microsoft.PowerFx.Core.Tests
                     };
                     continue;
                 }
+
                 if (test != null)
                 {
                     // If it's indented, then part of previous line. 
@@ -91,12 +93,14 @@ namespace Microsoft.PowerFx.Core.Tests
                             continue;
                         }
                     }
+
                     test.SetExpected(line.Trim());
 
                     tests.Add(test);
                     test = null;
                 }
             }
+
             return tests;
         }
 

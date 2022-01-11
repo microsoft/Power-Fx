@@ -26,7 +26,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
-            yield return new [] { TexlStrings.ReplaceFuncArg1, TexlStrings.StringFuncArg2, TexlStrings.StringFuncArg3, TexlStrings.ReplaceFuncArg4 };
+            yield return new[] { TexlStrings.ReplaceFuncArg1, TexlStrings.StringFuncArg2, TexlStrings.StringFuncArg3, TexlStrings.ReplaceFuncArg4 };
         }
     }
 
@@ -43,7 +43,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
-            yield return new [] { TexlStrings.StringTFuncArg1, TexlStrings.StringFuncArg2, TexlStrings.StringFuncArg3, TexlStrings.ReplaceFuncArg4 };
+            yield return new[] { TexlStrings.StringTFuncArg1, TexlStrings.StringFuncArg2, TexlStrings.StringFuncArg3, TexlStrings.ReplaceFuncArg4 };
         }
 
         public override string GetUniqueTexlRuntimeName(bool isPrefetching = false)
@@ -60,7 +60,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertValue(errors);
             Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
 
-            var fValid = base.CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            var fValid = CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
 
             var type0 = argTypes[0];
             var type1 = argTypes[1];

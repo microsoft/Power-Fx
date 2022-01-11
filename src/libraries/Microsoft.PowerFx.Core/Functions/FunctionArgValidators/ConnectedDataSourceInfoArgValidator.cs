@@ -20,14 +20,14 @@ namespace Microsoft.PowerFx.Core.Functions.FunctionArgValidators
             dsInfo = null;
             switch (argNode.Kind)
             {
-            case NodeKind.FirstName:
-                return TryGetDsInfo(argNode.AsFirstName(), binding, out dsInfo);
-            case NodeKind.Call:
-                return TryGetDsInfo(argNode.AsCall(), binding, out dsInfo);
-            case NodeKind.DottedName:
-                return TryGetDsInfo(argNode.AsDottedName(), binding, out dsInfo);
-            case NodeKind.As:
-                return TryGetValidValue(argNode.AsAsNode().Left, binding, out dsInfo);
+                case NodeKind.FirstName:
+                    return TryGetDsInfo(argNode.AsFirstName(), binding, out dsInfo);
+                case NodeKind.Call:
+                    return TryGetDsInfo(argNode.AsCall(), binding, out dsInfo);
+                case NodeKind.DottedName:
+                    return TryGetDsInfo(argNode.AsDottedName(), binding, out dsInfo);
+                case NodeKind.As:
+                    return TryGetValidValue(argNode.AsAsNode().Left, binding, out dsInfo);
             }
 
             return false;
@@ -40,15 +40,21 @@ namespace Microsoft.PowerFx.Core.Functions.FunctionArgValidators
 
             dsInfo = null;
             if (callNode == null || !binding.IsDelegatable(callNode) || !binding.GetType(callNode).IsTable)
+            {
                 return false;
+            }
 
             var callInfo = binding.GetInfo(callNode);
             if (callInfo == null)
+            {
                 return false;
+            }
 
             var function = callInfo.Function;
             if (function == null)
+            {
                 return false;
+            }
 
             var success = function.TryGetDataSource(callNode, binding, out var external);
             dsInfo = (IExternalDataSource)external;
@@ -62,11 +68,15 @@ namespace Microsoft.PowerFx.Core.Functions.FunctionArgValidators
 
             dsInfo = null;
             if (firstName == null || !binding.GetType(firstName).IsTable)
+            {
                 return false;
+            }
 
             var firstNameInfo = binding.GetInfo(firstName);
             if (firstNameInfo == null || firstNameInfo.Kind != BindKind.Data)
+            {
                 return false;
+            }
 
             return binding.EntityScope != null &&
                 binding.EntityScope.TryGetEntity(firstNameInfo.Name, out dsInfo);
@@ -79,7 +89,9 @@ namespace Microsoft.PowerFx.Core.Functions.FunctionArgValidators
 
             dsInfo = null;
             if (dottedNameNode == null || !binding.HasExpandInfo(dottedNameNode))
+            {
                 return false;
+            }
 
             binding.TryGetEntityInfo(dottedNameNode, out var info).Verify();
             dsInfo = info.ParentDataSource;

@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation.
+﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
 using System.Collections.Generic;
@@ -16,7 +16,7 @@ namespace Microsoft.PowerFx.Core.Types
         };
 
         /// <returns>
-        /// The schema for an error value
+        /// The schema for an error value.
         /// </returns>
         private static IEnumerable<TypedName> ReifiedErrorSchema => new[] {
             new TypedName(EnumStore.GetEnum("ErrorKind"), new DName("Kind")),
@@ -27,12 +27,12 @@ namespace Microsoft.PowerFx.Core.Types
         };
 
         /// <returns>
-        /// The <see cref="DType"/> of an error value
+        /// The <see cref="DType"/> of an error value.
         /// </returns>
         public static DType ReifiedError() => DType.CreateRecord(ReifiedErrorSchema);
 
         /// <returns>
-        /// The <see cref="DType"/> of a collection of error values
+        /// The <see cref="DType"/> of a collection of error values.
         /// </returns>
         public static DType ReifiedErrorTable() => DType.CreateTable(ReifiedErrorSchema);
     }

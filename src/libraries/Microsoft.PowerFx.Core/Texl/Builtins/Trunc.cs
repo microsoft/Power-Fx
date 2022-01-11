@@ -30,6 +30,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             yield return new[] { TexlStrings.TruncArg1, TexlStrings.TruncArg2 };
         }
     }
+
     internal sealed class TruncTableFunction : BuiltinFunction
     {
         public override bool IsSelfContained => true;
@@ -59,7 +60,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertValue(errors);
             Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
 
-            var fValid = base.CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            var fValid = CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
 
             if (argTypes.Length == 2)
             {

@@ -64,7 +64,7 @@ namespace Microsoft.PowerFx
         private FunctionDescr _info;
 
         /// <summary>
-        /// Assume by defaults. Will reflect to get primitive types
+        /// Assume by defaults. Will reflect to get primitive types.
         /// </summary>
         protected ReflectionFunction()
         {
@@ -124,12 +124,17 @@ namespace Microsoft.PowerFx
 
                 _info = info;
             }
+
             return _info;
         }
 
         static FormulaType GetType(Type t)
         {
-            if (t == typeof(NumberValue)) return FormulaType.Number;
+            if (t == typeof(NumberValue))
+            {
+                return FormulaType.Number;
+            }
+
             throw new NotImplementedException($"Marshal type {t.Name}");
         }
 

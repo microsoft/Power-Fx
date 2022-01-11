@@ -26,8 +26,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
-            yield return new [] { TexlStrings.SubstituteFuncArg1, TexlStrings.SubstituteFuncArg2, TexlStrings.SubstituteFuncArg3 };
-            yield return new [] { TexlStrings.SubstituteFuncArg1, TexlStrings.SubstituteFuncArg2, TexlStrings.SubstituteFuncArg3, TexlStrings.SubstituteFuncArg4 };
+            yield return new[] { TexlStrings.SubstituteFuncArg1, TexlStrings.SubstituteFuncArg2, TexlStrings.SubstituteFuncArg3 };
+            yield return new[] { TexlStrings.SubstituteFuncArg1, TexlStrings.SubstituteFuncArg2, TexlStrings.SubstituteFuncArg3, TexlStrings.SubstituteFuncArg4 };
         }
     }
 
@@ -44,8 +44,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
-            yield return new [] { TexlStrings.SubstituteTFuncArg1, TexlStrings.SubstituteFuncArg2, TexlStrings.SubstituteFuncArg3 };
-            yield return new [] { TexlStrings.SubstituteTFuncArg1, TexlStrings.SubstituteFuncArg2, TexlStrings.SubstituteFuncArg3, TexlStrings.SubstituteFuncArg4 };
+            yield return new[] { TexlStrings.SubstituteTFuncArg1, TexlStrings.SubstituteFuncArg2, TexlStrings.SubstituteFuncArg3 };
+            yield return new[] { TexlStrings.SubstituteTFuncArg1, TexlStrings.SubstituteFuncArg2, TexlStrings.SubstituteFuncArg3, TexlStrings.SubstituteFuncArg4 };
         }
 
         public override string GetUniqueTexlRuntimeName(bool isPrefetching = false)
@@ -62,7 +62,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertValue(errors);
             Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
 
-            var fValid = base.CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            var fValid = CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
 
             var type0 = argTypes[0];
             var type1 = argTypes[1];
@@ -162,7 +162,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 errors.EnsureError(DocumentErrorSeverity.Severe, args[1], TexlStrings.ErrTypeError);
                 errors.EnsureError(DocumentErrorSeverity.Severe, args[2], TexlStrings.ErrTypeError);
                 if (hasCount)
+                {
                     errors.EnsureError(DocumentErrorSeverity.Severe, args[3], TexlStrings.ErrTypeError);
+                }
             }
 
             return fValid;

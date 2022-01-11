@@ -32,7 +32,9 @@ namespace Microsoft.PowerFx.Core.Types
                 {
                     // Skip if this column doesn't belong to this datasource.
                     if (skipIfNotInSchema && !tabularDataSource.Schema.Contains(new DName(columnName)))
+                    {
                         continue;
+                    }
 
                     retval |= dataSourceToQueryOptionsMap.AddSelect((IExternalTabularDataSource)tabularDataSource, new DName(columnName));
 

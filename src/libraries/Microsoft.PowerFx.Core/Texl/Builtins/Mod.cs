@@ -42,7 +42,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
-            yield return new [] { TexlStrings.ModTFuncArg1, TexlStrings.ModTFuncArg2 };
+            yield return new[] { TexlStrings.ModTFuncArg1, TexlStrings.ModTFuncArg2 };
         }
 
         public override string GetUniqueTexlRuntimeName(bool isPrefetching = false)
@@ -77,7 +77,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             else if (CheckType(arg0, type0, DType.Number, DefaultErrorContainer, out matchedWithCoercion))
             {
                 if (matchedWithCoercion)
+                {
                     CollectionUtils.Add(ref nodeToCoercedTypeMap, arg0, DType.Number);
+                }
             }
             else
             {
@@ -93,7 +95,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             else if (CheckType(arg1, type1, DType.Number, DefaultErrorContainer, out matchedWithCoercion))
             {
                 if (matchedWithCoercion)
+                {
                     CollectionUtils.Add(ref nodeToCoercedTypeMap, arg1, DType.Number);
+                }
             }
             else
             {
@@ -105,10 +109,14 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             // At least one arg has to be a table.
             if (!(type0.IsTable || type1.IsTable))
+            {
                 fValid = false;
+            }
 
             if (!fValid)
+            {
                 nodeToCoercedTypeMap = null;
+            }
 
             return fValid;
         }

@@ -46,7 +46,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
 
             // Base call yields unknown return type, so we set it accordingly below
-            var fArgsValid = base.CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            var fArgsValid = CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
 
             // Return type determined by second argument (function)
             // Since CheckInvocation is called on partial functions, return type should be error when a second argument is undefined
@@ -66,7 +66,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         /// With function has special syntax where datasource can be provided as scope parameter argument.
         /// </summary>
         /// <param name="node"></param>
-        /// <returns>TexlNode for argument that can be used to determine tabular datasource</returns>
+        /// <returns>TexlNode for argument that can be used to determine tabular datasource.</returns>
         public override IEnumerable<TexlNode> GetTabularDataSourceArg(CallNode node)
         {
             Contracts.AssertValue(node);
@@ -74,7 +74,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             var dsArg = node.Args.Children[0];
 
             if (dsArg is VariadicBase variadicBaseDSArg)
+            {
                 return variadicBaseDSArg.Children;
+            }
 
             return new[] { dsArg };
         }

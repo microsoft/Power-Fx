@@ -4,9 +4,9 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using Microsoft.PowerFx.Core.Tests;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Public.Values;
+using Microsoft.PowerFx.Core.Tests;
 using Xunit;
 
 namespace Microsoft.PowerFx.Interpreter.Tests

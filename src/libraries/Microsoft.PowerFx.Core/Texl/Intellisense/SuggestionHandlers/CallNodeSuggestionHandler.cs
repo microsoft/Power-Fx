@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation.
+﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
 using System.Linq;
@@ -53,7 +53,9 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
 
                     // If we are replacing the full token, also include the opening paren (since this will be provided by the suggestion)
                     if (replacementLength == spanLim - spanMin)
+                    {
                         replacementLength += TexlLexer.PunctuatorParenOpen.Length;
+                    }
 
                     intellisenseData.SetMatchArea(spanMin, cursorPos, replacementLength);
                     intellisenseData.BoundTo = intellisenseData.Binding.ErrorContainer.HasErrors(callNode) ? string.Empty : callNode.Head.Name;
@@ -76,7 +78,9 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
                         // Cursor position is before the closed parenthesis and there are no arguments.
                         // If there were arguments FindNode should have returned one of those.
                         if (intellisenseData.CurFunc != null && intellisenseData.CurFunc.MaxArity > 0)
+                        {
                             IntellisenseHelper.AddSuggestionsForTopLevel(intellisenseData, callNode);
+                        }
                     }
                     else if (IntellisenseHelper.CanSuggestAfterValue(cursorPos, intellisenseData.Script))
                     {

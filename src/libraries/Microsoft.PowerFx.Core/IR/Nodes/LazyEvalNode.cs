@@ -6,7 +6,7 @@ using Microsoft.PowerFx.Core.Utils;
 namespace Microsoft.PowerFx.Core.IR.Nodes
 {
     /// <summary>
-    /// Wraps an child IR Node that is evaluated on-demand by the LazyEval node's parent
+    /// Wraps an child IR Node that is evaluated on-demand by the LazyEval node's parent.
     /// </summary>
     internal sealed class LazyEvalNode : IntermediateNode
     {

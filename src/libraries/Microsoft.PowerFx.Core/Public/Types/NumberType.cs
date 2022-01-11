@@ -10,6 +10,7 @@ namespace Microsoft.PowerFx.Core.Public.Types
         internal NumberType() : base(new DType(DKind.Number))
         {
         }
+
         public override void Visit(ITypeVistor vistor)
         {
             vistor.Visit(this);

@@ -21,7 +21,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     /// and returns the result corresponding to the first matching value. If there is no match,
     /// an optional default value(which is last argument if number of arguments are even) is returned.
     /// Syntax:
-    /// Switch(Value to switch,Value to match 1...[2-N], Value to return for match1...[2-N], [Value to return if there's no match])
+    /// Switch(Value to switch,Value to match 1...[2-N], Value to return for match1...[2-N], [Value to return if there's no match]).
     /// </summary>
     internal sealed class SwitchFunction : BuiltinFunction
     {
@@ -73,7 +73,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
 
             if (fEven)
+            {
                 signature[cargCur] = TexlStrings.SwitchDefaultReturn;
+            }
 
             return new ReadOnlyCollection<TexlStrings.StringGetter[]>(new[] { signature });
         }
@@ -96,7 +98,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             // Check the switch expression type matches all case expression types in list.
             var fArgsValid = true;
             for (var i = 1; i < count - 1; i += 2)
-                fArgsValid &= CheckType(args[i], argTypes[i], argTypes[0], errors, coerceIfSupported: false, out bool  _);
+            {
+                fArgsValid &= CheckType(args[i], argTypes[i], argTypes[0], errors, coerceIfSupported: false, out bool _);
+            }
 
             var type = ReturnType;
             nodeToCoercedTypeMap = null;
@@ -111,7 +115,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 var nodeArg = args[i];
                 var typeArg = argTypes[i];
                 if (typeArg.IsError)
+                {
                     errors.EnsureError(args[i], TexlStrings.ErrTypeError);
+                }
 
                 var typeSuper = DType.Supertype(type, typeArg);
 
@@ -147,7 +153,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 // If there are an odd number of args, the last arg also participates.
                 i += 2;
                 if (i == count)
+                {
                     i--;
+                }
             }
 
             // Update the return type based on the specified invocation args.
@@ -168,13 +176,17 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 if (ArgValidators.DataSourceArgNodeValidator.TryGetValidValue(nodeArg, binding, out var tmpDsNodes))
                 {
                     foreach (var node in tmpDsNodes)
+                    {
                         dsNodes.Add(node);
+                    }
                 }
 
                 // If there are an odd number of args, the last arg also participates.
                 i += 2;
                 if (i == count)
+                {
                     i--;
+                }
             }
 
             return dsNodes.Any();
@@ -187,7 +199,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             dsNodes = new List<FirstNameNode>();
             if (callNode.Args.Count < 2)
+            {
                 return false;
+            }
 
             var args = callNode.Args.Children.VerifyValue();
             return TryGetDSNodes(binding, args, out dsNodes);
@@ -196,7 +210,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override bool SupportsPaging(CallNode callNode, TexlBinding binding)
         {
             if (!TryGetDataSourceNodes(callNode, binding, out var dsNodes))
+            {
                 return false;
+            }
 
             var args = callNode.Args.Children.VerifyValue();
             var count = args.Count();
@@ -204,12 +220,16 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             for (var i = 2; i < count;)
             {
                 if (!binding.IsPageable(args[i]))
+                {
                     return false;
+                }
 
                 // If there are an odd number of args, the last arg also participates.
                 i += 2;
                 if (i == count)
+                {
                     i--;
+                }
             }
 
             return true;

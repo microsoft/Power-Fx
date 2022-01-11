@@ -24,7 +24,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
-            yield return new [] { TexlStrings.RGBAArg1, TexlStrings.RGBAArg2, TexlStrings.RGBAArg3, TexlStrings.RGBAArg4 };
+            yield return new[] { TexlStrings.RGBAArg1, TexlStrings.RGBAArg2, TexlStrings.RGBAArg3, TexlStrings.RGBAArg4 };
         }
     }
 }

@@ -32,7 +32,7 @@ namespace Microsoft.PowerFx.Core.Functions
         { }
 
         public BuiltinFunction(DPath theNamespace, string name, TexlStrings.StringGetter description, FunctionCategories functionCategories, DType returnType, BigInteger maskLambdas, int arityMin, int arityMax, params DType[] paramTypes)
-            : this(theNamespace, name, /*localeSpecificName*/string.Empty,  description, functionCategories, returnType, maskLambdas, arityMin, arityMax, paramTypes)
+            : this(theNamespace, name, /*localeSpecificName*/string.Empty, description, functionCategories, returnType, maskLambdas, arityMin, arityMax, paramTypes)
         { }
 
         public BuiltinFunction(string name, TexlStrings.StringGetter description, FunctionCategories functionCategories, DType returnType, BigInteger maskLambdas, int arityMin, int arityMax, params DType[] paramTypes)

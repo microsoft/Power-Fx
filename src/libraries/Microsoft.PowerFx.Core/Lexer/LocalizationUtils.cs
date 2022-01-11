@@ -51,7 +51,7 @@ namespace Microsoft.PowerFx.Core.Lexer
             Contracts.AssertNonEmpty(listItems);
 
             var singleQuoteFormat = StringResources.Get("ListItemSingleQuotedFormat");
-            var listSeparator = LocalizationUtils.CurrentLocaleListSeparator + " ";
+            var listSeparator = CurrentLocaleListSeparator + " ";
             return string.Join(listSeparator, listItems.Select(item => string.Format(singleQuoteFormat, item)));
         }
     }

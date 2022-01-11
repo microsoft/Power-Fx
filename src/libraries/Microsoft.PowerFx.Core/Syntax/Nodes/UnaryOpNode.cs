@@ -70,9 +70,13 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
         {
             // For syntax coloring regarding percentages
             if (IsPercent)
+            {
                 return new Span(Child.Token.VerifyValue().Span.Min, Child.Token.VerifyValue().Span.Lim + TexlLexer.PunctuatorPercent.Length);
+            }
             else
+            {
                 return new Span(Token.VerifyValue().Span.Min, Child.VerifyValue().GetCompleteSpan().Lim);
+            }
         }
     }
 }

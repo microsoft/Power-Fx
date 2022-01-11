@@ -26,12 +26,16 @@ namespace Microsoft.PowerFx.Core.App.ErrorContainers
             Contracts.AssertValue(node);
 
             if (CollectionUtils.Size(_errors) == 0)
+            {
                 return false;
+            }
 
             foreach (var err in _errors)
             {
                 if (err.Node == node && err.Severity >= severity)
+                {
                     return true;
+                }
             }
 
             return false;
@@ -42,12 +46,16 @@ namespace Microsoft.PowerFx.Core.App.ErrorContainers
             Contracts.AssertValue(rootNode);
 
             if (CollectionUtils.Size(_errors) == 0)
+            {
                 return false;
+            }
 
             foreach (var err in _errors)
             {
                 if (err.Node.InTree(rootNode) && err.Severity >= severity)
+                {
                     return true;
+                }
             }
 
             return false;
@@ -56,7 +64,10 @@ namespace Microsoft.PowerFx.Core.App.ErrorContainers
         public bool GetErrors(ref List<TexlError> rgerr)
         {
             if (CollectionUtils.Size(_errors) == 0)
+            {
                 return false;
+            }
+
             CollectionUtils.Add(ref rgerr, _errors);
             return true;
         }
@@ -66,7 +77,9 @@ namespace Microsoft.PowerFx.Core.App.ErrorContainers
             if (_errors != null)
             {
                 foreach (var err in _errors)
+                {
                     yield return err;
+                }
             }
         }
 
@@ -81,7 +94,9 @@ namespace Microsoft.PowerFx.Core.App.ErrorContainers
             Contracts.AssertValue(args);
 
             if (!HasErrors(node, severity))
+            {
                 return Error(severity, node, errKey, args);
+            }
 
             return null;
         }
@@ -110,7 +125,9 @@ namespace Microsoft.PowerFx.Core.App.ErrorContainers
 
             // If there's no schema difference, this was just an invalid type.
             if (string.IsNullOrEmpty(schemaDifference.Key))
+            {
                 return;
+            }
 
             if (schemaDifferenceType.IsValid)
             {

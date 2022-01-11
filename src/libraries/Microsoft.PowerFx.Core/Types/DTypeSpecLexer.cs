@@ -32,7 +32,9 @@ namespace Microsoft.PowerFx.Core.Types
         public bool TryNextToken(out string token)
         {
             while (!Eol && CharacterUtils.IsSpace(CurChar))
+            {
                 ++_cursor;
+            }
 
             if (Eol)
             {
@@ -73,6 +75,7 @@ namespace Microsoft.PowerFx.Core.Types
                                 quote = '0';
                                 break;
                             }
+
                             // else we let the fall-through logic append c once more.
                         }
                     }
@@ -95,7 +98,9 @@ namespace Microsoft.PowerFx.Core.Types
             }
 
             while (!Eol && CharacterUtils.IsSpace(CurChar))
+            {
                 ++_cursor;
+            }
 
             return true;
         }

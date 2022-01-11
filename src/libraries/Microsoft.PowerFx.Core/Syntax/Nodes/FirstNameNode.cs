@@ -23,6 +23,7 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
 
             Ident = ident;
         }
+
         public FirstNameNode(ref int idNext, Token tok, Identifier ident)
             : this(ref idNext, tok, new SourceList(tok), ident)
         {

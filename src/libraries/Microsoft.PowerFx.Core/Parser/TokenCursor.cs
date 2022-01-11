@@ -33,10 +33,12 @@ namespace Microsoft.PowerFx.Core.Parser
 
         public TokenCursor Split()
         {
-            var split = new TokenCursor(_tokens);
-            split._currentTokenIndex = _currentTokenIndex;
-            split._currentToken = _currentToken;
-            split._currentTokenId = _currentTokenId;
+            var split = new TokenCursor(_tokens)
+            {
+                _currentTokenIndex = _currentTokenIndex,
+                _currentToken = _currentToken,
+                _currentTokenId = _currentTokenId
+            };
             return split;
         }
 
@@ -44,7 +46,7 @@ namespace Microsoft.PowerFx.Core.Parser
         private void AssertValid()
         {
             Contracts.AssertValue(_tokens);
-            Contracts.Assert(0 < _tokenCount && _tokenCount <= _tokens.Length);
+            Contracts.Assert(_tokenCount > 0 && _tokenCount <= _tokens.Length);
             Contracts.Assert(_tokens[_tokenCount - 1].Kind == TokKind.Eof);
 
             Contracts.AssertIndex(_currentTokenIndex, _tokenCount);
@@ -103,7 +105,10 @@ namespace Microsoft.PowerFx.Core.Parser
             AssertValid();
             var tok = _currentToken;
             if (_currentTokenId != TokKind.Eof)
+            {
                 MoveTo(_currentTokenIndex + 1);
+            }
+
             return tok;
         }
 
@@ -112,7 +117,10 @@ namespace Microsoft.PowerFx.Core.Parser
             AssertValid();
             int itok;
             if ((itok = _currentTokenIndex + 1) < _tokenCount)
+            {
                 return _tokens[itok].Kind;
+            }
+
             Contracts.Assert(_currentTokenId == TokKind.Eof);
             return _currentTokenId;
         }
@@ -129,8 +137,11 @@ namespace Microsoft.PowerFx.Core.Parser
         public Token[] SkipWhitespace()
         {
             var tokens = new List<Token>();
-            while(_currentTokenId == TokKind.Whitespace)
+            while (_currentTokenId == TokKind.Whitespace)
+            {
                 tokens.Add(TokMove());
+            }
+
             return tokens.ToArray();
         }
 
@@ -138,7 +149,10 @@ namespace Microsoft.PowerFx.Core.Parser
         {
             var tokens = new List<Token>();
             while (_currentTokenId == TokKind.Whitespace)
+            {
                 tokens.Add(TokMove());
+            }
+
             return initial.Concat(tokens);
         }
 
@@ -148,9 +162,15 @@ namespace Microsoft.PowerFx.Core.Parser
 
             var itokPeek = _currentTokenIndex + ditok;
             if (itokPeek >= _tokenCount)
+            {
                 return _tokenCount - 1;
+            }
+
             if (itokPeek < 0)
+            {
                 return ditok <= 0 ? 0 : _tokenCount - 1;
+            }
+
             return itokPeek;
         }
     }

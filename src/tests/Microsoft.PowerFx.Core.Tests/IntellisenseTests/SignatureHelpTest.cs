@@ -16,7 +16,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         /// <summary>
         /// Resolves to the directory in the src folder that corresponds to the current directory, which may
         /// instead include the subpath bin/(Debug|Release).AnyCPU, depending on whether the assembly was
-        /// built in debug or release mode
+        /// built in debug or release mode.
         /// </summary>
         private static readonly string _signatureHelpDirectory = Path.Join(Directory.GetCurrentDirectory(), "IntellisenseTests", "TestSignatures")
             .Replace(Path.Join("bin", "Debug.AnyCPU"), "src")
@@ -28,7 +28,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         /// <see cref="SignatureHelpId"/>.
         /// </summary>
         /// <param name="signatureHelp">
-        /// Signature help value to test
+        /// Signature help value to test.
         /// </param>
         private void CheckSignatureHelpTest(SignatureHelp signatureHelp, int helpId)
         {
@@ -57,7 +57,9 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
                 Assert.True(RegenerateSignatureHelp, "Snapshot regeneration must be explicitly enabled to make new snapshot tests. Target path is: " + signatureHelpPath);
 
                 if (!Directory.Exists(directory))
+                {
                     Directory.CreateDirectory(directory);
+                }
 
                 WriteSignatureHelp(signatureHelpPath, signatureHelp);
             }

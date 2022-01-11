@@ -14,9 +14,10 @@ namespace Microsoft.PowerFx.Core.UtilityDataStructures
     }
 
     // Contains both blocking and non-blocking item groups to be executed as concurrently as possible.
-    internal sealed class ConcurrentGroupedQueue<T> where T : IBlockableItem
+    internal sealed class ConcurrentGroupedQueue<T>
+        where T : IBlockableItem
     {
-#region Item Groups
+        #region Item Groups
         internal abstract class ItemGroup
         {
             public abstract bool IsBlocking { get; }
@@ -27,7 +28,10 @@ namespace Microsoft.PowerFx.Core.UtilityDataStructures
                 get
                 {
                     if (_items == null)
+                    {
                         return 0;
+                    }
+
                     return _items.Count;
                 }
             }
@@ -52,6 +56,7 @@ namespace Microsoft.PowerFx.Core.UtilityDataStructures
                 Contracts.Assert(IsOpenGroup);
                 _items.Remove(item);
             }
+
             public void Clear()
             {
                 _items.Clear();
@@ -104,7 +109,7 @@ namespace Microsoft.PowerFx.Core.UtilityDataStructures
                 Parallel.ForEach(_items, (evt) => action(evt));
             }
         }
-#endregion
+        #endregion
 
         private readonly RunItemAction _runItemAction;
         private readonly GroupEndAction _groupEndAction;
@@ -125,9 +130,13 @@ namespace Microsoft.PowerFx.Core.UtilityDataStructures
         private ItemGroup CreateNewItemGroup(T change)
         {
             if (change.IsBlocking)
+            {
                 return new BlockingItemGroup();
+            }
             else
+            {
                 return new NonBlockingItemGroup();
+            }
         }
 
         public void Enqueue(T change)
@@ -137,7 +146,7 @@ namespace Microsoft.PowerFx.Core.UtilityDataStructures
                 CurrentGroup = CreateNewItemGroup(change);
                 _itemGroupQueue.Enqueue(CurrentGroup);
             }
-            else if(CurrentGroup.IsBlocking != change.IsBlocking)
+            else if (CurrentGroup.IsBlocking != change.IsBlocking)
             {
                 CurrentGroup.CloseGroup();
                 CurrentGroup = CreateNewItemGroup(change);
@@ -165,6 +174,7 @@ namespace Microsoft.PowerFx.Core.UtilityDataStructures
             {
                 group.Clear();
             }
+
             _itemGroupQueue.Clear();
             CurrentGroup = null;
         }

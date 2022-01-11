@@ -19,16 +19,16 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override bool SupportsParamCoercion => true;
 
         public RandBetweenFunction()
-            : base("RandBetween",
-                  TexlStrings.AboutRandBetween,
-                  FunctionCategories.MathAndStat,
-                  returnType: DType.Number,
-                  maskLambdas: 0,
-                  arityMin: 2,
-                  arityMax: 2,
-                  DType.Number,
-                  DType.Number
-                  )
+            : base(
+                "RandBetween",
+                TexlStrings.AboutRandBetween,
+                FunctionCategories.MathAndStat,
+                returnType: DType.Number,
+                maskLambdas: 0,
+                arityMin: 2,
+                arityMax: 2,
+                DType.Number,
+                DType.Number)
         { }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()

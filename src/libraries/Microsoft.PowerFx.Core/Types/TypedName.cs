@@ -33,15 +33,9 @@ namespace Microsoft.PowerFx.Core.Types
             return sb.ToString();
         }
 
-        public static bool operator ==(TypedName tn1, TypedName tn2)
-        {
-            return tn1.Name == tn2.Name && tn1.Type == tn2.Type;
-        }
+        public static bool operator ==(TypedName tn1, TypedName tn2) => tn1.Name == tn2.Name && tn1.Type == tn2.Type;
 
-        public static bool operator !=(TypedName tn1, TypedName tn2)
-        {
-            return tn1.Name != tn2.Name || tn1.Type != tn2.Type;
-        }
+        public static bool operator !=(TypedName tn1, TypedName tn2) => tn1.Name != tn2.Name || tn1.Type != tn2.Type;
 
         public bool Equals(TypedName other)
         {
@@ -52,7 +46,10 @@ namespace Microsoft.PowerFx.Core.Types
         {
             Contracts.AssertValueOrNull(obj);
             if (!(obj is TypedName))
+            {
                 return false;
+            }
+
             return this == (TypedName)obj;
         }
 

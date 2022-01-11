@@ -33,7 +33,10 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures(int arity)
         {
             if (arity > 2)
+            {
                 return GetGenericSignatures(arity, TexlStrings.StatisticalArg, TexlStrings.StatisticalArg);
+            }
+
             return base.GetSignatures(arity);
         }
 
@@ -56,7 +59,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 if (CheckType(args[i], argTypes[i], DType.Number, DefaultErrorContainer, out var matchedWithCoercion))
                 {
                     if (matchedWithCoercion)
+                    {
                         CollectionUtils.Add(ref nodeToCoercedTypeMap, args[i], DType.Number, allowDupes: true);
+                    }
                 }
                 else
                 {
@@ -66,7 +71,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
 
             if (!fValid)
+            {
                 nodeToCoercedTypeMap = null;
+            }
 
             return fValid;
         }

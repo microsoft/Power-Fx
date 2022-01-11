@@ -30,7 +30,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
-            yield return new [] { TexlStrings.CountArg1 };
+            yield return new[] { TexlStrings.CountArg1 };
         }
 
         public override bool IsServerDelegatable(CallNode callNode, TexlBinding binding)
@@ -39,7 +39,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertValue(binding);
 
             if (!CheckArgsCount(callNode, binding))
+            {
                 return false;
+            }
 
             return TryGetValidDataSourceForDelegation(callNode, binding, out var dataSource, out var preferredFunctionDelegationCapability);
         }
@@ -76,7 +78,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             TryGetValidDataSourceForDelegation(callNode, binding, DelegationCapability.CountDistinct, out dataSource);
             if (dataSource != null && dataSource.IsDelegatable)
+            {
                 binding.ErrorContainer.EnsureError(DocumentErrorSeverity.Warning, callNode, TexlStrings.OpNotSupportedByServiceSuggestionMessage_OpNotSupportedByService, Name);
+            }
 
             return false;
         }

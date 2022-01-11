@@ -18,8 +18,8 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationMetadata
         // If no capability at column level specified then this would be the default filter functionality supported by column.
         private readonly DelegationCapability _defaultCapabilities;
 
-        public FilterOpMetadata(DType tableSchema, Dictionary<DPath, DelegationCapability> columnRestrictions, 
-            Dictionary<DPath, DelegationCapability> columnCapabilities, 
+        public FilterOpMetadata(DType tableSchema, Dictionary<DPath, DelegationCapability> columnRestrictions,
+            Dictionary<DPath, DelegationCapability> columnCapabilities,
             DelegationCapability filterFunctionsSupportedByAllColumns,
             DelegationCapability? filterFunctionsSupportedByTable)
             : base(tableSchema)
@@ -32,8 +32,9 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationMetadata
             _filterFunctionsSupportedByTable = filterFunctionsSupportedByTable;
             _defaultCapabilities = filterFunctionsSupportedByAllColumns;
             if (_filterFunctionsSupportedByTable != null)
+            {
                 _defaultCapabilities = filterFunctionsSupportedByAllColumns | DelegationCapability.Filter;
-
+            }
         }
 
         protected override Dictionary<DPath, DelegationCapability> ColumnRestrictions => _columnRestrictions;
@@ -54,9 +55,13 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationMetadata
                     // Otherwise this simply means that filter operators at table level are not supported.
                     // For example, Filter(CDS, Lower(Col1) != Lower(Col2)), here != operator at table level needs to be supported as it's not operating on any column directly. 
                     if (DefaultColumnCapabilities.Capabilities == DelegationCapability.None)
+                    {
                         return DelegationCapability.None;
+                    }
                     else
+                    {
                         return DelegationCapability.Filter;
+                    }
                 }
             }
         }
@@ -68,12 +73,16 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationMetadata
             // See if there is a specific capability defined for column.
             // If not then just return default one.
             if (!_columnCapabilities.TryGetValue(columnPath, out capabilities))
+            {
                 return base.TryGetColumnCapabilities(columnPath, out capabilities);
+            }
 
             // If metadata specified any restrictions for this column then apply those
             // before returning capabilities.
             if (TryGetColumnRestrictions(columnPath, out var restrictions))
+            {
                 capabilities &= ~restrictions;
+            }
 
             return true;
         }
@@ -81,9 +90,13 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationMetadata
         public override bool IsDelegationSupportedByTable(DelegationCapability delegationCapability)
         {
             if (_filterFunctionsSupportedByTable.HasValue)
+            {
                 return _filterFunctionsSupportedByTable.Value.HasCapability(delegationCapability.Capabilities);
+            }
             else
+            {
                 return base.IsDelegationSupportedByTable(delegationCapability); /* This is needed for compatibility with older metadata */
+            }
         }
 
         public bool IsColumnSearchable(DPath columnPath)

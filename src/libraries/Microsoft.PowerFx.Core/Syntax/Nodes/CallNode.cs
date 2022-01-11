@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation.
+﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
 using System;
@@ -29,7 +29,7 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
         public readonly string UniqueInvocationId;
 
         // Parse Tree is assigned a unique id that is used later to create unique node ids.
-        private volatile static int _uniqueInvocationIdNext;
+        private static volatile int _uniqueInvocationIdNext;
 
         public CallNode(ref int idNext, Token primaryToken, SourceList sourceList, Identifier head, TexlNode headNode, ListNode args, Token tokParenClose)
             : base(ref idNext, primaryToken, sourceList)
@@ -49,10 +49,14 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
             _depth = 1 + (args.Depth > headDepth ? args.Depth : headDepth);
 
             if (headNode != null)
+            {
                 MinChildID = Math.Min(headNode.MinChildID, MinChildID);
+            }
 
             if (args != null)
+            {
                 MinChildID = Math.Min(args.MinChildID, MinChildID);
+            }
 
 #pragma warning disable 420
             // A volatile field should not normally be passed using a ref or out parameter, since it will not be treated
@@ -115,13 +119,17 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
         public override Span GetTextSpan()
         {
             if (ParenClose == null)
+            {
                 return base.GetTextSpan();
+            }
+
             // If the call is a Service call then adjust the span for the entire call
             DottedNameNode dotted;
             if (HeadNode != null && (dotted = HeadNode.AsDottedName()) != null)
             {
                 return new Span(dotted.GetCompleteSpan().Min, ParenClose.Span.Lim);
             }
+
             return new Span(Head.Token.Span.Min, ParenClose.Span.Lim);
         }
 
@@ -142,7 +150,9 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
 
             DottedNameNode dotted;
             if (HeadNode != null && (dotted = HeadNode.AsDottedName()) != null)
+            {
                 return new Span(dotted.GetCompleteSpan().Min, limit);
+            }
 
             return new Span(Head.Token.Span.Min, limit);
         }

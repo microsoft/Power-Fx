@@ -114,6 +114,7 @@ namespace Microsoft.PowerFx.Core.Functions
                     errors.Error(callNode, TexlStrings.ErrNeedTable_Func, _function.Name);
                     fArgsValid = false;
                 }
+
                 // This assumes that the lambdas operate on the individual records
                 // of the table, not the entire table.
                 var fError = false;

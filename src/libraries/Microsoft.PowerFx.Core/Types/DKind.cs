@@ -20,7 +20,7 @@ namespace Microsoft.PowerFx.Core.Types
         // It represents a type that is not yet known, and it is used primarily for analysis
         // purposes (i.e. Top in static analysis).
         // This type does not have a runtime equivalent.
-        _Min = Unknown,
+        Min = Unknown,
         Unknown = 1,
 
         // Error is an authoring-time type. It is a supertype of all other types.
@@ -32,7 +32,7 @@ namespace Microsoft.PowerFx.Core.Types
         Record = 3,
         Table = 4,
 
-        _MinPrimitive = Boolean,
+        MinPrimitive = Boolean,
         Boolean = 5,
         Number = 6,
         String = 7,
@@ -54,7 +54,7 @@ namespace Microsoft.PowerFx.Core.Types
         OptionSetValue = 22,
         ViewValue = 23,
         NamedValue = 24,
-        _LimPrimitive = Control,
+        LimPrimitive = Control,
 
         // Control type.
         Control = 25,
@@ -83,6 +83,6 @@ namespace Microsoft.PowerFx.Core.Types
         File = 33,
         LargeImage = 34,
 
-        _Lim = 35,
+        Lim = 35,
     }
 }

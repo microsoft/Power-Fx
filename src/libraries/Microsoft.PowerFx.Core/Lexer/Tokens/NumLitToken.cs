@@ -11,16 +11,16 @@ namespace Microsoft.PowerFx.Core.Lexer.Tokens
         public NumLitToken(double value, Span span)
             : base(TokKind.NumLit, span)
         {
-            Contracts.Assert(double.MinValue <= value && value < double.MaxValue);
+            Contracts.Assert(value >= double.MinValue && value < double.MaxValue);
 
             Value = value;
         }
 
         /// <summary>
-        /// Copy Ctor for NumLitToken used by Clone
+        /// Copy Ctor for NumLitToken used by Clone.
         /// </summary>
-        /// <param name="tok">The token to be copied</param>
-        /// <param name="newSpan">The new span</param>
+        /// <param name="tok">The token to be copied.</param>
+        /// <param name="newSpan">The new span.</param>
         private NumLitToken(NumLitToken tok, Span newSpan)
             : this(tok.Value, newSpan)
         {
@@ -43,7 +43,10 @@ namespace Microsoft.PowerFx.Core.Lexer.Tokens
             Contracts.AssertValue(that);
 
             if (!(that is NumLitToken))
+            {
                 return false;
+            }
+
             var thatNumLitToken = that.As<NumLitToken>();
             return Value == thatNumLitToken.Value && base.Equals(that);
         }

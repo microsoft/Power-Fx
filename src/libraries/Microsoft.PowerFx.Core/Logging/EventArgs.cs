@@ -32,7 +32,7 @@ namespace Microsoft.PowerFx.Core.Logging
         }
     }
 
-    internal sealed class EndScenarioEventArgs: IEndScenarioEventArgs
+    internal sealed class EndScenarioEventArgs : IEndScenarioEventArgs
     {
         public string ScenarioGuid { get; }
         public string SerializedJson { get; }

@@ -20,7 +20,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
-            yield return new [] { TexlStrings.IsNumericArg1 };
+            yield return new[] { TexlStrings.IsNumericArg1 };
         }
     }
 }

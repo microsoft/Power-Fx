@@ -82,14 +82,18 @@ namespace Microsoft.PowerFx.Core.Localization
                 }
 
                 if (index < script.Length)
+                {
                     sb.Append(script, index, script.Length - index);
+                }
 
                 return sb.ToString();
             }
             finally
             {
                 if (sb != null)
+                {
                     StringBuilderCache.Release(sb);
+                }
             }
         }
 

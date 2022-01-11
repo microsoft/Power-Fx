@@ -25,7 +25,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
-            yield return new [] { TexlStrings.ShuffleArg1 };
+            yield return new[] { TexlStrings.ShuffleArg1 };
         }
 
         public override bool CheckInvocation(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
@@ -40,7 +40,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             var fError = false;
             returnType = argTypes[0].ToTable(ref fError);
-            
+
             return isValid && !fError;
         }
     }

@@ -10,17 +10,17 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
     {
         /// <summary>
         /// This method does the same as <see cref="Suggest"/>, but filters the suggestions by their text so
-        /// that they can be more easily compared
+        /// that they can be more easily compared.
         /// </summary>
         /// <param name="expression">
         /// Test case wherein the presence of the `|` character indicates cursor position.  See
         /// <see cref="TestSuggest"/> for more details.
         /// </param>
         /// <param name="contextTypeString">
-        /// The type that defines names and types that are valid in <see cref="expression"/>
+        /// The type that defines names and types that are valid in <see cref="expression"/>.
         /// </param>
         /// <returns>
-        /// List of string representing suggestions
+        /// List of string representing suggestions.
         /// </returns>
         private string[] SuggestStrings(string expression, string contextTypeString = null)
         {
@@ -38,11 +38,11 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         /// position. Note also that these test suggestion order as well as contents.
         /// </summary>
         /// <param name="expression">
-        /// Expression on which intellisense will be run
+        /// Expression on which intellisense will be run.
         /// </param>
         /// <param name="expectedSuggestions">
         /// A list of arguments that will be compared with the names of the output of
-        /// <see cref="Workspace.Suggest"/> in order
+        /// <see cref="Workspace.Suggest"/> in order.
         /// </param>
         [Theory]
         // CommentNodeSuggestionHandler
@@ -120,7 +120,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
 
         /// <summary>
         /// In cases for which Intellisense produces exceedingly numerous results it may be sufficient that
-        /// they (the cases) be validated based on whether they return suggestions at all
+        /// they (the cases) be validated based on whether they return suggestions at all.
         /// </summary>
         [Theory]
         // CallNodeSuggestionHandler

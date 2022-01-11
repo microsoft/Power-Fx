@@ -42,12 +42,16 @@ namespace Microsoft.PowerFx.Core.Entities.QueryOptions
             _keyColumns = new HashSet<string>();
 
             foreach (var select in selects)
+            {
                 _selects.Add(select);
+            }
 
             var parentDataSource = ExpandInfo.ParentDataSource as IExternalTabularDataSource;
             var keyColumns = parentDataSource?.GetKeyColumns(ExpandInfo);
             foreach (var keyColumn in keyColumns)
+            {
                 _selects.Add(keyColumn);
+            }
 
             _expands = new HashSet<ExpandQueryOptions>();
             IsRoot = isRoot;
@@ -67,11 +71,15 @@ namespace Microsoft.PowerFx.Core.Entities.QueryOptions
         public bool AddSelect(string selectColumnName)
         {
             if (string.IsNullOrEmpty(selectColumnName))
+            {
                 return false;
+            }
 
             var parentDataSource = ExpandInfo.ParentDataSource as IExternalTabularDataSource;
             if (!parentDataSource.CanIncludeSelect(ExpandInfo, selectColumnName))
+            {
                 return false;
+            }
 
             return _selects.Add(selectColumnName);
         }
@@ -82,6 +90,7 @@ namespace Microsoft.PowerFx.Core.Entities.QueryOptions
             {
                 return;
             }
+
             var CdsDataSourceInfo = ExpandInfo.ParentDataSource as IExternalCdsDataSource;
             var selectColumnNames = new HashSet<string>(_selects);
             foreach (var select in selectColumnNames)
@@ -95,29 +104,34 @@ namespace Microsoft.PowerFx.Core.Entities.QueryOptions
         }
 
         /// <summary>
-        /// Remove expands and replace it with annotated select column
+        /// Remove expands and replace it with annotated select column.
         /// </summary>
         internal bool ReplaceExpandsWithAnnotation(ExpandQueryOptions expand)
         {
             RemoveExpand(expand);
             var selectColumnName = expand.ExpandInfo.ExpandPath.EntityName;
             if (string.IsNullOrEmpty(selectColumnName))
+            {
                 return false;
+            }
 
             if (ExpandInfo.ParentDataSource == null || !(ExpandInfo.ParentDataSource is IExternalCdsDataSource))
             {
                 return false;
             }
+
             var parentDataSource = ExpandInfo.ParentDataSource as IExternalCdsDataSource;
             if (!parentDataSource.Document.GlobalScope.TryGetCdsDataSourceWithLogicalName(parentDataSource.DatasetName, ExpandInfo.Identity, out var expandDataSourceInfo) || expandDataSourceInfo == null)
             {
                 return false;
             }
+
             parentDataSource.TryGetRelatedColumn(selectColumnName, out var additionalColumnName, expandDataSourceInfo.TableDefinition);
             if (additionalColumnName == null || _selects.Contains(additionalColumnName))
             {
                 return false;
             }
+
             return _selects.Add(additionalColumnName);
         }
 
@@ -192,7 +206,9 @@ namespace Microsoft.PowerFx.Core.Entities.QueryOptions
             Contracts.AssertValue(added);
 
             if (original == added)
+            {
                 return false;
+            }
 
             var isOriginalModified = false;
 
@@ -200,7 +216,9 @@ namespace Microsoft.PowerFx.Core.Entities.QueryOptions
             foreach (var selectedFieldToAdd in added.Selects)
             {
                 if (original.Selects.Contains(selectedFieldToAdd))
+                {
                     continue;
+                }
 
                 original.AddSelect(selectedFieldToAdd);
                 isOriginalModified = true;
@@ -217,7 +235,9 @@ namespace Microsoft.PowerFx.Core.Entities.QueryOptions
             foreach (var expand in original.Expands)
             {
                 if (!entityPathToQueryOptionsMap.ContainsKey(expand.ExpandInfo.ExpandPath))
+                {
                     entityPathToQueryOptionsMap[expand.ExpandInfo.ExpandPath] = expand?.Clone();
+                }
             }
 
             foreach (var expand in added.Expands)
@@ -241,10 +261,15 @@ namespace Microsoft.PowerFx.Core.Entities.QueryOptions
             var queryOptions = CreateExpandQueryOptions(expandInfo);
             foreach (var currentExpand in Expands)
             {
-                if (!currentExpand.ExpandInfo.Equals(queryOptions.ExpandInfo)) continue;
+                if (!currentExpand.ExpandInfo.Equals(queryOptions.ExpandInfo))
+                {
+                    continue;
+                }
 
                 foreach (var qoSelect in queryOptions.Selects)
+                {
                     currentExpand.AddSelect(qoSelect);
+                }
 
                 return currentExpand;
             }
@@ -288,7 +313,9 @@ namespace Microsoft.PowerFx.Core.Entities.QueryOptions
             foreach (var expand in Expands)
             {
                 if (!expand.ExpandInfo.IsTable)
+                {
                     return true;
+                }
             }
 
             return false;

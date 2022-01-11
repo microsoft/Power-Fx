@@ -73,6 +73,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 {
                     break;
                 }
+
                 var line = lines[i];
                 if (string.IsNullOrWhiteSpace(line) || line.StartsWith("//"))
                 {
@@ -90,6 +91,7 @@ namespace Microsoft.PowerFx.Core.Tests
                     };
                     continue;
                 }
+
                 if (test != null)
                 {
                     // If it's indented, then part of previous line. 
@@ -113,6 +115,7 @@ namespace Microsoft.PowerFx.Core.Tests
                             continue;
                         }
                     }
+
                     test.SetExpected(line.Trim());
 
                     _tests.Add(test);
@@ -225,7 +228,7 @@ namespace Microsoft.PowerFx.Core.Tests
             {
                 sb.Append('[');
 
-                var dil = "";
+                var dil = string.Empty;
                 foreach (var row in t.Rows)
                 {
                     sb.Append(dil);
@@ -250,6 +253,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
                     dil = ",";
                 }
+
                 sb.Append(']');
             }
             else if (result is RecordValue r)
@@ -258,7 +262,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 Array.Sort(fields, (a, b) => string.CompareOrdinal(a.Name, b.Name));
 
                 sb.Append('{');
-                var dil = "";
+                var dil = string.Empty;
 
                 foreach (var field in fields)
                 {
@@ -269,6 +273,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
                     dil = ",";
                 }
+
                 sb.Append('}');
             }
             else if (result is BlankValue)

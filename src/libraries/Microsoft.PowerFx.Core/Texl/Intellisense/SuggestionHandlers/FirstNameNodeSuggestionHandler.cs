@@ -10,7 +10,8 @@ using Microsoft.PowerFx.Core.Syntax.Nodes;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 
-namespace Microsoft.PowerFx.Core.Texl.Intellisense{
+namespace Microsoft.PowerFx.Core.Texl.Intellisense
+{
     internal partial class Intellisense
     {
         internal sealed class FirstNameNodeSuggestionHandler : NodeKindSuggestionHandler
@@ -69,6 +70,7 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense{
                         // Suggest value posssibilities otherwise.
                         IntellisenseHelper.AddSuggestionsForValuePossibilities(intellisenseData, curNode);
                     }
+
                     intellisenseData.AddAdditionalSuggestionsForKeywordSymbols(curNode);
                 }
                 else if (IsBracketOpen(tok.Span.Lim, cursorPos, intellisenseData.Script))
@@ -106,15 +108,21 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense{
 
                 // Failsafe for index out of bounds exception.
                 if (begin < 0 || script.Length < cursorPos)
+                {
                     return false;
+                }
 
                 var bracketOpenCount = 0;
                 for (var i = begin; i < cursorPos; i++)
                 {
                     if (TexlLexer.PunctuatorBracketOpen.Equals(script[i].ToString()))
+                    {
                         bracketOpenCount++;
+                    }
                     else if (bracketOpenCount > 1 || !CharacterUtils.IsSpace(script[i]))
+                    {
                         return false;
+                    }
                 }
 
                 return bracketOpenCount == 1;
@@ -126,7 +134,9 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense{
                 Contracts.Assert(scope.IsValid);
 
                 foreach (var field in scope.GetNames(DPath.Root))
+                {
                     IntellisenseHelper.AddSuggestion(intellisenseData, TexlLexer.PunctuatorAt + TexlLexer.EscapeName(field.Name.Value), SuggestionKind.Field, SuggestionIconKind.Other, field.Type, requiresSuggestionEscaping: false);
+                }
             }
         }
     }

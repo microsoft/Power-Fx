@@ -1,10 +1,10 @@
-﻿using Microsoft.PowerFx.Core.IR;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.PowerFx.Core.IR;
+using Microsoft.PowerFx.Core.Public;
 using Microsoft.PowerFx.Core.Public.Types;
 using Microsoft.PowerFx.Core.Public.Values;
-using Microsoft.PowerFx.Core.Public;
 
 namespace Microsoft.PowerFx.Functions
 {
@@ -27,15 +27,15 @@ namespace Microsoft.PowerFx.Functions
         /// A pipeline that maps blanks to a value, checks
         /// runtime types, and possibly map values to errors
         /// before filtering errors and possibly returning
-        /// an ErrorValue instead of executing
+        /// an ErrorValue instead of executing.
         /// </summary>
-        /// <typeparam name="T">The specific FormulaValue type that the implementation of the builtin expects, for exmaple NumberValue for math functions</typeparam>
-        /// <param name="expandArguments">This stage of the pipeline can be used to expand an argument list if some of the arguments are optional and missing</param>
-        /// <param name="replaceBlankValues">This stage can be used to transform Blank() into something else, for example the number 0</param>
+        /// <typeparam name="T">The specific FormulaValue type that the implementation of the builtin expects, for exmaple NumberValue for math functions.</typeparam>
+        /// <param name="expandArguments">This stage of the pipeline can be used to expand an argument list if some of the arguments are optional and missing.</param>
+        /// <param name="replaceBlankValues">This stage can be used to transform Blank() into something else, for example the number 0.</param>
         /// <param name="checkRuntimeTypes">This stage can be used to check to that all the arguments have type T, or check that all arguments have type T | Blank(), etc.</param>
         /// <param name="checkRuntimeValues">This stage can be used to generate errors if specific values occur in the arguments, for example infinity, NaN, etc.</param>
-        /// <param name="returnBehavior">A flag that can be used to activate pre-defined early return behavior, such as returning Blank() if any argument is Blank()</param>
-        /// <param name="targetFunction">The implementation of the builtin function</param>
+        /// <param name="returnBehavior">A flag that can be used to activate pre-defined early return behavior, such as returning Blank() if any argument is Blank().</param>
+        /// <param name="targetFunction">The implementation of the builtin function.</param>
         /// <returns></returns>
         private static FunctionPtr StandardErrorHandling<T>(
                 Func<IRContext, IEnumerable<FormulaValue>, IEnumerable<FormulaValue>> expandArguments,
@@ -43,8 +43,8 @@ namespace Microsoft.PowerFx.Functions
                 Func<IRContext, int, FormulaValue, FormulaValue> checkRuntimeTypes,
                 Func<IRContext, int, FormulaValue, FormulaValue> checkRuntimeValues,
                 ReturnBehavior returnBehavior,
-                Func<EvalVisitor, SymbolContext, IRContext, T[], FormulaValue> targetFunction
-            ) where T : FormulaValue
+                Func<EvalVisitor, SymbolContext, IRContext, T[], FormulaValue> targetFunction)
+            where T : FormulaValue
         {
             return (runner, symbolContext, irContext, args) =>
             {
@@ -89,18 +89,21 @@ namespace Microsoft.PowerFx.Functions
                         {
                             return new BlankValue(IRContext.NotInSource(FormulaType.Blank));
                         }
+
                         break;
                     case ReturnBehavior.ReturnEmptyStringIfAnyArgIsBlank:
                         if (runtimeValuesChecked.Any(arg => arg is BlankValue))
                         {
-                            return new StringValue(IRContext.NotInSource(FormulaType.String), "");
+                            return new StringValue(IRContext.NotInSource(FormulaType.String), string.Empty);
                         }
+
                         break;
                     case ReturnBehavior.ReturnFalseIfAnyArgIsBlank:
                         if (runtimeValuesChecked.Any(arg => arg is BlankValue))
                         {
                             return new BooleanValue(IRContext.NotInSource(FormulaType.Boolean), false);
                         }
+
                         break;
                     case ReturnBehavior.AlwaysEvaluateAndReturnResult:
                         break;
@@ -119,8 +122,8 @@ namespace Microsoft.PowerFx.Functions
             Func<IRContext, int, FormulaValue, FormulaValue> checkRuntimeTypes,
             Func<IRContext, int, FormulaValue, FormulaValue> checkRuntimeValues,
             ReturnBehavior returnBehavior,
-            Func<IRContext, T[], FormulaValue> targetFunction
-            ) where T : FormulaValue
+            Func<IRContext, T[], FormulaValue> targetFunction)
+            where T : FormulaValue
         {
             return StandardErrorHandling<T>(expandArguments, replaceBlankValues, checkRuntimeTypes, checkRuntimeValues, returnBehavior, (runner, symbolContext, irContext, args) =>
             {
@@ -138,6 +141,7 @@ namespace Microsoft.PowerFx.Functions
                 {
                     res.Add(fillWith);
                 }
+
                 return res.ToArray();
             };
         }
@@ -154,6 +158,7 @@ namespace Microsoft.PowerFx.Functions
                     res.Add(count);
                 }
             }
+
             return res.ToArray();
         }
         #endregion
@@ -166,7 +171,7 @@ namespace Microsoft.PowerFx.Functions
 
         private static FormulaValue ReplaceBlankWithEmptyString(IRContext irContext, int index)
         {
-            return new StringValue(IRContext.NotInSource(FormulaType.String), "");
+            return new StringValue(IRContext.NotInSource(FormulaType.String), string.Empty);
         }
 
         private static Func<IRContext, int, FormulaValue> ReplaceBlankWith(params FormulaValue[] values)
@@ -186,13 +191,15 @@ namespace Microsoft.PowerFx.Functions
                 {
                     return new NumberValue(IRContext.NotInSource(FormulaType.Number), 0.0);
                 }
+
                 return new BlankValue(irContext);
             };
         }
         #endregion
 
         #region Common Type Checking Pipeline Stages
-        private static FormulaValue ExactValueType<T>(IRContext irContext, int index, FormulaValue arg) where T : FormulaValue
+        private static FormulaValue ExactValueType<T>(IRContext irContext, int index, FormulaValue arg)
+            where T : FormulaValue
         {
             if (arg is T || arg is ErrorValue)
             {
@@ -204,7 +211,8 @@ namespace Microsoft.PowerFx.Functions
             }
         }
 
-        private static FormulaValue ExactValueTypeOrBlank<T>(IRContext irContext, int index, FormulaValue arg) where T : FormulaValue
+        private static FormulaValue ExactValueTypeOrBlank<T>(IRContext irContext, int index, FormulaValue arg)
+            where T : FormulaValue
         {
             if (arg is BlankValue)
             {
@@ -246,6 +254,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 return arg;
             }
+
             return CommonErrors.RuntimeTypeMismatch(irContext);
         }
 
@@ -255,6 +264,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 return arg;
             }
+
             return CommonErrors.RuntimeTypeMismatch(irContext);
         }
         #endregion
@@ -270,6 +280,7 @@ namespace Microsoft.PowerFx.Functions
                     return CommonErrors.ArgumentOutOfRange(irContext);
                 }
             }
+
             return arg;
         }
 
@@ -284,6 +295,7 @@ namespace Microsoft.PowerFx.Functions
                     return CommonErrors.ArgumentOutOfRange(irContext);
                 }
             }
+
             return arg;
         }
 
@@ -298,6 +310,7 @@ namespace Microsoft.PowerFx.Functions
                     return CommonErrors.ArgumentOutOfRange(irContext);
                 }
             }
+
             return arg;
         }
 
@@ -312,6 +325,7 @@ namespace Microsoft.PowerFx.Functions
                     return CommonErrors.DivByZeroError(irContext);
                 }
             }
+
             return arg;
         }
 
@@ -328,6 +342,7 @@ namespace Microsoft.PowerFx.Functions
                         Kind = ErrorKind.InvalidFunctionUsage
                     });
                 }
+
                 var finiteCheckResult = FiniteChecker(irContext, index, arg);
                 if (finiteCheckResult is NumberValue numberArg)
                 {
@@ -337,12 +352,15 @@ namespace Microsoft.PowerFx.Functions
                         return CommonErrors.ArgumentOutOfRange(irContext);
                     }
                 }
+
                 return finiteCheckResult;
             }
+
             if (index == 2)
             {
                 return PositiveNumberChecker(irContext, index, arg);
             }
+
             return arg;
         }
         #endregion
@@ -365,7 +383,8 @@ namespace Microsoft.PowerFx.Functions
             return arg;
         }
 
-        private static FormulaValue DeferRuntimeValueChecking<T>(IRContext irContext, int index, T arg) where T : FormulaValue
+        private static FormulaValue DeferRuntimeValueChecking<T>(IRContext irContext, int index, T arg)
+            where T : FormulaValue
         {
             return arg;
         }

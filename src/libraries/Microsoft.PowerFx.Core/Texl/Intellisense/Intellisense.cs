@@ -48,7 +48,9 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
                 foreach (var handler in _suggestionHandlers)
                 {
                     if (handler.Run(intellisenseData))
+                    {
                         break;
+                    }
                 }
 
                 return Finalize(context, intellisenseData);
@@ -59,6 +61,7 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
                 // return an empty result set along with exception for client use.
                 return new IntellisenseResult(new DefaultIntellisenseData(), new List<IntellisenseSuggestion>(), ex);
             }
+
             // TODO: Hoist scenario tracking out of language module.
             // finally
             // {
@@ -74,11 +77,15 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
                 var binaryOpNode = curNode.Parent.CastBinaryOp();
                 TexlNode expectedNode = null;
                 if (cursorPos < binaryOpNode.Token.Span.Min)
+                {
                     // Cursor is before the binary operator. Expected type is equal to the type of right side.
                     expectedNode = binaryOpNode.Right;
+                }
                 else if (cursorPos > binaryOpNode.Token.Span.Lim)
+                {
                     // Cursor is after the binary operator. Expected type is equal to the type of left side.
                     expectedNode = binaryOpNode.Left;
+                }
 
                 if (expectedNode != null)
                 {
@@ -137,7 +144,9 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
                 // Non-zero sort priorities take precedence over type filtering.
                 var j = 0;
                 while (j < suggestions.Count && suggestions[j].SortPriority > 0)
+                {
                     j++;
+                }
 
                 IntellisenseSuggestion temp;
                 for (var i = j; i < suggestions.Count; i++)
@@ -152,6 +161,7 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
                             suggestions[k] = suggestions[k - 1];
                             k--;
                         }
+
                         suggestions[j++] = temp;
                     }
                 }
@@ -182,12 +192,16 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
 
             // The string type is too nebulous to push all matching string values to the top of the suggestion list
             if (type == DType.Unknown || type == DType.Error || type == DType.String)
+            {
                 return;
+            }
 
             foreach (var suggestion in suggestions)
             {
                 if (!suggestion.Type.IsUnknown && type.Accepts(suggestion.Type))
+                {
                     suggestion.SortPriority++;
+                }
             }
         }
 
@@ -222,12 +236,18 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
             }
 
             if (TryGetExpectedTypeForBinaryOp(binding, curNode, context.CursorPosition, out var binaryOpExpectedType))
+            {
                 expectedType = binaryOpExpectedType;
+            }
 
             if (curFunc != null)
+            {
                 isValidSuggestionFunc = (intellisenseData, suggestion) => intellisenseData.CurFunc.IsSuggestionTypeValid(intellisenseData.ArgIndex, suggestion.Type);
+            }
             else
+            {
                 isValidSuggestionFunc = Helper.DefaultIsValidSuggestionFunc;
+            }
         }
 
         private IIntellisenseResult Finalize(IIntellisenseContext context, IntellisenseData.IntellisenseData intellisenseData)
@@ -248,7 +268,9 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
             TypeFilter(expectedType, intellisenseData.MatchingStr, ref resultSuggestions);
 
             foreach (var handler in intellisenseData.CleanupHandlers)
+            {
                 handler.Run(context, intellisenseData, resultSuggestions);
+            }
 
             return new IntellisenseResult(intellisenseData, resultSuggestions);
         }

@@ -8,7 +8,7 @@ using Microsoft.PowerFx.Core.Utils;
 namespace Microsoft.PowerFx.Core.IR.Nodes
 {
     /// <summary>
-    /// For Record->Record and Table->Table, provides coercions for individual fields, potentially recursively
+    /// For Record->Record and Table->Table, provides coercions for individual fields, potentially recursively.
     /// </summary>
     internal sealed class AggregateCoercionNode : IntermediateNode
     {

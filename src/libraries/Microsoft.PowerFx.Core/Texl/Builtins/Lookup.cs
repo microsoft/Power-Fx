@@ -29,8 +29,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
-            yield return new [] { TexlStrings.LookUpArg1, TexlStrings.LookUpArg2 };
-            yield return new [] { TexlStrings.LookUpArg1, TexlStrings.LookUpArg2, TexlStrings.LookUpArg3 };
+            yield return new[] { TexlStrings.LookUpArg1, TexlStrings.LookUpArg2 };
+            yield return new[] { TexlStrings.LookUpArg1, TexlStrings.LookUpArg2, TexlStrings.LookUpArg3 };
         }
 
         public override bool CheckInvocation(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
@@ -41,7 +41,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.Assert(args.Length >= 2 && args.Length <= 3);
             Contracts.AssertValue(errors);
 
-            var fValid = base.CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            var fValid = CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
 
             // The return type is dictated by the last argument (projection) if one exists. Otherwise it's based on first argument (source).
             returnType = args.Length == 2 ? argTypes[0].ToRecord() : argTypes[2];
@@ -65,7 +65,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertValue(binding);
 
             if (!CheckArgsCount(callNode, binding))
+            {
                 return false;
+            }
 
             FilterOpMetadata metadata = null;
             if (TryGetEntityMetadata(callNode, binding, out IDelegationMetadata delegationMetadata))
@@ -82,7 +84,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             else
             {
                 if (!TryGetValidDataSourceForDelegation(callNode, binding, FunctionDelegationCapability, out var dataSource))
+                {
                     return false;
+                }
 
                 metadata = dataSource.DelegationMetadata.FilterDelegationMetadata;
             }
@@ -95,7 +99,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
 
             if (args.Length < 2)
+            {
                 return false;
+            }
 
             return IsValidDelegatableFilterPredicateNode(args[1], binding, metadata);
         }

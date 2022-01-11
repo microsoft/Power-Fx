@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation.
+﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
 using System;
@@ -12,7 +12,7 @@ using Microsoft.PowerFx.Core.Utils;
 namespace Microsoft.PowerFx.Core.Binding.BindInfo
 {
     /// <summary>
-    /// Binding information for "first" names.a
+    /// Binding information for "first" names.a.
     /// </summary>
     internal sealed class FirstNameInfo : NameInfo
     {

@@ -31,7 +31,7 @@ namespace Microsoft.PowerFx.Core.Binding
             {
                 Contracts.AssertValue(columnMetadata);
 
-                return (columnMetadata?.DataFormat == DataFormat.Lookup);
+                return columnMetadata?.DataFormat == DataFormat.Lookup;
             }
 
             public override void PostVisit(DottedNameNode node)
@@ -76,7 +76,9 @@ namespace Microsoft.PowerFx.Core.Binding
 
                     var entityPath = string.Empty;
                     if (lhsType.HasExpandInfo)
+                    {
                         entityPath = lhsType.ExpandInfo.ExpandPath.ToString();
+                    }
 
                     var expandedEntityType = GetExpandedEntityType(typeRhs, entityPath);
 

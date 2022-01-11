@@ -28,8 +28,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
-            yield return new [] { TexlStrings.TextArg1, TexlStrings.TextArg2 };
-            yield return new [] { TexlStrings.TextArg1, TexlStrings.TextArg2, TexlStrings.TextArg3 };
+            yield return new[] { TexlStrings.TextArg1, TexlStrings.TextArg2 };
+            yield return new[] { TexlStrings.TextArg1, TexlStrings.TextArg2, TexlStrings.TextArg3 };
         }
 
         public override bool CheckInvocation(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
@@ -115,8 +115,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 {
                     var end = fmt.IndexOf(']', 3);
                     if (end > 0)
+                    {
                         fmt = fmt.Substring(end + 1);
+                    }
                 }
+
                 var hasDateTimeFmt = fmt.IndexOfAny(new char[] { 'm', 'd', 'y', 'h', 'H', 's', 'a', 'A', 'p', 'P' }) >= 0;
                 var hasNumericFmt = fmt.IndexOfAny(new char[] { '0', '#' }) >= 0;
                 if (hasDateTimeFmt && hasNumericFmt)
@@ -155,7 +158,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         // This method returns true if there are special suggestions for a particular parameter of the function.
         public override bool HasSuggestionsForParam(int argumentIndex)
         {
-            Contracts.Assert(0 <= argumentIndex);
+            Contracts.Assert(argumentIndex >= 0);
 
             return argumentIndex == 1 || argumentIndex == 2;
         }

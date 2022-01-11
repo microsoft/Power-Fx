@@ -62,8 +62,10 @@ namespace Microsoft.PowerFx.Core.Binding
         public override void PostVisit(UnaryOpNode node)
         {
             Contracts.AssertValue(node);
-            if(node.Token.Kind == TokKind.PercentSign)
+            if (node.Token.Kind == TokKind.PercentSign)
+            {
                 _unaryOperators.Add(node);
+            }
         }
 
         public override void Visit(BoolLitNode node)

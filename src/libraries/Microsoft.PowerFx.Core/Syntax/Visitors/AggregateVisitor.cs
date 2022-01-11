@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation.
+﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
 using System;
@@ -9,7 +9,7 @@ using Microsoft.PowerFx.Core.Syntax.Nodes;
 namespace Microsoft.PowerFx.Core.Syntax.Visitors
 {
     /// <summary>
-    /// A base visitor for returning results that can be easily aggregated (lists, booleans, sums)
+    /// A base visitor for returning results that can be easily aggregated (lists, booleans, sums).
     /// </summary>
     internal abstract class AggregateVisitor<Result, Context> : DefaultVisitor<Result, Context>
     {

@@ -78,7 +78,9 @@ namespace Microsoft.PowerFx.Core.Utils
             Contracts.CheckValue(input, nameof(input));
 
             if (string.IsNullOrWhiteSpace(input))
+            {
                 return input;
+            }
 
             var length = input.Length;
             var lengthForBuilder = EstimateEscapedStringLength(length) + 2 /* for the quotes */;
@@ -116,9 +118,13 @@ namespace Microsoft.PowerFx.Core.Utils
                 else if (IsDigit(ch))
                 {
                     if (i == 0)
+                    {
                         UpdateEscapeInternals("_" + ch, name, estimatedLength, i, ref charsToAdd, ref sb);
+                    }
                     else
+                    {
                         charsToAdd++;
+                    }
                 }
                 else
                 {
@@ -128,10 +134,14 @@ namespace Microsoft.PowerFx.Core.Utils
 
             // The original string wasn't modified.
             if (sb == null)
+            {
                 return name;
+            }
 
             if (charsToAdd > 0)
+            {
                 sb.Append(name, length - charsToAdd, charsToAdd);
+            }
 
             Contracts.Assert(sb.Length > 0);
             return StringBuilderCache.GetStringAndRelease(sb);
@@ -162,21 +172,25 @@ namespace Microsoft.PowerFx.Core.Utils
             {
                 switch (value[i])
                 {
-                case '\"':
-                    UpdateEscapeInternals("\"\"", value, lengthForBuilder, i, ref charsToAdd, ref sb);
-                    break;
-                default:
-                    charsToAdd++;
-                    break;
+                    case '\"':
+                        UpdateEscapeInternals("\"\"", value, lengthForBuilder, i, ref charsToAdd, ref sb);
+                        break;
+                    default:
+                        charsToAdd++;
+                        break;
                 }
             }
 
             // The original string wasn't modified.
             if (sb == null)
+            {
                 return value;
+            }
 
             if (charsToAdd > 0)
+            {
                 sb.Append(value, length - charsToAdd, charsToAdd);
+            }
 
             return StringBuilderCache.GetStringAndRelease(sb);
         }
@@ -185,34 +199,38 @@ namespace Microsoft.PowerFx.Core.Utils
         public static bool IsDigit(char ch)
         {
             if (ch < 128)
-                return (((uint)ch - '0') <= 9);
+            {
+                return ((uint)ch - '0') <= 9;
+            }
 
-            return ((GetUniCatFlags(ch) & UniCatFlags.DecimalDigitNumber) != 0);
+            return (GetUniCatFlags(ch) & UniCatFlags.DecimalDigitNumber) != 0;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsFormatCh(char ch)
         {
-            return (ch >= 128 && (GetUniCatFlags(ch) & UniCatFlags.Format) != 0);
+            return ch >= 128 && (GetUniCatFlags(ch) & UniCatFlags.Format) != 0;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsLatinAlpha(char ch)
         {
-            return ((ch >= 'A' && ch <= 'Z') || (ch >= 'a' && ch <= 'z'));
+            return (ch >= 'A' && ch <= 'Z') || (ch >= 'a' && ch <= 'z');
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static UniCatFlags GetUniCatFlags(char ch)
         {
-            return ((UniCatFlags)(1u << (int)CharUnicodeInfo.GetUnicodeCategory(ch)));
+            return (UniCatFlags)(1u << (int)CharUnicodeInfo.GetUnicodeCategory(ch));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsSpace(char ch)
         {
             if (ch >= 128)
+            {
                 return (GetUniCatFlags(ch) & UniCatFlags.SpaceSeparator) != 0;
+            }
 
             switch (ch)
             {
@@ -223,7 +241,7 @@ namespace Microsoft.PowerFx.Core.Utils
                 case '\u000B':
                 // form feed
                 case '\u000C':
-                        return true;
+                    return true;
             }
 
             return false;
@@ -237,7 +255,9 @@ namespace Microsoft.PowerFx.Core.Utils
             for (var i = 0; i < length; i++)
             {
                 if (IsSpace(str[i]))
+                {
                     return true;
+                }
             }
 
             return false;
@@ -248,17 +268,17 @@ namespace Microsoft.PowerFx.Core.Utils
         {
             switch (ch)
             {
-            // line feed, unicode 0x000A
-            case '\n':
-            // carriage return, unicode 0x000D
-            case '\r':
-            // Unicode next line
-            case '\u0085':
-            // Unicode line separator
-            case '\u2028':
-            // Unicode paragraph separator
-            case '\u2029':
-                return true;
+                // line feed, unicode 0x000A
+                case '\n':
+                // carriage return, unicode 0x000D
+                case '\r':
+                // Unicode next line
+                case '\u0085':
+                // Unicode line separator
+                case '\u2028':
+                // Unicode paragraph separator
+                case '\u2029':
+                    return true;
             }
 
             return false;
@@ -278,57 +298,61 @@ namespace Microsoft.PowerFx.Core.Utils
             {
                 switch (value[i])
                 {
-                case '\\':
-                    UpdateEscapeInternals("\\\\", value, lengthForBuilder, i, ref charsToAdd, ref sb);
-                    break;
-                case '\"':
-                    UpdateEscapeInternals("\\\"", value, lengthForBuilder, i, ref charsToAdd, ref sb);
-                    break;
-                case '\'':
-                    UpdateEscapeInternals("\\\'", value, lengthForBuilder, i, ref charsToAdd, ref sb);
-                    break;
-                case '\0':
-                    UpdateEscapeInternals("\\0", value, lengthForBuilder, i, ref charsToAdd, ref sb);
-                    break;
-                case '\b':
-                    UpdateEscapeInternals("\\b", value, lengthForBuilder, i, ref charsToAdd, ref sb);
-                    break;
-                case '\t':
-                    UpdateEscapeInternals("\\t", value, lengthForBuilder, i, ref charsToAdd, ref sb);
-                    break;
-                case '\n':
-                    UpdateEscapeInternals("\\n", value, lengthForBuilder, i, ref charsToAdd, ref sb);
-                    break;
-                case '\v':
-                    UpdateEscapeInternals("\\v", value, lengthForBuilder, i, ref charsToAdd, ref sb);
-                    break;
-                case '\f':
-                    UpdateEscapeInternals("\\f", value, lengthForBuilder, i, ref charsToAdd, ref sb);
-                    break;
-                case '\r':
-                    UpdateEscapeInternals("\\r", value, lengthForBuilder, i, ref charsToAdd, ref sb);
-                    break;
-                case '\u0085':
-                    UpdateEscapeInternals("\\u0085", value, lengthForBuilder, i, ref charsToAdd, ref sb);
-                    break;
-                case '\u2028':
-                    UpdateEscapeInternals("\\u2028", value, lengthForBuilder, i, ref charsToAdd, ref sb);
-                    break;
-                case '\u2029':
-                    UpdateEscapeInternals("\\u2029", value, lengthForBuilder, i, ref charsToAdd, ref sb);
-                    break;
-                default:
-                    charsToAdd++;
-                    break;
+                    case '\\':
+                        UpdateEscapeInternals("\\\\", value, lengthForBuilder, i, ref charsToAdd, ref sb);
+                        break;
+                    case '\"':
+                        UpdateEscapeInternals("\\\"", value, lengthForBuilder, i, ref charsToAdd, ref sb);
+                        break;
+                    case '\'':
+                        UpdateEscapeInternals("\\\'", value, lengthForBuilder, i, ref charsToAdd, ref sb);
+                        break;
+                    case '\0':
+                        UpdateEscapeInternals("\\0", value, lengthForBuilder, i, ref charsToAdd, ref sb);
+                        break;
+                    case '\b':
+                        UpdateEscapeInternals("\\b", value, lengthForBuilder, i, ref charsToAdd, ref sb);
+                        break;
+                    case '\t':
+                        UpdateEscapeInternals("\\t", value, lengthForBuilder, i, ref charsToAdd, ref sb);
+                        break;
+                    case '\n':
+                        UpdateEscapeInternals("\\n", value, lengthForBuilder, i, ref charsToAdd, ref sb);
+                        break;
+                    case '\v':
+                        UpdateEscapeInternals("\\v", value, lengthForBuilder, i, ref charsToAdd, ref sb);
+                        break;
+                    case '\f':
+                        UpdateEscapeInternals("\\f", value, lengthForBuilder, i, ref charsToAdd, ref sb);
+                        break;
+                    case '\r':
+                        UpdateEscapeInternals("\\r", value, lengthForBuilder, i, ref charsToAdd, ref sb);
+                        break;
+                    case '\u0085':
+                        UpdateEscapeInternals("\\u0085", value, lengthForBuilder, i, ref charsToAdd, ref sb);
+                        break;
+                    case '\u2028':
+                        UpdateEscapeInternals("\\u2028", value, lengthForBuilder, i, ref charsToAdd, ref sb);
+                        break;
+                    case '\u2029':
+                        UpdateEscapeInternals("\\u2029", value, lengthForBuilder, i, ref charsToAdd, ref sb);
+                        break;
+                    default:
+                        charsToAdd++;
+                        break;
                 }
             }
 
             // The original string wasn't modified.
             if (sb == null)
+            {
                 return value;
+            }
 
             if (charsToAdd > 0)
+            {
                 sb.Append(value, length - charsToAdd, charsToAdd);
+            }
 
             return finalizeBuilder ? StringBuilderCache.GetStringAndRelease(sb) : string.Empty;
         }

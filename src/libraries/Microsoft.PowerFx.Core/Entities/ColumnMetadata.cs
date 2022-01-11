@@ -33,11 +33,11 @@ namespace Microsoft.PowerFx.Core.Entities
         {
             { DKind.Number, AllowedValuesOnly },
             { DKind.Currency, AllowedValuesOnly },
-            { DKind.String, new [] { DataFormat.AllowedValues, DataFormat.Email, DataFormat.Multiline, DataFormat.Phone } },
-            { DKind.Record, new [] { DataFormat.Lookup } },
-            { DKind.Table, new [] {DataFormat.Lookup} },
-            { DKind.Attachment, new [] {DataFormat.Attachment} },
-            { DKind.OptionSetValue, new [] {DataFormat.Lookup} }
+            { DKind.String, new[] { DataFormat.AllowedValues, DataFormat.Email, DataFormat.Multiline, DataFormat.Phone } },
+            { DKind.Record, new[] { DataFormat.Lookup } },
+            { DKind.Table, new[] { DataFormat.Lookup } },
+            { DKind.Attachment, new[] { DataFormat.Attachment } },
+            { DKind.OptionSetValue, new[] { DataFormat.Lookup } }
         };
 
         public static DataFormat[] GetValidDataFormats(DKind dkind)
@@ -105,7 +105,7 @@ namespace Microsoft.PowerFx.Core.Entities
     }
 
     /// <summary>
-    /// Implements logic for describing metadata about a datasource column
+    /// Implements logic for describing metadata about a datasource column.
     /// </summary>
     [DebuggerDisplay("Name={Name} ({DisplayName}) Type={Type.ToString()}")]
     internal sealed class ColumnMetadata : IExternalColumnMetadata
@@ -113,10 +113,21 @@ namespace Microsoft.PowerFx.Core.Entities
         private readonly ColumnCreationKind _kind;
         private readonly ColumnVisibility _visibility;
 
-        public ColumnMetadata(string name, DType schema, DataFormat? dataFormat, string displayName, bool isReadOnly, bool isKey, bool isRequired,
-            ColumnCreationKind creationKind, ColumnVisibility visibility,
-            string titleColumnName, string subtitleColumnName, string thumbnailColumnName,
-            ColumnLookupMetadata? lookupMetadata, ColumnAttachmentMetadata? attachmentMetadata)
+        public ColumnMetadata(
+            string name,
+            DType schema,
+            DataFormat? dataFormat,
+            string displayName,
+            bool isReadOnly,
+            bool isKey,
+            bool isRequired,
+            ColumnCreationKind creationKind,
+            ColumnVisibility visibility,
+            string titleColumnName,
+            string subtitleColumnName,
+            string thumbnailColumnName,
+            ColumnLookupMetadata? lookupMetadata,
+            ColumnAttachmentMetadata? attachmentMetadata)
         {
             Contracts.AssertNonEmpty(name);
             Contracts.AssertValid(schema);
@@ -143,8 +154,10 @@ namespace Microsoft.PowerFx.Core.Entities
             LookupMetadata = lookupMetadata;
             AttachmentMetadata = attachmentMetadata;
 
-            if (dataFormat == PowerFx.Core.App.DataFormat.AllowedValues)
+            if (dataFormat == App.DataFormat.AllowedValues)
+            {
                 AllowedValues = AllowedValuesMetadata.CreateForValue(schema);
+            }
         }
 
         public string Name { get; }

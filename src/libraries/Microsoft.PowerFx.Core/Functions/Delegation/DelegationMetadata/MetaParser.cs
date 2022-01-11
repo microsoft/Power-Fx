@@ -19,7 +19,9 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationMetadata
 
                 // Retrieve the entry for the column using column name as key.
                 if (!columnCapabilityJsonObj.TryGetProperty(capabilityKey, out var functionsJsonArray))
+                {
                     return DelegationCapability.None;
+                }
 
                 DelegationCapability columnCapability = DelegationCapability.None;
                 foreach (var op in functionsJsonArray.EnumerateArray())
@@ -29,7 +31,9 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationMetadata
 
                     // If we don't support the operator then don't look at this capability.
                     if (!DelegationCapability.OperatorToDelegationCapabilityMap.ContainsKey(operatorStr))
+                    {
                         continue;
+                    }
 
                     columnCapability |= DelegationCapability.OperatorToDelegationCapabilityMap[operatorStr];
                 }

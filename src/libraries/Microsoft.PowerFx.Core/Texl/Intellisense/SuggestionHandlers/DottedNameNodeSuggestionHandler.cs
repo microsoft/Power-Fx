@@ -42,7 +42,7 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
 
                 var isOneColumnTable = leftType.IsColumn
                                         && leftNode.Kind == NodeKind.DottedName
-                                        && leftType.Accepts(intellisenseData.Binding.GetType(((DottedNameNode) leftNode).Left));
+                                        && leftType.Accepts(intellisenseData.Binding.GetType(((DottedNameNode)leftNode).Left));
 
                 if (cursorPos < ident.Token.Span.Min)
                 {
@@ -59,7 +59,9 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
                     intellisenseData.SetMatchArea(ident.Token.Span.Min, cursorPos, ident.Token.Span.Lim - ident.Token.Span.Min);
 
                     if (!intellisenseData.Binding.ErrorContainer.HasErrors(dottedNameNode))
+                    {
                         intellisenseData.BoundTo = identName;
+                    }
 
                     AddSuggestionsForLeftNodeScope(intellisenseData, leftNode, isOneColumnTable, leftType);
                 }
@@ -187,7 +189,9 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
                 Contracts.AssertValid(type);
 
                 if (intellisenseData.TryAddCustomDottedNameSuggestions(type))
+                {
                     return;
+                }
 
                 if (!type.IsTable)
                 {

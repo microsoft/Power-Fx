@@ -16,13 +16,14 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override bool SupportsParamCoercion => true;
 
         public PiFunction()
-            : base("Pi",
-                  TexlStrings.AboutPi,
-                  FunctionCategories.MathAndStat,
-                  DType.Number, // return type
-                  0,            // no lambdas
-                  0,            // min arity of 0
-                  0)            // max arity of 0
+            : base(
+                "Pi",
+                TexlStrings.AboutPi,
+                FunctionCategories.MathAndStat,
+                DType.Number, // return type
+                0,            // no lambdas
+                0,            // min arity of 0
+                0)            // max arity of 0
         { }
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {

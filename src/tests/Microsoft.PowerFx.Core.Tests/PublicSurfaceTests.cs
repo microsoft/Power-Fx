@@ -77,7 +77,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
             var sb = new StringBuilder();
             var count = 0;
-            foreach(var type in asm.GetTypes().Where(t => t.IsPublic))
+            foreach (var type in asm.GetTypes().Where(t => t.IsPublic))
             {
                 var name = type.FullName;
                 if (!allowed.Contains(name))
@@ -89,10 +89,10 @@ namespace Microsoft.PowerFx.Core.Tests
                 allowed.Remove(name);
             }
 
-            Assert.True(0 == count, $"Unexpected public types: {sb}");
+            Assert.True(count == 0, $"Unexpected public types: {sb}");
 
             // Types we expect to be in the assembly are all there. 
-            Assert.Empty(allowed); 
+            Assert.Empty(allowed);
         }
     }
 }

@@ -24,7 +24,7 @@ namespace Microsoft.PowerFx.Core.Types
         /// The last parameter type of service functions is a record.  The fields of this argument do not have to
         /// be defined in order for an invocation to correctly type check.  The individual field types must match
         /// the expected type exactly, however, so it is necessary to set this value for a single aggregate DType
-        /// and not for the individual field types within
+        /// and not for the individual field types within.
         /// </summary>
         public bool AreFieldsOptional { get; set; } = false;
 
@@ -81,7 +81,8 @@ namespace Microsoft.PowerFx.Core.Types
         }
 
         private static readonly Lazy<Dictionary<DKind, DKind>> _kindToSuperkindMapping =
-            new Lazy<Dictionary<DKind, DKind>>(() => new Dictionary<DKind, DKind>
+            new Lazy<Dictionary<DKind, DKind>>(
+                () => new Dictionary<DKind, DKind>
             {
                 { DKind.DateTimeNoTimeZone, DKind.DateTime },
                 { DKind.Date, DKind.DateTime },
@@ -135,7 +136,7 @@ namespace Microsoft.PowerFx.Core.Types
         /// NamedValueKind is used only for values of kind NamedValue
         /// It is a restriction on what variety of named value it actually is
         /// Semantically, NamedValues of a given kind only interact with other ones of the same Kind
-        /// Null for non-named value DTypes
+        /// Null for non-named value DTypes.
         /// </summary>
         internal string NamedValueKind { get; }
 
@@ -152,7 +153,7 @@ namespace Microsoft.PowerFx.Core.Types
 
         public DType(DKind kind)
         {
-            Contracts.Assert(DKind._Min <= kind && kind < DKind._Lim);
+            Contracts.Assert(kind >= DKind.Min && kind < DKind.Lim);
 
             Kind = kind;
             TypeTree = default;
@@ -175,7 +176,9 @@ namespace Microsoft.PowerFx.Core.Types
             Contracts.AssertValueOrNull(dataSourceInfo);
 
             if (dataSourceInfo == null)
+            {
                 dataSourceInfo = new HashSet<IExternalTabularDataSource>();
+            }
 
             AssociatedDataSources = dataSourceInfo;
         }
@@ -205,7 +208,7 @@ namespace Microsoft.PowerFx.Core.Types
         // Constructor for aggregate types (record, table)
         public DType(DKind kind, TypeTree tree, bool isFile = false, bool isLargeImage = false)
         {
-            Contracts.Assert(DKind._Min <= kind && kind < DKind._Lim);
+            Contracts.Assert(kind >= DKind.Min && kind < DKind.Lim);
             tree.AssertValid();
             Contracts.Assert(tree.IsEmpty || kind == DKind.Table || kind == DKind.Record);
 
@@ -229,7 +232,7 @@ namespace Microsoft.PowerFx.Core.Types
         // Constructor for enum types
         public DType(DKind superkind, ValueTree enumTree)
         {
-            Contracts.Assert(DKind._Min <= superkind && superkind < DKind._Lim);
+            Contracts.Assert(superkind >= DKind.Min && superkind < DKind.Lim);
 
             Kind = DKind.Enum;
             TypeTree = default;
@@ -461,13 +464,13 @@ namespace Microsoft.PowerFx.Core.Types
         [Conditional("DEBUG")]
         internal void AssertValid()
         {
-            Contracts.Assert(DKind._Min <= Kind && Kind < DKind._Lim);
+            Contracts.Assert(Kind >= DKind.Min && Kind < DKind.Lim);
 #if DEBUG
             TypeTree.AssertValid();
 #endif
             Contracts.Assert(TypeTree.IsEmpty || Kind == DKind.Table || Kind == DKind.Record || Kind == DKind.Control || Kind == DKind.DataEntity || Kind == DKind.Attachment || Kind == DKind.File || Kind == DKind.LargeImage || Kind == DKind.OptionSet || Kind == DKind.OptionSetValue || Kind == DKind.View || Kind == DKind.ViewValue);
             Contracts.Assert(ValueTree.IsEmpty || Kind == DKind.Enum);
-            Contracts.Assert(Kind != DKind.Enum || (DKind._Min <= EnumSuperkind && EnumSuperkind < DKind._Lim && EnumSuperkind != DKind.Enum));
+            Contracts.Assert(Kind != DKind.Enum || (EnumSuperkind >= DKind.Min && EnumSuperkind < DKind.Lim && EnumSuperkind != DKind.Enum));
             Contracts.Assert((Metadata != null) == (Kind == DKind.Metadata));
             Contracts.Assert((_attachmentType != null) == (Kind == DKind.Attachment));
 #if DEBUG
@@ -485,7 +488,7 @@ namespace Microsoft.PowerFx.Core.Types
 
         public DKind Kind { get; }
 
-        public bool IsValid => DKind._Min <= Kind && Kind < DKind._Lim;
+        public bool IsValid => Kind >= DKind.Min && Kind < DKind.Lim;
         public bool IsUnknown => Kind == DKind.Unknown;
         public bool IsError => Kind == DKind.Error;
         public bool IsRecord => Kind == DKind.Record || Kind == DKind.ObjNull;
@@ -500,7 +503,7 @@ namespace Microsoft.PowerFx.Core.Types
         public bool IsOptionSet => Kind == DKind.OptionSet || Kind == DKind.OptionSetValue;
         public bool IsView => Kind == DKind.View || Kind == DKind.ViewValue;
         public bool IsAggregate => Kind == DKind.Table || Kind == DKind.Record || Kind == DKind.ObjNull;
-        public bool IsPrimitive => DKind._MinPrimitive <= Kind && Kind < DKind._LimPrimitive || Kind == DKind.ObjNull;
+        public bool IsPrimitive => Kind >= DKind.MinPrimitive && Kind < DKind.LimPrimitive || Kind == DKind.ObjNull;
 
         private readonly bool _isFile;
         public bool IsFile => _isFile || Kind == DKind.File;
@@ -514,9 +517,12 @@ namespace Microsoft.PowerFx.Core.Types
             get
             {
                 if (_IsActivityPointer.HasValue)
+                {
                     return _IsActivityPointer.Value;
+                }
+
                 TryGetType(new DName("activity_pointer_fax"), out var activityReferenceType);
-                _IsActivityPointer = IsRecord && activityReferenceType != DType.Invalid;
+                _IsActivityPointer = IsRecord && activityReferenceType != Invalid;
                 return _IsActivityPointer.Value;
             }
         }
@@ -533,7 +539,10 @@ namespace Microsoft.PowerFx.Core.Types
             get
             {
                 if (IsAggregate)
+                {
                     return TypeTree.Count;
+                }
+
                 return 0;
             }
         }
@@ -581,7 +590,9 @@ namespace Microsoft.PowerFx.Core.Types
             returnType.AssociatedDataSources.Add(dsInfo);
 
             if (!attachToNestedType)
+            {
                 return returnType;
+            }
 
             var fError = false;
             foreach (var typedName in returnType.GetNames(DPath.Root))
@@ -600,7 +611,9 @@ namespace Microsoft.PowerFx.Core.Types
             // expandedType is always a table as that's what runtime registers it.
             // But EntityInfo.IsTable defines whether it's a table or record.
             if (!ExpandInfo.IsTable && expandedType.IsTable)
+            {
                 expandedType = expandedType.ToRecord();
+            }
 
             Contracts.AssertValid(expandedType);
             return new DType(expandedType.Kind, ExpandInfo.Clone(), expandedType.TypeTree, associatedDatasources);
@@ -613,7 +626,9 @@ namespace Microsoft.PowerFx.Core.Types
             Contracts.Assert(HasPolymorphicInfo);
 
             if (!PolymorphicInfo.IsTable && expandedType.IsTable)
+            {
                 expandedType = expandedType.ToRecord();
+            }
 
             Contracts.AssertValid(expandedType);
             return new DType(expandedType.Kind, expandInfo, expandedType.TypeTree, expandedType.AssociatedDataSources);
@@ -671,21 +686,21 @@ namespace Microsoft.PowerFx.Core.Types
         {
             Contracts.AssertValue(info);
 
-            return new DType(DKind.DataEntity, info, DType.Unknown.TypeTree);
+            return new DType(DKind.DataEntity, info, Unknown.TypeTree);
         }
 
         public static DType CreatePolymorphicType(IPolymorphicInfo info)
         {
             Contracts.AssertValue(info);
 
-            return new DType(DKind.Polymorphic, info, DType.Unknown.TypeTree);
+            return new DType(DKind.Polymorphic, info, Unknown.TypeTree);
         }
 
         public static DType CreateMetadataType(IDataColumnMetadata metadata)
         {
             Contracts.AssertValue(metadata);
 
-            return new DType(DKind.Metadata, metadata, DType.Unknown.TypeTree);
+            return new DType(DKind.Metadata, metadata, Unknown.TypeTree);
         }
 
         public static DType CreateAttachmentType(DType attachmentType)
@@ -748,8 +763,10 @@ namespace Microsoft.PowerFx.Core.Types
 
         public static DType CreateMinimalLargeImageType()
         {
-            var minTypeTree = new List<KeyValuePair<string, DType>>();
-            minTypeTree.Add(new KeyValuePair<string, DType>("Value", DType.Image));
+            var minTypeTree = new List<KeyValuePair<string, DType>>
+            {
+                new KeyValuePair<string, DType>("Value", Image)
+            };
             return new DType(DKind.Record, TypeTree.Create(minTypeTree));
         }
 
@@ -797,9 +814,13 @@ namespace Microsoft.PowerFx.Core.Types
             // Coercing all numerics to double to avoid mismatches between 1.0 vs. 1, and such.
             var value = pair.Value;
             if (value is int || value is uint)
+            {
                 value = (double)((int)value);
+            }
             else if (value is long || value is ulong)
+            {
                 value = (double)((long)value);
+            }
 
             return new KeyValuePair<string, EquatableObject>(pair.Key.Value, new EquatableObject(value));
         }
@@ -807,17 +828,23 @@ namespace Microsoft.PowerFx.Core.Types
         /// <summary>
         /// Get the string form representation for the Kind to be displayed in the UI.
         /// </summary>
-        /// <returns>String representation of DType.Kind</returns>
+        /// <returns>String representation of DType.Kind.</returns>
         public string GetKindString()
         {
-            if (Kind == DKind._MinPrimitive)
+            if (Kind == DKind.MinPrimitive)
+            {
                 return "Boolean";
+            }
 
             if (Kind == DKind.String)
+            {
                 return "Text";
+            }
 
-            if (Kind == DKind._LimPrimitive)
+            if (Kind == DKind.LimPrimitive)
+            {
                 return "Control";
+            }
 
             return Kind.ToString();
         }
@@ -834,9 +861,14 @@ namespace Microsoft.PowerFx.Core.Types
                 case DKind.Control:
                 case DKind.DataEntity:
                     if (ExpandInfo != null)
+                    {
                         return new DType(DKind.Record, ExpandInfo, TypeTree);
+                    }
                     else
+                    {
                         return new DType(DKind.Record, TypeTree, AssociatedDataSources);
+                    }
+
                 case DKind.ObjNull:
                     return EmptyRecord;
                 default:
@@ -862,7 +894,9 @@ namespace Microsoft.PowerFx.Core.Types
             AssertValid();
 
             if (!IsAggregate && !IsControl)
+            {
                 return this;
+            }
 
             var result = IsControl ? ToRecord() : this;
 
@@ -870,7 +904,9 @@ namespace Microsoft.PowerFx.Core.Types
             {
                 var fError = false;
                 if (typedName.Type.IsAggregate || typedName.Type.IsControl)
+                {
                     result = result.SetType(ref fError, DPath.Root.Append(typedName.Name), typedName.Type.ControlsToRecordsRecursive());
+                }
             }
 
             return result;
@@ -890,9 +926,12 @@ namespace Microsoft.PowerFx.Core.Types
                 else if (typedName.Type.IsPolymorphic && typedName.Type.HasPolymorphicInfo)
                 {
                     foreach (var expand in typedName.Type.PolymorphicInfo.Expands)
+                    {
                         expands.Add(expand);
+                    }
                 }
             }
+
             return expands;
         }
 
@@ -908,9 +947,14 @@ namespace Microsoft.PowerFx.Core.Types
                 case DKind.DataEntity:
                 case DKind.Control:
                     if (ExpandInfo != null)
+                    {
                         return new DType(DKind.Record, ExpandInfo, TypeTree);
+                    }
                     else
+                    {
                         return new DType(DKind.Record, TypeTree, AssociatedDataSources);
+                    }
+
                 case DKind.ObjNull:
                     return EmptyRecord;
                 default:
@@ -931,9 +975,14 @@ namespace Microsoft.PowerFx.Core.Types
                 case DKind.DataEntity:
                 case DKind.Control:
                     if (ExpandInfo != null)
+                    {
                         return new DType(DKind.Table, ExpandInfo, TypeTree);
+                    }
                     else
+                    {
                         return new DType(DKind.Table, TypeTree, AssociatedDataSources);
+                    }
+
                 case DKind.ObjNull:
                     return EmptyTable;
                 default:
@@ -1019,7 +1068,7 @@ namespace Microsoft.PowerFx.Core.Types
 
             if (!name.IsValid)
             {
-                type = DType.Invalid;
+                type = Invalid;
                 return false;
             }
 
@@ -1054,9 +1103,10 @@ namespace Microsoft.PowerFx.Core.Types
                         type = GetEnumSupertype();
                         return true;
                     }
+
                     goto default;
                 default:
-                    type = DType.Invalid;
+                    type = Invalid;
                     return false;
             }
         }
@@ -1082,7 +1132,7 @@ namespace Microsoft.PowerFx.Core.Types
 
             if (!type.IsAggregate)
             {
-                type = DType.Invalid;
+                type = Invalid;
                 return false;
             }
 
@@ -1128,12 +1178,16 @@ namespace Microsoft.PowerFx.Core.Types
                 type = new DType(typeCur.Kind, tree, typeCur.AssociatedDataSources);
 
                 if (typeCur.HasExpandInfo)
+                {
                     type = CopyExpandInfo(type, typeCur);
+                }
             }
 
             // Don't lose the top level entity info either.
             if (HasExpandInfo)
+            {
                 type = CopyExpandInfo(type, this);
+            }
 
             return type;
         }
@@ -1155,13 +1209,17 @@ namespace Microsoft.PowerFx.Core.Types
             Contracts.Assert(typeOuter.IsRecord || typeOuter.IsTable);
 
             if (typeOuter.TypeTree.TryGetValue(name, out var typeCur))
+            {
                 fError = true;
+            }
 
             var tree = typeOuter.TypeTree.SetItem(name, type);
             var updatedTypeOuter = new DType(typeOuter.Kind, tree, AssociatedDataSources);
 
             if (typeOuter.HasExpandInfo)
+            {
                 updatedTypeOuter = CopyExpandInfo(updatedTypeOuter, typeOuter);
+            }
 
             return SetType(ref fError, path, updatedTypeOuter);
         }
@@ -1176,8 +1234,10 @@ namespace Microsoft.PowerFx.Core.Types
 
             Contracts.Assert(!TypeTree.Contains(name));
             var tree = TypeTree.SetItem(name, type);
-            var newType = new DType(Kind, tree);
-            newType.AssociatedDataSources = AssociatedDataSources;
+            var newType = new DType(Kind, tree)
+            {
+                AssociatedDataSources = AssociatedDataSources
+            };
 
             return newType;
         }
@@ -1218,7 +1278,9 @@ namespace Microsoft.PowerFx.Core.Types
             {
                 Contracts.Assert(tn.IsValid);
                 if (tree.TryGetValue(tn.Name, out var typeCur))
+                {
                     fError = true;
+                }
 
                 tree = tree.SetItem(tn.Name, tn.Type);
             }
@@ -1245,7 +1307,9 @@ namespace Microsoft.PowerFx.Core.Types
 
             var tree = typeOuter.TypeTree.RemoveItem(ref fError, name);
             if (fError)
+            {
                 return this;
+            }
 
             return SetType(ref fError, path, new DType(typeOuter.Kind, tree, AssociatedDataSources));
         }
@@ -1254,7 +1318,7 @@ namespace Microsoft.PowerFx.Core.Types
         public DType DropAllOfKind(ref bool fError, DPath path, DKind kind)
         {
             AssertValid();
-            Contracts.Assert(DKind._Min <= kind && kind < DKind._Lim);
+            Contracts.Assert(kind >= DKind.Min && kind < DKind.Lim);
 
             fError |= !TryGetType(path, out var typeOuter);
             if (!typeOuter.IsAggregate)
@@ -1267,7 +1331,9 @@ namespace Microsoft.PowerFx.Core.Types
             foreach (var typedName in GetNames(path))
             {
                 if (typedName.Type.Kind == kind)
+                {
                     tree = tree.RemoveItem(ref fError, typedName.Name);
+                }
             }
 
             // Set error if no type of given kind was found.
@@ -1302,10 +1368,14 @@ namespace Microsoft.PowerFx.Core.Types
                 {
                     var typeInner = typedName.Type.DropAllOfTableRelationships(ref fError, DPath.Root);
                     if (fError)
+                    {
                         return this;
+                    }
 
                     if (typeInner.TypeTree != tree)
+                    {
                         tree = tree.SetItem(typedName.Name.ToString(), typeInner);
+                    }
                 }
             }
 
@@ -1316,7 +1386,7 @@ namespace Microsoft.PowerFx.Core.Types
         public DType DropAllOfKindNested(ref bool fError, DPath path, DKind kind)
         {
             AssertValid();
-            Contracts.Assert(DKind._Min <= kind && kind < DKind._Lim);
+            Contracts.Assert(kind >= DKind.Min && kind < DKind.Lim);
 
             fError |= !TryGetType(path, out var typeOuter);
             if (!typeOuter.IsAggregate)
@@ -1336,10 +1406,14 @@ namespace Microsoft.PowerFx.Core.Types
                 {
                     var typeInner = typedName.Type.DropAllOfKindNested(ref fError, DPath.Root, kind);
                     if (fError)
+                    {
                         return this;
+                    }
 
                     if (typeInner.TypeTree != tree)
+                    {
                         tree = tree.SetItem(typedName.Name.ToString(), typeInner);
+                    }
                 }
             }
 
@@ -1394,8 +1468,9 @@ namespace Microsoft.PowerFx.Core.Types
                 if (!typeOuter.TryGetType(name, out var typeCur))
                 {
                     fError = true;
-                    typeCur = DType.Error;
+                    typeCur = Error;
                 }
+
                 tree = tree.SetItem(name, typeCur);
             }
 
@@ -1413,7 +1488,7 @@ namespace Microsoft.PowerFx.Core.Types
             if (!IsAggregate)
             {
                 fError = true;
-                typeRest = DType.Error;
+                typeRest = Error;
                 return this;
             }
 
@@ -1432,7 +1507,7 @@ namespace Microsoft.PowerFx.Core.Types
                 else
                 {
                     fError = true;
-                    treeWith = treeWith.SetItem(name, DType.Error);
+                    treeWith = treeWith.SetItem(name, Error);
                 }
             }
 
@@ -1486,7 +1561,9 @@ namespace Microsoft.PowerFx.Core.Types
         public bool IsMultiSelectOptionSet()
         {
             if (TypeTree.Count != 1)
+            {
                 return false;
+            }
 
             var columnType = TypeTree.GetPairs().First();
             return columnType.Value.Kind == DKind.OptionSetValue;
@@ -1499,7 +1576,9 @@ namespace Microsoft.PowerFx.Core.Types
 
             fError |= !TryGetType(path, out var type);
             if (!type.IsAggregate && !type.IsEnum)
+            {
                 fError = true;
+            }
 
             switch (type.Kind)
             {
@@ -1522,7 +1601,7 @@ namespace Microsoft.PowerFx.Core.Types
         {
             if (!TryGetEntityDelegationMetadata(out var metadata))
             {
-                type = DType.Unknown;
+                type = Unknown;
                 return false;
             }
 
@@ -1538,7 +1617,9 @@ namespace Microsoft.PowerFx.Core.Types
         internal bool TryGetExpandedEntityTypeWithoutDataSourceSpecificColumns(out DType type)
         {
             if (!TryGetExpandedEntityType(out type))
+            {
                 return false;
+            }
 
             var fValid = true;
             if (type.ContainsDataEntityType(DPath.Root))
@@ -1556,7 +1637,9 @@ namespace Microsoft.PowerFx.Core.Types
             }
 
             if (!fValid)
-                type = DType.Unknown;
+            {
+                type = Unknown;
+            }
 
             return fValid;
         }
@@ -1574,11 +1657,15 @@ namespace Microsoft.PowerFx.Core.Types
                 case DKind.Table:
                 case DKind.Record:
                     if (type.ExpandInfo != null && type.ExpandInfo.Identity != ExpandInfo.Identity)
+                    {
                         return false;
+                    }
 
                     DType expandedEntityType;
                     if (!TryGetExpandedEntityType(out expandedEntityType))
+                    {
                         return false;
+                    }
 
                     return expandedEntityType.Accepts(type, true);
                 default:
@@ -1614,7 +1701,7 @@ namespace Microsoft.PowerFx.Core.Types
         /// example a table type will accept a table with less fields.
         /// </summary>
         /// <param name="type">
-        /// Type of questionable acceptance
+        /// Type of questionable acceptance.
         /// </param>
         /// <param name="exact">
         /// Whether or not <see cref="this"/>'s absense of columns that are defined in <see cref="type"/>
@@ -1638,14 +1725,14 @@ namespace Microsoft.PowerFx.Core.Types
         /// example a table type will accept a table with less fields.
         /// </summary>
         /// <param name="type">
-        /// Type of questionable acceptance
+        /// Type of questionable acceptance.
         /// </param>
         /// <param name="schemaDifference">
         /// Holds the expected type of a type mismatch as well as a field name if the mismatch is aggregate.
         /// If the mismatch is top level, the key of this kvp will be set to null.
         /// </param>
         /// <param name="schemaDifference">
-        /// Holds the actual type of a type mismatch
+        /// Holds the actual type of a type mismatch.
         /// </param>
         /// <param name="exact">
         /// Whether or not <see cref="this"/>'s absense of columns that are defined in <see cref="type"/>
@@ -1659,15 +1746,16 @@ namespace Microsoft.PowerFx.Core.Types
             AssertValid();
             type.AssertValid();
 
-            schemaDifference = new KeyValuePair<string, DType>(null, DType.Invalid);
-            schemaDifferenceType = DType.Invalid;
+            schemaDifference = new KeyValuePair<string, DType>(null, Invalid);
+            schemaDifferenceType = Invalid;
 
             // We accept ObjNull as any DType (but subtypes can override).
             if (type.Kind == DKind.ObjNull)
+            {
                 return true;
+            }
 
-            Func<DType, bool> defaultReturnValue =
-                targetType =>
+            bool DefaultReturnValue(DType targetType) =>
                     targetType.Kind == Kind ||
                     targetType.Kind == DKind.Unknown ||
                     (targetType.Kind == DKind.Enum && Accepts(targetType.GetEnumSupertype()));
@@ -1687,14 +1775,18 @@ namespace Microsoft.PowerFx.Core.Types
                 case DKind.File:
                 case DKind.LargeImage:
                     if (Kind == type.Kind)
+                    {
                         return TreeAccepts(this, TypeTree, type.TypeTree, out schemaDifference, out schemaDifferenceType, exact, useLegacyDateTimeAccepts);
+                    }
 
                     accepts = type.Kind == DKind.Unknown;
                     break;
 
                 case DKind.Table:
                     if (Kind == type.Kind || type.IsExpandEntity)
+                    {
                         return TreeAccepts(this, TypeTree, type.TypeTree, out schemaDifference, out schemaDifferenceType, exact, useLegacyDateTimeAccepts);
+                    }
 
                     accepts = type.Kind == DKind.Unknown;
                     break;
@@ -1739,7 +1831,7 @@ namespace Microsoft.PowerFx.Core.Types
                 case DKind.PenImage:
                 case DKind.ObjNull:
                 case DKind.Guid:
-                    accepts = defaultReturnValue(type);
+                    accepts = DefaultReturnValue(type);
                     break;
 
                 case DKind.Hyperlink:
@@ -1748,34 +1840,34 @@ namespace Microsoft.PowerFx.Core.Types
                               type.Kind == DKind.Blob ||
                               type.Kind == DKind.Image ||
                               type.Kind == DKind.PenImage ||
-                              defaultReturnValue(type);
+                              DefaultReturnValue(type);
 
                     break;
                 case DKind.Image:
                     accepts =
-                        type.Kind == DKind.PenImage || type.Kind == DKind.Blob || (!exact && (type.Kind == DKind.String || type.Kind == DKind.Hyperlink)) || defaultReturnValue(type);
+                        type.Kind == DKind.PenImage || type.Kind == DKind.Blob || (!exact && (type.Kind == DKind.String || type.Kind == DKind.Hyperlink)) || DefaultReturnValue(type);
                     break;
                 case DKind.Media:
                     accepts =
-                        type.Kind == DKind.Blob || (!exact && (type.Kind == DKind.String || type.Kind == DKind.Hyperlink)) || defaultReturnValue(type);
+                        type.Kind == DKind.Blob || (!exact && (type.Kind == DKind.String || type.Kind == DKind.Hyperlink)) || DefaultReturnValue(type);
                     break;
                 case DKind.Blob:
-                    accepts = !exact && (type.Kind == DKind.String || type.Kind == DKind.Hyperlink) || defaultReturnValue(type);
+                    accepts = !exact && (type.Kind == DKind.String || type.Kind == DKind.Hyperlink) || DefaultReturnValue(type);
                     break;
                 case DKind.Currency:
-                    accepts = (!exact && type.Kind == DKind.Number) || defaultReturnValue(type);
+                    accepts = (!exact && type.Kind == DKind.Number) || DefaultReturnValue(type);
                     break;
                 case DKind.DateTime:
-                    accepts = (type.Kind == DKind.Date || type.Kind == DKind.Time || type.Kind == DKind.DateTimeNoTimeZone || (useLegacyDateTimeAccepts && !exact && type.Kind == DKind.Number)) || defaultReturnValue(type);
+                    accepts = (type.Kind == DKind.Date || type.Kind == DKind.Time || type.Kind == DKind.DateTimeNoTimeZone || (useLegacyDateTimeAccepts && !exact && type.Kind == DKind.Number)) || DefaultReturnValue(type);
                     break;
                 case DKind.DateTimeNoTimeZone:
                     accepts = (type.Kind == DKind.Date || type.Kind == DKind.Time || (useLegacyDateTimeAccepts && !exact && type.Kind == DKind.Number)) ||
-                              defaultReturnValue(type);
+                              DefaultReturnValue(type);
                     break;
                 case DKind.Date:
                 case DKind.Time:
                     accepts = (!exact && (type.Kind == DKind.DateTime || type.Kind == DKind.DateTimeNoTimeZone || (useLegacyDateTimeAccepts && type.Kind == DKind.Number))) ||
-                              defaultReturnValue(type);
+                              DefaultReturnValue(type);
                     break;
                 case DKind.Control:
                     throw new NotImplementedException("This should be overriden");
@@ -1786,22 +1878,22 @@ namespace Microsoft.PowerFx.Core.Types
                     accepts = AcceptsAttachmentType(type);
                     break;
                 case DKind.Metadata:
-                    accepts =  (type.Kind == Kind &&
+                    accepts = (type.Kind == Kind &&
                                 type.Metadata.Name == Metadata.Name &&
                                 type.Metadata.Type == Metadata.Type &&
                                 type.Metadata.ParentTableMetadata.Name == Metadata.ParentTableMetadata.Name) || type.Kind == DKind.Unknown;
                     break;
                 case DKind.OptionSet:
                 case DKind.OptionSetValue:
-                    accepts = ((type.Kind == Kind &&
+                    accepts = (type.Kind == Kind &&
                                 (OptionSetInfo == null || type.OptionSetInfo == null || type.OptionSetInfo == OptionSetInfo)) ||
-                               type.Kind == DKind.Unknown);
+                               type.Kind == DKind.Unknown;
                     break;
                 case DKind.View:
                 case DKind.ViewValue:
-                    accepts = ((type.Kind == Kind &&
+                    accepts = (type.Kind == Kind &&
                                 (ViewInfo == null || type.ViewInfo == null || type.ViewInfo == ViewInfo)) ||
-                               type.Kind == DKind.Unknown);
+                               type.Kind == DKind.Unknown;
                     break;
 
                 case DKind.NamedValue:
@@ -1810,13 +1902,13 @@ namespace Microsoft.PowerFx.Core.Types
                     break;
                 default:
                     Contracts.Assert(false);
-                    accepts = defaultReturnValue(type);
+                    accepts = DefaultReturnValue(type);
                     break;
             }
 
             // If the type is accepted we consider the difference invalid.  Otherwise, the type difference is the
             // unaccepting type
-            var typeDifference = accepts ? this : DType.Invalid;
+            var typeDifference = accepts ? this : Invalid;
             schemaDifference = new KeyValuePair<string, DType>(null, typeDifference);
 
             return accepts;
@@ -1828,11 +1920,13 @@ namespace Microsoft.PowerFx.Core.Types
             treeDst.AssertValid();
             treeSrc.AssertValid();
 
-            schemaDifference = new KeyValuePair<string, DType>(null, DType.Invalid);
-            treeSrcSchemaDifferenceType = DType.Invalid;
+            schemaDifference = new KeyValuePair<string, DType>(null, Invalid);
+            treeSrcSchemaDifferenceType = Invalid;
 
             if (treeDst == treeSrc)
+            {
                 return true;
+            }
 
             foreach (var pairDst in treeDst.GetPairs())
             {
@@ -1841,16 +1935,21 @@ namespace Microsoft.PowerFx.Core.Types
                 // If a field has type Error, it doesn't matter whether treeSrc
                 // has the same field.
                 if (pairDst.Value.IsError)
+                {
                     continue;
+                }
 
                 if (!treeSrc.TryGetValue(pairDst.Key, out var type))
                 {
                     if (!exact || parentType.AreFieldsOptional)
+                    {
                         continue;
+                    }
 
-                    if (!DType.TryGetDisplayNameForColumn(parentType, pairDst.Key, out var colName))
+                    if (!TryGetDisplayNameForColumn(parentType, pairDst.Key, out var colName))
+                    {
                         colName = pairDst.Key;
-
+                    }
 
                     schemaDifference = new KeyValuePair<string, DType>(colName, pairDst.Value);
                     return false;
@@ -1858,8 +1957,10 @@ namespace Microsoft.PowerFx.Core.Types
 
                 if (!pairDst.Value.Accepts(type, out var recursiveSchemaDifference, out var recursiveSchemaDifferenceType, exact, useLegacyDateTimeAccepts))
                 {
-                    if (!DType.TryGetDisplayNameForColumn(parentType, pairDst.Key, out var colName))
+                    if (!TryGetDisplayNameForColumn(parentType, pairDst.Key, out var colName))
+                    {
                         colName = pairDst.Key;
+                    }
 
                     if (!string.IsNullOrEmpty(recursiveSchemaDifference.Key))
                     {
@@ -1871,6 +1972,7 @@ namespace Microsoft.PowerFx.Core.Types
                         schemaDifference = new KeyValuePair<string, DType>(colName, pairDst.Value);
                         treeSrcSchemaDifferenceType = type;
                     }
+
                     return false;
                 }
             }
@@ -1885,7 +1987,9 @@ namespace Microsoft.PowerFx.Core.Types
             treeSrc.AssertValid();
 
             if (treeDst == treeSrc)
+            {
                 return true;
+            }
 
             foreach (var pairSrc in treeSrc.GetPairs())
             {
@@ -1894,12 +1998,17 @@ namespace Microsoft.PowerFx.Core.Types
                 if (!treeDst.TryGetValue(pairSrc.Key, out var obj))
                 {
                     if (exact)
+                    {
                         return false;
+                    }
+
                     continue;
                 }
 
                 if (pairSrc.Value != obj)
+                {
                     return false;
+                }
             }
 
             return true;
@@ -1907,22 +2016,30 @@ namespace Microsoft.PowerFx.Core.Types
 
         private static bool IsSuperKind(DKind baseKind, DKind kind)
         {
-            Contracts.Assert(DKind._Min <= baseKind && baseKind < DKind._Lim);
-            Contracts.Assert(DKind._Min <= kind && kind < DKind._Lim);
+            Contracts.Assert(baseKind >= DKind.Min && baseKind < DKind.Lim);
+            Contracts.Assert(kind >= DKind.Min && kind < DKind.Lim);
 
             if (baseKind == kind)
+            {
                 return false;
+            }
 
             if (baseKind == DKind.Error)
+            {
                 return true;
+            }
 
             if (kind == DKind.Error)
+            {
                 return false;
+            }
 
             DKind kind2Superkind;
 
             while (KindToSuperkindMapping.TryGetValue(kind, out kind2Superkind) && kind2Superkind != baseKind)
+            {
                 kind = kind2Superkind;
+            }
 
             return kind2Superkind == baseKind;
         }
@@ -1941,7 +2058,10 @@ namespace Microsoft.PowerFx.Core.Types
                 case DKind.String:
                 case DKind.Hyperlink:
                     if (Kind == DKind.Blob || Kind == DKind.Image || Kind == DKind.Media)
+                    {
                         return true;
+                    }
+
                     break;
                 default:
                     break;
@@ -1959,7 +2079,9 @@ namespace Microsoft.PowerFx.Core.Types
             if (type1.IsAggregate && type2.IsAggregate)
             {
                 if (type1.Kind != type2.Kind)
-                    return DType.Error;
+                {
+                    return Error;
+                }
 
                 return SupertypeAggregateCore(type1, type2, useLegacyDateTimeAccepts);
             }
@@ -1973,26 +2095,36 @@ namespace Microsoft.PowerFx.Core.Types
             type2.AssertValid();
 
             if (type1.Accepts(type2, useLegacyDateTimeAccepts: useLegacyDateTimeAccepts))
+            {
                 return CreateDTypeWithConnectedDataSourceInfoMetadata(type1, type2.AssociatedDataSources);
+            }
 
             if (type2.Accepts(type1, useLegacyDateTimeAccepts: useLegacyDateTimeAccepts))
+            {
                 return CreateDTypeWithConnectedDataSourceInfoMetadata(type2, type1.AssociatedDataSources);
+            }
 
             if (!KindToSuperkindMapping.TryGetValue(type1.Kind, out var type1Superkind) || type1Superkind == DKind.Error)
-                return DType.Error;
+            {
+                return Error;
+            }
 
             while (!IsSuperKind(type1Superkind, type2.Kind))
             {
                 if (!KindToSuperkindMapping.TryGetValue(type1Superkind, out type1Superkind) || type1Superkind == DKind.Error)
-                    return DType.Error;
+                {
+                    return Error;
+                }
             }
 
-            Contracts.Assert(type1Superkind != DKind.Enum && DKind._MinPrimitive <= type1Superkind && type1Superkind < DKind._LimPrimitive);
+            Contracts.Assert(type1Superkind != DKind.Enum && type1Superkind >= DKind.MinPrimitive && type1Superkind < DKind.LimPrimitive);
 
             var type = new DType(type1Superkind);
 
             foreach (var cds in UnionDataSourceInfoMetadata(type1, type2))
+            {
                 type = AttachDataSourceInfo(type, cds);
+            }
 
             return type;
         }
@@ -2006,7 +2138,9 @@ namespace Microsoft.PowerFx.Core.Types
             Contracts.Assert(type1.Kind == type2.Kind);
 
             if (type1.ChildCount > type2.ChildCount)
+            {
                 CollectionUtils.Swap(ref type1, ref type2);
+            }
 
             var fError = false;
             var treeRes = type1.TypeTree;
@@ -2023,9 +2157,13 @@ namespace Microsoft.PowerFx.Core.Types
                     {
                         var innerType = Supertype(ator1.Current.Value, ator2.Current.Value, useLegacyDateTimeAccepts);
                         if (innerType.IsError)
+                        {
                             treeRes = treeRes.RemoveItem(ref fError, ator1.Current.Key);
+                        }
                         else if (innerType != ator1.Current.Value)
+                        {
                             treeRes = treeRes.SetItem(ator1.Current.Key, innerType);
+                        }
 
                         fAtor1 = ator1.MoveNext();
                         fAtor2 = ator2.MoveNext();
@@ -2040,6 +2178,7 @@ namespace Microsoft.PowerFx.Core.Types
                         fAtor2 = ator2.MoveNext();
                     }
                 }
+
                 // If we still have fields in ator1, they need to be removed from treeRes.
                 while (fAtor1)
                 {
@@ -2047,6 +2186,7 @@ namespace Microsoft.PowerFx.Core.Types
                     fAtor1 = ator1.MoveNext();
                 }
             }
+
             Contracts.Assert(!fError);
             return new DType(type1.Kind, treeRes, UnionDataSourceInfoMetadata(type1, type2));
         }
@@ -2077,13 +2217,19 @@ namespace Microsoft.PowerFx.Core.Types
             type2.AssertValid();
 
             if (type2.AssociatedDataSources == null && type1.AssociatedDataSources == null)
+            {
                 return new HashSet<IExternalTabularDataSource>();
+            }
 
             if (type2.AssociatedDataSources == null)
+            {
                 return type1.AssociatedDataSources;
+            }
 
             if (type1.AssociatedDataSources == null)
+            {
                 return type2.AssociatedDataSources;
+            }
 
             var set = type1.AssociatedDataSources.Union(type2.AssociatedDataSources);
             return new HashSet<IExternalTabularDataSource>(set);
@@ -2106,6 +2252,7 @@ namespace Microsoft.PowerFx.Core.Types
                 metadata = null;
                 return false;
             }
+
             return true;
         }
 
@@ -2115,11 +2262,15 @@ namespace Microsoft.PowerFx.Core.Types
             Contracts.AssertValueOrNull(connectedDataSourceInfoSet);
 
             if (connectedDataSourceInfoSet == null || connectedDataSourceInfoSet.Count == 0)
+            {
                 return type;
+            }
 
             var returnType = type;
             foreach (var cds in connectedDataSourceInfoSet)
+            {
                 returnType = AttachDataSourceInfo(returnType, cds);
+            }
 
             return returnType;
         }
@@ -2130,7 +2281,9 @@ namespace Microsoft.PowerFx.Core.Types
             if (type != null && type.IsOptionSet && type.OptionSetInfo != null)
             {
                 if (int.TryParse(logicalName, out var value) && type.OptionSetInfo.DisplayNameMapping.TryGetFromFirst(value, out displayName))
+                {
                     return true;
+                }
 
                 displayName = null;
                 return false;
@@ -2140,7 +2293,9 @@ namespace Microsoft.PowerFx.Core.Types
             if (type != null && type.IsView && type.ViewInfo != null)
             {
                 if (System.Guid.TryParse(logicalName, out var value) && type.ViewInfo.DisplayNameMapping.TryGetFromFirst(value, out displayName))
+                {
                     return true;
+                }
 
                 displayName = null;
                 return false;
@@ -2150,7 +2305,10 @@ namespace Microsoft.PowerFx.Core.Types
             if (TryGetEntityMetadataForDisplayNames(type, out var entityMetadata))
             {
                 if (entityMetadata.DisplayNameMapping.TryGetFromFirst(logicalName, out displayName))
+                {
                     return true;
+                }
+
                 return false;
             }
 
@@ -2160,7 +2318,9 @@ namespace Microsoft.PowerFx.Core.Types
             {
                 var dataSourceInfo = type.AssociatedDataSources.FirstOrDefault();
                 if (dataSourceInfo != null && dataSourceInfo.DisplayNameMapping.TryGetFromFirst(logicalName, out displayName))
+                {
                     return true;
+                }
             }
 
             displayName = null;
@@ -2177,6 +2337,7 @@ namespace Microsoft.PowerFx.Core.Types
                     logicalName = value.ToString();
                     return true;
                 }
+
                 logicalName = null;
                 return false;
             }
@@ -2189,6 +2350,7 @@ namespace Microsoft.PowerFx.Core.Types
                     logicalName = value.ToString();
                     return true;
                 }
+
                 logicalName = null;
                 return false;
             }
@@ -2197,7 +2359,10 @@ namespace Microsoft.PowerFx.Core.Types
             if (TryGetEntityMetadataForDisplayNames(type, out var entityMetadata))
             {
                 if (entityMetadata.DisplayNameMapping.TryGetFromSecond(displayName, out logicalName))
+                {
                     return true;
+                }
+
                 return false;
             }
 
@@ -2207,7 +2372,9 @@ namespace Microsoft.PowerFx.Core.Types
             {
                 var dataSourceInfo = type.AssociatedDataSources.FirstOrDefault();
                 if (dataSourceInfo != null && dataSourceInfo.DisplayNameMapping.TryGetFromSecond(displayName, out logicalName))
+                {
                     return true;
+                }
             }
 
             logicalName = null;
@@ -2221,21 +2388,21 @@ namespace Microsoft.PowerFx.Core.Types
         /// </summary>
         /// <param name="type">
         /// Type the mapping within which to search for old display name and from which to produce new
-        /// display name
+        /// display name.
         /// </param>
         /// <param name="displayName">
-        /// Display name used to search
+        /// Display name used to search.
         /// </param>
         /// <param name="logicalName">
         /// Will be set to <see cref="displayName"/>'s corresponding logical name if
-        /// <see cref="displayName"/> exists within <see cref="type"/>'s old mapping
+        /// <see cref="displayName"/> exists within <see cref="type"/>'s old mapping.
         /// </param>
         /// <param name="newDisplayName">
         /// Will be set to <see cref="logicalName"/>'s new display name if
-        /// <see cref="displayName"/> exists within <see cref="type"/>'s old mapping
+        /// <see cref="displayName"/> exists within <see cref="type"/>'s old mapping.
         /// </param>
         /// <returns>
-        /// Whether <see cref="displayName"/> exists within <see cref="type"/>'s previous display name map
+        /// Whether <see cref="displayName"/> exists within <see cref="type"/>'s previous display name map.
         /// </returns>
         internal static bool TryGetConvertedDisplayNameAndLogicalNameForColumn(DType type, string displayName, out string logicalName, out string newDisplayName)
         {
@@ -2248,7 +2415,9 @@ namespace Microsoft.PowerFx.Core.Types
                 {
                     logicalName = value.ToString();
                     if (type.OptionSetInfo.DisplayNameMapping.TryGetFromFirst(value, out newDisplayName))
+                    {
                         return true;
+                    }
 
                     // Converting and no new mapping exists for this column, so the display name is also the logical name
                     newDisplayName = logicalName;
@@ -2269,7 +2438,9 @@ namespace Microsoft.PowerFx.Core.Types
                 {
                     logicalName = value.ToString();
                     if (type.ViewInfo.DisplayNameMapping.TryGetFromFirst(value, out newDisplayName))
+                    {
                         return true;
+                    }
 
                     // Converting and no new mapping exists for this column, so the display name is also the logical name
                     newDisplayName = logicalName;
@@ -2289,12 +2460,15 @@ namespace Microsoft.PowerFx.Core.Types
                     entityMetadata.PreviousDisplayNameMapping.TryGetFromSecond(displayName, out logicalName))
                 {
                     if (entityMetadata.DisplayNameMapping.TryGetFromFirst(logicalName, out newDisplayName))
+                    {
                         return true;
+                    }
 
                     // Converting and no new mapping exists for this column, so the display name is also the logical name
                     newDisplayName = logicalName;
                     return true;
                 }
+
                 logicalName = null;
                 newDisplayName = null;
                 return false;
@@ -2311,7 +2485,9 @@ namespace Microsoft.PowerFx.Core.Types
                     dataSourceInfo.PreviousDisplayNameMapping.TryGetFromSecond(displayName, out logicalName))
                 {
                     if (dataSourceInfo.DisplayNameMapping.TryGetFromFirst(logicalName, out newDisplayName))
+                    {
                         return true;
+                    }
 
                     // Converting and no new mapping exists for this column, so the display name is also the logical name
                     newDisplayName = logicalName;
@@ -2332,14 +2508,19 @@ namespace Microsoft.PowerFx.Core.Types
             if (type1.IsAggregate && type2.IsAggregate)
             {
                 if (type1 == ObjNull)
+                {
                     return CreateDTypeWithConnectedDataSourceInfoMetadata(type2, type1.AssociatedDataSources);
+                }
+
                 if (type2 == ObjNull)
+                {
                     return CreateDTypeWithConnectedDataSourceInfoMetadata(type1, type2.AssociatedDataSources);
+                }
 
                 if (type1.Kind != type2.Kind)
                 {
                     fError = true;
-                    return DType.Error;
+                    return Error;
                 }
 
                 return CreateDTypeWithConnectedDataSourceInfoMetadata(UnionCore(ref fError, type1, type2, useLegacyDateTimeAccepts), type2.AssociatedDataSources);
@@ -2358,7 +2539,7 @@ namespace Microsoft.PowerFx.Core.Types
             }
 
             var result = Supertype(type1, type2, useLegacyDateTimeAccepts);
-            fError = result == DType.Error;
+            fError = result == Error;
             return result;
         }
 
@@ -2383,7 +2564,9 @@ namespace Microsoft.PowerFx.Core.Types
 
                 var field2Type = pair.Type;
                 if (field1Type == field2Type)
+                {
                     continue;
+                }
 
                 DType fieldType;
                 if (field1Type == ObjNull || field2Type == ObjNull)
@@ -2397,7 +2580,7 @@ namespace Microsoft.PowerFx.Core.Types
                 else if (field1Type.IsAggregate || field2Type.IsAggregate)
                 {
                     var isMatchingExpandType = false;
-                    var expandType = DType.Unknown;
+                    var expandType = Unknown;
                     if (field1Type.HasExpandInfo && field2Type.IsAggregate)
                     {
                         isMatchingExpandType = IsMatchingExpandType(field1Type, field2Type);
@@ -2411,7 +2594,7 @@ namespace Microsoft.PowerFx.Core.Types
 
                     if (!isMatchingExpandType)
                     {
-                        fieldType = DType.Error;
+                        fieldType = Error;
                         fError = true;
                     }
                     else
@@ -2436,10 +2619,10 @@ namespace Microsoft.PowerFx.Core.Types
         /// Above rule will define new collection with schema from Accounts datasource
         /// Adding new rule that populates collection with lookup data like below
         /// Collection populatin rule => Collect(newCollection, {'Primary Contact':First(Contacts)});
-        /// Above rule is collecting new data record with data in lookup fields
+        /// Above rule is collecting new data record with data in lookup fields.
         /// </summary>
-        /// <param name="expectedColumnType">expected type in collection definition for 'Primary Contact' column is entity of expand type</param>
-        /// <param name="actualColumnType">actual column provide in data collection rule is record of entity matching expand type</param>
+        /// <param name="expectedColumnType">expected type in collection definition for 'Primary Contact' column is entity of expand type.</param>
+        /// <param name="actualColumnType">actual column provide in data collection rule is record of entity matching expand type.</param>
         /// <returns>true if actual column type is Entity type matching Expand entity, false O.W.</returns>
         internal static bool IsMatchingExpandType(DType expectedColumnType, DType actualColumnType)
         {
@@ -2482,17 +2665,19 @@ namespace Microsoft.PowerFx.Core.Types
                 if (type1.Kind != type2.Kind)
                 {
                     fError = true;
-                    return DType.Error;
+                    return Error;
                 }
 
                 return IntersectionCore(ref fError, type1, type2);
             }
 
             if (type1.Kind == type2.Kind)
+            {
                 return type1;
+            }
 
             fError = true;
-            return DType.Error;
+            return Error;
         }
 
         private static DType IntersectionCore(ref bool fError, DType type1, DType type2)
@@ -2509,17 +2694,25 @@ namespace Microsoft.PowerFx.Core.Types
                 var field2Name = pair.Name;
 
                 if (!type1.TryGetType(field2Name, out var field1Type))
+                {
                     continue;
+                }
 
                 var field2Type = pair.Type;
                 DType fieldType;
 
                 if (field1Type.IsAggregate && field2Type.IsAggregate)
+                {
                     fieldType = Intersection(ref fError, field1Type, field2Type);
+                }
                 else if (field1Type.Kind == field2Type.Kind)
+                {
                     fieldType = field1Type;
+                }
                 else
+                {
                     continue;
+                }
 
                 result = result.Add(field2Name, fieldType);
             }
@@ -2532,12 +2725,16 @@ namespace Microsoft.PowerFx.Core.Types
             other.AssertValid();
 
             if (!IsAggregate || !other.IsAggregate || Kind != other.Kind)
+            {
                 return false;
+            }
 
             foreach (var pair in GetNames(DPath.Root))
             {
                 if (other.TryGetType(pair.Name, out var f2Type) && f2Type == pair.Type)
+                {
                     return true;
+                }
             }
 
             return false;
@@ -2545,12 +2742,13 @@ namespace Microsoft.PowerFx.Core.Types
 
         public static bool operator ==(DType type1, DType type2)
         {
-            var null1 = object.ReferenceEquals(type1, null);
-            var null2 = object.ReferenceEquals(type2, null);
+            var null1 = ReferenceEquals(type1, null);
+            var null2 = ReferenceEquals(type2, null);
             if (null1 && null2)
             {
                 return true;
             }
+
             if (null1 || null2)
             {
                 return false;
@@ -2567,6 +2765,7 @@ namespace Microsoft.PowerFx.Core.Types
             {
                 return false;
             }
+
             if (null1 || null2)
             {
                 return true;
@@ -2578,8 +2777,8 @@ namespace Microsoft.PowerFx.Core.Types
         public override int GetHashCode()
         {
             return Hashing.CombineHash(
-                Hashing.HashInt((int) Kind),
-                Hashing.HashInt((int) EnumSuperkind),
+                Hashing.HashInt((int)Kind),
+                Hashing.HashInt((int)EnumSuperkind),
                 TypeTree.GetHashCode(),
                 ValueTree.GetHashCode());
         }
@@ -2614,7 +2813,7 @@ namespace Microsoft.PowerFx.Core.Types
         /// respective JS type:
         /// export interface IJsonFunctionDataDefinition {
         ///     t: string;   // Type (maps to DType.Kind)
-        ///     c?: HashTable<IJsonFunctionDataDefinition>; // optional children
+        ///     c?: HashTable.<IJsonFunctionDataDefinition>; // optional children
         /// }
         /// </remarks>
         internal string ToJsType(Func<DName, DType, bool> shouldBeIncluded = null)
@@ -2656,7 +2855,7 @@ namespace Microsoft.PowerFx.Core.Types
             }
         }
 
-        private readonly static Regex noNeedEscape = new Regex("^[a-zA-Z_][0-9a-zA-Z]*$");
+        private static readonly Regex noNeedEscape = new Regex("^[a-zA-Z_][0-9a-zA-Z]*$");
 
         protected DType(
             DKind kind,
@@ -2704,7 +2903,7 @@ namespace Microsoft.PowerFx.Core.Types
                 {
                     var c = name[i];
                     const string needsEscaping = "\\\"";
-                    if (' ' <= c && c <= '~')
+                    if (c >= ' ' && c <= '~')
                     {
                         if (needsEscaping.Contains(c))
                         {
@@ -2770,10 +2969,10 @@ namespace Microsoft.PowerFx.Core.Types
         {
             Contracts.Assert(IsAggregate);
 
-            schemaDifference = new KeyValuePair<string, DType>(null, DType.Invalid);
-            schemaDifferenceType = DType.Invalid;
+            schemaDifference = new KeyValuePair<string, DType>(null, Invalid);
+            schemaDifferenceType = Invalid;
 
-            if ((typeDest.Kind == DKind.Image && IsLargeImage) || (typeDest.IsLargeImage && this == DType.MinimalLargeImage))
+            if ((typeDest.Kind == DKind.Image && IsLargeImage) || (typeDest.IsLargeImage && this == MinimalLargeImage))
             {
                 isSafe = true;
                 coercionType = typeDest;
@@ -2789,7 +2988,9 @@ namespace Microsoft.PowerFx.Core.Types
             }
 
             if (Kind != typeDest.Kind && Kind == DKind.Record && aggregateCoercion)
+            {
                 return ToTable().CoercesTo(typeDest, out isSafe, out coercionType, out schemaDifference, out schemaDifferenceType);
+            }
 
             if (Kind != typeDest.Kind)
             {
@@ -2802,11 +3003,11 @@ namespace Microsoft.PowerFx.Core.Types
             var isValid = true;
             if (IsRecord)
             {
-                coercionType = DType.EmptyRecord;
+                coercionType = EmptyRecord;
             }
             else
             {
-                coercionType = DType.EmptyTable;
+                coercionType = EmptyTable;
             }
 
             isSafe = true;
@@ -2815,8 +3016,13 @@ namespace Microsoft.PowerFx.Core.Types
                 // If the name exists on the type, it is valid if it is coercible to the target type
                 if (TryGetType(typedName.Name, out var thisFieldType))
                 {
-                    var isFieldValid = thisFieldType.CoercesTo(typedName.Type, out fieldIsSafe, out var fieldCoercionType,
-                        out var fieldSchemaDifference,  out var fieldSchemaDifferenceType, aggregateCoercion);
+                    var isFieldValid = thisFieldType.CoercesTo(
+                        typedName.Type,
+                        out fieldIsSafe,
+                        out var fieldCoercionType,
+                        out var fieldSchemaDifference,
+                        out var fieldSchemaDifferenceType,
+                        aggregateCoercion);
 
                     // This is the attempted coercion type.  If we fail, we need to know this for error handling
                     coercionType = coercionType.Add(typedName.Name, fieldCoercionType);
@@ -2851,8 +3057,8 @@ namespace Microsoft.PowerFx.Core.Types
             AssertValid();
             Contracts.Assert(typeDest.IsValid);
 
-            schemaDifference = new KeyValuePair<string, DType>(null, DType.Invalid);
-            schemaDifferenceType = DType.Invalid;
+            schemaDifference = new KeyValuePair<string, DType>(null, Invalid);
+            schemaDifferenceType = Invalid;
 
             isSafe = true;
 
@@ -2870,7 +3076,9 @@ namespace Microsoft.PowerFx.Core.Types
             }
 
             if (IsAggregate)
+            {
                 return AggregateCoercesTo(typeDest, out isSafe, out coercionType, out schemaDifference, out schemaDifferenceType, aggregateCoercion);
+            }
 
             var subtypeCoerces = SubtypeCoercesTo(typeDest, ref isSafe, out coercionType, ref schemaDifference, ref schemaDifferenceType);
             if (subtypeCoerces.HasValue)
@@ -2916,7 +3124,7 @@ namespace Microsoft.PowerFx.Core.Types
                 case DKind.Boolean:
                     isSafe = Kind != DKind.String;
                     doesCoerce = Kind == DKind.String ||
-                                 DType.Number.Accepts(this) ||
+                                 Number.Accepts(this) ||
                                  (Kind == DKind.OptionSetValue && OptionSetInfo != null && OptionSetInfo.IsBooleanValued);
                     break;
                 case DKind.DateTime:
@@ -2928,38 +3136,38 @@ namespace Microsoft.PowerFx.Core.Types
                     // String to DateTime isn't safe for ill-formatted strings.
                     isSafe = Kind != DKind.String;
                     doesCoerce = Kind == DKind.String ||
-                                 DType.Number.Accepts(this) ||
-                                 DType.DateTime.Accepts(this);
+                                 Number.Accepts(this) ||
+                                 DateTime.Accepts(this);
                     break;
                 case DKind.Number:
                     // Ill-formatted strings coerce to null; unsafe.
                     isSafe = Kind != DKind.String;
                     doesCoerce = Kind == DKind.String ||
-                                 DType.Number.Accepts(this) ||
-                                 DType.Boolean.Accepts(this) ||
-                                 DType.DateTime.Accepts(this);
+                                 Number.Accepts(this) ||
+                                 Boolean.Accepts(this) ||
+                                 DateTime.Accepts(this);
                     break;
                 case DKind.Currency:
                     // Ill-formatted strings coerce to null; unsafe.
                     isSafe = Kind != DKind.String;
                     doesCoerce = Kind == DKind.String ||
                                  Kind == DKind.Number ||
-                                 DType.Boolean.Accepts(this);
+                                 Boolean.Accepts(this);
                     break;
                 case DKind.String:
                     doesCoerce = Kind != DKind.Color && Kind != DKind.Control && Kind != DKind.DataEntity && Kind != DKind.OptionSet && Kind != DKind.View && Kind != DKind.Polymorphic && Kind != DKind.File && Kind != DKind.LargeImage;
                     break;
                 case DKind.Hyperlink:
-                    doesCoerce = Kind != DKind.Guid && DType.String.Accepts(this);
+                    doesCoerce = Kind != DKind.Guid && String.Accepts(this);
                     break;
                 case DKind.Image:
-                    doesCoerce = Kind != DKind.Media && Kind != DKind.Blob && Kind != DKind.Guid && DType.String.Accepts(this);
+                    doesCoerce = Kind != DKind.Media && Kind != DKind.Blob && Kind != DKind.Guid && String.Accepts(this);
                     break;
                 case DKind.Media:
-                    doesCoerce = Kind != DKind.Image && Kind != DKind.PenImage && Kind != DKind.Blob && Kind != DKind.Guid && DType.String.Accepts(this);
+                    doesCoerce = Kind != DKind.Image && Kind != DKind.PenImage && Kind != DKind.Blob && Kind != DKind.Guid && String.Accepts(this);
                     break;
                 case DKind.Blob:
-                    doesCoerce = Kind != DKind.Guid && DType.String.Accepts(this);
+                    doesCoerce = Kind != DKind.Guid && String.Accepts(this);
                     break;
                 case DKind.Enum:
                     return CoercesTo(typeDest.GetEnumSupertype(), out isSafe, out coercionType, out schemaDifference, out schemaDifferenceType);
@@ -2969,9 +3177,13 @@ namespace Microsoft.PowerFx.Core.Types
             }
 
             if (doesCoerce)
+            {
                 coercionType = typeDest;
+            }
             else
+            {
                 coercionType = this;
+            }
 
             return doesCoerce;
         }
@@ -2995,7 +3207,9 @@ namespace Microsoft.PowerFx.Core.Types
                 coercionType = expectedType;
                 coercionNeeded = !expectedType.Accepts(this);
                 if (!coercionNeeded)
+                {
                     return true;
+                }
 
                 if (expectedType.TryGetExpandedEntityTypeWithoutDataSourceSpecificColumns(out var expandedType) && expandedType.Accepts(this))
                 {
@@ -3003,24 +3217,30 @@ namespace Microsoft.PowerFx.Core.Types
                     return true;
                 }
 
-                return (CoercesTo(expectedType, out var coercionIsSafe, aggregateCoercion) && (!safeCoercionRequired || coercionIsSafe));
+                return CoercesTo(expectedType, out var coercionIsSafe, aggregateCoercion) && (!safeCoercionRequired || coercionIsSafe);
             }
 
-            coercionType = IsRecord ? DType.EmptyRecord : DType.EmptyTable;
+            coercionType = IsRecord ? EmptyRecord : EmptyTable;
             coercionNeeded = false;
 
             if (!IsAggregate)
+            {
                 return false;
+            }
 
             if (IsTable != expectedType.IsTable && !aggregateCoercion)
+            {
                 return false;
+            }
 
             foreach (var typedName in expectedType.GetNames(DPath.Root))
             {
                 if (TryGetType(typedName.Name, out var thisFieldType))
                 {
                     if (!thisFieldType.TryGetCoercionSubType(typedName.Type, out var thisFieldCoercionType, out var thisFieldCoercionNeeded, safeCoercionRequired, aggregateCoercion))
+                    {
                         return false;
+                    }
 
                     coercionNeeded |= thisFieldCoercionNeeded;
                     coercionType = coercionType.Add(typedName.Name, thisFieldCoercionType);
@@ -3048,23 +3268,28 @@ namespace Microsoft.PowerFx.Core.Types
 
             // No need to do anything for null values.
             if (value == null)
+            {
                 return true;
+            }
 
             // No support for converting to aggregate types.
             if (typeDest.IsAggregate)
+            {
                 return false;
+            }
 
             switch (typeDest.Kind)
             {
                 case DKind.Boolean:
-                    if (value is bool)
+                    if (value is bool boolean)
                     {
-                        newValue = (bool)value;
+                        newValue = boolean;
                         return true;
                     }
-                    if (value is double)
+
+                    if (value is double doubleValue)
                     {
-                        newValue = (double)value != 0;
+                        newValue = doubleValue != 0;
                         return true;
                     }
 
@@ -3076,40 +3301,46 @@ namespace Microsoft.PowerFx.Core.Types
 
                     // Since DateTime is represented as a numeric value underneath, conversion to boolean
                     // should simply check if the numeric value is 0 or not.
-                    if (value is DateTime)
+                    if (value is DateTime time)
                     {
-                        var tempNum = ((DateTime)value).ToJavaScriptDate();
+                        var tempNum = time.ToJavaScriptDate();
                         newValue = tempNum != 0;
                         return true;
                     }
+
                     return false;
 
                 case DKind.Number:
                 case DKind.Currency:
-                    if (value is bool)
+                    if (value is bool boolValue)
                     {
-                        newValue = (double)((bool)value ? 1 : 0);
+                        newValue = (double)(boolValue ? 1 : 0);
                         return true;
                     }
-                    if (value is double)
+
+                    if (value is double doubleValue1)
                     {
-                        newValue = (double)value;
+                        newValue = doubleValue1;
                         return true;
                     }
 
                     if (value is string s1)
                     {
-                        if (!double.TryParse(s1, out var doubleValue))
+                        if (!double.TryParse(s1, out var doubleValue2))
+                        {
                             return false;
-                        newValue = doubleValue;
+                        }
+
+                        newValue = doubleValue2;
                         return true;
                     }
 
-                    if (value is DateTime)
+                    if (value is DateTime time1)
                     {
-                        newValue = ((DateTime)value).ToJavaScriptDate();
+                        newValue = time1.ToJavaScriptDate();
                         return true;
                     }
+
                     return false;
                 case DKind.Date:
                 case DKind.Time:
@@ -3117,14 +3348,15 @@ namespace Microsoft.PowerFx.Core.Types
                     return TryConvertDateTimeValue(value, typeDest, out newValue);
 
                 case DKind.String:
-                    if (value is bool)
+                    if (value is bool boolean1)
                     {
-                        newValue = (string)((bool)value ? TexlLexer.KeywordTrue : TexlLexer.KeywordFalse);
+                        newValue = (string)(boolean1 ? TexlLexer.KeywordTrue : TexlLexer.KeywordFalse);
                         return true;
                     }
-                    if (value is double)
+
+                    if (value is double double2)
                     {
-                        newValue = ((double)value).ToString("R");
+                        newValue = double2.ToString("R");
                         return true;
                     }
 
@@ -3134,11 +3366,12 @@ namespace Microsoft.PowerFx.Core.Types
                         return true;
                     }
 
-                    if (value is DateTime)
+                    if (value is DateTime time2)
                     {
-                        newValue = ((DateTime)value).ToLocalTime().ToString();
+                        newValue = time2.ToLocalTime().ToString();
                         return true;
                     }
+
                     return false;
 
                 case DKind.Image:
@@ -3151,6 +3384,7 @@ namespace Microsoft.PowerFx.Core.Types
                         newValue = value1;
                         return true;
                     }
+
                     return false;
 
                 case DKind.Color:
@@ -3172,124 +3406,147 @@ namespace Microsoft.PowerFx.Core.Types
             switch (typeDest.Kind)
             {
                 case DKind.Date:
-                {
-                    if (value is bool @boolean)
                     {
+                        if (value is bool @boolean)
+                        {
                             // REVIEW ragru/hekum: Excel specific behaviour. Revisit.
                             var success = DateTimeExtensions.TryFromOADate(@boolean ? 1 : 0, out var result);
                             newValue = success ? result.ToLocalTime().Date.ToUniversalTime() : result;
-                        return success;
-                    }
+                            return success;
+                        }
 
-                    if (value is double @double)
-                    {
+                        if (value is double @double)
+                        {
                             // REVIEW ragru/hekum: Excel specific behaviour. Revisit.
                             var success = DateTimeExtensions.TryFromOADate(@double, out var result);
                             newValue = success ? result.ToLocalTime().Date.ToUniversalTime() : result;
-                        return success;
+                            return success;
+                        }
+
+                        if (value is string @string)
+                        {
+                            if (!System.DateTime.TryParse(@string, out dt))
+                            {
+                                return false;
+                            }
+
+                            if (dt.Kind == DateTimeKind.Unspecified)
+                            {
+                                dt = System.DateTime.SpecifyKind(dt, DateTimeKind.Local).ToUniversalTime();
+                            }
+
+                            newValue = dt.ToLocalTime().Date.ToUniversalTime();
+                            return true;
+                        }
+
+                        if (value is DateTime dateTime)
+                        {
+                            dt = dateTime;
+
+                            if (dt.Kind == DateTimeKind.Unspecified)
+                            {
+                                dt = System.DateTime.SpecifyKind(dt, DateTimeKind.Local);
+                            }
+
+                            newValue = dt.ToLocalTime().Date.ToUniversalTime();
+                            return true;
+                        }
+
+                        return false;
                     }
 
-                    if (value is string @string)
-                    {
-                        if (!System.DateTime.TryParse(@string, out dt))
-                            return false;
-                        if (dt.Kind == DateTimeKind.Unspecified)
-                            dt = System.DateTime.SpecifyKind(dt, DateTimeKind.Local).ToUniversalTime();
-
-                        newValue = dt.ToLocalTime().Date.ToUniversalTime();
-                        return true;
-                    }
-
-                    if (value is DateTime dateTime)
-                    {
-                        dt = dateTime;
-
-                        if (dt.Kind == DateTimeKind.Unspecified)
-                            dt = System.DateTime.SpecifyKind(dt, DateTimeKind.Local);
-
-                        newValue = dt.ToLocalTime().Date.ToUniversalTime();
-                        return true;
-                    }
-
-                    return false;
-                }
                 case DKind.Time:
-                {
-                    if (value is bool)
                     {
+                        if (value is bool)
+                        {
                             // REVIEW ragru/hekum: Excel specific behaviour. Revisit.
                             var success = DateTimeExtensions.TryFromOADate(0.0, out var result);
                             newValue = result;
-                        return success;
-                    }
+                            return success;
+                        }
 
-                    if (value is double @double)
-                    {
+                        if (value is double @double)
+                        {
                             // REVIEW ragru/hekum: Excel specific behaviour. Revisit.
 
                             var frac = Math.Abs(@double) - Math.Abs(Math.Truncate(@double));
                             var success = DateTimeExtensions.TryFromOADate(frac, out var result);
-                        newValue = result;
-                        return success;
+                            newValue = result;
+                            return success;
+                        }
+
+                        if (value is string @string)
+                        {
+                            if (!System.DateTime.TryParse(@string, out dt))
+                            {
+                                return false;
+                            }
+
+                            newValue = ConvertDateTimeToTime(dt);
+                            return true;
+                        }
+
+                        if (value is DateTime dateTime)
+                        {
+                            newValue = ConvertDateTimeToTime(dateTime);
+                            return true;
+                        }
+
+                        return false;
                     }
 
-                    if (value is string @string)
-                    {
-                        if (!System.DateTime.TryParse(@string, out dt))
-                            return false;
-                        newValue = ConvertDateTimeToTime(dt);
-                        return true;
-                    }
-
-                    if (value is DateTime dateTime)
-                    {
-                        newValue = ConvertDateTimeToTime(dateTime);
-                        return true;
-                    }
-
-                    return false;
-                }
                 case DKind.DateTime:
-                {
-                    if (value is bool boolean)
                     {
+                        if (value is bool boolean)
+                        {
                             // REVIEW ragru/hekum: Excel specific behaviour. Revisit.
                             var success = DateTimeExtensions.TryFromOADate(boolean ? 1 : 0, out var result);
                             newValue = result;
-                        return success;
-                    }
+                            return success;
+                        }
 
-                    if (value is double @double)
-                    {
+                        if (value is double @double)
+                        {
                             // REVIEW ragru/hekum: Excel specific behaviour. Revisit.
                             var success = DateTimeExtensions.TryFromOADate(@double, out var result);
                             newValue = result;
-                        return success;
-                    }
+                            return success;
+                        }
 
-                    if (value is string @string)
-                    {
-                        if (!System.DateTime.TryParse(@string, out dt))
-                            return false;
-                        if (dt.Kind == DateTimeKind.Unspecified)
-                            dt = System.DateTime.SpecifyKind(dt, DateTimeKind.Local).ToUniversalTime();
-                        newValue = dt;
-                        return true;
-                    }
+                        if (value is string @string)
+                        {
+                            if (!System.DateTime.TryParse(@string, out dt))
+                            {
+                                return false;
+                            }
 
-                    if (value is DateTime dateTime)
-                    {
-                        dt = dateTime;
+                            if (dt.Kind == DateTimeKind.Unspecified)
+                            {
+                                dt = System.DateTime.SpecifyKind(dt, DateTimeKind.Local).ToUniversalTime();
+                            }
 
-                        if (dt.Kind == DateTimeKind.Unspecified)
-                            newValue = System.DateTime.SpecifyKind(dt, DateTimeKind.Local).ToUniversalTime();
-                        else
                             newValue = dt;
-                        return true;
-                    }
+                            return true;
+                        }
 
-                    return false;
-                }
+                        if (value is DateTime dateTime)
+                        {
+                            dt = dateTime;
+
+                            if (dt.Kind == DateTimeKind.Unspecified)
+                            {
+                                newValue = System.DateTime.SpecifyKind(dt, DateTimeKind.Local).ToUniversalTime();
+                            }
+                            else
+                            {
+                                newValue = dt;
+                            }
+
+                            return true;
+                        }
+
+                        return false;
+                    }
             }
 
             newValue = null;
@@ -3299,7 +3556,9 @@ namespace Microsoft.PowerFx.Core.Types
         private static object ConvertDateTimeToTime(DateTime value)
         {
             if (value.Kind == DateTimeKind.Unspecified)
+            {
                 value = System.DateTime.SpecifyKind(value, DateTimeKind.Local).ToUniversalTime();
+            }
 
             var DateValue = value.ToLocalTime().Date.ToUniversalTime();
             return (DateTimeExtensions.OleAutomationEpoch + (value - DateValue)).ToUniversalTime();
@@ -3519,7 +3778,7 @@ namespace Microsoft.PowerFx.Core.Types
         public bool TryGetMetaField(out IExternalControlType metaFieldType)
         {
             if (!IsAggregate ||
-                !TryGetType(new DName(DType.MetaFieldName), out var field) ||
+                !TryGetType(new DName(MetaFieldName), out var field) ||
                 !(field is IExternalControlType control) ||
                 !control.ControlTemplate.IsMetaLoc)
             {
@@ -3534,9 +3793,13 @@ namespace Microsoft.PowerFx.Core.Types
         public void ReportNonExistingName(FieldNameKind fieldNameKind, IErrorContainer errors, DName name, TexlNode location, DocumentErrorSeverity severity = DocumentErrorSeverity.Severe)
         {
             if (TryGetSimilarName(name, fieldNameKind, out var similar))
+            {
                 errors.EnsureError(severity, location, TexlStrings.ErrColumnDoesNotExist_Name_Similar, name, similar);
+            }
             else
+            {
                 errors.EnsureError(severity, location, TexlStrings.ErrColDNE_Name, name);
+            }
         }
 
         public bool TryGetSimilarName(DName name, FieldNameKind fieldNameKind, out string similar)
@@ -3544,14 +3807,19 @@ namespace Microsoft.PowerFx.Core.Types
             var maxLength = 2000;
             similar = null;
             if (name.Value.Length > maxLength)
+            {
                 return false;
+            }
 
             var comparer = new StringDistanceComparer(name.Value, maxLength);
             similar = GetNames(DPath.Root).Select(k =>
             {
                 var result = k.Name.Value;
-                if (fieldNameKind == FieldNameKind.Display && DType.TryGetDisplayNameForColumn(this, result, out var colName))
+                if (fieldNameKind == FieldNameKind.Display && TryGetDisplayNameForColumn(this, result, out var colName))
+                {
                     result = colName;
+                }
+
                 return result;
             }).OrderBy(x => x, comparer).FirstOrDefault();
 

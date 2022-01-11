@@ -29,10 +29,14 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
                 Contracts.AssertValue(child);
                 child.Parent = this;
                 if (maxDepth < child.Depth)
+                {
                     maxDepth = child.Depth;
+                }
 
                 if (MinChildID > child.MinChildID)
+                {
                     MinChildID = child.MinChildID;
+                }
             }
 
             _depth = maxDepth + 1;
@@ -45,6 +49,7 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
             {
                 clones[x] = Children[x].Clone(ref idNext, ts);
             }
+
             return clones;
         }
 
@@ -52,10 +57,16 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
         {
             Contracts.AssertValueOrNull(toks);
             if (toks == null)
+            {
                 return null;
+            }
+
             var newToks = new Token[toks.Length];
             for (var x = 0; x < toks.Length; x++)
+            {
                 newToks[x] = toks[x].Clone(ts);
+            }
+
             return newToks;
         }
 
@@ -74,7 +85,9 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
         public override Span GetCompleteSpan()
         {
             if (Children.Count() == 0)
+            {
                 return new Span(Token.VerifyValue().Span.Min, Token.VerifyValue().Span.Lim);
+            }
 
             return new Span(Children.VerifyValue().First().VerifyValue().GetCompleteSpan().Min, Children.VerifyValue().Last().VerifyValue().GetCompleteSpan().Lim);
         }

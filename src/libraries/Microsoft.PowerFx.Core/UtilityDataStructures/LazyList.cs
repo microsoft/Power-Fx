@@ -39,7 +39,10 @@ namespace Microsoft.PowerFx.Core.UtilityDataStructures
         {
             Contracts.AssertValue(values);
             if (!values.Any())
+            {
                 return this;
+            }
+
             return new LazyList<T>(this.values.Concat(values));
         }
 
@@ -50,7 +53,10 @@ namespace Microsoft.PowerFx.Core.UtilityDataStructures
         {
             Contracts.AssertValue(values);
             if (!values.Any())
+            {
                 return this;
+            }
+
             return new LazyList<T>(this.values.Concat(values));
         }
 

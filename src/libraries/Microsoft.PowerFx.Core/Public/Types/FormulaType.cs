@@ -10,7 +10,7 @@ namespace Microsoft.PowerFx.Core.Public.Types
 {
     /// <summary>
     /// Base class for type of a Formula. 
-    /// Formula Types are a class hiearchy
+    /// Formula Types are a class hiearchy.
     /// </summary>
     [DebuggerDisplay("{_type}")]
     public abstract class FormulaType
@@ -22,8 +22,8 @@ namespace Microsoft.PowerFx.Core.Public.Types
         public static FormulaType Blank { get; } = new BlankType();
 
         // Well-known types 
-        public static FormulaType Boolean { get; }  = new BooleanType();
-        public static FormulaType Number { get; }  = new NumberType();
+        public static FormulaType Boolean { get; } = new BooleanType();
+        public static FormulaType Number { get; } = new NumberType();
         public static FormulaType String { get; } = new StringType();
 
         public static FormulaType Time { get; } = new TimeType();
@@ -42,7 +42,7 @@ namespace Microsoft.PowerFx.Core.Public.Types
         // Get the correct derived type
         internal static FormulaType Build(DType type)
         {
-            switch(type.Kind)
+            switch (type.Kind)
             {
                 case DKind.ObjNull: return Blank;
 
@@ -78,32 +78,32 @@ namespace Microsoft.PowerFx.Core.Public.Types
         public static bool operator ==(FormulaType a, FormulaType b)
         {
             // Use object.ReferenceEquals to avoid recursion.
-            if (object.ReferenceEquals(a,null))
+            if (ReferenceEquals(a, null))
             {
-                return object.ReferenceEquals(b, null);
+                return ReferenceEquals(b, null);
             }
+
             return a.Equals(b);
         }
 
-        public static bool operator !=(FormulaType a, FormulaType b)
-        {
-            return !(a == b);
-        }
+        public static bool operator !=(FormulaType a, FormulaType b) => !(a == b);
         public override bool Equals(object other)
         {
             if (other is FormulaType t)
             {
                 return _type.Equals(t._type);
             }
+
             return false;
         }
+
         public override int GetHashCode()
         {
             return _type.GetHashCode();
         }
 
         #endregion // Equality
-                
+
 
         public abstract void Visit(ITypeVistor vistor);
     }

@@ -5,7 +5,7 @@ using System.Diagnostics.Contracts;
 using Microsoft.PowerFx.Core.IR;
 
 namespace Microsoft.PowerFx.Core.Public.Values
-{ 
+{
     /// <summary>
     /// Helper for non-aggregate values that are represented as a single .net object.
     /// </summary>

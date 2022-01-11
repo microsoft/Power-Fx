@@ -52,23 +52,28 @@ namespace Microsoft.PowerFx.Core.Public.Values
             // $$$ Is this safe? or loss in precision?
             return new NumberValue(IRContext.NotInSource(FormulaType.Number), (double)number);
         }
+
         public static NumberValue New(long number)
         {
             // $$$ Is this safe? or loss in precision?
             return new NumberValue(IRContext.NotInSource(FormulaType.Number), (double)number);
         }
+
         public static NumberValue New(int number)
         {
             return new NumberValue(IRContext.NotInSource(FormulaType.Number), number);
         }
+
         public static NumberValue New(float number)
         {
             return new NumberValue(IRContext.NotInSource(FormulaType.Number), number);
         }
+
         public static StringValue New(string value)
         {
             return new StringValue(IRContext.NotInSource(FormulaType.String), value);
         }
+
         public static BooleanValue New(bool value)
         {
             return new BooleanValue(IRContext.NotInSource(FormulaType.Boolean), value);
@@ -76,14 +81,16 @@ namespace Microsoft.PowerFx.Core.Public.Values
 
         public static DateValue NewDateOnly(DateTime value)
         {
-            if(value.TimeOfDay != TimeSpan.Zero)
+            if (value.TimeOfDay != TimeSpan.Zero)
             {
                 throw new ArgumentException("Invalid DateValue, the provided DateTime contains a non-zero TimeOfDay");
             }
-            if(value.Kind == DateTimeKind.Utc)
+
+            if (value.Kind == DateTimeKind.Utc)
             {
                 throw new ArgumentException("Invalid DateValue, the provided DateTime must be local");
             }
+
             return new DateValue(IRContext.NotInSource(FormulaType.Date), value);
         }
 
@@ -93,6 +100,7 @@ namespace Microsoft.PowerFx.Core.Public.Values
             {
                 throw new ArgumentException("Invalid DateTimeValue, the provided DateTime must be local");
             }
+
             return new DateTimeValue(IRContext.NotInSource(FormulaType.DateTime), value);
         }
 
@@ -103,10 +111,11 @@ namespace Microsoft.PowerFx.Core.Public.Values
 
         public static BlankValue NewBlank(FormulaType type = null)
         {
-            if(type == null)
+            if (type == null)
             {
                 type = FormulaType.Blank;
             }
+
             return new BlankValue(IRContext.NotInSource(type));
         }
 
@@ -119,6 +128,7 @@ namespace Microsoft.PowerFx.Core.Public.Values
         {
             return NewTable((IEnumerable<T>)array);
         }
+
         public static TableValue NewTable<T>(IEnumerable<T> rows)
         {
             return TableFromEnumerable((System.Collections.IEnumerable)rows, typeof(T));
@@ -229,11 +239,11 @@ namespace Microsoft.PowerFx.Core.Public.Values
 
         #region Host Records API
         /// <summary>
-        /// Create a record by reflecting over the object's public properties
+        /// Create a record by reflecting over the object's public properties.
         /// </summary>
-        /// <typeparam name="T">static type to reflect over</typeparam>
+        /// <typeparam name="T">static type to reflect over.</typeparam>
         /// <param name="obj"></param>
-        /// <returns>a new record value</returns>
+        /// <returns>a new record value.</returns>
         public static RecordValue RecordFromProperties<T>(T obj)
         {
             return RecordFromProperties(obj, typeof(T));
@@ -262,10 +272,11 @@ namespace Microsoft.PowerFx.Core.Public.Values
         public static RecordValue RecordFromFields(IEnumerable<NamedValue> fields)
         {
             var type = new RecordType();
-            foreach(var field in fields)
+            foreach (var field in fields)
             {
                 type = type.Add(new NamedFormulaType(field.Name, field.Value.IRContext.ResultType));
             }
+
             return new InMemoryRecordValue(IRContext.NotInSource(type), fields);
         }
 
@@ -308,7 +319,8 @@ namespace Microsoft.PowerFx.Core.Public.Values
         /// <param name="values"></param>
         /// <param name="elementType"></param>
         /// <returns></returns>
-        internal static TableValue TableFromEnumerable(System.Collections.IEnumerable values,
+        internal static TableValue TableFromEnumerable(
+            System.Collections.IEnumerable values,
             Type elementType)
         {
             if (elementType == null) { throw new ArgumentNullException(nameof(elementType)); }
@@ -331,7 +343,7 @@ namespace Microsoft.PowerFx.Core.Public.Values
 
         public static TableValue TableFromRecords<T>(IEnumerable<T> values, TableType type)
         {
-            var values2 = values.Select(v => GuaranteeRecord(FormulaValue.New(v, typeof(T))));
+            var values2 = values.Select(v => GuaranteeRecord(New(v, typeof(T))));
             return new InMemoryTableValue(IRContext.NotInSource(type), values2.Select(r => DValue<RecordValue>.Of(r)));
         }
 
@@ -343,7 +355,7 @@ namespace Microsoft.PowerFx.Core.Public.Values
         {
             foreach (var obj in values)
             {
-                var formulaValue = GuaranteeRecord(FormulaValue.New(obj, elementType));
+                var formulaValue = GuaranteeRecord(New(obj, elementType));
                 yield return formulaValue;
             }
         }
@@ -375,7 +387,7 @@ namespace Microsoft.PowerFx.Core.Public.Values
             for (var i = 0; i < array.GetArrayLength(); ++i)
             {
                 var element = array[i];
-                var val = GuaranteeRecord(FormulaValue.FromJson(element));
+                var val = GuaranteeRecord(FromJson(element));
 
                 records.Add(val);
             }
@@ -390,6 +402,7 @@ namespace Microsoft.PowerFx.Core.Public.Values
             {
                 type = TableType.FromRecord((RecordType)GuaranteeRecord(records[0]).IRContext.ResultType);
             }
+
             return new InMemoryTableValue(IRContext.NotInSource(type), records.Select(r => DValue<RecordValue>.Of(r)));
         }
         #endregion

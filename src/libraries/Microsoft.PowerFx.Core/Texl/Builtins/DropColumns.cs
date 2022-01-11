@@ -24,15 +24,18 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
-            yield return new [] { TexlStrings.DropColumnsArg1, TexlStrings.DropColumnsArg2 };
-            yield return new [] { TexlStrings.DropColumnsArg1, TexlStrings.DropColumnsArg2, TexlStrings.DropColumnsArg2 };
-            yield return new [] { TexlStrings.DropColumnsArg1, TexlStrings.DropColumnsArg2, TexlStrings.DropColumnsArg2, TexlStrings.DropColumnsArg2 };
+            yield return new[] { TexlStrings.DropColumnsArg1, TexlStrings.DropColumnsArg2 };
+            yield return new[] { TexlStrings.DropColumnsArg1, TexlStrings.DropColumnsArg2, TexlStrings.DropColumnsArg2 };
+            yield return new[] { TexlStrings.DropColumnsArg1, TexlStrings.DropColumnsArg2, TexlStrings.DropColumnsArg2, TexlStrings.DropColumnsArg2 };
         }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures(int arity)
         {
             if (arity > 2)
+            {
                 return GetGenericSignatures(arity, TexlStrings.DropColumnsArg1, TexlStrings.DropColumnsArg2);
+            }
+
             return base.GetSignatures(arity);
         }
 
@@ -44,7 +47,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertValue(errors);
             Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
 
-            var fArgsValid = base.CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            var fArgsValid = CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
             Contracts.Assert(returnType.IsTable);
 
             if (!argTypes[0].IsTable)
@@ -105,7 +108,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         // This method returns true if there are special suggestions for a particular parameter of the function.
         public override bool HasSuggestionsForParam(int argumentIndex)
         {
-            Contracts.Assert(0 <= argumentIndex);
+            Contracts.Assert(argumentIndex >= 0);
 
             return argumentIndex >= 0;
         }

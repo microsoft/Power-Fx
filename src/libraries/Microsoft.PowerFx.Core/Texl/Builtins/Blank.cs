@@ -14,13 +14,14 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override bool IsSelfContained => true;
         public override bool SupportsParamCoercion => true;
 
-        public BlankFunction() : base("Blank",
-                  TexlStrings.AboutBlank,
-                  FunctionCategories.Text,
-                  DType.ObjNull, // return type
-                  0,            // no lambdas
-                  0,            // min arity of 0
-                  0)            // max arity of 0
+        public BlankFunction() : base(
+            "Blank",
+            TexlStrings.AboutBlank,
+            FunctionCategories.Text,
+            DType.ObjNull, // return type
+            0,            // no lambdas
+            0,            // min arity of 0
+            0)            // max arity of 0
         { }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()

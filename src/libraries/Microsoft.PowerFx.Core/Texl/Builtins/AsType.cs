@@ -46,7 +46,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
 
             if (!base.CheckInvocation(binding, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap))
+            {
                 return false;
+            }
 
             // Check if first argument is poly type or an activity pointer
             if (!argTypes[0].IsPolymorphic && !argTypes[0].IsActivityPointer)
@@ -59,7 +61,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             var tableArg = args[1];
             IExternalDataSource tableDsInfo;
             if (!binding.TryGetFirstNameInfo(tableArg.Id, out var tableInfo) ||
-                (tableDsInfo = (tableInfo.Data as IExternalDataSource)) == null ||
+                (tableDsInfo = tableInfo.Data as IExternalDataSource) == null ||
                 !(tableDsInfo is IExternalTabularDataSource))
             {
                 errors.EnsureError(tableArg, TexlStrings.ErrAsTypeAndIsTypeExpectConnectedDataSource);
@@ -89,7 +91,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         {
             Contracts.AssertValue(args);
             Contracts.AssertAllValues(args);
-            Contracts.Assert(0 <= paramIndex && paramIndex < args.Length);
+            Contracts.Assert(paramIndex >= 0 && paramIndex < args.Length);
             Contracts.AssertValue(binding);
             Contracts.Assert(binding.IsPageable(args[paramIndex].VerifyValue()));
 

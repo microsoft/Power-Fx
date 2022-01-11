@@ -1,12 +1,12 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
-using Microsoft.PowerFx.Core.IR;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Public.Types;
 using Microsoft.PowerFx.Core.Public.Values;
-using System;
 
 namespace Microsoft.PowerFx.Functions
 {
@@ -33,6 +33,7 @@ namespace Microsoft.PowerFx.Functions
                 _accumulator += n1.Value;
                 _count++;
             }
+
             public virtual FormulaValue GetResult(IRContext irContext)
             {
                 if (_count == 0) { return new BlankValue(irContext); }
@@ -56,6 +57,7 @@ namespace Microsoft.PowerFx.Functions
                 }
 
             }
+
             public virtual FormulaValue GetResult(IRContext irContext)
             {
                 if (_count == 0) { return new BlankValue(irContext); }
@@ -79,6 +81,7 @@ namespace Microsoft.PowerFx.Functions
                 }
 
             }
+
             public virtual FormulaValue GetResult(IRContext irContext)
             {
                 if (_count == 0) { return new BlankValue(irContext); }
@@ -101,6 +104,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 agg.Apply(value);
             }
+
             return agg.GetResult(irContext);
         }
 
@@ -125,6 +129,7 @@ namespace Microsoft.PowerFx.Functions
                     {
                         return error;
                     }
+
                     agg.Apply(value);
                 }
             }

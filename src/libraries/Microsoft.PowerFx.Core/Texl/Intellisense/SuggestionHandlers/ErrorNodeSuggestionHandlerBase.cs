@@ -1,11 +1,12 @@
-// Copyright (c) Microsoft Corporation.
+﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
 using Microsoft.PowerFx.Core.Syntax;
 using Microsoft.PowerFx.Core.Syntax.Nodes;
 using Microsoft.PowerFx.Core.Utils;
 
-namespace Microsoft.PowerFx.Core.Texl.Intellisense{
+namespace Microsoft.PowerFx.Core.Texl.Intellisense
+{
     internal partial class Intellisense
     {
         internal abstract class ErrorNodeSuggestionHandlerBase : NodeKindSuggestionHandler
@@ -26,7 +27,9 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense{
                 // top level suggestions are added, one after, and one to handle the case where there aren't
                 // any top level suggestions to add.
                 if (intellisenseData.AddSuggestionsBeforeTopLevelErrorNodeSuggestions())
+                {
                     return true;
+                }
 
                 if (!IntellisenseHelper.AddSuggestionsForTopLevel(intellisenseData, curNode))
                 {

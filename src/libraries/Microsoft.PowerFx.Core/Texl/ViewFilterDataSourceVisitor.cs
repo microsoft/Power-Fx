@@ -18,7 +18,7 @@ namespace Microsoft.PowerFx.Core.Texl
     {
         const string FilterFunctionName = "Filter";
         private readonly TexlBinding _txb;
-        public IExternalCdsDataSource cdsDataSourceInfo { get; private set; }
+        public IExternalCdsDataSource CdsDataSourceInfo { get; private set; }
         public bool ContainsViewFilter { get; private set; }
 
         public ViewFilterDataSourceVisitor(TexlBinding binding)
@@ -32,8 +32,8 @@ namespace Microsoft.PowerFx.Core.Texl
         {
             if (_txb.EntityScope.TryGetDataSource(node, out var info) && info.Kind == DataSourceKind.CdsNative)
             {
-                cdsDataSourceInfo = info as IExternalCdsDataSource;
-            }            
+                CdsDataSourceInfo = info as IExternalCdsDataSource;
+            }
         }
 
         public override void PostVisit(CallNode node)

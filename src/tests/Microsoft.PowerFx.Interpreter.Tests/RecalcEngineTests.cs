@@ -40,7 +40,7 @@ namespace Microsoft.PowerFx.Tests
                 allowed.Remove(name);
             }
 
-            Assert.True(0 == sb.Length, $"Unexpected public types: {sb}");
+            Assert.True(sb.Length == 0, $"Unexpected public types: {sb}");
 
             // Types we expect to be in the assembly aren't there. 
             if (allowed.Count > 0)
@@ -60,7 +60,7 @@ namespace Microsoft.PowerFx.Tests
                 x = 15
             });
             var result = engine.Eval("With({y:2}, x+y)", context);
-            
+
             Assert.Equal(17.0, ((NumberValue)result).Value);
         }
 
@@ -89,7 +89,7 @@ namespace Microsoft.PowerFx.Tests
             engine.SetFormula("B", "A*10", OnUpdate);
             AssertUpdate("B-->10;");
 
-            engine.SetFormula("C", "B+5", OnUpdate); 
+            engine.SetFormula("C", "B+5", OnUpdate);
             AssertUpdate("C-->15;");
 
             // depend on grand child directly 
@@ -117,7 +117,7 @@ namespace Microsoft.PowerFx.Tests
 
             engine.SetFormula("C", "A2*10", OnUpdate);
             AssertUpdate("C-->50;");
-                        
+
             engine.UpdateVariable("A1", 2);
             AssertUpdate("B-->7;"); // Don't fire C, not touched
 
@@ -153,8 +153,7 @@ namespace Microsoft.PowerFx.Tests
 
             // not supported: Can't change a variable's type.
             Assert.Throws<NotSupportedException>(() =>
-                engine.UpdateVariable("a", FormulaValue.New("str"))
-            );
+                engine.UpdateVariable("a", FormulaValue.New("str")));
 
         }
 
@@ -204,7 +203,8 @@ namespace Microsoft.PowerFx.Tests
         public void CheckSuccess()
         {
             var engine = new RecalcEngine();
-            var result = engine.Check("3*2+x",
+            var result = engine.Check(
+                "3*2+x",
                 new RecordType().Add(
                     new NamedFormulaType("x", FormulaType.Number)));
 
@@ -283,7 +283,7 @@ namespace Microsoft.PowerFx.Tests
 
         void AssertUpdate(string expected)
         {
-            Assert.Equal(expected, _updates.ToString());            
+            Assert.Equal(expected, _updates.ToString());
             _updates.Clear();
         }
 

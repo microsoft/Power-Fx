@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation.
+﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
 using Microsoft.PowerFx.Core.Localization;
@@ -13,10 +13,10 @@ namespace Microsoft.PowerFx.Core.Lexer.Tokens
         { }
 
         /// <summary>
-        /// Copy Ctor for KeyToken used by Clone
+        /// Copy Ctor for KeyToken used by Clone.
         /// </summary>
-        /// <param name="tok">The token to be copied</param>
-        /// <param name="newSpan">The new span</param>
+        /// <param name="tok">The token to be copied.</param>
+        /// <param name="newSpan">The new span.</param>
         private KeyToken(KeyToken tok, Span newSpan)
             : this(tok.Kind, newSpan)
         {
@@ -34,7 +34,10 @@ namespace Microsoft.PowerFx.Core.Lexer.Tokens
             Contracts.AssertValue(that);
 
             if (!(that is KeyToken))
+            {
                 return false;
+            }
+
             return base.Equals(that);
         }
     }

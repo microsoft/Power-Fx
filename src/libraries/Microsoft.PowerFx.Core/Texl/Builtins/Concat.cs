@@ -24,8 +24,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
-            yield return new [] { TexlStrings.ConcatArg1, TexlStrings.ConcatArg2 };
-            yield return new [] { TexlStrings.ConcatArg1, TexlStrings.ConcatArg2, TexlStrings.ConcatArg3 };
+            yield return new[] { TexlStrings.ConcatArg1, TexlStrings.ConcatArg2 };
+            yield return new[] { TexlStrings.ConcatArg1, TexlStrings.ConcatArg2, TexlStrings.ConcatArg3 };
         }
     }
 }

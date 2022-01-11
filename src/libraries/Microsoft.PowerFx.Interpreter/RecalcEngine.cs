@@ -1,15 +1,16 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
-using Microsoft.PowerFx.Core.IR;
-using Microsoft.PowerFx.Core.IR.Symbols;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Glue;
+using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.IR.Nodes;
+using Microsoft.PowerFx.Core.IR.Symbols;
 using Microsoft.PowerFx.Core.Parser;
 using Microsoft.PowerFx.Core.Public;
 using Microsoft.PowerFx.Core.Public.Types;
@@ -18,7 +19,6 @@ using Microsoft.PowerFx.Core.Syntax;
 using Microsoft.PowerFx.Core.Texl.Intellisense;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Types.Enums;
-using System.Globalization;
 
 namespace Microsoft.PowerFx
 {
@@ -95,6 +95,7 @@ namespace Microsoft.PowerFx
                 {
                     throw new NotSupportedException($"Can't change '{name}''s type from {fi._type} to {x.Type}.");
                 }
+
                 fi._value = x;
 
                 // Be sure to preserve used-by set. 
@@ -147,10 +148,9 @@ namespace Microsoft.PowerFx
                 formula.ParseTree,
                 resolver,
                 ruleScope: intellisense ? parameterType._type : null,
-                useThisRecordForRuleScope: false
-            );
+                useThisRecordForRuleScope: false);
 
-            var errors = (formula.HasParseErrors) ? formula.GetParseErrors() : binding.ErrorContainer.GetErrors();
+            var errors = formula.HasParseErrors ? formula.GetParseErrors() : binding.ErrorContainer.GetErrors();
 
             var result = new CheckResult
             {
@@ -167,7 +167,9 @@ namespace Microsoft.PowerFx
                 result.TopLevelIdentifiers = DependencyFinder.FindDependencies(binding.Top, binding);
                 // TODO: Fix FormulaType.Build to not throw exceptions for Enum types then remove this check
                 if (binding.ResultType.Kind != DKind.Enum)
+                {
                     result.ReturnType = FormulaType.Build(binding.ResultType);
+                }
             }
 
             return result;
@@ -176,16 +178,17 @@ namespace Microsoft.PowerFx
         /// <summary>
         /// Evaluate an expression as text and return the result.
         /// </summary>
-        /// <param name="expressionText">textual representation of the formula</param>
+        /// <param name="expressionText">textual representation of the formula.</param>
         /// <param name="parameters">parameters for formula. The fields in the parameter record can 
         /// be acecssed as top-level identifiers in the formula.</param>
-        /// <returns>The formula's result</returns>
+        /// <returns>The formula's result.</returns>
         public FormulaValue Eval(string expressionText, RecordValue parameters = null)
         {
             if (parameters == null)
             {
                 parameters = RecordValue.Empty();
             }
+
             var check = Check(expressionText, parameters.IRContext.ResultType);
             check.ThrowOnErrors();
 

@@ -10,7 +10,7 @@ namespace Microsoft.PowerFx.Core.App.Controls
     /// <summary>
     /// Categories of rules and properties, e.g. data, design, behavior.
     /// When published, this enum is not available to JavaScript;
-    /// Please keep these values in sync with src/AppMagic/js/AppMagic.Controls/Constants.ts
+    /// Please keep these values in sync with src/AppMagic/js/AppMagic.Controls/Constants.ts.
     /// </summary>
     [TransportType(TransportKind.Enum)]
     internal enum PropertyRuleCategory
@@ -45,8 +45,8 @@ namespace Microsoft.PowerFx.Core.App.Controls
     internal static class PropertyRuleCategoryExtensions
     {
         internal static bool IsValid(this PropertyRuleCategory category) =>
-            PropertyRuleCategory.Data <= category && category <= PropertyRuleCategory.Unknown;
-        internal static bool IsBehavioral(this PropertyRuleCategory category) => 
+            category >= PropertyRuleCategory.Data && category <= PropertyRuleCategory.Unknown;
+        internal static bool IsBehavioral(this PropertyRuleCategory category) =>
             category == PropertyRuleCategory.Behavior || category == PropertyRuleCategory.OnDemandData;
     }
 

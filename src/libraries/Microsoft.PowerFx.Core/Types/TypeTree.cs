@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation.
+﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
 using System;
@@ -20,6 +20,14 @@ namespace Microsoft.PowerFx.Core.Types
             _root = root;
             _hashCodeCache = new Dictionary<RedBlackNode<DType>, int>();
         }
+
+        public bool IsEmpty => _root == null;
+
+        public int Count => _root == null ? 0 : _root.Count;
+
+        public static bool operator ==(TypeTree tree1, TypeTree tree2) => RedBlackNode<DType>.Equals(tree1._root, tree2._root);
+
+        public static bool operator !=(TypeTree tree1, TypeTree tree2) => !(tree1 == tree2);
 
         [Conditional("PARANOID_VALIDATION")]
         internal void AssertValid()
@@ -43,10 +51,6 @@ namespace Microsoft.PowerFx.Core.Types
 #endif
             return new TypeTree(RedBlackNode<DType>.Create(items));
         }
-
-        public bool IsEmpty => _root == null;
-
-        public int Count => _root == null ? 0 : _root.Count;
 
         public bool Contains(string key)
         {
@@ -100,16 +104,6 @@ namespace Microsoft.PowerFx.Core.Types
             return new TypeTree(root);
         }
 
-        public static bool operator ==(TypeTree tree1, TypeTree tree2)
-        {
-            return RedBlackNode<DType>.Equals(tree1._root, tree2._root);
-        }
-
-        public static bool operator !=(TypeTree tree1, TypeTree tree2)
-        {
-            return !(tree1 == tree2);
-        }
-
         public bool Equals(TypeTree other)
         {
             return this == other;
@@ -118,7 +112,10 @@ namespace Microsoft.PowerFx.Core.Types
         public override bool Equals(object obj)
         {
             if (!(obj is TypeTree))
+            {
                 return false;
+            }
+
             return this == (TypeTree)obj;
         }
 
@@ -128,9 +125,13 @@ namespace Microsoft.PowerFx.Core.Types
             if (_root != null)
             {
                 if (_hashCodeCache.ContainsKey(_root))
+                {
                     hash = _hashCodeCache[_root];
+                }
                 else
+                {
                     hash = Hashing.CombineHash(hash, _root.GetHashCode());
+                }
             }
 
             return hash;

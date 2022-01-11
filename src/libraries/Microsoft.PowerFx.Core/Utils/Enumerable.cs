@@ -25,7 +25,10 @@ namespace Microsoft.PowerFx.Core.Utils
             get
             {
                 if (_instance == null)
+                {
                     Interlocked.CompareExchange(ref _instance, new EmptyEnumerator<T>(), null);
+                }
+
                 return _instance;
             }
         }
@@ -94,6 +97,6 @@ namespace Microsoft.PowerFx.Core.Utils
 
         public static int FindIndex<T>(this IEnumerable<T> list, Predicate<T> predicate) => list.Select((item, index) => predicate(item) ? index : -1).Where(i => i != -1).DefaultIfEmpty(-1).First();
 
-        public static IEnumerable<T> OrEmpty<T>(this IEnumerable<T> list) => list ?? EnumerableUtils.Yield<T>();
+        public static IEnumerable<T> OrEmpty<T>(this IEnumerable<T> list) => list ?? Yield<T>();
     }
 }

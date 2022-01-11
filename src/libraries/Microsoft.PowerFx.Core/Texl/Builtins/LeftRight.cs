@@ -27,7 +27,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
-            yield return new [] { TexlStrings.LeftRightArg1, TexlStrings.LeftRightArg2 };
+            yield return new[] { TexlStrings.LeftRightArg1, TexlStrings.LeftRightArg2 };
         }
     }
 
@@ -46,7 +46,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
-            yield return new [] { TexlStrings.LeftRightTArg1, TexlStrings.LeftRightArg2 };
+            yield return new[] { TexlStrings.LeftRightTArg1, TexlStrings.LeftRightArg2 };
         }
 
         public override string GetUniqueTexlRuntimeName(bool isPrefetching = false)
@@ -66,7 +66,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertValue(errors);
             Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
 
-            var fValid = base.CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            var fValid = CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
             Contracts.Assert(returnType.IsTable);
 
             // Typecheck the input table
@@ -93,7 +93,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
-            yield return new [] { TexlStrings.LeftRightTArg1, TexlStrings.LeftRightArg2 };
+            yield return new[] { TexlStrings.LeftRightTArg1, TexlStrings.LeftRightArg2 };
         }
 
         public override string GetUniqueTexlRuntimeName(bool isPrefetching = false)
@@ -113,7 +113,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertValue(errors);
             Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
 
-            var fValid = base.CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            var fValid = CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
             Contracts.Assert(returnType.IsTable);
 
             // Typecheck the input table
@@ -143,7 +143,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
-            yield return new [] { TexlStrings.LeftRightArg1, TexlStrings.LeftRightArg2 };
+            yield return new[] { TexlStrings.LeftRightArg1, TexlStrings.LeftRightArg2 };
         }
 
         public override string GetUniqueTexlRuntimeName(bool isPrefetching = false)
@@ -163,7 +163,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertValue(errors);
             Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
 
-            var fValid = base.CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            var fValid = CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
             Contracts.Assert(returnType.IsTable);
 
             // Typecheck the count table

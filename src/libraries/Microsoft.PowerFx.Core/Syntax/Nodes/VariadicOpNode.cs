@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation.
+﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
 using System.Collections.Generic;
@@ -32,7 +32,9 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
             var children = CloneChildren(ref idNext, ts);
             var newNodes = new Dictionary<TexlNode, TexlNode>();
             for (var i = 0; i < Children.Length; ++i)
+            {
                 newNodes.Add(Children[i], children[i]);
+            }
 
             return new VariadicOpNode(ref idNext, Op, children, Clone(OpTokens, ts), SourceList.Clone(ts, newNodes));
         }

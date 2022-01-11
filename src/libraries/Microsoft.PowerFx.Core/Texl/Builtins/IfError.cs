@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation.
+﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
 using System.Collections.Generic;
@@ -27,13 +27,14 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public IfErrorFunction()
             : base("IfError", TexlStrings.AboutIfError, FunctionCategories.Logical, DType.Unknown, 0, 2, int.MaxValue)
         {
-            ScopeInfo = new FunctionScopeInfo(this,
+            ScopeInfo = new FunctionScopeInfo(
+                this,
                 iteratesOverScope: false,
                 scopeType: DType.CreateRecord(
                     new TypedName(ErrorType.ReifiedError(), new DName("FirstError")),
                     new TypedName(ErrorType.ReifiedErrorTable(), new DName("AllErrors")),
                     new TypedName(DType.ObjNull, new DName("ErrorResult"))),
-                appliesToArgument: (i => i > 0 && (i % 2 == 1)));
+                appliesToArgument: i => i > 0 && (i % 2 == 1));
         }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
@@ -46,7 +47,10 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures(int arity)
         {
             if (arity > 2)
+            {
                 return GetGenericSignatures(arity, TexlStrings.IfErrorArg2);
+            }
+
             return base.GetSignatures(arity);
         }
 
@@ -76,7 +80,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 var typeArg = argTypes[i];
 
                 if (typeArg.IsError)
+                {
                     errors.EnsureError(args[i], TexlStrings.ErrTypeError);
+                }
 
                 var typeSuper = DType.Supertype(type, typeArg);
 
@@ -114,7 +120,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 // If there are an odd number of args, the last arg also participates.
                 i += 2;
                 if (i == count)
+                {
                     i--;
+                }
             }
 
             returnType = type;
@@ -139,7 +147,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             while (ancestor.Head.Name == Name)
             {
                 if (ancestor.Parent == null && ancestor.Args.Children.Length > 0)
+                {
                     return true;
+                }
 
                 // Deal with the possibility that the ancestor may be contributing to a chain.
                 // This also lets us cover the following patterns:
@@ -151,16 +161,23 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 {
                     // Top-level chain in a behavior rule.
                     if (chainNode.Parent == null)
+                    {
                         return true;
+                    }
 
                     // A chain nested within a larger non-call structure.
                     if (!(chainNode.Parent is ListNode) || !(chainNode.Parent.Parent is CallNode))
+                    {
                         return false;
+                    }
 
                     // Only the last chain segment is consequential.
                     var numSegments = chainNode.Children.Length;
                     if (numSegments > 0 && !arg.InTree(chainNode.Children[numSegments - 1]))
+                    {
                         return true;
+                    }
+
                     // The node is in the last segment of a chain nested within a larger invocation.
                     ancestor = chainNode.Parent.Parent.AsCall();
                     continue;
@@ -168,7 +185,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
                 // Walk up the parent chain to the outer invocation.
                 if (!(ancestor.Parent is ListNode) || !(ancestor.Parent.Parent is CallNode))
+                {
                     return false;
+                }
 
                 ancestor = ancestor.Parent.Parent.AsCall();
             }

@@ -12,7 +12,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     {
         public AbsFunction()
             : base("Abs", TexlStrings.AboutAbs, FunctionCategories.MathAndStat)
-        {}
+        { }
     }
 
     // Abs(E:*[n])

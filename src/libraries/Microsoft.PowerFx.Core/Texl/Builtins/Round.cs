@@ -25,7 +25,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
-            yield return new [] { TexlStrings.RoundArg1, TexlStrings.RoundArg2 };
+            yield return new[] { TexlStrings.RoundArg1, TexlStrings.RoundArg2 };
         }
     }
 
@@ -41,7 +41,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
-            yield return new [] { TexlStrings.RoundTArg1, TexlStrings.RoundTArg2 };
+            yield return new[] { TexlStrings.RoundTArg1, TexlStrings.RoundTArg2 };
         }
 
         public override string GetUniqueTexlRuntimeName(bool isPrefetching = false)

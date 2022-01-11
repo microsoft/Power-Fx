@@ -102,7 +102,7 @@ namespace Microsoft.PowerFx.Core.Errors
 
         /// <summary>
         /// The internal exception, which can be null
-        /// This is for diagnostic purposes only, NOT for display to the end-user
+        /// This is for diagnostic purposes only, NOT for display to the end-user.
         /// </summary>
         public Exception InternalException { get; }
 
@@ -161,7 +161,9 @@ namespace Microsoft.PowerFx.Core.Errors
         private string FormatMessage(string message, params object[] args)
         {
             if (message == null)
+            {
                 return null;
+            }
 
             var sb = new StringBuilder();
             if (args != null && args.Length > 0)
@@ -201,12 +203,16 @@ namespace Microsoft.PowerFx.Core.Errors
             // Look for singular Message_HowToFix
             var howToFixSingularKey = messageKey + HowToFixSuffix;
             if (StringResources.TryGet(howToFixSingularKey, out var howToFixSingularMessage, locale))
+            {
                 return new List<string> { howToFixSingularMessage };
+            }
 
             // Look for multiple how to fix messages: Message_HowToFix1, Message_HowToFix2...
             var messages = new List<string>();
             for (var messageIndex = 1; StringResources.TryGet(howToFixSingularKey + messageIndex, out var howToFixMessage, locale); messageIndex++)
+            {
                 messages.Add(howToFixMessage);
+            }
 
             return messages.Count == 0 ? null : messages;
         }
@@ -235,7 +241,11 @@ namespace Microsoft.PowerFx.Core.Errors
         {
             Contracts.AssertValue(sb);
 
-            if (InnerError == null) return;
+            if (InnerError == null)
+            {
+                return;
+            }
+
             sb.AppendLine();
             var innerError = InnerError as BaseError;
             Contracts.AssertValue(innerError);

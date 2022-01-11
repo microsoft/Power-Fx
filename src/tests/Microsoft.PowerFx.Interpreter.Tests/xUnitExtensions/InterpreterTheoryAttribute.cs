@@ -15,7 +15,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests.xUnitExtensions
     {
         public InterpreterTheoryAttribute(params Type[] skippingExceptions)
         {
-            
+
         }
     }
 }

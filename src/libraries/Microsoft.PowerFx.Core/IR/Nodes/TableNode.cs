@@ -21,7 +21,7 @@ namespace Microsoft.PowerFx.Core.IR.Nodes
         {
             return visitor.Visit(this, context);
         }
-        
+
         public override string ToString()
         {
             return $"Table({string.Join(",", Values)})";

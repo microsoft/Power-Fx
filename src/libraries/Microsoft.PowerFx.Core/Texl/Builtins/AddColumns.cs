@@ -34,15 +34,18 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
             // Enumerate just the base overloads (the first 3 possibilities).
-            yield return new [] { TexlStrings.AddColumnsArg1, TexlStrings.AddColumnsArg2, TexlStrings.AddColumnsArg3 };
-            yield return new [] { TexlStrings.AddColumnsArg1, TexlStrings.AddColumnsArg2, TexlStrings.AddColumnsArg3, TexlStrings.AddColumnsArg2, TexlStrings.AddColumnsArg3 };
-            yield return new [] { TexlStrings.AddColumnsArg1, TexlStrings.AddColumnsArg2, TexlStrings.AddColumnsArg3, TexlStrings.AddColumnsArg2, TexlStrings.AddColumnsArg3, TexlStrings.AddColumnsArg2, TexlStrings.AddColumnsArg3 };
+            yield return new[] { TexlStrings.AddColumnsArg1, TexlStrings.AddColumnsArg2, TexlStrings.AddColumnsArg3 };
+            yield return new[] { TexlStrings.AddColumnsArg1, TexlStrings.AddColumnsArg2, TexlStrings.AddColumnsArg3, TexlStrings.AddColumnsArg2, TexlStrings.AddColumnsArg3 };
+            yield return new[] { TexlStrings.AddColumnsArg1, TexlStrings.AddColumnsArg2, TexlStrings.AddColumnsArg3, TexlStrings.AddColumnsArg2, TexlStrings.AddColumnsArg3, TexlStrings.AddColumnsArg2, TexlStrings.AddColumnsArg3 };
         }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures(int arity)
         {
             if (arity > 3)
+            {
                 return GetOverloadsAddColumns(arity);
+            }
+
             return base.GetSignatures(arity);
         }
 
@@ -54,7 +57,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertValue(errors);
             Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
 
-            var fArgsValid = base.CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            var fArgsValid = CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
 
             // The first arg determines the scope type for the lambda params, and the return type.
             fArgsValid &= ScopeInfo.CheckInput(args[0], argTypes[0], errors, out var typeScope);
@@ -65,7 +68,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             var count = args.Length;
             if ((count & 1) == 0)
+            {
                 errors.EnsureError(DocumentErrorSeverity.Severe, args[0].Parent.CastList().Parent.CastCall(), TexlStrings.ErrBadArityOdd, count);
+            }
 
             for (var i = 1; i < count; i += 2)
             {
@@ -94,7 +99,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
                 var columnName = new DName(nameNode.Value);
                 if (DType.TryGetDisplayNameForColumn(typeScope, columnName, out var colName))
+                {
                     columnName = new DName(colName);
+                }
 
                 // Verify that the name doesn't already exist as either a logical or display name
                 if (typeScope.TryGetType(columnName, out var columnType) || DType.TryGetLogicalNameForColumn(typeScope, columnName, out var unused))
@@ -105,7 +112,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 }
 
                 if (i + 1 >= count)
+                {
                     break;
+                }
 
                 columnType = argTypes[i + 1];
 
@@ -127,7 +136,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         // Gets the overloads for the AddColumns function for the specified arity.
         private IEnumerable<TexlStrings.StringGetter[]> GetOverloadsAddColumns(int arity)
         {
-            Contracts.Assert(4 <= arity);
+            Contracts.Assert(arity >= 4);
 
             const int OverloadCount = 2;
 
@@ -146,6 +155,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     overload[iarg] = TexlStrings.AddColumnsArg2;
                     overload[iarg + 1] = TexlStrings.AddColumnsArg3;
                 }
+
                 overloads.Add(overload);
             }
 

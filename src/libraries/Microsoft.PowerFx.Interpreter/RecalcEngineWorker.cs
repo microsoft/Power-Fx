@@ -1,15 +1,15 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
-using System.Linq;
 using System.Collections.Generic;
-using Microsoft.PowerFx.Functions;
+using System.Globalization;
+using System.Linq;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.IR.Nodes;
 using Microsoft.PowerFx.Core.IR.Symbols;
-using Microsoft.PowerFx.Core.Public.Values;
 using Microsoft.PowerFx.Core.Localization;
-using System.Globalization;
+using Microsoft.PowerFx.Core.Public.Values;
+using Microsoft.PowerFx.Functions;
 
 namespace Microsoft.PowerFx
 {
@@ -114,6 +114,7 @@ namespace Microsoft.PowerFx
 
                 value = _calcs[name];
             }
+
             return value;
         }
     } // end class RecalcHelper

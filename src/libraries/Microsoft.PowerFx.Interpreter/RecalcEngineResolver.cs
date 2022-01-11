@@ -13,7 +13,7 @@ using Microsoft.PowerFx.Core.Utils;
 namespace Microsoft.PowerFx
 {
     /// <summary>
-    /// <see cref="INameResolver"/> implementation for <see cref="RecalcEngine"/>
+    /// <see cref="INameResolver"/> implementation for <see cref="RecalcEngine"/>.
     /// </summary>
     internal class RecalcEngineResolver : SimpleResolver
     {
@@ -23,7 +23,7 @@ namespace Microsoft.PowerFx
         public RecalcEngineResolver(
             RecalcEngine parent,
             RecordType parameters,
-            IEnumerable<EnumSymbol> enumSymbols, 
+            IEnumerable<EnumSymbol> enumSymbols,
             params TexlFunction[] extraFunctions) :
             base(enumSymbols, extraFunctions)
         {
@@ -31,7 +31,7 @@ namespace Microsoft.PowerFx
             _parent = parent;
         }
 
-         public override bool Lookup(DName name, out NameLookupInfo nameInfo, NameLookupPreferences preferences = NameLookupPreferences.None)
+        public override bool Lookup(DName name, out NameLookupInfo nameInfo, NameLookupPreferences preferences = NameLookupPreferences.None)
         {
             // Kinds of globals:
             // - global formula
@@ -50,8 +50,7 @@ namespace Microsoft.PowerFx
                     type,
                     DPath.Root,
                     0,
-                    data
-                    );
+                    data);
                 return true;
             }
 
@@ -65,8 +64,7 @@ namespace Microsoft.PowerFx
                     type,
                     DPath.Root,
                     0,
-                    data
-                    );
+                    data);
                 return true;
             }
 

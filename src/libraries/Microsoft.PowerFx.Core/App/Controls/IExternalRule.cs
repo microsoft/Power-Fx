@@ -18,6 +18,6 @@ namespace Microsoft.PowerFx.Core.App.Controls
         bool HasErrors { get; }
         bool HasControlPropertyDependency(string referencedControlUniqueId);
 
-        void SetDelegationTrackerStatus(TexlNode node, DelegationStatus status, DelegationTelemetryInfo logInfo, TexlFunction func);        
+        void SetDelegationTrackerStatus(TexlNode node, DelegationStatus status, DelegationTelemetryInfo logInfo, TexlFunction func);
     }
 }

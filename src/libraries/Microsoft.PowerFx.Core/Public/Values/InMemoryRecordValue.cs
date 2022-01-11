@@ -33,10 +33,12 @@ namespace Microsoft.PowerFx.Core.Public.Values
             {
                 return new InMemoryRecordValue(IRContext.NotInSource(fieldType), recordValue.Fields);
             }
+
             if (fieldValue is TableValue tableValue)
             {
                 return new InMemoryTableValue(IRContext.NotInSource(fieldType), tableValue.Rows);
             }
+
             return fieldValue;
         }
     }

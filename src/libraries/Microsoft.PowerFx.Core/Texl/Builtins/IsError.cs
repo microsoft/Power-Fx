@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation.
+﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
 using System.Collections.Generic;
@@ -35,7 +35,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.Assert(args.Length == argTypes.Length);
             Contracts.Assert(args.Length == 1);
             Contracts.AssertValue(errors);
-            
+
             nodeToCoercedTypeMap = null;
 
             var type = ReturnType;

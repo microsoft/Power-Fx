@@ -5,7 +5,7 @@ using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Core.Texl.Intellisense
 {
-    internal class IntellisenseContext: IIntellisenseContext
+    internal class IntellisenseContext : IIntellisenseContext
     {
         /// <summary>
         /// The input string for intellisense.

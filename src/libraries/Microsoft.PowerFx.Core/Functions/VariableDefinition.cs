@@ -17,7 +17,7 @@ namespace Microsoft.PowerFx.Core.Functions
         {
             Contracts.AssertValid(name);
             Contracts.AssertValue(node);
-            
+
             Name = name;
             IsGlobal = isGlobal;
             Node = node;

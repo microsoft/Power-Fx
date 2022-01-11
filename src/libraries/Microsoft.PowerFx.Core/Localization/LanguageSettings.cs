@@ -13,14 +13,11 @@ namespace Microsoft.PowerFx.Core.Localization
     /// </summary>
     internal sealed class LanguageSettings : ILanguageSettings
     {
-        private readonly Dictionary<string, string> _invariantToLocPunctuatorMap;
-        private readonly string _uiCultureName;
-
         private LanguageSettings _cachedInvariantSettings;
         private int _cacheStamp;
 
         public string CultureName { get; }
-        public string UICultureName => _uiCultureName;
+        public string UICultureName { get; }
 
         // Locale-specific to Invariant maps
         public Dictionary<string, string> LocToInvariantFunctionMap { get; }
@@ -28,7 +25,7 @@ namespace Microsoft.PowerFx.Core.Localization
 
         // Reverse maps
         public Dictionary<string, string> InvariantToLocFunctionMap { get; }
-        public Dictionary<string, string> InvariantToLocPunctuatorMap => _invariantToLocPunctuatorMap;
+        public Dictionary<string, string> InvariantToLocPunctuatorMap { get; }
 
         public void AddFunction(string loc, string invariant)
         {
@@ -47,7 +44,7 @@ namespace Microsoft.PowerFx.Core.Localization
             Contracts.AssertNonEmpty(invariant);
 
             LocToInvariantPunctuatorMap[loc] = invariant;
-            _invariantToLocPunctuatorMap[invariant] = loc;
+            InvariantToLocPunctuatorMap[invariant] = loc;
 
             _cacheStamp++;
         }
@@ -56,14 +53,20 @@ namespace Microsoft.PowerFx.Core.Localization
         {
             if (_cachedInvariantSettings == null || NeedsRefresh(_cachedInvariantSettings))
             {
-                _cachedInvariantSettings = new LanguageSettings("en-US", "en-US");
-
-                _cachedInvariantSettings._cacheStamp = _cacheStamp;
+                _cachedInvariantSettings = new LanguageSettings("en-US", "en-US")
+                {
+                    _cacheStamp = _cacheStamp
+                };
 
                 foreach (var kvp in LocToInvariantFunctionMap)
+                {
                     _cachedInvariantSettings.AddFunction(kvp.Value, kvp.Value);
+                }
+
                 foreach (var kvp in LocToInvariantPunctuatorMap)
+                {
                     _cachedInvariantSettings.AddPunctuator(kvp.Value, kvp.Value);
+                }
             }
 
             return _cachedInvariantSettings;
@@ -81,12 +84,12 @@ namespace Microsoft.PowerFx.Core.Localization
             Contracts.AssertNonEmpty(cultureName);
 
             CultureName = cultureName;
-            _uiCultureName = uiCultureName;
+            UICultureName = uiCultureName;
 
             LocToInvariantFunctionMap = new Dictionary<string, string>();
             LocToInvariantPunctuatorMap = new Dictionary<string, string>();
             InvariantToLocFunctionMap = new Dictionary<string, string>();
-            _invariantToLocPunctuatorMap = new Dictionary<string, string>();
+            InvariantToLocPunctuatorMap = new Dictionary<string, string>();
 
             _cacheStamp = 0;
             _cachedInvariantSettings = null;

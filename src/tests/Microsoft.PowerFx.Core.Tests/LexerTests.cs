@@ -70,8 +70,11 @@ namespace Microsoft.PowerFx.Core.Tests
             for (var i = 0; i < range.Length; i++)
             {
                 if (range[i].Item1 <= ch && ch <= range[i].Item2)
+                {
                     return true;
+                }
             }
+
             return false;
         }
 
@@ -88,7 +91,7 @@ namespace Microsoft.PowerFx.Core.Tests
             for (var i = 0; i < 128; i++)
             {
                 var ch = (char)i;
-                Assert.Equal(LexerTest.IsInRangeInclusive(ch, identStartRanges), TexlLexer.IsIdentStart(ch));
+                Assert.Equal(IsInRangeInclusive(ch, identStartRanges), TexlLexer.IsIdentStart(ch));
             }
         }
 

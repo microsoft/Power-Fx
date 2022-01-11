@@ -41,7 +41,10 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures(int arity)
         {
             if (arity > 2)
+            {
                 return GetGenericSignatures(arity, TexlStrings.FilterArg1, TexlStrings.FilterArg2);
+            }
+
             return base.GetSignatures(arity);
         }
 
@@ -54,7 +57,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             nodeToCoercedTypeMap = null;
             var viewCount = 0;
 
-            var fArgsValid = base.CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            var fArgsValid = CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
 
             var dataSourceVisitor = new ViewFilterDataSourceVisitor(binding);
             // Ensure that all the args starting at index 1 are booleans or view
@@ -72,7 +75,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
                     // Use the visitor to get the datasource info and if a view was already used anywhere in the node tree.
                     args[0].Accept(dataSourceVisitor);
-                    var dataSourceInfo = dataSourceVisitor.cdsDataSourceInfo;
+                    var dataSourceInfo = dataSourceVisitor.CdsDataSourceInfo;
 
                     if (dataSourceVisitor.ContainsViewFilter)
                     {
@@ -131,7 +134,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertValue(binding);
 
             if (!CheckArgsCount(callNode, binding))
+            {
                 return false;
+            }
 
             FilterOpMetadata metadata = null;
             if (TryGetEntityMetadata(callNode, binding, out IDelegationMetadata delegationMetadata))
@@ -148,7 +153,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             else
             {
                 if (!TryGetValidDataSourceForDelegation(callNode, binding, FunctionDelegationCapability, out var dataSource))
+                {
                     return false;
+                }
 
                 metadata = dataSource.DelegationMetadata.FilterDelegationMetadata;
             }
@@ -158,7 +165,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             for (var i = 1; i < args.Length; i++)
             {
                 if (!IsValidDelegatableFilterPredicateNode(args[i], binding, metadata))
+                {
                     return false;
+                }
             }
 
             return true;

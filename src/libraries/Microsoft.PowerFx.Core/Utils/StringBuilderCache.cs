@@ -23,7 +23,7 @@ namespace Microsoft.PowerFx.Core.Utils
     /// // ...
     /// StringBuilder sb = SBCache.Acquire(capacity: 32);
     /// sb.Append("sample text");
-    /// string result = SBCache.GetStringAndRelease(sb);
+    /// string result = SBCache.GetStringAndRelease(sb);.
     /// </example>
     internal static class StringBuilderCache<T>
     {

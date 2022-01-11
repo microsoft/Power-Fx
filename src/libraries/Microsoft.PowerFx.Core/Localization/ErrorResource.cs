@@ -31,11 +31,11 @@ namespace Microsoft.PowerFx.Core.Localization
         internal const string ReswErrorResourcePrefix = "ErrorResource_";
         internal static readonly Dictionary<string, string> ErrorResourceTagToReswSuffix = new Dictionary<string, string>()
         {
-            { ErrorResource.ShortMessageTag, "_ShortMessage" },
-            { ErrorResource.LongMessageTag, "_LongMessage" },
-            { ErrorResource.HowToFixTag, "_HowToFix" },
-            { ErrorResource.WhyToFixTag, "_WhyToFix" },
-            { ErrorResource.LinkTag, "_Link" },
+            { ShortMessageTag, "_ShortMessage" },
+            { LongMessageTag, "_LongMessage" },
+            { HowToFixTag, "_HowToFix" },
+            { WhyToFixTag, "_WhyToFix" },
+            { LinkTag, "_Link" },
         };
 
         internal static bool IsTagMultivalue(string tag) => tag == HowToFixTag || tag == LinkTag;
@@ -69,7 +69,9 @@ namespace Microsoft.PowerFx.Core.Localization
                 else
                 {
                     if (!errorResource.TagToValues.ContainsKey(tagName))
+                    {
                         errorResource.TagToValues[tagName] = new List<string>();
+                    }
 
                     errorResource.TagToValues[tagName].Add(tag.Element("value").Value);
                 }
@@ -98,6 +100,7 @@ namespace Microsoft.PowerFx.Core.Localization
                     urls.TryGetValue(kvp.Key, out var correspondingUrl).Verify();
                     errorResource.HelpLinks.Add(new ErrorHelpLink(kvp.Value, correspondingUrl));
                 }
+
                 members.Remove(LinkTag);
                 members.Remove(LinkTagUrlTag);
             }
@@ -106,7 +109,9 @@ namespace Microsoft.PowerFx.Core.Localization
             foreach (var tag in members)
             {
                 if (!errorResource.TagToValues.ContainsKey(tag.Key))
+                {
                     errorResource.TagToValues[tag.Key] = new List<string>();
+                }
 
                 foreach (var value in tag.Value.OrderBy(kvp => kvp.Key).Select(kvp => kvp.Value))
                 {
@@ -129,7 +134,9 @@ namespace Microsoft.PowerFx.Core.Localization
             Contracts.AssertValue(tag);
 
             if (!TagToValues.ContainsKey(tag))
+            {
                 return null;
+            }
 
             Contracts.Assert(TagToValues[tag].Count == 1);
 
@@ -139,7 +146,10 @@ namespace Microsoft.PowerFx.Core.Localization
         public IList<string> GetValues(string tag)
         {
             if (!TagToValues.ContainsKey(tag))
+            {
                 return null;
+            }
+
             return TagToValues[tag];
         }
     }

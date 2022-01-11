@@ -24,7 +24,9 @@ namespace Microsoft.PowerFx.Core.Logging.Trackers
             // The rule need not exist on ControlInfo yet. This happens when we are attempting
             // to create a namemap in which case we try to bind the rule before adding it to the control.
             if (!TryGetCurrentRule(binding, out var rule))
+            {
                 return;
+            }
 
             rule.SetDelegationTrackerStatus(node, status, logInfo ?? DelegationTelemetryInfo.CreateEmptyDelegationTelemetryInfo(), func);
         }
@@ -38,7 +40,9 @@ namespace Microsoft.PowerFx.Core.Logging.Trackers
             var entity = binding.NameResolver?.CurrentEntity;
             var currentProperty = binding.NameResolver?.CurrentProperty;
             if (entity == null || !currentProperty.HasValue || !currentProperty.Value.IsValid)
+            {
                 return false;
+            }
 
             return entity.TryGetRule(currentProperty.Value, out rule);
         }

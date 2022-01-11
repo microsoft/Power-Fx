@@ -26,15 +26,18 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
-            yield return new [] { TexlStrings.ConcatenateArg1, TexlStrings.ConcatenateArg1 };
-            yield return new [] { TexlStrings.ConcatenateArg1, TexlStrings.ConcatenateArg1, TexlStrings.ConcatenateArg1 };
-            yield return new [] { TexlStrings.ConcatenateArg1, TexlStrings.ConcatenateArg1, TexlStrings.ConcatenateArg1, TexlStrings.ConcatenateArg1 };
+            yield return new[] { TexlStrings.ConcatenateArg1, TexlStrings.ConcatenateArg1 };
+            yield return new[] { TexlStrings.ConcatenateArg1, TexlStrings.ConcatenateArg1, TexlStrings.ConcatenateArg1 };
+            yield return new[] { TexlStrings.ConcatenateArg1, TexlStrings.ConcatenateArg1, TexlStrings.ConcatenateArg1, TexlStrings.ConcatenateArg1 };
         }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures(int arity)
         {
             if (arity > 2)
+            {
                 return GetGenericSignatures(arity, TexlStrings.ConcatenateArg1, TexlStrings.ConcatenateArg1);
+            }
+
             return base.GetSignatures(arity);
         }
 
@@ -61,7 +64,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
 
             returnType = hasTableArg ? DType.CreateTable(new TypedName(DType.String, OneColumnTableResultName)) : DType.String;
-            
+
             return fArgsValid;
         }
     }

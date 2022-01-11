@@ -40,9 +40,12 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
                     callNode = nodeParent.AsCall();
                     break;
                 }
+
                 // The last node before a call's list node is the call arg.
                 if (nodeParent.Kind != NodeKind.List)
+                {
                     nodeCallArg = nodeParent;
+                }
 
                 nodeParent = nodeParent.Parent;
             }
@@ -64,8 +67,11 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
                 for (iarg = 0; iarg < carg; iarg++)
                 {
                     if (callNode.Args.Children[iarg] == nodeCallArg)
+                    {
                         break;
+                    }
                 }
+
                 Contracts.Assert(iarg < carg);
                 funcCur = (TexlFunction)info.Function;
                 return true;
@@ -79,14 +85,18 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
 
         internal static bool CanSuggestAfterValue(int cursor, string script)
         {
-            if (0 >= cursor || cursor > script.Length)
+            if (cursor <= 0 || cursor > script.Length)
+            {
                 return false;
+            }
 
             var result = CharacterUtils.IsSpace(script[cursor - 1]);
             cursor--;
 
             while (cursor > 0 && CharacterUtils.IsSpace(script[cursor]))
+            {
                 cursor--;
+            }
 
             return result &= script[cursor] != ',';
         }
@@ -107,7 +117,7 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
 
             var retVal = curSuggestion;
             var sug = curSuggestion.Text;
-            var suggestionKindIsGlobalOrScope = (suggestionKind == SuggestionKind.Global || suggestionKind == SuggestionKind.ScopeVariable);
+            var suggestionKindIsGlobalOrScope = suggestionKind == SuggestionKind.Global || suggestionKind == SuggestionKind.ScopeVariable;
 
             foreach (var s in curList.SuggestionsForText(sug))
             {
@@ -135,27 +145,35 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
 
                     // If we are already using the global syntax, we should not add it again.
                     if (dispText.Text.StartsWith(TexlLexer.PunctuatorBracketOpen + TexlLexer.PunctuatorAt))
+                    {
                         continue;
+                    }
 
-                    curList.UpdateDisplayText(index, new UIString(TexlLexer.PunctuatorBracketOpen + TexlLexer.PunctuatorAt + dispText.Text + TexlLexer.PunctuatorBracketClose,
+                    curList.UpdateDisplayText(index, new UIString(
+                        TexlLexer.PunctuatorBracketOpen + TexlLexer.PunctuatorAt + dispText.Text + TexlLexer.PunctuatorBracketClose,
                         dispText.HighlightStart + punctuatorLen,
                         dispText.HighlightEnd + punctuatorLen));
                 }
+
                 // Current suggestion is global. Update it.
                 else
                 {
-                    retVal = new UIString(TexlLexer.PunctuatorBracketOpen + TexlLexer.PunctuatorAt + sug + TexlLexer.PunctuatorBracketClose,
+                    retVal = new UIString(
+                        TexlLexer.PunctuatorBracketOpen + TexlLexer.PunctuatorAt + sug + TexlLexer.PunctuatorBracketClose,
                         curSuggestion.HighlightStart + punctuatorLen,
                         curSuggestion.HighlightEnd + punctuatorLen);
                 }
             }
+
             return retVal;
         }
 
         public static bool CheckAndAddSuggestion(IntellisenseSuggestion suggestion, IntellisenseSuggestionList suggestionList)
         {
             if (suggestionList.ContainsSuggestion(suggestion.DisplayText.Text))
+            {
                 return false;
+            }
 
             suggestionList.Add(suggestion);
             return true;
@@ -171,7 +189,10 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
             Contracts.AssertValue(intellisenseData);
             Contracts.AssertValue(possibilities);
 
-            foreach (var possibility in possibilities) AddSuggestion(intellisenseData, possibility, kind, iconKind, DType.Unknown, requiresSuggestionEscaping, sortPriority);
+            foreach (var possibility in possibilities)
+            {
+                AddSuggestion(intellisenseData, possibility, kind, iconKind, DType.Unknown, requiresSuggestionEscaping, sortPriority);
+            }
         }
 
         internal static void AddSuggestionsForMatches(IntellisenseData.IntellisenseData intellisenseData, IEnumerable<KeyValuePair<string, SuggestionIconKind>> possibilities, SuggestionKind kind, bool requiresSuggestionEscaping, uint sortPriority = 0)
@@ -228,6 +249,7 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
                     var canAddSuggestion = _addSuggestionDryRunHelper.AddSuggestion(intellisenseData, candidate, SuggestionKind.Global, SuggestionIconKind.Other, typedName.Type, false);
                     anyCollisionExists = anyCollisionExists || canAddSuggestion;
                 }
+
                 locNameTypePairs.Add(new Tuple<string, DType>(escapedLocName, typedName.Type));
             }
 
@@ -247,11 +269,15 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
             {
                 var usedName = field.Name;
                 if (DType.TryGetDisplayNameForColumn(type, usedName, out var maybeDisplayName))
+                {
                     usedName = new DName(maybeDisplayName);
+                }
 
                 var suggestionType = field.Type;
                 if (createTableSuggestion)
+                {
                     suggestionType = DType.CreateTable(new TypedName(type, usedName));
+                }
 
                 AddSuggestion(data, usedName.Value, SuggestionKind.Field, SuggestionIconKind.Other, suggestionType, requiresSuggestionEscaping: true);
             }
@@ -285,7 +311,10 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
                 {
                     var usedName = tName.Name;
                     if (DType.TryGetDisplayNameForColumn(type, usedName, out var maybeDisplayName))
+                    {
                         usedName = new DName(maybeDisplayName);
+                    }
+
                     AddSuggestion(intellisenseData, prefix + TexlLexer.EscapeName(usedName.Value), SuggestionKind.Global, SuggestionIconKind.Other, tName.Type, requiresSuggestionEscaping: false);
                 }
             }
@@ -316,12 +345,20 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
                     var error = false;
                     type = type.DropAllOfTableRelationships(ref error, DPath.Root);
                     if (error)
+                    {
                         return;
+                    }
                 }
 
-                if (info.ScopeIdentifier != default) AddSuggestion(intellisenseData, info.ScopeIdentifier, SuggestionKind.Global, SuggestionIconKind.Other, type, requiresSuggestionEscaping: false);
+                if (info.ScopeIdentifier != default)
+                {
+                    AddSuggestion(intellisenseData, info.ScopeIdentifier, SuggestionKind.Global, SuggestionIconKind.Other, type, requiresSuggestionEscaping: false);
+                }
 
-                if (!info.RequiresScopeIdentifier) AddTopLevelSuggestions(intellisenseData, type);
+                if (!info.RequiresScopeIdentifier)
+                {
+                    AddTopLevelSuggestions(intellisenseData, type);
+                }
             }
         }
 
@@ -333,7 +370,9 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
             DottedNameNode dottedNode;
             FirstNameNode firstNameNode;
             if ((dottedNode = node.AsDottedName()) != null)
+            {
                 return intellisenseData.Binding.GetType(dottedNode.Left);
+            }
 
             if ((firstNameNode = node.AsFirstName()) != null)
             {
@@ -341,10 +380,14 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
 
                 var parent = firstNameInfo.Path.Parent;
                 if (!parent.Name.IsValid)
+                {
                     return DType.Unknown;
+                }
 
                 if (intellisenseData.TryGetEnumSymbol(parent.Name, intellisenseData.Binding, out var enumSymbol))
+                {
                     return enumSymbol.EnumType;
+                }
             }
 
             return DType.Unknown;
@@ -363,7 +406,9 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
                 {
                     var parentScopeType = ScopeTypeForArgumentSuggestions(callNodeCurr, intellisenseData);
                     if (parentScopeType != null && parentScopeType != DType.Unknown)
+                    {
                         return parentScopeType;
+                    }
                 }
             }
 
@@ -375,7 +420,9 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
             Contracts.AssertValid(scopeType);
 
             foreach (var name in scopeType.GetNames(DPath.Root))
-                yield return new KeyValuePair<string, DType>(("\"" + CharacterUtils.ExcelEscapeString(name.Name.Value) + "\""), name.Type);
+            {
+                yield return new KeyValuePair<string, DType>("\"" + CharacterUtils.ExcelEscapeString(name.Name.Value) + "\"", name.Type);
+            }
         }
 
         internal static IEnumerable<KeyValuePair<string, DType>> GetSuggestionsFromType(DType typeToSuggestFrom, DType suggestionType)
@@ -385,7 +432,9 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
 
             // If no suggestion type provided, accept all suggestions.
             if (suggestionType == DType.Invalid)
+            {
                 suggestionType = DType.Error;
+            }
 
             var suggestions = new List<KeyValuePair<string, DType>>();
             foreach (var tName in typeToSuggestFrom.GetNames(DPath.Root))
@@ -394,11 +443,14 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
                 {
                     var usedName = tName.Name.Value;
                     if (DType.TryGetDisplayNameForColumn(typeToSuggestFrom, usedName, out var maybeDisplayName))
+                    {
                         usedName = maybeDisplayName;
+                    }
 
                     suggestions.Add(new KeyValuePair<string, DType>(usedName, tName.Type));
                 }
             }
+
             return suggestions;
         }
 
@@ -415,7 +467,9 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
             }
 
             if (callNode.Args.Count <= info.Function.SuggestionTypeReferenceParamIndex)
+            {
                 return DType.Unknown;
+            }
 
             var referenceArg = callNode.Args.Children[info.Function.SuggestionTypeReferenceParamIndex];
             return info.Function.UsesEnumNamespace ? GetEnumType(intellisenseData, referenceArg) : intellisenseData.Binding.GetType(referenceArg);
@@ -468,8 +522,8 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
                 AddSuggestion(intellisenseData, suggestion.Key, suggestionKind, SuggestionIconKind.Function, suggestion.Value, requiresSuggestionEscaping);
             }
 
-            return (intellisenseData.Suggestions.Count > countSuggestionsBefore ||
-                    intellisenseData.SubstringSuggestions.Count > countSubstringSuggestionsBefore);
+            return intellisenseData.Suggestions.Count > countSuggestionsBefore ||
+                    intellisenseData.SubstringSuggestions.Count > countSubstringSuggestionsBefore;
         }
 
         /// <summary>
@@ -486,7 +540,9 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
 
             var callNode = GetNearestCallNode(currentNode);
             if (callNode == null)
+            {
                 return false;
+            }
 
             if (callNode.Args.Count == 0)
             {
@@ -499,13 +555,17 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
                 if (node.InTree(callNode.Args.Children[i]))
                 {
                     AddTopLevelSuggestionsForCursorType(intellisenseData, callNode, i);
-                    if (Object.ReferenceEquals(node, currentNode) && TryAddSpecificSuggestionsForGivenArgPosition(intellisenseData, callNode, i))
+                    if (ReferenceEquals(node, currentNode) && TryAddSpecificSuggestionsForGivenArgPosition(intellisenseData, callNode, i))
+                    {
                         return true;
+                    }
                 }
             }
 
             if (callNode.Parent != null)
+            {
                 return AddTopLevelSuggestionsForGivenNode(intellisenseData, node, callNode.Parent);
+            }
 
             return false;
         }
@@ -522,6 +582,7 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
                 {
                     return callNode;
                 }
+
                 parent = parent.Parent;
             }
 
@@ -585,7 +646,7 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
         }
 
         /// <summary>
-        /// Based on our current token, determine how much of it should be replaced
+        /// Based on our current token, determine how much of it should be replaced.
         /// </summary>
         /// <param name="intellisenseData"></param>
         /// <param name="tokenStart"></param>
@@ -603,7 +664,9 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
             var cursorPos = intellisenseData.CursorPos;
             // If the cursor is at the start of a token, then do not replace anything
             if (tokenStart == intellisenseData.CursorPos)
+            {
                 return 0;
+            }
 
             var forwardOverwrittenText = intellisenseData.Script.Substring(cursorPos, tokenEnd - cursorPos);
             foreach (var validName in validNames)
@@ -611,7 +674,9 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
                 Contracts.AssertNonEmpty(validName);
 
                 if (validName == forwardOverwrittenText)
+                {
                     return cursorPos - tokenStart;   // If the remaining text of the token is a valid name, we shouldn't overwrite it
+                }
             }
 
             return tokenEnd - tokenStart;
@@ -627,9 +692,11 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
 
             var scopeType = intellisenseData.ContextScope;
             if (scopeType == null)
+            {
                 return;
+            }
 
-            IntellisenseHelper.AddTopLevelSuggestions(intellisenseData, scopeType);
+            AddTopLevelSuggestions(intellisenseData, scopeType);
         }
 
         internal static void AddSuggestionsForGlobals(IntellisenseData.IntellisenseData intellisenseData)
@@ -643,9 +710,11 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
             foreach (var funcNamespace in namespaces)
             {
                 if (funcNamespace == DPath.Root)
+                {
                     continue;
+                }
 
-                IntellisenseHelper.AddSuggestion(intellisenseData, funcNamespace.Name, SuggestionKind.Global, SuggestionIconKind.Other, DType.Unknown, requiresSuggestionEscaping: true);
+                AddSuggestion(intellisenseData, funcNamespace.Name, SuggestionKind.Global, SuggestionIconKind.Other, DType.Unknown, requiresSuggestionEscaping: true);
             }
         }
 
@@ -654,7 +723,7 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
             Contracts.AssertValue(intellisenseData);
 
             // TASK: 76039: Intellisense: Update intellisense to filter suggestions based on the expected type of the text being typed in UI
-            IntellisenseHelper.AddSuggestionsForMatches(intellisenseData, TexlLexer.LocalizedInstance.GetUnaryOperatorKeywords(), SuggestionKind.KeyWord, SuggestionIconKind.Other, requiresSuggestionEscaping: false);
+            AddSuggestionsForMatches(intellisenseData, TexlLexer.LocalizedInstance.GetUnaryOperatorKeywords(), SuggestionKind.KeyWord, SuggestionIconKind.Other, requiresSuggestionEscaping: false);
         }
 
         public static void AddSuggestionsForEnums(IntellisenseData.IntellisenseData intellisenseData)
@@ -672,9 +741,9 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
                 var enumName = enumInfo.Name;
 
                 // TASK: 76039: Intellisense: Update intellisense to filter suggestions based on the expected type of the text being typed in UI
-                IntellisenseHelper.AddSuggestion(intellisenseData, enumName, SuggestionKind.Enum, SuggestionIconKind.Other, enumType, requiresSuggestionEscaping: true);
+                AddSuggestion(intellisenseData, enumName, SuggestionKind.Enum, SuggestionIconKind.Other, enumType, requiresSuggestionEscaping: true);
 
-                IntellisenseHelper.AddSuggestionsForEnum(intellisenseData, enumInfo, prefix: enumName + TexlLexer.PunctuatorDot);
+                AddSuggestionsForEnum(intellisenseData, enumInfo, prefix: enumName + TexlLexer.PunctuatorDot);
             }
 
             if (suggestions.Count + substringSuggestions.Count == countSuggBefore + countSubSuggBefore + 1 && intellisenseData.SuggestUnqualifiedEnums)
@@ -683,13 +752,15 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
                 var dotIndex = enumSuggestion.LastIndexOf(TexlLexer.PunctuatorDot);
 
                 // Assert '.' is not present or not at the beginning or the end of the EnumSuggestion
-                Contracts.Assert(dotIndex == -1 || (0 < dotIndex && dotIndex < enumSuggestion.Length - 1));
+                Contracts.Assert(dotIndex == -1 || (dotIndex > 0 && dotIndex < enumSuggestion.Length - 1));
                 var unqualifiedEnum = enumSuggestion.Substring(dotIndex + 1);
                 // If the Enum we are about suggest unqualified (i.e. just 'Blue' instead of Color!Blue)
                 // has a name collision with some Item already in the suggestionlist we should not continue
                 // and suggest it.
                 if (suggestions.Any(x => x.Text == unqualifiedEnum) || substringSuggestions.Any(x => x.Text == unqualifiedEnum))
+                {
                     return;
+                }
 
                 DType enumType;
                 if (suggestions.Count > countSuggBefore)
@@ -706,7 +777,7 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
 
                 // Add the unqualified Enum.
                 // Note: The suggestion has already been escaped when it was previously added
-                IntellisenseHelper.AddSuggestion(intellisenseData, unqualifiedEnum, SuggestionKind.Enum, SuggestionIconKind.Other, enumType, requiresSuggestionEscaping: false);
+                AddSuggestion(intellisenseData, unqualifiedEnum, SuggestionKind.Enum, SuggestionIconKind.Other, enumType, requiresSuggestionEscaping: false);
             }
         }
 
@@ -716,15 +787,15 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
             Contracts.AssertValue(node);
 
             var suggestionCount = intellisenseData.Suggestions.Count() + intellisenseData.SubstringSuggestions.Count();
-            IntellisenseHelper.AddSuggestionsForRuleScope(intellisenseData);
-            IntellisenseHelper.AddSuggestionsForTopLevel(intellisenseData, node);
-            IntellisenseHelper.AddSuggestionsForFunctions(intellisenseData);
+            AddSuggestionsForRuleScope(intellisenseData);
+            AddSuggestionsForTopLevel(intellisenseData, node);
+            AddSuggestionsForFunctions(intellisenseData);
             intellisenseData.AddSuggestionsForConstantKeywords();
-            IntellisenseHelper.AddSuggestionsForGlobals(intellisenseData);
+            AddSuggestionsForGlobals(intellisenseData);
             intellisenseData.AfterAddSuggestionsForGlobals();
-            IntellisenseHelper.AddSuggestionsForUnaryOperatorKeyWords(intellisenseData);
+            AddSuggestionsForUnaryOperatorKeyWords(intellisenseData);
             intellisenseData.AfterAddSuggestionsForUnaryOperatorKeywords();
-            IntellisenseHelper.AddSuggestionsForEnums(intellisenseData);
+            AddSuggestionsForEnums(intellisenseData);
 
             intellisenseData.AddCustomSuggestionsForValuePossibilities();
 
@@ -733,7 +804,7 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
 
         internal static bool IsPunctuatorColonNextToCursor(int cursorPos, string script)
         {
-            Contracts.Assert(0 <= cursorPos && cursorPos <= script.Length);
+            Contracts.Assert(cursorPos >= 0 && cursorPos <= script.Length);
 
             var colonLen = TexlLexer.PunctuatorColon.Length;
             return script.Length >= cursorPos + colonLen && script.Substring(cursorPos, colonLen) == TexlLexer.PunctuatorColon;

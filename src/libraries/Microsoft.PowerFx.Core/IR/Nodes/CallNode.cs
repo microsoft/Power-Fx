@@ -48,7 +48,9 @@ namespace Microsoft.PowerFx.Core.IR.Nodes
         {
             arg = default;
             if (i > Args.Count && i < 0)
+            {
                 return false;
+            }
 
             arg = Args[i];
             return true;
@@ -57,7 +59,9 @@ namespace Microsoft.PowerFx.Core.IR.Nodes
         public bool IsLambdaArg(int i)
         {
             if (i > Args.Count && i < 0)
+            {
                 return false;
+            }
 
             return Args[i] is LazyEvalNode;
         }
@@ -83,6 +87,7 @@ namespace Microsoft.PowerFx.Core.IR.Nodes
             {
                 result += $", {arg}";
             }
+
             result += ")";
             return result;
         }

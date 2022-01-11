@@ -23,7 +23,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
             // Parameters are a numeric color value, and a fadeDelta (-1 to 1)
-            yield return new [] { TexlStrings.ColorFadeArg1, TexlStrings.ColorFadeArg2 };
+            yield return new[] { TexlStrings.ColorFadeArg1, TexlStrings.ColorFadeArg2 };
         }
     }
 }

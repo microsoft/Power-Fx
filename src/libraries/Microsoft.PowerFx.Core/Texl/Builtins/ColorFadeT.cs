@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation.
+﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
 using System.Collections.Generic;
@@ -28,7 +28,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
-            yield return new [] { TexlStrings.ColorFadeTArg1, TexlStrings.ColorFadeTArg2 };
+            yield return new[] { TexlStrings.ColorFadeTArg1, TexlStrings.ColorFadeTArg2 };
         }
 
         public override string GetUniqueTexlRuntimeName(bool isPrefetching = false)
@@ -45,7 +45,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertValue(errors);
             Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
 
-            var fValid = base.CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            var fValid = CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
 
             var type0 = argTypes[0];
             var type1 = argTypes[1];
@@ -111,7 +111,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
 
             if (expectedType.Accepts(otherType))
+            {
                 return true;
+            }
 
             if (otherType.CoercesTo(expectedType))
             {

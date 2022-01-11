@@ -22,7 +22,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class VarPTableFunction : StatisticalTableFunction
     {
         public override bool RequiresErrorContext => true;
-        
+
         public VarPTableFunction()
             : base("VarP", TexlStrings.AboutVarPT, FunctionCategories.Table)
         { }

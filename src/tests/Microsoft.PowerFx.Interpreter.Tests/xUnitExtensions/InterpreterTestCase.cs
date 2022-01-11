@@ -58,7 +58,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests.xUnitExtensions
             get
             {
                 var expressionTestCase = testCase.TestMethodArguments[0] as ExpressionTestCase;
-                testCase.Traits.Add("File", new List<string>() {Path.GetFileName(expressionTestCase.SourceFile) });
+                testCase.Traits.Add("File", new List<string>() { Path.GetFileName(expressionTestCase.SourceFile) });
                 return testCase.Traits;
             }
         }

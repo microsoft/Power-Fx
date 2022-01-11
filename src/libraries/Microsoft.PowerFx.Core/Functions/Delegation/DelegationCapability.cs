@@ -14,7 +14,8 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation
     {
         private BigInteger _capabilities;
         private static readonly Lazy<Dictionary<BinaryOp, DelegationCapability>> _binaryOpToDelegationCapabilityMap =
-            new Lazy<Dictionary<BinaryOp, DelegationCapability>>(() => new Dictionary<BinaryOp, DelegationCapability>
+            new Lazy<Dictionary<BinaryOp, DelegationCapability>>(
+                () => new Dictionary<BinaryOp, DelegationCapability>
             {
                 { BinaryOp.Equal, new DelegationCapability(Equal) },
                 { BinaryOp.NotEqual, new DelegationCapability(NotEqual) },
@@ -24,21 +25,23 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation
                 { BinaryOp.GreaterEqual, new DelegationCapability(GreaterThanOrEqual) },
                 { BinaryOp.And, new DelegationCapability(And) },
                 { BinaryOp.Or, new DelegationCapability(Or) },
-                { BinaryOp.In, new DelegationCapability(Contains)},
-                { BinaryOp.Add, new DelegationCapability(Add)},
-                { BinaryOp.Mul, new DelegationCapability(Mul)},
-                { BinaryOp.Div, new DelegationCapability(Div)},
+                { BinaryOp.In, new DelegationCapability(Contains) },
+                { BinaryOp.Add, new DelegationCapability(Add) },
+                { BinaryOp.Mul, new DelegationCapability(Mul) },
+                { BinaryOp.Div, new DelegationCapability(Div) },
             }, isThreadSafe: true);
 
         private static readonly Lazy<Dictionary<UnaryOp, DelegationCapability>> _unaryOpToDelegationCapabilityMap =
-            new Lazy<Dictionary<UnaryOp, DelegationCapability>>(() => new Dictionary<UnaryOp, DelegationCapability>
+            new Lazy<Dictionary<UnaryOp, DelegationCapability>>(
+                () => new Dictionary<UnaryOp, DelegationCapability>
             {
                 { UnaryOp.Not, new DelegationCapability(Not) },
-                { UnaryOp.Minus, new DelegationCapability(Sub)},
+                { UnaryOp.Minus, new DelegationCapability(Sub) },
             }, isThreadSafe: true);
 
         private static readonly Lazy<Dictionary<string, DelegationCapability>> _operatorToDelegationCapabilityMap =
-            new Lazy<Dictionary<string, DelegationCapability>>(() => new Dictionary<string, DelegationCapability>
+            new Lazy<Dictionary<string, DelegationCapability>>(
+                () => new Dictionary<string, DelegationCapability>
             {
                 { DelegationMetadataOperatorConstants.Equal, new DelegationCapability(Equal) },
                 { DelegationMetadataOperatorConstants.NotEqual, new DelegationCapability(NotEqual) },
@@ -79,7 +82,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation
                 { DelegationMetadataOperatorConstants.CdsIn, new DelegationCapability(CdsIn) },
                 { DelegationMetadataOperatorConstants.Top, new DelegationCapability(Top) },
                 { DelegationMetadataOperatorConstants.AsType, new DelegationCapability(AsType) },
-                { DelegationMetadataOperatorConstants.ArrayLookup, new DelegationCapability(ArrayLookup)}
+                { DelegationMetadataOperatorConstants.ArrayLookup, new DelegationCapability(ArrayLookup) }
             }, isThreadSafe: true);
 
         // Supported delegatable operations.
@@ -152,20 +155,11 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation
             _capabilities = delegationCapabilities;
         }
 
-        public static DelegationCapability operator &(DelegationCapability lhs, DelegationCapability rhs)
-        {
-            return new DelegationCapability(lhs.Capabilities & rhs.Capabilities);
-        }
+        public static DelegationCapability operator &(DelegationCapability lhs, DelegationCapability rhs) => new DelegationCapability(lhs.Capabilities & rhs.Capabilities);
 
-        public static DelegationCapability operator |(DelegationCapability lhs, DelegationCapability rhs)
-        {
-            return new DelegationCapability(lhs.Capabilities | rhs.Capabilities);
-        }
+        public static DelegationCapability operator |(DelegationCapability lhs, DelegationCapability rhs) => new DelegationCapability(lhs.Capabilities | rhs.Capabilities);
 
-        public static DelegationCapability operator ~(DelegationCapability rhs)
-        {
-            return new DelegationCapability(~rhs.Capabilities);
-        }
+        public static DelegationCapability operator ~(DelegationCapability rhs) => new DelegationCapability(~rhs.Capabilities);
 
         public static implicit operator DelegationCapability(BigInteger capability)
         {
@@ -180,7 +174,9 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation
         public bool HasCapability(BigInteger delegationCapability)
         {
             if (delegationCapability == None)
+            {
                 return false;
+            }
 
             return (_capabilities & delegationCapability) == delegationCapability;
         }
@@ -189,8 +185,8 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation
 
         public static bool IsValid(BigInteger capabilityConstant)
         {
-            return (capabilityConstant == DelegationCapability.None) ||
-                !(capabilityConstant & DelegationCapability.SupportsAll).IsZero;
+            return (capabilityConstant == None) ||
+                !(capabilityConstant & SupportsAll).IsZero;
         }
 
         public static Dictionary<BinaryOp, DelegationCapability> BinaryOpToDelegationCapabilityMap => _binaryOpToDelegationCapabilityMap.Value;

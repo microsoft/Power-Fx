@@ -99,15 +99,9 @@ namespace Microsoft.PowerFx.Core.Types
             return new ValueTree(root);
         }
 
-        public static bool operator ==(ValueTree tree1, ValueTree tree2)
-        {
-            return RedBlackNode<EquatableObject>.Equals(tree1._root, tree2._root);
-        }
+        public static bool operator ==(ValueTree tree1, ValueTree tree2) => RedBlackNode<EquatableObject>.Equals(tree1._root, tree2._root);
 
-        public static bool operator !=(ValueTree tree1, ValueTree tree2)
-        {
-            return !(tree1 == tree2);
-        }
+        public static bool operator !=(ValueTree tree1, ValueTree tree2) => !(tree1 == tree2);
 
         public bool Equals(ValueTree other)
         {
@@ -117,7 +111,10 @@ namespace Microsoft.PowerFx.Core.Types
         public override bool Equals(object other)
         {
             if (!(other is ValueTree))
+            {
                 return false;
+            }
+
             return this == (ValueTree)other;
         }
 
@@ -127,9 +124,13 @@ namespace Microsoft.PowerFx.Core.Types
             if (_root != null)
             {
                 if (_hashCodeCache.ContainsKey(_root))
+                {
                     hash = _hashCodeCache[_root];
+                }
                 else
+                {
                     hash = Hashing.CombineHash(hash, _root.GetHashCode());
+                }
             }
 
             return hash;

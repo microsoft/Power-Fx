@@ -9,7 +9,7 @@ namespace Microsoft.PowerFx.Core.Public.Values
     [DebuggerDisplay("Blank() ({Type})")]
     public class BlankValue : FormulaValue
     {
-        internal BlankValue(IRContext irContext): base(irContext)
+        internal BlankValue(IRContext irContext) : base(irContext)
         {
         }
 

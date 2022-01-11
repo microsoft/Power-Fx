@@ -35,7 +35,9 @@ namespace Microsoft.PowerFx.Core.Types
 
             // Older documents may use an "a" type, which for legacy reasons is a duplicate of "o" type.
             if (token == DType.MapKindToStr(DKind.LegacyBlob))
+            {
                 token = DType.MapKindToStr(DKind.Blob);
+            }
 
             // Note that control types "v" or "E" are parsed to Error, since the type spec language is not a mechanism for serializing/deserializing controls.
             if (token == DType.MapKindToStr(DKind.Control) || token == DType.MapKindToStr(DKind.DataEntity))
@@ -114,7 +116,9 @@ namespace Microsoft.PowerFx.Core.Types
             {
                 var name = token;
                 if (name.Length >= 2 && name.StartsWith("'") && name.EndsWith("'"))
+                {
                     name = TexlLexer.UnescapeName(name);
+                }
 
                 if (!DName.IsValidDName(name) ||
                     !lexer.TryNextToken(out token) ||
@@ -166,7 +170,9 @@ namespace Microsoft.PowerFx.Core.Types
             {
                 var name = token;
                 if (name.Length >= 2 && name.StartsWith("'") && name.EndsWith("'"))
+                {
                     name = name.TrimStart('\'').TrimEnd('\'');
+                }
 
                 if (!lexer.TryNextToken(out token) || token != ":" ||
                     !TryParseEquatableObject(lexer, out var value))
@@ -220,6 +226,7 @@ namespace Microsoft.PowerFx.Core.Types
                     value = default;
                     return false;
                 }
+
                 value = new EquatableObject(token.Substring(1, tokenLen - 2));
                 return true;
             }

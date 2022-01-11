@@ -46,10 +46,10 @@ namespace Microsoft.PowerFx.Core.Lexer.Tokens
         }
 
         /// <summary>
-        /// Copy Ctor for IdentToken used by Clone
+        /// Copy Ctor for IdentToken used by Clone.
         /// </summary>
-        /// <param name="tok">The token to be copied</param>
-        /// <param name="newSpan">The new span</param>
+        /// <param name="tok">The token to be copied.</param>
+        /// <param name="newSpan">The new span.</param>
         private IdentToken(IdentToken tok, Span newSpan)
             : this(tok._value, newSpan, tok.HasDelimiterStart, tok.HasDelimiterEnd)
         {
@@ -84,7 +84,9 @@ namespace Microsoft.PowerFx.Core.Lexer.Tokens
             }
 
             if (HasDelimiterStart)
+            {
                 sb.Append(TexlLexer.IdentifierDelimiter);
+            }
 
             for (var i = 0; i < _value.Length; i++)
             {
@@ -92,11 +94,15 @@ namespace Microsoft.PowerFx.Core.Lexer.Tokens
                 sb.Append(ch);
 
                 if (ch == TexlLexer.IdentifierDelimiter)
+                {
                     sb.Append(ch);
+                }
             }
 
             if (HasDelimiterEnd)
+            {
                 sb.Append(TexlLexer.IdentifierDelimiter);
+            }
         }
 
         public override bool Equals(Token that)
@@ -104,7 +110,10 @@ namespace Microsoft.PowerFx.Core.Lexer.Tokens
             Contracts.AssertValue(that);
 
             if (!(that is IdentToken))
+            {
                 return false;
+            }
+
             return Name == that.As<IdentToken>().Name && base.Equals(that);
         }
     }

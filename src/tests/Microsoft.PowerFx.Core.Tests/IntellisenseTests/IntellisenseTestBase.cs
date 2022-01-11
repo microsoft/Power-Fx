@@ -16,13 +16,13 @@ using Xunit;
 namespace Microsoft.PowerFx.Tests.IntellisenseTests
 {
     /// <summary>
-    /// Provides methods that may be used by Intellisense tests
+    /// Provides methods that may be used by Intellisense tests.
     /// </summary>
     public class IntellisenseTestBase
     {
         /// <summary>
         /// This method receives a test case string, along with an optional context type that defines the valid
-        /// names and types in the expression and invokes Intellisense.Suggest on it, and returns a the result
+        /// names and types in the expression and invokes Intellisense.Suggest on it, and returns a the result.
         /// </summary>
         /// <param name="expression"></param>
         /// <param name="contextTypeString"></param>
@@ -42,7 +42,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
             {
                 DType.TryParse(contextTypeString, out var contextDType);
                 contextType = FormulaType.Build(contextDType) as RecordType;
-                
+
                 Assert.True(contextType != null, "Context type must be a record type");
             }
             else
@@ -64,8 +64,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
                 formula.ParseTree,
                 new SimpleResolver(EnumStore.EnumSymbols),
                 ruleScope: parameterType._type,
-                useThisRecordForRuleScope: false
-            );
+                useThisRecordForRuleScope: false);
 
             var context = new IntellisenseContext(expression, cursorPosition);
             var intellisense = IntellisenseProvider.GetIntellisense();

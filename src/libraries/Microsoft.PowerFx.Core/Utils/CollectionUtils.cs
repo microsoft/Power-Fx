@@ -16,10 +16,13 @@ namespace Microsoft.PowerFx.Core.Utils
             b = c;
         }
 
-        public static T EnsureInstanceCreated<T>(ref T memberVariable, Func<T> creationMethod) where T : class
+        public static T EnsureInstanceCreated<T>(ref T memberVariable, Func<T> creationMethod)
+            where T : class
         {
             if (memberVariable == null)
+            {
                 Interlocked.CompareExchange(ref memberVariable, creationMethod(), null);
+            }
 
             return memberVariable;
         }
@@ -59,7 +62,9 @@ namespace Microsoft.PowerFx.Core.Utils
         public static bool Contains<T>(ICollection<T> collection, T item)
         {
             if (collection == null)
+            {
                 return false;
+            }
 
             return collection.Contains(item);
         }
@@ -74,6 +79,7 @@ namespace Microsoft.PowerFx.Core.Utils
                 value = default;
                 return false;
             }
+
             return map.TryGetValue(key, out value);
         }
 
@@ -83,7 +89,10 @@ namespace Microsoft.PowerFx.Core.Utils
         {
             Contracts.AssertValueOrNull(list);
             if (list == null)
+            {
                 list = new List<T>();
+            }
+
             list.Add(item);
         }
 
@@ -93,9 +102,15 @@ namespace Microsoft.PowerFx.Core.Utils
             Contracts.AssertValueOrNull(listDst);
 
             if (listSrc == null || listSrc.Count == 0)
+            {
                 return;
+            }
+
             if (listDst == null)
+            {
                 listDst = new List<T>(listSrc.Count);
+            }
+
             listDst.AddRange(listSrc);
         }
 
@@ -105,29 +120,46 @@ namespace Microsoft.PowerFx.Core.Utils
             Contracts.AssertValueOrNull(src);
 
             if (src == null)
+            {
                 return;
+            }
+
             if (listDst == null)
+            {
                 listDst = new List<T>(src);
+            }
             else
+            {
                 listDst.AddRange(src);
+            }
         }
 
         public static void Add<K, V>(ref Dictionary<K, V> map, K key, V value, bool allowDupes = false)
         {
             Contracts.AssertValueOrNull(map);
             if (map == null)
+            {
                 map = new Dictionary<K, V>();
+            }
+
             if (allowDupes)
+            {
                 map[key] = value;
+            }
             else
+            {
                 map.Add(key, value);
+            }
         }
 
         public static void Add<T>(ref HashSet<T> list, T item)
         {
             Contracts.AssertValueOrNull(list);
             if (list == null)
+            {
                 list = new HashSet<T>();
+            }
+
             list.Add(item);
         }
 
@@ -135,7 +167,10 @@ namespace Microsoft.PowerFx.Core.Utils
         {
             Contracts.AssertValueOrNull(stack);
             if (stack == null)
+            {
                 stack = new Stack<T>();
+            }
+
             stack.Push(item);
         }
 
@@ -149,7 +184,9 @@ namespace Microsoft.PowerFx.Core.Utils
         {
             Contracts.AssertValueOrNull(list);
             if (list != null)
+            {
                 list.Sort();
+            }
         }
 
         public static TItem Append<TItem>(this List<TItem> list, TItem item)

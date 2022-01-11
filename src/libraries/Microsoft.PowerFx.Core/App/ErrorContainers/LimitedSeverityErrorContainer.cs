@@ -33,6 +33,7 @@ namespace Microsoft.PowerFx.Core.App.ErrorContainers
             {
                 return errors.EnsureError(node, errKey, args);
             }
+
             return null;
         }
 
@@ -42,6 +43,7 @@ namespace Microsoft.PowerFx.Core.App.ErrorContainers
             {
                 return errors.EnsureError(severity, node, errKey, args);
             }
+
             return null;
         }
 
@@ -51,6 +53,7 @@ namespace Microsoft.PowerFx.Core.App.ErrorContainers
             {
                 return errors.Error(node, errKey, args);
             }
+
             return null;
         }
 
@@ -60,12 +63,13 @@ namespace Microsoft.PowerFx.Core.App.ErrorContainers
             {
                 return errors.Error(severity, node, errKey, args);
             }
+
             return null;
         }
 
         public void Errors(TexlNode node, DType nodeType, KeyValuePair<string, DType> schemaDifference, DType schemaDifferenceType)
         {
-            if (DocumentErrorSeverity.Severe <= maximumSeverity)
+            if (maximumSeverity >= DocumentErrorSeverity.Severe)
             {
                 errors.Errors(node, nodeType, schemaDifference, schemaDifferenceType);
             }

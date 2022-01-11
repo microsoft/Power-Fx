@@ -67,6 +67,7 @@ namespace Microsoft.PowerFx.Core.Syntax
                 Contracts.AssertValue(ParseTree);
                 AssertValid();
             }
+
             return _errors == null;
         }
 
