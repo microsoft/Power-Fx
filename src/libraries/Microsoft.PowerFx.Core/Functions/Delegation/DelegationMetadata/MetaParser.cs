@@ -11,7 +11,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationMetadata
     {
         private abstract class MetaParser
         {
-            public abstract OperationCapabilityMetadata Parse(JsonElement dataServiceCapabilitiesJsonObject, DType Schema);
+            public abstract OperationCapabilityMetadata Parse(JsonElement dataServiceCapabilitiesJsonObject, DType schema);
 
             protected DelegationCapability ParseColumnCapability(JsonElement columnCapabilityJsonObj, string capabilityKey)
             {

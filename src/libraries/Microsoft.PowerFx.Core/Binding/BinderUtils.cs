@@ -52,8 +52,7 @@ namespace Microsoft.PowerFx.Core.Binding
             return false;
         }
 
-        public static void LogTelemetryForFunction(TexlFunction function, CallNode node, TexlBinding texlBinding,
-            bool isServerDelegatable)
+        public static void LogTelemetryForFunction(TexlFunction function, CallNode node, TexlBinding texlBinding, bool isServerDelegatable)
         {
             Contracts.AssertValue(function);
             Contracts.AssertValue(node);

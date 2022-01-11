@@ -92,11 +92,11 @@ namespace Microsoft.PowerFx.Core.Entities.QueryOptions
                 return;
             }
 
-            var CdsDataSourceInfo = ExpandInfo.ParentDataSource as IExternalCdsDataSource;
+            var cdsDataSourceInfo = ExpandInfo.ParentDataSource as IExternalCdsDataSource;
             var selectColumnNames = new HashSet<string>(_selects);
             foreach (var select in selectColumnNames)
             {
-                if (CdsDataSourceInfo.TryGetRelatedColumn(select, out var additionalColumnName) && !_selects.Contains(additionalColumnName))
+                if (cdsDataSourceInfo.TryGetRelatedColumn(select, out var additionalColumnName) && !_selects.Contains(additionalColumnName))
                 {
                     // Add the Annotated value in case a navigation field is referred in selects. (ex: if the Datasource is Accounts and primarycontactid is in selects also append _primarycontactid_value)
                     _selects.Add(additionalColumnName);

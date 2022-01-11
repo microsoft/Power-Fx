@@ -23,7 +23,9 @@ namespace Microsoft.PowerFx.Core.Utils
                 {
                     File.Delete(FullPath);
                 }
-                catch { /* Failing to delete here isn't fatal */ }
+                catch
+                { /* Failing to delete here isn't fatal */
+                }
             }
 
             FullPath = null;
@@ -50,7 +52,9 @@ namespace Microsoft.PowerFx.Core.Utils
                 {
                     Directory.Delete(Dir, recursive: true);
                 }
-                catch { /* Failing to delete here isn't fatal */ }
+                catch
+                { /* Failing to delete here isn't fatal */
+                }
             }
 
             Dir = null;

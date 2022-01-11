@@ -131,7 +131,7 @@ namespace Microsoft.PowerFx.Core.Syntax.Visitors
 
             if (_cursorPosition <= node.Token.Span.Min // Cursor position is before the open paren.
                 || (node.ParenClose != null && node.ParenClose.Span.Lim <= _cursorPosition) // Cursor is after the closed paren.
-                || node.Args.Count == 0) // Cursor is between the open and closed paren.
+                || node.Args.Count == 0) //// Cursor is between the open and closed paren.
             {
                 _result = node;
                 return false;
@@ -187,9 +187,9 @@ namespace Microsoft.PowerFx.Core.Syntax.Visitors
             Contracts.AssertValue(node);
             Contracts.Assert(node.Token.Kind == TokKind.CurlyOpen || node.Token.Kind == TokKind.Ident);
 
-            if (_cursorPosition <= node.Token.Span.Min // If cursor position is before the open curly return the record node.
-                || node.Count == 0  // Or if the record node is empty, return the record node.
-                || (node.CurlyClose != null && node.CurlyClose.Span.Lim <= _cursorPosition)) // Cursor is after the closed curly.
+            if (_cursorPosition <= node.Token.Span.Min || // If cursor position is before the open curly return the record node.
+                node.Count == 0 || // Or if the record node is empty, return the record node.
+                (node.CurlyClose != null && node.CurlyClose.Span.Lim <= _cursorPosition)) //// Cursor is after the closed curly.
             {
                 _result = node;
                 return false;
@@ -229,7 +229,7 @@ namespace Microsoft.PowerFx.Core.Syntax.Visitors
 
             if (_cursorPosition <= node.Token.Span.Min // If cursor position is before the open Bracket return the table node.
                 || node.Count == 0 // Or if the table node is empty, return the table node.
-                || (node.BracketClose != null && node.BracketClose.Span.Lim <= _cursorPosition)) // Cursor is after the closed bracket.
+                || (node.BracketClose != null && node.BracketClose.Span.Lim <= _cursorPosition)) //// Cursor is after the closed bracket.
             {
                 _result = node;
                 return false;

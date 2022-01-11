@@ -10,7 +10,7 @@ using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Core.Syntax.Nodes
 {
-    /// Base class for all parse nodes.
+    // Base class for all parse nodes.
     internal abstract class TexlNode
     {
         private TexlNode _parent;

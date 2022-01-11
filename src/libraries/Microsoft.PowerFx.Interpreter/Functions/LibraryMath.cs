@@ -33,7 +33,11 @@ namespace Microsoft.PowerFx.Functions
 
             public void Apply(FormulaValue value)
             {
-                if (value is BlankValue) { return; }
+                if (value is BlankValue)
+                {
+                    return;
+                }
+
                 var n1 = (NumberValue)value;
 
                 _accumulator += n1.Value;
@@ -42,7 +46,11 @@ namespace Microsoft.PowerFx.Functions
 
             public virtual FormulaValue GetResult(IRContext irContext)
             {
-                if (_count == 0) { return new BlankValue(irContext); }
+                if (_count == 0)
+                {
+                    return new BlankValue(irContext);
+                }
+
                 return new NumberValue(irContext, _accumulator);
             }
         }
@@ -55,7 +63,11 @@ namespace Microsoft.PowerFx.Functions
             public void Apply(FormulaValue value)
             {
                 _count++;
-                if (value is BlankValue) { return; }
+                if (value is BlankValue)
+                {
+                    return;
+                }
+
                 var n1 = (NumberValue)value;
                 if (n1.Value < _minValue)
                 {
@@ -65,7 +77,11 @@ namespace Microsoft.PowerFx.Functions
 
             public virtual FormulaValue GetResult(IRContext irContext)
             {
-                if (_count == 0) { return new BlankValue(irContext); }
+                if (_count == 0)
+                {
+                    return new BlankValue(irContext);
+                }
+
                 return new NumberValue(irContext, _minValue);
             }
         }
@@ -78,7 +94,11 @@ namespace Microsoft.PowerFx.Functions
             public void Apply(FormulaValue value)
             {
                 _count++;
-                if (value is BlankValue) { return; }
+                if (value is BlankValue)
+                {
+                    return;
+                }
+
                 var n1 = (NumberValue)value;
                 if (n1.Value > _maxValue)
                 {
@@ -88,7 +108,11 @@ namespace Microsoft.PowerFx.Functions
 
             public virtual FormulaValue GetResult(IRContext irContext)
             {
-                if (_count == 0) { return new BlankValue(irContext); }
+                if (_count == 0)
+                {
+                    return new BlankValue(irContext);
+                }
+
                 return new NumberValue(irContext, _maxValue);
             }
         }
@@ -97,7 +121,11 @@ namespace Microsoft.PowerFx.Functions
         {
             public override FormulaValue GetResult(IRContext irContext)
             {
-                if (_count == 0) { return CommonErrors.DivByZeroError(irContext); }
+                if (_count == 0)
+                {
+                    return CommonErrors.DivByZeroError(irContext);
+                }
+
                 return new NumberValue(irContext, _accumulator / _count);
             }
         }

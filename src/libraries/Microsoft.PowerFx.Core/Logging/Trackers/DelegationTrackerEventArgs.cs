@@ -8,19 +8,6 @@ using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Core.Logging.Trackers
 {
-    internal interface IDelegationTrackerEventArgs
-    {
-        DelegationStatus Status { get; }
-
-        TexlNode Node { get; }
-
-        TexlBinding Binding { get; }
-
-        TexlFunction Func { get; }
-
-        DelegationTelemetryInfo LogInfo { get; }
-    }
-
     internal class DelegationTrackerEventArgs : IDelegationTrackerEventArgs
     {
         public DelegationStatus Status { get; }
@@ -33,8 +20,12 @@ namespace Microsoft.PowerFx.Core.Logging.Trackers
 
         public DelegationTelemetryInfo LogInfo { get; }
 
-        public DelegationTrackerEventArgs(DelegationStatus status, TexlNode node,
-            TexlBinding binding, TexlFunction func, DelegationTelemetryInfo logInfo = null)
+        public DelegationTrackerEventArgs(
+            DelegationStatus status,
+            TexlNode node,
+            TexlBinding binding,
+            TexlFunction func,
+            DelegationTelemetryInfo logInfo = null)
         {
             Contracts.AssertValue(node);
             Contracts.AssertValue(binding);
@@ -47,5 +38,18 @@ namespace Microsoft.PowerFx.Core.Logging.Trackers
             Func = func;
             LogInfo = logInfo;
         }
+    }
+
+    internal interface IDelegationTrackerEventArgs
+    {
+        DelegationStatus Status { get; }
+
+        TexlNode Node { get; }
+
+        TexlBinding Binding { get; }
+
+        TexlFunction Func { get; }
+
+        DelegationTelemetryInfo LogInfo { get; }
     }
 }

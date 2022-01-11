@@ -410,7 +410,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             Assert.Equal("testDocument1", response.Id);
             Assert.NotEmpty(response.Result);
             Assert.Contains(CodeActionKind.QuickFix, response.Result.Keys);
-            Assert.True(1 == response.Result[CodeActionKind.QuickFix].Length, "Quick fix didn't return expected suggestion.");
+            Assert.True(response.Result[CodeActionKind.QuickFix].Length == 1, "Quick fix didn't return expected suggestion.");
             Assert.Equal("TestTitle1", response.Result[CodeActionKind.QuickFix][0].Title);
             Assert.NotEmpty(response.Result[CodeActionKind.QuickFix][0].Edit.Changes);
             Assert.Contains(documentUri, response.Result[CodeActionKind.QuickFix][0].Edit.Changes.Keys);

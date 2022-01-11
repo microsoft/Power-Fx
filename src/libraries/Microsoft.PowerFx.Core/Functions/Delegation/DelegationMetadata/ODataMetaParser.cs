@@ -76,8 +76,9 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationMetadata
 
                     return fullPath;
                 }
-                else // Task 5593666: This is temporary to not cause regressions while sharepoint switches to using full query param
+                else 
                 {
+                    // Task 5593666: This is temporary to not cause regressions while sharepoint switches to using full query param
                     return currentColumnPath.Append(new DName(alias));
                 }
             }

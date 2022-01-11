@@ -16,20 +16,20 @@ namespace Microsoft.PowerFx.Core.UtilityDataStructures
     /// </summary>
     internal class LazyList<T> : IEnumerable<T>
     {
-        private readonly IEnumerable<T> values;
+        private readonly IEnumerable<T> _values;
 
         public static readonly LazyList<T> Empty = new LazyList<T>(Enumerable.Empty<T>());
 
         public LazyList(IEnumerable<T> values)
         {
             Contracts.AssertValue(values);
-            this.values = values;
+            this._values = values;
         }
 
         public LazyList(T value)
         {
             Contracts.Assert(value != null);
-            values = new[] { value };
+            _values = new[] { value };
         }
 
         /// <summary>
@@ -43,7 +43,7 @@ namespace Microsoft.PowerFx.Core.UtilityDataStructures
                 return this;
             }
 
-            return new LazyList<T>(this.values.Concat(values));
+            return new LazyList<T>(this._values.Concat(values));
         }
 
         /// <summary>
@@ -57,17 +57,17 @@ namespace Microsoft.PowerFx.Core.UtilityDataStructures
                 return this;
             }
 
-            return new LazyList<T>(this.values.Concat(values));
+            return new LazyList<T>(this._values.Concat(values));
         }
 
         public IEnumerator<T> GetEnumerator()
         {
-            return values.GetEnumerator();
+            return _values.GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return values.GetEnumerator();
+            return _values.GetEnumerator();
         }
 
         /// <summary>

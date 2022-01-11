@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation.
+﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
 using Microsoft.PowerFx.Core.Localization;
@@ -16,6 +16,7 @@ namespace Microsoft.PowerFx.Core.Lexer.Tokens
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="StrLitToken"/> class.
         /// Copy Ctor for StrLitToken used by Clone.
         /// </summary>
         /// <param name="tok">The token to be copied.</param>

@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation.
+﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
 using System;
@@ -29,16 +29,17 @@ namespace Microsoft.PowerFx
     public class RecalcEngine : IScope
     {
         // User-provided functions 
-        private Dictionary<string, TexlFunction> _extraFunctions = new Dictionary<string, TexlFunction>(StringComparer.OrdinalIgnoreCase);
+        private readonly Dictionary<string, TexlFunction> _extraFunctions = new Dictionary<string, TexlFunction>(StringComparer.OrdinalIgnoreCase);
 
         internal Dictionary<string, RecalcFormulaInfo> Formulas { get; } = new Dictionary<string, RecalcFormulaInfo>();
 
         private readonly PowerFxConfig _powerFxConfig;
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="RecalcEngine"/> class.
         /// Create a new power fx engine. 
         /// </summary>
-        /// <param name="powerFxConfig">Compiler customizations</param>
+        /// <param name="powerFxConfig">Compiler customizations.</param>
         public RecalcEngine(PowerFxConfig powerFxConfig = null)
         {
             _powerFxConfig = powerFxConfig ?? new PowerFxConfig();
@@ -59,8 +60,15 @@ namespace Microsoft.PowerFx
         /// </summary>
         public IEnumerable<string> GetAllFunctionNames()
         {
-            foreach (var kv in _extraFunctions) { yield return kv.Key; }
-            foreach (var func in Functions.Library.FunctionList) { yield return func.Name; }
+            foreach (var kv in _extraFunctions)
+            {
+                yield return kv.Key;
+            }
+
+            foreach (var func in Functions.Library.FunctionList)
+            {
+                yield return func.Name;
+            }
         }
 
         // This handles lookups in the global scope. 
@@ -167,6 +175,7 @@ namespace Microsoft.PowerFx
             else
             {
                 result.TopLevelIdentifiers = DependencyFinder.FindDependencies(binding.Top, binding);
+
                 // TODO: Fix FormulaType.Build to not throw exceptions for Enum types then remove this check
                 if (binding.ResultType.Kind != DKind.Enum)
                 {
@@ -183,10 +192,10 @@ namespace Microsoft.PowerFx
         /// <summary>
         /// Evaluate an expression as text and return the result.
         /// </summary>
-        /// <param name="expressionText">textual representation of the formula</param>
+        /// <param name="expressionText">textual representation of the formula.</param>
         /// <param name="parameters">parameters for formula. The fields in the parameter record can 
         /// be acecssed as top-level identifiers in the formula.</param>
-        /// <returns>The formula's result</returns>
+        /// <returns>The formula's result.</returns>
         public FormulaValue Eval(string expressionText, RecordValue parameters = null)
         {
             if (parameters == null)
@@ -202,12 +211,12 @@ namespace Microsoft.PowerFx
         }
 
         /// <summary>
-        /// Convert references in an expression to the invariant form
+        /// Convert references in an expression to the invariant form.
         /// </summary>
-        /// <param name="expressionText">textual representation of the formula</param>
+        /// <param name="expressionText">textual representation of the formula.</param>
         /// <param name="parameters">Type of parameters for formula. The fields in the parameter record can 
         /// be acecssed as top-level identifiers in the formula. If DisplayNames are used, make sure to have that mapping
-        /// as part of the RecordType
+        /// as part of the RecordType.
         /// <returns>The formula, with all identifiers converted to invariant form</returns>
         public string GetInvariantExpression(string expressionText, RecordType parameters)
         {
@@ -215,12 +224,12 @@ namespace Microsoft.PowerFx
         }
 
         /// <summary>
-        /// Convert references in an expression to the display form
+        /// Convert references in an expression to the display form.
         /// </summary>
-        /// <param name="expressionText">textual representation of the formula</param>
+        /// <param name="expressionText">textual representation of the formula.</param>
         /// <param name="parameters">Type of parameters for formula. The fields in the parameter record can 
         /// be acecssed as top-level identifiers in the formula. If DisplayNames are used, make sure to have that mapping
-        /// as part of the RecordType
+        /// as part of the RecordType.
         /// <returns>The formula, with all identifiers converted to display form</returns>
         public string GetDisplayExpression(string expressionText, RecordType parameters)
         {
@@ -306,7 +315,7 @@ namespace Microsoft.PowerFx
         /// </summary>
         public IIntellisenseResult Suggest(string expression, FormulaType parameterType, int cursorPosition)
         {
-            var result = this.CheckInternal(expression, parameterType, intellisense: true);
+            var result = CheckInternal(expression, parameterType, intellisense: true);
             var binding = result._binding;
             var formula = result._formula;
 

@@ -52,9 +52,9 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
                     highlightEnd = matchingLength > valueToSuggest.Length ? valueToSuggest.Length : matchingLength;
                 }
 
-                var UIsuggestion = ConstructUIString(suggestionKind, type, suggestions, valueToSuggest, highlightStart, highlightEnd);
+                var uIsuggestion = ConstructUIString(suggestionKind, type, suggestions, valueToSuggest, highlightStart, highlightEnd);
                 var candidate = new IntellisenseSuggestion(
-                    UIsuggestion,
+                    uIsuggestion,
                     suggestionKind,
                     iconKind,
                     type,
@@ -68,9 +68,9 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
 
             if (highlightStart > -1)
             {
-                var UIsuggestion = ConstructUIString(suggestionKind, type, substringSuggestions, valueToSuggest, highlightStart, highlightEnd);
+                var uIsuggestion = ConstructUIString(suggestionKind, type, substringSuggestions, valueToSuggest, highlightStart, highlightEnd);
                 var candidate = new IntellisenseSuggestion(
-                    UIsuggestion,
+                    uIsuggestion,
                     suggestionKind,
                     iconKind,
                     type,

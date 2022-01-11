@@ -14,6 +14,7 @@ namespace Microsoft.PowerFx.Core.Lexer.Tokens
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="KeyToken"/> class.
         /// Copy Ctor for KeyToken used by Clone.
         /// </summary>
         /// <param name="tok">The token to be copied.</param>

@@ -36,7 +36,7 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
                 { typeof(EndsWithFunction), DiscardEnumParam(StringTypeSuggestions) },
                 { typeof(SplitFunction), DiscardEnumParam(StringTypeSuggestions) },
                 { typeof(StartsWithFunction), DiscardEnumParam(StringTypeSuggestions) },
-                { typeof(TextFunction), TextSuggestions  },
+                { typeof(TextFunction), TextSuggestions },
                 { typeof(ValueFunction), LanguageCodeSuggestion },
             }, isThreadSafe: true);
 

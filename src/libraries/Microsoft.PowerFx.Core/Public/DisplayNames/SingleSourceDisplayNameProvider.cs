@@ -3,19 +3,19 @@
 
 using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Collections.Immutable;
 using System.Linq;
+using System.Text;
 using Microsoft.PowerFx.Core.UtilityDataStructures;
 using Microsoft.PowerFx.Core.Utils;
-using System.Collections.Immutable;
 
 namespace Microsoft.PowerFx.Core
 {
     internal class SingleSourceDisplayNameProvider : DisplayNameProvider
     {
         // First is Logical Name, Second is Display Name
-        private ImmutableDictionary<DName, DName> _logicalToDisplay;
-        private ImmutableDictionary<DName, DName> _displayToLogical;
+        private readonly ImmutableDictionary<DName, DName> _logicalToDisplay;
+        private readonly ImmutableDictionary<DName, DName> _displayToLogical;
 
         public SingleSourceDisplayNameProvider()
         {

@@ -11,7 +11,9 @@ namespace Microsoft.PowerFx.Core
     {
         public static DisabledDisplayNameProvider Instance { get; } = new DisabledDisplayNameProvider();
 
-        private DisabledDisplayNameProvider() { }
+        private DisabledDisplayNameProvider()
+        {
+        }
 
         public override bool TryGetDisplayName(DName logicalName, out DName displayName)
         {

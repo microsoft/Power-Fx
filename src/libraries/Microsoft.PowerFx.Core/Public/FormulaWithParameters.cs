@@ -14,7 +14,7 @@ namespace Microsoft.PowerFx.Core.Public
         internal readonly FormulaType _schema; // context formula can access.
 
         /// <summary>
-        /// 
+        /// Initializes a new instance of the <see cref="FormulaWithParameters"/> class.
         /// </summary>
         /// <param name="expression">The text version of the expression.</param>
         /// <param name="parameterTypes">The static type of parameters (context) available to this formula. 

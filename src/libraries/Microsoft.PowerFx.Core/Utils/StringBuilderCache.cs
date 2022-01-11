@@ -30,10 +30,10 @@ namespace Microsoft.PowerFx.Core.Utils
         // The value 360 was chosen in discussion with performance experts as a compromise between using
         // as litle memory (per thread) as possible and still covering a large part of short-lived
         // StringBuilder creations on the startup path of VS designers.
-        private static volatile int MaxBuilderSize = 360;
+        private static volatile int maxBuilderSize = 360;
 
         [ThreadStatic]
-        private static StringBuilder CachedInstance;
+        private static StringBuilder cachedInstance;
 
         /// <summary>
         /// Updates the default value for the maximum cached <see cref="StringBuilder"/> size.
@@ -47,20 +47,20 @@ namespace Microsoft.PowerFx.Core.Utils
         public static void SetMaxBuilderSize(int maxSize)
         {
             Contracts.CheckParam(maxSize > 0, nameof(maxSize));
-            MaxBuilderSize = maxSize;
+            maxBuilderSize = maxSize;
         }
 
         public static StringBuilder Acquire(int capacity)
         {
-            if (capacity <= MaxBuilderSize)
+            if (capacity <= maxBuilderSize)
             {
-                var sb = CachedInstance;
+                var sb = cachedInstance;
 
                 // Avoid stringbuilder block fragmentation by getting a new StringBuilder
                 // when the requested size is larger than the current capacity
                 if (capacity <= sb?.Capacity)
                 {
-                    CachedInstance = null;
+                    cachedInstance = null;
                     return sb;
                 }
             }
@@ -70,9 +70,9 @@ namespace Microsoft.PowerFx.Core.Utils
 
         public static void Release(StringBuilder sb)
         {
-            if (sb.Capacity <= MaxBuilderSize)
+            if (sb.Capacity <= maxBuilderSize)
             {
-                CachedInstance = sb;
+                cachedInstance = sb;
                 sb.Clear();
             }
         }

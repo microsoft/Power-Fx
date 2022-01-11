@@ -95,7 +95,10 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     }
                     else
                     {
-                        errors.EnsureError(DocumentErrorSeverity.Severe, nodeArg, TexlStrings.ErrBadType_ExpectedType_ProvidedType,
+                        errors.EnsureError(
+                            DocumentErrorSeverity.Severe,
+                            nodeArg,
+                            TexlStrings.ErrBadType_ExpectedType_ProvidedType,
                             type.GetKindString(),
                             typeArg.GetKindString());
                         fArgsValid = false;

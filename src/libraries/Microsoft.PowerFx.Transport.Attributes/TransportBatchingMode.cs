@@ -7,7 +7,7 @@ namespace Microsoft.AppMagic.Transport
     /// Describes which batching policy should be applied to the api.
     /// </summary>
     /// <remarks>
-    /// Must be manually kept in sync with Transport.d.ts
+    /// Must be manually kept in sync with Transport.d.ts.
     /// </remarks>
     public enum TransportBatchingMode
     {

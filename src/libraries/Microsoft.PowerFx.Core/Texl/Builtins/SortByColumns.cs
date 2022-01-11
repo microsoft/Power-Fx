@@ -440,8 +440,13 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             var column = columns.Single();
             if (nameNode != null && columnType.IsValid && !columnType.Accepts(column.Type))
             {
-                errors.EnsureError(DocumentErrorSeverity.Severe, valuesArg, TexlStrings.ErrTypeError_Arg_Expected_Found, nameNode.Value,
-                    columnType.GetKindString(), column.Type.GetKindString());
+                errors.EnsureError(
+                    DocumentErrorSeverity.Severe,
+                    valuesArg,
+                    TexlStrings.ErrTypeError_Arg_Expected_Found,
+                    nameNode.Value,
+                    columnType.GetKindString(),
+                    column.Type.GetKindString());
                 fValid = false;
             }
 

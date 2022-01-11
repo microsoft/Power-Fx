@@ -30,16 +30,18 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense.IntellisenseData
         private readonly int _cursorPos;
         private readonly int _argIndex;
         private readonly int _argCount;
-        private IsValidSuggestion _isValidSuggestionFunc;
-        private string _matchingStr;
+        private readonly IsValidSuggestion _isValidSuggestionFunc;
+        private readonly string _matchingStr;
+
         // _matchingLength will be different from the length of _matchingStr when _matchingStr contains delimiters.
         // For matching purposes we escape the delimeters and match against the internal DName.
-        private int _matchingLength;
-        private int _replacementStartIndex;
+        private readonly int _matchingLength;
+        private readonly int _replacementStartIndex;
+
         // There will be a separate replacement length when we want to replace an entire node and not just the
         // preceding portion which is used for matching.
-        private int _replacementLength;
-        private IList<DType> _missingTypes;
+        private readonly int _replacementLength;
+        private readonly IList<DType> _missingTypes;
         private readonly List<ISpecialCaseHandler> _cleanupHandlers;
 
         public IntellisenseData(EnumStore enumStore, IIntellisenseContext context, DType expectedType, TexlBinding binding, TexlFunction curFunc, TexlNode curNode, int argIndex, int argCount, IsValidSuggestion isValidSuggestionFunc, IList<DType> missingTypes, List<CommentToken> comments)

@@ -13,6 +13,7 @@ namespace Microsoft.PowerFx.Core.Lexer.Tokens
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="EofToken"/> class.
         /// Copy Ctor for EofToken used by Clone.
         /// </summary>
         /// <param name="tok">The token to be copied.</param>

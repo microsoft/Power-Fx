@@ -16,7 +16,7 @@ namespace Microsoft.PowerFx.Core.Entities.QueryOptions
 
         public IEnumerable<string> Selects => _selects;
 
-        private HashSet<string> _selects { get; }
+        private readonly HashSet<string> _selects;
 
         /// <summary>
         /// List of navigation datasources and their query options.
@@ -57,16 +57,16 @@ namespace Microsoft.PowerFx.Core.Entities.QueryOptions
             return _selects.Add(selectColumnName);
         }
 
-        public bool AddSelectMultiple(IEnumerable<string> _selects)
+        public bool AddSelectMultiple(IEnumerable<string> selects)
         {
-            if (_selects == null)
+            if (selects == null)
             {
                 return false;
             }
 
             var retVal = false;
 
-            foreach (var select in _selects)
+            foreach (var select in selects)
             {
                 retVal |= AddSelect(select);
             }
@@ -119,9 +119,9 @@ namespace Microsoft.PowerFx.Core.Entities.QueryOptions
                 return false;
             }
 
-            var CdsDataSourceInfo = TabularDataSourceInfo as IExternalCdsDataSource;
+            var cdsDataSourceInfo = TabularDataSourceInfo as IExternalCdsDataSource;
             if (_selects.Contains(selectColumnName)
-                || !CdsDataSourceInfo.TryGetRelatedColumn(selectColumnName, out var additionalColumnName) || additionalColumnName == null
+                || !cdsDataSourceInfo.TryGetRelatedColumn(selectColumnName, out var additionalColumnName) || additionalColumnName == null
                 || _selects.Contains(additionalColumnName))
             {
                 return false;

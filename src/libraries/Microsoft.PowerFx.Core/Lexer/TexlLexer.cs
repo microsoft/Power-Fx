@@ -11,12 +11,12 @@ using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 
+// Used as a temporary storage for LexerImpl class.
+// LexerImpl is private, so we cannot define 'using' for it here - TexlLexer instead.
+using StringBuilderCache = Microsoft.PowerFx.Core.Utils.StringBuilderCache<Microsoft.PowerFx.Core.Lexer.TexlLexer>;
+
 namespace Microsoft.PowerFx.Core.Lexer
 {
-    // Used as a temporary storage for LexerImpl class.
-    // LexerImpl is private, so we cannot define 'using' for it here - TexlLexer instead.
-    using StringBuilderCache = Microsoft.PowerFx.Core.Utils.StringBuilderCache<Microsoft.PowerFx.Core.Lexer.TexlLexer>;
-
     // TEXL expression lexer
     internal sealed class TexlLexer
     {

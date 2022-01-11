@@ -9,6 +9,9 @@ using Microsoft.PowerFx.Core.Syntax.Nodes;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 
+#pragma warning disable SA1402 // File may only contain a single type
+#pragma warning disable SA1649 // File name should match first type name
+
 namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
     // FirstN(source:*, [count:n])
@@ -20,8 +23,16 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override bool SupportsParamCoercion => false;
 
         public FirstLastNFunction(bool isFirst)
-            : base(isFirst ? "FirstN" : "LastN", isFirst ? TexlStrings.AboutFirstN : TexlStrings.AboutLastN, FunctionCategories.Table,
-            DType.EmptyTable, 0, 1, 2, DType.EmptyTable, DType.Number)
+            : base(
+                  isFirst ? "FirstN" : "LastN",
+                  isFirst ? TexlStrings.AboutFirstN : TexlStrings.AboutLastN,
+                  FunctionCategories.Table,
+                  DType.EmptyTable,
+                  0,
+                  1,
+                  2,
+                  DType.EmptyTable,
+                  DType.Number)
         {
         }
 
@@ -56,3 +67,5 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         }
     }
 }
+#pragma warning restore SA1402 // File may only contain a single type
+#pragma warning restore SA1649 // File name should match first type name

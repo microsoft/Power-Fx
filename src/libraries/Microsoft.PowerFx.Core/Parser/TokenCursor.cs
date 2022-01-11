@@ -6,11 +6,10 @@ using System.Linq;
 using Microsoft.PowerFx.Core.Lexer;
 using Microsoft.PowerFx.Core.Lexer.Tokens;
 using Microsoft.PowerFx.Core.Utils;
+using Conditional = System.Diagnostics.ConditionalAttribute;
 
 namespace Microsoft.PowerFx.Core.Parser
 {
-    using Conditional = System.Diagnostics.ConditionalAttribute;
-
     internal sealed class TokenCursor
     {
         private readonly Token[] _tokens;

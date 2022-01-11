@@ -62,6 +62,7 @@ namespace Microsoft.PowerFx
         private FunctionDescr _info;
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="ReflectionFunction"/> class.
         /// Assume by defaults. Will reflect to get primitive types.
         /// </summary>
         protected ReflectionFunction()

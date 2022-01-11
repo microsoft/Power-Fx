@@ -46,7 +46,7 @@ namespace Microsoft.PowerFx.Core.Functions
 
             if (EndNonRepeatCount > 0)
             {
-                /// FuncName(arg1,arg2,arg2,...,arg2,...,arg3,...)
+                // FuncName(arg1,arg2,arg2,...,arg2,...,arg3,...)
                 var tailArgRange = new[] { argCount - EndNonRepeatCount - RepeatSpan, argCount - EndNonRepeatCount };
                 var tailSignatureRange = new[] { signatureCount - EndNonRepeatCount - RepeatSpan, signatureCount - EndNonRepeatCount };
                 if (IsIndexInRange(argIndex, tailArgRange[0], tailArgRange[1]))

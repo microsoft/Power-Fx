@@ -11,7 +11,8 @@ namespace Microsoft.PowerFx.Core
     {
         public string CollidingDisplayName { get; private set; }
 
-        public NameCollisionException(string collidingDisplayName) : base($"Name {collidingDisplayName} has a collision with another display or logical name")
+        public NameCollisionException(string collidingDisplayName)
+            : base($"Name {collidingDisplayName} has a collision with another display or logical name")
         {
             CollidingDisplayName = collidingDisplayName;
         }

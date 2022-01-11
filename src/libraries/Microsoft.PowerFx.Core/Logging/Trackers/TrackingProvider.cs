@@ -21,8 +21,12 @@ namespace Microsoft.PowerFx.Core.Logging.Trackers
             AddSuggestionEvent?.Invoke(this, new AddSuggestionMessageEventArgs(message, node, binding));
         }
 
-        internal void SetDelegationTrackerStatus(DelegationStatus status, TexlNode node,
-            TexlBinding binding, TexlFunction func, DelegationTelemetryInfo logInfo = null)
+        internal void SetDelegationTrackerStatus(
+            DelegationStatus status,
+            TexlNode node,
+            TexlBinding binding,
+            TexlFunction func,
+            DelegationTelemetryInfo logInfo = null)
         {
             DelegationTrackerEvent?.Invoke(this, new DelegationTrackerEventArgs(status, node, binding, func, logInfo));
         }

@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation.
+﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
 using System.Collections.Generic;
@@ -7,11 +7,10 @@ using System.Linq;
 using System.Text;
 using Microsoft.AppMagic.Transport;
 using Microsoft.PowerFx.Core.Utils;
+using StringBuilderCache = Microsoft.PowerFx.Core.Utils.StringBuilderCache<Microsoft.PowerFx.Core.Localization.Span>;
 
 namespace Microsoft.PowerFx.Core.Localization
 {
-    using StringBuilderCache = StringBuilderCache<Span>;
-
     [TransportType(TransportKind.ByValue)]
     public sealed class Span
     {

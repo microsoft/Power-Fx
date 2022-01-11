@@ -18,7 +18,9 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationMetadata
         // If no capability at column level specified then this would be the default filter functionality supported by column.
         private readonly DelegationCapability _defaultCapabilities;
 
-        public FilterOpMetadata(DType tableSchema, Dictionary<DPath, DelegationCapability> columnRestrictions,
+        public FilterOpMetadata(
+            DType tableSchema,
+            Dictionary<DPath, DelegationCapability> columnRestrictions,
             Dictionary<DPath, DelegationCapability> columnCapabilities,
             DelegationCapability filterFunctionsSupportedByAllColumns,
             DelegationCapability? filterFunctionsSupportedByTable)

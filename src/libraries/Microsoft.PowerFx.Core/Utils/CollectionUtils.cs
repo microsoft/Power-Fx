@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation.
+﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
 using System;
@@ -53,7 +53,7 @@ namespace Microsoft.PowerFx.Core.Utils
             return stack == null ? 0 : stack.Count;
         }
 
-        public static int Size<K, V>(Dictionary<K, V> map)
+        public static int Size<TKey, TValue>(Dictionary<TKey, TValue> map)
         {
             Contracts.AssertValueOrNull(map);
             return map == null ? 0 : map.Count;
@@ -71,7 +71,7 @@ namespace Microsoft.PowerFx.Core.Utils
 
         // Getting items from a collection when the collection may be null.
 
-        public static bool TryGetValue<K, V>(Dictionary<K, V> map, K key, out V value)
+        public static bool TryGetValue<TK, TV>(Dictionary<TK, TV> map, TK key, out TV value)
         {
             Contracts.AssertValueOrNull(map);
             if (map == null)
@@ -134,12 +134,12 @@ namespace Microsoft.PowerFx.Core.Utils
             }
         }
 
-        public static void Add<K, V>(ref Dictionary<K, V> map, K key, V value, bool allowDupes = false)
+        public static void Add<TKey, TValue>(ref Dictionary<TKey, TValue> map, TKey key, TValue value, bool allowDupes = false)
         {
             Contracts.AssertValueOrNull(map);
             if (map == null)
             {
-                map = new Dictionary<K, V>();
+                map = new Dictionary<TKey, TValue>();
             }
 
             if (allowDupes)

@@ -1,9 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
-using System;
 using Microsoft.AppMagic.Transport;
-using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Core.App.Controls
 {
@@ -21,6 +19,7 @@ namespace Microsoft.PowerFx.Core.App.Controls
         ConstantData = 3,
         OnDemandData = 4,
         Scope = 5,
+
         /// <summary>
         /// Represents a missing property category when deserializing
         /// Should be cleaned up by document converter, only occurs if 
@@ -41,32 +40,5 @@ namespace Microsoft.PowerFx.Core.App.Controls
         Unknown,
         System,
         User,
-    }
-
-    internal static class PropertyRuleCategoryExtensions
-    {
-        internal static bool IsValid(this PropertyRuleCategory category) =>
-            PropertyRuleCategory.Data <= category && category <= PropertyRuleCategory.Formulas;
-
-        internal static bool IsBehavioral(this PropertyRuleCategory category) =>
-            category == PropertyRuleCategory.Behavior || category == PropertyRuleCategory.OnDemandData;
-    }
-
-    internal static class PropertyRuleCategoryHelper
-    {
-        public static bool IsValidPropertyRuleCategory(string category)
-        {
-            PropertyRuleCategory _;
-            return Enum.TryParse(category, ignoreCase: true, result: out _);
-        }
-
-        public static bool TryParsePropertyCategory(string category, out PropertyRuleCategory categoryEnum)
-        {
-            Contracts.CheckNonEmpty(category, "category");
-
-            // Enum.TryParse uses a bunch of reflection and boxing. If this becomes an issue, we can
-            // use plain-old switch statement.
-            return Enum.TryParse(category, ignoreCase: true, result: out categoryEnum);
-        }
     }
 }

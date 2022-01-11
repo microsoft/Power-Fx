@@ -42,4 +42,3 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         }
     }
 }
-

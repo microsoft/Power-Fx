@@ -135,16 +135,16 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation
         public static readonly BigInteger ArrayLookup = 0x200000000000;
 
         // Please update it as max value changes.
-        private static BigInteger MaxSingleCapabilityValue = ArrayLookup;
+        private static BigInteger maxSingleCapabilityValue = ArrayLookup;
 
         // Indicates support all functionality.
         public static BigInteger SupportsAll
         {
             get
             {
-                Contracts.Assert(MaxSingleCapabilityValue.IsPowerOfTwo);
+                Contracts.Assert(maxSingleCapabilityValue.IsPowerOfTwo);
 
-                return MaxSingleCapabilityValue | MaxSingleCapabilityValue - 1;
+                return maxSingleCapabilityValue | maxSingleCapabilityValue - 1;
             }
         }
 
@@ -161,10 +161,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation
 
         public static DelegationCapability operator ~(DelegationCapability rhs) => new DelegationCapability(~rhs.Capabilities);
 
-        public static implicit operator DelegationCapability(BigInteger capability)
-        {
-            return new DelegationCapability(capability);
-        }
+        public static implicit operator DelegationCapability(BigInteger capability) => new DelegationCapability(capability);
 
         public bool HasLeastOneCapability(BigInteger delegationCapability)
         {

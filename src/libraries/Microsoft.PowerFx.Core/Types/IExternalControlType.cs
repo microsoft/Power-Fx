@@ -1,4 +1,4 @@
-using Microsoft.PowerFx.Core.App.Controls;
+﻿using Microsoft.PowerFx.Core.App.Controls;
 
 namespace Microsoft.PowerFx.Core.Types
 {

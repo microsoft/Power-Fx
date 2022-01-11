@@ -4,11 +4,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Conditional = System.Diagnostics.ConditionalAttribute;
 
 namespace Microsoft.PowerFx.Core.Utils
 {
-    using Conditional = System.Diagnostics.ConditionalAttribute;
-
     // RedBlackNode<V> instances are immutable. An empty tree is represented by null.
     // Assumes a string "key", but general "value" of type "V".
 
@@ -18,9 +17,9 @@ namespace Microsoft.PowerFx.Core.Utils
     // a struct wrapper around RedBlackNode<DType>.
 
     // This partial contains the public API.
-    internal abstract partial class RedBlackNode<V> : IEquatable<RedBlackNode<V>>
+    internal abstract partial class RedBlackNode<T> : IEquatable<RedBlackNode<T>>
     {
-        public static RedBlackNode<V> Create(IEnumerable<KeyValuePair<string, V>> items)
+        public static RedBlackNode<T> Create(IEnumerable<KeyValuePair<string, T>> items)
         {
             Contracts.AssertValue(items);
 
@@ -40,7 +39,10 @@ namespace Microsoft.PowerFx.Core.Utils
                 rgikvp[iikvp] = iikvp;
             }
 
-            Sorting.Sort(rgikvp, 0, count,
+            Sorting.Sort(
+                rgikvp, 
+                0, 
+                count,
                 (ikvp1, ikvp2) =>
                 {
                     if (ikvp1 == ikvp2)
@@ -59,7 +61,10 @@ namespace Microsoft.PowerFx.Core.Utils
                     return ikvp2 - ikvp1;
                 });
 
-            Sorting.RemoveDupsFromSorted(rgikvp, 0, ref count,
+            Sorting.RemoveDupsFromSorted(
+                rgikvp,
+                0,
+                ref count,
                 (ikvp1, ikvp2) => rgkvp[ikvp1].Key == rgkvp[ikvp2].Key);
 
             return CreateFromArraySorted(rgkvp, rgikvp, 0, count);
@@ -68,14 +73,14 @@ namespace Microsoft.PowerFx.Core.Utils
         public abstract int Count { get; }
 
         // Standard key/value lookup method.
-        public static bool TryGetValue(RedBlackNode<V> root, string key, out V value)
+        public static bool TryGetValue(RedBlackNode<T> root, string key, out T value)
         {
             Contracts.AssertValueOrNull(root);
             Contracts.AssertValue(key);
 
             if (root != null && TryFindNode(root, key, out root))
             {
-                value = root.Value;
+                value = root._value;
                 return true;
             }
 
@@ -83,7 +88,7 @@ namespace Microsoft.PowerFx.Core.Utils
             return false;
         }
 
-        public static IEnumerable<KeyValuePair<string, V>> GetPairs(RedBlackNode<V> root)
+        public static IEnumerable<KeyValuePair<string, T>> GetPairs(RedBlackNode<T> root)
         {
             Contracts.AssertValueOrNull(root);
 
@@ -92,7 +97,7 @@ namespace Microsoft.PowerFx.Core.Utils
                 yield break;
             }
 
-            var stack = new Stack<RedBlackNode<V>>();
+            var stack = new Stack<RedBlackNode<T>>();
             var node = root;
 LStart:
             if (node.Left != null)
@@ -103,7 +108,7 @@ LStart:
             }
 
 LYieldSelf:
-            yield return new KeyValuePair<string, V>(node.Key, node.Value);
+            yield return new KeyValuePair<string, T>(node._key, node._value);
 
             if (node.Right != null)
             {
@@ -120,7 +125,7 @@ LYieldSelf:
             goto LYieldSelf;
         }
 
-        public static RedBlackNode<V> SetItem(RedBlackNode<V> root, string name, V value, bool skipCompare = false)
+        public static RedBlackNode<T> SetItem(RedBlackNode<T> root, string name, T value, bool skipCompare = false)
         {
             Contracts.AssertValueOrNull(root);
             Contracts.AssertValue(name);
@@ -136,7 +141,7 @@ LYieldSelf:
             return root;
         }
 
-        public static RedBlackNode<V> RemoveItem(ref bool fError, RedBlackNode<V> root, string name, Dictionary<RedBlackNode<V>, int> hashCodeCache)
+        public static RedBlackNode<T> RemoveItem(ref bool fError, RedBlackNode<T> root, string name, Dictionary<RedBlackNode<T>, int> hashCodeCache)
         {
             Contracts.AssertValueOrNull(root);
             Contracts.AssertValue(name);
@@ -151,7 +156,7 @@ LYieldSelf:
 
         // Note that we DON'T implement == and !=, so those operators indicate
         // reference equality.
-        public static bool Equals(RedBlackNode<V> root1, RedBlackNode<V> root2)
+        public static bool Equals(RedBlackNode<T> root1, RedBlackNode<T> root2)
         {
             Contracts.AssertValueOrNull(root1);
             Contracts.AssertValueOrNull(root2);
@@ -194,7 +199,7 @@ LYieldSelf:
             return true;
         }
 
-        public bool Equals(RedBlackNode<V> other)
+        public bool Equals(RedBlackNode<T> other)
         {
             Contracts.AssertValueOrNull(other);
             return Equals(this, other);
@@ -202,7 +207,7 @@ LYieldSelf:
 
         public override bool Equals(object obj)
         {
-            if (obj is not RedBlackNode<V> other)
+            if (obj is not RedBlackNode<T> other)
             {
                 return false;
             }
@@ -225,7 +230,7 @@ LYieldSelf:
 
     // This partial contains the base implementation. In the ideal world, RedBlackTree<V> is a
     // struct and this partial is a nested abstract type named Node.
-    internal abstract partial class RedBlackNode<V>
+    internal abstract partial class RedBlackNode<T>
     {
         protected enum Color : byte
         {
@@ -233,26 +238,26 @@ LYieldSelf:
             Black
         }
 
-        private readonly string Key;
-        private readonly V Value;
+        private readonly string _key;
+        private readonly T _value;
 
-        private RedBlackNode(string key, V value)
+        private RedBlackNode(string key, T value)
         {
             Contracts.AssertNonEmpty(key);
-            Key = key;
-            Value = value;
+            _key = key;
+            _value = value;
         }
 
-        private RedBlackNode(KeyValuePair<string, V> kvp)
+        private RedBlackNode(KeyValuePair<string, T> kvp)
         {
             Contracts.AssertNonEmpty(kvp.Key);
-            Key = kvp.Key;
-            Value = kvp.Value;
+            _key = kvp.Key;
+            _value = kvp.Value;
         }
 
-        protected abstract RedBlackNode<V> Left { get; }
+        protected abstract RedBlackNode<T> Left { get; }
 
-        protected abstract RedBlackNode<V> Right { get; }
+        protected abstract RedBlackNode<T> Right { get; }
 
         protected abstract Color LeftColor { get; }
 
@@ -260,7 +265,7 @@ LYieldSelf:
 
         // Creates a new node with the same key and structure of the current node
         // but uses the new value.
-        protected abstract RedBlackNode<V> CloneStructure(V value);
+        protected abstract RedBlackNode<T> CloneStructure(T value);
 
         [Conditional("PARANOID_VALIDATION")]
         internal void AssertValid()
@@ -322,45 +327,45 @@ LYieldSelf:
 
     // This partial contains the implementations. In the ideal world, RedBlackTree<V> is a
     // struct and these derive from an abstract nested type named Node.
-    internal abstract partial class RedBlackNode<V>
+    internal abstract partial class RedBlackNode<T>
     {
-        private sealed class LeafNode : RedBlackNode<V>
+        private sealed class LeafNode : RedBlackNode<T>
         {
-            public LeafNode(string key, V value)
+            public LeafNode(string key, T value)
                 : base(key, value)
             {
             }
 
-            public LeafNode(KeyValuePair<string, V> kvp)
+            public LeafNode(KeyValuePair<string, T> kvp)
                 : base(kvp)
             {
             }
 
             public override int Count => 1;
 
-            protected override RedBlackNode<V> Left => null;
+            protected override RedBlackNode<T> Left => null;
 
-            protected override RedBlackNode<V> Right => null;
+            protected override RedBlackNode<T> Right => null;
 
             protected override Color LeftColor => Color.Black;
 
             protected override Color RightColor => Color.Black;
 
-            protected override RedBlackNode<V> CloneStructure(V value)
+            protected override RedBlackNode<T> CloneStructure(T value)
             {
-                return new LeafNode(Key, value);
+                return new LeafNode(_key, value);
             }
         }
 
-        private sealed class InteriorNode : RedBlackNode<V>
+        private sealed class InteriorNode : RedBlackNode<T>
         {
             private readonly int _count;
-            private readonly RedBlackNode<V> _left;
-            private readonly RedBlackNode<V> _right;
+            private readonly RedBlackNode<T> _left;
+            private readonly RedBlackNode<T> _right;
             private readonly Color _leftColor;
             private readonly Color _rightColor;
 
-            public InteriorNode(string key, V value, RedBlackNode<V> left, RedBlackNode<V> right, Color leftColor, Color rightColor)
+            public InteriorNode(string key, T value, RedBlackNode<T> left, RedBlackNode<T> right, Color leftColor, Color rightColor)
                 : base(key, value)
             {
                 Contracts.Assert(left != null || right != null);
@@ -388,29 +393,29 @@ LYieldSelf:
 #endif
             }
 
-            public InteriorNode(KeyValuePair<string, V> kvp, RedBlackNode<V> left, RedBlackNode<V> right, Color leftColor, Color rightColor)
+            public InteriorNode(KeyValuePair<string, T> kvp, RedBlackNode<T> left, RedBlackNode<T> right, Color leftColor, Color rightColor)
                 : this(kvp.Key, kvp.Value, left, right, leftColor, rightColor)
             {
             }
 
             public override int Count => _count;
 
-            protected override RedBlackNode<V> Left => _left;
+            protected override RedBlackNode<T> Left => _left;
 
-            protected override RedBlackNode<V> Right => _right;
+            protected override RedBlackNode<T> Right => _right;
 
             protected override Color LeftColor => _leftColor;
 
             protected override Color RightColor => _rightColor;
 
-            protected override RedBlackNode<V> CloneStructure(V value)
+            protected override RedBlackNode<T> CloneStructure(T value)
             {
-                return new InteriorNode(Key, value, _left, _right, _leftColor, _rightColor);
+                return new InteriorNode(_key, value, _left, _right, _leftColor, _rightColor);
             }
         }
 
         // Creates a new node in the tree given that left and/or right may be null.
-        private static RedBlackNode<V> Create(string key, V value, RedBlackNode<V> left, RedBlackNode<V> right, Color leftColor, Color rightColor)
+        private static RedBlackNode<T> Create(string key, T value, RedBlackNode<T> left, RedBlackNode<T> right, Color leftColor, Color rightColor)
         {
             Contracts.AssertNonEmpty(key);
             Contracts.AssertValueOrNull(left);
@@ -427,7 +432,7 @@ LYieldSelf:
     }
 
     // This partial contains the core tree manipulation methods.
-    internal abstract partial class RedBlackNode<V>
+    internal abstract partial class RedBlackNode<T>
     {
         // Red Black tree rules:
         // 1) A node is either red or black. 
@@ -495,7 +500,7 @@ LYieldSelf:
             return string.CompareOrdinal(str0, str1);
         }
 
-        private static RedBlackNode<V> CreateFromArraySorted(KeyValuePair<string, V>[] rgkvp, int[] rgikvp, int iikvpMin, int iikvpLim)
+        private static RedBlackNode<T> CreateFromArraySorted(KeyValuePair<string, T>[] rgkvp, int[] rgikvp, int iikvpMin, int iikvpLim)
         {
             Contracts.AssertValue(rgkvp);
             Contracts.AssertValue(rgikvp);
@@ -504,8 +509,8 @@ LYieldSelf:
 
             var nodeCount = iikvpLim - iikvpMin;
             var half = 0;
-            RedBlackNode<V> left = null;
-            RedBlackNode<V> right = null;
+            RedBlackNode<T> left = null;
+            RedBlackNode<T> right = null;
             var leftColor = Color.Black;
 
             // What is this 'magic' test "if (((nodeCount + 2) & (nodeCount + 1)) == 0)" below?
@@ -564,7 +569,7 @@ LYieldSelf:
             }
         }
 
-        private static bool TryFindNode(RedBlackNode<V> root, string key, out RedBlackNode<V> node)
+        private static bool TryFindNode(RedBlackNode<T> root, string key, out RedBlackNode<T> node)
         {
             Contracts.AssertValueOrNull(root);
             Contracts.AssertValue(key);
@@ -572,7 +577,7 @@ LYieldSelf:
             node = root;
             while (node != null)
             {
-                var cmp = Compare(key, node.Key);
+                var cmp = Compare(key, node._key);
                 if (cmp == 0)
                 {
                     return true;
@@ -584,15 +589,15 @@ LYieldSelf:
             return false;
         }
 
-        private static AddCoreResult AddItemCore(ref RedBlackNode<V> root, Color rootColor, string key, V value, bool skipCompare = false)
+        private static AddCoreResult AddItemCore(ref RedBlackNode<T> root, Color rootColor, string key, T value, bool skipCompare = false)
         {
             Contracts.AssertValue(root);
             Contracts.AssertValue(key);
 
-            var cmp = Compare(key, root.Key);
+            var cmp = Compare(key, root._key);
             if (cmp == 0)
             {
-                if (!skipCompare && value.Equals(root.Value))
+                if (!skipCompare && value.Equals(root._value))
                 {
                     return AddCoreResult.ItemPresent; // Don't build a new tree.
                 }
@@ -601,8 +606,8 @@ LYieldSelf:
                 return AddCoreResult.ItemUpdated; // Build a new tree, don't change the count.
             }
 
-            RedBlackNode<V> left;
-            RedBlackNode<V> right;
+            RedBlackNode<T> left;
+            RedBlackNode<T> right;
             AddCoreResult result;
             if (cmp < 0)
             {
@@ -611,7 +616,7 @@ LYieldSelf:
                 if (root.Left == null)
                 {
                     // Make a new left child, set its color to red.
-                    root = new InteriorNode(root.Key, root.Value, new LeafNode(key, value), right, Color.Red, root.RightColor);
+                    root = new InteriorNode(root._key, root._value, new LeafNode(key, value), right, Color.Red, root.RightColor);
 
                     // Check for double red violation and warn the caller.
                     return (rootColor == Color.Red) ? AddCoreResult.DoubleRedLeftChild : AddCoreResult.ItemAdded;
@@ -621,18 +626,18 @@ LYieldSelf:
                 // [] - black node
                 // numbers - color doesn't matter, may be null in some cases
 
-                RedBlackNode<V> newLeft;
-                RedBlackNode<V> newRight;
+                RedBlackNode<T> newLeft;
+                RedBlackNode<T> newRight;
                 left = root.Left;
                 result = AddItemCore(ref left, root.LeftColor, key, value, skipCompare: skipCompare);
                 switch (result)
                 {
                     case AddCoreResult.ItemUpdated:
                     case AddCoreResult.ItemAdded:
-                        root = new InteriorNode(root.Key, root.Value, left, right, root.LeftColor, root.RightColor);
+                        root = new InteriorNode(root._key, root._value, left, right, root.LeftColor, root.RightColor);
                         return result;
                     case AddCoreResult.NewNodeIsRed:
-                        root = new InteriorNode(root.Key, root.Value, left, right, Color.Red, root.RightColor);
+                        root = new InteriorNode(root._key, root._value, left, right, Color.Red, root.RightColor);
 
                         // Check for double red violation and warn the caller.
                         return (rootColor == Color.Red) ? AddCoreResult.DoubleRedLeftChild : AddCoreResult.ItemAdded;
@@ -647,8 +652,8 @@ LYieldSelf:
                         Contracts.Assert(rootColor == Color.Black);
 
                         newLeft = left.Left;
-                        newRight = Create(root.Key, root.Value, left.Right, root.Right, left.RightColor, root.RightColor);
-                        root = new InteriorNode(left.Key, left.Value, newLeft, newRight, Color.Black, Color.Black);
+                        newRight = Create(root._key, root._value, left.Right, root.Right, left.RightColor, root.RightColor);
+                        root = new InteriorNode(left._key, left._value, newLeft, newRight, Color.Black, Color.Black);
                         return AddCoreResult.NewNodeIsRed;
                     case AddCoreResult.DoubleRedRightChild:
                         //    [Z]     
@@ -662,9 +667,9 @@ LYieldSelf:
 
                         var leftRight = left.Right;
                         Contracts.AssertValue(leftRight);
-                        newLeft = Create(left.Key, left.Value, left.Left, leftRight.Left, left.LeftColor, leftRight.LeftColor);
-                        newRight = Create(root.Key, root.Value, leftRight.Right, right, leftRight.RightColor, root.RightColor);
-                        root = new InteriorNode(leftRight.Key, leftRight.Value, newLeft, newRight, Color.Black, Color.Black);
+                        newLeft = Create(left._key, left._value, left.Left, leftRight.Left, left.LeftColor, leftRight.LeftColor);
+                        newRight = Create(root._key, root._value, leftRight.Right, right, leftRight.RightColor, root.RightColor);
+                        root = new InteriorNode(leftRight._key, leftRight._value, newLeft, newRight, Color.Black, Color.Black);
                         return AddCoreResult.NewNodeIsRed;
                     default:
                         Contracts.Assert(result == AddCoreResult.ItemPresent);
@@ -678,24 +683,24 @@ LYieldSelf:
                 if (root.Right == null)
                 {
                     // Make a new right child, set its color to red.
-                    root = new InteriorNode(root.Key, root.Value, left, new LeafNode(key, value), root.LeftColor, Color.Red);
+                    root = new InteriorNode(root._key, root._value, left, new LeafNode(key, value), root.LeftColor, Color.Red);
 
                     // Check for double red violation and warn the caller.
                     return (rootColor == Color.Red) ? AddCoreResult.DoubleRedRightChild : AddCoreResult.ItemAdded;
                 }
 
-                RedBlackNode<V> newLeft;
-                RedBlackNode<V> newRight;
+                RedBlackNode<T> newLeft;
+                RedBlackNode<T> newRight;
                 right = root.Right;
                 result = AddItemCore(ref right, root.RightColor, key, value, skipCompare: skipCompare);
                 switch (result)
                 {
                     case AddCoreResult.ItemUpdated:
                     case AddCoreResult.ItemAdded:
-                        root = new InteriorNode(root.Key, root.Value, left, right, root.LeftColor, root.RightColor);
+                        root = new InteriorNode(root._key, root._value, left, right, root.LeftColor, root.RightColor);
                         return result;
                     case AddCoreResult.NewNodeIsRed:
-                        root = new InteriorNode(root.Key, root.Value, left, right, root.LeftColor, Color.Red);
+                        root = new InteriorNode(root._key, root._value, left, right, root.LeftColor, Color.Red);
 
                         // Check for double red violation and warn the caller.
                         return (rootColor == Color.Red) ? AddCoreResult.DoubleRedRightChild : AddCoreResult.ItemAdded;
@@ -709,9 +714,9 @@ LYieldSelf:
                         //       3 4       1   2 3   4
                         Contracts.Assert(rootColor == Color.Black);
 
-                        newLeft = Create(root.Key, root.Value, root.Left, right.Left, root.LeftColor, right.LeftColor);
+                        newLeft = Create(root._key, root._value, root.Left, right.Left, root.LeftColor, right.LeftColor);
                         newRight = right.Right;
-                        root = new InteriorNode(right.Key, right.Value, newLeft, newRight, Color.Black, Color.Black);
+                        root = new InteriorNode(right._key, right._value, newLeft, newRight, Color.Black, Color.Black);
                         return AddCoreResult.NewNodeIsRed;
                     case AddCoreResult.DoubleRedLeftChild:
                         //    [X]        
@@ -725,9 +730,9 @@ LYieldSelf:
 
                         var rightLeft = right.Left;
                         Contracts.AssertValue(rightLeft);
-                        newLeft = Create(root.Key, root.Value, root.Left, rightLeft.Left, root.LeftColor, rightLeft.LeftColor);
-                        newRight = Create(right.Key, right.Value, rightLeft.Right, right.Right, rightLeft.RightColor, right.RightColor);
-                        root = new InteriorNode(rightLeft.Key, rightLeft.Value, newLeft, newRight, Color.Black, Color.Black);
+                        newLeft = Create(root._key, root._value, root.Left, rightLeft.Left, root.LeftColor, rightLeft.LeftColor);
+                        newRight = Create(right._key, right._value, rightLeft.Right, right.Right, rightLeft.RightColor, right.RightColor);
+                        root = new InteriorNode(rightLeft._key, rightLeft._value, newLeft, newRight, Color.Black, Color.Black);
                         return AddCoreResult.NewNodeIsRed;
                     default:
                         Contracts.Assert(result == AddCoreResult.ItemPresent);
@@ -736,7 +741,7 @@ LYieldSelf:
             }
         }
 
-        private static RemoveCoreResult RemoveItemCore(ref RedBlackNode<V> root, Color rootColor, string key, Dictionary<RedBlackNode<V>, int> hashCodeCache)
+        private static RemoveCoreResult RemoveItemCore(ref RedBlackNode<T> root, Color rootColor, string key, Dictionary<RedBlackNode<T>, int> hashCodeCache)
         {
             Contracts.AssertValueOrNull(root);
             Contracts.AssertValue(key);
@@ -746,7 +751,7 @@ LYieldSelf:
                 return RemoveCoreResult.ItemNotFound;
             }
 
-            var cmp = Compare(key, root.Key);
+            var cmp = Compare(key, root._key);
             if (cmp == 0)
             {
                 // We found it. Update count.
@@ -794,10 +799,10 @@ LYieldSelf:
                 switch (result)
                 {
                     case RemoveCoreResult.ItemRemoved:
-                        root = new InteriorNode(leftMost.Key, leftMost.Value, root.Left, newRight, root.LeftColor, root.RightColor);
+                        root = new InteriorNode(leftMost._key, leftMost._value, root.Left, newRight, root.LeftColor, root.RightColor);
                         return RemoveCoreResult.ItemRemoved;
                     case RemoveCoreResult.NewNodeIsBlack:
-                        root = new InteriorNode(leftMost.Key, leftMost.Value, root.Left, newRight, root.LeftColor, Color.Black);
+                        root = new InteriorNode(leftMost._key, leftMost._value, root.Left, newRight, root.LeftColor, Color.Black);
                         return RemoveCoreResult.ItemRemoved;
                     default:
                         Contracts.Assert(result == RemoveCoreResult.NewNodeIsDoubleBlack);
@@ -813,10 +818,10 @@ LYieldSelf:
                 switch (result)
                 {
                     case RemoveCoreResult.ItemRemoved:
-                        root = Create(root.Key, root.Value, left, root.Right, root.LeftColor, root.RightColor);
+                        root = Create(root._key, root._value, left, root.Right, root.LeftColor, root.RightColor);
                         return RemoveCoreResult.ItemRemoved;
                     case RemoveCoreResult.NewNodeIsBlack:
-                        root = Create(root.Key, root.Value, left, root.Right, Color.Black, root.RightColor);
+                        root = Create(root._key, root._value, left, root.Right, Color.Black, root.RightColor);
                         return RemoveCoreResult.ItemRemoved;
                     case RemoveCoreResult.NewNodeIsDoubleBlack:
                         return RemoveFixupLeft(ref root, rootColor, left);
@@ -833,10 +838,10 @@ LYieldSelf:
                 switch (result)
                 {
                     case RemoveCoreResult.ItemRemoved:
-                        root = Create(root.Key, root.Value, root.Left, right, root.LeftColor, root.RightColor);
+                        root = Create(root._key, root._value, root.Left, right, root.LeftColor, root.RightColor);
                         return RemoveCoreResult.ItemRemoved;
                     case RemoveCoreResult.NewNodeIsBlack:
-                        root = Create(root.Key, root.Value, root.Left, right, root.LeftColor, Color.Black);
+                        root = Create(root._key, root._value, root.Left, right, root.LeftColor, Color.Black);
                         return RemoveCoreResult.ItemRemoved;
                     case RemoveCoreResult.NewNodeIsDoubleBlack:
                         return RemoveFixupRight(ref root, root, rootColor, right);
@@ -847,7 +852,7 @@ LYieldSelf:
             }
         }
 
-        private static RemoveCoreResult RemoveLeftMost(ref RedBlackNode<V> root, Color rootColor, Dictionary<RedBlackNode<V>, int> hashCodeCache, out RedBlackNode<V> removedNode)
+        private static RemoveCoreResult RemoveLeftMost(ref RedBlackNode<T> root, Color rootColor, Dictionary<RedBlackNode<T>, int> hashCodeCache, out RedBlackNode<T> removedNode)
         {
             Contracts.AssertValue(root);
 
@@ -879,10 +884,10 @@ LYieldSelf:
             switch (result)
             {
                 case RemoveCoreResult.ItemRemoved:
-                    root = Create(root.Key, root.Value, left, root.Right, root.LeftColor, root.RightColor);
+                    root = Create(root._key, root._value, left, root.Right, root.LeftColor, root.RightColor);
                     return RemoveCoreResult.ItemRemoved;
                 case RemoveCoreResult.NewNodeIsBlack:
-                    root = Create(root.Key, root.Value, left, root.Right, Color.Black, root.RightColor);
+                    root = Create(root._key, root._value, left, root.Right, Color.Black, root.RightColor);
                     return RemoveCoreResult.ItemRemoved;
                 default:
                     Contracts.Assert(result == RemoveCoreResult.NewNodeIsDoubleBlack);
@@ -892,7 +897,7 @@ LYieldSelf:
 
         // Performs red-black tree fixup for the root whose new left child (left)
         // is a 'double black' node.
-        private static RemoveCoreResult RemoveFixupLeft(ref RedBlackNode<V> root, Color rootColor, RedBlackNode<V> left)
+        private static RemoveCoreResult RemoveFixupLeft(ref RedBlackNode<T> root, Color rootColor, RedBlackNode<T> left)
         {
             Contracts.AssertValue(root);
             Contracts.AssertValue(root.Right);
@@ -920,9 +925,9 @@ LYieldSelf:
                 //          3   4 5 6          1   2   3   4
                 Contracts.Assert(root.RightColor == Color.Black);
 
-                var newLeft = Create(root.Key, root.Value, left, rootRight.Left, Color.Black, rootRight.LeftColor);
+                var newLeft = Create(root._key, root._value, left, rootRight.Left, Color.Black, rootRight.LeftColor);
                 var newRight = rootRight.Right;
-                root = new InteriorNode(rootRight.Key, rootRight.Value, newLeft, newRight, Color.Black, Color.Black);
+                root = new InteriorNode(rootRight._key, rootRight._value, newLeft, newRight, Color.Black, Color.Black);
                 return RemoveCoreResult.ItemRemoved;
             }
 
@@ -946,9 +951,9 @@ LYieldSelf:
 
                 var rootRightLeft = rootRight.Left;
                 Contracts.AssertValue(rootRightLeft);
-                var newLeft = Create(root.Key, root.Value, left, rootRightLeft.Left, Color.Black, rootRightLeft.LeftColor);
-                var newRight = Create(rootRight.Key, rootRight.Value, rootRightLeft.Right, rootRight.Right, rootRightLeft.RightColor, Color.Black);
-                root = new InteriorNode(rootRightLeft.Key, rootRightLeft.Value, newLeft, newRight, Color.Black, Color.Black);
+                var newLeft = Create(root._key, root._value, left, rootRightLeft.Left, Color.Black, rootRightLeft.LeftColor);
+                var newRight = Create(rootRight._key, rootRight._value, rootRightLeft.Right, rootRight.Right, rootRightLeft.RightColor, Color.Black);
+                root = new InteriorNode(rootRightLeft._key, rootRightLeft._value, newLeft, newRight, Color.Black, Color.Black);
                 return RemoveCoreResult.ItemRemoved;
             }
 
@@ -963,8 +968,8 @@ LYieldSelf:
                 Contracts.Assert(rootRight.LeftColor == Color.Black);
                 Contracts.Assert(rootRight.RightColor == Color.Black);
 
-                RedBlackNode<V> newLeft;
-                RedBlackNode<V> newRight;
+                RedBlackNode<T> newLeft;
+                RedBlackNode<T> newRight;
                 var rootRightLeft = rootRight.Left;
                 Contracts.AssertValue(rootRightLeft);
 
@@ -980,11 +985,11 @@ LYieldSelf:
                     //          3   CZ  6 7      1  2   3   CZ                [A]   3  4    5
                     //              / \                    /  \              /  \
                     //             4   5                  4    5            1    2
-                    var newLeftLeft = Create(root.Key, root.Value, left, rootRightLeft.Left, Color.Black, rootRightLeft.LeftColor);
+                    var newLeftLeft = Create(root._key, root._value, left, rootRightLeft.Left, Color.Black, rootRightLeft.LeftColor);
                     var newLeftRight = rootRightLeft.Right;
-                    newLeft = new InteriorNode(rootRightLeft.Key, rootRightLeft.Value, newLeftLeft, newLeftRight, Color.Black, Color.Black);
+                    newLeft = new InteriorNode(rootRightLeft._key, rootRightLeft._value, newLeftLeft, newLeftRight, Color.Black, Color.Black);
                     newRight = rootRight.Right;
-                    root = new InteriorNode(rootRight.Key, rootRight.Value, newLeft, newRight, Color.Red, Color.Black);
+                    root = new InteriorNode(rootRight._key, rootRight._value, newLeft, newRight, Color.Red, Color.Black);
                     return RemoveCoreResult.ItemRemoved;
                 }
 
@@ -1002,11 +1007,11 @@ LYieldSelf:
                     //        3  4 5   6               3  4 5 6                        1    2          5    6
                     var rootRightLeftLeft = rootRightLeft.Left;
                     Contracts.AssertValue(rootRightLeftLeft);
-                    var newLeftLeft = Create(root.Key, root.Value, left, rootRightLeftLeft.Left, Color.Black, rootRightLeftLeft.LeftColor);
-                    var newLeftRight = Create(rootRightLeft.Key, rootRightLeft.Value, rootRightLeftLeft.Right, rootRightLeft.Right, rootRightLeftLeft.RightColor, Color.Black);
-                    newLeft = new InteriorNode(rootRightLeftLeft.Key, rootRightLeftLeft.Value, newLeftLeft, newLeftRight, Color.Black, Color.Black);
+                    var newLeftLeft = Create(root._key, root._value, left, rootRightLeftLeft.Left, Color.Black, rootRightLeftLeft.LeftColor);
+                    var newLeftRight = Create(rootRightLeft._key, rootRightLeft._value, rootRightLeftLeft.Right, rootRightLeft.Right, rootRightLeftLeft.RightColor, Color.Black);
+                    newLeft = new InteriorNode(rootRightLeftLeft._key, rootRightLeftLeft._value, newLeftLeft, newLeftRight, Color.Black, Color.Black);
                     newRight = rootRight.Right;
-                    root = new InteriorNode(rootRight.Key, rootRight.Value, newLeft, newRight, Color.Red, Color.Black);
+                    root = new InteriorNode(rootRight._key, rootRight._value, newLeft, newRight, Color.Red, Color.Black);
                     return RemoveCoreResult.ItemRemoved;
                 }
 
@@ -1018,9 +1023,9 @@ LYieldSelf:
                 // 1   2     [C]    [E]      [[A]]   [C]     3   4       [A]     C      3   4
                 //           / \    / \       /\     /  \                /\     /  \         
                 //         [CA][CZ] 3 4      1  2   [CA][CZ]            1  2   [CA][CZ]      
-                newLeft = Create(root.Key, root.Value, left, rootRightLeft, Color.Black, Color.Red);
+                newLeft = Create(root._key, root._value, left, rootRightLeft, Color.Black, Color.Red);
                 newRight = rootRight.Right;
-                root = new InteriorNode(rootRight.Key, rootRight.Value, newLeft, newRight, Color.Black, Color.Black);
+                root = new InteriorNode(rootRight._key, rootRight._value, newLeft, newRight, Color.Black, Color.Black);
                 return RemoveCoreResult.NewNodeIsBlack;
             }
 
@@ -1029,7 +1034,7 @@ LYieldSelf:
             if (rootColor == Color.Red)
             {
                 Contracts.Assert(root.RightColor == Color.Black);
-                root = new InteriorNode(root.Key, root.Value, left, rootRight, Color.Black, Color.Red);
+                root = new InteriorNode(root._key, root._value, left, rootRight, Color.Black, Color.Red);
                 return RemoveCoreResult.NewNodeIsBlack;
             }
 
@@ -1039,7 +1044,7 @@ LYieldSelf:
             Contracts.Assert(root.RightColor == Color.Black);
             Contracts.Assert(rootRight.LeftColor == Color.Black);
             Contracts.Assert(rootRight.RightColor == Color.Black);
-            root = new InteriorNode(root.Key, root.Value, left, rootRight, Color.Black, Color.Red);
+            root = new InteriorNode(root._key, root._value, left, rootRight, Color.Black, Color.Red);
             return RemoveCoreResult.NewNodeIsDoubleBlack;
         }
 
@@ -1047,7 +1052,7 @@ LYieldSelf:
         // is a 'double black' node.
         // Takes two 'root' parameters (root, rootData) instead of one like RemoveFixupLeft
         // because the data for the new root might be coming from the result of a RemoveLeftMost
-        private static RemoveCoreResult RemoveFixupRight(ref RedBlackNode<V> root, RedBlackNode<V> rootData, Color rootColor, RedBlackNode<V> right)
+        private static RemoveCoreResult RemoveFixupRight(ref RedBlackNode<T> root, RedBlackNode<T> rootData, Color rootColor, RedBlackNode<T> right)
         {
             Contracts.AssertValue(root);
             Contracts.AssertValue(root.Left);
@@ -1065,8 +1070,8 @@ LYieldSelf:
             {
                 Contracts.Assert(root.LeftColor == Color.Black);
                 var newLeft = rootLeft.Left;
-                var newRight = Create(rootData.Key, rootData.Value, rootLeft.Right, right, rootLeft.RightColor, Color.Black);
-                root = new InteriorNode(rootLeft.Key, rootLeft.Value, newLeft, newRight, Color.Black, Color.Black);
+                var newRight = Create(rootData._key, rootData._value, rootLeft.Right, right, rootLeft.RightColor, Color.Black);
+                root = new InteriorNode(rootLeft._key, rootLeft._value, newLeft, newRight, Color.Black, Color.Black);
                 return RemoveCoreResult.ItemRemoved;
             }
 
@@ -1079,9 +1084,9 @@ LYieldSelf:
                 Contracts.Assert(root.LeftColor == Color.Black);
                 Contracts.Assert(rootLeft.LeftColor == Color.Black);
                 var rootLeftRight = rootLeft.Right;
-                var newLeft = Create(rootLeft.Key, rootLeft.Value, rootLeft.Left, rootLeftRight.Left, Color.Black, rootLeftRight.LeftColor);
-                var newRight = Create(rootData.Key, rootData.Value, rootLeftRight.Right, right, rootLeftRight.RightColor, Color.Black);
-                root = new InteriorNode(rootLeftRight.Key, rootLeftRight.Value, newLeft, newRight, Color.Black, Color.Black);
+                var newLeft = Create(rootLeft._key, rootLeft._value, rootLeft.Left, rootLeftRight.Left, Color.Black, rootLeftRight.LeftColor);
+                var newRight = Create(rootData._key, rootData._value, rootLeftRight.Right, right, rootLeftRight.RightColor, Color.Black);
+                root = new InteriorNode(rootLeftRight._key, rootLeftRight._value, newLeft, newRight, Color.Black, Color.Black);
                 return RemoveCoreResult.ItemRemoved;
             }
 
@@ -1096,8 +1101,8 @@ LYieldSelf:
                 Contracts.Assert(rootLeft.LeftColor == Color.Black);
                 Contracts.Assert(rootLeft.RightColor == Color.Black);
 
-                RedBlackNode<V> newLeft;
-                RedBlackNode<V> newRight;
+                RedBlackNode<T> newLeft;
+                RedBlackNode<T> newRight;
                 var rootLeftRight = rootLeft.Right;
                 Contracts.AssertValue(rootLeftRight);
 
@@ -1105,10 +1110,10 @@ LYieldSelf:
                 if (rootLeftRight.LeftColor == Color.Red)
                 {
                     var newRightLeft = rootLeftRight.Left;
-                    var newRightRight = Create(rootData.Key, rootData.Value, rootLeftRight.Right, right, rootLeftRight.RightColor, Color.Black);
+                    var newRightRight = Create(rootData._key, rootData._value, rootLeftRight.Right, right, rootLeftRight.RightColor, Color.Black);
                     newLeft = rootLeft.Left;
-                    newRight = new InteriorNode(rootLeftRight.Key, rootLeftRight.Value, newRightLeft, newRightRight, Color.Black, Color.Black);
-                    root = new InteriorNode(rootLeft.Key, rootLeft.Value, newLeft, newRight, Color.Black, Color.Red);
+                    newRight = new InteriorNode(rootLeftRight._key, rootLeftRight._value, newRightLeft, newRightRight, Color.Black, Color.Black);
+                    root = new InteriorNode(rootLeft._key, rootLeft._value, newLeft, newRight, Color.Black, Color.Red);
                     return RemoveCoreResult.ItemRemoved;
                 }
 
@@ -1117,18 +1122,18 @@ LYieldSelf:
                 {
                     var rootLeftRightRight = rootLeftRight.Right;
                     Contracts.AssertValue(rootLeftRightRight);
-                    var newRightLeft = Create(rootLeftRight.Key, rootLeftRight.Value, rootLeftRight.Left, rootLeftRightRight.Left, Color.Black, rootLeftRightRight.LeftColor);
-                    var newRightRight = Create(rootData.Key, rootData.Value, rootLeftRightRight.Right, right, rootLeftRightRight.RightColor, Color.Black);
+                    var newRightLeft = Create(rootLeftRight._key, rootLeftRight._value, rootLeftRight.Left, rootLeftRightRight.Left, Color.Black, rootLeftRightRight.LeftColor);
+                    var newRightRight = Create(rootData._key, rootData._value, rootLeftRightRight.Right, right, rootLeftRightRight.RightColor, Color.Black);
                     newLeft = rootLeft.Left;
-                    newRight = new InteriorNode(rootLeftRightRight.Key, rootLeftRightRight.Value, newRightLeft, newRightRight, Color.Black, Color.Black);
-                    root = new InteriorNode(rootLeft.Key, rootLeft.Value, newLeft, newRight, Color.Black, Color.Red);
+                    newRight = new InteriorNode(rootLeftRightRight._key, rootLeftRightRight._value, newRightLeft, newRightRight, Color.Black, Color.Black);
+                    root = new InteriorNode(rootLeft._key, rootLeft._value, newLeft, newRight, Color.Black, Color.Red);
                     return RemoveCoreResult.ItemRemoved;
                 }
 
                 // Case 3 -> Case 4
                 newLeft = rootLeft.Left;
-                newRight = new InteriorNode(rootData.Key, rootData.Value, rootLeftRight, right, Color.Red, Color.Black);
-                root = new InteriorNode(rootLeft.Key, rootLeft.Value, newLeft, newRight, Color.Black, Color.Black);
+                newRight = new InteriorNode(rootData._key, rootData._value, rootLeftRight, right, Color.Red, Color.Black);
+                root = new InteriorNode(rootLeft._key, rootLeft._value, newLeft, newRight, Color.Black, Color.Black);
                 return RemoveCoreResult.NewNodeIsBlack;
             }
 
@@ -1137,7 +1142,7 @@ LYieldSelf:
             if (rootColor == Color.Red)
             {
                 Contracts.Assert(root.LeftColor == Color.Black);
-                root = new InteriorNode(rootData.Key, rootData.Value, rootLeft, right, Color.Red, Color.Black);
+                root = new InteriorNode(rootData._key, rootData._value, rootLeft, right, Color.Red, Color.Black);
                 return RemoveCoreResult.NewNodeIsBlack;
             }
 
@@ -1147,7 +1152,7 @@ LYieldSelf:
             Contracts.Assert(root.LeftColor == Color.Black);
             Contracts.Assert(rootLeft.LeftColor == Color.Black);
             Contracts.Assert(rootLeft.RightColor == Color.Black);
-            root = new InteriorNode(rootData.Key, rootData.Value, rootLeft, right, Color.Red, Color.Black);
+            root = new InteriorNode(rootData._key, rootData._value, rootLeft, right, Color.Red, Color.Black);
             return RemoveCoreResult.NewNodeIsDoubleBlack;
         }
     }

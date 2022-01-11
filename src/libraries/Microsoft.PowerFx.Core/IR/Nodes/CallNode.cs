@@ -13,6 +13,7 @@ namespace Microsoft.PowerFx.Core.IR.Nodes
     {
         public readonly TexlFunction Function;
         public readonly List<IntermediateNode> Args;
+
         /// <summary>
         /// Scope is non-null if the function creates a scope.
         /// </summary>

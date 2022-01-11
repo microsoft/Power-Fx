@@ -39,6 +39,7 @@ namespace Microsoft.PowerFx.Core.Lexer.Tokens
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="ErrorToken"/> class.
         /// Copy Ctor for ErrorToken used by Clone.
         /// </summary>
         /// <param name="tok">The token to be copied.</param>

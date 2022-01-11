@@ -37,7 +37,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
 
         private class EmptyEnumStore : EnumStore
         {
-            private IDictionary<string, string> _enumDict = new Dictionary<string, string>();
+            private readonly IDictionary<string, string> _enumDict = new Dictionary<string, string>();
 
             protected override IDictionary<string, string> EnumDict => _enumDict;
         }
@@ -152,7 +152,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         }
 
         /// <summary>
-        /// In cases for Intellisense with an empty enum store
+        /// In cases for Intellisense with an empty enum store.
         /// </summary>
         [Theory]
         [InlineData("Color.AliceBl|")]
@@ -162,6 +162,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         [InlineData("Disabled|")]
         [InlineData("DisplayMode.D|")]
         [InlineData("DisplayMode|")]
+
         // Calendar is a namespace for functions, not an enum
         [InlineData("Calendar.|", "MonthsLong", "MonthsShort", "WeekdaysLong", "WeekdaysShort")]
         [InlineData("Calendar.Months|", "MonthsLong", "MonthsShort")]

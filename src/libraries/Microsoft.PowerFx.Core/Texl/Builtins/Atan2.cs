@@ -26,7 +26,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 2,            // min arity of 2
                 2,            // max arity of 2
                 DType.Number, // first param is numeric
-                DType.Number)  // second param is numeric
+                DType.Number) // second param is numeric
         {
         }
 

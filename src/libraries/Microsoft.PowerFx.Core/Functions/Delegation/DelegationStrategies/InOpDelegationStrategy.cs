@@ -70,9 +70,9 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
             var hasEnhancedDelegation = binding.Document.Properties.EnabledFeatures.IsEnhancedDelegationEnabled;
             var isColumn = rightNodeType?.IsColumn == true;
             var isDelegationSupportedByTable = metadata.IsDelegationSupportedByTable(DelegationCapability.CdsIn);
-            var HasLeftFirstNameNodeOrIsFullRecordRowScopeAccess = binaryOpNode.Left?.AsFirstName() != null || binding.IsFullRecordRowScopeAccess(binaryOpNode.Left);
+            var hasLeftFirstNameNodeOrIsFullRecordRowScopeAccess = binaryOpNode.Left?.AsFirstName() != null || binding.IsFullRecordRowScopeAccess(binaryOpNode.Left);
 
-            return hasEnhancedDelegation && isColumn && isDelegationSupportedByTable && HasLeftFirstNameNodeOrIsFullRecordRowScopeAccess;
+            return hasEnhancedDelegation && isColumn && isDelegationSupportedByTable && hasLeftFirstNameNodeOrIsFullRecordRowScopeAccess;
         }
 
         public bool CheckForFullyQualifiedFieldAccess(bool isRHSDelegableTable, BinaryOpNode binaryOpNode, TexlBinding binding, TexlNode node, ref DName columnName, ref FirstNameInfo info)

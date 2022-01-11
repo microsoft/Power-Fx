@@ -76,7 +76,7 @@ namespace Microsoft.PowerFx
 
                 var newValue = irnode.Accept(v, SymbolContext.New());
 
-                var equal = fi._value != null &&  // null on initial run. 
+                var equal = fi._value != null && // null on initial run. 
                     RuntimeHelpers.AreEqual(newValue, fi._value);
 
                 if (!equal)

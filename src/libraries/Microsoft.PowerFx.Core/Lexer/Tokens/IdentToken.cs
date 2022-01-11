@@ -52,6 +52,7 @@ namespace Microsoft.PowerFx.Core.Lexer.Tokens
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="IdentToken"/> class.
         /// Copy Ctor for IdentToken used by Clone.
         /// </summary>
         /// <param name="tok">The token to be copied.</param>

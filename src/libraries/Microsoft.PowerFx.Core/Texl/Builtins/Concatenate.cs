@@ -23,7 +23,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public ConcatenateFunction()
             : base("Concatenate", TexlStrings.AboutConcatenate, FunctionCategories.Text, DType.String, 0, 1, int.MaxValue)
-        { }
+        {
+        }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
@@ -90,7 +91,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public ConcatenateTableFunction()
             : base("Concatenate", TexlStrings.AboutConcatenateT, FunctionCategories.Table | FunctionCategories.Text, DType.EmptyTable, 0, 1, int.MaxValue)
-        { }
+        {
+        }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {

@@ -45,7 +45,11 @@ namespace Microsoft.PowerFx.Core.Public.Values
 
         public static FormulaValue New(double? number)
         {
-            if (number.HasValue) { return New(number.Value); }
+            if (number.HasValue)
+            {
+                return New(number.Value);
+            }
+
             return new BlankValue(IRContext.NotInSource(FormulaType.Number));
         }
 
@@ -154,21 +158,60 @@ namespace Microsoft.PowerFx.Core.Public.Values
                 return NewBlank();
             }
 
-            if (obj is FormulaValue value) { return value; }
+            if (obj is FormulaValue value)
+            {
+                return value;
+            }
 
-            if (obj is string strValue) { return New(strValue); }
-            if (obj is bool boolValue) { return New(boolValue); }
+            if (obj is string strValue)
+            {
+                return New(strValue);
+            }
 
-            if (obj is double doubleValue) { return New(doubleValue); }
-            if (obj is int intValue) { return New(intValue); }
-            if (obj is decimal decValue) { return New(decValue); }
-            if (obj is long longValue) { return New(longValue); }
+            if (obj is bool boolValue)
+            {
+                return New(boolValue);
+            }
 
-            if (obj is float singleValue) { return New(singleValue); }
+            if (obj is double doubleValue)
+            {
+                return New(doubleValue);
+            }
 
-            if (obj is DateTime dateValue) { return New(dateValue); }
-            if (obj is DateTimeOffset dateOffsetValue) { return New(dateOffsetValue.DateTime); }
-            if (obj is TimeSpan timeValue) { return New(timeValue); }
+            if (obj is int intValue)
+            {
+                return New(intValue);
+            }
+
+            if (obj is decimal decValue)
+            {
+                return New(decValue);
+            }
+
+            if (obj is long longValue)
+            {
+                return New(longValue);
+            }
+
+            if (obj is float singleValue)
+            {
+                return New(singleValue);
+            }
+
+            if (obj is DateTime dateValue)
+            {
+                return New(dateValue);
+            }
+
+            if (obj is DateTimeOffset dateOffsetValue)
+            {
+                return New(dateOffsetValue.DateTime);
+            }
+
+            if (obj is TimeSpan timeValue)
+            {
+                return New(timeValue);
+            }
 
             // Do checking off the static type, not the runtime instance. 
             if (type.IsInterface)
@@ -239,6 +282,7 @@ namespace Microsoft.PowerFx.Core.Public.Values
         #endregion
 
         #region Host Records API
+
         /// <summary>
         /// Create a record by reflecting over the object's public properties.
         /// </summary>
@@ -314,6 +358,7 @@ namespace Microsoft.PowerFx.Core.Public.Values
         #endregion
 
         #region Host Tables API
+
         /// <summary>
         /// Create a table from an untyped IEnumerable. This can be useful in some dynamic scenarios.
         /// </summary>
@@ -324,7 +369,10 @@ namespace Microsoft.PowerFx.Core.Public.Values
             System.Collections.IEnumerable values,
             Type elementType)
         {
-            if (elementType == null) { throw new ArgumentNullException(nameof(elementType)); }
+            if (elementType == null)
+            {
+                throw new ArgumentNullException(nameof(elementType));
+            }
 
             var records = TableToRecords(values, elementType);
             var recordType = (RecordType)records.First().IRContext.ResultType;

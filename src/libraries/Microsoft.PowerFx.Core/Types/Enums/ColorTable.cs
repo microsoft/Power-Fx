@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation.
+﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
 using System.Collections.Generic;
@@ -31,7 +31,7 @@ namespace Microsoft.PowerFx.Core.Types.Enums
                 { "SeaGreen", 0xFF2E8B57 }, { "SeaShell", 0xFFFFF5EE }, { "Sienna", 0xFFA0522D }, { "Silver", 0xFFC0C0C0 }, { "SkyBlue", 0xFF87CEEB }, { "SlateBlue", 0xFF6A5ACD }, { "SlateGray", 0xFF708090 }, { "Snow", 0xFFFFFAFA },
                 { "SpringGreen", 0xFF00FF7F }, { "SteelBlue", 0xFF4682B4 }, { "Tan", 0xFFD2B48C }, { "Teal", 0xFF008080 }, { "Thistle", 0xFFD8BFD8 }, { "Tomato", 0xFFFF6347 }, { "Transparent", 0 }, { "Turquoise", 0xFF40E0D0 }, { "Violet", 0xFFEE82EE },
                 { "Wheat", 0xFFF5DEB3 }, { "White", 0xFFFFFFFF }, { "WhiteSmoke", 0xFFF5F5F5 }, { "Yellow", 0xFFFFFF00 }, { "YellowGreen", 0xFF9ACD32 }
-            };
+        };
 
         internal static new string ToString()
         {

@@ -277,6 +277,7 @@ namespace DocumentServer.Core.Tests.Formulas
         }
 
         [Theory]
+
         // Unqualified identifiers
         [InlineData("A")]
         [InlineData("A12345")]
@@ -324,6 +325,7 @@ namespace DocumentServer.Core.Tests.Formulas
         }
 
         [Theory]
+
         // Identifiers can't be all-blank.
         [InlineData("' '")]
         [InlineData("'     '")]
@@ -364,6 +366,7 @@ namespace DocumentServer.Core.Tests.Formulas
         }
 
         [Theory]
+
         // The language does not / no longer supports a null constant.
         // Out-of-context nulls are parsed as unbound identifiers.
         [InlineData("null", NodeKind.FirstName)]
@@ -475,6 +478,7 @@ namespace DocumentServer.Core.Tests.Formulas
         }
 
         [Theory]
+
         // "As" Ident cannot be a reserved keyword
         [InlineData("Filter([1,2,3] As Self, 'Self'.Value > 2)", 3)]
         public void TestReservedAsIdentifier(string script, int expected)
@@ -684,6 +688,7 @@ namespace DocumentServer.Core.Tests.Formulas
             Assert.False(result.HasError);
 
             var startid = node.Id;
+
             // Test cloning
             var clone = node.Clone(ref startid, default(Span));
             Assert.Equal(TexlPretty.PrettyPrint(node), TexlPretty.PrettyPrint(clone), false);
@@ -712,6 +717,7 @@ namespace DocumentServer.Core.Tests.Formulas
             Assert.NotNull(result.Root);
             Assert.True(result.HasError);
             Assert.True(result.Errors.Count >= count);
+
             //Assert.IsTrue(result.Errors.All(err => err.ErrorKind == DocumentErrorKind.AXL && err.TextSpan != null));
             Assert.True(errorMessage == null || result.Errors.Any(err => err.ShortMessage == errorMessage));
         }

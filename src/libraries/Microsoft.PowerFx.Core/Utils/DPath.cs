@@ -6,11 +6,10 @@ using System;
 using System.Text;
 using System.Threading;
 using Microsoft.PowerFx.Core.Lexer;
+using Conditional = System.Diagnostics.ConditionalAttribute;
 
 namespace Microsoft.PowerFx.Core.Utils
 {
-    using Conditional = System.Diagnostics.ConditionalAttribute;
-
     // A path is essentially a list of simple names, starting at "root".
     // TASK: 67008 - Make this public, or expose a public shim in Document.
     internal struct DPath : IEquatable<DPath>, ICheckable

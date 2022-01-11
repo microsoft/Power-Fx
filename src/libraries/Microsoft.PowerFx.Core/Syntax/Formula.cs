@@ -9,11 +9,10 @@ using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Parser;
 using Microsoft.PowerFx.Core.Syntax.Nodes;
 using Microsoft.PowerFx.Core.Utils;
+using Conditional = System.Diagnostics.ConditionalAttribute;
 
 namespace Microsoft.PowerFx.Core.Syntax
 {
-    using Conditional = System.Diagnostics.ConditionalAttribute;
-
     // This encapsulates a Texl formula, its parse tree and any parse errors. Note that
     // it doesn't include TexlBinding information, since that depends on context, while parsing
     // does not.

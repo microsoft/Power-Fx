@@ -241,7 +241,10 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             {
                 if (column.Type.IsPrimitive && !column.Type.IsOptionSet)
                 {
-                    primitiveColumnsAndComparatorIds.AppendFormat("{0}\"{1}\":{2}", separator, CharacterUtils.EscapeString(column.Name),
+                    primitiveColumnsAndComparatorIds.AppendFormat(
+                        "{0}\"{1}\":{2}",
+                        separator,
+                        CharacterUtils.EscapeString(column.Name),
                         GetSortComparatorIdForType(column.Type));
                     separator = ",";
                 }

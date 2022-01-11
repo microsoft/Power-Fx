@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation.
+﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
 using System.Linq;
@@ -10,7 +10,7 @@ using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Core.Syntax.Nodes
 {
-    /// Base for all variadic nodes.
+    // Base for all variadic nodes.
     internal abstract class VariadicBase : TexlNode
     {
         public readonly TexlNode[] Children;

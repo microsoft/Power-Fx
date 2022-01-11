@@ -20,7 +20,7 @@ namespace Microsoft.PowerFx.Core.UtilityDataStructures
         internal const int ChunkSize = 8192;
         private const int FirstChunkInitialSize = 4;
         private int _version;
-        private readonly Stack<Action> onClear = new Stack<Action>();
+        private readonly Stack<Action> _onClear = new Stack<Action>();
 
         public T this[int index]
         {
@@ -66,7 +66,7 @@ namespace Microsoft.PowerFx.Core.UtilityDataStructures
 
         public void Clear()
         {
-            foreach (var action in onClear)
+            foreach (var action in _onClear)
             {
                 action();
             }
@@ -78,12 +78,12 @@ namespace Microsoft.PowerFx.Core.UtilityDataStructures
 
         public void TrackClear(Action action)
         {
-            onClear.Push(action);
+            _onClear.Push(action);
         }
 
         public void StopTrackingClear()
         {
-            onClear.Pop();
+            _onClear.Pop();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
@@ -133,15 +133,15 @@ namespace Microsoft.PowerFx.Core.UtilityDataStructures
 
         internal class ChunkedListEnumerator : IEnumerator<T>, System.Collections.IEnumerator
         {
-            private readonly ChunkedList<T> list;
-            private int index;
-            private readonly int version;
+            private readonly ChunkedList<T> _list;
+            private int _index;
+            private readonly int _version;
 
             internal ChunkedListEnumerator(ChunkedList<T> list)
             {
-                this.list = list;
-                index = 0;
-                version = list._version;
+                _list = list;
+                _index = 0;
+                _version = list._version;
                 Current = default;
             }
 
@@ -151,12 +151,12 @@ namespace Microsoft.PowerFx.Core.UtilityDataStructures
 
             public bool MoveNext()
             {
-                var localList = list;
+                var localList = _list;
 
-                if (version == localList._version && ((uint)index < (uint)localList.Count))
+                if (_version == localList._version && ((uint)_index < (uint)localList.Count))
                 {
-                    Current = localList[index];
-                    index++;
+                    Current = localList[_index];
+                    _index++;
                     return true;
                 }
 
@@ -165,12 +165,12 @@ namespace Microsoft.PowerFx.Core.UtilityDataStructures
 
             private bool MoveNextRare()
             {
-                if (version != list._version)
+                if (_version != _list._version)
                 {
                     throw new InvalidOperationException("Chunked List is modified during enumeration");
                 }
 
-                index = list.Count + 1;
+                _index = _list.Count + 1;
                 Current = default;
                 return false;
             }
@@ -181,7 +181,7 @@ namespace Microsoft.PowerFx.Core.UtilityDataStructures
             {
                 get
                 {
-                    if (index == 0 || index == list.Count + 1)
+                    if (_index == 0 || _index == _list.Count + 1)
                     {
                         throw new IndexOutOfRangeException("ChunkedList out of range index accessed");
                     }
@@ -192,12 +192,12 @@ namespace Microsoft.PowerFx.Core.UtilityDataStructures
 
             void System.Collections.IEnumerator.Reset()
             {
-                if (version != list._version)
+                if (_version != _list._version)
                 {
                     throw new InvalidOperationException("Chunked List is modified during enumeration");
                 }
 
-                index = 0;
+                _index = 0;
                 Current = default;
             }
         }
