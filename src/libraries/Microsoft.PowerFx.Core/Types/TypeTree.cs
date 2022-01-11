@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation.
+﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
 using System;
@@ -20,6 +20,14 @@ namespace Microsoft.PowerFx.Core.Types
             _root = root;
             _hashCodeCache = new Dictionary<RedBlackNode<DType>, int>();
         }
+
+        public bool IsEmpty => _root == null;
+
+        public int Count => _root == null ? 0 : _root.Count;
+
+        public static bool operator ==(TypeTree tree1, TypeTree tree2) => RedBlackNode<DType>.Equals(tree1._root, tree2._root);
+
+        public static bool operator !=(TypeTree tree1, TypeTree tree2) => !(tree1 == tree2);
 
         [Conditional("PARANOID_VALIDATION")]
         internal void AssertValid()
@@ -44,21 +52,16 @@ namespace Microsoft.PowerFx.Core.Types
             return new TypeTree(RedBlackNode<DType>.Create(items));
         }
 
-        public bool IsEmpty { get { return _root == null; } }
-
-        public int Count { get { return _root == null ? 0 : _root.Count; } }
-
         public bool Contains(string key)
         {
             Contracts.AssertValue(key);
-            DType value;
-            return TryGetValue(key, out value);
+            return TryGetValue(key, out var value);
         }
 
         public bool TryGetValue(string key, out DType value)
         {
             Contracts.AssertValue(key);
-            bool fRet = RedBlackNode<DType>.TryGetValue(_root, key, out value);
+            var fRet = RedBlackNode<DType>.TryGetValue(_root, key, out value);
             value = value ?? DType.Invalid;
             Contracts.Assert(fRet == value.IsValid);
             return fRet;
@@ -91,7 +94,7 @@ namespace Microsoft.PowerFx.Core.Types
             Contracts.AssertNonEmpty(rgname);
             Contracts.AssertAllValid(rgname);
 
-            RedBlackNode<DType> root = _root;
+            var root = _root;
             foreach (string name in rgname)
             {
                 Contracts.AssertNonEmpty(name);
@@ -99,16 +102,6 @@ namespace Microsoft.PowerFx.Core.Types
             }
 
             return new TypeTree(root);
-        }
-
-        public static bool operator ==(TypeTree tree1, TypeTree tree2)
-        {
-            return RedBlackNode<DType>.Equals(tree1._root, tree2._root);
-        }
-
-        public static bool operator !=(TypeTree tree1, TypeTree tree2)
-        {
-            return !(tree1 == tree2);
         }
 
         public bool Equals(TypeTree other)
@@ -119,19 +112,26 @@ namespace Microsoft.PowerFx.Core.Types
         public override bool Equals(object obj)
         {
             if (!(obj is TypeTree))
+            {
                 return false;
+            }
+
             return this == (TypeTree)obj;
         }
 
         public override int GetHashCode()
         {
-            int hash = 0x450C1E25;
+            var hash = 0x450C1E25;
             if (_root != null)
             {
                 if (_hashCodeCache.ContainsKey(_root))
+                {
                     hash = _hashCodeCache[_root];
+                }
                 else
+                {
                     hash = Hashing.CombineHash(hash, _root.GetHashCode());
+                }
             }
 
             return hash;

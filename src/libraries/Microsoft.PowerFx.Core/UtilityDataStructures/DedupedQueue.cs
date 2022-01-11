@@ -10,7 +10,7 @@ namespace Microsoft.PowerFx.Core.UtilityDataStructures
         private readonly Queue<T> _itemQueue;
         private readonly HashSet<T> _itemSet;
 
-        public DedupedQueue() 
+        public DedupedQueue()
         {
             _itemQueue = new Queue<T>();
             _itemSet = new HashSet<T>();
@@ -22,7 +22,9 @@ namespace Microsoft.PowerFx.Core.UtilityDataStructures
             _itemSet = new HashSet<T>();
 
             foreach (var item in other)
+            {
                 Enqueue(item);
+            }
         }
 
         public DedupedQueue(int size)
@@ -36,7 +38,9 @@ namespace Microsoft.PowerFx.Core.UtilityDataStructures
         public void Enqueue(T item)
         {
             if (!_itemSet.Add(item))
+            {
                 return;
+            }
 
             _itemQueue.Enqueue(item);
         }

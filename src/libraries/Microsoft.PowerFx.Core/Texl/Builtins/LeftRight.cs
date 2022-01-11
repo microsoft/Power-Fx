@@ -18,16 +18,19 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class LeftRightScalarFunction : BuiltinFunction
     {
         public override bool RequiresErrorContext => true;
+
         public override bool IsSelfContained => true;
+
         public override bool SupportsParamCoercion => true;
 
         public LeftRightScalarFunction(bool isLeft)
             : base(isLeft ? "Left" : "Right", isLeft ? TexlStrings.AboutLeft : TexlStrings.AboutRight, FunctionCategories.Text, DType.String, 0, 2, 2, DType.String, DType.Number)
-        { }
+        {
+        }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
-            yield return new [] { TexlStrings.LeftRightArg1, TexlStrings.LeftRightArg2 };
+            yield return new[] { TexlStrings.LeftRightArg1, TexlStrings.LeftRightArg2 };
         }
     }
 
@@ -37,16 +40,19 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class LeftRightTableScalarFunction : BuiltinFunction
     {
         public override bool RequiresErrorContext => true;
+
         public override bool IsSelfContained => true;
+
         public override bool SupportsParamCoercion => true;
 
         public LeftRightTableScalarFunction(bool isLeft)
             : base(isLeft ? "Left" : "Right", isLeft ? TexlStrings.AboutLeftT : TexlStrings.AboutRightT, FunctionCategories.Table, DType.EmptyTable, 0, 2, 2, DType.EmptyTable, DType.Number)
-        { }
+        {
+        }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
-            yield return new [] { TexlStrings.LeftRightTArg1, TexlStrings.LeftRightArg2 };
+            yield return new[] { TexlStrings.LeftRightTArg1, TexlStrings.LeftRightArg2 };
         }
 
         public override string GetUniqueTexlRuntimeName(bool isPrefetching = false)
@@ -66,7 +72,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertValue(errors);
             Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
 
-            bool fValid = base.CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            var fValid = CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
             Contracts.Assert(returnType.IsTable);
 
             // Typecheck the input table
@@ -84,16 +90,19 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class LeftRightTableTableFunction : BuiltinFunction
     {
         public override bool RequiresErrorContext => true;
+
         public override bool IsSelfContained => true;
+
         public override bool SupportsParamCoercion => true;
 
         public LeftRightTableTableFunction(bool isLeft)
             : base(isLeft ? "Left" : "Right", isLeft ? TexlStrings.AboutLeftT : TexlStrings.AboutRightT, FunctionCategories.Table, DType.EmptyTable, 0, 2, 2, DType.EmptyTable, DType.EmptyTable)
-        { }
+        {
+        }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
-            yield return new [] { TexlStrings.LeftRightTArg1, TexlStrings.LeftRightArg2 };
+            yield return new[] { TexlStrings.LeftRightTArg1, TexlStrings.LeftRightArg2 };
         }
 
         public override string GetUniqueTexlRuntimeName(bool isPrefetching = false)
@@ -113,7 +122,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertValue(errors);
             Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
 
-            bool fValid = base.CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            var fValid = CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
             Contracts.Assert(returnType.IsTable);
 
             // Typecheck the input table
@@ -134,16 +143,19 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class LeftRightScalarTableFunction : BuiltinFunction
     {
         public override bool RequiresErrorContext => true;
+
         public override bool IsSelfContained => true;
+
         public override bool SupportsParamCoercion => true;
 
         public LeftRightScalarTableFunction(bool isLeft)
             : base(isLeft ? "Left" : "Right", isLeft ? TexlStrings.AboutLeftT : TexlStrings.AboutRightT, FunctionCategories.Table, DType.EmptyTable, 0, 2, 2, DType.String, DType.EmptyTable)
-        { }
+        {
+        }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
-            yield return new [] { TexlStrings.LeftRightArg1, TexlStrings.LeftRightArg2 };
+            yield return new[] { TexlStrings.LeftRightArg1, TexlStrings.LeftRightArg2 };
         }
 
         public override string GetUniqueTexlRuntimeName(bool isPrefetching = false)
@@ -163,7 +175,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertValue(errors);
             Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
 
-            bool fValid = base.CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            var fValid = CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
             Contracts.Assert(returnType.IsTable);
 
             // Typecheck the count table

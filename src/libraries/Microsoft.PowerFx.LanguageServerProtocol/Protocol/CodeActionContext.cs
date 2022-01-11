@@ -9,7 +9,8 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
     public class CodeActionContext
     {
         /// <summary>
-        /// ctor
+        /// Initializes a new instance of the <see cref="CodeActionContext"/> class.
+        /// ctor.
         /// </summary>
         public CodeActionContext()
         {

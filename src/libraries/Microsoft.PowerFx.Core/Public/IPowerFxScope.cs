@@ -18,7 +18,7 @@ namespace Microsoft.PowerFx.Core.Public
         CheckResult Check(string expression);
 
         /// <summary>
-        /// Provide intellisense for expression
+        /// Provide intellisense for expression.
         /// </summary>
         IIntellisenseResult Suggest(string expression, int cursorPosition);
     }

@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation.
+﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
 using Microsoft.PowerFx.Core.Lexer.Tokens;
@@ -13,7 +13,7 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
     {
         public readonly Identifier Ident;
 
-        public bool IsLhs { get { return Parent != null && Parent.AsDottedName() != null; } }
+        public bool IsLhs => Parent != null && Parent.AsDottedName() != null;
 
         public FirstNameNode(ref int idNext, Token tok, SourceList sourceList, Identifier ident)
             : base(ref idNext, tok, sourceList)
@@ -23,6 +23,7 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
 
             Ident = ident;
         }
+
         public FirstNameNode(ref int idNext, Token tok, Identifier ident)
             : this(ref idNext, tok, new SourceList(tok), ident)
         {
@@ -39,12 +40,12 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
             visitor.Visit(this);
         }
 
-        public override Result Accept<Result, Context>(TexlFunctionalVisitor<Result, Context> visitor, Context context)
+        public override TResult Accept<TResult, TContext>(TexlFunctionalVisitor<TResult, TContext> visitor, TContext context)
         {
             return visitor.Visit(this, context);
         }
 
-        public override NodeKind Kind { get { return NodeKind.FirstName; } }
+        public override NodeKind Kind => NodeKind.FirstName;
 
         public override FirstNameNode CastFirstName()
         {

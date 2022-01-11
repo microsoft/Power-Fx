@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation.
+﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
 namespace Microsoft.PowerFx.Core.Binding
@@ -7,7 +7,7 @@ namespace Microsoft.PowerFx.Core.Binding
     {
         // default(BindKind) will resolve to Unknown.
         Unknown,
-        _Min = Unknown,
+        Min = Unknown,
 
         // Global control entity.
         Control,
@@ -75,6 +75,6 @@ namespace Microsoft.PowerFx.Core.Binding
         // Global namespace, only used with fully qualified values
         QualifiedValue,
 
-        _Lim
+        Lim
     }
 }

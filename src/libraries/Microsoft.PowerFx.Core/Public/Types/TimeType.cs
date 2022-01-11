@@ -7,7 +7,8 @@ namespace Microsoft.PowerFx.Core.Public.Types
 {
     public class TimeType : FormulaType
     {
-        internal TimeType() : base(DType.Time)
+        internal TimeType()
+            : base(DType.Time)
         {
         }
 

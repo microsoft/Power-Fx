@@ -16,19 +16,22 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class LogFunction : BuiltinFunction
     {
         public override bool SupportsParamCoercion => true;
-        public override bool IsSelfContained => true;
-        public override bool HasPreciseErrors => true;
-        public override bool RequiresErrorContext => true;
 
+        public override bool IsSelfContained => true;
+
+        public override bool HasPreciseErrors => true;
+
+        public override bool RequiresErrorContext => true;
 
         public LogFunction()
             : base("Log", TexlStrings.AboutLog, FunctionCategories.MathAndStat, DType.Number, 0, 1, 2, DType.Number, DType.Number)
-        { }
+        {
+        }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
-            yield return new [] { TexlStrings.MathFuncArg1 };
-            yield return new [] { TexlStrings.MathFuncArg1, TexlStrings.LogBase };
+            yield return new[] { TexlStrings.MathFuncArg1 };
+            yield return new[] { TexlStrings.MathFuncArg1, TexlStrings.LogBase };
         }
     }
 
@@ -37,16 +40,19 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class LogTFunction : BuiltinFunction
     {
         public override bool SupportsParamCoercion => true;
+
         public override bool IsSelfContained => true;
+
         public override bool RequiresErrorContext => true;
 
         public LogTFunction()
             : base("Log", TexlStrings.AboutLogT, FunctionCategories.MathAndStat, DType.EmptyTable, 0, 1, 2)
-        { }
+        {
+        }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
-            yield return new [] { TexlStrings.MathFuncArg1 };
+            yield return new[] { TexlStrings.MathFuncArg1 };
         }
 
         public override string GetUniqueTexlRuntimeName(bool isPrefetching = false)
@@ -62,7 +68,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.Assert(args.Length == argTypes.Length);
             Contracts.AssertValue(errors);
 
-            bool fValid = base.CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            var fValid = base.CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
             fValid &= CheckAllParamsAreTypeOrSingleColumnTable(DType.Number, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
 
             return fValid;

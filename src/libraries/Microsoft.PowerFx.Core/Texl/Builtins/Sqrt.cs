@@ -14,7 +14,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public SqrtFunction()
             : base("Sqrt", TexlStrings.AboutSqrt, FunctionCategories.MathAndStat)
-        { }
+        {
+        }
     }
 
     // Sqrt(E:*[n])
@@ -25,6 +26,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public SqrtTableFunction()
             : base("Sqrt", TexlStrings.AboutSqrtT, FunctionCategories.Table)
-        { }
+        {
+        }
     }
 }

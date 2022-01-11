@@ -3,7 +3,7 @@
 
 namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
 {
-    public class CompletionParams: TextDocumentPositionParams
+    public class CompletionParams : TextDocumentPositionParams
     {
         public CompletionParams()
         {
@@ -13,7 +13,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
         /// <summary>
         /// The completion context. This is only available if the client specifies
         /// to send this using the client capability
-        /// `completion.contextSupport === true`
+        /// `completion.contextSupport === true`.
         /// </summary>
         public CompletionContext Context { get; set; }
     }

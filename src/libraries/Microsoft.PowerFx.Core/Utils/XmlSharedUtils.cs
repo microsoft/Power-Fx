@@ -24,10 +24,11 @@ namespace Microsoft.PowerFx.Core.Utils
             Contracts.AssertValue(element);
             Contracts.AssertValue(name);
 
-            XAttribute xattr = element.GetRequiredNonEmptyAttribute(name);
-            Guid guid;
-            if (!Guid.TryParse((string)xattr, out guid))
+            var xattr = element.GetRequiredNonEmptyAttribute(name);
+            if (!Guid.TryParse((string)xattr, out var guid))
+            {
                 throw new InvalidXmlException(string.Format(StringResources.Get("InvalidXml_AttributeValueInvalidGuid_AttrName_Value"), xattr.Name, xattr.Value), xattr);
+            }
 
             return guid;
         }
@@ -41,9 +42,11 @@ namespace Microsoft.PowerFx.Core.Utils
             Contracts.AssertValue(element);
             Contracts.AssertValue(name);
 
-            XAttribute xattr = element.GetRequiredAttribute(name);
+            var xattr = element.GetRequiredAttribute(name);
             if (string.IsNullOrEmpty(xattr.Value))
+            {
                 throw new InvalidXmlException(string.Format(StringResources.Get("InvalidXml_AttributeCannotBeEmpty_AttrName"), xattr.Name), xattr);
+            }
 
             return xattr;
         }
@@ -69,9 +72,11 @@ namespace Microsoft.PowerFx.Core.Utils
             Contracts.AssertValue(element);
             Contracts.AssertValue(name);
 
-            XAttribute xattr = element.Attribute(name);
+            var xattr = element.Attribute(name);
             if (xattr == null)
+            {
                 throw new InvalidXmlException(string.Format(StringResources.Get("InvalidXml_ElementMissingAttribute_ElemName_AttrName"), element.Name, name), element);
+            }
 
             return xattr;
         }
@@ -105,7 +110,7 @@ namespace Microsoft.PowerFx.Core.Utils
             Contracts.CheckValue(element, "element");
             Contracts.CheckValue(attributeName, "attributeName");
 
-            XAttribute attribute = element.Attribute(attributeName);
+            var attribute = element.Attribute(attributeName);
             if (attribute == null)
             {
                 value = null;
@@ -134,8 +139,7 @@ namespace Microsoft.PowerFx.Core.Utils
             Contracts.CheckValue(element, "element");
             Contracts.CheckValue(attributeName, "attributeName");
 
-            string attributeValue;
-            if (element.TryGetNonEmptyAttributeValue(attributeName, out attributeValue)
+            if (element.TryGetNonEmptyAttributeValue(attributeName, out var attributeValue)
                 && int.TryParse(attributeValue, out value))
             {
                 return true;
@@ -158,8 +162,7 @@ namespace Microsoft.PowerFx.Core.Utils
             Contracts.CheckValue(attributeName, "attributeName");
 
             value = false;
-            string attributeValue;
-            return element.TryGetNonEmptyAttributeValue(attributeName, out attributeValue) && bool.TryParse(attributeValue, out value);
+            return element.TryGetNonEmptyAttributeValue(attributeName, out var attributeValue) && bool.TryParse(attributeValue, out value);
         }
     }
 }

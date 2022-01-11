@@ -28,7 +28,7 @@ namespace Microsoft.PowerFx
 
         public override void Visit(FirstNameNode node)
         {
-            FirstNameInfo info = _binding.GetInfo(node);
+            var info = _binding.GetInfo(node);
 
             var name = node.Ident.Name.Value;
 

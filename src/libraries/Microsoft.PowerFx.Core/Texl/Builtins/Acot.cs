@@ -14,7 +14,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public AcotFunction()
             : base("Acot", TexlStrings.AboutAcot, FunctionCategories.MathAndStat)
-        { }
+        {
+        }
     }
 
     // Acot(E:*[n])
@@ -25,6 +26,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public AcotTableFunction()
             : base("Acot", TexlStrings.AboutAcotT, FunctionCategories.Table)
-        { }
+        {
+        }
     }
 }

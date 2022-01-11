@@ -6,7 +6,7 @@ using Microsoft.PowerFx.LanguageServerProtocol.Protocol;
 namespace Microsoft.PowerFx.Core
 {
     /// <summary>
-    /// Provides quick fix
+    /// Provides quick fix.
     /// </summary>
     public interface IPowerFxScopeQuickFix
     {

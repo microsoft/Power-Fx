@@ -10,7 +10,7 @@ using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Core.Syntax.Nodes
 {
-    /// Base class for all parse nodes.
+    // Base class for all parse nodes.
     internal abstract class TexlNode
     {
         private TexlNode _parent;
@@ -18,20 +18,18 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
         protected int _depth;
 
         public readonly int Id;
+
         public int MinChildID { get; protected set; }
 
         public readonly Token Token;
 
         public SourceList SourceList { get; private set; }
 
-        public int Depth { get { return _depth; } }
+        public int Depth => _depth;
 
         public TexlNode Parent
         {
-            get
-            {
-                return _parent;
-            }
+            get => _parent;
             set
             {
                 Contracts.Assert(_parent == null);
@@ -44,13 +42,14 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
             get
             {
                 if (_usesChains.HasValue)
+                {
                     return _usesChains.Value;
+                }
 
                 _usesChains = ChainTrackerVisitor.Run(this);
                 return _usesChains.Value;
             }
         }
-
 
         protected TexlNode(ref int idNext, Token primaryToken, SourceList sourceList)
         {
@@ -69,7 +68,7 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
 
         public abstract void Accept(TexlVisitor visitor);
 
-        public abstract Result Accept<Result, Context>(TexlFunctionalVisitor<Result, Context> visitor, Context context);
+        public abstract TResult Accept<TResult, TContext>(TexlFunctionalVisitor<TResult, TContext> visitor, TContext context);
 
         public abstract NodeKind Kind { get; }
 
@@ -86,13 +85,15 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
 
         public virtual Span GetCompleteSpan()
         {
-            return new Span(this.GetTextSpan());
+            return new Span(GetTextSpan());
         }
 
         public Span GetSourceBasedSpan()
         {
             if (SourceList.Tokens.Count() == 0)
+            {
                 return GetCompleteSpan();
+            }
 
             var start = SourceList.Tokens.First().Span.Min;
             var end = SourceList.Tokens.Last().Span.Lim;
@@ -259,7 +260,7 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
 
         internal TexlNode FindTopMostDottedParentOrSelf()
         {
-            TexlNode parent = this;
+            var parent = this;
 
             while (parent != null && parent.Parent != null && parent.Parent.Kind == NodeKind.DottedName)
             {
@@ -268,5 +269,5 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
 
             return parent;
         }
-   }
+    }
 }

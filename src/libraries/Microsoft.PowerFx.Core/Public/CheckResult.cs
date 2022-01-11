@@ -32,19 +32,20 @@ namespace Microsoft.PowerFx.Core.Public
         /// </summary>
         public ExpressionError[] Errors { get; set; }
 
-
         /// <summary>
-        /// Parsed expression, or null if IsSuccess is false
+        /// Parsed expression, or null if IsSuccess is false.
         /// </summary>
-        public IExpression Expression {  get; set; }
+        public IExpression Expression { get; set; }
 
-        public virtual bool IsSuccess => this.Errors == null;
+        public virtual bool IsSuccess => Errors == null;
 
         internal TexlBinding _binding;
 
         internal Formula _formula;
 
-        public CheckResult() { }
+        public CheckResult()
+        {
+        }
 
         internal CheckResult(IEnumerable<IDocumentError> errors, TexlBinding binding = null)
         {
@@ -56,7 +57,7 @@ namespace Microsoft.PowerFx.Core.Public
         {
             if (!IsSuccess)
             {
-                var msg = String.Join("\r\n", Errors.Select(err => err.ToString()).ToArray());
+                var msg = string.Join("\r\n", Errors.Select(err => err.ToString()).ToArray());
                 throw new InvalidOperationException($"Errors: " + msg);
             }
         }

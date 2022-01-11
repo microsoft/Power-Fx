@@ -24,14 +24,19 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationMetadata
 
             Schema = schema;
         }
-        
-        public Dictionary<DPath, DPath> ODataPathReplacementMap { get { return _compositeMetadata.ODataPathReplacementMap; } }
 
-        public SortOpMetadata SortDelegationMetadata { get { return _compositeMetadata.SortDelegationMetadata; } }
-        public FilterOpMetadata FilterDelegationMetadata { get { return _compositeMetadata.FilterDelegationMetadata; } }
-        public GroupOpMetadata GroupDelegationMetadata { get { return _compositeMetadata.GroupDelegationMetadata; } }
+        public Dictionary<DPath, DPath> ODataPathReplacementMap => _compositeMetadata.ODataPathReplacementMap;
+
+        public SortOpMetadata SortDelegationMetadata => _compositeMetadata.SortDelegationMetadata;
+
+        public FilterOpMetadata FilterDelegationMetadata => _compositeMetadata.FilterDelegationMetadata;
+
+        public GroupOpMetadata GroupDelegationMetadata => _compositeMetadata.GroupDelegationMetadata;
+
         public DType Schema { get; }
-        public DelegationCapability TableAttributes { get { return _compositeMetadata.TableAttributes; } }
-        public DelegationCapability TableCapabilities { get { return _compositeMetadata.TableCapabilities; } }
+
+        public DelegationCapability TableAttributes => _compositeMetadata.TableAttributes;
+
+        public DelegationCapability TableCapabilities => _compositeMetadata.TableCapabilities;
     }
 }

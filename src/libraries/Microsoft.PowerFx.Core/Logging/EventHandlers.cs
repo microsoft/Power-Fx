@@ -9,8 +9,11 @@ namespace Microsoft.PowerFx.Core.Logging
     internal sealed class EventHandlers
     {
         public event EventHandler<ITrackEventArgs> TrackEvent;
+
         public event EventHandler<ITrackEventArgs> ScenarioStartEvent;
+
         public event EventHandler<IEndScenarioEventArgs> ScenarioEndEvent;
+
         public event EventHandler<IEndScenarioEventArgs> FailScenarioEvent;
 
         internal void RaiseTrackEvent(string eventName, string serializedJson)

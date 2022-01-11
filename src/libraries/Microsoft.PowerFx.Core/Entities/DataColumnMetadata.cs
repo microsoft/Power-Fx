@@ -50,20 +50,4 @@ namespace Microsoft.PowerFx.Core.Entities
 
         public DType Type { get; }
     }
-
-    internal sealed class DataTableMetadata
-    {
-        public string DisplayName { get; }
-
-        public string Name { get; }
-
-        public DataTableMetadata(string name, string DisplayName)
-        {
-            Contracts.AssertNonEmpty(name);
-            Contracts.AssertNonEmpty(DisplayName);
-
-            Name = name;
-            this.DisplayName = DisplayName;
-        }
-    }
 }

@@ -3,7 +3,7 @@
 
 namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
 {
-    public class VersionedTextDocumentIdentifier: TextDocumentIdentifier
+    public class VersionedTextDocumentIdentifier : TextDocumentIdentifier
     {
         /// <summary>
         /// The version number of this document.

@@ -18,12 +18,15 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal abstract class IsBlankFunctionBase : BuiltinFunction
     {
         public override bool SupportsParamCoercion => true;
+
         public override bool IsSelfContained => true;
+
         public override DelegationCapability FunctionDelegationCapability => DelegationCapability.Null | DelegationCapability.Filter;
 
         public IsBlankFunctionBase(string name, TexlStrings.StringGetter description, FunctionCategories functionCategories, DType returnType, BigInteger maskLambdas, int arityMin, int arityMax)
             : base(name, description, functionCategories, returnType, maskLambdas, arityMin, arityMax)
-        { }
+        {
+        }
 
         public override bool CheckInvocation(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
@@ -34,11 +37,15 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertValue(errors);
 
             if (!base.CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap))
+            {
                 return false;
+            }
 
             // Option Set values need to be checked with their own function since they have a special return for "blank" values.
             if (argTypes[0].Kind == DKind.OptionSetValue)
+            {
                 return false;
+            }
 
             if (argTypes[0] is IExternalControlType controlType)
             {
@@ -50,7 +57,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 if (primaryOutputProperty != null)
                 {
                     if (nodeToCoercedTypeMap == null)
+                    {
                         nodeToCoercedTypeMap = new Dictionary<TexlNode, DType>();
+                    }
 
                     nodeToCoercedTypeMap.Add(args[0], primaryOutputProperty.GetOpaqueType());
                 }
@@ -68,7 +77,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public IsBlankFunction()
             : base(IsBlankInvariantFunctionName, TexlStrings.AboutIsBlank, FunctionCategories.Table | FunctionCategories.Information, DType.Boolean, 0, 1, 1)
-        { }
+        {
+        }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
@@ -82,12 +92,16 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertValue(metadata);
 
             if (binding.ErrorContainer.HasErrors(callNode))
+            {
                 return false;
+            }
 
             if (!CheckArgsCount(callNode, binding))
+            {
                 return false;
+            }
 
-            TexlNode[] args = callNode.Args.Children.VerifyValue();
+            var args = callNode.Args.Children.VerifyValue();
             var opStrategy = GetOpDelegationStrategy(BinaryOp.Equal, null);
 
             if (binding.IsFullRecordRowScopeAccess(args[0]))
@@ -95,8 +109,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 return GetDottedNameNodeDelegationStrategy().IsValidDottedNameNode(args[0] as DottedNameNode, binding, metadata, opStrategy);
             }
 
-            FirstNameNode node = args[0] as FirstNameNode;
-            if (node == null)
+            if (args[0] is not FirstNameNode node)
             {
                 var message = string.Format("Arg1 is not a firstname node, instead it is {0}", args[0].Kind);
                 AddSuggestionMessageToTelemetry(message, args[0], binding);
@@ -104,7 +117,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
 
             if (!binding.IsRowScope(node))
+            {
                 return false;
+            }
 
             var firstNameNodeValidationStrategy = GetFirstNameNodeDelegationStrategy();
             return firstNameNodeValidationStrategy.IsValidFirstNameNode(node, binding, opStrategy);
@@ -116,11 +131,13 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class IsBlankOptionSetValueFunction : BuiltinFunction
     {
         public override bool SupportsParamCoercion => true;
+
         public override bool IsSelfContained => true;
 
         public IsBlankOptionSetValueFunction()
             : base("IsBlank", TexlStrings.AboutIsBlank, FunctionCategories.Table | FunctionCategories.Information, DType.Boolean, 0, 1, 1, DType.OptionSetValue)
-        { }
+        {
+        }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {

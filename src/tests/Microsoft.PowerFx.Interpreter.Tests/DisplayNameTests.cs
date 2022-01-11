@@ -14,25 +14,25 @@ using Xunit;
 using Xunit.Sdk;
 
 namespace Microsoft.PowerFx.Interpreter.Tests
-{    
-    public class DisplayNameTests 
+{
+    public class DisplayNameTests
     {
         [Fact]
         public void CollisionsThrow()
         {
             var engine = new RecalcEngine();
-            RecordType r1 = new RecordType()
+            var r1 = new RecordType()
                 .Add(new NamedFormulaType("Num", FormulaType.Number, new DName("DisplayNum")));
 
             Assert.Throws<NameCollisionException>(() => r1.Add(new NamedFormulaType("DisplayNum", FormulaType.Date, "NoCollision")));
             Assert.Throws<NameCollisionException>(() => r1.Add(new NamedFormulaType("NoCollision", FormulaType.Date, "DisplayNum")));
             Assert.Throws<NameCollisionException>(() => r1.Add(new NamedFormulaType("NoCollision", FormulaType.Date, "Num")));
         }
-        
+
         [Fact]
         public void ImmutableDisplayNameProvider()
         {
-            RecordType r1 = new RecordType();
+            var r1 = new RecordType();
 
             var r2 = r1.Add(new NamedFormulaType("Logical", FormulaType.String, "Foo"));
             var r3 = r1.Add(new NamedFormulaType("Logical", FormulaType.String, "Bar"));
@@ -40,15 +40,13 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Assert.False(ReferenceEquals(r2._type.DisplayNameProvider, r3._type.DisplayNameProvider));
         }
 
-        
-        
         [Fact]
         public void DisableDisplayNames()
         {
-            RecordType r1 = new RecordType()
+            var r1 = new RecordType()
                 .Add(new NamedFormulaType("Logical", FormulaType.String, "Foo"));
 
-            RecordType r2 = new RecordType()
+            var r2 = new RecordType()
                 .Add(new NamedFormulaType("Other", FormulaType.String, "Foo"));
 
             Assert.IsType<SingleSourceDisplayNameProvider>(r1._type.DisplayNameProvider);
@@ -72,18 +70,20 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         public void ValidateDisplayNames(string inputExpression, string outputExpression, bool toDisplay)
         {
             var engine = new RecalcEngine();
-            RecordType r1 = new RecordType()
+            var r1 = new RecordType()
                 .Add(new NamedFormulaType("Num", FormulaType.Number, "DisplayNum"))
                 .Add(new NamedFormulaType("B", FormulaType.Boolean, "DisplayB"))
-                .Add(new NamedFormulaType("Nested", new TableType()
-                    .Add(new NamedFormulaType("Inner", FormulaType.Number, "InnerDisplay")), "NestedDisplay"));
+                .Add(new NamedFormulaType(
+                    "Nested", 
+                    new TableType().Add(new NamedFormulaType("Inner", FormulaType.Number, "InnerDisplay")), 
+                    "NestedDisplay"));
 
             if (toDisplay)
             {
                 var outDisplayExpression = engine.GetDisplayExpression(inputExpression, r1);
                 Assert.Equal(outputExpression, outDisplayExpression);
             }
-            else 
+            else
             {
                 var outInvariantExpression = engine.GetInvariantExpression(outputExpression, r1);
                 Assert.Equal(outputExpression, outInvariantExpression);
@@ -94,7 +94,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         public void ConvertToDisplayNamesNoNames()
         {
             var engine = new RecalcEngine();
-            RecordType r1 = new RecordType()
+            var r1 = new RecordType()
                 .Add(new NamedFormulaType("Num", FormulaType.Number))
                 .Add(new NamedFormulaType("B", FormulaType.Boolean));
 
@@ -107,7 +107,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         public void ConvertToInvariantNamesNoNames()
         {
             var engine = new RecalcEngine();
-            RecordType r1 = new RecordType()
+            var r1 = new RecordType()
                 .Add(new NamedFormulaType("Num", FormulaType.Number))
                 .Add(new NamedFormulaType("B", FormulaType.Boolean));
 

@@ -17,7 +17,8 @@ namespace Microsoft.PowerFx.Core.Public.Values
         public override IEnumerable<NamedValue> Fields =>
             from field in _fields select new NamedValue(field);
 
-        public InMemoryRecordValue(IRContext irContext, IEnumerable<NamedValue> fields) : base(irContext)
+        public InMemoryRecordValue(IRContext irContext, IEnumerable<NamedValue> fields)
+            : base(irContext)
         {
             Contract.Assert(IRContext.ResultType is RecordType);
             var recordType = (RecordType)IRContext.ResultType;
@@ -34,10 +35,12 @@ namespace Microsoft.PowerFx.Core.Public.Values
             {
                 return new InMemoryRecordValue(IRContext.NotInSource(fieldType), recordValue.Fields);
             }
+
             if (fieldValue is TableValue tableValue)
             {
                 return new InMemoryTableValue(IRContext.NotInSource(fieldType), tableValue.Rows);
             }
+
             return fieldValue;
         }
     }

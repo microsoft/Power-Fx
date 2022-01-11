@@ -5,12 +5,13 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
 {
     /// <summary>
     /// Code action object model.
-    /// https://docs.microsoft.com/en-us/dotnet/api/microsoft.visualstudio.languageserver.protocol.codeaction?view=visualstudiosdk-2019
+    /// https://docs.microsoft.com/en-us/dotnet/api/microsoft.visualstudio.languageserver.protocol.codeaction?view=visualstudiosdk-2019.
     /// </summary>
     public class CodeAction
     {
         /// <summary>
-        /// ctor
+        /// Initializes a new instance of the <see cref="CodeAction"/> class.
+        /// ctor.
         /// </summary>
         public CodeAction()
         {

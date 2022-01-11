@@ -20,15 +20,21 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class AsTypeFunction : BuiltinFunction
     {
         public const string AsTypeInvariantFunctionName = "AsType";
+
         public override bool RequiresErrorContext => true;
+
         public override bool IsAsync => true;
+
         public override bool CanReturnExpandInfo => true;
+
         public override bool IsSelfContained => true;
+
         public override bool SupportsParamCoercion => false;
 
         public AsTypeFunction()
             : base(AsTypeInvariantFunctionName, TexlStrings.AboutAsType, FunctionCategories.Table, DType.EmptyRecord, 0, 2, 2, DType.Error /* Polymorphic type is checked in override */, DType.EmptyTable)
-        { }
+        {
+        }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
@@ -44,9 +50,10 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.Assert(argTypes.Length == 2);
             Contracts.AssertValue(errors);
 
-
             if (!base.CheckInvocation(binding, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap))
+            {
                 return false;
+            }
 
             // Check if first argument is poly type or an activity pointer
             if (!argTypes[0].IsPolymorphic && !argTypes[0].IsActivityPointer)
@@ -56,11 +63,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
 
             // Check if table arg referrs to a connected data source.
-            TexlNode tableArg = args[1];
-            FirstNameInfo tableInfo;
-            IExternalDataSource tableDsInfo;
-            if (!binding.TryGetFirstNameInfo(tableArg.Id, out tableInfo) ||
-                (tableDsInfo = (tableInfo.Data as IExternalDataSource)) == null ||
+            var tableArg = args[1];
+            if (!binding.TryGetFirstNameInfo(tableArg.Id, out var tableInfo) ||
+                tableInfo.Data is not IExternalDataSource tableDsInfo ||
                 !(tableDsInfo is IExternalTabularDataSource))
             {
                 errors.EnsureError(tableArg, TexlStrings.ErrAsTypeAndIsTypeExpectConnectedDataSource);
@@ -90,7 +95,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         {
             Contracts.AssertValue(args);
             Contracts.AssertAllValues(args);
-            Contracts.Assert(0 <= paramIndex && paramIndex < args.Length);
+            Contracts.Assert(paramIndex >= 0 && paramIndex < args.Length);
             Contracts.AssertValue(binding);
             Contracts.Assert(binding.IsPageable(args[paramIndex].VerifyValue()));
 

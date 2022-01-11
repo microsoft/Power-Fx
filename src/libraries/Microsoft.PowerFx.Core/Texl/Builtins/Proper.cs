@@ -13,9 +13,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class ProperFunction : StringOneArgFunction
     {
         public override bool HasPreciseErrors => true;
+
         public ProperFunction()
             : base("Proper", TexlStrings.AboutProper, FunctionCategories.Text)
-        { }
+        {
+        }
 
         public override bool IsRowScopedServerDelegatable(CallNode callNode, TexlBinding binding, OperationCapabilityMetadata metadata)
         {
@@ -27,8 +29,10 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class ProperTFunction : StringOneArgTableFunction
     {
         public override bool HasPreciseErrors => true;
+
         public ProperTFunction()
             : base("Proper", TexlStrings.AboutProperT, FunctionCategories.Table)
-        { }
+        {
+        }
     }
 }

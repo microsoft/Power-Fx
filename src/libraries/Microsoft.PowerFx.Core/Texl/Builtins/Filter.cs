@@ -20,7 +20,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Corresponding DAX function: Filter
     internal sealed class FilterFunction : FilterFunctionBase
     {
-        public override bool RequiresErrorContext { get { return true; } }
+        public override bool RequiresErrorContext => true;
 
         public FilterFunction()
             : base("Filter", TexlStrings.AboutFilter, FunctionCategories.Table, DType.EmptyTable, -2, 2, int.MaxValue, DType.EmptyTable)
@@ -28,7 +28,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             ScopeInfo = new FunctionScopeInfo(this, acceptsLiteralPredicates: false);
         }
 
-        public override bool SupportsParamCoercion { get { return true; } }
+        public override bool SupportsParamCoercion => true;
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
@@ -41,7 +41,10 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures(int arity)
         {
             if (arity > 2)
+            {
                 return GetGenericSignatures(arity, TexlStrings.FilterArg1, TexlStrings.FilterArg2);
+            }
+
             return base.GetSignatures(arity);
         }
 
@@ -52,13 +55,14 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.Assert(args.Length == argTypes.Length);
             Contracts.AssertValue(errors);
             nodeToCoercedTypeMap = null;
-            int viewCount = 0;
+            var viewCount = 0;
 
-            bool fArgsValid = base.CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            var fArgsValid = CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
 
             var dataSourceVisitor = new ViewFilterDataSourceVisitor(binding);
+
             // Ensure that all the args starting at index 1 are booleans or view
-            for (int i = 1; i < args.Length; i++)
+            for (var i = 1; i < args.Length; i++)
             {
                 if (argTypes[i].Kind == DKind.ViewValue)
                 {
@@ -72,7 +76,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
                     // Use the visitor to get the datasource info and if a view was already used anywhere in the node tree.
                     args[0].Accept(dataSourceVisitor);
-                    var dataSourceInfo = dataSourceVisitor.cdsDataSourceInfo;
+                    var dataSourceInfo = dataSourceVisitor.CdsDataSourceInfo;
 
                     if (dataSourceVisitor.ContainsViewFilter)
                     {
@@ -113,8 +117,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
 
             // The first Texl function arg determines the cursor type, the scope type for the lambda params, and the return type.
-            DType typeScope;
-            fArgsValid &= ScopeInfo.CheckInput(args[0], argTypes[0], errors, out typeScope);
+            fArgsValid &= ScopeInfo.CheckInput(args[0], argTypes[0], errors, out var typeScope);
 
             Contracts.Assert(typeScope.IsRecord);
             returnType = typeScope.ToTable();
@@ -132,12 +135,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertValue(binding);
 
             if (!CheckArgsCount(callNode, binding))
+            {
                 return false;
+            }
 
-            IExternalDataSource dataSource;
             FilterOpMetadata metadata = null;
-            IDelegationMetadata delegationMetadata = null;
-            if (TryGetEntityMetadata(callNode, binding, out delegationMetadata))
+            if (TryGetEntityMetadata(callNode, binding, out IDelegationMetadata delegationMetadata))
             {
                 if (!binding.Document.Properties.EnabledFeatures.IsEnhancedDelegationEnabled ||
                     !TryGetValidDataSourceForDelegation(callNode, binding, DelegationCapability.ArrayLookup, out _))
@@ -150,18 +153,23 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
             else
             {
-                if (!TryGetValidDataSourceForDelegation(callNode, binding, FunctionDelegationCapability, out dataSource))
+                if (!TryGetValidDataSourceForDelegation(callNode, binding, FunctionDelegationCapability, out var dataSource))
+                {
                     return false;
+                }
 
                 metadata = dataSource.DelegationMetadata.FilterDelegationMetadata;
             }
 
-            TexlNode[] args = callNode.Args.Children.VerifyValue();
+            var args = callNode.Args.Children.VerifyValue();
+
             // Validate for each predicate node.
-            for (int i = 1; i < args.Length; i++)
+            for (var i = 1; i < args.Length; i++)
             {
                 if (!IsValidDelegatableFilterPredicateNode(args[i], binding, metadata))
+                {
                     return false;
+                }
             }
 
             return true;

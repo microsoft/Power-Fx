@@ -17,13 +17,14 @@ namespace Microsoft.PowerFx.Core.Types.Enums
         private readonly Dictionary<string, string> _valuesInvariantToDisplayName;
 
         public DType EnumType { get; }
+
         public IEnumerable<string> LocalizedEnumValues => _valuesLocToInvariant.Keys;
 
         /// <summary>
-        /// The variant name for the enum
+        /// The variant name for the enum.
         /// </summary>
         public string Name { get; set; }
-        
+
         public string InvariantName { get; set; }
 
         public EnumSymbol(EnumStore store, DName name, DName invariantName, DType invariantType)
@@ -42,24 +43,27 @@ namespace Microsoft.PowerFx.Core.Types.Enums
 
             foreach (var typedName in EnumType.GetNames(DPath.Root))
             {
-                string invName = typedName.Name.Value;
+                var invName = typedName.Name.Value;
 
-                string locName;
-                if (!StringResources.TryGet($"{InvariantName}_{typedName.Name.Value}_Name", out locName))
+                if (!StringResources.TryGet($"{InvariantName}_{typedName.Name.Value}_Name", out var locName))
+                {
                     locName = invName;
+                }
 
                 Contracts.Assert(DName.IsValidDName(invName));
                 _valuesInvariantToLoc[invName] = locName;
                 _valuesLocToInvariant[locName] = invName;
 
-                string displayName;
-                if (!StringResources.TryGet($"{InvariantName}_{typedName.Name.Value}_DisplayName", out displayName))
+                if (!StringResources.TryGet($"{InvariantName}_{typedName.Name.Value}_DisplayName", out var displayName))
+                {
                     displayName = locName;
+                }
 
-                string custDisplayName;
-                string entityNameValue = name.Value;
-                if (!store.TryGetLocalizedEnumValue(entityNameValue, invName, out custDisplayName))
+                var entityNameValue = name.Value;
+                if (!store.TryGetLocalizedEnumValue(entityNameValue, invName, out var custDisplayName))
+                {
                     custDisplayName = displayName;
+                }
 
                 _valuesInvariantToDisplayName[invName] = custDisplayName;
             }
@@ -67,7 +71,7 @@ namespace Microsoft.PowerFx.Core.Types.Enums
 
         /// <summary>
         /// Look up an enum value by its locale-specific name.
-        /// For example, locName="Droit" --> invName="Right", value="right"
+        /// For example, locName="Droit" --> invName="Right", value="right".
         /// </summary>
         public bool TryLookupValueByLocName(string locName, out string invName, out object value)
         {
@@ -82,10 +86,10 @@ namespace Microsoft.PowerFx.Core.Types.Enums
 
             return EnumType.TryGetEnumValue(new DName(invName), out value);
         }
-        
+
         /// <summary>
         /// Get the invariant enum value name corresponding to the given locale-specific name.
-        /// For example, locName="Droit" --> invName="Right"For example, locName="Droit" --> invName="Right"
+        /// For example, locName="Droit" --> invName="Right"For example, locName="Droit" --> invName="Right".
         /// </summary>
         public bool TryGetInvariantValueName(string locName, out string invName)
         {

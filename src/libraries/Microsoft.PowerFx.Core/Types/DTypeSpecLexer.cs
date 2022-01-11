@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation.
+﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
 using System.Text;
@@ -32,7 +32,9 @@ namespace Microsoft.PowerFx.Core.Types
         public bool TryNextToken(out string token)
         {
             while (!Eol && CharacterUtils.IsSpace(CurChar))
+            {
                 ++_cursor;
+            }
 
             if (Eol)
             {
@@ -48,17 +50,19 @@ namespace Microsoft.PowerFx.Core.Types
             }
             else
             {
-                StringBuilder tok = new StringBuilder();
+                var tok = new StringBuilder();
 
-                char quote = '0';
+                var quote = '0';
                 while (!Eol)
                 {
-                    char c = CurChar;
+                    var c = CurChar;
                     if ((c == '"' && (quote == '"' || quote == '0')) ||
                         (c == '\'' && (quote == '\'' || quote == '0')))
                     {
                         if (quote == '0')
+                        {
                             quote = c;
+                        }
                         else
                         {
                             tok.Append(c);
@@ -71,11 +75,14 @@ namespace Microsoft.PowerFx.Core.Types
                                 quote = '0';
                                 break;
                             }
+
                             // else we let the fall-through logic append c once more.
                         }
                     }
                     else if ((quote == '0') && (CharacterUtils.IsSpace(c) || punctuators.IndexOf(c) >= 0))
+                    {
                         break;
+                    }
 
                     tok.Append(c);
                     ++_cursor;
@@ -91,7 +98,9 @@ namespace Microsoft.PowerFx.Core.Types
             }
 
             while (!Eol && CharacterUtils.IsSpace(CurChar))
+            {
                 ++_cursor;
+            }
 
             return true;
         }

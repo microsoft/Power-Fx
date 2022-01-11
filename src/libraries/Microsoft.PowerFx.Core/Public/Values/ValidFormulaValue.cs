@@ -13,9 +13,9 @@ namespace Microsoft.PowerFx.Core.Public.Values
     /// </summary>
     public abstract class ValidFormulaValue : FormulaValue
     {
-        internal ValidFormulaValue(IRContext irContext) : base(irContext)
+        internal ValidFormulaValue(IRContext irContext)
+            : base(irContext)
         {
-
         }
     }
 }

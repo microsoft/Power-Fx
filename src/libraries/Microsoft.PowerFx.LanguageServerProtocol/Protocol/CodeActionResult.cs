@@ -4,7 +4,7 @@
 namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
 {
     /// <summary>
-    /// Code action response (ex. Quick fix)
+    /// Code action response (ex. Quick fix).
     /// </summary>
     public class CodeActionResult
     {

@@ -15,6 +15,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public MinMaxFunction(bool isMin)
             : base(isMin ? "Min" : "Max", isMin ? TexlStrings.AboutMin : TexlStrings.AboutMax, FunctionCategories.MathAndStat)
-        { }
+        {
+        }
     }
 }

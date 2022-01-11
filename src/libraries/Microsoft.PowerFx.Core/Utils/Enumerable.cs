@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation.
+﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 #pragma warning disable 420
 
@@ -25,7 +25,10 @@ namespace Microsoft.PowerFx.Core.Utils
             get
             {
                 if (_instance == null)
+                {
                     Interlocked.CompareExchange(ref _instance, new EmptyEnumerator<T>(), null);
+                }
+
                 return _instance;
             }
         }
@@ -40,13 +43,13 @@ namespace Microsoft.PowerFx.Core.Utils
             return this;
         }
 
-        T IEnumerator<T>.Current { get { throw Contracts.Except(); } }
+        T IEnumerator<T>.Current => throw Contracts.Except();
 
         void IDisposable.Dispose()
         {
         }
 
-        object System.Collections.IEnumerator.Current { get { throw Contracts.Except(); } }
+        object System.Collections.IEnumerator.Current => throw Contracts.Except();
 
         bool System.Collections.IEnumerator.MoveNext()
         {
@@ -94,6 +97,6 @@ namespace Microsoft.PowerFx.Core.Utils
 
         public static int FindIndex<T>(this IEnumerable<T> list, Predicate<T> predicate) => list.Select((item, index) => predicate(item) ? index : -1).Where(i => i != -1).DefaultIfEmpty(-1).First();
 
-        public static IEnumerable<T> OrEmpty<T>(this IEnumerable<T> list) => list ?? EnumerableUtils.Yield<T>();
+        public static IEnumerable<T> OrEmpty<T>(this IEnumerable<T> list) => list ?? Yield<T>();
     }
 }

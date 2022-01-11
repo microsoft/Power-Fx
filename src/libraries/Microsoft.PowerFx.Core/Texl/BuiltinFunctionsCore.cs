@@ -13,10 +13,7 @@ namespace Microsoft.PowerFx.Core.Texl
     // - just functions that are ported over to Language.Core
     internal class BuiltinFunctionsCore
     {
-        public static IEnumerable<TexlFunction> BuiltinFunctionsLibrary
-        {
-            get { return _library; }
-        }
+        public static IEnumerable<TexlFunction> BuiltinFunctionsLibrary => _library;
 
         private static readonly List<TexlFunction> _library = new List<TexlFunction>(200);
 
@@ -61,7 +58,7 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction DateDiff = _library.Append(new DateDiffFunction());
         public static readonly TexlFunction DateDiffT = _library.Append(new DateDiffTFunction());
         public static readonly TexlFunction DateTimeValue = _library.Append(new DateTimeValueFunction());
-        public static readonly TexlFunction DateValue = _library.Append(new DateValueFunction());        
+        public static readonly TexlFunction DateValue = _library.Append(new DateValueFunction());
         public static readonly TexlFunction Day = _library.Append(new DayFunction());
         public static readonly TexlFunction Degrees = _library.Append(new DegreesFunction());
         public static readonly TexlFunction DegreesT = _library.Append(new DegreesTableFunction());

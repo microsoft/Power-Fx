@@ -18,7 +18,8 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
     {
         private readonly BinaryOpNode _binaryOpNode;
 
-        public InOpDelegationStrategy(BinaryOpNode node, TexlFunction function) : base(BinaryOp.In, function)
+        public InOpDelegationStrategy(BinaryOpNode node, TexlFunction function)
+            : base(BinaryOp.In, function)
         {
             Contracts.AssertValue(node);
             Contracts.Assert(node.Op == BinaryOp.In);
@@ -32,27 +33,33 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
             Contracts.AssertValue(metadata);
             Contracts.AssertValue(binding);
 
-            BinaryOpNode binaryOpNode = node?.AsBinaryOp();
+            var binaryOpNode = node?.AsBinaryOp();
             if (binaryOpNode == null)
+            {
                 return false;
+            }
 
             var isRHSDelegableTable = IsRHSDelegableTable(binding, binaryOpNode, metadata);
 
             DName columnName = default;
             FirstNameInfo info = null;
 
-            bool isFullyQualifiedFieldAccess = CheckForFullyQualifiedFieldAccess(isRHSDelegableTable, binaryOpNode, binding, node, ref columnName, ref info);
+            var isFullyQualifiedFieldAccess = CheckForFullyQualifiedFieldAccess(isRHSDelegableTable, binaryOpNode, binding, node, ref columnName, ref info);
             if (!isFullyQualifiedFieldAccess)
+            {
                 return false;
+            }
 
-            bool isRowScopedOrLambda = IsRowScopedOrLambda(binding, node, info, columnName, metadata);
+            var isRowScopedOrLambda = IsRowScopedOrLambda(binding, node, info, columnName, metadata);
             if (!isRowScopedOrLambda)
+            {
                 return false;
+            }
 
             return base.IsSupportedOpNode(node, metadata, binding);
         }
 
-        public bool IsRHSDelegableTable(TexlBinding binding, BinaryOpNode binaryOpNode, OperationCapabilityMetadata metadata) 
+        public bool IsRHSDelegableTable(TexlBinding binding, BinaryOpNode binaryOpNode, OperationCapabilityMetadata metadata)
         {
             Contracts.AssertValue(binding);
             Contracts.AssertValue(binaryOpNode);
@@ -63,9 +70,9 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
             var hasEnhancedDelegation = binding.Document.Properties.EnabledFeatures.IsEnhancedDelegationEnabled;
             var isColumn = rightNodeType?.IsColumn == true;
             var isDelegationSupportedByTable = metadata.IsDelegationSupportedByTable(DelegationCapability.CdsIn);
-            var HasLeftFirstNameNodeOrIsFullRecordRowScopeAccess = binaryOpNode.Left?.AsFirstName() != null || binding.IsFullRecordRowScopeAccess(binaryOpNode.Left);
+            var hasLeftFirstNameNodeOrIsFullRecordRowScopeAccess = binaryOpNode.Left?.AsFirstName() != null || binding.IsFullRecordRowScopeAccess(binaryOpNode.Left);
 
-            return hasEnhancedDelegation && isColumn && isDelegationSupportedByTable && HasLeftFirstNameNodeOrIsFullRecordRowScopeAccess;
+            return hasEnhancedDelegation && isColumn && isDelegationSupportedByTable && hasLeftFirstNameNodeOrIsFullRecordRowScopeAccess;
         }
 
         public bool CheckForFullyQualifiedFieldAccess(bool isRHSDelegableTable, BinaryOpNode binaryOpNode, TexlBinding binding, TexlNode node, ref DName columnName, ref FirstNameInfo info)
@@ -90,7 +97,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
             }
             else
             {
-                info = binding.GetInfo(firstNameNode); 
+                info = binding.GetInfo(firstNameNode);
                 if (info == null)
                 {
                     SuggestDelegationHint(node, binding, TexlStrings.SuggestRemoteExecutionHint_InOpRhs);
@@ -98,6 +105,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
                     TrackingProvider.Instance.AddSuggestionMessage(FormatTelemetryMessage($"RHS unbound delegation target in rule: {structure}"), _binaryOpNode.Right, binding);
                     return false;
                 }
+
                 columnName = info.Name;
             }
 
@@ -122,6 +130,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
             }
 
             IDelegationMetadata columnMetadata = info.Data as DelegationMetadata.DelegationMetadata;
+
             // For this to be delegable, rhs needs to be a column that belongs to innermost scoped delegable datasource.
             if (columnMetadata == null || info.UpCount != 0)
             {
@@ -136,7 +145,6 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
                 !columnMetadata.FilterDelegationMetadata.IsDelegationSupportedByColumn(columnPath, DelegationCapability.IndexOf | DelegationCapability.GreaterThan) &&
                 !columnMetadata.FilterDelegationMetadata.IsDelegationSupportedByColumn(columnPath, DelegationCapability.SubStringOf | DelegationCapability.Equal))
             {
-
                 SuggestDelegationHintAndAddTelemetryMessage(node, binding, FormatTelemetryMessage("Not supported by column."), TexlStrings.OpNotSupportedByColumnSuggestionMessage_OpNotSupportedByColumn, CharacterUtils.MakeSafeForFormatString(columnName.Value));
                 return false;
             }

@@ -18,7 +18,8 @@ namespace Microsoft.PowerFx.Core.Public.Values
 
         public override IEnumerable<DValue<RecordValue>> Rows => _records;
 
-        internal InMemoryTableValue(IRContext irContext, IEnumerable<DValue<RecordValue>> records) : base(irContext)
+        internal InMemoryTableValue(IRContext irContext, IEnumerable<DValue<RecordValue>> records)
+            : base(irContext)
         {
             Contract.Assert(IRContext.ResultType is TableType);
             var tableType = (TableType)IRContext.ResultType;

@@ -6,7 +6,9 @@ namespace Microsoft.PowerFx.Core.IR.Nodes
     internal sealed class BooleanLiteralNode : IntermediateNode
     {
         public readonly bool LiteralValue;
-        public BooleanLiteralNode(IRContext irContext, bool value) : base(irContext)
+
+        public BooleanLiteralNode(IRContext irContext, bool value)
+            : base(irContext)
         {
             LiteralValue = value;
         }

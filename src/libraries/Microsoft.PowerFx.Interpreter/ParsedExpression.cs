@@ -19,7 +19,6 @@ namespace Microsoft.PowerFx
             _cultureInfo = cultureInfo ?? CultureInfo.CurrentCulture;
         }
 
-
         public FormulaValue Eval(RecordValue parameters)
         {
             var ev2 = new EvalVisitor(_cultureInfo);
