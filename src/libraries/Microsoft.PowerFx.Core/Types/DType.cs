@@ -160,7 +160,7 @@ namespace Microsoft.PowerFx.Core.Types
 
         public DType(DKind kind)
         {
-            Contracts.Assert(kind >= DKind.Min && kind < DKind.Lim);
+            Contracts.Assert(kind >= DKind._Min && kind < DKind._Lim);
 
             Kind = kind;
             TypeTree = default;
@@ -216,7 +216,7 @@ namespace Microsoft.PowerFx.Core.Types
         // Constructor for aggregate types (record, table)
         public DType(DKind kind, TypeTree tree, bool isFile = false, bool isLargeImage = false)
         {
-            Contracts.Assert(kind >= DKind.Min && kind < DKind.Lim);
+            Contracts.Assert(kind >= DKind._Min && kind < DKind._Lim);
             tree.AssertValid();
             Contracts.Assert(tree.IsEmpty || kind == DKind.Table || kind == DKind.Record);
 
@@ -240,7 +240,7 @@ namespace Microsoft.PowerFx.Core.Types
         // Constructor for enum types
         public DType(DKind superkind, ValueTree enumTree)
         {
-            Contracts.Assert(superkind >= DKind.Min && superkind < DKind.Lim);
+            Contracts.Assert(superkind >= DKind._Min && superkind < DKind._Lim);
 
             Kind = DKind.Enum;
             TypeTree = default;
@@ -472,13 +472,13 @@ namespace Microsoft.PowerFx.Core.Types
         [Conditional("DEBUG")]
         internal void AssertValid()
         {
-            Contracts.Assert(Kind >= DKind.Min && Kind < DKind.Lim);
+            Contracts.Assert(Kind >= DKind._Min && Kind < DKind._Lim);
 #if DEBUG
             TypeTree.AssertValid();
 #endif
             Contracts.Assert(TypeTree.IsEmpty || Kind == DKind.Table || Kind == DKind.Record || Kind == DKind.Control || Kind == DKind.DataEntity || Kind == DKind.Attachment || Kind == DKind.File || Kind == DKind.LargeImage || Kind == DKind.OptionSet || Kind == DKind.OptionSetValue || Kind == DKind.View || Kind == DKind.ViewValue);
             Contracts.Assert(ValueTree.IsEmpty || Kind == DKind.Enum);
-            Contracts.Assert(Kind != DKind.Enum || (EnumSuperkind >= DKind.Min && EnumSuperkind < DKind.Lim && EnumSuperkind != DKind.Enum));
+            Contracts.Assert(Kind != DKind.Enum || (EnumSuperkind >= DKind._Min && EnumSuperkind < DKind._Lim && EnumSuperkind != DKind.Enum));
             Contracts.Assert((Metadata != null) == (Kind == DKind.Metadata));
             Contracts.Assert((_attachmentType != null) == (Kind == DKind.Attachment));
 #if DEBUG
@@ -498,7 +498,7 @@ namespace Microsoft.PowerFx.Core.Types
 
         public DKind Kind { get; }
 
-        public bool IsValid => Kind >= DKind.Min && Kind < DKind.Lim;
+        public bool IsValid => Kind >= DKind._Min && Kind < DKind._Lim;
 
         public bool IsUnknown => Kind == DKind.Unknown;
 
@@ -528,7 +528,7 @@ namespace Microsoft.PowerFx.Core.Types
 
         public bool IsAggregate => Kind == DKind.Table || Kind == DKind.Record || Kind == DKind.ObjNull;
 
-        public bool IsPrimitive => (Kind >= DKind.MinPrimitive && Kind < DKind.LimPrimitive) || Kind == DKind.ObjNull;
+        public bool IsPrimitive => (Kind >= DKind._MinPrimitive && Kind < DKind._LimPrimitive) || Kind == DKind.ObjNull;
 
         private readonly bool _isFile;
 
@@ -899,7 +899,7 @@ namespace Microsoft.PowerFx.Core.Types
         /// <returns>String representation of DType.Kind.</returns>
         public string GetKindString()
         {
-            if (Kind == DKind.MinPrimitive)
+            if (Kind == DKind._MinPrimitive)
             {
                 return "Boolean";
             }
@@ -909,7 +909,7 @@ namespace Microsoft.PowerFx.Core.Types
                 return "Text";
             }
 
-            if (Kind == DKind.LimPrimitive)
+            if (Kind == DKind._LimPrimitive)
             {
                 return "Control";
             }
@@ -1383,7 +1383,7 @@ namespace Microsoft.PowerFx.Core.Types
         public DType DropAllOfKind(ref bool fError, DPath path, DKind kind)
         {
             AssertValid();
-            Contracts.Assert(kind >= DKind.Min && kind < DKind.Lim);
+            Contracts.Assert(kind >= DKind._Min && kind < DKind._Lim);
 
             fError |= !TryGetType(path, out var typeOuter);
             if (!typeOuter.IsAggregate)
@@ -1451,7 +1451,7 @@ namespace Microsoft.PowerFx.Core.Types
         public DType DropAllOfKindNested(ref bool fError, DPath path, DKind kind)
         {
             AssertValid();
-            Contracts.Assert(kind >= DKind.Min && kind < DKind.Lim);
+            Contracts.Assert(kind >= DKind._Min && kind < DKind._Lim);
 
             fError |= !TryGetType(path, out var typeOuter);
             if (!typeOuter.IsAggregate)
@@ -2081,8 +2081,8 @@ namespace Microsoft.PowerFx.Core.Types
 
         private static bool IsSuperKind(DKind baseKind, DKind kind)
         {
-            Contracts.Assert(baseKind >= DKind.Min && baseKind < DKind.Lim);
-            Contracts.Assert(kind >= DKind.Min && kind < DKind.Lim);
+            Contracts.Assert(baseKind >= DKind._Min && baseKind < DKind._Lim);
+            Contracts.Assert(kind >= DKind._Min && kind < DKind._Lim);
 
             if (baseKind == kind)
             {
@@ -2182,7 +2182,7 @@ namespace Microsoft.PowerFx.Core.Types
                 }
             }
 
-            Contracts.Assert(type1Superkind != DKind.Enum && type1Superkind >= DKind.MinPrimitive && type1Superkind < DKind.LimPrimitive);
+            Contracts.Assert(type1Superkind != DKind.Enum && type1Superkind >= DKind._MinPrimitive && type1Superkind < DKind._LimPrimitive);
 
             var type = new DType(type1Superkind);
 

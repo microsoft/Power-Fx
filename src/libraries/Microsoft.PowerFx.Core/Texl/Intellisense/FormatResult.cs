@@ -5,11 +5,13 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
 {
     internal sealed class FormatResult
     {
-        public string ResultText { get; }
+#pragma warning disable SA1300 // Element should begin with upper-case letter
+        public string resultText { get; }
+#pragma warning restore SA1300 // Element should begin with upper-case letter
 
         public FormatResult(string text)
         {
-            ResultText = text;
+            resultText = text;
         }
     }
 }
