@@ -1079,7 +1079,6 @@ namespace Microsoft.PowerFx.Core.Lexer
             private readonly bool _allowReplaceableTokens;
             private readonly Stack<LexerMode> _modeStack;
 
-            private readonly int _currentPos; // Current position.
             private int _currentTokenPos; // The start of the current token.
 
             public LexerImpl(TexlLexer lex, string text, StringBuilder sb, Flags flags)
@@ -1738,7 +1737,7 @@ namespace Microsoft.PowerFx.Core.Lexer
                 var commentEnd = _sb.ToString().StartsWith("/*") ? "*/" : "\n";
 
                 // Comment initiation takes up two chars, so must - 1 to get start
-                var startingPosition = _currentPos - 1;
+                var startingPosition = CurrentPos - 1;
 
                 while (CurrentPos < _text.Length)
                 {
