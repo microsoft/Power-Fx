@@ -151,15 +151,11 @@
     <Rule Id="SA1518" Action="Error" />
     <Rule Id="SA1519" Action="Error" />
     <Rule Id="SA1520" Action="Error" />
-    <Rule Id="SA1601" Action="Error" />
-    <Rule Id="SA1604" Action="Error" />
     <Rule Id="SA1605" Action="Error" />
     <Rule Id="SA1606" Action="Error" />
     <Rule Id="SA1607" Action="Error" />
     <Rule Id="SA1608" Action="Error" />
     <Rule Id="SA1610" Action="Error" />
-    <Rule Id="SA1611" Action="Error" />
-    <Rule Id="SA1612" Action="Error" />
     <Rule Id="SA1613" Action="Error" />
     <Rule Id="SA1614" Action="Error" />
     <Rule Id="SA1615" Action="Error" />
@@ -192,8 +188,12 @@
     <!-- XML Documentation Warnings, disabled until we take a pass over docs -->
     <Rule Id="SA1574" Action="None" />
     <Rule Id="SA1600" Action="None" />
+    <Rule Id="SA1601" Action="None" />
     <Rule Id="SA1602" Action="None" />
+    <Rule Id="SA1604" Action="None" />
     <Rule Id="SA1609" Action="None" />
+    <Rule Id="SA1611" Action="None" />
+    <Rule Id="SA1612" Action="None" />
     <Rule Id="SA1623" Action="None" />
     <!-- End XM Documentation Warnings-->
   </Rules>
