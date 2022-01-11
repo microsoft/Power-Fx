@@ -71,7 +71,7 @@
     <Rule Id="SA1121" Action="Error" />
     <Rule Id="SA1122" Action="Error" />
     <Rule Id="SA1123" Action="Error" />
-    <Rule Id="SA1124" Action="Error" />
+    <Rule Id="SA1124" Action="None" /> <!-- DoNotUseRegions-->
     <Rule Id="SA1125" Action="Error" />
     <Rule Id="SA1127" Action="Error" />
     <Rule Id="SA1128" Action="Error" />
@@ -85,10 +85,10 @@
     <Rule Id="SA1137" Action="Error" />
     <Rule Id="SA1139" Action="Error" />
     <Rule Id="SA1200" Action="None" />
-    <Rule Id="SA1201" Action="Error" />
-    <Rule Id="SA1202" Action="Error" />
-    <Rule Id="SA1203" Action="Error" />
-    <Rule Id="SA1204" Action="Error" />
+    <Rule Id="SA1201" Action="None" />  <!-- ElementsMustAppearInTheCorrectOrder (This is a good rule, but not followed in the code currently)-->
+    <Rule Id="SA1202" Action="None" />  <!-- Same -->
+    <Rule Id="SA1203" Action="None" />  <!-- Same -->
+    <Rule Id="SA1204" Action="None" /> <!-- Same -->
     <Rule Id="SA1205" Action="Error" />
     <Rule Id="SA1206" Action="Error" />
     <Rule Id="SA1207" Action="Error" />
@@ -151,15 +151,12 @@
     <Rule Id="SA1518" Action="Error" />
     <Rule Id="SA1519" Action="Error" />
     <Rule Id="SA1520" Action="Error" />
-    <Rule Id="SA1600" Action="None" />
     <Rule Id="SA1601" Action="Error" />
-    <Rule Id="SA1602" Action="Error" />
     <Rule Id="SA1604" Action="Error" />
     <Rule Id="SA1605" Action="Error" />
     <Rule Id="SA1606" Action="Error" />
     <Rule Id="SA1607" Action="Error" />
     <Rule Id="SA1608" Action="Error" />
-    <Rule Id="SA1609" Action="Error" />
     <Rule Id="SA1610" Action="Error" />
     <Rule Id="SA1611" Action="Error" />
     <Rule Id="SA1612" Action="Error" />
@@ -173,7 +170,6 @@
     <Rule Id="SA1620" Action="Error" />
     <Rule Id="SA1621" Action="Error" />
     <Rule Id="SA1622" Action="Error" />
-    <Rule Id="SA1623" Action="Error" />
     <Rule Id="SA1624" Action="Error" />
     <Rule Id="SA1625" Action="Error" />
     <Rule Id="SA1626" Action="Error" />
@@ -193,5 +189,12 @@
     <Rule Id="SA1649" Action="Error" />
     <Rule Id="SA1651" Action="Error" />
     <Rule Id="SX1309" Action="Error" /> <!-- FieldNamesShouldBeginWithUnderscores -->
+    <!-- XML Documentation Warnings, disabled until we take a pass over docs -->
+    <Rule Id="SA1574" Action="None" />
+    <Rule Id="SA1600" Action="None" />
+    <Rule Id="SA1602" Action="None" />
+    <Rule Id="SA1609" Action="None" />
+    <Rule Id="SA1623" Action="None" />
+    <!-- End XM Documentation Warnings-->
   </Rules>
 </RuleSet>
