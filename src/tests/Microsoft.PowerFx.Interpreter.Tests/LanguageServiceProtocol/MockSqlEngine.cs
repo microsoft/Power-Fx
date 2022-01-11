@@ -31,7 +31,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             {
                 new CodeActionResult
                 {
-                    Text = "TestText1", Title= "TestTitle1",
+                    Text = "TestText1", Title = "TestTitle1",
                     Range = new Range
                     {
                         Start = new Position

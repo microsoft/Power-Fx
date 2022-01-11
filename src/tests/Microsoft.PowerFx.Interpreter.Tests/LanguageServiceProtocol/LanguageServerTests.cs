@@ -9,6 +9,7 @@ using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Public;
 using Microsoft.PowerFx.Core.Public.Types;
 using Microsoft.PowerFx.LanguageServerProtocol;
+using Microsoft.PowerFx.LanguageServerProtocol.Protocol;
 using Xunit;
 
 namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
@@ -483,11 +484,11 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             var response = JsonSerializer.Deserialize<JsonRpcSignatureHelpResponse>(_sendToClientData[0], _jsonSerializerOptions);
             Assert.Equal("2.0", response.Jsonrpc);
             Assert.Equal("123", response.Id);
-            Assert.Equal((uint)0, response.Result.ActiveSignature);
-            Assert.Equal((uint)0, response.Result.ActiveParameter);
+            Assert.Equal(0U, response.Result.ActiveSignature);
+            Assert.Equal(0U, response.Result.ActiveParameter);
             var foundItems = response.Result.Signatures.Where(item => item.Label.StartsWith("Power"));
             Assert.True(Enumerable.Count(foundItems) == 1, "Power should be found from signatures result");
-            Assert.Equal((uint)0, foundItems.First().ActiveParameter);
+            Assert.Equal(0U, foundItems.First().ActiveParameter);
             Assert.Equal(2, foundItems.First().Parameters.Length);
             Assert.Equal("base", foundItems.First().Parameters[0].Label);
             Assert.Equal("exponent", foundItems.First().Parameters[1].Label);
@@ -520,11 +521,11 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             response = JsonSerializer.Deserialize<JsonRpcSignatureHelpResponse>(_sendToClientData[0], _jsonSerializerOptions);
             Assert.Equal("2.0", response.Jsonrpc);
             Assert.Equal("123", response.Id);
-            Assert.Equal((uint)0, response.Result.ActiveSignature);
-            Assert.Equal((uint)1, response.Result.ActiveParameter);
+            Assert.Equal(0U, response.Result.ActiveSignature);
+            Assert.Equal(1U, response.Result.ActiveParameter);
             foundItems = response.Result.Signatures.Where(item => item.Label.StartsWith("Power"));
             Assert.True(Enumerable.Count(foundItems) == 1, "Power should be found from signatures result");
-            Assert.Equal((uint)0, foundItems.First().ActiveParameter);
+            Assert.Equal(0U, foundItems.First().ActiveParameter);
             Assert.Equal(2, foundItems.First().Parameters.Length);
             Assert.Equal("base", foundItems.First().Parameters[0].Label);
             Assert.Equal("exponent", foundItems.First().Parameters[1].Label);

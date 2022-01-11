@@ -133,7 +133,8 @@ namespace Microsoft.PowerFx.Functions
         }
 
         #region Single Column Table Functions
-        public static Func<EvalVisitor, SymbolContext, IRContext, TableValue[], FormulaValue> StandardSingleColumnTable<T>(Func<EvalVisitor, SymbolContext, IRContext, T[], FormulaValue> targetFunction) where T : FormulaValue
+        public static Func<EvalVisitor, SymbolContext, IRContext, TableValue[], FormulaValue> StandardSingleColumnTable<T>(Func<EvalVisitor, SymbolContext, IRContext, T[], FormulaValue> targetFunction) 
+            where T : FormulaValue
         {
             return (runner, symbolContext, irContext, args) =>
             {
@@ -173,7 +174,8 @@ namespace Microsoft.PowerFx.Functions
             };
         }
 
-        public static Func<EvalVisitor, SymbolContext, IRContext, TableValue[], FormulaValue> StandardSingleColumnTable<T>(Func<IRContext, T[], FormulaValue> targetFunction) where T : FormulaValue
+        public static Func<EvalVisitor, SymbolContext, IRContext, TableValue[], FormulaValue> StandardSingleColumnTable<T>(Func<IRContext, T[], FormulaValue> targetFunction)
+            where T : FormulaValue
         {
             return StandardSingleColumnTable<T>((runner, symbolContext, irContext, args) => targetFunction(irContext, args));
         }
@@ -393,7 +395,8 @@ namespace Microsoft.PowerFx.Functions
             }
         }
 
-        private static FormulaValue ExactValueTypeOrTableOrBlank<T>(IRContext irContext, int index, FormulaValue arg) where T : FormulaValue
+        private static FormulaValue ExactValueTypeOrTableOrBlank<T>(IRContext irContext, int index, FormulaValue arg)
+            where T : FormulaValue
         {
             if (arg is TableValue)
             {

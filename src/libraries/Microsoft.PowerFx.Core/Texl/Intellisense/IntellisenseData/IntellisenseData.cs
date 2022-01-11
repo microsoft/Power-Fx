@@ -19,30 +19,6 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense.IntellisenseData
     internal class IntellisenseData : IIntellisenseData
     {
         private readonly EnumStore _enumStore;
-        private readonly DType _expectedType;
-        private readonly IntellisenseSuggestionList _suggestions;
-        private readonly IntellisenseSuggestionList _substringSuggestions;
-        private readonly TexlBinding _binding;
-        private readonly List<CommentToken> _comments;
-        private readonly TexlFunction _curFunc;
-        private readonly TexlNode _curNode;
-        private readonly string _script;
-        private readonly int _cursorPos;
-        private readonly int _argIndex;
-        private readonly int _argCount;
-        private readonly IsValidSuggestion _isValidSuggestionFunc;
-        private readonly string _matchingStr;
-
-        // _matchingLength will be different from the length of _matchingStr when _matchingStr contains delimiters.
-        // For matching purposes we escape the delimeters and match against the internal DName.
-        private readonly int _matchingLength;
-        private readonly int _replacementStartIndex;
-
-        // There will be a separate replacement length when we want to replace an entire node and not just the
-        // preceding portion which is used for matching.
-        private readonly int _replacementLength;
-        private readonly IList<DType> _missingTypes;
-        private readonly List<ISpecialCaseHandler> _cleanupHandlers;
 
         public IntellisenseData(EnumStore enumStore, IIntellisenseContext context, DType expectedType, TexlBinding binding, TexlFunction curFunc, TexlNode curNode, int argIndex, int argCount, IsValidSuggestion isValidSuggestionFunc, IList<DType> missingTypes, List<CommentToken> comments)
         {
@@ -56,22 +32,22 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense.IntellisenseData
             Contracts.AssertValueOrNull(comments);
 
             _enumStore = enumStore;
-            _expectedType = expectedType;
-            _suggestions = new IntellisenseSuggestionList();
-            _substringSuggestions = new IntellisenseSuggestionList();
-            _binding = binding;
-            _comments = comments;
-            _curFunc = curFunc;
-            _curNode = curNode;
-            _script = context.InputText;
-            _cursorPos = context.CursorPosition;
-            _argIndex = argIndex;
-            _argCount = argCount;
-            _isValidSuggestionFunc = isValidSuggestionFunc;
-            _matchingStr = string.Empty;
-            _matchingLength = 0;
-            _replacementStartIndex = context.CursorPosition;
-            _missingTypes = missingTypes;
+            ExpectedType = expectedType;
+            Suggestions = new IntellisenseSuggestionList();
+            SubstringSuggestions = new IntellisenseSuggestionList();
+            Binding = binding;
+            Comments = comments;
+            CurFunc = curFunc;
+            CurNode = curNode;
+            Script = context.InputText;
+            CursorPos = context.CursorPosition;
+            ArgIndex = argIndex;
+            ArgCount = argCount;
+            IsValidSuggestionFunc = isValidSuggestionFunc;
+            MatchingStr = string.Empty;
+            MatchingLength = 0;
+            ReplacementStartIndex = context.CursorPosition;
+            MissingTypes = missingTypes;
             BoundTo = string.Empty;
             CleanupHandlers = new List<ISpecialCaseHandler>();
         }

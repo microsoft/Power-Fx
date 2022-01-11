@@ -23,7 +23,7 @@ namespace Microsoft.PowerFx.Core.UtilityDataStructures
         public LazyList(IEnumerable<T> values)
         {
             Contracts.AssertValue(values);
-            this._values = values;
+            _values = values;
         }
 
         public LazyList(T value)
@@ -43,7 +43,7 @@ namespace Microsoft.PowerFx.Core.UtilityDataStructures
                 return this;
             }
 
-            return new LazyList<T>(this._values.Concat(values));
+            return new LazyList<T>(_values.Concat(values));
         }
 
         /// <summary>
@@ -57,7 +57,7 @@ namespace Microsoft.PowerFx.Core.UtilityDataStructures
                 return this;
             }
 
-            return new LazyList<T>(this._values.Concat(values));
+            return new LazyList<T>(_values.Concat(values));
         }
 
         public IEnumerator<T> GetEnumerator()

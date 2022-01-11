@@ -7,7 +7,7 @@ using System.Text;
 using Xunit;
 using Xunit.Sdk;
 
-namespace Microsoft.PowerFx.Interpreter.Tests.xUnitExtensions
+namespace Microsoft.PowerFx.Interpreter.Tests.XUnitExtensions
 {
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
     [XunitTestCaseDiscoverer("Microsoft.PowerFx.Interpreter.Tests.xUnitExtensions.InterpreterTheoryDiscoverer", "Microsoft.PowerFx.Interpreter.Tests")]

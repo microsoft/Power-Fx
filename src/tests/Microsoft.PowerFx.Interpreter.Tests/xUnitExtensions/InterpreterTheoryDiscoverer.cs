@@ -9,7 +9,7 @@ using Xunit;
 using Xunit.Abstractions;
 using Xunit.Sdk;
 
-namespace Microsoft.PowerFx.Interpreter.Tests.xUnitExtensions
+namespace Microsoft.PowerFx.Interpreter.Tests.XUnitExtensions
 {
     public class InterpreterTheoryDiscoverer : IXunitTestCaseDiscoverer
     {

@@ -9,7 +9,7 @@ using System.Text;
 using Microsoft.PowerFx.Core.Public.Types;
 using Microsoft.PowerFx.Core.Public.Values;
 using Microsoft.PowerFx.Core.Tests;
-using Microsoft.PowerFx.Interpreter.Tests.xUnitExtensions;
+using Microsoft.PowerFx.Interpreter.Tests.XUnitExtensions;
 using Xunit;
 using static Microsoft.PowerFx.Interpreter.Tests.ExpressionEvaluationTests;
 
@@ -19,7 +19,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
     {
         private InterpreterRunner _runner;
 
-        [InterpreterTheory()]
+        [InterpreterTheory]
         [TxtFileData("ExpressionTestCases", nameof(InterpreterRunner))]
         public void InterpreterTestCase(ExpressionTestCase testCase)
         {

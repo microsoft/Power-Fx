@@ -220,13 +220,11 @@ namespace Microsoft.PowerFx.Functions
             var pattern = @"^(?<openAMPM>\s*t+\s*)? " +
                              @"(?(openAMPM) h+(?<nonHours>[^ht]+)$ " +
                              @"| \s*h+(?<nonHours>[^ht]+)\s*t+)";
-            return Regex.Replace(format, pattern, "HH${nonHours}",
-                                 RegexOptions.IgnorePatternWhitespace);
+            return Regex.Replace(format, pattern, "HH${nonHours}", RegexOptions.IgnorePatternWhitespace);
         }
 
         // https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-isblank-isempty
-        // Take first non-blank value. 
-        // 
+        // Take first non-blank value.
         public static FormulaValue Coalesce(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args)
         {
             var errors = new List<ErrorValue>();

@@ -32,8 +32,7 @@ namespace Microsoft.PowerFx.Tests
                 {
                     Assert.True(
                         function.TryGetParamDescription(paramName, out var descr),
-                        "Missing parameter description. Please add the following to Resources: " +
-                        "About" + function.LocaleInvariantName + "_" + paramName);
+                        "Missing parameter description. Please add the following to Resources: " + "About" + function.LocaleInvariantName + "_" + paramName);
                 }
             }
         }

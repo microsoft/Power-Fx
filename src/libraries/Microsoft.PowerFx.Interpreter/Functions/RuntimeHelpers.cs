@@ -12,7 +12,9 @@ namespace Microsoft.PowerFx.Functions
         public static bool AreEqual(FormulaValue arg1, FormulaValue arg2)
         {
             bool b;
-            if (arg1 is BlankValue) // $$$ coercion 
+
+            // $$$ coercion
+            if (arg1 is BlankValue) 
             {
                 b = arg2 is BlankValue;
             }

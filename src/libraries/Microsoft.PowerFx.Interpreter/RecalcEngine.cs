@@ -159,7 +159,7 @@ namespace Microsoft.PowerFx
                 ruleScope: intellisense ? parameterType._type : null,
                 useThisRecordForRuleScope: false);
 
-            var errors = (formula.HasParseErrors) ? formula.GetParseErrors() : binding.ErrorContainer.GetErrors();
+            var errors = formula.HasParseErrors ? formula.GetParseErrors() : binding.ErrorContainer.GetErrors();
 
             var result = new CheckResult
             {
@@ -254,7 +254,7 @@ namespace Microsoft.PowerFx
                 updateDisplayNames: toDisplayNames,
                 forceUpdateDisplayNames: toDisplayNames);
 
-            Dictionary<Span, string> worklist = new();
+            Dictionary<Span, string> worklist = new ();
             foreach (var token in binding.NodesToReplace)
             {
                 worklist.Add(token.Key.Span, TexlLexer.EscapeName(token.Value));

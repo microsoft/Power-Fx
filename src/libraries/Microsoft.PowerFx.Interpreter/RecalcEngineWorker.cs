@@ -47,10 +47,7 @@ namespace Microsoft.PowerFx
                 var info = _parent.Formulas[varName];
 
                 var newValue = info._value;
-                if (info._onUpdate != null)
-                {
-                    info._onUpdate(varName, newValue);
-                }
+                info._onUpdate?.Invoke(varName, newValue);
             }
         }
 

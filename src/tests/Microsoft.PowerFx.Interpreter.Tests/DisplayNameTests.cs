@@ -73,8 +73,10 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var r1 = new RecordType()
                 .Add(new NamedFormulaType("Num", FormulaType.Number, "DisplayNum"))
                 .Add(new NamedFormulaType("B", FormulaType.Boolean, "DisplayB"))
-                .Add(new NamedFormulaType("Nested", new TableType()
-                    .Add(new NamedFormulaType("Inner", FormulaType.Number, "InnerDisplay")), "NestedDisplay"));
+                .Add(new NamedFormulaType(
+                    "Nested", 
+                    new TableType().Add(new NamedFormulaType("Inner", FormulaType.Number, "InnerDisplay")), 
+                    "NestedDisplay"));
 
             if (toDisplay)
             {

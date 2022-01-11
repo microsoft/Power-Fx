@@ -10,7 +10,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 {
     public class TimeTests
     {
-        readonly RecalcEngine engine = new RecalcEngine();
+        private readonly RecalcEngine engine = new RecalcEngine();
 
         [Fact]
         public void TestTimeZoneOffsetNonDST()
@@ -81,6 +81,5 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 Assert.True(false, "result was not a DateTimeValue");
             }
         }
-
     }
 }

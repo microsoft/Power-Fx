@@ -50,7 +50,6 @@ namespace DocumentServer.Core.Tests.Formulas
         public void TexlParseNumericLiterals(string script, string expected = null)
         {
             TestRoundtrip(script, expected);
-
         }
 
         [Theory]
@@ -402,7 +401,6 @@ namespace DocumentServer.Core.Tests.Formulas
         internal void TexlParseParent(string script, NodeKind expectedNodeKind = NodeKind.Error)
         {
             TestRoundtrip(script, expectedNodeKind: expectedNodeKind);
-
         }
 
         [Theory]
@@ -461,7 +459,9 @@ namespace DocumentServer.Core.Tests.Formulas
                     Assert.True((node.AsCall().Head as Identifier).Namespace.IsRoot);
                 });
 
-            TestRoundtrip("Netflix!Services!GetMovieCatalog()", expected: "Netflix.Services.GetMovieCatalog()",
+            TestRoundtrip(
+                "Netflix!Services!GetMovieCatalog()", 
+                expected: "Netflix.Services.GetMovieCatalog()",
                 customTest: node =>
                 {
                     Assert.True(node is CallNode);
@@ -690,7 +690,7 @@ namespace DocumentServer.Core.Tests.Formulas
             var startid = node.Id;
 
             // Test cloning
-            var clone = node.Clone(ref startid, default(Span));
+            var clone = node.Clone(ref startid, default);
             Assert.Equal(TexlPretty.PrettyPrint(node), TexlPretty.PrettyPrint(clone), false);
 
             if (expected == null)
@@ -705,10 +705,7 @@ namespace DocumentServer.Core.Tests.Formulas
                 Assert.Equal(expectedNodeKind, node.Kind);
             }
 
-            if (customTest != null)
-            {
-                customTest(node);
-            }
+            customTest?.Invoke(node);
         }
 
         internal void TestParseErrors(string script, int count = 1, string errorMessage = null)
