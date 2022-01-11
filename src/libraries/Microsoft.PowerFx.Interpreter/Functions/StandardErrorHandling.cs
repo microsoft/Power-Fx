@@ -168,6 +168,7 @@ namespace Microsoft.PowerFx.Functions
                         resultRows.Add(DValue<RecordValue>.Of(row.Error));
                     }
                 }
+
                 return new InMemoryTableValue(irContext, resultRows);
             };
         }
@@ -179,7 +180,7 @@ namespace Microsoft.PowerFx.Functions
 
         private static int GetMaxTableSize(FormulaValue[] args)
         {
-            int max = 0;
+            var max = 0;
 
             foreach (var arg in args)
             {
@@ -206,7 +207,7 @@ namespace Microsoft.PowerFx.Functions
 
         private static ExpandToSizeResult ExpandToSize(FormulaValue arg, int size)
         {
-            string name = BuiltinFunction.ColumnName_ValueStr;
+            var name = BuiltinFunction.ColumnName_ValueStr;
             if (arg is TableValue tv)
             {
                 var tvType = (TableType)tv.Type;
@@ -246,7 +247,7 @@ namespace Microsoft.PowerFx.Functions
         {
             var rows = new List<List<T>>();
 
-            for (int i = 0; i < columnSize; i++)
+            for (var i = 0; i < columnSize; i++)
             {
                 rows.Add(columns.Select(column => column[i]).ToList());
             }
@@ -293,6 +294,7 @@ namespace Microsoft.PowerFx.Functions
                     var record = new InMemoryRecordValue(IRContext.NotInSource(resultType), new List<NamedValue>() { namedValue });
                     resultRows.Add(DValue<RecordValue>.Of(record));
                 }
+
                 return new InMemoryTableValue(irContext, resultRows);
             };
         }

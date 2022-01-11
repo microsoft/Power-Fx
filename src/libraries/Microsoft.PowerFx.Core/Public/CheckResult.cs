@@ -32,11 +32,10 @@ namespace Microsoft.PowerFx.Core.Public
         /// </summary>
         public ExpressionError[] Errors { get; set; }
 
-
         /// <summary>
         /// Parsed expression, or null if IsSuccess is false
         /// </summary>
-        public IExpression Expression {  get; set; }
+        public IExpression Expression { get; set; }
 
         public virtual bool IsSuccess => Errors == null;
 

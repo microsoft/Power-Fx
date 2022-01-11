@@ -12,13 +12,13 @@ namespace Microsoft.AppMagic.Transport
     public class TransportConverterAttribute : Attribute
     {
         public TransportConverterAttribute(
-            Type originalType, 
-            Type surrogateType, 
+            Type originalType,
+            Type surrogateType,
             string alternateTypescriptType = null,
             string alternateTypescriptConverter = null,
-            string cSharpPredicateForOmittingFromDto = null, 
-            string csharpQuotedJsonStringExpression = null, 
-            string typescriptPropertyStateSyncExpression = null, 
+            string cSharpPredicateForOmittingFromDto = null,
+            string csharpQuotedJsonStringExpression = null,
+            string typescriptPropertyStateSyncExpression = null,
             string typescriptValueExpressionForUndefinedValueAppearingInDto = null)
         {
             OriginalType = originalType;

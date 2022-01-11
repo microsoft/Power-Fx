@@ -294,7 +294,7 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
                 return !Equals(suggestion1, suggestion2);
             }
 
-            return ! suggestion1.Equals(suggestion2);
+            return !suggestion1.Equals(suggestion2);
         }
 
         // Removes the function overloads which have args less than the given value

@@ -247,7 +247,8 @@ namespace DocumentServer.Core.Tests.Formulas
             // Test the correct parsing of double- vs. single-ampersand.
 
             // Double-ampersand should resolve to the logical conjunction operator.
-            TestRoundtrip("A && B",
+            TestRoundtrip(
+                "A && B",
                 expectedNodeKind: NodeKind.BinaryOp,
                 customTest: node =>
                 {
@@ -255,7 +256,8 @@ namespace DocumentServer.Core.Tests.Formulas
                 });
 
             // Single-ampersand should resolve to the concatenation operator.
-            TestRoundtrip("A & B",
+            TestRoundtrip(
+                "A & B",
                 expectedNodeKind: NodeKind.BinaryOp,
                 customTest: node =>
                 {
@@ -358,7 +360,7 @@ namespace DocumentServer.Core.Tests.Formulas
         public void TexlParseIdentifiersNegative(string script)
         {
             // Identifiers can't be all-blank.
-            TestParseErrors(script);           
+            TestParseErrors(script);
         }
 
         [Theory]
@@ -432,7 +434,6 @@ namespace DocumentServer.Core.Tests.Formulas
             TestParseErrors(script, expected);
         }
 
-
         [Theory]
         [InlineData("Facebook!GetFriends()", "Facebook.GetFriends()")]
         [InlineData("Facebook.GetFriends()")]
@@ -446,7 +447,8 @@ namespace DocumentServer.Core.Tests.Formulas
         [Fact]
         public void TexlCallHeadNodes()
         {
-            TestRoundtrip("GetSomething()",
+            TestRoundtrip(
+                "GetSomething()",
                 customTest: node =>
                 {
                     Assert.True(node is CallNode);
@@ -476,7 +478,7 @@ namespace DocumentServer.Core.Tests.Formulas
         // "As" Ident cannot be a reserved keyword
         [InlineData("Filter([1,2,3] As Self, 'Self'.Value > 2)", 3)]
         public void TestReservedAsIdentifier(string script, int expected)
-        {            
+        {
             TestParseErrors(script, expected);
         }
 
@@ -560,7 +562,7 @@ namespace DocumentServer.Core.Tests.Formulas
             Assert.Null(result.Errors);
             Assert.True(node is DottedNameNode);
 
-            DottedNameNode dotted = node as DottedNameNode;
+            var dotted = node as DottedNameNode;
             Assert.Equal(dpath, dotted.ToDPath().ToDottedSyntax(punctuator: "."));
         }
 
@@ -585,36 +587,36 @@ namespace DocumentServer.Core.Tests.Formulas
         }
 
         [Theory]
-            [InlineData("{{}}")]
-            [InlineData("{ , }")]
-            [InlineData("{A:1, }")]
-            [InlineData("{A:1,,, }")]
-            [InlineData("{A:1, B:2,,, }")]
-            [InlineData("{ . . . }")]
-            [InlineData("{ some identifiers }")]
-            [InlineData("{ {some identifiers} }")]
-            [InlineData("{{}, {}, {}}")]
-            [InlineData("{ 10 20 30 }")]
-            [InlineData("{10, 20, 30}")]
-            [InlineData("{A; B; C}")]
-            [InlineData("{A:1, B C}")]
-            [InlineData("{A, B, C}")]
-            [InlineData("{A B C}")]
-            [InlineData("{true, false, true, true, false}")]
-            [InlineData("{\"a\", \"b\", \"c\"}")]
-            [InlineData("{:, :, :}")]
-            [InlineData("{A:10; B:30; C:40}")]
-            [InlineData("{A:10, , , , C:30}")]
-            [InlineData("{{}:A}")]
-            [InlineData("{10:B, 20:C}")]
-            [InlineData("{A:10 B:20 C:30}")]
-            [InlineData("{A:10 . B:20 . C:30}")]
-            [InlineData("{A;10, B;20, C;30}")]
-            [InlineData("{A=20, B=30, C=40}")]
-            [InlineData("{A:=20, B:=30, C:=true}")]
-            [InlineData("{A:20+}")]
-            [InlineData("{A:20, B:30; }")]
-            [InlineData("{A:20, B:30 ++ }")]
+        [InlineData("{{}}")]
+        [InlineData("{ , }")]
+        [InlineData("{A:1, }")]
+        [InlineData("{A:1,,, }")]
+        [InlineData("{A:1, B:2,,, }")]
+        [InlineData("{ . . . }")]
+        [InlineData("{ some identifiers }")]
+        [InlineData("{ {some identifiers} }")]
+        [InlineData("{{}, {}, {}}")]
+        [InlineData("{ 10 20 30 }")]
+        [InlineData("{10, 20, 30}")]
+        [InlineData("{A; B; C}")]
+        [InlineData("{A:1, B C}")]
+        [InlineData("{A, B, C}")]
+        [InlineData("{A B C}")]
+        [InlineData("{true, false, true, true, false}")]
+        [InlineData("{\"a\", \"b\", \"c\"}")]
+        [InlineData("{:, :, :}")]
+        [InlineData("{A:10; B:30; C:40}")]
+        [InlineData("{A:10, , , , C:30}")]
+        [InlineData("{{}:A}")]
+        [InlineData("{10:B, 20:C}")]
+        [InlineData("{A:10 B:20 C:30}")]
+        [InlineData("{A:10 . B:20 . C:30}")]
+        [InlineData("{A;10, B;20, C;30}")]
+        [InlineData("{A=20, B=30, C=40}")]
+        [InlineData("{A:=20, B:=30, C:=true}")]
+        [InlineData("{A:20+}")]
+        [InlineData("{A:20, B:30; }")]
+        [InlineData("{A:20, B:30 ++ }")]
         public void TestParseRecordsNegative(string script)
         {
             TestParseErrors(script);
@@ -681,21 +683,27 @@ namespace DocumentServer.Core.Tests.Formulas
             Assert.NotNull(node);
             Assert.False(result.HasError);
 
-            int startid = node.Id;
+            var startid = node.Id;
             // Test cloning
-            TexlNode clone = node.Clone(ref startid, default(Span));
+            var clone = node.Clone(ref startid, default(Span));
             Assert.Equal(TexlPretty.PrettyPrint(node), TexlPretty.PrettyPrint(clone), false);
 
             if (expected == null)
+            {
                 expected = script;
+            }
 
             Assert.Equal(expected, TexlPretty.PrettyPrint(node), false);
 
             if (expectedNodeKind != NodeKind.Error)
+            {
                 Assert.Equal(expectedNodeKind, node.Kind);
+            }
 
             if (customTest != null)
+            {
                 customTest(node);
+            }
         }
 
         internal void TestParseErrors(string script, int count = 1, string errorMessage = null)

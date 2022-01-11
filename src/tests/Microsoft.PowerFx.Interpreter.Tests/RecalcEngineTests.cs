@@ -291,7 +291,8 @@ namespace Microsoft.PowerFx.Tests
         public void CheckSuccessWithParsedExpression()
         {
             var engine = new RecalcEngine();
-            var result = engine.Check("3*2+x",
+            var result = engine.Check(
+                "3*2+x",
                 new RecordType().Add(
                     new NamedFormulaType("x", FormulaType.Number)));
 
@@ -306,7 +307,7 @@ namespace Microsoft.PowerFx.Tests
             var recordValue = FormulaValue.RecordFromFields(
                 new NamedValue("x", FormulaValue.New(5)));
             var formulaValue = result.Expression.Eval(recordValue);
-            Assert.Equal(11.0, (double) formulaValue.ToObject());
+            Assert.Equal(11.0, (double)formulaValue.ToObject());
         }
 
         #region Test

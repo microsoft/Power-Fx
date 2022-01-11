@@ -101,7 +101,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 if (typeCanBeReturned)
                 {
                     // Let's check if it matches the other types that can be returned
-                    DType typeSuper = DType.Supertype(type, typeArg);
+                    var typeSuper = DType.Supertype(type, typeArg);
 
                     if (!typeSuper.IsError)
                     {
@@ -117,7 +117,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     {
                         // Types don't resolve normally, coercion needed
                         if (typeArg.CoercesTo(type))
+                        {
                             CollectionUtils.Add(ref nodeToCoercedTypeMap, nodeArg, type);
+                        }
                         else if (!isBehavior || !IsArgTypeInconsequential(nodeArg))
                         {
                             errors.EnsureError(DocumentErrorSeverity.Severe, nodeArg, TexlStrings.ErrBadType_ExpectedType_ProvidedType,

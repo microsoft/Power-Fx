@@ -7,7 +7,8 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
 {
     internal static class IntellisenseProvider
     {
-        internal static readonly ISuggestionHandler[] suggestionHandlers = {
+        internal static readonly ISuggestionHandler[] suggestionHandlers =
+        {
             new Intellisense.CommentNodeSuggestionHandler(),
             new Intellisense.NullNodeSuggestionHandler(),
             new Intellisense.FunctionRecordNameSuggestionHandler(),

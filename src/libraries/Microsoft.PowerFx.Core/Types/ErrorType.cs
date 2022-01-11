@@ -18,7 +18,8 @@ namespace Microsoft.PowerFx.Core.Types
         /// <returns>
         /// The schema for an error value.
         /// </returns>
-        private static IEnumerable<TypedName> ReifiedErrorSchema => new[] {
+        private static IEnumerable<TypedName> ReifiedErrorSchema => new[]
+        {
             new TypedName(DType.Number, new DName("Kind")),
             new TypedName(DType.String, new DName("Message")),
             new TypedName(DType.String, new DName("Source")),

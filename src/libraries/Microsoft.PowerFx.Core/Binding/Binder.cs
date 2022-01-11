@@ -2717,6 +2717,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 // Skip trying to match display names if the type isn't associated with a data source, an option set or view, or other display name source
                 if (!type.AssociatedDataSources.Any() && !type.IsOptionSet && !type.IsView && !type.HasExpandInfo && type.DisplayNameProvider == null)
+                {
                     return logicalNodeName;
                 }
 
@@ -5655,7 +5656,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 }
 
                 _txb.SetType(
-                    node, 
+                    node,
                     exprType.IsValid ? DType.CreateTable(new TypedName(exprType, new DName("Value"))) : DType.EmptyTable);
                 SetVariadicNodePurity(node);
                 _txb.SetScopeUseSet(node, JoinScopeUseSets(node.Children));

@@ -27,10 +27,10 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
-            yield return new [] { TexlStrings.ConcatenateArg1 };
-            yield return new [] { TexlStrings.ConcatenateArg1, TexlStrings.ConcatenateArg1 };
-            yield return new [] { TexlStrings.ConcatenateArg1, TexlStrings.ConcatenateArg1, TexlStrings.ConcatenateArg1 };
-            yield return new [] { TexlStrings.ConcatenateArg1, TexlStrings.ConcatenateArg1, TexlStrings.ConcatenateArg1, TexlStrings.ConcatenateArg1 };
+            yield return new[] { TexlStrings.ConcatenateArg1 };
+            yield return new[] { TexlStrings.ConcatenateArg1, TexlStrings.ConcatenateArg1 };
+            yield return new[] { TexlStrings.ConcatenateArg1, TexlStrings.ConcatenateArg1, TexlStrings.ConcatenateArg1 };
+            yield return new[] { TexlStrings.ConcatenateArg1, TexlStrings.ConcatenateArg1, TexlStrings.ConcatenateArg1, TexlStrings.ConcatenateArg1 };
         }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures(int arity)
@@ -51,21 +51,25 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.Assert(args.Length >= 1);
             Contracts.AssertValue(errors);
 
-            int count = args.Length;
-            bool fArgsValid = true;
+            var count = args.Length;
+            var fArgsValid = true;
             nodeToCoercedTypeMap = null;
 
-            for (int i = 0; i < count; i++)
+            for (var i = 0; i < count; i++)
             {
                 var typeChecks = CheckType(args[i], argTypes[i], DType.String, errors, true, out DType coercionType);
                 if (typeChecks && coercionType != null)
+                {
                     CollectionUtils.Add(ref nodeToCoercedTypeMap, args[i], coercionType);
+                }
 
                 fArgsValid &= typeChecks;
             }
 
             if (!fArgsValid)
+            {
                 nodeToCoercedTypeMap = null;
+            }
 
             returnType = ReturnType;
 
@@ -81,6 +85,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class ConcatenateTableFunction : BuiltinFunction
     {
         public override bool IsSelfContained => true;
+
         public override bool SupportsParamCoercion => true;
 
         public ConcatenateTableFunction()
@@ -97,7 +102,10 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures(int arity)
         {
             if (arity > 2)
+            {
                 return GetGenericSignatures(arity, TexlStrings.ConcatenateArg1, TexlStrings.ConcatenateArg1);
+            }
+
             return base.GetSignatures(arity);
         }
 
@@ -121,7 +129,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             var fArgsValid = true;
 
             // Type check the args
-            for (int i = 0; i < count; i++)
+            for (var i = 0; i < count; i++)
             {
                 fArgsValid &= CheckParamIsTypeOrSingleColumnTable(DType.String, args[i], argTypes[i], errors, out var isTable, ref nodeToCoercedTypeMap);
                 hasTableArg |= isTable;
@@ -130,7 +138,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             fArgsValid &= hasTableArg;
 
             if (!fArgsValid)
+            {
                 nodeToCoercedTypeMap = null;
+            }
 
             returnType = DType.CreateTable(new TypedName(DType.String, OneColumnTableResultName));
 

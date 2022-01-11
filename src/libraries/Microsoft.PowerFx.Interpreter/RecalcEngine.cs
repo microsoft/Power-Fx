@@ -96,6 +96,7 @@ namespace Microsoft.PowerFx
                 {
                     throw new NotSupportedException($"Can't change '{name}''s type from {fi._type} to {x.Type}.");
                 }
+
                 fi._value = x;
 
                 // Be sure to preserve used-by set. 
@@ -148,8 +149,7 @@ namespace Microsoft.PowerFx
                 formula.ParseTree,
                 resolver,
                 ruleScope: intellisense ? parameterType._type : null,
-                useThisRecordForRuleScope: false
-            );
+                useThisRecordForRuleScope: false);
 
             var errors = (formula.HasParseErrors) ? formula.GetParseErrors() : binding.ErrorContainer.GetErrors();
 
@@ -169,9 +169,11 @@ namespace Microsoft.PowerFx
                 result.TopLevelIdentifiers = DependencyFinder.FindDependencies(binding.Top, binding);
                 // TODO: Fix FormulaType.Build to not throw exceptions for Enum types then remove this check
                 if (binding.ResultType.Kind != DKind.Enum)
+                {
                     result.ReturnType = FormulaType.Build(binding.ResultType);
+                }
 
-                (IntermediateNode irnode, ScopeSymbol ruleScopeSymbol) = IRTranslator.Translate(result._binding);
+                (var irnode, var ruleScopeSymbol) = IRTranslator.Translate(result._binding);
                 result.Expression = new ParsedExpression(irnode);
             }
 
@@ -191,14 +193,14 @@ namespace Microsoft.PowerFx
             {
                 parameters = RecordValue.Empty();
             }
+
             var check = Check(expressionText, parameters.IRContext.ResultType);
             check.ThrowOnErrors();
 
-            FormulaValue newValue = check.Expression.Eval(parameters);
+            var newValue = check.Expression.Eval(parameters);
             return newValue;
         }
 
-        
         /// <summary>
         /// Convert references in an expression to the invariant form
         /// </summary>
@@ -211,7 +213,7 @@ namespace Microsoft.PowerFx
         {
             return ConvertExpression(expressionText, parameters, toDisplayNames: false);
         }
-        
+
         /// <summary>
         /// Convert references in an expression to the display form
         /// </summary>
@@ -241,8 +243,7 @@ namespace Microsoft.PowerFx
                 ruleScope: parameters._type,
                 useThisRecordForRuleScope: false,
                 updateDisplayNames: toDisplayNames,
-                forceUpdateDisplayNames: toDisplayNames
-            );
+                forceUpdateDisplayNames: toDisplayNames);
 
             Dictionary<Span, string> worklist = new();
             foreach (var token in binding.NodesToReplace)
@@ -279,7 +280,7 @@ namespace Microsoft.PowerFx
             // We can't have cycles because:
             // - formulas can only refer to already-defined values
             // - formulas can't be redefined.  
-            HashSet<string> dependsOn = check.TopLevelIdentifiers;
+            var dependsOn = check.TopLevelIdentifiers;
 
             var type = FormulaType.Build(binding.ResultType);
             var info = new RecalcFormulaInfo

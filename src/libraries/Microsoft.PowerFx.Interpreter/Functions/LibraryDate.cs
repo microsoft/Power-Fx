@@ -400,11 +400,11 @@ namespace Microsoft.PowerFx.Functions
 
         public static FormulaValue TimeZoneOffset(IRContext irContext, FormulaValue[] args)
         {
-            TimeZoneInfo tzInfo = TimeZoneInfo.Local;
+            var tzInfo = TimeZoneInfo.Local;
             if (args.Length == 0)
             {
                 var tzOffsetDays = tzInfo.GetUtcOffset(DateTime.Now).TotalDays;
-                return new NumberValue(irContext, tzOffsetDays  * -1);
+                return new NumberValue(irContext, tzOffsetDays * -1);
             }
 
             switch (args[0])

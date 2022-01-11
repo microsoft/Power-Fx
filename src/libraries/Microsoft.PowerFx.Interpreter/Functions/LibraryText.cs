@@ -137,7 +137,6 @@ namespace Microsoft.PowerFx.Functions
                 formatString = fs.Value;
             }
 
-
             CultureInfo suppliedCulture = null;
             if (args.Length > 2 && args[2] is StringValue locale)
             {
@@ -179,7 +178,9 @@ namespace Microsoft.PowerFx.Functions
         internal static string ExpandDateTimeFormatSpecifiers(string format, CultureInfo culture)
         {
             if (format == null)
+            {
                 return format;
+            }
 
             var info = DateTimeFormatInfo.GetInstance(culture);
 
@@ -216,7 +217,7 @@ namespace Microsoft.PowerFx.Functions
 
         private static string ReplaceWith24HourClock(string format)
         {
-            string pattern = @"^(?<openAMPM>\s*t+\s*)? " +
+            var pattern = @"^(?<openAMPM>\s*t+\s*)? " +
                              @"(?(openAMPM) h+(?<nonHours>[^ht]+)$ " +
                              @"| \s*h+(?<nonHours>[^ht]+)\s*t+)";
             return Regex.Replace(format, pattern, "HH${nonHours}",

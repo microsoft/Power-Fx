@@ -14,11 +14,11 @@ using Xunit;
 
 namespace Microsoft.PowerFx.Core.Tests
 {
-    public sealed class LexerTest
+    public sealed class LexerTests
     {
         private void AssertTokens(string value, params TokKind[] tokKinds)
         {
-            Token[] tokens = TexlLexer.LocalizedInstance.LexSource(value);
+            var tokens = TexlLexer.LocalizedInstance.LexSource(value);
             Assert.NotNull(tokens);
             Assert.Equal(tokKinds.Length, tokens.Length);
             Assert.True(tokens.Zip(tokKinds, (t, k) => t.Kind == k).All(b => b));
@@ -582,7 +582,8 @@ namespace Microsoft.PowerFx.Core.Tests
         [Fact]
         public void TestBasicStringInterpolation()
         {
-            AssertTokens("$\"Hello {name}\"",
+            AssertTokens(
+                "$\"Hello {name}\"",
                 TokKind.StrInterpStart,
                 TokKind.StrLit,
                 TokKind.IslandStart,
@@ -595,7 +596,8 @@ namespace Microsoft.PowerFx.Core.Tests
         [Fact]
         public void TestEscapeStringInterpolation()
         {
-            AssertTokens("$\"Hello {{name}} {name}\"",
+            AssertTokens(
+                "$\"Hello {{name}} {name}\"",
                 TokKind.StrInterpStart,
                 TokKind.StrLit,
                 TokKind.IslandStart,
@@ -608,7 +610,8 @@ namespace Microsoft.PowerFx.Core.Tests
         [Fact]
         public void TestStringInterpolationWithTable()
         {
-            AssertTokens("$\"Hello {Table({a: 5})} World!\"",
+            AssertTokens(
+                "$\"Hello {Table({a: 5})} World!\"",
                 TokKind.StrInterpStart,
                 TokKind.StrLit,
                 TokKind.IslandStart,
@@ -630,7 +633,8 @@ namespace Microsoft.PowerFx.Core.Tests
         [Fact]
         public void TestNestedStringInterpolation()
         {
-            AssertTokens("$\"One {$\"Two {\"Three\"}\"} Four\"",
+            AssertTokens(
+                "$\"One {$\"Two {\"Three\"}\"} Four\"",
                 TokKind.StrInterpStart,
                 TokKind.StrLit,
                 TokKind.IslandStart,

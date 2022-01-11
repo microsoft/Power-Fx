@@ -59,9 +59,9 @@ namespace Microsoft.PowerFx.Core.Types.Enums
                     displayName = locName;
                 }
 
-                string custDisplayName;
-                string entityNameValue = name.Value;
-                if (!store.TryGetLocalizedEnumValue(entityNameValue, invName, out custDisplayName))
+                var entityNameValue = name.Value;
+                if (!store.TryGetLocalizedEnumValue(entityNameValue, invName, out var custDisplayName))
+                {
                     custDisplayName = displayName;
                 }
 

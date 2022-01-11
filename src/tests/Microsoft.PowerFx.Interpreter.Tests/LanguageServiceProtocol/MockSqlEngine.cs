@@ -27,16 +27,20 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
 
         public CodeActionResult[] Suggest(string expression)
         {
-            return new CodeActionResult[] {
+            return new CodeActionResult[]
+            {
                 new CodeActionResult
                 {
                     Text = "TestText1", Title= "TestTitle1",
-                    Range = new Range {
-                        Start = new Position {
+                    Range = new Range
+                    {
+                        Start = new Position
+                        {
                             Line = 0,
                             Character = 0
                         },
-                        End = new Position {
+                        End = new Position
+                        {
                             Line = 0,
                             Character = 10
                         }

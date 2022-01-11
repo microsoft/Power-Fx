@@ -42,7 +42,7 @@ namespace Microsoft.PowerFx.Core.Functions.FunctionArgValidators
             Contracts.AssertValue(binding);
 
             dsInfos = new List<FirstNameNode>();
-            if (callNode == null || ! binding.GetType(callNode).IsAggregate)
+            if (callNode == null || !binding.GetType(callNode).IsAggregate)
             {
                 return false;
             }

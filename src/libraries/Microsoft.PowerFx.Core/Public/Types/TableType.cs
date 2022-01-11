@@ -46,7 +46,6 @@ namespace Microsoft.PowerFx.Core.Public.Types
             }
         }
 
-
         public FormulaType SingleColumnFieldType
         {
             get

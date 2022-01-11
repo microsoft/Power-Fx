@@ -31,13 +31,13 @@ namespace Microsoft.PowerFx.Core.Lexer
         // These are the global settings, borrowed from the OS, and will be settable by the user according to their preferences.
         // If there is a collision between the two, the list separator automatically becomes ;.
         public string LocalizedPunctuatorDecimalSeparator { get; }
-        
+
         public string LocalizedPunctuatorListSeparator { get; }
 
         // The chaining operator has to be disambiguated accordingly.
         public string LocalizedPunctuatorChainingSeparator { get; }
 
-    // Locale-invariant syntax.
+        // Locale-invariant syntax.
         public const string KeywordTrue = "true";
         public const string KeywordFalse = "false";
         public const string KeywordIn = "in";
@@ -499,7 +499,9 @@ namespace Microsoft.PowerFx.Core.Lexer
                 }
 
                 if (impl.UnmatchedCurly)
+                {
                     tokens.Add(new ErrorToken(impl.GetTextSpan(), TexlStrings.ErrUnmatchedCurly));
+                }
 
                 tokens.Add(impl.GetEof());
             }
@@ -1077,7 +1079,7 @@ namespace Microsoft.PowerFx.Core.Lexer
             private readonly bool _allowReplaceableTokens;
             private readonly Stack<LexerMode> _modeStack;
 
-            private int _currentPos; // Current position.
+            private readonly int _currentPos; // Current position.
             private int _currentTokenPos; // The start of the current token.
 
             public LexerImpl(TexlLexer lex, string text, StringBuilder sb, Flags flags)
@@ -1097,7 +1099,9 @@ namespace Microsoft.PowerFx.Core.Lexer
             }
 
             private LexerMode CurrentMode => _modeStack.Peek();
+
             private bool IsModeStackEmpty => _modeStack.Count == 0;
+
             internal bool UnmatchedCurly => _modeStack.Count != 1;
 
             private void EnterMode(LexerMode newMode)
@@ -1107,8 +1111,10 @@ namespace Microsoft.PowerFx.Core.Lexer
 
             private void ExitMode()
             {
-                if(_modeStack.Count != 0)
+                if (_modeStack.Count != 0)
+                {
                     _modeStack.Pop();
+                }
             }
 
             // Whether we've hit the end of input yet. If this returns true, ChCur will be zero.
@@ -1232,33 +1238,57 @@ namespace Microsoft.PowerFx.Core.Lexer
                     }
 
                     if (_lex.IsNumStart(ch))
+                    {
                         return LexNumLit();
+                    }
+
                     if (IsIdentStart(ch))
+                    {
                         return LexIdent();
+                    }
+
                     if (IsInterpolatedStringStart(ch, nextCh))
+                    {
                         return LexInterpolatedStringStart();
+                    }
+
                     if (IsStringDelimiter(ch))
+                    {
                         return LexStringLit();
+                    }
+
                     if (CharacterUtils.IsSpace(ch) || CharacterUtils.IsLineTerm(ch))
+                    {
                         return LexSpace();
+                    }
 
                     if (_allowReplaceableTokens)
                     {
                         if (allowContextDependentTokens && IsContextDependentTokenDelimiter(ch))
+                        {
                             return LexContextDependentTokenLit();
+                        }
 
                         if (allowLocalizableTokens && IsLocalizableTokenDelimiter(ch, nextCh))
+                        {
                             return LexLocalizableTokenLit();
+                        }
                     }
 
                     return LexOther();
                 }
                 else if (IsStringDelimiter(ch))
+                {
                     return LexInterpolatedStringEnd();
+                }
                 else if (IsCurlyOpen(ch) && !IsCurlyOpen(nextCh))
+                {
                     return LexIslandStart();
+                }
                 else
+                {
                     return LexInterpolatedStringBody();
+                }
             }
 
             private Token LexOther()
@@ -1301,11 +1331,13 @@ namespace Microsoft.PowerFx.Core.Lexer
                 while (--punctuatorLength >= 0)
                 {
                     NextChar();
+                }
 
                 if (tidPunc == TokKind.CurlyOpen)
                 {
                     EnterMode(LexerMode.Normal);
                 }
+
                 if (tidPunc == TokKind.CurlyClose)
                 {
                     ExitMode();
@@ -1612,7 +1644,7 @@ namespace Microsoft.PowerFx.Core.Lexer
 
                 do
                 {
-                    char ch = CurrentChar;
+                    var ch = CurrentChar;
 
                     if (IsStringDelimiter(ch))
                     {
@@ -1621,9 +1653,13 @@ namespace Microsoft.PowerFx.Core.Lexer
                         {
                             // Interpolated string end, do not call NextChar()
                             if (Eof)
+                            {
                                 return new ErrorToken(GetTextSpan());
+                            }
+
                             return new StrLitToken(_sb.ToString(), GetTextSpan());
                         }
+
                         // If we are here, we are seeing a double quote followed immediately by another
                         // double quote. That is an escape sequence for double quote characters.
                         _sb.Append(ch);
@@ -1636,9 +1672,13 @@ namespace Microsoft.PowerFx.Core.Lexer
                         {
                             // Island start, do not call NextChar()
                             if (Eof)
+                            {
                                 return new ErrorToken(GetTextSpan());
+                            }
+
                             return new StrLitToken(_sb.ToString(), GetTextSpan());
                         }
+
                         // If we are here, we are seeing a open curly followed immediately by another
                         // open curly. That is an escape sequence for open curly characters.
                         _sb.Append(ch);
@@ -1653,16 +1693,20 @@ namespace Microsoft.PowerFx.Core.Lexer
                             NextChar();
                             return res;
                         }
+
                         // If we are here, we are seeing a close curly followed immediately by another
                         // close curly. That is an escape sequence for close curly characters.
                         _sb.Append(ch);
                         NextChar();
                     }
                     else if (!CharacterUtils.IsFormatCh(ch))
+                    {
                         _sb.Append(ch);
+                    }
 
                     NextChar();
-                } while (!Eof);
+                }
+                while (!Eof);
 
                 return new ErrorToken(GetTextSpan());
             }
@@ -1694,7 +1738,7 @@ namespace Microsoft.PowerFx.Core.Lexer
                 var commentEnd = _sb.ToString().StartsWith("/*") ? "*/" : "\n";
 
                 // Comment initiation takes up two chars, so must - 1 to get start
-                int startingPosition = _currentPos - 1;
+                var startingPosition = _currentPos - 1;
 
                 while (CurrentPos < _text.Length)
                 {
@@ -1845,7 +1889,7 @@ namespace Microsoft.PowerFx.Core.Lexer
                     var position = CurrentPos;
                     var unexpectedChar = Convert.ToUInt16(CurrentChar).ToString("X4");
                     NextChar();
-                    return new ErrorToken(GetTextSpan(), errorResourceKey, String.Concat(UnicodePrefix, unexpectedChar), position);
+                    return new ErrorToken(GetTextSpan(), errorResourceKey, string.Concat(UnicodePrefix, unexpectedChar), position);
                 }
                 else
                 {

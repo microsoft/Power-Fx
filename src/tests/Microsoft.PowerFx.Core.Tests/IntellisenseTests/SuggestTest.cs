@@ -38,6 +38,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         private class EmptyEnumStore : EnumStore
         {
             private IDictionary<string, string> _enumDict = new Dictionary<string, string>();
+
             protected override IDictionary<string, string> EnumDict => _enumDict;
         }
 

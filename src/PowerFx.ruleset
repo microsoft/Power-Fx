@@ -157,9 +157,6 @@
     <Rule Id="SA1608" Action="Error" />
     <Rule Id="SA1610" Action="Error" />
     <Rule Id="SA1613" Action="Error" />
-    <Rule Id="SA1614" Action="Error" />
-    <Rule Id="SA1615" Action="Error" />
-    <Rule Id="SA1616" Action="Error" />
     <Rule Id="SA1617" Action="Error" />
     <Rule Id="SA1618" Action="Error" />
     <Rule Id="SA1619" Action="Error" />
@@ -194,6 +191,9 @@
     <Rule Id="SA1609" Action="None" />
     <Rule Id="SA1611" Action="None" />
     <Rule Id="SA1612" Action="None" />
+    <Rule Id="SA1614" Action="None" />
+    <Rule Id="SA1615" Action="None" />
+    <Rule Id="SA1616" Action="None" />
     <Rule Id="SA1623" Action="None" />
     <!-- End XM Documentation Warnings-->
   </Rules>

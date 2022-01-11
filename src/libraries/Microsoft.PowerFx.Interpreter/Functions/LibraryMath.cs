@@ -379,6 +379,7 @@ namespace Microsoft.PowerFx.Functions
                 {
                     _random = new Random();
                 }
+
                 return new NumberValue(irContext, _random.NextDouble());
             }
         }
@@ -404,6 +405,7 @@ namespace Microsoft.PowerFx.Functions
                 {
                     _random = new Random();
                 }
+
                 return new NumberValue(irContext, _random.Next(lower, upper));
             }
         }

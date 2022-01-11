@@ -492,14 +492,14 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
                 return;
             }
 
-            _sendToClient(JsonRpcHelper.CreateNotification(CustomProtocolNames.PublishExpressionType,
+            _sendToClient(JsonRpcHelper.CreateNotification(
+                CustomProtocolNames.PublishExpressionType,
                 new PublishExpressionTypeParams()
                 {
                     Uri = documentUri,
                     Type = result.ReturnType
                 }));
         }
-
 
         private bool TryParseParams<T>(string json, out T result)
         {

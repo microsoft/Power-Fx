@@ -96,8 +96,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             var count = args.Length;
 
             // Check the switch expression type matches all case expression types in list.
-            bool fArgsValid = true;
-            for (int i = 1; i < count - 1; i += 2)
+            var fArgsValid = true;
+            for (var i = 1; i < count - 1; i += 2)
             {
                 if (!argTypes[0].Accepts(argTypes[i]) && !argTypes[i].Accepts(argTypes[0]))
                 {

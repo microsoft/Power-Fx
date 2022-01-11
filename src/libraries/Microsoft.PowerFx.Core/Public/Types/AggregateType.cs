@@ -26,7 +26,9 @@ namespace Microsoft.PowerFx.Core.Public.Types
         {
             var displayNameProvider = _type.DisplayNameProvider;
             if (displayNameProvider == null)
+            {
                 displayNameProvider = new SingleSourceDisplayNameProvider();
+            }
 
             if (displayNameProvider is SingleSourceDisplayNameProvider singleSourceDisplayNameProvider)
             {
@@ -42,6 +44,7 @@ namespace Microsoft.PowerFx.Core.Public.Types
             {
                 newType = DType.ReplaceDisplayNameProvider(newType, displayNameProvider);
             }
+
             return newType;
         }
     }

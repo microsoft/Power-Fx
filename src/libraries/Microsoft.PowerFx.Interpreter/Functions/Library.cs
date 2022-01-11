@@ -96,8 +96,7 @@ namespace Microsoft.PowerFx.Functions
                     checkRuntimeTypes: ExactValueTypeOrBlank<TableValue>,
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
-                    targetFunction: StandardSingleColumnTable<NumberValue>(Char)
-                    )
+                    targetFunction: StandardSingleColumnTable<NumberValue>(Char))
             },
             {
                 BuiltinFunctionsCore.Concatenate,
@@ -107,8 +106,7 @@ namespace Microsoft.PowerFx.Functions
                     checkRuntimeTypes: ExactValueType<StringValue>,
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
-                    targetFunction: Concatenate
-                )
+                    targetFunction: Concatenate)
             },
             {
                 BuiltinFunctionsCore.ConcatenateT,
@@ -125,10 +123,7 @@ namespace Microsoft.PowerFx.Functions
                                 checkRuntimeTypes: ExactValueType<StringValue>,
                                 checkRuntimeValues: DeferRuntimeValueChecking,
                                 returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
-                                targetFunction: Concatenate
-                            )
-                        )
-                    )
+                                targetFunction: Concatenate)))
             },
             {
                 BuiltinFunctionsCore.CountIf,
@@ -269,8 +264,7 @@ namespace Microsoft.PowerFx.Functions
                     checkRuntimeTypes: DeferRuntimeTypeChecking,
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
-                    targetFunction: IsNumeric
-                    )
+                    targetFunction: IsNumeric)
             },
             {
                 BuiltinFunctionsCore.IsToday,
@@ -402,8 +396,7 @@ namespace Microsoft.PowerFx.Functions
                     checkRuntimeTypes: ExactValueTypeOrBlank<TableValue>,
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
-                    targetFunction: StandardSingleColumnTable<StringValue>(Len)
-                    )
+                    targetFunction: StandardSingleColumnTable<StringValue>(Len))
             },
             {
                 BuiltinFunctionsCore.Ln,
@@ -562,8 +555,7 @@ namespace Microsoft.PowerFx.Functions
                     checkRuntimeTypes: ExactValueType<NumberValue>,
                     checkRuntimeValues: FiniteChecker,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
-                    targetFunction: RandBetween
-                    )
+                    targetFunction: RandBetween)
             },
             {
                 BuiltinFunctionsCore.Replace,
@@ -777,8 +769,7 @@ namespace Microsoft.PowerFx.Functions
                     checkRuntimeTypes: DateOrDateTime,
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
-                    targetFunction: TimeZoneOffset
-                )
+                    targetFunction: TimeZoneOffset)
             },
             { BuiltinFunctionsCore.Today, Today },
             {

@@ -13,7 +13,7 @@ namespace Microsoft.PowerFx.Core
     internal abstract class DisplayNameProvider
     {
         public abstract bool TryGetLogicalName(DName displayName, out DName logicalName);
-        
+
         public abstract bool TryGetDisplayName(DName logicalName, out DName displayName);
     }
 }

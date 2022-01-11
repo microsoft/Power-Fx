@@ -95,7 +95,8 @@ namespace Microsoft.PowerFx.Core.Entities.QueryOptions
             }
             catch (Exception ex)
             {
-                return new Dictionary<string, object>() {
+                return new Dictionary<string, object>()
+                {
                     { "message", ex.Message },
                     { "stacktrace", ex.StackTrace }
                 };

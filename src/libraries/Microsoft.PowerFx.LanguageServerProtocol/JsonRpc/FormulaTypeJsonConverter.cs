@@ -96,6 +96,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
                     Write(writer, namedFormulaType.Type, options);
                 }
             }
+
             writer.WriteEndObject();
         }
 
@@ -165,6 +166,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
             {
                 return true;
             }
+
             return element.TryGetProperty(property, out value);
         }
 

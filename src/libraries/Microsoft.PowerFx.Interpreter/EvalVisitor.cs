@@ -317,7 +317,7 @@ namespace Microsoft.PowerFx
             }
 
             // Binds to whole scope
-            if (node.Value is ScopeSymbol s2) 
+            if (node.Value is ScopeSymbol s2)
             {
                 var r = context.ScopeValues[s2.Id];
                 var r2 = (RecordScope)r;

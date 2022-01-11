@@ -85,23 +85,23 @@ namespace Microsoft.PowerFx.Core.Parser
             Contracts.AssertValue(script);
             Contracts.AssertValueOrNull(loc);
 
-            Token[] formulaTokens = TokenizeScript(script, loc, Flags.NamedFormulas);
-            TexlParser parser = new TexlParser(formulaTokens, Flags.NamedFormulas);
+            var formulaTokens = TokenizeScript(script, loc, Flags.NamedFormulas);
+            var parser = new TexlParser(formulaTokens, Flags.NamedFormulas);
 
             return parser.ParseFormulas();
         }
 
         private ParseFormulasResult ParseFormulas()
         {
-            Dictionary<DName, TexlNode> namedFormulas = new Dictionary<DName, TexlNode>();
+            var namedFormulas = new Dictionary<DName, TexlNode>();
             while (_curs.TokCur.Kind != TokKind.Eof)
             {
                 // Verify identifier
-                Token thisIdentifier = TokEat(TokKind.Ident);
+                var thisIdentifier = TokEat(TokKind.Ident);
                 if (thisIdentifier != null)
                 {
                     // Verify "="
-                    Token thisEq = TokEat(TokKind.Equ);
+                    var thisEq = TokEat(TokKind.Equ);
                     if (thisEq != null)
                     {
                         // Extract expression
@@ -113,10 +113,12 @@ namespace Microsoft.PowerFx.Core.Parser
                                 CreateError(_curs.TokCur, TexlStrings.ErrNamedFormula_MissingSemicolon);
                                 return new ParseFormulasResult(namedFormulas, _errors);
                             }
+
                             // Parse expression
                             var result = ParseExpr(Precedence.None);
                             namedFormulas.Add(thisIdentifier.As<IdentToken>().Name, result);
                         }
+
                         _curs.TokMove();
                     }
                     else
@@ -129,6 +131,7 @@ namespace Microsoft.PowerFx.Core.Parser
                     break;
                 }
             }
+
             return new ParseFormulasResult(namedFormulas, _errors);
         }
 
@@ -164,7 +167,6 @@ namespace Microsoft.PowerFx.Core.Parser
                     PostBlockCommentMissingClosingError();
                     errors = _errors;
                 }
-
 
                 node = new BlankNode(ref _idNext, _curs.TokCur);
             }
@@ -235,7 +237,8 @@ namespace Microsoft.PowerFx.Core.Parser
                     _comments.Add(comment);
                     triviaFound = true;
                 }
-            } while (triviaFound);
+            }
+            while (triviaFound);
 
             if (sources.Count() == 1)
             {
@@ -526,6 +529,7 @@ namespace Microsoft.PowerFx.Core.Parser
                             {
                                 goto default;
                             }
+
                             // Only allow this when expression chaining is enabled (e.g. in behavior rules).
                             if ((_flags & Flags.EnableExpressionChaining) == 0)
                             {
@@ -663,10 +667,11 @@ namespace Microsoft.PowerFx.Core.Parser
                 case TokKind.StrInterpStart:
                     var res = ParseStringInterpolation();
                     var tokCur = _curs.TokCur;
-                    if(FeatureFlags.StringInterpolation)
+                    if (FeatureFlags.StringInterpolation)
                     {
                         return res;
                     }
+
                     return CreateError(tokCur, TexlStrings.ErrBadToken);
                 case TokKind.StrLit:
                     return new StrLitNode(ref _idNext, _curs.TokMove().As<StrLitToken>());
@@ -836,29 +841,31 @@ namespace Microsoft.PowerFx.Core.Parser
             Contracts.Assert(_curs.TidCur == TokKind.StrInterpStart);
             var startToken = _curs.TokMove();
 
-            IdentToken headToken = new IdentToken(IdentToken.StrInterpIdent, startToken.Span);
-            Identifier head = new Identifier(headToken);
-            ITexlSource headTrivia = ParseTrivia();
+            var headToken = new IdentToken(IdentToken.StrInterpIdent, startToken.Span);
+            var head = new Identifier(headToken);
+            var headTrivia = ParseTrivia();
             TexlNode headNode = null;
 
             Contracts.AssertValue(head);
             Contracts.AssertValueOrNull(headNode);
 
-            Token leftParen = startToken;
+            var leftParen = startToken;
             var leftTrivia = headTrivia;
 
             if (_curs.TidCur == TokKind.StrInterpEnd)
             {
-                var strLitToken = new StrLitToken("", headToken.Span);
+                var strLitToken = new StrLitToken(string.Empty, headToken.Span);
                 _curs.TokMove();
                 return new StrLitNode(ref _idNext, strLitToken);
             }
 
             var rgtokCommas = new List<Token>();
             var arguments = new List<TexlNode>();
-            var sourceList = new List<ITexlSource>();
-            sourceList.Add(new TokenSource(leftParen));
-            sourceList.Add(leftTrivia);
+            var sourceList = new List<ITexlSource>
+            {
+                new TokenSource(leftParen),
+                leftTrivia
+            };
             for (var i = 0; ; i++)
             {
                 if (_curs.TidCur == TokKind.IslandStart)
@@ -907,9 +914,14 @@ namespace Microsoft.PowerFx.Core.Parser
 
             Token parenClose = null;
             if (_curs.TidCur == TokKind.StrInterpEnd)
+            {
                 parenClose = TokEat(TokKind.StrInterpEnd);
+            }
+
             if (parenClose != null)
+            {
                 sourceList.Add(new TokenSource(parenClose));
+            }
 
             var list = new ListNode(
                 ref _idNext,
@@ -920,7 +932,9 @@ namespace Microsoft.PowerFx.Core.Parser
 
             ITexlSource headNodeSource = new IdentifierSource(head);
             if (headNode != null)
+            {
                 headNodeSource = new NodeSource(headNode);
+            }
 
             return new CallNode(
                 ref _idNext,
