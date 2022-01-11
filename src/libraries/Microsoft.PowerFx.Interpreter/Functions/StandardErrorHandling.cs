@@ -547,40 +547,6 @@ namespace Microsoft.PowerFx.Functions
 
             return arg;
         }
-
-        private static FormulaValue CustomObjectNumberChecker(IRContext irContext, int index, FormulaValue arg)
-        {
-            if (arg is CustomObjectValue cov)
-            {
-                if (cov.Impl.IsNumber)
-                {
-                    var number = cov.Impl.GetDouble();
-                    if (IsInvalidDouble(number))
-                    {
-                        return CommonErrors.ArgumentOutOfRange(irContext);
-                    }
-                }
-                else
-                {
-                    return CommonErrors.RuntimeTypeMismatch(irContext);
-                }
-            }
-
-            return arg;
-        }
-
-        private static FormulaValue CustomObjectStringChecker(IRContext irContext, int index, FormulaValue arg)
-        {
-            if (arg is CustomObjectValue cov)
-            {
-                if (!cov.Impl.IsString)
-                {
-                    return CommonErrors.RuntimeTypeMismatch(irContext);
-                }
-            }
-
-            return arg;
-        }
         #endregion
 
         #region No Op Pipeline Stages

@@ -156,6 +156,7 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction SumT = _library.Append(new SumTableFunction());
         public static readonly TexlFunction Switch = _library.Append(new SwitchFunction());
         public static readonly TexlFunction Table = _library.Append(new TableFunction());
+        public static readonly TexlFunction Table_CO = _library.Append(new TableFunction_CO());
         public static readonly TexlFunction Tan = _library.Append(new TanFunction());
         public static readonly TexlFunction TanT = _library.Append(new TanTableFunction());
         public static readonly TexlFunction Time = _library.Append(new TimeFunction());

@@ -15,3 +15,6 @@
 
 >> Text(ParseJson("""s"""))
 "s"
+
+>> Sum(Table(ParseJson("[1, 2, 3, 4, 5]")), Value(Value))
+15

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Text.Json;
+using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Public;
 using Microsoft.PowerFx.Core.Public.Types;
@@ -165,6 +166,85 @@ namespace Microsoft.PowerFx.Functions
                     Kind = ErrorKind.InvalidFunctionUsage
                 });
             }
+        }
+
+        public static FormulaValue Value_CO(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, CustomObjectValue[] args)
+        {
+            return new NumberValue(irContext, args[0].Impl.GetDouble());
+        }
+
+        public static FormulaValue Text_CO(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, CustomObjectValue[] args)
+        {
+            return new StringValue(irContext, args[0].Impl.GetString());
+        }
+
+        public static FormulaValue Table_CO(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, CustomObjectValue[] args)
+        {
+            var tableType = (TableType)irContext.ResultType;
+            var resultType = tableType.ToRecord();
+            var itemType = resultType.GetFieldType(BuiltinFunction.ColumnName_ValueStr);
+
+            var resultRows = new List<DValue<RecordValue>>();
+
+            var len = args[0].Impl.GetArrayLength();
+
+            for (var i = 0; i < len; i++)
+            {
+                var element = args[0].Impl[i];
+
+                var namedValue = new NamedValue(BuiltinFunction.ColumnName_ValueStr, new CustomObjectValue(IRContext.NotInSource(itemType), element));
+                var record = new InMemoryRecordValue(IRContext.NotInSource(resultType), new List<NamedValue>() { namedValue });
+                resultRows.Add(DValue<RecordValue>.Of(record));
+            }
+
+            return new InMemoryTableValue(irContext, resultRows);
+        }
+
+        private static FormulaValue CustomObjectNumberChecker(IRContext irContext, int index, FormulaValue arg)
+        {
+            if (arg is CustomObjectValue cov)
+            {
+                if (cov.Impl.IsNumber)
+                {
+                    var number = cov.Impl.GetDouble();
+                    if (IsInvalidDouble(number))
+                    {
+                        return CommonErrors.ArgumentOutOfRange(irContext);
+                    }
+                }
+                else
+                {
+                    return CommonErrors.RuntimeTypeMismatch(irContext);
+                }
+            }
+
+            return arg;
+        }
+
+        private static FormulaValue CustomObjectStringChecker(IRContext irContext, int index, FormulaValue arg)
+        {
+            if (arg is CustomObjectValue cov)
+            {
+                if (!cov.Impl.IsString)
+                {
+                    return CommonErrors.RuntimeTypeMismatch(irContext);
+                }
+            }
+
+            return arg;
+        }
+
+        private static FormulaValue CustomObjectArrayChecker(IRContext irContext, int index, FormulaValue arg)
+        {
+            if (arg is CustomObjectValue cov)
+            {
+                if (!cov.Impl.IsArray)
+                {
+                    return CommonErrors.RuntimeTypeMismatch(irContext);
+                }
+            }
+
+            return arg;
         }
     }
 }

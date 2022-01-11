@@ -766,6 +766,16 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: Table)
             },
             {
+                BuiltinFunctionsCore.Table_CO,
+                StandardErrorHandling<CustomObjectValue>(
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<CustomObjectValue>,
+                    checkRuntimeValues: CustomObjectArrayChecker,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: Table_CO)
+            },
+            {
                 BuiltinFunctionsCore.Text,
                 StandardErrorHandling<FormulaValue>(
                     expandArguments: NoArgExpansion,

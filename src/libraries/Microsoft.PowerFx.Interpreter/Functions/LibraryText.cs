@@ -126,11 +126,6 @@ namespace Microsoft.PowerFx.Functions
             return new NumberValue(irContext, val);
         }
 
-        public static FormulaValue Value_CO(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, CustomObjectValue[] args)
-        {
-            return new NumberValue(irContext, args[0].Impl.GetDouble());
-        }
-
         // https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-text
         public static FormulaValue Text(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args)
         {
@@ -184,11 +179,6 @@ namespace Microsoft.PowerFx.Functions
             }
 
             return CommonErrors.NotYetImplementedError(irContext, $"Text format for {args[0]?.GetType().Name}");
-        }
-
-        public static FormulaValue Text_CO(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, CustomObjectValue[] args)
-        {
-            return new StringValue(irContext, args[0].Impl.GetString());
         }
 
         internal static string ExpandDateTimeFormatSpecifiers(string format, CultureInfo culture)
