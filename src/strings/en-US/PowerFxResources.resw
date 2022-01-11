@@ -447,7 +447,18 @@
     <comment>function_parameter - Argument to the Concatenate function - the text to be concatenated.</comment>
   </data>
   <data name="AboutConcatenate_text" xml:space="preserve">
-    <value>A text or a column of text values, to be concatenated with the rest of the arguments.</value>
+    <value>A text value, to be concatenated with the rest of the arguments.</value>
+  </data>
+  <data name="AboutConcatenateT" xml:space="preserve">
+    <value>Joins several text values or tables into one column of text values.</value>
+    <comment>Description of 'Concatenate' function.</comment>
+  </data>
+  <data name="ConcatenateTArg1" xml:space="preserve">
+    <value>value</value>
+    <comment>function_parameter - Argument to the Concatenate function - the text or table to be concatenated.</comment>
+  </data>
+  <data name="AboutConcatenate_value" xml:space="preserve">
+    <value>A text value or a column of text values, to be concatenated with the rest of the arguments.</value>
   </data>
   <data name="AboutConcat" xml:space="preserve">
     <value>Joins all text values produced by evaluating the given expression over the given table into one text value.</value>
@@ -1264,6 +1275,12 @@
     <value>y_coordinate</value>
     <comment>function_parameter - Second parameter to the Atan function - the y coordinate for arctangent to be returned. When translating, maintain as a single word (i.e., do not add spaces)</comment>
   </data>
+  <data name="AboutAtan2_x_coordinate" xml:space="preserve">
+    <value>x-coordinate.</value>
+  </data>
+  <data name="AboutAtan2_y_coordinate" xml:space="preserve">
+    <value>y-coordinate.</value>
+  </data>
   <data name="AboutSqrt" xml:space="preserve">
     <value>Returns the square root of a number.</value>
     <comment>Description of 'Sqrt' function.</comment>
@@ -1750,6 +1767,10 @@
   <data name="ErrAsTypeAndIsTypeExpectConnectedDataSource" xml:space="preserve">
     <value>Incorrect argument. This formula expects a table from a connected data source. The AsType and IsType functions require connected data sources.</value>
     <comment>{Locked=AsType}{Locked=IsType} Error message provided when the user attempts to use a non-Connected data source table as the second argument to AsType or IsType.</comment>
+  </data>
+  <data name="ErrUnmatchedCurly" xml:space="preserve">
+    <value>One or more '{' or '}' characters are mismatched.</value>
+    <comment>Error message when the lexer mode stack is empty, or when lexing terminates with more than a single mode in the stack.</comment>
   </data>
   <data name="InfoMessage" xml:space="preserve">
     <value>Message: </value>
@@ -5495,6 +5516,14 @@
     <value>{0} is not supported in formula columns, use {1} instead.</value>
     <comment>Error Message. Used in formula columns for scenarios where the maker attempts to use a function that is not supported, providing an alternate function name.  The {0} will be the name of the function that is not supported, and {1} is the name of the suggested alternate.</comment>
   </data>
+  <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
+    <value>This result type {0} is not supported in formula columns.</value>
+    <comment>Error Message. Used in formula columns for a formula that returns a type which is not supported.</comment>
+  </data>
+  <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
+    <value>The result type for this formula is expected to be {0}, but the actual result type is {1}. The result type of a formula column cannot be changed.</value>
+    <comment>Error Message. Used in formula columns for a formula that returns an unexpected result type during editing. The {0} will be the name of the required type. The {1} will be the name of the incorrect type.</comment>
+  </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
     <value>Expected an operand. The formula or expression expects a valid operand. For example, you can add the operand '2' to the expression ' 1 +_' so that the result is '3'. Or, you can add the operand "there" to the expression '"Hi "&amp; _ ' so that the result is 'Hi there'.</value>
     <comment>Error Message.</comment>
@@ -6236,5 +6265,9 @@
   <data name="ErrorResource_ErrAsNotInContext_ShortMessage" xml:space="preserve">
     <value>As is not permitted in this context</value>
     <comment>{Locked=As} This is an error message that shows up when the As keyword is used but is not valid</comment>
+  </data>
+  <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
+    <value>Named formula must end with a semicolon.</value>
+    <comment>A semicolon must terminate named formulas. For example, a=10;</comment>
   </data>
 </root>

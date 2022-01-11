@@ -2715,9 +2715,8 @@ namespace Microsoft.PowerFx.Core.Binding
                     return logicalNodeName;
                 }
 
-                // Skip trying to match display names if the type isn't associated with a data source, an option set or view
-                if (!type.AssociatedDataSources.Any() && !type.IsOptionSet && !type.IsView && !type.HasExpandInfo)
-                {
+                // Skip trying to match display names if the type isn't associated with a data source, an option set or view, or other display name source
+                if (!type.AssociatedDataSources.Any() && !type.IsOptionSet && !type.IsView && !type.HasExpandInfo && type.DisplayNameProvider == null)
                     return logicalNodeName;
                 }
 
@@ -3658,7 +3657,7 @@ namespace Microsoft.PowerFx.Core.Binding
                     }
                     else
                     {
-                        _txb.SetType(node, DType.CreateDTypeWithConnectedDataSourceInfoMetadata(DType.CreateTable(new TypedName(typeRhs, nameRhs)), typeRhs.AssociatedDataSources));
+                        _txb.SetType(node, DType.CreateDTypeWithConnectedDataSourceInfoMetadata(DType.CreateTable(new TypedName(typeRhs, nameRhs)), typeRhs.AssociatedDataSources, typeRhs.DisplayNameProvider));
                     }
                 }
                 else
@@ -5563,7 +5562,7 @@ namespace Microsoft.PowerFx.Core.Binding
                     else
                     {
                         dataSourceBoundType = dataSourceInfo.Schema;
-                        nodeType = DType.CreateDTypeWithConnectedDataSourceInfoMetadata(nodeType, dataSourceBoundType.AssociatedDataSources);
+                        nodeType = DType.CreateDTypeWithConnectedDataSourceInfoMetadata(nodeType, dataSourceBoundType.AssociatedDataSources, dataSourceBoundType.DisplayNameProvider);
                     }
                 }
 

@@ -16,6 +16,14 @@ namespace Microsoft.PowerFx.Core.Tests
 {
     public sealed class LexerTest
     {
+        private void AssertTokens(string value, params TokKind[] tokKinds)
+        {
+            Token[] tokens = TexlLexer.LocalizedInstance.LexSource(value);
+            Assert.NotNull(tokens);
+            Assert.Equal(tokKinds.Length, tokens.Length);
+            Assert.True(tokens.Zip(tokKinds, (t, k) => t.Kind == k).All(b => b));
+        }
+
         [Fact]
         public void TestTryNameOrIdentifierToName()
         {
@@ -569,6 +577,73 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.Equal(123456.78, tokens[0].As<NumLitToken>().Value);
 
             CultureInfo.CurrentCulture = oldCulture;
+        }
+
+        [Fact]
+        public void TestBasicStringInterpolation()
+        {
+            AssertTokens("$\"Hello {name}\"",
+                TokKind.StrInterpStart,
+                TokKind.StrLit,
+                TokKind.IslandStart,
+                TokKind.Ident,
+                TokKind.IslandEnd,
+                TokKind.StrInterpEnd,
+                TokKind.Eof);
+        }
+
+        [Fact]
+        public void TestEscapeStringInterpolation()
+        {
+            AssertTokens("$\"Hello {{name}} {name}\"",
+                TokKind.StrInterpStart,
+                TokKind.StrLit,
+                TokKind.IslandStart,
+                TokKind.Ident,
+                TokKind.IslandEnd,
+                TokKind.StrInterpEnd,
+                TokKind.Eof);
+        }
+
+        [Fact]
+        public void TestStringInterpolationWithTable()
+        {
+            AssertTokens("$\"Hello {Table({a: 5})} World!\"",
+                TokKind.StrInterpStart,
+                TokKind.StrLit,
+                TokKind.IslandStart,
+                TokKind.Ident,
+                TokKind.ParenOpen,
+                TokKind.CurlyOpen,
+                TokKind.Ident,
+                TokKind.Colon,
+                TokKind.Whitespace,
+                TokKind.NumLit,
+                TokKind.CurlyClose,
+                TokKind.ParenClose,
+                TokKind.IslandEnd,
+                TokKind.StrLit,
+                TokKind.StrInterpEnd,
+                TokKind.Eof);
+        }
+
+        [Fact]
+        public void TestNestedStringInterpolation()
+        {
+            AssertTokens("$\"One {$\"Two {\"Three\"}\"} Four\"",
+                TokKind.StrInterpStart,
+                TokKind.StrLit,
+                TokKind.IslandStart,
+                TokKind.StrInterpStart,
+                TokKind.StrLit,
+                TokKind.IslandStart,
+                TokKind.StrLit,
+                TokKind.IslandEnd,
+                TokKind.StrInterpEnd,
+                TokKind.IslandEnd,
+                TokKind.StrLit,
+                TokKind.StrInterpEnd,
+                TokKind.Eof);
         }
     }
 }

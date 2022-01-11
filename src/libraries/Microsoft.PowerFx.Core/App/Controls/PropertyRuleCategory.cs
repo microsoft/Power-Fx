@@ -27,6 +27,7 @@ namespace Microsoft.PowerFx.Core.App.Controls
         /// control template is invalid
         /// </summary>
         Unknown = 6,
+        Formulas = 7,
     }
 
     /// <summary>
@@ -45,9 +46,8 @@ namespace Microsoft.PowerFx.Core.App.Controls
     internal static class PropertyRuleCategoryExtensions
     {
         internal static bool IsValid(this PropertyRuleCategory category) =>
-            category >= PropertyRuleCategory.Data && category <= PropertyRuleCategory.Unknown;
-
-        internal static bool IsBehavioral(this PropertyRuleCategory category) =>
+            PropertyRuleCategory.Data <= category && category <= PropertyRuleCategory.Formulas;
+        internal static bool IsBehavioral(this PropertyRuleCategory category) => 
             category == PropertyRuleCategory.Behavior || category == PropertyRuleCategory.OnDemandData;
     }
 

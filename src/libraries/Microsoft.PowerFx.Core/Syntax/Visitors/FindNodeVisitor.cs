@@ -127,7 +127,7 @@ namespace Microsoft.PowerFx.Core.Syntax.Visitors
         public override bool PreVisit(CallNode node)
         {
             Contracts.AssertValue(node);
-            Contracts.Assert(node.Token.Kind == TokKind.ParenOpen);
+            Contracts.Assert(node.Token.Kind == TokKind.ParenOpen || node.Token.Kind == TokKind.StrInterpStart);
 
             if (_cursorPosition <= node.Token.Span.Min // Cursor position is before the open paren.
                 || (node.ParenClose != null && node.ParenClose.Span.Lim <= _cursorPosition) // Cursor is after the closed paren.

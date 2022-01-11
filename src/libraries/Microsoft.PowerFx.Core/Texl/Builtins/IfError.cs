@@ -89,37 +89,48 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     errors.EnsureError(args[i], TexlStrings.ErrTypeError);
                 }
 
-                var typeSuper = DType.Supertype(type, typeArg);
+                // In an IfError expression, not all expressions can be returned to the caller:
+                // - If there is an even number of arguments, only the fallbacks or the last
+                //   value (the next-to-last argument) can be returned:
+                //   IfError(v1, f1, v2, f2, v3, f3) --> possible values to be returned are f1, f2, f3 or v3
+                // - If there is an odd number of arguments, only the fallbacks or the last
+                //   value (the last argument) can be returned:
+                //   IfError(v1, f1, v2, f2, v3) --> possible values to be returned are f1, f2 or v3
+                var typeCanBeReturned = (i % 2) == 1 || i == ((count % 2) == 0 ? (count - 2) : (count - 1));
 
-                if (!typeSuper.IsError)
+                if (typeCanBeReturned)
                 {
-                    type = typeSuper;
-                }
-                else if (type.Kind == DKind.Unknown)
-                {
-                    // One of the args is also of unknown type, so we can't resolve the type of IfError
-                    type = typeSuper;
-                    fArgsValid = false;
-                }
-                else if (!type.IsError)
-                {
-                    // Types don't resolve normally, coercion needed
-                    if (typeArg.CoercesTo(type))
+                    // Let's check if it matches the other types that can be returned
+                    DType typeSuper = DType.Supertype(type, typeArg);
+
+                    if (!typeSuper.IsError)
                     {
-                        CollectionUtils.Add(ref nodeToCoercedTypeMap, nodeArg, type);
+                        type = typeSuper;
                     }
-                    else if (!isBehavior || !IsArgTypeInconsequential(nodeArg))
+                    else if (type.Kind == DKind.Unknown)
                     {
-                        errors.EnsureError(DocumentErrorSeverity.Severe, nodeArg, TexlStrings.ErrBadType_ExpectedType_ProvidedType,
-                            type.GetKindString(),
-                            typeArg.GetKindString());
+                        // One of the args is also of unknown type, so we can't resolve the type of IfError
+                        type = typeSuper;
                         fArgsValid = false;
                     }
-                }
-                else if (typeArg.Kind != DKind.Unknown)
-                {
-                    type = typeArg;
-                    fArgsValid = false;
+                    else if (!type.IsError)
+                    {
+                        // Types don't resolve normally, coercion needed
+                        if (typeArg.CoercesTo(type))
+                            CollectionUtils.Add(ref nodeToCoercedTypeMap, nodeArg, type);
+                        else if (!isBehavior || !IsArgTypeInconsequential(nodeArg))
+                        {
+                            errors.EnsureError(DocumentErrorSeverity.Severe, nodeArg, TexlStrings.ErrBadType_ExpectedType_ProvidedType,
+                                type.GetKindString(),
+                                typeArg.GetKindString());
+                            fArgsValid = false;
+                        }
+                    }
+                    else if (typeArg.Kind != DKind.Unknown)
+                    {
+                        type = typeArg;
+                        fArgsValid = false;
+                    }
                 }
 
                 // If there are an odd number of args, the last arg also participates.

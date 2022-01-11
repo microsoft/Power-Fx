@@ -24,53 +24,6 @@ namespace Microsoft.PowerFx.Functions
             return new StringValue(irContext, str);
         }
 
-        public static FormulaValue CharT(IRContext irContext, TableValue[] args)
-        {
-            var tableType = (TableType)irContext.ResultType;
-            var resultType = tableType.ToRecord();
-
-            var arg0 = args[0];
-            var resultRows = new List<DValue<RecordValue>>();
-            foreach (var row in arg0.Rows)
-            {
-                if (row.IsValue)
-                {
-                    var value = row.Value.GetField(BuiltinFunction.ColumnName_ValueStr);
-                    NamedValue namedValue;
-                    if (value is NumberValue nv)
-                    {
-                        var str = Char(IRContext.NotInSource(FormulaType.String), new NumberValue[] { nv });
-                        namedValue = new NamedValue(BuiltinFunction.OneColumnTableResultNameStr, str);
-                    }
-                    else if (value is BlankValue bv)
-                    {
-                        namedValue = new NamedValue(BuiltinFunction.OneColumnTableResultNameStr, bv);
-                    }
-                    else if (value is ErrorValue ev)
-                    {
-                        namedValue = new NamedValue(BuiltinFunction.OneColumnTableResultNameStr, ev);
-                    }
-                    else
-                    {
-                        namedValue = new NamedValue(BuiltinFunction.OneColumnTableResultNameStr, CommonErrors.RuntimeTypeMismatch(IRContext.NotInSource(FormulaType.Number)));
-                    }
-
-                    var record = new InMemoryRecordValue(IRContext.NotInSource(resultType), new List<NamedValue>() { namedValue });
-                    resultRows.Add(DValue<RecordValue>.Of(record));
-                }
-                else if (row.IsBlank)
-                {
-                    resultRows.Add(DValue<RecordValue>.Of(row.Blank));
-                }
-                else
-                {
-                    resultRows.Add(DValue<RecordValue>.Of(row.Error));
-                }
-            }
-
-            return new InMemoryTableValue(irContext, resultRows);
-        }
-
         public static FormulaValue Concat(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args)
         {// Streaming 
             var arg0 = (TableValue)args[0];
@@ -95,8 +48,8 @@ namespace Microsoft.PowerFx.Functions
             return new StringValue(irContext, sb.ToString());
         }
 
-        // Scalar 
-        // Operator & maps to this function call. 
+        // Scalar
+        // Operator & maps to this function call.
         public static FormulaValue Concatenate(IRContext irContext, StringValue[] args)
         {
             var sb = new StringBuilder();
@@ -179,27 +132,37 @@ namespace Microsoft.PowerFx.Functions
             string resultString = null;
             string formatString = null;
 
-            if (args.Length > 1 && args[1] is StringValue sv)
+            if (args.Length > 1 && args[1] is StringValue fs)
             {
-                formatString = sv.Value;
+                formatString = fs.Value;
+            }
+
+
+            CultureInfo suppliedCulture = null;
+            if (args.Length > 2 && args[2] is StringValue locale)
+            {
+                suppliedCulture = new CultureInfo(locale.Value);
             }
 
             switch (args[0])
             {
                 case NumberValue num:
-                    resultString = num.Value.ToString(formatString ?? "g", runner.CultureInfo);
+                    resultString = num.Value.ToString(formatString ?? "g", suppliedCulture ?? runner.CultureInfo);
                     break;
                 case StringValue s:
                     resultString = s.Value;
                     break;
                 case DateValue d:
-                    resultString = d.Value.ToString(formatString ?? "M/d/yyyy", runner.CultureInfo);
+                    formatString = ExpandDateTimeFormatSpecifiers(formatString, suppliedCulture ?? runner.CultureInfo);
+                    resultString = d.Value.ToString(formatString ?? "M/d/yyyy", suppliedCulture ?? runner.CultureInfo);
                     break;
                 case DateTimeValue dt:
-                    resultString = dt.Value.ToString(formatString ?? "g", runner.CultureInfo);
+                    formatString = ExpandDateTimeFormatSpecifiers(formatString, suppliedCulture ?? runner.CultureInfo);
+                    resultString = dt.Value.ToString(formatString ?? "g", suppliedCulture ?? runner.CultureInfo);
                     break;
                 case TimeValue t:
-                    resultString = _epoch.Add(t.Value).ToString(formatString ?? "t", runner.CultureInfo);
+                    formatString = ExpandDateTimeFormatSpecifiers(formatString, suppliedCulture ?? runner.CultureInfo);
+                    resultString = _epoch.Add(t.Value).ToString(formatString ?? "t", suppliedCulture ?? runner.CultureInfo);
                     break;
                 default:
                     break;
@@ -211,6 +174,53 @@ namespace Microsoft.PowerFx.Functions
             }
 
             return CommonErrors.NotYetImplementedError(irContext, $"Text format for {args[0]?.GetType().Name}");
+        }
+
+        internal static string ExpandDateTimeFormatSpecifiers(string format, CultureInfo culture)
+        {
+            if (format == null)
+                return format;
+
+            var info = DateTimeFormatInfo.GetInstance(culture);
+
+            switch (format.ToLower())
+            {
+                case "shortdatetime24":
+                    // TODO: This might be wrong for some cultures
+                    return ReplaceWith24HourClock(info.ShortDatePattern + " " + info.ShortTimePattern);
+                case "shortdatetime":
+                    // TODO: This might be wrong for some cultures
+                    return info.ShortDatePattern + " " + info.ShortTimePattern;
+                case "shorttime24":
+                    return ReplaceWith24HourClock(info.ShortTimePattern);
+                case "shorttime":
+                    return info.ShortTimePattern;
+                case "shortdate":
+                    return info.ShortDatePattern;
+                case "longdatetime24":
+                    return ReplaceWith24HourClock(info.FullDateTimePattern);
+                case "longdatetime":
+                    return info.FullDateTimePattern;
+                case "longtime24":
+                    return ReplaceWith24HourClock(info.LongTimePattern);
+                case "longtime":
+                    return info.LongTimePattern;
+                case "longdate":
+                    return info.LongDatePattern;
+                case "utc":
+                    return info.UniversalSortableDateTimePattern;
+            }
+
+            return format;
+        }
+
+        private static string ReplaceWith24HourClock(string format)
+        {
+            string pattern = @"^(?<openAMPM>\s*t+\s*)? " +
+                             @"(?(openAMPM) h+(?<nonHours>[^ht]+)$ " +
+                             @"| \s*h+(?<nonHours>[^ht]+)\s*t+)";
+            return Regex.Replace(format, pattern, "HH${nonHours}",
+                                 RegexOptions.IgnorePatternWhitespace);
         }
 
         // https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-isblank-isempty

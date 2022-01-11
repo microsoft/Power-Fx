@@ -27,7 +27,7 @@ namespace Microsoft.PowerFx.Core.Types.Enums
 
         public string InvariantName { get; set; }
 
-        public EnumSymbol(DName name, DName invariantName, DType invariantType)
+        public EnumSymbol(EnumStore store, DName name, DName invariantName, DType invariantType)
         {
             Contracts.AssertValid(invariantName);
             Contracts.Assert(invariantType.IsEnum);
@@ -59,9 +59,9 @@ namespace Microsoft.PowerFx.Core.Types.Enums
                     displayName = locName;
                 }
 
-                var entityNameValue = name.Value;
-                if (!EnumStore.TryGetLocalizedEnumValue(entityNameValue, invName, out var custDisplayName))
-                {
+                string custDisplayName;
+                string entityNameValue = name.Value;
+                if (!store.TryGetLocalizedEnumValue(entityNameValue, invName, out custDisplayName))
                     custDisplayName = displayName;
                 }
 

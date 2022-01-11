@@ -131,9 +131,13 @@ namespace Microsoft.PowerFx.Core.Localization
 
             if (!Strings.TryGetValue(locale, out var strings))
             {
-                LoadFromResource(locale, ResourceNamePrefix, typeof(TypeFromThisAssembly), ResourceFileName, ResourceFormat.Resw, out strings, out var errorResources);
-                Strings[locale] = strings;
-                ErrorResources[locale] = errorResources;
+                lock (dictionaryLock)
+                {
+                    Dictionary<string, ErrorResource> errorResources;
+                    LoadFromResource(locale, ResourceNamePrefix, typeof(TypeFromThisAssembly), ResourceFileName, ResourceFormat.Resw, out strings, out errorResources);
+                    Strings[locale] = strings;
+                    ErrorResources[locale] = errorResources;
+                }
             }
 
             return strings.TryGetValue(resourceKey, out resourceValue) || (ExternalStringResources?.TryGet(resourceKey, out resourceValue, locale) ?? false);

@@ -7,16 +7,19 @@ using System.Text.Json;
 using System.Text.RegularExpressions;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Public;
-using Microsoft.PowerFx.LanguageServerProtocol.Protocol;
+using Microsoft.PowerFx.Core.Public.Types;
+using Microsoft.PowerFx.LanguageServerProtocol;
 using Xunit;
 
 namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
 {
     public class LanguageServerTests
     {
-        protected static readonly JsonSerializerOptions _jsonSerializerOptions = new JsonSerializerOptions()
+        protected static readonly JsonSerializerOptions _jsonSerializerOptions = new JsonSerializerOptions
         {
-            PropertyNameCaseInsensitive = true
+            PropertyNameCaseInsensitive = true,
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+            Converters = { new FormulaTypeJsonConverter() }
         };
 
         protected static List<string> _sendToClientData;
@@ -367,6 +370,53 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             Assert.Equal(-32602, errorResponse.Error.Code);
         }
 
+        [Fact]
+        public void TestCodeAction()
+        {
+            var scopeFactory = new TestPowerFxScopeFactory((string documentUri) => new MockSqlEngine());
+            var testServer = new TestLanguageServer(_sendToClientData.Add, scopeFactory);
+            var documentUri = "powerfx://test?expression=IsBlank(&context={\"A\":1,\"B\":[1,2,3]}";
+
+            testServer.OnDataReceived(JsonSerializer.Serialize(new
+            {
+                jsonrpc = "2.0",
+                id = "testDocument1",
+                method = "textDocument/codeAction",
+                @params = new CodeActionParams()
+                {
+                    TextDocument = new TextDocumentIdentifier()
+                    {
+                        Uri = documentUri
+                    },
+                    Range = new Range()
+                    {
+                        Start = new Position
+                        {
+                            Line = 0,
+                            Character = 0
+                        },
+                        End = new Position
+                        {
+                            Line = 0,
+                            Character = 10
+                        }
+                    },
+                    Context = new CodeActionContext() { Only = new[] { CodeActionKind.QuickFix } }
+                }
+            }));
+            Assert.Single(_sendToClientData);
+            var response = JsonSerializer.Deserialize<JsonRpcCodeActionResponse>(_sendToClientData[0], _jsonSerializerOptions);
+            Assert.Equal("2.0", response.Jsonrpc);
+            Assert.Equal("testDocument1", response.Id);
+            Assert.NotEmpty(response.Result);
+            Assert.Contains(CodeActionKind.QuickFix, response.Result.Keys);
+            Assert.True(1 == response.Result[CodeActionKind.QuickFix].Length, "Quick fix didn't return expected suggestion.");
+            Assert.Equal("TestTitle1", response.Result[CodeActionKind.QuickFix][0].Title);
+            Assert.NotEmpty(response.Result[CodeActionKind.QuickFix][0].Edit.Changes);
+            Assert.Contains(documentUri, response.Result[CodeActionKind.QuickFix][0].Edit.Changes.Keys);
+            Assert.Equal("TestText1", response.Result[CodeActionKind.QuickFix][0].Edit.Changes[documentUri][0].NewText);
+        }
+
         [Theory]
         [InlineData("{1}", 1)]
         [InlineData("12{3}45", 3)]
@@ -598,6 +648,101 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             Assert.Equal(TokenResultType.Function, response.Params.Tokens["CountRows"]);
             Assert.Equal(TokenResultType.Function, response.Params.Tokens["VarP"]);
             Assert.Equal(TokenResultType.Function, response.Params.Tokens["Year"]);
+        }
+
+        [Theory]
+        [InlineData("{\"A\": 1 }", "A+2", typeof(NumberType))]
+        [InlineData("{}", "\"hi\"", typeof(StringType))]
+        [InlineData("{}", "", typeof(BlankType))]
+        [InlineData("{}", "{ A: 1 }", typeof(RecordType))]
+        [InlineData("{}", "[1, 2, 3]", typeof(TableType))]
+        [InlineData("{}", "true", typeof(BooleanType))]
+        public void TestPublishExpressionType(string context, string expression, System.Type expectedType)
+        {
+            var documentUri = $"powerfx://app?context={context}&getExpressionType=true";
+            _testServer.OnDataReceived(JsonSerializer.Serialize(new
+            {
+                jsonrpc = "2.0",
+                method = "textDocument/didOpen",
+                @params = new DidOpenTextDocumentParams()
+                {
+                    TextDocument = new TextDocumentItem()
+                    {
+                        Uri = documentUri,
+                        LanguageId = "powerfx",
+                        Version = 1,
+                        Text = expression
+                    }
+                }
+            }));
+
+            Assert.Equal(2, _sendToClientData.Count);
+            var response = JsonSerializer.Deserialize<JsonRpcPublishExpressionTypeNotification>(_sendToClientData[1], _jsonSerializerOptions);
+            Assert.Equal("$/publishExpressionType", response.Method);
+            Assert.Equal(documentUri, response.Params.Uri);
+            Assert.IsType(expectedType, response.Params.Type);
+        }
+
+        [Theory]
+        [InlineData("{\"A\": 1 }", "invalid+A")]
+        [InlineData("{}", "B")]
+        [InlineData("{}", "+")]
+        public void TestPublishExpressionType_Null(string context, string expression)
+        {
+            var documentUri = $"powerfx://app?context={context}&getExpressionType=true";
+            _testServer.OnDataReceived(JsonSerializer.Serialize(new
+            {
+                jsonrpc = "2.0",
+                method = "textDocument/didOpen",
+                @params = new DidOpenTextDocumentParams()
+                {
+                    TextDocument = new TextDocumentItem()
+                    {
+                        Uri = documentUri,
+                        LanguageId = "powerfx",
+                        Version = 1,
+                        Text = expression
+                    }
+                }
+            }));
+
+            Assert.Equal(2, _sendToClientData.Count);
+            var response = JsonSerializer.Deserialize<JsonRpcPublishExpressionTypeNotification>(_sendToClientData[1], _jsonSerializerOptions);
+            Assert.Equal("$/publishExpressionType", response.Method);
+            Assert.Equal(documentUri, response.Params.Uri);
+            Assert.Null(response.Params.Type);
+        }
+
+        [Theory]
+        [InlineData("{}", "{ A: 1 }", @"{""type"":""Record"",""fields"":{""A"":{""type"":""Number""}}}")]
+        [InlineData("{}", "[1, 2]", @"{""type"":""Table"",""fields"":{""Value"":{""type"":""Number""}}}")]
+        [InlineData("{}", "[{ A: 1 }, { B: true }]", @"{""type"":""Table"",""fields"":{""Value"":{""type"":""Record"",""fields"":{""A"":{""type"":""Number""},""B"":{""type"":""Boolean""}}}}}")]
+        [InlineData("{}", "{A: 1, B: { C: { D: \"Qwerty\" }, E: true } }", @"{""type"":""Record"",""fields"":{""A"":{""type"":""Number""},""B"":{""type"":""Record"",""fields"":{""C"":{""type"":""Record"",""fields"":{""D"":{""type"":""String""}}},""E"":{""type"":""Boolean""}}}}}")]
+        [InlineData("{}", "{ type: 123 }", @"{""type"":""Record"",""fields"":{""type"":{""type"":""Number""}}}")]
+        public void TestPublishExpressionType_AggregateShapes(string context, string expression, string expectedTypeJson)
+        {
+            var documentUri = $"powerfx://app?context={context}&getExpressionType=true";
+            _testServer.OnDataReceived(JsonSerializer.Serialize(new
+            {
+                jsonrpc = "2.0",
+                method = "textDocument/didOpen",
+                @params = new DidOpenTextDocumentParams()
+                {
+                    TextDocument = new TextDocumentItem()
+                    {
+                        Uri = documentUri,
+                        LanguageId = "powerfx",
+                        Version = 1,
+                        Text = expression
+                    }
+                }
+            }));
+
+            Assert.Equal(2, _sendToClientData.Count);
+            var response = JsonSerializer.Deserialize<JsonRpcPublishExpressionTypeNotification>(_sendToClientData[1], _jsonSerializerOptions);
+            Assert.Equal("$/publishExpressionType", response.Method);
+            Assert.Equal(documentUri, response.Params.Uri);
+            Assert.Equal(expectedTypeJson, JsonSerializer.Serialize(response.Params.Type, _jsonSerializerOptions));
         }
 
         [Fact]

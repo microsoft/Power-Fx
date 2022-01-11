@@ -11,9 +11,11 @@
 0
 
 >> Value("0.0")
+/*SqlRunner*/ #Error
 0
 
 >> Value("123,456.78")
+/*SqlRunner*/ #Error
 123456.78
 
 >> Value("xxx")
@@ -32,12 +34,15 @@ false
 Blank()
 
 >> Value( "$ 12.34" )
+/*SqlRunner*/ #Error
 12.34
 
 >> Value( "24e3" )
+/*SqlRunner*/ #Error
 24000
 
 >> Value( "12.34%" )
+/*SqlRunner*/ #Error
 0.1234
 
 >> Value("%")
@@ -48,13 +53,16 @@ true
 
 // leading and trailing whitespace ignored
 >> Value(" %10")
+/*SqlRunner*/ #Error
 0.1
 
 >> Value("10% ")
+/*SqlRunner*/ #Error
 0.1
 
 // percent can also be a prefix
 >> Value("%10")
+/*SqlRunner*/ #Error
 0.1
 
 // inner percent not handled
@@ -70,13 +78,17 @@ true
 123
 
 >> Value(Date(1900, 1, 1))
+/*SqlRunner*/ Compile Error
 2
 
 >> Value(Date(1900, 2, 28))
+/*SqlRunner*/ Compile Error
 60
 
 >> Value(Date(1900, 3, 1))
+/*SqlRunner*/ Compile Error
 61
 
 >> Value(Date(1900, 3, 1)) - Value(Date(1900, 2, 28))
+/*SqlRunner*/ Compile Error
 1
