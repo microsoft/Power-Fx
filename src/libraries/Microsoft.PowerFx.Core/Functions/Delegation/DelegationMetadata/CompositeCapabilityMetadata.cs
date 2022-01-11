@@ -13,7 +13,8 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationMetadata
     {
         private readonly List<OperationCapabilityMetadata> _compositeMetadata;
 
-        public CompositeCapabilityMetadata(DType schema, List<OperationCapabilityMetadata> compositeMetadata) : base(schema)
+        public CompositeCapabilityMetadata(DType schema, List<OperationCapabilityMetadata> compositeMetadata)
+            : base(schema)
         {
             Contracts.AssertValue(compositeMetadata);
             _compositeMetadata = compositeMetadata;

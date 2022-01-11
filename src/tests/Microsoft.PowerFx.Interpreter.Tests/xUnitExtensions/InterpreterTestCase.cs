@@ -13,7 +13,7 @@ using Xunit;
 using Xunit.Abstractions;
 using Xunit.Sdk;
 
-namespace Microsoft.PowerFx.Interpreter.Tests.xUnitExtensions
+namespace Microsoft.PowerFx.Interpreter.Tests.XUnitExtensions
 {
     public class InterpreterTestCase : LongLivedMarshalByRefObject, IXunitTestCase
     {
@@ -32,7 +32,9 @@ namespace Microsoft.PowerFx.Interpreter.Tests.xUnitExtensions
 
         [EditorBrowsable(EditorBrowsableState.Never)]
         [Obsolete("Called by the de-serializer; should only be called by deriving classes for de-serialization purposes")]
-        public InterpreterTestCase() { }
+        public InterpreterTestCase()
+        {
+        }
 
         public Exception InitializationException { get; set; }
 
@@ -51,6 +53,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests.xUnitExtensions
         }
 
         public ITestMethod TestMethod => testCase.TestMethod;
+
         public object[] TestMethodArguments => testCase.TestMethodArguments;
 
         public Dictionary<string, List<string>> Traits
@@ -84,7 +87,6 @@ namespace Microsoft.PowerFx.Interpreter.Tests.xUnitExtensions
             result.Failed -= messageBusInterceptor.SkippedCount;
             result.Skipped += messageBusInterceptor.SkippedCount;
             return result;
-
         }
     }
 }

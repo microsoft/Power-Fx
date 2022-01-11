@@ -56,5 +56,4 @@ namespace Microsoft.PowerFx.Core.Utils
             Dir = null;
         }
     }
-
 }

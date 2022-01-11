@@ -10,7 +10,8 @@ namespace Microsoft.PowerFx.Core.Public.Values
 {
     public class TimeValue : PrimitiveValue<TimeSpan>
     {
-        internal TimeValue(IRContext irContext, TimeSpan ts) : base(irContext, ts)
+        internal TimeValue(IRContext irContext, TimeSpan ts)
+            : base(irContext, ts)
         {
             Contract.Assert(IRContext.ResultType == FormulaType.Time);
         }

@@ -16,12 +16,14 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class FirstLastNFunction : FunctionWithTableInput
     {
         public override bool IsSelfContained => true;
+
         public override bool SupportsParamCoercion => false;
 
         public FirstLastNFunction(bool isFirst)
             : base(isFirst ? "FirstN" : "LastN", isFirst ? TexlStrings.AboutFirstN : TexlStrings.AboutLastN, FunctionCategories.Table,
             DType.EmptyTable, 0, 1, 2, DType.EmptyTable, DType.Number)
-        { }
+        {
+        }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {

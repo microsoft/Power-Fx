@@ -18,7 +18,8 @@ namespace Microsoft.PowerFx.Core.IR.Nodes
         /// </summary>
         public readonly ScopeSymbol Scope;
 
-        public CallNode(IRContext irContext, TexlFunction func, params IntermediateNode[] args) : base(irContext)
+        public CallNode(IRContext irContext, TexlFunction func, params IntermediateNode[] args)
+            : base(irContext)
         {
             Contracts.AssertValue(func);
             Contracts.AssertAllValues(args);
@@ -27,7 +28,8 @@ namespace Microsoft.PowerFx.Core.IR.Nodes
             Args = args.ToList();
         }
 
-        public CallNode(IRContext irContext, TexlFunction func, IList<IntermediateNode> args) : base(irContext)
+        public CallNode(IRContext irContext, TexlFunction func, IList<IntermediateNode> args)
+            : base(irContext)
         {
             Contracts.AssertValue(func);
             Contracts.AssertAllValues(args);
@@ -36,8 +38,8 @@ namespace Microsoft.PowerFx.Core.IR.Nodes
             Args = args.ToList();
         }
 
-
-        public CallNode(IRContext irContext, TexlFunction func, ScopeSymbol scope, IList<IntermediateNode> args) : this(irContext, func, args)
+        public CallNode(IRContext irContext, TexlFunction func, ScopeSymbol scope, IList<IntermediateNode> args)
+            : this(irContext, func, args)
         {
             Contracts.AssertValue(scope);
 
@@ -92,5 +94,4 @@ namespace Microsoft.PowerFx.Core.IR.Nodes
             return result;
         }
     }
-
 }

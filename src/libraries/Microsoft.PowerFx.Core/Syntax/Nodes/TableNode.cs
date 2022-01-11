@@ -14,6 +14,7 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
     internal sealed class TableNode : VariadicBase
     {
         public readonly Token[] Commas;
+
         // BracketClose can be null.
         public readonly Token BracketClose;
 

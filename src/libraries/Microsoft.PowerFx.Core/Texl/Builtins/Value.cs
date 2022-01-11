@@ -18,13 +18,17 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class ValueFunction : BuiltinFunction
     {
         public const string ValueInvariantFunctionName = "Value";
+
         public override bool RequiresErrorContext => true;
+
         public override bool IsSelfContained => true;
+
         public override bool SupportsParamCoercion => true;
 
         public ValueFunction()
             : base(ValueInvariantFunctionName, TexlStrings.AboutValue, FunctionCategories.Text, DType.Number, 0, 1, 2, DType.String, DType.String)
-        { }
+        {
+        }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {

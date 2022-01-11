@@ -17,11 +17,13 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal abstract class StatisticalFunction : BuiltinFunction
     {
         public override bool SupportsParamCoercion => true;
+
         public override bool IsSelfContained => true;
 
         public StatisticalFunction(string name, TexlStrings.StringGetter description, FunctionCategories fc)
             : base(name, description, fc, DType.Number, 0, 1, int.MaxValue, DType.Number)
-        { }
+        {
+        }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
@@ -51,7 +53,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             var fValid = base.CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
             Contracts.Assert(returnType == DType.Number);
-
 
             // Ensure that all the arguments are numeric/coercible to numeric.
             for (var i = 0; i < argTypes.Length; i++)

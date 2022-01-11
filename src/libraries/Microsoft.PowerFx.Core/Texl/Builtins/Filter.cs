@@ -60,6 +60,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             var fArgsValid = CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
 
             var dataSourceVisitor = new ViewFilterDataSourceVisitor(binding);
+
             // Ensure that all the args starting at index 1 are booleans or view
             for (var i = 1; i < args.Length; i++)
             {
@@ -161,6 +162,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
 
             var args = callNode.Args.Children.VerifyValue();
+
             // Validate for each predicate node.
             for (var i = 1; i < args.Length; i++)
             {

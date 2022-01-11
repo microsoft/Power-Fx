@@ -441,7 +441,9 @@ namespace Microsoft.PowerFx.Core.Utils
         {
 #if DEBUG
             if (!f)
+            {
                 DbgFail();
+            }
 #endif
         }
 
@@ -450,7 +452,9 @@ namespace Microsoft.PowerFx.Core.Utils
         {
 #if DEBUG
             if (!f)
+            {
                 DbgFail(msg);
+            }
 #endif
         }
 
@@ -459,7 +463,9 @@ namespace Microsoft.PowerFx.Core.Utils
         {
 #if DEBUG
             if (!IsValid(index, count, available))
+            {
                 DbgFail();
+            }
 #endif
         }
 
@@ -468,7 +474,9 @@ namespace Microsoft.PowerFx.Core.Utils
         {
 #if DEBUG
             if (!IsValid(index, count, available))
+            {
                 DbgFail(msg);
+            }
 #endif
         }
 
@@ -477,7 +485,9 @@ namespace Microsoft.PowerFx.Core.Utils
         {
 #if DEBUG
             if (!IsValid(index, count, available))
+            {
                 DbgFail();
+            }
 #endif
         }
 
@@ -486,7 +496,9 @@ namespace Microsoft.PowerFx.Core.Utils
         {
 #if DEBUG
             if (!IsValid(index, count, available))
+            {
                 DbgFail(msg);
+            }
 #endif
         }
 
@@ -495,7 +507,9 @@ namespace Microsoft.PowerFx.Core.Utils
         {
 #if DEBUG
             if (!IsValidIndex(index, available))
+            {
                 DbgFail();
+            }
 #endif
         }
 
@@ -504,7 +518,9 @@ namespace Microsoft.PowerFx.Core.Utils
         {
 #if DEBUG
             if (!IsValidIndex(index, available))
+            {
                 DbgFail(msg);
+            }
 #endif
         }
 
@@ -513,7 +529,9 @@ namespace Microsoft.PowerFx.Core.Utils
         {
 #if DEBUG
             if (!IsValidIndex(index, available))
+            {
                 DbgFail();
+            }
 #endif
         }
 
@@ -522,7 +540,9 @@ namespace Microsoft.PowerFx.Core.Utils
         {
 #if DEBUG
             if (!IsValidIndex(index, available))
+            {
                 DbgFail(msg);
+            }
 #endif
         }
 
@@ -531,7 +551,9 @@ namespace Microsoft.PowerFx.Core.Utils
         {
 #if DEBUG
             if (!IsValidIndexInclusive(index, available))
+            {
                 DbgFail();
+            }
 #endif
         }
 
@@ -540,7 +562,9 @@ namespace Microsoft.PowerFx.Core.Utils
         {
 #if DEBUG
             if (!IsValidIndexInclusive(index, available))
+            {
                 DbgFail(msg);
+            }
 #endif
         }
 
@@ -549,7 +573,9 @@ namespace Microsoft.PowerFx.Core.Utils
         {
 #if DEBUG
             if (!IsValidIndexInclusive(index, available))
+            {
                 DbgFail();
+            }
 #endif
         }
 
@@ -558,7 +584,9 @@ namespace Microsoft.PowerFx.Core.Utils
         {
 #if DEBUG
             if (!IsValidIndexInclusive(index, available))
+            {
                 DbgFail(msg);
+            }
 #endif
         }
 
@@ -567,7 +595,9 @@ namespace Microsoft.PowerFx.Core.Utils
         {
 #if DEBUG
             if (string.IsNullOrEmpty(s))
+            {
                 DbgFailEmpty();
+            }
 #endif
         }
 
@@ -576,7 +606,9 @@ namespace Microsoft.PowerFx.Core.Utils
         {
 #if DEBUG
             if (string.IsNullOrEmpty(s))
+            {
                 DbgFailEmpty(msg);
+            }
 #endif
         }
 
@@ -585,7 +617,9 @@ namespace Microsoft.PowerFx.Core.Utils
         {
 #if DEBUG
             if (g == Guid.Empty)
+            {
                 DbgFailEmpty();
+            }
 #endif
         }
 
@@ -603,7 +637,9 @@ namespace Microsoft.PowerFx.Core.Utils
         {
 #if DEBUG
             if (g.HasValue && g.Value == Guid.Empty)
+            {
                 DbgFailEmpty();
+            }
 #endif
         }
 
@@ -612,7 +648,9 @@ namespace Microsoft.PowerFx.Core.Utils
         {
 #if DEBUG
             if (Size(args) == 0)
+            {
                 DbgFail();
+            }
 #endif
         }
 
@@ -621,7 +659,9 @@ namespace Microsoft.PowerFx.Core.Utils
         {
 #if DEBUG
             if (Size(args) == 0)
+            {
                 DbgFail(msg);
+            }
 #endif
         }
 
@@ -630,7 +670,9 @@ namespace Microsoft.PowerFx.Core.Utils
         {
 #if DEBUG
             if (Size(args) == 0)
+            {
                 DbgFail();
+            }
 #endif
         }
 
@@ -639,7 +681,9 @@ namespace Microsoft.PowerFx.Core.Utils
         {
 #if DEBUG
             if (Size(args) == 0)
+            {
                 DbgFail(msg);
+            }
 #endif
         }
 
@@ -648,7 +692,9 @@ namespace Microsoft.PowerFx.Core.Utils
         {
 #if DEBUG
             if (s != null)
+            {
                 AssertNonEmpty(s);
+            }
 #endif
         }
 
@@ -657,7 +703,9 @@ namespace Microsoft.PowerFx.Core.Utils
         {
 #if DEBUG
             if (s != null)
+            {
                 AssertNonEmpty(s, msg);
+            }
 #endif
         }
 
@@ -666,7 +714,9 @@ namespace Microsoft.PowerFx.Core.Utils
         {
 #if DEBUG
             if (args != null)
+            {
                 AssertNonEmpty(args);
+            }
 #endif
         }
 
@@ -675,7 +725,9 @@ namespace Microsoft.PowerFx.Core.Utils
         {
 #if DEBUG
             if (args != null)
+            {
                 AssertNonEmpty(args, msg);
+            }
 #endif
         }
 
@@ -684,7 +736,9 @@ namespace Microsoft.PowerFx.Core.Utils
         {
 #if DEBUG
             if (args != null)
+            {
                 AssertNonEmpty(args);
+            }
 #endif
         }
 
@@ -693,7 +747,9 @@ namespace Microsoft.PowerFx.Core.Utils
         {
 #if DEBUG
             if (args != null)
+            {
                 AssertNonEmpty(args, msg);
+            }
 #endif
         }
 
@@ -717,7 +773,9 @@ namespace Microsoft.PowerFx.Core.Utils
         {
 #if DEBUG
             if (!val.HasValue)
+            {
                 DbgFailValue();
+            }
 #endif
         }
 
@@ -727,7 +785,9 @@ namespace Microsoft.PowerFx.Core.Utils
         {
 #if DEBUG
             if (ReferenceEquals(val, null))
+            {
                 DbgFailValue();
+            }
 #endif
         }
 
@@ -737,7 +797,9 @@ namespace Microsoft.PowerFx.Core.Utils
         {
 #if DEBUG
             if (ReferenceEquals(val, null))
+            {
                 DbgFailValue(name);
+            }
 #endif
         }
 
@@ -747,7 +809,9 @@ namespace Microsoft.PowerFx.Core.Utils
         {
 #if DEBUG
             if (ReferenceEquals(val, null))
+            {
                 DbgFailValue(name, msg);
+            }
 #endif
         }
 
@@ -757,7 +821,9 @@ namespace Microsoft.PowerFx.Core.Utils
         {
 #if DEBUG
             if (!ReferenceEquals(val, null))
+            {
                 DbgFailNull();
+            }
 #endif
         }
 
@@ -767,7 +833,9 @@ namespace Microsoft.PowerFx.Core.Utils
         {
 #if DEBUG
             if (!ReferenceEquals(val, null))
+            {
                 DbgFailNull(name);
+            }
 #endif
         }
 
@@ -777,7 +845,9 @@ namespace Microsoft.PowerFx.Core.Utils
         {
 #if DEBUG
             if (!ReferenceEquals(val, null))
+            {
                 DbgFailNull(name, msg);
+            }
 #endif
         }
 
@@ -787,7 +857,9 @@ namespace Microsoft.PowerFx.Core.Utils
         {
 #if DEBUG
             if (val != null)
+            {
                 DbgFailNull();
+            }
 #endif
         }
 
@@ -797,7 +869,9 @@ namespace Microsoft.PowerFx.Core.Utils
         {
 #if DEBUG
             if (val != null)
+            {
                 DbgFailNull(name);
+            }
 #endif
         }
 
@@ -807,7 +881,9 @@ namespace Microsoft.PowerFx.Core.Utils
         {
 #if DEBUG
             if (val != null)
+            {
                 DbgFailNull(name, msg);
+            }
 #endif
         }
 
@@ -832,7 +908,9 @@ namespace Microsoft.PowerFx.Core.Utils
         {
 #if DEBUG
             if (text != null)
+            {
                 AssertXmlDocumentString(text);
+            }
 #endif
         }
 
@@ -875,7 +953,9 @@ namespace Microsoft.PowerFx.Core.Utils
         {
 #if DEBUG
             if (!ReferenceEquals(val, null))
+            {
                 AssertOneOf(val, expectedPossibilities);
+            }
 #endif
         }
 
@@ -889,7 +969,9 @@ namespace Microsoft.PowerFx.Core.Utils
         {
 #if DEBUG
             if (!ReferenceEquals(val, null))
+            {
                 AssertOneOf(val, expectedPossibilities);
+            }
 #endif
         }
 
@@ -922,7 +1004,9 @@ namespace Microsoft.PowerFx.Core.Utils
         {
 #if DEBUG
             if (val.HasValue)
+            {
                 AssertOneOfValueType(val.Value, (IEnumerable<T>)expectedPossibilities);
+            }
 #endif
         }
 
@@ -932,7 +1016,9 @@ namespace Microsoft.PowerFx.Core.Utils
         {
 #if DEBUG
             if (val.HasValue)
+            {
                 AssertOneOfValueType(val.Value, expectedPossibilities);
+            }
 #endif
         }
 
@@ -1123,8 +1209,8 @@ namespace Microsoft.PowerFx.Core.Utils
         }
 
         [Conditional("DEBUG")]
-        public static void AssertAll<K, V>(IDictionary<K, V> args)
-            where V : ICheckable
+        public static void AssertAll<TKey, TValue>(IDictionary<TKey, TValue> args)
+            where TValue : ICheckable
         {
 #if DEBUG
             if (!ReferenceEquals(args, null))
@@ -1146,7 +1232,9 @@ namespace Microsoft.PowerFx.Core.Utils
         {
 #if DEBUG
             if (ReferenceEquals(val, null) || !val.IsValid)
+            {
                 DbgFailValid();
+            }
 #endif
         }
 
@@ -1156,7 +1244,9 @@ namespace Microsoft.PowerFx.Core.Utils
         {
 #if DEBUG
             if (ReferenceEquals(val, null) || !val.IsValid)
+            {
                 DbgFailValid(name);
+            }
 #endif
         }
 
@@ -1277,17 +1367,21 @@ namespace Microsoft.PowerFx.Core.Utils
             try
             {
                 // Try to load the test assembly
-                var UTFwkAssemblyName = new AssemblyName(assemblyName);
-                var UTFwkAssembly = Assembly.Load(UTFwkAssemblyName);
-                var assertFailedExClassType = UTFwkAssembly.ExportedTypes.Single(t => t.FullName == testExceptionFullName);
+                var uTFwkAssemblyName = new AssemblyName(assemblyName);
+                var uTFwkAssembly = Assembly.Load(uTFwkAssemblyName);
+                var assertFailedExClassType = uTFwkAssembly.ExportedTypes.Single(t => t.FullName == testExceptionFullName);
                 var assertFailedExClassTypeInfo = IntrospectionExtensions.GetTypeInfo(assertFailedExClassType);
                 testExceptionCtor = assertFailedExClassTypeInfo.DeclaredConstructors.Single(ctor => ctor.GetParameters().Length == 1);
             }
 
             // We are only catching exceptions as a result of not running within a unit test.
             // This will allow us to bubble up other potential problems (eg. signature issues) that would otherwise break our safety net.
-            catch (IOException) { }
-            catch (BadImageFormatException) { }
+            catch (IOException)
+            {
+            }
+            catch (BadImageFormatException)
+            {
+            }
 
             return testExceptionCtor;
         }

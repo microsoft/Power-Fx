@@ -9,15 +9,25 @@ namespace Microsoft.PowerFx.Core.Public.Types
     public interface ITypeVistor
     {
         void Visit(BlankType type);
+
         void Visit(BooleanType type);
+
         void Visit(NumberType type);
+
         void Visit(StringType type);
+
         void Visit(RecordType type);
+
         void Visit(TableType type);
+
         void Visit(DateType type);
+
         void Visit(DateTimeType type);
+
         void Visit(DateTimeNoTimeZoneType type);
+
         void Visit(TimeType type);
+
         void Visit(OptionSetValueType type);
     }
 }

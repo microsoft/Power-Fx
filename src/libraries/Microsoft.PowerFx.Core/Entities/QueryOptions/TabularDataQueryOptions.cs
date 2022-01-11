@@ -212,6 +212,7 @@ namespace Microsoft.PowerFx.Core.Entities.QueryOptions
             }
 
             var isOriginalModified = false;
+
             // Update selectedfields first.
             foreach (var selectedFieldToAdd in added.Selects)
             {

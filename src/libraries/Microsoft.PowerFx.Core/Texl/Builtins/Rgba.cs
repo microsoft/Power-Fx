@@ -12,7 +12,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class RGBAFunction : BuiltinFunction
     {
         public override bool IsTrackedInTelemetry => false;
+
         public override bool SupportsParamCoercion => true;
+
         public override bool SupportsInlining => true;
 
         // This is important to set so that calls to RGBA(consts,...) are also considered const
@@ -20,7 +22,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public RGBAFunction()
             : base("RGBA", TexlStrings.AboutRGBA, FunctionCategories.Color, DType.Color, 0, 4, 4, DType.Number, DType.Number, DType.Number, DType.Number)
-        { }
+        {
+        }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {

@@ -17,12 +17,15 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class MidFunction : BuiltinFunction
     {
         public override bool RequiresErrorContext => true;
+
         public override bool IsSelfContained => true;
+
         public override bool SupportsParamCoercion => true;
 
         public MidFunction()
             : base("Mid", TexlStrings.AboutMid, FunctionCategories.Text, DType.String, 0, 2, 3, DType.String, DType.Number, DType.Number)
-        { }
+        {
+        }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
@@ -35,12 +38,15 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class MidTFunction : BuiltinFunction
     {
         public override bool RequiresErrorContext => true;
+
         public override bool IsSelfContained => true;
+
         public override bool SupportsParamCoercion => true;
 
         public MidTFunction()
             : base("Mid", TexlStrings.AboutMidT, FunctionCategories.Table, DType.EmptyTable, 0, 2, 3)
-        { }
+        {
+        }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
@@ -73,6 +79,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             {
                 // Ensure we have a one-column table of strings
                 fValid &= CheckStringColumnType(type0, args[0], errors, ref nodeToCoercedTypeMap);
+
                 // Borrow the return type from the 1st arg
                 returnType = type0;
             }

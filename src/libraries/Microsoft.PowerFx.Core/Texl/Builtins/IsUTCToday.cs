@@ -18,12 +18,16 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     {
         // Multiple invocations may result in different return values.
         public override bool IsStateless => false;
+
         public override bool IsSelfContained => true;
+
         public override bool SupportsParamCoercion => true;
+
         public IsUTCTodayFunction()
             : base("IsUTCToday", TexlStrings.AboutIsUTCToday, FunctionCategories.Information, DType.Boolean, 0, 1, 1, DType.DateTime)
+        {
+        }
 
-        { }
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
             return EnumerableUtils.Yield(new[] { TexlStrings.IsUTCTodayFuncArg1 });
@@ -39,6 +43,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
             var fValid = CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
             var type0 = argTypes[0];
+
             // Arg0 should not be a Time
             if (type0.Kind == DKind.Time)
             {

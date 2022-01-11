@@ -16,6 +16,7 @@ namespace Microsoft.PowerFx.Core.Localization
     public sealed class Span
     {
         public int Min { get; }
+
         public int Lim { get; }
 
         public Span(int min, int lim)
@@ -107,8 +108,8 @@ namespace Microsoft.PowerFx.Core.Localization
         public override int GetHashCode()
         {
             var hashCode = -1160472096;
-            hashCode = hashCode * -1521134295 + Min.GetHashCode();
-            hashCode = hashCode * -1521134295 + Lim.GetHashCode();
+            hashCode = (hashCode * -1521134295) + Min.GetHashCode();
+            hashCode = (hashCode * -1521134295) + Lim.GetHashCode();
             return hashCode;
         }
     }

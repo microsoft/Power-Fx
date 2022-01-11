@@ -19,30 +19,55 @@ namespace Microsoft.PowerFx.Core.Lexer
         // references from TS code come via AuthoringCore.d.ts and that needs to be kept current with this file
 
         public static string CurrentLocaleDecimalSeparator => TexlLexer.LocalizedInstance.LocalizedPunctuatorDecimalSeparator;
+
         public static string CurrentLocaleListSeparator => TexlLexer.LocalizedInstance.LocalizedPunctuatorListSeparator;
+
         public static string CurrentLocaleChainingOperator => TexlLexer.LocalizedInstance.LocalizedPunctuatorChainingSeparator;
+
         public static string CurrentLocalePositiveSymbol => TexlLexer.PunctuatorAdd;
+
         public static string CurrentLocaleNegativeSymbol => TexlLexer.PunctuatorSub;
+
         public static string CurrentLocaleMultiplySymbol => TexlLexer.PunctuatorMul;
+
         public static string CurrentLocaleDivideSymbol => TexlLexer.PunctuatorDiv;
+
         public static string CurrentLocaleEqual => TexlLexer.PunctuatorEqual;
+
         public static string CurrentLocaleParenOpen => TexlLexer.PunctuatorParenOpen;
+
         public static string CurrentLocaleParenClose => TexlLexer.PunctuatorParenClose;
+
         public static string CurrentLocaleBracketOpen => TexlLexer.PunctuatorBracketOpen;
+
         public static string CurrentLocaleBracketClose => TexlLexer.PunctuatorBracketClose;
+
         public static string CurrentLocaleCurlyOpen => TexlLexer.PunctuatorCurlyOpen;
+
         public static string CurrentLocaleCurlyClose => TexlLexer.PunctuatorCurlyClose;
+
         public static string CurrentLocalePercent => TexlLexer.PunctuatorPercent;
+
         public static string CurrentLocaleBang => TexlLexer.PunctuatorBang;
+
         public static string CurrentLocaleDot => TexlLexer.PunctuatorDot;
+
         public static string CurrentLocaleCaret => TexlLexer.PunctuatorCaret;
+
         public static string CurrentLocaleOr => TexlLexer.PunctuatorOr;
+
         public static string CurrentLocaleAnd => TexlLexer.PunctuatorAnd;
+
         public static string CurrentLocaleAmpersand => TexlLexer.PunctuatorAmpersand;
+
         public static string CurrentLocaleGreater => TexlLexer.PunctuatorGreater;
+
         public static string CurrentLocaleLess => TexlLexer.PunctuatorLess;
+
         public static string CurrentLocaleGreaterOrEqual => TexlLexer.PunctuatorGreaterOrEqual;
+
         public static string CurrentLocaleLessOrEqual => TexlLexer.PunctuatorLessOrEqual;
+
         public static string PunctuatorDotInvariant => TexlLexer.PunctuatorDot;
 
         internal static string ComposeSingleQuotedList(IEnumerable<string> listItems)

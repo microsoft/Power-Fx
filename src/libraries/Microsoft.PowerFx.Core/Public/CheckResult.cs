@@ -38,7 +38,9 @@ namespace Microsoft.PowerFx.Core.Public
 
         internal Formula _formula;
 
-        public CheckResult() { }
+        public CheckResult()
+        {
+        }
 
         internal CheckResult(IEnumerable<IDocumentError> errors, TexlBinding binding = null)
         {

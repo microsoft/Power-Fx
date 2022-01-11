@@ -14,7 +14,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public VarPFunction()
             : base("VarP", TexlStrings.AboutVarP, FunctionCategories.MathAndStat)
-        { }
+        {
+        }
     }
 
     // VarP(source:*, projection:n)
@@ -25,6 +26,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public VarPTableFunction()
             : base("VarP", TexlStrings.AboutVarPT, FunctionCategories.Table)
-        { }
+        {
+        }
     }
 }

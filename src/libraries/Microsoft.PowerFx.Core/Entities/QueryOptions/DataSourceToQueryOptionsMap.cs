@@ -142,7 +142,6 @@ namespace Microsoft.PowerFx.Core.Entities.QueryOptions
             return queryOptions.ExpandDTypes;
         }
 
-
         internal IEnumerable<TabularDataQueryOptions> GetValues()
         {
             return _tabularDataQueryOptionsSet.Values;

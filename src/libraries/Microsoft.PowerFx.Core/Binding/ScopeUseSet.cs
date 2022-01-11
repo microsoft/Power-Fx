@@ -30,6 +30,7 @@ namespace Microsoft.PowerFx.Core.Binding
         private readonly long _levels;
 
         public bool IsGlobalOnlyScope => _levels == 0;
+
         public bool IsLambdaScope => _levels != 0;
 
         public ScopeUseSet(int singleLevel)

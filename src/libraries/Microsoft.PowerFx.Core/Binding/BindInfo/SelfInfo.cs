@@ -16,6 +16,8 @@ namespace Microsoft.PowerFx.Core.Binding.BindInfo
         public override DName Name => new DName(TexlLexer.KeywordSelf);
 
         public SelfInfo(SelfNode node, DPath path, IExternalControl data)
-            : base(node, path, data) { }
+            : base(node, path, data)
+        {
+        }
     }
 }

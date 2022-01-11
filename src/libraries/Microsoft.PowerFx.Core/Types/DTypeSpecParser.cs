@@ -67,7 +67,6 @@ namespace Microsoft.PowerFx.Core.Types
             {
                 if (result.IsEnum)
                 {
-
                     if (!TryParse(lexer, out var enumSupertype) ||
                         (!enumSupertype.IsPrimitive && !enumSupertype.IsUnknown) ||
                         !TryParseValueMap(lexer, out var valueMap))

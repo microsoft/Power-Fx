@@ -14,6 +14,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class ConcatFunction : FunctionWithTableInput
     {
         public override bool IsSelfContained => true;
+
         public override bool SupportsParamCoercion => false;
 
         public ConcatFunction()

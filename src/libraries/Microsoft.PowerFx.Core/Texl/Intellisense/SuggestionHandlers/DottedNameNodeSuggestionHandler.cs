@@ -20,7 +20,8 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
         {
             public DottedNameNodeSuggestionHandler()
                 : base(NodeKind.DottedName)
-            { }
+            {
+            }
 
             internal override bool TryAddSuggestionsForNodeKind(IntellisenseData.IntellisenseData intellisenseData)
             {
@@ -28,6 +29,7 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
 
                 var curNode = intellisenseData.CurNode;
                 var cursorPos = intellisenseData.CursorPos;
+
                 // Cursor position is after the dot (If it was before the dot FindNode would have returned the left node).
                 Contracts.Assert(curNode.Token.IsDottedNamePunctuator);
                 Contracts.Assert(curNode.Token.Span.Lim <= cursorPos);

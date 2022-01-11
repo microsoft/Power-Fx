@@ -25,7 +25,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class SortFunction : FunctionWithTableInput
     {
         private readonly SortOrderValidator _sortOrderValidator;
+
         public override bool IsSelfContained => true;
+
         public override bool SupportsParamCoercion => false;
 
         public SortFunction()
@@ -274,6 +276,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertValid(columnPath);
 
             order = order.ToLower();
+
             // If column is marked as ascending only then return false if order requested is descending.
             return order != LanguageConstants.DescendingSortOrderString || !metadata.IsColumnAscendingOnly(columnPath);
         }

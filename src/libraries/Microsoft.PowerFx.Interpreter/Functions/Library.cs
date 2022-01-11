@@ -960,6 +960,7 @@ namespace Microsoft.PowerFx.Functions
                 }
 
                 var equal = RuntimeHelpers.AreEqual(test, matchValue);
+
                 // Comparison? 
 
                 if (equal)

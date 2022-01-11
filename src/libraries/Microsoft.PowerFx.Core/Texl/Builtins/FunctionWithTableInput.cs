@@ -14,11 +14,13 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     {
         public FunctionWithTableInput(DPath theNamespace, string name, TexlStrings.StringGetter description, FunctionCategories fc, DType returnType, BigInteger maskLambdas, int arityMin, int arityMax, params DType[] paramTypes)
             : base(theNamespace, name, description, fc, returnType, maskLambdas, arityMin, arityMax, paramTypes)
-        { }
+        {
+        }
 
         public FunctionWithTableInput(string name, TexlStrings.StringGetter description, FunctionCategories fc, DType returnType, BigInteger maskLambdas, int arityMin, int arityMax, params DType[] paramTypes)
             : this(DPath.Root, name, description, fc, returnType, maskLambdas, arityMin, arityMax, paramTypes)
-        { }
+        {
+        }
 
         public override bool SupportCoercionForArg(int argIndex)
         {

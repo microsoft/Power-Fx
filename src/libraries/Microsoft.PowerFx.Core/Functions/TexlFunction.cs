@@ -207,9 +207,9 @@ namespace Microsoft.PowerFx.Core.Functions
         /// <summary>Indicates whether table and record param types require all columns to be specified in the input argument.</summary>
         public virtual bool RequireAllParamColumns => false;
 
-        ///<summary>
+        /// <summary>
         /// Indicates whether the function sets a value.
-        ///</summary>
+        /// </summary>
         public virtual bool ModifiesValues => false;
 
         /// <summary>
@@ -236,6 +236,7 @@ namespace Microsoft.PowerFx.Core.Functions
 
         // A forward link to the function help.
         public virtual string HelpLink =>
+
                 // The invariant name is used to form a URL. It cannot contain spaces and other
                 // funky characters. We have tests that enforce this constraint. If we ever need
                 // such characters (#, &, %, ?), they need to be encoded here, e.g. %20, etc.
@@ -298,7 +299,9 @@ namespace Microsoft.PowerFx.Core.Functions
             FunctionCategories functionCategories,
             DType returnType,
             BigInteger maskLambdas,
-            int arityMin, int arityMax, params DType[] paramTypes)
+            int arityMin,
+            int arityMax,
+            params DType[] paramTypes)
         {
             Contracts.Assert(theNamespace.IsValid);
             Contracts.AssertNonEmpty(name);
@@ -467,7 +470,6 @@ namespace Microsoft.PowerFx.Core.Functions
             return false;
         }
 
-
         // Return true if the parameter at the specified 0-based rank is a lambda parameter, false otherwise.
         public virtual bool IsLambdaParam(int index)
         {
@@ -509,7 +511,10 @@ namespace Microsoft.PowerFx.Core.Functions
 
         // Returns true if function requires actual data to be pulled for this arg. This is applicable to pagable args only like datasource object.
         // It's used in codegen in optimizing generated code where there is no data is required to be pulled from server.
-        protected virtual bool RequiresPagedDataForParamCore(TexlNode[] args, int paramIndex, TexlBinding binding) { return true; }
+        protected virtual bool RequiresPagedDataForParamCore(TexlNode[] args, int paramIndex, TexlBinding binding)
+        {
+            return true;
+        }
 
         public bool RequiresPagedDataForParam(CallNode callNode, int paramIndex, TexlBinding binding)
         {
@@ -571,7 +576,6 @@ namespace Microsoft.PowerFx.Core.Functions
         /// <returns></returns>
         public static bool TryGetEntityMetadata(CallNode callNode, TexlBinding binding, out IDelegationMetadata metadata)
         {
-
             if (!TryGetEntityMetadata(callNode, binding, out IDataEntityMetadata entityMetadata))
             {
                 metadata = null;
@@ -763,6 +767,7 @@ namespace Microsoft.PowerFx.Core.Functions
         }
 
         public virtual bool RequiresDataSourceScope => false;
+
         public virtual bool ArgMatchesDatasourceType(int argNum)
         {
             return false;
@@ -870,8 +875,12 @@ namespace Microsoft.PowerFx.Core.Functions
 
                     if ((expectedColumn.Type.IsTable && actualColumnType.IsTable) || (expectedColumn.Type.IsRecord && actualColumnType.IsRecord))
                     {
-                        return SetErrorForMismatchedColumnsCore(expectedColumn.Type, actualColumnType, errorArg,
-                            errors, columnPrefix.Append(new DName(errName)));
+                        return SetErrorForMismatchedColumnsCore(
+                            expectedColumn.Type,
+                            actualColumnType,
+                            errorArg,
+                            errors,
+                            columnPrefix.Append(new DName(errName)));
                     }
 
                     if (expectedColumn.Type.IsExpandEntity
@@ -880,16 +889,25 @@ namespace Microsoft.PowerFx.Core.Functions
                         continue;
                     }
 
-                    errors.EnsureError(DocumentErrorSeverity.Severe, errorArg, TexlStrings.ErrColumnTypeMismatch_ColName_ExpectedType_ActualType,
-                        columnPrefix.Append(new DName(errName)).ToDottedSyntax(), expectedColumn.Type.GetKindString(), actualColumnType.GetKindString());
+                    errors.EnsureError(
+                        DocumentErrorSeverity.Severe,
+                        errorArg,
+                        TexlStrings.ErrColumnTypeMismatch_ColName_ExpectedType_ActualType,
+                        columnPrefix.Append(new DName(errName)).ToDottedSyntax(),
+                        expectedColumn.Type.GetKindString(),
+                        actualColumnType.GetKindString());
                     return true;
                 }
 
                 // Second, set column missing message if applicable
                 if (RequireAllParamColumns && !expectedType.AreFieldsOptional)
                 {
-                    errors.EnsureError(DocumentErrorSeverity.Severe, errorArg, TexlStrings.ErrColumnMissing_ColName_ExpectedType,
-                        columnPrefix.Append(expectedColumn.Name).ToDottedSyntax(), expectedColumn.Type.GetKindString());
+                    errors.EnsureError(
+                        DocumentErrorSeverity.Severe,
+                        errorArg,
+                        TexlStrings.ErrColumnMissing_ColName_ExpectedType,
+                        columnPrefix.Append(expectedColumn.Name).ToDottedSyntax(),
+                        expectedColumn.Type.GetKindString());
                     return true;
                 }
             }
@@ -899,7 +917,8 @@ namespace Microsoft.PowerFx.Core.Functions
 
         #region Internal functionality
 
-        public virtual bool SupportsMetadataTypeArg { get { return false; ; } }
+        public virtual bool SupportsMetadataTypeArg => false;
+
         public virtual bool IsMetadataTypeArg(int index)
         {
             Contracts.Assert(!SupportsMetadataTypeArg);
@@ -918,8 +937,7 @@ namespace Microsoft.PowerFx.Core.Functions
             return CheckType(node, nodeType, expectedType, errors, SupportsParamCoercion, out matchedWithCoercion);
         }
 
-        protected bool CheckType(TexlNode node, DType nodeType, DType expectedType, IErrorContainer errors, bool coerceIfSupported,
-            out bool matchedWithCoercion)
+        protected bool CheckType(TexlNode node, DType nodeType, DType expectedType, IErrorContainer errors, bool coerceIfSupported, out bool matchedWithCoercion)
         {
             var typeChecks = CheckType(node, nodeType, expectedType, errors, coerceIfSupported, out DType coercionType);
             matchedWithCoercion = typeChecks && coercionType != null;
@@ -1046,21 +1064,23 @@ namespace Microsoft.PowerFx.Core.Functions
             Contracts.AssertValue(args);
             Contracts.Assert(args.Length > 0);
 
-            var SignatureCount = 5;
+            var signatureCount = 5;
             var argCount = arity;
+
             // Limit the signature length of params descriptions.
-            if (SignatureConstraint != null && (arity + SignatureCount) > SignatureConstraint.RepeatTopLength)
+            if (SignatureConstraint != null && (arity + signatureCount) > SignatureConstraint.RepeatTopLength)
             {
-                SignatureCount = (SignatureConstraint.RepeatTopLength - arity) > 0 ? SignatureConstraint.RepeatTopLength - arity : 1;
+                signatureCount = (SignatureConstraint.RepeatTopLength - arity) > 0 ? SignatureConstraint.RepeatTopLength - arity : 1;
                 argCount = arity < SignatureConstraint.RepeatTopLength ? arity : SignatureConstraint.RepeatTopLength;
             }
 
-            var signatures = new List<TexlStrings.StringGetter[]>(SignatureCount);
+            var signatures = new List<TexlStrings.StringGetter[]>(signatureCount);
             var lastArg = args.Last();
 
-            for (var sigIndex = 0; sigIndex < SignatureCount; sigIndex++)
+            for (var sigIndex = 0; sigIndex < signatureCount; sigIndex++)
             {
                 var signature = new TexlStrings.StringGetter[argCount];
+
                 // Populate from the given args (as much as possible). The last arg will be repeated.
                 for (var i = 0; i < argCount; i++)
                 {
@@ -1121,6 +1141,7 @@ namespace Microsoft.PowerFx.Core.Functions
             Contracts.AssertValue(binding);
 
             dataSource = null;
+
             // Only check for errors with severity more than warning.
             // Ignore warning errors as it's quite possible to have delegation warnings on a node in different call node context.
             // For example, Filter(CDS, A = B) It's possible that B as itself is delegatable but in the context of Filter it's not and could have warning on it.
@@ -1190,7 +1211,6 @@ namespace Microsoft.PowerFx.Core.Functions
 
             return true;
         }
-
 
         public virtual bool TryGetDelegationMetadata(CallNode node, TexlBinding binding, out IDelegationMetadata metadata)
         {

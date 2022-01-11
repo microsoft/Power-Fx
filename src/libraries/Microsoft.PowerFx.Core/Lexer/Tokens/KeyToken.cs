@@ -10,7 +10,8 @@ namespace Microsoft.PowerFx.Core.Lexer.Tokens
     {
         public KeyToken(TokKind tid, Span span)
             : base(tid, span)
-        { }
+        {
+        }
 
         /// <summary>
         /// Copy Ctor for KeyToken used by Clone.

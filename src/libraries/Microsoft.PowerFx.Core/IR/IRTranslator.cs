@@ -239,7 +239,6 @@ namespace Microsoft.PowerFx.Core.IR
                 return MaybeInjectCoercion(node, binaryOpResult, context);
             }
 
-
             public override IntermediateNode Visit(TexlCallNode node, IRTranslatorContext context)
             {
                 Contracts.AssertValue(node);
@@ -284,7 +283,6 @@ namespace Microsoft.PowerFx.Core.IR
 
                 return MaybeInjectCoercion(node, new CallNode(context.GetIRContext(node), func, args), context);
             }
-
 
             public override IntermediateNode Visit(FirstNameNode node, IRTranslatorContext context)
             {
@@ -423,8 +421,8 @@ namespace Microsoft.PowerFx.Core.IR
 
                     if (typeLhs.TryGetType(nameRhs, out var typeRhs) &&
                         typeRhs.IsExpandEntity &&
-                        context.Binding.TryGetEntityInfo(node, out var ExpandInfo) &&
-                        ExpandInfo.IsTable)
+                        context.Binding.TryGetEntityInfo(node, out var expandInfo) &&
+                        expandInfo.IsTable)
                     {
                         // No relationships in PFX yet
                         Contracts.Assert(false, "Relationships not yet supported");
@@ -453,7 +451,6 @@ namespace Microsoft.PowerFx.Core.IR
                     Contracts.Assert(context.Binding.ErrorContainer.HasErrors(node.Left) || context.Binding.ErrorContainer.HasErrors(node));
                     return new ErrorNode(context.GetIRContext(node), node.ToString());
                 }
-
 
                 return MaybeInjectCoercion(node, result, context);
             }
@@ -493,7 +490,6 @@ namespace Microsoft.PowerFx.Core.IR
                 return new ErrorNode(context.GetIRContext(node), node.ToString());
             }
 
-
             // List nodes are pointless (just a container for Args for Call Nodes?)
             // We could genuinely clean them up entirely
             public override IntermediateNode Visit(ListNode node, IRTranslatorContext context)
@@ -521,8 +517,8 @@ namespace Microsoft.PowerFx.Core.IR
                 throw new NotSupportedException();
             }
 
-
             private int _scopeId = 1;
+
             private ScopeSymbol GetNewScope()
             {
                 return new ScopeSymbol(_scopeId++);
@@ -535,7 +531,7 @@ namespace Microsoft.PowerFx.Core.IR
                     case CoercionKind.DateToText:
                         return new TextLiteralNode(IRContext.NotInSource(FormulaType.String), "\'shortdate\'");
                     case CoercionKind.TimeToText:
-                        return new TextLiteralNode(IRContext.NotInSource(FormulaType.String), "\'shorttime\'"); ;
+                        return new TextLiteralNode(IRContext.NotInSource(FormulaType.String), "\'shorttime\'");
                     case CoercionKind.DateTimeToText:
                         return new TextLiteralNode(IRContext.NotInSource(FormulaType.String), "\'shortdatetime\'");
                     default:
@@ -802,7 +798,6 @@ namespace Microsoft.PowerFx.Core.IR
                         }
                 }
             }
-
 
             private static IntermediateNode GetBooleanBinaryOp(IRTranslatorContext context, TexlBinaryOpNode node, IntermediateNode left, IntermediateNode right, DType leftType, DType rightType)
             {

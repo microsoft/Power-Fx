@@ -8,10 +8,15 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense.IntellisenseData
     internal class DefaultIntellisenseData : IIntellisenseData
     {
         public int ReplacementStartIndex => 0;
+
         public int ReplacementLength => 0;
+
         public TexlFunction CurFunc => null;
+
         public int ArgCount => 0;
+
         public int ArgIndex => 0;
+
         public string Script => string.Empty;
 
         /// <summary>

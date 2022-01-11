@@ -46,6 +46,7 @@ namespace Microsoft.PowerFx.Core.App.Controls
     {
         internal static bool IsValid(this PropertyRuleCategory category) =>
             category >= PropertyRuleCategory.Data && category <= PropertyRuleCategory.Unknown;
+
         internal static bool IsBehavioral(this PropertyRuleCategory category) =>
             category == PropertyRuleCategory.Behavior || category == PropertyRuleCategory.OnDemandData;
     }

@@ -9,7 +9,6 @@ namespace Microsoft.PowerFx.Core.Types
 {
     internal static class DTypeExtensionsCore
     {
-
         internal static bool AssociateDataSourcesToSelect(this DType self, DataSourceToQueryOptionsMap dataSourceToQueryOptionsMap, string columnName, DType columnType, bool skipIfNotInSchema = false, bool skipExpands = false)
         {
             Contracts.AssertValue(dataSourceToQueryOptionsMap);
@@ -49,6 +48,5 @@ namespace Microsoft.PowerFx.Core.Types
 
             return retval;
         }
-
     }
 }

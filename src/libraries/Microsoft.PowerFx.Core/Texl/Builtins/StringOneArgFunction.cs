@@ -18,15 +18,18 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal abstract class StringOneArgFunction : BuiltinFunction
     {
         public override bool IsSelfContained => true;
+
         public override bool SupportsParamCoercion => true;
 
         public StringOneArgFunction(string name, TexlStrings.StringGetter description, FunctionCategories functionCategories)
             : base(name, description, functionCategories, DType.String, 0, 1, 1, DType.String)
-        { }
+        {
+        }
 
         public StringOneArgFunction(string name, TexlStrings.StringGetter description, FunctionCategories functionCategories, DType returnType)
             : base(name, description, functionCategories, returnType, 0, 1, 1, DType.String)
-        { }
+        {
+        }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
@@ -86,11 +89,13 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal abstract class StringOneArgTableFunction : BuiltinFunction
     {
         public override bool IsSelfContained => true;
+
         public override bool SupportsParamCoercion => true;
 
         public StringOneArgTableFunction(string name, TexlStrings.StringGetter description, FunctionCategories functionCategories)
             : base(name, description, functionCategories, DType.EmptyTable, 0, 1, 1, DType.EmptyTable)
-        { }
+        {
+        }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {

@@ -15,7 +15,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public AverageFunction()
             : base("Average", TexlStrings.AboutAverage, FunctionCategories.MathAndStat)
-        { }
+        {
+        }
     }
 
     // Average(source:*, projection:n)
@@ -28,6 +29,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public AverageTableFunction()
             : base("Average", TexlStrings.AboutAverageT, FunctionCategories.Table)
-        { }
+        {
+        }
     }
 }

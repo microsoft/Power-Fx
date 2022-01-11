@@ -49,7 +49,6 @@ namespace Microsoft.PowerFx.Tests
             }
         }
 
-
         [Fact]
         public void EvalWithGlobals()
         {
@@ -154,7 +153,6 @@ namespace Microsoft.PowerFx.Tests
             // not supported: Can't change a variable's type.
             Assert.Throws<NotSupportedException>(() =>
                 engine.UpdateVariable("a", FormulaValue.New("str")));
-
         }
 
         [Fact]
@@ -278,16 +276,15 @@ namespace Microsoft.PowerFx.Tests
 
         #region Test
 
-        readonly StringBuilder _updates = new StringBuilder();
+        private readonly StringBuilder _updates = new StringBuilder();
 
-
-        void AssertUpdate(string expected)
+        private void AssertUpdate(string expected)
         {
             Assert.Equal(expected, _updates.ToString());
             _updates.Clear();
         }
 
-        void OnUpdate(string name, FormulaValue newValue)
+        private void OnUpdate(string name, FormulaValue newValue)
         {
             var str = newValue.ToObject()?.ToString();
 

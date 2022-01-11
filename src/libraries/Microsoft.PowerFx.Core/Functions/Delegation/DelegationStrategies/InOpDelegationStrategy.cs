@@ -18,7 +18,8 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
     {
         private readonly BinaryOpNode _binaryOpNode;
 
-        public InOpDelegationStrategy(BinaryOpNode node, TexlFunction function) : base(BinaryOp.In, function)
+        public InOpDelegationStrategy(BinaryOpNode node, TexlFunction function)
+            : base(BinaryOp.In, function)
         {
             Contracts.AssertValue(node);
             Contracts.Assert(node.Op == BinaryOp.In);
@@ -129,6 +130,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
             }
 
             IDelegationMetadata columnMetadata = info.Data as DelegationMetadata.DelegationMetadata;
+
             // For this to be delegable, rhs needs to be a column that belongs to innermost scoped delegable datasource.
             if (columnMetadata == null || info.UpCount != 0)
             {
@@ -143,7 +145,6 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
                 !columnMetadata.FilterDelegationMetadata.IsDelegationSupportedByColumn(columnPath, DelegationCapability.IndexOf | DelegationCapability.GreaterThan) &&
                 !columnMetadata.FilterDelegationMetadata.IsDelegationSupportedByColumn(columnPath, DelegationCapability.SubStringOf | DelegationCapability.Equal))
             {
-
                 SuggestDelegationHintAndAddTelemetryMessage(node, binding, FormatTelemetryMessage("Not supported by column."), TexlStrings.OpNotSupportedByColumnSuggestionMessage_OpNotSupportedByColumn, CharacterUtils.MakeSafeForFormatString(columnName.Value));
                 return false;
             }

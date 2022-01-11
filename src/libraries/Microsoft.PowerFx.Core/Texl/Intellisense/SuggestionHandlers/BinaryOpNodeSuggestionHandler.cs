@@ -15,13 +15,15 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
         {
             public BinaryOpNodeSuggestionHandler()
                 : base(NodeKind.BinaryOp)
-            { }
+            {
+            }
 
             internal override bool TryAddSuggestionsForNodeKind(IntellisenseData.IntellisenseData intellisenseData)
             {
                 Contracts.AssertValue(intellisenseData);
 
                 var curNode = intellisenseData.CurNode;
+
                 // Cursor is in the operation token.
                 // Suggest binary operators.
                 var binaryOpNode = curNode.CastBinaryOp();

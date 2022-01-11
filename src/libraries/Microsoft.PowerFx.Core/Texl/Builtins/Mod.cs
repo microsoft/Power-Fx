@@ -16,12 +16,15 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class ModFunction : BuiltinFunction
     {
         public override bool SupportsParamCoercion => true;
+
         public override bool IsSelfContained => true;
+
         public override bool RequiresErrorContext => true;
 
         public ModFunction()
             : base("Mod", TexlStrings.AboutMod, FunctionCategories.MathAndStat, DType.Number, 0, 2, 2, DType.Number, DType.Number)
-        { }
+        {
+        }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
@@ -33,12 +36,15 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class ModTFunction : BuiltinFunction
     {
         public override bool SupportsParamCoercion => true;
+
         public override bool IsSelfContained => true;
+
         public override bool RequiresErrorContext => true;
 
         public ModTFunction()
             : base("Mod", TexlStrings.AboutModT, FunctionCategories.Table, DType.EmptyTable, 0, 2, 2)
-        { }
+        {
+        }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {

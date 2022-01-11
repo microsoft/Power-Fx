@@ -5,7 +5,6 @@ using System;
 
 namespace Microsoft.AppMagic.Transport
 {
-
     public sealed class DtoUndefinedValueMapping
     {
         /// <summary>

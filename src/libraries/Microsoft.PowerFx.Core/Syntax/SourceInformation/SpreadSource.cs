@@ -18,6 +18,7 @@ namespace Microsoft.PowerFx.Core.Syntax.SourceInformation
     internal sealed class SpreadSource : ITexlSource
     {
         public IEnumerable<ITexlSource> Sources { get; }
+
         public IEnumerable<Token> Tokens => Sources.SelectMany(source => source.Tokens);
 
         public SpreadSource(IEnumerable<ITexlSource> sources)
@@ -44,7 +45,7 @@ namespace Microsoft.PowerFx.Core.Syntax.SourceInformation
             foreach (var source in Sources)
             {
                 newItems[i] = source.Clone(newNodes, newSpan);
-                i += 1; ;
+                i += 1;
             }
 
             return new SpreadSource(newItems);

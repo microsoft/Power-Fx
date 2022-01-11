@@ -18,12 +18,15 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class FindFunction : BuiltinFunction
     {
         public override bool RequiresErrorContext => true;
+
         public override bool IsSelfContained => true;
+
         public override bool SupportsParamCoercion => true;
 
         public FindFunction()
             : base("Find", TexlStrings.AboutFind, FunctionCategories.Text, DType.Number, 0, 2, 3, DType.String, DType.String, DType.Number)
-        { }
+        {
+        }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
@@ -36,12 +39,15 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class FindTFunction : BuiltinFunction
     {
         public override bool RequiresErrorContext => true;
+
         public override bool IsSelfContained => true;
+
         public override bool SupportsParamCoercion => true;
 
         public FindTFunction()
             : base("Find", TexlStrings.AboutFindT, FunctionCategories.Table, DType.EmptyTable, 0, 2, 3)
-        { }
+        {
+        }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {

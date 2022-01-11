@@ -38,6 +38,7 @@ namespace Microsoft.PowerFx.Core.Binding.BindInfo
         public readonly DName DataControlName;
 
         private readonly Lazy<Dictionary<ExpandPath, ExpandQueryOptions>> _dataQueryOptions;
+
         public Dictionary<ExpandPath, ExpandQueryOptions> DataQueryOptions => _dataQueryOptions.Value;
 
         // The number of containing scopes up where the name is defined.
@@ -108,7 +109,6 @@ namespace Microsoft.PowerFx.Core.Binding.BindInfo
 
             return new FirstNameInfo(BindKind.Control, node, 0, 0, DPath.Root, data, default, false);
         }
-
 
         // Create either an unqualified scoped field:
         //      e.g. "X" in Filter(T, X < 2)

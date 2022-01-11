@@ -22,9 +22,13 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class IfFunction : BuiltinFunction
     {
         public override bool IsStrict => false;
+
         public override int SuggestionTypeReferenceParamIndex => 1;
+
         public override bool UsesEnumNamespace => true;
+
         public override bool IsSelfContained => true;
+
         public override bool SupportsParamCoercion => true;
 
         public IfFunction()
@@ -242,6 +246,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             const int OverloadCount = 3;
 
             var overloads = new List<TexlStrings.StringGetter[]>(OverloadCount);
+
             // Limit the argCount avoiding potential OOM
             var argCount = arity > SignatureConstraint.RepeatTopLength ? SignatureConstraint.RepeatTopLength + (arity & 1) : arity;
             for (var ioverload = 0; ioverload < OverloadCount; ioverload++)

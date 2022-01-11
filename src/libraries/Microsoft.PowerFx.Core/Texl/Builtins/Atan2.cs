@@ -13,6 +13,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class Atan2Function : BuiltinFunction
     {
         public override bool IsSelfContained => true;
+
         public override bool RequiresErrorContext => true;
 
         public Atan2Function()
@@ -26,7 +27,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 2,            // max arity of 2
                 DType.Number, // first param is numeric
                 DType.Number)  // second param is numeric
-        { }
+        {
+        }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {

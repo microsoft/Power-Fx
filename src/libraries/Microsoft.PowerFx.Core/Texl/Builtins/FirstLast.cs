@@ -19,7 +19,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class FirstLastFunction : FunctionWithTableInput
     {
         public override bool RequiresErrorContext => _isFirst;
+
         public override bool IsSelfContained => true;
+
         public override bool SupportsParamCoercion => false;
 
         private readonly bool _isFirst;
@@ -32,7 +34,10 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override DelegationCapability FunctionDelegationCapability => DelegationCapability.Top;
 
-        public override bool SupportsPaging(CallNode callNode, TexlBinding binding) { return false; }
+        public override bool SupportsPaging(CallNode callNode, TexlBinding binding)
+        {
+            return false;
+        }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
@@ -66,7 +71,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         {
             Contracts.AssertValue(callNode);
             Contracts.AssertValue(binding);
-
 
             // Only delegate First, not last
             if (!_isFirst)

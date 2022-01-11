@@ -18,8 +18,10 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
     {
         public readonly Identifier Head;
         public readonly ListNode Args;
+
         // ParenClose can be null.
         public readonly Token ParenClose;
+
         // HeadNode is null for simple invocations. It is typically non-null if the head is
         // a more complex expression, e.g. a non-identifier, or a namespace-qualified identifier
         // in the form of a DottedNameNode.
@@ -59,6 +61,7 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
             }
 
 #pragma warning disable 420
+
             // A volatile field should not normally be passed using a ref or out parameter, since it will not be treated
             // as volatile within the scope of the function. There are exceptions to this, such as when calling an interlocked API.
             // Hence disabling the warning for this instance.

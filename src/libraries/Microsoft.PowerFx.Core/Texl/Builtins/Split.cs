@@ -16,7 +16,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     {
         public SplitFunction()
             : base("Split", TexlStrings.AboutSplit, DType.EmptyTable)
-        { }
+        {
+        }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {

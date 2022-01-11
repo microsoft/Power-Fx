@@ -18,7 +18,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public StartsWithFunction()
             : base("StartsWith", TexlStrings.AboutStartsWith)
-        { }
+        {
+        }
 
         public override bool IsRowScopedServerDelegatable(CallNode callNode, TexlBinding binding, OperationCapabilityMetadata metadata)
         {

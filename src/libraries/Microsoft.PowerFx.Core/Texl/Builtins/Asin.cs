@@ -14,7 +14,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public AsinFunction()
             : base("Asin", TexlStrings.AboutAsin, FunctionCategories.MathAndStat)
-        { }
+        {
+        }
     }
 
     // Asin(E:*[n])
@@ -25,6 +26,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public AsinTableFunction()
             : base("Asin", TexlStrings.AboutAsinT, FunctionCategories.Table)
-        { }
+        {
+        }
     }
 }

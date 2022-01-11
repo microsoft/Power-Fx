@@ -13,7 +13,8 @@ namespace Microsoft.PowerFx.Core.Public.Values
     /// </summary>
     public class DateValue : PrimitiveValue<DateTime>
     {
-        internal DateValue(IRContext irContext, DateTime value) : base(irContext, value)
+        internal DateValue(IRContext irContext, DateTime value)
+            : base(irContext, value)
         {
             Contract.Assert(IRContext.ResultType == FormulaType.Date);
             Contract.Assert(value.TimeOfDay == TimeSpan.Zero);

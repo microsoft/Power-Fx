@@ -13,6 +13,7 @@ namespace Microsoft.PowerFx.Core.Entities.QueryOptions
         public IExpandInfo ExpandInfo { get; }
 
         public bool IsRoot { get; } // True if this is a root node.
+
         public readonly ExpandQueryOptions Parent;
 
         private readonly HashSet<string> _selects;  // List of selected fields if any on a particular entity.

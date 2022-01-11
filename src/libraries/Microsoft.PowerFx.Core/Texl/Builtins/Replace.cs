@@ -17,12 +17,15 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class ReplaceFunction : BuiltinFunction
     {
         public override bool RequiresErrorContext => true;
+
         public override bool IsSelfContained => true;
+
         public override bool SupportsParamCoercion => true;
 
         public ReplaceFunction()
             : base("Replace", TexlStrings.AboutReplace, FunctionCategories.Text, DType.String, 0, 4, 4, DType.String, DType.Number, DType.Number, DType.String)
-        { }
+        {
+        }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
@@ -34,12 +37,15 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class ReplaceTFunction : BuiltinFunction
     {
         public override bool RequiresErrorContext => true;
+
         public override bool IsSelfContained => true;
+
         public override bool SupportsParamCoercion => true;
 
         public ReplaceTFunction()
             : base("Replace", TexlStrings.AboutReplaceT, FunctionCategories.Table, DType.EmptyTable, 0, 4, 4)
-        { }
+        {
+        }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
@@ -73,6 +79,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             {
                 // Ensure we have a one-column table of strings
                 fValid &= CheckStringColumnType(type0, args[0], errors, ref nodeToCoercedTypeMap);
+
                 // Borrow the return type from the 1st arg
                 returnType = type0;
             }

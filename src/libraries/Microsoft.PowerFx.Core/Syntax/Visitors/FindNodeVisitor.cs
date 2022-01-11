@@ -65,7 +65,6 @@ namespace Microsoft.PowerFx.Core.Syntax.Visitors
                     _result = node;
                     return false;
                 }
-
             }
 
             // If we got here the cursor should be in the last child.
@@ -105,7 +104,7 @@ namespace Microsoft.PowerFx.Core.Syntax.Visitors
             {
                 var span = node.GetSourceBasedSpan();
 
-                if (node.Token.Span.Min <= _cursorPosition && _cursorPosition <= node.Token.Span.Lim || _cursorPosition <= span.Min || _cursorPosition >= span.Lim)
+                if ((node.Token.Span.Min <= _cursorPosition && _cursorPosition <= node.Token.Span.Lim) || _cursorPosition <= span.Min || _cursorPosition >= span.Lim)
                 {
                     _result = node;
                     return false;
@@ -252,13 +251,44 @@ namespace Microsoft.PowerFx.Core.Syntax.Visitors
             return false;
         }
 
-        public override void Visit(BlankNode node) { SetCurrentNodeAsResult(node); }
-        public override void Visit(BoolLitNode node) { SetCurrentNodeAsResult(node); }
-        public override void Visit(ErrorNode node) { SetCurrentNodeAsResult(node); }
-        public override void Visit(StrLitNode node) { SetCurrentNodeAsResult(node); }
-        public override void Visit(NumLitNode node) { SetCurrentNodeAsResult(node); }
-        public override void Visit(FirstNameNode node) { SetCurrentNodeAsResult(node); }
-        public override void Visit(ParentNode node) { SetCurrentNodeAsResult(node); }
-        public override void Visit(SelfNode node) { SetCurrentNodeAsResult(node); }
+        public override void Visit(BlankNode node)
+        {
+            SetCurrentNodeAsResult(node);
+        }
+
+        public override void Visit(BoolLitNode node)
+        {
+            SetCurrentNodeAsResult(node);
+        }
+
+        public override void Visit(ErrorNode node)
+        {
+            SetCurrentNodeAsResult(node);
+        }
+
+        public override void Visit(StrLitNode node)
+        {
+            SetCurrentNodeAsResult(node);
+        }
+
+        public override void Visit(NumLitNode node)
+        {
+            SetCurrentNodeAsResult(node);
+        }
+
+        public override void Visit(FirstNameNode node)
+        {
+            SetCurrentNodeAsResult(node);
+        }
+
+        public override void Visit(ParentNode node)
+        {
+            SetCurrentNodeAsResult(node);
+        }
+
+        public override void Visit(SelfNode node)
+        {
+            SetCurrentNodeAsResult(node);
+        }
     }
 }

@@ -13,7 +13,8 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
         internal sealed class StrNumLitNodeSuggestionHandler : ISuggestionHandler
         {
             public StrNumLitNodeSuggestionHandler()
-            { }
+            {
+            }
 
             /// <summary>
             /// Adds suggestions as appropriate to the internal Suggestions and SubstringSuggestions lists of intellisenseData.
@@ -32,6 +33,7 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
                 var curNode = intellisenseData.CurNode;
                 var cursorPos = intellisenseData.CursorPos;
                 var tokenSpan = curNode.Token.Span;
+
                 // Should not suggest anything if the cursor is before the string/number.
                 if (cursorPos > tokenSpan.Lim && IntellisenseHelper.CanSuggestAfterValue(cursorPos, intellisenseData.Script))
                 {

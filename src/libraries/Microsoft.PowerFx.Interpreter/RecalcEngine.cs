@@ -165,6 +165,7 @@ namespace Microsoft.PowerFx
             else
             {
                 result.TopLevelIdentifiers = DependencyFinder.FindDependencies(binding.Top, binding);
+
                 // TODO: Fix FormulaType.Build to not throw exceptions for Enum types then remove this check
                 if (binding.ResultType.Kind != DKind.Enum)
                 {
@@ -193,7 +194,6 @@ namespace Microsoft.PowerFx
             check.ThrowOnErrors();
 
             var binding = check._binding;
-
 
             (var irnode, var ruleScopeSymbol) = IRTranslator.Translate(binding);
 

@@ -28,10 +28,15 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationMetadata
         public Dictionary<DPath, DPath> ODataPathReplacementMap => _compositeMetadata.ODataPathReplacementMap;
 
         public SortOpMetadata SortDelegationMetadata => _compositeMetadata.SortDelegationMetadata;
+
         public FilterOpMetadata FilterDelegationMetadata => _compositeMetadata.FilterDelegationMetadata;
+
         public GroupOpMetadata GroupDelegationMetadata => _compositeMetadata.GroupDelegationMetadata;
+
         public DType Schema { get; }
+
         public DelegationCapability TableAttributes => _compositeMetadata.TableAttributes;
+
         public DelegationCapability TableCapabilities => _compositeMetadata.TableCapabilities;
     }
 }

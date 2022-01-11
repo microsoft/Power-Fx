@@ -15,7 +15,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     {
         public TrimFunction()
             : base("Trim", TexlStrings.AboutTrim, FunctionCategories.Text)
-        { }
+        {
+        }
     }
 
     // Trim(arg:*[s])
@@ -23,7 +24,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     {
         public TrimTFunction()
             : base("Trim", TexlStrings.AboutTrim, FunctionCategories.Table)
-        { }
+        {
+        }
     }
 
     // TrimEnds(arg:s)
@@ -31,7 +33,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     {
         public TrimEndsFunction()
             : base("TrimEnds", TexlStrings.AboutTrimEnds, FunctionCategories.Text)
-        { }
+        {
+        }
 
         public override DelegationCapability FunctionDelegationCapability => DelegationCapability.Trim;
 
@@ -50,6 +53,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     {
         public TrimEndsTFunction()
             : base("TrimEnds", TexlStrings.AboutTrimEnds, FunctionCategories.Table)
-        { }
+        {
+        }
     }
 }

@@ -17,11 +17,13 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal abstract class ScalarRoundingFunction : BuiltinFunction
     {
         public override bool IsSelfContained => true;
+
         public override bool SupportsParamCoercion => true;
 
         public ScalarRoundingFunction(string name, TexlStrings.StringGetter description)
             : base(name, description, FunctionCategories.MathAndStat, DType.Number, 0, 2, 2, DType.Number, DType.Number)
-        { }
+        {
+        }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
@@ -33,11 +35,13 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal abstract class TableRoundingFunction : BuiltinFunction
     {
         public override bool IsSelfContained => true;
+
         public override bool SupportsParamCoercion => true;
 
         public TableRoundingFunction(string name, TexlStrings.StringGetter description)
             : base(name, description, FunctionCategories.Table, DType.EmptyTable, 0, 2, 2)
-        { }
+        {
+        }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
@@ -71,8 +75,10 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             {
                 // Ensure we have a one-column table of numerics
                 fValid &= CheckNumericColumnType(type0, args[0], errors, ref nodeToCoercedTypeMap);
+
                 // Borrow the return type from the 1st arg
                 returnType = type0;
+
                 // Check arg1 below.
                 otherArg = args[1];
                 otherType = type1;
@@ -81,8 +87,10 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             {
                 // Ensure we have a one-column table of numerics
                 fValid &= CheckNumericColumnType(type1, args[1], errors, ref nodeToCoercedTypeMap);
+
                 // Since the 1st arg is not a table, make a new table return type *[Result:n]
                 returnType = DType.CreateTable(new TypedName(DType.Number, OneColumnTableResultName));
+
                 // Check arg0 below.
                 otherArg = args[0];
                 otherType = type0;
@@ -92,6 +100,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 Contracts.Assert(returnType.IsTable);
                 errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrTypeError);
                 errors.EnsureError(DocumentErrorSeverity.Severe, args[1], TexlStrings.ErrTypeError);
+
                 // Both args are invalid. No need to continue.
                 return false;
             }
@@ -128,7 +137,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     {
         public RoundScalarFunction()
             : base("Round", TexlStrings.AboutRound)
-        { }
+        {
+        }
     }
 
     // RoundUp(number:n, digits:n)
@@ -136,7 +146,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     {
         public RoundUpScalarFunction()
             : base("RoundUp", TexlStrings.AboutRoundUp)
-        { }
+        {
+        }
     }
 
     // RoundDown(number:n, digits:n)
@@ -144,7 +155,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     {
         public RoundDownScalarFunction()
             : base("RoundDown", TexlStrings.AboutRoundDown)
-        { }
+        {
+        }
     }
 
     // Round(number:n|*[n], digits:n|*[n])
@@ -152,7 +164,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     {
         public RoundTableFunction()
             : base("Round", TexlStrings.AboutRoundT)
-        { }
+        {
+        }
     }
 
     // RoundUp(number:n|*[n], digits:n|*[n])
@@ -160,7 +173,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     {
         public RoundUpTableFunction()
             : base("RoundUp", TexlStrings.AboutRoundUpT)
-        { }
+        {
+        }
     }
 
     // RoundDown(number:n|*[n], digits:n|*[n])
@@ -168,6 +182,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     {
         public RoundDownTableFunction()
             : base("RoundDown", TexlStrings.AboutRoundDownT)
-        { }
+        {
+        }
     }
 }

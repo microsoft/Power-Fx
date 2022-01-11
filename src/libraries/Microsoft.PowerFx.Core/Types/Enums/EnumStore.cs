@@ -60,6 +60,7 @@ namespace Microsoft.PowerFx.Core.Types.Enums
                     "%s[Normal:\"normal\", Semibold:\"600\", Bold:\"bold\", Lighter:\"lighter\"]"                 },
                 { EnumConstants.ImagePositionEnumString,
                     "%s[Fill:\"fill\", Fit:\"fit\", Stretch:\"stretch\", Tile:\"tile\", Center:\"center\"]"                 },
+
                 // Keep the next two enums in order for back-compat reasons.
                 // See: #9003434 and #9003431
                 { EnumConstants.LayoutEnumString,
@@ -114,6 +115,7 @@ namespace Microsoft.PowerFx.Core.Types.Enums
                     "%n[NoError:1, DataSourceError:2, All:4294967295]"                 },
                 { EnumConstants.ErrorSeverityEnumString,
                     "%n[NoError:0, Warning:1, Moderate:2, Severe:3]"                 },
+
                 // TASK 4620228: Connect to Data: Need Final design on Error enum returned by Errors function.
                 { EnumConstants.ErrorKindEnumString,
                     "%n[None:0, Sync:1, MissingRequired:2, CreatePermission:3, EditPermission:4, DeletePermission:5, Conflict:6, NotFound:7, ConstraintViolated:8, GeneratedValue:9, ReadOnlyValue:10, Validation: 11, Unknown: 12, " +

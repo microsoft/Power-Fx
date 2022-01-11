@@ -20,15 +20,21 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class AsTypeFunction : BuiltinFunction
     {
         public const string AsTypeInvariantFunctionName = "AsType";
+
         public override bool RequiresErrorContext => true;
+
         public override bool IsAsync => true;
+
         public override bool CanReturnExpandInfo => true;
+
         public override bool IsSelfContained => true;
+
         public override bool SupportsParamCoercion => false;
 
         public AsTypeFunction()
             : base(AsTypeInvariantFunctionName, TexlStrings.AboutAsType, FunctionCategories.Table, DType.EmptyRecord, 0, 2, 2, DType.Error /* Polymorphic type is checked in override */, DType.EmptyTable)
-        { }
+        {
+        }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
@@ -44,7 +50,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.Assert(argTypes.Length == 2);
             Contracts.AssertValue(errors);
 
-
             if (!base.CheckInvocation(binding, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap))
             {
                 return false;
@@ -59,9 +64,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             // Check if table arg referrs to a connected data source.
             var tableArg = args[1];
-            IExternalDataSource tableDsInfo;
             if (!binding.TryGetFirstNameInfo(tableArg.Id, out var tableInfo) ||
-                (tableDsInfo = tableInfo.Data as IExternalDataSource) == null ||
+                tableInfo.Data is not IExternalDataSource tableDsInfo ||
                 !(tableDsInfo is IExternalTabularDataSource))
             {
                 errors.EnsureError(tableArg, TexlStrings.ErrAsTypeAndIsTypeExpectConnectedDataSource);

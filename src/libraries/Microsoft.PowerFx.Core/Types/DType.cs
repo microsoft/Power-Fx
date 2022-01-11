@@ -114,7 +114,6 @@ namespace Microsoft.PowerFx.Core.Types
                 { DKind.View, DKind.Error },
                 { DKind.ViewValue, DKind.Error },
                 { DKind.NamedValue, DKind.Error },
-
             }, isThreadSafe: true);
 
         public static Dictionary<DKind, DKind> KindToSuperkindMapping => _kindToSuperkindMapping.Value;
@@ -123,13 +122,16 @@ namespace Microsoft.PowerFx.Core.Types
 
         // These are default values except for Enums.
         public DKind EnumSuperkind { get; }
+
         public ValueTree ValueTree { get; }
 
         // This is only used by attachment type. DocumentDataType is used to workaround the issue of having cycles in struct type.
         protected readonly DType _attachmentType;
 
         internal HashSet<IExternalTabularDataSource> AssociatedDataSources { get; private set; }
+
         internal IExternalOptionSet<int> OptionSetInfo { get; }
+
         internal IExternalViewInfo ViewInfo { get; }
 
         /// <summary>
@@ -182,7 +184,6 @@ namespace Microsoft.PowerFx.Core.Types
 
             AssociatedDataSources = dataSourceInfo;
         }
-
 
         public virtual DType Clone()
         {
@@ -475,7 +476,9 @@ namespace Microsoft.PowerFx.Core.Types
             Contracts.Assert((_attachmentType != null) == (Kind == DKind.Attachment));
 #if DEBUG
             if (ExpandInfo != null)
+            {
                 Contracts.Assert((Kind == DKind.Table) || (Kind == DKind.Record) || (Kind == DKind.DataEntity) || (Kind == DKind.Metadata));
+            }
 
             if (ValueTree.Count > 1)
             {
@@ -489,49 +492,72 @@ namespace Microsoft.PowerFx.Core.Types
         public DKind Kind { get; }
 
         public bool IsValid => Kind >= DKind.Min && Kind < DKind.Lim;
+
         public bool IsUnknown => Kind == DKind.Unknown;
+
         public bool IsError => Kind == DKind.Error;
+
         public bool IsRecord => Kind == DKind.Record || Kind == DKind.ObjNull;
+
         public bool IsTable => Kind == DKind.Table || Kind == DKind.ObjNull;
+
         public bool IsEnum => Kind == DKind.Enum || Kind == DKind.ObjNull;
+
         public bool IsColumn => IsTable && ChildCount == 1;
+
         public bool IsControl => Kind == DKind.Control;
+
         public bool IsExpandEntity => Kind == DKind.DataEntity;
+
         public bool IsMetadata => Kind == DKind.Metadata;
+
         public bool IsAttachment => Kind == DKind.Attachment;
+
         public bool IsPolymorphic => Kind == DKind.Polymorphic;
+
         public bool IsOptionSet => Kind == DKind.OptionSet || Kind == DKind.OptionSetValue;
+
         public bool IsView => Kind == DKind.View || Kind == DKind.ViewValue;
+
         public bool IsAggregate => Kind == DKind.Table || Kind == DKind.Record || Kind == DKind.ObjNull;
-        public bool IsPrimitive => Kind >= DKind.MinPrimitive && Kind < DKind.LimPrimitive || Kind == DKind.ObjNull;
+
+        public bool IsPrimitive => (Kind >= DKind.MinPrimitive && Kind < DKind.LimPrimitive) || Kind == DKind.ObjNull;
 
         private readonly bool _isFile;
+
         public bool IsFile => _isFile || Kind == DKind.File;
 
         private readonly bool _isLargeImage;
+
         public bool IsLargeImage => _isLargeImage || Kind == DKind.LargeImage;
 
-        private bool? _IsActivityPointer;
+        private bool? _isActivityPointer;
+
         public bool IsActivityPointer
         {
             get
             {
-                if (_IsActivityPointer.HasValue)
+                if (_isActivityPointer.HasValue)
                 {
-                    return _IsActivityPointer.Value;
+                    return _isActivityPointer.Value;
                 }
 
                 TryGetType(new DName("activity_pointer_fax"), out var activityReferenceType);
-                _IsActivityPointer = IsRecord && activityReferenceType != Invalid;
-                return _IsActivityPointer.Value;
+                _isActivityPointer = IsRecord && activityReferenceType != Invalid;
+                return _isActivityPointer.Value;
             }
         }
 
         public IExpandInfo ExpandInfo { get; }
+
         public IPolymorphicInfo PolymorphicInfo { get; }
+
         public IDataColumnMetadata Metadata { get; }
+
         public DType AttachmentType => _attachmentType;
+
         public bool HasExpandInfo => ExpandInfo != null;
+
         public bool HasPolymorphicInfo => PolymorphicInfo != null;
 
         public int ChildCount
@@ -1852,7 +1878,7 @@ namespace Microsoft.PowerFx.Core.Types
                         type.Kind == DKind.Blob || (!exact && (type.Kind == DKind.String || type.Kind == DKind.Hyperlink)) || DefaultReturnValue(type);
                     break;
                 case DKind.Blob:
-                    accepts = !exact && (type.Kind == DKind.String || type.Kind == DKind.Hyperlink) || DefaultReturnValue(type);
+                    accepts = (!exact && (type.Kind == DKind.String || type.Kind == DKind.Hyperlink)) || DefaultReturnValue(type);
                     break;
                 case DKind.Currency:
                     accepts = (!exact && type.Kind == DKind.Number) || DefaultReturnValue(type);
@@ -2827,7 +2853,7 @@ namespace Microsoft.PowerFx.Core.Types
         {
             if (shouldBeIncluded == null)
             {
-                shouldBeIncluded = (_1, _2) => true;
+                shouldBeIncluded = (a, b) => true;
             }
 
             var kindStr = MapKindToStr(Kind);
@@ -2855,7 +2881,7 @@ namespace Microsoft.PowerFx.Core.Types
             }
         }
 
-        private static readonly Regex noNeedEscape = new Regex("^[a-zA-Z_][0-9a-zA-Z]*$");
+        private static readonly Regex NoNeedEscape = new Regex("^[a-zA-Z_][0-9a-zA-Z]*$");
 
         protected DType(
             DKind kind,
@@ -2891,7 +2917,7 @@ namespace Microsoft.PowerFx.Core.Types
 
         private static void EscapeJSPropertyName(StringBuilder builder, string name)
         {
-            if (noNeedEscape.IsMatch(name))
+            if (NoNeedEscape.IsMatch(name))
             {
                 builder.Append(name);
             }
@@ -3560,8 +3586,8 @@ namespace Microsoft.PowerFx.Core.Types
                 value = System.DateTime.SpecifyKind(value, DateTimeKind.Local).ToUniversalTime();
             }
 
-            var DateValue = value.ToLocalTime().Date.ToUniversalTime();
-            return (DateTimeExtensions.OleAutomationEpoch + (value - DateValue)).ToUniversalTime();
+            var dateValue = value.ToLocalTime().Date.ToUniversalTime();
+            return (DateTimeExtensions.OleAutomationEpoch + (value - dateValue)).ToUniversalTime();
         }
 
         public static bool IsAcceptableTypeConversionForTables(DType sourceType, DType destinationType)
@@ -3826,7 +3852,7 @@ namespace Microsoft.PowerFx.Core.Types
             // We also want to have a heuristic maximum distance so that we don't give ridiculous
             // suggestions.
             return similar != null &&
-                   comparer.Distance(similar) < name.Value.Length / 3 + 3;
+                   comparer.Distance(similar) < (name.Value.Length / 3) + 3;
         }
     }
 }

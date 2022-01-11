@@ -21,6 +21,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal abstract class StatisticalTableFunction : FunctionWithTableInput
     {
         public override bool SupportsParamCoercion => true;
+
         public override bool IsSelfContained => true;
 
         public StatisticalTableFunction(string name, TexlStrings.StringGetter description, FunctionCategories fc)
@@ -29,7 +30,10 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             ScopeInfo = new FunctionScopeInfo(this, usesAllFieldsInScope: false, acceptsLiteralPredicates: false);
         }
 
-        public override bool SupportsPaging(CallNode callNode, TexlBinding binding) { return false; }
+        public override bool SupportsPaging(CallNode callNode, TexlBinding binding)
+        {
+            return false;
+        }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {

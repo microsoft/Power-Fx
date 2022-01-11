@@ -7,8 +7,6 @@ using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Core.Errors
 {
-
-
     internal abstract class BaseError : IDocumentError
     {
         /// <summary>
@@ -35,6 +33,7 @@ namespace Microsoft.PowerFx.Core.Errors
         /// Returns the key of the error message to be consumed by UI.
         /// </summary>
         public string MessageKey { get; }
+
         public ErrorResourceKey ErrorResourceKey => new ErrorResourceKey(MessageKey);
 
         /// <summary>
@@ -110,7 +109,8 @@ namespace Microsoft.PowerFx.Core.Errors
 
         internal BaseError(IDocumentError innerError, Exception internalException, DocumentErrorKind kind, DocumentErrorSeverity severity, ErrorResourceKey errKey, params object[] args)
             : this(innerError, internalException, kind, severity, errKey, textSpan: null, sinkTypeErrors: null, args: args)
-        { }
+        {
+        }
 
         internal BaseError(IDocumentError innerError, Exception internalException, DocumentErrorKind kind, DocumentErrorSeverity severity, ErrorResourceKey errKey, Span textSpan, IEnumerable<string> sinkTypeErrors, params object[] args)
         {
@@ -149,7 +149,6 @@ namespace Microsoft.PowerFx.Core.Errors
                 Contracts.AssertValue(shortMessage);
                 longMessage = errorResource.GetSingleValue(ErrorResource.LongMessageTag);
             }
-
 
             ShortMessage = FormatMessage(shortMessage, args);
             LongMessage = FormatMessage(longMessage, args);

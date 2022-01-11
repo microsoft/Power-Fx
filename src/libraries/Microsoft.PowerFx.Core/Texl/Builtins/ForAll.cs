@@ -16,8 +16,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class ForAllFunction : FunctionWithTableInput
     {
         public override bool SkipScopeForInlineRecords => true;
+
         public override bool IsSelfContained => true;
+
         public override bool RequiresErrorContext => true;
+
         public override bool SupportsParamCoercion => false;
 
         public ForAllFunction()

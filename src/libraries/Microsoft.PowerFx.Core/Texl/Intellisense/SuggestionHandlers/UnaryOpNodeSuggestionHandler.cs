@@ -14,7 +14,8 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
         {
             public UnaryOpNodeSuggestionHandler()
                 : base(NodeKind.UnaryOp)
-            { }
+            {
+            }
 
             internal override bool TryAddSuggestionsForNodeKind(IntellisenseData.IntellisenseData intellisenseData)
             {
@@ -22,6 +23,7 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
 
                 var curNode = intellisenseData.CurNode;
                 var cursorPos = intellisenseData.CursorPos;
+
                 // Cursor is in the operation token or before.
                 // Suggest all value possibilities.
                 var unaryOpNode = curNode.CastUnaryOp();

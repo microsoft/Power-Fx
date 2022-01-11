@@ -11,10 +11,15 @@ namespace Microsoft.PowerFx.Core.Entities
     internal interface IExternalEntity
     {
         DName EntityName { get; }
+
         string InvariantName { get; }
+
         bool IsControl { get; }
+
         IExternalEntityScope EntityScope { get; }
+
         IEnumerable<IDocumentError> Errors { get; }
+
         bool TryGetRule(DName propertyName, out IExternalRule rule);
     }
 }

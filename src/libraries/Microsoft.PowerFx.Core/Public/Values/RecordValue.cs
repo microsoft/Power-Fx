@@ -17,7 +17,8 @@ namespace Microsoft.PowerFx.Core.Public.Values
     {
         public abstract IEnumerable<NamedValue> Fields { get; }
 
-        internal RecordValue(IRContext irContext) : base(irContext)
+        internal RecordValue(IRContext irContext)
+            : base(irContext)
         {
             Contract.Assert(IRContext.ResultType is RecordType);
         }

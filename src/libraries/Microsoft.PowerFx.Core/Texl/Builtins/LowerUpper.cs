@@ -16,6 +16,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class LowerUpperFunction : StringOneArgFunction
     {
         private readonly bool _isLower;
+
         public LowerUpperFunction(bool isLower)
             : base(isLower ? "Lower" : "Upper", isLower ? TexlStrings.AboutLower : TexlStrings.AboutUpper, FunctionCategories.Text)
         {
@@ -40,6 +41,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     {
         public LowerUpperTFunction(bool isLower)
             : base(isLower ? "Lower" : "Upper", isLower ? TexlStrings.AboutLowerT : TexlStrings.AboutUpperT, FunctionCategories.Table)
-        { }
+        {
+        }
     }
 }

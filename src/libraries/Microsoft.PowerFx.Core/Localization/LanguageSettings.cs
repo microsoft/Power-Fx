@@ -17,14 +17,17 @@ namespace Microsoft.PowerFx.Core.Localization
         private int _cacheStamp;
 
         public string CultureName { get; }
+
         public string UICultureName { get; }
 
         // Locale-specific to Invariant maps
         public Dictionary<string, string> LocToInvariantFunctionMap { get; }
+
         public Dictionary<string, string> LocToInvariantPunctuatorMap { get; }
 
         // Reverse maps
         public Dictionary<string, string> InvariantToLocFunctionMap { get; }
+
         public Dictionary<string, string> InvariantToLocPunctuatorMap { get; }
 
         public void AddFunction(string loc, string invariant)

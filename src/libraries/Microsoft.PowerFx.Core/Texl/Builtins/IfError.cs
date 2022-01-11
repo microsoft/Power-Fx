@@ -18,10 +18,15 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class IfErrorFunction : BuiltinFunction
     {
         public override bool IsStrict => false;
+
         public override bool RequiresErrorContext => true;
+
         public override bool IsSelfContained => true;
+
         public override bool HasLambdas => true;
+
         public override bool IsAsync => true;
+
         public override bool SupportsParamCoercion => true;
 
         public IfErrorFunction()

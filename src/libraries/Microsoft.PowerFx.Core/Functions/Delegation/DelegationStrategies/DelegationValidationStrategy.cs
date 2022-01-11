@@ -145,7 +145,8 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
             {
                 var telemetryMessage = string.Format(
                     "Kind:{0}, isRowScoped:{1}",
-                    node.Kind, isRowScoped);
+                    node.Kind,
+                    isRowScoped);
 
                 SuggestDelegationHintAndAddTelemetryMessage(node, binding, telemetryMessage);
                 return false;
@@ -192,7 +193,9 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
             {
                 var telemetryMessage = string.Format(
                     "Kind:{0}, isRowScoped:{1}, no metadata found for entity {2}",
-                    node.Kind, isRowScoped, CharacterUtils.MakeSafeForFormatString(info.Identity));
+                    node.Kind,
+                    isRowScoped,
+                    CharacterUtils.MakeSafeForFormatString(info.Identity));
 
                 SuggestDelegationHintAndAddTelemetryMessage(node, binding, telemetryMessage);
                 return false;
@@ -284,6 +287,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
             }
 
             var metadata = GetCapabilityMetadata(firstNameInfo);
+
             // This means that this row scoped field is from some parent scope which is non-delegatable. That should deny delegation at that point.
             // For this scope, this means that value will be provided from some other source.
             // For example, AddColumns(CDS, "Column1", LookUp(CDS1, Name in FirstName))
@@ -355,7 +359,6 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
             var isAsync = binding.IsAsync(node);
             var isPure = binding.IsPure(node);
 
-
             if (node is DottedNameNode &&
                 ((binding.GetType(node.AsDottedName().Left).Kind == DKind.OptionSet && binding.GetType(node).Kind == DKind.OptionSetValue) ||
                 (binding.GetType(node.AsDottedName().Left).Kind == DKind.View && binding.GetType(node).Kind == DKind.ViewValue)))
@@ -374,7 +377,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
             // Async predicates and impure nodes are not supported.
             // Let CallNodes for User() be marked as being Valid to allow
             // expressions with User() calls to be delegated
-            if (! IsUserCallNodeDelegable(node, binding) && (isAsync || !isPure))
+            if (!IsUserCallNodeDelegable(node, binding) && (isAsync || !isPure))
             {
                 var telemetryMessage = string.Format("Kind:{0}, isAsync:{1}, isPure:{2}", node.Kind, isAsync, isPure);
                 SuggestDelegationHintAndAddTelemetryMessage(node, binding, telemetryMessage);

@@ -12,13 +12,21 @@ namespace Microsoft.PowerFx.Core.Types
     internal interface IPolymorphicInfo
     {
         string[] TargetTables { get; }
+
         string[] TargetFields { get; }
+
         bool IsTable { get; }
+
         string Name { get; }
+
         IExternalDataSource ParentDataSource { get; }
+
         public IEnumerable<IExpandInfo> Expands { get; }
+
         public IExpandInfo TryGetExpandInfo(string targetTable);
+
         IPolymorphicInfo Clone();
+
         string ToDebugString();
     }
 }

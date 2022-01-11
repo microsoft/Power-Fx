@@ -17,16 +17,22 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class CountRowsFunction : FunctionWithTableInput
     {
         public override bool RequiresErrorContext => true;
+
         public override bool IsSelfContained => true;
+
         public override bool SupportsParamCoercion => false;
 
         public override DelegationCapability FunctionDelegationCapability => DelegationCapability.Count;
 
         public CountRowsFunction()
             : base("CountRows", TexlStrings.AboutCountRows, FunctionCategories.Table | FunctionCategories.MathAndStat, DType.Number, 0, 1, 1, DType.EmptyTable)
-        { }
+        {
+        }
 
-        public override bool SupportsPaging(CallNode callNode, TexlBinding binding) { return false; }
+        public override bool SupportsPaging(CallNode callNode, TexlBinding binding)
+        {
+            return false;
+        }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
@@ -53,6 +59,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertValue(binding);
 
             preferredFunctionDelegationCapability = FunctionDelegationCapability;
+
             // We ensure Document is available because some tests run with a null Document.
             if ((binding.Document != null
                 && binding.Document.Properties.EnabledFeatures.IsEnhancedDelegationEnabled)

@@ -9,7 +9,8 @@ namespace Microsoft.PowerFx.Core.Lexer.Tokens
     {
         public EofToken(Span span)
             : base(TokKind.Eof, span)
-        { }
+        {
+        }
 
         /// <summary>
         /// Copy Ctor for EofToken used by Clone.

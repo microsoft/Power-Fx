@@ -13,6 +13,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class PiFunction : BuiltinFunction
     {
         public override bool IsSelfContained => true;
+
         public override bool SupportsParamCoercion => true;
 
         public PiFunction()
@@ -24,7 +25,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 0,            // no lambdas
                 0,            // min arity of 0
                 0)            // max arity of 0
-        { }
+        {
+        }
+
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
             yield return new TexlStrings.StringGetter[] { };

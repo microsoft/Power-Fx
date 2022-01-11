@@ -9,6 +9,7 @@ namespace Microsoft.PowerFx.Core.Localization
     internal interface INamedLanguageSettings
     {
         string CultureName { get; }
+
         string UICultureName { get; }
     }
 }

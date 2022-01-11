@@ -18,12 +18,15 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     {
         // Multiple invocations may result in different return values.
         public override bool IsStateless => false;
+
         public override bool IsSelfContained => true;
+
         public override bool SupportsParamCoercion => true;
 
         public IsTodayFunction()
             : base("IsToday", TexlStrings.AboutIsToday, FunctionCategories.Information, DType.Boolean, 0, 1, 1, DType.DateTime)
-        { }
+        {
+        }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {

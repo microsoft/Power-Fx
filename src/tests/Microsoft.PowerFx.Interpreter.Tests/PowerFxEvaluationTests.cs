@@ -11,7 +11,6 @@ using Xunit;
 
 namespace Microsoft.PowerFx.Interpreter.Tests
 {
-
     public class ExpressionEvaluationTests
     {
         //[Fact]

@@ -19,7 +19,6 @@ namespace Microsoft.PowerFx.Core.Localization
             Pares
         }
 
-
         /// <summary>
         ///  This field is set once on startup by Canvas' Document Server, and allows access to Canvas-specific string keys
         ///  It is a legacy use, left over from when PowerFx was deeply embedded in Canvas, and ideally should be removed if possible.
@@ -36,7 +35,6 @@ namespace Microsoft.PowerFx.Core.Localization
         {
             Contracts.CheckValue(resourceKey.Key, "action");
             Contracts.CheckValueOrNull(locale, "locale");
-
 
             // As foreign languages can lag behind en-US while being localized, if we can't find it then always look in the en-US locale
             if (!TryGetErrorResource(resourceKey, out var resourceValue, locale) && !TryGetErrorResource(resourceKey, out resourceValue, FallbackLocale))
@@ -60,7 +58,6 @@ namespace Microsoft.PowerFx.Core.Localization
         {
             Contracts.CheckValue(resourceKey, "action");
             Contracts.CheckValueOrNull(locale, "locale");
-
 
             // As foreign languages can lag behind en-US while being localized, if we can't find it then always look in the en-US locale
             if (!TryGet(resourceKey, out var resourceValue, locale) && !TryGet(resourceKey, out resourceValue, FallbackLocale))
@@ -88,10 +85,11 @@ namespace Microsoft.PowerFx.Core.Localization
         // One resource dictionary per locale
         private static readonly Dictionary<string, Dictionary<string, string>> Strings = new Dictionary<string, Dictionary<string, string>>();
         private static readonly Dictionary<string, Dictionary<string, ErrorResource>> ErrorResources = new Dictionary<string, Dictionary<string, ErrorResource>>();
-        private static readonly object dictionaryLock = new object();
+        private static readonly object DictionaryLock = new object();
 
         private class TypeFromThisAssembly
-        { }
+        {
+        }
 
         private static readonly string ResourceNamePrefix = "Microsoft.PowerFx.Core.Strings.";
         private static readonly string ResourceFileName = "PowerFxResources.resw";
@@ -107,10 +105,9 @@ namespace Microsoft.PowerFx.Core.Localization
                 Contracts.CheckNonEmpty(locale, "currentLocale");
             }
 
-
             if (!ErrorResources.TryGetValue(locale, out var errorResources))
             {
-                lock (dictionaryLock)
+                lock (DictionaryLock)
                 {
                     LoadFromResource(locale, ResourceNamePrefix, typeof(TypeFromThisAssembly), ResourceFileName, ResourceFormat.Resw, out var strings, out errorResources);
                     Strings[locale] = strings;
@@ -131,7 +128,6 @@ namespace Microsoft.PowerFx.Core.Localization
                 locale = CurrentLocaleInfo.CurrentUILanguageName;
                 Contracts.CheckNonEmpty(locale, "currentLocale");
             }
-
 
             if (!Strings.TryGetValue(locale, out var strings))
             {
@@ -181,7 +177,6 @@ namespace Microsoft.PowerFx.Core.Localization
 
                     if (resourceFormat == ResourceFormat.Pares)
                     {
-
                         foreach (var item in loadedStrings)
                         {
                             if (item.TryGetNonEmptyAttributeValue("type", out var type) && type == ErrorResource.XmlType)

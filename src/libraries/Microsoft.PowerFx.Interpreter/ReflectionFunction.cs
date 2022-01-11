@@ -20,6 +20,7 @@ namespace Microsoft.PowerFx
     internal class CustomTexlFunction : TexlFunction
     {
         public Func<FormulaValue[], FormulaValue> _impl;
+
         public override bool SupportsParamCoercion => true;
 
         public CustomTexlFunction(string name, FormulaType returnType, params FormulaType[] paramTypes)
@@ -28,10 +29,8 @@ namespace Microsoft.PowerFx
         }
 
         public CustomTexlFunction(string name, DType returnType, params DType[] paramTypes)
-            : base(DPath.Root, name, name, SG("Custom func " + name), FunctionCategories.MathAndStat, returnType, 0,
-                  paramTypes.Length, paramTypes.Length, paramTypes)
+            : base(DPath.Root, name, name, SG("Custom func " + name), FunctionCategories.MathAndStat, returnType, 0, paramTypes.Length, paramTypes.Length, paramTypes)
         {
-
         }
 
         public override bool IsSelfContained => true;
@@ -45,7 +44,6 @@ namespace Microsoft.PowerFx
         {
             yield return new[] { SG("Arg 1") };
         }
-
 
         public virtual FormulaValue Invoke(FormulaValue[] args)
         {
@@ -84,19 +82,18 @@ namespace Microsoft.PowerFx
 
             _info = new FunctionDescr
             {
-                name = name,
-                retType = returnType,
-                paramTypes = paramTypes,
+                Name = name,
+                RetType = returnType,
+                ParamTypes = paramTypes,
                 _method = m
             };
-
         }
 
-        class FunctionDescr
+        private class FunctionDescr
         {
-            public FormulaType retType;
-            public FormulaType[] paramTypes;
-            public string name;
+            public FormulaType RetType;
+            public FormulaType[] ParamTypes;
+            public string Name;
 
             public MethodInfo _method;
         }
@@ -110,7 +107,7 @@ namespace Microsoft.PowerFx
                 var t = GetType();
 
                 var suffix = "Function";
-                info.name = t.Name.Substring(0, t.Name.Length - suffix.Length);
+                info.Name = t.Name.Substring(0, t.Name.Length - suffix.Length);
 
                 var m = t.GetMethod("Execute", BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance);
                 if (m == null)
@@ -118,8 +115,8 @@ namespace Microsoft.PowerFx
                     throw new InvalidOperationException($"Missing Execute method");
                 }
 
-                info.retType = GetType(m.ReturnType);
-                info.paramTypes = Array.ConvertAll(m.GetParameters(), p => GetType(p.ParameterType));
+                info.RetType = GetType(m.ReturnType);
+                info.ParamTypes = Array.ConvertAll(m.GetParameters(), p => GetType(p.ParameterType));
                 info._method = m;
 
                 _info = info;
@@ -128,7 +125,7 @@ namespace Microsoft.PowerFx
             return _info;
         }
 
-        static FormulaType GetType(Type t)
+        private static FormulaType GetType(Type t)
         {
             if (t == typeof(NumberValue))
             {
@@ -138,11 +135,10 @@ namespace Microsoft.PowerFx
             throw new NotImplementedException($"Marshal type {t.Name}");
         }
 
-
         internal TexlFunction GetTexlFunction()
         {
             var info = Scan();
-            return new CustomTexlFunction(info.name, info.retType, info.paramTypes)
+            return new CustomTexlFunction(info.Name, info.RetType, info.ParamTypes)
             {
                 _impl = (args) => Invoke(args)
             };
@@ -154,7 +150,6 @@ namespace Microsoft.PowerFx
             var result = _info._method.Invoke(this, args);
 
             return (FormulaValue)result;
-
         }
     }
 }

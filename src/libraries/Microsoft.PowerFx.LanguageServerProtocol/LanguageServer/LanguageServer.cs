@@ -481,6 +481,5 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
 
             return position;
         }
-
     }
 }

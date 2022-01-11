@@ -9,7 +9,6 @@ namespace Microsoft.PowerFx.Core.Lexer.Tokens
 {
     internal class ErrorToken : Token
     {
-
         // May produce null, if there is no available detail for this error token.
         public ErrorResourceKey? DetailErrorKey { get; }
 
@@ -18,7 +17,8 @@ namespace Microsoft.PowerFx.Core.Lexer.Tokens
 
         public ErrorToken(Span span)
             : this(span, null)
-        { }
+        {
+        }
 
         public ErrorToken(Span span, ErrorResourceKey? detailErrorKey)
             : base(TokKind.Error, span)

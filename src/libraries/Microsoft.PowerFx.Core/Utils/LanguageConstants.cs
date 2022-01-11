@@ -12,7 +12,6 @@ namespace Microsoft.PowerFx.Core.Utils
         /// </summary>
         public static string SortOrderEnumString => StringResources.Get("LocaleSpecificEnum_SortOrder");
 
-
         /// <summary>
         /// Defines ascending sort order string constant.
         /// </summary>

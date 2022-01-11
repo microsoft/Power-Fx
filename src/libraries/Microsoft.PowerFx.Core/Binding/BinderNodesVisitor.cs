@@ -13,25 +13,32 @@ namespace Microsoft.PowerFx.Core.Binding
     internal sealed class BinderNodesVisitor : IdentityTexlVisitor
     {
         private readonly List<BinaryOpNode> _binaryOperators;
+
         public IEnumerable<BinaryOpNode> BinaryOperators => _binaryOperators;
 
         private readonly List<VariadicOpNode> _variadicOperators;
+
         public IEnumerable<VariadicOpNode> VariadicOperators => _variadicOperators;
 
         private readonly List<BoolLitNode> _booleanLiterals;
+
         public IEnumerable<BoolLitNode> BooleanLiterals => _booleanLiterals;
 
         private readonly List<NumLitNode> _numericLiterals;
+
         public IEnumerable<NumLitNode> NumericLiterals => _numericLiterals;
 
         private readonly List<StrLitNode> _stringLiterals;
+
         public IEnumerable<StrLitNode> StringLiterals => _stringLiterals;
 
         private readonly HashSet<NodeKind> _keywords;
+
         // Parent, Self, and ThisItem keywords.
         public IEnumerable<NodeKind> Keywords => _keywords;
 
         private readonly List<UnaryOpNode> _unaryOperators;
+
         public IEnumerable<UnaryOpNode> UnaryOperators => _unaryOperators;
 
         private BinderNodesVisitor(TexlNode node)

@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation.
+﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
 using System;
@@ -41,7 +41,7 @@ namespace Microsoft.PowerFx.Core.Parser
 
         // Track the parsing depth and enforce a maximum, to avoid excessive recursion.
         private int _depth;
-        private const int _maxAllowedExpressionDepth = 50;
+        private const int MaxAllowedExpressionDepth = 50;
 
         private readonly List<CommentToken> _comments = new List<CommentToken>();
         private SourceList _before;
@@ -105,12 +105,11 @@ namespace Microsoft.PowerFx.Core.Parser
             {
                 if (firstToken.Kind == TokKind.Comment && firstToken.As<CommentToken>().IsOpenBlock)
                 {
-
                     // This provides an error message for when a block comment missing a closing '*/' is the only token in the formula bar
                     PostBlockCommentMissingClosingError();
                     errors = _errors;
                 }
-                ;
+
 
                 node = new BlankNode(ref _idNext, _curs.TokCur);
             }
@@ -220,7 +219,7 @@ namespace Microsoft.PowerFx.Core.Parser
                 // corresponding parse errors.
                 if (node == null)
                 {
-                    if (++_depth > _maxAllowedExpressionDepth)
+                    if (++_depth > MaxAllowedExpressionDepth)
                     {
                         return CreateError(_curs.TokMove(), TexlStrings.ErrRuleNestedTooDeeply);
                     }
@@ -273,7 +272,7 @@ namespace Microsoft.PowerFx.Core.Parser
                                 node,
                                 identifier,
                                 null);
-                            if (node.Depth > _maxAllowedExpressionDepth)
+                            if (node.Depth > MaxAllowedExpressionDepth)
                             {
                                 return CreateError(node.Token, TexlStrings.ErrRuleNestedTooDeeply);
                             }
@@ -457,7 +456,6 @@ namespace Microsoft.PowerFx.Core.Parser
 
                             node = ParseBinary(node, leftTrivia, BinaryOp.Exactin, Precedence.In + 1);
                             break;
-
 
                         case TokKind.As:
                             if (precMin > Precedence.As)

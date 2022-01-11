@@ -24,6 +24,7 @@ namespace Microsoft.PowerFx.Core.Public.Values
         // In general the interpreter should trust that the binding had
         // the correct runtime types for all values.
         internal IRContext IRContext { get; }
+
         public FormulaType Type => IRContext.ResultType;
 
         internal FormulaValue(IRContext irContext)
@@ -32,6 +33,7 @@ namespace Microsoft.PowerFx.Core.Public.Values
         }
 
         #region Host Utility API
+
         // Host utility creation methods, listed here for discoverability.
         // NOT FOR USE IN THE INTERPRETER! When creating new instances in
         // the interpreter, call the constructor directly and pass in the
@@ -167,7 +169,6 @@ namespace Microsoft.PowerFx.Core.Public.Values
             if (obj is DateTime dateValue) { return New(dateValue); }
             if (obj is DateTimeOffset dateOffsetValue) { return New(dateOffsetValue.DateTime); }
             if (obj is TimeSpan timeValue) { return New(timeValue); }
-
 
             // Do checking off the static type, not the runtime instance. 
             if (type.IsInterface)

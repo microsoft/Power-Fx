@@ -18,6 +18,7 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
     internal static class ArgumentSuggestions
     {
         internal delegate IEnumerable<KeyValuePair<string, DType>> GetArgumentSuggestionsDelegate(TryGetEnumSymbol tryGetEnumSymbol, bool suggestUnqualifiedName, DType scopeType, int argumentIndex, out bool requiresSuggestionEscaping);
+
         private delegate IEnumerable<KeyValuePair<string, DType>> GetArgumentSuggestionsDelegateWithoutEnum(DType scopeType, int argumentIndex, out bool requiresSuggestionEscaping);
 
         internal delegate bool TryGetEnumSymbol(string symbolName, out EnumSymbol symbol);

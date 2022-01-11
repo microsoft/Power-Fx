@@ -17,7 +17,6 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
         /// </summary>
         public int CursorPosition { get; private set; }
 
-
         public IntellisenseContext(string inputText, int cursorPosition)
         {
             Contracts.CheckValue(inputText, "inputText");

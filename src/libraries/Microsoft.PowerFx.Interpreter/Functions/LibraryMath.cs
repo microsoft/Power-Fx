@@ -17,6 +17,7 @@ namespace Microsoft.PowerFx.Functions
         private interface IAggregator
         {
             void Apply(FormulaValue value);
+
             FormulaValue GetResult(IRContext irContext);
         }
 
@@ -55,7 +56,6 @@ namespace Microsoft.PowerFx.Functions
                 {
                     _minValue = n1.Value;
                 }
-
             }
 
             public virtual FormulaValue GetResult(IRContext irContext)
@@ -79,7 +79,6 @@ namespace Microsoft.PowerFx.Functions
                 {
                     _maxValue = n1.Value;
                 }
-
             }
 
             public virtual FormulaValue GetResult(IRContext irContext)
@@ -286,6 +285,7 @@ namespace Microsoft.PowerFx.Functions
             }
 
             var multiplier = Math.Pow(10, digits < 0 ? Math.Ceiling(digits) : Math.Floor(digits));
+
             // Contracts.Assert(multiplier != 0);
 
             // Deal with catastrophic loss of precision
@@ -317,6 +317,7 @@ namespace Microsoft.PowerFx.Functions
             }
 
             var multiplier = Math.Pow(10, digits < 0 ? Math.Ceiling(digits) : Math.Floor(digits));
+
             // DebugContracts.assert(multiplier !== 0);
 
             // Deal with catastrophic loss of precision

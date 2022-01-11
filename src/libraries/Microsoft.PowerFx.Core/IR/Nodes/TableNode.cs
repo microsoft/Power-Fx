@@ -10,7 +10,8 @@ namespace Microsoft.PowerFx.Core.IR.Nodes
     {
         public readonly IReadOnlyList<IntermediateNode> Values;
 
-        public TableNode(IRContext irContext, params IntermediateNode[] values) : base(irContext)
+        public TableNode(IRContext irContext, params IntermediateNode[] values)
+            : base(irContext)
         {
             Contracts.AssertAllValues(values);
 

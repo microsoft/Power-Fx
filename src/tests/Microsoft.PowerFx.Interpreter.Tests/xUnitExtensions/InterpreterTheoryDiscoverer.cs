@@ -13,7 +13,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests.xUnitExtensions
 {
     public class InterpreterTheoryDiscoverer : IXunitTestCaseDiscoverer
     {
-        readonly TheoryDiscoverer theoryDiscoverer;
+        private readonly TheoryDiscoverer theoryDiscoverer;
 
         public InterpreterTheoryDiscoverer(IMessageSink diagnosticMessageSink)
         {

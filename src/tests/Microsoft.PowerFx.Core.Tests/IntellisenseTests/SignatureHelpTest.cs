@@ -11,7 +11,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
 {
     public class SignatureHelpTest : IntellisenseTestBase
     {
-        static readonly bool RegenerateSignatureHelp = false;
+        private static readonly bool RegenerateSignatureHelp = false;
 
         /// <summary>
         /// Resolves to the directory in the src folder that corresponds to the current directory, which may
@@ -66,7 +66,9 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         }
 
         private JObject ReadSignatureHelpFile(string signatureHelpPath) => JObject.Parse(File.ReadAllText(signatureHelpPath));
+
         private JObject SerializeSignatureHelp(SignatureHelp signatureHelp) => JObject.Parse(JsonConvert.SerializeObject(signatureHelp));
+
         private void WriteSignatureHelp(string path, SignatureHelp signatureHelp) => File.WriteAllText(path, JsonConvert.SerializeObject(signatureHelp, Formatting.Indented));
 
         /// <summary>

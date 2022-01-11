@@ -9,7 +9,9 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
     {
         internal sealed class NullNodeSuggestionHandler : ISuggestionHandler
         {
-            public NullNodeSuggestionHandler() { }
+            public NullNodeSuggestionHandler()
+            {
+            }
 
             /// <summary>
             /// Adds suggestions as appropriate to the internal Suggestions and SubstringSuggestions lists of intellisenseData.

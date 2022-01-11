@@ -18,7 +18,8 @@ namespace Microsoft.PowerFx.Core.UtilityDataStructures
             _secondToFirst = new Dictionary<TSecond, TFirst>();
         }
 
-        public BidirectionalDictionary(IDictionary<TFirst, TSecond> input) : this()
+        public BidirectionalDictionary(IDictionary<TFirst, TSecond> input)
+            : this()
         {
             foreach (var kvp in input)
             {
@@ -78,7 +79,6 @@ namespace Microsoft.PowerFx.Core.UtilityDataStructures
 
             return false;
         }
-
 
         public IEnumerator<KeyValuePair<TFirst, TSecond>> GetEnumerator()
         {

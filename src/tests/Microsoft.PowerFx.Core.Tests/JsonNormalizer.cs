@@ -89,7 +89,6 @@ namespace Microsoft.PowerFx.Tests
 
                 default:
                     throw new NotImplementedException($"Kind: {je.ValueKind}");
-
             }
         }
     }

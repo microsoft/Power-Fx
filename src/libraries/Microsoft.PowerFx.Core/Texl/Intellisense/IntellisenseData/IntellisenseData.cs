@@ -135,7 +135,9 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense.IntellisenseData
         /// <param name="node">
         /// Node for which suggestions may be added or other actions committed.
         /// </param>
-        internal virtual void OnAddedSuggestionsForLeftNodeScope(TexlNode node) { }
+        internal virtual void OnAddedSuggestionsForLeftNodeScope(TexlNode node)
+        {
+        }
 
         /// <summary>
         /// Should return true if name collides with existing symbols and false otherwise.  Used to determine
@@ -228,7 +230,9 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense.IntellisenseData
         /// Left node in the <see cref="DottedNameNode"/> at which the cursor is pointed at the time of
         /// invocation.
         /// </param>
-        internal virtual void BeforeAddSuggestionsForDottedNameNode(TexlNode node) { }
+        internal virtual void BeforeAddSuggestionsForDottedNameNode(TexlNode node)
+        {
+        }
 
         /// <summary>
         /// This method is called by <see cref="Intellisense"/> to determine whether a candidate suggestion
@@ -291,25 +295,33 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense.IntellisenseData
         /// This method is called after all default suggestions for value possibilities have been run and may be
         /// overridden to provide custom suggestions.
         /// </summary>
-        internal virtual void AddCustomSuggestionsForValuePossibilities() { }
+        internal virtual void AddCustomSuggestionsForValuePossibilities()
+        {
+        }
 
         /// <summary>
         /// May be overridden to provide custom suggestions at the point in intellisense runtime when
         /// suggestions for global identifiers are added.
         /// </summary>
-        internal virtual void AddCustomSuggestionsForGlobals() { }
+        internal virtual void AddCustomSuggestionsForGlobals()
+        {
+        }
 
         /// <summary>
         /// May be overridden to provide custom suggestions or change other state after the point in
         /// intellisense runtime where suggestions for global identifiers are added.
         /// </summary>
-        internal virtual void AfterAddSuggestionsForGlobals() { }
+        internal virtual void AfterAddSuggestionsForGlobals()
+        {
+        }
 
         /// <summary>
         /// May be overridden to provide custom suggestions or change other state after the point in
         /// intellisense runtime where suggestions for unary operator keywords are added.
         /// </summary>
-        internal virtual void AfterAddSuggestionsForUnaryOperatorKeywords() { }
+        internal virtual void AfterAddSuggestionsForUnaryOperatorKeywords()
+        {
+        }
 
         /// <summary>
         /// This collection is appended to the resultant suggestion list when
@@ -320,7 +332,6 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense.IntellisenseData
         /// Sequence of suggestions for first name node context.
         /// </returns>
         internal virtual IEnumerable<string> SuggestableFirstNames => Enumerable.Empty<string>();
-
 
         /// <summary>
         /// Invokes <see cref="AddSuggestionsForConstantKeywords"/> to supply suggestions for constant
@@ -345,7 +356,9 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense.IntellisenseData
         /// This method may be overriden to add additional suggestions for local selections to the resultant
         /// suggestion list for first name nodes.
         /// </summary>
-        internal virtual void AddAdditionalSuggestionsForLocalSymbols() { }
+        internal virtual void AddAdditionalSuggestionsForLocalSymbols()
+        {
+        }
 
         /// <summary>
         /// This method may be overriden to add additional suggestions for generic selections to the resultant
@@ -354,7 +367,9 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense.IntellisenseData
         /// <param name="currentNode">
         /// The node for which Intellisense is invoked.
         /// </param>
-        internal virtual void AddAdditionalSuggestionsForKeywordSymbols(TexlNode currentNode) { }
+        internal virtual void AddAdditionalSuggestionsForKeywordSymbols(TexlNode currentNode)
+        {
+        }
 
         /// <param name="function">
         /// Function whose eligibility is called into question.
@@ -419,13 +434,17 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense.IntellisenseData
         /// This method is called by <see cref="Intellisense.ErrorNodeSuggestionHandlerBase"/> if no top level
         /// suggestions are added.  It may be overridden to supply alternative top level suggestions.
         /// </summary>
-        internal virtual void AddAlternativeTopLevelSuggestionsForErrorNode() { }
+        internal virtual void AddAlternativeTopLevelSuggestionsForErrorNode()
+        {
+        }
 
         /// <summary>
         /// This method is called by <see cref="Intellisense.ErrorNodeSuggestionHandlerBase"/> after it has added all
         /// its suggestions to <see cref="Suggestions"/>.
         /// </summary>
-        internal virtual void AddSuggestionsAfterTopLevelErrorNodeSuggestions() { }
+        internal virtual void AddSuggestionsAfterTopLevelErrorNodeSuggestions()
+        {
+        }
 
         public virtual bool TryAugmentSignature(TexlFunction func, int argIndex, string paramName, int highlightStart, out int newHighlightStart, out int newHighlightEnd, out string newParamName, out string newInvariantParamName) =>
             DefaultIntellisenseData.DefaultTryAugmentSignature(func, argIndex, paramName, highlightStart, out newHighlightStart, out newHighlightEnd, out newParamName, out newInvariantParamName);

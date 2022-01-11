@@ -7,7 +7,8 @@ namespace Microsoft.PowerFx.Core.Public.Types
 {
     public class NumberType : FormulaType
     {
-        internal NumberType() : base(new DType(DKind.Number))
+        internal NumberType()
+            : base(new DType(DKind.Number))
         {
         }
 

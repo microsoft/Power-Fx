@@ -17,12 +17,15 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal abstract class FilterFunctionBase : FunctionWithTableInput
     {
         public override DelegationCapability FunctionDelegationCapability => DelegationCapability.Filter;
+
         public override bool HasEcsExcemptLambdas => true;
+
         public override bool IsSelfContained => true;
 
         public FilterFunctionBase(string name, TexlStrings.StringGetter description, FunctionCategories fc, DType returnType, BigInteger maskLambdas, int arityMin, int arityMax, params DType[] paramTypes)
             : base(name, description, fc, returnType, maskLambdas, arityMin, arityMax, paramTypes)
-        { }
+        {
+        }
 
         public override bool TryGetDelegationMetadata(CallNode node, TexlBinding binding, out IDelegationMetadata metadata)
         {

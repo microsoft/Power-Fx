@@ -111,9 +111,13 @@ namespace Microsoft.PowerFx.Core.Utils
         }
 
         public DPath Parent => _node == null ? this : new DPath(_node.Parent);
+
         public DName Name => _node == null ? default : _node.Name;
+
         public int Length => _node == null ? 0 : _node.Length;
+
         public bool IsRoot => _node == null;
+
         public bool IsValid => _node == null || _node.IsValid;
 
         public DName this[int index]

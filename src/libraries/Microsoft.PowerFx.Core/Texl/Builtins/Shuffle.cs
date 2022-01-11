@@ -16,12 +16,15 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     {
         // Multiple invocations with the same args may result in different results.
         public override bool IsStateless => false;
+
         public override bool IsSelfContained => true;
+
         public override bool SupportsParamCoercion => false;
 
         public ShuffleFunction()
             : base("Shuffle", TexlStrings.AboutShuffle, FunctionCategories.Table, DType.EmptyTable, 0, 1, 1, DType.EmptyTable)
-        { }
+        {
+        }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {

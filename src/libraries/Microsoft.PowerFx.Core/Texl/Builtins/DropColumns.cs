@@ -16,11 +16,13 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class DropColumnsFunction : FunctionWithTableInput
     {
         public override bool IsSelfContained => true;
+
         public override bool SupportsParamCoercion => false;
 
         public DropColumnsFunction()
             : base("DropColumns", TexlStrings.AboutDropColumns, FunctionCategories.Table, DType.EmptyTable, 0, 2, int.MaxValue, DType.EmptyTable)
-        { }
+        {
+        }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {

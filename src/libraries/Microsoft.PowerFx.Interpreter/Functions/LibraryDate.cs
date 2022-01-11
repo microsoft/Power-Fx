@@ -1,14 +1,14 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
-using Microsoft.PowerFx.Core.IR;
 using System;
-using Microsoft.PowerFx.Core.Public.Values;
 using System.Globalization;
+using Microsoft.PowerFx.Core.IR;
+using Microsoft.PowerFx.Core.Public.Values;
 
 namespace Microsoft.PowerFx.Functions
 {
-    partial class Library
+    internal partial class Library
     {
         public static FormulaValue Today(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args)
         {
@@ -159,10 +159,10 @@ namespace Microsoft.PowerFx.Functions
                     var days = Math.Floor(diff.TotalDays);
                     return new NumberValue(irContext, days);
                 case "months":
-                    double months = (end.Year - start.Year) * 12 + end.Month - start.Month;
+                    double months = ((end.Year - start.Year) * 12) + end.Month - start.Month;
                     return new NumberValue(irContext, months);
                 case "quarters":
-                    var quarters = (end.Year - start.Year) * 4 + Math.Floor(end.Month / 3.0) - Math.Floor(start.Month / 3.0);
+                    var quarters = ((end.Year - start.Year) * 4) + Math.Floor(end.Month / 3.0) - Math.Floor(start.Month / 3.0);
                     return new NumberValue(irContext, quarters);
                 case "years":
                     double years = end.Year - start.Year;

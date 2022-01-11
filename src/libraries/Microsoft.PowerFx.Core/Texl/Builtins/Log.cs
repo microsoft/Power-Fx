@@ -16,14 +16,17 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class LogFunction : BuiltinFunction
     {
         public override bool SupportsParamCoercion => true;
-        public override bool IsSelfContained => true;
-        public override bool HasPreciseErrors => true;
-        public override bool RequiresErrorContext => true;
 
+        public override bool IsSelfContained => true;
+
+        public override bool HasPreciseErrors => true;
+
+        public override bool RequiresErrorContext => true;
 
         public LogFunction()
             : base("Log", TexlStrings.AboutLog, FunctionCategories.MathAndStat, DType.Number, 0, 1, 2, DType.Number, DType.Number)
-        { }
+        {
+        }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
@@ -37,12 +40,15 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class LogTFunction : BuiltinFunction
     {
         public override bool SupportsParamCoercion => true;
+
         public override bool IsSelfContained => true;
+
         public override bool RequiresErrorContext => true;
 
         public LogTFunction()
             : base("Log", TexlStrings.AboutLogT, FunctionCategories.MathAndStat, DType.EmptyTable, 0, 1, 2)
-        { }
+        {
+        }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {

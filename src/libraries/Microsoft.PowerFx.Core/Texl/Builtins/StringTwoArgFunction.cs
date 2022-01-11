@@ -16,16 +16,20 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal abstract class StringTwoArgFunction : BuiltinFunction
     {
         public override bool UseParentScopeForArgumentSuggestions => true;
+
         public override bool IsSelfContained => true;
+
         public override bool SupportsParamCoercion => true;
 
         public StringTwoArgFunction(string name, TexlStrings.StringGetter description)
             : this(name, description, DType.Boolean)
-        { }
+        {
+        }
 
         public StringTwoArgFunction(string name, TexlStrings.StringGetter description, DType returnType)
             : base(name, description, FunctionCategories.Text, returnType, 0, 2, 2, DType.String, DType.String)
-        { }
+        {
+        }
 
         protected bool IsRowScopedServerDelegatableHelper(CallNode callNode, TexlBinding binding, OperationCapabilityMetadata metadata)
         {

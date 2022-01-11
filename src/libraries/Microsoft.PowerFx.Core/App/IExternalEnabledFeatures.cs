@@ -9,18 +9,26 @@
     public interface IExternalEnabledFeatures
     {
         bool IsEnhancedDelegationEnabled { get; }
+
         bool IsProjectionMappingEnabled { get; }
+
         bool IsEnableRowScopeOneToNExpandEnabled { get; }
+
         bool IsUseDisplayNameMetadataEnabled { get; }
+
         bool IsDynamicSchemaEnabled { get; }
     }
 
     public class DefaultEnabledFeatures : IExternalEnabledFeatures
     {
         public bool IsEnhancedDelegationEnabled => true;
+
         public bool IsProjectionMappingEnabled => true;
+
         public bool IsEnableRowScopeOneToNExpandEnabled => true;
+
         public bool IsUseDisplayNameMetadataEnabled => true;
+
         public bool IsDynamicSchemaEnabled => true;
     }
 }

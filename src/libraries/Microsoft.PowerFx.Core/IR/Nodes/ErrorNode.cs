@@ -14,7 +14,8 @@ namespace Microsoft.PowerFx.Core.IR.Nodes
         // This mostly exists for debug purposes.
         public readonly string ErrorHint;
 
-        public ErrorNode(IRContext irContext, string hint) : base(irContext)
+        public ErrorNode(IRContext irContext, string hint)
+            : base(irContext)
         {
             ErrorHint = hint;
         }

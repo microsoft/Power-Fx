@@ -25,6 +25,7 @@ namespace Microsoft.PowerFx.Core.Tests
         {
             var tests = new List<ExpressionTestCase>();
             thisFile = Path.GetFullPath(thisFile, GetDefaultTestDir());
+
             // Get the absolute path to the .txt file
             var path = Path.IsPathRooted(thisFile)
                 ? thisFile
@@ -104,7 +105,6 @@ namespace Microsoft.PowerFx.Core.Tests
             return tests;
         }
 
-
         public override IEnumerable<object[]> GetData(MethodInfo testMethod)
         {
             if (testMethod == null)
@@ -132,6 +132,5 @@ namespace Microsoft.PowerFx.Core.Tests
             var testDir = Path.Combine(curDir, _filePath);
             return testDir;
         }
-
     }
 }

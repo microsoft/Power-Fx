@@ -12,9 +12,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class BlankFunction : BuiltinFunction
     {
         public override bool IsSelfContained => true;
+
         public override bool SupportsParamCoercion => true;
 
-        public BlankFunction() : base(
+        public BlankFunction()
+            : base(
             "Blank",
             TexlStrings.AboutBlank,
             FunctionCategories.Text,
@@ -22,7 +24,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             0,            // no lambdas
             0,            // min arity of 0
             0)            // max arity of 0
-        { }
+        {
+        }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {

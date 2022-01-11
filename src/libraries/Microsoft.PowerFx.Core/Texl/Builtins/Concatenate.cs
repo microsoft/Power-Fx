@@ -18,11 +18,13 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class ConcatenateFunction : BuiltinFunction
     {
         public override bool IsSelfContained => true;
+
         public override bool SupportsParamCoercion => true;
 
         public ConcatenateFunction()
             : base("Concatenate", TexlStrings.AboutConcatenate, FunctionCategories.Table | FunctionCategories.Text, DType.Unknown, 0, 2, int.MaxValue)
-        { }
+        {
+        }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {

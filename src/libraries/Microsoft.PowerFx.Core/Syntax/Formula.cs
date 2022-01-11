@@ -28,6 +28,7 @@ namespace Microsoft.PowerFx.Core.Syntax
 
         // This may be null if the script hasn't yet been parsed.
         internal TexlNode ParseTree { get; private set; }
+
         internal List<CommentToken> Comments { get; private set; }
 
         public Formula(string script, ILanguageSettings loc = null)

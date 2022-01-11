@@ -7,7 +7,8 @@ namespace Microsoft.PowerFx.Core.Types.Enums
 {
     internal class InvalidEnumException : Exception
     {
-        public InvalidEnumException(string message) : base(message)
+        public InvalidEnumException(string message)
+            : base(message)
         {
         }
     }

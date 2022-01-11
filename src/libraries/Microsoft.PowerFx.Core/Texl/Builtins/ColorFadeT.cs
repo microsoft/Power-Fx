@@ -17,12 +17,15 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class ColorFadeTFunction : BuiltinFunction
     {
         private static readonly string TableKindString = DType.EmptyTable.GetKindString();
+
         public override bool IsSelfContained => true;
+
         public override bool SupportsParamCoercion => true;
 
         public ColorFadeTFunction()
             : base("ColorFade", TexlStrings.AboutColorFadeT, FunctionCategories.Table, DType.EmptyTable, 0, 2, 2)
-        { }
+        {
+        }
 
         public override bool IsTrackedInTelemetry => false;
 
@@ -58,8 +61,10 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             {
                 // Ensure we have a one-column table of colors.
                 fValid &= CheckColorColumnType(type0, args[0], errors, ref nodeToCoercedTypeMap);
+
                 // Borrow the return type from the 1st arg.
                 returnType = type0;
+
                 // Check arg1 below.
                 otherArg = args[1];
                 otherType = type1;
@@ -73,8 +78,10 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             {
                 // Ensure we have a one-column table of numerics.
                 fValid &= CheckNumericColumnType(type1, args[1], errors, ref nodeToCoercedTypeMap);
+
                 // Since the 1st arg is not a table, make a new table return type *[Result:c]
                 returnType = DType.CreateTable(new TypedName(DType.Color, OneColumnTableResultName));
+
                 // Check arg0 below.
                 otherArg = args[0];
                 otherType = type0;
@@ -90,6 +97,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
                 errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrTypeError_Ex1_Ex2_Found, TableKindString, DType.Color.GetKindString(), type0.GetKindString());
                 errors.EnsureError(DocumentErrorSeverity.Severe, args[1], TexlStrings.ErrTypeError_Ex1_Ex2_Found, TableKindString, DType.Number.GetKindString(), type1.GetKindString());
+
                 // Both args are invalid. No need to continue.
                 return false;
             }

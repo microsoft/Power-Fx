@@ -16,11 +16,13 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal abstract class MathOneArgFunction : BuiltinFunction
     {
         public override bool SupportsParamCoercion => true;
+
         public override bool IsSelfContained => true;
 
         public MathOneArgFunction(string name, TexlStrings.StringGetter description, FunctionCategories fc)
             : base(name, description, fc, DType.Number, 0, 1, 1, DType.Number)
-        { }
+        {
+        }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
@@ -31,11 +33,13 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal abstract class MathOneArgTableFunction : BuiltinFunction
     {
         public override bool SupportsParamCoercion => true;
+
         public override bool IsSelfContained => true;
 
         public MathOneArgTableFunction(string name, TexlStrings.StringGetter description, FunctionCategories fc)
             : base(name, description, fc, DType.EmptyTable, 0, 1, 1, DType.EmptyTable)
-        { }
+        {
+        }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {

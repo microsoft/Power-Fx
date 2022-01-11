@@ -18,17 +18,21 @@ namespace Microsoft.PowerFx.Core.Public.Types
         // protected isn't enough to let derived classes access this.
         internal readonly DType _type;
 
-
         public static FormulaType Blank { get; } = new BlankType();
 
         // Well-known types 
         public static FormulaType Boolean { get; } = new BooleanType();
+
         public static FormulaType Number { get; } = new NumberType();
+
         public static FormulaType String { get; } = new StringType();
 
         public static FormulaType Time { get; } = new TimeType();
+
         public static FormulaType Date { get; } = new DateType();
+
         public static FormulaType DateTime { get; } = new DateTimeType();
+
         public static FormulaType DateTimeNoTimeZone { get; } = new DateTimeNoTimeZoneType();
 
         public static FormulaType OptionSetValue { get; } = new OptionSetValueType();
@@ -73,6 +77,7 @@ namespace Microsoft.PowerFx.Core.Public.Types
         }
 
         #region Equality
+
         // Aggregate Types (records, tables) can be complex.  
         // Override op= like system.type does. 
         public static bool operator ==(FormulaType a, FormulaType b)
@@ -87,6 +92,7 @@ namespace Microsoft.PowerFx.Core.Public.Types
         }
 
         public static bool operator !=(FormulaType a, FormulaType b) => !(a == b);
+
         public override bool Equals(object other)
         {
             if (other is FormulaType t)
@@ -103,7 +109,6 @@ namespace Microsoft.PowerFx.Core.Public.Types
         }
 
         #endregion // Equality
-
 
         public abstract void Visit(ITypeVistor vistor);
     }

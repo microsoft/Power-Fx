@@ -18,12 +18,15 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal abstract class IsBlankFunctionBase : BuiltinFunction
     {
         public override bool SupportsParamCoercion => true;
+
         public override bool IsSelfContained => true;
+
         public override DelegationCapability FunctionDelegationCapability => DelegationCapability.Null | DelegationCapability.Filter;
 
         public IsBlankFunctionBase(string name, TexlStrings.StringGetter description, FunctionCategories functionCategories, DType returnType, BigInteger maskLambdas, int arityMin, int arityMax)
             : base(name, description, functionCategories, returnType, maskLambdas, arityMin, arityMax)
-        { }
+        {
+        }
 
         public override bool CheckInvocation(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
@@ -74,7 +77,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public IsBlankFunction()
             : base(IsBlankInvariantFunctionName, TexlStrings.AboutIsBlank, FunctionCategories.Table | FunctionCategories.Information, DType.Boolean, 0, 1, 1)
-        { }
+        {
+        }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
@@ -127,11 +131,13 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class IsBlankOptionSetValueFunction : BuiltinFunction
     {
         public override bool SupportsParamCoercion => true;
+
         public override bool IsSelfContained => true;
 
         public IsBlankOptionSetValueFunction()
             : base("IsBlank", TexlStrings.AboutIsBlank, FunctionCategories.Table | FunctionCategories.Information, DType.Boolean, 0, 1, 1, DType.OptionSetValue)
-        { }
+        {
+        }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {

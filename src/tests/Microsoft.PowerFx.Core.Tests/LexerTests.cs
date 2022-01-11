@@ -19,7 +19,6 @@ namespace Microsoft.PowerFx.Core.Tests
         [Fact]
         public void TestTryNameOrIdentifierToName()
         {
-
             Assert.True(TexlLexer.TryNameOrIdentifierToName(" Name   ", out var name));
             Assert.Equal("Name", name);
 
@@ -81,7 +80,8 @@ namespace Microsoft.PowerFx.Core.Tests
         [Fact]
         public void TestIsIdentStart()
         {
-            var identStartRanges = new Tuple<char, char>[] {
+            var identStartRanges = new Tuple<char, char>[]
+            {
                 Tuple.Create('A', 'Z'),
                 Tuple.Create('a', 'z'),
                 Tuple.Create('_', '_'),
@@ -449,7 +449,7 @@ namespace Microsoft.PowerFx.Core.Tests
             var unaryOperatorKeywords = TexlLexer.LocalizedInstance.GetUnaryOperatorKeywords();
 
             var expectedUOKeywordLength = 1;
-            Assert.True(unaryOperatorKeywords.Contains(TexlLexer.KeywordNot));
+            Assert.Contains(TexlLexer.KeywordNot, unaryOperatorKeywords);
             expectedUOKeywordLength += 1;
 
             Assert.True(unaryOperatorKeywords?.Length == expectedUOKeywordLength);
@@ -460,64 +460,64 @@ namespace Microsoft.PowerFx.Core.Tests
             var expectedBOKeywordLength = 17;
 
             expectedBOKeywordLength += 2;
-            Assert.True(binaryOperatorKeywords.Contains(TexlLexer.KeywordAnd));
-            Assert.True(binaryOperatorKeywords.Contains(TexlLexer.KeywordOr));
+            Assert.Contains(TexlLexer.KeywordAnd, binaryOperatorKeywords);
+            Assert.Contains(TexlLexer.KeywordOr, binaryOperatorKeywords);
 
             Assert.True(binaryOperatorKeywords?.Length == expectedBOKeywordLength);
 
-            Assert.True(binaryOperatorKeywords.Contains(TexlLexer.PunctuatorAmpersand));
-            Assert.True(binaryOperatorKeywords.Contains(TexlLexer.PunctuatorAnd));
-            Assert.True(binaryOperatorKeywords.Contains(TexlLexer.PunctuatorOr));
-            Assert.True(binaryOperatorKeywords.Contains(TexlLexer.PunctuatorAdd));
-            Assert.True(binaryOperatorKeywords.Contains(TexlLexer.PunctuatorSub));
-            Assert.True(binaryOperatorKeywords.Contains(TexlLexer.PunctuatorMul));
-            Assert.True(binaryOperatorKeywords.Contains(TexlLexer.PunctuatorDiv));
-            Assert.True(binaryOperatorKeywords.Contains(TexlLexer.PunctuatorEqual));
-            Assert.True(binaryOperatorKeywords.Contains(TexlLexer.PunctuatorLess));
-            Assert.True(binaryOperatorKeywords.Contains(TexlLexer.PunctuatorLessOrEqual));
-            Assert.True(binaryOperatorKeywords.Contains(TexlLexer.PunctuatorGreater));
-            Assert.True(binaryOperatorKeywords.Contains(TexlLexer.PunctuatorGreaterOrEqual));
-            Assert.True(binaryOperatorKeywords.Contains(TexlLexer.PunctuatorNotEqual));
-            Assert.True(binaryOperatorKeywords.Contains(TexlLexer.PunctuatorCaret));
-            Assert.True(binaryOperatorKeywords.Contains(TexlLexer.KeywordIn));
-            Assert.True(binaryOperatorKeywords.Contains(TexlLexer.KeywordExactin));
-            Assert.True(binaryOperatorKeywords.Contains(TexlLexer.KeywordAs));
-            // GetOperatorKeywords
+            Assert.Contains(TexlLexer.PunctuatorAmpersand, binaryOperatorKeywords);
+            Assert.Contains(TexlLexer.PunctuatorAnd, binaryOperatorKeywords);
+            Assert.Contains(TexlLexer.PunctuatorOr, binaryOperatorKeywords);
+            Assert.Contains(TexlLexer.PunctuatorAdd, binaryOperatorKeywords);
+            Assert.Contains(TexlLexer.PunctuatorSub, binaryOperatorKeywords);
+            Assert.Contains(TexlLexer.PunctuatorMul, binaryOperatorKeywords);
+            Assert.Contains(TexlLexer.PunctuatorDiv, binaryOperatorKeywords);
+            Assert.Contains(TexlLexer.PunctuatorEqual, binaryOperatorKeywords);
+            Assert.Contains(TexlLexer.PunctuatorLess, binaryOperatorKeywords);
+            Assert.Contains(TexlLexer.PunctuatorLessOrEqual, binaryOperatorKeywords);
+            Assert.Contains(TexlLexer.PunctuatorGreater, binaryOperatorKeywords);
+            Assert.Contains(TexlLexer.PunctuatorGreaterOrEqual, binaryOperatorKeywords);
+            Assert.Contains(TexlLexer.PunctuatorNotEqual, binaryOperatorKeywords);
+            Assert.Contains(TexlLexer.PunctuatorCaret, binaryOperatorKeywords);
+            Assert.Contains(TexlLexer.KeywordIn, binaryOperatorKeywords);
+            Assert.Contains(TexlLexer.KeywordExactin, binaryOperatorKeywords);
+            Assert.Contains(TexlLexer.KeywordAs, binaryOperatorKeywords);
 
+            // GetOperatorKeywords
             // Primitive type.
             var primitiveOperatorKeywords = TexlLexer.LocalizedInstance.GetOperatorKeywords(new DType(DKind.Boolean));
 
             var expectedPOKeywordLength = 17;
 
             expectedPOKeywordLength += 2;
-            Assert.True(primitiveOperatorKeywords.Contains(TexlLexer.KeywordAnd));
-            Assert.True(primitiveOperatorKeywords.Contains(TexlLexer.KeywordOr));
+            Assert.Contains(TexlLexer.KeywordAnd, primitiveOperatorKeywords);
+            Assert.Contains(TexlLexer.KeywordOr, primitiveOperatorKeywords);
 
             Assert.True(primitiveOperatorKeywords?.Length == expectedPOKeywordLength);
 
-            Assert.True(primitiveOperatorKeywords.Contains(TexlLexer.PunctuatorAmpersand));
-            Assert.True(primitiveOperatorKeywords.Contains(TexlLexer.PunctuatorEqual));
-            Assert.True(primitiveOperatorKeywords.Contains(TexlLexer.PunctuatorNotEqual));
-            Assert.True(primitiveOperatorKeywords.Contains(TexlLexer.PunctuatorAdd));
-            Assert.True(primitiveOperatorKeywords.Contains(TexlLexer.PunctuatorSub));
-            Assert.True(primitiveOperatorKeywords.Contains(TexlLexer.PunctuatorMul));
-            Assert.True(primitiveOperatorKeywords.Contains(TexlLexer.PunctuatorDiv));
-            Assert.True(primitiveOperatorKeywords.Contains(TexlLexer.PunctuatorCaret));
-            Assert.True(primitiveOperatorKeywords.Contains(TexlLexer.PunctuatorAnd));
-            Assert.True(primitiveOperatorKeywords.Contains(TexlLexer.PunctuatorOr));
-            Assert.True(primitiveOperatorKeywords.Contains(TexlLexer.PunctuatorLess));
-            Assert.True(primitiveOperatorKeywords.Contains(TexlLexer.PunctuatorLessOrEqual));
-            Assert.True(primitiveOperatorKeywords.Contains(TexlLexer.PunctuatorGreater));
-            Assert.True(primitiveOperatorKeywords.Contains(TexlLexer.PunctuatorGreaterOrEqual));
-            Assert.True(primitiveOperatorKeywords.Contains(TexlLexer.KeywordIn));
-            Assert.True(primitiveOperatorKeywords.Contains(TexlLexer.KeywordExactin));
+            Assert.Contains(TexlLexer.PunctuatorAmpersand, primitiveOperatorKeywords);
+            Assert.Contains(TexlLexer.PunctuatorEqual, primitiveOperatorKeywords);
+            Assert.Contains(TexlLexer.PunctuatorNotEqual, primitiveOperatorKeywords);
+            Assert.Contains(TexlLexer.PunctuatorAdd, primitiveOperatorKeywords);
+            Assert.Contains(TexlLexer.PunctuatorSub, primitiveOperatorKeywords);
+            Assert.Contains(TexlLexer.PunctuatorMul, primitiveOperatorKeywords);
+            Assert.Contains(TexlLexer.PunctuatorDiv, primitiveOperatorKeywords);
+            Assert.Contains(TexlLexer.PunctuatorCaret, primitiveOperatorKeywords);
+            Assert.Contains(TexlLexer.PunctuatorAnd, primitiveOperatorKeywords);
+            Assert.Contains(TexlLexer.PunctuatorOr, primitiveOperatorKeywords);
+            Assert.Contains(TexlLexer.PunctuatorLess, primitiveOperatorKeywords);
+            Assert.Contains(TexlLexer.PunctuatorLessOrEqual, primitiveOperatorKeywords);
+            Assert.Contains(TexlLexer.PunctuatorGreater, primitiveOperatorKeywords);
+            Assert.Contains(TexlLexer.PunctuatorGreaterOrEqual, primitiveOperatorKeywords);
+            Assert.Contains(TexlLexer.KeywordIn, primitiveOperatorKeywords);
+            Assert.Contains(TexlLexer.KeywordExactin, primitiveOperatorKeywords);
 
             // Aggregate/Control type.
             var aggregateOperatorKeywords = TexlLexer.LocalizedInstance.GetOperatorKeywords(new DType(DKind.Table));
             Assert.True(aggregateOperatorKeywords?.Length == 3);
-            Assert.True(aggregateOperatorKeywords.Contains(TexlLexer.KeywordIn));
-            Assert.True(aggregateOperatorKeywords.Contains(TexlLexer.KeywordExactin));
-            Assert.True(aggregateOperatorKeywords.Contains(TexlLexer.KeywordAs));
+            Assert.Contains(TexlLexer.KeywordIn, aggregateOperatorKeywords);
+            Assert.Contains(TexlLexer.KeywordExactin, aggregateOperatorKeywords);
+            Assert.Contains(TexlLexer.KeywordAs, aggregateOperatorKeywords);
 
             // Not a primitive nor an aggregate type.
             var errorOperatorKeywords = TexlLexer.LocalizedInstance.GetOperatorKeywords(new DType(DKind.Error));
@@ -527,16 +527,16 @@ namespace Microsoft.PowerFx.Core.Tests
 
             var constantKeywords = TexlLexer.LocalizedInstance.GetConstantKeywords(getParent: false);
             Assert.True(constantKeywords?.Length == 3);
-            Assert.True(constantKeywords.Contains(TexlLexer.KeywordFalse));
-            Assert.True(constantKeywords.Contains(TexlLexer.KeywordTrue));
-            Assert.True(constantKeywords.Contains(TexlLexer.KeywordSelf));
+            Assert.Contains(TexlLexer.KeywordFalse, constantKeywords);
+            Assert.Contains(TexlLexer.KeywordTrue, constantKeywords);
+            Assert.Contains(TexlLexer.KeywordSelf, constantKeywords);
 
             constantKeywords = TexlLexer.LocalizedInstance.GetConstantKeywords(getParent: true);
             Assert.True(constantKeywords?.Length == 4);
-            Assert.True(constantKeywords.Contains(TexlLexer.KeywordFalse));
-            Assert.True(constantKeywords.Contains(TexlLexer.KeywordTrue));
-            Assert.True(constantKeywords.Contains(TexlLexer.KeywordParent));
-            Assert.True(constantKeywords.Contains(TexlLexer.KeywordSelf));
+            Assert.Contains(TexlLexer.KeywordFalse, constantKeywords);
+            Assert.Contains(TexlLexer.KeywordTrue, constantKeywords);
+            Assert.Contains(TexlLexer.KeywordParent, constantKeywords);
+            Assert.Contains(TexlLexer.KeywordSelf, constantKeywords);
 
             // GetPunctuatorsAndInvariants
 

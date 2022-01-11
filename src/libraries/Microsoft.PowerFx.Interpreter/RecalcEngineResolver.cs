@@ -24,8 +24,8 @@ namespace Microsoft.PowerFx
             RecalcEngine parent,
             RecordType parameters,
             IEnumerable<EnumSymbol> enumSymbols,
-            params TexlFunction[] extraFunctions) :
-            base(enumSymbols, extraFunctions)
+            params TexlFunction[] extraFunctions)
+            : base(enumSymbols, extraFunctions)
         {
             _parameters = parameters;
             _parent = parent;

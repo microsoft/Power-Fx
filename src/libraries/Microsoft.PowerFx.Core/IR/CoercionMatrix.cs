@@ -13,7 +13,6 @@ namespace Microsoft.PowerFx.Core.IR
             Contracts.AssertValid(fromType);
             Contracts.AssertValid(toType);
 
-
             if (!fromType.IsAggregate && !fromType.IsOptionSet && !fromType.IsView && fromType == toType)
             {
                 return CoercionKind.None;
@@ -234,7 +233,6 @@ namespace Microsoft.PowerFx.Core.IR
                 DType.DateTime.Accepts(fromType) || DType.Time.Accepts(fromType) || DType.Date.Accepts(fromType) || DType.DateTimeNoTimeZone.Accepts(fromType) ||
                 fromType.IsControl || (DType.OptionSetValue.Accepts(fromType) && (fromType.OptionSetInfo?.IsBooleanValued ?? false)), "Unsupported type coercion");
 
-
             if (DType.String.Accepts(fromType))
             {
                 return CoercionKind.TextToNumber;
@@ -266,7 +264,6 @@ namespace Microsoft.PowerFx.Core.IR
             }
 
             return CoercionKind.None;
-
         }
 
         /// <summary>
@@ -295,16 +292,16 @@ namespace Microsoft.PowerFx.Core.IR
 
         private static CoercionKind GetToStringCoercion(DType fromType)
         {
-            var _number = DType.Number.Accepts(fromType);
-            var _datetime = DType.DateTime.Accepts(fromType);
-            var _date = DType.Date.Accepts(fromType);
-            var _time = DType.Time.Accepts(fromType);
-            var _boolean = DType.Boolean.Accepts(fromType);
-            var _string = DType.String.Accepts(fromType);
-            var _guid = DType.Guid.Accepts(fromType);
-            var _optionSet = DType.OptionSetValue.Accepts(fromType);
-            var _viewValue = DType.ViewValue.Accepts(fromType);
-            Contracts.Assert(_number || _boolean || _datetime || _date || _time || _string || _guid || _optionSet || _viewValue, "Unsupported type coercion");
+            var acceptsN = DType.Number.Accepts(fromType);
+            var acceptsDT = DType.DateTime.Accepts(fromType);
+            var acceptsD = DType.Date.Accepts(fromType);
+            var acceptsT = DType.Time.Accepts(fromType);
+            var acceptsB = DType.Boolean.Accepts(fromType);
+            var acceptsS = DType.String.Accepts(fromType);
+            var acceptsG = DType.Guid.Accepts(fromType);
+            var acceptsOS = DType.OptionSetValue.Accepts(fromType);
+            var acceptsV = DType.ViewValue.Accepts(fromType);
+            Contracts.Assert(acceptsN || acceptsB || acceptsDT || acceptsD || acceptsT || acceptsS || acceptsG || acceptsOS || acceptsV, "Unsupported type coercion");
 
             if (DType.Number.Accepts(fromType) || DType.DateTime.Accepts(fromType))
             {

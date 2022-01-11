@@ -38,7 +38,6 @@ namespace Microsoft.PowerFx.Tests
             Assert.True(r1.Equals(r2));
             Assert.False(r1.Equals(null));
 
-
             Assert.Equal(r1.GetHashCode(), r2.GetHashCode());
         }
     }

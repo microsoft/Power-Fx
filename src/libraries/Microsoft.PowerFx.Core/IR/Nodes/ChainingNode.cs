@@ -10,7 +10,8 @@ namespace Microsoft.PowerFx.Core.IR.Nodes
     {
         public readonly IList<IntermediateNode> Nodes;
 
-        public ChainingNode(IRContext irContext, IList<IntermediateNode> nodes) : base(irContext)
+        public ChainingNode(IRContext irContext, IList<IntermediateNode> nodes)
+            : base(irContext)
         {
             Contracts.AssertAllValues(nodes);
 

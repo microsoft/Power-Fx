@@ -16,10 +16,12 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
     {
         public readonly TexlNode Left;
         public readonly Identifier Right;
+
         // Can be null
         public readonly TexlNode RightNode;
         public readonly bool HasOnlyIdentifiers;
         public readonly bool HasPossibleNamespaceQualifier;
+
         public override NodeKind Kind => NodeKind.DottedName;
 
         // True if the name uses dots, e.g. A.B.C

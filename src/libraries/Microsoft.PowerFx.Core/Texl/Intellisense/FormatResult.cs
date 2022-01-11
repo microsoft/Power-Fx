@@ -12,5 +12,4 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
             ResultText = text;
         }
     }
-
 }

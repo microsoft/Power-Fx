@@ -14,8 +14,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     {
         // Multiple invocations may produce different return values.
         public override bool IsStateless => false;
+
         public override bool IsSelfContained => true;
+
         public override bool RequiresErrorContext => true;
+
         public override bool SupportsParamCoercion => true;
 
         public RandBetweenFunction()
@@ -29,7 +32,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 arityMax: 2,
                 DType.Number,
                 DType.Number)
-        { }
+        {
+        }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {

@@ -11,10 +11,14 @@ namespace Microsoft.PowerFx.Core.Entities
     internal interface IExternalEntityScope
     {
         bool TryGetNamedEnum(DName identName, out DType enumType);
+
         bool TryGetCdsDataSourceWithLogicalName(string datasetName, string expandInfoIdentity, out IExternalCdsDataSource dataSource);
+
         IExternalTabularDataSource GetTabularDataSource(string identName);
+
         bool TryGetEntity<T>(DName currentEntityEntityName, out T externalEntity)
             where T : class, IExternalEntity;
+
         IEnumerable<IExternalEntity> DynamicTypes { get; }
     }
 

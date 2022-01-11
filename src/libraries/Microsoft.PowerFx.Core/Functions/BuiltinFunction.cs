@@ -29,18 +29,22 @@ namespace Microsoft.PowerFx.Core.Functions
 
         public BuiltinFunction(DPath theNamespace, string name, string localeSpecificName, TexlStrings.StringGetter description, FunctionCategories functionCategories, DType returnType, BigInteger maskLambdas, int arityMin, int arityMax, params DType[] paramTypes)
             : base(theNamespace, name, localeSpecificName, description, functionCategories, returnType, maskLambdas, arityMin, arityMax, paramTypes)
-        { }
+        {
+        }
 
         public BuiltinFunction(DPath theNamespace, string name, TexlStrings.StringGetter description, FunctionCategories functionCategories, DType returnType, BigInteger maskLambdas, int arityMin, int arityMax, params DType[] paramTypes)
             : this(theNamespace, name, /*localeSpecificName*/string.Empty, description, functionCategories, returnType, maskLambdas, arityMin, arityMax, paramTypes)
-        { }
+        {
+        }
 
         public BuiltinFunction(string name, TexlStrings.StringGetter description, FunctionCategories functionCategories, DType returnType, BigInteger maskLambdas, int arityMin, int arityMax, params DType[] paramTypes)
             : this(DPath.Root, name, description, functionCategories, returnType, maskLambdas, arityMin, arityMax, paramTypes)
-        { }
+        {
+        }
 
         public BuiltinFunction(string name, string localeSpecificName, TexlStrings.StringGetter description, FunctionCategories functionCategories, DType returnType, BigInteger maskLambdas, int arityMin, int arityMax, params DType[] paramTypes)
             : this(DPath.Root, name, localeSpecificName, description, functionCategories, returnType, maskLambdas, arityMin, arityMax, paramTypes)
-        { }
+        {
+        }
     }
 }

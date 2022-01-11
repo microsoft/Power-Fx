@@ -130,7 +130,6 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationMetadata
                                     columnCapabilities.Add(propertyPath, propertyCapability | DelegationCapability.Filter);
                                 }
                             }
-
                         }
                     }
 

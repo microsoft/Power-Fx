@@ -14,7 +14,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public SumFunction()
             : base("Sum", TexlStrings.AboutSum, FunctionCategories.MathAndStat)
-        { }
+        {
+        }
     }
 
     // Sum(source:*, projection:n)
@@ -27,6 +28,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public SumTableFunction()
             : base("Sum", TexlStrings.AboutSumT, FunctionCategories.Table)
-        { }
+        {
+        }
     }
 }

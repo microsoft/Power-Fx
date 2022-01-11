@@ -1,10 +1,10 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
-using Microsoft.PowerFx.Core.IR;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Public;
 using Microsoft.PowerFx.Core.Public.Types;
 using Microsoft.PowerFx.Core.Public.Values;
@@ -28,11 +28,9 @@ namespace Microsoft.PowerFx.Functions
             var arg0 = (TableValue)args[0];
             var arg1 = (NumberValue)args[1];
 
-
             var rows = arg0.Rows.Take((int)arg1.Value);
             return new InMemoryTableValue(irContext, rows);
         }
-
 
         public static FormulaValue LastN(IRContext irContext, FormulaValue[] args)
         {
@@ -63,7 +61,6 @@ namespace Microsoft.PowerFx.Functions
             return new InMemoryTableValue(irContext, rows);
         }
 
-
         private static IEnumerable<DValue<RecordValue>> LazyAddColumns(EvalVisitor runner, SymbolContext context, IEnumerable<DValue<RecordValue>> sources, IRContext recordIRContext, NamedLambda[] newColumns)
         {
             foreach (var row in sources)
@@ -89,7 +86,6 @@ namespace Microsoft.PowerFx.Functions
                 }
             }
         }
-
 
         // CountRows
         public static FormulaValue CountRows(IRContext irContext, TableValue[] args)
@@ -228,9 +224,9 @@ namespace Microsoft.PowerFx.Functions
             return val is T || val is BlankValue || val is ErrorValue;
         }
 
-        private static FormulaValue SortValueType<T, S>(List<KeyValuePair<DValue<RecordValue>, FormulaValue>> pairs, IRContext irContext, int compareToResultModifier)
-            where T : PrimitiveValue<S>
-            where S : IComparable<S>
+        private static FormulaValue SortValueType<TPFxPrimitive, TDotNetPrimitive>(List<KeyValuePair<DValue<RecordValue>, FormulaValue>> pairs, IRContext irContext, int compareToResultModifier)
+            where TPFxPrimitive : PrimitiveValue<TDotNetPrimitive>
+            where TDotNetPrimitive : IComparable<TDotNetPrimitive>
         {
             pairs.Sort((a, b) =>
             {
@@ -243,8 +239,8 @@ namespace Microsoft.PowerFx.Functions
                     return -1;
                 }
 
-                var n1 = a.Value as T;
-                var n2 = b.Value as T;
+                var n1 = a.Value as TPFxPrimitive;
+                var n2 = b.Value as TPFxPrimitive;
                 return n1.Value.CompareTo(n2.Value) * compareToResultModifier;
             });
 
@@ -280,12 +276,11 @@ namespace Microsoft.PowerFx.Functions
         }
 
         // AddColumns accepts pairs of args. 
-        class NamedLambda
+        private class NamedLambda
         {
             public string Name;
 
             public LambdaFormulaValue Lambda;
-
 
             public static NamedLambda[] Parse(FormulaValue[] args)
             {

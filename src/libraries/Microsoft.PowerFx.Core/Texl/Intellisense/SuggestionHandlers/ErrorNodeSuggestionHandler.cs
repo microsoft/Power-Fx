@@ -11,7 +11,8 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
         {
             public ErrorNodeSuggestionHandler()
                 : base(NodeKind.Error)
-            { }
+            {
+            }
         }
     }
 }

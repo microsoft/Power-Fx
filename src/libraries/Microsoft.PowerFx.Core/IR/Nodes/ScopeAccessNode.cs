@@ -15,7 +15,8 @@ namespace Microsoft.PowerFx.Core.IR.Nodes
         /// </summary>
         public IScopeSymbol Value;
 
-        public ScopeAccessNode(IRContext irContext, IScopeSymbol symbol) : base(irContext)
+        public ScopeAccessNode(IRContext irContext, IScopeSymbol symbol)
+            : base(irContext)
         {
             Contracts.AssertValue(symbol);
 
@@ -26,7 +27,6 @@ namespace Microsoft.PowerFx.Core.IR.Nodes
         {
             return visitor.Visit(this, context);
         }
-
 
         public override string ToString()
         {

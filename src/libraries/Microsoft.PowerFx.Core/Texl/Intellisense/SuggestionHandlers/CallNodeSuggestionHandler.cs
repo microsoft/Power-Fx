@@ -15,7 +15,8 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
         {
             public CallNodeSuggestionHandler()
                 : base(NodeKind.Call)
-            { }
+            {
+            }
 
             internal override bool TryAddSuggestionsForNodeKind(IntellisenseData.IntellisenseData intellisenseData)
             {

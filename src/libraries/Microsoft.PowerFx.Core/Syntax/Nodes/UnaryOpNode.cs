@@ -16,6 +16,7 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
     {
         public readonly TexlNode Child;
         public readonly UnaryOp Op;
+
         public bool IsPercent => Op == UnaryOp.Percent;
 
         public UnaryOpNode(ref int idNext, Token primaryToken, SourceList sourceList, UnaryOp op, TexlNode child)

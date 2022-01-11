@@ -25,13 +25,16 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class SortByColumnsFunction : BuiltinFunction
     {
         private readonly SortOrderValidator _sortOrderValidator;
+
         public override bool IsSelfContained => true;
+
         public override bool SupportsParamCoercion => false;
 
         public SortByColumnsFunction()
             : base("SortByColumns", TexlStrings.AboutSortByColumns, FunctionCategories.Table, DType.EmptyTable, 0, 2, int.MaxValue, DType.EmptyTable, DType.String)
         {
             _sortOrderValidator = ArgValidators.SortOrderValidator;
+
             // SortByColumns(source, name, order, name, order, ...name, order, ...)
             SignatureConstraint = new SignatureConstraint(omitStartIndex: 5, repeatSpan: 2, endNonRepeatCount: 0, repeatTopLength: 9);
         }
@@ -273,6 +276,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertValid(columnPath);
 
             order = order.ToLower();
+
             // If column is marked as ascending only then return false if order requested is descending.
             return order != LanguageConstants.DescendingSortOrderString || !metadata.IsColumnAscendingOnly(columnPath);
         }
@@ -355,10 +359,13 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class SortByColumnsOrderTableFunction : BuiltinFunction
     {
         public override bool IsSelfContained => true;
+
         public override bool SupportsParamCoercion => false;
+
         public SortByColumnsOrderTableFunction()
             : base("SortByColumns", TexlStrings.AboutSortByColumnsWithOrderValues, FunctionCategories.Table, DType.EmptyTable, 0, 3, 3, DType.EmptyTable, DType.String, DType.EmptyTable)
-        { }
+        {
+        }
 
         public override bool RequiresErrorContext => true;
 

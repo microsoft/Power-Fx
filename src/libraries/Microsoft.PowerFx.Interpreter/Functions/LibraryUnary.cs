@@ -1,16 +1,16 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
+using System;
+using System.Collections.Generic;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.IR.Nodes;
 using Microsoft.PowerFx.Core.Public.Values;
 using Microsoft.PowerFx.Core.Utils;
-using System;
-using System.Collections.Generic;
 
 namespace Microsoft.PowerFx.Functions
 {
-    partial class Library
+    internal partial class Library
     {
         private static readonly DateTime _epoch = new DateTime(1899, 12, 30, 0, 0, 0, 0);
 

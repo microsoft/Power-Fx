@@ -16,12 +16,15 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class PowerFunction : BuiltinFunction
     {
         public override bool SupportsParamCoercion => true;
+
         public override bool IsSelfContained => true;
+
         public override bool RequiresErrorContext => true;
 
         public PowerFunction()
             : base("Power", TexlStrings.AboutPower, FunctionCategories.MathAndStat, DType.Number, 0, 2, 2, DType.Number, DType.Number)
-        { }
+        {
+        }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
@@ -34,12 +37,15 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class PowerTFunction : BuiltinFunction
     {
         public override bool SupportsParamCoercion => true;
+
         public override bool IsSelfContained => true;
+
         public override bool RequiresErrorContext => true;
 
         public PowerTFunction()
             : base("Power", TexlStrings.AboutPowerT, FunctionCategories.MathAndStat, DType.EmptyTable, 0, 2, 2)
-        { }
+        {
+        }
 
         public override string GetUniqueTexlRuntimeName(bool isPrefetching = false)
         {

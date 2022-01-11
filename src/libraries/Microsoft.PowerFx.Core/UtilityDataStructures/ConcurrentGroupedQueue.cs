@@ -21,8 +21,10 @@ namespace Microsoft.PowerFx.Core.UtilityDataStructures
         internal abstract class ItemGroup
         {
             public abstract bool IsBlocking { get; }
+
             protected HashSet<T> _items;
             public bool IsOpenGroup;
+
             public int Count
             {
                 get
@@ -45,12 +47,15 @@ namespace Microsoft.PowerFx.Core.UtilityDataStructures
             public void CloseGroup()
             {
                 Contracts.Assert(IsOpenGroup);
+
                 // Maybe collect telemetry?
                 IsOpenGroup = false;
             }
 
             public abstract void Enqueue(T change);
+
             public abstract void Run(RunItemAction action);
+
             public void Remove(T item)
             {
                 Contracts.Assert(IsOpenGroup);
@@ -67,7 +72,10 @@ namespace Microsoft.PowerFx.Core.UtilityDataStructures
         {
             public override bool IsBlocking => true;
 
-            public BlockingItemGroup() : base() { }
+            public BlockingItemGroup()
+                : base()
+            {
+            }
 
             public override void Enqueue(T change)
             {
@@ -93,7 +101,9 @@ namespace Microsoft.PowerFx.Core.UtilityDataStructures
             public override bool IsBlocking => false;
 
             public NonBlockingItemGroup()
-                : base() { }
+                : base()
+            {
+            }
 
             public override void Enqueue(T change)
             {
@@ -118,6 +128,7 @@ namespace Microsoft.PowerFx.Core.UtilityDataStructures
         internal ItemGroup CurrentGroup { get; private set; }
 
         public delegate void RunItemAction(T change);
+
         public delegate void GroupEndAction();
 
         public ConcurrentGroupedQueue(RunItemAction action, GroupEndAction endAction)

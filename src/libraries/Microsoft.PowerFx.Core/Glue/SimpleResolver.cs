@@ -33,6 +33,7 @@ namespace Microsoft.PowerFx.Core.Glue
         IExternalEntityScope INameResolver.EntityScope => throw new NotImplementedException();
 
         public DName CurrentProperty => default;
+
         public DPath CurrentEntityPath => default;
 
         // Allow behavior properties, like calls to POST.
@@ -40,13 +41,15 @@ namespace Microsoft.PowerFx.Core.Glue
         public bool CurrentPropertyIsBehavior => true;
 
         public bool CurrentPropertyIsConstantData => false;
+
         public bool CurrentPropertyAllowsNavigation => false;
 
         public IEnumerable<TexlFunction> Functions => _library;
 
         public IExternalEntity CurrentEntity => null;
 
-        public SimpleResolver(IEnumerable<EnumSymbol> enumSymbols, params TexlFunction[] extraFunctions) : this(extraFunctions)
+        public SimpleResolver(IEnumerable<EnumSymbol> enumSymbols, params TexlFunction[] extraFunctions)
+            : this(extraFunctions)
         {
             _enums = enumSymbols.ToArray();
         }

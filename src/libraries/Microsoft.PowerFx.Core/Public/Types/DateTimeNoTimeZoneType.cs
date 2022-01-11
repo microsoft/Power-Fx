@@ -9,7 +9,8 @@ namespace Microsoft.PowerFx.Core.Public.Types
     [DebuggerDisplay("{_type}:tzi")]
     public class DateTimeNoTimeZoneType : FormulaType
     {
-        internal DateTimeNoTimeZoneType() : base(DType.DateTimeNoTimeZone)
+        internal DateTimeNoTimeZoneType()
+            : base(DType.DateTimeNoTimeZone)
         {
         }
 

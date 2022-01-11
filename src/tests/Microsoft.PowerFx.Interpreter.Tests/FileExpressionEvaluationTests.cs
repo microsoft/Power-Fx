@@ -49,7 +49,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             if (testCase.GetExpected(nameof(InterpreterRunner)) == "#Skip")
             {
                 var goodResult = testCase.GetExpected("-");
-                Assert.False(goodResult == actualStr || goodResult == "#Error" && _runner.IsError(result), "Test marked to skip returned correct result");
+                Assert.False(goodResult == actualStr || (goodResult == "#Error" && _runner.IsError(result)), "Test marked to skip returned correct result");
 
                 // Since test is marked to skip and it didn't return a result that matched the baseline
                 // expected result then we can marked it skipped here
@@ -159,7 +159,5 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 throw new InvalidOperationException($"unsupported value type: {result.GetType().Name}");
             }
         }
-
     }
-
 }

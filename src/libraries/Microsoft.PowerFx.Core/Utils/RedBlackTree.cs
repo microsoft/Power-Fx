@@ -251,8 +251,11 @@ LYieldSelf:
         }
 
         protected abstract RedBlackNode<V> Left { get; }
+
         protected abstract RedBlackNode<V> Right { get; }
+
         protected abstract Color LeftColor { get; }
+
         protected abstract Color RightColor { get; }
 
         // Creates a new node with the same key and structure of the current node
@@ -334,9 +337,13 @@ LYieldSelf:
             }
 
             public override int Count => 1;
+
             protected override RedBlackNode<V> Left => null;
+
             protected override RedBlackNode<V> Right => null;
+
             protected override Color LeftColor => Color.Black;
+
             protected override Color RightColor => Color.Black;
 
             protected override RedBlackNode<V> CloneStructure(V value)
@@ -387,9 +394,13 @@ LYieldSelf:
             }
 
             public override int Count => _count;
+
             protected override RedBlackNode<V> Left => _left;
+
             protected override RedBlackNode<V> Right => _right;
+
             protected override Color LeftColor => _leftColor;
+
             protected override Color RightColor => _rightColor;
 
             protected override RedBlackNode<V> CloneStructure(V value)
@@ -433,19 +444,24 @@ LYieldSelf:
         {
             // The item was already in the tree, no change.
             ItemPresent,
+
             // The key was already in the tree, and was updated with a new value.
             // A new tree is being built, but no colors need to change.
             ItemUpdated,
+
             // The key was not in the tree.
             // A new tree is being built, but no colors need to change.
             ItemAdded,
+
             // The key was not in the tree.
             // A new tree is being built, the returned node should be red.
             NewNodeIsRed,
+
             // The key was not in the tree.
             // A new tree is being built, the returned node is red
             // and its left child is also red, the caller needs to fix this violation
             DoubleRedLeftChild,
+
             // The key was not in the tree.
             // A new tree is being built, the returned node is red
             // and its right child is also red, the caller needs to fix this violation
@@ -457,12 +473,15 @@ LYieldSelf:
         {
             // The key was not in the tree, no change.
             ItemNotFound,
+
             // The key was in the tree.
             // A new tree is being built, but no colors need to change.
             ItemRemoved,
+
             // The key was in the tree.
             // A new tree is being built, the returned node should be black.
             NewNodeIsBlack,
+
             // The key was in the tree.
             // A new tree is being built, the returned node is 'double black'
             // which is a violation that needs to be fixed by the caller.
@@ -488,6 +507,7 @@ LYieldSelf:
             RedBlackNode<V> left = null;
             RedBlackNode<V> right = null;
             var leftColor = Color.Black;
+
             // What is this 'magic' test "if (((nodeCount + 2) & (nodeCount + 1)) == 0)" below?
             // The max height of an RB tree is 2*Floor(Log_2(N + 1)) (every other node is red)
             // This means the min height of an RB tree is Floor(Log_2(N + 1)) (maximum number of black nodes)
@@ -592,6 +612,7 @@ LYieldSelf:
                 {
                     // Make a new left child, set its color to red.
                     root = new InteriorNode(root.Key, root.Value, new LeafNode(key, value), right, Color.Red, root.RightColor);
+
                     // Check for double red violation and warn the caller.
                     return (rootColor == Color.Red) ? AddCoreResult.DoubleRedLeftChild : AddCoreResult.ItemAdded;
                 }
@@ -612,6 +633,7 @@ LYieldSelf:
                         return result;
                     case AddCoreResult.NewNodeIsRed:
                         root = new InteriorNode(root.Key, root.Value, left, right, Color.Red, root.RightColor);
+
                         // Check for double red violation and warn the caller.
                         return (rootColor == Color.Red) ? AddCoreResult.DoubleRedLeftChild : AddCoreResult.ItemAdded;
                     case AddCoreResult.DoubleRedLeftChild:
@@ -657,6 +679,7 @@ LYieldSelf:
                 {
                     // Make a new right child, set its color to red.
                     root = new InteriorNode(root.Key, root.Value, left, new LeafNode(key, value), root.LeftColor, Color.Red);
+
                     // Check for double red violation and warn the caller.
                     return (rootColor == Color.Red) ? AddCoreResult.DoubleRedRightChild : AddCoreResult.ItemAdded;
                 }
@@ -673,6 +696,7 @@ LYieldSelf:
                         return result;
                     case AddCoreResult.NewNodeIsRed:
                         root = new InteriorNode(root.Key, root.Value, left, right, root.LeftColor, Color.Red);
+
                         // Check for double red violation and warn the caller.
                         return (rootColor == Color.Red) ? AddCoreResult.DoubleRedRightChild : AddCoreResult.ItemAdded;
                     case AddCoreResult.DoubleRedRightChild:
@@ -714,7 +738,6 @@ LYieldSelf:
 
         private static RemoveCoreResult RemoveItemCore(ref RedBlackNode<V> root, Color rootColor, string key, Dictionary<RedBlackNode<V>, int> hashCodeCache)
         {
-
             Contracts.AssertValueOrNull(root);
             Contracts.AssertValue(key);
 
@@ -731,6 +754,7 @@ LYieldSelf:
                 {
                     var rightColor = root.RightColor;
                     root = root.Right;
+
                     // If the removed node or its only child is red, just color it black
                     // and we are done, no black height violations.
                     if (rootColor == Color.Red || rightColor == Color.Red)
@@ -747,6 +771,7 @@ LYieldSelf:
                 {
                     var leftColor = root.LeftColor;
                     root = root.Left;
+
                     // If the removed node or its only child is red, just color it black
                     // and we are done, no black height violations.
                     if (rootColor == Color.Red || leftColor == Color.Red)
@@ -760,6 +785,7 @@ LYieldSelf:
                 }
 
                 var newRight = root.Right;
+
                 // Find the left-most child of the right node and remove it, then use its key/value
                 // as the new key/value for this node, thus 'removing' the target node.
                 var result = RemoveLeftMost(ref newRight, root.RightColor, hashCodeCache, out var leftMost);
@@ -941,6 +967,7 @@ LYieldSelf:
                 RedBlackNode<V> newRight;
                 var rootRightLeft = rootRight.Left;
                 Contracts.AssertValue(rootRightLeft);
+
                 // Case 3 -> Case 1
                 if (rootRightLeft.RightColor == Color.Red)
                 {
@@ -1073,6 +1100,7 @@ LYieldSelf:
                 RedBlackNode<V> newRight;
                 var rootLeftRight = rootLeft.Right;
                 Contracts.AssertValue(rootLeftRight);
+
                 // Case 3 -> Case 1
                 if (rootLeftRight.LeftColor == Color.Red)
                 {

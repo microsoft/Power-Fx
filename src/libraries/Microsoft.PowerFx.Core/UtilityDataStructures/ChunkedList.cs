@@ -32,6 +32,7 @@ namespace Microsoft.PowerFx.Core.UtilityDataStructures
                 var idx = index % ChunkSize;
                 return _chunks[chunk][idx];
             }
+
             set
             {
                 Contracts.Assert(index >= 0 && index < Count);
@@ -150,7 +151,6 @@ namespace Microsoft.PowerFx.Core.UtilityDataStructures
 
             public bool MoveNext()
             {
-
                 var localList = list;
 
                 if (version == localList._version && ((uint)index < (uint)localList.Count))

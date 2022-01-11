@@ -10,7 +10,9 @@ namespace Microsoft.PowerFx.Core.Functions
     internal sealed class VariableDefinition
     {
         public DName Name { get; private set; }
+
         public bool IsGlobal { get; private set; }
+
         public TexlNode Node { get; private set; }
 
         public VariableDefinition(DName name, bool isGlobal, TexlNode node)

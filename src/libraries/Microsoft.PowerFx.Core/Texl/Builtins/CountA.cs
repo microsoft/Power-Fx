@@ -17,11 +17,13 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class CountAFunction : FunctionWithTableInput
     {
         public override bool IsSelfContained => true;
+
         public override bool SupportsParamCoercion => false;
 
         public CountAFunction()
             : base("CountA", TexlStrings.AboutCountA, FunctionCategories.Table | FunctionCategories.MathAndStat, DType.Number, 0, 1, 1, DType.EmptyTable)
-        { }
+        {
+        }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {

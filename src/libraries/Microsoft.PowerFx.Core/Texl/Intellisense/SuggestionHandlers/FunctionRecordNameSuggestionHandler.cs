@@ -147,7 +147,6 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
                 return false;
             }
 
-
             // 1.
             // <CallNode>
             //    |

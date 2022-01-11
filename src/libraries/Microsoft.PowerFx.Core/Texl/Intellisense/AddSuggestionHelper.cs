@@ -28,6 +28,7 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
 
             var valueToSuggest = requiresSuggestionEscaping ? TexlLexer.EscapeName(suggestion) : suggestion;
             var highlightStart = suggestion.IndexOf(matchingStr, StringComparison.OrdinalIgnoreCase);
+
             // If the suggestion has special characters we need to find the highlightStart index by escaping the matching string as well.
             // Because, the suggestion could be something like 'Ident with Space' and the user might have typed Ident. In this case,
             // we want to highlight only Ident while displaying 'Ident with Space'.

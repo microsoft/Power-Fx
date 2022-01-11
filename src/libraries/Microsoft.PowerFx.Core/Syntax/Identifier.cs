@@ -37,10 +37,12 @@ namespace Microsoft.PowerFx.Core.Syntax
 
         public Identifier(IdentToken token)
             : this(DPath.Root, null, token)
-        { }
+        {
+        }
 
         public Identifier(Token atToken, IdentToken token)
             : this(DPath.Root, atToken, token)
-        { }
+        {
+        }
     }
 }

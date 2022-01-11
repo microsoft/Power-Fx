@@ -12,6 +12,7 @@ namespace Microsoft.PowerFx.Core.Public.Values
     public class NamedValue
     {
         public string Name { get; }
+
         public FormulaValue Value { get; }
 
         public NamedValue(KeyValuePair<string, FormulaValue> pair)

@@ -10,7 +10,8 @@ namespace Microsoft.PowerFx.Core.Public.Types
 {
     public abstract class AggregateType : FormulaType
     {
-        internal AggregateType(DType type) : base(type)
+        internal AggregateType(DType type)
+            : base(type)
         {
         }
 

@@ -16,6 +16,7 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
         public readonly Token[] Commas;
         public readonly Token[] Colons;
         public readonly Identifier[] Ids;
+
         // CurlyClose can be null.
         public readonly Token CurlyClose;
 

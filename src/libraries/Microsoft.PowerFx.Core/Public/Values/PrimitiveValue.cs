@@ -16,7 +16,8 @@ namespace Microsoft.PowerFx.Core.Public.Values
 
         public T Value => _value;
 
-        internal PrimitiveValue(IRContext irContext, T value) : base(irContext)
+        internal PrimitiveValue(IRContext irContext, T value)
+            : base(irContext)
         {
             Contract.Assert(value != null);
 

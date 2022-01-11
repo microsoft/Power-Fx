@@ -17,7 +17,8 @@ namespace Microsoft.PowerFx.Core.IR.Nodes
         public readonly IReadOnlyDictionary<DName, IntermediateNode> FieldCoercions;
         public readonly ScopeSymbol Scope;
 
-        public AggregateCoercionNode(IRContext irContext, UnaryOpKind op, ScopeSymbol scope, IntermediateNode child, IReadOnlyDictionary<DName, IntermediateNode> fieldCoercions) : base(irContext)
+        public AggregateCoercionNode(IRContext irContext, UnaryOpKind op, ScopeSymbol scope, IntermediateNode child, IReadOnlyDictionary<DName, IntermediateNode> fieldCoercions)
+            : base(irContext)
         {
             Contracts.AssertValue(child);
             Contracts.Assert(op == UnaryOpKind.RecordToRecord || op == UnaryOpKind.TableToTable);
@@ -27,7 +28,6 @@ namespace Microsoft.PowerFx.Core.IR.Nodes
             Child = child;
             FieldCoercions = fieldCoercions;
         }
-
 
         public override TResult Accept<TResult, TContext>(IRNodeVisitor<TResult, TContext> visitor, TContext context)
         {

@@ -34,11 +34,15 @@ namespace Microsoft.PowerFx.Core.Public.Values
         }
 
         public bool IsValue => Value != null;
+
         public bool IsBlank => Blank != null;
+
         public bool IsError => Error != null;
 
         public T Value { get; }
+
         public BlankValue Blank { get; }
+
         public ErrorValue Error { get; }
 
         public FormulaValue ToFormulaValue()

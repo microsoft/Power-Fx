@@ -9,7 +9,6 @@ using Microsoft.PowerFx.Core.Public.Values;
 
 namespace Microsoft.PowerFx.Core.Tests
 {
-
     // Base class for running a lightweght test. 
     public abstract class BaseRunner
     {

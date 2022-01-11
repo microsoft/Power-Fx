@@ -221,7 +221,6 @@ namespace Microsoft.PowerFx.Core.Syntax
                 case BinaryOp.GreaterEqual:
                     return PrettyBinary(SpacedOper(TexlLexer.PunctuatorGreaterOrEqual), parentPrecedence, Precedence.Compare, node.Left, node.Right);
 
-
                 default:
                     Contracts.Assert(false);
                     return PrettyBinary(" <error> ", parentPrecedence, Precedence.Atomic + 1, node.Left, node.Right);
@@ -412,7 +411,7 @@ namespace Microsoft.PowerFx.Core.Syntax
     {
         private readonly string _script;
 
-        private static readonly Dictionary<BinaryOp, Precedence> binaryPrecedence =
+        private static readonly Dictionary<BinaryOp, Precedence> BinaryPrecedence =
             new Dictionary<BinaryOp, Precedence>()
             {
                 { BinaryOp.Or, Precedence.Or },
@@ -590,7 +589,7 @@ namespace Microsoft.PowerFx.Core.Syntax
                 return Basic(node, context);
             }
 
-            if (!binaryPrecedence.TryGetValue(node.Op, out var precedence))
+            if (!BinaryPrecedence.TryGetValue(node.Op, out var precedence))
             {
                 Contracts.Assert(false, "Couldn't find precedence for " + node.Op);
                 precedence = Precedence.Error;
@@ -668,6 +667,7 @@ namespace Microsoft.PowerFx.Core.Syntax
         public override LazyList<string> Visit(ListNode node, Context context)
         {
             Contracts.AssertValue(node);
+
             // This must be precalculated, as if any generated argument contains a newline,
             // this should newline as well.
             context = context.Indent();
@@ -825,7 +825,7 @@ namespace Microsoft.PowerFx.Core.Syntax
                 }
             }
 
-            return result; ;
+            return result;
         }
 
         public override LazyList<string> Visit(AsNode node, Context context)

@@ -16,6 +16,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class WithFunction : BuiltinFunction
     {
         public override bool IsSelfContained => true;
+
         public override bool SupportsParamCoercion => false;
 
         public WithFunction()
@@ -43,7 +44,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertValue(argTypes);
             Contracts.Assert(args.Length == argTypes.Length);
             Contracts.AssertValue(errors);
-
 
             // Base call yields unknown return type, so we set it accordingly below
             var fArgsValid = CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
@@ -81,5 +81,4 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return new[] { dsArg };
         }
     }
-
 }

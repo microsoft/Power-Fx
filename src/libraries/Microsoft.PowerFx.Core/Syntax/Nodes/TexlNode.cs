@@ -18,6 +18,7 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
         protected int _depth;
 
         public readonly int Id;
+
         public int MinChildID { get; protected set; }
 
         public readonly Token Token;
@@ -50,7 +51,6 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
             }
         }
 
-
         protected TexlNode(ref int idNext, Token primaryToken, SourceList sourceList)
         {
             Contracts.Assert(idNext >= 0);
@@ -68,7 +68,7 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
 
         public abstract void Accept(TexlVisitor visitor);
 
-        public abstract Result Accept<Result, Context>(TexlFunctionalVisitor<Result, Context> visitor, Context context);
+        public abstract TResult Accept<TResult, TContext>(TexlFunctionalVisitor<TResult, TContext> visitor, TContext context);
 
         public abstract NodeKind Kind { get; }
 

@@ -7,7 +7,7 @@ using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationMetadata
 {
-    class ODataOpMetadata : OperationCapabilityMetadata
+    internal class ODataOpMetadata : OperationCapabilityMetadata
     {
         private readonly Dictionary<DPath, DPath> _oDataReplacement;
 
@@ -24,6 +24,5 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationMetadata
         public override DelegationCapability DefaultColumnCapabilities => DelegationCapability.None;
 
         public override DelegationCapability TableCapabilities => DefaultColumnCapabilities;
-
     }
 }

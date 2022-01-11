@@ -21,16 +21,21 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class CountIfFunction : FilterFunctionBase
     {
         public override bool RequiresErrorContext => true;
+
         public override bool SupportsParamCoercion => false;
 
         public override DelegationCapability FunctionDelegationCapability => DelegationCapability.Filter | DelegationCapability.Count;
+
         public CountIfFunction()
             : base("CountIf", TexlStrings.AboutCountIf, FunctionCategories.Table | FunctionCategories.MathAndStat, DType.Number, -2, 2, int.MaxValue, DType.EmptyTable, DType.Boolean)
         {
             ScopeInfo = new FunctionScopeInfo(this, usesAllFieldsInScope: false);
         }
 
-        public override bool SupportsPaging(CallNode callNode, TexlBinding binding) { return false; }
+        public override bool SupportsPaging(CallNode callNode, TexlBinding binding)
+        {
+            return false;
+        }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
@@ -83,6 +88,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
 
             IExternalDataSource dataSource = null;
+
             // We ensure Document is available because some tests run with a null Document.
             if ((binding.Document != null && !binding.Document.Properties.EnabledFeatures.IsEnhancedDelegationEnabled) || !TryGetValidDataSourceForDelegation(callNode, binding, FunctionDelegationCapability, out dataSource))
             {
@@ -110,6 +116,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
 
             var metadata = dataSource.DelegationMetadata.FilterDelegationMetadata;
+
             // Validate for each predicate node.
             for (var i = 1; i < args.Length; i++)
             {

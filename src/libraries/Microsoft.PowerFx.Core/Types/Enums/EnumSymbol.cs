@@ -17,6 +17,7 @@ namespace Microsoft.PowerFx.Core.Types.Enums
         private readonly Dictionary<string, string> _valuesInvariantToDisplayName;
 
         public DType EnumType { get; }
+
         public IEnumerable<string> LocalizedEnumValues => _valuesLocToInvariant.Keys;
 
         /// <summary>

@@ -19,12 +19,15 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class TextFunction : BuiltinFunction
     {
         public override bool SupportsParamCoercion => true;
+
         public override bool RequiresErrorContext => true;
+
         public override bool IsSelfContained => true;
 
         public TextFunction()
             : base("Text", TexlStrings.AboutText, FunctionCategories.Table | FunctionCategories.Text | FunctionCategories.DateTime, DType.String, 0, 1, 3, DType.Number, DType.String, DType.String)
-        { }
+        {
+        }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
@@ -61,7 +64,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 }
                 else
                 {
-
                     isValidString = CheckType(arg0, arg0Type, DType.String, DefaultErrorContainer, out matchedWithCoercion);
 
                     if (isValidString)

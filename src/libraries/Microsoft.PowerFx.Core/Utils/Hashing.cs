@@ -64,7 +64,7 @@ namespace Microsoft.PowerFx.Core.Utils
                 hash2 = ((hash2 << 5) + hash2) ^ str[--ich];
             }
 
-            return HashUint(hash1 + hash2 * 1566083941);
+            return HashUint(hash1 + (hash2 * 1566083941));
         }
 
         public static uint HashUint(uint u)

@@ -28,7 +28,6 @@ namespace Microsoft.PowerFx.Core.Tests
             return testDir;
         }
 
-
         public string TestRoot { get; set; } = GetDefaultTestDir();
 
         public void AddDir(string directory = "")
@@ -124,7 +123,6 @@ namespace Microsoft.PowerFx.Core.Tests
             }
         }
 
-
         public (int total, int failed, int passed, string output) RunTests()
         {
             var total = 0;
@@ -139,6 +137,7 @@ namespace Microsoft.PowerFx.Core.Tests
                     total++;
 
                     var engineName = runner.GetName();
+
                     // var runner = kv.Value;
 
                     string actualStr;

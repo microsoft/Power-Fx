@@ -19,8 +19,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class AddColumnsFunction : FunctionWithTableInput
     {
         public override bool SkipScopeForInlineRecords => true;
+
         public override bool HasLambdas => true;
+
         public override bool IsSelfContained => true;
+
         public override bool SupportsParamCoercion => false;
 
         public AddColumnsFunction()
@@ -143,11 +146,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             // REVIEW ragru: cache these and enumerate from the cache...
 
             var overloads = new List<TexlStrings.StringGetter[]>(OverloadCount);
+
             // Limit the argCount avoiding potential OOM
             var argCount = arity > SignatureConstraint.RepeatTopLength ? SignatureConstraint.RepeatTopLength : arity;
             for (var ioverload = 0; ioverload < OverloadCount; ioverload++)
             {
-                var iArgCount = (argCount | 1) + ioverload * 2;
+                var iArgCount = (argCount | 1) + (ioverload * 2);
                 var overload = new TexlStrings.StringGetter[iArgCount];
                 overload[0] = TexlStrings.AddColumnsArg1;
                 for (var iarg = 1; iarg < iArgCount; iarg += 2)

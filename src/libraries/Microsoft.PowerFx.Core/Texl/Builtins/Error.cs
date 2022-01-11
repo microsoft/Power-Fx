@@ -17,9 +17,13 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class ErrorFunction : BuiltinFunction
     {
         public override bool HasPreciseErrors => true;
+
         public override bool RequiresErrorContext => true;
+
         public override bool CanSuggestInputColumns => true;
+
         public override bool IsSelfContained => true;
+
         public override bool SupportsParamCoercion => true;
 
         public ErrorFunction()
@@ -121,6 +125,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 // A record with the proper types for the fields that are specified.
                 var expectedOptionalFieldsRecord = DType.CreateRecord(
                     acceptedFields.Where(field =>
+
                         // Kind has already been handled before
                         field.Name != "Kind" && names.Any(name => name.Name == field.Name)));
 
@@ -131,6 +136,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 // A table with the proper types for the fields that are specified.
                 var expectedOptionalFieldsTable = DType.CreateTable(
                     acceptedFields.Where(field =>
+
                         // Kind has already been handled before
                         field.Name != "Kind" && names.Any(name => name.Name == field.Name)));
                 typeValid = CheckType(argument, argumentType, expectedOptionalFieldsTable, errors, true, out matchedWithCoercion);

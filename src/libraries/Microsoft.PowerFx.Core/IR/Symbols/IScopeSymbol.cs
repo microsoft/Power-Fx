@@ -10,6 +10,5 @@ namespace Microsoft.PowerFx.Core.IR.Symbols
     /// </summary>
     internal interface IScopeSymbol
     {
-
     }
 }

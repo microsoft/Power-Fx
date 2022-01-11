@@ -29,6 +29,7 @@ namespace Microsoft.AppMagic.Transport
     public class TransportTypeAttribute : Attribute
     {
         public TransportKind Kind { get; }
+
         public bool EnablePublicMembersByDefault { get; }
 
         public TransportTypeAttribute(TransportKind kind = TransportKind.ByValue, bool enablePublicMembersByDefault = true, string customTypescriptBaseClass = null, string customDtoName = null, bool isMethodCustomizationEnabled = false)

@@ -13,6 +13,7 @@ namespace Microsoft.PowerFx.Core.Lexer.Tokens
         public readonly bool HasDelimiterEnd;
         public readonly bool IsModified;
         public readonly bool IsReplaceable;
+
         // Unescaped, unmodified value.
         private readonly string _value;
         public readonly DName Name;
@@ -62,6 +63,7 @@ namespace Microsoft.PowerFx.Core.Lexer.Tokens
 
         // REVIEW ragru: having a property for every possible error isn't scalable.
         public bool HasDelimiters => HasDelimiterStart;
+
         public bool HasErrors => IsModified || (HasDelimiterStart && !HasDelimiterEnd);
 
         public override string ToString()

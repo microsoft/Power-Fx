@@ -21,10 +21,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class VariadicLogicalFunction : BuiltinFunction
     {
         public override bool IsStrict => false;
-        public override bool IsSelfContained => true;
-        public override bool RequiresErrorContext => true;
-        public override bool SupportsParamCoercion => true;
 
+        public override bool IsSelfContained => true;
+
+        public override bool RequiresErrorContext => true;
+
+        public override bool SupportsParamCoercion => true;
 
         internal readonly bool _isAnd;
 
@@ -33,7 +35,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         {
             _isAnd = isAnd;
         }
-
 
         public override bool IsLazyEvalParam(int index)
         {

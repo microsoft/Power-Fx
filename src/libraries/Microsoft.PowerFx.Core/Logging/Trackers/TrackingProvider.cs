@@ -11,7 +11,9 @@ namespace Microsoft.PowerFx.Core.Logging.Trackers
     internal class TrackingProvider
     {
         public static readonly TrackingProvider Instance = new TrackingProvider();
+
         internal event EventHandler<IAddSuggestionMessageEventArgs> AddSuggestionEvent;
+
         internal event EventHandler<IDelegationTrackerEventArgs> DelegationTrackerEvent;
 
         internal void AddSuggestionMessage(string message, TexlNode node, TexlBinding binding)

@@ -135,6 +135,7 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
                 // The retrived list represents collisions. Update the suggestion text with global disambiguation.
 
                 var punctuatorLen = TexlLexer.PunctuatorAt.Length + TexlLexer.PunctuatorAt.Length;
+
                 // The suggestion already in the list is global. Update it.
                 if (s.Kind == SuggestionKind.Global || s.Kind == SuggestionKind.ScopeVariable)
                 {
@@ -459,7 +460,6 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
             Contracts.AssertValue(callNode);
             Contracts.AssertValue(intellisenseData);
 
-
             var info = intellisenseData.Binding.GetInfo(callNode);
             if (info.Function.UseParentScopeForArgumentSuggestions)
             {
@@ -662,6 +662,7 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
             Contracts.AssertAllNonEmpty(validNames);
 
             var cursorPos = intellisenseData.CursorPos;
+
             // If the cursor is at the start of a token, then do not replace anything
             if (tokenStart == intellisenseData.CursorPos)
             {
@@ -754,6 +755,7 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
                 // Assert '.' is not present or not at the beginning or the end of the EnumSuggestion
                 Contracts.Assert(dotIndex == -1 || (dotIndex > 0 && dotIndex < enumSuggestion.Length - 1));
                 var unqualifiedEnum = enumSuggestion.Substring(dotIndex + 1);
+
                 // If the Enum we are about suggest unqualified (i.e. just 'Blue' instead of Color!Blue)
                 // has a name collision with some Item already in the suggestionlist we should not continue
                 // and suggest it.

@@ -25,6 +25,5 @@ namespace Microsoft.PowerFx.Core.Binding.BindInfo
             Name = name;
             IsStateful = isStateful;
         }
-
     }
 }

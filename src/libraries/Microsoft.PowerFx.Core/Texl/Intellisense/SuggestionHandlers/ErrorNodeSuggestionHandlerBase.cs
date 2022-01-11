@@ -13,7 +13,8 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
         {
             public ErrorNodeSuggestionHandlerBase(NodeKind kind)
                 : base(kind)
-            { }
+            {
+            }
 
             internal override bool TryAddSuggestionsForNodeKind(IntellisenseData.IntellisenseData intellisenseData)
             {

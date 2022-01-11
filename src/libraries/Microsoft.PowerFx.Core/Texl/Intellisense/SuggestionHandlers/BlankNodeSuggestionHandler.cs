@@ -11,7 +11,8 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
         {
             public BlankNodeSuggestionHandler()
                 : base(NodeKind.Blank)
-            { }
+            {
+            }
         }
     }
 }

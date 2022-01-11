@@ -13,6 +13,9 @@ using Microsoft.PowerFx.Core.Syntax.Nodes;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 
+#pragma warning disable SA1402 // File may only contain a single type
+#pragma warning disable SA1649 // File name should match first type name
+
 namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
     // Date()
@@ -20,13 +23,17 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class DateFunction : BuiltinFunction
     {
         public override bool RequiresErrorContext => true;
+
         public override bool IsSelfContained => true;
+
         public override bool HasPreciseErrors => true;
+
         public override bool SupportsParamCoercion => true;
 
         public DateFunction()
             : base("Date", TexlStrings.AboutDate, FunctionCategories.DateTime, DType.Date, 0, 3, 3, DType.Number, DType.Number, DType.Number)
-        { }
+        {
+        }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
@@ -38,8 +45,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal abstract class ExtractDateTimeFunctionBase : BuiltinFunction
     {
         public override bool HasPreciseErrors => true;
+
         public override bool RequiresErrorContext => true;
+
         public override bool IsSelfContained => true;
+
         public override bool SupportsParamCoercion => true;
 
         public ExtractDateTimeFunctionBase(string name, TexlStrings.StringGetter description, FunctionCategories fc, DType returnType, BigInteger maskLambdas, int arityMin, int arityMax, params DType[] paramTypes)
@@ -65,13 +75,17 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class TimeFunction : BuiltinFunction
     {
         public override bool RequiresErrorContext => true;
+
         public override bool IsSelfContained => true;
+
         public override bool HasPreciseErrors => true;
+
         public override bool SupportsParamCoercion => true;
 
         public TimeFunction()
             : base("Time", TexlStrings.AboutTime, FunctionCategories.DateTime, DType.Time, 0, 3, 4, DType.Number, DType.Number, DType.Number, DType.Number)
-        { }
+        {
+        }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
@@ -86,7 +100,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     {
         public YearFunction()
             : base("Year", TexlStrings.AboutYear, FunctionCategories.DateTime, DType.Number, 0, 1, 1, DType.DateTime)
-        { }
+        {
+        }
 
         public override DelegationCapability FunctionDelegationCapability => DelegationCapability.Year | DelegationCapability.Add;
 
@@ -102,7 +117,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     {
         public MonthFunction()
             : base("Month", TexlStrings.AboutMonth, FunctionCategories.DateTime, DType.Number, 0, 1, 1, DType.DateTime)
-        { }
+        {
+        }
 
         public override DelegationCapability FunctionDelegationCapability => DelegationCapability.Month | DelegationCapability.Add;
 
@@ -118,7 +134,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     {
         public DayFunction()
             : base("Day", TexlStrings.AboutDay, FunctionCategories.DateTime, DType.Number, 0, 1, 1, DType.DateTime)
-        { }
+        {
+        }
 
         public override DelegationCapability FunctionDelegationCapability => DelegationCapability.Day | DelegationCapability.Add;
 
@@ -128,14 +145,14 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         }
     }
 
-
     // Hour()
     // Equivalent DAX/Excel function: Hour
     internal sealed class HourFunction : ExtractDateTimeFunctionBase
     {
         public HourFunction()
             : base("Hour", TexlStrings.AboutHour, FunctionCategories.DateTime, DType.Number, 0, 1, 1, DType.DateTime)
-        { }
+        {
+        }
 
         public override DelegationCapability FunctionDelegationCapability => DelegationCapability.Hour | DelegationCapability.Add;
 
@@ -151,7 +168,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     {
         public MinuteFunction()
             : base("Minute", TexlStrings.AboutMinute, FunctionCategories.DateTime, DType.Number, 0, 1, 1, DType.DateTime)
-        { }
+        {
+        }
 
         public override DelegationCapability FunctionDelegationCapability => DelegationCapability.Minute | DelegationCapability.Add;
 
@@ -167,7 +185,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     {
         public SecondFunction()
             : base("Second", TexlStrings.AboutSecond, FunctionCategories.DateTime, DType.Number, 0, 1, 1, DType.DateTime)
-        { }
+        {
+        }
 
         public override DelegationCapability FunctionDelegationCapability => DelegationCapability.Second | DelegationCapability.Add;
 
@@ -182,13 +201,17 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class WeekdayFunction : BuiltinFunction
     {
         public override bool RequiresErrorContext => true;
+
         public override bool IsSelfContained => true;
+
         public override bool HasPreciseErrors => true;
+
         public override bool SupportsParamCoercion => true;
 
         public WeekdayFunction()
             : base("Weekday", TexlStrings.AboutWeekday, FunctionCategories.DateTime, DType.Number, 0, 1, 2, DType.DateTime, DType.Number)
-        { }
+        {
+        }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
@@ -202,13 +225,17 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class WeekNumFunction : BuiltinFunction
     {
         public override bool RequiresErrorContext => true;
+
         public override bool IsSelfContained => true;
+
         public override bool HasPreciseErrors => true;
+
         public override bool SupportsParamCoercion => true;
 
         public WeekNumFunction()
             : base("WeekNum", TexlStrings.AboutWeekNum, FunctionCategories.DateTime, DType.Number, 0, 1, 2, DType.DateTime, DType.Number)
-        { }
+        {
+        }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
@@ -222,11 +249,13 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class ISOWeekNumFunction : BuiltinFunction
     {
         public override bool IsSelfContained => true;
+
         public override bool SupportsParamCoercion => true;
 
         public ISOWeekNumFunction()
             : base("ISOWeekNum", TexlStrings.AboutISOWeekNum, FunctionCategories.DateTime, DType.Number, 0, 1, 1, DType.DateTime)
-        { }
+        {
+        }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
@@ -237,7 +266,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal abstract class DateTimeGenericFunction : BuiltinFunction
     {
         public override bool RequiresErrorContext => true;
+
         public override bool IsSelfContained => true;
+
         public override bool HasPreciseErrors => true;
 
         protected DateTimeGenericFunction(string name, TexlStrings.StringGetter description, DType returnType)
@@ -255,11 +286,13 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class DateValueFunction : DateTimeGenericFunction
     {
         public override bool HasPreciseErrors => true;
+
         public override bool SupportsParamCoercion => true;
 
         public DateValueFunction()
             : base("DateValue", TexlStrings.AboutDateValue, DType.Date)
-        { }
+        {
+        }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
@@ -272,11 +305,13 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class TimeValueFunction : DateTimeGenericFunction
     {
         public override bool HasPreciseErrors => true;
+
         public override bool SupportsParamCoercion => true;
 
         public TimeValueFunction()
             : base("TimeValue", TexlStrings.AboutTimeValue, DType.Time)
-        { }
+        {
+        }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
@@ -289,11 +324,13 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class DateTimeValueFunction : DateTimeGenericFunction
     {
         public override bool HasPreciseErrors => true;
+
         public override bool SupportsParamCoercion => true;
 
         public DateTimeValueFunction()
             : base("DateTimeValue", TexlStrings.AboutDateTimeValue, DType.DateTime)
-        { }
+        {
+        }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
@@ -306,14 +343,17 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class DateAddFunction : BuiltinFunction
     {
         public override bool RequiresErrorContext => true;
+
         public override bool IsSelfContained => true;
+
         public override bool SupportsParamCoercion => true;
 
         internal static readonly List<string> SubDayStringList = new List<string>() { "Hours", "Minutes", "Seconds", "Milliseconds" };
 
         public DateAddFunction()
             : base("DateAdd", TexlStrings.AboutDateAdd, FunctionCategories.DateTime, DType.DateTime, 0, 2, 3, DType.DateTime, DType.Number, DType.String)
-        { }
+        {
+        }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
@@ -372,12 +412,15 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class DateAddTFunction : BuiltinFunction
     {
         public override bool RequiresErrorContext => true;
+
         public override bool IsSelfContained => true;
+
         public override bool SupportsParamCoercion => true;
 
         public DateAddTFunction()
             : base("DateAdd", TexlStrings.AboutDateAddT, FunctionCategories.Table, DType.EmptyTable, 0, 2, 3)
-        { }
+        {
+        }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
@@ -478,13 +521,17 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class DateDiffFunction : BuiltinFunction
     {
         public override bool RequiresErrorContext => true;
+
         public override bool IsSelfContained => true;
+
         public override bool HasPreciseErrors => true;
+
         public override bool SupportsParamCoercion => true;
 
         public DateDiffFunction()
             : base("DateDiff", TexlStrings.AboutDateDiff, FunctionCategories.DateTime, DType.Number, 0, 2, 3, DType.DateTime, DType.DateTime, DType.String)
-        { }
+        {
+        }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
@@ -505,12 +552,15 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class DateDiffTFunction : BuiltinFunction
     {
         public override bool RequiresErrorContext => true;
+
         public override bool IsSelfContained => true;
+
         public override bool SupportsParamCoercion => true;
 
         public DateDiffTFunction()
             : base("DateDiff", TexlStrings.AboutDateDiffT, FunctionCategories.Table, DType.EmptyTable, 0, 2, 3)
-        { }
+        {
+        }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
@@ -597,3 +647,5 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         }
     }
 }
+#pragma warning restore SA1402 // File may only contain a single type
+#pragma warning restore SA1649 // File name should match first type name

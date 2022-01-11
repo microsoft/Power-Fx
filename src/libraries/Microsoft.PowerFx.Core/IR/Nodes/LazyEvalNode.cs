@@ -12,19 +12,18 @@ namespace Microsoft.PowerFx.Core.IR.Nodes
     {
         public readonly IntermediateNode Child;
 
-        public LazyEvalNode(IRContext irContext, IntermediateNode wrapped) : base(irContext)
+        public LazyEvalNode(IRContext irContext, IntermediateNode wrapped)
+            : base(irContext)
         {
             Contracts.AssertValue(wrapped);
 
             Child = wrapped;
         }
 
-
         public override TResult Accept<TResult, TContext>(IRNodeVisitor<TResult, TContext> visitor, TContext context)
         {
             return visitor.Visit(this, context);
         }
-
 
         public override string ToString()
         {

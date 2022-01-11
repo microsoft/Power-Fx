@@ -9,12 +9,14 @@ namespace Microsoft.PowerFx.Core.Public.Types
 {
     public class RecordType : AggregateType
     {
-        internal RecordType(DType type) : base(type)
+        internal RecordType(DType type)
+            : base(type)
         {
             Contract.Assert(type.IsRecord);
         }
 
-        public RecordType() : base(DType.EmptyRecord)
+        public RecordType()
+            : base(DType.EmptyRecord)
         {
         }
 

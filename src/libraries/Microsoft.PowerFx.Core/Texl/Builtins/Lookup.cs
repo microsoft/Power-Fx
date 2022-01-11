@@ -19,6 +19,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class LookUpFunction : FilterFunctionBase
     {
         public override bool RequiresErrorContext => true;
+
         public override bool SupportsParamCoercion => false;
 
         public LookUpFunction()
