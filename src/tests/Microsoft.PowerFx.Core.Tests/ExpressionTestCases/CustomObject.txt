@@ -13,5 +13,5 @@
 >> Text(GetAt(ParseJson("[""s""]"), 0))
 "s"
 
->> Text(ParseJson("s"))
+>> Text(ParseJson("""s"""))
 "s"

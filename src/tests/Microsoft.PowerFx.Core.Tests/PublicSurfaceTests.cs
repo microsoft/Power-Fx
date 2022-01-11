@@ -38,6 +38,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Core.Public.Values.BlankValue",
                 "Microsoft.PowerFx.Core.Public.Values.BooleanValue",
                 "Microsoft.PowerFx.Core.Public.Values.CustomObjectValue",
+                "Microsoft.PowerFx.Core.Public.Values.ICustomObject",
                 "Microsoft.PowerFx.Core.Public.Values.DateTimeValue",
                 "Microsoft.PowerFx.Core.Public.Values.DateValue",
                 "Microsoft.PowerFx.Core.Public.Values.DValue`1",
