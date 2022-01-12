@@ -2295,7 +2295,7 @@
     <comment>Description of 'Index' function.</comment>
   </data>
   <data name="IndexArg1" xml:space="preserve">
-    <value>obj</value>
+    <value>table</value>
     <comment>function_parameter - First argument of the Index function - Table type.</comment>
   </data>
   <data name="IndexArg2" xml:space="preserve">
