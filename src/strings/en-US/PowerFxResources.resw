@@ -2291,19 +2291,19 @@
     <value>The name of a field.</value>
   </data>
   <data name="AboutIndex" xml:space="preserve">
-    <value>Indexes into a loosely-typed object using an integer. Returns a loosely-typed object.</value>
+    <value>Returns the record in a table at a given index.</value>
     <comment>Description of 'Index' function.</comment>
   </data>
   <data name="IndexArg1" xml:space="preserve">
     <value>obj</value>
-    <comment>function_parameter - First argument of the Index function - CustomObject type.</comment>
+    <comment>function_parameter - First argument of the Index function - Table type.</comment>
   </data>
   <data name="IndexArg2" xml:space="preserve">
     <value>index</value>
     <comment>function_parameter - Second argument of the Index function - Number type.</comment>
   </data>
-  <data name="AboutIndex_obj" xml:space="preserve">
-    <value>A loosely-typed object.</value>
+  <data name="AboutIndex_table" xml:space="preserve">
+    <value>A table.</value>
   </data>
   <data name="AboutIndex_index" xml:space="preserve">
     <value>An integer index.</value>
