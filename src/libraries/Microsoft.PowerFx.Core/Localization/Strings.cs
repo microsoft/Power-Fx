@@ -435,9 +435,9 @@ namespace Microsoft.PowerFx.Core.Localization
         public static StringGetter GetFieldArg1 = (b) => StringResources.Get("GetFieldArg1", b);
         public static StringGetter GetFieldArg2 = (b) => StringResources.Get("GetFieldArg2", b);
 
-        public static StringGetter AboutGetAt = (b) => StringResources.Get("AboutGetAt", b);
-        public static StringGetter GetAtArg1 = (b) => StringResources.Get("GetAtArg1", b);
-        public static StringGetter GetAtArg2 = (b) => StringResources.Get("GetAtArg2", b);
+        public static StringGetter AboutIndex = (b) => StringResources.Get("AboutIndex", b);
+        public static StringGetter IndexArg1 = (b) => StringResources.Get("IndexArg1", b);
+        public static StringGetter IndexArg2 = (b) => StringResources.Get("IndexArg2", b);
 
         // Previously, errors were listed here in the form of a StringGetter, which would be evaluated to fetch
         // an error message to pass to the BaseError class constructor. We are switching to passing the message key itself

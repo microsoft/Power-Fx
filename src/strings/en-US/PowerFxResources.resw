@@ -2290,22 +2290,22 @@
   <data name="AboutGetField_field" xml:space="preserve">
     <value>The name of a field.</value>
   </data>
-  <data name="AboutGetAt" xml:space="preserve">
+  <data name="AboutIndex" xml:space="preserve">
     <value>Indexes into a loosely-typed object using an integer. Returns a loosely-typed object.</value>
-    <comment>Description of 'GetAt' function.</comment>
+    <comment>Description of 'Index' function.</comment>
   </data>
-  <data name="GetAtArg1" xml:space="preserve">
+  <data name="IndexArg1" xml:space="preserve">
     <value>obj</value>
-    <comment>function_parameter - First argument of the GetAt function - CustomObject type.</comment>
+    <comment>function_parameter - First argument of the Index function - CustomObject type.</comment>
   </data>
-  <data name="GetAtArg2" xml:space="preserve">
+  <data name="IndexArg2" xml:space="preserve">
     <value>index</value>
-    <comment>function_parameter - Second argument of the GetAt function - Number type.</comment>
+    <comment>function_parameter - Second argument of the Index function - Number type.</comment>
   </data>
-  <data name="AboutGetAt_obj" xml:space="preserve">
+  <data name="AboutIndex_obj" xml:space="preserve">
     <value>A loosely-typed object.</value>
   </data>
-  <data name="AboutGetAt_index" xml:space="preserve">
+  <data name="AboutIndex_index" xml:space="preserve">
     <value>An integer index.</value>
   </data>
   <data name="FormMode_Edit_Name" xml:space="preserve">

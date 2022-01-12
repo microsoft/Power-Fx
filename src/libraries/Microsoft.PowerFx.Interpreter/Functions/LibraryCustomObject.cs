@@ -93,43 +93,31 @@ namespace Microsoft.PowerFx.Functions
             }
         }
 
-        public static FormulaValue GetAt(IRContext irContext, FormulaValue[] args)
+        public static FormulaValue Index_CO(IRContext irContext, FormulaValue[] args)
         {
             var arg0 = (CustomObjectValue)args[0];
             var arg1 = (NumberValue)args[1];
 
             var element = arg0.Impl;
 
-            if (element.IsArray)
+            var len = element.GetArrayLength();
+            var index = (int)arg1.Value;
+
+            if (index < len)
             {
-                var len = element.GetArrayLength();
-                var index = (int)arg1.Value;
+                var result = element[index - 1]; // 1-based index
 
-                if (index < len)
-                {
-                    var result = element[index];
-
-                    // Map null to blank
-                    if (result.IsNull)
-                    {
-                        return new BlankValue(IRContext.NotInSource(FormulaType.Blank));
-                    }
-
-                    return new CustomObjectValue(irContext, result);
-                }
-                else
+                // Map null to blank
+                if (result.IsNull)
                 {
                     return new BlankValue(IRContext.NotInSource(FormulaType.Blank));
                 }
+
+                return new CustomObjectValue(irContext, result);
             }
             else
             {
-                return new ErrorValue(irContext, new ExpressionError()
-                {
-                    Message = "Invalid GetAt: The CustomObject does not represent an array",
-                    Span = irContext.SourceContext,
-                    Kind = ErrorKind.InvalidFunctionUsage
-                });
+                return new BlankValue(IRContext.NotInSource(FormulaType.Blank));
             }
         }
 
@@ -140,31 +128,19 @@ namespace Microsoft.PowerFx.Functions
 
             var element = arg0.Impl;
 
-            if (element.IsObject)
+            if (element.TryGetProperty(arg1.Value, out var result))
             {
-                if (element.TryGetProperty(arg1.Value, out var result))
-                {
-                    // Map null to blank
-                    if (result.IsNull)
-                    {
-                        return new BlankValue(IRContext.NotInSource(FormulaType.Blank));
-                    }
-
-                    return new CustomObjectValue(irContext, result);
-                }
-                else
+                // Map null to blank
+                if (result.IsNull)
                 {
                     return new BlankValue(IRContext.NotInSource(FormulaType.Blank));
                 }
+
+                return new CustomObjectValue(irContext, result);
             }
             else
             {
-                return new ErrorValue(irContext, new ExpressionError()
-                {
-                    Message = "Invalid GetField: The CustomObject does not represent an object",
-                    Span = irContext.SourceContext,
-                    Kind = ErrorKind.InvalidFunctionUsage
-                });
+                return new BlankValue(IRContext.NotInSource(FormulaType.Blank));
             }
         }
 
@@ -240,7 +216,30 @@ namespace Microsoft.PowerFx.Functions
             {
                 if (!cov.Impl.IsArray)
                 {
-                    return CommonErrors.RuntimeTypeMismatch(irContext);
+                    return new ErrorValue(irContext, new ExpressionError()
+                    {
+                        Message = "The CustomObject does not represent an array",
+                        Span = irContext.SourceContext,
+                        Kind = ErrorKind.InvalidFunctionUsage
+                    });
+                }
+            }
+
+            return arg;
+        }
+
+        private static FormulaValue CustomObjectObjectChecker(IRContext irContext, int index, FormulaValue arg)
+        {
+            if (arg is CustomObjectValue cov)
+            {
+                if (!cov.Impl.IsObject)
+                {
+                    return new ErrorValue(irContext, new ExpressionError()
+                    {
+                        Message = "The CustomObject does not represent an object",
+                        Span = irContext.SourceContext,
+                        Kind = ErrorKind.InvalidFunctionUsage
+                    });
                 }
             }
 

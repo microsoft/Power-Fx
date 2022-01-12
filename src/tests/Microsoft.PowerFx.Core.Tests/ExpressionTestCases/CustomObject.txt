@@ -1,7 +1,7 @@
 ﻿>> Value(GetField(ParseJson("{""a"": 5}"), "a"))
 5
 
->> Value(GetAt(ParseJson("[5]"), 0))
+>> Value(Index(ParseJson("[5]"), 1))
 5
 
 >> Value(ParseJson("5"))
@@ -10,7 +10,7 @@
 >> Text(GetField(ParseJson("{""a"": ""s""}"), "a"))
 "s"
 
->> Text(GetAt(ParseJson("[""s""]"), 0))
+>> Text(Index(ParseJson("[""s""]"), 1))
 "s"
 
 >> Text(ParseJson("""s"""))

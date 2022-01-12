@@ -56,9 +56,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         }
     }
 
-    internal sealed class GetAtFunction : BuiltinFunction
+    internal sealed class IndexFunction_CO : BuiltinFunction
     {
-        public const string GetAtInvariantFunctionName = "GetAt";
+        public const string IndexInvariantFunctionName = "Index";
 
         public override bool RequiresErrorContext => true;
 
@@ -68,14 +68,14 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool IsHidden => true;
 
-        public GetAtFunction()
-            : base(GetAtInvariantFunctionName, TexlStrings.AboutGetAt, FunctionCategories.CustomObject, DType.CustomObject, 0, 2, 2, DType.CustomObject, DType.Number)
+        public IndexFunction_CO()
+            : base(IndexInvariantFunctionName, TexlStrings.AboutIndex, FunctionCategories.CustomObject, DType.CustomObject, 0, 2, 2, DType.CustomObject, DType.Number)
         {
         }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
-            yield return new[] { TexlStrings.GetAtArg1, TexlStrings.GetAtArg2 };
+            yield return new[] { TexlStrings.IndexArg1, TexlStrings.IndexArg2 };
         }
     }
 }

@@ -335,18 +335,6 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: ForAll)
             },
             {
-                BuiltinFunctionsCore.GetAt,
-                StandardErrorHandling<FormulaValue>(
-                    expandArguments: NoArgExpansion,
-                    replaceBlankValues: DoNotReplaceBlank,
-                    checkRuntimeTypes: ExactSequence(
-                        ExactValueTypeOrBlank<CustomObjectValue>,
-                        ExactValueTypeOrBlank<NumberValue>),
-                    checkRuntimeValues: FiniteChecker,
-                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
-                    targetFunction: GetAt)
-            },
-            {
                 BuiltinFunctionsCore.GetField,
                 StandardErrorHandling<FormulaValue>(
                     expandArguments: NoArgExpansion,
@@ -354,7 +342,7 @@ namespace Microsoft.PowerFx.Functions
                     checkRuntimeTypes: ExactSequence(
                         ExactValueTypeOrBlank<CustomObjectValue>,
                         ExactValueTypeOrBlank<StringValue>),
-                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    checkRuntimeValues: CustomObjectObjectChecker,
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
                     targetFunction: GetField)
             },
@@ -367,6 +355,20 @@ namespace Microsoft.PowerFx.Functions
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: Hour)
+            },
+            {
+                BuiltinFunctionsCore.Index_CO,
+                StandardErrorHandling<FormulaValue>(
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactSequence(
+                        ExactValueTypeOrBlank<CustomObjectValue>,
+                        ExactValueTypeOrBlank<NumberValue>),
+                    checkRuntimeValues: ExactSequence(
+                        CustomObjectArrayChecker,
+                        StrictPositiveNumberChecker),
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: Index_CO)
             },
             {
                 BuiltinFunctionsCore.Last,

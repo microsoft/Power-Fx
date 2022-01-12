@@ -94,7 +94,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
 
         // CallNodeSuggestionHandler
         [InlineData("ForAll|([1],Value)", "ForAll")]
-        [InlineData("at|(", "Atan", "Atan2", "Concat", "Concatenate", "Date", "DateAdd", "DateDiff", "DateTimeValue", "DateValue", "GetAt")]
+        [InlineData("at|(", "Atan", "Atan2", "Concat", "Concatenate", "Date", "DateAdd", "DateDiff", "DateTimeValue", "DateValue")]
         [InlineData("Atan |(")]
         [InlineData("Clock.A|(", "Clock.AmPm", "Clock.AmPmShort")]
         [InlineData("ForAll([\"test\"],EndsWith(|))", "Value")]

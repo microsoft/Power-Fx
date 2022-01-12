@@ -72,7 +72,7 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction First = _library.Append(new FirstLastFunction(isFirst: true));
         public static readonly TexlFunction FirstN = _library.Append(new FirstLastNFunction(isFirst: true));
         public static readonly TexlFunction ForAll = _library.Append(new ForAllFunction());
-        public static readonly TexlFunction GetAt = _library.Append(new GetAtFunction());
+        public static readonly TexlFunction Index_CO = _library.Append(new IndexFunction_CO());
         public static readonly TexlFunction GetField = _library.Append(new GetFieldFunction());
         public static readonly TexlFunction Hour = _library.Append(new HourFunction());
         public static readonly TexlFunction If = _library.Append(new IfFunction());
