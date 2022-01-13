@@ -19,28 +19,6 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense.IntellisenseData
     internal class IntellisenseData : IIntellisenseData
     {
         private readonly EnumStore _enumStore;
-        private readonly DType _expectedType;
-        private readonly IntellisenseSuggestionList _suggestions;
-        private readonly IntellisenseSuggestionList _substringSuggestions;
-        private readonly TexlBinding _binding;
-        private readonly List<CommentToken> _comments;
-        private readonly TexlFunction _curFunc;
-        private readonly TexlNode _curNode;
-        private readonly string _script;
-        private readonly int _cursorPos;
-        private readonly int _argIndex;
-        private readonly int _argCount;
-        private IsValidSuggestion _isValidSuggestionFunc;
-        private string _matchingStr;
-        // _matchingLength will be different from the length of _matchingStr when _matchingStr contains delimiters.
-        // For matching purposes we escape the delimeters and match against the internal DName.
-        private int _matchingLength;
-        private int _replacementStartIndex;
-        // There will be a separate replacement length when we want to replace an entire node and not just the
-        // preceding portion which is used for matching.
-        private int _replacementLength;
-        private IList<DType> _missingTypes;
-        private readonly List<ISpecialCaseHandler> _cleanupHandlers;
 
         public IntellisenseData(EnumStore enumStore, IIntellisenseContext context, DType expectedType, TexlBinding binding, TexlFunction curFunc, TexlNode curNode, int argIndex, int argCount, IsValidSuggestion isValidSuggestionFunc, IList<DType> missingTypes, List<CommentToken> comments)
         {
@@ -48,72 +26,72 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense.IntellisenseData
             Contracts.AssertValid(expectedType);
             Contracts.AssertValue(binding);
             Contracts.AssertValue(curNode);
-            Contracts.Assert(0 <= context.CursorPosition && context.CursorPosition <= context.InputText.Length);
+            Contracts.Assert(context.CursorPosition >= 0 && context.CursorPosition <= context.InputText.Length);
             Contracts.AssertValue(isValidSuggestionFunc);
             Contracts.AssertValueOrNull(missingTypes);
             Contracts.AssertValueOrNull(comments);
 
             _enumStore = enumStore;
-            _expectedType = expectedType;
-            _suggestions = new IntellisenseSuggestionList();
-            _substringSuggestions = new IntellisenseSuggestionList();
-            _binding = binding;
-            _comments = comments;
-            _curFunc = curFunc;
-            _curNode = curNode;
-            _script = context.InputText;
-            _cursorPos = context.CursorPosition;
-            _argIndex = argIndex;
-            _argCount = argCount;
-            _isValidSuggestionFunc = isValidSuggestionFunc;
-            _matchingStr = string.Empty;
-            _matchingLength = 0;
-            _replacementStartIndex = context.CursorPosition;
-            _missingTypes = missingTypes;
+            ExpectedType = expectedType;
+            Suggestions = new IntellisenseSuggestionList();
+            SubstringSuggestions = new IntellisenseSuggestionList();
+            Binding = binding;
+            Comments = comments;
+            CurFunc = curFunc;
+            CurNode = curNode;
+            Script = context.InputText;
+            CursorPos = context.CursorPosition;
+            ArgIndex = argIndex;
+            ArgCount = argCount;
+            IsValidSuggestionFunc = isValidSuggestionFunc;
+            MatchingStr = string.Empty;
+            MatchingLength = 0;
+            ReplacementStartIndex = context.CursorPosition;
+            MissingTypes = missingTypes;
             BoundTo = string.Empty;
-            _cleanupHandlers = new List<ISpecialCaseHandler>();
+            CleanupHandlers = new List<ISpecialCaseHandler>();
         }
 
-        internal DType ExpectedType { get { return _expectedType; } }
+        internal DType ExpectedType { get; }
 
-        internal IntellisenseSuggestionList Suggestions { get { return _suggestions; } }
+        internal IntellisenseSuggestionList Suggestions { get; }
 
-        internal IntellisenseSuggestionList SubstringSuggestions { get { return _substringSuggestions; } }
+        internal IntellisenseSuggestionList SubstringSuggestions { get; }
 
-        internal TexlBinding Binding { get { return _binding; } }
+        internal TexlBinding Binding { get; }
 
-        internal List<CommentToken> Comments { get { return _comments; } }
+        internal List<CommentToken> Comments { get; }
 
-        public TexlFunction CurFunc { get { return _curFunc; } }
+        public TexlFunction CurFunc { get; }
 
-        internal TexlNode CurNode { get { return _curNode; } }
+        internal TexlNode CurNode { get; }
 
-        public string Script { get { return _script; } }
+        public string Script { get; }
 
-        internal int CursorPos { get { return _cursorPos; } }
+        internal int CursorPos { get; }
 
-        public int ArgIndex { get { return _argIndex; } }
+        public int ArgIndex { get; }
 
-        public int ArgCount { get { return _argCount; } }
+        public int ArgCount { get; }
 
-        internal IsValidSuggestion IsValidSuggestionFunc { get { return _isValidSuggestionFunc; } }
+        internal IsValidSuggestion IsValidSuggestionFunc { get; }
 
-        internal string MatchingStr { get { return _matchingStr; } }
+        internal string MatchingStr { get; private set; }
 
-        internal int MatchingLength { get { return _matchingLength; } }
+        internal int MatchingLength { get; private set; }
 
-        public int ReplacementStartIndex { get { return _replacementStartIndex; } }
+        public int ReplacementStartIndex { get; private set; }
 
-        public int ReplacementLength { get { return _replacementLength; } }
+        public int ReplacementLength { get; private set; }
 
         internal string BoundTo { get; set; }
 
-        internal IList<DType> MissingTypes { get { return _missingTypes; } }
+        internal IList<DType> MissingTypes { get; }
 
-        internal List<ISpecialCaseHandler> CleanupHandlers { get { return _cleanupHandlers; } }
+        internal List<ISpecialCaseHandler> CleanupHandlers { get; }
 
         /// <summary>
-        /// Type that defines valid symbols in the formula
+        /// Type that defines valid symbols in the formula.
         /// </summary>
         internal virtual DType ContextScope => Binding.ContextScope;
 
@@ -124,10 +102,10 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense.IntellisenseData
         /// desired.
         /// </summary>
         /// <param name="suggestion">
-        /// Candidate suggestion string
+        /// Candidate suggestion string.
         /// </param>
         /// <param name="type">
-        /// Type of the node at the caller's context
+        /// Type of the node at the caller's context.
         /// </param>
         /// <returns>
         /// Whether the provided candidate suggestion is valid per the provided type.
@@ -160,14 +138,16 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense.IntellisenseData
         /// <param name="node">
         /// Node for which suggestions may be added or other actions committed.
         /// </param>
-        internal virtual void OnAddedSuggestionsForLeftNodeScope(TexlNode node) { }
+        internal virtual void OnAddedSuggestionsForLeftNodeScope(TexlNode node)
+        {
+        }
 
         /// <summary>
         /// Should return true if name collides with existing symbols and false otherwise.  Used to determine
         /// whether to prepend a prefix to an enum value.
         /// </summary>
         /// <param name="name">
-        /// Name in question
+        /// Name in question.
         /// </param>
         /// <returns>
         /// True if the provided name collides with an existing name or identifier, false otherwise.
@@ -180,18 +160,18 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense.IntellisenseData
         }
 
         /// <summary>
-        /// Should unqualified enums be suggested
+        /// Should unqualified enums be suggested.
         /// </summary>
         internal virtual bool SuggestUnqualifiedEnums => true;
 
         /// <summary>
-        /// Retrieves an <see cref="EnumSymbol"/> from <see cref="binding"/> (if necessary)
+        /// Retrieves an <see cref="EnumSymbol"/> from <see cref="binding"/> (if necessary).
         /// </summary>
         /// <param name="name">
-        /// Name of the enum symbol for which to look
+        /// Name of the enum symbol for which to look.
         /// </param>
         /// <param name="binding">
-        /// Binding in which may be looked for the enum symbol
+        /// Binding in which may be looked for the enum symbol.
         /// </param>
         /// <param name="enumSymbol">
         /// Should be set to the symbol for <see cref="name"/> if it is found, and left null otherwise.
@@ -211,15 +191,15 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense.IntellisenseData
         }
 
         /// <summary>
-        /// A list of the enum symbols defined for intellisense
+        /// A list of the enum symbols defined for intellisense.
         /// </summary>
         internal virtual IEnumerable<EnumSymbol> EnumSymbols => _enumStore.EnumSymbols;
 
         /// <summary>
-        /// Tries to add custom suggestions for a column specified by <see cref="type"/>
+        /// Tries to add custom suggestions for a column specified by <see cref="type"/>.
         /// </summary>
         /// <param name="type">
-        /// The type of the column for which suggestions may be added
+        /// The type of the column for which suggestions may be added.
         /// </param>
         /// <returns>
         /// True if suggestions were added and default column suggestion behavior should not be executed,
@@ -253,41 +233,43 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense.IntellisenseData
         /// Left node in the <see cref="DottedNameNode"/> at which the cursor is pointed at the time of
         /// invocation.
         /// </param>
-        internal virtual void BeforeAddSuggestionsForDottedNameNode(TexlNode node) { }
+        internal virtual void BeforeAddSuggestionsForDottedNameNode(TexlNode node)
+        {
+        }
 
         /// <summary>
         /// This method is called by <see cref="Intellisense"/> to determine whether a candidate suggestion
-        /// that represents a function should be suggested
+        /// that represents a function should be suggested.
         /// </summary>
         /// <param name="suggestion">
         /// Candidate suggestion wherein the key represents the suggestion name and the value represents its
-        /// type
+        /// type.
         /// </param>
         /// <returns>
-        /// True if the function may be suggested, false otherwise
+        /// True if the function may be suggested, false otherwise.
         /// </returns>
         internal virtual bool ShouldSuggestFunction(TexlFunction function) => true;
 
         /// <summary>
-        /// Returns a list of argument suggestions for a given function, scope type, and argument index
+        /// Returns a list of argument suggestions for a given function, scope type, and argument index.
         /// </summary>
         /// <param name="function">
-        /// The function for which we are producing argument suggestions
+        /// The function for which we are producing argument suggestions.
         /// </param>
         /// <param name="scopeType">
-        /// The type of the scope from where intellisense is run
+        /// The type of the scope from where intellisense is run.
         /// </param>
         /// <param name="argumentIndex">
-        /// The index of the current argument of <see cref="function"/>
+        /// The index of the current argument of <see cref="function"/>.
         /// </param>
         /// <param name="argsSoFar">
-        /// The arguments that are present in the formula at the time of invocation
+        /// The arguments that are present in the formula at the time of invocation.
         /// </param>
         /// <param name="requiresSuggestionEscaping">
-        /// Is set to whether the characters within the returned suggestion need have its characters escaped
+        /// Is set to whether the characters within the returned suggestion need have its characters escaped.
         /// </param>
         /// <returns>
-        /// Argument suggestions for the provided context
+        /// Argument suggestions for the provided context.
         /// </returns>
         internal virtual IEnumerable<KeyValuePair<string, DType>> GetArgumentSuggestions(TexlFunction function, DType scopeType, int argumentIndex, TexlNode[] argsSoFar, out bool requiresSuggestionEscaping)
         {
@@ -299,53 +281,60 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense.IntellisenseData
 
         /// <summary>
         /// Should return the kind of suggestion that may be recomended for the
-        /// <see cref="argumentIndex"/> parameter of <see cref="function"/>
+        /// <see cref="argumentIndex"/> parameter of <see cref="function"/>.
         /// </summary>
         /// <param name="function">
-        /// Function that the kind of suggestion for which this function determines
+        /// Function that the kind of suggestion for which this function determines.
         /// </param>
         /// <param name="argumentIndex">
-        /// The index of the argument to which the suggestion pertains
+        /// The index of the argument to which the suggestion pertains.
         /// </param>
         /// <returns>
-        /// The suggestion kind for the hypothetical suggestion
+        /// The suggestion kind for the hypothetical suggestion.
         /// </returns>
         internal virtual SuggestionKind GetFunctionSuggestionKind(TexlFunction function, int argumentIndex) => SuggestionKind.Global;
 
         /// <summary>
         /// This method is called after all default suggestions for value possibilities have been run and may be
-        /// overridden to provide custom suggestions
+        /// overridden to provide custom suggestions.
         /// </summary>
-        internal virtual void AddCustomSuggestionsForValuePossibilities() { }
+        internal virtual void AddCustomSuggestionsForValuePossibilities()
+        {
+        }
 
         /// <summary>
         /// May be overridden to provide custom suggestions at the point in intellisense runtime when
-        /// suggestions for global identifiers are added
+        /// suggestions for global identifiers are added.
         /// </summary>
-        internal virtual void AddCustomSuggestionsForGlobals() { }
+        internal virtual void AddCustomSuggestionsForGlobals()
+        {
+        }
 
         /// <summary>
         /// May be overridden to provide custom suggestions or change other state after the point in
         /// intellisense runtime where suggestions for global identifiers are added.
         /// </summary>
-        internal virtual void AfterAddSuggestionsForGlobals() { }
+        internal virtual void AfterAddSuggestionsForGlobals()
+        {
+        }
 
         /// <summary>
         /// May be overridden to provide custom suggestions or change other state after the point in
         /// intellisense runtime where suggestions for unary operator keywords are added.
         /// </summary>
-        internal virtual void AfterAddSuggestionsForUnaryOperatorKeywords() { }
+        internal virtual void AfterAddSuggestionsForUnaryOperatorKeywords()
+        {
+        }
 
         /// <summary>
         /// This collection is appended to the resultant suggestion list when
         /// <see cref="Intellisense.FirstNameNodeSuggestionHandler"/> is used.  It may be overridden to provide
-        /// additional first name node suggestions.  It is called when the cursor is
+        /// additional first name node suggestions.  It is called when the cursor is.
         /// </summary>
         /// <returns>
         /// Sequence of suggestions for first name node context.
         /// </returns>
         internal virtual IEnumerable<string> SuggestableFirstNames => Enumerable.Empty<string>();
-
 
         /// <summary>
         /// Invokes <see cref="AddSuggestionsForConstantKeywords"/> to supply suggestions for constant
@@ -370,16 +359,20 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense.IntellisenseData
         /// This method may be overriden to add additional suggestions for local selections to the resultant
         /// suggestion list for first name nodes.
         /// </summary>
-        internal virtual void AddAdditionalSuggestionsForLocalSymbols() { }
+        internal virtual void AddAdditionalSuggestionsForLocalSymbols()
+        {
+        }
 
         /// <summary>
         /// This method may be overriden to add additional suggestions for generic selections to the resultant
         /// suggestion list for first name nodes.
         /// </summary>
         /// <param name="currentNode">
-        /// The node for which Intellisense is invoked
+        /// The node for which Intellisense is invoked.
         /// </param>
-        internal virtual void AddAdditionalSuggestionsForKeywordSymbols(TexlNode currentNode) { }
+        internal virtual void AddAdditionalSuggestionsForKeywordSymbols(TexlNode currentNode)
+        {
+        }
 
         /// <param name="function">
         /// Function whose eligibility is called into question.
@@ -391,10 +384,10 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense.IntellisenseData
         internal virtual bool IsFunctionElligibleForRecordSuggestions(TexlFunction function) => true;
 
         /// <param name="function">
-        /// Function in question
+        /// Function in question.
         /// </param>
         /// <param name="callNode">
-        /// The node at the present cursor position
+        /// The node at the present cursor position.
         /// </param>
         /// <param name="type">
         /// If overridden, may be set to a custom function type when returns.
@@ -423,10 +416,10 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense.IntellisenseData
         /// will be added.
         /// </summary>
         /// <param name="function">
-        /// Function for which additional suggestions may be added
+        /// Function for which additional suggestions may be added.
         /// </param>
         /// <param name="argIndex">
-        /// Index of the argument on which the cursor is positioned
+        /// Index of the argument on which the cursor is positioned.
         /// </param>
         /// <returns>
         /// True if all suggestions have been added and no more should be.  False otherwise.
@@ -444,13 +437,17 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense.IntellisenseData
         /// This method is called by <see cref="Intellisense.ErrorNodeSuggestionHandlerBase"/> if no top level
         /// suggestions are added.  It may be overridden to supply alternative top level suggestions.
         /// </summary>
-        internal virtual void AddAlternativeTopLevelSuggestionsForErrorNode() { }
+        internal virtual void AddAlternativeTopLevelSuggestionsForErrorNode()
+        {
+        }
 
         /// <summary>
         /// This method is called by <see cref="Intellisense.ErrorNodeSuggestionHandlerBase"/> after it has added all
-        /// its suggestions to <see cref="Suggestions"/>
+        /// its suggestions to <see cref="Suggestions"/>.
         /// </summary>
-        internal virtual void AddSuggestionsAfterTopLevelErrorNodeSuggestions() { }
+        internal virtual void AddSuggestionsAfterTopLevelErrorNodeSuggestions()
+        {
+        }
 
         public virtual bool TryAugmentSignature(TexlFunction func, int argIndex, string paramName, int highlightStart, out int newHighlightStart, out int newHighlightEnd, out string newParamName, out string newInvariantParamName) =>
             DefaultIntellisenseData.DefaultTryAugmentSignature(func, argIndex, paramName, highlightStart, out newHighlightStart, out newHighlightEnd, out newParamName, out newInvariantParamName);
@@ -460,20 +457,24 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense.IntellisenseData
 
         internal bool SetMatchArea(int startIndex, int endIndex, int replacementLength = -1)
         {
-            Contracts.Assert(0 <= startIndex && startIndex <= endIndex && endIndex <= _script.Length);
+            Contracts.Assert(startIndex >= 0 && startIndex <= endIndex && endIndex <= Script.Length);
 
             // If we have already provided suggestions, we can't set the match area
             if (Suggestions.Count > 0 || SubstringSuggestions.Count > 0)
+            {
                 return false;
+            }
 
             // Trim leading whitespace as there is no point to matching it
             while (startIndex < endIndex && string.IsNullOrWhiteSpace(Script.Substring(startIndex, 1)))
+            {
                 startIndex++;
+            }
 
-            _replacementStartIndex = startIndex;
-            _matchingLength = endIndex - startIndex;
-            _replacementLength = replacementLength < 0 ? _matchingLength : replacementLength;
-            _matchingStr = TexlLexer.UnescapeName(_script.Substring(startIndex, _matchingLength));
+            ReplacementStartIndex = startIndex;
+            MatchingLength = endIndex - startIndex;
+            ReplacementLength = replacementLength < 0 ? MatchingLength : replacementLength;
+            MatchingStr = TexlLexer.UnescapeName(Script.Substring(startIndex, MatchingLength));
 
             return true;
         }

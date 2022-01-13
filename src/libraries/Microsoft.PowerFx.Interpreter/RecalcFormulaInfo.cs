@@ -27,7 +27,7 @@ namespace Microsoft.PowerFx
         public Action<string, FormulaValue> _onUpdate;
 
         // For recalc, needed for execution 
-        public TexlBinding _binding; 
+        public TexlBinding _binding;
 
         // Cached value
         public FormulaValue _value;

@@ -26,22 +26,16 @@ namespace Microsoft.PowerFx.Core.Types
 
         public override string ToString()
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             sb.Append(Name);
             sb.Append(":");
             Type.AppendTo(sb);
             return sb.ToString();
         }
 
-        public static bool operator ==(TypedName tn1, TypedName tn2)
-        {
-            return tn1.Name == tn2.Name && tn1.Type == tn2.Type;
-        }
+        public static bool operator ==(TypedName tn1, TypedName tn2) => tn1.Name == tn2.Name && tn1.Type == tn2.Type;
 
-        public static bool operator !=(TypedName tn1, TypedName tn2)
-        {
-            return tn1.Name != tn2.Name || tn1.Type != tn2.Type;
-        }
+        public static bool operator !=(TypedName tn1, TypedName tn2) => tn1.Name != tn2.Name || tn1.Type != tn2.Type;
 
         public bool Equals(TypedName other)
         {
@@ -52,7 +46,10 @@ namespace Microsoft.PowerFx.Core.Types
         {
             Contracts.AssertValueOrNull(obj);
             if (!(obj is TypedName))
+            {
                 return false;
+            }
+
             return this == (TypedName)obj;
         }
 
@@ -61,6 +58,6 @@ namespace Microsoft.PowerFx.Core.Types
             return Hashing.CombineHash(Type.GetHashCode(), Name.GetHashCode());
         }
 
-        public bool IsValid { get { return Name.IsValid && Type.IsValid; } }
+        public bool IsValid => Name.IsValid && Type.IsValid;
     }
 }

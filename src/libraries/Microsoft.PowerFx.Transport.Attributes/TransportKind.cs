@@ -16,7 +16,7 @@ namespace Microsoft.AppMagic.Transport
         /// <summary>
         /// C# server remoting. Javascript receives a proxy to this object.
         /// </summary>
-        ServerRemoted = 1, 
+        ServerRemoted = 1,
 
         /// <summary>
         /// Custom transport. The User or runtime is responsible for implementing serialization of this type.

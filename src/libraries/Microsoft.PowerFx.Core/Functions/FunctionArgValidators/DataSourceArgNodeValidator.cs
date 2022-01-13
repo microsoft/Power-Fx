@@ -18,17 +18,19 @@ namespace Microsoft.PowerFx.Core.Functions.FunctionArgValidators
             Contracts.AssertValue(binding);
 
             dsNodes = new List<FirstNameNode>();
-            FirstNameNode dsNode;
             switch (argNode.Kind)
             {
-            case NodeKind.FirstName:
-                if (TryGetDsNode(argNode.AsFirstName(), binding, out dsNode))
-                    dsNodes.Add(dsNode);
-                break;
-            case NodeKind.Call:
-                return TryGetDsNodes(argNode.AsCall(), binding, out dsNodes);
-            case NodeKind.DottedName:
-                return TryGetDsNode(argNode.AsDottedName(), binding, out dsNodes);
+                case NodeKind.FirstName:
+                    if (TryGetDsNode(argNode.AsFirstName(), binding, out var dsNode))
+                    {
+                        dsNodes.Add(dsNode);
+                    }
+
+                    break;
+                case NodeKind.Call:
+                    return TryGetDsNodes(argNode.AsCall(), binding, out dsNodes);
+                case NodeKind.DottedName:
+                    return TryGetDsNode(argNode.AsDottedName(), binding, out dsNodes);
             }
 
             return dsNodes.Count > 0;
@@ -40,16 +42,22 @@ namespace Microsoft.PowerFx.Core.Functions.FunctionArgValidators
             Contracts.AssertValue(binding);
 
             dsInfos = new List<FirstNameNode>();
-            if (callNode == null || !(binding.GetType(callNode).IsAggregate))
+            if (callNode == null || !binding.GetType(callNode).IsAggregate)
+            {
                 return false;
+            }
 
             var callInfo = binding.GetInfo(callNode);
             if (callInfo == null)
+            {
                 return false;
+            }
 
             var function = callInfo.Function;
             if (function == null)
+            {
                 return false;
+            }
 
             return function.TryGetDataSourceNodes(callNode, binding, out dsInfos);
         }
@@ -61,14 +69,20 @@ namespace Microsoft.PowerFx.Core.Functions.FunctionArgValidators
 
             dsNode = null;
             if (firstName == null || !binding.GetType(firstName).IsTable)
+            {
                 return false;
+            }
 
             var firstNameInfo = binding.GetInfo(firstName);
             if (firstNameInfo == null || firstNameInfo.Kind != BindKind.Data)
+            {
                 return false;
+            }
 
             if (binding.EntityScope == null || !binding.EntityScope.TryGetEntity(firstNameInfo.Name, out IExternalDataSource _))
+            {
                 return false;
+            }
 
             dsNode = firstName;
             return true;
@@ -81,7 +95,9 @@ namespace Microsoft.PowerFx.Core.Functions.FunctionArgValidators
 
             dsNode = null;
             if (dottedNameNode == null || !binding.HasExpandInfo(dottedNameNode))
+            {
                 return false;
+            }
 
             return TryGetValidValue(dottedNameNode.Left, binding, out dsNode);
         }

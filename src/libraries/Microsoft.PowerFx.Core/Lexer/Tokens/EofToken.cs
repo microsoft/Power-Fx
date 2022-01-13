@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation.
+﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
 using Microsoft.PowerFx.Core.Localization;
@@ -9,13 +9,15 @@ namespace Microsoft.PowerFx.Core.Lexer.Tokens
     {
         public EofToken(Span span)
             : base(TokKind.Eof, span)
-        { }
+        {
+        }
 
         /// <summary>
-        /// Copy Ctor for EofToken used by Clone
+        /// Initializes a new instance of the <see cref="EofToken"/> class.
+        /// Copy Ctor for EofToken used by Clone.
         /// </summary>
-        /// <param name="tok">The token to be copied</param>
-        /// <param name="newSpan">The new span</param>
+        /// <param name="tok">The token to be copied.</param>
+        /// <param name="newSpan">The new span.</param>
         private EofToken(EofToken tok, Span newSpan)
             : this(newSpan)
         {

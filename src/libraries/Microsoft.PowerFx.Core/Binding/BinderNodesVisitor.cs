@@ -13,26 +13,33 @@ namespace Microsoft.PowerFx.Core.Binding
     internal sealed class BinderNodesVisitor : IdentityTexlVisitor
     {
         private readonly List<BinaryOpNode> _binaryOperators;
-        public IEnumerable<BinaryOpNode> BinaryOperators { get { return _binaryOperators; } }
+
+        public IEnumerable<BinaryOpNode> BinaryOperators => _binaryOperators;
 
         private readonly List<VariadicOpNode> _variadicOperators;
-        public IEnumerable<VariadicOpNode> VariadicOperators { get { return _variadicOperators; } }
+
+        public IEnumerable<VariadicOpNode> VariadicOperators => _variadicOperators;
 
         private readonly List<BoolLitNode> _booleanLiterals;
-        public IEnumerable<BoolLitNode> BooleanLiterals { get { return _booleanLiterals; } }
+
+        public IEnumerable<BoolLitNode> BooleanLiterals => _booleanLiterals;
 
         private readonly List<NumLitNode> _numericLiterals;
-        public IEnumerable<NumLitNode> NumericLiterals { get { return _numericLiterals; } }
+
+        public IEnumerable<NumLitNode> NumericLiterals => _numericLiterals;
 
         private readonly List<StrLitNode> _stringLiterals;
-        public IEnumerable<StrLitNode> StringLiterals { get { return _stringLiterals; } }
+
+        public IEnumerable<StrLitNode> StringLiterals => _stringLiterals;
 
         private readonly HashSet<NodeKind> _keywords;
+
         // Parent, Self, and ThisItem keywords.
-        public IEnumerable<NodeKind> Keywords { get { return _keywords; } }
+        public IEnumerable<NodeKind> Keywords => _keywords;
 
         private readonly List<UnaryOpNode> _unaryOperators;
-        public IEnumerable<UnaryOpNode> UnaryOperators { get { return _unaryOperators; } }
+
+        public IEnumerable<UnaryOpNode> UnaryOperators => _unaryOperators;
 
         private BinderNodesVisitor(TexlNode node)
         {
@@ -62,8 +69,10 @@ namespace Microsoft.PowerFx.Core.Binding
         public override void PostVisit(UnaryOpNode node)
         {
             Contracts.AssertValue(node);
-            if(node.Token.Kind == TokKind.PercentSign)
+            if (node.Token.Kind == TokKind.PercentSign)
+            {
                 _unaryOperators.Add(node);
+            }
         }
 
         public override void Visit(BoolLitNode node)

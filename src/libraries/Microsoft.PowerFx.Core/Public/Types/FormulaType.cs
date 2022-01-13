@@ -11,7 +11,7 @@ namespace Microsoft.PowerFx.Core.Public.Types
 {
     /// <summary>
     /// Base class for type of a Formula. 
-    /// Formula Types are a class hiearchy
+    /// Formula Types are a class hiearchy.
     /// </summary>
     [DebuggerDisplay("{_type}")]
     public abstract class FormulaType
@@ -21,14 +21,19 @@ namespace Microsoft.PowerFx.Core.Public.Types
 
         public static FormulaType Blank { get; } = new BlankType();
 
-        // Well-known types
+        // Well-known types 
         public static FormulaType Boolean { get; } = new BooleanType();
+
         public static FormulaType Number { get; } = new NumberType();
+
         public static FormulaType String { get; } = new StringType();
 
         public static FormulaType Time { get; } = new TimeType();
+
         public static FormulaType Date { get; } = new DateType();
+
         public static FormulaType DateTime { get; } = new DateTimeType();
+
         public static FormulaType DateTimeNoTimeZone { get; } = new DateTimeNoTimeZoneType();
 
         public static FormulaType OptionSetValue { get; } = new OptionSetValueType();
@@ -87,37 +92,38 @@ namespace Microsoft.PowerFx.Core.Public.Types
         }
 
         #region Equality
+
         // Aggregate Types (records, tables) can be complex.  
         // Override op= like system.type does. 
         public static bool operator ==(FormulaType a, FormulaType b)
         {
             // Use object.ReferenceEquals to avoid recursion.
-            if (object.ReferenceEquals(a,null))
+            if (ReferenceEquals(a, null))
             {
-                return object.ReferenceEquals(b, null);
+                return ReferenceEquals(b, null);
             }
+
             return a.Equals(b);
         }
 
-        public static bool operator !=(FormulaType a, FormulaType b)
-        {
-            return !(a == b);
-        }
+        public static bool operator !=(FormulaType a, FormulaType b) => !(a == b);
+
         public override bool Equals(object other)
         {
             if (other is FormulaType t)
             {
                 return _type.Equals(t._type);
             }
+
             return false;
         }
+
         public override int GetHashCode()
         {
             return _type.GetHashCode();
         }
 
         #endregion // Equality
-                
 
         public abstract void Visit(ITypeVistor vistor);
     }

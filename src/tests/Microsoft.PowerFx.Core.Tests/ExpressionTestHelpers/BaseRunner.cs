@@ -9,11 +9,10 @@ using Microsoft.PowerFx.Core.Public.Values;
 
 namespace Microsoft.PowerFx.Core.Tests
 {
-
     // Base class for running a lightweght test. 
     public abstract class BaseRunner
     {
-        abstract public Task<FormulaValue> RunAsync(string expr);
+        public abstract Task<FormulaValue> RunAsync(string expr);
 
         // Get the friendly name of the harness. 
         public virtual string GetName()

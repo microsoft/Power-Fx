@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation.
+﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
 using System.Linq;
@@ -10,7 +10,7 @@ using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Core.Syntax.Nodes
 {
-    /// Base for all variadic nodes.
+    // Base for all variadic nodes.
     internal abstract class VariadicBase : TexlNode
     {
         public readonly TexlNode[] Children;
@@ -22,17 +22,21 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
             Contracts.AssertValue(children);
             Children = children;
 
-            int maxDepth = 0;
+            var maxDepth = 0;
 
-            foreach (TexlNode child in children)
+            foreach (var child in children)
             {
                 Contracts.AssertValue(child);
                 child.Parent = this;
                 if (maxDepth < child.Depth)
+                {
                     maxDepth = child.Depth;
+                }
 
                 if (MinChildID > child.MinChildID)
+                {
                     MinChildID = child.MinChildID;
+                }
             }
 
             _depth = maxDepth + 1;
@@ -40,11 +44,12 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
 
         public TexlNode[] CloneChildren(ref int idNext, Span ts)
         {
-            TexlNode[] clones = new TexlNode[Children.Length];
-            for (int x = 0; x < clones.Length; x++)
+            var clones = new TexlNode[Children.Length];
+            for (var x = 0; x < clones.Length; x++)
             {
                 clones[x] = Children[x].Clone(ref idNext, ts);
             }
+
             return clones;
         }
 
@@ -52,14 +57,20 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
         {
             Contracts.AssertValueOrNull(toks);
             if (toks == null)
+            {
                 return null;
-            Token[] newToks = new Token[toks.Length];
-            for (int x = 0; x < toks.Length; x++)
+            }
+
+            var newToks = new Token[toks.Length];
+            for (var x = 0; x < toks.Length; x++)
+            {
                 newToks[x] = toks[x].Clone(ts);
+            }
+
             return newToks;
         }
 
-        public int Count { get { return Children.Length; } }
+        public int Count => Children.Length;
 
         public void AcceptChildren(TexlVisitor visitor)
         {
@@ -74,7 +85,9 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
         public override Span GetCompleteSpan()
         {
             if (Children.Count() == 0)
+            {
                 return new Span(Token.VerifyValue().Span.Min, Token.VerifyValue().Span.Lim);
+            }
 
             return new Span(Children.VerifyValue().First().VerifyValue().GetCompleteSpan().Min, Children.VerifyValue().Last().VerifyValue().GetCompleteSpan().Lim);
         }

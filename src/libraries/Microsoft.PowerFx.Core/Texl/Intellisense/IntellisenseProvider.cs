@@ -7,7 +7,8 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
 {
     internal static class IntellisenseProvider
     {
-        internal static readonly ISuggestionHandler[] suggestionHandlers = {
+        internal static readonly ISuggestionHandler[] SuggestionHandlers =
+        {
             new Intellisense.CommentNodeSuggestionHandler(),
             new Intellisense.NullNodeSuggestionHandler(),
             new Intellisense.FunctionRecordNameSuggestionHandler(),
@@ -25,7 +26,7 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
 
         internal static IIntellisense GetIntellisense(EnumStore enumStore)
         {
-            return new Intellisense(enumStore, suggestionHandlers);
+            return new Intellisense(enumStore, SuggestionHandlers);
         }
     }
 }

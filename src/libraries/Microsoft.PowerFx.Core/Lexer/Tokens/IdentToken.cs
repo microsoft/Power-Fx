@@ -13,6 +13,7 @@ namespace Microsoft.PowerFx.Core.Lexer.Tokens
         public readonly bool HasDelimiterEnd;
         public readonly bool IsModified;
         public readonly bool IsReplaceable;
+
         // Unescaped, unmodified value.
         private readonly string _value;
         public readonly DName Name;
@@ -51,10 +52,11 @@ namespace Microsoft.PowerFx.Core.Lexer.Tokens
         }
 
         /// <summary>
-        /// Copy Ctor for IdentToken used by Clone
+        /// Initializes a new instance of the <see cref="IdentToken"/> class.
+        /// Copy Ctor for IdentToken used by Clone.
         /// </summary>
-        /// <param name="tok">The token to be copied</param>
-        /// <param name="newSpan">The new span</param>
+        /// <param name="tok">The token to be copied.</param>
+        /// <param name="newSpan">The new span.</param>
         private IdentToken(IdentToken tok, Span newSpan)
             : this(tok._value, newSpan, tok.HasDelimiterStart, tok.HasDelimiterEnd)
         {
@@ -66,12 +68,13 @@ namespace Microsoft.PowerFx.Core.Lexer.Tokens
         }
 
         // REVIEW ragru: having a property for every possible error isn't scalable.
-        public bool HasDelimiters { get { return HasDelimiterStart; } }
-        public bool HasErrors { get { return IsModified || (HasDelimiterStart && !HasDelimiterEnd); } }
+        public bool HasDelimiters => HasDelimiterStart;
+
+        public bool HasErrors => IsModified || (HasDelimiterStart && !HasDelimiterEnd);
 
         public override string ToString()
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             Format(sb);
             return sb.ToString();
         }
@@ -89,19 +92,25 @@ namespace Microsoft.PowerFx.Core.Lexer.Tokens
             }
 
             if (HasDelimiterStart)
-                sb.Append(TexlLexer.IdentifierDelimiter);
-
-            for (int i = 0; i < _value.Length; i++)
             {
-                char ch = _value[i];
+                sb.Append(TexlLexer.IdentifierDelimiter);
+            }
+
+            for (var i = 0; i < _value.Length; i++)
+            {
+                var ch = _value[i];
                 sb.Append(ch);
 
                 if (ch == TexlLexer.IdentifierDelimiter)
+                {
                     sb.Append(ch);
+                }
             }
 
             if (HasDelimiterEnd)
+            {
                 sb.Append(TexlLexer.IdentifierDelimiter);
+            }
         }
 
         public override bool Equals(Token that)
@@ -109,7 +118,10 @@ namespace Microsoft.PowerFx.Core.Lexer.Tokens
             Contracts.AssertValue(that);
 
             if (!(that is IdentToken))
+            {
                 return false;
+            }
+
             return Name == that.As<IdentToken>().Name && base.Equals(that);
         }
     }

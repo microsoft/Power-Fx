@@ -9,7 +9,8 @@ namespace Microsoft.PowerFx.Core.IR.Nodes
     {
         public readonly object Value;
 
-        public ResolvedObjectNode(IRContext irContext, object value) : base(irContext)
+        public ResolvedObjectNode(IRContext irContext, object value)
+            : base(irContext)
         {
             Contracts.AssertValue(value);
 

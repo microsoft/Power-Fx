@@ -14,7 +14,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public AtanFunction()
             : base("Atan", TexlStrings.AboutAtan, FunctionCategories.MathAndStat)
-        { }
+        {
+        }
     }
 
     // Atan(E:*[n])
@@ -25,6 +26,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public AtanTableFunction()
             : base("Atan", TexlStrings.AboutAtanT, FunctionCategories.Table)
-        { }
+        {
+        }
     }
 }

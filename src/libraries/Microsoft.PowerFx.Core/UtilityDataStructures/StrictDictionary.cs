@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation.
+﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
 using System.Collections;
@@ -16,21 +16,21 @@ namespace Microsoft.PowerFx.Core.UtilityDataStructures
     ///  dictionary, since that could change behavior. This is safe in cases where a null in the
     ///  original dictionary would result in an almost certain crash anyway.
     /// </summary>
-    internal class StrictDictionary<K, V> : IDictionary<K, V>, IReadOnlyDictionary<K, V>
+    internal class StrictDictionary<TKey, TValue> : IDictionary<TKey, TValue>, IReadOnlyDictionary<TKey, TValue>
     {
-        private readonly IDictionary<K, V> _backingDictionary = new Dictionary<K, V>();
+        private readonly IDictionary<TKey, TValue> _backingDictionary = new Dictionary<TKey, TValue>();
 
-        public IEnumerator<KeyValuePair<K, V>> GetEnumerator()
+        public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()
         {
             return _backingDictionary.GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return ((IEnumerable) _backingDictionary).GetEnumerator();
+            return ((IEnumerable)_backingDictionary).GetEnumerator();
         }
 
-        public void Add(KeyValuePair<K, V> item)
+        public void Add(KeyValuePair<TKey, TValue> item)
         {
             Contracts.Check(item.Value != null, "A strict dictionary can't accept a null value.");
             _backingDictionary.Add(item);
@@ -41,17 +41,17 @@ namespace Microsoft.PowerFx.Core.UtilityDataStructures
             _backingDictionary.Clear();
         }
 
-        public bool Contains(KeyValuePair<K, V> item)
+        public bool Contains(KeyValuePair<TKey, TValue> item)
         {
             return _backingDictionary.Contains(item);
         }
 
-        public void CopyTo(KeyValuePair<K, V>[] array, int arrayIndex)
+        public void CopyTo(KeyValuePair<TKey, TValue>[] array, int arrayIndex)
         {
             _backingDictionary.CopyTo(array, arrayIndex);
         }
 
-        public bool Remove(KeyValuePair<K, V> item)
+        public bool Remove(KeyValuePair<TKey, TValue> item)
         {
             return _backingDictionary.Remove(item);
         }
@@ -60,28 +60,28 @@ namespace Microsoft.PowerFx.Core.UtilityDataStructures
 
         public bool IsReadOnly => _backingDictionary.IsReadOnly;
 
-        public void Add(K key, V value)
+        public void Add(TKey key, TValue value)
         {
             Contracts.Check(value != null, "A strict dictionary can't accept a null value.");
             _backingDictionary.Add(key, value);
         }
 
-        public bool ContainsKey(K key)
+        public bool ContainsKey(TKey key)
         {
             return _backingDictionary.ContainsKey(key);
         }
 
-        public bool Remove(K key)
+        public bool Remove(TKey key)
         {
             return _backingDictionary.Remove(key);
         }
 
-        public bool TryGetValue(K key, out V value)
+        public bool TryGetValue(TKey key, out TValue value)
         {
             return _backingDictionary.TryGetValue(key, out value);
         }
 
-        public V this[K key]
+        public TValue this[TKey key]
         {
             get => _backingDictionary[key];
             set
@@ -91,12 +91,12 @@ namespace Microsoft.PowerFx.Core.UtilityDataStructures
             }
         }
 
-        IEnumerable<K> IReadOnlyDictionary<K, V>.Keys => Keys;
+        IEnumerable<TKey> IReadOnlyDictionary<TKey, TValue>.Keys => Keys;
 
-        IEnumerable<V> IReadOnlyDictionary<K, V>.Values => Values;
+        IEnumerable<TValue> IReadOnlyDictionary<TKey, TValue>.Values => Values;
 
-        public ICollection<K> Keys => _backingDictionary.Keys;
+        public ICollection<TKey> Keys => _backingDictionary.Keys;
 
-        public ICollection<V> Values => _backingDictionary.Values;
+        public ICollection<TValue> Values => _backingDictionary.Values;
     }
 }

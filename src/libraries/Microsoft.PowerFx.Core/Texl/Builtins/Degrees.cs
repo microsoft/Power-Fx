@@ -14,7 +14,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public DegreesFunction()
             : base("Degrees", TexlStrings.AboutDegrees, FunctionCategories.MathAndStat)
-        { }
+        {
+        }
     }
 
     // Degrees(E:*[n])
@@ -25,6 +26,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public DegreesTableFunction()
             : base("Degrees", TexlStrings.AboutDegreesT, FunctionCategories.Table)
-        { }
+        {
+        }
     }
 }

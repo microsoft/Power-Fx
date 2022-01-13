@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation.
+﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
 using Microsoft.PowerFx.Core.Lexer.Tokens;
@@ -11,7 +11,7 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
 {
     internal sealed class BlankNode : TexlNode
     {
-        public override NodeKind Kind { get { return NodeKind.Blank; } }
+        public override NodeKind Kind => NodeKind.Blank;
 
         public BlankNode(ref int idNext, Token primaryToken)
             : base(ref idNext, primaryToken, new SourceList(primaryToken))
@@ -29,7 +29,7 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
             visitor.Visit(this);
         }
 
-        public override Result Accept<Result, Context>(TexlFunctionalVisitor<Result, Context> visitor, Context context)
+        public override TResult Accept<TResult, TContext>(TexlFunctionalVisitor<TResult, TContext> visitor, TContext context)
         {
             return visitor.Visit(this, context);
         }

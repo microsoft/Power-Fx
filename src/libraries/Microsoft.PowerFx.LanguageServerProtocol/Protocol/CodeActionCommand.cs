@@ -4,12 +4,13 @@
 namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
 {
     /// <summary>
-    /// Code action command object model
+    /// Code action command object model.
     /// </summary>
     public class CodeActionCommand
     {
         /// <summary>
-        /// ctor
+        /// Initializes a new instance of the <see cref="CodeActionCommand"/> class.
+        /// ctor.
         /// </summary>
         public CodeActionCommand()
         {

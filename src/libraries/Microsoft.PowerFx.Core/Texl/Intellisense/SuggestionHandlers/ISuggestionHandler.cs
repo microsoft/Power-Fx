@@ -1,7 +1,8 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
-namespace Microsoft.PowerFx.Core.Texl.Intellisense{
+namespace Microsoft.PowerFx.Core.Texl.Intellisense
+{
     internal interface ISuggestionHandler
     {
         /// <summary>

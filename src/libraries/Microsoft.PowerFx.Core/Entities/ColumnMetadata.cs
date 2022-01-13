@@ -24,54 +24,6 @@ namespace Microsoft.PowerFx.Core.Entities
         ServerGenerated = 1,
     }
 
-    internal static class DataTypeInfo
-    {
-        private static readonly DataFormat[] NoValidFormat = new DataFormat[0];
-        private static readonly DataFormat[] AllowedValuesOnly = new[] { DataFormat.AllowedValues };
-
-        private static readonly IReadOnlyDictionary<DKind, DataFormat[]> _validDataFormatsPerDKind = new Dictionary<DKind, DataFormat[]>
-        {
-            { DKind.Number, AllowedValuesOnly },
-            { DKind.Currency, AllowedValuesOnly },
-            { DKind.String, new [] { DataFormat.AllowedValues, DataFormat.Email, DataFormat.Multiline, DataFormat.Phone } },
-            { DKind.Record, new [] { DataFormat.Lookup } },
-            { DKind.Table, new [] {DataFormat.Lookup} },
-            { DKind.Attachment, new [] {DataFormat.Attachment} },
-            { DKind.OptionSetValue, new [] {DataFormat.Lookup} }
-        };
-
-        public static DataFormat[] GetValidDataFormats(DKind dkind)
-        {
-            DataFormat[] validFormats;
-            return _validDataFormatsPerDKind.TryGetValue(dkind, out validFormats) ? validFormats : NoValidFormat;
-        }
-    }
-
-    internal sealed class AllowedValuesMetadata
-    {
-        private static readonly DName ValueColumnName = new DName("Value");
-
-        public static AllowedValuesMetadata CreateForValue(DType valueType)
-        {
-            Contracts.Assert(valueType.IsValid);
-
-            return new AllowedValuesMetadata(DType.CreateTable(new TypedName(valueType, ValueColumnName)));
-        }
-
-        public AllowedValuesMetadata(DType valuesSchema)
-        {
-            Contracts.Assert(valuesSchema.IsTable);
-            Contracts.Assert(valuesSchema.Contains(ValueColumnName));
-
-            ValuesSchema = valuesSchema;
-        }
-
-        /// <summary>
-        /// The schema of the table returned from the document function DataSourceInfo(DS, DataSourceInfo.AllowedValues, "columnName").
-        /// </summary>
-        public DType ValuesSchema { get; }
-    }
-
     internal struct ColumnLookupMetadata
     {
         public readonly bool IsSearchable;
@@ -106,7 +58,7 @@ namespace Microsoft.PowerFx.Core.Entities
     }
 
     /// <summary>
-    /// Implements logic for describing metadata about a datasource column
+    /// Implements logic for describing metadata about a datasource column.
     /// </summary>
     [DebuggerDisplay("Name={Name} ({DisplayName}) Type={Type.ToString()}")]
     internal sealed class ColumnMetadata : IExternalColumnMetadata
@@ -114,10 +66,21 @@ namespace Microsoft.PowerFx.Core.Entities
         private readonly ColumnCreationKind _kind;
         private readonly ColumnVisibility _visibility;
 
-        public ColumnMetadata(string name, DType schema, DataFormat? dataFormat, string displayName, bool isReadOnly, bool isKey, bool isRequired,
-            ColumnCreationKind creationKind, ColumnVisibility visibility,
-            string titleColumnName, string subtitleColumnName, string thumbnailColumnName,
-            ColumnLookupMetadata? lookupMetadata, ColumnAttachmentMetadata? attachmentMetadata)
+        public ColumnMetadata(
+            string name,
+            DType schema,
+            DataFormat? dataFormat,
+            string displayName,
+            bool isReadOnly,
+            bool isKey,
+            bool isRequired,
+            ColumnCreationKind creationKind,
+            ColumnVisibility visibility,
+            string titleColumnName,
+            string subtitleColumnName,
+            string thumbnailColumnName,
+            ColumnLookupMetadata? lookupMetadata,
+            ColumnAttachmentMetadata? attachmentMetadata)
         {
             Contracts.AssertNonEmpty(name);
             Contracts.AssertValid(schema);
@@ -144,24 +107,40 @@ namespace Microsoft.PowerFx.Core.Entities
             LookupMetadata = lookupMetadata;
             AttachmentMetadata = attachmentMetadata;
 
-            if (dataFormat == PowerFx.Core.App.DataFormat.AllowedValues)
+            if (dataFormat == App.DataFormat.AllowedValues)
+            {
                 AllowedValues = AllowedValuesMetadata.CreateForValue(schema);
+            }
         }
 
         public string Name { get; }
+
         public DType Type { get; }
+
         public DataFormat? DataFormat { get; }
+
         public string DisplayName { get; }
+
         public bool IsReadOnly { get; }
+
         public bool IsKey { get; }
+
         public bool IsRequired { get; }
-        public bool IsHidden { get { return _visibility == ColumnVisibility.Hidden || _visibility == ColumnVisibility.Internal; } }
-        public bool IsServerGenerated { get { return _kind == ColumnCreationKind.ServerGenerated; } }
+
+        public bool IsHidden => _visibility == ColumnVisibility.Hidden || _visibility == ColumnVisibility.Internal;
+
+        public bool IsServerGenerated => _kind == ColumnCreationKind.ServerGenerated;
+
         public AllowedValuesMetadata AllowedValues { get; }
+
         public string TitleColumnName { get; }
+
         public string SubtitleColumnName { get; }
+
         public string ThumbnailColumnName { get; }
+
         public ColumnLookupMetadata? LookupMetadata { get; }
+
         public ColumnAttachmentMetadata? AttachmentMetadata { get; }
     }
 }

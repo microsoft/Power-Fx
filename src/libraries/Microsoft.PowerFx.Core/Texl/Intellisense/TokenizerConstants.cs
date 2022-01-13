@@ -3,7 +3,8 @@
 
 namespace Microsoft.PowerFx.Core.Texl.Intellisense
 {
-    internal static class TokenizerConstants {
+    internal static class TokenizerConstants
+    {
         public const string BinaryOp = "BinaryOp";
         public const string VariadicOp = "VariadicOp";
         public const string BooleanLiteral = "BoolLit";

@@ -14,7 +14,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public TanFunction()
             : base("Tan", TexlStrings.AboutTan, FunctionCategories.MathAndStat)
-        { }
+        {
+        }
     }
 
     // Tan(E:*[n])
@@ -25,6 +26,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public TanTableFunction()
             : base("Tan", TexlStrings.AboutTanT, FunctionCategories.Table)
-        { }
+        {
+        }
     }
 }

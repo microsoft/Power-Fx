@@ -7,9 +7,9 @@ using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationMetadata
 {
-    class ODataOpMetadata : OperationCapabilityMetadata
+    internal class ODataOpMetadata : OperationCapabilityMetadata
     {
-        private Dictionary<DPath, DPath> _oDataReplacement;
+        private readonly Dictionary<DPath, DPath> _oDataReplacement;
 
         public ODataOpMetadata(DType schema, Dictionary<DPath, DPath> oDataReplacement)
             : base(schema)
@@ -19,11 +19,10 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationMetadata
             _oDataReplacement = oDataReplacement;
         }
 
-        public override Dictionary<DPath, DPath> QueryPathReplacement {  get { return _oDataReplacement; } }
+        public override Dictionary<DPath, DPath> QueryPathReplacement => _oDataReplacement;
 
-        public override DelegationCapability DefaultColumnCapabilities { get { return DelegationCapability.None; } }
+        public override DelegationCapability DefaultColumnCapabilities => DelegationCapability.None;
 
-        public override DelegationCapability TableCapabilities { get { return DefaultColumnCapabilities; } }
-
+        public override DelegationCapability TableCapabilities => DefaultColumnCapabilities;
     }
 }

@@ -9,6 +9,9 @@ using Microsoft.PowerFx.Core.Syntax.Nodes;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 
+#pragma warning disable SA1402 // File may only contain a single type
+#pragma warning disable SA1649 // File name should match first type name
+
 namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
     // FirstN(source:*, [count:n])
@@ -16,17 +19,27 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class FirstLastNFunction : FunctionWithTableInput
     {
         public override bool IsSelfContained => true;
+
         public override bool SupportsParamCoercion => false;
 
         public FirstLastNFunction(bool isFirst)
-            : base(isFirst ? "FirstN" : "LastN", isFirst ? TexlStrings.AboutFirstN : TexlStrings.AboutLastN, FunctionCategories.Table,
-            DType.EmptyTable, 0, 1, 2, DType.EmptyTable, DType.Number)
-        { }
+            : base(
+                  isFirst ? "FirstN" : "LastN",
+                  isFirst ? TexlStrings.AboutFirstN : TexlStrings.AboutLastN,
+                  FunctionCategories.Table,
+                  DType.EmptyTable,
+                  0,
+                  1,
+                  2,
+                  DType.EmptyTable,
+                  DType.Number)
+        {
+        }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
-            yield return new [] { TexlStrings.FirstLastNArg1 };
-            yield return new [] { TexlStrings.FirstLastNArg1, TexlStrings.FirstLastNArg2 };
+            yield return new[] { TexlStrings.FirstLastNArg1 };
+            yield return new[] { TexlStrings.FirstLastNArg1, TexlStrings.FirstLastNArg2 };
         }
 
         public override bool CheckInvocation(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
@@ -37,11 +50,13 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertValue(errors);
             Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
 
-            bool fArgsValid = base.CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            var fArgsValid = CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
 
-            DType arg0Type = argTypes[0];
+            var arg0Type = argTypes[0];
             if (arg0Type.IsTable)
+            {
                 returnType = arg0Type;
+            }
             else
             {
                 returnType = arg0Type.IsRecord ? arg0Type.ToTable() : DType.Error;
@@ -52,3 +67,5 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         }
     }
 }
+#pragma warning restore SA1402 // File may only contain a single type
+#pragma warning restore SA1649 // File name should match first type name

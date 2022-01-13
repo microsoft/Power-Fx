@@ -28,7 +28,10 @@ namespace Microsoft.PowerFx.Core.Lexer.Tokens
             Contracts.AssertValue(that);
 
             if (!(that is StrInterpStartToken))
+            {
                 return false;
+            }
+
             return base.Equals(that);
         }
     }

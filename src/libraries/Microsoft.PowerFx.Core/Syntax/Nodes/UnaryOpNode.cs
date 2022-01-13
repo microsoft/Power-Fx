@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation.
+﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
 using System;
@@ -16,6 +16,7 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
     {
         public readonly TexlNode Child;
         public readonly UnaryOp Op;
+
         public bool IsPercent => Op == UnaryOp.Percent;
 
         public UnaryOpNode(ref int idNext, Token primaryToken, SourceList sourceList, UnaryOp op, TexlNode child)
@@ -49,12 +50,12 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
             }
         }
 
-        public override Result Accept<Result, Context>(TexlFunctionalVisitor<Result, Context> visitor, Context context)
+        public override TResult Accept<TResult, TContext>(TexlFunctionalVisitor<TResult, TContext> visitor, TContext context)
         {
             return visitor.Visit(this, context);
         }
 
-        public override NodeKind Kind { get { return NodeKind.UnaryOp; } }
+        public override NodeKind Kind => NodeKind.UnaryOp;
 
         public override UnaryOpNode CastUnaryOp()
         {
@@ -70,9 +71,13 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
         {
             // For syntax coloring regarding percentages
             if (IsPercent)
-                return new Span(this.Child.Token.VerifyValue().Span.Min, this.Child.Token.VerifyValue().Span.Lim + TexlLexer.PunctuatorPercent.Length);
+            {
+                return new Span(Child.Token.VerifyValue().Span.Min, Child.Token.VerifyValue().Span.Lim + TexlLexer.PunctuatorPercent.Length);
+            }
             else
-                return new Span(this.Token.VerifyValue().Span.Min, this.Child.VerifyValue().GetCompleteSpan().Lim);
+            {
+                return new Span(Token.VerifyValue().Span.Min, Child.VerifyValue().GetCompleteSpan().Lim);
+            }
         }
     }
 }

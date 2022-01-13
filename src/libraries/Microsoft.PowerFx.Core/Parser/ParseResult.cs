@@ -28,6 +28,7 @@ namespace Microsoft.PowerFx.Core.Parser
         {
             Contracts.AssertValue(root);
             Contracts.AssertValue(comments);
+
             // You can have an empty error list and still have a semi-silent error, but if you have an error in your list there must have been an error.
             Contracts.Assert(errors != null ? hasError : true);
 

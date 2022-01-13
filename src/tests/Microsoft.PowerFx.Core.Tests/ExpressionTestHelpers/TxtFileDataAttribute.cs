@@ -23,8 +23,9 @@ namespace Microsoft.PowerFx.Core.Tests
 
         public List<ExpressionTestCase> GetTestsFromFile(string thisFile)
         {
-            List<ExpressionTestCase> tests = new List<ExpressionTestCase>();
+            var tests = new List<ExpressionTestCase>();
             thisFile = Path.GetFullPath(thisFile, GetDefaultTestDir());
+
             // Get the absolute path to the .txt file
             var path = Path.IsPathRooted(thisFile)
                 ? thisFile
@@ -35,7 +36,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 throw new ArgumentException($"Could not find file at path: {thisFile}");
             }
 
-            string[] lines = File.ReadAllLines(path);
+            var lines = File.ReadAllLines(path);
 
             // Skip blanks or "comments"
             // >> indicates input expression
@@ -43,7 +44,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
             ExpressionTestCase test = null;
 
-            int i = -1;
+            var i = -1;
             while (true)
             {
                 i++;
@@ -51,6 +52,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 {
                     break;
                 }
+
                 var line = lines[i];
                 if (string.IsNullOrWhiteSpace(line) || line.StartsWith("//"))
                 {
@@ -68,6 +70,7 @@ namespace Microsoft.PowerFx.Core.Tests
                     };
                     continue;
                 }
+
                 if (test != null)
                 {
                     // If it's indented, then part of previous line. 
@@ -91,15 +94,16 @@ namespace Microsoft.PowerFx.Core.Tests
                             continue;
                         }
                     }
+
                     test.SetExpected(line.Trim());
 
                     tests.Add(test);
                     test = null;
                 }
             }
+
             return tests;
         }
-
 
         public override IEnumerable<object[]> GetData(MethodInfo testMethod)
         {
@@ -108,8 +112,8 @@ namespace Microsoft.PowerFx.Core.Tests
                 throw new ArgumentNullException(nameof(testMethod));
             }
 
-            IEnumerable<string> allFiles = Directory.EnumerateFiles(GetDefaultTestDir());
-            List<ExpressionTestCase> tests = new List<ExpressionTestCase>();
+            var allFiles = Directory.EnumerateFiles(GetDefaultTestDir());
+            var tests = new List<ExpressionTestCase>();
             foreach (var file in allFiles)
             {
                 tests.AddRange(GetTestsFromFile(file));
@@ -123,11 +127,10 @@ namespace Microsoft.PowerFx.Core.Tests
 
         private string GetDefaultTestDir()
         {
-            string executable = new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath;
+            var executable = new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath;
             var curDir = Path.GetFullPath(Path.GetDirectoryName(executable));
             var testDir = Path.Combine(curDir, _filePath);
             return testDir;
         }
-
     }
 }

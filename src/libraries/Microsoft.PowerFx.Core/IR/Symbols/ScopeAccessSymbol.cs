@@ -9,10 +9,10 @@ namespace Microsoft.PowerFx.Core.IR.Symbols
     internal class ScopeAccessSymbol : IScopeSymbol
     {
         public ScopeSymbol Parent { get; }
+
         public int Index { get; }
 
         public DName Name => Parent.AccessedFields.ElementAtOrDefault(Index);
-
 
         public ScopeAccessSymbol(ScopeSymbol parent, int index)
         {

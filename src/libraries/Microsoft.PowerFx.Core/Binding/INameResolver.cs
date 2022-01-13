@@ -25,12 +25,19 @@ namespace Microsoft.PowerFx.Core.Binding
     internal interface INameResolver
     {
         IExternalDocument Document { get; }
+
         IExternalEntityScope EntityScope { get; }
+
         IExternalEntity CurrentEntity { get; }
+
         DName CurrentProperty { get; }
+
         DPath CurrentEntityPath { get; }
+
         bool CurrentPropertyIsBehavior { get; }
+
         bool CurrentPropertyIsConstantData { get; }
+
         bool CurrentPropertyAllowsNavigation { get; }
 
         IEnumerable<TexlFunction> Functions { get; }
@@ -47,7 +54,7 @@ namespace Microsoft.PowerFx.Core.Binding
         IEnumerable<TexlFunction> LookupFunctions(DPath theNamespace, string name, bool localeInvariant = false);
 
         /// <returns>
-        /// List of functions in <see cref="nameSpace"/>
+        /// List of functions in <see cref="nameSpace"/>.
         /// </returns>
         IEnumerable<TexlFunction> LookupFunctionsInNamespace(DPath nameSpace);
 
@@ -56,6 +63,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
         // Return true if the specified enum type contains a value for the given locale-specific name.
         bool LookupEnumValueByTypeAndLocName(DType enumType, DName locName, out object value);
+
         // Looks up the parent control for the current context.
         bool LookupParent(out NameLookupInfo lookupInfo);
 

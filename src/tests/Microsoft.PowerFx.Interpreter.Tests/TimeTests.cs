@@ -1,20 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using Microsoft.PowerFx.Core.Tests;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Public.Values;
+using Microsoft.PowerFx.Core.Tests;
 using Xunit;
+
 namespace Microsoft.PowerFx.Interpreter.Tests
 {
     public class TimeTests
     {
-        RecalcEngine engine = new RecalcEngine();
+        private readonly RecalcEngine engine = new RecalcEngine();
 
         [Fact]
         public void TestTimeZoneOffsetNonDST()
         {
-            TimeZoneInfo tzInfo = TimeZoneInfo.Local;
+            var tzInfo = TimeZoneInfo.Local;
             var testDate = new DateTime(2021, 6, 1);
             var tzOffsetDays = tzInfo.GetUtcOffset(testDate).TotalDays * -1;
             var numberValue = engine.Eval("TimeZoneOffset(Date(2021, 6, 1))") as NumberValue;
@@ -25,7 +26,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [Fact]
         public void TestTimeZoneOffsetDST()
         {
-            TimeZoneInfo tzInfo = TimeZoneInfo.Local;
+            var tzInfo = TimeZoneInfo.Local;
             var testDate = new DateTime(2021, 12, 1);
             var tzOffsetDays = tzInfo.GetUtcOffset(testDate).TotalDays * -1;
             var numberValue = engine.Eval("TimeZoneOffset(Date(2021, 12, 1))") as NumberValue;
@@ -33,11 +34,10 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Assert.Equal(numberValue.Value, tzOffsetDays);
         }
 
-
         [Fact]
         public void TestCurrentTimeZoneOffset()
         {
-            TimeZoneInfo tzInfo = TimeZoneInfo.Local;
+            var tzInfo = TimeZoneInfo.Local;
             var tzOffsetDays = tzInfo.GetUtcOffset(DateTime.Now).TotalDays * -1;
             var numberValue = engine.Eval("TimeZoneOffset()") as NumberValue;
             Assert.NotNull(numberValue);
@@ -81,6 +81,5 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 Assert.True(false, "result was not a DateTimeValue");
             }
         }
-
     }
 }

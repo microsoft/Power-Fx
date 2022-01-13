@@ -18,12 +18,15 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     {
         // Multiple invocations may result in different return values.
         public override bool IsStateless => false;
+
         public override bool IsSelfContained => true;
+
         public override bool SupportsParamCoercion => true;
 
         public IsTodayFunction()
             : base("IsToday", TexlStrings.AboutIsToday, FunctionCategories.Information, DType.Boolean, 0, 1, 1, DType.DateTime)
-        { }
+        {
+        }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
@@ -39,9 +42,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertValue(errors);
             Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
 
-            bool fValid = base.CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            var fValid = CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
 
-            DType type0 = argTypes[0];
+            var type0 = argTypes[0];
 
             // Arg0 should not be a Time
             if (type0.Kind == DKind.Time)
