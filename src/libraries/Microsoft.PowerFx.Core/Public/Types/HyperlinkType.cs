@@ -8,7 +8,8 @@ namespace Microsoft.PowerFx.Core.Public.Types
 {
     public class HyperlinkType : FormulaType
     {
-        internal HyperlinkType() : base(DType.Hyperlink)
+        internal HyperlinkType()
+            : base(DType.Hyperlink)
         {
         }
 

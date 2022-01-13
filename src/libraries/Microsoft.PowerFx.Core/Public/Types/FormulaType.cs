@@ -39,6 +39,7 @@ namespace Microsoft.PowerFx.Core.Public.Types
         public static FormulaType OptionSetValue { get; } = new OptionSetValueType();
 
         public static FormulaType Hyperlink { get; } = new HyperlinkType();
+
         public static FormulaType Invalid { get; } = new InvalidType();
 
         // chained by derived type 
@@ -55,6 +56,7 @@ namespace Microsoft.PowerFx.Core.Public.Types
             {
                 throw new NotImplementedException($"Not implemented type: {type}");
             }
+
             return formulaType;
         }
 

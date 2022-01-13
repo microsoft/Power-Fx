@@ -8,7 +8,8 @@ namespace Microsoft.PowerFx.Core.Public.Types
 {
     public class InvalidType : FormulaType
     {
-        internal InvalidType() : base(DType.Invalid)
+        internal InvalidType()
+            : base(DType.Invalid)
         {
         }
 
