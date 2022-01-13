@@ -5524,6 +5524,14 @@
     <value>The result type for this formula is expected to be {0}, but the actual result type is {1}. The result type of a formula column cannot be changed.</value>
     <comment>Error Message. Used in formula columns for a formula that returns an unexpected result type during editing. The {0} will be the name of the required type. The {1} will be the name of the incorrect type.</comment>
   </data>
+  <data name="FormulaColumns_FloatingPointNotSupported" xml:space="preserve">
+    <value>Cannot use floating point column in formula columns.</value>
+    <comment>Error Message. Used in formula columns for a formula where the maker attempts to access a floating point field from Dataverse.</comment>
+  </data>
+    <data name="FormulaColumns_FormulaTooLong" xml:space="preserve">
+    <value>Formulas can't be longer than 1000 characters.</value>
+    <comment>Error Message. Used in formula columns for a formula where the text is too long.</comment>
+  </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
     <value>Expected an operand. The formula or expression expects a valid operand. For example, you can add the operand '2' to the expression ' 1 +_' so that the result is '3'. Or, you can add the operand "there" to the expression '"Hi "&amp; _ ' so that the result is 'Hi there'.</value>
     <comment>Error Message.</comment>

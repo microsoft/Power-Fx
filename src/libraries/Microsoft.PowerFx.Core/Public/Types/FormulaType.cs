@@ -33,6 +33,9 @@ namespace Microsoft.PowerFx.Core.Public.Types
 
         public static FormulaType OptionSetValue { get; } = new OptionSetValueType();
 
+        public static FormulaType Hyperlink { get; } = new HyperlinkType();
+        public static FormulaType Invalid { get; } = new InvalidType();
+
         // chained by derived type 
         internal FormulaType(DType type)
         {
@@ -42,7 +45,17 @@ namespace Microsoft.PowerFx.Core.Public.Types
         // Get the correct derived type
         internal static FormulaType Build(DType type)
         {
-            switch(type.Kind)
+            var formulaType = BuildOrInvalid(type);
+            if (formulaType == Invalid)
+            {
+                throw new NotImplementedException($"Not implemented type: {type}");
+            }
+            return formulaType;
+        }
+
+        internal static FormulaType BuildOrInvalid(DType type)
+        {
+            switch (type.Kind)
             {
                 case DKind.ObjNull: return Blank;
 
@@ -53,6 +66,7 @@ namespace Microsoft.PowerFx.Core.Public.Types
                 case DKind.String: return String;
                 case DKind.Boolean: return Boolean;
                 case DKind.Currency: return Number; // TODO: validate
+                case DKind.Hyperlink: return Hyperlink;
 
                 case DKind.Time: return Time;
                 case DKind.Date: return Date;
@@ -68,7 +82,7 @@ namespace Microsoft.PowerFx.Core.Public.Types
                     return new RecordType(DType.CreateRecord(type.GetAllNames(DPath.Root)));
 
                 default:
-                    throw new NotImplementedException($"Not implemented type: {type}");
+                    return Invalid;
             }
         }
 
