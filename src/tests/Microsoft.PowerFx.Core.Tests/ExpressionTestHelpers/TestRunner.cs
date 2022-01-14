@@ -14,7 +14,7 @@ namespace Microsoft.PowerFx.Core.Tests
     public class TestRunner
     {
         private readonly BaseRunner[] _runners;
-        private List<TestCase> _tests = new List<TestCase>();
+        private readonly List<TestCase> _tests = new List<TestCase>();
 
         public TestRunner(params BaseRunner[] runners)
         {
@@ -28,13 +28,12 @@ namespace Microsoft.PowerFx.Core.Tests
             return testDir;
         }
 
-
         public string TestRoot { get; set; } = GetDefaultTestDir();
 
         public void AddDir(string directory = "")
         {
             directory = Path.GetFullPath(directory, TestRoot);
-            IEnumerable<string> allFiles = Directory.EnumerateFiles(directory);
+            var allFiles = Directory.EnumerateFiles(directory);
 
             AddFile(allFiles);
         }
@@ -57,7 +56,7 @@ namespace Microsoft.PowerFx.Core.Tests
         {
             thisFile = Path.GetFullPath(thisFile, TestRoot);
 
-            string[] lines = File.ReadAllLines(thisFile);
+            var lines = File.ReadAllLines(thisFile);
 
             // Skip blanks or "comments"
             // >> indicates input expression
@@ -65,7 +64,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
             TestCase test = null;
 
-            int i = -1;
+            var i = -1;
             while (true)
             {
                 i++;
@@ -73,6 +72,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 {
                     break;
                 }
+
                 var line = lines[i];
                 if (string.IsNullOrWhiteSpace(line) || line.StartsWith("//"))
                 {
@@ -90,6 +90,7 @@ namespace Microsoft.PowerFx.Core.Tests
                     };
                     continue;
                 }
+
                 if (test != null)
                 {
                     // If it's indented, then part of previous line. 
@@ -113,6 +114,7 @@ namespace Microsoft.PowerFx.Core.Tests
                             continue;
                         }
                     }
+
                     test.SetExpected(line.Trim());
 
                     _tests.Add(test);
@@ -121,26 +123,26 @@ namespace Microsoft.PowerFx.Core.Tests
             }
         }
 
-
         public (int total, int failed, int passed, string output) RunTests()
         {
-            int total = 0;
-            int fail = 0;
-            int pass = 0;
-            StringBuilder sb = new StringBuilder();
+            var total = 0;
+            var fail = 0;
+            var pass = 0;
+            var sb = new StringBuilder();
 
             foreach (var test in _tests)
             {
-                foreach (BaseRunner runner in this._runners)
+                foreach (var runner in _runners)
                 {
                     total++;
 
                     var engineName = runner.GetName();
+
                     // var runner = kv.Value;
 
                     string actualStr;
                     FormulaValue result = null;
-                    bool exceptionThrown = false;
+                    var exceptionThrown = false;
                     try
                     {
                         result = runner.RunAsync(test.Input).Result;
@@ -188,7 +190,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
         internal static string TestToString(FormulaValue result)
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             try
             {
                 TestToString(result, sb);
@@ -199,7 +201,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 sb.Append($"<exception writing result: {e.Message}>");
             }
 
-            string actualStr = sb.ToString();
+            var actualStr = sb.ToString();
             return actualStr;
         }
 
@@ -225,7 +227,7 @@ namespace Microsoft.PowerFx.Core.Tests
             {
                 sb.Append('[');
 
-                string dil = "";
+                var dil = string.Empty;
                 foreach (var row in t.Rows)
                 {
                     sb.Append(dil);
@@ -250,6 +252,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
                     dil = ",";
                 }
+
                 sb.Append(']');
             }
             else if (result is RecordValue r)
@@ -258,7 +261,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 Array.Sort(fields, (a, b) => string.CompareOrdinal(a.Name, b.Name));
 
                 sb.Append('{');
-                string dil = "";
+                var dil = string.Empty;
 
                 foreach (var field in fields)
                 {
@@ -269,6 +272,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
                     dil = ",";
                 }
+
                 sb.Append('}');
             }
             else if (result is BlankValue)

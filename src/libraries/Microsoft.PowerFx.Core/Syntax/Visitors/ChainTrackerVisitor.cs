@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation.
+﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
 using Microsoft.PowerFx.Core.Lexer;
@@ -17,7 +17,7 @@ namespace Microsoft.PowerFx.Core.Syntax.Visitors
 
         public static bool Run(TexlNode node)
         {
-            ChainTrackerVisitor visitor = new ChainTrackerVisitor();
+            var visitor = new ChainTrackerVisitor();
             node.Accept(visitor);
             return visitor._usesChains;
         }

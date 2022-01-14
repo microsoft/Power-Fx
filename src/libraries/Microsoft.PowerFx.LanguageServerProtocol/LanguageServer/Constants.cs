@@ -4,7 +4,7 @@
 namespace Microsoft.PowerFx.LanguageServerProtocol
 {
     /// <summary>
-    /// Code action kind constants
+    /// Code action kind constants.
     /// </summary>
     public class CodeActionKind
     {

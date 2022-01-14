@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation.
+﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
 using Microsoft.PowerFx.Core.App.Controls;
@@ -13,9 +13,11 @@ namespace Microsoft.PowerFx.Core.Binding.BindInfo
     /// </summary>
     internal sealed class ParentInfo : ControlKeywordInfo
     {
-        public override DName Name { get { return new DName(TexlLexer.KeywordParent); } }
+        public override DName Name => new DName(TexlLexer.KeywordParent);
 
         public ParentInfo(ParentNode node, DPath path, IExternalControl data)
-            : base(node, path, data) { }
+            : base(node, path, data)
+        {
+        }
     }
 }

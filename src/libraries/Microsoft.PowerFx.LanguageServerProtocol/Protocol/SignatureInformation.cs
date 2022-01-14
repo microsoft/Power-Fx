@@ -10,24 +10,24 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
     /// </summary>
     public class SignatureInformation
     {
-        /// </summary>
+        /// <summary>
         /// The label of this signature. Will be shown in
         /// the UI.
         /// </summary>
         public string Label { get; set; }
 
-        /// </summary>
+        /// <summary>
         /// The human-readable doc-comment of this signature. Will be shown
         /// in the UI but can be omitted.
         /// </summary>
         public string Documentation { get; set; }
 
-        /// </summary>
+        /// <summary>
         /// The parameters of this signature.
         /// </summary>
         public ParameterInformation[] Parameters { get; set; }
 
-        /// </summary>
+        /// <summary>
         /// The index of the active parameter.
         ///
         /// If provided, this is used in place of `SignatureHelp.activeParameter`.

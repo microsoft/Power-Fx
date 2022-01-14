@@ -15,6 +15,7 @@ namespace Microsoft.PowerFx
     internal class RecordScope : IScope
     {
         public readonly RecordValue _context;
+
         public RecordScope(RecordValue context)
         {
             _context = context;
@@ -32,6 +33,7 @@ namespace Microsoft.PowerFx
                     return field.Value;
                 }
             }
+
             return null;
         }
     }

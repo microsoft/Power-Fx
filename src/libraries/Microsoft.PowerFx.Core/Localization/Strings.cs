@@ -10,7 +10,7 @@ namespace Microsoft.PowerFx.Core.Localization
         public static StringGetter AboutChar = (b) => StringResources.Get("AboutChar", b);
         public static StringGetter CharArg1 = (b) => StringResources.Get("CharArg1", b);
         public static StringGetter AboutCharT = (b) => StringResources.Get("AboutCharT", b);
-        public static StringGetter CharTArg1 = (b) => StringResources.Get("CharTArg1",b );
+        public static StringGetter CharTArg1 = (b) => StringResources.Get("CharTArg1", b);
 
         public static StringGetter AboutIf = (b) => StringResources.Get("AboutIf", b);
         public static StringGetter IfArgCond = (b) => StringResources.Get("IfArgCond", b);
@@ -523,6 +523,7 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrBadRecordFieldType_FieldName_ExpectedType = new ErrorResourceKey("ErrBadRecordFieldType_FieldName_ExpectedType");
         public static ErrorResourceKey ErrAsTypeAndIsTypeExpectConnectedDataSource = new ErrorResourceKey("ErrAsTypeAndIsTypeExpectConnectedDataSource");
         public static ErrorResourceKey ErrInvalidControlReference = new ErrorResourceKey("ErrInvalidControlReference");
+        public static ErrorResourceKey ErrUnmatchedCurly = new ErrorResourceKey("ErrUnmatchedCurly");
 
         public static ErrorResourceKey ErrErrorIrrelevantField = new ErrorResourceKey("ErrErrorIrrelevantField");
         public static ErrorResourceKey ErrAsNotInContext = new ErrorResourceKey("ErrAsNotInContext");

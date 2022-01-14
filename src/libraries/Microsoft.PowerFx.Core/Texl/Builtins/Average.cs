@@ -15,7 +15,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public AverageFunction()
             : base("Average", TexlStrings.AboutAverage, FunctionCategories.MathAndStat)
-        { }
+        {
+        }
     }
 
     // Average(source:*, projection:n)
@@ -24,10 +25,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     {
         public override bool RequiresErrorContext => true;
 
-        public override DelegationCapability FunctionDelegationCapability { get { return DelegationCapability.Average; } }
+        public override DelegationCapability FunctionDelegationCapability => DelegationCapability.Average;
 
         public AverageTableFunction()
             : base("Average", TexlStrings.AboutAverageT, FunctionCategories.Table)
-        { }
+        {
+        }
     }
 }

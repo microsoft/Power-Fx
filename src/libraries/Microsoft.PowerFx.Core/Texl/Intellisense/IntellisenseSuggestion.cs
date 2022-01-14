@@ -16,7 +16,6 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
     // List.Sort() calls CompareTo.
     internal sealed class IntellisenseSuggestion : IComparable<IntellisenseSuggestion>, IEquatable<IntellisenseSuggestion>, IIntellisenseSuggestion
     {
-        private readonly string _text;
         private readonly List<IIntellisenseSuggestion> _overloads;
         private int _argIndex;
 
@@ -24,7 +23,7 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
         /// This is valid if the current kind is of SuggestionKind.Function, else -1.
         /// This is used to filter out suggestions that have less arguments than ArgIndex.
         /// </summary>
-        private int _argCount;
+        private readonly int _argCount;
 
         /// <summary>
         /// Gets the sort priority for this suggestion. 0 is lowest priority.
@@ -34,7 +33,7 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
         /// <summary>
         /// Gets the text form of the DisplayText  for the suggestion.
         /// </summary>
-        internal string Text { get { return _text; } }
+        internal string Text { get; }
 
         /// <summary>
         /// This is an internal field that stores the simple function name if the suggestion is a Function.
@@ -76,10 +75,10 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
         /// Returns the list of suggestions for the overload of the function.
         /// This is populated only if the suggestion kind is a function and if the function has overloads.
         /// </summary>
-        public IEnumerable<IIntellisenseSuggestion> Overloads { get { return _overloads; } }
+        public IEnumerable<IIntellisenseSuggestion> Overloads => _overloads;
 
         /// <summary>
-        /// The Kind of Suggestion
+        /// The Kind of Suggestion.
         /// </summary>
         public SuggestionKind Kind { get; private set; }
 
@@ -89,7 +88,7 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
         public SuggestionIconKind IconKind { get; private set; }
 
         /// <summary>
-        /// This is the string that will be displayed to the user
+        /// This is the string that will be displayed to the user.
         /// </summary>
         public UIString DisplayText { get; internal set; }
 
@@ -103,10 +102,7 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
         /// </summary>
         public int ArgIndex
         {
-            get
-            {
-                return _argIndex;
-            }
+            get => _argIndex;
 
             internal set
             {
@@ -145,7 +141,7 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
 
             DisplayText = text;
             _overloads = new List<IIntellisenseSuggestion>();
-            _text = text.Text;
+            Text = text.Text;
             Kind = kind;
             IconKind = iconKind;
             Type = type;
@@ -168,10 +164,10 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
 
             foreach (var signature in function.GetSignatures())
             {
-                int count = 0;
-                string argumentSeparator = "";
-                string listSep = TexlLexer.LocalizedInstance.LocalizedPunctuatorListSeparator + " ";
-                StringBuilder funcDisplayString = new StringBuilder(Text);
+                var count = 0;
+                var argumentSeparator = string.Empty;
+                var listSep = TexlLexer.LocalizedInstance.LocalizedPunctuatorListSeparator + " ";
+                var funcDisplayString = new StringBuilder(Text);
                 funcDisplayString.Append('(');
                 foreach (var arg in signature)
                 {
@@ -180,6 +176,7 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
                     argumentSeparator = listSep;
                     count++;
                 }
+
                 funcDisplayString.Append(')');
                 _overloads.Add(new IntellisenseSuggestion(new UIString(funcDisplayString.ToString()), SuggestionKind.Function, SuggestionIconKind.Function, function.VerifyValue().ReturnType, exactMatch, count, function.Description, function.Name, 0));
             }
@@ -217,15 +214,21 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
             Contracts.AssertValueOrNull(other);
 
             if (other == null)
+            {
                 return -1;
+            }
 
-            bool thisIsExactMatch = IsExactMatch(Text, ExactMatch);
-            bool otherIsExactMatch = IsExactMatch(other.Text, other.ExactMatch);
+            var thisIsExactMatch = IsExactMatch(Text, ExactMatch);
+            var otherIsExactMatch = IsExactMatch(other.Text, other.ExactMatch);
 
             if (thisIsExactMatch && !otherIsExactMatch)
+            {
                 return -1;
+            }
             else if (!thisIsExactMatch && otherIsExactMatch)
+            {
                 return 1;
+            }
 
             return SortPriority == other.SortPriority ? Text.CompareTo(other.Text) : (int)(other.SortPriority - SortPriority);
         }
@@ -235,11 +238,13 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
             Contracts.AssertValueOrNull(other);
 
             if (other == null)
+            {
                 return false;
+            }
 
             // REVIEW ragru/hekum: Here comparing the _overloads is not necessary because all the possible overloads for a
             // function are gathered under one name and hence there won't be 2 function suggestions with the same name.
-            return _text == other.Text
+            return Text == other.Text
                 && Type.Equals(other.Type)
                 && FunctionName == other.FunctionName
                 && _argCount == other._argCount
@@ -251,25 +256,33 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
             Contracts.AssertValueOrNull(other);
 
             if (other == null)
+            {
                 return false;
+            }
 
-            IntellisenseSuggestion otherSuggestion = other as IntellisenseSuggestion;
+            var otherSuggestion = other as IntellisenseSuggestion;
             if (otherSuggestion == null)
+            {
                 return false;
+            }
             else
+            {
                 return Equals(otherSuggestion);
+            }
         }
 
         public override int GetHashCode()
         {
-            int funcHashCode = FunctionName == null ? 0 : FunctionName.GetHashCode();
-            return _text.GetHashCode() ^ Type.GetHashCode() ^ funcHashCode ^ _argCount ^ _argIndex;
+            var funcHashCode = FunctionName == null ? 0 : FunctionName.GetHashCode();
+            return Text.GetHashCode() ^ Type.GetHashCode() ^ funcHashCode ^ _argCount ^ _argIndex;
         }
 
         public static bool operator ==(IntellisenseSuggestion suggestion1, IntellisenseSuggestion suggestion2)
         {
             if ((object)suggestion1 == null || ((object)suggestion2) == null)
-                return Object.Equals(suggestion1, suggestion2);
+            {
+                return Equals(suggestion1, suggestion2);
+            }
 
             return suggestion1.Equals(suggestion2);
         }
@@ -277,9 +290,11 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
         public static bool operator !=(IntellisenseSuggestion suggestion1, IntellisenseSuggestion suggestion2)
         {
             if (suggestion1 == null || suggestion2 == null)
-                return !Object.Equals(suggestion1, suggestion2);
+            {
+                return !Equals(suggestion1, suggestion2);
+            }
 
-            return !(suggestion1.Equals(suggestion2));
+            return !suggestion1.Equals(suggestion2);
         }
 
         // Removes the function overloads which have args less than the given value

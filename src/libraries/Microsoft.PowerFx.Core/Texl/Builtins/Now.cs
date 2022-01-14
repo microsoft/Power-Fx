@@ -15,13 +15,17 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     {
         // Multiple invocations may produce different return values.
         public override bool IsStateless => false;
+
         public override bool IsGlobalReliant => true;
+
         public override bool IsSelfContained => true;
+
         public override bool SupportsParamCoercion => true;
 
         public NowFunction()
             : base("Now", TexlStrings.AboutNow, FunctionCategories.DateTime, DType.DateTime, 0, 0, 0)
-        { }
+        {
+        }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {

@@ -23,12 +23,13 @@ namespace Microsoft.AppMagic.Transport
     /// - Custom. The user specifies a class that provides dto conversion methods for this type. The wire format for the object is 
     ///     determined by the dto type that the user choses. This is intended to be used as part of migration from existing proxies.
     ///
-    /// See specification for more information: https://microsoft.sharepoint.com/teams/appPlatform/PowerApps/Shared%20Documents/Engineering/WebAuthoring/NextTransportFull.docx?web=1
+    /// See specification for more information: https://microsoft.sharepoint.com/teams/appPlatform/PowerApps/Shared%20Documents/Engineering/WebAuthoring/NextTransportFull.docx?web=1.
     /// </remarks>
     [AttributeUsage(AttributeTargets.Interface | AttributeTargets.Class | AttributeTargets.Enum)]
     public class TransportTypeAttribute : Attribute
     {
         public TransportKind Kind { get; }
+
         public bool EnablePublicMembersByDefault { get; }
 
         public TransportTypeAttribute(TransportKind kind = TransportKind.ByValue, bool enablePublicMembersByDefault = true, string customTypescriptBaseClass = null, string customDtoName = null, bool isMethodCustomizationEnabled = false)
@@ -43,7 +44,7 @@ namespace Microsoft.AppMagic.Transport
         /// <summary>
         /// Allows providing a custom base class. This is intended for use during transition from hand-written proxies, allowing
         /// the custom base class to provide implementations of missing functionality. For instance, it could provide implementations
-        /// of methods or properties that were disabled via [TransportDisable]
+        /// of methods or properties that were disabled via [TransportDisable].
         /// </summary>
         public string CustomTypescriptBaseClass { get; }
 

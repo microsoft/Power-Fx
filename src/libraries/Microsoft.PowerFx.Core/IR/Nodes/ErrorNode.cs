@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation.
+﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
 namespace Microsoft.PowerFx.Core.IR.Nodes
@@ -14,7 +14,8 @@ namespace Microsoft.PowerFx.Core.IR.Nodes
         // This mostly exists for debug purposes.
         public readonly string ErrorHint;
 
-        public ErrorNode(IRContext irContext, string hint) : base(irContext)
+        public ErrorNode(IRContext irContext, string hint)
+            : base(irContext)
         {
             ErrorHint = hint;
         }
@@ -23,6 +24,7 @@ namespace Microsoft.PowerFx.Core.IR.Nodes
         {
             return visitor.Visit(this, context);
         }
+
         public override string ToString()
         {
             return $"Error({ErrorHint})";

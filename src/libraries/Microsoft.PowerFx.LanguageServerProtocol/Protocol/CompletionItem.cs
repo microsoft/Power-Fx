@@ -5,7 +5,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
 {
     public class CompletionItem
     {
-        public CompletionItem ()
+        public CompletionItem()
         {
             Label = string.Empty;
             Kind = CompletionItemKind.Text;
@@ -36,6 +36,6 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
         /// <summary>
         /// A human-readable string that represents a doc-comment.
         /// </summary>
-        public string Documentation { get;set;}
+        public string Documentation { get; set; }
     }
 }

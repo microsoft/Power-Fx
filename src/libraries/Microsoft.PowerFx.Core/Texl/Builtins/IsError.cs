@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation.
+﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
 using System.Collections.Generic;
@@ -16,11 +16,13 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class IsErrorFunction : BuiltinFunction
     {
         public override bool IsSelfContained => true;
+
         public override bool SupportsParamCoercion => false;
 
         public IsErrorFunction()
             : base("IsError", TexlStrings.AboutIsError, FunctionCategories.Logical, DType.Boolean, 0, 1, 1)
-        { }
+        {
+        }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
@@ -35,10 +37,10 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.Assert(args.Length == argTypes.Length);
             Contracts.Assert(args.Length == 1);
             Contracts.AssertValue(errors);
-            
+
             nodeToCoercedTypeMap = null;
 
-            DType type = ReturnType;
+            var type = ReturnType;
 
             Contracts.Assert(ReturnType == DType.Boolean);
 

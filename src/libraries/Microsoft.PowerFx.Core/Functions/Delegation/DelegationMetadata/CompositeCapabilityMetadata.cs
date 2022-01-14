@@ -13,7 +13,8 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationMetadata
     {
         private readonly List<OperationCapabilityMetadata> _compositeMetadata;
 
-        public CompositeCapabilityMetadata(DType schema, List<OperationCapabilityMetadata> compositeMetadata) : base(schema)
+        public CompositeCapabilityMetadata(DType schema, List<OperationCapabilityMetadata> compositeMetadata)
+            : base(schema)
         {
             Contracts.AssertValue(compositeMetadata);
             _compositeMetadata = compositeMetadata;
@@ -21,26 +22,18 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationMetadata
 
         public Dictionary<DPath, DPath> ODataPathReplacementMap
         {
-            get {
-                ODataOpMetadata op = _compositeMetadata.OfType<ODataOpMetadata>().SingleOrDefault();
-                return op != null? op.QueryPathReplacement : new Dictionary<DPath, DPath>();
+            get
+            {
+                var op = _compositeMetadata.OfType<ODataOpMetadata>().SingleOrDefault();
+                return op != null ? op.QueryPathReplacement : new Dictionary<DPath, DPath>();
             }
         }
 
-        public FilterOpMetadata FilterDelegationMetadata
-        {
-            get { return _compositeMetadata.OfType<FilterOpMetadata>().SingleOrDefault(); }
-        }
+        public FilterOpMetadata FilterDelegationMetadata => _compositeMetadata.OfType<FilterOpMetadata>().SingleOrDefault();
 
-        public SortOpMetadata SortDelegationMetadata
-        {
-            get { return _compositeMetadata.OfType<SortOpMetadata>().SingleOrDefault(); }
-        }
+        public SortOpMetadata SortDelegationMetadata => _compositeMetadata.OfType<SortOpMetadata>().SingleOrDefault();
 
-        public GroupOpMetadata GroupDelegationMetadata
-        {
-            get { return _compositeMetadata.OfType<GroupOpMetadata>().SingleOrDefault();  }
-        }
+        public GroupOpMetadata GroupDelegationMetadata => _compositeMetadata.OfType<GroupOpMetadata>().SingleOrDefault();
 
         public override DelegationCapability TableCapabilities
         {
@@ -48,7 +41,9 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationMetadata
             {
                 DelegationCapability capabilities = DelegationCapability.None;
                 foreach (var metadata in _compositeMetadata)
+                {
                     capabilities |= metadata.TableCapabilities;
+                }
 
                 return capabilities;
             }
@@ -60,7 +55,9 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationMetadata
             {
                 DelegationCapability capabilities = DelegationCapability.None;
                 foreach (var metadata in _compositeMetadata)
+                {
                     capabilities |= metadata.DefaultColumnCapabilities;
+                }
 
                 return capabilities;
             }
@@ -72,7 +69,9 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationMetadata
             {
                 DelegationCapability capabilities = DelegationCapability.None;
                 foreach (var metadata in _compositeMetadata)
+                {
                     capabilities |= metadata.DefaultColumnCapabilities;
+                }
 
                 return capabilities;
             }

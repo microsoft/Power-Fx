@@ -18,7 +18,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
         /// Character that caused signature help to be triggered.
         ///
         /// This is undefined when triggerKind !==
-        /// SignatureHelpTriggerKind.TriggerCharacter
+        /// SignatureHelpTriggerKind.TriggerCharacter.
         /// </summary>
         public string TriggerCharacter { get; set; }
 

@@ -24,6 +24,7 @@ namespace Microsoft.PowerFx.Core.Public.Types
         }
 
         public DName Name => _typedName.Name;
+
         public DName DisplayName { get; }
 
         public FormulaType Type => FormulaType.Build(_typedName.Type);

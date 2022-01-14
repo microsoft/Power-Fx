@@ -113,7 +113,7 @@ namespace Microsoft.PowerFx.Core.Errors
 
         /// <summary>
         /// The internal exception, which can be null
-        /// This is for diagnostic purposes only, NOT for display to the end-user
+        /// This is for diagnostic purposes only, NOT for display to the end-user.
         /// </summary>
         [TransportDisabled] // not available to script
         Exception InternalException { get; }

@@ -15,17 +15,17 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
     {
         /// <summary>
         /// This method does the same as <see cref="Suggest"/>, but filters the suggestions by their text so
-        /// that they can be more easily compared
+        /// that they can be more easily compared.
         /// </summary>
         /// <param name="expression">
         /// Test case wherein the presence of the `|` character indicates cursor position.  See
         /// <see cref="TestSuggest"/> for more details.
         /// </param>
         /// <param name="contextTypeString">
-        /// The type that defines names and types that are valid in <see cref="expression"/>
+        /// The type that defines names and types that are valid in <see cref="expression"/>.
         /// </param>
         /// <returns>
-        /// List of string representing suggestions
+        /// List of string representing suggestions.
         /// </returns>
         private string[] SuggestStrings(string expression, EnumStore enumStore, string contextTypeString = null)
         {
@@ -37,7 +37,8 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
 
         private class EmptyEnumStore : EnumStore
         {
-            private IDictionary<string, string> _enumDict = new Dictionary<string, string>();
+            private readonly IDictionary<string, string> _enumDict = new Dictionary<string, string>();
+
             protected override IDictionary<string, string> EnumDict => _enumDict;
         }
 
@@ -52,18 +53,21 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         /// position. Note also that these test suggestion order as well as contents.
         /// </summary>
         /// <param name="expression">
-        /// Expression on which intellisense will be run
+        /// Expression on which intellisense will be run.
         /// </param>
         /// <param name="expectedSuggestions">
         /// A list of arguments that will be compared with the names of the output of
-        /// <see cref="Workspace.Suggest"/> in order
+        /// <see cref="Workspace.Suggest"/> in order.
         /// </param>
         [Theory]
+
         // CommentNodeSuggestionHandler
         [InlineData("// No| intellisense inside comment")]
+
         // RecordNodeSuggestionHandler
         [InlineData("{} |", "As", "exactin", "in")]
         [InlineData("{'complex record':{column:{}}} |", "As", "exactin", "in")]
+
         // DottedNameNodeSuggestionHandler
         [InlineData("{a:{},b:{},c:{}}.|", "a", "b", "c")]
         [InlineData("$\"Hello { {a:{},b:{},c:{}}.| } World\"", "a", "b", "c")]
@@ -75,16 +79,19 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         [InlineData("{abc:{},ab:{},a:{}}.abc |", "As", "exactin", "in")]
         [InlineData("{az:{},z:{}}.|", "az", "z")]
         [InlineData("{az:{},z:{}}.z|", "z", "az")]
+
         // We don't recommend anything for one column tables only if the one column table is referenced
         // by the following dotted name access.
         [InlineData("[\"test\"].Value.| ")]
         [InlineData("[{test:\",test\"}].test.| ")]
+
         // We do, however, if the one column table is a literal.
         [InlineData("[\"test\"].| ", "Value")]
         [InlineData("Calendar.|", "MonthsLong", "MonthsShort", "WeekdaysLong", "WeekdaysShort")]
         [InlineData("Calendar.Months|", "MonthsLong", "MonthsShort")]
         [InlineData("Color.AliceBl|", "AliceBlue")]
         [InlineData("Color.Pale|", "PaleGoldenRod", "PaleGreen", "PaleTurquoise", "PaleVioletRed")]
+
         // CallNodeSuggestionHandler
         [InlineData("ForAll|([1],Value)", "ForAll")]
         [InlineData("at|(", "Atan", "Atan2", "Concat", "Concatenate", "Date", "DateAdd", "DateDiff", "DateTimeValue", "DateValue")]
@@ -92,35 +99,44 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         [InlineData("Clock.A|(", "Clock.AmPm", "Clock.AmPmShort")]
         [InlineData("ForAll([\"test\"],EndsWith(|))", "Value")]
         [InlineData("ForAll([1],Value) |", "As", "exactin", "in")]
+
         // BoolLitNodeSuggestionHandler
         [InlineData("true|", "true")]
         [InlineData("tru|e", "true", "Trunc")]
         [InlineData("false |", "-", "&", "&&", "*", "/", "^", "||", "+", "<", "<=", "<>", "=", ">", ">=", "And", "As", "exactin", "in", "Or")]
+
         // BinaryOpNodeSuggestionHandler
         [InlineData("1 +|", "+")]
         [InlineData("1 |+", "-", "&", "&&", "*", "/", "^", "||", "+", "<", "<=", "<>", "=", ">", ">=", "And", "As", "exactin", "in", "Or")]
         [InlineData("\"1\" in|", "in", "exactin")]
         [InlineData("true &|", "&", "&&")]
+
         // UnaryOpNodeSuggestionHandler
         [InlineData("Not| false", "Not", "Note", "Notebook", "NotFound", "NotificationType", "NotificationType.Error", "NotificationType.Information", "NotificationType.Success", "NotificationType.Warning", "NotSupported", "FileNotFound")]
         [InlineData("| Not false")]
         [InlineData("Not |")]
+
         // StrNumLitNodeSuggestionHandler
         [InlineData("1 |", "-", "&", "&&", "*", "/", "^", "||", "+", "<", "<=", "<>", "=", ">", ">=", "And", "As", "exactin", "in", "Or")]
         [InlineData("1|0")]
         [InlineData("\"Clock|\"")]
+
         // FirstNameNodeSuggestionHandler
         [InlineData("Tru|", "true", "Trunc")] // Though it recommends only a boolean, the suggestions are still provided by the first name handler
         [InlineData("[@Bo|]", "BorderStyle", "VirtualKeyboardMode")]
+
         // FunctionRecordNameSuggestionHandler
         [InlineData("Error({Kin|d:0})", "Kind:")]
         [InlineData("Error({|Kind:0, Test:\"\"})", "Kind:", "Test:")]
+
         // ErrorNodeSuggestionHandler
         [InlineData("ForAll([0],`|", "ThisRecord", "Value")]
         [InlineData("ForAll(-],|", "ThisRecord")]
         [InlineData("ForAll()~|")]
+
         // BlankNodeSuggestionHandler
         [InlineData("|")]
+
         // AddSuggestionsForEnums
         [InlineData("Edit|", "EditPermissions", "DataSourceInfo.EditPermission", "DisplayMode.Edit", "FormMode.Edit", "Icon.Edit", "RecordInfo.EditPermission", "SelectedState.Edit")]
         [InlineData("DisplayMode.E|", "Edit", "Disabled", "View")]
@@ -136,7 +152,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         }
 
         /// <summary>
-        /// In cases for Intellisense with an empty enum store
+        /// In cases for Intellisense with an empty enum store.
         /// </summary>
         [Theory]
         [InlineData("Color.AliceBl|")]
@@ -146,6 +162,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         [InlineData("Disabled|")]
         [InlineData("DisplayMode.D|")]
         [InlineData("DisplayMode|")]
+
         // Calendar is a namespace for functions, not an enum
         [InlineData("Calendar.|", "MonthsLong", "MonthsShort", "WeekdaysLong", "WeekdaysShort")]
         [InlineData("Calendar.Months|", "MonthsLong", "MonthsShort")]
@@ -158,17 +175,21 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
 
         /// <summary>
         /// In cases for which Intellisense produces exceedingly numerous results it may be sufficient that
-        /// they (the cases) be validated based on whether they return suggestions at all
+        /// they (the cases) be validated based on whether they return suggestions at all.
         /// </summary>
         [Theory]
+
         // CallNodeSuggestionHandler
         [InlineData("| ForAll([1],Value)")]
+
         // BoolLitNodeSuggestionHandler
         [InlineData("t|rue")]
         [InlineData("f|alse")]
         [InlineData("| false")]
+
         // UnaryOpNodeSuggestionHandler
         [InlineData("|Not false")]
+
         // FirstNameNodeSuggestionHandler
         [InlineData("| Test", "![Test: s]")]
         [InlineData("[@|]")]
@@ -180,11 +201,13 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         }
 
         [Theory]
+
         // FirstNameNodeSuggestionHandleractualSuggestions = IntellisenseResult
         [InlineData("Test|", "![Test1: s, Test2: n, Test3: h]", "Test1", "Test2", "Test3")]
         [InlineData("RecordName[|", "![RecordName: ![StringName: s, NumberName: n]]", "@NumberName", "@StringName")]
         [InlineData("RecordName[|", "![RecordName: ![]]")]
         [InlineData("Test |", "![Test: s]", "-", "&", "&&", "*", "/", "^", "||", "+", "<", "<=", "<>", "=", ">", ">=", "And", "As", "exactin", "in", "Or")]
+
         // ErrorNodeSuggestionHandler
         [InlineData("ForAll(Table,`|", "![Table: *[Column: s]]", "Column", "ThisRecord")]
         public void TestSuggestWithContext(string expression, string context, params string[] expectedSuggestions)

@@ -15,20 +15,22 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
         {
             public BinaryOpNodeSuggestionHandler()
                 : base(NodeKind.BinaryOp)
-            { }
+            {
+            }
 
             internal override bool TryAddSuggestionsForNodeKind(IntellisenseData.IntellisenseData intellisenseData)
             {
                 Contracts.AssertValue(intellisenseData);
 
-                TexlNode curNode = intellisenseData.CurNode;
+                var curNode = intellisenseData.CurNode;
+
                 // Cursor is in the operation token.
                 // Suggest binary operators.
-                BinaryOpNode binaryOpNode = curNode.CastBinaryOp();
+                var binaryOpNode = curNode.CastBinaryOp();
                 var tokenSpan = binaryOpNode.Token.Span;
 
-                string keyword = binaryOpNode.Op == BinaryOp.Error ? tokenSpan.GetFragment(intellisenseData.Script) : TexlParser.GetTokString(binaryOpNode.Token.Kind);
-                int replacementLength = tokenSpan.Min == intellisenseData.CursorPos ? 0 : tokenSpan.Lim - tokenSpan.Min;
+                var keyword = binaryOpNode.Op == BinaryOp.Error ? tokenSpan.GetFragment(intellisenseData.Script) : TexlParser.GetTokString(binaryOpNode.Token.Kind);
+                var replacementLength = tokenSpan.Min == intellisenseData.CursorPos ? 0 : tokenSpan.Lim - tokenSpan.Min;
                 intellisenseData.SetMatchArea(tokenSpan.Min, intellisenseData.CursorPos, replacementLength);
                 intellisenseData.BoundTo = binaryOpNode.Op == BinaryOp.Error ? string.Empty : keyword;
                 AddSuggestionsForBinaryOperatorKeyWords(intellisenseData);

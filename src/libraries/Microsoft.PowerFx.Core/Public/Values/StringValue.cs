@@ -9,7 +9,8 @@ namespace Microsoft.PowerFx.Core.Public.Values
 {
     public class StringValue : PrimitiveValue<string>
     {
-        internal StringValue(IRContext irContext, string value) : base(irContext, value)
+        internal StringValue(IRContext irContext, string value)
+            : base(irContext, value)
         {
             Contract.Assert(IRContext.ResultType == FormulaType.String);
         }

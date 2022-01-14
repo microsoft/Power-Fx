@@ -1,4 +1,4 @@
-using Microsoft.PowerFx.Core.Types;
+﻿using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Core.Binding.BindInfo
@@ -25,6 +25,5 @@ namespace Microsoft.PowerFx.Core.Binding.BindInfo
             Name = name;
             IsStateful = isStateful;
         }
-
     }
 }

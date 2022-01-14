@@ -13,12 +13,14 @@ namespace Microsoft.PowerFx.Core.IR.Nodes
     {
         public readonly TexlFunction Function;
         public readonly List<IntermediateNode> Args;
+
         /// <summary>
         /// Scope is non-null if the function creates a scope.
         /// </summary>
         public readonly ScopeSymbol Scope;
 
-        public CallNode(IRContext irContext, TexlFunction func, params IntermediateNode[] args) : base(irContext)
+        public CallNode(IRContext irContext, TexlFunction func, params IntermediateNode[] args)
+            : base(irContext)
         {
             Contracts.AssertValue(func);
             Contracts.AssertAllValues(args);
@@ -27,7 +29,8 @@ namespace Microsoft.PowerFx.Core.IR.Nodes
             Args = args.ToList();
         }
 
-        public CallNode(IRContext irContext, TexlFunction func, IList<IntermediateNode> args) : base(irContext)
+        public CallNode(IRContext irContext, TexlFunction func, IList<IntermediateNode> args)
+            : base(irContext)
         {
             Contracts.AssertValue(func);
             Contracts.AssertAllValues(args);
@@ -36,8 +39,8 @@ namespace Microsoft.PowerFx.Core.IR.Nodes
             Args = args.ToList();
         }
 
-
-        public CallNode(IRContext irContext, TexlFunction func, ScopeSymbol scope, IList<IntermediateNode> args) : this(irContext, func, args)
+        public CallNode(IRContext irContext, TexlFunction func, ScopeSymbol scope, IList<IntermediateNode> args)
+            : this(irContext, func, args)
         {
             Contracts.AssertValue(scope);
 
@@ -48,7 +51,9 @@ namespace Microsoft.PowerFx.Core.IR.Nodes
         {
             arg = default;
             if (i > Args.Count && i < 0)
+            {
                 return false;
+            }
 
             arg = Args[i];
             return true;
@@ -57,7 +62,9 @@ namespace Microsoft.PowerFx.Core.IR.Nodes
         public bool IsLambdaArg(int i)
         {
             if (i > Args.Count && i < 0)
+            {
                 return false;
+            }
 
             return Args[i] is LazyEvalNode;
         }
@@ -83,9 +90,9 @@ namespace Microsoft.PowerFx.Core.IR.Nodes
             {
                 result += $", {arg}";
             }
+
             result += ")";
             return result;
         }
     }
-
 }

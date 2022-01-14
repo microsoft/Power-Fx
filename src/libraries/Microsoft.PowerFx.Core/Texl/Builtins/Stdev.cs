@@ -14,7 +14,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public StdevPFunction()
             : base("StdevP", TexlStrings.AboutStdevP, FunctionCategories.MathAndStat)
-        { }
+        {
+        }
     }
 
     // StdevP(source:*, projection:n)
@@ -22,9 +23,10 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class StdevPTableFunction : StatisticalTableFunction
     {
         public override bool RequiresErrorContext => true;
-        
+
         public StdevPTableFunction()
             : base("StdevP", TexlStrings.AboutStdevPT, FunctionCategories.Table)
-        { }
+        {
+        }
     }
 }

@@ -3,27 +3,27 @@
 
 using System.Linq;
 using System.Text.RegularExpressions;
-using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core;
+using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Glue;
 using Microsoft.PowerFx.Core.Parser;
 using Microsoft.PowerFx.Core.Public.Types;
 using Microsoft.PowerFx.Core.Syntax;
 using Microsoft.PowerFx.Core.Texl.Intellisense;
 using Microsoft.PowerFx.Core.Types;
-using Xunit;
 using Microsoft.PowerFx.Core.Types.Enums;
+using Xunit;
 
 namespace Microsoft.PowerFx.Tests.IntellisenseTests
 {
     /// <summary>
-    /// Provides methods that may be used by Intellisense tests
+    /// Provides methods that may be used by Intellisense tests.
     /// </summary>
     public class IntellisenseTestBase
     {
         /// <summary>
         /// This method receives a test case string, along with an optional context type that defines the valid
-        /// names and types in the expression and invokes Intellisense.Suggest on it, and returns a the result
+        /// names and types in the expression and invokes Intellisense.Suggest on it, and returns a the result.
         /// </summary>
         /// <param name="expression"></param>
         /// <param name="contextTypeString"></param>
@@ -65,8 +65,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
                 formula.ParseTree,
                 new SimpleResolver(enumStore.EnumSymbols),
                 ruleScope: parameterType._type,
-                useThisRecordForRuleScope: false
-            );
+                useThisRecordForRuleScope: false);
 
             var context = new IntellisenseContext(expression, cursorPosition);
             var intellisense = IntellisenseProvider.GetIntellisense(enumStore);

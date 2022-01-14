@@ -10,8 +10,7 @@ namespace Microsoft.PowerFx.Core.Utils
         /// <summary>
         /// The string value representing SortOrder enum.
         /// </summary>
-        public static string SortOrderEnumString { get { return StringResources.Get("LocaleSpecificEnum_SortOrder"); } }
-
+        public static string SortOrderEnumString => StringResources.Get("LocaleSpecificEnum_SortOrder");
 
         /// <summary>
         /// Defines ascending sort order string constant.
@@ -36,6 +35,6 @@ namespace Microsoft.PowerFx.Core.Utils
         /// <summary>
         /// The invariant string value representing SortOrder enum.
         /// </summary>
-        internal static string SortOrderEnumStringInvariant { get { return "SortOrder"; } }
+        internal static string SortOrderEnumStringInvariant => "SortOrder";
     }
 }

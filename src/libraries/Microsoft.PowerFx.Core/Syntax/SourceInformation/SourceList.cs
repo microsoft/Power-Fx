@@ -51,13 +51,14 @@ namespace Microsoft.PowerFx.Core.Syntax.SourceInformation
             Contracts.AssertValue(newNodes);
             Contracts.AssertAllValues(newNodes.Values);
             Contracts.AssertAllValues(newNodes.Keys);
-            ITexlSource[] newItems = new ITexlSource[Sources.Count()];
-            int i = 0;
+            var newItems = new ITexlSource[Sources.Count()];
+            var i = 0;
             foreach (var source in Sources)
             {
                 newItems[i] = source.Clone(newNodes, span);
                 i += 1;
             }
+
             return new SourceList(newItems);
         }
     }

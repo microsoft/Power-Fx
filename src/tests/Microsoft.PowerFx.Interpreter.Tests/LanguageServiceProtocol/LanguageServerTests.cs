@@ -1,14 +1,15 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
-using Microsoft.PowerFx.LanguageServerProtocol.Protocol;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Text.RegularExpressions;
+using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Public;
 using Microsoft.PowerFx.Core.Public.Types;
 using Microsoft.PowerFx.LanguageServerProtocol;
+using Microsoft.PowerFx.LanguageServerProtocol.Protocol;
 using Xunit;
 
 namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
@@ -103,7 +104,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
                     },
                     ContentChanges = new TextDocumentContentChangeEvent[]
                     {
-                        new TextDocumentContentChangeEvent() { Text = "A+CountRows(B)"}
+                        new TextDocumentContentChangeEvent() { Text = "A+CountRows(B)" }
                     }
                 }
             }));
@@ -129,7 +130,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
                     },
                     ContentChanges = new TextDocumentContentChangeEvent[]
                     {
-                        new TextDocumentContentChangeEvent() { Text = "AA"}
+                        new TextDocumentContentChangeEvent() { Text = "AA" }
                     }
                 }
             }));
@@ -167,7 +168,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             {
                 jsonrpc = "2.0",
                 method = "textDocument/didChange",
-                @params = ""
+                @params = string.Empty
             }));
             Assert.Single(_sendToClientData);
             errorResponse = JsonSerializer.Deserialize<JsonRpcErrorResponse>(_sendToClientData[0], _jsonSerializerOptions);
@@ -212,7 +213,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
         [InlineData("A+CountRows(B)", "{\"A\":1,\"B\":[1,2,3]}")]
         public void TestDidOpenValidFormula(string formula, string context = null)
         {
-            var uri = $"powerfx://app{(context != null ? "powerfx://app?context=" + context : "")}";
+            var uri = $"powerfx://app{(context != null ? "powerfx://app?context=" + context : string.Empty)}";
             TestPublishDiagnostics(uri, "textDocument/didOpen", formula, new Diagnostic[0]);
         }
 
@@ -278,7 +279,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             Assert.Equal("2.0", response.Jsonrpc);
             Assert.Equal("123", response.Id);
             var foundItems = response.Result.Items.Where(item => item.Label == "AliceBlue");
-            Assert.True(1 == Enumerable.Count(foundItems), "AliceBlue should be found from suggestion result");
+            Assert.True(Enumerable.Count(foundItems) == 1, "AliceBlue should be found from suggestion result");
 
             _sendToClientData.Clear();
             _testServer.OnDataReceived(JsonSerializer.Serialize(new
@@ -306,7 +307,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             Assert.Equal("123", response.Id);
             foundItems = response.Result.Items.Where(item => item.Label == "AliceBlue");
             Assert.Equal(CompletionItemKind.Variable, foundItems.First().Kind);
-            Assert.True(1 == Enumerable.Count(foundItems), "AliceBlue should be found from suggestion result");
+            Assert.True(Enumerable.Count(foundItems) == 1, "AliceBlue should be found from suggestion result");
 
             _sendToClientData.Clear();
             _testServer.OnDataReceived(JsonSerializer.Serialize(new
@@ -333,13 +334,13 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             Assert.Equal("2.0", response.Jsonrpc);
             Assert.Equal("123", response.Id);
             foundItems = response.Result.Items.Where(item => item.Label == "a");
-            Assert.True(1 == Enumerable.Count(foundItems), "'a' should be found from suggestion result");
+            Assert.True(Enumerable.Count(foundItems) == 1, "'a' should be found from suggestion result");
             Assert.Equal(CompletionItemKind.Variable, foundItems.First().Kind);
             foundItems = response.Result.Items.Where(item => item.Label == "b");
-            Assert.True(1 == Enumerable.Count(foundItems), "'b' should be found from suggestion result");
+            Assert.True(Enumerable.Count(foundItems) == 1, "'b' should be found from suggestion result");
             Assert.Equal(CompletionItemKind.Variable, foundItems.First().Kind);
             foundItems = response.Result.Items.Where(item => item.Label == "c");
-            Assert.True(1 == Enumerable.Count(foundItems), "'c' should be found from suggestion result");
+            Assert.True(Enumerable.Count(foundItems) == 1, "'c' should be found from suggestion result");
             Assert.Equal(CompletionItemKind.Variable, foundItems.First().Kind);
 
             // missing 'expression' in documentUri
@@ -410,7 +411,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             Assert.Equal("testDocument1", response.Id);
             Assert.NotEmpty(response.Result);
             Assert.Contains(CodeActionKind.QuickFix, response.Result.Keys);
-            Assert.True(1 == response.Result[CodeActionKind.QuickFix].Length, "Quick fix didn't return expected suggestion.");
+            Assert.True(response.Result[CodeActionKind.QuickFix].Length == 1, "Quick fix didn't return expected suggestion.");
             Assert.Equal("TestTitle1", response.Result[CodeActionKind.QuickFix][0].Title);
             Assert.NotEmpty(response.Result[CodeActionKind.QuickFix][0].Edit.Changes);
             Assert.Contains(documentUri, response.Result[CodeActionKind.QuickFix][0].Edit.Changes.Keys);
@@ -428,7 +429,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
         [InlineData("123\n567{\n}890", 3)]
         public void TestGetCharPosition(string expression, int expected)
         {
-            string pattern = @"\{[0-9|\n]\}";
+            var pattern = @"\{[0-9|\n]\}";
             var re = new Regex(pattern);
             var matches = re.Matches(expression);
             Assert.Single(matches);
@@ -483,11 +484,11 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             var response = JsonSerializer.Deserialize<JsonRpcSignatureHelpResponse>(_sendToClientData[0], _jsonSerializerOptions);
             Assert.Equal("2.0", response.Jsonrpc);
             Assert.Equal("123", response.Id);
-            Assert.Equal((uint)0, response.Result.ActiveSignature);
-            Assert.Equal((uint)0, response.Result.ActiveParameter);
+            Assert.Equal(0U, response.Result.ActiveSignature);
+            Assert.Equal(0U, response.Result.ActiveParameter);
             var foundItems = response.Result.Signatures.Where(item => item.Label.StartsWith("Power"));
-            Assert.True(1 == Enumerable.Count(foundItems), "Power should be found from signatures result");
-            Assert.Equal((uint)0, foundItems.First().ActiveParameter);
+            Assert.True(Enumerable.Count(foundItems) == 1, "Power should be found from signatures result");
+            Assert.Equal(0U, foundItems.First().ActiveParameter);
             Assert.Equal(2, foundItems.First().Parameters.Length);
             Assert.Equal("base", foundItems.First().Parameters[0].Label);
             Assert.Equal("exponent", foundItems.First().Parameters[1].Label);
@@ -520,11 +521,11 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             response = JsonSerializer.Deserialize<JsonRpcSignatureHelpResponse>(_sendToClientData[0], _jsonSerializerOptions);
             Assert.Equal("2.0", response.Jsonrpc);
             Assert.Equal("123", response.Id);
-            Assert.Equal((uint)0, response.Result.ActiveSignature);
-            Assert.Equal((uint)1, response.Result.ActiveParameter);
+            Assert.Equal(0U, response.Result.ActiveSignature);
+            Assert.Equal(1U, response.Result.ActiveParameter);
             foundItems = response.Result.Signatures.Where(item => item.Label.StartsWith("Power"));
-            Assert.True(1 == Enumerable.Count(foundItems), "Power should be found from signatures result");
-            Assert.Equal((uint)0, foundItems.First().ActiveParameter);
+            Assert.True(Enumerable.Count(foundItems) == 1, "Power should be found from signatures result");
+            Assert.Equal(0U, foundItems.First().ActiveParameter);
             Assert.Equal(2, foundItems.First().Parameters.Length);
             Assert.Equal("base", foundItems.First().Parameters[0].Label);
             Assert.Equal("exponent", foundItems.First().Parameters[1].Label);
@@ -602,7 +603,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
                     },
                     ContentChanges = new TextDocumentContentChangeEvent[]
                     {
-                        new TextDocumentContentChangeEvent() { Text = "A+CountRows(B)"}
+                        new TextDocumentContentChangeEvent() { Text = "A+CountRows(B)" }
                     }
                 }
             }));
@@ -633,7 +634,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
                     },
                     ContentChanges = new TextDocumentContentChangeEvent[]
                     {
-                        new TextDocumentContentChangeEvent() { Text = "A+CountRows(B)"}
+                        new TextDocumentContentChangeEvent() { Text = "A+CountRows(B)" }
                     }
                 }
             }));

@@ -11,20 +11,20 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
 {
     public class FormulaTypeJsonConverter : JsonConverter<FormulaType>
     {
-        private const string TypeProperty = "Type",
-                             FieldsProperty = "Fields";
+        private const string TypeProperty = "Type";
+        private const string FieldsProperty = "Fields";
 
-        private const string Blank = "Blank",
-                             Boolean = "Boolean",
-                             Number = "Number",
-                             String = "String",
-                             Time = "Time",
-                             Date = "Date",
-                             DateTime = "DateTime",
-                             DateTimeNoTimeZone = "DateTimeNoTimezone",
-                             OptionSetValue = "OptionSetValue",
-                             Record = "Record",
-                             Table = "Table";
+        private const string Blank = "Blank";
+        private const string Boolean = "Boolean";
+        private const string Number = "Number";
+        private const string String = "String";
+        private const string Time = "Time";
+        private const string Date = "Date";
+        private const string DateTime = "DateTime";
+        private const string DateTimeNoTimeZone = "DateTimeNoTimezone";
+        private const string OptionSetValue = "OptionSetValue";
+        private const string Record = "Record";
+        private const string Table = "Table";
 
         public override FormulaType Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
@@ -96,6 +96,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
                     Write(writer, namedFormulaType.Type, options);
                 }
             }
+
             writer.WriteEndObject();
         }
 
@@ -165,8 +166,8 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
             {
                 return true;
             }
+
             return element.TryGetProperty(property, out value);
         }
-
     }
 }

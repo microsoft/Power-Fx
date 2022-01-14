@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
-using Microsoft.PowerFx.Core.IR.Symbols;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +8,7 @@ using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Binding.BindInfo;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.IR.Nodes;
+using Microsoft.PowerFx.Core.IR.Symbols;
 using Microsoft.PowerFx.Core.Lexer;
 using Microsoft.PowerFx.Core.Public.Types;
 using Microsoft.PowerFx.Core.Syntax.Nodes;
@@ -21,12 +21,12 @@ using CallNode = Microsoft.PowerFx.Core.IR.Nodes.CallNode;
 using ErrorNode = Microsoft.PowerFx.Core.IR.Nodes.ErrorNode;
 using RecordNode = Microsoft.PowerFx.Core.IR.Nodes.RecordNode;
 using TableNode = Microsoft.PowerFx.Core.IR.Nodes.TableNode;
-using TexlRecordNode = Microsoft.PowerFx.Core.Syntax.Nodes.RecordNode;
-using TexlTableNode = Microsoft.PowerFx.Core.Syntax.Nodes.TableNode;
-using TexlUnaryOpNode = Microsoft.PowerFx.Core.Syntax.Nodes.UnaryOpNode;
 using TexlBinaryOpNode = Microsoft.PowerFx.Core.Syntax.Nodes.BinaryOpNode;
 using TexlCallNode = Microsoft.PowerFx.Core.Syntax.Nodes.CallNode;
 using TexlErrorNode = Microsoft.PowerFx.Core.Syntax.Nodes.ErrorNode;
+using TexlRecordNode = Microsoft.PowerFx.Core.Syntax.Nodes.RecordNode;
+using TexlTableNode = Microsoft.PowerFx.Core.Syntax.Nodes.TableNode;
+using TexlUnaryOpNode = Microsoft.PowerFx.Core.Syntax.Nodes.UnaryOpNode;
 using UnaryOpNode = Microsoft.PowerFx.Core.IR.Nodes.UnaryOpNode;
 
 namespace Microsoft.PowerFx.Core.IR
@@ -34,7 +34,7 @@ namespace Microsoft.PowerFx.Core.IR
     internal class IRTranslator
     {
         /// <summary>
-        /// Returns the top node of the IR tree, and a symbol that corresponds to the Rule Scope
+        /// Returns the top node of the IR tree, and a symbol that corresponds to the Rule Scope.
         /// </summary>
         public static (IntermediateNode topNode, ScopeSymbol ruleScopeSymbol) Translate(TexlBinding binding)
         {
@@ -86,7 +86,7 @@ namespace Microsoft.PowerFx.Core.IR
                 Contracts.AssertValue(context);
 
                 var values = new Dictionary<DName, IntermediateNode>();
-                for (int i = 0; i < node.Count; i++)
+                for (var i = 0; i < node.Count; i++)
                 {
                     var childNode = node.Children[i];
                     var identifierName = context.Binding.TryGetReplacedIdentName(node.Ids[i], out var newIdent) ? new DName(newIdent) : node.Ids[i].Name;
@@ -143,8 +143,8 @@ namespace Microsoft.PowerFx.Core.IR
                 var left = node.Left.Accept(this, context);
                 var right = node.Right.Accept(this, context);
 
-                DType leftType = context.Binding.GetType(node.Left);
-                DType rightType = context.Binding.GetType(node.Right);
+                var leftType = context.Binding.GetType(node.Left);
+                var rightType = context.Binding.GetType(node.Right);
 
                 IntermediateNode binaryOpResult;
 
@@ -239,14 +239,13 @@ namespace Microsoft.PowerFx.Core.IR
                 return MaybeInjectCoercion(node, binaryOpResult, context);
             }
 
-
             public override IntermediateNode Visit(TexlCallNode node, IRTranslatorContext context)
             {
                 Contracts.AssertValue(node);
                 Contracts.AssertValue(context);
 
-                CallInfo info = context.Binding.GetInfo(node);
-                int carg = node.Args.Count;
+                var info = context.Binding.GetInfo(node);
+                var carg = node.Args.Count;
                 var func = (TexlFunction)info.Function;
 
                 var resultType = context.Binding.GetType(node);
@@ -259,9 +258,11 @@ namespace Microsoft.PowerFx.Core.IR
                 var args = new List<IntermediateNode>();
                 ScopeSymbol scope = null;
                 if (func.ScopeInfo != null)
+                {
                     scope = GetNewScope();
+                }
 
-                for (int i = 0; i < carg; ++i)
+                for (var i = 0; i < carg; ++i)
                 {
                     var arg = node.Args.Children[i];
                     if (func.IsLazyEvalParam(i))
@@ -276,18 +277,19 @@ namespace Microsoft.PowerFx.Core.IR
                 }
 
                 if (scope != null)
+                {
                     return MaybeInjectCoercion(node, new CallNode(context.GetIRContext(node), func, scope, args), context);
+                }
 
                 return MaybeInjectCoercion(node, new CallNode(context.GetIRContext(node), func, args), context);
             }
-
 
             public override IntermediateNode Visit(FirstNameNode node, IRTranslatorContext context)
             {
                 Contracts.AssertValue(node);
                 Contracts.AssertValue(context);
 
-                FirstNameInfo info = context.Binding.GetInfo(node);
+                var info = context.Binding.GetInfo(node);
                 if (info == null)
                 {
                     // Binding previously failed for this node, we don't know enough to do something useful here
@@ -295,7 +297,7 @@ namespace Microsoft.PowerFx.Core.IR
                     return new ErrorNode(context.GetIRContext(node), node.ToString());
                 }
 
-                DName nodeName = context.Binding.TryGetReplacedIdentName(node.Ident, out var newIdent) ? new DName(newIdent) : node.Ident.Name;
+                var nodeName = context.Binding.TryGetReplacedIdentName(node.Ident, out var newIdent) ? new DName(newIdent) : node.Ident.Name;
 
                 IntermediateNode result;
                 switch (info.Kind)
@@ -311,6 +313,7 @@ namespace Microsoft.PowerFx.Core.IR
                             result = new ScopeAccessNode(context.GetIRContext(node), scope);
                             break;
                         }
+
                     case BindKind.LambdaField:
                         {
                             // This is a normal bind, e.g. "Price" in an expression like "Filter(T, Price < 100)".
@@ -323,12 +326,14 @@ namespace Microsoft.PowerFx.Core.IR
                             result = new ScopeAccessNode(context.GetIRContext(node), fieldAccess);
                             break;
                         }
+
                     case BindKind.OptionSet:
                     case BindKind.PowerFxResolvedObject:
                         {
                             result = new ResolvedObjectNode(context.GetIRContext(node), info.Data);
                             break;
                         }
+
                     default:
                         Contracts.Assert(false, "Unsupported Bindkind");
                         throw new NotImplementedException();
@@ -342,8 +347,8 @@ namespace Microsoft.PowerFx.Core.IR
                 Contracts.AssertValue(node);
                 Contracts.AssertValue(context);
 
-                DType typeLhs = context.Binding.GetType(node.Left);
-                DName nameRhs = context.Binding.TryGetReplacedIdentName(node.Right, out var newIdent) ? new DName(newIdent) : node.Right.Name;
+                var typeLhs = context.Binding.GetType(node.Left);
+                var nameRhs = context.Binding.TryGetReplacedIdentName(node.Right, out var newIdent) ? new DName(newIdent) : node.Right.Name;
 
                 var resultType = context.Binding.GetType(node);
                 IntermediateNode result;
@@ -416,8 +421,8 @@ namespace Microsoft.PowerFx.Core.IR
 
                     if (typeLhs.TryGetType(nameRhs, out var typeRhs) &&
                         typeRhs.IsExpandEntity &&
-                        context.Binding.TryGetEntityInfo(node, out var ExpandInfo) &&
-                        ExpandInfo.IsTable)
+                        context.Binding.TryGetEntityInfo(node, out var expandInfo) &&
+                        expandInfo.IsTable)
                     {
                         // No relationships in PFX yet
                         Contracts.Assert(false, "Relationships not yet supported");
@@ -446,7 +451,6 @@ namespace Microsoft.PowerFx.Core.IR
                     Contracts.Assert(context.Binding.ErrorContainer.HasErrors(node.Left) || context.Binding.ErrorContainer.HasErrors(node));
                     return new ErrorNode(context.GetIRContext(node), node.ToString());
                 }
-
 
                 return MaybeInjectCoercion(node, result, context);
             }
@@ -486,7 +490,6 @@ namespace Microsoft.PowerFx.Core.IR
                 return new ErrorNode(context.GetIRContext(node), node.ToString());
             }
 
-
             // List nodes are pointless (just a container for Args for Call Nodes?)
             // We could genuinely clean them up entirely
             public override IntermediateNode Visit(ListNode node, IRTranslatorContext context)
@@ -514,8 +517,8 @@ namespace Microsoft.PowerFx.Core.IR
                 throw new NotSupportedException();
             }
 
-
             private int _scopeId = 1;
+
             private ScopeSymbol GetNewScope()
             {
                 return new ScopeSymbol(_scopeId++);
@@ -528,7 +531,7 @@ namespace Microsoft.PowerFx.Core.IR
                     case CoercionKind.DateToText:
                         return new TextLiteralNode(IRContext.NotInSource(FormulaType.String), "\'shortdate\'");
                     case CoercionKind.TimeToText:
-                        return new TextLiteralNode(IRContext.NotInSource(FormulaType.String), "\'shorttime\'"); ;
+                        return new TextLiteralNode(IRContext.NotInSource(FormulaType.String), "\'shorttime\'");
                     case CoercionKind.DateTimeToText:
                         return new TextLiteralNode(IRContext.NotInSource(FormulaType.String), "\'shortdatetime\'");
                     default:
@@ -542,8 +545,7 @@ namespace Microsoft.PowerFx.Core.IR
                 var scope = GetNewScope();
                 foreach (var fromField in fromType.GetNames(DPath.Root))
                 {
-                    DType toFieldType;
-                    if (!toType.TryGetType(fromField.Name, out toFieldType) || toFieldType.Accepts(fromField.Type))
+                    if (!toType.TryGetType(fromField.Name, out var toFieldType) || toFieldType.Accepts(fromField.Type))
                     {
                         continue;
                     }
@@ -551,17 +553,20 @@ namespace Microsoft.PowerFx.Core.IR
                     {
                         var coercionKind = CoercionMatrix.GetCoercionKind(fromField.Type, toFieldType);
                         if (coercionKind == CoercionKind.None)
+                        {
                             continue;
+                        }
+
                         fieldCoercions.Add(
                             fromField.Name,
                             InjectCoercion(
                                 new ScopeAccessNode(IRContext.NotInSource(FormulaType.Build(fromField.Type)), new ScopeAccessSymbol(scope, scope.AddOrGetIndexForField(fromField.Name))),
                                 context,
                                 fromField.Type,
-                                toFieldType)
-                            );
+                                toFieldType));
                     }
                 }
+
                 return new AggregateCoercionNode(IRContext.NotInSource(FormulaType.Build(toType)), unaryOpKind, scope, child, fieldCoercions);
             }
 
@@ -741,6 +746,7 @@ namespace Microsoft.PowerFx.Core.IR
                         {
                             return new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.AddDateAndDay, left, right);
                         }
+
                     case DKind.Time:
                         if (rightType == DType.Date)
                         {
@@ -759,6 +765,7 @@ namespace Microsoft.PowerFx.Core.IR
                             // Time + Number
                             return new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.AddTimeAndMilliseconds, left, right);
                         }
+
                     case DKind.DateTime:
                         if (rightType == DType.DateTime || rightType == DType.Date)
                         {
@@ -773,6 +780,7 @@ namespace Microsoft.PowerFx.Core.IR
                         {
                             return new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.AddDateTimeAndDay, left, right);
                         }
+
                     default:
                         switch (rightType.Kind)
                         {
@@ -791,7 +799,6 @@ namespace Microsoft.PowerFx.Core.IR
                 }
             }
 
-
             private static IntermediateNode GetBooleanBinaryOp(IRTranslatorContext context, TexlBinaryOpNode node, IntermediateNode left, IntermediateNode right, DType leftType, DType rightType)
             {
                 var kindToUse = leftType.Accepts(rightType) ? leftType.Kind : rightType.Kind;
@@ -800,11 +807,17 @@ namespace Microsoft.PowerFx.Core.IR
                 {
                     // There is coercion involved, pick the coerced type.
                     if (context.Binding.TryGetCoercedType(node.Left, out var leftCoerced))
+                    {
                         kindToUse = leftCoerced.Kind;
+                    }
                     else if (context.Binding.TryGetCoercedType(node.Right, out var rightCoerced))
+                    {
                         kindToUse = rightCoerced.Kind;
+                    }
                     else
+                    {
                         throw new NotSupportedException();
+                    }
                 }
 
                 switch (kindToUse)
@@ -827,6 +840,7 @@ namespace Microsoft.PowerFx.Core.IR
                             default:
                                 throw new NotSupportedException();
                         }
+
                     case DKind.Date:
                         switch (node.Op)
                         {
@@ -845,6 +859,7 @@ namespace Microsoft.PowerFx.Core.IR
                             default:
                                 throw new NotSupportedException();
                         }
+
                     case DKind.DateTime:
                         switch (node.Op)
                         {
@@ -863,6 +878,7 @@ namespace Microsoft.PowerFx.Core.IR
                             default:
                                 throw new NotSupportedException();
                         }
+
                     case DKind.Time:
                         switch (node.Op)
                         {
@@ -892,6 +908,7 @@ namespace Microsoft.PowerFx.Core.IR
                             default:
                                 throw new NotSupportedException();
                         }
+
                     case DKind.String:
                         switch (node.Op)
                         {
@@ -902,6 +919,7 @@ namespace Microsoft.PowerFx.Core.IR
                             default:
                                 throw new NotSupportedException();
                         }
+
                     case DKind.Hyperlink:
                         switch (node.Op)
                         {
@@ -912,6 +930,7 @@ namespace Microsoft.PowerFx.Core.IR
                             default:
                                 throw new NotSupportedException();
                         }
+
                     case DKind.Currency:
                         switch (node.Op)
                         {
@@ -922,6 +941,7 @@ namespace Microsoft.PowerFx.Core.IR
                             default:
                                 throw new NotSupportedException();
                         }
+
                     case DKind.Image:
                         switch (node.Op)
                         {
@@ -932,6 +952,7 @@ namespace Microsoft.PowerFx.Core.IR
                             default:
                                 throw new NotSupportedException();
                         }
+
                     case DKind.Color:
                         switch (node.Op)
                         {
@@ -942,6 +963,7 @@ namespace Microsoft.PowerFx.Core.IR
                             default:
                                 throw new NotSupportedException();
                         }
+
                     case DKind.Media:
                         switch (node.Op)
                         {
@@ -952,6 +974,7 @@ namespace Microsoft.PowerFx.Core.IR
                             default:
                                 throw new NotSupportedException();
                         }
+
                     case DKind.Blob:
                         switch (node.Op)
                         {
@@ -962,6 +985,7 @@ namespace Microsoft.PowerFx.Core.IR
                             default:
                                 throw new NotSupportedException();
                         }
+
                     case DKind.Guid:
                         switch (node.Op)
                         {
@@ -972,6 +996,7 @@ namespace Microsoft.PowerFx.Core.IR
                             default:
                                 throw new NotSupportedException();
                         }
+
                     case DKind.ObjNull:
                         switch (node.Op)
                         {
@@ -982,6 +1007,7 @@ namespace Microsoft.PowerFx.Core.IR
                             default:
                                 throw new NotSupportedException();
                         }
+
                     case DKind.OptionSetValue:
                         switch (node.Op)
                         {
@@ -992,6 +1018,7 @@ namespace Microsoft.PowerFx.Core.IR
                             default:
                                 throw new NotSupportedException();
                         }
+
                     default:
                         throw new NotSupportedException("Not supported comparison op on type " + kindToUse.ToString());
                 }

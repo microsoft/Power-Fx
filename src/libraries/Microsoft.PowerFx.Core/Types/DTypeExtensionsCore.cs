@@ -9,14 +9,13 @@ namespace Microsoft.PowerFx.Core.Types
 {
     internal static class DTypeExtensionsCore
     {
-
         internal static bool AssociateDataSourcesToSelect(this DType self, DataSourceToQueryOptionsMap dataSourceToQueryOptionsMap, string columnName, DType columnType, bool skipIfNotInSchema = false, bool skipExpands = false)
         {
             Contracts.AssertValue(dataSourceToQueryOptionsMap);
             Contracts.AssertNonEmpty(columnName);
             Contracts.AssertValue(columnType);
 
-            bool retval = false;
+            var retval = false;
             if (self.HasExpandInfo && self.ExpandInfo != null && !skipExpands)
             {
                 var qOptions = dataSourceToQueryOptionsMap.GetOrCreateQueryOptions(self.ExpandInfo.ParentDataSource as IExternalTabularDataSource);
@@ -32,7 +31,9 @@ namespace Microsoft.PowerFx.Core.Types
                 {
                     // Skip if this column doesn't belong to this datasource.
                     if (skipIfNotInSchema && !tabularDataSource.Schema.Contains(new DName(columnName)))
+                    {
                         continue;
+                    }
 
                     retval |= dataSourceToQueryOptionsMap.AddSelect((IExternalTabularDataSource)tabularDataSource, new DName(columnName));
 
@@ -47,6 +48,5 @@ namespace Microsoft.PowerFx.Core.Types
 
             return retval;
         }
-
     }
 }

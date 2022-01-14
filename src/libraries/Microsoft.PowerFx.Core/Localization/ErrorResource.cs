@@ -15,38 +15,40 @@ namespace Microsoft.PowerFx.Core.Localization
 
         // The default error message.
         public const string ShortMessageTag = "shortMessage";
+
         // Optional: A longer explanation of the error. There is currently no UI (or DocError) support for this.
         public const string LongMessageTag = "longMessage";
+
         // Optional: A series of messages explaining how to fix the error.
         public const string HowToFixTag = "howToFixMessage";
+
         // Optional: A series of messages explaining why to fix the error. Used primarily for accessibility errors.
         public const string WhyToFixTag = "whyToFixMessage";
+
         // Optional: A series of links to help documents. There is currently no UI (or DocError) support for this.
         public const string LinkTag = "link";
         public const string LinkTagDisplayTextTag = "value";
         public const string LinkTagUrlTag = "url";
 
-
-
         internal const string ReswErrorResourcePrefix = "ErrorResource_";
         internal static readonly Dictionary<string, string> ErrorResourceTagToReswSuffix = new Dictionary<string, string>()
         {
-            { ErrorResource.ShortMessageTag, "_ShortMessage" },
-            { ErrorResource.LongMessageTag, "_LongMessage" },
-            { ErrorResource.HowToFixTag, "_HowToFix" },
-            { ErrorResource.WhyToFixTag, "_WhyToFix" },
-            { ErrorResource.LinkTag, "_Link" },
+            { ShortMessageTag, "_ShortMessage" },
+            { LongMessageTag, "_LongMessage" },
+            { HowToFixTag, "_HowToFix" },
+            { WhyToFixTag, "_WhyToFix" },
+            { LinkTag, "_Link" },
         };
 
         internal static bool IsTagMultivalue(string tag) => tag == HowToFixTag || tag == LinkTag;
 
+        private readonly Dictionary<string, IList<string>> _tagToValues;
 
-        private Dictionary<string, IList<string>> TagToValues;
         public IList<IErrorHelpLink> HelpLinks { get; }
 
         private ErrorResource()
         {
-            TagToValues = new Dictionary<string, IList<string>>();
+            _tagToValues = new Dictionary<string, IList<string>>();
             HelpLinks = new List<IErrorHelpLink>();
         }
 
@@ -59,7 +61,7 @@ namespace Microsoft.PowerFx.Core.Localization
             // Parse each sub-element into the TagToValues dictionary.
             foreach (var tag in errorXml.Elements())
             {
-                string tagName = tag.Name.LocalName;
+                var tagName = tag.Name.LocalName;
 
                 // Links are specialized because they are a two-part resource.
                 if (tagName == LinkTag)
@@ -68,10 +70,12 @@ namespace Microsoft.PowerFx.Core.Localization
                 }
                 else
                 {
-                    if (!errorResource.TagToValues.ContainsKey(tagName))
-                        errorResource.TagToValues[tagName] = new List<string>();
+                    if (!errorResource._tagToValues.ContainsKey(tagName))
+                    {
+                        errorResource._tagToValues[tagName] = new List<string>();
+                    }
 
-                    errorResource.TagToValues[tagName].Add(tag.Element("value").Value);
+                    errorResource._tagToValues[tagName].Add(tag.Element("value").Value);
                 }
             }
 
@@ -98,19 +102,21 @@ namespace Microsoft.PowerFx.Core.Localization
                     urls.TryGetValue(kvp.Key, out var correspondingUrl).Verify();
                     errorResource.HelpLinks.Add(new ErrorHelpLink(kvp.Value, correspondingUrl));
                 }
+
                 members.Remove(LinkTag);
                 members.Remove(LinkTagUrlTag);
             }
 
-
             foreach (var tag in members)
             {
-                if (!errorResource.TagToValues.ContainsKey(tag.Key))
-                    errorResource.TagToValues[tag.Key] = new List<string>();
+                if (!errorResource._tagToValues.ContainsKey(tag.Key))
+                {
+                    errorResource._tagToValues[tag.Key] = new List<string>();
+                }
 
                 foreach (var value in tag.Value.OrderBy(kvp => kvp.Key).Select(kvp => kvp.Value))
                 {
-                    errorResource.TagToValues[tag.Key].Add(value);
+                    errorResource._tagToValues[tag.Key].Add(value);
                 }
             }
 
@@ -128,19 +134,24 @@ namespace Microsoft.PowerFx.Core.Localization
         {
             Contracts.AssertValue(tag);
 
-            if (!TagToValues.ContainsKey(tag))
+            if (!_tagToValues.ContainsKey(tag))
+            {
                 return null;
+            }
 
-            Contracts.Assert(TagToValues[tag].Count == 1);
+            Contracts.Assert(_tagToValues[tag].Count == 1);
 
-            return TagToValues[tag][0];
+            return _tagToValues[tag][0];
         }
 
         public IList<string> GetValues(string tag)
         {
-            if (!TagToValues.ContainsKey(tag))
+            if (!_tagToValues.ContainsKey(tag))
+            {
                 return null;
-            return TagToValues[tag];
+            }
+
+            return _tagToValues[tag];
         }
     }
 }

@@ -11,7 +11,8 @@ namespace Microsoft.PowerFx.Core.IR.Nodes
         public readonly IntermediateNode Left;
         public readonly IntermediateNode Right;
 
-        public BinaryOpNode(IRContext irContext, BinaryOpKind op, IntermediateNode left, IntermediateNode right) : base(irContext)
+        public BinaryOpNode(IRContext irContext, BinaryOpKind op, IntermediateNode left, IntermediateNode right)
+            : base(irContext)
         {
             Contracts.AssertValue(left);
             Contracts.AssertValue(right);
@@ -21,7 +22,6 @@ namespace Microsoft.PowerFx.Core.IR.Nodes
             Right = right;
         }
 
-
         public override TResult Accept<TResult, TContext>(IRNodeVisitor<TResult, TContext> visitor, TContext context)
         {
             return visitor.Visit(this, context);
@@ -29,7 +29,7 @@ namespace Microsoft.PowerFx.Core.IR.Nodes
 
         public override string ToString()
         {
-            return $"BinaryOp({Op}, {Left}, {Right})"; 
+            return $"BinaryOp({Op}, {Left}, {Right})";
         }
     }
 }

@@ -7,7 +7,8 @@ namespace Microsoft.PowerFx.Core.Public.Types
 {
     public class DateType : FormulaType
     {
-        internal DateType() : base(DType.Date)
+        internal DateType()
+            : base(DType.Date)
         {
         }
 
