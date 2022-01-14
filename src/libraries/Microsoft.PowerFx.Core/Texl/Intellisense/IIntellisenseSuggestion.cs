@@ -50,7 +50,7 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
 
         /// <summary>
         /// A boolean value indicating if the suggestion should be preselected by the formula bar
-        /// In canvas, used for Primary Output properties
+        /// In canvas, used for Primary Output properties.
         /// </summary>
         bool ShouldPreselect { get; }
     }

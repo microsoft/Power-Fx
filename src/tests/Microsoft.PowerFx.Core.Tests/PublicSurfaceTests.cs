@@ -1,10 +1,10 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
-using Newtonsoft.Json.Serialization;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Newtonsoft.Json.Serialization;
 using Xunit;
 
 namespace Microsoft.PowerFx.Core.Tests
@@ -16,7 +16,7 @@ namespace Microsoft.PowerFx.Core.Tests
         {
             var asm = typeof(Parser.TexlParser).Assembly;
 
-            HashSet<string> allowed = new HashSet<string>()
+            var allowed = new HashSet<string>()
             {
                 "Microsoft.PowerFx.Core.Texl.Intellisense.IIntellisenseResult",
                 "Microsoft.PowerFx.Core.Texl.Intellisense.IIntellisenseSuggestion",
@@ -78,9 +78,9 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Core.NameCollisionException",
             };
 
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             var count = 0;
-            foreach(var type in asm.GetTypes().Where(t => t.IsPublic))
+            foreach (var type in asm.GetTypes().Where(t => t.IsPublic))
             {
                 var name = type.FullName;
                 if (!allowed.Contains(name))
@@ -92,10 +92,10 @@ namespace Microsoft.PowerFx.Core.Tests
                 allowed.Remove(name);
             }
 
-            Assert.True(0 == count, $"Unexpected public types: {sb}");
+            Assert.True(count == 0, $"Unexpected public types: {sb}");
 
             // Types we expect to be in the assembly are all there. 
-            Assert.Empty(allowed); 
+            Assert.Empty(allowed);
         }
     }
 }

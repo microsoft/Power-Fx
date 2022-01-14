@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation.
+﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
 using Microsoft.PowerFx.Core.Lexer.Tokens;
@@ -31,16 +31,18 @@ namespace Microsoft.PowerFx.Core.Syntax
         {
             return new Identifier(
                 Namespace,
-                AtToken == null ? null : AtToken.Clone(ts),
+                AtToken?.Clone(ts),
                 Token.Clone(ts).As<IdentToken>());
         }
 
         public Identifier(IdentToken token)
             : this(DPath.Root, null, token)
-        { }
+        {
+        }
 
         public Identifier(Token atToken, IdentToken token)
             : this(DPath.Root, atToken, token)
-        { }
+        {
+        }
     }
 }

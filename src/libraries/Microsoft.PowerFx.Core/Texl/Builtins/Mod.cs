@@ -16,12 +16,15 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class ModFunction : BuiltinFunction
     {
         public override bool SupportsParamCoercion => true;
+
         public override bool IsSelfContained => true;
+
         public override bool RequiresErrorContext => true;
 
         public ModFunction()
             : base("Mod", TexlStrings.AboutMod, FunctionCategories.MathAndStat, DType.Number, 0, 2, 2, DType.Number, DType.Number)
-        { }
+        {
+        }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
@@ -33,16 +36,19 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class ModTFunction : BuiltinFunction
     {
         public override bool SupportsParamCoercion => true;
+
         public override bool IsSelfContained => true;
+
         public override bool RequiresErrorContext => true;
 
         public ModTFunction()
             : base("Mod", TexlStrings.AboutModT, FunctionCategories.Table, DType.EmptyTable, 0, 2, 2)
-        { }
+        {
+        }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
-            yield return new [] { TexlStrings.ModTFuncArg1, TexlStrings.ModTFuncArg2 };
+            yield return new[] { TexlStrings.ModTFuncArg1, TexlStrings.ModTFuncArg2 };
         }
 
         public override string GetUniqueTexlRuntimeName(bool isPrefetching = false)
@@ -59,13 +65,13 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertValue(errors);
             Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
 
-            bool fValid = base.CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            var fValid = base.CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
 
-            DType type0 = argTypes[0];
-            DType type1 = argTypes[1];
+            var type0 = argTypes[0];
+            var type1 = argTypes[1];
 
-            TexlNode arg0 = args[0];
-            TexlNode arg1 = args[1];
+            var arg0 = args[0];
+            var arg1 = args[1];
 
             // Arg0 should be either a number or a column of number (coercion is ok).
             bool matchedWithCoercion;
@@ -77,7 +83,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             else if (CheckType(arg0, type0, DType.Number, DefaultErrorContainer, out matchedWithCoercion))
             {
                 if (matchedWithCoercion)
+                {
                     CollectionUtils.Add(ref nodeToCoercedTypeMap, arg0, DType.Number);
+                }
             }
             else
             {
@@ -93,7 +101,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             else if (CheckType(arg1, type1, DType.Number, DefaultErrorContainer, out matchedWithCoercion))
             {
                 if (matchedWithCoercion)
+                {
                     CollectionUtils.Add(ref nodeToCoercedTypeMap, arg1, DType.Number);
+                }
             }
             else
             {
@@ -105,10 +115,14 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             // At least one arg has to be a table.
             if (!(type0.IsTable || type1.IsTable))
+            {
                 fValid = false;
+            }
 
             if (!fValid)
+            {
                 nodeToCoercedTypeMap = null;
+            }
 
             return fValid;
         }

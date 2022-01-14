@@ -10,9 +10,10 @@ namespace Microsoft.PowerFx.Core.IR.Symbols
     internal class ScopeSymbol : IScopeSymbol
     {
         public int Id { get; }
+
         public IReadOnlyList<DName> AccessedFields => _fields;
-            
-        private List<DName> _fields = new List<DName>();
+
+        private readonly List<DName> _fields = new List<DName>();
 
         public ScopeSymbol(int id)
         {
@@ -22,7 +23,9 @@ namespace Microsoft.PowerFx.Core.IR.Symbols
         public int AddOrGetIndexForField(DName fieldName)
         {
             if (AccessedFields.Contains(fieldName))
+            {
                 return _fields.IndexOf(fieldName);
+            }
 
             _fields.Add(fieldName);
             return AccessedFields.Count - 1;

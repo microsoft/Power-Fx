@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation.
+﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
 using System;
@@ -62,12 +62,12 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
             }
         }
 
-        public override Result Accept<Result, Context>(TexlFunctionalVisitor<Result, Context> visitor, Context context)
+        public override TResult Accept<TResult, TContext>(TexlFunctionalVisitor<TResult, TContext> visitor, TContext context)
         {
             return visitor.Visit(this, context);
         }
 
-        public override NodeKind Kind { get { return NodeKind.BinaryOp; } }
+        public override NodeKind Kind => NodeKind.BinaryOp;
 
         public override BinaryOpNode CastBinaryOp()
         {
@@ -81,10 +81,14 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
 
         public override Span GetCompleteSpan()
         {
-            if (this.Token.Kind == TokKind.PercentSign && this.Right.Token.Span.Lim < this.Left.Token.Span.Min)
-                return new Span(this.Right.Token.Span.Min, this.Left.Token.Span.Lim);
+            if (Token.Kind == TokKind.PercentSign && Right.Token.Span.Lim < Left.Token.Span.Min)
+            {
+                return new Span(Right.Token.Span.Min, Left.Token.Span.Lim);
+            }
             else
-                return new Span(this.Left.VerifyValue().GetCompleteSpan().Min, this.Right.VerifyValue().GetCompleteSpan().Lim);
+            {
+                return new Span(Left.VerifyValue().GetCompleteSpan().Min, Right.VerifyValue().GetCompleteSpan().Lim);
+            }
         }
     }
 }

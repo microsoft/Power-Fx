@@ -1,10 +1,10 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
-using Microsoft.PowerFx.Core.IR;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Public;
 using Microsoft.PowerFx.Core.Public.Types;
 using Microsoft.PowerFx.Core.Public.Values;
@@ -28,11 +28,9 @@ namespace Microsoft.PowerFx.Functions
             var arg0 = (TableValue)args[0];
             var arg1 = (NumberValue)args[1];
 
-
             var rows = arg0.Rows.Take((int)arg1.Value);
             return new InMemoryTableValue(irContext, rows);
         }
-
 
         public static FormulaValue LastN(IRContext irContext, FormulaValue[] args)
         {
@@ -63,7 +61,6 @@ namespace Microsoft.PowerFx.Functions
             return new InMemoryTableValue(irContext, rows);
         }
 
-
         private static IEnumerable<DValue<RecordValue>> LazyAddColumns(EvalVisitor runner, SymbolContext context, IEnumerable<DValue<RecordValue>> sources, IRContext recordIRContext, NamedLambda[] newColumns)
         {
             foreach (var row in sources)
@@ -90,7 +87,6 @@ namespace Microsoft.PowerFx.Functions
             }
         }
 
-
         // CountRows
         public static FormulaValue CountRows(IRContext irContext, TableValue[] args)
         {
@@ -107,7 +103,7 @@ namespace Microsoft.PowerFx.Functions
             var sources = (TableValue)args[0];
             var filter = (LambdaFormulaValue)args[1];
 
-            int count = 0;
+            var count = 0;
 
             var errors = new List<ErrorValue>();
 
@@ -124,13 +120,14 @@ namespace Microsoft.PowerFx.Functions
                         continue;
                     }
 
-                    bool include = ((BooleanValue)result).Value;
+                    var include = ((BooleanValue)result).Value;
 
                     if (include)
                     {
                         count++;
                     }
                 }
+
                 if (row.IsError)
                 {
                     errors.Add(row.Error);
@@ -180,6 +177,7 @@ namespace Microsoft.PowerFx.Functions
                     var childContext = symbolContext.WithScopeValues(row.Value);
                     return new KeyValuePair<DValue<RecordValue>, FormulaValue>(row, arg1.Eval(runner, childContext));
                 }
+
                 return new KeyValuePair<DValue<RecordValue>, FormulaValue>(row, row.ToFormulaValue());
             }).ToList();
 
@@ -220,14 +218,15 @@ namespace Microsoft.PowerFx.Functions
             }
         }
 
-        private static bool IsValueTypeErrorOrBlank<T>(FormulaValue val) where T : FormulaValue
+        private static bool IsValueTypeErrorOrBlank<T>(FormulaValue val)
+            where T : FormulaValue
         {
             return val is T || val is BlankValue || val is ErrorValue;
         }
 
-        private static FormulaValue SortValueType<T, S>(List<KeyValuePair<DValue<RecordValue>, FormulaValue>> pairs, IRContext irContext, int compareToResultModifier)
-            where T : PrimitiveValue<S>
-            where S : IComparable<S>
+        private static FormulaValue SortValueType<TPFxPrimitive, TDotNetPrimitive>(List<KeyValuePair<DValue<RecordValue>, FormulaValue>> pairs, IRContext irContext, int compareToResultModifier)
+            where TPFxPrimitive : PrimitiveValue<TDotNetPrimitive>
+            where TDotNetPrimitive : IComparable<TDotNetPrimitive>
         {
             pairs.Sort((a, b) =>
             {
@@ -239,15 +238,17 @@ namespace Microsoft.PowerFx.Functions
                 {
                     return -1;
                 }
-                var n1 = a.Value as T;
-                var n2 = b.Value as T;
+
+                var n1 = a.Value as TPFxPrimitive;
+                var n2 = b.Value as TPFxPrimitive;
                 return n1.Value.CompareTo(n2.Value) * compareToResultModifier;
             });
 
             return new InMemoryTableValue(irContext, pairs.Select(pair => pair.Key));
         }
 
-        private static IEnumerable<DValue<RecordValue>> LazyFilter(EvalVisitor runner,
+        private static IEnumerable<DValue<RecordValue>> LazyFilter(
+            EvalVisitor runner,
             SymbolContext context,
             IEnumerable<DValue<RecordValue>> sources,
             LambdaFormulaValue filter)
@@ -260,7 +261,7 @@ namespace Microsoft.PowerFx.Functions
 
                     // Filter evals to a boolean 
                     var result = filter.Eval(runner, childContext);
-                    bool include = false;
+                    var include = false;
                     if (result is BooleanValue booleanValue)
                     {
                         include = booleanValue.Value;
@@ -275,18 +276,17 @@ namespace Microsoft.PowerFx.Functions
         }
 
         // AddColumns accepts pairs of args. 
-        class NamedLambda
+        private class NamedLambda
         {
             public string Name;
 
             public LambdaFormulaValue Lambda;
 
-
             public static NamedLambda[] Parse(FormulaValue[] args)
             {
-                List<NamedLambda> l = new List<NamedLambda>();
+                var l = new List<NamedLambda>();
 
-                for (int i = 1; i < args.Length; i += 2)
+                for (var i = 1; i < args.Length; i += 2)
                 {
                     var columnName = ((StringValue)args[1]).Value;
                     var arg1 = (LambdaFormulaValue)args[2];

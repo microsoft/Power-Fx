@@ -13,14 +13,23 @@ namespace Microsoft.PowerFx.Core.Glue
     internal interface IBinderGlue
     {
         bool IsDataComponentDefinition(object lookupInfoData);
+
         bool IsComponentDataSource(object lookupInfoData);
+
         bool IsDataComponentInstance(object lookupInfoData);
+
         bool TryGetCdsDataSourceByBind(object lhsInfoData, out IExternalControl o);
+
         bool IsDynamicDataSourceInfo(object lookupInfoData);
+
         bool CanControlBeUsedInComponentProperty(TexlBinding binding, IExternalControl control);
+
         IExternalControl GetVariableScopedControlFromTexlBinding(TexlBinding txb);
+
         bool IsComponentScopedPropertyFunction(TexlFunction infoFunction);
+
         bool IsPrimaryCommandComponentProperty(IExternalControlProperty externalControlProperty);
+
         bool IsContextProperty(IExternalControlProperty externalControlProperty);
     }
 }

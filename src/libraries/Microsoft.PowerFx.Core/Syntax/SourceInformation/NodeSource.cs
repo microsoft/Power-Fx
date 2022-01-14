@@ -24,7 +24,7 @@ namespace Microsoft.PowerFx.Core.Syntax.SourceInformation
         public NodeSource(TexlNode node)
         {
             Contracts.AssertValue(node);
-            this.Node = node;
+            Node = node;
         }
 
         public ITexlSource Clone(Dictionary<TexlNode, TexlNode> newNodes, Span span)

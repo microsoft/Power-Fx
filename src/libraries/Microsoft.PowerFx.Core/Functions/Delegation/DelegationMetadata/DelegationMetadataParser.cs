@@ -17,7 +17,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationMetadata
 
                 using var result = JsonDocument.Parse(delegationMetadataJson);
 
-                CompositeMetaParser compositeParser = new CompositeMetaParser();
+                var compositeParser = new CompositeMetaParser();
                 compositeParser.AddMetaParser(new SortMetaParser());
                 compositeParser.AddMetaParser(new FilterMetaParser());
                 compositeParser.AddMetaParser(new GroupMetaParser());

@@ -14,7 +14,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public CotFunction()
             : base("Cot", TexlStrings.AboutCot, FunctionCategories.MathAndStat)
-        { }
+        {
+        }
     }
 
     // Cot(E:*[n])
@@ -25,6 +26,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public CotTableFunction()
             : base("Cot", TexlStrings.AboutCotT, FunctionCategories.Table)
-        { }
+        {
+        }
     }
 }

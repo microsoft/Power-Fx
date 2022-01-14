@@ -14,7 +14,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public CosFunction()
             : base("Cos", TexlStrings.AboutCos, FunctionCategories.MathAndStat)
-        { }
+        {
+        }
     }
 
     // Cos(E:*[n])
@@ -25,6 +26,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public CosTableFunction()
             : base("Cos", TexlStrings.AboutCosT, FunctionCategories.Table)
-        { }
+        {
+        }
     }
 }

@@ -14,11 +14,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Checks if the text ends with the end string.
     internal sealed class EndsWithFunction : StringTwoArgFunction
     {
-        public override DelegationCapability FunctionDelegationCapability { get { return DelegationCapability.EndsWith; } }
+        public override DelegationCapability FunctionDelegationCapability => DelegationCapability.EndsWith;
 
         public EndsWithFunction()
             : base("EndsWith", TexlStrings.AboutEndsWith)
-        { }
+        {
+        }
 
         public override bool IsRowScopedServerDelegatable(CallNode callNode, TexlBinding binding, OperationCapabilityMetadata metadata)
         {

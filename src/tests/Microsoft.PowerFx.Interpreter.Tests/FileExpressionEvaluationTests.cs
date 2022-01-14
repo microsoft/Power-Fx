@@ -9,7 +9,7 @@ using System.Text;
 using Microsoft.PowerFx.Core.Public.Types;
 using Microsoft.PowerFx.Core.Public.Values;
 using Microsoft.PowerFx.Core.Tests;
-using Microsoft.PowerFx.Interpreter.Tests.xUnitExtensions;
+using Microsoft.PowerFx.Interpreter.Tests.XUnitExtensions;
 using Xunit;
 using static Microsoft.PowerFx.Interpreter.Tests.ExpressionEvaluationTests;
 
@@ -19,7 +19,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
     {
         private InterpreterRunner _runner;
 
-        [InterpreterTheory()]
+        [InterpreterTheory]
         [TxtFileData("ExpressionTestCases", nameof(InterpreterRunner))]
         public void InterpreterTestCase(ExpressionTestCase testCase)
         {
@@ -28,7 +28,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             string actualStr;
             FormulaValue result = null;
-            bool exceptionThrown = false;
+            var exceptionThrown = false;
             try
             {
                 result = _runner.RunAsync(testCase.Input).Result;
@@ -49,7 +49,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             if (testCase.GetExpected(nameof(InterpreterRunner)) == "#Skip")
             {
                 var goodResult = testCase.GetExpected("-");
-                Assert.False(goodResult == actualStr || goodResult == "#Error" && _runner.IsError(result), "Test marked to skip returned correct result");
+                Assert.False(goodResult == actualStr || (goodResult == "#Error" && _runner.IsError(result)), "Test marked to skip returned correct result");
 
                 // Since test is marked to skip and it didn't return a result that matched the baseline
                 // expected result then we can marked it skipped here
@@ -61,7 +61,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
         internal string TestToString(FormulaValue result)
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             try
             {
                 TestToString(result, sb);
@@ -98,7 +98,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             {
                 sb.Append('[');
 
-                string dil = "";
+                var dil = string.Empty;
                 foreach (var row in t.Rows)
                 {
                     sb.Append(dil);
@@ -123,6 +123,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
                     dil = ",";
                 }
+
                 sb.Append(']');
             }
             else if (result is RecordValue r)
@@ -131,7 +132,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 Array.Sort(fields, (a, b) => string.CompareOrdinal(a.Name, b.Name));
 
                 sb.Append('{');
-                string dil = "";
+                var dil = string.Empty;
 
                 foreach (var field in fields)
                 {
@@ -142,6 +143,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
                     dil = ",";
                 }
+
                 sb.Append('}');
             }
             else if (result is BlankValue)
@@ -157,7 +159,5 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 throw new InvalidOperationException($"unsupported value type: {result.GetType().Name}");
             }
         }
-
     }
-
 }

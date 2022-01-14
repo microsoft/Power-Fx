@@ -33,6 +33,7 @@ namespace Microsoft.PowerFx.Functions
                     return res.ToFormulaValue();
                 }
             }
+
             return new BooleanValue(irContext, true);
         }
 
@@ -56,6 +57,7 @@ namespace Microsoft.PowerFx.Functions
                     return res.Error;
                 }
             }
+
             return new BooleanValue(irContext, false);
         }
     }

@@ -1,4 +1,4 @@
-using Microsoft.PowerFx.Core.Lexer.Tokens;
+﻿using Microsoft.PowerFx.Core.Lexer.Tokens;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Utils;
 

@@ -6,27 +6,31 @@ using Microsoft.PowerFx.Core.Syntax.Nodes;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 
-namespace Microsoft.PowerFx.Core.Texl.Intellisense{
+namespace Microsoft.PowerFx.Core.Texl.Intellisense
+{
     internal partial class Intellisense
     {
         internal sealed class TableNodeSuggestionHandler : NodeKindSuggestionHandler
         {
             public TableNodeSuggestionHandler()
                 : base(NodeKind.Table)
-            { }
+            {
+            }
 
             internal override bool TryAddSuggestionsForNodeKind(IntellisenseData.IntellisenseData intellisenseData)
             {
                 Contracts.AssertValue(intellisenseData);
 
-                TexlNode curNode = intellisenseData.CurNode;
-                int cursorPos = intellisenseData.CursorPos;
+                var curNode = intellisenseData.CurNode;
+                var cursorPos = intellisenseData.CursorPos;
 
                 var tokenSpan = curNode.Token.Span;
 
                 // Only suggest after table nodes
                 if (cursorPos <= tokenSpan.Lim)
+                {
                     return true;
+                }
 
                 if (IntellisenseHelper.CanSuggestAfterValue(cursorPos, intellisenseData.Script))
                 {

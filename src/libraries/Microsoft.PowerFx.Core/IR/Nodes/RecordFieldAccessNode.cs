@@ -10,7 +10,8 @@ namespace Microsoft.PowerFx.Core.IR.Nodes
         public readonly IntermediateNode From;
         public readonly DName Field;
 
-        public RecordFieldAccessNode(IRContext irContext, IntermediateNode from, DName field) : base(irContext)
+        public RecordFieldAccessNode(IRContext irContext, IntermediateNode from, DName field)
+            : base(irContext)
         {
             Contracts.AssertValid(field);
             Contracts.AssertValue(from);
@@ -23,7 +24,6 @@ namespace Microsoft.PowerFx.Core.IR.Nodes
         {
             return visitor.Visit(this, context);
         }
-
 
         public override string ToString()
         {

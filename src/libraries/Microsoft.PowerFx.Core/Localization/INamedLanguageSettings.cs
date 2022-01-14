@@ -4,11 +4,12 @@
 namespace Microsoft.PowerFx.Core.Localization
 {
     /// <summary>
-    ///     A language settings abstraction tied to a specific culture name
+    ///     A language settings abstraction tied to a specific culture name.
     /// </summary>
     internal interface INamedLanguageSettings
     {
         string CultureName { get; }
+
         string UICultureName { get; }
     }
 }

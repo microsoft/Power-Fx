@@ -20,7 +20,9 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
             foreach (var category in Enum.GetValues(typeof(FunctionCategories)))
             {
                 if (category.Equals(FunctionCategories.None))
+                {
                     continue;
+                }
 
                 var str = StringResources.Get("FunctionCategoryName_" + category.ToString());
                 yield return new KeyValuePair<string, string>(category.ToString(), str);

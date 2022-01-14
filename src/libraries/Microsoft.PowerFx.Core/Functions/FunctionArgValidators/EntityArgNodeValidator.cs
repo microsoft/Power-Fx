@@ -19,12 +19,12 @@ namespace Microsoft.PowerFx.Core.Functions.FunctionArgValidators
             entityInfo = null;
             switch (argNode.Kind)
             {
-            case NodeKind.FirstName:
-                return TryGetEntityInfo(argNode.AsFirstName(), binding, out entityInfo);
-            case NodeKind.Call:
-                return TryGetEntityInfo(argNode.AsCall(), binding, out entityInfo);
-            case NodeKind.DottedName:
-                return TryGetEntityInfo(argNode.AsDottedName(), binding, out entityInfo);
+                case NodeKind.FirstName:
+                    return TryGetEntityInfo(argNode.AsFirstName(), binding, out entityInfo);
+                case NodeKind.Call:
+                    return TryGetEntityInfo(argNode.AsCall(), binding, out entityInfo);
+                case NodeKind.DottedName:
+                    return TryGetEntityInfo(argNode.AsDottedName(), binding, out entityInfo);
             }
 
             return false;
@@ -37,15 +37,21 @@ namespace Microsoft.PowerFx.Core.Functions.FunctionArgValidators
 
             entityInfo = null;
             if (callNode == null || !binding.GetType(callNode).IsTable)
+            {
                 return false;
+            }
 
             var callInfo = binding.GetInfo(callNode);
             if (callInfo == null)
+            {
                 return false;
+            }
 
             var function = callInfo.Function;
             if (function == null)
+            {
                 return false;
+            }
 
             return function.TryGetEntityInfo(callNode, binding, out entityInfo);
         }
@@ -57,7 +63,9 @@ namespace Microsoft.PowerFx.Core.Functions.FunctionArgValidators
 
             entityInfo = null;
             if (firstName == null || !binding.GetType(firstName).IsTable)
+            {
                 return false;
+            }
 
             return binding.TryGetEntityInfo(firstName, out entityInfo);
         }
@@ -69,7 +77,9 @@ namespace Microsoft.PowerFx.Core.Functions.FunctionArgValidators
 
             entityInfo = null;
             if (dottedNameNode == null || !binding.HasExpandInfo(dottedNameNode))
+            {
                 return false;
+            }
 
             return binding.TryGetEntityInfo(dottedNameNode, out entityInfo);
         }

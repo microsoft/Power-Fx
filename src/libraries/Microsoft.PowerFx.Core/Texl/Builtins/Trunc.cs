@@ -18,11 +18,13 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class TruncFunction : BuiltinFunction
     {
         public override bool IsSelfContained => true;
+
         public override bool SupportsParamCoercion => true;
 
         public TruncFunction()
             : base("Trunc", TexlStrings.AboutTrunc, FunctionCategories.MathAndStat, DType.Number, 0, 1, 2, DType.Number, DType.Number)
-        { }
+        {
+        }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
@@ -30,14 +32,17 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             yield return new[] { TexlStrings.TruncArg1, TexlStrings.TruncArg2 };
         }
     }
+
     internal sealed class TruncTableFunction : BuiltinFunction
     {
         public override bool IsSelfContained => true;
+
         public override bool SupportsParamCoercion => true;
 
         public TruncTableFunction()
             : base("Trunc", TexlStrings.AboutTruncT, FunctionCategories.Table, DType.EmptyTable, 0, 1, 2)
-        { }
+        {
+        }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
@@ -59,14 +64,14 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertValue(errors);
             Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
 
-            bool fValid = base.CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            var fValid = CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
 
             if (argTypes.Length == 2)
             {
-                DType type0 = argTypes[0];
-                DType type1 = argTypes[1];
+                var type0 = argTypes[0];
+                var type1 = argTypes[1];
 
-                DType otherType = DType.Invalid;
+                var otherType = DType.Invalid;
                 TexlNode otherArg = null;
 
                 // At least one of the arguments has to be a table.
@@ -74,8 +79,10 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 {
                     // Ensure we have a one-column table of numerics
                     fValid &= CheckNumericColumnType(type0, args[0], errors, ref nodeToCoercedTypeMap);
+
                     // Borrow the return type from the 1st arg
                     returnType = type0;
+
                     // Check arg1 below.
                     otherArg = args[1];
                     otherType = type1;
@@ -84,8 +91,10 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 {
                     // Ensure we have a one-column table of numerics
                     fValid &= CheckNumericColumnType(type1, args[1], errors, ref nodeToCoercedTypeMap);
+
                     // Since the 1st arg is not a table, make a new table return type *[Result:n]
                     returnType = DType.CreateTable(new TypedName(DType.Number, OneColumnTableResultName));
+
                     // Check arg0 below.
                     otherArg = args[0];
                     otherType = type0;
@@ -95,6 +104,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     Contracts.Assert(returnType.IsTable);
                     errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrTypeError);
                     errors.EnsureError(DocumentErrorSeverity.Severe, args[1], TexlStrings.ErrTypeError);
+
                     // Both args are invalid. No need to continue.
                     return false;
                 }
@@ -124,12 +134,13 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
             else
             {
-                DType type0 = argTypes[0];
+                var type0 = argTypes[0];
 
                 if (type0.IsTable)
                 {
                     // Ensure we have a one-column table of numerics
                     fValid &= CheckNumericColumnType(type0, args[0], errors, ref nodeToCoercedTypeMap);
+
                     // Borrow the return type from the 1st arg
                     returnType = type0;
                 }

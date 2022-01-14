@@ -14,7 +14,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public RadiansFunction()
             : base("Radians", TexlStrings.AboutRadians, FunctionCategories.MathAndStat)
-        { }
+        {
+        }
     }
 
     // Radians(E:*[n])
@@ -25,6 +26,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public RadiansTableFunction()
             : base("Radians", TexlStrings.AboutRadiansT, FunctionCategories.Table)
-        { }
+        {
+        }
     }
 }

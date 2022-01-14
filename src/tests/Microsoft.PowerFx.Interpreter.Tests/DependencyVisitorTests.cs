@@ -3,8 +3,8 @@
 
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Linq;
+using System.Text;
 using Microsoft.PowerFx.Core.Public.Types;
 using Xunit;
 
@@ -36,7 +36,7 @@ namespace Microsoft.PowerFx.Tests
             Assert.True(result.IsSuccess);
 
             // sets should be equal
-            var sorted = result.TopLevelIdentifiers.OrderBy(x=>x).ToArray();
+            var sorted = result.TopLevelIdentifiers.OrderBy(x => x).ToArray();
             var actualStr = string.Join(',', sorted);
 
             Assert.Equal(dependsOn, actualStr);

@@ -18,7 +18,7 @@ namespace Microsoft.PowerFx.Core.Binding.BindInfo
 
         protected NameInfo(BindKind kind, NameNode node)
         {
-            Contracts.Assert(BindKind._Min <= kind && kind < BindKind._Lim);
+            Contracts.Assert(kind >= BindKind.Min && kind < BindKind.Lim);
             Contracts.AssertValue(node);
 
             Kind = kind;
@@ -28,7 +28,8 @@ namespace Microsoft.PowerFx.Core.Binding.BindInfo
         /// <summary>
         /// Asserts that the object is in fact of type T before casting.
         /// </summary>
-        public T As<T>() where T : NameInfo
+        public T As<T>()
+            where T : NameInfo
         {
             Contracts.Assert(this is T);
 
