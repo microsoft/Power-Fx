@@ -33,29 +33,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         }
     }
 
-    internal sealed class GetFieldFunction : BuiltinFunction
-    {
-        public const string GetFieldInvariantFunctionName = "GetField";
-
-        public override bool RequiresErrorContext => true;
-
-        public override bool IsSelfContained => true;
-
-        public override bool SupportsParamCoercion => false;
-
-        public override bool IsHidden => true;
-
-        public GetFieldFunction()
-            : base(GetFieldInvariantFunctionName, TexlStrings.AboutGetField, FunctionCategories.CustomObject, DType.CustomObject, 0, 2, 2, DType.CustomObject, DType.String)
-        {
-        }
-
-        public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
-        {
-            yield return new[] { TexlStrings.GetFieldArg1, TexlStrings.GetFieldArg2 };
-        }
-    }
-
     internal sealed class IndexFunction_CO : BuiltinFunction
     {
         public const string IndexInvariantFunctionName = "Index";

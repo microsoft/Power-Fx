@@ -121,29 +121,6 @@ namespace Microsoft.PowerFx.Functions
             }
         }
 
-        public static FormulaValue GetField(IRContext irContext, FormulaValue[] args)
-        {
-            var arg0 = (CustomObjectValue)args[0];
-            var arg1 = (StringValue)args[1];
-
-            var element = arg0.Impl;
-
-            if (element.TryGetProperty(arg1.Value, out var result))
-            {
-                // Map null to blank
-                if (result.IsNull)
-                {
-                    return new BlankValue(IRContext.NotInSource(FormulaType.Blank));
-                }
-
-                return new CustomObjectValue(irContext, result);
-            }
-            else
-            {
-                return new BlankValue(IRContext.NotInSource(FormulaType.Blank));
-            }
-        }
-
         public static FormulaValue Value_CO(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, CustomObjectValue[] args)
         {
             return new NumberValue(irContext, args[0].Impl.GetDouble());

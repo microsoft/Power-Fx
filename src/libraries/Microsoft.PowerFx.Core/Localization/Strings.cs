@@ -431,10 +431,6 @@ namespace Microsoft.PowerFx.Core.Localization
         public static StringGetter AboutParseJson = (b) => StringResources.Get("AboutParseJson", b);
         public static StringGetter ParseJsonArg1 = (b) => StringResources.Get("ParseJsonArg1", b);
 
-        public static StringGetter AboutGetField = (b) => StringResources.Get("AboutGetField", b);
-        public static StringGetter GetFieldArg1 = (b) => StringResources.Get("GetFieldArg1", b);
-        public static StringGetter GetFieldArg2 = (b) => StringResources.Get("GetFieldArg2", b);
-
         public static StringGetter AboutIndex = (b) => StringResources.Get("AboutIndex", b);
         public static StringGetter IndexArg1 = (b) => StringResources.Get("IndexArg1", b);
         public static StringGetter IndexArg2 = (b) => StringResources.Get("IndexArg2", b);

@@ -335,18 +335,6 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: ForAll)
             },
             {
-                BuiltinFunctionsCore.GetField,
-                StandardErrorHandling<FormulaValue>(
-                    expandArguments: NoArgExpansion,
-                    replaceBlankValues: DoNotReplaceBlank,
-                    checkRuntimeTypes: ExactSequence(
-                        ExactValueTypeOrBlank<CustomObjectValue>,
-                        ExactValueTypeOrBlank<StringValue>),
-                    checkRuntimeValues: CustomObjectObjectChecker,
-                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
-                    targetFunction: GetField)
-            },
-            {
                 BuiltinFunctionsCore.Hour,
                 StandardErrorHandling<FormulaValue>(
                     expandArguments: NoArgExpansion,
