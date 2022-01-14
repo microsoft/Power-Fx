@@ -13,7 +13,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 {
     public class ExpressionEvaluationTests
     {
-        //[Fact]
+        // [Fact]
         public void RunInterpreterTestCases()
         {
             var runner = new TestRunner(new InterpreterRunner());

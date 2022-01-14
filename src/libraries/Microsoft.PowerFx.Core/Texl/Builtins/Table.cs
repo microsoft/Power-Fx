@@ -85,4 +85,39 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return isValid;
         }
     }
+
+    internal class TableFunction_CO : BuiltinFunction
+    {
+        public override bool RequiresErrorContext => true;
+
+        public override bool IsSelfContained => true;
+
+        public override bool SupportsParamCoercion => false;
+
+        public TableFunction_CO()
+            : base("Table", TexlStrings.AboutTable, FunctionCategories.Table | FunctionCategories.CustomObject, DType.EmptyTable, 0, 1, 1, DType.CustomObject)
+        {
+        }
+
+        public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
+        {
+            yield return new[] { TexlStrings.TableArg1 };
+        }
+
+        // Typecheck an invocation of Table.
+        public override bool CheckInvocation(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        {
+            var isValid = CheckInvocation(args, argTypes, errors, out _, out nodeToCoercedTypeMap);
+
+            var rowType = DType.EmptyRecord.Add(new TypedName(DType.CustomObject, ColumnName_Value));
+            returnType = rowType.ToTable();
+
+            return isValid;
+        }
+
+        public override string GetUniqueTexlRuntimeName(bool isPrefetching = false)
+        {
+            return GetUniqueTexlRuntimeName(suffix: "_CO");
+        }
+    }
 }

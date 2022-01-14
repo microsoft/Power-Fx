@@ -2261,6 +2261,35 @@
   <data name="AboutChar_column_of_numbers" xml:space="preserve">
     <value>A column of code numbers from the character set on your platform.</value>
   </data>
+  <data name="AboutParseJson" xml:space="preserve">
+    <value>Converts a JSON string into an object.</value>
+    <comment>Description of 'ParseJson' function.</comment>
+  </data>
+  <data name="ParseJsonArg1" xml:space="preserve">
+    <value>input</value>
+    <comment>function_parameter - First argument of the ParseJson function - String type.</comment>
+  </data>
+  <data name="AboutParseJson_input" xml:space="preserve">
+    <value>A JSON string to process.</value>
+  </data>
+  <data name="AboutIndex" xml:space="preserve">
+    <value>Returns the record in a table at a given index.</value>
+    <comment>Description of 'Index' function.</comment>
+  </data>
+  <data name="IndexArg1" xml:space="preserve">
+    <value>table</value>
+    <comment>function_parameter - First argument of the Index function - Table type.</comment>
+  </data>
+  <data name="IndexArg2" xml:space="preserve">
+    <value>index</value>
+    <comment>function_parameter - Second argument of the Index function - Number type.</comment>
+  </data>
+  <data name="AboutIndex_table" xml:space="preserve">
+    <value>A table.</value>
+  </data>
+  <data name="AboutIndex_index" xml:space="preserve">
+    <value>An integer index.</value>
+  </data>
   <data name="FormMode_Edit_Name" xml:space="preserve">
     <value>Edit</value>
     <comment>{Locked} Enum value</comment>
