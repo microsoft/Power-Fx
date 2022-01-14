@@ -29,5 +29,9 @@ namespace Microsoft.PowerFx.Core.Public.Types
         void Visit(TimeType type);
 
         void Visit(OptionSetValueType type);
+
+        void Visit(InvalidType type);
+
+        void Visit(HyperlinkType type);
     }
 }
