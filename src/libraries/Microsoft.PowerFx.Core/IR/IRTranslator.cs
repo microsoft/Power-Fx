@@ -446,6 +446,13 @@ namespace Microsoft.PowerFx.Core.IR
                         }
                     }
                 }
+                else if (typeLhs.IsCustomObject)
+                {
+                    // Field access within a custom object.
+                    Contracts.Assert(typeLhs.IsCustomObject);
+
+                    result = new RecordFieldAccessNode(context.GetIRContext(node), left, nameRhs);
+                }
                 else
                 {
                     Contracts.Assert(context.Binding.ErrorContainer.HasErrors(node.Left) || context.Binding.ErrorContainer.HasErrors(node));

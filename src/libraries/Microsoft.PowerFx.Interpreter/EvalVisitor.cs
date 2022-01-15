@@ -341,6 +341,35 @@ namespace Microsoft.PowerFx
                 return left;
             }
 
+            if (left is CustomObjectValue cov)
+            {
+                if (cov.Impl.IsObject)
+                {
+                    if (cov.Impl.TryGetProperty(node.Field.Value, out var res))
+                    {
+                        return new CustomObjectValue(node.IRContext, res);
+                    }
+                    else
+                    {
+                        return new ErrorValue(node.IRContext, new ExpressionError()
+                        {
+                            Message = $"The object does not contain a field with the name {node.Field.Value}",
+                            Span = node.IRContext.SourceContext,
+                            Kind = ErrorKind.BadLanguageCode
+                        });
+                    }
+                }
+                else
+                {
+                    return new ErrorValue(node.IRContext, new ExpressionError()
+                    {
+                        Message = "The CustomObject does not represent an object",
+                        Span = node.IRContext.SourceContext,
+                        Kind = ErrorKind.BadLanguageCode
+                    });
+                }
+            }
+
             var record = (RecordValue)left;
             var val = record.GetField(node.IRContext, node.Field.Value);
 
