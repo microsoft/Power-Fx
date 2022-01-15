@@ -351,19 +351,14 @@ namespace Microsoft.PowerFx
                     }
                     else
                     {
-                        return new ErrorValue(node.IRContext, new ExpressionError()
-                        {
-                            Message = $"The object does not contain a field with the name {node.Field.Value}",
-                            Span = node.IRContext.SourceContext,
-                            Kind = ErrorKind.BadLanguageCode
-                        });
+                        return new BlankValue(node.IRContext);
                     }
                 }
                 else
                 {
                     return new ErrorValue(node.IRContext, new ExpressionError()
                     {
-                        Message = "The CustomObject does not represent an object",
+                        Message = "Accessing a field is not valid on this value",
                         Span = node.IRContext.SourceContext,
                         Kind = ErrorKind.BadLanguageCode
                     });
