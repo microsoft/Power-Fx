@@ -103,7 +103,7 @@ namespace Microsoft.PowerFx.Functions
             var len = element.GetArrayLength();
             var index = (int)arg1.Value;
 
-            if (index < len)
+            if (index <= len)
             {
                 var result = element[index - 1]; // 1-based index
 
