@@ -1,4 +1,7 @@
-﻿namespace Microsoft.PowerFx.Core.App
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
+namespace Microsoft.PowerFx.Core.App
 {
     /// <summary>
     /// All hosts should use <see cref="DefaultEnabledFeatures"/> except for Canvas Apps (legacy flag support)

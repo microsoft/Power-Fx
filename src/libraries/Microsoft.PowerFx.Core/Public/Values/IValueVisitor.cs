@@ -1,4 +1,7 @@
-﻿namespace Microsoft.PowerFx.Core.Public.Values
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
+namespace Microsoft.PowerFx.Core.Public.Values
 {
     public interface IValueVisitor
     {

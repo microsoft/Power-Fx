@@ -1,4 +1,7 @@
-﻿using Microsoft.PowerFx.Core.Types;
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
+using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Core.Binding.BindInfo

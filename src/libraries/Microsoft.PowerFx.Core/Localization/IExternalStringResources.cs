@@ -1,4 +1,7 @@
-﻿namespace Microsoft.PowerFx.Core.Localization
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
+namespace Microsoft.PowerFx.Core.Localization
 {
     /// <summary>
     /// This interface is used by Canvas apps to pass in an interface to access strings for keys that are resolved later by PowerFx.
