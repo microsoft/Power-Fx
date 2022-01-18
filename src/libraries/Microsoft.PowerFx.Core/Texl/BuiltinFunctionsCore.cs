@@ -72,6 +72,7 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction First = _library.Append(new FirstLastFunction(isFirst: true));
         public static readonly TexlFunction FirstN = _library.Append(new FirstLastNFunction(isFirst: true));
         public static readonly TexlFunction ForAll = _library.Append(new ForAllFunction());
+        public static readonly TexlFunction Index_CO = _library.Append(new IndexFunction_CO());
         public static readonly TexlFunction Hour = _library.Append(new HourFunction());
         public static readonly TexlFunction If = _library.Append(new IfFunction());
         public static readonly TexlFunction IfError = _library.Append(new IfErrorFunction());
@@ -111,6 +112,7 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction Not = _library.Append(new NotFunction());
         public static readonly TexlFunction Now = _library.Append(new NowFunction());
         public static readonly TexlFunction Or = _library.Append(new VariadicLogicalFunction(isAnd: false));
+        public static readonly TexlFunction ParseJson = _library.Append(new ParseJsonFunction());
         public static readonly TexlFunction Power = _library.Append(new PowerFunction());
         public static readonly TexlFunction PowerT = _library.Append(new PowerTFunction());
         public static readonly TexlFunction Pi = _library.Append(new PiFunction());
@@ -153,6 +155,7 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction SumT = _library.Append(new SumTableFunction());
         public static readonly TexlFunction Switch = _library.Append(new SwitchFunction());
         public static readonly TexlFunction Table = _library.Append(new TableFunction());
+        public static readonly TexlFunction Table_CO = _library.Append(new TableFunction_CO());
         public static readonly TexlFunction Tan = _library.Append(new TanFunction());
         public static readonly TexlFunction TanT = _library.Append(new TanTableFunction());
         public static readonly TexlFunction Time = _library.Append(new TimeFunction());
@@ -168,9 +171,11 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction Upper = _library.Append(new LowerUpperFunction(isLower: false));
         public static readonly TexlFunction UpperT = _library.Append(new LowerUpperTFunction(isLower: false));
         public static readonly TexlFunction Value = _library.Append(new ValueFunction());
+        public static readonly TexlFunction Value_CO = _library.Append(new ValueFunction_CO());
         public static readonly TexlFunction VarP = _library.Append(new VarPFunction());
         public static readonly TexlFunction VarPT = _library.Append(new VarPTableFunction());
         public static readonly TexlFunction Text = _library.Append(new TextFunction());
+        public static readonly TexlFunction Text_CO = _library.Append(new TextFunction_CO());
         public static readonly TexlFunction Weekday = _library.Append(new WeekdayFunction());
         public static readonly TexlFunction WeekdaysLong = _library.Append(new WeekdaysLongFunction());
         public static readonly TexlFunction WeekdaysShort = _library.Append(new WeekdaysShortFunction());

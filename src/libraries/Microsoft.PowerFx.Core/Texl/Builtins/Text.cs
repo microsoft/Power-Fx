@@ -165,4 +165,29 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return argumentIndex == 1 || argumentIndex == 2;
         }
     }
+
+    // Text(arg:O)
+    internal sealed class TextFunction_CO : BuiltinFunction
+    {
+        public override bool SupportsParamCoercion => false;
+
+        public override bool RequiresErrorContext => true;
+
+        public override bool IsSelfContained => true;
+
+        public TextFunction_CO()
+            : base("Text", TexlStrings.AboutText, FunctionCategories.CustomObject, DType.String, 0, 1, 1, DType.CustomObject)
+        {
+        }
+
+        public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
+        {
+            yield return new[] { TexlStrings.TextArg1 };
+        }
+
+        public override string GetUniqueTexlRuntimeName(bool isPrefetching = false)
+        {
+            return GetUniqueTexlRuntimeName(suffix: "_CO");
+        }
+    }
 }

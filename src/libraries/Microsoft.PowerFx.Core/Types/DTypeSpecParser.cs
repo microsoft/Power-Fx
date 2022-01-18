@@ -10,14 +10,14 @@ namespace Microsoft.PowerFx.Core.Types
 {
     internal static class DTypeSpecParser
     {
-        private const string _typeEncodings = "?ebnshdipmgo$cDT!*%lLNZPQqV";
+        private const string _typeEncodings = "?ebnshdipmgo$cDT!*%lLNZPQqVO";
         private static readonly DType[] _types = new DType[]
         {
             DType.Unknown, DType.Error, DType.Boolean, DType.Number, DType.String, DType.Hyperlink,
             DType.DateTime, DType.Image, DType.PenImage, DType.Media, DType.Guid, DType.Blob, DType.Currency, DType.Color,
             DType.Date, DType.Time, DType.EmptyRecord, DType.EmptyTable, DType.EmptyEnum,
             DType.OptionSetValue, DType.OptionSet, DType.ObjNull, DType.DateTimeNoTimeZone, DType.Polymorphic, DType.View, DType.ViewValue,
-            DType.NamedValue
+            DType.NamedValue, DType.CustomObject
         };
 
         // Parses a type specification, returns true and sets 'type' on success.
