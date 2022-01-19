@@ -76,6 +76,8 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction Hour = _library.Append(new HourFunction());
         public static readonly TexlFunction If = _library.Append(new IfFunction());
         public static readonly TexlFunction IfError = _library.Append(new IfErrorFunction());
+        public static readonly TexlFunction Index = _library.Append(new IndexFunction());
+        // public static readonly TexlFunction IndexT = _library.Append(new IndexTableFunction());
         public static readonly TexlFunction Int = _library.Append(new IntFunction());
         public static readonly TexlFunction IntT = _library.Append(new IntTableFunction());
         public static readonly TexlFunction IsBlank = _library.Append(new IsBlankFunction());

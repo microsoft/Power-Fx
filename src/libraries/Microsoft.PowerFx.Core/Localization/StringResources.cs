@@ -19,6 +19,7 @@ namespace Microsoft.PowerFx.Core.Localization
             Pares
         }
 
+
         /// <summary>
         ///  This field is set once on startup by Canvas' Document Server, and allows access to Canvas-specific string keys
         ///  It is a legacy use, left over from when PowerFx was deeply embedded in Canvas, and ideally should be removed if possible.
@@ -36,14 +37,14 @@ namespace Microsoft.PowerFx.Core.Localization
             Contracts.CheckValue(resourceKey.Key, "action");
             Contracts.CheckValueOrNull(locale, "locale");
 
+            ErrorResource resourceValue;
+
             // As foreign languages can lag behind en-US while being localized, if we can't find it then always look in the en-US locale
-            if (!TryGetErrorResource(resourceKey, out var resourceValue, locale) && !TryGetErrorResource(resourceKey, out resourceValue, FallbackLocale))
+            if (!TryGetErrorResource(resourceKey, out resourceValue, locale) && !TryGetErrorResource(resourceKey, out resourceValue, FallbackLocale))
             {
                 Debug.WriteLine(string.Format("ERROR error resource {0} not found", resourceKey));
                 if (ShouldThrowIfMissing)
-                {
                     throw new System.IO.FileNotFoundException(resourceKey.Key);
-                }
             }
 
             return resourceValue;
@@ -59,40 +60,38 @@ namespace Microsoft.PowerFx.Core.Localization
             Contracts.CheckValue(resourceKey, "action");
             Contracts.CheckValueOrNull(locale, "locale");
 
+            string resourceValue;
+
             // As foreign languages can lag behind en-US while being localized, if we can't find it then always look in the en-US locale
-            if (!TryGet(resourceKey, out var resourceValue, locale) && !TryGet(resourceKey, out resourceValue, FallbackLocale))
+            if (!TryGet(resourceKey, out resourceValue, locale) && !TryGet(resourceKey, out resourceValue, FallbackLocale))
             {
                 // Prior to ErrorResources, error messages were fetched like other string resources.
                 // The resource associated with the key corresponds to the ShortMessage of the new
                 // ErrorResource objects. For backwards compatibility with tests/telemetry that fetched
                 // the error message manually (as opposed to going through the DocError class), we check
                 // if there is an error resource associated with this key if we did not find it normally.
-                if (TryGetErrorResource(new ErrorResourceKey(resourceKey), out var potentialErrorResource, locale) || TryGetErrorResource(new ErrorResourceKey(resourceKey), out potentialErrorResource, FallbackLocale))
-                {
+                ErrorResource potentialErrorResource;
+                if (TryGetErrorResource(new ErrorResourceKey(resourceKey), out potentialErrorResource, locale) || TryGetErrorResource(new ErrorResourceKey(resourceKey), out potentialErrorResource, FallbackLocale))
                     return potentialErrorResource.GetSingleValue(ErrorResource.ShortMessageTag);
-                }
 
                 Debug.WriteLine(string.Format("ERROR resource string {0} not found", resourceKey));
                 if (ShouldThrowIfMissing)
-                {
                     throw new System.IO.FileNotFoundException(resourceKey);
-                }
             }
 
             return resourceValue;
         }
 
         // One resource dictionary per locale
-        private static readonly Dictionary<string, Dictionary<string, string>> Strings = new Dictionary<string, Dictionary<string, string>>();
-        private static readonly Dictionary<string, Dictionary<string, ErrorResource>> ErrorResources = new Dictionary<string, Dictionary<string, ErrorResource>>();
-        private static readonly object DictionaryLock = new object();
+        private static Dictionary<string, Dictionary<string, string>> Strings = new Dictionary<string, Dictionary<string, string>>();
+        private static Dictionary<string, Dictionary<string, ErrorResource>> ErrorResources = new Dictionary<string, Dictionary<string, ErrorResource>>();
+        private static Object dictionaryLock = new object();
 
         private class TypeFromThisAssembly
-        {
-        }
+        { }
 
-        private static readonly string ResourceNamePrefix = "Microsoft.PowerFx.Core.Strings.";
-        private static readonly string ResourceFileName = "PowerFxResources.resw";
+        private static string ResourceNamePrefix = "Microsoft.PowerFx.Core.Strings.";
+        private static string ResourceFileName = "PowerFxResources.resw";
 
         public static bool TryGetErrorResource(ErrorResourceKey resourceKey, out ErrorResource resourceValue, string locale = null)
         {
@@ -111,11 +110,14 @@ namespace Microsoft.PowerFx.Core.Localization
                 }
             }
 
-            if (!ErrorResources.TryGetValue(locale, out var errorResources))
+            Dictionary<string, ErrorResource> errorResources;
+
+            if (!ErrorResources.TryGetValue(locale, out errorResources))
             {
-                lock (DictionaryLock)
+                lock (dictionaryLock)
                 {
-                    LoadFromResource(locale, ResourceNamePrefix, typeof(TypeFromThisAssembly), ResourceFileName, ResourceFormat.Resw, out var strings, out errorResources);
+                    Dictionary<string, string> strings;
+                    LoadFromResource(locale, ResourceNamePrefix, typeof(TypeFromThisAssembly), ResourceFileName, ResourceFormat.Resw, out strings, out errorResources);
                     Strings[locale] = strings;
                     ErrorResources[locale] = errorResources;
                 }
@@ -141,11 +143,14 @@ namespace Microsoft.PowerFx.Core.Localization
                 }
             }
 
-            if (!Strings.TryGetValue(locale, out var strings))
+            Dictionary<string, string> strings;
+
+            if (!Strings.TryGetValue(locale, out strings))
             {
-                lock (DictionaryLock)
+                lock (dictionaryLock)
                 {
-                    LoadFromResource(locale, ResourceNamePrefix, typeof(TypeFromThisAssembly), ResourceFileName, ResourceFormat.Resw, out strings, out var errorResources);
+                    Dictionary<string, ErrorResource> errorResources;
+                    LoadFromResource(locale, ResourceNamePrefix, typeof(TypeFromThisAssembly), ResourceFileName, ResourceFormat.Resw, out strings, out errorResources);
                     Strings[locale] = strings;
                     ErrorResources[locale] = errorResources;
                 }
@@ -192,16 +197,14 @@ namespace Microsoft.PowerFx.Core.Localization
 
                     if (resourceFormat == ResourceFormat.Pares)
                     {
+
                         foreach (var item in loadedStrings)
                         {
-                            if (item.TryGetNonEmptyAttributeValue("type", out var type) && type == ErrorResource.XmlType)
-                            {
+                            string type;
+                            if (item.TryGetNonEmptyAttributeValue("type", out type) && type == ErrorResource.XmlType)
                                 errorResources[item.Attribute("name").Value] = ErrorResource.Parse(item);
-                            }
                             else
-                            {
                                 strings[item.Attribute("name").Value] = item.Element("value").Value;
-                            }
                         }
                     }
                     else if (resourceFormat == ResourceFormat.Resw)
@@ -211,15 +214,10 @@ namespace Microsoft.PowerFx.Core.Localization
                         {
                             var itemName = item.Attribute("name").Value;
                             if (itemName.StartsWith(ErrorResource.ReswErrorResourcePrefix, StringComparison.OrdinalIgnoreCase))
-                            {
                                 separatedResourceKeys[itemName] = item.Element("value").Value;
-                            }
                             else
-                            {
                                 strings[itemName] = item.Element("value").Value;
-                            }
                         }
-
                         errorResources = PostProcessErrorResources(separatedResourceKeys);
                     }
                     else
@@ -240,7 +238,6 @@ namespace Microsoft.PowerFx.Core.Localization
                 index = int.Parse(match.Groups[1].Value);
                 return true;
             }
-
             suffix = null;
             index = 0;
             return false;
@@ -260,20 +257,16 @@ namespace Microsoft.PowerFx.Core.Localization
                 }
                 else
                 {
-                    tagNumberToValuesDict = new Dictionary<int, string>
-                    {
-                        { index, resourceValue }
-                    };
+                    tagNumberToValuesDict = new Dictionary<int, string>();
+                    tagNumberToValuesDict.Add(index, resourceValue);
                     tagToValuesDict.Add(tag, tagNumberToValuesDict);
                 }
             }
             else
             {
                 tagToValuesDict = new Dictionary<string, Dictionary<int, string>>(StringComparer.OrdinalIgnoreCase);
-                var tagNumberToValuesDict = new Dictionary<int, string>
-                {
-                    { index, resourceValue }
-                };
+                var tagNumberToValuesDict = new Dictionary<int, string>();
+                tagNumberToValuesDict.Add(index, resourceValue);
                 tagToValuesDict.Add(tag, tagNumberToValuesDict);
                 errorResources.Add(resourceName, tagToValuesDict);
             }
@@ -287,24 +280,18 @@ namespace Microsoft.PowerFx.Core.Localization
             foreach (var resource in separateResourceKeys)
             {
                 if (!resource.Key.StartsWith(ErrorResource.ReswErrorResourcePrefix, StringComparison.OrdinalIgnoreCase))
-                {
                     continue;
-                }
 
                 // Skip URLs, we'll handle that paired with the link tag
                 if (resource.Key.EndsWith(ErrorResource.LinkTagUrlTag, StringComparison.OrdinalIgnoreCase))
-                {
                     continue;
-                }
 
                 foreach (var tag in ErrorResource.ErrorResourceTagToReswSuffix)
                 {
                     if (!ErrorResource.IsTagMultivalue(tag.Key))
                     {
                         if (!resource.Key.EndsWith(tag.Value, StringComparison.OrdinalIgnoreCase))
-                        {
                             continue;
-                        }
 
                         // Single valued tag, we use index=0 here when inserting
                         var resourceName = resource.Key.Substring(ErrorResource.ReswErrorResourcePrefix.Length, resource.Key.Length - (ErrorResource.ReswErrorResourcePrefix.Length + tag.Value.Length));
@@ -314,9 +301,7 @@ namespace Microsoft.PowerFx.Core.Localization
                     else
                     {
                         if (!TryGetMultiValueSuffix(resource.Key, tag.Value, out var suffix, out var index))
-                        {
                             continue;
-                        }
 
                         var resourceName = resource.Key.Substring(ErrorResource.ReswErrorResourcePrefix.Length, resource.Key.Length - (ErrorResource.ReswErrorResourcePrefix.Length + suffix.Length));
                         UpdateErrorResource(resourceName, resource.Value, tag.Key, index, errorResources);
@@ -328,7 +313,6 @@ namespace Microsoft.PowerFx.Core.Localization
                             separateResourceKeys.TryGetValue(resource.Key + "_url", out var urlValue).Verify();
                             UpdateErrorResource(resourceName, urlValue, ErrorResource.LinkTagUrlTag, index, errorResources);
                         }
-
                         break;
                     }
                 }
