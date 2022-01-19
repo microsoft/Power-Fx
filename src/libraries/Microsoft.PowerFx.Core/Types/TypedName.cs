@@ -1,5 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+// Licensed under the MIT license.
+
 #pragma warning disable 420
 
 using System;

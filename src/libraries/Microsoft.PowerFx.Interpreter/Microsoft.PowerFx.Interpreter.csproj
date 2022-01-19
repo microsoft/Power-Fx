@@ -15,6 +15,9 @@
 		<Title>Microsoft Power Fx Compiler - Interpreter Target</Title>
 		<Description>The Interpreter the Power Fx compiler</Description>
 	</PropertyGroup>
+	<ItemGroup>
+	  <AdditionalFiles Include="..\..\stylecop.json" Link="stylecop.json" />
+	</ItemGroup>
 
 	<ItemGroup>
 		<PackageReference Include="System.Text.Json" Version="5.0.2" />
