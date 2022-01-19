@@ -175,15 +175,14 @@ namespace Microsoft.PowerFx.Functions
                     Kind = ErrorKind.Validation
                 });
             } else {
-                var arg0 = (Array)args[0];
-                var arg1 = (NumberValue)args[1];
-                var arg2 = args[2] != null ? (NumberValue)args[2] : null;
-                var arg3 = args[3] != null ? (NumberValue)args[3] : null;
+                var table = (TableValue)args[0];
+                var row = (NumberValue)args[1];
+                var col = args[2] != null ? (NumberValue)args[2] : null;
 
                 if (args.Length == 2) {
-                    return arg0.Rows.ElementAt((int)arg1.Value).ToFormulaValue();
-                } else if (args.Length == 3) {
-                    return arg0.Rows.ElementAt((int)arg1.Value).ToFormulaValue();
+                    return table.Rows.ElementAt((int)row.Value).ToFormulaValue();
+                } else {
+                    return table.Rows.ElementAt((int)row.Value).ToFormulaValue();
                 }
             }
         }
