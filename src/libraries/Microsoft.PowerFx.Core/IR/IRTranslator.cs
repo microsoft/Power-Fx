@@ -446,6 +446,15 @@ namespace Microsoft.PowerFx.Core.IR
                         }
                     }
                 }
+                else if (typeLhs.IsCustomObject)
+                {
+                    // Field access within a custom object.
+                    Contracts.Assert(typeLhs.IsCustomObject);
+
+                    var right = new TextLiteralNode(IRContext.NotInSource(FormulaType.String), nameRhs);
+
+                    return new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.DynamicGetField, left, right);
+                }
                 else
                 {
                     Contracts.Assert(context.Binding.ErrorContainer.HasErrors(node.Left) || context.Binding.ErrorContainer.HasErrors(node));
