@@ -412,26 +412,6 @@
   <data name="AboutLast_source" xml:space="preserve">
     <value>A table whose last row will be returned.</value>
   </data>
-  <data name="AboutIndex" xml:space="preserve">
-    <value>Returns value or reference to value from within a table.</value>
-    <comment>Description of 'Index' function.</comment>
-  </data>
-	<data name="AboutIndexT" xml:space="preserve">
-    <value>Returns value or reference to value from within a column.</value>
-    <comment>Description of 'Index' function.</comment>
-  </data>
-  <data name="AboutIndex_array" xml:space="preserve">
-    <value>First argument of 'Index' function - The array or array of arrays of values that has to be indexed.</value>
-  </data>
-  <data name="AboutIndex_row" xml:space="preserve">
-    <value>Second argument of 'Index' function - The row in the array that has to be returned.</value>
-  </data>
-  <data name="AboutIndex_col" xml:space="preserve">
-    <value>Third (optional) argument of 'Index' function - The column in the array, if multiple columns, that has to be returned.</value>
-  </data>
-  <data name="AboutIndex_area" xml:space="preserve">
-    <value>Fourth (optional) argument of 'Index' function - The index of the array, if array of arrays, that has to be indexed.</value>
-  </data>
   <data name="AboutFirstN" xml:space="preserve">
     <value>Returns the first 'count' rows of 'source'.</value>
     <comment>Description of 'FirstN' function. 'source' should be translated as 'FirstLastNArg1'; 'count' should be translated as 'FirstLastNArg2'</comment>

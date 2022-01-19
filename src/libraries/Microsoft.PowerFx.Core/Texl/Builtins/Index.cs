@@ -19,14 +19,22 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override bool SupportsParamCoercion => false;
 
         public IndexFunction()
-            : base("Index", TexlStrings.AboutIndex, FunctionCategories.Table,
-            DType.EmptyRecord, 0, 1, 2, DType.EmptyTable, DType.Number)
+            : base(
+                "Index",
+                TexlStrings.AboutIndex,
+                FunctionCategories.Table,
+                DType.EmptyRecord,
+                0,
+                1,
+                2,
+                DType.EmptyTable,
+                DType.Number)
         { }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
-            yield return new [] { TexlStrings.FirstLastNArg1 };
-            yield return new [] { TexlStrings.FirstLastNArg1, TexlStrings.FirstLastNArg2 };
+            yield return new [] { TexlStrings.IndexArg1 };
+            yield return new [] { TexlStrings.IndexArg1, TexlStrings.IndexArg2 };
         }
 
         public override bool CheckInvocation(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
@@ -42,8 +50,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             var arg0Type = argTypes[0];
             returnType = arg0Type.ToRecord();
-
-
 
             return fArgsValid;
         }
