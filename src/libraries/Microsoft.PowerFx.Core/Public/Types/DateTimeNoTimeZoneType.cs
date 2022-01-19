@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+// Licensed under the MIT license.
 
 using System.Diagnostics;
 using Microsoft.PowerFx.Core.Types;
