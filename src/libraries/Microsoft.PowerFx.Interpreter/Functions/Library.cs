@@ -345,6 +345,20 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: Hour)
             },
             {
+                BuiltinFunctionsCore.Index_CO,
+                StandardErrorHandling<FormulaValue>(
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactSequence(
+                        ExactValueTypeOrBlank<CustomObjectValue>,
+                        ExactValueTypeOrBlank<NumberValue>),
+                    checkRuntimeValues: ExactSequence(
+                        CustomObjectArrayChecker,
+                        StrictPositiveNumberChecker),
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: Index_CO)
+            },
+            {
                 BuiltinFunctionsCore.Last,
                 StandardErrorHandling<TableValue>(
                     expandArguments: NoArgExpansion,
@@ -533,6 +547,16 @@ namespace Microsoft.PowerFx.Functions
                 Now
             },
             { BuiltinFunctionsCore.Or, Or },
+            {
+                BuiltinFunctionsCore.ParseJson,
+                StandardErrorHandling<StringValue>(
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<StringValue>,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: ParseJson)
+            },
             {
                 BuiltinFunctionsCore.Power,
                 StandardErrorHandling<NumberValue>(
@@ -732,6 +756,16 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: Table)
             },
             {
+                BuiltinFunctionsCore.Table_CO,
+                StandardErrorHandling<CustomObjectValue>(
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<CustomObjectValue>,
+                    checkRuntimeValues: CustomObjectArrayChecker,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: Table_CO)
+            },
+            {
                 BuiltinFunctionsCore.Text,
                 StandardErrorHandling<FormulaValue>(
                     expandArguments: NoArgExpansion,
@@ -740,6 +774,16 @@ namespace Microsoft.PowerFx.Functions
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.ReturnEmptyStringIfAnyArgIsBlank,
                     targetFunction: Text)
+            },
+            {
+                BuiltinFunctionsCore.Text_CO,
+                StandardErrorHandling<CustomObjectValue>(
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<CustomObjectValue>,
+                    checkRuntimeValues: CustomObjectStringChecker,
+                    returnBehavior: ReturnBehavior.ReturnEmptyStringIfAnyArgIsBlank,
+                    targetFunction: Text_CO)
             },
             {
                 BuiltinFunctionsCore.Time,
@@ -821,6 +865,16 @@ namespace Microsoft.PowerFx.Functions
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
                     targetFunction: Value)
+            },
+            {
+                BuiltinFunctionsCore.Value_CO,
+                StandardErrorHandling<CustomObjectValue>(
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<CustomObjectValue>,
+                    checkRuntimeValues: CustomObjectNumberChecker,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: Value_CO)
             },
             {
                 BuiltinFunctionsCore.With,
