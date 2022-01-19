@@ -244,6 +244,34 @@ namespace Microsoft.PowerFx
                     return OperatorGtTime(this, context, node.IRContext, args);
                 case BinaryOpKind.GeqTime:
                     return OperatorGeqTime(this, context, node.IRContext, args);
+                case BinaryOpKind.DynamicGetField:
+                    if (arg1 is CustomObjectValue cov && arg1 is StringValue sv)
+                    {
+                        if (cov.Impl.IsObject)
+                        {
+                            if (cov.Impl.TryGetProperty(sv.Value, out var res))
+                            {
+                                return new CustomObjectValue(node.IRContext, res);
+                            }
+                            else
+                            {
+                                return new BlankValue(node.IRContext);
+                            }
+                        }
+                        else
+                        {
+                            return new ErrorValue(node.IRContext, new ExpressionError()
+                            {
+                                Message = "Accessing a field is not valid on this value",
+                                Span = node.IRContext.SourceContext,
+                                Kind = ErrorKind.BadLanguageCode
+                            });
+                        }
+                    }
+                    else
+                    {
+                        return new BlankValue(node.IRContext);
+                    }
 
                 default:
                     return CommonErrors.UnreachableCodeError(node.IRContext);
@@ -339,30 +367,6 @@ namespace Microsoft.PowerFx
             if (left is ErrorValue)
             {
                 return left;
-            }
-
-            if (left is CustomObjectValue cov)
-            {
-                if (cov.Impl.IsObject)
-                {
-                    if (cov.Impl.TryGetProperty(node.Field.Value, out var res))
-                    {
-                        return new CustomObjectValue(node.IRContext, res);
-                    }
-                    else
-                    {
-                        return new BlankValue(node.IRContext);
-                    }
-                }
-                else
-                {
-                    return new ErrorValue(node.IRContext, new ExpressionError()
-                    {
-                        Message = "Accessing a field is not valid on this value",
-                        Span = node.IRContext.SourceContext,
-                        Kind = ErrorKind.BadLanguageCode
-                    });
-                }
             }
 
             var record = (RecordValue)left;

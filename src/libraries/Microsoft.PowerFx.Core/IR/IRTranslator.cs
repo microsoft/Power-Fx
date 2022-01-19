@@ -451,7 +451,9 @@ namespace Microsoft.PowerFx.Core.IR
                     // Field access within a custom object.
                     Contracts.Assert(typeLhs.IsCustomObject);
 
-                    result = new RecordFieldAccessNode(context.GetIRContext(node), left, nameRhs);
+                    var right = new TextLiteralNode(context.GetIRContext(node.RightNode), nameRhs);
+
+                    return new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.DynamicGetField, left, right);
                 }
                 else
                 {
