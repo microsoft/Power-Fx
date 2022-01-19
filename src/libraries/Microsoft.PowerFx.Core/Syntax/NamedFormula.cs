@@ -13,18 +13,26 @@ namespace Microsoft.PowerFx.Core.Syntax
     /// <summary>
     /// This encapsulates a named formula: its original script, the parsed result, and any parse errors.
     /// </summary>
-    internal sealed class NamedFormula
+    internal class NamedFormula
     {
+        /// <summary>
+        /// A script containing one or more named formulas.
+        /// </summary>
         public readonly string Script;
 
         // The language settings used for parsing this script.
         // May be null if the script is to be parsed in the current locale.
         public readonly ILanguageSettings Loc;
 
+        public Dictionary<DName, TexlNode> FormulasResult;
+
         private List<TexlError> _errors;
 
-        internal Dictionary<DName, TexlNode> _formulasResult;
-
+        /// <summary>
+        /// Initializes a new instance of the <see cref="NamedFormula"/> class.
+        /// </summary>
+        /// <param name="script"></param>
+        /// <param name="loc"></param>
         public NamedFormula(string script, ILanguageSettings loc = null)
         {
             Contracts.AssertValue(script);
@@ -34,12 +42,16 @@ namespace Microsoft.PowerFx.Core.Syntax
             Loc = loc;
         }
 
+        /// <summary>
+        /// Ensures that the named formulas have been parsed and if not, parses them.
+        /// </summary>
+        /// <returns></returns>
         public bool EnsureParsed()
         {
-            if (_formulasResult == null)
+            if (FormulasResult == null)
             {
                 var result = TexlParser.ParseFormulasScript(Script, loc: Loc);
-                _formulasResult = result.NamedFormulas;
+                FormulasResult = result.NamedFormulas;
                 _errors = result.Errors;
             }
 
