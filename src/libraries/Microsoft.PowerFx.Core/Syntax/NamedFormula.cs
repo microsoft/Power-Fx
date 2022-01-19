@@ -45,5 +45,15 @@ namespace Microsoft.PowerFx.Core.Syntax
 
             return _errors == null;
         }
+
+        /// <summary>
+        /// Gets the part of the script associated with that node.
+        /// </summary>
+        /// <param name="node"></param>
+        /// <returns></returns>
+        public string GetSubscript(TexlNode node)
+        {
+            return node.GetCompleteSpan().GetFragment(Script);
+        }
     }
 }
