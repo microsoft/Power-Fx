@@ -245,7 +245,7 @@ namespace Microsoft.PowerFx
                 case BinaryOpKind.GeqTime:
                     return OperatorGeqTime(this, context, node.IRContext, args);
                 case BinaryOpKind.DynamicGetField:
-                    if (arg1 is CustomObjectValue cov && arg1 is StringValue sv)
+                    if (arg1 is CustomObjectValue cov && arg2 is StringValue sv)
                     {
                         if (cov.Impl.IsObject)
                         {
