@@ -69,6 +69,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Core.Public.Types.StringType",
                 "Microsoft.PowerFx.Core.Public.Types.TableType",
                 "Microsoft.PowerFx.Core.Public.Types.TimeType",
+                "Microsoft.PowerFx.Core.Public.Types.HyperlinkType",
                 "Microsoft.PowerFx.Core.Localization.ErrorResourceKey",
                 "Microsoft.PowerFx.Core.Localization.Span",
                 "Microsoft.PowerFx.Core.Functions.Publish.Capabilities",

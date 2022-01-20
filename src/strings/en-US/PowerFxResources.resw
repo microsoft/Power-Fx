@@ -5546,12 +5546,24 @@
     <comment>Error Message. Used in formula columns for scenarios where the maker attempts to use a function that is not supported, providing an alternate function name.  The {0} will be the name of the function that is not supported, and {1} is the name of the suggested alternate.</comment>
   </data>
   <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
-    <value>This result type {0} is not supported in formula columns.</value>
+    <value>The result type {0} is not supported in formula columns.</value>
     <comment>Error Message. Used in formula columns for a formula that returns a type which is not supported.</comment>
   </data>
   <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
     <value>The result type for this formula is expected to be {0}, but the actual result type is {1}. The result type of a formula column cannot be changed.</value>
     <comment>Error Message. Used in formula columns for a formula that returns an unexpected result type during editing. The {0} will be the name of the required type. The {1} will be the name of the incorrect type.</comment>
+  </data>
+  <data name="FormulaColumns_ColumnTypeNotSupported" xml:space="preserve">
+    <value>Columns of type {0} are not supported in formula columns.</value>
+    <comment>Error Message. Used in formula columns for a formula where the maker attempts to use a column from Dataverse that is not supported, such as floating point.</comment>
+  </data>
+    <data name="FormulaColumns_ColumnFormatNotSupported" xml:space="preserve">
+    <value>Columns of type {0} with format {1} are not supported in formula columns.</value>
+    <comment>Error Message. Used in formula columns for a formula where the maker attempts to use a column from Dataverse that is of a format that not supported, such as whole number formatted as language.</comment>
+  </data>
+    <data name="FormulaColumns_FormulaTooLong" xml:space="preserve">
+    <value>Formulas can't be longer than 1000 characters.</value>
+    <comment>Error Message. Used in formula columns for a formula where the text is too long.</comment>
   </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
     <value>Expected an operand. The formula or expression expects a valid operand. For example, you can add the operand '2' to the expression ' 1 +_' so that the result is '3'. Or, you can add the operand "there" to the expression '"Hi "&amp; _ ' so that the result is 'Hi there'.</value>
