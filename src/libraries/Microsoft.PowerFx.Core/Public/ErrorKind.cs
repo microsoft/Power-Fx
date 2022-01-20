@@ -34,6 +34,7 @@ namespace Microsoft.PowerFx.Core.Public
         QuotaExceeded = 22,
         Network = 23,
         Numeric = 24,
-        Canceled = 25
+        InvalidArgument = 25,
+        Canceled = 26
     }
 }
