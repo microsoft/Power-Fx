@@ -1,4 +1,7 @@
-﻿using Microsoft.PowerFx.Core.Functions;
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
+using Microsoft.PowerFx.Core.Functions;
 
 namespace Microsoft.PowerFx.Core.Texl.Intellisense.IntellisenseData
 {

@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+// Licensed under the MIT license.
 
 using System.Diagnostics.Contracts;
 using Microsoft.PowerFx.Core.IR;

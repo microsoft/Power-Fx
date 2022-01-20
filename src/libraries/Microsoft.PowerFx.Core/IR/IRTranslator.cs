@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+// Licensed under the MIT license.
 
 using System;
 using System.Collections.Generic;
@@ -445,6 +445,15 @@ namespace Microsoft.PowerFx.Core.IR
                             result = new RecordFieldAccessNode(context.GetIRContext(node), left, nameRhs);
                         }
                     }
+                }
+                else if (typeLhs.IsCustomObject)
+                {
+                    // Field access within a custom object.
+                    Contracts.Assert(typeLhs.IsCustomObject);
+
+                    var right = new TextLiteralNode(IRContext.NotInSource(FormulaType.String), nameRhs);
+
+                    return new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.DynamicGetField, left, right);
                 }
                 else
                 {
