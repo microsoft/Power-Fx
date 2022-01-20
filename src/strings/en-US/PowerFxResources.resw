@@ -5549,9 +5549,13 @@
     <value>The result type for this formula is expected to be {0}, but the actual result type is {1}. The result type of a formula column cannot be changed.</value>
     <comment>Error Message. Used in formula columns for a formula that returns an unexpected result type during editing. The {0} will be the name of the required type. The {1} will be the name of the incorrect type.</comment>
   </data>
-  <data name="FormulaColumns_FloatingPointNotSupported" xml:space="preserve">
-    <value>Cannot use floating point column in formula columns.</value>
-    <comment>Error Message. Used in formula columns for a formula where the maker attempts to access a floating point field from Dataverse.</comment>
+  <data name="FormulaColumns_ColumnTypeNotSupported" xml:space="preserve">
+    <value>Columns of type {0} are not supported in formula columns.</value>
+    <comment>Error Message. Used in formula columns for a formula where the maker attempts to use a column from Dataverse that is not supported, such as floating point.</comment>
+  </data>
+    <data name="FormulaColumns_ColumnFormatNotSupported" xml:space="preserve">
+    <value>Columns of type {0} with format {1} are not supported in formula columns.</value>
+    <comment>Error Message. Used in formula columns for a formula where the maker attempts to use a column from Dataverse that is of a format that not supported, such as whole number formatted as language.</comment>
   </data>
     <data name="FormulaColumns_FormulaTooLong" xml:space="preserve">
     <value>Formulas can't be longer than 1000 characters.</value>
