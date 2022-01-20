@@ -172,7 +172,7 @@ namespace Microsoft.PowerFx.Functions
             }
             else if (impl.IsBoolean)
             {
-                str = impl.GetBoolean().ToString();
+                str = impl.GetBoolean() ? "true" : "false";
             }
             else
             {
