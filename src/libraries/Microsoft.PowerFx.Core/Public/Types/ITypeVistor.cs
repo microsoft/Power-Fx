@@ -32,8 +32,6 @@ namespace Microsoft.PowerFx.Core.Public.Types
 
         void Visit(CustomObjectType type);
 
-        void Visit(InvalidType type);
-
         void Visit(HyperlinkType type);
     }
 }

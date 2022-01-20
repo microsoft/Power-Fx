@@ -42,8 +42,6 @@ namespace Microsoft.PowerFx.Core.Public.Types
 
         public static FormulaType Hyperlink { get; } = new HyperlinkType();
 
-        public static FormulaType Invalid { get; } = new InvalidType();
-
         // chained by derived type 
         internal FormulaType(DType type)
         {
@@ -52,17 +50,6 @@ namespace Microsoft.PowerFx.Core.Public.Types
 
         // Get the correct derived type
         internal static FormulaType Build(DType type)
-        {
-            var formulaType = BuildOrInvalid(type);
-            if (formulaType == Invalid)
-            {
-                throw new NotImplementedException($"Not implemented type: {type}");
-            }
-
-            return formulaType;
-        }
-
-        internal static FormulaType BuildOrInvalid(DType type)
         {
             switch (type.Kind)
             {
@@ -94,7 +81,7 @@ namespace Microsoft.PowerFx.Core.Public.Types
                     return CustomObject;
 
                 default:
-                    return Invalid;
+                    throw new NotImplementedException($"Not implemented type: {type}");
             }
         }
 

@@ -5542,7 +5542,7 @@
     <comment>Error Message. Used in formula columns for scenarios where the maker attempts to use a function that is not supported, providing an alternate function name.  The {0} will be the name of the function that is not supported, and {1} is the name of the suggested alternate.</comment>
   </data>
   <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
-    <value>This result type {0} is not supported in formula columns.</value>
+    <value>The result type {0} is not supported in formula columns.</value>
     <comment>Error Message. Used in formula columns for a formula that returns a type which is not supported.</comment>
   </data>
   <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
