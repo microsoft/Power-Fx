@@ -33,6 +33,7 @@ namespace Microsoft.PowerFx.Core.Public
         InsufficientMemory = 21,
         QuotaExceeded = 22,
         Network = 23,
-        Numeric = 24
+        Numeric = 24,
+        InvalidArgument = 25
     }
 }
