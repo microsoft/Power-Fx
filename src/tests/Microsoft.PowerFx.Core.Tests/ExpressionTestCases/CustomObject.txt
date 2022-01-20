@@ -21,3 +21,6 @@ Blank()
 
 >> Value(ParseJson("""s""").a)
 #Error
+
+>> Value(ParseJson("This "" Is , "" Invalid ")).a
+#Error

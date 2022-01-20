@@ -268,9 +268,17 @@ namespace Microsoft.PowerFx
                             });
                         }
                     }
-                    else
+                    else if (arg1 is BlankValue)
                     {
                         return new BlankValue(node.IRContext);
+                    }
+                    else if (arg1 is ErrorValue)
+                    {
+                        return arg1;
+                    }
+                    else
+                    {
+                        return CommonErrors.UnreachableCodeError(node.IRContext);
                     }
 
                 default:
