@@ -781,7 +781,7 @@ namespace Microsoft.PowerFx.Functions
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: DoNotReplaceBlank,
                     checkRuntimeTypes: ExactValueTypeOrBlank<CustomObjectValue>,
-                    checkRuntimeValues: CustomObjectStringChecker,
+                    checkRuntimeValues: CustomObjectPrimitiveChecker,
                     returnBehavior: ReturnBehavior.ReturnEmptyStringIfAnyArgIsBlank,
                     targetFunction: Text_CO)
             },
@@ -872,7 +872,7 @@ namespace Microsoft.PowerFx.Functions
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: DoNotReplaceBlank,
                     checkRuntimeTypes: ExactValueTypeOrBlank<CustomObjectValue>,
-                    checkRuntimeValues: CustomObjectNumberChecker,
+                    checkRuntimeValues: CustomObjectPrimitiveChecker,
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
                     targetFunction: Value_CO)
             },

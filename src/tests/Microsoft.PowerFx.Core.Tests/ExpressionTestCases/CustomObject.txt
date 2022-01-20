@@ -1,17 +1,24 @@
-﻿>> Value(Index(ParseJson("[5]"), 1))
+﻿// Value tests
+>> Value(Index(ParseJson("[5]"), 1))
 5
 
 >> Value(ParseJson("5"))
 5
 
->> Text(Index(ParseJson("[""s""]"), 1))
-"s"
+>> Value(ParseJson("true"))
+1
 
->> Text(ParseJson("""s"""))
-"s"
+>> Value(ParseJson("false"))
+0
 
->> Sum(Table(ParseJson("[1, 2, 3, 4, 5]")), Value(Value))
-15
+>> Value(ParseJson("""5"""))
+5
+
+>> Value(ParseJson("""a"""))
+#Error
+
+>> Value(ParseJson("null"))
+Blank()
 
 >> Value(ParseJson("{""a"": 5}").a)
 5
@@ -22,5 +29,33 @@ Blank()
 >> Value(ParseJson("""s""").a)
 #Error
 
->> Value(ParseJson("This "" Is , "" Invalid ")).a
+>> Value(ParseJson("This "" Is , "" Invalid ").a)
 #Error
+
+// Text tests
+>> Text(Index(ParseJson("[""s""]"), 1))
+"s"
+
+>> Text(ParseJson("""s"""))
+"s"
+
+>> Text(ParseJson("null"))
+""
+
+>> Text(ParseJson("true"))
+"true"
+
+>> Text(ParseJson("false"))
+"false"
+
+>> Text(ParseJson("5"))
+"5"
+
+ParseJson("{""a"": null}").a
+Blank()
+
+ParseJson("null").a
+Blank()
+
+>> Sum(Table(ParseJson("[1, 2, 3, 4, 5]")), Value(Value))
+15

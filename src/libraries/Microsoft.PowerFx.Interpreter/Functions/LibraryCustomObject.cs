@@ -34,6 +34,8 @@ namespace Microsoft.PowerFx.Functions
 
             public bool IsNumber => _element.ValueKind == JsonValueKind.Number;
 
+            public bool IsBoolean => _element.ValueKind == JsonValueKind.True || _element.ValueKind == JsonValueKind.False;
+
             public int GetArrayLength()
             {
                 return _element.GetArrayLength();
@@ -47,6 +49,11 @@ namespace Microsoft.PowerFx.Functions
             public string GetString()
             {
                 return _element.GetString();
+            }
+
+            public bool GetBoolean()
+            {
+                return _element.GetBoolean();
             }
 
             public object ToObject()
@@ -124,12 +131,55 @@ namespace Microsoft.PowerFx.Functions
 
         public static FormulaValue Value_CO(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, CustomObjectValue[] args)
         {
-            return new NumberValue(irContext, args[0].Impl.GetDouble());
+            var impl = args[0].Impl;
+            double number;
+
+            if (impl.IsString)
+            {
+                if (!double.TryParse(impl.GetString(), out number))
+                {
+                    return CommonErrors.InvalidNumberFormatError(irContext);
+                }
+            }
+            else if (impl.IsNull)
+            {
+                return new BlankValue(irContext);
+            }
+            else if (impl.IsBoolean)
+            {
+                number = impl.GetBoolean() ? 1 : 0;
+            }
+            else
+            {
+                number = impl.GetDouble();
+            }
+
+            return new NumberValue(irContext, number);
         }
 
         public static FormulaValue Text_CO(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, CustomObjectValue[] args)
         {
-            return new StringValue(irContext, args[0].Impl.GetString());
+            var impl = args[0].Impl;
+            string str;
+
+            if (impl.IsString)
+            {
+                str = impl.GetString();
+            }
+            else if (impl.IsNull)
+            {
+                str = string.Empty;
+            }
+            else if (impl.IsBoolean)
+            {
+                str = impl.GetBoolean().ToString();
+            }
+            else
+            {
+                str = impl.GetDouble().ToString();
+            }
+
+            return new StringValue(irContext, str);
         }
 
         public static FormulaValue Table_CO(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, CustomObjectValue[] args)
@@ -154,7 +204,7 @@ namespace Microsoft.PowerFx.Functions
             return new InMemoryTableValue(irContext, resultRows);
         }
 
-        private static FormulaValue CustomObjectNumberChecker(IRContext irContext, int index, FormulaValue arg)
+        private static FormulaValue CustomObjectPrimitiveChecker(IRContext irContext, int index, FormulaValue arg)
         {
             if (arg is CustomObjectValue cov)
             {
@@ -166,20 +216,7 @@ namespace Microsoft.PowerFx.Functions
                         return CommonErrors.ArgumentOutOfRange(irContext);
                     }
                 }
-                else
-                {
-                    return CommonErrors.RuntimeTypeMismatch(irContext);
-                }
-            }
-
-            return arg;
-        }
-
-        private static FormulaValue CustomObjectStringChecker(IRContext irContext, int index, FormulaValue arg)
-        {
-            if (arg is CustomObjectValue cov)
-            {
-                if (!cov.Impl.IsString)
+                else if (cov.Impl.IsObject || cov.Impl.IsArray)
                 {
                     return CommonErrors.RuntimeTypeMismatch(irContext);
                 }

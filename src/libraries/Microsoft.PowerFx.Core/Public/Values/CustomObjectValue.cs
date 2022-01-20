@@ -23,6 +23,8 @@ namespace Microsoft.PowerFx.Core.Public.Values
 
         bool IsNumber { get; }
 
+        bool IsBoolean { get; }
+
         object ToObject();
 
         int GetArrayLength();
@@ -34,6 +36,8 @@ namespace Microsoft.PowerFx.Core.Public.Values
         string GetString();
 
         double GetDouble();
+
+        bool GetBoolean();
     }
 
     public class CustomObjectValue : ValidFormulaValue

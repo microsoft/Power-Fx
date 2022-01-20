@@ -251,12 +251,21 @@ namespace Microsoft.PowerFx
                         {
                             if (cov.Impl.TryGetProperty(sv.Value, out var res))
                             {
+                                if (res.IsNull)
+                                {
+                                    return new BlankValue(node.IRContext);
+                                }
+
                                 return new CustomObjectValue(node.IRContext, res);
                             }
                             else
                             {
                                 return new BlankValue(node.IRContext);
                             }
+                        }
+                        else if (cov.Impl.IsNull)
+                        {
+                            return new BlankValue(node.IRContext);
                         }
                         else
                         {
