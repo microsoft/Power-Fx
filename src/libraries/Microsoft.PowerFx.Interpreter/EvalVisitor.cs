@@ -247,11 +247,11 @@ namespace Microsoft.PowerFx
                 case BinaryOpKind.DynamicGetField:
                     if (arg1 is CustomObjectValue cov && arg2 is StringValue sv)
                     {
-                        if (cov.Impl.IsObject)
+                        if (cov.Impl.Kind == CustomObjectKind.Object)
                         {
                             if (cov.Impl.TryGetProperty(sv.Value, out var res))
                             {
-                                if (res.IsNull)
+                                if (res.Kind == CustomObjectKind.Null)
                                 {
                                     return new BlankValue(node.IRContext);
                                 }
@@ -263,7 +263,7 @@ namespace Microsoft.PowerFx
                                 return new BlankValue(node.IRContext);
                             }
                         }
-                        else if (cov.Impl.IsNull)
+                        else if (cov.Impl.Kind == CustomObjectKind.Null)
                         {
                             return new BlankValue(node.IRContext);
                         }

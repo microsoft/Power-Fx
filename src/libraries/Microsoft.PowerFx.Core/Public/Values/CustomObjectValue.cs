@@ -11,19 +11,19 @@ using Microsoft.PowerFx.Core.Public.Types;
 
 namespace Microsoft.PowerFx.Core.Public.Values
 {
+    public enum CustomObjectKind
+    {
+        Null,
+        Number,
+        String,
+        Boolean,
+        Object,
+        Array
+    }
+
     public interface ICustomObject
     {
-        bool IsArray { get; }
-
-        bool IsNull { get; }
-
-        bool IsObject { get; }
-
-        bool IsString { get; }
-
-        bool IsNumber { get; }
-
-        bool IsBoolean { get; }
+        CustomObjectKind Kind { get; }
 
         object ToObject();
 

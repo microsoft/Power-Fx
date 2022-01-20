@@ -22,6 +22,29 @@ namespace Microsoft.PowerFx.Functions
                 _element = element;
             }
 
+            public CustomObjectKind Kind
+            {
+                get
+                {
+                    switch (_element.ValueKind)
+                    {
+                        case JsonValueKind.Object:
+                            return CustomObjectKind.Object;
+                        case JsonValueKind.Array:
+                            return CustomObjectKind.Array;
+                        case JsonValueKind.String:
+                            return CustomObjectKind.String;
+                        case JsonValueKind.Number:
+                            return CustomObjectKind.Number;
+                        case JsonValueKind.True:
+                        case JsonValueKind.False:
+                            return CustomObjectKind.Boolean;
+                    }
+
+                    return CustomObjectKind.Null;
+                }
+            }
+
             public ICustomObject this[int index] => new JsonCustomObject(_element[index]);
 
             public bool IsArray => _element.ValueKind == JsonValueKind.Array;
@@ -116,7 +139,7 @@ namespace Microsoft.PowerFx.Functions
                 var result = element[index - 1]; // 1-based index
 
                 // Map null to blank
-                if (result.IsNull)
+                if (result.Kind == CustomObjectKind.Null)
                 {
                     return new BlankValue(IRContext.NotInSource(FormulaType.Blank));
                 }
@@ -134,18 +157,18 @@ namespace Microsoft.PowerFx.Functions
             var impl = args[0].Impl;
             double number;
 
-            if (impl.IsString)
+            if (impl.Kind == CustomObjectKind.String)
             {
                 if (!double.TryParse(impl.GetString(), out number))
                 {
                     return CommonErrors.InvalidNumberFormatError(irContext);
                 }
             }
-            else if (impl.IsNull)
+            else if (impl.Kind == CustomObjectKind.Null)
             {
                 return new BlankValue(irContext);
             }
-            else if (impl.IsBoolean)
+            else if (impl.Kind == CustomObjectKind.Boolean)
             {
                 number = impl.GetBoolean() ? 1 : 0;
             }
@@ -162,15 +185,15 @@ namespace Microsoft.PowerFx.Functions
             var impl = args[0].Impl;
             string str;
 
-            if (impl.IsString)
+            if (impl.Kind == CustomObjectKind.String)
             {
                 str = impl.GetString();
             }
-            else if (impl.IsNull)
+            else if (impl.Kind == CustomObjectKind.Null)
             {
                 str = string.Empty;
             }
-            else if (impl.IsBoolean)
+            else if (impl.Kind == CustomObjectKind.Boolean)
             {
                 str = impl.GetBoolean() ? "true" : "false";
             }
@@ -208,7 +231,7 @@ namespace Microsoft.PowerFx.Functions
         {
             if (arg is CustomObjectValue cov)
             {
-                if (cov.Impl.IsNumber)
+                if (cov.Impl.Kind == CustomObjectKind.Number)
                 {
                     var number = cov.Impl.GetDouble();
                     if (IsInvalidDouble(number))
@@ -216,7 +239,7 @@ namespace Microsoft.PowerFx.Functions
                         return CommonErrors.ArgumentOutOfRange(irContext);
                     }
                 }
-                else if (cov.Impl.IsObject || cov.Impl.IsArray)
+                else if (cov.Impl.Kind == CustomObjectKind.Object || cov.Impl.Kind == CustomObjectKind.Array)
                 {
                     return CommonErrors.RuntimeTypeMismatch(irContext);
                 }
@@ -229,7 +252,7 @@ namespace Microsoft.PowerFx.Functions
         {
             if (arg is CustomObjectValue cov)
             {
-                if (!cov.Impl.IsArray)
+                if (cov.Impl.Kind != CustomObjectKind.Array)
                 {
                     return new ErrorValue(irContext, new ExpressionError()
                     {
