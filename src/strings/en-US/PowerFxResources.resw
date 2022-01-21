@@ -3301,10 +3301,6 @@
     <value>InvalidArgument</value>
     <comment>{Locked} Enum value</comment>
   </data>
-  <data name="ErrorKind_Canceled_Name" xml:space="preserve">
-    <value>Canceled</value>
-    <comment>{Locked} Enum value</comment>
-  </data>
   <data name="Post" xml:space="preserve">
     <value>Post</value>
     <comment>Button text to post comment</comment>

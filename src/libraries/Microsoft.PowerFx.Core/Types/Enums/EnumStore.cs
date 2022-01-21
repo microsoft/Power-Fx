@@ -198,10 +198,8 @@ namespace Microsoft.PowerFx.Core.Types.Enums
                 // TASK 4620228: Connect to Data: Need Final design on Error enum returned by Errors function.
                 {
                     EnumConstants.ErrorKindEnumString,
-                    "%n[None:0, Sync:1, MissingRequired:2, CreatePermission:3, EditPermission:4, DeletePermission:5, Conflict:6, NotFound:7, ConstraintViolated:8, " +
-                    "GeneratedValue:9, ReadOnlyValue:10, Validation: 11, Unknown: 12, Div0: 13, BadLanguageCode: 14, BadRegex: 15, InvalidFunctionUsage: 16, " +
-                    "FileNotFound: 17, AnalysisError: 18, ReadPermission: 19, NotSupported: 20, InsufficientMemory: 21, QuotaExceeded: 22, Network: 23, Numeric: 24, " +
-                    "InvalidArgument: 25, Canceled: 26]"
+                    "%n[None:0, Sync:1, MissingRequired:2, CreatePermission:3, EditPermission:4, DeletePermission:5, Conflict:6, NotFound:7, ConstraintViolated:8, GeneratedValue:9, ReadOnlyValue:10, Validation: 11, Unknown: 12, " +
+                    "Div0: 13, BadLanguageCode: 14, BadRegex: 15, InvalidFunctionUsage: 16, FileNotFound: 17, AnalysisError: 18, ReadPermission: 19, NotSupported: 20, InsufficientMemory: 21, QuotaExceeded: 22, Network: 23, Numeric: 24, InvalidArgument: 25]"
                 },
                 {
                     EnumConstants.ZoomEnumString,
