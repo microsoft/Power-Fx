@@ -1,6 +1,7 @@
-﻿using System;
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 using System.Collections.Generic;
-using System.Text;
 using System.Text.Json;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.IR;
@@ -196,24 +197,6 @@ namespace Microsoft.PowerFx.Functions
                     return new ErrorValue(irContext, new ExpressionError()
                     {
                         Message = "The CustomObject does not represent an array",
-                        Span = irContext.SourceContext,
-                        Kind = ErrorKind.InvalidFunctionUsage
-                    });
-                }
-            }
-
-            return arg;
-        }
-
-        private static FormulaValue CustomObjectObjectChecker(IRContext irContext, int index, FormulaValue arg)
-        {
-            if (arg is CustomObjectValue cov)
-            {
-                if (!cov.Impl.IsObject)
-                {
-                    return new ErrorValue(irContext, new ExpressionError()
-                    {
-                        Message = "The CustomObject does not represent an object",
                         Span = irContext.SourceContext,
                         Kind = ErrorKind.InvalidFunctionUsage
                     });

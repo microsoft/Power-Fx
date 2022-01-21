@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+// Licensed under the MIT license.
 
 namespace Microsoft.PowerFx.Core.Public.Types
 {
@@ -29,7 +29,9 @@ namespace Microsoft.PowerFx.Core.Public.Types
         void Visit(TimeType type);
 
         void Visit(OptionSetValueType type);
-        
+
         void Visit(CustomObjectType type);
+
+        void Visit(HyperlinkType type);
     }
 }

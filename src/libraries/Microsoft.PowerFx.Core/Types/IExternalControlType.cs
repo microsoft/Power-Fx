@@ -1,4 +1,7 @@
-﻿using Microsoft.PowerFx.Core.App.Controls;
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
+using Microsoft.PowerFx.Core.App.Controls;
 
 namespace Microsoft.PowerFx.Core.Types
 {
