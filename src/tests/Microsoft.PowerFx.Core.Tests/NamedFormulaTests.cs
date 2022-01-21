@@ -34,16 +34,25 @@ namespace Microsoft.PowerFx.Core.Tests
         {
             var namedFormula = new NamedFormula(script);
             namedFormula.EnsureParsed();
-            var values = namedFormula.FormulasResult.Values;
+            var keys = namedFormula.FormulasResult.Keys;
             var subscripts = new List<string>();
 
-            foreach (var node in values)
+            foreach (var name in keys)
             {
-                subscripts.Add(namedFormula.GetSubscript(node));
+                subscripts.Add(namedFormula.TryGetSubscript(name));
             }
 
             Assert.Equal("1", subscripts[0]);
             Assert.Equal("2", subscripts[1]);
+        }
+
+        [Fact]
+        public void GetSubScriptTestNegative()
+        {
+            var namedFormula = new NamedFormula(script);
+            namedFormula.EnsureParsed();
+
+            Assert.Null(namedFormula.TryGetSubscript(new Utils.DName("Not A Valid Name")));
         }
     }
 }
