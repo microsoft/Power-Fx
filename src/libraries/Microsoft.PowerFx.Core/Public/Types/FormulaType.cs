@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+// Licensed under the MIT license.
 
 using System;
 using System.Collections.Generic;
@@ -40,6 +40,8 @@ namespace Microsoft.PowerFx.Core.Public.Types
 
         public static FormulaType CustomObject { get; } = new CustomObjectType();
 
+        public static FormulaType Hyperlink { get; } = new HyperlinkType();
+
         // chained by derived type 
         internal FormulaType(DType type)
         {
@@ -60,6 +62,7 @@ namespace Microsoft.PowerFx.Core.Public.Types
                 case DKind.String: return String;
                 case DKind.Boolean: return Boolean;
                 case DKind.Currency: return Number; // TODO: validate
+                case DKind.Hyperlink: return Hyperlink;
 
                 case DKind.Time: return Time;
                 case DKind.Date: return Date;

@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+// Licensed under the MIT license.
 
 namespace Microsoft.PowerFx.Core.Public
 {
@@ -33,6 +33,8 @@ namespace Microsoft.PowerFx.Core.Public
         InsufficientMemory = 21,
         QuotaExceeded = 22,
         Network = 23,
-        Numeric = 24
+        Numeric = 24,
+        InvalidArgument = 25,
+        Canceled = 26
     }
 }

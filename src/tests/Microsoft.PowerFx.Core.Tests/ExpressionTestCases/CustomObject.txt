@@ -12,3 +12,12 @@
 
 >> Sum(Table(ParseJson("[1, 2, 3, 4, 5]")), Value(Value))
 15
+
+>> Value(ParseJson("{""a"": 5}").a)
+5
+
+>> Value(ParseJson("{""a"": 5}").b)
+Blank()
+
+>> Value(ParseJson("""s""").a)
+#Error
