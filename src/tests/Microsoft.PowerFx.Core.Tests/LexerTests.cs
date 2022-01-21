@@ -640,5 +640,25 @@ namespace Microsoft.PowerFx.Core.Tests
                 TokKind.StrInterpEnd,
                 TokKind.Eof);
         }
+
+        [Fact]
+        public void TestNestedStringInterpolation()
+        {
+            AssertTokens(
+                "$\"One {$\"Two {\"Three\"}\"} Four\"",
+                TokKind.StrInterpStart,
+                TokKind.StrLit,
+                TokKind.IslandStart,
+                TokKind.StrInterpStart,
+                TokKind.StrLit,
+                TokKind.IslandStart,
+                TokKind.StrLit,
+                TokKind.IslandEnd,
+                TokKind.StrInterpEnd,
+                TokKind.IslandEnd,
+                TokKind.StrLit,
+                TokKind.StrInterpEnd,
+                TokKind.Eof);
+        }
     }
 }
