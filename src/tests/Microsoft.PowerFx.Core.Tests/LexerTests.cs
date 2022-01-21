@@ -591,6 +591,17 @@ namespace Microsoft.PowerFx.Core.Tests
                 TokKind.IslandEnd,
                 TokKind.StrInterpEnd,
                 TokKind.Eof);
+        }        
+
+        [Fact]
+        public void TestImbalancedBrackets()
+        {
+            AssertTokens(
+                "}}}",
+                TokKind.CurlyClose,
+                TokKind.CurlyClose,
+                TokKind.CurlyClose,
+                TokKind.Eof);
         }
 
         [Fact]
