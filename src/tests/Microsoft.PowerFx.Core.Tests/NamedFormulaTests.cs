@@ -9,17 +9,17 @@ namespace Microsoft.PowerFx.Core.Tests
 {
     public class NamedFormulaTests
     {
-        private readonly string script = "x=1;y=2;";
-
-        [Fact]
-        public void NamedFormulaTest()
+        [Theory]
+        [InlineData("x=1;y=2;")]
+        public void NamedFormulaTest(string script)
         {
             var namedFormula = new NamedFormula(script);
             Assert.Equal(script, namedFormula.Script);
         }
 
-        [Fact]
-        public void EnsureParsedTest()
+        [Theory]
+        [InlineData("x=1;y=2;")]
+        public void EnsureParsedTest(string script)
         {
             var namedFormula = new NamedFormula(script);
             Assert.Null(namedFormula.FormulasResult);
@@ -28,8 +28,9 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.NotNull(namedFormula.FormulasResult);
         }
 
-        [Fact]
-        public void GetSubScriptTest()
+        [Theory]
+        [InlineData("x=1;y=2;", "1", "2")]
+        public void GetSubScriptTest(string script, string expectedX, string expectedY)
         {
             var namedFormula = new NamedFormula(script);
             namedFormula.EnsureParsed();
@@ -42,17 +43,18 @@ namespace Microsoft.PowerFx.Core.Tests
                 subScripts.Add(subScript);
             }
 
-            Assert.Equal("1", subScripts[0]);
-            Assert.Equal("2", subScripts[1]);
+            Assert.Equal(expectedX, subScripts[0]);
+            Assert.Equal(expectedY, subScripts[1]);
         }
 
-        [Fact]
-        public void GetSubScriptTestNegative()
+        [Theory]
+        [InlineData("x=1;y=2;", "Not A Valid Name")]
+        public void GetSubScriptTestNegative(string script, string invalidName)
         {
             var namedFormula = new NamedFormula(script);
             namedFormula.EnsureParsed();
 
-            namedFormula.TryGetSubscript(new Utils.DName("Not A Valid Name"), out var subScript);
+            namedFormula.TryGetSubscript(new Utils.DName(invalidName), out var subScript);
             Assert.Null(subScript);
         }
     }

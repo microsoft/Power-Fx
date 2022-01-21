@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Parser;
@@ -25,6 +26,10 @@ namespace Microsoft.PowerFx.Core.Syntax
         public readonly ILanguageSettings Loc;
 
         public Dictionary<DName, TexlNode> FormulasResult;
+
+        public bool IsParsed => FormulasResult != null;
+
+        public bool HasParseErrors { get; private set; }
 
         private List<TexlError> _errors;
 
@@ -50,9 +55,13 @@ namespace Microsoft.PowerFx.Core.Syntax
         {
             if (FormulasResult == null)
             {
+                Contracts.AssertValue(Script);
+                Contracts.AssertValueOrNull(Loc);
                 var result = TexlParser.ParseFormulasScript(Script, loc: Loc);
                 FormulasResult = result.NamedFormulas;
                 _errors = result.Errors;
+                HasParseErrors = result.HasError;
+                Contracts.AssertValue(FormulasResult);
             }
 
             return _errors == null;
@@ -66,9 +75,21 @@ namespace Microsoft.PowerFx.Core.Syntax
         /// <returns></returns>
         public bool TryGetSubscript(DName name, out string subScript)
         {
+            Contracts.AssertValue(Script);
             var nodeExists = FormulasResult.TryGetValue(name, out var node);
             subScript = nodeExists ? node.GetCompleteSpan().GetFragment(Script) : null;
             return nodeExists;
+        }
+
+        /// <summary>
+        /// Returns any parse errors.
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<TexlError> GetParseErrors()
+        {
+            Contracts.AssertValue(Script);
+            Contracts.Assert(IsParsed, "Should call EnsureParsed() first!");
+            return _errors ?? Enumerable.Empty<TexlError>();
         }
     }
 }
