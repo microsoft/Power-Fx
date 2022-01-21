@@ -15,7 +15,6 @@ namespace Microsoft.PowerFx.Core.Tests
         public void NamedFormulaTest()
         {
             var namedFormula = new NamedFormula(script);
-
             Assert.Equal(script, namedFormula.Script);
         }
 
