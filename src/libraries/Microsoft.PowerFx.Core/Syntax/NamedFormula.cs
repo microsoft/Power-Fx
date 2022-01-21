@@ -59,14 +59,16 @@ namespace Microsoft.PowerFx.Core.Syntax
         }
 
         /// <summary>
-        /// Gets the formula part of the script associated with a given name.
+        /// Returns the formula portion of the script for a given named formula identifier.
         /// </summary>
         /// <param name="name"></param>
+        /// <param name="subScript"></param>
         /// <returns></returns>
-        public string TryGetSubscript(DName name)
+        public bool TryGetSubscript(DName name, out string subScript)
         {
             var nodeExists = FormulasResult.TryGetValue(name, out var node);
-            return nodeExists ? node.GetCompleteSpan().GetFragment(Script) : null;
+            subScript = nodeExists ? node.GetCompleteSpan().GetFragment(Script) : null;
+            return nodeExists;
         }
     }
 }
