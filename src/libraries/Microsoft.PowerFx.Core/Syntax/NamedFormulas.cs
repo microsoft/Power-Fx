@@ -84,33 +84,23 @@ namespace Microsoft.PowerFx.Core.Syntax
         /// Returns a Formula object for each named formula.
         /// </summary>
         /// <returns></returns>
-        public List<Formula> GetFormulas()
+        public IEnumerable<Formula> GetFormulas()
         {
             _formulas = new List<Formula>();
             if (FormulasResult != null)
             {
                 foreach (var kvp in FormulasResult)
                 {
-                    TryGetSubscript(kvp.Key, out var subScript);
-                    _formulas.Add(new Formula(subScript, kvp.Value));
+                    _formulas.Add(GetFormula(kvp.Value));
                 }
             }
 
             return _formulas;
         }
 
-        /// <summary>
-        /// Returns the formula portion of the script for a given named formula identifier.
-        /// </summary>
-        /// <param name="name"></param>
-        /// <param name="subScript"></param>
-        /// <returns></returns>
-        private bool TryGetSubscript(DName name, out string subScript)
+        private Formula GetFormula(TexlNode node)
         {
-            Contracts.AssertValue(Script);
-            var nodeExists = FormulasResult.TryGetValue(name, out var node);
-            subScript = nodeExists ? node.GetCompleteSpan().GetFragment(Script) : null;
-            return nodeExists;
+            return new Formula(node.GetCompleteSpan().GetFragment(Script), node);
         }
     }
 }

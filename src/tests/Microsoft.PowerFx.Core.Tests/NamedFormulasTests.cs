@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System.Linq;
 using Microsoft.PowerFx.Core.Syntax;
 using Xunit;
 
@@ -65,23 +66,12 @@ namespace Microsoft.PowerFx.Core.Tests
             var namedFormula = new NamedFormulas(script);
             namedFormula.EnsureParsed();
             var formulas = namedFormula.GetFormulas();
+            formulas.OrderBy(formula => formula.Script);
 
             Assert.NotNull(formulas);
-            Assert.Equal(expectedX, formulas[0].Script);
-            Assert.Equal(expectedY, formulas[1].Script);
-        }
 
-        [Theory]
-        [InlineData("x=1;y=2;", "Not a correct script")]
-        public void GetFormulasTestNegative(string script, string invalidSubscript)
-        {
-            var namedFormula = new NamedFormulas(script);
-            namedFormula.EnsureParsed();
-            var formulas = namedFormula.GetFormulas();
-
-            Assert.NotNull(formulas);
-            Assert.NotEqual(invalidSubscript, formulas[0].Script);
-            Assert.NotEqual(invalidSubscript, formulas[1].Script);
+            Assert.Equal(expectedX, formulas.ElementAt(0).Script);
+            Assert.Equal(expectedY, formulas.ElementAt(1).Script);
         }
     }
 }
