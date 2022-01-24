@@ -10,7 +10,7 @@ namespace Microsoft.PowerFx.Core.Public
     /// <note>
     /// This is the minimal set of functionality required of a RecalcEngine. Implementations may also provide other public methods, fields, etc.
     /// </note>
-    public interface IRecalcEngine
+    public interface IPowerFxEngine
     {
         /// <summary>
         /// Checks that the provided expression is valid. This means that it is syntactically value and that all types referenced in the epxression are defined in the parameterType.

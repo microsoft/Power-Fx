@@ -317,7 +317,7 @@ namespace Microsoft.PowerFx.Tests
             CheckThroughInterface(engine);
         }
 
-        private void CheckThroughInterface(IRecalcEngine engine)
+        private void CheckThroughInterface(IPowerFxEngine engine)
         {
             var result = engine.Check(
                "3*2+x",
