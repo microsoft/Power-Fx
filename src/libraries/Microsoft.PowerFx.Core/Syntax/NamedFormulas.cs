@@ -14,7 +14,7 @@ namespace Microsoft.PowerFx.Core.Syntax
     /// <summary>
     /// This encapsulates a named formula: its original script, the parsed result, and any parse errors.
     /// </summary>
-    internal class NamedFormula
+    internal class NamedFormulas
     {
         /// <summary>
         /// A script containing one or more named formulas.
@@ -33,12 +33,14 @@ namespace Microsoft.PowerFx.Core.Syntax
 
         private List<TexlError> _errors;
 
+        private List<Formula> _formulas;
+
         /// <summary>
-        /// Initializes a new instance of the <see cref="NamedFormula"/> class.
+        /// Initializes a new instance of the <see cref="NamedFormulas"/> class.
         /// </summary>
         /// <param name="script"></param>
         /// <param name="loc"></param>
-        public NamedFormula(string script, ILanguageSettings loc = null)
+        public NamedFormulas(string script, ILanguageSettings loc = null)
         {
             Contracts.AssertValue(script);
             Contracts.AssertValueOrNull(loc);
@@ -68,20 +70,6 @@ namespace Microsoft.PowerFx.Core.Syntax
         }
 
         /// <summary>
-        /// Returns the formula portion of the script for a given named formula identifier.
-        /// </summary>
-        /// <param name="name"></param>
-        /// <param name="subScript"></param>
-        /// <returns></returns>
-        public bool TryGetSubscript(DName name, out string subScript)
-        {
-            Contracts.AssertValue(Script);
-            var nodeExists = FormulasResult.TryGetValue(name, out var node);
-            subScript = nodeExists ? node.GetCompleteSpan().GetFragment(Script) : null;
-            return nodeExists;
-        }
-
-        /// <summary>
         /// Returns any parse errors.
         /// </summary>
         /// <returns></returns>
@@ -90,6 +78,39 @@ namespace Microsoft.PowerFx.Core.Syntax
             Contracts.AssertValue(Script);
             Contracts.Assert(IsParsed, "Should call EnsureParsed() first!");
             return _errors ?? Enumerable.Empty<TexlError>();
+        }
+
+        /// <summary>
+        /// Returns a Formula object for each named formula.
+        /// </summary>
+        /// <returns></returns>
+        public List<Formula> GetFormulas()
+        {
+            _formulas = new List<Formula>();
+            if (FormulasResult != null)
+            {
+                foreach (var kvp in FormulasResult)
+                {
+                    TryGetSubscript(kvp.Key, out var subScript);
+                    _formulas.Add(new Formula(subScript, kvp.Value));
+                }
+            }
+
+            return _formulas;
+        }
+
+        /// <summary>
+        /// Returns the formula portion of the script for a given named formula identifier.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="subScript"></param>
+        /// <returns></returns>
+        private bool TryGetSubscript(DName name, out string subScript)
+        {
+            Contracts.AssertValue(Script);
+            var nodeExists = FormulasResult.TryGetValue(name, out var node);
+            subScript = nodeExists ? node.GetCompleteSpan().GetFragment(Script) : null;
+            return nodeExists;
         }
     }
 }
