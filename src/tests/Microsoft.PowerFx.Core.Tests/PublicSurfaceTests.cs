@@ -34,6 +34,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Core.Public.IExpression",
                 "Microsoft.PowerFx.Core.Public.IPowerFxScope",
                 "Microsoft.PowerFx.Core.Public.IPowerFxScopeDisplayName",
+                "Microsoft.PowerFx.Core.Public.IRecalcEngine",
                 "Microsoft.PowerFx.Core.Public.TokenResultType",
                 "Microsoft.PowerFx.Core.Public.Values.BlankValue",
                 "Microsoft.PowerFx.Core.Public.Values.BooleanValue",

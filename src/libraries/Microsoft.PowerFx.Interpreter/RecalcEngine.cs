@@ -26,7 +26,7 @@ namespace Microsoft.PowerFx
     /// <summary>
     /// Holds a set of Power Fx variables and formulas. Formulas are recalculated when their dependent variables change.
     /// </summary>
-    public class RecalcEngine : IScope
+    public class RecalcEngine : IScope, IRecalcEngine
     {
         // User-provided functions 
         private readonly Dictionary<string, TexlFunction> _extraFunctions = new Dictionary<string, TexlFunction>(StringComparer.OrdinalIgnoreCase);
