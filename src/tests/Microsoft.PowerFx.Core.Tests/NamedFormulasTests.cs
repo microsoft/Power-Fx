@@ -22,10 +22,7 @@ namespace Microsoft.PowerFx.Core.Tests
         public void EnsureParsedTest(string script)
         {
             var namedFormula = new NamedFormulas(script);
-            Assert.Null(namedFormula.FormulasResult);
-
             Assert.True(namedFormula.EnsureParsed());
-            Assert.NotNull(namedFormula.FormulasResult);
         }
 
         [Theory]
@@ -33,7 +30,6 @@ namespace Microsoft.PowerFx.Core.Tests
         public void EnsureParsedWithErrorsTest(string script)
         {
             var namedFormula = new NamedFormulas(script);
-            Assert.Null(namedFormula.FormulasResult);
             Assert.False(namedFormula.EnsureParsed());            
         }
 
