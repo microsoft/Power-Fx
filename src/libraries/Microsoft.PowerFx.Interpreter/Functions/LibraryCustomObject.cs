@@ -81,7 +81,7 @@ namespace Microsoft.PowerFx.Functions
 
             public object ToObject()
             {
-                return _element.GetRawText();
+                return _element;
             }
 
             public bool TryGetProperty(string value, out ICustomObject result)
