@@ -25,15 +25,13 @@ namespace Microsoft.PowerFx.Core.Syntax
         // May be null if the script is to be parsed in the current locale.
         public readonly ILanguageSettings Loc;
 
-        public Dictionary<DName, TexlNode> FormulasResult;
-
-        public bool IsParsed => FormulasResult != null;
+        public bool IsParsed => _formulasResult != null;
 
         public bool HasParseErrors { get; private set; }
 
-        private List<TexlError> _errors;
+        private Dictionary<DName, TexlNode> _formulasResult;
 
-        private List<Formula> _formulas;
+        private List<TexlError> _errors;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NamedFormulas"/> class.
@@ -55,15 +53,15 @@ namespace Microsoft.PowerFx.Core.Syntax
         /// <returns></returns>
         public bool EnsureParsed()
         {
-            if (FormulasResult == null)
+            if (_formulasResult == null)
             {
                 Contracts.AssertValue(Script);
                 Contracts.AssertValueOrNull(Loc);
                 var result = TexlParser.ParseFormulasScript(Script, loc: Loc);
-                FormulasResult = result.NamedFormulas;
+                _formulasResult = result.NamedFormulas;
                 _errors = result.Errors;
                 HasParseErrors = result.HasError;
-                Contracts.AssertValue(FormulasResult);
+                Contracts.AssertValue(_formulasResult);
             }
 
             return _errors == null;
@@ -86,16 +84,16 @@ namespace Microsoft.PowerFx.Core.Syntax
         /// <returns></returns>
         public IEnumerable<Formula> GetFormulas()
         {
-            _formulas = new List<Formula>();
-            if (FormulasResult != null)
+            var formulas = new List<Formula>();
+            if (_formulasResult != null)
             {
-                foreach (var kvp in FormulasResult)
+                foreach (var kvp in _formulasResult)
                 {
-                    _formulas.Add(GetFormula(kvp.Value));
+                    formulas.Add(GetFormula(kvp.Value));
                 }
             }
 
-            return _formulas;
+            return formulas;
         }
 
         private Formula GetFormula(TexlNode node)
