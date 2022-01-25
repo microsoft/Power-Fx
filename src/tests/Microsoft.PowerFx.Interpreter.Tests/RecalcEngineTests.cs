@@ -310,6 +310,26 @@ namespace Microsoft.PowerFx.Tests
             Assert.Equal(11.0, (double)formulaValue.ToObject());
         }
 
+        [Fact]
+        public void CheckIntefaceSuccess()
+        {
+            var engine = new RecalcEngine();
+            CheckThroughInterface(engine);
+        }
+
+        private void CheckThroughInterface(IPowerFxEngine engine)
+        {
+            var result = engine.Check(
+               "3*2+x",
+               new RecordType().Add(
+                   new NamedFormulaType("x", FormulaType.Number)));
+
+            Assert.True(result.IsSuccess);
+            Assert.True(result.ReturnType is NumberType);
+            Assert.Single(result.TopLevelIdentifiers);
+            Assert.Equal("x", result.TopLevelIdentifiers.First());
+        }
+
         #region Test
 
         private readonly StringBuilder _updates = new StringBuilder();

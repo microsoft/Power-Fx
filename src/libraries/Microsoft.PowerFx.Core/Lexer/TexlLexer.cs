@@ -1092,7 +1092,8 @@ namespace Microsoft.PowerFx.Core.Lexer
                 _modeStack.Push(LexerMode.Normal);
             }
 
-            private LexerMode CurrentMode => _modeStack.Peek();
+            // If the mode stack is empty, this is already an parse, use NormalMode as a default
+            private LexerMode CurrentMode => _modeStack.Count != 0 ? _modeStack.Peek() : LexerMode.Normal;
 
             private void EnterMode(LexerMode newMode)
             {
