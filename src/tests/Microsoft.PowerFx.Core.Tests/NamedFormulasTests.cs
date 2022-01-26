@@ -62,12 +62,12 @@ namespace Microsoft.PowerFx.Core.Tests
             var namedFormula = new NamedFormulas(script);
             namedFormula.EnsureParsed();
             var formulas = namedFormula.GetNamedFormulas();
-            formulas.OrderBy(formula => formula.Item2.Script);
+            formulas.OrderBy(formula => formula.formula.Script);
 
             Assert.NotNull(formulas);
 
-            Assert.Equal(expectedX, formulas.ElementAt(0).Item2.Script);
-            Assert.Equal(expectedY, formulas.ElementAt(1).Item2.Script);
+            Assert.Equal(expectedX, formulas.ElementAt(0).formula.Script);
+            Assert.Equal(expectedY, formulas.ElementAt(1).formula.Script);
         }
     }
 }

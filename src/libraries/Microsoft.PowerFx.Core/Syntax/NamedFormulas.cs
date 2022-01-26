@@ -83,14 +83,14 @@ namespace Microsoft.PowerFx.Core.Syntax
         /// Returns a Tuple of a DName and Formula object for each named formula.
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<Tuple<DName, Formula>> GetNamedFormulas()
+        public IEnumerable<(DName name, Formula formula)> GetNamedFormulas()
         {
-            var formulas = new List<Tuple<DName, Formula>>();
+            var formulas = new List<(DName, Formula)>();
             if (_formulasResult != null)
             {
                 foreach (var kvp in _formulasResult)
                 {
-                    formulas.Add(Tuple.Create(kvp.Key, GetFormula(kvp.Value)));
+                    formulas.Add((kvp.Key, GetFormula(kvp.Value)));
                 }
             }
 
