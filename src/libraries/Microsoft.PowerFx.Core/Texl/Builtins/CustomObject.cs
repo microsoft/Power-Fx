@@ -23,7 +23,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override bool IsHidden => true;
 
         public ParseJsonFunction()
-            : base(ParseJsonInvariantFunctionName, TexlStrings.AboutParseJson, FunctionCategories.CustomObject, DType.CustomObject, 0, 1, 1, DType.String)
+            : base(ParseJsonInvariantFunctionName, TexlStrings.AboutParseJson, FunctionCategories.None, DType.CustomObject, 0, 1, 1, DType.String)
         {
         }
 
@@ -46,7 +46,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override bool IsHidden => true;
 
         public IndexFunction_CO()
-            : base(IndexInvariantFunctionName, TexlStrings.AboutIndex, FunctionCategories.CustomObject, DType.CustomObject, 0, 2, 2, DType.CustomObject, DType.Number)
+            : base(IndexInvariantFunctionName, TexlStrings.AboutIndex, FunctionCategories.Table, DType.CustomObject, 0, 2, 2, DType.CustomObject, DType.Number)
         {
         }
 

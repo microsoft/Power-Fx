@@ -93,7 +93,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override bool SupportsParamCoercion => false;
 
         public ValueFunction_CO()
-            : base(ValueFunction.ValueInvariantFunctionName, TexlStrings.AboutValue, FunctionCategories.CustomObject, DType.Number, 0, 1, 1, DType.CustomObject)
+            : base(ValueFunction.ValueInvariantFunctionName, TexlStrings.AboutValue, FunctionCategories.Text, DType.Number, 0, 1, 1, DType.CustomObject)
         {
         }
 
