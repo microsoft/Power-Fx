@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.PowerFx.Core.Errors;
@@ -79,17 +80,17 @@ namespace Microsoft.PowerFx.Core.Syntax
         }
 
         /// <summary>
-        /// Returns a Formula object for each named formula.
+        /// Returns a Tuple of a DName and Formula object for each named formula.
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<Formula> GetFormulas()
+        public IEnumerable<(DName name, Formula formula)> GetNamedFormulas()
         {
-            var formulas = new List<Formula>();
+            var formulas = new List<(DName, Formula)>();
             if (_formulasResult != null)
             {
                 foreach (var kvp in _formulasResult)
                 {
-                    formulas.Add(GetFormula(kvp.Value));
+                    formulas.Add((kvp.Key, GetFormula(kvp.Value)));
                 }
             }
 
