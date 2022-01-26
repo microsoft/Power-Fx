@@ -3,9 +3,11 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Binding;
+using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Glue;
 using Microsoft.PowerFx.Core.IR;
@@ -29,11 +31,13 @@ namespace Microsoft.PowerFx
     public class RecalcEngine : IScope
     {
         // User-provided functions 
-        private readonly Dictionary<string, TexlFunction> _extraFunctions = new Dictionary<string, TexlFunction>(StringComparer.OrdinalIgnoreCase);
+        private readonly ImmutableDictionary<string, TexlFunction> _extraFunctions = ImmutableDictionary<string, TexlFunction>.Empty.WithComparers(StringComparer.OrdinalIgnoreCase);
 
         internal Dictionary<string, RecalcFormulaInfo> Formulas { get; } = new Dictionary<string, RecalcFormulaInfo>();
 
         private readonly PowerFxConfig _powerFxConfig;
+
+        private readonly ImmutableEnvironmentSymbolTable _enviromentSymbolTable;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RecalcEngine"/> class.
@@ -46,13 +50,42 @@ namespace Microsoft.PowerFx
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="RecalcEngine"/> class,
+        /// Used for updating immutable parts of RecalcEngine, while keeping Formula context.
+        /// </summary>
+        /// <param name="powerFxConfig">Compiler customizations.</param>
+        /// <param name="formulas">Set of formulas already registered with RecalcEngine.</param>
+        /// <param name="environmentSymbolTable">Symbols present in the environment. Immutable.</param>
+        /// <param name="extraFunctions">Additional functions registered by the host. Immutable.</param>
+        private RecalcEngine(PowerFxConfig powerFxConfig, Dictionary<string, RecalcFormulaInfo> formulas, ImmutableEnvironmentSymbolTable environmentSymbolTable, ImmutableDictionary<string, TexlFunction> extraFunctions)
+        {
+            _powerFxConfig = powerFxConfig;
+            Formulas = formulas;
+            _enviromentSymbolTable = environmentSymbolTable;
+            _extraFunctions = extraFunctions;
+            
+            // Run rebind for all formulas here
+        }
+
+        public RecalcEngine WithEnvironmentSymbol(IExternalEntity entity)
+        {
+            if (Formulas.ContainsKey(entity.EntityName) || _enviromentSymbolTable.ContainsSymbol(entity.EntityName))
+            {
+                throw new InvalidOperationException($"Symbol {entity.EntityName} collides with an existing symbol");
+            }
+
+            return new RecalcEngine(_powerFxConfig, Formulas, _enviromentSymbolTable.With(entity), _extraFunctions);
+        }
+
+        /// <summary>
         /// Add a custom function. 
         /// </summary>
         /// <param name="function"></param>
-        public void AddFunction(ReflectionFunction function)
+        public RecalcEngine WithFunction(ReflectionFunction function)
         {
             var texl = function.GetTexlFunction();
-            _extraFunctions[texl.Name] = texl; // throw if already exists. 
+
+            return new RecalcEngine(_powerFxConfig, Formulas, _enviromentSymbolTable, _extraFunctions.Add(texl.Name, texl)); // throw if already exists.
         }
 
         /// <summary>

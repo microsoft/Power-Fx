@@ -252,8 +252,7 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public void CustomFunction()
         {
-            var engine = new RecalcEngine();
-            engine.AddFunction(new TestCustomFunction());
+            var engine = new RecalcEngine().WithFunction(new TestCustomFunction());
 
             // Shows up in enuemeration
             var func = engine.GetAllFunctionNames().First(name => name == "TestCustom");

@@ -12,8 +12,6 @@ namespace Microsoft.PowerFx.Core.Entities
     {
         DName EntityName { get; }
 
-        string InvariantName { get; }
-
         bool IsControl { get; }
 
         IExternalEntityScope EntityScope { get; }

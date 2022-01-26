@@ -3,16 +3,12 @@
 
 namespace Microsoft.PowerFx.Core.Entities
 {
-    internal interface IExternalOptionSet<T> : IExternalEntity, IDisplayMapped<int>
+    internal interface IExternalOptionSet<T> : IExternalEntity, IDisplayMapped<T>
     {
         string Name { get; }
 
-        bool IsBooleanValued { get; }
+        bool IsBooleanValued { get; }   
 
         string RelatedEntityName { get; }
-
-        string RelatedColumnInvariantName { get; }
-
-        bool IsGlobal { get; }
     }
 }

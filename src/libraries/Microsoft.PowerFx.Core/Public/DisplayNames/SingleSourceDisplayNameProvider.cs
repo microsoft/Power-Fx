@@ -23,6 +23,28 @@ namespace Microsoft.PowerFx.Core
             _displayToLogical = ImmutableDictionary.Create<DName, DName>();
         }
 
+        public SingleSourceDisplayNameProvider(IEnumerable<KeyValuePair<DName, DName>> keyValuePairs)
+        {
+            var lToDBuilder = ImmutableDictionary.CreateBuilder<DName, DName>();
+            var dToLBuilder = ImmutableDictionary.CreateBuilder<DName, DName>();
+
+            // Validate input while constructing the dictionaries
+            foreach (var kvp in keyValuePairs)
+            {
+                if (dToLBuilder.ContainsKey(kvp.Value) || lToDBuilder.ContainsKey(kvp.Value) ||
+                    lToDBuilder.ContainsKey(kvp.Key) || dToLBuilder.ContainsKey(kvp.Key))
+                {
+                    throw new NameCollisionException(kvp.Key);
+                }
+
+                dToLBuilder.Add(kvp.Key, kvp.Value);
+                lToDBuilder.Add(kvp.Value, kvp.Key);
+            }
+
+            _logicalToDisplay = lToDBuilder.ToImmutable();
+            _displayToLogical = dToLBuilder.ToImmutable();
+        }
+
         private SingleSourceDisplayNameProvider(ImmutableDictionary<DName, DName> logicalToDisplay, ImmutableDictionary<DName, DName> displayToLogical)
         {
             _logicalToDisplay = logicalToDisplay;
