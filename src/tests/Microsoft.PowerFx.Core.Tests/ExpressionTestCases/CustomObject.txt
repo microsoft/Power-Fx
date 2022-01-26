@@ -59,3 +59,33 @@ Blank()
 
 >> Sum(Table(ParseJson("[1, 2, 3, 4, 5]")), Value(Value))
 15
+
+>> ParseJson("5") + ParseJson("5")
+#Error
+
+>> ParseJson("5") - ParseJson("5")
+#Error
+
+>> ParseJson("5") * ParseJson("5")
+#Error
+
+>> ParseJson("5") / ParseJson("5")
+#Error
+
+>> ParseJson("5") = ParseJson("5")
+#Error
+
+>> ParseJson("5") > ParseJson("5")
+#Error
+
+>> ParseJson("5") < ParseJson("5")
+#Error
+
+>> ParseJson("5") <> ParseJson("5")
+#Error
+
+>> ParseJson("5") >= ParseJson("5")
+#Error
+
+>> ParseJson("5") <= ParseJson("5")
+#Error
