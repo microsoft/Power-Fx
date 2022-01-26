@@ -15,6 +15,9 @@ namespace Microsoft.PowerFx.Functions
     {
         internal class JsonCustomObject : ICustomObject
         {
+            private static readonly FormulaType _objectType = new ExternalType(ExternalTypeKind.Object);
+            private static readonly FormulaType _arrayType = new ExternalType(ExternalTypeKind.Array);
+
             private readonly JsonElement _element;
 
             public JsonCustomObject(JsonElement element)
@@ -22,26 +25,26 @@ namespace Microsoft.PowerFx.Functions
                 _element = element;
             }
 
-            public CustomObjectKind Kind
+            public FormulaType Type
             {
                 get
                 {
                     switch (_element.ValueKind)
                     {
                         case JsonValueKind.Object:
-                            return CustomObjectKind.Object;
+                            return _objectType;
                         case JsonValueKind.Array:
-                            return CustomObjectKind.Array;
+                            return _arrayType;
                         case JsonValueKind.String:
-                            return CustomObjectKind.String;
+                            return FormulaType.String;
                         case JsonValueKind.Number:
-                            return CustomObjectKind.Number;
+                            return FormulaType.Number;
                         case JsonValueKind.True:
                         case JsonValueKind.False:
-                            return CustomObjectKind.Boolean;
+                            return FormulaType.Boolean;
                     }
 
-                    return CustomObjectKind.Null;
+                    return FormulaType.Blank;
                 }
             }
 
@@ -139,7 +142,7 @@ namespace Microsoft.PowerFx.Functions
                 var result = element[index - 1]; // 1-based index
 
                 // Map null to blank
-                if (result.Kind == CustomObjectKind.Null)
+                if (result.Type == FormulaType.Blank)
                 {
                     return new BlankValue(IRContext.NotInSource(FormulaType.Blank));
                 }
@@ -157,18 +160,18 @@ namespace Microsoft.PowerFx.Functions
             var impl = args[0].Impl;
             double number;
 
-            if (impl.Kind == CustomObjectKind.String)
+            if (impl.Type == FormulaType.String)
             {
                 if (!double.TryParse(impl.GetString(), out number))
                 {
                     return CommonErrors.InvalidNumberFormatError(irContext);
                 }
             }
-            else if (impl.Kind == CustomObjectKind.Null)
+            else if (impl.Type == FormulaType.Blank)
             {
                 return new BlankValue(irContext);
             }
-            else if (impl.Kind == CustomObjectKind.Boolean)
+            else if (impl.Type == FormulaType.Boolean)
             {
                 number = impl.GetBoolean() ? 1 : 0;
             }
@@ -185,15 +188,15 @@ namespace Microsoft.PowerFx.Functions
             var impl = args[0].Impl;
             string str;
 
-            if (impl.Kind == CustomObjectKind.String)
+            if (impl.Type == FormulaType.String)
             {
                 str = impl.GetString();
             }
-            else if (impl.Kind == CustomObjectKind.Null)
+            else if (impl.Type == FormulaType.Blank)
             {
                 str = string.Empty;
             }
-            else if (impl.Kind == CustomObjectKind.Boolean)
+            else if (impl.Type == FormulaType.Boolean)
             {
                 str = impl.GetBoolean() ? "true" : "false";
             }
@@ -231,7 +234,7 @@ namespace Microsoft.PowerFx.Functions
         {
             if (arg is CustomObjectValue cov)
             {
-                if (cov.Impl.Kind == CustomObjectKind.Number)
+                if (cov.Impl.Type == FormulaType.Number)
                 {
                     var number = cov.Impl.GetDouble();
                     if (IsInvalidDouble(number))
@@ -239,7 +242,7 @@ namespace Microsoft.PowerFx.Functions
                         return CommonErrors.ArgumentOutOfRange(irContext);
                     }
                 }
-                else if (cov.Impl.Kind == CustomObjectKind.Object || cov.Impl.Kind == CustomObjectKind.Array)
+                else if (cov.Impl.Type is ExternalType)
                 {
                     return CommonErrors.RuntimeTypeMismatch(irContext);
                 }
@@ -252,7 +255,7 @@ namespace Microsoft.PowerFx.Functions
         {
             if (arg is CustomObjectValue cov)
             {
-                if (cov.Impl.Kind != CustomObjectKind.Array)
+                if (!(cov.Impl.Type is ExternalType et && et.Kind == ExternalTypeKind.Array))
                 {
                     return new ErrorValue(irContext, new ExpressionError()
                     {

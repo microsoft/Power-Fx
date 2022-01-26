@@ -11,19 +11,9 @@ using Microsoft.PowerFx.Core.Public.Types;
 
 namespace Microsoft.PowerFx.Core.Public.Values
 {
-    public enum CustomObjectKind
-    {
-        Null,
-        Number,
-        String,
-        Boolean,
-        Object,
-        Array
-    }
-
     public interface ICustomObject
     {
-        CustomObjectKind Kind { get; }
+        FormulaType Type { get; }
 
         object ToObject();
 
