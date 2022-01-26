@@ -655,25 +655,26 @@ namespace DocumentServer.Core.Tests.Formulas
         }
 
         [Theory]
-        [InlineData("")]
-        [InlineData("a=10;")]
-        [InlineData("a=b=10;")]
-        [InlineData("a=10;c=20;")]
+        [InlineData(" ")]
+        [InlineData("a = 10;")]
+        [InlineData("   a    =  10    ;  ")]
+        [InlineData("a = b = 10;")]
+        [InlineData("a = 10; c = 20;")]
         public void TestFormulasParse(string script)
         {
             TestFormulasParseRoundtrip(script);
         }
 
         [Theory]
-        [InlineData("a=10")]
+        [InlineData("a = 10")]
         [InlineData("a;")]
         [InlineData(";")]
-        [InlineData("a=10;;")]
-        [InlineData("a=10;b")]
-        [InlineData("A=If(true,1;);")]
-        [InlineData("A=If(true,1;2);")]
-        [InlineData("1+2);")]
-        [InlineData("1=10")]
+        [InlineData("a = 10;;")]
+        [InlineData("a = 10; b")]
+        [InlineData("A = If(true,1;);")]
+        [InlineData("A = If(true,1;2);")]
+        [InlineData("1 + 2);")]
+        [InlineData("1 = 10")]
         [InlineData("a.b = c")]
         public void TestFormulasParse_Negative(string script)
         {
