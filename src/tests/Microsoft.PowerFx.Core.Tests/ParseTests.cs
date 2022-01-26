@@ -656,7 +656,8 @@ namespace DocumentServer.Core.Tests.Formulas
 
         [Theory]
         [InlineData(" ")]
-        [InlineData("a = 10;")]
+        [InlineData("AFormula = 10;")]
+        [InlineData("'A Formula' = 10;")]
         [InlineData("   a    =  10    ;  ")]
         [InlineData("a = b = 10;")]
         [InlineData("a = 10; c = 20;")]
@@ -667,6 +668,7 @@ namespace DocumentServer.Core.Tests.Formulas
 
         [Theory]
         [InlineData("a = 10")]
+        [InlineData("Formul@ = 10; Formula$ = 20;")]
         [InlineData("a;")]
         [InlineData(";")]
         [InlineData("a = 10;;")]
