@@ -23,7 +23,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override bool IsHidden => true;
 
         public ParseJsonFunction()
-            : base(ParseJsonInvariantFunctionName, TexlStrings.AboutParseJson, FunctionCategories.None, DType.CustomObject, 0, 1, 1, DType.String)
+            : base(ParseJsonInvariantFunctionName, TexlStrings.AboutParseJson, FunctionCategories.Text, DType.CustomObject, 0, 1, 1, DType.String)
         {
         }
 
