@@ -95,7 +95,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override bool SupportsParamCoercion => false;
 
         public TableFunction_CO()
-            : base("Table", TexlStrings.AboutTable, FunctionCategories.Table | FunctionCategories.CustomObject, DType.EmptyTable, 0, 1, 1, DType.CustomObject)
+            : base("Table", TexlStrings.AboutTable, FunctionCategories.Table, DType.EmptyTable, 0, 1, 1, DType.CustomObject)
         {
         }
 
