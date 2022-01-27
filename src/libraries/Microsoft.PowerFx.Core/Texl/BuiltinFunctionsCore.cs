@@ -17,7 +17,7 @@ namespace Microsoft.PowerFx.Core.Texl
 
         // Functions in this list are shared and may show up in other hosts by default.
         private static readonly List<TexlFunction> _library = new List<TexlFunction>(200);
-
+        
         public static readonly TexlFunction AmPm = _library.Append(new AmPmFunction());
         public static readonly TexlFunction AmPmShort = _library.Append(new AmPmShortFunction());
         public static readonly TexlFunction Abs = _library.Append(new AbsFunction());
@@ -154,7 +154,6 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction SumT = _library.Append(new SumTableFunction());
         public static readonly TexlFunction Switch = _library.Append(new SwitchFunction());
         public static readonly TexlFunction Table = _library.Append(new TableFunction());
-        public static readonly TexlFunction Table_CO = _library.Append(new TableFunction_CO());
         public static readonly TexlFunction Tan = _library.Append(new TanFunction());
         public static readonly TexlFunction TanT = _library.Append(new TanTableFunction());
         public static readonly TexlFunction Time = _library.Append(new TimeFunction());
@@ -170,11 +169,9 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction Upper = _library.Append(new LowerUpperFunction(isLower: false));
         public static readonly TexlFunction UpperT = _library.Append(new LowerUpperTFunction(isLower: false));
         public static readonly TexlFunction Value = _library.Append(new ValueFunction());
-        public static readonly TexlFunction Value_CO = _library.Append(new ValueFunction_CO());
         public static readonly TexlFunction VarP = _library.Append(new VarPFunction());
         public static readonly TexlFunction VarPT = _library.Append(new VarPTableFunction());
         public static readonly TexlFunction Text = _library.Append(new TextFunction());
-        public static readonly TexlFunction Text_CO = _library.Append(new TextFunction_CO());
         public static readonly TexlFunction Weekday = _library.Append(new WeekdayFunction());
         public static readonly TexlFunction WeekdaysLong = _library.Append(new WeekdaysLongFunction());
         public static readonly TexlFunction WeekdaysShort = _library.Append(new WeekdaysShortFunction());
@@ -185,6 +182,9 @@ namespace Microsoft.PowerFx.Core.Texl
         // NOTE: These functions should not be part of the core library until they are implemented in all runtimes
         public static readonly TexlFunction Index_CO = new IndexFunction_CO();
         public static readonly TexlFunction ParseJson = new ParseJsonFunction();
+        public static readonly TexlFunction Table_CO = new TableFunction_CO();
+        public static readonly TexlFunction Text_CO = new TextFunction_CO();
+        public static readonly TexlFunction Value_CO = new ValueFunction_CO();
 
         public static readonly TexlFunction IsUTCToday = new IsUTCTodayFunction();
         public static readonly TexlFunction UTCNow = new UTCNowFunction();
