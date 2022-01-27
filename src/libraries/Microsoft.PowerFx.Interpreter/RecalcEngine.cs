@@ -18,6 +18,7 @@ using Microsoft.PowerFx.Core.Public;
 using Microsoft.PowerFx.Core.Public.Types;
 using Microsoft.PowerFx.Core.Public.Values;
 using Microsoft.PowerFx.Core.Syntax;
+using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Core.Texl.Intellisense;
 using Microsoft.PowerFx.Core.Types;
 
@@ -43,6 +44,18 @@ namespace Microsoft.PowerFx
         public RecalcEngine(PowerFxConfig powerFxConfig = null)
         {
             _powerFxConfig = powerFxConfig ?? new PowerFxConfig();
+
+            AddFunction(BuiltinFunctionsCore.Index_CO);
+            AddFunction(BuiltinFunctionsCore.ParseJson);
+            AddFunction(BuiltinFunctionsCore.Table_CO);
+            AddFunction(BuiltinFunctionsCore.Text_CO);
+            AddFunction(BuiltinFunctionsCore.Value_CO);
+        }
+
+        // Add Builtin functions that aren't yet in the shared library. 
+        private void AddFunction(TexlFunction function)
+        {
+            _extraFunctions.Add(function.Name, function);
         }
 
         /// <summary>
