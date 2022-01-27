@@ -91,7 +91,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             if (binding.IsAsync(node))
             {
                 AddSuggestionMessageToTelemetry("Async sortorder node.", node, binding);
-                DelegationTrackerCore.SetDelegationTrackerStatus(DelegationStatus.AsyncSortOrder, node, binding, this, DelegationTelemetryInfo.CreateEmptyDelegationTelemetryInfo());
+                TrackingProvider.Instance.SetDelegationTrackerStatus(DelegationStatus.AsyncSortOrder, node, binding, this, DelegationTelemetryInfo.CreateEmptyDelegationTelemetryInfo());
                 return false;
             }
 
@@ -161,7 +161,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             {
                 SuggestDelegationHint(arg1, binding);
                 AddSuggestionMessageToTelemetry("Arg1 is not a FirstName node.", arg1, binding);
-                DelegationTrackerCore.SetDelegationTrackerStatus(DelegationStatus.UnSupportedSortArg, arg1, binding, this, DelegationTelemetryInfo.CreateEmptyDelegationTelemetryInfo());
+                TrackingProvider.Instance.SetDelegationTrackerStatus(DelegationStatus.UnSupportedSortArg, arg1, binding, this, DelegationTelemetryInfo.CreateEmptyDelegationTelemetryInfo());
                 return false;
             }
 
@@ -175,7 +175,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             if (!metadata.IsDelegationSupportedByColumn(columnName, DelegationCapability.Sort))
             {
                 SuggestDelegationHint(firstName, binding);
-                DelegationTrackerCore.SetDelegationTrackerStatus(DelegationStatus.NoDelSupportByColumn, firstName, binding, this, DelegationTelemetryInfo.CreateNoDelSupportByColumnTelemetryInfo(firstNameInfo));
+                TrackingProvider.Instance.SetDelegationTrackerStatus(DelegationStatus.NoDelSupportByColumn, firstName, binding, this, DelegationTelemetryInfo.CreateNoDelSupportByColumnTelemetryInfo(firstNameInfo));
                 return false;
             }
 
@@ -266,7 +266,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             var result = IsSortOrderSuppportedByColumn(order, metadata, columnPath);
             if (!result)
             {
-                DelegationTrackerCore.SetDelegationTrackerStatus(DelegationStatus.SortOrderNotSupportedByColumn, node, binding, this, DelegationTelemetryInfo.CreateEmptyDelegationTelemetryInfo());
+                TrackingProvider.Instance.SetDelegationTrackerStatus(DelegationStatus.SortOrderNotSupportedByColumn, node, binding, this, DelegationTelemetryInfo.CreateEmptyDelegationTelemetryInfo());
             }
 
             return result;

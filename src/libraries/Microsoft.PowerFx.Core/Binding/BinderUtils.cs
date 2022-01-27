@@ -64,7 +64,7 @@ namespace Microsoft.PowerFx.Core.Binding
             // We only want to log about successful delegation status here. Any failures should have been logged by this time.
             if (isServerDelegatable)
             {
-                DelegationTrackerCore.SetDelegationTrackerStatus(DelegationStatus.DelegationSuccessful, node, texlBinding, function);
+                TrackingProvider.Instance.SetDelegationTrackerStatus(DelegationStatus.DelegationSuccessful, node, texlBinding, function);
                 return;
             }
         }
