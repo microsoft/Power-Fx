@@ -103,7 +103,7 @@ Errors: Error 0-14: Invalid argument type. Expecting one of the following: Numbe
 Errors: Error 15-17: Incompatible types for comparison. These types can't be compared: CustomObject, CustomObject.
 
 >> ParseJson("5") >= ParseJson("5")
-Errors: Error 0-14: Invalid argument type. Expecting one of the following: Number, Date, Time, DateTime.|Error 17-31: Invalid argument type. Expecting one of the following: Number, Date, Time, DateTime.
+Errors: Error 0-14: Invalid argument type. Expecting one of the following: Number, Date, Time, DateTime.|Error 18-32: Invalid argument type. Expecting one of the following: Number, Date, Time, DateTime.
 
 >> ParseJson("5") <= ParseJson("5")
-Errors: Error 0-14: Invalid argument type. Expecting one of the following: Number, Date, Time, DateTime.|Error 17-31: Invalid argument type. Expecting one of the following: Number, Date, Time, DateTime.
+Errors: Error 0-14: Invalid argument type. Expecting one of the following: Number, Date, Time, DateTime.|Error 18-32: Invalid argument type. Expecting one of the following: Number, Date, Time, DateTime.
