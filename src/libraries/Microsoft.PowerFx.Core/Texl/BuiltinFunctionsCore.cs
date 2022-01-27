@@ -15,6 +15,7 @@ namespace Microsoft.PowerFx.Core.Texl
     {
         public static IEnumerable<TexlFunction> BuiltinFunctionsLibrary => _library;
 
+        // Functions in this list are shared and may show up in other hosts by default.
         private static readonly List<TexlFunction> _library = new List<TexlFunction>(200);
 
         public static readonly TexlFunction AmPm = _library.Append(new AmPmFunction());
@@ -72,7 +73,6 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction First = _library.Append(new FirstLastFunction(isFirst: true));
         public static readonly TexlFunction FirstN = _library.Append(new FirstLastNFunction(isFirst: true));
         public static readonly TexlFunction ForAll = _library.Append(new ForAllFunction());
-        public static readonly TexlFunction Index_CO = _library.Append(new IndexFunction_CO());
         public static readonly TexlFunction Hour = _library.Append(new HourFunction());
         public static readonly TexlFunction If = _library.Append(new IfFunction());
         public static readonly TexlFunction IfError = _library.Append(new IfErrorFunction());
@@ -112,7 +112,6 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction Not = _library.Append(new NotFunction());
         public static readonly TexlFunction Now = _library.Append(new NowFunction());
         public static readonly TexlFunction Or = _library.Append(new VariadicLogicalFunction(isAnd: false));
-        public static readonly TexlFunction ParseJson = _library.Append(new ParseJsonFunction());
         public static readonly TexlFunction Power = _library.Append(new PowerFunction());
         public static readonly TexlFunction PowerT = _library.Append(new PowerTFunction());
         public static readonly TexlFunction Pi = _library.Append(new PiFunction());
@@ -184,6 +183,9 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction Year = _library.Append(new YearFunction());
 
         // NOTE: These functions should not be part of the core library until they are implemented in all runtimes
+        public static readonly TexlFunction Index_CO = new IndexFunction_CO();
+        public static readonly TexlFunction ParseJson = new ParseJsonFunction();
+
         public static readonly TexlFunction IsUTCToday = new IsUTCTodayFunction();
         public static readonly TexlFunction UTCNow = new UTCNowFunction();
         public static readonly TexlFunction UTCToday = new UTCTodayFunction();
