@@ -11,15 +11,17 @@ using Microsoft.PowerFx.Core.Public.Types;
 
 namespace Microsoft.PowerFx.Core.Public.Values
 {
+    /// <summary>
+    /// The backing implementation for CustomObjectValue, for example Json, Xml,
+    /// or the Ast or Value system from another language.
+    /// </summary>
     public interface ICustomObject
     {
-        FormulaType Type { get; }
-
-        object ToObject();
+        FormulaType Type { get; } // Use ExternalType if the type is incompatible with PowerFx
 
         int GetArrayLength();
 
-        ICustomObject this[int index] { get; }
+        ICustomObject this[int index] { get; } // 0-based index
 
         bool TryGetProperty(string value, out ICustomObject result);
 
@@ -32,20 +34,18 @@ namespace Microsoft.PowerFx.Core.Public.Values
 
     public class CustomObjectValue : ValidFormulaValue
     {
-        protected readonly ICustomObject _impl;
-
-        public ICustomObject Impl => _impl;
+        public ICustomObject Impl { get; }
 
         internal CustomObjectValue(IRContext irContext, ICustomObject impl)
             : base(irContext)
         {
             Contract.Assert(IRContext.ResultType == FormulaType.CustomObject);
-            _impl = impl;
+            Impl = impl;
         }
 
         public override object ToObject()
         {
-            return _impl.ToObject();
+            return Impl; // Hosts will need to be able to interpret the backing value
         }
 
         public override void Visit(IValueVisitor visitor)

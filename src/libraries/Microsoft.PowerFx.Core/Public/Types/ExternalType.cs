@@ -12,18 +12,19 @@ namespace Microsoft.PowerFx.Core.Public.Types
     /// </summary>
     public enum ExternalTypeKind
     {
-        Array,
-        Object
+        Array, // PowerFx only supports single-column tables
+        Object // PowerFx does not support schema-less objects
     }
 
     /// <summary>
     /// FormulaType that can be used by CustomObject instances to
-    /// indicate that the type of the data does not exist in PowerFx,
-    /// such as Arrays (PowerFx only supports Tables) or schema-less
-    /// objects.
+    /// indicate that the type of the data does not exist in PowerFx.
     /// </summary>
     public class ExternalType : FormulaType
     {
+        public static readonly FormulaType ObjectType = new ExternalType(ExternalTypeKind.Object);
+        public static readonly FormulaType ArrayType = new ExternalType(ExternalTypeKind.Array);
+
         public ExternalTypeKind Kind { get; }
 
         public ExternalType(ExternalTypeKind kind)

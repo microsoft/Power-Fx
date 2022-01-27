@@ -13,120 +13,6 @@ namespace Microsoft.PowerFx.Functions
 {
     internal static partial class Library
     {
-        internal class JsonCustomObject : ICustomObject
-        {
-            private static readonly FormulaType _objectType = new ExternalType(ExternalTypeKind.Object);
-            private static readonly FormulaType _arrayType = new ExternalType(ExternalTypeKind.Array);
-
-            private readonly JsonElement _element;
-
-            public JsonCustomObject(JsonElement element)
-            {
-                _element = element;
-            }
-
-            public FormulaType Type
-            {
-                get
-                {
-                    switch (_element.ValueKind)
-                    {
-                        case JsonValueKind.Object:
-                            return _objectType;
-                        case JsonValueKind.Array:
-                            return _arrayType;
-                        case JsonValueKind.String:
-                            return FormulaType.String;
-                        case JsonValueKind.Number:
-                            return FormulaType.Number;
-                        case JsonValueKind.True:
-                        case JsonValueKind.False:
-                            return FormulaType.Boolean;
-                    }
-
-                    return FormulaType.Blank;
-                }
-            }
-
-            public ICustomObject this[int index] => new JsonCustomObject(_element[index]);
-
-            public bool IsArray => _element.ValueKind == JsonValueKind.Array;
-
-            public bool IsNull => _element.ValueKind == JsonValueKind.Null;
-
-            public bool IsObject => _element.ValueKind == JsonValueKind.Object;
-
-            public bool IsString => _element.ValueKind == JsonValueKind.String;
-
-            public bool IsNumber => _element.ValueKind == JsonValueKind.Number;
-
-            public bool IsBoolean => _element.ValueKind == JsonValueKind.True || _element.ValueKind == JsonValueKind.False;
-
-            public int GetArrayLength()
-            {
-                return _element.GetArrayLength();
-            }
-
-            public double GetDouble()
-            {
-                return _element.GetDouble();
-            }
-
-            public string GetString()
-            {
-                return _element.GetString();
-            }
-
-            public bool GetBoolean()
-            {
-                return _element.GetBoolean();
-            }
-
-            public object ToObject()
-            {
-                return _element;
-            }
-
-            public bool TryGetProperty(string value, out ICustomObject result)
-            {
-                var res = _element.TryGetProperty(value, out var je);
-                result = new JsonCustomObject(je);
-                return res;
-            }
-        }
-
-        public static FormulaValue ParseJson(IRContext irContext, StringValue[] args)
-        {
-            var json = args[0].Value;
-            JsonElement result;
-
-            try
-            {
-                using (var document = JsonDocument.Parse(json))
-                {
-                    // Clone must be used here because the original element will be disposed
-                    result = document.RootElement.Clone();
-                }
-
-                // Map null to blank
-                if (result.ValueKind == JsonValueKind.Null)
-                {
-                    return new BlankValue(IRContext.NotInSource(FormulaType.Blank));
-                }
-
-                return new CustomObjectValue(irContext, new JsonCustomObject(result));
-            }
-            catch (JsonException ex)
-            {
-                return new ErrorValue(irContext, new ExpressionError()
-                {
-                    Message = $"The Json could not be parsed: {ex.Message}",
-                    Span = irContext.SourceContext,
-                    Kind = ErrorKind.InvalidFunctionUsage
-                });
-            }
-        }
-
         public static FormulaValue Index_CO(IRContext irContext, FormulaValue[] args)
         {
             var arg0 = (CustomObjectValue)args[0];
@@ -135,11 +21,11 @@ namespace Microsoft.PowerFx.Functions
             var element = arg0.Impl;
 
             var len = element.GetArrayLength();
-            var index = (int)arg1.Value;
+            var index = (int)arg1.Value - 1; // 1-based index
 
-            if (index <= len)
+            if (index < len)
             {
-                var result = element[index - 1]; // 1-based index
+                var result = element[index];
 
                 // Map null to blank
                 if (result.Type == FormulaType.Blank)
@@ -198,7 +84,7 @@ namespace Microsoft.PowerFx.Functions
             }
             else if (impl.Type == FormulaType.Boolean)
             {
-                str = impl.GetBoolean() ? "true" : "false";
+                str = PowerFxBooleanToString(impl.GetBoolean());
             }
             else
             {
