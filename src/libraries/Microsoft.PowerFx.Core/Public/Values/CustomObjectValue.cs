@@ -17,11 +17,17 @@ namespace Microsoft.PowerFx.Core.Public.Values
     /// </summary>
     public interface ICustomObject
     {
-        FormulaType Type { get; } // Use ExternalType if the type is incompatible with PowerFx
+        /// <summary>
+        /// Use ExternalType if the type is incompatible with PowerFx.
+        /// </summary>
+        FormulaType Type { get; }
 
         int GetArrayLength();
 
-        ICustomObject this[int index] { get; } // 0-based index
+        /// <summary>
+        /// 0-based index.
+        /// </summary>
+        ICustomObject this[int index] { get; }
 
         bool TryGetProperty(string value, out ICustomObject result);
 
@@ -45,7 +51,7 @@ namespace Microsoft.PowerFx.Core.Public.Values
 
         public override object ToObject()
         {
-            return Impl; // Hosts will need to be able to interpret the backing value
+            throw new NotImplementedException();
         }
 
         public override void Visit(IValueVisitor visitor)
