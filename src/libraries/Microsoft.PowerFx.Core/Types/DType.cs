@@ -60,7 +60,7 @@ namespace Microsoft.PowerFx.Core.Types
         public static readonly DType ViewValue = new DType(DKind.ViewValue);
         public static readonly DType NamedValue = new DType(DKind.NamedValue);
         public static readonly DType MinimalLargeImage = CreateMinimalLargeImageType();
-        public static readonly DType CustomObject = new DType(DKind.CustomObject);
+        public static readonly DType UntypedObject = new DType(DKind.UntypedObject);
 
         public static readonly DType Invalid = new DType();
 
@@ -116,7 +116,7 @@ namespace Microsoft.PowerFx.Core.Types
                 { DKind.View, DKind.Error },
                 { DKind.ViewValue, DKind.Error },
                 { DKind.NamedValue, DKind.Error },
-                { DKind.CustomObject, DKind.Error },
+                { DKind.UntypedObject, DKind.Error },
             }, isThreadSafe: true);
 
         public static Dictionary<DKind, DKind> KindToSuperkindMapping => _kindToSuperkindMapping.Value;
@@ -532,7 +532,7 @@ namespace Microsoft.PowerFx.Core.Types
 
         public bool IsPrimitive => (Kind >= DKind._MinPrimitive && Kind < DKind._LimPrimitive) || Kind == DKind.ObjNull;
 
-        public bool IsCustomObject => Kind == DKind.CustomObject;
+        public bool IsUntypedObject => Kind == DKind.UntypedObject;
 
         private readonly bool _isFile;
 
@@ -1969,8 +1969,8 @@ namespace Microsoft.PowerFx.Core.Types
                     accepts = (type.Kind == Kind && NamedValueKind == type.NamedValueKind) ||
                               type.Kind == DKind.Unknown;
                     break;
-                case DKind.CustomObject:
-                    accepts = type.Kind == DKind.CustomObject || type.Kind == DKind.Unknown;
+                case DKind.UntypedObject:
+                    accepts = type.Kind == DKind.UntypedObject || type.Kind == DKind.Unknown;
                     break;
                 default:
                     Contracts.Assert(false);
@@ -3798,7 +3798,7 @@ namespace Microsoft.PowerFx.Core.Types
                     return "I";
                 case DKind.NamedValue:
                     return "V";
-                case DKind.CustomObject:
+                case DKind.UntypedObject:
                     return "O";
             }
         }

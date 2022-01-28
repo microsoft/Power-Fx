@@ -83,7 +83,7 @@ namespace Microsoft.PowerFx.Core.Types
         // Complex types
         File = 33,
         LargeImage = 34,
-        CustomObject = 35,
+        UntypedObject = 35,
 
         _Lim = 36,
 #pragma warning restore SA1300 // Element should begin with upper-case letter

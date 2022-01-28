@@ -17,7 +17,7 @@ namespace Microsoft.PowerFx.Core.Types
             DType.DateTime, DType.Image, DType.PenImage, DType.Media, DType.Guid, DType.Blob, DType.Currency, DType.Color,
             DType.Date, DType.Time, DType.EmptyRecord, DType.EmptyTable, DType.EmptyEnum,
             DType.OptionSetValue, DType.OptionSet, DType.ObjNull, DType.DateTimeNoTimeZone, DType.Polymorphic, DType.View, DType.ViewValue,
-            DType.NamedValue, DType.CustomObject
+            DType.NamedValue, DType.UntypedObject
         };
 
         // Parses a type specification, returns true and sets 'type' on success.

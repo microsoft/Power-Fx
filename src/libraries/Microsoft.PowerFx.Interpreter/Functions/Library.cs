@@ -350,10 +350,10 @@ namespace Microsoft.PowerFx.Functions
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: DoNotReplaceBlank,
                     checkRuntimeTypes: ExactSequence(
-                        ExactValueTypeOrBlank<CustomObjectValue>,
+                        ExactValueTypeOrBlank<UntypedObjectValue>,
                         ExactValueTypeOrBlank<NumberValue>),
                     checkRuntimeValues: ExactSequence(
-                        CustomObjectArrayChecker,
+                        UntypedObjectArrayChecker,
                         StrictPositiveNumberChecker),
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
                     targetFunction: Index_CO)
@@ -757,11 +757,11 @@ namespace Microsoft.PowerFx.Functions
             },
             {
                 BuiltinFunctionsCore.Table_CO,
-                StandardErrorHandling<CustomObjectValue>(
+                StandardErrorHandling<UntypedObjectValue>(
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: DoNotReplaceBlank,
-                    checkRuntimeTypes: ExactValueTypeOrBlank<CustomObjectValue>,
-                    checkRuntimeValues: CustomObjectArrayChecker,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<UntypedObjectValue>,
+                    checkRuntimeValues: UntypedObjectArrayChecker,
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
                     targetFunction: Table_CO)
             },
@@ -777,11 +777,11 @@ namespace Microsoft.PowerFx.Functions
             },
             {
                 BuiltinFunctionsCore.Text_CO,
-                StandardErrorHandling<CustomObjectValue>(
+                StandardErrorHandling<UntypedObjectValue>(
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: DoNotReplaceBlank,
-                    checkRuntimeTypes: ExactValueTypeOrBlank<CustomObjectValue>,
-                    checkRuntimeValues: CustomObjectStringChecker,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<UntypedObjectValue>,
+                    checkRuntimeValues: UntypedObjectPrimitiveChecker,
                     returnBehavior: ReturnBehavior.ReturnEmptyStringIfAnyArgIsBlank,
                     targetFunction: Text_CO)
             },
@@ -868,11 +868,11 @@ namespace Microsoft.PowerFx.Functions
             },
             {
                 BuiltinFunctionsCore.Value_CO,
-                StandardErrorHandling<CustomObjectValue>(
+                StandardErrorHandling<UntypedObjectValue>(
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: DoNotReplaceBlank,
-                    checkRuntimeTypes: ExactValueTypeOrBlank<CustomObjectValue>,
-                    checkRuntimeValues: CustomObjectNumberChecker,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<UntypedObjectValue>,
+                    checkRuntimeValues: UntypedObjectPrimitiveChecker,
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
                     targetFunction: Value_CO)
             },

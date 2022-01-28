@@ -25,6 +25,6 @@ namespace Microsoft.PowerFx.Core.Public.Values
 
         void Visit(DateTimeValue value);
 
-        void Visit(CustomObjectValue value);
+        void Visit(UntypedObjectValue value);
     }
 }

@@ -3350,7 +3350,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 var leftType = _txb.GetType(node.Left);
 
-                if (!leftType.IsControl && !leftType.IsAggregate && !leftType.IsEnum && !leftType.IsOptionSet && !leftType.IsView && !leftType.IsCustomObject)
+                if (!leftType.IsControl && !leftType.IsAggregate && !leftType.IsEnum && !leftType.IsOptionSet && !leftType.IsView && !leftType.IsUntypedObject)
                 {
                     SetDottedNameError(node, TexlStrings.ErrInvalidDot);
                     return;
@@ -3550,7 +3550,7 @@ namespace Microsoft.PowerFx.Core.Binding
                         _txb.FlagPathAsAsync(node);
                     }
                 }
-                else if (!leftType.TryGetType(nameRhs, out typeRhs) && !leftType.IsCustomObject)
+                else if (!leftType.TryGetType(nameRhs, out typeRhs) && !leftType.IsUntypedObject)
                 {
                     // We may be in the case of dropDown!Selected!RHS
                     // In this case, Selected embeds a meta field whose v-type encapsulates localization info
@@ -3636,9 +3636,9 @@ namespace Microsoft.PowerFx.Core.Binding
                     // ![id:type, ...] . id --> type
                     _txb.SetType(node, typeRhs);
                 }
-                else if (leftType.IsCustomObject)
+                else if (leftType.IsUntypedObject)
                 {
-                    _txb.SetType(node, DType.CustomObject);
+                    _txb.SetType(node, DType.UntypedObject);
                 }
                 else if (leftType.IsTable)
                 {
