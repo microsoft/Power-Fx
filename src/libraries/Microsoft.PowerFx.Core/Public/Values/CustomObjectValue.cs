@@ -11,22 +11,22 @@ using Microsoft.PowerFx.Core.Public.Types;
 
 namespace Microsoft.PowerFx.Core.Public.Values
 {
+    /// <summary>
+    /// The backing implementation for CustomObjectValue, for example Json, Xml,
+    /// or the Ast or Value system from another language.
+    /// </summary>
     public interface ICustomObject
     {
-        bool IsArray { get; }
-
-        bool IsNull { get; }
-
-        bool IsObject { get; }
-
-        bool IsString { get; }
-
-        bool IsNumber { get; }
-
-        object ToObject();
+        /// <summary>
+        /// Use ExternalType if the type is incompatible with PowerFx.
+        /// </summary>
+        FormulaType Type { get; }
 
         int GetArrayLength();
 
+        /// <summary>
+        /// 0-based index.
+        /// </summary>
         ICustomObject this[int index] { get; }
 
         bool TryGetProperty(string value, out ICustomObject result);
@@ -34,24 +34,24 @@ namespace Microsoft.PowerFx.Core.Public.Values
         string GetString();
 
         double GetDouble();
+
+        bool GetBoolean();
     }
 
     public class CustomObjectValue : ValidFormulaValue
     {
-        protected readonly ICustomObject _impl;
-
-        public ICustomObject Impl => _impl;
+        public ICustomObject Impl { get; }
 
         internal CustomObjectValue(IRContext irContext, ICustomObject impl)
             : base(irContext)
         {
             Contract.Assert(IRContext.ResultType == FormulaType.CustomObject);
-            _impl = impl;
+            Impl = impl;
         }
 
         public override object ToObject()
         {
-            return _impl.ToObject();
+            throw new NotImplementedException();
         }
 
         public override void Visit(IValueVisitor visitor)

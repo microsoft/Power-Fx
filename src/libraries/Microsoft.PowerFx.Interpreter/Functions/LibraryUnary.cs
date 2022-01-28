@@ -259,7 +259,12 @@ namespace Microsoft.PowerFx.Functions
         public static StringValue BooleanToText(IRContext irContext, BooleanValue[] args)
         {
             var b = args[0].Value;
-            return new StringValue(irContext, b ? "true" : "false");
+            return new StringValue(irContext, PowerFxBooleanToString(b));
+        }
+
+        private static string PowerFxBooleanToString(bool b)
+        {
+            return b ? "true" : "false";
         }
 
         public static NumberValue BooleanToNumber(IRContext irContext, BooleanValue[] args)
