@@ -17,7 +17,7 @@ namespace Microsoft.PowerFx.Core.Public.Types
     }
 
     /// <summary>
-    /// FormulaType that can be used by CustomObject instances to
+    /// FormulaType that can be used by UntypedObject instances to
     /// indicate that the type of the data does not exist in PowerFx.
     /// </summary>
     public class ExternalType : FormulaType

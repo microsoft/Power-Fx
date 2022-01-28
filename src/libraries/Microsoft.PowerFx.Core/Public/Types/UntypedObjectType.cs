@@ -8,10 +8,10 @@ using Microsoft.PowerFx.Core.Types;
 
 namespace Microsoft.PowerFx.Core.Public.Types
 {
-    public class CustomObjectType : FormulaType
+    public class UntypedObjectType : FormulaType
     {
-        public CustomObjectType()
-            : base(DType.CustomObject)
+        public UntypedObjectType()
+            : base(DType.UntypedObject)
         {
         }
 

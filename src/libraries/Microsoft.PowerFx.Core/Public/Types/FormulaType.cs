@@ -38,7 +38,7 @@ namespace Microsoft.PowerFx.Core.Public.Types
 
         public static FormulaType OptionSetValue { get; } = new OptionSetValueType();
 
-        public static FormulaType CustomObject { get; } = new CustomObjectType();
+        public static FormulaType UntypedObject { get; } = new UntypedObjectType();
 
         public static FormulaType Hyperlink { get; } = new HyperlinkType();
 
@@ -77,8 +77,8 @@ namespace Microsoft.PowerFx.Core.Public.Types
                 case DKind.OptionSet:
                     return new RecordType(DType.CreateRecord(type.GetAllNames(DPath.Root)));
 
-                case DKind.CustomObject:
-                    return CustomObject;
+                case DKind.UntypedObject:
+                    return UntypedObject;
 
                 default:
                     throw new NotImplementedException($"Not implemented type: {type}");
