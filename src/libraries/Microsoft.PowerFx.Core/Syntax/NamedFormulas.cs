@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.PowerFx.Core.Errors;
@@ -15,7 +16,7 @@ namespace Microsoft.PowerFx.Core.Syntax
     /// <summary>
     /// This encapsulates a named formula: its original script, the parsed result, and any parse errors.
     /// </summary>
-    internal class NamedFormulas
+    internal class NamedFormulas : IEnumerable<(DName name, Formula formula)>
     {
         /// <summary>
         /// A script containing one or more named formulas.
@@ -79,27 +80,26 @@ namespace Microsoft.PowerFx.Core.Syntax
             return _errors ?? Enumerable.Empty<TexlError>();
         }
 
-        /// <summary>
-        /// Returns a Tuple of a DName and Formula object for each named formula.
-        /// </summary>
-        /// <returns></returns>
-        public IEnumerable<(DName name, Formula formula)> GetNamedFormulas()
-        {
-            var formulas = new List<(DName, Formula)>();
-            if (_formulasResult != null)
-            {
-                foreach (var kvp in _formulasResult)
-                {
-                    formulas.Add((kvp.Key, GetFormula(kvp.Value)));
-                }
-            }
-
-            return formulas;
-        }
-
         private Formula GetFormula(TexlNode node)
         {
             return new Formula(node.GetCompleteSpan().GetFragment(Script), node);
         }
+
+        /// <summary>
+        /// Returns a enumerator of type Tuple of a DName and Formula object that can be enumerated for each named formula.
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerator<(DName name, Formula formula)> GetEnumerator()
+        {
+            if (_formulasResult != null)
+            {
+                foreach (var kvp in _formulasResult)
+                {
+                    yield return (kvp.Key, GetFormula(kvp.Value));
+                }
+            }
+        }
+
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     }
 }

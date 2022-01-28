@@ -59,15 +59,14 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("x=1;y=2;", "1", "2")]
         public void GetNamedFormulasTest(string script, string expectedX, string expectedY)
         {
-            var namedFormula = new NamedFormulas(script);
-            namedFormula.EnsureParsed();
-            var formulas = namedFormula.GetNamedFormulas();
-            formulas.OrderBy(formula => formula.formula.Script);
+            var namedFormulas = new NamedFormulas(script);
+            namedFormulas.EnsureParsed();
+            namedFormulas.OrderBy(formula => formula.formula.Script);
 
-            Assert.NotNull(formulas);
+            Assert.NotNull(namedFormulas);
 
-            Assert.Equal(expectedX, formulas.ElementAt(0).formula.Script);
-            Assert.Equal(expectedY, formulas.ElementAt(1).formula.Script);
+            Assert.Equal(expectedX, namedFormulas.ElementAt(0).formula.Script);
+            Assert.Equal(expectedY, namedFormulas.ElementAt(1).formula.Script);
         }
     }
 }
