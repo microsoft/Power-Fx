@@ -10,9 +10,5 @@ namespace Microsoft.PowerFx.Core.Entities
         bool IsBooleanValued { get; }
 
         string RelatedEntityName { get; }
-
-        string RelatedColumnInvariantName { get; }
-
-        bool IsGlobal { get; }
     }
 }
