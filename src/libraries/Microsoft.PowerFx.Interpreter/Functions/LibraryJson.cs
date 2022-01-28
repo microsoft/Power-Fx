@@ -13,11 +13,11 @@ namespace Microsoft.PowerFx.Functions
 {
     internal static partial class Library
     {
-        internal class JsonCustomObject : ICustomObject
+        internal class JsonUntypedObject : IUntypedObject
         {
             private readonly JsonElement _element;
 
-            public JsonCustomObject(JsonElement element)
+            public JsonUntypedObject(JsonElement element)
             {
                 _element = element;
             }
@@ -45,7 +45,7 @@ namespace Microsoft.PowerFx.Functions
                 }
             }
 
-            public ICustomObject this[int index] => new JsonCustomObject(_element[index]);
+            public IUntypedObject this[int index] => new JsonUntypedObject(_element[index]);
 
             public int GetArrayLength()
             {
@@ -67,10 +67,10 @@ namespace Microsoft.PowerFx.Functions
                 return _element.GetBoolean();
             }
 
-            public bool TryGetProperty(string value, out ICustomObject result)
+            public bool TryGetProperty(string value, out IUntypedObject result)
             {
                 var res = _element.TryGetProperty(value, out var je);
-                result = new JsonCustomObject(je);
+                result = new JsonUntypedObject(je);
                 return res;
             }
         }
@@ -94,7 +94,7 @@ namespace Microsoft.PowerFx.Functions
                     return new BlankValue(IRContext.NotInSource(FormulaType.Blank));
                 }
 
-                return new CustomObjectValue(irContext, new JsonCustomObject(result));
+                return new UntypedObjectValue(irContext, new JsonUntypedObject(result));
             }
             catch (JsonException ex)
             {

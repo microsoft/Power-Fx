@@ -15,7 +15,7 @@ namespace Microsoft.PowerFx.Functions
     {
         public static FormulaValue Index_CO(IRContext irContext, FormulaValue[] args)
         {
-            var arg0 = (CustomObjectValue)args[0];
+            var arg0 = (UntypedObjectValue)args[0];
             var arg1 = (NumberValue)args[1];
 
             var element = arg0.Impl;
@@ -33,7 +33,7 @@ namespace Microsoft.PowerFx.Functions
                     return new BlankValue(IRContext.NotInSource(FormulaType.Blank));
                 }
 
-                return new CustomObjectValue(irContext, result);
+                return new UntypedObjectValue(irContext, result);
             }
             else
             {
@@ -41,7 +41,7 @@ namespace Microsoft.PowerFx.Functions
             }
         }
 
-        public static FormulaValue Value_CO(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, CustomObjectValue[] args)
+        public static FormulaValue Value_CO(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, UntypedObjectValue[] args)
         {
             var impl = args[0].Impl;
             double number;
@@ -69,7 +69,7 @@ namespace Microsoft.PowerFx.Functions
             return new NumberValue(irContext, number);
         }
 
-        public static FormulaValue Text_CO(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, CustomObjectValue[] args)
+        public static FormulaValue Text_CO(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, UntypedObjectValue[] args)
         {
             var impl = args[0].Impl;
             string str;
@@ -94,7 +94,7 @@ namespace Microsoft.PowerFx.Functions
             return new StringValue(irContext, str);
         }
 
-        public static FormulaValue Table_CO(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, CustomObjectValue[] args)
+        public static FormulaValue Table_CO(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, UntypedObjectValue[] args)
         {
             var tableType = (TableType)irContext.ResultType;
             var resultType = tableType.ToRecord();
@@ -108,7 +108,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 var element = args[0].Impl[i];
 
-                var namedValue = new NamedValue(BuiltinFunction.ColumnName_ValueStr, new CustomObjectValue(IRContext.NotInSource(itemType), element));
+                var namedValue = new NamedValue(BuiltinFunction.ColumnName_ValueStr, new UntypedObjectValue(IRContext.NotInSource(itemType), element));
                 var record = new InMemoryRecordValue(IRContext.NotInSource(resultType), new List<NamedValue>() { namedValue });
                 resultRows.Add(DValue<RecordValue>.Of(record));
             }
@@ -116,9 +116,9 @@ namespace Microsoft.PowerFx.Functions
             return new InMemoryTableValue(irContext, resultRows);
         }
 
-        private static FormulaValue CustomObjectPrimitiveChecker(IRContext irContext, int index, FormulaValue arg)
+        private static FormulaValue UntypedObjectPrimitiveChecker(IRContext irContext, int index, FormulaValue arg)
         {
-            if (arg is CustomObjectValue cov)
+            if (arg is UntypedObjectValue cov)
             {
                 if (cov.Impl.Type == FormulaType.Number)
                 {
@@ -137,15 +137,15 @@ namespace Microsoft.PowerFx.Functions
             return arg;
         }
 
-        private static FormulaValue CustomObjectArrayChecker(IRContext irContext, int index, FormulaValue arg)
+        private static FormulaValue UntypedObjectArrayChecker(IRContext irContext, int index, FormulaValue arg)
         {
-            if (arg is CustomObjectValue cov)
+            if (arg is UntypedObjectValue cov)
             {
                 if (!(cov.Impl.Type is ExternalType et && et.Kind == ExternalTypeKind.Array))
                 {
                     return new ErrorValue(irContext, new ExpressionError()
                     {
-                        Message = "The CustomObject does not represent an array",
+                        Message = "The UntypedObject does not represent an array",
                         Span = irContext.SourceContext,
                         Kind = ErrorKind.InvalidFunctionUsage
                     });

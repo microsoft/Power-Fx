@@ -12,10 +12,10 @@ using Microsoft.PowerFx.Core.Public.Types;
 namespace Microsoft.PowerFx.Core.Public.Values
 {
     /// <summary>
-    /// The backing implementation for CustomObjectValue, for example Json, Xml,
+    /// The backing implementation for UntypedObjectValue, for example Json, Xml,
     /// or the Ast or Value system from another language.
     /// </summary>
-    public interface ICustomObject
+    public interface IUntypedObject
     {
         /// <summary>
         /// Use ExternalType if the type is incompatible with PowerFx.
@@ -27,9 +27,9 @@ namespace Microsoft.PowerFx.Core.Public.Values
         /// <summary>
         /// 0-based index.
         /// </summary>
-        ICustomObject this[int index] { get; }
+        IUntypedObject this[int index] { get; }
 
-        bool TryGetProperty(string value, out ICustomObject result);
+        bool TryGetProperty(string value, out IUntypedObject result);
 
         string GetString();
 
@@ -38,14 +38,14 @@ namespace Microsoft.PowerFx.Core.Public.Values
         bool GetBoolean();
     }
 
-    public class CustomObjectValue : ValidFormulaValue
+    public class UntypedObjectValue : ValidFormulaValue
     {
-        public ICustomObject Impl { get; }
+        public IUntypedObject Impl { get; }
 
-        internal CustomObjectValue(IRContext irContext, ICustomObject impl)
+        internal UntypedObjectValue(IRContext irContext, IUntypedObject impl)
             : base(irContext)
         {
-            Contract.Assert(IRContext.ResultType == FormulaType.CustomObject);
+            Contract.Assert(IRContext.ResultType == FormulaType.UntypedObject);
             Impl = impl;
         }
 

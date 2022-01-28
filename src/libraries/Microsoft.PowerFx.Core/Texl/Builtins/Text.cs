@@ -176,7 +176,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override bool IsSelfContained => true;
 
         public TextFunction_CO()
-            : base("Text", TexlStrings.AboutText, FunctionCategories.Text, DType.String, 0, 1, 1, DType.CustomObject)
+            : base("Text", TexlStrings.AboutText, FunctionCategories.Text, DType.String, 0, 1, 1, DType.UntypedObject)
         {
         }
 
