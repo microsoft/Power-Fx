@@ -134,7 +134,7 @@ namespace Microsoft.PowerFx.Core.Binding
             get
             {
 #if DEBUG
-                if (NameResolver?.CurrentEntity?.IsControl == true && NameResolver.CurrentProperty.IsValid && NameResolver.TryGetCurrentControlProperty(out var currentProperty))
+                if (NameResolver.CurrentEntity is IExternalControl && NameResolver.CurrentProperty.IsValid && NameResolver.TryGetCurrentControlProperty(out var currentProperty))
                 {
                     Contracts.Assert(_property == currentProperty);
                 }
@@ -149,7 +149,7 @@ namespace Microsoft.PowerFx.Core.Binding
             get
             {
 #if DEBUG
-                if (NameResolver != null && NameResolver.CurrentEntity != null && NameResolver.CurrentEntity.IsControl)
+                if (NameResolver != null && NameResolver.CurrentEntity != null && NameResolver.CurrentEntity is IExternalControl)
                 {
                     Contracts.Assert(NameResolver.CurrentEntity == _control);
                 }
@@ -667,7 +667,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 return null;
             }
 
-            if (!nameResolver.CurrentEntity.IsControl || !nameResolver.LookupParent(out var lookupInfo))
+            if (!(nameResolver.CurrentEntity is IExternalControl) || !nameResolver.LookupParent(out var lookupInfo))
             {
                 return null;
             }
@@ -3040,11 +3040,11 @@ namespace Microsoft.PowerFx.Core.Binding
 
             private bool TryProcessFirstNameNodeForThisItemAccess(FirstNameNode node, NameLookupInfo lookupInfo, out DType nodeType, out FirstNameInfo info)
             {
-                if (_nameResolver.CurrentEntity.IsControl)
+                if (_nameResolver.CurrentEntity is IExternalControl)
                 {
                     // Check to see if we only want to include ThisItem in specific
                     // properties of this Control
-                    if (_nameResolver.CurrentEntity.EntityScope.TryGetEntity(_nameResolver.CurrentEntity.EntityName, out IExternalControl nodeAssociatedControl) &&
+                    if (_nameResolver.EntityScope.TryGetEntity(_nameResolver.CurrentEntity.EntityName, out IExternalControl nodeAssociatedControl) &&
                         nodeAssociatedControl.Template.IncludesThisItemInSpecificProperty)
                     {
                         if (nodeAssociatedControl.Template.TryGetProperty(_nameResolver.CurrentProperty, out var nodeAssociatedProperty) && !nodeAssociatedProperty.ShouldIncludeThisItemInFormula)
@@ -3230,7 +3230,7 @@ namespace Microsoft.PowerFx.Core.Binding
                     return;
                 }
 
-                if (!_nameResolver.CurrentEntity.IsControl || !_nameResolver.LookupParent(out var lookupInfo))
+                if (!(_nameResolver.CurrentEntity is IExternalControl) || !_nameResolver.LookupParent(out var lookupInfo))
                 {
                     _txb.ErrorContainer.Error(node, TexlStrings.ErrInvalidParentUse);
                     _txb.SetType(node, DType.Error);
