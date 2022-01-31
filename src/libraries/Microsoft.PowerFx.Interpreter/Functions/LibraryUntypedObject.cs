@@ -13,7 +13,7 @@ namespace Microsoft.PowerFx.Functions
 {
     internal static partial class Library
     {
-        public static FormulaValue Index_CO(IRContext irContext, FormulaValue[] args)
+        public static FormulaValue Index_UO(IRContext irContext, FormulaValue[] args)
         {
             var arg0 = (UntypedObjectValue)args[0];
             var arg1 = (NumberValue)args[1];
@@ -41,7 +41,7 @@ namespace Microsoft.PowerFx.Functions
             }
         }
 
-        public static FormulaValue Value_CO(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, UntypedObjectValue[] args)
+        public static FormulaValue Value_UO(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, UntypedObjectValue[] args)
         {
             var impl = args[0].Impl;
             double number;
@@ -69,7 +69,7 @@ namespace Microsoft.PowerFx.Functions
             return new NumberValue(irContext, number);
         }
 
-        public static FormulaValue Text_CO(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, UntypedObjectValue[] args)
+        public static FormulaValue Text_UO(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, UntypedObjectValue[] args)
         {
             var impl = args[0].Impl;
             string str;
@@ -94,7 +94,7 @@ namespace Microsoft.PowerFx.Functions
             return new StringValue(irContext, str);
         }
 
-        public static FormulaValue Table_CO(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, UntypedObjectValue[] args)
+        public static FormulaValue Table_UO(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, UntypedObjectValue[] args)
         {
             var tableType = (TableType)irContext.ResultType;
             var resultType = tableType.ToRecord();

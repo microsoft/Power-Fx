@@ -33,7 +33,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         }
     }
 
-    internal sealed class IndexFunction_CO : BuiltinFunction
+    internal sealed class IndexFunction_UO : BuiltinFunction
     {
         public const string IndexInvariantFunctionName = "Index";
 
@@ -45,7 +45,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool IsHidden => true;
 
-        public IndexFunction_CO()
+        public IndexFunction_UO()
             : base(IndexInvariantFunctionName, TexlStrings.AboutIndex, FunctionCategories.Table, DType.UntypedObject, 0, 2, 2, DType.UntypedObject, DType.Number)
         {
         }

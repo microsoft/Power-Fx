@@ -45,11 +45,11 @@ namespace Microsoft.PowerFx
         {
             _powerFxConfig = powerFxConfig ?? new PowerFxConfig();
 
-            AddFunction(BuiltinFunctionsCore.Index_CO);
+            AddFunction(BuiltinFunctionsCore.Index_UO);
             AddFunction(BuiltinFunctionsCore.ParseJson);
-            AddFunction(BuiltinFunctionsCore.Table_CO);
-            AddFunction(BuiltinFunctionsCore.Text_CO);
-            AddFunction(BuiltinFunctionsCore.Value_CO);
+            AddFunction(BuiltinFunctionsCore.Table_UO);
+            AddFunction(BuiltinFunctionsCore.Text_UO);
+            AddFunction(BuiltinFunctionsCore.Value_UO);
         }
 
         // Add Builtin functions that aren't yet in the shared library. 
