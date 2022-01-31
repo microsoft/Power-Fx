@@ -4212,8 +4212,8 @@ namespace Microsoft.PowerFx.Core.Binding
                 if (!(typeLeft.IsPrimitive && typeRight.IsPrimitive) && !(typeLeft.IsPolymorphic && typeRight.IsPolymorphic) && !(typeLeft.IsControl && typeRight.IsControl)
                     && !(typeLeft.IsPolymorphic && typeRight.IsRecord) && !(typeLeft.IsRecord && typeRight.IsPolymorphic))
                 {
-                    var leftTypeDisambiguation = typeLeft.IsOptionSet && typeLeft.OptionSetInfo != null ? $"({typeLeft.OptionSetInfo.Name})" : string.Empty;
-                    var rightTypeDisambiguation = typeRight.IsOptionSet && typeRight.OptionSetInfo != null ? $"({typeRight.OptionSetInfo.Name})" : string.Empty;
+                    var leftTypeDisambiguation = typeLeft.IsOptionSet && typeLeft.OptionSetInfo != null ? $"({typeLeft.OptionSetInfo.EntityName})" : string.Empty;
+                    var rightTypeDisambiguation = typeRight.IsOptionSet && typeRight.OptionSetInfo != null ? $"({typeRight.OptionSetInfo.EntityName})" : string.Empty;
 
                     _txb.ErrorContainer.EnsureError(
                         DocumentErrorSeverity.Severe,
@@ -4238,8 +4238,8 @@ namespace Microsoft.PowerFx.Core.Binding
                 // Special case for option set values, it should produce an error when the base option sets are different
                 if (typeLeft.Kind == DKind.OptionSetValue && !typeLeft.Accepts(typeRight))
                 {
-                    var leftTypeDisambiguation = typeLeft.IsOptionSet && typeLeft.OptionSetInfo != null ? $"({typeLeft.OptionSetInfo.Name})" : string.Empty;
-                    var rightTypeDisambiguation = typeRight.IsOptionSet && typeRight.OptionSetInfo != null ? $"({typeRight.OptionSetInfo.Name})" : string.Empty;
+                    var leftTypeDisambiguation = typeLeft.IsOptionSet && typeLeft.OptionSetInfo != null ? $"({typeLeft.OptionSetInfo.EntityName})" : string.Empty;
+                    var rightTypeDisambiguation = typeRight.IsOptionSet && typeRight.OptionSetInfo != null ? $"({typeRight.OptionSetInfo.EntityName})" : string.Empty;
 
                     _txb.ErrorContainer.EnsureError(
                         DocumentErrorSeverity.Severe,
