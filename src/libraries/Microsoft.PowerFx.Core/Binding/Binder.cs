@@ -2985,15 +2985,6 @@ namespace Microsoft.PowerFx.Core.Binding
                     }
                 }
 
-                // Check if we are referencing an errored data source and report the error.
-                IExternalTabularDataSource connectedDataSourceInfo = null;
-                if (lookupInfo.Kind == BindKind.Data &&
-                    (connectedDataSourceInfo = lookupInfo.Data as IExternalTabularDataSource) != null &&
-                    connectedDataSourceInfo.Errors.Any(error => error.Severity >= DocumentErrorSeverity.Severe))
-                {
-                    _txb.ErrorContainer.EnsureError(node, TexlStrings.ErrInvalidDataSource);
-                }
-
                 // Update _usesGlobals, _usesResources, etc.
                 UpdateBindKindUseFlags(lookupInfo.Kind);
 
@@ -3017,7 +3008,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 }
 
                 // Any connectedDataSourceInfo or option set or view needs to be accessed asynchronously to allow data to be loaded.
-                if (connectedDataSourceInfo != null || lookupInfo.Kind == BindKind.OptionSet || lookupInfo.Kind == BindKind.View)
+                if (lookupInfo.Data is IExternalTabularDataSource || lookupInfo.Kind == BindKind.OptionSet || lookupInfo.Kind == BindKind.View)
                 {
                     _txb.FlagPathAsAsync(node);
 
@@ -3025,14 +3016,6 @@ namespace Microsoft.PowerFx.Core.Binding
                     // If view no need to verify entity existence
                     if (lookupInfo.Type.OptionSetInfo == null || lookupInfo.Kind == BindKind.View)
                     {
-                        return;
-                    }
-
-                    var relatedEntityName = new DName(lookupInfo.Type.OptionSetInfo.RelatedEntityName);
-                    if (!haveNameResolver || !_nameResolver.LookupGlobalEntity(relatedEntityName, out var entityLookupInfo))
-                    {
-                        _txb.ErrorContainer.Error(node, TexlStrings.ErrNeedEntity_EntityName, relatedEntityName);
-                        _txb.SetType(node, DType.Error);
                         return;
                     }
                 }
