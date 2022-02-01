@@ -121,8 +121,17 @@ namespace Microsoft.PowerFx.Core.Parser
                             }
 
                             // Parse expression
-                            var result = ParseExpr(Precedence.None);
-                            namedFormulas.Add(thisIdentifier.As<IdentToken>().Name, result);
+                            var key = thisIdentifier.As<IdentToken>().Name;
+                            if (namedFormulas.ContainsKey(key))
+                            {
+                                PostError(thisIdentifier, TexlStrings.ErrNamedFormula_DuplicateVariable, key.Value);
+                                _curs.TokMove();
+                            }
+                            else
+                            {
+                                var result = ParseExpr(Precedence.None);
+                                namedFormulas.Add(key, result);
+                            }
                         }
 
                         _curs.TokMove();

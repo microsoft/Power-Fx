@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System.Linq;
+using Microsoft.PowerFx.Core.Lexer.Tokens;
 using Microsoft.PowerFx.Core.Syntax;
 using Xunit;
 
@@ -68,6 +69,29 @@ namespace Microsoft.PowerFx.Core.Tests
 
             Assert.Equal(expectedX, formulas.ElementAt(0).formula.Script);
             Assert.Equal(expectedY, formulas.ElementAt(1).formula.Script);
+        }
+
+        [Theory]
+        [InlineData("x = 1;x = 2;", "1", 1, "x")]
+        [InlineData("y = 1;y = 2;y = 2;", "1", 2, "y")]
+        [InlineData("y = 1;y = 2;y=3", "1", 3, "y")]
+        public void NamedFormulasWithDuplicateVariablesTest(string script, string expectedX, int expectedErrorCount, string errorToken)
+        {
+            var namedFormula = new NamedFormulas(script);
+            Assert.False(namedFormula.EnsureParsed());
+
+            var errors = namedFormula.GetParseErrors();
+            Assert.NotEmpty(errors);
+            Assert.Equal(errors.Count(), expectedErrorCount);
+
+            var identifierDName = errors.ElementAt(0)?.Tok.As<IdentToken>()?.Name;
+            Assert.NotNull(identifierDName);
+            Assert.Equal(errorToken, identifierDName.Value);
+
+            var formulas = namedFormula.GetNamedFormulas();
+            Assert.NotNull(formulas);
+
+            Assert.Equal(expectedX, formulas.ElementAt(0).formula.Script);
         }
     }
 }
