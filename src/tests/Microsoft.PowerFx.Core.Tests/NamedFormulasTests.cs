@@ -19,11 +19,13 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Theory]
-        [InlineData("x=1;y=2;")]
-        public void EnsureParsedTest(string script)
+        [InlineData("x=1;y=2;", 2)]
+        public void EnsureParsedTest(string script, int count)
         {
             var namedFormula = new NamedFormulas(script);
-            Assert.True(namedFormula.EnsureParsed());
+            var formulas = namedFormula.EnsureParsed();
+            Assert.NotNull(formulas);
+            Assert.Equal(formulas.Count(), count);
         }
 
         [Theory]
@@ -31,7 +33,8 @@ namespace Microsoft.PowerFx.Core.Tests
         public void EnsureParsedWithErrorsTest(string script)
         {
             var namedFormula = new NamedFormulas(script);
-            Assert.False(namedFormula.EnsureParsed());            
+            var formulas = namedFormula.EnsureParsed();
+            Assert.Empty(formulas);            
         }
 
         [Theory]
@@ -61,37 +64,13 @@ namespace Microsoft.PowerFx.Core.Tests
         public void GetNamedFormulasTest(string script, string expectedX, string expectedY)
         {
             var namedFormula = new NamedFormulas(script);
-            namedFormula.EnsureParsed();
-            var formulas = namedFormula.GetNamedFormulas();
+            var formulas = namedFormula.EnsureParsed();
             formulas.OrderBy(formula => formula.formula.Script);
 
             Assert.NotNull(formulas);
 
             Assert.Equal(expectedX, formulas.ElementAt(0).formula.Script);
             Assert.Equal(expectedY, formulas.ElementAt(1).formula.Script);
-        }
-
-        [Theory]
-        [InlineData("x = 1;x = 2;", "1", 1, "x")]
-        [InlineData("y = 1;y = 2;y = 2;", "1", 2, "y")]
-        [InlineData("y = 1;y = 2;y=3", "1", 3, "y")]
-        public void NamedFormulasWithDuplicateVariablesTest(string script, string expectedX, int expectedErrorCount, string errorToken)
-        {
-            var namedFormula = new NamedFormulas(script);
-            Assert.False(namedFormula.EnsureParsed());
-
-            var errors = namedFormula.GetParseErrors();
-            Assert.NotEmpty(errors);
-            Assert.Equal(errors.Count(), expectedErrorCount);
-
-            var identifierDName = errors.ElementAt(0)?.Tok.As<IdentToken>()?.Name;
-            Assert.NotNull(identifierDName);
-            Assert.Equal(errorToken, identifierDName.Value);
-
-            var formulas = namedFormula.GetNamedFormulas();
-            Assert.NotNull(formulas);
-
-            Assert.Equal(expectedX, formulas.ElementAt(0).formula.Script);
         }
     }
 }

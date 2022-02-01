@@ -88,12 +88,12 @@ namespace Microsoft.PowerFx.Core.Parser
             var formulaTokens = TokenizeScript(script, loc, Flags.NamedFormulas);
             var parser = new TexlParser(formulaTokens, Flags.NamedFormulas);
 
-            return parser.ParseFormulas();
+            return parser.ParseFormulas(script);
         }
 
-        private ParseFormulasResult ParseFormulas()
+        private ParseFormulasResult ParseFormulas(string script)
         {
-            var namedFormulas = new Dictionary<DName, TexlNode>();
+            var namedFormulas = new List<KeyValuePair<IdentToken, TexlNode>>();
             ParseTrivia();
 
             while (_curs.TokCur.Kind != TokKind.Eof)
@@ -121,17 +121,9 @@ namespace Microsoft.PowerFx.Core.Parser
                             }
 
                             // Parse expression
-                            var key = thisIdentifier.As<IdentToken>().Name;
-                            if (namedFormulas.ContainsKey(key))
-                            {
-                                PostError(thisIdentifier, TexlStrings.ErrNamedFormula_DuplicateVariable, key.Value);
-                                _curs.TokMove();
-                            }
-                            else
-                            {
-                                var result = ParseExpr(Precedence.None);
-                                namedFormulas.Add(key, result);
-                            }
+                            var result = ParseExpr(Precedence.None);
+
+                            namedFormulas.Add(new KeyValuePair<IdentToken, TexlNode>(thisIdentifier.As<IdentToken>(), result));
                         }
 
                         _curs.TokMove();
