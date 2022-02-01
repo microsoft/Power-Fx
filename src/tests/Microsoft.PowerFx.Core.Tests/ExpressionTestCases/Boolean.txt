@@ -1,0 +1,26 @@
+﻿>> Boolean("true")
+true
+
+>> Boolean("false")
+false
+
+>> Boolean("x")
+#Error
+
+>> Boolean(" true")
+true
+
+>> Boolean(" false")
+false
+
+>> Boolean("True")
+true
+
+>> Boolean("False")
+false
+
+>> Boolean(Text(Blank()))
+Blank()
+
+>> Boolean(Text(0/1))
+#Error

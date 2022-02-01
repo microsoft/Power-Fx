@@ -63,7 +63,7 @@ namespace Microsoft.PowerFx.Functions
         {
             return new ErrorValue(irContext, new ExpressionError()
             {
-                Message = "The Boolean could not be parsed",
+                Message = "The value could not be interpreted as a Boolean",
                 Span = irContext.SourceContext,
                 Kind = ErrorKind.BadLanguageCode
             });

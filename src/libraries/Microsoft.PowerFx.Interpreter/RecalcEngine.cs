@@ -50,6 +50,7 @@ namespace Microsoft.PowerFx
             AddFunction(BuiltinFunctionsCore.Table_UO);
             AddFunction(BuiltinFunctionsCore.Text_UO);
             AddFunction(BuiltinFunctionsCore.Value_UO);
+            AddFunction(BuiltinFunctionsCore.Boolean_UO);
         }
 
         // Add Builtin functions that aren't yet in the shared library. 

@@ -36,7 +36,6 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction AverageT = _library.Append(new AverageTableFunction());
         public static readonly TexlFunction Blank = _library.Append(new BlankFunction());
         public static readonly TexlFunction Boolean = _library.Append(new BooleanFunction());
-        public static readonly TexlFunction Boolean_UO = _library.Append(new BooleanFunction_UO());
         public static readonly TexlFunction Clock24 = _library.Append(new IsClock24Function());
         public static readonly TexlFunction Char = _library.Append(new CharFunction());
         public static readonly TexlFunction CharT = _library.Append(new CharTFunction());
@@ -187,6 +186,7 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction Table_UO = new TableFunction_UO();
         public static readonly TexlFunction Text_UO = new TextFunction_UO();
         public static readonly TexlFunction Value_UO = new ValueFunction_UO();
+        public static readonly TexlFunction Boolean_UO = new BooleanFunction_UO();
 
         public static readonly TexlFunction IsUTCToday = new IsUTCTodayFunction();
         public static readonly TexlFunction UTCNow = new UTCNowFunction();

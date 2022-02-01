@@ -8,7 +8,7 @@ using Microsoft.PowerFx.Core.Types;
 
 namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
-    // Boolean(arg:s|n)
+    // Boolean(arg:s)
     // Corresponding Excel and DAX function: Boolean
     internal sealed class BooleanFunction : BuiltinFunction
     {
