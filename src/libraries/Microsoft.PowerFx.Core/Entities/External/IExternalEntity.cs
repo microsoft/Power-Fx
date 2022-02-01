@@ -11,7 +11,5 @@ namespace Microsoft.PowerFx.Core.Entities
     internal interface IExternalEntity
     {
         DName EntityName { get; }
-
-        IEnumerable<IDocumentError> Errors { get; }
     }
 }
