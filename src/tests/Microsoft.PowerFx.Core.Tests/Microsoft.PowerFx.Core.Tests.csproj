@@ -55,9 +55,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="ExpressionTestCases\Boolean.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\..\libraries\Microsoft.PowerFx.Core\Microsoft.PowerFx.Core.csproj" />
   </ItemGroup>
 </Project>
