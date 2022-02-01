@@ -30,7 +30,7 @@ namespace Microsoft.PowerFx.Core.Public.Types
 
         void Visit(OptionSetValueType type);
 
-        void Visit(CustomObjectType type);
+        void Visit(UntypedObjectType type);
 
         void Visit(HyperlinkType type);
     }

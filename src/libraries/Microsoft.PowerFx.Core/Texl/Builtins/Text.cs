@@ -167,7 +167,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     }
 
     // Text(arg:O)
-    internal sealed class TextFunction_CO : BuiltinFunction
+    internal sealed class TextFunction_UO : BuiltinFunction
     {
         public override bool SupportsParamCoercion => false;
 
@@ -175,8 +175,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool IsSelfContained => true;
 
-        public TextFunction_CO()
-            : base("Text", TexlStrings.AboutText, FunctionCategories.CustomObject, DType.String, 0, 1, 1, DType.CustomObject)
+        public TextFunction_UO()
+            : base("Text", TexlStrings.AboutText, FunctionCategories.Text, DType.String, 0, 1, 1, DType.UntypedObject)
         {
         }
 
@@ -187,7 +187,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override string GetUniqueTexlRuntimeName(bool isPrefetching = false)
         {
-            return GetUniqueTexlRuntimeName(suffix: "_CO");
+            return GetUniqueTexlRuntimeName(suffix: "_UO");
         }
     }
 }

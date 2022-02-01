@@ -37,30 +37,10 @@ namespace Microsoft.PowerFx.Interpreter
         {
             return new SingleSourceDisplayNameProvider(Options);
         }
-
         
         // Refactor the interface to separate out all this Canvas stuff from Power Fx. 
         public string Name => EntityName;
 
         public bool IsBooleanValued => false;
-
-        public string RelatedEntityName => throw new NotImplementedException();
-
-        public bool IsControl => throw new NotImplementedException();
-
-        public IExternalEntityScope EntityScope => throw new NotImplementedException();
-
-        public IEnumerable<IDocumentError> Errors => throw new NotImplementedException();
-
-        public bool IsConvertingDisplayNameMapping => throw new NotImplementedException();
-
-        public BidirectionalDictionary<string, string> DisplayNameMapping => throw new NotImplementedException();
-
-        public BidirectionalDictionary<string, string> PreviousDisplayNameMapping => throw new NotImplementedException();
-
-        public bool TryGetRule(DName propertyName, out IExternalRule rule)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

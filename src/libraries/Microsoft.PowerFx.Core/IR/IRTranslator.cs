@@ -446,10 +446,10 @@ namespace Microsoft.PowerFx.Core.IR
                         }
                     }
                 }
-                else if (typeLhs.IsCustomObject)
+                else if (typeLhs.IsUntypedObject)
                 {
                     // Field access within a custom object.
-                    Contracts.Assert(typeLhs.IsCustomObject);
+                    Contracts.Assert(typeLhs.IsUntypedObject);
 
                     var right = new TextLiteralNode(IRContext.NotInSource(FormulaType.String), nameRhs);
 

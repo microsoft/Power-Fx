@@ -84,7 +84,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     }
 
     // Value(arg:O)
-    internal sealed class ValueFunction_CO : BuiltinFunction
+    internal sealed class ValueFunction_UO : BuiltinFunction
     {
         public override bool RequiresErrorContext => true;
 
@@ -92,8 +92,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool SupportsParamCoercion => false;
 
-        public ValueFunction_CO()
-            : base(ValueFunction.ValueInvariantFunctionName, TexlStrings.AboutValue, FunctionCategories.CustomObject, DType.Number, 0, 1, 1, DType.CustomObject)
+        public ValueFunction_UO()
+            : base(ValueFunction.ValueInvariantFunctionName, TexlStrings.AboutValue, FunctionCategories.Text, DType.Number, 0, 1, 1, DType.UntypedObject)
         {
         }
 
@@ -104,7 +104,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override string GetUniqueTexlRuntimeName(bool isPrefetching = false)
         {
-            return GetUniqueTexlRuntimeName(suffix: "_CO");
+            return GetUniqueTexlRuntimeName(suffix: "_UO");
         }
     }
 }

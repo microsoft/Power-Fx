@@ -134,7 +134,7 @@ namespace Microsoft.PowerFx.Core.Binding
             get
             {
 #if DEBUG
-                if (NameResolver?.CurrentEntity?.IsControl == true && NameResolver.CurrentProperty.IsValid && NameResolver.TryGetCurrentControlProperty(out var currentProperty))
+                if (NameResolver.CurrentEntity is IExternalControl && NameResolver.CurrentProperty.IsValid && NameResolver.TryGetCurrentControlProperty(out var currentProperty))
                 {
                     Contracts.Assert(_property == currentProperty);
                 }
@@ -149,7 +149,7 @@ namespace Microsoft.PowerFx.Core.Binding
             get
             {
 #if DEBUG
-                if (NameResolver != null && NameResolver.CurrentEntity != null && NameResolver.CurrentEntity.IsControl)
+                if (NameResolver != null && NameResolver.CurrentEntity != null && NameResolver.CurrentEntity is IExternalControl)
                 {
                     Contracts.Assert(NameResolver.CurrentEntity == _control);
                 }
@@ -667,7 +667,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 return null;
             }
 
-            if (!nameResolver.CurrentEntity.IsControl || !nameResolver.LookupParent(out var lookupInfo))
+            if (!(nameResolver.CurrentEntity is IExternalControl) || !nameResolver.LookupParent(out var lookupInfo))
             {
                 return null;
             }
@@ -3040,11 +3040,11 @@ namespace Microsoft.PowerFx.Core.Binding
 
             private bool TryProcessFirstNameNodeForThisItemAccess(FirstNameNode node, NameLookupInfo lookupInfo, out DType nodeType, out FirstNameInfo info)
             {
-                if (_nameResolver.CurrentEntity.IsControl)
+                if (_nameResolver.CurrentEntity is IExternalControl)
                 {
                     // Check to see if we only want to include ThisItem in specific
                     // properties of this Control
-                    if (_nameResolver.CurrentEntity.EntityScope.TryGetEntity(_nameResolver.CurrentEntity.EntityName, out IExternalControl nodeAssociatedControl) &&
+                    if (_nameResolver.EntityScope.TryGetEntity(_nameResolver.CurrentEntity.EntityName, out IExternalControl nodeAssociatedControl) &&
                         nodeAssociatedControl.Template.IncludesThisItemInSpecificProperty)
                     {
                         if (nodeAssociatedControl.Template.TryGetProperty(_nameResolver.CurrentProperty, out var nodeAssociatedProperty) && !nodeAssociatedProperty.ShouldIncludeThisItemInFormula)
@@ -3230,7 +3230,7 @@ namespace Microsoft.PowerFx.Core.Binding
                     return;
                 }
 
-                if (!_nameResolver.CurrentEntity.IsControl || !_nameResolver.LookupParent(out var lookupInfo))
+                if (!(_nameResolver.CurrentEntity is IExternalControl) || !_nameResolver.LookupParent(out var lookupInfo))
                 {
                     _txb.ErrorContainer.Error(node, TexlStrings.ErrInvalidParentUse);
                     _txb.SetType(node, DType.Error);
@@ -3350,7 +3350,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 var leftType = _txb.GetType(node.Left);
 
-                if (!leftType.IsControl && !leftType.IsAggregate && !leftType.IsEnum && !leftType.IsOptionSet && !leftType.IsView && !leftType.IsCustomObject)
+                if (!leftType.IsControl && !leftType.IsAggregate && !leftType.IsEnum && !leftType.IsOptionSet && !leftType.IsView && !leftType.IsUntypedObject)
                 {
                     SetDottedNameError(node, TexlStrings.ErrInvalidDot);
                     return;
@@ -3550,7 +3550,7 @@ namespace Microsoft.PowerFx.Core.Binding
                         _txb.FlagPathAsAsync(node);
                     }
                 }
-                else if (!leftType.TryGetType(nameRhs, out typeRhs) && !leftType.IsCustomObject)
+                else if (!leftType.TryGetType(nameRhs, out typeRhs) && !leftType.IsUntypedObject)
                 {
                     // We may be in the case of dropDown!Selected!RHS
                     // In this case, Selected embeds a meta field whose v-type encapsulates localization info
@@ -3636,9 +3636,9 @@ namespace Microsoft.PowerFx.Core.Binding
                     // ![id:type, ...] . id --> type
                     _txb.SetType(node, typeRhs);
                 }
-                else if (leftType.IsCustomObject)
+                else if (leftType.IsUntypedObject)
                 {
-                    _txb.SetType(node, DType.CustomObject);
+                    _txb.SetType(node, DType.UntypedObject);
                 }
                 else if (leftType.IsTable)
                 {

@@ -94,16 +94,22 @@ namespace Microsoft.PowerFx.Core.Parser
         private ParseFormulasResult ParseFormulas()
         {
             var namedFormulas = new Dictionary<DName, TexlNode>();
+            ParseTrivia();
+
             while (_curs.TokCur.Kind != TokKind.Eof)
             {
                 // Verify identifier
                 var thisIdentifier = TokEat(TokKind.Ident);
                 if (thisIdentifier != null)
                 {
+                    ParseTrivia();
+
                     // Verify "="
                     var thisEq = TokEat(TokKind.Equ);
                     if (thisEq != null)
                     {
+                        ParseTrivia();
+
                         // Extract expression
                         while (_curs.TidCur != TokKind.Semicolon)
                         {
@@ -130,6 +136,8 @@ namespace Microsoft.PowerFx.Core.Parser
                 {
                     break;
                 }
+
+                ParseTrivia();
             }
 
             return new ParseFormulasResult(namedFormulas, _errors);

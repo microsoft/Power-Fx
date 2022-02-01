@@ -30,14 +30,20 @@ namespace Microsoft.PowerFx.Core.Syntax
 
         internal List<CommentToken> Comments { get; private set; }
 
-        public Formula(string script, ILanguageSettings loc = null)
+        public Formula(string script, TexlNode tree, ILanguageSettings loc = null)
         {
             Contracts.AssertValue(script);
             Contracts.AssertValueOrNull(loc);
 
             Script = script;
+            ParseTree = tree;
             Loc = loc;
             AssertValid();
+        }
+
+        public Formula(string script, ILanguageSettings loc = null)
+    : this(script, null, loc)
+        {
         }
 
         [Conditional("DEBUG")]

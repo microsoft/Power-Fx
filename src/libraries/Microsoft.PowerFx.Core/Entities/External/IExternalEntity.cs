@@ -12,12 +12,6 @@ namespace Microsoft.PowerFx.Core.Entities
     {
         DName EntityName { get; }
 
-        bool IsControl { get; }
-
-        IExternalEntityScope EntityScope { get; }
-
         IEnumerable<IDocumentError> Errors { get; }
-
-        bool TryGetRule(DName propertyName, out IExternalRule rule);
     }
 }
