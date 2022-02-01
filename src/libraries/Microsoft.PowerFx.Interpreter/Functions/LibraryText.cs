@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
-using System.Text.Json;
 using System.Text.RegularExpressions;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.IR;
@@ -143,31 +142,32 @@ namespace Microsoft.PowerFx.Functions
                 formatString = fs.Value;
             }
 
-            CultureInfo suppliedCulture = null;
+            var culture = runner.CultureInfo;
             if (args.Length > 2 && args[2] is StringValue locale)
             {
-                suppliedCulture = new CultureInfo(locale.Value);
+                // Supplied culture
+                culture = new CultureInfo(locale.Value);
             }
 
             switch (args[0])
             {
                 case NumberValue num:
-                    resultString = num.Value.ToString(formatString ?? "g", suppliedCulture ?? runner.CultureInfo);
+                    resultString = num.Value.ToString(formatString ?? "g", culture);
                     break;
                 case StringValue s:
                     resultString = s.Value;
                     break;
                 case DateValue d:
-                    formatString = ExpandDateTimeFormatSpecifiers(formatString, suppliedCulture ?? runner.CultureInfo);
-                    resultString = d.Value.ToString(formatString ?? "M/d/yyyy", suppliedCulture ?? runner.CultureInfo);
+                    formatString = ExpandDateTimeFormatSpecifiers(formatString, culture);
+                    resultString = d.Value.ToString(formatString ?? "M/d/yyyy", culture);
                     break;
                 case DateTimeValue dt:
-                    formatString = ExpandDateTimeFormatSpecifiers(formatString, suppliedCulture ?? runner.CultureInfo);
-                    resultString = dt.Value.ToString(formatString ?? "g", suppliedCulture ?? runner.CultureInfo);
+                    formatString = ExpandDateTimeFormatSpecifiers(formatString, culture);
+                    resultString = dt.Value.ToString(formatString ?? "g", culture);
                     break;
                 case TimeValue t:
-                    formatString = ExpandDateTimeFormatSpecifiers(formatString, suppliedCulture ?? runner.CultureInfo);
-                    resultString = _epoch.Add(t.Value).ToString(formatString ?? "t", suppliedCulture ?? runner.CultureInfo);
+                    formatString = ExpandDateTimeFormatSpecifiers(formatString, culture);
+                    resultString = _epoch.Add(t.Value).ToString(formatString ?? "t", culture);
                     break;
                 default:
                     break;
@@ -350,6 +350,31 @@ namespace Microsoft.PowerFx.Functions
             }
 
             return new StringValue(irContext, source.Value.Substring(source.Value.Length - (int)count.Value, (int)count.Value));
+        }
+
+        private static FormulaValue Find(IRContext irContext, FormulaValue[] args)
+        {
+            var findText = (StringValue)args[0];
+            var withinText = (StringValue)args[1];
+
+            NumberValue startIndex;
+            if (args[2] is BlankValue)
+            {
+                return new BlankValue(irContext);
+            }
+            else
+            {
+                startIndex = (NumberValue)args[2];
+            }
+
+            if (startIndex.Value < 1 || startIndex.Value > withinText.Value.Length + 1)
+            {
+                return CommonErrors.ArgumentOutOfRange(irContext);
+            }
+
+            var index = withinText.Value.IndexOf(findText.Value, (int)startIndex.Value - 1);
+            return index >= 0 ? new NumberValue(irContext, index + 1)
+                              : new BlankValue(irContext);
         }
 
         private static FormulaValue Replace(IRContext irContext, FormulaValue[] args)
