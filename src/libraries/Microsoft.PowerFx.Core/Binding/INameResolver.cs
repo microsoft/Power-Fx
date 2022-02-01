@@ -81,9 +81,9 @@ namespace Microsoft.PowerFx.Core.Binding
         internal static bool TryGetCurrentControlProperty(this INameResolver resolver, out IExternalControlProperty currentProperty)
         {
             // If the current entity is a control and valid
-            if (resolver.CurrentEntity?.IsControl == true && resolver.CurrentProperty.IsValid)
+            if ((resolver.CurrentEntity is IExternalControl control) && resolver.CurrentProperty.IsValid)
             {
-                ((IExternalControl)resolver.CurrentEntity).Template.TryGetInputProperty(resolver.CurrentProperty.Value, out currentProperty);
+                control.Template.TryGetInputProperty(resolver.CurrentProperty.Value, out currentProperty);
                 return true;
             }
 

@@ -134,7 +134,7 @@ namespace Microsoft.PowerFx.Core.Binding
             get
             {
 #if DEBUG
-                if (NameResolver?.CurrentEntity?.IsControl == true && NameResolver.CurrentProperty.IsValid && NameResolver.TryGetCurrentControlProperty(out var currentProperty))
+                if (NameResolver.CurrentEntity is IExternalControl && NameResolver.CurrentProperty.IsValid && NameResolver.TryGetCurrentControlProperty(out var currentProperty))
                 {
                     Contracts.Assert(_property == currentProperty);
                 }
@@ -149,7 +149,7 @@ namespace Microsoft.PowerFx.Core.Binding
             get
             {
 #if DEBUG
-                if (NameResolver != null && NameResolver.CurrentEntity != null && NameResolver.CurrentEntity.IsControl)
+                if (NameResolver != null && NameResolver.CurrentEntity != null && NameResolver.CurrentEntity is IExternalControl)
                 {
                     Contracts.Assert(NameResolver.CurrentEntity == _control);
                 }
@@ -667,7 +667,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 return null;
             }
 
-            if (!nameResolver.CurrentEntity.IsControl || !nameResolver.LookupParent(out var lookupInfo))
+            if (!(nameResolver.CurrentEntity is IExternalControl) || !nameResolver.LookupParent(out var lookupInfo))
             {
                 return null;
             }
@@ -2985,15 +2985,6 @@ namespace Microsoft.PowerFx.Core.Binding
                     }
                 }
 
-                // Check if we are referencing an errored data source and report the error.
-                IExternalTabularDataSource connectedDataSourceInfo = null;
-                if (lookupInfo.Kind == BindKind.Data &&
-                    (connectedDataSourceInfo = lookupInfo.Data as IExternalTabularDataSource) != null &&
-                    connectedDataSourceInfo.Errors.Any(error => error.Severity >= DocumentErrorSeverity.Severe))
-                {
-                    _txb.ErrorContainer.EnsureError(node, TexlStrings.ErrInvalidDataSource);
-                }
-
                 // Update _usesGlobals, _usesResources, etc.
                 UpdateBindKindUseFlags(lookupInfo.Kind);
 
@@ -3017,34 +3008,19 @@ namespace Microsoft.PowerFx.Core.Binding
                 }
 
                 // Any connectedDataSourceInfo or option set or view needs to be accessed asynchronously to allow data to be loaded.
-                if (connectedDataSourceInfo != null || lookupInfo.Kind == BindKind.OptionSet || lookupInfo.Kind == BindKind.View)
+                if (lookupInfo.Data is IExternalTabularDataSource || lookupInfo.Kind == BindKind.OptionSet || lookupInfo.Kind == BindKind.View)
                 {
                     _txb.FlagPathAsAsync(node);
-
-                    // If we have a static declaration of an OptionSet (primarily from tests) there is no entity we need to import
-                    // If view no need to verify entity existence
-                    if (lookupInfo.Type.OptionSetInfo == null || lookupInfo.Kind == BindKind.View)
-                    {
-                        return;
-                    }
-
-                    var relatedEntityName = new DName(lookupInfo.Type.OptionSetInfo.RelatedEntityName);
-                    if (!haveNameResolver || !_nameResolver.LookupGlobalEntity(relatedEntityName, out var entityLookupInfo))
-                    {
-                        _txb.ErrorContainer.Error(node, TexlStrings.ErrNeedEntity_EntityName, relatedEntityName);
-                        _txb.SetType(node, DType.Error);
-                        return;
-                    }
                 }
             }
 
             private bool TryProcessFirstNameNodeForThisItemAccess(FirstNameNode node, NameLookupInfo lookupInfo, out DType nodeType, out FirstNameInfo info)
             {
-                if (_nameResolver.CurrentEntity.IsControl)
+                if (_nameResolver.CurrentEntity is IExternalControl)
                 {
                     // Check to see if we only want to include ThisItem in specific
                     // properties of this Control
-                    if (_nameResolver.CurrentEntity.EntityScope.TryGetEntity(_nameResolver.CurrentEntity.EntityName, out IExternalControl nodeAssociatedControl) &&
+                    if (_nameResolver.EntityScope.TryGetEntity(_nameResolver.CurrentEntity.EntityName, out IExternalControl nodeAssociatedControl) &&
                         nodeAssociatedControl.Template.IncludesThisItemInSpecificProperty)
                     {
                         if (nodeAssociatedControl.Template.TryGetProperty(_nameResolver.CurrentProperty, out var nodeAssociatedProperty) && !nodeAssociatedProperty.ShouldIncludeThisItemInFormula)
@@ -3230,7 +3206,7 @@ namespace Microsoft.PowerFx.Core.Binding
                     return;
                 }
 
-                if (!_nameResolver.CurrentEntity.IsControl || !_nameResolver.LookupParent(out var lookupInfo))
+                if (!(_nameResolver.CurrentEntity is IExternalControl) || !_nameResolver.LookupParent(out var lookupInfo))
                 {
                     _txb.ErrorContainer.Error(node, TexlStrings.ErrInvalidParentUse);
                     _txb.SetType(node, DType.Error);
@@ -3350,7 +3326,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 var leftType = _txb.GetType(node.Left);
 
-                if (!leftType.IsControl && !leftType.IsAggregate && !leftType.IsEnum && !leftType.IsOptionSet && !leftType.IsView && !leftType.IsCustomObject)
+                if (!leftType.IsControl && !leftType.IsAggregate && !leftType.IsEnum && !leftType.IsOptionSet && !leftType.IsView && !leftType.IsUntypedObject)
                 {
                     SetDottedNameError(node, TexlStrings.ErrInvalidDot);
                     return;
@@ -3550,7 +3526,7 @@ namespace Microsoft.PowerFx.Core.Binding
                         _txb.FlagPathAsAsync(node);
                     }
                 }
-                else if (!leftType.TryGetType(nameRhs, out typeRhs) && !leftType.IsCustomObject)
+                else if (!leftType.TryGetType(nameRhs, out typeRhs) && !leftType.IsUntypedObject)
                 {
                     // We may be in the case of dropDown!Selected!RHS
                     // In this case, Selected embeds a meta field whose v-type encapsulates localization info
@@ -3636,9 +3612,9 @@ namespace Microsoft.PowerFx.Core.Binding
                     // ![id:type, ...] . id --> type
                     _txb.SetType(node, typeRhs);
                 }
-                else if (leftType.IsCustomObject)
+                else if (leftType.IsUntypedObject)
                 {
-                    _txb.SetType(node, DType.CustomObject);
+                    _txb.SetType(node, DType.UntypedObject);
                 }
                 else if (leftType.IsTable)
                 {
@@ -4212,8 +4188,8 @@ namespace Microsoft.PowerFx.Core.Binding
                 if (!(typeLeft.IsPrimitive && typeRight.IsPrimitive) && !(typeLeft.IsPolymorphic && typeRight.IsPolymorphic) && !(typeLeft.IsControl && typeRight.IsControl)
                     && !(typeLeft.IsPolymorphic && typeRight.IsRecord) && !(typeLeft.IsRecord && typeRight.IsPolymorphic))
                 {
-                    var leftTypeDisambiguation = typeLeft.IsOptionSet && typeLeft.OptionSetInfo != null ? $"({typeLeft.OptionSetInfo.Name})" : string.Empty;
-                    var rightTypeDisambiguation = typeRight.IsOptionSet && typeRight.OptionSetInfo != null ? $"({typeRight.OptionSetInfo.Name})" : string.Empty;
+                    var leftTypeDisambiguation = typeLeft.IsOptionSet && typeLeft.OptionSetInfo != null ? $"({typeLeft.OptionSetInfo.EntityName})" : string.Empty;
+                    var rightTypeDisambiguation = typeRight.IsOptionSet && typeRight.OptionSetInfo != null ? $"({typeRight.OptionSetInfo.EntityName})" : string.Empty;
 
                     _txb.ErrorContainer.EnsureError(
                         DocumentErrorSeverity.Severe,
@@ -4238,8 +4214,8 @@ namespace Microsoft.PowerFx.Core.Binding
                 // Special case for option set values, it should produce an error when the base option sets are different
                 if (typeLeft.Kind == DKind.OptionSetValue && !typeLeft.Accepts(typeRight))
                 {
-                    var leftTypeDisambiguation = typeLeft.IsOptionSet && typeLeft.OptionSetInfo != null ? $"({typeLeft.OptionSetInfo.Name})" : string.Empty;
-                    var rightTypeDisambiguation = typeRight.IsOptionSet && typeRight.OptionSetInfo != null ? $"({typeRight.OptionSetInfo.Name})" : string.Empty;
+                    var leftTypeDisambiguation = typeLeft.IsOptionSet && typeLeft.OptionSetInfo != null ? $"({typeLeft.OptionSetInfo.EntityName})" : string.Empty;
+                    var rightTypeDisambiguation = typeRight.IsOptionSet && typeRight.OptionSetInfo != null ? $"({typeRight.OptionSetInfo.EntityName})" : string.Empty;
 
                     _txb.ErrorContainer.EnsureError(
                         DocumentErrorSeverity.Severe,

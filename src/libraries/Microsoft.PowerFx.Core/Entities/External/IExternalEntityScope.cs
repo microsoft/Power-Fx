@@ -18,8 +18,6 @@ namespace Microsoft.PowerFx.Core.Entities
 
         bool TryGetEntity<T>(DName currentEntityEntityName, out T externalEntity)
             where T : class, IExternalEntity;
-
-        IEnumerable<IExternalEntity> DynamicTypes { get; }
     }
 
     internal static class IExternalEntityScopeExtensions

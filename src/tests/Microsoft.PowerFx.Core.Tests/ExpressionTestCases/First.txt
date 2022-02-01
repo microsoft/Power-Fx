@@ -16,6 +16,12 @@ Blank()
 >> FirstN([1, 2, 3, 4, 5], 2)
 [1,2]
 
+>> FirstN([1, 2, 3, 4, 5], 1)
+[1]
+
+>> FirstN([1, 2, 3, 4, 5])
+[1]
+
 >> FirstN([1, 2, 3, 4, 5], 6)
 [1,2,3,4,5]
 
@@ -26,6 +32,9 @@ Blank()
 Blank()
 
 >> FirstN(Blank(), 2)
+Blank()
+
+>> FirstN(Blank())
 Blank()
 
 >> FirstN(Sort([-2, -1, 0, 1, 2], 1 / Value), 2)

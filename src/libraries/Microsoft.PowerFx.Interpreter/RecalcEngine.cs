@@ -18,6 +18,7 @@ using Microsoft.PowerFx.Core.Public;
 using Microsoft.PowerFx.Core.Public.Types;
 using Microsoft.PowerFx.Core.Public.Values;
 using Microsoft.PowerFx.Core.Syntax;
+using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Core.Texl.Intellisense;
 using Microsoft.PowerFx.Core.Types;
 
@@ -26,7 +27,7 @@ namespace Microsoft.PowerFx
     /// <summary>
     /// Holds a set of Power Fx variables and formulas. Formulas are recalculated when their dependent variables change.
     /// </summary>
-    public class RecalcEngine : IScope
+    public class RecalcEngine : IScope, IPowerFxEngine
     {
         // User-provided functions 
         private readonly Dictionary<string, TexlFunction> _extraFunctions = new Dictionary<string, TexlFunction>(StringComparer.OrdinalIgnoreCase);
@@ -43,6 +44,18 @@ namespace Microsoft.PowerFx
         public RecalcEngine(PowerFxConfig powerFxConfig = null)
         {
             _powerFxConfig = powerFxConfig ?? new PowerFxConfig();
+
+            AddFunction(BuiltinFunctionsCore.Index_UO);
+            AddFunction(BuiltinFunctionsCore.ParseJson);
+            AddFunction(BuiltinFunctionsCore.Table_UO);
+            AddFunction(BuiltinFunctionsCore.Text_UO);
+            AddFunction(BuiltinFunctionsCore.Value_UO);
+        }
+
+        // Add Builtin functions that aren't yet in the shared library. 
+        private void AddFunction(TexlFunction function)
+        {
+            _extraFunctions.Add(function.Name, function);
         }
 
         /// <summary>

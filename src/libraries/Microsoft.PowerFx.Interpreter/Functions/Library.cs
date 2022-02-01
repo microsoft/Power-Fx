@@ -349,7 +349,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 BuiltinFunctionsCore.IsNumeric,
                 StandardErrorHandling<FormulaValue>(
-                    expandArguments: NoArgExpansion,
+                    expandArguments: InsertDefaultValues(outputArgsCount: 2, fillWith: new NumberValue(IRContext.NotInSource(FormulaType.Number), 1)),
                     replaceBlankValues: DoNotReplaceBlank,
                     checkRuntimeTypes: DeferRuntimeTypeChecking,
                     checkRuntimeValues: DeferRuntimeValueChecking,
@@ -389,18 +389,18 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: Hour)
             },
             {
-                BuiltinFunctionsCore.Index_CO,
+                BuiltinFunctionsCore.Index_UO,
                 StandardErrorHandling<FormulaValue>(
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: DoNotReplaceBlank,
                     checkRuntimeTypes: ExactSequence(
-                        ExactValueTypeOrBlank<CustomObjectValue>,
+                        ExactValueTypeOrBlank<UntypedObjectValue>,
                         ExactValueTypeOrBlank<NumberValue>),
                     checkRuntimeValues: ExactSequence(
-                        CustomObjectArrayChecker,
+                        UntypedObjectArrayChecker,
                         StrictPositiveNumberChecker),
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
-                    targetFunction: Index_CO)
+                    targetFunction: Index_UO)
             },
             {
                 BuiltinFunctionsCore.Last,
@@ -415,7 +415,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 BuiltinFunctionsCore.LastN,
                 StandardErrorHandling<FormulaValue>(
-                    expandArguments: NoArgExpansion,
+                    expandArguments: InsertDefaultValues(outputArgsCount: 2, fillWith: new NumberValue(IRContext.NotInSource(FormulaType.Number), 1)),
                     replaceBlankValues: DoNotReplaceBlank,
                     checkRuntimeTypes: ExactSequence(
                         ExactValueTypeOrBlank<TableValue>,
@@ -800,14 +800,14 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: Table)
             },
             {
-                BuiltinFunctionsCore.Table_CO,
-                StandardErrorHandling<CustomObjectValue>(
+                BuiltinFunctionsCore.Table_UO,
+                StandardErrorHandling<UntypedObjectValue>(
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: DoNotReplaceBlank,
-                    checkRuntimeTypes: ExactValueTypeOrBlank<CustomObjectValue>,
-                    checkRuntimeValues: CustomObjectArrayChecker,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<UntypedObjectValue>,
+                    checkRuntimeValues: UntypedObjectArrayChecker,
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
-                    targetFunction: Table_CO)
+                    targetFunction: Table_UO)
             },
             {
                 BuiltinFunctionsCore.Text,
@@ -820,14 +820,14 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: Text)
             },
             {
-                BuiltinFunctionsCore.Text_CO,
-                StandardErrorHandling<CustomObjectValue>(
+                BuiltinFunctionsCore.Text_UO,
+                StandardErrorHandling<UntypedObjectValue>(
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: DoNotReplaceBlank,
-                    checkRuntimeTypes: ExactValueTypeOrBlank<CustomObjectValue>,
-                    checkRuntimeValues: CustomObjectStringChecker,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<UntypedObjectValue>,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.ReturnEmptyStringIfAnyArgIsBlank,
-                    targetFunction: Text_CO)
+                    targetFunction: Text_UO)
             },
             {
                 BuiltinFunctionsCore.Time,
@@ -911,14 +911,14 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: Value)
             },
             {
-                BuiltinFunctionsCore.Value_CO,
-                StandardErrorHandling<CustomObjectValue>(
+                BuiltinFunctionsCore.Value_UO,
+                StandardErrorHandling<UntypedObjectValue>(
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: DoNotReplaceBlank,
-                    checkRuntimeTypes: ExactValueTypeOrBlank<CustomObjectValue>,
-                    checkRuntimeValues: CustomObjectNumberChecker,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<UntypedObjectValue>,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
-                    targetFunction: Value_CO)
+                    targetFunction: Value_UO)
             },
             {
                 BuiltinFunctionsCore.With,
