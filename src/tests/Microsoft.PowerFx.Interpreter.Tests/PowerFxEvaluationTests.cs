@@ -27,7 +27,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         {
             var runner = new TestRunner(new InterpreterRunner());
 
-            runner.AddFile("Testing.txt");
+            // runner.AddFile("Testing.txt");
 
             var (total, failed, passed, output) = runner.RunTests();
 
