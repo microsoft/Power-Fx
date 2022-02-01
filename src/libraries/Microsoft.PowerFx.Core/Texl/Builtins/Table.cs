@@ -86,7 +86,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         }
     }
 
-    internal class TableFunction_CO : BuiltinFunction
+    internal class TableFunction_UO : BuiltinFunction
     {
         public override bool RequiresErrorContext => true;
 
@@ -94,7 +94,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool SupportsParamCoercion => false;
 
-        public TableFunction_CO()
+        public TableFunction_UO()
             : base("Table", TexlStrings.AboutTable, FunctionCategories.Table, DType.EmptyTable, 0, 1, 1, DType.UntypedObject)
         {
         }
@@ -117,7 +117,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override string GetUniqueTexlRuntimeName(bool isPrefetching = false)
         {
-            return GetUniqueTexlRuntimeName(suffix: "_CO");
+            return GetUniqueTexlRuntimeName(suffix: "_UO");
         }
     }
 }
