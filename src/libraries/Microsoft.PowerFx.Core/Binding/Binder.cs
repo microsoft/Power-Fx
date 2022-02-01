@@ -2985,15 +2985,6 @@ namespace Microsoft.PowerFx.Core.Binding
                     }
                 }
 
-                // Check if we are referencing an errored data source and report the error.
-                IExternalTabularDataSource connectedDataSourceInfo = null;
-                if (lookupInfo.Kind == BindKind.Data &&
-                    (connectedDataSourceInfo = lookupInfo.Data as IExternalTabularDataSource) != null &&
-                    connectedDataSourceInfo.Errors.Any(error => error.Severity >= DocumentErrorSeverity.Severe))
-                {
-                    _txb.ErrorContainer.EnsureError(node, TexlStrings.ErrInvalidDataSource);
-                }
-
                 // Update _usesGlobals, _usesResources, etc.
                 UpdateBindKindUseFlags(lookupInfo.Kind);
 
@@ -3017,24 +3008,9 @@ namespace Microsoft.PowerFx.Core.Binding
                 }
 
                 // Any connectedDataSourceInfo or option set or view needs to be accessed asynchronously to allow data to be loaded.
-                if (connectedDataSourceInfo != null || lookupInfo.Kind == BindKind.OptionSet || lookupInfo.Kind == BindKind.View)
+                if (lookupInfo.Data is IExternalTabularDataSource || lookupInfo.Kind == BindKind.OptionSet || lookupInfo.Kind == BindKind.View)
                 {
                     _txb.FlagPathAsAsync(node);
-
-                    // If we have a static declaration of an OptionSet (primarily from tests) there is no entity we need to import
-                    // If view no need to verify entity existence
-                    if (lookupInfo.Type.OptionSetInfo == null || lookupInfo.Kind == BindKind.View)
-                    {
-                        return;
-                    }
-
-                    var relatedEntityName = new DName(lookupInfo.Type.OptionSetInfo.RelatedEntityName);
-                    if (!haveNameResolver || !_nameResolver.LookupGlobalEntity(relatedEntityName, out var entityLookupInfo))
-                    {
-                        _txb.ErrorContainer.Error(node, TexlStrings.ErrNeedEntity_EntityName, relatedEntityName);
-                        _txb.SetType(node, DType.Error);
-                        return;
-                    }
                 }
             }
 
@@ -4212,8 +4188,8 @@ namespace Microsoft.PowerFx.Core.Binding
                 if (!(typeLeft.IsPrimitive && typeRight.IsPrimitive) && !(typeLeft.IsPolymorphic && typeRight.IsPolymorphic) && !(typeLeft.IsControl && typeRight.IsControl)
                     && !(typeLeft.IsPolymorphic && typeRight.IsRecord) && !(typeLeft.IsRecord && typeRight.IsPolymorphic))
                 {
-                    var leftTypeDisambiguation = typeLeft.IsOptionSet && typeLeft.OptionSetInfo != null ? $"({typeLeft.OptionSetInfo.Name})" : string.Empty;
-                    var rightTypeDisambiguation = typeRight.IsOptionSet && typeRight.OptionSetInfo != null ? $"({typeRight.OptionSetInfo.Name})" : string.Empty;
+                    var leftTypeDisambiguation = typeLeft.IsOptionSet && typeLeft.OptionSetInfo != null ? $"({typeLeft.OptionSetInfo.EntityName})" : string.Empty;
+                    var rightTypeDisambiguation = typeRight.IsOptionSet && typeRight.OptionSetInfo != null ? $"({typeRight.OptionSetInfo.EntityName})" : string.Empty;
 
                     _txb.ErrorContainer.EnsureError(
                         DocumentErrorSeverity.Severe,
@@ -4238,8 +4214,8 @@ namespace Microsoft.PowerFx.Core.Binding
                 // Special case for option set values, it should produce an error when the base option sets are different
                 if (typeLeft.Kind == DKind.OptionSetValue && !typeLeft.Accepts(typeRight))
                 {
-                    var leftTypeDisambiguation = typeLeft.IsOptionSet && typeLeft.OptionSetInfo != null ? $"({typeLeft.OptionSetInfo.Name})" : string.Empty;
-                    var rightTypeDisambiguation = typeRight.IsOptionSet && typeRight.OptionSetInfo != null ? $"({typeRight.OptionSetInfo.Name})" : string.Empty;
+                    var leftTypeDisambiguation = typeLeft.IsOptionSet && typeLeft.OptionSetInfo != null ? $"({typeLeft.OptionSetInfo.EntityName})" : string.Empty;
+                    var rightTypeDisambiguation = typeRight.IsOptionSet && typeRight.OptionSetInfo != null ? $"({typeRight.OptionSetInfo.EntityName})" : string.Empty;
 
                     _txb.ErrorContainer.EnsureError(
                         DocumentErrorSeverity.Severe,
