@@ -111,5 +111,18 @@ namespace Microsoft.PowerFx.Functions
 
             return arg;
         }
+
+        public static FormulaValue Boolean_UO(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, UntypedObjectValue[] args)
+        {
+            var impl = args[0].Impl;
+
+            if (impl.Type == FormulaType.Boolean)
+            {
+                var b = impl.GetBoolean();
+                return new BooleanValue(irContext, b);
+            }
+
+            return CommonErrors.RuntimeTypeMismatch(irContext);
+        }
     }
 }

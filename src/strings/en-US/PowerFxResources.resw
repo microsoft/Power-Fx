@@ -427,6 +427,17 @@
     <value>Language code to use when converting the value.</value>
     <comment>Value Parameter description.</comment>
   </data>
+  <data name="AboutBoolean" xml:space="preserve">
+    <value>Converts a 'text' that represents a boolean to a boolean value.</value>
+    <comment>Description of 'Boolean' function.</comment>
+  </data>
+  <data name="BooleanArg1" xml:space="preserve">
+    <value>text</value>
+    <comment>function_parameter - First argument to the Boolean function - the text that will be converted to a boolean.</comment>
+  </data>
+  <data name="AboutBoolean_text" xml:space="preserve">
+    <value>The text value to convert to a boolean value.</value>
+  </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Returns the first non blank argument</value>
     <comment>Description of 'Coalesce' function.</comment>
