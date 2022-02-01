@@ -3011,13 +3011,6 @@ namespace Microsoft.PowerFx.Core.Binding
                 if (lookupInfo.Data is IExternalTabularDataSource || lookupInfo.Kind == BindKind.OptionSet || lookupInfo.Kind == BindKind.View)
                 {
                     _txb.FlagPathAsAsync(node);
-
-                    // If we have a static declaration of an OptionSet (primarily from tests) there is no entity we need to import
-                    // If view no need to verify entity existence
-                    if (lookupInfo.Type.OptionSetInfo == null || lookupInfo.Kind == BindKind.View)
-                    {
-                        return;
-                    }
                 }
             }
 
