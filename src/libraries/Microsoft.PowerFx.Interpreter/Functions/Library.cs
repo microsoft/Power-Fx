@@ -311,7 +311,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 BuiltinFunctionsCore.FirstN,
                 StandardErrorHandling<FormulaValue>(
-                    expandArguments: NoArgExpansion,
+                    expandArguments: InsertDefaultValues(outputArgsCount: 2, fillWith: new NumberValue(IRContext.NotInSource(FormulaType.Number), 1)),
                     replaceBlankValues: DoNotReplaceBlank,
                     checkRuntimeTypes: ExactSequence(
                         ExactValueTypeOrBlank<TableValue>,
