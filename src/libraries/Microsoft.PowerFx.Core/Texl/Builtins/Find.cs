@@ -75,7 +75,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             var type1 = argTypes[1];
 
             // Arg0 should be either a string or a column of strings.
-            if (type0.IsTable && type0.Kind != DKind.ObjNull)
+            if (type0.IsTable)
             {
                 // Ensure we have a one-column table of strings.
                 fValid &= CheckStringColumnType(type0, args[0], errors, ref nodeToCoercedTypeMap);
@@ -94,7 +94,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
 
             // Arg1 should be either a string or a column of strings.
-            if (type1.IsTable && type1.Kind != DKind.ObjNull)
+            if (type1.IsTable)
             {
                 fValid &= CheckStringColumnType(type1, args[1], errors, ref nodeToCoercedTypeMap);
             }
@@ -120,7 +120,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 var type2 = argTypes[2];
 
                 // Arg2 should be either a number or a column of numbers.
-                if (argTypes[2].IsTable && type2.Kind != DKind.ObjNull)
+                if (argTypes[2].IsTable)
                 {
                     fValid &= CheckNumericColumnType(type2, args[2], errors, ref nodeToCoercedTypeMap);
                 }

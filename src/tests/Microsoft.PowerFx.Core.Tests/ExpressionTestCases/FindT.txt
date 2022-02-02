@@ -1,25 +1,40 @@
-﻿>> Find(Blank(), Blank(), [1])
+﻿>> Find(Blank(), [""], [1])
+Errors: Error 0-24: The function 'Find' has some invalid arguments.|Error 14-18: Invalid argument type (Table). Expecting a Text value instead.|Error 20-23: Invalid argument type (Table). Expecting a Number value instead.
+
+>> Find([""], [""], Blank())
+Errors: Error 0-25: The function 'Find' has some invalid arguments.|Error 5-9: Invalid argument type (Table). Expecting a Text value instead.|Error 11-15: Invalid argument type (Table). Expecting a Text value instead.
+
+>> Find(If(false, ["blank table"], Blank()), If(false, ["blank table"], Blank()), [1])
 [{Result:1}]
 
->> Find(Blank(), Blank(), [2])
+>> Find(If(false, ["blank table"], Blank()), If(false, ["blank table"], Blank()), [2])
 [{Result:Microsoft.PowerFx.Core.Public.Values.ErrorValue}]
 
->> Find(Blank(), "textToBeSearchedIn", [5])
+>> Find(If(false, ["blank table"], Blank()), "textToBeSearchedIn", [5])
 [{Result:5}]
 
->> Find("textToSearch", Blank(), [1])
+>> Find("textToSearch", If(false, ["blank table"], Blank()), [1])
 [{Result:Blank()}]
 
->> Find([Blank(), "", ","], Blank(), 1)
+>> Find([Blank(), "", ","], If(false, ["blank table"], Blank()), 1)
 [{Result:1},{Result:1},{Result:Blank()}]
 
->> Find([Blank(), "", ","], Blank(), [1, 2, 3])
+>> Find(["b"], ["abc", "cde"])
+[{Result:2},{Result:1}]
+
+>> Find(["b"], ["abc", "cde"], If(false, [0], Blank()))
+[{Result:Blank()},{Result:Blank()}]
+
+>> Find(["b"], ["abc", "cde"], Filter([0], Value <> Value))
+[]
+
+>> Find([Blank(), "", ","], If(false, ["blank table"], Blank()), [1, 2, 3])
 [{Result:1},{Result:Microsoft.PowerFx.Core.Public.Values.ErrorValue},{Result:Microsoft.PowerFx.Core.Public.Values.ErrorValue}]
 
->> Find(Blank(), [Blank(), "", "textToBeSearchedIn"], 1)
+>> Find(If(false, ["blank table"], Blank()), [Blank(), "", "textToBeSearchedIn"], 1)
 [{Result:1},{Result:1},{Result:1}]
 
->> Find(Blank(), [Blank(), "", "textToBeSearchedIn"], [1, 2, 3])
+>> Find(If(false, ["blank table"], Blank()), [Blank(), "", "textToBeSearchedIn"], [1, 2, 3])
 [{Result:1},{Result:Microsoft.PowerFx.Core.Public.Values.ErrorValue},{Result:3}]
 
 >> Find([Blank(), "", ","], "textToBeSearchedIn,textToBeSearchedIn", 1)
@@ -40,10 +55,10 @@
 >> Find(",", "textToBeSearchedIn,textToBeSearchedIn", [1, 2, 19, 20])
 [{Result:19},{Result:19},{Result:19},{Result:Blank()}]
 
->> Find([Blank(), "", ","], Blank())
+>> Find([Blank(), "", ","], If(false, ["blank table"], Blank()))
 [{Result:1},{Result:1},{Result:Blank()}]
 
->> Find(Blank(), [Blank(), "", "textToBeSearchedIn"])
+>> Find(If(false, ["blank table"], Blank()), [Blank(), "", "textToBeSearchedIn"])
 [{Result:1},{Result:1},{Result:1}]
 
 >> Find([Blank(), "", ","], "textToBeSearchedIn,textToBeSearchedIn")
