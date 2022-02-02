@@ -57,6 +57,12 @@ Blank()
 >> Text(ParseJson("5"))
 #Error
 
+>> Boolean(ParseJson("true"))
+true
+
+>> Boolean(ParseJson("false"))
+false
+
 >> ParseJson("{""a"": null}").a
 Blank()
 

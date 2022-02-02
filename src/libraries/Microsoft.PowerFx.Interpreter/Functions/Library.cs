@@ -66,6 +66,26 @@ namespace Microsoft.PowerFx.Functions
             },
             { BuiltinFunctionsCore.Blank, Blank },
             {
+                BuiltinFunctionsCore.Boolean,
+                StandardErrorHandling<StringValue>(
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<StringValue>,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: Boolean)
+            },
+            {
+                BuiltinFunctionsCore.Boolean_UO,
+                StandardErrorHandling<UntypedObjectValue>(
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<UntypedObjectValue>,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: Boolean_UO)
+            },
+            {
                 BuiltinFunctionsCore.Concat,
                 StandardErrorHandling<FormulaValue>(
                     expandArguments: NoArgExpansion,

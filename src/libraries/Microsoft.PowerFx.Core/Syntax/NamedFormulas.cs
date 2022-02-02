@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.PowerFx.Core.Errors;
+using Microsoft.PowerFx.Core.Lexer.Tokens;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Parser;
 using Microsoft.PowerFx.Core.Syntax.Nodes;
@@ -30,9 +31,9 @@ namespace Microsoft.PowerFx.Core.Syntax
 
         public bool HasParseErrors { get; private set; }
 
-        private Dictionary<DName, TexlNode> _formulasResult;
+        private IEnumerable<KeyValuePair<IdentToken, TexlNode>> _formulasResult;
 
-        private List<TexlError> _errors;
+        private IEnumerable<TexlError> _errors;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NamedFormulas"/> class.
@@ -51,8 +52,8 @@ namespace Microsoft.PowerFx.Core.Syntax
         /// <summary>
         /// Ensures that the named formulas have been parsed and if not, parses them.
         /// </summary>
-        /// <returns></returns>
-        public bool EnsureParsed()
+        /// <returns>Tuple of IdentToken and formula.</returns>
+        public IEnumerable<(IdentToken token, Formula formula)> EnsureParsed()
         {
             if (_formulasResult == null)
             {
@@ -65,7 +66,7 @@ namespace Microsoft.PowerFx.Core.Syntax
                 Contracts.AssertValue(_formulasResult);
             }
 
-            return _errors == null;
+            return GetNamedFormulas();
         }
 
         /// <summary>
@@ -79,13 +80,9 @@ namespace Microsoft.PowerFx.Core.Syntax
             return _errors ?? Enumerable.Empty<TexlError>();
         }
 
-        /// <summary>
-        /// Returns a Tuple of a DName and Formula object for each named formula.
-        /// </summary>
-        /// <returns></returns>
-        public IEnumerable<(DName name, Formula formula)> GetNamedFormulas()
+        private IEnumerable<(IdentToken token, Formula formula)> GetNamedFormulas()
         {
-            var formulas = new List<(DName, Formula)>();
+            var formulas = new List<(IdentToken, Formula)>();
             if (_formulasResult != null)
             {
                 foreach (var kvp in _formulasResult)
