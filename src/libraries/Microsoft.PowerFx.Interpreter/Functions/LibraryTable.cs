@@ -166,25 +166,9 @@ namespace Microsoft.PowerFx.Functions
 
         public static FormulaValue IndexTable(IRContext irContext, FormulaValue[] args)
         {
-            if (args.Length < 2 || args.Length > 4) {
-                var message = args.Length < 2 ? "You've entered too few arguments for this function." : "You've entered too many arguments for this function.";
-                return new ErrorValue(irContext, new ExpressionError()
-                {
-                    Message = message,
-                    Span = irContext.SourceContext,
-                    Kind = ErrorKind.Validation
-                });
-            } else {
-                var table = (TableValue)args[0];
-                var row = (NumberValue)args[1];
-                var col = args[2] != null ? (NumberValue)args[2] : null;
-
-                if (args.Length == 2) {
-                    return table.Rows.ElementAt((int)row.Value).ToFormulaValue();
-                } else {
-                    return table.Rows.ElementAt((int)row.Value).ToFormulaValue();
-                }
-            }
+            var arg0 = (TableValue)args[0];
+            var arg1 = (NumberValue)args[1];
+            return arg0.Rows.ElementAt((int)arg1.Value).ToFormulaValue();
         }
 
         public static FormulaValue SortTable(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args)
