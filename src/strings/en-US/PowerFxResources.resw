@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -6342,9 +6342,5 @@
   <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
     <value>Named formula must end with a semicolon.</value>
     <comment>A semicolon must terminate named formulas. For example, a=10;</comment>
-  </data>
-  <data name="ErrNamedFormula_DuplicateVariable" xml:space="preserve">
-    <value>Named formula was already defined with name '{0}'.</value>
-    <comment>Error Message.</comment>
   </data>
 </root>
