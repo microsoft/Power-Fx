@@ -2354,11 +2354,19 @@
     <value>index</value>
     <comment>function_parameter - Second argument of the Index function - Number type.</comment>
   </data>
-  <data name="AboutIndex_table" xml:space="preserve">
+  <data name="AboutIndexT" xml:space="preserve">
+    <value>A table.</value>
+    <comment>function_parameter - First argument of the Index function - Table type.</comment>
+  </data>
+  <data name="IndexTArg1" xml:space="preserve">
     <value>A table.</value>
   </data>
   <data name="AboutIndex_index" xml:space="preserve">
     <value>An integer index.</value>
+  </data>
+  <data name="IndexTArg2" xml:space="preserve">
+    <value>An integer index.</value>
+    <comment>function_parameter - Second argument of the Index function - Number type.</comment>
   </data>
   <data name="FormMode_Edit_Name" xml:space="preserve">
     <value>Edit</value>
