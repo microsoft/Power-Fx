@@ -537,17 +537,7 @@ namespace Microsoft.PowerFx.Functions
                     });
                 }
 
-                var finiteCheckResult = FiniteChecker(irContext, index, arg);
-                if (finiteCheckResult is NumberValue numberArg)
-                {
-                    var number = numberArg.Value;
-                    if (number <= 0)
-                    {
-                        return CommonErrors.ArgumentOutOfRange(irContext);
-                    }
-                }
-
-                return finiteCheckResult;
+                return StrictPositiveNumberChecker(irContext, index, arg);
             }
 
             if (index == 2)

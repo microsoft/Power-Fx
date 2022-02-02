@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -357,22 +358,31 @@ namespace Microsoft.PowerFx.Functions
             var findText = (StringValue)args[0];
             var withinText = (StringValue)args[1];
 
-            NumberValue startIndex;
+            int startIndexValue;
             if (args[2] is BlankValue)
             {
                 return new BlankValue(irContext);
             }
             else
             {
-                startIndex = (NumberValue)args[2];
+                var generalRangeCheckResult = StrictPositiveNumberChecker(irContext, 2, args[2]);
+                if (generalRangeCheckResult is NumberValue startIndex)
+                {
+                    startIndexValue = (int)startIndex.Value;
+                }
+                else
+                {
+                    Contract.Assert(generalRangeCheckResult is ErrorValue);
+                    return generalRangeCheckResult;
+                }
+
+                if (startIndexValue < 1 || startIndexValue > withinText.Value.Length + 1)
+                {
+                    return CommonErrors.ArgumentOutOfRange(irContext);
+                }
             }
 
-            if (startIndex.Value < 1 || startIndex.Value > withinText.Value.Length + 1)
-            {
-                return CommonErrors.ArgumentOutOfRange(irContext);
-            }
-
-            var index = withinText.Value.IndexOf(findText.Value, (int)startIndex.Value - 1);
+            var index = withinText.Value.IndexOf(findText.Value, startIndexValue - 1);
             return index >= 0 ? new NumberValue(irContext, index + 1)
                               : new BlankValue(irContext);
         }
