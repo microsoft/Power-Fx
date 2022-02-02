@@ -133,7 +133,7 @@ namespace Microsoft.PowerFx.Core.Types
 
         internal HashSet<IExternalTabularDataSource> AssociatedDataSources { get; }
 
-        internal IExternalOptionSet<int> OptionSetInfo { get; }
+        internal IExternalOptionSet OptionSetInfo { get; }
 
         internal IExternalViewInfo ViewInfo { get; }
 
@@ -366,7 +366,7 @@ namespace Microsoft.PowerFx.Core.Types
         }
 
         // Constructor for OptionSet type
-        private DType(DKind kind, TypeTree outputTypeTree, IExternalOptionSet<int> info)
+        private DType(DKind kind, TypeTree outputTypeTree, IExternalOptionSet info)
         {
             Contracts.Assert(kind == DKind.OptionSet);
             Contracts.AssertValue(info);
@@ -384,11 +384,12 @@ namespace Microsoft.PowerFx.Core.Types
             OptionSetInfo = info;
             ViewInfo = null;
             NamedValueKind = null;
+            DisplayNameProvider = info.DisplayNameProvider;
             AssertValid();
         }
 
         // Constructor for OptionSetValue type
-        private DType(DKind kind, IExternalOptionSet<int> info)
+        private DType(DKind kind, IExternalOptionSet info)
         {
             Contracts.Assert(kind == DKind.OptionSetValue);
             Contracts.AssertValue(info);
@@ -405,6 +406,7 @@ namespace Microsoft.PowerFx.Core.Types
             OptionSetInfo = info;
             ViewInfo = null;
             NamedValueKind = null;
+            DisplayNameProvider = info.DisplayNameProvider;
             AssertValid();
         }
 
@@ -796,16 +798,16 @@ namespace Microsoft.PowerFx.Core.Types
             return new DType(DKind.LargeImage, imageType);
         }
 
-        public static DType CreateOptionSetType(IExternalOptionSet<int> info)
+        public static DType CreateOptionSetType(IExternalOptionSet info)
         {
             Contracts.AssertValue(info);
 
             var typedNames = new List<TypedName>();
 
-            foreach (var kvp in info.DisplayNameMapping)
+            foreach (var name in info.OptionNames)
             {
                 var type = new DType(DKind.OptionSetValue, info);
-                typedNames.Add(new TypedName(type, new DName(kvp.Key.ToString())));
+                typedNames.Add(new TypedName(type, name));
             }
 
             return new DType(DKind.OptionSet, TypeTree.Create(typedNames.Select(TypedNameToKVP)), info);
@@ -842,7 +844,7 @@ namespace Microsoft.PowerFx.Core.Types
             return new DType(DKind.Record, TypeTree.Create(minTypeTree));
         }
 
-        public static DType CreateOptionSetValue(IExternalOptionSet<int> info)
+        public static DType CreateOptionSetValue(IExternalOptionSet info)
         {
             return new DType(DKind.OptionSetValue, info);
         }
@@ -2354,18 +2356,6 @@ namespace Microsoft.PowerFx.Core.Types
 
         internal static bool TryGetDisplayNameForColumn(DType type, string logicalName, out string displayName)
         {
-            // If the type is an option set, the option set info has the mapping
-            if (type != null && type.IsOptionSet && type.OptionSetInfo != null)
-            {
-                if (int.TryParse(logicalName, out var value) && type.OptionSetInfo.DisplayNameMapping.TryGetFromFirst(value, out displayName))
-                {
-                    return true;
-                }
-
-                displayName = null;
-                return false;
-            }
-
             // If the type is an view, the view info has the mapping
             if (type != null && type.IsView && type.ViewInfo != null)
             {
@@ -2416,19 +2406,6 @@ namespace Microsoft.PowerFx.Core.Types
 
         internal static bool TryGetLogicalNameForColumn(DType type, string displayName, out string logicalName, bool isThisItem = false)
         {
-            // If the type is an option set, the option set info has the mapping
-            if (type != null && type.IsOptionSet && !isThisItem && type.OptionSetInfo != null)
-            {
-                if (type.OptionSetInfo.DisplayNameMapping.TryGetFromSecond(displayName, out var value))
-                {
-                    logicalName = value.ToString();
-                    return true;
-                }
-
-                logicalName = null;
-                return false;
-            }
-
             // If the type is a view, the view info has the mapping
             if (type != null && type.IsView && !isThisItem && type.ViewInfo != null)
             {
@@ -2465,7 +2442,7 @@ namespace Microsoft.PowerFx.Core.Types
             }
 
             // Use the DisplayNameProvider here
-            if (type != null && type.DisplayNameProvider != null)
+            if (type != null && type.DisplayNameProvider != null && !isThisItem)
             {
                 if (type.DisplayNameProvider.TryGetLogicalName(new DName(displayName), out var logicalDName))
                 {
@@ -2503,29 +2480,6 @@ namespace Microsoft.PowerFx.Core.Types
         /// </returns>
         internal static bool TryGetConvertedDisplayNameAndLogicalNameForColumn(DType type, string displayName, out string logicalName, out string newDisplayName)
         {
-            // If the type is an option set, the option set info has the mapping
-            if (type != null && type.IsOptionSet && type.OptionSetInfo != null)
-            {
-                if (type.OptionSetInfo.IsConvertingDisplayNameMapping &&
-                    type.OptionSetInfo.PreviousDisplayNameMapping != null &&
-                    type.OptionSetInfo.PreviousDisplayNameMapping.TryGetFromSecond(displayName, out var value))
-                {
-                    logicalName = value.ToString();
-                    if (type.OptionSetInfo.DisplayNameMapping.TryGetFromFirst(value, out newDisplayName))
-                    {
-                        return true;
-                    }
-
-                    // Converting and no new mapping exists for this column, so the display name is also the logical name
-                    newDisplayName = logicalName;
-                    return true;
-                }
-
-                logicalName = null;
-                newDisplayName = null;
-                return false;
-            }
-
             // If the type is a view, the info has the mapping
             if (type != null && type.IsView && type.ViewInfo != null)
             {
@@ -2592,13 +2546,12 @@ namespace Microsoft.PowerFx.Core.Types
                 }
             }
 
-            // The DisplayNameProvider path doesn't participate in Display -> Display remapping, just logical -> display and display -> logical.
             if (type != null && type.DisplayNameProvider != null)
             {
-                if (type.DisplayNameProvider.TryGetLogicalName(new DName(displayName), out var logicalDName))
+                if (type.DisplayNameProvider.TryRemapLogicalAndDisplayNames(new DName(displayName), out var logicalDName, out var newDisplayDName))
                 {
                     logicalName = logicalDName.Value;
-                    newDisplayName = displayName;
+                    newDisplayName = newDisplayDName;
                     return true;
                 }
             }
@@ -2977,7 +2930,7 @@ namespace Microsoft.PowerFx.Core.Types
             bool isFile,
             bool isLargeImage,
             HashSet<IExternalTabularDataSource> associatedDataSources,
-            IExternalOptionSet<int> optionSetInfo,
+            IExternalOptionSet optionSetInfo,
             IExternalViewInfo viewInfo,
             string namedValueKind,
             DisplayNameProvider displayNameProvider)
