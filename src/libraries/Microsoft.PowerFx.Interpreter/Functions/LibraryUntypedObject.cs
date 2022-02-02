@@ -44,54 +44,32 @@ namespace Microsoft.PowerFx.Functions
         public static FormulaValue Value_UO(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, UntypedObjectValue[] args)
         {
             var impl = args[0].Impl;
-            double number;
 
-            if (impl.Type == FormulaType.String)
+            if (impl.Type == FormulaType.Number)
             {
-                if (!double.TryParse(impl.GetString(), out number))
+                var number = impl.GetDouble();
+                if (IsInvalidDouble(number))
                 {
-                    return CommonErrors.InvalidNumberFormatError(irContext);
+                    return CommonErrors.ArgumentOutOfRange(irContext);
                 }
-            }
-            else if (impl.Type == FormulaType.Blank)
-            {
-                return new BlankValue(irContext);
-            }
-            else if (impl.Type == FormulaType.Boolean)
-            {
-                number = impl.GetBoolean() ? 1 : 0;
-            }
-            else
-            {
-                number = impl.GetDouble();
+
+                return new NumberValue(irContext, number);
             }
 
-            return new NumberValue(irContext, number);
+            return CommonErrors.RuntimeTypeMismatch(irContext);
         }
 
         public static FormulaValue Text_UO(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, UntypedObjectValue[] args)
         {
             var impl = args[0].Impl;
-            string str;
 
             if (impl.Type == FormulaType.String)
             {
-                str = impl.GetString();
-            }
-            else if (impl.Type == FormulaType.Blank)
-            {
-                str = string.Empty;
-            }
-            else if (impl.Type == FormulaType.Boolean)
-            {
-                str = PowerFxBooleanToString(impl.GetBoolean());
-            }
-            else
-            {
-                str = impl.GetDouble().ToString();
+                var str = impl.GetString();
+                return new StringValue(irContext, str);
             }
 
-            return new StringValue(irContext, str);
+            return CommonErrors.RuntimeTypeMismatch(irContext);
         }
 
         public static FormulaValue Table_UO(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, UntypedObjectValue[] args)
@@ -116,27 +94,6 @@ namespace Microsoft.PowerFx.Functions
             return new InMemoryTableValue(irContext, resultRows);
         }
 
-        private static FormulaValue UntypedObjectPrimitiveChecker(IRContext irContext, int index, FormulaValue arg)
-        {
-            if (arg is UntypedObjectValue cov)
-            {
-                if (cov.Impl.Type == FormulaType.Number)
-                {
-                    var number = cov.Impl.GetDouble();
-                    if (IsInvalidDouble(number))
-                    {
-                        return CommonErrors.ArgumentOutOfRange(irContext);
-                    }
-                }
-                else if (cov.Impl.Type is ExternalType)
-                {
-                    return CommonErrors.RuntimeTypeMismatch(irContext);
-                }
-            }
-
-            return arg;
-        }
-
         private static FormulaValue UntypedObjectArrayChecker(IRContext irContext, int index, FormulaValue arg)
         {
             if (arg is UntypedObjectValue cov)
@@ -153,6 +110,19 @@ namespace Microsoft.PowerFx.Functions
             }
 
             return arg;
+        }
+
+        public static FormulaValue Boolean_UO(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, UntypedObjectValue[] args)
+        {
+            var impl = args[0].Impl;
+
+            if (impl.Type == FormulaType.Boolean)
+            {
+                var b = impl.GetBoolean();
+                return new BooleanValue(irContext, b);
+            }
+
+            return CommonErrors.RuntimeTypeMismatch(irContext);
         }
     }
 }

@@ -59,6 +59,16 @@ namespace Microsoft.PowerFx.Functions
             });
         }
 
+        public static ErrorValue InvalidBooleanFormatError(IRContext irContext)
+        {
+            return new ErrorValue(irContext, new ExpressionError()
+            {
+                Message = "The value could not be interpreted as a Boolean",
+                Span = irContext.SourceContext,
+                Kind = ErrorKind.BadLanguageCode
+            });
+        }
+
         public static ErrorValue UnreachableCodeError(IRContext irContext)
         {
             return new ErrorValue(irContext, new ExpressionError()

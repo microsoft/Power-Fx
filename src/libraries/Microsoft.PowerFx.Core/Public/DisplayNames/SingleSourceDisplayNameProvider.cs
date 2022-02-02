@@ -23,13 +23,13 @@ namespace Microsoft.PowerFx.Core
             _displayToLogical = ImmutableDictionary.Create<DName, DName>();
         }
 
-        public SingleSourceDisplayNameProvider(IEnumerable<KeyValuePair<DName, DName>> keyValuePairs)
+        public SingleSourceDisplayNameProvider(IEnumerable<KeyValuePair<DName, DName>> logicalToDisplayPairs)
         {
             var lToDBuilder = ImmutableDictionary.CreateBuilder<DName, DName>();
             var dToLBuilder = ImmutableDictionary.CreateBuilder<DName, DName>();
 
             // Validate input while constructing the dictionaries
-            foreach (var kvp in keyValuePairs)
+            foreach (var kvp in logicalToDisplayPairs)
             {
                 if (dToLBuilder.ContainsKey(kvp.Value) || lToDBuilder.ContainsKey(kvp.Value) ||
                     lToDBuilder.ContainsKey(kvp.Key) || dToLBuilder.ContainsKey(kvp.Key))
@@ -37,8 +37,8 @@ namespace Microsoft.PowerFx.Core
                     throw new NameCollisionException(kvp.Key);
                 }
 
-                dToLBuilder.Add(kvp.Key, kvp.Value);
-                lToDBuilder.Add(kvp.Value, kvp.Key);
+                lToDBuilder.Add(kvp.Key, kvp.Value);
+                dToLBuilder.Add(kvp.Value, kvp.Key);
             }
 
             _logicalToDisplay = lToDBuilder.ToImmutable();
@@ -74,6 +74,12 @@ namespace Microsoft.PowerFx.Core
         public override bool TryGetDisplayName(DName logicalName, out DName displayName)
         {
             return _logicalToDisplay.TryGetValue(logicalName, out displayName);
+        }
+
+        public override bool TryRemapLogicalAndDisplayNames(DName displayName, out DName logicalName, out DName newDisplayName)
+        {
+            newDisplayName = displayName;
+            return TryGetLogicalName(displayName, out logicalName);
         }
     }
 }
