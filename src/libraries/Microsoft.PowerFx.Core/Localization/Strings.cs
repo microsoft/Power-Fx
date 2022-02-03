@@ -85,6 +85,9 @@ namespace Microsoft.PowerFx.Core.Localization
         public static StringGetter ValueArg1 = (b) => StringResources.Get("ValueArg1", b);
         public static StringGetter ValueArg2 = (b) => StringResources.Get("ValueArg2", b);
 
+        public static StringGetter AboutBoolean = (b) => StringResources.Get("AboutBoolean", b);
+        public static StringGetter BooleanArg1 = (b) => StringResources.Get("BooleanArg1", b);
+
         public static StringGetter AboutConcatenate = (b) => StringResources.Get("AboutConcatenate", b);
         public static StringGetter ConcatenateArg1 = (b) => StringResources.Get("ConcatenateArg1", b);
         public static StringGetter AboutConcatenateT = (b) => StringResources.Get("AboutConcatenateT", b);

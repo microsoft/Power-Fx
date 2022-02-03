@@ -1,14 +1,22 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System.Collections.Generic;
+using Microsoft.PowerFx.Core.Utils;
+
 namespace Microsoft.PowerFx.Core.Entities
 {
-    internal interface IExternalOptionSet<T> : IExternalEntity, IDisplayMapped<int>
+    internal interface IExternalOptionSet : IExternalEntity
     {
-        string Name { get; }
+        DisplayNameProvider DisplayNameProvider { get; }
 
+        /// <summary>
+        /// Logical names for the fields in this Option Set.
+        /// </summary>
+        IEnumerable<DName> OptionNames { get; }
+                
         bool IsBooleanValued { get; }
 
-        string RelatedEntityName { get; }
+        bool IsConvertingDisplayNameMapping { get; } 
     }
 }

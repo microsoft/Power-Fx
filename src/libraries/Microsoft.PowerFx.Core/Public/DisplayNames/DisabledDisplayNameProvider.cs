@@ -29,5 +29,12 @@ namespace Microsoft.PowerFx.Core
             logicalName = default;
             return false;
         }
+
+        public override bool TryRemapLogicalAndDisplayNames(DName displayName, out DName logicalName, out DName newDisplayName)
+        {
+            logicalName = default;
+            newDisplayName = default;
+            return false;
+        }
     }
 }

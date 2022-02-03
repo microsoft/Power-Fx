@@ -66,6 +66,26 @@ namespace Microsoft.PowerFx.Functions
             },
             { BuiltinFunctionsCore.Blank, Blank },
             {
+                BuiltinFunctionsCore.Boolean,
+                StandardErrorHandling<StringValue>(
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<StringValue>,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: Boolean)
+            },
+            {
+                BuiltinFunctionsCore.Boolean_UO,
+                StandardErrorHandling<UntypedObjectValue>(
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<UntypedObjectValue>,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: Boolean_UO)
+            },
+            {
                 BuiltinFunctionsCore.Concat,
                 StandardErrorHandling<FormulaValue>(
                     expandArguments: NoArgExpansion,
@@ -345,7 +365,7 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: Hour)
             },
             {
-                BuiltinFunctionsCore.Index_CO,
+                BuiltinFunctionsCore.Index_UO,
                 StandardErrorHandling<FormulaValue>(
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: DoNotReplaceBlank,
@@ -356,7 +376,7 @@ namespace Microsoft.PowerFx.Functions
                         UntypedObjectArrayChecker,
                         StrictPositiveNumberChecker),
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
-                    targetFunction: Index_CO)
+                    targetFunction: Index_UO)
             },
             {
                 BuiltinFunctionsCore.Last,
@@ -756,14 +776,14 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: Table)
             },
             {
-                BuiltinFunctionsCore.Table_CO,
+                BuiltinFunctionsCore.Table_UO,
                 StandardErrorHandling<UntypedObjectValue>(
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: DoNotReplaceBlank,
                     checkRuntimeTypes: ExactValueTypeOrBlank<UntypedObjectValue>,
                     checkRuntimeValues: UntypedObjectArrayChecker,
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
-                    targetFunction: Table_CO)
+                    targetFunction: Table_UO)
             },
             {
                 BuiltinFunctionsCore.Text,
@@ -776,14 +796,14 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: Text)
             },
             {
-                BuiltinFunctionsCore.Text_CO,
+                BuiltinFunctionsCore.Text_UO,
                 StandardErrorHandling<UntypedObjectValue>(
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: DoNotReplaceBlank,
                     checkRuntimeTypes: ExactValueTypeOrBlank<UntypedObjectValue>,
-                    checkRuntimeValues: UntypedObjectPrimitiveChecker,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.ReturnEmptyStringIfAnyArgIsBlank,
-                    targetFunction: Text_CO)
+                    targetFunction: Text_UO)
             },
             {
                 BuiltinFunctionsCore.Time,
@@ -867,14 +887,14 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: Value)
             },
             {
-                BuiltinFunctionsCore.Value_CO,
+                BuiltinFunctionsCore.Value_UO,
                 StandardErrorHandling<UntypedObjectValue>(
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: DoNotReplaceBlank,
                     checkRuntimeTypes: ExactValueTypeOrBlank<UntypedObjectValue>,
-                    checkRuntimeValues: UntypedObjectPrimitiveChecker,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
-                    targetFunction: Value_CO)
+                    targetFunction: Value_UO)
             },
             {
                 BuiltinFunctionsCore.With,

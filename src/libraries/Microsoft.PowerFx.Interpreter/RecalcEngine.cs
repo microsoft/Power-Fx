@@ -45,17 +45,19 @@ namespace Microsoft.PowerFx
         {
             _powerFxConfig = powerFxConfig ?? new PowerFxConfig();
 
-            AddFunction(BuiltinFunctionsCore.Index_CO);
+            AddFunction(BuiltinFunctionsCore.Index_UO);
             AddFunction(BuiltinFunctionsCore.ParseJson);
-            AddFunction(BuiltinFunctionsCore.Table_CO);
-            AddFunction(BuiltinFunctionsCore.Text_CO);
-            AddFunction(BuiltinFunctionsCore.Value_CO);
+            AddFunction(BuiltinFunctionsCore.Table_UO);
+            AddFunction(BuiltinFunctionsCore.Text_UO);
+            AddFunction(BuiltinFunctionsCore.Value_UO);
+            AddFunction(BuiltinFunctionsCore.Boolean);
+            AddFunction(BuiltinFunctionsCore.Boolean_UO);
         }
 
         // Add Builtin functions that aren't yet in the shared library. 
         private void AddFunction(TexlFunction function)
         {
-            _extraFunctions.Add(function.Name, function);
+            _extraFunctions.Add(function.GetUniqueTexlRuntimeName(), function);
         }
 
         /// <summary>
@@ -75,7 +77,7 @@ namespace Microsoft.PowerFx
         {
             foreach (var kv in _extraFunctions)
             {
-                yield return kv.Key;
+                yield return kv.Value.Name;
             }
 
             foreach (var func in Functions.Library.FunctionList)
