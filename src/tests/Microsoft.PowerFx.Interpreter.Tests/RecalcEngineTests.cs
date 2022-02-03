@@ -8,6 +8,8 @@ using System.Text;
 using Microsoft.PowerFx.Core.Public;
 using Microsoft.PowerFx.Core.Public.Types;
 using Microsoft.PowerFx.Core.Public.Values;
+using Microsoft.PowerFx.Core.Texl;
+using Microsoft.PowerFx.Core.Utils;
 using Xunit;
 using Xunit.Sdk;
 
@@ -254,7 +256,7 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public void CustomFunction()
         {
-            var config = new PowerFxConfig();
+            var config = new PowerFxConfig(null, null);
             config.AddFunction(new TestCustomFunction());
             var engine = new RecalcEngine(config);
 
@@ -331,6 +333,23 @@ namespace Microsoft.PowerFx.Tests
             Assert.True(result.ReturnType is NumberType);
             Assert.Single(result.TopLevelIdentifiers);
             Assert.Equal("x", result.TopLevelIdentifiers.First());
+        }
+
+        [Fact]
+        public void RecalcEngineLocksConfig()
+        {
+            var config = new PowerFxConfig(null, null);
+            config.AddFunction(BuiltinFunctionsCore.Blank);
+            
+            var recalcEngine = new RecalcEngine(config);
+
+            var optionSet = new OptionSet("foo", new Dictionary<string, string>() { { "one key", "one value" } });
+            Assert.Throws<InvalidOperationException>(() => config.AddFunction(BuiltinFunctionsCore.Abs));
+            Assert.Throws<InvalidOperationException>(() => config.AddOptionSet(optionSet));
+
+            Assert.False(config.ImmutableEnvironmentSymbolTable.ContainsSymbol(new DName("foo")));
+
+            Assert.DoesNotContain(new DName(BuiltinFunctionsCore.Abs.Name), config.ExtraFunctions.Keys);
         }
 
         #region Test
