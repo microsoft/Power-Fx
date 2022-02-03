@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+// Licensed under the MIT license.
 
 using System.Collections.Generic;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
@@ -11,8 +11,6 @@ using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
-    // FirstN(source:*, [count:n])
-    // LastN(source:*, [count:n])
     internal sealed class IndexTFunction : FunctionWithTableInput
     {
         public override bool IsSelfContained => true;
