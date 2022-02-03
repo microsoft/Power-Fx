@@ -437,7 +437,7 @@ namespace Microsoft.PowerFx.Functions
                         ExactValueTypeOrBlank<TableValue>,
                         ExactValueTypeOrBlank<NumberValue>),
                     checkRuntimeValues: ExactSequence(
-                        CustomObjectArrayChecker,
+                        DeferRuntimeValueChecking,
                         StrictPositiveNumberChecker),
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
                     targetFunction: IndexTable)
