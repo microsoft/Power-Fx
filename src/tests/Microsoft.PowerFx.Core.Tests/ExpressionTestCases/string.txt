@@ -427,3 +427,6 @@ Errors: Error 2-2: Unexpected characters. Characters are used in the formula in 
 >> $""""
 /*SqlRunner*/ Compile Error
 """
+
+>> """"
+"""
