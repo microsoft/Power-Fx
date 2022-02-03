@@ -2358,6 +2358,9 @@
     <value>A table.</value>
     <comment>function_parameter - First argument of the Index function - Table type.</comment>
   </data>
+  <data name="AboutIndex_table" xml:space="preserve">
+    <value>A table.</value>
+  </data>
   <data name="IndexTArg1" xml:space="preserve">
     <value>A table.</value>
   </data>
