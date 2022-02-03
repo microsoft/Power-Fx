@@ -2366,6 +2366,7 @@
   </data>
   <data name="AboutIndex_index" xml:space="preserve">
     <value>An integer index.</value>
+    <comment>function_parameter - Second argument of the Index function - Number type.</comment>
   </data>
   <data name="IndexTArg2" xml:space="preserve">
     <value>An integer index.</value>

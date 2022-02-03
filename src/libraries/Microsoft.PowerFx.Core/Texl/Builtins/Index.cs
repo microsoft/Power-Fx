@@ -11,6 +11,7 @@ using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
+    // IndexT(source:*, [n])
     internal sealed class IndexTFunction : FunctionWithTableInput
     {
         public override bool IsSelfContained => true;
