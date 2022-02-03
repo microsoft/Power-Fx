@@ -7,7 +7,7 @@ namespace Microsoft.PowerFx
     /// Hosts can enable these flags to try out early features. 
     /// Any flags will eventually default to true and then get removed once the feature is finalized. 
     /// </summary>
-    internal static class FeatureFlags
+    public static class FeatureFlags
     {
         /// <summary>
         /// Enable String Interpolation feature. 
