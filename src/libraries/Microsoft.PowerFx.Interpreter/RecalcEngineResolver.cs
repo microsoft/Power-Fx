@@ -1,16 +1,18 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Binding.BindInfo;
+using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Glue;
 using Microsoft.PowerFx.Core.Public.Types;
 using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
-using Microsoft.PowerFx.Interpreter;
 
 namespace Microsoft.PowerFx
 {
@@ -25,15 +27,13 @@ namespace Microsoft.PowerFx
 
         public RecalcEngineResolver(
             RecalcEngine parent,
-            ImmutableEnvironmentSymbolTable symbolTable,
-            RecordType parameters,
-            IEnumerable<EnumSymbol> enumSymbols,
-            params TexlFunction[] extraFunctions)
-            : base(enumSymbols, extraFunctions)
+            PowerFxConfig powerFxConfig,
+            RecordType parameters)
+            : base(powerFxConfig.EnumStore.EnumSymbols, powerFxConfig.ExtraFunctions.Values.ToArray())
         {
             _parameters = parameters;
             _parent = parent;
-            _symbolTable = symbolTable;
+            _symbolTable = powerFxConfig.ImmutableEnvironmentSymbolTable;
         }
 
         public override bool Lookup(DName name, out NameLookupInfo nameInfo, NameLookupPreferences preferences = NameLookupPreferences.None)
@@ -41,6 +41,7 @@ namespace Microsoft.PowerFx
             // Kinds of globals:
             // - global formula
             // - parameters 
+            // - environment symbols
 
             var str = name.Value;
 
@@ -74,29 +75,22 @@ namespace Microsoft.PowerFx
             }
             else if (_symbolTable.TryGetSymbol(name, out var symbol))
             {
-                var type = symbol.Schema;
-
                 // Special case symbols
-                if (symbol is OptionSet optionSet)
+                if (symbol is IExternalOptionSet optionSet)
                 {
                     nameInfo = new NameLookupInfo(
                         BindKind.OptionSet,
-                        type,
+                        optionSet.Type,
                         DPath.Root,
                         0,
                         optionSet);
 
                     return true;
                 }
-
-                nameInfo = new NameLookupInfo(
-                    BindKind.PowerFxResolvedObject,
-                    type,
-                    DPath.Root,
-                    0,
-                    symbol);
-
-                return true;
+                else
+                {
+                    throw new NotImplementedException($"{symbol.GetType().Name} not supported by {typeof(RecalcEngineResolver).Name}");
+                }
             }
 
             return base.Lookup(name, out nameInfo, preferences);

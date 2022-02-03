@@ -31,14 +31,9 @@ namespace Microsoft.PowerFx
     /// </summary>
     public class RecalcEngine : IScope, IPowerFxEngine
     {
-        // User-provided functions 
-        private readonly ImmutableDictionary<string, TexlFunction> _extraFunctions = ImmutableDictionary<string, TexlFunction>.Empty.WithComparers(StringComparer.OrdinalIgnoreCase);
-
         internal Dictionary<string, RecalcFormulaInfo> Formulas { get; } = new Dictionary<string, RecalcFormulaInfo>();
 
         private readonly PowerFxConfig _powerFxConfig;
-
-        private readonly ImmutableEnvironmentSymbolTable _enviromentSymbolTable;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RecalcEngine"/> class.
@@ -47,60 +42,22 @@ namespace Microsoft.PowerFx
         /// <param name="powerFxConfig">Compiler customizations.</param>
         public RecalcEngine(PowerFxConfig powerFxConfig = null)
         {
-            _powerFxConfig = powerFxConfig ?? new PowerFxConfig();
-
-            AddFunction(BuiltinFunctionsCore.Index_UO);
-            AddFunction(BuiltinFunctionsCore.ParseJson);
-            AddFunction(BuiltinFunctionsCore.Table_UO);
-            AddFunction(BuiltinFunctionsCore.Text_UO);
-            AddFunction(BuiltinFunctionsCore.Value_UO);
-            AddFunction(BuiltinFunctionsCore.Boolean);
-            AddFunction(BuiltinFunctionsCore.Boolean_UO);
+            powerFxConfig = powerFxConfig ?? new PowerFxConfig(null, null);
+            AddInterpreterFunctions(powerFxConfig);
+            powerFxConfig.Lock();
+            _powerFxConfig = powerFxConfig;
         }
 
         // Add Builtin functions that aren't yet in the shared library. 
-        private void AddFunction(TexlFunction function)
+        private void AddInterpreterFunctions(PowerFxConfig powerFxConfig)
         {
-            _extraFunctions.Add(function.GetUniqueTexlRuntimeName(), function);
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="RecalcEngine"/> class,
-        /// Used for updating immutable parts of RecalcEngine, while keeping Formula context.
-        /// </summary>
-        /// <param name="powerFxConfig">Compiler customizations.</param>
-        /// <param name="formulas">Set of formulas already registered with RecalcEngine.</param>
-        /// <param name="environmentSymbolTable">Symbols present in the environment. Immutable.</param>
-        /// <param name="extraFunctions">Additional functions registered by the host. Immutable.</param>
-        private RecalcEngine(PowerFxConfig powerFxConfig, Dictionary<string, RecalcFormulaInfo> formulas, ImmutableEnvironmentSymbolTable environmentSymbolTable, ImmutableDictionary<string, TexlFunction> extraFunctions)
-        {
-            _powerFxConfig = powerFxConfig;
-            Formulas = formulas;
-            _enviromentSymbolTable = environmentSymbolTable;
-            _extraFunctions = extraFunctions;
-            
-            // Run rebind for all formulas here
-        }
-
-        public RecalcEngine WithEnvironmentSymbol(IExternalEntity entity)
-        {
-            if (Formulas.ContainsKey(entity.EntityName) || _enviromentSymbolTable.ContainsSymbol(entity.EntityName))
-            {
-                throw new InvalidOperationException($"Symbol {entity.EntityName} collides with an existing symbol");
-            }
-
-            return new RecalcEngine(_powerFxConfig, Formulas, _enviromentSymbolTable.With(entity), _extraFunctions);
-        }
-
-        /// <summary>
-        /// Add a custom function. 
-        /// </summary>
-        /// <param name="function"></param>
-        public RecalcEngine WithFunction(ReflectionFunction function)
-        {
-            var texl = function.GetTexlFunction();
-
-            return new RecalcEngine(_powerFxConfig, Formulas, _enviromentSymbolTable, _extraFunctions.Add(texl.Name, texl)); // throw if already exists.
+            powerFxConfig.AddFunction(BuiltinFunctionsCore.Index_UO);
+            powerFxConfig.AddFunction(BuiltinFunctionsCore.ParseJson);
+            powerFxConfig.AddFunction(BuiltinFunctionsCore.Table_UO);
+            powerFxConfig.AddFunction(BuiltinFunctionsCore.Text_UO);
+            powerFxConfig.AddFunction(BuiltinFunctionsCore.Value_UO);
+            powerFxConfig.AddFunction(BuiltinFunctionsCore.Boolean);
+            powerFxConfig.AddFunction(BuiltinFunctionsCore.Boolean_UO);
         }
 
         /// <summary>
@@ -108,7 +65,7 @@ namespace Microsoft.PowerFx
         /// </summary>
         public IEnumerable<string> GetAllFunctionNames()
         {
-            foreach (var kv in _extraFunctions)
+            foreach (var kv in _powerFxConfig.ExtraFunctions)
             {
                 yield return kv.Value.Name;
             }
@@ -191,9 +148,7 @@ namespace Microsoft.PowerFx
             // Ok to continue with binding even if there are parse errors. 
             // We can still use that for intellisense. 
 
-            var extraFunctions = _extraFunctions.Values.ToArray();
-
-            var resolver = new RecalcEngineResolver(this, (RecordType)parameterType, _powerFxConfig.EnumStore.EnumSymbols, extraFunctions);
+            var resolver = new RecalcEngineResolver(this, _powerFxConfig, (RecordType)parameterType);
 
             // $$$ - intellisense only works with ruleScope.
             // So if running for intellisense, pass the parameters in ruleScope. 
@@ -289,8 +244,7 @@ namespace Microsoft.PowerFx
             var formula = new Formula(expressionText);
             formula.EnsureParsed(TexlParser.Flags.None);
 
-            var extraFunctions = _extraFunctions.Values.ToArray();
-            var resolver = new RecalcEngineResolver(this, parameters, _powerFxConfig.EnumStore.EnumSymbols, extraFunctions);
+            var resolver = new RecalcEngineResolver(this, _powerFxConfig, parameters);
             var binding = TexlBinding.Run(
                 new Glue2DocumentBinderGlue(),
                 null,

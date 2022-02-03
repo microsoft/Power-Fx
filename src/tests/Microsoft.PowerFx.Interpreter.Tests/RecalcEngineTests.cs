@@ -25,7 +25,9 @@ namespace Microsoft.PowerFx.Tests
             {
                 $"{ns}.{nameof(RecalcEngine)}",
                 $"{ns}.{nameof(ReflectionFunction)}",
-                $"{ns}.{nameof(RecalcEngineScope)}"
+                $"{ns}.{nameof(RecalcEngineScope)}",
+                $"{ns}.{nameof(PowerFxConfig)}",
+                $"{ns}.{nameof(OptionSet)}"
             };
 
             var sb = new StringBuilder();
@@ -252,7 +254,9 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public void CustomFunction()
         {
-            var engine = new RecalcEngine().WithFunction(new TestCustomFunction());
+            var config = new PowerFxConfig();
+            config.AddFunction(new TestCustomFunction());
+            var engine = new RecalcEngine(config);
 
             // Shows up in enuemeration
             var func = engine.GetAllFunctionNames().First(name => name == "TestCustom");

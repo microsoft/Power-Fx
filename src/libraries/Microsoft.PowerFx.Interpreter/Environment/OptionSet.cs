@@ -10,37 +10,50 @@ using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.App.Controls;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Errors;
+using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.UtilityDataStructures;
 using Microsoft.PowerFx.Core.Utils;
 
-namespace Microsoft.PowerFx.Interpreter
+namespace Microsoft.PowerFx
 {
-    public class OptionSet : IExternalOptionSet<string>
+    public class OptionSet : IExternalOptionSet
     {
-        // Staying
-        public DName EntityName { get; }
-
-        public ImmutableDictionary<DName, DName> Options { get; }
+        private readonly SingleSourceDisplayNameProvider _displayNameProvider;
+        private readonly DType _type;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="OptionSet"/> class.
         /// </summary>
         /// <param name="name">The name of the option set. Will be available as a global name in Power Fx expressions.</param>
-        /// <param name="options">The members of the option set. Dictionary of Display name to Logical name.</param>
+        /// <param name="options">The members of the option set. Dictionary of logical name to display name.</param>
         public OptionSet(string name, IDictionary<string, string> options)
         {
             EntityName = new DName(name);
             Options = ImmutableDictionary.CreateRange(options.Select(kvp => new KeyValuePair<DName, DName>(new DName(kvp.Key), new DName(kvp.Value))));
-        }
 
-        internal DisplayNameProvider GetDisplayNameProvider()
-        {
-            return new SingleSourceDisplayNameProvider(Options);
+            _displayNameProvider = new SingleSourceDisplayNameProvider(Options);
+            _type = DType.CreateOptionSetType(this);
         }
         
-        // Refactor the interface to separate out all this Canvas stuff from Power Fx. 
-        public string Name => EntityName;
+        /// <summary>
+        /// Name of the option set, referenceable from expressions.
+        /// </summary>
+        public DName EntityName { get; }
 
-        public bool IsBooleanValued => false;
+        /// <summary>
+        /// Contains the members of the option set.
+        /// Key is logical/invariant name, value is display name.
+        /// </summary>
+        public ImmutableDictionary<DName, DName> Options { get; }
+
+        IEnumerable<DName> IExternalOptionSet.OptionNames => Options.Keys;
+
+        DisplayNameProvider IExternalOptionSet.DisplayNameProvider => _displayNameProvider;
+        
+        bool IExternalOptionSet.IsBooleanValued => false;
+
+        bool IExternalOptionSet.IsConvertingDisplayNameMapping => false;
+
+        DType IExternalOptionSet.Type => _type;
     }
 }
