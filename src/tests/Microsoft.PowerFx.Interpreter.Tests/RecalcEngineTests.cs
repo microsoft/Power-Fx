@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Public;
 using Microsoft.PowerFx.Core.Public.Types;
 using Microsoft.PowerFx.Core.Public.Values;
@@ -28,7 +29,7 @@ namespace Microsoft.PowerFx.Tests
                 $"{ns}.{nameof(RecalcEngine)}",
                 $"{ns}.{nameof(ReflectionFunction)}",
                 $"{ns}.{nameof(RecalcEngineScope)}",
-                $"{ns}.{nameof(PowerFxConfig)}",
+                $"{ns}.{nameof(PowerFxConfigExtensions)}",
                 $"{ns}.{nameof(OptionSet)}"
             };
 

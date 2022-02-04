@@ -10,7 +10,7 @@ using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
 
-namespace Microsoft.PowerFx
+namespace Microsoft.PowerFx.Core
 {
     /// <summary>
     /// A container that allows for compiler customization.
