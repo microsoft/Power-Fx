@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using Microsoft.PowerFx.Core.IR;
+using Microsoft.PowerFx.Core.Public.Types;
 
 namespace Microsoft.PowerFx.Core.Public.Values
 {
@@ -15,6 +16,12 @@ namespace Microsoft.PowerFx.Core.Public.Values
     {
         internal ValidFormulaValue(IRContext irContext)
             : base(irContext)
+        {
+        }
+
+        // for custom types
+        protected ValidFormulaValue(FormulaType type)
+            : this(IRContext.NotInSource(type))
         {
         }
     }
