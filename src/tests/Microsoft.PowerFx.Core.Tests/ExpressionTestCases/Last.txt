@@ -48,3 +48,9 @@ Blank()
 
 >> LastN(Table({Value:1,Zulu:1}, {Value:2,Zulu:2}, {Value:3,Zulu:3}), 2)
 [{Value:2,Zulu:2},{Value:3,Zulu:3}]
+
+>> Last(Filter([1,2,3],Value=4)).Value
+Blank()
+
+>> LastN(Filter([1,2,3],Value=4),2)
+[]
