@@ -55,11 +55,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="ExpressionTestCases\Concatenate.txt" />
-    <None Remove="ExpressionTestCases\Find.txt" />
-    <None Remove="ExpressionTestCases\FindT.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\..\libraries\Microsoft.PowerFx.Core\Microsoft.PowerFx.Core.csproj" />
   </ItemGroup>
 </Project>
