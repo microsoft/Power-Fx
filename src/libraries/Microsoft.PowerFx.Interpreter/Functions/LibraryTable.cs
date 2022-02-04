@@ -266,6 +266,10 @@ namespace Microsoft.PowerFx.Functions
                     {
                         include = booleanValue.Value;
                     }
+                    else if (result is ErrorValue errorValue)
+                    {
+                        yield return DValue<RecordValue>.Of(errorValue);
+                    }
 
                     if (include)
                     {

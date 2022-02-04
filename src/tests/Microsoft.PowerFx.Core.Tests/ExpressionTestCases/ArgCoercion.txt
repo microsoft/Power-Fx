@@ -7,19 +7,19 @@
 #Error
 
 >> Char(["55", "56", "57"])
-[{Result:"7"},{Result:"8"},{Result:"9"}]
+Table({Result:"7"},{Result:"8"},{Result:"9"})
 
 >> Char(["55", "Error Coercion", "57"])
-[{Result:"7"},{Result:Microsoft.PowerFx.Core.Public.Values.ErrorValue},{Result:"9"}]
+Table({Result:"7"},{Result:Microsoft.PowerFx.Core.Public.Values.ErrorValue},{Result:"9"})
 
 >> Concatenate(123, "456")
 "123456"
 
 >> Concatenate(-1, ["456", "abc"] )
-[{Result:"-1456"},{Result:"-1abc"}]
+Table({Result:"-1456"},{Result:"-1abc"})
 
 >> Concatenate([-1, 123], ["456", "abc"] )
-[{Result:"-1456"},{Result:"123abc"}]
+Table({Result:"-1456"},{Result:"123abc"})
 
 >> IsToday(100)
 false
@@ -28,7 +28,7 @@ false
 4
 
 >> Len([123, -2344566, 0567])
-[{Result:3},{Result:8},{Result:3}]
+Table({Result:3},{Result:8},{Result:3})
 
 >> Day(Average(Date(1900, 1, 2), Date(1900, 1, 4)))
 3
