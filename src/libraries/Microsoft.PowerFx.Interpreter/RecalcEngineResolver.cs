@@ -22,7 +22,7 @@ namespace Microsoft.PowerFx
     internal class RecalcEngineResolver : SimpleResolver
     {
         private readonly RecalcEngine _parent;
-        private readonly ImmutableEnvironmentSymbolTable _symbolTable;
+        private readonly PowerFxConfig _powerFxConfig;
         private readonly RecordType _parameters;
 
         public RecalcEngineResolver(
@@ -33,7 +33,7 @@ namespace Microsoft.PowerFx
         {
             _parameters = parameters;
             _parent = parent;
-            _symbolTable = powerFxConfig.ImmutableEnvironmentSymbolTable;
+            _powerFxConfig = powerFxConfig;
         }
 
         public override bool Lookup(DName name, out NameLookupInfo nameInfo, NameLookupPreferences preferences = NameLookupPreferences.None)
@@ -73,7 +73,7 @@ namespace Microsoft.PowerFx
                     data);
                 return true;
             }
-            else if (_symbolTable.TryGetSymbol(name, out var symbol))
+            else if (_powerFxConfig.EnvironmentSymbols.TryGetValue(name, out var symbol))
             {
                 // Special case symbols
                 if (symbol is IExternalOptionSet optionSet)

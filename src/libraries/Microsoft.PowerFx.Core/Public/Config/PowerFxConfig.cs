@@ -5,8 +5,10 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using Microsoft.PowerFx.Core;
+using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Types.Enums;
+using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx
 {
@@ -17,10 +19,11 @@ namespace Microsoft.PowerFx
     {
         private bool _isLocked;
         private readonly Dictionary<string, TexlFunction> _extraFunctions;
-
-        internal ImmutableEnvironmentSymbolTable ImmutableEnvironmentSymbolTable;
+        private readonly Dictionary<DName, IExternalEntity> _environmentSymbols;
 
         internal IReadOnlyDictionary<string, TexlFunction> ExtraFunctions => _extraFunctions;
+
+        internal IReadOnlyDictionary<DName, IExternalEntity> EnvironmentSymbols => _environmentSymbols;
 
         internal EnumStore EnumStore { get; }
 
@@ -37,22 +40,14 @@ namespace Microsoft.PowerFx
             CultureInfo = cultureInfo ?? CultureInfo.CurrentCulture;
             _isLocked = false;
             _extraFunctions = new Dictionary<string, TexlFunction>();
-            ImmutableEnvironmentSymbolTable = new ImmutableEnvironmentSymbolTable();
+            _environmentSymbols = new Dictionary<DName, IExternalEntity>();
         }
 
-        public void AddFunction(ReflectionFunction function)
+        internal void AddEntity(IExternalEntity entity)
         {
             CheckUnlocked();
 
-            var texlFunction = function.GetTexlFunction();
-            _extraFunctions.Add(texlFunction.GetUniqueTexlRuntimeName(), texlFunction);
-        }
-
-        public void AddOptionSet(OptionSet optionSet)
-        {
-            CheckUnlocked();
-
-            ImmutableEnvironmentSymbolTable = ImmutableEnvironmentSymbolTable.With(optionSet);
+            _environmentSymbols.Add(entity.EntityName, entity);
         }
 
         internal void AddFunction(TexlFunction function)
@@ -63,7 +58,7 @@ namespace Microsoft.PowerFx
         }
 
         internal void Lock()
-        {
+        { 
             CheckUnlocked();
 
             _isLocked = true;
