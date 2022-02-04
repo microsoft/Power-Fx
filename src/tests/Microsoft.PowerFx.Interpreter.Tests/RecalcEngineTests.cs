@@ -350,6 +350,24 @@ namespace Microsoft.PowerFx.Tests
             Assert.False(config.ImmutableEnvironmentSymbolTable.ContainsSymbol(new DName("foo")));
 
             Assert.DoesNotContain(new DName(BuiltinFunctionsCore.Abs.Name), config.ExtraFunctions.Keys);
+        }        
+
+        [Fact]
+        public void OptionSetChecks()
+        {
+            var config = new PowerFxConfig(null, null);
+
+            var optionSet = new OptionSet("OptionSet", new Dictionary<string, string>() 
+            {
+                    { "option_1", "Option1" },
+                    { "option_2", "Option2" }
+            });
+            
+            config.AddOptionSet(optionSet);            
+            var recalcEngine = new RecalcEngine(config);
+
+            var checkResult = recalcEngine.Check("OptionSet.Option1 <> OptionSet.Option2");
+            Assert.True(checkResult.IsSuccess);
         }
 
         #region Test
