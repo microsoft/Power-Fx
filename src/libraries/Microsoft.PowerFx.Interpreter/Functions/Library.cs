@@ -288,7 +288,7 @@ namespace Microsoft.PowerFx.Functions
                         ExactValueType<StringValue>,
                         ExactValueTypeOrBlank<NumberValue>),
                     checkRuntimeValues: DeferRuntimeValueChecking,
-                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
                     targetFunction: Find)
             },
             {

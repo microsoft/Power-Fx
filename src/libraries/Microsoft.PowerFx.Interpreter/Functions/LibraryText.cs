@@ -378,27 +378,20 @@ namespace Microsoft.PowerFx.Functions
             var withinText = (StringValue)args[1];
 
             int startIndexValue;
-            if (args[2] is BlankValue)
+            var startIndexCheckResult = StrictPositiveNumberChecker(irContext, 2, args[2]);
+            if (startIndexCheckResult is NumberValue startIndex)
             {
-                return new BlankValue(irContext);
+                startIndexValue = (int)startIndex.Value;
             }
             else
             {
-                var generalRangeCheckResult = StrictPositiveNumberChecker(irContext, 2, args[2]);
-                if (generalRangeCheckResult is NumberValue startIndex)
-                {
-                    startIndexValue = (int)startIndex.Value;
-                }
-                else
-                {
-                    Contract.Assert(generalRangeCheckResult is ErrorValue);
-                    return generalRangeCheckResult;
-                }
+                Contract.Assert(startIndexCheckResult is ErrorValue);
+                return startIndexCheckResult;
+            }
 
-                if (startIndexValue < 1 || startIndexValue > withinText.Value.Length + 1)
-                {
-                    return CommonErrors.ArgumentOutOfRange(irContext);
-                }
+            if (startIndexValue < 1 || startIndexValue > withinText.Value.Length + 1)
+            {
+                return CommonErrors.ArgumentOutOfRange(irContext);
             }
 
             var index = withinText.Value.IndexOf(findText.Value, startIndexValue - 1);
