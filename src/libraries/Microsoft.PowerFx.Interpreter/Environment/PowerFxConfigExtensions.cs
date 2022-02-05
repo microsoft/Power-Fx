@@ -17,7 +17,7 @@ namespace Microsoft.PowerFx
 
         public static void AddFunction(this PowerFxConfig powerFxConfig, ReflectionFunction function)
         {
-            powerFxConfig.AddFunction(function);
+            powerFxConfig.AddFunction(function.GetTexlFunction());
         }
     }
 }
