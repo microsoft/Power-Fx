@@ -287,7 +287,10 @@ namespace Microsoft.PowerFx.Functions
                         ExactValueType<StringValue>,
                         ExactValueType<StringValue>,
                         ExactValueTypeOrBlank<NumberValue>),
-                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    checkRuntimeValues: ExactSequence(
+                        DeferRuntimeValueChecking,
+                        DeferRuntimeValueChecking,
+                        StrictPositiveNumberChecker),
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
                     targetFunction: Find)
             },
@@ -313,8 +316,11 @@ namespace Microsoft.PowerFx.Functions
                                     ExactValueType<StringValue>,
                                     ExactValueType<StringValue>,
                                     ExactValueTypeOrBlank<NumberValue>),
-                                checkRuntimeValues: DeferRuntimeValueChecking,
-                                returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
+                                checkRuntimeValues: ExactSequence(
+                                    DeferRuntimeValueChecking,
+                                    DeferRuntimeValueChecking,
+                                    StrictPositiveNumberChecker),
+                                returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
                                 targetFunction: Find),
                             transposeEmptyTable: false))
             },

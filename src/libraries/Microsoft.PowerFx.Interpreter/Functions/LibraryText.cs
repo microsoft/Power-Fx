@@ -376,18 +376,7 @@ namespace Microsoft.PowerFx.Functions
         {
             var findText = (StringValue)args[0];
             var withinText = (StringValue)args[1];
-
-            int startIndexValue;
-            var startIndexCheckResult = StrictPositiveNumberChecker(irContext, 2, args[2]);
-            if (startIndexCheckResult is NumberValue startIndex)
-            {
-                startIndexValue = (int)startIndex.Value;
-            }
-            else
-            {
-                Contract.Assert(startIndexCheckResult is ErrorValue);
-                return startIndexCheckResult;
-            }
+            var startIndexValue = (int)((NumberValue)args[2]).Value;
 
             if (startIndexValue < 1 || startIndexValue > withinText.Value.Length + 1)
             {
