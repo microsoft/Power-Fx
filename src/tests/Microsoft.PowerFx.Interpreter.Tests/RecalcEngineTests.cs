@@ -5,9 +5,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Public;
 using Microsoft.PowerFx.Core.Public.Types;
 using Microsoft.PowerFx.Core.Public.Values;
+using Microsoft.PowerFx.Core.Texl;
+using Microsoft.PowerFx.Core.Utils;
 using Xunit;
 using Xunit.Sdk;
 
@@ -25,7 +28,9 @@ namespace Microsoft.PowerFx.Tests
             {
                 $"{ns}.{nameof(RecalcEngine)}",
                 $"{ns}.{nameof(ReflectionFunction)}",
-                $"{ns}.{nameof(RecalcEngineScope)}"
+                $"{ns}.{nameof(RecalcEngineScope)}",
+                $"{ns}.{nameof(PowerFxConfigExtensions)}",
+                $"{ns}.{nameof(OptionSet)}"
             };
 
             var sb = new StringBuilder();
@@ -252,8 +257,9 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public void CustomFunction()
         {
-            var engine = new RecalcEngine();
-            engine.AddFunction(new TestCustomFunction());
+            var config = new PowerFxConfig(null, null);
+            config.AddFunction(new TestCustomFunction());
+            var engine = new RecalcEngine(config);
 
             // Shows up in enuemeration
             var func = engine.GetAllFunctionNames().First(name => name == "TestCustom");
@@ -328,6 +334,41 @@ namespace Microsoft.PowerFx.Tests
             Assert.True(result.ReturnType is NumberType);
             Assert.Single(result.TopLevelIdentifiers);
             Assert.Equal("x", result.TopLevelIdentifiers.First());
+        }
+
+        [Fact]
+        public void RecalcEngineLocksConfig()
+        {
+            var config = new PowerFxConfig(null, null);
+            config.AddFunction(BuiltinFunctionsCore.Blank);
+            
+            var recalcEngine = new RecalcEngine(config);
+
+            var optionSet = new OptionSet("foo", new Dictionary<string, string>() { { "one key", "one value" } });
+            Assert.Throws<InvalidOperationException>(() => config.AddFunction(BuiltinFunctionsCore.Abs));
+            Assert.Throws<InvalidOperationException>(() => config.AddOptionSet(optionSet));
+
+            Assert.DoesNotContain(new DName("foo"), config.EnvironmentSymbols.Keys);
+
+            Assert.DoesNotContain(new DName(BuiltinFunctionsCore.Abs.Name), config.ExtraFunctions.Keys);
+        }        
+
+        [Fact]
+        public void OptionSetChecks()
+        {
+            var config = new PowerFxConfig(null, null);
+
+            var optionSet = new OptionSet("OptionSet", new Dictionary<string, string>() 
+            {
+                    { "option_1", "Option1" },
+                    { "option_2", "Option2" }
+            });
+            
+            config.AddOptionSet(optionSet);            
+            var recalcEngine = new RecalcEngine(config);
+
+            var checkResult = recalcEngine.Check("OptionSet.Option1 <> OptionSet.Option2");
+            Assert.True(checkResult.IsSuccess);
         }
 
         #region Test

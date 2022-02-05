@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
+using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Core.Entities
@@ -18,5 +19,7 @@ namespace Microsoft.PowerFx.Core.Entities
         bool IsBooleanValued { get; }
 
         bool IsConvertingDisplayNameMapping { get; } 
+
+        DType Type { get; }
     }
 }
