@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Public;
 using Microsoft.PowerFx.Core.Public.Types;
 using Microsoft.PowerFx.Core.Public.Values;
@@ -272,6 +273,65 @@ namespace Microsoft.PowerFx.Tests
             {
                 var val = x.Value * y.Value;
                 return FormulaValue.New(val);
+            }
+        }
+
+        [Fact]
+        public void CustomValueFunction()
+        {
+            var engine = new RecalcEngine();
+            engine.AddFunction(new TestPictureRatioFunction());
+            engine.UpdateVariable("pic", new TestPictureValue(new TestPicture(100, 50)));
+
+            var result = engine.Eval("TestPictureRatio(pic)");
+            Assert.Equal(2.0, result.ToObject());
+        }
+
+        // custom type representing an arbitrary c# object
+        private class TestPicture
+        {
+            public readonly int Width;
+            public readonly int Height;
+
+            public TestPicture(int width, int height)
+            {
+                Width = width;
+                Height = height;
+            }
+        }
+
+        // ValidFormulaValue wrapper for the custom type
+        private class TestPictureValue : ValidFormulaValue
+        {
+            public readonly TestPicture Picture;
+
+            public TestPictureValue(TestPicture picture)
+                : base(ExternalType.ObjectType)
+            {
+                Picture = picture;
+            }
+
+            public override object ToObject() => Picture;
+
+            public override void Visit(IValueVisitor visitor)
+            {
+                // a visitor couldn't make sense of this value so they can treat it as blank.
+                visitor.Visit(FormulaValue.NewBlank(ExternalType.ObjectType));
+            }
+        }
+
+        private class TestPictureRatioFunction : ReflectionFunction
+        {
+            public TestPictureRatioFunction()
+                : base("TestPictureRatio", FormulaType.Number, ExternalType.ObjectType)
+            {
+            }
+
+            public static NumberValue Execute(TestPictureValue pictureValue)
+            {
+                var picture = pictureValue.Picture;
+                var ratio = picture.Width / picture.Height;
+                return FormulaValue.New(ratio);
             }
         }
 

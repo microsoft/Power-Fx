@@ -28,7 +28,7 @@ namespace Microsoft.PowerFx.Core.Public.Types
         public ExternalTypeKind Kind { get; }
 
         public ExternalType(ExternalTypeKind kind)
-            : base(new DType(DKind.Unknown))
+            : base(new DType(DKind.UntypedObject))
         {
             Kind = kind;
         }
