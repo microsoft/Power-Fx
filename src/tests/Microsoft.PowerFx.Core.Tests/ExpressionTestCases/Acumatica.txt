@@ -47,4 +47,4 @@ true
 
 //Filter(Current.DocumentDetails, Discount > 0)
 >> Filter(Table({Name : "Alpha", Discount : 30 }, {Name:"Beta", Discount :45 }), Discount > 40)
-[{Discount:45,Name:"Beta"}]
+Table({Discount:45,Name:"Beta"})

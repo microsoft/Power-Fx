@@ -41,13 +41,13 @@ Blank()
 #Error
 
 >> LastN(Table({a:1, b:101}, {a:2}, {a:3}), 2)
-[{a:2},{a:3}]
+Table({a:2},{a:3})
 
 >> LastN(Table({a:1}, {a:2}, {a:3}), 2)
-[{a:2},{a:3}]
+Table({a:2},{a:3})
 
 >> LastN(Table({Value:1,Zulu:1}, {Value:2,Zulu:2}, {Value:3,Zulu:3}), 2)
-[{Value:2,Zulu:2},{Value:3,Zulu:3}]
+Table({Value:2,Zulu:2},{Value:3,Zulu:3})
 
 >> Last(Filter([1,2,3],Value=4)).Value
 Blank()

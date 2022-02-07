@@ -1,83 +1,83 @@
 ﻿// Scalar + Table
 >> Concatenate("a", Table({b:"1"},{b:"2"}))
-[{Result:"a1"},{Result:"a2"}]
+Table({Result:"a1"},{Result:"a2"})
 
 >> Concatenate("a", LastN(Table({b:"1"},{b:"2"}), 0))
-[]
+Table()
 
 >> Concatenate("a", If(1<0, ["txt"]))
-[]
+Table()
 
 >> Concatenate("a", If(1/0<2, ["txt"]))
 #Error
 
 >> Concatenate("a", ["hello", Mid("great", -1), "world"])
-[{Result:"ahello"},{Result:Microsoft.PowerFx.Core.Public.Values.ErrorValue},{Result:"aworld"}]
+Table({Result:"ahello"},{Result:Microsoft.PowerFx.Core.Public.Values.ErrorValue},{Result:"aworld"})
 
 >> Concatenate("a", Table({a:"one"},If(1<0,{a:"two"}),{a:"three"}))
-[{Result:"aone"},{Result:"a"},{Result:"athree"}]
+Table({Result:"aone"},{Result:"a"},{Result:"athree"})
 
 >> Concatenate("a", Table({a:"one"},If(1/0<2,{a:"two"}),{a:"three"}))
 Microsoft.PowerFx.Core.Public.Values.ErrorValue
 
 >> Concatenate(Blank(), ["hello", Mid("great", -1), "world"])
-[{Result:"hello"},{Result:Microsoft.PowerFx.Core.Public.Values.ErrorValue},{Result:"world"}]
+Table({Result:"hello"},{Result:Microsoft.PowerFx.Core.Public.Values.ErrorValue},{Result:"world"})
 
 >> Concatenate(Blank(), Table({a:"one"},If(1<0,{a:"two"}),{a:"three"}))
-[{Result:"one"},{Result:""},{Result:"three"}]
+Table({Result:"one"},{Result:""},{Result:"three"})
 
 >> Concatenate(Blank(), Table({a:"one"},If(1/0<2,{a:"two"}),{a:"three"}))
 Microsoft.PowerFx.Core.Public.Values.ErrorValue
 
 // Table + Scalar (Reverse Arguments)
 >> Concatenate(Table({b:"1"},{b:"2"}), "a")
-[{Result:"1a"},{Result:"2a"}]
+Table({Result:"1a"},{Result:"2a"})
 
 >> Concatenate(LastN(Table({b:"1"},{b:"2"}), 0), "a")
-[]
+Table()
 
 >> Concatenate(If(1<0, ["txt"]), "a")
-[]
+Table()
 
 >> Concatenate(If(1/0<2, ["txt"]), "a")
 #Error
 
 >> Concatenate(["hello", Mid("great", -1), "world"], "a")
-[{Result:"helloa"},{Result:Microsoft.PowerFx.Core.Public.Values.ErrorValue},{Result:"worlda"}]
+Table({Result:"helloa"},{Result:Microsoft.PowerFx.Core.Public.Values.ErrorValue},{Result:"worlda"})
 
 >> Concatenate(Table({a:"one"},If(1<0,{a:"two"}),{a:"three"}), "a")
-[{Result:"onea"},{Result:"a"},{Result:"threea"}]
+Table({Result:"onea"},{Result:"a"},{Result:"threea"})
 
 >> Concatenate(Table({a:"one"},If(1/0<2,{a:"two"}),{a:"three"}), "a")
 Microsoft.PowerFx.Core.Public.Values.ErrorValue
 
 >> Concatenate(["hello", Mid("great", -1), "world"], Blank())
-[{Result:"hello"},{Result:Microsoft.PowerFx.Core.Public.Values.ErrorValue},{Result:"world"}]
+Table({Result:"hello"},{Result:Microsoft.PowerFx.Core.Public.Values.ErrorValue},{Result:"world"})
 
 >> Concatenate(Table({a:"one"},If(1<0,{a:"two"}),{a:"three"}), Blank())
-[{Result:"one"},{Result:""},{Result:"three"}]
+Table({Result:"one"},{Result:""},{Result:"three"})
 
 >> Concatenate(Table({a:"one"},If(1/0<2,{a:"two"}),{a:"three"}), Blank())
 Microsoft.PowerFx.Core.Public.Values.ErrorValue
 
 // Table + Table
 >> Concatenate(["one", "two"], [1, 2, 3, 4])
-[{Result:"one1"},{Result:"two2"},{Result:"3"},{Result:"4"}]
+Table({Result:"one1"},{Result:"two2"},{Result:"3"},{Result:"4"})
 
 >> Concatenate(["one", "two"], LastN(Table({b:"1"},{b:"2"}), 0))
-[{Result:"one"},{Result:"two"}]
+Table({Result:"one"},{Result:"two"})
 
 >> Concatenate(["one", "two"], If(1<0, ["txt"]))
-[{Result:"one"},{Result:"two"}]
+Table({Result:"one"},{Result:"two"})
 
 >> Concatenate(["one", "two"], If(1/0<2, ["txt"]))
 Microsoft.PowerFx.Core.Public.Values.ErrorValue
 
 >> Concatenate(["one", "two"], Table({a:"one"},If(1<0,{a:"two"}),{a:"three"}))
-[{Result:"oneone"},{Result:"two"},{Result:"three"}]
+Table({Result:"oneone"},{Result:"two"},{Result:"three"})
 
 >> Concatenate(["one", "two"], ["hello", Mid("great", -1), "world"])
-[{Result:"onehello"},{Result:Microsoft.PowerFx.Core.Public.Values.ErrorValue},{Result:"world"}]
+Table({Result:"onehello"},{Result:Microsoft.PowerFx.Core.Public.Values.ErrorValue},{Result:"world"})
 
 >> Concatenate(["a","b","c","d"], "-", ["1", "2"], "-", ["x", "y", "z"], "!")
-[{Result:"a-1-x!"},{Result:"b-2-y!"},{Result:"c--z!"},{Result:"d--!"}]
+Table({Result:"a-1-x!"},{Result:"b-2-y!"},{Result:"c--z!"},{Result:"d--!"})

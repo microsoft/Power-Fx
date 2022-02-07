@@ -2,37 +2,37 @@
 
 // single column table with "Result" as col name
 >> Split("this is a test", " ")
-[{Result:"this"},{Result:"is"},{Result:"a"},{Result:"test"}]
+Table({Result:"this"},{Result:"is"},{Result:"a"},{Result:"test"})
 
 // no delimeter returns each char
 >> Split("test", "")
-[{Result:"t"},{Result:"e"},{Result:"s"},{Result:"t"}]
+Table({Result:"t"},{Result:"e"},{Result:"s"},{Result:"t"})
 
 // no delimeter returns each char
 >> Split("Hello world", If(1 < 0, ""))
-[{Result:"H"},{Result:"e"},{Result:"l"},{Result:"l"},{Result:"o"},{Result:" "},{Result:"w"},{Result:"o"},{Result:"r"},{Result:"l"},{Result:"d"}]
+Table({Result:"H"},{Result:"e"},{Result:"l"},{Result:"l"},{Result:"o"},{Result:" "},{Result:"w"},{Result:"o"},{Result:"r"},{Result:"l"},{Result:"d"})
 
 // two delimeters in a row in source text produces empty string
 >> Split( "Hello, World", "l" )
-[{Result:"He"},{Result:""},{Result:"o, Wor"},{Result:"d"}]
+Table({Result:"He"},{Result:""},{Result:"o, Wor"},{Result:"d"})
 
 // string as delimeter
 >> Split( "Hello, World", "ll" )
-[{Result:"He"},{Result:"o, World"}]
+Table({Result:"He"},{Result:"o, World"})
 
 // delimeter doesn't exist
 >> Split( "Hello, World", "%" )
-[{Result:"Hello, World"}]
+Table({Result:"Hello, World"})
 
 // only delimeter is removed
 >> Split( "Hello, World", "," )
-[{Result:"Hello"},{Result:" World"}]
+Table({Result:"Hello"},{Result:" World"})
 
 >> Split("", "")
-[]
+Table()
 
 >> Split(If(1 < 0, ""), "")
-[]
+Table()
 
 Split(Text(1/0), "")
 #Error
