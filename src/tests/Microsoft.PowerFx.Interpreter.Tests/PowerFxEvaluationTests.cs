@@ -1,9 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Public.Values;
 using Microsoft.PowerFx.Core.Tests;
@@ -21,7 +18,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var (total, failed, passed, output) = runner.RunTests();
 
             // This number should go to 0 over time
-            Assert.Equal(36, failed);
+            Assert.Equal(16, failed);
         }
 
         // Use this for local testing of a single testcase (uncomment "TestMethod")
@@ -29,7 +26,9 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         public void RunSingleTestCase()
         {
             var runner = new TestRunner(new InterpreterRunner());
+
             runner.AddFile("Testing.txt");
+
             var (total, failed, passed, output) = runner.RunTests();
 
             Assert.Equal(0, failed);

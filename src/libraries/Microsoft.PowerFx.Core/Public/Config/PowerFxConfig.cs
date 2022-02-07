@@ -1,8 +1,14 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
+using System.Collections.Generic;
 using System.Globalization;
+using Microsoft.PowerFx.Core;
+using Microsoft.PowerFx.Core.Entities;
+using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Types.Enums;
+using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Core
 {
@@ -11,29 +17,59 @@ namespace Microsoft.PowerFx.Core
     /// </summary>
     public sealed class PowerFxConfig
     {
-        private readonly EnumStore _enumStore;
-        private readonly CultureInfo _cultureInfo;
+        private bool _isLocked;
+        private readonly Dictionary<string, TexlFunction> _extraFunctions;
+        private readonly Dictionary<DName, IExternalEntity> _environmentSymbols;
 
-        internal EnumStore EnumStore => _enumStore;
+        internal IReadOnlyDictionary<string, TexlFunction> ExtraFunctions => _extraFunctions;
 
-        public CultureInfo CultureInfo => _cultureInfo;
+        internal IReadOnlyDictionary<DName, IExternalEntity> EnvironmentSymbols => _environmentSymbols;
 
-        public PowerFxConfig()
+        internal EnumStore EnumStore { get; }
+
+        internal CultureInfo CultureInfo { get; }        
+
+        public PowerFxConfig(CultureInfo cultureInfo = null)
+            : this(null, cultureInfo)
         {
-            _enumStore = new EnumStore();
-            _cultureInfo = CultureInfo.CurrentCulture;
         }
 
-        public PowerFxConfig(CultureInfo cultureInfo)
+        internal PowerFxConfig(EnumStore enumStore = null, CultureInfo cultureInfo = null)
         {
-            _enumStore = new EnumStore();
-            _cultureInfo = cultureInfo;
+            EnumStore = enumStore ?? new EnumStore();
+            CultureInfo = cultureInfo ?? CultureInfo.CurrentCulture;
+            _isLocked = false;
+            _extraFunctions = new Dictionary<string, TexlFunction>();
+            _environmentSymbols = new Dictionary<DName, IExternalEntity>();
         }
 
-        internal PowerFxConfig(EnumStore enumStore, CultureInfo cultureInfo)
+        internal void AddEntity(IExternalEntity entity)
         {
-            _enumStore = enumStore;
-            _cultureInfo = cultureInfo;
+            CheckUnlocked();
+
+            _environmentSymbols.Add(entity.EntityName, entity);
+        }
+
+        internal void AddFunction(TexlFunction function)
+        {
+            CheckUnlocked();
+
+            _extraFunctions.Add(function.GetUniqueTexlRuntimeName(), function);
+        }
+
+        internal void Lock()
+        { 
+            CheckUnlocked();
+
+            _isLocked = true;
+        }
+
+        private void CheckUnlocked()
+        {
+            if (_isLocked)
+            {
+                throw new InvalidOperationException("This PowerFxConfig instance is locked");
+            }
         }
     }
 }
