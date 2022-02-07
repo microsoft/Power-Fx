@@ -115,5 +115,35 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             Assert.Equal("If(B, Num, 1234)", displayExpressions);
         }
+
+        [Theory]
+        [InlineData("OptionSet.Option1 <> OptionSet.Option2", "OptionSet.option_1 <> OptionSet.option_2", false)]
+        [InlineData("OptionSet.option_1 <> OptionSet.option_2", "OptionSet.Option1 <> OptionSet.Option2", true)]
+        [InlineData("OptionSet.option_1 <> OptionSet.Option2", "OptionSet.Option1 <> OptionSet.Option2", true)]
+        [InlineData("OptionSet.Option1 <> OptionSet.option_2", "OptionSet.option_1 <> OptionSet.option_2", false)]
+        public void OptionSetDisplayNames(string inputExpression, string outputExpression, bool toDisplay)
+        {            
+            var config = new PowerFxConfig(null, null);
+            var optionSet = new OptionSet("OptionSet", new Dictionary<string, string>() 
+            {
+                    { "option_1", "Option1" },
+                    { "option_2", "Option2" }
+            });
+
+            config.AddOptionSet(optionSet);
+            
+            var engine = new RecalcEngine(config);
+
+            if (toDisplay)
+            {
+                var outDisplayExpression = engine.GetDisplayExpression(inputExpression, new RecordType());
+                Assert.Equal(outputExpression, outDisplayExpression);
+            }
+            else
+            {
+                var outInvariantExpression = engine.GetInvariantExpression(outputExpression, new RecordType());
+                Assert.Equal(outputExpression, outInvariantExpression);
+            }        
+        }
     }
 }
