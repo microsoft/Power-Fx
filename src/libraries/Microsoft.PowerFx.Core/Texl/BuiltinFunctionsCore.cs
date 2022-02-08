@@ -187,6 +187,7 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction Value_UO = new ValueFunction_UO();
         public static readonly TexlFunction Boolean = new BooleanFunction();
         public static readonly TexlFunction Boolean_UO = new BooleanFunction_UO();
+        public static readonly TexlFunction StringInterpolation = new StringInterpolationFunction();
 
         public static readonly TexlFunction IsUTCToday = new IsUTCTodayFunction();
         public static readonly TexlFunction UTCNow = new UTCNowFunction();
