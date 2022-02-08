@@ -10,7 +10,9 @@ using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.App.Controls;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Errors;
+using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Public.Types;
+using Microsoft.PowerFx.Core.Public.Values;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.UtilityDataStructures;
 using Microsoft.PowerFx.Core.Utils;
@@ -53,6 +55,16 @@ namespace Microsoft.PowerFx
         /// Use in record/table contexts to define the type of fields using this option set.
         /// </summary>
         public FormulaType FormulaType { get; }
+
+        public OptionSetValue GetValue(DName fieldName)
+        {
+            if (!Options.ContainsKey(fieldName)) 
+            {
+                throw new InvalidOperationException($"{fieldName.Value} is not a member of option set {EntityName.Value}");
+            }
+
+            return new OptionSetValue(fieldName, IRContext.NotInSource(FormulaType));
+        }
 
         IEnumerable<DName> IExternalOptionSet.OptionNames => Options.Keys;
 

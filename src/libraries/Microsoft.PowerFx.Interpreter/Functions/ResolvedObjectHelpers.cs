@@ -32,7 +32,7 @@ namespace Microsoft.PowerFx.Functions
                 optionSet.Options
                     .Select(option => new NamedValue(
                         option.Key, 
-                        new OptionSetValue(option.Key, IRContext.NotInSource(optionSet.FormulaType)))));
+                        optionSet.GetValue(option.Key))));
             return recordValue;
         }
 

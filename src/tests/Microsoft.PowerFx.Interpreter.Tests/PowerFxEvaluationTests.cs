@@ -5,20 +5,22 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core;
+using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Public.Values;
 using Microsoft.PowerFx.Core.Tests;
+using Microsoft.PowerFx.Core.Utils;
 using Xunit;
 
 namespace Microsoft.PowerFx.Interpreter.Tests
 {
     public class ExpressionEvaluationTests
     {
-        internal static Dictionary<string, Func<RecalcEngine>> SetupHandlers = new Dictionary<string, Func<RecalcEngine>>() 
+        internal static Dictionary<string, Func<(RecalcEngine engine, RecordValue parameters)>> SetupHandlers = new Dictionary<string, Func<(RecalcEngine engine, RecordValue parameters)>>() 
         {
             { "OptionSetTestSetup", OptionSetTestSetup }
         };
 
-        private static RecalcEngine OptionSetTestSetup()
+        private static (RecalcEngine engine, RecordValue parameters) OptionSetTestSetup()
         {            
             var optionSet = new OptionSet("OptionSet", new Dictionary<string, string>() 
             {
@@ -38,7 +40,12 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             config.AddOptionSet(optionSet);
             config.AddOptionSet(otherOptionSet);
 
-            return new RecalcEngine(config);
+            var parameters = FormulaValue.RecordFromFields(
+                    new NamedValue("TopOptionSetField", optionSet.GetValue(new DName("option_1"))),
+                    new NamedValue("Nested", FormulaValue.RecordFromFields(
+                        new NamedValue("InnerOtherOptionSet", otherOptionSet.GetValue(new DName("123412983")))))); 
+
+            return (new RecalcEngine(config), parameters);
         }
 
         internal class InterpreterRunner : BaseRunner
@@ -60,8 +67,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                     throw new NotSupportedException($"Setup Handler {setupHandlerName} not defined for {nameof(InterpreterRunner)}");
                 }
 
-                var engine = handler();
-                var result = engine.Eval(expr);
+                var (engine, parameters) = handler();
+                var result = engine.Eval(expr, parameters);
                 return Task.FromResult(result);
             }
         }
