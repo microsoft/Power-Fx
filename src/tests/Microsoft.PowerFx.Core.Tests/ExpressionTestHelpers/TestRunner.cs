@@ -65,6 +65,15 @@ namespace Microsoft.PowerFx.Core.Tests
             TestCase test = null;
 
             var i = -1;
+
+            // Preprocess file directives
+            string fileSetup = null;
+            if (lines[0].StartsWith("// SETUP: "))
+            {
+                fileSetup = lines[0].Substring("// SETUP: ".Length).Trim();
+                i++;
+            }
+
             while (true)
             {
                 i++;
@@ -86,7 +95,8 @@ namespace Microsoft.PowerFx.Core.Tests
                     {
                         Input = line,
                         SourceLine = i + 1, // 1-based
-                        SourceFile = thisFile
+                        SourceFile = thisFile,
+                        SetupHandlerName = fileSetup
                     };
                     continue;
                 }
@@ -137,6 +147,14 @@ namespace Microsoft.PowerFx.Core.Tests
                     total++;
 
                     var engineName = runner.GetName();
+
+                    if (test.SetupHandlerName != null && !runner.TryDoSetup(test.SetupHandlerName))
+                    {
+
+                        sb.AppendLine($"SKIPPED: {engineName}, {Path.GetFileName(test.SourceFile)}:{test.SourceLine}");
+                        sb.AppendLine($"SKIPPED: {test.Input}, missing handler: {test.SetupHandlerName}");   
+                        continue;
+                    }
 
                     // var runner = kv.Value;
 

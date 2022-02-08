@@ -1,7 +1,10 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Public.Values;
 using Microsoft.PowerFx.Core.Tests;
 using Xunit;
@@ -10,39 +13,59 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 {
     public class ExpressionEvaluationTests
     {
-        // [Fact]
-        public void RunInterpreterTestCases()
+        internal static Dictionary<string, Func<RecalcEngine>> SetupHandlers = new Dictionary<string, Func<RecalcEngine>>() 
         {
-            var runner = new TestRunner(new InterpreterRunner());
-            runner.AddDir();
-            var (total, failed, passed, output) = runner.RunTests();
+            { "OptionSetTestSetup", OptionSetTestSetup }
+        };
 
-            // This number should go to 0 over time
-            Assert.Equal(16, failed);
+        private static RecalcEngine OptionSetTestSetup()
+        {            
+            var optionSet = new OptionSet("OptionSet", new Dictionary<string, string>() 
+            {
+                    { "option_1", "Option1" },
+                    { "option_2", "Option2" }
+            });
+            
+            var otherOptionSet = new OptionSet("OtherOptionSet", new Dictionary<string, string>() 
+            {
+                    { "99", "OptionA" },
+                    { "112", "OptionB" },
+                    { "35694", "OptionC" },
+                    { "123412983", "OptionD" },
+            });
+
+            var config = new PowerFxConfig(null, null);
+            config.AddOptionSet(optionSet);            
+            return new RecalcEngine(config);
         }
 
-        // Use this for local testing of a single testcase (uncomment "TestMethod")
-        // [Fact]
-        public void RunSingleTestCase()
-        {
-            var runner = new TestRunner(new InterpreterRunner());
-
-            runner.AddFile("Testing.txt");
-
-            var (total, failed, passed, output) = runner.RunTests();
-
-            Assert.Equal(0, failed);
-        }
 
         internal class InterpreterRunner : BaseRunner
         {
-            private readonly RecalcEngine _engine = new RecalcEngine();
+            private RecalcEngine _engine = new RecalcEngine();
+            private bool _shouldReset = false; 
 
             public override Task<FormulaValue> RunAsync(string expr)
             {
                 FeatureFlags.StringInterpolation = true;
                 var result = _engine.Eval(expr);
+                if (_shouldReset)
+                {
+                    _engine = new RecalcEngine();
+                    _shouldReset = false;
+                }
                 return Task.FromResult(result);
+            }
+
+            public override bool TryDoSetup(string setupHandlerName)
+            {
+                _shouldReset = true;
+                if (SetupHandlers.TryGetValue(setupHandlerName, out var handler))
+                {
+                    _engine = handler();
+                    return true;
+                }
+                return false;
             }
         }
     }

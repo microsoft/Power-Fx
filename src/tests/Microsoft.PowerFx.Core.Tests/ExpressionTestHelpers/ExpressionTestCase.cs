@@ -32,6 +32,7 @@ namespace Microsoft.PowerFx.Core.Tests
         // Location from source file. 
         public string SourceFile;
         public int SourceLine;
+        public string SetupHandlerName;
 
         public override string ToString()
         {
