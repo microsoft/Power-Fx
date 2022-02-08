@@ -379,3 +379,14 @@ Errors: Error 2-2: Unexpected characters. Characters are used in the formula in 
 >> $"{{a}}-"
 /*SqlRunner*/ Compile Error
 "{a}-"
+
+>> $"! {Date(1980,1,1)} !"
+/*SqlRunner*/ Compile Error
+"! 1/1/1980 !"
+
+>> $""""
+/*SqlRunner*/ Compile Error
+"""
+
+>> """"
+"""
