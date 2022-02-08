@@ -11,17 +11,17 @@ using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
-    // IndexT(source:*, [n])
-    internal sealed class IndexTFunction : FunctionWithTableInput
+    // Index(source:*, n)
+    internal sealed class IndexFunction : FunctionWithTableInput
     {
         public override bool IsSelfContained => true;
 
         public override bool SupportsParamCoercion => false;
 
-        public IndexTFunction()
+        public IndexFunction()
             : base(
-                  "IndexT",
-                  TexlStrings.AboutIndexT,
+                  "Index",
+                  TexlStrings.AboutIndex,
                   FunctionCategories.Table,
                   DType.EmptyRecord,
                   0,
@@ -34,8 +34,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
-            yield return new[] { TexlStrings.IndexTArg1 };
-            yield return new[] { TexlStrings.IndexTArg1, TexlStrings.IndexTArg2 };
+            yield return new[] { TexlStrings.IndexArg1 };
+            yield return new[] { TexlStrings.IndexArg1, TexlStrings.IndexArg2 };
         }
 
         public override bool CheckInvocation(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
@@ -51,11 +51,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             var arg0Type = argTypes[0];
             if (arg0Type.IsTable)
             {
-                returnType = arg0Type;
+                returnType = arg0Type.ToRecord();
             }
             else
             {
-                returnType = arg0Type.IsRecord ? arg0Type.ToTable() : DType.Error;
+                returnType = arg0Type.IsRecord ? arg0Type : DType.Error;
                 fArgsValid = false;
             }
 

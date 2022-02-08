@@ -1,20 +1,20 @@
->> IndexT([1, 2, 3, 4, 5], 3)
-[3]
+>> Index([1, 2, 3, 4, 5], 3)
+{Value:3}
 
->> IndexT([1, 2, 3, 4, 5], 6)
+>> Index([1, 2, 3, 4, 5], 6)
 #Error
 
->> IndexT([1, 2, 3, 4, 5], -1)
+>> Index([1, 2, 3, 4, 5], -1)
+#Error
+
+>> Index([1, 2, 3, 4, 5], Blank())
 Blank()
 
->> IndexT([1, 2, 3, 4, 5], Blank())
+>> Index(Blank(), 2)
 Blank()
 
->> IndexT(Blank(), 2)
-Blank()
+>> Index(Sort([1,2,7,3,4,2],1/Value), 1)
+{Value:7}
 
->> IndexT(Sort([1,2,7,3,4,2],1/Value), 1)
-[7]
-
->> IndexT([1, 2, 3, 4, 5], 1/0)
+>> Index([1, 2, 3, 4, 5], 1/0)
 #Error
