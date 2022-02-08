@@ -379,3 +379,58 @@ Errors: Error 2-2: Unexpected characters. Characters are used in the formula in 
 >> $"{{a}}-"
 /*SqlRunner*/ Compile Error
 "{a}-"
+
+>> $"! {Date(1980,1,1)} !"
+/*SqlRunner*/ Compile Error
+"! 1/1/1980 !"
+
+>> $""""
+/*SqlRunner*/ Compile Error
+"""
+
+>> """"
+"""
+
+>> $"! {With({a:4,b:6},a*b)} !"
+/*SqlRunner*/ Compile Error
+"! 24 !"
+
+>> $"! {With({array:[1,5,9]},Sum(Sequence(CountRows(array)) As Index,Power(Last(FirstN(array,Index.Value)).Value, Index.Value)))} !"
+/*SqlRunner*/ Compile Error
+"! 755 !"
+
+>> $"! {$"{$"{true}"}"} !"
+/*SqlRunner*/ Compile Error
+"! true !"
+
+>> $""
+/*SqlRunner*/ Compile Error
+""
+
+>> $"! !"
+/*SqlRunner*/ Compile Error
+"! !"
+
+>> $"! "" !"
+/*SqlRunner*/ Compile Error
+"! " !"
+
+>> $"! {{1,2}} !"
+/*SqlRunner*/ Compile Error
+"! {1,2} !"
+
+>> $"! {[1,2]} !"
+/*SqlRunner*/ Compile Error
+Errors: Error 5-10: Invalid argument type (Table). Expecting a Text value instead.|Error 0-14: The function 'StringInterpolation' has some invalid arguments.
+
+>> $"! {Table({a:1})} !"
+/*SqlRunner*/ Compile Error
+Errors: Error 5-17: Invalid argument type (Table). Expecting a Text value instead.|Error 0-21: The function 'StringInterpolation' has some invalid arguments.
+
+>> $"! {{a:1,b:2}} !"
+/*SqlRunner*/ Compile Error
+"! {a:1,b:2} !"
+
+>> $"! { {a:1,b:2} } !"
+/*SqlRunner*/ Compile Error
+Errors: Error 6-15: Invalid argument type (Record). Expecting a Text value instead.|Error 0-20: The function 'StringInterpolation' has some invalid arguments.

@@ -6,13 +6,13 @@
 5
 
 >> Value(ParseJson("true"))
-1
+#Error
 
 >> Value(ParseJson("false"))
-0
+#Error
 
 >> Value(ParseJson("""5"""))
-5
+#Error
 
 >> Value(ParseJson("""a"""))
 #Error
@@ -49,13 +49,19 @@ Blank()
 ""
 
 >> Text(ParseJson("true"))
-"true"
+#Error
 
 >> Text(ParseJson("false"))
-"false"
+#Error
 
 >> Text(ParseJson("5"))
-"5"
+#Error
+
+>> Boolean(ParseJson("true"))
+true
+
+>> Boolean(ParseJson("false"))
+false
 
 >> ParseJson("{""a"": null}").a
 Blank()

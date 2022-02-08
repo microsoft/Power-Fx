@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System.Linq;
+using Microsoft.PowerFx.Core.Lexer.Tokens;
 using Microsoft.PowerFx.Core.Syntax;
 using Xunit;
 
@@ -18,11 +19,13 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Theory]
-        [InlineData("x=1;y=2;")]
-        public void EnsureParsedTest(string script)
+        [InlineData("x=1;y=2;", 2)]
+        public void EnsureParsedTest(string script, int count)
         {
             var namedFormula = new NamedFormulas(script);
-            Assert.True(namedFormula.EnsureParsed());
+            var formulas = namedFormula.EnsureParsed();
+            Assert.NotNull(formulas);
+            Assert.Equal(formulas.Count(), count);
         }
 
         [Theory]
@@ -30,7 +33,8 @@ namespace Microsoft.PowerFx.Core.Tests
         public void EnsureParsedWithErrorsTest(string script)
         {
             var namedFormula = new NamedFormulas(script);
-            Assert.False(namedFormula.EnsureParsed());            
+            var formulas = namedFormula.EnsureParsed();
+            Assert.Empty(formulas);            
         }
 
         [Theory]
@@ -60,8 +64,7 @@ namespace Microsoft.PowerFx.Core.Tests
         public void GetNamedFormulasTest(string script, string expectedX, string expectedY)
         {
             var namedFormula = new NamedFormulas(script);
-            namedFormula.EnsureParsed();
-            var formulas = namedFormula.GetNamedFormulas();
+            var formulas = namedFormula.EnsureParsed();
             formulas.OrderBy(formula => formula.formula.Script);
 
             Assert.NotNull(formulas);
