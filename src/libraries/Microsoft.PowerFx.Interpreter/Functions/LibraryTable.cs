@@ -169,15 +169,15 @@ namespace Microsoft.PowerFx.Functions
             var arg0 = (TableValue)args[0];
             var arg1 = (NumberValue)args[1];
 
-            // if ((int)arg1.Value < 1 || (int)arg1.Value >= arg0.Rows.Count())
-            // {
-            //     return new ErrorValue(irContext, new ExpressionError()
-            //     {
-            //         Message = "Row index provided is out of range.",
-            //         Span = irContext.SourceContext,
-            //         Kind = ErrorKind.Validation
-            //     });
-            // }
+            if ((int)arg1.Value < 1 || (int)arg1.Value >= arg0.Rows.Count())
+            {
+                return new ErrorValue(irContext, new ExpressionError()
+                {
+                    Message = "Row index provided is out of range.",
+                    Span = irContext.SourceContext,
+                    Kind = ErrorKind.Validation
+                });
+            }
 
             return arg0.Rows.ElementAt((int)arg1.Value - 1).ToFormulaValue();
         }
