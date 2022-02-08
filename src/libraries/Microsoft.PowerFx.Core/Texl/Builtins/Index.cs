@@ -34,7 +34,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
-            yield return new[] { TexlStrings.IndexArg1 };
             yield return new[] { TexlStrings.IndexArg1, TexlStrings.IndexArg2 };
         }
 
