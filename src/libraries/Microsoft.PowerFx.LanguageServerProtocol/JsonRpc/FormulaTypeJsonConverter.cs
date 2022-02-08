@@ -40,7 +40,6 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
                 Date => FormulaType.Date,
                 DateTime => FormulaType.DateTime,
                 DateTimeNoTimeZone => FormulaType.DateTimeNoTimeZone,
-                OptionSetValue => FormulaType.DateTimeNoTimeZone,
                 Record => RecordFromJson(element, options),
                 Table => TableFromJson(element, options),
                 _ => throw new NotImplementedException($"Unknown {nameof(FormulaType)}: {typeValue}")
@@ -60,7 +59,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
                 DateType => Date,
                 DateTimeType => DateTime,
                 DateTimeNoTimeZoneType => DateTimeNoTimeZone,
-                OptionSetValueType => DateTimeNoTimeZone,
+                OptionSetValueType => OptionSetValue,
                 TableType => Table,
                 RecordType => Record,
                 _ => throw new NotImplementedException($"Unknown {nameof(FormulaType)}: {value.GetType().Name}")

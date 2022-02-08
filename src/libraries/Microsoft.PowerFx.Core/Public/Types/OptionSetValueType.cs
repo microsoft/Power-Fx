@@ -1,14 +1,15 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Types;
 
 namespace Microsoft.PowerFx.Core.Public.Types
 {
     public class OptionSetValueType : FormulaType
     {
-        internal OptionSetValueType()
-            : base(new DType(DKind.OptionSetValue))
+        internal OptionSetValueType(IExternalOptionSet optionSet)
+            : base(DType.CreateOptionSetType(optionSet))
         {
         }
 

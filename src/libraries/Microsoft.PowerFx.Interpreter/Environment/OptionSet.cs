@@ -10,6 +10,7 @@ using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.App.Controls;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Errors;
+using Microsoft.PowerFx.Core.Public.Types;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.UtilityDataStructures;
 using Microsoft.PowerFx.Core.Utils;
@@ -32,7 +33,8 @@ namespace Microsoft.PowerFx
             Options = ImmutableDictionary.CreateRange(options.Select(kvp => new KeyValuePair<DName, DName>(new DName(kvp.Key), new DName(kvp.Value))));
 
             _displayNameProvider = new SingleSourceDisplayNameProvider(Options);
-            _type = DType.CreateOptionSetType(this);
+            FormulaType = new OptionSetValueType(this);
+            _type = FormulaType._type;
         }
         
         /// <summary>
@@ -45,6 +47,12 @@ namespace Microsoft.PowerFx
         /// Key is logical/invariant name, value is display name.
         /// </summary>
         public ImmutableDictionary<DName, DName> Options { get; }
+
+        /// <summary>
+        /// Formula Type corresponding to this option set.
+        /// Use in record/table contexts to define the type of fields using this option set.
+        /// </summary>
+        public FormulaType FormulaType { get; }
 
         IEnumerable<DName> IExternalOptionSet.OptionNames => Options.Keys;
 

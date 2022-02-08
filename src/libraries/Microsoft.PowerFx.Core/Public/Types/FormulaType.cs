@@ -36,8 +36,6 @@ namespace Microsoft.PowerFx.Core.Public.Types
 
         public static FormulaType DateTimeNoTimeZone { get; } = new DateTimeNoTimeZoneType();
 
-        public static FormulaType OptionSetValue { get; } = new OptionSetValueType();
-
         public static FormulaType UntypedObject { get; } = new UntypedObjectType();
 
         public static FormulaType Hyperlink { get; } = new HyperlinkType();
@@ -70,8 +68,7 @@ namespace Microsoft.PowerFx.Core.Public.Types
                 case DKind.DateTimeNoTimeZone: return DateTimeNoTimeZone;
 
                 case DKind.OptionSetValue:
-                    var isBoolean = type.OptionSetInfo?.IsBooleanValued;
-                    return isBoolean.HasValue && isBoolean.Value ? Boolean : OptionSetValue;
+                    return new OptionSetValueType(type.OptionSetInfo);
 
                 // This isn't quite right, but once we're in the IR, an option set acts more like a record with optionsetvalue fields. 
                 case DKind.OptionSet:
