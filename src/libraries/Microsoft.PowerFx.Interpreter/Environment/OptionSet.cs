@@ -34,7 +34,7 @@ namespace Microsoft.PowerFx
 
             _displayNameProvider = new SingleSourceDisplayNameProvider(Options);
             FormulaType = new OptionSetValueType(this);
-            _type = FormulaType._type;
+            _type = DType.CreateOptionSetType(this);
         }
         
         /// <summary>

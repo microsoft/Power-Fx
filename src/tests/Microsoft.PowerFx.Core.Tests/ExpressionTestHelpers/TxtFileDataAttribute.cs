@@ -48,12 +48,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
             // Preprocess file directives
             string fileSetup = null;
-            if (lines[0].StartsWith("// SETUP: "))
-            {
-                fileSetup = lines[0].Substring("// SETUP: ".Length).Trim();
-                i++;
-            }
-
+            
             while (true)
             {
                 i++;
@@ -63,6 +58,13 @@ namespace Microsoft.PowerFx.Core.Tests
                 }
 
                 var line = lines[i];
+
+                if (line.StartsWith("// SETUP:"))
+                {
+                    fileSetup = line.Substring("// SETUP:".Length).Trim();
+                    continue;
+                }
+
                 if (string.IsNullOrWhiteSpace(line) || line.StartsWith("//"))
                 {
                     continue;

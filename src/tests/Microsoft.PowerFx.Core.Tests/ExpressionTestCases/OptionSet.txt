@@ -3,7 +3,7 @@
 >> OptionSet.Option1 <> OptionSet.Option2
 true
 
->> OptionSet.Option2 == OptionSet.Option2
+>> OptionSet.Option2 = OptionSet.Option2
 true
 
 
