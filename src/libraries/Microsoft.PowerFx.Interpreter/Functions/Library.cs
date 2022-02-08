@@ -379,7 +379,7 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: Index_UO)
             },
             {
-                BuiltinFunctionsCore.IndexT,
+                BuiltinFunctionsCore.Index,
                 StandardErrorHandling<FormulaValue>(
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: DoNotReplaceBlank,
