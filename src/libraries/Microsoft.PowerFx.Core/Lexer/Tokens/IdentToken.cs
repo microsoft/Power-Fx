@@ -18,7 +18,7 @@ namespace Microsoft.PowerFx.Core.Lexer.Tokens
         private readonly string _value;
         public readonly DName Name;
 
-        public const string StrInterpIdent = "Concatenate";
+        public const string StrInterpIdent = "StringInterpolation";
 
         public IdentToken(string val, Span span)
             : this(val, span, false, false)

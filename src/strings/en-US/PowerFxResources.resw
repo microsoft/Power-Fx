@@ -530,6 +530,17 @@
   <data name="AboutConcatenate_value" xml:space="preserve">
     <value>A text value or a column of text values, to be concatenated with the rest of the arguments.</value>
   </data>
+  <data name="AboutStringInterpolation" xml:space="preserve">
+    <value>Joins several text values into one text value.</value>
+    <comment>Description of 'StringInterpolation' function.</comment>
+  </data>
+  <data name="StringInterpolationArg1" xml:space="preserve">
+    <value>text</value>
+    <comment>function_parameter - Argument to the StringInterpolation function - the text to be concatenated.</comment>
+  </data>
+  <data name="AboutStringInterpolation_text" xml:space="preserve">
+    <value>A text value, to be concatenated with the rest of the arguments.</value>
+  </data>
   <data name="AboutConcat" xml:space="preserve">
     <value>Joins all text values produced by evaluating the given expression over the given table into one text value.</value>
     <comment>Description of 'Concat' function.</comment>
