@@ -209,7 +209,7 @@ namespace Microsoft.PowerFx.Functions
 
             var info = DateTimeFormatInfo.GetInstance(culture);
 
-            switch (format.ToLower())
+            switch (format.ToLower().Trim('\''))
             {
                 case "shortdatetime24":
                     // TODO: This might be wrong for some cultures
