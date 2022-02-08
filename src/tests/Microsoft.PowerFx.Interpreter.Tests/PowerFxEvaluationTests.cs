@@ -35,37 +35,34 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             });
 
             var config = new PowerFxConfig(null, null);
-            config.AddOptionSet(optionSet);            
+            config.AddOptionSet(optionSet);
+            config.AddOptionSet(otherOptionSet);
+
             return new RecalcEngine(config);
         }
 
-
         internal class InterpreterRunner : BaseRunner
         {
-            private RecalcEngine _engine = new RecalcEngine();
-            private bool _shouldReset = false; 
+            private readonly RecalcEngine _engine = new RecalcEngine();
 
             public override Task<FormulaValue> RunAsync(string expr)
             {
                 FeatureFlags.StringInterpolation = true;
                 var result = _engine.Eval(expr);
-                if (_shouldReset)
-                {
-                    _engine = new RecalcEngine();
-                    _shouldReset = false;
-                }
                 return Task.FromResult(result);
             }
 
-            public override bool TryDoSetup(string setupHandlerName)
+            public override Task<FormulaValue> RunWithSetup(string expr, string setupHandlerName)
             {
-                _shouldReset = true;
-                if (SetupHandlers.TryGetValue(setupHandlerName, out var handler))
+                FeatureFlags.StringInterpolation = true;
+                if (!SetupHandlers.TryGetValue(setupHandlerName, out var handler))
                 {
-                    _engine = handler();
-                    return true;
+                    throw new NotSupportedException($"Setup Handler {setupHandlerName} not defined for {nameof(InterpreterRunner)}");
                 }
-                return false;
+
+                var engine = handler();
+                var result = engine.Eval(expr);
+                return Task.FromResult(result);
             }
         }
     }

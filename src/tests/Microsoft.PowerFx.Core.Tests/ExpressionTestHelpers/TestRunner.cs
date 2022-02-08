@@ -148,14 +148,6 @@ namespace Microsoft.PowerFx.Core.Tests
 
                     var engineName = runner.GetName();
 
-                    if (test.SetupHandlerName != null && !runner.TryDoSetup(test.SetupHandlerName))
-                    {
-
-                        sb.AppendLine($"SKIPPED: {engineName}, {Path.GetFileName(test.SourceFile)}:{test.SourceLine}");
-                        sb.AppendLine($"SKIPPED: {test.Input}, missing handler: {test.SetupHandlerName}");   
-                        continue;
-                    }
-
                     // var runner = kv.Value;
 
                     string actualStr;
@@ -163,7 +155,24 @@ namespace Microsoft.PowerFx.Core.Tests
                     var exceptionThrown = false;
                     try
                     {
-                        result = runner.RunAsync(test.Input).Result;
+                        if (test.SetupHandlerName != null)
+                        {
+                            try
+                            {
+                                result = runner.RunWithSetup(test.Input, test.SetupHandlerName).Result;
+                            }
+                            catch (NotSupportedException ex) when (ex.Message.Contains("Setup Handler"))
+                            {
+                                sb.AppendLine($"SKIPPED: {engineName}, {Path.GetFileName(test.SourceFile)}:{test.SourceLine}");
+                                sb.AppendLine($"SKIPPED: {test.Input}, missing handler: {test.SetupHandlerName}");   
+                                continue;
+                            }
+                        }
+                        else 
+                        {
+                            result = runner.RunAsync(test.Input).Result;
+                        }
+
                         actualStr = TestToString(result);
                     }
                     catch (Exception e)

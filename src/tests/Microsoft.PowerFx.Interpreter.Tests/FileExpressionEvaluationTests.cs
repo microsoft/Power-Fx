@@ -31,7 +31,22 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var exceptionThrown = false;
             try
             {
-                result = _runner.RunAsync(testCase.Input).Result;
+                if (testCase.SetupHandlerName != null)
+                {
+                    try
+                    {
+                        result = _runner.RunWithSetup(testCase.Input, testCase.SetupHandlerName).Result;
+                    }
+                    catch (NotSupportedException ex) when (ex.Message.Contains("Setup Handler"))
+                    {
+                        Skip.If(true, $"Test {testCase.SourceFile}:{testCase.SourceLine} was skipped due to missing setup handler {testCase.SetupHandlerName}");
+                    }
+                }
+                else 
+                {
+                    result = _runner.RunAsync(testCase.Input).Result;
+                }
+
                 actualStr = TestRunner.TestToString(result);
             }
             catch (Exception e)
