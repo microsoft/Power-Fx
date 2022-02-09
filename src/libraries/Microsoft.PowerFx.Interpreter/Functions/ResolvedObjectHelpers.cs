@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.IR.Nodes;
@@ -21,12 +22,18 @@ namespace Microsoft.PowerFx.Functions
 
         public static FormulaValue OptionSet(OptionSet optionSet, IRContext irContext)
         {
-            var recordValue = FormulaValue.RecordFromFields(
-                optionSet.Options
-                    .Select(option => new NamedValue(
-                        option.Key, 
-                        optionSet.GetValue(option.Key))));
-            return recordValue;
+            var options = new List<NamedValue>();
+            foreach (var option in optionSet.Options)
+            {
+                if (!optionSet.TryGetValue(option.Key, out var osValue))
+                {
+                    return CommonErrors.UnreachableCodeError(irContext); 
+                }
+
+                options.Add(new NamedValue(option.Key, osValue));
+            }
+
+            return FormulaValue.RecordFromFields(options);
         }
 
         public static FormulaValue ResolvedObjectError(ResolvedObjectNode node)
