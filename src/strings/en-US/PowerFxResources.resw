@@ -519,6 +519,9 @@
   <data name="AboutConcatenate_text" xml:space="preserve">
     <value>A text value, to be concatenated with the rest of the arguments.</value>
   </data>
+  <data name="AboutStringInterpolation_text" xml:space="preserve">
+    <value>A text value, to be concatenated with the rest of the arguments.</value>
+  </data>
   <data name="AboutConcatenateT" xml:space="preserve">
     <value>Joins several text values or tables into one column of text values.</value>
     <comment>Description of 'Concatenate' function.</comment>
