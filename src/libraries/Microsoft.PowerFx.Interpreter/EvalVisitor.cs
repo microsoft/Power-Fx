@@ -423,7 +423,6 @@ namespace Microsoft.PowerFx
         {
             return node.Value switch
             {
-                RecalcEngineResolver.ParameterData data => ResolvedObjectHelpers.ParameterData(data, context, node.IRContext),
                 RecalcFormulaInfo fi => ResolvedObjectHelpers.RecalcFormulaInfo(fi),
                 OptionSet optionSet => ResolvedObjectHelpers.OptionSet(optionSet, node.IRContext),
                 _ => ResolvedObjectHelpers.ResolvedObjectError(node),

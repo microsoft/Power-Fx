@@ -13,6 +13,12 @@ namespace Microsoft.PowerFx.Core.Public.Types
         {
         }
 
+        // Constructor for dummy option set values, don't use for valid option sets
+        internal OptionSetValueType()
+            : base(new DType(DKind.OptionSetValue))
+        {
+        }
+
         public override void Visit(ITypeVistor vistor)
         {
             vistor.Visit(this);

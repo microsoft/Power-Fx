@@ -39,6 +39,9 @@ namespace Microsoft.PowerFx.Core.Public.Types
         public static FormulaType UntypedObject { get; } = new UntypedObjectType();
 
         public static FormulaType Hyperlink { get; } = new HyperlinkType();
+        
+        // This is a dummy option set value, don't use this type for valid option sets.  
+        internal static FormulaType OptionSetValue { get; } = new OptionSetValueType();
 
         // chained by derived type 
         internal FormulaType(DType type)
@@ -67,8 +70,9 @@ namespace Microsoft.PowerFx.Core.Public.Types
                 case DKind.DateTime: return DateTime;
                 case DKind.DateTimeNoTimeZone: return DateTimeNoTimeZone;
 
-                case DKind.OptionSetValue:
-                    return new OptionSetValueType(type.OptionSetInfo);
+                case DKind.OptionSetValue:                    
+                    var isBoolean = type.OptionSetInfo?.IsBooleanValued;
+                    return isBoolean.HasValue && isBoolean.Value ? Boolean : OptionSetValue;
 
                 // This isn't quite right, but once we're in the IR, an option set acts more like a record with optionsetvalue fields. 
                 case DKind.OptionSet:

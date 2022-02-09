@@ -14,13 +14,6 @@ namespace Microsoft.PowerFx.Functions
     // Core operations for turning ResolvedObjects into PowerFx values
     internal static class ResolvedObjectHelpers
     {
-        public static FormulaValue ParameterData(RecalcEngineResolver.ParameterData data, SymbolContext context, IRContext irContext)
-        {
-            var paramName = data.ParameterName;
-            var value = context.Globals.GetField(irContext, paramName);
-            return value;
-        }
-
         public static FormulaValue RecalcFormulaInfo(RecalcFormulaInfo fi)
         {
             return fi._value;

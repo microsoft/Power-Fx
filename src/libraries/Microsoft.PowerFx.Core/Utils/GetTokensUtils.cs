@@ -36,6 +36,9 @@ namespace Microsoft.PowerFx.Core.Utils
                             tokens[item.Name] = TokenResultType.HostSymbol;
                             break;
                         case BindKind.PowerFxResolvedObject:
+                            tokens[item.Name] = TokenResultType.HostSymbol;
+                            break;
+                        case BindKind.LambdaField:
                             tokens[item.Name] = TokenResultType.Variable;
                             break;
                         default:
