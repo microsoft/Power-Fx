@@ -40,7 +40,6 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             public override Task<FormulaValue> RunAsync(string expr)
             {
-                FeatureFlags.StringInterpolation = true;
                 var result = _engine.Eval(expr);
                 return Task.FromResult(result);
             }
