@@ -9,7 +9,7 @@ namespace Microsoft.PowerFx.Core.Public.Types
     public class OptionSetValueType : FormulaType
     {
         internal OptionSetValueType(IExternalOptionSet optionSet)
-            : base(DType.CreateOptionSetValue(optionSet))
+            : base(DType.CreateOptionSetValueType(optionSet))
         {
         }
 

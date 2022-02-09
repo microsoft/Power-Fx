@@ -56,14 +56,16 @@ namespace Microsoft.PowerFx
         /// </summary>
         public FormulaType FormulaType { get; }
 
-        public OptionSetValue GetValue(DName fieldName)
+        public bool TryGetValue(DName fieldName, out OptionSetValue optionSetValue)
         {
             if (!Options.ContainsKey(fieldName)) 
             {
-                throw new InvalidOperationException($"{fieldName.Value} is not a member of option set {EntityName.Value}");
+                optionSetValue = null;
+                return false;
             }
 
-            return new OptionSetValue(fieldName, IRContext.NotInSource(FormulaType));
+            optionSetValue = new OptionSetValue(fieldName, IRContext.NotInSource(FormulaType));
+            return true;
         }
 
         IEnumerable<DName> IExternalOptionSet.OptionNames => Options.Keys;

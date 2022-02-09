@@ -40,10 +40,13 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             config.AddOptionSet(optionSet);
             config.AddOptionSet(otherOptionSet);
 
+            optionSet.TryGetValue(new DName("option_1"), out var o1Val);            
+            otherOptionSet.TryGetValue(new DName("123412983"), out var o2Val);
+
             var parameters = FormulaValue.RecordFromFields(
-                    new NamedValue("TopOptionSetField", optionSet.GetValue(new DName("option_1"))),
+                    new NamedValue("TopOptionSetField", o1Val),
                     new NamedValue("Nested", FormulaValue.RecordFromFields(
-                        new NamedValue("InnerOtherOptionSet", otherOptionSet.GetValue(new DName("123412983")))))); 
+                        new NamedValue("InnerOtherOptionSet", o2Val)))); 
 
             return (new RecalcEngine(config), parameters);
         }

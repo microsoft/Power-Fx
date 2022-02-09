@@ -15,7 +15,7 @@ namespace Microsoft.PowerFx.Core.Public.Values
         /// <summary>
         /// Logical name for this option set value.
         /// </summary>
-        public string Option;
+        public readonly string Option;
 
         internal OptionSetValue(string option, IRContext irContext)
             : base(irContext)
