@@ -755,16 +755,6 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: StartsWith)
             },
             {
-                BuiltinFunctionsCore.StringInterpolation,
-                StandardErrorHandling<StringValue>(
-                    expandArguments: NoArgExpansion,
-                    replaceBlankValues: ReplaceBlankWithEmptyString,
-                    checkRuntimeTypes: ExactValueType<StringValue>,
-                    checkRuntimeValues: DeferRuntimeValueChecking,
-                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
-                    targetFunction: Concatenate)
-            },
-            {
                 BuiltinFunctionsCore.Sum,
                 StandardErrorHandling<FormulaValue>(
                     expandArguments: NoArgExpansion,

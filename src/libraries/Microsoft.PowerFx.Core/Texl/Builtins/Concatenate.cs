@@ -15,23 +15,14 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Concatenate(source1:s, source2:s, ...)
     // Corresponding DAX function: Concatenate
     // This only performs string/string concatenation.
-    internal sealed class ConcatenateFunction : ConcatenateFunctionBase
-    {
-        public ConcatenateFunction()
-            : base("Concatenate")
-        {
-        }
-    }
-
-    // Base implementation for Concatenate and StringInterpolation
-    internal abstract class ConcatenateFunctionBase : BuiltinFunction
+    internal sealed class ConcatenateFunction : BuiltinFunction
     {
         public override bool IsSelfContained => true;
 
         public override bool SupportsParamCoercion => true;
 
-        public ConcatenateFunctionBase(string name)
-            : base(name, TexlStrings.AboutConcatenate, FunctionCategories.Text, DType.String, 0, 1, int.MaxValue)
+        public ConcatenateFunction()
+            : base("Concatenate", TexlStrings.AboutConcatenate, FunctionCategories.Text, DType.String, 0, 1, int.MaxValue)
         {
         }
 
