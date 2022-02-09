@@ -5,12 +5,14 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Globalization;
+using System.Linq;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.IR.Nodes;
 using Microsoft.PowerFx.Core.IR.Symbols;
 using Microsoft.PowerFx.Core.Public;
 using Microsoft.PowerFx.Core.Public.Types;
 using Microsoft.PowerFx.Core.Public.Values;
+using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Functions;
 using static Microsoft.PowerFx.Functions.Library;
 
@@ -154,6 +156,12 @@ namespace Microsoft.PowerFx
 
                 return CommonErrors.NotYetImplementedError(node.IRContext, $"Missing func: {func.Name}");
             }
+        }
+
+        public override FormulaValue Visit(StringInterpolationNode node, SymbolContext context)
+        {
+            var args = node.Nodes.Select(s => s.Accept(this, context));
+            return FuncsByName[BuiltinFunctionsCore.Concatenate](this, context, node.IRContext, args.ToArray());
         }
 
         public override FormulaValue Visit(BinaryOpNode node, SymbolContext context)

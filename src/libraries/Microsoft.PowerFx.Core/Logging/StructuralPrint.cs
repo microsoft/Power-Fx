@@ -259,6 +259,11 @@ namespace Microsoft.PowerFx.Core.Logging
             }
         }
 
+        public override LazyList<string> Visit(StrInterpNode node, Precedence context)
+        {
+            throw new NotImplementedException();
+        }
+
         public override LazyList<string> Visit(CallNode node, Precedence parentPrecedence)
         {
             Contracts.AssertValue(node);

@@ -5034,6 +5034,52 @@ namespace Microsoft.PowerFx.Core.Binding
                 Contracts.Assert(false, "Should never get here");
             }
 
+            public override bool PreVisit(StrInterpNode node)
+            {
+                var runningWeight = _txb.GetVolatileVariables(node);
+                var isUnliftable = false;
+
+                foreach (var child in node.Children)
+                {
+                    _txb.AddVolatileVariables(child, runningWeight);
+                    child.Accept(this);
+                    runningWeight = runningWeight.Union(_txb.GetVolatileVariables(child));
+                    isUnliftable |= _txb.IsUnliftable(child);
+                }
+
+                _txb.AddVolatileVariables(node, runningWeight);
+                _txb.SetIsUnliftable(node, isUnliftable);
+
+                PostVisit(node);
+                return false;
+            }
+
+            public override void PostVisit(StrInterpNode node)
+            {
+                AssertValid();
+                Contracts.AssertValue(node);
+
+                // Determine constancy.
+                var isConstant = true;
+                var isSelfContainedConstant = true;
+
+                foreach (var child in node.Children)
+                {
+                    isConstant &= _txb.IsConstant(child);
+                    isSelfContainedConstant &= _txb.IsSelfContainedConstant(child);
+                    if (!isConstant && !isSelfContainedConstant)
+                    {
+                        break;
+                    }
+                }
+
+                _txb.SetConstant(node, isConstant);
+                _txb.SetSelfContainedConstant(node, isSelfContainedConstant);
+
+                SetVariadicNodePurity(node);
+                _txb.SetScopeUseSet(node, JoinScopeUseSets(node.Children));
+            }
+
             private bool TryGetAffectScopeVariableFunc(CallNode node, out TexlFunction func)
             {
                 Contracts.AssertValue(node);

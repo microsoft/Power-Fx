@@ -483,6 +483,25 @@ namespace Microsoft.PowerFx.Core.IR
                 return MaybeInjectCoercion(node, new ChainingNode(context.GetIRContext(node), children), context);
             }
 
+            public override IntermediateNode Visit(StrInterpNode node, IRTranslatorContext context)
+            {
+                Contracts.AssertValue(node);
+                Contracts.AssertValue(context);
+
+                if (node.Children.Length == 1)
+                {
+                    return MaybeInjectCoercion(node, node.Children[0].Accept(this, context), context);
+                }
+
+                var children = new List<IntermediateNode>();
+                foreach (var child in node.Children)
+                {
+                    children.Add(child.Accept(this, context));
+                }
+
+                return MaybeInjectCoercion(node, new StringInterpolationNode(context.GetIRContext(node), children), context);
+            }
+
             public override IntermediateNode Visit(AsNode node, IRTranslatorContext context)
             {
                 Contracts.AssertValue(node);

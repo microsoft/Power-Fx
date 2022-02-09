@@ -850,31 +850,25 @@ namespace Microsoft.PowerFx.Core.Parser
             Contracts.Assert(_curs.TidCur == TokKind.StrInterpStart);
             var startToken = _curs.TokMove();
 
-            var headToken = new IdentToken(IdentToken.StrInterpIdent, startToken.Span);
-            var head = new Identifier(headToken);
-            var headTrivia = ParseTrivia();
-            TexlNode headNode = null;
-
-            Contracts.AssertValue(head);
-            Contracts.AssertValueOrNull(headNode);
-
-            var leftParen = startToken;
-            var leftTrivia = headTrivia;
-
-            if (_curs.TidCur == TokKind.StrInterpEnd)
-            {
-                var strLitToken = new StrLitToken(string.Empty, headToken.Span);
-                _curs.TokMove();
-                return new StrLitNode(ref _idNext, strLitToken);
-            }
+            var strInterpStart = startToken;
+            var strInterpTrivia = ParseTrivia();
 
             var rgtokCommas = new List<Token>();
             var arguments = new List<TexlNode>();
             var sourceList = new List<ITexlSource>
             {
-                new TokenSource(leftParen),
-                leftTrivia
+                new TokenSource(strInterpStart),
+                strInterpTrivia
             };
+
+            if (_curs.TidCur == TokKind.StrInterpEnd)
+            {
+                var tokenEnd = _curs.TokMove();
+                sourceList.Add(new TokenSource(tokenEnd));
+
+                return new StrInterpNode(ref _idNext, strInterpStart, new SourceList(sourceList), new TexlNode[0], tokenEnd);
+            }
+
             for (var i = 0; ; i++)
             {
                 if (_curs.TidCur == TokKind.IslandStart)
@@ -921,41 +915,23 @@ namespace Microsoft.PowerFx.Core.Parser
 
             Contracts.Assert(_curs.TidCur == TokKind.StrInterpEnd || _curs.TidCur == TokKind.Eof);
 
-            Token parenClose = null;
+            Token strInterpEnd = null;
             if (_curs.TidCur == TokKind.StrInterpEnd)
             {
-                parenClose = TokEat(TokKind.StrInterpEnd);
+                strInterpEnd = TokEat(TokKind.StrInterpEnd);
             }
 
-            if (parenClose != null)
+            if (strInterpEnd != null)
             {
-                sourceList.Add(new TokenSource(parenClose));
+                sourceList.Add(new TokenSource(strInterpEnd));
             }
 
-            var list = new ListNode(
+            return new StrInterpNode(
                 ref _idNext,
-                leftParen,
+                strInterpStart,
+                new SourceList(sourceList),
                 arguments.ToArray(),
-                CollectionUtils.ToArray(rgtokCommas),
-                new SourceList(sourceList));
-
-            ITexlSource headNodeSource = new IdentifierSource(head);
-            if (headNode != null)
-            {
-                headNodeSource = new NodeSource(headNode);
-            }
-
-            return new CallNode(
-                ref _idNext,
-                leftParen,
-                new SourceList(
-                    headNodeSource,
-                    headTrivia,
-                    new NodeSource(list)),
-                head,
-                headNode,
-                list,
-                parenClose);
+                strInterpEnd);
         }
 
         // Parse a namespace-qualified invocation, e.g. Facebook.GetFriends()

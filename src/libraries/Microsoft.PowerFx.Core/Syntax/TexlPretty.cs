@@ -267,6 +267,11 @@ namespace Microsoft.PowerFx.Core.Syntax
             }
         }
 
+        public override LazyList<string> Visit(StrInterpNode node, Precedence context)
+        {
+            throw new NotImplementedException();
+        }
+
         public override LazyList<string> Visit(CallNode node, Precedence parentPrecedence)
         {
             Contracts.AssertValue(node);
@@ -655,6 +660,11 @@ namespace Microsoft.PowerFx.Core.Syntax
             }
 
             return Basic(node, context);
+        }
+
+        public override LazyList<string> Visit(StrInterpNode node, Context context)
+        {
+            throw new NotImplementedException();
         }
 
         public override LazyList<string> Visit(CallNode node, Context context)
