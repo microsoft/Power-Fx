@@ -150,6 +150,13 @@ namespace Microsoft.PowerFx.Core.Public.Values
             return RecordFromProperties(obj, type);
         }
 
+        public static UntypedObjectValue New(IUntypedObject untypedObject)
+        {
+            return new UntypedObjectValue(
+                IRContext.NotInSource(new UntypedObjectType()),
+                untypedObject);
+        }
+
         // Dynamic new, useful for marshallers. 
         public static FormulaValue New(object obj, Type type)
         {
