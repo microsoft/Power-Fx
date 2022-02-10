@@ -70,7 +70,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
 
         // DottedNameNodeSuggestionHandler
         [InlineData("{a:{},b:{},c:{}}.|", "a", "b", "c")]
-        [InlineData("$\"Hello { {a:{},b:{},c:{}}.| } World\"", "a", "b", "c")]
+        [InlineData("$\"Hello { First(Table({a:{},b:{},c:{}})).| } World\"", "a", "b", "c")]
         [InlineData("{abc:{},ab:{},a:{}}.|ab", "ab", "a", "abc")]
         [InlineData("{abc:{},ab:{},a:{}}.ab|", "ab", "abc")]
         [InlineData("{abc:{},ab:{},a:{}}.ab|c", "abc", "ab")]

@@ -5039,13 +5039,36 @@ namespace Microsoft.PowerFx.Core.Binding
                 var runningWeight = _txb.GetVolatileVariables(node);
                 var isUnliftable = false;
 
-                foreach (var child in node.Children)
+                var args = node.Children;
+                var argTypes = new DType[args.Length];
+
+                for (var i = 0; i < args.Length; i++)
                 {
+                    var child = args[i];
                     _txb.AddVolatileVariables(child, runningWeight);
                     child.Accept(this);
+                    argTypes[i] = _txb.GetType(args[i]);
                     runningWeight = runningWeight.Union(_txb.GetVolatileVariables(child));
                     isUnliftable |= _txb.IsUnliftable(child);
                 }
+
+                // Typecheck the node's children against the built-in Concatenate function
+                var fArgsValid = BuiltinFunctionsCore.Concatenate.CheckInvocation(_txb, args, argTypes, _txb.ErrorContainer, out var returnType, out var nodeToCoercedTypeMap);
+
+                if (!fArgsValid)
+                {
+                    _txb.ErrorContainer.Error(DocumentErrorSeverity.Severe, node, TexlStrings.ErrInvalidStringInterpolation);
+                }
+
+                if (fArgsValid && nodeToCoercedTypeMap != null)
+                {
+                    foreach (var nodeToCoercedTypeKvp in nodeToCoercedTypeMap)
+                    {
+                        _txb.SetCoercedType(nodeToCoercedTypeKvp.Key, nodeToCoercedTypeKvp.Value);
+                    }
+                }
+
+                _txb.SetType(node, returnType);
 
                 _txb.AddVolatileVariables(node, runningWeight);
                 _txb.SetIsUnliftable(node, isUnliftable);
