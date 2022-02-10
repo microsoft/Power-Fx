@@ -664,7 +664,44 @@ namespace Microsoft.PowerFx.Core.Syntax
 
         public override LazyList<string> Visit(StrInterpNode node, Context context)
         {
-            throw new NotImplementedException();
+            Contracts.AssertValue(node);
+
+            var result = LazyList<string>.Empty.With("$\"");
+            foreach (var source in node.SourceList.Sources.Where(source => !(source is WhitespaceSource)))
+            {
+                if (source is NodeSource nodeSource)
+                {
+                    if (nodeSource.Node.Kind == NodeKind.StrLit)
+                    {
+                        Contracts.Assert(nodeSource.Node is StrLitNode);
+
+                        var strLitNode = nodeSource.Node as StrLitNode;
+                        result = result
+                            .With(CharacterUtils.ExcelEscapeString(strLitNode.Value));
+                    }
+                    else
+                    {
+                        result = result
+                            .With("{")
+                            .With(nodeSource.Node.Accept(this, context))
+                            .With("}");
+                    }
+                }
+                else if (source is TokenSource tokenSource && tokenSource.Token.Kind == TokKind.StrLit)
+                {
+                    Contracts.Assert(tokenSource.Token is StrLitToken);
+
+                    var strLitToken = tokenSource.Token as StrLitToken;
+                    result = result
+                        .With(CharacterUtils.ExcelEscapeString(strLitToken.Value));
+                }
+                else
+                {
+                    result = result.With(source.Tokens.Select(GetScriptForToken));
+                }
+            }
+
+            return result.With("\"");
         }
 
         public override LazyList<string> Visit(CallNode node, Context context)
