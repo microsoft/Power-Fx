@@ -45,7 +45,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
                 DateType => Date,
                 DateTimeType => DateTime,
                 DateTimeNoTimeZoneType => DateTimeNoTimeZone,
-                OptionSetValueType => DateTimeNoTimeZone,
+                OptionSetValueType => OptionSetValue,
                 TableType => Table,
                 RecordType => Record,
                 _ => throw new NotImplementedException($"Unknown {nameof(FormulaType)}: {value.GetType().Name}")

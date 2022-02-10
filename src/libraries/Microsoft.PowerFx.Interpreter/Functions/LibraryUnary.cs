@@ -228,6 +228,16 @@ namespace Microsoft.PowerFx.Functions
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
                     targetFunction: TimeParse)
+            },
+            {
+                UnaryOpKind.OptionSetToText,                
+                StandardErrorHandling<OptionSetValue>(
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<OptionSetValue>,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: OptionSetValueToString)
             }
         };
         #endregion
@@ -390,6 +400,26 @@ namespace Microsoft.PowerFx.Functions
             var t = args[0].Value;
             var date = _epoch.Add(t);
             return new DateTimeValue(irContext, date);
+        }
+
+        public static FormulaValue OptionSetValueToString(IRContext irContext, OptionSetValue[] args)
+        {
+            // The type checker and IR have already validated that this is a valid OptionSet and that it contains a member matching this Option.
+            // These are just defensive error checks, and should be unreachable.
+            var os = args[0].Type?._type?.OptionSetInfo;
+            if (os is not OptionSet optionSet) 
+            {
+                return CommonErrors.UnreachableCodeError(irContext);
+            }
+
+            var option = args[0].Option;
+
+            if (!optionSet.Options.TryGetValue(new DName(option), out var displayName))
+            { 
+                return CommonErrors.UnreachableCodeError(irContext);
+            }
+
+            return new StringValue(irContext, displayName);
         }
         #endregion
     }

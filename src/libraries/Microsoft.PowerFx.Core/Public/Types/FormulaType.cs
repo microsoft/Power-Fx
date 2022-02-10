@@ -36,11 +36,15 @@ namespace Microsoft.PowerFx.Core.Public.Types
 
         public static FormulaType DateTimeNoTimeZone { get; } = new DateTimeNoTimeZoneType();
 
-        public static FormulaType OptionSetValue { get; } = new OptionSetValueType();
-
         public static FormulaType UntypedObject { get; } = new UntypedObjectType();
 
         public static FormulaType Hyperlink { get; } = new HyperlinkType();
+        
+        /// <summary>
+        /// Internal use only to represent an arbitrary (un-backed) option set value.
+        /// Should be removed if possible.
+        /// </summary>
+        internal static FormulaType OptionSetValue { get; } = new OptionSetValueType();
 
         // chained by derived type 
         internal FormulaType(DType type)

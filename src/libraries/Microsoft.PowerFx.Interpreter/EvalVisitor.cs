@@ -184,10 +184,12 @@ namespace Microsoft.PowerFx
                 case BinaryOpKind.EqMedia:
                 case BinaryOpKind.EqBlob:
                 case BinaryOpKind.EqGuid:
+                case BinaryOpKind.EqOptionSetValue:
                     return OperatorBinaryEq(this, context, node.IRContext, args);
 
                 case BinaryOpKind.NeqNumbers:
                 case BinaryOpKind.NeqText:
+                case BinaryOpKind.NeqOptionSetValue:
                     return OperatorBinaryNeq(this, context, node.IRContext, args);
 
                 case BinaryOpKind.GtNumbers:
@@ -419,26 +421,12 @@ namespace Microsoft.PowerFx
 
         public override FormulaValue Visit(ResolvedObjectNode node, SymbolContext context)
         {
-            if (node.Value is RecalcEngineResolver.ParameterData data)
+            return node.Value switch
             {
-                var paramName = data.ParameterName;
-
-                var value = context.Globals.GetField(node.IRContext, paramName);
-                return value;
-            }
-
-            if (node.Value is RecalcFormulaInfo fi)
-            {
-                var value = fi._value;
-                return value;
-            }
-
-            return new ErrorValue(node.IRContext, new ExpressionError()
-            {
-                Message = $"Unrecognized symbol {node?.Value?.GetType()?.Name}".Trim(),
-                Span = node.IRContext.SourceContext,
-                Kind = ErrorKind.Validation
-            });
+                RecalcFormulaInfo fi => ResolvedObjectHelpers.RecalcFormulaInfo(fi),
+                OptionSet optionSet => ResolvedObjectHelpers.OptionSet(optionSet, node.IRContext),
+                _ => ResolvedObjectHelpers.ResolvedObjectError(node),
+            };
         }
     }
 }

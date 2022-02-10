@@ -32,6 +32,7 @@ namespace Microsoft.PowerFx.Core.Tests
         // Location from source file. 
         public string SourceFile;
         public int SourceLine;
+        public string SetupHandlerName;
 
         public override string ToString()
         {
@@ -64,6 +65,7 @@ namespace Microsoft.PowerFx.Core.Tests
             Input = info.GetValue<string>("input");
             SourceFile = info.GetValue<string>("sourceFile");
             SourceLine = info.GetValue<int>("sourceLine");
+            SetupHandlerName = info.GetValue<string>("setupHandlerName");
         }
 
         public void Serialize(IXunitSerializationInfo info)
@@ -73,6 +75,7 @@ namespace Microsoft.PowerFx.Core.Tests
             info.AddValue("input", Input, typeof(string));
             info.AddValue("sourceFile", SourceFile, typeof(string));
             info.AddValue("sourceLine", SourceLine, typeof(int));
+            info.AddValue("setupHandlerName", SetupHandlerName, typeof(string));
         }
     }
 }

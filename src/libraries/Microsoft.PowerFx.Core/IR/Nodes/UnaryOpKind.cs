@@ -11,7 +11,6 @@ namespace Microsoft.PowerFx.Core.IR.Nodes
 
         // Coercion operations
         BooleanToNumber,
-        StringOptionSetToNumber,
         BooleanOptionSetToNumber,
         DateToNumber,
         TimeToNumber,

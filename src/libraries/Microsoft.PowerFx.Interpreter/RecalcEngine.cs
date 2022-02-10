@@ -151,16 +151,11 @@ namespace Microsoft.PowerFx
 
             var resolver = new RecalcEngineResolver(this, _powerFxConfig, (RecordType)parameterType);
 
-            // $$$ - intellisense only works with ruleScope.
-            // So if running for intellisense, pass the parameters in ruleScope. 
-            // But if running for eval, let the resolver handle the parameters. 
-            // Resolver is only invoked if not in RuleScope. 
-
             var binding = TexlBinding.Run(
                 new Glue2DocumentBinderGlue(),
                 formula.ParseTree,
                 resolver,
-                ruleScope: intellisense ? parameterType._type : null,
+                ruleScope: parameterType._type,
                 useThisRecordForRuleScope: false);
 
             var errors = formula.HasParseErrors ? formula.GetParseErrors() : binding.ErrorContainer.GetErrors();
@@ -187,7 +182,7 @@ namespace Microsoft.PowerFx
                 }
 
                 (var irnode, var ruleScopeSymbol) = IRTranslator.Translate(result._binding);
-                result.Expression = new ParsedExpression(irnode);
+                result.Expression = new ParsedExpression(irnode, ruleScopeSymbol);
             }
 
             return result;

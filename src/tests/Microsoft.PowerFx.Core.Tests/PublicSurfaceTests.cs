@@ -48,6 +48,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Core.Public.Values.IValueVisitor",
                 "Microsoft.PowerFx.Core.Public.Values.NamedValue",
                 "Microsoft.PowerFx.Core.Public.Values.NumberValue",
+                "Microsoft.PowerFx.Core.Public.Values.OptionSetValue",
                 "Microsoft.PowerFx.Core.Public.Values.PrimitiveValue`1",
                 "Microsoft.PowerFx.Core.Public.Values.RecordValue",
                 "Microsoft.PowerFx.Core.Public.Values.StringValue",

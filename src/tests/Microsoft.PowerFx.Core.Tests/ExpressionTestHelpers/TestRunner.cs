@@ -65,6 +65,15 @@ namespace Microsoft.PowerFx.Core.Tests
             TestCase test = null;
 
             var i = -1;
+
+            // Preprocess file directives
+            string fileSetup = null;
+            if (lines[0].StartsWith("#SETUP:"))
+            {
+                fileSetup = lines[0].Substring("#SETUP:".Length).Trim();
+                i++;
+            }
+
             while (true)
             {
                 i++;
@@ -86,7 +95,8 @@ namespace Microsoft.PowerFx.Core.Tests
                     {
                         Input = line,
                         SourceLine = i + 1, // 1-based
-                        SourceFile = thisFile
+                        SourceFile = thisFile,
+                        SetupHandlerName = fileSetup
                     };
                     continue;
                 }
@@ -145,7 +155,24 @@ namespace Microsoft.PowerFx.Core.Tests
                     var exceptionThrown = false;
                     try
                     {
-                        result = runner.RunAsync(test.Input).Result;
+                        if (test.SetupHandlerName != null)
+                        {
+                            try
+                            {
+                                result = runner.RunWithSetup(test.Input, test.SetupHandlerName).Result;
+                            }
+                            catch (NotSupportedException ex) when (ex.Message.Contains("Setup Handler"))
+                            {
+                                sb.AppendLine($"SKIPPED: {engineName}, {Path.GetFileName(test.SourceFile)}:{test.SourceLine}");
+                                sb.AppendLine($"SKIPPED: {test.Input}, missing handler: {test.SetupHandlerName}");   
+                                continue;
+                            }
+                        }
+                        else 
+                        {
+                            result = runner.RunAsync(test.Input).Result;
+                        }
+
                         actualStr = TestToString(result);
                     }
                     catch (Exception e)
