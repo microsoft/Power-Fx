@@ -40,7 +40,10 @@ namespace Microsoft.PowerFx.Core.Public.Types
 
         public static FormulaType Hyperlink { get; } = new HyperlinkType();
         
-        // This is a dummy option set value, don't use this type for valid option sets.  
+        /// <summary>
+        /// Internal use only to represent an arbitrary (un-backed) option set value.
+        /// Should be removed if possible.
+        /// </summary>
         internal static FormulaType OptionSetValue { get; } = new OptionSetValueType();
 
         // chained by derived type 
@@ -70,7 +73,7 @@ namespace Microsoft.PowerFx.Core.Public.Types
                 case DKind.DateTime: return DateTime;
                 case DKind.DateTimeNoTimeZone: return DateTimeNoTimeZone;
 
-                case DKind.OptionSetValue:                    
+                case DKind.OptionSetValue:
                     var isBoolean = type.OptionSetInfo?.IsBooleanValued;
                     return isBoolean.HasValue && isBoolean.Value ? Boolean : OptionSetValue;
 

@@ -33,8 +33,6 @@ namespace Microsoft.PowerFx.Core.Utils
                     switch (item.Kind)
                     {
                         case BindKind.Control:
-                            tokens[item.Name] = TokenResultType.HostSymbol;
-                            break;
                         case BindKind.OptionSet:
                         case BindKind.PowerFxResolvedObject:
                             tokens[item.Name] = TokenResultType.HostSymbol;

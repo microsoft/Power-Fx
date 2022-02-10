@@ -27,12 +27,16 @@ namespace Microsoft.PowerFx.Functions
             {
                 if (!optionSet.TryGetValue(option.Key, out var osValue))
                 {
+                    // This is iterating the Options in the option set
+                    // so we already know TryGetValue will succeed, making this unreachable.
                     return CommonErrors.UnreachableCodeError(irContext); 
                 }
 
                 options.Add(new NamedValue(option.Key, osValue));
             }
 
+            // When evaluating an option set ResolvedObjectNode, we convert the options into a record
+            // This allows the use of the FieldAccess operator to get specific option values.
             return FormulaValue.RecordFromFields(options);
         }
 

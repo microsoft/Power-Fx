@@ -404,6 +404,8 @@ namespace Microsoft.PowerFx.Functions
 
         public static FormulaValue OptionSetValueToString(IRContext irContext, OptionSetValue[] args)
         {
+            // The type checker and IR have already validated that this is a valid OptionSet and that it contains a member matching this Option.
+            // These are just defensive error checks, and should be unreachable.
             var os = args[0].Type?._type?.OptionSetInfo;
             if (os is not OptionSet optionSet) 
             {

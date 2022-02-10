@@ -13,7 +13,10 @@ namespace Microsoft.PowerFx.Core.Public.Types
         {
         }
 
-        // Constructor for dummy option set values, don't use for valid option sets
+        /// <summary>
+        /// Initializes a new instance of the <see cref="OptionSetValueType"/> class.
+        /// Internal use only. Used by legacy clients to represent an un-backed option set, and should be removed.
+        /// </summary>
         internal OptionSetValueType()
             : base(new DType(DKind.OptionSetValue))
         {
