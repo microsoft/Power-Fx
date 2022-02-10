@@ -59,9 +59,9 @@ namespace Microsoft.PowerFx.Core.Tests
 
                 var line = lines[i];
 
-                if (line.StartsWith("// SETUP:"))
+                if (line.StartsWith("#SETUP:"))
                 {
-                    fileSetup = line.Substring("// SETUP:".Length).Trim();
+                    fileSetup = line.Substring("#SETUP:".Length).Trim();
                     continue;
                 }
 

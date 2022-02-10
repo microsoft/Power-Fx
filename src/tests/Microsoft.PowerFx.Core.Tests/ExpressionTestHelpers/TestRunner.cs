@@ -68,9 +68,9 @@ namespace Microsoft.PowerFx.Core.Tests
 
             // Preprocess file directives
             string fileSetup = null;
-            if (lines[0].StartsWith("// SETUP: "))
+            if (lines[0].StartsWith("#SETUP:"))
             {
-                fileSetup = lines[0].Substring("// SETUP: ".Length).Trim();
+                fileSetup = lines[0].Substring("#SETUP:".Length).Trim();
                 i++;
             }
 

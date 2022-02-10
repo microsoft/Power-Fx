@@ -1,4 +1,4 @@
-// SETUP: OptionSetTestSetup
+#SETUP: OptionSetTestSetup
 
 >> OptionSet.Option1 <> OptionSet.Option2
 true
