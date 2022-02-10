@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System.Linq;
 using Microsoft.PowerFx.Core.Lexer;
 using Microsoft.PowerFx.Core.Lexer.Tokens;
 using Microsoft.PowerFx.Core.Syntax.Nodes;
@@ -69,6 +70,37 @@ namespace Microsoft.PowerFx.Core.Syntax.Visitors
 
             // If we got here the cursor should be in the last child.
             node.Children[node.Children.Length - 1].Accept(this);
+
+            return false;
+        }
+
+        public override bool PreVisit(StrInterpNode node)
+        {
+            Contracts.AssertValue(node);
+            Contracts.Assert(node.Token.Kind == TokKind.StrInterpStart);
+
+            if (_cursorPosition <= node.Token.Span.Min // Cursor position is before the $"
+                || (node.StrInterpEnd != null && node.StrInterpEnd.Span.Lim <= _cursorPosition) // Cursor is after the close quote.
+                || node.Children.Count() == 0) //// Cursor is between the open and closed paren.
+            {
+                _result = node;
+                return false;
+            }
+
+            Contracts.Assert(node.Children.Length > 0);
+
+            for (var i = 0; i < node.Children.Length; i++)
+            {
+                var token = node.Children[i];
+                var span = token.GetCompleteSpan();
+
+                if (_cursorPosition >= span.Min && _cursorPosition <= span.Lim)
+                {
+                    // Cursor position is inside ith child.
+                    node.Children[i].Accept(this);
+                    return false;
+                }
+            }
 
             return false;
         }
