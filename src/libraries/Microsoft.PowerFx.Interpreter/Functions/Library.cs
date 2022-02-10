@@ -1213,10 +1213,16 @@ namespace Microsoft.PowerFx.Functions
             var arg0 = (TableValue)args[0];
             var arg1 = (LambdaFormulaValue)args[1];
 
-            var rows = LazyForAll(runner, symbolContext, arg0.Rows, arg1);
+            var rows = LazyForAll(runner, symbolContext, arg0.Rows, arg1).ToArray();
+
+            var errors = rows.OfType<ErrorValue>();
+            if (errors.Any())
+            {
+                return ErrorValue.Combine(irContext, errors);
+            }
 
             // TODO: verify semantics in the case of heterogeneous record lists
-            return new InMemoryTableValue(irContext, StandardTableNodeRecords(irContext, rows.ToArray()));
+            return new InMemoryTableValue(irContext, StandardTableNodeRecords(irContext, rows));
         }
 
         private static IEnumerable<FormulaValue> LazyForAll(
