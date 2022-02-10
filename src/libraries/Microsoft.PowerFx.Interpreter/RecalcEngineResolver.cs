@@ -23,15 +23,12 @@ namespace Microsoft.PowerFx
     {
         private readonly RecalcEngine _parent;
         private readonly PowerFxConfig _powerFxConfig;
-        private readonly RecordType _parameters;
 
         public RecalcEngineResolver(
             RecalcEngine parent,
-            PowerFxConfig powerFxConfig,
-            RecordType parameters)
+            PowerFxConfig powerFxConfig)
             : base(powerFxConfig.EnumStore.EnumSymbols, powerFxConfig.ExtraFunctions.Values.ToArray())
         {
-            _parameters = parameters;
             _parent = parent;
             _powerFxConfig = powerFxConfig;
         }
@@ -40,26 +37,9 @@ namespace Microsoft.PowerFx
         {
             // Kinds of globals:
             // - global formula
-            // - parameters 
             // - environment symbols
 
             var str = name.Value;
-
-            var parameter = _parameters.MaybeGetFieldType(str);
-            if (parameter != null)
-            {
-                var data = new ParameterData { ParameterName = str };
-                var type = parameter._type;
-
-                nameInfo = new NameLookupInfo(
-                    BindKind.PowerFxResolvedObject,
-                    type,
-                    DPath.Root,
-                    0,
-                    data);
-                return true;
-            }
-
             if (_parent.Formulas.TryGetValue(str, out var fi))
             {
                 var data = fi;
@@ -94,11 +74,6 @@ namespace Microsoft.PowerFx
             }
 
             return base.Lookup(name, out nameInfo, preferences);
-        }
-
-        public class ParameterData
-        {
-            public string ParameterName;
         }
     }
 }

@@ -419,14 +419,6 @@ namespace Microsoft.PowerFx
 
         public override FormulaValue Visit(ResolvedObjectNode node, SymbolContext context)
         {
-            if (node.Value is RecalcEngineResolver.ParameterData data)
-            {
-                var paramName = data.ParameterName;
-
-                var value = context.Globals.GetField(node.IRContext, paramName);
-                return value;
-            }
-
             if (node.Value is RecalcFormulaInfo fi)
             {
                 var value = fi._value;
