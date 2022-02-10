@@ -19,6 +19,9 @@ namespace Microsoft.PowerFx.Tests
         [InlineData(
             "Set(x, 10 + 3); Launch(\"example.com\", ThisItem.Text, Parent.Text)",
             "Set(#$firstname$#, #$number$# + #$number$#) ; Launch(#$string$#, #$firstname$#.#$righthandid$#, Parent.#$righthandid$#)")]
+        [InlineData(
+            "$\"Hello {\"World\"}\"",
+            "$\"#$string$#{#$string$#}\"")]
         public void TestStucturalPrint(string script, string expected)
         {
             var result = ParseScript(
@@ -111,6 +114,12 @@ namespace Microsoft.PowerFx.Tests
         [InlineData("/*a*/foo/*b*/[/*c*/@/*d*/bar/*e*/]/*f*/", "/*a*/foo/*b*/[/*c*/@/*d*/bar/*e*/]/*f*/")]
         [InlineData("1; /*a*/2/*b*/; 3", "1;\n/*a*/2/*b*/;\n3")]
         [InlineData("/*a*/1/*b*/+/*c*/2/*d*/-/*e*/3/*f*/", "/*a*/1 /*b*/+/*c*/ 2 /*d*/-/*e*/ 3/*f*/")]
+        [InlineData("$\"Hello {\"World\"}\"", "$\"Hello {\"World\"}\"")]
+        [InlineData("$\"Hello { \"World\" }\"", "$\"Hello { \"World\" }\"")]
+        [InlineData("$\"Hello {/*a*/\"World\"}\"", "$\"Hello {/*a*/\"World\"}\"")]
+        [InlineData("/*a*/$\"Hello {\"World\"}\"", "/*a*/$\"Hello {\"World\"}\"")]
+        [InlineData("$\"Hello {\"World\"/*b*/}\"", "$\"Hello {\"World\"/*b*/}\"")]
+        [InlineData("$\"Hello {\"World\"}\"/*b*/", "$\"Hello {\"World\"}\"/*b*/")]
         public void TestPrettyPrint(string script, string expected)
         {
             var result = Format(script);
