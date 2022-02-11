@@ -13,6 +13,6 @@ namespace Microsoft.PowerFx
         /// Enable String Interpolation feature. 
         /// Added 12/3/2021.
         /// </summary>
-        public static bool StringInterpolation = true;
+        public static bool StringInterpolation = false;
     }
 }
