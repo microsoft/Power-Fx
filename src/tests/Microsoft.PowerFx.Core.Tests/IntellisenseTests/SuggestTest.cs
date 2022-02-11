@@ -146,7 +146,6 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         [InlineData("$\"Hello {DisplayMode|} World!\"", "DisplayMode", "DisplayMode.Disabled", "DisplayMode.Edit", "DisplayMode.View")]
         public void TestSuggest(string expression, params string[] expectedSuggestions)
         {
-            FeatureFlags.StringInterpolation = true;
             var actualSuggestions = SuggestStrings(expression, _defaultEnumStore);
             Assert.Equal(expectedSuggestions, actualSuggestions);
         }
@@ -168,7 +167,6 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         [InlineData("Calendar.Months|", "MonthsLong", "MonthsShort")]
         public void TestSuggestEmptyEnumList(string expression, params string[] expectedSuggestions)
         {
-            FeatureFlags.StringInterpolation = true;
             var actualSuggestions = SuggestStrings(expression, _emptyEnumStore);
             Assert.Equal(expectedSuggestions, actualSuggestions);
         }

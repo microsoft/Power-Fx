@@ -666,12 +666,17 @@ namespace Microsoft.PowerFx.Core.Syntax
         {
             Contracts.AssertValue(node);
 
-            var result = LazyList<string>.Empty.With("$\"");
+            var result = LazyList<string>.Empty;
+            var withinIsland = false;
             foreach (var source in node.SourceList.Sources.Where(source => !(source is WhitespaceSource)))
             {
                 if (source is NodeSource nodeSource)
                 {
-                    if (nodeSource.Node.Kind == NodeKind.StrLit)
+                    if (withinIsland)
+                    {
+                        result = result.With(nodeSource.Node.Accept(this, context));
+                    }
+                    else if (nodeSource.Node.Kind == NodeKind.StrLit)
                     {
                         Contracts.Assert(nodeSource.Node is StrLitNode);
 
@@ -679,21 +684,31 @@ namespace Microsoft.PowerFx.Core.Syntax
                         result = result
                             .With(CharacterUtils.ExcelEscapeString(strLitNode.Value));
                     }
+                }
+                else if (source is TokenSource tokenSource)
+                {
+                    if (tokenSource.Token.Kind == TokKind.StrLit)
+                    {
+                        Contracts.Assert(tokenSource.Token is StrLitToken);
+
+                        var strLitToken = tokenSource.Token as StrLitToken;
+                        result = result
+                            .With(CharacterUtils.ExcelEscapeString(strLitToken.Value));
+                    }
+                    else if (tokenSource.Token.Kind == TokKind.IslandStart)
+                    {
+                        withinIsland = true;
+                        result = result.With(source.Tokens.Select(GetScriptForToken));
+                    }
+                    else if (tokenSource.Token.Kind == TokKind.IslandEnd)
+                    {
+                        withinIsland = false;
+                        result = result.With(source.Tokens.Select(GetScriptForToken));
+                    }
                     else
                     {
-                        result = result
-                            .With("{")
-                            .With(nodeSource.Node.Accept(this, context))
-                            .With("}");
+                        result = result.With(source.Tokens.Select(GetScriptForToken));
                     }
-                }
-                else if (source is TokenSource tokenSource && tokenSource.Token.Kind == TokKind.StrLit)
-                {
-                    Contracts.Assert(tokenSource.Token is StrLitToken);
-
-                    var strLitToken = tokenSource.Token as StrLitToken;
-                    result = result
-                        .With(CharacterUtils.ExcelEscapeString(strLitToken.Value));
                 }
                 else
                 {
@@ -701,7 +716,7 @@ namespace Microsoft.PowerFx.Core.Syntax
                 }
             }
 
-            return result.With("\"");
+            return result;
         }
 
         public override LazyList<string> Visit(CallNode node, Context context)

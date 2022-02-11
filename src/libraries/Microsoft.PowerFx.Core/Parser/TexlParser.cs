@@ -853,7 +853,6 @@ namespace Microsoft.PowerFx.Core.Parser
             var strInterpStart = startToken;
             var strInterpTrivia = ParseTrivia();
 
-            var rgtokCommas = new List<Token>();
             var arguments = new List<TexlNode>();
             var sourceList = new List<ITexlSource>
             {
@@ -875,9 +874,8 @@ namespace Microsoft.PowerFx.Core.Parser
                 {
                     if (i != 0)
                     {
-                        var comma = _curs.TokMove();
-                        rgtokCommas.Add(comma);
-                        sourceList.Add(new TokenSource(comma));
+                        var islandStart = _curs.TokMove();
+                        sourceList.Add(new TokenSource(islandStart));
                         sourceList.Add(ParseTrivia());
                     }
                     else
@@ -887,20 +885,15 @@ namespace Microsoft.PowerFx.Core.Parser
                 }
                 else if (_curs.TidCur == TokKind.IslandEnd)
                 {
-                    var peek1 = _curs.TidPeek(1);
-                    if (peek1 != TokKind.StrInterpEnd && peek1 != TokKind.IslandStart)
-                    {
-                        var comma = _curs.TokMove();
-                        rgtokCommas.Add(comma);
-                        sourceList.Add(new TokenSource(comma));
-                        sourceList.Add(ParseTrivia());
-                    }
-                    else
-                    {
-                        _curs.TokMove();
-                    }
+                    var islandEnd = _curs.TokMove();
+                    sourceList.Add(new TokenSource(islandEnd));
+                    sourceList.Add(ParseTrivia());
                 }
-                else if (_curs.TidCur == TokKind.StrInterpEnd || _curs.TidCur == TokKind.Eof)
+                else if (_curs.TidCur == TokKind.Eof)
+                {
+                    return CreateError(_curs.TokCur, TexlStrings.ErrBadToken);
+                }
+                else if (_curs.TidCur == TokKind.StrInterpEnd)
                 {
                     break;
                 }

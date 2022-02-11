@@ -57,14 +57,12 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             public override Task<FormulaValue> RunAsync(string expr)
             {
-                FeatureFlags.StringInterpolation = true;
                 var result = _engine.Eval(expr);
                 return Task.FromResult(result);
             }
 
             public override Task<FormulaValue> RunWithSetup(string expr, string setupHandlerName)
             {
-                FeatureFlags.StringInterpolation = true;
                 if (!SetupHandlers.TryGetValue(setupHandlerName, out var handler))
                 {
                     throw new NotSupportedException($"Setup Handler {setupHandlerName} not defined for {nameof(InterpreterRunner)}");
