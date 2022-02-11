@@ -478,6 +478,7 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrNotAccessibleInCurrentContext = new ErrorResourceKey("ErrNotAccessibleInCurrentContext");
         public static ErrorResourceKey ErrInternalControlInInputProperty = new ErrorResourceKey("ErrInternalControlInInputProperty");
         public static ErrorResourceKey ErrColumnNotAccessibleInCurrentContext = new ErrorResourceKey("ErrColumnNotAccessibleInCurrentContext");
+        public static ErrorResourceKey ErrDotOnTableType = new ErrorResourceKey("ErrDotOnTableType");
         public static ErrorResourceKey WrnRowScopeOneToNExpandNumberOfCalls = new ErrorResourceKey("WrnRowScopeOneToNExpandNumberOfCalls");
         public static ErrorResourceKey ErrInvalidSchemaNeedStringCol_Col = new ErrorResourceKey("ErrInvalidSchemaNeedStringCol_Col");
         public static ErrorResourceKey ErrInvalidSchemaNeedNumCol_Col = new ErrorResourceKey("ErrInvalidSchemaNeedNumCol_Col");

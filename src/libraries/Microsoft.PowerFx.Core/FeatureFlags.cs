@@ -14,5 +14,11 @@ namespace Microsoft.PowerFx
         /// Added 12/3/2021.
         /// </summary>
         public static bool StringInterpolation = false;
+        
+        /// <summary>
+        /// Disable Single Column Tables. 
+        /// Added 12/3/2021.
+        /// </summary>
+        public static bool DisableSingleColumnTables = false;
     }
 }

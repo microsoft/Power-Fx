@@ -42,10 +42,16 @@ namespace Microsoft.PowerFx
         /// <param name="powerFxConfig">Compiler customizations.</param>
         public RecalcEngine(PowerFxConfig powerFxConfig = null)
         {
+            SetFlags();
             powerFxConfig = powerFxConfig ?? new PowerFxConfig(null, null);
             AddInterpreterFunctions(powerFxConfig);
             powerFxConfig.Lock();
             _powerFxConfig = powerFxConfig;
+        }
+
+        private void SetFlags()
+        {            
+            FeatureFlags.DisableSingleColumnTables = true;
         }
 
         // Add Builtin functions that aren't yet in the shared library. 

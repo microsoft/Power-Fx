@@ -397,7 +397,8 @@ namespace Microsoft.PowerFx.Core.IR
                 }
                 else if (typeLhs.IsTable)
                 {
-                    result = new SingleColumnTableAccessNode(context.GetIRContext(node), left, nameRhs);
+                    Contracts.Assert(context.Binding.ErrorContainer.HasErrors(node), "Unsupported LHS Type for DottedNames");
+                    return new ErrorNode(context.GetIRContext(node), node.ToString());
                 }
                 else if (node.UsesBracket)
                 {

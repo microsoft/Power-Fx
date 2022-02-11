@@ -3618,6 +3618,12 @@ namespace Microsoft.PowerFx.Core.Binding
                 }
                 else if (leftType.IsTable)
                 {
+                    if (FeatureFlags.DisableSingleColumnTables)
+                    {
+                        SetDottedNameError(node, TexlStrings.ErrDotOnTableType);
+                        return;
+                    }
+
                     // *[id:type, ...] . id  --> *[id:type]
                     // We don't support scenario when lhs is table and rhs is entity of table type (1-n)
                     if (value is IExpandInfo && typeRhs.IsTable)

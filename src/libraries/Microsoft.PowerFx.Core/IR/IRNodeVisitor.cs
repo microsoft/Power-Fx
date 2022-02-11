@@ -35,8 +35,6 @@ namespace Microsoft.PowerFx.Core.IR
 
         public abstract TResult Visit(ResolvedObjectNode node, TContext context);
 
-        public abstract TResult Visit(SingleColumnTableAccessNode node, TContext context);
-
         public abstract TResult Visit(ChainingNode node, TContext context);
 
         public abstract TResult Visit(AggregateCoercionNode node, TContext context);

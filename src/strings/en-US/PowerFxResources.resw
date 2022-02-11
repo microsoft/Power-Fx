@@ -1746,6 +1746,10 @@
     <value>The specified column is not accessible in this context.</value>
     <comment>Error Message.</comment>
   </data>
+  <data name="ErrDotOnTableType" xml:space="preserve">
+    <value>The '.' operator cannot be used on tables.</value>
+    <comment>Error Message, referencing the '.' operator.</comment>
+  </data>
   <data name="WrnRowScopeOneToNExpandNumberOfCalls" xml:space="preserve">
     <value>A One-to-Many or Many-to-Many relationship is being referenced in this function's record scope.  This may result in a large number of calls to your data source that can impact performance.</value>
     <comment>Warning Message.</comment>

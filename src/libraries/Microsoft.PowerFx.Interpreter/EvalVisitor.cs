@@ -394,11 +394,6 @@ namespace Microsoft.PowerFx
             return val;
         }
 
-        public override FormulaValue Visit(SingleColumnTableAccessNode node, SymbolContext context)
-        {
-            return CommonErrors.NotYetImplementedError(node.IRContext, "Single column table access");
-        }
-
         public override FormulaValue Visit(ErrorNode node, SymbolContext context)
         {
             return new ErrorValue(node.IRContext, new ExpressionError()
