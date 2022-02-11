@@ -102,7 +102,13 @@ namespace Microsoft.PowerFx.Core.Localization
             if (locale == null)
             {
                 locale = CurrentLocaleInfo.CurrentUILanguageName;
-                Contracts.CheckNonEmpty(locale, "currentLocale");
+
+                // If the locale is not set here, return false immedately and go to the "en-us" fallback
+                if (string.IsNullOrEmpty(locale))
+                {
+                    resourceValue = default;
+                    return false;
+                }
             }
 
             if (!ErrorResources.TryGetValue(locale, out var errorResources))
@@ -126,7 +132,13 @@ namespace Microsoft.PowerFx.Core.Localization
             if (locale == null)
             {
                 locale = CurrentLocaleInfo.CurrentUILanguageName;
-                Contracts.CheckNonEmpty(locale, "currentLocale");
+
+                // If the locale is not set here, return false immedately and go to the "en-us" fallback
+                if (string.IsNullOrEmpty(locale))
+                {
+                    resourceValue = default;
+                    return false;
+                }
             }
 
             if (!Strings.TryGetValue(locale, out var strings))
