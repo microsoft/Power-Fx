@@ -443,7 +443,8 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
                                 Line = endLine
                             }
                         },
-                        Message = item.Message
+                        Message = item.Message,
+                        Severity = DocumentSeverityToDiagnosticSeverityMap(item.Severity)
                     });
                 }
             }
