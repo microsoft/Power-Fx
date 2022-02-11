@@ -269,7 +269,32 @@ namespace Microsoft.PowerFx.Core.Syntax
 
         public override LazyList<string> Visit(StrInterpNode node, Precedence context)
         {
-            throw new NotImplementedException();
+            Contracts.AssertValue(node);
+
+            var count = node.Count;
+            var result = LazyList<string>.Empty;
+
+            result = result.With("$\"");
+            for (var i = 0; i < count; i++)
+            {
+                if (node.Children[i].Kind == NodeKind.StrLit)
+                {
+                    Contracts.Assert(node.Children[i] is StrLitNode);
+
+                    var strLit = node.Children[i] as StrLitNode;
+                    result = result.With(CharacterUtils.ExcelEscapeString(strLit.Value));
+                }
+                else
+                {
+                    result = result
+                        .With("{")
+                        .With(node.Children[i].Accept(this, Precedence.None))
+                        .With("}");
+                }
+            }
+
+            result = result.With("\"");
+            return result;
         }
 
         public override LazyList<string> Visit(CallNode node, Precedence parentPrecedence)
