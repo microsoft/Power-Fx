@@ -48,22 +48,15 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
 
                     if (cursorPos <= strInterpNode.StrInterpEnd.Span.Min)
                     {
-                        // Cursor position is before the close quote and there are no arguments.
-                        // If there were arguments FindNode should have returned one of those.
-                        if (intellisenseData.CurFunc != null && intellisenseData.CurFunc.MaxArity > 0)
-                        {
-                            IntellisenseHelper.AddSuggestionsForTopLevel(intellisenseData, strInterpNode);
-                        }
+                        IntellisenseHelper.AddSuggestionsForTopLevel(intellisenseData, strInterpNode);
                     }
                     else if (IntellisenseHelper.CanSuggestAfterValue(cursorPos, intellisenseData.Script))
                     {
-                        // Verify that cursor is after a space after the closed parenthesis and
-                        // suggest binary operators.
                         IntellisenseHelper.AddSuggestionsForAfterValue(intellisenseData, intellisenseData.Binding.GetType(strInterpNode));
                     }
                 }
 
-                return true;
+                return false;
             }
         }
     }

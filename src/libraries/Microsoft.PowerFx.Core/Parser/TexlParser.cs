@@ -891,7 +891,16 @@ namespace Microsoft.PowerFx.Core.Parser
                 }
                 else if (_curs.TidCur == TokKind.Eof)
                 {
-                    return CreateError(_curs.TokCur, TexlStrings.ErrBadToken);
+                    var error = CreateError(_curs.TokCur, TexlStrings.ErrBadToken);
+                    arguments.Add(error);
+                    sourceList.Add(new NodeSource(error));
+                    sourceList.Add(ParseTrivia());
+                    return new StrInterpNode(
+                        ref _idNext,
+                        strInterpStart,
+                        new SourceList(sourceList),
+                        arguments.ToArray(),
+                        _curs.TokCur);
                 }
                 else if (_curs.TidCur == TokKind.StrInterpEnd)
                 {

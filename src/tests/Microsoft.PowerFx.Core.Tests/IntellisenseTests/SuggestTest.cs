@@ -71,6 +71,10 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         // DottedNameNodeSuggestionHandler
         [InlineData("{a:{},b:{},c:{}}.|", "a", "b", "c")]
         [InlineData("$\"Hello { First(Table({a:{},b:{},c:{}})).| } World\"", "a", "b", "c")]
+        [InlineData("$\"Hello { First(Table({a:{},b:{},c:{}})).|", "a", "b", "c")]
+        [InlineData("$\"Hello { {a:{},b:{},c:{}}.|", "a", "b", "c")]
+        [InlineData("$ |")]
+        [InlineData("$\"foo {|")]
         [InlineData("{abc:{},ab:{},a:{}}.|ab", "ab", "a", "abc")]
         [InlineData("{abc:{},ab:{},a:{}}.ab|", "ab", "abc")]
         [InlineData("{abc:{},ab:{},a:{}}.ab|c", "abc", "ab")]
@@ -139,6 +143,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
 
         // AddSuggestionsForEnums
         [InlineData("Edit|", "EditPermissions", "DataSourceInfo.EditPermission", "DisplayMode.Edit", "FormMode.Edit", "Icon.Edit", "RecordInfo.EditPermission", "SelectedState.Edit")]
+        [InlineData("Value(Edit|", "EditPermissions", "DataSourceInfo.EditPermission", "DisplayMode.Edit", "FormMode.Edit", "Icon.Edit", "RecordInfo.EditPermission", "SelectedState.Edit")]
         [InlineData("DisplayMode.E|", "Edit", "Disabled", "View")]
         [InlineData("Disabled|", "Disabled")]
         [InlineData("DisplayMode.D|", "Disabled", "Edit")]

@@ -80,7 +80,7 @@ namespace Microsoft.PowerFx.Core.Syntax.Visitors
             Contracts.Assert(node.Token.Kind == TokKind.StrInterpStart);
 
             if (_cursorPosition <= node.Token.Span.Min // Cursor position is before the $"
-                || (node.StrInterpEnd != null && node.StrInterpEnd.Span.Lim <= _cursorPosition) // Cursor is after the close quote.
+                || (node.StrInterpEnd != null && node.StrInterpEnd is StrInterpEndToken && node.StrInterpEnd.Span.Lim <= _cursorPosition) // Cursor is after the close quote.
                 || node.Children.Count() == 0) //// Cursor is inside empty string interpolation.
             {
                 _result = node;
@@ -91,14 +91,9 @@ namespace Microsoft.PowerFx.Core.Syntax.Visitors
 
             for (var i = 0; i < node.Children.Length; i++)
             {
-                var token = node.Children[i];
-                var span = token.GetCompleteSpan();
-
-                if (_cursorPosition >= span.Min && _cursorPosition <= span.Lim)
+                if (node.Children[i].Kind != NodeKind.Error)
                 {
-                    // Cursor position is inside ith child.
                     node.Children[i].Accept(this);
-                    return false;
                 }
             }
 
