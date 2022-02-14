@@ -5,12 +5,14 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Globalization;
+using System.Linq;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.IR.Nodes;
 using Microsoft.PowerFx.Core.IR.Symbols;
 using Microsoft.PowerFx.Core.Public;
 using Microsoft.PowerFx.Core.Public.Types;
 using Microsoft.PowerFx.Core.Public.Values;
+using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Functions;
 using static Microsoft.PowerFx.Functions.Library;
 
@@ -156,6 +158,12 @@ namespace Microsoft.PowerFx
             }
         }
 
+        public override FormulaValue Visit(StringInterpolationNode node, SymbolContext context)
+        {
+            var args = node.Nodes.Select(s => s.Accept(this, context));
+            return FuncsByName[BuiltinFunctionsCore.Concatenate](this, context, node.IRContext, args.ToArray());
+        }
+
         public override FormulaValue Visit(BinaryOpNode node, SymbolContext context)
         {
             var arg1 = node.Left.Accept(this, context);
@@ -184,10 +192,12 @@ namespace Microsoft.PowerFx
                 case BinaryOpKind.EqMedia:
                 case BinaryOpKind.EqBlob:
                 case BinaryOpKind.EqGuid:
+                case BinaryOpKind.EqOptionSetValue:
                     return OperatorBinaryEq(this, context, node.IRContext, args);
 
                 case BinaryOpKind.NeqNumbers:
                 case BinaryOpKind.NeqText:
+                case BinaryOpKind.NeqOptionSetValue:
                     return OperatorBinaryNeq(this, context, node.IRContext, args);
 
                 case BinaryOpKind.GtNumbers:
@@ -419,26 +429,12 @@ namespace Microsoft.PowerFx
 
         public override FormulaValue Visit(ResolvedObjectNode node, SymbolContext context)
         {
-            if (node.Value is RecalcEngineResolver.ParameterData data)
+            return node.Value switch
             {
-                var paramName = data.ParameterName;
-
-                var value = context.Globals.GetField(node.IRContext, paramName);
-                return value;
-            }
-
-            if (node.Value is RecalcFormulaInfo fi)
-            {
-                var value = fi._value;
-                return value;
-            }
-
-            return new ErrorValue(node.IRContext, new ExpressionError()
-            {
-                Message = $"Unrecognized symbol {node?.Value?.GetType()?.Name}".Trim(),
-                Span = node.IRContext.SourceContext,
-                Kind = ErrorKind.Validation
-            });
+                RecalcFormulaInfo fi => ResolvedObjectHelpers.RecalcFormulaInfo(fi),
+                OptionSet optionSet => ResolvedObjectHelpers.OptionSet(optionSet, node.IRContext),
+                _ => ResolvedObjectHelpers.ResolvedObjectError(node),
+            };
         }
     }
 }

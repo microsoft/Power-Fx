@@ -1,0 +1,156 @@
+﻿>> Find(Blank(), [""], [1])
+Errors: Error 0-24: The function 'Find' has some invalid arguments.|Error 14-18: Invalid argument type (Table). Expecting a Text value instead.|Error 20-23: Invalid argument type (Table). Expecting a Number value instead.
+
+>> Find([""], [""], Blank())
+Errors: Error 0-25: The function 'Find' has some invalid arguments.|Error 5-9: Invalid argument type (Table). Expecting a Text value instead.|Error 11-15: Invalid argument type (Table). Expecting a Text value instead.
+
+>> Find(If(false, ["blank table"], Blank()), If(false, ["blank table"], Blank()), [1])
+Table({Result:1})
+
+>> Find(If(false, ["blank table"], Blank()), If(false, ["blank table"], Blank()), [2])
+Table({Result:Microsoft.PowerFx.Core.Public.Values.ErrorValue})
+
+>> Find(If(false, ["blank table"], Blank()), "textToBeSearchedIn", [5])
+Table({Result:5})
+
+>> Find("textToSearch", If(false, ["blank table"], Blank()), [1])
+Table({Result:Blank()})
+
+>> Find([Blank(), "", ","], If(false, ["blank table"], Blank()), 1)
+Table({Result:1},{Result:1},{Result:Blank()})
+
+>> Find(["b"], ["abc", "cde"])
+Table({Result:2},{Result:1})
+
+>> Find(["b"], ["abc", "cde"], If(false, [0], Blank()))
+Table({Result:Blank()},{Result:Blank()})
+
+>> Find(["b"], ["abc", "cde"], Filter([0], Value <> Value))
+Table()
+
+>> Find([Blank(), "", ","], If(false, ["blank table"], Blank()), [1, 2, 3])
+Table({Result:1},{Result:Microsoft.PowerFx.Core.Public.Values.ErrorValue},{Result:Microsoft.PowerFx.Core.Public.Values.ErrorValue})
+
+>> Find(If(false, ["blank table"], Blank()), [Blank(), "", "textToBeSearchedIn"], 1)
+Table({Result:1},{Result:1},{Result:1})
+
+>> Find(If(false, ["blank table"], Blank()), [Blank(), "", "textToBeSearchedIn"], [1, 2, 3])
+Table({Result:1},{Result:Microsoft.PowerFx.Core.Public.Values.ErrorValue},{Result:3})
+
+>> Find([Blank(), "", ","], "textToBeSearchedIn,textToBeSearchedIn", 1)
+Table({Result:1},{Result:1},{Result:19})
+
+>> Find([Blank(), "", ",", ","], "textToBeSearchedIn,textToBeSearchedIn", [1, 2, 3, 20])
+Table({Result:1},{Result:2},{Result:19},{Result:Blank()})
+
+>> Find(",", ["textToBeSearchedIn,textToBeSearchedIn"], 1)
+Table({Result:19})
+
+>> Find(",", ["textToBeSearchedIn,textToBeSearchedIn", "textToBeSearchedIn,textToBeSearchedIn,", "textToBeSearchedIn,textToBeSearchedIn"], [1, 20, 40])
+Table({Result:19},{Result:38},{Result:Microsoft.PowerFx.Core.Public.Values.ErrorValue})
+
+>> Find([Blank(), "", ","], ["textToBeSearchedIn,textToBeSearchedIn", "textToBeSearchedIn,textToBeSearchedIn,", "textToBeSearchedIn,textToBeSearchedIn"], [1, 10, 9])
+Table({Result:1},{Result:10},{Result:19})
+
+>> Find(",", "textToBeSearchedIn,textToBeSearchedIn", [1, 2, 19, 20])
+Table({Result:19},{Result:19},{Result:19},{Result:Blank()})
+
+>> Find([Blank(), "", ","], If(false, ["blank table"], Blank()))
+Table({Result:1},{Result:1},{Result:Blank()})
+
+>> Find(If(false, ["blank table"], Blank()), [Blank(), "", "textToBeSearchedIn"])
+Table({Result:1},{Result:1},{Result:1})
+
+>> Find([Blank(), "", ","], "textToBeSearchedIn,textToBeSearchedIn")
+Table({Result:1},{Result:1},{Result:19})
+
+>> Find(",", ["textToBeSearchedIn,textToBeSearchedIn"])
+Table({Result:19})
+
+>> Find([Blank(), "", ","], ["textToBeSearchedIn,textToBeSearchedIn", "textToBeSearchedIn,textToBeSearchedIn,", "textToBeSearchedIn,textToBeSearchedIn"])
+Table({Result:1},{Result:1},{Result:19})
+
+>> Find([Blank(), ","], ["lastName,firstName", "lastName,firstName,", "lastName,firstName", Blank()])
+Table({Result:1},{Result:9},{Result:1},{Result:1})
+
+>> Find([Blank(), ",", "", "findMe"], [Blank(), "lastName,firstName"])
+Table({Result:1},{Result:9},{Result:1},{Result:Blank()})
+
+>> Find([Blank(), ","], ["lastName,firstName",], [9, 2, 3])
+Table({Result:9},{Result:Microsoft.PowerFx.Core.Public.Values.ErrorValue},{Result:Microsoft.PowerFx.Core.Public.Values.ErrorValue})
+
+>> Find([Blank(), ",", "", "findMe"], [Blank(), "lastName,firstName"], 10)
+Table({Result:Microsoft.PowerFx.Core.Public.Values.ErrorValue},{Result:Blank()},{Result:Microsoft.PowerFx.Core.Public.Values.ErrorValue},{Result:Microsoft.PowerFx.Core.Public.Values.ErrorValue})
+
+>> Find([",", Blank()], "lastName,firstName", [1, 2, 3])
+Table({Result:9},{Result:2},{Result:3})
+
+>> Find(",", [Blank(), "lastName,firstName", "lastName,firstName"], [1, 2])
+Table({Result:Blank()},{Result:9},{Result:Blank()})
+
+>> Find(Filter(["empty table"], Value <> Value), "", 1)
+Table()
+
+>> Find("", Filter(["empty table"], Value <> Value), 1)
+Table()
+
+>> Find("textToFind", Filter(["empty table"], Value <> Value), 2)
+Table()
+
+>> Find(Filter(["empty table"], Value <> Value), Filter(["empty table"], Value <> Value))
+Table()
+
+>> Find(Filter(["empty table"], Value <> Value), Filter(["empty table"], Value <> Value), Filter(["empty table"], Value <> Value))
+Table()
+
+>> Find(Filter(["empty table"], Value <> Value), [Blank(), "lastName,firstName", "lastName,firstName"], 2)
+Table()
+
+>> Find(Filter(["empty table"], Value <> Value), "textToSearch", [1, 2])
+Table()
+
+>> Find([",", Blank(), ""], Filter(["empty table"], Value <> Value), 2)
+Table()
+
+>> Find(",", Filter(["empty table"], Value <> Value), [1, 1])
+Table()
+
+>> Find([Blank(), ",", "", "findMe"], [Blank(), "lastName,firstName", "lastName,firstName"], Filter(["empty table"], Value <> Value))
+Table()
+
+>> Find(",", [Blank(), "lastName,firstName"], Filter(["empty table"], Value <> Value))
+Table()
+
+>> Find("c", Table({ within: "abc" }, { within: Error({Kind: "Validation"}) }, { within: "cde" }))
+Table({Result:3},{Result:Microsoft.PowerFx.Core.Public.Values.ErrorValue},{Result:1})
+
+>> Find("c", Table({ within: "abc" }, { within: Error({Kind: "Validation"}) }, { within: "cde" }))
+Table({Result:3},{Result:Microsoft.PowerFx.Core.Public.Values.ErrorValue},{Result:1})
+
+>> Find("c", ["abc", Error({Kind: "Validation"}), "cde"])
+/*InterpreterRunner*/ #Skip
+Table({Result:3},Microsoft.PowerFx.Core.Public.Values.ErrorValue,{Result:1})
+//actual: Table({Result:3},{Result:Microsoft.PowerFx.Core.Public.Values.ErrorValue},{Result:1})
+
+>> Find(Table({ find: "a" }, { find: Error({Kind: "Validation"}) }, { find: "b" }), "abc")
+Table({Result:1},{Result:Microsoft.PowerFx.Core.Public.Values.ErrorValue},{Result:2})
+
+>> Find(["a", Error({Kind: "Validation"}), "b"], "abc")
+/*InterpreterRunner*/ #Skip
+Table({Result:1},Microsoft.PowerFx.Core.Public.Values.ErrorValue,{Result:2})
+//actual: Table({Result:1},{Result:Microsoft.PowerFx.Core.Public.Values.ErrorValue},{Result:2})
+
+>> Find(Table({ find: "a" }, { find: Error({Kind: "Validation"}) }, { find: "b" }, Error({Kind: "Validation"}), { find: "c" }), Table({ within: "abc" }, Error({Kind: "Validation"}), { within: Error({Kind: "Validation"}) }, Error({Kind: "Validation"}), { within: "abc" }))
+/*InterpreterRunner*/ #Skip
+Table({Result:1},Microsoft.PowerFx.Core.Public.Values.ErrorValue,{Result:Microsoft.PowerFx.Core.Public.Values.ErrorValue},Microsoft.PowerFx.Core.Public.Values.ErrorValue,{Result:3})
+//actual: Microsoft.PowerFx.Core.Public.Values.ErrorValue
+
+>> Find(Table({ find: "a" }, { find: "b" }, { find: "c" }), Error({Kind: "Validation"}))
+/*InterpreterRunner*/ #Skip
+Table({Result:Microsoft.PowerFx.Core.Public.Values.ErrorValue},{Result:Microsoft.PowerFx.Core.Public.Values.ErrorValue},{Result:Microsoft.PowerFx.Core.Public.Values.ErrorValue})
+//actual: Microsoft.PowerFx.Core.Public.Values.ErrorValue
+
+>> Find(Error({Kind: "Validation"}), Table({ within: "First" }, { within: "Second" }))
+/*InterpreterRunner*/ #Skip
+Table({Result:Microsoft.PowerFx.Core.Public.Values.ErrorValue},{Result:Microsoft.PowerFx.Core.Public.Values.ErrorValue})
+//actual: Microsoft.PowerFx.Core.Public.Values.ErrorValue

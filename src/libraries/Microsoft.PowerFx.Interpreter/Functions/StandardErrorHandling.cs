@@ -81,7 +81,7 @@ namespace Microsoft.PowerFx.Functions
                 });
 
                 var errors = runtimeValuesChecked.OfType<ErrorValue>();
-                if (errors.Count() != 0)
+                if (errors.Any())
                 {
                     return ErrorValue.Combine(irContext, errors);
                 }
@@ -183,19 +183,22 @@ namespace Microsoft.PowerFx.Functions
             return StandardSingleColumnTable<T>((runner, symbolContext, irContext, args) => targetFunction(irContext, args));
         }
 
-        private static int GetMaxTableSize(FormulaValue[] args)
+        private static (int maxTableSize, bool emptyTablePresent) AnalyzeTableArguments(FormulaValue[] args)
         {
-            var max = 0;
+            var maxTableSize = 0;
+            var emptyTablePresent = false;
 
             foreach (var arg in args)
             {
                 if (arg is TableValue tv)
                 {
-                    max = Math.Max(max, tv.Rows.Count());
+                    var tableSize = tv.Rows.Count();
+                    maxTableSize = Math.Max(maxTableSize, tableSize);
+                    emptyTablePresent |= tableSize == 0;
                 }
             }
 
-            return max;
+            return (maxTableSize, emptyTablePresent);
         }
 
         private class ExpandToSizeResult
@@ -212,11 +215,10 @@ namespace Microsoft.PowerFx.Functions
 
         private static ExpandToSizeResult ExpandToSize(FormulaValue arg, int size)
         {
-            var name = BuiltinFunction.ColumnName_ValueStr;
             if (arg is TableValue tv)
             {
                 var tvType = (TableType)tv.Type;
-                name = tvType.SingleColumnFieldName;
+                var name = tvType.SingleColumnFieldName;
 
                 var count = tv.Rows.Count();
                 if (count < size)
@@ -237,6 +239,7 @@ namespace Microsoft.PowerFx.Functions
             }
             else
             {
+                var name = BuiltinFunction.ColumnName_ValueStr;
                 var inputRecordType = new RecordType().Add(name, arg.Type);
                 var inputRecordNamedValue = new NamedValue(name, arg);
                 var inputRecord = new InMemoryRecordValue(IRContext.NotInSource(inputRecordType), new List<NamedValue>() { inputRecordNamedValue });
@@ -270,17 +273,21 @@ namespace Microsoft.PowerFx.Functions
          * F([a, b], [c, d]) => [F'([a, c]), F'([b, d])]
          * As a concrete example, Concatenate(["a", "b"], ["1", "2"]) => ["a1", "b2"]
         */
-        public static Func<EvalVisitor, SymbolContext, IRContext, FormulaValue[], FormulaValue> MultiSingleColumnTable(FunctionPtr targetFunction)
+        public static Func<EvalVisitor, SymbolContext, IRContext, FormulaValue[], FormulaValue> MultiSingleColumnTable(
+            FunctionPtr targetFunction, 
+            bool transposeEmptyTable)
         {
             return (runner, symbolContext, irContext, args) =>
             {
                 var resultRows = new List<DValue<RecordValue>>();
-                var maxSize = GetMaxTableSize(args);
 
-                if (maxSize == 0)
+                (var maxSize, var emptyTablePresent) = AnalyzeTableArguments(args);
+                if (maxSize == 0 || (emptyTablePresent && !transposeEmptyTable))
                 {
-                    // This can happen when we expect a Table at compile time but we recieve Blank() at runtime
-                    // Just return an empty table with the correct type
+                    // maxSize == 0 means there are no tables with rows. This can happen when we expect a Table at compile time but we recieve Blank() at runtime,
+                    // or all tables in args are empty. Additionally, among non-empty tables (in which case maxSize > 0) there may be an empty table,
+                    // which also means empty result if transposeEmptyTable == false.
+                    // Return an empty table (with the correct type).
                     return new InMemoryTableValue(irContext, resultRows);
                 }
 
@@ -530,17 +537,7 @@ namespace Microsoft.PowerFx.Functions
                     });
                 }
 
-                var finiteCheckResult = FiniteChecker(irContext, index, arg);
-                if (finiteCheckResult is NumberValue numberArg)
-                {
-                    var number = numberArg.Value;
-                    if (number <= 0)
-                    {
-                        return CommonErrors.ArgumentOutOfRange(irContext);
-                    }
-                }
-
-                return finiteCheckResult;
+                return StrictPositiveNumberChecker(irContext, index, arg);
             }
 
             if (index == 2)

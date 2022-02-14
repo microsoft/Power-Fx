@@ -1,11 +1,11 @@
 ﻿>> AddColumns([1,2,3,4,5], "Double", Value * 2)
-[{Double:2,Value:1},{Double:4,Value:2},{Double:6,Value:3},{Double:8,Value:4},{Double:10,Value:5}]
+Table({Double:2,Value:1},{Double:4,Value:2},{Double:6,Value:3},{Double:8,Value:4},{Double:10,Value:5})
 
 >> AddColumns([1,2,3,4,5], "Blanks", Blank())
-[{Blanks:Blank(),Value:1},{Blanks:Blank(),Value:2},{Blanks:Blank(),Value:3},{Blanks:Blank(),Value:4},{Blanks:Blank(),Value:5}]
+Table({Blanks:Blank(),Value:1},{Blanks:Blank(),Value:2},{Blanks:Blank(),Value:3},{Blanks:Blank(),Value:4},{Blanks:Blank(),Value:5})
 
 >> AddColumns([1,2,0,4,5], "Div", 20/Value)
-[{Div:20,Value:1},{Div:10,Value:2},{Div:Microsoft.PowerFx.Core.Public.Values.ErrorValue,Value:0},{Div:5,Value:4},{Div:4,Value:5}]
+Table({Div:20,Value:1},{Div:10,Value:2},{Div:Microsoft.PowerFx.Core.Public.Values.ErrorValue,Value:0},{Div:5,Value:4},{Div:4,Value:5})
 
 >> AddColumns(Sort([-2, -1, 0, 1, 2], 1 / Value), "Double", Value * 2)
 #Error

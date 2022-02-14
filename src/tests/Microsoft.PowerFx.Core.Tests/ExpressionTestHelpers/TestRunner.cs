@@ -65,6 +65,15 @@ namespace Microsoft.PowerFx.Core.Tests
             TestCase test = null;
 
             var i = -1;
+
+            // Preprocess file directives
+            string fileSetup = null;
+            if (lines[0].StartsWith("#SETUP:"))
+            {
+                fileSetup = lines[0].Substring("#SETUP:".Length).Trim();
+                i++;
+            }
+
             while (true)
             {
                 i++;
@@ -86,7 +95,8 @@ namespace Microsoft.PowerFx.Core.Tests
                     {
                         Input = line,
                         SourceLine = i + 1, // 1-based
-                        SourceFile = thisFile
+                        SourceFile = thisFile,
+                        SetupHandlerName = fileSetup
                     };
                     continue;
                 }
@@ -145,7 +155,24 @@ namespace Microsoft.PowerFx.Core.Tests
                     var exceptionThrown = false;
                     try
                     {
-                        result = runner.RunAsync(test.Input).Result;
+                        if (test.SetupHandlerName != null)
+                        {
+                            try
+                            {
+                                result = runner.RunWithSetup(test.Input, test.SetupHandlerName).Result;
+                            }
+                            catch (NotSupportedException ex) when (ex.Message.Contains("Setup Handler"))
+                            {
+                                sb.AppendLine($"SKIPPED: {engineName}, {Path.GetFileName(test.SourceFile)}:{test.SourceLine}");
+                                sb.AppendLine($"SKIPPED: {test.Input}, missing handler: {test.SetupHandlerName}");   
+                                continue;
+                            }
+                        }
+                        else 
+                        {
+                            result = runner.RunAsync(test.Input).Result;
+                        }
+
                         actualStr = TestToString(result);
                     }
                     catch (Exception e)
@@ -188,7 +215,7 @@ namespace Microsoft.PowerFx.Core.Tests
             return (total, fail, pass, sb.ToString());
         }
 
-        internal static string TestToString(FormulaValue result)
+        public static string TestToString(FormulaValue result)
         {
             var sb = new StringBuilder();
             try
@@ -225,35 +252,51 @@ namespace Microsoft.PowerFx.Core.Tests
             }
             else if (result is TableValue t)
             {
-                sb.Append('[');
+                var tableType = (TableType)t.Type;
+                var canUseSquareBracketSyntax = t.IsColumn && t.Rows.All(r => r.IsValue) && tableType.GetNames().First().Name == "Value";
+                if (canUseSquareBracketSyntax)
+                {
+                    sb.Append('[');
+                }
+                else
+                {
+                    sb.Append("Table(");
+                }
 
                 var dil = string.Empty;
                 foreach (var row in t.Rows)
                 {
                     sb.Append(dil);
+                    dil = ",";
 
-                    if (row.IsValue)
+                    if (canUseSquareBracketSyntax)
                     {
-                        var tableType = (TableType)t.Type;
-                        if (t.IsColumn && tableType.GetNames().First().Name == "Value")
-                        {
-                            var val = row.Value.Fields.First().Value;
-                            TestToString(val, sb);
-                        }
-                        else
-                        {
-                            TestToString(row.Value, sb);
-                        }
+                        var val = row.Value.Fields.First().Value;
+                        TestToString(val, sb);
                     }
                     else
                     {
-                        TestToString(row.ToFormulaValue(), sb);
+                        if (row.IsValue)
+                        {
+                            TestToString(row.Value, sb);
+                        }
+                        else
+                        {
+                            TestToString(row.ToFormulaValue(), sb);
+                        }
                     }
 
                     dil = ",";
                 }
 
-                sb.Append(']');
+                if (canUseSquareBracketSyntax)
+                {
+                    sb.Append(']');
+                }
+                else
+                {
+                    sb.Append(')');
+                }
             }
             else if (result is RecordValue r)
             {

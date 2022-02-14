@@ -1268,7 +1268,7 @@ namespace Microsoft.PowerFx.Core.Lexer
 
                     return LexOther();
                 }
-                else if (IsStringDelimiter(ch))
+                else if (IsStringDelimiter(ch) && !IsStringDelimiter(nextCh))
                 {
                     return LexInterpolatedStringEnd();
                 }

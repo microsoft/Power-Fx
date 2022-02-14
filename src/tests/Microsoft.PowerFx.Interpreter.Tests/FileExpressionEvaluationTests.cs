@@ -31,8 +31,23 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var exceptionThrown = false;
             try
             {
-                result = _runner.RunAsync(testCase.Input).Result;
-                actualStr = TestToString(result);
+                if (testCase.SetupHandlerName != null)
+                {
+                    try
+                    {
+                        result = _runner.RunWithSetup(testCase.Input, testCase.SetupHandlerName).Result;
+                    }
+                    catch (NotSupportedException ex) when (ex.Message.Contains("Setup Handler"))
+                    {
+                        Skip.If(true, $"Test {testCase.SourceFile}:{testCase.SourceLine} was skipped due to missing setup handler {testCase.SetupHandlerName}");
+                    }
+                }
+                else 
+                {
+                    result = _runner.RunAsync(testCase.Input).Result;
+                }
+
+                actualStr = TestRunner.TestToString(result);
             }
             catch (Exception e)
             {
@@ -57,107 +72,6 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             }
 
             Assert.Equal(testCase.GetExpected(nameof(InterpreterRunner)), actualStr);
-        }
-
-        internal string TestToString(FormulaValue result)
-        {
-            var sb = new StringBuilder();
-            try
-            {
-                TestToString(result, sb);
-            }
-            catch (Exception e)
-            {
-                // This will cause a diff and test failure below. 
-                sb.Append($"<exception writing result: {e.Message}>");
-            }
-
-            return sb.ToString();
-        }
-
-        internal void TestToString(FormulaValue result, StringBuilder sb)
-        {
-            if (result is NumberValue n)
-            {
-                sb.Append(n.Value);
-            }
-            else if (result is DateValue d)
-            {
-                sb.Append(d.Value.ToString("d"));
-            }
-            else if (result is BooleanValue b)
-            {
-                sb.Append(b.Value ? "true" : "false");
-            }
-            else if (result is StringValue s)
-            {
-                // $$$ proper escaping?
-                sb.Append('"' + s.Value + '"');
-            }
-            else if (result is TableValue t)
-            {
-                sb.Append('[');
-
-                var dil = string.Empty;
-                foreach (var row in t.Rows)
-                {
-                    sb.Append(dil);
-
-                    if (row.IsValue)
-                    {
-                        var tableType = (TableType)t.Type;
-                        if (t.IsColumn && tableType.GetNames().First().Name == "Value")
-                        {
-                            var val = row.Value.Fields.First().Value;
-                            TestToString(val, sb);
-                        }
-                        else
-                        {
-                            TestToString(row.Value, sb);
-                        }
-                    }
-                    else
-                    {
-                        TestToString(row.ToFormulaValue(), sb);
-                    }
-
-                    dil = ",";
-                }
-
-                sb.Append(']');
-            }
-            else if (result is RecordValue r)
-            {
-                var fields = r.Fields.ToArray();
-                Array.Sort(fields, (a, b) => string.CompareOrdinal(a.Name, b.Name));
-
-                sb.Append('{');
-                var dil = string.Empty;
-
-                foreach (var field in fields)
-                {
-                    sb.Append(dil);
-                    sb.Append(field.Name);
-                    sb.Append(':');
-                    TestToString(field.Value, sb);
-
-                    dil = ",";
-                }
-
-                sb.Append('}');
-            }
-            else if (result is BlankValue)
-            {
-                sb.Append("Blank()");
-            }
-            else if (result is ErrorValue)
-            {
-                sb.Append(result);
-            }
-            else
-            {
-                throw new InvalidOperationException($"unsupported value type: {result.GetType().Name}");
-            }
         }
     }
 }

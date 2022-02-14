@@ -33,9 +33,11 @@ namespace Microsoft.PowerFx.Core.Utils
                     switch (item.Kind)
                     {
                         case BindKind.Control:
+                        case BindKind.OptionSet:
+                        case BindKind.PowerFxResolvedObject:
                             tokens[item.Name] = TokenResultType.HostSymbol;
                             break;
-                        case BindKind.PowerFxResolvedObject:
+                        case BindKind.LambdaField:
                             tokens[item.Name] = TokenResultType.Variable;
                             break;
                         default:

@@ -45,6 +45,10 @@ namespace Microsoft.PowerFx.Core.Tests
             ExpressionTestCase test = null;
 
             var i = -1;
+
+            // Preprocess file directives
+            string fileSetup = null;
+            
             while (true)
             {
                 i++;
@@ -54,6 +58,13 @@ namespace Microsoft.PowerFx.Core.Tests
                 }
 
                 var line = lines[i];
+
+                if (line.StartsWith("#SETUP:"))
+                {
+                    fileSetup = line.Substring("#SETUP:".Length).Trim();
+                    continue;
+                }
+
                 if (string.IsNullOrWhiteSpace(line) || line.StartsWith("//"))
                 {
                     continue;
@@ -66,7 +77,8 @@ namespace Microsoft.PowerFx.Core.Tests
                     {
                         Input = line,
                         SourceLine = i + 1, // 1-based
-                        SourceFile = thisFile
+                        SourceFile = thisFile,
+                        SetupHandlerName = fileSetup
                     };
                     continue;
                 }

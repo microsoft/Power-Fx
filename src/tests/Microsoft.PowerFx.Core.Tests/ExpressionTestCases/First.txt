@@ -63,3 +63,9 @@ Blank()
 
 >> First(First(Table({a:{aa:11,ab:12,ad:Table({aaa:1},{aaa:2})},b:1},{a:{ac:23,ad:Table({bbb:1},{bbb:2})},b:2})).a.ad).aaa
 1
+
+>> First(Filter([1,2,3],Value=4)).Value
+Blank()
+
+>> FirstN(Filter([1,2,3],Value=4),2)
+[]

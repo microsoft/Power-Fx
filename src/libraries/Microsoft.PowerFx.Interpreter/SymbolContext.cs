@@ -15,14 +15,11 @@ namespace Microsoft.PowerFx
     // of this class in the bodies of the various .visit methods
     internal sealed class SymbolContext
     {
-        public SymbolContext(RecordValue globals, ScopeSymbol currentScope, Dictionary<int, IScope> scopeValues)
+        public SymbolContext(ScopeSymbol currentScope, Dictionary<int, IScope> scopeValues)
         {
-            Globals = globals;
             CurrentScope = currentScope;
             ScopeValues = scopeValues;
         }
-
-        public RecordValue Globals { get; }
 
         public ScopeSymbol CurrentScope { get; } = null;
 
@@ -30,17 +27,17 @@ namespace Microsoft.PowerFx
 
         public static SymbolContext New()
         {
-            return new SymbolContext(null, null, new Dictionary<int, IScope>());
+            return new SymbolContext(null, new Dictionary<int, IScope>());
         }
 
-        public SymbolContext WithGlobals(RecordValue globals)
+        public static SymbolContext NewTopScope(ScopeSymbol topScope, RecordValue ruleScope)
         {
-            return new SymbolContext(globals, CurrentScope, ScopeValues);
+            return new SymbolContext(topScope, new Dictionary<int, IScope>() { { topScope.Id, new RecordScope(ruleScope) } });
         }
 
         public SymbolContext WithScope(ScopeSymbol currentScope)
         {
-            return new SymbolContext(Globals, currentScope, ScopeValues);
+            return new SymbolContext(currentScope, ScopeValues);
         }
 
         public SymbolContext WithScopeValues(IScope scopeValues)
@@ -49,7 +46,7 @@ namespace Microsoft.PowerFx
             {
                 [CurrentScope.Id] = scopeValues
             };
-            return new SymbolContext(Globals, CurrentScope, newScopeValues);
+            return new SymbolContext(CurrentScope, newScopeValues);
         }
 
         public SymbolContext WithScopeValues(RecordValue scopeValues)

@@ -14,6 +14,10 @@ namespace Microsoft.PowerFx.Core.Tests
     {
         public abstract Task<FormulaValue> RunAsync(string expr);
 
+        // Throws NotSupportedException, with a message containing the string "Setup Handler"
+        // if setup handler isn't defined for this runner
+        public abstract Task<FormulaValue> RunWithSetup(string expr, string setupHandlerName);
+
         // Get the friendly name of the harness. 
         public virtual string GetName()
         {

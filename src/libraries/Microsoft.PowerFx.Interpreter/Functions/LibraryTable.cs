@@ -15,12 +15,12 @@ namespace Microsoft.PowerFx.Functions
     {
         public static FormulaValue First(IRContext irContext, TableValue[] args)
         {
-            return args[0].Rows.First().ToFormulaValue();
+            return args[0].Rows.FirstOrDefault()?.ToFormulaValue() ?? new BlankValue(irContext);
         }
 
         public static FormulaValue Last(IRContext irContext, TableValue[] args)
         {
-            return args[0].Rows.Last().ToFormulaValue();
+            return args[0].Rows.LastOrDefault()?.ToFormulaValue() ?? new BlankValue(irContext);
         }
 
         public static FormulaValue FirstN(IRContext irContext, FormulaValue[] args)
@@ -283,6 +283,10 @@ namespace Microsoft.PowerFx.Functions
                     if (result is BooleanValue booleanValue)
                     {
                         include = booleanValue.Value;
+                    }
+                    else if (result is ErrorValue errorValue)
+                    {
+                        yield return DValue<RecordValue>.Of(errorValue);
                     }
 
                     if (include)

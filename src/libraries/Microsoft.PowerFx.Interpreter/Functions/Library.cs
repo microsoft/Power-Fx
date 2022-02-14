@@ -143,7 +143,8 @@ namespace Microsoft.PowerFx.Functions
                                 checkRuntimeTypes: ExactValueType<StringValue>,
                                 checkRuntimeValues: DeferRuntimeValueChecking,
                                 returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
-                                targetFunction: Concatenate)))
+                                targetFunction: Concatenate),
+                            transposeEmptyTable: true))
             },
             {
                 BuiltinFunctionsCore.CountIf,
@@ -263,52 +264,6 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: Exp)
             },
             {
-                BuiltinFunctionsCore.IsBlank,
-                StandardErrorHandling<FormulaValue>(
-                    expandArguments: NoArgExpansion,
-                    replaceBlankValues: DoNotReplaceBlank,
-                    checkRuntimeTypes: DeferRuntimeTypeChecking,
-                    checkRuntimeValues: DeferRuntimeValueChecking,
-                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
-                    targetFunction: IsBlank)
-            },
-            {
-                BuiltinFunctionsCore.IsError,
-                IsError
-            },
-            {
-                BuiltinFunctionsCore.IsNumeric,
-                StandardErrorHandling<FormulaValue>(
-                    expandArguments: NoArgExpansion,
-                    replaceBlankValues: DoNotReplaceBlank,
-                    checkRuntimeTypes: DeferRuntimeTypeChecking,
-                    checkRuntimeValues: DeferRuntimeValueChecking,
-                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
-                    targetFunction: IsNumeric)
-            },
-            {
-                BuiltinFunctionsCore.IsToday,
-                StandardErrorHandling<FormulaValue>(
-                    expandArguments: NoArgExpansion,
-                    replaceBlankValues: DoNotReplaceBlank,
-                    checkRuntimeTypes: DateOrDateTime,
-                    checkRuntimeValues: DeferRuntimeValueChecking,
-                    returnBehavior: ReturnBehavior.ReturnFalseIfAnyArgIsBlank,
-                    targetFunction: IsToday)
-            },
-            { BuiltinFunctionsCore.If, If },
-            { BuiltinFunctionsCore.IfError, IfError },
-            {
-                BuiltinFunctionsCore.Int,
-                StandardErrorHandling<NumberValue>(
-                    expandArguments: NoArgExpansion,
-                    replaceBlankValues: DoNotReplaceBlank,
-                    checkRuntimeTypes: ExactValueTypeOrBlank<NumberValue>,
-                    checkRuntimeValues: FiniteChecker,
-                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
-                    targetFunction: Int)
-            },
-            {
                 BuiltinFunctionsCore.Filter,
                 StandardErrorHandling<FormulaValue>(
                     expandArguments: NoArgExpansion,
@@ -319,6 +274,55 @@ namespace Microsoft.PowerFx.Functions
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
                     targetFunction: FilterTable)
+            },
+            {
+                BuiltinFunctionsCore.Find,
+                StandardErrorHandling<FormulaValue>(
+                    expandArguments: InsertDefaultValues(outputArgsCount: 3, fillWith: new NumberValue(IRContext.NotInSource(FormulaType.Number), 1)),
+                    replaceBlankValues: ReplaceBlankWith(
+                        new StringValue(IRContext.NotInSource(FormulaType.String), string.Empty),
+                        new StringValue(IRContext.NotInSource(FormulaType.String), string.Empty),
+                        new BlankValue(IRContext.NotInSource(FormulaType.Blank))),
+                    checkRuntimeTypes: ExactSequence(
+                        ExactValueType<StringValue>,
+                        ExactValueType<StringValue>,
+                        ExactValueTypeOrBlank<NumberValue>),
+                    checkRuntimeValues: ExactSequence(
+                        DeferRuntimeValueChecking,
+                        DeferRuntimeValueChecking,
+                        StrictPositiveNumberChecker),
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: Find)
+            },
+            {
+                BuiltinFunctionsCore.FindT,
+                StandardErrorHandling<FormulaValue>(
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactSequence(
+                        ExactValueTypeOrTableOrBlank<StringValue>,
+                        ExactValueTypeOrTableOrBlank<StringValue>,
+                        ExactValueTypeOrTableOrBlank<NumberValue>),
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
+                    targetFunction: MultiSingleColumnTable(
+                            StandardErrorHandling<FormulaValue>(
+                                expandArguments: InsertDefaultValues(outputArgsCount: 3, fillWith: new NumberValue(IRContext.NotInSource(FormulaType.Number), 1)),
+                                replaceBlankValues: ReplaceBlankWith(
+                                    new StringValue(IRContext.NotInSource(FormulaType.String), string.Empty),
+                                    new StringValue(IRContext.NotInSource(FormulaType.String), string.Empty),
+                                    new BlankValue(IRContext.NotInSource(FormulaType.Blank))),
+                                checkRuntimeTypes: ExactSequence(
+                                    ExactValueType<StringValue>,
+                                    ExactValueType<StringValue>,
+                                    ExactValueTypeOrBlank<NumberValue>),
+                                checkRuntimeValues: ExactSequence(
+                                    DeferRuntimeValueChecking,
+                                    DeferRuntimeValueChecking,
+                                    StrictPositiveNumberChecker),
+                                returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                                targetFunction: Find),
+                            transposeEmptyTable: false))
             },
             {
                 BuiltinFunctionsCore.First,
@@ -353,6 +357,52 @@ namespace Microsoft.PowerFx.Functions
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
                     targetFunction: ForAll)
+            },
+            {
+                BuiltinFunctionsCore.IsBlank,
+                StandardErrorHandling<FormulaValue>(
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: DeferRuntimeTypeChecking,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
+                    targetFunction: IsBlank)
+            },
+            {
+                BuiltinFunctionsCore.IsError,
+                IsError
+            },
+            {
+                BuiltinFunctionsCore.IsNumeric,
+                StandardErrorHandling<FormulaValue>(
+                    expandArguments: InsertDefaultValues(outputArgsCount: 2, fillWith: new NumberValue(IRContext.NotInSource(FormulaType.Number), 1)),
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: DeferRuntimeTypeChecking,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
+                    targetFunction: IsNumeric)
+            },
+            {
+                BuiltinFunctionsCore.IsToday,
+                StandardErrorHandling<FormulaValue>(
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: DateOrDateTime,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.ReturnFalseIfAnyArgIsBlank,
+                    targetFunction: IsToday)
+            },
+            { BuiltinFunctionsCore.If, If },
+            { BuiltinFunctionsCore.IfError, IfError },
+            {
+                BuiltinFunctionsCore.Int,
+                StandardErrorHandling<NumberValue>(
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<NumberValue>,
+                    checkRuntimeValues: FiniteChecker,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: Int)
             },
             {
                 BuiltinFunctionsCore.Hour,

@@ -33,7 +33,7 @@
 4
 
 >> Filter([1,2,0,3,4], 1/ThisRecord.Value >= 0)
-[1,2,3,4]
+Table({Value:1},{Value:2},Microsoft.PowerFx.Core.Public.Values.ErrorValue,{Value:3},{Value:4})
 
 >> Filter([1,2,0,3,4], Blank())
 []
