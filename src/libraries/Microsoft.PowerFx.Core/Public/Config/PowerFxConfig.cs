@@ -30,17 +30,14 @@ namespace Microsoft.PowerFx.Core
         internal CultureInfo CultureInfo { get; }        
 
         public PowerFxConfig(CultureInfo cultureInfo = null)
-            : this(null, cultureInfo)
         {
-        }
-
-        internal PowerFxConfig(EnumStore enumStore = null, CultureInfo cultureInfo = null)
-        {
-            EnumStore = enumStore ?? new EnumStore();
             CultureInfo = cultureInfo ?? CultureInfo.CurrentCulture;
             _isLocked = false;
             _extraFunctions = new Dictionary<string, TexlFunction>();
             _environmentSymbols = new Dictionary<DName, IExternalEntity>();
+            
+            // $$$ Refactor this to be part of the builder pattern when addressing Enum + Function configuration
+            EnumStore = new EnumStore();
         }
 
         internal void AddEntity(IExternalEntity entity)

@@ -36,7 +36,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                     { "123412983", "OptionD" },
             });
 
-            var config = new PowerFxConfig(null, null);
+            var config = new PowerFxConfig(null);
             config.AddOptionSet(optionSet);
             config.AddOptionSet(otherOptionSet);
 
