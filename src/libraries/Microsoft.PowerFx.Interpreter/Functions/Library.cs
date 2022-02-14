@@ -443,6 +443,20 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: Index_UO)
             },
             {
+                BuiltinFunctionsCore.Index,
+                StandardErrorHandling<FormulaValue>(
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactSequence(
+                        ExactValueTypeOrBlank<TableValue>,
+                        ExactValueTypeOrBlank<NumberValue>),
+                    checkRuntimeValues: ExactSequence(
+                        DeferRuntimeValueChecking,
+                        StrictPositiveNumberChecker),
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: IndexTable)
+            },
+            {
                 BuiltinFunctionsCore.Last,
                 StandardErrorHandling<TableValue>(
                     expandArguments: NoArgExpansion,
@@ -767,16 +781,6 @@ namespace Microsoft.PowerFx.Functions
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.ReturnFalseIfAnyArgIsBlank,
                     targetFunction: StartsWith)
-            },
-            {
-                BuiltinFunctionsCore.StringInterpolation,
-                StandardErrorHandling<StringValue>(
-                    expandArguments: NoArgExpansion,
-                    replaceBlankValues: ReplaceBlankWithEmptyString,
-                    checkRuntimeTypes: ExactValueType<StringValue>,
-                    checkRuntimeValues: DeferRuntimeValueChecking,
-                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
-                    targetFunction: Concatenate)
             },
             {
                 BuiltinFunctionsCore.Sum,

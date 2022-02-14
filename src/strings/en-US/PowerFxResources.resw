@@ -6347,6 +6347,14 @@
     <value>https://go.microsoft.com/fwlink/?linkid=2132703</value>
     <comment>{Locked}</comment>
   </data>
+  <data name="ErrorResource_ErrInvalidStringInterpolation_ShortMessage" xml:space="preserve">
+    <value>Expressions which appear inside an interpolated string must evaluate to a Text value or to a compatible type.</value>
+    <comment>Error message.</comment>
+  </data>
+  <data name="ErrorResource_ErrInvalidStringInterpolation_HowToFix_1" xml:space="preserve">
+    <value>Check the types of the expressions inside the interpolated string.</value>
+    <comment>How to fix message for an error</comment>
+  </data>
   <data name="ErrorResource_ErrAsNotInContext_ShortMessage" xml:space="preserve">
     <value>As is not permitted in this context</value>
     <comment>{Locked=As} This is an error message that shows up when the As keyword is used but is not valid</comment>

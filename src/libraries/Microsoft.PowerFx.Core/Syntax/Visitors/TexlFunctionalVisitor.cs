@@ -28,6 +28,8 @@ namespace Microsoft.PowerFx.Core.Syntax.Visitors
 
         // Visit methods for non-leaf node types.
         // If PreVisit returns true, the children are visited and PostVisit is called.
+        public abstract TResult Visit(StrInterpNode node, TContext context);
+
         public abstract TResult Visit(DottedNameNode node, TContext context);
 
         public abstract TResult Visit(UnaryOpNode node, TContext context);

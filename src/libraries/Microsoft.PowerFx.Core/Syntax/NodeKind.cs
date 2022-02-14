@@ -29,6 +29,7 @@ namespace Microsoft.PowerFx.Core.Syntax
         StrLit,
         Replaceable,
 
-        Error
+        Error,
+        StrInterp
     }
 }
