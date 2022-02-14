@@ -25,7 +25,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                   FunctionCategories.Table,
                   DType.EmptyRecord,
                   0,
-                  1,
+                  2,
                   2,
                   DType.EmptyTable,
                   DType.Number)
