@@ -152,6 +152,11 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
             return null;
         }
 
+        public virtual StrInterpNode AsStrInterp()
+        {
+            return null;
+        }
+
         public virtual BoolLitNode CastBoolLit()
         {
             Contracts.Assert(false);

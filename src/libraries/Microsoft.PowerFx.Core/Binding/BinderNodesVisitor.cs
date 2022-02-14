@@ -20,6 +20,10 @@ namespace Microsoft.PowerFx.Core.Binding
 
         public IEnumerable<VariadicOpNode> VariadicOperators => _variadicOperators;
 
+        private readonly List<StrInterpNode> _stringInterpolations;
+
+        public IEnumerable<StrInterpNode> StringInterpolations => _stringInterpolations;
+
         private readonly List<BoolLitNode> _booleanLiterals;
 
         public IEnumerable<BoolLitNode> BooleanLiterals => _booleanLiterals;
@@ -47,6 +51,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
             _binaryOperators = new List<BinaryOpNode>();
             _variadicOperators = new List<VariadicOpNode>();
+            _stringInterpolations = new List<StrInterpNode>();
             _booleanLiterals = new List<BoolLitNode>();
             _numericLiterals = new List<NumLitNode>();
             _stringLiterals = new List<StrLitNode>();
@@ -64,6 +69,12 @@ namespace Microsoft.PowerFx.Core.Binding
         {
             Contracts.AssertValue(node);
             _variadicOperators.Add(node);
+        }
+
+        public override void PostVisit(StrInterpNode node)
+        {
+            Contracts.AssertValue(node);
+            _stringInterpolations.Add(node);
         }
 
         public override void PostVisit(UnaryOpNode node)

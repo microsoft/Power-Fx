@@ -58,7 +58,6 @@ namespace Microsoft.PowerFx
             powerFxConfig.AddFunction(BuiltinFunctionsCore.Value_UO);
             powerFxConfig.AddFunction(BuiltinFunctionsCore.Boolean);
             powerFxConfig.AddFunction(BuiltinFunctionsCore.Boolean_UO);
-            powerFxConfig.AddFunction(BuiltinFunctionsCore.StringInterpolation);
         }
 
         /// <summary>
