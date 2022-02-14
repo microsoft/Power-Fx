@@ -60,6 +60,10 @@ namespace Microsoft.PowerFx.Core.Syntax.Visitors
         {
         }
 
+        public override void PostVisit(StrInterpNode node)
+        {
+        }
+
         public override void PostVisit(CallNode node)
         {
         }

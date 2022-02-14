@@ -11,6 +11,7 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
         {
             new Intellisense.CommentNodeSuggestionHandler(),
             new Intellisense.NullNodeSuggestionHandler(),
+            new Intellisense.StrInterpSuggestionHandler(),
             new Intellisense.FunctionRecordNameSuggestionHandler(),
             new Intellisense.ErrorNodeSuggestionHandler(),
             new Intellisense.BlankNodeSuggestionHandler(),

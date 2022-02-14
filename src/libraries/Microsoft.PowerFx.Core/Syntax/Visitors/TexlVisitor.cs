@@ -29,6 +29,11 @@ namespace Microsoft.PowerFx.Core.Syntax.Visitors
 
         // Visit methods for non-leaf node types.
         // If PreVisit returns true, the children are visited and PostVisit is called.
+        public virtual bool PreVisit(StrInterpNode node)
+        {
+            return true;
+        }
+
         public virtual bool PreVisit(DottedNameNode node)
         {
             return true;
@@ -73,6 +78,8 @@ namespace Microsoft.PowerFx.Core.Syntax.Visitors
         {
             return true;
         }
+
+        public abstract void PostVisit(StrInterpNode node);
 
         public abstract void PostVisit(DottedNameNode node);
 
