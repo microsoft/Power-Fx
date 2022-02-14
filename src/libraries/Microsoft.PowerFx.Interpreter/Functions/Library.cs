@@ -415,20 +415,6 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: Hour)
             },
             {
-                BuiltinFunctionsCore.Index_UO,
-                StandardErrorHandling<FormulaValue>(
-                    expandArguments: NoArgExpansion,
-                    replaceBlankValues: DoNotReplaceBlank,
-                    checkRuntimeTypes: ExactSequence(
-                        ExactValueTypeOrBlank<UntypedObjectValue>,
-                        ExactValueTypeOrBlank<NumberValue>),
-                    checkRuntimeValues: ExactSequence(
-                        UntypedObjectArrayChecker,
-                        StrictPositiveNumberChecker),
-                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
-                    targetFunction: Index_UO)
-            },
-            {
                 BuiltinFunctionsCore.Index,
                 StandardErrorHandling<FormulaValue>(
                     expandArguments: NoArgExpansion,
@@ -441,6 +427,20 @@ namespace Microsoft.PowerFx.Functions
                         StrictPositiveNumberChecker),
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
                     targetFunction: IndexTable)
+            },
+            {
+                BuiltinFunctionsCore.Index_UO,
+                StandardErrorHandling<FormulaValue>(
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactSequence(
+                        ExactValueTypeOrBlank<UntypedObjectValue>,
+                        ExactValueTypeOrBlank<NumberValue>),
+                    checkRuntimeValues: ExactSequence(
+                        UntypedObjectArrayChecker,
+                        StrictPositiveNumberChecker),
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: Index_UO)
             },
             {
                 BuiltinFunctionsCore.Last,
