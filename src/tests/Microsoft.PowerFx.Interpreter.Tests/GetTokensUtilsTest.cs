@@ -49,7 +49,7 @@ namespace Microsoft.PowerFx.Tests
                     { "option_1", "Option1" },
                     { "option_2", "Option2" }
             });
-            var config = new PowerFxConfig(null, null);
+            var config = new PowerFxConfig(null);
             config.AddOptionSet(optionSet);
 
             var scope = RecalcEngineScope.FromJson(new RecalcEngine(config), "{\"A\":1,\"B\":[1,2,3]}");

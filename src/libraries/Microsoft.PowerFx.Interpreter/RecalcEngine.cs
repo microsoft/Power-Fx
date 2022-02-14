@@ -42,7 +42,7 @@ namespace Microsoft.PowerFx
         /// <param name="powerFxConfig">Compiler customizations.</param>
         public RecalcEngine(PowerFxConfig powerFxConfig = null)
         {
-            powerFxConfig = powerFxConfig ?? new PowerFxConfig(null, null);
+            powerFxConfig = powerFxConfig ?? new PowerFxConfig(null);
             AddInterpreterFunctions(powerFxConfig);
             powerFxConfig.Lock();
             _powerFxConfig = powerFxConfig;
