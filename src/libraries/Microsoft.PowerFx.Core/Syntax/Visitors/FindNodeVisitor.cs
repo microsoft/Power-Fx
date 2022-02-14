@@ -87,13 +87,15 @@ namespace Microsoft.PowerFx.Core.Syntax.Visitors
                 return false;
             }
 
-            Contracts.Assert(node.Children.Length > 0);
-
             for (var i = 0; i < node.Children.Length; i++)
             {
-                if (node.Children[i].Kind != NodeKind.Error)
+                var child = node.Children[i];
+
+                // Cursor position is inside ith child.
+                if (_cursorPosition <= child.GetCompleteSpan().Lim)
                 {
-                    node.Children[i].Accept(this);
+                    child.Accept(this);
+                    return false;
                 }
             }
 
