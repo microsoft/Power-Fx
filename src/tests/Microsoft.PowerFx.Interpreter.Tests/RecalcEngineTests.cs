@@ -237,7 +237,7 @@ namespace Microsoft.PowerFx.Tests
 
             Assert.False(result.IsSuccess);
             Assert.Single(result.Errors);
-            Assert.StartsWith("Error 2-5: Name isn't valid. This identifier isn't recognized", result.Errors[0].ToString());
+            Assert.StartsWith("Error 2-5: Name isn't valid. 'foo' isn't recognized", result.Errors[0].ToString());
         }
 
         [Fact]
@@ -290,7 +290,7 @@ namespace Microsoft.PowerFx.Tests
             Assert.False(result.IsSuccess);
             Assert.Null(result.Expression);
             Assert.Single(result.Errors);
-            Assert.StartsWith("Error 2-5: Name isn't valid. This identifier isn't recognized", result.Errors[0].ToString());
+            Assert.StartsWith("Error 2-5: Name isn't valid. 'foo' isn't recognized", result.Errors[0].ToString());
         }
 
         [Fact]
