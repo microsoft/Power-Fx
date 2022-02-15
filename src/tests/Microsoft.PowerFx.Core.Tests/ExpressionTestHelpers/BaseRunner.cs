@@ -12,11 +12,13 @@ namespace Microsoft.PowerFx.Core.Tests
     // Base class for running a lightweght test. 
     public abstract class BaseRunner
     {
-        public abstract Task<FormulaValue> RunAsync(string expr);
-
-        // Throws NotSupportedException, with a message containing the string "Setup Handler"
-        // if setup handler isn't defined for this runner
-        public abstract Task<FormulaValue> RunWithSetup(string expr, string setupHandlerName);
+        /// <summary>
+        /// Runs a PowerFx test case, with optional setup.
+        /// </summary>
+        /// <param name="expr">PowerFx expression.</param>
+        /// <param name="setupHandlerName">Optional name of a setup handler to run. Throws SetupHandlerNotImplemented if not found.</param>
+        /// <returns>Result of evaluating Expr.</returns>
+        public abstract Task<FormulaValue> RunAsync(string expr, string setupHandlerName = null);
 
         // Get the friendly name of the harness. 
         public virtual string GetName()
