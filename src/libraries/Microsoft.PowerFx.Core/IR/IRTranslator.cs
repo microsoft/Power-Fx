@@ -499,7 +499,7 @@ namespace Microsoft.PowerFx.Core.IR
                     children.Add(child.Accept(this, context));
                 }
 
-                return MaybeInjectCoercion(node, new StringInterpolationNode(context.GetIRContext(node), children), context);
+                return MaybeInjectCoercion(node, new CallNode(context.GetIRContext(node), BuiltinFunctionsCore.Concatenate, children), context);
             }
 
             public override IntermediateNode Visit(AsNode node, IRTranslatorContext context)
