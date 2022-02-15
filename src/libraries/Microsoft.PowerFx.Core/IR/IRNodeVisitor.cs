@@ -39,8 +39,6 @@ namespace Microsoft.PowerFx.Core.IR
 
         public abstract TResult Visit(ChainingNode node, TContext context);
 
-        public abstract TResult Visit(StringInterpolationNode node, TContext context);
-
         public abstract TResult Visit(AggregateCoercionNode node, TContext context);
     }
 }
