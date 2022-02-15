@@ -5719,7 +5719,7 @@
     <comment>{Locked}</comment>
   </data>
   <data name="ErrorResource_ErrInvalidName_ShortMessage" xml:space="preserve">
-    <value>Name isn't valid. This identifier isn't recognized.</value>
+    <value>Name isn't valid. '{0}' isn't recognized.</value>
     <comment>Error Message.</comment>
   </data>
   <data name="ErrorResource_ErrInvalidName_LongMessage" xml:space="preserve">
