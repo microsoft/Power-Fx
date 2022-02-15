@@ -168,8 +168,9 @@ namespace Microsoft.PowerFx.Functions
         {
             var arg0 = (TableValue)args[0];
             var arg1 = (NumberValue)args[1];
+            int rowIndex = (int)arg1.Value;
 
-            if ((int)arg1.Value < 1 || (int)arg1.Value >= arg0.Rows.Count())
+            if (rowIndex < 1 || rowIndex >= arg0.Rows.Count())
             {
                 return new ErrorValue(irContext, new ExpressionError()
                 {
@@ -179,7 +180,7 @@ namespace Microsoft.PowerFx.Functions
                 });
             }
 
-            return arg0.Rows.ElementAt((int)arg1.Value - 1).ToFormulaValue();
+            return arg0.Rows.ElementAt(rowIndex - 1).ToFormulaValue();
         }
 
         public static FormulaValue SortTable(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args)
