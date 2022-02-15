@@ -257,7 +257,7 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public void CustomFunction()
         {
-            var config = new PowerFxConfig(null, null);
+            var config = new PowerFxConfig(null);
             config.AddFunction(new TestCustomFunction());
             var engine = new RecalcEngine(config);
 
@@ -339,7 +339,7 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public void RecalcEngineLocksConfig()
         {
-            var config = new PowerFxConfig(null, null);
+            var config = new PowerFxConfig(null);
             config.AddFunction(BuiltinFunctionsCore.Blank);
             
             var recalcEngine = new RecalcEngine(config);
@@ -356,7 +356,7 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public void OptionSetChecks()
         {
-            var config = new PowerFxConfig(null, null);
+            var config = new PowerFxConfig(null);
 
             var optionSet = new OptionSet("OptionSet", new Dictionary<string, string>() 
             {
