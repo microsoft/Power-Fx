@@ -69,3 +69,15 @@ true
 
 >> 10% = 0.12
 false
+
+>> Time(10,30,00) = Time(10,30,00)
+true
+
+>> Time(14,20,30) = Time(2,30,30)
+false
+
+>> Time(10,30,00) <> Time(10,30,00)
+false
+
+>> Time(14,20,30) <> Time(2,30,30)
+true
