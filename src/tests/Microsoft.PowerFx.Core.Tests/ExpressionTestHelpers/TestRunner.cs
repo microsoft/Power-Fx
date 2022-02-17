@@ -155,22 +155,15 @@ namespace Microsoft.PowerFx.Core.Tests
                     var exceptionThrown = false;
                     try
                     {
-                        if (test.SetupHandlerName != null)
+                        try
                         {
-                            try
-                            {
-                                result = runner.RunWithSetup(test.Input, test.SetupHandlerName).Result;
-                            }
-                            catch (NotSupportedException ex) when (ex.Message.Contains("Setup Handler"))
-                            {
-                                sb.AppendLine($"SKIPPED: {engineName}, {Path.GetFileName(test.SourceFile)}:{test.SourceLine}");
-                                sb.AppendLine($"SKIPPED: {test.Input}, missing handler: {test.SetupHandlerName}");   
-                                continue;
-                            }
+                            result = runner.RunAsync(test.Input, test.SetupHandlerName).Result;
                         }
-                        else 
+                        catch (SetupHandlerNotFoundException ex)
                         {
-                            result = runner.RunAsync(test.Input).Result;
+                            sb.AppendLine($"SKIPPED: {engineName}, {Path.GetFileName(test.SourceFile)}:{test.SourceLine}");
+                            sb.AppendLine($"SKIPPED: {test.Input}, missing handler: {test.SetupHandlerName}");   
+                            continue;
                         }
 
                         actualStr = TestToString(result);

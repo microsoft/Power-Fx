@@ -39,6 +39,10 @@ namespace Microsoft.PowerFx.Core.Public.Types
         public static FormulaType UntypedObject { get; } = new UntypedObjectType();
 
         public static FormulaType Hyperlink { get; } = new HyperlinkType();
+
+        public static FormulaType Color { get; } = new ColorType();
+
+        public static FormulaType Guid { get; } = new GuidType();
         
         /// <summary>
         /// Internal use only to represent an arbitrary (un-backed) option set value.
@@ -67,6 +71,8 @@ namespace Microsoft.PowerFx.Core.Public.Types
                 case DKind.Boolean: return Boolean;
                 case DKind.Currency: return Number; // TODO: validate
                 case DKind.Hyperlink: return Hyperlink;
+                case DKind.Color: return Color;
+                case DKind.Guid: return Guid;
 
                 case DKind.Time: return Time;
                 case DKind.Date: return Date;

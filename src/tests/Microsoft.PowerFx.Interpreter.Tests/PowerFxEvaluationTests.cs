@@ -53,24 +53,27 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
         internal class InterpreterRunner : BaseRunner
         {
-            private readonly RecalcEngine _engine = new RecalcEngine();
-
-            public override Task<FormulaValue> RunAsync(string expr)
+            public override Task<FormulaValue> RunAsync(string expr, string setupHandlerName)
             {
                 FeatureFlags.StringInterpolation = true;
-                var result = _engine.Eval(expr);
-                return Task.FromResult(result);
-            }
+                RecalcEngine engine;
+                RecordValue parameters;
 
-            public override Task<FormulaValue> RunWithSetup(string expr, string setupHandlerName)
-            {
-                FeatureFlags.StringInterpolation = true;
-                if (!SetupHandlers.TryGetValue(setupHandlerName, out var handler))
+                if (setupHandlerName != null) 
                 {
-                    throw new NotSupportedException($"Setup Handler {setupHandlerName} not defined for {nameof(InterpreterRunner)}");
+                    if (!SetupHandlers.TryGetValue(setupHandlerName, out var handler))
+                    {
+                        throw new SetupHandlerNotFoundException();
+                    }
+
+                    (engine, parameters) = handler();
+                }
+                else
+                {
+                    engine = new RecalcEngine();
+                    parameters = null;
                 }
 
-                var (engine, parameters) = handler();
                 var result = engine.Eval(expr, parameters);
                 return Task.FromResult(result);
             }

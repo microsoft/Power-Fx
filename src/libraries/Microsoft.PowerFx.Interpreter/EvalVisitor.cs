@@ -158,12 +158,6 @@ namespace Microsoft.PowerFx
             }
         }
 
-        public override FormulaValue Visit(StringInterpolationNode node, SymbolContext context)
-        {
-            var args = node.Nodes.Select(s => s.Accept(this, context));
-            return FuncsByName[BuiltinFunctionsCore.Concatenate](this, context, node.IRContext, args.ToArray());
-        }
-
         public override FormulaValue Visit(BinaryOpNode node, SymbolContext context)
         {
             var arg1 = node.Left.Accept(this, context);
