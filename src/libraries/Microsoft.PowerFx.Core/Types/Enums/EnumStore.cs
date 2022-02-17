@@ -325,14 +325,6 @@ namespace Microsoft.PowerFx.Core.Types.Enums
             }
         }
 
-        private void ResetEnumCaches()
-        {
-            _enumSpec = RegenerateEnumSpec();
-            _enumTypes = RegenerateEnumTypes();
-            _enumSymbols = null;
-            _enumsUsedPowerApps = null;
-        }
-
         internal bool TryGetLocalizedEnumValue(string enumName, string enumValue, out string locValue)
         {
             Contracts.AssertValue(enumName);
@@ -533,6 +525,14 @@ namespace Microsoft.PowerFx.Core.Types.Enums
             }
 
             return list.ToImmutable();
+        }
+
+        private void ResetEnumCaches()
+        {
+            _enumSpec = RegenerateEnumSpec();
+            _enumTypes = RegenerateEnumTypes();
+            _enumSymbols = null;
+            _enumsUsedPowerApps = null;
         }
     }
 }
