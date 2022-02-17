@@ -76,6 +76,8 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         [InlineData("$\"Hello {\"|")]
         [InlineData("$\"Hello {}\"|")]
         [InlineData("$\"Hello {|}\"")]
+        [InlineData("$\"{ {a:{},b:{},c:{}}.}{|}\"")]
+        [InlineData("$\"{ {a:{},b:{},c:{}}}{|}\"")]
         [InlineData("$ |")]
         [InlineData("$\"foo {|")]
         [InlineData("{abc:{},ab:{},a:{}}.|ab", "ab", "a", "abc")]
