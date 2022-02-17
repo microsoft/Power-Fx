@@ -435,7 +435,7 @@ namespace Microsoft.PowerFx.Core.Types.Enums
 
             return CollectionUtils.EnsureInstanceCreated(ref _enumsUsedPowerApps, () =>
             {
-                var list = ImmutableList.Create<Tuple<DName, DName, DType>>();
+                var list = ImmutableList.CreateBuilder<Tuple<DName, DName, DType>>();
                 foreach (var enumSpec in EnumDict)
                 {
                     Contracts.Assert(DName.IsValidDName(enumSpec.Key));
@@ -452,7 +452,7 @@ namespace Microsoft.PowerFx.Core.Types.Enums
                     list.Add(new Tuple<DName, DName, DType>(new DName(enumSpec.Item1), new DName(enumSpec.Item2), _enumTypes[enumSpec.Item2]));
                 }
 
-                return list;
+                return list.ToImmutable();
             });
         }
 
