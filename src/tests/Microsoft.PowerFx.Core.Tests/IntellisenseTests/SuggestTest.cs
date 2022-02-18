@@ -71,8 +71,13 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         // DottedNameNodeSuggestionHandler
         [InlineData("{a:{},b:{},c:{}}.|", "a", "b", "c")]
         [InlineData("$\"Hello { First(Table({a:{},b:{},c:{}})).| } World\"", "a", "b", "c")]
-        [InlineData("$\"Hello { First(Table({a:{},b:{},c:{}})).|", "a", "b", "c")]
-        [InlineData("$\"Hello { {a:{},b:{},c:{}}.|", "a", "b", "c")]
+        [InlineData("$\"Hello { First(Table({a:{},b:{},c:{}})).|   \"", "a", "b", "c")]
+        [InlineData("$\"Hello { {a:{},b:{},c:{}}.|  \"", "a", "b", "c")]
+        [InlineData("$\"Hello {\"|")]
+        [InlineData("$\"Hello {}\"|")]
+        [InlineData("$\"Hello {|}\"")]
+        [InlineData("$\"{ {a:{},b:{},c:{}}.}{|}\"")]
+        [InlineData("$\"{ {a:{},b:{},c:{}}}{|}\"")]
         [InlineData("$ |")]
         [InlineData("$\"foo {|")]
         [InlineData("{abc:{},ab:{},a:{}}.|ab", "ab", "a", "abc")]
@@ -151,6 +156,9 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         [InlineData("$\"Hello {DisplayMode|} World!\"", "DisplayMode", "DisplayMode.Disabled", "DisplayMode.Edit", "DisplayMode.View")]
         public void TestSuggest(string expression, params string[] expectedSuggestions)
         {
+            // Note that the expression string needs to have balanced quotes or we hit a bug in NUnit running the tests:
+            //   https://github.com/nunit/nunit3-vs-adapter/issues/691
+
             FeatureFlags.StringInterpolation = true;
             var actualSuggestions = SuggestStrings(expression, _defaultEnumStore);
             Assert.Equal(expectedSuggestions, actualSuggestions);
