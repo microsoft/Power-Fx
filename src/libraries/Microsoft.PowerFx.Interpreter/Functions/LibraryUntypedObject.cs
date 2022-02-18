@@ -28,7 +28,7 @@ namespace Microsoft.PowerFx.Functions
                 var result = element[index];
 
                 // Map null to blank
-                if (result.Type == FormulaType.Blank)
+                if (result == null || result.Type == FormulaType.Blank)
                 {
                     return new BlankValue(IRContext.NotInSource(FormulaType.Blank));
                 }
