@@ -24,6 +24,7 @@ namespace Microsoft.PowerFx.Functions
             var index1 = (int)arg1.Value;
             var index0 = index1 - 1; // 1-based index
 
+            // Error pipeline already caught cases of too low. 
             if (index0 < len)
             {
                 var result = element[index0];
@@ -38,7 +39,7 @@ namespace Microsoft.PowerFx.Functions
             }
             else
             {
-                return new BlankValue(IRContext.NotInSource(FormulaType.Blank));
+                return CommonErrors.ArgumentOutOfRange(irContext);
             }
         }
 
