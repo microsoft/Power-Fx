@@ -35,14 +35,16 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             engine.UpdateVariable(name, objFx);
         }
 
-        [Theory]        
+        [Theory]
         [InlineData("Value(obj.Next.Value)", 20.0)]
-        [InlineData("obj.missing", null)]        
+        [InlineData("obj.missing", null)]
         [InlineData("IsBlank(obj.Next.Next)", true)]
         [InlineData("IsBlank(obj.Next)", false)]
         [InlineData("obj.Next.Next", null)]
         [InlineData("IsBlank(Index(array, 3))", true)]
         [InlineData("Text(Index(array, 2))", "two")]
+        [InlineData("Index(array, -1)", "#error")] // Out of bounds , low
+        [InlineData("Index(array, 100)", null)] // Out of bounds, high
         public void Test(string expr, object expected)
         {
             var engine = new RecalcEngine();
@@ -62,7 +64,14 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             var result = engine.Eval(expr);
 
-            Assert.Equal(expected, result.ToObject());
+            if (expected is string str && str == "#error")
+            {
+                Assert.IsType<ErrorValue>(result);
+            }
+            else
+            {
+                Assert.Equal(expected, result.ToObject());
+            }
         }
 
         [Fact]
