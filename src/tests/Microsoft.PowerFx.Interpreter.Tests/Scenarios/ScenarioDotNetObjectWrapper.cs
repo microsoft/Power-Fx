@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.Reflection;
 using Microsoft.PowerFx;
@@ -36,8 +37,9 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
         [Theory]        
         [InlineData("Value(obj.Next.Value)", 20.0)]
-        [InlineData("obj.missing", null)]
+        [InlineData("obj.missing", null)]        
         [InlineData("IsBlank(obj.Next.Next)", true)]
+        [InlineData("IsBlank(obj.Next)", false)]
         [InlineData("obj.Next.Next", null)]
         [InlineData("IsBlank(Index(array, 3))", true)]
         [InlineData("Text(Index(array, 2))", "two")]
@@ -61,10 +63,34 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var result = engine.Eval(expr);
 
             Assert.Equal(expected, result.ToObject());
-        }   
+        }
+
+        [Fact]
+        public void PassThrough()
+        {            
+            var obj1 = new TestObj { Value = 15 };
+            var obj2 = new TestObj { Value = 25, Next = obj1 };
+
+            var engine = new RecalcEngine();
+            var objFx2 = FormulaValue.New(new Wrapper(obj2));
+
+            // We can pass UntypedObject as a parameter.             
+            var parameters = FormulaValue.RecordFromFields(
+                new NamedValue("obj2", objFx2));
+
+            var result = engine.Eval("obj2.Next", parameters);
+
+            Assert.IsType<UntypedObjectValue>(result);
+            var uov = (UntypedObjectValue)result;
+            var obj1result = ((Wrapper)uov.Impl)._source;
+            
+            // And also ensure we get it back out with reference identity. 
+            Assert.True(ReferenceEquals(obj1result, obj1));
+        }
 
         // Wrap a .net object. 
         // This will lazily marshal through the object as it's accessed.
+        [DebuggerDisplay("{_source}")]
         private class Wrapper : IUntypedObject
         {
             public readonly object _source;
