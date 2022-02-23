@@ -70,6 +70,9 @@ namespace Microsoft.PowerFx.Tests
             Assert.Equal(17.0, ((NumberValue)result).Value);
         }
 
+        /// <summary>
+        /// Test that helps to ensure that RecalcEngine performs evaluation in thread safe manner.
+        /// </summary>
         [Fact]
         public void EvalInMultipleThreads()
         {
@@ -78,14 +81,10 @@ namespace Microsoft.PowerFx.Tests
                 1000,
                 (i) =>
                 {
-                    var engine = new RecalcEngine();
-                    Assert.Equal("5", engine.Eval("10-5", "5").ToObject().ToString());
-                     engine = new RecalcEngine();
-                    Assert.Equal("True", engine.Eval("true Or false", "True").ToObject().ToString());
-                     engine = new RecalcEngine();
-                    Assert.Equal("15", engine.Eval("10+5", "15").ToObject().ToString());
-                     engine = new RecalcEngine();
-                    Assert.Equal("True", engine.Eval("true Or false", "True").ToObject().ToString());
+                    Assert.Equal("5", new RecalcEngine().Eval("10-5").ToObject().ToString());
+                    Assert.Equal("True", new RecalcEngine().Eval("true Or false").ToObject().ToString());
+                    Assert.Equal("15", new RecalcEngine().Eval("10+5").ToObject().ToString());
+                    Assert.Equal("True", new RecalcEngine().Eval("true Or false").ToObject().ToString());
                 });
         }
 
