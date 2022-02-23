@@ -76,15 +76,15 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public void EvalInMultipleThreads()
         {
+            var engine = new RecalcEngine();
             Parallel.For(
                 0,
-                1000,
+                10000,
                 (i) =>
                 {
-                    Assert.Equal("5", new RecalcEngine().Eval("10-5").ToObject().ToString());
-                    Assert.Equal("True", new RecalcEngine().Eval("true Or false").ToObject().ToString());
-                    Assert.Equal("15", new RecalcEngine().Eval("10+5").ToObject().ToString());
-                    Assert.Equal("True", new RecalcEngine().Eval("true Or false").ToObject().ToString());
+                    Assert.Equal("5", engine.Eval("10-5").ToObject().ToString());
+                    Assert.Equal("True", engine.Eval("true Or false").ToObject().ToString());
+                    Assert.Equal("15", engine.Eval("10+5").ToObject().ToString());
                 });
         }
 
