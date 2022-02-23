@@ -1572,6 +1572,11 @@ namespace Microsoft.PowerFx.Core.Binding
             return BinderNodesVisitor.StringLiterals;
         }
 
+        public IEnumerable<StrInterpNode> GetStringInterpolations()
+        {
+            return BinderNodesVisitor.StringInterpolations;
+        }
+
         public IEnumerable<UnaryOpNode> GetUnaryOperators()
         {
             return BinderNodesVisitor.UnaryOperators;
