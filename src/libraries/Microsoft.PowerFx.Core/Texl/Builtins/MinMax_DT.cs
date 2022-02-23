@@ -15,11 +15,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     {
         public override bool IsSelfContained => true;
 
-        public bool IsMin;
+        private readonly bool _isMin;
 
         public override string GetUniqueTexlRuntimeName(bool isPrefetching = false)
         {
-            if (IsMin)
+            if (_isMin)
             {
                 return BuiltinFunctionsCore.Min.GetUniqueTexlRuntimeName(isPrefetching);
             }
@@ -32,7 +32,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public MinMaxFunction_DT(bool isMin)
             : base(isMin ? "Min" : "Max", isMin ? TexlStrings.AboutMin : TexlStrings.AboutMax, FunctionCategories.MathAndStat, DType.DateTime, 0, 1, int.MaxValue, DType.DateTime)
         {
-            IsMin = isMin;
+            _isMin = isMin;
         }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()

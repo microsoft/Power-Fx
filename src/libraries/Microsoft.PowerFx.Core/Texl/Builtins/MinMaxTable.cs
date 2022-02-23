@@ -29,7 +29,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             _delegationCapability = isMin ? DelegationCapability.Min : DelegationCapability.Max;
         }
 
-        public override bool CheckInvocation(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        public override bool CheckInvocation(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             Contracts.AssertValue(args);
             Contracts.AssertValue(argTypes);
@@ -38,7 +38,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             var fValid = CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
 
-            // The return type will be the type of whichever field was chosen to min/max on.
+            // The return type will be the result type of the expression in the 2nd argument
             returnType = argTypes[1];
 
             return fValid;
