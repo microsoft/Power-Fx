@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Public;
 using Microsoft.PowerFx.Core.Public.Types;
@@ -67,6 +68,25 @@ namespace Microsoft.PowerFx.Tests
             var result = engine.Eval("With({y:2}, x+y)", context);
 
             Assert.Equal(17.0, ((NumberValue)result).Value);
+        }
+
+        [Fact]
+        public void EvalInMultipleThreads()
+        {
+            Parallel.For(
+                0,
+                1000,
+                (i) =>
+                {
+                    var engine = new RecalcEngine();
+                    Assert.Equal("5", engine.Eval("10-5", "5").ToObject().ToString());
+                     engine = new RecalcEngine();
+                    Assert.Equal("True", engine.Eval("true Or false", "True").ToObject().ToString());
+                     engine = new RecalcEngine();
+                    Assert.Equal("15", engine.Eval("10+5", "15").ToObject().ToString());
+                     engine = new RecalcEngine();
+                    Assert.Equal("True", engine.Eval("true Or false", "True").ToObject().ToString());
+                });
         }
 
         [Fact]
