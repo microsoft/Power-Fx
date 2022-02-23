@@ -98,11 +98,11 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction Lower = _library.Append(new LowerUpperFunction(isLower: true));
         public static readonly TexlFunction LowerT = _library.Append(new LowerUpperTFunction(isLower: true));
         public static readonly TexlFunction Max_DT = _library.Append(new MinMaxFunction_DT(isMin: false));
-        public static readonly TexlFunction Min_DT = _library.Append(new MinMaxFunction_DT(isMin: true));
         public static readonly TexlFunction Max = _library.Append(new MinMaxFunction(isMin: false));
         public static readonly TexlFunction MaxT = _library.Append(new MinMaxTableFunction(isMin: false));
         public static readonly TexlFunction Mid = _library.Append(new MidFunction());
         public static readonly TexlFunction MidT = _library.Append(new MidTFunction());
+        public static readonly TexlFunction Min_DT = _library.Append(new MinMaxFunction_DT(isMin: true));
         public static readonly TexlFunction Min = _library.Append(new MinMaxFunction(isMin: true));
         public static readonly TexlFunction MinT = _library.Append(new MinMaxTableFunction(isMin: true));
         public static readonly TexlFunction Minute = _library.Append(new MinuteFunction());
