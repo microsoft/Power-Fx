@@ -434,3 +434,9 @@ Errors: Error 5-17: Invalid argument type (Table). Expecting a Text value instea
 >> $"! { {a:1,b:2} } !"
 /*SqlRunner*/ Compile Error
 Errors: Error 6-15: Invalid argument type (Record). Expecting a Text value instead.|Error 0-20: Expressions which appear inside an interpolated string must evaluate to a Text value or to a compatible type.
+
+>> $"Hello {"
+Errors: Error 9-10: Unexpected characters. Characters are used in the formula in an unexpected way.|Error 10-10: Unexpected characters. Characters are used in the formula in an unexpected way.
+
+>> $"Hello {}"
+"Hello "

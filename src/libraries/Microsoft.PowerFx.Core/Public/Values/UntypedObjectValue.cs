@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Diagnostics.Contracts;
 using System.Text;
 using System.Text.Json;
@@ -38,6 +39,7 @@ namespace Microsoft.PowerFx.Core.Public.Values
         bool GetBoolean();
     }
 
+    [DebuggerDisplay("UntypedObjectValue({Impl})")]
     public class UntypedObjectValue : ValidFormulaValue
     {
         public IUntypedObject Impl { get; }
