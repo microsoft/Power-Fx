@@ -36,6 +36,9 @@ Blank()
 >> Max(1, 2, 3, Blank(), 2, 3)
 3
 
+>> Max(Table({Name:"John Doe", DOB:Date(1985,3,5)},{Name:"Jane Roe", DOB:Date(1986,10,19)}),DOB)
+"10/19/1986"
+
 >> IsBlank(Average(Filter([1,2,3],Value > 10), Value))
 #Error
 
