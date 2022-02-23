@@ -99,6 +99,11 @@ namespace Microsoft.PowerFx.Core.Syntax.Visitors
                 }
             }
 
+            // If we got here we could be inside an empty island
+            // i.e. $"Hello {|}"
+            // Just visit the last child
+            node.Children[node.Children.Length - 1].Accept(this);
+
             return false;
         }
 

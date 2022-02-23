@@ -33,5 +33,9 @@ namespace Microsoft.PowerFx.Core.Public.Types
         void Visit(UntypedObjectType type);
 
         void Visit(HyperlinkType type);
+
+        void Visit(GuidType type);
+
+        void Visit(ColorType type);
     }
 }

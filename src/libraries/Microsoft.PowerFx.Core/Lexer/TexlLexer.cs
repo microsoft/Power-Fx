@@ -469,15 +469,16 @@ namespace Microsoft.PowerFx.Core.Lexer
             Contracts.AssertValue(text);
 
             // Check the cache
-            if (_cache != null)
+            var cacheCopy = _cache;
+            if (cacheCopy != null)
             {
-                Contracts.AssertValue(_cache.Item1);
-                Contracts.AssertValue(_cache.Item3);
+                Contracts.AssertValue(cacheCopy.Item1);
+                Contracts.AssertValue(cacheCopy.Item3);
 
                 // Cache hit
-                if (text == _cache.Item1 && flags == _cache.Item2)
+                if (text == cacheCopy.Item1 && flags == cacheCopy.Item2)
                 {
-                    return _cache.Item3;
+                    return cacheCopy.Item3;
                 }
             }
 

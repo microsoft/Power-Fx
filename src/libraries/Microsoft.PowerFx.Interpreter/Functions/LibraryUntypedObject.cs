@@ -21,14 +21,16 @@ namespace Microsoft.PowerFx.Functions
             var element = arg0.Impl;
 
             var len = element.GetArrayLength();
-            var index = (int)arg1.Value - 1; // 1-based index
+            var index1 = (int)arg1.Value;
+            var index0 = index1 - 1; // 1-based index
 
-            if (index < len)
+            // Error pipeline already caught cases of too low. 
+            if (index0 < len)
             {
-                var result = element[index];
+                var result = element[index0];
 
                 // Map null to blank
-                if (result.Type == FormulaType.Blank)
+                if (result == null || result.Type == FormulaType.Blank)
                 {
                     return new BlankValue(IRContext.NotInSource(FormulaType.Blank));
                 }
@@ -37,7 +39,7 @@ namespace Microsoft.PowerFx.Functions
             }
             else
             {
-                return new BlankValue(IRContext.NotInSource(FormulaType.Blank));
+                return CommonErrors.ArgumentOutOfRange(irContext);
             }
         }
 
