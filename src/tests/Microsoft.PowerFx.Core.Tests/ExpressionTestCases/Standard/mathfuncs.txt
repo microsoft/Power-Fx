@@ -1,0 +1,78 @@
+
+
+>> Average(1,0,5)
+2
+
+>> Average("1",0,5) // coerce
+2
+
+// With new error semantics, blank yields error.
+>> Average(Blank())
+#Error
+
+>> Average(1,Blank(),5)
+3
+
+// scalar 
+>> Sum(1,2)
+3
+
+>> Sum(1)
+1
+
+>> Sum(0)
+0
+
+// Basic math 
+>> Sqrt(4)+1
+3
+
+>> Mod(7,3)
+1
+
+>> Mod(Blank(),3)
+0
+
+>> Mod(7,Blank())
+#Error
+
+>> Mod(7,1/0)
+#Error
+
+>> Mod(1/0,3)
+#Error
+
+>> Mod(1, 0)
+#Error
+
+>> Abs(-5)
+5
+
+>> Abs(5)
+5
+
+>> Abs(0)
+0
+
+>> Abs(Blank())
+Blank()
+
+>> Abs(1/0)
+#Error
+
+// use Text to ignore precision issues
+>> Text(Exp(Ln(2)), "#")
+"2"
+
+>> Text(Ln(Exp(2)), "#")
+"2"
+
+>> Ln(0)
+#Error
+
+>> Ln(Blank())
+Blank()
+
+>> Ln(1/0)
+#Error
+

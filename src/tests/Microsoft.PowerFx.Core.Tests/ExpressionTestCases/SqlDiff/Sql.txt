@@ -1,0 +1,109 @@
+// math operation overflow
+>> Power(10,12)
+/*SqlRunner*/ #Error
+1000000000000
+
+>> Power(100,6)
+/*SqlRunner*/ #Error
+1000000000000
+
+>> Power(10,200)
+/*SqlRunner*/ #Error
+1E+200
+
+>> IsError(Power(10,200))
+/*SqlRunner*/ true
+false
+
+>> RoundUp(1, -200)
+/*SqlRunner*/ #Error
+1E+200
+
+>> RoundUp(1, -10)
+/*SqlRunner*/ #Error
+10000000000
+
+>> Text(Ln(Exp(200)))
+/*SqlRunner*/ #Error
+"200"
+
+>> IsError(Text(Ln(Exp(200))))
+/*SqlRunner*/ true
+false
+
+// literal overflow
+>> 1E37
+/*SqlRunner*/ #Error
+1E+37
+
+>> IsError(1E37)
+/*SqlRunner*/ true
+false
+
+// date overflow
+>>Year(Date(9999, 12, 31))
+
+9999
+
+>> Year(Date(10000, 1, 1))
+/*InterpreterRunner*/ #Skip
+
+#Error
+
+// Date doesn't support inputting years earlier than 1900, so use subtraction to create min supported value
+>> Year(DateAdd(Date(1953, 1, 1), -200, TimeUnit.Years))
+
+1753
+
+// Date Add overflow
+>> Year(DateAdd(Date(9999, 12, 31), 1))
+/*InterpreterRunner*/ #Skip
+/*SqlRunner*/ #Error
+10000
+
+>> IsError(DateAdd(Date(9999, 12, 31), 1))
+/*InterpreterRunner*/ #Skip
+/*SqlRunner*/ true
+false
+
+>> Year(DateAdd(Date(1952, 12, 31), -200, TimeUnit.Years))
+/*SqlRunner*/ #Error
+1752
+
+>> IsError(DateAdd(Date(1952, 12, 31), -200, TimeUnit.Years))
+/*SqlRunner*/ true
+false
+
+>> IsError(Date(2001, 2, 14) + 99999999999.9)
+
+true
+
+// date diff overflow
+>> IsError(DateDiff(Date(1900, 1, 1), Date(9999, 12, 31), TimeUnit.Months))
+
+false
+
+>> IsError(DateDiff(Date(1900,1,1), Date(5982,12,31), TimeUnit.Minutes))
+
+false
+
+>> IsError(DateDiff(Date(1900, 1, 1), Date(9999, 12, 31), TimeUnit.Minutes))
+
+/* SqlRunner*/ true
+
+
+>> IsError(DateDiff(Date(1900, 1, 1), Date(9999, 12, 31), TimeUnit.Seconds))
+
+/* SqlRunner*/ true
+
+
+// check string literals are sanitized
+>> "Robert '; DROP TABLE Students; --"
+
+"Robert '; DROP TABLE Students; --"
+
+// check SQL wildcards are handled
+>> "%_" in "SQL wildcards"
+
+false
+

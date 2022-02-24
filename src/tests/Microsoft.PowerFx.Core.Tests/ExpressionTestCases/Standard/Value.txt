@@ -1,0 +1,12 @@
+// https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-value
+
+// Default to invariant
+>> Value("-5")
+-5
+
+>> Value("5")
+5
+
+>> Value("0")
+0
+

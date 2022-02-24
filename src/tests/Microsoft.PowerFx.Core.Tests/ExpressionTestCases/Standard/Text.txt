@@ -1,0 +1,6 @@
+// Text function 
+// https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-text
+
+>> Text(123)
+"123"
+

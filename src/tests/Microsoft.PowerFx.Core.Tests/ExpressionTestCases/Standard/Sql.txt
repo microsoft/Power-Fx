@@ -1,0 +1,42 @@
+
+// SQL-specific tests
+
+// IsError inside If
+>> If(true, IsError(1/0 + 1))
+true
+
+>> If(IsError(1/0), 1, 2)
+1
+
+>> Switch(IsError(1/0), true, 1, 2)
+1
+
+// If inside IsError
+>> IsError(If(false, 1/0, 1/0))
+true
+
+>> IsError(If(true, 1/0, 1/0))
+true
+
+>> IsError(Switch(1, 1, 1/0, 1/0))
+true
+
+// IsError inside If inside IsError
+>> IsError(If(false, IsError(1/0), IsError(1/0)))
+false
+
+>> IsError(1/2 + 1) && IsError(1/0)
+false
+
+>> IsError(1/2 + 2)
+false
+
+>> IsError(1/0 + 1)
+true
+
+>> IfError(If(true, 1/0, 1/0), 2)
+2
+
+>> IsError(If(IfError(1/0 = 1, true), 1/0, 1/0))
+true
+
