@@ -1,33 +1,34 @@
 ﻿// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+// Licensed under the MIT license.
 
 using System.Linq;
 using System.Text.RegularExpressions;
-using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core;
+using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Glue;
 using Microsoft.PowerFx.Core.Parser;
 using Microsoft.PowerFx.Core.Public.Types;
 using Microsoft.PowerFx.Core.Syntax;
 using Microsoft.PowerFx.Core.Texl.Intellisense;
 using Microsoft.PowerFx.Core.Types;
+using Microsoft.PowerFx.Core.Types.Enums;
 using Xunit;
 
 namespace Microsoft.PowerFx.Tests.IntellisenseTests
 {
     /// <summary>
-    /// Provides methods that may be used by Intellisense tests
+    /// Provides methods that may be used by Intellisense tests.
     /// </summary>
     public class IntellisenseTestBase
     {
         /// <summary>
         /// This method receives a test case string, along with an optional context type that defines the valid
-        /// names and types in the expression and invokes Intellisense.Suggest on it, and returns a the result
+        /// names and types in the expression and invokes Intellisense.Suggest on it, and returns a the result.
         /// </summary>
         /// <param name="expression"></param>
         /// <param name="contextTypeString"></param>
         /// <returns></returns>
-        internal IIntellisenseResult Suggest(string expression, PowerFxConfig powerFxConfig, string contextTypeString = null)
+        internal IIntellisenseResult Suggest(string expression, EnumStore enumStore, string contextTypeString = null)
         {
             Assert.NotNull(expression);
 
@@ -51,10 +52,10 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
                 contextType = new RecordType();
             }
 
-            return Suggest(expression, contextType, cursorPosition, powerFxConfig);
+            return Suggest(expression, contextType, cursorPosition, enumStore);
         }
 
-        internal IIntellisenseResult Suggest(string expression, FormulaType parameterType, int cursorPosition, PowerFxConfig powerFxConfig)
+        internal IIntellisenseResult Suggest(string expression, FormulaType parameterType, int cursorPosition, EnumStore enumStore)
         {
             var formula = new Formula(expression);
             formula.EnsureParsed(TexlParser.Flags.None);
@@ -62,13 +63,12 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
             var binding = TexlBinding.Run(
                 new Glue2DocumentBinderGlue(),
                 formula.ParseTree,
-                new SimpleResolver(powerFxConfig.EnumStore.EnumSymbols),
+                new SimpleResolver(enumStore.EnumSymbols),
                 ruleScope: parameterType._type,
-                useThisRecordForRuleScope: false
-            );
+                useThisRecordForRuleScope: false);
 
             var context = new IntellisenseContext(expression, cursorPosition);
-            var intellisense = IntellisenseProvider.GetIntellisense(powerFxConfig);
+            var intellisense = IntellisenseProvider.GetIntellisense(enumStore);
             var suggestions = intellisense.Suggest(context, binding, formula);
 
             if (suggestions.Exception != null)

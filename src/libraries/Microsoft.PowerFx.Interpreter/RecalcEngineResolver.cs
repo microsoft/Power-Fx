@@ -1,9 +1,13 @@
 ﻿// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+// Licensed under the MIT license.
 
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Binding.BindInfo;
+using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Glue;
 using Microsoft.PowerFx.Core.Public.Types;
@@ -13,31 +17,33 @@ using Microsoft.PowerFx.Core.Utils;
 namespace Microsoft.PowerFx
 {
     /// <summary>
-    /// <see cref="INameResolver"/> implementation for <see cref="RecalcEngine"/>
+    /// <see cref="INameResolver"/> implementation for <see cref="RecalcEngine"/>.
     /// </summary>
     internal class RecalcEngineResolver : SimpleResolver
     {
         private readonly RecalcEngine _parent;
+        private readonly PowerFxConfig _powerFxConfig;
         private readonly RecordType _parameters;
 
         public RecalcEngineResolver(
             RecalcEngine parent,
-            RecordType parameters,
-            IEnumerable<EnumSymbol> enumSymbols, 
-            params TexlFunction[] extraFunctions) :
-            base(enumSymbols, extraFunctions)
+            PowerFxConfig powerFxConfig,
+            RecordType parameters)
+            : base(powerFxConfig.EnumStore.EnumSymbols, powerFxConfig.ExtraFunctions.Values.ToArray())
         {
             _parameters = parameters;
             _parent = parent;
+            _powerFxConfig = powerFxConfig;
         }
 
-         public override bool Lookup(DName name, out NameLookupInfo nameInfo, NameLookupPreferences preferences = NameLookupPreferences.None)
+        public override bool Lookup(DName name, out NameLookupInfo nameInfo, NameLookupPreferences preferences = NameLookupPreferences.None)
         {
             // Kinds of globals:
             // - global formula
             // - parameters 
+            // - environment symbols
 
-            string str = name.Value;
+            var str = name.Value;
 
             var parameter = _parameters.MaybeGetFieldType(str);
             if (parameter != null)
@@ -50,8 +56,7 @@ namespace Microsoft.PowerFx
                     type,
                     DPath.Root,
                     0,
-                    data
-                    );
+                    data);
                 return true;
             }
 
@@ -65,9 +70,27 @@ namespace Microsoft.PowerFx
                     type,
                     DPath.Root,
                     0,
-                    data
-                    );
+                    data);
                 return true;
+            }
+            else if (_powerFxConfig.EnvironmentSymbols.TryGetValue(name, out var symbol))
+            {
+                // Special case symbols
+                if (symbol is IExternalOptionSet optionSet)
+                {
+                    nameInfo = new NameLookupInfo(
+                        BindKind.OptionSet,
+                        optionSet.Type,
+                        DPath.Root,
+                        0,
+                        optionSet);
+
+                    return true;
+                }
+                else
+                {
+                    throw new NotImplementedException($"{symbol.GetType().Name} not supported by {typeof(RecalcEngineResolver).Name}");
+                }
             }
 
             return base.Lookup(name, out nameInfo, preferences);

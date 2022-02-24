@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+// Licensed under the MIT license.
 
 using System.Collections.Generic;
 using Microsoft.PowerFx.Core.App.Controls;
@@ -11,7 +11,9 @@ namespace Microsoft.PowerFx.Core.App
     internal interface IExternalDocument
     {
         IExternalDocumentProperties Properties { get; }
+
         IExternalEntityScope GlobalScope { get; }
+
         bool TryGetControlByUniqueId(string name, out IExternalControl control);
     }
 }

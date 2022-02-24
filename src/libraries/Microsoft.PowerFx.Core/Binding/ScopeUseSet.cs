@@ -1,5 +1,5 @@
-// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
 
 using System.Text;
 using Microsoft.PowerFx.Core.Utils;
@@ -18,7 +18,7 @@ namespace Microsoft.PowerFx.Core.Binding
         // maximum algorithmic complexity of O(n^64).
         public const int MaxUpCount = 63;
 
-        public static readonly ScopeUseSet GlobalsOnly = default(ScopeUseSet);
+        public static readonly ScopeUseSet GlobalsOnly = default;
 
         // 0 means only globals are used (default).
         // A value other than zero means lambda parameters are used, as follows:
@@ -30,6 +30,7 @@ namespace Microsoft.PowerFx.Core.Binding
         private readonly long _levels;
 
         public bool IsGlobalOnlyScope => _levels == 0;
+
         public bool IsLambdaScope => _levels != 0;
 
         public ScopeUseSet(int singleLevel)
@@ -56,27 +57,33 @@ namespace Microsoft.PowerFx.Core.Binding
         public int GetInnermost()
         {
             if (_levels == 0)
-                return ScopeUseSet.GlobalScopeLevel;
+            {
+                return GlobalScopeLevel;
+            }
 
-            for (int i = 0; i <= MaxUpCount; i++)
+            for (var i = 0; i <= MaxUpCount; i++)
             {
                 if ((_levels & (1L << i)) != 0)
+                {
                     return i;
+                }
             }
 
             // Can never get here.
             Contracts.Assert(false, "We should never get here.");
-            return ScopeUseSet.GlobalScopeLevel;
+            return GlobalScopeLevel;
         }
 
         public override string ToString()
         {
             if (IsGlobalOnlyScope)
+            {
                 return "{{Global}}";
+            }
 
-            StringBuilder sb = new StringBuilder("{");
-            string sep = string.Empty;
-            for (int i = 0; i <= MaxUpCount; i++)
+            var sb = new StringBuilder("{");
+            var sep = string.Empty;
+            for (var i = 0; i <= MaxUpCount; i++)
             {
                 if ((_levels & (1L << i)) != 0)
                 {

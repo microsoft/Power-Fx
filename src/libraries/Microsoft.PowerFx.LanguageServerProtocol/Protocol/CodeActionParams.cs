@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+// Licensed under the MIT license.
 
 namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
 {
@@ -9,7 +9,8 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
     public class CodeActionParams
     {
         /// <summary>
-        /// ctor
+        /// Initializes a new instance of the <see cref="CodeActionParams"/> class.
+        /// ctor.
         /// </summary>
         public CodeActionParams()
         {

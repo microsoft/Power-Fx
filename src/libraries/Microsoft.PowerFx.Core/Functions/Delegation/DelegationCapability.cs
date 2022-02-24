@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+// Licensed under the MIT license.
 
 using System;
 using System.Collections.Generic;
@@ -14,7 +14,8 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation
     {
         private BigInteger _capabilities;
         private static readonly Lazy<Dictionary<BinaryOp, DelegationCapability>> _binaryOpToDelegationCapabilityMap =
-            new Lazy<Dictionary<BinaryOp, DelegationCapability>>(() => new Dictionary<BinaryOp, DelegationCapability>
+            new Lazy<Dictionary<BinaryOp, DelegationCapability>>(
+                () => new Dictionary<BinaryOp, DelegationCapability>
             {
                 { BinaryOp.Equal, new DelegationCapability(Equal) },
                 { BinaryOp.NotEqual, new DelegationCapability(NotEqual) },
@@ -24,21 +25,23 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation
                 { BinaryOp.GreaterEqual, new DelegationCapability(GreaterThanOrEqual) },
                 { BinaryOp.And, new DelegationCapability(And) },
                 { BinaryOp.Or, new DelegationCapability(Or) },
-                { BinaryOp.In, new DelegationCapability(Contains)},
-                { BinaryOp.Add, new DelegationCapability(Add)},
-                { BinaryOp.Mul, new DelegationCapability(Mul)},
-                { BinaryOp.Div, new DelegationCapability(Div)},
+                { BinaryOp.In, new DelegationCapability(Contains) },
+                { BinaryOp.Add, new DelegationCapability(Add) },
+                { BinaryOp.Mul, new DelegationCapability(Mul) },
+                { BinaryOp.Div, new DelegationCapability(Div) },
             }, isThreadSafe: true);
 
         private static readonly Lazy<Dictionary<UnaryOp, DelegationCapability>> _unaryOpToDelegationCapabilityMap =
-            new Lazy<Dictionary<UnaryOp, DelegationCapability>>(() => new Dictionary<UnaryOp, DelegationCapability>
+            new Lazy<Dictionary<UnaryOp, DelegationCapability>>(
+                () => new Dictionary<UnaryOp, DelegationCapability>
             {
                 { UnaryOp.Not, new DelegationCapability(Not) },
-                { UnaryOp.Minus, new DelegationCapability(Sub)},
+                { UnaryOp.Minus, new DelegationCapability(Sub) },
             }, isThreadSafe: true);
 
         private static readonly Lazy<Dictionary<string, DelegationCapability>> _operatorToDelegationCapabilityMap =
-            new Lazy<Dictionary<string, DelegationCapability>>(() => new Dictionary<string, DelegationCapability>
+            new Lazy<Dictionary<string, DelegationCapability>>(
+                () => new Dictionary<string, DelegationCapability>
             {
                 { DelegationMetadataOperatorConstants.Equal, new DelegationCapability(Equal) },
                 { DelegationMetadataOperatorConstants.NotEqual, new DelegationCapability(NotEqual) },
@@ -79,7 +82,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation
                 { DelegationMetadataOperatorConstants.CdsIn, new DelegationCapability(CdsIn) },
                 { DelegationMetadataOperatorConstants.Top, new DelegationCapability(Top) },
                 { DelegationMetadataOperatorConstants.AsType, new DelegationCapability(AsType) },
-                { DelegationMetadataOperatorConstants.ArrayLookup, new DelegationCapability(ArrayLookup)}
+                { DelegationMetadataOperatorConstants.ArrayLookup, new DelegationCapability(ArrayLookup) }
             }, isThreadSafe: true);
 
         // Supported delegatable operations.
@@ -132,16 +135,16 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation
         public static readonly BigInteger ArrayLookup = 0x200000000000;
 
         // Please update it as max value changes.
-        private static BigInteger MaxSingleCapabilityValue = ArrayLookup;
+        private static BigInteger maxSingleCapabilityValue = ArrayLookup;
 
         // Indicates support all functionality.
         public static BigInteger SupportsAll
         {
             get
             {
-                Contracts.Assert(MaxSingleCapabilityValue.IsPowerOfTwo);
+                Contracts.Assert(maxSingleCapabilityValue.IsPowerOfTwo);
 
-                return MaxSingleCapabilityValue | MaxSingleCapabilityValue - 1;
+                return maxSingleCapabilityValue | maxSingleCapabilityValue - 1;
             }
         }
 
@@ -152,25 +155,13 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation
             _capabilities = delegationCapabilities;
         }
 
-        public static DelegationCapability operator &(DelegationCapability lhs, DelegationCapability rhs)
-        {
-            return new DelegationCapability(lhs.Capabilities & rhs.Capabilities);
-        }
+        public static DelegationCapability operator &(DelegationCapability lhs, DelegationCapability rhs) => new DelegationCapability(lhs.Capabilities & rhs.Capabilities);
 
-        public static DelegationCapability operator |(DelegationCapability lhs, DelegationCapability rhs)
-        {
-            return new DelegationCapability(lhs.Capabilities | rhs.Capabilities);
-        }
+        public static DelegationCapability operator |(DelegationCapability lhs, DelegationCapability rhs) => new DelegationCapability(lhs.Capabilities | rhs.Capabilities);
 
-        public static DelegationCapability operator ~(DelegationCapability rhs)
-        {
-            return new DelegationCapability(~rhs.Capabilities);
-        }
+        public static DelegationCapability operator ~(DelegationCapability rhs) => new DelegationCapability(~rhs.Capabilities);
 
-        public static implicit operator DelegationCapability(BigInteger capability)
-        {
-            return new DelegationCapability(capability);
-        }
+        public static implicit operator DelegationCapability(BigInteger capability) => new DelegationCapability(capability);
 
         public bool HasLeastOneCapability(BigInteger delegationCapability)
         {
@@ -180,41 +171,25 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation
         public bool HasCapability(BigInteger delegationCapability)
         {
             if (delegationCapability == None)
+            {
                 return false;
+            }
 
             return (_capabilities & delegationCapability) == delegationCapability;
         }
 
-        public BigInteger Capabilities { get { return _capabilities; } }
+        public BigInteger Capabilities => _capabilities;
 
         public static bool IsValid(BigInteger capabilityConstant)
         {
-            return (capabilityConstant == DelegationCapability.None) ||
-                !(capabilityConstant & DelegationCapability.SupportsAll).IsZero;
+            return (capabilityConstant == None) ||
+                !(capabilityConstant & SupportsAll).IsZero;
         }
 
-        public static Dictionary<BinaryOp, DelegationCapability> BinaryOpToDelegationCapabilityMap
-        {
-            get
-            {
-                return _binaryOpToDelegationCapabilityMap.Value;
-            }
-        }
+        public static Dictionary<BinaryOp, DelegationCapability> BinaryOpToDelegationCapabilityMap => _binaryOpToDelegationCapabilityMap.Value;
 
-        public static Dictionary<UnaryOp, DelegationCapability> UnaryOpToDelegationCapabilityMap
-        {
-            get
-            {
-                return _unaryOpToDelegationCapabilityMap.Value;
-            }
-        }
+        public static Dictionary<UnaryOp, DelegationCapability> UnaryOpToDelegationCapabilityMap => _unaryOpToDelegationCapabilityMap.Value;
 
-        public static Dictionary<string, DelegationCapability> OperatorToDelegationCapabilityMap
-        {
-            get
-            {
-                return _operatorToDelegationCapabilityMap.Value;
-            }
-        }
+        public static Dictionary<string, DelegationCapability> OperatorToDelegationCapabilityMap => _operatorToDelegationCapabilityMap.Value;
     }
 }

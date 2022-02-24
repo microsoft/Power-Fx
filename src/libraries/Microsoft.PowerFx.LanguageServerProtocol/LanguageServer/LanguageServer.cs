@@ -1,16 +1,16 @@
 ﻿// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+// Licensed under the MIT license.
 
-using Microsoft.PowerFx.Core;
-using Microsoft.PowerFx.LanguageServerProtocol.Protocol;
 using System;
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Web;
+using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Public;
 using Microsoft.PowerFx.Core.Texl.Intellisense;
 using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.LanguageServerProtocol.Protocol;
 
 namespace Microsoft.PowerFx.LanguageServerProtocol
 {
@@ -21,7 +21,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
     ///
     /// LanguageServer is hosted inside WebSocket or HTTP/HTTPS service
     ///   * For WebSocket, OnDataReceived() is for incoming traffic, SendToClient() is for outgoing traffic
-    ///   * For HTTP/HTTPS, OnDataReceived() is for HTTP/HTTPS request, SendToClient() is queued up in next HTTP/HTTPS response
+    ///   * For HTTP/HTTPS, OnDataReceived() is for HTTP/HTTPS request, SendToClient() is queued up in next HTTP/HTTPS response.
     /// </summary>
     public class LanguageServer
     {
@@ -52,7 +52,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
         }
 
         /// <summary>
-        /// Received request/notification payload from client
+        /// Received request/notification payload from client.
         /// </summary>
         public void OnDataReceived(string jsonRpcPayload)
         {
@@ -64,20 +64,23 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
                 using (var doc = JsonDocument.Parse(jsonRpcPayload))
                 {
                     var element = doc.RootElement;
-                    if (element.TryGetProperty("id", out JsonElement idElement))
+                    if (element.TryGetProperty("id", out var idElement))
                     {
                         id = idElement.GetString();
                     }
-                    if (!element.TryGetProperty("method", out JsonElement methodElement))
+
+                    if (!element.TryGetProperty("method", out var methodElement))
                     {
                         _sendToClient(JsonRpcHelper.CreateErrorResult(id, JsonRpcHelper.ErrorCode.InvalidRequest));
                         return;
                     }
-                    if (!element.TryGetProperty("params", out JsonElement paramsElement))
+
+                    if (!element.TryGetProperty("params", out var paramsElement))
                     {
                         _sendToClient(JsonRpcHelper.CreateErrorResult(id, JsonRpcHelper.ErrorCode.InvalidRequest));
                         return;
                     }
+
                     var method = methodElement.GetString();
                     var paramsJson = paramsElement.GetRawText();
                     switch (method)
@@ -273,8 +276,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
             var scope = _scopeFactory.GetOrCreateInstance(documentUri);
 
             var expression = initialFixupParams.TextDocument.Text;
-            var scopeDisplayName = scope as IPowerFxScopeDisplayName;
-            if (scopeDisplayName != null)
+            if (scope is IPowerFxScopeDisplayName scopeDisplayName)
             {
                 expression = scopeDisplayName.TranslateToDisplayName(expression);
             }
@@ -395,7 +397,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
         /// <see cref="DocumentErrorSeverity"/> which will be mapped to the LSP eequivalent.
         /// </param>
         /// <returns>
-        /// <see cref="DiagnosticSeverity"/> equivalent to <see cref="DocumentErrorSeverity"/>
+        /// <see cref="DiagnosticSeverity"/> equivalent to <see cref="DocumentErrorSeverity"/>.
         /// </returns>
         private DiagnosticSeverity DocumentSeverityToDiagnosticSeverityMap(DocumentErrorSeverity severity) => severity switch
         {
@@ -441,13 +443,15 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
                                 Line = endLine
                             }
                         },
-                        Message = item.Message
+                        Message = item.Message,
+                        Severity = DocumentSeverityToDiagnosticSeverityMap(item.Severity)
                     });
                 }
             }
 
             // Send PublishDiagnostics notification
-            _sendToClient(JsonRpcHelper.CreateNotification(TextDocumentNames.PublishDiagnostics,
+            _sendToClient(JsonRpcHelper.CreateNotification(
+                TextDocumentNames.PublishDiagnostics,
                 new PublishDiagnosticsParams()
                 {
                     Uri = uri,
@@ -459,7 +463,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
         {
             var uri = new Uri(documentUri);
             var nameValueCollection = HttpUtility.ParseQueryString(uri.Query);
-            if (!uint.TryParse(nameValueCollection.Get("getTokensFlags"), out uint flags))
+            if (!uint.TryParse(nameValueCollection.Get("getTokensFlags"), out var flags))
             {
                 return;
             }
@@ -471,7 +475,8 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
             }
 
             // Send PublishTokens notification
-            _sendToClient(JsonRpcHelper.CreateNotification(CustomProtocolNames.PublishTokens,
+            _sendToClient(JsonRpcHelper.CreateNotification(
+                CustomProtocolNames.PublishTokens,
                 new PublishTokensParams()
                 {
                     Uri = documentUri,
@@ -488,14 +493,14 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
                 return;
             }
 
-            _sendToClient(JsonRpcHelper.CreateNotification(CustomProtocolNames.PublishExpressionType,
+            _sendToClient(JsonRpcHelper.CreateNotification(
+                CustomProtocolNames.PublishExpressionType,
                 new PublishExpressionTypeParams()
                 {
                     Uri = documentUri,
                     Type = result.ReturnType
                 }));
         }
-
 
         private bool TryParseParams<T>(string json, out T result)
         {
@@ -516,17 +521,17 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
         /// <summary>
         /// Get the charactor position (starts with 1) from its line.
         /// e.g. "123\n1{2}3" ==> 2 ({x} is the input char at position)
-        ///      "12{\n}123" ==> 3 ('\n' belongs to the previous line "12\n", the last char is '2' with index of 3)
+        ///      "12{\n}123" ==> 3 ('\n' belongs to the previous line "12\n", the last char is '2' with index of 3).
         /// </summary>
-        /// <param name="expression">The expression content</param>
-        /// <param name="position">The charactor position (starts with 0)</param>
-        /// <returns>The charactor position (starts with 1) from its line</returns>
+        /// <param name="expression">The expression content.</param>
+        /// <param name="position">The charactor position (starts with 0).</param>
+        /// <returns>The charactor position (starts with 1) from its line.</returns>
         protected int GetCharPosition(string expression, int position)
         {
             Contracts.AssertValue(expression);
             Contracts.Assert(position >= 0);
 
-            int column = (position < expression.Length && expression[position] == EOL) ? 0 : 1;
+            var column = (position < expression.Length && expression[position] == EOL) ? 0 : 1;
             position--;
             while (position >= 0 && expression[position] != EOL)
             {
@@ -539,7 +544,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
 
         /// <summary>
         /// Get the position offset (starts with 0) in Expression from line/character (starts with 0)
-        /// e.g. "123", line:0, char:1 => 1
+        /// e.g. "123", line:0, char:1 => 1.
         /// </summary>
         protected int GetPosition(string expression, int line, int character)
         {
@@ -547,9 +552,9 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
             Contracts.Assert(line >= 0);
             Contracts.Assert(character >= 0);
 
-            int position = 0;
-            int currentLine = 0;
-            int currentCharacter = 0;
+            var position = 0;
+            var currentLine = 0;
+            var currentCharacter = 0;
             while (position < expression.Length)
             {
                 if (line == currentLine && character == currentCharacter)
@@ -572,6 +577,5 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
 
             return position;
         }
-
     }
 }

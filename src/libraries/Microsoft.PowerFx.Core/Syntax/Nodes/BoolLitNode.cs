@@ -1,5 +1,5 @@
-// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
 
 using Microsoft.PowerFx.Core.Lexer;
 using Microsoft.PowerFx.Core.Lexer.Tokens;
@@ -24,7 +24,7 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
             return new BoolLitNode(ref idNext, Token.Clone(ts));
         }
 
-        public bool Value { get { return Token.Kind == TokKind.True; } }
+        public bool Value => Token.Kind == TokKind.True;
 
         public override void Accept(TexlVisitor visitor)
         {
@@ -32,7 +32,7 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
             visitor.Visit(this);
         }
 
-        public override Result Accept<Result, Context>(TexlFunctionalVisitor<Result, Context> visitor, Context context)
+        public override TResult Accept<TResult, TContext>(TexlFunctionalVisitor<TResult, TContext> visitor, TContext context)
         {
             return visitor.Visit(this, context);
         }

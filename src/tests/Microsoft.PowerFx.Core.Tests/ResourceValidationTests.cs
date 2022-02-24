@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+// Licensed under the MIT license.
 
 using System.Collections;
 using System.IO;
@@ -24,14 +24,15 @@ namespace Microsoft.PowerFx.Tests
             foreach (var function in functions)
             {
                 if (function.MaxArity == 0)
+                {
                     continue;
+                }
 
                 foreach (var paramName in function.GetParamNames())
                 {
-                    string descr;
-                    Assert.True(function.TryGetParamDescription(paramName, out descr),
-                        "Missing parameter description. Please add the following to Resources: " +
-                        "About" + function.LocaleInvariantName + "_" + paramName);
+                    Assert.True(
+                        function.TryGetParamDescription(paramName, out var descr),
+                        "Missing parameter description. Please add the following to Resources: " + "About" + function.LocaleInvariantName + "_" + paramName);
                 }
             }
         }

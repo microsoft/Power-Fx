@@ -1,17 +1,16 @@
 ﻿// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+// Licensed under the MIT license.
 
-using Microsoft.PowerFx.Core.IR;
-using Microsoft.PowerFx.Core.IR.Symbols;
-using Microsoft.PowerFx.Functions;
-using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
+using System.Globalization;
+using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.IR.Nodes;
+using Microsoft.PowerFx.Core.IR.Symbols;
 using Microsoft.PowerFx.Core.Public;
 using Microsoft.PowerFx.Core.Public.Types;
 using Microsoft.PowerFx.Core.Public.Values;
-using System.Globalization;
+using Microsoft.PowerFx.Functions;
 using static Microsoft.PowerFx.Functions.Library;
 
 namespace Microsoft.PowerFx
@@ -25,8 +24,9 @@ namespace Microsoft.PowerFx
             CultureInfo = cultureInfo;
         }
 
-        // Helper to eval an arg that might be a lambda. 
-        internal DValue<T> EvalArg<T>(FormulaValue arg, SymbolContext context, IRContext irContext) where T : ValidFormulaValue
+        // Helper to eval an arg that might be a lambda.
+        internal DValue<T> EvalArg<T>(FormulaValue arg, SymbolContext context, IRContext irContext)
+            where T : ValidFormulaValue
         {
             if (arg is LambdaFormulaValue lambda)
             {
@@ -39,6 +39,7 @@ namespace Microsoft.PowerFx
                     _ => DValue<T>.Of(CommonErrors.RuntimeTypeMismatch(irContext))
                 };
             }
+
             return arg switch
             {
                 T t => DValue<T>.Of(t),
@@ -65,13 +66,13 @@ namespace Microsoft.PowerFx
 
         public override FormulaValue Visit(TableNode node, SymbolContext context)
         {
-            // single-column table. 
+            // single-column table.
 
-            int len = node.Values.Count;
+            var len = node.Values.Count;
 
             // Were pushed left-to-right
             var args = new FormulaValue[len];
-            for (int i = 0; i < len; i++)
+            for (var i = 0; i < len; i++)
             {
                 var child = node.Values[i];
                 var arg = child.Accept(this, context);
@@ -79,21 +80,21 @@ namespace Microsoft.PowerFx
             }
 
             // Children are on the stack.
-            var tableValue = new InMemoryTableValue(node.IRContext, Library.StandardTableNodeRecords(node.IRContext, args));
+            var tableValue = new InMemoryTableValue(node.IRContext, StandardTableNodeRecords(node.IRContext, args));
 
             return tableValue;
         }
 
         public override FormulaValue Visit(RecordNode node, SymbolContext context)
         {
-            List<NamedValue> fields = new List<NamedValue>();
+            var fields = new List<NamedValue>();
 
             foreach (var field in node.Fields)
             {
                 var name = field.Key;
-                IntermediateNode value = field.Value;
+                var value = field.Value;
 
-                FormulaValue rhsValue = value.Accept(this, context);
+                var rhsValue = value.Accept(this, context);
                 fields.Add(new NamedValue(name.Value, rhsValue));
             }
 
@@ -108,19 +109,19 @@ namespace Microsoft.PowerFx
 
         public override FormulaValue Visit(CallNode node, SymbolContext context)
         {
-            // Sum(  [1,2,3], Value * Value)            
+            // Sum(  [1,2,3], Value * Value)
             // return base.PreVisit(node);
 
             var func = node.Function;
 
-            int carg = node.Args.Count;
+            var carg = node.Args.Count;
 
-            FormulaValue[] args = new FormulaValue[carg];
+            var args = new FormulaValue[carg];
 
-            for (int i = 0; i < carg; i++)
+            for (var i = 0; i < carg; i++)
             {
                 var child = node.Args[i];
-                bool isLambda = node.IsLambdaArg(i);
+                var isLambda = node.IsLambdaArg(i);
 
                 if (!isLambda)
                 {
@@ -136,20 +137,20 @@ namespace Microsoft.PowerFx
 
             if (func is CustomTexlFunction customFunc)
             {
-                FormulaValue result = customFunc.Invoke(args);
+                var result = customFunc.Invoke(args);
                 return result;
             }
             else
             {
-                FunctionPtr ptr;
-                if (FuncsByName.TryGetValue(func, out ptr))
+                if (FuncsByName.TryGetValue(func, out var ptr))
                 {
-                    FormulaValue result = ptr(this, childContext, node.IRContext, args);
+                    var result = ptr(this, childContext, node.IRContext, args);
 
                     Contract.Assert(result.IRContext.ResultType == node.IRContext.ResultType || result is ErrorValue || result.IRContext.ResultType is BlankType);
 
                     return result;
                 }
+
                 return CommonErrors.NotYetImplementedError(node.IRContext, $"Missing func: {func.Name}");
             }
         }
@@ -163,85 +164,143 @@ namespace Microsoft.PowerFx
             switch (node.Op)
             {
                 case BinaryOpKind.AddNumbers:
-                    return Library.OperatorBinaryAdd(this, context, node.IRContext, args);
+                    return OperatorBinaryAdd(this, context, node.IRContext, args);
                 case BinaryOpKind.MulNumbers:
-                    return Library.OperatorBinaryMul(this, context, node.IRContext, args);
+                    return OperatorBinaryMul(this, context, node.IRContext, args);
                 case BinaryOpKind.DivNumbers:
-                    return Library.OperatorBinaryDiv(this, context, node.IRContext, args);
-
-                case BinaryOpKind.EqNumbers:
-                case BinaryOpKind.EqBoolean:
-                case BinaryOpKind.EqText:
-                case BinaryOpKind.EqDate:
-                case BinaryOpKind.EqTime:
-                case BinaryOpKind.EqDateTime:
-                case BinaryOpKind.EqHyperlink:
-                case BinaryOpKind.EqCurrency:
-                case BinaryOpKind.EqImage:
-                case BinaryOpKind.EqColor:
-                case BinaryOpKind.EqMedia:
+                    return OperatorBinaryDiv(this, context, node.IRContext, args);
                 case BinaryOpKind.EqBlob:
-                case BinaryOpKind.EqGuid:
-                    return Library.OperatorBinaryEq(this, context, node.IRContext, args);
 
+                case BinaryOpKind.EqBoolean:
+                case BinaryOpKind.EqColor:
+                case BinaryOpKind.EqCurrency:
+                case BinaryOpKind.EqDate:
+                case BinaryOpKind.EqDateTime:
+                case BinaryOpKind.EqGuid:
+                case BinaryOpKind.EqHyperlink:
+                case BinaryOpKind.EqImage:
+                case BinaryOpKind.EqMedia:
+                case BinaryOpKind.EqNumbers:
+                case BinaryOpKind.EqOptionSetValue:
+                case BinaryOpKind.EqText:
+                case BinaryOpKind.EqTime:
+                    return OperatorBinaryEq(this, context, node.IRContext, args);
+
+                case BinaryOpKind.NeqBlob:
+                case BinaryOpKind.NeqBoolean:
+                case BinaryOpKind.NeqColor:
+                case BinaryOpKind.NeqCurrency:
+                case BinaryOpKind.NeqDate:
+                case BinaryOpKind.NeqDateTime:
+                case BinaryOpKind.NeqGuid:
+                case BinaryOpKind.NeqHyperlink:
+                case BinaryOpKind.NeqImage:
+                case BinaryOpKind.NeqMedia:
                 case BinaryOpKind.NeqNumbers:
+                case BinaryOpKind.NeqOptionSetValue:
                 case BinaryOpKind.NeqText:
-                    return Library.OperatorBinaryNeq(this, context, node.IRContext, args);
+                case BinaryOpKind.NeqTime:
+                    return OperatorBinaryNeq(this, context, node.IRContext, args);
 
                 case BinaryOpKind.GtNumbers:
-                    return Library.OperatorBinaryGt(this, context, node.IRContext, args);
+                    return OperatorBinaryGt(this, context, node.IRContext, args);
                 case BinaryOpKind.GeqNumbers:
-                    return Library.OperatorBinaryGeq(this, context, node.IRContext, args);
+                    return OperatorBinaryGeq(this, context, node.IRContext, args);
                 case BinaryOpKind.LtNumbers:
-                    return Library.OperatorBinaryLt(this, context, node.IRContext, args);
+                    return OperatorBinaryLt(this, context, node.IRContext, args);
                 case BinaryOpKind.LeqNumbers:
-                    return Library.OperatorBinaryLeq(this, context, node.IRContext, args);
+                    return OperatorBinaryLeq(this, context, node.IRContext, args);
 
                 case BinaryOpKind.InText:
-                    return Library.OperatorTextIn(this, context, node.IRContext, args);
+                    return OperatorTextIn(this, context, node.IRContext, args);
                 case BinaryOpKind.ExactInText:
-                    return Library.OperatorTextInExact(this, context, node.IRContext, args);
+                    return OperatorTextInExact(this, context, node.IRContext, args);
 
                 case BinaryOpKind.InScalarTable:
-                    return Library.OperatorScalarTableIn(this, context, node.IRContext, args);
+                    return OperatorScalarTableIn(this, context, node.IRContext, args);
 
                 case BinaryOpKind.ExactInScalarTable:
-                    return Library.OperatorScalarTableInExact(this, context, node.IRContext, args);
+                    return OperatorScalarTableInExact(this, context, node.IRContext, args);
 
                 case BinaryOpKind.AddDateAndTime:
-                    return Library.OperatorAddDateAndTime(this, context, node.IRContext, args);
+                    return OperatorAddDateAndTime(this, context, node.IRContext, args);
                 case BinaryOpKind.AddDateAndDay:
-                    return Library.OperatorAddDateAndDay(this, context, node.IRContext, args);
+                    return OperatorAddDateAndDay(this, context, node.IRContext, args);
                 case BinaryOpKind.AddDateTimeAndDay:
-                    return Library.OperatorAddDateTimeAndDay(this, context, node.IRContext, args);
+                    return OperatorAddDateTimeAndDay(this, context, node.IRContext, args);
                 case BinaryOpKind.DateDifference:
-                    return Library.OperatorDateDifference(this, context, node.IRContext, args);
+                    return OperatorDateDifference(this, context, node.IRContext, args);
                 case BinaryOpKind.TimeDifference:
-                    return Library.OperatorTimeDifference(this, context, node.IRContext, args);
+                    return OperatorTimeDifference(this, context, node.IRContext, args);
                 case BinaryOpKind.LtDateTime:
-                    return Library.OperatorLtDateTime(this, context, node.IRContext, args);
+                    return OperatorLtDateTime(this, context, node.IRContext, args);
                 case BinaryOpKind.LeqDateTime:
-                    return Library.OperatorLeqDateTime(this, context, node.IRContext, args);
+                    return OperatorLeqDateTime(this, context, node.IRContext, args);
                 case BinaryOpKind.GtDateTime:
-                    return Library.OperatorGtDateTime(this, context, node.IRContext, args);
+                    return OperatorGtDateTime(this, context, node.IRContext, args);
                 case BinaryOpKind.GeqDateTime:
-                    return Library.OperatorGeqDateTime(this, context, node.IRContext, args);
+                    return OperatorGeqDateTime(this, context, node.IRContext, args);
                 case BinaryOpKind.LtDate:
-                    return Library.OperatorLtDate(this, context, node.IRContext, args);
+                    return OperatorLtDate(this, context, node.IRContext, args);
                 case BinaryOpKind.LeqDate:
-                    return Library.OperatorLeqDate(this, context, node.IRContext, args);
+                    return OperatorLeqDate(this, context, node.IRContext, args);
                 case BinaryOpKind.GtDate:
-                    return Library.OperatorGtDate(this, context, node.IRContext, args);
+                    return OperatorGtDate(this, context, node.IRContext, args);
                 case BinaryOpKind.GeqDate:
-                    return Library.OperatorGeqDate(this, context, node.IRContext, args);
+                    return OperatorGeqDate(this, context, node.IRContext, args);
                 case BinaryOpKind.LtTime:
-                    return Library.OperatorLtTime(this, context, node.IRContext, args);
+                    return OperatorLtTime(this, context, node.IRContext, args);
                 case BinaryOpKind.LeqTime:
-                    return Library.OperatorLeqTime(this, context, node.IRContext, args);
+                    return OperatorLeqTime(this, context, node.IRContext, args);
                 case BinaryOpKind.GtTime:
-                    return Library.OperatorGtTime(this, context, node.IRContext, args);
+                    return OperatorGtTime(this, context, node.IRContext, args);
                 case BinaryOpKind.GeqTime:
-                    return Library.OperatorGeqTime(this, context, node.IRContext, args);
+                    return OperatorGeqTime(this, context, node.IRContext, args);
+                case BinaryOpKind.DynamicGetField:
+                    if (arg1 is UntypedObjectValue cov && arg2 is StringValue sv)
+                    {
+                        if (cov.Impl.Type is ExternalType et && et.Kind == ExternalTypeKind.Object)
+                        {
+                            if (cov.Impl.TryGetProperty(sv.Value, out var res))
+                            {
+                                if (res.Type == FormulaType.Blank)
+                                {
+                                    return new BlankValue(node.IRContext);
+                                }
+
+                                return new UntypedObjectValue(node.IRContext, res);
+                            }
+                            else
+                            {
+                                return new BlankValue(node.IRContext);
+                            }
+                        }
+                        else if (cov.Impl.Type == FormulaType.Blank)
+                        {
+                            return new BlankValue(node.IRContext);
+                        }
+                        else
+                        {
+                            return new ErrorValue(node.IRContext, new ExpressionError()
+                            {
+                                Message = "Accessing a field is not valid on this value",
+                                Span = node.IRContext.SourceContext,
+                                Kind = ErrorKind.BadLanguageCode
+                            });
+                        }
+                    }
+                    else if (arg1 is BlankValue)
+                    {
+                        return new BlankValue(node.IRContext);
+                    }
+                    else if (arg1 is ErrorValue)
+                    {
+                        return arg1;
+                    }
+                    else
+                    {
+                        return CommonErrors.UnreachableCodeError(node.IRContext);
+                    }
 
                 default:
                     return CommonErrors.UnreachableCodeError(node.IRContext);
@@ -253,7 +312,7 @@ namespace Microsoft.PowerFx
             var arg1 = node.Child.Accept(this, context);
             var args = new FormulaValue[] { arg1 };
 
-            if (Library.UnaryOps.TryGetValue(node.Op, out Library.FunctionPtr unaryOp))
+            if (UnaryOps.TryGetValue(node.Op, out var unaryOp))
             {
                 return unaryOp(this, context, node.IRContext, args);
             }
@@ -274,7 +333,7 @@ namespace Microsoft.PowerFx
                 {
                     if (row.IsValue)
                     {
-                        List<NamedValue> fields = new List<NamedValue>();
+                        var fields = new List<NamedValue>();
                         var scopeContext = context.WithScope(node.Scope);
                         foreach (var coercion in node.FieldCoercions)
                         {
@@ -285,6 +344,7 @@ namespace Microsoft.PowerFx
                             var name = coercion.Key;
                             fields.Add(new NamedValue(name.Value, newValue));
                         }
+
                         resultRows.Add(DValue<RecordValue>.Of(new InMemoryRecordValue(IRContext.NotInSource(tableType.ToRecord()), fields)));
                     }
                     else if (row.IsBlank)
@@ -296,6 +356,7 @@ namespace Microsoft.PowerFx
                         resultRows.Add(DValue<RecordValue>.Of(row.Error));
                     }
                 }
+
                 return new InMemoryTableValue(node.IRContext, resultRows);
             }
 
@@ -306,14 +367,16 @@ namespace Microsoft.PowerFx
         {
             if (node.Value is ScopeAccessSymbol s1)
             {
-                ScopeSymbol scope = s1.Parent;
+                var scope = s1.Parent;
 
                 var val = context.GetScopeVar(scope, s1.Name);
                 return val;
             }
-            if (node.Value is ScopeSymbol s2) // Binds to whole scope
+
+            // Binds to whole scope
+            if (node.Value is ScopeSymbol s2)
             {
-                IScope r = context.ScopeValues[s2.Id];
+                var r = context.ScopeValues[s2.Id];
                 var r2 = (RecordScope)r;
                 return r2._context;
             }
@@ -329,7 +392,8 @@ namespace Microsoft.PowerFx
             {
                 return new BlankValue(node.IRContext);
             }
-            if(left is ErrorValue)
+
+            if (left is ErrorValue)
             {
                 return left;
             }
@@ -367,25 +431,12 @@ namespace Microsoft.PowerFx
 
         public override FormulaValue Visit(ResolvedObjectNode node, SymbolContext context)
         {
-            if (node.Value is RecalcEngineResolver.ParameterData data)
+            return node.Value switch
             {
-                var paramName = data.ParameterName;
-
-                var value = context.Globals.GetField(node.IRContext, paramName);
-                return value;
-            }
-            if (node.Value is RecalcFormulaInfo fi)
-            {
-                var value = fi._value;
-                return value;
-            }
-
-            return new ErrorValue(node.IRContext, new ExpressionError()
-            {
-                Message = $"Unrecognized symbol {node?.Value?.GetType()?.Name}".Trim(),
-                Span = node.IRContext.SourceContext,
-                Kind = ErrorKind.Validation
-            });
+                RecalcFormulaInfo fi => ResolvedObjectHelpers.RecalcFormulaInfo(fi),
+                OptionSet optionSet => ResolvedObjectHelpers.OptionSet(optionSet, node.IRContext),
+                _ => ResolvedObjectHelpers.ResolvedObjectError(node),
+            };
         }
     }
 }

@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+// Licensed under the MIT license.
 
 using System;
 
@@ -20,9 +20,9 @@ namespace Microsoft.PowerFx.Core.Utils
             _value = value;
         }
 
-        public string Value { get { return _value ?? string.Empty; } }
+        public string Value => _value ?? string.Empty;
 
-        public bool IsValid { get { return _value != null; } }
+        public bool IsValid => _value != null;
 
         public static implicit operator string(DName name)
         {
@@ -44,7 +44,9 @@ namespace Microsoft.PowerFx.Core.Utils
             Contracts.AssertValueOrNull(obj);
 
             if (!(obj is DName))
+            {
                 return false;
+            }
 
             return Equals((DName)obj);
         }
@@ -60,10 +62,7 @@ namespace Microsoft.PowerFx.Core.Utils
             return Value == other;
         }
 
-        public static bool operator ==(DName name1, DName name2)
-        {
-            return name1.Value == name2.Value;
-        }
+        public static bool operator ==(DName name1, DName name2) => name1.Value == name2.Value;
 
         public static bool operator ==(string str, DName name)
         {
@@ -77,10 +76,7 @@ namespace Microsoft.PowerFx.Core.Utils
             return name.Value == str;
         }
 
-        public static bool operator !=(DName name1, DName name2)
-        {
-            return name1.Value != name2.Value;
-        }
+        public static bool operator !=(DName name1, DName name2) => name1.Value != name2.Value;
 
         public static bool operator !=(string str, DName name)
         {
@@ -100,13 +96,17 @@ namespace Microsoft.PowerFx.Core.Utils
             Contracts.AssertValueOrNull(strName);
 
             if (string.IsNullOrEmpty(strName))
-                return false;
-
-            for (int i = 0; i < strName.Length; i++)
             {
-                char ch = strName[i];
+                return false;
+            }
+
+            for (var i = 0; i < strName.Length; i++)
+            {
+                var ch = strName[i];
                 if (!CharacterUtils.IsSpace(ch))
+                {
                     return true;
+                }
             }
 
             return false;
@@ -125,16 +125,18 @@ namespace Microsoft.PowerFx.Core.Utils
                 return new DName(StrUnderscore);
             }
 
-            bool fAllSpaces = true;
+            var fAllSpaces = true;
             fModified = false;
 
-            for (int i = 0; i < strName.Length; i++)
+            for (var i = 0; i < strName.Length; i++)
             {
                 fAllSpaces = fAllSpaces && (strName[i] == ChSpace);
             }
 
             if (!fAllSpaces)
+            {
                 return new DName(strName);
+            }
 
             fModified = true;
 

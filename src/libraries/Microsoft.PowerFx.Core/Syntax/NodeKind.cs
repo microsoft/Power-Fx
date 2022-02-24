@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+// Licensed under the MIT license.
 
 namespace Microsoft.PowerFx.Core.Syntax
 {
@@ -29,6 +29,7 @@ namespace Microsoft.PowerFx.Core.Syntax
         StrLit,
         Replaceable,
 
-        Error
+        Error,
+        StrInterp
     }
 }

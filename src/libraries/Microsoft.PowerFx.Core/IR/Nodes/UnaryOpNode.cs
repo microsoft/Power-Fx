@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+// Licensed under the MIT license.
 
 using System.Collections.Generic;
 using Microsoft.PowerFx.Core.Public.Types;
@@ -12,7 +12,8 @@ namespace Microsoft.PowerFx.Core.IR.Nodes
         public readonly UnaryOpKind Op;
         public readonly IntermediateNode Child;
 
-        public UnaryOpNode(IRContext irContext, UnaryOpKind op, IntermediateNode child) : base(irContext)
+        public UnaryOpNode(IRContext irContext, UnaryOpKind op, IntermediateNode child)
+            : base(irContext)
         {
             Contracts.AssertValue(child);
             Contracts.Assert(op != UnaryOpKind.RecordToRecord && op != UnaryOpKind.TableToTable);

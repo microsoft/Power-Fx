@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+// Licensed under the MIT license.
 
 using System;
 using System.Collections.Generic;
@@ -24,6 +24,7 @@ namespace Microsoft.PowerFx.Core.Public.Values
         // In general the interpreter should trust that the binding had
         // the correct runtime types for all values.
         internal IRContext IRContext { get; }
+
         public FormulaType Type => IRContext.ResultType;
 
         internal FormulaValue(IRContext irContext)
@@ -32,6 +33,7 @@ namespace Microsoft.PowerFx.Core.Public.Values
         }
 
         #region Host Utility API
+
         // Host utility creation methods, listed here for discoverability.
         // NOT FOR USE IN THE INTERPRETER! When creating new instances in
         // the interpreter, call the constructor directly and pass in the
@@ -43,7 +45,11 @@ namespace Microsoft.PowerFx.Core.Public.Values
 
         public static FormulaValue New(double? number)
         {
-            if (number.HasValue) { return New(number.Value); }
+            if (number.HasValue)
+            {
+                return New(number.Value);
+            }
+
             return new BlankValue(IRContext.NotInSource(FormulaType.Number));
         }
 
@@ -52,23 +58,28 @@ namespace Microsoft.PowerFx.Core.Public.Values
             // $$$ Is this safe? or loss in precision?
             return new NumberValue(IRContext.NotInSource(FormulaType.Number), (double)number);
         }
+
         public static NumberValue New(long number)
         {
             // $$$ Is this safe? or loss in precision?
             return new NumberValue(IRContext.NotInSource(FormulaType.Number), (double)number);
         }
+
         public static NumberValue New(int number)
         {
             return new NumberValue(IRContext.NotInSource(FormulaType.Number), number);
         }
+
         public static NumberValue New(float number)
         {
             return new NumberValue(IRContext.NotInSource(FormulaType.Number), number);
         }
+
         public static StringValue New(string value)
         {
             return new StringValue(IRContext.NotInSource(FormulaType.String), value);
         }
+
         public static BooleanValue New(bool value)
         {
             return new BooleanValue(IRContext.NotInSource(FormulaType.Boolean), value);
@@ -76,14 +87,16 @@ namespace Microsoft.PowerFx.Core.Public.Values
 
         public static DateValue NewDateOnly(DateTime value)
         {
-            if(value.TimeOfDay != TimeSpan.Zero)
+            if (value.TimeOfDay != TimeSpan.Zero)
             {
                 throw new ArgumentException("Invalid DateValue, the provided DateTime contains a non-zero TimeOfDay");
             }
-            if(value.Kind == DateTimeKind.Utc)
+
+            if (value.Kind == DateTimeKind.Utc)
             {
                 throw new ArgumentException("Invalid DateValue, the provided DateTime must be local");
             }
+
             return new DateValue(IRContext.NotInSource(FormulaType.Date), value);
         }
 
@@ -93,6 +106,7 @@ namespace Microsoft.PowerFx.Core.Public.Values
             {
                 throw new ArgumentException("Invalid DateTimeValue, the provided DateTime must be local");
             }
+
             return new DateTimeValue(IRContext.NotInSource(FormulaType.DateTime), value);
         }
 
@@ -103,10 +117,11 @@ namespace Microsoft.PowerFx.Core.Public.Values
 
         public static BlankValue NewBlank(FormulaType type = null)
         {
-            if(type == null)
+            if (type == null)
             {
                 type = FormulaType.Blank;
             }
+
             return new BlankValue(IRContext.NotInSource(type));
         }
 
@@ -119,6 +134,7 @@ namespace Microsoft.PowerFx.Core.Public.Values
         {
             return NewTable((IEnumerable<T>)array);
         }
+
         public static TableValue NewTable<T>(IEnumerable<T> rows)
         {
             return TableFromEnumerable((System.Collections.IEnumerable)rows, typeof(T));
@@ -134,6 +150,13 @@ namespace Microsoft.PowerFx.Core.Public.Values
             return RecordFromProperties(obj, type);
         }
 
+        public static UntypedObjectValue New(IUntypedObject untypedObject)
+        {
+            return new UntypedObjectValue(
+                IRContext.NotInSource(new UntypedObjectType()),
+                untypedObject);
+        }
+
         // Dynamic new, useful for marshallers. 
         public static FormulaValue New(object obj, Type type)
         {
@@ -142,22 +165,60 @@ namespace Microsoft.PowerFx.Core.Public.Values
                 return NewBlank();
             }
 
-            if (obj is FormulaValue value) { return value; }
+            if (obj is FormulaValue value)
+            {
+                return value;
+            }
 
-            if (obj is string strValue) { return New(strValue); }
-            if (obj is bool boolValue) { return New(boolValue); }
+            if (obj is string strValue)
+            {
+                return New(strValue);
+            }
 
-            if (obj is double doubleValue) { return New(doubleValue); }
-            if (obj is int intValue) { return New(intValue); }
-            if (obj is decimal decValue) { return New(decValue); }
-            if (obj is long longValue) { return New(longValue); }
+            if (obj is bool boolValue)
+            {
+                return New(boolValue);
+            }
 
-            if (obj is float singleValue) { return New(singleValue); }
+            if (obj is double doubleValue)
+            {
+                return New(doubleValue);
+            }
 
-            if (obj is DateTime dateValue) { return New(dateValue); }
-            if (obj is DateTimeOffset dateOffsetValue) { return New(dateOffsetValue.DateTime); }
-            if (obj is TimeSpan timeValue) { return New(timeValue); }
+            if (obj is int intValue)
+            {
+                return New(intValue);
+            }
 
+            if (obj is decimal decValue)
+            {
+                return New(decValue);
+            }
+
+            if (obj is long longValue)
+            {
+                return New(longValue);
+            }
+
+            if (obj is float singleValue)
+            {
+                return New(singleValue);
+            }
+
+            if (obj is DateTime dateValue)
+            {
+                return New(dateValue);
+            }
+
+            if (obj is DateTimeOffset dateOffsetValue)
+            {
+                return New(dateOffsetValue.DateTime);
+            }
+
+            if (obj is TimeSpan timeValue)
+            {
+                return New(timeValue);
+            }
 
             // Do checking off the static type, not the runtime instance. 
             if (type.IsInterface)
@@ -185,7 +246,7 @@ namespace Microsoft.PowerFx.Core.Public.Values
                 using var document = JsonDocument.Parse(jsonString);
                 using var jsonMemStream = new MemoryStream();
                 using var paJsonWriter = new Utf8JsonWriter(jsonMemStream);
-                JsonElement propBag = document.RootElement;
+                var propBag = document.RootElement;
 
                 return FromJson(propBag);
             }
@@ -228,12 +289,13 @@ namespace Microsoft.PowerFx.Core.Public.Values
         #endregion
 
         #region Host Records API
+
         /// <summary>
-        /// Create a record by reflecting over the object's public properties
+        /// Create a record by reflecting over the object's public properties.
         /// </summary>
-        /// <typeparam name="T">static type to reflect over</typeparam>
+        /// <typeparam name="T">static type to reflect over.</typeparam>
         /// <param name="obj"></param>
-        /// <returns>a new record value</returns>
+        /// <returns>a new record value.</returns>
         public static RecordValue RecordFromProperties<T>(T obj)
         {
             return RecordFromProperties(obj, typeof(T));
@@ -241,7 +303,7 @@ namespace Microsoft.PowerFx.Core.Public.Values
 
         public static RecordValue RecordFromProperties(object obj, Type type)
         {
-            RecordValue r = RecordFromFields(
+            var r = RecordFromFields(
                 from prop in type.GetProperties(BindingFlags.Public | BindingFlags.Instance)
                 let fieldValue = prop.GetValue(obj)
                 select new NamedValue(prop.Name, New(fieldValue, prop.PropertyType)));
@@ -262,10 +324,11 @@ namespace Microsoft.PowerFx.Core.Public.Values
         public static RecordValue RecordFromFields(IEnumerable<NamedValue> fields)
         {
             var type = new RecordType();
-            foreach(var field in fields)
+            foreach (var field in fields)
             {
                 type = type.Add(new NamedFormulaType(field.Name, field.Value.IRContext.ResultType));
             }
+
             return new InMemoryRecordValue(IRContext.NotInSource(type), fields);
         }
 
@@ -284,13 +347,13 @@ namespace Microsoft.PowerFx.Core.Public.Values
         {
             Contract.Assert(element.ValueKind == JsonValueKind.Object);
 
-            List<NamedValue> fields = new List<NamedValue>();
+            var fields = new List<NamedValue>();
             var type = new RecordType();
 
             foreach (var pair in element.EnumerateObject())
             {
                 var name = pair.Name;
-                JsonElement value = pair.Value;
+                var value = pair.Value;
 
                 var paValue = FromJson(value);
                 fields.Add(new NamedValue(name, paValue));
@@ -302,16 +365,21 @@ namespace Microsoft.PowerFx.Core.Public.Values
         #endregion
 
         #region Host Tables API
+
         /// <summary>
         /// Create a table from an untyped IEnumerable. This can be useful in some dynamic scenarios.
         /// </summary>
         /// <param name="values"></param>
         /// <param name="elementType"></param>
         /// <returns></returns>
-        internal static TableValue TableFromEnumerable(System.Collections.IEnumerable values,
+        internal static TableValue TableFromEnumerable(
+            System.Collections.IEnumerable values,
             Type elementType)
         {
-            if (elementType == null) { throw new ArgumentNullException(nameof(elementType)); }
+            if (elementType == null)
+            {
+                throw new ArgumentNullException(nameof(elementType));
+            }
 
             var records = TableToRecords(values, elementType);
             var recordType = (RecordType)records.First().IRContext.ResultType;
@@ -331,7 +399,7 @@ namespace Microsoft.PowerFx.Core.Public.Values
 
         public static TableValue TableFromRecords<T>(IEnumerable<T> values, TableType type)
         {
-            var values2 = values.Select(v => GuaranteeRecord(FormulaValue.New(v, typeof(T))));
+            var values2 = values.Select(v => GuaranteeRecord(New(v, typeof(T))));
             return new InMemoryTableValue(IRContext.NotInSource(type), values2.Select(r => DValue<RecordValue>.Of(r)));
         }
 
@@ -343,7 +411,7 @@ namespace Microsoft.PowerFx.Core.Public.Values
         {
             foreach (var obj in values)
             {
-                var formulaValue = GuaranteeRecord(FormulaValue.New(obj, elementType));
+                var formulaValue = GuaranteeRecord(New(obj, elementType));
                 yield return formulaValue;
             }
         }
@@ -358,7 +426,7 @@ namespace Microsoft.PowerFx.Core.Public.Values
             // Handle the single-column-table case. 
             var defaultField = new NamedValue("Value", rawVal);
 
-            RecordValue val = RecordFromFields(defaultField);
+            var val = RecordFromFields(defaultField);
             return val;
         }
 
@@ -370,12 +438,12 @@ namespace Microsoft.PowerFx.Core.Public.Values
         {
             Contract.Assert(array.ValueKind == JsonValueKind.Array);
 
-            List<RecordValue> records = new List<RecordValue>();
+            var records = new List<RecordValue>();
 
             for (var i = 0; i < array.GetArrayLength(); ++i)
             {
                 var element = array[i];
-                var val = GuaranteeRecord(FormulaValue.FromJson(element));
+                var val = GuaranteeRecord(FromJson(element));
 
                 records.Add(val);
             }
@@ -390,6 +458,7 @@ namespace Microsoft.PowerFx.Core.Public.Values
             {
                 type = TableType.FromRecord((RecordType)GuaranteeRecord(records[0]).IRContext.ResultType);
             }
+
             return new InMemoryTableValue(IRContext.NotInSource(type), records.Select(r => DValue<RecordValue>.Of(r)));
         }
         #endregion

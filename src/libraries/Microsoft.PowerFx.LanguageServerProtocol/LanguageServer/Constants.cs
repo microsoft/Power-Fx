@@ -1,10 +1,10 @@
 ﻿// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+// Licensed under the MIT license.
 
 namespace Microsoft.PowerFx.LanguageServerProtocol
 {
     /// <summary>
-    /// Code action kind constants
+    /// Code action kind constants.
     /// </summary>
     public class CodeActionKind
     {

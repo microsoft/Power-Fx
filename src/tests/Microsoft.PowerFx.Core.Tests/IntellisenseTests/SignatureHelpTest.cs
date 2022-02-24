@@ -1,9 +1,10 @@
 ﻿// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+// Licensed under the MIT license.
 
 using System.IO;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Texl.Intellisense.SignatureHelp;
+using Microsoft.PowerFx.Core.Types.Enums;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Xunit;
@@ -12,14 +13,14 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
 {
     public class SignatureHelpTest : IntellisenseTestBase
     {
-        static bool RegenerateSignatureHelp = false;
+        private static readonly bool RegenerateSignatureHelp = false;
 
         /// <summary>
         /// Resolves to the directory in the src folder that corresponds to the current directory, which may
         /// instead include the subpath bin/(Debug|Release).AnyCPU, depending on whether the assembly was
-        /// built in debug or release mode
+        /// built in debug or release mode.
         /// </summary>
-        private static string _signatureHelpDirectory = Path.Join(Directory.GetCurrentDirectory(), "IntellisenseTests", "TestSignatures")
+        private static readonly string _signatureHelpDirectory = Path.Join(Directory.GetCurrentDirectory(), "IntellisenseTests", "TestSignatures")
             .Replace(Path.Join("bin", "Debug.AnyCPU"), "src")
             .Replace(Path.Join("bin", "Release.AnyCPU"), "src");
 
@@ -29,7 +30,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         /// <see cref="SignatureHelpId"/>.
         /// </summary>
         /// <param name="signatureHelp">
-        /// Signature help value to test
+        /// Signature help value to test.
         /// </param>
         private void CheckSignatureHelpTest(SignatureHelp signatureHelp, int helpId)
         {
@@ -58,14 +59,18 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
                 Assert.True(RegenerateSignatureHelp, "Snapshot regeneration must be explicitly enabled to make new snapshot tests. Target path is: " + signatureHelpPath);
 
                 if (!Directory.Exists(directory))
+                {
                     Directory.CreateDirectory(directory);
+                }
 
                 WriteSignatureHelp(signatureHelpPath, signatureHelp);
             }
         }
 
         private JObject ReadSignatureHelpFile(string signatureHelpPath) => JObject.Parse(File.ReadAllText(signatureHelpPath));
+
         private JObject SerializeSignatureHelp(SignatureHelp signatureHelp) => JObject.Parse(JsonConvert.SerializeObject(signatureHelp));
+
         private void WriteSignatureHelp(string path, SignatureHelp signatureHelp) => File.WriteAllText(path, JsonConvert.SerializeObject(signatureHelp, Formatting.Indented));
 
         /// <summary>
@@ -86,7 +91,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         [InlineData("If(true, If(true, 0, 1)|)", 8)]
         [InlineData("Filter|", 9)]
         [InlineData("|", 10)]
-        public void TestSignatureHelp(string expression, int helpId) => CheckSignatureHelpTest(Suggest(expression, new PowerFxConfig()).SignatureHelp, helpId);
+        public void TestSignatureHelp(string expression, int helpId) => CheckSignatureHelpTest(Suggest(expression, new EnumStore()).SignatureHelp, helpId);
 
         [Fact]
         public void TestRegenerateSignatureHelpIsOff() => Assert.False(RegenerateSignatureHelp);

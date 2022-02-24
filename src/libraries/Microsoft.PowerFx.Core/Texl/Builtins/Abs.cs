@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+// Licensed under the MIT license.
 
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
@@ -12,7 +12,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     {
         public AbsFunction()
             : base("Abs", TexlStrings.AboutAbs, FunctionCategories.MathAndStat)
-        {}
+        {
+        }
     }
 
     // Abs(E:*[n])
@@ -21,6 +22,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     {
         public AbsTableFunction()
             : base("Abs", TexlStrings.AboutAbsT, FunctionCategories.Table)
-        { }
+        {
+        }
     }
 }

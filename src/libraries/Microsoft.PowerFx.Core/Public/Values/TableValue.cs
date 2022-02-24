@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+// Licensed under the MIT license.
 
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
@@ -18,7 +18,8 @@ namespace Microsoft.PowerFx.Core.Public.Values
 
         public bool IsColumn => IRContext.ResultType._type.IsColumn;
 
-        internal TableValue(IRContext irContext) : base(irContext)
+        internal TableValue(IRContext irContext)
+            : base(irContext)
         {
             Contract.Assert(IRContext.ResultType is TableType);
         }
@@ -69,5 +70,5 @@ namespace Microsoft.PowerFx.Core.Public.Values
         {
             visitor.Visit(this);
         }
-    }   
+    }
 }

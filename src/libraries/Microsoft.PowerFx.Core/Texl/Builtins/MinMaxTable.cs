@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+// Licensed under the MIT license.
 
 using Microsoft.PowerFx.Core.Functions.Delegation;
 using Microsoft.PowerFx.Core.Localization;
@@ -14,9 +14,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     {
         private readonly DelegationCapability _delegationCapability;
 
-        public override bool RequiresErrorContext { get { return true; } }
+        public override bool RequiresErrorContext => true;
 
-        public override DelegationCapability FunctionDelegationCapability { get { return _delegationCapability; } }
+        public override DelegationCapability FunctionDelegationCapability => _delegationCapability;
 
         public MinMaxTableFunction(bool isMin)
             : base(isMin ? "Min" : "Max", isMin ? TexlStrings.AboutMinT : TexlStrings.AboutMaxT, FunctionCategories.Table)

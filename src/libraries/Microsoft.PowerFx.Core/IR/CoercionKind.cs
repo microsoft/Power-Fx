@@ -1,4 +1,7 @@
-﻿namespace Microsoft.PowerFx.Core.IR
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
+namespace Microsoft.PowerFx.Core.IR
 {
     internal enum CoercionKind
     {

@@ -1,10 +1,10 @@
-// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
 
 namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
 {
     /// <summary>
-    /// Custom LSP protocol starts with '$/', not all client supports
+    /// Custom LSP protocol starts with '$/', not all client supports.
     /// </summary>
     public static class CustomProtocolNames
     {

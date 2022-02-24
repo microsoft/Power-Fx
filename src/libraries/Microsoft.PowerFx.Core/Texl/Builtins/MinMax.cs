@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+// Licensed under the MIT license.
 
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
@@ -15,6 +15,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public MinMaxFunction(bool isMin)
             : base(isMin ? "Min" : "Max", isMin ? TexlStrings.AboutMin : TexlStrings.AboutMax, FunctionCategories.MathAndStat)
-        { }
+        {
+        }
     }
 }

@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+// Licensed under the MIT license.
 
 using System.Collections.Generic;
 using System.Text.Json;
@@ -18,7 +18,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationMetadata
             {
                 Contracts.AssertValid(schema);
 
-                Dictionary<DPath, DPath> oDataReplacement = new Dictionary<DPath, DPath>();
+                var oDataReplacement = new Dictionary<DPath, DPath>();
 
                 if (dataServiceCapabilitiesJsonObject.TryGetProperty(CapabilitiesConstants.ColumnsCapabilities, out var columnCapabilitiesJsonObj))
                 {
@@ -38,7 +38,9 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationMetadata
                         }
 
                         if (!capabilitiesDefinedByColumn.TryGetProperty(CapabilitiesConstants.Properties, out var propertyCapabilities))
+                        {
                             continue;
+                        }
 
                         foreach (var property in propertyCapabilities.EnumerateObject())
                         {
@@ -46,11 +48,13 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationMetadata
                             var capabilitiesDefinedByColumnProperty = property.Value;
 
                             if (!capabilitiesDefinedByColumnProperty.TryGetProperty(CapabilitiesConstants.Capabilities, out var propertyCapabilityJsonObject))
+                            {
                                 continue;
+                            }
 
                             if (propertyCapabilityJsonObject.TryGetProperty(CapabilitiesConstants.PropertyQueryAlias, out var alias))
                             {
-                                oDataReplacement.Add(propertyPath, getReplacementPath(alias.GetString(), columnPath));
+                                oDataReplacement.Add(propertyPath, GetReplacementPath(alias.GetString(), columnPath));
                             }
                         }
                     }
@@ -59,7 +63,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationMetadata
                 return new ODataOpMetadata(schema, oDataReplacement);
             }
 
-            private DPath getReplacementPath(string alias, DPath currentColumnPath)
+            private DPath GetReplacementPath(string alias, DPath currentColumnPath)
             {
                 if (alias.Contains("/"))
                 {
@@ -72,8 +76,9 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationMetadata
 
                     return fullPath;
                 }
-                else // Task 5593666: This is temporary to not cause regressions while sharepoint switches to using full query param
+                else 
                 {
+                    // Task 5593666: This is temporary to not cause regressions while sharepoint switches to using full query param
                     return currentColumnPath.Append(new DName(alias));
                 }
             }

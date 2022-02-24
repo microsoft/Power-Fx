@@ -16,6 +16,12 @@ Blank()
 >> FirstN([1, 2, 3, 4, 5], 2)
 [1,2]
 
+>> FirstN([1, 2, 3, 4, 5], 1)
+[1]
+
+>> FirstN([1, 2, 3, 4, 5])
+[1]
+
 >> FirstN([1, 2, 3, 4, 5], 6)
 [1,2,3,4,5]
 
@@ -26,6 +32,9 @@ Blank()
 Blank()
 
 >> FirstN(Blank(), 2)
+Blank()
+
+>> FirstN(Blank())
 Blank()
 
 >> FirstN(Sort([-2, -1, 0, 1, 2], 1 / Value), 2)
@@ -54,3 +63,9 @@ Blank()
 
 >> First(First(Table({a:{aa:11,ab:12,ad:Table({aaa:1},{aaa:2})},b:1},{a:{ac:23,ad:Table({bbb:1},{bbb:2})},b:2})).a.ad).aaa
 1
+
+>> First(Filter([1,2,3],Value=4)).Value
+Blank()
+
+>> FirstN(Filter([1,2,3],Value=4),2)
+[]

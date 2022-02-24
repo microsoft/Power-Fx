@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+// Licensed under the MIT license.
 
 using Microsoft.PowerFx.Core.IR;
 
@@ -13,9 +13,9 @@ namespace Microsoft.PowerFx.Core.Public.Values
     /// </summary>
     public abstract class ValidFormulaValue : FormulaValue
     {
-        internal ValidFormulaValue(IRContext irContext) : base(irContext)
+        internal ValidFormulaValue(IRContext irContext)
+            : base(irContext)
         {
-
         }
     }
 }

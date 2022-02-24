@@ -1,5 +1,5 @@
-// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
 
 using System.Collections.Generic;
 using System.Linq;
@@ -31,8 +31,10 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
         {
             var children = CloneChildren(ref idNext, ts);
             var newNodes = new Dictionary<TexlNode, TexlNode>();
-            for (int i = 0; i < Children.Length; ++i)
+            for (var i = 0; i < Children.Length; ++i)
+            {
                 newNodes.Add(Children[i], children[i]);
+            }
 
             return new VariadicOpNode(ref idNext, Op, children, Clone(OpTokens, ts), SourceList.Clone(ts, newNodes));
         }
@@ -47,12 +49,12 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
             }
         }
 
-        public override Result Accept<Result, Context>(TexlFunctionalVisitor<Result, Context> visitor, Context context)
+        public override TResult Accept<TResult, TContext>(TexlFunctionalVisitor<TResult, TContext> visitor, TContext context)
         {
             return visitor.Visit(this, context);
         }
 
-        public override NodeKind Kind { get { return NodeKind.VariadicOp; } }
+        public override NodeKind Kind => NodeKind.VariadicOp;
 
         public override VariadicOpNode AsVariadicOp()
         {

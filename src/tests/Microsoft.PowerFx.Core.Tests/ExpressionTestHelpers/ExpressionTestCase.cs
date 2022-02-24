@@ -1,5 +1,5 @@
-// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
 
 using System.Collections.Generic;
 using System.IO;
@@ -11,7 +11,7 @@ namespace Microsoft.PowerFx.Core.Tests
     // Describe a test case in the file. 
     public class ExpressionTestCase : IXunitSerializable
     {
-        private string _engineName = null;
+        private readonly string _engineName = null;
 
         public ExpressionTestCase()
         {
@@ -32,10 +32,11 @@ namespace Microsoft.PowerFx.Core.Tests
         // Location from source file. 
         public string SourceFile;
         public int SourceLine;
+        public string SetupHandlerName;
 
         public override string ToString()
         {
-            return $"{Path.GetFileName(this.SourceFile)} : {this.SourceLine.ToString("000")} - {Input} = {GetExpected(_engineName)}";
+            return $"{Path.GetFileName(SourceFile)} : {SourceLine.ToString("000")} - {Input} = {GetExpected(_engineName)}";
         }
 
         public void SetExpected(string expected, string engineName = null)
@@ -44,6 +45,7 @@ namespace Microsoft.PowerFx.Core.Tests
             {
                 engineName = "-";
             }
+
             _expected[engineName] = expected;
         }
 
@@ -53,24 +55,27 @@ namespace Microsoft.PowerFx.Core.Tests
             {
                 return _expected["-"];
             }
+
             return expected;
         }
 
         public void Deserialize(IXunitSerializationInfo info)
         {
             _expected = JsonConvert.DeserializeObject<Dictionary<string, string>>(info.GetValue<string>("expected"));
-            this.Input = info.GetValue<string>("input");
-            this.SourceFile = info.GetValue<string>("sourceFile");
-            this.SourceLine = info.GetValue<int>("sourceLine");
+            Input = info.GetValue<string>("input");
+            SourceFile = info.GetValue<string>("sourceFile");
+            SourceLine = info.GetValue<int>("sourceLine");
+            SetupHandlerName = info.GetValue<string>("setupHandlerName");
         }
 
         public void Serialize(IXunitSerializationInfo info)
         {
-            string expectedJSON = JsonConvert.SerializeObject(_expected);
+            var expectedJSON = JsonConvert.SerializeObject(_expected);
             info.AddValue("expected", expectedJSON, typeof(string));
-            info.AddValue("input", this.Input, typeof(string));
-            info.AddValue("sourceFile", this.SourceFile, typeof(string));
-            info.AddValue("sourceLine", this.SourceLine, typeof(int));
+            info.AddValue("input", Input, typeof(string));
+            info.AddValue("sourceFile", SourceFile, typeof(string));
+            info.AddValue("sourceLine", SourceLine, typeof(int));
+            info.AddValue("setupHandlerName", SetupHandlerName, typeof(string));
         }
     }
 }

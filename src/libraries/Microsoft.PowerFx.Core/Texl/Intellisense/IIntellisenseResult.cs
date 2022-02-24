@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+// Licensed under the MIT license.
 
 using System;
 using System.Collections.Generic;
@@ -46,7 +46,7 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
         Exception Exception { get; }
 
         /// <summary>
-        /// Function signature help for this result, complies to Language Server Protocol
+        /// Function signature help for this result, complies to Language Server Protocol.
         /// </summary>
         public SignatureHelp.SignatureHelp SignatureHelp { get; }
     }

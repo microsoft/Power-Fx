@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+// Licensed under the MIT license.
 
 namespace Microsoft.PowerFx.Core.IR.Nodes
 {
@@ -75,6 +75,7 @@ namespace Microsoft.PowerFx.Core.IR.Nodes
         LeqTime,
         GtTime,
         GeqTime,
+        DynamicGetField,
 
         // And, Or, Pow, Concatenate get represented as FunctionNodes with lambdas to handle short-circuiting
     }

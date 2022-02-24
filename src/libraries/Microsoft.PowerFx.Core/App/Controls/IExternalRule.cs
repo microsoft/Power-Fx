@@ -1,5 +1,5 @@
-// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
 
 using System.Collections.Generic;
 using Microsoft.PowerFx.Core.Binding;
@@ -13,11 +13,15 @@ namespace Microsoft.PowerFx.Core.App.Controls
     internal interface IExternalRule
     {
         Dictionary<int, DataSourceToQueryOptionsMap> TexlNodeQueryOptions { get; }
+
         IExternalDocument Document { get; }
+
         TexlBinding Binding { get; }
+
         bool HasErrors { get; }
+
         bool HasControlPropertyDependency(string referencedControlUniqueId);
 
-        void SetDelegationTrackerStatus(TexlNode node, DelegationStatus status, DelegationTelemetryInfo logInfo, TexlFunction func);        
+        void SetDelegationTrackerStatus(TexlNode node, DelegationStatus status, DelegationTelemetryInfo logInfo, TexlFunction func);
     }
 }

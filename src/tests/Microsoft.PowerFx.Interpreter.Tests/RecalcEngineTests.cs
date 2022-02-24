@@ -1,12 +1,17 @@
 ﻿// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+// Licensed under the MIT license.
 
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
+using Microsoft.PowerFx.Core;
+using Microsoft.PowerFx.Core.Public;
 using Microsoft.PowerFx.Core.Public.Types;
 using Microsoft.PowerFx.Core.Public.Values;
+using Microsoft.PowerFx.Core.Texl;
+using Microsoft.PowerFx.Core.Utils;
 using Xunit;
 using Xunit.Sdk;
 
@@ -20,14 +25,16 @@ namespace Microsoft.PowerFx.Tests
             var asm = typeof(RecalcEngine).Assembly;
 
             var ns = "Microsoft.PowerFx";
-            HashSet<string> allowed = new HashSet<string>()
+            var allowed = new HashSet<string>()
             {
                 $"{ns}.{nameof(RecalcEngine)}",
                 $"{ns}.{nameof(ReflectionFunction)}",
-                $"{ns}.{nameof(RecalcEngineScope)}"
+                $"{ns}.{nameof(RecalcEngineScope)}",
+                $"{ns}.{nameof(PowerFxConfigExtensions)}",
+                $"{ns}.{nameof(OptionSet)}"
             };
 
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             foreach (var type in asm.GetTypes().Where(t => t.IsPublic))
             {
                 var name = type.FullName;
@@ -40,7 +47,7 @@ namespace Microsoft.PowerFx.Tests
                 allowed.Remove(name);
             }
 
-            Assert.True(0 == sb.Length, $"Unexpected public types: {sb}");
+            Assert.True(sb.Length == 0, $"Unexpected public types: {sb}");
 
             // Types we expect to be in the assembly aren't there. 
             if (allowed.Count > 0)
@@ -48,7 +55,6 @@ namespace Microsoft.PowerFx.Tests
                 throw new XunitException("Types missing: " + string.Join(",", allowed.ToArray()));
             }
         }
-
 
         [Fact]
         public void EvalWithGlobals()
@@ -60,8 +66,26 @@ namespace Microsoft.PowerFx.Tests
                 x = 15
             });
             var result = engine.Eval("With({y:2}, x+y)", context);
-            
+
             Assert.Equal(17.0, ((NumberValue)result).Value);
+        }
+
+        /// <summary>
+        /// Test that helps to ensure that RecalcEngine performs evaluation in thread safe manner.
+        /// </summary>
+        [Fact]
+        public void EvalInMultipleThreads()
+        {
+            var engine = new RecalcEngine();
+            Parallel.For(
+                0,
+                10000,
+                (i) =>
+                {
+                    Assert.Equal("5", engine.Eval("10-5").ToObject().ToString());
+                    Assert.Equal("True", engine.Eval("true Or false").ToObject().ToString());
+                    Assert.Equal("15", engine.Eval("10+5").ToObject().ToString());
+                });
         }
 
         [Fact]
@@ -89,7 +113,7 @@ namespace Microsoft.PowerFx.Tests
             engine.SetFormula("B", "A*10", OnUpdate);
             AssertUpdate("B-->10;");
 
-            engine.SetFormula("C", "B+5", OnUpdate); 
+            engine.SetFormula("C", "B+5", OnUpdate);
             AssertUpdate("C-->15;");
 
             // depend on grand child directly 
@@ -117,7 +141,7 @@ namespace Microsoft.PowerFx.Tests
 
             engine.SetFormula("C", "A2*10", OnUpdate);
             AssertUpdate("C-->50;");
-                        
+
             engine.UpdateVariable("A1", 2);
             AssertUpdate("B-->7;"); // Don't fire C, not touched
 
@@ -153,9 +177,7 @@ namespace Microsoft.PowerFx.Tests
 
             // not supported: Can't change a variable's type.
             Assert.Throws<NotSupportedException>(() =>
-                engine.UpdateVariable("a", FormulaValue.New("str"))
-            );
-
+                engine.UpdateVariable("a", FormulaValue.New("str")));
         }
 
         [Fact]
@@ -204,7 +226,8 @@ namespace Microsoft.PowerFx.Tests
         public void CheckSuccess()
         {
             var engine = new RecalcEngine();
-            var result = engine.Check("3*2+x",
+            var result = engine.Check(
+                "3*2+x",
                 new RecordType().Add(
                     new NamedFormulaType("x", FormulaType.Number)));
 
@@ -253,8 +276,9 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public void CustomFunction()
         {
-            var engine = new RecalcEngine();
-            engine.AddFunction(new TestCustomFunction());
+            var config = new PowerFxConfig(null);
+            config.AddFunction(new TestCustomFunction());
+            var engine = new RecalcEngine(config);
 
             // Shows up in enuemeration
             var func = engine.GetAllFunctionNames().First(name => name == "TestCustom");
@@ -276,18 +300,107 @@ namespace Microsoft.PowerFx.Tests
             }
         }
 
+        [Fact]
+        public void CheckBindErrorWithParseExpression()
+        {
+            var engine = new RecalcEngine();
+            var result = engine.Check("3+foo+2", new RecordType()); // foo is undefined 
+
+            Assert.False(result.IsSuccess);
+            Assert.Null(result.Expression);
+            Assert.Single(result.Errors);
+            Assert.StartsWith("Error 2-5: Name isn't valid. This identifier isn't recognized", result.Errors[0].ToString());
+        }
+
+        [Fact]
+        public void CheckSuccessWithParsedExpression()
+        {
+            var engine = new RecalcEngine();
+            var result = engine.Check(
+                "3*2+x",
+                new RecordType().Add(
+                    new NamedFormulaType("x", FormulaType.Number)));
+
+            // Test that parsing worked
+            Assert.True(result.IsSuccess);
+            Assert.NotNull(result.Expression);
+            Assert.True(result.ReturnType is NumberType);
+            Assert.Single(result.TopLevelIdentifiers);
+            Assert.Equal("x", result.TopLevelIdentifiers.First());
+
+            // Test evaluation of parsed expression
+            var recordValue = FormulaValue.RecordFromFields(
+                new NamedValue("x", FormulaValue.New(5)));
+            var formulaValue = result.Expression.Eval(recordValue);
+            Assert.Equal(11.0, (double)formulaValue.ToObject());
+        }
+
+        [Fact]
+        public void CheckIntefaceSuccess()
+        {
+            var engine = new RecalcEngine();
+            CheckThroughInterface(engine);
+        }
+
+        private void CheckThroughInterface(IPowerFxEngine engine)
+        {
+            var result = engine.Check(
+               "3*2+x",
+               new RecordType().Add(
+                   new NamedFormulaType("x", FormulaType.Number)));
+
+            Assert.True(result.IsSuccess);
+            Assert.True(result.ReturnType is NumberType);
+            Assert.Single(result.TopLevelIdentifiers);
+            Assert.Equal("x", result.TopLevelIdentifiers.First());
+        }
+
+        [Fact]
+        public void RecalcEngineLocksConfig()
+        {
+            var config = new PowerFxConfig(null);
+            config.AddFunction(BuiltinFunctionsCore.Blank);
+            
+            var recalcEngine = new RecalcEngine(config);
+
+            var optionSet = new OptionSet("foo", new Dictionary<string, string>() { { "one key", "one value" } });
+            Assert.Throws<InvalidOperationException>(() => config.AddFunction(BuiltinFunctionsCore.Abs));
+            Assert.Throws<InvalidOperationException>(() => config.AddOptionSet(optionSet));
+
+            Assert.DoesNotContain(new DName("foo"), config.EnvironmentSymbols.Keys);
+
+            Assert.DoesNotContain(new DName(BuiltinFunctionsCore.Abs.Name), config.ExtraFunctions.Keys);
+        }        
+
+        [Fact]
+        public void OptionSetChecks()
+        {
+            var config = new PowerFxConfig(null);
+
+            var optionSet = new OptionSet("OptionSet", new Dictionary<string, string>() 
+            {
+                    { "option_1", "Option1" },
+                    { "option_2", "Option2" }
+            });
+            
+            config.AddOptionSet(optionSet);            
+            var recalcEngine = new RecalcEngine(config);
+
+            var checkResult = recalcEngine.Check("OptionSet.Option1 <> OptionSet.Option2");
+            Assert.True(checkResult.IsSuccess);
+        }
+
         #region Test
 
-        StringBuilder _updates = new StringBuilder();
+        private readonly StringBuilder _updates = new StringBuilder();
 
-
-        void AssertUpdate(string expected)
+        private void AssertUpdate(string expected)
         {
-            Assert.Equal(expected, _updates.ToString());            
+            Assert.Equal(expected, _updates.ToString());
             _updates.Clear();
         }
 
-        void OnUpdate(string name, FormulaValue newValue)
+        private void OnUpdate(string name, FormulaValue newValue)
         {
             var str = newValue.ToObject()?.ToString();
 

@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+// Licensed under the MIT license.
 
 using System.Collections.Generic;
 using Microsoft.PowerFx.Core.Functions;
@@ -13,13 +13,11 @@ namespace Microsoft.PowerFx.Core.Texl
     // - just functions that are ported over to Language.Core
     internal class BuiltinFunctionsCore
     {
-        public static IEnumerable<TexlFunction> BuiltinFunctionsLibrary
-        {
-            get { return _library; }
-        }
+        public static IEnumerable<TexlFunction> BuiltinFunctionsLibrary => _library;
 
+        // Functions in this list are shared and may show up in other hosts by default.
         private static readonly List<TexlFunction> _library = new List<TexlFunction>(200);
-
+        
         public static readonly TexlFunction AmPm = _library.Append(new AmPmFunction());
         public static readonly TexlFunction AmPmShort = _library.Append(new AmPmShortFunction());
         public static readonly TexlFunction Abs = _library.Append(new AbsFunction());
@@ -61,7 +59,7 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction DateDiff = _library.Append(new DateDiffFunction());
         public static readonly TexlFunction DateDiffT = _library.Append(new DateDiffTFunction());
         public static readonly TexlFunction DateTimeValue = _library.Append(new DateTimeValueFunction());
-        public static readonly TexlFunction DateValue = _library.Append(new DateValueFunction());        
+        public static readonly TexlFunction DateValue = _library.Append(new DateValueFunction());
         public static readonly TexlFunction Day = _library.Append(new DayFunction());
         public static readonly TexlFunction Degrees = _library.Append(new DegreesFunction());
         public static readonly TexlFunction DegreesT = _library.Append(new DegreesTableFunction());
@@ -182,6 +180,14 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction Year = _library.Append(new YearFunction());
 
         // NOTE: These functions should not be part of the core library until they are implemented in all runtimes
+        public static readonly TexlFunction Index_UO = new IndexFunction_UO();
+        public static readonly TexlFunction ParseJson = new ParseJsonFunction();
+        public static readonly TexlFunction Table_UO = new TableFunction_UO();
+        public static readonly TexlFunction Text_UO = new TextFunction_UO();
+        public static readonly TexlFunction Value_UO = new ValueFunction_UO();
+        public static readonly TexlFunction Boolean = new BooleanFunction();
+        public static readonly TexlFunction Boolean_UO = new BooleanFunction_UO();
+
         public static readonly TexlFunction IsUTCToday = new IsUTCTodayFunction();
         public static readonly TexlFunction UTCNow = new UTCNowFunction();
         public static readonly TexlFunction UTCToday = new UTCTodayFunction();

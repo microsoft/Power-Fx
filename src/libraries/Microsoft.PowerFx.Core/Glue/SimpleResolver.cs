@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+// Licensed under the MIT license.
 
 using System;
 using System.Collections.Generic;
@@ -33,6 +33,7 @@ namespace Microsoft.PowerFx.Core.Glue
         IExternalEntityScope INameResolver.EntityScope => throw new NotImplementedException();
 
         public DName CurrentProperty => default;
+
         public DPath CurrentEntityPath => default;
 
         // Allow behavior properties, like calls to POST.
@@ -40,13 +41,15 @@ namespace Microsoft.PowerFx.Core.Glue
         public bool CurrentPropertyIsBehavior => true;
 
         public bool CurrentPropertyIsConstantData => false;
+
         public bool CurrentPropertyAllowsNavigation => false;
 
         public IEnumerable<TexlFunction> Functions => _library;
 
         public IExternalEntity CurrentEntity => null;
 
-        public SimpleResolver(IEnumerable<EnumSymbol> enumSymbols, params TexlFunction[] extraFunctions) : this(extraFunctions)
+        public SimpleResolver(IEnumerable<EnumSymbol> enumSymbols, params TexlFunction[] extraFunctions)
+            : this(extraFunctions)
         {
             _enums = enumSymbols.ToArray();
         }
@@ -79,7 +82,7 @@ namespace Microsoft.PowerFx.Core.Glue
 
             // See TexlFunctionsLibrary.Lookup
             // return _functionLibrary.Lookup(theNamespace, name, localeInvariant, null);            
-            IEnumerable<TexlFunction> functionLibrary = _library.Where(func => func.Namespace == theNamespace && name == (localeInvariant ? func.LocaleInvariantName : func.Name)); // Base filter
+            var functionLibrary = _library.Where(func => func.Namespace == theNamespace && name == (localeInvariant ? func.LocaleInvariantName : func.Name)); // Base filter
             return functionLibrary;
         }
 
@@ -103,7 +106,7 @@ namespace Microsoft.PowerFx.Core.Glue
             }
 
             // Not found
-            enumName = default(DName);
+            enumName = default;
             enumType = null;
             value = null;
 
@@ -130,7 +133,9 @@ namespace Microsoft.PowerFx.Core.Glue
             foreach (var info in _enums)
             {
                 if (info.EnumType == enumType)
+                {
                     return info.TryLookupValueByLocName(locName.Value, out _, out value);
+                }
             }
 
             value = null;

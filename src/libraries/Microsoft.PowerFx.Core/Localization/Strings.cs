@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+// Licensed under the MIT license.
 
 namespace Microsoft.PowerFx.Core.Localization
 {
@@ -10,7 +10,7 @@ namespace Microsoft.PowerFx.Core.Localization
         public static StringGetter AboutChar = (b) => StringResources.Get("AboutChar", b);
         public static StringGetter CharArg1 = (b) => StringResources.Get("CharArg1", b);
         public static StringGetter AboutCharT = (b) => StringResources.Get("AboutCharT", b);
-        public static StringGetter CharTArg1 = (b) => StringResources.Get("CharTArg1",b );
+        public static StringGetter CharTArg1 = (b) => StringResources.Get("CharTArg1", b);
 
         public static StringGetter AboutIf = (b) => StringResources.Get("AboutIf", b);
         public static StringGetter IfArgCond = (b) => StringResources.Get("IfArgCond", b);
@@ -84,6 +84,9 @@ namespace Microsoft.PowerFx.Core.Localization
         public static StringGetter AboutValue = (b) => StringResources.Get("AboutValue", b);
         public static StringGetter ValueArg1 = (b) => StringResources.Get("ValueArg1", b);
         public static StringGetter ValueArg2 = (b) => StringResources.Get("ValueArg2", b);
+
+        public static StringGetter AboutBoolean = (b) => StringResources.Get("AboutBoolean", b);
+        public static StringGetter BooleanArg1 = (b) => StringResources.Get("BooleanArg1", b);
 
         public static StringGetter AboutConcatenate = (b) => StringResources.Get("AboutConcatenate", b);
         public static StringGetter ConcatenateArg1 = (b) => StringResources.Get("ConcatenateArg1", b);
@@ -428,6 +431,13 @@ namespace Microsoft.PowerFx.Core.Localization
         public static StringGetter SequenceArg2 = (b) => StringResources.Get("SequenceArg2", b);
         public static StringGetter SequenceArg3 = (b) => StringResources.Get("SequenceArg3", b);
 
+        public static StringGetter AboutParseJson = (b) => StringResources.Get("AboutParseJson", b);
+        public static StringGetter ParseJsonArg1 = (b) => StringResources.Get("ParseJsonArg1", b);
+
+        public static StringGetter AboutIndex = (b) => StringResources.Get("AboutIndex", b);
+        public static StringGetter IndexArg1 = (b) => StringResources.Get("IndexArg1", b);
+        public static StringGetter IndexArg2 = (b) => StringResources.Get("IndexArg2", b);
+
         // Previously, errors were listed here in the form of a StringGetter, which would be evaluated to fetch
         // an error message to pass to the BaseError class constructor. We are switching to passing the message key itself
         // to the BaseError class, and the BaseError itself is responsible for fetching the resource. (This allows the
@@ -523,6 +533,7 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrBadRecordFieldType_FieldName_ExpectedType = new ErrorResourceKey("ErrBadRecordFieldType_FieldName_ExpectedType");
         public static ErrorResourceKey ErrAsTypeAndIsTypeExpectConnectedDataSource = new ErrorResourceKey("ErrAsTypeAndIsTypeExpectConnectedDataSource");
         public static ErrorResourceKey ErrInvalidControlReference = new ErrorResourceKey("ErrInvalidControlReference");
+        public static ErrorResourceKey ErrInvalidStringInterpolation = new ErrorResourceKey("ErrInvalidStringInterpolation");
 
         public static ErrorResourceKey ErrErrorIrrelevantField = new ErrorResourceKey("ErrErrorIrrelevantField");
         public static ErrorResourceKey ErrAsNotInContext = new ErrorResourceKey("ErrAsNotInContext");

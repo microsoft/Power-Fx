@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+// Licensed under the MIT license.
 
 using System;
 using System.Collections.Generic;
@@ -17,7 +17,8 @@ namespace Microsoft.PowerFx.Core.Public.Values
     {
         public abstract IEnumerable<NamedValue> Fields { get; }
 
-        internal RecordValue(IRContext irContext) : base(irContext)
+        internal RecordValue(IRContext irContext)
+            : base(irContext)
         {
             Contract.Assert(IRContext.ResultType is RecordType);
         }
@@ -28,7 +29,7 @@ namespace Microsoft.PowerFx.Core.Public.Values
             return new InMemoryRecordValue(IRContext.NotInSource(type), new List<NamedValue>());
         }
 
-        internal virtual FormulaValue GetField(string name)
+        public virtual FormulaValue GetField(string name)
         {
             return GetField(IRContext.NotInSource(FormulaType.Blank), name);
         }
@@ -36,7 +37,7 @@ namespace Microsoft.PowerFx.Core.Public.Values
         internal virtual FormulaValue GetField(IRContext irContext, string name)
         {
             // Derived class can have more optimized lookup.
-            foreach (var field in this.Fields)
+            foreach (var field in Fields)
             {
                 if (name == field.Name)
                 {
@@ -51,8 +52,8 @@ namespace Microsoft.PowerFx.Core.Public.Values
         public override object ToObject()
         {
             var e = new ExpandoObject();
-            IDictionary<String, Object> dict = e;
-            foreach (var field in this.Fields)
+            IDictionary<string, object> dict = e;
+            foreach (var field in Fields)
             {
                 dict[field.Name] = field.Value?.ToObject();
             }

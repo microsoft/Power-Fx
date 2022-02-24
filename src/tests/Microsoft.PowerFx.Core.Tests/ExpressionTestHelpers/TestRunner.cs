@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+// Licensed under the MIT license.
 
 using System;
 using System.Collections.Generic;
@@ -14,7 +14,7 @@ namespace Microsoft.PowerFx.Core.Tests
     public class TestRunner
     {
         private readonly BaseRunner[] _runners;
-        private List<TestCase> _tests = new List<TestCase>();
+        private readonly List<TestCase> _tests = new List<TestCase>();
 
         public TestRunner(params BaseRunner[] runners)
         {
@@ -28,13 +28,12 @@ namespace Microsoft.PowerFx.Core.Tests
             return testDir;
         }
 
-
         public string TestRoot { get; set; } = GetDefaultTestDir();
 
         public void AddDir(string directory = "")
         {
             directory = Path.GetFullPath(directory, TestRoot);
-            IEnumerable<string> allFiles = Directory.EnumerateFiles(directory);
+            var allFiles = Directory.EnumerateFiles(directory);
 
             AddFile(allFiles);
         }
@@ -57,7 +56,7 @@ namespace Microsoft.PowerFx.Core.Tests
         {
             thisFile = Path.GetFullPath(thisFile, TestRoot);
 
-            string[] lines = File.ReadAllLines(thisFile);
+            var lines = File.ReadAllLines(thisFile);
 
             // Skip blanks or "comments"
             // >> indicates input expression
@@ -65,7 +64,16 @@ namespace Microsoft.PowerFx.Core.Tests
 
             TestCase test = null;
 
-            int i = -1;
+            var i = -1;
+
+            // Preprocess file directives
+            string fileSetup = null;
+            if (lines[0].StartsWith("#SETUP:"))
+            {
+                fileSetup = lines[0].Substring("#SETUP:".Length).Trim();
+                i++;
+            }
+
             while (true)
             {
                 i++;
@@ -73,6 +81,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 {
                     break;
                 }
+
                 var line = lines[i];
                 if (string.IsNullOrWhiteSpace(line) || line.StartsWith("//"))
                 {
@@ -86,10 +95,12 @@ namespace Microsoft.PowerFx.Core.Tests
                     {
                         Input = line,
                         SourceLine = i + 1, // 1-based
-                        SourceFile = thisFile
+                        SourceFile = thisFile,
+                        SetupHandlerName = fileSetup
                     };
                     continue;
                 }
+
                 if (test != null)
                 {
                     // If it's indented, then part of previous line. 
@@ -113,6 +124,7 @@ namespace Microsoft.PowerFx.Core.Tests
                             continue;
                         }
                     }
+
                     test.SetExpected(line.Trim());
 
                     _tests.Add(test);
@@ -121,29 +133,39 @@ namespace Microsoft.PowerFx.Core.Tests
             }
         }
 
-
         public (int total, int failed, int passed, string output) RunTests()
         {
-            int total = 0;
-            int fail = 0;
-            int pass = 0;
-            StringBuilder sb = new StringBuilder();
+            var total = 0;
+            var fail = 0;
+            var pass = 0;
+            var sb = new StringBuilder();
 
             foreach (var test in _tests)
             {
-                foreach (BaseRunner runner in this._runners)
+                foreach (var runner in _runners)
                 {
                     total++;
 
                     var engineName = runner.GetName();
+
                     // var runner = kv.Value;
 
                     string actualStr;
                     FormulaValue result = null;
-                    bool exceptionThrown = false;
+                    var exceptionThrown = false;
                     try
                     {
-                        result = runner.RunAsync(test.Input).Result;
+                        try
+                        {
+                            result = runner.RunAsync(test.Input, test.SetupHandlerName).Result;
+                        }
+                        catch (SetupHandlerNotFoundException ex)
+                        {
+                            sb.AppendLine($"SKIPPED: {engineName}, {Path.GetFileName(test.SourceFile)}:{test.SourceLine}");
+                            sb.AppendLine($"SKIPPED: {test.Input}, missing handler: {test.SetupHandlerName}");   
+                            continue;
+                        }
+
                         actualStr = TestToString(result);
                     }
                     catch (Exception e)
@@ -186,9 +208,9 @@ namespace Microsoft.PowerFx.Core.Tests
             return (total, fail, pass, sb.ToString());
         }
 
-        internal static string TestToString(FormulaValue result)
+        public static string TestToString(FormulaValue result)
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             try
             {
                 TestToString(result, sb);
@@ -199,7 +221,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 sb.Append($"<exception writing result: {e.Message}>");
             }
 
-            string actualStr = sb.ToString();
+            var actualStr = sb.ToString();
             return actualStr;
         }
 
@@ -223,34 +245,51 @@ namespace Microsoft.PowerFx.Core.Tests
             }
             else if (result is TableValue t)
             {
-                sb.Append('[');
+                var tableType = (TableType)t.Type;
+                var canUseSquareBracketSyntax = t.IsColumn && t.Rows.All(r => r.IsValue) && tableType.GetNames().First().Name == "Value";
+                if (canUseSquareBracketSyntax)
+                {
+                    sb.Append('[');
+                }
+                else
+                {
+                    sb.Append("Table(");
+                }
 
-                string dil = "";
+                var dil = string.Empty;
                 foreach (var row in t.Rows)
                 {
                     sb.Append(dil);
+                    dil = ",";
 
-                    if (row.IsValue)
+                    if (canUseSquareBracketSyntax)
                     {
-                        var tableType = (TableType)t.Type;
-                        if (t.IsColumn && tableType.GetNames().First().Name == "Value")
-                        {
-                            var val = row.Value.Fields.First().Value;
-                            TestToString(val, sb);
-                        }
-                        else
-                        {
-                            TestToString(row.Value, sb);
-                        }
+                        var val = row.Value.Fields.First().Value;
+                        TestToString(val, sb);
                     }
                     else
                     {
-                        TestToString(row.ToFormulaValue(), sb);
+                        if (row.IsValue)
+                        {
+                            TestToString(row.Value, sb);
+                        }
+                        else
+                        {
+                            TestToString(row.ToFormulaValue(), sb);
+                        }
                     }
 
                     dil = ",";
                 }
-                sb.Append(']');
+
+                if (canUseSquareBracketSyntax)
+                {
+                    sb.Append(']');
+                }
+                else
+                {
+                    sb.Append(')');
+                }
             }
             else if (result is RecordValue r)
             {
@@ -258,7 +297,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 Array.Sort(fields, (a, b) => string.CompareOrdinal(a.Name, b.Name));
 
                 sb.Append('{');
-                string dil = "";
+                var dil = string.Empty;
 
                 foreach (var field in fields)
                 {
@@ -269,6 +308,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
                     dil = ",";
                 }
+
                 sb.Append('}');
             }
             else if (result is BlankValue)

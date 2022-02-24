@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+// Licensed under the MIT license.
 
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Public.Values;
@@ -12,7 +12,9 @@ namespace Microsoft.PowerFx.Functions
         public static bool AreEqual(FormulaValue arg1, FormulaValue arg2)
         {
             bool b;
-            if (arg1 is BlankValue) // $$$ coercion 
+
+            // $$$ coercion
+            if (arg1 is BlankValue) 
             {
                 b = arg2 is BlankValue;
             }
@@ -20,6 +22,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 b = arg1.ToObject().Equals(arg2.ToObject());
             }
+
             return b;
         }
 

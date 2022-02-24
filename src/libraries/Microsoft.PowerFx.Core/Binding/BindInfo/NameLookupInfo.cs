@@ -1,5 +1,5 @@
-// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
 
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
@@ -7,7 +7,7 @@ using Microsoft.PowerFx.Core.Utils;
 namespace Microsoft.PowerFx.Core.Binding.BindInfo
 {
     /// <summary>
-    /// Temporary name information used by the Binder<->Document lookup handshake/mechanism.
+    /// Temporary name information used by the Binder---Document lookup handshake/mechanism.
     /// </summary>
     internal struct NameLookupInfo
     {
@@ -20,9 +20,9 @@ namespace Microsoft.PowerFx.Core.Binding.BindInfo
         // Optional data associated with a name. May be null.
         public readonly object Data;
 
-        public NameLookupInfo(BindKind kind, DType type, DPath path, int upCount, object data = null, DName logicalName = default(DName))
+        public NameLookupInfo(BindKind kind, DType type, DPath path, int upCount, object data = null, DName logicalName = default)
         {
-            Contracts.Assert(BindKind._Min <= kind && kind < BindKind._Lim);
+            Contracts.Assert(kind >= BindKind.Min && kind < BindKind.Lim);
             Contracts.Assert(upCount >= 0);
             Contracts.AssertValueOrNull(data);
 

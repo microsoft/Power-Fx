@@ -1,5 +1,5 @@
-// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
 
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Utils;
@@ -8,20 +8,19 @@ namespace Microsoft.PowerFx.Core.Lexer.Tokens
 {
     internal class StrLitToken : Token
     {
-        private readonly string _val;
-
         public StrLitToken(string val, Span span)
             : base(TokKind.StrLit, span)
         {
             Contracts.AssertValue(val);
-            _val = val;
+            Value = val;
         }
 
         /// <summary>
-        /// Copy Ctor for StrLitToken used by Clone
+        /// Initializes a new instance of the <see cref="StrLitToken"/> class.
+        /// Copy Ctor for StrLitToken used by Clone.
         /// </summary>
-        /// <param name="tok">The token to be copied</param>
-        /// <param name="newSpan">The new span</param>
+        /// <param name="tok">The token to be copied.</param>
+        /// <param name="newSpan">The new span.</param>
         private StrLitToken(StrLitToken tok, Span newSpan)
             : this(tok.Value, newSpan)
         {
@@ -29,10 +28,10 @@ namespace Microsoft.PowerFx.Core.Lexer.Tokens
 
         public override string ToString()
         {
-            return _val;
+            return Value;
         }
 
-        public string Value { get { return _val; } }
+        public string Value { get; }
 
         public override Token Clone(Span ts)
         {
@@ -44,7 +43,10 @@ namespace Microsoft.PowerFx.Core.Lexer.Tokens
             Contracts.AssertValue(that);
 
             if (!(that is StrLitToken))
+            {
                 return false;
+            }
+
             return Value == that.As<StrLitToken>().Value && base.Equals(that);
         }
     }

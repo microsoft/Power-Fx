@@ -1,5 +1,5 @@
-// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
 
 using System;
 using System.Collections.Generic;
@@ -32,19 +32,11 @@ namespace Microsoft.PowerFx.Core.Functions
         // A default "no-op" error container that does not post document errors.
         public static IErrorContainer DefaultErrorContainer => new DefaultNoOpErrorContainer();
 
-        // The locale-invariant Texl function name.
-        private readonly string _localeInvariantName;
-
-        // The locale-specific namespace.
-        private readonly DPath _localeSpecificNamespace;
-
         // The information for scope if there is one.
         private FunctionScopeInfo _scopeInfo;
 
         // A description associated with this function.
         private readonly TexlStrings.StringGetter _description;
-
-        private readonly FunctionCategories _functionCategoriesMask;
 
         // Convenience mask that indicates which parameters are to be treated as lambdas.
         // Bit at position K refers to argument of rank K. A bit of 1 denotes a lambda, 0 denotes non-lambda.
@@ -76,26 +68,26 @@ namespace Microsoft.PowerFx.Core.Functions
         private string _cachedLocaleName;
 
         // Return true if the function should be hidden from the formular bar, false otherwise.
-        public virtual bool IsHidden { get { return false; } }
+        public virtual bool IsHidden => false;
 
         // Return true if the function expects lambda arguments, false otherwise.
-        public virtual bool HasLambdas { get { return !_maskLambdas.IsZero; } }
+        public virtual bool HasLambdas => !_maskLambdas.IsZero;
 
         // Return true if lambda args should affect ECS, false otherwise.
-        public virtual bool HasEcsExcemptLambdas { get { return false; } }
+        public virtual bool HasEcsExcemptLambdas => false;
 
         // Return true if the function is asynchronous, false otherwise.
-        public virtual bool IsAsync { get { return false; } }
+        public virtual bool IsAsync => false;
 
         // Return true if the function is tracked in telemetry.
-        public virtual bool IsTrackedInTelemetry { get { return true; } }
+        public virtual bool IsTrackedInTelemetry => true;
 
         // Return true if the function is declared as variadic.
-        public bool IsVariadicFunction { get { return MaxArity == Int32.MaxValue; } }
+        public bool IsVariadicFunction => MaxArity == int.MaxValue;
 
         // Return true if the function's return value only depends on the global variable
         // e.g. Today(), Now() depend on the system time.
-        public virtual bool IsGlobalReliant { get { return false; } }
+        public virtual bool IsGlobalReliant => false;
 
         // Return true if the function is self-contained (no side effects), or false otherwise.
         // This is a decision that developers will need to do for new functions, so making it
@@ -103,17 +95,17 @@ namespace Microsoft.PowerFx.Core.Functions
         public abstract bool IsSelfContained { get; }
 
         // Return true if the function is stateless (same result for same input), or false otherwise.
-        public virtual bool IsStateless { get { return true; } }
+        public virtual bool IsStateless => true;
 
         // Return true if the function supports inlining during codegen.
-        public virtual bool SupportsInlining { get { return false; } }
+        public virtual bool SupportsInlining => false;
 
         // Returns false if we want to block the function within FunctionWithScope calls
         // that have a nondeterministic operation order (due to multiple async calls).
-        public virtual bool AllowedWithinNondeterministicOperationOrder { get { return true; } }
+        public virtual bool AllowedWithinNondeterministicOperationOrder => true;
 
         // Returns true if the function creates an implicit dependency on the control's parent screen.
-        public virtual bool CreatesImplicitScreenDependency { get { return false; } }
+        public virtual bool CreatesImplicitScreenDependency => false;
 
         // Returns true if the function can be used in test cases; all "global" functions should
         // work, functionst that create screen dependencies don't by default (but can be overriden
@@ -127,10 +119,10 @@ namespace Microsoft.PowerFx.Core.Functions
         public virtual bool HasPreciseErrors => false;
 
         // Returns true if the function is disabled for component.
-        public virtual bool DisableForComponent { get { return false; } }
+        public virtual bool DisableForComponent => false;
 
         // Returns true if the function is disabled for data component.
-        public virtual bool DisableForDataComponent { get { return false; } }
+        public virtual bool DisableForDataComponent => false;
 
         // Returns true if the function is disabled for Commmanding
         public virtual bool DisableForCommanding => false;
@@ -141,7 +133,7 @@ namespace Microsoft.PowerFx.Core.Functions
         public virtual RequiredDataSourcePermissions FunctionPermission => RequiredDataSourcePermissions.None;
 
         // Return true if the function is pure (stateless with no side effects), or false otherwise.
-        public bool IsPure { get { return IsSelfContained && IsStateless; } }
+        public bool IsPure => IsSelfContained && IsStateless;
 
         // Return true if the function is strict (in all of its parameters), or false otherwise.
         // A strict function is a function that always evaluates all of its arguments (the parameters
@@ -150,75 +142,75 @@ namespace Microsoft.PowerFx.Core.Functions
         // function means that a dependence on the function result implies dependencies on all of its args,
         // whereas a non-strict function means that a dependence on the result implies dependencies
         // on only some of the args.
-        public virtual bool IsStrict { get { return true; } }
+        public virtual bool IsStrict => true;
 
         // Return true if the function can only be used in behavior rules, i.e. rules that run in
         // response to user feedback. Only certain functions fall into this category, e.g. functions
         // with side effects, such as Collect.
-        public virtual bool IsBehaviorOnly { get { return !IsSelfContained; } }
+        public virtual bool IsBehaviorOnly => !IsSelfContained;
 
         // Return true if the function can only be used as part of test cases. Functions that
         // emulate user interaction fall into this category, such as SetProperty.
-        public virtual bool IsTestOnly { get { return false; } }
+        public virtual bool IsTestOnly => false;
 
         // Return true if the function manipulates collections.
-        public virtual bool ManipulatesCollections { get { return false; } }
+        public virtual bool ManipulatesCollections => false;
 
         // Return true if the function uses an input's column names to inform Intellisense's suggestions.
-        public virtual bool CanSuggestInputColumns { get { return false; } }
+        public virtual bool CanSuggestInputColumns => false;
 
         // Return true if the function expects a screen's context variables to be suggested within a record argument.
-        public virtual bool CanSuggestContextVariables { get { return false; } }
+        public virtual bool CanSuggestContextVariables => false;
 
         // Returns true if it's valid to suggest ThisItem for this function as an argument.
-        public virtual bool CanSuggestThisItem { get { return false; } }
+        public virtual bool CanSuggestThisItem => false;
 
         // Return true if this function affects collection schemas.
-        public virtual bool AffectsCollectionSchemas { get { return false; } }
+        public virtual bool AffectsCollectionSchemas => false;
 
         // Return true if this function affects screen aliases ("context variables").
-        public virtual bool AffectsAliases { get { return false; } }
+        public virtual bool AffectsAliases => false;
 
         // Return true if this function affects scope variable ("app scope variable or component scope variable").
-        public virtual bool AffectsScopeVariable { get { return false; } }
+        public virtual bool AffectsScopeVariable => false;
 
         // Return true if this function affects datasource query options.
-        public virtual bool AffectsDataSourceQueryOptions { get { return false; } }
+        public virtual bool AffectsDataSourceQueryOptions => false;
 
         // Return true if this function can return a type with ExpandInfo.
-        public virtual bool CanReturnExpandInfo { get { return false; } }
+        public virtual bool CanReturnExpandInfo => false;
 
         // Return true if this function requires error context info.
-        public virtual bool RequiresErrorContext { get { return false; } }
+        public virtual bool RequiresErrorContext => false;
 
         // Return true if this function requires binding context info.
-        public virtual bool RequiresBindingContext { get { return false; } }
+        public virtual bool RequiresBindingContext => false;
 
         // Return true if this function can generate new data on its own without re-evaluating a rule.
-        public virtual bool IsAutoRefreshable { get { return false; } }
+        public virtual bool IsAutoRefreshable => false;
 
         // Return true if this function returns dynamic metadata
-        public virtual bool IsDynamic { get { return false; } }
+        public virtual bool IsDynamic => false;
 
         // Return the index to be used to provide type recommendations for later arguments
-        public virtual int SuggestionTypeReferenceParamIndex { get { return 0; } }
+        public virtual int SuggestionTypeReferenceParamIndex => 0;
 
         // Return true if the function uses the parent scope to provide suggestions
-        public virtual bool UseParentScopeForArgumentSuggestions { get { return false; } }
+        public virtual bool UseParentScopeForArgumentSuggestions => false;
 
         // Return true if the function uses the enum namespace for type suggestions
-        public virtual bool UsesEnumNamespace { get { return false; } }
+        public virtual bool UsesEnumNamespace => false;
 
         // Return true if the function supports parameter coercion.
-        public virtual bool SupportsParamCoercion { get { return true; } }
+        public virtual bool SupportsParamCoercion => true;
 
         /// <summary>Indicates whether table and record param types require all columns to be specified in the input argument.</summary>
-        public virtual bool RequireAllParamColumns { get { return false; } }
+        public virtual bool RequireAllParamColumns => false;
 
-        ///<summary>
-        /// Indicates whether the function sets a value
-        ///</summary>
-        public virtual bool ModifiesValues { get { return false; } }
+        /// <summary>
+        /// Indicates whether the function sets a value.
+        /// </summary>
+        public virtual bool ModifiesValues => false;
 
         /// <summary>
         /// The function's name as surfaced in / accessible from the language.
@@ -227,7 +219,7 @@ namespace Microsoft.PowerFx.Core.Functions
         public string Name { get; }
 
         // The localized version of the namespace for this function.
-        public DPath LocaleSpecificNamespace { get { return _localeSpecificNamespace; } }
+        public DPath LocaleSpecificNamespace { get; }
 
         /// <summary>
         /// The function's locale-specific name.
@@ -237,39 +229,34 @@ namespace Microsoft.PowerFx.Core.Functions
         public string LocaleSpecificName { get; }
 
         // The function's English / locale-invariant name.
-        public string LocaleInvariantName { get { return _localeInvariantName; } }
+        public string LocaleInvariantName { get; }
 
         // A description associated with this function.
-        public string Description { get { return _description(null); } }
+        public string Description => _description(null);
 
         // A forward link to the function help.
-        public virtual string HelpLink
-        {
-            get
-            {
+        public virtual string HelpLink =>
+
                 // The invariant name is used to form a URL. It cannot contain spaces and other
                 // funky characters. We have tests that enforce this constraint. If we ever need
                 // such characters (#, &, %, ?), they need to be encoded here, e.g. %20, etc.
-                return StringResources.Get("FunctionReference_Link") + char.ToLower(_localeInvariantName.First());
-            }
-        }
+                StringResources.Get("FunctionReference_Link") + char.ToLower(LocaleInvariantName.First());
 
         /// <summary>
-        /// Might need to reset if Function is variadic function
+        /// Might need to reset if Function is variadic function.
         /// </summary>
         public SignatureConstraint SignatureConstraint
         {
             get
             {
                 if (MaxArity == int.MaxValue && _signatureConstraint == null)
+                {
                     _signatureConstraint = new SignatureConstraint(MinArity + 1, 1, 0, MinArity + 3);
+                }
 
                 return _signatureConstraint;
             }
-            protected set
-            {
-                _signatureConstraint = value;
-            }
+            protected set => _signatureConstraint = value;
         }
 
         /// <summary>
@@ -278,31 +265,31 @@ namespace Microsoft.PowerFx.Core.Functions
         /// </summary>
         public FunctionScopeInfo ScopeInfo
         {
-            get
-            {
-                return _scopeInfo;
-            }
+            get => _scopeInfo;
 
             protected set
             {
                 if (_scopeInfo != null)
+                {
                     Contracts.Assert(false, "The ScopeInfo should only be set once in the constructor, if at all.");
+                }
+
                 _scopeInfo = value;
             }
         }
 
         // Mask indicating the function categories the function belongs to.
-        public FunctionCategories FunctionCategoriesMask { get { return _functionCategoriesMask; } }
+        public FunctionCategories FunctionCategoriesMask { get; }
 
         // Mask indicating the function delegation capabilities.
-        public virtual DelegationCapability FunctionDelegationCapability { get { return DelegationCapability.None; } }
+        public virtual DelegationCapability FunctionDelegationCapability => DelegationCapability.None;
 
         // Mask indicating the function capabilities.
-        public virtual Capabilities Capabilities { get { return Capabilities.None; } }
+        public virtual Capabilities Capabilities => Capabilities.None;
 
         // The function's fully qualified locale-specific name, including the namespace.
         // If the function is in the global namespace, this.QualifiedName is the same as this.Name.
-        public string QualifiedName { get { return Namespace.IsRoot ? Name : Namespace.ToDottedSyntax(TexlLexer.PunctuatorDot, escapeInnerName: true) + TexlLexer.PunctuatorDot + TexlLexer.EscapeName(Name); } }
+        public string QualifiedName => Namespace.IsRoot ? Name : Namespace.ToDottedSyntax(TexlLexer.PunctuatorDot, escapeInnerName: true) + TexlLexer.PunctuatorDot + TexlLexer.EscapeName(Name);
 
         public TexlFunction(
             DPath theNamespace,
@@ -312,7 +299,9 @@ namespace Microsoft.PowerFx.Core.Functions
             FunctionCategories functionCategories,
             DType returnType,
             BigInteger maskLambdas,
-            int arityMin, int arityMax, params DType[] paramTypes)
+            int arityMin,
+            int arityMax,
+            params DType[] paramTypes)
         {
             Contracts.Assert(theNamespace.IsValid);
             Contracts.AssertNonEmpty(name);
@@ -322,12 +311,12 @@ namespace Microsoft.PowerFx.Core.Functions
             Contracts.AssertValue(paramTypes);
             Contracts.AssertAllValid(paramTypes);
             Contracts.Assert(maskLambdas.Sign >= 0 || arityMax == int.MaxValue);
-            Contracts.Assert(0 <= arityMax && paramTypes.Length <= arityMax);
+            Contracts.Assert(arityMax >= 0 && paramTypes.Length <= arityMax);
             Contracts.AssertIndexInclusive(arityMin, arityMax);
 
             Namespace = theNamespace;
-            _localeInvariantName = name;
-            _functionCategoriesMask = functionCategories;
+            LocaleInvariantName = name;
+            FunctionCategoriesMask = functionCategories;
             _description = description;
             ReturnType = returnType;
             _maskLambdas = maskLambdas;
@@ -339,13 +328,14 @@ namespace Microsoft.PowerFx.Core.Functions
             // For all other instances, the name is the same as the En-Us name
             if (!string.IsNullOrEmpty(localeSpecificName))
             {
-                _localeSpecificNamespace = new DPath().Append(new DName(localeSpecificName));
+                LocaleSpecificNamespace = new DPath().Append(new DName(localeSpecificName));
                 LocaleSpecificName = localeSpecificName;
             }
             else
             {
                 LocaleSpecificName = LocaleInvariantName;
             }
+
             Name = LocaleSpecificName;
         }
 
@@ -356,12 +346,14 @@ namespace Microsoft.PowerFx.Core.Functions
         // Return all signatures with at most 'arity' parameters.
         public virtual IEnumerable<TexlStrings.StringGetter[]> GetSignatures(int arity)
         {
-            Contracts.Assert(0 <= arity);
+            Contracts.Assert(arity >= 0);
 
-            foreach (TexlStrings.StringGetter[] signature in GetSignatures())
+            foreach (var signature in GetSignatures())
             {
                 if (arity <= signature.Length)
+                {
                     yield return signature;
+                }
             }
         }
 
@@ -370,15 +362,18 @@ namespace Microsoft.PowerFx.Core.Functions
         // TASK: 68797: We need a TexlFunction name -> JS/runtime function name map.
         public virtual string GetUniqueTexlRuntimeName(bool isPrefetching = false)
         {
-            return GetUniqueTexlRuntimeName("");
+            return GetUniqueTexlRuntimeName(string.Empty);
         }
 
         protected string GetUniqueTexlRuntimeName(string suffix, bool suppressAsync = false)
         {
-            string name = Namespace.IsRoot ? LocaleInvariantName : Namespace.Name + "__" + LocaleInvariantName;
+            var name = Namespace.IsRoot ? LocaleInvariantName : Namespace.Name + "__" + LocaleInvariantName;
             if (name.Length <= 1)
+            {
                 return name.ToLowerInvariant();
-            return char.ToLowerInvariant(name[0]).ToString() + name.Substring(1) + suffix + (IsAsync && !suppressAsync ? "Async" : "");
+            }
+
+            return char.ToLowerInvariant(name[0]).ToString() + name.Substring(1) + suffix + (IsAsync && !suppressAsync ? "Async" : string.Empty);
         }
 
         public virtual bool CheckInvocation(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
@@ -402,9 +397,9 @@ namespace Microsoft.PowerFx.Core.Functions
 
         protected static uint ComputeArgHash(TexlNode[] args)
         {
-            string argHash = "";
+            var argHash = string.Empty;
 
-            for (int i = 0; i < args.Length; i++)
+            for (var i = 0; i < args.Length; i++)
             {
                 argHash += args[i].ToString();
             }
@@ -427,24 +422,26 @@ namespace Microsoft.PowerFx.Core.Functions
             Contracts.AssertValue(errors);
             Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
 
-            bool fValid = true;
-            int count = Math.Min(args.Length, ParamTypes.Length);
+            var fValid = true;
+            var count = Math.Min(args.Length, ParamTypes.Length);
 
             nodeToCoercedTypeMap = null;
 
             // Type check the args
-            for (int i = 0; i < count; i++)
+            for (var i = 0; i < count; i++)
             {
                 var typeChecks = CheckType(args[i], argTypes[i], ParamTypes[i], errors, SupportCoercionForArg(i), out DType coercionType);
                 if (typeChecks && coercionType != null)
+                {
                     CollectionUtils.Add(ref nodeToCoercedTypeMap, args[i], coercionType);
+                }
 
                 fValid &= typeChecks;
             }
 
-            for (int i = count; i < args.Length; i++)
+            for (var i = count; i < args.Length; i++)
             {
-                DType type = argTypes[i];
+                var type = argTypes[i];
                 if (type.IsError)
                 {
                     errors.EnsureError(args[i], TexlStrings.ErrBadType);
@@ -453,7 +450,9 @@ namespace Microsoft.PowerFx.Core.Functions
             }
 
             if (!fValid)
+            {
                 nodeToCoercedTypeMap = null;
+            }
 
             ScopeInfo?.CheckLiteralPredicates(args, errors);
 
@@ -464,13 +463,12 @@ namespace Microsoft.PowerFx.Core.Functions
         }
 
         /// <summary>
-        /// True if there was any custom post-visit validation errors applied for this function
+        /// True if there was any custom post-visit validation errors applied for this function.
         /// </summary>
         public virtual bool PostVisitValidation(TexlBinding binding, CallNode callNode)
         {
             return false;
         }
-
 
         // Return true if the parameter at the specified 0-based rank is a lambda parameter, false otherwise.
         public virtual bool IsLambdaParam(int index)
@@ -485,7 +483,7 @@ namespace Microsoft.PowerFx.Core.Functions
         /// e.g. conditionally evaluated, repeatedly evaluated, etc.., false otherwise
         /// All lambda params are Lazy, but others may also be, including short-circuit booleans, conditionals, etc..
         /// </summary>
-        /// <param name="index">Parameter index, 0-based</param>
+        /// <param name="index">Parameter index, 0-based.</param>
         public virtual bool IsLazyEvalParam(int index)
         {
             Contracts.AssertIndexInclusive(index, MaxArity);
@@ -513,22 +511,29 @@ namespace Microsoft.PowerFx.Core.Functions
 
         // Returns true if function requires actual data to be pulled for this arg. This is applicable to pagable args only like datasource object.
         // It's used in codegen in optimizing generated code where there is no data is required to be pulled from server.
-        protected virtual bool RequiresPagedDataForParamCore(TexlNode[] args, int paramIndex, TexlBinding binding) { return true; }
+        protected virtual bool RequiresPagedDataForParamCore(TexlNode[] args, int paramIndex, TexlBinding binding)
+        {
+            return true;
+        }
 
         public bool RequiresPagedDataForParam(CallNode callNode, int paramIndex, TexlBinding binding)
         {
             Contracts.AssertValue(callNode);
             Contracts.AssertValue(callNode.Args);
-            Contracts.Assert(0 <= paramIndex && paramIndex < callNode.Args.Children.Count());
+            Contracts.Assert(paramIndex >= 0 && paramIndex < callNode.Args.Children.Count());
             Contracts.AssertValue(binding);
 
             var child = callNode.Args.Children[paramIndex].VerifyValue();
             if (!binding.IsPageable(child))
+            {
                 return false;
+            }
 
             // If the parent call node is pagable then we don't need to pull the data.
             if (binding.IsPageable(callNode))
+            {
                 return false;
+            }
 
             // Check with function if we actually need data for this param.
             return RequiresPagedDataForParamCore(callNode.Args.Children, paramIndex, binding);
@@ -543,9 +548,8 @@ namespace Microsoft.PowerFx.Core.Functions
             Contracts.AssertValue(callNode);
             Contracts.AssertValue(binding);
 
-            TexlNode[] args = callNode.Args.Children.VerifyValue();
-            IExpandInfo entityInfo;
-            if (!binding.IsPageable(args[0]) || !binding.TryGetEntityInfo(args[0], out entityInfo))
+            var args = callNode.Args.Children.VerifyValue();
+            if (!binding.IsPageable(args[0]) || !binding.TryGetEntityInfo(args[0], out var entityInfo))
             {
                 metadata = null;
                 return false;
@@ -556,8 +560,7 @@ namespace Microsoft.PowerFx.Core.Functions
 
             var metadataProvider = entityInfo.ParentDataSource.DataEntityMetadataProvider;
 
-            IDataEntityMetadata entityMetadata;
-            if (!metadataProvider.TryGetEntityMetadata(entityInfo.Identity, out entityMetadata))
+            if (!metadataProvider.TryGetEntityMetadata(entityInfo.Identity, out var entityMetadata))
             {
                 metadata = null;
                 return false;
@@ -568,14 +571,12 @@ namespace Microsoft.PowerFx.Core.Functions
         }
 
         /// <summary>
-        /// Provides delegationmetadata for a callnode. It's used by delegable functions to get delegation metadata. For example, Filter, Sort, SortByColumns
+        /// Provides delegationmetadata for a callnode. It's used by delegable functions to get delegation metadata. For example, Filter, Sort, SortByColumns.
         /// </summary>
         /// <returns></returns>
         public static bool TryGetEntityMetadata(CallNode callNode, TexlBinding binding, out IDelegationMetadata metadata)
         {
-            IDataEntityMetadata entityMetadata;
-
-            if (!TryGetEntityMetadata(callNode, binding, out entityMetadata))
+            if (!TryGetEntityMetadata(callNode, binding, out IDataEntityMetadata entityMetadata))
             {
                 metadata = null;
                 return false;
@@ -606,7 +607,7 @@ namespace Microsoft.PowerFx.Core.Functions
         // Allows a function to determine if a given type is valid for a given parameter index.
         public virtual bool IsSuggestionTypeValid(int paramIndex, DType type)
         {
-            Contracts.Assert(0 <= paramIndex);
+            Contracts.Assert(paramIndex >= 0);
             Contracts.AssertValid(type);
 
             return paramIndex < MaxArity;
@@ -646,7 +647,9 @@ namespace Microsoft.PowerFx.Core.Functions
             Contracts.AssertValue(binding);
 
             if (!binding.IsRowScope(callNode))
+            {
                 return false;
+            }
 
             return IsServerDelegatable(callNode, binding);
         }
@@ -658,7 +661,9 @@ namespace Microsoft.PowerFx.Core.Functions
 
             dsInfo = null;
             if (callNode.Args.Count < 1)
+            {
                 return false;
+            }
 
             var args = callNode.Args.Children.VerifyValue();
             var arg0 = args[0].VerifyValue();
@@ -673,7 +678,9 @@ namespace Microsoft.PowerFx.Core.Functions
 
             dsNodes = new List<FirstNameNode>();
             if (callNode.Args.Count < 1)
+            {
                 return false;
+            }
 
             var args = callNode.Args.Children.VerifyValue();
             var arg0 = args[0].VerifyValue();
@@ -688,7 +695,9 @@ namespace Microsoft.PowerFx.Core.Functions
 
             entityInfo = null;
             if (callNode.Args.Count < 1)
+            {
                 return false;
+            }
 
             var args = callNode.Args.Children.VerifyValue();
             var arg0 = args[0].VerifyValue();
@@ -702,62 +711,14 @@ namespace Microsoft.PowerFx.Core.Functions
             return null;
         }
 
-        // Optional Override for functions that affect aliases. Allows functions to specify whether they affect aliases
-        // given the specific args and binding.
-        public virtual bool AffectsAliasesWith(TexlNode[] args, TexlBinding binding)
-        {
-            Contracts.AssertValue(args);
-            Contracts.AssertValue(binding);
-
-            return AffectsAliases;
-        }
-
-        // Override if Function.AffectsAliases is true. Given the args and binding for the call,
-        // this should return true if there should be a change to aliases, and return the aliasMap as
-        // a record DType that specifies a map from alias to DType. Also should change the parentName
-        // if the parent control is something besides the current screen.
-        public virtual bool TryGetAliasMap(TexlNode[] args, TexlBinding binding, out DType aliasMapType, ref string targetScreenUniqueId)
-        {
-            Contracts.AssertValue(args);
-            Contracts.AssertValue(binding);
-
-            aliasMapType = DType.Invalid;
-            return false;
-        }
-
-        // Override if Function.AffectsScopeVariable is true. Given the args and binding for the call,
-        // this should return true if there should be a change to app/component variable,
-        // and return the variableName as Dname that represents the name of an app/component variable
-        // and the variableType as any DType that specifies the value of an app/component variable.
-        public virtual bool TryGetScopeVariablePair(TexlNode[] args, TexlBinding binding, out DName variableName, out DType variableType)
-        {
-            Contracts.AssertValue(args);
-            Contracts.AssertValue(binding);
-
-            variableName = default(DName);
-            variableType = DType.Invalid;
-            return false;
-        }
-
-        // Override if Function.AffectsAliases or Function.AffectsScopeVariable is true. Returns a list of variable defintion information
-        public virtual IEnumerable<VariableDefinition> GetDefinedVariables(TexlNode[] args, TexlBinding binding)
-        {
-            return Enumerable.Empty<VariableDefinition>();
-        }
-
-        // Override if Function.AffectsAliases is true. Returns the index of the arg that contains the aliases.
-        public virtual int AliasAffectingArg()
-        {
-            return -1;
-        }
-
         // Override if Function.AffectsScopeVariable is true. Returns the index of the arg that contains the app/component variable names.
         public virtual int ScopeVariableNameAffectingArg()
         {
             return -1;
         }
 
-        public virtual bool RequiresDataSourceScope { get { return false; } }
+        public virtual bool RequiresDataSourceScope => false;
+
         public virtual bool ArgMatchesDatasourceType(int argNum)
         {
             return false;
@@ -769,7 +730,7 @@ namespace Microsoft.PowerFx.Core.Functions
         /// however With function will have Record type argument that can hold multiple datasource type columns
         /// Functions that have datasource arguments in places ither than first argument need to override this.
         /// </summary>
-        /// <param name="callNode">Function Texl Node</param>
+        /// <param name="callNode">Function Texl Node.</param>
         public virtual IEnumerable<TexlNode> GetTabularDataSourceArg(CallNode callNode)
         {
             Contracts.AssertValue(callNode);
@@ -778,18 +739,19 @@ namespace Microsoft.PowerFx.Core.Functions
         }
 
         /// <summary>
-        /// If true, the scope this function creates isn't used for field names of inline records
+        /// If true, the scope this function creates isn't used for field names of inline records.
         /// </summary>
-        public virtual bool SkipScopeForInlineRecords { get { return false; } }
+        public virtual bool SkipScopeForInlineRecords => false;
 
         protected static bool Arg0RequiresAsync(CallNode callNode, TexlBinding binding)
         {
             Contracts.AssertValue(callNode);
             Contracts.AssertValue(binding);
 
-            IExternalDataSource dataSource;
-            if (!TryGetArg0AsDsInfo(callNode, binding, out dataSource))
+            if (!TryGetArg0AsDsInfo(callNode, binding, out var dataSource))
+            {
                 return false;
+            }
 
             return dataSource.RequiresAsync;
         }
@@ -801,18 +763,24 @@ namespace Microsoft.PowerFx.Core.Functions
 
             dsInfo = null;
             if (callNode.Args.Count < 1)
+            {
                 return false;
+            }
 
             var args = callNode.Args.Children.VerifyValue();
             var arg0 = args[0].VerifyValue();
 
-            FirstNameNode firstName = arg0.AsFirstName();
+            var firstName = arg0.AsFirstName();
             if (firstName == null || !binding.GetType(firstName).IsTable)
+            {
                 return false;
+            }
 
             var firstNameInfo = binding.GetInfo(firstName);
             if (firstNameInfo == null || firstNameInfo.Kind != BindKind.Data)
+            {
                 return false;
+            }
 
             var result = binding.EntityScope != null &&
                binding.EntityScope.TryGetEntity(firstNameInfo.Name, out dsInfo);
@@ -843,19 +811,27 @@ namespace Microsoft.PowerFx.Core.Functions
             foreach (var expectedColumn in expectedType.GetAllNames(DPath.Root))
             {
                 // First, set type mismatch message.
-                if (actualType.TryGetType(expectedColumn.Name, out DType actualColumnType))
+                if (actualType.TryGetType(expectedColumn.Name, out var actualColumnType))
                 {
                     var expectedColumnType = expectedColumn.Type;
                     if (expectedColumnType.Accepts(actualColumnType))
+                    {
                         continue;
+                    }
 
-                    if (!DType.TryGetDisplayNameForColumn(expectedType, expectedColumn.Name, out string errName))
+                    if (!DType.TryGetDisplayNameForColumn(expectedType, expectedColumn.Name, out var errName))
+                    {
                         errName = expectedColumn.Name;
+                    }
 
                     if ((expectedColumn.Type.IsTable && actualColumnType.IsTable) || (expectedColumn.Type.IsRecord && actualColumnType.IsRecord))
                     {
-                        return SetErrorForMismatchedColumnsCore(expectedColumn.Type, actualColumnType, errorArg,
-                            errors, columnPrefix.Append(new DName(errName)));
+                        return SetErrorForMismatchedColumnsCore(
+                            expectedColumn.Type,
+                            actualColumnType,
+                            errorArg,
+                            errors,
+                            columnPrefix.Append(new DName(errName)));
                     }
 
                     if (expectedColumn.Type.IsExpandEntity
@@ -864,16 +840,25 @@ namespace Microsoft.PowerFx.Core.Functions
                         continue;
                     }
 
-                    errors.EnsureError(DocumentErrorSeverity.Severe, errorArg, TexlStrings.ErrColumnTypeMismatch_ColName_ExpectedType_ActualType,
-                        columnPrefix.Append(new DName(errName)).ToDottedSyntax(), expectedColumn.Type.GetKindString(), actualColumnType.GetKindString());
+                    errors.EnsureError(
+                        DocumentErrorSeverity.Severe,
+                        errorArg,
+                        TexlStrings.ErrColumnTypeMismatch_ColName_ExpectedType_ActualType,
+                        columnPrefix.Append(new DName(errName)).ToDottedSyntax(),
+                        expectedColumn.Type.GetKindString(),
+                        actualColumnType.GetKindString());
                     return true;
                 }
 
                 // Second, set column missing message if applicable
                 if (RequireAllParamColumns && !expectedType.AreFieldsOptional)
                 {
-                    errors.EnsureError(DocumentErrorSeverity.Severe, errorArg, TexlStrings.ErrColumnMissing_ColName_ExpectedType,
-                        columnPrefix.Append(expectedColumn.Name).ToDottedSyntax(), expectedColumn.Type.GetKindString());
+                    errors.EnsureError(
+                        DocumentErrorSeverity.Severe,
+                        errorArg,
+                        TexlStrings.ErrColumnMissing_ColName_ExpectedType,
+                        columnPrefix.Append(expectedColumn.Name).ToDottedSyntax(),
+                        expectedColumn.Type.GetKindString());
                     return true;
                 }
             }
@@ -883,7 +868,8 @@ namespace Microsoft.PowerFx.Core.Functions
 
         #region Internal functionality
 
-        public virtual bool SupportsMetadataTypeArg { get { return false; ; } }
+        public virtual bool SupportsMetadataTypeArg => false;
+
         public virtual bool IsMetadataTypeArg(int index)
         {
             Contracts.Assert(!SupportsMetadataTypeArg);
@@ -902,8 +888,7 @@ namespace Microsoft.PowerFx.Core.Functions
             return CheckType(node, nodeType, expectedType, errors, SupportsParamCoercion, out matchedWithCoercion);
         }
 
-        protected bool CheckType(TexlNode node, DType nodeType, DType expectedType, IErrorContainer errors, bool coerceIfSupported,
-            out bool matchedWithCoercion)
+        protected bool CheckType(TexlNode node, DType nodeType, DType expectedType, IErrorContainer errors, bool coerceIfSupported, out bool matchedWithCoercion)
         {
             var typeChecks = CheckType(node, nodeType, expectedType, errors, coerceIfSupported, out DType coercionType);
             matchedWithCoercion = typeChecks && coercionType != null;
@@ -921,21 +906,29 @@ namespace Microsoft.PowerFx.Core.Functions
 
             coercionType = null;
             if (expectedType.Accepts(nodeType, out var schemaDifference, out var schemaDifferenceType))
+            {
                 return true;
+            }
 
             KeyValuePair<string, DType> coercionDifference;
             DType coercionDifferenceType = null;
             if (coerceIfSupported && nodeType.CoercesTo(expectedType, out _, out coercionType, out coercionDifference, out coercionDifferenceType))
+            {
                 return true;
+            }
 
             // If we could coerce some but not all of it we don't want errors for the coercible fields
-            var targetType = coercionType == null ? nodeType : coercionType;
+            var targetType = coercionType ?? nodeType;
             var targetDifference = coercionType == null ? schemaDifference : coercionDifference;
             var targetDifferenceType = coercionType == null ? schemaDifferenceType : coercionDifferenceType;
 
             if ((targetType.IsTable && nodeType.IsTable) || (targetType.IsRecord && nodeType.IsRecord))
+            {
                 if (SetErrorForMismatchedColumns(expectedType, targetType, node, errors))
+                {
                     return false;
+                }
+            }
 
             if (nodeType.Kind == expectedType.Kind)
             {
@@ -944,7 +937,9 @@ namespace Microsoft.PowerFx.Core.Functions
                 errors.Errors(node, targetType, targetDifference, targetDifferenceType);
             }
             else
+            {
                 errors.EnsureError(DocumentErrorSeverity.Severe, node, TexlStrings.ErrBadType_ExpectedType_ProvidedType, expectedType.GetKindString(), nodeType.GetKindString());
+            }
 
             return false;
         }
@@ -964,7 +959,7 @@ namespace Microsoft.PowerFx.Core.Functions
             }
             else
             {
-                TypedName column = columns.Single();
+                var column = columns.Single();
                 if (!expectedType.Accepts(column.Type))
                 {
                     if (SupportsParamCoercion && column.Type.CoercesTo(expectedType))
@@ -1020,23 +1015,28 @@ namespace Microsoft.PowerFx.Core.Functions
             Contracts.AssertValue(args);
             Contracts.Assert(args.Length > 0);
 
-            int SignatureCount = 5;
-            int argCount = arity;
+            var signatureCount = 5;
+            var argCount = arity;
+
             // Limit the signature length of params descriptions.
-            if (SignatureConstraint != null && (arity + SignatureCount) > SignatureConstraint.RepeatTopLength)
+            if (SignatureConstraint != null && (arity + signatureCount) > SignatureConstraint.RepeatTopLength)
             {
-                SignatureCount = (SignatureConstraint.RepeatTopLength - arity) > 0 ? SignatureConstraint.RepeatTopLength - arity : 1;
+                signatureCount = (SignatureConstraint.RepeatTopLength - arity) > 0 ? SignatureConstraint.RepeatTopLength - arity : 1;
                 argCount = arity < SignatureConstraint.RepeatTopLength ? arity : SignatureConstraint.RepeatTopLength;
             }
-            var signatures = new List<TexlStrings.StringGetter[]>(SignatureCount);
+
+            var signatures = new List<TexlStrings.StringGetter[]>(signatureCount);
             var lastArg = args.Last();
 
-            for (int sigIndex = 0; sigIndex < SignatureCount; sigIndex++)
+            for (var sigIndex = 0; sigIndex < signatureCount; sigIndex++)
             {
-                TexlStrings.StringGetter[] signature = new TexlStrings.StringGetter[argCount];
+                var signature = new TexlStrings.StringGetter[argCount];
+
                 // Populate from the given args (as much as possible). The last arg will be repeated.
-                for (int i = 0; i < argCount; i++)
+                for (var i = 0; i < argCount; i++)
+                {
                     signature[i] = i < args.Length ? args[i] : lastArg;
+                }
 
                 signatures.Add(signature);
                 argCount++;
@@ -1076,10 +1076,12 @@ namespace Microsoft.PowerFx.Core.Functions
             Contracts.AssertValue(binding);
 
             if (binding.ErrorContainer.HasErrors(callNode, errorSeverity))
+            {
                 return false;
+            }
 
             var args = callNode.Args.Children.VerifyValue();
-            int cargs = args.Count();
+            var cargs = args.Count();
             return !(cargs < MinArity || cargs > MaxArity);
         }
 
@@ -1090,18 +1092,23 @@ namespace Microsoft.PowerFx.Core.Functions
             Contracts.AssertValue(binding);
 
             dataSource = null;
+
             // Only check for errors with severity more than warning.
             // Ignore warning errors as it's quite possible to have delegation warnings on a node in different call node context.
             // For example, Filter(CDS, A = B) It's possible that B as itself is delegatable but in the context of Filter it's not and could have warning on it.
             if (binding.ErrorContainer.HasErrors(callNode, DocumentErrorSeverity.Moderate))
+            {
                 return false;
+            }
 
             if (!TryGetDataSource(callNode, binding, out dataSource))
+            {
                 return false;
+            }
 
             // Check if DS is server delegatable.
-            return (dataSource.IsDelegatable &&
-                    dataSource.DelegationMetadata.VerifyValue().TableCapabilities.HasCapability(expectedCapability.Capabilities));
+            return dataSource.IsDelegatable &&
+                    dataSource.DelegationMetadata.VerifyValue().TableCapabilities.HasCapability(expectedCapability.Capabilities);
         }
 
         /// <summary>
@@ -1114,8 +1121,8 @@ namespace Microsoft.PowerFx.Core.Functions
         /// is delay loaded.  It is stripped from the type when used in functions like Set and is ignored in
         /// Collect.CheckInvocation.
         /// </remarks>
-        /// <param name="itemType">Type that may define Attachments</param>
-        /// <param name="errors">Errors</param>
+        /// <param name="itemType">Type that may define Attachments.</param>
+        /// <param name="errors">Errors.</param>
         /// <param name="node">Node to which <see cref="itemType"/> is associated.</param>
         /// <returns>
         /// True if operation succeeded, if no Attachments field is defined or the Attachments field
@@ -1128,7 +1135,9 @@ namespace Microsoft.PowerFx.Core.Functions
             Contracts.AssertValue(node);
 
             if (itemType.ContainsAttachmentType(DPath.Root))
+            {
                 return DropAllOfKindNested(ref itemType, errors, node, DKind.Attachment);
+            }
 
             return true;
         }
@@ -1140,7 +1149,7 @@ namespace Microsoft.PowerFx.Core.Functions
             Contracts.AssertValue(errors);
             Contracts.AssertValue(node);
 
-            bool fError = false;
+            var fError = false;
             itemType = itemType.DropAllOfKindNested(ref fError, DPath.Root, kind);
             if (fError)
             {
@@ -1153,7 +1162,6 @@ namespace Microsoft.PowerFx.Core.Functions
 
             return true;
         }
-
 
         public virtual bool TryGetDelegationMetadata(CallNode node, TexlBinding binding, out IDelegationMetadata metadata)
         {
@@ -1228,7 +1236,7 @@ namespace Microsoft.PowerFx.Core.Functions
 
             if (nodeType.IsTable)
             {
-                int count = 0;
+                var count = 0;
                 isTable = true;
                 foreach (var col in nodeType.GetNames(DPath.Root))
                 {
@@ -1266,33 +1274,40 @@ namespace Microsoft.PowerFx.Core.Functions
             Contracts.Assert(args.Length == argTypes.Length);
             Contracts.AssertValue(errors);
 
-            bool fValid = true;
+            var fValid = true;
             nodeToCoercedTypeMap = new Dictionary<TexlNode, DType>();
 
             returnType = DType.Invalid;
 
             // Type check the args
-            for (int i = 0; i < args.Length; i++)
+            for (var i = 0; i < args.Length; i++)
             {
-                bool isTable;
-                fValid &= CheckParamIsTypeOrSingleColumnTable(desiredType, args[i], argTypes[i], errors, out isTable, ref nodeToCoercedTypeMap);
+                fValid &= CheckParamIsTypeOrSingleColumnTable(desiredType, args[i], argTypes[i], errors, out var isTable, ref nodeToCoercedTypeMap);
 
                 // If there are any table args, the return type depends on the first such arg.
                 if (isTable && returnType == DType.Invalid)
                 {
                     if (fValid && nodeToCoercedTypeMap.Any())
+                    {
                         returnType = DType.CreateTable(new TypedName(desiredType, argTypes[i].GetNames(DPath.Root).Single().Name));
+                    }
                     else
+                    {
                         returnType = argTypes[i];
+                    }
                 }
             }
 
             // If the returnType hasn't been set, we are working with only scalars.
             if (returnType == DType.Invalid)
+            {
                 returnType = desiredType;
+            }
 
             if (!fValid)
+            {
                 nodeToCoercedTypeMap = null;
+            }
 
             return fValid;
         }
@@ -1303,7 +1318,9 @@ namespace Microsoft.PowerFx.Core.Functions
         {
             // If the locale has changed, we want to reset the function info to one of the new locale
             if (CurrentLocaleInfo.CurrentUILanguageName == _cachedLocaleName && _cachedFunctionInfo != null)
+            {
                 return _cachedFunctionInfo;
+            }
 
             _cachedLocaleName = CurrentLocaleInfo.CurrentUILanguageName;
             return _cachedFunctionInfo = new FunctionInfo()
@@ -1317,8 +1334,7 @@ namespace Microsoft.PowerFx.Core.Functions
                         ("(" + string.Join(TexlLexer.LocalizedInstance.LocalizedPunctuatorListSeparator + " ", signature.Select(getter => getter(null))) + ")")),
                     Parameters = signature?.Select(getter =>
                     {
-                        string description;
-                        TryGetParamDescription(getter(locale), out description);
+                        TryGetParamDescription(getter(locale), out var description);
 
                         return new ParameterInfo()
                         {

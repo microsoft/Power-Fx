@@ -1,16 +1,16 @@
 ﻿// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+// Licensed under the MIT license.
+
 #pragma warning disable 420
 
 using System;
 using System.Text;
 using System.Threading;
 using Microsoft.PowerFx.Core.Lexer;
+using Conditional = System.Diagnostics.ConditionalAttribute;
 
 namespace Microsoft.PowerFx.Core.Utils
 {
-    using Conditional = System.Diagnostics.ConditionalAttribute;
-
     // A path is essentially a list of simple names, starting at "root".
     // TASK: 67008 - Make this public, or expose a public shim in Document.
     internal struct DPath : IEquatable<DPath>, ICheckable
@@ -29,7 +29,7 @@ namespace Microsoft.PowerFx.Core.Utils
             // Computed lazily and cached. This only hashes the strings, NOT the length.
             private volatile int _hash;
 
-            public bool IsValid { get { return Name.IsValid && (Parent == null ? Length == 1 : Length == Parent.Length + 1); } }
+            public bool IsValid => Name.IsValid && (Parent == null ? Length == 1 : Length == Parent.Length + 1);
 
             public Node(Node par, DName name)
             {
@@ -48,7 +48,10 @@ namespace Microsoft.PowerFx.Core.Utils
                 AssertValid();
                 Contracts.AssertValueOrNull(node);
                 if (node == null)
+                {
                     return this;
+                }
+
                 return new Node(Append(node.Parent), node.Name);
             }
 
@@ -62,15 +65,21 @@ namespace Microsoft.PowerFx.Core.Utils
             public override int GetHashCode()
             {
                 if (_hash == 0)
+                {
                     EnsureHash();
+                }
+
                 return _hash;
             }
 
             private void EnsureHash()
             {
-                int hash = Hashing.CombineHash(Parent == null ? HashNull : Parent.GetHashCode(), Name.GetHashCode());
+                var hash = Hashing.CombineHash(Parent == null ? HashNull : Parent.GetHashCode(), Name.GetHashCode());
                 if (hash == 0)
+                {
                     hash = 1;
+                }
+
                 Interlocked.CompareExchange(ref _hash, hash, 0);
             }
         }
@@ -78,7 +87,7 @@ namespace Microsoft.PowerFx.Core.Utils
         // The "root" is indicated by null.
         private readonly Node _node;
 
-        public static readonly DPath Root = default(DPath);
+        public static readonly DPath Root = default;
 
         private DPath(Node node)
         {
@@ -101,20 +110,27 @@ namespace Microsoft.PowerFx.Core.Utils
             Contracts.Assert(IsValid);
         }
 
-        public DPath Parent { get { return _node == null ? this : new DPath(_node.Parent); } }
-        public DName Name { get { return _node == null ? default(DName) : _node.Name; } }
-        public int Length { get { return _node == null ? 0 : _node.Length; } }
-        public bool IsRoot { get { return _node == null; } }
-        public bool IsValid { get { return _node == null || _node.IsValid; } }
+        public DPath Parent => _node == null ? this : new DPath(_node.Parent);
+
+        public DName Name => _node == null ? default : _node.Name;
+
+        public int Length => _node == null ? 0 : _node.Length;
+
+        public bool IsRoot => _node == null;
+
+        public bool IsValid => _node == null || _node.IsValid;
 
         public DName this[int index]
         {
             get
             {
                 Contracts.AssertIndex(index, Length);
-                Node node = _node;
+                var node = _node;
                 while (node.Length > index + 1)
+                {
                     node = node.Parent;
+                }
+
                 return node.Name;
             }
         }
@@ -131,24 +147,31 @@ namespace Microsoft.PowerFx.Core.Utils
             path.AssertValid();
 
             if (IsRoot)
+            {
                 return path;
+            }
 
             // Simple recursion avoids excess memory allocation at the expense of stack space.
             if (path.Length <= 20)
+            {
                 return new DPath(_node.Append(path._node));
+            }
 
             // For long paths, don't recurse.
-            Node[] nodes = new Node[path.Length];
-            int inode = 0;
+            var nodes = new Node[path.Length];
+            var inode = 0;
             Node node;
             for (node = path._node; node != null; node = node.Parent)
+            {
                 nodes[inode++] = node;
+            }
+
             Contracts.Assert(inode == nodes.Length);
 
             node = _node;
             while (inode > 0)
             {
-                Node nodeCur = nodes[--inode];
+                var nodeCur = nodes[--inode];
                 node = new Node(node, nodeCur.Name);
             }
 
@@ -164,35 +187,46 @@ namespace Microsoft.PowerFx.Core.Utils
         private Node GoUpCore(int count)
         {
             Contracts.AssertIndexInclusive(count, Length);
-            Node node = _node;
+            var node = _node;
             while (--count >= 0)
             {
                 Contracts.AssertValue(node);
                 node = node.Parent;
             }
+
             return node;
         }
 
         public override string ToString()
         {
             if (IsRoot)
+            {
                 return RootString;
+            }
 
-            int cch = 1;
-            for (Node node = _node; node != null; node = node.Parent)
+            var cch = 1;
+            for (var node = _node; node != null; node = node.Parent)
+            {
                 cch += node.Name.Value.Length + 1;
+            }
 
-            StringBuilder sb = new StringBuilder(cch);
-            sb.Length = cch;
-            for (Node node = _node; node != null; node = node.Parent)
+            var sb = new StringBuilder(cch)
+            {
+                Length = cch
+            };
+            for (var node = _node; node != null; node = node.Parent)
             {
                 string str = node.Name;
-                int ich = str.Length;
+                var ich = str.Length;
                 Contracts.Assert(ich < cch);
                 while (ich > 0)
+                {
                     sb[--cch] = str[--ich];
+                }
+
                 sb[--cch] = '.';
             }
+
             Contracts.Assert(cch == 1);
             sb[--cch] = RootChar;
             return sb.ToString();
@@ -206,17 +240,21 @@ namespace Microsoft.PowerFx.Core.Utils
             Contracts.Assert(".!".IndexOf(punctuator[0]) >= 0);
 
             if (IsRoot)
+            {
                 return string.Empty;
+            }
 
             Contracts.Assert(Length > 0);
-            int count = 0;
-            for (Node node = _node; node != null; node = node.Parent)
+            var count = 0;
+            for (var node = _node; node != null; node = node.Parent)
+            {
                 count += node.Name.Value.Length;
+            }
 
-            StringBuilder sb = new StringBuilder(count + Length - 1);
+            var sb = new StringBuilder(count + Length - 1);
 
-            string sep = string.Empty;
-            for (int i = 0; i < Length; i++)
+            var sep = string.Empty;
+            for (var i = 0; i < Length; i++)
             {
                 sb.Append(sep);
                 var escapedName = escapeInnerName ? TexlLexer.EscapeName(this[i]) : this[i];
@@ -233,18 +271,21 @@ namespace Microsoft.PowerFx.Core.Utils
         {
             Contracts.AssertValue(dotted);
 
-            path = DPath.Root;
+            path = Root;
 
             if (dotted == string.Empty)
+            {
                 return true;
+            }
 
             foreach (var name in dotted.Split('.', '!'))
             {
                 if (!DName.IsValidDName(name))
                 {
-                    path = DPath.Root;
+                    path = Root;
                     return false;
                 }
+
                 path = path.Append(new DName(name));
             }
 
@@ -253,36 +294,46 @@ namespace Microsoft.PowerFx.Core.Utils
 
         public static bool operator ==(DPath path1, DPath path2)
         {
-            Node node1 = path1._node;
-            Node node2 = path2._node;
+            var node1 = path1._node;
+            var node2 = path2._node;
 
-            for (; ; )
+            for (; ;)
             {
                 if (node1 == node2)
+                {
                     return true;
+                }
 
                 Contracts.Assert(node1 != null || node2 != null);
                 if (node1 == null || node2 == null)
+                {
                     return false;
+                }
 
                 if (node1.GetHashCode() != node2.GetHashCode())
+                {
                     return false;
+                }
+
                 if (node1.Name != node2.Name)
+                {
                     return false;
+                }
+
                 node1 = node1.Parent;
                 node2 = node2.Parent;
             }
         }
 
-        public static bool operator !=(DPath path1, DPath path2)
-        {
-            return !(path1 == path2);
-        }
+        public static bool operator !=(DPath path1, DPath path2) => !(path1 == path2);
 
         public override int GetHashCode()
         {
             if (_node == null)
+            {
                 return Node.HashNull;
+            }
+
             return _node.GetHashCode();
         }
 
@@ -295,7 +346,10 @@ namespace Microsoft.PowerFx.Core.Utils
         {
             Contracts.AssertValueOrNull(obj);
             if (!(obj is DPath))
+            {
                 return false;
+            }
+
             return this == (DPath)obj;
         }
     }

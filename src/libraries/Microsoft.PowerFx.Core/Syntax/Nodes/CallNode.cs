@@ -1,5 +1,5 @@
-// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
 
 using System;
 using System.Collections.Generic;
@@ -18,8 +18,10 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
     {
         public readonly Identifier Head;
         public readonly ListNode Args;
+
         // ParenClose can be null.
         public readonly Token ParenClose;
+
         // HeadNode is null for simple invocations. It is typically non-null if the head is
         // a more complex expression, e.g. a non-identifier, or a namespace-qualified identifier
         // in the form of a DottedNameNode.
@@ -29,7 +31,7 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
         public readonly string UniqueInvocationId;
 
         // Parse Tree is assigned a unique id that is used later to create unique node ids.
-        private volatile static int _uniqueInvocationIdNext;
+        private static volatile int _uniqueInvocationIdNext;
 
         public CallNode(ref int idNext, Token primaryToken, SourceList sourceList, Identifier head, TexlNode headNode, ListNode args, Token tokParenClose)
             : base(ref idNext, primaryToken, sourceList)
@@ -45,20 +47,25 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
             Args.Parent = this;
             ParenClose = tokParenClose;
 
-            int headDepth = HeadNode == null ? 0 : HeadNode.Depth;
+            var headDepth = HeadNode == null ? 0 : HeadNode.Depth;
             _depth = 1 + (args.Depth > headDepth ? args.Depth : headDepth);
 
             if (headNode != null)
+            {
                 MinChildID = Math.Min(headNode.MinChildID, MinChildID);
+            }
 
             if (args != null)
+            {
                 MinChildID = Math.Min(args.MinChildID, MinChildID);
+            }
 
 #pragma warning disable 420
+
             // A volatile field should not normally be passed using a ref or out parameter, since it will not be treated
             // as volatile within the scope of the function. There are exceptions to this, such as when calling an interlocked API.
             // Hence disabling the warning for this instance.
-            int invocationId = Interlocked.Increment(ref _uniqueInvocationIdNext);
+            var invocationId = Interlocked.Increment(ref _uniqueInvocationIdNext);
 #pragma warning restore 420
 
             // We need to generate a globally unique name for this function invocation, so we use
@@ -95,12 +102,12 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
             }
         }
 
-        public override Result Accept<Result, Context>(TexlFunctionalVisitor<Result, Context> visitor, Context context)
+        public override TResult Accept<TResult, TContext>(TexlFunctionalVisitor<TResult, TContext> visitor, TContext context)
         {
             return visitor.Visit(this, context);
         }
 
-        public override NodeKind Kind { get { return NodeKind.Call; } }
+        public override NodeKind Kind => NodeKind.Call;
 
         public override CallNode CastCall()
         {
@@ -115,13 +122,17 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
         public override Span GetTextSpan()
         {
             if (ParenClose == null)
+            {
                 return base.GetTextSpan();
+            }
+
             // If the call is a Service call then adjust the span for the entire call
             DottedNameNode dotted;
             if (HeadNode != null && (dotted = HeadNode.AsDottedName()) != null)
             {
                 return new Span(dotted.GetCompleteSpan().Min, ParenClose.Span.Lim);
             }
+
             return new Span(Head.Token.Span.Min, ParenClose.Span.Lim);
         }
 
@@ -132,7 +143,9 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
             // If we have a close paren, then the call node is complete.
             // If not, then the call node ends with the end of the last argument.
             if (ParenClose != null)
+            {
                 limit = ParenClose.Span.Lim;
+            }
             else
             {
                 limit = Args.GetCompleteSpan().Lim;
@@ -140,7 +153,9 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
 
             DottedNameNode dotted;
             if (HeadNode != null && (dotted = HeadNode.AsDottedName()) != null)
+            {
                 return new Span(dotted.GetCompleteSpan().Min, limit);
+            }
 
             return new Span(Head.Token.Span.Min, limit);
         }

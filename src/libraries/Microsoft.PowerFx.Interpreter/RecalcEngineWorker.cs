@@ -1,15 +1,15 @@
 ﻿// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+// Licensed under the MIT license.
 
-using System.Linq;
 using System.Collections.Generic;
-using Microsoft.PowerFx.Functions;
+using System.Globalization;
+using System.Linq;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.IR.Nodes;
 using Microsoft.PowerFx.Core.IR.Symbols;
-using Microsoft.PowerFx.Core.Public.Values;
 using Microsoft.PowerFx.Core.Localization;
-using System.Globalization;
+using Microsoft.PowerFx.Core.Public.Values;
+using Microsoft.PowerFx.Functions;
 
 namespace Microsoft.PowerFx
 {
@@ -47,10 +47,7 @@ namespace Microsoft.PowerFx
                 var info = _parent.Formulas[varName];
 
                 var newValue = info._value;
-                if (info._onUpdate != null)
-                {
-                    info._onUpdate(varName, newValue);
-                }
+                info._onUpdate?.Invoke(varName, newValue);
             }
         }
 
@@ -69,14 +66,14 @@ namespace Microsoft.PowerFx
             {
                 var binding = fi._binding;
 
-                (IntermediateNode irnode, ScopeSymbol ruleScopeSymbol) = IRTranslator.Translate(binding);
+                (var irnode, var ruleScopeSymbol) = IRTranslator.Translate(binding);
 
                 var scope = this;
                 var v = new EvalVisitor(_cultureInfo);
 
-                FormulaValue newValue = irnode.Accept(v, SymbolContext.New());
+                var newValue = irnode.Accept(v, SymbolContext.New());
 
-                var equal = fi._value != null &&  // null on initial run. 
+                var equal = fi._value != null && // null on initial run. 
                     RuntimeHelpers.AreEqual(newValue, fi._value);
 
                 if (!equal)
@@ -114,6 +111,7 @@ namespace Microsoft.PowerFx
 
                 value = _calcs[name];
             }
+
             return value;
         }
     } // end class RecalcHelper

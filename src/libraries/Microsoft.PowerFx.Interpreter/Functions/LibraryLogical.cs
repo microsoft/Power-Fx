@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+// Licensed under the MIT license.
 
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Public.Values;
@@ -33,6 +33,7 @@ namespace Microsoft.PowerFx.Functions
                     return res.ToFormulaValue();
                 }
             }
+
             return new BooleanValue(irContext, true);
         }
 
@@ -56,6 +57,7 @@ namespace Microsoft.PowerFx.Functions
                     return res.Error;
                 }
             }
+
             return new BooleanValue(irContext, false);
         }
     }

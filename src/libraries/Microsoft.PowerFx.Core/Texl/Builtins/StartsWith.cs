@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+// Licensed under the MIT license.
 
 using System.Collections.Generic;
 using Microsoft.PowerFx.Core.Binding;
@@ -14,11 +14,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Checks if the text starts with the start string.
     internal sealed class StartsWithFunction : StringTwoArgFunction
     {
-        public override DelegationCapability FunctionDelegationCapability {  get { return DelegationCapability.StartsWith;  } }
+        public override DelegationCapability FunctionDelegationCapability => DelegationCapability.StartsWith;
 
         public StartsWithFunction()
             : base("StartsWith", TexlStrings.AboutStartsWith)
-        { }
+        {
+        }
 
         public override bool IsRowScopedServerDelegatable(CallNode callNode, TexlBinding binding, OperationCapabilityMetadata metadata)
         {

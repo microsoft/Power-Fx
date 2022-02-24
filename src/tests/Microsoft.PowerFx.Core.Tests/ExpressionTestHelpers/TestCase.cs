@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+// Licensed under the MIT license.
 
 using System;
 using System.Collections.Generic;
@@ -11,7 +11,7 @@ namespace Microsoft.PowerFx.Core.Tests
     internal class TestCase
     {
         // Formula string to run 
-        public string? Input;
+        public string Input;
 
         // Expected Result, indexed by runner name
         public Dictionary<string, string> _expected = new Dictionary<string, string>();
@@ -19,10 +19,11 @@ namespace Microsoft.PowerFx.Core.Tests
         // Location from source file. 
         public string SourceFile;
         public int SourceLine;
+        public string SetupHandlerName;
 
         public override string ToString()
         {
-            return $"{Path.GetFileName(this.SourceFile)}:{this.SourceLine}: {Input}";
+            return $"{Path.GetFileName(SourceFile)}:{SourceLine}: {Input}";
         }
 
         public void SetExpected(string expected, string engineName = null)
@@ -31,6 +32,7 @@ namespace Microsoft.PowerFx.Core.Tests
             {
                 engineName = "-";
             }
+
             _expected[engineName] = expected;
         }
 
@@ -40,6 +42,7 @@ namespace Microsoft.PowerFx.Core.Tests
             {
                 return _expected["-"];
             }
+
             return expected;
         }
     }

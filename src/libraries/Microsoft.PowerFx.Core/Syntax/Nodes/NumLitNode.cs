@@ -1,5 +1,5 @@
-// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
 
 using Microsoft.PowerFx.Core.Lexer;
 using Microsoft.PowerFx.Core.Lexer.Tokens;
@@ -32,15 +32,15 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
         public override TexlNode Clone(ref int idNext, Span ts)
         {
             if (Value == null)
+            {
                 return new NumLitNode(ref idNext, Token.Clone(ts), SourceList.Clone(ts, null), NumValue);
+            }
+
             return new NumLitNode(ref idNext, Value.Clone(ts).As<NumLitToken>());
         }
 
         // This may be null, in which case, NumValue should be used.
-        public NumLitToken Value
-        {
-            get { return Token as NumLitToken; }
-        }
+        public NumLitToken Value => Token as NumLitToken;
 
         public override void Accept(TexlVisitor visitor)
         {
@@ -48,12 +48,12 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
             visitor.Visit(this);
         }
 
-        public override Result Accept<Result, Context>(TexlFunctionalVisitor<Result, Context> visitor, Context context)
+        public override TResult Accept<TResult, TContext>(TexlFunctionalVisitor<TResult, TContext> visitor, TContext context)
         {
             return visitor.Visit(this, context);
         }
 
-        public override NodeKind Kind { get { return NodeKind.NumLit; } }
+        public override NodeKind Kind => NodeKind.NumLit;
 
         public override NumLitNode AsNumLit()
         {

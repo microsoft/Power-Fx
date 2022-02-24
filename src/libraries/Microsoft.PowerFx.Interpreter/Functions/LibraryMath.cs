@@ -1,13 +1,13 @@
 ﻿// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+// Licensed under the MIT license.
 
-using Microsoft.PowerFx.Core.IR;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.PowerFx.Core.IR;
+using Microsoft.PowerFx.Core.Public;
 using Microsoft.PowerFx.Core.Public.Types;
 using Microsoft.PowerFx.Core.Public.Values;
-using System;
-using Microsoft.PowerFx.Core.Public;
 
 namespace Microsoft.PowerFx.Functions
 {
@@ -22,6 +22,7 @@ namespace Microsoft.PowerFx.Functions
         private interface IAggregator
         {
             void Apply(FormulaValue value);
+
             FormulaValue GetResult(IRContext irContext);
         }
 
@@ -32,15 +33,24 @@ namespace Microsoft.PowerFx.Functions
 
             public void Apply(FormulaValue value)
             {
-                if (value is BlankValue) { return; }
+                if (value is BlankValue)
+                {
+                    return;
+                }
+
                 var n1 = (NumberValue)value;
 
                 _accumulator += n1.Value;
                 _count++;
             }
+
             public virtual FormulaValue GetResult(IRContext irContext)
             {
-                if (_count == 0) { return new BlankValue(irContext); }
+                if (_count == 0)
+                {
+                    return new BlankValue(irContext);
+                }
+
                 return new NumberValue(irContext, _accumulator);
             }
         }
@@ -53,17 +63,25 @@ namespace Microsoft.PowerFx.Functions
             public void Apply(FormulaValue value)
             {
                 _count++;
-                if (value is BlankValue) { return; }
+                if (value is BlankValue)
+                {
+                    return;
+                }
+
                 var n1 = (NumberValue)value;
                 if (n1.Value < _minValue)
                 {
                     _minValue = n1.Value;
                 }
-
             }
+
             public virtual FormulaValue GetResult(IRContext irContext)
             {
-                if (_count == 0) { return new BlankValue(irContext); }
+                if (_count == 0)
+                {
+                    return new BlankValue(irContext);
+                }
+
                 return new NumberValue(irContext, _minValue);
             }
         }
@@ -76,17 +94,25 @@ namespace Microsoft.PowerFx.Functions
             public void Apply(FormulaValue value)
             {
                 _count++;
-                if (value is BlankValue) { return; }
+                if (value is BlankValue)
+                {
+                    return;
+                }
+
                 var n1 = (NumberValue)value;
                 if (n1.Value > _maxValue)
                 {
                     _maxValue = n1.Value;
                 }
-
             }
+
             public virtual FormulaValue GetResult(IRContext irContext)
             {
-                if (_count == 0) { return new BlankValue(irContext); }
+                if (_count == 0)
+                {
+                    return new BlankValue(irContext);
+                }
+
                 return new NumberValue(irContext, _maxValue);
             }
         }
@@ -95,7 +121,11 @@ namespace Microsoft.PowerFx.Functions
         {
             public override FormulaValue GetResult(IRContext irContext)
             {
-                if (_count == 0) { return CommonErrors.DivByZeroError(irContext); }
+                if (_count == 0)
+                {
+                    return CommonErrors.DivByZeroError(irContext);
+                }
+
                 return new NumberValue(irContext, _accumulator / _count);
             }
         }
@@ -106,6 +136,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 agg.Apply(value);
             }
+
             return agg.GetResult(irContext);
         }
 
@@ -114,7 +145,7 @@ namespace Microsoft.PowerFx.Functions
             var arg0 = (TableValue)args[0];
             var arg1 = (LambdaFormulaValue)args[1];
 
-            foreach (DValue<RecordValue> row in arg0.Rows)
+            foreach (var row in arg0.Rows)
             {
                 if (row.IsValue)
                 {
@@ -130,6 +161,7 @@ namespace Microsoft.PowerFx.Functions
                     {
                         return error;
                     }
+
                     agg.Apply(value);
                 }
             }
@@ -214,9 +246,9 @@ namespace Microsoft.PowerFx.Functions
         // https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-sequence
         public static FormulaValue Sequence(IRContext irContext, NumberValue[] args)
         {
-            double records = args[0].Value;
-            double start = args[1].Value;
-            double step = args[2].Value;
+            var records = args[0].Value;
+            var start = args[1].Value;
+            var step = args[2].Value;
 
             var rows = LazySequence(records, start, step).Select(n => new NumberValue(IRContext.NotInSource(FormulaType.Number), n));
 
@@ -225,8 +257,8 @@ namespace Microsoft.PowerFx.Functions
 
         private static IEnumerable<double> LazySequence(double records, double start, double step)
         {
-            double x = start;
-            for (int i = 1; i <= records; i++)
+            var x = start;
+            for (var i = 1; i <= records; i++)
             {
                 yield return x;
                 x += step;
@@ -285,7 +317,8 @@ namespace Microsoft.PowerFx.Functions
                 return number < 0 ? Math.Floor(number) : Math.Ceiling(number);
             }
 
-            double multiplier = Math.Pow(10, digits < 0 ? Math.Ceiling(digits) : Math.Floor(digits));
+            var multiplier = Math.Pow(10, digits < 0 ? Math.Ceiling(digits) : Math.Floor(digits));
+
             // Contracts.Assert(multiplier != 0);
 
             // Deal with catastrophic loss of precision
@@ -317,6 +350,7 @@ namespace Microsoft.PowerFx.Functions
             }
 
             var multiplier = Math.Pow(10, digits < 0 ? Math.Ceiling(digits) : Math.Floor(digits));
+
             // DebugContracts.assert(multiplier !== 0);
 
             // Deal with catastrophic loss of precision
@@ -373,6 +407,7 @@ namespace Microsoft.PowerFx.Functions
                 {
                     _random = new Random();
                 }
+
                 return new NumberValue(irContext, _random.NextDouble());
             }
         }
@@ -398,6 +433,7 @@ namespace Microsoft.PowerFx.Functions
                 {
                     _random = new Random();
                 }
+
                 return new NumberValue(irContext, _random.Next(lower, upper));
             }
         }

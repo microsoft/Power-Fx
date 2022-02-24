@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+// Licensed under the MIT license.
 
 using System.Collections.Generic;
 using Microsoft.PowerFx.Core.Binding;
@@ -28,7 +28,7 @@ namespace Microsoft.PowerFx
 
         public override void Visit(FirstNameNode node)
         {
-            FirstNameInfo info = _binding.GetInfo(node);
+            var info = _binding.GetInfo(node);
 
             var name = node.Ident.Name.Value;
 
