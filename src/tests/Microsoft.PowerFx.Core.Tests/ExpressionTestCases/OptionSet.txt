@@ -1,0 +1,22 @@
+#SETUP: OptionSetTestSetup
+
+>> OptionSet.Option1 <> OptionSet.Option2
+true
+
+>> OptionSet.Option2 = OptionSet.Option2
+true
+
+>> "Coerces to " & OptionSet.Option2
+"Coerces to Option2"
+
+>> OtherOptionSet.OptionD & "Coerces"
+"OptionDCoerces"
+
+>> If(TopOptionSetField = OptionSet.Option1, "success", "failure")
+"success"
+
+>> Switch(Nested.InnerOtherOptionSet, OtherOptionSet.OptionA, 1, OtherOptionSet.OptionB, 2, OtherOptionSet.OptionC, 3, OtherOptionSet.OptionD, 4)
+4
+
+>> OtherOptionSet.OptionA <> TopOptionSetField
+Errors: Error 23-25: Incompatible types for comparison. These types can't be compared: OptionSetValue(OtherOptionSet), OptionSetValue(OptionSet).
