@@ -58,6 +58,8 @@ namespace Microsoft.PowerFx.Functions
         private class MinAgg : IAggregator
         {
             protected double _minValue = double.MaxValue;
+            protected DateTime _minValueDT = DateTime.MaxValue;
+            protected TimeSpan _minValueT = TimeSpan.MaxValue;
             protected int _count;
 
             public void Apply(FormulaValue value)
@@ -67,11 +69,37 @@ namespace Microsoft.PowerFx.Functions
                 {
                     return;
                 }
-
-                var n1 = (NumberValue)value;
-                if (n1.Value < _minValue)
+                else if (value.Type == FormulaType.Number)
                 {
-                    _minValue = n1.Value;
+                    var n1 = (NumberValue)value;
+                    if (n1.Value < _minValue)
+                    {
+                        _minValue = n1.Value;
+                    }
+                }
+                else if (value.Type == FormulaType.DateTime)
+                {
+                    var n1 = (DateTimeValue)value;
+                    if (n1.Value < _minValueDT)
+                    {
+                        _minValueDT = n1.Value;
+                    }
+                }
+                else if (value.Type == FormulaType.Date)
+                {
+                    var n1 = (DateValue)value;
+                    if (n1.Value < _minValueDT)
+                    {
+                        _minValueDT = n1.Value;
+                    }
+                }
+                else if (value.Type == FormulaType.Time)
+                {
+                    var n1 = (TimeValue)value;
+                    if (n1.Value < _minValueT)
+                    {
+                        _minValueT = n1.Value;
+                    }
                 }
             }
 
@@ -81,14 +109,34 @@ namespace Microsoft.PowerFx.Functions
                 {
                     return new BlankValue(irContext);
                 }
-
-                return new NumberValue(irContext, _minValue);
+                else if (irContext.ResultType == FormulaType.Number)
+                {
+                    return new NumberValue(irContext, _minValue);
+                }
+                else if (irContext.ResultType == FormulaType.DateTime)
+                {
+                    return new DateTimeValue(irContext, _minValueDT);
+                }
+                else if (irContext.ResultType == FormulaType.Date)
+                {
+                    return new DateTimeValue(irContext, _minValueDT);
+                }
+                else if (irContext.ResultType == FormulaType.Time)
+                {
+                    return new TimeValue(irContext, _minValueT);
+                }
+                else
+                {
+                    return new BlankValue(irContext);
+                }
             }
         }
 
         private class MaxAgg : IAggregator
         {
             protected double _maxValue = double.MinValue;
+            protected DateTime _maxValueDT = DateTime.MinValue;
+            protected TimeSpan _maxValueT = TimeSpan.MinValue;
             protected int _count;
 
             public void Apply(FormulaValue value)
@@ -98,11 +146,38 @@ namespace Microsoft.PowerFx.Functions
                 {
                     return;
                 }
-
-                var n1 = (NumberValue)value;
-                if (n1.Value > _maxValue)
+                else if (value.Type == FormulaType.Number)
                 {
-                    _maxValue = n1.Value;
+                    var n1 = (NumberValue)value;
+                    if (n1.Value > _maxValue)
+                    {
+                        _maxValue = n1.Value;
+                    }
+                }
+                else if (value.Type == FormulaType.DateTime)
+                {
+                    var n1 = (DateTimeValue)value;
+
+                    if (n1.Value > _maxValueDT)
+                    {
+                        _maxValueDT = n1.Value;
+                    }
+                }
+                else if (value.Type == FormulaType.Date)
+                {
+                    var n1 = (DateValue)value;
+                    if (n1.Value > _maxValueDT)
+                    {
+                        _maxValueDT = n1.Value;
+                    }
+                }
+                else if (value.Type == FormulaType.Time)
+                {
+                    var n1 = (TimeValue)value;
+                    if (n1.Value > _maxValueT)
+                    {
+                        _maxValueT = n1.Value;
+                    }
                 }
             }
 
@@ -112,8 +187,26 @@ namespace Microsoft.PowerFx.Functions
                 {
                     return new BlankValue(irContext);
                 }
-
-                return new NumberValue(irContext, _maxValue);
+                else if (irContext.ResultType == FormulaType.Number)
+                {
+                    return new NumberValue(irContext, _maxValue);
+                }
+                else if (irContext.ResultType == FormulaType.DateTime)
+                {
+                    return new DateTimeValue(irContext, _maxValueDT);
+                }
+                else if (irContext.ResultType == FormulaType.Date)
+                {
+                    return new DateTimeValue(irContext, _maxValueDT);
+                }
+                else if (irContext.ResultType == FormulaType.Time)
+                {
+                    return new TimeValue(irContext, _maxValueT);
+                }
+                else
+                {
+                    return new BlankValue(irContext);
+                }
             }
         }
 
@@ -193,6 +286,8 @@ namespace Microsoft.PowerFx.Functions
         // Max(1,2,3)     
         internal static FormulaValue Max(IRContext irContext, FormulaValue[] args)
         {
+            // type check all args (maybe in agg)
+
             return RunAggregator(new MaxAgg(), irContext, args);
         }
 
