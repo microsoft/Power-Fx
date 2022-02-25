@@ -1,0 +1,45 @@
+// https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-value
+
+// Default to invariant
+>> Value("-5")
+-5
+
+>> Value("5")
+5
+
+>> Value("0")
+0
+
+>> Value("xxx")
+#Error
+
+>> Value("")
+Blank()
+
+>> Value(1/0)
+#Error
+
+>> IsError(Value(""))
+false
+
+>> Value(Blank())
+Blank()
+
+>> Value("%")
+#Error
+
+>> IsError(Value("%"))
+true
+
+// inner percent not handled
+>> Value("1%00")
+#Error
+
+// currency and percent can't both be provided
+>> Value("$10%")
+#Error
+
+// Value on a number is just passthrough
+>> Value(123)
+123
+

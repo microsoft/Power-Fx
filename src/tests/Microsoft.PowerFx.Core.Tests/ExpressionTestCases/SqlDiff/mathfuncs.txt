@@ -1,0 +1,94 @@
+// Log is not implemented for SQL
+
+>> Log(100)
+/*SqlRunner*/ Compile Error
+2
+
+>> Log(0)
+/*SqlRunner*/ Compile Error
+#Error
+
+>> Log(Blank())
+/*SqlRunner*/ Compile Error
+Blank()
+
+>> Log(1/0)
+/*SqlRunner*/ Compile Error
+#Error
+
+>>IsNumeric("A")
+/*SqlRunner*/ Compile Error
+false
+
+>>IsNumeric(123)
+/*SqlRunner*/ Compile Error
+true
+
+>>IsNumeric(-123)
+/*SqlRunner*/ Compile Error
+true
+
+>>IsNumeric(-123.1)
+/*SqlRunner*/ Compile Error
+true
+
+>>IsNumeric(123.1)
+/*SqlRunner*/ Compile Error
+true
+
+>>IsNumeric("1" + 2)
+/*SqlRunner*/ Compile Error
+true
+
+>>IsNumeric(1/0)
+/*SqlRunner*/ Compile Error
+#Error
+
+>>IsNumeric(Blank())
+/*SqlRunner*/ Compile Error
+false
+
+>>IsNumeric({RecordValue: 123})
+/*SqlRunner*/ Compile Error
+false
+
+>>IsNumeric([1,2,3,4])
+/*SqlRunner*/ Compile Error
+false
+
+>>RandBetween(1, 1)
+/*SqlRunner*/ Compile Error
+1
+
+>>IsError(RandBetween(5, 1))
+/*SqlRunner*/ Compile Error
+true
+
+>>RandBetween(Blank(),1)
+/*SqlRunner*/ Compile Error
+0
+
+>>IsError(RandBetween(1/0, 1))
+/*SqlRunner*/ Compile Error
+true
+
+>>IsError(RandBetween(0, 1/0))
+/*SqlRunner*/ Compile Error
+true
+
+>>RandBetween(100.5, 100.7)
+/*SqlRunner*/ Compile Error
+100
+
+>> Sum(Sequence(100), With({RandomNumber: RandBetween(1,20)}, If(RandomNumber >=1 && RandomNumber <= 20, 1, 0)))
+/*SqlRunner*/ Compile Error
+100
+
+>> Sum(Sequence(100), With({RandomNumber: RandBetween(2-1,50-30)}, If(RandomNumber >=1 && RandomNumber <= 20, 1, 0)))
+/*SqlRunner*/ Compile Error
+100
+
+>> Sum(Sequence(100), With({RandomNumber: Rand()}, If(RandomNumber > 0 && RandomNumber < 1.0, 1, 0)))
+/*SqlRunner*/ Compile Error
+100
+

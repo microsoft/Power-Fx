@@ -1,0 +1,80 @@
+
+// SQL-specific tests
+
+// IsError inside If
+>> If(true, IsError(1/0 + 1))
+true
+
+>> If(IsError(1/0), 1, 2)
+1
+
+>> Switch(IsError(1/0), true, 1, 2)
+1
+
+// If inside IsError
+>> IsError(If(false, 1/0, 1/0))
+true
+
+>> IsError(If(true, 1/0, 1/0))
+true
+
+>> IsError(Switch(1, 1, 1/0, 1/0))
+true
+
+// IsError inside If inside IsError
+>> IsError(If(false, IsError(1/0), IsError(1/0)))
+false
+
+>> IsError(1/2 + 1) && IsError(1/0)
+false
+
+>> IsError(1/2 + 2)
+false
+
+>> IsError(1/0 + 1)
+true
+
+>> IfError(If(true, 1/0, 1/0), 2)
+2
+
+>> IsError(If(IfError(1/0 = 1, true), 1/0, 1/0))
+true
+
+// date overflow
+>>Year(Date(9999, 12, 31))
+9999
+
+>> Year(Date(10000, 1, 1))
+/*InterpreterRunner*/ #Skip
+#Error
+
+// Date doesn't support inputting years earlier than 1900, so use subtraction to create min supported value
+>> Year(DateAdd(Date(1953, 1, 1), -200, TimeUnit.Years))
+1753
+
+>> IsError(Date(2001, 2, 14) + 99999999999.9)
+true
+
+// date diff overflow
+>> IsError(DateDiff(Date(1900, 1, 1), Date(9999, 12, 31), TimeUnit.Months))
+false
+
+>> IsError(DateDiff(Date(1900,1,1), Date(5982,12,31), TimeUnit.Minutes))
+false
+
+>> IsError(DateDiff(Date(1900, 1, 1), Date(9999, 12, 31), TimeUnit.Minutes))
+/* SqlRunner*/ true
+
+
+>> IsError(DateDiff(Date(1900, 1, 1), Date(9999, 12, 31), TimeUnit.Seconds))
+/* SqlRunner*/ true
+
+
+// check string literals are sanitized
+>> "Robert '; DROP TABLE Students; --"
+"Robert '; DROP TABLE Students; --"
+
+// check SQL wildcards are handled
+>> "%_" in "SQL wildcards"
+false
+

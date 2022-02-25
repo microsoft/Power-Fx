@@ -1,0 +1,44 @@
+>> ForAll([1,2,3], ThisRecord)
+[1,2,3]
+
+>> ForAll([1,2,3], ThisRecord.Value)
+[1,2,3]
+
+>> ForAll([1,2,3] As X, X)
+[1,2,3]
+
+>> ForAll([1,2,3] As X, X.Value)
+[1,2,3]
+
+
+>> ForAll([1,2,3],Value*Value)
+[1,4,9]
+
+// As renames
+>> First(ForAll([1,2,3] As X, X)).Value
+1
+
+>> First(ForAll([1,2,3] As X, X.Value)).Value
+1
+
+>> ForAll(Sort([60, 61, 62, 63, 64], 1/Value), Char(Value))
+["@","?",">","=","<"]
+
+>> ForAll(FirstN([60, 61, 62, 63, 64], Blank()), Char(Value))
+Blank()
+
+>> ForAll(Sort([60, 61, 0, 63, 64], 1/Value), Char(Value))
+#Error
+
+>> ForAll(Table({Value:1,Zulu:1}, {Value:0,Zulu:0}, {Value:2,Zulu:2}), 1/ThisRecord.Value)
+[1,Microsoft.PowerFx.Core.Public.Values.ErrorValue,0.5]
+
+>> First(LastN(ForAll(Table({Value:1,Zulu:1}, {Value:0,Zulu:0}, {Value:2,Zulu:2}), 1/ThisRecord.Value), 2)).Value
+#Error
+
+>> Table({Value:1},First(LastN(ForAll(Table({Value:1,Zulu:1}, {Value:0,Zulu:0}, {Value:2,Zulu:2}), 1/ThisRecord.Value), 2)),{Value:2})
+[1,Microsoft.PowerFx.Core.Public.Values.ErrorValue,2]
+
+>> First(First(LastN(ForAll(Table({Value:1}, {Value:0}, {Value:2}), Table({a: 1/ThisRecord.Value})), 2)).Value)
+{a:Microsoft.PowerFx.Core.Public.Values.ErrorValue}
+

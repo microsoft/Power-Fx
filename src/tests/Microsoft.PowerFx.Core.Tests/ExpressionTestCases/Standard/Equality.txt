@@ -1,0 +1,84 @@
+>> 1 = 1
+true
+
+>> 1 <> 1
+false
+
+>> 1 = 2
+false
+
+>> 1 <> 2
+true
+
+>> true = true
+true
+
+>> true = false
+false
+
+>> true <> true
+false
+
+>> true <> false
+true
+
+>> 1.0 = 1.0
+true
+
+>> 1.0 <> 1.0
+false
+
+>> 1.0 <> 1.1
+true
+
+>> 1.0 = 1.1
+false
+
+>> "foo" = "foo"
+true
+
+>> "foo" <> "foo"
+false
+
+>> "foo" = "bar"
+false
+
+>> "foo" <> "bar"
+true
+
+>> Date(2022,2,17) = Date(2022,2,17)
+true
+
+>> Date(2022,2,17) <> Date(2022,2,17)
+false
+
+>> Date(2022,2,17) = Date(2017,4,27)
+false
+
+>> Date(2022,2,17) <> Date(2017,4,27)
+true
+
+>> 10% = 10%
+true
+
+>> 10% = 0.1
+true
+
+>> 10% <> 12%
+true
+
+>> 10% = 0.12
+false
+
+>> Time(10,30,00) = Time(10,30,00)
+true
+
+>> Time(14,20,30) = Time(2,30,30)
+false
+
+>> Time(10,30,00) <> Time(10,30,00)
+false
+
+>> Time(14,20,30) <> Time(2,30,30)
+true
+

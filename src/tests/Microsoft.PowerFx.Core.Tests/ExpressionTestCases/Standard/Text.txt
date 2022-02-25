@@ -1,0 +1,46 @@
+// Text function
+// https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-text
+
+>> Text(123)
+"123"
+
+>> Text(10*10)
+"100"
+
+>> Text(Blank(), "#.000")
+""
+
+>> Text(123.4, Blank())
+""
+
+>> Text(1.5, "000")
+"002"
+
+>> Text(100, "#%‰'eE:")
+/*InterpreterRunner*/ #Skip
+"100%‰'eE:"
+
+>> Text(567, "!#!#!#!#!")
+"!!5!6!7!"
+
+>> Text(true)
+"true"
+
+>> Text(false)
+"false"
+
+>> Text("abc")
+"abc"
+
+>> Char(65)
+"A"
+
+>> Char(Blank())
+Blank()
+
+>> Char(660/10)
+"B"
+
+>> Char(1/0)
+#Error
+

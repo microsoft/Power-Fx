@@ -1,0 +1,42 @@
+>> Boolean("true")
+true
+
+>> Boolean("false")
+false
+
+>> Boolean("x")
+#Error
+
+>> Boolean(" true")
+true
+
+>> Boolean(" false")
+false
+
+>> Boolean("True")
+true
+
+>> Boolean("False")
+false
+
+>> Boolean(Text(Blank()))
+Blank()
+
+>> Boolean(Text(0/1))
+#Error
+
+>> Boolean("0")
+#Error
+
+>> Boolean(0)
+Errors: Error 0-10: The function 'Boolean' has some invalid arguments.|Error 8-9: Invalid argument type (Number). Expecting a Text value instead.
+
+>> Boolean([])
+Errors: Error 0-11: The function 'Boolean' has some invalid arguments.|Error 8-10: Invalid argument type (Table). Expecting a Text value instead.
+
+>> Boolean(true)
+Errors: Error 0-13: The function 'Boolean' has some invalid arguments.|Error 8-12: Invalid argument type (Boolean). Expecting a Text value instead.
+
+>> Boolean(false)
+Errors: Error 0-14: The function 'Boolean' has some invalid arguments.|Error 8-13: Invalid argument type (Boolean). Expecting a Text value instead.
+
