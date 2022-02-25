@@ -119,7 +119,7 @@ namespace Microsoft.PowerFx.Functions
                 }
                 else if (irContext.ResultType == FormulaType.Date)
                 {
-                    return new DateTimeValue(irContext, _minValueDT);
+                    return new DateValue(irContext, _minValueDT);
                 }
                 else if (irContext.ResultType == FormulaType.Time)
                 {
@@ -197,7 +197,7 @@ namespace Microsoft.PowerFx.Functions
                 }
                 else if (irContext.ResultType == FormulaType.Date)
                 {
-                    return new DateTimeValue(irContext, _maxValueDT);
+                    return new DateValue(irContext, _maxValueDT);
                 }
                 else if (irContext.ResultType == FormulaType.Time)
                 {

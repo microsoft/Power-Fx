@@ -3,7 +3,6 @@
 
 using System.Collections.Generic;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
-using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Localization;
@@ -50,12 +49,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                         CollectionUtils.Add(ref nodeToCoercedTypeMap, args[i], DType.Number, allowDupes: true);
                     }
                 }
-
-                //else
-                //{
-                //    errors.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.ErrNumberExpected);
-                //    fArgsValid = false;
-                //}
+                else if (argTypes[i] != DType.Date && argTypes[i] != DType.DateTime && argTypes[i] != DType.Time)
+                {
+                    errors.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.ErrNumberExpected);
+                    fArgsValid = false;
+                }
             }
 
             if (!fArgsValid)
