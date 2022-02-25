@@ -37,7 +37,7 @@ Blank()
 3
 
 >> Max(Table({Name:"John Doe", DOB:Date(1985,3,5)},{Name:"Jane Roe", DOB:Date(1986,10,19)}),DOB)
-10/19/1986 00:00:00
+10/19/1986 12:00:00 AM
 
 >> Max(Table({Name:"John Doe", DOB:Date(1985,3,5), Thing: "1"},{Name:"Jane Roe", DOB:Date(1986,10,19), Thing: "2"}),Thing)
 2
