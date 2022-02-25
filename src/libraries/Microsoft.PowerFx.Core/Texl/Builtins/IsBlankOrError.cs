@@ -34,7 +34,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override bool IsSelfContained => true;
 
         public IsBlankOrErrorOptionSetValueFunction()
-            : base("IsBlankOrError", TexlStrings.AboutIsBlankOrError, FunctionCategories.Table | FunctionCategories.Information, DType.Boolean, 0, 1, 1, DType.OptionSetValue)
+            : base(IsBlankOrErrorFunction.IsBlankOrErrorInvariantFunctionName, TexlStrings.AboutIsBlankOrError, FunctionCategories.Table | FunctionCategories.Information, DType.Boolean, 0, 1, 1, DType.OptionSetValue)
         {
         }
 
