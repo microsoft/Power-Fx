@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation.
+﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
@@ -16,11 +16,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public IsBlankOrErrorFunction()
             : base(IsBlankOrErrorInvariantFunctionName, TexlStrings.AboutIsBlankOrError, FunctionCategories.Table | FunctionCategories.Information, DType.Boolean, 0, 1, 1)
-        { }
+        {
+        }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
-            yield return new [] { TexlStrings.IsBlankOrErrorArg1 };
+            yield return new[] { TexlStrings.IsBlankOrErrorArg1 };
         }
     }
 
@@ -29,11 +30,13 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class IsBlankOrErrorOptionSetValueFunction : BuiltinFunction
     {
         public override bool SupportsParamCoercion => true;
+
         public override bool IsSelfContained => true;
 
         public IsBlankOrErrorOptionSetValueFunction()
             : base("IsBlankOrError", TexlStrings.AboutIsBlankOrError, FunctionCategories.Table | FunctionCategories.Information, DType.Boolean, 0, 1, 1, DType.OptionSetValue)
-        { }
+        {
+        }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
