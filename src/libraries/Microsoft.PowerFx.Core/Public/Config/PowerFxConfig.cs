@@ -25,7 +25,7 @@ namespace Microsoft.PowerFx.Core
 
         internal IReadOnlyDictionary<DName, IExternalEntity> EnvironmentSymbols => _environmentSymbols;
 
-        internal EnumStore EnumStore { get; private set;}
+        internal EnumStore EnumStore { get; private set; }
 
         internal CultureInfo CultureInfo { get; }        
 
@@ -47,7 +47,7 @@ namespace Microsoft.PowerFx.Core
         {
             Contracts.AssertValue(enumStore);
             CheckUnlocked();
-            
+
             EnumStore = enumStore;
         }
 
