@@ -187,7 +187,7 @@ namespace Microsoft.PowerFx.Functions
                 {
                     return new BlankValue(irContext);
                 }
-                else if (irContext.ResultType == FormulaType.Number)
+                else if (irContext.ResultType == FormulaType.Number || (irContext.ResultType == FormulaType.String))
                 {
                     return new NumberValue(irContext, _maxValue);
                 }

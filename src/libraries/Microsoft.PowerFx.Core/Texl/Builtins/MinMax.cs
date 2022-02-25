@@ -35,33 +35,34 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertValue(errors);
             Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
 
-            var isValid = true;
+            var fArgsValid = true;
             returnType = argTypes[0];
             nodeToCoercedTypeMap = null;
 
-            //// Ensure that all the arguments are numeric/coercible to numeric.
-            //for (var i = 0; i < argTypes.Length; i++)
-            //{
-            //    if (CheckType(args[i], argTypes[i], DType.Number, DefaultErrorContainer, out var matchedWithCoercion))
-            //    {
-            //        if (matchedWithCoercion)
-            //        {
-            //            CollectionUtils.Add(ref nodeToCoercedTypeMap, args[i], DType.Number, allowDupes: true);
-            //        }
-            //    }
-            //    else
-            //    {
-            //        errors.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.ErrNumberExpected);
-            //        fArgsValid = false;
-            //    }
-            //}
+            // Coerce string to numeric.
+            for (var i = 0; i < argTypes.Length; i++)
+            {
+                if (argTypes[i] == DType.String && CheckType(args[i], argTypes[i], DType.Number, DefaultErrorContainer, out var matchedWithCoercion))
+                {
+                    if (matchedWithCoercion)
+                    {
+                        CollectionUtils.Add(ref nodeToCoercedTypeMap, args[i], DType.Number, allowDupes: true);
+                    }
+                }
 
-            //if (!fArgsValid)
-            //{
-            //    nodeToCoercedTypeMap = null;
-            //}
+                //else
+                //{
+                //    errors.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.ErrNumberExpected);
+                //    fArgsValid = false;
+                //}
+            }
 
-            return isValid;
+            if (!fArgsValid)
+            {
+                nodeToCoercedTypeMap = null;
+            }
+
+            return fArgsValid;
         }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
