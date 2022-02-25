@@ -40,6 +40,20 @@ namespace Microsoft.PowerFx.Core
             EnumStore = new EnumStore();
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PowerFxConfig"/> class.
+        /// Stopgap constructor until Enum Store is refactored. Do not rely on, this will be removed. 
+        /// </summary>
+        internal PowerFxConfig(CultureInfo cultureInfo = null, EnumStore enumStore = null)
+        {
+            CultureInfo = cultureInfo ?? CultureInfo.CurrentCulture;
+            _isLocked = false;
+            _extraFunctions = new Dictionary<string, TexlFunction>();
+            _environmentSymbols = new Dictionary<DName, IExternalEntity>();
+            
+            EnumStore = enumStore ?? new EnumStore();
+        }
+
         internal void AddEntity(IExternalEntity entity)
         {
             CheckUnlocked();
