@@ -172,12 +172,7 @@ namespace Microsoft.PowerFx.Functions
 
             if (rowIndex < 1 || rowIndex >= arg0.Rows.Count())
             {
-                return new ErrorValue(irContext, new ExpressionError()
-                {
-                    Message = "Row index provided is out of range.",
-                    Span = irContext.SourceContext,
-                    Kind = ErrorKind.Validation
-                });
+                return CommonErrors.ArgumentOutOfRange(irContext);
             }
 
             return arg0.Rows.ElementAt(rowIndex - 1).ToFormulaValue();
