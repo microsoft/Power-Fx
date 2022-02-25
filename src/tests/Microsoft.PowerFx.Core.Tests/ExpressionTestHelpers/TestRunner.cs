@@ -311,6 +311,18 @@ namespace Microsoft.PowerFx.Core.Tests
 
                 sb.Append('}');
             }
+            else if (result is TimeValue tv)
+            {
+                sb.Append(tv.Value.ToString());
+            }
+            else if (result is DateValue d)
+            {
+                sb.Append(d.Value.ToString());
+            }
+            else if (result is DateTimeValue dt)
+            {
+                sb.Append(dt.Value.ToString());
+            }
             else if (result is BlankValue)
             {
                 sb.Append("Blank()");

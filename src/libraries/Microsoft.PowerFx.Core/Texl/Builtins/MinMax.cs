@@ -39,11 +39,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             returnType = argTypes[0];
             nodeToCoercedTypeMap = null;
 
-            // Coerce string to numeric.
+            // Coerce everything except date/times to numeric.
             for (var i = 0; i < argTypes.Length; i++)
             {
-                if (argTypes[i] == DType.String && CheckType(args[i], argTypes[i], DType.Number, DefaultErrorContainer, out var matchedWithCoercion))
+                if (argTypes[i] != DType.Date && argTypes[i] != DType.DateTime && argTypes[i] != DType.Time && CheckType(args[i], argTypes[i], DType.Number, DefaultErrorContainer, out var matchedWithCoercion))
                 {
+                    returnType = DType.Number;
                     if (matchedWithCoercion)
                     {
                         CollectionUtils.Add(ref nodeToCoercedTypeMap, args[i], DType.Number, allowDupes: true);
