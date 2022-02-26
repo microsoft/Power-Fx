@@ -38,7 +38,8 @@ namespace Microsoft.PowerFx.Core
             EnumStore = enumStore;
         }      
 
-        public PowerFxConfig(CultureInfo cultureInfo = null) : this(cultureInfo, new EnumStore()) 
+        public PowerFxConfig(CultureInfo cultureInfo = null)
+            : this(cultureInfo, new EnumStore()) 
         {
         }
 
