@@ -25,30 +25,29 @@ namespace Microsoft.PowerFx.Core
 
         internal IReadOnlyDictionary<DName, IExternalEntity> EnvironmentSymbols => _environmentSymbols;
 
-        internal EnumStore EnumStore { get; private set; }
+        internal EnumStore EnumStore { get; }
 
-        internal CultureInfo CultureInfo { get; }        
+        internal CultureInfo CultureInfo { get; }
 
-        public PowerFxConfig(CultureInfo cultureInfo = null)
+        private PowerFxConfig(CultureInfo cultureInfo, EnumStore enumStore) 
         {
             CultureInfo = cultureInfo ?? CultureInfo.CurrentCulture;
             _isLocked = false;
             _extraFunctions = new Dictionary<string, TexlFunction>();
             _environmentSymbols = new Dictionary<DName, IExternalEntity>();
-            
-            // $$$ Refactor this to be part of the builder pattern when addressing Enum + Function configuration
-            EnumStore = new EnumStore();
+            EnumStore = enumStore;
+        }      
+
+        public PowerFxConfig(CultureInfo cultureInfo = null) : this(cultureInfo, new EnumStore()) 
+        {
         }
 
         /// <summary>
         /// Stopgap until Enum Store is refactored. Do not rely on, this will be removed. 
         /// </summary>
-        internal void ReplaceEnumStore(EnumStore enumStore)
+        internal static PowerFxConfig BuildWithEnumStore(CultureInfo cultureInfo, EnumStore enumStore)
         {
-            Contracts.AssertValue(enumStore);
-            CheckUnlocked();
-
-            EnumStore = enumStore;
+            return new PowerFxConfig(cultureInfo, enumStore);
         }
 
         internal void AddEntity(IExternalEntity entity)
