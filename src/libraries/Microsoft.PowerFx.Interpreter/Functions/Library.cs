@@ -384,6 +384,14 @@ namespace Microsoft.PowerFx.Functions
                 IsError
             },
             {
+                BuiltinFunctionsCore.IsBlankOrError,
+                IsBlankOrError
+            },
+            {
+                BuiltinFunctionsCore.IsBlankOrErrorOptionSetValue,
+                IsBlankOrError
+            },
+            {
                 BuiltinFunctionsCore.IsNumeric,
                 StandardErrorHandling<FormulaValue>(
                     expandArguments: InsertDefaultValues(outputArgsCount: 2, fillWith: new NumberValue(IRContext.NotInSource(FormulaType.Number), 1)),
@@ -1249,6 +1257,16 @@ namespace Microsoft.PowerFx.Functions
         {
             var result = args[0] is ErrorValue;
             return new BooleanValue(irContext, result);
+        }
+
+        public static FormulaValue IsBlankOrError(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args)
+        {
+            if (IsBlank(args[0]) || args[0] is ErrorValue)
+            {
+                return new BooleanValue(irContext, true);
+            }
+
+            return new BooleanValue(irContext, false);
         }
     }
 }
