@@ -19,7 +19,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [Fact]
         public void MutabilityTest()
         {
-            var config = new PowerFxConfig(null);
+            var config = new PowerFxConfig();
             config.AddFunction(new Assert2Function());
             config.AddFunction(new Set2Function());
             var engine = new RecalcEngine(config);
