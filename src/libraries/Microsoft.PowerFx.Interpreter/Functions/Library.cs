@@ -369,6 +369,17 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: IsBlank)
             },
             {
+                // Implementation 100% shared with IsBlank() for the interpreter
+                BuiltinFunctionsCore.IsBlankOptionSetValue,
+                StandardErrorHandling<FormulaValue>(
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: DeferRuntimeTypeChecking,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
+                    targetFunction: IsBlank)
+            },
+            {
                 BuiltinFunctionsCore.IsError,
                 IsError
             },
