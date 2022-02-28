@@ -317,11 +317,11 @@ namespace Microsoft.PowerFx.Core.Tests
             }
             else if (result is DateValue d)
             {
-                sb.Append(d.Value.ToString());
+                sb.Append(d.Value.ToString(@"MM/dd/yyyy hh:mm:ss tt", System.Globalization.CultureInfo.InvariantCulture));
             }
             else if (result is DateTimeValue dt)
             {
-                sb.Append(dt.Value.ToString());
+                sb.Append(dt.Value.ToString(@"MM/dd/yyyy hh:mm:ss tt", System.Globalization.CultureInfo.InvariantCulture));
             }
             else if (result is BlankValue)
             {

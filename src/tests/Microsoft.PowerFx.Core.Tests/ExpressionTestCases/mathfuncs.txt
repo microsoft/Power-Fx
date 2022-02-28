@@ -143,13 +143,13 @@ Blank()
 2002
 
 >> Max(DateTimeValue("November 10, 2014 1:50 PM"), DateTimeValue("November 11, 2014 1:50 PM"))
-11/11/2014 13:50:00
+11/11/2014 01:50:00 PM
 
 >> Max(DateTimeValue("November 10, 2014 1:50 PM"), DateTimeValue("November 10, 2014 2:50 PM"))
-11/10/2014 14:50:00 
+11/10/2014 02:50:00 PM
 
 >> Min(Date(1985,3,5),Date(1986,10,19))
-3/5/1985 00:00:00
+03/05/1985 12:00:00 AM
 
 >> Max(Time(1,50,0),Time(2,0,0))
 02:00:00

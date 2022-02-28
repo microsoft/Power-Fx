@@ -5,11 +5,9 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core;
-using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Public.Values;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Core.Utils;
-using Xunit;
 
 namespace Microsoft.PowerFx.Interpreter.Tests
 {
