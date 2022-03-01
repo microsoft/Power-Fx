@@ -369,8 +369,27 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: IsBlank)
             },
             {
+                // Implementation 100% shared with IsBlank() for the interpreter
+                BuiltinFunctionsCore.IsBlankOptionSetValue,
+                StandardErrorHandling<FormulaValue>(
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: DeferRuntimeTypeChecking,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
+                    targetFunction: IsBlank)
+            },
+            {
                 BuiltinFunctionsCore.IsError,
                 IsError
+            },
+            {
+                BuiltinFunctionsCore.IsBlankOrError,
+                IsBlankOrError
+            },
+            {
+                BuiltinFunctionsCore.IsBlankOrErrorOptionSetValue,
+                IsBlankOrError
             },
             {
                 BuiltinFunctionsCore.IsNumeric,
@@ -1238,6 +1257,16 @@ namespace Microsoft.PowerFx.Functions
         {
             var result = args[0] is ErrorValue;
             return new BooleanValue(irContext, result);
+        }
+
+        public static FormulaValue IsBlankOrError(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args)
+        {
+            if (IsBlank(args[0]) || args[0] is ErrorValue)
+            {
+                return new BooleanValue(irContext, true);
+            }
+
+            return new BooleanValue(irContext, false);
         }
     }
 }

@@ -135,7 +135,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override bool IsSelfContained => true;
 
         public IsBlankOptionSetValueFunction()
-            : base("IsBlank", TexlStrings.AboutIsBlank, FunctionCategories.Table | FunctionCategories.Information, DType.Boolean, 0, 1, 1, DType.OptionSetValue)
+            : base(IsBlankFunction.IsBlankInvariantFunctionName, TexlStrings.AboutIsBlank, FunctionCategories.Table | FunctionCategories.Information, DType.Boolean, 0, 1, 1, DType.OptionSetValue)
         {
         }
 
