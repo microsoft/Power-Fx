@@ -286,8 +286,6 @@ namespace Microsoft.PowerFx.Functions
         // Max(1,2,3)     
         internal static FormulaValue Max(IRContext irContext, FormulaValue[] args)
         {
-            // type check all args (maybe in agg)
-
             return RunAggregator(new MaxAgg(), irContext, args);
         }
 
