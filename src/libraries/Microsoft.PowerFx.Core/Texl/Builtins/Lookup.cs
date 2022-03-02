@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Entities;
+using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Functions.Delegation;
 using Microsoft.PowerFx.Core.Functions.Delegation.DelegationMetadata;
@@ -20,7 +21,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     {
         public override bool RequiresErrorContext => true;
 
-        public override bool SupportsParamCoercion => false;
+        public override bool SupportsParamCoercion => true;
 
         public LookUpFunction()
             : base("LookUp", TexlStrings.AboutLookUp, FunctionCategories.Table, DType.Unknown, 0x6, 2, 3, DType.EmptyTable, DType.Boolean)
@@ -46,6 +47,13 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             // The return type is dictated by the last argument (projection) if one exists. Otherwise it's based on first argument (source).
             returnType = args.Length == 2 ? argTypes[0].ToRecord() : argTypes[2];
+
+            // Ensure that the arg at index 1 is boolean or can be coersed.
+            if (!DType.Boolean.Accepts(argTypes[1]) && !argTypes[1].CoercesTo(DType.Boolean))
+            {
+                errors.EnsureError(DocumentErrorSeverity.Severe, args[1], TexlStrings.ErrBooleanExpected);
+                fValid = false;
+            }
 
             return fValid;
         }
