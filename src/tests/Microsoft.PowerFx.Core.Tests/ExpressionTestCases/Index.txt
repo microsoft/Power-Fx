@@ -18,3 +18,24 @@ Blank()
 
 >> Index([1, 2, 3, 4, 5], 1/0)
 #Error
+
+>> Index(Table({a:"1", b:"101"}, {a:"2"}, {b:"3"}), 1)
+{a:"1",b:"101"}
+
+>> Index(Filter([1,2,3],Value=4),2)
+#Error
+
+>> Index(Table({a:{Value:2},b:1},{a:{Value:1},b:2}), 1).a
+{Value:2}
+
+>> Index(FirstN(Table({a:{Value:2},b:1},{a:{Value:1},b:2}), 2), 1).a
+{Value:2}
+
+>> Index(FirstN(Table({a:{Value:2},b:1},{a:{Value:1},b:2}), 1), 1).a
+{Value:2}
+
+>> Index(FirstN([1, 2, 3, 4, 5], 1), 1)
+{Value:1}
+
+>> Index(LastN([1, 2, 3, 4, 5], 3), 1)
+{Value:3}
