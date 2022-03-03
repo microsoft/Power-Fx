@@ -74,10 +74,6 @@ namespace Microsoft.PowerFx.Core.Tests
             // Other test is unchanged. 
             Assert.Equal("input2", tests[1].Input);
             Assert.Equal("expected_result2", tests[1].GetExpected("-"));
-        
-            // $$$ Don't allow overriding within a single file (assume that's a mistake)
-
-            // $$$ Test multiline
         }
 
         // #DISABLE directive to remove an entire file. 

@@ -193,6 +193,8 @@ namespace Microsoft.PowerFx.Core.Tests
                     var key = test.GetUniqueId(fileOveride);
                     if (_keyToTests.TryGetValue(key, out var existingTest))
                     {
+                        // Must be in different sources
+                        
                         // Updating an existing test. 
                         // Inputs are the same, but update the results.
                         existingTest._expected = test._expected;
