@@ -19,7 +19,14 @@ namespace Microsoft.PowerFx.Core.Tests
         private readonly BaseRunner[] _runners;
         private readonly List<TestCase> _tests = new List<TestCase>();
 
+        // Mapping of a Test's key to the test case in _test list.
+        // Used for when we need to update the test. 
+        private readonly Dictionary<string, TestCase> _keyToTests = new Dictionary<string, TestCase>(StringComparer.Ordinal);
+
         public IEnumerable<TestCase> Tests => _tests;
+
+        // Files that have been disabled. 
+        public HashSet<string> DisabledFiles = new HashSet<string>();
 
         public TestRunner(params BaseRunner[] runners)
         {
@@ -57,6 +64,24 @@ namespace Microsoft.PowerFx.Core.Tests
             }
         }
 
+        // Directive should start with #, end in : like "#SETUP:"
+        // Returns true if matched; false if not. Throws on error.
+        private static bool ParseDirective(string line, string directive, ref string param)
+        {
+            if (line.StartsWith(directive, StringComparison.OrdinalIgnoreCase))
+            {
+                if (param != null)
+                {
+                    throw new InvalidOperationException($"Can't have multiple {directive}");
+                }
+
+                param = line.Substring(directive.Length).Trim();
+                return true;
+            }
+
+            return false;  
+        }
+
         public void AddFile(string thisFile)
         {
             thisFile = Path.GetFullPath(thisFile, TestRoot);
@@ -72,12 +97,45 @@ namespace Microsoft.PowerFx.Core.Tests
             var i = -1;
 
             // Preprocess file directives
+            // #Directive: Parameter
             string fileSetup = null;
-            if (lines[0].StartsWith("#SETUP:"))
-            {
-                fileSetup = lines[0].Substring("#SETUP:".Length).Trim();
-                i++;
-            }
+            string fileOveride = null;
+            
+            while (true)
+            {                
+                var line = lines[i + 1];
+                if (string.IsNullOrWhiteSpace(line) || line.StartsWith("//"))
+                {
+                    i++;
+                    continue;
+                }
+
+                if (line.Length > 1 && line[0] == '#')
+                {
+                    string fileDisable = null;
+                    if (ParseDirective(line, "#DISABLE:", ref fileDisable))
+                    {
+                        DisabledFiles.Add(fileDisable);
+
+                        // Will remove all cases in this file.
+                        // Can apply to multiple files. 
+                        var countRemoved = _tests.RemoveAll(test => string.Equals(Path.GetFileName(test.SourceFile), fileDisable, StringComparison.OrdinalIgnoreCase));                        
+                    }
+                    else if (ParseDirective(line, "#SETUP:", ref fileSetup) ||
+                      ParseDirective(line, "#OVERRIDE:", ref fileOveride))
+                    {
+                    }
+                    else
+                    {
+                        throw new InvalidOperationException($"Unrecognized directive: {line}");
+                    }
+
+                    i++;
+                    continue;
+                }                
+
+                break;                
+            }            
 
             while (true)
             {
@@ -132,7 +190,23 @@ namespace Microsoft.PowerFx.Core.Tests
 
                     test.SetExpected(line.Trim());
 
-                    _tests.Add(test);
+                    var key = test.GetUniqueId(fileOveride);
+                    if (_keyToTests.TryGetValue(key, out var existingTest))
+                    {
+                        // Updating an existing test. 
+                        // Inputs are the same, but update the results.
+                        existingTest._expected = test._expected;
+                        existingTest.SourceFile = test.SourceFile;
+                        existingTest.SourceLine = test.SourceLine;
+                    }
+                    else
+                    {
+                        // New test
+                        _tests.Add(test);
+
+                        _keyToTests[key] = test;
+                    }
+
                     test = null;
                 }
             }

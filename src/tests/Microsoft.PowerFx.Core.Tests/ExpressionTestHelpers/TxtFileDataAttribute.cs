@@ -3,8 +3,8 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using Xunit.Sdk;
 
@@ -76,9 +76,14 @@ namespace Microsoft.PowerFx.Core.Tests
 
         private string GetDefaultTestDir()
         {
+            return GetDefaultTestDir(_filePath);
+        }
+
+        internal static string GetDefaultTestDir(string filePath)
+        { 
             var executable = new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath;
             var curDir = Path.GetFullPath(Path.GetDirectoryName(executable));
-            var testDir = Path.Combine(curDir, _filePath);
+            var testDir = Path.Combine(curDir, filePath);
             return testDir;
         }
     }

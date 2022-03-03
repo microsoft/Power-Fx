@@ -24,6 +24,17 @@ namespace Microsoft.PowerFx.Core.Tests
         public int SourceLine;
         public string SetupHandlerName;
 
+        // Uniquely identity this test case. 
+        // This is very useful for when another file needs to override the results. 
+        public string GetUniqueId(string file)
+        {
+            // Inputs are case sensitive, so the overall key must be case sensitive. 
+            // But filenames are case insensitive, so canon them to lowercase.
+            var fileKey = file ?? Path.GetFileName(SourceFile);
+            
+            return fileKey.ToLower() + ":" + Input;
+        }
+
         public override string ToString()
         {
             return $"{Path.GetFileName(SourceFile)}:{SourceLine}: {Input}";
