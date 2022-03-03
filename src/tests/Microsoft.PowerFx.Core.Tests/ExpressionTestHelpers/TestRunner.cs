@@ -66,7 +66,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
         // Directive should start with #, end in : like "#SETUP:"
         // Returns true if matched; false if not. Throws on error.
-        private static bool ParseDirective(string line, string directive, ref string param)
+        private static bool TryParseDirective(string line, string directive, ref string param)
         {
             if (line.StartsWith(directive, StringComparison.OrdinalIgnoreCase))
             {
@@ -113,7 +113,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 if (line.Length > 1 && line[0] == '#')
                 {
                     string fileDisable = null;
-                    if (ParseDirective(line, "#DISABLE:", ref fileDisable))
+                    if (TryParseDirective(line, "#DISABLE:", ref fileDisable))
                     {
                         DisabledFiles.Add(fileDisable);
 
@@ -121,9 +121,10 @@ namespace Microsoft.PowerFx.Core.Tests
                         // Can apply to multiple files. 
                         var countRemoved = _tests.RemoveAll(test => string.Equals(Path.GetFileName(test.SourceFile), fileDisable, StringComparison.OrdinalIgnoreCase));                        
                     }
-                    else if (ParseDirective(line, "#SETUP:", ref fileSetup) ||
-                      ParseDirective(line, "#OVERRIDE:", ref fileOveride))
+                    else if (TryParseDirective(line, "#SETUP:", ref fileSetup) ||
+                      TryParseDirective(line, "#OVERRIDE:", ref fileOveride))
                     {
+                        // flag is set, no additional work needed.
                     }
                     else
                     {
@@ -221,7 +222,7 @@ namespace Microsoft.PowerFx.Core.Tests
             var pass = 0;
             var sb = new StringBuilder();
 
-            foreach (var test in _tests)
+            foreach (var testCase in _tests)
             {
                 foreach (var runner in _runners)
                 {
@@ -229,56 +230,28 @@ namespace Microsoft.PowerFx.Core.Tests
 
                     var engineName = runner.GetName();
 
-                    // var runner = kv.Value;
+                    var (result, msg) = runner.RunAsync(testCase).Result;
 
-                    string actualStr;
-                    FormulaValue result = null;
-                    var exceptionThrown = false;
-                    try
+                    var prefix = $"Test {Path.GetFileName(testCase.SourceFile)}:{testCase.SourceLine}: ";
+                    switch (result)
                     {
-                        try
-                        {
-                            result = runner.RunAsync(test.Input, test.SetupHandlerName).Result;
-                        }
-                        catch (SetupHandlerNotFoundException ex)
-                        {
-                            sb.AppendLine($"SKIPPED: {engineName}, {Path.GetFileName(test.SourceFile)}:{test.SourceLine}");
-                            sb.AppendLine($"SKIPPED: {test.Input}, missing handler: {test.SetupHandlerName}");   
-                            continue;
-                        }
+                        case TestResult.Pass:
+                            pass++;
+                            sb.Append(".");
+                            break;
 
-                        actualStr = TestToString(result);
-                    }
-                    catch (Exception e)
-                    {
-                        actualStr = e.Message.Replace("\r\n", "|");
-                        exceptionThrown = true;
-                    }
+                        case TestResult.Fail:
+                            sb.AppendLine();
+                            sb.AppendLine($"FAIL: {engineName}, {Path.GetFileName(testCase.SourceFile)}:{testCase.SourceLine}");
+                            sb.AppendLine($"FAIL: {testCase.Input}");
+                            sb.AppendLine($"{msg}");
+                            sb.AppendLine();
+                            fail++;
+                            break;
 
-                    var expected = test.GetExpected(engineName);
-                    if ((exceptionThrown && expected == "Compile Error") || (result != null && expected == "#Error" && runner.IsError(result)))
-                    {
-                        // Pass!
-                        pass++;
-                        sb.Append(".");
-                        continue;
-                    }
-
-                    if (actualStr == expected)
-                    {
-                        pass++;
-                        sb.Append(".");
-                    }
-                    else
-                    {
-                        sb.AppendLine();
-                        sb.AppendLine($"FAIL: {engineName}, {Path.GetFileName(test.SourceFile)}:{test.SourceLine}");
-                        sb.AppendLine($"FAIL: {test.Input}");
-                        sb.AppendLine($"expected: {expected}");
-                        sb.AppendLine($"actual  : {actualStr}");
-                        sb.AppendLine();
-                        fail++;
-                        continue;
+                        case TestResult.Skip:
+                            sb.Append("-");
+                            break;
                     }
                 }
             }

@@ -2,15 +2,10 @@
 // Licensed under the MIT license.
 
 using System;
-using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using System.Linq;
-using Microsoft.PowerFx.Core.Lexer;
-using Microsoft.PowerFx.Core.Lexer.Tokens;
-using Microsoft.PowerFx.Core.Localization;
-using Microsoft.PowerFx.Core.Types;
-using Microsoft.PowerFx.Core.Utils;
+using System.Threading.Tasks;
+using Microsoft.PowerFx.Core.Public.Values;
 using Xunit;
 
 namespace Microsoft.PowerFx.Core.Tests
@@ -69,7 +64,7 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.Equal(2, tests.Length);
 
             Assert.Equal("input1", tests[0].Input);
-            Assert.Equal("override_input1", tests[0].GetExpected("-"));
+            Assert.Equal("override_result1", tests[0].GetExpected("-"));
 
             // Other test is unchanged. 
             Assert.Equal("input2", tests[1].Input);
@@ -94,6 +89,111 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.Equal("input3", tests[0].Input);
             Assert.Equal("result3", tests[0].GetExpected("-"));
             Assert.Equal("filedisable.txt:input3", tests[0].GetUniqueId(null));
+        }
+
+        private static readonly ErrorValue _errorValue = new ErrorValue(IR.IRContext.NotInSource(Public.Types.FormulaType.Number));
+
+        private class MockRunner : BaseRunner
+        {
+            public Func<string, string, FormulaValue> _hook;
+
+            protected override Task<FormulaValue> RunAsyncInternal(string expr, string setupHandlerName = null)
+            {
+                return Task.FromResult(_hook(expr, setupHandlerName));
+            }
+        }
+
+        [Fact]
+        public async Task TestRunnerSuccess()
+        {
+            var runner = new MockRunner
+            {
+                _hook = (expr, setup) => FormulaValue.New(1)
+            };
+
+            var test = new TestCase();
+            test.SetExpected("1");
+            var result = await runner.RunAsync(test);
+
+            Assert.Equal(TestResult.Pass, result.Item1);            
+        }
+
+        [Fact]
+        public async Task TestRunnerFail()
+        {
+            var runner = new MockRunner
+            {
+                _hook = (expr, setup) => FormulaValue.New(1)
+            };
+
+            var test = new TestCase();
+            test.SetExpected("2"); // Mismatch!
+            var result = await runner.RunAsync(test);
+
+            Assert.Equal(TestResult.Fail, result.Item1);
+        }
+
+        [Fact]
+        public async Task TestRunnerSkip()
+        {
+            var runner = new MockRunner();
+
+            // #SKIP won't even call runner.
+            var test = new TestCase();
+            test.SetExpected("#SKIP");
+            var result = await runner.RunAsync(test);
+
+            Assert.Equal(TestResult.Skip, result.Item1);
+            Assert.NotNull(result.Item2);
+        }
+
+        [Fact]
+        public async Task TestRunnerError()
+        {
+            var runner = new MockRunner
+            {
+                _hook = (expr, setup) => _errorValue // error
+            };
+                        
+            var test = new TestCase();
+            test.SetExpected("#ERROR");
+            var result = await runner.RunAsync(test);
+
+            Assert.Equal(TestResult.Pass, result.Item1);
+
+            // It's a failure if #error casesucceeds. 
+            runner._hook = (expr, setup) => FormulaValue.New(1); // success
+            result = await runner.RunAsync(test);
+
+            Assert.Equal(TestResult.Fail, result.Item1);
+        }
+
+        [Fact]
+        public async Task TestRunnerCompilerError()
+        {
+            // Compiler error is a throw from Check()
+            var runner = new MockRunner
+            {
+                _hook = (expr, setup) => throw new InvalidOperationException("Errors: Error X") 
+            };
+
+            var test = new TestCase();
+            test.SetExpected("Errors: Error X");
+            var result = await runner.RunAsync(test);
+
+            Assert.Equal(TestResult.Pass, result.Item1);
+
+            // It's a failure if we have the wrong error
+            runner._hook = (expr, setup) => throw new InvalidOperationException("Errors: Error Y");            
+            result = await runner.RunAsync(test);
+
+            Assert.Equal(TestResult.Fail, result.Item1);
+            
+            // Failure if the compiler error is unexpected
+            test.SetExpected("1");
+            result = await runner.RunAsync(test);
+
+            Assert.Equal(TestResult.Fail, result.Item1);
         }
 
         private static void AddFile(TestRunner runner, string filename)

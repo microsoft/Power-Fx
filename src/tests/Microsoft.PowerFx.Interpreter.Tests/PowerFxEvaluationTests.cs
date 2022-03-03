@@ -53,7 +53,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
         internal class InterpreterRunner : BaseRunner
         {
-            public override Task<FormulaValue> RunAsync(string expr, string setupHandlerName)
+            protected override Task<FormulaValue> RunAsyncInternal(string expr, string setupHandlerName)
             {
                 FeatureFlags.StringInterpolation = true;
                 RecalcEngine engine;

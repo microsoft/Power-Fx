@@ -2,4 +2,4 @@
 
 // Override
 >> input1
-override_input1
+override_result1
