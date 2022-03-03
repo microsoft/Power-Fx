@@ -66,7 +66,14 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             // Ensure that all the args starting at index 1 are booleans or can be coersed.
             for (var i = 1; i < args.Length; i++)
             {
-                if (!DType.Boolean.Accepts(argTypes[i]) && !argTypes[i].CoercesTo(DType.Boolean))
+                if (CheckType(args[i], argTypes[i], DType.Boolean, DefaultErrorContainer, out var matchedWithCoercion) || DType.Boolean.Accepts(argTypes[i]))
+                {
+                    if (matchedWithCoercion)
+                    {
+                        CollectionUtils.Add(ref nodeToCoercedTypeMap, args[i], DType.Boolean, allowDupes: true);
+                    }
+                }
+                else
                 {
                     errors.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.ErrBooleanExpected);
                     fValid = false;
