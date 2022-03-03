@@ -88,10 +88,10 @@ namespace Microsoft.PowerFx.Core.Parser
             var formulaTokens = TokenizeScript(script, loc, Flags.NamedFormulas);
             var parser = new TexlParser(formulaTokens, Flags.NamedFormulas);
 
-            return parser.ParseFormulas(script);
+            return parser.ParseFormulas();
         }
 
-        private ParseFormulasResult ParseFormulas(string script)
+        private ParseFormulasResult ParseFormulas()
         {
             var namedFormulas = new List<KeyValuePair<IdentToken, TexlNode>>();
             ParseTrivia();

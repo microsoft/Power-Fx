@@ -18,22 +18,37 @@ namespace Microsoft.PowerFx.Core.Localization
 
         public int Lim { get; }
 
+        public int Offset { get; }
+
+        public Span(int min, int lim, int offset)
+        {
+            Contracts.CheckParam(min >= 0, "min");
+            Contracts.CheckParam(lim >= min, "lim");
+            Contracts.CheckParam(offset >= 0, "offset");
+
+            Min = min;
+            Lim = lim;
+            Offset = offset;
+        }
+
         public Span(int min, int lim)
         {
             Contracts.CheckParam(min >= 0, "min");
             Contracts.CheckParam(lim >= min, "lim");
-
-            Min = min;
-            Lim = lim;
+            Offset = System.Math.Min(min, lim);
+            Min = min - Offset;
+            Lim = lim - Offset;
         }
 
         public Span(Span span)
         {
             Contracts.CheckParam(span.Min >= 0, "min");
             Contracts.CheckParam(span.Lim >= span.Min, "lim");
+            Contracts.CheckParam(span.Offset >= 0, "offset");
 
             Min = span.Min;
             Lim = span.Lim;
+            Offset = span.Offset;
         }
 
         [TransportDisabled]
@@ -41,7 +56,7 @@ namespace Microsoft.PowerFx.Core.Localization
         {
             Contracts.AssertValue(script);
             Contracts.Assert(Lim <= script.Length);
-            return script.Substring(Min, Lim - Min);
+            return script.Substring(Offset, Lim - Min);
         }
 
         [TransportDisabled]

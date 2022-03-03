@@ -80,7 +80,7 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
 
         public virtual Span GetTextSpan()
         {
-            return new Span(Token.VerifyValue().Span.Min, Token.VerifyValue().Span.Lim);
+            return new Span(Token.VerifyValue().Span.Min, Token.VerifyValue().Span.Lim, Token.VerifyValue().Span.Offset);
         }
 
         public virtual Span GetCompleteSpan()

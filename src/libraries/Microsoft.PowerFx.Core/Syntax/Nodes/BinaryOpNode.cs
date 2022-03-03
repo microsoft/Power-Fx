@@ -87,7 +87,10 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
             }
             else
             {
-                return new Span(Left.VerifyValue().GetCompleteSpan().Min, Right.VerifyValue().GetCompleteSpan().Lim);
+                var leftSpan = Left.VerifyValue().GetCompleteSpan();
+                var rightSpan = Right.VerifyValue().GetCompleteSpan();
+                var op = rightSpan.Offset - (leftSpan.Offset + leftSpan.Lim);
+                return new Span(leftSpan.Min,  leftSpan.Lim + rightSpan.Lim + op, leftSpan.Offset);
             }
         }
     }
