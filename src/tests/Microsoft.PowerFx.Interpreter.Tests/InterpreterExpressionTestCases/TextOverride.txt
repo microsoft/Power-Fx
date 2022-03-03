@@ -1,0 +1,9 @@
+﻿#OVERRIDE: Text.txt
+
+>> Text(123456789, "0,")
+/*InterpreterRunner*/ "123457"
+"123456789,"
+
+>> Text(100, "#%‰'eE:")
+/*InterpreterRunner*/ #Skip
+"100%‰'eE:"

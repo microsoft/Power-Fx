@@ -101,8 +101,8 @@ namespace Microsoft.PowerFx.Core.Tests
             string fileSetup = null;
             string fileOveride = null;
             
-            while (true)
-            {                
+            while (i < lines.Length - 1)
+            {               
                 var line = lines[i + 1];
                 if (string.IsNullOrWhiteSpace(line) || line.StartsWith("//"))
                 {

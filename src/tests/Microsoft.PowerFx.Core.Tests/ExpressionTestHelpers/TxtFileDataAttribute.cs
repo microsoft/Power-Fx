@@ -18,65 +18,45 @@ namespace Microsoft.PowerFx.Core.Tests
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = true, Inherited = false)]
     public class TxtFileDataAttribute : DataAttribute
     {
-        private readonly string _filePath;
+        private readonly string _filePathCommon;
+        private readonly string _filePathSpecific;
         private readonly string _engineName;
         
-        public TxtFileDataAttribute(string filePath, string engineName)
+        public TxtFileDataAttribute(string filePathCommon, string filePathSpecific, string engineName)
         {
-            _filePath = filePath;
+            _filePathCommon = filePathCommon;
+            _filePathSpecific = filePathSpecific;
             _engineName = engineName;
-        }
-
-        public List<ExpressionTestCase> GetTestsFromFile(string thisFile)
-        {
-            thisFile = Path.GetFullPath(thisFile, GetDefaultTestDir());
-
-            // Get the absolute path to the .txt file
-            var path = Path.IsPathRooted(thisFile)
-                ? thisFile
-                : Path.GetRelativePath(Directory.GetCurrentDirectory(), thisFile);
-
-            if (!File.Exists(path))
-            {
-                throw new ArgumentException($"Could not find file at path: {thisFile}");
-            }
-
-            var tests = new List<ExpressionTestCase>();
-
-            var parser = new TestRunner();
-            parser.AddFile(path);
-
-            foreach (var test in parser.Tests)
-            {
-                tests.Add(new ExpressionTestCase(_engineName, test));
-            }
-
-            return tests;
         }
 
         public override IEnumerable<object[]> GetData(MethodInfo testMethod)
         {
+            // This is run in a separate process. To debug, need to call Launch() and attach a debugger.
+            // System.Diagnostics.Debugger.Launch();
+
             if (testMethod == null)
             {
                 throw new ArgumentNullException(nameof(testMethod));
             }
 
-            var allFiles = Directory.EnumerateFiles(GetDefaultTestDir());
-            var tests = new List<ExpressionTestCase>();
-            foreach (var file in allFiles)
-            {
-                tests.AddRange(GetTestsFromFile(file));
-            }
+            var parser = new TestRunner();
 
-            foreach (var item in tests)
+            foreach (var dir in new string[] { _filePathCommon, _filePathSpecific })
             {
+                var allFiles = Directory.EnumerateFiles(GetDefaultTestDir(dir));
+
+                foreach (var file in allFiles)
+                {
+                    parser.AddFile(file);
+                }
+            }            
+
+            foreach (var test in parser.Tests)
+            {
+                var item = new ExpressionTestCase(_engineName, test);
+
                 yield return new object[1] { item };
             }
-        }
-
-        private string GetDefaultTestDir()
-        {
-            return GetDefaultTestDir(_filePath);
         }
 
         internal static string GetDefaultTestDir(string filePath)

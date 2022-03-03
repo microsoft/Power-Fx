@@ -53,12 +53,10 @@
 "123,456,789.0"
 
 >> Text(123456789, "0,")
-/*InterpreterRunner*/ "123457"
 /*SqlRunner*/ Compile Error
 "123456789,"
 
 >> Text(100, "#%‰'eE:")
-/*InterpreterRunner*/ #Skip
 "100%‰'eE:"
 
 >> Text(567, "!#!#!#!#!")

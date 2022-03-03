@@ -20,7 +20,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         private InterpreterRunner _runner;
 
         [InterpreterTheory]
-        [TxtFileData("ExpressionTestCases", nameof(InterpreterRunner))]
+        [TxtFileData("ExpressionTestCases", "InterpreterExpressionTestCases", nameof(InterpreterRunner))]
         public void InterpreterTestCase(ExpressionTestCase testCase)
         {
             _runner = new InterpreterRunner();
