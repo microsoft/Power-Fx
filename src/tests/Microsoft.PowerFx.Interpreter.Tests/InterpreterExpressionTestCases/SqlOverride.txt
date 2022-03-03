@@ -1,0 +1,16 @@
+﻿#OVERRIDE: sql.txt
+
+>> Year(Date(10000, 1, 1))
+#Skip
+
+// Date Add overflow
+>> Year(DateAdd(Date(9999, 12, 31), 1))
+#Skip
+
+// Date Add overflow
+>> Year(DateAdd(Date(9999, 12, 31), 1))
+#Skip
+
+>> IsError(DateAdd(Date(9999, 12, 31), 1))
+#Skip
+

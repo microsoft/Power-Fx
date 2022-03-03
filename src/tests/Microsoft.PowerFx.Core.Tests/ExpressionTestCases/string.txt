@@ -135,7 +135,6 @@ false
 true
 
 >> StartsWith("FOO", "f")
-/*InterpreterRunner*/ #Skip
 true
 
 >> StartsWith("FOO", "O")

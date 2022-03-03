@@ -39,6 +39,24 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.Equal("file1.txt:input2", tests[1].GetUniqueId(null));
         }
 
+        [Fact]
+        public void Test2()
+        {
+            var runner = new TestRunner();
+            AddFile(runner, "File2.txt");
+
+            var tests = runner.Tests.ToArray();
+            Assert.Equal(2, tests.Length);
+
+            Assert.Equal("MultiInput\n  secondline", tests[0].Input.Replace("\r", string.Empty));
+            Assert.Equal("Result", tests[0].GetExpected("-"));
+                        
+            Assert.Equal("Engines2", tests[1].Input);
+            Assert.Equal("Normal", tests[1].GetExpected("-"));
+            Assert.Equal("ER1", tests[1].GetExpected("Engine1"));
+            Assert.Equal("ER2", tests[1].GetExpected("Engine2"));
+        }
+
         // Override a single file
         [Fact]
         public void TestOverride()

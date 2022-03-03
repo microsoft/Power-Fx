@@ -1,9 +1,9 @@
 ﻿#OVERRIDE: Text.txt
 
+// Should be: "123456789,"
 >> Text(123456789, "0,")
-/*InterpreterRunner*/ "123457"
-"123456789,"
+"123457"
 
+// should be: "100%‰'eE:"
 >> Text(100, "#%‰'eE:")
-/*InterpreterRunner*/ #Skip
-"100%‰'eE:"
+#Skip
