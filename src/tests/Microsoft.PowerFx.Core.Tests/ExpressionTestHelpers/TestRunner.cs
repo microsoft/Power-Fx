@@ -10,11 +10,16 @@ using Microsoft.PowerFx.Core.Public.Types;
 using Microsoft.PowerFx.Core.Public.Values;
 
 namespace Microsoft.PowerFx.Core.Tests
-{
+{    
+    /// <summary>
+    /// Parse test files and invoke runners to execute them. 
+    /// </summary>
     public class TestRunner
     {
         private readonly BaseRunner[] _runners;
         private readonly List<TestCase> _tests = new List<TestCase>();
+
+        public IEnumerable<TestCase> Tests => _tests;
 
         public TestRunner(params BaseRunner[] runners)
         {

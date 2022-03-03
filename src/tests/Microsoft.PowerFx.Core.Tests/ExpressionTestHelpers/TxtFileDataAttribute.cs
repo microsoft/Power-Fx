@@ -3,18 +3,24 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using Xunit.Sdk;
 
 namespace Microsoft.PowerFx.Core.Tests
 {
+    /// <summary>
+    /// Xunit adapter to generate a single xunit test per case in the .txt file.
+    /// Note that this is run in a separate process, and then generates a serialized list of test cases. 
+    /// So breakpoints set in here will not be hit with regular F5 debugging. 
+    /// </summary>
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = true, Inherited = false)]
     public class TxtFileDataAttribute : DataAttribute
     {
         private readonly string _filePath;
         private readonly string _engineName;
-
+        
         public TxtFileDataAttribute(string filePath, string engineName)
         {
             _filePath = filePath;
@@ -23,7 +29,6 @@ namespace Microsoft.PowerFx.Core.Tests
 
         public List<ExpressionTestCase> GetTestsFromFile(string thisFile)
         {
-            var tests = new List<ExpressionTestCase>();
             thisFile = Path.GetFullPath(thisFile, GetDefaultTestDir());
 
             // Get the absolute path to the .txt file
@@ -36,82 +41,14 @@ namespace Microsoft.PowerFx.Core.Tests
                 throw new ArgumentException($"Could not find file at path: {thisFile}");
             }
 
-            var lines = File.ReadAllLines(path);
+            var tests = new List<ExpressionTestCase>();
 
-            // Skip blanks or "comments"
-            // >> indicates input expression
-            // next line is expected result.
+            var parser = new TestRunner();
+            parser.AddFile(path);
 
-            ExpressionTestCase test = null;
-
-            var i = -1;
-
-            // Preprocess file directives
-            string fileSetup = null;
-            
-            while (true)
+            foreach (var test in parser.Tests)
             {
-                i++;
-                if (i == lines.Length)
-                {
-                    break;
-                }
-
-                var line = lines[i];
-
-                if (line.StartsWith("#SETUP:"))
-                {
-                    fileSetup = line.Substring("#SETUP:".Length).Trim();
-                    continue;
-                }
-
-                if (string.IsNullOrWhiteSpace(line) || line.StartsWith("//"))
-                {
-                    continue;
-                }
-
-                if (line.StartsWith(">>"))
-                {
-                    line = line.Substring(2).Trim();
-                    test = new ExpressionTestCase(_engineName)
-                    {
-                        Input = line,
-                        SourceLine = i + 1, // 1-based
-                        SourceFile = thisFile,
-                        SetupHandlerName = fileSetup
-                    };
-                    continue;
-                }
-
-                if (test != null)
-                {
-                    // If it's indented, then part of previous line. 
-                    if (line[0] == ' ')
-                    {
-                        test.Input += "\r\n" + line;
-                        continue;
-                    }
-
-                    // Line after the input is the response
-
-                    // handle engine-specific results
-                    if (line.StartsWith("/*"))
-                    {
-                        var index = line.IndexOf("*/");
-                        if (index > -1)
-                        {
-                            var engine = line.Substring(2, index - 2).Trim();
-                            var result = line.Substring(index + 2).Trim();
-                            test.SetExpected(result, engine);
-                            continue;
-                        }
-                    }
-
-                    test.SetExpected(line.Trim());
-
-                    tests.Add(test);
-                    test = null;
-                }
+                tests.Add(new ExpressionTestCase(_engineName, test));
             }
 
             return tests;

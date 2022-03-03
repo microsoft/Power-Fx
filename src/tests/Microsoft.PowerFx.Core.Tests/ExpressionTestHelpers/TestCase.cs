@@ -8,7 +8,10 @@ using System.Text;
 
 namespace Microsoft.PowerFx.Core.Tests
 {
-    internal class TestCase
+    /// <summary>
+    ///  Describe a test case from the .txt file.
+    /// </summary>
+    public class TestCase
     {
         // Formula string to run 
         public string Input;

@@ -8,8 +8,8 @@ using Xunit.Abstractions;
 
 namespace Microsoft.PowerFx.Core.Tests
 {
-    // Describe a test case in the file. 
-    public class ExpressionTestCase : IXunitSerializable
+    // Wrap a test case for calling from xunit. 
+    public class ExpressionTestCase : TestCase, IXunitSerializable
     {
         private readonly string _engineName = null;
 
@@ -23,40 +23,19 @@ namespace Microsoft.PowerFx.Core.Tests
             _engineName = engineName;
         }
 
-        // Formula string to run 
-        public string Input;
-
-        // Expected Result, indexed by runner name
-        private Dictionary<string, string> _expected = new Dictionary<string, string>();
-
-        // Location from source file. 
-        public string SourceFile;
-        public int SourceLine;
-        public string SetupHandlerName;
+        public ExpressionTestCase(string engineName, TestCase test)
+            : this(engineName)
+        {
+            Input = test.Input;
+            _expected = test._expected;
+            SourceFile = test.SourceFile;
+            SourceLine = test.SourceLine;
+            SetupHandlerName = test.SetupHandlerName;
+        }
 
         public override string ToString()
         {
             return $"{Path.GetFileName(SourceFile)} : {SourceLine.ToString("000")} - {Input} = {GetExpected(_engineName)}";
-        }
-
-        public void SetExpected(string expected, string engineName = null)
-        {
-            if (engineName == null)
-            {
-                engineName = "-";
-            }
-
-            _expected[engineName] = expected;
-        }
-
-        public string GetExpected(string engineName)
-        {
-            if (!_expected.TryGetValue(engineName, out var expected))
-            {
-                return _expected["-"];
-            }
-
-            return expected;
         }
 
         public void Deserialize(IXunitSerializationInfo info)
