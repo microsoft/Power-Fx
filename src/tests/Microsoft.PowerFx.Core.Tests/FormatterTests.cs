@@ -2,9 +2,11 @@
 // Licensed under the MIT license.
 
 using System.Linq;
+using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Lexer;
 using Microsoft.PowerFx.Core.Logging;
+using Microsoft.PowerFx.Core.Syntax.Nodes;
 using Xunit;
 using static Microsoft.PowerFx.Core.Parser.TexlParser;
 
@@ -32,6 +34,28 @@ namespace Microsoft.PowerFx.Tests
                 flags: Flags.EnableExpressionChaining);
 
             Assert.Equal(expected, StructuralPrint.Print(result.Root));
+        }
+
+        private class TestSanitizer : ISanitizedNameProvider
+        {
+            public bool TrySanitizeFirstNameNode(FirstNameNode node, TexlBinding binding, out string sanitizedName)
+            {
+                sanitizedName = "custom";
+                return true;
+            }
+        }
+
+        [Theory]
+        [InlineData(
+            "Function(Field,1,\"foo\")",
+            "Function(custom, #$number$#, #$string$#)")]
+        public void TestStucturalPrintWithCustomSanitizer(string script, string expected)
+        {
+            var result = ParseScript(
+                script,
+                flags: Flags.EnableExpressionChaining);
+
+            Assert.Equal(expected, StructuralPrint.Print(result.Root, nameProvider: new TestSanitizer()));
         }
 
         [Theory]

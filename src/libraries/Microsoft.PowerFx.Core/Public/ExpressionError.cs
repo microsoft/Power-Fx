@@ -16,6 +16,8 @@ namespace Microsoft.PowerFx.Core.Public
 
         public DocumentErrorSeverity Severity { get; set; }
 
+        public string MessageKey { get; set; }
+
         public override string ToString()
         {
             return $"Error {Span.Min}-{Span.Lim}: {Message}";

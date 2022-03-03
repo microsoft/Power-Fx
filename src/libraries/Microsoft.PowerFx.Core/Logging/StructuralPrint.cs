@@ -18,18 +18,20 @@ namespace Microsoft.PowerFx.Core.Logging
     internal sealed class StructuralPrint : TexlFunctionalVisitor<LazyList<string>, Precedence>
     {
         private readonly TexlBinding _binding;
+        private readonly ISanitizedNameProvider _nameProvider;
 
-        private StructuralPrint(TexlBinding binding = null)
+        private StructuralPrint(TexlBinding binding = null, ISanitizedNameProvider nameProvider = null)
         {
             _binding = binding;
+            _nameProvider = nameProvider;
         }
 
         // Public entry point for prettyprinting TEXL parse trees
-        public static string Print(TexlNode node, TexlBinding binding = null)
+        public static string Print(TexlNode node, TexlBinding binding = null, ISanitizedNameProvider nameProvider = null)
         {
             Contracts.AssertValue(node);
 
-            var pretty = new StructuralPrint(binding);
+            var pretty = new StructuralPrint(binding, nameProvider);
             return string.Concat(node.Accept(pretty, Precedence.None));
         }
 
@@ -73,6 +75,11 @@ namespace Microsoft.PowerFx.Core.Logging
         public override LazyList<string> Visit(FirstNameNode node, Precedence parentPrecedence)
         {
             Contracts.AssertValue(node);
+
+            if (_nameProvider != null && _nameProvider.TrySanitizeFirstNameNode(node, _binding, out var sanitizedName))
+            {
+                return LazyList<string>.Of(sanitizedName);
+            }
 
             var info = _binding?.GetInfo(node);
             if (info != null && info.Kind != BindKind.Unknown)
