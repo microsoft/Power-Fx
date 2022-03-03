@@ -133,18 +133,102 @@ namespace Microsoft.PowerFx.Core.Tests
             }
         }
 
-        public (int total, int failed, int passed, string output) RunTests()
+        public class TestRunResult
         {
-            var total = 0;
-            var fail = 0;
-            var pass = 0;
+#pragma warning disable SA1300 // Element should begin with upper-case letter
+            public int total { get; internal set; }
+
+            public int failed { get; internal set; }
+
+            public int passed { get; internal set; }
+
+            public string output { get; internal set; }
+#pragma warning restore SA1300 // Element should begin with upper-case letter
+
+            public IDictionary<string, PerEngineTestFailures> FailedTestsPerEngine { get; private set; }
+
+            public TestRunResult()
+            {
+                FailedTestsPerEngine = new Dictionary<string, PerEngineTestFailures>(StringComparer.OrdinalIgnoreCase);
+            }
+
+            public void AddFailure(string engineName, string fileName, int lineNumber, string testInput, string expectedValue, string actualValue)
+            {
+                if (!FailedTestsPerEngine.ContainsKey(engineName))
+                {
+                    FailedTestsPerEngine.Add(engineName, new PerEngineTestFailures());
+                }
+
+                FailedTestsPerEngine[fileName].AddFailure(fileName, lineNumber, testInput, expectedValue, actualValue);
+            }
+        }
+
+        public class PerEngineTestFailures
+        {
+            public string EngineName { get; set; }
+
+            public IDictionary<string, PerFileTestFailures> FailedTestFiles { get; private set; }
+
+            public PerEngineTestFailures()
+            {
+                FailedTestFiles = new Dictionary<string, PerFileTestFailures>(StringComparer.OrdinalIgnoreCase);
+            }
+
+            public void AddFailure(string fileName, int lineNumber, string testInput, string expectedValue, string actualValue)
+            {
+                if (!FailedTestFiles.ContainsKey(fileName))
+                {
+                    FailedTestFiles.Add(fileName, new PerFileTestFailures());
+                }
+
+                FailedTestFiles[fileName].AddFailure(lineNumber, testInput, expectedValue, actualValue);
+            }
+        }
+
+        public class PerFileTestFailures
+        {
+            public string FileName { get; set; }
+
+            public IList<SingleTestFailure> TestFailures { get; private set; }
+
+            public PerFileTestFailures()
+            {
+                TestFailures = new List<SingleTestFailure>();
+            }
+
+            public void AddFailure(int lineNumber, string testInput, string expectedValue, string actualValue)
+            {
+                TestFailures.Add(new SingleTestFailure
+                { 
+                    LineNumber = lineNumber,
+                    TestInput = testInput,
+                    Expected = expectedValue,
+                    Actual = actualValue
+                });
+            }
+        }
+
+        public class SingleTestFailure
+        {
+            public int LineNumber { get; set; }
+
+            public string TestInput { get; set; }
+
+            public string Expected { get; set; }
+            
+            public string Actual { get; set; }
+        }
+
+        public TestRunResult RunTests()
+        {
+            var testResult = new TestRunResult();
             var sb = new StringBuilder();
 
             foreach (var test in _tests)
             {
                 foreach (var runner in _runners)
                 {
-                    total++;
+                    testResult.total++;
 
                     var engineName = runner.GetName();
 
@@ -178,34 +262,36 @@ namespace Microsoft.PowerFx.Core.Tests
                     if ((exceptionThrown && expected == "Compile Error") || (result != null && expected == "#Error" && runner.IsError(result)))
                     {
                         // Pass!
-                        pass++;
+                        testResult.passed++;
                         sb.Append(".");
                         continue;
                     }
 
                     if (actualStr == expected)
                     {
-                        pass++;
+                        testResult.passed++;
                         sb.Append(".");
                     }
                     else
                     {
+                        testResult.AddFailure(engineName, test.SourceFile, test.SourceLine, test.Input, expected, actualStr);
                         sb.AppendLine();
                         sb.AppendLine($"FAIL: {engineName}, {Path.GetFileName(test.SourceFile)}:{test.SourceLine}");
                         sb.AppendLine($"FAIL: {test.Input}");
                         sb.AppendLine($"expected: {expected}");
                         sb.AppendLine($"actual  : {actualStr}");
                         sb.AppendLine();
-                        fail++;
+                        testResult.failed++;
                         continue;
                     }
                 }
             }
 
             sb.AppendLine();
-            sb.AppendLine($"{total} total. {pass} passed. {fail} failed");
+            sb.AppendLine($"{testResult.total} total. {testResult.passed} passed. {testResult.failed} failed");
             Console.WriteLine(sb.ToString());
-            return (total, fail, pass, sb.ToString());
+            testResult.output = sb.ToString();
+            return testResult;
         }
 
         public static string TestToString(FormulaValue result)
