@@ -18,6 +18,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool SupportsParamCoercion => false;
 
+        public override bool RequiresErrorContext => true;
+
         public IndexFunction()
             : base(
                   "Index",
