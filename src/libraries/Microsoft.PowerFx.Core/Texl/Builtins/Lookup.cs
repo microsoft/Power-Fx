@@ -49,7 +49,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             returnType = args.Length == 2 ? argTypes[0].ToRecord() : argTypes[2];
 
             // Ensure that the arg at index 1 is boolean or can be coersed.
-            if (CheckType(args[1], argTypes[1], DType.Boolean, DefaultErrorContainer, out var matchedWithCoercion) || DType.Boolean.Accepts(argTypes[1]))
+            if (CheckType(args[1], argTypes[1], DType.Boolean, DefaultErrorContainer, out var matchedWithCoercion))
             {
                 if (matchedWithCoercion)
                 {

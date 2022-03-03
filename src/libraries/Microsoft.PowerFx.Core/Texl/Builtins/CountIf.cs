@@ -66,7 +66,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             // Ensure that all the args starting at index 1 are booleans or can be coersed.
             for (var i = 1; i < args.Length; i++)
             {
-                if (CheckType(args[i], argTypes[i], DType.Boolean, DefaultErrorContainer, out var matchedWithCoercion) || DType.Boolean.Accepts(argTypes[i]))
+                if (CheckType(args[i], argTypes[i], DType.Boolean, DefaultErrorContainer, out var matchedWithCoercion))
                 {
                     if (matchedWithCoercion)
                     {
