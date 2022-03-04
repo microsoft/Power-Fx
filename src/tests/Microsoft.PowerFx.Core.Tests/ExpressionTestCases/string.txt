@@ -217,9 +217,6 @@ false
 >> Substitute("abcabcabc", "ab", "xx", 4)
 "abcabcabc"
 
->> Substitute("abcabcabc", "ab", "xx", 0)
-#Error
-
 >> Substitute("abcabcabc", "ab", "xx", 1/0)
 #Error
 

@@ -23,6 +23,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [TxtFileData("ExpressionTestCases", "InterpreterExpressionTestCases", nameof(InterpreterRunner))]
         public void InterpreterTestCase(ExpressionTestCase testCase)
         {
+            Assert.True(testCase.FailMessage == null, testCase.FailMessage);
+
             _runner = new InterpreterRunner();
 
             var (result, msg) = _runner.RunAsync(testCase).Result;
@@ -41,6 +43,19 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                     Skip.If(true, prefix + msg);
                     break;
             }
+        }
+
+        // Since test discovery runs in a separate process, run a dedicated 
+        // parse pass as a single unit test to verify all the .txt will parse. 
+        // This doesn't actually run any tests. 
+        [Fact]
+        public void ScanForTxtParseErrors()
+        {
+            var method = GetType().GetMethod(nameof(InterpreterTestCase));
+            var attr = (TxtFileDataAttribute)method.GetCustomAttributes(typeof(TxtFileDataAttribute), false)[0];
+
+            // Verify this runs wtihout throwing an exception.
+            var list = attr.GetData(method);
         }
     }
 }

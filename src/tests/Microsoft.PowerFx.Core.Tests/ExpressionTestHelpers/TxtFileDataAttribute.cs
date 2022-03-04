@@ -39,24 +39,41 @@ namespace Microsoft.PowerFx.Core.Tests
                 throw new ArgumentNullException(nameof(testMethod));
             }
 
-            var parser = new TestRunner();
+            var list = new List<object[]>();
 
-            foreach (var dir in new string[] { _filePathCommon, _filePathSpecific })
+            try
             {
-                var allFiles = Directory.EnumerateFiles(GetDefaultTestDir(dir));
+                var parser = new TestRunner();
 
-                foreach (var file in allFiles)
+                foreach (var dir in new string[] { _filePathCommon, _filePathSpecific })
                 {
-                    parser.AddFile(file);
+                    var allFiles = Directory.EnumerateFiles(GetDefaultTestDir(dir));
+
+                    foreach (var file in allFiles)
+                    {
+                        parser.AddFile(file);
+                    }
                 }
-            }            
 
-            foreach (var test in parser.Tests)
-            {
-                var item = new ExpressionTestCase(_engineName, test);
+                foreach (var test in parser.Tests)
+                {
+                    var item = new ExpressionTestCase(_engineName, test);
 
-                yield return new object[1] { item };
+                    list.Add(new object[] { item });
+                }
             }
+            catch (Exception e)
+            {
+                // If this method crashes, then we just get 0 tests. 
+                // The only way to communicate a failure from here back to the developer
+                // is to pass a "fake" test object that always fails and contains the error. 
+
+                var item = ExpressionTestCase.Fail($"Test discovery failed with: {e}");
+
+                list.Add(new object[] { item });
+            }
+
+            return list;
         }
 
         internal static string GetDefaultTestDir(string filePath)

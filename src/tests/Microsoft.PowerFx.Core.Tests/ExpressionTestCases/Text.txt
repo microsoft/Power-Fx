@@ -87,10 +87,6 @@ Blank()
 /*SqlRunner*/ Compile Error
 "2018-03-15"
 
->> Text(Date(2018, 3, 15), "yyyy-MM-dd")
-/*SqlRunner*/ Compile Error
-"2018-03-15"
-
 >> Text(Date(2018, 3, 15), "MM-dd-yyyy")
 /*SqlRunner*/ Compile Error
 "03-15-2018"

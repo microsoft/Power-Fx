@@ -196,6 +196,31 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.Equal(TestResult.Fail, result.Item1);
         }
 
+        [Fact]
+        public async Task TestSetupHandler()
+        {
+            const string handlerName = "myhandler";
+
+            var runner = new MockRunner
+            {
+                _hook = (expr, setup) =>
+                {
+                    Assert.Equal(setup, handlerName);
+
+                    throw new SetupHandlerNotFoundException();
+                }
+            };
+
+            var test = new TestCase
+            {
+                SetupHandlerName = handlerName
+            };
+            test.SetExpected("1");
+            var result = await runner.RunAsync(test);
+
+            Assert.Equal(TestResult.Skip, result.Item1);            
+        }
+
         private static void AddFile(TestRunner runner, string filename)
         {
             var test1 = Path.GetFullPath(filename, TxtFileDataAttribute.GetDefaultTestDir("TestRunnerTests"));            

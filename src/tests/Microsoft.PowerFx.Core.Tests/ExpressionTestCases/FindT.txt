@@ -124,9 +124,6 @@ Table()
 >> Find("c", Table({ within: "abc" }, { within: Error({Kind: "Validation"}) }, { within: "cde" }))
 Table({Result:3},{Result:Microsoft.PowerFx.Core.Public.Values.ErrorValue},{Result:1})
 
->> Find("c", Table({ within: "abc" }, { within: Error({Kind: "Validation"}) }, { within: "cde" }))
-Table({Result:3},{Result:Microsoft.PowerFx.Core.Public.Values.ErrorValue},{Result:1})
-
 >> Find("c", ["abc", Error({Kind: "Validation"}), "cde"])
 Table({Result:3},Microsoft.PowerFx.Core.Public.Values.ErrorValue,{Result:1})
 //actual: Table({Result:3},{Result:Microsoft.PowerFx.Core.Public.Values.ErrorValue},{Result:1})

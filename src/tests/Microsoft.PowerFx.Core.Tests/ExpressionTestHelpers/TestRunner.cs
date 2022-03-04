@@ -195,6 +195,10 @@ namespace Microsoft.PowerFx.Core.Tests
                     if (_keyToTests.TryGetValue(key, out var existingTest))
                     {
                         // Must be in different sources
+                        if (existingTest.SourceFile == test.SourceFile)
+                        {
+                            throw new InvalidOperationException($"Duplicate test cases in {Path.GetFileName(test.SourceFile)} on line {test.SourceLine} and {existingTest.SourceLine}");
+                        }
                         
                         // Updating an existing test. 
                         // Inputs are the same, but update the results.

@@ -13,6 +13,9 @@ namespace Microsoft.PowerFx.Core.Tests
     {
         private readonly string _engineName = null;
 
+        // Normally null. Set if the test discovery infrastructure needs to send a notice to the test runner. 
+        public string FailMessage;
+
         public ExpressionTestCase()
         {
             _engineName = "-";
@@ -33,6 +36,14 @@ namespace Microsoft.PowerFx.Core.Tests
             SetupHandlerName = test.SetupHandlerName;
         }
 
+        public static ExpressionTestCase Fail(string message)
+        {
+            return new ExpressionTestCase
+            {
+                FailMessage = message
+            };
+        }
+
         public override string ToString()
         {
             return $"{Path.GetFileName(SourceFile)} : {SourceLine.ToString("000")} - {Input} = {GetExpected(_engineName)}";
@@ -45,6 +56,7 @@ namespace Microsoft.PowerFx.Core.Tests
             SourceFile = info.GetValue<string>("sourceFile");
             SourceLine = info.GetValue<int>("sourceLine");
             SetupHandlerName = info.GetValue<string>("setupHandlerName");
+            FailMessage = info.GetValue<string>("failMessage");
         }
 
         public void Serialize(IXunitSerializationInfo info)
@@ -55,6 +67,7 @@ namespace Microsoft.PowerFx.Core.Tests
             info.AddValue("sourceFile", SourceFile, typeof(string));
             info.AddValue("sourceLine", SourceLine, typeof(int));
             info.AddValue("setupHandlerName", SetupHandlerName, typeof(string));
+            info.AddValue("failMessage", FailMessage, typeof(string));
         }
     }
 }
