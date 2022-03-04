@@ -71,6 +71,15 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.Equal("expected_result2", tests[1].GetExpected("-"));
         }
 
+        [Fact]
+        public void TestBadParse()
+        {
+            var runner = new TestRunner();
+
+            Assert.Throws<InvalidOperationException>(
+                () => AddFile(runner, "Bad1.txt"));
+        }
+
         // #DISABLE directive to remove an entire file. 
         [Fact]
         public void TestDisable()

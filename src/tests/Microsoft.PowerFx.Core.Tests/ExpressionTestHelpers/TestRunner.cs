@@ -215,6 +215,10 @@ namespace Microsoft.PowerFx.Core.Tests
                     }
 
                     test = null;
+                } 
+                else 
+                {
+                    throw new InvalidOperationException($"Parse error at {Path.GetFileName(thisFile)} on line {i}");
                 }
             }
         }

@@ -83,7 +83,7 @@ true
 >> Mid("foo", 0)
 #Error
 
-Mid(Text(1/0, "#.000"), 1)
+>> Mid(Text(1/0, "#.000"), 1)
 #Error
 
 >> IsError(Mid("foo", 0))
@@ -107,7 +107,7 @@ false
 >> Len(Blank())
 0
 
-Len(Text(1/0, "#.000"))
+>> Len(Text(1/0, "#.000"))
 #Error
 
 >> "f" in "foo"
