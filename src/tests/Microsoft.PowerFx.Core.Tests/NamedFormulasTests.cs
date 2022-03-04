@@ -19,7 +19,9 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Theory]
-        [InlineData("x=1;y=2;", 2)]
+        [InlineData("x=    \n\n\t2;colStyles=Table({\n\tkey:\"colorPrimary\", \n\tvalue:\"Red\"\n})", 2)]
+
+        //[InlineData("x=158558 +\t                  \n\n289885;y=\n\n     \t2;", 2)]
         public void EnsureParsedTest(string script, int count)
         {
             var namedFormula = new NamedFormulas(script);

@@ -60,7 +60,7 @@ namespace Microsoft.PowerFx.Core.Parser
             Contracts.AssertValue(tokens);
 
             _depth = 0;
-            _curs = new TokenCursor(tokens);
+            _curs = new TokenCursor(tokens, flags);
             _flags = flags;
         }
 
@@ -93,13 +93,14 @@ namespace Microsoft.PowerFx.Core.Parser
 
         private ParseFormulasResult ParseFormulas(string script)
         {
-            var namedFormulas = new List<KeyValuePair<IdentToken, TexlNode>>();
+            var namedFormulas = new List<NamedFormula>();
             ParseTrivia();
-
+            var offset = _curs.CurrentCharIndex;
             while (_curs.TokCur.Kind != TokKind.Eof)
             {
                 // Verify identifier
                 var thisIdentifier = TokEat(TokKind.Ident);
+         
                 if (thisIdentifier != null)
                 {
                     ParseTrivia();
@@ -123,10 +124,11 @@ namespace Microsoft.PowerFx.Core.Parser
                             // Parse expression
                             var result = ParseExpr(Precedence.None);
 
-                            namedFormulas.Add(new KeyValuePair<IdentToken, TexlNode>(thisIdentifier.As<IdentToken>(), result));
+                            namedFormulas.Add(new NamedFormula(thisIdentifier.As<IdentToken>(), result, offset));
                         }
 
                         _curs.TokMove();
+                        offset = _curs.CurrentCharIndex;
                     }
                     else
                     {
@@ -1387,7 +1389,7 @@ namespace Microsoft.PowerFx.Core.Parser
 
         // Returns the current token if it's of the given kind and moves to the next token.
         // If the token is not the right kind, reports an error, leaves the token, and returns null.
-        private Token TokEat(TokKind tid)
+        private Token TokEat(TokKind tid, int offset = 0)
         {
             if (_curs.TidCur == tid)
             {

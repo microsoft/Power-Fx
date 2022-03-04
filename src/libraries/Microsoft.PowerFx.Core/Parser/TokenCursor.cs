@@ -14,29 +14,32 @@ namespace Microsoft.PowerFx.Core.Parser
     {
         private readonly Token[] _tokens;
         private readonly int _tokenCount;
-
+        private readonly TexlParser.Flags _flags;
+        private int _offset;
         private int _currentTokenIndex;
         private Token _currentToken;
         private TokKind _currentTokenId;
+        private int _currentCharIndex;
 
-        public TokenCursor(Token[] rgtok)
+        public TokenCursor(Token[] rgtok, TexlParser.Flags flags = TexlParser.Flags.None)
         {
             Contracts.AssertValue(rgtok);
             Contracts.Assert(rgtok.Length > 0 && rgtok[rgtok.Length - 1].Kind == TokKind.Eof);
             _tokens = rgtok;
             _tokenCount = _tokens.Length;
-
+            _flags = flags;
             _currentToken = _tokens[0];
             _currentTokenId = _currentToken.Kind;
         }
 
         public TokenCursor Split()
         {
-            var split = new TokenCursor(_tokens)
+            var split = new TokenCursor(_tokens, _flags)
             {
                 _currentTokenIndex = _currentTokenIndex,
                 _currentToken = _currentToken,
-                _currentTokenId = _currentTokenId
+                _currentTokenId = _currentTokenId,
+                _offset = _offset
             };
             return split;
         }
@@ -89,6 +92,15 @@ namespace Microsoft.PowerFx.Core.Parser
             }
         }
 
+        public int CurrentCharIndex
+        {
+            get
+            {
+                AssertValid();
+                return _currentCharIndex;
+            }
+        }
+
         public void MoveTo(int tokenIndex)
         {
             AssertValid();
@@ -103,9 +115,19 @@ namespace Microsoft.PowerFx.Core.Parser
         {
             AssertValid();
             var tok = _currentToken;
+            
             if (_currentTokenId != TokKind.Eof)
             {
                 MoveTo(_currentTokenIndex + 1);
+            }
+
+            var tokenLength = tok.Span.Lim - tok.Span.Min;
+            _currentCharIndex += tokenLength;
+
+            if (_flags.HasFlag(TexlParser.Flags.NamedFormulas))
+            {
+                tok = tok.Clone(new Localization.Span(_offset, _offset + tokenLength));
+                _offset = tok.Kind == TokKind.Semicolon ? 0 : _offset + tokenLength;
             }
 
             return tok;

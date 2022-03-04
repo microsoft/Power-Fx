@@ -37,11 +37,11 @@ namespace Microsoft.PowerFx.Core.Localization
         }
 
         [TransportDisabled]
-        public string GetFragment(string script)
+        public string GetFragment(string script, int offset = 0)
         {
             Contracts.AssertValue(script);
-            Contracts.Assert(Lim <= script.Length);
-            return script.Substring(Min, Lim - Min);
+            Contracts.Assert(Lim + offset <= script.Length);
+            return script.Substring(Min + offset, Lim - Min);
         }
 
         [TransportDisabled]

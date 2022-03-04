@@ -31,7 +31,7 @@ namespace Microsoft.PowerFx.Core.Syntax
 
         public bool HasParseErrors { get; private set; }
 
-        private IEnumerable<KeyValuePair<IdentToken, TexlNode>> _formulasResult;
+        private IEnumerable<NamedFormula> _formulasResult;
 
         private IEnumerable<TexlError> _errors;
 
@@ -85,18 +85,18 @@ namespace Microsoft.PowerFx.Core.Syntax
             var formulas = new List<(IdentToken, Formula)>();
             if (_formulasResult != null)
             {
-                foreach (var kvp in _formulasResult)
+                foreach (var nf in _formulasResult)
                 {
-                    formulas.Add((kvp.Key, GetFormula(kvp.Value)));
+                    formulas.Add((nf.Name, GetFormula(nf.Node, nf.Offset)));
                 }
             }
 
             return formulas;
         }
 
-        private Formula GetFormula(TexlNode node)
+        private Formula GetFormula(TexlNode node, int offset)
         {
-            return new Formula(node.GetCompleteSpan().GetFragment(Script), node);
+            return new Formula(node.GetCompleteSpan().GetFragment(Script, offset), node);
         }
     }
 }
