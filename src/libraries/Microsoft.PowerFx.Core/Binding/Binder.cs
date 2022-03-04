@@ -4362,12 +4362,6 @@ namespace Microsoft.PowerFx.Core.Binding
                    (currentControl.IsComponentControl ||
                    (currentControl.TopParentOrSelf is IExternalControl { IsComponentControl: false })))
                 {
-                    // Behavior property is blocked from outside the component.
-                    if (isBehaviorOnly)
-                    {
-                        return false;
-                    }
-
                     // If current property is output property of the component then access is allowed.
                     // Or if the rhs property is out put property then it's allowed which could only be possible if the current control is component definition.
                     return currentProperty.IsImmutableOnInstance || rhsProperty.IsImmutableOnInstance;
