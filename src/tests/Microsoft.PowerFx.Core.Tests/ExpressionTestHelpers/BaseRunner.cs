@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Public.Values;
 
@@ -11,7 +12,13 @@ namespace Microsoft.PowerFx.Core.Tests
 {
     // Base class for running a lightweght test. 
     public abstract class BaseRunner
-    {
+    {        
+        /// <summary>
+        /// Maximum time to run test - this catches potential hangs in the engine. 
+        /// Any test should easily run in under 1s. 
+        /// </summary>
+        public static TimeSpan Timeout = TimeSpan.FromSeconds(20);
+
         /// <summary>
         /// Runs a PowerFx test case, with optional setup.
         /// </summary>
@@ -26,6 +33,29 @@ namespace Microsoft.PowerFx.Core.Tests
         /// <param name="test">test case to run.</param>
         /// <returns>status from running.</returns>
         public async Task<(TestResult, string)> RunAsync(TestCase testCase)
+        {
+            var result = TestResult.Fail;
+            string message = null;
+
+            var t = new Thread(() =>
+            {
+                (result, message) = RunAsync2(testCase).Result;
+            });
+            t.Start();
+            var success = t.Join(Timeout);
+
+            if (success)
+            {
+                return (result, message);
+            } 
+            else
+            {
+                // Timeout!!!
+                return (TestResult.Fail, $"Timeout after {Timeout}");
+            }
+        }
+
+        private async Task<(TestResult, string)> RunAsync2(TestCase testCase)
         {
             string actualStr;
             FormulaValue result = null;
