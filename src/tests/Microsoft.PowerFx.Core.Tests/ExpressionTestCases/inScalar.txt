@@ -39,7 +39,6 @@ true
 // If Blank is on either side, operator is false. 
 // Use If() to coerce Blank to string. 
 >> Blank() in Blank()
-/*InterpreterRunner*/  #Error
 /*SqlRunner*/ Compile Error
 false
 

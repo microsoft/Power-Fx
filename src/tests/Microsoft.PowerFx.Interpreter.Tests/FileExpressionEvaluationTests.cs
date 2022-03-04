@@ -20,51 +20,42 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         private InterpreterRunner _runner;
 
         [InterpreterTheory]
-        [TxtFileData("ExpressionTestCases", nameof(InterpreterRunner))]
+        [TxtFileData("ExpressionTestCases", "InterpreterExpressionTestCases", nameof(InterpreterRunner))]
         public void InterpreterTestCase(ExpressionTestCase testCase)
         {
+            Assert.True(testCase.FailMessage == null, testCase.FailMessage);
+
             _runner = new InterpreterRunner();
-            var engineName = _runner.GetName();
 
-            string actualStr;
-            FormulaValue result = null;
-            var exceptionThrown = false;
-            try
+            var (result, msg) = _runner.RunAsync(testCase).Result;
+
+            var prefix = $"Test {Path.GetFileName(testCase.SourceFile)}:{testCase.SourceLine}: ";
+            switch (result)
             {
-                try
-                {
-                    result = _runner.RunAsync(testCase.Input, testCase.SetupHandlerName).Result;
-                }
-                catch (SetupHandlerNotFoundException ex)
-                {
-                    Skip.If(true, $"Test {testCase.SourceFile}:{testCase.SourceLine} was skipped due to missing setup handler {testCase.SetupHandlerName}");
-                }
+                case TestResult.Pass:
+                    break;
 
-                actualStr = TestRunner.TestToString(result);
+                case TestResult.Fail:
+                    Assert.True(false, prefix + msg);
+                    break;
+
+                case TestResult.Skip:
+                    Skip.If(true, prefix + msg);
+                    break;
             }
-            catch (Exception e)
-            {
-                actualStr = e.Message.Replace("\r\n", "|");
-                exceptionThrown = true;
-            }
+        }
 
-            if ((exceptionThrown && testCase.GetExpected(nameof(InterpreterRunner)) == "Compile Error") || (result != null && testCase.GetExpected(nameof(InterpreterRunner)) == "#Error" && _runner.IsError(result)))
-            {
-                // Pass as test is expected to return an error
-                return;
-            }
+        // Since test discovery runs in a separate process, run a dedicated 
+        // parse pass as a single unit test to verify all the .txt will parse. 
+        // This doesn't actually run any tests. 
+        [Fact]
+        public void ScanForTxtParseErrors()
+        {
+            var method = GetType().GetMethod(nameof(InterpreterTestCase));
+            var attr = (TxtFileDataAttribute)method.GetCustomAttributes(typeof(TxtFileDataAttribute), false)[0];
 
-            if (testCase.GetExpected(nameof(InterpreterRunner)) == "#Skip")
-            {
-                var goodResult = testCase.GetExpected("-");
-                Assert.False(goodResult == actualStr || (goodResult == "#Error" && _runner.IsError(result)), "Test marked to skip returned correct result");
-
-                // Since test is marked to skip and it didn't return a result that matched the baseline
-                // expected result then we can marked it skipped here
-                Skip.If(true, $"Test {testCase.SourceFile}:{testCase.SourceLine} was skipped by request");
-            }
-
-            Assert.Equal(testCase.GetExpected(nameof(InterpreterRunner)), actualStr);
+            // Verify this runs wtihout throwing an exception.
+            var list = attr.GetData(method);
         }
     }
 }
