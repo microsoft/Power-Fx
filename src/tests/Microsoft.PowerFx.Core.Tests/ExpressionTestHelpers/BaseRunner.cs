@@ -47,7 +47,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 (result, message) = RunAsync2(testCase).Result;
             });
             t.Start();
-            var success = t.Join(Timeout);
+            var success = t.Join(System.Diagnostics.Debugger.IsAttached ? TimeSpan.FromSeconds(20000) : Timeout);
 
             if (success)
             {
