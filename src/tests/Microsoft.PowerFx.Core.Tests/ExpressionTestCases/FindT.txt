@@ -124,11 +124,7 @@ Table()
 >> Find("c", Table({ within: "abc" }, { within: Error({Kind: "Validation"}) }, { within: "cde" }))
 Table({Result:3},{Result:Microsoft.PowerFx.Core.Public.Values.ErrorValue},{Result:1})
 
->> Find("c", Table({ within: "abc" }, { within: Error({Kind: "Validation"}) }, { within: "cde" }))
-Table({Result:3},{Result:Microsoft.PowerFx.Core.Public.Values.ErrorValue},{Result:1})
-
 >> Find("c", ["abc", Error({Kind: "Validation"}), "cde"])
-/*InterpreterRunner*/ #Skip
 Table({Result:3},Microsoft.PowerFx.Core.Public.Values.ErrorValue,{Result:1})
 //actual: Table({Result:3},{Result:Microsoft.PowerFx.Core.Public.Values.ErrorValue},{Result:1})
 
@@ -136,21 +132,17 @@ Table({Result:3},Microsoft.PowerFx.Core.Public.Values.ErrorValue,{Result:1})
 Table({Result:1},{Result:Microsoft.PowerFx.Core.Public.Values.ErrorValue},{Result:2})
 
 >> Find(["a", Error({Kind: "Validation"}), "b"], "abc")
-/*InterpreterRunner*/ #Skip
 Table({Result:1},Microsoft.PowerFx.Core.Public.Values.ErrorValue,{Result:2})
 //actual: Table({Result:1},{Result:Microsoft.PowerFx.Core.Public.Values.ErrorValue},{Result:2})
 
 >> Find(Table({ find: "a" }, { find: Error({Kind: "Validation"}) }, { find: "b" }, Error({Kind: "Validation"}), { find: "c" }), Table({ within: "abc" }, Error({Kind: "Validation"}), { within: Error({Kind: "Validation"}) }, Error({Kind: "Validation"}), { within: "abc" }))
-/*InterpreterRunner*/ #Skip
 Table({Result:1},Microsoft.PowerFx.Core.Public.Values.ErrorValue,{Result:Microsoft.PowerFx.Core.Public.Values.ErrorValue},Microsoft.PowerFx.Core.Public.Values.ErrorValue,{Result:3})
 //actual: Microsoft.PowerFx.Core.Public.Values.ErrorValue
 
 >> Find(Table({ find: "a" }, { find: "b" }, { find: "c" }), Error({Kind: "Validation"}))
-/*InterpreterRunner*/ #Skip
 Table({Result:Microsoft.PowerFx.Core.Public.Values.ErrorValue},{Result:Microsoft.PowerFx.Core.Public.Values.ErrorValue},{Result:Microsoft.PowerFx.Core.Public.Values.ErrorValue})
 //actual: Microsoft.PowerFx.Core.Public.Values.ErrorValue
 
 >> Find(Error({Kind: "Validation"}), Table({ within: "First" }, { within: "Second" }))
-/*InterpreterRunner*/ #Skip
 Table({Result:Microsoft.PowerFx.Core.Public.Values.ErrorValue},{Result:Microsoft.PowerFx.Core.Public.Values.ErrorValue})
 //actual: Microsoft.PowerFx.Core.Public.Values.ErrorValue

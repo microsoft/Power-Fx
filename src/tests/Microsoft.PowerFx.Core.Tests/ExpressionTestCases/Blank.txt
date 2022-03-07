@@ -91,7 +91,6 @@ true
 0
 
 >> Blank() = Blank()
-/*InterpreterRunner*/ #Skip
 true
 
 >> Blank() = ""

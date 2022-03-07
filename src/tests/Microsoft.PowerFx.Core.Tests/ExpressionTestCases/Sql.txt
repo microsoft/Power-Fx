@@ -87,7 +87,6 @@ false
 9999
 
 >> Year(Date(10000, 1, 1))
-/*InterpreterRunner*/ #Skip
 #Error
 
 // Date doesn't support inputting years earlier than 1900, so use subtraction to create min supported value
@@ -97,12 +96,10 @@ false
 // Date Add overflow
 >> Year(DateAdd(Date(9999, 12, 31), 1))
 /*SqlRunner*/ #Error
-/*InterpreterRunner*/ #Skip
 10000
 
 >> IsError(DateAdd(Date(9999, 12, 31), 1))
 /*SqlRunner*/ true
-/*InterpreterRunner*/ #Skip
 false
 
 >> Year(DateAdd(Date(1952, 12, 31), -200, TimeUnit.Years))
