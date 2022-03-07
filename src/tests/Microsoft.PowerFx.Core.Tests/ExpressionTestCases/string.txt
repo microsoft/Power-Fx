@@ -83,10 +83,8 @@ true
 >> Mid("foo", 0)
 #Error
 
-// Fails due to https://github.com/microsoft/Power-Fx/issues/195 
 >> Mid(Text(1/0, "#.000"), 1)
-#skip 
-//#Error
+#Error
 
 >> IsError(Mid("foo", 0))
 true
