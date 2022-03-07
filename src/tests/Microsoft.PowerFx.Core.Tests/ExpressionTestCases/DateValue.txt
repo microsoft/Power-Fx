@@ -27,7 +27,6 @@ true
 >> Minute(DateAdd(DateTimeValue("01-01-2001 1:10:20"), 1, TimeUnit.Minutes))
 11
 
-// SQL does not support DateTimeValue
 >> Text(DateTimeValue("02/14/2001 6:00 AM") - 0.5)
 "2/13/2001 6:00 PM"
 

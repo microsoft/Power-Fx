@@ -106,7 +106,6 @@ false
 >> Second(Date(2011, 2, 3) + Time(1, 2, 3))
 3
 
-
 >> Year(Time(1, 2, 3) + Date(2011, 2, 3))
 2011
 

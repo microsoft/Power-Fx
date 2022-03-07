@@ -377,7 +377,7 @@ namespace Microsoft.PowerFx.Core.Tests
             }
             else if (result is DateValue d)
             {
-                // DAte(YYYY,MM,DD)
+                // Date(YYYY,MM,DD)
                 var date = d.Value;
                 sb.Append($"Date({date.Year},{date.Month},{date.Day})");
             }
