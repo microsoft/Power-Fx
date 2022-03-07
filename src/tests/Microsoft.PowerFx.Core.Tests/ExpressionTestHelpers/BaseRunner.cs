@@ -20,7 +20,7 @@ namespace Microsoft.PowerFx.Core.Tests
         /// Maximum time to run test - this catches potential hangs in the engine. 
         /// Any test should easily run in under 1s. 
         /// </summary>
-        public static TimeSpan Timeout = TimeSpan.FromSeconds(20000);
+        public static TimeSpan Timeout = TimeSpan.FromSeconds(20);
 
         /// <summary>
         /// Runs a PowerFx test case, with optional setup.
