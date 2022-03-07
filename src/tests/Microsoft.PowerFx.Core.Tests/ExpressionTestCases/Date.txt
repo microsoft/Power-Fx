@@ -5,9 +5,10 @@
 >> Date(Blank(), 2, 3)
 Blank()
 
-// dates before 1900 get converted to post-1900
+// Previously: dates before 1900 get converted to post-1900
+// New behavior: don't convert. 
 >> Date(80, 1, 2)
-Date(1980,1,2)
+Date(80,1,2)
 
 // months and days overflow (but not for SQL)
 >> Date(2000, 25, 69)

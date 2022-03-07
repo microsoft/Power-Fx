@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
 using System.Collections.Generic;
 using System.IO;
 using Newtonsoft.Json;
@@ -51,12 +52,19 @@ namespace Microsoft.PowerFx.Core.Tests
 
         public void Deserialize(IXunitSerializationInfo info)
         {
-            Expected = JsonConvert.DeserializeObject<string>(info.GetValue<string>("expected"));
-            Input = info.GetValue<string>("input");
-            SourceFile = info.GetValue<string>("sourceFile");
-            SourceLine = info.GetValue<int>("sourceLine");
-            SetupHandlerName = info.GetValue<string>("setupHandlerName");
-            FailMessage = info.GetValue<string>("failMessage");
+            try
+            {
+                Expected = info.GetValue<string>("expected");
+                Input = info.GetValue<string>("input");
+                SourceFile = info.GetValue<string>("sourceFile");
+                SourceLine = info.GetValue<int>("sourceLine");
+                SetupHandlerName = info.GetValue<string>("setupHandlerName");
+                FailMessage = info.GetValue<string>("failMessage");
+            }
+            catch (Exception e)
+            {
+                FailMessage = $"Failed to deserialized test {e.Message}";
+            }
         }
 
         public void Serialize(IXunitSerializationInfo info)
