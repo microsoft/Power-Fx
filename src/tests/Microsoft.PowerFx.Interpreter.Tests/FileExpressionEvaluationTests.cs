@@ -23,6 +23,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [TxtFileData("ExpressionTestCases", "InterpreterExpressionTestCases", nameof(InterpreterRunner))]
         public void InterpreterTestCase(ExpressionTestCase testCase)
         {
+            // This is running against embedded resources, so if you're updating the .txt files,
+            // make sure they build is actually copying them over. 
             Assert.True(testCase.FailMessage == null, testCase.FailMessage);
 
             _runner = new InterpreterRunner();

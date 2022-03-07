@@ -1,0 +1,24 @@
+
+>> IsToday(Today())
+true
+
+>> IsToday(Now())
+true
+
+>> IsToday(Date(-1, 2, 3))
+#Error
+
+>> IsToday(Date(Blank(), 2, 3))
+false
+
+>> IsToday(Date(2012,1,1))
+false
+
+>> IsToday(DateAdd(Today(),-1))
+false
+
+>> DateDiff(Now(), Today(), TimeUnit.Minutes) <> 0
+true
+
+>> Date(Year(Today()), Month(Today()), Day(Today())) = Today()
+true
