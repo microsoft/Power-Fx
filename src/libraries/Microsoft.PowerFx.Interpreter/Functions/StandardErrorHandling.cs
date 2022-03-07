@@ -346,6 +346,10 @@ namespace Microsoft.PowerFx.Functions
                     var count = new NumberValue(IRContext.NotInSource(FormulaType.Number), stringValue.Value.Length);
                     res.Add(count);
                 }
+                else
+                {
+                    break;
+                }
             }
 
             return res.ToArray();
