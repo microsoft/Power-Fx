@@ -847,16 +847,7 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: Substitute)
             },
             { BuiltinFunctionsCore.Switch, Switch },
-            {
-                BuiltinFunctionsCore.Table,
-                StandardErrorHandling<FormulaValue>(
-                    expandArguments: NoArgExpansion,
-                    replaceBlankValues: DoNotReplaceBlank,
-                    checkRuntimeTypes: DeferRuntimeTypeChecking,
-                    checkRuntimeValues: DeferRuntimeValueChecking,
-                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
-                    targetFunction: Table)
-            },
+            { BuiltinFunctionsCore.Table, Table },
             {
                 BuiltinFunctionsCore.Table_UO,
                 StandardErrorHandling<UntypedObjectValue>(
@@ -1110,7 +1101,9 @@ namespace Microsoft.PowerFx.Functions
 
                 if (res.IsError)
                 {
-                    return res.Error;
+                    // Update error "type" to the type of the If function
+                    var resultContext = new IRContext(res.Error.IRContext.SourceContext, irContext.ResultType);
+                    return new ErrorValue(resultContext, res.Error.Errors.ToList());
                 }
 
                 // False branch
