@@ -1,8 +1,8 @@
 ﻿>> 1/0
-#Error
+#Error(Kind=Div0)
 
 >> Sqrt(-1)
-#Error
+#Error(Kind=Numeric)
 
 >> IsError(1/0)
 true
@@ -16,11 +16,14 @@ true
 >> IsError(Error({Kind: 11}))
 true
 
->> IsError(Error({Kind: "Validation"}))
-true
-
 >> IfError(1/0, 3)
 3
+
+>> IfError(1/0, FirstError.Kind)
+13
+
+>> IfError(Error({Kind:12}), FirstError.Kind)
+12
 
 >> IfError(0, 1, Sqrt(-2), 2)
 2
@@ -38,10 +41,10 @@ true
 3
 
 >> IsBlank(1/0)
-#Error
+#Error(Kind=Div0)
 
 >> Not(IsBlank(1/0))
-#Error
+#Error(Kind=13)
 
 >> "Result: " & IfError(1/0, -1)
 "Result: -1"
