@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
 using System.Collections.Generic;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Errors;
@@ -34,25 +35,51 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertValue(errors);
             Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
 
+            nodeToCoercedTypeMap = null;
             var fArgsValid = true;
             returnType = argTypes[0];
-            nodeToCoercedTypeMap = null;
 
-            // Coerce everything except date/times to numeric.
-            for (var i = 0; i < argTypes.Length; i++)
+            // If there are any numbers in the comparision, coerse all to numeric.
+            if (Array.Exists(argTypes, element => element == DType.Number))
             {
-                if (argTypes[i] != DType.Date && argTypes[i] != DType.DateTime && argTypes[i] != DType.Time && CheckType(args[i], argTypes[i], DType.Number, DefaultErrorContainer, out var matchedWithCoercion))
+                fArgsValid = base.CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+                Contracts.Assert(returnType == DType.Number);
+
+                // Ensure that all the arguments are numeric/coercible to numeric.
+                for (var i = 0; i < argTypes.Length; i++)
                 {
-                    returnType = DType.Number;
-                    if (matchedWithCoercion)
+                    if (CheckType(args[i], argTypes[i], DType.Number, DefaultErrorContainer, out var matchedWithCoercion))
                     {
-                        CollectionUtils.Add(ref nodeToCoercedTypeMap, args[i], DType.Number, allowDupes: true);
+                        if (matchedWithCoercion)
+                        {
+                            CollectionUtils.Add(ref nodeToCoercedTypeMap, args[i], DType.Number, allowDupes: true);
+                        }
+                    }
+                    else
+                    {
+                        errors.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.ErrNumberExpected);
+                        fArgsValid = false;
                     }
                 }
-                else if (argTypes[i] != DType.Date && argTypes[i] != DType.DateTime && argTypes[i] != DType.Time)
+            }
+            else
+            {
+                // If there are no numbers in the comparison, coerce everything except date/times to numeric.
+                for (var i = 0; i < argTypes.Length; i++)
                 {
-                    errors.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.ErrNumberExpected);
-                    fArgsValid = false;
+                    if (argTypes[i] != DType.Date && argTypes[i] != DType.DateTime && argTypes[i] != DType.Time && CheckType(args[i], argTypes[i], DType.Number, DefaultErrorContainer, out var matchedWithCoercion))
+                    {
+                        returnType = DType.Number;
+                        if (matchedWithCoercion)
+                        {
+                            CollectionUtils.Add(ref nodeToCoercedTypeMap, args[i], DType.Number, allowDupes: true);
+                        }
+                    }
+                    else if (argTypes[i] != DType.Date && argTypes[i] != DType.DateTime && argTypes[i] != DType.Time)
+                    {
+                        errors.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.ErrNumberExpected);
+                        fArgsValid = false;
+                    }
                 }
             }
 

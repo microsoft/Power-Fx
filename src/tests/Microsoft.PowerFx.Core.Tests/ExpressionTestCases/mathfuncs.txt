@@ -142,6 +142,12 @@ Blank()
 >> Max(Blank(), 100, -5, "2000", Value("2001"), Text(2002))
 2002
 
+>> Max(Blank(), 100, -5, "2000", Value("2001"), Text(2002), Time(2,0,0))
+2002
+
+>> Max(Blank(), 100, -5, "2000", Value("2001"), Text(2002), Date(1985,3,5))
+2002
+
 >> Max(DateTimeValue("November 10, 2014 1:50 PM"), DateTimeValue("November 11, 2014 1:50 PM"))
 11/11/2014 01:50:00 PM
 
@@ -153,6 +159,9 @@ Blank()
 
 >> Max(Time(1,50,0),Time(2,0,0))
 02:00:00
+
+>> Max(Time(1,50,0), Date(1985,3,5))
+03/05/1985 12:00:00 AM
 
 >> Min(1,2)
 1
