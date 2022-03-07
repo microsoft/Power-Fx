@@ -65,7 +65,7 @@ namespace Microsoft.PowerFx.Core.Tests
             string actualStr;
             FormulaValue result = null;
 
-            var expected = testCase.GetExpected(GetName());
+            var expected = testCase.Expected;
             var expectedSkip = string.Equals(expected, "#skip", StringComparison.OrdinalIgnoreCase);
             if (expectedSkip)
             {

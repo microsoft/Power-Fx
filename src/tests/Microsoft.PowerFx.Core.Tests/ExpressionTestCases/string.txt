@@ -149,7 +149,6 @@ true
 false
 
 >> StartsWith("foobar", Text(1/0))
-/*SqlRunner*/ Compile Error
 #Error
 
 >> EndsWith("foobar", "bar")
@@ -165,7 +164,6 @@ true
 false
 
 >> EndsWith("foobar", Text(1/0))
-/*SqlRunner*/ Compile Error
 #Error
 
 >> TrimEnds("   Hello     World   ")

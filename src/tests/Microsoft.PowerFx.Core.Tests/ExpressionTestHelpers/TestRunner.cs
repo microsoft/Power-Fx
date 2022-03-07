@@ -179,17 +179,10 @@ namespace Microsoft.PowerFx.Core.Tests
                     // handle engine-specific results
                     if (line.StartsWith("/*"))
                     {
-                        var index = line.IndexOf("*/");
-                        if (index > -1)
-                        {
-                            var engine = line.Substring(2, index - 2).Trim();
-                            var result = line.Substring(index + 2).Trim();
-                            test.SetExpected(result, engine);
-                            continue;
-                        }
+                        throw new InvalidOperationException($"Multiline comments aren't supported in output");                        
                     }
 
-                    test.SetExpected(line.Trim());
+                    test.Expected = line.Trim();
 
                     var key = test.GetUniqueId(fileOveride);
                     if (_keyToTests.TryGetValue(key, out var existingTest))
@@ -202,7 +195,7 @@ namespace Microsoft.PowerFx.Core.Tests
                         
                         // Updating an existing test. 
                         // Inputs are the same, but update the results.
-                        existingTest._expected = test._expected;
+                        existingTest.Expected = test.Expected;
                         existingTest.SourceFile = test.SourceFile;
                         existingTest.SourceLine = test.SourceLine;
                     }
@@ -225,6 +218,11 @@ namespace Microsoft.PowerFx.Core.Tests
 
         public (int total, int failed, int passed, string output) RunTests()
         {
+            if (_runners.Length == 0)
+            {
+                throw new InvalidOperationException($"Need to specify a runner to run tests");
+            }
+
             var total = 0;
             var fail = 0;
             var pass = 0;
@@ -376,6 +374,12 @@ namespace Microsoft.PowerFx.Core.Tests
             else if (result is BlankValue)
             {
                 sb.Append("Blank()");
+            }
+            else if (result is DateValue d)
+            {
+                // Date(YYYY,MM,DD)
+                var date = d.Value;
+                sb.Append($"Date({date.Year},{date.Month},{date.Day})");
             }
             else if (result is ErrorValue)
             {
