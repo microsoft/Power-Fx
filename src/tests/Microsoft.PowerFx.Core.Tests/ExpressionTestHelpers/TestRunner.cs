@@ -179,17 +179,10 @@ namespace Microsoft.PowerFx.Core.Tests
                     // handle engine-specific results
                     if (line.StartsWith("/*"))
                     {
-                        var index = line.IndexOf("*/");
-                        if (index > -1)
-                        {
-                            var engine = line.Substring(2, index - 2).Trim();
-                            var result = line.Substring(index + 2).Trim();
-                            test.SetExpected(result, engine);
-                            continue;
-                        }
+                        throw new InvalidOperationException($"Multiline comments aren't supported in output");                        
                     }
 
-                    test.SetExpected(line.Trim());
+                    test.Expected = line.Trim();
 
                     var key = test.GetUniqueId(fileOveride);
                     if (_keyToTests.TryGetValue(key, out var existingTest))
@@ -202,7 +195,7 @@ namespace Microsoft.PowerFx.Core.Tests
                         
                         // Updating an existing test. 
                         // Inputs are the same, but update the results.
-                        existingTest._expected = test._expected;
+                        existingTest.Expected = test.Expected;
                         existingTest.SourceFile = test.SourceFile;
                         existingTest.SourceLine = test.SourceLine;
                     }

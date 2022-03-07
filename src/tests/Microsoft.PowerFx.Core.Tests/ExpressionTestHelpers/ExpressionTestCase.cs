@@ -30,7 +30,7 @@ namespace Microsoft.PowerFx.Core.Tests
             : this(engineName)
         {
             Input = test.Input;
-            _expected = test._expected;
+            Expected = test.Expected;
             SourceFile = test.SourceFile;
             SourceLine = test.SourceLine;
             SetupHandlerName = test.SetupHandlerName;
@@ -46,12 +46,12 @@ namespace Microsoft.PowerFx.Core.Tests
 
         public override string ToString()
         {
-            return $"{Path.GetFileName(SourceFile)} : {SourceLine.ToString("000")} - {Input} = {GetExpected(_engineName)}";
+            return $"{Path.GetFileName(SourceFile)} : {SourceLine.ToString("000")} - {Input} = {Expected}";
         }
 
         public void Deserialize(IXunitSerializationInfo info)
         {
-            _expected = JsonConvert.DeserializeObject<Dictionary<string, string>>(info.GetValue<string>("expected"));
+            Expected = JsonConvert.DeserializeObject<string>(info.GetValue<string>("expected"));
             Input = info.GetValue<string>("input");
             SourceFile = info.GetValue<string>("sourceFile");
             SourceLine = info.GetValue<int>("sourceLine");
@@ -61,8 +61,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
         public void Serialize(IXunitSerializationInfo info)
         {
-            var expectedJSON = JsonConvert.SerializeObject(_expected);
-            info.AddValue("expected", expectedJSON, typeof(string));
+            info.AddValue("expected", Expected, typeof(string));
             info.AddValue("input", Input, typeof(string));
             info.AddValue("sourceFile", SourceFile, typeof(string));
             info.AddValue("sourceLine", SourceLine, typeof(int));
