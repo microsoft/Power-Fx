@@ -8,7 +8,7 @@ Table({Blanks:Blank(),Value:1},{Blanks:Blank(),Value:2},{Blanks:Blank(),Value:3}
 Table({Div:20,Value:1},{Div:10,Value:2},{Div:Microsoft.PowerFx.Core.Public.Values.ErrorValue,Value:0},{Div:5,Value:4},{Div:4,Value:5})
 
 >> AddColumns(Sort([-2, -1, 0, 1, 2], 1 / Value), "Double", Value * 2)
-#Error
+#Error(Kind=Div0)
 
 >> AddColumns(LastN([1, 2, 3, 4, 5], Blank()), "Double", Value * 2)
 Blank()

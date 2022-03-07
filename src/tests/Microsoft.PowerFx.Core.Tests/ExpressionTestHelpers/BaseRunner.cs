@@ -3,9 +3,12 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.PowerFx.Core.Public;
 using Microsoft.PowerFx.Core.Public.Values;
 
 namespace Microsoft.PowerFx.Core.Tests
@@ -27,6 +30,8 @@ namespace Microsoft.PowerFx.Core.Tests
         /// <returns>Result of evaluating Expr.</returns>
         protected abstract Task<FormulaValue> RunAsyncInternal(string expr, string setupHandlerName = null);
 
+        private static readonly Regex RuntimeErrorExpectedResultRegex = new Regex(@"\#error(\(?:Kind=(?<errorKind>[^\)]+)\))?", RegexOptions.IgnoreCase);
+
         /// <summary>
         /// Returns (Pass,Fail,Skip) and a status message.
         /// </summary>
@@ -42,7 +47,12 @@ namespace Microsoft.PowerFx.Core.Tests
                 (result, message) = RunAsync2(testCase).Result;
             });
             t.Start();
-            var success = t.Join(Timeout);
+            bool success;
+            do
+            {
+                success = t.Join(Timeout);
+            }
+            while (!success && System.Diagnostics.Debugger.IsAttached);
 
             if (success)
             {
@@ -111,17 +121,52 @@ namespace Microsoft.PowerFx.Core.Tests
                 return (TestResult.Fail, "did not return a value");
             }
 
-            var expectedRuntimeError = string.Equals(expected, "#error", StringComparison.OrdinalIgnoreCase);
+            var expectedRuntimeErrorMatch = RuntimeErrorExpectedResultRegex.Match(expected);
             
-            if (expectedRuntimeError)
+            if (expectedRuntimeErrorMatch.Success)
             {
-                var isError = IsError(result);
-                if (isError)
+                var expectedErrorKindGroup = expectedRuntimeErrorMatch.Groups["errorKind"];
+                var expectedErrorKind = expectedErrorKindGroup.Success ? expectedErrorKindGroup.Value : null;
+                if (result is ErrorValue errorResult)
                 {
-                    return (TestResult.Pass, null);
+                    if (expectedErrorKind == null)
+                    {
+                        // If no kind is part of the expected value, just return a pass if the result is an error
+                        return (TestResult.Pass, null);
+                    }
+
+                    var actualErrorKind = errorResult.Errors.First().Kind;
+                    if (int.TryParse(expectedErrorKind, out var numericErrorKind))
+                    {
+                        // Error given as the internal value
+                        if (numericErrorKind == (int)actualErrorKind)
+                        {
+                            return (TestResult.Pass, null);
+                        }
+                        else
+                        {
+                            return (TestResult.Fail, $"Received an error, but expected kind={expectedErrorKind} and received {actualErrorKind} ({(int)actualErrorKind})");
+                        }
+                    }
+                    else if (Enum.TryParse<ErrorKind>(expectedErrorKind, out var errorKind))
+                    {
+                        // Error given as the enum name
+                        if (errorKind == actualErrorKind)
+                        {
+                            return (TestResult.Pass, null);
+                        }
+                        else
+                        {
+                            return (TestResult.Fail, $"Received an error, but expected kind={errorKind} and received {actualErrorKind}");
+                        }
+                    }
+                    else
+                    {
+                        return (TestResult.Fail, $"Invalid expected error kind: {expectedErrorKind}");
+                    }
                 }
 
-                // we'll fail with a mismatch below
+                // If the actual result is not an error, we'll fail with a mismatch below
             }
                         
             if (string.Equals(expected, actualStr, StringComparison.Ordinal))
