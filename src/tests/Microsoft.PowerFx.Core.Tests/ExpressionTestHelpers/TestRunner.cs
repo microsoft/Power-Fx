@@ -225,6 +225,11 @@ namespace Microsoft.PowerFx.Core.Tests
 
         public (int total, int failed, int passed, string output) RunTests()
         {
+            if (_runners.Length == 0)
+            {
+                throw new InvalidOperationException($"Need to specify a runner to run tests");
+            }
+
             var total = 0;
             var fail = 0;
             var pass = 0;
@@ -376,6 +381,12 @@ namespace Microsoft.PowerFx.Core.Tests
             else if (result is BlankValue)
             {
                 sb.Append("Blank()");
+            }
+            else if (result is DateValue d)
+            {
+                // DAte(YYYY,MM,DD)
+                var date = d.Value;
+                sb.Append($"Date({date.Year},{date.Month},{date.Day})");
             }
             else if (result is ErrorValue)
             {

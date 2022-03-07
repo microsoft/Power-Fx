@@ -1,0 +1,41 @@
+
+// Use of DateValue, DateTimeValue
+
+>> Text(DateTimeValue("01-01-2001 1:10:20"))
+"1/1/2001 1:10 AM"
+
+
+>> Date(2001, 2, 14) = DateValue("2001-02-14")
+true
+
+>> DateValue("02-14-01") = DateValue("02/14/01")
+true
+
+>> DateValue("02/14/2001") = DateValue("2001-02-14")
+true
+
+// time zone offset
+>> Hour(DateAdd(DateAdd(DateTimeValue("01-01-2001 1:10:20"), TimeZoneOffset(), TimeUnit.Minutes), -TimeZoneOffset(), "Minutes"))
+1
+
+>> Second(DateAdd(DateTimeValue("01-01-2001 1:10:20"), 1, "Seconds"))
+21
+
+>> Hour(DateAdd(DateTimeValue("01-01-2001 1:10:20"), 1, TimeUnit.Hours))
+2
+
+>> Minute(DateAdd(DateTimeValue("01-01-2001 1:10:20"), 1, TimeUnit.Minutes))
+11
+
+// SQL does not support DateTimeValue
+>> Text(DateTimeValue("02/14/2001 6:00 AM") - 0.5)
+"2/13/2001 6:00 PM"
+
+>> Text(DateTimeValue("02/14/2001 6:00 AM") + 0.0417)
+"2/14/2001 7:00 AM"
+
+>> Text(DateTimeValue("02/14/2001 6:00 AM") + 7e-4)
+"2/14/2001 6:01 AM"
+
+>> Second(DateTimeValue("02/14/2001 6:00 AM") - 1.1574e-5)
+59
