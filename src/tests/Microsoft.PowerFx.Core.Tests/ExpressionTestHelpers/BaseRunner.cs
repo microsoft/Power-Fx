@@ -164,6 +164,10 @@ namespace Microsoft.PowerFx.Core.Tests
                     {
                         return (TestResult.Fail, $"Invalid expected error kind: {expectedErrorKind}");
                     }
+                } 
+                else if (IsError(result))
+                {
+                    return (TestResult.Pass, null);
                 }
 
                 // If the actual result is not an error, we'll fail with a mismatch below
