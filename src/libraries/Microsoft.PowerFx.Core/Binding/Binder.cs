@@ -68,6 +68,10 @@ namespace Microsoft.PowerFx.Core.Binding
         // Maps Ids to Info, where the Id is an index in the array.
         private readonly object[] _infoMap;
 
+        // Call nodes which do not appear in the source code
+        // For example, $"" (interpolated string) maps to a call to Concatenate
+        private readonly CallNode[] _compilerGeneratedCallNodes;
+
         private readonly IDictionary<int, IList<FirstNameInfo>> _lambdaParams;
 
         // Whether a node is stateful or has side effects or is contextual or is constant.
@@ -267,6 +271,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
             CoercedToplevelType = DType.Invalid;
             _infoMap = new object[idLim];
+            _compilerGeneratedCallNodes = new CallNode[idLim];
             _asyncMap = new bool[idLim];
             _lambdaParams = new Dictionary<int, IList<FirstNameInfo>>(idLim);
             _isStateful = new BitArray(idLim);
@@ -2060,6 +2065,14 @@ namespace Microsoft.PowerFx.Core.Binding
             return _infoMap[node.Id] as CallInfo;
         }
 
+        public CallNode GetCompilerGeneratedCallNode(TexlNode node)
+        {
+            Contracts.AssertValue(node);
+            Contracts.AssertIndex(node.Id, _compilerGeneratedCallNodes.Length);
+
+            return _compilerGeneratedCallNodes[node.Id];
+        }
+
         private void SetInfo(CallNode node, CallInfo info, bool markIfAsync = true)
         {
             Contracts.AssertValue(node);
@@ -2095,6 +2108,27 @@ namespace Microsoft.PowerFx.Core.Binding
                     AffectsTabularDataSources = true;
                 }
             }
+        }
+
+        private CallNode GenerateCallNode(StrInterpNode node)
+        {
+            // We generate a transient CallNode to the Concatenate function
+            var func = BuiltinFunctionsCore.Concatenate;
+            var ident = new IdentToken(func.Name, node.Token.Span);
+            var id = node.Id;
+            var listNodeId = 0;
+            var minChildId = node.MinChildID;
+            var callNode = new CallNode(
+                ref id,
+                primaryToken: ident,
+                sourceList: node.SourceList,
+                head: new Identifier(ident),
+                headNode: null,
+                new ListNode(ref listNodeId, tok: node.Token, args: node.CloneChildren(ref minChildId, node.GetCompleteSpan()), delimiters: null, sourceList: node.SourceList),
+                node.StrInterpEnd);
+            _compilerGeneratedCallNodes[node.Id] = callNode;
+            SetInfo(callNode, new CallInfo(callNode));
+            return callNode;
         }
 
         internal bool AddFieldToQuerySelects(DType type, string fieldName)
@@ -5043,9 +5077,13 @@ namespace Microsoft.PowerFx.Core.Binding
                 var runningWeight = _txb.GetVolatileVariables(node);
                 var isUnliftable = false;
 
+                // Make a binder-aware call to Concatenate
+                _txb.GenerateCallNode(node);
+
                 var args = node.Children;
                 var argTypes = new DType[args.Length];
 
+                // Process arguments
                 for (var i = 0; i < args.Length; i++)
                 {
                     var child = args[i];
