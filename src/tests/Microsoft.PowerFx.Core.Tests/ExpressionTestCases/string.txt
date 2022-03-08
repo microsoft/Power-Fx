@@ -83,10 +83,8 @@ true
 >> Mid("foo", 0)
 #Error
 
-// Fails due to https://github.com/microsoft/Power-Fx/issues/195 
 >> Mid(Text(1/0, "#.000"), 1)
-#skip 
-//#Error
+#Error
 
 >> IsError(Mid("foo", 0))
 true
@@ -149,7 +147,6 @@ true
 false
 
 >> StartsWith("foobar", Text(1/0))
-/*SqlRunner*/ Compile Error
 #Error
 
 >> EndsWith("foobar", "bar")
@@ -165,7 +162,6 @@ true
 false
 
 >> EndsWith("foobar", Text(1/0))
-/*SqlRunner*/ Compile Error
 #Error
 
 >> TrimEnds("   Hello     World   ")

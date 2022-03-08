@@ -24,13 +24,13 @@ namespace Microsoft.PowerFx.Core.Tests
                         
             // Ordered by how we see them in the file. 
             Assert.Equal("input1", tests[0].Input);
-            Assert.Equal("expected_result1", tests[0].GetExpected("-"));
+            Assert.Equal("expected_result1", tests[0].Expected);
             Assert.Equal("file1.txt:input1", tests[0].GetUniqueId(null));
             Assert.Equal("File1.txt", Path.GetFileName(tests[0].SourceFile), ignoreCase: true);
             Assert.Equal(3, tests[0].SourceLine);
 
             Assert.Equal("input2", tests[1].Input);
-            Assert.Equal("expected_result2", tests[1].GetExpected("-"));
+            Assert.Equal("expected_result2", tests[1].Expected);
             Assert.Equal("file1.txt:input2", tests[1].GetUniqueId(null));
         }
 
@@ -41,15 +41,10 @@ namespace Microsoft.PowerFx.Core.Tests
             AddFile(runner, "File2.txt");
 
             var tests = runner.Tests.ToArray();
-            Assert.Equal(2, tests.Length);
+            Assert.Single(tests);
 
             Assert.Equal("MultiInput\n  secondline", tests[0].Input.Replace("\r", string.Empty));
-            Assert.Equal("Result", tests[0].GetExpected("-"));
-                        
-            Assert.Equal("Engines2", tests[1].Input);
-            Assert.Equal("Normal", tests[1].GetExpected("-"));
-            Assert.Equal("ER1", tests[1].GetExpected("Engine1"));
-            Assert.Equal("ER2", tests[1].GetExpected("Engine2"));
+            Assert.Equal("Result", tests[0].Expected);
         }
 
         // Override a single file
@@ -64,11 +59,11 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.Equal(2, tests.Length);
 
             Assert.Equal("input1", tests[0].Input);
-            Assert.Equal("override_result1", tests[0].GetExpected("-"));
+            Assert.Equal("override_result1", tests[0].Expected);
 
             // Other test is unchanged. 
             Assert.Equal("input2", tests[1].Input);
-            Assert.Equal("expected_result2", tests[1].GetExpected("-"));
+            Assert.Equal("expected_result2", tests[1].Expected);
         }
 
         [Fact]
@@ -96,7 +91,7 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.Single(tests);
 
             Assert.Equal("input3", tests[0].Input);
-            Assert.Equal("result3", tests[0].GetExpected("-"));
+            Assert.Equal("result3", tests[0].Expected);
             Assert.Equal("filedisable.txt:input3", tests[0].GetUniqueId(null));
         }
 
@@ -120,8 +115,10 @@ namespace Microsoft.PowerFx.Core.Tests
                 _hook = (expr, setup) => FormulaValue.New(1)
             };
 
-            var test = new TestCase();
-            test.SetExpected("1");
+            var test = new TestCase
+            {
+                Expected = "1"
+            };
             var result = await runner.RunAsync(test);
 
             Assert.Equal(TestResult.Pass, result.Item1);            
@@ -135,8 +132,10 @@ namespace Microsoft.PowerFx.Core.Tests
                 _hook = (expr, setup) => FormulaValue.New(1)
             };
 
-            var test = new TestCase();
-            test.SetExpected("2"); // Mismatch!
+            var test = new TestCase
+            {
+                Expected = "2" // Mismatch!
+            };
             var result = await runner.RunAsync(test);
 
             Assert.Equal(TestResult.Fail, result.Item1);
@@ -148,8 +147,10 @@ namespace Microsoft.PowerFx.Core.Tests
             var runner = new MockRunner();
 
             // #SKIP won't even call runner.
-            var test = new TestCase();
-            test.SetExpected("#SKIP");
+            var test = new TestCase
+            {
+                Expected = "#SKIP"
+            };
             var result = await runner.RunAsync(test);
 
             Assert.Equal(TestResult.Skip, result.Item1);
@@ -163,9 +164,11 @@ namespace Microsoft.PowerFx.Core.Tests
             {
                 _hook = (expr, setup) => _errorValue // error
             };
-                        
-            var test = new TestCase();
-            test.SetExpected("#ERROR");
+
+            var test = new TestCase
+            {
+                Expected = "#ERROR"
+            };
             var result = await runner.RunAsync(test);
 
             Assert.Equal(TestResult.Pass, result.Item1);
@@ -186,8 +189,10 @@ namespace Microsoft.PowerFx.Core.Tests
                 _hook = (expr, setup) => throw new InvalidOperationException("Errors: Error X") 
             };
 
-            var test = new TestCase();
-            test.SetExpected("Errors: Error X");
+            var test = new TestCase
+            {
+                Expected = "Errors: Error X"
+            };
             var result = await runner.RunAsync(test);
 
             Assert.Equal(TestResult.Pass, result.Item1);
@@ -199,7 +204,7 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.Equal(TestResult.Fail, result.Item1);
             
             // Failure if the compiler error is unexpected
-            test.SetExpected("1");
+            test.Expected = "1";
             result = await runner.RunAsync(test);
 
             Assert.Equal(TestResult.Fail, result.Item1);
@@ -224,10 +229,49 @@ namespace Microsoft.PowerFx.Core.Tests
             {
                 SetupHandlerName = handlerName
             };
-            test.SetExpected("1");
+            test.Expected = "1";
             var result = await runner.RunAsync(test);
 
             Assert.Equal(TestResult.Skip, result.Item1);            
+        }
+
+        // Override IsError
+        private class MockErrorRunner : MockRunner
+        {
+            protected override Task<FormulaValue> RunAsyncInternal(string expr, string setupHandlerName = null)
+            {
+                return Task.FromResult(_hook(expr, setupHandlerName));
+            }
+
+            public Func<FormulaValue, bool> _isError;
+
+            public override bool IsError(FormulaValue value)
+            {
+                return _isError(value);
+            }
+        }
+
+        [Fact]
+        public async Task TestErrorOverride()
+        {
+            // Test override BaseRunner.IsError
+            var runner = new MockErrorRunner
+            {
+                _hook = (expr, setup) => FormulaValue.New(1),
+                _isError = (value) => true
+            };
+
+            var test = new TestCase
+            {
+                Expected = "#error"                
+            };
+
+            var result = await runner.RunAsync(test);
+            Assert.Equal(TestResult.Pass, result.Item1);
+
+            runner._isError = (value) => false;
+            result = await runner.RunAsync(test);
+            Assert.Equal(TestResult.Fail, result.Item1);
         }
 
         private static void AddFile(TestRunner runner, string filename)
