@@ -301,7 +301,15 @@ namespace Microsoft.PowerFx.Functions
                 var names = allResults.Select(result => result.Name).ToList();
                 foreach (var list in transposed)
                 {
+                    var errorRow = list.FirstOrDefault(dv => dv.IsError);
+                    if (errorRow != null)
+                    {
+                        resultRows.Add(DValue<RecordValue>.Of(errorRow.Error));
+                        continue;
+                    }
+
                     var targetArgs = list.Select((dv, i) => dv.IsValue ? dv.Value.GetField(names[i]) : dv.ToFormulaValue()).ToArray();
+
                     var namedValue = new NamedValue(BuiltinFunction.OneColumnTableResultNameStr, targetFunction(runner, symbolContext, IRContext.NotInSource(itemType), targetArgs));
                     var record = new InMemoryRecordValue(IRContext.NotInSource(resultType), new List<NamedValue>() { namedValue });
                     resultRows.Add(DValue<RecordValue>.Of(record));
