@@ -259,6 +259,32 @@ namespace Microsoft.PowerFx.Core.Logging
             }
         }
 
+        public override LazyList<string> Visit(StrInterpNode node, Precedence context)
+        {
+            Contracts.AssertValue(node);
+
+            var count = node.Count;
+            var result = LazyList<string>.Empty.With("$\"");
+
+            for (var i = 0; i < count; i++)
+            {
+                if (node.Children[i].Kind == NodeKind.StrLit)
+                {
+                    result = result
+                        .With(node.Children[i].Accept(this, context));
+                }
+                else
+                {
+                    result = result
+                        .With("{")
+                        .With(node.Children[i].Accept(this, context))
+                        .With("}");
+                }
+            }
+
+            return result.With("\"");
+        }
+
         public override LazyList<string> Visit(CallNode node, Precedence parentPrecedence)
         {
             Contracts.AssertValue(node);

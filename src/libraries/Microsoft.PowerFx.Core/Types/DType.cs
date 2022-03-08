@@ -844,7 +844,7 @@ namespace Microsoft.PowerFx.Core.Types
             return new DType(DKind.Record, TypeTree.Create(minTypeTree));
         }
 
-        public static DType CreateOptionSetValue(IExternalOptionSet info)
+        public static DType CreateOptionSetValueType(IExternalOptionSet info)
         {
             return new DType(DKind.OptionSetValue, info);
         }

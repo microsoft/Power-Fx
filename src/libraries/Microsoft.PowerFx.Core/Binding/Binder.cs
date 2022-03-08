@@ -1572,6 +1572,11 @@ namespace Microsoft.PowerFx.Core.Binding
             return BinderNodesVisitor.StringLiterals;
         }
 
+        public IEnumerable<StrInterpNode> GetStringInterpolations()
+        {
+            return BinderNodesVisitor.StringInterpolations;
+        }
+
         public IEnumerable<UnaryOpNode> GetUnaryOperators()
         {
             return BinderNodesVisitor.UnaryOperators;
@@ -2935,7 +2940,6 @@ namespace Microsoft.PowerFx.Core.Binding
                 }
                 else if (lookupInfo.Kind == BindKind.DeprecatedImplicitThisItem)
                 {
-                    Contracts.Assert(_txb.Document.Properties.SupportsImplicitThisItem);
                     _txb._hasThisItemReference = true;
 
                     // Even though lookupInfo.Type isn't the full data source type, it still is tagged with the full datasource info if this is a thisitem node
@@ -5032,6 +5036,75 @@ namespace Microsoft.PowerFx.Core.Binding
             public override void PostVisit(CallNode node)
             {
                 Contracts.Assert(false, "Should never get here");
+            }
+
+            public override bool PreVisit(StrInterpNode node)
+            {
+                var runningWeight = _txb.GetVolatileVariables(node);
+                var isUnliftable = false;
+
+                var args = node.Children;
+                var argTypes = new DType[args.Length];
+
+                for (var i = 0; i < args.Length; i++)
+                {
+                    var child = args[i];
+                    _txb.AddVolatileVariables(child, runningWeight);
+                    child.Accept(this);
+                    argTypes[i] = _txb.GetType(args[i]);
+                    runningWeight = runningWeight.Union(_txb.GetVolatileVariables(child));
+                    isUnliftable |= _txb.IsUnliftable(child);
+                }
+
+                // Typecheck the node's children against the built-in Concatenate function
+                var fArgsValid = BuiltinFunctionsCore.Concatenate.CheckInvocation(_txb, args, argTypes, _txb.ErrorContainer, out var returnType, out var nodeToCoercedTypeMap);
+
+                if (!fArgsValid)
+                {
+                    _txb.ErrorContainer.Error(DocumentErrorSeverity.Severe, node, TexlStrings.ErrInvalidStringInterpolation);
+                }
+
+                if (fArgsValid && nodeToCoercedTypeMap != null)
+                {
+                    foreach (var nodeToCoercedTypeKvp in nodeToCoercedTypeMap)
+                    {
+                        _txb.SetCoercedType(nodeToCoercedTypeKvp.Key, nodeToCoercedTypeKvp.Value);
+                    }
+                }
+
+                _txb.SetType(node, returnType);
+
+                _txb.AddVolatileVariables(node, runningWeight);
+                _txb.SetIsUnliftable(node, isUnliftable);
+
+                PostVisit(node);
+                return false;
+            }
+
+            public override void PostVisit(StrInterpNode node)
+            {
+                AssertValid();
+                Contracts.AssertValue(node);
+
+                // Determine constancy.
+                var isConstant = true;
+                var isSelfContainedConstant = true;
+
+                foreach (var child in node.Children)
+                {
+                    isConstant &= _txb.IsConstant(child);
+                    isSelfContainedConstant &= _txb.IsSelfContainedConstant(child);
+                    if (!isConstant && !isSelfContainedConstant)
+                    {
+                        break;
+                    }
+                }
+
+                _txb.SetConstant(node, isConstant);
+                _txb.SetSelfContainedConstant(node, isSelfContainedConstant);
+
+                SetVariadicNodePurity(node);
+                _txb.SetScopeUseSet(node, JoinScopeUseSets(node.Children));
             }
 
             private bool TryGetAffectScopeVariableFunc(CallNode node, out TexlFunction func)

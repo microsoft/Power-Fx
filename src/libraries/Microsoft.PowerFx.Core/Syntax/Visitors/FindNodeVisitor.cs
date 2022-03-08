@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System.Linq;
 using Microsoft.PowerFx.Core.Lexer;
 using Microsoft.PowerFx.Core.Lexer.Tokens;
 using Microsoft.PowerFx.Core.Syntax.Nodes;
@@ -68,6 +69,39 @@ namespace Microsoft.PowerFx.Core.Syntax.Visitors
             }
 
             // If we got here the cursor should be in the last child.
+            node.Children[node.Children.Length - 1].Accept(this);
+
+            return false;
+        }
+
+        public override bool PreVisit(StrInterpNode node)
+        {
+            Contracts.AssertValue(node);
+            Contracts.Assert(node.Token.Kind == TokKind.StrInterpStart);
+
+            if (_cursorPosition <= node.Token.Span.Min // Cursor position is before the $"
+                || (node.StrInterpEnd != null && node.StrInterpEnd is StrInterpEndToken && node.StrInterpEnd.Span.Lim <= _cursorPosition) // Cursor is after the close quote.
+                || node.Children.Count() == 0) //// Cursor is inside empty string interpolation.
+            {
+                _result = node;
+                return false;
+            }
+
+            for (var i = 0; i < node.Children.Length; i++)
+            {
+                var child = node.Children[i];
+
+                // Cursor position is inside ith child.
+                if (_cursorPosition <= child.GetCompleteSpan().Lim)
+                {
+                    child.Accept(this);
+                    return false;
+                }
+            }
+
+            // If we got here we could be inside an empty island
+            // i.e. $"Hello {|}"
+            // Just visit the last child
             node.Children[node.Children.Length - 1].Accept(this);
 
             return false;

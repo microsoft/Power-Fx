@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Globalization;
@@ -25,7 +24,7 @@ namespace Microsoft.PowerFx
             CultureInfo = cultureInfo;
         }
 
-        // Helper to eval an arg that might be a lambda. 
+        // Helper to eval an arg that might be a lambda.
         internal DValue<T> EvalArg<T>(FormulaValue arg, SymbolContext context, IRContext irContext)
             where T : ValidFormulaValue
         {
@@ -67,7 +66,7 @@ namespace Microsoft.PowerFx
 
         public override FormulaValue Visit(TableNode node, SymbolContext context)
         {
-            // single-column table. 
+            // single-column table.
 
             var len = node.Values.Count;
 
@@ -110,7 +109,7 @@ namespace Microsoft.PowerFx
 
         public override FormulaValue Visit(CallNode node, SymbolContext context)
         {
-            // Sum(  [1,2,3], Value * Value)            
+            // Sum(  [1,2,3], Value * Value)
             // return base.PreVisit(node);
 
             var func = node.Function;
@@ -170,24 +169,37 @@ namespace Microsoft.PowerFx
                     return OperatorBinaryMul(this, context, node.IRContext, args);
                 case BinaryOpKind.DivNumbers:
                     return OperatorBinaryDiv(this, context, node.IRContext, args);
-
-                case BinaryOpKind.EqNumbers:
-                case BinaryOpKind.EqBoolean:
-                case BinaryOpKind.EqText:
-                case BinaryOpKind.EqDate:
-                case BinaryOpKind.EqTime:
-                case BinaryOpKind.EqDateTime:
-                case BinaryOpKind.EqHyperlink:
-                case BinaryOpKind.EqCurrency:
-                case BinaryOpKind.EqImage:
-                case BinaryOpKind.EqColor:
-                case BinaryOpKind.EqMedia:
                 case BinaryOpKind.EqBlob:
+
+                case BinaryOpKind.EqBoolean:
+                case BinaryOpKind.EqColor:
+                case BinaryOpKind.EqCurrency:
+                case BinaryOpKind.EqDate:
+                case BinaryOpKind.EqDateTime:
                 case BinaryOpKind.EqGuid:
+                case BinaryOpKind.EqHyperlink:
+                case BinaryOpKind.EqImage:
+                case BinaryOpKind.EqMedia:
+                case BinaryOpKind.EqNumbers:
+                case BinaryOpKind.EqOptionSetValue:
+                case BinaryOpKind.EqText:
+                case BinaryOpKind.EqTime:
                     return OperatorBinaryEq(this, context, node.IRContext, args);
 
+                case BinaryOpKind.NeqBlob:
+                case BinaryOpKind.NeqBoolean:
+                case BinaryOpKind.NeqColor:
+                case BinaryOpKind.NeqCurrency:
+                case BinaryOpKind.NeqDate:
+                case BinaryOpKind.NeqDateTime:
+                case BinaryOpKind.NeqGuid:
+                case BinaryOpKind.NeqHyperlink:
+                case BinaryOpKind.NeqImage:
+                case BinaryOpKind.NeqMedia:
                 case BinaryOpKind.NeqNumbers:
+                case BinaryOpKind.NeqOptionSetValue:
                 case BinaryOpKind.NeqText:
+                case BinaryOpKind.NeqTime:
                     return OperatorBinaryNeq(this, context, node.IRContext, args);
 
                 case BinaryOpKind.GtNumbers:
@@ -419,26 +431,12 @@ namespace Microsoft.PowerFx
 
         public override FormulaValue Visit(ResolvedObjectNode node, SymbolContext context)
         {
-            if (node.Value is RecalcEngineResolver.ParameterData data)
+            return node.Value switch
             {
-                var paramName = data.ParameterName;
-
-                var value = context.Globals.GetField(node.IRContext, paramName);
-                return value;
-            }
-
-            if (node.Value is RecalcFormulaInfo fi)
-            {
-                var value = fi._value;
-                return value;
-            }
-
-            return new ErrorValue(node.IRContext, new ExpressionError()
-            {
-                Message = $"Unrecognized symbol {node?.Value?.GetType()?.Name}".Trim(),
-                Span = node.IRContext.SourceContext,
-                Kind = ErrorKind.Validation
-            });
+                RecalcFormulaInfo fi => ResolvedObjectHelpers.RecalcFormulaInfo(fi),
+                OptionSet optionSet => ResolvedObjectHelpers.OptionSet(optionSet, node.IRContext),
+                _ => ResolvedObjectHelpers.ResolvedObjectError(node),
+            };
         }
     }
 }

@@ -46,6 +46,10 @@ namespace Microsoft.PowerFx.Core.Texl
         {
         }
 
+        public override void PostVisit(StrInterpNode node)
+        {
+        }
+
         public override void PostVisit(RecordNode node)
         {
         }

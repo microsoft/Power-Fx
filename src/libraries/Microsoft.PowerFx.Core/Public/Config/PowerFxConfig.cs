@@ -27,20 +27,28 @@ namespace Microsoft.PowerFx.Core
 
         internal EnumStore EnumStore { get; }
 
-        internal CultureInfo CultureInfo { get; }        
+        internal CultureInfo CultureInfo { get; }
 
-        public PowerFxConfig(CultureInfo cultureInfo = null)
-            : this(null, cultureInfo)
+        private PowerFxConfig(CultureInfo cultureInfo, EnumStore enumStore) 
         {
-        }
-
-        internal PowerFxConfig(EnumStore enumStore = null, CultureInfo cultureInfo = null)
-        {
-            EnumStore = enumStore ?? new EnumStore();
             CultureInfo = cultureInfo ?? CultureInfo.CurrentCulture;
             _isLocked = false;
             _extraFunctions = new Dictionary<string, TexlFunction>();
             _environmentSymbols = new Dictionary<DName, IExternalEntity>();
+            EnumStore = enumStore;
+        }      
+
+        public PowerFxConfig(CultureInfo cultureInfo = null)
+            : this(cultureInfo, new EnumStore()) 
+        {
+        }
+
+        /// <summary>
+        /// Stopgap until Enum Store is refactored. Do not rely on, this will be removed. 
+        /// </summary>
+        internal static PowerFxConfig BuildWithEnumStore(CultureInfo cultureInfo, EnumStore enumStore)
+        {
+            return new PowerFxConfig(cultureInfo, enumStore);
         }
 
         internal void AddEntity(IExternalEntity entity)

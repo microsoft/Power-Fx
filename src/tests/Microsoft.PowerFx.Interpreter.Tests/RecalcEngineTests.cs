@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Public;
 using Microsoft.PowerFx.Core.Public.Types;
@@ -67,6 +68,24 @@ namespace Microsoft.PowerFx.Tests
             var result = engine.Eval("With({y:2}, x+y)", context);
 
             Assert.Equal(17.0, ((NumberValue)result).Value);
+        }
+
+        /// <summary>
+        /// Test that helps to ensure that RecalcEngine performs evaluation in thread safe manner.
+        /// </summary>
+        [Fact]
+        public void EvalInMultipleThreads()
+        {
+            var engine = new RecalcEngine();
+            Parallel.For(
+                0,
+                10000,
+                (i) =>
+                {
+                    Assert.Equal("5", engine.Eval("10-5").ToObject().ToString());
+                    Assert.Equal("True", engine.Eval("true Or false").ToObject().ToString());
+                    Assert.Equal("15", engine.Eval("10+5").ToObject().ToString());
+                });
         }
 
         [Fact]
@@ -257,7 +276,7 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public void CustomFunction()
         {
-            var config = new PowerFxConfig(null, null);
+            var config = new PowerFxConfig(null);
             config.AddFunction(new TestCustomFunction());
             var engine = new RecalcEngine(config);
 
@@ -339,7 +358,7 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public void RecalcEngineLocksConfig()
         {
-            var config = new PowerFxConfig(null, null);
+            var config = new PowerFxConfig(null);
             config.AddFunction(BuiltinFunctionsCore.Blank);
             
             var recalcEngine = new RecalcEngine(config);
@@ -356,7 +375,7 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public void OptionSetChecks()
         {
-            var config = new PowerFxConfig(null, null);
+            var config = new PowerFxConfig(null);
 
             var optionSet = new OptionSet("OptionSet", new Dictionary<string, string>() 
             {

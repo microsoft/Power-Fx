@@ -267,6 +267,36 @@ namespace Microsoft.PowerFx.Core.Syntax
             }
         }
 
+        public override LazyList<string> Visit(StrInterpNode node, Precedence context)
+        {
+            Contracts.AssertValue(node);
+
+            var count = node.Count;
+            var result = LazyList<string>.Empty;
+
+            result = result.With("$\"");
+            for (var i = 0; i < count; i++)
+            {
+                if (node.Children[i].Kind == NodeKind.StrLit)
+                {
+                    Contracts.Assert(node.Children[i] is StrLitNode);
+
+                    var strLit = node.Children[i] as StrLitNode;
+                    result = result.With(CharacterUtils.ExcelEscapeString(strLit.Value));
+                }
+                else
+                {
+                    result = result
+                        .With("{")
+                        .With(node.Children[i].Accept(this, Precedence.None))
+                        .With("}");
+                }
+            }
+
+            result = result.With("\"");
+            return result;
+        }
+
         public override LazyList<string> Visit(CallNode node, Precedence parentPrecedence)
         {
             Contracts.AssertValue(node);
@@ -655,6 +685,63 @@ namespace Microsoft.PowerFx.Core.Syntax
             }
 
             return Basic(node, context);
+        }
+
+        public override LazyList<string> Visit(StrInterpNode node, Context context)
+        {
+            Contracts.AssertValue(node);
+
+            var result = LazyList<string>.Empty;
+            var withinIsland = false;
+            foreach (var source in node.SourceList.Sources.Where(source => !(source is WhitespaceSource)))
+            {
+                if (source is NodeSource nodeSource)
+                {
+                    if (withinIsland)
+                    {
+                        result = result.With(nodeSource.Node.Accept(this, context));
+                    }
+                    else if (nodeSource.Node.Kind == NodeKind.StrLit)
+                    {
+                        Contracts.Assert(nodeSource.Node is StrLitNode);
+
+                        var strLitNode = nodeSource.Node as StrLitNode;
+                        result = result
+                            .With(CharacterUtils.ExcelEscapeString(strLitNode.Value));
+                    }
+                }
+                else if (source is TokenSource tokenSource)
+                {
+                    if (tokenSource.Token.Kind == TokKind.StrLit)
+                    {
+                        Contracts.Assert(tokenSource.Token is StrLitToken);
+
+                        var strLitToken = tokenSource.Token as StrLitToken;
+                        result = result
+                            .With(CharacterUtils.ExcelEscapeString(strLitToken.Value));
+                    }
+                    else if (tokenSource.Token.Kind == TokKind.IslandStart)
+                    {
+                        withinIsland = true;
+                        result = result.With(source.Tokens.Select(GetScriptForToken));
+                    }
+                    else if (tokenSource.Token.Kind == TokKind.IslandEnd)
+                    {
+                        withinIsland = false;
+                        result = result.With(source.Tokens.Select(GetScriptForToken));
+                    }
+                    else
+                    {
+                        result = result.With(source.Tokens.Select(GetScriptForToken));
+                    }
+                }
+                else
+                {
+                    result = result.With(source.Tokens.Select(GetScriptForToken));
+                }
+            }
+
+            return result;
         }
 
         public override LazyList<string> Visit(CallNode node, Context context)

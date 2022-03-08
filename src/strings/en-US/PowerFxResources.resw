@@ -1438,6 +1438,10 @@
     <value>expression</value>
     <comment>function_parameter - First parameter to the IsBlankOrError function - the expression to be evaluated.</comment>
   </data>
+  <data name="AboutIsBlankOrError_expression" xml:space="preserve">
+    <value>An expression to be tested.</value>
+    <comment>Function parameter for IsBlankOrError function.</comment>
+  </data>
   <data name="AboutIsEmpty" xml:space="preserve">
     <value>Checks if a collection is empty and returns true or false.</value>
     <comment>Description of 'IsEmpty' function.</comment>
@@ -1445,6 +1449,9 @@
   <data name="IsEmptyArg1" xml:space="preserve">
     <value>source</value>
     <comment>function_parameter - First parameter to the IsEmpty function - the source expression to be evaluated.</comment>
+  </data>
+  <data name="AboutIsEmpty_source" xml:space="preserve">
+    <value>A table to be tested.</value>
   </data>
   <data name="AboutShuffle" xml:space="preserve">
     <value>Returns a randomly shuffled copy of the input 'source' table.</value>
@@ -6345,6 +6352,14 @@
   <data name="ErrorResource_ErrInvalidControlReference_Link_1_URL" xml:space="preserve">
     <value>https://go.microsoft.com/fwlink/?linkid=2132703</value>
     <comment>{Locked}</comment>
+  </data>
+  <data name="ErrorResource_ErrInvalidStringInterpolation_ShortMessage" xml:space="preserve">
+    <value>Expressions which appear inside an interpolated string must evaluate to a Text value or to a compatible type.</value>
+    <comment>Error message.</comment>
+  </data>
+  <data name="ErrorResource_ErrInvalidStringInterpolation_HowToFix_1" xml:space="preserve">
+    <value>Check the types of the expressions inside the interpolated string.</value>
+    <comment>How to fix message for an error</comment>
   </data>
   <data name="ErrorResource_ErrAsNotInContext_ShortMessage" xml:space="preserve">
     <value>As is not permitted in this context</value>

@@ -291,6 +291,11 @@ namespace Microsoft.PowerFx.Core.Types.Enums
 #endif
             };
 
+        private ImmutableList<EnumSymbol> _enumSymbols;
+
+        // TODO: unify _enumSymbols with this variable because they are basically the same thing
+        private ImmutableList<Tuple<DName, DName, DType>> _enumsUsedPowerApps;
+
         protected virtual IDictionary<string, string> EnumDict
         {
             get
@@ -305,8 +310,7 @@ namespace Microsoft.PowerFx.Core.Types.Enums
             if (!_customEnumDict.ContainsKey(tupleName))
             {
                 _customEnumDict = _customEnumDict.Add(tupleName, tuple);
-                _enumSpec = RegenerateEnumSpec();
-                _enumTypes = RegenerateEnumTypes();
+                ResetEnumCaches();
                 if (locInfo != null)
                 {
                     if (!_customEnumLocDict.ContainsKey(tupleName))
@@ -344,8 +348,7 @@ namespace Microsoft.PowerFx.Core.Types.Enums
         {
             _customEnumDict = ImmutableDictionary<string, Tuple<string, string, string>>.Empty;
             _customEnumLocDict = ImmutableDictionary<string, Dictionary<string, string>>.Empty;
-            _enumSpec = RegenerateEnumSpec();
-            _enumTypes = RegenerateEnumTypes();
+            ResetEnumCaches();
         }
 
         /// <summary>
@@ -430,21 +433,27 @@ namespace Microsoft.PowerFx.Core.Types.Enums
                 return RegenerateEnumTypes();
             });
 
-            foreach (var enumSpec in EnumDict)
+            return CollectionUtils.EnsureInstanceCreated(ref _enumsUsedPowerApps, () =>
             {
-                Contracts.Assert(DName.IsValidDName(enumSpec.Key));
+                var list = ImmutableList.CreateBuilder<Tuple<DName, DName, DType>>();
+                foreach (var enumSpec in EnumDict)
+                {
+                    Contracts.Assert(DName.IsValidDName(enumSpec.Key));
 
-                var name = new DName(enumSpec.Key);
-                yield return new Tuple<DName, DName, DType>(name, name, _enumTypes[enumSpec.Key]);
-            }
+                    var name = new DName(enumSpec.Key);
+                    list.Add(new Tuple<DName, DName, DType>(name, name, _enumTypes[enumSpec.Key]));
+                }
 
-            foreach (var enumSpec in _customEnumDict.Values)
-            {
-                Contracts.Assert(DName.IsValidDName(enumSpec.Item1));
-                Contracts.Assert(DName.IsValidDName(enumSpec.Item2));
+                foreach (var enumSpec in _customEnumDict.Values)
+                {
+                    Contracts.Assert(DName.IsValidDName(enumSpec.Item1));
+                    Contracts.Assert(DName.IsValidDName(enumSpec.Item2));
 
-                yield return new Tuple<DName, DName, DType>(new DName(enumSpec.Item1), new DName(enumSpec.Item2), _enumTypes[enumSpec.Item2]);
-            }
+                    list.Add(new Tuple<DName, DName, DType>(new DName(enumSpec.Item1), new DName(enumSpec.Item2), _enumTypes[enumSpec.Item2]));
+                }
+
+                return list.ToImmutable();
+            });
         }
 
         internal bool TryGetEnumSpec(string name, out string dType)
@@ -503,15 +512,27 @@ namespace Microsoft.PowerFx.Core.Types.Enums
             return false;
         }
 
-        internal IEnumerable<EnumSymbol> EnumSymbols
+        internal IEnumerable<EnumSymbol> EnumSymbols =>
+            CollectionUtils.EnsureInstanceCreated(
+                    ref _enumSymbols, () => RegenerateEnumSymbols());
+
+        private ImmutableList<EnumSymbol> RegenerateEnumSymbols()
         {
-            get
+            var list = ImmutableList.CreateBuilder<EnumSymbol>();
+            foreach (var enumValue in Enums())
             {
-                foreach (var enumValue in Enums())
-                {
-                    yield return new EnumSymbol(this, enumValue.Item1, enumValue.Item2, enumValue.Item3);
-                }
+                list.Add(new EnumSymbol(this, enumValue.Item1, enumValue.Item2, enumValue.Item3));
             }
+
+            return list.ToImmutable();
+        }
+
+        private void ResetEnumCaches()
+        {
+            _enumSpec = RegenerateEnumSpec();
+            _enumTypes = RegenerateEnumTypes();
+            _enumSymbols = null;
+            _enumsUsedPowerApps = null;
         }
     }
 }

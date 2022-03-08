@@ -123,7 +123,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [InlineData("OptionSet.Option1 <> OptionSet.option_2", "OptionSet.option_1 <> OptionSet.option_2", false)]
         public void OptionSetDisplayNames(string inputExpression, string outputExpression, bool toDisplay)
         {            
-            var config = new PowerFxConfig(null, null);
+            var config = new PowerFxConfig(null);
             var optionSet = new OptionSet("OptionSet", new Dictionary<string, string>() 
             {
                     { "option_1", "Option1" },
