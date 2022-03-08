@@ -75,6 +75,15 @@ namespace Microsoft.PowerFx.Core.Tests
                 () => AddFile(runner, "Bad1.txt"));
         }
 
+        [Fact]
+        public void TestBad2Parse()
+        {
+            var runner = new TestRunner();
+
+            Assert.Throws<InvalidOperationException>(
+                () => AddFile(runner, "Bad2.txt"));
+        }
+
         // #DISABLE directive to remove an entire file. 
         [Fact]
         public void TestDisable()
@@ -257,15 +266,22 @@ namespace Microsoft.PowerFx.Core.Tests
             // Test override BaseRunner.IsError
             var runner = new MockErrorRunner
             {
-                _hook = (expr, setup) => FormulaValue.New(1),
-                _isError = (value) => true
+                _hook = (expr, setup) => 
+                    expr switch {
+                        "1" => FormulaValue.New(1),
+                        "IsError(1)" => FormulaValue.New(true),
+                        _ => throw new InvalidOperationException()
+                     },
+                _isError = (value) => value is NumberValue
             };
 
             var test = new TestCase
             {
+                Input = "1",
                 Expected = "#error"                
             };
 
+            // On #error for x, test runner  will also call IsError(x)
             var result = await runner.RunAsync(test);
             Assert.Equal(TestResult.Pass, result.Item1);
 
