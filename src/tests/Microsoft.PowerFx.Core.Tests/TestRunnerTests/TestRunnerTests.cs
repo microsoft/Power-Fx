@@ -235,6 +235,45 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.Equal(TestResult.Skip, result.Item1);            
         }
 
+        // Override IsError
+        private class MockErrorRunner : MockRunner
+        {
+            protected override Task<FormulaValue> RunAsyncInternal(string expr, string setupHandlerName = null)
+            {
+                return Task.FromResult(_hook(expr, setupHandlerName));
+            }
+
+            public Func<FormulaValue, bool> _isError;
+
+            public override bool IsError(FormulaValue value)
+            {
+                return _isError(value);
+            }
+        }
+
+        [Fact]
+        public async Task TestErrorOverride()
+        {
+            // Test override BaseRunner.IsError
+            var runner = new MockErrorRunner
+            {
+                _hook = (expr, setup) => FormulaValue.New(1),
+                _isError = (value) => true
+            };
+
+            var test = new TestCase
+            {
+                Expected = "#error"                
+            };
+
+            var result = await runner.RunAsync(test);
+            Assert.Equal(TestResult.Pass, result.Item1);
+
+            runner._isError = (value) => false;
+            result = await runner.RunAsync(test);
+            Assert.Equal(TestResult.Fail, result.Item1);
+        }
+
         private static void AddFile(TestRunner runner, string filename)
         {
             var test1 = Path.GetFullPath(filename, TxtFileDataAttribute.GetDefaultTestDir("TestRunnerTests"));            
