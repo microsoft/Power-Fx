@@ -54,6 +54,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="ExpressionTestCases\MinMax.txt" />
     <None Remove="ExpressionTestCases\StringInterpolate.txt" />
   </ItemGroup>
 

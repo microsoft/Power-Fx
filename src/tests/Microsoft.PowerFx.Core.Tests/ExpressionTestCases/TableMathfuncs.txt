@@ -18,30 +18,6 @@ Blank()
 >> Sum([1, 2, 1/0, 4, 5], Value)
 #Error
 
->> Min([1, 2, 3, 4, 5], Value)
-1
-
->> Min([1, 2, 1/0, 4, 5], Value)
-#Error
-
->> Min(1, 2, 3, Blank(), 2, 3)
-1
-
->> Max([1, 2, 3, 4, 5], Value)
-5
-
->> Max([1, 2, 1/0, 4, 5], Value)
-#Error
-
->> Max(1, 2, 3, Blank(), 2, 3)
-3
-
->> Max(Table({Name:"John Doe", DOB:Date(1985,3,5)},{Name:"Jane Roe", DOB:Date(1986,10,19)}),DOB)
-Date(1986,10,19)
-
->> Max(Table({Name:"John Doe", DOB:Date(1985,3,5), Thing: "1"},{Name:"Jane Roe", DOB:Date(1986,10,19), Thing: "2"}),Thing)
-2
-
 >> IsBlank(Average(Filter([1,2,3],Value > 10), Value))
 #Error
 
