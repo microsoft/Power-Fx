@@ -2127,7 +2127,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 new ListNode(ref listNodeId, tok: node.Token, args: node.CloneChildren(ref minChildId, node.GetCompleteSpan()), delimiters: null, sourceList: node.SourceList),
                 node.StrInterpEnd);
             _compilerGeneratedCallNodes[node.Id] = callNode;
-            SetInfo(callNode, new CallInfo(callNode));
+            SetInfo(callNode, new CallInfo(func, callNode));
             return callNode;
         }
 
