@@ -351,7 +351,8 @@ namespace Microsoft.PowerFx.Core.Tests
 
             // On #error for x, test runner  will also call IsError(x)
             var result = await runner.RunAsync(test);
-            Assert.Equal(TestResult.Fail, result.Item1);            
+            Assert.Equal(TestResult.Fail, result.Item1);
+            Assert.Contains("(IsError() followup call", result.Item2);
         }
 
         private static void AddFile(TestRunner runner, string filename)

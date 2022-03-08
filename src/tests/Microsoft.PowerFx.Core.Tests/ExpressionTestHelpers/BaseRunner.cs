@@ -82,7 +82,13 @@ namespace Microsoft.PowerFx.Core.Tests
                 Expected = "true"
             };
 
-            return await RunAsync2(case2);
+            var (result, msg) = await RunAsync2(case2);
+            if (result == TestResult.Fail)
+            {
+                msg += " (IsError() followup call)";
+            }
+
+            return (result, msg);
         }
 
         private async Task<(TestResult, string)> RunAsync2(TestCase testCase)
