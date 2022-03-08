@@ -39,8 +39,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             var fArgsValid = true;
             returnType = argTypes[0];
 
-            // If there are any numbers in the comparision, coerse all to numeric.
-            if (Array.Exists(argTypes, element => element == DType.Number))
+            // If there are elements of different types OR if the elements are not a Date/Time/DateTime, coerce to numeric.
+            if (!Array.TrueForAll(argTypes, element => element == argTypes[0]) || !Array.Exists(argTypes, element => element == DType.Date || element == DType.DateTime || element == DType.Time))
             {
                 fArgsValid = base.CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
                 Contracts.Assert(returnType == DType.Number);
@@ -56,26 +56,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                         }
                     }
                     else
-                    {
-                        errors.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.ErrNumberExpected);
-                        fArgsValid = false;
-                    }
-                }
-            }
-            else
-            {
-                // If there are no numbers in the comparison, coerce everything except date/times to numeric.
-                for (var i = 0; i < argTypes.Length; i++)
-                {
-                    if (argTypes[i] != DType.Date && argTypes[i] != DType.DateTime && argTypes[i] != DType.Time && CheckType(args[i], argTypes[i], DType.Number, DefaultErrorContainer, out var matchedWithCoercion))
-                    {
-                        returnType = DType.Number;
-                        if (matchedWithCoercion)
-                        {
-                            CollectionUtils.Add(ref nodeToCoercedTypeMap, args[i], DType.Number, allowDupes: true);
-                        }
-                    }
-                    else if (argTypes[i] != DType.Date && argTypes[i] != DType.DateTime && argTypes[i] != DType.Time)
                     {
                         errors.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.ErrNumberExpected);
                         fArgsValid = false;
