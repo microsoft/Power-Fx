@@ -67,6 +67,38 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Fact]
+        public void TestList()
+        {
+            var mock = new MockErrorRunner
+            {
+                _hook = (expr, setup) => FormulaValue.New(int.Parse(expr))
+            };
+
+            // Edit test directly 
+            var runner = new TestRunner(mock);
+            runner.Tests.Add(new TestCase
+            {
+                Input = "1",
+                Expected = "1"
+            });
+            runner.Tests.Add(new TestCase
+            {
+                Input = "2",
+                Expected = "1"
+            });
+            runner.Tests.Add(new TestCase
+            {
+                Input = "2",
+                Expected = "2"
+            });
+
+            var (total, failed, passed, output) = runner.RunTests();
+            Assert.Equal(3, total);
+            Assert.Equal(1, failed);
+            Assert.Equal(2, passed);
+        }
+
+        [Fact]
         public void TestBadParse()
         {
             var runner = new TestRunner();
@@ -256,7 +288,12 @@ namespace Microsoft.PowerFx.Core.Tests
 
             public override bool IsError(FormulaValue value)
             {
-                return _isError(value);
+                if (_isError != null)
+                {
+                    return _isError(value);
+                }
+
+                return base.IsError(value);
             }
         }
 
@@ -266,10 +303,10 @@ namespace Microsoft.PowerFx.Core.Tests
             // Test override BaseRunner.IsError
             var runner = new MockErrorRunner
             {
-                _hook = (expr, setup) => 
+                _hook = (expr, setup) =>
                     expr switch {
-                        "1" => FormulaValue.New(1),
-                        "IsError(1)" => FormulaValue.New(true),
+                    "1" => FormulaValue.New(1),
+                    "IsError(1)" => FormulaValue.New(true),
                         _ => throw new InvalidOperationException()
                      },
                 _isError = (value) => value is NumberValue
@@ -288,6 +325,33 @@ namespace Microsoft.PowerFx.Core.Tests
             runner._isError = (value) => false;
             result = await runner.RunAsync(test);
             Assert.Equal(TestResult.Fail, result.Item1);
+        }
+
+        // Ensure the #error test fails if the IsError(x) followup call doesn't return true. 
+        [Fact]
+        public async Task TestErrorOverride2()
+        {
+            // Test override BaseRunner.IsError
+            var runner = new MockErrorRunner
+            {
+                _hook = (expr, setup) =>
+                    expr switch {
+                        "1" => FormulaValue.New(1),
+                        "IsError(1)" => FormulaValue.New(false), // expects true, should cause failure
+                        _ => throw new InvalidOperationException()
+                    },
+                _isError = (value) => value is NumberValue
+            };
+
+            var test = new TestCase
+            {
+                Input = "1",
+                Expected = "#error"
+            };
+
+            // On #error for x, test runner  will also call IsError(x)
+            var result = await runner.RunAsync(test);
+            Assert.Equal(TestResult.Fail, result.Item1);            
         }
 
         private static void AddFile(TestRunner runner, string filename)
