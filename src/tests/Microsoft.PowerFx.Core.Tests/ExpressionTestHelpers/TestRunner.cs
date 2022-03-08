@@ -315,9 +315,9 @@ namespace Microsoft.PowerFx.Core.Tests
             {
                 sb.Append(tv.Value.ToString());
             }
-            else if (result is DateValue d)
+            else if (result is DateValue dv)
             {
-                sb.Append(d.Value.ToString(@"MM/dd/yyyy hh:mm:ss tt", System.Globalization.CultureInfo.InvariantCulture));
+                sb.Append(dv.Value.ToString(@"MM/dd/yyyy hh:mm:ss tt", System.Globalization.CultureInfo.InvariantCulture));
             }
             else if (result is DateTimeValue dt)
             {
