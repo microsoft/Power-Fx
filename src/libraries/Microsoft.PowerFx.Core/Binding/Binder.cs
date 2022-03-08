@@ -2940,7 +2940,6 @@ namespace Microsoft.PowerFx.Core.Binding
                 }
                 else if (lookupInfo.Kind == BindKind.DeprecatedImplicitThisItem)
                 {
-                    Contracts.Assert(_txb.Document.Properties.SupportsImplicitThisItem);
                     _txb._hasThisItemReference = true;
 
                     // Even though lookupInfo.Type isn't the full data source type, it still is tagged with the full datasource info if this is a thisitem node
