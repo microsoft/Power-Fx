@@ -402,16 +402,10 @@ namespace Microsoft.PowerFx.Core.Types.Enums
         /// <summary>
         /// Static list of all enum specs.
         /// </summary>
-        private Dictionary<string, string> EnumSpec
-        {
-            get
-            {
-                return CollectionUtils.EnsureInstanceCreated(ref _enumSpec, () =>
-                {
-                    return RegenerateEnumSpec();
-                });
-            }
-        }
+        private Dictionary<string, string> EnumSpec => CollectionUtils.EnsureInstanceCreated(ref _enumSpec, () =>
+                                                                     {
+                                                                         return RegenerateEnumSpec();
+                                                                     });
 
         /// <summary>
         /// Enumerates the default enum declarations.

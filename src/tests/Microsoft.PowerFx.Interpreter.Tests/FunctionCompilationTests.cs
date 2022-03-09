@@ -1,11 +1,13 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System.Collections.Generic;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Public.Types;
 using Microsoft.PowerFx.Core.Public.Values;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Types.Enums;
+using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Interpreter;
 using Xunit;
 
@@ -26,24 +28,17 @@ namespace Microsoft.PowerFx.Tests
             Assert.Equal(FormulaType.String, check.ReturnType);
         }
 
-        private class ErrorKindEnumFormulaType : FormulaType
-        {
-            private static readonly DType _errorKindEnumType = new EnumStore().GetEnum("ErrorKind");
-
-            public ErrorKindEnumFormulaType()
-                : base(_errorKindEnumType)
-            {
-            }
-
-            public override void Visit(ITypeVistor vistor)
-            {
-            }
-        }
-
         private class ErrorKindEnumFormulaValue : FormulaValue
         {
+            private static readonly KeyValuePair<DName, object>[] ErrorKindValues = new[]
+            {
+                new KeyValuePair<DName, object>(new DName("Div0"), 13)
+            };
+
+            private static readonly FormulaType ErrorKindEnumType = new EnumType(DType.Number, ErrorKindValues);
+
             internal ErrorKindEnumFormulaValue()
-                : base(IRContext.NotInSource(new ErrorKindEnumFormulaType()))
+                : base(IRContext.NotInSource(ErrorKindEnumType))
             {
             }
 
