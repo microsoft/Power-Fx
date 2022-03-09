@@ -18,7 +18,14 @@ namespace Microsoft.PowerFx.Core.Public
 
         public override string ToString()
         {
-            return $"Error {Span.Min}-{Span.Lim}: {Message}";
+            if (Span != null)
+            {
+                return $"Error {Span.Min}-{Span.Lim}: {Message}";
+            }
+            else
+            {
+                return $"Error {Message}";
+            }    
         }
     }
 }

@@ -66,7 +66,7 @@ false
 >> ParseJson("{""a"": null}").a
 Blank()
 
-ParseJson("{""a"": null}").a.b
+>> ParseJson("{""a"": null}").a.b
 Blank()
 
 >> ParseJson("null").a

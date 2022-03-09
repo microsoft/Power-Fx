@@ -1,0 +1,9 @@
+﻿// The Disable directive will remove all tests in the specified file 
+#DISABLE: File1.txt
+
+// Adds a new case
+>> input3
+result3
+
+
+

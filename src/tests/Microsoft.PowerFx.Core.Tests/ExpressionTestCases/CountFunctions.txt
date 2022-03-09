@@ -21,3 +21,6 @@ Blank()
 
 >> CountIf([1, 2, 0, 4, 5], 1/Value > 2)
 #Error
+
+>> CountIf([1, 2, 3, 4], 123)
+Errors: Error 22-25: Invalid argument type (Number). Expecting a Boolean value instead.

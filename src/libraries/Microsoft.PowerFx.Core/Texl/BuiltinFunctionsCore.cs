@@ -98,7 +98,8 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction Ln = _library.Append(new LnFunction());
         public static readonly TexlFunction LnT = _library.Append(new LnTableFunction());
         public static readonly TexlFunction Log = _library.Append(new LogFunction());
-        public static readonly TexlFunction LogT = _library.Append(new LogTFunction());
+        public static readonly TexlFunction LogT = _library.Append(new LogTFunction());        
+        public static readonly TexlFunction LookUp = _library.Append(new LookUpFunction());
         public static readonly TexlFunction Lower = _library.Append(new LowerUpperFunction(isLower: true));
         public static readonly TexlFunction LowerT = _library.Append(new LowerUpperTFunction(isLower: true));
         public static readonly TexlFunction Max = _library.Append(new MinMaxFunction(isMin: false));

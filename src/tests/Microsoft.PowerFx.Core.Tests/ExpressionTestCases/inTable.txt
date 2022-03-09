@@ -42,7 +42,6 @@ true
 
 // Blank() on LHS is still false and treated liked record. 
 >> Blank() in [1, Blank(), 2] 
-/*InterpreterRunner*/  #Error
 false
 
 >> 3 in [1, Blank(), 2]

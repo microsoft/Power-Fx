@@ -1,0 +1,13 @@
+// Log is not implemented for SQL
+
+>> Log(100)
+2
+
+>> Log(0)
+#Error
+
+>> Log(Blank())
+Blank()
+
+>> Log(1/0)
+#Error
