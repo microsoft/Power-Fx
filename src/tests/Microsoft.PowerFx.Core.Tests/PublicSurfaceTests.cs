@@ -65,6 +65,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Core.Public.Types.DateTimeNoTimeZoneType",
                 "Microsoft.PowerFx.Core.Public.Types.DateTimeType",
                 "Microsoft.PowerFx.Core.Public.Types.DateType",
+                "Microsoft.PowerFx.Core.Public.Types.EnumType",
                 "Microsoft.PowerFx.Core.Public.Types.FormulaType",
                 "Microsoft.PowerFx.Core.Public.Types.GuidType",
                 "Microsoft.PowerFx.Core.Public.Types.ITypeVistor",
