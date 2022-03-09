@@ -296,13 +296,7 @@ namespace Microsoft.PowerFx.Core.Types.Enums
         // TODO: unify _enumSymbols with this variable because they are basically the same thing
         private ImmutableList<Tuple<DName, DName, DType>> _enumsUsedPowerApps;
 
-        protected virtual IDictionary<string, string> EnumDict
-        {
-            get
-            {
-                return _enums;
-            }
-        }
+        protected virtual IDictionary<string, string> EnumDict => _enums;
 
         internal void RegisterTuple(Tuple<string, string, string> tuple, Dictionary<string, string> locInfo = null)
         {
@@ -408,16 +402,10 @@ namespace Microsoft.PowerFx.Core.Types.Enums
         /// <summary>
         /// Static list of all enum specs.
         /// </summary>
-        private Dictionary<string, string> EnumSpec
-        {
-            get
-            {
-                return CollectionUtils.EnsureInstanceCreated(ref _enumSpec, () =>
-                {
-                    return RegenerateEnumSpec();
-                });
-            }
-        }
+        private Dictionary<string, string> EnumSpec => CollectionUtils.EnsureInstanceCreated(ref _enumSpec, () =>
+                                                                     {
+                                                                         return RegenerateEnumSpec();
+                                                                     });
 
         /// <summary>
         /// Enumerates the default enum declarations.

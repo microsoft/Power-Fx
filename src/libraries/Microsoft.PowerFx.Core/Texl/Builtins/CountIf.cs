@@ -8,6 +8,7 @@ using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Functions.Delegation;
+using Microsoft.PowerFx.Core.Functions.Delegation.DelegationMetadata;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Syntax.Nodes;
 using Microsoft.PowerFx.Core.Types;
@@ -21,7 +22,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     {
         public override bool RequiresErrorContext => true;
 
-        public override bool SupportsParamCoercion => true;
+        public override bool SupportsParamCoercion => false;
 
         public override DelegationCapability FunctionDelegationCapability => DelegationCapability.Filter | DelegationCapability.Count;
 
@@ -63,17 +64,10 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             var fValid = CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
             Contracts.Assert(returnType == DType.Number);
 
-            // Ensure that all the args starting at index 1 are booleans or can be coersed.
+            // Ensure that all the args starting at index 1 are booleans.
             for (var i = 1; i < args.Length; i++)
             {
-                if (CheckType(args[i], argTypes[i], DType.Boolean, DefaultErrorContainer, out var matchedWithCoercion))
-                {
-                    if (matchedWithCoercion)
-                    {
-                        CollectionUtils.Add(ref nodeToCoercedTypeMap, args[i], DType.Boolean, allowDupes: true);
-                    }
-                }
-                else
+                if (!DType.Boolean.Accepts(argTypes[i]))
                 {
                     errors.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.ErrBooleanExpected);
                     fValid = false;
