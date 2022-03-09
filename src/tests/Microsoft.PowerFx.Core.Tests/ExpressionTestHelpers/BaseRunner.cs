@@ -65,6 +65,32 @@ namespace Microsoft.PowerFx.Core.Tests
             }
         }
 
+        // If we override Error values, then for a test case:
+        //   >> X
+        //   #error
+        // also check that:
+        //   >> IsError(x)
+        //   true
+        private async Task<(TestResult, string)> RunErrorCaseAsync(TestCase testCase)
+        {
+            var case2 = new TestCase
+            {
+                SetupHandlerName = testCase.SetupHandlerName,
+                SourceLine = testCase.SourceLine,
+                SourceFile = testCase.SourceFile,
+                Input = $"IsError({testCase.Input})",
+                Expected = "true"
+            };
+
+            var (result, msg) = await RunAsync2(case2);
+            if (result == TestResult.Fail)
+            {
+                msg += " (IsError() followup call)";
+            }
+
+            return (result, msg);
+        }
+
         private async Task<(TestResult, string)> RunAsync2(TestCase testCase)
         {
             string actualStr;
@@ -167,7 +193,8 @@ namespace Microsoft.PowerFx.Core.Tests
                 } 
                 else if (IsError(result))
                 {
-                    return (TestResult.Pass, null);
+                    // If they override IsError, then do additional checks. 
+                    return await RunErrorCaseAsync(testCase);                    
                 }
 
                 // If the actual result is not an error, we'll fail with a mismatch below
@@ -187,6 +214,8 @@ namespace Microsoft.PowerFx.Core.Tests
             return GetType().Name;
         }
 
+        // Some hosts don't have a way to natively represent an error, and so top level errors values
+        // are converted to something like blank. 
         public virtual bool IsError(FormulaValue value)
         {
             return value is ErrorValue;
