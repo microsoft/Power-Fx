@@ -28,6 +28,9 @@ Errors: Error 12-22: Name isn't valid. This identifier isn't recognized.
 >> Error({Kind:"Validation"}) // Error kind needs to be numeric!
 Errors: Error 6-25: Invalid argument type. Expecting a Record value, but of a different schema.|Error 6-25: Invalid type for field 'Kind'. Expected field type of 'ErrorKind'.
 
+>> IfError(1/0, Error({Kind:FirstError.Kind}))
+#Error(Kind=Div0)
+
 >> IfError(1/0, 3)
 3
 
