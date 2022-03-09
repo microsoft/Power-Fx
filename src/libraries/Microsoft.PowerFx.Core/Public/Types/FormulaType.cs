@@ -90,9 +90,6 @@ namespace Microsoft.PowerFx.Core.Public.Types
                 case DKind.UntypedObject:
                     return UntypedObject;
 
-                case DKind.Enum:
-                    return new EnumType(type.GetEnumSupertype(), type.ValueTree);
-
                 default:
                     throw new NotImplementedException($"Not implemented type: {type}");
             }

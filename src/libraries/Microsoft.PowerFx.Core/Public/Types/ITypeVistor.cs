@@ -37,7 +37,5 @@ namespace Microsoft.PowerFx.Core.Public.Types
         void Visit(GuidType type);
 
         void Visit(ColorType type);
-
-        void Visit(EnumType type);
     }
 }
