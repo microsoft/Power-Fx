@@ -711,55 +711,6 @@ namespace Microsoft.PowerFx.Core.Functions
             return null;
         }
 
-        // Optional Override for functions that affect aliases. Allows functions to specify whether they affect aliases
-        // given the specific args and binding.
-        public virtual bool AffectsAliasesWith(TexlNode[] args, TexlBinding binding)
-        {
-            Contracts.AssertValue(args);
-            Contracts.AssertValue(binding);
-
-            return AffectsAliases;
-        }
-
-        // Override if Function.AffectsAliases is true. Given the args and binding for the call,
-        // this should return true if there should be a change to aliases, and return the aliasMap as
-        // a record DType that specifies a map from alias to DType. Also should change the parentName
-        // if the parent control is something besides the current screen.
-        public virtual bool TryGetAliasMap(TexlNode[] args, TexlBinding binding, out DType aliasMapType, ref string targetScreenUniqueId)
-        {
-            Contracts.AssertValue(args);
-            Contracts.AssertValue(binding);
-
-            aliasMapType = DType.Invalid;
-            return false;
-        }
-
-        // Override if Function.AffectsScopeVariable is true. Given the args and binding for the call,
-        // this should return true if there should be a change to app/component variable,
-        // and return the variableName as Dname that represents the name of an app/component variable
-        // and the variableType as any DType that specifies the value of an app/component variable.
-        public virtual bool TryGetScopeVariablePair(TexlNode[] args, TexlBinding binding, out DName variableName, out DType variableType)
-        {
-            Contracts.AssertValue(args);
-            Contracts.AssertValue(binding);
-
-            variableName = default;
-            variableType = DType.Invalid;
-            return false;
-        }
-
-        // Override if Function.AffectsAliases or Function.AffectsScopeVariable is true. Returns a list of variable defintion information
-        public virtual IEnumerable<VariableDefinition> GetDefinedVariables(TexlNode[] args, TexlBinding binding)
-        {
-            return Enumerable.Empty<VariableDefinition>();
-        }
-
-        // Override if Function.AffectsAliases is true. Returns the index of the arg that contains the aliases.
-        public virtual int AliasAffectingArg()
-        {
-            return -1;
-        }
-
         // Override if Function.AffectsScopeVariable is true. Returns the index of the arg that contains the app/component variable names.
         public virtual int ScopeVariableNameAffectingArg()
         {

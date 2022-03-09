@@ -69,6 +69,13 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
 
         // Parent reference
         Parent,
+
+        // String interpolation
+        StrInterpStart,
+        StrInterpEnd,
+        IslandStart,
+        IslandEnd,
+
         Lim
     }
 }
