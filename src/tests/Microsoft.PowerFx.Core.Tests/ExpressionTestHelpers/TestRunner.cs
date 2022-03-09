@@ -17,13 +17,14 @@ namespace Microsoft.PowerFx.Core.Tests
     public class TestRunner
     {
         private readonly BaseRunner[] _runners;
-        private readonly List<TestCase> _tests = new List<TestCase>();
 
-        // Mapping of a Test's key to the test case in _test list.
+        // Mapping of a Test's key to the test case in Test list.
         // Used for when we need to update the test. 
         private readonly Dictionary<string, TestCase> _keyToTests = new Dictionary<string, TestCase>(StringComparer.Ordinal);
 
-        public IEnumerable<TestCase> Tests => _tests;
+        // Expose tests so that host can manipulate list directly. 
+        // Also populate this by calling various Add*() functions to parse. 
+        public List<TestCase> Tests { get; set; } = new List<TestCase>();
 
         // Files that have been disabled. 
         public HashSet<string> DisabledFiles = new HashSet<string>();
@@ -119,7 +120,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
                         // Will remove all cases in this file.
                         // Can apply to multiple files. 
-                        var countRemoved = _tests.RemoveAll(test => string.Equals(Path.GetFileName(test.SourceFile), fileDisable, StringComparison.OrdinalIgnoreCase));                        
+                        var countRemoved = Tests.RemoveAll(test => string.Equals(Path.GetFileName(test.SourceFile), fileDisable, StringComparison.OrdinalIgnoreCase));                        
                     }
                     else if (TryParseDirective(line, "#SETUP:", ref fileSetup) ||
                       TryParseDirective(line, "#OVERRIDE:", ref fileOveride))
@@ -202,7 +203,7 @@ namespace Microsoft.PowerFx.Core.Tests
                     else
                     {
                         // New test
-                        _tests.Add(test);
+                        Tests.Add(test);
 
                         _keyToTests[key] = test;
                     }
@@ -213,6 +214,11 @@ namespace Microsoft.PowerFx.Core.Tests
                 {
                     throw new InvalidOperationException($"Parse error at {Path.GetFileName(thisFile)} on line {i}");
                 }
+            }
+
+            if (test != null)
+            {
+                throw new InvalidOperationException($"Parse error at {Path.GetFileName(thisFile)} on line {i}, missing test result");
             }
         }
 
@@ -228,7 +234,7 @@ namespace Microsoft.PowerFx.Core.Tests
             var pass = 0;
             var sb = new StringBuilder();
 
-            foreach (var testCase in _tests)
+            foreach (var testCase in Tests)
             {
                 foreach (var runner in _runners)
                 {
