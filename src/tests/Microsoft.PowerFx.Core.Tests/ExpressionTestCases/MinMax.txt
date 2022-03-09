@@ -1,4 +1,10 @@
-﻿>> Max(1,2)
+﻿>> Max(1)
+1
+
+>> Max(Min(Date(2022,3,8)))
+Date(2022,3,8)
+
+>> Max(1,2)
 2
 
 >> Max(Blank(), 100, -5, "2000", Value("2001"), Text(2002))
@@ -16,7 +22,19 @@
 >> Max(Time(1,50,0),Time(2,0,0))
 02:00:00
 
+>> Max(Time(3,4,5), Time(2,1/0,8))
+#Error(Kind=Div0)
+
+>> Min(1)
+1
+
+>> Min(Min(Date(2022,3,8)))
+Date(2022,3,8)
+
 >> Min(1,2)
+1
+
+>> Min(Sequence(10000), Value)
 1
 
 >> Min(Date(1985,3,5),Date(1986,10,19))
@@ -25,20 +43,32 @@ Date(1985,3,5)
 >> Min(-100, If(true, -1000, 200))
 -1000
 
+>> Min(1, 3, Sqrt(-1), -3)
+#Error(Kind=Numeric)
+
 >> Min([1, 2, 3, 4, 5], Value)
 1
-
->> Min([1, 2, 1/0, 4, 5], Value)
-#Error
 
 >> Min(1, 2, 3, Blank(), 2, 3)
 1
 
+>> Min([1, 2, 3], 4)
+4
+
+>> Min(Sequence(10000), DateAdd(Date(2000,1,1), -Value, TimeUnit.Days))
+Date(1972,8,15)
+
+>> Min([1, 2, 1/0, 4, 5], Value)
+#Error(Kind=Div0)
+
+>> Min(If(Sqrt(-1) < 1, [1,2,3]), Value)
+#Error
+
 >> Max([1, 2, 3, 4, 5], Value)
 5
 
->> Max([1, 2, 1/0, 4, 5], Value)
-#Error
+>> Max(Sequence(33333, 10),Value)
+33342
 
 >> Max(1, 2, 3, Blank(), 2, 3)
 3
@@ -48,3 +78,10 @@ Date(1986,10,19)
 
 >> Max(Table({Name:"John Doe", DOB:Date(1985,3,5), Thing: "1"},{Name:"Jane Roe", DOB:Date(1986,10,19), Thing: "2"}),Thing)
 2
+
+>> Max(If(Left("hello", -1), [Date(2020,1,1), Date(2021,2,2)]), Value)
+#Error
+
+>> Max([1, 2, 1/0, 4, 5], Value)
+#Error(Kind=Div0)
+
