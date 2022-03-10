@@ -21,7 +21,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     {
         public override bool RequiresErrorContext => true;
 
-        public override bool SupportsParamCoercion => false;
+        public override bool SupportsParamCoercion => true;
 
         public LookUpFunction()
             : base("LookUp", TexlStrings.AboutLookUp, FunctionCategories.Table, DType.Unknown, 0x6, 2, 3, DType.EmptyTable, DType.Boolean)
@@ -49,17 +49,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             returnType = args.Length == 2 ? argTypes[0].ToRecord() : argTypes[2];
 
             // Ensure that the arg at index 1 is boolean or can coerece to boolean if they are OptionSetValues.
-            if (DType.Boolean.Accepts(argTypes[1]))
+            if (argTypes[1].Kind == DKind.OptionSetValue && argTypes[1].CoercesTo(DType.Boolean))
             {
-            }
-            else if (argTypes[1] == DType.OptionSetValue && CheckType(args[1], argTypes[1], DType.Boolean, DefaultErrorContainer, out var matchedWithCoercion))
-            {
-                if (matchedWithCoercion)
-                {
                     CollectionUtils.Add(ref nodeToCoercedTypeMap, args[1], DType.Boolean, allowDupes: true);
-                }
             }
-            else
+            else if (!DType.Boolean.Accepts(argTypes[1]))
             {
                 errors.EnsureError(DocumentErrorSeverity.Severe, args[1], TexlStrings.ErrBooleanExpected);
                 fValid = false;

@@ -22,7 +22,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     {
         public override bool RequiresErrorContext => true;
 
-        public override bool SupportsParamCoercion => false;
+        public override bool SupportsParamCoercion => true;
 
         public override DelegationCapability FunctionDelegationCapability => DelegationCapability.Filter | DelegationCapability.Count;
 
@@ -67,18 +67,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             // Ensure that all the args starting at index 1 are booleans or coerece to boolean if they are OptionSetValues.
             for (var i = 1; i < args.Length; i++)
             {
-                if (argTypes[i] == DType.OptionSetValue && CheckType(args[i], argTypes[i], DType.Boolean, DefaultErrorContainer, out var matchedWithCoercion))
+                if (argTypes[i].Kind == DKind.OptionSetValue && argTypes[i].CoercesTo(DType.Boolean))
                 {
-                    if (matchedWithCoercion)
-                    {
-                        CollectionUtils.Add(ref nodeToCoercedTypeMap, args[i], DType.Boolean, allowDupes: true);
-                    }
+                    CollectionUtils.Add(ref nodeToCoercedTypeMap, args[i], DType.Boolean, allowDupes: true);
                 }
-                else if (DType.Boolean.Accepts(argTypes[i]))
-                {
-                    continue;
-                }
-                else
+                else if (!DType.Boolean.Accepts(argTypes[i]))
                 {
                     errors.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.ErrBooleanExpected);
                     fValid = false;
