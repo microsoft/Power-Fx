@@ -76,7 +76,7 @@ namespace Microsoft.PowerFx.Core.Logging
         {
             Contracts.AssertValue(node);
 
-            if (_nameProvider != null && _nameProvider.TrySanitizeFirstNameNode(node, _binding, out var sanitizedName))
+            if (_nameProvider != null && _nameProvider.TrySanitizeIdentifier(node.Ident, out var sanitizedName))
             {
                 return LazyList<string>.Of(sanitizedName);
             }
@@ -123,8 +123,21 @@ namespace Microsoft.PowerFx.Core.Logging
             }
             else
             {
-                values = values.With(node.RightNode?.Accept(this, parentPrecedence) ??
-                     LazyList<string>.Of("#$righthandid$#"));
+                if (node.RightNode != null)
+                {
+                    values = values.With(node.RightNode?.Accept(this, parentPrecedence));
+                }
+                else
+                {
+                    if (_nameProvider != null && _nameProvider.TrySanitizeIdentifier(node.Right, out var sanitizedName, node))
+                    {
+                        values = values.With(sanitizedName);
+                    }
+                    else
+                    {
+                        values = values.With("#$righthandid$#");
+                    }
+                }
             }
 
             return ApplyPrecedence(parentPrecedence, Precedence.Primary, values);

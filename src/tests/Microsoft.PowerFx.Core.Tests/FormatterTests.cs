@@ -2,10 +2,10 @@
 // Licensed under the MIT license.
 
 using System.Linq;
-using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Lexer;
 using Microsoft.PowerFx.Core.Logging;
+using Microsoft.PowerFx.Core.Syntax;
 using Microsoft.PowerFx.Core.Syntax.Nodes;
 using Xunit;
 using static Microsoft.PowerFx.Core.Parser.TexlParser;
@@ -38,9 +38,9 @@ namespace Microsoft.PowerFx.Tests
 
         private class TestSanitizer : ISanitizedNameProvider
         {
-            public bool TrySanitizeFirstNameNode(FirstNameNode node, TexlBinding binding, out string sanitizedName)
+            public bool TrySanitizeIdentifier(Identifier identifier, out string sanitizedName, DottedNameNode dottedNameNode = null)
             {
-                sanitizedName = "custom";
+                sanitizedName = dottedNameNode == null ? "custom" : "custom2";
                 return true;
             }
         }
@@ -49,6 +49,9 @@ namespace Microsoft.PowerFx.Tests
         [InlineData(
             "Function(Field,1,\"foo\")",
             "Function(custom, #$number$#, #$string$#)")]
+        [InlineData(
+            "Lookup.Field && true",
+            "custom.custom2 && #$boolean$#")]
         public void TestStucturalPrintWithCustomSanitizer(string script, string expected)
         {
             var result = ParseScript(
