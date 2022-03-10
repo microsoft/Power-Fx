@@ -4383,7 +4383,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 _txb.SetScopeUseSet(node, JoinScopeUseSets(node.Children));
             }
 
-            private static bool IsValidAccessToScopedProperty(IExternalControl lhsControl, IExternalControlProperty rhsProperty, IExternalControl currentControl, IExternalControlProperty currentProperty, bool isBehaviorOnly = false)
+            private static bool IsValidAccessToScopedProperty(IExternalControl lhsControl, IExternalControlProperty rhsProperty, IExternalControl currentControl, IExternalControlProperty currentProperty)
             {
                 Contracts.AssertValue(lhsControl);
                 Contracts.AssertValue(rhsProperty);
@@ -4424,7 +4424,7 @@ namespace Microsoft.PowerFx.Core.Binding
                     if (_txb.Document.TryGetControlByUniqueId(infoTexlFunction.Namespace.Name.Value, out var lhsControl) &&
                         lhsControl.Template.TryGetProperty(infoTexlFunction.Name, out var rhsProperty))
                     {
-                        return IsValidAccessToScopedProperty(lhsControl, rhsProperty, currentControl, currentProperty, infoTexlFunction.IsBehaviorOnly);
+                        return IsValidAccessToScopedProperty(lhsControl, rhsProperty, currentControl, currentProperty);
                     }
                 }
 
