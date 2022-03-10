@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Entities;
+using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Functions.Delegation;
 using Microsoft.PowerFx.Core.Functions.Delegation.DelegationMetadata;
@@ -46,6 +47,23 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             // The return type is dictated by the last argument (projection) if one exists. Otherwise it's based on first argument (source).
             returnType = args.Length == 2 ? argTypes[0].ToRecord() : argTypes[2];
+
+            // Ensure that the arg at index 1 is boolean or can coerece to boolean if they are OptionSetValues.
+            if (DType.Boolean.Accepts(argTypes[1]))
+            {
+            }
+            else if (argTypes[1] == DType.OptionSetValue && CheckType(args[1], argTypes[1], DType.Boolean, DefaultErrorContainer, out var matchedWithCoercion))
+            {
+                if (matchedWithCoercion)
+                {
+                    CollectionUtils.Add(ref nodeToCoercedTypeMap, args[1], DType.Boolean, allowDupes: true);
+                }
+            }
+            else
+            {
+                errors.EnsureError(DocumentErrorSeverity.Severe, args[1], TexlStrings.ErrBooleanExpected);
+                fValid = false;
+            }
 
             return fValid;
         }

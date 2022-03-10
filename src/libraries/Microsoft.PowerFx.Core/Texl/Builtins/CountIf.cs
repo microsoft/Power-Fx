@@ -64,10 +64,21 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             var fValid = CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
             Contracts.Assert(returnType == DType.Number);
 
-            // Ensure that all the args starting at index 1 are booleans.
+            // Ensure that all the args starting at index 1 are booleans or coerece to boolean if they are OptionSetValues.
             for (var i = 1; i < args.Length; i++)
             {
-                if (!DType.Boolean.Accepts(argTypes[i]))
+                if (argTypes[i] == DType.OptionSetValue && CheckType(args[i], argTypes[i], DType.Boolean, DefaultErrorContainer, out var matchedWithCoercion))
+                {
+                    if (matchedWithCoercion)
+                    {
+                        CollectionUtils.Add(ref nodeToCoercedTypeMap, args[i], DType.Boolean, allowDupes: true);
+                    }
+                }
+                else if (DType.Boolean.Accepts(argTypes[i]))
+                {
+                    continue;
+                }
+                else
                 {
                     errors.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.ErrBooleanExpected);
                     fValid = false;
