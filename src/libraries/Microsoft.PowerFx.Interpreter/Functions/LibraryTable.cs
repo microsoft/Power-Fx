@@ -13,6 +13,53 @@ namespace Microsoft.PowerFx.Functions
 {
     internal static partial class Library
     {
+        public static FormulaValue LookUp(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args)
+        {
+            // Streaming 
+            var arg0 = (TableValue)args[0];
+            var arg1 = (LambdaFormulaValue)args[1];
+            var arg2 = (LambdaFormulaValue)(args.Length > 2 ? args[2] : null);
+
+            if (args.Length > 3)
+            {
+                return new ErrorValue(irContext, new ExpressionError()
+                {
+                    Message = "LookUp() only supports two predicates",
+                    Span = irContext.SourceContext,
+                    Kind = ErrorKind.Validation
+                });
+            }
+
+            var row = LazyFilter(runner, symbolContext, arg0.Rows, arg1).FirstOrDefault();
+
+            if (row != null)
+            {
+                if (args.Length == 2)
+                {
+                    return row?.ToFormulaValue() ?? new BlankValue(irContext);
+                }
+                else
+                {
+                    var childContext = symbolContext.WithScopeValues(row.Value);
+                    var value = arg2.Eval(runner, childContext);
+
+                    if (value is NumberValue number)
+                    {
+                        value = FiniteChecker(irContext, 0, number);
+                    }
+
+                    if (value is ErrorValue error)
+                    {
+                        return error;
+                    }
+
+                    return value;
+                }
+            }
+
+            return new BlankValue(irContext);
+        }
+
         public static FormulaValue First(IRContext irContext, TableValue[] args)
         {
             return args[0].Rows.FirstOrDefault()?.ToFormulaValue() ?? new BlankValue(irContext);

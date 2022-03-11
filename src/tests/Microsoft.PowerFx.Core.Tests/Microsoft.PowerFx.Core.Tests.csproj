@@ -54,6 +54,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="ExpressionTestCases\Lookup.txt" />
     <None Remove="ExpressionTestCases\StringInterpolate.txt" />
   </ItemGroup>
 
