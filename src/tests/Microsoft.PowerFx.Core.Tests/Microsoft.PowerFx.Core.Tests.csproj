@@ -54,6 +54,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="ExpressionTestCases\Lookup.txt" />
+    <None Remove="ExpressionTestCases\StringInterpolate.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\libraries\Microsoft.PowerFx.Core\Microsoft.PowerFx.Core.csproj" />
   </ItemGroup>
 
