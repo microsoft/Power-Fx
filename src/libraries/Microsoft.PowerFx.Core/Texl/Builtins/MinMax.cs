@@ -39,8 +39,19 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             var fArgsValid = true;
             returnType = argTypes[0];
 
-            // If there are elements of different types OR if the elements are not a Date/Time/DateTime, coerce to numeric.
-            if (!Array.TrueForAll(argTypes, element => element == argTypes[0]) || !Array.Exists(argTypes, element => element == DType.Date || element == DType.DateTime || element == DType.Time))
+            // If there is mixing of Date and DateTime, coerce Date to DateTime
+            if (Array.TrueForAll(argTypes, element => element.Kind == DKind.Date || element.Kind == DKind.DateTime) && !Array.TrueForAll(argTypes, element => element.Kind == DKind.Date))
+            {
+                for (var i = 0; i < argTypes.Length; i++)
+                {
+                    if (argTypes[i].Kind == DKind.Date && argTypes[i].CoercesTo(DType.DateTime))
+                    {
+                        CollectionUtils.Add(ref nodeToCoercedTypeMap, args[i], DType.DateTime, allowDupes: true);
+                        returnType = DType.DateTime;
+                    }
+                }
+            }// If there are elements of mixed types OR if the elements are NOT a Date/Time/DateTime, attempt to coerce to numeric.
+            else if (!Array.TrueForAll(argTypes, element => element.Kind == argTypes[0].Kind) || !Array.Exists(argTypes, element => element.Kind == DKind.Date || element.Kind == DKind.DateTime || element.Kind == DKind.Time))
             {
                 fArgsValid = base.CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
                 Contracts.Assert(returnType == DType.Number);

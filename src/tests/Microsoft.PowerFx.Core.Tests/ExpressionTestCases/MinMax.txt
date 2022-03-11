@@ -22,6 +22,9 @@ Date(2022,3,8)
 >> Max(Time(1,50,0),Time(2,0,0))
 02:00:00
 
+>> Max(Date(2022,3,8),DateTimeValue("March 08, 2022 1:50 PM"))
+03/08/2022 01:50:00 PM
+
 >> Max(Time(3,4,5), Time(2,1/0,8))
 #Error(Kind=Div0)
 
@@ -45,6 +48,9 @@ Date(1985,3,5)
 
 >> Min(-100, If(true, -1000, 200))
 -1000
+
+>> Min(Date(2022,3,8),DateTimeValue("March 08, 2022 1:50 PM"))
+03/08/2022 12:00:00 AM
 
 >> Min(1, 3, Sqrt(-1), -3)
 #Error(Kind=Numeric)
