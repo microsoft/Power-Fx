@@ -2,10 +2,10 @@
 {Value:30}
 
 >> Index([1, 2, 3, 4, 5], 6)
-#Error
+#Error(Kind=Numeric)
 
 >> Index([1, 2, 3, 4, 5], -1)
-#Error
+#Error(Kind=Numeric)
 
 >> Index([1, 2, 3, 4, 5], Blank())
 Blank()
@@ -17,13 +17,13 @@ Blank()
 {Value:7}
 
 >> Index([1, 2, 3, 4, 5], 1/0)
-#Error
+#Error(Kind=Div0)
 
 >> Index(Table({a:"1", b:"101"}, {a:"2"}, {b:"3"}), 1)
 {a:"1",b:"101"}
 
 >> Index(Filter([1,2,3],Value=4),2)
-#Error
+#Error(Kind=Numeric)
 
 >> Index(Table({a:{Value:2},b:1},{a:{Value:1},b:2}), 1).a
 {Value:2}
@@ -39,3 +39,9 @@ Blank()
 
 >> Index(LastN([1, 2, 3, 4, 5], 3), 1)
 {Value:3}
+
+>> Index(Error({Kind: 11}), 1)
+#Error(Kind=Validation)
+
+>> Index([1, 2, 3, 4, 5], Error({Kind: 11}))
+#Error(Kind=Validation)
