@@ -70,7 +70,8 @@ namespace Microsoft.PowerFx.Core.Public
             {
                 Message = x.ShortMessage,
                 Span = x.TextSpan,
-                Severity = x.Severity
+                Severity = x.Severity,
+                MessageKey = x.MessageKey
             }).ToArray();
 
             if (Errors.Length == 0)
