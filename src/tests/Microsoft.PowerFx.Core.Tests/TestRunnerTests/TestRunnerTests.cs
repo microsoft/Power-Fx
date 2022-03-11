@@ -222,6 +222,46 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Fact]
+        public async Task TestRunnerErrorKindMatching()
+        {
+            var errorValue = new ErrorValue(
+                IR.IRContext.NotInSource(Public.Types.FormulaType.Number),
+                new Public.ExpressionError { Kind = Public.ErrorKind.InvalidFunctionUsage });
+            var runner = new MockRunner
+            {
+                _hook = (expr, setup) => errorValue // error
+            };
+
+            var test = new TestCase
+            {
+                Expected = "#Error(Kind=InvalidFunctionUsage)" // validation by enum name
+            };
+            var result = await runner.RunAsync(test);
+            Assert.Equal(TestResult.Pass, result.Item1);
+
+            test = new TestCase
+            {
+                Expected = "#Error(Kind=16)" // // validation by enum value
+            };
+            result = await runner.RunAsync(test);
+            Assert.Equal(TestResult.Pass, result.Item1);
+
+            test = new TestCase
+            {
+                Expected = "#Error(Kind=Div0)" // // failure if error kind does not match
+            };
+            result = await runner.RunAsync(test);
+            Assert.Equal(TestResult.Fail, result.Item1);
+
+            test = new TestCase
+            {
+                Expected = "#Error(Kind=13)" // // failure if numeric error kind does not match
+            };
+            result = await runner.RunAsync(test);
+            Assert.Equal(TestResult.Fail, result.Item1);
+        }
+
+        [Fact]
         public async Task TestRunnerCompilerError()
         {
             // Compiler error is a throw from Check()
