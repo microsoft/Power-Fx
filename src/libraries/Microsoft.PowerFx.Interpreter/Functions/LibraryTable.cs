@@ -48,11 +48,6 @@ namespace Microsoft.PowerFx.Functions
                         value = FiniteChecker(irContext, 0, number);
                     }
 
-                    if (value is ErrorValue error)
-                    {
-                        return error;
-                    }
-
                     return value;
                 }
             }
