@@ -43,9 +43,9 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             optionSet.TryGetValue(new DName("option_1"), out var o1Val);            
             otherOptionSet.TryGetValue(new DName("123412983"), out var o2Val);
 
-            var parameters = FormulaValue.RecordFromFields(
+            var parameters = FormulaValue.NewRecordFromFields(
                     new NamedValue("TopOptionSetField", o1Val),
-                    new NamedValue("Nested", FormulaValue.RecordFromFields(
+                    new NamedValue("Nested", FormulaValue.NewRecordFromFields(
                         new NamedValue("InnerOtherOptionSet", o2Val)))); 
 
             return (new RecalcEngine(config), parameters);

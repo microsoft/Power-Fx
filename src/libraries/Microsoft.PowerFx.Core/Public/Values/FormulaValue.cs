@@ -20,6 +20,11 @@ namespace Microsoft.PowerFx.Core.Public.Values
     [DebuggerDisplay("{ToObject().ToString()} ({Type})")]
     public abstract class FormulaValue
     {
+        // We place the .New*() methods on FormulaValue for discoverability. 
+        // If we're "marshalling" a T, we need a TypeMarshallerCache
+        // Else, if we're "constructing" a Table/Record from existing FormulaValues, we don't need a marshaller.
+        // We can use C# overloading to resolve. 
+
         // IR contextual information flows from Binding >> IR >> Values
         // In general the interpreter should trust that the binding had
         // the correct runtime types for all values.
@@ -73,6 +78,11 @@ namespace Microsoft.PowerFx.Core.Public.Values
         public static NumberValue New(float number)
         {
             return new NumberValue(IRContext.NotInSource(FormulaType.Number), number);
+        }
+
+        public static GuidValue New(Guid guid)
+        {
+            return new GuidValue(IRContext.NotInSource(FormulaType.Guid), guid);
         }
 
         public static StringValue New(string value)
@@ -130,26 +140,6 @@ namespace Microsoft.PowerFx.Core.Public.Values
             return new ErrorValue(IRContext.NotInSource(FormulaType.Blank), error);
         }
 
-        public static TableValue NewTable<T>(params T[] array)
-        {
-            return NewTable((IEnumerable<T>)array);
-        }
-
-        public static TableValue NewTable<T>(IEnumerable<T> rows)
-        {
-            return TableFromEnumerable((System.Collections.IEnumerable)rows, typeof(T));
-        }
-
-        public static RecordValue NewRecord<T>(T obj)
-        {
-            return RecordFromProperties(obj, typeof(T));
-        }
-
-        public static RecordValue NewRecord(object obj, Type type)
-        {
-            return RecordFromProperties(obj, type);
-        }
-
         public static UntypedObjectValue New(IUntypedObject untypedObject)
         {
             return new UntypedObjectValue(
@@ -157,82 +147,16 @@ namespace Microsoft.PowerFx.Core.Public.Values
                 untypedObject);
         }
 
-        // Dynamic new, useful for marshallers. 
-        public static FormulaValue New(object obj, Type type)
+        // Marshal an arbitray object (scalar, record, table, etc) into a FormulaValue. 
+        public static FormulaValue New(object obj, Type type, TypeMarshallerCache cache = null)
         {
-            if (obj == null)
+            if (cache == null)
             {
-                return NewBlank();
+                cache = new TypeMarshallerCache();
             }
 
-            if (obj is FormulaValue value)
-            {
-                return value;
-            }
-
-            if (obj is string strValue)
-            {
-                return New(strValue);
-            }
-
-            if (obj is bool boolValue)
-            {
-                return New(boolValue);
-            }
-
-            if (obj is double doubleValue)
-            {
-                return New(doubleValue);
-            }
-
-            if (obj is int intValue)
-            {
-                return New(intValue);
-            }
-
-            if (obj is decimal decValue)
-            {
-                return New(decValue);
-            }
-
-            if (obj is long longValue)
-            {
-                return New(longValue);
-            }
-
-            if (obj is float singleValue)
-            {
-                return New(singleValue);
-            }
-
-            if (obj is DateTime dateValue)
-            {
-                return New(dateValue);
-            }
-
-            if (obj is DateTimeOffset dateOffsetValue)
-            {
-                return New(dateOffsetValue.DateTime);
-            }
-
-            if (obj is TimeSpan timeValue)
-            {
-                return New(timeValue);
-            }
-
-            // Do checking off the static type, not the runtime instance. 
-            if (type.IsInterface)
-            {
-                throw new InvalidOperationException($"Can't convert interface");
-            }
-
-            if (typeof(System.Collections.IEnumerable).IsAssignableFrom(type))
-            {
-                return TableFromEnumerable((System.Collections.IEnumerable)obj, type.GetElementType());
-            }
-
-            // Record?
-            return RecordFromProperties(obj, type);
+            // Have New() wrapper for discoverability. 
+            return cache.Marshal(obj, type);   
         }
 
         /// <summary>
@@ -296,19 +220,20 @@ namespace Microsoft.PowerFx.Core.Public.Values
         /// <typeparam name="T">static type to reflect over.</typeparam>
         /// <param name="obj"></param>
         /// <returns>a new record value.</returns>
-        public static RecordValue RecordFromProperties<T>(T obj)
+        public static RecordValue NewRecord<T>(T obj, TypeMarshallerCache cache = null)
         {
-            return RecordFromProperties(obj, typeof(T));
+            return NewRecord(obj, typeof(T), cache);
         }
 
-        public static RecordValue RecordFromProperties(object obj, Type type)
+        public static RecordValue NewRecord(object obj, Type type, TypeMarshallerCache cache = null)
         {
-            var r = RecordFromFields(
-                from prop in type.GetProperties(BindingFlags.Public | BindingFlags.Instance)
-                let fieldValue = prop.GetValue(obj)
-                select new NamedValue(prop.Name, New(fieldValue, prop.PropertyType)));
+            if (cache == null)
+            {
+                cache = new TypeMarshallerCache();
+            }
 
-            return r;
+            var value = (RecordValue)cache.Marshal(obj, type);
+            return value;
         }
 
         /// <summary>
@@ -316,12 +241,12 @@ namespace Microsoft.PowerFx.Core.Public.Values
         /// </summary>
         /// <param name="fields"></param>
         /// <returns></returns>
-        public static RecordValue RecordFromFields(params NamedValue[] fields)
+        public static RecordValue NewRecordFromFields(params NamedValue[] fields)
         {
-            return RecordFromFields(fields.AsEnumerable());
+            return NewRecordFromFields(fields.AsEnumerable());
         }
 
-        public static RecordValue RecordFromFields(IEnumerable<NamedValue> fields)
+        public static RecordValue NewRecordFromFields(IEnumerable<NamedValue> fields)
         {
             var type = new RecordType();
             foreach (var field in fields)
@@ -329,15 +254,15 @@ namespace Microsoft.PowerFx.Core.Public.Values
                 type = type.Add(new NamedFormulaType(field.Name, field.Value.IRContext.ResultType));
             }
 
-            return new InMemoryRecordValue(IRContext.NotInSource(type), fields);
+            return NewRecordFromFields(type, fields);
         }
 
-        public static RecordValue RecordFromFields(RecordType recordType, params NamedValue[] fields)
+        public static RecordValue NewRecordFromFields(RecordType recordType, params NamedValue[] fields)
         {
-            return RecordFromFields(recordType, fields.AsEnumerable());
+            return NewRecordFromFields(recordType, fields.AsEnumerable());
         }
 
-        public static RecordValue RecordFromFields(RecordType recordType, IEnumerable<NamedValue> fields)
+        public static RecordValue NewRecordFromFields(RecordType recordType, IEnumerable<NamedValue> fields)
         {
             return new InMemoryRecordValue(IRContext.NotInSource(recordType), fields);
         }
@@ -366,56 +291,68 @@ namespace Microsoft.PowerFx.Core.Public.Values
 
         #region Host Tables API
 
-        /// <summary>
-        /// Create a table from an untyped IEnumerable. This can be useful in some dynamic scenarios.
-        /// </summary>
-        /// <param name="values"></param>
-        /// <param name="elementType"></param>
-        /// <returns></returns>
-        internal static TableValue TableFromEnumerable(
-            System.Collections.IEnumerable values,
-            Type elementType)
+        public static TableValue NewTable<T>(TypeMarshallerCache cache, params T[] array)
         {
-            if (elementType == null)
+            return NewTable(cache, (IEnumerable<T>)array);
+        }
+
+        // If T is a RecordValue or FormulaValue, this will call out to that overload. 
+        public static TableValue NewTable<T>(TypeMarshallerCache cache, IEnumerable<T> rows)
+        {
+            if (cache == null)
             {
-                throw new ArgumentNullException(nameof(elementType));
+                throw new ArgumentNullException(nameof(cache));
             }
 
-            var records = TableToRecords(values, elementType);
-            var recordType = (RecordType)records.First().IRContext.ResultType;
-            return TableFromRecords(records, recordType.ToTable());
-        }
-
-        public static TableValue TableFromRecords(params RecordValue[] values)
-        {
-            var recordType = (RecordType)values.First().IRContext.ResultType;
-            return TableFromRecords(values, recordType.ToTable());
-        }
-
-        public static TableValue TableFromRecords(IEnumerable<RecordValue> values, TableType type)
-        {
-            return new InMemoryTableValue(IRContext.NotInSource(type), values.Select(r => DValue<RecordValue>.Of(r)));
-        }
-
-        public static TableValue TableFromRecords<T>(IEnumerable<T> values, TableType type)
-        {
-            var values2 = values.Select(v => GuaranteeRecord(New(v, typeof(T))));
-            return new InMemoryTableValue(IRContext.NotInSource(type), values2.Select(r => DValue<RecordValue>.Of(r)));
-        }
-
-        // Used for converting an arbitrary .net enumerable.
-        // The types of the elements my be heterogenous even after this call
-        private static IEnumerable<RecordValue> TableToRecords(
-            System.Collections.IEnumerable values,
-            Type elementType)
-        {
-            foreach (var obj in values)
+            // For FormulaValue, we need to inspect the runtime type. 
+            if (rows is IEnumerable<RecordValue> records)
             {
-                var formulaValue = GuaranteeRecord(New(obj, elementType));
-                yield return formulaValue;
+                return NewTable(records);
             }
+
+            // Check FormulaValue after RecordValue
+            if (rows is IEnumerable<FormulaValue> values)
+            {
+                // Check for a single-column table.                
+                return NewSingleColumnTable(values);
+            }
+
+            // Statically marshal the T to a FormulaType.             
+            var value = cache.Marshal(rows);
+            return (TableValue)value;
+        }
+                
+        // Already having RecordValues  (as oppossed to a unknown T) lets us avoid type marshalling.
+        public static TableValue NewTable(params RecordValue[] values)
+        {
+            return NewTable((IEnumerable<RecordValue>)values);
         }
 
+        public static TableValue NewTable(IEnumerable<RecordValue> records, TableType tableType = null)
+        {
+            if (tableType == null)
+            {
+                var first = records.FirstOrDefault();
+                tableType = (first == null) ?
+                    new TableType() :
+                    ((RecordType)first.Type).ToTable();
+            }
+
+            return new InMemoryTableValue(IRContext.NotInSource(tableType), records.Select(r => DValue<RecordValue>.Of(r)));            
+        }
+
+        public static TableValue NewSingleColumnTable(params FormulaValue[] values)
+        {
+            return NewSingleColumnTable((IEnumerable<FormulaValue>)values);
+        }
+
+        public static TableValue NewSingleColumnTable(IEnumerable<FormulaValue> values)
+        {
+            var records = values.Select(value => GuaranteeRecord(value));
+            return NewTable(records);
+        }
+
+        // Convert a FormulaValue into a Record for a single column table if needed. 
         private static RecordValue GuaranteeRecord(FormulaValue rawVal)
         {
             if (rawVal is RecordValue record)
@@ -426,7 +363,7 @@ namespace Microsoft.PowerFx.Core.Public.Values
             // Handle the single-column-table case. 
             var defaultField = new NamedValue("Value", rawVal);
 
-            var val = RecordFromFields(defaultField);
+            var val = NewRecordFromFields(defaultField);
             return val;
         }
 

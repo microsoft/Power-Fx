@@ -1,0 +1,300 @@
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.PowerFx.Core.Public.Types;
+using Microsoft.PowerFx.Core.Public.Values;
+using Xunit;
+
+// Need to test against some poorly formed classes that violate StyleCop rules. 
+#pragma warning disable IDE0007 // Use implicit type
+#pragma warning disable SA1300 // Element should begin with upper-case letter
+#pragma warning disable SA1307 // Accessible fields should begin with upper-case letter
+
+namespace Microsoft.PowerFx.Core.Tests
+{
+    public class ValueTests
+    {
+        [Theory]
+        [InlineData(true, "true")]
+        [InlineData(false, "false")]
+        public void Bool(bool val, string expectedJson)
+        {
+            var formulaValue = FormulaValue.New(val);
+
+            Assert.Equal(val, formulaValue.Value);
+            Assert.Equal(val, formulaValue.ToObject());
+
+            Assert.Equal(FormulaType.Boolean, formulaValue.Type);
+
+            var resultStr = formulaValue.ToStr();
+            Assert.Equal(expectedJson, resultStr);
+        }
+
+        [Theory]
+        [InlineData(5, "5")]
+        [InlineData(-5, "-5")]
+        public void Number(double val, string expectedJson)
+        {
+            var formulaValue = FormulaValue.New(val);
+
+            Assert.Equal(val, formulaValue.Value);
+            Assert.Equal(val, formulaValue.ToObject());
+
+            Assert.Equal(FormulaType.Number, formulaValue.Type);
+
+            var resultStr = formulaValue.ToStr();
+            Assert.Equal(expectedJson, resultStr);
+
+            // Nullable overloads
+            double? val2 = val;
+            var formulaValue2 = FormulaValue.New((double?)val); // nullable overload
+            Assert.Equal(expectedJson, formulaValue2.ToStr());
+           
+            var formulaValue3 = FormulaValue.New((double?)null);
+            Assert.IsType<NumberType>(formulaValue3.Type);
+            Assert.IsType<BlankValue>(formulaValue3);
+        }    
+
+        [Theory]
+        [InlineData("abc", "\"abc\"")]
+        public void String(string val, string expectedJson)
+        {
+            var formulaValue = FormulaValue.New(val);
+
+            Assert.Equal(val, formulaValue.Value);
+            Assert.Equal(val, formulaValue.ToObject());
+
+            Assert.Equal(FormulaType.String, formulaValue.Type);
+
+            var resultStr = formulaValue.ToStr();
+            Assert.Equal(expectedJson, resultStr);
+        }
+
+        [Fact]
+        public void Record()
+        {
+            RecordValue r = FormulaValue.NewRecordFromFields(
+                new NamedValue("Num", FormulaValue.New(15)),
+                new NamedValue("Str", FormulaValue.New("hello")));
+
+            RecordType rt = (RecordType)r.Type;
+
+            // Access as a dynamic
+            dynamic d = r.ToObject();
+            Assert.Equal(15, d.Num);
+            Assert.Equal("hello", d.Str);
+
+            // Explicit field lookup 
+            var numField = r.GetField("Num");
+            Assert.Equal(15.0, ((NumberValue)numField).Value);
+
+            // Get json runtime representation
+            var resultStr = r.ToStr();
+            Assert.Equal("{Num:15,Str:\"hello\"}", resultStr);
+        }
+
+        [Fact]
+        public void RecordMarshaller()
+        {
+            var obj = new TestRowPrimitives
+            {
+                numberInt = 15,
+                numberDouble = 15.1,
+                boolean = true,
+                str = "hello",
+                datetime = new DateTime(1999, 3, 1),
+                timespan = TimeSpan.FromDays(3)
+            };
+
+            RecordValue r = FormulaValue.NewRecord(obj);
+            dynamic d = r.ToObject();
+
+            Assert.Equal((double)obj.numberInt, d.numberInt);
+            Assert.Equal(obj.numberDouble, d.numberDouble);
+            Assert.Equal(obj.boolean, d.boolean);
+            Assert.Equal(obj.str, d.str);
+            Assert.Equal(obj.datetime, d.datetime);
+            Assert.Equal(obj.timespan, d.timespan);
+        }
+
+        // Test the different types of primitives that can get marshalled. 
+        private class TestRowPrimitives
+        {
+            public int numberInt { get; set; }
+
+            public double numberDouble { get; set; }
+
+            public bool boolean { get; set; }
+
+            public string str { get; set; }
+
+            public DateTime datetime { get; set; }
+
+            public DateTimeOffset dto { get; set; }
+
+            public TimeSpan timespan { get; set; }
+        }
+
+        [Fact]
+        public void RecordNotMarshalled()
+        {
+            RecordValue r = FormulaValue.NewRecord(new RowDontMarshal());
+            Assert.Equal(0, r.Fields.Count());
+        }
+
+        // These member kinds are not marshalled.  
+        private class RowDontMarshal
+        {
+            public static int StaticProp { get; set; }
+
+            private int PrivateProp { get; set; }
+
+            internal int InternalProp { get; set; }
+
+            public int publicField;
+        }
+
+        private class TestRow
+        {
+            public double a { get; set; }
+
+            public string str { get; set; }
+        }
+
+        [Fact]
+        public void Table()
+        {
+            var cache = new TypeMarshallerCache();
+            TableValue val = FormulaValue.NewTable(
+                cache,
+                new TestRow { a = 10, str = "alpha" },
+                new TestRow { a = 15, str = "beta" });
+
+            dynamic d = val.ToObject();
+            Assert.Equal(15.0, d[1].a);
+
+            // Verify runtime json
+            var resultStr = val.ToStr();
+
+            Assert.Equal("Table({a:10,str:\"alpha\"},{a:15,str:\"beta\"})", resultStr);
+        }
+
+        [Fact]
+        public void TableFromRecords()
+        {
+            RecordValue r1 = FormulaValue.NewRecord(new TestRow { a = 10, str = "alpha" });
+            RecordValue r2 = FormulaValue.NewRecord(new TestRow { a = 15, str = "beta" });
+            TableValue val = FormulaValue.NewTable(r1, r2);
+                        
+            dynamic d = val.ToObject();
+            Assert.Equal(10.0, d[0].a);
+
+            // Verify runtime json
+            var resultStr = val.ToStr();
+            Assert.Equal("Table({a:10,str:\"alpha\"},{a:15,str:\"beta\"})", resultStr);
+
+            TableValue val2 = NewTableHelper(r1, r2);
+            Assert.Equal(resultStr, val2.ToStr());
+        }
+
+        [Fact]
+        public void EmptyTableFromRecords()
+        {
+            // Empty means we can't infer the type from the records passed in. 
+            var records = new RecordValue[0];
+            TableValue val = FormulaValue.NewTable(records);
+
+            Assert.Empty(val.Rows);
+
+            var resultStr = val.ToStr();
+            Assert.Equal("Table()", resultStr);
+        }
+
+        // Helper to bypass function overloading and invoke the generic overload. 
+        private static TableValue NewTableHelper<T>(params T[] rows)
+        {
+            var cache = new TypeMarshallerCache();
+            return FormulaValue.NewTable<T>(cache, rows);
+        }
+
+        // Single Column Table
+        [Fact]
+        public void TableFromPrimitive()
+        {
+            NumberValue r1 = FormulaValue.New(10);
+            NumberValue r2 = FormulaValue.New(20);
+            TableValue val = FormulaValue.NewSingleColumnTable(r1, r2);
+
+            dynamic d = val.ToObject();
+            Assert.Equal(20.0, d[1]); // SCT returned as arrays
+
+            // Verify runtime resultStr
+            var resultStr = val.ToStr();
+
+            Assert.Equal("[10,20]", resultStr);
+
+            TableValue val2 = NewTableHelper(r1, r2);
+            Assert.Equal(resultStr, val2.ToStr());
+        }
+
+        [Fact]
+        public void SingleColumnTable()
+        {
+            TableValue value = (TableValue)FormulaValue.FromJson("[1,2,3]");
+
+            TableType type = (TableType)value.Type;
+
+            TableType typeExpected = new TableType()
+                .Add(new NamedFormulaType("Value", FormulaType.Number));
+            Assert.Equal(typeExpected, type);
+
+            // Another way to compare
+            var field1 = type.GetNames().First();
+            Assert.Equal("Value", field1.Name);
+            Assert.Equal(FormulaType.Number, field1.Type);
+
+            RecordValue row0 = value.Rows.First().Value;
+            Assert.Equal(1.0, row0.GetField("Value").ToObject());
+
+            var len = value.Rows.Count();
+            Assert.Equal(3, len);
+
+            // Converts to single column 
+            var obj = value.ToObject();
+
+            Assert.Equal((ICollection)obj, new[] { 1.0, 2.0, 3.0 });
+
+            var resultStr = value.ToStr();
+            Assert.Equal("[1,2,3]", resultStr);
+        }
+
+        [Fact]
+        public void Blanks()
+        {
+            var value = FormulaValue.New(null, typeof(int));
+            Assert.True(value is BlankValue);
+
+            // null marshals as blank. 
+            RecordValue r = FormulaValue.NewRecord(new
+            {
+                number = 15.1,
+                missing = (string)null,
+            });
+
+            Assert.True(r.GetField("missing") is BlankValue);
+            Assert.Equal(15.1, r.GetField("number").ToObject());
+        }
+    }
+
+    public static class Ext
+    {
+        public static string ToStr(this FormulaValue value)
+        {
+            return TestRunner.TestToString(value);
+        }
+    }
+}

@@ -200,7 +200,7 @@ namespace Microsoft.PowerFx.Functions
         {
             var arg0 = (TableValue)args[0];
             var arg1 = (NumberValue)args[1];
-            int rowIndex = (int)arg1.Value;
+            var rowIndex = (int)arg1.Value;
 
             if (rowIndex < 1 || rowIndex > arg0.Rows.Count())
             {

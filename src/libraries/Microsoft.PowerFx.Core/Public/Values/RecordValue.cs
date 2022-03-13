@@ -28,9 +28,15 @@ namespace Microsoft.PowerFx.Core.Public.Values
             var type = new RecordType();
             return new InMemoryRecordValue(IRContext.NotInSource(type), new List<NamedValue>());
         }
-
-        public virtual FormulaValue GetField(string name)
-        {
+         
+        /// <summary>
+        /// Get a field on this record. 
+        /// See <see cref="ObjectMarshaler"/> to override GetField behavior. 
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public FormulaValue GetField(string name)
+        {            
             return GetField(IRContext.NotInSource(FormulaType.Blank), name);
         }
 
@@ -61,7 +67,7 @@ namespace Microsoft.PowerFx.Core.Public.Values
             return e;
         }
 
-        public override void Visit(IValueVisitor visitor)
+        public sealed override void Visit(IValueVisitor visitor)
         {
             visitor.Visit(this);
         }

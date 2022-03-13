@@ -209,14 +209,14 @@ namespace Microsoft.PowerFx.Tests
         {
             var engine = new RecalcEngine();
 
-            engine.UpdateVariable("R", FormulaValue.RecordFromFields(
+            engine.UpdateVariable("R", FormulaValue.NewRecordFromFields(
                 new NamedValue("F1", FormulaValue.NewBlank(FormulaType.Number)),
                 new NamedValue("F2", FormulaValue.New(6))));
 
             engine.SetFormula("A", "R.F2 + 3 + R.F1", OnUpdate);
             AssertUpdate("A-->9;");
 
-            engine.UpdateVariable("R", FormulaValue.RecordFromFields(
+            engine.UpdateVariable("R", FormulaValue.NewRecordFromFields(
                 new NamedValue("F1", FormulaValue.New(2)),
                 new NamedValue("F2", FormulaValue.New(7))));
             AssertUpdate("A-->12;");
@@ -329,7 +329,7 @@ namespace Microsoft.PowerFx.Tests
             Assert.Equal("x", result.TopLevelIdentifiers.First());
 
             // Test evaluation of parsed expression
-            var recordValue = FormulaValue.RecordFromFields(
+            var recordValue = FormulaValue.NewRecordFromFields(
                 new NamedValue("x", FormulaValue.New(5)));
             var formulaValue = result.Expression.Eval(recordValue);
             Assert.Equal(11.0, (double)formulaValue.ToObject());
