@@ -21,6 +21,9 @@
 >> $""
 ""
 
+>> $"{}"
+Errors: Error 3-4: Empty expressions cannot appear inside an interpolated string.
+
 >> $"Hello"
 "Hello"
 
