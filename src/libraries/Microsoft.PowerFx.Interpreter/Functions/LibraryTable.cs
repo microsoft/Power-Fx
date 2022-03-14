@@ -36,7 +36,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 if (args.Length == 2)
                 {
-                    return row?.ToFormulaValue() ?? new BlankValue(irContext);
+                    return row.ToFormulaValue() ?? new BlankValue(irContext);
                 }
                 else
                 {
