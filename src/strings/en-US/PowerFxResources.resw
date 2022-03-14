@@ -6355,19 +6355,19 @@
   </data>
   <data name="ErrorResource_ErrInvalidStringInterpolation_ShortMessage" xml:space="preserve">
     <value>Expressions which appear inside an interpolated string must evaluate to a Text value or to a compatible type.</value>
-    <comment>Error message.</comment>
+    <comment>Error message. The term "interpolated string" should be translated using the same terms used in the C# documentation.</comment>
   </data>
   <data name="ErrorResource_ErrInvalidStringInterpolation_HowToFix_1" xml:space="preserve">
     <value>Check the types of the expressions inside the interpolated string.</value>
-    <comment>How to fix message for an error</comment>
+    <comment>How to fix message for an error. The term "interpolated string" should be translated using the same terms used in the C# documentation.</comment>
   </data>
   <data name="ErrorResource_ErrEmptyIsland_ShortMessage" xml:space="preserve">
     <value>Empty expressions cannot appear inside an interpolated string.</value>
-    <comment>Error message.</comment>
+    <comment>Error message. The term "interpolated string" should be translated using the same terms used in the C# documentation.</comment>
   </data>
   <data name="ErrorResource_ErrEmptyIsland_HowToFix_1" xml:space="preserve">
     <value>Check for empty expressions inside the interpolated string.</value>
-    <comment>How to fix message for an error</comment>
+    <comment>How to fix message for an error. The term "interpolated string" should be translated using the same terms used in the C# documentation.</comment>
   </data>
   <data name="ErrorResource_ErrAsNotInContext_ShortMessage" xml:space="preserve">
     <value>As is not permitted in this context</value>
