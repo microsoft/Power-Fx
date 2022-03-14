@@ -437,5 +437,30 @@ namespace Microsoft.PowerFx.Functions
                 return new NumberValue(irContext, _random.Next(lower, upper));
             }
         }
+
+        private static FormulaValue Pi(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args)
+        {
+            return new NumberValue(irContext, Math.PI);
+        }
+
+        public static Func<IRContext, NumberValue[], FormulaValue> SingleArgTrig(string functionName, Func<double, double> function)
+        {
+            return (IRContext irContext, NumberValue[] args) =>
+            {
+                var arg = args[0].Value;
+                var result = function(arg);
+                if (double.IsNaN(result) || double.IsInfinity(result))
+                {
+                    return new ErrorValue(irContext, new ExpressionError
+                    {
+                        Message = $"Invalid argument to the {functionName} function.",
+                        Span = irContext.SourceContext,
+                        Kind = ErrorKind.Numeric
+                    });
+                }
+
+                return new NumberValue(irContext, result);
+            };
+        }
     }
 }
