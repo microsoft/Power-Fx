@@ -109,4 +109,4 @@ Errors: Error 6-15: Invalid argument type (Record). Expecting a Text value inste
 Errors: Error 9-10: Unexpected characters. Characters are used in the formula in an unexpected way.|Error 10-10: Unexpected characters. Characters are used in the formula in an unexpected way.
 
 >> $"Hello {}"
-"Hello "
+Errors: Error 9-10: Empty expressions cannot appear inside an interpolated string.
