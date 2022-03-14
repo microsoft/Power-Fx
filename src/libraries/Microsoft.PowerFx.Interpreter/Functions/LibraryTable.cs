@@ -20,16 +20,6 @@ namespace Microsoft.PowerFx.Functions
             var arg1 = (LambdaFormulaValue)args[1];
             var arg2 = (LambdaFormulaValue)(args.Length > 2 ? args[2] : null);
 
-            if (args.Length > 3)
-            {
-                return new ErrorValue(irContext, new ExpressionError()
-                {
-                    Message = "LookUp() only supports two predicates",
-                    Span = irContext.SourceContext,
-                    Kind = ErrorKind.Validation
-                });
-            }
-
             var row = LazyFilter(runner, symbolContext, arg0.Rows, arg1).FirstOrDefault();
 
             if (row != null)
