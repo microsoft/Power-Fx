@@ -3,11 +3,14 @@
 
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Types;
+using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Core.Public.Types
 {
     public class OptionSetValueType : FormulaType
     {
+        internal DName OptionSetName => _type.OptionSetInfo?.EntityName ?? default;
+
         internal OptionSetValueType(IExternalOptionSet optionSet)
             : base(DType.CreateOptionSetValueType(optionSet))
         {
