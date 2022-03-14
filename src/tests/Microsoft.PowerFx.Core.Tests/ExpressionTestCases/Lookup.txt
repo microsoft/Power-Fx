@@ -86,7 +86,7 @@ Blank()
 Blank()
 
 >> LookUp([100, 200, 300], Value > 250, Power(100, Value))
-#Error(Kind=ArgumentOutOfRange)
+#Error(Kind=Numeric)
 
 >> LookUp(Sequence(0), true)
 Blank()
@@ -95,10 +95,10 @@ Blank()
 "found error on the table"
 
 >> LookUp(["one", "two", "three"], Left(Value, -1) = "string")
-#Error(Kind=InvalidArgument)
+#Error(Kind=Numeric)
 
 >> LookUp(["one", "two", "three"], true, Left(Value, -1))
-#Error(Kind=InvalidArgument)
+#Error(Kind=Numeric)
 
 >> LookUp(If(1/0<2,[1,2]), true)
 #Error(Kind=Div0)
