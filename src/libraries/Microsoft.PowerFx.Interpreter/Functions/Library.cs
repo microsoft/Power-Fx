@@ -6,9 +6,12 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.IR;
+using Microsoft.PowerFx.Core.Public;
 using Microsoft.PowerFx.Core.Public.Types;
 using Microsoft.PowerFx.Core.Public.Values;
 using Microsoft.PowerFx.Core.Texl;
+using Microsoft.PowerFx.Core.Types;
+using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Functions
 {
@@ -254,6 +257,16 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: EndsWith)
             },
             {
+                BuiltinFunctionsCore.Error,
+                StandardErrorHandling<FormulaValue>(
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: DeferRuntimeTypeChecking,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.ReturnFalseIfAnyArgIsBlank,
+                    targetFunction: Error)
+            },
+            {
                 BuiltinFunctionsCore.Exp,
                 StandardErrorHandling<NumberValue>(
                     expandArguments: NoArgExpansion,
@@ -369,8 +382,27 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: IsBlank)
             },
             {
+                // Implementation 100% shared with IsBlank() for the interpreter
+                BuiltinFunctionsCore.IsBlankOptionSetValue,
+                StandardErrorHandling<FormulaValue>(
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: DeferRuntimeTypeChecking,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
+                    targetFunction: IsBlank)
+            },
+            {
                 BuiltinFunctionsCore.IsError,
                 IsError
+            },
+            {
+                BuiltinFunctionsCore.IsBlankOrError,
+                IsBlankOrError
+            },
+            {
+                BuiltinFunctionsCore.IsBlankOrErrorOptionSetValue,
+                IsBlankOrError
             },
             {
                 BuiltinFunctionsCore.IsNumeric,
@@ -815,16 +847,7 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: Substitute)
             },
             { BuiltinFunctionsCore.Switch, Switch },
-            {
-                BuiltinFunctionsCore.Table,
-                StandardErrorHandling<FormulaValue>(
-                    expandArguments: NoArgExpansion,
-                    replaceBlankValues: DoNotReplaceBlank,
-                    checkRuntimeTypes: DeferRuntimeTypeChecking,
-                    checkRuntimeValues: DeferRuntimeValueChecking,
-                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
-                    targetFunction: Table)
-            },
+            { BuiltinFunctionsCore.Table, Table },
             {
                 BuiltinFunctionsCore.Table_UO,
                 StandardErrorHandling<UntypedObjectValue>(
@@ -1078,7 +1101,9 @@ namespace Microsoft.PowerFx.Functions
 
                 if (res.IsError)
                 {
-                    return res.Error;
+                    // Update error "type" to the type of the If function
+                    var resultContext = new IRContext(res.Error.IRContext.SourceContext, irContext.ResultType);
+                    return new ErrorValue(resultContext, res.Error.Errors.ToList());
                 }
 
                 // False branch
@@ -1105,9 +1130,41 @@ namespace Microsoft.PowerFx.Functions
 
                 if (res.IsError)
                 {
-                    var trueBranch = args[i + 1];
+                    var errorHandlingBranch = args[i + 1];
+                    var allErrors = new List<RecordValue>();
+                    foreach (var error in res.Error.Errors)
+                    {
+                        var kindProperty = new NamedValue("Kind", FormulaValue.New((int)error.Kind));
+                        var messageProperty = new NamedValue(
+                            "Message",
+                            error.Message == null ? FormulaValue.NewBlank(FormulaType.String) : FormulaValue.New(error.Message));
+                        var errorScope = new InMemoryRecordValue(
+                            IRContext.NotInSource(new RecordType(ErrorType.ReifiedError())),
+                            new[] { kindProperty, messageProperty });
+                        allErrors.Add(errorScope);
+                    }
 
-                    return runner.EvalArg<ValidFormulaValue>(trueBranch, symbolContext, trueBranch.IRContext).ToFormulaValue();
+                    var scopeVariables = new NamedValue[]
+                    {
+                        new NamedValue("FirstError", allErrors.First()),
+                        new NamedValue(
+                            "AllErrors",
+                            new InMemoryTableValue(
+                                IRContext.NotInSource(new TableType(ErrorType.ReifiedErrorTable())),
+                                allErrors.Select(e => DValue<RecordValue>.Of(e))))
+                    };
+
+                    var ifErrorScopeParamType = new RecordType(DType.CreateRecord(
+                        new[]
+                        {
+                            new TypedName(ErrorType.ReifiedError(), new DName("FirstError")),
+                            new TypedName(ErrorType.ReifiedErrorTable(), new DName("AllErrors")),
+                        }));
+                    var childContext = symbolContext.WithScopeValues(
+                        new InMemoryRecordValue(
+                            IRContext.NotInSource(ifErrorScopeParamType),
+                            scopeVariables));
+                    return runner.EvalArg<ValidFormulaValue>(errorHandlingBranch, childContext, errorHandlingBranch.IRContext).ToFormulaValue();
                 }
 
                 if (i + 1 == args.Length - 1)
@@ -1123,6 +1180,47 @@ namespace Microsoft.PowerFx.Functions
             }
 
             return CommonErrors.UnreachableCodeError(irContext);
+        }
+
+        // Error({Kind:<error kind>,Message:<error message>})
+        // Error(Table({Kind:<error kind 1>,Message:<error message 1>}, {Kind:<error kind 2>,Message:<error message 2>}))
+        public static FormulaValue Error(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args)
+        {
+            var result = new ErrorValue(irContext);
+
+            var errorRecords = new List<RecordValue>();
+            if (args[0] is RecordValue singleErrorRecord)
+            {
+                errorRecords.Add(singleErrorRecord);
+            }
+            else if (args[0] is TableValue errorTable)
+            {
+                foreach (var errorRow in errorTable.Rows)
+                {
+                    if (errorRow.IsValue)
+                    {
+                        errorRecords.Add(errorRow.Value);
+                    }
+                }
+            }
+            else
+            {
+                return CommonErrors.RuntimeTypeMismatch(irContext);
+            }
+
+            foreach (var errorRecord in errorRecords)
+            {
+                var messageField = errorRecord.GetField(ErrorType.MessageFieldName) as StringValue;
+
+                if (errorRecord.GetField(ErrorType.KindFieldName) is not NumberValue kindField)
+                {
+                    return CommonErrors.RuntimeTypeMismatch(irContext);
+                }
+
+                result.Add(new ExpressionError { Kind = (ErrorKind)kindField.Value, Message = messageField?.Value as string });
+            }
+
+            return result;
         }
 
         // Switch( Formula, Match1, Result1 [, Match2, Result2, ... [, DefaultResult ] ] )
@@ -1238,6 +1336,16 @@ namespace Microsoft.PowerFx.Functions
         {
             var result = args[0] is ErrorValue;
             return new BooleanValue(irContext, result);
+        }
+
+        public static FormulaValue IsBlankOrError(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args)
+        {
+            if (IsBlank(args[0]) || args[0] is ErrorValue)
+            {
+                return new BooleanValue(irContext, true);
+            }
+
+            return new BooleanValue(irContext, false);
         }
     }
 }

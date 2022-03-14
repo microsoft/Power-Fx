@@ -1438,6 +1438,10 @@
     <value>expression</value>
     <comment>function_parameter - First parameter to the IsBlankOrError function - the expression to be evaluated.</comment>
   </data>
+  <data name="AboutIsBlankOrError_expression" xml:space="preserve">
+    <value>An expression to be tested.</value>
+    <comment>Function parameter for IsBlankOrError function.</comment>
+  </data>
   <data name="AboutIsEmpty" xml:space="preserve">
     <value>Checks if a collection is empty and returns true or false.</value>
     <comment>Description of 'IsEmpty' function.</comment>
@@ -1445,6 +1449,9 @@
   <data name="IsEmptyArg1" xml:space="preserve">
     <value>source</value>
     <comment>function_parameter - First parameter to the IsEmpty function - the source expression to be evaluated.</comment>
+  </data>
+  <data name="AboutIsEmpty_source" xml:space="preserve">
+    <value>A table to be tested.</value>
   </data>
   <data name="AboutShuffle" xml:space="preserve">
     <value>Returns a randomly shuffled copy of the input 'source' table.</value>

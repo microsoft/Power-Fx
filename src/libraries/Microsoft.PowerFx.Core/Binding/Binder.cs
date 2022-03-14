@@ -68,6 +68,10 @@ namespace Microsoft.PowerFx.Core.Binding
         // Maps Ids to Info, where the Id is an index in the array.
         private readonly object[] _infoMap;
 
+        // Call nodes which do not appear in the source code
+        // For example, $"" (interpolated string) maps to a call to Concatenate
+        private readonly CallNode[] _compilerGeneratedCallNodes;
+
         private readonly IDictionary<int, IList<FirstNameInfo>> _lambdaParams;
 
         // Whether a node is stateful or has side effects or is contextual or is constant.
@@ -267,6 +271,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
             CoercedToplevelType = DType.Invalid;
             _infoMap = new object[idLim];
+            _compilerGeneratedCallNodes = new CallNode[idLim];
             _asyncMap = new bool[idLim];
             _lambdaParams = new Dictionary<int, IList<FirstNameInfo>>(idLim);
             _isStateful = new BitArray(idLim);
@@ -1572,6 +1577,11 @@ namespace Microsoft.PowerFx.Core.Binding
             return BinderNodesVisitor.StringLiterals;
         }
 
+        public IEnumerable<StrInterpNode> GetStringInterpolations()
+        {
+            return BinderNodesVisitor.StringInterpolations;
+        }
+
         public IEnumerable<UnaryOpNode> GetUnaryOperators()
         {
             return BinderNodesVisitor.UnaryOperators;
@@ -2055,6 +2065,14 @@ namespace Microsoft.PowerFx.Core.Binding
             return _infoMap[node.Id] as CallInfo;
         }
 
+        public CallNode GetCompilerGeneratedCallNode(TexlNode node)
+        {
+            Contracts.AssertValue(node);
+            Contracts.AssertIndex(node.Id, _compilerGeneratedCallNodes.Length);
+
+            return _compilerGeneratedCallNodes[node.Id];
+        }
+
         private void SetInfo(CallNode node, CallInfo info, bool markIfAsync = true)
         {
             Contracts.AssertValue(node);
@@ -2090,6 +2108,27 @@ namespace Microsoft.PowerFx.Core.Binding
                     AffectsTabularDataSources = true;
                 }
             }
+        }
+
+        private CallNode GenerateCallNode(StrInterpNode node)
+        {
+            // We generate a transient CallNode to the Concatenate function
+            var func = BuiltinFunctionsCore.Concatenate;
+            var ident = new IdentToken(func.Name, node.Token.Span);
+            var id = node.Id;
+            var listNodeId = 0;
+            var minChildId = node.MinChildID;
+            var callNode = new CallNode(
+                ref id,
+                primaryToken: ident,
+                sourceList: node.SourceList,
+                head: new Identifier(ident),
+                headNode: null,
+                new ListNode(ref listNodeId, tok: node.Token, args: node.CloneChildren(ref minChildId, node.GetCompleteSpan()), delimiters: null, sourceList: node.SourceList),
+                node.StrInterpEnd);
+            _compilerGeneratedCallNodes[node.Id] = callNode;
+            SetInfo(callNode, new CallInfo(func, callNode));
+            return callNode;
         }
 
         internal bool AddFieldToQuerySelects(DType type, string fieldName)
@@ -2935,7 +2974,6 @@ namespace Microsoft.PowerFx.Core.Binding
                 }
                 else if (lookupInfo.Kind == BindKind.DeprecatedImplicitThisItem)
                 {
-                    Contracts.Assert(_txb.Document.Properties.SupportsImplicitThisItem);
                     _txb._hasThisItemReference = true;
 
                     // Even though lookupInfo.Type isn't the full data source type, it still is tagged with the full datasource info if this is a thisitem node
@@ -4345,7 +4383,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 _txb.SetScopeUseSet(node, JoinScopeUseSets(node.Children));
             }
 
-            private static bool IsValidAccessToScopedProperty(IExternalControl lhsControl, IExternalControlProperty rhsProperty, IExternalControl currentControl, IExternalControlProperty currentProperty, bool isBehaviorOnly = false)
+            private static bool IsValidAccessToScopedProperty(IExternalControl lhsControl, IExternalControlProperty rhsProperty, IExternalControl currentControl, IExternalControlProperty currentProperty)
             {
                 Contracts.AssertValue(lhsControl);
                 Contracts.AssertValue(rhsProperty);
@@ -4357,12 +4395,6 @@ namespace Microsoft.PowerFx.Core.Binding
                    (currentControl.IsComponentControl ||
                    (currentControl.TopParentOrSelf is IExternalControl { IsComponentControl: false })))
                 {
-                    // Behavior property is blocked from outside the component.
-                    if (isBehaviorOnly)
-                    {
-                        return false;
-                    }
-
                     // If current property is output property of the component then access is allowed.
                     // Or if the rhs property is out put property then it's allowed which could only be possible if the current control is component definition.
                     return currentProperty.IsImmutableOnInstance || rhsProperty.IsImmutableOnInstance;
@@ -4392,7 +4424,7 @@ namespace Microsoft.PowerFx.Core.Binding
                     if (_txb.Document.TryGetControlByUniqueId(infoTexlFunction.Namespace.Name.Value, out var lhsControl) &&
                         lhsControl.Template.TryGetProperty(infoTexlFunction.Name, out var rhsProperty))
                     {
-                        return IsValidAccessToScopedProperty(lhsControl, rhsProperty, currentControl, currentProperty, infoTexlFunction.IsBehaviorOnly);
+                        return IsValidAccessToScopedProperty(lhsControl, rhsProperty, currentControl, currentProperty);
                     }
                 }
 
@@ -5039,9 +5071,13 @@ namespace Microsoft.PowerFx.Core.Binding
                 var runningWeight = _txb.GetVolatileVariables(node);
                 var isUnliftable = false;
 
+                // Make a binder-aware call to Concatenate
+                _txb.GenerateCallNode(node);
+
                 var args = node.Children;
                 var argTypes = new DType[args.Length];
 
+                // Process arguments
                 for (var i = 0; i < args.Length; i++)
                 {
                     var child = args[i];
