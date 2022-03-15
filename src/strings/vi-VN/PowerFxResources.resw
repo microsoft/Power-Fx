@@ -1,5 +1,64 @@
 ﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
@@ -426,6 +485,17 @@
   <data name="AboutValue_language" xml:space="preserve">
     <value>Mã ngôn ngữ để sử dụng khi chuyển đổi giá trị.</value>
     
+  </data>
+  <data name="AboutBoolean" xml:space="preserve">
+    <value>Chuyển đổi một 'văn bản' đại diện cho một boolean thành một giá trị boolean.</value>
+    
+  </data>
+  <data name="BooleanArg1" xml:space="preserve">
+    <value>văn bản</value>
+    
+  </data>
+  <data name="AboutBoolean_text" xml:space="preserve">
+    <value>Giá trị văn bản để chuyển đổi thành giá trị boolean.</value>
   </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Trả về đối số không trống đầu tiên</value>
@@ -1368,6 +1438,10 @@
     <value>biểu_thức</value>
     
   </data>
+  <data name="AboutIsBlankOrError_expression" xml:space="preserve">
+    <value>Biểu thức sẽ được thử nghiệm.</value>
+    
+  </data>
   <data name="AboutIsEmpty" xml:space="preserve">
     <value>Kiểm tra xem bộ sưu tập có bị trống hay không và trả về giá trị đúng hoặc sai.</value>
     
@@ -1375,6 +1449,9 @@
   <data name="IsEmptyArg1" xml:space="preserve">
     <value>nguồn</value>
     
+  </data>
+  <data name="AboutIsEmpty_source" xml:space="preserve">
+    <value>Bảng sẽ được thử nghiệm.</value>
   </data>
   <data name="AboutShuffle" xml:space="preserve">
     <value>Trả về một bản sao của bảng 'nguồn' đầu vào được trộn ngẫu nhiên.</value>
@@ -2260,6 +2337,35 @@
   </data>
   <data name="AboutChar_column_of_numbers" xml:space="preserve">
     <value>Cột số mã từ tập ký tự trên nền tảng của bạn.</value>
+  </data>
+  <data name="AboutParseJson" xml:space="preserve">
+    <value>Chuyển đổi một chuỗi JSON thành đối tượng.</value>
+    
+  </data>
+  <data name="ParseJsonArg1" xml:space="preserve">
+    <value>đầu_vào</value>
+    
+  </data>
+  <data name="AboutParseJson_input" xml:space="preserve">
+    <value>Một chuỗi JSON để xử lý.</value>
+  </data>
+  <data name="AboutIndex" xml:space="preserve">
+    <value>Trả về bản ghi trong bảng tại một chỉ mục nhất định.</value>
+    
+  </data>
+  <data name="IndexArg1" xml:space="preserve">
+    <value>bảng</value>
+    
+  </data>
+  <data name="IndexArg2" xml:space="preserve">
+    <value>chỉ mục</value>
+    
+  </data>
+  <data name="AboutIndex_table" xml:space="preserve">
+    <value>Bảng.</value>
+  </data>
+  <data name="AboutIndex_index" xml:space="preserve">
+    <value>Chỉ mục số nguyên.</value>
   </data>
   <data name="Screen_Name_DisplayName" xml:space="preserve">
     <value>Tên</value>
@@ -3781,11 +3887,23 @@
     
   </data>
   <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
-    <value>Loại kết quả này {0} không được hỗ trợ trong cột công thức.</value>
+    <value>Không hỗ trợ kiểu kết quả {0} trong cột công thức.</value>
     
   </data>
   <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
     <value>Loại kết quả cho công thức này dự kiến là {0}, nhưng loại kết quả thực tế là {1}. Không thể thay đổi loại kết quả của cột công thức.</value>
+    
+  </data>
+  <data name="FormulaColumns_ColumnTypeNotSupported" xml:space="preserve">
+    <value>Không hỗ trợ cột kiểu {0} trong cột công thức.</value>
+    
+  </data>
+  <data name="FormulaColumns_ColumnFormatNotSupported" xml:space="preserve">
+    <value>Không hỗ trợ cột kiểu {0} với định dạng {1} trong cột công thức.</value>
+    
+  </data>
+  <data name="FormulaColumns_FormulaTooLong" xml:space="preserve">
+    <value>Công thức không được dài hơn 1.000 ký tự.</value>
     
   </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
@@ -3802,7 +3920,6 @@
   </data>
   <data name="ErrorResource_ErrBadToken_LongMessage" xml:space="preserve">
     <value>Ví dụ: không dự kiến có ký tự '\' sau một số, như thế này: '32\'. Dự kiến có dấu cách ('32') để số đó chỉ là số 32 hoặc có thể dự kiến một số khác (như trong '323').</value>
-    
   </data>
   <data name="ErrorResource_ErrBadToken_HowToFix_1" xml:space="preserve">
     <value>Loại bỏ hoặc thay thế các ký tự ngoài ý muốn.</value>
@@ -3818,11 +3935,9 @@
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_LongMessage" xml:space="preserve">
     <value>Ví dụ: không dự kiến có ký tự '\' sau một số, như thế này: '32\'. Dự kiến có dấu cách ('32') để số đó chỉ là số 32 hoặc có thể dự kiến một số khác (như trong '323').</value>
-    
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_HowToFix_1" xml:space="preserve">
     <value>Loại bỏ hoặc thay thế ký tự không mong muốn.</value>
-    
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_Link_1" xml:space="preserve">
     <value>Bài viết: Tham chiếu công thức cho Power Apps</value>
@@ -3834,7 +3949,6 @@
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_LongMessage" xml:space="preserve">
     <value>Mỗi chú thích khối phải bắt đầu bằng '/*' và kết thúc bằng '*/'. Nếu bạn không kết thúc đúng cách từng chú thích khối thì toàn bộ mã phía sau chú thích sẽ trở thành một phần của chú thích đó. Nếu chú thích chỉ gồm một dòng, bạn có thể bắt đầu chú thích đó bằng '//' và không chỉ định điểm kết thúc của chú thích.</value>
-    
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_HowToFix_1" xml:space="preserve">
     <value>Thêm '*/' vào cuối chú thích khối của bạn hoặc thay đổi chú thích thành một tập hợp chú thích theo dòng.</value>
@@ -3850,7 +3964,6 @@
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_LongMessage" xml:space="preserve">
     <value>Lỗi này xảy ra nếu chẳng hạn có công thức chứa '{{Val@ 7}}' thay vì '{{Val: 7}}'. Khi bạn đặt một biến, cú pháp sẽ yêu cầu dấu hai chấm thay vì biểu tượng "@".á</value>
-    
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_HowToFix_1" xml:space="preserve">
     <value>Loại bỏ hoặc thay thế các ký tự ngoài dự kiến bằng các ký tự được dự kiến.</value>
@@ -3866,7 +3979,6 @@
   </data>
   <data name="ErrorResource_ErrInvalidName_LongMessage" xml:space="preserve">
     <value>Lỗi này hay xuất hiện nhất khi có công thức tham chiếu tới nội dung không còn tồn tại (ví dụ: một kiểm soát mà bạn đã xóa).</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidName_HowToFix_1" xml:space="preserve">
     <value>Loại bỏ hoặc sửa tham chiếu tới tên không hợp lệ.</value>
@@ -3882,7 +3994,6 @@
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_LongMessage" xml:space="preserve">
     <value>Lỗi này xuất hiện khi một công thức đề cập đến các thuộc tính hành vi cấu phần với cú pháp không hợp lệ. (Ví dụ: Component.OnCustomChange thay vì Component.OnCustomChange())</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_HowToFix_1" xml:space="preserve">
     <value>Sử dụng đúng cú pháp để tham chiếu đến thuộc tính hành vi cấu phần. Ví dụ: Component.OnCustomChange()</value>
@@ -3898,7 +4009,6 @@
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_LongMessage" xml:space="preserve">
     <value>Bạn không thể sử dụng toán tử Parent với một kiểm soát không chứa kiểm soát cha. Toán tử này tham chiếu tới kiểm soát lưu trữ kiểm soát được cung cấp và đưa mọi thuộc tính của kiểm soát này vào trạng thái sẵn dùng.</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_HowToFix_1" xml:space="preserve">
     <value>Loại bỏ toán tử 'Cha mẹ'.</value>
@@ -3914,7 +4024,6 @@
   </data>
   <data name="ErrorResource_ErrTooManyUps_LongMessage" xml:space="preserve">
     <value>Độ phức tạp sẽ tăng theo mỗi mức lồng, do đó, Power Apps chỉ hỗ trợ lồng phạm vi hàng tới tối đa 63 mức.</value>
-    
   </data>
   <data name="ErrorResource_ErrTooManyUps_HowToFix_1" xml:space="preserve">
     <value>Viết lại công thức với ít mức lồng hơn.</value>
@@ -3926,7 +4035,6 @@
   </data>
   <data name="ErrorResource_ErrRuleNestedTooDeeply_LongMessage" xml:space="preserve">
     <value>Power Apps chỉ hỗ trợ biểu thức lồng tới tối đa 50 mức. Biểu thức được lồng sâu như thế này sẽ khó để hiểu và duy trì.</value>
-    
   </data>
   <data name="ErrorResource_ErrRuleNestedTooDeeply_HowToFix_1" xml:space="preserve">
     <value>Viết lại công thức với ít mức lồng hơn.</value>
@@ -3938,7 +4046,6 @@
   </data>
   <data name="ErrorResource_ErrOperatorExpected_LongMessage" xml:space="preserve">
     <value>Toán tử kết hợp hai toán hạng lại với nhau. Lỗi này xảy ra nếu bạn đặt hai hàm (toán hạng) lại với nhau mà không có toán tử nào giữa chúng -- ví dụ: Len("mytext")Len("mytext").</value>
-    
   </data>
   <data name="ErrorResource_ErrOperatorExpected_HowToFix_1" xml:space="preserve">
     <value>Chỉnh sửa công thức của bạn để công thức có toán tử giữa các toán hạng.</value>
@@ -3954,7 +4061,6 @@
   </data>
   <data name="ErrorResource_ErrNumberExpected_LongMessage" xml:space="preserve">
     <value>Lỗi này sẽ xảy ra nếu bạn sử dụng một hàm yêu cầu số nhưng thay vào đó, bạn lại cung cấp hình ảnh chẳng hạn.</value>
-    
   </data>
   <data name="ErrorResource_ErrNumberExpected_HowToFix_1" xml:space="preserve">
     <value>Chỉnh sửa công thức của bạn để cho ra kết quả số tại điểm này trong công thức.</value>
@@ -3970,7 +4076,6 @@
   </data>
   <data name="ErrorResource_ErrBooleanExpected_LongMessage" xml:space="preserve">
     <value>Boolean còn được gọi là giá trị true/false trong các ứng dụng như Microsoft Excel. Lỗi này sẽ xảy ra nếu bạn sử dụng một hàm yêu cầu boolean nhưng thay vào đó, bạn lại cung cấp ngày tháng chẳng hạn.</value>
-    
   </data>
   <data name="ErrorResource_ErrBooleanExpected_HowToFix_1" xml:space="preserve">
     <value>Chỉnh sửa công thức của bạn để cho ra kết quả boolean tại điểm này trong công thức.</value>
@@ -3986,7 +4091,6 @@
   </data>
   <data name="ErrorResource_ErrColonExpected_LongMessage" xml:space="preserve">
     <value>Dấu hai chấm phân tách tên trường, đôi khi được gọi là tên cột, với giá trị trường trong bản ghi (ví dụ: {Month:"1"}, {Month:"2"}...). Dấu hai chấm cũng phân tách giờ với phút và giây (ví dụ: "3:04").</value>
-    
   </data>
   <data name="ErrorResource_ErrColonExpected_HowToFix_1" xml:space="preserve">
     <value>Chỉnh sửa công thức của bạn để công thức có chứa dấu hai chấm.</value>
@@ -4002,7 +4106,6 @@
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_LongMessage" xml:space="preserve">
     <value>Các hàm hành vi thay đổi trạng thái ứng dụng bằng cách thay đổi các giá trị ở nơi khác trong ứng dụng. 'Navigate', 'Patch', 'UpdateContext' và 'Collect' là những hàm hành vi thông thường. Các thuộc tính 'OnSelect', 'OnVisible' và các thuộc tính 'On …' khác là các thuộc tính dựa trên hành vi thông thường.</value>
-    
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_HowToFix_1" xml:space="preserve">
     <value>Di chuyển hàm hành vi tới một thuộc tính dựa trên hành vi.</value>
@@ -4018,7 +4121,6 @@
   </data>
   <data name="ErrorResource_ErrTestPropertyExpected_LongMessage" xml:space="preserve">
     <value>Hàm thử nghiệm là những hàm có thể dùng để mô phỏng đầu vào người dùng khi thử nghiệm ứng dụng. 'SetProperty', 'SelectRow' và 'Assert' là các hàm thử nghiệm phổ biến. Chỉ có thể sử dụng chúng trong các trường hợp thử nghiệm.</value>
-    
   </data>
   <data name="ErrorResource_ErrTestPropertyExpected_HowToFix_1" xml:space="preserve">
     <value>Sử dụng hàm trong trường hợp thử nghiệm chứ không phải trong chính ứng dụng.</value>
@@ -4030,7 +4132,6 @@
   </data>
   <data name="ErrorResource_ErrCannotCoerce_SourceType_TargetType_LongMessage" xml:space="preserve">
     <value>Power Apps có thể chuyển đổi một số kiểu dữ liệu trong công thức của bạn thành các kiểu khác. Ví dụ: Power Apps có thể chuyển đổi "1" (chuỗi) thành 1 (số) nhưng ứng dụng này không thể chuyển đổi tất cả kiểu dữ liệu thành các loại dữ liệu khác. Ví dụ: Power Apps không thể chuyển đổi hình ảnh thành số.</value>
-    
   </data>
   <data name="ErrorResource_ErrCannotCoerce_SourceType_TargetType_HowToFix_1" xml:space="preserve">
     <value>Chỉnh sửa công thức để bạn có thể chuyển đổi dữ liệu đang được đề cập đến sang kiểu dự kiến.</value>
@@ -4042,7 +4143,6 @@
   </data>
   <data name="ErrorResource_ErrStringExpected_LongMessage" xml:space="preserve">
     <value>Lỗi này xảy ra nếu bạn sử dụng một hàm yêu cầu đối số là văn bản (hoặc chuỗi) và thay vào đó, bạn lại cung cấp ngày tháng chẳng hạn.</value>
-    
   </data>
   <data name="ErrorResource_ErrStringExpected_HowToFix_1" xml:space="preserve">
     <value>Chỉnh sửa công thức của bạn để cho ra kết quả văn bản tại điểm này trong công thức.</value>
@@ -4058,7 +4158,6 @@
   </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_LongMessage" xml:space="preserve">
     <value>Lỗi này sẽ xảy ra nếu bạn sử dụng một hàm yêu cầu văn bản hoặc số nhưng bạn lại cung cấp giá trị boolean (true/false) chẳng hạn.</value>
-    
   </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_HowToFix_1" xml:space="preserve">
     <value>Chỉnh sửa công thức của bạn để cho ra kết quả văn bản hoặc số tại điểm này trong công thức.</value>
@@ -4074,7 +4173,6 @@
   </data>
   <data name="ErrorResource_ErrClosingBracketExpected_LongMessage" xml:space="preserve">
     <value>Dấu ngoặc đóng biểu thị sự kết thúc của bản ghi (ví dụ: {Month:"1"}, {Month:"2"}...).</value>
-    
   </data>
   <data name="ErrorResource_ErrClosingBracketExpected_HowToFix_1" xml:space="preserve">
     <value>Chỉnh sửa công thức của bạn để công thức có chứa dấu ngoặc.</value>
@@ -4094,7 +4192,6 @@
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_LongMessage" xml:space="preserve">
     <value>Chúng tôi không thể đánh giá công thức của bạn vì các giá trị được so sánh trong công thức không thuộc cùng loại.</value>
-    
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_HowToFix_1" xml:space="preserve">
     <value>Có thể bạn cần chuyển đổi giá trị đó thành cùng loại, chẳng hạn như chuyển đổi một chuỗi ngày (ví dụ: "31/12/2018") thành giá trị ngày.</value>
@@ -4174,7 +4271,6 @@
   </data>
   <data name="ErrorResource_ErrTypeError_LongMessage" xml:space="preserve">
     <value>Dữ liệu này có thể không khớp với kiểu dự kiến. (văn bản, số, ngày, bảng, bản ghi.)</value>
-    
   </data>
   <data name="ErrorResource_ErrTypeError_HowToFix_1" xml:space="preserve">
     <value>Kiểm tra các loại giá trị liên quan trong công thức và đảm bảo rằng các loại giá trị khớp nhau.</value>
@@ -4194,7 +4290,6 @@
   </data>
   <data name="ErrorResource_ErrDateExpected_LongMessage" xml:space="preserve">
     <value>Lỗi này sẽ xảy ra nếu bạn sử dụng một hàm yêu cầu ngày nhưng thay vào đó, bạn lại cung cấp văn bản chẳng hạn.</value>
-    
   </data>
   <data name="ErrorResource_ErrDateExpected_HowToFix_1" xml:space="preserve">
     <value>Chỉnh sửa công thức của bạn để cho ra kết quả ngày tại điểm này trong công thức.</value>
@@ -4210,7 +4305,6 @@
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_LongMessage" xml:space="preserve">
     <value>Nguồn dữ liệu này có thể không xử lý được công thức và có thể trả về một tập hợp dữ liệu không đầy đủ. Ứng dụng của bạn có thể không trả về kết quả đúng hoặc hoạt động đúng cách nếu tập hợp dữ liệu không hoàn chỉnh.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_HowToFix_1" xml:space="preserve">
     <value>Nếu bộ dữ liệu vượt quá giới hạn 500 bản ghi nhưng chứa ít hơn 2.000 bản ghi, hãy thử đặt lại giới hạn.</value>
@@ -4238,7 +4332,6 @@
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_LongMessage" xml:space="preserve">
     <value>Nguồn dữ liệu này có thể không xử lý được công thức và có thể trả về một tập hợp dữ liệu không đầy đủ. Ứng dụng của bạn có thể không trả về kết quả đúng hoặc hoạt động đúng cách nếu tập hợp dữ liệu không hoàn chỉnh.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_HowToFix_1" xml:space="preserve">
     <value>Nếu bộ dữ liệu vượt quá giới hạn 500 bản ghi nhưng chứa ít hơn 2.000 bản ghi, hãy thử đặt lại giới hạn.</value>
@@ -4266,7 +4359,6 @@
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_LongMessage" xml:space="preserve">
     <value> Phía bên phải toán tử "in" phải là tên cột từ nguồn dữ liệu đúng. Nguồn dữ liệu này có thể không xử lý được công thức và có thể trả về một tập hợp dữ liệu không hoàn chỉnh. Ứng dụng của bạn có thể không trả về kết quả đúng hoặc hoạt động đúng cách nếu tập hợp dữ liệu không hoàn chỉnh.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_1" xml:space="preserve">
     <value>Thay đổi mục ở bên phải toán tử "in" thành cột từ nguồn dữ liệu đúng.</value>
@@ -4299,7 +4391,6 @@
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_LongMessage" xml:space="preserve">
     <value> Phía bên phải toán tử "in" không phải là cột từ nguồn dữ liệu đúng. Nguồn dữ liệu này có thể không xử lý được công thức và có thể trả về một tập hợp dữ liệu không hoàn chỉnh. Ứng dụng của bạn có thể không trả về kết quả đúng hoặc hoạt động đúng cách nếu tập hợp dữ liệu không hoàn chỉnh.
       </value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_1" xml:space="preserve">
     <value>Thay đổi mục ở bên phải toán tử "in" thành cột từ nguồn dữ liệu đúng.</value>
@@ -4380,6 +4471,22 @@
   </data>
   <data name="ErrorResource_ErrInvalidControlReference_Link_1" xml:space="preserve">
     <value>Tham chiếu: ConfirmExit cho ứng dụng canvas</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidStringInterpolation_ShortMessage" xml:space="preserve">
+    <value>Biểu thức xuất hiện trong chuỗi nội suy phải đánh giá theo giá trị Văn bản hoặc theo loại tương thích.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidStringInterpolation_HowToFix_1" xml:space="preserve">
+    <value>Kiểm tra các loại biểu thức trong chuỗi nội suy.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrEmptyIsland_ShortMessage" xml:space="preserve">
+    <value>Empty expressions cannot appear inside an interpolated string.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrEmptyIsland_HowToFix_1" xml:space="preserve">
+    <value>Check for empty expressions inside the interpolated string.</value>
     
   </data>
   <data name="ErrorResource_ErrAsNotInContext_ShortMessage" xml:space="preserve">
