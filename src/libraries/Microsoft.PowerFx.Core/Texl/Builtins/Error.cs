@@ -83,6 +83,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
 
             var argumentKindType = names.First(tn => tn.Name == requiredKindField.Name).Type;
+            if (argumentKindType.IsEnum)
+            {
+                argumentKindType = argumentKindType.GetEnumSupertype();
+            }
+
             if (argumentKindType.Kind != requiredKindField.Type.Kind)
             {
                 errors.EnsureError(

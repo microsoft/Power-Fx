@@ -30,7 +30,7 @@ namespace Microsoft.PowerFx.Core.Tests
         /// <returns>Result of evaluating Expr.</returns>
         protected abstract Task<FormulaValue> RunAsyncInternal(string expr, string setupHandlerName = null);
 
-        private static readonly Regex RuntimeErrorExpectedResultRegex = new Regex(@"\#error(\(?:Kind=(?<errorKind>[^\)]+)\))?", RegexOptions.IgnoreCase);
+        private static readonly Regex RuntimeErrorExpectedResultRegex = new Regex(@"\#error(?:\(Kind=(?<errorKind>[^\)]+)\))?", RegexOptions.IgnoreCase);
 
         /// <summary>
         /// Returns (Pass,Fail,Skip) and a status message.
@@ -63,6 +63,32 @@ namespace Microsoft.PowerFx.Core.Tests
                 // Timeout!!!
                 return (TestResult.Fail, $"Timeout after {Timeout}");
             }
+        }
+
+        // If we override Error values, then for a test case:
+        //   >> X
+        //   #error
+        // also check that:
+        //   >> IsError(x)
+        //   true
+        private async Task<(TestResult, string)> RunErrorCaseAsync(TestCase testCase)
+        {
+            var case2 = new TestCase
+            {
+                SetupHandlerName = testCase.SetupHandlerName,
+                SourceLine = testCase.SourceLine,
+                SourceFile = testCase.SourceFile,
+                Input = $"IsError({testCase.Input})",
+                Expected = "true"
+            };
+
+            var (result, msg) = await RunAsync2(case2);
+            if (result == TestResult.Fail)
+            {
+                msg += " (IsError() followup call)";
+            }
+
+            return (result, msg);
         }
 
         private async Task<(TestResult, string)> RunAsync2(TestCase testCase)
@@ -164,6 +190,11 @@ namespace Microsoft.PowerFx.Core.Tests
                     {
                         return (TestResult.Fail, $"Invalid expected error kind: {expectedErrorKind}");
                     }
+                } 
+                else if (IsError(result))
+                {
+                    // If they override IsError, then do additional checks. 
+                    return await RunErrorCaseAsync(testCase);                    
                 }
 
                 // If the actual result is not an error, we'll fail with a mismatch below
@@ -183,6 +214,8 @@ namespace Microsoft.PowerFx.Core.Tests
             return GetType().Name;
         }
 
+        // Some hosts don't have a way to natively represent an error, and so top level errors values
+        // are converted to something like blank. 
         public virtual bool IsError(FormulaValue value)
         {
             return value is ErrorValue;

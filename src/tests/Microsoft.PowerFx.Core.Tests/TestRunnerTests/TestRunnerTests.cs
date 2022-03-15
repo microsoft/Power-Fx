@@ -67,12 +67,53 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Fact]
+        public void TestList()
+        {
+            var mock = new MockErrorRunner
+            {
+                _hook = (expr, setup) => FormulaValue.New(int.Parse(expr))
+            };
+
+            // Edit test directly 
+            var runner = new TestRunner(mock);
+            runner.Tests.Add(new TestCase
+            {
+                Input = "1",
+                Expected = "1"
+            });
+            runner.Tests.Add(new TestCase
+            {
+                Input = "2",
+                Expected = "1"
+            });
+            runner.Tests.Add(new TestCase
+            {
+                Input = "2",
+                Expected = "2"
+            });
+
+            var (total, failed, passed, output) = runner.RunTests();
+            Assert.Equal(3, total);
+            Assert.Equal(1, failed);
+            Assert.Equal(2, passed);
+        }
+
+        [Fact]
         public void TestBadParse()
         {
             var runner = new TestRunner();
 
             Assert.Throws<InvalidOperationException>(
                 () => AddFile(runner, "Bad1.txt"));
+        }
+
+        [Fact]
+        public void TestBad2Parse()
+        {
+            var runner = new TestRunner();
+
+            Assert.Throws<InvalidOperationException>(
+                () => AddFile(runner, "Bad2.txt"));
         }
 
         // #DISABLE directive to remove an entire file. 
@@ -181,6 +222,46 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Fact]
+        public async Task TestRunnerErrorKindMatching()
+        {
+            var errorValue = new ErrorValue(
+                IR.IRContext.NotInSource(Public.Types.FormulaType.Number),
+                new Public.ExpressionError { Kind = Public.ErrorKind.InvalidFunctionUsage });
+            var runner = new MockRunner
+            {
+                _hook = (expr, setup) => errorValue // error
+            };
+
+            var test = new TestCase
+            {
+                Expected = "#Error(Kind=InvalidFunctionUsage)" // validation by enum name
+            };
+            var result = await runner.RunAsync(test);
+            Assert.Equal(TestResult.Pass, result.Item1);
+
+            test = new TestCase
+            {
+                Expected = "#Error(Kind=16)" // // validation by enum value
+            };
+            result = await runner.RunAsync(test);
+            Assert.Equal(TestResult.Pass, result.Item1);
+
+            test = new TestCase
+            {
+                Expected = "#Error(Kind=Div0)" // // failure if error kind does not match
+            };
+            result = await runner.RunAsync(test);
+            Assert.Equal(TestResult.Fail, result.Item1);
+
+            test = new TestCase
+            {
+                Expected = "#Error(Kind=13)" // // failure if numeric error kind does not match
+            };
+            result = await runner.RunAsync(test);
+            Assert.Equal(TestResult.Fail, result.Item1);
+        }
+
+        [Fact]
         public async Task TestRunnerCompilerError()
         {
             // Compiler error is a throw from Check()
@@ -233,6 +314,85 @@ namespace Microsoft.PowerFx.Core.Tests
             var result = await runner.RunAsync(test);
 
             Assert.Equal(TestResult.Skip, result.Item1);            
+        }
+
+        // Override IsError
+        private class MockErrorRunner : MockRunner
+        {
+            protected override Task<FormulaValue> RunAsyncInternal(string expr, string setupHandlerName = null)
+            {
+                return Task.FromResult(_hook(expr, setupHandlerName));
+            }
+
+            public Func<FormulaValue, bool> _isError;
+
+            public override bool IsError(FormulaValue value)
+            {
+                if (_isError != null)
+                {
+                    return _isError(value);
+                }
+
+                return base.IsError(value);
+            }
+        }
+
+        [Fact]
+        public async Task TestErrorOverride()
+        {
+            // Test override BaseRunner.IsError
+            var runner = new MockErrorRunner
+            {
+                _hook = (expr, setup) =>
+                    expr switch {
+                    "1" => FormulaValue.New(1),
+                    "IsError(1)" => FormulaValue.New(true),
+                        _ => throw new InvalidOperationException()
+                     },
+                _isError = (value) => value is NumberValue
+            };
+
+            var test = new TestCase
+            {
+                Input = "1",
+                Expected = "#error"                
+            };
+
+            // On #error for x, test runner  will also call IsError(x)
+            var result = await runner.RunAsync(test);
+            Assert.Equal(TestResult.Pass, result.Item1);
+
+            runner._isError = (value) => false;
+            result = await runner.RunAsync(test);
+            Assert.Equal(TestResult.Fail, result.Item1);
+        }
+
+        // Ensure the #error test fails if the IsError(x) followup call doesn't return true. 
+        [Fact]
+        public async Task TestErrorOverride2()
+        {
+            // Test override BaseRunner.IsError
+            var runner = new MockErrorRunner
+            {
+                _hook = (expr, setup) =>
+                    expr switch {
+                        "1" => FormulaValue.New(1),
+                        "IsError(1)" => FormulaValue.New(false), // expects true, should cause failure
+                        _ => throw new InvalidOperationException()
+                    },
+                _isError = (value) => value is NumberValue
+            };
+
+            var test = new TestCase
+            {
+                Input = "1",
+                Expected = "#error"
+            };
+
+            // On #error for x, test runner  will also call IsError(x)
+            var result = await runner.RunAsync(test);
+            Assert.Equal(TestResult.Fail, result.Item1);
+            Assert.Contains("(IsError() followup call", result.Item2);
         }
 
         private static void AddFile(TestRunner runner, string filename)
