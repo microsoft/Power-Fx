@@ -21,9 +21,9 @@ namespace Microsoft.PowerFx.Core.Tests
         private readonly EnumStore _enumStore = new EnumStore();
 
         [Theory]
-        [InlineData("CountIf(numtable, val > 0)", ">")]
-        [InlineData("Sum(numtable, Sum(val,0))", "Sum(val,0)")]
-        public void TestLazyEvalNodeSourceSpan(string expression, string expectedFragment)
+        [InlineData("CountIf(numtable, val > 0)", ">", typeof(BooleanType))]
+        [InlineData("Sum(numtable, Sum(val,0))", "Sum(val,0)", typeof(NumberType))]
+        public void TestLazyEvalNode(string expression, string expectedFragment, Type type)
         {
             var parameterType = new RecordType();
 
@@ -55,9 +55,12 @@ namespace Microsoft.PowerFx.Core.Tests
 
             Assert.True(lazyEvalNode.GetType() == typeof(LazyEvalNode));
 
-            // SourceSpan Check
+            // Span Check
             var fragment = lazyEvalNode.IRContext.SourceContext.GetFragment(expression);
             Assert.Equal(expectedFragment, fragment);
+
+            // Type Check
+            Assert.Equal(type, lazyEvalNode.IRContext.ResultType.GetType());
         }
     }
 }
