@@ -1,5 +1,64 @@
 ﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
@@ -426,6 +485,17 @@
   <data name="AboutValue_language" xml:space="preserve">
     <value>Değer dönüştürme işleminde kullanılacak dil kodu.</value>
     
+  </data>
+  <data name="AboutBoolean" xml:space="preserve">
+    <value>Bir boole'yi temsil eden "metni" boole değerine dönüştürür.</value>
+    
+  </data>
+  <data name="BooleanArg1" xml:space="preserve">
+    <value>metin</value>
+    
+  </data>
+  <data name="AboutBoolean_text" xml:space="preserve">
+    <value>Boole değerine dönüştürülecek metin değeri.</value>
   </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Boş olmayan ilk bağımsız değişkeni döndürür</value>
@@ -1368,6 +1438,10 @@
     <value>ifade</value>
     
   </data>
+  <data name="AboutIsBlankOrError_expression" xml:space="preserve">
+    <value>Test edilecek ifade.</value>
+    
+  </data>
   <data name="AboutIsEmpty" xml:space="preserve">
     <value>Bir koleksiyonun boş olup olmadığını denetler ve true veya false değeri döndürür.</value>
     
@@ -1375,6 +1449,9 @@
   <data name="IsEmptyArg1" xml:space="preserve">
     <value>kaynak</value>
     
+  </data>
+  <data name="AboutIsEmpty_source" xml:space="preserve">
+    <value>Test edilecek tablo.</value>
   </data>
   <data name="AboutShuffle" xml:space="preserve">
     <value>Giriş 'source' tablosunun rastgele karıştırılmış bir kopyasını döndürür.</value>
@@ -2260,6 +2337,35 @@
   </data>
   <data name="AboutChar_column_of_numbers" xml:space="preserve">
     <value>Platformunuzdaki karakter kümesinde yer alan kod numaralarını içeren bir sütun.</value>
+  </data>
+  <data name="AboutParseJson" xml:space="preserve">
+    <value>JSON dizesini nesneye dönüştürür.</value>
+    
+  </data>
+  <data name="ParseJsonArg1" xml:space="preserve">
+    <value>giriş</value>
+    
+  </data>
+  <data name="AboutParseJson_input" xml:space="preserve">
+    <value>İşlenecek JSON dizesi.</value>
+  </data>
+  <data name="AboutIndex" xml:space="preserve">
+    <value>Belirli bir dizinde bir tablodaki kaydı döndürür.</value>
+    
+  </data>
+  <data name="IndexArg1" xml:space="preserve">
+    <value>tablo</value>
+    
+  </data>
+  <data name="IndexArg2" xml:space="preserve">
+    <value>dizin</value>
+    
+  </data>
+  <data name="AboutIndex_table" xml:space="preserve">
+    <value>Bir tablo.</value>
+  </data>
+  <data name="AboutIndex_index" xml:space="preserve">
+    <value>Tamsayı dizini.</value>
   </data>
   <data name="Screen_Name_DisplayName" xml:space="preserve">
     <value>Ad</value>
@@ -3781,11 +3887,23 @@
     
   </data>
   <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
-    <value>Bu {0} sonuç türü, formül sütunlarında desteklenmiyor.</value>
+    <value>Sonuç türü {0}, formül sütunlarında desteklenmiyor.</value>
     
   </data>
   <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
     <value>Bu formül için sonuç türünün {0} olması bekleniyordu ancak gerçek sonuç türü {1}. Formül sütununun sonuç türü değiştirilemez.</value>
+    
+  </data>
+  <data name="FormulaColumns_ColumnTypeNotSupported" xml:space="preserve">
+    <value>{0} türündeki sütunlar, formül sütunlarında desteklenmiyor.</value>
+    
+  </data>
+  <data name="FormulaColumns_ColumnFormatNotSupported" xml:space="preserve">
+    <value>{1} biçimindeki {0} türündeki sütunlar, formül sütunlarında desteklenmiyor.</value>
+    
+  </data>
+  <data name="FormulaColumns_FormulaTooLong" xml:space="preserve">
+    <value>Formüller 1000 karakterden uzun olamaz.</value>
     
   </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
@@ -3802,7 +3920,6 @@
   </data>
   <data name="ErrorResource_ErrBadToken_LongMessage" xml:space="preserve">
     <value>Örneğin, '\' karakteri bir sayıdan sonra beklenmez (örneğin, '32\'). Yalnızca 32 sayısı olması için bir boşluk ('32 ') veya başka bir sayı ('323' gibi) bekleniyor.</value>
-    
   </data>
   <data name="ErrorResource_ErrBadToken_HowToFix_1" xml:space="preserve">
     <value>Beklenmeyen karakterleri kaldırın veya değiştirin.</value>
@@ -3818,11 +3935,9 @@
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_LongMessage" xml:space="preserve">
     <value>Örneğin, '\' karakteri bir sayıdan sonra beklenmez (örneğin, '32\'). Yalnızca 32 sayısı olması için bir boşluk ('32 ') veya başka bir sayı ('323' gibi) bekleniyor.</value>
-    
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_HowToFix_1" xml:space="preserve">
     <value>Beklenmeyen karakteri kaldırın veya değiştirin.</value>
-    
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_Link_1" xml:space="preserve">
     <value>Makale: Power Apps için formül başvurusu</value>
@@ -3834,7 +3949,6 @@
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_LongMessage" xml:space="preserve">
     <value>Her blok açıklama '/*' ile başlamalı ve '*/' ile bitmelidir. Her blok açıklamayı düzgün şekilde sonlandırmazsanız, açıklamadan sonraki tüm kodlar bu açıklamanın bir parçası olur. Açıklama tek bir satırdan oluşuyorsa, '//' ile başlayarak açıklamanın sonunu belirtmeyebilirsiniz.</value>
-    
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_HowToFix_1" xml:space="preserve">
     <value>Blok açıklamanızın sonuna bir '*/' ekleyin veya açıklamanızı bir satır açıklaması kümesine değiştirin.</value>
@@ -3850,7 +3964,6 @@
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_LongMessage" xml:space="preserve">
     <value>Örneğin, bir formül '{{Val: 7}}' yerine '{{Val@ 7}}' içeriyorsa bu hata oluşur. Bir değişken ayarladığınızda, söz dizimi bir "at" simgesi yerine iki nokta üst üste gerektirir.</value>
-    
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_HowToFix_1" xml:space="preserve">
     <value>Beklenmeyen karakterleri kaldırın veya beklenen bir karakterle değiştirin.</value>
@@ -3866,7 +3979,6 @@
   </data>
   <data name="ErrorResource_ErrInvalidName_LongMessage" xml:space="preserve">
     <value>Bu hata en yaygın olarak bir formül artık var olmayan bir öğeye (örneğin, silmiş olduğunuz bir denetime) başvurduğunda ortaya çıkar.</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidName_HowToFix_1" xml:space="preserve">
     <value>Geçerli olmayan ad başvurusunu kaldırın veya düzeltin.</value>
@@ -3882,7 +3994,6 @@
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_LongMessage" xml:space="preserve">
     <value>Bu hata, bir formül geçersiz söz dizimine sahip bileşen davranışı özelliklerine başvurduğunda görüntülenir. (ör. Component.OnCustomChange()) yerine Component.OnCustomChange())</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_HowToFix_1" xml:space="preserve">
     <value>Bileşen davranışı özelliğine başvurmak için doğru söz dizimini kullanın. Örneğin, Component.OnCustomChange()</value>
@@ -3898,7 +4009,6 @@
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_LongMessage" xml:space="preserve">
     <value>Parent işlecini bir üst denetimi olmayan bir denetim ile kullanamazsınız. Bu işleç, belirtilen denetimi barındıran denetime başvurur ve tüm özelliklerini kullanılabilir yapar.</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_HowToFix_1" xml:space="preserve">
     <value>'Parent' işlecini kaldırın.</value>
@@ -3914,7 +4024,6 @@
   </data>
   <data name="ErrorResource_ErrTooManyUps_LongMessage" xml:space="preserve">
     <value>Her iç içe geçme düzeyinde karmaşıklık arttığından Power Apps yalnızca 63 düzeye kadar satır kapsamı iç içe geçmeyi destekler.</value>
-    
   </data>
   <data name="ErrorResource_ErrTooManyUps_HowToFix_1" xml:space="preserve">
     <value>Formülü daha az sayıda iç içe geçme düzeyi ile yeniden yazın.</value>
@@ -3926,7 +4035,6 @@
   </data>
   <data name="ErrorResource_ErrRuleNestedTooDeeply_LongMessage" xml:space="preserve">
     <value>Power Apps yalnızca 50 düzeye kadar iç içe geçmeyi destekler. Bu derinlikte bir ifadeyi anlamak ve korumak zor olabilir.</value>
-    
   </data>
   <data name="ErrorResource_ErrRuleNestedTooDeeply_HowToFix_1" xml:space="preserve">
     <value>Formülü daha az sayıda iç içe geçme düzeyi ile yeniden yazın.</value>
@@ -3938,7 +4046,6 @@
   </data>
   <data name="ErrorResource_ErrOperatorExpected_LongMessage" xml:space="preserve">
     <value>İşleçler iki işleneni birbirine ekler. Bu hata, iki işlevi (işleneni) aralarında bir işleç olmadan kullandığınızda oluşur -- örneğin, Len("metnim")Len("metnim").</value>
-    
   </data>
   <data name="ErrorResource_ErrOperatorExpected_HowToFix_1" xml:space="preserve">
     <value>Formülünüzü işlenenler arasında bir işleç içerecek şekilde düzenleyin.</value>
@@ -3954,7 +4061,6 @@
   </data>
   <data name="ErrorResource_ErrNumberExpected_LongMessage" xml:space="preserve">
     <value>Bu hata, bir sayı gerektiren bir işlev kullandığınızda ancak bunun yerine, örneğin, resim sağladığınızda oluşur.</value>
-    
   </data>
   <data name="ErrorResource_ErrNumberExpected_HowToFix_1" xml:space="preserve">
     <value>Formülünüzü formülün bu noktasında bir sayı verecek şekilde düzenleyin.</value>
@@ -3970,7 +4076,6 @@
   </data>
   <data name="ErrorResource_ErrBooleanExpected_LongMessage" xml:space="preserve">
     <value>Boole değeri Microsoft Excel gibi uygulamalarda bir true/false değeri olarak da bilinir. Bu hata, Boole gerektiren bir işlev kullandığınızda ancak bunun yerine, örneğin, bir tarih sağladığınızda oluşur.</value>
-    
   </data>
   <data name="ErrorResource_ErrBooleanExpected_HowToFix_1" xml:space="preserve">
     <value>Formülünüzü formülün bu noktasında bir boole değeri verecek şekilde düzenleyin.</value>
@@ -3986,7 +4091,6 @@
   </data>
   <data name="ErrorResource_ErrColonExpected_LongMessage" xml:space="preserve">
     <value>İki nokta üst üste bir kayıttaki alan adını (sütun adı olarak da bilinir) alan değerinden ayırır (örneğin, {Month:"1"}, {Month:"2"} …). İki nokta üst üste ayrıca saatler, dakikalar ve saniyeleri de ayırır (örnek, "3:04").</value>
-    
   </data>
   <data name="ErrorResource_ErrColonExpected_HowToFix_1" xml:space="preserve">
     <value>Formülünüzü iki nokta üst üste içerecek şekilde düzenleyin.</value>
@@ -4002,7 +4106,6 @@
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_LongMessage" xml:space="preserve">
     <value>Davranış işlevleri uygulamanın başka bir yerinde değerleri değiştirerek uygulamanın durumunu değiştirir. 'Navigate', 'Patch', 'UpdateContext' ve 'Collect' yaygın davranış işlevleridir. 'OnSelect', 'OnVisible' ve diğer 'On …' özellikleri yaygın davranış tabanlı özelliklerdir.</value>
-    
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_HowToFix_1" xml:space="preserve">
     <value>Davranış işlevini davranış tabanlı bir özelliğe taşıyın.</value>
@@ -4018,7 +4121,6 @@
   </data>
   <data name="ErrorResource_ErrTestPropertyExpected_LongMessage" xml:space="preserve">
     <value>Test işlevleri, bir uygulamayı test ederken kullanıcı girişinin benzetimini yapmak için kullanılabilen bağlantılardır. 'SetProperty', 'SelectRow' ve 'Assert', ortak test işlevlerdir. Yalnızca test çalışmaları içinde kullanılabilirler.</value>
-    
   </data>
   <data name="ErrorResource_ErrTestPropertyExpected_HowToFix_1" xml:space="preserve">
     <value>İşlevi uygulamanın kendisinde değil, bir test çalışmasında kullanın.</value>
@@ -4030,7 +4132,6 @@
   </data>
   <data name="ErrorResource_ErrCannotCoerce_SourceType_TargetType_LongMessage" xml:space="preserve">
     <value>Power Apps sizin için formülünüzdeki bazı veri türlerini diğer türlere dönüştürebilir. Örneğin, "1" (dize) değerini 1 (sayı) değerine dönüştürebilir ancak tüm veri türlerini diğer tüm veri türlerine dönüştürülemez. Örneğin, bir resmi sayıya dönüştüremez.</value>
-    
   </data>
   <data name="ErrorResource_ErrCannotCoerce_SourceType_TargetType_HowToFix_1" xml:space="preserve">
     <value>Formülünüzü söz konusu verileri beklenen türe dönüştürecek şekilde düzenleyin.</value>
@@ -4042,7 +4143,6 @@
   </data>
   <data name="ErrorResource_ErrStringExpected_LongMessage" xml:space="preserve">
     <value>Bu hata, bir metin (veya dize) bağımsız değişkeni gerektiren bir işlev kullandığınızda ancak bunun yerine, örneğin, tarih sağladığınızda oluşur.</value>
-    
   </data>
   <data name="ErrorResource_ErrStringExpected_HowToFix_1" xml:space="preserve">
     <value>Formülünüzü formülün bu noktasında bir metin verecek şekilde düzenleyin.</value>
@@ -4058,7 +4158,6 @@
   </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_LongMessage" xml:space="preserve">
     <value>Bu hata, bir metin sayı gerektiren bir işlev kullandığınızda ancak bunun yerine, örneğin, bir boole (true/false) değeri sağladığınızda oluşur.</value>
-    
   </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_HowToFix_1" xml:space="preserve">
     <value>Formülünüzü formülün bu noktasında bir metin veya sayı verecek şekilde düzenleyin.</value>
@@ -4074,7 +4173,6 @@
   </data>
   <data name="ErrorResource_ErrClosingBracketExpected_LongMessage" xml:space="preserve">
     <value>Sağ ayraç bir kaydın sonunu gösterir (örneğin, {Month:"1"}, {Month:"2"} …).</value>
-    
   </data>
   <data name="ErrorResource_ErrClosingBracketExpected_HowToFix_1" xml:space="preserve">
     <value>Formülünüzü ayraç içerecek şekilde düzenleyin.</value>
@@ -4094,7 +4192,6 @@
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_LongMessage" xml:space="preserve">
     <value>Formülde karşılaştırılmakta olan değerler aynı türde olmadığından formülünüzü değerlendiremiyoruz.</value>
-    
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_HowToFix_1" xml:space="preserve">
     <value>Bir tarih dizesini (örn. "31/12/2018") tarih değerine dönüştürür gibi, değeri aynı türe dönüştürmeniz gerekebilir.</value>
@@ -4174,7 +4271,6 @@
   </data>
   <data name="ErrorResource_ErrTypeError_LongMessage" xml:space="preserve">
     <value>Veriler beklenen türle eşleşmiyor olabilir. (Metin, sayı, tarih, tablo, kayıt.)</value>
-    
   </data>
   <data name="ErrorResource_ErrTypeError_HowToFix_1" xml:space="preserve">
     <value>Formüle dahil edilen değerlerin türlerini denetleyin ve türlerin eşleştiğinden emin olun.</value>
@@ -4194,7 +4290,6 @@
   </data>
   <data name="ErrorResource_ErrDateExpected_LongMessage" xml:space="preserve">
     <value>Bu hata, bir tarih gerektiren bir işlev kullandığınızda ancak bunun yerine, örneğin, metin sağladığınızda oluşur.</value>
-    
   </data>
   <data name="ErrorResource_ErrDateExpected_HowToFix_1" xml:space="preserve">
     <value>Formülünüzü formülün bu noktasında bir tarih verecek şekilde düzenleyin.</value>
@@ -4210,7 +4305,6 @@
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_LongMessage" xml:space="preserve">
     <value>Veri kaynağı, formülü işleyemeyebilir ve eksik bir veri kümesi döndürebilir. Veri kümesi eksikse uygulamanız doğru sonuçlar döndürmeyebilir veya düzgün çalışmayabilir.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_HowToFix_1" xml:space="preserve">
     <value>Veri kümeniz 500 kayıt sınırını aşıyor ancak 2000'den az kayıt içeriyorsa sınırı sıfırlamayı deneyin.</value>
@@ -4238,7 +4332,6 @@
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_LongMessage" xml:space="preserve">
     <value>Veri kaynağı, formülü işleyemeyebilir ve eksik bir veri kümesi döndürebilir. Veri kümesi eksikse uygulamanız doğru sonuçlar döndürmeyebilir veya düzgün çalışmayabilir.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_HowToFix_1" xml:space="preserve">
     <value>Veri kümeniz 500 kayıt sınırını aşıyor ancak 2000'den az kayıt içeriyorsa sınırı sıfırlamayı deneyin.</value>
@@ -4266,7 +4359,6 @@
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_LongMessage" xml:space="preserve">
     <value> "in" işlecinin sağ tarafı doğru veri kaynağından bir sütun adı olmalıdır. Veri kaynağı, formülü işleyemeyebilir ve eksik bir veri kümesi döndürebilir. Veri kümesi eksikse uygulamanız doğru sonuçlar döndürmeyebilir veya düzgün çalışmayabilir.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_1" xml:space="preserve">
     <value>"in" işlecinin sağındaki öğeyi doğru veri kaynağından bir sütun olacak şekilde değiştirin.</value>
@@ -4299,7 +4391,6 @@
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_LongMessage" xml:space="preserve">
     <value> "in" işlecinin sağ tarafı doğru veri kaynağından bir sütun değil. Veri kaynağı, formülü işleyemeyebilir ve eksik bir veri kümesi döndürebilir. Veri kümesi eksikse uygulamanız doğru sonuçlar döndürmeyebilir veya düzgün çalışmayabilir.
       </value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_1" xml:space="preserve">
     <value>"in" işlecinin sağındaki öğeyi doğru veri kaynağından bir sütun olacak şekilde değiştirin.</value>
@@ -4380,6 +4471,22 @@
   </data>
   <data name="ErrorResource_ErrInvalidControlReference_Link_1" xml:space="preserve">
     <value>Başvuru: Tuval Uygulamaları için ConfirmExit</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidStringInterpolation_ShortMessage" xml:space="preserve">
+    <value>Düz metin arasına kod eklenmiş dizede görünen ifadeler bir Metin değerine veya uyumlu bir türe göre değerlendirmelidir.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidStringInterpolation_HowToFix_1" xml:space="preserve">
+    <value>Düz metin arasına kod eklenmiş dize içindeki ifadelerin türlerini kontrol edin.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrEmptyIsland_ShortMessage" xml:space="preserve">
+    <value>Empty expressions cannot appear inside an interpolated string.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrEmptyIsland_HowToFix_1" xml:space="preserve">
+    <value>Check for empty expressions inside the interpolated string.</value>
     
   </data>
   <data name="ErrorResource_ErrAsNotInContext_ShortMessage" xml:space="preserve">

@@ -872,15 +872,13 @@ namespace Microsoft.PowerFx.Core.Parser
             {
                 if (_curs.TidCur == TokKind.IslandStart)
                 {
-                    if (i != 0)
+                    var islandStart = _curs.TokMove();
+                    sourceList.Add(new TokenSource(islandStart));
+                    sourceList.Add(ParseTrivia());
+
+                    if (_curs.TidCur == TokKind.IslandEnd)
                     {
-                        var islandStart = _curs.TokMove();
-                        sourceList.Add(new TokenSource(islandStart));
-                        sourceList.Add(ParseTrivia());
-                    }
-                    else
-                    {
-                        _curs.TokMove();
+                        arguments.Add(CreateError(_curs.TokCur, TexlStrings.ErrEmptyIsland));
                     }
                 }
                 else if (_curs.TidCur == TokKind.IslandEnd)
