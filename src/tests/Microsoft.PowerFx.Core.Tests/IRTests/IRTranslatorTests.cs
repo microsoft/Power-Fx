@@ -21,7 +21,7 @@ namespace Microsoft.PowerFx.Core.Tests
         private readonly EnumStore _enumStore = new EnumStore();
 
         [Theory]
-        [InlineData("CountIf(numtable, val > 0)", "val > 0")]
+        [InlineData("CountIf(numtable, val > 0)", ">")]
         [InlineData("Sum(numtable, Sum(val,0))", "Sum(val,0)")]
         public void TestLazyEvalNodeSourceSpan(string expression, string expectedFragment)
         {
