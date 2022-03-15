@@ -145,7 +145,8 @@ namespace Microsoft.PowerFx.Functions
                     replaceBlankValues: DoNotReplaceBlank,
                     checkRuntimeTypes: ExactSequence(
                         ExactValueTypeOrBlank<TableValue>,
-                        ExactValueTypeOrBlank<LambdaFormulaValue>),
+                        ExactValueTypeOrBlank<LambdaFormulaValue>,
+                        ExactValueTypeOrBlank<StringValue>),
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
                     targetFunction: Concat)
