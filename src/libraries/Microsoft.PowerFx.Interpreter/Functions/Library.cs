@@ -616,6 +616,19 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: Log)
             },
             {
+                BuiltinFunctionsCore.LookUp,
+                StandardErrorHandling<FormulaValue>(
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactSequence(
+                        ExactValueTypeOrBlank<TableValue>,
+                        ExactValueTypeOrBlank<LambdaFormulaValue>,
+                        ExactValueTypeOrBlank<LambdaFormulaValue>),
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: LookUp)
+            },
+            {
                 BuiltinFunctionsCore.Lower,
                 StandardErrorHandling<StringValue>(
                     expandArguments: NoArgExpansion,
