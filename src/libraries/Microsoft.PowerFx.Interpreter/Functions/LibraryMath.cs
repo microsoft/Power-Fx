@@ -414,8 +414,8 @@ namespace Microsoft.PowerFx.Functions
 
         public static FormulaValue RandBetween(IRContext irContext, NumberValue[] args)
         {
-            var lower = (int)args[0].Value;
-            var upper = (int)args[1].Value;
+            var lower = args[0].Value;
+            var upper = args[1].Value;
 
             if (lower > upper)
             {
@@ -427,6 +427,9 @@ namespace Microsoft.PowerFx.Functions
                 });
             }
 
+            lower = Math.Ceiling(lower);
+            upper = Math.Floor(upper);
+
             lock (_randomizerLock)
             {
                 if (_random == null)
@@ -434,7 +437,7 @@ namespace Microsoft.PowerFx.Functions
                     _random = new Random();
                 }
 
-                return new NumberValue(irContext, _random.Next(lower, upper));
+                return new NumberValue(irContext, Math.Floor((_random.NextDouble() * (upper - lower + 1)) + lower));
             }
         }
 

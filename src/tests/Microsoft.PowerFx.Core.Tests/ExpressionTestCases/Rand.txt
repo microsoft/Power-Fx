@@ -6,9 +6,6 @@
 >>IsError(RandBetween(5, 1))
 true
 
->>RandBetween(Blank(),1)
-0
-
 >>IsError(RandBetween(1/0, 1))
 true
 
@@ -16,7 +13,24 @@ true
 true
 
 >>RandBetween(100.5, 100.7)
-100
+101
+
+// First argument should be included
+>> CountIf(Sequence(200), RandBetween(3, 4) = 3) > 0
+true
+
+// Second argument should be included
+>> CountIf(Sequence(200), RandBetween(3, 4) = 4) > 0
+true
+
+>>RandBetween(Blank(),0.5)
+0
+
+>> CountIf(Sequence(200) RandBetween(Blank(), 1) = 0) > 0
+true
+
+>> CountIf(Sequence(200) RandBetween(Blank(), 1) = 1) > 0
+true
 
 >> Sum(Sequence(100), With({RandomNumber: RandBetween(1,20)}, If(RandomNumber >=1 && RandomNumber <= 20, 1, 0)))
 100
@@ -26,3 +40,20 @@ true
 
 >> Sum(Sequence(100), With({RandomNumber: Rand()}, If(RandomNumber > 0 && RandomNumber < 1.0, 1, 0)))
 100
+
+>> Sum(Sequence(100), With({rnd:RandBetween(-20,-10)}, If(rnd >= -20 And rnd <= -10, 1, 0)))
+100
+
+// Result must be larger than first argument
+>> Sum(Sequence(100), RandBetween(4.5, 5.7))
+500
+
+>> Sum(Sequence(100), With({rnd:RandBetween(-4.5,-2.7)}, If(rnd = -4 Or rnd = -3, 1, 0)))
+100
+
+>> RandBetween(4.7, 4.5)
+#Error
+
+// Just like Excel, if there is no integer between the two numbers, take ceiling
+>> Sum(Sequence(100), RandBetween(3.5, 3.7))
+400
