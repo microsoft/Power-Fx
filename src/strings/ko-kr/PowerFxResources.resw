@@ -1,5 +1,64 @@
 ﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
@@ -426,6 +485,17 @@
   <data name="AboutValue_language" xml:space="preserve">
     <value>값을 변환할 때 사용할 언어 코드입니다.</value>
     
+  </data>
+  <data name="AboutBoolean" xml:space="preserve">
+    <value>부울을 나타내는 '텍스트'를 부울 값으로 변환합니다.</value>
+    
+  </data>
+  <data name="BooleanArg1" xml:space="preserve">
+    <value>텍스트</value>
+    
+  </data>
+  <data name="AboutBoolean_text" xml:space="preserve">
+    <value>부울 값으로 변환할 텍스트 값입니다.</value>
   </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>공백이 아닌 첫 번째 인수를 반환함</value>
@@ -1368,6 +1438,10 @@
     <value>식</value>
     
   </data>
+  <data name="AboutIsBlankOrError_expression" xml:space="preserve">
+    <value>테스트할 식입니다.</value>
+    
+  </data>
   <data name="AboutIsEmpty" xml:space="preserve">
     <value>컬렉션이 비어 있는지 여부를 확인하고 true나 false를 반환합니다.</value>
     
@@ -1375,6 +1449,9 @@
   <data name="IsEmptyArg1" xml:space="preserve">
     <value>원본</value>
     
+  </data>
+  <data name="AboutIsEmpty_source" xml:space="preserve">
+    <value>테스트할 테이블입니다.</value>
   </data>
   <data name="AboutShuffle" xml:space="preserve">
     <value>입력 '원본' 테이블의 무작위로 순서를 섞은 복사본을 반환합니다.</value>
@@ -2260,6 +2337,35 @@
   </data>
   <data name="AboutChar_column_of_numbers" xml:space="preserve">
     <value>플랫폼에 설정된 문자의 코드 번호 열입니다.</value>
+  </data>
+  <data name="AboutParseJson" xml:space="preserve">
+    <value>JSON 문자열을 개체로 변환합니다.</value>
+    
+  </data>
+  <data name="ParseJsonArg1" xml:space="preserve">
+    <value>입력</value>
+    
+  </data>
+  <data name="AboutParseJson_input" xml:space="preserve">
+    <value>처리할 JSON 문자열.</value>
+  </data>
+  <data name="AboutIndex" xml:space="preserve">
+    <value>해당 색인에서 테이블의 레코드를 반환합니다.</value>
+    
+  </data>
+  <data name="IndexArg1" xml:space="preserve">
+    <value>테이블</value>
+    
+  </data>
+  <data name="IndexArg2" xml:space="preserve">
+    <value>색인</value>
+    
+  </data>
+  <data name="AboutIndex_table" xml:space="preserve">
+    <value>테이블.</value>
+  </data>
+  <data name="AboutIndex_index" xml:space="preserve">
+    <value>정수 색인.</value>
   </data>
   <data name="Screen_Name_DisplayName" xml:space="preserve">
     <value>이름</value>
@@ -3781,11 +3887,23 @@
     
   </data>
   <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
-    <value>이 결과 유형 {0}은(는) 수식 열에 지원되지 않습니다.</value>
+    <value>{0} 결과 유형은 수식 열에 지원되지 않습니다.</value>
     
   </data>
   <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
     <value>이 수식에 기대되는 결과 유형은 {0}이지만, 실제 결과 유형은 {1}입니다. 수식 열의 결과 유형을 변경할 수 없습니다.</value>
+    
+  </data>
+  <data name="FormulaColumns_ColumnTypeNotSupported" xml:space="preserve">
+    <value>{0} 유형의 열은 수식 열에 지원되지 않습니다.</value>
+    
+  </data>
+  <data name="FormulaColumns_ColumnFormatNotSupported" xml:space="preserve">
+    <value>형식이 {1}인 {0} 유형의 열은 수식 열에 지원되지 않습니다.</value>
+    
+  </data>
+  <data name="FormulaColumns_FormulaTooLong" xml:space="preserve">
+    <value>수식은 1,000자를 초과할 수 없습니다.</value>
     
   </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
@@ -3802,7 +3920,6 @@
   </data>
   <data name="ErrorResource_ErrBadToken_LongMessage" xml:space="preserve">
     <value>예를 들어, 숫자 뒤에 문자 '\'는 필요하지 않습니다(예: '32\'). 숫자 32 또는 다른 숫자(예: '323')가 오도록 공백('32')이 필요합니다.</value>
-    
   </data>
   <data name="ErrorResource_ErrBadToken_HowToFix_1" xml:space="preserve">
     <value>예기치 않은 문자를 제거하거나 바꿉니다.</value>
@@ -3818,11 +3935,9 @@
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_LongMessage" xml:space="preserve">
     <value>예를 들어, 숫자 뒤에 문자 '\'는 필요하지 않습니다(예: '32\'). 숫자 32 또는 다른 숫자(예: '323')가 오도록 공백('32')이 필요합니다.</value>
-    
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_HowToFix_1" xml:space="preserve">
     <value>예기치 않은 문자를 제거하거나 바꿉니다.</value>
-    
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_Link_1" xml:space="preserve">
     <value>문서: Power Apps에 대한 수식 참조</value>
@@ -3834,7 +3949,6 @@
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_LongMessage" xml:space="preserve">
     <value>각 블록 주석은 '/*'로 시작하고 '*/'로 끝나야 합니다. 블록 주석을 올바르게 끝내지 않는 경우 주석 뒤의 모든 코드가 주석의 일부가 됩니다. 주석이 한 줄인 경우 '//'로 시작하고 주석 끝은 식별하지 않아도 됩니다.</value>
-    
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_HowToFix_1" xml:space="preserve">
     <value>블록 주석 끝에 '*/'를 추가하거나 여러 줄의 주석으로 변경합니다.</value>
@@ -3850,7 +3964,6 @@
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_LongMessage" xml:space="preserve">
     <value>이 오류는 예를 들어 수식에 '{{Val: 7}}' 대신 '{{Val@ 7}}'이(가) 있는 경우에 발생합니다. 변수를 설정할 때는 구문에 "골뱅이표" 기호 대신 콜론이 필요합니다.</value>
-    
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_HowToFix_1" xml:space="preserve">
     <value>예기치 않은 문자를 제거하거나 필요한 문자로 바꿉니다.</value>
@@ -3866,7 +3979,6 @@
   </data>
   <data name="ErrorResource_ErrInvalidName_LongMessage" xml:space="preserve">
     <value>이 오류는 일반적으로 수식이 존재하지 않는 항목(예: 삭제한 컨트롤)을 참조하는 경우에 나타납니다.</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidName_HowToFix_1" xml:space="preserve">
     <value>잘못된 이름에 대한 참조를 제거하거나 수정합니다.</value>
@@ -3882,7 +3994,6 @@
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_LongMessage" xml:space="preserve">
     <value>이 오류는 수식에서 잘못된 구문이 있는 구성 요소 동작 속성을 참조하는 경우에 표시됩니다(예: Component.OnCustomChange() 대신 Component.OnCustomChange).</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_HowToFix_1" xml:space="preserve">
     <value>올바른 구문을 사용하여 구성 요소 동작 속성을 참조하세요(예: Component.OnCustomChange()).</value>
@@ -3898,7 +4009,6 @@
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_LongMessage" xml:space="preserve">
     <value>부모 컨트롤이 없는 컨트롤에 부모 연산자를 사용할 수 없습니다. 이 연산자는 지정된 컨트롤을 호스트하고 해당 속성을 모두 사용할 수 있게 만드는 컨트롤을 참조합니다.</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_HowToFix_1" xml:space="preserve">
     <value>'부모' 연산자를 제거합니다.</value>
@@ -3914,7 +4024,6 @@
   </data>
   <data name="ErrorResource_ErrTooManyUps_LongMessage" xml:space="preserve">
     <value>각 중첩 수준으로 복잡성이 증가하므로 Power Apps는 행 범위 중첩을 최대 63단계까지만 지원합니다.</value>
-    
   </data>
   <data name="ErrorResource_ErrTooManyUps_HowToFix_1" xml:space="preserve">
     <value>수식의 중첩 수준이 더 적어지게 다시 작성합니다.</value>
@@ -3926,7 +4035,6 @@
   </data>
   <data name="ErrorResource_ErrRuleNestedTooDeeply_LongMessage" xml:space="preserve">
     <value>Power Apps는 식의 중첩을 최대 50단계까지만 지원합니다. 이렇게 깊은 식은 이해하고 유지하기가 어렵습니다.</value>
-    
   </data>
   <data name="ErrorResource_ErrRuleNestedTooDeeply_HowToFix_1" xml:space="preserve">
     <value>수식의 중첩 수준이 더 적어지게 다시 작성합니다.</value>
@@ -3938,7 +4046,6 @@
   </data>
   <data name="ErrorResource_ErrOperatorExpected_LongMessage" xml:space="preserve">
     <value>연산자는 두 개의 피연산자를 결합합니다. 이 오류는 두 개의 함수(피연산자) 사이에 연산자를 넣지 않는 경우(예: Len("mytext")Len("mytext"))에 발생합니다.</value>
-    
   </data>
   <data name="ErrorResource_ErrOperatorExpected_HowToFix_1" xml:space="preserve">
     <value>피연산자 사이에 연산자가 포함되도록 수식을 편집합니다.</value>
@@ -3954,7 +4061,6 @@
   </data>
   <data name="ErrorResource_ErrNumberExpected_LongMessage" xml:space="preserve">
     <value>이 오류는 숫자가 필요한 함수를 사용하는데 이미지 등을 입력하는 경우에 발생합니다.</value>
-    
   </data>
   <data name="ErrorResource_ErrNumberExpected_HowToFix_1" xml:space="preserve">
     <value>수식의 이 지점에서 숫자로 평가되도록 수식을 편집합니다.</value>
@@ -3970,7 +4076,6 @@
   </data>
   <data name="ErrorResource_ErrBooleanExpected_LongMessage" xml:space="preserve">
     <value>Microsoft Excel 등의 애플리케이션에서는 부울을 true/false 값이라고도 합니다. 이 오류는 부울 값이 필요한 함수를 사용하는데 날짜 등을 입력하는 경우에 발생합니다.</value>
-    
   </data>
   <data name="ErrorResource_ErrBooleanExpected_HowToFix_1" xml:space="preserve">
     <value>수식의 이 지점에서 부울로 평가되도록 수식을 편집합니다.</value>
@@ -3986,7 +4091,6 @@
   </data>
   <data name="ErrorResource_ErrColonExpected_LongMessage" xml:space="preserve">
     <value>콜론은 레코드에서 필드 이름(열 이름이라고도 함)과 필드 값을 구분합니다(예: {Month:"1"}, {Month:"2"}…). 또한 콜론은 시간, 분, 초를 구분합니다(예: "3:04").</value>
-    
   </data>
   <data name="ErrorResource_ErrColonExpected_HowToFix_1" xml:space="preserve">
     <value>수식에 콜론이 포함되도록 편집합니다.</value>
@@ -4002,7 +4106,6 @@
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_LongMessage" xml:space="preserve">
     <value>동작 함수는 앱의 다른 곳에서 값을 변경하여 앱의 상태를 변경합니다. 'Navigate', 'Patch', 'UpdateContext' 및 'Collect'는 일반적인 동작 함수입니다. 'OnSelect', 'OnVisible' 및 기타 'On …' 속성은 일반적인 동작 기반 속성입니다.</value>
-    
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_HowToFix_1" xml:space="preserve">
     <value>동작 함수를 동작 기반 속성으로 이동합니다.</value>
@@ -4018,7 +4121,6 @@
   </data>
   <data name="ErrorResource_ErrTestPropertyExpected_LongMessage" xml:space="preserve">
     <value>테스트 함수는 앱을 테스트할 때 사용자 입력을 시뮬레이션하는 데 사용할 수 있는 함수입니다. 'SetProperty', 'SelectRow' 및 'Assert'는 일반적인 테스트 함수로, 테스트 사례에서만 사용할 수 있습니다.</value>
-    
   </data>
   <data name="ErrorResource_ErrTestPropertyExpected_HowToFix_1" xml:space="preserve">
     <value>앱 자체가 아니라 테스트 사례에서 함수를 사용하세요.</value>
@@ -4030,7 +4132,6 @@
   </data>
   <data name="ErrorResource_ErrCannotCoerce_SourceType_TargetType_LongMessage" xml:space="preserve">
     <value>Power Apps에서는 수식에 있는 일부 데이터 형식을 다른 형식으로 변환할 수 있습니다. 예를 들어 "1"(문자열)을 1(숫자)로 변환할 수 있지만, 일부 데이터 형식은 다른 데이터 형식으로 변환할 수 없습니다. 예를 들어 이미지를 숫자로 변환할 수는 없습니다.</value>
-    
   </data>
   <data name="ErrorResource_ErrCannotCoerce_SourceType_TargetType_HowToFix_1" xml:space="preserve">
     <value>요청한 데이터를 필요한 형식으로 변환하도록 수식을 편집합니다.</value>
@@ -4042,7 +4143,6 @@
   </data>
   <data name="ErrorResource_ErrStringExpected_LongMessage" xml:space="preserve">
     <value>이 오류는 텍스트(또는 문자열) 인수가 필요한 함수를 사용하는데 날짜 등을 입력하는 경우에 발생합니다.</value>
-    
   </data>
   <data name="ErrorResource_ErrStringExpected_HowToFix_1" xml:space="preserve">
     <value>수식의 이 지점에서 텍스트로 평가되도록 수식을 편집합니다.</value>
@@ -4058,7 +4158,6 @@
   </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_LongMessage" xml:space="preserve">
     <value>이 오류는 텍스트 또는 숫자가 필요한 함수를 사용하는데 부울(true/false) 값 등을 입력하는 경우에 발생합니다.</value>
-    
   </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_HowToFix_1" xml:space="preserve">
     <value>수식의 이 지점에서 텍스트 또는 숫자로 평가되도록 수식을 편집합니다.</value>
@@ -4074,7 +4173,6 @@
   </data>
   <data name="ErrorResource_ErrClosingBracketExpected_LongMessage" xml:space="preserve">
     <value>닫는 대괄호는 레코드의 끝을 나타냅니다(예: {Month:"1"}, {Month:"2"}…).</value>
-    
   </data>
   <data name="ErrorResource_ErrClosingBracketExpected_HowToFix_1" xml:space="preserve">
     <value>수식에 대괄호가 포함되도록 편집합니다.</value>
@@ -4094,7 +4192,6 @@
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_LongMessage" xml:space="preserve">
     <value>수식에서 비교되는 값이 동일한 형식이 아니므로 수식을 평가할 수 없습니다.</value>
-    
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_HowToFix_1" xml:space="preserve">
     <value>날짜 문자열(예: "12/31/2018")을 날짜 값으로 변환하는 것과 같이 값을 동일한 형식으로 변환해야 할 수도 있습니다.</value>
@@ -4174,7 +4271,6 @@
   </data>
   <data name="ErrorResource_ErrTypeError_LongMessage" xml:space="preserve">
     <value>데이터가 필요한 형식(텍스트, 숫자, 날짜, 테이블, 레코드)과 일치하지 않을 수 있습니다.</value>
-    
   </data>
   <data name="ErrorResource_ErrTypeError_HowToFix_1" xml:space="preserve">
     <value>수식에 포함된 값의 유형을 확인하고 유형이 일치하는지 확인합니다.</value>
@@ -4194,7 +4290,6 @@
   </data>
   <data name="ErrorResource_ErrDateExpected_LongMessage" xml:space="preserve">
     <value>이 오류는 날짜가 필요한 함수를 사용하는데 텍스트 등을 입력하는 경우에 발생합니다.</value>
-    
   </data>
   <data name="ErrorResource_ErrDateExpected_HowToFix_1" xml:space="preserve">
     <value>수식의 이 지점에서 날짜로 평가되도록 수식을 편집합니다.</value>
@@ -4210,7 +4305,6 @@
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_LongMessage" xml:space="preserve">
     <value>데이터 원본이 수식을 처리하지 못할 수 있으며 불완전한 데이터 세트를 반환할 수도 있습니다. 데이터 세트가 불완전하면 애플리케이션이 올바른 결과를 반환할 수 없거나 제대로 동작하지 않을 수 있습니다.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_HowToFix_1" xml:space="preserve">
     <value>데이터 집합이 500개 레코드 제한을 초과하지만 2,000개 레코드 미만인 경우 한계를 재설정합니다.</value>
@@ -4238,7 +4332,6 @@
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_LongMessage" xml:space="preserve">
     <value>데이터 원본이 수식을 처리하지 못할 수 있으며 불완전한 데이터 세트를 반환할 수도 있습니다. 데이터 세트가 불완전하면 애플리케이션이 올바른 결과를 반환할 수 없거나 제대로 동작하지 않을 수 있습니다.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_HowToFix_1" xml:space="preserve">
     <value>데이터 집합이 500개 레코드 제한을 초과하지만 2,000개 레코드 미만인 경우 한계를 재설정합니다.</value>
@@ -4266,7 +4359,6 @@
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_LongMessage" xml:space="preserve">
     <value>"in" 연산자의 오른쪽에 있는 항목은 올바른 데이터 원본의 열 이름이어야 합니다. 데이터 원본이 수식을 처리하지 못할 수 있으며 불완전한 데이터 세트를 반환할 수도 있습니다. 데이터 세트가 불완전하면 애플리케이션이 올바른 결과를 반환할 수 없거나 제대로 동작하지 않을 수 있습니다.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_1" xml:space="preserve">
     <value>"in" 연산자의 오른쪽에 있는 항목이 올바른 데이터 원본의 열이 되도록 변경합니다.</value>
@@ -4299,7 +4391,6 @@
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_LongMessage" xml:space="preserve">
     <value> "in" 연산자의 오른쪽에 있는 항목은 올바른 데이터 원본의 열이 아닙니다. 데이터 원본이 수식을 처리하지 못할 수 있으며 불완전한 데이터 세트를 반환할 수도 있습니다. 데이터 세트가 불완전하면 애플리케이션이 올바른 결과를 반환할 수 없거나 제대로 동작하지 않을 수 있습니다.
       </value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_1" xml:space="preserve">
     <value>"in" 연산자의 오른쪽에 있는 항목이 올바른 데이터 원본의 열이 되도록 변경합니다.</value>
@@ -4380,6 +4471,22 @@
   </data>
   <data name="ErrorResource_ErrInvalidControlReference_Link_1" xml:space="preserve">
     <value>참조: 캔버스 앱에 대한 ConfirmExit</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidStringInterpolation_ShortMessage" xml:space="preserve">
+    <value>보간된 문자열 안에 표시되는 식은 텍스트 값 또는 호환되는 유형으로 평가해야 합니다.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidStringInterpolation_HowToFix_1" xml:space="preserve">
+    <value>보간된 문자열 내의 식 유형을 확인하세요.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrEmptyIsland_ShortMessage" xml:space="preserve">
+    <value>Empty expressions cannot appear inside an interpolated string.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrEmptyIsland_HowToFix_1" xml:space="preserve">
+    <value>Check for empty expressions inside the interpolated string.</value>
     
   </data>
   <data name="ErrorResource_ErrAsNotInContext_ShortMessage" xml:space="preserve">

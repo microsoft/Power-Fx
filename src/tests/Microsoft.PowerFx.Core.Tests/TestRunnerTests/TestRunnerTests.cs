@@ -21,7 +21,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
             var tests = runner.Tests.ToArray();
             Assert.Equal(2, tests.Length);
-                        
+
             // Ordered by how we see them in the file. 
             Assert.Equal("input1", tests[0].Input);
             Assert.Equal("expected_result1", tests[0].Expected);
@@ -162,7 +162,7 @@ namespace Microsoft.PowerFx.Core.Tests
             };
             var result = await runner.RunAsync(test);
 
-            Assert.Equal(TestResult.Pass, result.Item1);            
+            Assert.Equal(TestResult.Pass, result.Item1);
         }
 
         [Fact]
@@ -178,6 +178,31 @@ namespace Microsoft.PowerFx.Core.Tests
                 Expected = "2" // Mismatch!
             };
             var result = await runner.RunAsync(test);
+
+            Assert.Equal(TestResult.Fail, result.Item1);
+        }
+
+        [Fact]
+        public async Task TestRunnerNumericTolerance()
+        {
+            var runner = new MockRunner
+            {
+                _hook = (expr, setup) => FormulaValue.New(1.23456789)
+            };
+
+            var test = new TestCase
+            {
+                Expected = "1.2345654" // difference less than 1e-5
+            };
+            var result = await runner.RunAsync(test);
+
+            Assert.Equal(TestResult.Pass, result.Item1);
+
+            test = new TestCase
+            {
+                Expected = "1.23455" // difference more than 1e-5
+            };
+            result = await runner.RunAsync(test);
 
             Assert.Equal(TestResult.Fail, result.Item1);
         }
@@ -267,7 +292,7 @@ namespace Microsoft.PowerFx.Core.Tests
             // Compiler error is a throw from Check()
             var runner = new MockRunner
             {
-                _hook = (expr, setup) => throw new InvalidOperationException("Errors: Error X") 
+                _hook = (expr, setup) => throw new InvalidOperationException("Errors: Error X")
             };
 
             var test = new TestCase
@@ -279,11 +304,11 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.Equal(TestResult.Pass, result.Item1);
 
             // It's a failure if we have the wrong error
-            runner._hook = (expr, setup) => throw new InvalidOperationException("Errors: Error Y");            
+            runner._hook = (expr, setup) => throw new InvalidOperationException("Errors: Error Y");
             result = await runner.RunAsync(test);
 
             Assert.Equal(TestResult.Fail, result.Item1);
-            
+
             // Failure if the compiler error is unexpected
             test.Expected = "1";
             result = await runner.RunAsync(test);
@@ -313,7 +338,7 @@ namespace Microsoft.PowerFx.Core.Tests
             test.Expected = "1";
             var result = await runner.RunAsync(test);
 
-            Assert.Equal(TestResult.Skip, result.Item1);            
+            Assert.Equal(TestResult.Skip, result.Item1);
         }
 
         // Override IsError
@@ -344,18 +369,19 @@ namespace Microsoft.PowerFx.Core.Tests
             var runner = new MockErrorRunner
             {
                 _hook = (expr, setup) =>
-                    expr switch {
-                    "1" => FormulaValue.New(1),
-                    "IsError(1)" => FormulaValue.New(true),
+                    expr switch
+                    {
+                        "1" => FormulaValue.New(1),
+                        "IsError(1)" => FormulaValue.New(true),
                         _ => throw new InvalidOperationException()
-                     },
+                    },
                 _isError = (value) => value is NumberValue
             };
 
             var test = new TestCase
             {
                 Input = "1",
-                Expected = "#error"                
+                Expected = "#error"
             };
 
             // On #error for x, test runner  will also call IsError(x)
@@ -375,7 +401,8 @@ namespace Microsoft.PowerFx.Core.Tests
             var runner = new MockErrorRunner
             {
                 _hook = (expr, setup) =>
-                    expr switch {
+                    expr switch
+                    {
                         "1" => FormulaValue.New(1),
                         "IsError(1)" => FormulaValue.New(false), // expects true, should cause failure
                         _ => throw new InvalidOperationException()
@@ -397,7 +424,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
         private static void AddFile(TestRunner runner, string filename)
         {
-            var test1 = Path.GetFullPath(filename, TxtFileDataAttribute.GetDefaultTestDir("TestRunnerTests"));            
+            var test1 = Path.GetFullPath(filename, TxtFileDataAttribute.GetDefaultTestDir("TestRunnerTests"));
             runner.AddFile(test1);
         }
     }

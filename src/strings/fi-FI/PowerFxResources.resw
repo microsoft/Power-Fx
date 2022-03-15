@@ -1,5 +1,64 @@
 ﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
@@ -426,6 +485,17 @@
   <data name="AboutValue_language" xml:space="preserve">
     <value>Arvon muuntamisessa käytettävä kielikoodi.</value>
     
+  </data>
+  <data name="AboutBoolean" xml:space="preserve">
+    <value>Muuntaa totuusarvoa edustavan tekstin totuusarvoksi.</value>
+    
+  </data>
+  <data name="BooleanArg1" xml:space="preserve">
+    <value>teksti</value>
+    
+  </data>
+  <data name="AboutBoolean_text" xml:space="preserve">
+    <value>Totuusarvoksi muunnettava tekstiarvo.</value>
   </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Palauttaa ensimmäisen muun kuin tyhjän argumentin</value>
@@ -1368,6 +1438,10 @@
     <value>lauseke</value>
     
   </data>
+  <data name="AboutIsBlankOrError_expression" xml:space="preserve">
+    <value>Testattava lauseke.</value>
+    
+  </data>
   <data name="AboutIsEmpty" xml:space="preserve">
     <value>Tarkistaa, onko kokoelma tyhjä, ja palauttaa arvon tosi tai epätosi.</value>
     
@@ -1375,6 +1449,9 @@
   <data name="IsEmptyArg1" xml:space="preserve">
     <value>lähde</value>
     
+  </data>
+  <data name="AboutIsEmpty_source" xml:space="preserve">
+    <value>Testattava taulukko.</value>
   </data>
   <data name="AboutShuffle" xml:space="preserve">
     <value>Palauttaa syötteen source-taulukon satunnaisesti sekoitetun kopion.</value>
@@ -2260,6 +2337,35 @@
   </data>
   <data name="AboutChar_column_of_numbers" xml:space="preserve">
     <value>Alustasi merkistön koodin numeroiden sarake.</value>
+  </data>
+  <data name="AboutParseJson" xml:space="preserve">
+    <value>Muuntaa JSON-merkkijonon objektiksi.</value>
+    
+  </data>
+  <data name="ParseJsonArg1" xml:space="preserve">
+    <value>syöte</value>
+    
+  </data>
+  <data name="AboutParseJson_input" xml:space="preserve">
+    <value>Käsiteltävä JSON-merkkijono.</value>
+  </data>
+  <data name="AboutIndex" xml:space="preserve">
+    <value>Palauttaa tietueen taulukon annetusta indeksistä.</value>
+    
+  </data>
+  <data name="IndexArg1" xml:space="preserve">
+    <value>taulukko</value>
+    
+  </data>
+  <data name="IndexArg2" xml:space="preserve">
+    <value>indeksi</value>
+    
+  </data>
+  <data name="AboutIndex_table" xml:space="preserve">
+    <value>Taulukko.</value>
+  </data>
+  <data name="AboutIndex_index" xml:space="preserve">
+    <value>Kokonaislukuindeksi.</value>
   </data>
   <data name="Screen_Name_DisplayName" xml:space="preserve">
     <value>Nimi</value>
@@ -3781,11 +3887,23 @@
     
   </data>
   <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
-    <value>Kaavasarakkeet eivät tue tätä tulostyyppiä {0}.</value>
+    <value>Tulostyyppiä {0} ei tueta kaavasarakkeissa.</value>
     
   </data>
   <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
     <value>Tämän kaavan tuloksen tyypin odotetaan olevan {0}, mutta tuloksen todellinen tyyppi on {1}. Kaavasarakkeen tulostyyppiä ei voi muuttaa.</value>
+    
+  </data>
+  <data name="FormulaColumns_ColumnTypeNotSupported" xml:space="preserve">
+    <value>Sarakkeita, joiden tyyppi on {0}, ei tueta kaavasarakkeissa.</value>
+    
+  </data>
+  <data name="FormulaColumns_ColumnFormatNotSupported" xml:space="preserve">
+    <value>Tyypin {0} sarakkeet, joiden muoto on {1}, ei tueta kaavasarakkeissa.</value>
+    
+  </data>
+  <data name="FormulaColumns_FormulaTooLong" xml:space="preserve">
+    <value>Kaavat voivat olla enintään 1 000 merkkiä pitkiä.</value>
     
   </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
@@ -3802,7 +3920,6 @@
   </data>
   <data name="ErrorResource_ErrBadToken_LongMessage" xml:space="preserve">
     <value>Esimerkiksi merkki \ ei ole odotettu luvun jälkeen (esimerkiksi 32 \). Väliä (32 ) odotettaan niin, että se on luku 32, tai muuten voidaan odottaa toista lukua (kuten 323).</value>
-    
   </data>
   <data name="ErrorResource_ErrBadToken_HowToFix_1" xml:space="preserve">
     <value>Poista tai korvaa odottamattomat merkit.</value>
@@ -3818,11 +3935,9 @@
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_LongMessage" xml:space="preserve">
     <value>Esimerkiksi merkki \ ei ole odotettu luvun jälkeen (esimerkiksi 32 \). Väliä (32 ) odotettaan niin, että se on luku 32, tai muuten voidaan odottaa toista lukua (kuten 323).</value>
-    
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_HowToFix_1" xml:space="preserve">
     <value>Poista tai korvaa odottamaton merkki.</value>
-    
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_Link_1" xml:space="preserve">
     <value>Artikkeli: Power Appsin kaavojen viiteopas</value>
@@ -3834,7 +3949,6 @@
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_LongMessage" xml:space="preserve">
     <value>Jokaisen lohkon kommentin on alettava merkeillä /* ja päätyttävä merkkeihin */. Jos et lopeta jokaista lohkokommenttia oikein, kaikesta kommentin jälkeen olevasta koodista tulee osa kyseistä kommenttia Jos kommentti koostuu vain yhdestä rivistä, voit aloittaa sen merkeillä // ja olla tunnistamatta kommentin loppua.</value>
-    
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_HowToFix_1" xml:space="preserve">
     <value>Lisää */ lohkokommenttisi loppuun tai muuta se joukoksi rivikommentteja.</value>
@@ -3850,7 +3964,6 @@
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_LongMessage" xml:space="preserve">
     <value>Tämä virhe ilmenee esimerkiksi silloin, kun kaava sisältää merkkijonon {{Val@ 7}} merkkijonon {{Val: 7}} sijaan. Kun asetat muuttujan, syntaksi vaatii kaksoispisteen at-erikoismerkin sijaan.</value>
-    
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_HowToFix_1" xml:space="preserve">
     <value>Poista tai korvaa odottamattomat merkit odotetulla merkillä.</value>
@@ -3866,7 +3979,6 @@
   </data>
   <data name="ErrorResource_ErrInvalidName_LongMessage" xml:space="preserve">
     <value>Tämä virhe esiintyy yleisimmin, kun kaava viittaa johonkin, jota ei enää olemassa (esimerkiksi ohjausobjektiin, jonka olet poistanut).</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidName_HowToFix_1" xml:space="preserve">
     <value>Poista tai korjaa viittaus nimeen, joka ei ole kelvollinen.</value>
@@ -3882,7 +3994,6 @@
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_LongMessage" xml:space="preserve">
     <value>Tämä virhe tulee näkyviin, kun kaava viittaa osan käyttäytymisen ominaisuuksiin, joiden syntaksi on virheellinen. (Esimerkiksi Component.OnCustomChange kohteen Component.OnCustomChange() sijaan)</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_HowToFix_1" xml:space="preserve">
     <value>Viittaa osan käyttäytymisen ominaisuuteen oikean syntaksin avulla. Esimerkki: Component.OnCustomChange()</value>
@@ -3898,7 +4009,6 @@
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_LongMessage" xml:space="preserve">
     <value>Et voi käyttää Parent-operaattoria ei sellaisen ohjausobjektin kanssa, jolla ei ole ylemmän tason ohjausobjektia. Tämä operaattori viittaa ohjausobjektiin, joka isännöi määritettyä ohjausobjektia ja tekee kaikki sen ominaisuudet käytettäviksi.</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_HowToFix_1" xml:space="preserve">
     <value>Poista Parent-operaattori.</value>
@@ -3914,7 +4024,6 @@
   </data>
   <data name="ErrorResource_ErrTooManyUps_LongMessage" xml:space="preserve">
     <value>Monimutkaisuus kasvaa kunkin sisäkkäisyystason myötä, joten Power Apps tukee rivivaikutusalueen sisäkkäisyyttä enintään 63 tasoon saakka.</value>
-    
   </data>
   <data name="ErrorResource_ErrTooManyUps_HowToFix_1" xml:space="preserve">
     <value>Kirjoita kaava uudelleen käyttäen entistä harvempia sisäkkäisyystasoja.</value>
@@ -3926,7 +4035,6 @@
   </data>
   <data name="ErrorResource_ErrRuleNestedTooDeeply_LongMessage" xml:space="preserve">
     <value>Power Apps tukee lausekkeen sisäkkäisyyttä vain 50:een tasoon saakka. Näin syvä lauseke on vaikea ymmärtää ja ylläpitää.</value>
-    
   </data>
   <data name="ErrorResource_ErrRuleNestedTooDeeply_HowToFix_1" xml:space="preserve">
     <value>Kirjoita kaava uudelleen käyttäen entistä harvempia sisäkkäisyystasoja.</value>
@@ -3938,7 +4046,6 @@
   </data>
   <data name="ErrorResource_ErrOperatorExpected_LongMessage" xml:space="preserve">
     <value>Operaattorit liittävät kaksi operandia toisiinsa. Tämä virhe ilmenee, jos sijoitat kaksi funktiota (operandia) yhteen ilman operaattoria niiden välissä, esimerkiksi Len("omateksti")Len("omateksti").</value>
-    
   </data>
   <data name="ErrorResource_ErrOperatorExpected_HowToFix_1" xml:space="preserve">
     <value>Muokkaa kaavaasi niin, että se sisältää operaattorin operandien välissä.</value>
@@ -3954,7 +4061,6 @@
   </data>
   <data name="ErrorResource_ErrNumberExpected_LongMessage" xml:space="preserve">
     <value>Tämä virhe ilmenee, jos käytät funktiota, joka edellyttää lukua, mutta annat sen sijaan esimerkiksi kuvan.</value>
-    
   </data>
   <data name="ErrorResource_ErrNumberExpected_HowToFix_1" xml:space="preserve">
     <value>Muokkaa kaavaasi niin, että se antaa arvioitaessa luvun kaavan tässä kohdassa.</value>
@@ -3970,7 +4076,6 @@
   </data>
   <data name="ErrorResource_ErrBooleanExpected_LongMessage" xml:space="preserve">
     <value>Totuusarvoa kutsutaan myös true/false (tosi/epätosi) -arvoksi sovelluksissa, kuten Microsoft Excelissä. Tämä virhe ilmenee, jos käytät funktiota, joka edellyttää totuusarvoa, mutta annat sen sijaan esimerkiksi päivämäärän.</value>
-    
   </data>
   <data name="ErrorResource_ErrBooleanExpected_HowToFix_1" xml:space="preserve">
     <value>Muokkaa kaavaasi niin, että se antaa arvioitaessa totuusarvon kaavan tässä kohdassa.</value>
@@ -3986,7 +4091,6 @@
   </data>
   <data name="ErrorResource_ErrColonExpected_LongMessage" xml:space="preserve">
     <value>Kaksoispiste erottaa kentän nimen, jota kutsutaan joskus sarakkeen nimeksi, kentän arvosta tietueessa (esimerkiksi {Month:"1"}, {Month:"2"} …). Kaksoispiste erottaa myös tunnit minuuteista ja sekunneista englanninkielisissä ajan muodoissa (esimerkiksi 3:04).</value>
-    
   </data>
   <data name="ErrorResource_ErrColonExpected_HowToFix_1" xml:space="preserve">
     <value>Muokkaa kaavaasi niin, että se sisältää kaksoispisteen.</value>
@@ -4002,7 +4106,6 @@
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_LongMessage" xml:space="preserve">
     <value>Toimintafunktiot muuttavat sovelluksen tilaa muuttamalla arvoja muualla sovelluksessa. Navigate, Patch, UpdateContext ja Collect ovat yleisiä toimintafunktioita. OnSelect, OnVisible ja muut On...-ominaisuudet ovat yleisiä toimintaan perustuvia ominaisuuksia.</value>
-    
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_HowToFix_1" xml:space="preserve">
     <value>Siirrä käyttäytymisfunktion käyttäytymiseen perustuvaan ominaisuuteen.</value>
@@ -4018,7 +4121,6 @@
   </data>
   <data name="ErrorResource_ErrTestPropertyExpected_LongMessage" xml:space="preserve">
     <value>Testifunktiot ovat kohteita, joiden avulla voidaan simuloida käyttäjän syötteitä sovellusta testattaessa. SetProperty, SelectRow ja Assert ovat yleisiä testifunktioita. Niitä voi käyttää vain testitapauksissa.</value>
-    
   </data>
   <data name="ErrorResource_ErrTestPropertyExpected_HowToFix_1" xml:space="preserve">
     <value>Käytä funktiota testitapauksessa, ei itse sovelluksessa.</value>
@@ -4030,7 +4132,6 @@
   </data>
   <data name="ErrorResource_ErrCannotCoerce_SourceType_TargetType_LongMessage" xml:space="preserve">
     <value>Power Apps voi muuntaa kaavasi joidenkin tietojen tyypit muiksi tyypeiksi puolestasi. Se voi esimerkiksi muuntaa kohteen "1" (merkkijono) kohteeksi 1 (luku), mutta se ei muuntaa kaikkia tietotyyppejä kaikiksi muiksi tietotyypeiksi. Se ei esimerkiksi voi muuntaa kuvaa luvuksi.</value>
-    
   </data>
   <data name="ErrorResource_ErrCannotCoerce_SourceType_TargetType_HowToFix_1" xml:space="preserve">
     <value>Muokkaa kaavaa niin, että muunnat kyseiset tiedot odotetuksi tyypiksi.</value>
@@ -4042,7 +4143,6 @@
   </data>
   <data name="ErrorResource_ErrStringExpected_LongMessage" xml:space="preserve">
     <value>Tämä virhe ilmenee, jos käytät funktiota, joka edellyttää tekstiargumenttia (tai merkkijonoargumenttia), mutta annat sen sijaan esimerkiksi päivämäärän.</value>
-    
   </data>
   <data name="ErrorResource_ErrStringExpected_HowToFix_1" xml:space="preserve">
     <value>Muokkaa kaavaasi niin, että se antaa arvioitaessa tekstin kaavan tässä kohdassa.</value>
@@ -4058,7 +4158,6 @@
   </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_LongMessage" xml:space="preserve">
     <value>Tämä virhe ilmenee, jos käytät funktiota, joka edellyttää tekstiä tai lukua, mutta annat sen sijaan esimerkiksi totuusarvon (true/false).</value>
-    
   </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_HowToFix_1" xml:space="preserve">
     <value>Muokkaa kaavaasi niin, että se antaa arvioitaessa tekstin tai luvun kaavan tässä kohdassa.</value>
@@ -4074,7 +4173,6 @@
   </data>
   <data name="ErrorResource_ErrClosingBracketExpected_LongMessage" xml:space="preserve">
     <value>Sulkeva aaltosulje ilmaisee tietueen päättymisen (esimerkiksi {Month:"1"}, {Month:"2"}...).</value>
-    
   </data>
   <data name="ErrorResource_ErrClosingBracketExpected_HowToFix_1" xml:space="preserve">
     <value>Muokkaa kaavaasi niin, että se sisältää aaltosulkeen.</value>
@@ -4094,7 +4192,6 @@
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_LongMessage" xml:space="preserve">
     <value>Kaavaasi ei voi arvioida, koska kaavan vertailtavat arvot eivät ole samaa tyyppiä.</value>
-    
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_HowToFix_1" xml:space="preserve">
     <value>Saatat joutua muuntamaan arvon samaksi tyypiksi, kuten muuntamaan päivämäärämerkkijonon (esimerkiksi 12/31/2018) päivämääräarvoksi.</value>
@@ -4174,7 +4271,6 @@
   </data>
   <data name="ErrorResource_ErrTypeError_LongMessage" xml:space="preserve">
     <value>Tiedot eivät ehkä vastaa odotettua tyyppiä (teksti, luku, päivämäärä, taulukko tai tietue).</value>
-    
   </data>
   <data name="ErrorResource_ErrTypeError_HowToFix_1" xml:space="preserve">
     <value>Tarkista kaavaan liittyvien arvojen tyypit ja varmista, että tyypit täsmäävät.</value>
@@ -4194,7 +4290,6 @@
   </data>
   <data name="ErrorResource_ErrDateExpected_LongMessage" xml:space="preserve">
     <value>Tämä virhe ilmenee, jos käytät funktiota, joka edellyttää päivämäärää, mutta annat sen sijaan esimerkiksi tekstin.</value>
-    
   </data>
   <data name="ErrorResource_ErrDateExpected_HowToFix_1" xml:space="preserve">
     <value>Muokkaa kaavaasi niin, että se antaa arvioitaessa päivämäärän kaavan tässä kohdassa.</value>
@@ -4210,7 +4305,6 @@
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_LongMessage" xml:space="preserve">
     <value>Tietolähde ei ehkä pysty käsittelemään kaavaa ja saattaa palauttaa epätäydellisen tietojoukon. Sovelluksesi ei ehkä palauta oikeita tuloksia tai käyttäydy oikein, jos tietojoukko on epätäydellinen.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_HowToFix_1" xml:space="preserve">
     <value>Jos tietojoukkosi ylittää 500 tietueen rajan, mutta siinä on alle 2 000 tietuetta, kokeile nollata raja.</value>
@@ -4238,7 +4332,6 @@
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_LongMessage" xml:space="preserve">
     <value>Tietolähde ei ehkä pysty käsittelemään kaavaa ja saattaa palauttaa epätäydellisen tietojoukon. Sovelluksesi ei ehkä palauta oikeita tuloksia tai käyttäydy oikein, jos tietojoukko on epätäydellinen.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_HowToFix_1" xml:space="preserve">
     <value>Jos tietojoukkosi ylittää 500 tietueen rajan, mutta siinä on alle 2 000 tietuetta, kokeile nollata raja.</value>
@@ -4266,7 +4359,6 @@
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_LongMessage" xml:space="preserve">
     <value> In-operaattorin oikean puolen on oltava oikean tietolähteen sarakkeen nimi. Tietolähde ei ehkä pysty käsittelemään kaavaa ja saattaa palauttaa epätäydellisen tietojoukon. Sovelluksesi ei ehkä palauta oikeita tuloksia tai toimi oikein, jos tietojoukko on epätäydellinen.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_1" xml:space="preserve">
     <value>Muuta in-operaattorin oikealla puolella oleva kohde sarakkeeksi oikeasta tietolähteestä.</value>
@@ -4299,7 +4391,6 @@
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_LongMessage" xml:space="preserve">
     <value> In-operaattorin oikea puoli ei ole sarake oikeasta tietolähteestä. Tietolähde ei ehkä pysty käsittelemään kaavaa ja saattaa palauttaa epätäydellisen tietojoukon. Sovelluksesi ei ehkä palauta oikeita tuloksia tai toimi oikein, jos tietojoukko on epätäydellinen.
       </value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_1" xml:space="preserve">
     <value>Muuta in-operaattorin oikealla puolella oleva kohde sarakkeeksi oikeasta tietolähteestä.</value>
@@ -4380,6 +4471,22 @@
   </data>
   <data name="ErrorResource_ErrInvalidControlReference_Link_1" xml:space="preserve">
     <value>Viittaus: ConfirmExit pohjaan perustuville sovelluksille</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidStringInterpolation_ShortMessage" xml:space="preserve">
+    <value>Interpoloidun merkkijonon sisältämien lausekkeiden on käännyttävä tekstiarvoksi tai yhteensopivaksi tyypiksi.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidStringInterpolation_HowToFix_1" xml:space="preserve">
+    <value>Tarkista interpoloidun merkkijonon sisältämien lausekkeiden tyypit.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrEmptyIsland_ShortMessage" xml:space="preserve">
+    <value>Empty expressions cannot appear inside an interpolated string.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrEmptyIsland_HowToFix_1" xml:space="preserve">
+    <value>Check for empty expressions inside the interpolated string.</value>
     
   </data>
   <data name="ErrorResource_ErrAsNotInContext_ShortMessage" xml:space="preserve">

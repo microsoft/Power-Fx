@@ -1,5 +1,64 @@
 ﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
@@ -426,6 +485,17 @@
   <data name="AboutValue_language" xml:space="preserve">
     <value>मान परिवर्तित करते समय उपयोग किया जाने वाला भाषा कोड.</value>
     
+  </data>
+  <data name="AboutBoolean" xml:space="preserve">
+    <value>उस 'टेक्स्ट' को बदलता है जो बूलियन को बूलियन मान में दर्शाता है.</value>
+    
+  </data>
+  <data name="BooleanArg1" xml:space="preserve">
+    <value>पाठ</value>
+    
+  </data>
+  <data name="AboutBoolean_text" xml:space="preserve">
+    <value>बूलियन मान में बदला जाने वाला टेक्स्ट मान.</value>
   </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>पहला गैर रिक्त तर्क वापस करता है</value>
@@ -1368,6 +1438,10 @@
     <value>व्यंजक</value>
     
   </data>
+  <data name="AboutIsBlankOrError_expression" xml:space="preserve">
+    <value>परीक्षण किया जाने वाला व्यंजक.</value>
+    
+  </data>
   <data name="AboutIsEmpty" xml:space="preserve">
     <value>जाँचता है कि कोई संग्रह रिक्त है या नहीं और सत्य या असत्य लौटाता है.</value>
     
@@ -1375,6 +1449,9 @@
   <data name="IsEmptyArg1" xml:space="preserve">
     <value>स्रोत</value>
     
+  </data>
+  <data name="AboutIsEmpty_source" xml:space="preserve">
+    <value>परीक्षण की जाने वाली तालिका.</value>
   </data>
   <data name="AboutShuffle" xml:space="preserve">
     <value>इनपुट 'source' तालिका की यादृच्छिक रूप से शफ़ल की गई प्रतिलिपि लौटाता है.</value>
@@ -2260,6 +2337,35 @@
   </data>
   <data name="AboutChar_column_of_numbers" xml:space="preserve">
     <value>आपके प्लेटफ़ॉर्म पर कैरेक्टर सेट से कोड संख्याओं का एक स्तंभ.</value>
+  </data>
+  <data name="AboutParseJson" xml:space="preserve">
+    <value>JSON स्ट्रिंग को ऑब्जेक्ट में रूपांतरित करें.</value>
+    
+  </data>
+  <data name="ParseJsonArg1" xml:space="preserve">
+    <value>इनपुट</value>
+    
+  </data>
+  <data name="AboutParseJson_input" xml:space="preserve">
+    <value>प्रोसेस की जाने वाली एक JSON स्ट्रिंग.</value>
+  </data>
+  <data name="AboutIndex" xml:space="preserve">
+    <value>तालिका में किसी दिए गए इंडेक्स पर रिकॉर्ड लौटाता है.</value>
+    
+  </data>
+  <data name="IndexArg1" xml:space="preserve">
+    <value>तालिका</value>
+    
+  </data>
+  <data name="IndexArg2" xml:space="preserve">
+    <value>इंडेक्स</value>
+    
+  </data>
+  <data name="AboutIndex_table" xml:space="preserve">
+    <value>तालिका.</value>
+  </data>
+  <data name="AboutIndex_index" xml:space="preserve">
+    <value>एक पूर्णांक इंडेक्स.</value>
   </data>
   <data name="Screen_Name_DisplayName" xml:space="preserve">
     <value>नाम</value>
@@ -3781,11 +3887,23 @@
     
   </data>
   <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
-    <value>यह परिणाम प्रकार {0} फॉर्मूला कॉलमों में समर्थित नहीं है.</value>
+    <value>परिणाम प्रकार {0} फॉर्मूला स्तंभों में समर्थित नहीं है.</value>
     
   </data>
   <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
     <value>इस फॉर्मूला का परिणाम प्रकार {0} होने की उम्मीद है, लेकिन असली परिणाम प्रकार {1} है. फॉर्मूला कॉलम के परिणाम प्रकार को बदला नहीं जा सकता है.</value>
+    
+  </data>
+  <data name="FormulaColumns_ColumnTypeNotSupported" xml:space="preserve">
+    <value>फॉर्मूला कॉलम में {0} प्रकार के कॉलम समर्थित नहीं हैं.</value>
+    
+  </data>
+  <data name="FormulaColumns_ColumnFormatNotSupported" xml:space="preserve">
+    <value>{1} प्रारूप वाले {0} प्रकार के स्तंभ फॉर्मूला स्तंभों में समर्थित नहीं हैं.</value>
+    
+  </data>
+  <data name="FormulaColumns_FormulaTooLong" xml:space="preserve">
+    <value>फॉर्मूला 1000 अक्षरों से ज्यादा लंबे नहीं हो सकते.</value>
     
   </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
@@ -3802,7 +3920,6 @@
   </data>
   <data name="ErrorResource_ErrBadToken_LongMessage" xml:space="preserve">
     <value>उदाहरण के लिए, किसी संख्या के बाद वर्ण '\' अपेक्षित नहीं है, जैसे कि यह: '32\'. रिक्ति ('32') की अपेक्षा की जाएगी ताकि यह केवल संख्या 32 हो, या किसी अन्य संख्या (जैसा कि '323' में है) की अपेक्षा की जाएगी.</value>
-    
   </data>
   <data name="ErrorResource_ErrBadToken_HowToFix_1" xml:space="preserve">
     <value>अनपेक्षित वर्णों को निकालें या बदलें.</value>
@@ -3818,11 +3935,9 @@
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_LongMessage" xml:space="preserve">
     <value>उदाहरण के लिए, किसी संख्या के बाद वर्ण '\' अपेक्षित नहीं है, जैसे कि यह: '32\'. रिक्ति ('32') की अपेक्षा की जाएगी ताकि यह केवल संख्या 32 हो, या किसी अन्य संख्या (जैसा कि '323' में है) की अपेक्षा की जाएगी.</value>
-    
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_HowToFix_1" xml:space="preserve">
     <value>अप्रत्याशित चरित्र को हटा दें या बदलें.</value>
-    
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_Link_1" xml:space="preserve">
     <value>लेख: Power Apps के लिए सूत्र संदर्भ</value>
@@ -3834,7 +3949,6 @@
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_LongMessage" xml:space="preserve">
     <value>प्रत्येक ब्लॉक टिप्पणी '/*' के साथ प्रारंभ और '*/' के साथ समाप्त होनी चाहिए. यदि आप प्रत्येक ब्लॉक टिप्पणी को ठीक से समाप्त नहीं करते हैं, तो टिप्पणी के बाद के सभी कोड उस टिप्पणी का भाग बन जाते हैं. यदि किसी टिप्पणी में केवल एक ही पंक्ति है, तो आप इसे '//' के साथ प्रारंभ कर सकते हैं और टिप्पणी की समाप्ति की पहचान नहीं होती.</value>
-    
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_HowToFix_1" xml:space="preserve">
     <value>अपनी ब्लॉक टिप्पणी की समाप्ति पर '*/' जोड़ें या इसे पंक्ति टिप्पणियों के एक सेट से परिवर्तित करें.</value>
@@ -3850,7 +3964,6 @@
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_LongMessage" xml:space="preserve">
     <value>उदाहरण के लिए, यह त्रुटि तब होती है, जब सूत्र में '{{Val: 7}}' के बजाय '{{Val@ 7}}' होता है. जब आप कोई चर सेट करते हैं, तो सिंटैक्स को "at" चिह्न के बजाय अर्धविराम की आवश्यकता होती है.</value>
-    
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_HowToFix_1" xml:space="preserve">
     <value>अनपेक्षित वर्णों को निकालें या किसी अपेक्षित वर्ण के साथ बदलें.</value>
@@ -3866,7 +3979,6 @@
   </data>
   <data name="ErrorResource_ErrInvalidName_LongMessage" xml:space="preserve">
     <value>यह त्रुटि सामान्यतः सबसे अधिक तब आती है जब कोई सूत्र किसी ऐसी चीज़ को संदर्भित करता है जो अब मौजूद नहीं है (उदाहरण के लिए, आपके द्वारा हटाया गया कोई नियंत्रण).</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidName_HowToFix_1" xml:space="preserve">
     <value>उस नाम का संदर्भ निकालें या उसे ठीक करें जो मान्य नहीं है.</value>
@@ -3882,7 +3994,6 @@
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_LongMessage" xml:space="preserve">
     <value>यह त्रुटि तब दिखाई देती है, जब कोई सूत्र अमान्य सिंटैक्स वाले घटक व्यवहार गुणों को दर्शाता है. (उदाहरण के लिए, Component.OnCustomChange के बजाय Component.OnCustomChange())</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_HowToFix_1" xml:space="preserve">
     <value>घटक व्यवहार गुण को दर्शाने के लिए उपयुक्त सिंटैक्स का उपयोग करें. उदाहरण के लिए, Component.OnCustomChange()</value>
@@ -3898,7 +4009,6 @@
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_LongMessage" xml:space="preserve">
     <value>आप कोई ऐसा नियंत्रण रखने वाले पैरेंट ऑपरेटर का उपयोग नहीं कर सकते हैं, जिसमें पैरेंट नियंत्रण नहीं है. यह ऑपरेटर उस नियंत्रण को संदर्भित करता है, जो दिए गए नियंत्रण को होस्ट करता है और इसके सभी गुणों को उपलब्ध कराता है.</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_HowToFix_1" xml:space="preserve">
     <value>पैरेंट' ऑपरेटर निकालें.</value>
@@ -3914,7 +4024,6 @@
   </data>
   <data name="ErrorResource_ErrTooManyUps_LongMessage" xml:space="preserve">
     <value>हर नेस्टिंग स्तर के साथ जटिलता बढ़ जाती है, इसलिए Power Apps केवल 63 स्तरों तक पंक्ति-सीमा क्षेत्र नेस्टिंग का समर्थन करता है.</value>
-    
   </data>
   <data name="ErrorResource_ErrTooManyUps_HowToFix_1" xml:space="preserve">
     <value>कम नेस्टिंग स्तरों वाला सूत्र फिर से लिखें.</value>
@@ -3926,7 +4035,6 @@
   </data>
   <data name="ErrorResource_ErrRuleNestedTooDeeply_LongMessage" xml:space="preserve">
     <value>Power Apps केवल 50 स्तरों तक व्यंजक नेस्टिंग का समर्थन करता है. ऐसे गहन व्यंजक को समझना और बरकरार रखना कठिन है.</value>
-    
   </data>
   <data name="ErrorResource_ErrRuleNestedTooDeeply_HowToFix_1" xml:space="preserve">
     <value>कम नेस्टिंग स्तरों वाला सूत्र फिर से लिखें.</value>
@@ -3938,7 +4046,6 @@
   </data>
   <data name="ErrorResource_ErrOperatorExpected_LongMessage" xml:space="preserve">
     <value>ऑपरेटर दो ऑपरैंड को एक साथ जोड़ते हैं. यदि आप बीच में बिना किसी ऑपरेटर के दो फ़ंक्शंस (ऑपरैंड) को एक साथ रखते हैं-- उदाहरण के लिए, Len("mytext")Len("mytext"), तो यह त्रुटि होगी.</value>
-    
   </data>
   <data name="ErrorResource_ErrOperatorExpected_HowToFix_1" xml:space="preserve">
     <value>अपने सूत्र को संपादित करें ताकि ऑपरैंड्स के बीच कोई ऑपरेटर शामिल हो सके.</value>
@@ -3954,7 +4061,6 @@
   </data>
   <data name="ErrorResource_ErrNumberExpected_LongMessage" xml:space="preserve">
     <value>यदि आप ऐसे किसी फ़ंक्शन का उपयोग करते हैं, जिसके लिए किसी संख्या की आवश्यकता हो, लेकिन आप इसके बजाय, उदाहरण के लिए, कोई छवि प्रदान करते हैं तो यह त्रुटि होगी.</value>
-    
   </data>
   <data name="ErrorResource_ErrNumberExpected_HowToFix_1" xml:space="preserve">
     <value>अपने सूत्र को संपादित करें ताकि सूत्र में इस बिंदु पर यह किसी संख्या के लिए मूल्यांकन करे.</value>
@@ -3970,7 +4076,6 @@
   </data>
   <data name="ErrorResource_ErrBooleanExpected_LongMessage" xml:space="preserve">
     <value>Microsoft Excel जैसे एप्लिकेशन में बूलियन सही/गलत मान के रूप में भी जाना जाता है. अगर आप एक बूलियन की आवश्यकता वाले किसी फ़ंक्शन का उपयोग करते हैं, लेकिन आप आपूर्ति करते हैं, तो यह त्रुटि होगी, उदाहरण के लिए इसके बजाय कोई दिनांक प्रदान करते हैं.</value>
-    
   </data>
   <data name="ErrorResource_ErrBooleanExpected_HowToFix_1" xml:space="preserve">
     <value>अपने सूत्र को संपादित करें ताकि सूत्र में इस बिंदु पर यह किसी बूलियन के लिए मूल्यांकन करे.</value>
@@ -3986,7 +4091,6 @@
   </data>
   <data name="ErrorResource_ErrColonExpected_LongMessage" xml:space="preserve">
     <value>अर्धविराम फ़ील्ड नाम को, जिसे कभी-कभी स्तंभ नाम कहा जाता है, किसी रिकॉर्ड के फ़ील्ड मान से अलग करता है (उदाहरण के लिए, {Month:"1"}, {Month:"2"} …). अर्धविराम घंटे को मिनट और सेकंड से भी अलग करता है (उदाहरण के लिए, "3:04").</value>
-    
   </data>
   <data name="ErrorResource_ErrColonExpected_HowToFix_1" xml:space="preserve">
     <value>अपने सूत्र को संपादित करें ताकि इसमें कॉलन शामिल हो सके.</value>
@@ -4002,7 +4106,6 @@
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_LongMessage" xml:space="preserve">
     <value>व्यवहार फ़ंक्शन, ऐप में कहीं भी मानों को परिवर्तित करके ऐप की स्थिति को परिवर्तित कर देते हैं. 'नेविगेट करें', 'पैच करें', 'UpdateContext' और 'कलेक्ट' सामान्य व्यवहार फ़ंक्शन हैं. 'OnSelect', 'OnVisible' और अन्य 'On …' गुण सामान्य व्यवहार-आधारित गुण हैं.</value>
-    
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_HowToFix_1" xml:space="preserve">
     <value>व्यवहार फ़ंक्शन को एक व्यवहार-आधारित गुण पर ले जाएँ.</value>
@@ -4018,7 +4121,6 @@
   </data>
   <data name="ErrorResource_ErrTestPropertyExpected_LongMessage" xml:space="preserve">
     <value>परीक्षण फ़ंक्शंस वे हैं जिनका उपयोग किसी ऐप के परीक्षण के दौरान उपयोगकर्ता इनपुट का अनुकरण करने के लिए किया जा सकता है. 'SetProperty', 'SelectRow', और 'दृढ़ता' सामान्य परीक्षण फ़ंक्शंस हैं. इनका उपयोग केवल परीक्षण संबंधी मामलों में किया जा सकता है.</value>
-    
   </data>
   <data name="ErrorResource_ErrTestPropertyExpected_HowToFix_1" xml:space="preserve">
     <value>परीक्षण मामले में फ़ंक्शन का उपयोग करें, ऐप में ही नहीं.</value>
@@ -4030,7 +4132,6 @@
   </data>
   <data name="ErrorResource_ErrCannotCoerce_SourceType_TargetType_LongMessage" xml:space="preserve">
     <value>Power Apps आपके सूत्र में कुछ प्रकार के डेटा को आपके लिए अन्य प्रकारों में रूपांतरित कर सकते हैं. उदाहरण के लिए, यह "1" (एक स्ट्रिंग) को 1 (एक संख्या) में रूपांतरित कर सकता है, लेकिन यह सभी डेटा प्रकारों को अन्य सभी डेटा प्रकारों में रूपांतरित नहीं कर सकता है. उदाहरण के लिए, यह किसी छवि को किसी संख्या में रूपांतरित नहीं कर सकता है.</value>
-    
   </data>
   <data name="ErrorResource_ErrCannotCoerce_SourceType_TargetType_HowToFix_1" xml:space="preserve">
     <value>अपने सूत्र को संपादित करें ताकि आप प्रश्न को अपेक्षित प्रकार में परिवर्तित कर सकें.</value>
@@ -4042,7 +4143,6 @@
   </data>
   <data name="ErrorResource_ErrStringExpected_LongMessage" xml:space="preserve">
     <value>यदि आप किसी ऐसे फ़ंक्शन का उपयोग करते हैं, जिसके लिए किसी पाठ (या स्ट्रिंग) तर्क की आवश्यकता होती है और आप, उदाहरण के लिए, कोई दिनांक प्रदान करते हैं, तो यह त्रुटि होगी.</value>
-    
   </data>
   <data name="ErrorResource_ErrStringExpected_HowToFix_1" xml:space="preserve">
     <value>अपने सूत्र को संपादित करें ताकि सूत्र में इस बिंदु पर यह पाठ के लिए मूल्यांकन करे.</value>
@@ -4058,7 +4158,6 @@
   </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_LongMessage" xml:space="preserve">
     <value>यदि आप ऐसे किसी फ़ंक्शन का उपयोग करते हैं, जिसके लिए या तो पाठ या किसी संख्या की आवश्यकता हो, लेकिन आप, उदाहरण के लिए, कोई बूलियन (सही/गलत) मान प्रदान करते हैं, तो यह त्रुटि होगी.</value>
-    
   </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_HowToFix_1" xml:space="preserve">
     <value>अपने सूत्र को संपादित करें ताकि सूत्र में इस बिंदु पर यह पाठ या किसी संख्या के लिए मूल्यांकन करे.</value>
@@ -4074,7 +4173,6 @@
   </data>
   <data name="ErrorResource_ErrClosingBracketExpected_LongMessage" xml:space="preserve">
     <value>बंद करने वाला कोष्ठक किसी रिकॉर्ड की समाप्ति को इंगित करता है (उदाहरण के लिए, {Month:"1"}, {Month:"2"} …).</value>
-    
   </data>
   <data name="ErrorResource_ErrClosingBracketExpected_HowToFix_1" xml:space="preserve">
     <value>अपने सूत्र को संपादित करें ताकि इसमें कोष्ठक शामिल किया जा सके.</value>
@@ -4094,7 +4192,6 @@
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_LongMessage" xml:space="preserve">
     <value>हम आपके सूत्र का मूल्यांकन इसलिए नहीं कर सकते क्योंकि सूत्र में तुलना किए जाने वाले मान समान प्रकार के नहीं हैं.</value>
-    
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_HowToFix_1" xml:space="preserve">
     <value>आपको समान प्रकार का बनाने के लिए मान को रूपांतरित करने की आवश्यकता पड़ सकती है, जैसे कि किसी तिथि स्ट्रिंग (उदाहरण के लिए "12/31/2018") को एक तिथिमान में बदलना.</value>
@@ -4174,7 +4271,6 @@
   </data>
   <data name="ErrorResource_ErrTypeError_LongMessage" xml:space="preserve">
     <value>हो सकता है कि डेटा अपेक्षित प्रकार से मेल न खाए. (पाठ, संख्या, दिनांक, तालिका, रिकॉर्ड.)</value>
-    
   </data>
   <data name="ErrorResource_ErrTypeError_HowToFix_1" xml:space="preserve">
     <value>सूत्र से संबद्ध मानों के प्रकारों की जाँच करें और सुनिश्चित करें कि प्रकार मेल खाते हैं.</value>
@@ -4194,7 +4290,6 @@
   </data>
   <data name="ErrorResource_ErrDateExpected_LongMessage" xml:space="preserve">
     <value>यदि आप ऐसे किसी फ़ंक्शन का उपयोग करते हैं, जिसके लिए किसी दिनांक की आवश्यकता हो, लेकिन आप इसके बजाय, उदाहरण के लिए, कोई पाठ प्रदान करते हैं तो यह त्रुटि होगी.</value>
-    
   </data>
   <data name="ErrorResource_ErrDateExpected_HowToFix_1" xml:space="preserve">
     <value>अपने सूत्र को संपादित करें ताकि सूत्र में इस बिंदु पर यह किसी दिनांक के लिए मूल्यांकन करे.</value>
@@ -4210,7 +4305,6 @@
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_LongMessage" xml:space="preserve">
     <value>हो सकता है कि डेटा स्रोत, सूत्र को संसाधित न कर पाए और कोई अपूर्ण डेटा सेट वापस लौटाए. हो सकता है कि डेटा सेट अपूर्ण होने पर आपका एप्लिकेशन सही परिणाम न लौटा पाए या सही व्यवहार न करे.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_HowToFix_1" xml:space="preserve">
     <value>यदि आपका डेटा सेट 500 रिकॉर्ड सीमा से अधिक है, लेकिन उसमें 2,000 से कम रिकॉर्ड शामिल हैं, तो सीमा रीसेट करने का प्रयास करें.</value>
@@ -4238,7 +4332,6 @@
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_LongMessage" xml:space="preserve">
     <value>हो सकता है कि डेटा स्रोत, सूत्र को संसाधित न कर पाए और कोई अपूर्ण डेटा सेट वापस लौटाए. हो सकता है कि डेटा सेट अपूर्ण होने पर आपका एप्लिकेशन सही परिणाम न लौटा पाए या सही व्यवहार न करे.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_HowToFix_1" xml:space="preserve">
     <value>यदि आपका डेटा सेट 500 रिकॉर्ड सीमा से अधिक है, लेकिन उसमें 2,000 से कम रिकॉर्ड शामिल हैं, तो सीमा रीसेट करने का प्रयास करें.</value>
@@ -4266,7 +4359,6 @@
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_LongMessage" xml:space="preserve">
     <value> "in" ऑपरेटर के दाईं तरफ़ सही डेटा स्रोत से लिया गया स्तंभ नहीं है. हो सकता है कि डेटा स्रोत, सूत्र को संसाधित न कर पाए और कोई अपूर्ण डेटा सेट वापस लौटाए. हो सकता है कि डेटा सेट अपूर्ण होने पर आपका एप्लिकेशन सही परिणाम न लौटा पाए या सही व्यवहार न करे.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_1" xml:space="preserve">
     <value>आइटम का स्थान बदलकर उसे "in" ऑपरेटर के दाईं ओर कर दें ताकि उसका स्तंभ सही डेटा स्रोत वाला हो जाए.</value>
@@ -4299,7 +4391,6 @@
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_LongMessage" xml:space="preserve">
     <value> "in" ऑपरेटर के दाईं तरफ़ सही डेटा स्रोत से लिया गया स्तंभ नहीं है. हो सकता है कि डेटा स्रोत, सूत्र को संसाधित न कर पाए और कोई अपूर्ण डेटा सेट वापस लौटाए. हो सकता है कि डेटा सेट अपूर्ण होने पर आपका एप्लिकेशन सही परिणाम न लौटा पाए या सही व्यवहार न करे.
       </value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_1" xml:space="preserve">
     <value>आइटम का स्थान बदलकर उसे "in" ऑपरेटर के दाईं ओर कर दें ताकि उसका स्तंभ सही डेटा स्रोत वाला हो जाए.</value>
@@ -4380,6 +4471,22 @@
   </data>
   <data name="ErrorResource_ErrInvalidControlReference_Link_1" xml:space="preserve">
     <value>संदर्भ: कैनवास ऐप्स के लिए ConfirmExit</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidStringInterpolation_ShortMessage" xml:space="preserve">
+    <value>इंटरपोलेटेड स्ट्रिंग में दिखाई देने वाले मनोभावों का टेक्स्ट के मान या संगत प्रकार के लिए मूल्यांकन करना चाहिए.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidStringInterpolation_HowToFix_1" xml:space="preserve">
+    <value>इंटरपोलेटेड स्ट्रिंग में मनोभावों के प्रकारों को जांचें.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrEmptyIsland_ShortMessage" xml:space="preserve">
+    <value>Empty expressions cannot appear inside an interpolated string.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrEmptyIsland_HowToFix_1" xml:space="preserve">
+    <value>Check for empty expressions inside the interpolated string.</value>
     
   </data>
   <data name="ErrorResource_ErrAsNotInContext_ShortMessage" xml:space="preserve">
