@@ -1,5 +1,64 @@
 ﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
@@ -426,6 +485,17 @@
   <data name="AboutValue_language" xml:space="preserve">
     <value>Κωδικός γλώσσας για χρήση κατά τη μετατροπή της τιμής.</value>
     
+  </data>
+  <data name="AboutBoolean" xml:space="preserve">
+    <value>Μετατρέπει ένα "κείμενο" που αναπαριστά μια δυαδική τιμή σε δυαδική τιμή.</value>
+    
+  </data>
+  <data name="BooleanArg1" xml:space="preserve">
+    <value>κείμενο</value>
+    
+  </data>
+  <data name="AboutBoolean_text" xml:space="preserve">
+    <value>Η τιμή κειμένου για μετατροπή σε δυαδική τιμή.</value>
   </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Επιστρέφει το πρώτο μη κενό όρισμα</value>
@@ -1368,6 +1438,10 @@
     <value>παράσταση</value>
     
   </data>
+  <data name="AboutIsBlankOrError_expression" xml:space="preserve">
+    <value>Μια παράσταση προς δοκιμή.</value>
+    
+  </data>
   <data name="AboutIsEmpty" xml:space="preserve">
     <value>Ελέγχει εάν μια συλλογή είναι κενή και επιστρέφει true ή false.</value>
     
@@ -1375,6 +1449,9 @@
   <data name="IsEmptyArg1" xml:space="preserve">
     <value>προέλευση</value>
     
+  </data>
+  <data name="AboutIsEmpty_source" xml:space="preserve">
+    <value>Ένας πίνακας για δοκιμή.</value>
   </data>
   <data name="AboutShuffle" xml:space="preserve">
     <value>Επιστρέφει ένα αντίγραφο με τυχαία σειρά του πίνακα "προέλευσης" εισόδου.</value>
@@ -2260,6 +2337,35 @@
   </data>
   <data name="AboutChar_column_of_numbers" xml:space="preserve">
     <value>Στήλη κωδικών αριθμών από το σύνολο χαρακτήρων στην πλατφόρμα σας.</value>
+  </data>
+  <data name="AboutParseJson" xml:space="preserve">
+    <value>Μετατρέπει μια συμβολοσειρά JSON σε αντικείμενο.</value>
+    
+  </data>
+  <data name="ParseJsonArg1" xml:space="preserve">
+    <value>δεδομένα_εισόδου</value>
+    
+  </data>
+  <data name="AboutParseJson_input" xml:space="preserve">
+    <value>Μια συμβολοσειρά JSON για επεξεργασία.</value>
+  </data>
+  <data name="AboutIndex" xml:space="preserve">
+    <value>Επιστρέφει την καρτέλα σε έναν πίνακα σε ένα δεδομένο ευρετήριο.</value>
+    
+  </data>
+  <data name="IndexArg1" xml:space="preserve">
+    <value>πίνακας</value>
+    
+  </data>
+  <data name="IndexArg2" xml:space="preserve">
+    <value>ευρετήριο</value>
+    
+  </data>
+  <data name="AboutIndex_table" xml:space="preserve">
+    <value>Ένας πίνακας.</value>
+  </data>
+  <data name="AboutIndex_index" xml:space="preserve">
+    <value>Ακέραιος δείκτης.</value>
   </data>
   <data name="Screen_Name_DisplayName" xml:space="preserve">
     <value>Όνομα</value>
@@ -3781,11 +3887,23 @@
     
   </data>
   <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
-    <value>Αυτός ο τύπος αποτελέσματος {0} δεν υποστηρίζεται σε στήλες τύπου.</value>
+    <value>Ο τύπος αποτελέσματος {0} δεν υποστηρίζεται σε στήλες τύπου.</value>
     
   </data>
   <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
     <value>Ο τύπος αποτελέσματος για αυτόν τον τύπο αναμένεται να είναι {0}, αλλά ο πραγματικός τύπος αποτελέσματος είναι {1}. Δεν είναι δυνατή η αλλαγή του τύπου αποτελέσματος μιας στήλης τύπου.</value>
+    
+  </data>
+  <data name="FormulaColumns_ColumnTypeNotSupported" xml:space="preserve">
+    <value>Οι στήλες τύπου {0} δεν υποστηρίζονται σε στήλες τύπου.</value>
+    
+  </data>
+  <data name="FormulaColumns_ColumnFormatNotSupported" xml:space="preserve">
+    <value>Οι στήλες τύπου {0} με μορφή {1} δεν υποστηρίζονται σε στήλες τύπου.</value>
+    
+  </data>
+  <data name="FormulaColumns_FormulaTooLong" xml:space="preserve">
+    <value>Οι τύποι δεν μπορούν να είναι μεγαλύτεροι από 1000 χαρακτήρες.</value>
     
   </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
@@ -3802,7 +3920,6 @@
   </data>
   <data name="ErrorResource_ErrBadToken_LongMessage" xml:space="preserve">
     <value>Για παράδειγμα, ο χαρακτήρας "\" δεν αναμένεται μετά από έναν αριθμό, για παράδειγμα: "32\". Αναμένεται ένα κενό διάστημα ("32"), ώστε να είναι μόνο ο αριθμός 32, ή ένας άλλος αριθμός (όπως "323").</value>
-    
   </data>
   <data name="ErrorResource_ErrBadToken_HowToFix_1" xml:space="preserve">
     <value>Καταργήστε ή αντικαταστήστε τους μη αναμενόμενους χαρακτήρες.</value>
@@ -3818,11 +3935,9 @@
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_LongMessage" xml:space="preserve">
     <value>Για παράδειγμα, ο χαρακτήρας «\» δεν αναμένεται μετά από έναν αριθμό, για παράδειγμα: «32\». Αναμένεται ένα κενό διάστημα («32»), ώστε να είναι μόνο ο αριθμός 32, ή ένας άλλος αριθμός (όπως «323»).</value>
-    
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_HowToFix_1" xml:space="preserve">
     <value>Καταργήστε ή αντικαταστήστε τον απροσδόκητο χαρακτήρα.</value>
-    
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_Link_1" xml:space="preserve">
     <value>Άρθρο: Αναφορά τύπου για το Power Apps</value>
@@ -3834,7 +3949,6 @@
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_LongMessage" xml:space="preserve">
     <value>Κάθε σχόλιο μπλοκ πρέπει να ξεκινά με "/*" και να τελειώνει με "*/". Αν δεν φροντίσετε κάθε σχόλιο μπλοκ να τελειώνει σωστά, όλος ο κώδικας μετά το σχόλιο γίνεται τμήμα του συγκεκριμένου σχολίου. Αν ένα σχόλιο αποτελείται από μία μόνο γραμμή, μπορείτε να την ξεκινήσετε με "//" και να μην προσδιορίσετε το τέλος του σχολίου.</value>
-    
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_HowToFix_1" xml:space="preserve">
     <value>Προσθέστε το "*/" στο τέλος του σχολίου μπλοκ ή αλλάξτε το σε ένα σύνολο σχολίων γραμμής.</value>
@@ -3850,7 +3964,6 @@
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_LongMessage" xml:space="preserve">
     <value>Αυτό το σφάλμα παρουσιάζεται αν, για παράδειγμα, ένας τύπος περιέχει "{{Val@ 7}}" αντί για "{{Val: 7}}". Όταν ορίζετε μια μεταβλητή, η σύνταξη απαιτεί άνω και κάτω τελεία αντί για σύμβολο @.</value>
-    
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_HowToFix_1" xml:space="preserve">
     <value>Καταργήστε ή αντικαταστήστε τους μη αναμενόμενους χαρακτήρες με έναν αναμενόμενο χαρακτήρα.</value>
@@ -3866,7 +3979,6 @@
   </data>
   <data name="ErrorResource_ErrInvalidName_LongMessage" xml:space="preserve">
     <value>Αυτό το σφάλμα εμφανίζεται συνήθως όταν ένας τύπος αναφέρεται σε κάτι το οποίο δεν υπάρχει πλέον (για παράδειγμα, ένα στοιχείο ελέγχου που έχετε διαγράψει).</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidName_HowToFix_1" xml:space="preserve">
     <value>Καταργήστε ή διορθώστε την αναφορά στο όνομα που δεν είναι έγκυρο.</value>
@@ -3882,7 +3994,6 @@
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_LongMessage" xml:space="preserve">
     <value>Αυτό το σφάλμα εμφανίζεται όταν ένας τύπος αναφέρεται σε ιδιότητες συμπεριφοράς στοιχείων με μη έγκυρη σύνταξη. (Για παράδειγμα, Component.OnCustomChange αντί για Component.OnCustomChange())</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_HowToFix_1" xml:space="preserve">
     <value>Χρησιμοποιήστε τη σωστή σύνταξη για να αναφερθείτε στην ιδιότητα συμπεριφοράς στοιχείων. Για παράδειγμα, Component.OnCustomChange()</value>
@@ -3898,7 +4009,6 @@
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_LongMessage" xml:space="preserve">
     <value>Δεν μπορείτε να χρησιμοποιήσετε τον τελεστή Parent με ένα στοιχείο ελέγχου που δεν έχει γονικό στοιχείο ελέγχου. Αυτός ο τελεστής αναφέρεται στο στοιχείο ελέγχου που φιλοξενεί το συγκεκριμένο στοιχείο ελέγχου και καθιστά διαθέσιμες όλες τις ιδιότητές του.</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_HowToFix_1" xml:space="preserve">
     <value>Καταργήστε τον τελεστή "Parent".</value>
@@ -3914,7 +4024,6 @@
   </data>
   <data name="ErrorResource_ErrTooManyUps_LongMessage" xml:space="preserve">
     <value>Η πολυπλοκότητα αυξάνεται με κάθε επίπεδο ενσωμάτωσης, επομένως το Power Apps υποστηρίζει την ενσωμάτωση εμβέλειας γραμμής μόνο έως 63 επίπεδα.</value>
-    
   </data>
   <data name="ErrorResource_ErrTooManyUps_HowToFix_1" xml:space="preserve">
     <value>Συντάξτε εκ νέου τον τύπο με λιγότερα επίπεδα ενσωμάτωσης.</value>
@@ -3926,7 +4035,6 @@
   </data>
   <data name="ErrorResource_ErrRuleNestedTooDeeply_LongMessage" xml:space="preserve">
     <value>Το Power Apps υποστηρίζει την ενσωμάτωση παραστάσεων μόνο έως 50 επίπεδα. Η κατανόηση και η συντήρηση μιας παράστασης σε αυτό το βάθος είναι δύσκολη.</value>
-    
   </data>
   <data name="ErrorResource_ErrRuleNestedTooDeeply_HowToFix_1" xml:space="preserve">
     <value>Συντάξτε εκ νέου τον τύπο με λιγότερα επίπεδα ενσωμάτωσης.</value>
@@ -3938,7 +4046,6 @@
   </data>
   <data name="ErrorResource_ErrOperatorExpected_LongMessage" xml:space="preserve">
     <value>Οι τελεστές συνδέουν δύο τελεστέους. Αυτό το σφάλμα παρουσιάζεται αν τοποθετήσετε μαζί δύο συναρτήσεις (τελεστέους) χωρίς τελεστή ανάμεσά τους, για παράδειγμα, Len("mytext")Len("mytext").</value>
-    
   </data>
   <data name="ErrorResource_ErrOperatorExpected_HowToFix_1" xml:space="preserve">
     <value>Επεξεργαστείτε τον τύπο έτσι ώστε να περιλαμβάνει έναν τελεστή μεταξύ των τελεστέων.</value>
@@ -3954,7 +4061,6 @@
   </data>
   <data name="ErrorResource_ErrNumberExpected_LongMessage" xml:space="preserve">
     <value>Αυτό το σφάλμα παρουσιάζεται, αν χρησιμοποιήσετε μια συνάρτηση που απαιτεί έναν αριθμό, αλλά παρέχετε, για παράδειγμα, μια εικόνα στη θέση του.</value>
-    
   </data>
   <data name="ErrorResource_ErrNumberExpected_HowToFix_1" xml:space="preserve">
     <value>Επεξεργαστείτε τον τύπο έτσι ώστε να αποδίδει έναν αριθμό σε αυτό το σημείο στον τύπο.</value>
@@ -3970,7 +4076,6 @@
   </data>
   <data name="ErrorResource_ErrBooleanExpected_LongMessage" xml:space="preserve">
     <value>Οι δυαδικές τιμές είναι επίσης γνωστές ως τιμές true/false σε εφαρμογές όπως το Microsoft Excel. Αυτό το σφάλμα εμφανίζεται αν χρησιμοποιήσετε μια συνάρτηση που απαιτεί μια δυαδική τιμή, αλλά παρέχετε, για παράδειγμα, μια ημερομηνία στη θέση της.</value>
-    
   </data>
   <data name="ErrorResource_ErrBooleanExpected_HowToFix_1" xml:space="preserve">
     <value>Επεξεργαστείτε τον τύπο έτσι ώστε να αποδίδει μια δυαδική τιμή σε αυτό το σημείο στον τύπο.</value>
@@ -3986,7 +4091,6 @@
   </data>
   <data name="ErrorResource_ErrColonExpected_LongMessage" xml:space="preserve">
     <value>Η άνω και κάτω τελεία διαχωρίζει ένα όνομα πεδίου, το οποίο μερικές φορές ονομάζεται όνομα στήλης, από μια τιμή πεδίου σε μια εγγραφή (για παράδειγμα, {Month:"1"}, {Month:"2"}…). Επίσης, η άνω και κάτω τελεία διαχωρίζει τις ώρες από τα λεπτά και τα δευτερόλεπτα (για παράδειγμα, "3:04").</value>
-    
   </data>
   <data name="ErrorResource_ErrColonExpected_HowToFix_1" xml:space="preserve">
     <value>Επεξεργαστείτε τον τύπο έτσι ώστε να περιλαμβάνει μια άνω και κάτω τελεία.</value>
@@ -4002,7 +4106,6 @@
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_LongMessage" xml:space="preserve">
     <value>Οι συναρτήσεις συμπεριφοράς αλλάζουν την κατάσταση της εφαρμογής με την αλλαγή τιμών αλλού στην εφαρμογή. Οι συναρτήσεις Navigate, Patch, UpdateContext και Collect είναι συνήθεις συναρτήσεις συμπεριφοράς. Οι ιδιότητες OnSelect, OnVisible και άλλες ιδιότητες "On …" είναι συνήθεις ιδιότητες που βασίζονται στη συμπεριφορά.</value>
-    
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_HowToFix_1" xml:space="preserve">
     <value>Μετακινήστε τη συνάρτηση συμπεριφοράς σε μια ιδιότητα που βασίζεται στη συμπεριφορά.</value>
@@ -4018,7 +4121,6 @@
   </data>
   <data name="ErrorResource_ErrTestPropertyExpected_LongMessage" xml:space="preserve">
     <value>Οι συναρτήσεις δοκιμής είναι αυτές που μπορούν να χρησιμοποιηθούν για την προσομοίωση εισόδου από τον χρήστη κατά τη δοκιμή μιας εφαρμογής. Οι SetProperty, SelectRow και Assert είναι συνήθεις συναρτήσεις δοκιμής. Μπορούν να χρησιμοποιηθούν μόνο σε υποθέσεις δοκιμής.</value>
-    
   </data>
   <data name="ErrorResource_ErrTestPropertyExpected_HowToFix_1" xml:space="preserve">
     <value>Χρησιμοποιήστε τη συνάρτηση σε μια υπόθεση δοκιμής και όχι στην ίδια την εφαρμογή.</value>
@@ -4030,7 +4132,6 @@
   </data>
   <data name="ErrorResource_ErrCannotCoerce_SourceType_TargetType_LongMessage" xml:space="preserve">
     <value>Το Power Apps μπορεί να μετατρέψει ορισμένους τύπους δεδομένων στον τύπο σας σε άλλους τύπους για λογαριασμό σας. Για παράδειγμα, μπορεί να μετατρέψει το "1" (συμβολοσειρά) σε 1 (αριθμό), αλλά δεν μπορεί να μετατρέψει όλους τους τύπους δεδομένων σε όλους τους άλλους τύπους δεδομένων. Για παράδειγμα, δεν μπορεί να μετατρέψει μια εικόνα σε αριθμό.</value>
-    
   </data>
   <data name="ErrorResource_ErrCannotCoerce_SourceType_TargetType_HowToFix_1" xml:space="preserve">
     <value>Επεξεργαστείτε τον τύπο, ώστε να μετατρέψετε τα εν λόγω δεδομένα στον αναμενόμενο τύπο.</value>
@@ -4042,7 +4143,6 @@
   </data>
   <data name="ErrorResource_ErrStringExpected_LongMessage" xml:space="preserve">
     <value>Αυτό το σφάλμα παρουσιάζεται, αν χρησιμοποιήσετε μια συνάρτηση που απαιτεί ένα όρισμα κειμένου (ή συμβολοσειράς), αλλά παρέχετε, για παράδειγμα, μια ημερομηνία στη θέση του.</value>
-    
   </data>
   <data name="ErrorResource_ErrStringExpected_HowToFix_1" xml:space="preserve">
     <value>Επεξεργαστείτε τον τύπο έτσι ώστε να αποδίδει κείμενο σε αυτό το σημείο στον τύπο.</value>
@@ -4058,7 +4158,6 @@
   </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_LongMessage" xml:space="preserve">
     <value>Αυτό το σφάλμα παρουσιάζεται, αν χρησιμοποιήσετε μια συνάρτηση που απαιτεί είτε κείμενο είτε αριθμό, αλλά παρέχετε, για παράδειγμα, μια δυαδική τιμή (true/false) στη θέση του.</value>
-    
   </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_HowToFix_1" xml:space="preserve">
     <value>Επεξεργαστείτε τον τύπο έτσι ώστε να αποδίδει κείμενο ή αριθμό σε αυτό το σημείο στον τύπο.</value>
@@ -4074,7 +4173,6 @@
   </data>
   <data name="ErrorResource_ErrClosingBracketExpected_LongMessage" xml:space="preserve">
     <value>Μια δεξιά αγκύλη υποδεικνύει το τέλος μιας εγγραφής (για παράδειγμα, {Month:"1"}, {Month:"2"}…).</value>
-    
   </data>
   <data name="ErrorResource_ErrClosingBracketExpected_HowToFix_1" xml:space="preserve">
     <value>Επεξεργαστείτε τον τύπο ώστε να περιλαμβάνει μια αγκύλη.</value>
@@ -4094,7 +4192,6 @@
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_LongMessage" xml:space="preserve">
     <value>Δεν είναι δυνατή η αξιολόγηση του τύπου σας, επειδή οι τιμές που συγκρίνονται στον τύπο δεν είναι του ίδιου τύπου.</value>
-    
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_HowToFix_1" xml:space="preserve">
     <value>Ίσως χρειαστεί να μετατρέψετε την τιμή ώστε να έχει τον ίδιο τύπο, μετατρέποντας, για παράδειγμα, μια συμβολοσειρά ημερομηνίας (π.χ. "31/12/2018") σε τιμή ημερομηνίας.</value>
@@ -4174,7 +4271,6 @@
   </data>
   <data name="ErrorResource_ErrTypeError_LongMessage" xml:space="preserve">
     <value>Τα δεδομένα μπορεί να μην συμφωνούν με τον αναμενόμενο τύπο. (κείμενο, αριθμός, ημερομηνία, πίνακας, καρτέλα.)</value>
-    
   </data>
   <data name="ErrorResource_ErrTypeError_HowToFix_1" xml:space="preserve">
     <value>Ελέγξτε τους τύπους των τιμών που εμπλέκονται στον τύπο και βεβαιωθείτε ότι οι τύποι ταιριάζουν.</value>
@@ -4194,7 +4290,6 @@
   </data>
   <data name="ErrorResource_ErrDateExpected_LongMessage" xml:space="preserve">
     <value>Αυτό το σφάλμα παρουσιάζεται, αν χρησιμοποιήσετε μια συνάρτηση που απαιτεί μια ημερομηνία, αλλά παρέχετε, για παράδειγμα, κείμενο στη θέση της.</value>
-    
   </data>
   <data name="ErrorResource_ErrDateExpected_HowToFix_1" xml:space="preserve">
     <value>Επεξεργαστείτε τον τύπο έτσι ώστε να αποδίδει μια ημερομηνία σε αυτό το σημείο στον τύπο.</value>
@@ -4210,7 +4305,6 @@
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_LongMessage" xml:space="preserve">
     <value>Η επεξεργασία του τύπου μπορεί να μην είναι δυνατή από την προέλευση δεδομένων και μπορεί να επιστραφεί ελλιπές σύνολο δεδομένων. Η εφαρμογή σας μπορεί να μην επιστρέψει σωστά αποτελέσματα ή να μην συμπεριφέρεται σωστά, αν το σύνολο δεδομένων είναι ελλιπές.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_HowToFix_1" xml:space="preserve">
     <value>Αν το σύνολο δεδομένων υπερβαίνει το όριο των 500 εγγραφών, αλλά περιέχει λιγότερες από 2.000 εγγραφές, δοκιμάστε να επαναφέρετε το όριο.</value>
@@ -4238,7 +4332,6 @@
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_LongMessage" xml:space="preserve">
     <value>Η επεξεργασία του τύπου μπορεί να μην είναι δυνατή από την προέλευση δεδομένων και μπορεί να επιστραφεί ελλιπές σύνολο δεδομένων. Η εφαρμογή σας μπορεί να μην επιστρέψει σωστά αποτελέσματα ή να μην συμπεριφέρεται σωστά, αν το σύνολο δεδομένων είναι ελλιπές.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_HowToFix_1" xml:space="preserve">
     <value>Αν το σύνολο δεδομένων υπερβαίνει το όριο των 500 εγγραφών, αλλά περιέχει λιγότερες από 2.000 εγγραφές, δοκιμάστε να επαναφέρετε το όριο.</value>
@@ -4266,7 +4359,6 @@
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_LongMessage" xml:space="preserve">
     <value>Η δεξιά πλευρά του τελεστή "σε" πρέπει να είναι όνομα στήλης από τη σωστή προέλευση δεδομένων. Η επεξεργασία του τύπου μπορεί να μην είναι δυνατή από την προέλευση δεδομένων και μπορεί να επιστραφεί ελλιπές σύνολο δεδομένων. Η εφαρμογή σας ενδέχεται να μην επιστρέψει σωστά αποτελέσματα ή να μην συμπεριφέρεται σωστά, αν το σύνολο δεδομένων είναι ελλιπές.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_1" xml:space="preserve">
     <value>Αλλάξτε το στοιχείο στα δεξιά του τελεστή "σε" ώστε να είναι στήλη από τη σωστή προέλευση δεδομένων.</value>
@@ -4299,7 +4391,6 @@
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_LongMessage" xml:space="preserve">
     <value> Η δεξιά πλευρά του τελεστή «σε» δεν είναι στήλη από τη σωστή προέλευση δεδομένων. Η επεξεργασία του τύπου μπορεί να μην είναι δυνατή από την προέλευση δεδομένων και μπορεί να επιστραφεί ελλιπές σύνολο δεδομένων. Η εφαρμογή σας ενδέχεται να μην επιστρέψει σωστά αποτελέσματα ή να μην συμπεριφέρεται σωστά, αν το σύνολο δεδομένων είναι ελλιπές.
       </value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_1" xml:space="preserve">
     <value>Αλλάξτε το στοιχείο στα δεξιά του τελεστή "σε" ώστε να είναι στήλη από τη σωστή προέλευση δεδομένων.</value>
@@ -4380,6 +4471,22 @@
   </data>
   <data name="ErrorResource_ErrInvalidControlReference_Link_1" xml:space="preserve">
     <value>Αναφορά: ConfirmExit για εφαρμογές καμβά</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidStringInterpolation_ShortMessage" xml:space="preserve">
+    <value>Οι παραστάσεις που εμφανίζονται εντός μιας παρεμβαλλόμενης συμβολοσειράς πρέπει να αποτιμούν σε τιμή κειμένου ή σε συμβατό τύπο.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidStringInterpolation_HowToFix_1" xml:space="preserve">
+    <value>Ελέγξτε τους τύπους των παραστάσεων εντός της παρεμβαλλόμενης συμβολοσειράς.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrEmptyIsland_ShortMessage" xml:space="preserve">
+    <value>Empty expressions cannot appear inside an interpolated string.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrEmptyIsland_HowToFix_1" xml:space="preserve">
+    <value>Check for empty expressions inside the interpolated string.</value>
     
   </data>
   <data name="ErrorResource_ErrAsNotInContext_ShortMessage" xml:space="preserve">

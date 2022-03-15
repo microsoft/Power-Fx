@@ -1,5 +1,64 @@
 ﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
@@ -426,6 +485,17 @@
   <data name="AboutValue_language" xml:space="preserve">
     <value>Kode bahasa yang harus digunakan saat mengonversi nilai.</value>
     
+  </data>
+  <data name="AboutBoolean" xml:space="preserve">
+    <value>Mengonversi 'teks' yang mewakili boolean ke nilai boolean.</value>
+    
+  </data>
+  <data name="BooleanArg1" xml:space="preserve">
+    <value>teks</value>
+    
+  </data>
+  <data name="AboutBoolean_text" xml:space="preserve">
+    <value>Nilai teks untuk dikonversi ke nilai boolean.</value>
   </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Menampilkan argumen tidak kosong pertama</value>
@@ -1368,6 +1438,10 @@
     <value>ekspresi</value>
     
   </data>
+  <data name="AboutIsBlankOrError_expression" xml:space="preserve">
+    <value>Ekspresi untuk diuji.</value>
+    
+  </data>
   <data name="AboutIsEmpty" xml:space="preserve">
     <value>Periksa apakah koleksi kosong atau tidak dan hasil true atau false.</value>
     
@@ -1375,6 +1449,9 @@
   <data name="IsEmptyArg1" xml:space="preserve">
     <value>sumber</value>
     
+  </data>
+  <data name="AboutIsEmpty_source" xml:space="preserve">
+    <value>Tabel untuk diuji.</value>
   </data>
   <data name="AboutShuffle" xml:space="preserve">
     <value>Menampilkan salinan acak tabel 'sumber' input.</value>
@@ -2260,6 +2337,35 @@
   </data>
   <data name="AboutChar_column_of_numbers" xml:space="preserve">
     <value>Kolom nomor kode dari set karakter .</value>
+  </data>
+  <data name="AboutParseJson" xml:space="preserve">
+    <value>Mengonversi string JSON menjadi objek.</value>
+    
+  </data>
+  <data name="ParseJsonArg1" xml:space="preserve">
+    <value>masukan</value>
+    
+  </data>
+  <data name="AboutParseJson_input" xml:space="preserve">
+    <value>String JSON yang akan diproses.</value>
+  </data>
+  <data name="AboutIndex" xml:space="preserve">
+    <value>Mengembalikan rekaman di tabel pada indeks tertentu.</value>
+    
+  </data>
+  <data name="IndexArg1" xml:space="preserve">
+    <value>tabel</value>
+    
+  </data>
+  <data name="IndexArg2" xml:space="preserve">
+    <value>indeks</value>
+    
+  </data>
+  <data name="AboutIndex_table" xml:space="preserve">
+    <value>Tabel.</value>
+  </data>
+  <data name="AboutIndex_index" xml:space="preserve">
+    <value>Indeks bilangan bulat.</value>
   </data>
   <data name="Screen_Name_DisplayName" xml:space="preserve">
     <value>Nama</value>
@@ -3781,11 +3887,23 @@
     
   </data>
   <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
-    <value>Jenis hasil {0} ini tidak didukung di kolom rumus.</value>
+    <value>Jenis hasil {0} tidak didukung di kolom rumus.</value>
     
   </data>
   <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
     <value>Jenis hasil yang diharapkan untuk rumus ini adalah {0}, tetapi jenis hasil aktual adalah {1}. Jenis hasil kolom rumus tidak dapat diubah.</value>
+    
+  </data>
+  <data name="FormulaColumns_ColumnTypeNotSupported" xml:space="preserve">
+    <value>Kolom jenis {0} tidak didukung di kolom rumus.</value>
+    
+  </data>
+  <data name="FormulaColumns_ColumnFormatNotSupported" xml:space="preserve">
+    <value>Kolom jenis {0} dengan format {1} tidak didukung di kolom rumus.</value>
+    
+  </data>
+  <data name="FormulaColumns_FormulaTooLong" xml:space="preserve">
+    <value>Rumus tidak boleh lebih dari 1.000 karakter.</value>
     
   </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
@@ -3802,7 +3920,6 @@
   </data>
   <data name="ErrorResource_ErrBadToken_LongMessage" xml:space="preserve">
     <value>Misalnya, karakter '\' tidak diharapkan setelah angka, seperti ini: '32\'. Spasi ('32') akan diharapkan sehingga hanya angka 32, atau nomor lain (seperti dalam '323') akan diharapkan.</value>
-    
   </data>
   <data name="ErrorResource_ErrBadToken_HowToFix_1" xml:space="preserve">
     <value>Hapus atau ganti karakter yang tidak diinginkan.</value>
@@ -3818,11 +3935,9 @@
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_LongMessage" xml:space="preserve">
     <value>Misalnya, karakter '\' tidak diharapkan setelah angka, seperti ini: '32\'. Spasi ('32') akan diharapkan sehingga hanya angka 32, atau nomor lain (seperti dalam '323') akan diharapkan.</value>
-    
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_HowToFix_1" xml:space="preserve">
     <value>Hapus atau ganti karakter yang tidak diharapkan.</value>
-    
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_Link_1" xml:space="preserve">
     <value>Artikel: Referensi rumus untuk Power Apps</value>
@@ -3834,7 +3949,6 @@
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_LongMessage" xml:space="preserve">
     <value>Setiap blok komentar harus diawali dengan '/*' dan diakhiri dengan '*/'. Jika Anda tidak mengakhiri setiap blok komentar dengan benar, semua kode setelah komentar menjadi bagian dari komentar tersebut. Jika komentar hanya terdiri dari satu baris, Anda dapat memulainya dengan '//' dan tidak mengidentifikasi akhir komentar.</value>
-    
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_HowToFix_1" xml:space="preserve">
     <value>Tambahkan '*/' ke bagian akhir blok komentar Anda, atau ubah ke kumpulan komentar baris.</value>
@@ -3850,7 +3964,6 @@
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_LongMessage" xml:space="preserve">
     <value>Kesalahan ini terjadi jika, misalnya, rumus berisi '{{Val@ 7}}', bukan '{{Val: 7}}'. Ketika Anda membuat variabel, sintaks memerlukan tanda titik dua, bukan simbol "at".</value>
-    
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_HowToFix_1" xml:space="preserve">
     <value>Hapus atau ganti karakter yang tidak diinginkan dengan karakter yang diharapkan.</value>
@@ -3866,7 +3979,6 @@
   </data>
   <data name="ErrorResource_ErrInvalidName_LongMessage" xml:space="preserve">
     <value>Kesalahan ini paling sering muncul saat rumus mengacu pada sesuatu yang tidak ada lagi (misalnya, kontrol yang telah Anda hapus).</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidName_HowToFix_1" xml:space="preserve">
     <value>Hapus atau perbaiki referensi untuk nama yang tidak valid.</value>
@@ -3882,7 +3994,6 @@
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_LongMessage" xml:space="preserve">
     <value>Kesalahan ini muncul saat rumus merujuk pada properti perilaku komponen dengan sintaks yang tidak valid. (Misalnya, Component.OnCustomChange, dan bukan Component.OnCustomChange())</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_HowToFix_1" xml:space="preserve">
     <value>Gunakan sintaks yang benar untuk merujuk pada properti perilaku komponen. Misalnya, Component.OnCustomChange()</value>
@@ -3898,7 +4009,6 @@
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_LongMessage" xml:space="preserve">
     <value>Anda tidak dapat menggunakan operator Induk dengan kontrol yang tidak memiliki kontrol induk. Operator ini mengacu ke kontrol yang menjadi host kontrol tertentu dan membuat semua propertinya tersedia.</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_HowToFix_1" xml:space="preserve">
     <value>Hapus operator 'Induk'.</value>
@@ -3914,7 +4024,6 @@
   </data>
   <data name="ErrorResource_ErrTooManyUps_LongMessage" xml:space="preserve">
     <value>Kerumitan meningkat dengan setiap tingkat tumpukan, sehingga Power Apps mendukung tumpukan lingkup baris hanya sampai 63 tingkat.</value>
-    
   </data>
   <data name="ErrorResource_ErrTooManyUps_HowToFix_1" xml:space="preserve">
     <value>Tulis ulang rumus dengan lebih sedikit tingkat tumpukan.</value>
@@ -3926,7 +4035,6 @@
   </data>
   <data name="ErrorResource_ErrRuleNestedTooDeeply_LongMessage" xml:space="preserve">
     <value>Power Apps mendukung penumpukan ekspresi hanya sampai 50 tingkat. Ekspresi sedalam ini sulit untuk dipahami dan dipertahankan.</value>
-    
   </data>
   <data name="ErrorResource_ErrRuleNestedTooDeeply_HowToFix_1" xml:space="preserve">
     <value>Tulis ulang rumus dengan lebih sedikit tingkat tumpukan.</value>
@@ -3938,7 +4046,6 @@
   </data>
   <data name="ErrorResource_ErrOperatorExpected_LongMessage" xml:space="preserve">
     <value>Operator menggabungkan dua operand sekaligus. Kesalahan ini terjadi jika Anda memasukkan dua fungsi (operand) sekaligus tanpa operator di antara keduanya -- misalnya, Len("mytext")Len("mytext").</value>
-    
   </data>
   <data name="ErrorResource_ErrOperatorExpected_HowToFix_1" xml:space="preserve">
     <value>Edit rumus Anda agar mencantumkan operator di antara operand.</value>
@@ -3954,7 +4061,6 @@
   </data>
   <data name="ErrorResource_ErrNumberExpected_LongMessage" xml:space="preserve">
     <value>Kesalahan ini akan terjadi jika Anda menggunakan fungsi yang memerlukan angka tetapi Anda memberikan, misalnya, gambar sebagai gantinya.</value>
-    
   </data>
   <data name="ErrorResource_ErrNumberExpected_HowToFix_1" xml:space="preserve">
     <value>Edit rumus Anda agar mengevaluasi angka pada titik ini dalam rumus.</value>
@@ -3970,7 +4076,6 @@
   </data>
   <data name="ErrorResource_ErrBooleanExpected_LongMessage" xml:space="preserve">
     <value>Boolean juga dikenal sebagai nilai true/false di aplikasi seperti Microsoft Excel. Kesalahan ini akan terjadi jika Anda menggunakan fungsi yang memerlukan boolean tetapi Anda memberikan, misalnya, tanggal sebagai gantinya.</value>
-    
   </data>
   <data name="ErrorResource_ErrBooleanExpected_HowToFix_1" xml:space="preserve">
     <value>Edit rumus Anda agar mengevaluasi boolean pada titik ini dalam rumus.</value>
@@ -3986,7 +4091,6 @@
   </data>
   <data name="ErrorResource_ErrColonExpected_LongMessage" xml:space="preserve">
     <value>Tanda titik dua memisahkan nama bidang, terkadang disebut juga nama kolom, dari nilai bidang dalam catatan (misalnya, {Month:"1"}, {Month:"2"} ...). Tanda titik dua juga memisahkan jam dari menit dan detik (misalnya, "3:04").</value>
-    
   </data>
   <data name="ErrorResource_ErrColonExpected_HowToFix_1" xml:space="preserve">
     <value>Edit rumus Anda agar mencantumkan tanda titik dua.</value>
@@ -4002,7 +4106,6 @@
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_LongMessage" xml:space="preserve">
     <value>Fungsi perilaku mengubah status aplikasi dengan mengubah nilai di tempat lain dalam aplikasi. 'Navigate', 'Patch', 'UpdateContext' dan 'Collect' adalah fungsi perilaku umum. 'OnSelect', 'OnVisible', dan properti 'On...' lainnya adalah properti berbasis perilaku umum.</value>
-    
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_HowToFix_1" xml:space="preserve">
     <value>Pindahkan fungsi perilaku ke properti berbasis perilaku.</value>
@@ -4018,7 +4121,6 @@
   </data>
   <data name="ErrorResource_ErrTestPropertyExpected_LongMessage" xml:space="preserve">
     <value>Fungsi uji adalah fungsi yang dapat digunakan untuk melakukan simulasi input pengguna saat menguji aplikasi. 'SetProperty', 'SelectRow', dan 'Assert' adalah fungsi pengujian umum. Ketiganya hanya dapat digunakan dalam kasus uji.</value>
-    
   </data>
   <data name="ErrorResource_ErrTestPropertyExpected_HowToFix_1" xml:space="preserve">
     <value>Gunakan fungsi dalam kasus uji, bukan di aplikasi itu sendiri.</value>
@@ -4030,7 +4132,6 @@
   </data>
   <data name="ErrorResource_ErrCannotCoerce_SourceType_TargetType_LongMessage" xml:space="preserve">
     <value>Power Apps dapat mengonversi beberapa tipe data dalam rumus ke tipe lain untuk Anda. Misalnya, Power Apps dapat mengonversi "1" (string) ke 1 (angka), tetapi tidak dapat mengonversi semua tipe data ke semua tipe data lain. Misalnya, Power Apps tidak dapat mengonversi gambar ke angka.</value>
-    
   </data>
   <data name="ErrorResource_ErrCannotCoerce_SourceType_TargetType_HowToFix_1" xml:space="preserve">
     <value>Edit rumus sehingga Anda mengonversi data yang dimaksud ke tipe yang diharapkan.</value>
@@ -4042,7 +4143,6 @@
   </data>
   <data name="ErrorResource_ErrStringExpected_LongMessage" xml:space="preserve">
     <value>Kesalahan ini terjadi jika Anda menggunakan fungsi yang memerlukan argumen teks (atau string) dan Anda memberikan, misalnya, tanggal sebagai gantinya.</value>
-    
   </data>
   <data name="ErrorResource_ErrStringExpected_HowToFix_1" xml:space="preserve">
     <value>Edit rumus Anda agar mengevaluasi teks pada titik ini dalam rumus.</value>
@@ -4058,7 +4158,6 @@
   </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_LongMessage" xml:space="preserve">
     <value>Kesalahan ini akan terjadi jika Anda menggunakan fungsi yang memerlukan teks atau angka tetapi Anda memberikan, misalnya, nilai boolean (true/false).</value>
-    
   </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_HowToFix_1" xml:space="preserve">
     <value>Edit rumus Anda agar mengevaluasi teks atau angka pada titik ini dalam rumus.</value>
@@ -4074,7 +4173,6 @@
   </data>
   <data name="ErrorResource_ErrClosingBracketExpected_LongMessage" xml:space="preserve">
     <value>Tanda kurung tutup menunjukkan akhir catatan (misalnya, {Month:"1"}, {Month:"2"} …).</value>
-    
   </data>
   <data name="ErrorResource_ErrClosingBracketExpected_HowToFix_1" xml:space="preserve">
     <value>Edit rumus Anda agar mencantumkan tanda kurung.</value>
@@ -4094,7 +4192,6 @@
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_LongMessage" xml:space="preserve">
     <value>Tidak dapat mengevaluasi rumus Anda karena nilai yang dibandingkan dalam rumus tidak berada dalam tipe yang sama.</value>
-    
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_HowToFix_1" xml:space="preserve">
     <value>Anda mungkin perlu mengonversi nilai menjadi jenis yang sama, seperti mengonversi string tanggal (misalnya, "31/12/2018") ke nilai tanggal.</value>
@@ -4174,7 +4271,6 @@
   </data>
   <data name="ErrorResource_ErrTypeError_LongMessage" xml:space="preserve">
     <value>Data mungkin tidak cocok dengan tipe yang diharapkan. (teks, angka, tanggal, tabel, catatan.)</value>
-    
   </data>
   <data name="ErrorResource_ErrTypeError_HowToFix_1" xml:space="preserve">
     <value>Periksa jenis nilai yang termasuk dalam rumus dan pastikan tipe cocok.</value>
@@ -4194,7 +4290,6 @@
   </data>
   <data name="ErrorResource_ErrDateExpected_LongMessage" xml:space="preserve">
     <value>Kesalahan ini akan terjadi jika Anda menggunakan fungsi yang memerlukan tanggal tetapi Anda memberikan, misalnya, teks sebagai gantinya.</value>
-    
   </data>
   <data name="ErrorResource_ErrDateExpected_HowToFix_1" xml:space="preserve">
     <value>Edit rumus Anda agar mengevaluasi tanggal pada titik ini dalam rumus.</value>
@@ -4210,7 +4305,6 @@
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_LongMessage" xml:space="preserve">
     <value>Sumber data mungkin tidak dapat memproses rumus dan mungkin menghasilkan himpunan data yang tidak lengkap. Aplikasi Anda mungkin tidak memberikan hasil yang benar atau berperilaku dengan benar jika himpunan data tidak lengkap.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_HowToFix_1" xml:space="preserve">
     <value>Jika himpunan data Anda melebihi batas catatan 500 tetapi berisi kurang dari 2.000 catatan, atur ulang batas.</value>
@@ -4238,7 +4332,6 @@
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_LongMessage" xml:space="preserve">
     <value>Sumber data mungkin tidak dapat memproses rumus dan mungkin menghasilkan himpunan data yang tidak lengkap. Aplikasi Anda mungkin tidak memberikan hasil yang benar atau berperilaku dengan benar jika himpunan data tidak lengkap.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_HowToFix_1" xml:space="preserve">
     <value>Jika himpunan data Anda melebihi batas catatan 500 tetapi berisi kurang dari 2.000 catatan, atur ulang batas.</value>
@@ -4266,7 +4359,6 @@
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_LongMessage" xml:space="preserve">
     <value> Sisi kanan operator "in" harus berupa nama kolom dari sumber data yang benar. Sumber data mungkin tidak dapat memproses rumus dan mungkin menghasilkan himpunan data yang tidak lengkap. Aplikasi Anda mungkin tidak memberikan hasil yang benar atau berperilaku dengan benar jika himpunan data tidak lengkap.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_1" xml:space="preserve">
     <value>Ubah item di sisi kanan operator "in" menjadi kolom dari sumber data yang benar.</value>
@@ -4299,7 +4391,6 @@
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_LongMessage" xml:space="preserve">
     <value> Sisi kanan operator "in" bukan merupakan kolom dari sumber data yang benar. Sumber data mungkin tidak dapat memproses rumus dan mungkin menghasilkan himpunan data yang tidak lengkap. Aplikasi Anda mungkin tidak memberikan hasil yang benar atau berperilaku dengan benar jika himpunan data tidak lengkap.
       </value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_1" xml:space="preserve">
     <value>Ubah item di sisi kanan operator "in" menjadi kolom dari sumber data yang benar.</value>
@@ -4380,6 +4471,22 @@
   </data>
   <data name="ErrorResource_ErrInvalidControlReference_Link_1" xml:space="preserve">
     <value>Referensi: ConfirmExit untuk Aplikasi Kanvas</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidStringInterpolation_ShortMessage" xml:space="preserve">
+    <value>Ekspresi yang muncul di dalam untai (karakter) yang diinterpolasi harus dievaluasi ke nilai Teks atau jenis yang kompatibel.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidStringInterpolation_HowToFix_1" xml:space="preserve">
+    <value>Periksa jenis ekspresi di dalam untai (karakter) yang diinterpolasi.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrEmptyIsland_ShortMessage" xml:space="preserve">
+    <value>Ekspresi kosong tidak boleh muncul di dalam string yang diinterpolasi.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrEmptyIsland_HowToFix_1" xml:space="preserve">
+    <value>Periksa ekspresi kosong di dalam string yang diinterpolasi.</value>
     
   </data>
   <data name="ErrorResource_ErrAsNotInContext_ShortMessage" xml:space="preserve">
