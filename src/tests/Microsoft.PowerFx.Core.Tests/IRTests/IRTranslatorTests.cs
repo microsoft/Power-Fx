@@ -53,7 +53,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
             callNode.TryGetArgument(1, out var lazyEvalNode);
 
-            Assert.True(lazyEvalNode.GetType() == typeof(LazyEvalNode));
+            Assert.IsType<LazyEvalNode>(lazyEvalNode);
 
             // Span Check
             var fragment = lazyEvalNode.IRContext.SourceContext.GetFragment(expression);
