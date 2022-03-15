@@ -37,8 +37,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertValue(errors);
             Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
 
-            //var fValid = CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
-
             // The return type will be the result type of the expression in the 2nd argument
             var fArgsValid = true;
             returnType = argTypes[1];
