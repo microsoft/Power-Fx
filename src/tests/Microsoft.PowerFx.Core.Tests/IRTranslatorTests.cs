@@ -1,4 +1,7 @@
-﻿using System;
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
+using System;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Glue;
 using Microsoft.PowerFx.Core.IR;
