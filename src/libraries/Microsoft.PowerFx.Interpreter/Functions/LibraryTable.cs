@@ -196,6 +196,20 @@ namespace Microsoft.PowerFx.Functions
             return new InMemoryTableValue(irContext, rows);
         }
 
+        public static FormulaValue IndexTable(IRContext irContext, FormulaValue[] args)
+        {
+            var arg0 = (TableValue)args[0];
+            var arg1 = (NumberValue)args[1];
+            int rowIndex = (int)arg1.Value;
+
+            if (rowIndex < 1 || rowIndex > arg0.Rows.Count())
+            {
+                return CommonErrors.ArgumentOutOfRange(irContext);
+            }
+
+            return arg0.Rows.ElementAtOrDefault(rowIndex - 1).ToFormulaValue();
+        }
+
         public static FormulaValue SortTable(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args)
         {
             var arg0 = (TableValue)args[0];
