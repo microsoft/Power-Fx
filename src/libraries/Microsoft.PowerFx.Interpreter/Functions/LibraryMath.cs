@@ -471,6 +471,25 @@ namespace Microsoft.PowerFx.Functions
             return new NumberValue(irContext, (Math.PI / 2) - atan);
         }
 
+        public static FormulaValue Atan2(IRContext irContext, NumberValue[] args)
+        {
+            var x = args[0].Value;
+            var y = args[1].Value;
+
+            if (x == 0 && y == 0)
+            {
+                return new ErrorValue(irContext, new ExpressionError
+                {
+                    Kind = ErrorKind.Div0,
+                    Span = irContext.SourceContext,
+                    Message = "Division by zero"
+                });
+            }
+
+            // Unlike Excel, C#'s Math.Atan2 expects 'y' as first argument and 'x' as second.
+            return new NumberValue(irContext, Math.Atan2(y, x));
+        }
+
         public static Func<IRContext, NumberValue[], FormulaValue> SingleArgTrig(string functionName, Func<double, double> function)
         {
             return (IRContext irContext, NumberValue[] args) =>

@@ -86,6 +86,16 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: SingleArgTrig("Atan", Math.Atan))
             },
             {
+                BuiltinFunctionsCore.Atan2,
+                StandardErrorHandling<NumberValue>(
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: ReplaceBlankWithZero,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<NumberValue>,
+                    checkRuntimeValues: FiniteChecker,
+                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
+                    targetFunction: Atan2)
+            },
+            {
                 BuiltinFunctionsCore.Average,
                 StandardErrorHandling<FormulaValue>(
                     expandArguments: NoArgExpansion,

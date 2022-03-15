@@ -246,6 +246,39 @@
 #skip
 // Tabular version not implemented yet; expected: [1.5708, 3.1416, 3.1416, 0.7854, 2.3562, 1.5708]
 
+>> Atan2(0, 0)
+#Error(Kind=Div0)
+
+>> Atan2(0, 1)
+1.570796327
+
+>> Atan2(1, 0)
+0
+
+>> Atan2(1, 1)
+0.785398163
+
+>> Atan2(-234, 0)
+3.141592654
+
+>> Atan2(0, -0.01)
+-1.570796327
+
+>> Atan2(2, 5)
+1.19028995
+
+>> Atan2(1, Blank()) // Blanks are coerced to zero
+0
+
+>> Atan2(-2, Blank())
+3.141592654
+
+>> Atan2(Blank(), Blank())
+#Error(Kind=Div0)
+
+>> Atan2(Sqrt(-1), 0)
+#Error(Kind=Numeric)
+
 >> Degrees(0)
 0
 
