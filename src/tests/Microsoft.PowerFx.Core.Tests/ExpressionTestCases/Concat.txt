@@ -1,6 +1,9 @@
 ﻿>> Concat(ForAll(["a","b","c"], With({x:Value}, x)), Value)
 "abc"
 
+>> Concat(ForAll(["a","b","c"], With({x:Value}, x)), Value, "-")
+"a-b-c"
+
 // On name collision, closest scope wins. 
 >> Concat(ForAll(["a","b","c"] As x, With({x:"hide"}, x)), Value)
 "hidehidehide"
@@ -12,6 +15,10 @@
 >> Concat(["A", "B", "C"], ThisRecord.Value)
 "ABC"
 
+// Explicit 'ThisRecord', with separator
+>> Concat(["A", "B", "C"], ThisRecord.Value, ", ")
+"A, B, C"
+
 // Using 'As'
 >> Concat(["A", "B", "C"] As X, X.Value)
 "ABC"
@@ -20,13 +27,14 @@
 >> Concat(["A", "B", "C"], Value)
 "ABC"
 
-
 // Good example of nested ForAll
 // https://powerapps.microsoft.com/en-us/blog/formulas-thisrecord-as-and-sequence/
 
 >> Concat(ForAll(["A","B"] As X,Concat(ForAll(["C","D"] As Y,X.Value&Y.Value),Value)),Value)
 "ACADBCBD"
 
+>> Concat(ForAll(["A","B"] As X,Concat(ForAll(["C","D"] As Y, X.Value & Y.Value),Value, "-")),Value, ", ")
+"AC-AD, BC-BD"
 
 // X dst,src = 2,3
 // Y         = 3,3
@@ -67,4 +75,10 @@
 Blank()
 
 >> Concat(ForAll(Sort([60, 61, 0, 63, 64], 1/Value), Char(Value)), Value)
+#Error
+
+>> Concat(Table({a: "one"}, {a: "two"}, {a: "three"}), a, ", ")
+"one, two, three"
+
+>> Concat(Table({a: "one"}, {a: "two"}, {a: "three"}), a, Left(", ", -1))
 #Error
