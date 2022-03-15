@@ -28,16 +28,26 @@ namespace Microsoft.PowerFx.Functions
         {// Streaming 
             var arg0 = (TableValue)args[0];
             var arg1 = (LambdaFormulaValue)args[1];
+            var separator = args.Length > 2 ? ((StringValue)args[2]).Value : string.Empty;
 
             var sb = new StringBuilder();
+            var first = true;
 
             foreach (var row in arg0.Rows)
             {
                 if (row.IsValue)
                 {
+                    if (first)
+                    {
+                        first = false;
+                    }
+                    else
+                    {
+                        sb.Append(separator);
+                    }
+
                     var childContext = symbolContext.WithScopeValues(row.Value);
 
-                    // Filter evals to a boolean 
                     var result = arg1.Eval(runner, childContext);
 
                     var str = (StringValue)result;
