@@ -262,13 +262,14 @@ namespace Microsoft.PowerFx.Core.IR
                     scope = GetNewScope();
                 }
 
+
                 for (var i = 0; i < carg; ++i)
                 {
                     var arg = node.Args.Children[i];
                     if (func.IsLazyEvalParam(i))
                     {
                         var child = arg.Accept(this, scope != null ? context.With(scope) : context);
-                        args.Add(new LazyEvalNode(context.GetIRContext(node), child));
+                        args.Add(new LazyEvalNode(context.GetIRContext(arg), child));
                     }
                     else
                     {

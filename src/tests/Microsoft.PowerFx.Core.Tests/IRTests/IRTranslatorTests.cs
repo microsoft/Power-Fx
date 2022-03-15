@@ -21,8 +21,9 @@ namespace Microsoft.PowerFx.Core.Tests
         private readonly EnumStore _enumStore = new EnumStore();
 
         [Theory]
-        [InlineData("CountIf(numtable, val > 5)")]
-        public void TestLazyEvalNodeSourceSpan(string expression)
+        [InlineData("CountIf(numtable, val > 0)", "val > 0")]
+        [InlineData("Sum(numtable, Sum(val,0))", "Sum(val,0)")]
+        public void TestLazyEvalNodeSourceSpan(string expression, string expectedFragment)
         {
             var parameterType = new RecordType();
 
@@ -45,9 +46,8 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.False(binding.ErrorContainer.HasErrors());
 
             (var irNode, var ruleScopeSymbol) = IRTranslator.Translate(binding);
-
-            Assert.True(irNode.GetType() == typeof(CallNode));
-            var callNode = irNode as CallNode;
+           
+            var callNode = (CallNode)irNode;
 
             Assert.True(callNode.IsLambdaArg(1));
 
@@ -56,8 +56,8 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.True(lazyEvalNode.GetType() == typeof(LazyEvalNode));
 
             // SourceSpan Check
-            Assert.Equal(18, lazyEvalNode.IRContext.SourceContext.Min);
-            Assert.Equal(25, lazyEvalNode.IRContext.SourceContext.Lim);
+            var fragment = lazyEvalNode.IRContext.SourceContext.GetFragment(expression);
+            Assert.Equal(expectedFragment, fragment);
         }
     }
 }
