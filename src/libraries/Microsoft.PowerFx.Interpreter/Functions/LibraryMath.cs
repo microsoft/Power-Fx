@@ -651,5 +651,77 @@ namespace Microsoft.PowerFx.Functions
                 return new NumberValue(irContext, _random.Next(lower, upper));
             }
         }
+
+        private static FormulaValue Pi(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args)
+        {
+            return new NumberValue(irContext, Math.PI);
+        }
+
+        // Given the absence of Math.Cot function, we compute Cot(x) as 1/Tan(x)
+        // Reference: https://en.wikipedia.org/wiki/Trigonometric_functions
+        private static FormulaValue Cot(IRContext irContext, NumberValue[] args)
+        {
+            var arg = args[0].Value;
+            var tan = Math.Tan(arg);
+            if (tan == 0)
+            {
+                return new ErrorValue(irContext, new ExpressionError
+                {
+                    Kind = ErrorKind.Div0,
+                    Span = irContext.SourceContext,
+                    Message = "Division by zero"
+                });
+            }
+
+            return new NumberValue(irContext, 1 / tan);
+        }
+
+        // Given the absence of Math.Acot function, we compute acot(x) as pi/2 - atan(x)
+        // Reference: https://en.wikipedia.org/wiki/Inverse_trigonometric_functions
+        public static FormulaValue Acot(IRContext irContext, NumberValue[] args)
+        {
+            var arg = args[0].Value;
+            var atan = Math.Atan(arg);
+            return new NumberValue(irContext, (Math.PI / 2) - atan);
+        }
+
+        public static FormulaValue Atan2(IRContext irContext, NumberValue[] args)
+        {
+            var x = args[0].Value;
+            var y = args[1].Value;
+
+            if (x == 0 && y == 0)
+            {
+                return new ErrorValue(irContext, new ExpressionError
+                {
+                    Kind = ErrorKind.Div0,
+                    Span = irContext.SourceContext,
+                    Message = "Division by zero"
+                });
+            }
+
+            // Unlike Excel, C#'s Math.Atan2 expects 'y' as first argument and 'x' as second.
+            return new NumberValue(irContext, Math.Atan2(y, x));
+        }
+
+        public static Func<IRContext, NumberValue[], FormulaValue> SingleArgTrig(string functionName, Func<double, double> function)
+        {
+            return (IRContext irContext, NumberValue[] args) =>
+            {
+                var arg = args[0].Value;
+                var result = function(arg);
+                if (double.IsNaN(result) || double.IsInfinity(result))
+                {
+                    return new ErrorValue(irContext, new ExpressionError
+                    {
+                        Message = $"Invalid argument to the {functionName} function.",
+                        Span = irContext.SourceContext,
+                        Kind = ErrorKind.Numeric
+                    });
+                }
+
+                return new NumberValue(irContext, result);
+            };
+        }
     }
 }

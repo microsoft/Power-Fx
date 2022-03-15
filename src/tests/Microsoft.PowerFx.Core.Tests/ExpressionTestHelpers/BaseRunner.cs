@@ -15,7 +15,7 @@ namespace Microsoft.PowerFx.Core.Tests
 {
     // Base class for running a lightweght test. 
     public abstract class BaseRunner
-    {        
+    {
         /// <summary>
         /// Maximum time to run test - this catches potential hangs in the engine. 
         /// Any test should easily run in under 1s. 
@@ -30,7 +30,7 @@ namespace Microsoft.PowerFx.Core.Tests
         /// <returns>Result of evaluating Expr.</returns>
         protected abstract Task<FormulaValue> RunAsyncInternal(string expr, string setupHandlerName = null);
 
-        private static readonly Regex RuntimeErrorExpectedResultRegex = new Regex(@"\#error(\(?:Kind=(?<errorKind>[^\)]+)\))?", RegexOptions.IgnoreCase);
+        private static readonly Regex RuntimeErrorExpectedResultRegex = new Regex(@"\#error(?:\(Kind=(?<errorKind>[^\)]+)\))?", RegexOptions.IgnoreCase);
 
         /// <summary>
         /// Returns (Pass,Fail,Skip) and a status message.
@@ -57,7 +57,7 @@ namespace Microsoft.PowerFx.Core.Tests
             if (success)
             {
                 return (result, message);
-            } 
+            }
             else
             {
                 // Timeout!!!
@@ -118,7 +118,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 actualStr = TestRunner.TestToString(result);
             }
             catch (Exception e)
-            {                
+            {
                 // Expected will contain the full error message, like:
                 //    Errors: Error 15-16: Incompatible types for comparison. These types can't be compared: UntypedObject, UntypedObject.
                 var expectedCompilerError = expected.StartsWith("Errors: Error"); // $$$ Match error message. 
@@ -148,7 +148,7 @@ namespace Microsoft.PowerFx.Core.Tests
             }
 
             var expectedRuntimeErrorMatch = RuntimeErrorExpectedResultRegex.Match(expected);
-            
+
             if (expectedRuntimeErrorMatch.Success)
             {
                 var expectedErrorKindGroup = expectedRuntimeErrorMatch.Groups["errorKind"];
@@ -190,22 +190,32 @@ namespace Microsoft.PowerFx.Core.Tests
                     {
                         return (TestResult.Fail, $"Invalid expected error kind: {expectedErrorKind}");
                     }
-                } 
+                }
                 else if (IsError(result))
                 {
                     // If they override IsError, then do additional checks. 
-                    return await RunErrorCaseAsync(testCase);                    
+                    return await RunErrorCaseAsync(testCase);
                 }
 
                 // If the actual result is not an error, we'll fail with a mismatch below
             }
-                        
+
             if (string.Equals(expected, actualStr, StringComparison.Ordinal))
             {
                 return (TestResult.Pass, null);
             }
 
-            return (TestResult.Fail, $"Expected: {expected}. actual: {actualStr}");            
+            if (result is NumberValue numericResult && double.TryParse(expected, out var expectedNumeric))
+            {
+                // Allow for a 1e-5 difference
+                var diff = Math.Abs(numericResult.Value - expectedNumeric);
+                if (diff < 1e-5)
+                {
+                    return (TestResult.Pass, null);
+                }
+            }
+
+            return (TestResult.Fail, $"Expected: {expected}. actual: {actualStr}");
         }
 
         // Get the friendly name of the harness. 
