@@ -1,0 +1,119 @@
+﻿// Basic LookUp
+>> LookUp(Table({ Id: 1, Name: "Element 1" }, { Id:2, Name: "Element 2"}), Id = 2)
+{Id:2,Name:"Element 2"}
+
+// Not found
+>> LookUp(Table({ Id: 1, Name: "Element 1" }, { Id:2, Name: "Element 2"}), Id = 3)
+Blank()
+
+// Basic LookUp with reduction
+>> LookUp(Table({ Id: 1, Name: "Element 1" }, { Id:2, Name: "Element 2"}), Id = 2, Name)
+"Element 2"
+
+>> LookUp(Table({ Id: 1, Name: "Element 1" }, { Id:2, Name: "Element 2"}), Id = 3, Name)
+Blank()
+
+>> LookUp(Table({ Id: 1, Name: "Element 1" }, { Id:2, Name: "Element 2"}), Id = 2).Name
+"Element 2"
+
+>> LookUp(Table({ Id: 1, Name: "Element 1" }, { Id:2, Name: "Element 2"}), Id = 3).Name
+Blank()
+
+// Return first result only
+>> LookUp(Table({ Id: 1, Name: "Element 1" }, { Id:2, Name: "Element 2a"}, { Id:2, Name: "Element 2b"}), Id = 2).Name
+"Element 2a"
+
+// 'As' with LookUp
+>> LookUp([1,2,3] As X, X.Value > 2)
+{Value:3}
+
+>> LookUp([1,2,3] As X, X.Value > 2).Value
+3
+
+>> LookUp([1,2,3] As X, X.Value > 2, X.Value)
+3
+
+// 'ThisRecord is implicit'
+>> LookUp([1,2,3], Value >= 2)
+{Value:2}
+
+>> LookUp([1,2,3], Value >= 2).Value
+2
+
+>> LookUp([1,2,3], Value >= 2, Value)
+2
+
+>> LookUp([1,2,3], ThisRecord.Value >= 2)
+{Value:2}
+
+>> LookUp([1,2,3], ThisRecord.Value >= 2, Value)
+2
+
+>> LookUp([1,2,3], Value >= 2, ThisRecord.Value)
+2
+
+>> LookUp([1,2,3], ThisRecord.Value > 2).Value
+3
+
+>> LookUp([1,2,3], ThisRecord.Value > 2, "constant")
+"constant"
+
+// Lookup in long list
+>> LookUp(Sequence(30000), Value > 25000, Value * 2)
+50002
+
+>> LookUp(Sequence(30000), Value > 35000, Value * 2)
+Blank()
+
+// $$$ Corner cases like  negative indices, N > length, doubles instead of int, empty. 
+
+>> LookUp([1,2,3], ThisRecord.Value > 3)
+Blank()
+
+>> LookUp([1,0,3,4], 1/ThisRecord.Value >= 0)
+{Value:1}
+
+>> LookUp([0,3,4], 1/ThisRecord.Value >= 0)
+#Error(Kind=Div0)
+
+>> LookUp([0,3,4], ThisRecord.Value = 0, 1/ThisRecord.Value)
+#Error(Kind=Div0)
+
+>> LookUp([1,2,3,4], Blank())
+Blank()
+
+>> LookUp(Blank(), Blank())
+Blank()
+
+>> LookUp(Blank(), Blank(), "constant")
+Blank()
+
+>> LookUp([100, 200, 300], Value > 250, Power(100, Value))
+#Error(Kind=Numeric)
+
+>> LookUp(Sequence(0), true)
+Blank()
+
+>> LookUp(["one", Left("two", -1), "three"], IsError(Value), IfError(Value, "found error on the table"))
+"found error on the table"
+
+>> LookUp(["one", "two", "three"], Left(Value, -1) = "string")
+#Error(Kind=Numeric)
+
+>> LookUp(["one", "two", "three"], true, Left(Value, -1))
+#Error(Kind=Numeric)
+
+>> LookUp(If(1/0<2,[1,2]), true)
+#Error(Kind=Div0)
+
+>> LookUp(true, true)
+Errors: Error 7-11: Invalid argument type.
+
+>> LookUp([1, 2, 3], "string")
+Errors: Error 18-26: Invalid argument type (Text). Expecting a Boolean value instead.
+
+>> LookUp([1, 2, 3] As X, Value > 2)
+Errors: Error 23-28: Name isn't valid. This identifier isn't recognized.
+
+>> LookUp([1, 2, 3] As X, X.Value > 2, Value)
+Errors: Error 36-41: Name isn't valid. This identifier isn't recognized.

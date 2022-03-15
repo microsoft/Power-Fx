@@ -4383,7 +4383,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 _txb.SetScopeUseSet(node, JoinScopeUseSets(node.Children));
             }
 
-            private static bool IsValidAccessToScopedProperty(IExternalControl lhsControl, IExternalControlProperty rhsProperty, IExternalControl currentControl, IExternalControlProperty currentProperty, bool isBehaviorOnly = false)
+            private static bool IsValidAccessToScopedProperty(IExternalControl lhsControl, IExternalControlProperty rhsProperty, IExternalControl currentControl, IExternalControlProperty currentProperty)
             {
                 Contracts.AssertValue(lhsControl);
                 Contracts.AssertValue(rhsProperty);
@@ -4395,12 +4395,6 @@ namespace Microsoft.PowerFx.Core.Binding
                    (currentControl.IsComponentControl ||
                    (currentControl.TopParentOrSelf is IExternalControl { IsComponentControl: false })))
                 {
-                    // Behavior property is blocked from outside the component.
-                    if (isBehaviorOnly)
-                    {
-                        return false;
-                    }
-
                     // If current property is output property of the component then access is allowed.
                     // Or if the rhs property is out put property then it's allowed which could only be possible if the current control is component definition.
                     return currentProperty.IsImmutableOnInstance || rhsProperty.IsImmutableOnInstance;
@@ -4430,7 +4424,7 @@ namespace Microsoft.PowerFx.Core.Binding
                     if (_txb.Document.TryGetControlByUniqueId(infoTexlFunction.Namespace.Name.Value, out var lhsControl) &&
                         lhsControl.Template.TryGetProperty(infoTexlFunction.Name, out var rhsProperty))
                     {
-                        return IsValidAccessToScopedProperty(lhsControl, rhsProperty, currentControl, currentProperty, infoTexlFunction.IsBehaviorOnly);
+                        return IsValidAccessToScopedProperty(lhsControl, rhsProperty, currentControl, currentProperty);
                     }
                 }
 

@@ -1,5 +1,64 @@
 ﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
@@ -426,6 +485,17 @@
   <data name="AboutValue_language" xml:space="preserve">
     <value>Az érték konvertálása során használandó nyelvkód.</value>
     
+  </data>
+  <data name="AboutBoolean" xml:space="preserve">
+    <value>Átalakít egy logikai értéket képviselő "szöveget" logikai értékké.</value>
+    
+  </data>
+  <data name="BooleanArg1" xml:space="preserve">
+    <value>szöveg</value>
+    
+  </data>
+  <data name="AboutBoolean_text" xml:space="preserve">
+    <value>A logikai értékké alakítandó szövegérték.</value>
   </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Az első nem üres argumentumot adja vissza</value>
@@ -1368,6 +1438,10 @@
     <value>kifejezés</value>
     
   </data>
+  <data name="AboutIsBlankOrError_expression" xml:space="preserve">
+    <value>A vizsgálandó kifejezés.</value>
+    
+  </data>
   <data name="AboutIsEmpty" xml:space="preserve">
     <value>Megvizsgálja, hogy üres-e egy gyűjtemény, és a true vagy a false értéket adja vissza.</value>
     
@@ -1375,6 +1449,9 @@
   <data name="IsEmptyArg1" xml:space="preserve">
     <value>forrás</value>
     
+  </data>
+  <data name="AboutIsEmpty_source" xml:space="preserve">
+    <value>A vizsgálandó tábla.</value>
   </data>
   <data name="AboutShuffle" xml:space="preserve">
     <value>A bemeneti „forrás” tábla véletlenszerűen felcserélt adatokat tartalmazó példányát adja vissza.</value>
@@ -2260,6 +2337,35 @@
   </data>
   <data name="AboutChar_column_of_numbers" xml:space="preserve">
     <value>A platform karakterkészletéből származó kódszámok oszlopa.</value>
+  </data>
+  <data name="AboutParseJson" xml:space="preserve">
+    <value>Objektummá alakít egy JSON-sztringet.</value>
+    
+  </data>
+  <data name="ParseJsonArg1" xml:space="preserve">
+    <value>bemenet</value>
+    
+  </data>
+  <data name="AboutParseJson_input" xml:space="preserve">
+    <value>A feldolgozandó JSON-sztring.</value>
+  </data>
+  <data name="AboutIndex" xml:space="preserve">
+    <value>Visszaadja a tábla adott indexhez tartozó rekordját.</value>
+    
+  </data>
+  <data name="IndexArg1" xml:space="preserve">
+    <value>tábla</value>
+    
+  </data>
+  <data name="IndexArg2" xml:space="preserve">
+    <value>index</value>
+    
+  </data>
+  <data name="AboutIndex_table" xml:space="preserve">
+    <value>Egy tábla.</value>
+  </data>
+  <data name="AboutIndex_index" xml:space="preserve">
+    <value>Egy egész számú index.</value>
   </data>
   <data name="Screen_Name_DisplayName" xml:space="preserve">
     <value>Név</value>
@@ -3781,11 +3887,23 @@
     
   </data>
   <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
-    <value>Ez az eredménytípus ("{0}") nem támogatott a képletoszlopokban.</value>
+    <value>Az eredménytípus ("{0}") nem támogatott a képletoszlopokban.</value>
     
   </data>
   <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
     <value>A képlet várt eredménytípusa {0}, de a tényleges eredménytípus {1}. A képletoszlop eredménytípusa nem módosítható.</value>
+    
+  </data>
+  <data name="FormulaColumns_ColumnTypeNotSupported" xml:space="preserve">
+    <value>A(z) {0} típusú oszlopok nem használhatók képletoszlopokban.</value>
+    
+  </data>
+  <data name="FormulaColumns_ColumnFormatNotSupported" xml:space="preserve">
+    <value>A(z) {0} típusú, {1} formátumú oszlopok nem használhatók képletoszlopokban.</value>
+    
+  </data>
+  <data name="FormulaColumns_FormulaTooLong" xml:space="preserve">
+    <value>A képletek nem lehetnek hosszabbak 1000 karakternél.</value>
     
   </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
@@ -3802,7 +3920,6 @@
   </data>
   <data name="ErrorResource_ErrBadToken_LongMessage" xml:space="preserve">
     <value>A „\” karakter például váratlan egy szám után, például a következőképpen: „32\”. A szóköz („32 ”) várható, ha csak a 32 számot eredményezi, illetve várható egy másik szám (példa: „323”).</value>
-    
   </data>
   <data name="ErrorResource_ErrBadToken_HowToFix_1" xml:space="preserve">
     <value>Távolítsa el vagy cserélje a váratlan karaktereket.</value>
@@ -3818,11 +3935,9 @@
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_LongMessage" xml:space="preserve">
     <value>A „\” karakter például váratlan egy szám után, például a következőképpen: „32\”. A szóköz („32 ”) várható, ha csak a 32 számot eredményezi, illetve várható egy másik szám (példa: „323”).</value>
-    
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_HowToFix_1" xml:space="preserve">
     <value>Távolítsa el vagy cserélje le a váratlan karaktert.</value>
-    
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_Link_1" xml:space="preserve">
     <value>Cikk: Power Apps-képletekkel kapcsolatos segédlet</value>
@@ -3834,7 +3949,6 @@
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_LongMessage" xml:space="preserve">
     <value>Minden megjegyzésblokknak a „/*” sztringgel kell kezdődnie, és a „*/” sztringgel kell végződnie. Ha nem zár le minden megjegyzésblokkot megfelelően, a megjegyzés után szereplő összes kód a megjegyzés része lesz. Ha egy megjegyzés csak egy sorból áll, azt kezdheti a „//” sztringgel, a megjegyzés végének meghatározása nélkül.</value>
-    
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_HowToFix_1" xml:space="preserve">
     <value>Szúrja be a „*/” sztringet a megjegyzésblokk végére, vagy módosítsa azt megjegyzéssorok készletére.</value>
@@ -3850,7 +3964,6 @@
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_LongMessage" xml:space="preserve">
     <value>Ez a hiba például akkor fordul elő, ha egy képlet a {{Val@ 7}} kifejezést tartalmazza {{Val: 7}} helyett. Változók beállításakor a szintaxis szerint kettőspontot kell megadni, nem pedig a „kukac” szimbólumot.</value>
-    
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_HowToFix_1" xml:space="preserve">
     <value>Távolítsa el a váratlan karaktereket, vagy cserélje azokat várt karakterekre.</value>
@@ -3866,7 +3979,6 @@
   </data>
   <data name="ErrorResource_ErrInvalidName_LongMessage" xml:space="preserve">
     <value>Ez a hiba leggyakrabban akkor jelenik meg, ha a képlet már nem létező dologra (például egy törölt vezérlőre) hivatkozik.</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidName_HowToFix_1" xml:space="preserve">
     <value>Távolítsa el vagy javítsa az érvénytelen névre való hivatkozást.</value>
@@ -3882,7 +3994,6 @@
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_LongMessage" xml:space="preserve">
     <value>Ez a hibaüzenet akkor jelenik meg, ha egy képlet érvénytelen szintaxissal hivatkozik az összetevő viselkedési tulajdonságaira (például a Component.OnCustomChange() függvényhívás helyett a következőt használja: Component.OnCustomChange)</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_HowToFix_1" xml:space="preserve">
     <value>A helyes szintaxis használatával hivatkozzon az összetevő viselkedési tulajdonságára. Példa: Component.OnCustomChange()</value>
@@ -3898,7 +4009,6 @@
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_LongMessage" xml:space="preserve">
     <value>A Parent operátor nem használható olyan vezérlőkhöz, melyeknek nincs szülő vezérlője. Az operátor az adott vezérlőt tároló vezérlőre hivatkozik, és annak minden tulajdonságát elérhetővé teszi.</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_HowToFix_1" xml:space="preserve">
     <value>Távolítsa el a Parent operátort.</value>
@@ -3914,7 +4024,6 @@
   </data>
   <data name="ErrorResource_ErrTooManyUps_LongMessage" xml:space="preserve">
     <value>A bonyolultság minden beágyazási szinttel növekszik, ezért a Power Apps csak legfeljebb 63 szintig támogatja a sor hatókörében való beágyazást.</value>
-    
   </data>
   <data name="ErrorResource_ErrTooManyUps_HowToFix_1" xml:space="preserve">
     <value>Írja át a képletet kevesebb beágyazási szint használatával.</value>
@@ -3926,7 +4035,6 @@
   </data>
   <data name="ErrorResource_ErrRuleNestedTooDeeply_LongMessage" xml:space="preserve">
     <value>A Power Apps legfeljebb 50 szintig támogatja a kifejezések beágyazását. Egy ennyire mélyen beágyazott kifejezést nehéz megérteni és kezelni.</value>
-    
   </data>
   <data name="ErrorResource_ErrRuleNestedTooDeeply_HowToFix_1" xml:space="preserve">
     <value>Írja át a képletet kevesebb beágyazási szint használatával.</value>
@@ -3938,7 +4046,6 @@
   </data>
   <data name="ErrorResource_ErrOperatorExpected_LongMessage" xml:space="preserve">
     <value>Az operátorok két operandust kötnek össze. Ez a hiba akkor fordul elő, ha úgy köt össze két függvényt (operandust), hogy nincs közöttük operátor. Példa: Len("sajátszöveg")Len("sajátszöveg").</value>
-    
   </data>
   <data name="ErrorResource_ErrOperatorExpected_HowToFix_1" xml:space="preserve">
     <value>Módosítsa a képletet úgy, hogy az operandusai között legyen egy operátor.</value>
@@ -3954,7 +4061,6 @@
   </data>
   <data name="ErrorResource_ErrNumberExpected_LongMessage" xml:space="preserve">
     <value>Ez a hiba akkor fordul elő, ha számot igénylő függvényt használ, de szám helyett például képet ad meg.</value>
-    
   </data>
   <data name="ErrorResource_ErrNumberExpected_HowToFix_1" xml:space="preserve">
     <value>Módosítsa a képletet úgy, hogy a képlet ezen pontján számot adjon vissza.</value>
@@ -3970,7 +4076,6 @@
   </data>
   <data name="ErrorResource_ErrBooleanExpected_LongMessage" xml:space="preserve">
     <value>A logikai érték igaz/hamis értékként is ismert az olyan alkalmazásokban, mint például a Microsoft Excel. Ez a hiba akkor fordul elő, ha egy logikai értéket igénylő függvényt használ, de a logikai érték helyett mást (például dátumot) ad meg.</value>
-    
   </data>
   <data name="ErrorResource_ErrBooleanExpected_HowToFix_1" xml:space="preserve">
     <value>Módosítsa a képletet úgy, hogy a képlet ezen pontján logikai értéket adjon vissza.</value>
@@ -3986,7 +4091,6 @@
   </data>
   <data name="ErrorResource_ErrColonExpected_LongMessage" xml:space="preserve">
     <value>A kettőspont a mezőnevet (más néven oszlopnevet) választja el a mező értékétől egy adott rekordban (például {Month:"1"}, {Month:"2"}…). Kettőspont választja el az órát is a perctől és a másodperctől (például 3:04).</value>
-    
   </data>
   <data name="ErrorResource_ErrColonExpected_HowToFix_1" xml:space="preserve">
     <value>Módosítsa a képletet úgy, hogy kettőspontot tartalmazzon.</value>
@@ -4002,7 +4106,6 @@
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_LongMessage" xml:space="preserve">
     <value>A viselkedési függvények úgy módosítják az alkalmazás állapotát, hogy az alkalmazás más részeiben módosítanak értékeket. A Navigate, a Patch, az UpdateContext és a Collect gyakran használt viselkedési függvények. Az OnSelect, az OnVisible és az egyéb „On ...” kezdetű tulajdonságok gyakran használt viselkedésalapú tulajdonságok.</value>
-    
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_HowToFix_1" xml:space="preserve">
     <value>Helyezze át a viselkedési függvényt egy viselkedésalapú tulajdonságba.</value>
@@ -4018,7 +4121,6 @@
   </data>
   <data name="ErrorResource_ErrTestPropertyExpected_LongMessage" xml:space="preserve">
     <value>A tesztfüggvények azok, amelyekkel szimulálhatók a felhasználói bemenetek egy alkalmazás tesztelésekor. A SetProperty, a SelectRow és az Assert gyakran használt tesztfüggvények. Ezek csak a tesztesetekben használhatók.</value>
-    
   </data>
   <data name="ErrorResource_ErrTestPropertyExpected_HowToFix_1" xml:space="preserve">
     <value>A függvényt egy tesztesetben használja, ne magában az alkalmazásban.</value>
@@ -4030,7 +4132,6 @@
   </data>
   <data name="ErrorResource_ErrCannotCoerce_SourceType_TargetType_LongMessage" xml:space="preserve">
     <value>A Power Apps a képletben szereplő adattípusok közül néhányat konvertálni tud más típusokra. Az 1 sztringet például konvertálni tudja az 1 számra, de minden adattípust nem tud konvertálni az összes egyéb adattípusra. Nem tud például egy képet számra konvertálni.</value>
-    
   </data>
   <data name="ErrorResource_ErrCannotCoerce_SourceType_TargetType_HowToFix_1" xml:space="preserve">
     <value>Módosítsa a képletet úgy, hogy az érintett adatokat a várt típusra konvertálja.</value>
@@ -4042,7 +4143,6 @@
   </data>
   <data name="ErrorResource_ErrStringExpected_LongMessage" xml:space="preserve">
     <value>Ez a hiba akkor fordul elő, ha szöveges (vagy sztring-) argumentumot igénylő függvényt használ, de például dátumot ad meg.</value>
-    
   </data>
   <data name="ErrorResource_ErrStringExpected_HowToFix_1" xml:space="preserve">
     <value>Módosítsa a képletet úgy, hogy a képlet ezen pontján szöveget adjon vissza.</value>
@@ -4058,7 +4158,6 @@
   </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_LongMessage" xml:space="preserve">
     <value>Ez a hiba akkor fordul elő, ha szöveget vagy számot igénylő függvényt használ, de például logikai (igaz/hamis) értéket ad meg.</value>
-    
   </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_HowToFix_1" xml:space="preserve">
     <value>Módosítsa a képletet úgy, hogy a képlet ezen pontján szöveget vagy számot adjon vissza.</value>
@@ -4074,7 +4173,6 @@
   </data>
   <data name="ErrorResource_ErrClosingBracketExpected_LongMessage" xml:space="preserve">
     <value>A záró zárójel a rekord végét jelöli (például {Month:"1"}, {Month:"2"}...).</value>
-    
   </data>
   <data name="ErrorResource_ErrClosingBracketExpected_HowToFix_1" xml:space="preserve">
     <value>Módosítsa a képletet úgy, hogy az zárójelet tartalmazzon.</value>
@@ -4094,7 +4192,6 @@
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_LongMessage" xml:space="preserve">
     <value>A képlet nem értékelhető ki, mert a képletben összehasonlított értékek nem azonos típusúak.</value>
-    
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_HowToFix_1" xml:space="preserve">
     <value>Lehetséges, hogy a típusegyezés érdekében konvertálnia kell az értéket, például a 12/31/2018 dátumsztringet egy dátumértékre.</value>
@@ -4174,7 +4271,6 @@
   </data>
   <data name="ErrorResource_ErrTypeError_LongMessage" xml:space="preserve">
     <value>Lehetséges, hogy az adatok nem a várt típusúak. (szöveg, szám, dátum, tábla, rekord)</value>
-    
   </data>
   <data name="ErrorResource_ErrTypeError_HowToFix_1" xml:space="preserve">
     <value>Gondoskodjon arról, hogy a képletben szereplő értéktípusok azonosak legyenek.</value>
@@ -4194,7 +4290,6 @@
   </data>
   <data name="ErrorResource_ErrDateExpected_LongMessage" xml:space="preserve">
     <value>Ez a hiba akkor fordul elő, ha dátumot igénylő függvényt használ, de dátum helyett például szöveget ad meg.</value>
-    
   </data>
   <data name="ErrorResource_ErrDateExpected_HowToFix_1" xml:space="preserve">
     <value>Módosítsa a képletet úgy, hogy a képlet ezen pontján dátumot adjon vissza.</value>
@@ -4210,7 +4305,6 @@
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_LongMessage" xml:space="preserve">
     <value>Előfordulhat, hogy az adatforrás nem tudja feldolgozni a képletet, és hiányos adathalmazt ad vissza. Ha az adathalmaz hiányos, előfordulhat, hogy az alkalmazás helytelen eredményeket ad vissza, vagy nem a várt módon működik.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_HowToFix_1" xml:space="preserve">
     <value>Ha az adathalmaz a megengedettnél (500) több, de 2000-nél kevesebb rekordot tartalmaz, próbálja meg alaphelyzetbe állítani a határértéket.</value>
@@ -4238,7 +4332,6 @@
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_LongMessage" xml:space="preserve">
     <value>Előfordulhat, hogy az adatforrás nem tudja feldolgozni a képletet, és hiányos adathalmazt ad vissza. Ha az adathalmaz hiányos, előfordulhat, hogy az alkalmazás helytelen eredményeket ad vissza, vagy nem a várt módon működik.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_HowToFix_1" xml:space="preserve">
     <value>Ha az adathalmaz a megengedettnél (500) több, de 2000-nél kevesebb rekordot tartalmaz, próbálja meg alaphelyzetbe állítani a határértéket.</value>
@@ -4266,7 +4359,6 @@
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_LongMessage" xml:space="preserve">
     <value> Az in operátortól jobbra lévő elemnek a helyes adatforrás egyik oszlopnevének kell lennie. Előfordulhat, hogy az adatforrás nem tudja feldolgozni a képletet, és hiányos adathalmazt ad vissza. Ha az adathalmaz hiányos, az alkalmazás helytelen eredményeket adhat vissza, vagy nem a várt módon működik.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_1" xml:space="preserve">
     <value>Módosítsa az in operátortól jobbra lévő elemet úgy, hogy az a helyes adatforrás egyik oszlopa legyen.</value>
@@ -4299,7 +4391,6 @@
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_LongMessage" xml:space="preserve">
     <value> Az „in” operátor jobb oldala nem a megfelelő adatforrásból származó oszlop. Előfordulhat, hogy az adatforrás nem képes feldolgozni a képletet, és hiányos adathalmazt adhat vissza. Elképzelhető, hogy az alkalmazás helytelen eredményt ad vissza, vagy nem megfelelően működik hiányos adathalmaz esetén.
       </value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_1" xml:space="preserve">
     <value>Módosítsa az in operátortól jobbra lévő elemet úgy, hogy az a helyes adatforrás egyik oszlopa legyen.</value>
@@ -4380,6 +4471,22 @@
   </data>
   <data name="ErrorResource_ErrInvalidControlReference_Link_1" xml:space="preserve">
     <value>Referencia: ConfirmExit vászonalapú alkalmazásokhoz</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidStringInterpolation_ShortMessage" xml:space="preserve">
+    <value>Az interpolált sztringben megjelenő kifejezéseket szövegértékkel vagy kompatibilis típussal kell kiértékelni.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidStringInterpolation_HowToFix_1" xml:space="preserve">
+    <value>Az interpolált sztringben található kifejezéstípusok ellenőrzése.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrEmptyIsland_ShortMessage" xml:space="preserve">
+    <value>Empty expressions cannot appear inside an interpolated string.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrEmptyIsland_HowToFix_1" xml:space="preserve">
+    <value>Check for empty expressions inside the interpolated string.</value>
     
   </data>
   <data name="ErrorResource_ErrAsNotInContext_ShortMessage" xml:space="preserve">
