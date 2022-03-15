@@ -268,7 +268,7 @@ namespace Microsoft.PowerFx.Core.IR
                     if (func.IsLazyEvalParam(i))
                     {
                         var child = arg.Accept(this, scope != null ? context.With(scope) : context);
-                        args.Add(new LazyEvalNode(context.GetIRContext(node), child));
+                        args.Add(new LazyEvalNode(context.GetIRContext(arg), child));
                     }
                     else
                     {
