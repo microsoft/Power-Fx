@@ -93,13 +93,10 @@ namespace Microsoft.PowerFx.Functions
                 StandardErrorHandling<FormulaValue>(
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: DoNotReplaceBlank,
-                    checkRuntimeTypes: ExactSequenceWithOptionalParameters(
-                        requiredParamRuntimeChecks: new Func<IRContext, int, FormulaValue, FormulaValue>[]
-                        {
-                            ExactValueTypeOrBlank<TableValue>,
-                            ExactValueTypeOrBlank<LambdaFormulaValue>,
-                        },
-                        optionalParamRuntimeChecks: new Func<IRContext, int, FormulaValue, FormulaValue>[] { ExactValueTypeOrBlank<StringValue> }),
+                    checkRuntimeTypes: ExactSequence(
+                        ExactValueTypeOrBlank<TableValue>,
+                        ExactValueTypeOrBlank<LambdaFormulaValue>,
+                        ExactValueTypeOrBlank<StringValue>),
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
                     targetFunction: Concat)

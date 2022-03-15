@@ -438,19 +438,6 @@ namespace Microsoft.PowerFx.Functions
             };
         }
 
-        private static Func<IRContext, int, FormulaValue, FormulaValue> ExactSequenceWithOptionalParameters(Func<IRContext, int, FormulaValue, FormulaValue>[] requiredParamRuntimeChecks, Func<IRContext, int, FormulaValue, FormulaValue>[] optionalParamRuntimeChecks)
-        {
-            return (irContext, index, arg) =>
-            {
-                if (index < requiredParamRuntimeChecks.Length)
-                {
-                    return requiredParamRuntimeChecks[index](irContext, index, arg);
-                }
-
-                return optionalParamRuntimeChecks[index - requiredParamRuntimeChecks.Length](irContext, index, arg);
-            };
-        }
-
         private static FormulaValue AddColumnsTypeChecker(IRContext irContext, int index, FormulaValue arg)
         {
             if (index == 0)

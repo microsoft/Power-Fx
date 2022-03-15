@@ -23,6 +23,10 @@
 >> Concat(["A", "B", "C"] As X, X.Value)
 "ABC"
 
+// Using 'As' and separators
+>> Concat(["A", "B", "C"] As X, X.Value, ".")
+"A.B.C"
+
 // Implicit 'ThisRecord'
 >> Concat(["A", "B", "C"], Value)
 "ABC"
@@ -82,3 +86,9 @@ Blank()
 
 >> Concat(Table({a: "one"}, {a: "two"}, {a: "three"}), a, Left(", ", -1))
 #Error
+
+>> With({a:"."}, Concat(Sequence(5, 65), Char(Value), $"-{a}-"))
+"A-.-B-.-C-.-D-.-E"
+
+>> Concat(["one", "two", "three"], Value, Len(Value)) // Separator cannot access record
+Errors: Error 43-48: Name isn't valid. This identifier isn't recognized.
