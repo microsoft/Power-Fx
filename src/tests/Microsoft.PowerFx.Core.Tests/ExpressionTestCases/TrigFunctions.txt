@@ -25,8 +25,21 @@
 >> Sin(Blank())
 0
 
->> Sin([0, Pi(), Pi()/2, -Pi()/2, 3*Pi()/2, 2*Pi(), Pi()/4, -Pi()/4, Blank()])
-[0, 0, 1, -1, -1, -0, 0.707106781, -0.707106781, 0]
+>> Sin(Table({a:0},{a:Pi()/6},{a:Pi()/2}))
+#skip
+// Tabular version not implemented yet: expected: Table({a:0},{a:0.5},{a:1})
+
+>> Sin(Table({a:0},{a:1/0},{a:Pi()/2}))
+#skip
+// Tabular version not implemented yet: expected: Table({a:0},{a:#Error(Kind=Div0)},{a:1})
+
+>> Sin(Table({a:0},{a:Pi()/6},If(1/0<2,{a:Pi()})))
+#skip
+// Tabular version not implemented yet: expected: Table({a:0},{a:0.5},#Error(Kind=Div0))
+
+>> Round(Sin([0, Pi(), Pi()/2, -Pi()/2, 3*Pi()/2, 2*Pi(), Pi()/4, -Pi()/4, Blank()]), 4)
+#skip
+// Tabular version not implemented yet; expected: [0, 0, 1, -1, -1, -0, 0.7071, -0.7071, 0]
 
 >> Cos(0)
 1
@@ -55,8 +68,21 @@
 >> Cos(Blank())
 1
 
->> Cos([0, Pi(), Pi()/2, -Pi()/2, 3*Pi()/2, 2*Pi(), Pi()/4, -Pi()/4, Blank()])
-[1, -1, 0, 0, -0, 1, 0.707106781, 0.707106781, 1]
+>> Cos(Table({a:0},{a:Pi()/3},{a:Pi()/2}))
+#skip
+// Tabular version not implemented yet: expected: Table({a:1},{a:0.5},{a:0})
+
+>> Cos(Table({a:1/0},{a:Pi()/3},{a:Pi()/2}))
+#skip
+// Tabular version not implemented yet: expected: Table({a:#Error(Kind=Div0)},{a:0.5},{a:0})
+
+>> Cos(Table({a:0},If(1/0<2,{a:Pi()/3}),{a:Pi()/2}))
+#skip
+// Tabular version not implemented yet: expected: Table({a:1},#Error(Kind=Div0),{a:0})
+
+>> Round(Cos([0, Pi(), Pi()/2, -Pi()/2, 3*Pi()/2, 2*Pi(), Pi()/4, -Pi()/4, Blank()]), 4)
+#skip
+// Tabular version not implemented yet; expected: [1, -1, 0, 0, -0, 1, 0.7071, 0.7071, 1]
 
 >> Tan(0)
 0
@@ -85,8 +111,21 @@
 >> Tan(Blank())
 0
 
->> Tan([0, Pi(), 2*Pi(), Pi()/4, -Pi()/4, Blank()])
-[0, -0, -0, 1, -1, 0]
+>> Tan(Table({a:0},{a:Pi()/4},{a:-Pi()/4}))
+#skip
+// Tabular version not implemented yet: expected: Table({a:0},{a:1},{a:-1})
+
+>> Tan(Table({a:1/0},{a:Pi()/4},{a:-Pi()/4}))
+#skip
+// Tabular version not implemented yet: expected: Table({a:#Error(Kind=Div0)},{a:1},{a:-1})
+
+>> Tan(Table(If(1/0<2,{a:0}),{a:Pi()/4},{a:-Pi()/4}))
+#skip
+// Tabular version not implemented yet: expected: Table(#Error(Kind=Div0),{a:1},{a:-1})
+
+>> Round(Tan([0, Pi(), 2*Pi(), Pi()/4, -Pi()/4, Blank()]), 4)
+#skip
+// Tabular version not implemented yet; expected: [0, -0, -0, 1, -1, 0]
 
 >> Cot(0)
 #Error(Kind=Div0)
@@ -115,8 +154,21 @@
 >> Cot(Blank())
 #Error(Kind=Div0)
 
->> Cot([0, Pi()/2, -Pi()/2, 3*Pi()/2, Pi()/4, -Pi()/4, Blank()])
-[#Error(Kind=Div0), 0, -0, 0, 1, -1, #Error(Kind=Div0)]
+>> Cot(Table({a:Pi()/2},{a:Pi()/4},{a:-Pi()/4}))
+#skip
+// Tabular version not implemented yet: expected: Table({a:0},{a:1},{a:-1})
+
+>> Cot(Table({a:Pi()/2},{a:0},{a:-Pi()/4}))
+#skip
+// Tabular version not implemented yet: expected: Table({a:0},{a:#Error(Kind=Div0)},{a:-1})
+
+>> Cot(Table({a:Pi()/2},If(Sqrt(-1)<1,{a:Pi()/4}),{a:-Pi()/4}))
+#skip
+// Tabular version not implemented yet: expected: Table({a:0},#Error(Kind=Numeric),{a:-1})
+
+>> Round(Cot([Pi()/2, -Pi()/2, 3*Pi()/2, Pi()/4, -Pi()/4]), 4)
+#skip
+// Tabular version not implemented yet; expected: [0, -0, 0, 1, -1]
 
 >> Asin(0)
 0
@@ -130,8 +182,9 @@
 >> Asin(Blank())
 0
 
->> Asin([0, 1, -1, Blank()])
-[0, 1.570796327, -1.570796327, 0]
+>> Round(Asin([0, 1, -1, Blank()]), 4)
+#skip
+// Tabular version not implemented yet; expected: [0, 1.5708, -1.5708, 0]
 
 >> Acos(0)
 1.570796327
@@ -145,14 +198,15 @@
 >> Acos(Blank())
 1.570796327
 
->> Acos([0, 1, -1, Blank()])
-[1.570796327, 0, 3.141592654, 1.570796327]
+>> Round(Acos([0, 1, -1, Blank()]), 4)
+#skip
+// Tabular version not implemented yet; expected: [1.5708, 0, 3.1416, 1.5708]
 
 >> Atan(0)
 0
 
 >> Atan(1e100)
--1.570796327
+1.570796327
 
 >> Atan(-1e100)
 -1.570796327
@@ -166,14 +220,15 @@
 >> Atan(Blank())
 0
 
->> Atan([0, 1e100, -1e100, 1, -1, Blank()])
-[0, -1.570796327, -1.570796327, 0.785398163, -0.785398163, 0]
+>> Round(Atan([0, 1e100, -1e100, 1, -1, Blank()]), 4)
+#skip
+// Tabular version not implemented yet; expected: [0, -1.5708, -1.5708, 0.7854, -0.7854, 0]
 
 >> Acot(0)
 1.570796327
 
 >> Acot(1e100)
-3.141592654
+0
 
 >> Acot(-1e100)
 3.141592654
@@ -187,8 +242,9 @@
 >> Acot(Blank())
 1.570796327
 
->> Acot([0, 1e100, -1e100, 1, -1, Blank()])
-[1.570796327, 3.141592654, 3.141592654, 0.785398163, 2.35619449, 1.570796327]
+>> Round(Acot([0, 1e100, -1e100, 1, -1, Blank()]), 4)
+#skip
+// Tabular version not implemented yet; expected: [1.5708, 3.1416, 3.1416, 0.7854, 2.3562, 1.5708]
 
 >> Degrees(0)
 0
@@ -223,8 +279,9 @@
 >> Degrees(Blank())
 0
 
->> Degrees([0, Pi(), Pi()/2, -Pi()/2, 3*Pi()/2, 2*Pi(), Pi()/4, -Pi()/4, 1, -1, Blank()])
-[0, 180, 90, -90, 270, 360, 45, -45, 57.295779513, -57.295779513, 0]
+>> Round(Degrees([0, Pi(), Pi()/2, -Pi()/2, 3*Pi()/2, 2*Pi(), Pi()/4, -Pi()/4, 1, -1, Blank()]), 4)
+#skip
+// Tabular version not implemented yet; expected: [0, 180, 90, -90, 270, 360, 45, -45, 57.2958, -57.2958, 0]
 
 >> Radians(0)
 0
@@ -250,6 +307,6 @@
 >> Radians(Blank())
 0
 
->> Radians([0, 1, -1, 180, 90, -180, -90, Blank()])
-[0, 0.017453293, -0.017453293, 3.141592654, 1.570796327, -3.141592654, -1.570796327, 0]
-
+>> Round(Radians([0, 1, -1, 180, 90, -180, -90, Blank()]), 4)
+#skip
+// Tabular version not implemented yet; expected: [0, 0.0175, -0.0175, 3.1416, 1.5708, -3.1416, -1.5708, 0]

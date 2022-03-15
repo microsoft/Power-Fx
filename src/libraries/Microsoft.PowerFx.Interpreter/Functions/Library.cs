@@ -52,7 +52,7 @@ namespace Microsoft.PowerFx.Functions
                     checkRuntimeTypes: ExactValueTypeOrBlank<NumberValue>,
                     checkRuntimeValues: FiniteChecker,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
-                    targetFunction: SingleArgTrig("Acot", x => (Math.PI / 2) - Math.Atan(x))) // Since there is no Math.Acot function, we compute it as PI/2 - Atan(x)
+                    targetFunction: Acot)
             },
             {
                 BuiltinFunctionsCore.AddColumns,
@@ -207,7 +207,7 @@ namespace Microsoft.PowerFx.Functions
                     checkRuntimeTypes: ExactValueTypeOrBlank<NumberValue>,
                     checkRuntimeValues: FiniteChecker,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
-                    targetFunction: SingleArgTrig("Cot", x => 1 / Math.Tan(x))) // Since there is no Math.Cot function, we compute it as PI/2 - Tan(x)
+                    targetFunction: Cot)
             },
             {
                 BuiltinFunctionsCore.CountIf,
