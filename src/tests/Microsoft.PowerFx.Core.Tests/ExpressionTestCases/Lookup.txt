@@ -110,7 +110,7 @@ Blank()
 Errors: Error 7-11: Invalid argument type.
 
 >> LookUp([1, 2, 3], "string")
-Errors: Error 18-26: Invalid argument type (Text). Expecting a Boolean value instead.
+Errors: Error 18-26: Expected boolean. We expect a boolean (true/false) at this point in the formula.|Error 0-27: The function 'LookUp' has some invalid arguments.
 
 >> LookUp([1, 2, 3] As X, Value > 2)
 Errors: Error 23-28: Name isn't valid. This identifier isn't recognized.
