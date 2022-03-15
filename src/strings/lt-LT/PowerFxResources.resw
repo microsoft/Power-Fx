@@ -1,5 +1,64 @@
 ﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
@@ -426,6 +485,17 @@
   <data name="AboutValue_language" xml:space="preserve">
     <value>Kalbos kodas, naudojamas konvertuojant reikšmę.</value>
     
+  </data>
+  <data name="AboutBoolean" xml:space="preserve">
+    <value>Konvertuoja Bulio logikos tekstą į Bulio logikos reikšmę.</value>
+    
+  </data>
+  <data name="BooleanArg1" xml:space="preserve">
+    <value>tekstas</value>
+    
+  </data>
+  <data name="AboutBoolean_text" xml:space="preserve">
+    <value>Teksto reikšmė, kurią reikia konvertuoti į Bulio logikos reikšmę.</value>
   </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Pateikiamas pirmasis netuščias argumentas</value>
@@ -1368,6 +1438,10 @@
     <value>reiškinys</value>
     
   </data>
+  <data name="AboutIsBlankOrError_expression" xml:space="preserve">
+    <value>Reiškinys, kurį reikia patikrinti.</value>
+    
+  </data>
   <data name="AboutIsEmpty" xml:space="preserve">
     <value>Tikrina, ar rinkinys yra tuščias, ir pateikia reikšmę TRUE arba FALSE.</value>
     
@@ -1375,6 +1449,9 @@
   <data name="IsEmptyArg1" xml:space="preserve">
     <value>šaltinis</value>
     
+  </data>
+  <data name="AboutIsEmpty_source" xml:space="preserve">
+    <value>Lentelė, kurią reikia patikrinti.</value>
   </data>
   <data name="AboutShuffle" xml:space="preserve">
     <value>Pateikia įvesties šaltinio lentelės atsitiktine tvarka sumaišytą kopiją.</value>
@@ -2260,6 +2337,35 @@
   </data>
   <data name="AboutChar_column_of_numbers" xml:space="preserve">
     <value>Stulpelis su kodais iš simbolių rinkinio jūsų platformoje.</value>
+  </data>
+  <data name="AboutParseJson" xml:space="preserve">
+    <value>Konvertuoja JSON eilutę į objektą.</value>
+    
+  </data>
+  <data name="ParseJsonArg1" xml:space="preserve">
+    <value>įvestis</value>
+    
+  </data>
+  <data name="AboutParseJson_input" xml:space="preserve">
+    <value>Apdorotina JSON eilutė.</value>
+  </data>
+  <data name="AboutIndex" xml:space="preserve">
+    <value>Pateikia įrašą lentelėje pagal nurodytą rodyklę.</value>
+    
+  </data>
+  <data name="IndexArg1" xml:space="preserve">
+    <value>lentelė</value>
+    
+  </data>
+  <data name="IndexArg2" xml:space="preserve">
+    <value>rodyklė</value>
+    
+  </data>
+  <data name="AboutIndex_table" xml:space="preserve">
+    <value>Lentelė.</value>
+  </data>
+  <data name="AboutIndex_index" xml:space="preserve">
+    <value>Sveikųjų skaičių rodyklė.</value>
   </data>
   <data name="Screen_Name_DisplayName" xml:space="preserve">
     <value>Pavadinimas</value>
@@ -3781,11 +3887,23 @@
     
   </data>
   <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
-    <value>Šis rezultato tipas {0} formulės stulpeliuose nepalaikomas.</value>
+    <value>{0} tipo rezultatas formulės stulpeliuose nepalaikomas.</value>
     
   </data>
   <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
     <value>Tikimasi, kad šios formulės rezultato tipas bus {0}, tačiau faktinis rezultato tipas yra {1}. Formulės stulpelio rezultatų tipo pakeisti negalima.</value>
+    
+  </data>
+  <data name="FormulaColumns_ColumnTypeNotSupported" xml:space="preserve">
+    <value>{0} tipo stulpeliai formulės stulpeliuose nepalaikomi.</value>
+    
+  </data>
+  <data name="FormulaColumns_ColumnFormatNotSupported" xml:space="preserve">
+    <value>{0} tipo stulpeliai, kurių formatas {1}, formulės stulpeliuose nepalaikomi.</value>
+    
+  </data>
+  <data name="FormulaColumns_FormulaTooLong" xml:space="preserve">
+    <value>Formulės negali būti ilgesnės nei 1000 simbolių.</value>
     
   </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
@@ -3802,7 +3920,6 @@
   </data>
   <data name="ErrorResource_ErrBadToken_LongMessage" xml:space="preserve">
     <value>Pavyzdžiui, po skaičiaus nenumatomas simbolis \, kaip antai: 32\. Galima numatyti tarpą (32), jei tai yra tiesiog skaičius 32, arba galima numatyti kitą skaičių (pvz., 323).</value>
-    
   </data>
   <data name="ErrorResource_ErrBadToken_HowToFix_1" xml:space="preserve">
     <value>Pašalinkite arba pakeiskite netikėtus simbolius.</value>
@@ -3818,11 +3935,9 @@
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_LongMessage" xml:space="preserve">
     <value>Pavyzdžiui, po skaičiaus nenumatomas simbolis \, kaip antai: 32\. Galima numatyti tarpą (32), jei tai yra tiesiog skaičius 32, arba galima numatyti kitą skaičių (pvz., 323).</value>
-    
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_HowToFix_1" xml:space="preserve">
     <value>Pašalinkite arba pakeiskite nenumatytą simbolį.</value>
-    
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_Link_1" xml:space="preserve">
     <value>Straipsnis: formulės nuoroda, skirta „Power Apps“</value>
@@ -3834,7 +3949,6 @@
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_LongMessage" xml:space="preserve">
     <value>Kiekvieno komentaro bloko pradžioje turi būti /*, o pabaigoje – */. Jei tinkamai neužbaigsite kiekvieno komentaro bloko, visi kodai, esantys po komentaro, taps komentaro dalimi. Jei komentaras yra tik viena eilutė, galite jį pradėti nuo // ir neidentifikuoti komentaro pabaigos.</value>
-    
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_HowToFix_1" xml:space="preserve">
     <value>Komentaro bloko pabaigoje įtraukite */ arba pakeiskite į eilutės komentarų rinkinį.</value>
@@ -3850,7 +3964,6 @@
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_LongMessage" xml:space="preserve">
     <value>Ši klaida įvyksta, jei, pavyzdžiui, formulėje yra {{Val@ 7}}, o ne {{Val: 7}}. Kai nustatote kintamąjį, sintaksė reikalauja dėti dvitaškį, o ne simbolį @.</value>
-    
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_HowToFix_1" xml:space="preserve">
     <value>Pašalinkite arba pakeiskite netikėtus simbolius numatytais simboliais.</value>
@@ -3866,7 +3979,6 @@
   </data>
   <data name="ErrorResource_ErrInvalidName_LongMessage" xml:space="preserve">
     <value>Ši klaida paprastai įvyksta tada, kai formulė nurodo kažką, ko jau nebėra (pavyzdžiui, valdiklį, kurį panaikinote).</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidName_HowToFix_1" xml:space="preserve">
     <value>Pašalinkite arba pataisykite nuorodą į netinkamą pavadinimą.</value>
@@ -3882,7 +3994,6 @@
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_LongMessage" xml:space="preserve">
     <value>Ši klaida rodoma, kai formulė nurodo komponento veikimo ypatybes su netinkama sintakse. (Pvz., „Component.OnCustomChange“ vietoj „Component.OnCustomChange()“)</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_HowToFix_1" xml:space="preserve">
     <value>Norėdami nurodyti komponento veikimo ypatybę, naudokite tinkamą sintaksę. Pvz., Component.OnCustomChange()</value>
@@ -3898,7 +4009,6 @@
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_LongMessage" xml:space="preserve">
     <value>Parinkties Pirminis operatorius negalite naudoti valdikliui, kuris neturi pirminio valdiklio. Šis operatorius nurodo valdiklį, kuriame yra nurodytas valdiklis ir per kurį pasiekiamos visos šio valdiklio ypatybės.</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_HowToFix_1" xml:space="preserve">
     <value>Pašalinkite operatorių Pirminis.</value>
@@ -3914,7 +4024,6 @@
   </data>
   <data name="ErrorResource_ErrTooManyUps_LongMessage" xml:space="preserve">
     <value>Kiekvienas įdėjimo lygis padidina sudėtingumo lygį, todėl „Power Apps“ palaiko tik iki 63 lygių eilučių aprėpties įdėjimą.</value>
-    
   </data>
   <data name="ErrorResource_ErrTooManyUps_HowToFix_1" xml:space="preserve">
     <value>Perrašykite formulę naudodami mažiau įdėjimo lygių.</value>
@@ -3926,7 +4035,6 @@
   </data>
   <data name="ErrorResource_ErrRuleNestedTooDeeply_LongMessage" xml:space="preserve">
     <value>„Power Apps“ palaiko išraiškų įdėjimą tik iki 50 lygių. Taip giliai įdėtą išraišką sunku suprasti ir palaikyti.</value>
-    
   </data>
   <data name="ErrorResource_ErrRuleNestedTooDeeply_HowToFix_1" xml:space="preserve">
     <value>Perrašykite formulę naudodami mažiau įdėjimo lygių.</value>
@@ -3938,7 +4046,6 @@
   </data>
   <data name="ErrorResource_ErrOperatorExpected_LongMessage" xml:space="preserve">
     <value>Operatoriai sujungia du operandus. Ši klaida įvyksta, jei dvi funkcijos (operandai) sujungiamos nededant jokio operatoriaus tarp jų, pvz., Len("mytext")Len("mytext").</value>
-    
   </data>
   <data name="ErrorResource_ErrOperatorExpected_HowToFix_1" xml:space="preserve">
     <value>Redaguokite savo formulę taip, kad joje tarp operandų būtų operatorius.</value>
@@ -3954,7 +4061,6 @@
   </data>
   <data name="ErrorResource_ErrNumberExpected_LongMessage" xml:space="preserve">
     <value>Ši klaida įvyks, jei naudosite funkciją, reikalaujančią skaičiaus, o jūs pateiksite pvz., vaizdą.</value>
-    
   </data>
   <data name="ErrorResource_ErrNumberExpected_HowToFix_1" xml:space="preserve">
     <value>Redaguokite savo formulę taip, kad šios formulės dalies rezultatas būtų skaičius.</value>
@@ -3970,7 +4076,6 @@
   </data>
   <data name="ErrorResource_ErrBooleanExpected_LongMessage" xml:space="preserve">
     <value>Bulio logikos reikšmė taip pat žinoma kaip „true“ / „false“ reikšmė programose, pvz., „Microsoft Excel“. Ši klaida įvyks, jei naudosite funkciją, reikalaujančią Bulio logikos reikšmės, o jūs pateiksite, pvz., datą.</value>
-    
   </data>
   <data name="ErrorResource_ErrBooleanExpected_HowToFix_1" xml:space="preserve">
     <value>Redaguokite savo formulę taip, kad šios formulės dalies rezultatas būtų Bulio logikos reikšmė.</value>
@@ -3986,7 +4091,6 @@
   </data>
   <data name="ErrorResource_ErrColonExpected_LongMessage" xml:space="preserve">
     <value>Dvitaškis skiria lauko pavadinimą, kartais vadinamą stulpelio pavadinimu, nuo lauko reikšmės įraše (pvz., {Month:"1"}, {Month:"2"} …). Dvitaškis taip pat skiria valandas nuo minučių ir sekundžių (pvz., 3:04).</value>
-    
   </data>
   <data name="ErrorResource_ErrColonExpected_HowToFix_1" xml:space="preserve">
     <value>Redaguokite savo formulę taip, kad joje būtų dvitaškis.</value>
@@ -4002,7 +4106,6 @@
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_LongMessage" xml:space="preserve">
     <value>Veikimo funkcijos keičia programos būseną pakeisdamos reikšmes kitose programos vietose. Navigate, Patch, UpdateContext ir Collect – tai bendrosios veikimo funkcijos. Ypatybės OnSelect, OnVisible ir kitos On... ypatybės yra bendrosios veikimo ypatybės.</value>
-    
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_HowToFix_1" xml:space="preserve">
     <value>Perkelkite veikimo funkciją į veikimo ypatybę.</value>
@@ -4018,7 +4121,6 @@
   </data>
   <data name="ErrorResource_ErrTestPropertyExpected_LongMessage" xml:space="preserve">
     <value>Tikrinimo funkcijos yra tos, kurias galima naudoti vartotojo įvesčiai modeliuoti tikrinant programą. Įprastos tikrinimo funkcijos yra „SetProperty“, „SelectRow“ ir „Assert“. Jas galima naudoti tik tikrinimo atvejuose.</value>
-    
   </data>
   <data name="ErrorResource_ErrTestPropertyExpected_HowToFix_1" xml:space="preserve">
     <value>Naudokite funkciją tikrinimo atvejyje, o ne pačioje programoje.</value>
@@ -4030,7 +4132,6 @@
   </data>
   <data name="ErrorResource_ErrCannotCoerce_SourceType_TargetType_LongMessage" xml:space="preserve">
     <value>„Power Apps“ gali konvertuoti kai kuriuos jūsų formulės duomenų tipus į kitus tipus. Pavyzdžiui, ji gali konvertuoti „1“ (eilutė) į 1 (skaičius), tačiau negali konvertuoti visų duomenų tipų į visus kitus duomenų tipus. Pavyzdžiui, ji negali konvertuoti vaizdo į skaičių.</value>
-    
   </data>
   <data name="ErrorResource_ErrCannotCoerce_SourceType_TargetType_HowToFix_1" xml:space="preserve">
     <value>Redaguokite savo formulę taip, kad atitinkamus duomenis konvertuotumėte į numatytą tipą.</value>
@@ -4042,7 +4143,6 @@
   </data>
   <data name="ErrorResource_ErrStringExpected_LongMessage" xml:space="preserve">
     <value>Ši klaida įvyks, jei naudosite funkciją, reikalaujančią teksto (arba eilutės) argumento, o jūs pateiksite, pvz., datą.</value>
-    
   </data>
   <data name="ErrorResource_ErrStringExpected_HowToFix_1" xml:space="preserve">
     <value>Redaguokite savo formulę taip, kad šios formulės dalies rezultatas būtų tekstas.</value>
@@ -4058,7 +4158,6 @@
   </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_LongMessage" xml:space="preserve">
     <value>Ši klaida įvyks, jei naudosite funkciją, reikalaujančią teksto arba skaičiaus, o jūs pateiksite, pvz., Bulio logikos („true“ / „false“) reikšmę.</value>
-    
   </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_HowToFix_1" xml:space="preserve">
     <value>Redaguokite savo taip formulę taip, kad šios formulės dalies rezultatas būtų tekstas arba skaičius.</value>
@@ -4074,7 +4173,6 @@
   </data>
   <data name="ErrorResource_ErrClosingBracketExpected_LongMessage" xml:space="preserve">
     <value>Dešinysis skliaustas nurodo įrašo pabaigą (pvz., {Month:"1"}, {Month:"2"}…).</value>
-    
   </data>
   <data name="ErrorResource_ErrClosingBracketExpected_HowToFix_1" xml:space="preserve">
     <value>Redaguokite savo formulę taip, kad joje būtų skliaustas.</value>
@@ -4094,7 +4192,6 @@
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_LongMessage" xml:space="preserve">
     <value>Negalime įvertinti formulės, nes lyginamos formulės reikšmės nėra to paties tipo.</value>
-    
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_HowToFix_1" xml:space="preserve">
     <value>Gali prireikti konvertuoti reikšmę, kad ji būtų to paties tipo, pavyzdžiui, konvertuoti datos eilutę (pvz., 12/31/2018) į datos reikšmę.</value>
@@ -4174,7 +4271,6 @@
   </data>
   <data name="ErrorResource_ErrTypeError_LongMessage" xml:space="preserve">
     <value>Duomenys gali neatitikti numatyto tipo (teksto, skaičiaus, datos, lentelės, įrašo).</value>
-    
   </data>
   <data name="ErrorResource_ErrTypeError_HowToFix_1" xml:space="preserve">
     <value>Patikrinkite į formulę įtrauktų reikšmių tipus ir įsitikinkite, kad tipai sutampa.</value>
@@ -4194,7 +4290,6 @@
   </data>
   <data name="ErrorResource_ErrDateExpected_LongMessage" xml:space="preserve">
     <value>Ši klaida įvyks, jei naudosite funkciją, reikalaujančią datos, o jūs pateiksite, pvz., tekstą.</value>
-    
   </data>
   <data name="ErrorResource_ErrDateExpected_HowToFix_1" xml:space="preserve">
     <value>Redaguokite savo formulę taip, kad šios formulės vietos rezultatas būtų data.</value>
@@ -4210,7 +4305,6 @@
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_LongMessage" xml:space="preserve">
     <value>Duomenų šaltinis gali nepajėgti apdoroti formulės ir pateikti ne visą duomenų rinkinį. Jei duomenų rinkinys bus ne visas, jūsų programa gali teikti neteisingus rezultatus arba veikti netinkamai.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_HowToFix_1" xml:space="preserve">
     <value>Jei jūsų duomenų rinkinys viršija 500 įrašų limitą, bet jame yra mažiau nei 2000 įrašų, pabandykite nustatyti limitą iš naujo.</value>
@@ -4238,7 +4332,6 @@
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_LongMessage" xml:space="preserve">
     <value>Duomenų šaltinis gali nepajėgti apdoroti formulės ir pateikti ne visą duomenų rinkinį. Jei duomenų rinkinys bus ne visas, jūsų programa gali teikti neteisingus rezultatus arba veikti netinkamai.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_HowToFix_1" xml:space="preserve">
     <value>Jei jūsų duomenų rinkinys viršija 500 įrašų limitą, bet jame yra mažiau nei 2000 įrašų, pabandykite nustatyti limitą iš naujo.</value>
@@ -4266,7 +4359,6 @@
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_LongMessage" xml:space="preserve">
     <value>Operatoriaus „in“ dešinėje turi būti stulpelio pavadinimas iš teisingo duomenų šaltinio. Duomenų šaltinis gali nepajėgti apdoroti formulės ir pateikti ne visą duomenų rinkinį. Jei duomenų rinkinys bus ne visas, jūsų programa gali teikti neteisingus rezultatus arba veikti netinkamai.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_1" xml:space="preserve">
     <value>Operatoriaus „in“ dešinėje esantį elementą pakeiskite stulpeliu iš teisingo duomenų šaltinio.</value>
@@ -4299,7 +4391,6 @@
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_LongMessage" xml:space="preserve">
     <value> Operatoriaus „in“ dešinėje nėra stulpelio iš teisingo duomenų šaltinio. Duomenų šaltinis gali nepajėgti apdoroti formulės ir pateikti ne visą duomenų rinkinį. Jei duomenų rinkinys bus ne visas, jūsų programa gali teikti neteisingus rezultatus arba veikti netinkamai.
       </value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_1" xml:space="preserve">
     <value>Operatoriaus „in“ dešinėje esantį elementą pakeiskite stulpeliu iš teisingo duomenų šaltinio.</value>
@@ -4380,6 +4471,22 @@
   </data>
   <data name="ErrorResource_ErrInvalidControlReference_Link_1" xml:space="preserve">
     <value>Nuoroda: ConfirmExit drobės programoms</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidStringInterpolation_ShortMessage" xml:space="preserve">
+    <value>Išraiškos, rodomos interpoliuotoje eilutėje, įvertinimas turi būti teksto reikšmė arba suderinamas tipas.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidStringInterpolation_HowToFix_1" xml:space="preserve">
+    <value>Patikrinkite išraiškų tipus interpoliuotoje eilutėje.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrEmptyIsland_ShortMessage" xml:space="preserve">
+    <value>Empty expressions cannot appear inside an interpolated string.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrEmptyIsland_HowToFix_1" xml:space="preserve">
+    <value>Check for empty expressions inside the interpolated string.</value>
     
   </data>
   <data name="ErrorResource_ErrAsNotInContext_ShortMessage" xml:space="preserve">
