@@ -262,7 +262,6 @@ namespace Microsoft.PowerFx.Core.IR
                     scope = GetNewScope();
                 }
 
-
                 for (var i = 0; i < carg; ++i)
                 {
                     var arg = node.Args.Children[i];
