@@ -528,6 +528,20 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: Hour)
             },
             {
+                BuiltinFunctionsCore.Index,
+                StandardErrorHandling<FormulaValue>(
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactSequence(
+                        ExactValueTypeOrBlank<TableValue>,
+                        ExactValueTypeOrBlank<NumberValue>),
+                    checkRuntimeValues: ExactSequence(
+                        DeferRuntimeValueChecking,
+                        StrictPositiveNumberChecker),
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: IndexTable)
+            },
+            {
                 BuiltinFunctionsCore.Index_UO,
                 StandardErrorHandling<FormulaValue>(
                     expandArguments: NoArgExpansion,
@@ -614,6 +628,19 @@ namespace Microsoft.PowerFx.Functions
                     checkRuntimeValues: StrictPositiveNumberChecker,
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
                     targetFunction: Log)
+            },
+            {
+                BuiltinFunctionsCore.LookUp,
+                StandardErrorHandling<FormulaValue>(
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactSequence(
+                        ExactValueTypeOrBlank<TableValue>,
+                        ExactValueTypeOrBlank<LambdaFormulaValue>,
+                        ExactValueTypeOrBlank<LambdaFormulaValue>),
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: LookUp)
             },
             {
                 BuiltinFunctionsCore.Lower,
