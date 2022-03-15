@@ -331,101 +331,97 @@ namespace Microsoft.PowerFx.Functions
         // Max(1,2,3)     
         internal static FormulaValue Max(IRContext irContext, FormulaValue[] args)
         {
-            if (irContext.ResultType == FormulaType.Number)
+            IAggregator agg;
+            if (irContext.ResultType == FormulaType.DateTime)
             {
-                return RunAggregator(new MaxNumberAgg(), irContext, args);
-            }
-            else if (irContext.ResultType == FormulaType.DateTime)
-            {
-                return RunAggregator(new MaxDateTimeAgg(), irContext, args);
+                agg = new MaxDateTimeAgg();
             }
             else if (irContext.ResultType == FormulaType.Date)
             {
-                return RunAggregator(new MaxDateAgg(), irContext, args);
+                agg = new MaxDateAgg();
             }
             else if (irContext.ResultType == FormulaType.Time)
             {
-                return RunAggregator(new MaxTimeAgg(), irContext, args);
+                agg = new MaxTimeAgg();
             }
             else
             {
-                return new BlankValue(irContext);
+                agg = new MaxNumberAgg();
             }
+
+            return RunAggregator(agg, irContext, args);
         }
 
         // Max([1,2,3], Value * Value)     
         public static FormulaValue MaxTable(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args)
         {
-            if (irContext.ResultType == FormulaType.Number)
+            IAggregator agg;
+            if (irContext.ResultType == FormulaType.DateTime)
             {
-                return RunAggregator(new MaxNumberAgg(), runner, symbolContext, irContext, args);
-            }
-            else if (irContext.ResultType == FormulaType.DateTime)
-            {
-                return RunAggregator(new MaxDateTimeAgg(), runner, symbolContext, irContext, args);
+                agg = new MaxDateTimeAgg();
             }
             else if (irContext.ResultType == FormulaType.Date)
             {
-                return RunAggregator(new MaxDateAgg(), runner, symbolContext, irContext, args);
+                agg = new MaxDateAgg();
             }
             else if (irContext.ResultType == FormulaType.Time)
             {
-                return RunAggregator(new MaxTimeAgg(), runner, symbolContext, irContext, args);
+                agg = new MaxTimeAgg();
             }
             else
             {
-                return new BlankValue(irContext);
+                agg = new MaxNumberAgg();
             }
+
+            return RunAggregator(agg, runner, symbolContext, irContext, args);
         }
 
         // Min(1,2,3)     
         internal static FormulaValue Min(IRContext irContext, FormulaValue[] args)
         {
-            if (irContext.ResultType == FormulaType.Number)
+            IAggregator agg;
+            if (irContext.ResultType == FormulaType.DateTime)
             {
-                return RunAggregator(new MinNumberAgg(), irContext, args);
-            }
-            else if (irContext.ResultType == FormulaType.DateTime)
-            {
-                return RunAggregator(new MinDateTimeAgg(), irContext, args);
+                agg = new MinDateTimeAgg();
             }
             else if (irContext.ResultType == FormulaType.Date)
             {
-                return RunAggregator(new MinDateAgg(), irContext, args);
+                agg = new MinDateAgg();
             }
             else if (irContext.ResultType == FormulaType.Time)
             {
-                return RunAggregator(new MinTimeAgg(), irContext, args);
+                agg = new MinTimeAgg();
             }
             else
             {
-                return new BlankValue(irContext);
+                agg = new MinNumberAgg();
             }
+
+            return RunAggregator(agg, irContext, args);
         }
 
         // Min([1,2,3], Value * Value)     
         public static FormulaValue MinTable(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args)
         {
-            if (irContext.ResultType == FormulaType.Number)
+            IAggregator agg;
+            if (irContext.ResultType == FormulaType.DateTime)
             {
-                return RunAggregator(new MinNumberAgg(), runner, symbolContext, irContext, args);
-            }
-            else if (irContext.ResultType == FormulaType.DateTime)
-            {
-                return RunAggregator(new MinDateTimeAgg(), runner, symbolContext, irContext, args);
+                agg = new MinDateTimeAgg();
             }
             else if (irContext.ResultType == FormulaType.Date)
             {
-                return RunAggregator(new MinDateAgg(), runner, symbolContext, irContext, args);
+                agg = new MinDateAgg();
             }
             else if (irContext.ResultType == FormulaType.Time)
             {
-                return RunAggregator(new MinTimeAgg(), runner, symbolContext, irContext, args);
+                agg = new MinTimeAgg();
             }
             else
             {
-                return new BlankValue(irContext);
+                agg = new MinNumberAgg();
             }
+
+            return RunAggregator(agg, runner, symbolContext, irContext, args);
         }
 
         // Average ignores blanks.
