@@ -26,10 +26,10 @@ true
 >>RandBetween(Blank(),0.5)
 0
 
->> CountIf(Sequence(200) RandBetween(Blank(), 1) = 0) > 0
+>> CountIf(Sequence(200), RandBetween(Blank(), 1) = 0) > 0
 true
 
->> CountIf(Sequence(200) RandBetween(Blank(), 1) = 1) > 0
+>> CountIf(Sequence(200), RandBetween(Blank(), 1) = 1) > 0
 true
 
 >> Sum(Sequence(100), With({RandomNumber: RandBetween(1,20)}, If(RandomNumber >=1 && RandomNumber <= 20, 1, 0)))
