@@ -2112,7 +2112,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
         private CallNode GenerateCallNode(StrInterpNode node)
         {
-            // We generate a transient CallNode to the Concatenate function
+            // We generate a transient CallNode (with no arguments) to the Concatenate function
             var func = BuiltinFunctionsCore.Concatenate;
             var ident = new IdentToken(func.Name, node.Token.Span);
             var id = node.Id;
@@ -2124,7 +2124,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 sourceList: node.SourceList,
                 head: new Identifier(ident),
                 headNode: null,
-                new ListNode(ref listNodeId, tok: node.Token, args: node.CloneChildren(ref minChildId, node.GetCompleteSpan()), delimiters: null, sourceList: node.SourceList),
+                new ListNode(ref listNodeId, tok: node.Token, args: new TexlNode[0], delimiters: null, sourceList: node.SourceList),
                 node.StrInterpEnd);
             _compilerGeneratedCallNodes[node.Id] = callNode;
             SetInfo(callNode, new CallInfo(func, callNode));
