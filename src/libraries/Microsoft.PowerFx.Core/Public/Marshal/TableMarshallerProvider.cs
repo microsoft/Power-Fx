@@ -6,6 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.Contracts;
+using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Text.Json;
@@ -50,11 +51,12 @@ namespace Microsoft.PowerFx.Core
 
             var tableType = recordType.ToTable();
 
-            marshaler = new TableMarshaler 
-            { 
-                Type = tableType,
-                _rowMarshaler = tm
-            };
+            var t2 = typeof(TableMarshaller<>).MakeGenericType(et);
+            var tableMarshaller = (TableMarshaller)Activator.CreateInstance(t2);
+
+            tableMarshaller.Type = tableType;
+            tableMarshaller._rowMarshaler = tm;
+            marshaler = tableMarshaller;
             return true;
         }
 
@@ -78,6 +80,7 @@ namespace Microsoft.PowerFx.Core
         }
 
         // Convert a single value into a Record for a SCT,  { value : x }
+        [DebuggerDisplay("SCT(_inner)")]
         internal class SCTMarshaler : ITypeMarshaller
         {
             public FormulaType Type { get; set; }
@@ -94,42 +97,26 @@ namespace Microsoft.PowerFx.Core
             }
         }
 
-        internal class TableMarshaler : ITypeMarshaller
+        internal abstract class TableMarshaller : ITypeMarshaller
         {
             public FormulaType Type { get; set; }
 
             public ITypeMarshaller _rowMarshaler;
 
-            public FormulaValue Marshal(object value)
+            public abstract FormulaValue Marshal(object value);
+        }
+
+        // T is record type of the table. 
+        [DebuggerDisplay("TableMarshal({_rowMarshaler})")]
+        internal class TableMarshaller<T> : TableMarshaller
+        {
+            public override FormulaValue Marshal(object value)
             {
                 var ir = IRContext.NotInSource(Type);
 
-                return new LazyTableValue(ir, (IEnumerable)value, _rowMarshaler);
+                var source = (IEnumerable<T>)value;
+                return new ObjectCollectionTableValue<T>(ir, source, _rowMarshaler);
             }
-        }
-    }
-        
-    internal class LazyTableValue : TableValue
-    {
-        private readonly IEnumerable<DValue<RecordValue>> _rows;
-
-        public override IEnumerable<DValue<RecordValue>> Rows => _rows;
-                
-        private readonly ITypeMarshaller _rowMarshaler;
-
-        internal LazyTableValue(IRContext irContext, IEnumerable source, ITypeMarshaller rowMarshaler) 
-            : base(irContext)
-        {        
-            _rowMarshaler = rowMarshaler;
-
-            var rows = new List<DValue<RecordValue>>();
-            foreach (var item in source)
-            {
-                var i2 = (RecordValue)_rowMarshaler.Marshal(item);
-                rows.Add(DValue<RecordValue>.Of(i2));
-            }
-
-            _rows = rows;
         }
     }
 }

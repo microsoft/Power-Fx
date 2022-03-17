@@ -34,7 +34,7 @@ namespace Microsoft.PowerFx.Core
         { 
             new PrimitiveMarshallerProvider(),
             new TableMarshallerProvider(),
-            new ObjectMarshallerProvider()
+            new ObjectMarshallerProvider() // dangerously broad, include last. 
         };
 
         /// <summary>
@@ -121,6 +121,7 @@ namespace Microsoft.PowerFx.Core
 
         // Wrapper to check for null and return blank. 
         // This lets us avoid every other ITypeMarshaler implementation having to do the same check.
+        [DebuggerDisplay("{_inner}")]
         private class NullCheckerMarshaler : ITypeMarshaller
         {
             private readonly ITypeMarshaller _inner;

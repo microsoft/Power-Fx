@@ -85,6 +85,7 @@ namespace Microsoft.PowerFx.Core
     /// <summary>
     /// Marshal a specific type of object to a record. 
     /// </summary>
+    [DebuggerDisplay("ObjMarshal({Type})")]
     public class ObjectMarshaler : ITypeMarshaller
     {
         // Map fx field name to a function produces the formula value given the dotnet object.

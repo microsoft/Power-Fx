@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using Microsoft.PowerFx.Core.Public.Types;
 using Microsoft.PowerFx.Core.Public.Values;
 
@@ -44,6 +45,7 @@ namespace Microsoft.PowerFx.Core
         }        
     }
 
+    [DebuggerDisplay("ObjMarshal({Type})")]
     public class PrimitiveTypeMarshaler : ITypeMarshaller
     {
         public FormulaType Type { get; }

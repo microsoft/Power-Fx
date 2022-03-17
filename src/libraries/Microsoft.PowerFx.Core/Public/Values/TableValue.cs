@@ -24,6 +24,49 @@ namespace Microsoft.PowerFx.Core.Public.Values
             Contract.Assert(IRContext.ResultType is TableType);
         }
 
+        public virtual int Count()
+        {
+            return Rows.Count();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="index0">0-based index.</param>
+        /// <returns>The record or an errorValue. </returns>
+        public DValue<RecordValue> Index(int index0)
+        {
+            if (TryGetIndex(index0, out var record))
+            {
+                return record;
+            }
+
+            return DValue<RecordValue>.Of(ArgumentOutOfRange(IRContext));
+        }
+
+        // Index() does standard error messaging and then call TryGetIndex().
+        protected virtual bool TryGetIndex(int index0, out DValue<RecordValue> record)
+        { 
+            if (index0 < 0)
+            {
+                record = null;
+                return false;
+            }
+
+            record = Rows.ElementAtOrDefault(index0);
+            return record != null;
+        }
+                
+        private static ErrorValue ArgumentOutOfRange(IRContext irContext)
+        {
+            return new ErrorValue(irContext, new ExpressionError()
+            {
+                Message = "Argument out of range",
+                Span = irContext.SourceContext,
+                Kind = ErrorKind.Numeric
+            });
+        }
+
         public override object ToObject()
         {
             if (IsColumn)

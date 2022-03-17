@@ -125,7 +125,7 @@ namespace Microsoft.PowerFx.Functions
             var arg0 = args[0];
 
             // Streaming 
-            var count = arg0.Rows.Count();
+            var count = arg0.Count();
             return new NumberValue(irContext, count);
         }
 
@@ -202,12 +202,7 @@ namespace Microsoft.PowerFx.Functions
             var arg1 = (NumberValue)args[1];
             var rowIndex = (int)arg1.Value;
 
-            if (rowIndex < 1 || rowIndex > arg0.Rows.Count())
-            {
-                return CommonErrors.ArgumentOutOfRange(irContext);
-            }
-
-            return arg0.Rows.ElementAtOrDefault(rowIndex - 1).ToFormulaValue();
+            return arg0.Index(rowIndex - 1).ToFormulaValue();
         }
 
         public static FormulaValue SortTable(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args)

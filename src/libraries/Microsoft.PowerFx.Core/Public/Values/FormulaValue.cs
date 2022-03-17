@@ -321,8 +321,13 @@ namespace Microsoft.PowerFx.Core.Public.Values
             var value = cache.Marshal(rows);
             return (TableValue)value;
         }
-                
-        // Already having RecordValues  (as oppossed to a unknown T) lets us avoid type marshalling.
+
+        /// <summary>
+        /// Construct a table from records. Assumed that Records must be the same type. 
+        /// Already having RecordValues (as oppossed to a unknown T or errors) lets us avoid type marshalling.
+        /// </summary>
+        /// <param name="values"></param>
+        /// <returns></returns>
         public static TableValue NewTable(params RecordValue[] values)
         {
             return NewTable((IEnumerable<RecordValue>)values);
@@ -338,7 +343,7 @@ namespace Microsoft.PowerFx.Core.Public.Values
                     ((RecordType)first.Type).ToTable();
             }
 
-            return new InMemoryTableValue(IRContext.NotInSource(tableType), records.Select(r => DValue<RecordValue>.Of(r)));            
+            return new RecordsOnlyTableValue(IRContext.NotInSource(tableType), records);
         }
 
         public static TableValue NewSingleColumnTable(params FormulaValue[] values)
@@ -353,7 +358,7 @@ namespace Microsoft.PowerFx.Core.Public.Values
         }
 
         // Convert a FormulaValue into a Record for a single column table if needed. 
-        private static RecordValue GuaranteeRecord(FormulaValue rawVal)
+        internal static RecordValue GuaranteeRecord(FormulaValue rawVal)
         {
             if (rawVal is RecordValue record)
             {

@@ -21,7 +21,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [Theory]
         [InlineData(true, "true")]
         [InlineData(false, "false")]
-        public void Bool(bool val, string expectedJson)
+        public void Bool(bool val, string expectedStr)
         {
             var formulaValue = FormulaValue.New(val);
 
@@ -30,14 +30,14 @@ namespace Microsoft.PowerFx.Core.Tests
 
             Assert.Equal(FormulaType.Boolean, formulaValue.Type);
 
-            var resultStr = formulaValue.ToStr();
-            Assert.Equal(expectedJson, resultStr);
+            var resultStr = formulaValue.Dump();
+            Assert.Equal(expectedStr, resultStr);
         }
 
         [Theory]
         [InlineData(5, "5")]
         [InlineData(-5, "-5")]
-        public void Number(double val, string expectedJson)
+        public void Number(double val, string expectedStr)
         {
             var formulaValue = FormulaValue.New(val);
 
@@ -46,13 +46,13 @@ namespace Microsoft.PowerFx.Core.Tests
 
             Assert.Equal(FormulaType.Number, formulaValue.Type);
 
-            var resultStr = formulaValue.ToStr();
-            Assert.Equal(expectedJson, resultStr);
+            var resultStr = formulaValue.Dump();
+            Assert.Equal(expectedStr, resultStr);
 
             // Nullable overloads
             double? val2 = val;
             var formulaValue2 = FormulaValue.New((double?)val); // nullable overload
-            Assert.Equal(expectedJson, formulaValue2.ToStr());
+            Assert.Equal(expectedStr, formulaValue2.Dump());
            
             var formulaValue3 = FormulaValue.New((double?)null);
             Assert.IsType<NumberType>(formulaValue3.Type);
@@ -61,7 +61,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
         [Theory]
         [InlineData("abc", "\"abc\"")]
-        public void String(string val, string expectedJson)
+        public void String(string val, string expectedStr)
         {
             var formulaValue = FormulaValue.New(val);
 
@@ -70,8 +70,8 @@ namespace Microsoft.PowerFx.Core.Tests
 
             Assert.Equal(FormulaType.String, formulaValue.Type);
 
-            var resultStr = formulaValue.ToStr();
-            Assert.Equal(expectedJson, resultStr);
+            var resultStr = formulaValue.Dump();
+            Assert.Equal(expectedStr, resultStr);
         }
 
         [Fact]
@@ -93,7 +93,7 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.Equal(15.0, ((NumberValue)numField).Value);
 
             // Get json runtime representation
-            var resultStr = r.ToStr();
+            var resultStr = r.Dump();
             Assert.Equal("{Num:15,Str:\"hello\"}", resultStr);
         }
 
@@ -174,31 +174,56 @@ namespace Microsoft.PowerFx.Core.Tests
                 new TestRow { a = 10, str = "alpha" },
                 new TestRow { a = 15, str = "beta" });
 
+            var field1 = ((StringValue)((RecordValue)val.Index(1).Value).GetField("str")).Value;
+            Assert.Equal("beta", field1);
+
             dynamic d = val.ToObject();
             Assert.Equal(15.0, d[1].a);
 
             // Verify runtime json
-            var resultStr = val.ToStr();
+            var resultStr = val.Dump();
 
             Assert.Equal("Table({a:10,str:\"alpha\"},{a:15,str:\"beta\"})", resultStr);
         }
-
+                
         [Fact]
         public void TableFromRecords()
         {
             RecordValue r1 = FormulaValue.NewRecord(new TestRow { a = 10, str = "alpha" });
             RecordValue r2 = FormulaValue.NewRecord(new TestRow { a = 15, str = "beta" });
             TableValue val = FormulaValue.NewTable(r1, r2);
+
+            var result1 = ((RecordValue)val.Index(1).Value).GetField("a").ToObject();
+            Assert.Equal(15.0, result1);
                         
             dynamic d = val.ToObject();
             Assert.Equal(10.0, d[0].a);
 
             // Verify runtime json
-            var resultStr = val.ToStr();
+            var resultStr = val.Dump();
             Assert.Equal("Table({a:10,str:\"alpha\"},{a:15,str:\"beta\"})", resultStr);
 
-            TableValue val2 = NewTableHelper(r1, r2);
-            Assert.Equal(resultStr, val2.ToStr());
+            TableValue val2 = NewTableT(r1, r2);
+            Assert.Equal(resultStr, val2.Dump());
+        }
+
+        // Heterogenous table.
+        [Fact]
+        public void TableFromMixedRecords()
+        {
+            var cache = new TypeMarshallerCache();
+            RecordValue r1 = FormulaValue.NewRecord(new { a = 10, b = 20, c = 30 }, cache);
+            RecordValue r2 = FormulaValue.NewRecord(new { a = 11,         c = 31 }, cache);
+            TableValue val = FormulaValue.NewTable(r1, r2);
+
+            // Users first type 
+
+            var result1 = ((RecordValue)val.Index(1).Value).GetField("a").ToObject();
+            Assert.Equal(11.0, result1);
+
+            var result2 = ((RecordValue)val.Index(1).Value).GetField("b");
+            Assert.IsType<BlankValue>(result2);
+            Assert.IsType<NumberType>(result2.Type);        
         }
 
         [Fact]
@@ -210,12 +235,12 @@ namespace Microsoft.PowerFx.Core.Tests
 
             Assert.Empty(val.Rows);
 
-            var resultStr = val.ToStr();
+            var resultStr = val.Dump();
             Assert.Equal("Table()", resultStr);
         }
 
         // Helper to bypass function overloading and invoke the generic overload. 
-        private static TableValue NewTableHelper<T>(params T[] rows)
+        private static TableValue NewTableT<T>(params T[] rows)
         {
             var cache = new TypeMarshallerCache();
             return FormulaValue.NewTable<T>(cache, rows);
@@ -233,12 +258,12 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.Equal(20.0, d[1]); // SCT returned as arrays
 
             // Verify runtime resultStr
-            var resultStr = val.ToStr();
+            var resultStr = val.Dump();
 
             Assert.Equal("[10,20]", resultStr);
 
-            TableValue val2 = NewTableHelper(r1, r2);
-            Assert.Equal(resultStr, val2.ToStr());
+            TableValue val2 = NewTableT(r1, r2);
+            Assert.Equal(resultStr, val2.Dump());
         }
 
         [Fact]
@@ -268,7 +293,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
             Assert.Equal((ICollection)obj, new[] { 1.0, 2.0, 3.0 });
 
-            var resultStr = value.ToStr();
+            var resultStr = value.Dump();
             Assert.Equal("[1,2,3]", resultStr);
         }
 
@@ -290,9 +315,9 @@ namespace Microsoft.PowerFx.Core.Tests
         }
     }
 
-    public static class Ext
+    public static class FormulaValueExtensions
     {
-        public static string ToStr(this FormulaValue value)
+        public static string Dump(this FormulaValue value)
         {
             return TestRunner.TestToString(value);
         }

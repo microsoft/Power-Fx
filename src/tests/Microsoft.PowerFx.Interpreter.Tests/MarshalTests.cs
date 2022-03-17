@@ -2,6 +2,8 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Microsoft.PowerFx.Core;
@@ -473,6 +475,95 @@ namespace Microsoft.PowerFx.Tests
             cache.Marshallers.RemoveAll(mp => mp is PrimitiveMarshallerProvider);
 
             Assert.Throws<InvalidOperationException>(() => cache.Marshal(5));
+        }
+
+        private class MyTable : IReadOnlyList<TestObj>
+        {
+            public TestObj[] _values;
+
+            public TestObj this[int index]
+            {
+                get
+                {
+                    var x = _values[index];
+                    x._counter2++; // Create a side-effect for the test. 
+                    return x;
+                }
+            }
+
+            public int Count => _values.Length;
+
+            // Lazy access - shouldn't ever call the enumerator.
+            public IEnumerator<TestObj> GetEnumerator() => throw new NotImplementedException();
+            
+            IEnumerator IEnumerable.GetEnumerator() => throw new NotImplementedException();            
+        }
+
+        // Verify it's lazy and enumerator is never called. 
+        [Fact]
+        public void TableIndex()
+        {
+            var cache = new TypeMarshallerCache();
+            
+            // _counter bumped for each field fetch. 
+            // _counter2 bumped for each index fetch. 
+            var values = new TestObj[]
+            {
+                new TestObj { _counter = 10 },
+                new TestObj { _counter = 20 }
+            };
+            var myTable = new MyTable { _values = values };
+
+            var fxTable = (TableValue)cache.Marshal(myTable);
+
+            var result1 = fxTable.Index(1);
+            Assert.Equal(10, values[0]._counter); // no field fetch
+            Assert.Equal(20, values[1]._counter);
+            Assert.Equal(0, values[0]._counter2);
+            Assert.Equal(1, values[1]._counter2); // only fetch on requested index. 
+
+            var engine = new RecalcEngine();
+            engine.UpdateVariable("x", fxTable);
+
+            var result2 = engine.Eval("Index(x, 2).Field1").ToObject();
+            Assert.Equal(10, values[0]._counter); // unchanged.
+            Assert.Equal(21, values[1]._counter);
+            Assert.Equal(21.0, result2);
+
+            Assert.Equal(0, values[0]._counter2);
+            Assert.Equal(2, values[1]._counter2); // index fetch again
+        }
+
+        // IEnumerable only. 
+        private class MyEnumeratorOnlyTable
+        {
+            public TestObj[] _data = new TestObj[]
+            {
+                new TestObj { _counter = 10 },
+                new TestObj { _counter = 20 }
+            };
+
+            public IEnumerable<TestObj> GetTable()
+            {
+                // use yield to ensure we only impl IEnum, and not other interfaces like Array.
+                foreach (var item in _data)
+                {
+                    yield return item;
+                }
+            }
+        }
+
+        [Fact]
+        public void TableEnumeratorOnly()
+        {
+            var cache = new TypeMarshallerCache();
+            var myTable = new MyEnumeratorOnlyTable();
+
+            var fxTable = (TableValue)cache.Marshal(myTable.GetTable());
+
+            // Table doesn't have indexer, so index is a linear scan. 
+            var result1 = (RecordValue)fxTable.Index(1).Value;
+            Assert.Equal(21.0, result1.GetField("Field1").ToObject());
         }
     }
 }
