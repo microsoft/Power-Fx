@@ -113,14 +113,17 @@ namespace Microsoft.PowerFx.Core.Tests
             typeof(DateTime),
             typeof(System.Text.RegularExpressions.Regex),
             typeof(System.Numerics.BigInteger),
-
-            // Readonly collections 
-            typeof(IReadOnlyDictionary<,>)
         };
 
         // If the instance is readonly, is the type itself immutable ?
         private static bool IsTypeImmutable(Type t)
         {
+            if (t.IsArray)
+            {
+                // Arrays are definitely not safe - their elements can be mutated.
+                return false;
+            }
+
             if (t.IsPrimitive)
             {
                 return true;
@@ -132,9 +135,17 @@ namespace Microsoft.PowerFx.Core.Tests
                 return true;
             }
 
+            // Collection classes should be a IReadOnly<T>. Verify their T is also safe.
             if (t.IsGenericType)
             {
-                t = t.GetGenericTypeDefinition();
+                var genericDef = t.GetGenericTypeDefinition();
+                if (genericDef == typeof(IReadOnlyDictionary<,>))
+                {
+                    // For a Dict<key,value>, need to make sure the values are also safe. 
+                    var valueArg = t.GetGenericArguments()[1];
+                    var isValueArgSafe = IsTypeImmutable(valueArg);
+                    return isValueArgSafe;
+                }
             }
 
             if (_knownImmutableTypes.Contains(t))
