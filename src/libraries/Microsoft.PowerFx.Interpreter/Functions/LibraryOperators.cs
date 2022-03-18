@@ -20,7 +20,7 @@ namespace Microsoft.PowerFx.Functions
             returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
             targetFunction: NumericAdd);
 
-        public static FunctionPtr OperatorBinaryMul = StandardErrorHandling<NumberValue>(
+        public static readonly FunctionPtr OperatorBinaryMul = StandardErrorHandling<NumberValue>(
             expandArguments: NoArgExpansion,
             replaceBlankValues: ReplaceBlankWithZero,
             checkRuntimeTypes: ExactValueType<NumberValue>,
@@ -28,7 +28,7 @@ namespace Microsoft.PowerFx.Functions
             returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
             targetFunction: NumericMul);
 
-        public static FunctionPtr OperatorBinaryDiv = StandardErrorHandling<NumberValue>(
+        public static readonly FunctionPtr OperatorBinaryDiv = StandardErrorHandling<NumberValue>(
             expandArguments: NoArgExpansion,
             replaceBlankValues: ReplaceBlankWithZero,
             checkRuntimeTypes: ExactValueType<NumberValue>,
@@ -36,7 +36,7 @@ namespace Microsoft.PowerFx.Functions
             returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
             targetFunction: NumericDiv);
 
-        public static FunctionPtr OperatorBinaryGt = StandardErrorHandling<NumberValue>(
+        public static readonly FunctionPtr OperatorBinaryGt = StandardErrorHandling<NumberValue>(
             expandArguments: NoArgExpansion,
             replaceBlankValues: ReplaceBlankWithZero,
             checkRuntimeTypes: ExactValueType<NumberValue>,
@@ -44,7 +44,7 @@ namespace Microsoft.PowerFx.Functions
             returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
             targetFunction: NumericGt);
 
-        public static FunctionPtr OperatorBinaryGeq = StandardErrorHandling<NumberValue>(
+        public static readonly FunctionPtr OperatorBinaryGeq = StandardErrorHandling<NumberValue>(
             expandArguments: NoArgExpansion,
             replaceBlankValues: ReplaceBlankWithZero,
             checkRuntimeTypes: ExactValueType<NumberValue>,
@@ -52,7 +52,7 @@ namespace Microsoft.PowerFx.Functions
             returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
             targetFunction: NumericGeq);
 
-        public static FunctionPtr OperatorBinaryLt = StandardErrorHandling<NumberValue>(
+        public static readonly FunctionPtr OperatorBinaryLt = StandardErrorHandling<NumberValue>(
             expandArguments: NoArgExpansion,
             replaceBlankValues: ReplaceBlankWithZero,
             checkRuntimeTypes: ExactValueType<NumberValue>,
@@ -60,7 +60,7 @@ namespace Microsoft.PowerFx.Functions
             returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
             targetFunction: NumericLt);
 
-        public static FunctionPtr OperatorBinaryLeq = StandardErrorHandling<NumberValue>(
+        public static readonly FunctionPtr OperatorBinaryLeq = StandardErrorHandling<NumberValue>(
             expandArguments: NoArgExpansion,
             replaceBlankValues: ReplaceBlankWithZero,
             checkRuntimeTypes: ExactValueType<NumberValue>,
@@ -68,7 +68,7 @@ namespace Microsoft.PowerFx.Functions
             returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
             targetFunction: NumericLeq);
 
-        public static FunctionPtr OperatorBinaryEq = StandardErrorHandling<FormulaValue>(
+        public static readonly FunctionPtr OperatorBinaryEq = StandardErrorHandling<FormulaValue>(
             expandArguments: NoArgExpansion,
             replaceBlankValues: DoNotReplaceBlank,
             checkRuntimeTypes: DeferRuntimeTypeChecking,
@@ -76,7 +76,7 @@ namespace Microsoft.PowerFx.Functions
             returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
             targetFunction: AreEqual);
 
-        public static FunctionPtr OperatorBinaryNeq = StandardErrorHandling<FormulaValue>(
+        public static readonly FunctionPtr OperatorBinaryNeq = StandardErrorHandling<FormulaValue>(
             expandArguments: NoArgExpansion,
             replaceBlankValues: DoNotReplaceBlank,
             checkRuntimeTypes: DeferRuntimeTypeChecking,
@@ -84,7 +84,7 @@ namespace Microsoft.PowerFx.Functions
             returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
             targetFunction: NotEqual);
 
-        public static FunctionPtr OperatorTextIn = StandardErrorHandling(
+        public static readonly FunctionPtr OperatorTextIn = StandardErrorHandling(
             expandArguments: NoArgExpansion,
             replaceBlankValues: DoNotReplaceBlank,
             checkRuntimeTypes: DeferRuntimeTypeChecking,
@@ -92,7 +92,7 @@ namespace Microsoft.PowerFx.Functions
             returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
             targetFunction: StringInOperator(false));
 
-        public static FunctionPtr OperatorTextInExact = StandardErrorHandling(
+        public static readonly FunctionPtr OperatorTextInExact = StandardErrorHandling(
             expandArguments: NoArgExpansion,
             replaceBlankValues: DoNotReplaceBlank,
             checkRuntimeTypes: DeferRuntimeTypeChecking,
@@ -100,7 +100,7 @@ namespace Microsoft.PowerFx.Functions
             returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
             targetFunction: StringInOperator(true));
 
-        public static FunctionPtr OperatorScalarTableIn = StandardErrorHandling(
+        public static readonly FunctionPtr OperatorScalarTableIn = StandardErrorHandling(
             expandArguments: NoArgExpansion,
             replaceBlankValues: DoNotReplaceBlank,
             checkRuntimeTypes: DeferRuntimeTypeChecking,
@@ -108,7 +108,7 @@ namespace Microsoft.PowerFx.Functions
             returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
             targetFunction: InScalarTableOperator(false));
 
-        public static FunctionPtr OperatorScalarTableInExact = StandardErrorHandling(
+        public static readonly FunctionPtr OperatorScalarTableInExact = StandardErrorHandling(
             expandArguments: NoArgExpansion,
             replaceBlankValues: DoNotReplaceBlank,
             checkRuntimeTypes: DeferRuntimeTypeChecking,
@@ -116,7 +116,7 @@ namespace Microsoft.PowerFx.Functions
             returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
             targetFunction: InScalarTableOperator(true));
 
-        public static FunctionPtr OperatorAddDateAndTime = StandardErrorHandling<FormulaValue>(
+        public static readonly FunctionPtr OperatorAddDateAndTime = StandardErrorHandling<FormulaValue>(
             expandArguments: NoArgExpansion,
             replaceBlankValues: DoNotReplaceBlank,
             checkRuntimeTypes: ExactSequence(
@@ -126,7 +126,7 @@ namespace Microsoft.PowerFx.Functions
             returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
             targetFunction: AddDateAndTime);
 
-        public static FunctionPtr OperatorAddDateAndDay = StandardErrorHandling<FormulaValue>(
+        public static readonly FunctionPtr OperatorAddDateAndDay = StandardErrorHandling<FormulaValue>(
             expandArguments: NoArgExpansion,
             replaceBlankValues: DoNotReplaceBlank,
             checkRuntimeTypes: ExactSequence(
@@ -136,7 +136,7 @@ namespace Microsoft.PowerFx.Functions
             returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
             targetFunction: AddDateAndDay);
 
-        public static FunctionPtr OperatorAddDateTimeAndDay = StandardErrorHandling<FormulaValue>(
+        public static readonly FunctionPtr OperatorAddDateTimeAndDay = StandardErrorHandling<FormulaValue>(
             expandArguments: NoArgExpansion,
             replaceBlankValues: DoNotReplaceBlank,
             checkRuntimeTypes: ExactSequence(
@@ -146,7 +146,7 @@ namespace Microsoft.PowerFx.Functions
             returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
             targetFunction: AddDateTimeAndDay);
 
-        public static FunctionPtr OperatorDateDifference = StandardErrorHandling<FormulaValue>(
+        public static readonly FunctionPtr OperatorDateDifference = StandardErrorHandling<FormulaValue>(
             expandArguments: NoArgExpansion,
             replaceBlankValues: DoNotReplaceBlank,
             checkRuntimeTypes: ExactSequence(
@@ -156,7 +156,7 @@ namespace Microsoft.PowerFx.Functions
             returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
             targetFunction: DateDifference);
 
-        public static FunctionPtr OperatorTimeDifference = StandardErrorHandling<FormulaValue>(
+        public static readonly FunctionPtr OperatorTimeDifference = StandardErrorHandling<FormulaValue>(
             expandArguments: NoArgExpansion,
             replaceBlankValues: DoNotReplaceBlank,
             checkRuntimeTypes: ExactSequence(
@@ -166,7 +166,7 @@ namespace Microsoft.PowerFx.Functions
             returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
             targetFunction: TimeDifference);
 
-        public static FunctionPtr OperatorLtDateTime = StandardErrorHandling<FormulaValue>(
+        public static readonly FunctionPtr OperatorLtDateTime = StandardErrorHandling<FormulaValue>(
             expandArguments: NoArgExpansion,
             replaceBlankValues: ReplaceBlankWith(
                 new DateTimeValue(IRContext.NotInSource(FormulaType.DateTime), _epoch),
@@ -178,7 +178,7 @@ namespace Microsoft.PowerFx.Functions
             returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
             targetFunction: LtDateTime);
 
-        public static FunctionPtr OperatorLeqDateTime = StandardErrorHandling<FormulaValue>(
+        public static readonly FunctionPtr OperatorLeqDateTime = StandardErrorHandling<FormulaValue>(
             expandArguments: NoArgExpansion,
             replaceBlankValues: ReplaceBlankWith(
                 new DateTimeValue(IRContext.NotInSource(FormulaType.DateTime), _epoch),
@@ -190,7 +190,7 @@ namespace Microsoft.PowerFx.Functions
             returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
             targetFunction: LeqDateTime);
 
-        public static FunctionPtr OperatorGtDateTime = StandardErrorHandling<FormulaValue>(
+        public static readonly FunctionPtr OperatorGtDateTime = StandardErrorHandling<FormulaValue>(
             expandArguments: NoArgExpansion,
             replaceBlankValues: ReplaceBlankWith(
                 new DateTimeValue(IRContext.NotInSource(FormulaType.DateTime), _epoch),
@@ -202,7 +202,7 @@ namespace Microsoft.PowerFx.Functions
             returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
             targetFunction: GtDateTime);
 
-        public static FunctionPtr OperatorGeqDateTime = StandardErrorHandling<FormulaValue>(
+        public static readonly FunctionPtr OperatorGeqDateTime = StandardErrorHandling<FormulaValue>(
             expandArguments: NoArgExpansion,
             replaceBlankValues: ReplaceBlankWith(
                 new DateTimeValue(IRContext.NotInSource(FormulaType.DateTime), _epoch),
@@ -214,7 +214,7 @@ namespace Microsoft.PowerFx.Functions
             returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
             targetFunction: GeqDateTime);
 
-        public static FunctionPtr OperatorLtDate = StandardErrorHandling<FormulaValue>(
+        public static readonly FunctionPtr OperatorLtDate = StandardErrorHandling<FormulaValue>(
             expandArguments: NoArgExpansion,
             replaceBlankValues: ReplaceBlankWith(
                 new DateValue(IRContext.NotInSource(FormulaType.Date), _epoch),
@@ -226,7 +226,7 @@ namespace Microsoft.PowerFx.Functions
             returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
             targetFunction: LtDate);
 
-        public static FunctionPtr OperatorLeqDate = StandardErrorHandling<FormulaValue>(
+        public static readonly FunctionPtr OperatorLeqDate = StandardErrorHandling<FormulaValue>(
             expandArguments: NoArgExpansion,
             replaceBlankValues: ReplaceBlankWith(
                 new DateValue(IRContext.NotInSource(FormulaType.Date), _epoch),
@@ -238,7 +238,7 @@ namespace Microsoft.PowerFx.Functions
             returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
             targetFunction: LeqDate);
 
-        public static FunctionPtr OperatorGtDate = StandardErrorHandling<FormulaValue>(
+        public static readonly FunctionPtr OperatorGtDate = StandardErrorHandling<FormulaValue>(
             expandArguments: NoArgExpansion,
             replaceBlankValues: ReplaceBlankWith(
                 new DateValue(IRContext.NotInSource(FormulaType.Date), _epoch),
@@ -250,7 +250,7 @@ namespace Microsoft.PowerFx.Functions
             returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
             targetFunction: GtDate);
 
-        public static FunctionPtr OperatorGeqDate = StandardErrorHandling<FormulaValue>(
+        public static readonly FunctionPtr OperatorGeqDate = StandardErrorHandling<FormulaValue>(
             expandArguments: NoArgExpansion,
             replaceBlankValues: ReplaceBlankWith(
                 new DateValue(IRContext.NotInSource(FormulaType.Date), _epoch),
@@ -262,7 +262,7 @@ namespace Microsoft.PowerFx.Functions
             returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
             targetFunction: GeqDate);
 
-        public static FunctionPtr OperatorLtTime = StandardErrorHandling<FormulaValue>(
+        public static readonly FunctionPtr OperatorLtTime = StandardErrorHandling<FormulaValue>(
             expandArguments: NoArgExpansion,
             replaceBlankValues: ReplaceBlankWith(
                 new TimeValue(IRContext.NotInSource(FormulaType.Time), TimeSpan.Zero),
@@ -274,7 +274,7 @@ namespace Microsoft.PowerFx.Functions
             returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
             targetFunction: LtTime);
 
-        public static FunctionPtr OperatorLeqTime = StandardErrorHandling<FormulaValue>(
+        public static readonly FunctionPtr OperatorLeqTime = StandardErrorHandling<FormulaValue>(
             expandArguments: NoArgExpansion,
             replaceBlankValues: ReplaceBlankWith(
                 new TimeValue(IRContext.NotInSource(FormulaType.Time), TimeSpan.Zero),
@@ -286,7 +286,7 @@ namespace Microsoft.PowerFx.Functions
             returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
             targetFunction: LeqTime);
 
-        public static FunctionPtr OperatorGtTime = StandardErrorHandling<FormulaValue>(
+        public static readonly FunctionPtr OperatorGtTime = StandardErrorHandling<FormulaValue>(
             expandArguments: NoArgExpansion,
             replaceBlankValues: ReplaceBlankWith(
                 new TimeValue(IRContext.NotInSource(FormulaType.Time), TimeSpan.Zero),
@@ -298,7 +298,7 @@ namespace Microsoft.PowerFx.Functions
             returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
             targetFunction: GtTime);
 
-        public static FunctionPtr OperatorGeqTime = StandardErrorHandling<FormulaValue>(
+        public static readonly FunctionPtr OperatorGeqTime = StandardErrorHandling<FormulaValue>(
             expandArguments: NoArgExpansion,
             replaceBlankValues: ReplaceBlankWith(
                 new TimeValue(IRContext.NotInSource(FormulaType.Time), TimeSpan.Zero),

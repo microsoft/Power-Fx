@@ -4,7 +4,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Linq;
 using System.Numerics;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
@@ -27,8 +26,8 @@ using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Core.Functions
-{    
-    [ImmutableObject(true)]
+{
+    [ThreadSafeImmutable]
     internal abstract class TexlFunction : IFunction
     {
         // A default "no-op" error container that does not post document errors.

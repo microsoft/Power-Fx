@@ -19,10 +19,10 @@ namespace Microsoft.PowerFx.Functions
     {
         public delegate FormulaValue FunctionPtr(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args);
 
-        public static IEnumerable<TexlFunction> FunctionList => _funcsByName.Keys;
+        public static IEnumerable<TexlFunction> FunctionList => FuncsByName.Keys;
 
         // Some TexlFunctions are overloaded
-        private static readonly Dictionary<TexlFunction, FunctionPtr> _funcsByName = new Dictionary<TexlFunction, FunctionPtr>
+        public static IReadOnlyDictionary<TexlFunction, FunctionPtr> FuncsByName { get; } = new Dictionary<TexlFunction, FunctionPtr>
         {
             {
                 BuiltinFunctionsCore.Abs,
@@ -1132,8 +1132,6 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: Year)
             }
         };
-
-        public static IReadOnlyDictionary<TexlFunction, FunctionPtr> FuncsByName => _funcsByName;
 
         public static IEnumerable<DValue<RecordValue>> StandardTableNodeRecords(IRContext irContext, FormulaValue[] args)
         {
