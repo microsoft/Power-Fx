@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
@@ -14,6 +15,7 @@ namespace Microsoft.PowerFx.Core.Public.Types
     /// Formula Types are a class hiearchy.
     /// </summary>
     [DebuggerDisplay("{_type}")]
+    [ImmutableObject(true)]
     public abstract class FormulaType
     {
         // protected isn't enough to let derived classes access this.

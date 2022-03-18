@@ -12,7 +12,7 @@ namespace Microsoft.PowerFx.Functions
     internal static partial class Library
     {
         #region Operator Standard Error Handling Wrappers
-        public static FunctionPtr OperatorBinaryAdd = StandardErrorHandling<NumberValue>(
+        public static readonly FunctionPtr OperatorBinaryAdd = StandardErrorHandling<NumberValue>(
             expandArguments: NoArgExpansion,
             replaceBlankValues: ReplaceBlankWithZero,
             checkRuntimeTypes: ExactValueType<NumberValue>,

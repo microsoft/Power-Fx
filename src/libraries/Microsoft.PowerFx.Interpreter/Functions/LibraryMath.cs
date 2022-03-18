@@ -16,6 +16,7 @@ namespace Microsoft.PowerFx.Functions
     {
         private static readonly object _randomizerLock = new object();
 
+        // TODO - some way to mark this field as "reviewed and safe"? (protected under lock)
         private static Random _random;
 
         // Support for aggregators. Helpers to ensure that Scalar and Tabular behave the same.
