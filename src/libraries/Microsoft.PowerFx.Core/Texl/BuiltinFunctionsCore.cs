@@ -28,6 +28,8 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction AcotT = _library.Append(new AcotTableFunction());
         public static readonly TexlFunction AddColumns = _library.Append(new AddColumnsFunction());
         public static readonly TexlFunction And = _library.Append(new VariadicLogicalFunction(isAnd: true));
+        public static readonly TexlFunction Asin = _library.Append(new AsinFunction());
+        public static readonly TexlFunction AsinT = _library.Append(new AsinTableFunction());
         public static readonly TexlFunction AsType = _library.Append(new AsTypeFunction());
         public static readonly TexlFunction Atan = _library.Append(new AtanFunction());
         public static readonly TexlFunction AtanT = _library.Append(new AtanTableFunction());
@@ -185,6 +187,7 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction Year = _library.Append(new YearFunction());
 
         // NOTE: These functions should not be part of the core library until they are implemented in all runtimes
+        public static readonly TexlFunction Index = new IndexFunction();
         public static readonly TexlFunction Index_UO = new IndexFunction_UO();
         public static readonly TexlFunction ParseJson = new ParseJsonFunction();
         public static readonly TexlFunction Table_UO = new TableFunction_UO();

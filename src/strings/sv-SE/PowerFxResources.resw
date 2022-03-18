@@ -1,5 +1,64 @@
 ﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
@@ -426,6 +485,17 @@
   <data name="AboutValue_language" xml:space="preserve">
     <value>Språkkoden som ska användas vid konvertering av värdet.</value>
     
+  </data>
+  <data name="AboutBoolean" xml:space="preserve">
+    <value>Konverterar en "text" som representerar en boolesk till ett booleskt värde.</value>
+    
+  </data>
+  <data name="BooleanArg1" xml:space="preserve">
+    <value>text</value>
+    
+  </data>
+  <data name="AboutBoolean_text" xml:space="preserve">
+    <value>Textvärdet som ska konverteras till ett booleskt värde.</value>
   </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Returnerar det första icke-tomma argumentet</value>
@@ -1368,6 +1438,10 @@
     <value>uttryck</value>
     
   </data>
+  <data name="AboutIsBlankOrError_expression" xml:space="preserve">
+    <value>Ett uttryck som ska testas.</value>
+    
+  </data>
   <data name="AboutIsEmpty" xml:space="preserve">
     <value>Kontrollerar om en samling är tom och returnerar sant eller falskt.</value>
     
@@ -1375,6 +1449,9 @@
   <data name="IsEmptyArg1" xml:space="preserve">
     <value>källa</value>
     
+  </data>
+  <data name="AboutIsEmpty_source" xml:space="preserve">
+    <value>En tabell som ska testas.</value>
   </data>
   <data name="AboutShuffle" xml:space="preserve">
     <value>Returnerar en slumpmässigt blandad kopia av indatakälltabellen.</value>
@@ -2260,6 +2337,35 @@
   </data>
   <data name="AboutChar_column_of_numbers" xml:space="preserve">
     <value>En kolumn med kodnummer från teckenuppsättningen på din plattform.</value>
+  </data>
+  <data name="AboutParseJson" xml:space="preserve">
+    <value>Konverterar en JSON-sträng till ett objekt.</value>
+    
+  </data>
+  <data name="ParseJsonArg1" xml:space="preserve">
+    <value>indata</value>
+    
+  </data>
+  <data name="AboutParseJson_input" xml:space="preserve">
+    <value>En JSON-sträng att bearbeta.</value>
+  </data>
+  <data name="AboutIndex" xml:space="preserve">
+    <value>Returnerar posten i en tabell vid ett visst index.</value>
+    
+  </data>
+  <data name="IndexArg1" xml:space="preserve">
+    <value>tabell</value>
+    
+  </data>
+  <data name="IndexArg2" xml:space="preserve">
+    <value>index</value>
+    
+  </data>
+  <data name="AboutIndex_table" xml:space="preserve">
+    <value>En tabell.</value>
+  </data>
+  <data name="AboutIndex_index" xml:space="preserve">
+    <value>Ett heltalsindex.</value>
   </data>
   <data name="Screen_Name_DisplayName" xml:space="preserve">
     <value>Namn</value>
@@ -3781,11 +3887,23 @@
     
   </data>
   <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
-    <value>Den här resultattypen {0} stöds inte i formelkolumner.</value>
+    <value>Resultattypen {0} stöds inte i formelkolumner.</value>
     
   </data>
   <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
     <value>Resultattypen för den här formeln förväntas vara {0}, men den faktiska resultattypen är {1}. Resultattypen för en formelkolumn kan inte ändras.</value>
+    
+  </data>
+  <data name="FormulaColumns_ColumnTypeNotSupported" xml:space="preserve">
+    <value>Kolumner av typen {0} stöds inte i formelkolumner.</value>
+    
+  </data>
+  <data name="FormulaColumns_ColumnFormatNotSupported" xml:space="preserve">
+    <value>Kolumner av typen {0} med formatet {1} stöds inte i formelkolumner.</value>
+    
+  </data>
+  <data name="FormulaColumns_FormulaTooLong" xml:space="preserve">
+    <value>Formler får inte vara längre än 1 000 tecken.</value>
     
   </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
@@ -3802,7 +3920,6 @@
   </data>
   <data name="ErrorResource_ErrBadToken_LongMessage" xml:space="preserve">
     <value>Tecknet '\' förväntas t.ex. inte efter ett tal, som exempelvis i: 32\'. Ett blanksteg (32 ) borde förväntas, så att det bara är talet 32, eller ett annat tal (som i 323) som förväntas.</value>
-    
   </data>
   <data name="ErrorResource_ErrBadToken_HowToFix_1" xml:space="preserve">
     <value>Ta bort eller ersätt de oväntade tecknen.</value>
@@ -3818,11 +3935,9 @@
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_LongMessage" xml:space="preserve">
     <value>Tecknet "\" förväntas t.ex. inte efter ett tal, som exempelvis i: "32\". Ett blanksteg ("32") borde förväntas, så att det bara är talet 32, eller ett annat tal (som i "323") som förväntas.</value>
-    
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_HowToFix_1" xml:space="preserve">
     <value>Ta bort eller ersätt det oväntade tecknet.</value>
-    
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_Link_1" xml:space="preserve">
     <value>Artikel: formelreferens för Power Apps</value>
@@ -3834,7 +3949,6 @@
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_LongMessage" xml:space="preserve">
     <value>Varje blockkommentar måste börja med '/*' och sluta med '*/'. Om du inte avslutar varje blockkommentar korrekt blir all kod efter kommentaren en del av kommentaren. Om en kommentar består av en enda rad kan du inleda den med '//' och inte identifiera slutet av kommentaren.</value>
-    
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_HowToFix_1" xml:space="preserve">
     <value>Lägg till '*/' i slutet av blockkommentaren eller ändra den till en uppsättning radkommentarer.</value>
@@ -3850,7 +3964,6 @@
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_LongMessage" xml:space="preserve">
     <value>Det här felet uppstår om en formel till exempel innehåller {{Val@ 7}} i stället för {{Val: 7}}. När du anger en variabel kräver syntaxen ett kolon i stället för en at-symbol.</value>
-    
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_HowToFix_1" xml:space="preserve">
     <value>Ta bort eller ersätt det oväntade tecknet med ett väntat tecken.</value>
@@ -3866,7 +3979,6 @@
   </data>
   <data name="ErrorResource_ErrInvalidName_LongMessage" xml:space="preserve">
     <value>Det här felet uppstår vanligtvis när en formel refererar till något som inte längre finns (t.ex. en kontroll som har tagits bort).</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidName_HowToFix_1" xml:space="preserve">
     <value>Ta bort eller korrigera referensen till det namn som inte är giltigt.</value>
@@ -3882,7 +3994,6 @@
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_LongMessage" xml:space="preserve">
     <value>Det här felet uppstår när en formel refererar till egenskaper för komponentbeteende med en ogiltig syntax. (Till exempel Component.OnCustomChange i stället för Component.OnCustomChange())</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_HowToFix_1" xml:space="preserve">
     <value>Använd korrekt syntax för att referera till egenskapen för komponentbeteendet. Till exempel Component.OnCustomChange()</value>
@@ -3898,7 +4009,6 @@
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_LongMessage" xml:space="preserve">
     <value>Du kan inte använda den överordnade operatorn med en kontroll som inte har en överordnad kontroll. Den här operatorn refererar till kontrollen som är värd för den angivna kontrollen och som gör alla dess egenskaper tillgängliga.</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_HowToFix_1" xml:space="preserve">
     <value>Ta bort den överordnade operatorn.</value>
@@ -3914,7 +4024,6 @@
   </data>
   <data name="ErrorResource_ErrTooManyUps_LongMessage" xml:space="preserve">
     <value>Komplexiteten ökar med varje kapslingsnivå, så Power Apps stöder bara kapsling av radomfång upp till 63 nivåer.</value>
-    
   </data>
   <data name="ErrorResource_ErrTooManyUps_HowToFix_1" xml:space="preserve">
     <value>Skriv om formeln med färre kapslingsnivåer.</value>
@@ -3926,7 +4035,6 @@
   </data>
   <data name="ErrorResource_ErrRuleNestedTooDeeply_LongMessage" xml:space="preserve">
     <value>Power Apps stöder enbart uttryckskapsling på upp till 50 nivåer. Ett uttryck som ligger så här djupt är svårt att förstå och hantera.</value>
-    
   </data>
   <data name="ErrorResource_ErrRuleNestedTooDeeply_HowToFix_1" xml:space="preserve">
     <value>Skriv om formeln med färre kapslingsnivåer.</value>
@@ -3938,7 +4046,6 @@
   </data>
   <data name="ErrorResource_ErrOperatorExpected_LongMessage" xml:space="preserve">
     <value>Operatorer kopplar ihop två operander. Det här felet uppstår om du placerar två funktioner (operander) tillsammans utan en operator mellan dem, till exempel Len("mytext")Len("mytext").</value>
-    
   </data>
   <data name="ErrorResource_ErrOperatorExpected_HowToFix_1" xml:space="preserve">
     <value>Redigera din formel så att den innehåller en operator mellan operanderna.</value>
@@ -3954,7 +4061,6 @@
   </data>
   <data name="ErrorResource_ErrNumberExpected_LongMessage" xml:space="preserve">
     <value>Det här felet uppstår om du använder en funktion som kräver ett tal men du anger, låt oss säga, en bild istället.</value>
-    
   </data>
   <data name="ErrorResource_ErrNumberExpected_HowToFix_1" xml:space="preserve">
     <value>Redigera din formel så att den utvärderas till ett tal vid den här tidpunkten i formeln.</value>
@@ -3970,7 +4076,6 @@
   </data>
   <data name="ErrorResource_ErrBooleanExpected_LongMessage" xml:space="preserve">
     <value>Ett booleskt värde kallas även ett sant/falskt-värde i program som Microsoft Excel eller Ja/Nej-värde i SharePoint. Det här felet uppstår om du använder en funktion som kräver ett booleskt värde men du anger, till exempel ett datum istället.</value>
-    
   </data>
   <data name="ErrorResource_ErrBooleanExpected_HowToFix_1" xml:space="preserve">
     <value>Redigera din formel så att den utvärderas till ett booleskt värde vid denna tidpunkt i formeln.</value>
@@ -3986,7 +4091,6 @@
   </data>
   <data name="ErrorResource_ErrColonExpected_LongMessage" xml:space="preserve">
     <value>Ett kolon avgränsar ett fältnamn vilket ibland kallas ett kolumnnamn från ett fältvärde i en post (till exempel {Month:"1"}, {Month:"2"}...). Ett kolon avgränsar även timmar från minuter och sekunder (till exempel 3:04).</value>
-    
   </data>
   <data name="ErrorResource_ErrColonExpected_HowToFix_1" xml:space="preserve">
     <value>Redigera din formel så att den innehåller ett kolon.</value>
@@ -4002,7 +4106,6 @@
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_LongMessage" xml:space="preserve">
     <value>Beteendefunktionerna förändrar appens tillstånd genom at ändra värden på andra ställen i appen. Navigate, Patch, UpdateContext och Collect är vanliga beteendefunktioner. OnSelect, OnVisible och andra "On"-egenskaper är vanliga beteendebaserade egenskaper.</value>
-    
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_HowToFix_1" xml:space="preserve">
     <value>Flytta beteendefunktionen till en beteendebaserad egenskap.</value>
@@ -4018,7 +4121,6 @@
   </data>
   <data name="ErrorResource_ErrTestPropertyExpected_LongMessage" xml:space="preserve">
     <value>Testfunktioner är sådana som kan användas för att simulera användarindata vid testning av en app. SetProperty, SelectRow och Assert är vanliga testfunktioner. De kan bara användas i testfall.</value>
-    
   </data>
   <data name="ErrorResource_ErrTestPropertyExpected_HowToFix_1" xml:space="preserve">
     <value>Använd funktionen i ett testfall, inte i själva appen.</value>
@@ -4030,7 +4132,6 @@
   </data>
   <data name="ErrorResource_ErrCannotCoerce_SourceType_TargetType_LongMessage" xml:space="preserve">
     <value>Power Apps kan konvertera vissa typer av data i din formel till andra typer åt dig. Det kan till exempel konvertera ”1” (en sträng) till 1 (ett tal), men det kan inte konvertera alla datatyper till alla andra datatyper. Det kan till exempel inte konvertera en bild till ett tal.</value>
-    
   </data>
   <data name="ErrorResource_ErrCannotCoerce_SourceType_TargetType_HowToFix_1" xml:space="preserve">
     <value>Redigera din formel så att du konverterar berörda data till den förväntade typen.</value>
@@ -4042,7 +4143,6 @@
   </data>
   <data name="ErrorResource_ErrStringExpected_LongMessage" xml:space="preserve">
     <value>Det här felet uppstår om du använder en funktion som kräver ett textargument (eller strängargument) och du anger, låt oss säga, ett datum istället.</value>
-    
   </data>
   <data name="ErrorResource_ErrStringExpected_HowToFix_1" xml:space="preserve">
     <value>Redigera din formel så att den utvärderas till text vid den här tidpunkten i formeln.</value>
@@ -4058,7 +4158,6 @@
   </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_LongMessage" xml:space="preserve">
     <value>Det här felet uppstår om du använder en funktion som kräver antingen text eller ett tal men du anger, låt oss säga, ett booleskt värde (sant/falskt).</value>
-    
   </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_HowToFix_1" xml:space="preserve">
     <value>Redigera din formel så att den utvärderas till en text eller ett tal i den här tidpunkten i formeln.</value>
@@ -4074,7 +4173,6 @@
   </data>
   <data name="ErrorResource_ErrClosingBracketExpected_LongMessage" xml:space="preserve">
     <value>En avslutande klammerparantes anger slutet av en post (till exempel {Month:"1"}, {Month:"2"}...).</value>
-    
   </data>
   <data name="ErrorResource_ErrClosingBracketExpected_HowToFix_1" xml:space="preserve">
     <value>Redigera din formel så att den innehåller en klammerparantes.</value>
@@ -4094,7 +4192,6 @@
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_LongMessage" xml:space="preserve">
     <value>Det går inte att utvärdera formeln eftersom värdena som jämförs i formeln inte är av samma typ.</value>
-    
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_HowToFix_1" xml:space="preserve">
     <value>Du kan behöva konvertera värdet att vara av samma typ, till exempel konvertera en datumsträng (t.ex. ”12/31/2018”) till ett datumvärde.</value>
@@ -4174,7 +4271,6 @@
   </data>
   <data name="ErrorResource_ErrTypeError_LongMessage" xml:space="preserve">
     <value>Data matchar kanske inte den förväntade typen (text, siffra, datum, tabell, post).</value>
-    
   </data>
   <data name="ErrorResource_ErrTypeError_HowToFix_1" xml:space="preserve">
     <value>Kontrollera vilka typer av värden som ingår i formeln och se till att typerna matchar.</value>
@@ -4194,7 +4290,6 @@
   </data>
   <data name="ErrorResource_ErrDateExpected_LongMessage" xml:space="preserve">
     <value>Det här felet uppstår om du använder en funktion som kräver ett datum men du anger, låt oss säga, text istället.</value>
-    
   </data>
   <data name="ErrorResource_ErrDateExpected_HowToFix_1" xml:space="preserve">
     <value>Redigera din formel så att den utvärderas till ett datum vid denna tidpunkt i formeln.</value>
@@ -4210,7 +4305,6 @@
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_LongMessage" xml:space="preserve">
     <value>Datakällan kanske inte kan bearbeta formeln och kan då returnera en ofullständig datauppsättning. Ditt program kanske inte kan returnera korrekta resultat eller uppvisa korrekt beteende om datauppsättningen är ofullständig.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_HowToFix_1" xml:space="preserve">
     <value>Om din datauppsättning överskrider gränsen på 500 poster men innehåller mindre än 2 000 poster, kan du prova att återställa gränsen.</value>
@@ -4238,7 +4332,6 @@
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_LongMessage" xml:space="preserve">
     <value>Datakällan kanske inte kan bearbeta formeln och kan då returnera en ofullständig datauppsättning. Ditt program kanske inte kan returnera korrekta resultat eller uppvisa korrekt beteende om datauppsättningen är ofullständig.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_HowToFix_1" xml:space="preserve">
     <value>Om din datauppsättning överskrider gränsen på 500 poster men innehåller mindre än 2 000 poster, kan du prova att återställa gränsen.</value>
@@ -4266,7 +4359,6 @@
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_LongMessage" xml:space="preserve">
     <value>Höger sida av in-operatorn bör varra ett kolumnnamn från korrekt datakälla. Datakällan kanske inte kan bearbeta formeln och kan returnera en ofullständig datauppsättning. Ditt program kanske inte kan returnera korrekta resultat eller uppföra sig korrekt om datauppsättningen är ofullständig.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_1" xml:space="preserve">
     <value>Ändra objektet till höger om in-operatorn till att vara en kolumn från rätt datakälla.</value>
@@ -4299,7 +4391,6 @@
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_LongMessage" xml:space="preserve">
     <value> Höger sida av "in"-operatorn är inte en kolumn från rätt datakälla. Datakällan kanske inte kan bearbeta formeln och kan returnera en ofullständig datauppsättning. Ditt program kanske inte kan returnera korrekta resultat eller uppföra sig korrekt om datauppsättningen är ofullständig.
       </value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_1" xml:space="preserve">
     <value>Ändra objektet till höger om in-operatorn till att vara en kolumn från rätt datakälla.</value>
@@ -4380,6 +4471,22 @@
   </data>
   <data name="ErrorResource_ErrInvalidControlReference_Link_1" xml:space="preserve">
     <value>Referens: ConfirmExit för arbetsyteappar</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidStringInterpolation_ShortMessage" xml:space="preserve">
+    <value>Uttryck som visas inuti en interpolerad sträng måste utvärderas till ett textvärde eller till en kompatibel typ.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidStringInterpolation_HowToFix_1" xml:space="preserve">
+    <value>Kontrollera typen av uttryck inuti den interpolerade strängen.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrEmptyIsland_ShortMessage" xml:space="preserve">
+    <value>Empty expressions cannot appear inside an interpolated string.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrEmptyIsland_HowToFix_1" xml:space="preserve">
+    <value>Check for empty expressions inside the interpolated string.</value>
     
   </data>
   <data name="ErrorResource_ErrAsNotInContext_ShortMessage" xml:space="preserve">

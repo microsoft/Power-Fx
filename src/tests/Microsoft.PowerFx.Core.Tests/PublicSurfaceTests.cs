@@ -88,6 +88,8 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Core.Utils.DName",
                 "Microsoft.PowerFx.Core.Utils.ICheckable",
                 "Microsoft.PowerFx.Core.NameCollisionException",
+                "Microsoft.PowerFx.Core.FormulaTypeSchema",
+                "Microsoft.PowerFx.Core.FormulaTypeToSchemaConverter",
             };
 
             var sb = new StringBuilder();
