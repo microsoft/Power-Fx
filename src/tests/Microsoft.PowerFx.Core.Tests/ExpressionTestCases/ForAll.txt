@@ -33,11 +33,14 @@ Blank()
 >> ForAll(Table({Value:1,Zulu:1}, {Value:0,Zulu:0}, {Value:2,Zulu:2}), 1/ThisRecord.Value)
 #Error
 
+>> First(LastN(ForAll(Table({Value:1,Zulu:1}, {Value:0,Zulu:0}, {Value:2,Zulu:2}), 1/ThisRecord.Value), 2))
+#Error(Kind=Div0)
+
 >> First(LastN(ForAll(Table({Value:1,Zulu:1}, {Value:0,Zulu:0}, {Value:2,Zulu:2}), 1/ThisRecord.Value), 2)).Value
-#Error
+#Error(Kind=Div0)
 
 >> Table({Value:1},First(LastN(ForAll(Table({Value:1,Zulu:1}, {Value:0,Zulu:0}, {Value:2,Zulu:2}), 1/ThisRecord.Value), 2)),{Value:2})
-#Error
+Table({Value:1},Microsoft.PowerFx.Core.Public.Values.ErrorValue,{Value:2})
 
 >> Table({Value:1},First(LastN(ForAll(Table({Value:1,Zulu:1}, {Value:0,Zulu:0}, {Value:2,Zulu:2}), {Value:1/ThisRecord.Value}), 2)),{Value:2})
 [1,Microsoft.PowerFx.Core.Public.Values.ErrorValue,2]

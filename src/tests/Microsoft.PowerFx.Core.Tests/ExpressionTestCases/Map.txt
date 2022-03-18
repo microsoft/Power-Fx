@@ -1,0 +1,58 @@
+﻿>> Map([1,2,3], ThisRecord)
+[1,2,3]
+
+>> Map([1,2,3], ThisRecord.Value)
+[1,2,3]
+
+>> Map([1,2,3] As X, X)
+[1,2,3]
+
+>> Map([1,2,3] As X, X.Value)
+[1,2,3]
+
+
+>> Map([1,2,3],Value*Value)
+[1,4,9]
+
+// As renames
+>> First(Map([1,2,3] As X, X)).Value
+1
+
+>> First(Map([1,2,3] As X, X.Value)).Value
+1
+
+>> Map(Sort([60, 61, 62, 63, 64], 1/Value), Char(Value))
+["@","?",">","=","<"]
+
+>> Map(FirstN([60, 61, 62, 63, 64], Blank()), Char(Value))
+Blank()
+
+>> Map(Sort([60, 61, 0, 63, 64], 1/Value), Char(Value))
+#Error
+
+>> Map(Table({Value:1,Zulu:1}, {Value:0,Zulu:0}, {Value:2,Zulu:2}), 1/ThisRecord.Value)
+[1,Microsoft.PowerFx.Core.Public.Values.ErrorValue,0.5]
+
+>> First(LastN(Map(Table({Value:1,Zulu:1}, {Value:0,Zulu:0}, {Value:2,Zulu:2}), 1/ThisRecord.Value), 2))
+{Value:Microsoft.PowerFx.Core.Public.Values.ErrorValue}
+
+>> First(LastN(Map(Table({Value:1,Zulu:1}, {Value:0,Zulu:0}, {Value:2,Zulu:2}), 1/ThisRecord.Value), 2)).Value
+#Error
+
+>> Table({Value:1},First(LastN(Map(Table({Value:1,Zulu:1}, {Value:0,Zulu:0}, {Value:2,Zulu:2}), 1/ThisRecord.Value), 2)),{Value:2})
+[1,Microsoft.PowerFx.Core.Public.Values.ErrorValue,2]
+
+>> First(First(LastN(Map(Table({Value:1}, {Value:0}, {Value:2}), Table({a: 1/ThisRecord.Value})), 2)).Value)
+{a:Microsoft.PowerFx.Core.Public.Values.ErrorValue}
+
+>> Last(FirstN(Map(Table({Value:1}, {Value:0}, {Value:2}), {a: 1/ThisRecord.Value}), 2)).a
+#Error
+
+>> Last(FirstN(Map(Table({Value:1}, {Value:0}, {Value:2}), {a: 1/ThisRecord.Value}), 1)).a
+1
+
+>> Last(FirstN(Map([1,0,2], 1/ThisRecord.Value), 2)).Value
+#Error(Kind=Div0)
+
+>> Last(FirstN(Map([1,0,2], 1/ThisRecord.Value), 1)).Value
+1
