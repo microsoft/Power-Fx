@@ -395,7 +395,7 @@ namespace Microsoft.PowerFx.Tests
         {
             var config = new PowerFxConfig(null);
 
-            var optionSet = new OptionSet("OptionSetName", new Dictionary<string, string>() 
+            var optionSet = new OptionSet("FooOs", new Dictionary<string, string>() 
             {
                     { "option_1", "Option1" },
                     { "option_2", "Option2" }
@@ -404,10 +404,10 @@ namespace Microsoft.PowerFx.Tests
             config.AddOptionSet(optionSet);            
             var recalcEngine = new RecalcEngine(config);
 
-            var checkResult = recalcEngine.Check("OptionSet.Option1");
+            var checkResult = recalcEngine.Check("FooOs.Option1");
             Assert.True(checkResult.IsSuccess);
             var osvaluetype = Assert.IsType<OptionSetValueType>(checkResult.ReturnType);
-            Assert.Equal("OptionSetName", osvaluetype.OptionSetName);
+            Assert.Equal("FooOs", osvaluetype.OptionSetName);
         }
 
         #region Test
