@@ -2338,15 +2338,15 @@
   <data name="AboutChar_column_of_numbers" xml:space="preserve">
     <value>A column of code numbers from the character set on your platform.</value>
   </data>
-  <data name="AboutParseJson" xml:space="preserve">
+  <data name="AboutParseJSON" xml:space="preserve">
     <value>Converts a JSON string into an object.</value>
-    <comment>Description of 'ParseJson' function.</comment>
+    <comment>Description of 'ParseJSON' function.</comment>
   </data>
-  <data name="ParseJsonArg1" xml:space="preserve">
+  <data name="ParseJSONArg1" xml:space="preserve">
     <value>input</value>
-    <comment>function_parameter - First argument of the ParseJson function - String type.</comment>
+    <comment>function_parameter - First argument of the ParseJSON function - String type.</comment>
   </data>
-  <data name="AboutParseJson_input" xml:space="preserve">
+  <data name="AboutParseJSON_input" xml:space="preserve">
     <value>A JSON string to process.</value>
   </data>
   <data name="AboutIndex" xml:space="preserve">

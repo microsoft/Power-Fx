@@ -189,7 +189,7 @@ namespace Microsoft.PowerFx.Core.Texl
         // NOTE: These functions should not be part of the core library until they are implemented in all runtimes
         public static readonly TexlFunction Index = new IndexFunction();
         public static readonly TexlFunction Index_UO = new IndexFunction_UO();
-        public static readonly TexlFunction ParseJson = new ParseJsonFunction();
+        public static readonly TexlFunction ParseJSON = new ParseJSONFunction();
         public static readonly TexlFunction Table_UO = new TableFunction_UO();
         public static readonly TexlFunction Text_UO = new TextFunction_UO();
         public static readonly TexlFunction Value_UO = new ValueFunction_UO();
