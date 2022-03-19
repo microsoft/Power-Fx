@@ -52,17 +52,6 @@ namespace Microsoft.PowerFx.Core.Tests
                         continue; // exclude compiler generated closures. 
                     }
 
-                    // These have been manually reviewed to be safe. 
-                    // This should be a last resort and short list, so track them here in a central place. 
-                    var allowList = new HashSet<string>
-                    {
-                        "CallNode._uniqueInvocationIdNext"
-                    };
-                    if (allowList.Contains(name))
-                    {
-                        continue;
-                    }
-
                     // Field has is protected by a lock.
                     if (field.GetCustomAttributes<ThreadSafeProtectedByLockAttribute>().Any())
                     {
