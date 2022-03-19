@@ -53,8 +53,6 @@ namespace Microsoft.PowerFx.Core.Tests
 
                 "FeatureFlags.StringInterpolation",
                 "EmptyEnumerator`1._instance",
-                "StringBuilderCache`1.maxBuilderSize",
-                "StringBuilderCache`1.cachedInstance",
                 "Contracts._assertFailExCtor",
                 "CurrentLocaleInfo.<CurrentLocaleName>k__BackingField",
                 "CurrentLocaleInfo.<CurrentUILanguageName>k__BackingField",

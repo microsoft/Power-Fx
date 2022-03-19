@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using Xunit;
 
 namespace Microsoft.PowerFx.Core.Tests
@@ -78,7 +79,20 @@ namespace Microsoft.PowerFx.Core.Tests
                         continue;
                     }
 
-                    // Is it readonly?  Const?
+                    if (field.GetCustomAttribute<ThreadStaticAttribute>() != null)
+                    {
+                        // If field is marked [ThreadStatic], then each thread gets its own copy.
+                        // It also implies the author thought about threading. 
+                        continue;
+                    }
+
+                    if (IsFieldVolatile(field))
+                    {
+                        // If a field was marked volatile, then assume the author thought through the threading.
+                        continue;
+                    }
+
+                    // Is it readonly? Const?
                     if (!field.Attributes.HasFlag(FieldAttributes.InitOnly))
                     {
                         // Mutable static field! That's bad.  
@@ -101,6 +115,14 @@ namespace Microsoft.PowerFx.Core.Tests
 
             // Batch up errors so we can see all at once. 
             Assert.Empty(errors);
+        }
+
+        private static bool IsFieldVolatile(FieldInfo field)
+        {
+            var isVolatile = field
+                .GetRequiredCustomModifiers()
+                .Any(x => x == typeof(IsVolatile));
+            return isVolatile;
         }
 
         // For other custom types, mark with [ThreadSafeImmutable] attribute.
