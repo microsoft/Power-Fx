@@ -53,7 +53,7 @@ namespace Microsoft.PowerFx
         {
             powerFxConfig.AddFunction(BuiltinFunctionsCore.Index);
             powerFxConfig.AddFunction(BuiltinFunctionsCore.Index_UO);
-            powerFxConfig.AddFunction(BuiltinFunctionsCore.ParseJson);
+            powerFxConfig.AddFunction(BuiltinFunctionsCore.ParseJSON);
             powerFxConfig.AddFunction(BuiltinFunctionsCore.Table_UO);
             powerFxConfig.AddFunction(BuiltinFunctionsCore.Text_UO);
             powerFxConfig.AddFunction(BuiltinFunctionsCore.Value_UO);
