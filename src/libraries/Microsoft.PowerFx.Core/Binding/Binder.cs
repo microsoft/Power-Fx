@@ -3050,6 +3050,11 @@ namespace Microsoft.PowerFx.Core.Binding
                 {
                     _txb.FlagPathAsAsync(node);
                 }
+
+                if (lookupInfo.Data is IExternalNamedFormulaRule namedFormulaRule && namedFormulaRule.Rule.Binding.IsAsync(namedFormulaRule.Rule.Binding.Top))
+                {
+                    _txb.FlagPathAsAsync(node);
+                }
             }
 
             private bool TryProcessFirstNameNodeForThisItemAccess(FirstNameNode node, NameLookupInfo lookupInfo, out DType nodeType, out FirstNameInfo info)
