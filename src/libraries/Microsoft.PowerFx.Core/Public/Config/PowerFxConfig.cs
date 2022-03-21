@@ -57,12 +57,10 @@ namespace Microsoft.PowerFx.Core
         {
             CheckUnlocked();
 
-            if (displayName != default) 
-            {
-                // Attempt to update display name provider before symbol table,
-                // since it can throw on collision and we want to leave the config in a good state
-                _environmentSymbolDisplayNameProvider = _environmentSymbolDisplayNameProvider.AddField(entity.EntityName, displayName);
-            }
+            // Attempt to update display name provider before symbol table,
+            // since it can throw on collision and we want to leave the config in a good state.
+            // For entities without a display name, add (logical, logical) pair to still be included in collision checks.
+            _environmentSymbolDisplayNameProvider = _environmentSymbolDisplayNameProvider.AddField(entity.EntityName, displayName != default ? displayName : entity.EntityName);
 
             _environmentSymbols.Add(entity.EntityName, entity);
         }
@@ -77,14 +75,14 @@ namespace Microsoft.PowerFx.Core
         internal bool TryGetSymbol(DName name, out IExternalEntity symbol, out DName displayName)
         {
             var lookupName = name;
-            if (_environmentSymbolDisplayNameProvider.TryGetLogicalName(name, out var logicalName))
+            if (_environmentSymbolDisplayNameProvider.TryGetDisplayName(name, out displayName))
+            {
+                lookupName = name;
+            }
+            else if (_environmentSymbolDisplayNameProvider.TryGetLogicalName(name, out var logicalName))
             {
                 lookupName = logicalName;
                 displayName = name;
-            }
-            else if (_environmentSymbolDisplayNameProvider.TryGetDisplayName(name, out displayName))
-            {
-                lookupName = name;
             }
 
             return _environmentSymbols.TryGetValue(lookupName, out symbol);
