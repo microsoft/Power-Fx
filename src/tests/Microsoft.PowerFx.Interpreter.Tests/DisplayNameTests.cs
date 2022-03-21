@@ -150,5 +150,30 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 Assert.Equal(outputExpression, outInvariantExpression);
             }
         }
+
+        [Fact]
+        public void PowerFxConfigCollisionsThrow()
+        {
+            var config = new PowerFxConfig(null);
+            var optionSet = new OptionSet("OptionSet", new Dictionary<string, string>() 
+            {
+                    { "option_1", "Option1" },
+                    { "option_2", "Option2" }
+            });
+
+            var otherOptionSet = new OptionSet("OtherOptionSet", new Dictionary<string, string>() 
+            {
+                    { "option_1", "Option1" },
+                    { "option_2", "Option2" }
+            });
+            config.AddEntity(optionSet, new DName("SomeDisplayName"));
+
+            Assert.Throws<NameCollisionException>(() => config.AddEntity(otherOptionSet, new DName("OptionSet")));
+            Assert.Throws<NameCollisionException>(() => config.AddEntity(otherOptionSet, new DName("SomeDisplayName")));
+                        
+            config.AddEntity(otherOptionSet, new DName("NonColliding"));
+
+            Assert.Equal(2, config.EnvironmentSymbols.Count);
+        }
     }
 }
