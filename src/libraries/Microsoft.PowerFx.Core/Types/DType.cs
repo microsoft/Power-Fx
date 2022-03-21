@@ -19,6 +19,7 @@ using Conditional = System.Diagnostics.ConditionalAttribute;
 
 namespace Microsoft.PowerFx.Core.Types
 {
+    [ThreadSafeImmutable]
     internal class DType : ICheckable
     {
         /// <summary>
