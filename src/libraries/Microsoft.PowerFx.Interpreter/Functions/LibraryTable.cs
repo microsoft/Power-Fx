@@ -202,7 +202,7 @@ namespace Microsoft.PowerFx.Functions
             var arg1 = (NumberValue)args[1];
             var rowIndex = (int)arg1.Value;
 
-            return arg0.Index(rowIndex - 1).ToFormulaValue();
+            return arg0.Index(rowIndex).ToFormulaValue();
         }
 
         public static FormulaValue SortTable(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args)

@@ -174,7 +174,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 new TestRow { a = 10, str = "alpha" },
                 new TestRow { a = 15, str = "beta" });
 
-            var field1 = ((StringValue)((RecordValue)val.Index(1).Value).GetField("str")).Value;
+            var field1 = ((StringValue)((RecordValue)val.Index(2).Value).GetField("str")).Value;
             Assert.Equal("beta", field1);
 
             dynamic d = val.ToObject();
@@ -191,9 +191,9 @@ namespace Microsoft.PowerFx.Core.Tests
         {
             RecordValue r1 = FormulaValue.NewRecord(new TestRow { a = 10, str = "alpha" });
             RecordValue r2 = FormulaValue.NewRecord(new TestRow { a = 15, str = "beta" });
-            TableValue val = FormulaValue.NewTable(r1, r2);
+            TableValue val = FormulaValue.NewTable(r1.Type, r1, r2);
 
-            var result1 = ((RecordValue)val.Index(1).Value).GetField("a").ToObject();
+            var result1 = ((RecordValue)val.Index(2).Value).GetField("a").ToObject();
             Assert.Equal(15.0, result1);
                         
             dynamic d = val.ToObject();
@@ -214,14 +214,14 @@ namespace Microsoft.PowerFx.Core.Tests
             var cache = new TypeMarshallerCache();
             RecordValue r1 = FormulaValue.NewRecord(new { a = 10, b = 20, c = 30 }, cache);
             RecordValue r2 = FormulaValue.NewRecord(new { a = 11,         c = 31 }, cache);
-            TableValue val = FormulaValue.NewTable(r1, r2);
+            TableValue val = FormulaValue.NewTable(r1.Type, r1, r2);
 
             // Users first type 
 
-            var result1 = ((RecordValue)val.Index(1).Value).GetField("a").ToObject();
+            var result1 = ((RecordValue)val.Index(2).Value).GetField("a").ToObject();
             Assert.Equal(11.0, result1);
 
-            var result2 = ((RecordValue)val.Index(1).Value).GetField("b");
+            var result2 = ((RecordValue)val.Index(2).Value).GetField("b");
             Assert.IsType<BlankValue>(result2);
             Assert.IsType<NumberType>(result2.Type);        
         }
@@ -230,8 +230,8 @@ namespace Microsoft.PowerFx.Core.Tests
         public void EmptyTableFromRecords()
         {
             // Empty means we can't infer the type from the records passed in. 
-            var records = new RecordValue[0];
-            TableValue val = FormulaValue.NewTable(records);
+            var cache = new TypeMarshallerCache();
+            TableValue val = FormulaValue.NewTable(cache, new RecordValue[0]);
 
             Assert.Empty(val.Rows);
 
@@ -262,8 +262,8 @@ namespace Microsoft.PowerFx.Core.Tests
 
             Assert.Equal("[10,20]", resultStr);
 
-            TableValue val2 = NewTableT(r1, r2);
-            Assert.Equal(resultStr, val2.Dump());
+            // Must use NewSingleColumnTable to create a single column table.
+            Assert.Throws<InvalidOperationException>(() => NewTableT(r1, r2));            
         }
 
         [Fact]

@@ -10,9 +10,9 @@ namespace Microsoft.PowerFx.Core
     /// <summary>
     /// Handles marshalling a given type. Invoked by the <see cref="TypeMarshallerCache"/>.
     /// </summary>
-    public interface ITypeMashallerProvider
+    public interface ITypeMarshallerProvider
     {
-        // Return null if it doesn't handle it. 
+        // Return false if it doesn't handle it. 
         // A single ITypeMarshaler can be created once per type and then reused for each instance.
         // Pass in a cache for aggregate types that need to marshal sub types. 
         public bool TryGetMarshaller(Type type, TypeMarshallerCache cache, int maxDepth, out ITypeMarshaller marshaller);

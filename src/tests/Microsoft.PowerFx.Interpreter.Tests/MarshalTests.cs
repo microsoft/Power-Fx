@@ -9,6 +9,7 @@ using System.Reflection;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Public.Types;
 using Microsoft.PowerFx.Core.Public.Values;
+using Microsoft.PowerFx.Core.Tests;
 using Xunit;
 
 namespace Microsoft.PowerFx.Tests
@@ -160,21 +161,26 @@ namespace Microsoft.PowerFx.Tests
         }
 
         // Basic marshaling hook. 
-        private int _hookCounter = 0;
-
-        private string Hook(PropertyInfo propInfo)
+        private class Custom1ObjectMarshallerProvider : ObjectMarshallerProvider
         {
-            _hookCounter++;
-            return propInfo.Name.StartsWith("_") ?
-               null : // skip
-                propInfo.Name + "Prop";
+            public int _hookCounter = 0;
+
+            public override string GetFxName(PropertyInfo propertyInfo)
+            {
+                _hookCounter++;
+
+                return propertyInfo.Name.StartsWith("_") ?
+                        null : // skip
+                        propertyInfo.Name + "Prop";
+            }
         }
 
         // Marshal objects with a custom hook. 
         [Fact]
         public void CustomMarshaling()
         {
-            Assert.Equal(0, _hookCounter);
+            var custom = new Custom1ObjectMarshallerProvider();
+            Assert.Equal(0, custom._hookCounter);
 
             // Be sure to use 'var' instead of 'object' so that we have compiler-time access to fields.           
             var fileObj = new
@@ -184,13 +190,12 @@ namespace Microsoft.PowerFx.Tests
                 _Skip = "skip me!"
             };
 
-            var cache = new TypeMarshallerCache();
-            cache.Marshallers.OfType<ObjectMarshallerProvider>().First().PropertyMapperFunc = Hook;
+            var cache = TypeMarshallerCache.New(custom);
 
             var t = cache.GetMarshaller(fileObj.GetType());
 
             var x = t.Marshal(fileObj);
-            Assert.Equal(3, _hookCounter); // Called once per property
+            Assert.Equal(3, custom._hookCounter); // Called once per property
 
             var engine = new RecalcEngine();
             engine.UpdateVariable("x", x);
@@ -208,10 +213,17 @@ namespace Microsoft.PowerFx.Tests
             var check3 = engine.Check("x._SkipProp");
             Assert.False(check3.IsSuccess);
 
-            Assert.Equal(3, _hookCounter); // no furher calls during execution
+            Assert.Equal(3, custom._hookCounter); // no furher calls during execution
         }
 
-        private static string HookCollide(PropertyInfo propInfo) => "NameCollision";
+        // Marshaller where all names collide. 
+        private class CollideObjectMarshallerProvider : ObjectMarshallerProvider
+        {
+            public override string GetFxName(PropertyInfo propertyInfo)
+            {
+                return "NameCollision";
+            }
+        }
 
         [Fact]
         public void NameCollision()
@@ -223,8 +235,7 @@ namespace Microsoft.PowerFx.Tests
                 Prop2 = "two"
             };
 
-            var cache = new TypeMarshallerCache();
-            cache.Marshallers.OfType<ObjectMarshallerProvider>().First().PropertyMapperFunc = HookCollide;
+            var cache = TypeMarshallerCache.New(new CollideObjectMarshallerProvider());
 
             Assert.Throws<NameCollisionException>(() => cache.GetMarshaller(obj.GetType()));
         }
@@ -302,6 +313,94 @@ namespace Microsoft.PowerFx.Tests
             Assert.Equal(0, obj1._counter2); // Didn't touch field2. 
         }
 
+        private class BasePoco
+        {
+            public int Base { get; set; }
+        }
+
+        private class DerivedPoco : BasePoco
+        {
+            public int Derived { get; set; }
+        }
+
+        // Inheritence
+        // - derived class, pass in base type. 
+        // - derived class, pass in derived type. 
+        [Theory]
+        [InlineData(typeof(BasePoco), "{Base:10}")] // don't include derived
+        [InlineData(typeof(DerivedPoco), "{Base:10,Derived:20}")] // include all
+        public void Inheritence(Type marshalAsType, string expected)
+        {
+            var obj = new DerivedPoco
+            {
+                Base = 10,
+                Derived = 20,
+            };
+
+            var cache = new TypeMarshallerCache();
+            var fxObj = (RecordValue)cache.Marshal(obj, marshalAsType);
+
+            Assert.Equal(expected, fxObj.Dump());
+        }
+             
+        // Use 'new' to create a property in derived that collides with base. 
+        private class Derived2Poco : BasePoco
+        {
+            public new string Base { get; set; } // Use New to hide base field!
+        }
+
+        [Theory]
+        [InlineData(typeof(Derived2Poco), null)]
+        [InlineData(typeof(BasePoco), "{Base:10}")] // don't include derived
+        public void InheritenceNewOverride(Type marshalAsType, string expected)
+        {
+            var obj = new Derived2Poco
+            {
+                Base = "hi"
+            };
+            ((BasePoco)obj).Base = 10;
+
+            var cache = new TypeMarshallerCache();
+
+            if (expected == null)
+            {
+                // Base and Derived both have a property called 'Base', that's a collision. 
+                Assert.Throws<NameCollisionException>(() => cache.Marshal(obj, marshalAsType));
+            }
+            else
+            {
+                var fxObj = cache.Marshal(obj, marshalAsType);
+                Assert.Equal(expected, fxObj.Dump());
+            }
+        }
+
+        // Use 'new' to create a property in derived that collides with base. 
+        private class VirtualBase
+        {
+            public virtual int Base { get; } = 15;
+        }
+
+        private class VirtualDerived : VirtualBase
+        {
+            public override int Base { get; } = 30;
+
+            public int Derived { get; } = 40;
+        }
+
+        // With polymorphism, we pull the derived property. 
+        [Theory]
+        [InlineData(typeof(VirtualDerived), "{Base:30,Derived:40}")]
+        [InlineData(typeof(VirtualBase), "{Base:30}")] 
+        public void InheritenceVirtuals(Type marshalAsType, string expected)
+        {
+            var obj = new VirtualDerived();
+
+            var cache = new TypeMarshallerCache();
+
+            var fxObj = cache.Marshal(obj, marshalAsType);
+            Assert.Equal(expected, fxObj.Dump());            
+        }
+
         // Marshal an array of records to a table. 
         [Fact]
         public void TableFromRecordArray()
@@ -376,7 +475,7 @@ namespace Microsoft.PowerFx.Tests
         }
 
         // Custom marshaller. Marshal Widget objects as Strings with a "W" prefix. 
-        private class WidgetMarshalerProvider : ITypeMashallerProvider
+        private class WidgetMarshalerProvider : ITypeMarshallerProvider
         {
             public int _counter = 0;
 
@@ -433,10 +532,9 @@ namespace Microsoft.PowerFx.Tests
         public void CustomMarshalerType()
         {
             var cache = new TypeMarshallerCache();
-
-            // Insert at 0 to get precedence over generic object marshaller
+                        
             var marshaler = new WidgetMarshalerProvider();
-            cache.Marshallers.Insert(0, marshaler);
+            cache = cache.NewPrepend(marshaler);
 
             Assert.Equal(0, marshaler._counter);
             var obj = new
@@ -471,8 +569,7 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public void FailMarshal()
         {
-            var cache = new TypeMarshallerCache();
-            cache.Marshallers.RemoveAll(mp => mp is PrimitiveMarshallerProvider);
+            var cache = TypeMarshallerCache.Empty;
 
             Assert.Throws<InvalidOperationException>(() => cache.Marshal(5));
         }
@@ -516,7 +613,7 @@ namespace Microsoft.PowerFx.Tests
 
             var fxTable = (TableValue)cache.Marshal(myTable);
 
-            var result1 = fxTable.Index(1);
+            var result1 = fxTable.Index(2);
             Assert.Equal(10, values[0]._counter); // no field fetch
             Assert.Equal(20, values[1]._counter);
             Assert.Equal(0, values[0]._counter2);
@@ -562,7 +659,7 @@ namespace Microsoft.PowerFx.Tests
             var fxTable = (TableValue)cache.Marshal(myTable.GetTable());
 
             // Table doesn't have indexer, so index is a linear scan. 
-            var result1 = (RecordValue)fxTable.Index(1).Value;
+            var result1 = (RecordValue)fxTable.Index(2).Value;
             Assert.Equal(21.0, result1.GetField("Field1").ToObject());
         }
     }

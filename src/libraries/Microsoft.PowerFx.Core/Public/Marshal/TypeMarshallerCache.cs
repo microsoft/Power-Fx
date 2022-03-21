@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.Contracts;
+using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Text.Json;
@@ -27,10 +28,67 @@ namespace Microsoft.PowerFx.Core
         // Map from a .net type to the marshaller for that type
         private readonly Dictionary<Type, ITypeMarshaller> _cache = new Dictionary<Type, ITypeMarshaller>();
 
+        // Take a private array to get a snapshot and ensure the enumeration doesn't change
+        private TypeMarshallerCache(ITypeMarshallerProvider[] marshallers)
+        {
+            _marshallers = marshallers;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TypeMarshallerCache"/> class.
+        /// Create marshaller with default list.
+        /// </summary>
+        public TypeMarshallerCache()
+            : this(_defaults)
+        {
+        }
+
+        /// <summary>
+        /// Create a new cache that includes the new providers and then chains to this cache.
+        /// </summary>
+        /// <param name="providers">list of providers.</param>
+        /// <returns></returns>
+        public TypeMarshallerCache NewPrepend(IEnumerable<ITypeMarshallerProvider> providers)
+        {
+            // The new providers are handled first, and will claim a type before the existing
+            // provider has a chance. 
+            var list = providers.Concat(_marshallers).ToArray();
+            return new TypeMarshallerCache(list);
+        }
+
+        public TypeMarshallerCache NewPrepend(params ITypeMarshallerProvider[] providers)
+        {
+            IEnumerable<ITypeMarshallerProvider> list = providers;
+
+            return NewPrepend(list);
+        }
+
+        /// <summary>
+        ///  Create a cache with the the default marshallers and the specified object marshaller.
+        /// </summary>
+        /// <param name="objectProvider"></param>
+        /// <returns></returns>
+        public static TypeMarshallerCache New(ObjectMarshallerProvider objectProvider)
+        {
+            return new TypeMarshallerCache(new ITypeMarshallerProvider[] 
+            {
+                new PrimitiveMarshallerProvider(),
+                new TableMarshallerProvider(),
+                objectProvider
+            });
+        }
+
+        /// <summary>
+        /// Empty type marshaller, without any defaults. 
+        /// </summary>
+        public static TypeMarshallerCache Empty { get; } = new TypeMarshallerCache(new ITypeMarshallerProvider[0]);
+
         /// <summary>
         /// Ordered list of type marshallers. First marshaller to handle is used. 
         /// </summary>
-        public List<ITypeMashallerProvider> Marshallers { get;  } = new List<ITypeMashallerProvider>
+        private readonly IEnumerable<ITypeMarshallerProvider> _marshallers;
+        
+        private static readonly ITypeMarshallerProvider[] _defaults = new ITypeMarshallerProvider[]
         { 
             new PrimitiveMarshallerProvider(),
             new TableMarshallerProvider(),
@@ -47,16 +105,16 @@ namespace Microsoft.PowerFx.Core
         {
             if (maxDepth < 0)
             {
-                return new Empty();
+                return new EmptyMarshaller();
             }
 
-            // The ccahe requires an exact type match and doesn't handle base types.
+            // The cache requires an exact type match and doesn't handle base types.
             if (_cache.TryGetValue(type, out var tm))
             {
                 return tm;
             }
 
-            foreach (var marshaller in Marshallers)
+            foreach (var marshaller in _marshallers)
             {
                 if (marshaller.TryGetMarshaller(type, this, maxDepth - 1, out tm))
                 {
@@ -100,7 +158,7 @@ namespace Microsoft.PowerFx.Core
                 type = value.GetType();
             }             
 
-            var tm = GetMarshaller(value.GetType());
+            var tm = GetMarshaller(type);
             return tm.Marshal(value);
         }
 
@@ -109,7 +167,7 @@ namespace Microsoft.PowerFx.Core
             return Marshal(value, typeof(T));
         }
 
-        private class Empty : ITypeMarshaller
+        private class EmptyMarshaller : ITypeMarshaller
         {
             public FormulaType Type => FormulaType.Blank;
 

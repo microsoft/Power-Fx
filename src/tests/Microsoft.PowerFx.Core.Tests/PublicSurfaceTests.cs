@@ -26,7 +26,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Core.Texl.Intellisense.SignatureHelp.ParameterInformation",
                 "Microsoft.PowerFx.Core.Texl.Intellisense.SignatureHelp.SignatureHelp",
                 "Microsoft.PowerFx.Core.Texl.Intellisense.SignatureHelp.SignatureInformation",
-                "Microsoft.PowerFx.Core.ITypeMashallerProvider",
+                "Microsoft.PowerFx.Core.ITypeMarshallerProvider",
                 "Microsoft.PowerFx.Core.ITypeMarshaller",
                 "Microsoft.PowerFx.Core.ObjectMarshallerProvider",
                 "Microsoft.PowerFx.Core.ObjectMarshaler",

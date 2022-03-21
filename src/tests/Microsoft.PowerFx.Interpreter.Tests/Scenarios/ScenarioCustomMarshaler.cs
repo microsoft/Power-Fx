@@ -27,16 +27,19 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             public int Field2 { get; set; }
         }
 
-        private string Hook(PropertyInfo propInfo)
+        private class CustomObjectMarshallerProvider : ObjectMarshallerProvider
         {
-            var attr = propInfo.GetCustomAttribute<DisplayNameAttribute>();
-            if (attr != null)
+            public override string GetFxName(PropertyInfo propertyInfo)
             {
-                return attr.DisplayName;
-            }
+                var attr = propertyInfo.GetCustomAttribute<DisplayNameAttribute>();
+                if (attr != null)
+                {
+                    return attr.DisplayName;
+                }
 
-            return propInfo.Name;         
-        }
+                return propertyInfo.Name;
+            }
+        }            
 
         [Fact]
         public void Test()
@@ -48,8 +51,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 Field2 = 20
             };
 
-            var cache = new TypeMarshallerCache();
-            cache.Marshallers.OfType<ObjectMarshallerProvider>().First().PropertyMapperFunc = Hook;
+            var custom = new CustomObjectMarshallerProvider();
+            var cache = new TypeMarshallerCache().NewPrepend(custom);
 
             var x = cache.Marshal(obj);
 

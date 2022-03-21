@@ -20,7 +20,7 @@ namespace Microsoft.PowerFx.Core
     /// Marshal .Net classes (with fields). This supports strong typing and lazy marshalling. 
     /// Handles any IEnumerable (including arrays).
     /// </summary>
-    public class TableMarshallerProvider : ITypeMashallerProvider
+    public class TableMarshallerProvider : ITypeMarshallerProvider
     {
         /// <inheritdoc/>
         public bool TryGetMarshaller(Type type, TypeMarshallerCache cache, int maxDepth, out ITypeMarshaller marshaler)
@@ -31,32 +31,23 @@ namespace Microsoft.PowerFx.Core
                 return false;
             }
 
-            var tm = cache.GetMarshaller(et, maxDepth);
+            var rowMarshaller = cache.GetMarshaller(et, maxDepth);
              
-            if (tm.Type is RecordType recordType)
+            if (rowMarshaller.Type is RecordType recordType)
             {
                 // Array of records 
             }       
             else
             {
-                // Single Column table. Wrap the scalar in a record. 
-                recordType = new RecordType().Add("Value", tm.Type);
+                // Single Column table. Wrap the in a record. 
+                // This is happens for scalars.
+                // But could also happen for a table of tables. 
+                recordType = new RecordType().Add("Value", rowMarshaller.Type);
 
-                tm = new SCTMarshaler
-                {
-                    _inner = tm,
-                    Type = recordType
-                };
+                rowMarshaller = new SCTMarshaler(recordType, rowMarshaller);
             }
 
-            var tableType = recordType.ToTable();
-
-            var t2 = typeof(TableMarshaller<>).MakeGenericType(et);
-            var tableMarshaller = (TableMarshaller)Activator.CreateInstance(t2);
-
-            tableMarshaller.Type = tableType;
-            tableMarshaller._rowMarshaler = tm;
-            marshaler = tableMarshaller;
+            marshaler = TableMarshaller.Create(et, rowMarshaller);
             return true;
         }
 
@@ -65,6 +56,12 @@ namespace Microsoft.PowerFx.Core
         {
             if (collection != typeof(string))
             {
+                if (collection.IsGenericType && collection.GetGenericTypeDefinition() == typeof(IEnumerable<>))
+                {
+                    elementType = collection.GenericTypeArguments[0];
+                    return true;
+                }
+
                 foreach (var t1 in collection.GetInterfaces())
                 {
                     if (t1.IsGenericType && t1.GetGenericTypeDefinition() == typeof(IEnumerable<>))
@@ -80,12 +77,18 @@ namespace Microsoft.PowerFx.Core
         }
 
         // Convert a single value into a Record for a SCT,  { value : x }
-        [DebuggerDisplay("SCT(_inner)")]
+        [DebuggerDisplay("SCT({_inner})")]
         internal class SCTMarshaler : ITypeMarshaller
         {
-            public FormulaType Type { get; set; }
+            public FormulaType Type { get; }
 
-            public ITypeMarshaller _inner;
+            private readonly ITypeMarshaller _inner;
+
+            public SCTMarshaler(RecordType type, ITypeMarshaller inner)
+            {
+                Type = type;
+                _inner = inner;
+            }
 
             public FormulaValue Marshal(object value)
             {
@@ -99,9 +102,22 @@ namespace Microsoft.PowerFx.Core
 
         internal abstract class TableMarshaller : ITypeMarshaller
         {
-            public FormulaType Type { get; set; }
+            public FormulaType Type { get; private set; }
 
-            public ITypeMarshaller _rowMarshaler;
+            protected ITypeMarshaller _rowMarshaler;
+
+            public static TableMarshaller Create(Type elementType, ITypeMarshaller rowMarshaller)
+            {
+                var t2 = typeof(TableMarshaller<>).MakeGenericType(elementType);
+                var tableMarshaller = (TableMarshaller)Activator.CreateInstance(t2);
+
+                var tableType = ((RecordType)rowMarshaller.Type).ToTable();
+
+                tableMarshaller.Type = tableType;
+                tableMarshaller._rowMarshaler = rowMarshaller;
+
+                return tableMarshaller;
+            }
 
             public abstract FormulaValue Marshal(object value);
         }

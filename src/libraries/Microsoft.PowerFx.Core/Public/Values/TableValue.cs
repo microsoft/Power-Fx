@@ -32,11 +32,11 @@ namespace Microsoft.PowerFx.Core.Public.Values
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="index0">0-based index.</param>
+        /// <param name="index1">1-based index.</param>
         /// <returns>The record or an errorValue. </returns>
-        public DValue<RecordValue> Index(int index0)
+        public DValue<RecordValue> Index(int index1)
         {
-            if (TryGetIndex(index0, out var record))
+            if (TryGetIndex(index1, out var record))
             {
                 return record;
             }
@@ -45,8 +45,9 @@ namespace Microsoft.PowerFx.Core.Public.Values
         }
 
         // Index() does standard error messaging and then call TryGetIndex().
-        protected virtual bool TryGetIndex(int index0, out DValue<RecordValue> record)
-        { 
+        protected virtual bool TryGetIndex(int index1, out DValue<RecordValue> record)
+        {
+            var index0 = index1 - 1;
             if (index0 < 0)
             {
                 record = null;

@@ -9,12 +9,12 @@ using Microsoft.PowerFx.Core.Public.Values;
 
 namespace Microsoft.PowerFx.Core
 {
-    public class PrimitiveMarshallerProvider : ITypeMashallerProvider
+    public class PrimitiveMarshallerProvider : ITypeMarshallerProvider
     {
         // Map from .net types to formulaTypes
         private static readonly Dictionary<Type, FormulaType> _map = new Dictionary<Type, FormulaType>()
         {
-            // Fx needs more number typeS:
+            // Fx needs more number types:
             { typeof(double), FormulaType.Number },
             { typeof(int), FormulaType.Number },
             { typeof(decimal), FormulaType.Number },
@@ -33,7 +33,7 @@ namespace Microsoft.PowerFx.Core
         /// <inheritdoc/>
         public bool TryGetMarshaller(Type type, TypeMarshallerCache cache, int maxDepth, out ITypeMarshaller marshaler)
         {
-            if (_map.TryGetValue(type, out var fxType))
+            if (TryGetFormulaType(type, out var fxType))
             {
                 marshaler = new PrimitiveTypeMarshaler(fxType);
                 return true;
@@ -42,7 +42,12 @@ namespace Microsoft.PowerFx.Core
             // Not supported
             marshaler = null;
             return false;
-        }        
+        }  
+        
+        public static bool TryGetFormulaType(Type type, out FormulaType fxType)
+        {
+            return _map.TryGetValue(type, out fxType);
+        }
     }
 
     [DebuggerDisplay("ObjMarshal({Type})")]

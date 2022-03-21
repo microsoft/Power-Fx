@@ -97,8 +97,9 @@ namespace Microsoft.PowerFx.Core
             }
         }
 
-        protected override bool TryGetIndex(int index0, out DValue<RecordValue> record)
+        protected override bool TryGetIndex(int index1, out DValue<RecordValue> record)
         {
+            var index0 = index1 - 1;
             if (_sourceIndex != null)
             {
                 if (index0 < 0 || index0 >= _sourceCount.Count)
@@ -113,7 +114,7 @@ namespace Microsoft.PowerFx.Core
             }
             else
             {
-                return base.TryGetIndex(index0, out record);
+                return base.TryGetIndex(index1, out record);
             }
         }
     }

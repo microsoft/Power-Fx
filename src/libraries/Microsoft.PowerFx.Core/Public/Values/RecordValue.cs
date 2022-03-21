@@ -23,6 +23,9 @@ namespace Microsoft.PowerFx.Core.Public.Values
             Contract.Assert(IRContext.ResultType is RecordType);
         }
 
+        // If we have a derived Value, we can get a derived type. 
+        public new RecordType Type => (RecordType)base.Type;
+
         public static RecordValue Empty()
         {
             var type = new RecordType();
