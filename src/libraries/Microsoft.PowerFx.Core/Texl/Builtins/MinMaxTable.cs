@@ -43,21 +43,18 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             nodeToCoercedTypeMap = null;
 
             // Coerce everything except date/times to numeric.
-            for (var i = 1; i < argTypes.Length; i++)
+            if (argTypes[1] != DType.Date && argTypes[1] != DType.DateTime && argTypes[1] != DType.Time && CheckType(args[1], argTypes[1], DType.Number, DefaultErrorContainer, out var matchedWithCoercion))
             {
-                if (argTypes[i] != DType.Date && argTypes[i] != DType.DateTime && argTypes[i] != DType.Time && CheckType(args[i], argTypes[i], DType.Number, DefaultErrorContainer, out var matchedWithCoercion))
+                returnType = DType.Number;
+                if (matchedWithCoercion)
                 {
-                    returnType = DType.Number;
-                    if (matchedWithCoercion)
-                    {
-                        CollectionUtils.Add(ref nodeToCoercedTypeMap, args[i], DType.Number, allowDupes: true);
-                    }
+                    CollectionUtils.Add(ref nodeToCoercedTypeMap, args[1], DType.Number, allowDupes: true);
                 }
-                else if (argTypes[i] != DType.Date && argTypes[i] != DType.DateTime && argTypes[i] != DType.Time)
-                {
-                    errors.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.ErrNumberExpected);
-                    fArgsValid = false;
-                }
+            }
+            else if (argTypes[1] != DType.Date && argTypes[1] != DType.DateTime && argTypes[1] != DType.Time)
+            {
+                errors.EnsureError(DocumentErrorSeverity.Severe, args[1], TexlStrings.ErrNumberExpected);
+                fArgsValid = false;
             }
 
             if (!fArgsValid)

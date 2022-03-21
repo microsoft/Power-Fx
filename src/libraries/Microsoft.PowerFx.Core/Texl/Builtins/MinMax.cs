@@ -53,8 +53,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }// If there are elements of mixed types OR if the elements are NOT a Date/Time/DateTime, attempt to coerce to numeric.
             else if (!Array.TrueForAll(argTypes, element => element.Kind == argTypes[0].Kind) || !Array.Exists(argTypes, element => element.Kind == DKind.Date || element.Kind == DKind.DateTime || element.Kind == DKind.Time))
             {
-                fArgsValid = base.CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
-                Contracts.Assert(returnType == DType.Number);
+                returnType = DType.Number;
 
                 // Ensure that all the arguments are numeric/coercible to numeric.
                 for (var i = 0; i < argTypes.Length; i++)
@@ -87,6 +86,16 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             yield return new[] { TexlStrings.StatisticalArg };
             yield return new[] { TexlStrings.StatisticalArg, TexlStrings.StatisticalArg };
             yield return new[] { TexlStrings.StatisticalArg, TexlStrings.StatisticalArg, TexlStrings.StatisticalArg };
+        }
+
+        public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures(int arity)
+        {
+            if (arity > 2)
+            {
+                return GetGenericSignatures(arity, TexlStrings.StatisticalArg, TexlStrings.StatisticalArg);
+            }
+
+            return base.GetSignatures(arity);
         }
     }
 }
