@@ -14,10 +14,8 @@ namespace Microsoft.PowerFx.Functions
     {
         private static readonly DateTime _epoch = new DateTime(1899, 12, 30, 0, 0, 0, 0);
 
-        public static IReadOnlyDictionary<UnaryOpKind, FunctionPtr> UnaryOps => _unaryOps;
-
         #region Standard Error Handling Wrappers for Unary Operators
-        private static readonly Dictionary<UnaryOpKind, FunctionPtr> _unaryOps = new Dictionary<UnaryOpKind, FunctionPtr>()
+        public static IReadOnlyDictionary<UnaryOpKind, FunctionPtr> UnaryOps { get; } = new Dictionary<UnaryOpKind, FunctionPtr>()
         {
             {
                 UnaryOpKind.Negate,
@@ -230,7 +228,7 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: TimeParse)
             },
             {
-                UnaryOpKind.OptionSetToText,                
+                UnaryOpKind.OptionSetToText,
                 StandardErrorHandling<OptionSetValue>(
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: DoNotReplaceBlank,

@@ -8,6 +8,7 @@ namespace Microsoft.PowerFx.Core.Utils
     // DName refers to a string that is valid as the name of a table/column.
     // That is any string that:
     // - does not consist entirely of space characters.
+    [ThreadSafeImmutable]
     public struct DName : ICheckable, IEquatable<DName>, IEquatable<string>
     {
         private const string StrUnderscore = "_";
