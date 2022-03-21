@@ -14,6 +14,7 @@ namespace Microsoft.PowerFx.Core.Public.Types
     /// Formula Types are a class hiearchy.
     /// </summary>
     [DebuggerDisplay("{_type}")]
+    [ThreadSafeImmutable]
     public abstract class FormulaType
     {
         // protected isn't enough to let derived classes access this.
