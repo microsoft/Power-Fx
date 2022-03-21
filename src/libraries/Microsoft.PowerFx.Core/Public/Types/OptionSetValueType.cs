@@ -9,7 +9,10 @@ namespace Microsoft.PowerFx.Core.Public.Types
 {
     public class OptionSetValueType : FormulaType
     {
-        internal DName OptionSetName => _type.OptionSetInfo?.EntityName ?? default;
+        /// <summary>
+        /// The name of the source Option Set for this type.
+        /// </summary>
+        public DName OptionSetName => _type.OptionSetInfo?.EntityName ?? default;
 
         internal OptionSetValueType(IExternalOptionSet optionSet)
             : base(DType.CreateOptionSetValueType(optionSet))

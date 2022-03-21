@@ -82,7 +82,16 @@ namespace Microsoft.PowerFx.Core.Public.Types
 
                 case DKind.OptionSetValue:
                     var isBoolean = type.OptionSetInfo?.IsBooleanValued;
-                    return isBoolean.HasValue && isBoolean.Value ? Boolean : OptionSetValue;
+                    if (isBoolean.HasValue && isBoolean.Value)
+                    {
+                        return Boolean;
+                    }
+                    else
+                    {
+                        // In all non-test cases, this option set info must be present
+                        // For some existing tests, it isn't available. Once that's resolved, this should be cleaned up
+                        return type.OptionSetInfo != null ? new OptionSetValueType(type.OptionSetInfo) : OptionSetValue;
+                    }
 
                 // This isn't quite right, but once we're in the IR, an option set acts more like a record with optionsetvalue fields. 
                 case DKind.OptionSet:
