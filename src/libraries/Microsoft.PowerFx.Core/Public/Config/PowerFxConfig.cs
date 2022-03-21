@@ -20,6 +20,7 @@ namespace Microsoft.PowerFx.Core
         private bool _isLocked;
         private readonly Dictionary<string, TexlFunction> _extraFunctions;
         private readonly Dictionary<DName, IExternalEntity> _environmentSymbols;
+        private SingleSourceDisplayNameProvider _environmentSymbolDisplayNameProvider;
 
         internal IReadOnlyDictionary<string, TexlFunction> ExtraFunctions => _extraFunctions;
 
@@ -35,6 +36,7 @@ namespace Microsoft.PowerFx.Core
             _isLocked = false;
             _extraFunctions = new Dictionary<string, TexlFunction>();
             _environmentSymbols = new Dictionary<DName, IExternalEntity>();
+            _environmentSymbolDisplayNameProvider = new SingleSourceDisplayNameProvider();
             EnumStore = enumStore;
         }      
 
@@ -51,9 +53,16 @@ namespace Microsoft.PowerFx.Core
             return new PowerFxConfig(cultureInfo, enumStore);
         }
 
-        internal void AddEntity(IExternalEntity entity)
+        internal void AddEntity(IExternalEntity entity, DName displayName = default)
         {
             CheckUnlocked();
+
+            if (displayName != default) 
+            {
+                // Attempt to update display name provider before symbol table,
+                // since it can throw on collision and we want to leave the config in a good state
+                _environmentSymbolDisplayNameProvider = _environmentSymbolDisplayNameProvider.AddField(entity.EntityName, displayName);
+            }
 
             _environmentSymbols.Add(entity.EntityName, entity);
         }
@@ -63,6 +72,22 @@ namespace Microsoft.PowerFx.Core
             CheckUnlocked();
 
             _extraFunctions.Add(function.GetUniqueTexlRuntimeName(), function);
+        }
+                
+        internal bool TryGetSymbol(DName name, out IExternalEntity symbol, out DName displayName)
+        {
+            var lookupName = name;
+            if (_environmentSymbolDisplayNameProvider.TryGetLogicalName(name, out var logicalName))
+            {
+                lookupName = logicalName;
+                displayName = name;
+            }
+            else if (_environmentSymbolDisplayNameProvider.TryGetDisplayName(name, out displayName))
+            {
+                lookupName = name;
+            }
+
+            return _environmentSymbols.TryGetValue(lookupName, out symbol);
         }
 
         internal void Lock()
