@@ -173,7 +173,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                         
             config.AddEntity(otherOptionSet, new DName("NonColliding"));
 
-            Assert.Equal(2, config.EnvironmentSymbols.Count);
+            Assert.Equal(2, config.EnvironmentSymbols.Count());
         }
     }
 }

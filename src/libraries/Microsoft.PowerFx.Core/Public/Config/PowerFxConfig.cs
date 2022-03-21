@@ -24,7 +24,7 @@ namespace Microsoft.PowerFx.Core
 
         internal IReadOnlyDictionary<string, TexlFunction> ExtraFunctions => _extraFunctions;
 
-        internal IReadOnlyDictionary<DName, IExternalEntity> EnvironmentSymbols => _environmentSymbols;
+        internal IEnumerable<IExternalEntity> EnvironmentSymbols => _environmentSymbols.Values;
 
         internal EnumStore EnumStore { get; }
 
