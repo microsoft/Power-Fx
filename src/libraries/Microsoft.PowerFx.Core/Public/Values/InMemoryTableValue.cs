@@ -14,12 +14,12 @@ namespace Microsoft.PowerFx.Core.Public.Values
     /// In-memory table. Constructed over RecordValues. 
     /// DValue means items could be error or blank. 
     /// </summary>
-    internal class InMemoryTableValue : ObjectCollectionTableValue<DValue<RecordValue>>
+    internal class InMemoryTableValue : CollectionTableValue<DValue<RecordValue>>
     {
         private readonly RecordType _recordType;
 
         internal InMemoryTableValue(IRContext irContext, IEnumerable<DValue<RecordValue>> records)
-            : base(irContext, records, null)
+            : base(irContext, records)
         {
             Contract.Assert(IRContext.ResultType is TableType);
             var tableType = (TableType)IRContext.ResultType;
@@ -43,12 +43,12 @@ namespace Microsoft.PowerFx.Core.Public.Values
     // More constrained table when we know that all values are indeed Records, not error/blank. 
     // Beware of wrapping/unwrapping in DValues if we already have a RecordValue -
     // that can create extra IEnumerable wrappers that break direct indexing. 
-    internal class RecordsOnlyTableValue : ObjectCollectionTableValue<RecordValue>
+    internal class RecordsOnlyTableValue : CollectionTableValue<RecordValue>
     {
         private readonly RecordType _recordType;
 
         internal RecordsOnlyTableValue(IRContext irContext, IEnumerable<RecordValue> records)
-            : base(irContext, records, null)
+            : base(irContext, records)
         {
             Contract.Assert(IRContext.ResultType is TableType);
             var tableType = (TableType)IRContext.ResultType;

@@ -31,7 +31,18 @@ namespace Microsoft.PowerFx.Tests
                 $"{ns}.{nameof(ReflectionFunction)}",
                 $"{ns}.{nameof(RecalcEngineScope)}",
                 $"{ns}.{nameof(PowerFxConfigExtensions)}",
-                $"{ns}.{nameof(OptionSet)}"
+                $"{ns}.{nameof(OptionSet)}",
+                $"{ns}.{nameof(ObjectRecordValue)}",
+                $"{ns}.{nameof(ITypeMarshallerProvider)}",
+                $"{ns}.{nameof(ITypeMarshaller)}",
+                $"{ns}.{nameof(OptionSet)}",
+                $"{ns}.{nameof(ObjectMarshallerProvider)}",
+                $"{ns}.{nameof(ObjectMarshaler)}",
+                $"{ns}.{nameof(PrimitiveMarshallerProvider)}",
+                $"{ns}.{nameof(PrimitiveTypeMarshaler)}",
+                $"{ns}.{nameof(TableMarshallerProvider)}",
+                $"{ns}.{nameof(TypeMarshallerCache)}",
+                $"{ns}.{nameof(TypeMarshallerCacheExtensions)}"
             };
 
             var sb = new StringBuilder();
@@ -59,9 +70,11 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public void EvalWithGlobals()
         {
-            var engine = new RecalcEngine();
+            var cache = new TypeMarshallerCache();
 
-            var context = FormulaValue.NewRecord(new
+            var engine = new RecalcEngine();
+            
+            var context = cache.NewRecord(new
             {
                 x = 15
             });

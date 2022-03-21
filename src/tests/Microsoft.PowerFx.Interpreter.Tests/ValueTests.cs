@@ -18,6 +18,8 @@ namespace Microsoft.PowerFx.Core.Tests
 {
     public class ValueTests
     {
+        private static readonly TypeMarshallerCache _cache = new TypeMarshallerCache();
+
         [Theory]
         [InlineData(true, "true")]
         [InlineData(false, "false")]
@@ -110,7 +112,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 timespan = TimeSpan.FromDays(3)
             };
 
-            RecordValue r = FormulaValue.NewRecord(obj);
+            RecordValue r = _cache.NewRecord(obj);
             dynamic d = r.ToObject();
 
             Assert.Equal((double)obj.numberInt, d.numberInt);
@@ -142,8 +144,8 @@ namespace Microsoft.PowerFx.Core.Tests
         [Fact]
         public void RecordNotMarshalled()
         {
-            RecordValue r = FormulaValue.NewRecord(new RowDontMarshal());
-            Assert.Equal(0, r.Fields.Count());
+            RecordValue r = _cache.NewRecord(new RowDontMarshal());
+            Assert.Empty(r.Fields);
         }
 
         // These member kinds are not marshalled.  
@@ -168,9 +170,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [Fact]
         public void Table()
         {
-            var cache = new TypeMarshallerCache();
-            TableValue val = FormulaValue.NewTable(
-                cache,
+            TableValue val = _cache.NewTable(                
                 new TestRow { a = 10, str = "alpha" },
                 new TestRow { a = 15, str = "beta" });
 
@@ -189,8 +189,8 @@ namespace Microsoft.PowerFx.Core.Tests
         [Fact]
         public void TableFromRecords()
         {
-            RecordValue r1 = FormulaValue.NewRecord(new TestRow { a = 10, str = "alpha" });
-            RecordValue r2 = FormulaValue.NewRecord(new TestRow { a = 15, str = "beta" });
+            RecordValue r1 = _cache.NewRecord(new TestRow { a = 10, str = "alpha" });
+            RecordValue r2 = _cache.NewRecord(new TestRow { a = 15, str = "beta" });
             TableValue val = FormulaValue.NewTable(r1.Type, r1, r2);
 
             var result1 = ((RecordValue)val.Index(2).Value).GetField("a").ToObject();
@@ -212,8 +212,8 @@ namespace Microsoft.PowerFx.Core.Tests
         public void TableFromMixedRecords()
         {
             var cache = new TypeMarshallerCache();
-            RecordValue r1 = FormulaValue.NewRecord(new { a = 10, b = 20, c = 30 }, cache);
-            RecordValue r2 = FormulaValue.NewRecord(new { a = 11,         c = 31 }, cache);
+            RecordValue r1 = _cache.NewRecord(new { a = 10, b = 20, c = 30 });
+            RecordValue r2 = _cache.NewRecord(new { a = 11,         c = 31 });
             TableValue val = FormulaValue.NewTable(r1.Type, r1, r2);
 
             // Users first type 
@@ -230,8 +230,7 @@ namespace Microsoft.PowerFx.Core.Tests
         public void EmptyTableFromRecords()
         {
             // Empty means we can't infer the type from the records passed in. 
-            var cache = new TypeMarshallerCache();
-            TableValue val = FormulaValue.NewTable(cache, new RecordValue[0]);
+            TableValue val = _cache.NewTable(new RecordValue[0]);
 
             Assert.Empty(val.Rows);
 
@@ -242,8 +241,7 @@ namespace Microsoft.PowerFx.Core.Tests
         // Helper to bypass function overloading and invoke the generic overload. 
         private static TableValue NewTableT<T>(params T[] rows)
         {
-            var cache = new TypeMarshallerCache();
-            return FormulaValue.NewTable<T>(cache, rows);
+            return _cache.NewTable<T>(rows);
         }
 
         // Single Column Table
@@ -300,11 +298,11 @@ namespace Microsoft.PowerFx.Core.Tests
         [Fact]
         public void Blanks()
         {
-            var value = FormulaValue.New(null, typeof(int));
+            var value = _cache.Marshal(null, typeof(int));
             Assert.True(value is BlankValue);
 
             // null marshals as blank. 
-            RecordValue r = FormulaValue.NewRecord(new
+            RecordValue r = _cache.NewRecord(new
             {
                 number = 15.1,
                 missing = (string)null,

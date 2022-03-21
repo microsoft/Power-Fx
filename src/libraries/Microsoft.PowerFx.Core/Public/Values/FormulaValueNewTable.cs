@@ -9,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text.Json;
+using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Public.Types;
 
@@ -21,40 +22,6 @@ namespace Microsoft.PowerFx.Core.Public.Values
     public partial class FormulaValue
     {
         #region Host Tables API
-
-        public static TableValue NewTable<T>(TypeMarshallerCache cache, params T[] array)
-        {
-            return NewTable(cache, (IEnumerable<T>)array);
-        }
-
-        // If T is a RecordValue or FormulaValue, this will call out to that overload. 
-        public static TableValue NewTable<T>(TypeMarshallerCache cache, IEnumerable<T> rows)
-        {
-            if (cache == null)
-            {
-                throw new ArgumentNullException(nameof(cache));
-            }
-
-            // For FormulaValue, we need to inspect the runtime type. 
-            if (rows is IEnumerable<RecordValue> records)
-            {
-                var first = records.FirstOrDefault();
-                var recordType = (first == null) ?
-                    new RecordType() :
-                    ((RecordType)first.Type);
-                return NewTable(recordType, records);
-            }
-
-            if (rows is IEnumerable<FormulaValue>)
-            {
-                // Check to help avoid common errors. 
-                throw new InvalidOperationException($"Use NewSingleColumnTable instead");
-            }
-
-            // Statically marshal the T to a FormulaType.             
-            var value = cache.Marshal(rows);
-            return (TableValue)value;
-        }
 
         /// <summary>
         /// Construct a table from records. Assumed that Records must be the same type. 
@@ -90,7 +57,7 @@ namespace Microsoft.PowerFx.Core.Public.Values
         {
             // This is a convenience method. For anything requiring more control,
             // use NewTable and be explicit. 
-            if (!PrimitiveMarshallerProvider.TryGetFormulaType(typeof(T), out var fxType))
+            if (!BuiltinFormulaTypeConversions.TryGetFormulaType(typeof(T), out var fxType))
             {
                 throw new InvalidOperationException($"Use NewTable() instead");
             }

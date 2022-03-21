@@ -40,7 +40,7 @@ namespace Microsoft.PowerFx.Core.Public.Values
         /// <returns></returns>
         public FormulaValue GetField(string name)
         {            
-            var fieldType = ((RecordType)Type).MaybeGetFieldType(name) ?? FormulaType.Blank;
+            var fieldType = Type.MaybeGetFieldType(name) ?? FormulaType.Blank;
 
             return GetField(IRContext.NotInSource(fieldType), name);
         }

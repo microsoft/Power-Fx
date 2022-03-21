@@ -3,9 +3,8 @@
 
 using System.Collections.Generic;
 using Microsoft.PowerFx.Core.IR;
-using Microsoft.PowerFx.Core.Public.Values;
 
-namespace Microsoft.PowerFx.Core
+namespace Microsoft.PowerFx.Core.Public.Values
 {
     /// <summary>
     /// Create a TableValue over a dotnet collection class.
@@ -13,7 +12,7 @@ namespace Microsoft.PowerFx.Core
     /// (such as Enumeration, Count, Index).
     /// </summary>
     /// <typeparam name="T">The element type of the collection.</typeparam>
-    internal class ObjectCollectionTableValue<T> : TableValue
+    internal abstract class CollectionTableValue<T> : TableValue
     {
         // Required - basic enumeration. This is the source object. 
         private readonly IEnumerable<T> _enumerator; // required. supports enumeration;
@@ -21,9 +20,6 @@ namespace Microsoft.PowerFx.Core
         // Additional capabilities. 
         private readonly IReadOnlyList<T> _sourceIndex; // maybe null. supports index. 
         private readonly IReadOnlyCollection<T> _sourceCount; // maybe null. supports count;
-
-        // Convert T --> RecordValue
-        private readonly ITypeMarshaller _rowMarshaler;
 
         /// <summary>
         /// This table can be enumerated. 
@@ -40,38 +36,16 @@ namespace Microsoft.PowerFx.Core
         /// </summary>
         public bool CanCount => _sourceCount != null;
 
-        // Create a new TableValue that wraps the source. 
-        // Operations are deferred lazily. 
-        // The marshaller converts from the T to a RecordValue. 
-        public static ObjectCollectionTableValue<T> New(IRContext irContext, IEnumerable<T> source, ITypeMarshaller rowMarshaler)
-        {
-            // Make this a static builder instead of a ctor so that we could return different derived classes 
-            // based on the capabilities. 
-            return new ObjectCollectionTableValue<T>(irContext, source, rowMarshaler);
-        }
-
-        internal ObjectCollectionTableValue(IRContext irContext, IEnumerable<T> source, ITypeMarshaller rowMarshaler)
+        internal CollectionTableValue(IRContext irContext, IEnumerable<T> source)
          : base(irContext)
         {
             _enumerator = source;
 
             _sourceIndex = source as IReadOnlyList<T>;
             _sourceCount = source as IReadOnlyCollection<T>;
-
-            _rowMarshaler = rowMarshaler;
         }
 
-        protected virtual DValue<RecordValue> Marshal(T item)
-        {
-            var arg = _rowMarshaler.Marshal(item);
-            var result = arg switch
-            {
-                RecordValue r => DValue<RecordValue>.Of(r),
-                BlankValue b => DValue<RecordValue>.Of(b),
-                _ => DValue<RecordValue>.Of((ErrorValue)arg),
-            };
-            return result;
-        }
+        protected abstract DValue<RecordValue> Marshal(T item);
 
         public override IEnumerable<DValue<RecordValue>> Rows
         {

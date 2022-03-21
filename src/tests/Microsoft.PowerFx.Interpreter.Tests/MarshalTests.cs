@@ -55,10 +55,9 @@ namespace Microsoft.PowerFx.Tests
         public void MarshalWithoutType()
         {
             var cache = new TypeMarshallerCache();
-            
-            var value = cache.Marshal((object)17, (Type)null);
 
-            Assert.Equal(17.0, ((NumberValue)value).Value);
+            // Type is a required parameter - being explicit. 
+            Assert.Throws<ArgumentNullException>(() => cache.Marshal((object)17, (Type)null));
         }
 
         [Fact]

@@ -30,10 +30,10 @@ namespace Microsoft.PowerFx.Core.Public.Values
         }
 
         /// <summary>
-        /// 
+        /// Lookup the record at the given 1-based index, or return an error value if out of range.
         /// </summary>
         /// <param name="index1">1-based index.</param>
-        /// <returns>The record or an errorValue. </returns>
+        /// <returns>The record or an errorValue.</returns>
         public DValue<RecordValue> Index(int index1)
         {
             if (TryGetIndex(index1, out var record))

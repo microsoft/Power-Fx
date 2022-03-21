@@ -10,12 +10,13 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Text.Json;
+using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Public.Types;
 using Microsoft.PowerFx.Core.Public.Values;
 
-namespace Microsoft.PowerFx.Core
-{
+namespace Microsoft.PowerFx
+{ 
     /// <summary>
     /// Marshal .Net classes (with fields). This supports strong typing and lazy marshalling. 
     /// Handles any IEnumerable (including arrays).
@@ -106,6 +107,7 @@ namespace Microsoft.PowerFx.Core
 
             protected ITypeMarshaller _rowMarshaler;
 
+            // Create a TableMarshaller<T> where T is the given elementType.
             public static TableMarshaller Create(Type elementType, ITypeMarshaller rowMarshaller)
             {
                 var t2 = typeof(TableMarshaller<>).MakeGenericType(elementType);

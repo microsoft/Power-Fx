@@ -9,9 +9,8 @@ using System.Reflection;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Public.Types;
 using Microsoft.PowerFx.Core.Public.Values;
-using static Microsoft.PowerFx.Core.ObjectMarshallerProvider;
 
-namespace Microsoft.PowerFx.Core
+namespace Microsoft.PowerFx
 {    
     /// <summary>
     /// Represent a Record that's backed by a DotNet object. 

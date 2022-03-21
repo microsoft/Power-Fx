@@ -13,7 +13,7 @@ using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Public.Types;
 using Microsoft.PowerFx.Core.Public.Values;
 
-namespace Microsoft.PowerFx.Core
+namespace Microsoft.PowerFx
 {
     /// <summary>
     /// Marshal .Net classes (with fields) to <see cref="RecordValue"/>. 
@@ -84,60 +84,5 @@ namespace Microsoft.PowerFx.Core
             marshaler = new ObjectMarshaler(fxType, mapping);
             return true;
         }      
-    }
-
-    /// <summary>
-    /// Marshal a specific type of object to a record. 
-    /// </summary>
-    [DebuggerDisplay("ObjMarshal({Type})")]
-    public class ObjectMarshaler : ITypeMarshaller
-    {
-        // Map fx field name to a function produces the formula value given the dotnet object.
-        private readonly IReadOnlyDictionary<string, Func<object, FormulaValue>> _mapping;
-
-        public FormulaType Type { get; private set; }
-
-        // FormulaType must be a record, and the dictionary provders getters for each field in that record. 
-        public ObjectMarshaler(FormulaType type, IReadOnlyDictionary<string, Func<object, FormulaValue>> fieldMap)
-        {
-            if (!(type is RecordType))
-            {
-                throw new ArgumentException($"type must be a record, not ${type}");
-            }
-
-            Type = type;
-            _mapping = fieldMap;
-        }
-
-        public FormulaValue Marshal(object source)
-        {
-            var value = new ObjectRecordValue(IRContext.NotInSource(Type), source, this);
-            return value;
-        }
-
-        // Get the value of the field. 
-        // Return null on missing
-        public FormulaValue TryGetField(object source, string name)
-        {
-            if (_mapping.TryGetValue(name, out var getter))
-            {
-                var fieldValue = getter(source);
-                return fieldValue;
-            }
-
-            return null;
-        }
-
-        public IEnumerable<NamedValue> GetFields(object source)
-        {
-            foreach (var kv in _mapping)
-            {
-                var fieldName = kv.Key;
-                var getter = kv.Value;
-
-                var value = getter(source);
-                yield return new NamedValue(fieldName, value);
-            }
-        }
     }
 }

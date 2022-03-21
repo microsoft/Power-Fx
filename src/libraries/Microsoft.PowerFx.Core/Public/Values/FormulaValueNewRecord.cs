@@ -23,28 +23,6 @@ namespace Microsoft.PowerFx.Core.Public.Values
         #region Host Records API
 
         /// <summary>
-        /// Create a record by reflecting over the object's public properties.
-        /// </summary>
-        /// <typeparam name="T">static type to reflect over.</typeparam>
-        /// <param name="obj"></param>
-        /// <returns>a new record value.</returns>
-        public static RecordValue NewRecord<T>(T obj, TypeMarshallerCache cache = null)
-        {
-            return NewRecord(obj, typeof(T), cache);
-        }
-
-        public static RecordValue NewRecord(object obj, Type type, TypeMarshallerCache cache = null)
-        {
-            if (cache == null)
-            {
-                cache = new TypeMarshallerCache();
-            }
-
-            var value = (RecordValue)cache.Marshal(obj, type);
-            return value;
-        }
-
-        /// <summary>
         /// Create a record from the list of fields provided. 
         /// </summary>
         /// <param name="fields"></param>

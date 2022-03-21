@@ -5,7 +5,7 @@ using System;
 using Microsoft.PowerFx.Core.Public.Types;
 using Microsoft.PowerFx.Core.Public.Values;
 
-namespace Microsoft.PowerFx.Core
+namespace Microsoft.PowerFx
 {
     /// <summary>
     /// Handles marshalling a given type. Invoked by the <see cref="TypeMarshallerCache"/>.
@@ -19,18 +19,24 @@ namespace Microsoft.PowerFx.Core
     }
 
     /// <summary>
-    /// A marshaller for a given System.Type.
+    /// A marshaller for a given System.Type to a given power fx type. .
     /// This can only marshal types that have a static mapping to a FormulaType.
     /// </summary>
     public interface ITypeMarshaller
     {
         public FormulaType Type { get; }
 
-        // Implementor can assume that:
-        // - value is not null. 
-        // - the value matches the type check in the provider.
-        // Throws on error. 
-        // returned FormulaValue must match the given type. 
+        /// <summary>
+        /// Marshal an dotnet object instance to a FormulaValue or throws on error. 
+        /// If value is null, then this returns a blank value. 
+        /// </summary>
+        /// <param name="value">an object instance. </param>
+        /// <returns>a formulaValue for this instance of type <see cref="Type"/>.</returns>
+        /// <remarks>
+        /// Implementor can assume that:
+        /// - value is not null. The cache wrapper it in a <see cref="NullCheckerMarshaler"/>
+        /// - the value matches the type check in the provider.
+        /// </remarks>
         public FormulaValue Marshal(object value);
     }
 }

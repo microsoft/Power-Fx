@@ -7,60 +7,28 @@ using System.Diagnostics;
 using Microsoft.PowerFx.Core.Public.Types;
 using Microsoft.PowerFx.Core.Public.Values;
 
-namespace Microsoft.PowerFx.Core
+namespace Microsoft.PowerFx
 {
-    public class PrimitiveMarshallerProvider : ITypeMarshallerProvider
-    {
-        // Map from .net types to formulaTypes
-        private static readonly Dictionary<Type, FormulaType> _map = new Dictionary<Type, FormulaType>()
-        {
-            // Fx needs more number types:
-            { typeof(double), FormulaType.Number },
-            { typeof(int), FormulaType.Number },
-            { typeof(decimal), FormulaType.Number },
-            { typeof(long), FormulaType.Number },
-            { typeof(float), FormulaType.Number },
-                        
-            // Non-numeric types:
-            { typeof(Guid), FormulaType.Guid },
-            { typeof(bool), FormulaType.Boolean },
-            { typeof(DateTime), FormulaType.DateTime },
-            { typeof(DateTimeOffset), FormulaType.DateTime },
-            { typeof(TimeSpan), FormulaType.Time },
-            { typeof(string), FormulaType.String }
-        };
-        
-        /// <inheritdoc/>
-        public bool TryGetMarshaller(Type type, TypeMarshallerCache cache, int maxDepth, out ITypeMarshaller marshaler)
-        {
-            if (TryGetFormulaType(type, out var fxType))
-            {
-                marshaler = new PrimitiveTypeMarshaler(fxType);
-                return true;
-            }
-
-            // Not supported
-            marshaler = null;
-            return false;
-        }  
-        
-        public static bool TryGetFormulaType(Type type, out FormulaType fxType)
-        {
-            return _map.TryGetValue(type, out fxType);
-        }
-    }
-
+    /// <summary>
+    /// Marshaller for builtin primitives. 
+    /// </summary>
     [DebuggerDisplay("ObjMarshal({Type})")]
     public class PrimitiveTypeMarshaler : ITypeMarshaller
     {
+        /// <inheritdoc/>
         public FormulaType Type { get; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PrimitiveTypeMarshaler"/> class.
+        /// </summary>
+        /// <param name="fxType">The power fx type this marshals to.</param>
         public PrimitiveTypeMarshaler(FormulaType fxType)
         {
             Type = fxType;
         }
 
-        public FormulaValue Marshal(object value)        
+        /// <inheritdoc/>
+        public FormulaValue Marshal(object value)
         {
             return Marshal(value, Type);
         }
@@ -68,11 +36,11 @@ namespace Microsoft.PowerFx.Core
         /// <summary>
         /// Marshal from a dotnet primitive to a given Power Fx type. 
         /// </summary>
-        /// <param name="value"></param>
-        /// <param name="type"></param>
-        /// <returns></returns>
+        /// <param name="value">dotnet value.</param>
+        /// <param name="type">target power fx type to marshal to.</param>
+        /// <returns>A power fx value.</returns>
         public static FormulaValue Marshal(object value, FormulaType type)
-        {         
+        {
             if (type == FormulaType.Number)
             {
                 if (value is int i)

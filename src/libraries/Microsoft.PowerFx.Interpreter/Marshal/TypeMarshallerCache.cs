@@ -13,11 +13,12 @@ using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Public.Types;
 using Microsoft.PowerFx.Core.Public.Values;
 
-namespace Microsoft.PowerFx.Core
+namespace Microsoft.PowerFx
 {
     /// <summary>
     /// Marshal .net objects into Power Fx values.  
     /// This allows customizing the marshallers, as well as caching the conversion rules for a given type. 
+    /// This is an immutable object representing a collection of immutable providers. 
     /// </summary>
     public class TypeMarshallerCache
     {
@@ -26,6 +27,7 @@ namespace Microsoft.PowerFx.Core
         public const int DefaultDepth = 3;
 
         // Map from a .net type to the marshaller for that type
+        // Cache must be thread-safe. 
         private readonly Dictionary<Type, ITypeMarshaller> _cache = new Dictionary<Type, ITypeMarshaller>();
 
         // Take a private array to get a snapshot and ensure the enumeration doesn't change
@@ -109,9 +111,14 @@ namespace Microsoft.PowerFx.Core
             }
 
             // The cache requires an exact type match and doesn't handle base types.
-            if (_cache.TryGetValue(type, out var tm))
+            ITypeMarshaller tm;
+
+            lock (_cache)
             {
-                return tm;
+                if (_cache.TryGetValue(type, out tm))
+                {
+                    return tm;
+                }
             }
 
             foreach (var marshaller in _marshallers)
@@ -119,7 +126,11 @@ namespace Microsoft.PowerFx.Core
                 if (marshaller.TryGetMarshaller(type, this, maxDepth - 1, out tm))
                 {
                     tm = new NullCheckerMarshaler(tm);
-                    _cache[type] = tm;
+                    lock (_cache)
+                    {
+                        _cache[type] = tm;
+                    }
+
                     return tm;
                 }
             }
@@ -133,21 +144,12 @@ namespace Microsoft.PowerFx.Core
         /// This can use runtime checks (like null to blank), and then 
         /// just calls <see cref="GetMarshaller"/>. 
         /// </summary>
-        /// <param name="value"></param>
+        /// <param name="value">the object instance to marshal.</param>
+        /// <param name="type">The type to marshal as. For example, if this is a base type, then 
+        /// the derived properties available at runtime are not marshalled.</param>
         /// <returns></returns>
-        public FormulaValue Marshal(object value, Type type = null)
+        public FormulaValue Marshal(object value, Type type)
         {
-            if (value == null)
-            {
-                FormulaType fxType = null;
-                if (type != null)
-                {
-                    fxType = GetMarshaller(type).Type;
-                }
-
-                return FormulaValue.NewBlank(fxType);                
-            }
-
             if (value is FormulaValue fxValue)
             {
                 return fxValue;
@@ -155,8 +157,8 @@ namespace Microsoft.PowerFx.Core
 
             if (type == null)
             {
-                type = value.GetType();
-            }             
+                throw new ArgumentNullException(nameof(type));
+            }
 
             var tm = GetMarshaller(type);
             return tm.Marshal(value);
@@ -164,6 +166,7 @@ namespace Microsoft.PowerFx.Core
 
         public FormulaValue Marshal<T>(T value)
         {
+            // T will be the compile-time type, not necessarily the runtime type. 
             return Marshal(value, typeof(T));
         }
 
