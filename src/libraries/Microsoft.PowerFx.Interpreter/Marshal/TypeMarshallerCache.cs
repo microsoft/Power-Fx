@@ -20,6 +20,7 @@ namespace Microsoft.PowerFx
     /// This allows customizing the marshallers, as well as caching the conversion rules for a given type. 
     /// This is an immutable object representing a collection of immutable providers. 
     /// </summary>
+    [ThreadSafeImmutable]
     public class TypeMarshallerCache
     {
         // Limit marshalling depth until we have full recusion support in type system.
@@ -28,7 +29,20 @@ namespace Microsoft.PowerFx
 
         // Map from a .net type to the marshaller for that type
         // Cache must be thread-safe. 
+        [ThreadSafeProtectedByLock("_cache")]
         private readonly Dictionary<Type, ITypeMarshaller> _cache = new Dictionary<Type, ITypeMarshaller>();
+
+        /// <summary>
+        /// Empty type marshaller, without any defaults. 
+        /// </summary>
+        public static TypeMarshallerCache Empty { get; } = new TypeMarshallerCache(new ITypeMarshallerProvider[0]);
+
+        private static readonly IEnumerable<ITypeMarshallerProvider> _defaults = NewList(new ObjectMarshallerProvider());
+
+        /// <summary>
+        /// Ordered list of type marshallers. First marshaller to handle is used. 
+        /// </summary>
+        private readonly IEnumerable<ITypeMarshallerProvider> _marshallers;
 
         // Take a private array to get a snapshot and ensure the enumeration doesn't change
         private TypeMarshallerCache(ITypeMarshallerProvider[] marshallers)
@@ -41,7 +55,7 @@ namespace Microsoft.PowerFx
         /// Create marshaller with default list.
         /// </summary>
         public TypeMarshallerCache()
-            : this(_defaults)
+            : this(_defaults.ToArray())
         {
         }
 
@@ -65,6 +79,21 @@ namespace Microsoft.PowerFx
             return NewPrepend(list);
         }
 
+        private static ITypeMarshallerProvider[] NewList(ObjectMarshallerProvider objectProvider)
+        {
+            if (objectProvider == null)
+            {
+                throw new ArgumentNullException(nameof(objectProvider));
+            }
+                
+            return new ITypeMarshallerProvider[]
+            {
+                new PrimitiveMarshallerProvider(),
+                new TableMarshallerProvider(),
+                objectProvider
+            };
+        }
+
         /// <summary>
         ///  Create a cache with the the default marshallers and the specified object marshaller.
         /// </summary>
@@ -72,30 +101,8 @@ namespace Microsoft.PowerFx
         /// <returns></returns>
         public static TypeMarshallerCache New(ObjectMarshallerProvider objectProvider)
         {
-            return new TypeMarshallerCache(new ITypeMarshallerProvider[] 
-            {
-                new PrimitiveMarshallerProvider(),
-                new TableMarshallerProvider(),
-                objectProvider
-            });
+            return new TypeMarshallerCache(NewList(objectProvider));
         }
-
-        /// <summary>
-        /// Empty type marshaller, without any defaults. 
-        /// </summary>
-        public static TypeMarshallerCache Empty { get; } = new TypeMarshallerCache(new ITypeMarshallerProvider[0]);
-
-        /// <summary>
-        /// Ordered list of type marshallers. First marshaller to handle is used. 
-        /// </summary>
-        private readonly IEnumerable<ITypeMarshallerProvider> _marshallers;
-        
-        private static readonly ITypeMarshallerProvider[] _defaults = new ITypeMarshallerProvider[]
-        { 
-            new PrimitiveMarshallerProvider(),
-            new TableMarshallerProvider(),
-            new ObjectMarshallerProvider() // dangerously broad, include last. 
-        };
 
         /// <summary>
         /// Returns a marshaller for the given type. 

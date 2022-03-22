@@ -8,7 +8,7 @@ namespace Microsoft.PowerFx
     /// <summary>
     /// This type is thread safe becasue it's immutable. 
     /// </summary>
-    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct)]
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Interface)]
     internal class ThreadSafeImmutableAttribute : Attribute
     {
         /// <summary>

@@ -10,6 +10,7 @@ namespace Microsoft.PowerFx
     /// <summary>
     /// Handles marshalling a given type. Invoked by the <see cref="TypeMarshallerCache"/>.
     /// </summary>
+    [ThreadSafeImmutable]
     public interface ITypeMarshallerProvider
     {
         // Return false if it doesn't handle it. 
@@ -22,6 +23,7 @@ namespace Microsoft.PowerFx
     /// A marshaller for a given System.Type to a given power fx type. .
     /// This can only marshal types that have a static mapping to a FormulaType.
     /// </summary>
+    [ThreadSafeImmutable]
     public interface ITypeMarshaller
     {
         public FormulaType Type { get; }
