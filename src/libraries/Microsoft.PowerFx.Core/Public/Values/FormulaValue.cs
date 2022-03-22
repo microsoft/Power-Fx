@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.Contracts;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -115,6 +116,11 @@ namespace Microsoft.PowerFx.Core.Public.Values
             return new TimeValue(IRContext.NotInSource(FormulaType.Time), value);
         }
 
+        public static ColorValue New(Color value)
+        {
+            return new ColorValue(IRContext.NotInSource(FormulaType.Color), value);
+        }
+
         public static BlankValue NewBlank(FormulaType type = null)
         {
             if (type == null)
@@ -218,6 +224,11 @@ namespace Microsoft.PowerFx.Core.Public.Values
             if (obj is TimeSpan timeValue)
             {
                 return New(timeValue);
+            }
+
+            if (obj is Color valueColor)
+            {
+                return New(valueColor);
             }
 
             // Do checking off the static type, not the runtime instance. 
