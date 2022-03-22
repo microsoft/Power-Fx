@@ -18,6 +18,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
             var allowed = new HashSet<string>()
             {
+                "Microsoft.PowerFx.FeatureFlags",
                 "Microsoft.PowerFx.Core.Texl.Intellisense.IIntellisenseResult",
                 "Microsoft.PowerFx.Core.Texl.Intellisense.IIntellisenseSuggestion",
                 "Microsoft.PowerFx.Core.Texl.Intellisense.SuggestionIconKind",
