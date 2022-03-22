@@ -3046,12 +3046,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 }
 
                 // Any connectedDataSourceInfo or option set or view needs to be accessed asynchronously to allow data to be loaded.
-                if (lookupInfo.Data is IExternalTabularDataSource || lookupInfo.Kind == BindKind.OptionSet || lookupInfo.Kind == BindKind.View)
-                {
-                    _txb.FlagPathAsAsync(node);
-                }
-
-                if (lookupInfo.Data is IExternalNamedFormulaRule namedFormulaRule && namedFormulaRule.Rule.IsAsync)
+                if (lookupInfo.Data is IExternalTabularDataSource || lookupInfo.Kind == BindKind.OptionSet || lookupInfo.Kind == BindKind.View || lookupInfo.IsAsync)
                 {
                     _txb.FlagPathAsAsync(node);
                 }

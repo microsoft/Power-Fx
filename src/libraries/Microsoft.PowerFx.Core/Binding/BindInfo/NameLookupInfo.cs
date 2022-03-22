@@ -16,11 +16,12 @@ namespace Microsoft.PowerFx.Core.Binding.BindInfo
         public readonly int UpCount;
         public readonly DType Type;
         public readonly DName LogicalName;
+        public readonly bool IsAsync;
 
         // Optional data associated with a name. May be null.
         public readonly object Data;
 
-        public NameLookupInfo(BindKind kind, DType type, DPath path, int upCount, object data = null, DName logicalName = default)
+        public NameLookupInfo(BindKind kind, DType type, DPath path, int upCount, object data = null, DName logicalName = default, bool isAsync = default)
         {
             Contracts.Assert(kind >= BindKind.Min && kind < BindKind.Lim);
             Contracts.Assert(upCount >= 0);
@@ -32,6 +33,7 @@ namespace Microsoft.PowerFx.Core.Binding.BindInfo
             UpCount = upCount;
             Data = data;
             LogicalName = logicalName;
+            IsAsync = isAsync;
         }
     }
 }
