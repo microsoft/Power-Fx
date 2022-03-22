@@ -309,6 +309,10 @@ namespace Microsoft.PowerFx.Core.Tests
                 // $$$ proper escaping?
                 sb.Append('"' + s.Value + '"');
             }
+            else if (result is GuidValue guid)
+            {
+                sb.Append(guid.Value);
+            }
             else if (result is TableValue t)
             {
                 var tableType = (TableType)t.Type;

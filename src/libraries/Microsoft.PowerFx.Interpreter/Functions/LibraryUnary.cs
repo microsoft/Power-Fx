@@ -78,6 +78,16 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: BooleanToNumber)
             },
             {
+                UnaryOpKind.GuidToText,
+                StandardErrorHandling<GuidValue>(
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<GuidValue>,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: GuidToText)
+            },
+            {
                 UnaryOpKind.TextToBoolean,
                 StandardErrorHandling<StringValue>(
                     expandArguments: NoArgExpansion,
@@ -279,6 +289,15 @@ namespace Microsoft.PowerFx.Functions
         {
             var b = args[0].Value;
             return new NumberValue(irContext, b ? 1.0 : 0.0);
+        }
+
+        public static StringValue GuidToText(IRContext irContext, GuidValue[] args)
+        {
+            var g = args[0].Value;
+
+            // The "D" format string is 32 digits, separated by hyphens
+            // 00000000 - 0000 - 0000 - 0000 - 000000000000
+            return new StringValue(irContext, g.ToString("D"));
         }
 
         public static BooleanValue TextToBoolean(IRContext irContext, StringValue[] args)

@@ -300,6 +300,23 @@ namespace Microsoft.PowerFx.Functions
             }
         }
 
+        public static FormulaValue GuidNoArg(IRContext irContext)
+        {
+            return new GuidValue(irContext, Guid.NewGuid());
+        }
+
+        public static FormulaValue GuidPure(IRContext irContext, StringValue[] args)
+        {
+            var stringInput = args[0];
+
+            if (Guid.TryParse(stringInput.Value, out var guid))
+            {
+                return new GuidValue(irContext, guid);
+            }
+
+            return CommonErrors.InvalidGuidError(irContext);
+        }
+
         public static FormulaValue Lower(IRContext irContext, StringValue[] args)
         {
             return new StringValue(irContext, args[0].Value.ToLower());
