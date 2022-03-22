@@ -16,6 +16,7 @@ namespace Microsoft.PowerFx.Functions
     {
         private static readonly object _randomizerLock = new object();
 
+        [ThreadSafeProtectedByLock(nameof(_randomizerLock))]
         private static Random _random;
 
         // Support for aggregators. Helpers to ensure that Scalar and Tabular behave the same.

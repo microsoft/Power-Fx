@@ -9,6 +9,7 @@ namespace Microsoft.PowerFx.Core.Binding
     // A ScopeUseSet is intrinsically associated with a scope S, and
     // encodes that scope's "use set", i.e. the set of up-counts relative
     // to S where the various lambda params used in S are actually declared.
+    [ThreadSafeImmutable]
     internal struct ScopeUseSet
     {
         // Pseudo-level to identify the "globals".

@@ -141,7 +141,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             Assert.Equal("textDocument/publishDiagnostics", notification.Method);
             Assert.Equal("powerfx://app", notification.Params.Uri);
             Assert.Single(notification.Params.Diagnostics);
-            Assert.Equal("Name isn't valid. This identifier isn't recognized.", notification.Params.Diagnostics[0].Message);
+            Assert.Equal("Name isn't valid. 'AA' isn't recognized.", notification.Params.Diagnostics[0].Message);
 
             // some invalid cases
             _sendToClientData.Clear();
@@ -219,8 +219,8 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
         }
 
         [Theory]
-        [InlineData("AA", null, "Name isn't valid. This identifier isn't recognized.")]
-        [InlineData("1+CountRowss", null, "Name isn't valid. This identifier isn't recognized.")]
+        [InlineData("AA", null, "Name isn't valid. 'AA' isn't recognized.")]
+        [InlineData("1+CountRowss", null, "Name isn't valid. 'CountRowss' isn't recognized.")]
         [InlineData("CountRows(2)", null, "Invalid argument type (Number). Expecting a Table value instead.", "The function 'CountRows' has some invalid arguments.")]
         public void TestDidOpenErroneousFormula(string formula, string context, params string[] expectedErrors)
         {
