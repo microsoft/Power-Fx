@@ -3057,8 +3057,7 @@ namespace Microsoft.PowerFx.Core.Binding
                     _txb.ErrorContainer.EnsureError(node, TexlStrings.ErrValueMustBeFullyQualified);
                 }
 
-                // Any connectedDataSourceInfo or option set or view needs to be accessed asynchronously to allow data to be loaded.
-                if (lookupInfo.Data is IExternalTabularDataSource || lookupInfo.Kind == BindKind.OptionSet || lookupInfo.Kind == BindKind.View)
+                if (lookupInfo.IsAsync)
                 {
                     _txb.FlagPathAsAsync(node);
                 }
