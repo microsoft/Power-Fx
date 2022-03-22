@@ -256,7 +256,40 @@ namespace Microsoft.PowerFx.Tests
 
             Assert.False(result.IsSuccess);
             Assert.Single(result.Errors);
-            Assert.StartsWith("Error 2-5: Name isn't valid. This identifier isn't recognized", result.Errors[0].ToString());
+            Assert.StartsWith("Error 2-5: Name isn't valid. 'foo' isn't recognized", result.Errors[0].ToString());
+        }
+
+        [Fact]
+        public void CheckLambdaBindError()
+        {
+            var engine = new RecalcEngine();
+            var result = engine.Check("Filter([1,2,3] As X, X.Value > foo)");
+
+            Assert.False(result.IsSuccess);
+            Assert.Single(result.Errors);
+            Assert.StartsWith("Error 31-34: Name isn't valid. 'foo' isn't recognized", result.Errors[0].ToString());
+        }
+
+        [Fact]
+        public void CheckDottedBindError()
+        {
+            var engine = new RecalcEngine();
+            var result = engine.Check("[1,2,3].foo");
+
+            Assert.False(result.IsSuccess);
+            Assert.Single(result.Errors);
+            Assert.StartsWith("Error 7-11: Name isn't valid. 'foo' isn't recognized", result.Errors[0].ToString());
+        }
+
+        [Fact]
+        public void CheckDottedBindErro2r()
+        {
+            var engine = new RecalcEngine();
+            var result = engine.Check("[].Value");
+
+            Assert.False(result.IsSuccess);
+            Assert.Single(result.Errors);
+            Assert.StartsWith("Error 2-8: Name isn't valid. 'Value' isn't recognized", result.Errors[0].ToString());
         }
 
         [Fact]
@@ -309,7 +342,7 @@ namespace Microsoft.PowerFx.Tests
             Assert.False(result.IsSuccess);
             Assert.Null(result.Expression);
             Assert.Single(result.Errors);
-            Assert.StartsWith("Error 2-5: Name isn't valid. This identifier isn't recognized", result.Errors[0].ToString());
+            Assert.StartsWith("Error 2-5: Name isn't valid. 'foo' isn't recognized", result.Errors[0].ToString());
         }
 
         [Fact]
