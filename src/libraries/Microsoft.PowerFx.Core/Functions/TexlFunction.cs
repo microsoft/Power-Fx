@@ -344,6 +344,13 @@ namespace Microsoft.PowerFx.Core.Functions
         // Functions with optional parameters have more than one signature.
         public abstract IEnumerable<TexlStrings.StringGetter[]> GetSignatures();
 
+        // Return all enums that are required by this function.
+        // This can be used to generate a list of enums required for a function library.
+        public virtual IEnumerable<string> GetRequiredEnumNames()
+        {
+            return new List<string>();
+        }
+
         // Return all signatures with at most 'arity' parameters.
         public virtual IEnumerable<TexlStrings.StringGetter[]> GetSignatures(int arity)
         {
