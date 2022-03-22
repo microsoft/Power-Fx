@@ -73,7 +73,8 @@ namespace Microsoft.PowerFx
                     data);
                 return true;
             }
-            else if (_powerFxConfig.EnvironmentSymbols.TryGetValue(name, out var symbol))
+
+            if (_powerFxConfig.TryGetSymbol(name, out var symbol, out var displayName))
             {
                 // Special case symbols
                 if (symbol is IExternalOptionSet optionSet)
@@ -83,7 +84,8 @@ namespace Microsoft.PowerFx
                         optionSet.Type,
                         DPath.Root,
                         0,
-                        optionSet);
+                        optionSet,
+                        displayName);
 
                     return true;
                 }

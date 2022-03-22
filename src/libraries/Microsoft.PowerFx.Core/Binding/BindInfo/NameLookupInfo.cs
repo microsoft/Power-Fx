@@ -15,12 +15,17 @@ namespace Microsoft.PowerFx.Core.Binding.BindInfo
         public readonly DPath Path;
         public readonly int UpCount;
         public readonly DType Type;
-        public readonly DName LogicalName;
+
+        /// <summary>
+        /// Some resolved objects may have a display name associated with them. If this is non-default,
+        /// it has the display name of the object in Data. 
+        /// </summary>
+        public readonly DName DisplayName;
 
         // Optional data associated with a name. May be null.
         public readonly object Data;
 
-        public NameLookupInfo(BindKind kind, DType type, DPath path, int upCount, object data = null, DName logicalName = default)
+        public NameLookupInfo(BindKind kind, DType type, DPath path, int upCount, object data = null, DName displayName = default)
         {
             Contracts.Assert(kind >= BindKind.Min && kind < BindKind.Lim);
             Contracts.Assert(upCount >= 0);
@@ -31,7 +36,7 @@ namespace Microsoft.PowerFx.Core.Binding.BindInfo
             Path = path;
             UpCount = upCount;
             Data = data;
-            LogicalName = logicalName;
+            DisplayName = displayName;
         }
     }
 }
