@@ -10,6 +10,7 @@ namespace Microsoft.PowerFx.Core
 {
     // If there are multiple DisplayNameProviders associated with a type, we may have name conflicts
     // In that case, we block the use of display names using this provider
+    [ThreadSafeImmutable]
     internal class DisabledDisplayNameProvider : DisplayNameProvider
     {
         public static DisabledDisplayNameProvider Instance { get; } = new DisabledDisplayNameProvider();

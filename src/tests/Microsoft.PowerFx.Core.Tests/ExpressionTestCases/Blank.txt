@@ -46,9 +46,7 @@ false
 
 // https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-isblank-isempty
 
-// Blank() by itself is not valid for SQL, since there must a valid SQL type
 >> Blank()
-/*SqlRunner*/ Compile Error
 Blank()
 
 //-----------------------------------------------
@@ -91,7 +89,6 @@ true
 0
 
 >> Blank() = Blank()
-/*InterpreterRunner*/ #Skip
 true
 
 >> Blank() = ""

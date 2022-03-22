@@ -10,6 +10,7 @@ using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Core.Functions.FunctionArgValidators
 {
+    [ThreadSafeImmutable]
     internal sealed class DataSourceArgNodeValidator : IArgValidator<IList<FirstNameNode>>
     {
         public bool TryGetValidValue(TexlNode argNode, TexlBinding binding, out IList<FirstNameNode> dsNodes)

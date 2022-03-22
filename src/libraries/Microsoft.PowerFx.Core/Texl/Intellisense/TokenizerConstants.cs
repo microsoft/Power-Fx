@@ -11,5 +11,9 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
         public const string NumericLiteral = "NumLit";
         public const string StringLiteral = "StrLit";
         public const string UnaryOp = "UnaryOp";
+        public const string StringInterpolationStart = "StrInterpStart";
+        public const string StringInterpolationEnd = "StrInterpEnd";
+        public const string IslandStart = "IslandStart";
+        public const string IslandEnd = "IslandEnd";
     }
 }

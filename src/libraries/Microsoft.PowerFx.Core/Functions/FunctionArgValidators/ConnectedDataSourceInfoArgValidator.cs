@@ -10,6 +10,7 @@ using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Core.Functions.FunctionArgValidators
 {
+    [ThreadSafeImmutable]
     internal sealed class DelegatableDataSourceInfoValidator : IArgValidator<IExternalDataSource>
     {
         public bool TryGetValidValue(TexlNode argNode, TexlBinding binding, out IExternalDataSource dsInfo)

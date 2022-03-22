@@ -1,0 +1,10 @@
+﻿
+// Parse error, 2nd case is missing >>
+>> input1
+result1
+
+input2
+result2
+
+>> input3
+input3

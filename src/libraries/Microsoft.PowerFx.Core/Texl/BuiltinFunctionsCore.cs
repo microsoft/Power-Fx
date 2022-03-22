@@ -28,6 +28,8 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction AcotT = _library.Append(new AcotTableFunction());
         public static readonly TexlFunction AddColumns = _library.Append(new AddColumnsFunction());
         public static readonly TexlFunction And = _library.Append(new VariadicLogicalFunction(isAnd: true));
+        public static readonly TexlFunction Asin = _library.Append(new AsinFunction());
+        public static readonly TexlFunction AsinT = _library.Append(new AsinTableFunction());
         public static readonly TexlFunction AsType = _library.Append(new AsTypeFunction());
         public static readonly TexlFunction Atan = _library.Append(new AtanFunction());
         public static readonly TexlFunction AtanT = _library.Append(new AtanTableFunction());
@@ -79,6 +81,10 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction Int = _library.Append(new IntFunction());
         public static readonly TexlFunction IntT = _library.Append(new IntTableFunction());
         public static readonly TexlFunction IsBlank = _library.Append(new IsBlankFunction());
+        public static readonly TexlFunction IsBlankOptionSetValue = _library.Append(new IsBlankOptionSetValueFunction());
+        public static readonly TexlFunction IsBlankOrError = _library.Append(new IsBlankOrErrorFunction());
+        public static readonly TexlFunction IsBlankOrErrorOptionSetValue = _library.Append(new IsBlankOrErrorOptionSetValueFunction());
+        public static readonly TexlFunction IsEmpty = _library.Append(new IsEmptyFunction());
         public static readonly TexlFunction IsError = _library.Append(new IsErrorFunction());
         public static readonly TexlFunction IsToday = _library.Append(new IsTodayFunction());
         public static readonly TexlFunction IsNumeric = _library.Append(new IsNumericFunction());
@@ -94,7 +100,8 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction Ln = _library.Append(new LnFunction());
         public static readonly TexlFunction LnT = _library.Append(new LnTableFunction());
         public static readonly TexlFunction Log = _library.Append(new LogFunction());
-        public static readonly TexlFunction LogT = _library.Append(new LogTFunction());
+        public static readonly TexlFunction LogT = _library.Append(new LogTFunction());        
+        public static readonly TexlFunction LookUp = _library.Append(new LookUpFunction());
         public static readonly TexlFunction Lower = _library.Append(new LowerUpperFunction(isLower: true));
         public static readonly TexlFunction LowerT = _library.Append(new LowerUpperTFunction(isLower: true));
         public static readonly TexlFunction Max = _library.Append(new MinMaxFunction(isMin: false));
@@ -180,8 +187,9 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction Year = _library.Append(new YearFunction());
 
         // NOTE: These functions should not be part of the core library until they are implemented in all runtimes
+        public static readonly TexlFunction Index = new IndexFunction();
         public static readonly TexlFunction Index_UO = new IndexFunction_UO();
-        public static readonly TexlFunction ParseJson = new ParseJsonFunction();
+        public static readonly TexlFunction ParseJSON = new ParseJSONFunction();
         public static readonly TexlFunction Table_UO = new TableFunction_UO();
         public static readonly TexlFunction Text_UO = new TextFunction_UO();
         public static readonly TexlFunction Value_UO = new ValueFunction_UO();

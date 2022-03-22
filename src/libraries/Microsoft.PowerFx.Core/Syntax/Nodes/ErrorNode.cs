@@ -24,7 +24,6 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
         public ErrorNode(ref int idNext, Token primaryToken, string msg, params object[] args)
             : base(ref idNext, primaryToken, new SourceList(primaryToken))
         {
-            Contracts.AssertValue(args);
             Message = msg;
             Args = args;
         }

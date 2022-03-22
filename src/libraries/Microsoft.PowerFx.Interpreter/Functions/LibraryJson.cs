@@ -75,7 +75,7 @@ namespace Microsoft.PowerFx.Functions
             }
         }
 
-        public static FormulaValue ParseJson(IRContext irContext, StringValue[] args)
+        public static FormulaValue ParseJSON(IRContext irContext, StringValue[] args)
         {
             var json = args[0].Value;
             JsonElement result;

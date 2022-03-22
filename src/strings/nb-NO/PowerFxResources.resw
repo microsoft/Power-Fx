@@ -1,5 +1,64 @@
 ﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
@@ -426,6 +485,17 @@
   <data name="AboutValue_language" xml:space="preserve">
     <value>Språkkoden som skal brukes ved konvertering av verdien.</value>
     
+  </data>
+  <data name="AboutBoolean" xml:space="preserve">
+    <value>Konverterer en tekst som representerer en boolsk verdi til en boolsk verdi.</value>
+    
+  </data>
+  <data name="BooleanArg1" xml:space="preserve">
+    <value>tekst</value>
+    
+  </data>
+  <data name="AboutBoolean_text" xml:space="preserve">
+    <value>Tekstverdien som skal konverteres til en boolsk verdi.</value>
   </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Returnerer det første argumentet som ikke er tomt</value>
@@ -1368,6 +1438,10 @@
     <value>uttrykk</value>
     
   </data>
+  <data name="AboutIsBlankOrError_expression" xml:space="preserve">
+    <value>Et uttrykk som skal kontrolleres.</value>
+    
+  </data>
   <data name="AboutIsEmpty" xml:space="preserve">
     <value>Kontrollerer om en samling er tom, og returnerer sann eller usann.</value>
     
@@ -1375,6 +1449,9 @@
   <data name="IsEmptyArg1" xml:space="preserve">
     <value>kilde</value>
     
+  </data>
+  <data name="AboutIsEmpty_source" xml:space="preserve">
+    <value>En tabell som skal kontrolleres.</value>
   </data>
   <data name="AboutShuffle" xml:space="preserve">
     <value>Returnerer en kopi i tilfeldig rekkefølge av inndatakildetabellen.</value>
@@ -2260,6 +2337,35 @@
   </data>
   <data name="AboutChar_column_of_numbers" xml:space="preserve">
     <value>En kolonne ned kodenumre fra tegnsettet på plattformen din.</value>
+  </data>
+  <data name="AboutParseJson" xml:space="preserve">
+    <value>Konverterer en JSON-streng til et objekt.</value>
+    
+  </data>
+  <data name="ParseJsonArg1" xml:space="preserve">
+    <value>inndata</value>
+    
+  </data>
+  <data name="AboutParseJson_input" xml:space="preserve">
+    <value>En JSON-streng som skal behandles.</value>
+  </data>
+  <data name="AboutIndex" xml:space="preserve">
+    <value>Returnerer oppføringen i en tabell ved en gitt indeks.</value>
+    
+  </data>
+  <data name="IndexArg1" xml:space="preserve">
+    <value>tabell</value>
+    
+  </data>
+  <data name="IndexArg2" xml:space="preserve">
+    <value>indeks</value>
+    
+  </data>
+  <data name="AboutIndex_table" xml:space="preserve">
+    <value>En tabell.</value>
+  </data>
+  <data name="AboutIndex_index" xml:space="preserve">
+    <value>En heltallsindeks.</value>
   </data>
   <data name="Screen_Name_DisplayName" xml:space="preserve">
     <value>Navn</value>
@@ -3788,6 +3894,18 @@
     <value>Resultattypen for denne formelen forventes å være {0}, men den faktiske resultattypen er {1}. Resultattypen for en formelkolonne kan ikke endres.</value>
     
   </data>
+  <data name="FormulaColumns_ColumnTypeNotSupported" xml:space="preserve">
+    <value>Kolonner av typen {0} støttes ikke i formelkolonner.</value>
+    
+  </data>
+  <data name="FormulaColumns_ColumnFormatNotSupported" xml:space="preserve">
+    <value>Kolonner av typen {0} med formatet {1} støttes ikke i formelkolonner.</value>
+    
+  </data>
+  <data name="FormulaColumns_FormulaTooLong" xml:space="preserve">
+    <value>Formler kan ikke være lengre enn 1000 tegn.</value>
+    
+  </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
     <value>Forventet en operand. Formelen eller uttrykket forventer en gyldig operand. Du kan for eksempel legge til operanden "2" i uttrykket '1 + _, slik at resultatet blir (3). Eller du kan legge til operanden "there" i uttrykket "" hei "&amp; _' slik at resultatet blir "Hei du".</value>
     
@@ -3802,7 +3920,6 @@
   </data>
   <data name="ErrorResource_ErrBadToken_LongMessage" xml:space="preserve">
     <value>For eksempel kan ikke tegnet «\» komme etter et tall, slik som dette: «32\». Det forventes et mellomrom (32), slik at det bare er tallet 32, eller et annet tall (f.eks. 323) forventes.</value>
-    
   </data>
   <data name="ErrorResource_ErrBadToken_HowToFix_1" xml:space="preserve">
     <value>Fjern eller erstatt uventede tegn.</value>
@@ -3818,11 +3935,9 @@
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_LongMessage" xml:space="preserve">
     <value>Tegnet «\» kan for eksempel ikke komme etter et tall, slik som dette: «32\». Det forventes et mellomrom (32), slik at det bare er tallet 32, eller et annet tall (f.eks. 323) forventes.</value>
-    
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_HowToFix_1" xml:space="preserve">
     <value>Fjern eller erstatt uventet tegn.</value>
-    
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_Link_1" xml:space="preserve">
     <value>Artikkel: Formelreferanse for Power Apps</value>
@@ -3834,7 +3949,6 @@
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_LongMessage" xml:space="preserve">
     <value>Hver blokkommentar må starte med «/*» og avsluttes med «*/». Hvis du ikke avslutter hver blokkommentar korrekt, blir all koding etter kommentaren en del av kommentaren. Hvis en kommentar består av bare én linje, kan du starte den med «//» og ikke identifisere slutten av kommentaren.</value>
-    
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_HowToFix_1" xml:space="preserve">
     <value>Legg til '* /' på slutten av blokkommentaren eller endre den til et sett med linjekommentarer.</value>
@@ -3850,7 +3964,6 @@
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_LongMessage" xml:space="preserve">
     <value>Denne feilen oppstår hvis for eksempel en formel inneholder {{Val@ 7}} i stedet for {{Val: 7}}. Når du angir en variabel, krever syntaksen et kolon i stedet for en krøllalfa (@).</value>
-    
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_HowToFix_1" xml:space="preserve">
     <value>Fjern eller erstatt de uventede tegnene med et forventet tegn.</value>
@@ -3866,7 +3979,6 @@
   </data>
   <data name="ErrorResource_ErrInvalidName_LongMessage" xml:space="preserve">
     <value>Denne feilen oppstår vanligvis når en formel refererer til noe som ikke lenger finnes (f.eks. en kontroll du har slettet).</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidName_HowToFix_1" xml:space="preserve">
     <value>Fjern eller korriger referansen til navnet som ikke er gyldig.</value>
@@ -3882,7 +3994,6 @@
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_LongMessage" xml:space="preserve">
     <value>Denne feilen vises når en formel refererer til egenskaper for komponentvirkemåte med ugyldig syntaks. (Som for eksempel Component.OnCustomChange i stedet for Component.OnCustomChange())</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_HowToFix_1" xml:space="preserve">
     <value>Bruk riktig syntaks til å referere til egenskapen for komponentvirkemåte. Som: Component.OnCustomChange()</value>
@@ -3898,7 +4009,6 @@
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_LongMessage" xml:space="preserve">
     <value>Du kan ikke bruke operatoren Parent for en kontroll som ikke har en overordnet kontroll. Denne operatoren refererer til kontrollen som er vert for den angitte kontrollen og gjør at alle egenskapene er tilgjengelige.</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_HowToFix_1" xml:space="preserve">
     <value>Fjern operatøren 'Overordnet'.</value>
@@ -3914,7 +4024,6 @@
   </data>
   <data name="ErrorResource_ErrTooManyUps_LongMessage" xml:space="preserve">
     <value>Kompleksiteten øker med hvert nestingsnivå, så Power Apps støtter kun nesting av rad-område opptil 63 nivåer.</value>
-    
   </data>
   <data name="ErrorResource_ErrTooManyUps_HowToFix_1" xml:space="preserve">
     <value>Skriv om formelen med færre nestingnivåer.</value>
@@ -3926,7 +4035,6 @@
   </data>
   <data name="ErrorResource_ErrRuleNestedTooDeeply_LongMessage" xml:space="preserve">
     <value>Power Apps støtter nesting av uttrykk kun opptil 50 nivåer. Et så dypt uttrykk er vanskelig å forstå og vedlikeholde.</value>
-    
   </data>
   <data name="ErrorResource_ErrRuleNestedTooDeeply_HowToFix_1" xml:space="preserve">
     <value>Skriv om formelen med færre nestingnivåer.</value>
@@ -3938,7 +4046,6 @@
   </data>
   <data name="ErrorResource_ErrOperatorExpected_LongMessage" xml:space="preserve">
     <value>Operatorer slår sammen to operander. Denne feilen oppstår hvis du setter to funksjoner (operander) sammen uten operator mellom dem, for eksempel Len("mytext")Len("mytext").</value>
-    
   </data>
   <data name="ErrorResource_ErrOperatorExpected_HowToFix_1" xml:space="preserve">
     <value>Rediger formelen slik at den inneholder en operatør mellom operandene.</value>
@@ -3954,7 +4061,6 @@
   </data>
   <data name="ErrorResource_ErrNumberExpected_LongMessage" xml:space="preserve">
     <value>Denne feilen oppstår hvis du bruker en funksjon som krever et tall, og du angir for eksempel et bilde i stedet.</value>
-    
   </data>
   <data name="ErrorResource_ErrNumberExpected_HowToFix_1" xml:space="preserve">
     <value>Rediger formelen slik at den returnerer et tall på dette punktet i formelen.</value>
@@ -3970,7 +4076,6 @@
   </data>
   <data name="ErrorResource_ErrBooleanExpected_LongMessage" xml:space="preserve">
     <value>En boolsk verdi er også kjent som en true/false-verdi i programmer som for eksempel Microsoft Excel. Denne feilen oppstår hvis du bruker en funksjon som krever en boolsk verdi, og du angir for eksempel en dato i stedet.</value>
-    
   </data>
   <data name="ErrorResource_ErrBooleanExpected_HowToFix_1" xml:space="preserve">
     <value>Rediger formelen slik at den returnerer en boolsk verdi på dette punktet i formelen.</value>
@@ -3986,7 +4091,6 @@
   </data>
   <data name="ErrorResource_ErrColonExpected_LongMessage" xml:space="preserve">
     <value>Et kolon skiller et feltnavn, iblant kalt kolonnenavn, fra en feltverdi i en post (f.eks. {Month:"1"}, {Month:"2"} ...). Et kolon skiller også timer fra minutter og sekunder (f.eks. 3:04).</value>
-    
   </data>
   <data name="ErrorResource_ErrColonExpected_HowToFix_1" xml:space="preserve">
     <value>Rediger formelen slik at den inneholder et kolon.</value>
@@ -4002,7 +4106,6 @@
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_LongMessage" xml:space="preserve">
     <value>Virkemåtefunksjoner endrer statusen til appen ved å endre verdier andre steder i appen. Navigate, Patch, UpdateContext og Collect er vanlige virkemåtefunksjoner. OnSelect, OnVisible og andre On... er vanlige virkemåtebaserte egenskaper.</value>
-    
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_HowToFix_1" xml:space="preserve">
     <value>Flytt virkemåtefunksjonen til en virkemåtebasert egenskap.</value>
@@ -4018,7 +4121,6 @@
   </data>
   <data name="ErrorResource_ErrTestPropertyExpected_LongMessage" xml:space="preserve">
     <value>Testfunksjoner er de som kan brukes til å simulere brukerinndata når en app testes. SetProperty, SelectRow og Assert er vanlige testfunksjoner. De kan bare brukes i testtilfellene.</value>
-    
   </data>
   <data name="ErrorResource_ErrTestPropertyExpected_HowToFix_1" xml:space="preserve">
     <value>Bruk funksjonen i et testtilfelle, ikke i selve appen.</value>
@@ -4030,7 +4132,6 @@
   </data>
   <data name="ErrorResource_ErrCannotCoerce_SourceType_TargetType_LongMessage" xml:space="preserve">
     <value>Power Apps kan konvertere noen datatyper i formelen til andre typer for deg. For eksempel den kan konvertere «1» (en streng) til 1 (et tall), men den kan ikke konvertere alle datatyper til alle andre datatyper. Den kan for eksempel ikke konvertere et bilde til et tall.</value>
-    
   </data>
   <data name="ErrorResource_ErrCannotCoerce_SourceType_TargetType_HowToFix_1" xml:space="preserve">
     <value>Rediger formelen slik at du konverterer de aktuelle dataene til den forventede typen.</value>
@@ -4042,7 +4143,6 @@
   </data>
   <data name="ErrorResource_ErrStringExpected_LongMessage" xml:space="preserve">
     <value>Denne feilen oppstår hvis du bruker en funksjon som krever et argument for tekst (eller streng), og du angir for eksempel en dato i stedet.</value>
-    
   </data>
   <data name="ErrorResource_ErrStringExpected_HowToFix_1" xml:space="preserve">
     <value>Rediger formelen slik at den returnerer tekst på dette punktet i formelen.</value>
@@ -4058,7 +4158,6 @@
   </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_LongMessage" xml:space="preserve">
     <value>Denne feilen oppstår hvis du bruker en funksjon som krever tekst eller et tall, og du angir for eksempel en boolsk verdi (true/false) i stedet.</value>
-    
   </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_HowToFix_1" xml:space="preserve">
     <value>Rediger formelen slik at den returnerer tekst eller et tall på dette punktet i formelen.</value>
@@ -4074,7 +4173,6 @@
   </data>
   <data name="ErrorResource_ErrClosingBracketExpected_LongMessage" xml:space="preserve">
     <value>En avsluttende klammeparentes angir slutten på en post (f.eks. {Month:"1"}, {Month:"2"} ...).</value>
-    
   </data>
   <data name="ErrorResource_ErrClosingBracketExpected_HowToFix_1" xml:space="preserve">
     <value>Rediger formelen slik at den inneholder en sløyfeparentes.</value>
@@ -4094,7 +4192,6 @@
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_LongMessage" xml:space="preserve">
     <value>Vi kan ikke evaluere formelen fordi verdiene som sammenlignes i formelen, ikke er av samme type.</value>
-    
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_HowToFix_1" xml:space="preserve">
     <value>Du må kanskje konvertere verdien til samme type, for eksempel å konvertere en datostreng (f.eks. 12/31/2018) til en datoverdi.</value>
@@ -4174,7 +4271,6 @@
   </data>
   <data name="ErrorResource_ErrTypeError_LongMessage" xml:space="preserve">
     <value>Det kan være at dataene ikke er av den forventede typen. (Tekst, tall, dato, tabell, post.)</value>
-    
   </data>
   <data name="ErrorResource_ErrTypeError_HowToFix_1" xml:space="preserve">
     <value>Kontroller typene verdier som er involvert i formelen, og at typene samsvarer.</value>
@@ -4194,7 +4290,6 @@
   </data>
   <data name="ErrorResource_ErrDateExpected_LongMessage" xml:space="preserve">
     <value>Denne feilen oppstår hvis du bruker en funksjon som krever en dato, og du angir for eksempel tekst i stedet.</value>
-    
   </data>
   <data name="ErrorResource_ErrDateExpected_HowToFix_1" xml:space="preserve">
     <value>Rediger formelen slik at den returnerer en dato på dette punktet i formelen.</value>
@@ -4210,7 +4305,6 @@
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_LongMessage" xml:space="preserve">
     <value>Det kan hende at datakilden ikke får behandlet formelen og dermed returnerer et ufullstendig datasett. Det kan hende at programmet ikke returnerer riktige resultater eller fungerer som det skal, hvis datasettet er ufullstendig.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_HowToFix_1" xml:space="preserve">
     <value>Hvis datasettet overskrider grensen på 500 poster, men inneholder mindre enn 2 000 poster, kan du prøve å tilbakestille grensen.</value>
@@ -4238,7 +4332,6 @@
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_LongMessage" xml:space="preserve">
     <value>Det kan hende at datakilden ikke får behandlet formelen og dermed returnerer et ufullstendig datasett. Det kan hende at programmet ikke returnerer riktige resultater eller fungerer som det skal, hvis datasettet er ufullstendig.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_HowToFix_1" xml:space="preserve">
     <value>Hvis datasettet overskrider grensen på 500 poster, men inneholder mindre enn 2 000 poster, kan du prøve å tilbakestille grensen.</value>
@@ -4266,7 +4359,6 @@
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_LongMessage" xml:space="preserve">
     <value> Høyre side av «i»-operatoren må være et kolonnenavn fra riktig datakilde. Det kan hende at datakilden ikke får behandlet formelen og dermed returnerer et ufullstendig datasett. Det kan hende at programmet ikke returnerer riktige resultater eller fungerer som det skal, hvis datasettet er ufullstendig.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_1" xml:space="preserve">
     <value>Endre elementet til høyre for i-operatoren til å være en kolonne fra den riktige datakilden.</value>
@@ -4299,7 +4391,6 @@
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_LongMessage" xml:space="preserve">
     <value> Høyre side av «i»-operatoren er ikke en kolonne fra riktig datakilde. Det kan hende at datakilden ikke får behandlet formelen og dermed returnerer et ufullstendig datasett. Det kan hende at programmet ikke returnerer riktige resultater eller fungerer som det skal, hvis datasettet er ufullstendig.
         </value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_1" xml:space="preserve">
     <value>Endre elementet til høyre for i-operatoren til å være en kolonne fra den riktige datakilden.</value>
@@ -4380,6 +4471,22 @@
   </data>
   <data name="ErrorResource_ErrInvalidControlReference_Link_1" xml:space="preserve">
     <value>Referanse: ConfirmExit for lerretsapper</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidStringInterpolation_ShortMessage" xml:space="preserve">
+    <value>Uttrykk som vises i en interpolert streng, må evalueres til en tekstverdi eller til en kompatibel type.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidStringInterpolation_HowToFix_1" xml:space="preserve">
+    <value>Kontroller uttrykkstypene i den interpolerte strengen.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrEmptyIsland_ShortMessage" xml:space="preserve">
+    <value>Empty expressions cannot appear inside an interpolated string.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrEmptyIsland_HowToFix_1" xml:space="preserve">
+    <value>Check for empty expressions inside the interpolated string.</value>
     
   </data>
   <data name="ErrorResource_ErrAsNotInContext_ShortMessage" xml:space="preserve">

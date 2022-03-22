@@ -430,7 +430,7 @@ namespace Microsoft.PowerFx.Core.Public.Values
             return val;
         }
 
-        // More type safe than base class's ParseJson
+        // More type safe than base class's ParseJSON
         // Parse json. 
         // [1,2,3]  is a single column table, actually equivalent to: 
         // [{Value : 1, Value: 2, Value :3 }]

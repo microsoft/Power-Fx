@@ -1,0 +1,6 @@
+﻿#OVERRIDE: inScalar.txt
+
+// If Blank is on either side, operator is false. 
+// Use If() to coerce Blank to string. 
+>> Blank() in Blank()
+#Error
