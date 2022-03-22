@@ -26,7 +26,7 @@ namespace Microsoft.PowerFx.Core.Binding.BindInfo
         // Optional data associated with a name. May be null.
         public readonly object Data;
 
-        public NameLookupInfo(BindKind kind, DType type, DPath path, int upCount, object data = null, DName displayName = default, bool isAsync = default)
+        public NameLookupInfo(BindKind kind, DType type, DPath path, int upCount, object data = null, DName displayName = default, bool isAsync = false)
         {
             Contracts.Assert(kind >= BindKind.Min && kind < BindKind.Lim);
             Contracts.Assert(upCount >= 0);
