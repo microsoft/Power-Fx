@@ -5753,7 +5753,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 _txb.SetType(
                     node,
-                    exprType.IsValid ? DType.CreateTable(new TypedName(exprType, new DName("Value"))) : DType.EmptyTable);
+                    exprType.IsValid ? DType.CreateTable(new TypedName(exprType, Public.Values.TableValue.ValueDName)) : DType.EmptyTable);
                 SetVariadicNodePurity(node);
                 _txb.SetScopeUseSet(node, JoinScopeUseSets(node.Children));
                 _txb.SetSelfContainedConstant(node, isSelfContainedConstant);
