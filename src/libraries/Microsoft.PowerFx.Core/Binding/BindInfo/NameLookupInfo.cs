@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 
@@ -37,8 +38,10 @@ namespace Microsoft.PowerFx.Core.Binding.BindInfo
             Path = path;
             UpCount = upCount;
             Data = data;
-            IsAsync = isAsync;
             DisplayName = displayName;
+
+            // Any connectedDataSourceInfo or option set or view needs to be accessed asynchronously to allow data to be loaded.
+            IsAsync = Data is IExternalTabularDataSource || Kind == BindKind.OptionSet || Kind == BindKind.View || isAsync;
         }
     }
 }
