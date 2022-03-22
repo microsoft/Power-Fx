@@ -311,7 +311,7 @@ namespace Microsoft.PowerFx.Core.Tests
             }
             else if (result is GuidValue guid)
             {
-                sb.Append(guid.Value);
+                sb.Append($"GUID(\"{guid.Value}\")");
             }
             else if (result is TableValue t)
             {
