@@ -11,6 +11,7 @@ using Microsoft.PowerFx.Core.Functions.Delegation;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Syntax.Nodes;
 using Microsoft.PowerFx.Core.Types;
+using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
 
 #pragma warning disable SA1402 // File may only contain a single type
@@ -218,6 +219,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             yield return new[] { TexlStrings.WeekdayArg1 };
             yield return new[] { TexlStrings.WeekdayArg1, TexlStrings.WeekdayArg2 };
         }
+
+        public override IEnumerable<string> GetRequiredEnumNames()
+        {
+            return new List<string>() { EnumConstants.StartOfWeekEnumString };
+        }
     }
 
     // WeekNum(date:d, [startOfWeek:n])
@@ -241,6 +247,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         {
             yield return new[] { TexlStrings.WeekNumArg1 };
             yield return new[] { TexlStrings.WeekNumArg1, TexlStrings.WeekNumArg2 };
+        }
+
+        public override IEnumerable<string> GetRequiredEnumNames()
+        {
+            return new List<string>() { EnumConstants.StartOfWeekEnumString };
         }
     }
 
@@ -274,6 +285,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         protected DateTimeGenericFunction(string name, TexlStrings.StringGetter description, DType returnType)
             : base(name, description, FunctionCategories.DateTime, returnType, 0, 1, 2, DType.String, DType.String)
         {
+        }
+
+        public override IEnumerable<string> GetRequiredEnumNames()
+        {
+            return new List<string>() { EnumConstants.DateTimeFormatEnumString };
         }
 
         public override bool HasSuggestionsForParam(int index)
@@ -361,6 +377,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             yield return new[] { TexlStrings.DateAddArg1, TexlStrings.DateAddArg2, TexlStrings.DateAddArg3 };
         }
 
+        public override IEnumerable<string> GetRequiredEnumNames()
+        {
+            return new List<string>() { EnumConstants.TimeUnitEnumString };
+        }
+
         // This method returns true if there are special suggestions for a particular parameter of the function.
         public override bool HasSuggestionsForParam(int argumentIndex)
         {
@@ -426,6 +447,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         {
             yield return new[] { TexlStrings.DateAddTArg1, TexlStrings.DateAddTArg2 };
             yield return new[] { TexlStrings.DateAddTArg1, TexlStrings.DateAddTArg2, TexlStrings.DateAddTArg3 };
+        }
+
+        public override IEnumerable<string> GetRequiredEnumNames()
+        {
+            return new List<string>() { EnumConstants.TimeUnitEnumString };
         }
 
         public override string GetUniqueTexlRuntimeName(bool isPrefetching = false)
@@ -539,6 +565,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             yield return new[] { TexlStrings.DateDiffArg1, TexlStrings.DateDiffArg2, TexlStrings.DateDiffArg3 };
         }
 
+        public override IEnumerable<string> GetRequiredEnumNames()
+        {
+            return new List<string>() { EnumConstants.TimeUnitEnumString };
+        }
+
         // This method returns true if there are special suggestions for a particular parameter of the function.
         public override bool HasSuggestionsForParam(int argumentIndex)
         {
@@ -566,6 +597,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         {
             yield return new[] { TexlStrings.DateDiffTArg1, TexlStrings.DateDiffTArg2 };
             yield return new[] { TexlStrings.DateDiffTArg1, TexlStrings.DateDiffTArg2, TexlStrings.DateDiffTArg3 };
+        }
+
+        public override IEnumerable<string> GetRequiredEnumNames()
+        {
+            return new List<string>() { EnumConstants.TimeUnitEnumString };
         }
 
         public override string GetUniqueTexlRuntimeName(bool isPrefetching = false)
