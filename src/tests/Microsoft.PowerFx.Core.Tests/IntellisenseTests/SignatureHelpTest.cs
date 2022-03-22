@@ -13,7 +13,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
 {
     public class SignatureHelpTest : IntellisenseTestBase
     {
-        private static readonly bool RegenerateSignatureHelp = false;
+        private const bool RegenerateSignatureHelp = false;
 
         /// <summary>
         /// Resolves to the directory in the src folder that corresponds to the current directory, which may

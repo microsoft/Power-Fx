@@ -27,6 +27,7 @@ using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Core.Functions
 {
+    [ThreadSafeImmutable]
     internal abstract class TexlFunction : IFunction
     {
         // A default "no-op" error container that does not post document errors.

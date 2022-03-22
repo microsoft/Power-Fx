@@ -10,6 +10,7 @@ using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Core.Functions.FunctionArgValidators
 {
+    [ThreadSafeImmutable]
     internal sealed class SortOrderValidator : IArgValidator<string>
     {
         public bool TryGetValidValue(TexlNode argNode, TexlBinding binding, out string validatedOrder)
