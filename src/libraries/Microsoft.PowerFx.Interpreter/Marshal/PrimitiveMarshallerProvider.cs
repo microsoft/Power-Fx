@@ -20,7 +20,7 @@ namespace Microsoft.PowerFx
         {
             if (BuiltinFormulaTypeConversions.TryGetFormulaType(type, out var fxType))
             {
-                marshaler = new PrimitiveTypeMarshaler(fxType);
+                marshaler = new PrimitiveTypeMarshaller(fxType);
                 return true;
             }
 

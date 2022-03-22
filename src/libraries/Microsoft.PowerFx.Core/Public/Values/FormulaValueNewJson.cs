@@ -27,7 +27,6 @@ namespace Microsoft.PowerFx.Core.Public.Values
             {
                 using var document = JsonDocument.Parse(jsonString);
                 using var jsonMemStream = new MemoryStream();
-                using var paJsonWriter = new Utf8JsonWriter(jsonMemStream);
                 var propBag = document.RootElement;
 
                 return FromJson(propBag);
@@ -39,6 +38,10 @@ namespace Microsoft.PowerFx.Core.Public.Values
             }
         }
 
+        /// <summary>
+        /// Convenience method to create a value from a <see cref="JsonElement"/>.
+        /// </summary>
+        /// <param name="element"></param>
         public static FormulaValue FromJson(JsonElement element)
         {
             switch (element.ValueKind)
@@ -70,7 +73,7 @@ namespace Microsoft.PowerFx.Core.Public.Values
         }
 
         // Json objects parse to records. 
-        internal static RecordValue RecordFromJsonObject(JsonElement element)
+        private static RecordValue RecordFromJsonObject(JsonElement element)
         {
             Contract.Assert(element.ValueKind == JsonValueKind.Object);
 
@@ -131,7 +134,7 @@ namespace Microsoft.PowerFx.Core.Public.Values
             }
 
             // Handle the single-column-table case. 
-            var defaultField = new NamedValue("Value", rawVal);
+            var defaultField = new NamedValue(TableValue.ValueName, rawVal);
 
             var val = NewRecordFromFields(defaultField);
             return val;

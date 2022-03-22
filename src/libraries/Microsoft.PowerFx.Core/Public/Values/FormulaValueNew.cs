@@ -10,8 +10,6 @@ namespace Microsoft.PowerFx.Core.Public.Values
     // Basc new operators. 
     public partial class FormulaValue
     {
-        #region Host Utility API
-
         // Host utility creation methods, listed here for discoverability.
         // NOT FOR USE IN THE INTERPRETER! When creating new instances in
         // the interpreter, call the constructor directly and pass in the
@@ -60,7 +58,13 @@ namespace Microsoft.PowerFx.Core.Public.Values
 
         public static StringValue New(string value)
         {
-            return new StringValue(IRContext.NotInSource(FormulaType.String), value);
+            var ir = IRContext.NotInSource(FormulaType.String);
+            if (value == null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+            
+            return new StringValue(ir, value);
         }
 
         public static BooleanValue New(bool value)
@@ -119,6 +123,5 @@ namespace Microsoft.PowerFx.Core.Public.Values
                 IRContext.NotInSource(new UntypedObjectType()),
                 untypedObject);
         }
-        #endregion
     }
 }

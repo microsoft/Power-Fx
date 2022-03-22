@@ -14,7 +14,7 @@ namespace Microsoft.PowerFx
     public interface ITypeMarshallerProvider
     {
         // Return false if it doesn't handle it. 
-        // A single ITypeMarshaler can be created once per type and then reused for each instance.
+        // A single ITypeMarshaller can be created once per type and then reused for each instance.
         // Pass in a cache for aggregate types that need to marshal sub types. 
         public bool TryGetMarshaller(Type type, TypeMarshallerCache cache, int maxDepth, out ITypeMarshaller marshaller);
     }
@@ -36,7 +36,7 @@ namespace Microsoft.PowerFx
         /// <returns>a formulaValue for this instance of type <see cref="Type"/>.</returns>
         /// <remarks>
         /// Implementor can assume that:
-        /// - value is not null. The cache wrapper it in a <see cref="NullCheckerMarshaler"/>
+        /// - value is not null. The cache wrapper it in a <see cref="NullCheckerMarshaller"/>
         /// - the value matches the type check in the provider.
         /// </remarks>
         public FormulaValue Marshal(object value);

@@ -37,9 +37,9 @@ namespace Microsoft.PowerFx.Tests
                 $"{ns}.{nameof(ITypeMarshaller)}",
                 $"{ns}.{nameof(OptionSet)}",
                 $"{ns}.{nameof(ObjectMarshallerProvider)}",
-                $"{ns}.{nameof(ObjectMarshaler)}",
+                $"{ns}.{nameof(ObjectMarshaller)}",
                 $"{ns}.{nameof(PrimitiveMarshallerProvider)}",
-                $"{ns}.{nameof(PrimitiveTypeMarshaler)}",
+                $"{ns}.{nameof(PrimitiveTypeMarshaller)}",
                 $"{ns}.{nameof(TableMarshallerProvider)}",
                 $"{ns}.{nameof(TypeMarshallerCache)}",
                 $"{ns}.{nameof(TypeMarshallerCacheExtensions)}"

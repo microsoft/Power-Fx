@@ -80,23 +80,23 @@ namespace Microsoft.PowerFx.Core.Tests
             var dto = new DateTimeOffset(dt);
             
             // Can't represent times as Dates. 
-            Assert.Throws<ArgumentException>(() => PrimitiveTypeMarshaler.Marshal(dt, FormulaType.Date));
-            Assert.Throws<ArgumentException>(() => PrimitiveTypeMarshaler.Marshal(dto, FormulaType.Date));
+            Assert.Throws<ArgumentException>(() => PrimitiveTypeMarshaller.Marshal(dt, FormulaType.Date));
+            Assert.Throws<ArgumentException>(() => PrimitiveTypeMarshaller.Marshal(dto, FormulaType.Date));
 
             Assert.Throws<ArgumentException>(() => FormulaValue.NewDateOnly(dt));
 
-            var result1 = (DateTimeValue)PrimitiveTypeMarshaler.Marshal(dt, FormulaType.DateTime);
+            var result1 = (DateTimeValue)PrimitiveTypeMarshaller.Marshal(dt, FormulaType.DateTime);
             var result2 = FormulaValue.New(dt);
             AssertEqual(dt, result2);
             AssertEqual(result1, result2);
 
-            var result3 = (DateTimeValue)PrimitiveTypeMarshaler.Marshal(dto, FormulaType.DateTime);
+            var result3 = (DateTimeValue)PrimitiveTypeMarshaller.Marshal(dto, FormulaType.DateTime);
             AssertEqual(result1, result3);
 
             // Success
             var result4 = FormulaValue.NewDateOnly(d);
             AssertEqual(d, result4);
-            var result5 = (DateValue)PrimitiveTypeMarshaler.Marshal(d, FormulaType.Date);
+            var result5 = (DateValue)PrimitiveTypeMarshaller.Marshal(d, FormulaType.Date);
             AssertEqual(result4, result5);
         }
 

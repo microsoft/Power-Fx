@@ -23,9 +23,9 @@ namespace Microsoft.PowerFx
         /// </summary>
         public object Source { get; private set; }
 
-        private readonly ObjectMarshaler _mapping;
+        private readonly ObjectMarshaller _mapping;
 
-        internal ObjectRecordValue(IRContext irContext, object source, ObjectMarshaler marshaler) 
+        internal ObjectRecordValue(IRContext irContext, object source, ObjectMarshaller marshaler) 
             : base(irContext)
         {
             Source = source;
@@ -36,8 +36,7 @@ namespace Microsoft.PowerFx
 
         internal override FormulaValue GetField(IRContext irContext, string name)
         {
-            var value = _mapping.TryGetField(Source, name);
-            if (value != null)
+            if (_mapping.TryGetField(Source, name, out var value))
             {
                 return value;
             }

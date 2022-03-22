@@ -21,21 +21,6 @@ namespace Microsoft.PowerFx.Core.Public.Values
         private readonly IReadOnlyList<T> _sourceIndex; // maybe null. supports index. 
         private readonly IReadOnlyCollection<T> _sourceCount; // maybe null. supports count;
 
-        /// <summary>
-        /// This table can be enumerated. 
-        /// </summary>
-        public bool CanEnumerate => _enumerator != null;
-
-        /// <summary>
-        /// This table can be directly indexed (without a linear scan).
-        /// </summary>
-        public bool CanIndex => _sourceIndex != null;
-
-        /// <summary>
-        /// This table can return a count (without a linear scan). 
-        /// </summary>
-        public bool CanCount => _sourceCount != null;
-
         internal CollectionTableValue(IRContext irContext, IEnumerable<T> source)
          : base(irContext)
         {

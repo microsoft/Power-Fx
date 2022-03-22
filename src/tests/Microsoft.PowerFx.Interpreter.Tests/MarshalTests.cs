@@ -474,7 +474,7 @@ namespace Microsoft.PowerFx.Tests
         }
 
         // Custom marshaller. Marshal Widget objects as Strings with a "W" prefix. 
-        private class WidgetMarshalerProvider : ITypeMarshallerProvider
+        private class WidgetMarshallerProvider : ITypeMarshallerProvider
         {
             public int _counter = 0;
 
@@ -488,11 +488,11 @@ namespace Microsoft.PowerFx.Tests
 
                 _counter++;
 
-                marshaler = new WidgetMarshaler();
+                marshaler = new WidgetMarshaller();
                 return true;
             }
 
-            private class WidgetMarshaler : ITypeMarshaller
+            private class WidgetMarshaller : ITypeMarshaller
             {
                 public FormulaType Type => FormulaType.String;
 
@@ -528,11 +528,11 @@ namespace Microsoft.PowerFx.Tests
 
         // Test a custom marshaler. 
         [Fact]
-        public void CustomMarshalerType()
+        public void CustomMarshallerType()
         {
             var cache = new TypeMarshallerCache();
                         
-            var marshaler = new WidgetMarshalerProvider();
+            var marshaler = new WidgetMarshallerProvider();
             cache = cache.NewPrepend(marshaler);
 
             Assert.Equal(0, marshaler._counter);
@@ -552,7 +552,7 @@ namespace Microsoft.PowerFx.Tests
             var x = cache.Marshal(obj);
             Assert.Equal(1, marshaler._counter);
 
-            // Verify TypeMarshaler comes from cache and we don't call TryGetMarshaler again. 
+            // Verify TypeMarshaller comes from cache and we don't call TryGetMarshaller again. 
             var w1 = cache.Marshal(obj.Widget1);
             Assert.Equal(1, marshaler._counter);
 

@@ -14,14 +14,10 @@ using Microsoft.PowerFx.Core.Public.Types;
 
 namespace Microsoft.PowerFx.Core.Public.Values
 {
-    // Marshalling a tables. 
-    // Tables need to know their record type.
-    // - a ITypeMarshaller  (which can be obtained from a TypeMarshallerCache and a T)
-    // - an explicit RecordType
+    // Helpers for creating tables from records.
+    // For marshalling a dotnet object (T) to a Table, see TypeMarshallerCache.. 
     public partial class FormulaValue
     {
-        #region Host Records API
-
         /// <summary>
         /// Create a record from the list of fields provided. 
         /// </summary>
@@ -52,6 +48,5 @@ namespace Microsoft.PowerFx.Core.Public.Values
         {
             return new InMemoryRecordValue(IRContext.NotInSource(recordType), fields);
         }
-        #endregion
     }
 }

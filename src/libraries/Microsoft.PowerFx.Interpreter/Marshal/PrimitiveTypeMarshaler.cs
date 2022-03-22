@@ -12,17 +12,17 @@ namespace Microsoft.PowerFx
     /// <summary>
     /// Marshaller for builtin primitives. 
     /// </summary>
-    [DebuggerDisplay("ObjMarshal({Type})")]
-    public class PrimitiveTypeMarshaler : ITypeMarshaller
+    [DebuggerDisplay("PrimitiveMarshal({Type})")]
+    public class PrimitiveTypeMarshaller : ITypeMarshaller
     {
         /// <inheritdoc/>
         public FormulaType Type { get; }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="PrimitiveTypeMarshaler"/> class.
+        /// Initializes a new instance of the <see cref="PrimitiveTypeMarshaller"/> class.
         /// </summary>
         /// <param name="fxType">The power fx type this marshals to.</param>
-        public PrimitiveTypeMarshaler(FormulaType fxType)
+        public PrimitiveTypeMarshaller(FormulaType fxType)
         {
             Type = fxType;
         }

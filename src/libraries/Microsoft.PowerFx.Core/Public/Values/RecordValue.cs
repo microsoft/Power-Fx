@@ -34,7 +34,7 @@ namespace Microsoft.PowerFx.Core.Public.Values
          
         /// <summary>
         /// Get a field on this record. 
-        /// See <see cref="ObjectMarshaler"/> to override GetField behavior. 
+        /// See <see cref="ObjectMarshaller"/> to override GetField behavior. 
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>

@@ -21,8 +21,6 @@ namespace Microsoft.PowerFx.Core.Public.Values
     // - an explicit RecordType
     public partial class FormulaValue
     {
-        #region Host Tables API
-
         /// <summary>
         /// Construct a table from records. Assumed that Records must be the same type. 
         /// Already having RecordValues (as oppossed to a unknown T or errors) lets us avoid type marshalling.
@@ -62,16 +60,14 @@ namespace Microsoft.PowerFx.Core.Public.Values
                 throw new InvalidOperationException($"Use NewTable() instead");
             }
 
-            const string valueField = "Value";
-            var recordType = new RecordType().Add(valueField, fxType);
+            var recordType = new RecordType().Add(TableValue.ValueName, fxType);
 
             var irContext = IRContext.NotInSource(recordType);
             var recordValues = values.Select(item => new InMemoryRecordValue(
                 irContext,
-                new NamedValue[] { new NamedValue(valueField, item) }));
+                new NamedValue[] { new NamedValue(TableValue.ValueName, item) }));
 
             return NewTable(recordType, recordValues);
         }
-        #endregion
     }
 }

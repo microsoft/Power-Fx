@@ -34,18 +34,14 @@ namespace Microsoft.PowerFx
 
             var rowMarshaller = cache.GetMarshaller(et, maxDepth);
              
-            if (rowMarshaller.Type is RecordType recordType)
-            {
-                // Array of records 
-            }       
-            else
-            {
-                // Single Column table. Wrap the in a record. 
+            if (rowMarshaller.Type is not RecordType recordType)
+            {               
+                // Single Column table. Wrap in a record. 
                 // This is happens for scalars.
                 // But could also happen for a table of tables. 
-                recordType = new RecordType().Add("Value", rowMarshaller.Type);
+                recordType = new RecordType().Add(TableValue.ValueName, rowMarshaller.Type);
 
-                rowMarshaller = new SCTMarshaler(recordType, rowMarshaller);
+                rowMarshaller = new SCTMarshaller(recordType, rowMarshaller);
             }
 
             marshaler = TableMarshaller.Create(et, rowMarshaller);
@@ -79,13 +75,13 @@ namespace Microsoft.PowerFx
 
         // Convert a single value into a Record for a SCT,  { value : x }
         [DebuggerDisplay("SCT({_inner})")]
-        internal class SCTMarshaler : ITypeMarshaller
+        internal class SCTMarshaller : ITypeMarshaller
         {
             public FormulaType Type { get; }
 
             private readonly ITypeMarshaller _inner;
 
-            public SCTMarshaler(RecordType type, ITypeMarshaller inner)
+            public SCTMarshaller(RecordType type, ITypeMarshaller inner)
             {
                 Type = type;
                 _inner = inner;
@@ -105,7 +101,7 @@ namespace Microsoft.PowerFx
         {
             public FormulaType Type { get; private set; }
 
-            protected ITypeMarshaller _rowMarshaler;
+            protected ITypeMarshaller _rowMarshaller;
 
             // Create a TableMarshaller<T> where T is the given elementType.
             public static TableMarshaller Create(Type elementType, ITypeMarshaller rowMarshaller)
@@ -116,7 +112,7 @@ namespace Microsoft.PowerFx
                 var tableType = ((RecordType)rowMarshaller.Type).ToTable();
 
                 tableMarshaller.Type = tableType;
-                tableMarshaller._rowMarshaler = rowMarshaller;
+                tableMarshaller._rowMarshaller = rowMarshaller;
 
                 return tableMarshaller;
             }
@@ -125,7 +121,7 @@ namespace Microsoft.PowerFx
         }
 
         // T is record type of the table. 
-        [DebuggerDisplay("TableMarshal({_rowMarshaler})")]
+        [DebuggerDisplay("TableMarshal({_rowMarshaller})")]
         internal class TableMarshaller<T> : TableMarshaller
         {
             public override FormulaValue Marshal(object value)
@@ -133,7 +129,7 @@ namespace Microsoft.PowerFx
                 var ir = IRContext.NotInSource(Type);
 
                 var source = (IEnumerable<T>)value;
-                return new ObjectCollectionTableValue<T>(ir, source, _rowMarshaler);
+                return new ObjectCollectionTableValue<T>(ir, source, _rowMarshaller);
             }
         }
     }

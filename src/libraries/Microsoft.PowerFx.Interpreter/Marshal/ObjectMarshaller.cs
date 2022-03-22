@@ -14,7 +14,7 @@ namespace Microsoft.PowerFx
     /// Marshal a specific type of object to a record. 
     /// </summary>
     [DebuggerDisplay("ObjMarshal({Type})")]
-    public class ObjectMarshaler : ITypeMarshaller
+    public class ObjectMarshaller : ITypeMarshaller
     {
         // Map fx field name to a function produces the formula value given the dotnet object.
         private readonly IReadOnlyDictionary<string, Func<object, FormulaValue>> _mapping;
@@ -23,11 +23,11 @@ namespace Microsoft.PowerFx
         public FormulaType Type { get; private set; }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ObjectMarshaler"/> class.
+        /// Initializes a new instance of the <see cref="ObjectMarshaller"/> class.
         /// </summary>
         /// <param name="type">The FormulaType that these objects product.</param>
         /// <param name="fieldMap">A mapping of fx field names to functions that produce that field. </param>
-        public ObjectMarshaler(FormulaType type, IReadOnlyDictionary<string, Func<object, FormulaValue>> fieldMap)
+        public ObjectMarshaller(FormulaType type, IReadOnlyDictionary<string, Func<object, FormulaValue>> fieldMap)
         {
             if (!(type is RecordType))
             {
@@ -47,15 +47,16 @@ namespace Microsoft.PowerFx
 
         // Get the value of the field. 
         // Return null on missing
-        internal FormulaValue TryGetField(object source, string name)
+        internal bool TryGetField(object source, string name, out FormulaValue fieldValue)
         {
             if (_mapping.TryGetValue(name, out var getter))
             {
-                var fieldValue = getter(source);
-                return fieldValue;
+                fieldValue = getter(source);
+                return true;
             }
 
-            return null;
+            fieldValue = null;
+            return false;
         }
 
         internal IEnumerable<NamedValue> GetFields(object source)

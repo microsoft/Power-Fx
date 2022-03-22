@@ -6,6 +6,7 @@ using System.Diagnostics.Contracts;
 using System.Linq;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Public.Types;
+using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Core.Public.Values
 {
@@ -14,6 +15,16 @@ namespace Microsoft.PowerFx.Core.Public.Values
     /// </summary>
     public abstract class TableValue : ValidFormulaValue
     {
+        /// <summary>
+        /// Often marshalling an array will create a Single Column Tables with a single "Value" column. 
+        /// </summary>
+        public const string ValueName = "Value";
+        
+        /// <summary>
+        /// DName for ValueName.
+        /// </summary>
+        public static readonly DName ValueDName = new DName(ValueName);
+
         public abstract IEnumerable<DValue<RecordValue>> Rows { get; }
 
         public bool IsColumn => IRContext.ResultType._type.IsColumn;

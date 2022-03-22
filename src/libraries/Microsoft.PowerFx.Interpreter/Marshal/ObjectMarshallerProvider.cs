@@ -18,7 +18,7 @@ namespace Microsoft.PowerFx
     /// <summary>
     /// Marshal .Net classes (with fields) to <see cref="RecordValue"/>. 
     /// This supports both strong typing and lazy marshalling. 
-    /// It will return a <see cref="ObjectMarshaler"/>. 
+    /// It will return a <see cref="ObjectMarshaller"/>. 
     /// </summary>
     public class ObjectMarshallerProvider : ITypeMarshallerProvider
     {
@@ -26,7 +26,7 @@ namespace Microsoft.PowerFx
         /// Provides a customization point to control how properties are marshalled. 
         /// This returns null to skip the property, else return the name it should have on the power fx record.
         /// If this is insufficient, a caller can always implement their own marshaller and return a 
-        /// a <see cref="ObjectMarshaler"/> directly. 
+        /// a <see cref="ObjectMarshaller"/> directly. 
         /// </summary>
         public virtual string GetFxName(PropertyInfo propertyInfo)
         {
@@ -81,7 +81,7 @@ namespace Microsoft.PowerFx
                 fxType = fxType.Add(fxName, fxFieldType);
             }
 
-            marshaler = new ObjectMarshaler(fxType, mapping);
+            marshaler = new ObjectMarshaller(fxType, mapping);
             return true;
         }      
     }

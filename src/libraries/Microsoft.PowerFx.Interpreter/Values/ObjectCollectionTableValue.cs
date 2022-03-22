@@ -12,17 +12,17 @@ namespace Microsoft.PowerFx
     internal class ObjectCollectionTableValue<T> : CollectionTableValue<T>
     {
         // Convert T --> RecordValue
-        private readonly ITypeMarshaller _rowMarshaler;
+        private readonly ITypeMarshaller _rowMarshaller;
 
-        internal ObjectCollectionTableValue(IRContext irContext, IEnumerable<T> source, ITypeMarshaller rowMarshaler)
+        internal ObjectCollectionTableValue(IRContext irContext, IEnumerable<T> source, ITypeMarshaller rowMarshaller)
             : base(irContext, source)
         {
-            _rowMarshaler = rowMarshaler;
+            _rowMarshaller = rowMarshaller;
         }
 
         protected override DValue<RecordValue> Marshal(T item)
         {
-            var arg = _rowMarshaler.Marshal(item);
+            var arg = _rowMarshaller.Marshal(item);
             var result = arg switch
             {
                 RecordValue r => DValue<RecordValue>.Of(r),

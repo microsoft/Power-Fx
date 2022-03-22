@@ -132,7 +132,7 @@ namespace Microsoft.PowerFx
             {
                 if (marshaller.TryGetMarshaller(type, this, maxDepth - 1, out tm))
                 {
-                    tm = new NullCheckerMarshaler(tm);
+                    tm = new NullCheckerMarshaller(tm);
                     lock (_cache)
                     {
                         _cache[type] = tm;
@@ -188,15 +188,15 @@ namespace Microsoft.PowerFx
         }
 
         // Wrapper to check for null and return blank. 
-        // This lets us avoid every other ITypeMarshaler implementation having to do the same check.
+        // This lets us avoid every other ITypeMarshaller implementation having to do the same check.
         [DebuggerDisplay("{_inner}")]
-        private class NullCheckerMarshaler : ITypeMarshaller
+        private class NullCheckerMarshaller : ITypeMarshaller
         {
             private readonly ITypeMarshaller _inner;
 
             public FormulaType Type => _inner.Type;
 
-            public NullCheckerMarshaler(ITypeMarshaller inner)
+            public NullCheckerMarshaller(ITypeMarshaller inner)
             {
                 _inner = inner;
             }
