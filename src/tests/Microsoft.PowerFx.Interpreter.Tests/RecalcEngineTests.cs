@@ -400,7 +400,7 @@ namespace Microsoft.PowerFx.Tests
             Assert.Throws<InvalidOperationException>(() => config.AddFunction(BuiltinFunctionsCore.Abs));
             Assert.Throws<InvalidOperationException>(() => config.AddOptionSet(optionSet));
 
-            Assert.DoesNotContain(new DName("foo"), config.EnvironmentSymbols.Keys);
+            Assert.False(config.TryGetSymbol(new DName("foo"), out _, out _));
 
             Assert.DoesNotContain(new DName(BuiltinFunctionsCore.Abs.Name), config.ExtraFunctions.Keys);
         }        

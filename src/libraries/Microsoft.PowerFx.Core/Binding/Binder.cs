@@ -2949,6 +2949,18 @@ namespace Microsoft.PowerFx.Core.Binding
                 var fnInfo = FirstNameInfo.Create(node, lookupInfo);
                 var lookupType = lookupInfo.Type;
 
+                if (lookupInfo.DisplayName != default) 
+                {
+                    if (_txb.UpdateDisplayNames)
+                    {                    
+                        _txb.NodesToReplace.Add(new KeyValuePair<Token, string>(node.Token, lookupInfo.DisplayName));
+                    }
+                    else if (lookupInfo.Data is IExternalEntity entity)
+                    {
+                        _txb.NodesToReplace.Add(new KeyValuePair<Token, string>(node.Token, entity.EntityName));
+                    }
+                }
+
                 // Internal control references are not allowed in component input properties.
                 if (CheckComponentProperty(lookupInfo.Data as IExternalControl))
                 {
