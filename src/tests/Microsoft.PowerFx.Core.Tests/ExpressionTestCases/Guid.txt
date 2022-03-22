@@ -17,6 +17,12 @@ true
 >> Len(GUID())
 36
 
+>> GUID(Blank())
+Blank()
+
+>> GUID(1/0)
+#Error(Kind=Div0)
+
 >> GUID("c3987aa4-52ff-462f-9a7c-a13c0dedb16d")
 c3987aa4-52ff-462f-9a7c-a13c0dedb16d
 
@@ -35,6 +41,36 @@ c3987aa4-52ff-462f-9a7c-a13c0dedb16d
 >> GUID("76353e29-1d57-4315-8af1-884ce7e6c75c") = GUID("76353e29-1d57-4315-8af1-884ce7e6c75c")
 true
 
+>> GUID("76353e291d5743158af1884ce7e6c75c") = GUID("76353E29-1D57-4315-8AF1-884CE7E6C75C")
+true
+
 // Not comparable to string
 >> GUID("76353e29-1d57-4315-8af1-884ce7e6c75c") = "76353e29-1d57-4315-8af1-884ce7e6c75c"
 Errors: Error 45-46: GUID values can only be compared to other GUID values.
+
+>> GUID("NotAGuid")
+#Error(Kind=InvalidArgument)
+
+// Missing 1 char
+>> GUID("ad4c12ae-e897-4bdc-8e37-8a2bfa04636")
+#Error(Kind=InvalidArgument)
+
+// 1 extra char
+>> GUID("743c9c6fb-a9ab-476e-8231-8c76631fb6f0")
+#Error(Kind=InvalidArgument)
+
+// Not a valid guid
+>> GUID("560fd2fc-cef6-xxxx-ad40-628a9d2cb164")
+#Error(Kind=InvalidArgument)
+
+
+
+// Not currently supported formats
+>> GUID("{275238ab-f73d-4167-862b-7d6c4e0e288c}")
+#Error(Kind=InvalidArgument
+
+>> GUID("(8261c454-2de7-48fc-a5cb-40be38a634fa)")
+#Error(Kind=InvalidArgument)
+
+>> GUID("{0x275238ab, 0xf73d, 0x4167, {0x86, 0x2b, 0x7d, 0x6c, 0x4e, 0x0e, 0x28, 0x8c}}")
+#Error(Kind=InvalidArgument)

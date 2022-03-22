@@ -309,7 +309,10 @@ namespace Microsoft.PowerFx.Functions
         {
             var stringInput = args[0];
 
-            if (Guid.TryParse(stringInput.Value, out var guid))
+            // Don't accept GUIDs formatted with {}, () or formatted as {0x00000000,0x0000,0x0000,{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00}
+            // This can be loosened later if needed
+            // see https://docs.microsoft.com/en-us/dotnet/api/system.guid.parseexact?view=net-6.0#system-guid-parseexact(system-string-system-string)
+            if (Guid.TryParseExact(stringInput.Value, "D", out var guid) || Guid.TryParseExact(stringInput.Value, "N", out guid))
             {
                 return new GuidValue(irContext, guid);
             }
