@@ -30,7 +30,7 @@ namespace Microsoft.PowerFx.Core.Tests
         /// <returns>Result of evaluating Expr.</returns>
         protected abstract Task<FormulaValue> RunAsyncInternal(string expr, string setupHandlerName = null);
 
-        private static readonly Regex RuntimeErrorExpectedResultRegex = new Regex(@"\#error(?:\(Kind=(?<errorKind>[^\)]+)\))?", RegexOptions.IgnoreCase);
+        private static readonly Regex RuntimeErrorExpectedResultRegex = new Regex(@"\#error($|(?:\(Kind=(?<errorKind>[^\)]+)\)))", RegexOptions.IgnoreCase);
 
         /// <summary>
         /// Returns (Pass,Fail,Skip) and a status message.

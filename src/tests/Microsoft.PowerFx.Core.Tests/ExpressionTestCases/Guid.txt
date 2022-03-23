@@ -66,11 +66,9 @@ Errors: Error 45-46: GUID values can only be compared to other GUID values.
 >> GUID("560fd2fc-cef6-xxxx-ad40-628a9d2cb164")
 #Error(Kind=InvalidArgument)
 
-
-
 // Not currently supported formats
 >> GUID("{275238ab-f73d-4167-862b-7d6c4e0e288c}")
-#Error(Kind=InvalidArgument
+#Error(Kind=InvalidArgument)
 
 >> GUID("(8261c454-2de7-48fc-a5cb-40be38a634fa)")
 #Error(Kind=InvalidArgument)
