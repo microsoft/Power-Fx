@@ -56,10 +56,15 @@ namespace Microsoft.PowerFx.Core.Glue
 
         public SimpleResolver(params TexlFunction[] extraFunctions)
         {
+            _library = GetFullFunctionLibrary(extraFunctions);
+        }
+
+        public static TexlFunction[] GetFullFunctionLibrary(TexlFunction[] extraFunctions)
+        {
             var list = new List<TexlFunction>();
             list.AddRange(BuiltinFunctionsCore.BuiltinFunctionsLibrary);
             list.AddRange(extraFunctions);
-            _library = list.ToArray();
+            return list.ToArray();
         }
 
         public virtual bool Lookup(DName name, out NameLookupInfo nameInfo, NameLookupPreferences preferences = NameLookupPreferences.None)
