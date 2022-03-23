@@ -6,6 +6,7 @@ using System.Diagnostics.Contracts;
 using System.Linq;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Public.Types;
+using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Core.Public.Values
 {
@@ -14,6 +15,16 @@ namespace Microsoft.PowerFx.Core.Public.Values
     /// </summary>
     public abstract class TableValue : ValidFormulaValue
     {
+        /// <summary>
+        /// Often marshalling an array will create a Single Column Tables with a single "Value" column. 
+        /// </summary>
+        public const string ValueName = "Value";
+        
+        /// <summary>
+        /// DName for ValueName.
+        /// </summary>
+        public static readonly DName ValueDName = new DName(ValueName);
+
         public abstract IEnumerable<DValue<RecordValue>> Rows { get; }
 
         public bool IsColumn => IRContext.ResultType._type.IsColumn;
@@ -22,6 +33,50 @@ namespace Microsoft.PowerFx.Core.Public.Values
             : base(irContext)
         {
             Contract.Assert(IRContext.ResultType is TableType);
+        }
+
+        public virtual int Count()
+        {
+            return Rows.Count();
+        }
+
+        /// <summary>
+        /// Lookup the record at the given 1-based index, or return an error value if out of range.
+        /// </summary>
+        /// <param name="index1">1-based index.</param>
+        /// <returns>The record or an errorValue.</returns>
+        public DValue<RecordValue> Index(int index1)
+        {
+            if (TryGetIndex(index1, out var record))
+            {
+                return record;
+            }
+
+            return DValue<RecordValue>.Of(ArgumentOutOfRange(IRContext));
+        }
+
+        // Index() does standard error messaging and then call TryGetIndex().
+        protected virtual bool TryGetIndex(int index1, out DValue<RecordValue> record)
+        {
+            var index0 = index1 - 1;
+            if (index0 < 0)
+            {
+                record = null;
+                return false;
+            }
+
+            record = Rows.ElementAtOrDefault(index0);
+            return record != null;
+        }
+                
+        private static ErrorValue ArgumentOutOfRange(IRContext irContext)
+        {
+            return new ErrorValue(irContext, new ExpressionError()
+            {
+                Message = "Argument out of range",
+                Span = irContext.SourceContext,
+                Kind = ErrorKind.Numeric
+            });
         }
 
         public override object ToObject()

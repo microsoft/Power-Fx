@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 
@@ -21,11 +22,12 @@ namespace Microsoft.PowerFx.Core.Binding.BindInfo
         /// it has the display name of the object in Data. 
         /// </summary>
         public readonly DName DisplayName;
+        public readonly bool IsAsync;
 
         // Optional data associated with a name. May be null.
         public readonly object Data;
 
-        public NameLookupInfo(BindKind kind, DType type, DPath path, int upCount, object data = null, DName displayName = default)
+        public NameLookupInfo(BindKind kind, DType type, DPath path, int upCount, object data = null, DName displayName = default, bool isAsync = false)
         {
             Contracts.Assert(kind >= BindKind.Min && kind < BindKind.Lim);
             Contracts.Assert(upCount >= 0);
@@ -37,6 +39,9 @@ namespace Microsoft.PowerFx.Core.Binding.BindInfo
             UpCount = upCount;
             Data = data;
             DisplayName = displayName;
+
+            // Any connectedDataSourceInfo or option set or view needs to be accessed asynchronously to allow data to be loaded.
+            IsAsync = Data is IExternalTabularDataSource || Kind == BindKind.OptionSet || Kind == BindKind.View || isAsync;
         }
     }
 }
