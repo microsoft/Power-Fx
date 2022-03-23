@@ -3,11 +3,38 @@
 >> Log(100)
 2
 
+>> Log(64, 2)
+6
+
+>> Log(64, 4)
+3
+
+>> Log(64, 8)
+2
+
 >> Log(0)
-#Error
+#Error(Kind=Numeric)
+
+>> Log(-1)
+#Error(Kind=Numeric)
+
+>> Log(-8, -2)
+#Error(Kind=Numeric)
+
+>> Log(10, 1)
+#Error(Kind=Div0)
 
 >> Log(Blank())
-Blank()
+#Error(Kind=Numeric)
+
+>> Log(64, Blank())
+#Error(Kind=Numeric)
+
+>> Log(Blank(), 64)
+#Error(Kind=Numeric)
+
+>> Log(Blank(), Blank())
+#Error(Kind=Numeric)
 
 >> Log(1/0)
-#Error
+#Error(Kind=Div0)

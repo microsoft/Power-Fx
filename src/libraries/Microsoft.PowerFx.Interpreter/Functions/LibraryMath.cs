@@ -384,6 +384,11 @@ namespace Microsoft.PowerFx.Functions
         {
             var number = args[0].Value;
             var numberBase = args[1].Value;
+            if (numberBase == 1)
+            {
+                return GetDiv0Error(irContext);
+            }
+
             return new NumberValue(irContext, Math.Log(number, numberBase));
         }
 
@@ -397,7 +402,26 @@ namespace Microsoft.PowerFx.Functions
         {
             var number = args[0].Value;
             var exponent = args[1].Value;
-            return new NumberValue(irContext, Math.Pow(number, exponent));
+
+            if (number == 0)
+            {
+                if (exponent < 0)
+                {
+                    return GetDiv0Error(irContext);
+                }
+                else if (exponent == 0)
+                {
+                    return new ErrorValue(irContext, new ExpressionError
+                    {
+                        Kind = ErrorKind.Numeric,
+                        Span = irContext.SourceContext,
+                        Message = "Invalid exponent"
+                    });
+                }
+            }
+
+            var result = new NumberValue(irContext, Math.Pow(number, exponent));
+            return FiniteChecker(irContext, 1, result);
         }
 
         private static FormulaValue Rand(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args)
@@ -455,12 +479,7 @@ namespace Microsoft.PowerFx.Functions
             var tan = Math.Tan(arg);
             if (tan == 0)
             {
-                return new ErrorValue(irContext, new ExpressionError
-                {
-                    Kind = ErrorKind.Div0,
-                    Span = irContext.SourceContext,
-                    Message = "Division by zero"
-                });
+                return GetDiv0Error(irContext);
             }
 
             return new NumberValue(irContext, 1 / tan);
@@ -482,12 +501,7 @@ namespace Microsoft.PowerFx.Functions
 
             if (x == 0 && y == 0)
             {
-                return new ErrorValue(irContext, new ExpressionError
-                {
-                    Kind = ErrorKind.Div0,
-                    Span = irContext.SourceContext,
-                    Message = "Division by zero"
-                });
+                return GetDiv0Error(irContext);
             }
 
             // Unlike Excel, C#'s Math.Atan2 expects 'y' as first argument and 'x' as second.
@@ -512,6 +526,16 @@ namespace Microsoft.PowerFx.Functions
 
                 return new NumberValue(irContext, result);
             };
+        }
+
+        private static ErrorValue GetDiv0Error(IRContext irContext)
+        {
+            return new ErrorValue(irContext, new ExpressionError
+            {
+                Kind = ErrorKind.Div0,
+                Span = irContext.SourceContext,
+                Message = "Division by zero"
+            });
         }
     }
 }

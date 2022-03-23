@@ -55,27 +55,43 @@
 0
 
 >> Abs(Blank())
-Blank()
+0
 
 >> Abs(1/0)
 #Error
 
-// use Text to ignore precision issues
->> Text(Exp(Ln(2)), "#")
-"2"
+>> Exp(1)
+2.71828182845904
 
->> Text(Ln(Exp(2)), "#")
-"2"
+>> Exp(2.302585092994045)
+10
+
+>> Exp(-5)
+0.0067379469991
+
+>> Exp(Ln(2))
+2
+
+>> Ln(Exp(2))
+2
+
+>> Ln(10)
+2.30258509299404
+
+>> Ln(0.5)
+-0.69314718055994
+
+>> Ln(1e-10)
+-23.02585092994045
 
 >> Ln(0)
-#Error
+#Error(Kind=Numeric)
 
 >> Ln(Blank())
-Blank()
+#Error(Kind=Numeric)
 
 >> Ln(1/0)
-#Error
-
+#Error(Kind=Div0)
 
 >> IsError(Ln(0))
 true
@@ -90,25 +106,34 @@ true
 0
 
 >> Sqrt(Blank())
-Blank()
+0
 
 >> Sqrt(1/0)
-#Error
+#Error(Kind=Div0)
+
+>> Sqrt(-2)
+#Error(Kind=Numeric)
 
 >> Power(2, -2)
 0.25
 
 >> Power(Blank(), -2)
-Blank()
+#Error(Kind=Div0)
+
+>> Power(Blank(), 2)
+0
+
+>> Power(3, Blank())
+1
 
 >> Power(1/0, -2)
-#Error
+#Error(Kind=Div0)
 
 >> Round(Exp(2), 2)
 7.39
 
 >> Exp(Blank())
-Blank()
+1
 
 >> Exp(1/0)
 #Error
@@ -240,7 +265,7 @@ Blank()
 -5
 
 >> Int(Blank())
-Blank()
+0
 
 >> Int(1/0)
 #Error
