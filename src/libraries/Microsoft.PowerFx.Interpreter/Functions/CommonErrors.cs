@@ -59,16 +59,6 @@ namespace Microsoft.PowerFx.Functions
             });
         }
 
-        public static ErrorValue InvalidGuidError(IRContext irContext)
-        {
-            return new ErrorValue(irContext, new ExpressionError()
-            {
-                Message = $"The argument to 'GUID' function is not in a valid GUID format",
-                Span = irContext.SourceContext,
-                Kind = ErrorKind.InvalidArgument
-            });
-        }
-
         public static ErrorValue InvalidBooleanFormatError(IRContext irContext)
         {
             return new ErrorValue(irContext, new ExpressionError()

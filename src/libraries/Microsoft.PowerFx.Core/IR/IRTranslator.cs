@@ -691,9 +691,6 @@ namespace Microsoft.PowerFx.Core.IR
                     case CoercionKind.BooleanToText:
                         unaryOpKind = UnaryOpKind.BooleanToText;
                         break;
-                    case CoercionKind.GuidToText:
-                        unaryOpKind = UnaryOpKind.GuidToText;
-                        break;
                     case CoercionKind.OptionSetToText:
                         unaryOpKind = UnaryOpKind.OptionSetToText;
                         break;
