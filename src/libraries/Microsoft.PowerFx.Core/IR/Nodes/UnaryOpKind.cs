@@ -33,6 +33,7 @@ namespace Microsoft.PowerFx.Core.IR.Nodes
         BooleanToText,
         OptionSetToText,
         ViewToText,
+        GuidToText,
 
         NumberToBoolean,
         TextToBoolean,

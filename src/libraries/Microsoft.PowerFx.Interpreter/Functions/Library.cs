@@ -453,6 +453,20 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: ForAll)
             },
             {
+                BuiltinFunctionsCore.GUIDNoArg,
+                (EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] values) => GuidNoArg(irContext)
+            },
+            {
+                BuiltinFunctionsCore.GUIDPure,
+                StandardErrorHandling<StringValue>(
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<StringValue>,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: GuidPure)
+            },
+            {
                 BuiltinFunctionsCore.IsBlank,
                 StandardErrorHandling<FormulaValue>(
                     expandArguments: NoArgExpansion,
