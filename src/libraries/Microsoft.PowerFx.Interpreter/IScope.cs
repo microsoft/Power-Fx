@@ -23,18 +23,7 @@ namespace Microsoft.PowerFx
 
         public virtual FormulaValue Resolve(string name)
         {
-            // Derived class can have more optimized lookup.
-
-            // $$$ avoid throwing (so we can chain). NEed a "TryLookup"
-            foreach (var field in _context.Fields)
-            {
-                if (name == field.Name)
-                {
-                    return field.Value;
-                }
-            }
-
-            return null;
+            return _context.GetField(name);            
         }
     }
 }

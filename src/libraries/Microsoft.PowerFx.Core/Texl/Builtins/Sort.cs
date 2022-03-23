@@ -43,6 +43,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             yield return new[] { TexlStrings.SortArg1, TexlStrings.SortArg2, TexlStrings.SortArg3 };
         }
 
+        public override IEnumerable<string> GetRequiredEnumNames()
+        {
+            return new List<string>() { LanguageConstants.SortOrderEnumString };
+        }
+
         public override bool CheckInvocation(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             Contracts.AssertValue(args);

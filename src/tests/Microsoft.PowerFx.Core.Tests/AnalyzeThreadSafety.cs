@@ -157,6 +157,13 @@ namespace Microsoft.PowerFx.Core.Tests
                     var isValueArgSafe = IsTypeImmutable(valueArg);
                     return isValueArgSafe;
                 }
+
+                if (genericDef == typeof(IEnumerable<>))
+                {
+                    var valueArg = t.GetGenericArguments()[0];
+                    var isValueArgSafe = IsTypeImmutable(valueArg);
+                    return isValueArgSafe;
+                }
             }
 
             if (_knownImmutableTypes.Contains(t))
