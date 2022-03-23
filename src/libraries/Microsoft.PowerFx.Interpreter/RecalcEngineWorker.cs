@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Threading;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.IR.Nodes;
 using Microsoft.PowerFx.Core.IR.Symbols;
@@ -69,9 +70,9 @@ namespace Microsoft.PowerFx
                 (var irnode, var ruleScopeSymbol) = IRTranslator.Translate(binding);
 
                 var scope = this;
-                var v = new EvalVisitor(_cultureInfo);
+                var v = new EvalVisitor(_cultureInfo, CancellationToken.None);
 
-                var newValue = irnode.Accept(v, SymbolContext.New());
+                var newValue = irnode.Accept(v, SymbolContext.New()).Result;
 
                 var equal = fi._value != null && // null on initial run. 
                     RuntimeHelpers.AreEqual(newValue, fi._value);

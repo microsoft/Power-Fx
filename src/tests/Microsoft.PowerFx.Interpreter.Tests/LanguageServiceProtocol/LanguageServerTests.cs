@@ -24,9 +24,9 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             Converters = { new FormulaTypeJsonConverter() }
         };
 
-        protected static List<string> _sendToClientData;
-        protected static TestPowerFxScopeFactory _scopeFactory;
-        protected static TestLanguageServer _testServer;
+        protected List<string> _sendToClientData;
+        protected TestPowerFxScopeFactory _scopeFactory;
+        protected TestLanguageServer _testServer;
 
         public LanguageServerTests()
         {

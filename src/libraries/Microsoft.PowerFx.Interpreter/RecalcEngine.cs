@@ -5,6 +5,8 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Entities;
@@ -196,6 +198,11 @@ namespace Microsoft.PowerFx
         /// <returns>The formula's result.</returns>
         public FormulaValue Eval(string expressionText, RecordValue parameters = null)
         {
+            return EvalAsync(expressionText, CancellationToken.None, parameters).Result;          
+        }
+
+        public async Task<FormulaValue> EvalAsync(string expressionText, CancellationToken cancel, RecordValue parameters = null)
+        {
             if (parameters == null)
             {
                 parameters = RecordValue.Empty();
@@ -204,7 +211,7 @@ namespace Microsoft.PowerFx
             var check = Check(expressionText, parameters.IRContext.ResultType);
             check.ThrowOnErrors();
 
-            var newValue = check.Expression.Eval(parameters);
+            var newValue = await check.Expression.EvalAsync(parameters, cancel);
             return newValue;
         }
 
