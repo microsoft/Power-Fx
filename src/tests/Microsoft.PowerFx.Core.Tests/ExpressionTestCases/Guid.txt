@@ -26,6 +26,9 @@ Blank()
 >> GUID("c3987aa4-52ff-462f-9a7c-a13c0dedb16d")
 GUID("c3987aa4-52ff-462f-9a7c-a13c0dedb16d")
 
+>> GUID("c3987aa4-52ff-462f-9a7c-a13c0dedb16d") & "aaaaaaaaaaaaaaaa"
+"c3987aa4-52ff-462f-9a7c-a13c0dedb16daaaaaaaaaaaaaaaa"
+
 >> GUID("8A9E8006-3EDE-4584-863F-4226BAA73D08")
 GUID("8a9e8006-3ede-4584-863f-4226baa73d08")
 

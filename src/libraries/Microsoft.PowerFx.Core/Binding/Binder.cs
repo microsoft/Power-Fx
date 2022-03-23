@@ -3926,8 +3926,8 @@ namespace Microsoft.PowerFx.Core.Binding
                         break;
 
                     case BinaryOp.Concat:
-                        CheckType(node.Left, DType.String, /* coerced: */ DType.Number, DType.Date, DType.Time, DType.DateTimeNoTimeZone, DType.DateTime, DType.Boolean, DType.OptionSetValue, DType.ViewValue);
-                        CheckType(node.Right, DType.String, /* coerced: */ DType.Number, DType.Date, DType.Time, DType.DateTimeNoTimeZone, DType.DateTime, DType.Boolean, DType.OptionSetValue, DType.ViewValue);
+                        CheckType(node.Left, DType.String, /* coerced: */ DType.Guid, DType.Number, DType.Date, DType.Time, DType.DateTimeNoTimeZone, DType.DateTime, DType.Boolean, DType.OptionSetValue, DType.ViewValue);
+                        CheckType(node.Right, DType.String, /* coerced: */ DType.Guid, DType.Number, DType.Date, DType.Time, DType.DateTimeNoTimeZone, DType.DateTime, DType.Boolean, DType.OptionSetValue, DType.ViewValue);
                         _txb.SetType(node, DType.String);
                         break;
 
