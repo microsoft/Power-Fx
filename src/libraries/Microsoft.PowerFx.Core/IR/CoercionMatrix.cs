@@ -346,10 +346,6 @@ namespace Microsoft.PowerFx.Core.IR
             {
                 return CoercionKind.ViewToText;
             }
-            else if (DType.Guid.Accepts(fromType))
-            {
-                return CoercionKind.GuidToText;
-            }
             else
             {
                 return CoercionKind.None; // Implicit coercion?

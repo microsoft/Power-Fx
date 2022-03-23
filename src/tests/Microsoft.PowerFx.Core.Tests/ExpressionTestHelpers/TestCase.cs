@@ -16,7 +16,7 @@ namespace Microsoft.PowerFx.Core.Tests
         // Formula string to run 
         public string Input;
 
-        // Expected Result
+        // Expected Result, indexed by runner name
         public string Expected;
 
         // Location from source file. 

@@ -300,26 +300,6 @@ namespace Microsoft.PowerFx.Functions
             }
         }
 
-        public static FormulaValue GuidNoArg(IRContext irContext)
-        {
-            return new GuidValue(irContext, Guid.NewGuid());
-        }
-
-        public static FormulaValue GuidPure(IRContext irContext, StringValue[] args)
-        {
-            var stringInput = args[0];
-
-            // Don't accept GUIDs formatted with {}, () or formatted as {0x00000000,0x0000,0x0000,{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00}
-            // This can be loosened later if needed
-            // see https://docs.microsoft.com/en-us/dotnet/api/system.guid.parseexact?view=net-6.0#system-guid-parseexact(system-string-system-string)
-            if (Guid.TryParseExact(stringInput.Value, "D", out var guid) || Guid.TryParseExact(stringInput.Value, "N", out guid))
-            {
-                return new GuidValue(irContext, guid);
-            }
-
-            return CommonErrors.InvalidGuidError(irContext);
-        }
-
         public static FormulaValue Lower(IRContext irContext, StringValue[] args)
         {
             return new StringValue(irContext, args[0].Value.ToLower());
