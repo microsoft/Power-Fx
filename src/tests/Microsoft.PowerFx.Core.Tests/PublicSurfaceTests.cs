@@ -92,6 +92,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Core.NameCollisionException",
                 "Microsoft.PowerFx.Core.FormulaTypeSchema",
                 "Microsoft.PowerFx.Core.FormulaTypeToSchemaConverter",
+                "Microsoft.PowerFx.Core.DisplayNameUtility",
             };
 
             var sb = new StringBuilder();
