@@ -9,13 +9,13 @@ using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Core.Syntax.Nodes
 {
-    internal sealed class FirstNameNode : NameNode
+    public sealed class FirstNameNode : NameNode
     {
-        public readonly Identifier Ident;
+        public Identifier Ident { get; }
 
         public bool IsLhs => Parent != null && Parent.AsDottedName() != null;
 
-        public FirstNameNode(ref int idNext, Token tok, SourceList sourceList, Identifier ident)
+        internal FirstNameNode(ref int idNext, Token tok, SourceList sourceList, Identifier ident)
             : base(ref idNext, tok, sourceList)
         {
             Contracts.AssertValue(ident);
@@ -24,35 +24,38 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
             Ident = ident;
         }
 
-        public FirstNameNode(ref int idNext, Token tok, Identifier ident)
+        internal FirstNameNode(ref int idNext, Token tok, Identifier ident)
             : this(ref idNext, tok, new SourceList(tok), ident)
         {
         }
 
-        public override TexlNode Clone(ref int idNext, Span ts)
+        internal override TexlNode Clone(ref int idNext, Span ts)
         {
             return new FirstNameNode(ref idNext, Token.Clone(ts), Ident.Clone(ts));
         }
 
+        /// <inheritdoc />
         public override void Accept(TexlVisitor visitor)
         {
             Contracts.AssertValue(visitor);
             visitor.Visit(this);
         }
 
+        /// <inheritdoc />
         public override TResult Accept<TResult, TContext>(TexlFunctionalVisitor<TResult, TContext> visitor, TContext context)
         {
             return visitor.Visit(this, context);
         }
 
+        /// <inheritdoc />
         public override NodeKind Kind => NodeKind.FirstName;
 
-        public override FirstNameNode CastFirstName()
+        internal override FirstNameNode CastFirstName()
         {
             return this;
         }
 
-        public override FirstNameNode AsFirstName()
+        internal override FirstNameNode AsFirstName()
         {
             return this;
         }

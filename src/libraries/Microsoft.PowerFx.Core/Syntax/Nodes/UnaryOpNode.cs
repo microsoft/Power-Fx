@@ -12,14 +12,15 @@ using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Core.Syntax.Nodes
 {
-    internal sealed class UnaryOpNode : TexlNode
+    public sealed class UnaryOpNode : TexlNode
     {
-        public readonly TexlNode Child;
-        public readonly UnaryOp Op;
+        public TexlNode Child { get; }
 
-        public bool IsPercent => Op == UnaryOp.Percent;
+        public UnaryOp Op { get; }
 
-        public UnaryOpNode(ref int idNext, Token primaryToken, SourceList sourceList, UnaryOp op, TexlNode child)
+        internal bool IsPercent => Op == UnaryOp.Percent;
+
+        internal UnaryOpNode(ref int idNext, Token primaryToken, SourceList sourceList, UnaryOp op, TexlNode child)
             : base(ref idNext, primaryToken, sourceList)
         {
             Contracts.AssertValue(child);
@@ -30,7 +31,7 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
             MinChildID = Math.Min(child.MinChildID, MinChildID);
         }
 
-        public override TexlNode Clone(ref int idNext, Span ts)
+        internal override TexlNode Clone(ref int idNext, Span ts)
         {
             var child = Child.Clone(ref idNext, ts);
             var newNodes = new Dictionary<TexlNode, TexlNode>
@@ -40,6 +41,7 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
             return new UnaryOpNode(ref idNext, Token.Clone(ts), SourceList.Clone(ts, newNodes), Op, child);
         }
 
+        /// <inheritdoc />
         public override void Accept(TexlVisitor visitor)
         {
             Contracts.AssertValue(visitor);
@@ -50,23 +52,26 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
             }
         }
 
+        /// <inheritdoc />
         public override TResult Accept<TResult, TContext>(TexlFunctionalVisitor<TResult, TContext> visitor, TContext context)
         {
             return visitor.Visit(this, context);
         }
 
+        /// <inheritdoc />
         public override NodeKind Kind => NodeKind.UnaryOp;
 
-        public override UnaryOpNode CastUnaryOp()
+        internal override UnaryOpNode CastUnaryOp()
         {
             return this;
         }
 
-        public override UnaryOpNode AsUnaryOpLit()
+        internal override UnaryOpNode AsUnaryOpLit()
         {
             return this;
         }
 
+        /// <inheritdoc />
         public override Span GetCompleteSpan()
         {
             // For syntax coloring regarding percentages

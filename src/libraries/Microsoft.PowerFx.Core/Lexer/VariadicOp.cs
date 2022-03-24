@@ -3,7 +3,7 @@
 
 namespace Microsoft.PowerFx.Core.Lexer
 {
-    internal enum VariadicOp
+    public enum VariadicOp
     {
         Chain,
     }

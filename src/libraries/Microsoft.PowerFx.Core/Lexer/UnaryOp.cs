@@ -3,7 +3,7 @@
 
 namespace Microsoft.PowerFx.Core.Lexer
 {
-    internal enum UnaryOp
+    public enum UnaryOp
     {
         Not,
         Minus,

@@ -25,10 +25,7 @@ namespace Microsoft.PowerFx.Core.Utils
 
         public bool IsValid => _value != null;
 
-        public static implicit operator string(DName name)
-        {
-            return name.Value;
-        }
+        public static implicit operator string(DName name) => name.Value;
 
         public override string ToString()
         {

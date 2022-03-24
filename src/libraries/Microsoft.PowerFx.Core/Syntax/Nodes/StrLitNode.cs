@@ -9,36 +9,39 @@ using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Core.Syntax.Nodes
 {
-    internal sealed class StrLitNode : TexlNode
+    public sealed class StrLitNode : TexlNode
     {
-        public readonly string Value;
+        public string Value { get; }
 
-        public StrLitNode(ref int idNext, StrLitToken tok)
+        internal StrLitNode(ref int idNext, StrLitToken tok)
             : base(ref idNext, tok, new SourceList(tok))
         {
             Value = tok.Value;
             Contracts.AssertValue(Value);
         }
 
-        public override TexlNode Clone(ref int idNext, Span ts)
+        internal override TexlNode Clone(ref int idNext, Span ts)
         {
             return new StrLitNode(ref idNext, Token.Clone(ts).As<StrLitToken>());
         }
 
+        /// <inheritdoc />
         public override void Accept(TexlVisitor visitor)
         {
             Contracts.AssertValue(visitor);
             visitor.Visit(this);
         }
 
+        /// <inheritdoc />
         public override TResult Accept<TResult, TContext>(TexlFunctionalVisitor<TResult, TContext> visitor, TContext context)
         {
             return visitor.Visit(this, context);
         }
 
+        /// <inheritdoc />
         public override NodeKind Kind => NodeKind.StrLit;
 
-        public override StrLitNode AsStrLit()
+        internal override StrLitNode AsStrLit()
         {
             return this;
         }

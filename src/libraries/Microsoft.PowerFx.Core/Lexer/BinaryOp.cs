@@ -3,7 +3,7 @@
 
 namespace Microsoft.PowerFx.Core.Lexer
 {
-    internal enum BinaryOp
+    public enum BinaryOp
     {
         Or,
         And,

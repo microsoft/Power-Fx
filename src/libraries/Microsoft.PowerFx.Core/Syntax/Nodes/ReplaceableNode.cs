@@ -9,9 +9,9 @@ using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Core.Syntax.Nodes
 {
-    internal sealed class ReplaceableNode : TexlNode
+    public sealed class ReplaceableNode : TexlNode
     {
-        public ReplaceableNode(ref int idNext, ReplaceableToken tok)
+        internal ReplaceableNode(ref int idNext, ReplaceableToken tok)
             : base(ref idNext, tok, new SourceList(tok))
         {
             Value = tok.Value;
@@ -20,24 +20,27 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
 
         public string Value { get; }
 
+        /// <inheritdoc />
         public override NodeKind Kind { get; } = NodeKind.Replaceable;
 
-        public override TexlNode Clone(ref int idNext, Span ts)
+        internal override TexlNode Clone(ref int idNext, Span ts)
         {
             return new ReplaceableNode(ref idNext, Token.Clone(ts).As<ReplaceableToken>());
         }
 
-        public override ReplaceableNode AsReplaceable()
+        internal override ReplaceableNode AsReplaceable()
         {
             return this;
         }
 
+        /// <inheritdoc />
         public override void Accept(TexlVisitor visitor)
         {
             Contracts.AssertValue(visitor);
             visitor.Visit(this);
         }
 
+        /// <inheritdoc />
         public override TResult Accept<TResult, TContext>(TexlFunctionalVisitor<TResult, TContext> visitor, TContext context)
         {
             return visitor.Visit(this, context);

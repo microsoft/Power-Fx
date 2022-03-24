@@ -11,15 +11,15 @@ using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Core.Syntax.Nodes
 {
-    internal sealed class TableNode : VariadicBase
+    public sealed class TableNode : VariadicBase
     {
-        public readonly Token[] Commas;
+        internal readonly Token[] Commas;
 
         // BracketClose can be null.
-        public readonly Token BracketClose;
+        internal readonly Token BracketClose;
 
         // Assumes ownership of all of the array args.
-        public TableNode(ref int idNext, Token primaryToken, SourceList sourceList, TexlNode[] exprs, Token[] commas, Token bracketCloseToken)
+        internal TableNode(ref int idNext, Token primaryToken, SourceList sourceList, TexlNode[] exprs, Token[] commas, Token bracketCloseToken)
             : base(ref idNext, primaryToken, sourceList, exprs)
         {
             Contracts.AssertValue(exprs);
@@ -30,7 +30,7 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
             BracketClose = bracketCloseToken;
         }
 
-        public override TexlNode Clone(ref int idNext, Span ts)
+        internal override TexlNode Clone(ref int idNext, Span ts)
         {
             var children = CloneChildren(ref idNext, ts);
             var newNodes = new Dictionary<TexlNode, TexlNode>();
@@ -42,6 +42,7 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
             return new TableNode(ref idNext, Token.Clone(ts), SourceList.Clone(ts, newNodes), children, Clone(Commas, ts), BracketClose.Clone(ts));
         }
 
+        /// <inheritdoc />
         public override void Accept(TexlVisitor visitor)
         {
             Contracts.AssertValue(visitor);
@@ -52,18 +53,21 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
             }
         }
 
+        /// <inheritdoc />
         public override TResult Accept<TResult, TContext>(TexlFunctionalVisitor<TResult, TContext> visitor, TContext context)
         {
             return visitor.Visit(this, context);
         }
 
+        /// <inheritdoc />
         public override NodeKind Kind => NodeKind.Table;
 
-        public override TableNode AsTable()
+        internal override TableNode AsTable()
         {
             return this;
         }
 
+        /// <inheritdoc />
         public override Span GetCompleteSpan()
         {
             int lim;
@@ -83,6 +87,7 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
             return new Span(Token.VerifyValue().Span.Min, lim);
         }
 
+        /// <inheritdoc />
         public override Span GetTextSpan()
         {
             var lim = BracketClose == null ? Token.VerifyValue().Span.Lim : BracketClose.Span.Lim;

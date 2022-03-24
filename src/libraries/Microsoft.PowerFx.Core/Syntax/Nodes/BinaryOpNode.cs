@@ -12,13 +12,15 @@ using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Core.Syntax.Nodes
 {
-    internal sealed class BinaryOpNode : TexlNode
+    public sealed class BinaryOpNode : TexlNode
     {
-        public readonly TexlNode Left;
-        public readonly TexlNode Right;
-        public readonly BinaryOp Op;
+        public TexlNode Left { get; }
 
-        public BinaryOpNode(ref int idNext, Token primaryToken, SourceList sourceList, BinaryOp op, TexlNode left, TexlNode right)
+        public TexlNode Right { get; }
+
+        public BinaryOp Op { get; }
+
+        internal BinaryOpNode(ref int idNext, Token primaryToken, SourceList sourceList, BinaryOp op, TexlNode left, TexlNode right)
             : base(ref idNext, primaryToken, sourceList)
         {
             Contracts.AssertValue(left);
@@ -33,7 +35,7 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
             MinChildID = Math.Min(left.MinChildID, right.MinChildID);
         }
 
-        public override TexlNode Clone(ref int idNext, Span ts)
+        internal override TexlNode Clone(ref int idNext, Span ts)
         {
             var left = Left.Clone(ref idNext, ts);
             var right = Right.Clone(ref idNext, ts);
@@ -51,6 +53,7 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
                 right);
         }
 
+        /// <inheritdoc />
         public override void Accept(TexlVisitor visitor)
         {
             Contracts.AssertValue(visitor);
@@ -62,23 +65,26 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
             }
         }
 
+        /// <inheritdoc />
         public override TResult Accept<TResult, TContext>(TexlFunctionalVisitor<TResult, TContext> visitor, TContext context)
         {
             return visitor.Visit(this, context);
         }
 
+        /// <inheritdoc />
         public override NodeKind Kind => NodeKind.BinaryOp;
 
-        public override BinaryOpNode CastBinaryOp()
+        internal override BinaryOpNode CastBinaryOp()
         {
             return this;
         }
 
-        public override BinaryOpNode AsBinaryOp()
+        internal override BinaryOpNode AsBinaryOp()
         {
             return this;
         }
 
+        /// <inheritdoc />
         public override Span GetCompleteSpan()
         {
             if (Token.Kind == TokKind.PercentSign && Right.Token.Span.Lim < Left.Token.Span.Min)

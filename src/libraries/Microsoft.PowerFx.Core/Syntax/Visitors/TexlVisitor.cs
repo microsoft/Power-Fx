@@ -6,7 +6,7 @@ using Microsoft.PowerFx.Core.Syntax.Nodes;
 namespace Microsoft.PowerFx.Core.Syntax.Visitors
 {
     // Abstract visitor base class
-    internal abstract class TexlVisitor
+    public abstract class TexlVisitor
     {
         // Visit methods for leaf node types.
         public abstract void Visit(ErrorNode node);

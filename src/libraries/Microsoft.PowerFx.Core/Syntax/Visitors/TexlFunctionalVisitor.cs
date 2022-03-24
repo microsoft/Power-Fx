@@ -5,7 +5,7 @@ using Microsoft.PowerFx.Core.Syntax.Nodes;
 
 namespace Microsoft.PowerFx.Core.Syntax.Visitors
 {
-    internal abstract class TexlFunctionalVisitor<TResult, TContext>
+    public abstract class TexlFunctionalVisitor<TResult, TContext>
     {
         // Visit methods for leaf node types.
         public abstract TResult Visit(ErrorNode node, TContext context);

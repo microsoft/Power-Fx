@@ -8,13 +8,14 @@ using Microsoft.PowerFx.Core.Syntax.SourceInformation;
 
 namespace Microsoft.PowerFx.Core.Syntax.Nodes
 {
-    internal abstract class NameNode : TexlNode
+    public abstract class NameNode : TexlNode
     {
-        protected NameNode(ref int idNext, Token primaryToken, SourceList sourceList)
+        private protected NameNode(ref int idNext, Token primaryToken, SourceList sourceList)
             : base(ref idNext, primaryToken, sourceList)
         {
         }
 
+        /// <inheritdoc />
         public override Span GetCompleteSpan()
         {
             if (SourceList.Tokens.Count() == 0)

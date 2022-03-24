@@ -14,9 +14,10 @@ namespace Microsoft.PowerFx.Core.Utils
     // A path is essentially a list of simple names, starting at "root".
     // TASK: 67008 - Make this public, or expose a public shim in Document.
     [ThreadSafeImmutable]
-    internal struct DPath : IEquatable<DPath>, ICheckable
+    public struct DPath : IEquatable<DPath>, ICheckable
     {
-        public const char RootChar = '\u2202';
+        internal const char RootChar = '\u2202';
+
         private const string RootString = "\u2202";
 
         private class Node : ICheckable
@@ -88,7 +89,7 @@ namespace Microsoft.PowerFx.Core.Utils
         // The "root" is indicated by null.
         private readonly Node _node;
 
-        public static readonly DPath Root = default;
+        public static DPath Root { get; } = default;
 
         private DPath(Node node)
         {

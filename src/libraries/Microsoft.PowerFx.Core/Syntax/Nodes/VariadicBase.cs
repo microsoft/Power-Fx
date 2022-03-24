@@ -11,12 +11,13 @@ using Microsoft.PowerFx.Core.Utils;
 namespace Microsoft.PowerFx.Core.Syntax.Nodes
 {
     // Base for all variadic nodes.
-    internal abstract class VariadicBase : TexlNode
+    public abstract class VariadicBase : TexlNode
     {
-        public readonly TexlNode[] Children;
+        // TODO: Would IReadOnlyList<TexlNode> work better here?
+        public TexlNode[] Children { get; }
 
         // Takes ownership of the array.
-        protected VariadicBase(ref int idNext, Token primaryToken, SourceList sourceList, TexlNode[] children)
+        private protected VariadicBase(ref int idNext, Token primaryToken, SourceList sourceList, TexlNode[] children)
             : base(ref idNext, primaryToken, sourceList)
         {
             Contracts.AssertValue(children);
@@ -42,7 +43,7 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
             _depth = maxDepth + 1;
         }
 
-        public TexlNode[] CloneChildren(ref int idNext, Span ts)
+        internal TexlNode[] CloneChildren(ref int idNext, Span ts)
         {
             var clones = new TexlNode[Children.Length];
             for (var x = 0; x < clones.Length; x++)
@@ -53,7 +54,7 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
             return clones;
         }
 
-        public static Token[] Clone(Token[] toks, Span ts)
+        internal static Token[] Clone(Token[] toks, Span ts)
         {
             Contracts.AssertValueOrNull(toks);
             if (toks == null)
@@ -82,6 +83,7 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
             }
         }
 
+        /// <inheritdoc />
         public override Span GetCompleteSpan()
         {
             if (Children.Count() == 0)
