@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Core.Types.Enums
@@ -298,6 +299,29 @@ namespace Microsoft.PowerFx.Core.Types.Enums
 
         protected virtual IDictionary<string, string> EnumDict => _enums;
 
+        internal EnumStore WithRequiredEnums(IEnumerable<TexlFunction> functions)
+        {
+            var missingEnums = new Dictionary<string, string>();
+            foreach (var function in functions)
+            {
+                var requiredEnumNames = function.GetRequiredEnumNames();
+                foreach (var name in requiredEnumNames)
+                {
+                    if (!EnumDict.ContainsKey(name) && !missingEnums.ContainsKey(name))
+                    {
+                        missingEnums.Add(name, _enums[name]);
+                    }
+                }
+            }
+
+            foreach (var missingEnum in missingEnums)
+            {
+                EnumDict.Add(missingEnum.Key, missingEnum.Value);
+            }
+
+            return this;
+        }
+
         internal void RegisterTuple(Tuple<string, string, string> tuple, Dictionary<string, string> locInfo = null)
         {
             var tupleName = tuple.Item1;
@@ -522,5 +546,12 @@ namespace Microsoft.PowerFx.Core.Types.Enums
             _enumSymbols = null;
             _enumsUsedPowerApps = null;
         }
+    }
+
+    internal class EmptyEnumStore : EnumStore
+    {
+        private readonly IDictionary<string, string> _enumDict = new Dictionary<string, string>();
+
+        protected override IDictionary<string, string> EnumDict => _enumDict;
     }
 }
