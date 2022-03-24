@@ -11,6 +11,7 @@ using Microsoft.PowerFx.Core.Public;
 using Microsoft.PowerFx.Core.Public.Types;
 using Microsoft.PowerFx.Core.Public.Values;
 using Microsoft.PowerFx.Core.Texl;
+using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
 using Xunit;
 using Xunit.Sdk;
@@ -454,6 +455,22 @@ namespace Microsoft.PowerFx.Tests
             Assert.True(checkResult.IsSuccess);
             var osvaluetype = Assert.IsType<OptionSetValueType>(checkResult.ReturnType);
             Assert.Equal("FooOs", osvaluetype.OptionSetName);
+        }
+
+        [Fact]
+        public void EmptyEnumStoreTest()
+        {
+            var config = PowerFxConfig.BuildWithEnumStore(null, new EmptyEnumStore());
+
+            var recalcEngine = new RecalcEngine(config);
+
+            var checkResult = recalcEngine.Check("SortOrder.Ascending");
+            Assert.True(checkResult.IsSuccess);
+            Assert.IsType<StringType>(checkResult.ReturnType);
+
+            var enums = config.EnumStore.Enums();
+
+            Assert.True(enums.Count() > 0);
         }
 
         #region Test
