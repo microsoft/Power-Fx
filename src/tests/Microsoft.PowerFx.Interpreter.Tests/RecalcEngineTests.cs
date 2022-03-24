@@ -409,7 +409,7 @@ namespace Microsoft.PowerFx.Tests
             
             var recalcEngine = new RecalcEngine(config);
 
-            var optionSet = new OptionSet("foo", new Dictionary<string, string>() { { "one key", "one value" } });
+            var optionSet = new OptionSet("foo", DisplayNameUtility.MakeUnique(new Dictionary<string, string>() { { "one key", "one value" } }));
             Assert.Throws<InvalidOperationException>(() => config.AddFunction(BuiltinFunctionsCore.Abs));
             Assert.Throws<InvalidOperationException>(() => config.AddOptionSet(optionSet));
 
@@ -423,11 +423,11 @@ namespace Microsoft.PowerFx.Tests
         {
             var config = new PowerFxConfig(null);
 
-            var optionSet = new OptionSet("OptionSet", new Dictionary<string, string>() 
+            var optionSet = new OptionSet("OptionSet", DisplayNameUtility.MakeUnique(new Dictionary<string, string>() 
             {
                     { "option_1", "Option1" },
                     { "option_2", "Option2" }
-            });
+            }));
             
             config.AddOptionSet(optionSet);            
             var recalcEngine = new RecalcEngine(config);
@@ -441,11 +441,11 @@ namespace Microsoft.PowerFx.Tests
         {
             var config = new PowerFxConfig(null);
 
-            var optionSet = new OptionSet("FooOs", new Dictionary<string, string>() 
+            var optionSet = new OptionSet("FooOs", DisplayNameUtility.MakeUnique(new Dictionary<string, string>() 
             {
                     { "option_1", "Option1" },
                     { "option_2", "Option2" }
-            });
+            }));
             
             config.AddOptionSet(optionSet);            
             var recalcEngine = new RecalcEngine(config);
@@ -454,6 +454,25 @@ namespace Microsoft.PowerFx.Tests
             Assert.True(checkResult.IsSuccess);
             var osvaluetype = Assert.IsType<OptionSetValueType>(checkResult.ReturnType);
             Assert.Equal("FooOs", osvaluetype.OptionSetName);
+        }              
+
+        [Fact]
+        public void OptionSetChecksWithMakeUniqueCollision()
+        {
+            var config = new PowerFxConfig(null);
+
+            var optionSet = new OptionSet("OptionSet", DisplayNameUtility.MakeUnique(new Dictionary<string, string>() 
+            {
+                    { "foo", "Option1" },
+                    { "bar", "Option2" },
+                    { "baz", "foo" }
+            }));
+            
+            config.AddEntity(optionSet, new DName("SomeDisplayName"));
+            var recalcEngine = new RecalcEngine(config);
+
+            var checkResult = recalcEngine.Check("SomeDisplayName.Option1 <> SomeDisplayName.'foo (baz)'");
+            Assert.True(checkResult.IsSuccess);
         }
 
         #region Test
