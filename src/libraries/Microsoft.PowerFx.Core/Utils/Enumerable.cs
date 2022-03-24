@@ -1,8 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-#pragma warning disable 420
-
 using System;
 using System.Collections.Generic;
 using System.Linq;

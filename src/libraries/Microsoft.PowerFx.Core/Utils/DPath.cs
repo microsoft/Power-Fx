@@ -1,8 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-#pragma warning disable 420
-
 using System;
 using System.Text;
 using System.Threading;
@@ -12,12 +10,10 @@ using Conditional = System.Diagnostics.ConditionalAttribute;
 namespace Microsoft.PowerFx.Core.Utils
 {
     // A path is essentially a list of simple names, starting at "root".
-    // TASK: 67008 - Make this public, or expose a public shim in Document.
     [ThreadSafeImmutable]
-    internal struct DPath : IEquatable<DPath>, ICheckable
+    public struct DPath : IEquatable<DPath>, ICheckable
     {
-        public const char RootChar = '\u2202';
-        private const string RootString = "\u2202";
+        private const char RootChar = '\u2202';
 
         private class Node : ICheckable
         {
@@ -111,17 +107,17 @@ namespace Microsoft.PowerFx.Core.Utils
             Contracts.Assert(IsValid);
         }
 
-        public DPath Parent => _node == null ? this : new DPath(_node.Parent);
+        internal DPath Parent => _node == null ? this : new DPath(_node.Parent);
 
-        public DName Name => _node == null ? default : _node.Name;
+        internal DName Name => _node == null ? default : _node.Name;
 
-        public int Length => _node == null ? 0 : _node.Length;
+        internal int Length => _node == null ? 0 : _node.Length;
 
-        public bool IsRoot => _node == null;
+        internal bool IsRoot => _node == null;
 
         public bool IsValid => _node == null || _node.IsValid;
 
-        public DName this[int index]
+        internal DName this[int index]
         {
             get
             {
@@ -179,30 +175,11 @@ namespace Microsoft.PowerFx.Core.Utils
             return new DPath(node);
         }
 
-        public DPath GoUp(int count)
-        {
-            Contracts.AssertIndexInclusive(count, Length);
-            return new DPath(GoUpCore(count));
-        }
-
-        private Node GoUpCore(int count)
-        {
-            Contracts.AssertIndexInclusive(count, Length);
-            var node = _node;
-            while (--count >= 0)
-            {
-                Contracts.AssertValue(node);
-                node = node.Parent;
-            }
-
-            return node;
-        }
-
         public override string ToString()
         {
             if (IsRoot)
             {
-                return RootString;
+                return RootChar.ToString();
             }
 
             var cch = 1;
@@ -234,7 +211,7 @@ namespace Microsoft.PowerFx.Core.Utils
         }
 
         // Convert this DPath to a string in dotted syntax, such as "screen1.group6.label3"
-        public string ToDottedSyntax(string punctuator = ".", bool escapeInnerName = false)
+        internal string ToDottedSyntax(string punctuator = ".", bool escapeInnerName = false)
         {
             Contracts.AssertNonEmpty(punctuator);
             Contracts.Assert(punctuator.Length == 1);
@@ -268,7 +245,7 @@ namespace Microsoft.PowerFx.Core.Utils
 
         // Convert a path specified as a string to a DPath.
         // Does not support individual path segments that contain '.' and '!' characters.
-        public static bool TryParse(string dotted, out DPath path)
+        internal static bool TryParse(string dotted, out DPath path)
         {
             Contracts.AssertValue(dotted);
 

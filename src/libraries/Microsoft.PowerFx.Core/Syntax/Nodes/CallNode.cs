@@ -60,13 +60,10 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
                 MinChildID = Math.Min(args.MinChildID, MinChildID);
             }
 
-#pragma warning disable 420
-
             // A volatile field should not normally be passed using a ref or out parameter, since it will not be treated
             // as volatile within the scope of the function. There are exceptions to this, such as when calling an interlocked API.
             // Hence disabling the warning for this instance.
             var invocationId = Interlocked.Increment(ref _uniqueInvocationIdNext);
-#pragma warning restore 420
 
             // We need to generate a globally unique name for this function invocation, so we use
             // a new (hardcoded) guid as well as the unique counter to avoid colliding with any
