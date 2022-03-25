@@ -15,8 +15,6 @@ namespace Microsoft.PowerFx.Core.Utils
     [ThreadSafeImmutable]
     public struct DPath : IEquatable<DPath>, ICheckable
     {
-        private const char RootChar = '\u2202';
-
         private class Node : ICheckable
         {
             public const int HashNull = 0x340CA819;
@@ -139,11 +137,8 @@ namespace Microsoft.PowerFx.Core.Utils
         }
 
         public readonly DPath Append(DName name)
-        {            
-            if (!name.IsValid)
-            {
-                throw new ArgumentException("Invalid DName", nameof(name));
-            }
+        {
+            Contracts.CheckValid<DName>(name, nameof(name));
 
             return new DPath(this, name);
         }
@@ -151,10 +146,7 @@ namespace Microsoft.PowerFx.Core.Utils
         public DPath Append(DPath path)
         {
             AssertValid();
-            if (!path.IsValid)
-            {
-                throw new ArgumentException("Invalid DPath", nameof(path));
-            }
+            Contracts.CheckValid<DPath>(path, nameof(path));
 
             if (IsRoot)
             {
