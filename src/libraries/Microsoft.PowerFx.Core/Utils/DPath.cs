@@ -2,6 +2,8 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading;
 using Microsoft.PowerFx.Core.Lexer;
@@ -117,11 +119,15 @@ namespace Microsoft.PowerFx.Core.Utils
 
         public bool IsValid => _node == null || _node.IsValid;
 
-        internal DName this[int index]
+        public DName this[int index]
         {
             get
             {
-                Contracts.AssertIndex(index, Length);
+                if (index < 0 || index >= Length)
+                {
+                    throw new ArgumentOutOfRangeException();
+                }
+
                 var node = _node;
                 while (node.Length > index + 1)
                 {
@@ -133,15 +139,22 @@ namespace Microsoft.PowerFx.Core.Utils
         }
 
         public readonly DPath Append(DName name)
-        {
-            Contracts.Assert(name.IsValid);
+        {            
+            if (!name.IsValid)
+            {
+                throw new ArgumentException("Invalid DName", nameof(name));
+            }
+
             return new DPath(this, name);
         }
 
         public DPath Append(DPath path)
         {
             AssertValid();
-            path.AssertValid();
+            if (!path.IsValid)
+            {
+                throw new ArgumentException("Invalid DPath", nameof(path));
+            }
 
             if (IsRoot)
             {
@@ -177,46 +190,12 @@ namespace Microsoft.PowerFx.Core.Utils
 
         public override string ToString()
         {
-            if (IsRoot)
-            {
-                return RootChar.ToString();
-            }
-
-            var cch = 1;
-            for (var node = _node; node != null; node = node.Parent)
-            {
-                cch += node.Name.Value.Length + 1;
-            }
-
-            var sb = new StringBuilder(cch)
-            {
-                Length = cch
-            };
-            for (var node = _node; node != null; node = node.Parent)
-            {
-                string str = node.Name;
-                var ich = str.Length;
-                Contracts.Assert(ich < cch);
-                while (ich > 0)
-                {
-                    sb[--cch] = str[--ich];
-                }
-
-                sb[--cch] = '.';
-            }
-
-            Contracts.Assert(cch == 1);
-            sb[--cch] = RootChar;
-            return sb.ToString();
+            return ToDottedSyntax();
         }
 
         // Convert this DPath to a string in dotted syntax, such as "screen1.group6.label3"
-        internal string ToDottedSyntax(string punctuator = ".", bool escapeInnerName = false)
+        internal string ToDottedSyntax()
         {
-            Contracts.AssertNonEmpty(punctuator);
-            Contracts.Assert(punctuator.Length == 1);
-            Contracts.Assert(".!".IndexOf(punctuator[0]) >= 0);
-
             if (IsRoot)
             {
                 return string.Empty;
@@ -235,39 +214,23 @@ namespace Microsoft.PowerFx.Core.Utils
             for (var i = 0; i < Length; i++)
             {
                 sb.Append(sep);
-                var escapedName = escapeInnerName ? TexlLexer.EscapeName(this[i]) : this[i];
+                var escapedName = TexlLexer.EscapeName(this[i]);
                 sb.Append(escapedName);
-                sep = punctuator;
+                sep = TexlLexer.PunctuatorDot;
             }
 
             return sb.ToString();
         }
 
-        // Convert a path specified as a string to a DPath.
-        // Does not support individual path segments that contain '.' and '!' characters.
-        internal static bool TryParse(string dotted, out DPath path)
+        public IEnumerable<DName> Segments()
         {
-            Contracts.AssertValue(dotted);
-
-            path = Root;
-
-            if (dotted == string.Empty)
+            var segments = new Stack<DName>();
+            for (var node = _node; node != null; node = node.Parent)
             {
-                return true;
+                segments.Push(node.Name);
             }
 
-            foreach (var name in dotted.Split('.', '!'))
-            {
-                if (!DName.IsValidDName(name))
-                {
-                    path = Root;
-                    return false;
-                }
-
-                path = path.Append(new DName(name));
-            }
-
-            return true;
+            return segments.AsEnumerable();
         }
 
         public static bool operator ==(DPath path1, DPath path2)
