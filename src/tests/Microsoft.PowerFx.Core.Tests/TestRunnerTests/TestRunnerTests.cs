@@ -98,6 +98,60 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.Equal(2, passed);
         }
 
+        // Ensure we can compare Large numbers. 
+        [Fact]
+        public void TestLargeNumber()
+        {
+            // Result of Exp(430)
+            var longForm = "5579910311786366000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000";
+            var shortForm = "5.579910311786367E+186";
+
+            var mock = new MockErrorRunner
+            {
+                _hook = (expr, setup) => FormulaValue.New(double.Parse(expr))
+            };
+
+            var runner = new TestRunner(mock);
+            runner.Tests.Add(new TestCase
+            {
+                Input = shortForm,
+                Expected = longForm
+            });
+            runner.Tests.Add(new TestCase
+            {
+                Input = longForm,
+                Expected = shortForm
+            });
+
+            var (total, failed, passed, output) = runner.RunTests();
+            Assert.Equal(2, passed);
+        }
+
+        // Ensure small numbers that are different actually do fail 
+        [Fact]
+        public void TestNumberDiff()
+        {
+            var mock = new MockErrorRunner
+            {
+                _hook = (expr, setup) => FormulaValue.New(double.Parse(expr))
+            };
+
+            var runner = new TestRunner(mock);
+            runner.Tests.Add(new TestCase
+            {
+                Input = "1.56",
+                Expected = "1.57"
+            });
+            runner.Tests.Add(new TestCase
+            {
+                Input = "1.57",
+                Expected = "1.56"
+            });
+
+            var (total, failed, passed, output) = runner.RunTests();
+            Assert.Equal(2, failed);
+        }
+
         [Fact]
         public void TestBadParse()
         {
