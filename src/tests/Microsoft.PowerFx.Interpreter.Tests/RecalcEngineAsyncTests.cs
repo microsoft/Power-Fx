@@ -76,7 +76,7 @@ namespace Microsoft.PowerFx.Tests
             Assert.Equal(12.0, result.ToObject());
         }
 
-        // Helper for creating a function that waits, and then returns 2x the resu;t
+        // Helper for creating a function that waits, and then returns 2x the result
         private class WaitHelper
         {
             private readonly TaskCompletionSource<FormulaValue> _waiter = new TaskCompletionSource<FormulaValue>();
