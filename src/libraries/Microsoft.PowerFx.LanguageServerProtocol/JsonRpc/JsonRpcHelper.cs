@@ -25,7 +25,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
             InvalidRequest = -32600,
             MethodNotFound = -32601,
             InvalidParams = -32602,
-            InternalError = -30603,
+            InternalError = -32603,
             ServerError = -32000
         }
 
@@ -34,7 +34,13 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
             code = (int)code
         });
 
-        public static string CreateErrorResult(string id, object error) => JsonSerializer.Serialize(
+        public static string CreateErrorResult(string id, ErrorCode code, string message) => CreateErrorResult(id, new
+        {
+            code = (int)code,
+            message = message
+        });
+
+        private static string CreateErrorResult(string id, object error) => JsonSerializer.Serialize(
             new
             {
                 jsonrpc = "2.0",
