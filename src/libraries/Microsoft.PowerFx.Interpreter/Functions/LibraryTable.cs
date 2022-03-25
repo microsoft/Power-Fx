@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Public;
@@ -21,7 +22,9 @@ namespace Microsoft.PowerFx.Functions
             var arg1 = (LambdaFormulaValue)args[1];
             var arg2 = (LambdaFormulaValue)(args.Length > 2 ? args[2] : null);
 
-            var row = LazyFilter(runner, symbolContext, arg0.Rows, arg1).FirstOrDefault();
+            var rowsAsync = LazyFilterAsync(runner, symbolContext, arg0.Rows, arg1);
+            var rows = await rowsAsync.ToListAsync();
+            var row = rows.FirstOrDefault();
 
             if (row != null)
             {
@@ -192,7 +195,9 @@ namespace Microsoft.PowerFx.Functions
                 });
             }
 
-            var rows = LazyFilter(runner, symbolContext, arg0.Rows, arg1);
+            var rowsAsync = LazyFilterAsync(runner, symbolContext, arg0.Rows, arg1);
+            
+            var rows = await rowsAsync.ToListAsync();
 
             return new InMemoryTableValue(irContext, rows);
         }
@@ -289,7 +294,7 @@ namespace Microsoft.PowerFx.Functions
             return new InMemoryTableValue(irContext, pairs.Select(pair => pair.Key));
         }
 
-        private static IEnumerable<DValue<RecordValue>> LazyFilter(
+        private static async IAsyncEnumerable<DValue<RecordValue>> LazyFilterAsync(
             EvalVisitor runner,
             SymbolContext context,
             IEnumerable<DValue<RecordValue>> sources,
@@ -297,12 +302,13 @@ namespace Microsoft.PowerFx.Functions
         {
             foreach (var row in sources)
             {
+                runner.CheckCancel();
                 if (row.IsValue)
                 {
                     var childContext = context.WithScopeValues(row.Value);
 
                     // Filter evals to a boolean 
-                    var result = filter.EvalAsync(runner, childContext).Result;
+                    var result = await filter.EvalAsync(runner, childContext);
                     var include = false;
                     if (result is BooleanValue booleanValue)
                     {

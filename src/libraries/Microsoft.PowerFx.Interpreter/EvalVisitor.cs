@@ -32,7 +32,7 @@ namespace Microsoft.PowerFx
             CultureInfo = cultureInfo;
             _cancel = cancel;
         }
-
+                
         // Check this cooperatively - especially in any loop. 
         public void CheckCancel()
         {

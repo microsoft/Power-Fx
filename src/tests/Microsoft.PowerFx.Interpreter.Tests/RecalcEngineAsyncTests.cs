@@ -76,9 +76,10 @@ namespace Microsoft.PowerFx.Tests
             Assert.Equal(12.0, result.ToObject());
         }
 
-        private class Helper
+        // Helper for creating a function that waits, and then returns 2x the resu;t
+        private class WaitHelper
         {
-            public TaskCompletionSource<FormulaValue> _waiter = new TaskCompletionSource<FormulaValue>();
+            private readonly TaskCompletionSource<FormulaValue> _waiter = new TaskCompletionSource<FormulaValue>();
 
             public async Task<FormulaValue> Worker2(FormulaValue[] args, CancellationToken cancel)
             {
@@ -90,17 +91,27 @@ namespace Microsoft.PowerFx.Tests
 
                 return x;
             }
+
+            public void SetResult(int value)
+            {
+                _waiter.SetResult(FormulaValue.New(value));
+            }
+
+            public TexlFunction GetFunction(string functionName)
+            {
+                return new CustomAsyncTexlFunction(functionName, DType.Number, DType.Number)
+                {
+                    _impl = Worker2
+                };
+            }
         }
 
         // Verify a custom function can return a non-completed task. 
         [Fact]
         public async Task VerifyFunctionIsAsync()
         {
-            var helper = new Helper();
-            var func = new CustomAsyncTexlFunction("CustomAsync", DType.Number, DType.Number)
-            {
-                _impl = helper.Worker2
-            };
+            var helper = new WaitHelper();
+            var func = helper.GetFunction("CustomAsync");
 
             var config = new PowerFxConfig(null);
             config.AddFunction(func);
@@ -117,7 +128,7 @@ namespace Microsoft.PowerFx.Tests
             await Task.Delay(TimeSpan.FromMilliseconds(5)); 
             Assert.False(task.IsCompleted);
 
-            helper._waiter.SetResult(FormulaValue.New(15));
+            helper.SetResult(15);
 
             var result = await task;
 
@@ -181,6 +192,114 @@ namespace Microsoft.PowerFx.Tests
             {
                 await engine.EvalAsync(expr, cts.Token);
             });
+        }
+
+        // Test interleaved concurrent runs. 
+        // RecalcEngine is single threaded, but the same engine should be able to do multiple evals.
+        [Fact]
+        public async Task ConcurrentInterleave()
+        {
+            var helper1 = new WaitHelper();
+            var func1 = helper1.GetFunction("F1");
+
+            var helper2 = new WaitHelper();
+            var func2 = helper2.GetFunction("F2");
+
+            var config1 = new PowerFxConfig(null);
+            config1.AddFunction(func1);
+            config1.AddFunction(func2);
+            var engine = new RecalcEngine(config1);
+
+            var task1 = engine.EvalAsync("F1(0)", CancellationToken.None);
+            var task2 = engine.EvalAsync("F2(0)", CancellationToken.None);
+
+            Assert.False(task1.IsCompleted);
+            Assert.False(task2.IsCompleted);
+
+            helper1.SetResult(333);
+            helper2.SetResult(444);
+
+            var result1 = await task1;
+            var result2 = await task2;
+
+            Assert.Equal(333.0 * 2, result1.ToObject());
+            Assert.Equal(444.0 * 2, result2.ToObject());
+        }
+
+        private class AsyncInLambdaHelper
+        {
+            public StringBuilder _sbLog = new StringBuilder();
+
+            private readonly TaskCompletionSource<FormulaValue>[] _waiters = new TaskCompletionSource<FormulaValue>[]
+            {
+                new TaskCompletionSource<FormulaValue>(),
+                new TaskCompletionSource<FormulaValue>(),
+                new TaskCompletionSource<FormulaValue>()
+            };
+
+            public async Task<FormulaValue> Worker(FormulaValue[] args, CancellationToken cancel)
+            {
+                var i = (int)((NumberValue)args[0]).Value;
+                _sbLog.Append($"[{i},");
+
+                var waiter = _waiters[i];
+                var result = await waiter.Task;
+
+                var n = ((NumberValue)result).Value;
+                var x = FormulaValue.New(n * 2);
+
+                _sbLog.Append($",{n}] ");
+
+                return x;
+            }
+
+            public void SetResult(int idx, int value)
+            {
+                _sbLog.Append($"({idx},{value})");
+                var waiter = _waiters[idx];
+                waiter.SetResult(FormulaValue.New(value));
+            }
+
+            public TexlFunction GetFunction()
+            {
+                return new CustomAsyncTexlFunction("DoubleIt", DType.Number, DType.Number)
+                {
+                    _impl = Worker
+                };
+            }
+        }
+
+        // Test an async inside a lambda
+        [Fact]
+        public async Task AsyncInLambda()
+        {            
+            var expr = "Filter([0,1,2], DoubleIt(Value) = 2)";
+
+            var helper = new AsyncInLambdaHelper();
+            var func = helper.GetFunction();
+
+            var config = new PowerFxConfig(null);
+            config.AddFunction(func);
+
+            var engine = new RecalcEngine(config);
+            
+            // If this hangs, then it's because somebody is calling .Result instead of await. 
+            var task = engine.EvalAsync(expr, CancellationToken.None);
+            Assert.False(task.IsCompleted);
+
+            helper.SetResult(0, 10);
+            Assert.False(task.IsCompleted);
+
+            helper.SetResult(1, 20);
+            Assert.False(task.IsCompleted);
+
+            helper.SetResult(2, 30);
+
+            var result = await task;
+
+            var log = helper._sbLog.ToString();
+
+            Assert.Equal("[0,(0,10),10] [1,(1,20),20] [2,(2,30),30] ", log);
         }
 
         // Helper for making async functions. 
