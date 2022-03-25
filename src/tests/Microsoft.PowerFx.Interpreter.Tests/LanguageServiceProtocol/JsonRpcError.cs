@@ -6,5 +6,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
     public class JsonRpcError
     {
         public int Code { get; set; }
+
+        public string Message { get; set; }
     }
 }
