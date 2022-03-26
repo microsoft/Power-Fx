@@ -34,6 +34,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Core.Public.ExpressionError",
                 "Microsoft.PowerFx.Core.Public.FormulaWithParameters",
                 "Microsoft.PowerFx.Core.Public.IExpression",
+                "Microsoft.PowerFx.Core.Public.IExpressionExtensions",
                 "Microsoft.PowerFx.Core.Public.IPowerFxEngine",
                 "Microsoft.PowerFx.Core.Public.IPowerFxScope",
                 "Microsoft.PowerFx.Core.Public.IPowerFxScopeDisplayName",
@@ -93,6 +94,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Core.NameCollisionException",
                 "Microsoft.PowerFx.Core.FormulaTypeSchema",
                 "Microsoft.PowerFx.Core.FormulaTypeToSchemaConverter",
+                "Microsoft.PowerFx.Core.DisplayNameUtility",
             };
 
             var sb = new StringBuilder();

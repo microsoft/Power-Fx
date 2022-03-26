@@ -98,6 +98,50 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.Equal(2, passed);
         }
 
+        private const string LongForm5e186 = "5579910311786366000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000";
+        private const string ShortForm5e186 = "5.579910311786367E+186";
+
+        [Theory]
+        [InlineData(LongForm5e186, ShortForm5e186, true)]
+        [InlineData("1.57", "1.57", true)] // Same
+        [InlineData("1.570", "1.5700", true)] // trailing 0s
+        [InlineData("1.57", "1.56", false)]
+        [InlineData("5.5e186", "5.6e186", false)]
+        [InlineData("-" + LongForm5e186, LongForm5e186, false)] // large positive vs. negative
+        public void TestLargeNumberPass(string a, string b, bool pass)
+        {
+            var mock = new MockErrorRunner
+            {
+                _hook = (expr, setup) => FormulaValue.New(double.Parse(expr))
+            };
+
+            // do both orders. 
+            var runner = new TestRunner(mock);
+            runner.Tests.Add(new TestCase
+            {
+                Input = a,
+                Expected = b
+            });
+            runner.Tests.Add(new TestCase
+            {
+                Input = b,
+                Expected = a
+            });
+
+            var (total, failed, passed, output) = runner.RunTests();
+
+            if (pass)
+            {
+                Assert.Equal(0, failed);
+                Assert.Equal(2, passed);
+            } 
+            else
+            {
+                Assert.Equal(2, failed);
+                Assert.Equal(0, passed);
+            }
+        }      
+
         [Fact]
         public void TestBadParse()
         {
