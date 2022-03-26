@@ -1138,23 +1138,23 @@ namespace Microsoft.PowerFx.Functions
             }
         };
 
-        public static IEnumerable<DValue<RecordValue>> StandardTableNodeRecords(IRContext irContext, FormulaValue[] args)
+        public static IEnumerable<DValue<RecordValue>> StandardTableNodeRecords(IRContext irContext, FormulaValue[] args, bool forceSingleColumn)
         {
-            return StandardTableNodeRecordsCore(irContext, args);
+            return StandardTableNodeRecordsCore(irContext, args, forceSingleColumn);
         }
 
-        public static IEnumerable<DValue<RecordValue>> StandardSingleColumnTableFromValues(IRContext irContext, FormulaValue[] args, string columnName)
+        public static IEnumerable<DValue<RecordValue>> StandardSingleColumnTableFromValues(IRContext irContext, FormulaValue[] args, bool forceSingleColumn, string columnName)
         {
-            return StandardTableNodeRecordsCore(irContext, args, columnName);
+            return StandardTableNodeRecordsCore(irContext, args, forceSingleColumn, columnName);
         }
 
-        private static IEnumerable<DValue<RecordValue>> StandardTableNodeRecordsCore(IRContext irContext, FormulaValue[] args, string columnName = BuiltinFunction.ColumnName_ValueStr)
+        private static IEnumerable<DValue<RecordValue>> StandardTableNodeRecordsCore(IRContext irContext, FormulaValue[] args, bool forceSingleColumn, string columnName = BuiltinFunction.ColumnName_ValueStr)
         {
             var tableType = (TableType)irContext.ResultType;
             var recordType = tableType.ToRecord();
             return args.Select(arg =>
             {
-                if (arg is RecordValue record)
+                if (!forceSingleColumn && arg is RecordValue record)
                 {
                     return DValue<RecordValue>.Of(record);
                 }
@@ -1456,7 +1456,7 @@ namespace Microsoft.PowerFx.Functions
             // TODO: verify semantics in the case of heterogeneous record lists
             var rows = await Task.WhenAll(rowsAsync);
 
-            return new InMemoryTableValue(irContext, StandardTableNodeRecords(irContext, rows));
+            return new InMemoryTableValue(irContext, StandardTableNodeRecords(irContext, rows, forceSingleColumn: false));
         }
 
         private static IEnumerable<Task<FormulaValue>> LazyForAll(
