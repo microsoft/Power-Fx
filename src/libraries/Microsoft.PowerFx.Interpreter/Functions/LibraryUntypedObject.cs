@@ -43,7 +43,7 @@ namespace Microsoft.PowerFx.Functions
             }
         }
 
-        public static FormulaValue Value_UO(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, UntypedObjectValue[] args)
+        public static FormulaValue Value_UO(IRContext irContext, UntypedObjectValue[] args)
         {
             var impl = args[0].Impl;
 
@@ -61,7 +61,7 @@ namespace Microsoft.PowerFx.Functions
             return CommonErrors.RuntimeTypeMismatch(irContext);
         }
 
-        public static FormulaValue Text_UO(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, UntypedObjectValue[] args)
+        public static FormulaValue Text_UO(IRContext irContext, UntypedObjectValue[] args)
         {
             var impl = args[0].Impl;
 
@@ -74,7 +74,7 @@ namespace Microsoft.PowerFx.Functions
             return CommonErrors.RuntimeTypeMismatch(irContext);
         }
 
-        public static FormulaValue Table_UO(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, UntypedObjectValue[] args)
+        public static FormulaValue Table_UO(IRContext irContext, UntypedObjectValue[] args)
         {
             var tableType = (TableType)irContext.ResultType;
             var resultType = tableType.ToRecord();
@@ -114,7 +114,7 @@ namespace Microsoft.PowerFx.Functions
             return arg;
         }
 
-        public static FormulaValue Boolean_UO(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, UntypedObjectValue[] args)
+        public static FormulaValue Boolean_UO(IRContext irContext, UntypedObjectValue[] args)
         {
             var impl = args[0].Impl;
 
