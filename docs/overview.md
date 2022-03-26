@@ -124,7 +124,7 @@ These have been simple examples.  We believe Power Fx makes a great language for
 
 Low-code makers build things that sometimes require the help of an expert or are taken over by a professional developer to maintain and enhance.  Professionals also appreciate that low-code development can be easier, faster, and less costly than building a professional tool.  Not every situation requires the full power of Visual Studio.
 
-Professionals want to use professional tools to be most productive. Power Fx formulas can be stored in [YAML source files](yaml-formula-grammar.md) that are easy to edit using Visual Studio Code, Visual Studio, or any other text editor and enables Power Fx to be put under source control with GitHub, Azure DevOps, or any other source code control system.
+Professionals want to use professional tools to be most productive. Power Fx formulas can be stored in [YAML-based](yaml-formula-grammar.md) [source files](https://powerapps.microsoft.com/en-us/blog/source-code-files-for-canvas-apps/) that are easy to edit using Visual Studio Code, Visual Studio, or any other text editor and enables Power Fx to be put under source control with GitHub, Azure DevOps, or any other source code control system.
 
 ![Pro code vscode](media/overview/pro-code-vscode.gif "Pro code vscode")
 
@@ -233,11 +233,12 @@ Some language such as JavaScript uses the concept of an "undefined" value for un
 
 ## Related articles
 
-[Data types](data-types.md)<br>
-[Operators and identifiers](operators.md)<br>
-[Tables](tables.md)<br>
-[Variables](variables.md)<br>
-[Imperative logic](imperative.md)<br>
-[Global support](global.md)<br>
-[Expression grammar](expression-grammar.md)<br>
-[YAML formula grammar](yaml-formula-grammar.md)
+- [Data types](data-types.md)
+- [Operators and identifiers](operators.md)
+- [Tables](tables.md)
+- [Variables](variables.md)
+- [Imperative logic](imperative.md)
+- [Global support](global.md)
+- [Expression grammar](expression-grammar.md)
+- [YAML formula grammar](yaml-formula-grammar.md)
+- [YAML Source code files](https://powerapps.microsoft.com/en-us/blog/source-code-files-for-canvas-apps/)
