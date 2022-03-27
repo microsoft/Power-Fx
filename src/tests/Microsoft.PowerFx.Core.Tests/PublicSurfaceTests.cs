@@ -89,6 +89,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Core.App.IExternalEnabledFeatures",
                 "Microsoft.PowerFx.Core.App.DefaultEnabledFeatures",
                 "Microsoft.PowerFx.Core.Utils.DName",
+                "Microsoft.PowerFx.Core.Utils.DPath",
                 "Microsoft.PowerFx.Core.Utils.ICheckable",
                 "Microsoft.PowerFx.Core.NameCollisionException",
                 "Microsoft.PowerFx.Core.FormulaTypeSchema",
