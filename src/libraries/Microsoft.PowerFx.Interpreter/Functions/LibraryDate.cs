@@ -355,6 +355,16 @@ namespace Microsoft.PowerFx.Functions
             return new TimeValue(irContext, result);
         }
 
+        public static FormulaValue DateTimeFunction(IRContext irContext, NumberValue[] args)
+        {
+            var date = Date(IRContext.NotInSource(Core.Public.Types.FormulaType.Date), new NumberValue[] { args[0], args[1], args[2] });
+            var time = Time(IRContext.NotInSource(Core.Public.Types.FormulaType.Time), new NumberValue[] { args[3], args[4], args[5], args[6] });
+
+            var result = AddDateAndTime(irContext, new[] { date, time });
+
+            return result;
+        }
+
         private static async ValueTask<FormulaValue> Now(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args)
         {
             return new DateTimeValue(irContext, DateTime.Now);
