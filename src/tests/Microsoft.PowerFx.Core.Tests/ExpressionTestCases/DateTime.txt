@@ -49,7 +49,7 @@ DateTime(2022,3,25,23,59,59,0)
 
 // Millisecond overflow
 >> DateTime(2022, 3, 6, 0, 0, 0, 1000)
-DateTime(2022,3,6,4,0,0,1,0)
+DateTime(2022,3,6,0,0,1,0)
 
 // Millisecond underflow
 >> DateTime(2022, 3, 15, 12, 34, 56, -1)
@@ -61,4 +61,4 @@ DateTime(2022,1,1,0,0,0,1)
 
 // Second underflow to year
 >> DateTime(2021, 1, 1, 0, 0, -1)
-DateTime(2020,12,31,23,59,59)
+DateTime(2020,12,31,23,59,59,0)
