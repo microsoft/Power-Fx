@@ -34,12 +34,22 @@ namespace Microsoft.PowerFx
             return propertyInfo.Name;
         }
 
+        /// <summary>
+        /// Provides customization point to control if this provider will handle the specific type.
+        /// </summary>
+        /// <param name="type">The type to decide to handle or not.</param>
+        /// <returns></returns>
+        public virtual bool CanHandleType(Type type)
+        {
+            return !(!type.IsClass ||
+                typeof(FormulaValue).IsAssignableFrom(type) ||
+                typeof(FormulaType).IsAssignableFrom(type));
+        }
+
         /// <inheritdoc/>
         public bool TryGetMarshaller(Type type, TypeMarshallerCache cache, int maxDepth, out ITypeMarshaller marshaler)
-        {        
-            if (!type.IsClass || 
-                typeof(FormulaValue).IsAssignableFrom(type) ||
-                typeof(FormulaType).IsAssignableFrom(type))
+        {
+            if (!CanHandleType(type))
             {
                 // Explicitly reject FormulaValue/FormulaType to catch common bugs. 
                 marshaler = null;
@@ -50,6 +60,30 @@ namespace Microsoft.PowerFx
 
             var fxType = new RecordType();
 
+            fxType = GetProperties(type, cache, maxDepth, mapping, fxType);
+
+            marshaler = GetObjectMarshaller(fxType, mapping);
+
+            return true;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="fxType"></param>
+        /// <param name="mapping"></param>
+        /// <returns></returns>
+        protected virtual ObjectMarshaller GetObjectMarshaller(RecordType fxType, Dictionary<string, Func<object, FormulaValue>> mapping)
+        {
+            return new ObjectMarshaller(fxType, mapping);
+        }
+
+        /// <summary>
+        /// Provides customization point to control the properties this provider will find.
+        /// </summary>
+        /// <returns>The record type containing the properties.</returns>
+        protected virtual RecordType GetProperties(Type type, TypeMarshallerCache cache, int maxDepth, Dictionary<string, Func<object, FormulaValue>> mapping, RecordType fxType)
+        {
             foreach (var prop in type.GetProperties(BindingFlags.Public | BindingFlags.Instance))
             {
                 if (!prop.CanRead)
@@ -81,8 +115,7 @@ namespace Microsoft.PowerFx
                 fxType = fxType.Add(fxName, fxFieldType);
             }
 
-            marshaler = new ObjectMarshaller(fxType, mapping);
-            return true;
-        }      
+            return fxType;
+        }
     }
 }
