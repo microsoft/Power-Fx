@@ -254,7 +254,7 @@ namespace Microsoft.PowerFx.Functions
 
             var rows = LazySequence(records, start, step).Select(n => new NumberValue(IRContext.NotInSource(FormulaType.Number), n));
 
-            return new InMemoryTableValue(irContext, StandardTableNodeRecords(irContext, rows.ToArray()));
+            return new InMemoryTableValue(irContext, StandardTableNodeRecords(irContext, rows.ToArray(), forceSingleColumn: true));
         }
 
         private static IEnumerable<double> LazySequence(double records, double start, double step)

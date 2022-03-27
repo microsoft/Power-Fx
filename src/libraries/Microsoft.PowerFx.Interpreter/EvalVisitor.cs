@@ -82,11 +82,8 @@ namespace Microsoft.PowerFx
 
         public override async ValueTask<FormulaValue> Visit(TableNode node, SymbolContext context)
         {
-            // single-column table.
-
             var len = node.Values.Count;
 
-            // Were pushed left-to-right
             var args = new FormulaValue[len];
             for (var i = 0; i < len; i++)
             {
@@ -97,8 +94,8 @@ namespace Microsoft.PowerFx
                 args[i] = arg;
             }
 
-            // Children are on the stack.
-            var tableValue = new InMemoryTableValue(node.IRContext, StandardTableNodeRecords(node.IRContext, args));
+            // This is always a single column table
+            var tableValue = new InMemoryTableValue(node.IRContext, StandardTableNodeRecords(node.IRContext, args, forceSingleColumn: true));
 
             return tableValue;
         }
