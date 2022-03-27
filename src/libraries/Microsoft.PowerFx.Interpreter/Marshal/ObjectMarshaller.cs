@@ -17,7 +17,7 @@ namespace Microsoft.PowerFx
     public class ObjectMarshaller : ITypeMarshaller
     {
         // Map fx field name to a function produces the formula value given the dotnet object.
-        private readonly IReadOnlyDictionary<string, Func<object, FormulaValue>> _mapping;
+        protected readonly IReadOnlyDictionary<string, Func<object, FormulaValue>> _mapping;
 
         /// <inheritdoc/>
         public FormulaType Type { get; private set; }
@@ -39,7 +39,7 @@ namespace Microsoft.PowerFx
         }
 
         /// <inheritdoc/>
-        public FormulaValue Marshal(object source)
+        public virtual FormulaValue Marshal(object source)
         {
             var value = new ObjectRecordValue(IRContext.NotInSource(Type), source, this);
             return value;
@@ -47,7 +47,7 @@ namespace Microsoft.PowerFx
 
         // Get the value of the field. 
         // Return null on missing
-        internal bool TryGetField(object source, string name, out FormulaValue fieldValue)
+        protected internal virtual bool TryGetField(object source, string name, out FormulaValue fieldValue)
         {
             if (_mapping.TryGetValue(name, out var getter))
             {
@@ -59,7 +59,7 @@ namespace Microsoft.PowerFx
             return false;
         }
 
-        internal IEnumerable<NamedValue> GetFields(object source)
+        protected internal virtual IEnumerable<NamedValue> GetFields(object source)
         {
             foreach (var kv in _mapping)
             {
