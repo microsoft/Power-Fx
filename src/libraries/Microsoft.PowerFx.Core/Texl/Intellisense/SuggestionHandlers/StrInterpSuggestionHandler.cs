@@ -56,7 +56,7 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
                     }
                 }
 
-                return false;
+                return true;
             }
         }
     }
