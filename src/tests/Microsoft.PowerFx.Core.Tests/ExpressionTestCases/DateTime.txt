@@ -62,3 +62,31 @@ DateTime(2022,1,1,0,0,0,1)
 // Second underflow to year
 >> DateTime(2021, 1, 1, 0, 0, -1)
 DateTime(2020,12,31,23,59,59,0)
+
+// Blanks are interpreted as zero
+>> DateTime(2020, Blank(), 1, 0, 0, 0)
+DateTime(2019,12,1,0,0,0,0)
+
+// Blanks are interpreted as zero
+>> DateTime(2020, 3, Blank(), 0, 0, 0)
+DateTime(2020,2,29,0,0,0,0)
+
+// Blanks are interpreted as zero
+>> DateTime(2020, 3, 3, Blank(), 12, 34)
+DateTime(2020,3,3,0,12,34,0)
+
+// Blanks are interpreted as zero
+>> DateTime(2020, 3, 3, 12, Blank(), 34)
+DateTime(2020,3,3,12,0,34,0)
+
+// Blanks are interpreted as zero
+>> DateTime(2020, 3, 3, 12, 34, Blank())
+DateTime(2020,3,3,12,34,0,0)
+
+// Blanks are interpreted as zero
+>> DateTime(2020, 3, 3, 12, 34, 56, Blank())
+DateTime(2020,3,3,12,34,56,0)
+
+// Errors are returned
+>> DateTime(2020, Sqrt(-1), 23, 1, 2, 3)
+#Error(Kind=Numeric)
