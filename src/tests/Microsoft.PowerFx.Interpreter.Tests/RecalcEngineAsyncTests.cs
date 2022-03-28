@@ -13,11 +13,11 @@ using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Public;
 using Microsoft.PowerFx.Core.Public.Types;
 using Microsoft.PowerFx.Core.Public.Values;
+using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Xunit;
-using Xunit.Sdk;
 using static Microsoft.PowerFx.Core.Localization.TexlStrings;
 
 namespace Microsoft.PowerFx.Tests
@@ -125,7 +125,7 @@ namespace Microsoft.PowerFx.Tests
             await Task.Yield();
 
             // custom func is blocking on our waiter
-            await Task.Delay(TimeSpan.FromMilliseconds(5)); 
+            await Task.Delay(TimeSpan.FromMilliseconds(5));
             Assert.False(task.IsCompleted);
 
             helper.SetResult(15);
@@ -134,7 +134,7 @@ namespace Microsoft.PowerFx.Tests
 
             Assert.Equal(30.0, result.ToObject());
         }
-        
+
         private static async Task<FormulaValue> WorkerWaitForCancel(FormulaValue[] args, CancellationToken cancel)
         {
             // Block forever until cancellation. 
@@ -226,115 +226,75 @@ namespace Microsoft.PowerFx.Tests
             Assert.Equal(444.0 * 2, result2.ToObject());
         }
 
-        private class AsyncInLambdaHelper
-        {
-            public StringBuilder _sbLog = new StringBuilder();
-
-            private readonly TaskCompletionSource<FormulaValue>[] _waiters = new TaskCompletionSource<FormulaValue>[]
-            {
-                new TaskCompletionSource<FormulaValue>(),
-                new TaskCompletionSource<FormulaValue>(),
-                new TaskCompletionSource<FormulaValue>()
-            };
-
-            public async Task<FormulaValue> Worker(FormulaValue[] args, CancellationToken cancel)
-            {
-                var i = (int)((NumberValue)args[0]).Value;
-                _sbLog.Append($"[{i},");
-
-                var waiter = _waiters[i];
-                var result = await waiter.Task;
-
-                var n = ((NumberValue)result).Value;
-                var x = FormulaValue.New(n * 2);
-
-                _sbLog.Append($",{n}] ");
-
-                return x;
-            }
-
-            public void SetResult(int idx, int value)
-            {
-                _sbLog.Append($"({idx},{value})");
-                var waiter = _waiters[idx];
-                waiter.SetResult(FormulaValue.New(value));
-            }
-
-            public TexlFunction GetFunction()
-            {
-                return new CustomAsyncTexlFunction("DoubleIt", DType.Number, DType.Number)
-                {
-                    _impl = Worker
-                };
-            }
-        }
-
-        // Test an async inside a lambda
+        // Verify WaitFor() function infrastructure
         [Fact]
-        public async Task AsyncInLambda()
-        {            
-            var expr = "Filter([0,1,2], DoubleIt(Value) = 2)";
+        public async Task WaitForFunctionTest()
+        {
+            var helper = new WaitForFunctionsHelper();
 
-            var helper = new AsyncInLambdaHelper();
-            var func = helper.GetFunction();
+            var result = await helper.Worker(0);
+            Assert.Equal(0, result);
 
-            var config = new PowerFxConfig(null);
-            config.AddFunction(func);
+            var result1 = await helper.Worker(1);
+            Assert.Equal(1, result1);
 
-            var engine = new RecalcEngine(config);
-            
-            // If this hangs, then it's because somebody is calling .Result instead of await. 
-            var task = engine.EvalAsync(expr, CancellationToken.None);
-            Assert.False(task.IsCompleted);
-
-            helper.SetResult(0, 10);
-            Assert.False(task.IsCompleted);
-
-            helper.SetResult(1, 20);
-            Assert.False(task.IsCompleted);
-
-            helper.SetResult(2, 30);
-
-            var result = await task;
-
-            var log = helper._sbLog.ToString();
-
-            Assert.Equal("[0,(0,10),10] [1,(1,20),20] [2,(2,30),30] ", log);
+            // WaitFor(3) fails if WaitFor(2) wasn't called. 
+            // Must do WaitFor() in order.
+            await Assert.ThrowsAsync<InvalidOperationException>(() => helper.Worker(3));
         }
 
-        // Helper for making async functions. 
-        internal class CustomAsyncTexlFunction : TexlFunction, IAsyncTexlFunction
+        // Veriy Async() function infrastructure
+        [Fact]
+        public async Task AsyncFunctionTest()
         {
-            public Func<FormulaValue[], CancellationToken, Task<FormulaValue>> _impl;
+            var helper = new AsyncFunctionsHelper();
 
-            public override bool SupportsParamCoercion => true;
+            var result = await helper.Worker(0);
+            Assert.Equal(0, result);
 
-            public CustomAsyncTexlFunction(string name, FormulaType returnType, params FormulaType[] paramTypes)
-                : this(name, returnType._type, Array.ConvertAll(paramTypes, x => x._type))
-            {
-            }
+            // Async(2) won't complete until Async(1) is called. 
+            var task2 = helper.Worker(2);
+            Assert.False(task2.IsCompleted);
 
-            public CustomAsyncTexlFunction(string name, DType returnType, params DType[] paramTypes)
-                : base(DPath.Root, name, name, SG("Custom func " + name), FunctionCategories.MathAndStat, returnType, 0, paramTypes.Length, paramTypes.Length, paramTypes)
-            {
-            }
+            await helper.Worker(1);
 
-            public override bool IsSelfContained => true;
+            var result2 = await task2;
+            Assert.Equal(2, result2);
+        }
+    }
 
-            public static StringGetter SG(string text)
-            {
-                return (string locale) => text;
-            }
+    // Helper for making async functions. 
+    internal class CustomAsyncTexlFunction : TexlFunction, IAsyncTexlFunction
+    {
+        public Func<FormulaValue[], CancellationToken, Task<FormulaValue>> _impl;
 
-            public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
-            {
-                yield return new[] { SG("Arg 1") };
-            }
+        public override bool SupportsParamCoercion => true;
 
-            public virtual Task<FormulaValue> InvokeAsync(FormulaValue[] args, CancellationToken cancel)
-            {
-                return _impl(args, cancel);
-            }
+        public CustomAsyncTexlFunction(string name, FormulaType returnType, params FormulaType[] paramTypes)
+            : this(name, returnType._type, Array.ConvertAll(paramTypes, x => x._type))
+        {
+        }
+
+        public CustomAsyncTexlFunction(string name, DType returnType, params DType[] paramTypes)
+            : base(DPath.Root, name, name, SG("Custom func " + name), FunctionCategories.MathAndStat, returnType, 0, paramTypes.Length, paramTypes.Length, paramTypes)
+        {
+        }
+
+        public override bool IsSelfContained => true;
+
+        public static StringGetter SG(string text)
+        {
+            return (string locale) => text;
+        }
+
+        public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
+        {
+            yield return new[] { SG("Arg 1") };
+        }
+
+        public virtual Task<FormulaValue> InvokeAsync(FormulaValue[] args, CancellationToken cancel)
+        {
+            return _impl(args, cancel);
         }
     }
 }

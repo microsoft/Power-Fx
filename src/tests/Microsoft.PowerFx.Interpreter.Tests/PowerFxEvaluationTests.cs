@@ -8,6 +8,8 @@ using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Public.Values;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Tests;
+using Xunit;
 
 namespace Microsoft.PowerFx.Interpreter.Tests
 {
@@ -15,7 +17,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
     {
         internal static Dictionary<string, Func<(RecalcEngine engine, RecordValue parameters)>> SetupHandlers = new Dictionary<string, Func<(RecalcEngine engine, RecordValue parameters)>>() 
         {
-            { "OptionSetTestSetup", OptionSetTestSetup }
+            { "OptionSetTestSetup", OptionSetTestSetup },
+            { "AsyncTestSetup", AsyncSetTestSetup }
         };
 
         private static (RecalcEngine engine, RecordValue parameters) OptionSetTestSetup()
@@ -47,6 +50,19 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                         new NamedValue("InnerOtherOptionSet", o2Val)))); 
 
             return (new RecalcEngine(config), parameters);
+        }
+
+        private static (RecalcEngine engine, RecordValue parameters) AsyncSetTestSetup()
+        {
+            var config = new PowerFxConfig(null);
+
+            var asyncHelper = new AsyncFunctionsHelper();
+            config.AddFunction(asyncHelper.GetFunction());
+
+            var waitForHelper = new WaitForFunctionsHelper();
+            config.AddFunction(waitForHelper.GetFunction());
+
+            return (new RecalcEngine(config), null);
         }
 
         internal class InterpreterRunner : BaseRunner
