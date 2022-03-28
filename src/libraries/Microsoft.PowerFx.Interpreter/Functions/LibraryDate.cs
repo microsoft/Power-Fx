@@ -329,6 +329,11 @@ namespace Microsoft.PowerFx.Functions
             var month = (int)args[1].Value;
             var day = (int)args[2].Value;
 
+            return DateImpl(irContext, year, month, day);
+        }
+
+        private static FormulaValue DateImpl(IRContext irContext, int year, int month, int day)
+        {
             // The final date is built up this way to allow for inputs which overflow,
             // such as: Date(2000, 25, 69) -> 3/10/2002
             var result = new DateTime(year, 1, 1)
@@ -345,6 +350,11 @@ namespace Microsoft.PowerFx.Functions
             var second = (int)args[2].Value;
             var millisecond = (int)args[3].Value;
 
+            return TimeImpl(irContext, hour, minute, second, millisecond);
+        }
+
+        private static FormulaValue TimeImpl(IRContext irContext, int hour, int minute, int second, int millisecond)
+        {
             // The final time is built up this way to allow for inputs which overflow,
             // such as: Time(10, 70, 360) -> 11:16 AM
             var result = new TimeSpan(hour, 0, 0)
@@ -357,8 +367,16 @@ namespace Microsoft.PowerFx.Functions
 
         public static FormulaValue DateTimeFunction(IRContext irContext, NumberValue[] args)
         {
-            var date = Date(IRContext.NotInSource(Core.Public.Types.FormulaType.Date), new NumberValue[] { args[0], args[1], args[2] });
-            var time = Time(IRContext.NotInSource(Core.Public.Types.FormulaType.Time), new NumberValue[] { args[3], args[4], args[5], args[6] });
+            var year = (int)args[0].Value;
+            var month = (int)args[1].Value;
+            var day = (int)args[2].Value;
+            var date = DateImpl(IRContext.NotInSource(Core.Public.Types.FormulaType.Date), year, month, day);
+
+            var hour = (int)args[3].Value;
+            var minute = (int)args[4].Value;
+            var second = (int)args[5].Value;
+            var millisecond = (int)args[6].Value;
+            var time = TimeImpl(IRContext.NotInSource(Core.Public.Types.FormulaType.Time), hour, minute, second, millisecond);
 
             var result = AddDateAndTime(irContext, new[] { date, time });
 
