@@ -102,6 +102,11 @@ namespace Microsoft.PowerFx.Core.Public.Values
             return new TimeValue(IRContext.NotInSource(FormulaType.Time), value);
         }
 
+        public static ColorValue New(Color value)
+        {
+            return new ColorValue(IRContext.NotInSource(FormulaType.Color), value);
+        }
+
         public static BlankValue NewBlank(FormulaType type = null)
         {
             if (type == null)
