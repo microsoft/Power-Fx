@@ -1922,8 +1922,12 @@
   <data name="AboutTime_millisecond" xml:space="preserve">
     <value>The millisecond component.</value>
   </data>
+  <data name="AboutDateTime" xml:space="preserve">
+    <value>Creates a value that represents an instant in time, expressed as a date and time of the day.</value>
+    <comment>Description of 'DateTime' function.</comment>
+  </data>
   <data name="AboutYear" xml:space="preserve">
-    <value>Year returns the year of a given date, a number greater than 1900.</value>
+    <value>Year returns the year of a given date.</value>
     <comment>Description of 'Year' function.</comment>
   </data>
   <data name="YearArg1" xml:space="preserve">

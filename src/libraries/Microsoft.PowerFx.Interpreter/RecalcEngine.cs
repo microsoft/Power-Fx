@@ -53,6 +53,7 @@ namespace Microsoft.PowerFx
         // Add Builtin functions that aren't yet in the shared library. 
         private void AddInterpreterFunctions(PowerFxConfig powerFxConfig)
         {
+            powerFxConfig.AddFunction(BuiltinFunctionsCore.DateTime);
             powerFxConfig.AddFunction(BuiltinFunctionsCore.Index_UO);
             powerFxConfig.AddFunction(BuiltinFunctionsCore.ParseJSON);
             powerFxConfig.AddFunction(BuiltinFunctionsCore.Table_UO);
