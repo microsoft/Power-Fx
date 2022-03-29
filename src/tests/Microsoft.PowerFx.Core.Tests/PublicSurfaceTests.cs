@@ -18,6 +18,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
             var allowed = new HashSet<string>()
             {
+                "Microsoft.PowerFx.FeatureFlags",
                 "Microsoft.PowerFx.Core.Texl.Intellisense.IIntellisenseResult",
                 "Microsoft.PowerFx.Core.Texl.Intellisense.IIntellisenseSuggestion",
                 "Microsoft.PowerFx.Core.Texl.Intellisense.SuggestionIconKind",
@@ -25,7 +26,8 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Core.Texl.Intellisense.UIString",
                 "Microsoft.PowerFx.Core.Texl.Intellisense.SignatureHelp.ParameterInformation",
                 "Microsoft.PowerFx.Core.Texl.Intellisense.SignatureHelp.SignatureHelp",
-                "Microsoft.PowerFx.Core.Texl.Intellisense.SignatureHelp.SignatureInformation",                
+                "Microsoft.PowerFx.Core.Texl.Intellisense.SignatureHelp.SignatureInformation",
+                "Microsoft.PowerFx.Core.BuiltinFormulaTypeConversions",
                 "Microsoft.PowerFx.Core.PowerFxConfig",
                 "Microsoft.PowerFx.Core.Public.CheckResult",
                 "Microsoft.PowerFx.Core.Public.ErrorKind",
@@ -88,6 +90,8 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Core.Utils.DName",
                 "Microsoft.PowerFx.Core.Utils.ICheckable",
                 "Microsoft.PowerFx.Core.NameCollisionException",
+                "Microsoft.PowerFx.Core.FormulaTypeSchema",
+                "Microsoft.PowerFx.Core.FormulaTypeToSchemaConverter",
             };
 
             var sb = new StringBuilder();

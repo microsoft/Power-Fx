@@ -60,10 +60,10 @@ false
 >> Or(false,false, true)
 true
 
--- Test short circuiting. Don't hit args in unevaled params.
+// -- Test short circuiting. Don't hit args in unevaled params.
 >> And(false, 1/0=1)
 false
 
--- Test short circuiting...
+// -- Test short circuiting...
 >> Or(true, 1/0=1)
 true

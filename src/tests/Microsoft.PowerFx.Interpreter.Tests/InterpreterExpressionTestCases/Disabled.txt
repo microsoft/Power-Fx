@@ -1,0 +1,3 @@
+﻿// List files that aren't supported in interpreter.
+#disable: Weekday.txt
+#disable: TrigTableFunctions.txt

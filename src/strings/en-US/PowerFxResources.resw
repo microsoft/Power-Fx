@@ -2338,15 +2338,15 @@
   <data name="AboutChar_column_of_numbers" xml:space="preserve">
     <value>A column of code numbers from the character set on your platform.</value>
   </data>
-  <data name="AboutParseJson" xml:space="preserve">
+  <data name="AboutParseJSON" xml:space="preserve">
     <value>Converts a JSON string into an object.</value>
-    <comment>Description of 'ParseJson' function.</comment>
+    <comment>Description of 'ParseJSON' function.</comment>
   </data>
-  <data name="ParseJsonArg1" xml:space="preserve">
+  <data name="ParseJSONArg1" xml:space="preserve">
     <value>input</value>
-    <comment>function_parameter - First argument of the ParseJson function - String type.</comment>
+    <comment>function_parameter - First argument of the ParseJSON function - String type.</comment>
   </data>
-  <data name="AboutParseJson_input" xml:space="preserve">
+  <data name="AboutParseJSON_input" xml:space="preserve">
     <value>A JSON string to process.</value>
   </data>
   <data name="AboutIndex" xml:space="preserve">
@@ -2365,7 +2365,8 @@
     <value>A table.</value>
   </data>
   <data name="AboutIndex_index" xml:space="preserve">
-    <value>An integer index.</value>
+    <value>The index of the record to be retrieved.</value>
+    <comment>function_parameter - Second argument of the Index function - Number type.</comment>
   </data>
   <data name="FormMode_Edit_Name" xml:space="preserve">
     <value>Edit</value>
@@ -5726,7 +5727,7 @@
     <comment>{Locked}</comment>
   </data>
   <data name="ErrorResource_ErrInvalidName_ShortMessage" xml:space="preserve">
-    <value>Name isn't valid. This identifier isn't recognized.</value>
+    <value>Name isn't valid. '{0}' isn't recognized.</value>
     <comment>Error Message.</comment>
   </data>
   <data name="ErrorResource_ErrInvalidName_LongMessage" xml:space="preserve">
@@ -5741,6 +5742,25 @@
     <comment>Article: Formula reference for Power Apps</comment>
   </data>
   <data name="ErrorResource_ErrInvalidName_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    <comment>{Locked}</comment>
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_ShortMessage" xml:space="preserve">
+    <value>Name isn't valid. This identifier isn't recognized.</value>
+    <comment>Error Message.</comment>
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_LongMessage" xml:space="preserve">
+    <value>This error appears most commonly when a formula refers to something that no longer exists (for example, a control that you've deleted).</value>
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_HowToFix_1" xml:space="preserve">
+    <value>Remove or correct the reference to the name that isn't valid.</value>
+    <comment>1 How to fix the error. </comment>
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_Link_1" xml:space="preserve">
+    <value>Article: Formula reference for Power Apps</value>
+    <comment>Article: Formula reference for Power Apps</comment>
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_Link_1_URL" xml:space="preserve">
     <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     <comment>{Locked}</comment>
   </data>
@@ -6355,11 +6375,19 @@
   </data>
   <data name="ErrorResource_ErrInvalidStringInterpolation_ShortMessage" xml:space="preserve">
     <value>Expressions which appear inside an interpolated string must evaluate to a Text value or to a compatible type.</value>
-    <comment>Error message.</comment>
+    <comment>Error message. The term "interpolated string" should be translated using the same terms used in the C# documentation.</comment>
   </data>
   <data name="ErrorResource_ErrInvalidStringInterpolation_HowToFix_1" xml:space="preserve">
     <value>Check the types of the expressions inside the interpolated string.</value>
-    <comment>How to fix message for an error</comment>
+    <comment>How to fix message for an error. The term "interpolated string" should be translated using the same terms used in the C# documentation.</comment>
+  </data>
+  <data name="ErrorResource_ErrEmptyIsland_ShortMessage" xml:space="preserve">
+    <value>Empty expressions cannot appear inside an interpolated string.</value>
+    <comment>Error message. The term "interpolated string" should be translated using the same terms used in the C# documentation.</comment>
+  </data>
+  <data name="ErrorResource_ErrEmptyIsland_HowToFix_1" xml:space="preserve">
+    <value>Check for empty expressions inside the interpolated string.</value>
+    <comment>How to fix message for an error. The term "interpolated string" should be translated using the same terms used in the C# documentation.</comment>
   </data>
   <data name="ErrorResource_ErrAsNotInContext_ShortMessage" xml:space="preserve">
     <value>As is not permitted in this context</value>

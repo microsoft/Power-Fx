@@ -31,7 +31,18 @@ namespace Microsoft.PowerFx.Tests
                 $"{ns}.{nameof(ReflectionFunction)}",
                 $"{ns}.{nameof(RecalcEngineScope)}",
                 $"{ns}.{nameof(PowerFxConfigExtensions)}",
-                $"{ns}.{nameof(OptionSet)}"
+                $"{ns}.{nameof(OptionSet)}",
+                $"{ns}.{nameof(ObjectRecordValue)}",
+                $"{ns}.{nameof(ITypeMarshallerProvider)}",
+                $"{ns}.{nameof(ITypeMarshaller)}",
+                $"{ns}.{nameof(OptionSet)}",
+                $"{ns}.{nameof(ObjectMarshallerProvider)}",
+                $"{ns}.{nameof(ObjectMarshaller)}",
+                $"{ns}.{nameof(PrimitiveMarshallerProvider)}",
+                $"{ns}.{nameof(PrimitiveTypeMarshaller)}",
+                $"{ns}.{nameof(TableMarshallerProvider)}",
+                $"{ns}.{nameof(TypeMarshallerCache)}",
+                $"{ns}.{nameof(TypeMarshallerCacheExtensions)}"
             };
 
             var sb = new StringBuilder();
@@ -59,9 +70,11 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public void EvalWithGlobals()
         {
-            var engine = new RecalcEngine();
+            var cache = new TypeMarshallerCache();
 
-            var context = FormulaValue.NewRecord(new
+            var engine = new RecalcEngine();
+            
+            var context = cache.NewRecord(new
             {
                 x = 15
             });
@@ -209,14 +222,14 @@ namespace Microsoft.PowerFx.Tests
         {
             var engine = new RecalcEngine();
 
-            engine.UpdateVariable("R", FormulaValue.RecordFromFields(
+            engine.UpdateVariable("R", FormulaValue.NewRecordFromFields(
                 new NamedValue("F1", FormulaValue.NewBlank(FormulaType.Number)),
                 new NamedValue("F2", FormulaValue.New(6))));
 
             engine.SetFormula("A", "R.F2 + 3 + R.F1", OnUpdate);
             AssertUpdate("A-->9;");
 
-            engine.UpdateVariable("R", FormulaValue.RecordFromFields(
+            engine.UpdateVariable("R", FormulaValue.NewRecordFromFields(
                 new NamedValue("F1", FormulaValue.New(2)),
                 new NamedValue("F2", FormulaValue.New(7))));
             AssertUpdate("A-->12;");
@@ -256,7 +269,40 @@ namespace Microsoft.PowerFx.Tests
 
             Assert.False(result.IsSuccess);
             Assert.Single(result.Errors);
-            Assert.StartsWith("Error 2-5: Name isn't valid. This identifier isn't recognized", result.Errors[0].ToString());
+            Assert.StartsWith("Error 2-5: Name isn't valid. 'foo' isn't recognized", result.Errors[0].ToString());
+        }
+
+        [Fact]
+        public void CheckLambdaBindError()
+        {
+            var engine = new RecalcEngine();
+            var result = engine.Check("Filter([1,2,3] As X, X.Value > foo)");
+
+            Assert.False(result.IsSuccess);
+            Assert.Single(result.Errors);
+            Assert.StartsWith("Error 31-34: Name isn't valid. 'foo' isn't recognized", result.Errors[0].ToString());
+        }
+
+        [Fact]
+        public void CheckDottedBindError()
+        {
+            var engine = new RecalcEngine();
+            var result = engine.Check("[1,2,3].foo");
+
+            Assert.False(result.IsSuccess);
+            Assert.Single(result.Errors);
+            Assert.StartsWith("Error 7-11: Name isn't valid. 'foo' isn't recognized", result.Errors[0].ToString());
+        }
+
+        [Fact]
+        public void CheckDottedBindErro2r()
+        {
+            var engine = new RecalcEngine();
+            var result = engine.Check("[].Value");
+
+            Assert.False(result.IsSuccess);
+            Assert.Single(result.Errors);
+            Assert.StartsWith("Error 2-8: Name isn't valid. 'Value' isn't recognized", result.Errors[0].ToString());
         }
 
         [Fact]
@@ -309,7 +355,7 @@ namespace Microsoft.PowerFx.Tests
             Assert.False(result.IsSuccess);
             Assert.Null(result.Expression);
             Assert.Single(result.Errors);
-            Assert.StartsWith("Error 2-5: Name isn't valid. This identifier isn't recognized", result.Errors[0].ToString());
+            Assert.StartsWith("Error 2-5: Name isn't valid. 'foo' isn't recognized", result.Errors[0].ToString());
         }
 
         [Fact]
@@ -329,7 +375,7 @@ namespace Microsoft.PowerFx.Tests
             Assert.Equal("x", result.TopLevelIdentifiers.First());
 
             // Test evaluation of parsed expression
-            var recordValue = FormulaValue.RecordFromFields(
+            var recordValue = FormulaValue.NewRecordFromFields(
                 new NamedValue("x", FormulaValue.New(5)));
             var formulaValue = result.Expression.Eval(recordValue);
             Assert.Equal(11.0, (double)formulaValue.ToObject());
@@ -367,7 +413,7 @@ namespace Microsoft.PowerFx.Tests
             Assert.Throws<InvalidOperationException>(() => config.AddFunction(BuiltinFunctionsCore.Abs));
             Assert.Throws<InvalidOperationException>(() => config.AddOptionSet(optionSet));
 
-            Assert.DoesNotContain(new DName("foo"), config.EnvironmentSymbols.Keys);
+            Assert.False(config.TryGetSymbol(new DName("foo"), out _, out _));
 
             Assert.DoesNotContain(new DName(BuiltinFunctionsCore.Abs.Name), config.ExtraFunctions.Keys);
         }        
@@ -388,6 +434,26 @@ namespace Microsoft.PowerFx.Tests
 
             var checkResult = recalcEngine.Check("OptionSet.Option1 <> OptionSet.Option2");
             Assert.True(checkResult.IsSuccess);
+        }
+        
+        [Fact]
+        public void OptionSetResultType()
+        {
+            var config = new PowerFxConfig(null);
+
+            var optionSet = new OptionSet("FooOs", new Dictionary<string, string>() 
+            {
+                    { "option_1", "Option1" },
+                    { "option_2", "Option2" }
+            });
+            
+            config.AddOptionSet(optionSet);            
+            var recalcEngine = new RecalcEngine(config);
+
+            var checkResult = recalcEngine.Check("FooOs.Option1");
+            Assert.True(checkResult.IsSuccess);
+            var osvaluetype = Assert.IsType<OptionSetValueType>(checkResult.ReturnType);
+            Assert.Equal("FooOs", osvaluetype.OptionSetName);
         }
 
         #region Test

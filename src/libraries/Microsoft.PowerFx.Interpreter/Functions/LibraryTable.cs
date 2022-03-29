@@ -13,6 +13,38 @@ namespace Microsoft.PowerFx.Functions
 {
     internal static partial class Library
     {
+        public static FormulaValue LookUp(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args)
+        {
+            // Streaming 
+            var arg0 = (TableValue)args[0];
+            var arg1 = (LambdaFormulaValue)args[1];
+            var arg2 = (LambdaFormulaValue)(args.Length > 2 ? args[2] : null);
+
+            var row = LazyFilter(runner, symbolContext, arg0.Rows, arg1).FirstOrDefault();
+
+            if (row != null)
+            {
+                if (args.Length == 2)
+                {
+                    return row.ToFormulaValue() ?? new BlankValue(irContext);
+                }
+                else
+                {
+                    var childContext = symbolContext.WithScopeValues(row.Value);
+                    var value = arg2.Eval(runner, childContext);
+
+                    if (value is NumberValue number)
+                    {
+                        value = FiniteChecker(irContext, 0, number);
+                    }
+
+                    return value;
+                }
+            }
+
+            return new BlankValue(irContext);
+        }
+
         public static FormulaValue First(IRContext irContext, TableValue[] args)
         {
             return args[0].Rows.FirstOrDefault()?.ToFormulaValue() ?? new BlankValue(irContext);
@@ -93,7 +125,7 @@ namespace Microsoft.PowerFx.Functions
             var arg0 = args[0];
 
             // Streaming 
-            var count = arg0.Rows.Count();
+            var count = arg0.Count();
             return new NumberValue(irContext, count);
         }
 
@@ -162,6 +194,15 @@ namespace Microsoft.PowerFx.Functions
             var rows = LazyFilter(runner, symbolContext, arg0.Rows, arg1);
 
             return new InMemoryTableValue(irContext, rows);
+        }
+
+        public static FormulaValue IndexTable(IRContext irContext, FormulaValue[] args)
+        {
+            var arg0 = (TableValue)args[0];
+            var arg1 = (NumberValue)args[1];
+            var rowIndex = (int)arg1.Value;
+
+            return arg0.Index(rowIndex).ToFormulaValue();
         }
 
         public static FormulaValue SortTable(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args)

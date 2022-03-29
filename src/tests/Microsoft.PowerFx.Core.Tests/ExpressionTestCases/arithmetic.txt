@@ -100,14 +100,8 @@ true
 >> 5 < 5
 false
 
->> 5 < 7
-true
-
 >> 5 <= 7
 true
-
->> 5 < 5
-false
 
 >> 5 < 1/0
 #Error

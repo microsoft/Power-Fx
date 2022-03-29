@@ -10,9 +10,9 @@ using Microsoft.PowerFx.Core.Types;
 
 namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
-    internal sealed class ParseJsonFunction : BuiltinFunction
+    internal sealed class ParseJSONFunction : BuiltinFunction
     {
-        public const string ParseJsonInvariantFunctionName = "ParseJson";
+        public const string ParseJSONInvariantFunctionName = "ParseJSON";
 
         public override bool RequiresErrorContext => true;
 
@@ -22,14 +22,14 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool IsHidden => true;
 
-        public ParseJsonFunction()
-            : base(ParseJsonInvariantFunctionName, TexlStrings.AboutParseJson, FunctionCategories.Text, DType.UntypedObject, 0, 1, 1, DType.String)
+        public ParseJSONFunction()
+            : base(ParseJSONInvariantFunctionName, TexlStrings.AboutParseJSON, FunctionCategories.Text, DType.UntypedObject, 0, 1, 1, DType.String)
         {
         }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
-            yield return new[] { TexlStrings.ParseJsonArg1 };
+            yield return new[] { TexlStrings.ParseJSONArg1 };
         }
     }
 
@@ -53,6 +53,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
             yield return new[] { TexlStrings.IndexArg1, TexlStrings.IndexArg2 };
+        }
+
+        public override string GetUniqueTexlRuntimeName(bool isPrefetching = false)
+        {
+            return GetUniqueTexlRuntimeName(suffix: "_UO");
         }
     }
 }
