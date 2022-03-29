@@ -14,15 +14,15 @@ namespace Microsoft.PowerFx
     {
         private readonly RecalcEngine _engine;
 
-        private readonly FormulaType _contextType;
+        private readonly RecordType _contextType;
 
-        private RecalcEngineScope(RecalcEngine engine, FormulaType contextType)
+        private RecalcEngineScope(RecalcEngine engine, RecordType contextType)
         {
             _engine = engine;
             _contextType = contextType;
         }
 
-        public static RecalcEngineScope FromRecord(RecalcEngine engine, FormulaType type)
+        public static RecalcEngineScope FromRecord(RecalcEngine engine, RecordType type)
         {
             return new RecalcEngineScope(engine, type);
         }
@@ -42,7 +42,7 @@ namespace Microsoft.PowerFx
         public static RecalcEngineScope FromJson(RecalcEngine engine, string json)
         {
             var context = FormulaValue.FromJson(json);
-            return FromRecord(engine, context.Type);
+            return FromRecord(engine, (RecordType)context.Type);
         }
 
         public CheckResult Check(string expression)

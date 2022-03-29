@@ -24,6 +24,8 @@ namespace Microsoft.PowerFx.Core.Glue
     {
         protected TexlFunction[] _library;
         protected EnumSymbol[] _enums = new EnumSymbol[] { };
+
+        // $$$ This isn't used anymore, but still required by INameResolver ...
         protected IExternalDocument _document;
 
         public IExternalDocument Document => _document;
@@ -48,18 +50,30 @@ namespace Microsoft.PowerFx.Core.Glue
 
         public IExternalEntity CurrentEntity => null;
 
-        public SimpleResolver(IEnumerable<EnumSymbol> enumSymbols, params TexlFunction[] extraFunctions)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SimpleResolver"/> class.
+        /// </summary>
+        /// <param name="config"></param>
+        public SimpleResolver(PowerFxConfig config)
+            : this(
+                config.EnumStore.WithRequiredEnums(GetFullFunctionLibrary(config.ExtraFunctions.Values.ToArray())).EnumSymbols,
+                config.ExtraFunctions.Values.ToArray())
+        {
+        }
+
+        // $$$ Get rid of these...
+        internal SimpleResolver(IEnumerable<EnumSymbol> enumSymbols, params TexlFunction[] extraFunctions)
             : this(extraFunctions)
         {
             _enums = enumSymbols.ToArray();
         }
 
-        public SimpleResolver(params TexlFunction[] extraFunctions)
+        internal SimpleResolver(params TexlFunction[] extraFunctions)
         {
             _library = GetFullFunctionLibrary(extraFunctions);
         }
 
-        public static TexlFunction[] GetFullFunctionLibrary(TexlFunction[] extraFunctions)
+        private static TexlFunction[] GetFullFunctionLibrary(TexlFunction[] extraFunctions)
         {
             var list = new List<TexlFunction>();
             list.AddRange(BuiltinFunctionsCore.BuiltinFunctionsLibrary);

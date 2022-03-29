@@ -29,7 +29,7 @@ namespace Microsoft.PowerFx
             RecalcEngine parent,
             PowerFxConfig powerFxConfig,
             RecordType parameters)
-            : base(powerFxConfig.EnumStore.WithRequiredEnums(GetFullFunctionLibrary(powerFxConfig.ExtraFunctions.Values.ToArray())).EnumSymbols, powerFxConfig.ExtraFunctions.Values.ToArray())
+            : base(powerFxConfig)
         {
             _parameters = parameters;
             _parent = parent;
@@ -45,6 +45,7 @@ namespace Microsoft.PowerFx
 
             var str = name.Value;
 
+            // $$$ MOve to base class?
             var parameter = _parameters.MaybeGetFieldType(str);
             if (parameter != null)
             {
@@ -74,6 +75,7 @@ namespace Microsoft.PowerFx
                 return true;
             }
 
+            // $$$ Should this be in base class?
             if (_powerFxConfig.TryGetSymbol(name, out var symbol, out var displayName))
             {
                 // Special case symbols

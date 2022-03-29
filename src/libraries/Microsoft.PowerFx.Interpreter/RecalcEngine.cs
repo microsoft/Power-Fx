@@ -31,27 +31,27 @@ namespace Microsoft.PowerFx
     /// <summary>
     /// Holds a set of Power Fx variables and formulas. Formulas are recalculated when their dependent variables change.
     /// </summary>
-    public class RecalcEngine : IScope, IPowerFxEngine
+    public sealed class RecalcEngine : Engine, IScope, IPowerFxEngine
     {
         internal Dictionary<string, RecalcFormulaInfo> Formulas { get; } = new Dictionary<string, RecalcFormulaInfo>();
-
-        private readonly PowerFxConfig _powerFxConfig;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RecalcEngine"/> class.
         /// Create a new power fx engine. 
         /// </summary>
         /// <param name="powerFxConfig">Compiler customizations.</param>
-        public RecalcEngine(PowerFxConfig powerFxConfig = null)
+        public RecalcEngine()
+            : this(new PowerFxConfig(null))
         {
-            powerFxConfig = powerFxConfig ?? new PowerFxConfig(null);
-            AddInterpreterFunctions(powerFxConfig);
-            powerFxConfig.Lock();
-            _powerFxConfig = powerFxConfig;
+        }
+
+        public RecalcEngine(PowerFxConfig powerFxConfig)
+            : base(AddInterpreterFunctions(powerFxConfig))
+        {
         }
 
         // Add Builtin functions that aren't yet in the shared library. 
-        private void AddInterpreterFunctions(PowerFxConfig powerFxConfig)
+        private static PowerFxConfig AddInterpreterFunctions(PowerFxConfig powerFxConfig)
         {
             powerFxConfig.AddFunction(BuiltinFunctionsCore.DateTime);
             powerFxConfig.AddFunction(BuiltinFunctionsCore.Index_UO);
@@ -61,22 +61,23 @@ namespace Microsoft.PowerFx
             powerFxConfig.AddFunction(BuiltinFunctionsCore.Value_UO);
             powerFxConfig.AddFunction(BuiltinFunctionsCore.Boolean);
             powerFxConfig.AddFunction(BuiltinFunctionsCore.Boolean_UO);
+
+            return powerFxConfig;
         }
 
-        /// <summary>
-        /// List all functions (both builtin and custom) registered with this evaluator. 
-        /// </summary>
-        public IEnumerable<string> GetAllFunctionNames()
+        /// <inheritdoc/>
+        private protected override SimpleResolver CreateResolver(RecordType parameterType)
         {
-            foreach (var kv in _powerFxConfig.ExtraFunctions)
-            {
-                yield return kv.Value.Name;
-            }
+            // The RecalcEngineResolver allows access to the values from UpdateValue. 
+            var resolver = new RecalcEngineResolver(this, Config, parameterType);
+            return resolver;
+        }
 
-            foreach (var func in Functions.Library.FunctionList)
-            {
-                yield return func.Name;
-            }
+        /// <inheritdoc/>
+        protected override IExpression CreateEvaluator(CheckResult result)
+        {
+            (var irnode, var ruleScopeSymbol) = IRTranslator.Translate(result._binding);
+            return new ParsedExpression(irnode, ruleScopeSymbol);
         }
 
         // This handles lookups in the global scope. 
@@ -127,70 +128,6 @@ namespace Microsoft.PowerFx
         }
 
         /// <summary>
-        /// Type check a formula without executing it. 
-        /// </summary>
-        /// <param name="expressionText"></param>
-        /// <param name="parameters"></param>
-        /// <returns></returns>
-        public CheckResult Check(string expressionText, FormulaType parameterType = null)
-        {
-            return CheckInternal(expressionText, parameterType, intellisense: false);
-        }
-
-        private CheckResult CheckInternal(string expressionText, FormulaType parameterType = null, bool intellisense = false)
-        {
-            if (parameterType == null)
-            {
-                parameterType = new RecordType();
-            }
-
-            var formula = new Formula(expressionText);
-
-            formula.EnsureParsed(TexlParser.Flags.None);
-
-            // Ok to continue with binding even if there are parse errors. 
-            // We can still use that for intellisense. 
-
-            var resolver = new RecalcEngineResolver(this, _powerFxConfig, (RecordType)parameterType);
-
-            var binding = TexlBinding.Run(
-                new Glue2DocumentBinderGlue(),
-                formula.ParseTree,
-                resolver,
-                ruleScope: parameterType._type,
-                useThisRecordForRuleScope: false);
-
-            var errors = formula.HasParseErrors ? formula.GetParseErrors() : binding.ErrorContainer.GetErrors();
-
-            var result = new CheckResult
-            {
-                _binding = binding,
-                _formula = formula,
-            };
-
-            if (errors != null && errors.Any())
-            {
-                result.SetErrors(errors.ToArray());
-                result.Expression = null;
-            }
-            else
-            {
-                result.TopLevelIdentifiers = DependencyFinder.FindDependencies(binding.Top, binding);
-
-                // TODO: Fix FormulaType.Build to not throw exceptions for Enum types then remove this check
-                if (binding.ResultType.Kind != DKind.Enum)
-                {
-                    result.ReturnType = FormulaType.Build(binding.ResultType);
-                }
-
-                (var irnode, var ruleScopeSymbol) = IRTranslator.Translate(result._binding);
-                result.Expression = new ParsedExpression(irnode, ruleScopeSymbol);
-            }
-
-            return result;
-        }
-
-        /// <summary>
         /// Evaluate an expression as text and return the result.
         /// </summary>
         /// <param name="expressionText">textual representation of the formula.</param>
@@ -209,7 +146,7 @@ namespace Microsoft.PowerFx
                 parameters = RecordValue.Empty();
             }
 
-            var check = Check(expressionText, parameters.IRContext.ResultType);
+            var check = Check(expressionText, (RecordType)parameters.IRContext.ResultType);
             check.ThrowOnErrors();
 
             var newValue = await check.Expression.EvalAsync(parameters, cancel);
@@ -247,7 +184,7 @@ namespace Microsoft.PowerFx
             var formula = new Formula(expressionText);
             formula.EnsureParsed(TexlParser.Flags.None);
 
-            var resolver = new RecalcEngineResolver(this, _powerFxConfig, parameters);
+            var resolver = new RecalcEngineResolver(this, Config, parameters);
             var binding = TexlBinding.Run(
                 new Glue2DocumentBinderGlue(),
                 null,
@@ -313,22 +250,6 @@ namespace Microsoft.PowerFx
             }
 
             Recalc(name);
-        }
-
-        /// <summary>
-        /// Get intellisense from the formula.
-        /// </summary>
-        public IIntellisenseResult Suggest(string expression, FormulaType parameterType, int cursorPosition)
-        {
-            var result = CheckInternal(expression, parameterType, intellisense: true);
-            var binding = result._binding;
-            var formula = result._formula;
-
-            var context = new IntellisenseContext(expression, cursorPosition);
-            var intellisense = IntellisenseProvider.GetIntellisense(_powerFxConfig.EnumStore);
-            var suggestions = intellisense.Suggest(context, binding, formula);
-
-            return suggestions;
         }
 
         // Trigger a recalc on name and anything that depends on it. 
