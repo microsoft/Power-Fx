@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
 using Microsoft.PowerFx.Core.Public.Types;
 using Microsoft.PowerFx.Core.Public.Values;
 
@@ -102,6 +103,10 @@ namespace Microsoft.PowerFx
             else if (type == FormulaType.Guid)
             {
                 return FormulaValue.New((Guid)value);
+            }
+            else if (type == FormulaType.Color)
+            {
+                return FormulaValue.New((Color)value);
             }
 
             throw new InvalidOperationException($"Unsupported type {value.GetType().FullName} as {type}");

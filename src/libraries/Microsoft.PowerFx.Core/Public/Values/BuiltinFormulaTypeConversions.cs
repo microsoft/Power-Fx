@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using Microsoft.PowerFx.Core.Public.Types;
 
 namespace Microsoft.PowerFx.Core
@@ -28,7 +29,8 @@ namespace Microsoft.PowerFx.Core
             { typeof(DateTime), FormulaType.DateTime },
             { typeof(DateTimeOffset), FormulaType.DateTime },
             { typeof(TimeSpan), FormulaType.Time },
-            { typeof(string), FormulaType.String }
+            { typeof(string), FormulaType.String },
+            { typeof(Color), FormulaType.Color }
         };
 
         /// <summary>
