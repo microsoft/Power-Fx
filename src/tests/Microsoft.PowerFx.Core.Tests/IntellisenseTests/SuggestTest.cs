@@ -66,6 +66,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         [InlineData("$\"Hello { First(Table({a:{},b:{},c:{}})).| } World\"", "a", "b", "c")]
         [InlineData("$\"Hello { First(Table({a:{},b:{},c:{}})).|   \"", "a", "b", "c")]
         [InlineData("$\"Hello { {a:{},b:{},c:{}}.|  \"", "a", "b", "c")]
+        [InlineData("First([$\"{ {a:1,b:2,c:3}.|", "a", "b", "c")]
         [InlineData("$\"Hello {\"|")]
         [InlineData("$\"Hello {}\"|")]
         [InlineData("$\"Hello {|}\"")]
