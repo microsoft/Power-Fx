@@ -10,7 +10,7 @@ using Microsoft.PowerFx.Core.Syntax;
 using Microsoft.PowerFx.Core.Syntax.Nodes;
 using Xunit;
 
-namespace DocumentServer.Core.Tests.Formulas
+namespace Microsoft.PowerFx.Core.Tests
 {
     public class ParseTests
     {
@@ -469,11 +469,11 @@ namespace DocumentServer.Core.Tests.Formulas
                     Assert.NotNull(node.AsCall().Head);
                     Assert.True(node.AsCall().Head is Identifier);
                     Assert.False((node.AsCall().Head as Identifier).Namespace.IsRoot);
-                    Assert.Equal("Netflix.Services", (node.AsCall().Head as Identifier).Namespace.ToDottedSyntax("."));
+                    Assert.Equal("Netflix.Services", (node.AsCall().Head as Identifier).Namespace.ToDottedSyntax());
 
                     Assert.NotNull(node.AsCall().HeadNode);
                     Assert.True(node.AsCall().HeadNode is DottedNameNode);
-                    Assert.Equal("Netflix.Services.GetMovieCatalog", node.AsCall().HeadNode.AsDottedName().ToDPath().ToDottedSyntax("."));
+                    Assert.Equal("Netflix.Services.GetMovieCatalog", node.AsCall().HeadNode.AsDottedName().ToDPath().ToDottedSyntax());
                 });
         }
 
@@ -567,7 +567,7 @@ namespace DocumentServer.Core.Tests.Formulas
             Assert.True(node is DottedNameNode);
 
             var dotted = node as DottedNameNode;
-            Assert.Equal(dpath, dotted.ToDPath().ToDottedSyntax(punctuator: "."));
+            Assert.Equal(dpath, dotted.ToDPath().ToDottedSyntax());
         }
 
         [Theory]

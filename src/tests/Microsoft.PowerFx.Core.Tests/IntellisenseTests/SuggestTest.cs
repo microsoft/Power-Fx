@@ -35,13 +35,6 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
             return intellisense.Suggestions.Select(suggestion => suggestion.DisplayText.Text).ToArray();
         }
 
-        private class EmptyEnumStore : EnumStore
-        {
-            private readonly IDictionary<string, string> _enumDict = new Dictionary<string, string>();
-
-            protected override IDictionary<string, string> EnumDict => _enumDict;
-        }
-
         private readonly EnumStore _defaultEnumStore = new EnumStore();
         private readonly EnumStore _emptyEnumStore = new EmptyEnumStore();
 
