@@ -1923,7 +1923,7 @@
     <value>The millisecond component.</value>
   </data>
   <data name="AboutDateTime" xml:space="preserve">
-    <value>Creates a new date/time value, given its components.</value>
+    <value>Creates a value that represents an instant in time, expressed as a date and time of the day.</value>
     <comment>Description of 'DateTime' function.</comment>
   </data>
   <data name="AboutYear" xml:space="preserve">

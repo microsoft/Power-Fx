@@ -96,7 +96,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     }
 
     // DateTime(year, month, day, hour, minute, second[, millisecond])
-    // Equivalent DAX/Excel function: Time
     internal sealed class DateTimeFunction : BuiltinFunction
     {
         public override bool RequiresErrorContext => true;
