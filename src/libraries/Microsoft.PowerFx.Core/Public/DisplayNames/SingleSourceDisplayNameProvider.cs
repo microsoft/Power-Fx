@@ -16,6 +16,7 @@ namespace Microsoft.PowerFx.Core
         // First is Logical Name, Second is Display Name
         private readonly ImmutableDictionary<DName, DName> _logicalToDisplay;
         private readonly ImmutableDictionary<DName, DName> _displayToLogical;
+        
         public IEnumerable<KeyValuePair<DName, DName>> LogicalToDisplayPairs => _logicalToDisplay;
 
         public SingleSourceDisplayNameProvider()
