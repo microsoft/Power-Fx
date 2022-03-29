@@ -25,6 +25,7 @@ using Microsoft.PowerFx.Core.Syntax;
 using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Core.Texl.Intellisense;
 using Microsoft.PowerFx.Core.Types;
+using Microsoft.PowerFx.Functions;
 
 namespace Microsoft.PowerFx
 {
@@ -53,6 +54,10 @@ namespace Microsoft.PowerFx
         // Add Builtin functions that aren't yet in the shared library. 
         private static PowerFxConfig AddInterpreterFunctions(PowerFxConfig powerFxConfig)
         {
+            // Set to Interpreter's implemented list (not necessarily same as defaults)
+            powerFxConfig.SetCoreFunctions(Library.FunctionList);
+
+            // Add custom. 
             powerFxConfig.AddFunction(BuiltinFunctionsCore.DateTime);
             powerFxConfig.AddFunction(BuiltinFunctionsCore.Index_UO);
             powerFxConfig.AddFunction(BuiltinFunctionsCore.ParseJSON);
@@ -66,10 +71,10 @@ namespace Microsoft.PowerFx
         }
 
         /// <inheritdoc/>
-        private protected override SimpleResolver CreateResolver(RecordType parameterType)
+        private protected override SimpleResolver CreateResolver()
         {
             // The RecalcEngineResolver allows access to the values from UpdateValue. 
-            var resolver = new RecalcEngineResolver(this, Config, parameterType);
+            var resolver = new RecalcEngineResolver(this, Config);
             return resolver;
         }
 
@@ -184,7 +189,7 @@ namespace Microsoft.PowerFx
             var formula = new Formula(expressionText);
             formula.EnsureParsed(TexlParser.Flags.None);
 
-            var resolver = new RecalcEngineResolver(this, Config, parameters);
+            var resolver = new RecalcEngineResolver(this, Config);
             var binding = TexlBinding.Run(
                 new Glue2DocumentBinderGlue(),
                 null,

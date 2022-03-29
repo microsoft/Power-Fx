@@ -41,8 +41,7 @@ namespace Microsoft.PowerFx
         /// </summary>
         public IEnumerable<string> GetAllFunctionNames()
         {
-            var resolver = CreateResolver(null);
-            return resolver.Functions.Select(func => func.Name);
+            return Config.GetAllFunctionNames();
         }
 
         /// <summary>
@@ -51,7 +50,7 @@ namespace Microsoft.PowerFx
         /// </summary>
         /// <param name="parameterType"></param>
         /// <returns></returns>
-        private protected virtual SimpleResolver CreateResolver(RecordType parameterType)
+        private protected virtual SimpleResolver CreateResolver()
         {
             return new SimpleResolver(Config);
         }
@@ -76,7 +75,7 @@ namespace Microsoft.PowerFx
             // Ok to continue with binding even if there are parse errors. 
             // We can still use that for intellisense. 
 
-            var resolver = CreateResolver(parameterType);
+            var resolver = CreateResolver();
 
             var binding = TexlBinding.Run(
                 new Glue2DocumentBinderGlue(),
@@ -126,6 +125,15 @@ namespace Microsoft.PowerFx
         }
 
         /// <summary>
+        /// Optional hook to customize intellisense. 
+        /// </summary>
+        /// <returns></returns>
+        private protected virtual IIntellisense CreateIntellisense()
+        {
+            return IntellisenseProvider.GetIntellisense(Config.EnumStore);
+        }
+
+        /// <summary>
         /// Get intellisense from the formula.
         /// </summary>
         public IIntellisenseResult Suggest(string expression, RecordType parameterType, int cursorPosition)
@@ -135,7 +143,7 @@ namespace Microsoft.PowerFx
             var formula = result._formula;
 
             var context = new IntellisenseContext(expression, cursorPosition);
-            var intellisense = IntellisenseProvider.GetIntellisense(Config.EnumStore);
+            var intellisense = CreateIntellisense();
             var suggestions = intellisense.Suggest(context, binding, formula);
 
             return suggestions;

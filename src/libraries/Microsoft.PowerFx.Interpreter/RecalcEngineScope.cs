@@ -10,24 +10,27 @@ using Microsoft.PowerFx.Core.Texl.Intellisense;
 
 namespace Microsoft.PowerFx
 {
+    /// <summary>
+    /// Implement a <see cref="IPowerFxScope"/> for intellisense on top of an <see cref="Engine"/> instance.
+    /// </summary>
     public class RecalcEngineScope : IPowerFxScope
     {
-        private readonly RecalcEngine _engine;
+        private readonly Engine _engine;
 
         private readonly RecordType _contextType;
 
-        private RecalcEngineScope(RecalcEngine engine, RecordType contextType)
+        private RecalcEngineScope(Engine engine, RecordType contextType)
         {
             _engine = engine;
             _contextType = contextType;
         }
 
-        public static RecalcEngineScope FromRecord(RecalcEngine engine, RecordType type)
+        public static RecalcEngineScope FromRecord(Engine engine, RecordType type)
         {
             return new RecalcEngineScope(engine, type);
         }
 
-        public static RecalcEngineScope FromUri(RecalcEngine engine, string uri)
+        public static RecalcEngineScope FromUri(Engine engine, string uri)
         {
             var uriObj = new Uri(uri);
             var contextJson = HttpUtility.ParseQueryString(uriObj.Query).Get("context");
@@ -39,7 +42,7 @@ namespace Microsoft.PowerFx
             return FromJson(engine, contextJson);
         }
 
-        public static RecalcEngineScope FromJson(RecalcEngine engine, string json)
+        public static RecalcEngineScope FromJson(Engine engine, string json)
         {
             var context = FormulaValue.FromJson(json);
             return FromRecord(engine, (RecordType)context.Type);

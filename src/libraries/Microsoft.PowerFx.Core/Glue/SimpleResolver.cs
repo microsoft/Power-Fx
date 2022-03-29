@@ -22,16 +22,17 @@ namespace Microsoft.PowerFx.Core.Glue
     /// </summary>
     internal class SimpleResolver : INameResolver
     {
-        protected TexlFunction[] _library;
-        protected EnumSymbol[] _enums = new EnumSymbol[] { };
+        private readonly PowerFxConfig _config;
+
+        private readonly TexlFunction[] _library;
+        private readonly EnumSymbol[] _enums = new EnumSymbol[] { };
 
         // $$$ This isn't used anymore, but still required by INameResolver ...
+        // Still used by DataverseResolver for OptionSets. 
         protected IExternalDocument _document;
 
         public IExternalDocument Document => _document;
 
-        // public EntityScope EntityScope => (EntityScope)Document.GlobalScope;
-        //IExternalEntityScope INameResolver.EntityScope => EntityScope;
         IExternalEntityScope INameResolver.EntityScope => throw new NotImplementedException();
 
         public DName CurrentProperty => default;
@@ -54,35 +55,40 @@ namespace Microsoft.PowerFx.Core.Glue
         /// Initializes a new instance of the <see cref="SimpleResolver"/> class.
         /// </summary>
         /// <param name="config"></param>
-        public SimpleResolver(PowerFxConfig config)
-            : this(
-                config.EnumStore.WithRequiredEnums(GetFullFunctionLibrary(config.ExtraFunctions.Values.ToArray())).EnumSymbols,
-                config.ExtraFunctions.Values.ToArray())
+        public SimpleResolver(PowerFxConfig config)            
         {
-        }
+            _config = config ?? throw new ArgumentNullException(nameof(config));
 
-        // $$$ Get rid of these...
-        internal SimpleResolver(IEnumerable<EnumSymbol> enumSymbols, params TexlFunction[] extraFunctions)
-            : this(extraFunctions)
-        {
-            _enums = enumSymbols.ToArray();
+            _library = config.Functions.ToArray();
+            _enums = config.EnumStore.WithRequiredEnums(_library).EnumSymbols.ToArray();
         }
-
-        internal SimpleResolver(params TexlFunction[] extraFunctions)
-        {
-            _library = GetFullFunctionLibrary(extraFunctions);
-        }
-
-        private static TexlFunction[] GetFullFunctionLibrary(TexlFunction[] extraFunctions)
-        {
-            var list = new List<TexlFunction>();
-            list.AddRange(BuiltinFunctionsCore.BuiltinFunctionsLibrary);
-            list.AddRange(extraFunctions);
-            return list.ToArray();
-        }
-
+        
         public virtual bool Lookup(DName name, out NameLookupInfo nameInfo, NameLookupPreferences preferences = NameLookupPreferences.None)
         {
+            if (_config != null)
+            {
+                if (_config.TryGetSymbol(name, out var symbol, out var displayName))
+                {
+                    // Special case symbols
+                    if (symbol is IExternalOptionSet optionSet)
+                    {
+                        nameInfo = new NameLookupInfo(
+                            BindKind.OptionSet,
+                            optionSet.Type,
+                            DPath.Root,
+                            0,
+                            optionSet,
+                            displayName);
+
+                        return true;
+                    }
+                    else
+                    {
+                        throw new NotImplementedException($"{symbol.GetType().Name} not supported.");
+                    }
+                }
+            }
+
             var enumValue = _enums.FirstOrDefault(symbol => symbol.InvariantName == name);
             if (enumValue != null)
             {
