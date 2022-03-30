@@ -1922,8 +1922,12 @@
   <data name="AboutTime_millisecond" xml:space="preserve">
     <value>Componenta milisecundă.</value>
   </data>
+  <data name="AboutDateTime" xml:space="preserve">
+    <value>Creează o valoare care reprezintă un moment în timp, exprimată ca dată și oră a zilei.</value>
+    
+  </data>
   <data name="AboutYear" xml:space="preserve">
-    <value>Anul returnează anul unei anumite date, un număr mai mare decât 1900.</value>
+    <value>Anul returnează anul unei anumite date.</value>
     
   </data>
   <data name="YearArg1" xml:space="preserve">
@@ -2338,15 +2342,15 @@
   <data name="AboutChar_column_of_numbers" xml:space="preserve">
     <value>O coloană de numere de cod din setul de caractere de pe platformă.</value>
   </data>
-  <data name="AboutParseJson" xml:space="preserve">
+  <data name="AboutParseJSON" xml:space="preserve">
     <value>Convertește un șir JSON într-un obiect.</value>
     
   </data>
-  <data name="ParseJsonArg1" xml:space="preserve">
+  <data name="ParseJSONArg1" xml:space="preserve">
     <value>intrare</value>
     
   </data>
-  <data name="AboutParseJson_input" xml:space="preserve">
+  <data name="AboutParseJSON_input" xml:space="preserve">
     <value>Un șir JSON de procesat.</value>
   </data>
   <data name="AboutIndex" xml:space="preserve">
@@ -2365,7 +2369,8 @@
     <value>Un tabel.</value>
   </data>
   <data name="AboutIndex_index" xml:space="preserve">
-    <value>Index întreg.</value>
+    <value>Indexul înregistrării de regăsit.</value>
+    
   </data>
   <data name="Screen_Name_DisplayName" xml:space="preserve">
     <value>Nume</value>
@@ -3974,7 +3979,7 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidName_ShortMessage" xml:space="preserve">
-    <value>Numele nu este valid. Acest identificator nu este recunoscut.</value>
+    <value>Numele nu este valid. „{0}” nu este recunoscut.</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidName_LongMessage" xml:space="preserve">
@@ -3986,6 +3991,21 @@
   </data>
   <data name="ErrorResource_ErrInvalidName_Link_1" xml:space="preserve">
     <value>Articol: referință privind formulele pentru Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_ShortMessage" xml:space="preserve">
+    <value>Numele nu este valid. Identificatorul nu este recunoscut.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_LongMessage" xml:space="preserve">
+    <value>Această eroare apare cel mai frecvent atunci când o formulă face referire la ceva care nu mai există (de exemplu un control pe care l-ați șters).</value>
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_HowToFix_1" xml:space="preserve">
+    <value>Eliminați sau corectați referința la numele care nu este valid.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_Link_1" xml:space="preserve">
+    <value>Articol: Referință la formule pentru Power Apps</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_ShortMessage" xml:space="preserve">
@@ -4482,11 +4502,11 @@
     
   </data>
   <data name="ErrorResource_ErrEmptyIsland_ShortMessage" xml:space="preserve">
-    <value>Empty expressions cannot appear inside an interpolated string.</value>
+    <value>Expresiile vide nu pot apărea într-un șir interpolat.</value>
     
   </data>
   <data name="ErrorResource_ErrEmptyIsland_HowToFix_1" xml:space="preserve">
-    <value>Check for empty expressions inside the interpolated string.</value>
+    <value>Verificați dacă există expresii goale în șirul interpolat.</value>
     
   </data>
   <data name="ErrorResource_ErrAsNotInContext_ShortMessage" xml:space="preserve">
