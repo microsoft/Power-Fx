@@ -1922,8 +1922,12 @@
   <data name="AboutTime_millisecond" xml:space="preserve">
     <value>Milisaniye bileşeni.</value>
   </data>
+  <data name="AboutDateTime" xml:space="preserve">
+    <value>Creates a value that represents an instant in time, expressed as a date and time of the day.</value>
+    
+  </data>
   <data name="AboutYear" xml:space="preserve">
-    <value>Yıl, 1900'den büyük bir sayı olarak sağlanan bir tarihin yılını döndürür.</value>
+    <value>Yıl, sağlanan bir tarihin yılını döndürür.</value>
     
   </data>
   <data name="YearArg1" xml:space="preserve">
@@ -2338,15 +2342,15 @@
   <data name="AboutChar_column_of_numbers" xml:space="preserve">
     <value>Platformunuzdaki karakter kümesinde yer alan kod numaralarını içeren bir sütun.</value>
   </data>
-  <data name="AboutParseJson" xml:space="preserve">
+  <data name="AboutParseJSON" xml:space="preserve">
     <value>JSON dizesini nesneye dönüştürür.</value>
     
   </data>
-  <data name="ParseJsonArg1" xml:space="preserve">
+  <data name="ParseJSONArg1" xml:space="preserve">
     <value>giriş</value>
     
   </data>
-  <data name="AboutParseJson_input" xml:space="preserve">
+  <data name="AboutParseJSON_input" xml:space="preserve">
     <value>İşlenecek JSON dizesi.</value>
   </data>
   <data name="AboutIndex" xml:space="preserve">
@@ -2365,7 +2369,8 @@
     <value>Bir tablo.</value>
   </data>
   <data name="AboutIndex_index" xml:space="preserve">
-    <value>Tamsayı dizini.</value>
+    <value>Alınacak kaydın dizini.</value>
+    
   </data>
   <data name="Screen_Name_DisplayName" xml:space="preserve">
     <value>Ad</value>
@@ -3974,7 +3979,7 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidName_ShortMessage" xml:space="preserve">
-    <value>Ad geçerli değil. Bu tanımlayıcı tanınmıyor.</value>
+    <value>Ad geçerli değil. '{0}' tanınmıyor.</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidName_LongMessage" xml:space="preserve">
@@ -3985,6 +3990,21 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidName_Link_1" xml:space="preserve">
+    <value>Makale: Power Apps için formül başvurusu</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_ShortMessage" xml:space="preserve">
+    <value>Ad geçerli değil. Bu tanımlayıcı tanınmıyor.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_LongMessage" xml:space="preserve">
+    <value>Bu hata en yaygın olarak bir formül artık var olmayan bir öğeye (örneğin, silmiş olduğunuz bir denetime) başvurduğunda ortaya çıkar.</value>
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_HowToFix_1" xml:space="preserve">
+    <value>Geçerli olmayan ad başvurusunu kaldırın veya düzeltin.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_Link_1" xml:space="preserve">
     <value>Makale: Power Apps için formül başvurusu</value>
     
   </data>
@@ -4482,11 +4502,11 @@
     
   </data>
   <data name="ErrorResource_ErrEmptyIsland_ShortMessage" xml:space="preserve">
-    <value>Empty expressions cannot appear inside an interpolated string.</value>
+    <value>Boş ifadeler, düz metin arasına kod eklenmiş dize içinde görünmez.</value>
     
   </data>
   <data name="ErrorResource_ErrEmptyIsland_HowToFix_1" xml:space="preserve">
-    <value>Check for empty expressions inside the interpolated string.</value>
+    <value>Düz metin arasına kod eklenmiş dize içinde boş ifade olup olmadığını kontrol edin.</value>
     
   </data>
   <data name="ErrorResource_ErrAsNotInContext_ShortMessage" xml:space="preserve">

@@ -1922,8 +1922,12 @@
   <data name="AboutTime_millisecond" xml:space="preserve">
     <value>Thành phần mili giây.</value>
   </data>
+  <data name="AboutDateTime" xml:space="preserve">
+    <value>Tạo giá trị đại diện cho thời điểm tức thì, được biểu thị bằng ngày và giờ trong ngày.</value>
+    
+  </data>
   <data name="AboutYear" xml:space="preserve">
-    <value>Năm trả về năm hoặc ngày được cho trước, một số lớn hơn 1900.</value>
+    <value>Năm trả về năm của một ngày nhất định.</value>
     
   </data>
   <data name="YearArg1" xml:space="preserve">
@@ -2338,15 +2342,15 @@
   <data name="AboutChar_column_of_numbers" xml:space="preserve">
     <value>Cột số mã từ tập ký tự trên nền tảng của bạn.</value>
   </data>
-  <data name="AboutParseJson" xml:space="preserve">
+  <data name="AboutParseJSON" xml:space="preserve">
     <value>Chuyển đổi một chuỗi JSON thành đối tượng.</value>
     
   </data>
-  <data name="ParseJsonArg1" xml:space="preserve">
+  <data name="ParseJSONArg1" xml:space="preserve">
     <value>đầu_vào</value>
     
   </data>
-  <data name="AboutParseJson_input" xml:space="preserve">
+  <data name="AboutParseJSON_input" xml:space="preserve">
     <value>Một chuỗi JSON để xử lý.</value>
   </data>
   <data name="AboutIndex" xml:space="preserve">
@@ -2365,7 +2369,8 @@
     <value>Bảng.</value>
   </data>
   <data name="AboutIndex_index" xml:space="preserve">
-    <value>Chỉ mục số nguyên.</value>
+    <value>Chỉ mục của bản ghi sẽ được truy xuất.</value>
+    
   </data>
   <data name="Screen_Name_DisplayName" xml:space="preserve">
     <value>Tên</value>
@@ -3974,7 +3979,7 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidName_ShortMessage" xml:space="preserve">
-    <value>Tên không hợp lệ. Không nhận dạng được mã định danh này.</value>
+    <value>Tên không hợp lệ. Không nhận dạng được "{0}".</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidName_LongMessage" xml:space="preserve">
@@ -3985,6 +3990,21 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidName_Link_1" xml:space="preserve">
+    <value>Bài viết: Tham chiếu công thức cho Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_ShortMessage" xml:space="preserve">
+    <value>Tên không hợp lệ. Không nhận dạng được mã định danh này.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_LongMessage" xml:space="preserve">
+    <value>Lỗi này hay xuất hiện nhất khi có công thức tham chiếu tới nội dung không còn tồn tại (ví dụ: một kiểm soát mà bạn đã xóa).</value>
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_HowToFix_1" xml:space="preserve">
+    <value>Loại bỏ hoặc sửa tham chiếu tới tên không hợp lệ.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_Link_1" xml:space="preserve">
     <value>Bài viết: Tham chiếu công thức cho Power Apps</value>
     
   </data>
@@ -4482,11 +4502,11 @@
     
   </data>
   <data name="ErrorResource_ErrEmptyIsland_ShortMessage" xml:space="preserve">
-    <value>Empty expressions cannot appear inside an interpolated string.</value>
+    <value>Các biểu thức trống không thể xuất hiện bên trong một xâu nội suy.</value>
     
   </data>
   <data name="ErrorResource_ErrEmptyIsland_HowToFix_1" xml:space="preserve">
-    <value>Check for empty expressions inside the interpolated string.</value>
+    <value>Kiểm tra các biểu thức trống bên trong xâu nội suy.</value>
     
   </data>
   <data name="ErrorResource_ErrAsNotInContext_ShortMessage" xml:space="preserve">

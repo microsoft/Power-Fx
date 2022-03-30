@@ -1922,8 +1922,12 @@
   <data name="AboutTime_millisecond" xml:space="preserve">
     <value>Milisekundės komponentas.</value>
   </data>
+  <data name="AboutDateTime" xml:space="preserve">
+    <value>Creates a value that represents an instant in time, expressed as a date and time of the day.</value>
+    
+  </data>
   <data name="AboutYear" xml:space="preserve">
-    <value>„Year“ pateikia nurodytos datos metus – skaičių, didesnį už 1900.</value>
+    <value>Year returns the year of a given date.</value>
     
   </data>
   <data name="YearArg1" xml:space="preserve">
@@ -2338,15 +2342,15 @@
   <data name="AboutChar_column_of_numbers" xml:space="preserve">
     <value>Stulpelis su kodais iš simbolių rinkinio jūsų platformoje.</value>
   </data>
-  <data name="AboutParseJson" xml:space="preserve">
+  <data name="AboutParseJSON" xml:space="preserve">
     <value>Konvertuoja JSON eilutę į objektą.</value>
     
   </data>
-  <data name="ParseJsonArg1" xml:space="preserve">
+  <data name="ParseJSONArg1" xml:space="preserve">
     <value>įvestis</value>
     
   </data>
-  <data name="AboutParseJson_input" xml:space="preserve">
+  <data name="AboutParseJSON_input" xml:space="preserve">
     <value>Apdorotina JSON eilutė.</value>
   </data>
   <data name="AboutIndex" xml:space="preserve">
@@ -2365,7 +2369,8 @@
     <value>Lentelė.</value>
   </data>
   <data name="AboutIndex_index" xml:space="preserve">
-    <value>Sveikųjų skaičių rodyklė.</value>
+    <value>Nuskaitoma įrašo rodyklė.</value>
+    
   </data>
   <data name="Screen_Name_DisplayName" xml:space="preserve">
     <value>Pavadinimas</value>
@@ -3974,7 +3979,7 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidName_ShortMessage" xml:space="preserve">
-    <value>Pavadinimas yra netinkamas. Šis identifikatorius neatpažintas.</value>
+    <value>Pavadinimas yra netinkamas. „{0}“ neatpažintas.</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidName_LongMessage" xml:space="preserve">
@@ -3985,6 +3990,21 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidName_Link_1" xml:space="preserve">
+    <value>Straipsnis: formulės nuoroda, skirta „Power Apps“</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_ShortMessage" xml:space="preserve">
+    <value>Pavadinimas yra netinkamas. Šis identifikatorius neatpažintas.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_LongMessage" xml:space="preserve">
+    <value>Ši klaida paprastai įvyksta tada, kai formulė nurodo kažką, ko jau nebėra (pavyzdžiui, valdiklį, kurį panaikinote).</value>
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_HowToFix_1" xml:space="preserve">
+    <value>Pašalinkite arba pataisykite nuorodą į netinkamą pavadinimą.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_Link_1" xml:space="preserve">
     <value>Straipsnis: formulės nuoroda, skirta „Power Apps“</value>
     
   </data>
@@ -4482,11 +4502,11 @@
     
   </data>
   <data name="ErrorResource_ErrEmptyIsland_ShortMessage" xml:space="preserve">
-    <value>Empty expressions cannot appear inside an interpolated string.</value>
+    <value>Interpoliuotoje eilutėje negali būti tuščių išraiškų.</value>
     
   </data>
   <data name="ErrorResource_ErrEmptyIsland_HowToFix_1" xml:space="preserve">
-    <value>Check for empty expressions inside the interpolated string.</value>
+    <value>Patikrinkite, ar interpoliuotoje eilutėje yra tuščių išraiškų.</value>
     
   </data>
   <data name="ErrorResource_ErrAsNotInContext_ShortMessage" xml:space="preserve">

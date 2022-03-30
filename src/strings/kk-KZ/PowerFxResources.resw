@@ -1922,8 +1922,12 @@
   <data name="AboutTime_millisecond" xml:space="preserve">
     <value>Миллисекунд компоненті.</value>
   </data>
+  <data name="AboutDateTime" xml:space="preserve">
+    <value>Creates a value that represents an instant in time, expressed as a date and time of the day.</value>
+    
+  </data>
   <data name="AboutYear" xml:space="preserve">
-    <value>Жыл 1900 мәнінен үлкен сан болатын берілген күннің жылын қайтарады.</value>
+    <value>Year returns the year of a given date.</value>
     
   </data>
   <data name="YearArg1" xml:space="preserve">
@@ -2338,15 +2342,15 @@
   <data name="AboutChar_column_of_numbers" xml:space="preserve">
     <value>Платформаңыздағы таңбалар жиынтығынан код нөмірлерінің бағаны.</value>
   </data>
-  <data name="AboutParseJson" xml:space="preserve">
+  <data name="AboutParseJSON" xml:space="preserve">
     <value>JSON жолын нысанға түрлендіреді.</value>
     
   </data>
-  <data name="ParseJsonArg1" xml:space="preserve">
+  <data name="ParseJSONArg1" xml:space="preserve">
     <value>кіріс</value>
     
   </data>
-  <data name="AboutParseJson_input" xml:space="preserve">
+  <data name="AboutParseJSON_input" xml:space="preserve">
     <value>Өңдеуге арналған JSON жолы.</value>
   </data>
   <data name="AboutIndex" xml:space="preserve">
@@ -2365,7 +2369,8 @@
     <value>Кесте.</value>
   </data>
   <data name="AboutIndex_index" xml:space="preserve">
-    <value>Бүтін сан индексі.</value>
+    <value>Алынатын жазбаның индексі.</value>
+    
   </data>
   <data name="Screen_Name_DisplayName" xml:space="preserve">
     <value>Аты</value>
@@ -3974,7 +3979,7 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidName_ShortMessage" xml:space="preserve">
-    <value>Атау жарамсыз. Бұл идентификатор танылмады.</value>
+    <value>Атау жарамсыз. "{0}" танылмады.</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidName_LongMessage" xml:space="preserve">
@@ -3986,6 +3991,21 @@
   </data>
   <data name="ErrorResource_ErrInvalidName_Link_1" xml:space="preserve">
     <value>Мақала. Power Apps үшін формула сілтемесі</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_ShortMessage" xml:space="preserve">
+    <value>Атау жарамсыз. Бұл идентификатор танылмады.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_LongMessage" xml:space="preserve">
+    <value>Формула бұдан былай жоқ элементке (мысалы, жойылған басқару элементіне) қатысты болған кезде, осы қате жиі пайда болады.</value>
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_HowToFix_1" xml:space="preserve">
+    <value>Жарамсыз атаудың сілтемесін жойыңыз немесе түзетіңіз.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_Link_1" xml:space="preserve">
+    <value>Мақала: Power Apps бағдарламасының формула сілтемесі</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_ShortMessage" xml:space="preserve">
@@ -4482,11 +4502,11 @@
     
   </data>
   <data name="ErrorResource_ErrEmptyIsland_ShortMessage" xml:space="preserve">
-    <value>Empty expressions cannot appear inside an interpolated string.</value>
+    <value>Бос өрнектер интерполяцияланған жолдың ішінде көрінбейді.</value>
     
   </data>
   <data name="ErrorResource_ErrEmptyIsland_HowToFix_1" xml:space="preserve">
-    <value>Check for empty expressions inside the interpolated string.</value>
+    <value>Интерполяцияланған жолдағы бос өрнектерді тексеріңіз.</value>
     
   </data>
   <data name="ErrorResource_ErrAsNotInContext_ShortMessage" xml:space="preserve">
