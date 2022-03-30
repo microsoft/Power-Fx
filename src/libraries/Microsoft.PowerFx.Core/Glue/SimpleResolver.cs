@@ -17,7 +17,8 @@ using Microsoft.PowerFx.Core.Utils;
 namespace Microsoft.PowerFx.Core.Glue
 {
     /// <summary>
-    /// Basic implementation of INameResolver. 
+    /// Basic implementation of INameResolver around a <see cref="PowerFxConfig"/> object. 
+    /// This aides in binding and intellisense. 
     /// Host can override Lookup to provide additional symbols to the expression. 
     /// </summary>
     internal class SimpleResolver : INameResolver
@@ -27,29 +28,28 @@ namespace Microsoft.PowerFx.Core.Glue
         private readonly TexlFunction[] _library;
         private readonly EnumSymbol[] _enums = new EnumSymbol[] { };
 
-        // $$$ This isn't used anymore, but still required by INameResolver ...
-        // Still used by DataverseResolver for OptionSets. 
-        protected IExternalDocument _document;
+        private readonly IExternalDocument _document;
 
-        public IExternalDocument Document => _document;
+        IExternalDocument INameResolver.Document => _document;
 
         IExternalEntityScope INameResolver.EntityScope => throw new NotImplementedException();
 
-        public DName CurrentProperty => default;
+        DName INameResolver.CurrentProperty => default;
 
-        public DPath CurrentEntityPath => default;
+        DPath INameResolver.CurrentEntityPath => default;
 
         // Allow behavior properties, like calls to POST.
         // $$$ this may need to be under a flag so host can enforce read-only properties.
-        public bool CurrentPropertyIsBehavior => true;
+        bool INameResolver.CurrentPropertyIsBehavior => true;
 
-        public bool CurrentPropertyIsConstantData => false;
+        bool INameResolver.CurrentPropertyIsConstantData => false;
 
-        public bool CurrentPropertyAllowsNavigation => false;
+        bool INameResolver.CurrentPropertyAllowsNavigation => false;
 
+        // Expose the list to aide in intellisense suggestions. 
         public IEnumerable<TexlFunction> Functions => _library;
 
-        public IExternalEntity CurrentEntity => null;
+        IExternalEntity INameResolver.CurrentEntity => null;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SimpleResolver"/> class.
@@ -62,7 +62,14 @@ namespace Microsoft.PowerFx.Core.Glue
             _library = config.Functions.ToArray();
             _enums = config.EnumStore.WithRequiredEnums(_library).EnumSymbols.ToArray();
         }
-        
+
+        // for derived classes that need to set INameResolver.Document. 
+        protected SimpleResolver(PowerFxConfig config, IExternalDocument document)
+            : this(config)
+        {
+            _document = document;
+        }
+
         public virtual bool Lookup(DName name, out NameLookupInfo nameInfo, NameLookupPreferences preferences = NameLookupPreferences.None)
         {
             if (_config != null)
