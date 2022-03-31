@@ -1922,8 +1922,12 @@
   <data name="AboutTime_millisecond" xml:space="preserve">
     <value>Komponenta milisekunde.</value>
   </data>
+  <data name="AboutDateTime" xml:space="preserve">
+    <value>Izradite vrijednost koja predstavlja jedan vremenski trenutak, izražen kao datum i doba dana.</value>
+    
+  </data>
   <data name="AboutYear" xml:space="preserve">
-    <value>Funkcija Year vraća godinu zadanog datuma, broj veći od 1900.</value>
+    <value>Funkcija Year vraća godinu zadanog datuma.</value>
     
   </data>
   <data name="YearArg1" xml:space="preserve">
@@ -2338,15 +2342,15 @@
   <data name="AboutChar_column_of_numbers" xml:space="preserve">
     <value>Stupac kodnih brojeva iz skupa znakova na vašoj platformi.</value>
   </data>
-  <data name="AboutParseJson" xml:space="preserve">
+  <data name="AboutParseJSON" xml:space="preserve">
     <value>Pretvara JSON niz u objekt.</value>
     
   </data>
-  <data name="ParseJsonArg1" xml:space="preserve">
+  <data name="ParseJSONArg1" xml:space="preserve">
     <value>unos</value>
     
   </data>
-  <data name="AboutParseJson_input" xml:space="preserve">
+  <data name="AboutParseJSON_input" xml:space="preserve">
     <value>JSON niz za obradu.</value>
   </data>
   <data name="AboutIndex" xml:space="preserve">
@@ -2365,7 +2369,8 @@
     <value>Jedna tablica.</value>
   </data>
   <data name="AboutIndex_index" xml:space="preserve">
-    <value>Indeks cijelog broja.</value>
+    <value>Indeks zapisa koji treba dohvatiti.</value>
+    
   </data>
   <data name="Screen_Name_DisplayName" xml:space="preserve">
     <value>Naziv</value>
@@ -3974,7 +3979,7 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidName_ShortMessage" xml:space="preserve">
-    <value>Naziv nije valjan. Identifikator nije prepoznat.</value>
+    <value>Naziv nije valjan. „{0}” nije prepoznat.</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidName_LongMessage" xml:space="preserve">
@@ -3986,6 +3991,21 @@
   </data>
   <data name="ErrorResource_ErrInvalidName_Link_1" xml:space="preserve">
     <value>Članak: referenca formule za Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_ShortMessage" xml:space="preserve">
+    <value>Naziv nije valjan. Identifikator nije prepoznat.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_LongMessage" xml:space="preserve">
+    <value>Ta se pogreška najčešće pojavljuje kada se formula odnosi se na nešto što više ne postoji (primjerice, na kontrolu koju ste izbrisali).</value>
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_HowToFix_1" xml:space="preserve">
+    <value>Uklonite ili ispravite referencu na naziv koji nije valjan.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_Link_1" xml:space="preserve">
+    <value>Članak: referenca formule za servis Power Apps</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_ShortMessage" xml:space="preserve">
@@ -4482,11 +4502,11 @@
     
   </data>
   <data name="ErrorResource_ErrEmptyIsland_ShortMessage" xml:space="preserve">
-    <value>Empty expressions cannot appear inside an interpolated string.</value>
+    <value>Prazni izrazi ne mogu se pojaviti unutar interpoliranog niza.</value>
     
   </data>
   <data name="ErrorResource_ErrEmptyIsland_HowToFix_1" xml:space="preserve">
-    <value>Check for empty expressions inside the interpolated string.</value>
+    <value>Provjerite ima li praznih izraza unutar interpoliranog niza.</value>
     
   </data>
   <data name="ErrorResource_ErrAsNotInContext_ShortMessage" xml:space="preserve">

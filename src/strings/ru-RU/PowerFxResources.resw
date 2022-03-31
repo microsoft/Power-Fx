@@ -1922,8 +1922,12 @@
   <data name="AboutTime_millisecond" xml:space="preserve">
     <value>Компонент миллисекунд.</value>
   </data>
+  <data name="AboutDateTime" xml:space="preserve">
+    <value>Создает значение, представляющее собой момент времени, выраженный в виде даты и времени суток.</value>
+    
+  </data>
   <data name="AboutYear" xml:space="preserve">
-    <value>Функция Year возвращает год для заданной даты в виде числа, большего 1900.</value>
+    <value>Функция Year возвращает год из заданной даты.</value>
     
   </data>
   <data name="YearArg1" xml:space="preserve">
@@ -2338,15 +2342,15 @@
   <data name="AboutChar_column_of_numbers" xml:space="preserve">
     <value>Столбец номеров кодов из кодировки для вашей платформы.</value>
   </data>
-  <data name="AboutParseJson" xml:space="preserve">
+  <data name="AboutParseJSON" xml:space="preserve">
     <value>Преобразует строку JSON в объект.</value>
     
   </data>
-  <data name="ParseJsonArg1" xml:space="preserve">
+  <data name="ParseJSONArg1" xml:space="preserve">
     <value>входные данные</value>
     
   </data>
-  <data name="AboutParseJson_input" xml:space="preserve">
+  <data name="AboutParseJSON_input" xml:space="preserve">
     <value>Строка JSON для обработки.</value>
   </data>
   <data name="AboutIndex" xml:space="preserve">
@@ -2365,7 +2369,8 @@
     <value>Таблица.</value>
   </data>
   <data name="AboutIndex_index" xml:space="preserve">
-    <value>Целочисленный индекс.</value>
+    <value>Индекс записи, которую требуется извлечь.</value>
+    
   </data>
   <data name="Screen_Name_DisplayName" xml:space="preserve">
     <value>Имя</value>
@@ -3974,7 +3979,7 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidName_ShortMessage" xml:space="preserve">
-    <value>Недопустимое имя. Этот идентификатор не распознан.</value>
+    <value>Недопустимое имя. Не удается распознать "{0}".</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidName_LongMessage" xml:space="preserve">
@@ -3986,6 +3991,21 @@
   </data>
   <data name="ErrorResource_ErrInvalidName_Link_1" xml:space="preserve">
     <value>Статья: ссылка на формулу для Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_ShortMessage" xml:space="preserve">
+    <value>Недопустимое имя. Этот идентификатор не распознан.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_LongMessage" xml:space="preserve">
+    <value>Эта ошибка чаще всего возникает, когда формула ссылается на объект, который больше не существует (например, удаленный элемент управления).</value>
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_HowToFix_1" xml:space="preserve">
+    <value>Удалите или исправьте ссылку на недопустимое имя.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_Link_1" xml:space="preserve">
+    <value>Статья: "Справка по формулам для Power Apps"</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_ShortMessage" xml:space="preserve">
@@ -4482,11 +4502,11 @@
     
   </data>
   <data name="ErrorResource_ErrEmptyIsland_ShortMessage" xml:space="preserve">
-    <value>Empty expressions cannot appear inside an interpolated string.</value>
+    <value>Внутри интерполированной строки не может быть пустых выражений.</value>
     
   </data>
   <data name="ErrorResource_ErrEmptyIsland_HowToFix_1" xml:space="preserve">
-    <value>Check for empty expressions inside the interpolated string.</value>
+    <value>Проверьте интерполированную строку на наличие пустых выражений.</value>
     
   </data>
   <data name="ErrorResource_ErrAsNotInContext_ShortMessage" xml:space="preserve">

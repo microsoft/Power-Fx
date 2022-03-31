@@ -1922,8 +1922,12 @@
   <data name="AboutTime_millisecond" xml:space="preserve">
     <value>Composant milliseconde.</value>
   </data>
+  <data name="AboutDateTime" xml:space="preserve">
+    <value>Crée une valeur représentant un instant dans le temps, exprimée sous forme de date et heure du jour.</value>
+    
+  </data>
   <data name="AboutYear" xml:space="preserve">
-    <value>Année retourne l’année d’une date donnée, un nombre supérieur à 1900.</value>
+    <value>Année retourne l’année d’une date donnée</value>
     
   </data>
   <data name="YearArg1" xml:space="preserve">
@@ -2338,15 +2342,15 @@
   <data name="AboutChar_column_of_numbers" xml:space="preserve">
     <value>Colonne de codes numériques du jeu de caractères sur votre plateforme.</value>
   </data>
-  <data name="AboutParseJson" xml:space="preserve">
+  <data name="AboutParseJSON" xml:space="preserve">
     <value>Convertit une chaîne JSON en objet.</value>
     
   </data>
-  <data name="ParseJsonArg1" xml:space="preserve">
+  <data name="ParseJSONArg1" xml:space="preserve">
     <value>entrée</value>
     
   </data>
-  <data name="AboutParseJson_input" xml:space="preserve">
+  <data name="AboutParseJSON_input" xml:space="preserve">
     <value>Chaîne JSON à traiter.</value>
   </data>
   <data name="AboutIndex" xml:space="preserve">
@@ -2365,7 +2369,8 @@
     <value>Une table.</value>
   </data>
   <data name="AboutIndex_index" xml:space="preserve">
-    <value>Index entier.</value>
+    <value>Index de l’enregistrement à récupérer.</value>
+    
   </data>
   <data name="Screen_Name_DisplayName" xml:space="preserve">
     <value>Nom</value>
@@ -3974,7 +3979,7 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidName_ShortMessage" xml:space="preserve">
-    <value>Le nom n’est pas valide. Cet identificateur n’est pas reconnu.</value>
+    <value>Le nom n’est pas valide. « {0} » n’est pas reconnu.</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidName_LongMessage" xml:space="preserve">
@@ -3985,6 +3990,21 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidName_Link_1" xml:space="preserve">
+    <value>Article : Référence de formule pour Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_ShortMessage" xml:space="preserve">
+    <value>Le nom n’est pas valide. Cet identificateur n’est pas reconnu.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_LongMessage" xml:space="preserve">
+    <value>Cette erreur se produit généralement lorsqu’une formule fait référence à un élément qui n’existe plus (par exemple, un contrôle que vous avez supprimé).</value>
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_HowToFix_1" xml:space="preserve">
+    <value>Supprimez ou corrigez la référence au nom qui n’est pas valide.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_Link_1" xml:space="preserve">
     <value>Article : Référence de formule pour Power Apps</value>
     
   </data>

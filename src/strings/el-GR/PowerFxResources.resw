@@ -1922,8 +1922,12 @@
   <data name="AboutTime_millisecond" xml:space="preserve">
     <value>Το στοιχείο χιλιοστού του δευτερολέπτου.</value>
   </data>
+  <data name="AboutDateTime" xml:space="preserve">
+    <value>Δημιουργεί μια τιμή που αναπαριστά μια χρονική στιγμή, η οποία εκφράζεται ως ημερομηνία και ώρα της ημέρας.</value>
+    
+  </data>
   <data name="AboutYear" xml:space="preserve">
-    <value>Το Έτος επιστρέφει το έτος μιας δεδομένης ημερομηνίας, έναν αριθμό μεγαλύτερο από 1900.</value>
+    <value>Το Έτος επιστρέφει το έτος μιας δεδομένης ημερομηνίας.</value>
     
   </data>
   <data name="YearArg1" xml:space="preserve">
@@ -2338,15 +2342,15 @@
   <data name="AboutChar_column_of_numbers" xml:space="preserve">
     <value>Στήλη κωδικών αριθμών από το σύνολο χαρακτήρων στην πλατφόρμα σας.</value>
   </data>
-  <data name="AboutParseJson" xml:space="preserve">
+  <data name="AboutParseJSON" xml:space="preserve">
     <value>Μετατρέπει μια συμβολοσειρά JSON σε αντικείμενο.</value>
     
   </data>
-  <data name="ParseJsonArg1" xml:space="preserve">
+  <data name="ParseJSONArg1" xml:space="preserve">
     <value>δεδομένα_εισόδου</value>
     
   </data>
-  <data name="AboutParseJson_input" xml:space="preserve">
+  <data name="AboutParseJSON_input" xml:space="preserve">
     <value>Μια συμβολοσειρά JSON για επεξεργασία.</value>
   </data>
   <data name="AboutIndex" xml:space="preserve">
@@ -2365,7 +2369,8 @@
     <value>Ένας πίνακας.</value>
   </data>
   <data name="AboutIndex_index" xml:space="preserve">
-    <value>Ακέραιος δείκτης.</value>
+    <value>Το ευρετήριο της καρτέλας προς ανάκτηση.</value>
+    
   </data>
   <data name="Screen_Name_DisplayName" xml:space="preserve">
     <value>Όνομα</value>
@@ -3974,7 +3979,7 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidName_ShortMessage" xml:space="preserve">
-    <value>Το όνομα δεν είναι έγκυρο. Αυτό το αναγνωριστικό δεν αναγνωρίζεται.</value>
+    <value>Το όνομα δεν είναι έγκυρο. Το '{0}' δεν αναγνωρίζεται.</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidName_LongMessage" xml:space="preserve">
@@ -3985,6 +3990,21 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidName_Link_1" xml:space="preserve">
+    <value>Άρθρο: Αναφορά τύπου για το Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_ShortMessage" xml:space="preserve">
+    <value>Το όνομα δεν είναι έγκυρο. Αυτό το αναγνωριστικό δεν αναγνωρίζεται.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_LongMessage" xml:space="preserve">
+    <value>Αυτό το σφάλμα εμφανίζεται συνήθως όταν ένας τύπος αναφέρεται σε κάτι το οποίο δεν υπάρχει πλέον (για παράδειγμα, ένα στοιχείο ελέγχου που έχετε διαγράψει).</value>
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_HowToFix_1" xml:space="preserve">
+    <value>Καταργήστε ή διορθώστε την αναφορά στο όνομα που δεν είναι έγκυρο.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_Link_1" xml:space="preserve">
     <value>Άρθρο: Αναφορά τύπου για το Power Apps</value>
     
   </data>
@@ -4482,11 +4502,11 @@
     
   </data>
   <data name="ErrorResource_ErrEmptyIsland_ShortMessage" xml:space="preserve">
-    <value>Empty expressions cannot appear inside an interpolated string.</value>
+    <value>Οι κενές παραστάσεις δεν είναι δυνατό να εμφανίζονται μέσα σε μια παρεμβαλλόμενη συμβολοσειρά.</value>
     
   </data>
   <data name="ErrorResource_ErrEmptyIsland_HowToFix_1" xml:space="preserve">
-    <value>Check for empty expressions inside the interpolated string.</value>
+    <value>Ελέγξτε για κενές παραστάσεις εντός της παρεμβαλλόμενης συμβολοσειράς.</value>
     
   </data>
   <data name="ErrorResource_ErrAsNotInContext_ShortMessage" xml:space="preserve">
