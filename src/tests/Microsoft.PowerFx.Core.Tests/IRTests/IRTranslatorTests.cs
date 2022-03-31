@@ -25,27 +25,17 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("Sum(numtable, Sum(val,0))", "Sum(val,0)", typeof(NumberType))]
         public void TestLazyEvalNode(string expression, string expectedFragment, Type type)
         {
-            var parameterType = new RecordType();
+            var tableType = new TableType()
+                .Add(new NamedFormulaType("val", FormulaType.Number));
 
-            var tableType = new TableType();
-            tableType = tableType.Add(new NamedFormulaType("val", FormulaType.Number));
+            var parameterType = new RecordType()
+                .Add(new NamedFormulaType("numtable", tableType));
 
-            parameterType = parameterType.Add(new NamedFormulaType("numtable", tableType));
-
-            var formula = new Formula(expression);
-            formula.EnsureParsed(TexlParser.Flags.None);
-
-            var binding = TexlBinding.Run(
-                new Glue2DocumentBinderGlue(),
-                formula.ParseTree,
-                new SimpleResolver(_enumStore.EnumSymbols),
-                ruleScope: parameterType._type,
-                useThisRecordForRuleScope: false);
-
-            Assert.False(formula.HasParseErrors);
-            Assert.False(binding.ErrorContainer.HasErrors());
-
-            (var irNode, var ruleScopeSymbol) = IRTranslator.Translate(binding);
+            var engine = new Engine(new PowerFxConfig());
+            var result = engine.Check(expression, parameterType);
+            result.ThrowOnErrors();
+            
+            (var irNode, var ruleScopeSymbol) = IRTranslator.Translate(result._binding);
            
             var callNode = (CallNode)irNode;
 
