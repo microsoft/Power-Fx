@@ -17,9 +17,11 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
     public abstract class VariadicBase : TexlNode
     {
         /// <summary>
-        /// The list of children nodes.
+        /// The list of child nodes.
         /// </summary>
-        public IReadOnlyList<TexlNode> Children { get; }
+        public IReadOnlyList<TexlNode> ChildNodes => Children;
+
+        internal readonly TexlNode[] Children;
 
         // Takes ownership of the array.
         private protected VariadicBase(ref int idNext, Token primaryToken, SourceList sourceList, TexlNode[] children)
@@ -50,7 +52,7 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
 
         internal TexlNode[] CloneChildren(ref int idNext, Span ts)
         {
-            var clones = new TexlNode[Children.Count];
+            var clones = new TexlNode[Children.Length];
             for (var x = 0; x < clones.Length; x++)
             {
                 clones[x] = Children[x].Clone(ref idNext, ts);
