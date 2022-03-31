@@ -124,7 +124,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Core.Syntax.Nodes.VariadicOpNode",
                 "Microsoft.PowerFx.Core.Lexer.BinaryOp",
                 "Microsoft.PowerFx.Core.Lexer.UnaryOp",
-                "Microsoft.PowerFx.Core.Lexer.VariadicOp"
+                "Microsoft.PowerFx.Core.Lexer.VariadicOp",
                 "Microsoft.PowerFx.Core.DisplayNameUtility",
             };
 
