@@ -42,17 +42,17 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
         /// <summary>
         /// True if the name uses dots, e.g. A.B.C.
         /// </summary>
-        public bool UsesDot => Token.Kind == TokKind.Dot;
+        internal bool UsesDot => Token.Kind == TokKind.Dot;
 
         /// <summary>
         /// True if the name uses bangs, e.g. A!B!C.
         /// </summary>
-        public bool UsesBang => Token.Kind == TokKind.Bang;
+        internal bool UsesBang => Token.Kind == TokKind.Bang;
 
         /// <summary>
         /// True if the name uses brackets, e.g. A[B].
         /// </summary>
-        public bool UsesBracket => Token.Kind == TokKind.BracketOpen;
+        internal bool UsesBracket => Token.Kind == TokKind.BracketOpen;
 
         internal DottedNameNode(ref int idNext, Token primaryToken, SourceList sourceList, TexlNode left, Identifier right, TexlNode rightNode)
             : base(ref idNext, primaryToken, sourceList)
