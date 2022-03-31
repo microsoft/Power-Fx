@@ -1,16 +1,18 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Newtonsoft.Json.Serialization;
 using Xunit;
 
 namespace Microsoft.PowerFx.Core.Tests
 {
     public class PublicSurfaceTests
     {
+        private static readonly Type TexlNodeType = typeof(Syntax.Nodes.TexlNode);
+
         [Fact]
         public void Test()
         {
@@ -143,5 +145,55 @@ namespace Microsoft.PowerFx.Core.Tests
             // Types we expect to be in the assembly are all there. 
             Assert.Empty(allowed);
         }
+
+        [Fact]
+        public void TestTexlNodeTypes()
+        {
+            var sb = new StringBuilder();
+
+            var asm = typeof(Syntax.Nodes.TexlNode).Assembly;
+            var types = asm.GetTypes().Where(IsTexlNodePublicType).ToList();
+            Assert.True(types.Count > 0, "No types found");
+
+            foreach (var type in types)
+            {
+                var fullName = type.FullName;
+
+                // Should be abstract or sealed
+                if (!(type.IsSealed || type.IsAbstract))
+                {
+                    sb.AppendLine($"{fullName} is neither abstract nor sealed");
+                }
+
+                // All ctors should be internal
+                foreach (var ctor in type.GetConstructors())
+                {
+                    if (ctor.IsPublic)
+                    {
+                        sb.AppendLine($"{fullName}.{ctor.Name} constructor is public");
+                    }
+                }
+
+                foreach (var field in type.GetFields())
+                {
+                    if (field.IsPublic)
+                    {
+                        sb.AppendLine($"{fullName}.{field.Name} field is public");
+                    }
+                }
+            }
+
+            Assert.True(sb.Length == 0, $"TexlNode errors: {sb}");
+        }
+
+        private static bool IsTexlNodePublicType(Type t) => t.IsPublic && IsSubclassOrEqual(t, TexlNodeType);
+
+        /// <summary>
+        ///     Checks whether <see cref="t1" /> is equal to or subclass of to <see cref="t2" />.
+        /// </summary>
+        /// <param name="t1"></param>
+        /// <param name="t2"></param>
+        /// <returns></returns>
+        private static bool IsSubclassOrEqual(Type t1, Type t2) => t1.Equals(t2) || t1.IsSubclassOf(t2);
     }
 }
