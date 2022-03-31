@@ -290,7 +290,7 @@ namespace Microsoft.PowerFx.Core.Functions
 
         // The function's fully qualified locale-specific name, including the namespace.
         // If the function is in the global namespace, this.QualifiedName is the same as this.Name.
-        public string QualifiedName => Namespace.IsRoot ? Name : Namespace.ToDottedSyntax(TexlLexer.PunctuatorDot, escapeInnerName: true) + TexlLexer.PunctuatorDot + TexlLexer.EscapeName(Name);
+        public string QualifiedName => Namespace.IsRoot ? Name : Namespace.ToDottedSyntax() + TexlLexer.PunctuatorDot + TexlLexer.EscapeName(Name);
 
         public TexlFunction(
             DPath theNamespace,

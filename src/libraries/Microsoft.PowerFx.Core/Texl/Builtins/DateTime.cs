@@ -95,6 +95,29 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         }
     }
 
+    // DateTime(year, month, day, hour, minute, second[, millisecond])
+    internal sealed class DateTimeFunction : BuiltinFunction
+    {
+        public override bool RequiresErrorContext => true;
+
+        public override bool IsSelfContained => true;
+
+        public override bool HasPreciseErrors => true;
+
+        public override bool SupportsParamCoercion => true;
+
+        public DateTimeFunction()
+            : base("DateTime", TexlStrings.AboutTime, FunctionCategories.DateTime, DType.DateTime, 0, 6, 7, DType.Number, DType.Number, DType.Number, DType.Number, DType.Number, DType.Number, DType.Number)
+        {
+        }
+
+        public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
+        {
+            yield return new[] { TexlStrings.DateArg1, TexlStrings.DateArg2, TexlStrings.DateArg3, TexlStrings.TimeArg1, TexlStrings.TimeArg2, TexlStrings.TimeArg3 };
+            yield return new[] { TexlStrings.DateArg1, TexlStrings.DateArg2, TexlStrings.DateArg3, TexlStrings.TimeArg1, TexlStrings.TimeArg2, TexlStrings.TimeArg3, TexlStrings.TimeArg4 };
+        }
+    }
+
     // Year()
     // Equivalent DAX/Excel function: Year
     internal sealed class YearFunction : ExtractDateTimeFunctionBase

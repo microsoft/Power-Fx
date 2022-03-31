@@ -1922,8 +1922,12 @@
   <data name="AboutTime_millisecond" xml:space="preserve">
     <value>Komponen milisaat.</value>
   </data>
+  <data name="AboutDateTime" xml:space="preserve">
+    <value>Mencipta nilai yang mewakili kesegeraan masa yang dinyatakan sebagai tarikh dan masa dalam sehari.</value>
+    
+  </data>
   <data name="AboutYear" xml:space="preserve">
-    <value>Tahun mengembalikan tahun bagi suatu tarikh yang diberikan yang nombornya lebih besar daripada 1900.</value>
+    <value>Tahun mengembalikan tahun untuk suatu tarikh yang diberikan.</value>
     
   </data>
   <data name="YearArg1" xml:space="preserve">
@@ -2338,15 +2342,15 @@
   <data name="AboutChar_column_of_numbers" xml:space="preserve">
     <value>Lajur nombor kod daripada set aksara pada platform anda.</value>
   </data>
-  <data name="AboutParseJson" xml:space="preserve">
+  <data name="AboutParseJSON" xml:space="preserve">
     <value>Menukar rentetan JSON kepada objek.</value>
     
   </data>
-  <data name="ParseJsonArg1" xml:space="preserve">
+  <data name="ParseJSONArg1" xml:space="preserve">
     <value>input</value>
     
   </data>
-  <data name="AboutParseJson_input" xml:space="preserve">
+  <data name="AboutParseJSON_input" xml:space="preserve">
     <value>Rentetan JSON untuk diproses.</value>
   </data>
   <data name="AboutIndex" xml:space="preserve">
@@ -2365,7 +2369,8 @@
     <value>Jadual.</value>
   </data>
   <data name="AboutIndex_index" xml:space="preserve">
-    <value>Indeks integer.</value>
+    <value>Indeks rekod yang akan diambil.</value>
+    
   </data>
   <data name="Screen_Name_DisplayName" xml:space="preserve">
     <value>Nama</value>
@@ -3974,7 +3979,7 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidName_ShortMessage" xml:space="preserve">
-    <value>Nama tidak sah. Pengecam ini tidak dikenali.</value>
+    <value>Nama tidak sah. '{0}' ini tidak dikenali.</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidName_LongMessage" xml:space="preserve">
@@ -3985,6 +3990,21 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidName_Link_1" xml:space="preserve">
+    <value>Artikel: Rujukan formula untuk Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_ShortMessage" xml:space="preserve">
+    <value>Nama tidak sah. Pengecam ini tidak dikenali.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_LongMessage" xml:space="preserve">
+    <value>Ralat ini muncul paling biasa apabila formula merujuk pada sesuatu yang tidak lagi wujud (contohnya, kawalan yang telah dipadamkan).</value>
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_HowToFix_1" xml:space="preserve">
+    <value>Alih keluar atau betulkan rujukan kepada nama yang tidak sah.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_Link_1" xml:space="preserve">
     <value>Artikel: Rujukan formula untuk Power Apps</value>
     
   </data>

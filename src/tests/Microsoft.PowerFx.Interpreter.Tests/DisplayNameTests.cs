@@ -129,11 +129,11 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         public void OptionSetDisplayNames(string inputExpression, string outputExpression, bool toDisplay, string optionSetDisplayName)
         {            
             var config = new PowerFxConfig(null);
-            var optionSet = new OptionSet("OptionSet", new Dictionary<string, string>() 
+            var optionSet = new OptionSet("OptionSet", DisplayNameUtility.MakeUnique(new Dictionary<string, string>() 
             {
                     { "option_1", "Option1" },
                     { "option_2", "Option2" }
-            });
+            }));
 
             config.AddOptionSet(optionSet, string.IsNullOrEmpty(optionSetDisplayName) ? default : new DName(optionSetDisplayName));
             
@@ -155,17 +155,17 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         public void PowerFxConfigCollisionsThrow()
         {
             var config = new PowerFxConfig(null);
-            var optionSet = new OptionSet("OptionSet", new Dictionary<string, string>() 
+            var optionSet = new OptionSet("OptionSet", DisplayNameUtility.MakeUnique(new Dictionary<string, string>() 
             {
                     { "option_1", "Option1" },
                     { "option_2", "Option2" }
-            });
+            }));
 
-            var otherOptionSet = new OptionSet("OtherOptionSet", new Dictionary<string, string>() 
+            var otherOptionSet = new OptionSet("OtherOptionSet", DisplayNameUtility.MakeUnique(new Dictionary<string, string>() 
             {
                     { "option_1", "Option1" },
                     { "option_2", "Option2" }
-            });
+            }));
             config.AddEntity(optionSet, new DName("SomeDisplayName"));
 
             Assert.Throws<NameCollisionException>(() => config.AddEntity(otherOptionSet, new DName("OptionSet")));

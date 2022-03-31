@@ -3,6 +3,7 @@
 
 using System;
 using System.Diagnostics;
+using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.IR.Nodes;
 using Microsoft.PowerFx.Core.Public.Values;
@@ -22,9 +23,10 @@ namespace Microsoft.PowerFx
             _tree = node;
         }
 
-        public FormulaValue Eval(EvalVisitor runner, SymbolContext context)
+        public async ValueTask<FormulaValue> EvalAsync(EvalVisitor runner, SymbolContext context)
         {
-            var result = _tree.Accept(runner, context);
+            runner.CheckCancel();
+            var result = await _tree.Accept(runner, context);
             return result;
         }
 

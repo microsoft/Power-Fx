@@ -1922,8 +1922,12 @@
   <data name="AboutTime_millisecond" xml:space="preserve">
     <value>Component de mil·lisegon.</value>
   </data>
+  <data name="AboutDateTime" xml:space="preserve">
+    <value>Crea un valor que representa un moment determina, expressat com una data i hora del dia.</value>
+    
+  </data>
   <data name="AboutYear" xml:space="preserve">
-    <value>Any retorna l'any d'una data proporcionada, un nombre més gran que 1900.</value>
+    <value>Any retorna l'any d'una data proporcionada.</value>
     
   </data>
   <data name="YearArg1" xml:space="preserve">
@@ -2338,15 +2342,15 @@
   <data name="AboutChar_column_of_numbers" xml:space="preserve">
     <value>Columna de números de codi del joc de caràcters de la plataforma.</value>
   </data>
-  <data name="AboutParseJson" xml:space="preserve">
+  <data name="AboutParseJSON" xml:space="preserve">
     <value>Converteix una cadena JSON en un objecte.</value>
     
   </data>
-  <data name="ParseJsonArg1" xml:space="preserve">
+  <data name="ParseJSONArg1" xml:space="preserve">
     <value>entrada</value>
     
   </data>
-  <data name="AboutParseJson_input" xml:space="preserve">
+  <data name="AboutParseJSON_input" xml:space="preserve">
     <value>Cadena JSON per processar.</value>
   </data>
   <data name="AboutIndex" xml:space="preserve">
@@ -2365,7 +2369,8 @@
     <value>Taula.</value>
   </data>
   <data name="AboutIndex_index" xml:space="preserve">
-    <value>Un índex enter.</value>
+    <value>Índex del registre que s'ha de recuperar.</value>
+    
   </data>
   <data name="Screen_Name_DisplayName" xml:space="preserve">
     <value>Nom</value>
@@ -3974,7 +3979,7 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidName_ShortMessage" xml:space="preserve">
-    <value>El nom no és vàlid. Aquest identificador no es reconeix.</value>
+    <value>El nom no és vàlid. "{0}" no es reconeix.</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidName_LongMessage" xml:space="preserve">
@@ -3985,6 +3990,21 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidName_Link_1" xml:space="preserve">
+    <value>Article: Referència de fórmules del Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_ShortMessage" xml:space="preserve">
+    <value>El nom no és vàlid. Aquest identificador no es reconeix.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_LongMessage" xml:space="preserve">
+    <value>Aquest error apareix més habitualment quan una fórmula fa referència a alguna cosa que ja no existeix (per exemple, un control que hàgiu suprimit).</value>
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_HowToFix_1" xml:space="preserve">
+    <value>Suprimiu o corregiu la referència al nom que no és vàlid.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_Link_1" xml:space="preserve">
     <value>Article: Referència de fórmules del Power Apps</value>
     
   </data>

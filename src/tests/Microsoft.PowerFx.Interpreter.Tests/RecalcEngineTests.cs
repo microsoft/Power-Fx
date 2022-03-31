@@ -5,12 +5,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Public;
 using Microsoft.PowerFx.Core.Public.Types;
 using Microsoft.PowerFx.Core.Public.Values;
 using Microsoft.PowerFx.Core.Texl;
+using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
 using Xunit;
 using Xunit.Sdk;
@@ -409,7 +411,7 @@ namespace Microsoft.PowerFx.Tests
             
             var recalcEngine = new RecalcEngine(config);
 
-            var optionSet = new OptionSet("foo", new Dictionary<string, string>() { { "one key", "one value" } });
+            var optionSet = new OptionSet("foo", DisplayNameUtility.MakeUnique(new Dictionary<string, string>() { { "one key", "one value" } }));
             Assert.Throws<InvalidOperationException>(() => config.AddFunction(BuiltinFunctionsCore.Abs));
             Assert.Throws<InvalidOperationException>(() => config.AddOptionSet(optionSet));
 
@@ -423,11 +425,11 @@ namespace Microsoft.PowerFx.Tests
         {
             var config = new PowerFxConfig(null);
 
-            var optionSet = new OptionSet("OptionSet", new Dictionary<string, string>() 
+            var optionSet = new OptionSet("OptionSet", DisplayNameUtility.MakeUnique(new Dictionary<string, string>() 
             {
                     { "option_1", "Option1" },
                     { "option_2", "Option2" }
-            });
+            }));
             
             config.AddOptionSet(optionSet);            
             var recalcEngine = new RecalcEngine(config);
@@ -441,11 +443,11 @@ namespace Microsoft.PowerFx.Tests
         {
             var config = new PowerFxConfig(null);
 
-            var optionSet = new OptionSet("FooOs", new Dictionary<string, string>() 
+            var optionSet = new OptionSet("FooOs", DisplayNameUtility.MakeUnique(new Dictionary<string, string>() 
             {
                     { "option_1", "Option1" },
                     { "option_2", "Option2" }
-            });
+            }));
             
             config.AddOptionSet(optionSet);            
             var recalcEngine = new RecalcEngine(config);
@@ -454,6 +456,41 @@ namespace Microsoft.PowerFx.Tests
             Assert.True(checkResult.IsSuccess);
             var osvaluetype = Assert.IsType<OptionSetValueType>(checkResult.ReturnType);
             Assert.Equal("FooOs", osvaluetype.OptionSetName);
+        }              
+
+        [Fact]
+        public void OptionSetChecksWithMakeUniqueCollision()
+        {
+            var config = new PowerFxConfig(null);
+
+            var optionSet = new OptionSet("OptionSet", DisplayNameUtility.MakeUnique(new Dictionary<string, string>() 
+            {
+                    { "foo", "Option1" },
+                    { "bar", "Option2" },
+                    { "baz", "foo" }
+            }));
+            
+            config.AddEntity(optionSet, new DName("SomeDisplayName"));
+            var recalcEngine = new RecalcEngine(config);
+
+            var checkResult = recalcEngine.Check("SomeDisplayName.Option1 <> SomeDisplayName.'foo (baz)'");
+            Assert.True(checkResult.IsSuccess);
+        }
+
+        [Fact]
+        public void EmptyEnumStoreTest()
+        {
+            var config = PowerFxConfig.BuildWithEnumStore(null, new EmptyEnumStore());
+
+            var recalcEngine = new RecalcEngine(config);
+
+            var checkResult = recalcEngine.Check("SortOrder.Ascending");
+            Assert.True(checkResult.IsSuccess);
+            Assert.IsType<StringType>(checkResult.ReturnType);
+
+            var enums = config.EnumStore.Enums();
+
+            Assert.True(enums.Count() > 0);
         }
 
         #region Test

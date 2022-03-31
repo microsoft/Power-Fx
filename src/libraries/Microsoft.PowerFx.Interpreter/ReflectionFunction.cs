@@ -4,6 +4,8 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Public.Types;
@@ -152,5 +154,11 @@ namespace Microsoft.PowerFx
 
             return (FormulaValue)result;
         }
+    }
+
+    // A function capable of async invokes. 
+    internal interface IAsyncTexlFunction
+    {
+        Task<FormulaValue> InvokeAsync(FormulaValue[] args, CancellationToken cancel);
     }
 }

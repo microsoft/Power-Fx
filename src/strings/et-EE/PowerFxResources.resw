@@ -1922,8 +1922,12 @@
   <data name="AboutTime_millisecond" xml:space="preserve">
     <value>Millisekundikomponent.</value>
   </data>
+  <data name="AboutDateTime" xml:space="preserve">
+    <value>Loob väärtuse, mis tähistab hetke ajas ning mida väljendatakse kuupäeva ja kellaajana.</value>
+    
+  </data>
   <data name="AboutYear" xml:space="preserve">
-    <value>Aasta tagastab määratud kuupäeva aasta, mis on 1900-st suurem arv.</value>
+    <value>Aasta tagastab määratud kuupäeva aasta.</value>
     
   </data>
   <data name="YearArg1" xml:space="preserve">
@@ -2338,15 +2342,15 @@
   <data name="AboutChar_column_of_numbers" xml:space="preserve">
     <value>Teie platvormi märgistikust pärit koodide veerg.</value>
   </data>
-  <data name="AboutParseJson" xml:space="preserve">
+  <data name="AboutParseJSON" xml:space="preserve">
     <value>Teisendab JSON-stringi objektiks.</value>
     
   </data>
-  <data name="ParseJsonArg1" xml:space="preserve">
+  <data name="ParseJSONArg1" xml:space="preserve">
     <value>sisend</value>
     
   </data>
-  <data name="AboutParseJson_input" xml:space="preserve">
+  <data name="AboutParseJSON_input" xml:space="preserve">
     <value>Töödeldav JSON-string.</value>
   </data>
   <data name="AboutIndex" xml:space="preserve">
@@ -2365,7 +2369,8 @@
     <value>Tabel.</value>
   </data>
   <data name="AboutIndex_index" xml:space="preserve">
-    <value>Täisarvuline register.</value>
+    <value>Toodava kirje register.</value>
+    
   </data>
   <data name="Screen_Name_DisplayName" xml:space="preserve">
     <value>Nimi</value>
@@ -3974,7 +3979,7 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidName_ShortMessage" xml:space="preserve">
-    <value>Nimi ei sobi. Identifikaatorit ei tuvastatud.</value>
+    <value>Nimi ei sobi. Üksust {0} ei tuvastatud.</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidName_LongMessage" xml:space="preserve">
@@ -3985,6 +3990,21 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidName_Link_1" xml:space="preserve">
+    <value>Artikkel: Power Appsi valemiviide</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_ShortMessage" xml:space="preserve">
+    <value>Nimi ei sobi. Identifikaatorit ei tuvastatud.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_LongMessage" xml:space="preserve">
+    <value>See tõrge ilmneb kõige sagedamini siis, kui valem viitab millelegi, mida pole enam olemas (näiteks kustutatud juhtelement).</value>
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_HowToFix_1" xml:space="preserve">
+    <value>Eemaldage või parandage viide nimele, mis pole sobiv.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_Link_1" xml:space="preserve">
     <value>Artikkel: Power Appsi valemiviide</value>
     
   </data>
@@ -4482,11 +4502,11 @@
     
   </data>
   <data name="ErrorResource_ErrEmptyIsland_ShortMessage" xml:space="preserve">
-    <value>Empty expressions cannot appear inside an interpolated string.</value>
+    <value>Tühjad avaldised ei tohi ilmuda interpoleeritud stringis.</value>
     
   </data>
   <data name="ErrorResource_ErrEmptyIsland_HowToFix_1" xml:space="preserve">
-    <value>Check for empty expressions inside the interpolated string.</value>
+    <value>Kontrollige tühjasid avaldisi interpoleeritud stringis.</value>
     
   </data>
   <data name="ErrorResource_ErrAsNotInContext_ShortMessage" xml:space="preserve">

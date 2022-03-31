@@ -42,6 +42,14 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
             PropertyNameCaseInsensitive = true
         };
 
+        public delegate void OnLogUnhandledExceptionHandler(Exception e);
+
+        /// <summary>
+        /// Callback for host to get notified of unhandled exceptions that are happening asynchronously.
+        /// This should be used for logging purposes. 
+        /// </summary>
+        public event OnLogUnhandledExceptionHandler LogUnhandledExceptionHandler;
+
         public LanguageServer(SendToClient sendToClient, IPowerFxScopeFactory scopeFactory)
         {
             Contracts.AssertValue(sendToClient);
@@ -111,7 +119,9 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
             }
             catch (Exception ex)
             {
-                _sendToClient(JsonRpcHelper.CreateErrorResult(id, ex.Message));
+                LogUnhandledExceptionHandler?.Invoke(ex);
+
+                _sendToClient(JsonRpcHelper.CreateErrorResult(id, JsonRpcHelper.ErrorCode.InternalError, ex.Message));
                 return;
             }
         }
