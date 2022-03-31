@@ -10,6 +10,9 @@ using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Core.Syntax.Nodes
 {
+    /// <summary>
+    /// Boolean literal parse node (true, false).
+    /// </summary>
     public sealed class BoolLitNode : TexlNode
     {
         internal BoolLitNode(ref int idNext, Token tok)
@@ -24,6 +27,9 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
             return new BoolLitNode(ref idNext, Token.Clone(ts));
         }
 
+        /// <summary>
+        /// The boolean value of the literal.
+        /// </summary>
         public bool Value => Token.Kind == TokKind.True;
 
         /// <inheritdoc />

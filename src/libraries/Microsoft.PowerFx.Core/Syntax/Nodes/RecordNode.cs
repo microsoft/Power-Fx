@@ -11,12 +11,20 @@ using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Core.Syntax.Nodes
 {
+    /// <summary>
+    /// Record expression parse node.
+    /// 
+    /// <code>{X1: E1, X2: E2, ...}</code>
+    /// </summary>
     public sealed class RecordNode : VariadicBase
     {
         internal readonly Token[] Commas;
         internal readonly Token[] Colons;
 
-        public Identifier[] Ids { get; }
+        /// <summary>
+        /// The record identifier names (i.e., field names).
+        /// </summary>
+        public IReadOnlyList<Identifier> Ids { get; }
 
         // CurlyClose can be null.
         internal readonly Token CurlyClose;
@@ -53,13 +61,13 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
         {
             var children = CloneChildren(ref idNext, ts);
             var newNodes = new Dictionary<TexlNode, TexlNode>();
-            for (var i = 0; i < Children.Length; ++i)
+            for (var i = 0; i < Children.Count; ++i)
             {
                 newNodes.Add(Children[i], children[i]);
             }
 
-            var newIdentifiers = new Identifier[Ids.Length];
-            for (var x = 0; x < Ids.Length; x++)
+            var newIdentifiers = new Identifier[Ids.Count];
+            for (var x = 0; x < Ids.Count; x++)
             {
                 newIdentifiers[x] = Ids[x].Clone(ts);
             }

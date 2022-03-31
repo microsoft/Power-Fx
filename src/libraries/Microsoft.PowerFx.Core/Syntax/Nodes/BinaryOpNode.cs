@@ -12,12 +12,26 @@ using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Core.Syntax.Nodes
 {
+    /// <summary>
+    /// Binary operation parse node. Example:
+    /// 
+    /// <code>Left BinaryOp Right</code>
+    /// </summary>
     public sealed class BinaryOpNode : TexlNode
     {
+        /// <summary>
+        /// Left operand of the binary operation.
+        /// </summary>
         public TexlNode Left { get; }
 
+        /// <summary>
+        /// Right operand of the binary operation.
+        /// </summary>
         public TexlNode Right { get; }
 
+        /// <summary>
+        /// The binary operator.
+        /// </summary>
         public BinaryOp Op { get; }
 
         internal BinaryOpNode(ref int idNext, Token primaryToken, SourceList sourceList, BinaryOp op, TexlNode left, TexlNode right)

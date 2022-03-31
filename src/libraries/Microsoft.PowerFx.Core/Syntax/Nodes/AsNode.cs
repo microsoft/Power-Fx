@@ -10,10 +10,21 @@ using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Core.Syntax.Nodes
 {
+    /// <summary>
+    /// As operator parse node. Example:
+    /// 
+    /// <code>Left As Identifier</code>
+    /// </summary>
     public sealed class AsNode : TexlNode
     {
+        /// <summary>
+        /// Left operand of the as operator.
+        /// </summary>
         public TexlNode Left { get; }
 
+        /// <summary>
+        /// Right operand (identifier) of the as operator.
+        /// </summary>
         public Identifier Right { get; }
 
         internal AsNode(ref int idNext, Token primaryToken, SourceList sourceList, TexlNode left, Identifier right)

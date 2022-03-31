@@ -11,6 +11,11 @@ using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Core.Syntax.Nodes
 {
+    /// <summary>
+    /// Table expression parse node. Example:
+    /// 
+    /// <code>[E1, ...]</code>
+    /// </summary>
     public sealed class TableNode : VariadicBase
     {
         internal readonly Token[] Commas;
@@ -34,7 +39,7 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
         {
             var children = CloneChildren(ref idNext, ts);
             var newNodes = new Dictionary<TexlNode, TexlNode>();
-            for (var i = 0; i < Children.Length; ++i)
+            for (var i = 0; i < Children.Count; ++i)
             {
                 newNodes.Add(Children[i], children[i]);
             }

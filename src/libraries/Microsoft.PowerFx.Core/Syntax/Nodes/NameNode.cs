@@ -8,6 +8,9 @@ using Microsoft.PowerFx.Core.Syntax.SourceInformation;
 
 namespace Microsoft.PowerFx.Core.Syntax.Nodes
 {
+    /// <summary>
+    /// Base class for all parse nodes representing a name/identifier.
+    /// </summary>
     public abstract class NameNode : TexlNode
     {
         private protected NameNode(ref int idNext, Token primaryToken, SourceList sourceList)

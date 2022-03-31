@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.PowerFx.Core.Lexer.Tokens;
 using Microsoft.PowerFx.Core.Localization;
@@ -10,11 +11,15 @@ using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Core.Syntax.Nodes
 {
-    // Base for all variadic nodes.
+    /// <summary>
+    /// Base class for all variadic (i.e., with variable number of children) parse nodes.
+    /// </summary>
     public abstract class VariadicBase : TexlNode
     {
-        // TODO: Would IReadOnlyList<TexlNode> work better here?
-        public TexlNode[] Children { get; }
+        /// <summary>
+        /// The list of children nodes.
+        /// </summary>
+        public IReadOnlyList<TexlNode> Children { get; }
 
         // Takes ownership of the array.
         private protected VariadicBase(ref int idNext, Token primaryToken, SourceList sourceList, TexlNode[] children)
@@ -45,7 +50,7 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
 
         internal TexlNode[] CloneChildren(ref int idNext, Span ts)
         {
-            var clones = new TexlNode[Children.Length];
+            var clones = new TexlNode[Children.Count];
             for (var x = 0; x < clones.Length; x++)
             {
                 clones[x] = Children[x].Clone(ref idNext, ts);

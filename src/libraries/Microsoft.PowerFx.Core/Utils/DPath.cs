@@ -11,8 +11,10 @@ using Conditional = System.Diagnostics.ConditionalAttribute;
 
 namespace Microsoft.PowerFx.Core.Utils
 {
-    // A path is essentially a list of simple names, starting at "root".
-    // TASK: 67008 - Make this public, or expose a public shim in Document.
+    /// <summary>
+    /// A list of simple names (<see cref="DName" />), starting at "root" (<see cref="Root" />).
+    /// </summary>
+    /// // TASK: 67008 - Make this public, or expose a public shim in Document.
     [ThreadSafeImmutable]
     public struct DPath : IEquatable<DPath>, ICheckable
     {
@@ -89,6 +91,9 @@ namespace Microsoft.PowerFx.Core.Utils
         // The "root" is indicated by null.
         private readonly Node _node;
 
+        /// <summary>
+        /// The "root" path.
+        /// </summary>
         public static DPath Root { get; } = default;
 
         private DPath(Node node)
@@ -112,16 +117,36 @@ namespace Microsoft.PowerFx.Core.Utils
             Contracts.Assert(IsValid);
         }
 
+        /// <summary>
+        /// The parent path.
+        /// </summary>
         public DPath Parent => _node == null ? this : new DPath(_node.Parent);
 
+        /// <summary>
+        /// The topmost name of the path.
+        /// </summary>
         public DName Name => _node == null ? default : _node.Name;
 
+        /// <summary>
+        /// The length (number of simple names) of the path.
+        /// </summary>
         public int Length => _node == null ? 0 : _node.Length;
 
+        /// <summary>
+        /// Whether this path is root.
+        /// </summary>
         public bool IsRoot => _node == null;
 
+        /// <summary>
+        /// Whether this path is valid.
+        /// </summary>
         public bool IsValid => _node == null || _node.IsValid;
 
+        /// <summary>
+        /// A name at some index.
+        /// </summary>
+        /// <param name="index">Index of the name in the path.</param>
+        /// <returns></returns>
         public DName this[int index]
         {
             get
@@ -137,12 +162,22 @@ namespace Microsoft.PowerFx.Core.Utils
             }
         }
 
+        /// <summary>
+        /// Creates a new path by appending a new simple name.
+        /// </summary>
+        /// <param name="name">The simple name to append.</param>
+        /// <returns></returns>
         public readonly DPath Append(DName name)
         {
             Contracts.Assert(name.IsValid);
             return new DPath(this, name);
         }
 
+        /// <summary>
+        /// Creates a new path by appending another path to this one.
+        /// </summary>
+        /// <param name="path">The path to append.</param>
+        /// <returns></returns>
         public DPath Append(DPath path)
         {
             AssertValid();
@@ -180,7 +215,7 @@ namespace Microsoft.PowerFx.Core.Utils
             return new DPath(node);
         }
 
-        public DPath GoUp(int count)
+        internal DPath GoUp(int count)
         {
             Contracts.AssertIndexInclusive(count, Length);
             return new DPath(GoUpCore(count));
@@ -199,6 +234,7 @@ namespace Microsoft.PowerFx.Core.Utils
             return node;
         }
 
+        /// <inheritdoc />
         public override string ToString()
         {
             if (IsRoot)
@@ -234,7 +270,12 @@ namespace Microsoft.PowerFx.Core.Utils
             return sb.ToString();
         }
 
-        // Convert this DPath to a string in dotted syntax, such as "screen1.group6.label3"
+        /// <summary>
+        /// Converts this path to a dotted syntax (e.g., Name1.Name2...)
+        /// </summary>
+        /// <param name="punctuator">The string to use as dot.</param>
+        /// <param name="escapeInnerName">Whether to escape inner names.</param>
+        /// <returns></returns>
         public string ToDottedSyntax(string punctuator = ".", bool escapeInnerName = false)
         {
             Contracts.AssertNonEmpty(punctuator);
@@ -267,8 +308,12 @@ namespace Microsoft.PowerFx.Core.Utils
             return sb.ToString();
         }
 
-        // Convert a path specified as a string to a DPath.
-        // Does not support individual path segments that contain '.' and '!' characters.
+        /// <summary>
+        /// Parses a path in dotted syntax (e.g., Name1.Name2...)
+        /// </summary>
+        /// <param name="dotted">The dotted string to parse.</param>
+        /// <param name="path">The resulting path (if any).</param>
+        /// <returns>Whether the parse was successful.</returns>
         public static bool TryParse(string dotted, out DPath path)
         {
             Contracts.AssertValue(dotted);

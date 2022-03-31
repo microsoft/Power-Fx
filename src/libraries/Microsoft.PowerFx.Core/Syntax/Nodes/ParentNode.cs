@@ -9,6 +9,9 @@ using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Core.Syntax.Nodes
 {
+    /// <summary>
+    /// Parent identifier parse node.
+    /// </summary>
     public sealed class ParentNode : NameNode
     {
         internal ParentNode(ref int idNext, Token tok)

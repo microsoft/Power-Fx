@@ -5,9 +5,10 @@ using System;
 
 namespace Microsoft.PowerFx.Core.Utils
 {
-    // DName refers to a string that is valid as the name of a table/column.
-    // That is any string that:
-    // - does not consist entirely of space characters.
+    /// <summary>
+    /// A string representing a valid name of a table, column or variable name.
+    /// A valid name does not consist entirely of space characters.
+    /// </summary>
     [ThreadSafeImmutable]
     public struct DName : ICheckable, IEquatable<DName>, IEquatable<string>
     {
@@ -15,28 +16,45 @@ namespace Microsoft.PowerFx.Core.Utils
         private const char ChSpace = ' ';
         private readonly string _value;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DName"/> struct.
+        /// </summary>
+        /// <param name="value">The value of the name.</param>
         public DName(string value)
         {
             Contracts.Assert(IsValidDName(value));
             _value = value;
         }
 
+        /// <summary>
+        /// The value of the name.
+        /// </summary>
         public string Value => _value ?? string.Empty;
 
+        /// <summary>
+        /// Whether the name is valid.
+        /// </summary>
         public bool IsValid => _value != null;
 
+        /// <summary>
+        /// String representation of the name value.
+        /// </summary>
+        /// <param name="name"></param>
         public static implicit operator string(DName name) => name.Value;
 
+        /// <inheritdoc />
         public override string ToString()
         {
             return Value;
         }
 
+        /// <inheritdoc />
         public override int GetHashCode()
         {
             return Value.GetHashCode();
         }
 
+        /// <inheritdoc />
         public override bool Equals(object obj)
         {
             Contracts.AssertValueOrNull(obj);
@@ -49,11 +67,21 @@ namespace Microsoft.PowerFx.Core.Utils
             return Equals((DName)obj);
         }
 
+        /// <summary>
+        /// Whether two names are equal.
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
         public bool Equals(DName other)
         {
             return Value == other.Value;
         }
 
+        /// <summary>
+        /// Whether the name is equal to a string value.
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
         public bool Equals(string other)
         {
             Contracts.AssertValueOrNull(other);
@@ -88,7 +116,11 @@ namespace Microsoft.PowerFx.Core.Utils
             return name.Value != str;
         }
 
-        // Returns whether the given name is a valid DName as defined above.
+        /// <summary>
+        /// Returns whether the given name is a valid <see cref="DName" />. 
+        /// </summary>
+        /// <param name="strName"></param>
+        /// <returns></returns>
         public static bool IsValidDName(string strName)
         {
             Contracts.AssertValueOrNull(strName);
@@ -110,9 +142,12 @@ namespace Microsoft.PowerFx.Core.Utils
             return false;
         }
 
-        // Takes a name and makes it into a valid DName
-        // If the name contains all spaces, an underscore is prepended to the name.
-        // Returns whether it had to be changed to be a valid DName in the fModified arg.
+        /// <summary>
+        /// Takes a name and makes it into a valid <see cref="DName" />.
+        /// If the name contains all spaces, an underscore is prepended to the name.
+        /// </summary>
+        /// <param name="strName"></param>
+        /// <param name="fModified">Whether it had to be changed to be a valid <see cref="DName" />.</param>
         public static DName MakeValid(string strName, out bool fModified)
         {
             Contracts.AssertValueOrNull(strName);

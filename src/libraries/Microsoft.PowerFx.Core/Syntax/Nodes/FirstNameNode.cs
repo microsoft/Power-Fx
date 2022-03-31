@@ -9,11 +9,19 @@ using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Core.Syntax.Nodes
 {
+    /// <summary>
+    /// First name parse node. Example:
+    /// 
+    /// <code>Ident</code>
+    /// </summary>
     public sealed class FirstNameNode : NameNode
     {
+        /// <summary>
+        ///  The identifier of the first name node.
+        /// </summary>
         public Identifier Ident { get; }
 
-        public bool IsLhs => Parent != null && Parent.AsDottedName() != null;
+        internal bool IsLhs => Parent != null && Parent.AsDottedName() != null;
 
         internal FirstNameNode(ref int idNext, Token tok, SourceList sourceList, Identifier ident)
             : base(ref idNext, tok, sourceList)

@@ -12,10 +12,22 @@ using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Core.Syntax.Nodes
 {
+    /// <summary>
+    /// Unary operation parse node. Examples:
+    /// 
+    /// <code>Op Child</code>
+    /// <code>Child %</code>
+    /// </summary>
     public sealed class UnaryOpNode : TexlNode
     {
+        /// <summary>
+        /// The unary operation operand.
+        /// </summary>
         public TexlNode Child { get; }
 
+        /// <summary>
+        /// The unary operator.
+        /// </summary>
         public UnaryOp Op { get; }
 
         internal bool IsPercent => Op == UnaryOp.Percent;

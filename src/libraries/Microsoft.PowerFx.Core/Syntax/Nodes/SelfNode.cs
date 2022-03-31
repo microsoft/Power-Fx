@@ -9,6 +9,9 @@ using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Core.Syntax.Nodes
 {
+    /// <summary>
+    /// Self identifier parse node.
+    /// </summary>
     public sealed class SelfNode : NameNode
     {
         internal SelfNode(ref int idNext, Token tok)

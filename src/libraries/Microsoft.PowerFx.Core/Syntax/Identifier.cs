@@ -7,16 +7,25 @@ using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Core.Syntax
 {
+    /// <summary>
+    /// The identifier during parsing.
+    /// </summary>
     public sealed class Identifier
     {
         internal readonly Token AtToken; // The "@" token, if any. May be null.
         internal readonly IdentToken Token;
 
+        /// <summary>
+        /// The simple name of the identifier.
+        /// </summary>
         public DName Name { get; }
 
+        /// <summary>
+        /// The namespace of the identifier.
+        /// </summary>
         public DPath Namespace { get; }
 
-        public bool HasAtToken => AtToken != null;
+        internal bool HasAtToken => AtToken != null;
 
         internal Identifier(DPath theNamespace, Token atToken, IdentToken tok)
         {

@@ -10,15 +10,21 @@ using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Core.Syntax.Nodes
 {
+    /// <summary>
+    /// Numeric literal parse node. Example:
+    /// 
+    /// <code>3.14</code>
+    /// </summary>
     public sealed class NumLitNode : TexlNode
     {
         // If Value is non-null, then the token represents its value.
         // Otherwise, the value is in NumValue.
         internal readonly double NumValue;
 
-        // This seams like a reasonable public interface
-        // TODO: Should we do this?
-        public double RealNumValue => Value?.Value ?? NumValue;
+        /// <summary>
+        /// The numeric value of the node.
+        /// </summary>
+        public double ActualNumValue => Value?.Value ?? NumValue;
 
         internal NumLitNode(ref int idNext, NumLitToken tok)
             : base(ref idNext, tok, new SourceList(tok))

@@ -12,8 +12,16 @@ using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Core.Syntax.Nodes
 {
+    /// <summary>
+    /// Variadic operation node. Example:
+    /// 
+    /// <code>Formula1 ; Formula2 ; ...</code>
+    /// </summary>
     public sealed class VariadicOpNode : VariadicBase
     {
+        /// <summary>
+        /// Variadic operator.
+        /// </summary>
         public VariadicOp Op { get; }
         
         internal readonly Token[] OpTokens;
@@ -32,7 +40,7 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
         {
             var children = CloneChildren(ref idNext, ts);
             var newNodes = new Dictionary<TexlNode, TexlNode>();
-            for (var i = 0; i < Children.Length; ++i)
+            for (var i = 0; i < Children.Count; ++i)
             {
                 newNodes.Add(Children[i], children[i]);
             }

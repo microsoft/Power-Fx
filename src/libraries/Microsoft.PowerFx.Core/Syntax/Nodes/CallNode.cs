@@ -14,10 +14,21 @@ using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Core.Syntax.Nodes
 {
+    /// <summary>
+    /// Function call parse node. Example:
+    /// 
+    /// <code>Head(Args...)</code>
+    /// </summary>
     public sealed class CallNode : TexlNode
     {
+        /// <summary>
+        /// The identifier of the function call.
+        /// </summary>
         public Identifier Head { get; }
 
+        /// <summary>
+        /// The argument list of the function call.
+        /// </summary>
         public ListNode Args { get; }
 
         // ParenClose can be null.

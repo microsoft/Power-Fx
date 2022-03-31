@@ -12,18 +12,29 @@ using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Core.Syntax.Nodes
 {
+    /// <summary>
+    /// Dotted identifier name parse node. Example:
+    /// 
+    /// <code>Left.Right</code>
+    /// </summary>
     public sealed class DottedNameNode : NameNode
     {
+        /// <summary>
+        /// The left node of the dotted name.
+        /// </summary>
         public TexlNode Left { get; }
 
+        /// <summary>
+        /// The right identifier of the dotted name.
+        /// </summary>
         public Identifier Right { get; }
 
         // Can be null
         internal readonly TexlNode RightNode;
 
-        public bool HasOnlyIdentifiers { get; }
+        internal readonly bool HasOnlyIdentifiers;
 
-        public bool HasPossibleNamespaceQualifier { get; }
+        internal readonly bool HasPossibleNamespaceQualifier;
 
         /// <inheritdoc />
         public override NodeKind Kind => NodeKind.DottedName;
@@ -127,6 +138,10 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
             return this;
         }
 
+        /// <summary>
+        /// The <see cref=" DPath" /> representation of the dotted name parse node.
+        /// </summary>
+        /// <returns></returns>
         public DPath ToDPath()
         {
             Contracts.Assert(HasPossibleNamespaceQualifier);

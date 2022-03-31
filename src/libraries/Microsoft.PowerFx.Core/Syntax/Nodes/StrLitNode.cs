@@ -9,8 +9,16 @@ using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Core.Syntax.Nodes
 {
+    /// <summary>
+    /// String literal parse node. Example:
+    /// 
+    /// <code>"Hello world"</code>
+    /// </summary>
     public sealed class StrLitNode : TexlNode
     {
+        /// <summary>
+        /// The string value of the literal.
+        /// </summary>
         public string Value { get; }
 
         internal StrLitNode(ref int idNext, StrLitToken tok)

@@ -10,6 +10,11 @@ using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Core.Syntax.Nodes
 {
+    /// <summary>
+    /// List expression parse node. Example:
+    /// 
+    /// <code>[Arg1, Arg2, ...]</code>
+    /// </summary>
     public sealed class ListNode : VariadicBase
     {
         internal readonly Token[] Delimiters;
@@ -27,7 +32,7 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
         {
             var children = CloneChildren(ref idNext, ts);
             var newNodes = new Dictionary<TexlNode, TexlNode>();
-            for (var i = 0; i < Children.Length; ++i)
+            for (var i = 0; i < Children.Count; ++i)
             {
                 newNodes.Add(Children[i], children[i]);
             }

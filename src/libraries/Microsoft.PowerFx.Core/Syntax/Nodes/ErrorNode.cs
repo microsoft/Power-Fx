@@ -9,11 +9,17 @@ using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Core.Syntax.Nodes
 {
+    /// <summary>
+    /// Error parse node.
+    /// </summary>
     public sealed class ErrorNode : TexlNode
     {
+        /// <summary>
+        /// The error message of the node.
+        /// </summary>
         public string Message { get; }
 
-        public object[] Args { get; }
+        internal readonly object[] Args;
 
         internal ErrorNode(ref int idNext, Token primaryToken, string msg)
             : base(ref idNext, primaryToken, new SourceList(primaryToken))

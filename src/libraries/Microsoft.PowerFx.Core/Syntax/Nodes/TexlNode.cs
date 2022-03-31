@@ -10,7 +10,9 @@ using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Core.Syntax.Nodes
 {
-    // Base class for all parse nodes.
+    /// <summary>
+    /// Base class for all parse nodes.
+    /// </summary>
     public abstract class TexlNode
     {
         private TexlNode _parent;
@@ -66,10 +68,25 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
 
         internal abstract TexlNode Clone(ref int idNext, Span ts);
 
+        /// <summary>
+        /// Accept a visitor <see cref="TexlVisitor" />.
+        /// </summary>
+        /// <param name="visitor">The visitor to accept.</param>
         public abstract void Accept(TexlVisitor visitor);
 
+        /// <summary>
+        /// Accept a functional visitor <see cref="TexlFunctionalVisitor{TResult, TContext}" />.
+        /// </summary>
+        /// <typeparam name="TResult">The result type of the visitor.</typeparam>
+        /// <typeparam name="TContext">The context type of the visitor.</typeparam>
+        /// <param name="visitor">The functional visitor to accept.</param>
+        /// <param name="context">The context to pass to the visitor.</param>
+        /// <returns>The result of the visitor.</returns>
         public abstract TResult Accept<TResult, TContext>(TexlFunctionalVisitor<TResult, TContext> visitor, TContext context);
 
+        /// <summary>
+        /// Kind of the parse node.
+        /// </summary>
         public abstract NodeKind Kind { get; }
 
         internal void Parser_SetSourceList(SourceList sources)
@@ -78,16 +95,22 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
             SourceList = sources;
         }
 
+        // TODO: Comment - what are the differences between different spans defined here?
+        // TODO: Should we keep this internal?
         public virtual Span GetTextSpan()
         {
             return new Span(Token.VerifyValue().Span.Min, Token.VerifyValue().Span.Lim);
         }
 
+        // TODO: Comment - what are the differences between different spans defined here?
+        // TODO: Should we keep this internal?
         public virtual Span GetCompleteSpan()
         {
             return new Span(GetTextSpan());
         }
 
+        // TODO: Comment - what are the differences between different spans defined here?
+        // TODO: Should we keep this internal?
         public Span GetSourceBasedSpan()
         {
             if (SourceList.Tokens.Count() == 0)
