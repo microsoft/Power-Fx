@@ -6,20 +6,24 @@ using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Core.Lexer.Tokens
 {
-    internal class CommentToken : Token
+    // TODO: Docs
+    public sealed class CommentToken : Token
     {
-        public bool IsOpenBlock;
+        internal bool IsOpenBlock;
 
-        public CommentToken(string val, Span span)
+        internal CommentToken(string val, Span span)
             : base(TokKind.Comment, span)
         {
             Contracts.AssertValue(val);
             Value = val;
         }
 
+        /// <summary>
+        /// Content of the comment.
+        /// </summary>
         public string Value { get; }
 
-        public override Token Clone(Span ts)
+        internal override Token Clone(Span ts)
         {
             return new CommentToken(Value, ts);
         }

@@ -6,9 +6,10 @@ using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Core.Lexer.Tokens
 {
-    internal class StrLitToken : Token
+    // TODO: Docs
+    public class StrLitToken : Token
     {
-        public StrLitToken(string val, Span span)
+        internal StrLitToken(string val, Span span)
             : base(TokKind.StrLit, span)
         {
             Contracts.AssertValue(val);
@@ -26,18 +27,23 @@ namespace Microsoft.PowerFx.Core.Lexer.Tokens
         {
         }
 
+        /// <inheritdoc />
         public override string ToString()
         {
             return Value;
         }
 
+        /// <summary>
+        /// Value of the string literal.
+        /// </summary>
         public string Value { get; }
 
-        public override Token Clone(Span ts)
+        internal override Token Clone(Span ts)
         {
             return new StrLitToken(this, ts);
         }
 
+        /// <inheritdoc />
         public override bool Equals(Token that)
         {
             Contracts.AssertValue(that);

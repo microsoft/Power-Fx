@@ -3,7 +3,8 @@
 
 namespace Microsoft.PowerFx.Core.Lexer
 {
-    internal enum TokKind
+    // TODO: All the comments
+    public enum TokKind
     {
         None,
 

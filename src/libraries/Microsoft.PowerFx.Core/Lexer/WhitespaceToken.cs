@@ -21,7 +21,7 @@ namespace Microsoft.PowerFx.Core.Lexer
             Value = value;
         }
 
-        public override Token Clone(Span ts)
+        internal override Token Clone(Span ts)
         {
             return new WhitespaceToken(Value, ts);
         }
