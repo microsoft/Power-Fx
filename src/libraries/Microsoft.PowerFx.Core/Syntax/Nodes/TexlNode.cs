@@ -13,6 +13,7 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
     /// <summary>
     /// Base class for all parse nodes.
     /// </summary>
+    [ThreadSafeImmutable]
     public abstract class TexlNode
     {
         private TexlNode _parent;

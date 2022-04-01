@@ -10,6 +10,7 @@ namespace Microsoft.PowerFx.Core.Syntax
     /// <summary>
     /// The identifier during parsing.
     /// </summary>
+    [ThreadSafeImmutable]
     public sealed class Identifier
     {
         internal readonly Token AtToken; // The "@" token, if any. May be null.

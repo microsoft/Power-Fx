@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using Xunit;
 
@@ -151,7 +152,8 @@ namespace Microsoft.PowerFx.Core.Tests
         [Fact]
         public void TestTexlNodeTypes()
         {
-            var sb = new StringBuilder();
+            var errors = new StringBuilder();
+            var checkedCount = 0;
 
             var asm = typeof(Syntax.Nodes.TexlNode).Assembly;
             var types = asm.GetTypes().Where(IsTexlNodePublicType).ToList();
@@ -159,12 +161,19 @@ namespace Microsoft.PowerFx.Core.Tests
 
             foreach (var type in types)
             {
+                checkedCount++;
                 var fullName = type.FullName;
 
                 // Should be abstract or sealed
                 if (!(type.IsSealed || type.IsAbstract))
                 {
-                    sb.AppendLine($"{fullName} is neither abstract nor sealed");
+                    errors.AppendLine($"{fullName} is neither abstract nor sealed");
+                }
+
+                // Should have immutable attribute
+                if (type.GetCustomAttribute<ThreadSafeImmutableAttribute>() is null)
+                {
+                    errors.AppendLine($"{fullName} does not have [ThreadSafeImmutable]");
                 }
 
                 // All ctors should be internal
@@ -172,20 +181,29 @@ namespace Microsoft.PowerFx.Core.Tests
                 {
                     if (ctor.IsPublic)
                     {
-                        sb.AppendLine($"{fullName}.{ctor.Name} constructor is public");
+                        errors.AppendLine($"{fullName}.{ctor.Name} constructor is public");
                     }
                 }
 
+                // Should not have public fields
                 foreach (var field in type.GetFields())
                 {
                     if (field.IsPublic)
                     {
-                        sb.AppendLine($"{fullName}.{field.Name} field is public");
+                        errors.AppendLine($"{fullName}.{field.Name} field is public");
                     }
                 }
             }
 
-            Assert.True(sb.Length == 0, $"TexlNode errors: {sb}");
+            Assert.True(checkedCount > 10);
+            Assert.True(errors.Length == 0, $"TexlNode errors: {errors}");
+        }
+
+        [Fact]
+        public static void TestImmutability()
+        {
+            var asm = typeof(Syntax.Nodes.TexlNode).Assembly;
+            ImmutabilityTests.CheckImmutability(asm);
         }
 
         private static bool IsTexlNodePublicType(Type t) => t.IsPublic && IsSubclassOrEqual(t, TexlNodeType);
