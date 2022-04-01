@@ -7,6 +7,7 @@ using System.Globalization;
 using System.Linq;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Functions;
+using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
@@ -33,9 +34,14 @@ namespace Microsoft.PowerFx.Core
 
         internal CultureInfo CultureInfo { get; }
 
+        internal ILanguageSettings LanguageSettings { get; }
+
         private PowerFxConfig(CultureInfo cultureInfo, EnumStoreBuilder enumStoreBuilder) 
         {
             CultureInfo = cultureInfo ?? CultureInfo.CurrentCulture;
+
+            // TODO: Does this make sense?
+            LanguageSettings = new LanguageSettings(cultureName: CultureInfo.Name, uiCultureName: CultureInfo.Name, addPunctuators: true);
             _isLocked = false;
             _extraFunctions = new Dictionary<string, TexlFunction>();
             _environmentSymbols = new Dictionary<DName, IExternalEntity>();

@@ -7,6 +7,7 @@ using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Glue;
 using Microsoft.PowerFx.Core.Lexer;
+using Microsoft.PowerFx.Core.Lexer.Tokens;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Parser;
 using Microsoft.PowerFx.Core.Public;
@@ -23,6 +24,8 @@ namespace Microsoft.PowerFx
     /// </summary>
     public class Engine : IPowerFxEngine
     {
+        private readonly TexlLexer _lexer;
+
         /// <summary>
         /// Configuration symbols for this Power Fx engine.
         /// </summary>
@@ -36,6 +39,9 @@ namespace Microsoft.PowerFx
         {
             powerFxConfig.Lock();
             Config = powerFxConfig;
+
+            // TODO: Get language settings from config
+            _lexer = TexlLexer.NewInstance(loc: null);
         }
 
         /// <summary>
@@ -58,6 +64,13 @@ namespace Microsoft.PowerFx
         }
 
         /// <summary>
+        ///     Tokenize an expression to a sequence of <see cref="Token" />s.
+        /// </summary>
+        /// <param name="expressionText"></param>
+        /// <returns></returns>
+        public IReadOnlyList<Token> Tokenize(string expressionText) => _lexer.GetTokens(expressionText);
+
+        /// <summary>
         /// Type check a formula without executing it. 
         /// </summary>
         /// <param name="expressionText"></param>
@@ -70,8 +83,9 @@ namespace Microsoft.PowerFx
                 parameterType = new RecordType();
             }
 
-            var formula = new Formula(expressionText);
+            var formula = new Formula(expressionText, loc: Config.LanguageSettings);
 
+            // TODO: Can we enable expression chaining via some config option?
             formula.EnsureParsed(TexlParser.Flags.None);
 
             // Ok to continue with binding even if there are parse errors. 
