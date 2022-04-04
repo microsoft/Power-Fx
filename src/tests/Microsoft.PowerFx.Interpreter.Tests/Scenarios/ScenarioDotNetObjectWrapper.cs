@@ -86,7 +86,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var objFx2 = FormulaValue.New(new Wrapper(obj2));
 
             // We can pass UntypedObject as a parameter.             
-            var parameters = FormulaValue.RecordFromFields(
+            var parameters = FormulaValue.NewRecordFromFields(
                 new NamedValue("obj2", objFx2));
 
             var result = engine.Eval("obj2.Next", parameters);

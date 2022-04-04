@@ -395,6 +395,12 @@ namespace Microsoft.PowerFx.Core.Tests
                 var date = d.Value;
                 sb.Append($"Date({date.Year},{date.Month},{date.Day})");
             }
+            else if (result is DateTimeValue dt)
+            {
+                // DateTime(yyyy,MM,dd,HH,mm,ss,fff)
+                var dateTime = dt.Value;
+                sb.Append($"DateTime({dateTime.Year},{dateTime.Month},{dateTime.Day},{dateTime.Hour},{dateTime.Minute},{dateTime.Second},{dateTime.Millisecond})");
+            }
             else if (result is ErrorValue)
             {
                 sb.Append(result);

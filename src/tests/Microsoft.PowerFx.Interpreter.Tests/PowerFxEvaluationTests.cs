@@ -20,19 +20,19 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
         private static (RecalcEngine engine, RecordValue parameters) OptionSetTestSetup()
         {            
-            var optionSet = new OptionSet("OptionSet", new Dictionary<string, string>() 
+            var optionSet = new OptionSet("OptionSet", DisplayNameUtility.MakeUnique(new Dictionary<string, string>() 
             {
                     { "option_1", "Option1" },
                     { "option_2", "Option2" }
-            });
+            }));
             
-            var otherOptionSet = new OptionSet("OtherOptionSet", new Dictionary<string, string>() 
+            var otherOptionSet = new OptionSet("OtherOptionSet", DisplayNameUtility.MakeUnique(new Dictionary<string, string>() 
             {
                     { "99", "OptionA" },
                     { "112", "OptionB" },
                     { "35694", "OptionC" },
                     { "123412983", "OptionD" },
-            });
+            }));
 
             var config = new PowerFxConfig(null);
             config.AddOptionSet(optionSet);
@@ -41,9 +41,9 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             optionSet.TryGetValue(new DName("option_1"), out var o1Val);            
             otherOptionSet.TryGetValue(new DName("123412983"), out var o2Val);
 
-            var parameters = FormulaValue.RecordFromFields(
+            var parameters = FormulaValue.NewRecordFromFields(
                     new NamedValue("TopOptionSetField", o1Val),
-                    new NamedValue("Nested", FormulaValue.RecordFromFields(
+                    new NamedValue("Nested", FormulaValue.NewRecordFromFields(
                         new NamedValue("InnerOtherOptionSet", o2Val)))); 
 
             return (new RecalcEngine(config), parameters);

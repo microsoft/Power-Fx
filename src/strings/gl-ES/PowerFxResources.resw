@@ -1922,8 +1922,12 @@
   <data name="AboutTime_millisecond" xml:space="preserve">
     <value>Compoñente milisegundo.</value>
   </data>
+  <data name="AboutDateTime" xml:space="preserve">
+    <value>Crea un valor que representa un instante no tempo, expresado en forma de data e hora do día.</value>
+    
+  </data>
   <data name="AboutYear" xml:space="preserve">
-    <value>Ano devolve o ano dunha data indicada, un número maior que 1900.</value>
+    <value>Ano devolve o ano dunha data indicada.</value>
     
   </data>
   <data name="YearArg1" xml:space="preserve">
@@ -2338,15 +2342,15 @@
   <data name="AboutChar_column_of_numbers" xml:space="preserve">
     <value>Columna de números de código do conxunto de caracteres da plataforma.</value>
   </data>
-  <data name="AboutParseJson" xml:space="preserve">
+  <data name="AboutParseJSON" xml:space="preserve">
     <value>Converte unha cadea JSON nun obxecto.</value>
     
   </data>
-  <data name="ParseJsonArg1" xml:space="preserve">
+  <data name="ParseJSONArg1" xml:space="preserve">
     <value>entrada</value>
     
   </data>
-  <data name="AboutParseJson_input" xml:space="preserve">
+  <data name="AboutParseJSON_input" xml:space="preserve">
     <value>Cadea JSON que se vai procesar.</value>
   </data>
   <data name="AboutIndex" xml:space="preserve">
@@ -2365,7 +2369,8 @@
     <value>Táboa.</value>
   </data>
   <data name="AboutIndex_index" xml:space="preserve">
-    <value>Índice de enteiros.</value>
+    <value>Índice do rexistro que se vai recuperar.</value>
+    
   </data>
   <data name="Screen_Name_DisplayName" xml:space="preserve">
     <value>Nome</value>
@@ -3974,7 +3979,7 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidName_ShortMessage" xml:space="preserve">
-    <value>O nome non é válido. Este identificador non se recoñece.</value>
+    <value>O nome non é válido. "{0}" non se recoñece.</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidName_LongMessage" xml:space="preserve">
@@ -3985,6 +3990,21 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidName_Link_1" xml:space="preserve">
+    <value>Artigo: Referencia de fórmulas para Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_ShortMessage" xml:space="preserve">
+    <value>O nome non é válido. Este identificador non se recoñece.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_LongMessage" xml:space="preserve">
+    <value>Este erro adoita aparecer cando unha fórmula fai referencia a algo que xa non existe (por exemplo, un control que eliminou).</value>
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_HowToFix_1" xml:space="preserve">
+    <value>Elimine ou corrixa a referencia ao nome que non é válido.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_Link_1" xml:space="preserve">
     <value>Artigo: Referencia de fórmulas para Power Apps</value>
     
   </data>
@@ -4482,11 +4502,11 @@
     
   </data>
   <data name="ErrorResource_ErrEmptyIsland_ShortMessage" xml:space="preserve">
-    <value>Empty expressions cannot appear inside an interpolated string.</value>
+    <value>Dentro dunha cadea interpolada non poden aparecer expresións baleiras.</value>
     
   </data>
   <data name="ErrorResource_ErrEmptyIsland_HowToFix_1" xml:space="preserve">
-    <value>Check for empty expressions inside the interpolated string.</value>
+    <value>Comprobe as expresións baleiras dentro da cadea interpolada.</value>
     
   </data>
   <data name="ErrorResource_ErrAsNotInContext_ShortMessage" xml:space="preserve">

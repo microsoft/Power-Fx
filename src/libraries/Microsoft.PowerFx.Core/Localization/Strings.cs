@@ -431,8 +431,8 @@ namespace Microsoft.PowerFx.Core.Localization
         public static StringGetter SequenceArg2 = (b) => StringResources.Get("SequenceArg2", b);
         public static StringGetter SequenceArg3 = (b) => StringResources.Get("SequenceArg3", b);
 
-        public static StringGetter AboutParseJson = (b) => StringResources.Get("AboutParseJson", b);
-        public static StringGetter ParseJsonArg1 = (b) => StringResources.Get("ParseJsonArg1", b);
+        public static StringGetter AboutParseJSON = (b) => StringResources.Get("AboutParseJSON", b);
+        public static StringGetter ParseJSONArg1 = (b) => StringResources.Get("ParseJSONArg1", b);
 
         public static StringGetter AboutIndex = (b) => StringResources.Get("AboutIndex", b);
         public static StringGetter IndexArg1 = (b) => StringResources.Get("IndexArg1", b);
@@ -452,6 +452,7 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrMissingEndOfBlockComment = new ErrorResourceKey("ErrMissingEndOfBlockComment");
         public static ErrorResourceKey ErrExpectedFound_Ex_Fnd = new ErrorResourceKey("ErrExpectedFound_Ex_Fnd");
         public static ErrorResourceKey ErrInvalidName = new ErrorResourceKey("ErrInvalidName");
+        public static ErrorResourceKey ErrInvalidIdentifier = new ErrorResourceKey("ErrInvalidIdentifier");
         public static ErrorResourceKey ErrInvalidPropertyAccess = new ErrorResourceKey("ErrInvalidPropertyAccess");
         public static ErrorResourceKey ErrInvalidPropertyReference = new ErrorResourceKey("ErrInvalidPropertyReference");
         public static ErrorResourceKey ErrInvalidParentUse = new ErrorResourceKey("ErrInvalidParentUse");

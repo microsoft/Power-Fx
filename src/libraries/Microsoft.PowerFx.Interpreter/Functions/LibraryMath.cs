@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Public;
 using Microsoft.PowerFx.Core.Public.Types;
@@ -16,6 +17,7 @@ namespace Microsoft.PowerFx.Functions
     {
         private static readonly object _randomizerLock = new object();
 
+        [ThreadSafeProtectedByLock(nameof(_randomizerLock))]
         private static Random _random;
 
         // Support for aggregators. Helpers to ensure that Scalar and Tabular behave the same.
@@ -288,7 +290,7 @@ namespace Microsoft.PowerFx.Functions
                 if (row.IsValue)
                 {
                     var childContext = context.WithScopeValues(row.Value);
-                    var value = arg1.Eval(runner, childContext);
+                    var value = arg1.EvalAsync(runner, childContext).Result;
 
                     if (value is NumberValue number)
                     {
@@ -323,7 +325,7 @@ namespace Microsoft.PowerFx.Functions
         }
 
         // Sum([1,2,3], Value * Value)     
-        public static FormulaValue SumTable(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args)
+        public static async ValueTask<FormulaValue> SumTable(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args)
         {
             return RunAggregator(new SumAgg(), runner, symbolContext, irContext, args);
         }
@@ -344,7 +346,7 @@ namespace Microsoft.PowerFx.Functions
         }
 
         // Max([1,2,3], Value * Value)     
-        public static FormulaValue MaxTable(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args)
+        public static async ValueTask<FormulaValue> MaxTable(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args)
         {
             var agg = GetMinMaxAggType(irContext, false);
 
@@ -374,7 +376,7 @@ namespace Microsoft.PowerFx.Functions
         }
 
         // Min([1,2,3], Value * Value)     
-        public static FormulaValue MinTable(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args)
+        public static async ValueTask<FormulaValue> MinTable(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args)
         {
             var agg = GetMinMaxAggType(irContext, true);
 
@@ -423,7 +425,7 @@ namespace Microsoft.PowerFx.Functions
         }
 
         // Average([1,2,3], Value * Value)     
-        public static FormulaValue AverageTable(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args)
+        public static async ValueTask<FormulaValue> AverageTable(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args)
         {
             var arg0 = (TableValue)args[0];
 
@@ -453,7 +455,7 @@ namespace Microsoft.PowerFx.Functions
 
             var rows = LazySequence(records, start, step).Select(n => new NumberValue(IRContext.NotInSource(FormulaType.Number), n));
 
-            return new InMemoryTableValue(irContext, StandardTableNodeRecords(irContext, rows.ToArray()));
+            return new InMemoryTableValue(irContext, StandardTableNodeRecords(irContext, rows.ToArray(), forceSingleColumn: true));
         }
 
         private static IEnumerable<double> LazySequence(double records, double start, double step)
@@ -584,6 +586,11 @@ namespace Microsoft.PowerFx.Functions
         {
             var number = args[0].Value;
             var numberBase = args[1].Value;
+            if (numberBase == 1)
+            {
+                return GetDiv0Error(irContext);
+            }
+
             return new NumberValue(irContext, Math.Log(number, numberBase));
         }
 
@@ -597,10 +604,29 @@ namespace Microsoft.PowerFx.Functions
         {
             var number = args[0].Value;
             var exponent = args[1].Value;
-            return new NumberValue(irContext, Math.Pow(number, exponent));
+
+            if (number == 0)
+            {
+                if (exponent < 0)
+                {
+                    return GetDiv0Error(irContext);
+                }
+                else if (exponent == 0)
+                {
+                    return new ErrorValue(irContext, new ExpressionError
+                    {
+                        Kind = ErrorKind.Numeric,
+                        Span = irContext.SourceContext,
+                        Message = "Invalid exponent"
+                    });
+                }
+            }
+
+            var result = new NumberValue(irContext, Math.Pow(number, exponent));
+            return FiniteChecker(irContext, 1, result);
         }
 
-        private static FormulaValue Rand(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args)
+        private static async ValueTask<FormulaValue> Rand(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args)
         {
             lock (_randomizerLock)
             {
@@ -615,8 +641,8 @@ namespace Microsoft.PowerFx.Functions
 
         public static FormulaValue RandBetween(IRContext irContext, NumberValue[] args)
         {
-            var lower = (int)args[0].Value;
-            var upper = (int)args[1].Value;
+            var lower = args[0].Value;
+            var upper = args[1].Value;
 
             if (lower > upper)
             {
@@ -628,6 +654,9 @@ namespace Microsoft.PowerFx.Functions
                 });
             }
 
+            lower = Math.Ceiling(lower);
+            upper = Math.Floor(upper);
+
             lock (_randomizerLock)
             {
                 if (_random == null)
@@ -635,11 +664,11 @@ namespace Microsoft.PowerFx.Functions
                     _random = new Random();
                 }
 
-                return new NumberValue(irContext, _random.Next(lower, upper));
+                return new NumberValue(irContext, Math.Floor((_random.NextDouble() * (upper - lower + 1)) + lower));
             }
         }
 
-        private static FormulaValue Pi(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args)
+        private static async ValueTask<FormulaValue> Pi(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args)
         {
             return new NumberValue(irContext, Math.PI);
         }
@@ -652,12 +681,7 @@ namespace Microsoft.PowerFx.Functions
             var tan = Math.Tan(arg);
             if (tan == 0)
             {
-                return new ErrorValue(irContext, new ExpressionError
-                {
-                    Kind = ErrorKind.Div0,
-                    Span = irContext.SourceContext,
-                    Message = "Division by zero"
-                });
+                return GetDiv0Error(irContext);
             }
 
             return new NumberValue(irContext, 1 / tan);
@@ -679,12 +703,7 @@ namespace Microsoft.PowerFx.Functions
 
             if (x == 0 && y == 0)
             {
-                return new ErrorValue(irContext, new ExpressionError
-                {
-                    Kind = ErrorKind.Div0,
-                    Span = irContext.SourceContext,
-                    Message = "Division by zero"
-                });
+                return GetDiv0Error(irContext);
             }
 
             // Unlike Excel, C#'s Math.Atan2 expects 'y' as first argument and 'x' as second.
@@ -709,6 +728,16 @@ namespace Microsoft.PowerFx.Functions
 
                 return new NumberValue(irContext, result);
             };
+        }
+
+        private static ErrorValue GetDiv0Error(IRContext irContext)
+        {
+            return new ErrorValue(irContext, new ExpressionError
+            {
+                Kind = ErrorKind.Div0,
+                Span = irContext.SourceContext,
+                Message = "Division by zero"
+            });
         }
     }
 }

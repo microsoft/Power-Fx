@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
+using Microsoft.PowerFx.Core.Types.Enums;
 
 namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
@@ -28,6 +29,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         {
             // Parameters are a numeric color value, and a fadeDelta (-1 to 1)
             yield return new[] { TexlStrings.ColorFadeArg1, TexlStrings.ColorFadeArg2 };
+        }
+
+        public override IEnumerable<string> GetRequiredEnumNames()
+        {
+            return new List<string>() { EnumConstants.ColorEnumString };
         }
     }
 }

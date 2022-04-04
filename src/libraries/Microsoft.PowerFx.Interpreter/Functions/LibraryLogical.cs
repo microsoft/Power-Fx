@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Public.Values;
 
@@ -14,11 +15,11 @@ namespace Microsoft.PowerFx.Functions
         }
 
         // Lazy evaluation 
-        public static FormulaValue And(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args)
+        public static async ValueTask<FormulaValue> And(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args)
         {
             foreach (var arg in args)
             {
-                var res = runner.EvalArg<BooleanValue>(arg, symbolContext, arg.IRContext);
+                var res = await runner.EvalArgAsync<BooleanValue>(arg, symbolContext, arg.IRContext);
 
                 if (res.IsValue)
                 {
@@ -38,11 +39,13 @@ namespace Microsoft.PowerFx.Functions
         }
 
         // Lazy evaluation 
-        public static FormulaValue Or(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args)
+        public static async ValueTask<FormulaValue> Or(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args)
         {
             foreach (var arg in args)
             {
-                var res = runner.EvalArg<BooleanValue>(arg, symbolContext, arg.IRContext);
+                runner.CheckCancel();
+
+                var res = await runner.EvalArgAsync<BooleanValue>(arg, symbolContext, arg.IRContext);
 
                 if (res.IsValue)
                 {

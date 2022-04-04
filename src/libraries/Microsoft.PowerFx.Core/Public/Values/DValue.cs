@@ -8,7 +8,7 @@ namespace Microsoft.PowerFx.Core.Public.Values
     /// TableValue stores this class (Rows), and it can be used in any situation
     /// where a value can be either a known type or Blank/Error.
     /// </summary>
-    public class DValue<T>
+    public sealed class DValue<T>
         where T : ValidFormulaValue
     {
         private DValue(T value, BlankValue blank, ErrorValue error)

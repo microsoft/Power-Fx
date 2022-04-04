@@ -44,11 +44,11 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public void GetTokensHostSymbolTest()
         {
-            var optionSet = new OptionSet("OptionSet", new Dictionary<string, string>() 
+            var optionSet = new OptionSet("OptionSet", DisplayNameUtility.MakeUnique(new Dictionary<string, string>() 
             {
                     { "option_1", "Option1" },
                     { "option_2", "Option2" }
-            });
+            }));
             var config = new PowerFxConfig(null);
             config.AddOptionSet(optionSet);
 

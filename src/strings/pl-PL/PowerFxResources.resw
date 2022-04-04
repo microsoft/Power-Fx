@@ -1922,8 +1922,12 @@
   <data name="AboutTime_millisecond" xml:space="preserve">
     <value>Składnik milisekundy.</value>
   </data>
+  <data name="AboutDateTime" xml:space="preserve">
+    <value>Tworzy wartość reprezentującą punkt w czasie, która jest wyrażona w postaci daty oraz godziny w ciągu dnia.</value>
+    
+  </data>
   <data name="AboutYear" xml:space="preserve">
-    <value>Rok zwraca numer roku danej daty, czyli liczbę większą niż 1900.</value>
+    <value>Funkcja Rok zwraca rok dla danej daty.</value>
     
   </data>
   <data name="YearArg1" xml:space="preserve">
@@ -2338,15 +2342,15 @@
   <data name="AboutChar_column_of_numbers" xml:space="preserve">
     <value>Kolumna numerów kodu z zestawu znaków na platformie.</value>
   </data>
-  <data name="AboutParseJson" xml:space="preserve">
+  <data name="AboutParseJSON" xml:space="preserve">
     <value>Konwertuje ciąg w formacie JSON na obiekt.</value>
     
   </data>
-  <data name="ParseJsonArg1" xml:space="preserve">
+  <data name="ParseJSONArg1" xml:space="preserve">
     <value>dane_wejściowe</value>
     
   </data>
-  <data name="AboutParseJson_input" xml:space="preserve">
+  <data name="AboutParseJSON_input" xml:space="preserve">
     <value>Ciąg w formacie JSON do przetworzenia.</value>
   </data>
   <data name="AboutIndex" xml:space="preserve">
@@ -2365,7 +2369,8 @@
     <value>Tabela.</value>
   </data>
   <data name="AboutIndex_index" xml:space="preserve">
-    <value>Indeks w postaci liczby całkowitej.</value>
+    <value>Indeks rekordu, który ma zostać pobrany.</value>
+    
   </data>
   <data name="Screen_Name_DisplayName" xml:space="preserve">
     <value>Nazwa</value>
@@ -3974,7 +3979,7 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidName_ShortMessage" xml:space="preserve">
-    <value>Nazwa jest nieprawidłowa. Identyfikator nie został rozpoznany.</value>
+    <value>Nazwa jest nieprawidłowa. Element „{0}” nie został rozpoznany.</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidName_LongMessage" xml:space="preserve">
@@ -3986,6 +3991,21 @@
   </data>
   <data name="ErrorResource_ErrInvalidName_Link_1" xml:space="preserve">
     <value>Artykuł: Odwołanie do formuły dla usługi Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_ShortMessage" xml:space="preserve">
+    <value>Nazwa jest nieprawidłowa. Ten identyfikator nie został rozpoznany.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_LongMessage" xml:space="preserve">
+    <value>Ten błąd występuje najczęściej wtedy, gdy formuła odwołuje się do elementu, który już nie istnieje (na przykład do usuniętej kontrolki).</value>
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_HowToFix_1" xml:space="preserve">
+    <value>Usuń lub popraw odwołanie do nieprawidłowej nazwy.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_Link_1" xml:space="preserve">
+    <value>Artykuł: Informacje o formułach w usłudze Power Apps</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_ShortMessage" xml:space="preserve">
