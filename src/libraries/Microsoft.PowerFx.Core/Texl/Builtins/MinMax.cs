@@ -52,7 +52,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                         returnType = DType.DateTime;
                     }
                 }
-            }// If there are elements of mixed types OR if the elements are NOT a Date/Time/DateTime, attempt to coerce to numeric.
+            } // If there are elements of mixed types OR if the elements are NOT a Date/Time/DateTime, attempt to coerce to numeric.
             else if (!Array.TrueForAll(argTypes, element => element.Kind == argTypes[0].Kind) || !Array.Exists(argTypes, element => element.Kind == DKind.Date || element.Kind == DKind.DateTime || element.Kind == DKind.Time))
             {
                 returnType = DType.Number;
@@ -73,6 +73,10 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                         fArgsValid = false;
                     }
                 }
+            } // No coercion necessary
+            else 
+            { 
+                fArgsValid = true; 
             }
 
             if (!fArgsValid)

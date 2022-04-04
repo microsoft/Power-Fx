@@ -381,10 +381,6 @@ namespace Microsoft.PowerFx.Core.Tests
             {
                 sb.Append(tv.Value.ToString());
             }
-            else if (result is DateTimeValue dt)
-            {
-                sb.Append(dt.Value.ToString(@"MM/dd/yyyy hh:mm:ss tt", System.Globalization.CultureInfo.InvariantCulture));
-            }
             else if (result is BlankValue)
             {
                 sb.Append("Blank()");
