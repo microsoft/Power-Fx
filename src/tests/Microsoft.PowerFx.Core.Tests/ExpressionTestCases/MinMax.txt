@@ -32,7 +32,7 @@ Date(2022,3,8)
 #Error(Kind=Div0)
 
 >> Max(1, 2, {a:3})
-Errors: Error 10-15: Expected number. We expect a number at this point in the formula.|Error 0-16: The function 'Max' has some invalid arguments.
+Error 10-15: Expected number. We expect a number at this point in the formula.
 
 >> Min(1)
 1
@@ -59,7 +59,7 @@ Date(1985,3,5)
 #Error(Kind=Numeric)
 
 >> Min({a:1}, {a:2}, {a:3})
-Errors: Error 4-9: Expected number. We expect a number at this point in the formula.|Error 11-16: Expected number. We expect a number at this point in the formula.|Error 18-23: Expected number. We expect a number at this point in the formula.|Error 0-24: The function 'Min' has some invalid arguments.
+Errors: Errors: Error 4-9: Expected number. We expect a number at this point in the formula.|Error 11-16: Expected number. We expect a number at this point in the formula.|Error 18-23: Expected number. We expect a number at this point in the formula.
 
 >> Max([1, 2, 3, 4, 5], Value)
 5

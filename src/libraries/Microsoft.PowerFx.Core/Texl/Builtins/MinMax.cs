@@ -20,6 +20,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     {
         public override bool SupportsParamCoercion => true;
 
+        public override bool HasPreciseErrors => true;
+
         public override bool IsSelfContained => true;
 
         public MinMaxFunction(bool isMin)
