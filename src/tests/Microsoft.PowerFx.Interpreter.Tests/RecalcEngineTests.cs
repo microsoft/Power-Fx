@@ -11,6 +11,7 @@ using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Public;
 using Microsoft.PowerFx.Core.Public.Types;
 using Microsoft.PowerFx.Core.Public.Values;
+using Microsoft.PowerFx.Core.Syntax;
 using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
@@ -243,6 +244,21 @@ namespace Microsoft.PowerFx.Tests
             var engine = new RecalcEngine();
             var result = engine.Check(
                 "3*2+x",
+                new RecordType().Add(
+                    new NamedFormulaType("x", FormulaType.Number)));
+
+            Assert.True(result.IsSuccess);
+            Assert.True(result.ReturnType is NumberType);
+            Assert.Single(result.TopLevelIdentifiers);
+            Assert.Equal("x", result.TopLevelIdentifiers.First());
+        }
+
+        [Fact]
+        public void CheckSuccess_WithPassedFormula()
+        {
+            var engine = new RecalcEngine();
+            var result = engine.Check(
+                new Formula("3*2+x"),
                 new RecordType().Add(
                     new NamedFormulaType("x", FormulaType.Number)));
 

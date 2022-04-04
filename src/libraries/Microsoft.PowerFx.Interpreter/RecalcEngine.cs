@@ -136,14 +136,29 @@ namespace Microsoft.PowerFx
             return CheckInternal(expressionText, parameterType, intellisense: false);
         }
 
+        /// <summary>
+        /// Type check a formula without executing it. 
+        /// </summary>
+        /// <param name="formula">The formula to check.</param>
+        /// <param name="parameterType">The type context.</param>
+        /// <remarks>Used by PVA.</remarks>
+        /// <returns></returns>
+        internal CheckResult Check(Formula formula, FormulaType parameterType = null)
+        {
+            return CheckInternal(formula, parameterType, intellisense: false);
+        }
+
         private CheckResult CheckInternal(string expressionText, FormulaType parameterType = null, bool intellisense = false)
+        {
+            return CheckInternal(new Formula(expressionText), parameterType, intellisense);
+        }
+
+        private CheckResult CheckInternal(Formula formula, FormulaType parameterType = null, bool intellisense = false)
         {
             if (parameterType == null)
             {
                 parameterType = new RecordType();
             }
-
-            var formula = new Formula(expressionText);
 
             formula.EnsureParsed(TexlParser.Flags.None);
 
