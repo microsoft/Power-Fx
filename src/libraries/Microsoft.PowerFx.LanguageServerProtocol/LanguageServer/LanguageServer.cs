@@ -331,11 +331,9 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
                 switch (codeActionKind)
                 {
                     case CodeActionKind.QuickFix:
-
                         var scope = _scopeFactory.GetOrCreateInstance(documentUri);
-                        var scopeQuickFix = scope as IPowerFxScopeQuickFix;
 
-                        if (scopeQuickFix != null)
+                        if (scope is IPowerFxScopeQuickFix scopeQuickFix)
                         {
                             var result = scopeQuickFix.Suggest(expression);
 
