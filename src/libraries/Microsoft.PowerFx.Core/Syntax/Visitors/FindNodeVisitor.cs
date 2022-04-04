@@ -270,18 +270,18 @@ namespace Microsoft.PowerFx.Core.Syntax.Visitors
             }
 
             // Cursor is between the open and closed bracket.
-            for (var i = 0; i < node.Children.Length; i++)
+            for (var i = 0; i < node.Commas.Length; i++)
             {
                 // Cursor position is inside ith child.
-                if (_cursorPosition <= node.Children[i].Token.Span.Lim)
+                if (_cursorPosition <= node.Commas[i].Span.Lim)
                 {
                     node.Children[i].Accept(this);
                     return false;
                 }
             }
 
-            // If we got here the cursor is not within the brackets. return tableNode.
-            _result = node;
+            // If we got here the cursor should be in the last child.
+            node.Children[node.Children.Length - 1].Accept(this);
             return false;
         }
 

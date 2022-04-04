@@ -1922,8 +1922,40 @@
   <data name="AboutTime_millisecond" xml:space="preserve">
     <value>The millisecond component.</value>
   </data>
+  <data name="AboutDateTime" xml:space="preserve">
+    <value>Creates a value that represents an instant in time, expressed as a date and time of the day.</value>
+    <comment>Description of 'DateTime' function.</comment>
+  </data>
+  <data name="AboutDateTime_year" xml:space="preserve">
+    <value>The year.</value>
+    <comment>Description of the first parameter to the 'DateTime' function: the year of the date/time value being created.</comment>
+  </data>
+  <data name="AboutDateTime_month" xml:space="preserve">
+    <value>The month.</value>
+    <comment>Description of the second parameter to the 'DateTime' function: the month of the date/time value being created.</comment>
+  </data>
+  <data name="AboutDateTime_day" xml:space="preserve">
+    <value>The day.</value>
+    <comment>Description of the third parameter to the 'DateTime' function: the day of the date/time value being created.</comment>
+  </data>
+  <data name="AboutDateTime_hour" xml:space="preserve">
+    <value>The hour.</value>
+    <comment>Description of the fourth parameter to the 'DateTime' function: the hour of the date/time value being created.</comment>
+  </data>
+  <data name="AboutDateTime_minute" xml:space="preserve">
+    <value>The minute.</value>
+    <comment>Description of the fifth parameter to the 'DateTime' function: the minute of the date/time value being created.</comment>
+  </data>
+  <data name="AboutDateTime_second" xml:space="preserve">
+    <value>The second.</value>
+    <comment>Description of the sixth parameter to the 'DateTime' function: the second of the date/time value being created.</comment>
+  </data>
+  <data name="AboutDateTime_millisecond" xml:space="preserve">
+    <value>The milliseconds.</value>
+    <comment>Description of the seventh parameter to the 'DateTime' function: the milliseconds of the date/time value being created.</comment>
+  </data>
   <data name="AboutYear" xml:space="preserve">
-    <value>Year returns the year of a given date, a number greater than 1900.</value>
+    <value>Year returns the year of a given date.</value>
     <comment>Description of 'Year' function.</comment>
   </data>
   <data name="YearArg1" xml:space="preserve">

@@ -1922,8 +1922,12 @@
   <data name="AboutTime_millisecond" xml:space="preserve">
     <value>Millisekundkomponenten.</value>
   </data>
+  <data name="AboutDateTime" xml:space="preserve">
+    <value>Oppretter en verdi som representerer et øyeblikk i tid, uttrykt som en dato og et klokkeslett for dagen.</value>
+    
+  </data>
   <data name="AboutYear" xml:space="preserve">
-    <value>År returnerer året for en gitt dato, et tall som er større enn 1900.</value>
+    <value>År returnerer året for en gitt dato.</value>
     
   </data>
   <data name="YearArg1" xml:space="preserve">
@@ -2338,15 +2342,15 @@
   <data name="AboutChar_column_of_numbers" xml:space="preserve">
     <value>En kolonne ned kodenumre fra tegnsettet på plattformen din.</value>
   </data>
-  <data name="AboutParseJson" xml:space="preserve">
+  <data name="AboutParseJSON" xml:space="preserve">
     <value>Konverterer en JSON-streng til et objekt.</value>
     
   </data>
-  <data name="ParseJsonArg1" xml:space="preserve">
+  <data name="ParseJSONArg1" xml:space="preserve">
     <value>inndata</value>
     
   </data>
-  <data name="AboutParseJson_input" xml:space="preserve">
+  <data name="AboutParseJSON_input" xml:space="preserve">
     <value>En JSON-streng som skal behandles.</value>
   </data>
   <data name="AboutIndex" xml:space="preserve">
@@ -2365,7 +2369,8 @@
     <value>En tabell.</value>
   </data>
   <data name="AboutIndex_index" xml:space="preserve">
-    <value>En heltallsindeks.</value>
+    <value>Indeksen for oppføringen som skal hentes.</value>
+    
   </data>
   <data name="Screen_Name_DisplayName" xml:space="preserve">
     <value>Navn</value>
@@ -3974,7 +3979,7 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidName_ShortMessage" xml:space="preserve">
-    <value>Navnet er ugyldig. Denne identifikatoren gjenkjennes ikke.</value>
+    <value>Navnet er ugyldig. Gjenkjenner ikke {0}.</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidName_LongMessage" xml:space="preserve">
@@ -3985,6 +3990,21 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidName_Link_1" xml:space="preserve">
+    <value>Artikkel: Formelreferanse for Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_ShortMessage" xml:space="preserve">
+    <value>Navnet er ugyldig. Denne identifikatoren gjenkjennes ikke.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_LongMessage" xml:space="preserve">
+    <value>Denne feilen oppstår vanligvis når en formel refererer til noe som ikke lenger finnes (f.eks. en kontroll du har slettet).</value>
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_HowToFix_1" xml:space="preserve">
+    <value>Fjern eller korriger referansen til navnet som ikke er gyldig.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_Link_1" xml:space="preserve">
     <value>Artikkel: Formelreferanse for Power Apps</value>
     
   </data>
@@ -4482,11 +4502,11 @@
     
   </data>
   <data name="ErrorResource_ErrEmptyIsland_ShortMessage" xml:space="preserve">
-    <value>Empty expressions cannot appear inside an interpolated string.</value>
+    <value>Tomme uttrykk kan ikke vises i en interpolert streng.</value>
     
   </data>
   <data name="ErrorResource_ErrEmptyIsland_HowToFix_1" xml:space="preserve">
-    <value>Check for empty expressions inside the interpolated string.</value>
+    <value>Se etter tomme uttrykk i den interpolerte strengen.</value>
     
   </data>
   <data name="ErrorResource_ErrAsNotInContext_ShortMessage" xml:space="preserve">

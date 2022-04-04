@@ -293,6 +293,16 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: DateDiff)
             },
             {
+                BuiltinFunctionsCore.DateTime,
+                StandardErrorHandling<NumberValue>(
+                    expandArguments: InsertDefaultValues(outputArgsCount: 7, fillWith: new NumberValue(IRContext.NotInSource(FormulaType.Number), 0)),
+                    replaceBlankValues: ReplaceBlankWithZero,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<NumberValue>,
+                    checkRuntimeValues: FiniteChecker,
+                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
+                    targetFunction: DateTimeFunction)
+            },
+            {
                 BuiltinFunctionsCore.DateValue,
                 StandardErrorHandling<StringValue>(
                     expandArguments: NoArgExpansion,
