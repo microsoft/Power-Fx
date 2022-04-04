@@ -341,7 +341,7 @@ namespace Microsoft.PowerFx.Functions
             }
             else
             {
-                return new BlankValue(irContext);
+                return CommonErrors.UnreachableCodeError(irContext);
             }
         }
 
@@ -356,7 +356,7 @@ namespace Microsoft.PowerFx.Functions
             }
             else
             {
-                return new BlankValue(irContext);
+                return CommonErrors.UnreachableCodeError(irContext);
             }
         }
 
@@ -371,7 +371,7 @@ namespace Microsoft.PowerFx.Functions
             }
             else
             {
-                return new BlankValue(irContext);
+                return CommonErrors.UnreachableCodeError(irContext);
             }
         }
 
@@ -386,7 +386,7 @@ namespace Microsoft.PowerFx.Functions
             }
             else 
             {
-                return new BlankValue(irContext);
+                return CommonErrors.UnreachableCodeError(irContext);
             }            
         }
 
