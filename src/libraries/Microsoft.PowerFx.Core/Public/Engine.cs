@@ -60,12 +60,12 @@ namespace Microsoft.PowerFx
         /// <summary>
         /// Type check a formula without executing it. 
         /// </summary>
-        /// <param name="formula"></param>
+        /// <param name="expressionText"></param>
         /// <param name="parameterType"></param>
         /// <returns></returns>
-        public CheckResult Check(string formula, FormulaType parameterType = null)
+        public CheckResult Check(string expressionText, RecordType parameterType = null)
         {
-            return Check(formula, parameterType);
+            return Check(new Formula(expressionText), parameterType);
         }
 
         /// <summary>
@@ -74,7 +74,7 @@ namespace Microsoft.PowerFx
         /// <param name="formula"></param>
         /// <param name="parameterType"></param>
         /// <returns></returns>
-        public CheckResult Check(Formula formula, RecordType parameterType = null)
+        internal CheckResult Check(Formula formula, RecordType parameterType = null)
         {
             if (parameterType == null)
             {
