@@ -22,8 +22,7 @@ namespace Microsoft.PowerFx.Functions
             var arg1 = (LambdaFormulaValue)args[1];
             var arg2 = (LambdaFormulaValue)(args.Length > 2 ? args[2] : null);
 
-            var rowsAsync = LazyFilterAsync(runner, symbolContext, arg0.Rows, arg1);
-            var rows = await rowsAsync.ToListAsync();
+            var rows = await LazyFilterAsync(runner, symbolContext, arg0.Rows, arg1);
             var row = rows.FirstOrDefault();
 
             if (row != null)
@@ -92,13 +91,15 @@ namespace Microsoft.PowerFx.Functions
 
             var tableType = (TableType)irContext.ResultType;
             var recordIRContext = new IRContext(irContext.SourceContext, tableType.ToRecord());
-            var rows = LazyAddColumns(runner, symbolContext, sourceArg.Rows, recordIRContext, newColumns);
+            var rows = await LazyAddColumnsAsync(runner, symbolContext, sourceArg.Rows, recordIRContext, newColumns);
 
             return new InMemoryTableValue(irContext, rows);
         }
 
-        private static IEnumerable<DValue<RecordValue>> LazyAddColumns(EvalVisitor runner, SymbolContext context, IEnumerable<DValue<RecordValue>> sources, IRContext recordIRContext, NamedLambda[] newColumns)
+        private static async Task<IEnumerable<DValue<RecordValue>>> LazyAddColumnsAsync(EvalVisitor runner, SymbolContext context, IEnumerable<DValue<RecordValue>> sources, IRContext recordIRContext, NamedLambda[] newColumns)
         {
+            var list = new List<DValue<RecordValue>>();
+
             foreach (var row in sources)
             {
                 if (row.IsValue)
@@ -110,17 +111,19 @@ namespace Microsoft.PowerFx.Functions
 
                     foreach (var column in newColumns)
                     {
-                        var value = column.Lambda.EvalAsync(runner, childContext).Result;
+                        var value = await column.Lambda.EvalAsync(runner, childContext);
                         fields.Add(new NamedValue(column.Name, value));
                     }
 
-                    yield return DValue<RecordValue>.Of(new InMemoryRecordValue(recordIRContext, fields.ToArray()));
+                    list.Add(DValue<RecordValue>.Of(new InMemoryRecordValue(recordIRContext, fields.ToArray())));
                 }
                 else
                 {
-                    yield return row;
+                    list.Add(row);
                 }
             }
+
+            return list;
         }
 
         // CountRows
@@ -195,10 +198,8 @@ namespace Microsoft.PowerFx.Functions
                 });
             }
 
-            var rowsAsync = LazyFilterAsync(runner, symbolContext, arg0.Rows, arg1);
+            var rows = await LazyFilterAsync(runner, symbolContext, arg0.Rows, arg1);
             
-            var rows = await rowsAsync.ToListAsync();
-
             return new InMemoryTableValue(irContext, rows);
         }
 
@@ -294,37 +295,62 @@ namespace Microsoft.PowerFx.Functions
             return new InMemoryTableValue(irContext, pairs.Select(pair => pair.Key));
         }
 
-        private static async IAsyncEnumerable<DValue<RecordValue>> LazyFilterAsync(
+        private static async Task<DValue<RecordValue>> LazyFilterRowAsync(
+           EvalVisitor runner,
+           SymbolContext context,
+           DValue<RecordValue> row,
+           LambdaFormulaValue filter)
+        {
+            if (row.IsValue)
+            {
+                var childContext = context.WithScopeValues(row.Value);
+
+                // Filter evals to a boolean 
+                var result = await filter.EvalAsync(runner, childContext);
+                var include = false;
+                if (result is BooleanValue booleanValue)
+                {
+                    include = booleanValue.Value;
+                }
+                else if (result is ErrorValue errorValue)
+                {
+                    return DValue<RecordValue>.Of(errorValue);
+                }
+
+                if (include)
+                {
+                    return row;
+                }
+            }
+
+            return null;
+        }
+
+        private static async Task<DValue<RecordValue>[]> LazyFilterAsync(
             EvalVisitor runner,
             SymbolContext context,
             IEnumerable<DValue<RecordValue>> sources,
-            LambdaFormulaValue filter)
+            LambdaFormulaValue filter, 
+            int topN = int.MaxValue)
         {
+            var tasks = new List<Task<DValue<RecordValue>>>();
+            
+            // Filter needs to allow running in parallel. 
             foreach (var row in sources)
             {
                 runner.CheckCancel();
-                if (row.IsValue)
-                {
-                    var childContext = context.WithScopeValues(row.Value);
 
-                    // Filter evals to a boolean 
-                    var result = await filter.EvalAsync(runner, childContext);
-                    var include = false;
-                    if (result is BooleanValue booleanValue)
-                    {
-                        include = booleanValue.Value;
-                    }
-                    else if (result is ErrorValue errorValue)
-                    {
-                        yield return DValue<RecordValue>.Of(errorValue);
-                    }
-
-                    if (include)
-                    {
-                        yield return row;
-                    }
-                }
+                var task = LazyFilterRowAsync(runner, context, row, filter);
+                tasks.Add(task);
             }
+
+            // WhenAll will allow running tasks in parallel. 
+            var results = await Task.WhenAll(tasks);
+
+            // Remove all nulls. 
+            var final = results.Where(x => x != null);
+
+            return final.ToArray();
         }
 
         // AddColumns accepts pairs of args. 
@@ -340,8 +366,8 @@ namespace Microsoft.PowerFx.Functions
 
                 for (var i = 1; i < args.Length; i += 2)
                 {
-                    var columnName = ((StringValue)args[1]).Value;
-                    var arg1 = (LambdaFormulaValue)args[2];
+                    var columnName = ((StringValue)args[i]).Value;
+                    var arg1 = (LambdaFormulaValue)args[i + 1];
                     l.Add(new NamedLambda
                     {
                         Name = columnName,

@@ -280,7 +280,7 @@ namespace Microsoft.PowerFx.Functions
             return agg.GetResult(irContext);
         }
 
-        private static FormulaValue RunAggregator(IAggregator agg, EvalVisitor runner, SymbolContext context, IRContext irContext, FormulaValue[] args)
+        private static async Task<FormulaValue> RunAggregatorAsync(IAggregator agg, EvalVisitor runner, SymbolContext context, IRContext irContext, FormulaValue[] args)
         {
             var arg0 = (TableValue)args[0];
             var arg1 = (LambdaFormulaValue)args[1];
@@ -290,7 +290,7 @@ namespace Microsoft.PowerFx.Functions
                 if (row.IsValue)
                 {
                     var childContext = context.WithScopeValues(row.Value);
-                    var value = arg1.EvalAsync(runner, childContext).Result;
+                    var value = await arg1.EvalAsync(runner, childContext);
 
                     if (value is NumberValue number)
                     {
@@ -327,7 +327,7 @@ namespace Microsoft.PowerFx.Functions
         // Sum([1,2,3], Value * Value)     
         public static async ValueTask<FormulaValue> SumTable(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args)
         {
-            return RunAggregator(new SumAgg(), runner, symbolContext, irContext, args);
+            return await RunAggregatorAsync(new SumAgg(), runner, symbolContext, irContext, args);
         }
 
         // Max(1,2,3)     
@@ -352,7 +352,7 @@ namespace Microsoft.PowerFx.Functions
 
             if (agg != null)
             {
-                return RunAggregator(agg, runner, symbolContext, irContext, args);
+                return await RunAggregatorAsync(agg, runner, symbolContext, irContext, args);
             }
             else
             {
@@ -382,7 +382,7 @@ namespace Microsoft.PowerFx.Functions
 
             if (agg != null)
             {
-                return RunAggregator(agg, runner, symbolContext, irContext, args);                
+                return await RunAggregatorAsync(agg, runner, symbolContext, irContext, args);                
             }
             else 
             {
@@ -434,7 +434,7 @@ namespace Microsoft.PowerFx.Functions
                 return CommonErrors.DivByZeroError(irContext);
             }
 
-            return RunAggregator(new AverageAgg(), runner, symbolContext, irContext, args);
+            return await RunAggregatorAsync(new AverageAgg(), runner, symbolContext, irContext, args);
         }
 
         // https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-mod
