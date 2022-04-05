@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Utils;
@@ -20,9 +21,9 @@ namespace Microsoft.PowerFx.Core.Types.Enums
         ///     Item1: Enum internal identifier
         ///     Item2: Enum invariant name.
         /// </summary>
-        private Dictionary<string, Tuple<string, string, string>> _customEnumDict = new Dictionary<string, Tuple<string, string, string>>();
+        private ImmutableDictionary<string, Tuple<string, string, string>> _customEnumDict = ImmutableDictionary<string, Tuple<string, string, string>>.Empty;
 
-        private Dictionary<string, Dictionary<string, string>> _customEnumLocDict = new Dictionary<string, Dictionary<string, string>>();
+        private ImmutableDictionary<string, Dictionary<string, string>> _customEnumLocDict = ImmutableDictionary<string, Dictionary<string, string>>.Empty;
 
         #region Default Enums
         private static readonly IReadOnlyDictionary<string, string> _defaultEnums =
@@ -295,10 +296,10 @@ namespace Microsoft.PowerFx.Core.Types.Enums
 
         private readonly Dictionary<string, string> _workingEnums = new Dictionary<string, string>();
 
-        private List<EnumSymbol> _enumSymbols;
+        private ImmutableList<EnumSymbol> _enumSymbols;
 
         // TODO: unify _enumSymbols with this variable because they are basically the same thing
-        private List<Tuple<DName, DName, DType>> _enumsUsedPowerApps;
+        private ImmutableList<Tuple<DName, DName, DType>> _enumsUsedPowerApps;
 
         #region Internal methods
         internal EnumStoreBuilder WithRequiredEnums(IEnumerable<TexlFunction> functions)
@@ -342,17 +343,17 @@ namespace Microsoft.PowerFx.Core.Types.Enums
             var tupleName = tuple.Item1;
             if (!_customEnumDict.ContainsKey(tupleName))
             {
-                _customEnumDict.Add(tupleName, tuple);
+                _customEnumDict = _customEnumDict.Add(tupleName, tuple);
                 ResetEnumCaches();
                 if (locInfo != null)
                 {
                     if (!_customEnumLocDict.ContainsKey(tupleName))
                     {
-                        _customEnumLocDict.Add(tupleName, locInfo);
+                        _customEnumLocDict = _customEnumLocDict.Add(tupleName, locInfo);
                     }
                     else
                     {
-                        _customEnumLocDict[tupleName] = locInfo;
+                        _customEnumLocDict = _customEnumLocDict.SetItem(tupleName, locInfo);
                     }
                 }
             }
@@ -360,14 +361,14 @@ namespace Microsoft.PowerFx.Core.Types.Enums
 
         internal void ResetCustomEnums()
         {
-            _customEnumDict = new Dictionary<string, Tuple<string, string, string>>();
-            _customEnumLocDict = new Dictionary<string, Dictionary<string, string>>();
+            _customEnumDict = ImmutableDictionary<string, Tuple<string, string, string>>.Empty;
+            _customEnumLocDict = ImmutableDictionary<string, Dictionary<string, string>>.Empty;
             ResetEnumCaches();
         }
 
         internal EnumStore Build()
         {
-            return EnumStore.Build(new List<EnumSymbol>(EnumSymbols()), new List<Tuple<DName, DName, DType>>(Enums()));
+            return EnumStore.Build(new List<EnumSymbol>(EnumSymbols), new List<Tuple<DName, DName, DType>>(Enums()));
         }
 
         internal EnumSymbol BuildEnumSymbol(DName name, DName invariantName, DType invariantType)
@@ -476,11 +477,10 @@ namespace Microsoft.PowerFx.Core.Types.Enums
         /// <summary>
         /// Static list of all enum specs.
         /// </summary>
-        private Dictionary<string, string> EnumSpec() =>
-            CollectionUtils.EnsureInstanceCreated(ref _enumSpec, () =>
-            {
-                return RegenerateEnumSpec();
-            });
+        private Dictionary<string, string> EnumSpec => CollectionUtils.EnsureInstanceCreated(ref _enumSpec, () =>
+        {
+            return RegenerateEnumSpec();
+        });
 
         /// <summary>
         /// Enumerates the default enum declarations.
@@ -489,7 +489,7 @@ namespace Microsoft.PowerFx.Core.Types.Enums
         /// List of enum tuples where the first item in the tuple is the internal identifier, the second item is the
         /// invariant identifier, and the third is the enum's type.
         /// </returns>
-        private IEnumerable<Tuple<DName, DName, DType>> Enums()
+        internal IEnumerable<Tuple<DName, DName, DType>> Enums()
         {
             CollectionUtils.EnsureInstanceCreated(ref _enumTypes, () =>
             {
@@ -498,7 +498,7 @@ namespace Microsoft.PowerFx.Core.Types.Enums
 
             return CollectionUtils.EnsureInstanceCreated(ref _enumsUsedPowerApps, () =>
             {
-                var list = new List<Tuple<DName, DName, DType>>();
+                var list = ImmutableList.CreateBuilder<Tuple<DName, DName, DType>>();
                 foreach (var enumSpec in _workingEnums)
                 {
                     Contracts.Assert(DName.IsValidDName(enumSpec.Key));
@@ -515,23 +515,23 @@ namespace Microsoft.PowerFx.Core.Types.Enums
                     list.Add(new Tuple<DName, DName, DType>(new DName(enumSpec.Item1), new DName(enumSpec.Item2), _enumTypes[enumSpec.Item2]));
                 }
 
-                return list;
+                return list.ToImmutable();
             });
         }
 
-        private IEnumerable<EnumSymbol> EnumSymbols() =>
+        internal IEnumerable<EnumSymbol> EnumSymbols =>
             CollectionUtils.EnsureInstanceCreated(
                     ref _enumSymbols, () => RegenerateEnumSymbols());
 
-        private List<EnumSymbol> RegenerateEnumSymbols()
+        private ImmutableList<EnumSymbol> RegenerateEnumSymbols()
         {
-            var list = new List<EnumSymbol>();
+            var list = ImmutableList.CreateBuilder<EnumSymbol>();
             foreach (var enumValue in Enums())
             {
-                list.Add(BuildEnumSymbol(enumValue.Item1, enumValue.Item2, enumValue.Item3));
+                list.Add(new EnumSymbol(_customEnumLocDict, enumValue.Item1, enumValue.Item2, enumValue.Item3));
             }
 
-            return list;
+            return list.ToImmutable();
         }
 
         private void ResetEnumCaches()
