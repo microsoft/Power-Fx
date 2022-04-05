@@ -40,10 +40,6 @@ namespace Microsoft.PowerFx.Core.Syntax.Visitors
         {
         }
 
-        public override void Visit(ReplaceableNode node)
-        {
-        }
-
         public override void PostVisit(DottedNameNode node)
         {
         }

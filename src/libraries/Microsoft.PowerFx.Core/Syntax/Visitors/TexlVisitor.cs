@@ -25,8 +25,6 @@ namespace Microsoft.PowerFx.Core.Syntax.Visitors
 
         public abstract void Visit(SelfNode node);
 
-        public abstract void Visit(ReplaceableNode node);
-
         // Visit methods for non-leaf node types.
         // If PreVisit returns true, the children are visited and PostVisit is called.
         public virtual bool PreVisit(StrInterpNode node)

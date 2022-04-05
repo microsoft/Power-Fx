@@ -36,11 +36,6 @@ namespace Microsoft.PowerFx.Core.Syntax
             return string.Concat(node.Accept(pretty, Precedence.None));
         }
 
-        public override LazyList<string> Visit(ReplaceableNode node, Precedence parentPrecedence)
-        {
-            throw new NotSupportedException("Replaceable nodes are not supported");
-        }
-
         public override LazyList<string> Visit(ErrorNode node, Precedence parentPrecedence)
         {
             Contracts.AssertValue(node);
@@ -522,11 +517,6 @@ namespace Microsoft.PowerFx.Core.Syntax
                 node.SourceList.Tokens
                     .Where(token => token.Kind != TokKind.Whitespace)
                     .Select(GetScriptForToken));
-        }
-
-        public override LazyList<string> Visit(ReplaceableNode node, Context context)
-        {
-            throw new NotSupportedException("Replaceable nodes are not supported");
         }
 
         public override LazyList<string> Visit(ErrorNode node, Context context)
