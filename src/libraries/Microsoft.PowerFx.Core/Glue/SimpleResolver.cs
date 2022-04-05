@@ -55,7 +55,6 @@ namespace Microsoft.PowerFx.Core.Glue
         /// Initializes a new instance of the <see cref="SimpleResolver"/> class.
         /// </summary>
         /// <param name="config"></param>
-        /// <param name="skipGlobalDisplayNames">For some scenarios, we force lookups to only be by logical names.</param>
         public SimpleResolver(PowerFxConfig config)            
         {
             _config = config ?? throw new ArgumentNullException(nameof(config));
