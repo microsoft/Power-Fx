@@ -4,9 +4,10 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using Microsoft.PowerFx.Core;
+using System.Linq;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Functions;
+using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
 
@@ -22,33 +23,53 @@ namespace Microsoft.PowerFx.Core
         private readonly Dictionary<DName, IExternalEntity> _environmentSymbols;
         private SingleSourceDisplayNameProvider _environmentSymbolDisplayNameProvider;
 
-        internal IReadOnlyDictionary<string, TexlFunction> ExtraFunctions => _extraFunctions;
+        // By default, we pull the core functions. 
+        // These can be overridden. 
+        private IEnumerable<TexlFunction> _coreFunctions = BuiltinFunctionsCore.BuiltinFunctionsLibrary;
 
-        internal EnumStore EnumStore { get; }
+        internal IEnumerable<TexlFunction> Functions => _coreFunctions.Concat(_extraFunctions.Values);
+
+        internal EnumStoreBuilder EnumStoreBuilder { get; }
 
         internal CultureInfo CultureInfo { get; }
 
-        private PowerFxConfig(CultureInfo cultureInfo, EnumStore enumStore) 
+        private PowerFxConfig(CultureInfo cultureInfo, EnumStoreBuilder enumStoreBuilder) 
         {
             CultureInfo = cultureInfo ?? CultureInfo.CurrentCulture;
             _isLocked = false;
             _extraFunctions = new Dictionary<string, TexlFunction>();
             _environmentSymbols = new Dictionary<DName, IExternalEntity>();
             _environmentSymbolDisplayNameProvider = new SingleSourceDisplayNameProvider();
-            EnumStore = enumStore;
-        }      
+            EnumStoreBuilder = enumStoreBuilder;
+        }    
 
         public PowerFxConfig(CultureInfo cultureInfo = null)
-            : this(cultureInfo, new EnumStore()) 
+            : this(cultureInfo, new EnumStoreBuilder().WithDefaultEnums()) 
         {
         }
 
         /// <summary>
         /// Stopgap until Enum Store is refactored. Do not rely on, this will be removed. 
         /// </summary>
-        internal static PowerFxConfig BuildWithEnumStore(CultureInfo cultureInfo, EnumStore enumStore)
+        internal static PowerFxConfig BuildWithEnumStore(CultureInfo cultureInfo, EnumStoreBuilder enumStoreBuilder)
         {
-            return new PowerFxConfig(cultureInfo, enumStore);
+            return new PowerFxConfig(cultureInfo, enumStoreBuilder);
+        }
+
+        internal static PowerFxConfig BuildWithEnumStore(CultureInfo cultureInfo, EnumStoreBuilder enumStoreBuilder, IEnumerable<TexlFunction> coreFunctions)
+        {
+            var config = new PowerFxConfig(cultureInfo, enumStoreBuilder);
+            config.SetCoreFunctions(coreFunctions);
+            return config;
+        }
+
+        /// <summary>
+        /// List all functions names registered in the config. 
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<string> GetAllFunctionNames()
+        {
+            return _extraFunctions.Values.Select(func => func.Name).Distinct();
         }
 
         internal void AddEntity(IExternalEntity entity, DName displayName = default)
@@ -63,11 +84,22 @@ namespace Microsoft.PowerFx.Core
             _environmentSymbols.Add(entity.EntityName, entity);
         }
 
+        // Sets the "core" builtin functions. This can vary from host to host. 
+        // Overwrite list and set. 
+        internal void SetCoreFunctions(IEnumerable<TexlFunction> functions)
+        {
+            CheckUnlocked();
+
+            _coreFunctions = functions ?? throw new ArgumentNullException(nameof(functions));
+            EnumStoreBuilder.WithRequiredEnums(functions);
+        }
+
         internal void AddFunction(TexlFunction function)
         {
             CheckUnlocked();
 
             _extraFunctions.Add(function.GetUniqueTexlRuntimeName(), function);
+            EnumStoreBuilder.WithRequiredEnums(new List<TexlFunction>() { function });
         }
                 
         internal bool TryGetSymbol(DName name, out IExternalEntity symbol, out DName displayName)

@@ -538,13 +538,6 @@ namespace Microsoft.PowerFx.Core.IR
                 throw new NotSupportedException();
             }
 
-            // Replaceable nodes are dead code and should be removed entirely
-            public override IntermediateNode Visit(ReplaceableNode node, IRTranslatorContext context)
-            {
-                Contracts.Assert(false);
-                throw new NotSupportedException();
-            }
-
             private int _scopeId = 1;
 
             private ScopeSymbol GetNewScope()

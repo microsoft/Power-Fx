@@ -1922,8 +1922,12 @@
   <data name="AboutTime_millisecond" xml:space="preserve">
     <value>Milisekundy</value>
   </data>
+  <data name="AboutDateTime" xml:space="preserve">
+    <value>Vytvoří hodnotu, která představuje okamžik v čase, vyjádřený jako datum a čas dne.</value>
+    
+  </data>
   <data name="AboutYear" xml:space="preserve">
-    <value>Funkce Year vrátí rok zadaného data, číslo větší než 1900.</value>
+    <value>Funkce Year vrátí rok zadaného data.</value>
     
   </data>
   <data name="YearArg1" xml:space="preserve">
@@ -2338,15 +2342,15 @@
   <data name="AboutChar_column_of_numbers" xml:space="preserve">
     <value>Sloupec s čísly kódů ze znakové sady vaší platformy</value>
   </data>
-  <data name="AboutParseJson" xml:space="preserve">
+  <data name="AboutParseJSON" xml:space="preserve">
     <value>Převede řetězec JSON na objekt.</value>
     
   </data>
-  <data name="ParseJsonArg1" xml:space="preserve">
+  <data name="ParseJSONArg1" xml:space="preserve">
     <value>vstup</value>
     
   </data>
-  <data name="AboutParseJson_input" xml:space="preserve">
+  <data name="AboutParseJSON_input" xml:space="preserve">
     <value>Řetězec JSON ke zpracování.</value>
   </data>
   <data name="AboutIndex" xml:space="preserve">
@@ -2365,7 +2369,8 @@
     <value>Tabulka.</value>
   </data>
   <data name="AboutIndex_index" xml:space="preserve">
-    <value>Celočíselný index.</value>
+    <value>Index záznamu, který má být načten.</value>
+    
   </data>
   <data name="Screen_Name_DisplayName" xml:space="preserve">
     <value>Název</value>
@@ -3974,7 +3979,7 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidName_ShortMessage" xml:space="preserve">
-    <value>Název není platný. Identifikátor se nerozpoznal.</value>
+    <value>Název není platný. Identifikátor '{0}' se nerozpoznal.</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidName_LongMessage" xml:space="preserve">
@@ -3985,6 +3990,21 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidName_Link_1" xml:space="preserve">
+    <value>Článek: Referenční informace ke vzorcům v Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_ShortMessage" xml:space="preserve">
+    <value>Název není platný. Identifikátor se nerozpoznal.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_LongMessage" xml:space="preserve">
+    <value>K této chybě dochází nejčastěji v případě, že vzorec odkazuje na něco, co už neexistuje (třeba ovládací prvek, který jste odstranili).</value>
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_HowToFix_1" xml:space="preserve">
+    <value>Odeberte nebo opravte odkaz na název, který není platný.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_Link_1" xml:space="preserve">
     <value>Článek: Referenční informace ke vzorcům v Power Apps</value>
     
   </data>

@@ -1,0 +1,105 @@
+﻿#SETUP: AsyncTestSetup
+
+// Testsetup adds these functions:
+// - Async(N)  returns N, but ... 
+// - Async(N) Does not complete until Async(N-1) completes. Async(0) is completed. 
+//   This verifies operations are happening in parallel (else the tests will deadlock and hit a timeout)
+
+// WaitFor(N) will *fail* if it's started before WaitFor(N-1) completes. 
+// This ensures things that must be serial are indeed serial. 
+
+>> Async(0)
+0
+
+>> WaitFor(0)
+0
+
+// table operations can work in parallel and handle rows that complete out-of-order.
+>> Filter([1,0,2], Async(Value) = Value)
+[1,0,2]
+
+>> Filter([1,3,0,2], Async(Value) > 1)
+[3,2]
+
+>> ForAll([1,0,2], Async(Value))
+[1,0,2]
+
+>> ForAll([1,0], If(Async(Value) = 0, Async(2), Async(3)))
+[3,2]
+
+
+// False branch is never even evaluated. 
+// Don't just evaluate and ignore the results, ensure we never even evaluate it. 
+>> If(true, 10, WaitFor(1))
+10
+
+>> If(false, WaitFor(1), 20)
+20
+
+// And short-circuits
+>> And(false, WaitFor(1) = 1 )
+false
+
+>> Or(true, WaitFor(1) = 1 )
+true
+
+
+// Field access.
+>> If(Async(0)=0,{x:5}, {x:10}).x
+5
+
+>> [WaitFor(0), WaitFor(1)]
+[0,1]
+
+// Unary
+>> Async(0)%
+0
+
+>> Async(0) + Async(1) + Async(2)
+3
+
+>> Table({ x: Async(0)}, {x: Async(1)})
+Table({x:0},{x:1})
+
+
+// synchronously, we pick the first that satifies predicate
+>> LookUp([3,2,0,1] As X, X.Value >= 2).Value
+3
+
+// async semantics still pick the "first", even though 2 completes before 3.
+// So async behaves same as sync.
+>> LookUp([3,2,0,1] As X, Async(X.Value) >= 2).Value
+3
+
+
+// Record fields can be async. 
+// Order of multiple fields is unspecified!
+>> { x : Async(0), y: 1 }.x
+0
+
+// Call args are serial, left-to-right
+>> Sum(WaitFor(0), WaitFor(1), WaitFor(2))
+3
+
+// Aggregates are done in serial.
+>> Sum([0,1,2], WaitFor(Value))
+3
+
+// These operations are not parallel. 
+>> WaitFor(0) + WaitFor(1)
+1
+
+>> WaitFor(0) = WaitFor(1)
+false
+
+>> WaitFor(0) < WaitFor(1)
+true
+
+>> WaitFor(0) > WaitFor(1)
+false
+
+
+// AddColumns is sequential, but should be parallel. 
+>> AddColumns([0,2,4], "N1", WaitFor(Value), "N2", WaitFor(Value+1))
+Table({N1:0,N2:1,Value:0},{N1:2,N2:3,Value:2},{N1:4,N2:5,Value:4})
+

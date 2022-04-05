@@ -121,11 +121,6 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
             return null;
         }
 
-        public virtual ReplaceableNode AsReplaceable()
-        {
-            return null;
-        }
-
         public virtual SelfNode AsSelf()
         {
             return null;

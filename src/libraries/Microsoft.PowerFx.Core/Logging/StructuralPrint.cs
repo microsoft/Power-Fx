@@ -34,12 +34,7 @@ namespace Microsoft.PowerFx.Core.Logging
             var pretty = new StructuralPrint(binding, nameProvider);
             return string.Concat(node.Accept(pretty, Precedence.None));
         }
-
-        public override LazyList<string> Visit(ReplaceableNode node, Precedence parentPrecedence)
-        {
-            return LazyList<string>.Of("#$replaceable$#");
-        }
-
+        
         public override LazyList<string> Visit(ErrorNode node, Precedence parentPrecedence)
         {
             Contracts.AssertValue(node);
