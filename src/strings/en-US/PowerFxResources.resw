@@ -1633,6 +1633,10 @@
     <value>'{0}' is an unknown or unsupported function.</value>
     <comment>Error Message.</comment>
   </data>
+  <data name="ErrUnknownNamespaceFunction" xml:space="preserve">
+    <value>'{0}' is an unknown or unsupported function in namespace '{1}'.</value>
+    <comment>Error Message.</comment>
+  </data>
   <data name="ErrUnSupportedComponentBehaviorInvocation" xml:space="preserve">
     <value>Component behavior can only be invoked from within a component.</value>
     <comment>Error Message.</comment>
