@@ -14,7 +14,6 @@ namespace Microsoft.PowerFx.Core.Utils
     /// <summary>
     /// A list of simple names (<see cref="DName" />), starting at "root" (<see cref="Root" />).
     /// </summary>
-    /// // TASK: 67008 - Make this public, or expose a public shim in Document.
     [ThreadSafeImmutable]
     public struct DPath : IEquatable<DPath>, ICheckable
     {
@@ -113,30 +112,21 @@ namespace Microsoft.PowerFx.Core.Utils
             Contracts.Assert(IsValid);
         }
 
-        /// <summary>
-        /// The parent path.
-        /// </summary>
-        public DPath Parent => _node == null ? this : new DPath(_node.Parent);
+        internal DPath Parent => _node == null ? this : new DPath(_node.Parent);
 
-        /// <summary>
-        /// The topmost name of the path.
-        /// </summary>
-        public DName Name => _node == null ? default : _node.Name;
+        internal DName Name => _node == null ? default : _node.Name;
 
-        /// <summary>
-        /// The length (number of simple names) of the path.
-        /// </summary>
-        public int Length => _node == null ? 0 : _node.Length;
-
-        /// <summary>
-        /// Whether this path is root.
-        /// </summary>
-        public bool IsRoot => _node == null;
+        internal bool IsRoot => _node == null;
 
         /// <summary>
         /// Whether this path is valid.
         /// </summary>
         public bool IsValid => _node == null || _node.IsValid;
+
+        /// <summary>
+        /// The length (number of simple names) of the path.
+        /// </summary>
+        public int Length => _node == null ? 0 : _node.Length;
 
         /// <summary>
         /// A name at some index.
@@ -253,6 +243,10 @@ namespace Microsoft.PowerFx.Core.Utils
             return sb.ToString();
         }
 
+        /// <summary>
+        /// A sequence of name segments.
+        /// </summary>
+        /// <returns></returns>
         public IEnumerable<DName> Segments()
         {
             var segments = new Stack<DName>();
@@ -264,6 +258,12 @@ namespace Microsoft.PowerFx.Core.Utils
             return segments.AsEnumerable();
         }
 
+        /// <summary>
+        /// Check whether two paths are equal.
+        /// </summary>
+        /// <param name="path1"></param>
+        /// <param name="path2"></param>
+        /// <returns></returns>
         public static bool operator ==(DPath path1, DPath path2)
         {
             var node1 = path1._node;
@@ -297,8 +297,15 @@ namespace Microsoft.PowerFx.Core.Utils
             }
         }
 
+        /// <summary>
+        /// Check whether two paths are not equal.
+        /// </summary>
+        /// <param name="path1"></param>
+        /// <param name="path2"></param>
+        /// <returns></returns>
         public static bool operator !=(DPath path1, DPath path2) => !(path1 == path2);
 
+        /// <inheritdoc />
         public override int GetHashCode()
         {
             if (_node == null)
@@ -309,11 +316,17 @@ namespace Microsoft.PowerFx.Core.Utils
             return _node.GetHashCode();
         }
 
+        /// <summary>
+        /// Whether this path is equal to another path.
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
         public bool Equals(DPath other)
         {
             return this == other;
         }
 
+        /// <inheritdoc />
         public override bool Equals(object obj)
         {
             Contracts.AssertValueOrNull(obj);
