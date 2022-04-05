@@ -230,7 +230,7 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public async Task WaitForFunctionTest()
         {
-            var helper = new WaitForFunctionsHelper();
+            var helper = new WaitForFunctionsHelper(null);
 
             var result = await helper.Worker(0);
             Assert.Equal(0, result);
@@ -247,7 +247,7 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public async Task AsyncFunctionTest()
         {
-            var helper = new AsyncFunctionsHelper();
+            var helper = new AsyncFunctionsHelper(null);
 
             var result = await helper.Worker(0);
             Assert.Equal(0, result);

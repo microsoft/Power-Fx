@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -10,6 +11,7 @@ using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Public.Values;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
+using Xunit;
 
 namespace Microsoft.PowerFx.Tests
 {
@@ -18,14 +20,17 @@ namespace Microsoft.PowerFx.Tests
     {
         private readonly string _functionName;
 
-        public AsyncFunctionHelperBase(string functionName)
+        private readonly AsyncVerify _verify;
+
+        public AsyncFunctionHelperBase(AsyncVerify verify, string functionName)
         {
             _functionName = functionName;
+            _verify = verify;
         }
 
         private readonly List<TaskCompletionSource<int>> _list = new List<TaskCompletionSource<int>>();
 
-        public TaskCompletionSource<int> Get(int i)
+        private TaskCompletionSource<int> Get(int i)
         {
             lock (_list)
             {
@@ -36,11 +41,6 @@ namespace Microsoft.PowerFx.Tests
             }
 
             return _list[i];
-        }
-
-        private int GetMax()
-        {
-            return _list.Count;
         }
 
         public async Task WaitFor(int i)
@@ -56,7 +56,7 @@ namespace Microsoft.PowerFx.Tests
         }
 
         protected abstract Task OnWaitPolicyAsync(int x);
-        
+
         public async Task<double> Worker(double d)
         {
             var result = await Worker(new FormulaValue[] { FormulaValue.New(d) }, CancellationToken.None);
@@ -67,14 +67,16 @@ namespace Microsoft.PowerFx.Tests
         {
             var i = (int)((NumberValue)args[0]).Value;
 
-            // will create the task, singals to listened there is an outstanding call.
-            Get(i);
+            if (_verify != null)
+            {
+                await _verify.BeginAsyncCall(i);
+            }
 
             for (var x = 0; x < i; x++)
             {
                 cancel.ThrowIfCancellationRequested();
 
-                await OnWaitPolicyAsync(x);                
+                await OnWaitPolicyAsync(x);
             }
 
             Complete(i);
@@ -88,42 +90,6 @@ namespace Microsoft.PowerFx.Tests
             {
                 _impl = Worker
             };
-        }
-    }
-
-    // WaitFor(N) hard fails if WaitFor(N-1) hasn't complete yet. 
-    internal class WaitForFunctionsHelper : AsyncFunctionHelperBase
-    {
-        public WaitForFunctionsHelper()
-            : base("WaitFor")
-        {
-        }
-
-        protected override async Task OnWaitPolicyAsync(int x)
-        {
-            // Fail if any previous instance started before this one.
-            var t = WaitFor(x);
-            if (!t.IsCompleted)
-            {
-                throw new InvalidOperationException($"Task {x} has not completed. Bad parallelism");
-            }
-        }
-    }
-
-    // Async(N) returns N. Does not complete until Async(N-1) completes. 
-    // Async(0) is completed.
-    internal class AsyncFunctionsHelper : AsyncFunctionHelperBase
-    {
-        public AsyncFunctionsHelper()
-            : base("Async")
-        {
-        }
-
-        protected override async Task OnWaitPolicyAsync(int x)
-        {
-            // all previous instances must have finished before this completes.
-            // But it's fine for them to start in paralle. 
-            await WaitFor(x);            
         }
     }
 }

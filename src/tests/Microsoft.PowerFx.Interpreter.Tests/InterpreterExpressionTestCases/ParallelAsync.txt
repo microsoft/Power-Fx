@@ -8,6 +8,12 @@
 // WaitFor(N) will *fail* if it's started before WaitFor(N-1) completes. 
 // This ensures things that must be serial are indeed serial. 
 
+>> Async(0)
+0
+
+>> WaitFor(0)
+0
+
 // table operations can work in parallel and handle rows that complete out-of-order.
 >> Filter([1,0,2], Async(Value) = Value)
 [1,0,2]
@@ -75,6 +81,10 @@ Table({x:0},{x:1})
 >> Sum(WaitFor(0), WaitFor(1), WaitFor(2))
 3
 
+// Aggregates are done in serial.
+>> Sum([0,1,2], WaitFor(Value))
+3
+
 // These operations are not parallel. 
 >> WaitFor(0) + WaitFor(1)
 1
@@ -92,8 +102,4 @@ false
 // AddColumns is sequential, but should be parallel. 
 >> AddColumns([0,2,4], "N1", WaitFor(Value), "N2", WaitFor(Value+1))
 Table({N1:0,N2:1,Value:0},{N1:2,N2:3,Value:2},{N1:4,N2:5,Value:4})
-
-// Aggregates are done in serial.
->> Sum([0,1,2], WaitFor(Value))
-3
 
