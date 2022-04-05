@@ -24,8 +24,6 @@ namespace Microsoft.PowerFx.Core.Syntax.Visitors
 
         public abstract TResult Visit(SelfNode node, TContext context);
 
-        public abstract TResult Visit(ReplaceableNode node, TContext context);
-
         // Visit methods for non-leaf node types.
         // If PreVisit returns true, the children are visited and PostVisit is called.
         public abstract TResult Visit(StrInterpNode node, TContext context);

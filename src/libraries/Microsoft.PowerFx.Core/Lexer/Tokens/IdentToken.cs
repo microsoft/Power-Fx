@@ -12,7 +12,6 @@ namespace Microsoft.PowerFx.Core.Lexer.Tokens
         public readonly bool HasDelimiterStart;
         public readonly bool HasDelimiterEnd;
         public readonly bool IsModified;
-        public readonly bool IsReplaceable;
 
         // Unescaped, unmodified value.
         private readonly string _value;
@@ -43,12 +42,6 @@ namespace Microsoft.PowerFx.Core.Lexer.Tokens
             Name = DName.MakeValid(val, out IsModified);
             HasDelimiterStart = fDelimiterStart;
             HasDelimiterEnd = fDelimiterEnd;
-        }
-
-        public IdentToken(ReplaceableToken tok)
-            : this(tok.Value, tok.Span)
-        {
-            IsReplaceable = true;
         }
 
         /// <summary>
