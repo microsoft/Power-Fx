@@ -115,7 +115,6 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Core.Syntax.Nodes.NumLitNode",
                 "Microsoft.PowerFx.Core.Syntax.Nodes.ParentNode",
                 "Microsoft.PowerFx.Core.Syntax.Nodes.RecordNode",
-                "Microsoft.PowerFx.Core.Syntax.Nodes.ReplaceableNode",
                 "Microsoft.PowerFx.Core.Syntax.Nodes.SelfNode",
                 "Microsoft.PowerFx.Core.Syntax.Nodes.StrInterpNode",
                 "Microsoft.PowerFx.Core.Syntax.Nodes.StrLitNode",
