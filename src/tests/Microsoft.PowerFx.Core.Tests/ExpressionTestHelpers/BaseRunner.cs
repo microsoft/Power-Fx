@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -48,11 +49,20 @@ namespace Microsoft.PowerFx.Core.Tests
             });
             t.Start();
             bool success;
-            do
+            while (true) 
             {
                 success = t.Join(Timeout);
-            }
-            while (!success && System.Diagnostics.Debugger.IsAttached);
+                if (!success && Debugger.IsAttached)
+                {
+                    // Aid in debugging.
+                    Debugger.Log(0, null, $"Test case {testCase} running...\r\n");
+                    
+                    // Debugger.Break();
+                    continue;
+                }
+
+                break;
+            }            
 
             if (success)
             {

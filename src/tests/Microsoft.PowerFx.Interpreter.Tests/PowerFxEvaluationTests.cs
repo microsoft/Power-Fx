@@ -3,11 +3,14 @@
 
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Public.Values;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Tests;
+using Xunit;
 
 namespace Microsoft.PowerFx.Interpreter.Tests
 {
@@ -47,15 +50,43 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                         new NamedValue("InnerOtherOptionSet", o2Val)))); 
 
             return (new RecalcEngine(config), parameters);
-        }
+        }        
 
         internal class InterpreterRunner : BaseRunner
         {
+            // For async tests, run in special mode. 
+            // This does _not_ change evaluation semantics, but does verify .Result isn't called by checking
+            // task completion status.. 
+            private async Task<FormulaValue> RunVerifyAsync(string expr)
+            {
+                var config = new PowerFxConfig(null);
+
+                var verify = new AsyncVerify();
+
+                // Add Async(),WaitFor() functions 
+                var asyncHelper = new AsyncFunctionsHelper(verify);
+                config.AddFunction(asyncHelper.GetFunction());
+
+                var waitForHelper = new WaitForFunctionsHelper(verify);
+                config.AddFunction(waitForHelper.GetFunction());
+
+                var engine = new RecalcEngine(config);
+
+                // Run in special mode that ensures we're not calling .Result
+                var result = await verify.EvalAsync(engine, expr);
+                return result;
+            }
+
             protected override Task<FormulaValue> RunAsyncInternal(string expr, string setupHandlerName)
             {
                 FeatureFlags.StringInterpolation = true;
                 RecalcEngine engine;
                 RecordValue parameters;
+
+                if (setupHandlerName == "AsyncTestSetup")
+                {
+                    return RunVerifyAsync(expr);
+                }
 
                 if (setupHandlerName != null) 
                 {
