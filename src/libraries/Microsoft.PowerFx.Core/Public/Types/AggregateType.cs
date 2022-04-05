@@ -68,37 +68,5 @@ namespace Microsoft.PowerFx.Core.Public.Types
 
             return newType;
         }
-
-        internal FormulaType RenameFormulaTypeHelper(Queue<DName> segments, DName updatedName)
-        {
-            var field = segments.Dequeue();
-            if (segments.Count == 0)
-            {
-                // Create a display name provider with only the name in question
-                var names = new Dictionary<DName, DName>
-                {
-                    [field] = updatedName
-                };
-                var newProvider = new SingleSourceDisplayNameProvider(names);
-
-                return Build(DType.ReplaceDisplayNameProvider(_type, newProvider));
-            }
-
-            var fieldType = MaybeGetFieldType(field);
-            if (fieldType is not AggregateType aggregateType)
-            {
-                // Path doesn't exist within parameters, return as is
-                return this;
-            }
-
-            var updatedType = aggregateType.RenameFormulaTypeHelper(segments, updatedName);
-            var fError = false;
-
-            // Use some fancy DType internals to swap one field type for the updated one
-            var dropped = _type.Drop(ref fError, DPath.Root, field);
-            Contracts.Assert(!fError);
-
-            return Build(dropped.Add(field, updatedType._type));
-        }
     }
 }

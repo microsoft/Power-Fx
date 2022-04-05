@@ -47,24 +47,24 @@ namespace Microsoft.PowerFx
                 };
                 var newProvider = new SingleSourceDisplayNameProvider(names);
 
-                return FormulaType.Build(DType.ReplaceDisplayNameProvider(nestedType._type, newProvider));
+                return FormulaType.Build(DType.ReplaceDisplayNameProvider(DType.DisableDisplayNameProviders(nestedType._type), newProvider));
             }
 
             var fieldType = nestedType.MaybeGetFieldType(field);
             if (fieldType is not AggregateType aggregateType)
             {
                 // Path doesn't exist within parameters, return as is, stripping displaynameproviders
-                return FormulaType.Build(DType.ReplaceDisplayNameProvider(nestedType._type, DisabledDisplayNameProvider.Instance));
+                return FormulaType.Build(DType.DisableDisplayNameProviders(nestedType._type));
             }
 
             var updatedType = RenameFormulaTypeHelper(aggregateType, segments, updatedName);
             var fError = false;
 
-            // Use some fancy DType internals to swap one field type for the updated one
-            var dropped = nestedType._type.Drop(ref fError, DPath.Root, field);
+            // Use DType internals to swap one field type for the updated one and disable all other display names
+            var dropped = DType.DisableDisplayNameProviders(nestedType._type.Drop(ref fError, DPath.Root, field));
             Contracts.Assert(!fError);
 
-            return FormulaType.Build(DType.ReplaceDisplayNameProvider(dropped.Add(field, updatedType._type), DisabledDisplayNameProvider.Instance));
+            return FormulaType.Build(dropped.Add(field, updatedType._type));
         }
     }
 }
