@@ -4626,7 +4626,15 @@ namespace Microsoft.PowerFx.Core.Binding
                 var overloads = LookupFunctions(funcNamespace, node.Head.Name.Value);
                 if (!overloads.Any())
                 {
-                    _txb.ErrorContainer.Error(node, TexlStrings.ErrUnknownFunction);
+                    if (funcNamespace.ToString() != string.Empty)
+                    {
+                        _txb.ErrorContainer.Error(node, TexlStrings.ErrUnknownNamespaceFunction, node.Head.Name.Value, funcNamespace.ToString());
+                    }
+                    else
+                    {
+                        _txb.ErrorContainer.Error(node, TexlStrings.ErrUnknownFunction, node.Head.Name.Value);
+                    }
+
                     _txb.SetInfo(node, new CallInfo(node));
                     _txb.SetType(node, DType.Error);
 
