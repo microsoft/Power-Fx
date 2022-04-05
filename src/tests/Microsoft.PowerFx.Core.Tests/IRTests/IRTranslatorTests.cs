@@ -2,14 +2,9 @@
 // Licensed under the MIT license.
 
 using System;
-using Microsoft.PowerFx.Core.Binding;
-using Microsoft.PowerFx.Core.Glue;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.IR.Nodes;
-using Microsoft.PowerFx.Core.Parser;
 using Microsoft.PowerFx.Core.Public.Types;
-using Microsoft.PowerFx.Core.Public.Values;
-using Microsoft.PowerFx.Core.Syntax;
 using Microsoft.PowerFx.Core.Types.Enums;
 using Xunit;
 using CallNode = Microsoft.PowerFx.Core.IR.Nodes.CallNode;
@@ -18,7 +13,7 @@ namespace Microsoft.PowerFx.Core.Tests
 {
     public class IRTranslatorTests
     {
-        private readonly EnumStore _enumStore = new EnumStore();
+        private readonly EnumStore _enumStore = new EnumStoreBuilder().WithDefaultEnums().Build();
 
         [Theory]
         [InlineData("CountIf(numtable, val > 0)", ">", typeof(BooleanType))]

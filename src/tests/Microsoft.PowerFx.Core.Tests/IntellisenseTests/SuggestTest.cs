@@ -1,12 +1,10 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.Globalization;
 using System.Linq;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Functions;
+using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Core.Types.Enums;
 using Xunit;
 
@@ -36,13 +34,13 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
             return intellisense.Suggestions.Select(suggestion => suggestion.DisplayText.Text).ToArray();
         }
 
-        private readonly PowerFxConfig _default = PowerFxConfig.BuildWithEnumStore(null, new EnumStore());
+        private readonly PowerFxConfig _default = PowerFxConfig.BuildWithEnumStore(null, new EnumStoreBuilder().WithDefaultEnums());
 
         // No enums, no functions. Adding functions will add back in associated enums, so to be truly empty, ensure no functions. 
-        private readonly PowerFxConfig _emptyEverything = PowerFxConfig.BuildWithEnumStore(null, new EmptyEnumStore(), new TexlFunction[0]);
+        private readonly PowerFxConfig _emptyEverything = PowerFxConfig.BuildWithEnumStore(null, new EnumStoreBuilder(), new TexlFunction[0]);
         
         // No extra enums, but standard functions (which will include some enums).
-        private readonly PowerFxConfig _minimalEnums = PowerFxConfig.BuildWithEnumStore(null, new EnumStore());
+        private readonly PowerFxConfig _minimalEnums = PowerFxConfig.BuildWithEnumStore(null, new EnumStoreBuilder().WithRequiredEnums(BuiltinFunctionsCore.BuiltinFunctionsLibrary));
 
         /// <summary>
         /// Compares expected suggestions with suggestions made by PFx Intellisense for a given
