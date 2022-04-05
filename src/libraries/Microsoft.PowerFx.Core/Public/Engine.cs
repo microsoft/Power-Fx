@@ -14,6 +14,7 @@ using Microsoft.PowerFx.Core.Public.Types;
 using Microsoft.PowerFx.Core.Syntax;
 using Microsoft.PowerFx.Core.Texl.Intellisense;
 using Microsoft.PowerFx.Core.Types;
+using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx
 {
@@ -149,6 +150,11 @@ namespace Microsoft.PowerFx
             var suggestions = intellisense.Suggest(context, binding, formula);
 
             return suggestions;
+        }
+
+        public string RenameParameter(string expressionText, RecordType parameters, DPath pathToRename, DName updatedName)
+        {
+
         }
 
         /// <summary>
