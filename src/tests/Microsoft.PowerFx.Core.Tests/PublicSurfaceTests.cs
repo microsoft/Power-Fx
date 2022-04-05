@@ -96,6 +96,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Core.FormulaTypeSchema",
                 "Microsoft.PowerFx.Core.FormulaTypeToSchemaConverter",
                 "Microsoft.PowerFx.Core.DisplayNameUtility",
+                "Microsoft.PowerFx.Core.RenameDriver",
             };
 
             var sb = new StringBuilder();
