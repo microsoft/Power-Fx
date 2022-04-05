@@ -57,11 +57,6 @@ namespace Microsoft.PowerFx.Core.Syntax.Visitors
             return Default;
         }
 
-        public override TResult Visit(ReplaceableNode node, TContext context)
-        {
-            return Default;
-        }
-
         public override TResult Visit(DottedNameNode node, TContext context)
         {
             return Default;

@@ -29,22 +29,22 @@ namespace Microsoft.PowerFx.Core
 
         internal IEnumerable<TexlFunction> Functions => _coreFunctions.Concat(_extraFunctions.Values);
 
-        internal EnumStore EnumStore { get; }
+        internal EnumStoreBuilder EnumStoreBuilder { get; }
 
         internal CultureInfo CultureInfo { get; }
 
-        private PowerFxConfig(CultureInfo cultureInfo, EnumStore enumStore) 
+        private PowerFxConfig(CultureInfo cultureInfo, EnumStoreBuilder enumStoreBuilder) 
         {
             CultureInfo = cultureInfo ?? CultureInfo.CurrentCulture;
             _isLocked = false;
             _extraFunctions = new Dictionary<string, TexlFunction>();
             _environmentSymbols = new Dictionary<DName, IExternalEntity>();
             _environmentSymbolDisplayNameProvider = new SingleSourceDisplayNameProvider();
-            EnumStore = enumStore;
-        }
+            EnumStoreBuilder = enumStoreBuilder;
+        }    
 
         public PowerFxConfig(CultureInfo cultureInfo = null)
-            : this(cultureInfo, new EnumStore()) 
+            : this(cultureInfo, new EnumStoreBuilder().WithDefaultEnums()) 
         {
         }
 
@@ -60,21 +60,21 @@ namespace Microsoft.PowerFx.Core
             _environmentSymbols = other._environmentSymbols;
             _environmentSymbolDisplayNameProvider = other._environmentSymbolDisplayNameProvider;
             _coreFunctions = other._coreFunctions;
-            EnumStore = other.EnumStore;
+            EnumStoreBuilder = other.EnumStoreBuilder;
             CultureInfo = other.CultureInfo;
         }
 
         /// <summary>
         /// Stopgap until Enum Store is refactored. Do not rely on, this will be removed. 
         /// </summary>
-        internal static PowerFxConfig BuildWithEnumStore(CultureInfo cultureInfo, EnumStore enumStore)
+        internal static PowerFxConfig BuildWithEnumStore(CultureInfo cultureInfo, EnumStoreBuilder enumStoreBuilder)
         {
-            return new PowerFxConfig(cultureInfo, enumStore);
+            return new PowerFxConfig(cultureInfo, enumStoreBuilder);
         }
 
-        internal static PowerFxConfig BuildWithEnumStore(CultureInfo cultureInfo, EnumStore enumStore, IEnumerable<TexlFunction> coreFunctions)
+        internal static PowerFxConfig BuildWithEnumStore(CultureInfo cultureInfo, EnumStoreBuilder enumStoreBuilder, IEnumerable<TexlFunction> coreFunctions)
         {
-            var config = new PowerFxConfig(cultureInfo, enumStore);
+            var config = new PowerFxConfig(cultureInfo, enumStoreBuilder);
             config.SetCoreFunctions(coreFunctions);
             return config;
         }
@@ -109,7 +109,8 @@ namespace Microsoft.PowerFx.Core
         {
             CheckUnlocked();
 
-            _coreFunctions = functions ?? throw new ArgumentNullException(nameof(functions));           
+            _coreFunctions = functions ?? throw new ArgumentNullException(nameof(functions));
+            EnumStoreBuilder.WithRequiredEnums(functions);
         }
 
         internal void AddFunction(TexlFunction function)
@@ -117,6 +118,7 @@ namespace Microsoft.PowerFx.Core
             CheckUnlocked();
 
             _extraFunctions.Add(function.GetUniqueTexlRuntimeName(), function);
+            EnumStoreBuilder.WithRequiredEnums(new List<TexlFunction>() { function });
         }
                 
         internal bool TryGetSymbol(DName name, out IExternalEntity symbol, out DName displayName)
