@@ -3,7 +3,6 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Glue;
@@ -163,6 +162,10 @@ namespace Microsoft.PowerFx
         /// <returns></returns>
         public RenameDriver CreateFieldRenamer(RecordType parameters, DPath pathToRename, DName updatedName)
         {
+            Contracts.AssertValue(parameters);
+            Contracts.AssertValid(pathToRename);
+            Contracts.AssertValid(updatedName);
+
             return new RenameDriver(parameters, pathToRename, updatedName, CreateResolver(Config.WithoutDisplayNames()));
         }
 

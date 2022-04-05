@@ -57,14 +57,14 @@ namespace Microsoft.PowerFx.Core
                 return FormulaType.Build(DType.DisableDisplayNameProviders(nestedType._type));
             }
 
-            var updatedType = RenameFormulaTypeHelper(aggregateType, segments, updatedName);
+            var innerUpdatedType = RenameFormulaTypeHelper(aggregateType, segments, updatedName);
             var fError = false;
 
             // Use DType internals to swap one field type for the updated one and disable all other display names
             var dropped = DType.DisableDisplayNameProviders(nestedType._type.Drop(ref fError, DPath.Root, field));
             Contracts.Assert(!fError);
 
-            return FormulaType.Build(dropped.Add(field, updatedType._type));
+            return FormulaType.Build(dropped.Add(field, innerUpdatedType._type));
         }
     }
 }
