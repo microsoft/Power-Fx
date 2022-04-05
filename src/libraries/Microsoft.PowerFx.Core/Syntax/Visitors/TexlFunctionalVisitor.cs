@@ -77,14 +77,6 @@ namespace Microsoft.PowerFx.Core.Syntax.Visitors
         public abstract TResult Visit(SelfNode node, TContext context);
 
         /// <summary>
-        /// Visit <see cref="ReplaceableNode" /> leaf node.
-        /// </summary>
-        /// <param name="node">The visited node.</param>
-        /// <param name="context">The context passed to the node.</param>
-        /// <returns>The node visit result.</returns>
-        public abstract TResult Visit(ReplaceableNode node, TContext context);
-
-        /// <summary>
         /// Visit <see cref="StrInterpNode" /> non-leaf node.
         /// </summary>
         /// <param name="node">The visited node.</param>

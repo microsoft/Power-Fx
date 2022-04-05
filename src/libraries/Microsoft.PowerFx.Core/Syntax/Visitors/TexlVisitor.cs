@@ -59,12 +59,6 @@ namespace Microsoft.PowerFx.Core.Syntax.Visitors
         public abstract void Visit(SelfNode node);
 
         /// <summary>
-        /// Visit <see cref="ReplaceableNode" /> leaf node.
-        /// </summary>
-        /// <param name="node">The visited node.</param>
-        public abstract void Visit(ReplaceableNode node);
-
-        /// <summary>
         /// Pre-visit <see cref="StrInterpNode" /> non-leaf node.
         /// </summary>
         /// <param name="node">The visited node.</param>

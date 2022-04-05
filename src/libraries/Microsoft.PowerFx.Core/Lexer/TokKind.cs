@@ -17,7 +17,6 @@ namespace Microsoft.PowerFx.Core.Lexer
         StrLit,
         Comment,
         Whitespace,
-        ReplaceableLit,
 
         // Punctuators
         Add,
