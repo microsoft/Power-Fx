@@ -21,7 +21,7 @@ namespace Microsoft.PowerFx.Core
         private bool _isLocked;
         private readonly Dictionary<string, TexlFunction> _extraFunctions;
         private readonly Dictionary<DName, IExternalEntity> _environmentSymbols;
-        private SingleSourceDisplayNameProvider _environmentSymbolDisplayNameProvider;
+        private DisplayNameProvider _environmentSymbolDisplayNameProvider;
 
         // By default, we pull the core functions. 
         // These can be overridden. 
@@ -41,11 +41,27 @@ namespace Microsoft.PowerFx.Core
             _environmentSymbols = new Dictionary<DName, IExternalEntity>();
             _environmentSymbolDisplayNameProvider = new SingleSourceDisplayNameProvider();
             EnumStore = enumStore;
-        }      
+        }
 
         public PowerFxConfig(CultureInfo cultureInfo = null)
             : this(cultureInfo, new EnumStore()) 
         {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PowerFxConfig"/> class.
+        /// Copy constructor. Should only be used on a locked PowerFxConfig object. 
+        /// </summary>
+        /// <param name="other">Config to clone from.</param>
+        private PowerFxConfig(PowerFxConfig other)
+        {
+            _isLocked = other._isLocked;
+            _extraFunctions = other._extraFunctions;
+            _environmentSymbols = other._environmentSymbols;
+            _environmentSymbolDisplayNameProvider = other._environmentSymbolDisplayNameProvider;
+            _coreFunctions = other._coreFunctions;
+            EnumStore = other.EnumStore;
+            CultureInfo = other.CultureInfo;
         }
 
         /// <summary>
@@ -79,7 +95,10 @@ namespace Microsoft.PowerFx.Core
             // Attempt to update display name provider before symbol table,
             // since it can throw on collision and we want to leave the config in a good state.
             // For entities without a display name, add (logical, logical) pair to still be included in collision checks.
-            _environmentSymbolDisplayNameProvider = _environmentSymbolDisplayNameProvider.AddField(entity.EntityName, displayName != default ? displayName : entity.EntityName);
+            if (_environmentSymbolDisplayNameProvider is SingleSourceDisplayNameProvider ssDnp)
+            {
+                _environmentSymbolDisplayNameProvider = ssDnp.AddField(entity.EntityName, displayName != default ? displayName : entity.EntityName);
+            }
 
             _environmentSymbols.Add(entity.EntityName, entity);
         }
@@ -115,6 +134,16 @@ namespace Microsoft.PowerFx.Core
 
             return _environmentSymbols.TryGetValue(lookupName, out symbol);
         }
+
+        /// <summary>
+        /// Some scenarios require that lookups be done with logical names only.
+        /// This returns the same PowerFxConfig with the display name provider disabled.
+        /// </summary>
+        /// <returns></returns>
+        internal PowerFxConfig WithoutDisplayNames()
+        {
+            return new PowerFxConfig(this) { _environmentSymbolDisplayNameProvider = DisabledDisplayNameProvider.Instance };
+        } 
 
         internal void Lock()
         { 

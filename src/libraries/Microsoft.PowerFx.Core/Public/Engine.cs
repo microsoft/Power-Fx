@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Glue;
@@ -48,14 +49,14 @@ namespace Microsoft.PowerFx
         }
 
         /// <summary>
-        /// Create a resolver for use in binding. This is called from <see cref="Check(string, FormulaType)"/>.
+        /// Create a resolver for use in binding. This is called from <see cref="Check(string, RecordType)"/>.
         /// Base classes can override this is there are additional symbols not in the config.
         /// </summary>
-        /// <param name="parameterType"></param>
+        /// <param name="alternateConfig">An alternate config that can be provided. Should default to engine's config if null.</param>
         /// <returns></returns>
-        private protected virtual SimpleResolver CreateResolver()
+        private protected virtual SimpleResolver CreateResolver(PowerFxConfig alternateConfig = null)
         {
-            return new SimpleResolver(Config);
+            return new SimpleResolver(alternateConfig ?? Config);
         }
 
         /// <summary>
@@ -152,9 +153,17 @@ namespace Microsoft.PowerFx
             return suggestions;
         }
 
-        public string RenameParameter(string expressionText, RecordType parameters, DPath pathToRename, DName updatedName)
+        /// <summary>
+        /// Creates a renamer instance for updating a field reference from <paramref name="parameters"/> in expressions.
+        /// </summary>
+        /// <param name="parameters">Type of parameters for formula. The fields in the parameter record can 
+        /// be acecssed as top-level identifiers in the formula. Must be the names from before any rename operation is applied.</param>
+        /// <param name="pathToRename">Path to the field to rename.</param>
+        /// <param name="updatedName">New name. Replaces the last segment of <paramref name="pathToRename"/>.</param>
+        /// <returns></returns>
+        public RenameDriver CreateFieldRenamer(RecordType parameters, DPath pathToRename, DName updatedName)
         {
-
+            return new RenameDriver(parameters, pathToRename, updatedName, CreateResolver(Config.WithoutDisplayNames()));
         }
 
         /// <summary>
@@ -167,7 +176,7 @@ namespace Microsoft.PowerFx
         /// <returns>The formula, with all identifiers converted to invariant form</returns>
         public string GetInvariantExpression(string expressionText, RecordType parameters)
         {
-            return ConvertExpression(expressionText, parameters, toDisplayNames: false);
+            return ConvertExpression(expressionText, parameters, CreateResolver(), toDisplayNames: false);
         }
 
         /// <summary>
@@ -180,15 +189,14 @@ namespace Microsoft.PowerFx
         /// <returns>The formula, with all identifiers converted to display form</returns>
         public string GetDisplayExpression(string expressionText, RecordType parameters)
         {
-            return ConvertExpression(expressionText, parameters, toDisplayNames: true);
+            return ConvertExpression(expressionText, parameters, CreateResolver(), toDisplayNames: true);
         }
 
-        private string ConvertExpression(string expressionText, RecordType parameters, bool toDisplayNames)
+        internal static string ConvertExpression(string expressionText, RecordType parameters, SimpleResolver resolver, bool toDisplayNames)
         {
             var formula = new Formula(expressionText);
             formula.EnsureParsed(TexlParser.Flags.None);
 
-            var resolver = CreateResolver();
             var binding = TexlBinding.Run(
                 new Glue2DocumentBinderGlue(),
                 null,
