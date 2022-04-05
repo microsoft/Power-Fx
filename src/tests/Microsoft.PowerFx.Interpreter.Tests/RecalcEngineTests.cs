@@ -5,8 +5,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core;
+using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Public;
 using Microsoft.PowerFx.Core.Public.Types;
 using Microsoft.PowerFx.Core.Public.Values;
@@ -237,6 +239,22 @@ namespace Microsoft.PowerFx.Tests
         }
 
         [Fact]
+        public void CheckFunctionCounts()
+        {
+            var config = new PowerFxConfig();
+
+            // Pick a function in core but not implemented in interpreter.
+            var nyiFunc = BuiltinFunctionsCore.Shuffle;
+
+            Assert.Contains(nyiFunc, config.Functions);
+
+            // RecalcEngine will add the interpreter's functions. 
+            var engine = new RecalcEngine(config);
+
+            Assert.DoesNotContain(nyiFunc, config.Functions);
+        }
+
+        [Fact]
         public void CheckSuccess()
         {
             var engine = new RecalcEngine();
@@ -296,7 +314,7 @@ namespace Microsoft.PowerFx.Tests
         }
 
         [Fact]
-        public void CheckDottedBindErro2r()
+        public void CheckDottedBindError2()
         {
             var engine = new RecalcEngine();
             var result = engine.Check("[].Value");
@@ -406,17 +424,21 @@ namespace Microsoft.PowerFx.Tests
         public void RecalcEngineLocksConfig()
         {
             var config = new PowerFxConfig(null);
+            config.SetCoreFunctions(new TexlFunction[0]); // clear builtins
             config.AddFunction(BuiltinFunctionsCore.Blank);
             
-            var recalcEngine = new RecalcEngine(config);
+            var recalcEngine = new Engine(config);
 
-            var optionSet = new OptionSet("foo", new Dictionary<string, string>() { { "one key", "one value" } });
-            Assert.Throws<InvalidOperationException>(() => config.AddFunction(BuiltinFunctionsCore.Abs));
+            var func = BuiltinFunctionsCore.AsType; // Function not already in engine
+            Assert.DoesNotContain(func, config.Functions); // didn't get auto-added by engine.
+
+            var optionSet = new OptionSet("foo", DisplayNameUtility.MakeUnique(new Dictionary<string, string>() { { "one key", "one value" } }));
+            Assert.Throws<InvalidOperationException>(() => config.AddFunction(func));
             Assert.Throws<InvalidOperationException>(() => config.AddOptionSet(optionSet));
 
             Assert.False(config.TryGetSymbol(new DName("foo"), out _, out _));
 
-            Assert.DoesNotContain(new DName(BuiltinFunctionsCore.Abs.Name), config.ExtraFunctions.Keys);
+            Assert.DoesNotContain(BuiltinFunctionsCore.Abs, config.Functions);
         }        
 
         [Fact]
@@ -424,11 +446,11 @@ namespace Microsoft.PowerFx.Tests
         {
             var config = new PowerFxConfig(null);
 
-            var optionSet = new OptionSet("OptionSet", new Dictionary<string, string>() 
+            var optionSet = new OptionSet("OptionSet", DisplayNameUtility.MakeUnique(new Dictionary<string, string>() 
             {
                     { "option_1", "Option1" },
                     { "option_2", "Option2" }
-            });
+            }));
             
             config.AddOptionSet(optionSet);            
             var recalcEngine = new RecalcEngine(config);
@@ -442,11 +464,11 @@ namespace Microsoft.PowerFx.Tests
         {
             var config = new PowerFxConfig(null);
 
-            var optionSet = new OptionSet("FooOs", new Dictionary<string, string>() 
+            var optionSet = new OptionSet("FooOs", DisplayNameUtility.MakeUnique(new Dictionary<string, string>() 
             {
                     { "option_1", "Option1" },
                     { "option_2", "Option2" }
-            });
+            }));
             
             config.AddOptionSet(optionSet);            
             var recalcEngine = new RecalcEngine(config);
@@ -455,6 +477,25 @@ namespace Microsoft.PowerFx.Tests
             Assert.True(checkResult.IsSuccess);
             var osvaluetype = Assert.IsType<OptionSetValueType>(checkResult.ReturnType);
             Assert.Equal("FooOs", osvaluetype.OptionSetName);
+        }              
+
+        [Fact]
+        public void OptionSetChecksWithMakeUniqueCollision()
+        {
+            var config = new PowerFxConfig(null);
+
+            var optionSet = new OptionSet("OptionSet", DisplayNameUtility.MakeUnique(new Dictionary<string, string>() 
+            {
+                    { "foo", "Option1" },
+                    { "bar", "Option2" },
+                    { "baz", "foo" }
+            }));
+            
+            config.AddEntity(optionSet, new DName("SomeDisplayName"));
+            var recalcEngine = new RecalcEngine(config);
+
+            var checkResult = recalcEngine.Check("SomeDisplayName.Option1 <> SomeDisplayName.'foo (baz)'");
+            Assert.True(checkResult.IsSuccess);
         }
 
         [Fact]

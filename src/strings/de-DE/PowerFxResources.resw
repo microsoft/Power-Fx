@@ -487,7 +487,7 @@
     
   </data>
   <data name="AboutBoolean" xml:space="preserve">
-    <value>Konvertiert einen "Text", der einen booleschen Wert darstellt, in einen booleschen Wert.</value>
+    <value>Konvertiert einen „Text“, der einen booleschen Wert darstellt, in einen booleschen Wert.</value>
     
   </data>
   <data name="BooleanArg1" xml:space="preserve">
@@ -1922,8 +1922,12 @@
   <data name="AboutTime_millisecond" xml:space="preserve">
     <value>Die Millisekundenkomponente.</value>
   </data>
+  <data name="AboutDateTime" xml:space="preserve">
+    <value>Erstellt einen Wert, der einen Zeitpunkt darstellt, ausgedrückt als Datum und Uhrzeit des Tages.</value>
+    
+  </data>
   <data name="AboutYear" xml:space="preserve">
-    <value>"Year" gibt das Jahr für ein bestimmtes Datum zurück, eine Zahl größer als 1900.</value>
+    <value>„Jahr“ gibt das Jahr für ein bestimmtes Datum zurück.</value>
     
   </data>
   <data name="YearArg1" xml:space="preserve">
@@ -2338,15 +2342,15 @@
   <data name="AboutChar_column_of_numbers" xml:space="preserve">
     <value>Eine Spalte mit Codenummern aus dem Zeichensatz Ihrer Plattform.</value>
   </data>
-  <data name="AboutParseJson" xml:space="preserve">
+  <data name="AboutParseJSON" xml:space="preserve">
     <value>Konvertiert eine JSON-Zeichenfolge in ein Objekt.</value>
     
   </data>
-  <data name="ParseJsonArg1" xml:space="preserve">
+  <data name="ParseJSONArg1" xml:space="preserve">
     <value>Eingabe</value>
     
   </data>
-  <data name="AboutParseJson_input" xml:space="preserve">
+  <data name="AboutParseJSON_input" xml:space="preserve">
     <value>Eine zu verarbeitende JSON-Zeichenfolge.</value>
   </data>
   <data name="AboutIndex" xml:space="preserve">
@@ -2365,7 +2369,8 @@
     <value>Eine Tabelle.</value>
   </data>
   <data name="AboutIndex_index" xml:space="preserve">
-    <value>Ein ganzzahliger Index.</value>
+    <value>Der Index des Datensatzes, der abgerufen werden soll.</value>
+    
   </data>
   <data name="Screen_Name_DisplayName" xml:space="preserve">
     <value>Name</value>
@@ -3974,7 +3979,7 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidName_ShortMessage" xml:space="preserve">
-    <value>Der Name ist ungültig. Dieser Bezeichner wird nicht erkannt.</value>
+    <value>Der Name ist ungültig. „{0}“ wird nicht erkannt.</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidName_LongMessage" xml:space="preserve">
@@ -3985,6 +3990,21 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidName_Link_1" xml:space="preserve">
+    <value>Artikel: Formelreferenz für Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_ShortMessage" xml:space="preserve">
+    <value>Der Name ist ungültig. Dieser Bezeichner wird nicht erkannt.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_LongMessage" xml:space="preserve">
+    <value>Dieser Fehler tritt meistens auf, wenn eine Formel auf ein Element verweist, das nicht mehr vorhanden ist (z. B. ein gelöschtes Steuerelement).</value>
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_HowToFix_1" xml:space="preserve">
+    <value>Entfernen oder korrigieren Sie den Verweis auf den ungültigen Namen.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_Link_1" xml:space="preserve">
     <value>Artikel: Formelreferenz für Power Apps</value>
     
   </data>
@@ -4482,11 +4502,11 @@
     
   </data>
   <data name="ErrorResource_ErrEmptyIsland_ShortMessage" xml:space="preserve">
-    <value>Empty expressions cannot appear inside an interpolated string.</value>
+    <value>In einer interpolierten Zeichenfolge dürfen keine leeren Ausdrücke vorkommen.</value>
     
   </data>
   <data name="ErrorResource_ErrEmptyIsland_HowToFix_1" xml:space="preserve">
-    <value>Check for empty expressions inside the interpolated string.</value>
+    <value>Prüfen Sie, ob es in der interpolierten Zeichenfolge leere Ausdrücke gibt.</value>
     
   </data>
   <data name="ErrorResource_ErrAsNotInContext_ShortMessage" xml:space="preserve">

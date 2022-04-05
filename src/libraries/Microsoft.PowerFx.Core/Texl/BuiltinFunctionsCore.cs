@@ -188,6 +188,7 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction Year = _library.Append(new YearFunction());
 
         // NOTE: These functions should not be part of the core library until they are implemented in all runtimes
+        public static readonly TexlFunction DateTime = new DateTimeFunction();
         public static readonly TexlFunction Index_UO = new IndexFunction_UO();
         public static readonly TexlFunction ParseJSON = new ParseJSONFunction();
         public static readonly TexlFunction Table_UO = new TableFunction_UO();

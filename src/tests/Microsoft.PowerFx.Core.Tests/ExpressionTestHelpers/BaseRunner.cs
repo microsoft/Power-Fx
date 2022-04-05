@@ -213,6 +213,16 @@ namespace Microsoft.PowerFx.Core.Tests
                 {
                     return (TestResult.Pass, null);
                 }
+
+                // diff in large numbers, Precision diff is small, but exponent can be large. 
+                // 5.5e186 vs 5.6e186
+                if (expectedNumeric != 0)
+                {
+                    if (Math.Abs((numericResult.Value - expectedNumeric) / expectedNumeric) < 1e-14)
+                    {
+                        return (TestResult.Pass, null);
+                    }
+                }
             }
 
             return (TestResult.Fail, $"Expected: {expected}. actual: {actualStr}");

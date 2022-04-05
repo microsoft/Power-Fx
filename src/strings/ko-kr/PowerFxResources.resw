@@ -1922,8 +1922,12 @@
   <data name="AboutTime_millisecond" xml:space="preserve">
     <value>밀리초 구성 요소입니다.</value>
   </data>
+  <data name="AboutDateTime" xml:space="preserve">
+    <value>시점을 나타내는 값을 만듭니다(날짜 및 시간으로 표현됨).</value>
+    
+  </data>
   <data name="AboutYear" xml:space="preserve">
-    <value>연도는 1900보다 큰, 지정된 날짜의 연도를 반환합니다.</value>
+    <value>연도는 지정된 날짜의 연도를 반환합니다.</value>
     
   </data>
   <data name="YearArg1" xml:space="preserve">
@@ -2338,15 +2342,15 @@
   <data name="AboutChar_column_of_numbers" xml:space="preserve">
     <value>플랫폼에 설정된 문자의 코드 번호 열입니다.</value>
   </data>
-  <data name="AboutParseJson" xml:space="preserve">
+  <data name="AboutParseJSON" xml:space="preserve">
     <value>JSON 문자열을 개체로 변환합니다.</value>
     
   </data>
-  <data name="ParseJsonArg1" xml:space="preserve">
+  <data name="ParseJSONArg1" xml:space="preserve">
     <value>입력</value>
     
   </data>
-  <data name="AboutParseJson_input" xml:space="preserve">
+  <data name="AboutParseJSON_input" xml:space="preserve">
     <value>처리할 JSON 문자열.</value>
   </data>
   <data name="AboutIndex" xml:space="preserve">
@@ -2365,7 +2369,8 @@
     <value>테이블.</value>
   </data>
   <data name="AboutIndex_index" xml:space="preserve">
-    <value>정수 색인.</value>
+    <value>검색할 레코드의 색인입니다.</value>
+    
   </data>
   <data name="Screen_Name_DisplayName" xml:space="preserve">
     <value>이름</value>
@@ -3974,7 +3979,7 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidName_ShortMessage" xml:space="preserve">
-    <value>이름이 잘못되었습니다. 이 식별자를 인식할 수 없습니다.</value>
+    <value>이름이 잘못되었습니다. '{0}'을(를) 인식할 수 없습니다.</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidName_LongMessage" xml:space="preserve">
@@ -3985,6 +3990,21 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidName_Link_1" xml:space="preserve">
+    <value>문서: Power Apps에 대한 수식 참조</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_ShortMessage" xml:space="preserve">
+    <value>이름이 잘못되었습니다. 이 식별자를 인식할 수 없습니다.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_LongMessage" xml:space="preserve">
+    <value>이 오류는 일반적으로 수식이 존재하지 않는 항목(예: 삭제한 컨트롤)을 참조하는 경우에 나타납니다.</value>
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_HowToFix_1" xml:space="preserve">
+    <value>잘못된 이름에 대한 참조를 제거하거나 수정합니다.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_Link_1" xml:space="preserve">
     <value>문서: Power Apps에 대한 수식 참조</value>
     
   </data>
@@ -4482,11 +4502,11 @@
     
   </data>
   <data name="ErrorResource_ErrEmptyIsland_ShortMessage" xml:space="preserve">
-    <value>Empty expressions cannot appear inside an interpolated string.</value>
+    <value>보간된 문자열 내에 빈 식을 표시할 수 없습니다.</value>
     
   </data>
   <data name="ErrorResource_ErrEmptyIsland_HowToFix_1" xml:space="preserve">
-    <value>Check for empty expressions inside the interpolated string.</value>
+    <value>보간된 문자열 내의 빈 식을 검사합니다.</value>
     
   </data>
   <data name="ErrorResource_ErrAsNotInContext_ShortMessage" xml:space="preserve">

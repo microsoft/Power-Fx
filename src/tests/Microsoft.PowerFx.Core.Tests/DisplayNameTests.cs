@@ -1,26 +1,21 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Public.Types;
-using Microsoft.PowerFx.Core.Public.Values;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Xunit;
-using Xunit.Sdk;
 
 namespace Microsoft.PowerFx.Interpreter.Tests
 {
     public class DisplayNameTests
     {
+        private readonly Engine _engine = new Engine(new PowerFxConfig());
+
         [Fact]
         public void CollisionsThrow()
         {
-            var engine = new RecalcEngine();
             var r1 = new RecordType()
                 .Add(new NamedFormulaType("Num", FormulaType.Number, new DName("DisplayNum")));
 
@@ -69,7 +64,6 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [InlineData("Sum(NestedDisplay /* The source */ , InnerDisplay /* Sum over the InnerDisplay column */)", "Sum(Nested /* The source */ , Inner /* Sum over the InnerDisplay column */)", false)]
         public void ValidateDisplayNames(string inputExpression, string outputExpression, bool toDisplay)
         {
-            var engine = new RecalcEngine();
             var r1 = new RecordType()
                 .Add(new NamedFormulaType("Num", FormulaType.Number, "DisplayNum"))
                 .Add(new NamedFormulaType("B", FormulaType.Boolean, "DisplayB"))
@@ -80,12 +74,12 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             if (toDisplay)
             {
-                var outDisplayExpression = engine.GetDisplayExpression(inputExpression, r1);
+                var outDisplayExpression = _engine.GetDisplayExpression(inputExpression, r1);
                 Assert.Equal(outputExpression, outDisplayExpression);
             }
             else
             {
-                var outInvariantExpression = engine.GetInvariantExpression(outputExpression, r1);
+                var outInvariantExpression = _engine.GetInvariantExpression(outputExpression, r1);
                 Assert.Equal(outputExpression, outInvariantExpression);
             }
         }
@@ -93,12 +87,11 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [Fact]
         public void ConvertToDisplayNamesNoNames()
         {
-            var engine = new RecalcEngine();
             var r1 = new RecordType()
                 .Add(new NamedFormulaType("Num", FormulaType.Number))
                 .Add(new NamedFormulaType("B", FormulaType.Boolean));
 
-            var displayExpressions = engine.GetDisplayExpression("If(B, Num, 1234)", r1);
+            var displayExpressions = _engine.GetDisplayExpression("If(B, Num, 1234)", r1);
 
             Assert.Equal("If(B, Num, 1234)", displayExpressions);
         }
@@ -106,81 +99,13 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [Fact]
         public void ConvertToInvariantNamesNoNames()
         {
-            var engine = new RecalcEngine();
             var r1 = new RecordType()
                 .Add(new NamedFormulaType("Num", FormulaType.Number))
                 .Add(new NamedFormulaType("B", FormulaType.Boolean));
 
-            var displayExpressions = engine.GetInvariantExpression("If(B, Num, 1234)", r1);
+            var displayExpressions = _engine.GetInvariantExpression("If(B, Num, 1234)", r1);
 
             Assert.Equal("If(B, Num, 1234)", displayExpressions);
-        }
-
-        [Theory]
-
-        [InlineData("OptionSet.Option1 <> OptionSet.Option2", "OptionSet.option_1 <> OptionSet.option_2", false, "")]
-        [InlineData("OptionSet.Option1 <> OptionSet.option_2", "OptionSet.option_1 <> OptionSet.option_2", false, "")]
-        [InlineData("OptionSet.option_1 <> OptionSet.option_2", "OptionSet.Option1 <> OptionSet.Option2", true, "")]
-        [InlineData("OptionSet.option_1 <> OptionSet.Option2", "OptionSet.Option1 <> OptionSet.Option2", true, "")]
-        [InlineData("TopOSDisplay.Option1 <> OptionSet.Option2", "OptionSet.option_1 <> OptionSet.option_2", false, "TopOSDisplay")]
-        [InlineData("TopOSDisplay.Option1 <> TopOSDisplay.option_2", "OptionSet.option_1 <> OptionSet.option_2", false, "TopOSDisplay")]
-        [InlineData("OptionSet.option_1 <> OptionSet.option_2", "TopOSDisplay.Option1 <> TopOSDisplay.Option2", true, "TopOSDisplay")]
-        [InlineData("TopOSDisplay.option_1 <> OptionSet.Option2", "TopOSDisplay.Option1 <> TopOSDisplay.Option2", true, "TopOSDisplay")]
-        public void OptionSetDisplayNames(string inputExpression, string outputExpression, bool toDisplay, string optionSetDisplayName)
-        {            
-            var config = new PowerFxConfig(null);
-            var optionSet = new OptionSet("OptionSet", new Dictionary<string, string>() 
-            {
-                    { "option_1", "Option1" },
-                    { "option_2", "Option2" }
-            });
-
-            config.AddOptionSet(optionSet, string.IsNullOrEmpty(optionSetDisplayName) ? default : new DName(optionSetDisplayName));
-            
-            var engine = new RecalcEngine(config);
-
-            if (toDisplay)
-            {
-                var outDisplayExpression = engine.GetDisplayExpression(inputExpression, new RecordType());
-                Assert.Equal(outputExpression, outDisplayExpression);
-            }
-            else
-            {
-                var outInvariantExpression = engine.GetInvariantExpression(inputExpression, new RecordType());
-                Assert.Equal(outputExpression, outInvariantExpression);
-            }
-        }
-
-        [Fact]
-        public void PowerFxConfigCollisionsThrow()
-        {
-            var config = new PowerFxConfig(null);
-            var optionSet = new OptionSet("OptionSet", new Dictionary<string, string>() 
-            {
-                    { "option_1", "Option1" },
-                    { "option_2", "Option2" }
-            });
-
-            var otherOptionSet = new OptionSet("OtherOptionSet", new Dictionary<string, string>() 
-            {
-                    { "option_1", "Option1" },
-                    { "option_2", "Option2" }
-            });
-            config.AddEntity(optionSet, new DName("SomeDisplayName"));
-
-            Assert.Throws<NameCollisionException>(() => config.AddEntity(otherOptionSet, new DName("OptionSet")));
-            Assert.Throws<NameCollisionException>(() => config.AddEntity(otherOptionSet, new DName("SomeDisplayName")));
-                        
-            config.AddEntity(otherOptionSet, new DName("NonColliding"));
-
-            Assert.True(config.TryGetSymbol(new DName("OptionSet"), out _, out var displayName));
-            Assert.Equal("SomeDisplayName", displayName.Value);
-            Assert.True(config.TryGetSymbol(new DName("OtherOptionSet"), out _, out displayName));
-            Assert.Equal("NonColliding", displayName.Value);
-            Assert.True(config.TryGetSymbol(new DName("NonColliding"), out _, out displayName));
-            Assert.Equal("NonColliding", displayName.Value);
-            Assert.True(config.TryGetSymbol(new DName("SomeDisplayName"), out _, out displayName));
-            Assert.Equal("SomeDisplayName", displayName.Value);
         }
     }
 }

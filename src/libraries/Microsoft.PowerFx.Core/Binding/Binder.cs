@@ -2666,12 +2666,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 return set;
             }
-
-            public override void Visit(ReplaceableNode node)
-            {
-                throw new NotSupportedException("Replaceable nodes are not supported");
-            }
-
+            
             public override void Visit(ErrorNode node)
             {
                 AssertValid();

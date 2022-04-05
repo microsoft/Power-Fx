@@ -18,6 +18,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
             var allowed = new HashSet<string>()
             {
+                "Microsoft.PowerFx.Engine",                
                 "Microsoft.PowerFx.FeatureFlags",
                 "Microsoft.PowerFx.Core.Texl.Intellisense.IIntellisenseResult",
                 "Microsoft.PowerFx.Core.Texl.Intellisense.IIntellisenseSuggestion",
@@ -34,6 +35,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Core.Public.ExpressionError",
                 "Microsoft.PowerFx.Core.Public.FormulaWithParameters",
                 "Microsoft.PowerFx.Core.Public.IExpression",
+                "Microsoft.PowerFx.Core.Public.IExpressionExtensions",
                 "Microsoft.PowerFx.Core.Public.IPowerFxEngine",
                 "Microsoft.PowerFx.Core.Public.IPowerFxScope",
                 "Microsoft.PowerFx.Core.Public.IPowerFxScopeDisplayName",
@@ -88,10 +90,12 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Core.App.IExternalEnabledFeatures",
                 "Microsoft.PowerFx.Core.App.DefaultEnabledFeatures",
                 "Microsoft.PowerFx.Core.Utils.DName",
+                "Microsoft.PowerFx.Core.Utils.DPath",
                 "Microsoft.PowerFx.Core.Utils.ICheckable",
                 "Microsoft.PowerFx.Core.NameCollisionException",
                 "Microsoft.PowerFx.Core.FormulaTypeSchema",
                 "Microsoft.PowerFx.Core.FormulaTypeToSchemaConverter",
+                "Microsoft.PowerFx.Core.DisplayNameUtility",
             };
 
             var sb = new StringBuilder();
