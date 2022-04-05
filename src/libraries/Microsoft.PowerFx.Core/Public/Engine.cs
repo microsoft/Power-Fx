@@ -132,7 +132,7 @@ namespace Microsoft.PowerFx
         /// <returns></returns>
         private protected virtual IIntellisense CreateIntellisense()
         {
-            return IntellisenseProvider.GetIntellisense(Config.EnumStore);
+            return IntellisenseProvider.GetIntellisense(Config.EnumStoreBuilder.Build());
         }
 
         /// <summary>
