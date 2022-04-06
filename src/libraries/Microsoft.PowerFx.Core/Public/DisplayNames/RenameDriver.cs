@@ -10,7 +10,7 @@ using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Core
 {
-    public class RenameDriver
+    public sealed class RenameDriver
     {
         private readonly RecordType _parameters;
         private readonly SimpleResolver _resolver;
