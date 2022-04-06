@@ -10,26 +10,36 @@ using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Core.Syntax.Nodes
 {
-    internal sealed class NumLitNode : TexlNode
+    /// <summary>
+    /// Numeric literal parse node. Example:
+    /// 
+    /// <code>3.14</code>
+    /// </summary>
+    public sealed class NumLitNode : TexlNode
     {
         // If Value is non-null, then the token represents its value.
         // Otherwise, the value is in NumValue.
-        public readonly double NumValue;
+        internal readonly double NumValue;
 
-        public NumLitNode(ref int idNext, NumLitToken tok)
+        /// <summary>
+        /// The numeric value of the node.
+        /// </summary>
+        public double ActualNumValue => Value?.Value ?? NumValue;
+
+        internal NumLitNode(ref int idNext, NumLitToken tok)
             : base(ref idNext, tok, new SourceList(tok))
         {
             NumValue = double.NaN;
         }
 
-        public NumLitNode(ref int idNext, Token tok, SourceList sourceList, double value)
+        internal NumLitNode(ref int idNext, Token tok, SourceList sourceList, double value)
             : base(ref idNext, tok, sourceList)
         {
             Contracts.Assert(tok.Kind != TokKind.NumLit);
             NumValue = value;
         }
 
-        public override TexlNode Clone(ref int idNext, Span ts)
+        internal override TexlNode Clone(ref int idNext, Span ts)
         {
             if (Value == null)
             {
@@ -40,22 +50,25 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
         }
 
         // This may be null, in which case, NumValue should be used.
-        public NumLitToken Value => Token as NumLitToken;
+        internal NumLitToken Value => Token as NumLitToken;
 
+        /// <inheritdoc />
         public override void Accept(TexlVisitor visitor)
         {
             Contracts.AssertValue(visitor);
             visitor.Visit(this);
         }
 
+        /// <inheritdoc />
         public override TResult Accept<TResult, TContext>(TexlFunctionalVisitor<TResult, TContext> visitor, TContext context)
         {
             return visitor.Visit(this, context);
         }
 
+        /// <inheritdoc />
         public override NodeKind Kind => NodeKind.NumLit;
 
-        public override NumLitNode AsNumLit()
+        internal override NumLitNode AsNumLit()
         {
             return this;
         }

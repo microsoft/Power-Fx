@@ -6,7 +6,7 @@ using System;
 namespace Microsoft.PowerFx
 {
     /// <summary>
-    /// This type is thread safe becasue it's immutable. 
+    /// This type is thread safe because it's immutable. 
     /// </summary>
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Interface)]
     internal class ThreadSafeImmutableAttribute : Attribute

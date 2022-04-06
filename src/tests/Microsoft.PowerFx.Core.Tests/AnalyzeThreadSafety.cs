@@ -127,7 +127,7 @@ namespace Microsoft.PowerFx.Core.Tests
         };
 
         // If the instance is readonly, is the type itself immutable ?
-        private static bool IsTypeImmutable(Type t)
+        internal static bool IsTypeImmutable(Type t)
         {
             if (t.IsArray)
             {
@@ -135,7 +135,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 return false;
             }
 
-            if (t.IsPrimitive)
+            if (t.IsPrimitive || t.IsEnum)
             {
                 return true;
             }
@@ -156,6 +156,12 @@ namespace Microsoft.PowerFx.Core.Tests
                     var valueArg = t.GetGenericArguments()[1];
                     var isValueArgSafe = IsTypeImmutable(valueArg);
                     return isValueArgSafe;
+                }
+
+                if (genericDef == typeof(IReadOnlyList<>))
+                {
+                    var valueArg = t.GetGenericArguments()[0];
+                    return IsTypeImmutable(valueArg);
                 }
 
                 if (genericDef == typeof(IEnumerable<>))
