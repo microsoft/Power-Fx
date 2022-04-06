@@ -12,13 +12,22 @@ using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Core.Syntax.Nodes
 {
-    internal sealed class VariadicOpNode : VariadicBase
+    /// <summary>
+    /// Variadic operation node. Example:
+    /// 
+    /// <code>Formula1 ; Formula2 ; ...</code>
+    /// </summary>
+    public sealed class VariadicOpNode : VariadicBase
     {
-        public readonly VariadicOp Op;
-        public readonly Token[] OpTokens;
+        /// <summary>
+        /// Variadic operator.
+        /// </summary>
+        public VariadicOp Op { get; }
+        
+        internal readonly Token[] OpTokens;
 
         // Assumes ownership of the 'children' and 'opTokens' array.
-        public VariadicOpNode(ref int idNext, VariadicOp op, TexlNode[] children, Token[] opTokens, SourceList sourceList)
+        internal VariadicOpNode(ref int idNext, VariadicOp op, TexlNode[] children, Token[] opTokens, SourceList sourceList)
             : base(ref idNext, opTokens.VerifyValue().First(), sourceList, children)
         {
             Contracts.AssertNonEmpty(opTokens);
@@ -27,7 +36,7 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
             OpTokens = opTokens;
         }
 
-        public override TexlNode Clone(ref int idNext, Span ts)
+        internal override TexlNode Clone(ref int idNext, Span ts)
         {
             var children = CloneChildren(ref idNext, ts);
             var newNodes = new Dictionary<TexlNode, TexlNode>();
@@ -39,6 +48,7 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
             return new VariadicOpNode(ref idNext, Op, children, Clone(OpTokens, ts), SourceList.Clone(ts, newNodes));
         }
 
+        /// <inheritdoc />
         public override void Accept(TexlVisitor visitor)
         {
             Contracts.AssertValue(visitor);
@@ -49,14 +59,16 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
             }
         }
 
+        /// <inheritdoc />
         public override TResult Accept<TResult, TContext>(TexlFunctionalVisitor<TResult, TContext> visitor, TContext context)
         {
             return visitor.Visit(this, context);
         }
 
+        /// <inheritdoc />
         public override NodeKind Kind => NodeKind.VariadicOp;
 
-        public override VariadicOpNode AsVariadicOp()
+        internal override VariadicOpNode AsVariadicOp()
         {
             return this;
         }
