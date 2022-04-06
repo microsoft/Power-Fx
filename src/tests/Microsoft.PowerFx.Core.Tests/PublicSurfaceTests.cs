@@ -127,6 +127,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Core.Lexer.UnaryOp",
                 "Microsoft.PowerFx.Core.Lexer.VariadicOp",
                 "Microsoft.PowerFx.Core.DisplayNameUtility",
+                "Microsoft.PowerFx.Core.RenameDriver",
             };
 
             var sb = new StringBuilder();
