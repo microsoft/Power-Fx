@@ -14,6 +14,65 @@ using Microsoft.PowerFx.Core.Public.Values;
 
 namespace Microsoft.PowerFx.Core.Tests
 {
+    /// <summary>
+    /// Result of a call to <see cref="BaseRunner.RunAsyncInternal(string, string)"/>.
+    /// - Compilation error - set Errors
+    /// - Runtime error - set Value
+    ///
+    /// If the eval used unsupported behavior, set UnsupportedReason to a message.
+    /// This may cause th etest to get skipped rather than fail. 
+    /// </summary>
+    public class RunResult
+    {
+        // Test case had a Compilation error.
+        // Null if none. 
+        public ExpressionError[] Errors;
+
+        // Test case ran and returned a result. 
+        public FormulaValue Value;
+
+        // Test may have run and failed (so Value is set) due to
+        // known unsupported behavior in an engine. Let engine mark that this is a known case.
+        //
+        // This will often mean skipping the test, but may still be a failure if:
+        // - the test is already from an override (so it should have marked #skip)
+        // - the test already expected to fail (so we should have gotten the failure)
+        //
+        // This allows tests to over lots of overrides for known behavior that isn't implemented.
+        public string UnsupportedReason;
+
+        public RunResult()
+        {
+        }
+
+        public RunResult(FormulaValue value)
+        {
+            Value = value;
+        }
+
+        public RunResult(CheckResult result)
+        {
+            if (!result.IsSuccess)
+            {
+                Errors = result.Errors;
+            }
+        }
+
+        public static RunResult FromError(string message)
+        {
+            return new RunResult()
+            {
+                Errors = new ExpressionError[]
+                {
+                    new ExpressionError
+                    {
+                         Message = message
+                    }
+                }
+            };
+        }
+    }
+
     // Base class for running a lightweght test. 
     public abstract class BaseRunner
     {
@@ -29,7 +88,7 @@ namespace Microsoft.PowerFx.Core.Tests
         /// <param name="expr">PowerFx expression.</param>
         /// <param name="setupHandlerName">Optional name of a setup handler to run. Throws SetupHandlerNotImplemented if not found.</param>
         /// <returns>Result of evaluating Expr.</returns>
-        protected abstract Task<FormulaValue> RunAsyncInternal(string expr, string setupHandlerName = null);
+        protected abstract Task<RunResult> RunAsyncInternal(string expr, string setupHandlerName = null);
 
         private static readonly Regex RuntimeErrorExpectedResultRegex = new Regex(@"\#error(?:\(Kind=(?<errorKind>[^\)]+)\))?", RegexOptions.IgnoreCase);
 
@@ -103,9 +162,9 @@ namespace Microsoft.PowerFx.Core.Tests
 
         private async Task<(TestResult, string)> RunAsync2(TestCase testCase)
         {
-            string actualStr;
+            RunResult runResult = null;
             FormulaValue result = null;
-
+            
             var expected = testCase.Expected;
             var expectedSkip = string.Equals(expected, "#skip", StringComparison.OrdinalIgnoreCase);
             if (expectedSkip)
@@ -118,47 +177,56 @@ namespace Microsoft.PowerFx.Core.Tests
             {
                 try
                 {
-                    result = await RunAsyncInternal(testCase.Input, testCase.SetupHandlerName);
+                    runResult = await RunAsyncInternal(testCase.Input, testCase.SetupHandlerName);
+                    result = runResult.Value;
+
+                    if (testCase.IsOverride)
+                    {
+                        // Unsupported is just for ignoring large groups of inherited tests. 
+                        // If it's an override, then the override should specify the exact error.
+                        runResult.UnsupportedReason = null;
+                    }
+
+                    // Check for a compile-time error.
+                    if (runResult.Errors != null && runResult.Errors.Length > 0)
+                    {
+                        // Matching text to CheckResult.ThrowOnErrors()
+                        // Expected will contain the full error message, like:
+                        //    Errors: Error 15-16: Incompatible types for comparison. These types can't be compared: UntypedObject, UntypedObject.
+                        var expectedCompilerError = expected.StartsWith("Errors: Error"); // $$$ Match error message. 
+                        if (expectedCompilerError)
+                        {
+                            var msg = $"Errors: " + string.Join("\r\n", runResult.Errors.Select(err => err.ToString()).ToArray());
+                            var actualStr = msg.Replace("\r\n", "|").Replace("\n", "|");
+
+                            if (actualStr.Contains(expected))
+                            {
+                                // Compiler errors result in exceptions
+                                return (TestResult.Pass, null);
+                            }
+                            else if (runResult.UnsupportedReason != null)
+                            {
+                                return (TestResult.Skip, "Unsupported in this engine: " + runResult.UnsupportedReason);
+                            }
+                            else
+                            { 
+                                return (TestResult.Fail, $"Failed, but wrong error message: {msg}");
+                            }
+                        }
+                    }
                 }
                 catch (SetupHandlerNotFoundException)
                 {
                     return (TestResult.Skip, $"was skipped due to missing setup handler {testCase.SetupHandlerName}");
                 }
-
-                actualStr = TestRunner.TestToString(result);
             }
             catch (Exception e)
             {
-                // Expected will contain the full error message, like:
-                //    Errors: Error 15-16: Incompatible types for comparison. These types can't be compared: UntypedObject, UntypedObject.
-                var expectedCompilerError = expected.StartsWith("Errors: Error"); // $$$ Match error message. 
-                if (expectedCompilerError)
-                {
-                    actualStr = e.Message.Replace("\r\n", "|").Replace("\n", "|");
-
-                    if (actualStr.Contains(expected))
-                    {
-                        // Compiler errors result in exceptions
-                        return (TestResult.Pass, null);
-                    }
-                    else
-                    {
-                        return (TestResult.Fail, $"Failed, but wrong error message: {e.Message}");
-                    }
-                }
-                else
-                {
-                    return (TestResult.Fail, $"Threw exception: {e.Message}");
-                }
+                return (TestResult.Fail, $"Threw exception: {e.Message}");                
             }
 
-            if (result == null)
-            {
-                return (TestResult.Fail, "did not return a value");
-            }
-
+            // Check for a runtime-error
             var expectedRuntimeErrorMatch = RuntimeErrorExpectedResultRegex.Match(expected);
-
             if (expectedRuntimeErrorMatch.Success)
             {
                 var expectedErrorKindGroup = expectedRuntimeErrorMatch.Groups["errorKind"];
@@ -209,33 +277,37 @@ namespace Microsoft.PowerFx.Core.Tests
 
                 // If the actual result is not an error, we'll fail with a mismatch below
             }
-
-            if (string.Equals(expected, actualStr, StringComparison.Ordinal))
+            else
             {
-                return (TestResult.Pass, null);
+                if (runResult.UnsupportedReason != null)
+                {
+                    return (TestResult.Skip, "Unsupported in this engine: " + runResult.UnsupportedReason);
+                }
             }
 
-            if (result is NumberValue numericResult && double.TryParse(expected, out var expectedNumeric))
+            if (result == null)
             {
-                // Allow for a 1e-5 difference
-                var diff = Math.Abs(numericResult.Value - expectedNumeric);
-                if (diff < 1e-5)
+                return (TestResult.Fail, "did not return a value");
+            }
+            else
+            {
+                var actualStr = TestRunner.TestToString(result);
+
+                if (string.Equals(expected, actualStr, StringComparison.Ordinal))
                 {
                     return (TestResult.Pass, null);
                 }
 
-                // diff in large numbers, Precision diff is small, but exponent can be large. 
-                // 5.5e186 vs 5.6e186
-                if (expectedNumeric != 0)
+                if (result is NumberValue numericResult && double.TryParse(expected, out var expectedNumeric))
                 {
-                    if (Math.Abs((numericResult.Value - expectedNumeric) / expectedNumeric) < 1e-14)
+                    if (NumberCompare(numericResult.Value, expectedNumeric))
                     {
                         return (TestResult.Pass, null);
                     }
                 }
-            }
 
-            return (TestResult.Fail, $"Expected: {expected}. actual: {actualStr}");
+                return (TestResult.Fail, $"Expected: {expected}. actual: {actualStr}");
+            }
         }
 
         // Get the friendly name of the harness. 
@@ -249,6 +321,29 @@ namespace Microsoft.PowerFx.Core.Tests
         public virtual bool IsError(FormulaValue value)
         {
             return value is ErrorValue;
+        }
+
+        // Derived harness may need to override if they have a different precision level. 
+        public virtual bool NumberCompare(double a, double b)
+        {
+            // Allow for a 1e-5 difference
+            var diff = Math.Abs(a - b);
+            if (diff < 1e-5)
+            {
+                return true;
+            }
+
+            // diff in large numbers, Precision diff is small, but exponent can be large. 
+            // 5.5e186 vs 5.6e186
+            if (b != 0)
+            {
+                if (Math.Abs(diff / b) < 1e-14)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
     }
 

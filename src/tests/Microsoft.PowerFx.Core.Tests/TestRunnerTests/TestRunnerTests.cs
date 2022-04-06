@@ -186,9 +186,16 @@ namespace Microsoft.PowerFx.Core.Tests
         {
             public Func<string, string, FormulaValue> _hook;
 
-            protected override Task<FormulaValue> RunAsyncInternal(string expr, string setupHandlerName = null)
+            public Func<string, string, RunResult> _hook2;
+
+            protected override Task<RunResult> RunAsyncInternal(string expr, string setupHandlerName = null)
             {
-                return Task.FromResult(_hook(expr, setupHandlerName));
+                if (_hook != null)
+                {
+                    return Task.FromResult(new RunResult(_hook(expr, setupHandlerName)));
+                }
+
+                return Task.FromResult(_hook2(expr, setupHandlerName));
             }
         }
 
@@ -267,6 +274,51 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.NotNull(result.Item2);
         }
 
+        // Cases where a test runner marks unsupported behavior. 
+        [Fact]
+        public async Task TestRunnerSkipException()
+        {
+            var msg = "msg xyz";
+
+            var runner = new MockRunner
+            {
+                _hook2 = (expr, setup) => new RunResult { UnsupportedReason = "unsupported" }
+            };
+            {
+                var test = new TestCase
+                {
+                    Expected = "1",
+                    OverrideFrom = "yes"
+                };
+                var result = await runner.RunAsync(test);
+
+                // Fail! Unsupported is only for non-overrides
+                Assert.Equal(TestResult.Fail, result.Item1);
+            }
+
+            {
+                var test = new TestCase
+                {
+                    Expected = "1",
+                };
+                var result = await runner.RunAsync(test);
+
+                // Yes, unsupported can skip non-overrides
+                Assert.Equal(TestResult.Skip, result.Item1);                
+            }
+
+            {
+                // Unsupported can't skip error. We should match the error. 
+                var test = new TestCase
+                {
+                    Expected = "#error",
+                };
+                var result = await runner.RunAsync(test);
+
+                Assert.Equal(TestResult.Fail, result.Item1);                
+            }
+        }
+
         [Fact]
         public async Task TestRunnerError()
         {
@@ -336,7 +388,7 @@ namespace Microsoft.PowerFx.Core.Tests
             // Compiler error is a throw from Check()
             var runner = new MockRunner
             {
-                _hook = (expr, setup) => throw new InvalidOperationException("Errors: Error X")
+                _hook2 = (expr, setup) => RunResult.FromError("X")
             };
 
             var test = new TestCase
@@ -348,7 +400,7 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.Equal(TestResult.Pass, result.Item1);
 
             // It's a failure if we have the wrong error
-            runner._hook = (expr, setup) => throw new InvalidOperationException("Errors: Error Y");
+            runner._hook2 = (expr, setup) => RunResult.FromError("Y");
             result = await runner.RunAsync(test);
 
             Assert.Equal(TestResult.Fail, result.Item1);
@@ -388,9 +440,9 @@ namespace Microsoft.PowerFx.Core.Tests
         // Override IsError
         private class MockErrorRunner : MockRunner
         {
-            protected override Task<FormulaValue> RunAsyncInternal(string expr, string setupHandlerName = null)
+            protected override Task<RunResult> RunAsyncInternal(string expr, string setupHandlerName = null)
             {
-                return Task.FromResult(_hook(expr, setupHandlerName));
+                return Task.FromResult(new RunResult(_hook(expr, setupHandlerName)));
             }
 
             public Func<FormulaValue, bool> _isError;
