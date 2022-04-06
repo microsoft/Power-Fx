@@ -7,7 +7,9 @@ using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Core.Lexer.Tokens
 {
-    // TODO: Docs
+    /// <summary>
+    /// Token for lexing error.
+    /// </summary>
     public class ErrorToken : Token
     {
         /// <summary>
