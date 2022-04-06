@@ -72,6 +72,19 @@ namespace Microsoft.PowerFx.Core
             return _extraFunctions.Values.Select(func => func.Name).Distinct();
         }
 
+        internal IEnumerable<IExternalEntity> GetSymbols() => _environmentSymbols.Values;
+
+        internal string GetSuggestableSymbolName(IExternalEntity entity)
+        {
+            var name = entity.EntityName;
+            if (_environmentSymbolDisplayNameProvider.TryGetDisplayName(name, out var displayName))
+            {
+                return displayName.Value;
+            }
+
+            return name.Value;
+        }
+
         internal void AddEntity(IExternalEntity entity, DName displayName = default)
         {
             CheckUnlocked();

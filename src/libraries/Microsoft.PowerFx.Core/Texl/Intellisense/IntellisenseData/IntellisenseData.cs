@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.PowerFx.Core.Binding;
+using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Lexer;
 using Microsoft.PowerFx.Core.Lexer.Tokens;
@@ -18,9 +19,10 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense.IntellisenseData
     // The IntellisenseData class contains the pre-parsed data for Intellisense to provide suggestions
     internal class IntellisenseData : IIntellisenseData
     {
+        private readonly PowerFxConfig _powerFxConfig;
         private readonly EnumStore _enumStore;
 
-        public IntellisenseData(EnumStore enumStore, IIntellisenseContext context, DType expectedType, TexlBinding binding, TexlFunction curFunc, TexlNode curNode, int argIndex, int argCount, IsValidSuggestion isValidSuggestionFunc, IList<DType> missingTypes, List<CommentToken> comments)
+        public IntellisenseData(PowerFxConfig powerFxConfig, IIntellisenseContext context, DType expectedType, TexlBinding binding, TexlFunction curFunc, TexlNode curNode, int argIndex, int argCount, IsValidSuggestion isValidSuggestionFunc, IList<DType> missingTypes, List<CommentToken> comments)
         {
             Contracts.AssertValue(context);
             Contracts.AssertValid(expectedType);
@@ -31,7 +33,8 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense.IntellisenseData
             Contracts.AssertValueOrNull(missingTypes);
             Contracts.AssertValueOrNull(comments);
 
-            _enumStore = enumStore;
+            _powerFxConfig = powerFxConfig;
+            _enumStore = powerFxConfig.EnumStoreBuilder.Build();
             ExpectedType = expectedType;
             Suggestions = new IntellisenseSuggestionList();
             SubstringSuggestions = new IntellisenseSuggestionList();
@@ -308,6 +311,17 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense.IntellisenseData
         /// </summary>
         internal virtual void AddCustomSuggestionsForGlobals()
         {
+            foreach (var global in _powerFxConfig.GetSymbols())
+            {
+                var type = DType.Unknown;
+
+                if (global is IExternalOptionSet optionSet)
+                {
+                    type = optionSet.Type;
+                }
+
+                IntellisenseHelper.AddSuggestion(this, _powerFxConfig.GetSuggestableSymbolName(global), SuggestionKind.Global, SuggestionIconKind.Other, type, requiresSuggestionEscaping: true);
+            }
         }
 
         /// <summary>
@@ -334,7 +348,7 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense.IntellisenseData
         /// <returns>
         /// Sequence of suggestions for first name node context.
         /// </returns>
-        internal virtual IEnumerable<string> SuggestableFirstNames => Enumerable.Empty<string>();
+        internal virtual IEnumerable<string> SuggestableFirstNames => _powerFxConfig.GetSymbols().Select(_powerFxConfig.GetSuggestableSymbolName);
 
         /// <summary>
         /// Invokes <see cref="AddSuggestionsForConstantKeywords"/> to supply suggestions for constant

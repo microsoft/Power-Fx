@@ -28,8 +28,9 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
         [Theory]
         [InlineData("OptionSet.Optio|", "Option1", "Option2")]
-        [InlineData("Option|", "OptionSet")]
-        [InlineData("O|", "OptionSet", "OtherOptionSet")]
+        [InlineData("Option|", "OptionSet", "OtherOptionSet", "TopOptionSetField")]
+        [InlineData("O|", "OptionSet", "OtherOptionSet", "Not", "TopOptionSetField")]
+        [InlineData("TopOptionSetField <> |", "OptionSet")]
         public void TestSuggestOptionSets(string expression, params string[] expectedSuggestions)
         {
             var config = PowerFxConfig.BuildWithEnumStore(null, new EnumStoreBuilder(), new TexlFunction[0]);
