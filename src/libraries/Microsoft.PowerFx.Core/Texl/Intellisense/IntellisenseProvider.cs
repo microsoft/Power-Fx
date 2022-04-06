@@ -25,7 +25,7 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
             new Intellisense.RecordNodeSuggestionHandler(),
         };
 
-        internal static IIntellisense GetIntellisense(EnumStore enumStore)
+        internal static IIntellisense GetIntellisense(IEnumStore enumStore)
         {
             return new Intellisense(enumStore, SuggestionHandlers);
         }
