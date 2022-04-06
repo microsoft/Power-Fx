@@ -28,12 +28,7 @@ namespace Microsoft.PowerFx.Core.Localization
         /// </summary>
         public int Lim { get; }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Span"/> class.
-        /// </summary>
-        /// <param name="min"></param>
-        /// <param name="lim"></param>
-        public Span(int min, int lim)
+        internal Span(int min, int lim)
         {
             Contracts.CheckParam(min >= 0, "min");
             Contracts.CheckParam(lim >= min, "lim");
@@ -87,15 +82,8 @@ namespace Microsoft.PowerFx.Core.Localization
             return Min + match.Length <= script.Length && string.CompareOrdinal(script, Min, match, 0, match.Length) == 0;
         }
 
-        /// <summary>
-        /// Generic span replacer. Given a set of unordered spans and replacement strings for 
-        /// each, this produces a new string with all the specified spans replaced accordingly.
-        /// </summary>
-        /// <param name="script"></param>
-        /// <param name="worklist"></param>
-        /// <returns></returns>
         [TransportDisabled]
-        public static string ReplaceSpans(string script, IEnumerable<KeyValuePair<Span, string>> worklist)
+        internal static string ReplaceSpans(string script, IEnumerable<KeyValuePair<Span, string>> worklist)
         {
             Contracts.AssertValue(script);
             Contracts.AssertValue(worklist);
