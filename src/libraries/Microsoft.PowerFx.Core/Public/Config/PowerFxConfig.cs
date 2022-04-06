@@ -41,7 +41,7 @@ namespace Microsoft.PowerFx.Core
             CultureInfo = cultureInfo ?? CultureInfo.CurrentCulture;
 
             // TODO: Does this make sense?
-            LanguageSettings = new LanguageSettings(cultureName: CultureInfo.Name, uiCultureName: CultureInfo.Name, addPunctuators: true);
+            LanguageSettings = new LanguageSettings(cultureName: CultureInfo.Name, uiCultureName: CultureInfo.Name);
             _isLocked = false;
             _extraFunctions = new Dictionary<string, TexlFunction>();
             _environmentSymbols = new Dictionary<DName, IExternalEntity>();
