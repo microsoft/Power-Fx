@@ -158,13 +158,8 @@ namespace Microsoft.PowerFx.Core.Tests
                     return isValueArgSafe;
                 }
 
-                if (genericDef == typeof(IReadOnlyList<>))
-                {
-                    var valueArg = t.GetGenericArguments()[0];
-                    return IsTypeImmutable(valueArg);
-                }
-
-                if (genericDef == typeof(IEnumerable<>))
+                if (genericDef == typeof(IEnumerable<>)
+                    || genericDef == typeof(IReadOnlyList<>) || genericDef == typeof(Nullable<>))
                 {
                     var valueArg = t.GetGenericArguments()[0];
                     var isValueArgSafe = IsTypeImmutable(valueArg);

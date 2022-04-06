@@ -12,6 +12,7 @@ using StringBuilderCache = Microsoft.PowerFx.Core.Utils.StringBuilderCache<Micro
 namespace Microsoft.PowerFx.Core.Localization
 {
     [TransportType(TransportKind.ByValue)]
+    [ThreadSafeImmutable]
     public sealed class Span
     {
         public int Min { get; }

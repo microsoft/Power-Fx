@@ -126,6 +126,13 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Core.Lexer.BinaryOp",
                 "Microsoft.PowerFx.Core.Lexer.UnaryOp",
                 "Microsoft.PowerFx.Core.Lexer.VariadicOp",
+                "Microsoft.PowerFx.Core.Lexer.TokKind",
+                "Microsoft.PowerFx.Core.Lexer.Tokens.CommentToken",
+                "Microsoft.PowerFx.Core.Lexer.Tokens.ErrorToken",
+                "Microsoft.PowerFx.Core.Lexer.Tokens.IdentToken",
+                "Microsoft.PowerFx.Core.Lexer.Tokens.NumLitToken",
+                "Microsoft.PowerFx.Core.Lexer.Tokens.StrLitToken",
+                "Microsoft.PowerFx.Core.Lexer.Tokens.Token",
                 "Microsoft.PowerFx.Core.DisplayNameUtility",
             };
 
