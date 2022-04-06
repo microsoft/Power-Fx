@@ -66,14 +66,8 @@ namespace Microsoft.PowerFx.Core.Localization
             return string.Format(CultureInfo.InvariantCulture, "({0},{1})", Min, Lim);
         }
 
-        /// <summary>
-        /// Checks whether this span starts with some text.
-        /// </summary>
-        /// <param name="script"></param>
-        /// <param name="match"></param>
-        /// <returns></returns>
         [TransportDisabled]
-        public bool StartsWith(string script, string match)
+        internal bool StartsWith(string script, string match)
         {
             Contracts.AssertValue(script);
             Contracts.Assert(Min <= script.Length);
