@@ -124,6 +124,10 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [InlineData("With(RecordNest, SomeString + nest2.datetest)", "With(RecordNest, SomeString + Foo.datetest)", "RecordNest.nest2", "Foo")]
         [InlineData("With(RecordNest, SomeString + nest2.datetest)", "With(RecordNest, SomeString + nest2.Foo)", "RecordNest.nest2.datetest", "Foo")]
         [InlineData("With({value: RecordNest.SomeString}, value & B)", "With({value: RecordNest.'abcd efg'}, value & B)", "RecordNest.SomeString", "abcd efg")]
+        [InlineData("If(B, Text(B), \"B\")", "If(A, Text(A), \"B\")", "B", "A")]
+        [InlineData("B & Invalid()", "A & Invalid()", "B", "A")] // Rename with bind errors
+        [InlineData("B + + + ", "A + + + ", "B", "A")] // Rename with parse errors
+        [InlineData("With({x: RecordNest, y: RecordNest}, x.SomeString & y.SomeString)", "With({x: RecordNest, y: RecordNest}, x.S2 & y.S2)", "RecordNest.SomeString", "S2")]
         public void RenameParameter(string expressionBase, string expectedExpression, string path, string newName)
         {
             var r1 = new RecordType()

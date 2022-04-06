@@ -162,9 +162,9 @@ namespace Microsoft.PowerFx
         /// <returns></returns>
         public RenameDriver CreateFieldRenamer(RecordType parameters, DPath pathToRename, DName updatedName)
         {
-            Contracts.AssertValue(parameters);
-            Contracts.AssertValid(pathToRename);
-            Contracts.AssertValid(updatedName);
+            Contracts.CheckValue(parameters, nameof(parameters));
+            Contracts.CheckValid(pathToRename, nameof(pathToRename));
+            Contracts.CheckValid(updatedName, nameof(updatedName));
 
             return new RenameDriver(parameters, pathToRename, updatedName, CreateResolver(Config.WithoutDisplayNames()));
         }
