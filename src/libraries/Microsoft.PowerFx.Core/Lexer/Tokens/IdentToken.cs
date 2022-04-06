@@ -10,9 +10,9 @@ namespace Microsoft.PowerFx.Core.Lexer.Tokens
     // TODO: Docs
     public class IdentToken : Token
     {
-        public readonly bool HasDelimiterStart;
-        public readonly bool HasDelimiterEnd;
-        public readonly bool IsModified;
+        internal readonly bool HasDelimiterStart;
+        internal readonly bool HasDelimiterEnd;
+        internal readonly bool IsModified;
 
         // Unescaped, unmodified value.
         private readonly string _value;

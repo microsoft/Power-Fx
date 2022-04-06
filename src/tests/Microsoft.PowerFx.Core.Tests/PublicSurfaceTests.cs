@@ -6,14 +6,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using Microsoft.PowerFx.Core.Lexer.Tokens;
+using Microsoft.PowerFx.Core.Syntax.Nodes;
 using Xunit;
 
 namespace Microsoft.PowerFx.Core.Tests
 {
     public class PublicSurfaceTests
     {
-        private static readonly Type TexlNodeType = typeof(Syntax.Nodes.TexlNode);
-
         [Fact]
         public void Test()
         {
@@ -157,22 +157,25 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Fact]
-        public void TestTexlNodeTypes()
+        public void TestTexlNodeTypes() => TestPublicClassHierarchy(typeof(TexlNode));
+
+        [Fact]
+        public void TestTokenTypes() => TestPublicClassHierarchy(typeof(Token), requireAbstractOrSealed: false);
+
+        private static void TestPublicClassHierarchy(Type rootType, bool requireAbstractOrSealed = true)
         {
             var errors = new StringBuilder();
-            var checkedCount = 0;
 
-            var asm = typeof(Syntax.Nodes.TexlNode).Assembly;
-            var types = asm.GetTypes().Where(IsTexlNodePublicType).ToList();
+            var asm = rootType.Assembly;
+            var types = asm.GetTypes().Where(t => IsPublicSubclassOrEqual(t, rootType)).ToList();
             Assert.True(types.Count > 0, "No types found");
 
             foreach (var type in types)
             {
-                checkedCount++;
                 var fullName = type.FullName;
 
                 // Should be abstract or sealed
-                if (!(type.IsSealed || type.IsAbstract))
+                if (requireAbstractOrSealed && !(type.IsSealed || type.IsAbstract))
                 {
                     errors.AppendLine($"{fullName} is neither abstract nor sealed");
                 }
@@ -202,7 +205,6 @@ namespace Microsoft.PowerFx.Core.Tests
                 }
             }
 
-            Assert.True(checkedCount > 10);
             Assert.True(errors.Length == 0, $"TexlNode errors: {errors}");
         }
 
@@ -213,14 +215,12 @@ namespace Microsoft.PowerFx.Core.Tests
             ImmutabilityTests.CheckImmutability(asm);
         }
 
-        private static bool IsTexlNodePublicType(Type t) => t.IsPublic && IsSubclassOrEqual(t, TexlNodeType);
-
         /// <summary>
-        ///     Checks whether <see cref="t1" /> is equal to or subclass of to <see cref="t2" />.
+        ///     Checks whether <see cref="t1" /> is public, and equal to or subclass of to <see cref="t2" />.
         /// </summary>
         /// <param name="t1"></param>
         /// <param name="t2"></param>
         /// <returns></returns>
-        private static bool IsSubclassOrEqual(Type t1, Type t2) => t1.Equals(t2) || t1.IsSubclassOf(t2);
+        private static bool IsPublicSubclassOrEqual(Type t1, Type t2) => t1.IsPublic && (t1.Equals(t2) || t1.IsSubclassOf(t2));
     }
 }
