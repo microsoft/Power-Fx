@@ -166,6 +166,15 @@ namespace Microsoft.PowerFx
             Contracts.CheckValid(pathToRename, nameof(pathToRename));
             Contracts.CheckValid(updatedName, nameof(updatedName));
 
+            /* 
+            ** PowerFxConfig handles symbol lookup in TryGetSymbol. As part of that, if that global entity 
+            ** has a display name and we're in the process of converting an expression from invariant -> display,
+            ** we also return that entities display name so it gets updated. 
+            ** For Rename, we're reusing that invariant->display support, but only doing it for a single name,
+            ** specified by `pathToRename`. So, we need to make sure that names in PowerFxConfig still bind, 
+            ** but that we don't return any display names for them. Thus, we clone a PowerFxConfig but without 
+            ** display name support and construct a resolver from that instead, which we use for the rewrite binding.
+            */
             return new RenameDriver(parameters, pathToRename, updatedName, CreateResolver(Config.WithoutDisplayNames()));
         }
 
