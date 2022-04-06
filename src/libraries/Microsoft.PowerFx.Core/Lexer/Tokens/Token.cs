@@ -7,7 +7,9 @@ using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Core.Lexer.Tokens
 {
-    // TODO: All the comments
+    /// <summary>
+    /// Base class for all lexing tokens.
+    /// </summary>
     [ThreadSafeImmutable]
     public abstract class Token : IEquatable<Token>
     {
@@ -17,10 +19,14 @@ namespace Microsoft.PowerFx.Core.Lexer.Tokens
             Span = span;
         }
 
-        // TODO: Comment
+        /// <summary>
+        /// Kind of the token.
+        /// </summary>
         public TokKind Kind { get; }
 
-        // TODO: Comment
+        /// <summary>
+        /// Span of the token in the formula.
+        /// </summary>
         public Span Span { get; }
 
         internal virtual bool IsDottedNamePunctuator => false;

@@ -7,7 +7,9 @@ using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Core.Lexer.Tokens
 {
-    // TODO: Docs
+    /// <summary>
+    /// Token for an identifier/name.
+    /// </summary>
     public class IdentToken : Token
     {
         internal readonly bool HasDelimiterStart;
@@ -17,7 +19,9 @@ namespace Microsoft.PowerFx.Core.Lexer.Tokens
         // Unescaped, unmodified value.
         private readonly string _value;
 
-        // TODO: Docs
+        /// <summary>
+        /// Identifier represented as <see cref="DName" />.
+        /// </summary>
         public DName Name { get; }
 
         internal const string StrInterpIdent = "Concatenate";

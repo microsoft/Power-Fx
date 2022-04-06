@@ -11,14 +11,28 @@ using StringBuilderCache = Microsoft.PowerFx.Core.Utils.StringBuilderCache<Micro
 
 namespace Microsoft.PowerFx.Core.Localization
 {
+    /// <summary>
+    /// Span in the text formula.
+    /// </summary>
     [TransportType(TransportKind.ByValue)]
     [ThreadSafeImmutable]
     public sealed class Span
     {
+        /// <summary>
+        /// Start index of this span.
+        /// </summary>
         public int Min { get; }
 
+        /// <summary>
+        /// End index of this span.
+        /// </summary>
         public int Lim { get; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Span"/> class.
+        /// </summary>
+        /// <param name="min"></param>
+        /// <param name="lim"></param>
         public Span(int min, int lim)
         {
             Contracts.CheckParam(min >= 0, "min");
@@ -28,7 +42,7 @@ namespace Microsoft.PowerFx.Core.Localization
             Lim = lim;
         }
 
-        public Span(Span span)
+        internal Span(Span span)
         {
             Contracts.CheckParam(span.Min >= 0, "min");
             Contracts.CheckParam(span.Lim >= span.Min, "lim");
@@ -37,6 +51,11 @@ namespace Microsoft.PowerFx.Core.Localization
             Lim = span.Lim;
         }
 
+        /// <summary>
+        /// Get fragment of the text denoted by this span.
+        /// </summary>
+        /// <param name="script"></param>
+        /// <returns></returns>
         [TransportDisabled]
         public string GetFragment(string script)
         {
@@ -45,12 +64,19 @@ namespace Microsoft.PowerFx.Core.Localization
             return script.Substring(Min, Lim - Min);
         }
 
+        /// <inheritdoc/>
         [TransportDisabled]
         public override string ToString()
         {
             return string.Format(CultureInfo.InvariantCulture, "({0},{1})", Min, Lim);
         }
 
+        /// <summary>
+        /// Checks whether this span starts with some text.
+        /// </summary>
+        /// <param name="script"></param>
+        /// <param name="match"></param>
+        /// <returns></returns>
         [TransportDisabled]
         public bool StartsWith(string script, string match)
         {
@@ -61,8 +87,13 @@ namespace Microsoft.PowerFx.Core.Localization
             return Min + match.Length <= script.Length && string.CompareOrdinal(script, Min, match, 0, match.Length) == 0;
         }
 
-        // Generic span replacer. Given a set of unordered spans and replacement strings for
-        // each, this produces a new string with all the specified spans replaced accordingly.
+        /// <summary>
+        /// Generic span replacer. Given a set of unordered spans and replacement strings for 
+        /// each, this produces a new string with all the specified spans replaced accordingly.
+        /// </summary>
+        /// <param name="script"></param>
+        /// <param name="worklist"></param>
+        /// <returns></returns>
         [TransportDisabled]
         public static string ReplaceSpans(string script, IEnumerable<KeyValuePair<Span, string>> worklist)
         {
@@ -98,6 +129,7 @@ namespace Microsoft.PowerFx.Core.Localization
             }
         }
 
+        /// <inheritdoc />
         public override bool Equals(object obj)
         {
             return obj is Span span &&
@@ -105,6 +137,7 @@ namespace Microsoft.PowerFx.Core.Localization
                    Lim == span.Lim;
         }
 
+        /// <inheritdoc />
         public override int GetHashCode()
         {
             var hashCode = -1160472096;

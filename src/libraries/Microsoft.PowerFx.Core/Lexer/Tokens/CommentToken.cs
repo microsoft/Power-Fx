@@ -6,7 +6,9 @@ using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Core.Lexer.Tokens
 {
-    // TODO: Docs
+    /// <summary>
+    /// Token for a comment.
+    /// </summary>
     public sealed class CommentToken : Token
     {
         internal bool IsOpenBlock;

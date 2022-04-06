@@ -6,7 +6,9 @@ using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Core.Lexer.Tokens
 {
-    // TODO: Docs
+    /// <summary>
+    /// Token for a numeric literal.
+    /// </summary>
     public class NumLitToken : Token
     {
         internal NumLitToken(double value, Span span)

@@ -6,7 +6,9 @@ using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Core.Lexer.Tokens
 {
-    // TODO: Docs
+    /// <summary>
+    /// Token for a string literal.
+    /// </summary>
     public class StrLitToken : Token
     {
         internal StrLitToken(string val, Span span)
