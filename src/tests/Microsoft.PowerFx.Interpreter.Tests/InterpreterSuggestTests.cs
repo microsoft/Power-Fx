@@ -26,11 +26,17 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             return intellisense.Suggestions.Select(suggestion => suggestion.DisplayText.Text).ToArray();
         }
 
+        // Intellisense isn't actually all that great when it comes to context-sensitive suggestions
+        // Without a refactor, this is the best it can currently do. 
+        // Ideally, for BinaryOp nodes we only suggest things with relevant types,
+        // but for now we can at least get them to appear higher in the sort order
         [Theory]
         [InlineData("OptionSet.Optio|", "Option1", "Option2")]
         [InlineData("Option|", "OptionSet", "OtherOptionSet", "TopOptionSetField")]
-        [InlineData("O|", "OptionSet", "OtherOptionSet", "Not", "TopOptionSetField")]
-        [InlineData("TopOptionSetField <> |", "OptionSet")]
+        [InlineData("Opt|", "OptionSet", "OtherOptionSet", "TopOptionSetField")]
+        [InlineData("Opti|on", "OptionSet", "OtherOptionSet", "TopOptionSetField")]
+        [InlineData("TopOptionSetField <> |", "OptionSet", "OtherOptionSet")]
+        [InlineData("TopOptionSetField <> Op|", "OptionSet", "OtherOptionSet", "TopOptionSetField")]
         public void TestSuggestOptionSets(string expression, params string[] expectedSuggestions)
         {
             var config = PowerFxConfig.BuildWithEnumStore(null, new EnumStoreBuilder(), new TexlFunction[0]);

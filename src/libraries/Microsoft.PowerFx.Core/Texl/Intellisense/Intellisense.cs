@@ -201,7 +201,13 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
 
             foreach (var suggestion in suggestions)
             {
-                if (!suggestion.Type.IsUnknown && type.Accepts(suggestion.Type))
+                if (!suggestion.Type.IsUnknown && 
+
+                    // Most type acceptance is straightforward
+                    (type.Accepts(suggestion.Type) ||
+
+                    // Option Set expected types should also include the option set base as a reccomendation.
+                    (suggestion.Type.IsOptionSet && type.Accepts(DType.CreateOptionSetValueType(suggestion.Type.OptionSetInfo)))))
                 {
                     suggestion.SortPriority++;
                 }

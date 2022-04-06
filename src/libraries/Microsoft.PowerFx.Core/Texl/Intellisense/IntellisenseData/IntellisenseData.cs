@@ -461,6 +461,7 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense.IntellisenseData
         /// </summary>
         internal virtual void AddSuggestionsAfterTopLevelErrorNodeSuggestions()
         {
+            AddCustomSuggestionsForGlobals();
         }
 
         public virtual bool TryAugmentSignature(TexlFunction func, int argIndex, string paramName, int highlightStart, out int newHighlightStart, out int newHighlightEnd, out string newParamName, out string newInvariantParamName) =>
