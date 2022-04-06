@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Functions;
@@ -501,7 +500,7 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public void EmptyEnumStoreTest()
         {
-            var config = PowerFxConfig.BuildWithEnumStore(null, new EmptyEnumStore());
+            var config = PowerFxConfig.BuildWithEnumStore(null, new EnumStoreBuilder());
 
             var recalcEngine = new RecalcEngine(config);
 
@@ -509,7 +508,7 @@ namespace Microsoft.PowerFx.Tests
             Assert.True(checkResult.IsSuccess);
             Assert.IsType<StringType>(checkResult.ReturnType);
 
-            var enums = config.EnumStore.Enums();
+            var enums = config.EnumStoreBuilder.Build().Enums();
 
             Assert.True(enums.Count() > 0);
         }

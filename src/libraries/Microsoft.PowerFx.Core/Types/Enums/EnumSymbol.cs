@@ -27,7 +27,7 @@ namespace Microsoft.PowerFx.Core.Types.Enums
 
         public string InvariantName { get; set; }
 
-        public EnumSymbol(EnumStore store, DName name, DName invariantName, DType invariantType)
+        public EnumSymbol(IReadOnlyDictionary<string, Dictionary<string, string>> customEnumLocDict, DName name, DName invariantName, DType invariantType)
         {
             Contracts.AssertValid(invariantName);
             Contracts.Assert(invariantType.IsEnum);
@@ -60,13 +60,32 @@ namespace Microsoft.PowerFx.Core.Types.Enums
                 }
 
                 var entityNameValue = name.Value;
-                if (!store.TryGetLocalizedEnumValue(entityNameValue, invName, out var custDisplayName))
+                if (!TryGetLocalizedEnumValue(customEnumLocDict, entityNameValue, invName, out var custDisplayName))
                 {
                     custDisplayName = displayName;
                 }
 
                 _valuesInvariantToDisplayName[invName] = custDisplayName;
             }
+        }
+
+        private bool TryGetLocalizedEnumValue(IReadOnlyDictionary<string, Dictionary<string, string>> customEnumLocDict, string enumName, string enumValue, out string locValue)
+        {
+            Contracts.AssertValue(enumName);
+            Contracts.AssertValue(enumValue);
+
+            locValue = enumValue;
+            if (customEnumLocDict.ContainsKey(enumName))
+            {
+                var thisEnum = customEnumLocDict[enumName];
+                if (thisEnum.ContainsKey(enumValue))
+                {
+                    locValue = thisEnum[enumValue];
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         /// <summary>
