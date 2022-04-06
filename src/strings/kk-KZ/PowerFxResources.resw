@@ -1,5 +1,64 @@
 ﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
@@ -426,6 +485,17 @@
   <data name="AboutValue_language" xml:space="preserve">
     <value>Мәнді түрлендіргенде пайдаланылатын тіл коды.</value>
     
+  </data>
+  <data name="AboutBoolean" xml:space="preserve">
+    <value>Логикалық мәнді білдіретін "мәтінді" логикалық мәнге түрлендіреді.</value>
+    
+  </data>
+  <data name="BooleanArg1" xml:space="preserve">
+    <value>мәтін</value>
+    
+  </data>
+  <data name="AboutBoolean_text" xml:space="preserve">
+    <value>Логикалық мәнге түрлендірілетін мәтін мәні.</value>
   </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Бірінші бос емес аргументті қайтарады</value>
@@ -1368,6 +1438,10 @@
     <value>өрнек</value>
     
   </data>
+  <data name="AboutIsBlankOrError_expression" xml:space="preserve">
+    <value>Тексерілетін өрнек.</value>
+    
+  </data>
   <data name="AboutIsEmpty" xml:space="preserve">
     <value>Жиынтықтың бос болуын не болмауын тексереді және "шын" немесе "жалған" мәнін қайтарады.</value>
     
@@ -1375,6 +1449,9 @@
   <data name="IsEmptyArg1" xml:space="preserve">
     <value>деректер_көзі</value>
     
+  </data>
+  <data name="AboutIsEmpty_source" xml:space="preserve">
+    <value>Тексерілетін кесте.</value>
   </data>
   <data name="AboutShuffle" xml:space="preserve">
     <value>Кіріс бастапқы кестенің кездейсоқ көшірмесін қайтарады.</value>
@@ -1845,8 +1922,12 @@
   <data name="AboutTime_millisecond" xml:space="preserve">
     <value>Миллисекунд компоненті.</value>
   </data>
+  <data name="AboutDateTime" xml:space="preserve">
+    <value>Creates a value that represents an instant in time, expressed as a date and time of the day.</value>
+    
+  </data>
   <data name="AboutYear" xml:space="preserve">
-    <value>Жыл 1900 мәнінен үлкен сан болатын берілген күннің жылын қайтарады.</value>
+    <value>Year returns the year of a given date.</value>
     
   </data>
   <data name="YearArg1" xml:space="preserve">
@@ -2260,6 +2341,36 @@
   </data>
   <data name="AboutChar_column_of_numbers" xml:space="preserve">
     <value>Платформаңыздағы таңбалар жиынтығынан код нөмірлерінің бағаны.</value>
+  </data>
+  <data name="AboutParseJSON" xml:space="preserve">
+    <value>JSON жолын нысанға түрлендіреді.</value>
+    
+  </data>
+  <data name="ParseJSONArg1" xml:space="preserve">
+    <value>кіріс</value>
+    
+  </data>
+  <data name="AboutParseJSON_input" xml:space="preserve">
+    <value>Өңдеуге арналған JSON жолы.</value>
+  </data>
+  <data name="AboutIndex" xml:space="preserve">
+    <value>Берілген индексте кестедегі жазбаны қайтарады.</value>
+    
+  </data>
+  <data name="IndexArg1" xml:space="preserve">
+    <value>кесте</value>
+    
+  </data>
+  <data name="IndexArg2" xml:space="preserve">
+    <value>индекс</value>
+    
+  </data>
+  <data name="AboutIndex_table" xml:space="preserve">
+    <value>Кесте.</value>
+  </data>
+  <data name="AboutIndex_index" xml:space="preserve">
+    <value>Алынатын жазбаның индексі.</value>
+    
   </data>
   <data name="Screen_Name_DisplayName" xml:space="preserve">
     <value>Аты</value>
@@ -3781,11 +3892,23 @@
     
   </data>
   <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
-    <value>Бұл {0} нәтиже түрі формула бағандарында қолданылмайды.</value>
+    <value>{0} нәтиже түріне формула бағандарында қолдау көрсетілмейді.</value>
     
   </data>
   <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
     <value>Бұл формула үшін нәтиже түрі {0} болады деп күтіледі, бірақ нақты нәтиже түрі — {1}. Формула бағанының нәтиже түрін өзгерту мүмкін емес.</value>
+    
+  </data>
+  <data name="FormulaColumns_ColumnTypeNotSupported" xml:space="preserve">
+    <value>{0} түріндегі бағандарға формула бағандарында қолдау көрсетілмейді.</value>
+    
+  </data>
+  <data name="FormulaColumns_ColumnFormatNotSupported" xml:space="preserve">
+    <value>{1} пішімді {0} түріндегі бағандарға формула бағандарында қолдау көрсетілмейді.</value>
+    
+  </data>
+  <data name="FormulaColumns_FormulaTooLong" xml:space="preserve">
+    <value>Формулалар 1000 таңбадан аспауы керек.</value>
     
   </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
@@ -3802,7 +3925,6 @@
   </data>
   <data name="ErrorResource_ErrBadToken_LongMessage" xml:space="preserve">
     <value>Мысалы, "\" таңбасы саннан кейін күтілмеген: "32\". Бос орын ("32") ол тек 32 саны болатындай күтілуі мүмкін немесе басқа сан ("323" санындағы сияқты) күтілуі мүмкін.</value>
-    
   </data>
   <data name="ErrorResource_ErrBadToken_HowToFix_1" xml:space="preserve">
     <value>Күтілмеген таңбаларды жойыңыз немесе ауыстырыңыз.</value>
@@ -3818,11 +3940,9 @@
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_LongMessage" xml:space="preserve">
     <value>Мысалы, "\" таңбасы саннан кейін күтілмеген: "32\". Бос орын ("32") ол тек 32 саны болатындай күтілуі мүмкін немесе басқа сан ("323" санындағы сияқты) күтілуі мүмкін.</value>
-    
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_HowToFix_1" xml:space="preserve">
     <value>Күтілмеген таңбаны алыңыз немесе ауыстырыңыз.</value>
-    
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_Link_1" xml:space="preserve">
     <value>Мақала: Power Apps үшін формула сілтемесі</value>
@@ -3834,7 +3954,6 @@
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_LongMessage" xml:space="preserve">
     <value>Әрбір блок комментарийі "/*" таңбасымен басталуы және "*/" таңбасымен аяқталуы тиіс. Әрбір блок комментарийін дұрыс аяқтамасаңыз, комментарийден кейінгі бүкіл код сол комментарийдің бөлігі болады. Егер комментарий тек бір жолдан тұрса, оны "//" таңбасымен бастауға және комментарийдің соңын анықтамауға болады.</value>
-    
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_HowToFix_1" xml:space="preserve">
     <value>Блок комментарийінің соңына "*/" таңбасын қосыңыз немесе оны жол комментарийлерінің жиынтығына өзгертіңіз.</value>
@@ -3850,7 +3969,6 @@
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_LongMessage" xml:space="preserve">
     <value>Мысалы, формулада "{{Val: 7}}" орнына "{{Val@ 7}}" болса, осы қате пайда болады. Айнымалыны орнатқанда, синтаксис айқұлақ таңбасының орнына қос нүктені қажет етеді.</value>
-    
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_HowToFix_1" xml:space="preserve">
     <value>Күтілмеген таңбаларды жойыңыз немесе күтілген таңбамен ауыстырыңыз.</value>
@@ -3861,12 +3979,11 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidName_ShortMessage" xml:space="preserve">
-    <value>Атау жарамсыз. Бұл идентификатор танылмады.</value>
+    <value>Атау жарамсыз. "{0}" танылмады.</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidName_LongMessage" xml:space="preserve">
     <value>Формула бұдан былай жоқ элементке (мысалы, жойылған басқару элементіне) сілтеме жасаған кезде, көбінесе осы пайда болады.</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidName_HowToFix_1" xml:space="preserve">
     <value>Сілтемені жойыңыз немесе жарамды атқа түзетіңіз.</value>
@@ -3876,13 +3993,27 @@
     <value>Мақала. Power Apps үшін формула сілтемесі</value>
     
   </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_ShortMessage" xml:space="preserve">
+    <value>Атау жарамсыз. Бұл идентификатор танылмады.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_LongMessage" xml:space="preserve">
+    <value>Формула бұдан былай жоқ элементке (мысалы, жойылған басқару элементіне) қатысты болған кезде, осы қате жиі пайда болады.</value>
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_HowToFix_1" xml:space="preserve">
+    <value>Жарамсыз атаудың сілтемесін жойыңыз немесе түзетіңіз.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_Link_1" xml:space="preserve">
+    <value>Мақала: Power Apps бағдарламасының формула сілтемесі</value>
+    
+  </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_ShortMessage" xml:space="preserve">
     <value>Сипатқа сілтеме жарамсыз.</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_LongMessage" xml:space="preserve">
     <value>Бұл қате формула жарамсыз синтаксисі бар компоненттің жұмыс режимі сипаттарына сілтеме жасағанда пайда болады. (Мысалы, Component.OnCustomChange() орнына Component.OnCustomChange)</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_HowToFix_1" xml:space="preserve">
     <value>Компоненттің жұмыс режимі сипатына сілтеме жасау үшін дұрыс синтаксисті пайдаланыңыз. Мысалы, Component.OnCustomChange()</value>
@@ -3898,7 +4029,6 @@
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_LongMessage" xml:space="preserve">
     <value>Негізгі операторды негізгі басқару элементі жоқ басқару элементімен пайдалану мүмкін емес. Бұл оператор берілген басқару элементін орналастыратын және оның барлық сипаттарын қолжетімді ететін басқару элементіне сілтеме жасайды.</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_HowToFix_1" xml:space="preserve">
     <value>"Негізгі" операторды жойыңыз.</value>
@@ -3914,7 +4044,6 @@
   </data>
   <data name="ErrorResource_ErrTooManyUps_LongMessage" xml:space="preserve">
     <value>Күрделілік әрбір енгізу деңгейімен арта түседі, сондықтан Power Apps тек 63 деңгейге дейінгі жол ауқымын енгізуге қолдау көрсетеді.</value>
-    
   </data>
   <data name="ErrorResource_ErrTooManyUps_HowToFix_1" xml:space="preserve">
     <value>Азырақ енгізу деңгейлерімен формуланы қайта жазыңыз.</value>
@@ -3926,7 +4055,6 @@
   </data>
   <data name="ErrorResource_ErrRuleNestedTooDeeply_LongMessage" xml:space="preserve">
     <value>Power Apps тек 50 деңгейге дейін өрнекті енгізуге қолдау көрсетеді. Бұл терең енгізілген өрнек түсіну және қолдау үшін қиын болады.</value>
-    
   </data>
   <data name="ErrorResource_ErrRuleNestedTooDeeply_HowToFix_1" xml:space="preserve">
     <value>Азырақ енгізу деңгейлерімен формуланы қайта жазыңыз.</value>
@@ -3938,7 +4066,6 @@
   </data>
   <data name="ErrorResource_ErrOperatorExpected_LongMessage" xml:space="preserve">
     <value>Операторлар екі операндты біріктіреді. Екі функцияны (операндты) ортасында операторсыз біріктірсеңіз, осы қате пайда болады, мысалы, Len("mytext")Len("mytext").</value>
-    
   </data>
   <data name="ErrorResource_ErrOperatorExpected_HowToFix_1" xml:space="preserve">
     <value>Формуланы ол операндтар арасындағы операторды қамтитын етіп өңдеңіз.</value>
@@ -3954,7 +4081,6 @@
   </data>
   <data name="ErrorResource_ErrNumberExpected_LongMessage" xml:space="preserve">
     <value>Санды қажет ететін функцияны пайдалансаңыз, бірақ оның орнына, мысалы, кескінді көрсетсеңіз, осы қате пайда болады.</value>
-    
   </data>
   <data name="ErrorResource_ErrNumberExpected_HowToFix_1" xml:space="preserve">
     <value>Формуланы формуладағы осы жерде ол сан болатын етіп өңдеңіз.</value>
@@ -3970,7 +4096,6 @@
   </data>
   <data name="ErrorResource_ErrBooleanExpected_LongMessage" xml:space="preserve">
     <value>Логикалық мән Microsoft Excel сияқты бағдарламаларда шын/жалған мәні ретінде белгілі. Логикалық мәнді қажет ететін функцияны пайдалансаңыз, бірақ оның орнына, мысалы, күнді көрсетсеңіз, осы қате пайда болады.</value>
-    
   </data>
   <data name="ErrorResource_ErrBooleanExpected_HowToFix_1" xml:space="preserve">
     <value>Формуланы формуладағы осы жерде ол логикалық мән болатын етіп өңдеңіз.</value>
@@ -3986,7 +4111,6 @@
   </data>
   <data name="ErrorResource_ErrColonExpected_LongMessage" xml:space="preserve">
     <value>Қос нүкте кейде баған атауы деп аталатын өріс атауын жазбадағы өріс мәнінен бөліп тұрады (мысалы, {Month:"1"}, {Month:"2"} …). Сондай-ақ қос нүкте сағатты минуттан және секундтан бөліп тұрады (мысалы, "3:04").</value>
-    
   </data>
   <data name="ErrorResource_ErrColonExpected_HowToFix_1" xml:space="preserve">
     <value>Формуланы ол қос нүктені қамтитын етіп өңдеңіз.</value>
@@ -4002,7 +4126,6 @@
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_LongMessage" xml:space="preserve">
     <value>Жұмыс режимі функциялары бағдарламаның күйін бағдарламадағы басқа жердегі мәндерді өзгерту арқылы өзгертеді. "Navigate", "Patch", "UpdateContext" және "Collect" жалпы жұмыс режимі функциялары болып табылады. "OnSelect", "OnVisible" және басқа "On …" сипаттары жалпы жұмыс режиміне негізделген сипаттар болып табылады.</value>
-    
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_HowToFix_1" xml:space="preserve">
     <value>Жұмыс режимі функциясын жұмыс режиміне негізделген сипатқа жылжытыңыз.</value>
@@ -4018,7 +4141,6 @@
   </data>
   <data name="ErrorResource_ErrTestPropertyExpected_LongMessage" xml:space="preserve">
     <value>Сынақ функцияларын бағдарламаны сынау кезінде пайдаланушы жазбасын үлгілеу үшін пайдалануға болады. "SetProperty", "SelectRow" және "Assert" – әдеттегі сынақ функциялары. Оларды сынақ жағдайларында ғана пайдалануға болады.</value>
-    
   </data>
   <data name="ErrorResource_ErrTestPropertyExpected_HowToFix_1" xml:space="preserve">
     <value>Функцияны бағдарламада емес, сынақ жағдайында пайдаланыңыз.</value>
@@ -4030,7 +4152,6 @@
   </data>
   <data name="ErrorResource_ErrCannotCoerce_SourceType_TargetType_LongMessage" xml:space="preserve">
     <value>Power Apps формуладағы деректердің кейбір түрлерін басқа түрлерге түрлендіре алады. Мысалы, ол "1" (жол) мәнін 1 (сан) етіп түрлендіре алады, бірақ ол барлық деректер түрлерін барлық басқа деректер түріне түрлендіре алмайды. Мысалы, ол кескінді санға түрлендіре алмайды.</value>
-    
   </data>
   <data name="ErrorResource_ErrCannotCoerce_SourceType_TargetType_HowToFix_1" xml:space="preserve">
     <value>Формуланы тиісті деректерді күтілген түрге түрлендіретіндей етіп өзгертіңіз.</value>
@@ -4042,7 +4163,6 @@
   </data>
   <data name="ErrorResource_ErrStringExpected_LongMessage" xml:space="preserve">
     <value>Мәтін (немесе жол) аргументін қажет ететін функцияны пайдалансаңыз, бірақ оның орнына, мысалы, күнді көрсетсеңіз, осы қате пайда болады.</value>
-    
   </data>
   <data name="ErrorResource_ErrStringExpected_HowToFix_1" xml:space="preserve">
     <value>Формуланы формуладағы осы жерде ол мәтін болатын етіп өңдеңіз.</value>
@@ -4058,7 +4178,6 @@
   </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_LongMessage" xml:space="preserve">
     <value>Мәтінді немесе санды қажет ететін функцияны пайдалансаңыз, бірақ оның орнына, мысалы, логикалық (шын/жалған) мәнді көрсетсеңіз, осы қате пайда болады.</value>
-    
   </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_HowToFix_1" xml:space="preserve">
     <value>Формуланы формуладағы осы жерде ол мәтін немесе сан болатын етіп өңдеңіз.</value>
@@ -4074,7 +4193,6 @@
   </data>
   <data name="ErrorResource_ErrClosingBracketExpected_LongMessage" xml:space="preserve">
     <value>Жабатын жақша жазбаның соңын көрсетеді (мысалы, {Month:"1"}, {Month:"2"} …).</value>
-    
   </data>
   <data name="ErrorResource_ErrClosingBracketExpected_HowToFix_1" xml:space="preserve">
     <value>Формуланы ол жақшаны қамтитын етіп өзгертіңіз.</value>
@@ -4094,7 +4212,6 @@
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_LongMessage" xml:space="preserve">
     <value>Формуланы бағалай алмаймыз, себебі формуладағы салыстырылатын мәндердің түрлері бірдей емес.</value>
-    
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_HowToFix_1" xml:space="preserve">
     <value>Мәнді бірдей түрде болуы үшін түрлендіруіңіз қажет болуы мүмкін, мысалы, күн жолын (мысалы, "31/12/2018") күн мәніне түрлендіру.</value>
@@ -4174,7 +4291,6 @@
   </data>
   <data name="ErrorResource_ErrTypeError_LongMessage" xml:space="preserve">
     <value>Деректер күтілген түрге сәйкес болмауы мүмкін. (мәтін, сан, күн, кесте, жазба.)</value>
-    
   </data>
   <data name="ErrorResource_ErrTypeError_HowToFix_1" xml:space="preserve">
     <value>Формулаға қатысты мәндердің түрлерін тексеріңіз және түрлердің сәйкестігіне көз жеткізіңіз.</value>
@@ -4194,7 +4310,6 @@
   </data>
   <data name="ErrorResource_ErrDateExpected_LongMessage" xml:space="preserve">
     <value>Күнді қажет ететін функцияны пайдалансаңыз, бірақ оның орнына, мысалы, мәтінді көрсетсеңіз, осы қате пайда болады.</value>
-    
   </data>
   <data name="ErrorResource_ErrDateExpected_HowToFix_1" xml:space="preserve">
     <value>Формуланы формуладағы осы жерде ол күн болатын етіп өңдеңіз.</value>
@@ -4210,7 +4325,6 @@
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_LongMessage" xml:space="preserve">
     <value>Деректер көзі формуланы өңдей алмауы мүмкін және толық емес деректер жиынтығын қайтаруы мүмкін. Деректер жиынтығы толық болмаса, бағдарламаңыз дұрыс нәтижелерді қайтармауы немесе дұрыс жұмыс істемеуі мүмкін.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_HowToFix_1" xml:space="preserve">
     <value>Егер деректер жиынтығы 500 жазба шегінен асатын болса, бірақ онда 2000 жазбадан азырақ болса, шекті қайта орнатып көріңіз.</value>
@@ -4238,7 +4352,6 @@
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_LongMessage" xml:space="preserve">
     <value>Деректер көзі формуланы өңдей алмауы мүмкін және толық емес деректер жиынтығын қайтаруы мүмкін. Деректер жиынтығы толық болмаса, бағдарламаңыз дұрыс нәтижелерді қайтармауы немесе дұрыс жұмыс істемеуі мүмкін.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_HowToFix_1" xml:space="preserve">
     <value>Егер деректер жиынтығы 500 жазба шегінен асатын болса, бірақ онда 2000 жазбадан азырақ болса, шекті қайта орнатып көріңіз.</value>
@@ -4266,7 +4379,6 @@
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_LongMessage" xml:space="preserve">
     <value>"In" операторының оң жақ бөлігі дұрыс деректер көзінен алынған баған атауы болуы тиіс. Деректер көзі формуланы өңдей алмауы мүмкін және толық емес деректер жиынтығын қайтаруы мүмкін. Деректер жиынтығы толық болмаса, бағдарламаңыз дұрыс нәтижелерді қайтармауы немесе дұрыс жұмыс істемеуі мүмкін.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_1" xml:space="preserve">
     <value>"In" операторының оң жағындағы элементті дұрыс деректер көзінің бағаны етіп өзгертіңіз.</value>
@@ -4299,7 +4411,6 @@
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_LongMessage" xml:space="preserve">
     <value> “Ішкі” амалдың оң жақ бөлігі дұрыс деректер көзінен алынған баған емес. Деректер көзі формуланы өңдей алмауы мүмкін және толық емес деректер жиынтығын қайтаруы мүмкін. Деректер жиынтығы толық болмаса, қолданбаңыз дұрыс нәтижелерді қайтармауы немесе дұрыс істемеуі мүмкін.
       </value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_1" xml:space="preserve">
     <value>"In" операторының оң жағындағы элементті дұрыс деректер көзінің бағаны етіп өзгертіңіз.</value>
@@ -4380,6 +4491,22 @@
   </data>
   <data name="ErrorResource_ErrInvalidControlReference_Link_1" xml:space="preserve">
     <value>Сілтеме: кенеп бағдарламалары үшін ConfirmExit</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidStringInterpolation_ShortMessage" xml:space="preserve">
+    <value>Интерполяцияланған жол ішінде пайда болатын өрнектер мәтін мәніне немесе үйлесімді түрге бағалануға тиіс.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidStringInterpolation_HowToFix_1" xml:space="preserve">
+    <value>Интерполяцияланған жол ішіндегі өрнектердің түрлерін тексеріңіз.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrEmptyIsland_ShortMessage" xml:space="preserve">
+    <value>Бос өрнектер интерполяцияланған жолдың ішінде көрінбейді.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrEmptyIsland_HowToFix_1" xml:space="preserve">
+    <value>Интерполяцияланған жолдағы бос өрнектерді тексеріңіз.</value>
     
   </data>
   <data name="ErrorResource_ErrAsNotInContext_ShortMessage" xml:space="preserve">

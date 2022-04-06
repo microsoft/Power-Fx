@@ -12,11 +12,12 @@ namespace Microsoft.PowerFx.Core.Lexer.Tokens
         public readonly bool HasDelimiterStart;
         public readonly bool HasDelimiterEnd;
         public readonly bool IsModified;
-        public readonly bool IsReplaceable;
 
         // Unescaped, unmodified value.
         private readonly string _value;
         public readonly DName Name;
+
+        public const string StrInterpIdent = "Concatenate";
 
         public IdentToken(string val, Span span)
             : this(val, span, false, false)
@@ -25,7 +26,7 @@ namespace Microsoft.PowerFx.Core.Lexer.Tokens
 
             // String interpolation sometimes creates tokens that do not exist in the source code
             // so we skip validating the span length for the Ident that the parser generates
-            Contracts.Assert(val.Length == span.Lim - span.Min);
+            Contracts.Assert(val.Length == span.Lim - span.Min || val == StrInterpIdent);
             _value = val;
             Name = DName.MakeValid(val, out IsModified);
         }
@@ -41,12 +42,6 @@ namespace Microsoft.PowerFx.Core.Lexer.Tokens
             Name = DName.MakeValid(val, out IsModified);
             HasDelimiterStart = fDelimiterStart;
             HasDelimiterEnd = fDelimiterEnd;
-        }
-
-        public IdentToken(ReplaceableToken tok)
-            : this(tok.Value, tok.Span)
-        {
-            IsReplaceable = true;
         }
 
         /// <summary>

@@ -1630,7 +1630,11 @@
     <comment>Error Message.</comment>
   </data>
   <data name="ErrUnknownFunction" xml:space="preserve">
-    <value>Invocation of unknown or unsupported function.</value>
+    <value>'{0}' is an unknown or unsupported function.</value>
+    <comment>Error Message.</comment>
+  </data>
+  <data name="ErrUnknownNamespaceFunction" xml:space="preserve">
+    <value>'{0}' is an unknown or unsupported function in namespace '{1}'.</value>
     <comment>Error Message.</comment>
   </data>
   <data name="ErrUnSupportedComponentBehaviorInvocation" xml:space="preserve">
@@ -1922,8 +1926,40 @@
   <data name="AboutTime_millisecond" xml:space="preserve">
     <value>The millisecond component.</value>
   </data>
+  <data name="AboutDateTime" xml:space="preserve">
+    <value>Creates a value that represents an instant in time, expressed as a date and time of the day.</value>
+    <comment>Description of 'DateTime' function.</comment>
+  </data>
+  <data name="AboutDateTime_year" xml:space="preserve">
+    <value>The year.</value>
+    <comment>Description of the first parameter to the 'DateTime' function: the year of the date/time value being created.</comment>
+  </data>
+  <data name="AboutDateTime_month" xml:space="preserve">
+    <value>The month.</value>
+    <comment>Description of the second parameter to the 'DateTime' function: the month of the date/time value being created.</comment>
+  </data>
+  <data name="AboutDateTime_day" xml:space="preserve">
+    <value>The day.</value>
+    <comment>Description of the third parameter to the 'DateTime' function: the day of the date/time value being created.</comment>
+  </data>
+  <data name="AboutDateTime_hour" xml:space="preserve">
+    <value>The hour.</value>
+    <comment>Description of the fourth parameter to the 'DateTime' function: the hour of the date/time value being created.</comment>
+  </data>
+  <data name="AboutDateTime_minute" xml:space="preserve">
+    <value>The minute.</value>
+    <comment>Description of the fifth parameter to the 'DateTime' function: the minute of the date/time value being created.</comment>
+  </data>
+  <data name="AboutDateTime_second" xml:space="preserve">
+    <value>The second.</value>
+    <comment>Description of the sixth parameter to the 'DateTime' function: the second of the date/time value being created.</comment>
+  </data>
+  <data name="AboutDateTime_millisecond" xml:space="preserve">
+    <value>The milliseconds.</value>
+    <comment>Description of the seventh parameter to the 'DateTime' function: the milliseconds of the date/time value being created.</comment>
+  </data>
   <data name="AboutYear" xml:space="preserve">
-    <value>Year returns the year of a given date, a number greater than 1900.</value>
+    <value>Year returns the year of a given date.</value>
     <comment>Description of 'Year' function.</comment>
   </data>
   <data name="YearArg1" xml:space="preserve">
@@ -2338,15 +2374,15 @@
   <data name="AboutChar_column_of_numbers" xml:space="preserve">
     <value>A column of code numbers from the character set on your platform.</value>
   </data>
-  <data name="AboutParseJson" xml:space="preserve">
+  <data name="AboutParseJSON" xml:space="preserve">
     <value>Converts a JSON string into an object.</value>
-    <comment>Description of 'ParseJson' function.</comment>
+    <comment>Description of 'ParseJSON' function.</comment>
   </data>
-  <data name="ParseJsonArg1" xml:space="preserve">
+  <data name="ParseJSONArg1" xml:space="preserve">
     <value>input</value>
-    <comment>function_parameter - First argument of the ParseJson function - String type.</comment>
+    <comment>function_parameter - First argument of the ParseJSON function - String type.</comment>
   </data>
-  <data name="AboutParseJson_input" xml:space="preserve">
+  <data name="AboutParseJSON_input" xml:space="preserve">
     <value>A JSON string to process.</value>
   </data>
   <data name="AboutIndex" xml:space="preserve">
@@ -2365,7 +2401,8 @@
     <value>A table.</value>
   </data>
   <data name="AboutIndex_index" xml:space="preserve">
-    <value>An integer index.</value>
+    <value>The index of the record to be retrieved.</value>
+    <comment>function_parameter - Second argument of the Index function - Number type.</comment>
   </data>
   <data name="FormMode_Edit_Name" xml:space="preserve">
     <value>Edit</value>
@@ -3447,7 +3484,7 @@
     <comment>{Locked} Enum value</comment>
   </data>
   <data name="SupportedDateTimeLanguageCodes" xml:space="preserve">
-    <value>"bg-BG","ca-ES","cs-CZ","da","da-DK","de","de-DE","el-GR","en","en-GB","en-US","es","es-ES","es-MX","et-EE","eu-ES","fi-FI","fr","fr-FR","gl-ES","hi-IN","hr-HR","hu-HU","id-ID","it","it-IT","ja","ja-JP","kk-KZ","ko","ko-KO","lt-LT","lv-LV","ms-MY","nb-NO","nl","nl-NL","pl","pl-PL","pt","pt-BR","pt-PT","ro-RO","ru","ru-RU","sk-SK","sl-SL","sr-cyrl-RS","sr-latn-RS","sv","sv-SE","th-TH","tr-TR","uk-UA","vi-VN","zh-CN","zh-TW"</value>
+    <value>"bg-BG","ca-ES","cs-CZ","da","da-DK","de","de-DE","el-GR","en","en-GB","en-US","es","es-ES","es-MX","et-EE","eu-ES","fi-FI","fr","fr-FR","gl-ES","hi-IN","hr-HR","hu-HU","id-ID","it","it-IT","ja","ja-JP","kk-KZ","ko","ko-KR","lt-LT","lv-LV","ms-MY","nb-NO","nl","nl-NL","pl","pl-PL","pt","pt-BR","pt-PT","ro-RO","ru","ru-RU","sk-SK","sl-SL","sr-cyrl-RS","sr-latn-RS","sv","sv-SE","th-TH","tr-TR","uk-UA","vi-VN","zh-CN","zh-TW"</value>
     <comment>{Locked}Supported DateTime language codes.</comment>
   </data>
   <data name="AboutDateTimeValue" xml:space="preserve">
@@ -5726,7 +5763,7 @@
     <comment>{Locked}</comment>
   </data>
   <data name="ErrorResource_ErrInvalidName_ShortMessage" xml:space="preserve">
-    <value>Name isn't valid. This identifier isn't recognized.</value>
+    <value>Name isn't valid. '{0}' isn't recognized.</value>
     <comment>Error Message.</comment>
   </data>
   <data name="ErrorResource_ErrInvalidName_LongMessage" xml:space="preserve">
@@ -5741,6 +5778,25 @@
     <comment>Article: Formula reference for Power Apps</comment>
   </data>
   <data name="ErrorResource_ErrInvalidName_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    <comment>{Locked}</comment>
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_ShortMessage" xml:space="preserve">
+    <value>Name isn't valid. This identifier isn't recognized.</value>
+    <comment>Error Message.</comment>
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_LongMessage" xml:space="preserve">
+    <value>This error appears most commonly when a formula refers to something that no longer exists (for example, a control that you've deleted).</value>
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_HowToFix_1" xml:space="preserve">
+    <value>Remove or correct the reference to the name that isn't valid.</value>
+    <comment>1 How to fix the error. </comment>
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_Link_1" xml:space="preserve">
+    <value>Article: Formula reference for Power Apps</value>
+    <comment>Article: Formula reference for Power Apps</comment>
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_Link_1_URL" xml:space="preserve">
     <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     <comment>{Locked}</comment>
   </data>
@@ -6355,11 +6411,19 @@
   </data>
   <data name="ErrorResource_ErrInvalidStringInterpolation_ShortMessage" xml:space="preserve">
     <value>Expressions which appear inside an interpolated string must evaluate to a Text value or to a compatible type.</value>
-    <comment>Error message.</comment>
+    <comment>Error message. The term "interpolated string" should be translated using the same terms used in the C# documentation.</comment>
   </data>
   <data name="ErrorResource_ErrInvalidStringInterpolation_HowToFix_1" xml:space="preserve">
     <value>Check the types of the expressions inside the interpolated string.</value>
-    <comment>How to fix message for an error</comment>
+    <comment>How to fix message for an error. The term "interpolated string" should be translated using the same terms used in the C# documentation.</comment>
+  </data>
+  <data name="ErrorResource_ErrEmptyIsland_ShortMessage" xml:space="preserve">
+    <value>Empty expressions cannot appear inside an interpolated string.</value>
+    <comment>Error message. The term "interpolated string" should be translated using the same terms used in the C# documentation.</comment>
+  </data>
+  <data name="ErrorResource_ErrEmptyIsland_HowToFix_1" xml:space="preserve">
+    <value>Check for empty expressions inside the interpolated string.</value>
+    <comment>How to fix message for an error. The term "interpolated string" should be translated using the same terms used in the C# documentation.</comment>
   </data>
   <data name="ErrorResource_ErrAsNotInContext_ShortMessage" xml:space="preserve">
     <value>As is not permitted in this context</value>

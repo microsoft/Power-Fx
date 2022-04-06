@@ -3,12 +3,13 @@
 
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core;
-using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Public.Values;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Tests;
 using Xunit;
 
 namespace Microsoft.PowerFx.Interpreter.Tests
@@ -22,19 +23,19 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
         private static (RecalcEngine engine, RecordValue parameters) OptionSetTestSetup()
         {            
-            var optionSet = new OptionSet("OptionSet", new Dictionary<string, string>() 
+            var optionSet = new OptionSet("OptionSet", DisplayNameUtility.MakeUnique(new Dictionary<string, string>() 
             {
                     { "option_1", "Option1" },
                     { "option_2", "Option2" }
-            });
+            }));
             
-            var otherOptionSet = new OptionSet("OtherOptionSet", new Dictionary<string, string>() 
+            var otherOptionSet = new OptionSet("OtherOptionSet", DisplayNameUtility.MakeUnique(new Dictionary<string, string>() 
             {
                     { "99", "OptionA" },
                     { "112", "OptionB" },
                     { "35694", "OptionC" },
                     { "123412983", "OptionD" },
-            });
+            }));
 
             var config = new PowerFxConfig(null);
             config.AddOptionSet(optionSet);
@@ -43,21 +44,49 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             optionSet.TryGetValue(new DName("option_1"), out var o1Val);            
             otherOptionSet.TryGetValue(new DName("123412983"), out var o2Val);
 
-            var parameters = FormulaValue.RecordFromFields(
+            var parameters = FormulaValue.NewRecordFromFields(
                     new NamedValue("TopOptionSetField", o1Val),
-                    new NamedValue("Nested", FormulaValue.RecordFromFields(
+                    new NamedValue("Nested", FormulaValue.NewRecordFromFields(
                         new NamedValue("InnerOtherOptionSet", o2Val)))); 
 
             return (new RecalcEngine(config), parameters);
-        }
+        }        
 
         internal class InterpreterRunner : BaseRunner
         {
-            public override Task<FormulaValue> RunAsync(string expr, string setupHandlerName)
+            // For async tests, run in special mode. 
+            // This does _not_ change evaluation semantics, but does verify .Result isn't called by checking
+            // task completion status.. 
+            private async Task<FormulaValue> RunVerifyAsync(string expr)
+            {
+                var config = new PowerFxConfig(null);
+
+                var verify = new AsyncVerify();
+
+                // Add Async(),WaitFor() functions 
+                var asyncHelper = new AsyncFunctionsHelper(verify);
+                config.AddFunction(asyncHelper.GetFunction());
+
+                var waitForHelper = new WaitForFunctionsHelper(verify);
+                config.AddFunction(waitForHelper.GetFunction());
+
+                var engine = new RecalcEngine(config);
+
+                // Run in special mode that ensures we're not calling .Result
+                var result = await verify.EvalAsync(engine, expr);
+                return result;
+            }
+
+            protected override Task<FormulaValue> RunAsyncInternal(string expr, string setupHandlerName)
             {
                 FeatureFlags.StringInterpolation = true;
                 RecalcEngine engine;
                 RecordValue parameters;
+
+                if (setupHandlerName == "AsyncTestSetup")
+                {
+                    return RunVerifyAsync(expr);
+                }
 
                 if (setupHandlerName != null) 
                 {

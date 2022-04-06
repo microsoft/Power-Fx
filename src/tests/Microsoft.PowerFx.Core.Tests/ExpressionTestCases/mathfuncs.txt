@@ -55,44 +55,43 @@
 0
 
 >> Abs(Blank())
-Blank()
+0
 
 >> Abs(1/0)
 #Error
 
-// use Text to ignore precision issues
->> Text(Exp(Ln(2)), "#")
-"2"
+>> Exp(1)
+2.71828182845904
 
->> Text(Ln(Exp(2)), "#")
-"2"
+>> Exp(2.302585092994045)
+10
 
->> Ln(0)
-#Error
+>> Exp(-5)
+0.0067379469991
 
->> Ln(Blank())
-Blank()
-
->> Ln(1/0)
-#Error
-
-// Log is not implemented for SQL
-
->> Log(100)
-/*SqlRunner*/ Compile Error
+>> Exp(Ln(2))
 2
 
->> Log(0)
-/*SqlRunner*/ Compile Error
-#Error
+>> Ln(Exp(2))
+2
 
->> Log(Blank())
-/*SqlRunner*/ Compile Error
-Blank()
+>> Ln(10)
+2.30258509299404
 
->> Log(1/0)
-/*SqlRunner*/ Compile Error
-#Error
+>> Ln(0.5)
+-0.69314718055994
+
+>> Ln(1e-10)
+-23.02585092994045
+
+>> Ln(0)
+#Error(Kind=Numeric)
+
+>> Ln(Blank())
+#Error(Kind=Numeric)
+
+>> Ln(1/0)
+#Error(Kind=Div0)
 
 >> IsError(Ln(0))
 true
@@ -107,25 +106,34 @@ true
 0
 
 >> Sqrt(Blank())
-Blank()
+0
 
 >> Sqrt(1/0)
-#Error
+#Error(Kind=Div0)
+
+>> Sqrt(-2)
+#Error(Kind=Numeric)
 
 >> Power(2, -2)
 0.25
 
 >> Power(Blank(), -2)
-Blank()
+#Error(Kind=Div0)
+
+>> Power(Blank(), 2)
+0
+
+>> Power(3, Blank())
+1
 
 >> Power(1/0, -2)
-#Error
+#Error(Kind=Div0)
 
 >> Round(Exp(2), 2)
 7.39
 
 >> Exp(Blank())
-Blank()
+1
 
 >> Exp(1/0)
 #Error
@@ -135,12 +143,6 @@ Blank()
 
 >> 2^-2
 0.25
-
->> Max(Blank(), 100, -5, "2000", Value("2001"), Text(2002))
-2002
-
->> Min(-100, If(true, -1000, 200))
--1000
 
 >> Round(1.5, 0)
 2
@@ -257,83 +259,8 @@ Blank()
 -5
 
 >> Int(Blank())
-Blank()
+0
 
 >> Int(1/0)
 #Error
 
->>IsNumeric("A")
-/*SqlRunner*/ Compile Error
-false
-
->>IsNumeric(123)
-/*SqlRunner*/ Compile Error
-true
-
->>IsNumeric(-123)
-/*SqlRunner*/ Compile Error
-true
-
->>IsNumeric(-123.1)
-/*SqlRunner*/ Compile Error
-true
-
->>IsNumeric(123.1)
-/*SqlRunner*/ Compile Error
-true
-
->>IsNumeric("1" + 2)
-/*SqlRunner*/ Compile Error
-true
-
->>IsNumeric(1/0)
-/*SqlRunner*/ Compile Error
-#Error
-
->>IsNumeric(Blank())
-/*SqlRunner*/ Compile Error
-false
-
->>IsNumeric({RecordValue: 123})
-/*SqlRunner*/ Compile Error
-false
-
->>IsNumeric([1,2,3,4])
-/*SqlRunner*/ Compile Error
-false
-
->>RandBetween(1, 1)
-/*SqlRunner*/ Compile Error
-1
-
->>IsError(RandBetween(5, 1))
-/*SqlRunner*/ Compile Error
-true
-
->>RandBetween(Blank(),1)
-/*SqlRunner*/ Compile Error
-0
-
->>IsError(RandBetween(1/0, 1))
-/*SqlRunner*/ Compile Error
-true
-
->>IsError(RandBetween(0, 1/0))
-/*SqlRunner*/ Compile Error
-true
-
->>RandBetween(100.5, 100.7)
-/*SqlRunner*/ Compile Error
-100
-
->> Sum(Sequence(100), With({RandomNumber: RandBetween(1,20)}, If(RandomNumber >=1 && RandomNumber <= 20, 1, 0)))
-/*SqlRunner*/ Compile Error
-100
-
->> Sum(Sequence(100), With({RandomNumber: RandBetween(2-1,50-30)}, If(RandomNumber >=1 && RandomNumber <= 20, 1, 0)))
-/*SqlRunner*/ Compile Error
-100
-
->> Sum(Sequence(100), With({RandomNumber: Rand()}, If(RandomNumber > 0 && RandomNumber < 1.0, 1, 0)))
-/*SqlRunner*/ Compile Error
-100

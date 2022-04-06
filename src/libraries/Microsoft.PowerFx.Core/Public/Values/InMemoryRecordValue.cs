@@ -29,6 +29,16 @@ namespace Microsoft.PowerFx.Core.Public.Values
             }
         }
 
+        internal override FormulaValue GetField(IRContext irContext, string name)
+        {
+            if (_fields.TryGetValue(name, out var value))
+            {
+                return value;
+            }
+
+            return new BlankValue(irContext);
+        }
+
         private FormulaValue PropagateFieldType(FormulaValue fieldValue, FormulaType fieldType)
         {
             if (fieldValue is RecordValue recordValue)

@@ -24,7 +24,6 @@ namespace Microsoft.PowerFx.Core.Lexer
         public enum Flags
         {
             None,
-            AllowReplaceableTokens = 1 << 0
         }
 
         // List and decimal separators.
@@ -1072,7 +1071,6 @@ namespace Microsoft.PowerFx.Core.Lexer
             private readonly string _text;
             private readonly int _charCount;
             private readonly StringBuilder _sb; // Used while building a token.
-            private readonly bool _allowReplaceableTokens;
             private readonly Stack<LexerMode> _modeStack;
 
             private int _currentTokenPos; // The start of the current token.
@@ -1087,7 +1085,6 @@ namespace Microsoft.PowerFx.Core.Lexer
                 _text = text;
                 _charCount = _text.Length;
                 _sb = sb;
-                _allowReplaceableTokens = flags.HasFlag(Flags.AllowReplaceableTokens);
 
                 _modeStack = new Stack<LexerMode>();
                 _modeStack.Push(LexerMode.Normal);
@@ -1252,19 +1249,6 @@ namespace Microsoft.PowerFx.Core.Lexer
                     if (CharacterUtils.IsSpace(ch) || CharacterUtils.IsLineTerm(ch))
                     {
                         return LexSpace();
-                    }
-
-                    if (_allowReplaceableTokens)
-                    {
-                        if (allowContextDependentTokens && IsContextDependentTokenDelimiter(ch))
-                        {
-                            return LexContextDependentTokenLit();
-                        }
-
-                        if (allowLocalizableTokens && IsLocalizableTokenDelimiter(ch, nextCh))
-                        {
-                            return LexLocalizableTokenLit();
-                        }
                     }
 
                     return LexOther();
@@ -1779,87 +1763,6 @@ namespace Microsoft.PowerFx.Core.Lexer
                 }
 
                 return commentToken;
-            }
-
-            // Lex a context-dependent token, wrapped with '%'.
-            private Token LexContextDependentTokenLit()
-            {
-                // Minimum non-empty block length.
-                const int minStringLength = 3;
-
-                var ch = CurrentChar;
-                Contracts.Assert(IsContextDependentTokenDelimiter(ch));
-
-                _sb.Length = 0;
-                _sb.Append(ContextDependentTokenDelimiterChar);
-
-                while (!Eof)
-                {
-                    ch = NextChar();
-
-                    if (IsContextDependentTokenDelimiter(ch))
-                    {
-                        _sb.Append(ContextDependentTokenDelimiterChar);
-                        break;
-                    }
-
-                    if (!CharacterUtils.IsFormatCh(ch))
-                    {
-                        _sb.Append(ch);
-                    }
-                }
-
-                if (Eof || _sb.Length < minStringLength)
-                {
-                    ResetToken();
-                    return Dispatch(false, true);
-                }
-
-                NextChar();
-                return new ReplaceableToken(_sb.ToString(), GetTextSpan());
-            }
-
-            // Lex a localizable token, wrapped with '##'.
-            private Token LexLocalizableTokenLit()
-            {
-                // Minimum non-empty block length.
-                const int minStringLength = 5;
-
-                var ch = CurrentChar;
-                var nextCh = Eof ? '\0' : NextChar();
-                Contracts.Assert(IsLocalizableTokenDelimiter(ch, nextCh));
-
-                _sb.Length = 0;
-                _sb.Append(LocalizedTokenDelimiterStr);
-
-                while (!Eof)
-                {
-                    ch = NextChar();
-                    nextCh = Eof ? '\0' : PeekChar(1);
-
-                    if (IsLocalizableTokenDelimiter(ch, nextCh))
-                    {
-                        // Make sure to move past the character we peeked before.
-                        NextChar();
-
-                        _sb.Append(LocalizedTokenDelimiterStr);
-                        break;
-                    }
-
-                    if (!CharacterUtils.IsFormatCh(ch))
-                    {
-                        _sb.Append(ch);
-                    }
-                }
-
-                if (Eof || _sb.Length < minStringLength)
-                {
-                    ResetToken();
-                    return Dispatch(true, false);
-                }
-
-                NextChar();
-                return new ReplaceableToken(_sb.ToString(), GetTextSpan());
             }
 
             // Returns specialized token for unexpected character errors.

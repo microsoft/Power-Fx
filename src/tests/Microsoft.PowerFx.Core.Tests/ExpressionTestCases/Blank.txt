@@ -46,9 +46,7 @@ false
 
 // https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-isblank-isempty
 
-// Blank() by itself is not valid for SQL, since there must a valid SQL type
 >> Blank()
-/*SqlRunner*/ Compile Error
 Blank()
 
 //-----------------------------------------------
@@ -91,7 +89,6 @@ true
 0
 
 >> Blank() = Blank()
-/*InterpreterRunner*/ #Skip
 true
 
 >> Blank() = ""
@@ -105,12 +102,3 @@ false
 
 >> Blank(
 Errors: Error 6-6: Expected an operand. The formula or expression expects a valid operand. For example, you can add the operand '2' to the expression ' 1 +_' so that the result is '3'. Or, you can add the operand "there" to the expression '"Hi "& _ ' so that the result is 'Hi there'.|Error 6-6: Unexpected characters. The formula contains 'ParenClose' where 'Eof' is expected.
-
->> IsBlankOrError(If(1 < 0, "hello"))
-true
-
->> IsBlankOrError("hello")
-false
-
->> IsBlankOrError(If(1 / 0 < 2, "hello"))
-true

@@ -1,5 +1,64 @@
 ﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
@@ -426,6 +485,17 @@
   <data name="AboutValue_language" xml:space="preserve">
     <value>Kod bahasa untuk digunakan apabila menukar kepada nilai.</value>
     
+  </data>
+  <data name="AboutBoolean" xml:space="preserve">
+    <value>Menukar 'teks' yang mewakili boolean kepada nilai boolean.</value>
+    
+  </data>
+  <data name="BooleanArg1" xml:space="preserve">
+    <value>teks</value>
+    
+  </data>
+  <data name="AboutBoolean_text" xml:space="preserve">
+    <value>Nilai teks untuk ditukar kepada nilai boolean.</value>
   </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Mengembalikan argumen bukan kosong pertama</value>
@@ -1368,6 +1438,10 @@
     <value>ungkapan</value>
     
   </data>
+  <data name="AboutIsBlankOrError_expression" xml:space="preserve">
+    <value>Ungkapan yang akan diuji.</value>
+    
+  </data>
   <data name="AboutIsEmpty" xml:space="preserve">
     <value>Menyemak jika koleksi kosong dan mengembalikan benar atau palsu.</value>
     
@@ -1375,6 +1449,9 @@
   <data name="IsEmptyArg1" xml:space="preserve">
     <value>sumber</value>
     
+  </data>
+  <data name="AboutIsEmpty_source" xml:space="preserve">
+    <value>Jadual yang akan diuji.</value>
   </data>
   <data name="AboutShuffle" xml:space="preserve">
     <value>Mengembalikan salinan yang disusun semula secara rawak jadual 'sumber' input.</value>
@@ -1845,8 +1922,12 @@
   <data name="AboutTime_millisecond" xml:space="preserve">
     <value>Komponen milisaat.</value>
   </data>
+  <data name="AboutDateTime" xml:space="preserve">
+    <value>Mencipta nilai yang mewakili kesegeraan masa yang dinyatakan sebagai tarikh dan masa dalam sehari.</value>
+    
+  </data>
   <data name="AboutYear" xml:space="preserve">
-    <value>Tahun mengembalikan tahun bagi suatu tarikh yang diberikan yang nombornya lebih besar daripada 1900.</value>
+    <value>Tahun mengembalikan tahun untuk suatu tarikh yang diberikan.</value>
     
   </data>
   <data name="YearArg1" xml:space="preserve">
@@ -2260,6 +2341,36 @@
   </data>
   <data name="AboutChar_column_of_numbers" xml:space="preserve">
     <value>Lajur nombor kod daripada set aksara pada platform anda.</value>
+  </data>
+  <data name="AboutParseJSON" xml:space="preserve">
+    <value>Menukar rentetan JSON kepada objek.</value>
+    
+  </data>
+  <data name="ParseJSONArg1" xml:space="preserve">
+    <value>input</value>
+    
+  </data>
+  <data name="AboutParseJSON_input" xml:space="preserve">
+    <value>Rentetan JSON untuk diproses.</value>
+  </data>
+  <data name="AboutIndex" xml:space="preserve">
+    <value>Mengembalikan rekod dalam jadual pada indeks yang diberikan.</value>
+    
+  </data>
+  <data name="IndexArg1" xml:space="preserve">
+    <value>jadual</value>
+    
+  </data>
+  <data name="IndexArg2" xml:space="preserve">
+    <value>indeks</value>
+    
+  </data>
+  <data name="AboutIndex_table" xml:space="preserve">
+    <value>Jadual.</value>
+  </data>
+  <data name="AboutIndex_index" xml:space="preserve">
+    <value>Indeks rekod yang akan diambil.</value>
+    
   </data>
   <data name="Screen_Name_DisplayName" xml:space="preserve">
     <value>Nama</value>
@@ -3781,11 +3892,23 @@
     
   </data>
   <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
-    <value>Jenis hasil {0} ini tidak disokong dalam lajur formula.</value>
+    <value>Jenis hasil {0} tidak disokong dalam lajur formula.</value>
     
   </data>
   <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
     <value>Jenis hasil untuk formula ini dijangkakan untuk menjadi {0}, tetapi jenis hasil sebenar ialah {1}. Jenis hasil lajur formula tidak boleh diubah.</value>
+    
+  </data>
+  <data name="FormulaColumns_ColumnTypeNotSupported" xml:space="preserve">
+    <value>Lajur jenis {0} tidak disokong dalam lajur formula.</value>
+    
+  </data>
+  <data name="FormulaColumns_ColumnFormatNotSupported" xml:space="preserve">
+    <value>Lajur jenis {0} dengan format {1} tidak disokong dalam lajur formula.</value>
+    
+  </data>
+  <data name="FormulaColumns_FormulaTooLong" xml:space="preserve">
+    <value>Formula tidak boleh lebih panjang daripada 1000 aksara.</value>
     
   </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
@@ -3802,7 +3925,6 @@
   </data>
   <data name="ErrorResource_ErrBadToken_LongMessage" xml:space="preserve">
     <value>Contohnya, aksara '\' tidak dijangka selepas nombor, seperti ini: '32\'. Ruang ('32') akan dijangka supaya ia hanya nombor 32, atau nombor lain (seperti dalam '323') akan dijangka.</value>
-    
   </data>
   <data name="ErrorResource_ErrBadToken_HowToFix_1" xml:space="preserve">
     <value>Alih Keluar atau menggantikan aksara yang tidak dijangka.</value>
@@ -3818,11 +3940,9 @@
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_LongMessage" xml:space="preserve">
     <value>Contohnya, aksara '\' tidak dijangka selepas nombor, seperti ini: '32\'. Ruang ('32') akan dijangka supaya ia hanya nombor 32, atau nombor lain (seperti dalam '323') akan dijangka.</value>
-    
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_HowToFix_1" xml:space="preserve">
     <value>Alih keluar atau gantikan aksara yang tidak dijangka.</value>
-    
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_Link_1" xml:space="preserve">
     <value>Artikel: Rujukan formula untuk Power Apps</value>
@@ -3834,7 +3954,6 @@
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_LongMessage" xml:space="preserve">
     <value>Setiap komen blok mesti bermula dengan '/*' dan berakhir dengan '*/'. Jika anda tidak menamatkan setiap komen blok dengan betul, semua kod selepas komen menjadi sebahagian daripada komen tersebut. Jika komen terdiri daripada hanya satu baris, anda boleh memulakannya dengan '//' dan tidak mengenal pasti hujung komen.</value>
-    
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_HowToFix_1" xml:space="preserve">
     <value>Tambah ' */' dengan hujung blok anda komen atau menukar kepada set baris komen.</value>
@@ -3850,7 +3969,6 @@
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_LongMessage" xml:space="preserve">
     <value>Ralat ini berlaku jika, contohnya, formula mengandungi '{{Val@ 7}}' bukannya '{{Val: 7}}'. Apabila anda tetapkan pemboleh ubah, sintaks memerlukan noktah bertindih dan bukannya simbol "at".</value>
-    
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_HowToFix_1" xml:space="preserve">
     <value>Alih Keluar atau menggantikan aksara dijangka dengan aksara yang tidak dijangka.</value>
@@ -3861,12 +3979,11 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidName_ShortMessage" xml:space="preserve">
-    <value>Nama tidak sah. Pengecam ini tidak dikenali.</value>
+    <value>Nama tidak sah. '{0}' ini tidak dikenali.</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidName_LongMessage" xml:space="preserve">
     <value>Ralat ini muncul paling biasa apabila formula merujuk pada sesuatu yang tidak lagi wujud (contohnya, kawalan yang telah dipadamkan).</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidName_HowToFix_1" xml:space="preserve">
     <value>Alih Keluar atau betulkan rujukan kepada nama yang tidak sah.</value>
@@ -3876,13 +3993,27 @@
     <value>Artikel: Rujukan formula untuk Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_ShortMessage" xml:space="preserve">
+    <value>Nama tidak sah. Pengecam ini tidak dikenali.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_LongMessage" xml:space="preserve">
+    <value>Ralat ini muncul paling biasa apabila formula merujuk pada sesuatu yang tidak lagi wujud (contohnya, kawalan yang telah dipadamkan).</value>
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_HowToFix_1" xml:space="preserve">
+    <value>Alih keluar atau betulkan rujukan kepada nama yang tidak sah.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_Link_1" xml:space="preserve">
+    <value>Artikel: Rujukan formula untuk Power Apps</value>
+    
+  </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_ShortMessage" xml:space="preserve">
     <value>Rujukan sifat tidak sah.</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_LongMessage" xml:space="preserve">
     <value>Ralat ini muncul apabila formula merujuk pada sifat tingkah laku komponen dengan sintaks yang tidak sah. (Contohnya, Component.OnCustomChange bukannya Component.OnCustomChange())</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_HowToFix_1" xml:space="preserve">
     <value>Gunakan sintaks yang betul untuk merujuk pada sifat tingkah laku komponen. Sebagai contoh, Component.OnCustomChange()</value>
@@ -3898,7 +4029,6 @@
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_LongMessage" xml:space="preserve">
     <value>Anda tidak boleh menggunakan operator Induk dengan kawalan yang tidak mempunyai kawalan induk. Operator ini merujuk pada kawalan yang menjadi hos kepada kawalan yang ditentukan dan membolehkan semua sifatnya tersedia.</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_HowToFix_1" xml:space="preserve">
     <value>Alih Keluar operator 'Parent'.</value>
@@ -3914,7 +4044,6 @@
   </data>
   <data name="ErrorResource_ErrTooManyUps_LongMessage" xml:space="preserve">
     <value>Kerumitan meningkat dengan setiap aras penyarangan, oleh itu Power Apps menyokong penyarangan baris skop hanya sehingga 63 aras.</value>
-    
   </data>
   <data name="ErrorResource_ErrTooManyUps_HowToFix_1" xml:space="preserve">
     <value>Tulis semula formula dengan aras bersarang kurang.</value>
@@ -3926,7 +4055,6 @@
   </data>
   <data name="ErrorResource_ErrRuleNestedTooDeeply_LongMessage" xml:space="preserve">
     <value>Power Apps menyokong penyarangan ungkapan sehingga aras 50 sahaja. Ungkapan sedalam ini sukar untuk difahami dan dikekalkan.</value>
-    
   </data>
   <data name="ErrorResource_ErrRuleNestedTooDeeply_HowToFix_1" xml:space="preserve">
     <value>Tulis semula formula dengan aras bersarang kurang.</value>
@@ -3938,7 +4066,6 @@
   </data>
   <data name="ErrorResource_ErrOperatorExpected_LongMessage" xml:space="preserve">
     <value>Operator mencantumkan dua operan bersama-sama. Ralat ini berlaku jika anda meletakkan dua fungsi (operan) bersama-sama tanpa operator di antaranya -- contohnya, Len("mytext")Len("mytext").</value>
-    
   </data>
   <data name="ErrorResource_ErrOperatorExpected_HowToFix_1" xml:space="preserve">
     <value>Edit formula anda supaya mengandungi operator antara operan.</value>
@@ -3954,7 +4081,6 @@
   </data>
   <data name="ErrorResource_ErrNumberExpected_LongMessage" xml:space="preserve">
     <value>Ralat ini akan berlaku jika anda menggunakan fungsi yang memerlukan nombor tetapi sebaliknya contohnya anda memberikan imej.</value>
-    
   </data>
   <data name="ErrorResource_ErrNumberExpected_HowToFix_1" xml:space="preserve">
     <value>Edit formula anda supaya menilai nombor pada peringkat ini dalam formula.</value>
@@ -3970,7 +4096,6 @@
   </data>
   <data name="ErrorResource_ErrBooleanExpected_LongMessage" xml:space="preserve">
     <value>Boolean juga dikenali sebagai nilai true/false dalam aplikasi seperti Microsoft Excel. Ralat ini akan berlaku jika anda menggunakan fungsi yang memerlukan boolean, tetapi sebagai contoh anda memberikan tarikh.</value>
-    
   </data>
   <data name="ErrorResource_ErrBooleanExpected_HowToFix_1" xml:space="preserve">
     <value>Edit formula anda supaya menilai boolean pada peringkat ini dalam formula.</value>
@@ -3986,7 +4111,6 @@
   </data>
   <data name="ErrorResource_ErrColonExpected_LongMessage" xml:space="preserve">
     <value>Noktah bertindih memisahkan nama medan, kadang-kadang dipanggil nama lajur, daripada nilai medan dalam rekod (contohnya, {Month:"1"}, {Month:"2"} …). Noktah bertindih juga memisahkan jam daripada minit dan saat (contohnya, "3:04").</value>
-    
   </data>
   <data name="ErrorResource_ErrColonExpected_HowToFix_1" xml:space="preserve">
     <value>Edit formula anda supaya mengandungi tanda titik bertindih.</value>
@@ -4002,7 +4126,6 @@
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_LongMessage" xml:space="preserve">
     <value>Fungsi kelakuan mengubah keadaan aplikasi dengan mengubah nilai di tempat lain dalam aplikasi. 'Navigate', 'Patch', 'UpdateContext', dan 'Collect' ialah fungsi kelakuan yang lazim. 'OnSelect', 'OnVisible', dan sifat 'On...' yang lain ialah sifat berasaskan kelakuan yang lazim.</value>
-    
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_HowToFix_1" xml:space="preserve">
     <value>Alihkan fungsi kelakuan pada sifat berdasarkan kelakuan.</value>
@@ -4018,7 +4141,6 @@
   </data>
   <data name="ErrorResource_ErrTestPropertyExpected_LongMessage" xml:space="preserve">
     <value>Fungsi ujian ialah fungsi yang boleh digunakan untuk mensimulasikan input pengguna apabila menguji aplikasi. 'SetProperty', 'SelectRow' dan 'Assert' ialah fungsi ujian biasa. Ia hanya boleh digunakan dalam kes ujian.</value>
-    
   </data>
   <data name="ErrorResource_ErrTestPropertyExpected_HowToFix_1" xml:space="preserve">
     <value>Gunakan fungsi dalam kes ujian, bukan dalam aplikasi itu sendiri.</value>
@@ -4030,7 +4152,6 @@
   </data>
   <data name="ErrorResource_ErrCannotCoerce_SourceType_TargetType_LongMessage" xml:space="preserve">
     <value>Power Apps boleh menukar beberapa jenis data dalam formula anda kepada jenis lain untuk anda. Contohnya, ia boleh menukar "1" (rentetan) kepada 1 (nombor), tetapi ia tidak boleh menukar semua jenis data kepada semua jenis data yang lain. Contohnya, ia tidak boleh menukar imej kepada nombor.</value>
-    
   </data>
   <data name="ErrorResource_ErrCannotCoerce_SourceType_TargetType_HowToFix_1" xml:space="preserve">
     <value>Edit formula anda supaya anda menukar data dalam soalan kepada jenis yang dijangka.</value>
@@ -4042,7 +4163,6 @@
   </data>
   <data name="ErrorResource_ErrStringExpected_LongMessage" xml:space="preserve">
     <value>Ralat ini berlaku jika anda menggunakan fungsi yang memerlukan argumen teks (atau rentetan) dan sebaliknya anda memberikan tarikh, sebagai contoh.</value>
-    
   </data>
   <data name="ErrorResource_ErrStringExpected_HowToFix_1" xml:space="preserve">
     <value>Edit formula anda supaya menilai teks pada peringkat ini dalam formula.</value>
@@ -4058,7 +4178,6 @@
   </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_LongMessage" xml:space="preserve">
     <value>Ralat ini akan berlaku jika anda menggunakan fungsi yang memerlukan teks atau nombor tetapi contohnya anda memberikan nilai boolean (true/false).</value>
-    
   </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_HowToFix_1" xml:space="preserve">
     <value>Edit formula anda supaya menilai teks atau nombor pada peringkat ini dalam formula.</value>
@@ -4074,7 +4193,6 @@
   </data>
   <data name="ErrorResource_ErrClosingBracketExpected_LongMessage" xml:space="preserve">
     <value>Tanda kurung penutup menunjukkan hujung rekod (contohnya, {Month:"1"}, {Month:"2"} …).</value>
-    
   </data>
   <data name="ErrorResource_ErrClosingBracketExpected_HowToFix_1" xml:space="preserve">
     <value>Edit formula anda supaya mengandungi tanda kurung.</value>
@@ -4094,7 +4212,6 @@
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_LongMessage" xml:space="preserve">
     <value>Kami tidak dapat menilai formula anda kerana nilai yang dibandingkan dalam formula bukan daripada jenis yang sama.</value>
-    
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_HowToFix_1" xml:space="preserve">
     <value>Anda mungkin perlu menukar nilai sebagai jenis yang sama, seperti menukar rentetan tarikh (MIS., "12/31/2018") kepada nilai tarikh.</value>
@@ -4174,7 +4291,6 @@
   </data>
   <data name="ErrorResource_ErrTypeError_LongMessage" xml:space="preserve">
     <value>Data mungkin tidak sepadan dengan jenis yang dijangkakan. (teks, nombor, tarikh, jadual, rekod.)</value>
-    
   </data>
   <data name="ErrorResource_ErrTypeError_HowToFix_1" xml:space="preserve">
     <value>Semak jenis nilai terlibat dalam formula dan pastikan sepadan dengan jenis.</value>
@@ -4194,7 +4310,6 @@
   </data>
   <data name="ErrorResource_ErrDateExpected_LongMessage" xml:space="preserve">
     <value>Ralat ini akan berlaku jika anda menggunakan fungsi yang memerlukan tarikh tetapi contohnya anda memberikan teks.</value>
-    
   </data>
   <data name="ErrorResource_ErrDateExpected_HowToFix_1" xml:space="preserve">
     <value>Edit formula anda supaya menilai tarikh pada peringkat ini dalam formula.</value>
@@ -4210,7 +4325,6 @@
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_LongMessage" xml:space="preserve">
     <value>Sumber data mungkin tidak dapat memproses formula dan mungkin mengembalikan set data yang tidak lengkap. Aplikasi anda mungkin tidak mengembalikan keputusan yang betul atau berkelakuan dengan betul jika set data tidak lengkap.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_HowToFix_1" xml:space="preserve">
     <value>Jika anda set data melebihi had rekod 500 tetapi mengandungi kurang daripada 2,000 rekod, cuba set semula had.</value>
@@ -4238,7 +4352,6 @@
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_LongMessage" xml:space="preserve">
     <value>Sumber data mungkin tidak dapat memproses formula dan mungkin mengembalikan set data yang tidak lengkap. Aplikasi anda mungkin tidak mengembalikan keputusan yang betul atau berkelakuan dengan betul jika set data tidak lengkap.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_HowToFix_1" xml:space="preserve">
     <value>Jika anda set data melebihi had rekod 500 tetapi mengandungi kurang daripada 2,000 rekod, cuba set semula had.</value>
@@ -4266,7 +4379,6 @@
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_LongMessage" xml:space="preserve">
     <value> Bahagian kanan operator "in" seharusnya nama lajur daripada sumber data yang betul. Sumber data mungkin tidak dapat memproses formula dan mungkin mengembalikan set data yang tidak lengkap. Aplikasi anda mungkin tidak mengembalikan keputusan yang betul atau berkelakuan dengan betul jika set data tidak lengkap.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_1" xml:space="preserve">
     <value>Tukar item di sebelah kanan pengendali "dalam" yang merupakan lajur daripada sumber data yang betul.</value>
@@ -4299,7 +4411,6 @@
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_LongMessage" xml:space="preserve">
     <value> Bahagian kanan operator "in" bukan lajur daripada sumber data yang betul. Sumber data mungkin tidak dapat memproses formula dan mungkin mengembalikan set data yang tidak lengkap. Aplikasi anda mungkin tidak mengembalikan hasil yang betul atau berkelakuan betul jika set data tidak lengkap.
       </value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_1" xml:space="preserve">
     <value>Tukar item di sebelah kanan pengendali "dalam" yang merupakan lajur daripada sumber data yang betul.</value>
@@ -4380,6 +4491,22 @@
   </data>
   <data name="ErrorResource_ErrInvalidControlReference_Link_1" xml:space="preserve">
     <value>Rujukan: ConfirmExit untuk Aplikasi Kanvas</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidStringInterpolation_ShortMessage" xml:space="preserve">
+    <value>Ungkapan yang muncul dalam rentetan tersisip mesti dinilai sebagai nilai Teks atau sebagai jenis yang serasi.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidStringInterpolation_HowToFix_1" xml:space="preserve">
+    <value>Semak jenis ungkapan dalam rentetan tersisip.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrEmptyIsland_ShortMessage" xml:space="preserve">
+    <value>Ungkapan kosong tidak boleh muncul dalam rentetan terinterpolasi.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrEmptyIsland_HowToFix_1" xml:space="preserve">
+    <value>Semak ungkapan kosong dalam rentetan terinterpolasi.</value>
     
   </data>
   <data name="ErrorResource_ErrAsNotInContext_ShortMessage" xml:space="preserve">

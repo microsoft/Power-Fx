@@ -3,6 +3,7 @@
 
 using System;
 using System.Globalization;
+using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Public.Values;
 
@@ -10,7 +11,7 @@ namespace Microsoft.PowerFx.Functions
 {
     internal partial class Library
     {
-        public static FormulaValue Today(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args)
+        public static async ValueTask<FormulaValue> Today(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args)
         {
             // $$$ timezone?
             var date = DateTime.Today;
@@ -328,6 +329,11 @@ namespace Microsoft.PowerFx.Functions
             var month = (int)args[1].Value;
             var day = (int)args[2].Value;
 
+            return DateImpl(irContext, year, month, day);
+        }
+
+        private static FormulaValue DateImpl(IRContext irContext, int year, int month, int day)
+        {
             // The final date is built up this way to allow for inputs which overflow,
             // such as: Date(2000, 25, 69) -> 3/10/2002
             var result = new DateTime(year, 1, 1)
@@ -344,6 +350,11 @@ namespace Microsoft.PowerFx.Functions
             var second = (int)args[2].Value;
             var millisecond = (int)args[3].Value;
 
+            return TimeImpl(irContext, hour, minute, second, millisecond);
+        }
+
+        private static FormulaValue TimeImpl(IRContext irContext, int hour, int minute, int second, int millisecond)
+        {
             // The final time is built up this way to allow for inputs which overflow,
             // such as: Time(10, 70, 360) -> 11:16 AM
             var result = new TimeSpan(hour, 0, 0)
@@ -354,12 +365,30 @@ namespace Microsoft.PowerFx.Functions
             return new TimeValue(irContext, result);
         }
 
-        private static FormulaValue Now(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args)
+        public static FormulaValue DateTimeFunction(IRContext irContext, NumberValue[] args)
+        {
+            var year = (int)args[0].Value;
+            var month = (int)args[1].Value;
+            var day = (int)args[2].Value;
+            var date = DateImpl(IRContext.NotInSource(Core.Public.Types.FormulaType.Date), year, month, day);
+
+            var hour = (int)args[3].Value;
+            var minute = (int)args[4].Value;
+            var second = (int)args[5].Value;
+            var millisecond = (int)args[6].Value;
+            var time = TimeImpl(IRContext.NotInSource(Core.Public.Types.FormulaType.Time), hour, minute, second, millisecond);
+
+            var result = AddDateAndTime(irContext, new[] { date, time });
+
+            return result;
+        }
+
+        private static async ValueTask<FormulaValue> Now(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args)
         {
             return new DateTimeValue(irContext, DateTime.Now);
         }
 
-        public static FormulaValue DateParse(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, StringValue[] args)
+        private static async ValueTask<FormulaValue> DateParse(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, StringValue[] args)
         {
             var str = args[0].Value;
             if (DateTime.TryParse(str, runner.CultureInfo, DateTimeStyles.None, out var result))
@@ -372,7 +401,7 @@ namespace Microsoft.PowerFx.Functions
             }
         }
 
-        public static FormulaValue DateTimeParse(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, StringValue[] args)
+        public static async ValueTask<FormulaValue> DateTimeParse(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, StringValue[] args)
         {
             var str = args[0].Value;
             if (DateTime.TryParse(str, runner.CultureInfo, DateTimeStyles.None, out var result))
@@ -385,7 +414,7 @@ namespace Microsoft.PowerFx.Functions
             }
         }
 
-        public static FormulaValue TimeParse(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, StringValue[] args)
+        public static async ValueTask<FormulaValue> TimeParse(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, StringValue[] args)
         {
             var str = args[0].Value;
             if (TimeSpan.TryParse(str, runner.CultureInfo, out var result))

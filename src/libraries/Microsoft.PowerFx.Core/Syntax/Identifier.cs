@@ -7,14 +7,28 @@ using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Core.Syntax
 {
-    internal sealed class Identifier
+    /// <summary>
+    /// The identifier during parsing.
+    /// </summary>
+    [ThreadSafeImmutable]
+    public sealed class Identifier
     {
-        public readonly Token AtToken; // The "@" token, if any. May be null.
-        public readonly IdentToken Token;
-        public readonly DName Name;
-        public readonly DPath Namespace;
+        internal readonly Token AtToken; // The "@" token, if any. May be null.
+        internal readonly IdentToken Token;
 
-        public Identifier(DPath theNamespace, Token atToken, IdentToken tok)
+        /// <summary>
+        /// The simple name of the identifier.
+        /// </summary>
+        public DName Name { get; }
+
+        /// <summary>
+        /// The namespace of the identifier.
+        /// </summary>
+        public DPath Namespace { get; }
+
+        internal bool HasAtToken => AtToken != null;
+
+        internal Identifier(DPath theNamespace, Token atToken, IdentToken tok)
         {
             Contracts.Assert(theNamespace.IsValid);
             Contracts.AssertValueOrNull(atToken);
@@ -27,7 +41,7 @@ namespace Microsoft.PowerFx.Core.Syntax
             Name = tok.Name;
         }
 
-        public Identifier Clone(Span ts)
+        internal Identifier Clone(Span ts)
         {
             return new Identifier(
                 Namespace,
@@ -35,12 +49,12 @@ namespace Microsoft.PowerFx.Core.Syntax
                 Token.Clone(ts).As<IdentToken>());
         }
 
-        public Identifier(IdentToken token)
+        internal Identifier(IdentToken token)
             : this(DPath.Root, null, token)
         {
         }
 
-        public Identifier(Token atToken, IdentToken token)
+        internal Identifier(Token atToken, IdentToken token)
             : this(DPath.Root, atToken, token)
         {
         }

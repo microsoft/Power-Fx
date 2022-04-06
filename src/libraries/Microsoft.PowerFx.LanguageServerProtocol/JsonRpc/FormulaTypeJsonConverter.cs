@@ -5,87 +5,80 @@ using System;
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Public.Types;
+using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.LanguageServerProtocol
 {
     public class FormulaTypeJsonConverter : JsonConverter<FormulaType>
     {
-        internal const string TypeProperty = "Type";
-        internal const string FieldsProperty = "Fields";
+        private readonly JsonSerializerOptions _options;
 
-        internal const string Blank = "Blank";
-        internal const string Boolean = "Boolean";
-        internal const string Number = "Number";
-        internal const string String = "String";
-        internal const string Time = "Time";
-        internal const string Date = "Date";
-        internal const string DateTime = "DateTime";
-        internal const string DateTimeNoTimeZone = "DateTimeNoTimezone";
-        internal const string OptionSetValue = "OptionSetValue";
-        internal const string Record = "Record";
-        internal const string Table = "Table";
+        public FormulaTypeJsonConverter()
+        {
+            _options = new JsonSerializerOptions()
+            {
+                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
+            };
+            _options.Converters.Add(new JsonStringEnumConverter());
+        }
 
+        // This roundtrip is for testing only. These schemas should only be for communicating with the client, not rehydrating FormulaTypes
         public override FormulaType Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
-            // This is a one-way serializer, we don't expect to ever read types back from the client
-            throw new NotSupportedException();
+            var schemaPoco = JsonSerializer.Deserialize<FormulaTypeSchema>(ref reader, _options);
+            return GetFormulaType(schemaPoco);
         }
 
         public override void Write(Utf8JsonWriter writer, FormulaType value, JsonSerializerOptions options)
         {
-            writer.WriteStartObject();
-            var typeName = value switch
-            {
-                BlankType => Blank,
-                BooleanType => Boolean,
-                NumberType => Number,
-                StringType => String,
-                TimeType => Time,
-                DateType => Date,
-                DateTimeType => DateTime,
-                DateTimeNoTimeZoneType => DateTimeNoTimeZone,
-                OptionSetValueType => OptionSetValue,
-                TableType => Table,
-                RecordType => Record,
-                _ => throw new NotImplementedException($"Unknown {nameof(FormulaType)}: {value.GetType().Name}")
-            };
-            writer.WritePropertyName(options.PropertyNamingPolicy?.ConvertName(TypeProperty) ?? TypeProperty);
-            writer.WriteStringValue(typeName);
-
-            if (typeName == Table)
-            {
-                WriteTableContents(writer, (TableType)value, options);
-            }
-            else if (typeName == Record)
-            {
-                WriteRecordContents(writer, (RecordType)value, options);
-            }
-
-            writer.WriteEndObject();
+            var schemaPoco = FormulaTypeToSchemaConverter.Convert(value);
+            JsonSerializer.Serialize(writer, schemaPoco, _options);
         }
 
-        private void WriteRecordContents(Utf8JsonWriter writer, RecordType record, JsonSerializerOptions options)
+        private FormulaType GetFormulaType(FormulaTypeSchema schema)
         {
-            writer.WritePropertyName(options.PropertyNamingPolicy?.ConvertName(FieldsProperty) ?? FieldsProperty);
-            writer.WriteStartObject();
-            foreach (var namedFormulaType in record.GetNames())
+            return schema.Type switch
             {
-                writer.WritePropertyName(namedFormulaType.Name); // Type names ignore PropertyNamingPolicy
-                if (namedFormulaType.Type == null)
-                {
-                    writer.WriteNullValue();
-                }
-                else
-                {
-                    Write(writer, namedFormulaType.Type, options);
-                }
-            }
-
-            writer.WriteEndObject();
+                FormulaTypeSchema.ParamType.Number => FormulaType.Number,
+                FormulaTypeSchema.ParamType.String => FormulaType.String,
+                FormulaTypeSchema.ParamType.Boolean => FormulaType.Boolean,
+                FormulaTypeSchema.ParamType.Date => FormulaType.Date,
+                FormulaTypeSchema.ParamType.Time => FormulaType.Time,
+                FormulaTypeSchema.ParamType.DateTime => FormulaType.DateTime,
+                FormulaTypeSchema.ParamType.Color => FormulaType.Color,
+                FormulaTypeSchema.ParamType.Guid => FormulaType.Guid,                
+                FormulaTypeSchema.ParamType.DateTimeNoTimeZone => FormulaType.DateTimeNoTimeZone,
+                FormulaTypeSchema.ParamType.Blank => FormulaType.Blank,
+                FormulaTypeSchema.ParamType.Hyperlink => FormulaType.Hyperlink,
+                FormulaTypeSchema.ParamType.UntypedObject => FormulaType.UntypedObject,
+                FormulaTypeSchema.ParamType.Record => GetAggregateType(schema.Fields, isTable: false),
+                FormulaTypeSchema.ParamType.Table => GetAggregateType(schema.Fields, isTable: true),                
+                
+                FormulaTypeSchema.ParamType.OptionSetValue => throw new NotImplementedException(),
+                FormulaTypeSchema.ParamType.EntityRecord => throw new NotSupportedException(),
+                FormulaTypeSchema.ParamType.EntityTable => throw new NotSupportedException(),
+            };
         }
 
-        private void WriteTableContents(Utf8JsonWriter writer, TableType table, JsonSerializerOptions options) =>
-            WriteRecordContents(writer, table.ToRecord(), options);
+        private FormulaType GetAggregateType(Dictionary<string, FormulaTypeSchema> fields, bool isTable)
+        {
+            Contracts.AssertValue(fields);
+            Contracts.AssertAllValues(fields);
+
+            var fieldsType = new RecordType();
+            foreach (var field in fields)
+            {
+                if (fieldsType.MaybeGetFieldType(field.Key) != null)
+                {
+                    throw new NotSupportedException($"Multiple definitions of {field.Key}");
+                }
+
+                fieldsType = fieldsType.Add(field.Key, GetFormulaType(field.Value));
+            }
+
+            return isTable ? TableType.FromRecord(fieldsType) : fieldsType;
+        }
     }
 }

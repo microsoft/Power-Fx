@@ -12,19 +12,26 @@ using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Core.Syntax.Nodes
 {
-    internal sealed class StrInterpNode : VariadicBase
+    /// <summary>
+    /// String interpolation parse node.
+    /// A variadic node where each child represents a single element of the interpolation.
+    /// 
+    /// Example:
+    /// <code>$"Hello {name}!"</code>
+    /// </summary>
+    public sealed class StrInterpNode : VariadicBase
     {
         // StrInterpEnd can be null.
-        public readonly Token StrInterpEnd;
+        internal readonly Token StrInterpEnd;
 
-        public StrInterpNode(ref int idNext, Token strInterpStart, SourceList sourceList, TexlNode[] children, Token strInterpEnd)
+        internal StrInterpNode(ref int idNext, Token strInterpStart, SourceList sourceList, TexlNode[] children, Token strInterpEnd)
             : base(ref idNext, strInterpStart, sourceList, children)
         {
             Contracts.AssertValueOrNull(strInterpEnd);
             StrInterpEnd = strInterpEnd;
         }
 
-        public override TexlNode Clone(ref int idNext, Span ts)
+        internal override TexlNode Clone(ref int idNext, Span ts)
         {
             var children = CloneChildren(ref idNext, ts);
             var newNodes = new Dictionary<TexlNode, TexlNode>();
@@ -36,6 +43,7 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
             return new StrInterpNode(ref idNext, Token.Clone(ts), SourceList.Clone(ts, newNodes), children, StrInterpEnd);
         }
 
+        /// <inheritdoc />
         public override void Accept(TexlVisitor visitor)
         {
             Contracts.AssertValue(visitor);
@@ -46,18 +54,21 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
             }
         }
 
+        /// <inheritdoc />
         public override TResult Accept<TResult, TContext>(TexlFunctionalVisitor<TResult, TContext> visitor, TContext context)
         {
             return visitor.Visit(this, context);
         }
 
+        /// <inheritdoc />
         public override NodeKind Kind => NodeKind.StrInterp;
 
-        public override StrInterpNode AsStrInterp()
+        internal override StrInterpNode AsStrInterp()
         {
             return this;
         }
 
+        /// <inheritdoc />
         public override Span GetTextSpan()
         {
             if (StrInterpEnd == null)
@@ -68,6 +79,7 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
             return new Span(Token.Span.Min, StrInterpEnd.Span.Lim);
         }
 
+        /// <inheritdoc />
         public override Span GetCompleteSpan()
         {
             int limit;

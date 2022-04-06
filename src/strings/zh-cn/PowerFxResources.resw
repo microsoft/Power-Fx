@@ -1,5 +1,64 @@
 ﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
@@ -426,6 +485,17 @@
   <data name="AboutValue_language" xml:space="preserve">
     <value>在转换值时要使用的语言代码。</value>
     
+  </data>
+  <data name="AboutBoolean" xml:space="preserve">
+    <value>将表示布尔值的“文本”转换为布尔值。</value>
+    
+  </data>
+  <data name="BooleanArg1" xml:space="preserve">
+    <value>文本</value>
+    
+  </data>
+  <data name="AboutBoolean_text" xml:space="preserve">
+    <value>要转换为布尔值的文本值。</value>
   </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>返回第一个非空白参数</value>
@@ -1368,6 +1438,10 @@
     <value>表达式</value>
     
   </data>
+  <data name="AboutIsBlankOrError_expression" xml:space="preserve">
+    <value>要进行测试的表达式。</value>
+    
+  </data>
   <data name="AboutIsEmpty" xml:space="preserve">
     <value>检查集合是否为空并返回 true 或 false。</value>
     
@@ -1375,6 +1449,9 @@
   <data name="IsEmptyArg1" xml:space="preserve">
     <value>源</value>
     
+  </data>
+  <data name="AboutIsEmpty_source" xml:space="preserve">
+    <value>要进行测试的表。</value>
   </data>
   <data name="AboutShuffle" xml:space="preserve">
     <value>返回输入 "source" 表的随机选择副本。</value>
@@ -1845,8 +1922,12 @@
   <data name="AboutTime_millisecond" xml:space="preserve">
     <value>毫秒部分。</value>
   </data>
+  <data name="AboutDateTime" xml:space="preserve">
+    <value>创建一个以某天的日期和时间来表示瞬间的值。</value>
+    
+  </data>
   <data name="AboutYear" xml:space="preserve">
-    <value>Year 返回给定日期的年份，大于 1900 的数字。</value>
+    <value>Year 返回给定日期的年份。</value>
     
   </data>
   <data name="YearArg1" xml:space="preserve">
@@ -2260,6 +2341,36 @@
   </data>
   <data name="AboutChar_column_of_numbers" xml:space="preserve">
     <value>平台上字符集中的代码编号组成的列。</value>
+  </data>
+  <data name="AboutParseJSON" xml:space="preserve">
+    <value>将 JSON 字符串转换为对象。</value>
+    
+  </data>
+  <data name="ParseJSONArg1" xml:space="preserve">
+    <value>输入</value>
+    
+  </data>
+  <data name="AboutParseJSON_input" xml:space="preserve">
+    <value>要处理的 JSON 字符串。</value>
+  </data>
+  <data name="AboutIndex" xml:space="preserve">
+    <value>返回表中给定索引处的记录。</value>
+    
+  </data>
+  <data name="IndexArg1" xml:space="preserve">
+    <value>表</value>
+    
+  </data>
+  <data name="IndexArg2" xml:space="preserve">
+    <value>索引</value>
+    
+  </data>
+  <data name="AboutIndex_table" xml:space="preserve">
+    <value>一个表。</value>
+  </data>
+  <data name="AboutIndex_index" xml:space="preserve">
+    <value>要检索的记录的索引。</value>
+    
   </data>
   <data name="Screen_Name_DisplayName" xml:space="preserve">
     <value>名称</value>
@@ -3781,11 +3892,23 @@
     
   </data>
   <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
-    <value>公式列中不支持此结果类型 {0}。</value>
+    <value>公式列中不支持结果类型 {0}。</value>
     
   </data>
   <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
     <value>此公式的结果类型预计为 {0}，但实际结果类型为 {1}。无法更改公式列的结果类型。</value>
+    
+  </data>
+  <data name="FormulaColumns_ColumnTypeNotSupported" xml:space="preserve">
+    <value>公式列不支持类型为 {0} 的列。</value>
+    
+  </data>
+  <data name="FormulaColumns_ColumnFormatNotSupported" xml:space="preserve">
+    <value>公式列不支持类型为 {0} 且格式为 {1} 的列。</value>
+    
+  </data>
+  <data name="FormulaColumns_FormulaTooLong" xml:space="preserve">
+    <value>公式长度不能超过 1000 个字符。</value>
     
   </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
@@ -3802,7 +3925,6 @@
   </data>
   <data name="ErrorResource_ErrBadToken_LongMessage" xml:space="preserve">
     <value>例如，数字不得后跟字符 "\" (如 "32\")，而应接空格("32")，这样可确保其仅为数字 32 或为其他数字(例如 "323")。</value>
-    
   </data>
   <data name="ErrorResource_ErrBadToken_HowToFix_1" xml:space="preserve">
     <value>删除或替换非预期字符。</value>
@@ -3818,11 +3940,9 @@
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_LongMessage" xml:space="preserve">
     <value>例如，数字不得后跟字符 "\" (如 "32\")，而应接空格("32")，这样可确保其仅为数字 32 或为其他数字(例如 "323")。</value>
-    
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_HowToFix_1" xml:space="preserve">
     <value>删除或替换意外字符。</value>
-    
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_Link_1" xml:space="preserve">
     <value>文章: 针对 Power Apps 的公式引用</value>
@@ -3834,7 +3954,6 @@
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_LongMessage" xml:space="preserve">
     <value>每个块注释都必须以 "/*" 开头且以 "*/" 结尾。如果块注释结尾错误，则注释后的所有代码都将成为注释的一部分。如果注释仅包含一行，可以 " //" 开头，而不用标识注释结尾。</value>
-    
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_HowToFix_1" xml:space="preserve">
     <value>在块注释的结尾添加“*/”，或将其更改为一组行注释。</value>
@@ -3850,7 +3969,6 @@
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_LongMessage" xml:space="preserve">
     <value>例如，如果公式中包含 "{{Val@ 7}}" 而非 "{{Val: 7}}" 时，会发生此错误。如果设置了变量，则语法会要求使用冒号而非 @ 符号。</value>
-    
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_HowToFix_1" xml:space="preserve">
     <value>删除或使用预期字符替换非预期字符。</value>
@@ -3861,12 +3979,11 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidName_ShortMessage" xml:space="preserve">
-    <value>名称无效。无法识别此标识符。</value>
+    <value>名称无效。无法识别 '{0}'。</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidName_LongMessage" xml:space="preserve">
     <value>当公式引用不再存在的内容(例如已删除的控件)时，最常出现此错误。</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidName_HowToFix_1" xml:space="preserve">
     <value>删除或更正对无效名称的引用。</value>
@@ -3876,13 +3993,27 @@
     <value>文章: 针对 Power Apps 的公式引用</value>
     
   </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_ShortMessage" xml:space="preserve">
+    <value>名称无效。无法识别此标识符。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_LongMessage" xml:space="preserve">
+    <value>当公式引用不再存在的内容(例如已删除的控件)时，最常出现此错误。</value>
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_HowToFix_1" xml:space="preserve">
+    <value>删除或更正对无效名称的引用。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_Link_1" xml:space="preserve">
+    <value>文章: 针对 Power Apps 的公式引用</value>
+    
+  </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_ShortMessage" xml:space="preserve">
     <value>属性引用无效。</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_LongMessage" xml:space="preserve">
     <value>当公式引用具有无效语法的组件行为属性时，会出现此错误。(例如，Component.OnCustomChange 而不是 Component.OnCustomChange())</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_HowToFix_1" xml:space="preserve">
     <value>请使用正确的语法来引用组件行为属性。例如，Component.OnCustomChange()</value>
@@ -3898,7 +4029,6 @@
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_LongMessage" xml:space="preserve">
     <value>无法对没有父控件的控件使用父运算符。此运算符引用承载给定控件的控件，并使其所有属性可用。</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_HowToFix_1" xml:space="preserve">
     <value>删除“Parent”运算符。</value>
@@ -3914,7 +4044,6 @@
   </data>
   <data name="ErrorResource_ErrTooManyUps_LongMessage" xml:space="preserve">
     <value>复杂性会随嵌套级别的增加而增加，因此 Power Apps 最多支持 63 个行范围嵌套级别。</value>
-    
   </data>
   <data name="ErrorResource_ErrTooManyUps_HowToFix_1" xml:space="preserve">
     <value>请使用较少的嵌套级别重写公式。</value>
@@ -3926,7 +4055,6 @@
   </data>
   <data name="ErrorResource_ErrRuleNestedTooDeeply_LongMessage" xml:space="preserve">
     <value>Power Apps 支持最多 50 个级别的表达式嵌套。很难理解和维持这种级别数的表达式。</value>
-    
   </data>
   <data name="ErrorResource_ErrRuleNestedTooDeeply_HowToFix_1" xml:space="preserve">
     <value>请使用较少的嵌套级别重写公式。</value>
@@ -3938,7 +4066,6 @@
   </data>
   <data name="ErrorResource_ErrOperatorExpected_LongMessage" xml:space="preserve">
     <value>运算符将两个操作数连接在一起。如果将两个函数(操作数)放在一起，但它们之间没有运算符，则会发生此错误 - 例如 Len("我的文本")Len("我的文本")。</value>
-    
   </data>
   <data name="ErrorResource_ErrOperatorExpected_HowToFix_1" xml:space="preserve">
     <value>编辑公式，使其在操作数之间包含一个运算符。</value>
@@ -3954,7 +4081,6 @@
   </data>
   <data name="ErrorResource_ErrNumberExpected_LongMessage" xml:space="preserve">
     <value>如果使用的函数需要一个数字，但却提供图像之类的值，则会出现此错误。</value>
-    
   </data>
   <data name="ErrorResource_ErrNumberExpected_HowToFix_1" xml:space="preserve">
     <value>编辑公式，使公式此时的计算结果为数字。</value>
@@ -3970,7 +4096,6 @@
   </data>
   <data name="ErrorResource_ErrBooleanExpected_LongMessage" xml:space="preserve">
     <value>布尔值在 Microsoft Excel 等应用程序中也称为 true/false 值。如果使用的函数需要布尔值，但却提供日期之类的值，则会发生此错误。</value>
-    
   </data>
   <data name="ErrorResource_ErrBooleanExpected_HowToFix_1" xml:space="preserve">
     <value>编辑公式，使公式此时的计算结果为布尔。</value>
@@ -3986,7 +4111,6 @@
   </data>
   <data name="ErrorResource_ErrColonExpected_LongMessage" xml:space="preserve">
     <value>冒号可将字段名(有时称为列名)与记录中的字段值隔开(例如 {Month:"1"}、{Month:"2"} …)。冒号还可将小时与分钟和秒隔开(例如 "3:04")。</value>
-    
   </data>
   <data name="ErrorResource_ErrColonExpected_HowToFix_1" xml:space="preserve">
     <value>编辑公式，使其包含一个冒号。</value>
@@ -4002,7 +4126,6 @@
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_LongMessage" xml:space="preserve">
     <value>行为属性通过更改应用中其他位置的值来更改应用的状态。常见行为函数包括 "Navigate"、"Patch"、"UpdateContext" 和 "Collect"。基于行为的常见属性包括 "OnSelect"、"OnVisible" 和其他 "On..." 属性。</value>
-    
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_HowToFix_1" xml:space="preserve">
     <value>将行为函数移至基于行为的属性。</value>
@@ -4018,7 +4141,6 @@
   </data>
   <data name="ErrorResource_ErrTestPropertyExpected_LongMessage" xml:space="preserve">
     <value>测试函数是在测试应用时可用于模拟用户输入的函数。"SetProperty"、"SelectRow" 和 "Assert" 是常见的测试函数。它们只能在测试用例中使用。</value>
-    
   </data>
   <data name="ErrorResource_ErrTestPropertyExpected_HowToFix_1" xml:space="preserve">
     <value>在测试用例(而非应用本身)中使用此函数。</value>
@@ -4030,7 +4152,6 @@
   </data>
   <data name="ErrorResource_ErrCannotCoerce_SourceType_TargetType_LongMessage" xml:space="preserve">
     <value>Power Apps 可将公式中部分类型的数据转换成其他类型，例如，它可将 "1" (字符串)转换为 1 (数字)。但是，它并不能将所有数据类型都转换成不同的数据类型，例如，它不能将图像转换成数字。</value>
-    
   </data>
   <data name="ErrorResource_ErrCannotCoerce_SourceType_TargetType_HowToFix_1" xml:space="preserve">
     <value>请编辑公式，以便将存在问题的数据转换成预期类型。</value>
@@ -4042,7 +4163,6 @@
   </data>
   <data name="ErrorResource_ErrStringExpected_LongMessage" xml:space="preserve">
     <value>如果使用的函数需要文本(或字符串)参数，但却提供日期之类的值，则会发生此错误。</value>
-    
   </data>
   <data name="ErrorResource_ErrStringExpected_HowToFix_1" xml:space="preserve">
     <value>编辑公式，使公式此时的计算结果为文本。</value>
@@ -4058,7 +4178,6 @@
   </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_LongMessage" xml:space="preserve">
     <value>如果使用的函数需要文本或数字，但却提供布尔(true/false)之类的值，则会出现此错误。</value>
-    
   </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_HowToFix_1" xml:space="preserve">
     <value>编辑公式，使公式此时的计算结果为文本或数字。</value>
@@ -4074,7 +4193,6 @@
   </data>
   <data name="ErrorResource_ErrClosingBracketExpected_LongMessage" xml:space="preserve">
     <value>右方括号表示记录的结尾(例如 {Month:"1"}、{Month:"2"} …)。</value>
-    
   </data>
   <data name="ErrorResource_ErrClosingBracketExpected_HowToFix_1" xml:space="preserve">
     <value>请编辑公式，使其包含一个方括号。</value>
@@ -4094,7 +4212,6 @@
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_LongMessage" xml:space="preserve">
     <value>无法计算公式，因为在公式中比较的值类型不相同。</value>
-    
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_HowToFix_1" xml:space="preserve">
     <value>可能需要将值转换为相同类型，例如将日期字符串(例如 "2018/12/31") 转换为日期值。</value>
@@ -4174,7 +4291,6 @@
   </data>
   <data name="ErrorResource_ErrTypeError_LongMessage" xml:space="preserve">
     <value>数据可能与所需的类型(文本、数字、日期、表、记录)不匹配。</value>
-    
   </data>
   <data name="ErrorResource_ErrTypeError_HowToFix_1" xml:space="preserve">
     <value>检查公式中涉及的值的类型，并确保类型匹配。</value>
@@ -4194,7 +4310,6 @@
   </data>
   <data name="ErrorResource_ErrDateExpected_LongMessage" xml:space="preserve">
     <value>如果使用的函数需要日期，但却提供文本之类的值，则会出现此错误。</value>
-    
   </data>
   <data name="ErrorResource_ErrDateExpected_HowToFix_1" xml:space="preserve">
     <value>编辑公式，使公式此时的计算结果为日期。</value>
@@ -4210,7 +4325,6 @@
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_LongMessage" xml:space="preserve">
     <value>数据源可能无法处理该公式且可能返回不完整的数据集。如果数据集不完整，应用程序可能不返回正确的结果或行为不正确。</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_HowToFix_1" xml:space="preserve">
     <value>如果数据集超过 500 条记录的限制，但包含少于 2,000 条记录，请尝试重置限制。</value>
@@ -4238,7 +4352,6 @@
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_LongMessage" xml:space="preserve">
     <value>数据源可能无法处理该公式且可能返回不完整的数据集。如果数据集不完整，应用程序可能不返回正确的结果或行为不正确。</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_HowToFix_1" xml:space="preserve">
     <value>如果数据集超过 500 条记录的限制，但包含少于 2,000 条记录，请尝试重置限制。</value>
@@ -4266,7 +4379,6 @@
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_LongMessage" xml:space="preserve">
     <value>"in" 运算符右侧应为来自正确数据源的列。数据源可能无法处理该公式并可能返回不完整的数据集。如果数据集不完整，应用程序可能不会返回正确的结果或行为不正确。</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_1" xml:space="preserve">
     <value>将 "in" 运算符右侧的项更改为来自正确数据源的列。</value>
@@ -4299,7 +4411,6 @@
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_LongMessage" xml:space="preserve">
     <value> "in" 运算符右侧不是来自正确数据源的列。数据源可能无法处理该公式并可能返回不完整的数据集。如果数据集不完整，应用程序可能不会返回正确的结果或行为不正确。
       </value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_1" xml:space="preserve">
     <value>将 "in" 运算符右侧的项更改为来自正确数据源的列。</value>
@@ -4380,6 +4491,22 @@
   </data>
   <data name="ErrorResource_ErrInvalidControlReference_Link_1" xml:space="preserve">
     <value>引用:画布应用的 ConfirmExit</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidStringInterpolation_ShortMessage" xml:space="preserve">
+    <value>出现在内插字符串中的表达式的计算结果必须为文本值或兼容类型。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidStringInterpolation_HowToFix_1" xml:space="preserve">
+    <value>检查内插字符串中表达式的类型。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrEmptyIsland_ShortMessage" xml:space="preserve">
+    <value>空表达式不能出现在内插字符串中。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrEmptyIsland_HowToFix_1" xml:space="preserve">
+    <value>检查内插字符串内是否有空表达式。</value>
     
   </data>
   <data name="ErrorResource_ErrAsNotInContext_ShortMessage" xml:space="preserve">

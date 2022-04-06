@@ -9,7 +9,6 @@ using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Binding.BindInfo;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Functions;
-using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
@@ -17,53 +16,85 @@ using Microsoft.PowerFx.Core.Utils;
 namespace Microsoft.PowerFx.Core.Glue
 {
     /// <summary>
-    /// Basic implementation of INameResolver. 
+    /// Basic implementation of INameResolver around a <see cref="PowerFxConfig"/> object. 
+    /// This aides in binding and intellisense. 
     /// Host can override Lookup to provide additional symbols to the expression. 
     /// </summary>
     internal class SimpleResolver : INameResolver
     {
-        protected TexlFunction[] _library;
-        protected EnumSymbol[] _enums = new EnumSymbol[] { };
-        protected IExternalDocument _document;
+        private readonly PowerFxConfig _config;
 
-        public IExternalDocument Document => _document;
+        private readonly TexlFunction[] _library;
+        private readonly EnumSymbol[] _enums = new EnumSymbol[] { };
 
-        // public EntityScope EntityScope => (EntityScope)Document.GlobalScope;
-        //IExternalEntityScope INameResolver.EntityScope => EntityScope;
+        private readonly IExternalDocument _document;
+
+        IExternalDocument INameResolver.Document => _document;
+
         IExternalEntityScope INameResolver.EntityScope => throw new NotImplementedException();
 
-        public DName CurrentProperty => default;
+        DName INameResolver.CurrentProperty => default;
 
-        public DPath CurrentEntityPath => default;
+        DPath INameResolver.CurrentEntityPath => default;
 
         // Allow behavior properties, like calls to POST.
         // $$$ this may need to be under a flag so host can enforce read-only properties.
-        public bool CurrentPropertyIsBehavior => true;
+        bool INameResolver.CurrentPropertyIsBehavior => true;
 
-        public bool CurrentPropertyIsConstantData => false;
+        bool INameResolver.CurrentPropertyIsConstantData => false;
 
-        public bool CurrentPropertyAllowsNavigation => false;
+        bool INameResolver.CurrentPropertyAllowsNavigation => false;
 
+        // Expose the list to aide in intellisense suggestions. 
         public IEnumerable<TexlFunction> Functions => _library;
 
-        public IExternalEntity CurrentEntity => null;
+        IExternalEntity INameResolver.CurrentEntity => null;
 
-        public SimpleResolver(IEnumerable<EnumSymbol> enumSymbols, params TexlFunction[] extraFunctions)
-            : this(extraFunctions)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SimpleResolver"/> class.
+        /// </summary>
+        /// <param name="config"></param>
+        public SimpleResolver(PowerFxConfig config)            
         {
-            _enums = enumSymbols.ToArray();
+            _config = config ?? throw new ArgumentNullException(nameof(config));
+
+            _library = config.Functions.ToArray();
+            _enums = config.EnumStoreBuilder.Build().EnumSymbols.ToArray();
         }
 
-        public SimpleResolver(params TexlFunction[] extraFunctions)
+        // for derived classes that need to set INameResolver.Document. 
+        protected SimpleResolver(PowerFxConfig config, IExternalDocument document)
+            : this(config)
         {
-            var list = new List<TexlFunction>();
-            list.AddRange(BuiltinFunctionsCore.BuiltinFunctionsLibrary);
-            list.AddRange(extraFunctions);
-            _library = list.ToArray();
+            _document = document;
         }
 
         public virtual bool Lookup(DName name, out NameLookupInfo nameInfo, NameLookupPreferences preferences = NameLookupPreferences.None)
         {
+            if (_config != null)
+            {
+                if (_config.TryGetSymbol(name, out var symbol, out var displayName))
+                {
+                    // Special case symbols
+                    if (symbol is IExternalOptionSet optionSet)
+                    {
+                        nameInfo = new NameLookupInfo(
+                            BindKind.OptionSet,
+                            optionSet.Type,
+                            DPath.Root,
+                            0,
+                            optionSet,
+                            displayName);
+
+                        return true;
+                    }
+                    else
+                    {
+                        throw new NotImplementedException($"{symbol.GetType().Name} not supported.");
+                    }
+                }
+            }
+
             var enumValue = _enums.FirstOrDefault(symbol => symbol.InvariantName == name);
             if (enumValue != null)
             {

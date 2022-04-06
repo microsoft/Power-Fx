@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Public;
@@ -41,16 +42,16 @@ namespace Microsoft.PowerFx.Functions
         /// <param name="returnBehavior">A flag that can be used to activate pre-defined early return behavior, such as returning Blank() if any argument is Blank().</param>
         /// <param name="targetFunction">The implementation of the builtin function.</param>
         /// <returns></returns>
-        private static FunctionPtr StandardErrorHandling<T>(
+        private static AsyncFunctionPtr StandardErrorHandling<T>(
                 Func<IRContext, IEnumerable<FormulaValue>, IEnumerable<FormulaValue>> expandArguments,
                 Func<IRContext, int, FormulaValue> replaceBlankValues,
                 Func<IRContext, int, FormulaValue, FormulaValue> checkRuntimeTypes,
                 Func<IRContext, int, FormulaValue, FormulaValue> checkRuntimeValues,
                 ReturnBehavior returnBehavior,
-                Func<EvalVisitor, SymbolContext, IRContext, T[], FormulaValue> targetFunction)
+                Func<EvalVisitor, SymbolContext, IRContext, T[], ValueTask<FormulaValue>> targetFunction)
             where T : FormulaValue
         {
-            return (runner, symbolContext, irContext, args) =>
+            return async (runner, symbolContext, irContext, args) =>
             {
                 var argumentsExpanded = expandArguments(irContext, args);
 
@@ -113,14 +114,14 @@ namespace Microsoft.PowerFx.Functions
                         break;
                 }
 
-                return targetFunction(runner, symbolContext, irContext, runtimeValuesChecked.Select(arg => arg as T).ToArray());
+                return await targetFunction(runner, symbolContext, irContext, runtimeValuesChecked.Select(arg => arg as T).ToArray());
             };
         }
 
         // A wrapper that allows standard error handling to apply to
         // functions which accept the simpler parameter list of
         // an array of arguments, ignoring context, runner etc.
-        private static FunctionPtr StandardErrorHandling<T>(
+        private static AsyncFunctionPtr StandardErrorHandling<T>(
             Func<IRContext, IEnumerable<FormulaValue>, IEnumerable<FormulaValue>> expandArguments,
             Func<IRContext, int, FormulaValue> replaceBlankValues,
             Func<IRContext, int, FormulaValue, FormulaValue> checkRuntimeTypes,
@@ -130,13 +131,14 @@ namespace Microsoft.PowerFx.Functions
             where T : FormulaValue
         {
             return StandardErrorHandling<T>(expandArguments, replaceBlankValues, checkRuntimeTypes, checkRuntimeValues, returnBehavior, (runner, symbolContext, irContext, args) =>
-            {
-                return targetFunction(irContext, args);
+            {                
+                var result = targetFunction(irContext, args);
+                return new ValueTask<FormulaValue>(result);
             });
         }
 
         #region Single Column Table Functions
-        public static Func<EvalVisitor, SymbolContext, IRContext, TableValue[], FormulaValue> StandardSingleColumnTable<T>(Func<EvalVisitor, SymbolContext, IRContext, T[], FormulaValue> targetFunction) 
+        public static Func<EvalVisitor, SymbolContext, IRContext, TableValue[], ValueTask<FormulaValue>> StandardSingleColumnTable<T>(Func<EvalVisitor, SymbolContext, IRContext, T[], FormulaValue> targetFunction) 
             where T : FormulaValue
         {
             return (runner, symbolContext, irContext, args) =>
@@ -173,11 +175,12 @@ namespace Microsoft.PowerFx.Functions
                     }
                 }
 
-                return new InMemoryTableValue(irContext, resultRows);
+                var result = new InMemoryTableValue(irContext, resultRows);
+                return new ValueTask<FormulaValue>(result);
             };
         }
 
-        public static Func<EvalVisitor, SymbolContext, IRContext, TableValue[], FormulaValue> StandardSingleColumnTable<T>(Func<IRContext, T[], FormulaValue> targetFunction)
+        public static Func<EvalVisitor, SymbolContext, IRContext, TableValue[], ValueTask<FormulaValue>> StandardSingleColumnTable<T>(Func<IRContext, T[], FormulaValue> targetFunction)
             where T : FormulaValue
         {
             return StandardSingleColumnTable<T>((runner, symbolContext, irContext, args) => targetFunction(irContext, args));
@@ -273,11 +276,11 @@ namespace Microsoft.PowerFx.Functions
          * F([a, b], [c, d]) => [F'([a, c]), F'([b, d])]
          * As a concrete example, Concatenate(["a", "b"], ["1", "2"]) => ["a1", "b2"]
         */
-        public static Func<EvalVisitor, SymbolContext, IRContext, FormulaValue[], FormulaValue> MultiSingleColumnTable(
-            FunctionPtr targetFunction, 
+        public static Func<EvalVisitor, SymbolContext, IRContext, FormulaValue[], ValueTask<FormulaValue>> MultiSingleColumnTable(
+            AsyncFunctionPtr targetFunction, 
             bool transposeEmptyTable)
         {
-            return (runner, symbolContext, irContext, args) =>
+            return async (runner, symbolContext, irContext, args) =>
             {
                 var resultRows = new List<DValue<RecordValue>>();
 
@@ -301,8 +304,16 @@ namespace Microsoft.PowerFx.Functions
                 var names = allResults.Select(result => result.Name).ToList();
                 foreach (var list in transposed)
                 {
+                    var errorRow = list.FirstOrDefault(dv => dv.IsError);
+                    if (errorRow != null)
+                    {
+                        resultRows.Add(DValue<RecordValue>.Of(errorRow.Error));
+                        continue;
+                    }
+
                     var targetArgs = list.Select((dv, i) => dv.IsValue ? dv.Value.GetField(names[i]) : dv.ToFormulaValue()).ToArray();
-                    var namedValue = new NamedValue(BuiltinFunction.OneColumnTableResultNameStr, targetFunction(runner, symbolContext, IRContext.NotInSource(itemType), targetArgs));
+
+                    var namedValue = new NamedValue(BuiltinFunction.OneColumnTableResultNameStr, await targetFunction(runner, symbolContext, IRContext.NotInSource(itemType), targetArgs));
                     var record = new InMemoryRecordValue(IRContext.NotInSource(resultType), new List<NamedValue>() { namedValue });
                     resultRows.Add(DValue<RecordValue>.Of(record));
                 }
@@ -337,6 +348,10 @@ namespace Microsoft.PowerFx.Functions
                 {
                     var count = new NumberValue(IRContext.NotInSource(FormulaType.Number), stringValue.Value.Length);
                     res.Add(count);
+                }
+                else
+                {
+                    break;
                 }
             }
 

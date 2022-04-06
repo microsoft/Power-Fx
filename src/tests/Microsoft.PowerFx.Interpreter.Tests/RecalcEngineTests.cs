@@ -7,10 +7,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core;
+using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Public;
 using Microsoft.PowerFx.Core.Public.Types;
 using Microsoft.PowerFx.Core.Public.Values;
 using Microsoft.PowerFx.Core.Texl;
+using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
 using Xunit;
 using Xunit.Sdk;
@@ -31,7 +33,18 @@ namespace Microsoft.PowerFx.Tests
                 $"{ns}.{nameof(ReflectionFunction)}",
                 $"{ns}.{nameof(RecalcEngineScope)}",
                 $"{ns}.{nameof(PowerFxConfigExtensions)}",
-                $"{ns}.{nameof(OptionSet)}"
+                $"{ns}.{nameof(OptionSet)}",
+                $"{ns}.{nameof(ObjectRecordValue)}",
+                $"{ns}.{nameof(ITypeMarshallerProvider)}",
+                $"{ns}.{nameof(ITypeMarshaller)}",
+                $"{ns}.{nameof(OptionSet)}",
+                $"{ns}.{nameof(ObjectMarshallerProvider)}",
+                $"{ns}.{nameof(ObjectMarshaller)}",
+                $"{ns}.{nameof(PrimitiveMarshallerProvider)}",
+                $"{ns}.{nameof(PrimitiveTypeMarshaller)}",
+                $"{ns}.{nameof(TableMarshallerProvider)}",
+                $"{ns}.{nameof(TypeMarshallerCache)}",
+                $"{ns}.{nameof(TypeMarshallerCacheExtensions)}"
             };
 
             var sb = new StringBuilder();
@@ -59,9 +72,11 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public void EvalWithGlobals()
         {
-            var engine = new RecalcEngine();
+            var cache = new TypeMarshallerCache();
 
-            var context = FormulaValue.NewRecord(new
+            var engine = new RecalcEngine();
+            
+            var context = cache.NewRecord(new
             {
                 x = 15
             });
@@ -209,17 +224,33 @@ namespace Microsoft.PowerFx.Tests
         {
             var engine = new RecalcEngine();
 
-            engine.UpdateVariable("R", FormulaValue.RecordFromFields(
+            engine.UpdateVariable("R", FormulaValue.NewRecordFromFields(
                 new NamedValue("F1", FormulaValue.NewBlank(FormulaType.Number)),
                 new NamedValue("F2", FormulaValue.New(6))));
 
             engine.SetFormula("A", "R.F2 + 3 + R.F1", OnUpdate);
             AssertUpdate("A-->9;");
 
-            engine.UpdateVariable("R", FormulaValue.RecordFromFields(
+            engine.UpdateVariable("R", FormulaValue.NewRecordFromFields(
                 new NamedValue("F1", FormulaValue.New(2)),
                 new NamedValue("F2", FormulaValue.New(7))));
             AssertUpdate("A-->12;");
+        }
+
+        [Fact]
+        public void CheckFunctionCounts()
+        {
+            var config = new PowerFxConfig();
+
+            // Pick a function in core but not implemented in interpreter.
+            var nyiFunc = BuiltinFunctionsCore.Shuffle;
+
+            Assert.Contains(nyiFunc, config.Functions);
+
+            // RecalcEngine will add the interpreter's functions. 
+            var engine = new RecalcEngine(config);
+
+            Assert.DoesNotContain(nyiFunc, config.Functions);
         }
 
         [Fact]
@@ -256,7 +287,40 @@ namespace Microsoft.PowerFx.Tests
 
             Assert.False(result.IsSuccess);
             Assert.Single(result.Errors);
-            Assert.StartsWith("Error 2-5: Name isn't valid. This identifier isn't recognized", result.Errors[0].ToString());
+            Assert.StartsWith("Error 2-5: Name isn't valid. 'foo' isn't recognized", result.Errors[0].ToString());
+        }
+
+        [Fact]
+        public void CheckLambdaBindError()
+        {
+            var engine = new RecalcEngine();
+            var result = engine.Check("Filter([1,2,3] As X, X.Value > foo)");
+
+            Assert.False(result.IsSuccess);
+            Assert.Single(result.Errors);
+            Assert.StartsWith("Error 31-34: Name isn't valid. 'foo' isn't recognized", result.Errors[0].ToString());
+        }
+
+        [Fact]
+        public void CheckDottedBindError()
+        {
+            var engine = new RecalcEngine();
+            var result = engine.Check("[1,2,3].foo");
+
+            Assert.False(result.IsSuccess);
+            Assert.Single(result.Errors);
+            Assert.StartsWith("Error 7-11: Name isn't valid. 'foo' isn't recognized", result.Errors[0].ToString());
+        }
+
+        [Fact]
+        public void CheckDottedBindError2()
+        {
+            var engine = new RecalcEngine();
+            var result = engine.Check("[].Value");
+
+            Assert.False(result.IsSuccess);
+            Assert.Single(result.Errors);
+            Assert.StartsWith("Error 2-8: Name isn't valid. 'Value' isn't recognized", result.Errors[0].ToString());
         }
 
         [Fact]
@@ -309,7 +373,7 @@ namespace Microsoft.PowerFx.Tests
             Assert.False(result.IsSuccess);
             Assert.Null(result.Expression);
             Assert.Single(result.Errors);
-            Assert.StartsWith("Error 2-5: Name isn't valid. This identifier isn't recognized", result.Errors[0].ToString());
+            Assert.StartsWith("Error 2-5: Name isn't valid. 'foo' isn't recognized", result.Errors[0].ToString());
         }
 
         [Fact]
@@ -329,7 +393,7 @@ namespace Microsoft.PowerFx.Tests
             Assert.Equal("x", result.TopLevelIdentifiers.First());
 
             // Test evaluation of parsed expression
-            var recordValue = FormulaValue.RecordFromFields(
+            var recordValue = FormulaValue.NewRecordFromFields(
                 new NamedValue("x", FormulaValue.New(5)));
             var formulaValue = result.Expression.Eval(recordValue);
             Assert.Equal(11.0, (double)formulaValue.ToObject());
@@ -359,17 +423,21 @@ namespace Microsoft.PowerFx.Tests
         public void RecalcEngineLocksConfig()
         {
             var config = new PowerFxConfig(null);
+            config.SetCoreFunctions(new TexlFunction[0]); // clear builtins
             config.AddFunction(BuiltinFunctionsCore.Blank);
             
-            var recalcEngine = new RecalcEngine(config);
+            var recalcEngine = new Engine(config);
 
-            var optionSet = new OptionSet("foo", new Dictionary<string, string>() { { "one key", "one value" } });
-            Assert.Throws<InvalidOperationException>(() => config.AddFunction(BuiltinFunctionsCore.Abs));
+            var func = BuiltinFunctionsCore.AsType; // Function not already in engine
+            Assert.DoesNotContain(func, config.Functions); // didn't get auto-added by engine.
+
+            var optionSet = new OptionSet("foo", DisplayNameUtility.MakeUnique(new Dictionary<string, string>() { { "one key", "one value" } }));
+            Assert.Throws<InvalidOperationException>(() => config.AddFunction(func));
             Assert.Throws<InvalidOperationException>(() => config.AddOptionSet(optionSet));
 
-            Assert.DoesNotContain(new DName("foo"), config.EnvironmentSymbols.Keys);
+            Assert.False(config.TryGetSymbol(new DName("foo"), out _, out _));
 
-            Assert.DoesNotContain(new DName(BuiltinFunctionsCore.Abs.Name), config.ExtraFunctions.Keys);
+            Assert.DoesNotContain(BuiltinFunctionsCore.Abs, config.Functions);
         }        
 
         [Fact]
@@ -377,17 +445,72 @@ namespace Microsoft.PowerFx.Tests
         {
             var config = new PowerFxConfig(null);
 
-            var optionSet = new OptionSet("OptionSet", new Dictionary<string, string>() 
+            var optionSet = new OptionSet("OptionSet", DisplayNameUtility.MakeUnique(new Dictionary<string, string>() 
             {
                     { "option_1", "Option1" },
                     { "option_2", "Option2" }
-            });
+            }));
             
             config.AddOptionSet(optionSet);            
             var recalcEngine = new RecalcEngine(config);
 
             var checkResult = recalcEngine.Check("OptionSet.Option1 <> OptionSet.Option2");
             Assert.True(checkResult.IsSuccess);
+        }
+        
+        [Fact]
+        public void OptionSetResultType()
+        {
+            var config = new PowerFxConfig(null);
+
+            var optionSet = new OptionSet("FooOs", DisplayNameUtility.MakeUnique(new Dictionary<string, string>() 
+            {
+                    { "option_1", "Option1" },
+                    { "option_2", "Option2" }
+            }));
+            
+            config.AddOptionSet(optionSet);            
+            var recalcEngine = new RecalcEngine(config);
+
+            var checkResult = recalcEngine.Check("FooOs.Option1");
+            Assert.True(checkResult.IsSuccess);
+            var osvaluetype = Assert.IsType<OptionSetValueType>(checkResult.ReturnType);
+            Assert.Equal("FooOs", osvaluetype.OptionSetName);
+        }              
+
+        [Fact]
+        public void OptionSetChecksWithMakeUniqueCollision()
+        {
+            var config = new PowerFxConfig(null);
+
+            var optionSet = new OptionSet("OptionSet", DisplayNameUtility.MakeUnique(new Dictionary<string, string>() 
+            {
+                    { "foo", "Option1" },
+                    { "bar", "Option2" },
+                    { "baz", "foo" }
+            }));
+            
+            config.AddEntity(optionSet, new DName("SomeDisplayName"));
+            var recalcEngine = new RecalcEngine(config);
+
+            var checkResult = recalcEngine.Check("SomeDisplayName.Option1 <> SomeDisplayName.'foo (baz)'");
+            Assert.True(checkResult.IsSuccess);
+        }
+
+        [Fact]
+        public void EmptyEnumStoreTest()
+        {
+            var config = PowerFxConfig.BuildWithEnumStore(null, new EnumStoreBuilder());
+
+            var recalcEngine = new RecalcEngine(config);
+
+            var checkResult = recalcEngine.Check("SortOrder.Ascending");
+            Assert.True(checkResult.IsSuccess);
+            Assert.IsType<StringType>(checkResult.ReturnType);
+
+            var enums = config.EnumStoreBuilder.Build().Enums();
+
+            Assert.True(enums.Count() > 0);
         }
 
         #region Test

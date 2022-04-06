@@ -1,5 +1,64 @@
 ﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
@@ -426,6 +485,17 @@
   <data name="AboutValue_language" xml:space="preserve">
     <value>値の変換に使う言語コード。</value>
     
+  </data>
+  <data name="AboutBoolean" xml:space="preserve">
+    <value>ブール値を表す 'text' をブール値に変換します。</value>
+    
+  </data>
+  <data name="BooleanArg1" xml:space="preserve">
+    <value>テキスト</value>
+    
+  </data>
+  <data name="AboutBoolean_text" xml:space="preserve">
+    <value>ブール値に変換するテキスト値です。</value>
   </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>空でない最初の引数を返します</value>
@@ -1368,6 +1438,10 @@
     <value>式</value>
     
   </data>
+  <data name="AboutIsBlankOrError_expression" xml:space="preserve">
+    <value>テスト対象の式です。</value>
+    
+  </data>
   <data name="AboutIsEmpty" xml:space="preserve">
     <value>コレクションが空かどうかをチェックし、True または False を返します。</value>
     
@@ -1375,6 +1449,9 @@
   <data name="IsEmptyArg1" xml:space="preserve">
     <value>ソース</value>
     
+  </data>
+  <data name="AboutIsEmpty_source" xml:space="preserve">
+    <value>テスト対象のテーブルです。</value>
   </data>
   <data name="AboutShuffle" xml:space="preserve">
     <value>入力 'ソース' テーブルのランダムにシャッフルされたコピーを返します。</value>
@@ -1845,8 +1922,12 @@
   <data name="AboutTime_millisecond" xml:space="preserve">
     <value>ミリ秒コンポーネント。</value>
   </data>
+  <data name="AboutDateTime" xml:space="preserve">
+    <value>ある瞬間の時間を表す値を作成します。日付と時刻で表します。</value>
+    
+  </data>
   <data name="AboutYear" xml:space="preserve">
-    <value>Year は、指定の日付の年を 1900 より大きい数値として返します。</value>
+    <value>Year は指定された日付の年を返します。</value>
     
   </data>
   <data name="YearArg1" xml:space="preserve">
@@ -2260,6 +2341,36 @@
   </data>
   <data name="AboutChar_column_of_numbers" xml:space="preserve">
     <value>お使いのプラットフォームの文字セットのコード番号が入った列。</value>
+  </data>
+  <data name="AboutParseJSON" xml:space="preserve">
+    <value>JSON 文字列をオブジェクトに変換します。</value>
+    
+  </data>
+  <data name="ParseJSONArg1" xml:space="preserve">
+    <value>入力</value>
+    
+  </data>
+  <data name="AboutParseJSON_input" xml:space="preserve">
+    <value>処理する JSON 文字列です。</value>
+  </data>
+  <data name="AboutIndex" xml:space="preserve">
+    <value>特定のインデックスにあるテーブル内のレコードを返します。</value>
+    
+  </data>
+  <data name="IndexArg1" xml:space="preserve">
+    <value>テーブル</value>
+    
+  </data>
+  <data name="IndexArg2" xml:space="preserve">
+    <value>インデックス</value>
+    
+  </data>
+  <data name="AboutIndex_table" xml:space="preserve">
+    <value>テーブルです。</value>
+  </data>
+  <data name="AboutIndex_index" xml:space="preserve">
+    <value>取得するレコードのインデックスです。</value>
+    
   </data>
   <data name="Screen_Name_DisplayName" xml:space="preserve">
     <value>名前</value>
@@ -3781,11 +3892,23 @@
     
   </data>
   <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
-    <value>計算式列は、この結果タイプ {0} をサポートしていません。</value>
+    <value>結果の種類 {0} は、計算式列に対応していません。</value>
     
   </data>
   <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
     <value>この計算式の結果タイプは {0} であるはずですが、実際の結果タイプは {1} です。計算式列の結果タイプは変更できません。</value>
+    
+  </data>
+  <data name="FormulaColumns_ColumnTypeNotSupported" xml:space="preserve">
+    <value>型が {0} である列は、計算式列に対応していません。</value>
+    
+  </data>
+  <data name="FormulaColumns_ColumnFormatNotSupported" xml:space="preserve">
+    <value>型が {0}、形式が {1} である列は、計算式列に対応していません。</value>
+    
+  </data>
+  <data name="FormulaColumns_FormulaTooLong" xml:space="preserve">
+    <value>計算式を 1,000 文字より長くすることはできません。</value>
     
   </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
@@ -3802,7 +3925,6 @@
   </data>
   <data name="ErrorResource_ErrBadToken_LongMessage" xml:space="preserve">
     <value>たとえば、文字 '\' は、次のように数字の後に置かれることはありません: '32\'。スペースが入る可能性があり ('32 ')、その場合は単に 32 という数値です。または別の数字が入る可能性もあります ('323')。</value>
-    
   </data>
   <data name="ErrorResource_ErrBadToken_HowToFix_1" xml:space="preserve">
     <value>予期しない文字を削除するか、置き換えてください。</value>
@@ -3818,11 +3940,9 @@
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_LongMessage" xml:space="preserve">
     <value>たとえば、文字 '\' は、次のように数字の後に置かれることはありません: '32\'。スペースが入る可能性があり ('32 ')、その場合は単に 32 という数値です。または別の数字が入る可能性もあります ('323')。</value>
-    
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_HowToFix_1" xml:space="preserve">
     <value>予期しない文字を削除するか、置き換えてください。</value>
-    
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_Link_1" xml:space="preserve">
     <value>記事: Power Apps の数式のリファレンス</value>
@@ -3834,7 +3954,6 @@
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_LongMessage" xml:space="preserve">
     <value>ブロック コメントはそれぞれ、'/*' で始まり '*/' で終わる必要があります。各ブロック コメントを正しく終了しない場合、そのコメントの後にあるコードがすべてそのコメントの一部になります。コメントが 1 行のみで構成される場合は、'//' で開始すれば、コメントの終了を指定する必要がありません。</value>
-    
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_HowToFix_1" xml:space="preserve">
     <value>ブロック コメントの末尾に '*/' を追加するか、行コメントのセットに変更してください。</value>
@@ -3850,7 +3969,6 @@
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_LongMessage" xml:space="preserve">
     <value>たとえば、数式に '{{Val: 7}}' の代わりに '{{Val@ 7}}' が含まれている場合は、このエラーが発生します。変数を設定する構文では、"アットマーク" ではなくコロンが必要です。</value>
-    
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_HowToFix_1" xml:space="preserve">
     <value>予期しない文字を削除するか、必要な文字で置き換えてください。</value>
@@ -3861,12 +3979,11 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidName_ShortMessage" xml:space="preserve">
-    <value>名前が無効です。この識別子は認識されません。</value>
+    <value>名前が無効です。'{0}' は認識されません。</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidName_LongMessage" xml:space="preserve">
     <value>このエラーが表示されるケースの大半は、存在しなくなったもの (削除したコントロールなど) を数式が参照している場合です。</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidName_HowToFix_1" xml:space="preserve">
     <value>名前への無効な参照を削除するか、修正してください。</value>
@@ -3876,13 +3993,27 @@
     <value>記事: Power Apps の数式のリファレンス</value>
     
   </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_ShortMessage" xml:space="preserve">
+    <value>名前が無効です。この識別子は認識されません。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_LongMessage" xml:space="preserve">
+    <value>このエラーが表示されるケースの大半は、存在しなくなったもの (削除したコントロールなど) を数式が参照している場合です。</value>
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_HowToFix_1" xml:space="preserve">
+    <value>名前への無効な参照を削除するか、修正してください。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_Link_1" xml:space="preserve">
+    <value>記事: Power Apps の数式のリファレンス</value>
+    
+  </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_ShortMessage" xml:space="preserve">
     <value>プロパティ参照が無効です。</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_LongMessage" xml:space="preserve">
     <value>このエラーは、構文が無効なコンポーネントの動作プロパティを数式が参照している場合に表示されます (例: Component.OnCustomChange() ではなく Component.OnCustomChange)。</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_HowToFix_1" xml:space="preserve">
     <value>正しい構文を使用してコンポーネントの動作プロパティを参照してください。例: Component.OnCustomChange()</value>
@@ -3898,7 +4029,6 @@
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_LongMessage" xml:space="preserve">
     <value>親コントロールを持たないコントロールには、Parent 演算子を使用できません。この演算子は、指定されたコントロールをホストするコントロールを参照し、そのコントロールのすべてのプロパティを利用できるようにします。</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_HowToFix_1" xml:space="preserve">
     <value>'Parent' 演算子を削除してください。</value>
@@ -3914,7 +4044,6 @@
   </data>
   <data name="ErrorResource_ErrTooManyUps_LongMessage" xml:space="preserve">
     <value>入れ子のレベルとともに複雑性が増すため、Power Apps は行スコープの入れ子を 63 レベルまでサポートしています。</value>
-    
   </data>
   <data name="ErrorResource_ErrTooManyUps_HowToFix_1" xml:space="preserve">
     <value>入れ子のレベルが少ない数式に書き直してください。</value>
@@ -3926,7 +4055,6 @@
   </data>
   <data name="ErrorResource_ErrRuleNestedTooDeeply_LongMessage" xml:space="preserve">
     <value>Power Apps では、50 レベルまでの入れ子の式がサポートされています。これほど深くなっている式は、理解するのも管理するのも困難です。</value>
-    
   </data>
   <data name="ErrorResource_ErrRuleNestedTooDeeply_HowToFix_1" xml:space="preserve">
     <value>入れ子のレベルが少ない数式に書き直してください。</value>
@@ -3938,7 +4066,6 @@
   </data>
   <data name="ErrorResource_ErrOperatorExpected_LongMessage" xml:space="preserve">
     <value>演算子は 2 つのオペランドを結合します。このエラーは、2 つの関数 (オペランド) をその間に演算子を指定しないで配置した場合に生じます (例: Len("mytext")Len("mytext"))。</value>
-    
   </data>
   <data name="ErrorResource_ErrOperatorExpected_HowToFix_1" xml:space="preserve">
     <value>数式を編集し、オペランド間に演算子を含めます。</value>
@@ -3954,7 +4081,6 @@
   </data>
   <data name="ErrorResource_ErrNumberExpected_LongMessage" xml:space="preserve">
     <value>このエラーは、数値が必要な関数を使用するときに画像などを指定した場合に生じます。</value>
-    
   </data>
   <data name="ErrorResource_ErrNumberExpected_HowToFix_1" xml:space="preserve">
     <value>数式を編集し、この時点の数式で数値に評価されるようにします。</value>
@@ -3970,7 +4096,6 @@
   </data>
   <data name="ErrorResource_ErrBooleanExpected_LongMessage" xml:space="preserve">
     <value>ブール値は、Microsoft Excel などのアプリケーションでは true/false 値とも呼ばれます。このエラーは、ブール値を必要としている関数を使用しているときに、代わりに日付などを指定した場合に生じます。</value>
-    
   </data>
   <data name="ErrorResource_ErrBooleanExpected_HowToFix_1" xml:space="preserve">
     <value>数式を編集し、この時点の数式でブール値に評価できるようにします。</value>
@@ -3986,7 +4111,6 @@
   </data>
   <data name="ErrorResource_ErrColonExpected_LongMessage" xml:space="preserve">
     <value>コロンは、フィールド名 (列名と呼ばれることもあります) をレコード内のフィールド値から区切ります (例: {Month:"1"}、{Month:"2"} など)。またコロンは、時間を分と秒から区切る場合にも使用します (例: "3:04")。</value>
-    
   </data>
   <data name="ErrorResource_ErrColonExpected_HowToFix_1" xml:space="preserve">
     <value>数式を編集し、コロンが含まれるようにします。</value>
@@ -4002,7 +4126,6 @@
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_LongMessage" xml:space="preserve">
     <value>動作関数は、アプリ内の他の場所にある値を変更することにより、アプリの状態を変更します。一般的な動作関数には、'Navigate'、'Patch'、'UpdateContext'、'Collect' があります。一般的な動作ベースのプロパティには、'OnSelect'、'OnVisible'、その他の 'On …' プロパティがあります。</value>
-    
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_HowToFix_1" xml:space="preserve">
     <value>動作関数を動作ベースのプロパティに移動してください。</value>
@@ -4018,7 +4141,6 @@
   </data>
   <data name="ErrorResource_ErrTestPropertyExpected_LongMessage" xml:space="preserve">
     <value>テスト関数は、アプリをテストするときにユーザー入力のシミュレートに使用できます。'SetProperty'、'SelectRow'、'Assert' は、一般的なテスト関数です。これらはテスト ケースでのみ使用できます。</value>
-    
   </data>
   <data name="ErrorResource_ErrTestPropertyExpected_HowToFix_1" xml:space="preserve">
     <value>この関数は、アプリ自体ではなく、テスト ケースで使用してください。</value>
@@ -4030,7 +4152,6 @@
   </data>
   <data name="ErrorResource_ErrCannotCoerce_SourceType_TargetType_LongMessage" xml:space="preserve">
     <value>Power Apps は、数式のいくつかのデータ型を他の型に変換できます。たとえば、"1" (文字列) を "1" (数値) に変換できますが、すべてのデータ型を他のすべてのデータ型へ変換できるわけではありません。たとえば、画像を数値に変換できません。</value>
-    
   </data>
   <data name="ErrorResource_ErrCannotCoerce_SourceType_TargetType_HowToFix_1" xml:space="preserve">
     <value>数式を編集して、問題のデータを必要な型に変換します。</value>
@@ -4042,7 +4163,6 @@
   </data>
   <data name="ErrorResource_ErrStringExpected_LongMessage" xml:space="preserve">
     <value>このエラーは、テキスト (または文字列) 引数が必要な関数を使用するときに日付などを指定した場合に生じます。</value>
-    
   </data>
   <data name="ErrorResource_ErrStringExpected_HowToFix_1" xml:space="preserve">
     <value>数式を編集し、この時点の数式でテキストに評価されるようにします。</value>
@@ -4058,7 +4178,6 @@
   </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_LongMessage" xml:space="preserve">
     <value>このエラーは、テキストまたは数値が必要な関数を使用するときにブール値 (true/false) などを指定した場合に生じます。</value>
-    
   </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_HowToFix_1" xml:space="preserve">
     <value>数式を編集し、この時点の数式でテキストまたは数値に評価されるようにします。</value>
@@ -4074,7 +4193,6 @@
   </data>
   <data name="ErrorResource_ErrClosingBracketExpected_LongMessage" xml:space="preserve">
     <value>閉じかっこは、レコードの終わりを示します (例: {Month:"1"}、{Month:"2"} …)。</value>
-    
   </data>
   <data name="ErrorResource_ErrClosingBracketExpected_HowToFix_1" xml:space="preserve">
     <value>数式を編集し、かっこが含まれるようにします。</value>
@@ -4094,7 +4212,6 @@
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_LongMessage" xml:space="preserve">
     <value>数式に含まれる比較対象の値が同じ型ではないため、数式を評価できません。</value>
-    
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_HowToFix_1" xml:space="preserve">
     <value>日付文字列 (例: "12/31/2018") を日付値に変換するなど、同じ型になるように値を変換する必要がある可能性があります。</value>
@@ -4174,7 +4291,6 @@
   </data>
   <data name="ErrorResource_ErrTypeError_LongMessage" xml:space="preserve">
     <value>データが必要な型と一致していない可能性があります。(テキスト、数、日付、テーブル、レコード。)</value>
-    
   </data>
   <data name="ErrorResource_ErrTypeError_HowToFix_1" xml:space="preserve">
     <value>数式に関係する値の型を調べて、型が一致していることを確認してください。</value>
@@ -4194,7 +4310,6 @@
   </data>
   <data name="ErrorResource_ErrDateExpected_LongMessage" xml:space="preserve">
     <value>このエラーは、日付が必要な関数を使用するときに、代わりにテキストなどを指定した場合に生じます。</value>
-    
   </data>
   <data name="ErrorResource_ErrDateExpected_HowToFix_1" xml:space="preserve">
     <value>数式を編集し、この時点の数式で日付に評価されるようにします。</value>
@@ -4210,7 +4325,6 @@
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_LongMessage" xml:space="preserve">
     <value>データ ソースは数式を処理できずに、不完全なデータ セットを返すことがあります。データ セットが不完全な場合、アプリケーションは正しい結果を返さないか、正常に機能しない場合があります。</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_HowToFix_1" xml:space="preserve">
     <value>データ セットが 500 レコードの制限を超えていても、2,000 レコードより少ない場合は、制限を再設定してみてください。</value>
@@ -4238,7 +4352,6 @@
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_LongMessage" xml:space="preserve">
     <value>データ ソースは数式を処理できずに、不完全なデータ セットを返すことがあります。データ セットが不完全な場合、アプリケーションは正しい結果を返さないか、正常に機能しない場合があります。</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_HowToFix_1" xml:space="preserve">
     <value>データ セットが 500 レコードの制限を超えていても、2,000 レコードより少ない場合は、制限を再設定してみてください。</value>
@@ -4266,7 +4379,6 @@
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_LongMessage" xml:space="preserve">
     <value>"in" 演算子の右側は、正しいデータ ソースの列名でなければなりません。データ ソースは数式を処理できずに、不完全なデータ セットを返すことがあります。データ セットが不完全な場合、アプリケーションは正しい結果を返さないか、正常に機能しない場合があります。</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_1" xml:space="preserve">
     <value>"in" 演算子の右側の項目が、正しいデータ ソースの列になるように変更します。</value>
@@ -4299,7 +4411,6 @@
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_LongMessage" xml:space="preserve">
     <value> "in" 演算子の右側が正しいデータ ソースの列になっていません。データ ソースが数式を処理できないため、不完全なデータ セットが返される可能性があります。データ セットが不完全な場合、アプリケーションは正しい結果を返さないか、正常に機能しない場合があります。
 </value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_1" xml:space="preserve">
     <value>"in" 演算子の右側の項目が、正しいデータ ソースの列になるように変更します。</value>
@@ -4380,6 +4491,22 @@
   </data>
   <data name="ErrorResource_ErrInvalidControlReference_Link_1" xml:space="preserve">
     <value>参照: キャンバス アプリの ConfirmExit</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidStringInterpolation_ShortMessage" xml:space="preserve">
+    <value>補間された文字列に表示される式は、テキスト値または互換性のあるタイプとして評価する必要があります。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidStringInterpolation_HowToFix_1" xml:space="preserve">
+    <value>補間された文字列が含む式のタイプを確認してください。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrEmptyIsland_ShortMessage" xml:space="preserve">
+    <value>補間された文字列内に空の式を表示することはできません。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrEmptyIsland_HowToFix_1" xml:space="preserve">
+    <value>補間された文字列内にある空の式を確認してください。</value>
     
   </data>
   <data name="ErrorResource_ErrAsNotInContext_ShortMessage" xml:space="preserve">

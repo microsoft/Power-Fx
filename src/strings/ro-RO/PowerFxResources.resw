@@ -1,5 +1,64 @@
 ﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
@@ -426,6 +485,17 @@
   <data name="AboutValue_language" xml:space="preserve">
     <value>Codul de limbă de utilizat la conversia valorii.</value>
     
+  </data>
+  <data name="AboutBoolean" xml:space="preserve">
+    <value>Convertește la o valoare booleană un „text” care reprezintă un boolean.</value>
+    
+  </data>
+  <data name="BooleanArg1" xml:space="preserve">
+    <value>text</value>
+    
+  </data>
+  <data name="AboutBoolean_text" xml:space="preserve">
+    <value>Valoarea textului de convertit la o valoare booleană.</value>
   </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Returnează primul argument nevid</value>
@@ -1368,6 +1438,10 @@
     <value>expresie</value>
     
   </data>
+  <data name="AboutIsBlankOrError_expression" xml:space="preserve">
+    <value>O expresie de testat.</value>
+    
+  </data>
   <data name="AboutIsEmpty" xml:space="preserve">
     <value>Verifică dacă o colecție este goală și returnează adevărat sau fals.</value>
     
@@ -1375,6 +1449,9 @@
   <data name="IsEmptyArg1" xml:space="preserve">
     <value>sursă</value>
     
+  </data>
+  <data name="AboutIsEmpty_source" xml:space="preserve">
+    <value>Un tabel de testat.</value>
   </data>
   <data name="AboutShuffle" xml:space="preserve">
     <value>Returnează o copie amestecată aleator a tabelului „sursă” de intrare.</value>
@@ -1845,8 +1922,12 @@
   <data name="AboutTime_millisecond" xml:space="preserve">
     <value>Componenta milisecundă.</value>
   </data>
+  <data name="AboutDateTime" xml:space="preserve">
+    <value>Creează o valoare care reprezintă un moment în timp, exprimată ca dată și oră a zilei.</value>
+    
+  </data>
   <data name="AboutYear" xml:space="preserve">
-    <value>Anul returnează anul unei anumite date, un număr mai mare decât 1900.</value>
+    <value>Anul returnează anul unei anumite date.</value>
     
   </data>
   <data name="YearArg1" xml:space="preserve">
@@ -2260,6 +2341,36 @@
   </data>
   <data name="AboutChar_column_of_numbers" xml:space="preserve">
     <value>O coloană de numere de cod din setul de caractere de pe platformă.</value>
+  </data>
+  <data name="AboutParseJSON" xml:space="preserve">
+    <value>Convertește un șir JSON într-un obiect.</value>
+    
+  </data>
+  <data name="ParseJSONArg1" xml:space="preserve">
+    <value>intrare</value>
+    
+  </data>
+  <data name="AboutParseJSON_input" xml:space="preserve">
+    <value>Un șir JSON de procesat.</value>
+  </data>
+  <data name="AboutIndex" xml:space="preserve">
+    <value>Returnează înregistrarea de la un index dat dintr-un tabel.</value>
+    
+  </data>
+  <data name="IndexArg1" xml:space="preserve">
+    <value>tabel</value>
+    
+  </data>
+  <data name="IndexArg2" xml:space="preserve">
+    <value>index</value>
+    
+  </data>
+  <data name="AboutIndex_table" xml:space="preserve">
+    <value>Un tabel.</value>
+  </data>
+  <data name="AboutIndex_index" xml:space="preserve">
+    <value>Indexul înregistrării de regăsit.</value>
+    
   </data>
   <data name="Screen_Name_DisplayName" xml:space="preserve">
     <value>Nume</value>
@@ -3788,6 +3899,18 @@
     <value>Tipul de rezultat al acestei formule trebuie să fie {0}, dar rezultatul actual este de tip {1}. Tipul de rezultat al unei coloane de formule nu poate fi modificat.</value>
     
   </data>
+  <data name="FormulaColumns_ColumnTypeNotSupported" xml:space="preserve">
+    <value>Coloanele de tip {0} nu sunt acceptate în coloanele de formule.</value>
+    
+  </data>
+  <data name="FormulaColumns_ColumnFormatNotSupported" xml:space="preserve">
+    <value>Coloanele de tip {0} având formatul {1} nu sunt acceptate în coloanele de formule.</value>
+    
+  </data>
+  <data name="FormulaColumns_FormulaTooLong" xml:space="preserve">
+    <value>Formulele nu pot avea mai mult de 1000 de caractere.</value>
+    
+  </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
     <value>Se aștepta un operand. Formula sau expresia așteaptă un operand valid. De exemplu, puteți adăuga operandul „2” la expresia „1 +_”, astfel încât rezultatul să fie „3”. Alternativ, puteți adăuga operandul „tuturor” la expresia „"Salut "&amp; _”, astfel încât rezultatul să fie „Salut tuturor”.</value>
     
@@ -3802,7 +3925,6 @@
   </data>
   <data name="ErrorResource_ErrBadToken_LongMessage" xml:space="preserve">
     <value>De exemplu, caracterul „\” nu este așteptat după un număr, în felul următor: „32\”. S-ar aștepta un spațiu („32 ”), astfel încât să fie doar numărul 32 sau un alt număr (precum în „323”).</value>
-    
   </data>
   <data name="ErrorResource_ErrBadToken_HowToFix_1" xml:space="preserve">
     <value>Eliminați sau înlocuiți caracterele neașteptate.</value>
@@ -3818,11 +3940,9 @@
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_LongMessage" xml:space="preserve">
     <value>De exemplu, caracterul „\” nu este așteptat după un număr, în felul următor: „32\”. S-ar aștepta un spațiu („32 ”), astfel încât să fie doar numărul 32 sau un alt număr (precum în „323”).</value>
-    
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_HowToFix_1" xml:space="preserve">
     <value>Eliminați sau înlocuiți caracterul neașteptat.</value>
-    
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_Link_1" xml:space="preserve">
     <value>Articol: Referință de formule pentru Power Apps</value>
@@ -3834,7 +3954,6 @@
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_LongMessage" xml:space="preserve">
     <value>Fiecare comentariu bloc trebuie să înceapă cu „/*” și să se termine cu „*/”. Dacă nu încheiați corect fiecare comentariu bloc, tot codul de după comentariu devine parte a comentariului. Dacă un comentariu cuprinde numai o singură linie, îl puteți începe cu „//” și nu este nevoie să identificați sfârșitul comentariului.</value>
-    
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_HowToFix_1" xml:space="preserve">
     <value>Adăugați „*/” la sfârșitul comentariului bloc sau transformați-l într-un set de comentarii linie.</value>
@@ -3850,7 +3969,6 @@
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_LongMessage" xml:space="preserve">
     <value>Această eroare apare dacă, de exemplu, o formulă conține „{{Val@ 7}}” în loc de „{{Val: 7}}”. Când setați o variabilă, sintaxa necesită două puncte în locul unui simbol „a rond”.</value>
-    
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_HowToFix_1" xml:space="preserve">
     <value>Eliminați sau înlocuiți caracterele neașteptate cu un caracter așteptat.</value>
@@ -3861,12 +3979,11 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidName_ShortMessage" xml:space="preserve">
-    <value>Numele nu este valid. Acest identificator nu este recunoscut.</value>
+    <value>Numele nu este valid. „{0}” nu este recunoscut.</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidName_LongMessage" xml:space="preserve">
     <value>Această eroare apare cel mai frecvent atunci când o formulă face referire la ceva care nu mai există (de exemplu, un control pe care l-ați șters).</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidName_HowToFix_1" xml:space="preserve">
     <value>Eliminați sau corectați referința la nume care nu este validă.</value>
@@ -3876,13 +3993,27 @@
     <value>Articol: referință privind formulele pentru Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_ShortMessage" xml:space="preserve">
+    <value>Numele nu este valid. Identificatorul nu este recunoscut.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_LongMessage" xml:space="preserve">
+    <value>Această eroare apare cel mai frecvent atunci când o formulă face referire la ceva care nu mai există (de exemplu un control pe care l-ați șters).</value>
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_HowToFix_1" xml:space="preserve">
+    <value>Eliminați sau corectați referința la numele care nu este valid.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_Link_1" xml:space="preserve">
+    <value>Articol: Referință la formule pentru Power Apps</value>
+    
+  </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_ShortMessage" xml:space="preserve">
     <value>Referința la proprietate nu este validă.</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_LongMessage" xml:space="preserve">
     <value>Această eroare apare când o formulă se referă la proprietățile de comportament ale componentelor cu sintaxă nevalidă. (De exemplu, Component.OnCustomChange în loc de Component.OnCustomChange())</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_HowToFix_1" xml:space="preserve">
     <value>Utilizați sintaxa corectă pentru a face referire la proprietatea de comportament a componentelor. De exemplu, Component.OnCustomChange()</value>
@@ -3898,7 +4029,6 @@
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_LongMessage" xml:space="preserve">
     <value>Nu puteți utiliza operatorul Parent cu un control care nu are un control părinte. Acest operator se referă la controlul care găzduiește controlul dat și face toate proprietățile sale disponibile.</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_HowToFix_1" xml:space="preserve">
     <value>Eliminați operatorul „Parent”.</value>
@@ -3914,7 +4044,6 @@
   </data>
   <data name="ErrorResource_ErrTooManyUps_LongMessage" xml:space="preserve">
     <value>Complexitatea crește cu fiecare nivel de imbricare, de aceea Power Apps acceptă imbricarea rândurilor în domeniul de acoperire doar până la 63 de niveluri.</value>
-    
   </data>
   <data name="ErrorResource_ErrTooManyUps_HowToFix_1" xml:space="preserve">
     <value>Rescrieți formula cu mai puține niveluri de imbricare.</value>
@@ -3926,7 +4055,6 @@
   </data>
   <data name="ErrorResource_ErrRuleNestedTooDeeply_LongMessage" xml:space="preserve">
     <value>Power Apps acceptă imbricarea expresiilor numai până la 50 de niveluri. O expresie cu o asemenea adâncime este dificil de înțeles și de întreținut.</value>
-    
   </data>
   <data name="ErrorResource_ErrRuleNestedTooDeeply_HowToFix_1" xml:space="preserve">
     <value>Rescrieți formula cu mai puține niveluri de imbricare.</value>
@@ -3938,7 +4066,6 @@
   </data>
   <data name="ErrorResource_ErrOperatorExpected_LongMessage" xml:space="preserve">
     <value>Operatorii asociază doi operanzi. Această eroare apare dacă asociați două funcții (operanzi) fără vreun operator între ele; de exemplu Len("textulmeu")Len("textulmeu").</value>
-    
   </data>
   <data name="ErrorResource_ErrOperatorExpected_HowToFix_1" xml:space="preserve">
     <value>Editați-vă formula astfel încât să includă un operator între operanzi.</value>
@@ -3954,7 +4081,6 @@
   </data>
   <data name="ErrorResource_ErrNumberExpected_LongMessage" xml:space="preserve">
     <value>Această eroare va avea loc dacă utilizați o funcție care necesită un număr, dar furnizați în schimb, de exemplu, o imagine.</value>
-    
   </data>
   <data name="ErrorResource_ErrNumberExpected_HowToFix_1" xml:space="preserve">
     <value>Editați-vă formula astfel încât să se evalueze la un număr în acest punct din formulă.</value>
@@ -3970,7 +4096,6 @@
   </data>
   <data name="ErrorResource_ErrBooleanExpected_LongMessage" xml:space="preserve">
     <value>O valoare booleană este cunoscută și drept valoare true/false în aplicații precum Microsoft Excel. Această eroare va apărea dacă utilizați o funcție care necesită o valoare booleană dar furnizați în schimb o dată, de exemplu.</value>
-    
   </data>
   <data name="ErrorResource_ErrBooleanExpected_HowToFix_1" xml:space="preserve">
     <value>Editați-vă formula astfel încât să se evalueze la o valoare booleană în acest punct din formulă.</value>
@@ -3986,7 +4111,6 @@
   </data>
   <data name="ErrorResource_ErrColonExpected_LongMessage" xml:space="preserve">
     <value>Un semn două puncte separă numele unui câmp, numit uneori nume de coloană, de o valoare de câmp dintr-o înregistrare (de exemplu, {Month:"1"}, {Month:"2"} …). Semnul două puncte separă, de asemenea, orele de minute și secunde (de exemplu, „3:04”).</value>
-    
   </data>
   <data name="ErrorResource_ErrColonExpected_HowToFix_1" xml:space="preserve">
     <value>Editați-vă formula astfel încât să includă un semn două puncte.</value>
@@ -4002,7 +4126,6 @@
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_LongMessage" xml:space="preserve">
     <value>Funcțiile de comportament schimbă starea aplicației, modificând valorile din altă parte a aplicației. „Navigate”, „Patch”, „UpdateContext” și „Collect” sunt funcții de comportament comune. Proprietățile „OnSelect”, „OnVisible” și alte proprietăți „On...” sunt proprietăți comune bazate pe comportament.</value>
-    
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_HowToFix_1" xml:space="preserve">
     <value>Mutați funcția de comportament la o proprietate bazată pe comportament.</value>
@@ -4018,7 +4141,6 @@
   </data>
   <data name="ErrorResource_ErrTestPropertyExpected_LongMessage" xml:space="preserve">
     <value>Funcțiile de testare sunt cele care pot fi utilizate pentru a simula intrarea utilizatorului atunci când se testează o aplicație. „SetProperty”, „SelectRow” și „Assert” sunt funcții comune de testare. Ele pot fi utilizate numai în cazurile de testare.</value>
-    
   </data>
   <data name="ErrorResource_ErrTestPropertyExpected_HowToFix_1" xml:space="preserve">
     <value>Utilizați funcția într-un caz de testare, nu în aplicația în sine.</value>
@@ -4030,7 +4152,6 @@
   </data>
   <data name="ErrorResource_ErrCannotCoerce_SourceType_TargetType_LongMessage" xml:space="preserve">
     <value>Power Apps poate converti anumite tipuri de date din formulă la alte tipuri. De exemplu poate converti „1” (șir) la 1 (număr), dar nu poate converti toate tipurile de date de un tip, la toate celelalte tipuri de date. De exemplu nu poate converti o imagine la un număr.</value>
-    
   </data>
   <data name="ErrorResource_ErrCannotCoerce_SourceType_TargetType_HowToFix_1" xml:space="preserve">
     <value>Editați formula astfel încât să faceți conversia datelor în cauză la tipul așteptat.</value>
@@ -4042,7 +4163,6 @@
   </data>
   <data name="ErrorResource_ErrStringExpected_LongMessage" xml:space="preserve">
     <value>Această eroare apare dacă utilizați o funcție care necesită un argument text (sau șir de caractere) și furnizați în schimb, de exemplu, o dată.</value>
-    
   </data>
   <data name="ErrorResource_ErrStringExpected_HowToFix_1" xml:space="preserve">
     <value>Editați-vă formula astfel încât să se evalueze la un text în acest punct din formulă.</value>
@@ -4058,7 +4178,6 @@
   </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_LongMessage" xml:space="preserve">
     <value>Această eroare va avea loc dacă utilizați o funcție care necesită un text sau un număr, dar furnizați, de exemplu, o valoare booleană (true/false).</value>
-    
   </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_HowToFix_1" xml:space="preserve">
     <value>Editați-vă formula astfel încât să se evalueze la un text sau un număr în acest punct din formulă.</value>
@@ -4074,7 +4193,6 @@
   </data>
   <data name="ErrorResource_ErrClosingBracketExpected_LongMessage" xml:space="preserve">
     <value>O acoladă de închidere indică sfârșitul unei înregistrări (de exemplu, {Month:"1"}, {Month:"2"} …).</value>
-    
   </data>
   <data name="ErrorResource_ErrClosingBracketExpected_HowToFix_1" xml:space="preserve">
     <value>Editați formula astfel încât să includă o acoladă.</value>
@@ -4094,7 +4212,6 @@
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_LongMessage" xml:space="preserve">
     <value>Nu vă putem evalua formula, deoarece valorile comparate în formulă nu sunt de același tip.</value>
-    
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_HowToFix_1" xml:space="preserve">
     <value>Poate fi necesar să convertiți valoarea astfel încât să fie de același tip, cum ar fi conversia unui șir de caractere de tip dată (de exemplu, „31.12.2018”) la o valoare de tip dată calendaristică.</value>
@@ -4174,7 +4291,6 @@
   </data>
   <data name="ErrorResource_ErrTypeError_LongMessage" xml:space="preserve">
     <value>Este posibil ca datele să nu se potrivească cu tipul așteptat. (text, număr, dată, tabel, înregistrare.)</value>
-    
   </data>
   <data name="ErrorResource_ErrTypeError_HowToFix_1" xml:space="preserve">
     <value>Verificați tipurile de valori implicate în formulă și asigurați-vă că tipurile corespund.</value>
@@ -4194,7 +4310,6 @@
   </data>
   <data name="ErrorResource_ErrDateExpected_LongMessage" xml:space="preserve">
     <value>Această eroare va avea loc dacă utilizați o funcție care necesită o dată, dar furnizați în schimb, de exemplu, un text.</value>
-    
   </data>
   <data name="ErrorResource_ErrDateExpected_HowToFix_1" xml:space="preserve">
     <value>Editați-vă formula astfel încât să se evalueze la o dată în acest punct din formulă.</value>
@@ -4210,7 +4325,6 @@
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_LongMessage" xml:space="preserve">
     <value>Este posibil ca sursa de date să nu poată procesa formula și să returneze un set de date incomplet. Aplicația ar putea să nu returneze rezultate corecte sau să nu se comporte corect dacă setul de date este incomplet.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_HowToFix_1" xml:space="preserve">
     <value>Dacă setul de date depășește limita de 500 de înregistrări, dar conține mai puțin de 2.000 de înregistrări, încercați să resetați limita.</value>
@@ -4238,7 +4352,6 @@
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_LongMessage" xml:space="preserve">
     <value>Este posibil ca sursa de date să nu poată procesa formula și să returneze un set de date incomplet. Aplicația ar putea să nu returneze rezultate corecte sau să nu se comporte corect dacă setul de date este incomplet.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_HowToFix_1" xml:space="preserve">
     <value>Dacă setul de date depășește limita de 500 de înregistrări, dar conține mai puțin de 2.000 de înregistrări, încercați să resetați limita.</value>
@@ -4266,7 +4379,6 @@
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_LongMessage" xml:space="preserve">
     <value> Partea din dreapta a operatorului „in” ar trebui să fie un nume de coloană din sursa de date corectă. Este posibil ca sursa de date să nu poată procesa formula și să returneze un set de date incomplet. Aplicația ar putea să nu returneze rezultate corecte sau să nu se comporte corect dacă setul de date este incomplet.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_1" xml:space="preserve">
     <value>Modificați elementul din partea dreaptă a operatorului „in” astfel încât să fie o coloană din sursa de date corectă.</value>
@@ -4299,7 +4411,6 @@
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_LongMessage" xml:space="preserve">
     <value> Partea din dreapta a operatorului „in” nu este o coloană din sursa de date corectă. Este posibil ca sursa de date să nu poată procesa formula și să returneze un set de date incomplet. Aplicația ar putea să nu returneze rezultate corecte sau să nu se comporte corect dacă setul de date este incomplet.
          </value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_1" xml:space="preserve">
     <value>Modificați elementul din partea dreaptă a operatorului „in” astfel încât să fie o coloană din sursa de date corectă.</value>
@@ -4380,6 +4491,22 @@
   </data>
   <data name="ErrorResource_ErrInvalidControlReference_Link_1" xml:space="preserve">
     <value>Referință: ConfirmExit pentru aplicații proiectate pe pânză</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidStringInterpolation_ShortMessage" xml:space="preserve">
+    <value>Expresiile care apar în cadrul unui șir interpolat trebuie să fie evaluate ca valoare Text sau un tip compatibil.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidStringInterpolation_HowToFix_1" xml:space="preserve">
+    <value>Verificați tipurile de expresii din cadrul șirului interpolat.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrEmptyIsland_ShortMessage" xml:space="preserve">
+    <value>Expresiile vide nu pot apărea într-un șir interpolat.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrEmptyIsland_HowToFix_1" xml:space="preserve">
+    <value>Verificați dacă există expresii goale în șirul interpolat.</value>
     
   </data>
   <data name="ErrorResource_ErrAsNotInContext_ShortMessage" xml:space="preserve">

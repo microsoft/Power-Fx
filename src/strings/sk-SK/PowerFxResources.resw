@@ -1,5 +1,64 @@
 ﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
@@ -426,6 +485,17 @@
   <data name="AboutValue_language" xml:space="preserve">
     <value>Kód jazyka, ktorý sa používa pri konverzii na hodnotu.</value>
     
+  </data>
+  <data name="AboutBoolean" xml:space="preserve">
+    <value>Konvertuje text, ktorý predstavuje booleovský typ údajov, na booleovskú hodnotu.</value>
+    
+  </data>
+  <data name="BooleanArg1" xml:space="preserve">
+    <value>text</value>
+    
+  </data>
+  <data name="AboutBoolean_text" xml:space="preserve">
+    <value>Textová hodnota, ktorá sa má skonvertovať na booleovskú hodnotu.</value>
   </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Vráti prvý argument, ktorý nie je prázdny</value>
@@ -1368,6 +1438,10 @@
     <value>výraz</value>
     
   </data>
+  <data name="AboutIsBlankOrError_expression" xml:space="preserve">
+    <value>Výraz na testovanie.</value>
+    
+  </data>
   <data name="AboutIsEmpty" xml:space="preserve">
     <value>Skontroluje, či je kolekcia prázdna, a vráti výsledok pravda alebo nepravda.</value>
     
@@ -1375,6 +1449,9 @@
   <data name="IsEmptyArg1" xml:space="preserve">
     <value>zdroj</value>
     
+  </data>
+  <data name="AboutIsEmpty_source" xml:space="preserve">
+    <value>Tabuľka na testovanie.</value>
   </data>
   <data name="AboutShuffle" xml:space="preserve">
     <value>Vráti náhodne vybratú kópiu vstupnej tabuľky zdroja.</value>
@@ -1845,8 +1922,12 @@
   <data name="AboutTime_millisecond" xml:space="preserve">
     <value>Komponent milisekúnd.</value>
   </data>
+  <data name="AboutDateTime" xml:space="preserve">
+    <value>Creates a value that represents an instant in time, expressed as a date and time of the day.</value>
+    
+  </data>
   <data name="AboutYear" xml:space="preserve">
-    <value>Funkcia Rok vracia rok daného dátumu, číslo väčšie ako 1900.</value>
+    <value>Funkcia Rok vracia rok daného dátumu.</value>
     
   </data>
   <data name="YearArg1" xml:space="preserve">
@@ -2260,6 +2341,36 @@
   </data>
   <data name="AboutChar_column_of_numbers" xml:space="preserve">
     <value>Stĺpec čísel kódov zo znakovej sady na vašej platforme.</value>
+  </data>
+  <data name="AboutParseJSON" xml:space="preserve">
+    <value>Konvertuje reťazec JSON na objekt.</value>
+    
+  </data>
+  <data name="ParseJSONArg1" xml:space="preserve">
+    <value>vstup</value>
+    
+  </data>
+  <data name="AboutParseJSON_input" xml:space="preserve">
+    <value>Reťazec JSON, ktorý sa má spracovať.</value>
+  </data>
+  <data name="AboutIndex" xml:space="preserve">
+    <value>Vráti záznam v tabuľke v rámci daného indexu.</value>
+    
+  </data>
+  <data name="IndexArg1" xml:space="preserve">
+    <value>tabuľka</value>
+    
+  </data>
+  <data name="IndexArg2" xml:space="preserve">
+    <value>index</value>
+    
+  </data>
+  <data name="AboutIndex_table" xml:space="preserve">
+    <value>Tabuľka.</value>
+  </data>
+  <data name="AboutIndex_index" xml:space="preserve">
+    <value>Index záznamu, ktorý sa má načítať.</value>
+    
   </data>
   <data name="Screen_Name_DisplayName" xml:space="preserve">
     <value>Názov</value>
@@ -3781,11 +3892,23 @@
     
   </data>
   <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
-    <value>Tento typ výsledku {0} nie je v stĺpcoch vzorcov podporovaný.</value>
+    <value>Typ výsledku {0} nie je v stĺpcoch vzorcov podporovaný.</value>
     
   </data>
   <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
     <value>Očakávaný typ výsledku pre tento vzorec by mal byť {0}, skutočný typ výsledku je však {1}. Typ výsledku v stĺpci vzorca nie je možné zmeniť.</value>
+    
+  </data>
+  <data name="FormulaColumns_ColumnTypeNotSupported" xml:space="preserve">
+    <value>Stĺpce typu {0} nie sú v stĺpcoch vzorcov podporované.</value>
+    
+  </data>
+  <data name="FormulaColumns_ColumnFormatNotSupported" xml:space="preserve">
+    <value>Stĺpce typu {0} vo formáte {1} nie sú v stĺpcoch vzorcov podporované.</value>
+    
+  </data>
+  <data name="FormulaColumns_FormulaTooLong" xml:space="preserve">
+    <value>Vzorce nemôžu byť dlhšie ako 1 000 znakov.</value>
     
   </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
@@ -3802,7 +3925,6 @@
   </data>
   <data name="ErrorResource_ErrBadToken_LongMessage" xml:space="preserve">
     <value>Napríklad znak \ sa neočakáva za číslom, ako napríklad: 32\. Ak by išlo iba o číslo 32, očakávala by sa medzera (32 ), resp. by sa očakávalo iné číslo (napríklad 323).</value>
-    
   </data>
   <data name="ErrorResource_ErrBadToken_HowToFix_1" xml:space="preserve">
     <value>Odstráňte alebo nahraďte neočakávané znaky.</value>
@@ -3818,11 +3940,9 @@
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_LongMessage" xml:space="preserve">
     <value>Napríklad znak \ sa neočakáva za číslom, ako napríklad: 32\. Ak by išlo iba o číslo 32, očakávala by sa medzera (32 ), resp. by sa očakávalo iné číslo (napríklad 323).</value>
-    
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_HowToFix_1" xml:space="preserve">
     <value>Odstráňte alebo nahraďte neočakávaný znak.</value>
-    
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_Link_1" xml:space="preserve">
     <value>Článok: Referenčné informácie pre vzorce v službe Power Apps</value>
@@ -3834,7 +3954,6 @@
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_LongMessage" xml:space="preserve">
     <value>Každý komentár v bloku sa musí začínať reťazcom /* a končiť reťazcom */. Ak komentár v bloku neukončíte správne, kód nasledujúci za komentárom sa stane súčasťou komentára. Ak komentár obsahuje iba jeden riadok, môžete začať znakom // a nemusíte identifikovať koniec komentára.</value>
-    
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_HowToFix_1" xml:space="preserve">
     <value>Pridajte znaky */ na koniec komentára v bloku alebo zmeňte komentár na skupinu riadkových komentárov.</value>
@@ -3850,7 +3969,6 @@
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_LongMessage" xml:space="preserve">
     <value>Táto chyba sa vyskytne, ak napríklad vzorec obsahuje {{Val@ 7}} namiesto {{Val: 7}}. Keď nastavujete premennú, syntax vyžaduje namiesto symbolu @ dvojbodku.</value>
-    
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_HowToFix_1" xml:space="preserve">
     <value>Odstráňte neočakávané znaky, alebo ich nahraďte očakávaným znakom.</value>
@@ -3861,12 +3979,11 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidName_ShortMessage" xml:space="preserve">
-    <value>Názov nie je platný. Tento identifikátor nie je rozpoznaný.</value>
+    <value>Názov nie je platný. Identifikátor {0} sa nerozpoznal.</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidName_LongMessage" xml:space="preserve">
     <value>Táto chyba sa najčastejšie zobrazuje, keď vzorec odkazuje na niečo, čo už neexistuje (napríklad na ovládací prvok, ktorý ste odstránili).</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidName_HowToFix_1" xml:space="preserve">
     <value>Odstráňte alebo opravte odkaz na názov, ktorý nie je platný.</value>
@@ -3876,13 +3993,27 @@
     <value>Článok: Referenčné informácie pre vzorce v službe Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_ShortMessage" xml:space="preserve">
+    <value>Názov nie je platný. Tento identifikátor nie je rozpoznaný.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_LongMessage" xml:space="preserve">
+    <value>Táto chyba sa najčastejšie zobrazuje, keď vzorec odkazuje na niečo, čo už neexistuje (napríklad na ovládací prvok, ktorý ste odstránili).</value>
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_HowToFix_1" xml:space="preserve">
+    <value>Odstráňte alebo opravte odkaz na názov, ktorý nie je platný.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_Link_1" xml:space="preserve">
+    <value>Článok: Referenčné informácie pre vzorce v službe Power Apps</value>
+    
+  </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_ShortMessage" xml:space="preserve">
     <value>Odkaz na vlastnosť nie je platný.</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_LongMessage" xml:space="preserve">
     <value>Táto chyba sa zobrazí, keď vzorec odkazuje na vlastnosti správania súčastí s neplatnou syntaxou. (Napríklad na vlastnosť Component.OnCustomChange namiesto vlastnosti Component.OnCustomChange())</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_HowToFix_1" xml:space="preserve">
     <value>Na odkazovanie na vlastnosť správania súčastí použite správnu syntax. Napríklad Component.OnCustomChange()</value>
@@ -3898,7 +4029,6 @@
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_LongMessage" xml:space="preserve">
     <value>Operátor Nadradené nemožno použiť s ovládacím prvkom, ktorý nemá nadradený ovládací prvok. Tento operátor odkazuje na ovládací prvok, ktorý je hostiteľom daného ovládacieho prvku, a sprístupňuje všetky jeho vlastnosti.</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_HowToFix_1" xml:space="preserve">
     <value>Odstráňte operátor Nadradené.</value>
@@ -3914,7 +4044,6 @@
   </data>
   <data name="ErrorResource_ErrTooManyUps_LongMessage" xml:space="preserve">
     <value>S každou úrovňou vnorenia sa zvyšuje zložitosť, preto služba Power Apps podporuje vnorenie rozsahu riadkov iba po 63. úroveň.</value>
-    
   </data>
   <data name="ErrorResource_ErrTooManyUps_HowToFix_1" xml:space="preserve">
     <value>Prepíšte vzorec tak, aby sa v ňom používalo menej úrovní vnorenia.</value>
@@ -3926,7 +4055,6 @@
   </data>
   <data name="ErrorResource_ErrRuleNestedTooDeeply_LongMessage" xml:space="preserve">
     <value>Služba Power Apps podporuje vnorenie výrazu maximálne po 50. úroveň. Pochopenie a udržiavanie výrazu, ktorý je vnorený takto hlboko, je príliš náročné.</value>
-    
   </data>
   <data name="ErrorResource_ErrRuleNestedTooDeeply_HowToFix_1" xml:space="preserve">
     <value>Prepíšte vzorec tak, aby sa v ňom používalo menej úrovní vnorenia.</value>
@@ -3938,7 +4066,6 @@
   </data>
   <data name="ErrorResource_ErrOperatorExpected_LongMessage" xml:space="preserve">
     <value>Operátory spájajú dva operandy. Táto chyba sa vyskytne, ak uvediete spolu dve funkcie (operandy) bez operátora medzi nimi, napríklad Len("môjtext")Len("môjtext").</value>
-    
   </data>
   <data name="ErrorResource_ErrOperatorExpected_HowToFix_1" xml:space="preserve">
     <value>Upravte vzorec tak, aby obsahoval operátor medzi operandmi.</value>
@@ -3954,7 +4081,6 @@
   </data>
   <data name="ErrorResource_ErrNumberExpected_LongMessage" xml:space="preserve">
     <value>Táto chyba sa vyskytne, ak používate funkciu, ktorá vyžaduje číslo, ale namiesto toho zadáte napríklad obrázok.</value>
-    
   </data>
   <data name="ErrorResource_ErrNumberExpected_HowToFix_1" xml:space="preserve">
     <value>Upravte vzorec tak, aby sa v tomto bode vyhodnotil ako číslo.</value>
@@ -3970,7 +4096,6 @@
   </data>
   <data name="ErrorResource_ErrBooleanExpected_LongMessage" xml:space="preserve">
     <value>Booleovská hodnota sa nazýva aj hodnota true/false, napríklad v Microsoft Exceli. Táto chyba sa vyskytne, ak používate funkciu, ktorá vyžaduje booleovskú hodnotu, ale namiesto toho zadáte napríklad dátum.</value>
-    
   </data>
   <data name="ErrorResource_ErrBooleanExpected_HowToFix_1" xml:space="preserve">
     <value>Upravte vzorec tak, aby sa v tomto bode vyhodnotil ako booleovská hodnota.</value>
@@ -3986,7 +4111,6 @@
   </data>
   <data name="ErrorResource_ErrColonExpected_LongMessage" xml:space="preserve">
     <value>Dvojbodka oddeľuje názov poľa (niekedy nazývaný aj názov stĺpca) od hodnoty poľa v zázname (napríklad {Month:"1"}, {Month:"2"}…). Dvojbodka oddeľuje aj hodiny od minút a sekúnd (napríklad 3:04).</value>
-    
   </data>
   <data name="ErrorResource_ErrColonExpected_HowToFix_1" xml:space="preserve">
     <value>Upravte vzorec tak, aby obsahoval dvojbodku.</value>
@@ -4002,7 +4126,6 @@
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_LongMessage" xml:space="preserve">
     <value>Funkcie správania menia stav aplikácie tým, že menia hodnoty inde v aplikácii. Navigate, Patch, UpdateContext a Collect sú bežné funkcie správania. OnSelect, OnVisible a ďalšie funkcie typu On… sú bežné vlastnosti založené na správaní.</value>
-    
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_HowToFix_1" xml:space="preserve">
     <value>Premiestnite funkciu správania do vlastnosti založenej na správaní.</value>
@@ -4018,7 +4141,6 @@
   </data>
   <data name="ErrorResource_ErrTestPropertyExpected_LongMessage" xml:space="preserve">
     <value>Testovacie funkcie sú tie, ktoré možno použiť na simuláciu vstupu používateľa pri testovaní aplikácie. Medzi bežné testovacie funkcie patria SetProperty, SelectRow a Assert. Môžu sa používať iba v testovacích prípadoch.</value>
-    
   </data>
   <data name="ErrorResource_ErrTestPropertyExpected_HowToFix_1" xml:space="preserve">
     <value>Použite funkciu v testovacom prípade, nie v samotnej aplikácii.</value>
@@ -4030,7 +4152,6 @@
   </data>
   <data name="ErrorResource_ErrCannotCoerce_SourceType_TargetType_LongMessage" xml:space="preserve">
     <value>Služba Power Apps môže za vás previesť niektoré typy údajov vo vzorci na iné typy. Môže napríklad previesť „1“ (reťazec) na 1 (číslo), no nie všetky typy údajov sa dajú previesť na akýkoľvek iný typ. Napríklad obrázok sa nedá previesť na číslo.</value>
-    
   </data>
   <data name="ErrorResource_ErrCannotCoerce_SourceType_TargetType_HowToFix_1" xml:space="preserve">
     <value>Upravte vzorec tak, aby ste previedli príslušné údaje na očakávaný typ.</value>
@@ -4042,7 +4163,6 @@
   </data>
   <data name="ErrorResource_ErrStringExpected_LongMessage" xml:space="preserve">
     <value>Táto chyba sa vyskytne, ak používate funkciu, ktorá vyžaduje textový (alebo reťazcový) argument, ale namiesto toho zadáte napríklad dátum.</value>
-    
   </data>
   <data name="ErrorResource_ErrStringExpected_HowToFix_1" xml:space="preserve">
     <value>Upravte vzorec tak, aby sa v tomto bode vyhodnotil ako text.</value>
@@ -4058,7 +4178,6 @@
   </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_LongMessage" xml:space="preserve">
     <value>Táto chyba sa vyskytne, ak používate funkciu, ktorá vyžaduje buď text, alebo číslo, ale namiesto toho zadáte napríklad booleovskú hodnotu (true/false).</value>
-    
   </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_HowToFix_1" xml:space="preserve">
     <value>Upravte vzorec tak, aby sa v tomto bode vyhodnotil ako text alebo číslo.</value>
@@ -4074,7 +4193,6 @@
   </data>
   <data name="ErrorResource_ErrClosingBracketExpected_LongMessage" xml:space="preserve">
     <value>Pravá zátvorka označuje koniec záznamu (napríklad {Month:"1"}, {Month:"2"}…).</value>
-    
   </data>
   <data name="ErrorResource_ErrClosingBracketExpected_HowToFix_1" xml:space="preserve">
     <value>Upravte vzorec tak, aby obsahoval zátvorku.</value>
@@ -4094,7 +4212,6 @@
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_LongMessage" xml:space="preserve">
     <value>Vzorec sa nedá vyhodnotiť, pretože hodnoty, ktoré sa porovnávajú vo vzorci, nie sú rovnakého typu.</value>
-    
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_HowToFix_1" xml:space="preserve">
     <value>Pravdepodobne budete musieť skonvertovať hodnotu tak, aby bola rovnakého typu, napríklad skonvertovať reťazec dátumu (napríklad 31/12/2018) na hodnotu dátumu.</value>
@@ -4174,7 +4291,6 @@
   </data>
   <data name="ErrorResource_ErrTypeError_LongMessage" xml:space="preserve">
     <value>Údaje nemusia zodpovedať očakávanému typu (text, číslo, dátum, tabuľka, záznam).</value>
-    
   </data>
   <data name="ErrorResource_ErrTypeError_HowToFix_1" xml:space="preserve">
     <value>Skontrolujte typy hodnôt vo vzorci a uistite sa, že sa typy zhodujú.</value>
@@ -4194,7 +4310,6 @@
   </data>
   <data name="ErrorResource_ErrDateExpected_LongMessage" xml:space="preserve">
     <value>Táto chyba sa vyskytne, ak používate funkciu, ktorá vyžaduje dátum, ale namiesto toho zadáte napríklad text.</value>
-    
   </data>
   <data name="ErrorResource_ErrDateExpected_HowToFix_1" xml:space="preserve">
     <value>Upravte vzorec tak, aby sa v tomto bode vyhodnotil ako dátum.</value>
@@ -4210,7 +4325,6 @@
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_LongMessage" xml:space="preserve">
     <value>Zdroj údajov nemusí byť schopný spracovať vzorec a môže vrátiť neúplnú množinu údajov. Vaša aplikácia nemusí vrátiť správne výsledky alebo sa nemusí správať správne, ak je množina údajov neúplná.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_HowToFix_1" xml:space="preserve">
     <value>Ak vaša množina údajov prekračuje limit 500 záznamov, ale obsahuje menej ako 2 000 záznamov, skúste resetovať obmedzenie.</value>
@@ -4238,7 +4352,6 @@
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_LongMessage" xml:space="preserve">
     <value>Zdroj údajov nemusí byť schopný spracovať vzorec a môže vrátiť neúplnú množinu údajov. Vaša aplikácia nemusí vrátiť správne výsledky alebo sa nemusí správať správne, ak je množina údajov neúplná.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_HowToFix_1" xml:space="preserve">
     <value>Ak vaša množina údajov prekračuje limit 500 záznamov, ale obsahuje menej ako 2 000 záznamov, skúste resetovať obmedzenie.</value>
@@ -4266,7 +4379,6 @@
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_LongMessage" xml:space="preserve">
     <value> Pravá strana operátora in by mala byť názvom stĺpca zo správneho zdroja údajov. Zdroj údajov nemusí byť schopný spracovať vzorec a môže vrátiť neúplnú množinu údajov. Vaša aplikácia nemusí vrátiť správne výsledky alebo sa nemusí správať správne, ak je množina údajov neúplná.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_1" xml:space="preserve">
     <value>Zmeňte položku napravo od operátora in tak, aby bola stĺpcom zo správneho zdroja údajov.</value>
@@ -4299,7 +4411,6 @@
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_LongMessage" xml:space="preserve">
     <value> Pravá strana operátora in nie je stĺpcom zo správneho zdroja údajov. Zdroj údajov nemusí byť schopný spracovať vzorec a môže vrátiť neúplnú množinu údajov. Vaša aplikácia nemusí vrátiť správne výsledky alebo sa nemusí správať správne, ak je množina údajov neúplná.
       </value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_1" xml:space="preserve">
     <value>Zmeňte položku napravo od operátora in tak, aby bola stĺpcom zo správneho zdroja údajov.</value>
@@ -4380,6 +4491,22 @@
   </data>
   <data name="ErrorResource_ErrInvalidControlReference_Link_1" xml:space="preserve">
     <value>Odkaz: ConfirmExit pre aplikácie plátna</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidStringInterpolation_ShortMessage" xml:space="preserve">
+    <value>Výrazy, ktoré sa objavujú vnútri interpolovaného reťazca, sa musia vyhodnotiť ako textová hodnota alebo kompatibilný typ.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidStringInterpolation_HowToFix_1" xml:space="preserve">
+    <value>Skontrolujte typy výrazov vnútri interpolovaného reťazca.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrEmptyIsland_ShortMessage" xml:space="preserve">
+    <value>Prázdne výrazy sa nemôžu objaviť vnútri interpolovaného reťazca.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrEmptyIsland_HowToFix_1" xml:space="preserve">
+    <value>Skontrolujte prázdne výrazy vnútri interpolovaného reťazca.</value>
     
   </data>
   <data name="ErrorResource_ErrAsNotInContext_ShortMessage" xml:space="preserve">
