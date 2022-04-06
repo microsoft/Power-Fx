@@ -380,7 +380,7 @@ namespace Microsoft.PowerFx.Core.Types.Enums
         {
             Contracts.AssertNonEmpty(name);
 
-            return _enumSpec.TryGetValue(name, out dType);
+            return EnumSpec.TryGetValue(name, out dType);
         }
 
         internal DType GetEnum(string name)
