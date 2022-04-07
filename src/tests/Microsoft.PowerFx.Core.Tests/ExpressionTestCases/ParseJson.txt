@@ -1,0 +1,115 @@
+﻿// Value tests
+>> Value(Index(ParseJSON("[5]"), 1))
+5
+
+>> Value(ParseJSON("5"))
+5
+
+>> Value(ParseJSON("true"))
+#Error
+
+>> Value(ParseJSON("false"))
+#Error
+
+>> Value(ParseJSON("""5"""))
+#Error
+
+>> Value(ParseJSON("""a"""))
+#Error
+
+>> Value(ParseJSON("null"))
+Blank()
+
+>> Value(ParseJSON("{""a"": 5}").a)
+5
+
+>> Value(ParseJSON("{""a"": 5, ""A"": 10}").a)
+5
+
+>> Value(ParseJSON("{""a"": 5, ""A"": 10}").A)
+10
+
+>> Value(ParseJSON("{""a"": 5}").b)
+Blank()
+
+>> Value(ParseJSON("""s""").a)
+#Error
+
+>> Value(ParseJSON("This "" Is , "" Invalid ").a)
+#Error
+
+// Text tests
+>> Text(Index(ParseJSON("[""s""]"), 1))
+"s"
+
+>> Text(ParseJSON("""s"""))
+"s"
+
+>> Text(ParseJSON("null"))
+""
+
+>> Text(ParseJSON("true"))
+#Error
+
+>> Text(ParseJSON("false"))
+#Error
+
+>> Text(ParseJSON("5"))
+#Error
+
+>> Boolean(ParseJSON("true"))
+true
+
+>> Boolean(ParseJSON("false"))
+false
+
+>> ParseJSON("{""a"": null}").a
+Blank()
+
+>> ParseJSON("{""a"": null}").a.b
+Blank()
+
+>> ParseJSON("null").a
+Blank()
+
+>> ParseJSON("null").a.b
+Blank()
+
+>> ParseJSON("{}").a
+Blank()
+
+>> ParseJSON("{}").a.b
+Blank()
+
+>> Sum(Table(ParseJSON("[1, 2, 3, 4, 5]")), Value(Value))
+15
+
+>> ParseJSON("5") + ParseJSON("5")
+Errors: Error 0-14: Invalid argument type. Expecting one of the following: Number, Text, Boolean.|Error 17-31: Invalid argument type. Expecting one of the following: Number, Text, Boolean.
+
+>> ParseJSON("5") - ParseJSON("5")
+Errors: Error 17-31: Invalid argument type. Expecting one of the following: Number, Text, Boolean.|Error 0-14: Invalid argument type. Expecting one of the following: Number, Text, Boolean.
+
+>> ParseJSON("5") * ParseJSON("5")
+Errors: Error 0-14: Invalid argument type. Expecting one of the following: Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime.|Error 17-31: Invalid argument type. Expecting one of the following: Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime.
+
+>> ParseJSON("5") / ParseJSON("5")
+Errors: Error 0-14: Invalid argument type. Expecting one of the following: Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime.|Error 17-31: Invalid argument type. Expecting one of the following: Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime.
+
+>> ParseJSON("5") = ParseJSON("5")
+Errors: Error 15-16: Incompatible types for comparison. These types can't be compared: UntypedObject, UntypedObject.
+
+>> ParseJSON("5") > ParseJSON("5")
+Errors: Error 0-14: Invalid argument type. Expecting one of the following: Number, Date, Time, DateTime.|Error 17-31: Invalid argument type. Expecting one of the following: Number, Date, Time, DateTime.
+
+>> ParseJSON("5") < ParseJSON("5")
+Errors: Error 0-14: Invalid argument type. Expecting one of the following: Number, Date, Time, DateTime.|Error 17-31: Invalid argument type. Expecting one of the following: Number, Date, Time, DateTime.
+
+>> ParseJSON("5") <> ParseJSON("5")
+Errors: Error 15-17: Incompatible types for comparison. These types can't be compared: UntypedObject, UntypedObject.
+
+>> ParseJSON("5") >= ParseJSON("5")
+Errors: Error 0-14: Invalid argument type. Expecting one of the following: Number, Date, Time, DateTime.|Error 18-32: Invalid argument type. Expecting one of the following: Number, Date, Time, DateTime.
+
+>> ParseJSON("5") <= ParseJSON("5")
+Errors: Error 0-14: Invalid argument type. Expecting one of the following: Number, Date, Time, DateTime.|Error 18-32: Invalid argument type. Expecting one of the following: Number, Date, Time, DateTime.

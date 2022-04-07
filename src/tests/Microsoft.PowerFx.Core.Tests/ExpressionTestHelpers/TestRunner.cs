@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+// Licensed under the MIT license.
 
 using System;
 using System.Collections.Generic;
@@ -10,11 +10,24 @@ using Microsoft.PowerFx.Core.Public.Types;
 using Microsoft.PowerFx.Core.Public.Values;
 
 namespace Microsoft.PowerFx.Core.Tests
-{
+{    
+    /// <summary>
+    /// Parse test files and invoke runners to execute them. 
+    /// </summary>
     public class TestRunner
     {
         private readonly BaseRunner[] _runners;
-        private List<TestCase> _tests = new List<TestCase>();
+
+        // Mapping of a Test's key to the test case in Test list.
+        // Used for when we need to update the test. 
+        private readonly Dictionary<string, TestCase> _keyToTests = new Dictionary<string, TestCase>(StringComparer.Ordinal);
+
+        // Expose tests so that host can manipulate list directly. 
+        // Also populate this by calling various Add*() functions to parse. 
+        public List<TestCase> Tests { get; set; } = new List<TestCase>();
+
+        // Files that have been disabled. 
+        public HashSet<string> DisabledFiles = new HashSet<string>();
 
         public TestRunner(params BaseRunner[] runners)
         {
@@ -28,13 +41,12 @@ namespace Microsoft.PowerFx.Core.Tests
             return testDir;
         }
 
-
         public string TestRoot { get; set; } = GetDefaultTestDir();
 
         public void AddDir(string directory = "")
         {
             directory = Path.GetFullPath(directory, TestRoot);
-            IEnumerable<string> allFiles = Directory.EnumerateFiles(directory);
+            var allFiles = Directory.EnumerateFiles(directory);
 
             AddFile(allFiles);
         }
@@ -53,11 +65,29 @@ namespace Microsoft.PowerFx.Core.Tests
             }
         }
 
+        // Directive should start with #, end in : like "#SETUP:"
+        // Returns true if matched; false if not. Throws on error.
+        private static bool TryParseDirective(string line, string directive, ref string param)
+        {
+            if (line.StartsWith(directive, StringComparison.OrdinalIgnoreCase))
+            {
+                if (param != null)
+                {
+                    throw new InvalidOperationException($"Can't have multiple {directive}");
+                }
+
+                param = line.Substring(directive.Length).Trim();
+                return true;
+            }
+
+            return false;  
+        }
+
         public void AddFile(string thisFile)
         {
             thisFile = Path.GetFullPath(thisFile, TestRoot);
 
-            string[] lines = File.ReadAllLines(thisFile);
+            var lines = File.ReadAllLines(thisFile);
 
             // Skip blanks or "comments"
             // >> indicates input expression
@@ -65,7 +95,50 @@ namespace Microsoft.PowerFx.Core.Tests
 
             TestCase test = null;
 
-            int i = -1;
+            var i = -1;
+
+            // Preprocess file directives
+            // #Directive: Parameter
+            string fileSetup = null;
+            string fileOveride = null;
+            
+            while (i < lines.Length - 1)
+            {               
+                var line = lines[i + 1];
+                if (string.IsNullOrWhiteSpace(line) || line.StartsWith("//"))
+                {
+                    i++;
+                    continue;
+                }
+
+                if (line.Length > 1 && line[0] == '#')
+                {
+                    string fileDisable = null;
+                    if (TryParseDirective(line, "#DISABLE:", ref fileDisable))
+                    {
+                        DisabledFiles.Add(fileDisable);
+
+                        // Will remove all cases in this file.
+                        // Can apply to multiple files. 
+                        var countRemoved = Tests.RemoveAll(test => string.Equals(Path.GetFileName(test.SourceFile), fileDisable, StringComparison.OrdinalIgnoreCase));                        
+                    }
+                    else if (TryParseDirective(line, "#SETUP:", ref fileSetup) ||
+                      TryParseDirective(line, "#OVERRIDE:", ref fileOveride))
+                    {
+                        // flag is set, no additional work needed.
+                    }
+                    else
+                    {
+                        throw new InvalidOperationException($"Unrecognized directive: {line}");
+                    }
+
+                    i++;
+                    continue;
+                }                
+
+                break;                
+            }            
+
             while (true)
             {
                 i++;
@@ -73,6 +146,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 {
                     break;
                 }
+
                 var line = lines[i];
                 if (string.IsNullOrWhiteSpace(line) || line.StartsWith("//"))
                 {
@@ -86,10 +160,12 @@ namespace Microsoft.PowerFx.Core.Tests
                     {
                         Input = line,
                         SourceLine = i + 1, // 1-based
-                        SourceFile = thisFile
+                        SourceFile = thisFile,
+                        SetupHandlerName = fileSetup
                     };
                     continue;
                 }
+
                 if (test != null)
                 {
                     // If it's indented, then part of previous line. 
@@ -104,78 +180,90 @@ namespace Microsoft.PowerFx.Core.Tests
                     // handle engine-specific results
                     if (line.StartsWith("/*"))
                     {
-                        var index = line.IndexOf("*/");
-                        if (index > -1)
-                        {
-                            var engine = line.Substring(2, index - 2).Trim();
-                            var result = line.Substring(index + 2).Trim();
-                            test.SetExpected(result, engine);
-                            continue;
-                        }
+                        throw new InvalidOperationException($"Multiline comments aren't supported in output");                        
                     }
-                    test.SetExpected(line.Trim());
 
-                    _tests.Add(test);
+                    test.Expected = line.Trim();
+
+                    var key = test.GetUniqueId(fileOveride);
+                    if (_keyToTests.TryGetValue(key, out var existingTest))
+                    {
+                        // Must be in different sources
+                        if (existingTest.SourceFile == test.SourceFile)
+                        {
+                            throw new InvalidOperationException($"Duplicate test cases in {Path.GetFileName(test.SourceFile)} on line {test.SourceLine} and {existingTest.SourceLine}");
+                        }
+                        
+                        // Updating an existing test. 
+                        // Inputs are the same, but update the results.
+                        existingTest.Expected = test.Expected;
+                        existingTest.SourceFile = test.SourceFile;
+                        existingTest.SourceLine = test.SourceLine;
+                    }
+                    else
+                    {
+                        // New test
+                        Tests.Add(test);
+
+                        _keyToTests[key] = test;
+                    }
+
                     test = null;
+                } 
+                else 
+                {
+                    throw new InvalidOperationException($"Parse error at {Path.GetFileName(thisFile)} on line {i}");
                 }
+            }
+
+            if (test != null)
+            {
+                throw new InvalidOperationException($"Parse error at {Path.GetFileName(thisFile)} on line {i}, missing test result");
             }
         }
 
-
         public (int total, int failed, int passed, string output) RunTests()
         {
-            int total = 0;
-            int fail = 0;
-            int pass = 0;
-            StringBuilder sb = new StringBuilder();
-
-            foreach (var test in _tests)
+            if (_runners.Length == 0)
             {
-                foreach (BaseRunner runner in this._runners)
+                throw new InvalidOperationException($"Need to specify a runner to run tests");
+            }
+
+            var total = 0;
+            var fail = 0;
+            var pass = 0;
+            var sb = new StringBuilder();
+
+            foreach (var testCase in Tests)
+            {
+                foreach (var runner in _runners)
                 {
                     total++;
 
                     var engineName = runner.GetName();
-                    // var runner = kv.Value;
 
-                    string actualStr;
-                    FormulaValue result = null;
-                    bool exceptionThrown = false;
-                    try
-                    {
-                        result = runner.RunAsync(test.Input).Result;
-                        actualStr = TestToString(result);
-                    }
-                    catch (Exception e)
-                    {
-                        actualStr = e.Message.Replace("\r\n", "|");
-                        exceptionThrown = true;
-                    }
+                    var (result, msg) = runner.RunAsync(testCase).Result;
 
-                    var expected = test.GetExpected(engineName);
-                    if ((exceptionThrown && expected == "Compile Error") || (result != null && expected == "#Error" && runner.IsError(result)))
+                    var prefix = $"Test {Path.GetFileName(testCase.SourceFile)}:{testCase.SourceLine}: ";
+                    switch (result)
                     {
-                        // Pass!
-                        pass++;
-                        sb.Append(".");
-                        continue;
-                    }
+                        case TestResult.Pass:
+                            pass++;
+                            sb.Append(".");
+                            break;
 
-                    if (actualStr == expected)
-                    {
-                        pass++;
-                        sb.Append(".");
-                    }
-                    else
-                    {
-                        sb.AppendLine();
-                        sb.AppendLine($"FAIL: {engineName}, {Path.GetFileName(test.SourceFile)}:{test.SourceLine}");
-                        sb.AppendLine($"FAIL: {test.Input}");
-                        sb.AppendLine($"expected: {expected}");
-                        sb.AppendLine($"actual  : {actualStr}");
-                        sb.AppendLine();
-                        fail++;
-                        continue;
+                        case TestResult.Fail:
+                            sb.AppendLine();
+                            sb.AppendLine($"FAIL: {engineName}, {Path.GetFileName(testCase.SourceFile)}:{testCase.SourceLine}");
+                            sb.AppendLine($"FAIL: {testCase.Input}");
+                            sb.AppendLine($"{msg}");
+                            sb.AppendLine();
+                            fail++;
+                            break;
+
+                        case TestResult.Skip:
+                            sb.Append("-");
+                            break;
                     }
                 }
             }
@@ -186,9 +274,9 @@ namespace Microsoft.PowerFx.Core.Tests
             return (total, fail, pass, sb.ToString());
         }
 
-        internal static string TestToString(FormulaValue result)
+        public static string TestToString(FormulaValue result)
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             try
             {
                 TestToString(result, sb);
@@ -199,7 +287,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 sb.Append($"<exception writing result: {e.Message}>");
             }
 
-            string actualStr = sb.ToString();
+            var actualStr = sb.ToString();
             return actualStr;
         }
 
@@ -223,34 +311,51 @@ namespace Microsoft.PowerFx.Core.Tests
             }
             else if (result is TableValue t)
             {
-                sb.Append('[');
+                var tableType = (TableType)t.Type;
+                var canUseSquareBracketSyntax = t.IsColumn && t.Rows.All(r => r.IsValue) && tableType.GetNames().First().Name == "Value";
+                if (canUseSquareBracketSyntax)
+                {
+                    sb.Append('[');
+                }
+                else
+                {
+                    sb.Append("Table(");
+                }
 
-                string dil = "";
+                var dil = string.Empty;
                 foreach (var row in t.Rows)
                 {
                     sb.Append(dil);
+                    dil = ",";
 
-                    if (row.IsValue)
+                    if (canUseSquareBracketSyntax)
                     {
-                        var tableType = (TableType)t.Type;
-                        if (t.IsColumn && tableType.GetNames().First().Name == "Value")
-                        {
-                            var val = row.Value.Fields.First().Value;
-                            TestToString(val, sb);
-                        }
-                        else
-                        {
-                            TestToString(row.Value, sb);
-                        }
+                        var val = row.Value.Fields.First().Value;
+                        TestToString(val, sb);
                     }
                     else
                     {
-                        TestToString(row.ToFormulaValue(), sb);
+                        if (row.IsValue)
+                        {
+                            TestToString(row.Value, sb);
+                        }
+                        else
+                        {
+                            TestToString(row.ToFormulaValue(), sb);
+                        }
                     }
 
                     dil = ",";
                 }
-                sb.Append(']');
+
+                if (canUseSquareBracketSyntax)
+                {
+                    sb.Append(']');
+                }
+                else
+                {
+                    sb.Append(')');
+                }
             }
             else if (result is RecordValue r)
             {
@@ -258,7 +363,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 Array.Sort(fields, (a, b) => string.CompareOrdinal(a.Name, b.Name));
 
                 sb.Append('{');
-                string dil = "";
+                var dil = string.Empty;
 
                 foreach (var field in fields)
                 {
@@ -269,11 +374,28 @@ namespace Microsoft.PowerFx.Core.Tests
 
                     dil = ",";
                 }
+
                 sb.Append('}');
+            }
+            else if (result is TimeValue tv)
+            {
+                sb.Append(tv.Value.ToString());
             }
             else if (result is BlankValue)
             {
                 sb.Append("Blank()");
+            }
+            else if (result is DateValue d)
+            {
+                // Date(YYYY,MM,DD)
+                var date = d.Value;
+                sb.Append($"Date({date.Year},{date.Month},{date.Day})");
+            }
+            else if (result is DateTimeValue dt)
+            {
+                // DateTime(yyyy,MM,dd,HH,mm,ss,fff)
+                var dateTime = dt.Value;
+                sb.Append($"DateTime({dateTime.Year},{dateTime.Month},{dateTime.Day},{dateTime.Hour},{dateTime.Minute},{dateTime.Second},{dateTime.Millisecond})");
             }
             else if (result is ErrorValue)
             {

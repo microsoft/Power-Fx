@@ -1,9 +1,13 @@
 ﻿// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+// Licensed under the MIT license.
 
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Binding.BindInfo;
+using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Glue;
 using Microsoft.PowerFx.Core.Public.Types;
@@ -13,47 +17,30 @@ using Microsoft.PowerFx.Core.Utils;
 namespace Microsoft.PowerFx
 {
     /// <summary>
-    /// <see cref="INameResolver"/> implementation for <see cref="RecalcEngine"/>
+    /// <see cref="INameResolver"/> implementation for <see cref="RecalcEngine"/>.
     /// </summary>
     internal class RecalcEngineResolver : SimpleResolver
     {
         private readonly RecalcEngine _parent;
-        private readonly RecordType _parameters;
+        private readonly PowerFxConfig _powerFxConfig;
 
         public RecalcEngineResolver(
             RecalcEngine parent,
-            RecordType parameters,
-            IEnumerable<EnumSymbol> enumSymbols, 
-            params TexlFunction[] extraFunctions) :
-            base(enumSymbols, extraFunctions)
+            PowerFxConfig powerFxConfig)
+            : base(powerFxConfig)
         {
-            _parameters = parameters;
             _parent = parent;
+            _powerFxConfig = powerFxConfig;
         }
 
-         public override bool Lookup(DName name, out NameLookupInfo nameInfo, NameLookupPreferences preferences = NameLookupPreferences.None)
+        public override bool Lookup(DName name, out NameLookupInfo nameInfo, NameLookupPreferences preferences = NameLookupPreferences.None)
         {
             // Kinds of globals:
             // - global formula
             // - parameters 
+            // - environment symbols
 
-            string str = name.Value;
-
-            var parameter = _parameters.MaybeGetFieldType(str);
-            if (parameter != null)
-            {
-                var data = new ParameterData { ParameterName = str };
-                var type = parameter._type;
-
-                nameInfo = new NameLookupInfo(
-                    BindKind.PowerFxResolvedObject,
-                    type,
-                    DPath.Root,
-                    0,
-                    data
-                    );
-                return true;
-            }
+            var str = name.Value;
 
             if (_parent.Formulas.TryGetValue(str, out var fi))
             {
@@ -65,8 +52,7 @@ namespace Microsoft.PowerFx
                     type,
                     DPath.Root,
                     0,
-                    data
-                    );
+                    data);
                 return true;
             }
 

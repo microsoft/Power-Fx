@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+// Licensed under the MIT license.
 
 using System.Collections.Generic;
 using Microsoft.PowerFx.Core.Binding;
@@ -21,6 +21,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal abstract class StatisticalTableFunction : FunctionWithTableInput
     {
         public override bool SupportsParamCoercion => true;
+
         public override bool IsSelfContained => true;
 
         public StatisticalTableFunction(string name, TexlStrings.StringGetter description, FunctionCategories fc)
@@ -29,7 +30,10 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             ScopeInfo = new FunctionScopeInfo(this, usesAllFieldsInScope: false, acceptsLiteralPredicates: false);
         }
 
-        public override bool SupportsPaging(CallNode callNode, TexlBinding binding) { return false; }
+        public override bool SupportsPaging(CallNode callNode, TexlBinding binding)
+        {
+            return false;
+        }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
@@ -47,16 +51,21 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertValue(binding);
 
             if (FunctionDelegationCapability.Capabilities == DelegationCapability.None)
+            {
                 return false;
+            }
 
             if (!CheckArgsCount(callNode, binding))
+            {
                 return false;
+            }
 
-            IExternalDataSource dataSource;
-            if (!TryGetValidDataSourceForDelegation(callNode, binding, FunctionDelegationCapability, out dataSource))
+            if (!TryGetValidDataSourceForDelegation(callNode, binding, FunctionDelegationCapability, out var dataSource))
             {
                 if (dataSource != null && dataSource.IsDelegatable)
+                {
                     binding.ErrorContainer.EnsureError(DocumentErrorSeverity.Warning, callNode, TexlStrings.OpNotSupportedByServiceSuggestionMessage_OpNotSupportedByService, Name);
+                }
 
                 return false;
             }
@@ -71,15 +80,21 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 SuggestDelegationHint(callNode, binding);
 
                 if (binding.GetType(args[1]) != DType.Number)
-                    DelegationTrackerCore.SetDelegationTrackerStatus(DelegationStatus.NotANumberArgType, callNode, binding, this, DelegationTelemetryInfo.CreateEmptyDelegationTelemetryInfo());
+                {
+                    TrackingProvider.Instance.SetDelegationTrackerStatus(DelegationStatus.NotANumberArgType, callNode, binding, this, DelegationTelemetryInfo.CreateEmptyDelegationTelemetryInfo());
+                }
                 else
-                    DelegationTrackerCore.SetDelegationTrackerStatus(DelegationStatus.InvalidArgType, callNode, binding, this, DelegationTelemetryInfo.CreateEmptyDelegationTelemetryInfo());
+                {
+                    TrackingProvider.Instance.SetDelegationTrackerStatus(DelegationStatus.InvalidArgType, callNode, binding, this, DelegationTelemetryInfo.CreateEmptyDelegationTelemetryInfo());
+                }
 
                 return false;
             }
 
             if (binding.IsFullRecordRowScopeAccess(args[1]))
+            {
                 return GetDottedNameNodeDelegationStrategy().IsValidDottedNameNode(args[1].AsDottedName(), binding, null, null);
+            }
 
             var firstNameStrategy = GetFirstNameNodeDelegationStrategy().VerifyValue();
             return firstNameStrategy.IsValidFirstNameNode(args[1].AsFirstName(), binding, null);

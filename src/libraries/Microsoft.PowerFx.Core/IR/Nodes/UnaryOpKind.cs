@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+// Licensed under the MIT license.
 
 namespace Microsoft.PowerFx.Core.IR.Nodes
 {
@@ -11,7 +11,6 @@ namespace Microsoft.PowerFx.Core.IR.Nodes
 
         // Coercion operations
         BooleanToNumber,
-        StringOptionSetToNumber,
         BooleanOptionSetToNumber,
         DateToNumber,
         TimeToNumber,

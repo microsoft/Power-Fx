@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+// Licensed under the MIT license.
 
 using System.Collections.Generic;
 using System.Linq;
@@ -18,6 +18,7 @@ namespace Microsoft.PowerFx.Core.Syntax.SourceInformation
     internal sealed class SpreadSource : ITexlSource
     {
         public IEnumerable<ITexlSource> Sources { get; }
+
         public IEnumerable<Token> Tokens => Sources.SelectMany(source => source.Tokens);
 
         public SpreadSource(IEnumerable<ITexlSource> sources)
@@ -39,19 +40,20 @@ namespace Microsoft.PowerFx.Core.Syntax.SourceInformation
             Contracts.AssertValue(newNodes);
             Contracts.AssertAllValues(newNodes.Values);
             Contracts.AssertAllValues(newNodes.Keys);
-            ITexlSource[] newItems = new ITexlSource[Sources.Count()];
-            int i = 0;
+            var newItems = new ITexlSource[Sources.Count()];
+            var i = 0;
             foreach (var source in Sources)
             {
                 newItems[i] = source.Clone(newNodes, newSpan);
-                i += 1; ;
+                i += 1;
             }
+
             return new SpreadSource(newItems);
         }
 
         public override string ToString()
         {
-            return string.Join("", Sources);
+            return string.Join(string.Empty, Sources);
         }
     }
 }

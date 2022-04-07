@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+// Licensed under the MIT license.
 
 using System.Collections.Generic;
 using Microsoft.PowerFx.Core.Utils;
@@ -10,7 +10,8 @@ namespace Microsoft.PowerFx.Core.IR.Nodes
     {
         public readonly IReadOnlyList<IntermediateNode> Values;
 
-        public TableNode(IRContext irContext, params IntermediateNode[] values) : base(irContext)
+        public TableNode(IRContext irContext, params IntermediateNode[] values)
+            : base(irContext)
         {
             Contracts.AssertAllValues(values);
 
@@ -21,7 +22,7 @@ namespace Microsoft.PowerFx.Core.IR.Nodes
         {
             return visitor.Visit(this, context);
         }
-        
+
         public override string ToString()
         {
             return $"Table({string.Join(",", Values)})";

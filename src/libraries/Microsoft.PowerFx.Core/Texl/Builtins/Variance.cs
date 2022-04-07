@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+// Licensed under the MIT license.
 
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
@@ -14,7 +14,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public VarPFunction()
             : base("VarP", TexlStrings.AboutVarP, FunctionCategories.MathAndStat)
-        { }
+        {
+        }
     }
 
     // VarP(source:*, projection:n)
@@ -22,9 +23,10 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class VarPTableFunction : StatisticalTableFunction
     {
         public override bool RequiresErrorContext => true;
-        
+
         public VarPTableFunction()
             : base("VarP", TexlStrings.AboutVarPT, FunctionCategories.Table)
-        { }
+        {
+        }
     }
 }

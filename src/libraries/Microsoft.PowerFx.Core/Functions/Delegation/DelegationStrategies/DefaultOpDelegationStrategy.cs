@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+// Licensed under the MIT license.
 
 using Microsoft.PowerFx.Core.Lexer;
 
@@ -7,13 +7,9 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
 {
     internal sealed class DefaultBinaryOpDelegationStrategy : BinaryOpDelegationStrategy
     {
-        public DefaultBinaryOpDelegationStrategy(BinaryOp op, TexlFunction function) : base(op, function)
-        { }
-    }
-
-    internal sealed class DefaultUnaryOpDelegationStrategy : UnaryOpDelegationStrategy
-    {
-        public DefaultUnaryOpDelegationStrategy(UnaryOp op, TexlFunction function) : base(op, function)
-        { }
+        public DefaultBinaryOpDelegationStrategy(BinaryOp op, TexlFunction function)
+            : base(op, function)
+        {
+        }
     }
 }

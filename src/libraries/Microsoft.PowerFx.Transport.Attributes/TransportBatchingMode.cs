@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+// Licensed under the MIT license.
 
 namespace Microsoft.AppMagic.Transport
 {
@@ -7,7 +7,7 @@ namespace Microsoft.AppMagic.Transport
     /// Describes which batching policy should be applied to the api.
     /// </summary>
     /// <remarks>
-    /// Must be manually kept in sync with Transport.d.ts
+    /// Must be manually kept in sync with Transport.d.ts.
     /// </remarks>
     public enum TransportBatchingMode
     {
@@ -18,7 +18,7 @@ namespace Microsoft.AppMagic.Transport
         /// Initially, the default policy is "Immediate" to maintain backwards compatibility. At some future point, prefer 
         /// "Batched" mode, as it's more efficient, but can greatly disturb application timing.
         /// </remarks>
-        Default = 0, 
+        Default = 0,
 
         /// <summary>
         /// Forces the request to be sent immediately.

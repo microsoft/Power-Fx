@@ -1,24 +1,21 @@
 ﻿// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+// Licensed under the MIT license.
 
 namespace Microsoft.PowerFx.Core.Public.Values
 {
     /// <summary>
     /// Represents the type (T | Blank | Error), where T is neither Blank nor Error
     /// TableValue stores this class (Rows), and it can be used in any situation
-    /// where a value can be either a known type or Blank/Error
+    /// where a value can be either a known type or Blank/Error.
     /// </summary>
-    public class DValue<T> where T : ValidFormulaValue
+    public sealed class DValue<T>
+        where T : ValidFormulaValue
     {
-        private T _value;
-        private BlankValue _blank;
-        private ErrorValue _error;
-
         private DValue(T value, BlankValue blank, ErrorValue error)
         {
-            _value = value;
-            _blank = blank;
-            _error = error;
+            Value = value;
+            Blank = blank;
+            Error = error;
         }
 
         public static DValue<T> Of(T t)
@@ -36,22 +33,32 @@ namespace Microsoft.PowerFx.Core.Public.Values
             return new DValue<T>(null, null, error);
         }
 
-        public bool IsValue => _value != null;
-        public bool IsBlank => _blank != null;
-        public bool IsError => _error != null;
+        public bool IsValue => Value != null;
 
-        public T Value => _value;
-        public BlankValue Blank => _blank;
-        public ErrorValue Error => _error;
+        public bool IsBlank => Blank != null;
+
+        public bool IsError => Error != null;
+
+        public T Value { get; }
+
+        public BlankValue Blank { get; }
+
+        public ErrorValue Error { get; }
 
         public FormulaValue ToFormulaValue()
         {
             if (IsValue)
+            {
                 return Value;
+            }
             else if (IsBlank)
+            {
                 return Blank;
+            }
             else
+            {
                 return Error;
+            }
         }
     }
 }

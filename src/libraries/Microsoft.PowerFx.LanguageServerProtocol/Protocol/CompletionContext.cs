@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+// Licensed under the MIT license.
 
 namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
 {
@@ -19,7 +19,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
         /// <summary>
         /// The trigger character (a single character) that has trigger code
         /// complete. Is undefined if
-        /// `triggerKind !== CompletionTriggerKind.TriggerCharacter`
+        /// `triggerKind !== CompletionTriggerKind.TriggerCharacter`.
         /// </summary>
         public string TriggerCharacter { get; set; }
     }

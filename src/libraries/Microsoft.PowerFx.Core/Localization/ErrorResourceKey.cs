@@ -1,11 +1,10 @@
 ﻿// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+// Licensed under the MIT license.
 
 using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Core.Localization
 {
-
     // Key Type of string resources related to errors. Used by BaseError in DocError.cs to ensure
     // that it is passed a key as opposed to a generic string, such as the contents of the error
     // message.

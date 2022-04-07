@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+// Licensed under the MIT license.
 
 using System;
 using System.Collections.Generic;
@@ -17,26 +17,38 @@ namespace Microsoft.PowerFx.Core.Public.Values
     {
         public abstract IEnumerable<NamedValue> Fields { get; }
 
-        internal RecordValue(IRContext irContext) : base(irContext)
+        internal RecordValue(IRContext irContext)
+            : base(irContext)
         {
             Contract.Assert(IRContext.ResultType is RecordType);
         }
+
+        // If we have a derived Value, we can get a derived type. 
+        public new RecordType Type => (RecordType)base.Type;
 
         public static RecordValue Empty()
         {
             var type = new RecordType();
             return new InMemoryRecordValue(IRContext.NotInSource(type), new List<NamedValue>());
         }
+         
+        /// <summary>
+        /// Get a field on this record. 
+        /// See <see cref="ObjectMarshaller"/> to override GetField behavior. 
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public FormulaValue GetField(string name)
+        {            
+            var fieldType = Type.MaybeGetFieldType(name) ?? FormulaType.Blank;
 
-        internal virtual FormulaValue GetField(string name)
-        {
-            return GetField(IRContext.NotInSource(FormulaType.Blank), name);
+            return GetField(IRContext.NotInSource(fieldType), name);
         }
 
         internal virtual FormulaValue GetField(IRContext irContext, string name)
         {
             // Derived class can have more optimized lookup.
-            foreach (var field in this.Fields)
+            foreach (var field in Fields)
             {
                 if (name == field.Name)
                 {
@@ -51,8 +63,8 @@ namespace Microsoft.PowerFx.Core.Public.Values
         public override object ToObject()
         {
             var e = new ExpandoObject();
-            IDictionary<String, Object> dict = e;
-            foreach (var field in this.Fields)
+            IDictionary<string, object> dict = e;
+            foreach (var field in Fields)
             {
                 dict[field.Name] = field.Value?.ToObject();
             }
@@ -60,7 +72,7 @@ namespace Microsoft.PowerFx.Core.Public.Values
             return e;
         }
 
-        public override void Visit(IValueVisitor visitor)
+        public sealed override void Visit(IValueVisitor visitor)
         {
             visitor.Visit(this);
         }

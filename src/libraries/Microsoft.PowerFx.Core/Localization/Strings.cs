@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+// Licensed under the MIT license.
 
 namespace Microsoft.PowerFx.Core.Localization
 {
@@ -10,7 +10,7 @@ namespace Microsoft.PowerFx.Core.Localization
         public static StringGetter AboutChar = (b) => StringResources.Get("AboutChar", b);
         public static StringGetter CharArg1 = (b) => StringResources.Get("CharArg1", b);
         public static StringGetter AboutCharT = (b) => StringResources.Get("AboutCharT", b);
-        public static StringGetter CharTArg1 = (b) => StringResources.Get("CharTArg1",b );
+        public static StringGetter CharTArg1 = (b) => StringResources.Get("CharTArg1", b);
 
         public static StringGetter AboutIf = (b) => StringResources.Get("AboutIf", b);
         public static StringGetter IfArgCond = (b) => StringResources.Get("IfArgCond", b);
@@ -85,8 +85,13 @@ namespace Microsoft.PowerFx.Core.Localization
         public static StringGetter ValueArg1 = (b) => StringResources.Get("ValueArg1", b);
         public static StringGetter ValueArg2 = (b) => StringResources.Get("ValueArg2", b);
 
+        public static StringGetter AboutBoolean = (b) => StringResources.Get("AboutBoolean", b);
+        public static StringGetter BooleanArg1 = (b) => StringResources.Get("BooleanArg1", b);
+
         public static StringGetter AboutConcatenate = (b) => StringResources.Get("AboutConcatenate", b);
         public static StringGetter ConcatenateArg1 = (b) => StringResources.Get("ConcatenateArg1", b);
+        public static StringGetter AboutConcatenateT = (b) => StringResources.Get("AboutConcatenateT", b);
+        public static StringGetter ConcatenateTArg1 = (b) => StringResources.Get("ConcatenateTArg1", b);
 
         public static StringGetter AboutCoalesce = (b) => StringResources.Get("AboutCoalesce", b);
         public static StringGetter CoalesceArg1 = (b) => StringResources.Get("CoalesceArg1", b);
@@ -426,6 +431,13 @@ namespace Microsoft.PowerFx.Core.Localization
         public static StringGetter SequenceArg2 = (b) => StringResources.Get("SequenceArg2", b);
         public static StringGetter SequenceArg3 = (b) => StringResources.Get("SequenceArg3", b);
 
+        public static StringGetter AboutParseJSON = (b) => StringResources.Get("AboutParseJSON", b);
+        public static StringGetter ParseJSONArg1 = (b) => StringResources.Get("ParseJSONArg1", b);
+
+        public static StringGetter AboutIndex = (b) => StringResources.Get("AboutIndex", b);
+        public static StringGetter IndexArg1 = (b) => StringResources.Get("IndexArg1", b);
+        public static StringGetter IndexArg2 = (b) => StringResources.Get("IndexArg2", b);
+
         // Previously, errors were listed here in the form of a StringGetter, which would be evaluated to fetch
         // an error message to pass to the BaseError class constructor. We are switching to passing the message key itself
         // to the BaseError class, and the BaseError itself is responsible for fetching the resource. (This allows the
@@ -440,6 +452,7 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrMissingEndOfBlockComment = new ErrorResourceKey("ErrMissingEndOfBlockComment");
         public static ErrorResourceKey ErrExpectedFound_Ex_Fnd = new ErrorResourceKey("ErrExpectedFound_Ex_Fnd");
         public static ErrorResourceKey ErrInvalidName = new ErrorResourceKey("ErrInvalidName");
+        public static ErrorResourceKey ErrInvalidIdentifier = new ErrorResourceKey("ErrInvalidIdentifier");
         public static ErrorResourceKey ErrInvalidPropertyAccess = new ErrorResourceKey("ErrInvalidPropertyAccess");
         public static ErrorResourceKey ErrInvalidPropertyReference = new ErrorResourceKey("ErrInvalidPropertyReference");
         public static ErrorResourceKey ErrInvalidParentUse = new ErrorResourceKey("ErrInvalidParentUse");
@@ -447,6 +460,7 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrRuleNestedTooDeeply = new ErrorResourceKey("ErrRuleNestedTooDeeply");
         public static ErrorResourceKey ErrInvalidDot = new ErrorResourceKey("ErrInvalidDot");
         public static ErrorResourceKey ErrUnknownFunction = new ErrorResourceKey("ErrUnknownFunction");
+        public static ErrorResourceKey ErrUnknownNamespaceFunction = new ErrorResourceKey("ErrUnknownNamespaceFunction");
         public static ErrorResourceKey ErrBadArity = new ErrorResourceKey("ErrBadArity");
         public static ErrorResourceKey ErrBadArityRange = new ErrorResourceKey("ErrBadArityRange");
         public static ErrorResourceKey ErrBadArityMinimum = new ErrorResourceKey("ErrBadArityMinimum");
@@ -521,6 +535,8 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrBadRecordFieldType_FieldName_ExpectedType = new ErrorResourceKey("ErrBadRecordFieldType_FieldName_ExpectedType");
         public static ErrorResourceKey ErrAsTypeAndIsTypeExpectConnectedDataSource = new ErrorResourceKey("ErrAsTypeAndIsTypeExpectConnectedDataSource");
         public static ErrorResourceKey ErrInvalidControlReference = new ErrorResourceKey("ErrInvalidControlReference");
+        public static ErrorResourceKey ErrInvalidStringInterpolation = new ErrorResourceKey("ErrInvalidStringInterpolation");
+        public static ErrorResourceKey ErrEmptyIsland = new ErrorResourceKey("ErrEmptyIsland");
 
         public static ErrorResourceKey ErrErrorIrrelevantField = new ErrorResourceKey("ErrErrorIrrelevantField");
         public static ErrorResourceKey ErrAsNotInContext = new ErrorResourceKey("ErrAsNotInContext");
@@ -542,6 +558,8 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey OpNotSupportedByColumnSuggestionMessage_OpNotSupportedByColumn = new ErrorResourceKey("SuggestRemoteExecutionHint_OpNotSupportedByColumn");
         public static ErrorResourceKey OpNotSupportedByServiceSuggestionMessage_OpNotSupportedByService = new ErrorResourceKey("SuggestRemoteExecutionHint_OpNotSupportedByService");
         public static ErrorResourceKey OpNotSupportedByClientSuggestionMessage_OpNotSupportedByClient = new ErrorResourceKey("SuggestRemoteExecutionHint_OpNotSupportedByClient");
+
+        public static ErrorResourceKey ErrNamedFormula_MissingSemicolon = new ErrorResourceKey("ErrNamedFormula_MissingSemicolon");
 
         // ErrorResourceKey for creating an error from an arbitrary string message. The key resolves to "{0}", meaning
         // that a single string arg can be supplied representing the entire text of the error.

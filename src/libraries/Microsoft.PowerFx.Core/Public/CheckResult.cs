@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+// Licensed under the MIT license.
 
 using System;
 using System.Collections.Generic;
@@ -32,13 +32,20 @@ namespace Microsoft.PowerFx.Core.Public
         /// </summary>
         public ExpressionError[] Errors { get; set; }
 
-        public virtual bool IsSuccess => this.Errors == null;
+        /// <summary>
+        /// Parsed expression, or null if IsSuccess is false.
+        /// </summary>
+        public IExpression Expression { get; set; }
+
+        public virtual bool IsSuccess => Errors == null;
 
         internal TexlBinding _binding;
 
         internal Formula _formula;
 
-        public CheckResult() { }
+        public CheckResult()
+        {
+        }
 
         internal CheckResult(IEnumerable<IDocumentError> errors, TexlBinding binding = null)
         {
@@ -50,7 +57,7 @@ namespace Microsoft.PowerFx.Core.Public
         {
             if (!IsSuccess)
             {
-                var msg = String.Join("\r\n", Errors.Select(err => err.ToString()).ToArray());
+                var msg = string.Join("\r\n", Errors.Select(err => err.ToString()).ToArray());
                 throw new InvalidOperationException($"Errors: " + msg);
             }
         }
@@ -63,7 +70,8 @@ namespace Microsoft.PowerFx.Core.Public
             {
                 Message = x.ShortMessage,
                 Span = x.TextSpan,
-                Severity = x.Severity
+                Severity = x.Severity,
+                MessageKey = x.MessageKey
             }).ToArray();
 
             if (Errors.Length == 0)

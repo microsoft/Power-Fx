@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+// Licensed under the MIT license.
 
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Functions.Delegation;
@@ -15,7 +15,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     {
         public TrimFunction()
             : base("Trim", TexlStrings.AboutTrim, FunctionCategories.Text)
-        { }
+        {
+        }
     }
 
     // Trim(arg:*[s])
@@ -23,16 +24,19 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     {
         public TrimTFunction()
             : base("Trim", TexlStrings.AboutTrim, FunctionCategories.Table)
-        { }
+        {
+        }
     }
+
     // TrimEnds(arg:s)
     internal sealed class TrimEndsFunction : StringOneArgFunction
     {
         public TrimEndsFunction()
             : base("TrimEnds", TexlStrings.AboutTrimEnds, FunctionCategories.Text)
-        { }
+        {
+        }
 
-        public override DelegationCapability FunctionDelegationCapability { get { return DelegationCapability.Trim; } }
+        public override DelegationCapability FunctionDelegationCapability => DelegationCapability.Trim;
 
         public override bool IsRowScopedServerDelegatable(CallNode callNode, TexlBinding binding, OperationCapabilityMetadata metadata)
         {
@@ -49,6 +53,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     {
         public TrimEndsTFunction()
             : base("TrimEnds", TexlStrings.AboutTrimEnds, FunctionCategories.Table)
-        { }
+        {
+        }
     }
 }

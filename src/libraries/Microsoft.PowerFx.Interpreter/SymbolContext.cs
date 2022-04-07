@@ -1,8 +1,8 @@
 ﻿// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+// Licensed under the MIT license.
 
-using Microsoft.PowerFx.Core.IR.Symbols;
 using System.Collections.Generic;
+using Microsoft.PowerFx.Core.IR.Symbols;
 using Microsoft.PowerFx.Core.Public.Values;
 
 namespace Microsoft.PowerFx
@@ -15,47 +15,38 @@ namespace Microsoft.PowerFx
     // of this class in the bodies of the various .visit methods
     internal sealed class SymbolContext
     {
-        // Global top-level parameters.
-        private readonly RecordValue _globals;
-
-        private readonly ScopeSymbol _currentScope = null;
-
-        // Map from scope Id to scope
-        private readonly Dictionary<int, IScope> _scopeValues = null;
-
-        public SymbolContext(RecordValue globals, ScopeSymbol currentScope, Dictionary<int, IScope> scopeValues)
+        public SymbolContext(ScopeSymbol currentScope, Dictionary<int, IScope> scopeValues)
         {
-            _globals = globals;
-            _currentScope = currentScope;
-            _scopeValues = scopeValues;
+            CurrentScope = currentScope;
+            ScopeValues = scopeValues;
         }
 
-        public RecordValue Globals => _globals;
+        public ScopeSymbol CurrentScope { get; } = null;
 
-        public ScopeSymbol CurrentScope => _currentScope;
-
-        public Dictionary<int, IScope> ScopeValues => _scopeValues;
+        public Dictionary<int, IScope> ScopeValues { get; } = null;
 
         public static SymbolContext New()
         {
-            return new SymbolContext(null, null, new Dictionary<int, IScope>());
+            return new SymbolContext(null, new Dictionary<int, IScope>());
         }
 
-        public SymbolContext WithGlobals(RecordValue globals)
+        public static SymbolContext NewTopScope(ScopeSymbol topScope, RecordValue ruleScope)
         {
-            return new SymbolContext(globals, CurrentScope, ScopeValues);
+            return new SymbolContext(topScope, new Dictionary<int, IScope>() { { topScope.Id, new RecordScope(ruleScope) } });
         }
 
         public SymbolContext WithScope(ScopeSymbol currentScope)
         {
-            return new SymbolContext(Globals, currentScope, ScopeValues);
+            return new SymbolContext(currentScope, ScopeValues);
         }
 
         public SymbolContext WithScopeValues(IScope scopeValues)
         {
-            var newScopeValues = new Dictionary<int, IScope>(ScopeValues);
-            newScopeValues[CurrentScope.Id] = scopeValues;
-            return new SymbolContext(Globals, CurrentScope, newScopeValues);
+            var newScopeValues = new Dictionary<int, IScope>(ScopeValues)
+            {
+                [CurrentScope.Id] = scopeValues
+            };
+            return new SymbolContext(CurrentScope, newScopeValues);
         }
 
         public SymbolContext WithScopeValues(RecordValue scopeValues)
@@ -65,7 +56,7 @@ namespace Microsoft.PowerFx
 
         public FormulaValue GetScopeVar(ScopeSymbol scope, string name)
         {
-            IScope record = ScopeValues[scope.Id];
+            var record = ScopeValues[scope.Id];
             return record.Resolve(name); // Binder should ensure success.
         }
     }

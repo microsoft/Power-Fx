@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+// Licensed under the MIT license.
 
 using System.Collections.Generic;
 using Microsoft.PowerFx.Core.Functions;
@@ -14,6 +14,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class ConcatFunction : FunctionWithTableInput
     {
         public override bool IsSelfContained => true;
+
         public override bool SupportsParamCoercion => false;
 
         public ConcatFunction()
@@ -24,8 +25,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
-            yield return new [] { TexlStrings.ConcatArg1, TexlStrings.ConcatArg2 };
-            yield return new [] { TexlStrings.ConcatArg1, TexlStrings.ConcatArg2, TexlStrings.ConcatArg3 };
+            yield return new[] { TexlStrings.ConcatArg1, TexlStrings.ConcatArg2 };
+            yield return new[] { TexlStrings.ConcatArg1, TexlStrings.ConcatArg2, TexlStrings.ConcatArg3 };
         }
     }
 }

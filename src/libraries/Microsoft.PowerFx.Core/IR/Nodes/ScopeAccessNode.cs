@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+// Licensed under the MIT license.
 
 using Microsoft.PowerFx.Core.IR.Symbols;
 using Microsoft.PowerFx.Core.Utils;
@@ -11,11 +11,12 @@ namespace Microsoft.PowerFx.Core.IR.Nodes
         /// <summary>
         /// Either a ScopeSymbol or a ScopeAccessSymbol
         /// A ScopeSymbol here represents access to the whole scope record,
-        /// A ScopeAccessSymbol here represents access to a single field from the scope
+        /// A ScopeAccessSymbol here represents access to a single field from the scope.
         /// </summary>
         public IScopeSymbol Value;
 
-        public ScopeAccessNode(IRContext irContext, IScopeSymbol symbol) : base(irContext)
+        public ScopeAccessNode(IRContext irContext, IScopeSymbol symbol)
+            : base(irContext)
         {
             Contracts.AssertValue(symbol);
 
@@ -26,7 +27,6 @@ namespace Microsoft.PowerFx.Core.IR.Nodes
         {
             return visitor.Visit(this, context);
         }
-
 
         public override string ToString()
         {

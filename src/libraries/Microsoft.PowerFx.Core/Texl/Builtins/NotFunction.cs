@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+// Licensed under the MIT license.
 
 using System.Collections.Generic;
 using Microsoft.PowerFx.Core.Binding;
@@ -21,19 +21,20 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal class NotFunction : BuiltinFunction
     {
         public override bool IsSelfContained => true;
-        public override bool SupportsParamCoercion => true;
 
+        public override bool SupportsParamCoercion => true;
 
         public NotFunction()
             : base("Not", TexlStrings.AboutNot, FunctionCategories.Logical, DType.Boolean, 0, 1, 1, DType.Boolean)
-        { }
+        {
+        }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
             yield return new[] { TexlStrings.LogicalFuncParam };
         }
 
-        public override DelegationCapability FunctionDelegationCapability { get { return DelegationCapability.Not | DelegationCapability.Filter; } }
+        public override DelegationCapability FunctionDelegationCapability => DelegationCapability.Not | DelegationCapability.Filter;
 
         // For binary op node args, we need to use filter delegation strategy. Hence we override this method here.
         public override IOpDelegationStrategy GetOpDelegationStrategy(BinaryOp op, BinaryOpNode opNode)
@@ -64,8 +65,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 return false;
             }
 
-            TexlNode[] args = callNode.Args.Children.VerifyValue();
-            NodeKind argKind = args[0].VerifyValue().Kind;
+            var args = callNode.Args.Children.VerifyValue();
+            var argKind = args[0].VerifyValue().Kind;
 
             var opStrategy = GetOpDelegationStrategy(UnaryOp.Not);
             var firstNameStrategy = GetFirstNameNodeDelegationStrategy();
@@ -80,33 +81,42 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 case NodeKind.Call:
                     {
                         if (!opStrategy.IsOpSupportedByTable(metadata, callNode, binding))
+                        {
                             return false;
+                        }
 
                         return cNodeStrategy.IsValidCallNode(args[0].AsCall(), binding, metadata);
                     }
+
                 case NodeKind.BinaryOp:
                     {
                         if (!opStrategy.IsOpSupportedByTable(metadata, callNode, binding))
+                        {
                             return false;
+                        }
 
-                        BinaryOpNode opNode = args[0].AsBinaryOp();
-                        IOpDelegationStrategy binaryOpNodeValidationStrategy = GetOpDelegationStrategy(opNode.Op, opNode);
+                        var opNode = args[0].AsBinaryOp();
+                        var binaryOpNodeValidationStrategy = GetOpDelegationStrategy(opNode.Op, opNode);
                         return binaryOpNodeValidationStrategy.IsSupportedOpNode(opNode, metadata, binding);
                     }
+
                 case NodeKind.UnaryOp:
                     {
                         if (!opStrategy.IsOpSupportedByTable(metadata, callNode, binding))
+                        {
                             return false;
+                        }
 
-                        UnaryOpNode opNode = args[0].AsUnaryOpLit();
+                        var opNode = args[0].AsUnaryOpLit();
                         var unaryOpNodeValidationStrategy = GetOpDelegationStrategy(opNode.Op);
                         return unaryOpNodeValidationStrategy.IsSupportedOpNode(opNode, metadata, binding);
                     }
+
                 case NodeKind.DottedName:
                     return dottedStrategy.IsValidDottedNameNode(args[0].AsDottedName(), binding, metadata, opStrategy);
 
                 default:
-                    return (argKind == NodeKind.BoolLit);
+                    return argKind == NodeKind.BoolLit;
             }
         }
     }

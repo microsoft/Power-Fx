@@ -1,5 +1,5 @@
-// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
 
 using System.Collections.Generic;
 using Microsoft.PowerFx.Core.Lexer.Tokens;
@@ -20,7 +20,7 @@ namespace Microsoft.PowerFx.Core.Syntax.SourceInformation
         public IdentifierSource(Identifier identifier)
         {
             Contracts.AssertValue(identifier);
-            this.Identifier = identifier;
+            Identifier = identifier;
         }
 
         public ITexlSource Clone(Dictionary<TexlNode, TexlNode> newNodes, Span span)

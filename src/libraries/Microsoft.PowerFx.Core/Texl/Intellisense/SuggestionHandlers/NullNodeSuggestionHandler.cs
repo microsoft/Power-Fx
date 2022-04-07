@@ -1,14 +1,17 @@
-// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
 
 using Microsoft.PowerFx.Core.Utils;
 
-namespace Microsoft.PowerFx.Core.Texl.Intellisense{
+namespace Microsoft.PowerFx.Core.Texl.Intellisense
+{
     internal partial class Intellisense
     {
         internal sealed class NullNodeSuggestionHandler : ISuggestionHandler
         {
-            public NullNodeSuggestionHandler() { }
+            public NullNodeSuggestionHandler()
+            {
+            }
 
             /// <summary>
             /// Adds suggestions as appropriate to the internal Suggestions and SubstringSuggestions lists of intellisenseData.
@@ -19,7 +22,9 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense{
                 Contracts.AssertValue(intellisenseData);
 
                 if (intellisenseData.CurNode != null)
+                {
                     return false;
+                }
 
                 return IntellisenseHelper.AddSuggestionsForValuePossibilities(intellisenseData, null);
             }

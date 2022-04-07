@@ -1,23 +1,22 @@
 ﻿// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+// Licensed under the MIT license.
 
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.IR.Nodes;
 using Microsoft.PowerFx.Core.Public.Values;
 using Microsoft.PowerFx.Core.Utils;
-using System;
-using System.Collections.Generic;
 
 namespace Microsoft.PowerFx.Functions
 {
-    partial class Library
+    internal partial class Library
     {
-        private static DateTime _epoch = new DateTime(1899, 12, 30, 0, 0, 0, 0);
-
-        public static IReadOnlyDictionary<UnaryOpKind, FunctionPtr> UnaryOps => _unaryOps;
+        private static readonly DateTime _epoch = new DateTime(1899, 12, 30, 0, 0, 0, 0);
 
         #region Standard Error Handling Wrappers for Unary Operators
-        private static Dictionary<UnaryOpKind, FunctionPtr> _unaryOps = new Dictionary<UnaryOpKind, FunctionPtr>()
+        public static IReadOnlyDictionary<UnaryOpKind, AsyncFunctionPtr> UnaryOps { get; } = new Dictionary<UnaryOpKind, AsyncFunctionPtr>()
         {
             {
                 UnaryOpKind.Negate,
@@ -27,8 +26,7 @@ namespace Microsoft.PowerFx.Functions
                     checkRuntimeTypes: ExactValueType<NumberValue>,
                     checkRuntimeValues: FiniteChecker,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
-                    targetFunction: NumericNegate
-                )
+                    targetFunction: NumericNegate)
             },
             {
                 UnaryOpKind.Percent,
@@ -38,8 +36,7 @@ namespace Microsoft.PowerFx.Functions
                     checkRuntimeTypes: ExactValueType<NumberValue>,
                     checkRuntimeValues: FiniteChecker,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
-                    targetFunction: NumericPercent
-                )
+                    targetFunction: NumericPercent)
             },
             {
                 UnaryOpKind.NumberToText,
@@ -49,8 +46,7 @@ namespace Microsoft.PowerFx.Functions
                     checkRuntimeTypes: ExactValueTypeOrBlank<NumberValue>,
                     checkRuntimeValues: FiniteChecker,
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
-                    targetFunction: NumberToText
-                )
+                    targetFunction: NumberToText)
             },
             {
                 UnaryOpKind.NumberToBoolean,
@@ -60,8 +56,7 @@ namespace Microsoft.PowerFx.Functions
                     checkRuntimeTypes: ExactValueTypeOrBlank<NumberValue>,
                     checkRuntimeValues: FiniteChecker,
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
-                    targetFunction: NumberToBoolean
-                )
+                    targetFunction: NumberToBoolean)
             },
             {
                 UnaryOpKind.BooleanToText,
@@ -71,8 +66,7 @@ namespace Microsoft.PowerFx.Functions
                     checkRuntimeTypes: ExactValueTypeOrBlank<BooleanValue>,
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
-                    targetFunction: BooleanToText
-                )
+                    targetFunction: BooleanToText)
             },
             {
                 UnaryOpKind.BooleanToNumber,
@@ -82,8 +76,7 @@ namespace Microsoft.PowerFx.Functions
                     checkRuntimeTypes: ExactValueTypeOrBlank<BooleanValue>,
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
-                    targetFunction: BooleanToNumber
-                )
+                    targetFunction: BooleanToNumber)
             },
             {
                 UnaryOpKind.TextToBoolean,
@@ -93,8 +86,7 @@ namespace Microsoft.PowerFx.Functions
                     checkRuntimeTypes: ExactValueTypeOrBlank<StringValue>,
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
-                    targetFunction: TextToBoolean
-                )
+                    targetFunction: TextToBoolean)
             },
             {
                 UnaryOpKind.DateToNumber,
@@ -104,8 +96,7 @@ namespace Microsoft.PowerFx.Functions
                     checkRuntimeTypes: DateOrDateTime,
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
-                    targetFunction: DateToNumber
-                )
+                    targetFunction: DateToNumber)
             },
             {
                 UnaryOpKind.NumberToDate,
@@ -115,8 +106,7 @@ namespace Microsoft.PowerFx.Functions
                     checkRuntimeTypes: ExactValueTypeOrBlank<NumberValue>,
                     checkRuntimeValues: FiniteChecker,
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
-                    targetFunction: NumberToDate
-                )
+                    targetFunction: NumberToDate)
             },
             {
                 UnaryOpKind.NumberToDateTime,
@@ -126,8 +116,7 @@ namespace Microsoft.PowerFx.Functions
                     checkRuntimeTypes: ExactValueTypeOrBlank<NumberValue>,
                     checkRuntimeValues: FiniteChecker,
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
-                    targetFunction: NumberToDateTime
-                )
+                    targetFunction: NumberToDateTime)
             },
             {
                 UnaryOpKind.DateToDateTime,
@@ -137,8 +126,7 @@ namespace Microsoft.PowerFx.Functions
                     checkRuntimeTypes: DateOrDateTime,
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
-                    targetFunction: DateToDateTime
-                )
+                    targetFunction: DateToDateTime)
             },
             {
                 UnaryOpKind.DateTimeToDate,
@@ -148,8 +136,7 @@ namespace Microsoft.PowerFx.Functions
                     checkRuntimeTypes: DateOrDateTime,
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
-                    targetFunction: DateTimeToDate
-                )
+                    targetFunction: DateTimeToDate)
             },
             {
                 UnaryOpKind.TimeToNumber,
@@ -159,8 +146,7 @@ namespace Microsoft.PowerFx.Functions
                     checkRuntimeTypes: ExactValueTypeOrBlank<TimeValue>,
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
-                    targetFunction: TimeToNumber
-                )
+                    targetFunction: TimeToNumber)
             },
             {
                 UnaryOpKind.NumberToTime,
@@ -170,8 +156,7 @@ namespace Microsoft.PowerFx.Functions
                     checkRuntimeTypes: ExactValueTypeOrBlank<NumberValue>,
                     checkRuntimeValues: FiniteChecker,
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
-                    targetFunction: NumberToTime
-                )
+                    targetFunction: NumberToTime)
             },
             {
                 UnaryOpKind.DateTimeToTime,
@@ -181,8 +166,7 @@ namespace Microsoft.PowerFx.Functions
                     checkRuntimeTypes: DateOrDateTime,
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
-                    targetFunction: DateTimeToTime
-                )
+                    targetFunction: DateTimeToTime)
             },
             {
                 UnaryOpKind.DateToTime,
@@ -192,8 +176,7 @@ namespace Microsoft.PowerFx.Functions
                     checkRuntimeTypes: DateOrDateTime,
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
-                    targetFunction: DateTimeToTime
-                )
+                    targetFunction: DateTimeToTime)
             },
             {
                 UnaryOpKind.TimeToDate,
@@ -203,8 +186,7 @@ namespace Microsoft.PowerFx.Functions
                     checkRuntimeTypes: ExactValueTypeOrBlank<TimeValue>,
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
-                    targetFunction: TimeToDate
-                )
+                    targetFunction: TimeToDate)
             },
             {
                 UnaryOpKind.TimeToDateTime,
@@ -214,8 +196,7 @@ namespace Microsoft.PowerFx.Functions
                     checkRuntimeTypes: ExactValueTypeOrBlank<TimeValue>,
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
-                    targetFunction: TimeToDateTime
-                )
+                    targetFunction: TimeToDateTime)
             },
             {
                 UnaryOpKind.TextToDate,
@@ -225,8 +206,7 @@ namespace Microsoft.PowerFx.Functions
                     checkRuntimeTypes: ExactValueTypeOrBlank<StringValue>,
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
-                    targetFunction: DateParse
-                )
+                    targetFunction: DateParse)
             },
             {
                 UnaryOpKind.TextToDateTime,
@@ -236,8 +216,7 @@ namespace Microsoft.PowerFx.Functions
                     checkRuntimeTypes: ExactValueTypeOrBlank<StringValue>,
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
-                    targetFunction: DateTimeParse
-                )
+                    targetFunction: DateTimeParse)
             },
             {
                 UnaryOpKind.TextToTime,
@@ -247,8 +226,17 @@ namespace Microsoft.PowerFx.Functions
                     checkRuntimeTypes: ExactValueTypeOrBlank<StringValue>,
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
-                    targetFunction: TimeParse
-                )
+                    targetFunction: TimeParse)
+            },
+            {
+                UnaryOpKind.OptionSetToText,
+                StandardErrorHandling<OptionSetValue>(
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<OptionSetValue>,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: OptionSetValueToString)
             }
         };
         #endregion
@@ -266,7 +254,7 @@ namespace Microsoft.PowerFx.Functions
             return new NumberValue(irContext, result);
         }
 
-        public static FormulaValue NumberToText(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, NumberValue[] args)
+        public static ValueTask<FormulaValue> NumberToText(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, NumberValue[] args)
         {
             return Text(runner, symbolContext, irContext, args);
         }
@@ -280,7 +268,12 @@ namespace Microsoft.PowerFx.Functions
         public static StringValue BooleanToText(IRContext irContext, BooleanValue[] args)
         {
             var b = args[0].Value;
-            return new StringValue(irContext, b ? "true" : "false");
+            return new StringValue(irContext, PowerFxBooleanToString(b));
+        }
+
+        private static string PowerFxBooleanToString(bool b)
+        {
+            return b ? "true" : "false";
         }
 
         public static NumberValue BooleanToNumber(IRContext irContext, BooleanValue[] args)
@@ -309,6 +302,7 @@ namespace Microsoft.PowerFx.Functions
                 default:
                     return CommonErrors.RuntimeTypeMismatch(irContext);
             }
+
             var diff = arg0.Subtract(_epoch).TotalDays;
             return new NumberValue(irContext, diff);
         }
@@ -388,6 +382,7 @@ namespace Microsoft.PowerFx.Functions
                 default:
                     return CommonErrors.RuntimeTypeMismatch(irContext);
             }
+
             var time = arg0.TimeOfDay;
             return new TimeValue(irContext, time);
         }
@@ -404,6 +399,26 @@ namespace Microsoft.PowerFx.Functions
             var t = args[0].Value;
             var date = _epoch.Add(t);
             return new DateTimeValue(irContext, date);
+        }
+
+        public static FormulaValue OptionSetValueToString(IRContext irContext, OptionSetValue[] args)
+        {
+            // The type checker and IR have already validated that this is a valid OptionSet and that it contains a member matching this Option.
+            // These are just defensive error checks, and should be unreachable.
+            var os = args[0].Type?._type?.OptionSetInfo;
+            if (os is not OptionSet optionSet) 
+            {
+                return CommonErrors.UnreachableCodeError(irContext);
+            }
+
+            var option = args[0].Option;
+
+            if (!optionSet.Options.TryGetValue(new DName(option), out var displayName))
+            { 
+                return CommonErrors.UnreachableCodeError(irContext);
+            }
+
+            return new StringValue(irContext, displayName);
         }
         #endregion
     }
