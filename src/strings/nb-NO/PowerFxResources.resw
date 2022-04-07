@@ -1,0 +1,4520 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="ListItemSingleQuotedFormat" xml:space="preserve">
+    <value>{0}</value>
+    
+  </data>
+  <data name="AboutIf" xml:space="preserve">
+    <value>Kontrollerer om noen av de angitte betingelsene er oppfylt, og returnerer den tilsvarende verdien. Hvis ingen av betingelsene er oppfylt, returnerer funksjonen den angitte standardverdien.</value>
+    
+  </data>
+  <data name="IfArgCond" xml:space="preserve">
+    <value>logisk_test</value>
+    
+  </data>
+  <data name="IfArgTrueValue" xml:space="preserve">
+    <value>sann_verdi</value>
+    
+  </data>
+  <data name="IfArgElseValue" xml:space="preserve">
+    <value>annen_verdi</value>
+    
+  </data>
+  <data name="AboutIf_logical_test" xml:space="preserve">
+    <value>En betingelse som resulterer i en boolsk verdi.</value>
+  </data>
+  <data name="AboutIf_true_value" xml:space="preserve">
+    <value>Et uttrykk som gir resultatet If når betingelsen er oppfylt.</value>
+    
+  </data>
+  <data name="AboutIf_else_value" xml:space="preserve">
+    <value>Et uttrykk som gir resultatet If når ingen angitte betingelser er oppfylt.</value>
+    
+  </data>
+  <data name="AboutSwitch" xml:space="preserve">
+    <value>Matcher resultatet av en formel med en verdiserie. Når det dukker opp et samsvar, blir en tilsvarende formel evaluert og returnert. Hvis det ikke blir funnet noen samsvarende treff, blir den siste standardformelen evaluert og returnert.</value>
+    
+  </data>
+  <data name="SwitchExpression" xml:space="preserve">
+    <value>bytt_verdi</value>
+    
+  </data>
+  <data name="SwitchDefaultReturn" xml:space="preserve">
+    <value>standardresultat</value>
+    
+  </data>
+  <data name="SwitchCaseExpr" xml:space="preserve">
+    <value>match_verdi</value>
+    
+  </data>
+  <data name="SwitchCaseArg" xml:space="preserve">
+    <value>match_resultat</value>
+    
+  </data>
+  <data name="AboutSwitch_switch_value" xml:space="preserve">
+    <value>Verdi som skal sammenlignes med hver match_verdi.</value>
+    
+  </data>
+  <data name="AboutSwitch_match_value" xml:space="preserve">
+    <value>Verdi som skal matches med bytt_verdi.</value>
+    
+  </data>
+  <data name="AboutSwitch_match_result" xml:space="preserve">
+    <value>Formel som skal evalueres og returneres hvis det blir funnet et treff.</value>
+  </data>
+  <data name="AboutSwitch_default_result" xml:space="preserve">
+    <value>Formel som skal evalueres og returneres hvis det ikke blir funnet noen treff.</value>
+  </data>
+  <data name="AboutAnd" xml:space="preserve">
+    <value>Kontrollerer om alle argumenter er sanne, og returnerer sann hvis alle argumentene er sanne.</value>
+    
+  </data>
+  <data name="AboutOr" xml:space="preserve">
+    <value>Kontrollerer om noen av argumentene har verdien SANN, og returnerer SANN eller USANN. Returnerer bare USANN hvis alle argumentene har verdien USANN.</value>
+    
+  </data>
+  <data name="AboutNot" xml:space="preserve">
+    <value>Endrer usann til sann og sann til usann.</value>
+    
+  </data>
+  <data name="LogicalFuncParam" xml:space="preserve">
+    <value>logisk</value>
+    
+  </data>
+  <data name="AboutAnd_logical" xml:space="preserve">
+    <value>Et logisk uttrykk som legges inn som faktor i Og-operasjonen.</value>
+  </data>
+  <data name="AboutOr_logical" xml:space="preserve">
+    <value>Et logisk uttrykk som skal faktoreres i Or-operasjonen.</value>
+  </data>
+  <data name="AboutNot_logical" xml:space="preserve">
+    <value>Et logisk uttrykk som skal negeres.</value>
+  </data>
+  <data name="AboutCount" xml:space="preserve">
+    <value>Teller de numeriske verdiene i den angitte kolonnen.</value>
+    
+  </data>
+  <data name="AboutCountA" xml:space="preserve">
+    <value>Teller antall rader i kolonnen som ikke er tomme.</value>
+    
+  </data>
+  <data name="AboutCountRows" xml:space="preserve">
+    <value>Teller antall rader i inndatatabellen eller samlingen.</value>
+    
+  </data>
+  <data name="CountArg1" xml:space="preserve">
+    <value>kilde</value>
+    
+  </data>
+  <data name="AboutCount_source" xml:space="preserve">
+    <value>En kolonne med verdier som skal telles.</value>
+  </data>
+  <data name="AboutCountA_source" xml:space="preserve">
+    <value>En kolonne med verdier som skal telles.</value>
+  </data>
+  <data name="AboutCountRows_source" xml:space="preserve">
+    <value>En tabell med rader som skal telles.</value>
+  </data>
+  <data name="AboutCountIf" xml:space="preserve">
+    <value>Teller antall rader som oppfyller det angitte vilkåret.</value>
+    
+  </data>
+  <data name="CountIfArg1" xml:space="preserve">
+    <value>kilde</value>
+    
+  </data>
+  <data name="CountIfArg2" xml:space="preserve">
+    <value>betingelse</value>
+    
+  </data>
+  <data name="AboutCountIf_source" xml:space="preserve">
+    <value>En tabell der rader som oppfyller visse kriterier, telles.</value>
+  </data>
+  <data name="AboutCountIf_condition" xml:space="preserve">
+    <value>Et uttrykk som evalueres for hver rad, som angir om raden skal telles.</value>
+  </data>
+  <data name="AboutSumT" xml:space="preserve">
+    <value>Returnerer summen av tallene som uttrykket evaluerer i tabellkonteksten.</value>
+    
+  </data>
+  <data name="AboutMaxT" xml:space="preserve">
+    <value>Returnerer den største verdien uttrykket evalueres til i tabellkonteksten.</value>
+    
+  </data>
+  <data name="AboutMinT" xml:space="preserve">
+    <value>Returnerer den minste verdien uttrykket evalueres til i tabellkonteksten.</value>
+    
+  </data>
+  <data name="AboutAverageT" xml:space="preserve">
+    <value>Returnerer gjennomsnittet (aritmetisk middelverdi) av tallene som uttrykket evalueres til i tabellkonteksten.</value>
+    
+  </data>
+  <data name="StatisticalTArg1" xml:space="preserve">
+    <value>kilde</value>
+    
+  </data>
+  <data name="StatisticalTArg2" xml:space="preserve">
+    <value>uttrykk</value>
+    
+  </data>
+  <data name="AboutMin_source" xml:space="preserve">
+    <value>En tabell som denne Min-operasjonen blir beregnet over.</value>
+  </data>
+  <data name="AboutMin_expression" xml:space="preserve">
+    <value>Et uttrykk som evalueres over hver rad i inndatatabellen, som inneholder numeriske verdier for denne Min-operasjonen.</value>
+  </data>
+  <data name="AboutMax_source" xml:space="preserve">
+    <value>Denne Max-operasjonen vil bli beregnet som en tabell.</value>
+  </data>
+  <data name="AboutMax_expression" xml:space="preserve">
+    <value>Et uttrykk som evalueres over hver rad i tabellen inndata, som inneholder numeriske verdier for denne Max-operasjonen.</value>
+  </data>
+  <data name="AboutAverage_source" xml:space="preserve">
+    <value>En tabell som denne gjennomsnittsoperasjonen skal beregnes i.</value>
+  </data>
+  <data name="AboutAverage_expression" xml:space="preserve">
+    <value>Et uttrykk som evalueres over hver rad i inndatatabellen, som angir numeriske verdier for denne gjennomsnittsoperasjonen.</value>
+  </data>
+  <data name="AboutSum_source" xml:space="preserve">
+    <value>En tabell som denne Sum-operasjonen blir beregnet over.</value>
+  </data>
+  <data name="AboutSum_expression" xml:space="preserve">
+    <value>Et uttrykk som evalueres over hver rad i inndatatabellen, som inneholder numeriske verdier for denne Sum-operasjonen.</value>
+  </data>
+  <data name="AboutSum" xml:space="preserve">
+    <value>Returnerer summen av dens argumenter.</value>
+    
+  </data>
+  <data name="AboutMax" xml:space="preserve">
+    <value>Returnerer den største verdien i et verdisett. Ignorerer logiske verdier og tekst.</value>
+    
+  </data>
+  <data name="AboutMin" xml:space="preserve">
+    <value>Returnerer den minste verdien i et verdisett. Ignorerer logiske verdier og tekst.</value>
+    
+  </data>
+  <data name="AboutAverage" xml:space="preserve">
+    <value>Returnerer gjennomsnittet (aritmetisk middelverdi) av argumentene.</value>
+    
+  </data>
+  <data name="StatisticalArg" xml:space="preserve">
+    <value>tall</value>
+    
+  </data>
+  <data name="AboutSum_number" xml:space="preserve">
+    <value>En numerisk verdi for denne Sum-operasjonen.</value>
+  </data>
+  <data name="AboutMin_number" xml:space="preserve">
+    <value>En numerisk verdi for denne Min-operasjonen.</value>
+  </data>
+  <data name="AboutMax_number" xml:space="preserve">
+    <value>En numerisk verdi for denne Max-operasjonen.</value>
+  </data>
+  <data name="AboutAverage_number" xml:space="preserve">
+    <value>En numerisk verdi for denne gjennomsnittsoperasjonen.</value>
+  </data>
+  <data name="AboutAddColumns" xml:space="preserve">
+    <value>Returnerer en tabell med nye kolonner som beregnes ved å evaluere alle uttrykk over kilden.</value>
+    
+  </data>
+  <data name="AddColumnsArg1" xml:space="preserve">
+    <value>kilde</value>
+    
+  </data>
+  <data name="AddColumnsArg2" xml:space="preserve">
+    <value>kolonne</value>
+    
+  </data>
+  <data name="AddColumnsArg3" xml:space="preserve">
+    <value>uttrykk</value>
+    
+  </data>
+  <data name="AboutAddColumns_source" xml:space="preserve">
+    <value>En tabell til å legge til kolonner i.</value>
+    
+  </data>
+  <data name="AboutAddColumns_column" xml:space="preserve">
+    <value>Et unikt kolonnenavn.</value>
+    
+  </data>
+  <data name="AboutAddColumns_expression" xml:space="preserve">
+    <value>Et uttrykk som angir verdier for den nye kolonnen.</value>
+    
+  </data>
+  <data name="AboutDropColumns" xml:space="preserve">
+    <value>Returnerer en tabell med én eller flere angitte kolonner som er fjernet fra kildetabellen.</value>
+    
+  </data>
+  <data name="DropColumnsArg1" xml:space="preserve">
+    <value>kilde</value>
+    
+  </data>
+  <data name="DropColumnsArg2" xml:space="preserve">
+    <value>kolonnenavn</value>
+    
+  </data>
+  <data name="AboutDropColumns_source" xml:space="preserve">
+    <value>En tabellverdi det skal fjernes kolonner fra.</value>
+  </data>
+  <data name="AboutDropColumns_column_name" xml:space="preserve">
+    <value>Navnet på en kolonne som skal fjernes.</value>
+  </data>
+  <data name="AboutFilter" xml:space="preserve">
+    <value>Returnerer radene fra tabellen der alle de angitte betingelsene er oppfylt.</value>
+    
+  </data>
+  <data name="FilterArg1" xml:space="preserve">
+    <value>kilde</value>
+    
+  </data>
+  <data name="FilterArg2" xml:space="preserve">
+    <value>logisk_test</value>
+    
+  </data>
+  <data name="AboutFilter_source" xml:space="preserve">
+    <value>En tabell som skal filtreres.</value>
+  </data>
+  <data name="AboutFilter_logical_test" xml:space="preserve">
+    <value>En logisk test som evalueres for hver rad. Bare radene som består denne testen, inkluderes i resultatet av filteret.</value>
+  </data>
+  <data name="AboutFirst" xml:space="preserve">
+    <value>Returnerer den første raden i kilden.</value>
+    
+  </data>
+  <data name="AboutLast" xml:space="preserve">
+    <value>Returnerer den siste raden i kilden.</value>
+    
+  </data>
+  <data name="FirstLastArg1" xml:space="preserve">
+    <value>kilde</value>
+    
+  </data>
+  <data name="AboutFirst_source" xml:space="preserve">
+    <value>En tabell som første rad skal returneres fra.</value>
+  </data>
+  <data name="AboutLast_source" xml:space="preserve">
+    <value>En tabell der siste rad returneres.</value>
+  </data>
+  <data name="AboutFirstN" xml:space="preserve">
+    <value>Returnerer de første antall-radene i kilden.</value>
+    
+  </data>
+  <data name="AboutLastN" xml:space="preserve">
+    <value>Returnerer de siste antall-radene i kilden.</value>
+    
+  </data>
+  <data name="FirstLastNArg1" xml:space="preserve">
+    <value>kilde</value>
+    
+  </data>
+  <data name="FirstLastNArg2" xml:space="preserve">
+    <value>antall</value>
+    
+  </data>
+  <data name="AboutFirstN_source" xml:space="preserve">
+    <value>En tabell som rader skal returneres fra.</value>
+  </data>
+  <data name="AboutFirstN_count" xml:space="preserve">
+    <value>Antall rader som skal returneres.</value>
+  </data>
+  <data name="AboutLastN_source" xml:space="preserve">
+    <value>En tabell som rader skal returneres fra.</value>
+  </data>
+  <data name="AboutLastN_count" xml:space="preserve">
+    <value>Antall rader som skal returneres.</value>
+  </data>
+  <data name="AboutText" xml:space="preserve">
+    <value>Konverterer en verdi til tekst i det bestemte tallformatet format_tekst. </value>
+    
+  </data>
+  <data name="TextArg1" xml:space="preserve">
+    <value>verdi</value>
+    
+  </data>
+  <data name="TextArg2" xml:space="preserve">
+    <value>format_tekst</value>
+    
+  </data>
+  <data name="TextArg3" xml:space="preserve">
+    <value>språk</value>
+    
+  </data>
+  <data name="AboutText_value" xml:space="preserve">
+    <value>En verdi som skal formateres til tekst.</value>
+  </data>
+  <data name="AboutText_format_text" xml:space="preserve">
+    <value>En tekstverdi som angir måten verdien blir formatert på.</value>
+    
+  </data>
+  <data name="AboutText_language" xml:space="preserve">
+    <value>Språkkoden som skal brukes ved konvertering til tekst.</value>
+    
+  </data>
+  <data name="AboutValue" xml:space="preserve">
+    <value>Konverterer en tekst som representerer et tall, til en numerisk verdi.</value>
+    
+  </data>
+  <data name="ValueArg1" xml:space="preserve">
+    <value>tekst</value>
+    
+  </data>
+  <data name="ValueArg2" xml:space="preserve">
+    <value>språk</value>
+    
+  </data>
+  <data name="AboutValue_text" xml:space="preserve">
+    <value>Tekstverdien som skal konverteres til en numerisk verdi.</value>
+  </data>
+  <data name="AboutValue_language" xml:space="preserve">
+    <value>Språkkoden som skal brukes ved konvertering av verdien.</value>
+    
+  </data>
+  <data name="AboutBoolean" xml:space="preserve">
+    <value>Konverterer en tekst som representerer en boolsk verdi til en boolsk verdi.</value>
+    
+  </data>
+  <data name="BooleanArg1" xml:space="preserve">
+    <value>tekst</value>
+    
+  </data>
+  <data name="AboutBoolean_text" xml:space="preserve">
+    <value>Tekstverdien som skal konverteres til en boolsk verdi.</value>
+  </data>
+  <data name="AboutCoalesce" xml:space="preserve">
+    <value>Returnerer det første argumentet som ikke er tomt</value>
+    
+  </data>
+  <data name="CoalesceArg1" xml:space="preserve">
+    <value>verdi</value>
+    
+  </data>
+  <data name="AboutCoalesce_value" xml:space="preserve">
+    <value>Et argument som skal returneres hvis det er det første argumentet som ikke er tomt.</value>
+  </data>
+  <data name="AboutConcatenate" xml:space="preserve">
+    <value>Slår sammen flere tekstverdier til én tekstverdi.</value>
+    
+  </data>
+  <data name="ConcatenateArg1" xml:space="preserve">
+    <value>tekst</value>
+    
+  </data>
+  <data name="AboutConcatenate_text" xml:space="preserve">
+    <value>En tekstverdi som skal settes sammen med resten av argumentene.</value>
+  </data>
+  <data name="AboutConcatenateT" xml:space="preserve">
+    <value>Slår sammen flere tekstverdier eller tabeller til én kolonne med tekstverdier.</value>
+    
+  </data>
+  <data name="ConcatenateTArg1" xml:space="preserve">
+    <value>verdi</value>
+    
+  </data>
+  <data name="AboutConcatenate_value" xml:space="preserve">
+    <value>En tekstverdi eller en kolonne med tekstverdier, som skal settes sammen med resten av argumentene.</value>
+  </data>
+  <data name="AboutConcat" xml:space="preserve">
+    <value>Slår sammen alle tekstverdier som er produsert, ved å evaluere det gitte uttrykket i den gitte tabellen til én tekstverdi.</value>
+    
+  </data>
+  <data name="ConcatArg1" xml:space="preserve">
+    <value>tabell</value>
+    
+  </data>
+  <data name="ConcatArg2" xml:space="preserve">
+    <value>uttrykk</value>
+    
+  </data>
+  <data name="ConcatArg3" xml:space="preserve">
+    <value>skilletegn</value>
+    
+  </data>
+  <data name="AboutConcat_table" xml:space="preserve">
+    <value>En tabellverdi som uttrykket som er gitt av den andre parameteren, skal evalueres etter.</value>
+  </data>
+  <data name="AboutConcat_expression" xml:space="preserve">
+    <value>Et tekstproduserende uttrykk som evalueres for hver rad i den gitte tabellen.</value>
+  </data>
+  <data name="AboutConcat_separator" xml:space="preserve">
+    <value>En tekstverdi som skal settes inn mellom sammenslåtte rader i tabellen.</value>
+    
+  </data>
+  <data name="AboutLen" xml:space="preserve">
+    <value>Returnerer antall tegn i en tekstverdi.</value>
+    
+  </data>
+  <data name="AboutLen_text" xml:space="preserve">
+    <value>En tekstverdi der lengden i tegn returneres.</value>
+  </data>
+  <data name="AboutLenT" xml:space="preserve">
+    <value>Returnerer antall tegn i en tekstverdi, evaluert per rad i den angitte tabellen eller samlingen.</value>
+    
+  </data>
+  <data name="AboutLen_text_column" xml:space="preserve">
+    <value>En kolonne med tekstverdier der lengden i tegn returneres (som en ny kolonne).</value>
+  </data>
+  <data name="LenArg1" xml:space="preserve">
+    <value>tekst</value>
+    
+  </data>
+  <data name="LenTArg1" xml:space="preserve">
+    <value>tekstkolonne</value>
+    
+  </data>
+  <data name="AboutUpper" xml:space="preserve">
+    <value>Konverterer en tekstverdi til bare store bokstaver.</value>
+    
+  </data>
+  <data name="AboutUpperT" xml:space="preserve">
+    <value>Konverterer alle bokstaver i en tekstverdi, evaluert per rad i den angitte tabellen eller samlingen, til store bokstaver.</value>
+    
+  </data>
+  <data name="AboutUpper_text" xml:space="preserve">
+    <value>En tekstverdi som konverteres til store bokstaver.</value>
+  </data>
+  <data name="AboutUpper_text_column" xml:space="preserve">
+    <value>En kolonne med tekstverdier som skal konverteres til en kolonne med tekstverdier for store bokstaver.</value>
+  </data>
+  <data name="AboutLower" xml:space="preserve">
+    <value>Konverterer alle bokstaver i en tekstverdi til små bokstaver.</value>
+    
+  </data>
+  <data name="AboutLowerT" xml:space="preserve">
+    <value>Konverterer alle bokstaver i en tekstverdi, evaluert per rad i den angitte tabellen eller samlingen, til små bokstaver.</value>
+    
+  </data>
+  <data name="AboutLower_text" xml:space="preserve">
+    <value>En tekstverdi som skal konverteres til små bokstaver.</value>
+  </data>
+  <data name="AboutLower_text_column" xml:space="preserve">
+    <value>En kolonne med tekstverdier som skal konverteres til en kolonne med tekstverdier med små bokstaver.</value>
+  </data>
+  <data name="AboutProper" xml:space="preserve">
+    <value>Konverterer en tekstverdi til store bokstaver: den første bokstaven i hvert ord med store bokstaver, og alle andre bokstaver til små bokstaver.</value>
+    
+  </data>
+  <data name="AboutProperT" xml:space="preserve">
+    <value>Konverterer en tekstverdi, evaluert per rad i den angitte tabellen eller samlingen, til store bokstaver: den første bokstaven i hvert ord med store bokstaver, og alle andre bokstaver til små bokstaver.</value>
+    
+  </data>
+  <data name="AboutProper_text" xml:space="preserve">
+    <value>En tekstverdi som skal konverteres til store bokstaver.</value>
+  </data>
+  <data name="AboutProper_text_column" xml:space="preserve">
+    <value>En kolonne med tekstverdier som skal konverteres til en kolonne med tekstverdier for store bokstaver.</value>
+  </data>
+  <data name="AboutTrim" xml:space="preserve">
+    <value>Fjerner alle mellomrom fra en tekstverdi, bortsett fra enkle mellomrom mellom ord.</value>
+    
+  </data>
+  <data name="AboutTrim_text" xml:space="preserve">
+    <value>En tekstverdi som skal konverteres for trimming.</value>
+  </data>
+  <data name="AboutTrim_text_column" xml:space="preserve">
+    <value>En kolonne med tekstverdier som skal trimmes.</value>
+  </data>
+  <data name="AboutTrimEnds" xml:space="preserve">
+    <value>Fjerner alle innledende og etterfølgende mellomrom fra en tekstverdi.</value>
+    
+  </data>
+  <data name="AboutTrimEnds_text" xml:space="preserve">
+    <value>En tekstverdi som skal trimme innledende og etterfølgende mellomrom.</value>
+  </data>
+  <data name="AboutTrimEnds_text_column" xml:space="preserve">
+    <value>En kolonne med tekstverdier som skal trimme innledende og etterfølgende mellomrom.</value>
+  </data>
+  <data name="AboutMid" xml:space="preserve">
+    <value>Returnerer tegnene fra midten av en tekstverdi, når en startposisjon og -lengde er angitt.</value>
+    
+  </data>
+  <data name="AboutMidT" xml:space="preserve">
+    <value>Returnerer tegnene fra midten av en tekstverdi, når en startposisjon og -lengde er angitt, som er evaluert per rad i den angitte tabellen eller samlingen.</value>
+    
+  </data>
+  <data name="AboutMid_text" xml:space="preserve">
+    <value>En tekstverdi som tegn blir trukket ut fra.</value>
+  </data>
+  <data name="AboutMid_text_column" xml:space="preserve">
+    <value>En kolonne med tekstverdier som tegn blir trukket ut fra til en ny kolonne.</value>
+  </data>
+  <data name="AboutMid_start_num" xml:space="preserve">
+    <value>Startposisjonen som tegnene skal trekkes ut fra.</value>
+  </data>
+  <data name="AboutMid_num_chars" xml:space="preserve">
+    <value>Antall tegn som skal trekkes ut.</value>
+  </data>
+  <data name="StringFuncArg1" xml:space="preserve">
+    <value>tekst</value>
+    
+  </data>
+  <data name="StringTFuncArg1" xml:space="preserve">
+    <value>tekstkolonne</value>
+    
+  </data>
+  <data name="StringFuncArg2" xml:space="preserve">
+    <value>startnummer</value>
+    
+  </data>
+  <data name="StringFuncArg3" xml:space="preserve">
+    <value>num_tegn</value>
+    
+  </data>
+  <data name="AboutReplace" xml:space="preserve">
+    <value>Erstatt del av en tekstverdi med en annen tekstverdi.</value>
+    
+  </data>
+  <data name="AboutReplaceT" xml:space="preserve">
+    <value>Erstatt del av en tekstverdi med en annen tekstverdi, evaluert per rad i den angitte tabellen eller samlingen.</value>
+    
+  </data>
+  <data name="ReplaceFuncArg1" xml:space="preserve">
+    <value>gammel_tekst</value>
+    
+  </data>
+  <data name="ReplaceFuncArg4" xml:space="preserve">
+    <value>ny_tekst</value>
+    
+  </data>
+  <data name="AboutReplace_old_text" xml:space="preserve">
+    <value>Tekstverdien som skal behandles.</value>
+  </data>
+  <data name="AboutReplace_start_num" xml:space="preserve">
+    <value>Startposisjonen der erstatningen finner sted.</value>
+  </data>
+  <data name="AboutReplace_num_chars" xml:space="preserve">
+    <value>Antallet tegn som skal erstattes.</value>
+  </data>
+  <data name="AboutReplace_new_text" xml:space="preserve">
+    <value>En erstatningstekstverdi.</value>
+  </data>
+  <data name="AboutReplace_text_column" xml:space="preserve">
+    <value>En kolonne med tekstverdier som skal behandles.</value>
+  </data>
+  <data name="AboutError" xml:space="preserve">
+    <value>Gir en feil med egendefinerte verdier.</value>
+    
+  </data>
+  <data name="AboutError_error_information" xml:space="preserve">
+    <value>En post som inneholder de egendefinerte verdiene for den produserte feilen.</value>
+    
+  </data>
+  <data name="ErrorArg1" xml:space="preserve">
+    <value>feilinformasjon</value>
+    
+  </data>
+  <data name="ErrErrorIrrelevantField" xml:space="preserve">
+    <value>Error-funksjonen bruker bare feltene «Kind», «Message», «Notify», «Control» og «Property»</value>
+    
+  </data>
+  <data name="AboutIfError" xml:space="preserve">
+    <value>Evaluerer og returnerer det første argumentet uten feil.</value>
+    
+  </data>
+  <data name="IfErrorArg1" xml:space="preserve">
+    <value>verdi</value>
+    
+  </data>
+  <data name="AboutIfError_value" xml:space="preserve">
+    <value>Verdien som returneres hvis det ikke er en feil.</value>
+    
+  </data>
+  <data name="IfErrorArg2" xml:space="preserve">
+    <value>tilbakefall</value>
+    
+  </data>
+  <data name="AboutIfError_fallback" xml:space="preserve">
+    <value>Verdien som returneres hvis det er det første argumentet uten feil.</value>
+    
+  </data>
+  <data name="AboutSubstitute" xml:space="preserve">
+    <value>Erstatter eksisterende tekst med ny tekst i en tekstverdi.</value>
+    
+  </data>
+  <data name="AboutSubstituteT" xml:space="preserve">
+    <value>Erstatter eksisterende tekst med ny tekst i en tekstverdi, evaluert per rad i den angitte tabellen eller samlingen.</value>
+    
+  </data>
+  <data name="SubstituteFuncArg1" xml:space="preserve">
+    <value>tekst</value>
+    
+  </data>
+  <data name="SubstituteTFuncArg1" xml:space="preserve">
+    <value>tekstkolonne</value>
+    
+  </data>
+  <data name="SubstituteFuncArg2" xml:space="preserve">
+    <value>gammel_tekst</value>
+    
+  </data>
+  <data name="SubstituteFuncArg3" xml:space="preserve">
+    <value>ny_tekst</value>
+    
+  </data>
+  <data name="SubstituteFuncArg4" xml:space="preserve">
+    <value>forekomstnummer</value>
+    
+  </data>
+  <data name="AboutSubstitute_text" xml:space="preserve">
+    <value>Tekstverdien som skal behandles.</value>
+  </data>
+  <data name="AboutSubstitute_old_text" xml:space="preserve">
+    <value>Teksten som skal erstattes.</value>
+  </data>
+  <data name="AboutSubstitute_new_text" xml:space="preserve">
+    <value>En erstatningstekst.</value>
+  </data>
+  <data name="AboutSubstitute_instance_num" xml:space="preserve">
+    <value>Angir hvilken forekomst for den angitte teksten som skal erstattes.</value>
+  </data>
+  <data name="AboutSubstitute_text_column" xml:space="preserve">
+    <value>En kolonne med tekstverdier som skal behandles.</value>
+  </data>
+  <data name="AboutSort" xml:space="preserve">
+    <value>Sorterer kilden basert på resultatene av uttrykket som ble evaluert for hver rad. En sorteringsrekkefølge kan eventuelt angis.</value>
+    
+  </data>
+  <data name="SortArg1" xml:space="preserve">
+    <value>kilde</value>
+    
+  </data>
+  <data name="SortArg2" xml:space="preserve">
+    <value>uttrykk</value>
+    
+  </data>
+  <data name="SortArg3" xml:space="preserve">
+    <value>rekkefølge</value>
+    
+  </data>
+  <data name="AboutSort_source" xml:space="preserve">
+    <value>Tabellen som skal sorteres.</value>
+  </data>
+  <data name="AboutSort_expression" xml:space="preserve">
+    <value>Et uttrykk som blir evaluert over rader i kilden og inneholder verdier for sortering.</value>
+  </data>
+  <data name="AboutSort_order" xml:space="preserve">
+    <value>Stigende eller synkende</value>
+  </data>
+  <data name="AboutSortByColumns" xml:space="preserve">
+    <value>Sorterer kilden basert på kolonnen. En sorteringsrekkefølge kan eventuelt angis.</value>
+    
+  </data>
+  <data name="SortByColumnsArg1" xml:space="preserve">
+    <value>kilde</value>
+    
+  </data>
+  <data name="SortByColumnsArg2" xml:space="preserve">
+    <value>kolonne</value>
+    
+  </data>
+  <data name="SortByColumnsArg3" xml:space="preserve">
+    <value>rekkefølge</value>
+    
+  </data>
+  <data name="AboutSortByColumns_source" xml:space="preserve">
+    <value>Tabellen som skal sorteres.</value>
+  </data>
+  <data name="AboutSortByColumns_column" xml:space="preserve">
+    <value>Et unikt kolonnenavn.</value>
+  </data>
+  <data name="AboutSortByColumns_order" xml:space="preserve">
+    <value>Stigende eller synkende</value>
+  </data>
+  <data name="AboutSortByColumnsWithOrderValues" xml:space="preserve">
+    <value>Sorterer kilden basert på indeksen av samsvarende verdier i den angitte kolonnen.</value>
+    
+  </data>
+  <data name="SortByColumnsWithOrderValuesArg1" xml:space="preserve">
+    <value>kilde</value>
+    
+  </data>
+  <data name="SortByColumnsWithOrderValuesArg2" xml:space="preserve">
+    <value>kolonne</value>
+    
+  </data>
+  <data name="SortByColumnsWithOrderValuesArg3" xml:space="preserve">
+    <value>verdier</value>
+    
+  </data>
+  <data name="AboutSortByColumns_values" xml:space="preserve">
+    <value>En kolonne med verdier som skal brukes til å sortere formål. Sortering blir ikke gjort stigende eller synkende, men i stedet basert på indeksen for samsvarende verdier i kolonnen </value>
+  </data>
+  <data name="AboutRand" xml:space="preserve">
+    <value>Returnerer et tilfeldig tall som er større enn eller lik 0 og mindre enn 1, jevnt fordelt.</value>
+    
+  </data>
+  <data name="AboutRandBetween" xml:space="preserve">
+    <value>Returnerer et tilfeldig tall mellom bunn og topp, jevnt fordelt.</value>
+    
+  </data>
+  <data name="AboutRandBetween_bottom" xml:space="preserve">
+    <value>Det minste heltallet som funksjonen kan returnere.</value>
+  </data>
+  <data name="AboutRandBetween_top" xml:space="preserve">
+    <value>Det største heltallet funksjonen kan returnere. Må være lik eller større enn bunnen.</value>
+  </data>
+  <data name="RandBetweenArg1" xml:space="preserve">
+    <value>bunn</value>
+    
+  </data>
+  <data name="RandBetweenArg2" xml:space="preserve">
+    <value>øverst</value>
+    
+  </data>
+  <data name="AboutGUID" xml:space="preserve">
+    <value>Oppretter en GUID fra en streng eller returnerer en tilfeldig generert GUID hvis det ikke er oppgitt noen argumenter.</value>
+    
+  </data>
+  <data name="GUIDArg" xml:space="preserve">
+    <value>GUID_streng</value>
+    
+  </data>
+  <data name="AboutGUID_GUID_string" xml:space="preserve">
+    <value>Strengen som skal konverteres til en GUID</value>
+    
+  </data>
+  <data name="AboutNow" xml:space="preserve">
+    <value>Returnerer gjeldende dato og klokkeslett.</value>
+    
+  </data>
+  <data name="AboutUTCNow" xml:space="preserve">
+    <value>Returnerer gjeldende dato og klokkeslett i UTC-tid.</value>
+    
+  </data>
+  <data name="AboutTimeZoneOffset" xml:space="preserve">
+    <value>Returnerer tidsforskjellen mellom UTC-tid og lokal tid i minutter. Hvis tidssonen din for eksempel er UTC+2, returneres -120.</value>
+    
+  </data>
+  <data name="TimeZoneOffsetArg1" xml:space="preserve">
+    <value>dato</value>
+    
+  </data>
+  <data name="AboutTimeZoneOffset_date" xml:space="preserve">
+    <value>Datoen som TimeZoneOffset skal beregnes på.</value>
+    
+  </data>
+  <data name="AboutToday" xml:space="preserve">
+    <value>Returnerer den gjeldende datoen.</value>
+    
+  </data>
+  <data name="AboutUTCToday" xml:space="preserve">
+    <value>Returnerer gjeldende dato i UTC-tid.</value>
+    
+  </data>
+  <data name="AboutWeekNum" xml:space="preserve">
+    <value>Returnerer ukenummeret for en bestemt dato.</value>
+    
+  </data>
+  <data name="WeekNumArg1" xml:space="preserve">
+    <value>dato</value>
+    
+  </data>
+  <data name="WeekNumArg2" xml:space="preserve">
+    <value>starten_av_uken</value>
+    
+  </data>
+  <data name="AboutWeekNum_date" xml:space="preserve">
+    <value>En datoverdi som ukenummeret skal beregnes for.</value>
+  </data>
+  <data name="AboutWeekNum_start_of_week" xml:space="preserve">
+    <value>En verdi fra opplistingen StartOfWeek eller et tall fra tilsvarende Excel-funksjon for å angi hvordan ukedagene skal nummereres.</value>
+    
+  </data>
+  <data name="AboutISOWeekNum" xml:space="preserve">
+    <value>Returnerer ukenummeret i henhold til ISO-regler for en bestemt dato.</value>
+    
+  </data>
+  <data name="ISOWeekNumArg1" xml:space="preserve">
+    <value>dato</value>
+    
+  </data>
+  <data name="AboutISOWeekNum_date" xml:space="preserve">
+    <value>En datoverdi som ISO-ukenummeret skal beregnes for.</value>
+  </data>
+  <data name="AboutInt" xml:space="preserve">
+    <value>Avkorter tall ved å runde av mot negativ uendelighet.</value>
+    
+  </data>
+  <data name="AboutIntT" xml:space="preserve">
+    <value>Avkorter verdiene i en kolonne med tall ved å runde av mot negativ uendelighet.</value>
+    
+  </data>
+  <data name="AboutInt_number" xml:space="preserve">
+    <value>En numerisk verdi som skal behandles.</value>
+  </data>
+  <data name="AboutInt_input" xml:space="preserve">
+    <value>En kolonne med numeriske verdier som skal behandles.</value>
+  </data>
+  <data name="AboutTrunc" xml:space="preserve">
+    <value>Avkorter tall ved å runde av mot null.</value>
+    
+  </data>
+  <data name="AboutTrunc_number" xml:space="preserve">
+    <value>Tallet som skal avkortes.</value>
+  </data>
+  <data name="AboutTrunc_source" xml:space="preserve">
+    <value>En kolonne med tall som skal avkortes.</value>
+  </data>
+  <data name="AboutTrunc_num_digits" xml:space="preserve">
+    <value>Antall desimaler som skal brukes for avkorting.</value>
+  </data>
+  <data name="AboutTruncT" xml:space="preserve">
+    <value>Avkorter alle tall i kilde ved å avrunde mot null.</value>
+    
+  </data>
+  <data name="TruncArg1" xml:space="preserve">
+    <value>tall</value>
+    
+  </data>
+  <data name="TruncArg2" xml:space="preserve">
+    <value>num_sifre</value>
+    
+  </data>
+  <data name="TruncTArg1" xml:space="preserve">
+    <value>kilde</value>
+    
+  </data>
+  <data name="TruncTArg2" xml:space="preserve">
+    <value>num_sifre</value>
+    
+  </data>
+  <data name="AboutRound" xml:space="preserve">
+    <value>Avrunder tallet til det angitte antallet sifre.</value>
+    
+  </data>
+  <data name="AboutRoundUp" xml:space="preserve">
+    <value>Avrunder tallet opp og bort fra null.</value>
+    
+  </data>
+  <data name="AboutRoundDown" xml:space="preserve">
+    <value>Avrunder tallet ned mot null.</value>
+    
+  </data>
+  <data name="RoundArg1" xml:space="preserve">
+    <value>tall</value>
+    
+  </data>
+  <data name="RoundArg2" xml:space="preserve">
+    <value>num_sifre</value>
+    
+  </data>
+  <data name="AboutRound_number" xml:space="preserve">
+    <value>Tallet som skal avrundes.</value>
+  </data>
+  <data name="AboutRound_source" xml:space="preserve">
+    <value>En kolonne med tall som skal avrundes.</value>
+  </data>
+  <data name="AboutRound_num_digits" xml:space="preserve">
+    <value>Antall desimaler som skal brukes for avrunding.</value>
+  </data>
+  <data name="AboutRoundUp_number" xml:space="preserve">
+    <value>Tallet som skal avrundes.</value>
+  </data>
+  <data name="AboutRoundUp_source" xml:space="preserve">
+    <value>En kolonne med tall som skal avrundes.</value>
+  </data>
+  <data name="AboutRoundUp_num_digits" xml:space="preserve">
+    <value>Antall desimaler som skal brukes for avrunding.</value>
+  </data>
+  <data name="AboutRoundDown_number" xml:space="preserve">
+    <value>Tallet som skal avrundes.</value>
+  </data>
+  <data name="AboutRoundDown_source" xml:space="preserve">
+    <value>En kolonne med tall som skal avrundes.</value>
+  </data>
+  <data name="AboutRoundDown_num_digits" xml:space="preserve">
+    <value>Antall desimaler som skal brukes for avrunding.</value>
+  </data>
+  <data name="AboutRoundT" xml:space="preserve">
+    <value>Avrunder alle tall i kilden til det angitte antallet sifre.</value>
+    
+  </data>
+  <data name="AboutRoundUpT" xml:space="preserve">
+    <value>Avrunder alle tall i kilden opp og bort fra null.</value>
+    
+  </data>
+  <data name="AboutRoundDownT" xml:space="preserve">
+    <value>Avrunder alle tall i kilden ned mot null.</value>
+    
+  </data>
+  <data name="RoundTArg1" xml:space="preserve">
+    <value>kilde</value>
+    
+  </data>
+  <data name="RoundTArg2" xml:space="preserve">
+    <value>num_sifre</value>
+    
+  </data>
+  <data name="AboutRGBA" xml:space="preserve">
+    <value>Bruker numeriske verdier for komponentene Rød, Grønn, Blå og Alfa for fargen og genererer den bestemte fargen. R, G, B er numeriske verdier mellom 0 og 255. Alfa er et desimaltall mellom 0 og 1.</value>
+    
+  </data>
+  <data name="RGBAArg1" xml:space="preserve">
+    <value>rød_verdi</value>
+    
+  </data>
+  <data name="RGBAArg2" xml:space="preserve">
+    <value>grønn_verdi</value>
+    
+  </data>
+  <data name="RGBAArg3" xml:space="preserve">
+    <value>blå_verdi</value>
+    
+  </data>
+  <data name="RGBAArg4" xml:space="preserve">
+    <value>alfaverdi</value>
+    
+  </data>
+  <data name="AboutRGBA_red_value" xml:space="preserve">
+    <value>Den røde komponenten, 0 til 255.</value>
+  </data>
+  <data name="AboutRGBA_green_value" xml:space="preserve">
+    <value>Den grønne komponenten, 0 til 255.</value>
+  </data>
+  <data name="AboutRGBA_blue_value" xml:space="preserve">
+    <value>Den blå komponenten, 0 til 255.</value>
+  </data>
+  <data name="AboutRGBA_alpha_value" xml:space="preserve">
+    <value>Alfa-komponenten, 0 til 1 (eller en prosentandel, for eksempel 49 %).</value>
+  </data>
+  <data name="AboutColorFade" xml:space="preserve">
+    <value>Lager en ny nyanse av den angitte fargen basert på den angitte prosenten for tone.</value>
+    
+  </data>
+  <data name="ColorFadeArg1" xml:space="preserve">
+    <value>farge</value>
+    
+  </data>
+  <data name="ColorFadeArg2" xml:space="preserve">
+    <value>ton_ned</value>
+    
+  </data>
+  <data name="AboutColorFade_color" xml:space="preserve">
+    <value>En farge som skal tones.</value>
+  </data>
+  <data name="AboutColorFade_fade" xml:space="preserve">
+    <value>En prosent som fargen tones med. En negativ prosent gir en mørkere nyanse. En positiv prosent gir en lysere nyanse.</value>
+  </data>
+  <data name="AboutColorFadeT" xml:space="preserve">
+    <value>Lager nye nyanser av de angitte fargeverdiene basert på de angitte prosentverdiene for tone.</value>
+  </data>
+  <data name="ColorFadeTArg1" xml:space="preserve">
+    <value>farge_eller_kolonne</value>
+    
+  </data>
+  <data name="ColorFadeTArg2" xml:space="preserve">
+    <value>ton_ned_eller_kolonne</value>
+    
+  </data>
+  <data name="AboutColorFade_color_or_column" xml:space="preserve">
+    <value>En farge (eller kolonne med fargeverdier) som skal tones.</value>
+  </data>
+  <data name="AboutColorFade_fade_or_column" xml:space="preserve">
+    <value>En prosent (eller kolonne med prosentverdier) som fargen (eller kolonne med fargeverdier) tones med. En negativ prosent gir en mørkere nyanse. En positiv prosent gir en lysere nyanse.</value>
+  </data>
+  <data name="AboutAbs" xml:space="preserve">
+    <value>Returnerer absoluttverdien til et tall, et tall uten fortegn.</value>
+    
+  </data>
+  <data name="AboutAbsT" xml:space="preserve">
+    <value>Returnerer absoluttverdiene (tall uten fortegn) for en kolonne med tall.</value>
+    
+  </data>
+  <data name="AboutAbs_number" xml:space="preserve">
+    <value>En numerisk verdi som skal behandles.</value>
+  </data>
+  <data name="AboutAbs_input" xml:space="preserve">
+    <value>En kolonne med numeriske verdier som skal behandles.</value>
+  </data>
+  <data name="AboutSin_number" xml:space="preserve">
+    <value>En numerisk verdi (i radianer) som skal behandles.</value>
+  </data>
+  <data name="AboutSin_input" xml:space="preserve">
+    <value>En kolonne med numeriske verdier (i radianer) som skal behandles.</value>
+  </data>
+  <data name="AboutSin" xml:space="preserve">
+    <value>Returnerer sinus-verdien for et tall.</value>
+    
+  </data>
+  <data name="AboutSinT" xml:space="preserve">
+    <value>Returnerer sinus-verdiene for en kolonne med tall.</value>
+    
+  </data>
+  <data name="AboutAsin_number" xml:space="preserve">
+    <value>En numerisk verdi som skal behandles.</value>
+  </data>
+  <data name="AboutAsin_input" xml:space="preserve">
+    <value>En kolonne med numeriske verdier som skal behandles.</value>
+  </data>
+  <data name="AboutAsin" xml:space="preserve">
+    <value>Returnerer arcsinus-verdien (i radianer) for et tall.</value>
+    
+  </data>
+  <data name="AboutAsinT" xml:space="preserve">
+    <value>Returnerer arcsinus-verdiene (i radianer) for en kolonne med tall.</value>
+    
+  </data>
+  <data name="AboutCos" xml:space="preserve">
+    <value>Returnerer cosinus-verdien for et tall.</value>
+    
+  </data>
+  <data name="AboutCosT" xml:space="preserve">
+    <value>Returnerer cosinus-verdiene for en kolonne med tall.</value>
+    
+  </data>
+  <data name="AboutCos_number" xml:space="preserve">
+    <value>En numerisk verdi (i radianer) som skal behandles.</value>
+  </data>
+  <data name="AboutCos_input" xml:space="preserve">
+    <value>En kolonne med numeriske verdier (i radianer) som skal behandles.</value>
+  </data>
+  <data name="AboutAcos" xml:space="preserve">
+    <value>Returnerer arccosinusen-verdien (i radianer) for et tall.</value>
+    
+  </data>
+  <data name="AboutAcos_number" xml:space="preserve">
+    <value>En numerisk verdi som skal behandles.</value>
+  </data>
+  <data name="AboutAcosT" xml:space="preserve">
+    <value>Returnerer arccosinusen-verdiene (i radianer) for en kolonne med tall.</value>
+    
+  </data>
+  <data name="AboutAcos_input" xml:space="preserve">
+    <value>En kolonne med numeriske verdier som skal behandles.</value>
+  </data>
+  <data name="AboutAcot_number" xml:space="preserve">
+    <value>En numerisk verdi som skal behandles.</value>
+  </data>
+  <data name="AboutAcot_input" xml:space="preserve">
+    <value>En kolonne med numeriske verdier som skal behandles.</value>
+  </data>
+  <data name="AboutAcot" xml:space="preserve">
+    <value>Returnerer arccotangens-verdien (i radianer) for et tall.</value>
+    
+  </data>
+  <data name="AboutAcotT" xml:space="preserve">
+    <value>Returnerer arccotangens-verdiene (i radianer) for en kolonne med tall.</value>
+    
+  </data>
+  <data name="AboutTan" xml:space="preserve">
+    <value>Returnerer tangent-verdien for et tall.</value>
+    
+  </data>
+  <data name="AboutTanT" xml:space="preserve">
+    <value>Returnerer tangent-verdiene for en kolonne med tall.</value>
+    
+  </data>
+  <data name="AboutTan_number" xml:space="preserve">
+    <value>En numerisk verdi (i radianer) som skal behandles.</value>
+  </data>
+  <data name="AboutTan_input" xml:space="preserve">
+    <value>En kolonne med numeriske verdier (i radianer) som skal behandles.</value>
+  </data>
+  <data name="AboutAtan" xml:space="preserve">
+    <value>Returnerer arctangens-verdien (i radianer) for et tall.</value>
+    
+  </data>
+  <data name="AboutAtanT" xml:space="preserve">
+    <value>Returnerer arctangens-verdiene (i radianer) for en kolonne med tall.</value>
+    
+  </data>
+  <data name="AboutAtan_number" xml:space="preserve">
+    <value>En numerisk verdi som skal behandles.</value>
+  </data>
+  <data name="AboutAtan_input" xml:space="preserve">
+    <value>En kolonne med numeriske verdier som skal behandles.</value>
+  </data>
+  <data name="AboutCot" xml:space="preserve">
+    <value>Returnerer kotangens-verdien for et tall.</value>
+    
+  </data>
+  <data name="AboutCotT" xml:space="preserve">
+    <value>Returnerer kotangens-verdiene for en kolonne med tall.</value>
+    
+  </data>
+  <data name="AboutCot_number" xml:space="preserve">
+    <value>En numerisk verdi (i radianer) som skal behandles.</value>
+  </data>
+  <data name="AboutCot_input" xml:space="preserve">
+    <value>En kolonne med numeriske verdier (i radianer) som skal behandles.</value>
+  </data>
+  <data name="AboutLn" xml:space="preserve">
+    <value>Returnerer den naturlige logaritmen (grunntall E) for et tall.</value>
+    
+  </data>
+  <data name="AboutLnT" xml:space="preserve">
+    <value>Returnerer de naturlige logaritme-verdiene (grunntall E) for en kolonne med tall.</value>
+    
+  </data>
+  <data name="AboutLn_number" xml:space="preserve">
+    <value>En numerisk verdi som skal behandles.</value>
+  </data>
+  <data name="AboutLn_input" xml:space="preserve">
+    <value>En kolonne med numeriske verdier som skal behandles.</value>
+  </data>
+  <data name="AboutLog" xml:space="preserve">
+    <value>Returnerer logaritmen for et tall for det gitte grunntallet. Standard grunntall er 10.</value>
+    
+  </data>
+  <data name="AboutLogT" xml:space="preserve">
+    <value>Returnerer logaritmeverdiene for et tall eller en kolonne med tall for det gitte grunntallet eller en kolonne med grunntall. Standard grunntall er 10.</value>
+    
+  </data>
+  <data name="AboutLog_number" xml:space="preserve">
+    <value>En numerisk verdi som skal behandles.</value>
+  </data>
+  <data name="AboutLog_input" xml:space="preserve">
+    <value>En kolonne med numeriske verdier som skal behandles.</value>
+  </data>
+  <data name="LogBase" xml:space="preserve">
+    <value>grunnlag</value>
+    
+  </data>
+  <data name="AboutLog_base" xml:space="preserve">
+    <value>Grunntallet for logaritmen.</value>
+  </data>
+  <data name="AboutExp" xml:space="preserve">
+    <value>Returnerer E opphøyd i potensen av et tall. Bruk potenseringsoperatoren (^) til å beregne potensen av andre grunntall.</value>
+    
+  </data>
+  <data name="AboutExpT" xml:space="preserve">
+    <value>Returnerer en kolonne som inneholder E opphøyd i potensen til hvert tilsvarende tall i en kolonne med tall. Bruk potenseringsoperatoren (^) til å beregne potensen av andre grunntall.</value>
+    
+  </data>
+  <data name="AboutExp_number" xml:space="preserve">
+    <value>En numerisk verdi som skal behandles.</value>
+  </data>
+  <data name="AboutExp_input" xml:space="preserve">
+    <value>En kolonne med numeriske verdier som skal behandles.</value>
+  </data>
+  <data name="AboutPi" xml:space="preserve">
+    <value>Returnerer verdien av pi.</value>
+  </data>
+  <data name="AboutRadians" xml:space="preserve">
+    <value>Returnerer radianer-verdien for et tall.</value>
+    
+  </data>
+  <data name="AboutRadiansT" xml:space="preserve">
+    <value>Returnerer radianer-verdiene for en kolonne med tall.</value>
+    
+  </data>
+  <data name="AboutRadians_number" xml:space="preserve">
+    <value>En numerisk verdi (i grader) som skal behandles.</value>
+  </data>
+  <data name="AboutRadians_input" xml:space="preserve">
+    <value>En kolonne med numeriske verdier (i grader) som skal behandles.</value>
+  </data>
+  <data name="AboutDegrees" xml:space="preserve">
+    <value>Returnerer grader-verdien for et tall.</value>
+    
+  </data>
+  <data name="AboutDegreesT" xml:space="preserve">
+    <value>Returnerer grader-verdiene for en kolonne med tall.</value>
+    
+  </data>
+  <data name="AboutDegrees_number" xml:space="preserve">
+    <value>En numerisk verdi (i radianer) som skal behandles.</value>
+  </data>
+  <data name="AboutDegrees_input" xml:space="preserve">
+    <value>En kolonne med numeriske verdier (i radianer) som skal behandles.</value>
+  </data>
+  <data name="AboutAtan2" xml:space="preserve">
+    <value>Returnerer arctangens-verdien (i radianer) for de angitte x- og y-koordinatene.</value>
+  </data>
+  <data name="AboutAtan2Arg1" xml:space="preserve">
+    <value>x_koordinat</value>
+    
+  </data>
+  <data name="AboutAtan2Arg2" xml:space="preserve">
+    <value>y_koordinat</value>
+    
+  </data>
+  <data name="AboutAtan2_x_coordinate" xml:space="preserve">
+    <value>x-koordinat.</value>
+  </data>
+  <data name="AboutAtan2_y_coordinate" xml:space="preserve">
+    <value>y-koordinat.</value>
+  </data>
+  <data name="AboutSqrt" xml:space="preserve">
+    <value>Returnerer kvadratroten av et tall.</value>
+    
+  </data>
+  <data name="AboutSqrtT" xml:space="preserve">
+    <value>Returnerer kvadratrøttene for en kolonne med tall.</value>
+    
+  </data>
+  <data name="AboutSqrt_number" xml:space="preserve">
+    <value>En numerisk verdi som skal behandles.</value>
+  </data>
+  <data name="AboutSqrt_input" xml:space="preserve">
+    <value>En kolonne med numeriske verdier som skal behandles.</value>
+  </data>
+  <data name="MathFuncArg1" xml:space="preserve">
+    <value>tall</value>
+    
+  </data>
+  <data name="MathTFuncArg1" xml:space="preserve">
+    <value>inndata</value>
+    
+  </data>
+  <data name="AboutLeft" xml:space="preserve">
+    <value>Returnerer det angitte antallet tegn fra starten av en tekstverdi.</value>
+    
+  </data>
+  <data name="AboutLeftT" xml:space="preserve">
+    <value>Returnerer en kolonne som inneholder det angitte antallet tegn fra starten av tekstverdien, evaluert per rad i den angitte tabellen eller samlingen.</value>
+    
+  </data>
+  <data name="AboutLeft_text" xml:space="preserve">
+    <value>En tekstverdi det skal trekkes ut tegn fra.</value>
+  </data>
+  <data name="AboutLeft_num_chars" xml:space="preserve">
+    <value>Antall tegn som skal trekkes ut.</value>
+  </data>
+  <data name="AboutLeft_text_column" xml:space="preserve">
+    <value>En kolonne med tekstverdier det skal trekkes ut tegn fra.</value>
+  </data>
+  <data name="AboutRight" xml:space="preserve">
+    <value>Returnerer det angitte antallet tegn fra slutten av en tekstverdi.</value>
+    
+  </data>
+  <data name="AboutRightT" xml:space="preserve">
+    <value>Returnerer en kolonne som inneholder det angitte antallet tegn fra slutten av en tekstverdi, evaluert per rad i den angitte tabellen eller samlingen.</value>
+    
+  </data>
+  <data name="AboutRight_text" xml:space="preserve">
+    <value>En tekstverdi det skal trekkes ut tegn fra.</value>
+  </data>
+  <data name="AboutRight_num_chars" xml:space="preserve">
+    <value>Antall tegn som skal trekkes ut.</value>
+  </data>
+  <data name="AboutRight_text_column" xml:space="preserve">
+    <value>En kolonne med tekstverdier det skal trekkes ut tegn fra.</value>
+  </data>
+  <data name="LeftRightArg1" xml:space="preserve">
+    <value>tekst</value>
+    
+  </data>
+  <data name="LeftRightTArg1" xml:space="preserve">
+    <value>tekstkolonne</value>
+    
+  </data>
+  <data name="LeftRightArg2" xml:space="preserve">
+    <value>num_tegn</value>
+    
+  </data>
+  <data name="AboutIsBlank" xml:space="preserve">
+    <value>Kontrollerer om uttrykket resulterer i en tom verdi, og returnerer sann eller usann.</value>
+    
+  </data>
+  <data name="IsBlankArg1" xml:space="preserve">
+    <value>uttrykk</value>
+    
+  </data>
+  <data name="AboutIsBlank_expression" xml:space="preserve">
+    <value>Et uttrykk som skal kontrolleres.</value>
+  </data>
+  <data name="AboutIsBlankOrError" xml:space="preserve">
+    <value>Kontrollerer om uttrykket resulterer i en tom verdi eller en feil, og returnerer sann eller usann.</value>
+    
+  </data>
+  <data name="IsBlankOrErrorArg1" xml:space="preserve">
+    <value>uttrykk</value>
+    
+  </data>
+  <data name="AboutIsBlankOrError_expression" xml:space="preserve">
+    <value>Et uttrykk som skal kontrolleres.</value>
+    
+  </data>
+  <data name="AboutIsEmpty" xml:space="preserve">
+    <value>Kontrollerer om en samling er tom, og returnerer sann eller usann.</value>
+    
+  </data>
+  <data name="IsEmptyArg1" xml:space="preserve">
+    <value>kilde</value>
+    
+  </data>
+  <data name="AboutIsEmpty_source" xml:space="preserve">
+    <value>En tabell som skal kontrolleres.</value>
+  </data>
+  <data name="AboutShuffle" xml:space="preserve">
+    <value>Returnerer en kopi i tilfeldig rekkefølge av inndatakildetabellen.</value>
+    
+  </data>
+  <data name="ShuffleArg1" xml:space="preserve">
+    <value>kilde</value>
+    
+  </data>
+  <data name="AboutShuffle_source" xml:space="preserve">
+    <value>En tabell som skal blandes.</value>
+  </data>
+  <data name="AboutLookUp" xml:space="preserve">
+    <value>Slår opp den første raden som den angitte betingelsen evalueres til sann for, og returnerer resultatet av uttrykket evaluert i konteksten for denne raden hvis et uttrykk angis, og hele raden ellers.</value>
+    
+  </data>
+  <data name="LookUpArg1" xml:space="preserve">
+    <value>kilde</value>
+    
+  </data>
+  <data name="LookUpArg2" xml:space="preserve">
+    <value>betingelse</value>
+    
+  </data>
+  <data name="LookUpArg3" xml:space="preserve">
+    <value>resultat</value>
+    
+  </data>
+  <data name="AboutLookUp_source" xml:space="preserve">
+    <value>En tabell der verdier slås opp.</value>
+  </data>
+  <data name="AboutLookUp_condition" xml:space="preserve">
+    <value>En betingelse som evalueres for rader i den angitte inndataen.</value>
+  </data>
+  <data name="AboutLookUp_result" xml:space="preserve">
+    <value>Et uttrykk som evalueres over raden, som samsvarer med den angitte betingelsen, og som gir resultatet.</value>
+  </data>
+  <data name="AboutStdevP" xml:space="preserve">
+    <value>Beregner standardavvik basert på hele utfyllingen angitt som argumenter (ignorerer logiske verdier og tekst).</value>
+    
+  </data>
+  <data name="AboutStdevP_number" xml:space="preserve">
+    <value>Et tall som skal faktoreres i beregningen av standardavvik.</value>
+  </data>
+  <data name="AboutStdevP_source" xml:space="preserve">
+    <value>En tabell som angir utfyllingen for beregningen av standardavvik.</value>
+  </data>
+  <data name="AboutStdevP_expression" xml:space="preserve">
+    <value>Et uttrykk som blir evaluert over rader i inndataene, som angir verdier for beregningen av standardavvik.</value>
+  </data>
+  <data name="AboutStdevPT" xml:space="preserve">
+    <value>Beregner standardavvik basert på hele utfyllingen angitt som en kolonne (ignorerer logiske verdier og tekst i kolonnen).</value>
+    
+  </data>
+  <data name="AboutVarP" xml:space="preserve">
+    <value>Beregner varians basert på hele populasjonen (ignorerer logiske verdier og tekst i populasjonen).</value>
+    
+  </data>
+  <data name="AboutVarP_number" xml:space="preserve">
+    <value>Et tall som faktoriseres i variansberegningen.</value>
+  </data>
+  <data name="AboutVarP_source" xml:space="preserve">
+    <value>En tabell som angir populasjonen for variansberegningen.</value>
+  </data>
+  <data name="AboutVarP_expression" xml:space="preserve">
+    <value>Et uttrykk som evalueres over rader i inndataene, som angir verdiene for beregning av avvik.</value>
+  </data>
+  <data name="AboutVarPT" xml:space="preserve">
+    <value>Beregner varians basert på hele populasjonen angitt som en kolonne (ignorerer logiske verdier og tekst i kolonnen).</value>
+    
+  </data>
+  <data name="SetArg1" xml:space="preserve">
+    <value>variabel</value>
+    
+  </data>
+  <data name="AboutSplit" xml:space="preserve">
+    <value>Deler opp en streng i delstrenger med et skilletegn.</value>
+    
+  </data>
+  <data name="AboutSplit_text" xml:space="preserve">
+    <value>Tekst som skal deles opp i delstrenger.</value>
+    
+  </data>
+  <data name="AboutSplit_separator" xml:space="preserve">
+    <value>Skilletegnstekst som brukes til å dele opp inndatateksten i delstrenger.</value>
+    
+  </data>
+  <data name="SplitArg1" xml:space="preserve">
+    <value>tekst</value>
+    
+  </data>
+  <data name="SplitArg2" xml:space="preserve">
+    <value>skilletegn</value>
+    
+  </data>
+  <data name="AboutIsType" xml:space="preserve">
+    <value>Returnerer true hvis den angitte verdien er av den angitte typen.</value>
+    
+  </data>
+  <data name="IsTypeArg1" xml:space="preserve">
+    <value>verdi</value>
+    
+  </data>
+  <data name="IsTypeArg2" xml:space="preserve">
+    <value>typeTable</value>
+    
+  </data>
+  <data name="AboutAsType" xml:space="preserve">
+    <value>Bruker den angitte verdien som den angitte typen.</value>
+    
+  </data>
+  <data name="AsTypeArg1" xml:space="preserve">
+    <value>verdi</value>
+    
+  </data>
+  <data name="AsTypeArg2" xml:space="preserve">
+    <value>typeTable</value>
+    
+  </data>
+  <data name="AboutAsType_value" xml:space="preserve">
+    <value>Den polymorfe oppføringen som skal konverteres til en ny type.</value>
+  </data>
+  <data name="AboutAsType_typeTable" xml:space="preserve">
+    <value>Enhetstabellen som representerer typen som vi ønsker at verdien skal brukes som.</value>
+  </data>
+  <data name="AboutWith" xml:space="preserve">
+    <value>Utfører formelen som er angitt som andre parameter ved hjelp av omfanget som er angitt av den første.</value>
+    
+  </data>
+  <data name="WithArg1" xml:space="preserve">
+    <value>omfang</value>
+    
+  </data>
+  <data name="WithArg2" xml:space="preserve">
+    <value>formel</value>
+    
+  </data>
+  <data name="AboutWith_scope" xml:space="preserve">
+    <value>Omfanget som skal oppkalle formelen som defineres av den andre parameteren.</value>
+    
+  </data>
+  <data name="AboutWith_formula" xml:space="preserve">
+    <value>Formelen som skal kalles ved å bruke omfanget som er angitt av den første parameteren.</value>
+    
+  </data>
+  <data name="AboutSequence" xml:space="preserve">
+    <value>Genererer en tabell med sekvensielle tall</value>
+    
+  </data>
+  <data name="SequenceArg1" xml:space="preserve">
+    <value>oppføringer</value>
+    
+  </data>
+  <data name="AboutSequence_records" xml:space="preserve">
+    <value>Antall oppføringer i tabell med én kolonne med navnet Verdi. Maksimalt 50 000.</value>
+    
+  </data>
+  <data name="SequenceArg2" xml:space="preserve">
+    <value>start</value>
+    
+  </data>
+  <data name="AboutSequence_start" xml:space="preserve">
+    <value>Valgfritt. Det første tallet i sekvensen. Standard 1.</value>
+    
+  </data>
+  <data name="SequenceArg3" xml:space="preserve">
+    <value>trinn</value>
+    
+  </data>
+  <data name="AboutSequence_step" xml:space="preserve">
+    <value>Valgfritt. Mengden som skal øke hver etterfølgende verdi i tabellen. Standard 1.</value>
+    
+  </data>
+  <data name="ErrInvalidDot" xml:space="preserve">
+    <value>Ugyldig bruk av '.'</value>
+    
+  </data>
+  <data name="ErrUnknownFunction" xml:space="preserve">
+    <value>Aktivering av ukjent eller ustøttet funksjon.</value>
+    
+  </data>
+  <data name="ErrUnSupportedComponentBehaviorInvocation" xml:space="preserve">
+    <value>Komponentvirkemåten kan bare aktiveres i en komponent.</value>
+    
+  </data>
+  <data name="ErrUnSupportedComponentDataPropertyAccess" xml:space="preserve">
+    <value>Egenskapen for komponenttilpassede data med parametere kan bare nås fra en komponent eller fra egenskaper for komponentutdata.</value>
+    
+  </data>
+  <data name="ErrBadArity" xml:space="preserve">
+    <value>Ugyldig antall argumenter: mottok {0}, men forventet {1}.</value>
+    
+  </data>
+  <data name="ErrBadArityEven" xml:space="preserve">
+    <value>Ugyldig antall argumenter: mottok {0}, men forventet et partall.</value>
+    
+  </data>
+  <data name="ErrBadArityOdd" xml:space="preserve">
+    <value>Ugyldig antall argumenter: mottok {0}, men forventet et ulikt tall.</value>
+    
+  </data>
+  <data name="ErrBadType" xml:space="preserve">
+    <value>Ugyldig argumenttype.</value>
+    
+  </data>
+  <data name="ErrBadType_Type" xml:space="preserve">
+    <value>Ugyldig argumenttype. Kan ikke bruke {0}-verdier i denne konteksten.</value>
+    
+  </data>
+  <data name="ErrBadOperatorTypes" xml:space="preserve">
+    <value>Denne operasjonen er ikke gyldig for disse typene: {0}, {1}.</value>
+    
+  </data>
+  <data name="ErrGuidStrictComparison" xml:space="preserve">
+    <value>GUID-verdier kan bare sammenlignes med andre GUID-verdier.</value>
+    
+  </data>
+  <data name="ErrBadRecordFieldType_FieldName_ExpectedType" xml:space="preserve">
+    <value>Ugyldig type for feltet {0}. Forventet felttype {1}.</value>
+    
+  </data>
+  <data name="ErrBadType_ExpectedType" xml:space="preserve">
+    <value>Ugyldig argumenttype. Forventet en {0}-verdi.</value>
+    
+  </data>
+  <data name="ErrBadType_ExpectedType_ProvidedType" xml:space="preserve">
+    <value>Ugyldig argumenttype ({1}). Forventet en {0}-verdi i stedet.</value>
+    
+  </data>
+  <data name="ErrBadSchema_ExpectedType" xml:space="preserve">
+    <value>Ugyldig argumenttype. Forventet en {0}-verdi, men for et annet skjema.</value>
+    
+  </data>
+  <data name="ErrBadType_ExpectedTypesCSV" xml:space="preserve">
+    <value>Ugyldig argumenttype. Forventet ett av følgende: {0}.</value>
+    
+  </data>
+  <data name="ErrInvalidArgs_Func" xml:space="preserve">
+    <value>Funksjonen {0} har noen ugyldige argumenter.</value>
+    
+  </data>
+  <data name="ErrNeedTable_Func" xml:space="preserve">
+    <value>Det første argumentet for {0} må være en tabell.</value>
+    
+  </data>
+  <data name="ErrInvalidPropertyAccess" xml:space="preserve">
+    <value>Egenskapen forventer en nødvendig parameter. Bruk parentesene til å sende den nødvendige parameteren.</value>
+    
+  </data>
+  <data name="ErrNeedTableCol_Func" xml:space="preserve">
+    <value>Det første argumentet for {0} må være en tabell med én kolonne.</value>
+    
+  </data>
+  <data name="ErrInvalidSchemaNeedStringCol_Col" xml:space="preserve">
+    <value>Ugyldig skjema. Forventet en kolonne med tekstverdier for {0}.</value>
+    
+  </data>
+  <data name="ErrInvalidSchemaNeedDateCol_Col" xml:space="preserve">
+    <value>Ugyldig skjema. Forventet en kolonne med datoverdier for {0}.</value>
+    
+  </data>
+  <data name="ErrInvalidSchemaNeedNumCol_Col" xml:space="preserve">
+    <value>Ugyldig skjema. Forventet en kolonne med numeriske verdier for {0}.</value>
+    
+  </data>
+  <data name="ErrInvalidSchemaNeedColorCol_Col" xml:space="preserve">
+    <value>Ugyldig skjema. Forventet en kolonne med fargeverdier for {0}.</value>
+    
+  </data>
+  <data name="ErrInvalidSchemaNeedCol" xml:space="preserve">
+    <value>Ugyldig skjema. Forventet en tabell med én kolonne.</value>
+    
+  </data>
+  <data name="ErrNeedRecord" xml:space="preserve">
+    <value>Kan ikke bruke en ikke-postverdi i denne konteksten.</value>
+    
+  </data>
+  <data name="ErrIncompatibleRecord" xml:space="preserve">
+    <value>Kan ikke bruke denne posten. Den inneholder kanskje konfliktfelt for inkompatible typer.</value>
+    
+  </data>
+  <data name="ErrNeedRecord_Func" xml:space="preserve">
+    <value>Det første argumentet for {0} må være en post.</value>
+    
+  </data>
+  <data name="ErrNeedEntity_EntityName" xml:space="preserve">
+    <value>For å kunne bruke dette alternativsettet som en opplistingsverdi eller i Choices funksjonen, må '{0}'-enheten legges til som datakilde. Bruk Vis-menyen for å legge til, og velg deretter datakilder.</value>
+    
+  </data>
+  <data name="ErrNotAccessibleInCurrentContext" xml:space="preserve">
+    <value>Den angitte egenskapen er ikke tilgjengelig i denne konteksten.</value>
+    
+  </data>
+  <data name="ErrInternalControlInInputProperty" xml:space="preserve">
+    <value>Det kan ikke henvises til kontroller i en komponent i inndataegenskapene for den samme komponenten.</value>
+    
+  </data>
+  <data name="ErrColumnNotAccessibleInCurrentContext" xml:space="preserve">
+    <value>Den angitte kolonnen er ikke tilgjengelig i denne konteksten.</value>
+    
+  </data>
+  <data name="WrnRowScopeOneToNExpandNumberOfCalls" xml:space="preserve">
+    <value>Det refereres til en én-til-mange- eller mange-til-mange-relasjon i denne funksjonens oppføringsomfang. Dette kan føre til et stort antall samtaler til datakilden som kan påvirke ytelsen.</value>
+    
+  </data>
+  <data name="ErrNumberTooLarge" xml:space="preserve">
+    <value>Numerisk verdi er for stor.</value>
+    
+  </data>
+  <data name="ErrInvalidDataSource" xml:space="preserve">
+    <value>Denne datakilden er ugyldig. Rett opp feilen i ruten Datakilder ved å klikke Innhold -&gt; Datakilder eller Vis -&gt; Alternativer</value>
+    
+  </data>
+  <data name="ErrExpectedDataSourceRestriction" xml:space="preserve">
+    <value>Forventet at en datakildeidentifikator begrenset den innebygde posten.</value>
+    
+  </data>
+  <data name="ErrIncompatibleTypes" xml:space="preserve">
+    <value>De angitte typene er inkompatible.</value>
+    
+  </data>
+  <data name="ErrTypeError_Ex1_Ex2_Found" xml:space="preserve">
+    <value>Typen for dette argumentet ({2}) samsvarer ikke med en av de forventede typene {0} eller {1}.</value>
+    
+  </data>
+  <data name="ErrTypeError_Arg_Expected_Found" xml:space="preserve">
+    <value>Typen for dette argumentet ({0}) samsvarer ikke med den forventede typen ({1}). Fant typen {2}.</value>
+    
+  </data>
+  <data name="ErrTypeErrorRecordIncompatibleWithSource" xml:space="preserve">
+    <value>Typen for denne posten er inkompatibel med kilden.</value>
+    
+  </data>
+  <data name="ErrExpectedStringLiteralArg_Name" xml:space="preserve">
+    <value>Argumentet {0} er ugyldig, forventet en tekstlitteral.</value>
+    
+  </data>
+  <data name="ErrArgNotAValidIdentifier_Name" xml:space="preserve">
+    <value>Argumentet {0} er ikke en gyldig identifikator.</value>
+    
+  </data>
+  <data name="ErrColExists_Name" xml:space="preserve">
+    <value>Det finnes allerede en kolonne med navnet {0}.</value>
+    
+  </data>
+  <data name="ErrColConflict_Name" xml:space="preserve">
+    <value>Navnekonflikt for kolonne {0}.</value>
+    
+  </data>
+  <data name="ErrColDNE_Name" xml:space="preserve">
+    <value>Den angitte kolonnen {0} finnes ikke.</value>
+    
+  </data>
+  <data name="ErrColumnDoesNotExist_Name_Similar" xml:space="preserve">
+    <value>Den angitte kolonnen {0} finnes ikke. Kolonnen med mest likt navn er {1}.</value>
+    
+  </data>
+  <data name="ErrSortIncorrectOrder" xml:space="preserve">
+    <value>Sorteringsrekkefølgen er feil for uttrykkstypen.</value>
+    
+  </data>
+  <data name="ErrSortWrongType" xml:space="preserve">
+    <value>Kan ikke sortere etter uttrykkstypen.</value>
+    
+  </data>
+  <data name="ErrFunctionDoesNotAcceptThisType_Function_Expected" xml:space="preserve">
+    <value>Feiltype: {0} forventer enten {1} eller en tabellkolonne av typen {1}.</value>
+    
+  </data>
+  <data name="ErrIncorrectFormat_Func" xml:space="preserve">
+    <value>Ugyldig formatangivelse for {0}.</value>
+    
+  </data>
+  <data name="ErrAsyncLambda" xml:space="preserve">
+    <value>Asynkron start kan ikke brukes i vilkår og verdifunksjoner.</value>
+    
+  </data>
+  <data name="ErrValueMustBeFullyQualified" xml:space="preserve">
+    <value>Dette er et navneområde. Du har tilgang til medlemmene ved hjelp av operatoren «.».</value>
+    
+  </data>
+  <data name="ErrScopeModificationLambda" xml:space="preserve">
+    <value>Denne funksjonen kan ikke bruke samme datakilde som brukes i {0}.</value>
+    
+  </data>
+  <data name="ErrFunctionDisallowedWithinNondeterministicOperationOrder" xml:space="preserve">
+    <value>Denne funksjonen kan ikke aktiveres inne i {0}.</value>
+    
+  </data>
+  <data name="ErrAsTypeAndIsTypeExpectConnectedDataSource" xml:space="preserve">
+    <value>Feil argument. Denne formelen forventer en tabell fra en tilkoblet datakilde. AsType og IsType krever tilkoblede datakilder.</value>
+    
+  </data>
+  <data name="InfoMessage" xml:space="preserve">
+    <value>Melding: </value>
+    
+  </data>
+  <data name="InfoNode_Node" xml:space="preserve">
+    <value>Node: {0}</value>
+    
+  </data>
+  <data name="InfoTok_Tok" xml:space="preserve">
+    <value>Token: {0}</value>
+    
+  </data>
+  <data name="FormatSpan_Min_Lim" xml:space="preserve">
+    <value>({0},{1}) </value>
+    
+  </data>
+  <data name="FormatErrorSeparator" xml:space="preserve">
+    <value>, </value>
+    
+  </data>
+  <data name="AboutDate" xml:space="preserve">
+    <value>Returnerer tallet som representerer datoen i dato/klokkeslett-koden for Power Apps.</value>
+    
+  </data>
+  <data name="DateArg1" xml:space="preserve">
+    <value>år</value>
+    
+  </data>
+  <data name="DateArg2" xml:space="preserve">
+    <value>måned</value>
+    
+  </data>
+  <data name="DateArg3" xml:space="preserve">
+    <value>dag</value>
+    
+  </data>
+  <data name="AboutDate_year" xml:space="preserve">
+    <value>Året.</value>
+  </data>
+  <data name="AboutDate_month" xml:space="preserve">
+    <value>Måneden.</value>
+  </data>
+  <data name="AboutDate_day" xml:space="preserve">
+    <value>Dagen.</value>
+  </data>
+  <data name="AboutTime" xml:space="preserve">
+    <value>Konverterer timer, minutter og sekunder til desimaltall.</value>
+    
+  </data>
+  <data name="TimeArg1" xml:space="preserve">
+    <value>time</value>
+    
+  </data>
+  <data name="TimeArg2" xml:space="preserve">
+    <value>minutt</value>
+    
+  </data>
+  <data name="TimeArg3" xml:space="preserve">
+    <value>sekund</value>
+    
+  </data>
+  <data name="TimeArg4" xml:space="preserve">
+    <value>millisekund</value>
+    
+  </data>
+  <data name="AboutTime_hour" xml:space="preserve">
+    <value>Klokkeslettkomponenten.</value>
+  </data>
+  <data name="AboutTime_minute" xml:space="preserve">
+    <value>Minuttkomponenten.</value>
+  </data>
+  <data name="AboutTime_second" xml:space="preserve">
+    <value>Sekundkomponenten.</value>
+  </data>
+  <data name="AboutTime_millisecond" xml:space="preserve">
+    <value>Millisekundkomponenten.</value>
+  </data>
+  <data name="AboutDateTime" xml:space="preserve">
+    <value>Oppretter en verdi som representerer et øyeblikk i tid, uttrykt som en dato og et klokkeslett for dagen.</value>
+    
+  </data>
+  <data name="AboutYear" xml:space="preserve">
+    <value>År returnerer året for en gitt dato.</value>
+    
+  </data>
+  <data name="YearArg1" xml:space="preserve">
+    <value>dato_klokkeslett</value>
+    
+  </data>
+  <data name="AboutYear_date_time" xml:space="preserve">
+    <value>En datoverdi som komponenten for år blir trukket ut fra.</value>
+  </data>
+  <data name="AboutMonth" xml:space="preserve">
+    <value>Returnerer måneden, som er et tall fra 1 (januar) til 12 (desember).</value>
+    
+  </data>
+  <data name="MonthArg1" xml:space="preserve">
+    <value>dato_klokkeslett</value>
+    
+  </data>
+  <data name="AboutMonth_date_time" xml:space="preserve">
+    <value>Datoverdien som minuttkomponenten blir trukket ut fra.</value>
+  </data>
+  <data name="AboutDay" xml:space="preserve">
+    <value>Dag returnerer dagen i måneden, et tall fra 1 til 31.</value>
+    
+  </data>
+  <data name="DayArg1" xml:space="preserve">
+    <value>dato_klokkeslett</value>
+    
+  </data>
+  <data name="AboutDay_date_time" xml:space="preserve">
+    <value>Datoverdien som dagskomponenten trekkes ut fra.</value>
+  </data>
+  <data name="AboutHour" xml:space="preserve">
+    <value>Time returnerer timen som et tall mellom 0 (12:00:00 AM) og 23 (11:00:00 PM).</value>
+    
+  </data>
+  <data name="HourArg1" xml:space="preserve">
+    <value>dato_klokkeslett</value>
+    
+  </data>
+  <data name="AboutHour_date_time" xml:space="preserve">
+    <value>Dato- eller klokkeslettverdien som komponenten trekkes ut fra.</value>
+  </data>
+  <data name="AboutMinute" xml:space="preserve">
+    <value>Returnerer minuttet, som er et tall fra 0 til 59.</value>
+    
+  </data>
+  <data name="MinuteArg1" xml:space="preserve">
+    <value>dato_klokkeslett</value>
+    
+  </data>
+  <data name="AboutMinute_date_time" xml:space="preserve">
+    <value>Dato- eller klokkeslettverdien som minuttkomponenten blir trukket ut fra.</value>
+  </data>
+  <data name="AboutSecond" xml:space="preserve">
+    <value>Returnerer sekundet, som er et tall fra 0 til 59.</value>
+    
+  </data>
+  <data name="SecondArg1" xml:space="preserve">
+    <value>dato_klokkeslett</value>
+    
+  </data>
+  <data name="AboutSecond_date_time" xml:space="preserve">
+    <value>Dato- eller klokkeslettverdien som sekundkomponenten blir trukket ut fra.</value>
+  </data>
+  <data name="AboutWeekday" xml:space="preserve">
+    <value>Returnerer ukedagen med en dato/klokkeslett-verdi. Som standard returneres resultatet i området 1 (søndag) til 7 (lørdag). Du kan angi et annet område med en StartOfWeek-opplistingsverdi eller en Microsoft Excel-funksjonskode for ukedag.</value>
+    
+  </data>
+  <data name="WeekdayArg1" xml:space="preserve">
+    <value>dato</value>
+    
+  </data>
+  <data name="WeekdayArg2" xml:space="preserve">
+    <value>starten_av_uken</value>
+    
+  </data>
+  <data name="AboutWeekday_date" xml:space="preserve">
+    <value>En datoverdi som ukedagen skal beregnes for.</value>
+  </data>
+  <data name="AboutWeekday_start_of_week" xml:space="preserve">
+    <value>En verdi fra opplistingen StartOfWeek eller et tall fra tilsvarende Excel-funksjon for å angi hvordan ukedagene skal nummereres.</value>
+    
+  </data>
+  <data name="AboutCalendar__MonthsLong" xml:space="preserve">
+    <value>Returnerer én kolonnetabell som inneholder de fullstendige navnene for hver måned.</value>
+    
+  </data>
+  <data name="AboutCalendar__MonthsShort" xml:space="preserve">
+    <value>Returnerer én kolonnetabell som inneholder de forkortede navnene for hver måned.</value>
+    
+  </data>
+  <data name="AboutCalendar__WeekdaysLong" xml:space="preserve">
+    <value>Returnerer én kolonnetabell som inneholder de fullstendige navnene for hver ukedag.</value>
+    
+  </data>
+  <data name="AboutCalendar__WeekdaysShort" xml:space="preserve">
+    <value>Returnerer én kolonnetabell som inneholder de forkortede navnene for hver ukedag.</value>
+    
+  </data>
+  <data name="AboutClock__AmPm" xml:space="preserve">
+    <value>Returnerer én kolonnetabell som inneholder angivelser med store bokstaver for før og etter kl. 12:00.</value>
+    
+  </data>
+  <data name="AboutClock__AmPmShort" xml:space="preserve">
+    <value>Returnerer én kolonnetabell som inneholder forkortede angivelser med store bokstaver for før og etter kl. 12:00.</value>
+    
+  </data>
+  <data name="AboutClock__IsClock24" xml:space="preserve">
+    <value>Returnerer en boolsk verdi som angir om klokken bruker 24-timers tid.</value>
+    
+  </data>
+  <data name="AboutDateValue" xml:space="preserve">
+    <value>Konverterer en dato i tekstformat til et tall som representerer datoen i dato/klokkeslett-koden for Power Apps.</value>
+    
+  </data>
+  <data name="DateValueArg1" xml:space="preserve">
+    <value>datotekst</value>
+    
+  </data>
+  <data name="DateValueArg2" xml:space="preserve">
+    <value>språkkode</value>
+    
+  </data>
+  <data name="AboutDateValue_date_text" xml:space="preserve">
+    <value>En tekstrepresentasjon av et dato/klokkeslett-stempel, i et plattformstøttet format.</value>
+  </data>
+  <data name="AboutDateValue_language_code" xml:space="preserve">
+    <value>Språkkoden for den angitte teksten.</value>
+  </data>
+  <data name="AboutTimeValue" xml:space="preserve">
+    <value>Konverterer et klokkeslett i form av tekst til et tall som representerer datoen i dato-/klokkeslettkoden for Microsoft Power Apps. Den eventuelle datodelen ignoreres.</value>
+    
+  </data>
+  <data name="TimeValueArg1" xml:space="preserve">
+    <value>klokkeslett_tid</value>
+    
+  </data>
+  <data name="TimeValueArg2" xml:space="preserve">
+    <value>språkkode</value>
+    
+  </data>
+  <data name="AboutTimeValue_time_text" xml:space="preserve">
+    <value>En tekstrepresentasjon av et dato/klokkeslett-stempel, i et plattformstøttet format.</value>
+  </data>
+  <data name="AboutTimeValue_language_code" xml:space="preserve">
+    <value>Språkkoden for den angitte teksten.</value>
+  </data>
+  <data name="ErrAutoRefreshNotAllowed" xml:space="preserve">
+    <value>Automatisk oppdatering av tjenestefunksjoner kan ikke brukes i handlingsregler.</value>
+    
+  </data>
+  <data name="ErrMultipleValuesForField_Name" xml:space="preserve">
+    <value>Et felt med navnet {0} ble angitt mer enn én gang i denne posten.</value>
+    
+  </data>
+  <data name="WarnColumnNameSpecifiedMultipleTimes_Name" xml:space="preserve">
+    <value>En kolonne med navnet {0} ble angitt mer enn én gang.</value>
+    
+  </data>
+  <data name="WarnLiteralPredicate" xml:space="preserve">
+    <value>Advarsel! Dette predikatet er en litteral verdi og refererer ikke til inndatatabellen.</value>
+    
+  </data>
+  <data name="WarnDynamicMetadata" xml:space="preserve">
+    <value>Advarsel: Velg "Hent skjema" nederst på den utvidede formellinjen for å angi og oppdatere resultatskjemaet for denne metoden. Hvis ikke returnerer ikke denne metoden noe resultat.</value>
+    
+  </data>
+  <data name="FindArg1" xml:space="preserve">
+    <value>finn_tekst</value>
+    
+  </data>
+  <data name="FindArg2" xml:space="preserve">
+    <value>innen_tekst</value>
+    
+  </data>
+  <data name="FindArg3" xml:space="preserve">
+    <value>startnummer</value>
+    
+  </data>
+  <data name="AboutFind_find_text" xml:space="preserve">
+    <value>En tekstverdi det skal søkes etter.</value>
+  </data>
+  <data name="AboutFind_within_text" xml:space="preserve">
+    <value>En tekstverdi det skal søkes i.</value>
+  </data>
+  <data name="AboutFind_start_num" xml:space="preserve">
+    <value>En valgfri startposisjon.</value>
+  </data>
+  <data name="AboutFind" xml:space="preserve">
+    <value>Returnerer startposisjonen for én tekstverdi i en annen tekstverdi. Søk skiller mellom store og små bokstaver.</value>
+    
+  </data>
+  <data name="AboutFindT" xml:space="preserve">
+    <value>Returnerer en kolonne med startposisjoner for én tekstverdi (eller kolonne med strenger) i en annen tekstverdi (eller kolonne med strenger). Søk skiller mellom store og små bokstaver.</value>
+    
+  </data>
+  <data name="FindTArg1" xml:space="preserve">
+    <value>finn_tekst_eller_kolonne</value>
+    
+  </data>
+  <data name="FindTArg2" xml:space="preserve">
+    <value>innen_tekst_eller_kolonne</value>
+    
+  </data>
+  <data name="FindTArg3" xml:space="preserve">
+    <value>startnummer</value>
+    
+  </data>
+  <data name="AboutFind_find_text_or_column" xml:space="preserve">
+    <value>En tekstverdi (eller kolonne med tekstverdier) det skal søkes etter.</value>
+  </data>
+  <data name="AboutFind_within_text_or_column" xml:space="preserve">
+    <value>Tekstverdien (eller kolonnen med tekstverdier) det skal søkes i.</value>
+  </data>
+  <data name="AboutColorValue" xml:space="preserve">
+    <value>Returnerer fargen som tilsvarer den gitte fargestrengen.</value>
+    
+  </data>
+  <data name="ColorValueArg1" xml:space="preserve">
+    <value>fargetekst</value>
+    
+  </data>
+  <data name="AboutColorValue_color_text" xml:space="preserve">
+    <value>En farge som er angitt med navn, for eksempel Blå, eller som bruker den standard 6-sifrede heksanotasjonen #rrggbb.</value>
+  </data>
+  <data name="ErrInvalidJsonPointer" xml:space="preserve">
+    <value>Ugyldig json-peker.</value>
+    
+  </data>
+  <data name="Text" xml:space="preserve">
+    <value>Tekst</value>
+  </data>
+  <data name="Logical" xml:space="preserve">
+    <value>Logisk</value>
+  </data>
+  <data name="Table" xml:space="preserve">
+    <value>Tabell</value>
+  </data>
+  <data name="Behavior" xml:space="preserve">
+    <value>Virkemåte</value>
+  </data>
+  <data name="DateTime" xml:space="preserve">
+    <value>Dato og klokkeslett</value>
+  </data>
+  <data name="MathAndStat" xml:space="preserve">
+    <value>Matematikk og statistikk</value>
+  </data>
+  <data name="Information" xml:space="preserve">
+    <value>Informasjon</value>
+  </data>
+  <data name="Color" xml:space="preserve">
+    <value>Farge</value>
+  </data>
+  <data name="REST" xml:space="preserve">
+    <value>Tjenester</value>
+    
+  </data>
+  <data name="FunctionReference_Link" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?LinkId=722347#</value>
+    
+  </data>
+  <data name="InvalidXml_ElementMissingAttribute_ElemName_AttrName" xml:space="preserve">
+    <value>Elementet {0} mangler attributtet {1}.</value>
+    
+  </data>
+  <data name="InvalidXml_AttributeCannotBeEmpty_AttrName" xml:space="preserve">
+    <value>Attributtet {0} kan ikke være en tom streng.</value>
+    
+  </data>
+  <data name="InvalidXml_AttributeValueInvalidGuid_AttrName_Value" xml:space="preserve">
+    <value>Attributtet {0} har en ugyldig GUID-verdi: {1}.</value>
+    
+  </data>
+  <data name="InvalidJson_MissingRequiredNamedValue_PropName" xml:space="preserve">
+    <value>Egenskapen {0} mangler.</value>
+    
+  </data>
+  <data name="InvalidJson_NamedValueTypeNotCorrect_PropName_ExpectedType_ActualType" xml:space="preserve">
+    <value>Egenskapen {0} har en ugyldig typeverdi: {2}. Forventet typeverdien {1}.</value>
+    
+  </data>
+  <data name="InvalidJson_NamedValueCannotBeEmpty_PropName" xml:space="preserve">
+    <value>Egenskapen {0} kan ikke være tom.</value>
+    
+  </data>
+  <data name="InvalidJson_NamedEnumStringInvalid_PropName_ActualValue" xml:space="preserve">
+    <value>Opplistingen {0} er forventet å ha en gyldig verdi, men verdien {1} er utenfor området for opplistingen.</value>
+    
+  </data>
+  <data name="InvalidJson_NamedIntegerOverflow_PropName_ActualValue" xml:space="preserve">
+    <value>Egenskapen {0} er forventet å ha en heltallsverdi, men verdien {1} er utenfor området.</value>
+    
+  </data>
+  <data name="InvalidJson_IndexedValueTypeNotCorrect_Index_ExpectedType_ActualType" xml:space="preserve">
+    <value>Elementet i indeksen {0} har en ugyldig typeverdi: {2}. Forventet typeverdien {1}.</value>
+  </data>
+  <data name="InvalidJson_IndexedValueMustBeNonEmpty_Index" xml:space="preserve">
+    <value>Elementet i indeksen {0} kan ikke være en tom streng.</value>
+  </data>
+  <data name="AboutDateAdd" xml:space="preserve">
+    <value>Legger til det angitte antallet enheter i en dato.</value>
+    
+  </data>
+  <data name="AboutDateDiff" xml:space="preserve">
+    <value>Beregn forskjellen mellom to datoer.</value>
+    
+  </data>
+  <data name="DateAddArg1" xml:space="preserve">
+    <value>dato</value>
+    
+  </data>
+  <data name="DateAddArg2" xml:space="preserve">
+    <value>antall_enheter</value>
+    
+  </data>
+  <data name="DateAddArg3" xml:space="preserve">
+    <value>enhet</value>
+    
+  </data>
+  <data name="AboutDateAdd_date" xml:space="preserve">
+    <value>En referansedatoverdi.</value>
+  </data>
+  <data name="AboutDateAdd_number_of_units" xml:space="preserve">
+    <value>Antall enheter som skal legges til. Tallet kan være negativt.</value>
+  </data>
+  <data name="AboutDateAdd_unit" xml:space="preserve">
+    <value>Enheten som skal brukes, som kan være Years, Quarters, Months, Days, Hours, Minutes, Seconds, Milliseconds.</value>
+    
+  </data>
+  <data name="DateDiffArg1" xml:space="preserve">
+    <value>startdato</value>
+    
+  </data>
+  <data name="DateDiffArg2" xml:space="preserve">
+    <value>sluttdato</value>
+    
+  </data>
+  <data name="DateDiffArg3" xml:space="preserve">
+    <value>enhet</value>
+    
+  </data>
+  <data name="AboutDateDiff_start_date" xml:space="preserve">
+    <value>En startdato for differanseoperasjonen.</value>
+  </data>
+  <data name="AboutDateDiff_end_date" xml:space="preserve">
+    <value>En sluttdato for differanseoperasjonen.</value>
+  </data>
+  <data name="AboutDateDiff_unit" xml:space="preserve">
+    <value>Enheten som resultatet skal uttrykkes i, som kan være Years, Quarters, Months, Days, Hours, Minutes, Seconds, Milliseconds.</value>
+    
+  </data>
+  <data name="AboutDateAddT" xml:space="preserve">
+    <value>Legger til det angitte antallet enheter i en kolonne med datoer.</value>
+    
+  </data>
+  <data name="AboutDateDiffT" xml:space="preserve">
+    <value>Beregner forskjellen mellom to kolonner med datoer.</value>
+    
+  </data>
+  <data name="DateAddTArg1" xml:space="preserve">
+    <value>datokolonne</value>
+    
+  </data>
+  <data name="DateAddTArg2" xml:space="preserve">
+    <value>antall_enheter</value>
+    
+  </data>
+  <data name="DateAddTArg3" xml:space="preserve">
+    <value>enhet</value>
+    
+  </data>
+  <data name="AboutDateAdd_date_column" xml:space="preserve">
+    <value>En kolonne med datoverdier.</value>
+  </data>
+  <data name="DateDiffTArg1" xml:space="preserve">
+    <value>startdatokolonne</value>
+    
+  </data>
+  <data name="DateDiffTArg2" xml:space="preserve">
+    <value>sluttdatokolonne</value>
+    
+  </data>
+  <data name="DateDiffTArg3" xml:space="preserve">
+    <value>enhet</value>
+    
+  </data>
+  <data name="AboutDateDiff_start_date_column" xml:space="preserve">
+    <value>En kolonne med startdatoer for differanseopersjonen.</value>
+  </data>
+  <data name="AboutDateDiff_end_date_column" xml:space="preserve">
+    <value>En kolonne med sluttdatoer for differanseopersjonen.</value>
+  </data>
+  <data name="AboutChar" xml:space="preserve">
+    <value>Returnerer tegnet som svarer til kodenummeret fra tegnsettet på plattformen din.</value>
+    
+  </data>
+  <data name="CharArg1" xml:space="preserve">
+    <value>tall</value>
+    
+  </data>
+  <data name="AboutChar_number" xml:space="preserve">
+    <value>Et kodenummer fra tegnsettet på plattformen din.</value>
+  </data>
+  <data name="AboutCharT" xml:space="preserve">
+    <value>Returnerer en tabell med tegn som svarer til kodetallene fra tegnsettet på plattformen din.</value>
+    
+  </data>
+  <data name="CharTArg1" xml:space="preserve">
+    <value>kolonne_med_tall</value>
+    
+  </data>
+  <data name="AboutChar_column_of_numbers" xml:space="preserve">
+    <value>En kolonne ned kodenumre fra tegnsettet på plattformen din.</value>
+  </data>
+  <data name="AboutParseJSON" xml:space="preserve">
+    <value>Konverterer en JSON-streng til et objekt.</value>
+    
+  </data>
+  <data name="ParseJSONArg1" xml:space="preserve">
+    <value>inndata</value>
+    
+  </data>
+  <data name="AboutParseJSON_input" xml:space="preserve">
+    <value>En JSON-streng som skal behandles.</value>
+  </data>
+  <data name="AboutIndex" xml:space="preserve">
+    <value>Returnerer oppføringen i en tabell ved en gitt indeks.</value>
+    
+  </data>
+  <data name="IndexArg1" xml:space="preserve">
+    <value>tabell</value>
+    
+  </data>
+  <data name="IndexArg2" xml:space="preserve">
+    <value>indeks</value>
+    
+  </data>
+  <data name="AboutIndex_table" xml:space="preserve">
+    <value>En tabell.</value>
+  </data>
+  <data name="AboutIndex_index" xml:space="preserve">
+    <value>Indeksen for oppføringen som skal hentes.</value>
+    
+  </data>
+  <data name="Screen_Name_DisplayName" xml:space="preserve">
+    <value>Navn</value>
+    
+  </data>
+  <data name="Screen_Printing_DisplayName" xml:space="preserve">
+    <value>Skriver ut</value>
+    
+  </data>
+  <data name="Screen_ImagePosition_DisplayName" xml:space="preserve">
+    <value>Bildeplassering</value>
+    
+  </data>
+  <data name="Screen_Size_DisplayName" xml:space="preserve">
+    <value>Størrelse</value>
+    
+  </data>
+  <data name="barcode_Type_DisplayName" xml:space="preserve">
+    <value>Strekkodetype</value>
+    
+  </data>
+  <data name="camera_Contrast_DisplayName" xml:space="preserve">
+    <value>Kontrast</value>
+    
+  </data>
+  <data name="camera_Zoom_DisplayName" xml:space="preserve">
+    <value>Zoom</value>
+    
+  </data>
+  <data name="camera_Camera_DisplayName" xml:space="preserve">
+    <value>Kamera</value>
+    
+  </data>
+  <data name="export_Data_DisplayName" xml:space="preserve">
+    <value>Data</value>
+    
+  </data>
+  <data name="Edit" xml:space="preserve">
+    <value>Rediger</value>
+    
+  </data>
+  <data name="Dust" xml:space="preserve">
+    <value>Støv</value>
+    
+  </data>
+  <data name="image_Image_DisplayName" xml:space="preserve">
+    <value>Bilde</value>
+    
+  </data>
+  <data name="icon_Icon_DisplayName" xml:space="preserve">
+    <value>Ikon</value>
+    
+  </data>
+  <data name="icon_Rotation_DisplayName" xml:space="preserve">
+    <value>Rotasjon</value>
+    
+  </data>
+  <data name="image_ImagePosition_DisplayName" xml:space="preserve">
+    <value>Bildeplassering</value>
+    
+  </data>
+  <data name="image_ImageRotation_DisplayName" xml:space="preserve">
+    <value>Roter</value>
+    
+  </data>
+  <data name="ImageRotation_None_DisplayName" xml:space="preserve">
+    <value>Ingen</value>
+    
+  </data>
+  <data name="label_Live_DisplayName" xml:space="preserve">
+    <value>Aktiv</value>
+    
+  </data>
+  <data name="label_Overflow_DisplayName" xml:space="preserve">
+    <value>Overflyt</value>
+    
+  </data>
+  <data name="DatePicker_DateTimeZone_DisplayName" xml:space="preserve">
+    <value>Dato-/tidssone</value>
+    
+  </data>
+  <data name="DatePicker_Format_DisplayName" xml:space="preserve">
+    <value>Format</value>
+    
+  </data>
+  <data name="DatePicker_Language_DisplayName" xml:space="preserve">
+    <value>Språk</value>
+    
+  </data>
+  <data name="Calendar_Width_DisplayName" xml:space="preserve">
+    <value>Kalenderbredde</value>
+    
+  </data>
+  <data name="Hide_Calendar_DisplayName" xml:space="preserve">
+    <value>Skjul kalender</value>
+    
+  </data>
+  <data name="Calendar_StartOfWeek_DisplayName" xml:space="preserve">
+    <value>Starten av uken</value>
+    
+  </data>
+  <data name="microphone_Mic_DisplayName" xml:space="preserve">
+    <value>Kontroller for administrert identitet</value>
+    
+  </data>
+  <data name="text_Default_DisplayName" xml:space="preserve">
+    <value>Standard</value>
+    
+  </data>
+  <data name="text_Mode_DisplayName" xml:space="preserve">
+    <value>Modus</value>
+    
+  </data>
+  <data name="text_Format_DisplayName" xml:space="preserve">
+    <value>Format</value>
+    
+  </data>
+  <data name="text_VirtualKeyboardMode_DisplayName" xml:space="preserve">
+    <value>Modus for virtuelt tastatur</value>
+    
+  </data>
+  <data name="text_TeamsTheme_DisplayName" xml:space="preserve">
+    <value>Teams-tema</value>
+    
+  </data>
+  <data name="text_Clear_DisplayName" xml:space="preserve">
+    <value>Fjern-knapp</value>
+    
+  </data>
+  <data name="Align_Left_DisplayName" xml:space="preserve">
+    <value>Venstrejuster</value>
+    
+  </data>
+  <data name="Align_Right_DisplayName" xml:space="preserve">
+    <value>Høyrejuster</value>
+    
+  </data>
+  <data name="Align_Center_DisplayName" xml:space="preserve">
+    <value>Midtstill loddrett</value>
+    
+  </data>
+  <data name="Align_Justify_DisplayName" xml:space="preserve">
+    <value>Juster</value>
+    
+  </data>
+  <data name="AboutIsNumeric" xml:space="preserve">
+    <value>Kontrollerer om en verdi er et tall, og returnerer sann eller usann.</value>
+    
+  </data>
+  <data name="IsNumericArg1" xml:space="preserve">
+    <value>verdi</value>
+    
+  </data>
+  <data name="AboutIsNumeric_value" xml:space="preserve">
+    <value>Verdien som skal testes.</value>
+  </data>
+  <data name="Post" xml:space="preserve">
+    <value>Legg ut</value>
+    
+  </data>
+  <data name="AboutDateTimeValue" xml:space="preserve">
+    <value>Konverterer en dato og et klokkeslett tekstformat til et tall som representerer datoen i dato/klokkeslett-koden for Power Apps.</value>
+    
+  </data>
+  <data name="DateTimeValueArg1" xml:space="preserve">
+    <value>klokkeslett_tid</value>
+    
+  </data>
+  <data name="DateTimeValueArg2" xml:space="preserve">
+    <value>språkkode</value>
+    
+  </data>
+  <data name="AboutDateTimeValue_time_text" xml:space="preserve">
+    <value>En tekstrepresentasjon av et dato/klokkeslett-stempel, i et plattformstøttet format.</value>
+  </data>
+  <data name="AboutDateTimeValue_language_code" xml:space="preserve">
+    <value>Språkkoden for den angitte teksten.</value>
+  </data>
+  <data name="AboutTable" xml:space="preserve">
+    <value>Oppretter en tabell fra de angitte postene med like mange kolonner som det er unike postfelt. For eksempel: tabell ({key1: val1, key2: val2, ...},...)</value>
+    
+  </data>
+  <data name="TableArg1" xml:space="preserve">
+    <value>post</value>
+    
+  </data>
+  <data name="AboutTable_record" xml:space="preserve">
+    <value>En post som blir en rad i sluttabellen.</value>
+  </data>
+  <data name="AboutShowColumns" xml:space="preserve">
+    <value>Returnerer en tabell med alle kolonner som er fjernet fra kildetabellen, bortsett fra de angitte kolonnene.</value>
+    
+  </data>
+  <data name="ShowColumnsArg1" xml:space="preserve">
+    <value>kilde</value>
+    
+  </data>
+  <data name="ShowColumnsArg2" xml:space="preserve">
+    <value>kolonnenavn</value>
+    
+  </data>
+  <data name="AboutShowColumns_source" xml:space="preserve">
+    <value>En tabellverdi det skal fjernes kolonner fra.</value>
+  </data>
+  <data name="AboutShowColumns_column_name" xml:space="preserve">
+    <value>Navnet på en kolonne som skal beholdes.</value>
+  </data>
+  <data name="AboutIsToday" xml:space="preserve">
+    <value>Kontrollerer om den angitte datoen er i dag, og returnerer sann eller usann.</value>
+    
+  </data>
+  <data name="AboutIsToday_date" xml:space="preserve">
+    <value>Datoverdien som skal testes.</value>
+  </data>
+  <data name="IsTodayFuncArg1" xml:space="preserve">
+    <value>dato</value>
+    
+  </data>
+  <data name="AboutIsUTCToday" xml:space="preserve">
+    <value>Kontrollerer om den angitte datoen er i dag i UTC, og returnerer sann eller usann.</value>
+    
+  </data>
+  <data name="AboutIsUTCToday_date" xml:space="preserve">
+    <value>Datoverdien som skal testes.</value>
+  </data>
+  <data name="IsUTCTodayFuncArg1" xml:space="preserve">
+    <value>dato</value>
+    
+  </data>
+  <data name="AboutMod" xml:space="preserve">
+    <value>Returnerer resten når et tall divideres med en divisor. Resultatet har samme fortegn som divisoren.</value>
+    
+  </data>
+  <data name="AboutModT" xml:space="preserve">
+    <value>Returnerer en kolonne som inneholder resten når et tall (eller en kolonne med tall) divideres med en divisor (eller en kolonne med divisorer).</value>
+    
+  </data>
+  <data name="AboutMod_divisor" xml:space="preserve">
+    <value>Tallet det skal divideres med.</value>
+  </data>
+  <data name="AboutMod_divisor_or_column" xml:space="preserve">
+    <value>Tallet eller tallkolonnen det skal divideres med.</value>
+  </data>
+  <data name="AboutMod_number" xml:space="preserve">
+    <value>Tallet det skal finnes resten for.</value>
+  </data>
+  <data name="AboutMod_number_or_column" xml:space="preserve">
+    <value>Tallet eller tallkolonnen det skal finnes resten for.</value>
+  </data>
+  <data name="ModFuncArg1" xml:space="preserve">
+    <value>tall</value>
+    
+  </data>
+  <data name="ModFuncArg2" xml:space="preserve">
+    <value>divisor</value>
+    
+  </data>
+  <data name="ModTFuncArg1" xml:space="preserve">
+    <value>tall_eller_kolonne</value>
+    
+  </data>
+  <data name="ModTFuncArg2" xml:space="preserve">
+    <value>divisor_eller_kolonne</value>
+    
+  </data>
+  <data name="pdfViewer_Document_DisplayName" xml:space="preserve">
+    <value>Dokument</value>
+    
+  </data>
+  <data name="pdfViewer_Zoom_DisplayName" xml:space="preserve">
+    <value>Zoom</value>
+    
+  </data>
+  <data name="pdfViewer_Password_DisplayName" xml:space="preserve">
+    <value>Passord</value>
+    
+  </data>
+  <data name="pdfViewer_PasswordState_DisplayName" xml:space="preserve">
+    <value>Passordstatus</value>
+    
+  </data>
+  <data name="DataDescriptionInvalidFormat_Reason" xml:space="preserve">
+    <value>Databeskrivelsen er ugyldig: {0}</value>
+  </data>
+  <data name="DataDescriptionParserUnknownException" xml:space="preserve">
+    <value>Det oppstod en ukjent feil under analyse av databeskrivelsen.</value>
+  </data>
+  <data name="AboutForAll" xml:space="preserve">
+    <value>Bruker en bestemt formel i hver rad i en datakilde, og returnerer deretter en ny tabell med resultater per rad.</value>
+    
+  </data>
+  <data name="AboutForAll_source" xml:space="preserve">
+    <value>Datakilden eller tabellen det skal arbeides på.</value>
+  </data>
+  <data name="AboutForAll_formula" xml:space="preserve">
+    <value>Formelen som skal evalueres for alle rader i tabellen.</value>
+  </data>
+  <data name="ForAllArg1" xml:space="preserve">
+    <value>kilde</value>
+    
+  </data>
+  <data name="ForAllArg2" xml:space="preserve">
+    <value>formel</value>
+    
+  </data>
+  <data name="AboutPower" xml:space="preserve">
+    <value>Opphøyer et tall x i potensen til et annet tall y. Samme som x^y.</value>
+    
+  </data>
+  <data name="AboutPower_base" xml:space="preserve">
+    <value>Grunntallet som skal opphøyes.</value>
+  </data>
+  <data name="AboutPower_exponent" xml:space="preserve">
+    <value>Eksponenten som grunntallet blir opphøyd i.</value>
+  </data>
+  <data name="PowerFuncArg1" xml:space="preserve">
+    <value>grunnlag</value>
+    
+  </data>
+  <data name="PowerFuncArg2" xml:space="preserve">
+    <value>eksponent</value>
+    
+  </data>
+  <data name="AboutStartsWith" xml:space="preserve">
+    <value>Returnerer sann hvis den angitte teksten starter med den angitte startstrengen.</value>
+    
+  </data>
+  <data name="AboutStartsWith_text" xml:space="preserve">
+    <value>Tekst som skal kontrolleres.</value>
+  </data>
+  <data name="AboutStartsWith_start" xml:space="preserve">
+    <value>Startstrengen. Funksjonen returnerer sann hvis teksten starter med denne strengen.</value>
+  </data>
+  <data name="StartsWithArg1" xml:space="preserve">
+    <value>tekst</value>
+    
+  </data>
+  <data name="StartsWithArg2" xml:space="preserve">
+    <value>start</value>
+    
+  </data>
+  <data name="AboutEndsWith" xml:space="preserve">
+    <value>Returnerer sann hvis den angitte teksten slutter med den angitte sluttstrengen.</value>
+    
+  </data>
+  <data name="AboutEndsWith_text" xml:space="preserve">
+    <value>Tekst som skal kontrolleres.</value>
+  </data>
+  <data name="AboutEndsWith_end" xml:space="preserve">
+    <value>Sluttstrengen. Funksjonen returnerer sann hvis teksten slutter med denne strengen.</value>
+  </data>
+  <data name="EndsWithArg1" xml:space="preserve">
+    <value>tekst</value>
+    
+  </data>
+  <data name="EndsWithArg2" xml:space="preserve">
+    <value>slutt</value>
+    
+  </data>
+  <data name="AboutBlank" xml:space="preserve">
+    <value>Returnerer en null-verdi (tom verdi)</value>
+  </data>
+  <data name="AboutPowerT" xml:space="preserve">
+    <value>Opphøyer et tall x (eller en kolonne med tall) i potensen av et annet tall y (eller en kolonne med tall). Samme som x^y.</value>
+    
+  </data>
+  <data name="AboutPower_base_or_column" xml:space="preserve">
+    <value>Grunntallet (eller kolonnen med grunntall) som skal opphøyes.</value>
+  </data>
+  <data name="AboutPower_exponent_or_column" xml:space="preserve">
+    <value>Eksponenten (eller kolonnen med eksponenter) som grunntallet skal opphøyes i.</value>
+  </data>
+  <data name="PowerTFuncArg1" xml:space="preserve">
+    <value>grunnlag_eller_kolonne</value>
+    
+  </data>
+  <data name="PowerTFuncArg2" xml:space="preserve">
+    <value>eksponent_eller_kolonne</value>
+    
+  </data>
+  <data name="Icon_Import_DisplayName" xml:space="preserve">
+    <value>Importer</value>
+    
+  </data>
+  <data name="Icon_AddUser_DisplayName" xml:space="preserve">
+    <value>Legg til bruker</value>
+    
+  </data>
+  <data name="Icon_Alarm_DisplayName" xml:space="preserve">
+    <value>Alarm</value>
+    
+  </data>
+  <data name="Icon_Blocked_DisplayName" xml:space="preserve">
+    <value>Blokkert</value>
+    
+  </data>
+  <data name="Icon_Bookmark_DisplayName" xml:space="preserve">
+    <value>Bokmerke</value>
+    
+  </data>
+  <data name="Icon_Bug_DisplayName" xml:space="preserve">
+    <value>Feil</value>
+    
+  </data>
+  <data name="Icon_Calculator_DisplayName" xml:space="preserve">
+    <value>Kalkulator</value>
+    
+  </data>
+  <data name="Icon_Diamond_DisplayName" xml:space="preserve">
+    <value>Diamant</value>
+    
+  </data>
+  <data name="Icon_DockLeft_DisplayName" xml:space="preserve">
+    <value>Forankre til venstre</value>
+    
+  </data>
+  <data name="Icon_DockRight_DisplayName" xml:space="preserve">
+    <value>Forankre til høyre</value>
+    
+  </data>
+  <data name="Icon_Enhance_DisplayName" xml:space="preserve">
+    <value>Forbedre</value>
+    
+  </data>
+  <data name="Icon_Error_DisplayName" xml:space="preserve">
+    <value>Feil</value>
+    
+  </data>
+  <data name="Icon_Export_DisplayName" xml:space="preserve">
+    <value>Eksporter</value>
+    
+  </data>
+  <data name="Icon_Flag_DisplayName" xml:space="preserve">
+    <value>Flagg</value>
+    
+  </data>
+  <data name="Icon_Globe_DisplayName" xml:space="preserve">
+    <value>Kule</value>
+    
+  </data>
+  <data name="Icon_HalfFilledCircle_DisplayName" xml:space="preserve">
+    <value>Halvfylt sirkel</value>
+    
+  </data>
+  <data name="Icon_Health_DisplayName" xml:space="preserve">
+    <value>Helse</value>
+    
+  </data>
+  <data name="Icon_Heart_DisplayName" xml:space="preserve">
+    <value>Hjerte</value>
+    
+  </data>
+  <data name="Icon_Help_DisplayName" xml:space="preserve">
+    <value>Hjelp</value>
+    
+  </data>
+  <data name="Icon_Hide_DisplayName" xml:space="preserve">
+    <value>Skjul</value>
+    
+  </data>
+  <data name="Icon_History_DisplayName" xml:space="preserve">
+    <value>Logg</value>
+    
+  </data>
+  <data name="Icon_HorizontalLine_DisplayName" xml:space="preserve">
+    <value>Vannrett linje</value>
+    
+  </data>
+  <data name="Icon_Hospital_DisplayName" xml:space="preserve">
+    <value>Sykehus</value>
+    
+  </data>
+  <data name="Icon_Key_DisplayName" xml:space="preserve">
+    <value>Nøkkel</value>
+    
+  </data>
+  <data name="Icon_Lightbulb_DisplayName" xml:space="preserve">
+    <value>Lyspære</value>
+    
+  </data>
+  <data name="Icon_LightningBolt_DisplayName" xml:space="preserve">
+    <value>Lyn</value>
+    
+  </data>
+  <data name="Icon_Link_DisplayName" xml:space="preserve">
+    <value>Kobling</value>
+    
+  </data>
+  <data name="Icon_Manufacture_DisplayName" xml:space="preserve">
+    <value>Produksjon</value>
+    
+  </data>
+  <data name="Icon_Medical_DisplayName" xml:space="preserve">
+    <value>Medisinsk</value>
+    
+  </data>
+  <data name="Icon_Microphone_DisplayName" xml:space="preserve">
+    <value>Mikrofon</value>
+    
+  </data>
+  <data name="Icon_Notebook_DisplayName" xml:space="preserve">
+    <value>Notatblokk</value>
+    
+  </data>
+  <data name="Icon_OpenInNewWindow_DisplayName" xml:space="preserve">
+    <value>Åpne i nytt vindu</value>
+    
+  </data>
+  <data name="Icon_Phonebook_DisplayName" xml:space="preserve">
+    <value>Telefonbok</value>
+    
+  </data>
+  <data name="Icon_Print_DisplayName" xml:space="preserve">
+    <value>Skriv ut</value>
+    
+  </data>
+  <data name="Icon_Publish_DisplayName" xml:space="preserve">
+    <value>Publiser</value>
+    
+  </data>
+  <data name="Icon_QuestionMark_DisplayName" xml:space="preserve">
+    <value>Spørsmålstegn</value>
+    
+  </data>
+  <data name="Icon_Redo_DisplayName" xml:space="preserve">
+    <value>Gjør om</value>
+    
+  </data>
+  <data name="Icon_Reset_DisplayName" xml:space="preserve">
+    <value>Tilbakestill</value>
+    
+  </data>
+  <data name="Icon_Ribbon_DisplayName" xml:space="preserve">
+    <value>Bånd</value>
+    
+  </data>
+  <data name="Icon_Scan_DisplayName" xml:space="preserve">
+    <value>Skann</value>
+    
+  </data>
+  <data name="Icon_Share_DisplayName" xml:space="preserve">
+    <value>Del</value>
+    
+  </data>
+  <data name="Icon_Shirt_DisplayName" xml:space="preserve">
+    <value>Skjorte</value>
+    
+  </data>
+  <data name="Icon_Shop_DisplayName" xml:space="preserve">
+    <value>Butikk</value>
+    
+  </data>
+  <data name="Icon_Signal_DisplayName" xml:space="preserve">
+    <value>Signal</value>
+    
+  </data>
+  <data name="Icon_Support_DisplayName" xml:space="preserve">
+    <value>Støtte</value>
+    
+  </data>
+  <data name="Icon_Sync_DisplayName" xml:space="preserve">
+    <value>Synkroniser</value>
+    
+  </data>
+  <data name="Icon_Text_DisplayName" xml:space="preserve">
+    <value>Tekst</value>
+    
+  </data>
+  <data name="Icon_ThumbsDown_DisplayName" xml:space="preserve">
+    <value>Tommelen ned</value>
+    
+  </data>
+  <data name="Icon_ThumbsUp_DisplayName" xml:space="preserve">
+    <value>Tommelen opp</value>
+    
+  </data>
+  <data name="Icon_Train_DisplayName" xml:space="preserve">
+    <value>Tog</value>
+    
+  </data>
+  <data name="Icon_Tray_DisplayName" xml:space="preserve">
+    <value>Skuff</value>
+    
+  </data>
+  <data name="Icon_Undo_DisplayName" xml:space="preserve">
+    <value>Angre</value>
+    
+  </data>
+  <data name="Icon_Unlock_DisplayName" xml:space="preserve">
+    <value>Lås opp</value>
+    
+  </data>
+  <data name="Icon_VerticalLine_DisplayName" xml:space="preserve">
+    <value>Loddrett linje</value>
+    
+  </data>
+  <data name="Icon_Video_DisplayName" xml:space="preserve">
+    <value>Video</value>
+    
+  </data>
+  <data name="Icon_View_DisplayName" xml:space="preserve">
+    <value>Vis</value>
+    
+  </data>
+  <data name="Icon_ZoomIn_DisplayName" xml:space="preserve">
+    <value>Zoom inn</value>
+    
+  </data>
+  <data name="Icon_ZoomOut_DisplayName" xml:space="preserve">
+    <value>Zoom ut</value>
+    
+  </data>
+  <data name="Icon_BookmarkFilled_DisplayName" xml:space="preserve">
+    <value>Bokmerke (fylt)</value>
+    
+  </data>
+  <data name="Icon_CancelBadge_DisplayName" xml:space="preserve">
+    <value>Avbryt (indikator)</value>
+    
+  </data>
+  <data name="Icon_CheckBadge_DisplayName" xml:space="preserve">
+    <value>Kontroll (indikator)</value>
+    
+  </data>
+  <data name="Icon_Cut_DisplayName" xml:space="preserve">
+    <value>Klipp ut</value>
+    
+  </data>
+  <data name="Icon_FilterFlat_DisplayName" xml:space="preserve">
+    <value>Flatt filter</value>
+    
+  </data>
+  <data name="Icon_FilterFlatFilled_DisplayName" xml:space="preserve">
+    <value>Flatt filter (fylt)</value>
+    
+  </data>
+  <data name="Icon_Leave_DisplayName" xml:space="preserve">
+    <value>Ferie</value>
+    
+  </data>
+  <data name="Icon_Paste_DisplayName" xml:space="preserve">
+    <value>Lim inn</value>
+    
+  </data>
+  <data name="Icon_ThumbsDownFilled_DisplayName" xml:space="preserve">
+    <value>Tommelen ned (fylt)</value>
+    
+  </data>
+  <data name="Icon_ThumbsUpFilled_DisplayName" xml:space="preserve">
+    <value>Tommelen opp (fylt)</value>
+    
+  </data>
+  <data name="Icon_EmojiHappy_DisplayName" xml:space="preserve">
+    <value>Emoji – glad</value>
+    
+  </data>
+  <data name="SuggestRemoteExecutionHint_OpNotSupportedByClient" xml:space="preserve">
+    <value>En del av denne formelen kan ikke evalueres eksternt. {0}-operasjonen støttes ikke i denne konteksten.</value>
+    
+  </data>
+  <data name="SuggestRemoteExecutionHint_StringMatchSecondParam" xml:space="preserve">
+    <value>En del av denne formelen kan ikke evalueres eksternt. Funksjonen {0} kan ikke delegeres hvis et feltnavn vises i det andre argumentet.</value>
+    
+  </data>
+  <data name="entityForm_EntityForm_DisplayName" xml:space="preserve">
+    <value>Enhetsskjema</value>
+    
+  </data>
+  <data name="BorderStyle_None_DisplayName" xml:space="preserve">
+    <value>Ingen</value>
+    
+  </data>
+  <data name="BorderStyle_Dashed_DisplayName" xml:space="preserve">
+    <value>Stiplet</value>
+    
+  </data>
+  <data name="BorderStyle_Solid_DisplayName" xml:space="preserve">
+    <value>Heltrukket</value>
+    
+  </data>
+  <data name="BorderStyle_Dotted_DisplayName" xml:space="preserve">
+    <value>Prikket</value>
+    
+  </data>
+  <data name="DisplayMode_Disabled_DisplayName" xml:space="preserve">
+    <value>Deaktivert</value>
+    
+  </data>
+  <data name="DisplayMode_Edit_DisplayName" xml:space="preserve">
+    <value>Rediger</value>
+    
+  </data>
+  <data name="DisplayMode_View_DisplayName" xml:space="preserve">
+    <value>Vis</value>
+    
+  </data>
+  <data name="LayoutMode_Manual_DisplayName" xml:space="preserve">
+    <value>Manuell</value>
+    
+  </data>
+  <data name="LayoutMode_Auto_DisplayName" xml:space="preserve">
+    <value>Automatisk</value>
+    
+  </data>
+  <data name="LayoutDirection_Horizontal_DisplayName" xml:space="preserve">
+    <value>Vannrett</value>
+    
+  </data>
+  <data name="LayoutDirection_Vertical_DisplayName" xml:space="preserve">
+    <value>Loddrett</value>
+    
+  </data>
+  <data name="LayoutAlignItems_Start_DisplayName" xml:space="preserve">
+    <value>Start</value>
+    
+  </data>
+  <data name="LayoutAlignItems_Center_DisplayName" xml:space="preserve">
+    <value>Midtstill</value>
+    
+  </data>
+  <data name="LayoutAlignItems_End_DisplayName" xml:space="preserve">
+    <value>Slutt</value>
+    
+  </data>
+  <data name="LayoutAlignItems_Stretch_DisplayName" xml:space="preserve">
+    <value>Strekk</value>
+    
+  </data>
+  <data name="AlignInContainer_Start_DisplayName" xml:space="preserve">
+    <value>Start</value>
+    
+  </data>
+  <data name="AlignInContainer_Center_DisplayName" xml:space="preserve">
+    <value>Midtstill</value>
+    
+  </data>
+  <data name="AlignInContainer_End_DisplayName" xml:space="preserve">
+    <value>Slutt</value>
+    
+  </data>
+  <data name="AlignInContainer_Stretch_DisplayName" xml:space="preserve">
+    <value>Strekk</value>
+    
+  </data>
+  <data name="AlignInContainer_SetByContainer_DisplayName" xml:space="preserve">
+    <value>Angi etter beholder</value>
+    
+  </data>
+  <data name="LayoutJustifyContent_Start_DisplayName" xml:space="preserve">
+    <value>Start</value>
+    
+  </data>
+  <data name="LayoutJustifyContent_Center_DisplayName" xml:space="preserve">
+    <value>Midtstill</value>
+    
+  </data>
+  <data name="LayoutJustifyContent_End_DisplayName" xml:space="preserve">
+    <value>Slutt</value>
+    
+  </data>
+  <data name="LayoutJustifyContent_SpaceEvenly_DisplayName" xml:space="preserve">
+    <value>Jevn plass</value>
+    
+  </data>
+  <data name="LayoutJustifyContent_SpaceAround_DisplayName" xml:space="preserve">
+    <value>Plass rundt</value>
+    
+  </data>
+  <data name="LayoutJustifyContent_SpaceBetween_DisplayName" xml:space="preserve">
+    <value>Avstand mellom</value>
+    
+  </data>
+  <data name="LayoutOverflow_Hide_DisplayName" xml:space="preserve">
+    <value>Skjul</value>
+    
+  </data>
+  <data name="LayoutOverflow_Scroll_DisplayName" xml:space="preserve">
+    <value>Bla</value>
+    
+  </data>
+  <data name="Overflow_Hidden_DisplayName" xml:space="preserve">
+    <value>Skjult</value>
+    
+  </data>
+  <data name="Overflow_Scroll_DisplayName" xml:space="preserve">
+    <value>Rull</value>
+    
+  </data>
+  <data name="TextMode_SingleLine_DisplayName" xml:space="preserve">
+    <value>Én linje</value>
+    
+  </data>
+  <data name="TextMode_Password_DisplayName" xml:space="preserve">
+    <value>Passord</value>
+    
+  </data>
+  <data name="TextMode_MultiLine_DisplayName" xml:space="preserve">
+    <value>Flere linjer</value>
+    
+  </data>
+  <data name="TextFormat_Text_DisplayName" xml:space="preserve">
+    <value>Tekst</value>
+    
+  </data>
+  <data name="TextFormat_Number_DisplayName" xml:space="preserve">
+    <value>Tall</value>
+    
+  </data>
+  <data name="VirtualKeyboardMode_Auto_DisplayName" xml:space="preserve">
+    <value>Automatisk tastatur</value>
+    
+  </data>
+  <data name="VirtualKeyboardMode_Numeric_DisplayName" xml:space="preserve">
+    <value>Numerisk tastatur</value>
+    
+  </data>
+  <data name="VirtualKeyboardMode_Text_DisplayName" xml:space="preserve">
+    <value>Teksttastatur</value>
+    
+  </data>
+  <data name="TeamsTheme_Default_DisplayName" xml:space="preserve">
+    <value>Standardtema</value>
+    
+  </data>
+  <data name="TeamsTheme_Dark_DisplayName" xml:space="preserve">
+    <value>Mørkt tema</value>
+    
+  </data>
+  <data name="TeamsTheme_Contrast_DisplayName" xml:space="preserve">
+    <value>Kontrasttema</value>
+    
+  </data>
+  <data name="PenMode_Draw_DisplayName" xml:space="preserve">
+    <value>Tegn</value>
+    
+  </data>
+  <data name="PenMode_Erase_DisplayName" xml:space="preserve">
+    <value>Slett</value>
+    
+  </data>
+  <data name="DateTimeZone_Local_DisplayName" xml:space="preserve">
+    <value>Lokal</value>
+    
+  </data>
+  <data name="DateTimeZone_UTC_DisplayName" xml:space="preserve">
+    <value>UTC</value>
+    
+  </data>
+  <data name="ImagePosition_Fill_DisplayName" xml:space="preserve">
+    <value>Fyll</value>
+    
+  </data>
+  <data name="ImagePosition_Fit_DisplayName" xml:space="preserve">
+    <value>Tilpass</value>
+    
+  </data>
+  <data name="ImagePosition_Stretch_DisplayName" xml:space="preserve">
+    <value>Strekk</value>
+    
+  </data>
+  <data name="ImagePosition_Tile_DisplayName" xml:space="preserve">
+    <value>Flis</value>
+    
+  </data>
+  <data name="ImagePosition_Center_DisplayName" xml:space="preserve">
+    <value>Midtstill</value>
+    
+  </data>
+  <data name="VerticalAlign_Top_DisplayName" xml:space="preserve">
+    <value>Topp</value>
+    
+  </data>
+  <data name="VerticalAlign_Middle_DisplayName" xml:space="preserve">
+    <value>Midtstilt</value>
+    
+  </data>
+  <data name="VerticalAlign_Bottom_DisplayName" xml:space="preserve">
+    <value>Bunn</value>
+    
+  </data>
+  <data name="Layout_Horizontal_DisplayName" xml:space="preserve">
+    <value>Vannrett</value>
+    
+  </data>
+  <data name="Layout_Vertical_DisplayName" xml:space="preserve">
+    <value>Loddrett</value>
+    
+  </data>
+  <data name="TextPosition_Left_DisplayName" xml:space="preserve">
+    <value>Venstre</value>
+    
+  </data>
+  <data name="TextPosition_Right_DisplayName" xml:space="preserve">
+    <value>Høyre</value>
+    
+  </data>
+  <data name="Transition_Push_DisplayName" xml:space="preserve">
+    <value>Trykk</value>
+    
+  </data>
+  <data name="Transition_Pop_DisplayName" xml:space="preserve">
+    <value>Pop</value>
+    
+  </data>
+  <data name="Transition_None_DisplayName" xml:space="preserve">
+    <value>Ingen</value>
+    
+  </data>
+  <data name="FontWeight_Normal_DisplayName" xml:space="preserve">
+    <value>Normal</value>
+    
+  </data>
+  <data name="FontWeight_Semibold_DisplayName" xml:space="preserve">
+    <value>Halvfet</value>
+    
+  </data>
+  <data name="FontWeight_Bold_DisplayName" xml:space="preserve">
+    <value>Fet</value>
+    
+  </data>
+  <data name="FontWeight_Lighter_DisplayName" xml:space="preserve">
+    <value>Lysere</value>
+    
+  </data>
+  <data name="FormPattern_None_DisplayName" xml:space="preserve">
+    <value>Ingen</value>
+    
+  </data>
+  <data name="FormPattern_Details_DisplayName" xml:space="preserve">
+    <value>Detaljer</value>
+    
+  </data>
+  <data name="FormPattern_List_DisplayName" xml:space="preserve">
+    <value>Vis</value>
+    
+  </data>
+  <data name="FormPattern_CardList_DisplayName" xml:space="preserve">
+    <value>Kortliste</value>
+    
+  </data>
+  <data name="BarcodeType_Auto_DisplayName" xml:space="preserve">
+    <value>Auto</value>
+    
+  </data>
+  <data name="BarcodeType_Aztec_DisplayName" xml:space="preserve">
+    <value>Aztec</value>
+    
+  </data>
+  <data name="BarcodeType_Codabar_DisplayName" xml:space="preserve">
+    <value>Codabar</value>
+    
+  </data>
+  <data name="BarcodeType_DataMatrix_DisplayName" xml:space="preserve">
+    <value>Datamatrise</value>
+    
+  </data>
+  <data name="BarcodeType_Ean_DisplayName" xml:space="preserve">
+    <value>EAN</value>
+    
+  </data>
+  <data name="BarcodeType_QRCode_DisplayName" xml:space="preserve">
+    <value>QR-kode</value>
+    
+  </data>
+  <data name="BarcodeType_RssExpanded_DisplayName" xml:space="preserve">
+    <value>RSS utvidet</value>
+    
+  </data>
+  <data name="BarcodeType_Upc_DisplayName" xml:space="preserve">
+    <value>UPC</value>
+    
+  </data>
+  <data name="GridStyle_XOnly_DisplayName" xml:space="preserve">
+    <value>Bare X</value>
+    
+  </data>
+  <data name="GridStyle_YOnly_DisplayName" xml:space="preserve">
+    <value>Bare Y</value>
+    
+  </data>
+  <data name="GridStyle_All_DisplayName" xml:space="preserve">
+    <value>Alle</value>
+    
+  </data>
+  <data name="GridStyle_None_DisplayName" xml:space="preserve">
+    <value>Ingen</value>
+    
+  </data>
+  <data name="FormMode_Edit_DisplayName" xml:space="preserve">
+    <value>Rediger</value>
+    
+  </data>
+  <data name="FormMode_View_DisplayName" xml:space="preserve">
+    <value>Vis</value>
+    
+  </data>
+  <data name="FormMode_New_DisplayName" xml:space="preserve">
+    <value>Ny</value>
+    
+  </data>
+  <data name="SelectedState_Edit_DisplayName" xml:space="preserve">
+    <value>Rediger</value>
+    
+  </data>
+  <data name="SelectedState_View_DisplayName" xml:space="preserve">
+    <value>Vis</value>
+    
+  </data>
+  <data name="SelectedState_New_DisplayName" xml:space="preserve">
+    <value>Ny</value>
+    
+  </data>
+  <data name="LoadingSpinner_Controls_DisplayName" xml:space="preserve">
+    <value>Kontroller</value>
+    
+  </data>
+  <data name="LoadingSpinner_Data_DisplayName" xml:space="preserve">
+    <value>Data</value>
+    
+  </data>
+  <data name="LoadingSpinner_None_DisplayName" xml:space="preserve">
+    <value>Ingen</value>
+    
+  </data>
+  <data name="NotificationType_Error_DisplayName" xml:space="preserve">
+    <value>Feil</value>
+    
+  </data>
+  <data name="NotificationType_Warning_DisplayName" xml:space="preserve">
+    <value>Advarsel!</value>
+    
+  </data>
+  <data name="NotificationType_Success_DisplayName" xml:space="preserve">
+    <value>Vellykket</value>
+    
+  </data>
+  <data name="NotificationType_Information_DisplayName" xml:space="preserve">
+    <value>Informasjon</value>
+    
+  </data>
+  <data name="Icon_Add_DisplayName" xml:space="preserve">
+    <value>Legg til</value>
+    
+  </data>
+  <data name="Icon_Cancel_DisplayName" xml:space="preserve">
+    <value>Avbryt</value>
+    
+  </data>
+  <data name="Icon_Edit_DisplayName" xml:space="preserve">
+    <value>Rediger</value>
+    
+  </data>
+  <data name="Icon_Check_DisplayName" xml:space="preserve">
+    <value>Merk av</value>
+    
+  </data>
+  <data name="Icon_Search_DisplayName" xml:space="preserve">
+    <value>Søk</value>
+    
+  </data>
+  <data name="Icon_Filter_DisplayName" xml:space="preserve">
+    <value>Filtrer</value>
+    
+  </data>
+  <data name="Icon_Sort_DisplayName" xml:space="preserve">
+    <value>Sorter</value>
+    
+  </data>
+  <data name="Icon_Reload_DisplayName" xml:space="preserve">
+    <value>Last inn på nytt</value>
+    
+  </data>
+  <data name="Icon_Trash_DisplayName" xml:space="preserve">
+    <value>Søppel</value>
+    
+  </data>
+  <data name="Icon_Save_DisplayName" xml:space="preserve">
+    <value>Lagre</value>
+    
+  </data>
+  <data name="Icon_Download_DisplayName" xml:space="preserve">
+    <value>Last ned</value>
+    
+  </data>
+  <data name="Icon_Copy_DisplayName" xml:space="preserve">
+    <value>Kopier</value>
+    
+  </data>
+  <data name="Icon_LikeDislike_DisplayName" xml:space="preserve">
+    <value>Liker/misliker</value>
+    
+  </data>
+  <data name="Icon_Crop_DisplayName" xml:space="preserve">
+    <value>Beskjær</value>
+    
+  </data>
+  <data name="Icon_Pin_DisplayName" xml:space="preserve">
+    <value>Fest</value>
+    
+  </data>
+  <data name="Icon_ClearDrawing_DisplayName" xml:space="preserve">
+    <value>Fjern tegning</value>
+    
+  </data>
+  <data name="Icon_ExpandView_DisplayName" xml:space="preserve">
+    <value>Utvid visning</value>
+    
+  </data>
+  <data name="Icon_CollapseView_DisplayName" xml:space="preserve">
+    <value>Skjul visning</value>
+    
+  </data>
+  <data name="Icon_Draw_DisplayName" xml:space="preserve">
+    <value>Tegn</value>
+    
+  </data>
+  <data name="Icon_Compose_DisplayName" xml:space="preserve">
+    <value>Komponer</value>
+    
+  </data>
+  <data name="Icon_Erase_DisplayName" xml:space="preserve">
+    <value>Slett</value>
+    
+  </data>
+  <data name="Icon_Message_DisplayName" xml:space="preserve">
+    <value>Melding</value>
+    
+  </data>
+  <data name="Icon_Post_DisplayName" xml:space="preserve">
+    <value>Legg ut</value>
+    
+  </data>
+  <data name="Icon_AddDocument_DisplayName" xml:space="preserve">
+    <value>Legg til dokument</value>
+    
+  </data>
+  <data name="Icon_AddLibrary_DisplayName" xml:space="preserve">
+    <value>Legg til bibliotek</value>
+    
+  </data>
+  <data name="Icon_Home_DisplayName" xml:space="preserve">
+    <value>Start</value>
+    
+  </data>
+  <data name="Icon_Hamburger_DisplayName" xml:space="preserve">
+    <value>Hamburger</value>
+    
+  </data>
+  <data name="Icon_Settings_DisplayName" xml:space="preserve">
+    <value>Innstillinger</value>
+    
+  </data>
+  <data name="Icon_More_DisplayName" xml:space="preserve">
+    <value>Mer</value>
+    
+  </data>
+  <data name="Icon_Waffle_DisplayName" xml:space="preserve">
+    <value>Vaffel</value>
+    
+  </data>
+  <data name="Icon_ChevronLeft_DisplayName" xml:space="preserve">
+    <value>Venstre</value>
+    
+  </data>
+  <data name="Icon_ChevronRight_DisplayName" xml:space="preserve">
+    <value>Høyre</value>
+    
+  </data>
+  <data name="Icon_ChevronUp_DisplayName" xml:space="preserve">
+    <value>Opp</value>
+    
+  </data>
+  <data name="Icon_ChevronDown_DisplayName" xml:space="preserve">
+    <value>Ned</value>
+    
+  </data>
+  <data name="Icon_NextArrow_DisplayName" xml:space="preserve">
+    <value>Neste</value>
+    
+  </data>
+  <data name="Icon_BackArrow_DisplayName" xml:space="preserve">
+    <value>Tilbake</value>
+    
+  </data>
+  <data name="Icon_ArrowDown_DisplayName" xml:space="preserve">
+    <value>Pil ned</value>
+    
+  </data>
+  <data name="Icon_ArrowUp_DisplayName" xml:space="preserve">
+    <value>Pil opp</value>
+    
+  </data>
+  <data name="Icon_ArrowLeft_DisplayName" xml:space="preserve">
+    <value>Pil venstre</value>
+    
+  </data>
+  <data name="Icon_ArrowRight_DisplayName" xml:space="preserve">
+    <value>Pil høyre</value>
+    
+  </data>
+  <data name="Icon_Camera_DisplayName" xml:space="preserve">
+    <value>Kamera</value>
+    
+  </data>
+  <data name="Icon_Document_DisplayName" xml:space="preserve">
+    <value>Dokument</value>
+    
+  </data>
+  <data name="Icon_DockCheckProperties_DisplayName" xml:space="preserve">
+    <value>Dokumentavmerking</value>
+    
+  </data>
+  <data name="Icon_Folder_DisplayName" xml:space="preserve">
+    <value>Mappe</value>
+    
+  </data>
+  <data name="Icon_Journal_DisplayName" xml:space="preserve">
+    <value>Logg</value>
+    
+  </data>
+  <data name="Icon_ForkKnife_DisplayName" xml:space="preserve">
+    <value>Mat</value>
+    
+  </data>
+  <data name="Icon_Transportation_DisplayName" xml:space="preserve">
+    <value>Transport</value>
+    
+  </data>
+  <data name="Icon_Airplane_DisplayName" xml:space="preserve">
+    <value>Fly</value>
+    
+  </data>
+  <data name="Icon_Bus_DisplayName" xml:space="preserve">
+    <value>Buss</value>
+    
+  </data>
+  <data name="Icon_Cars_DisplayName" xml:space="preserve">
+    <value>Biler</value>
+    
+  </data>
+  <data name="Icon_Money_DisplayName" xml:space="preserve">
+    <value>Penger</value>
+    
+  </data>
+  <data name="Icon_Currency_DisplayName" xml:space="preserve">
+    <value>Valuta</value>
+    
+  </data>
+  <data name="Icon_AddToCalendar_DisplayName" xml:space="preserve">
+    <value>Legg til i kalenderen</value>
+    
+  </data>
+  <data name="Icon_CalendarBlank_DisplayName" xml:space="preserve">
+    <value>Tom kalender</value>
+    
+  </data>
+  <data name="Icon_OfficeBuilding_DisplayName" xml:space="preserve">
+    <value>Kontorbygning</value>
+    
+  </data>
+  <data name="Icon_PaperClip_DisplayName" xml:space="preserve">
+    <value>Binders</value>
+    
+  </data>
+  <data name="Icon_Newspaper_DisplayName" xml:space="preserve">
+    <value>Avis</value>
+    
+  </data>
+  <data name="Icon_Lock_DisplayName" xml:space="preserve">
+    <value>Lås</value>
+    
+  </data>
+  <data name="Icon_Waypoint_DisplayName" xml:space="preserve">
+    <value>Veipunkt</value>
+    
+  </data>
+  <data name="Icon_Location_DisplayName" xml:space="preserve">
+    <value>Posisjon</value>
+    
+  </data>
+  <data name="Icon_DocumentPDF_DisplayName" xml:space="preserve">
+    <value>PDF-dokument</value>
+    
+  </data>
+  <data name="Icon_Bell_DisplayName" xml:space="preserve">
+    <value>Klokke</value>
+    
+  </data>
+  <data name="Icon_ShoppingCart_DisplayName" xml:space="preserve">
+    <value>Handlekurv</value>
+    
+  </data>
+  <data name="Icon_Phone_DisplayName" xml:space="preserve">
+    <value>Telefon</value>
+    
+  </data>
+  <data name="Icon_PhoneHangUp_DisplayName" xml:space="preserve">
+    <value>Avslutt samtale</value>
+    
+  </data>
+  <data name="Icon_Mobile_DisplayName" xml:space="preserve">
+    <value>Mobil</value>
+    
+  </data>
+  <data name="Icon_Laptop_DisplayName" xml:space="preserve">
+    <value>Bærbar datamaskin</value>
+    
+  </data>
+  <data name="Icon_ComputerDesktop_DisplayName" xml:space="preserve">
+    <value>Stasjonær datamaskin</value>
+    
+  </data>
+  <data name="Icon_Devices_DisplayName" xml:space="preserve">
+    <value>Enheter</value>
+    
+  </data>
+  <data name="Icon_Controller_DisplayName" xml:space="preserve">
+    <value>Kontroller</value>
+    
+  </data>
+  <data name="Icon_Tools_DisplayName" xml:space="preserve">
+    <value>Verktøy</value>
+    
+  </data>
+  <data name="Icon_ToolsWrench_DisplayName" xml:space="preserve">
+    <value>Verktøy, skrunøkkel</value>
+    
+  </data>
+  <data name="Icon_Mail_DisplayName" xml:space="preserve">
+    <value>E-post</value>
+    
+  </data>
+  <data name="Icon_Send_DisplayName" xml:space="preserve">
+    <value>Send</value>
+    
+  </data>
+  <data name="Icon_Clock_DisplayName" xml:space="preserve">
+    <value>Klokke</value>
+    
+  </data>
+  <data name="Icon_ListWatchlistRemind_DisplayName" xml:space="preserve">
+    <value>Listepåminnelse</value>
+    
+  </data>
+  <data name="Icon_LogJournal_DisplayName" xml:space="preserve">
+    <value>Loggjournal</value>
+    
+  </data>
+  <data name="Icon_Note_DisplayName" xml:space="preserve">
+    <value>Merk</value>
+    
+  </data>
+  <data name="Icon_PhotosPictures_DisplayName" xml:space="preserve">
+    <value>Bilderammer</value>
+    
+  </data>
+  <data name="Icon_RadarActivityMonitor_DisplayName" xml:space="preserve">
+    <value>Radar</value>
+    
+  </data>
+  <data name="Icon_Tablet_DisplayName" xml:space="preserve">
+    <value>Nettbrett</value>
+    
+  </data>
+  <data name="Icon_Tag_DisplayName" xml:space="preserve">
+    <value>Kode</value>
+    
+  </data>
+  <data name="Icon_CameraAperture_DisplayName" xml:space="preserve">
+    <value>Kameraets blenderåpning</value>
+    
+  </data>
+  <data name="Icon_ColorPicker_DisplayName" xml:space="preserve">
+    <value>Fargevelger</value>
+    
+  </data>
+  <data name="Icon_DetailList_DisplayName" xml:space="preserve">
+    <value>Detaljliste</value>
+    
+  </data>
+  <data name="Icon_DocumentWithContent_DisplayName" xml:space="preserve">
+    <value>Dokument med innhold</value>
+    
+  </data>
+  <data name="Icon_ListScrollEmpty_DisplayName" xml:space="preserve">
+    <value>Listerulling, tom</value>
+    
+  </data>
+  <data name="Icon_ListScrollWatchlist_DisplayName" xml:space="preserve">
+    <value>Listerulling, tittelliste</value>
+    
+  </data>
+  <data name="Icon_OptionsList_DisplayName" xml:space="preserve">
+    <value>Alternativliste</value>
+    
+  </data>
+  <data name="Icon_People_DisplayName" xml:space="preserve">
+    <value>Personer</value>
+    
+  </data>
+  <data name="Icon_Person_DisplayName" xml:space="preserve">
+    <value>Person</value>
+    
+  </data>
+  <data name="Icon_EmojiFrown_DisplayName" xml:space="preserve">
+    <value>Emoji – streng</value>
+    
+  </data>
+  <data name="Icon_EmojiSmile_DisplayName" xml:space="preserve">
+    <value>Emoji – smil</value>
+    
+  </data>
+  <data name="Icon_EmojiSad_DisplayName" xml:space="preserve">
+    <value>Emoji – trist</value>
+    
+  </data>
+  <data name="Icon_EmojiNeutral_DisplayName" xml:space="preserve">
+    <value>Emoji – nøytral</value>
+    
+  </data>
+  <data name="Icon_Warning_DisplayName" xml:space="preserve">
+    <value>Advarsel!</value>
+    
+  </data>
+  <data name="Icon_Information_DisplayName" xml:space="preserve">
+    <value>Informasjon</value>
+    
+  </data>
+  <data name="Icon_Database_DisplayName" xml:space="preserve">
+    <value>Database</value>
+    
+  </data>
+  <data name="Icon_Weather_DisplayName" xml:space="preserve">
+    <value>Været</value>
+    
+  </data>
+  <data name="Icon_TrendingHashtag_DisplayName" xml:space="preserve">
+    <value>Hash-merke</value>
+    
+  </data>
+  <data name="Icon_TrendingUpwards_DisplayName" xml:space="preserve">
+    <value>På vei opp</value>
+    
+  </data>
+  <data name="Icon_Items_DisplayName" xml:space="preserve">
+    <value>Elementer</value>
+    
+  </data>
+  <data name="Icon_LevelsLayersItems_DisplayName" xml:space="preserve">
+    <value>Lag</value>
+    
+  </data>
+  <data name="Icon_Trending_DisplayName" xml:space="preserve">
+    <value>Populært</value>
+    
+  </data>
+  <data name="Icon_LineWeight_DisplayName" xml:space="preserve">
+    <value>Linjetykkelse</value>
+    
+  </data>
+  <data name="AboutIsError" xml:space="preserve">
+    <value>Returnerer om det oppstod en feil under evaluering av det angitte argumentet.</value>
+    
+  </data>
+  <data name="IsErrorArg" xml:space="preserve">
+    <value>verdi</value>
+    
+  </data>
+  <data name="AboutIsError_value" xml:space="preserve">
+    <value>Verdien som skal se etter feil.</value>
+    
+  </data>
+  <data name="ErrBadArityMinimum" xml:space="preserve">
+    <value>Ugyldig antall argumenter: mottok {0}, men forventet {1} eller flere.</value>
+    
+  </data>
+  <data name="ErrBadArityRange" xml:space="preserve">
+    <value>Ugyldig antall argumenter: mottok {0}, men forventet {1}-{2}.</value>
+    
+  </data>
+  <data name="ErrGeneralError" xml:space="preserve">
+    <value>{0}</value>
+    
+  </data>
+  <data name="FormulaColumns_NotSupported" xml:space="preserve">
+    <value>Støttes ikke i formelkolonner.</value>
+    
+  </data>
+  <data name="FormulaColumns_ArgNotSupported" xml:space="preserve">
+    <value>Argumentet {0} støttes ikke for funksjonen {1} i formelkolonner.</value>
+    
+  </data>
+  <data name="FormulaColumns_ArgTypeNotSupported" xml:space="preserve">
+    <value>Dette argumentet kan ikke sendes som denne typen i formelkolonner.</value>
+    
+  </data>
+  <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
+    <value>Bare en litteralverdi støttes for dette argumentet.</value>
+    
+  </data>
+  <data name="FormulaColumns_TimeZoneConversion" xml:space="preserve">
+    <value>{0} kan ikke utføres for disse inndataene uten tidssonekonvertering, som ikke støttes i formelkolonner.</value>
+    
+  </data>
+  <data name="FormulaColumns_IncompatibleDateTimes" xml:space="preserve">
+    <value>Denne operasjonen kan ikke utføres på verdier som har ulike dato/klokkeslett-virkemåter.</value>
+    
+  </data>
+  <data name="FormulaColumns_DateTimeFormatNotSupported" xml:space="preserve">
+    <value>Bare strengene for kort dato og klokkeslett-format støttes i formelkolonner.</value>
+    
+  </data>
+  <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
+    <value>Spesifikke formateringstokener for nasjonal innstilling som «.» og «,» støttes ikke i formelkolonner.</value>
+    
+  </data>
+  <data name="FormulaColumns_FunctionNotSupported" xml:space="preserve">
+    <value>{0} støttes ikke i formelkolonner. Bruk {1} i stedet.</value>
+    
+  </data>
+  <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
+    <value>Resultattypen {0} støttes ikke i formelkolonner.</value>
+    
+  </data>
+  <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
+    <value>Resultattypen for denne formelen forventes å være {0}, men den faktiske resultattypen er {1}. Resultattypen for en formelkolonne kan ikke endres.</value>
+    
+  </data>
+  <data name="FormulaColumns_ColumnTypeNotSupported" xml:space="preserve">
+    <value>Kolonner av typen {0} støttes ikke i formelkolonner.</value>
+    
+  </data>
+  <data name="FormulaColumns_ColumnFormatNotSupported" xml:space="preserve">
+    <value>Kolonner av typen {0} med formatet {1} støttes ikke i formelkolonner.</value>
+    
+  </data>
+  <data name="FormulaColumns_FormulaTooLong" xml:space="preserve">
+    <value>Formler kan ikke være lengre enn 1000 tegn.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
+    <value>Forventet en operand. Formelen eller uttrykket forventer en gyldig operand. Du kan for eksempel legge til operanden "2" i uttrykket '1 + _, slik at resultatet blir (3). Eller du kan legge til operanden "there" i uttrykket "" hei "&amp; _' slik at resultatet blir "Hei du".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrOperandExpected_HowToFix_1" xml:space="preserve">
+    <value>Angi en operand-verdi som fullfører uttrykket. Kontroller at typen operand (tekst, tall, dato eller riktig/galt) passer uttrykket. Samkjør tall med tall, tekst med tekst og så videre. For eksempel er '1 + "Hei" ugyldig, mens '1 + 2' er gyldig.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBadToken_ShortMessage" xml:space="preserve">
+    <value>Uventede tegn. Tegnene brukes i formelen på en uventet måte.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBadToken_LongMessage" xml:space="preserve">
+    <value>For eksempel kan ikke tegnet «\» komme etter et tall, slik som dette: «32\». Det forventes et mellomrom (32), slik at det bare er tallet 32, eller et annet tall (f.eks. 323) forventes.</value>
+  </data>
+  <data name="ErrorResource_ErrBadToken_HowToFix_1" xml:space="preserve">
+    <value>Fjern eller erstatt uventede tegn.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBadToken_Link_1" xml:space="preserve">
+    <value>Artikkel: Formelreferanse for Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_UnexpectedCharacterToken_ShortMessage" xml:space="preserve">
+    <value>Uventet tegn {0} i posisjon {1} i formelen.</value>
+    
+  </data>
+  <data name="ErrorResource_UnexpectedCharacterToken_LongMessage" xml:space="preserve">
+    <value>Tegnet «\» kan for eksempel ikke komme etter et tall, slik som dette: «32\». Det forventes et mellomrom (32), slik at det bare er tallet 32, eller et annet tall (f.eks. 323) forventes.</value>
+  </data>
+  <data name="ErrorResource_UnexpectedCharacterToken_HowToFix_1" xml:space="preserve">
+    <value>Fjern eller erstatt uventet tegn.</value>
+  </data>
+  <data name="ErrorResource_UnexpectedCharacterToken_Link_1" xml:space="preserve">
+    <value>Artikkel: Formelreferanse for Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrMissingEndOfBlockComment_ShortMessage" xml:space="preserve">
+    <value>End-kommentaridentifikator mangler. Blokkommentaren har ingen end-kommentaridentifikator.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrMissingEndOfBlockComment_LongMessage" xml:space="preserve">
+    <value>Hver blokkommentar må starte med «/*» og avsluttes med «*/». Hvis du ikke avslutter hver blokkommentar korrekt, blir all koding etter kommentaren en del av kommentaren. Hvis en kommentar består av bare én linje, kan du starte den med «//» og ikke identifisere slutten av kommentaren.</value>
+  </data>
+  <data name="ErrorResource_ErrMissingEndOfBlockComment_HowToFix_1" xml:space="preserve">
+    <value>Legg til '* /' på slutten av blokkommentaren eller endre den til et sett med linjekommentarer.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrMissingEndOfBlockComment_Link_1" xml:space="preserve">
+    <value>Artikkel: Formelreferanse for Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_ShortMessage" xml:space="preserve">
+    <value>Uventede tegn. Formelen inneholder {0} der {1} er forventet.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_LongMessage" xml:space="preserve">
+    <value>Denne feilen oppstår hvis for eksempel en formel inneholder {{Val@ 7}} i stedet for {{Val: 7}}. Når du angir en variabel, krever syntaksen et kolon i stedet for en krøllalfa (@).</value>
+  </data>
+  <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_HowToFix_1" xml:space="preserve">
+    <value>Fjern eller erstatt de uventede tegnene med et forventet tegn.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_Link_1" xml:space="preserve">
+    <value>Artikkel: Formelreferanse for Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidName_ShortMessage" xml:space="preserve">
+    <value>Navnet er ugyldig. Gjenkjenner ikke {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidName_LongMessage" xml:space="preserve">
+    <value>Denne feilen oppstår vanligvis når en formel refererer til noe som ikke lenger finnes (f.eks. en kontroll du har slettet).</value>
+  </data>
+  <data name="ErrorResource_ErrInvalidName_HowToFix_1" xml:space="preserve">
+    <value>Fjern eller korriger referansen til navnet som ikke er gyldig.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidName_Link_1" xml:space="preserve">
+    <value>Artikkel: Formelreferanse for Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_ShortMessage" xml:space="preserve">
+    <value>Navnet er ugyldig. Denne identifikatoren gjenkjennes ikke.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_LongMessage" xml:space="preserve">
+    <value>Denne feilen oppstår vanligvis når en formel refererer til noe som ikke lenger finnes (f.eks. en kontroll du har slettet).</value>
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_HowToFix_1" xml:space="preserve">
+    <value>Fjern eller korriger referansen til navnet som ikke er gyldig.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_Link_1" xml:space="preserve">
+    <value>Artikkel: Formelreferanse for Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidPropertyReference_ShortMessage" xml:space="preserve">
+    <value>Egenskapsreferansen er ugyldig.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidPropertyReference_LongMessage" xml:space="preserve">
+    <value>Denne feilen vises når en formel refererer til egenskaper for komponentvirkemåte med ugyldig syntaks. (Som for eksempel Component.OnCustomChange i stedet for Component.OnCustomChange())</value>
+  </data>
+  <data name="ErrorResource_ErrInvalidPropertyReference_HowToFix_1" xml:space="preserve">
+    <value>Bruk riktig syntaks til å referere til egenskapen for komponentvirkemåte. Som: Component.OnCustomChange()</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidPropertyReference_Link_1" xml:space="preserve">
+    <value>Artikkel: Formelreferanse for PowerApps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidParentUse_ShortMessage" xml:space="preserve">
+    <value>Parent-referansen er ikke gyldig. Du kan ikke referere til en overordnet kontroll i denne konteksten.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidParentUse_LongMessage" xml:space="preserve">
+    <value>Du kan ikke bruke operatoren Parent for en kontroll som ikke har en overordnet kontroll. Denne operatoren refererer til kontrollen som er vert for den angitte kontrollen og gjør at alle egenskapene er tilgjengelige.</value>
+  </data>
+  <data name="ErrorResource_ErrInvalidParentUse_HowToFix_1" xml:space="preserve">
+    <value>Fjern operatøren 'Overordnet'.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidParentUse_Link_1" xml:space="preserve">
+    <value>Artikkel: Legg til og konfigurer en lerretet-app-kontroll i Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrTooManyUps_ShortMessage" xml:space="preserve">
+    <value>Nesting av rad-området er for dypt. Formelens rad-område overskrider 63 nestingsnivåer.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrTooManyUps_LongMessage" xml:space="preserve">
+    <value>Kompleksiteten øker med hvert nestingsnivå, så Power Apps støtter kun nesting av rad-område opptil 63 nivåer.</value>
+  </data>
+  <data name="ErrorResource_ErrTooManyUps_HowToFix_1" xml:space="preserve">
+    <value>Skriv om formelen med færre nestingnivåer.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrRuleNestedTooDeeply_ShortMessage" xml:space="preserve">
+    <value>Nesting av uttrykket er for dypt. Et uttrykk i formelen er nestet mer enn 50 nivåer.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrRuleNestedTooDeeply_LongMessage" xml:space="preserve">
+    <value>Power Apps støtter nesting av uttrykk kun opptil 50 nivåer. Et så dypt uttrykk er vanskelig å forstå og vedlikeholde.</value>
+  </data>
+  <data name="ErrorResource_ErrRuleNestedTooDeeply_HowToFix_1" xml:space="preserve">
+    <value>Skriv om formelen med færre nestingnivåer.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrOperatorExpected_ShortMessage" xml:space="preserve">
+    <value>Forventet operator. Vi forventer en operator, slik som +, *, or &amp;, på dette stedet i formelen.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrOperatorExpected_LongMessage" xml:space="preserve">
+    <value>Operatorer slår sammen to operander. Denne feilen oppstår hvis du setter to funksjoner (operander) sammen uten operator mellom dem, for eksempel Len("mytext")Len("mytext").</value>
+  </data>
+  <data name="ErrorResource_ErrOperatorExpected_HowToFix_1" xml:space="preserve">
+    <value>Rediger formelen slik at den inneholder en operatør mellom operandene.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrOperatorExpected_Link_1" xml:space="preserve">
+    <value>Modul: Bruk grunnleggende formler</value>
+    
+  </data>
+  <data name="ErrorResource_ErrNumberExpected_ShortMessage" xml:space="preserve">
+    <value>Forventet tall. Vi forventer et tall på dette stedet i formelen.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrNumberExpected_LongMessage" xml:space="preserve">
+    <value>Denne feilen oppstår hvis du bruker en funksjon som krever et tall, og du angir for eksempel et bilde i stedet.</value>
+  </data>
+  <data name="ErrorResource_ErrNumberExpected_HowToFix_1" xml:space="preserve">
+    <value>Rediger formelen slik at den returnerer et tall på dette punktet i formelen.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrNumberExpected_Link_1" xml:space="preserve">
+    <value>Artikkel: Formelreferanse for Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBooleanExpected_ShortMessage" xml:space="preserve">
+    <value>Forventet boolsk verdi. Vi forventer en boolsk verdi (true/false) på dette stedet i formelen.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBooleanExpected_LongMessage" xml:space="preserve">
+    <value>En boolsk verdi er også kjent som en true/false-verdi i programmer som for eksempel Microsoft Excel. Denne feilen oppstår hvis du bruker en funksjon som krever en boolsk verdi, og du angir for eksempel en dato i stedet.</value>
+  </data>
+  <data name="ErrorResource_ErrBooleanExpected_HowToFix_1" xml:space="preserve">
+    <value>Rediger formelen slik at den returnerer en boolsk verdi på dette punktet i formelen.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBooleanExpected_Link_1" xml:space="preserve">
+    <value>Artikkel: Formelreferanse for Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrColonExpected_ShortMessage" xml:space="preserve">
+    <value>Forventet kolon. Vi forventer et kolon (:) på dette stedet i formelen.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrColonExpected_LongMessage" xml:space="preserve">
+    <value>Et kolon skiller et feltnavn, iblant kalt kolonnenavn, fra en feltverdi i en post (f.eks. {Month:"1"}, {Month:"2"} ...). Et kolon skiller også timer fra minutter og sekunder (f.eks. 3:04).</value>
+  </data>
+  <data name="ErrorResource_ErrColonExpected_HowToFix_1" xml:space="preserve">
+    <value>Rediger formelen slik at den inneholder et kolon.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrColonExpected_Link_1" xml:space="preserve">
+    <value>Artikkel: Vis tekst, datoer og klokkeslett i Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorPropertyExpected_ShortMessage" xml:space="preserve">
+    <value>Virkemåtefunksjon i en ikke-virkemåte-egenskap. Du kan ikke bruke denne egenskapen til å endre verdier andre steder i appen.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorPropertyExpected_LongMessage" xml:space="preserve">
+    <value>Virkemåtefunksjoner endrer statusen til appen ved å endre verdier andre steder i appen. Navigate, Patch, UpdateContext og Collect er vanlige virkemåtefunksjoner. OnSelect, OnVisible og andre On... er vanlige virkemåtebaserte egenskaper.</value>
+  </data>
+  <data name="ErrorResource_ErrBehaviorPropertyExpected_HowToFix_1" xml:space="preserve">
+    <value>Flytt virkemåtefunksjonen til en virkemåtebasert egenskap.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorPropertyExpected_Link_1" xml:space="preserve">
+    <value>Artikkel: Forstå virkemåteformler for lerretsapper i Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrTestPropertyExpected_ShortMessage" xml:space="preserve">
+    <value>Testfunksjon i en egenskap som ikke er en test. Du kan ikke bruke denne egenskapen til å starte testfunksjoner.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrTestPropertyExpected_LongMessage" xml:space="preserve">
+    <value>Testfunksjoner er de som kan brukes til å simulere brukerinndata når en app testes. SetProperty, SelectRow og Assert er vanlige testfunksjoner. De kan bare brukes i testtilfellene.</value>
+  </data>
+  <data name="ErrorResource_ErrTestPropertyExpected_HowToFix_1" xml:space="preserve">
+    <value>Bruk funksjonen i et testtilfelle, ikke i selve appen.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrCannotCoerce_SourceType_TargetType_ShortMessage" xml:space="preserve">
+    <value>Kan ikke konvertere denne datatypen. Power Apps kan ikke konvertere denne {0} til en {1}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrCannotCoerce_SourceType_TargetType_LongMessage" xml:space="preserve">
+    <value>Power Apps kan konvertere noen datatyper i formelen til andre typer for deg. For eksempel den kan konvertere «1» (en streng) til 1 (et tall), men den kan ikke konvertere alle datatyper til alle andre datatyper. Den kan for eksempel ikke konvertere et bilde til et tall.</value>
+  </data>
+  <data name="ErrorResource_ErrCannotCoerce_SourceType_TargetType_HowToFix_1" xml:space="preserve">
+    <value>Rediger formelen slik at du konverterer de aktuelle dataene til den forventede typen.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrStringExpected_ShortMessage" xml:space="preserve">
+    <value>Forventet tekst. Vi forventer tekst på dette stedet i formelen.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrStringExpected_LongMessage" xml:space="preserve">
+    <value>Denne feilen oppstår hvis du bruker en funksjon som krever et argument for tekst (eller streng), og du angir for eksempel en dato i stedet.</value>
+  </data>
+  <data name="ErrorResource_ErrStringExpected_HowToFix_1" xml:space="preserve">
+    <value>Rediger formelen slik at den returnerer tekst på dette punktet i formelen.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrStringExpected_Link_1" xml:space="preserve">
+    <value>Artikkel: Formelreferanse for Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrNumberOrStringExpected_ShortMessage" xml:space="preserve">
+    <value>Forventet tekst eller tall. Vi forventer tekst eller et tall på dette stedet i formelen.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrNumberOrStringExpected_LongMessage" xml:space="preserve">
+    <value>Denne feilen oppstår hvis du bruker en funksjon som krever tekst eller et tall, og du angir for eksempel en boolsk verdi (true/false) i stedet.</value>
+  </data>
+  <data name="ErrorResource_ErrNumberOrStringExpected_HowToFix_1" xml:space="preserve">
+    <value>Rediger formelen slik at den returnerer tekst eller et tall på dette punktet i formelen.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrNumberOrStringExpected_Link_1" xml:space="preserve">
+    <value>Artikkel: Formelreferanse for Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrClosingBracketExpected_ShortMessage" xml:space="preserve">
+    <value>Forventet avsluttende sløyfeparentes. Vi forventer en avsluttende sløyfeparentes (}) på dette stedet i formelen.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrClosingBracketExpected_LongMessage" xml:space="preserve">
+    <value>En avsluttende klammeparentes angir slutten på en post (f.eks. {Month:"1"}, {Month:"2"} ...).</value>
+  </data>
+  <data name="ErrorResource_ErrClosingBracketExpected_HowToFix_1" xml:space="preserve">
+    <value>Rediger formelen slik at den inneholder en sløyfeparentes.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrEmptyInvalidIdentifier_ShortMessage" xml:space="preserve">
+    <value>Identifikatoren har ingen gyldig tekst.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrEmptyInvalidIdentifier_HowToFix_1" xml:space="preserve">
+    <value>Kontroller at du har tekst for identifikatoren. Denne feilen oppstår når identifikatoren er bare tomrom eller mellomrom.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_ShortMessage" xml:space="preserve">
+    <value>Inkompatible typer for sammenligning. Disse typene kan ikke sammenlignes: {0}, {1}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_LongMessage" xml:space="preserve">
+    <value>Vi kan ikke evaluere formelen fordi verdiene som sammenlignes i formelen, ikke er av samme type.</value>
+  </data>
+  <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_HowToFix_1" xml:space="preserve">
+    <value>Du må kanskje konvertere verdien til samme type, for eksempel å konvertere en datostreng (f.eks. 12/31/2018) til en datoverdi.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_HowToFix_2" xml:space="preserve">
+    <value>Hvis du sammenligner poster eller tabeller, må felt- eller kolonnetypene samsvare nøyaktig.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_Link_1" xml:space="preserve">
+    <value>Modul: Bruk grunnleggende formler</value>
+    
+  </data>
+  <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_Link_2" xml:space="preserve">
+    <value>Modul: Skriv grunnleggende formler med tabeller og poster</value>
+    
+  </data>
+  <data name="ErrorResource_ErrServiceFunctionUnknownOptionalParam_Name_ShortMessage" xml:space="preserve">
+    <value>Ingen parameter. Denne funksjonen har ikke en valgfri parameter med navnet {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrServiceFunctionUnknownOptionalParam_Name_HowToFix_1" xml:space="preserve">
+    <value>Slik retter du opp: Fjern eller gi nytt navn til parameteren i formelen.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrServiceFunctionUnknownOptionalParam_Name_Link_1" xml:space="preserve">
+    <value>Artikkel: Formelreferanse for Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_ShortMessage" xml:space="preserve">
+    <value>Inkompatibel type. Kolonnen {0} i datakilden du oppdaterer, forventer en {1}-type og du bruker en {2}-type.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_HowToFix_1" xml:space="preserve">
+    <value>Du må kanskje konvertere verdien til samme type, for eksempel å konvertere en datostreng (f.eks. 12/31/2018) til en datoverdi eller en streng til et tall.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_Link_1" xml:space="preserve">
+    <value>Modul: Bruk grunnleggende formler</value>
+    
+  </data>
+  <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_Link_2" xml:space="preserve">
+    <value>Modul: Skriv grunnleggende formler med tabeller og poster</value>
+    
+  </data>
+  <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_ShortMessage" xml:space="preserve">
+    <value>Manglende kolonne. Formelen mangler en kolonne {0} med typen {1}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_HowToFix_1" xml:space="preserve">
+    <value>Legg til en kolonne i formelen.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_Link_1" xml:space="preserve">
+    <value>Artikkel: Formelreferanse for Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrTableDoesNotAcceptThisType_ShortMessage" xml:space="preserve">
+    <value>Inkompatibel type. Elementet du prøver å sette inn i en tabell, har en type som ikke er kompatibel med tabellen.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrTableDoesNotAcceptThisType_HowToFix_1" xml:space="preserve">
+    <value>Kontroller at du ønsker å legge inn et element av en type som er kompatibel med tabellen. Det kan være du må konvertere typen til for eksempel en post.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrTableDoesNotAcceptThisType_Link_1" xml:space="preserve">
+    <value>Modul: Bruk grunnleggende formler</value>
+    
+  </data>
+  <data name="ErrorResource_ErrTableDoesNotAcceptThisType_Link_2" xml:space="preserve">
+    <value>Modul: Skriv grunnleggende formler med tabeller og poster</value>
+    
+  </data>
+  <data name="ErrorResource_ErrTypeError_ShortMessage" xml:space="preserve">
+    <value>Inkompatibel type. Vi kan ikke evaluere formelen på grunn av en typefeil.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrTypeError_LongMessage" xml:space="preserve">
+    <value>Det kan være at dataene ikke er av den forventede typen. (Tekst, tall, dato, tabell, post.)</value>
+  </data>
+  <data name="ErrorResource_ErrTypeError_HowToFix_1" xml:space="preserve">
+    <value>Kontroller typene verdier som er involvert i formelen, og at typene samsvarer.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrTypeError_Link_1" xml:space="preserve">
+    <value>Modul: Bruk grunnleggende formler</value>
+    
+  </data>
+  <data name="ErrorResource_ErrTypeError_Link_2" xml:space="preserve">
+    <value>Modul: Skriv grunnleggende formler med tabeller og poster</value>
+    
+  </data>
+  <data name="ErrorResource_ErrDateExpected_ShortMessage" xml:space="preserve">
+    <value>Forventet dato. Vi forventer en dato på dette stedet i formelen.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrDateExpected_LongMessage" xml:space="preserve">
+    <value>Denne feilen oppstår hvis du bruker en funksjon som krever en dato, og du angir for eksempel tekst i stedet.</value>
+  </data>
+  <data name="ErrorResource_ErrDateExpected_HowToFix_1" xml:space="preserve">
+    <value>Rediger formelen slik at den returnerer en dato på dette punktet i formelen.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrDateExpected_Link_1" xml:space="preserve">
+    <value>Artikkel: Formelreferanse for Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_ShortMessage" xml:space="preserve">
+    <value>Delegeringsvarsel. Formelens {0}-del kan ha problemer med å fungere på riktig måte på store datasett.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_LongMessage" xml:space="preserve">
+    <value>Det kan hende at datakilden ikke får behandlet formelen og dermed returnerer et ufullstendig datasett. Det kan hende at programmet ikke returnerer riktige resultater eller fungerer som det skal, hvis datasettet er ufullstendig.</value>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_HowToFix_1" xml:space="preserve">
+    <value>Hvis datasettet overskrider grensen på 500 poster, men inneholder mindre enn 2 000 poster, kan du prøve å tilbakestille grensen.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_HowToFix_2" xml:space="preserve">
+    <value>Prøv å forenkle formelen.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_HowToFix_3" xml:space="preserve">
+    <value>Prøv å flytte dataene til en annen datakilde.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_Link_1" xml:space="preserve">
+    <value>Artikkel: Forstå delegering i en lerretsapp</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_Link_2" xml:space="preserve">
+    <value>Blogg: Dataradgrenser for delegering</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_ShortMessage" xml:space="preserve">
+    <value>Delegeringsvarsel. Formelens merkede del kan ha problemer med å fungere på riktig måte med kolonne {0} på store datasett.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_LongMessage" xml:space="preserve">
+    <value>Det kan hende at datakilden ikke får behandlet formelen og dermed returnerer et ufullstendig datasett. Det kan hende at programmet ikke returnerer riktige resultater eller fungerer som det skal, hvis datasettet er ufullstendig.</value>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_HowToFix_1" xml:space="preserve">
+    <value>Hvis datasettet overskrider grensen på 500 poster, men inneholder mindre enn 2 000 poster, kan du prøve å tilbakestille grensen.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_HowToFix_2" xml:space="preserve">
+    <value>Prøv å forenkle formelen.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_HowToFix_3" xml:space="preserve">
+    <value>Prøv å flytte dataene til en annen datakilde.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_Link_1" xml:space="preserve">
+    <value>Artikkel: Forstå delegering i en lerretsapp</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_Link_2" xml:space="preserve">
+    <value>Blogg: Dataradgrenser for delegering</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_ShortMessage" xml:space="preserve">
+    <value>Delegeringsvarsel. Formelens merkede del kan ha problemer med å fungere på riktig måte på store datasett.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_LongMessage" xml:space="preserve">
+    <value> Høyre side av «i»-operatoren må være et kolonnenavn fra riktig datakilde. Det kan hende at datakilden ikke får behandlet formelen og dermed returnerer et ufullstendig datasett. Det kan hende at programmet ikke returnerer riktige resultater eller fungerer som det skal, hvis datasettet er ufullstendig.</value>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_1" xml:space="preserve">
+    <value>Endre elementet til høyre for i-operatoren til å være en kolonne fra den riktige datakilden.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_2" xml:space="preserve">
+    <value>Hvis datasettet overskrider grensen på 500 poster, men inneholder mindre enn 2 000 poster, kan du prøve å tilbakestille grensen.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_3" xml:space="preserve">
+    <value>Prøv å forenkle formelen.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_4" xml:space="preserve">
+    <value>Prøv å flytte dataene til en annen datakilde.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_Link_1" xml:space="preserve">
+    <value>Artikkel: Forstå delegering i en lerretsapp</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_Link_2" xml:space="preserve">
+    <value>Blogg: Dataradgrenser for delegering</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_ShortMessage" xml:space="preserve">
+    <value>Formelens merkede del kan ha problemer med å fungere på riktig måte på store datasett. </value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_LongMessage" xml:space="preserve">
+    <value> Høyre side av «i»-operatoren er ikke en kolonne fra riktig datakilde. Det kan hende at datakilden ikke får behandlet formelen og dermed returnerer et ufullstendig datasett. Det kan hende at programmet ikke returnerer riktige resultater eller fungerer som det skal, hvis datasettet er ufullstendig.
+        </value>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_1" xml:space="preserve">
+    <value>Endre elementet til høyre for i-operatoren til å være en kolonne fra den riktige datakilden.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_2" xml:space="preserve">
+    <value>Hvis datasettet overskrider grensen på 500 poster, men inneholder færre enn 2 000 poster, kan du prøve å tilbakestille grensen.
+        </value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_3" xml:space="preserve">
+    <value>Prøv å forenkle formelen.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_4" xml:space="preserve">
+    <value>Prøv å flytte dataene til en annen datakilde.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_Link_1" xml:space="preserve">
+    <value>Artikkel: Forstå delegering i en lerretsapp</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_Link_2" xml:space="preserve">
+    <value>Blogg: Dataradgrenser for delegering</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_ShortMessage" xml:space="preserve">
+    <value>Delegeringsvarsel. Formelens merkede del kan ha problemer med å fungere på riktig måte på store datasett. Operasjonen {0} støttes ikke av denne koblingen.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_LongMessage" xml:space="preserve">
+    <value>Det kan hende at datakilden ikke får behandlet formelen og dermed returnerer et ufullstendig datasett. Det kan hende at programmet ikke returnerer riktige resultater eller fungerer som det skal, hvis datasettet er ufullstendig.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_HowToFix_1" xml:space="preserve">
+    <value>Hvis datasettet overskrider grensen på 500 poster, men inneholder mindre enn 2 000 poster, kan du prøve å tilbakestille grensen.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_HowToFix_2" xml:space="preserve">
+    <value>Prøv å forenkle formelen.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_HowToFix_3" xml:space="preserve">
+    <value>Prøv å flytte dataene til en annen datakilde.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_Link_1" xml:space="preserve">
+    <value>Artikkel: Forstå delegering i en lerretsapp</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_Link_2" xml:space="preserve">
+    <value>Blogg: Dataradgrenser for delegering</value>
+    
+  </data>
+  <data name="ErrorResource_ErrOnlyOneViewExpected_ShortMessage" xml:space="preserve">
+    <value>Forventet kun én visning. Vi forventer kun én visning på dette stedet i formelen.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrOnlyOneViewExpected_HowToFix_1" xml:space="preserve">
+    <value>Rediger formelen slik at den kun har én visning på dette stedet i formelen.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrViewFromCurrentTableExpected_ShortMessage" xml:space="preserve">
+    <value>Forventet en visning fra datakilden {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrViewFromCurrentTableExpected_HowToFix_1" xml:space="preserve">
+    <value>Rediger formelen slik at den har visning fra datakilden {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidControlReference_ShortMessage" xml:space="preserve">
+    <value>Denne kontrollreferansen kan ikke brukes i denne egenskapen</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidControlReference_HowToFix_1" xml:space="preserve">
+    <value>Denne egenskapen støtter bare referanser til globale variabler, samlinger og enkelte egenskaper for kontroll og skjerm. Se koblingen for en liste over støttede kontrollegenskaper.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidControlReference_Link_1" xml:space="preserve">
+    <value>Referanse: ConfirmExit for lerretsapper</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidStringInterpolation_ShortMessage" xml:space="preserve">
+    <value>Uttrykk som vises i en interpolert streng, må evalueres til en tekstverdi eller til en kompatibel type.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidStringInterpolation_HowToFix_1" xml:space="preserve">
+    <value>Kontroller uttrykkstypene i den interpolerte strengen.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrEmptyIsland_ShortMessage" xml:space="preserve">
+    <value>Tomme uttrykk kan ikke vises i en interpolert streng.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrEmptyIsland_HowToFix_1" xml:space="preserve">
+    <value>Se etter tomme uttrykk i den interpolerte strengen.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrAsNotInContext_ShortMessage" xml:space="preserve">
+    <value>As er ikke tillatt i denne konteksten</value>
+    
+  </data>
+  <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
+    <value>Navngitt formel må slutte med et semikolon.</value>
+    
+  </data>
+</root>

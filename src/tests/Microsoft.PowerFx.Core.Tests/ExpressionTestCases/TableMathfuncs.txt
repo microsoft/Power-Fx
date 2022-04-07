@@ -1,0 +1,37 @@
+﻿// Sum on empty list 
+>> IsBlank(Sum(Filter([1,2,3],Value > 10), Value))
+true
+
+// Table overload of Sum
+>> Sum([1,2,3], Value)
+6
+
+>> Sum(LastN([1, 2, 3, 4, 5], Blank()), Value)
+Blank()
+
+>> Sum(Sort([-2, -1, 0, 1, 2], 1 / Value), Value)
+#Error
+
+>> Sum(1, 2, 3, Blank(), 2, 3)
+11
+
+>> Sum([1, 2, 1/0, 4, 5], Value)
+#Error
+
+>> IsBlank(Average(Filter([1,2,3],Value > 10), Value))
+#Error
+
+>> Average([1,2,3], Value)
+2
+
+>> Average(LastN([1, 2, 3, 4, 5], Blank()), Value)
+Blank()
+
+>> Average(Sort([-2, -1, 0, 1, 2], 1 / Value), Value)
+#Error
+
+>> Average(1, 2, 3, Blank(), 2, 2)
+2
+
+>> Average([1, 2, 1/0, 4, 5], Value)
+#Error

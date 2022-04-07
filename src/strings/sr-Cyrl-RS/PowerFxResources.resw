@@ -1,0 +1,4520 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="ListItemSingleQuotedFormat" xml:space="preserve">
+    <value>„{0}“</value>
+    
+  </data>
+  <data name="AboutIf" xml:space="preserve">
+    <value>Проверава да ли било који од наведених услова испуњава и враћа одговарајућу вредност. Ако ниједан од услова није испуњен, функција враћа наведену подразумевану вредност.</value>
+    
+  </data>
+  <data name="IfArgCond" xml:space="preserve">
+    <value>логички_тест</value>
+    
+  </data>
+  <data name="IfArgTrueValue" xml:space="preserve">
+    <value>тачна_вредност</value>
+    
+  </data>
+  <data name="IfArgElseValue" xml:space="preserve">
+    <value>друга_вредност</value>
+    
+  </data>
+  <data name="AboutIf_logical_test" xml:space="preserve">
+    <value>Услов који даје Булову вредност.</value>
+  </data>
+  <data name="AboutIf_true_value" xml:space="preserve">
+    <value>Израз који пружа резултат If када је услов исправан.</value>
+    
+  </data>
+  <data name="AboutIf_else_value" xml:space="preserve">
+    <value>Израз који пружа резултат за If када су сви наведени услови неисправни.</value>
+    
+  </data>
+  <data name="AboutSwitch" xml:space="preserve">
+    <value>Подудара резултат формуле са групом вредности. Кад се пронађе подударање, процењује се и враћа одговарајућа формула. Ако се не пронађе ниједно подударање, процењује се и враћа последња подразумевана формула.</value>
+    
+  </data>
+  <data name="SwitchExpression" xml:space="preserve">
+    <value>вредност_комутатора</value>
+    
+  </data>
+  <data name="SwitchDefaultReturn" xml:space="preserve">
+    <value>подразумевани_резултат</value>
+    
+  </data>
+  <data name="SwitchCaseExpr" xml:space="preserve">
+    <value>вредност_подударања</value>
+    
+  </data>
+  <data name="SwitchCaseArg" xml:space="preserve">
+    <value>резултат_подударања</value>
+    
+  </data>
+  <data name="AboutSwitch_switch_value" xml:space="preserve">
+    <value>Вредност која се пореди са сваким параметром „вредност_подударања“.</value>
+    
+  </data>
+  <data name="AboutSwitch_match_value" xml:space="preserve">
+    <value>Вредност која се подудара са параметром „вредност_комутатора“.</value>
+    
+  </data>
+  <data name="AboutSwitch_match_result" xml:space="preserve">
+    <value>Формула која се процењује и враћа ако се пронађе подударање.</value>
+  </data>
+  <data name="AboutSwitch_default_result" xml:space="preserve">
+    <value>Формула која се процењује и враћа ако се не пронађе ниједно подударање.</value>
+  </data>
+  <data name="AboutAnd" xml:space="preserve">
+    <value>Проверава да ли су сви аргументи тачни и враћа тачно ако јесу.</value>
+    
+  </data>
+  <data name="AboutOr" xml:space="preserve">
+    <value>Проверава да ли је неки од аргумената тачан и враћа „тачно“ или „нетачно“. Враћа „нетачно“ само ако су сви аргументи нетачни.</value>
+    
+  </data>
+  <data name="AboutNot" xml:space="preserve">
+    <value>Мења погрешно у исправо и исправно у погрешно.</value>
+    
+  </data>
+  <data name="LogicalFuncParam" xml:space="preserve">
+    <value>логички</value>
+    
+  </data>
+  <data name="AboutAnd_logical" xml:space="preserve">
+    <value>Логички израз за израчунавање And операције.</value>
+  </data>
+  <data name="AboutOr_logical" xml:space="preserve">
+    <value>Логички израз за израчунавање Or операције.</value>
+  </data>
+  <data name="AboutNot_logical" xml:space="preserve">
+    <value>Логички израз негирања.</value>
+  </data>
+  <data name="AboutCount" xml:space="preserve">
+    <value>Броји нумеричке вредности у наведеној колони.</value>
+    
+  </data>
+  <data name="AboutCountA" xml:space="preserve">
+    <value>Пребројава број редова у колони који нису празни.</value>
+    
+  </data>
+  <data name="AboutCountRows" xml:space="preserve">
+    <value>Броји број редова у улазној табели или колекцији.</value>
+    
+  </data>
+  <data name="CountArg1" xml:space="preserve">
+    <value>извор</value>
+    
+  </data>
+  <data name="AboutCount_source" xml:space="preserve">
+    <value>Колона са вредностима за пребројавање.</value>
+  </data>
+  <data name="AboutCountA_source" xml:space="preserve">
+    <value>Колона са вредностима за пребројавање.</value>
+  </data>
+  <data name="AboutCountRows_source" xml:space="preserve">
+    <value>Табела чији ће редови бити пребројани.</value>
+  </data>
+  <data name="AboutCountIf" xml:space="preserve">
+    <value>Пребројава број редова који испуњавају дати услов.</value>
+    
+  </data>
+  <data name="CountIfArg1" xml:space="preserve">
+    <value>извор</value>
+    
+  </data>
+  <data name="CountIfArg2" xml:space="preserve">
+    <value>услов</value>
+    
+  </data>
+  <data name="AboutCountIf_source" xml:space="preserve">
+    <value>Табела у којој ће редови који испуњавају одређени критеријум бити пребројани.</value>
+  </data>
+  <data name="AboutCountIf_condition" xml:space="preserve">
+    <value>Израз који је израчунат за сваки ред, који одређује да ли би требало пребројавати ред.</value>
+  </data>
+  <data name="AboutSumT" xml:space="preserve">
+    <value>Враћа збир бројева који израз процењује у контексту табеле.</value>
+    
+  </data>
+  <data name="AboutMaxT" xml:space="preserve">
+    <value>Враћа највећу вредност коју израз процењује у контексту табеле.</value>
+    
+  </data>
+  <data name="AboutMinT" xml:space="preserve">
+    <value>Враћа најмању вредност коју израз процењује у контексту табеле.</value>
+    
+  </data>
+  <data name="AboutAverageT" xml:space="preserve">
+    <value>Враћа просек (аритметичку средину) бројева у којима се проверава израз у контексту табеле.</value>
+    
+  </data>
+  <data name="StatisticalTArg1" xml:space="preserve">
+    <value>извор</value>
+    
+  </data>
+  <data name="StatisticalTArg2" xml:space="preserve">
+    <value>израз</value>
+    
+  </data>
+  <data name="AboutMin_source" xml:space="preserve">
+    <value>Табела на којој ће ова минимална операција бити израчуната.</value>
+  </data>
+  <data name="AboutMin_expression" xml:space="preserve">
+    <value>Израз проверен у сваком реду у улазној табели који обезбеђује нумеричке вредности за ову минималну операцију.</value>
+  </data>
+  <data name="AboutMax_source" xml:space="preserve">
+    <value>Табела на којој ће ова максимална операција бити израчуната.</value>
+  </data>
+  <data name="AboutMax_expression" xml:space="preserve">
+    <value>Израз проверен у сваком реду у улазној табели који обезбеђује нумеричке вредности за ову максималну операцију.</value>
+  </data>
+  <data name="AboutAverage_source" xml:space="preserve">
+    <value>Табела на којој ће ова операција просека бити израчуната.</value>
+  </data>
+  <data name="AboutAverage_expression" xml:space="preserve">
+    <value>Израз прверен у сваком реду у улазној табели који обезбеђује нумеричке вредности за ову операцију просека.</value>
+  </data>
+  <data name="AboutSum_source" xml:space="preserve">
+    <value>Табела на којој ће ова операција збира бити израчуната.</value>
+  </data>
+  <data name="AboutSum_expression" xml:space="preserve">
+    <value>Израз проверен у сваком реду у улазној табели који обезбеђује нумеричке вредности за ову операцију збира.</value>
+  </data>
+  <data name="AboutSum" xml:space="preserve">
+    <value>Враћа збир својих аргумената.</value>
+    
+  </data>
+  <data name="AboutMax" xml:space="preserve">
+    <value>Враћа највећу вредност у скупу вредности. Занемарује логичке вредности и текст.</value>
+    
+  </data>
+  <data name="AboutMin" xml:space="preserve">
+    <value>Враћа најмању вредност у скупу вредности. Занемарује логичке вредности и текст.</value>
+    
+  </data>
+  <data name="AboutAverage" xml:space="preserve">
+    <value>Враћа просек (аритметичку средину) својих аргумената.</value>
+    
+  </data>
+  <data name="StatisticalArg" xml:space="preserve">
+    <value>број</value>
+    
+  </data>
+  <data name="AboutSum_number" xml:space="preserve">
+    <value>Нумеричка вредност за операцију збира.</value>
+  </data>
+  <data name="AboutMin_number" xml:space="preserve">
+    <value>Нумеричка вредност за ову минималну операцију.</value>
+  </data>
+  <data name="AboutMax_number" xml:space="preserve">
+    <value>Нумеричка вредност за ову максималну операцију.</value>
+  </data>
+  <data name="AboutAverage_number" xml:space="preserve">
+    <value>Нумеричка вредност за ову операцију просека.</value>
+  </data>
+  <data name="AboutAddColumns" xml:space="preserve">
+    <value>Враћа табелу са новим колонама израчунатим проценом свих „израза“ у „извору“.</value>
+    
+  </data>
+  <data name="AddColumnsArg1" xml:space="preserve">
+    <value>извор</value>
+    
+  </data>
+  <data name="AddColumnsArg2" xml:space="preserve">
+    <value>колона</value>
+    
+  </data>
+  <data name="AddColumnsArg3" xml:space="preserve">
+    <value>израз</value>
+    
+  </data>
+  <data name="AboutAddColumns_source" xml:space="preserve">
+    <value>Табела у коју се додају колоне.</value>
+    
+  </data>
+  <data name="AboutAddColumns_column" xml:space="preserve">
+    <value>Јединствено име колоне.</value>
+    
+  </data>
+  <data name="AboutAddColumns_expression" xml:space="preserve">
+    <value>Израз који пружа вредности за нову колону.</value>
+    
+  </data>
+  <data name="AboutDropColumns" xml:space="preserve">
+    <value>Враћа табелу са неким наведеним „колонама“ уклоњеним из табеле „извор“.</value>
+    
+  </data>
+  <data name="DropColumnsArg1" xml:space="preserve">
+    <value>извор</value>
+    
+  </data>
+  <data name="DropColumnsArg2" xml:space="preserve">
+    <value>назив_колоне</value>
+    
+  </data>
+  <data name="AboutDropColumns_source" xml:space="preserve">
+    <value>Вредност табеле из које треба уклонити колоне.</value>
+  </data>
+  <data name="AboutDropColumns_column_name" xml:space="preserve">
+    <value>Име колоне коју треба уклонити.</value>
+  </data>
+  <data name="AboutFilter" xml:space="preserve">
+    <value>Враћа ред из табеле за коју су сви наведени услови исправни.</value>
+    
+  </data>
+  <data name="FilterArg1" xml:space="preserve">
+    <value>извор</value>
+    
+  </data>
+  <data name="FilterArg2" xml:space="preserve">
+    <value>логички_тест</value>
+    
+  </data>
+  <data name="AboutFilter_source" xml:space="preserve">
+    <value>Табела за филтрирање.</value>
+  </data>
+  <data name="AboutFilter_logical_test" xml:space="preserve">
+    <value>Логички текст за процену за сваки ред. Само редови који прођу тест биће укључени у резултата филтера.</value>
+  </data>
+  <data name="AboutFirst" xml:space="preserve">
+    <value>Враћа први ред „извора“.</value>
+    
+  </data>
+  <data name="AboutLast" xml:space="preserve">
+    <value>Враћа последњи ред „извора“.</value>
+    
+  </data>
+  <data name="FirstLastArg1" xml:space="preserve">
+    <value>извор</value>
+    
+  </data>
+  <data name="AboutFirst_source" xml:space="preserve">
+    <value>Табела чији ће први ред бити враћен.</value>
+  </data>
+  <data name="AboutLast_source" xml:space="preserve">
+    <value>Табела чији ће последњи ред бити враћен.</value>
+  </data>
+  <data name="AboutFirstN" xml:space="preserve">
+    <value>Враћа прве редове „број“ за „извор“.</value>
+    
+  </data>
+  <data name="AboutLastN" xml:space="preserve">
+    <value>Враћа последње редове „број“ за „извор“.</value>
+    
+  </data>
+  <data name="FirstLastNArg1" xml:space="preserve">
+    <value>извор</value>
+    
+  </data>
+  <data name="FirstLastNArg2" xml:space="preserve">
+    <value>број</value>
+    
+  </data>
+  <data name="AboutFirstN_source" xml:space="preserve">
+    <value>Табела из које ће редови бити враћени.</value>
+  </data>
+  <data name="AboutFirstN_count" xml:space="preserve">
+    <value>Број редова које треба вратити.</value>
+  </data>
+  <data name="AboutLastN_source" xml:space="preserve">
+    <value>Табела из које ће редови бити враћени.</value>
+  </data>
+  <data name="AboutLastN_count" xml:space="preserve">
+    <value>Број редова које треба вратити.</value>
+  </data>
+  <data name="AboutText" xml:space="preserve">
+    <value>Конвертује „вредност“ у текст у одређеном броју „формат_текст“.</value>
+    
+  </data>
+  <data name="TextArg1" xml:space="preserve">
+    <value>вредност</value>
+    
+  </data>
+  <data name="TextArg2" xml:space="preserve">
+    <value>формат_текста</value>
+    
+  </data>
+  <data name="TextArg3" xml:space="preserve">
+    <value>језик</value>
+    
+  </data>
+  <data name="AboutText_value" xml:space="preserve">
+    <value>Вредност коју треба обликовати у текст.</value>
+  </data>
+  <data name="AboutText_format_text" xml:space="preserve">
+    <value>Вредност текста која наводи начин на који ће „вредност“ бити обликована.</value>
+    
+  </data>
+  <data name="AboutText_language" xml:space="preserve">
+    <value>Шифра језика коју треба користити приликом конвертовања у текст.</value>
+    
+  </data>
+  <data name="AboutValue" xml:space="preserve">
+    <value>Претвара „текст“ који представља број у нумеричку вредност.</value>
+    
+  </data>
+  <data name="ValueArg1" xml:space="preserve">
+    <value>текст</value>
+    
+  </data>
+  <data name="ValueArg2" xml:space="preserve">
+    <value>језик</value>
+    
+  </data>
+  <data name="AboutValue_text" xml:space="preserve">
+    <value>Вредност текста за конвертовање у нумеричку вредност.</value>
+  </data>
+  <data name="AboutValue_language" xml:space="preserve">
+    <value>Шифра језика коју треба користити приликом конвертовања у вредност.</value>
+    
+  </data>
+  <data name="AboutBoolean" xml:space="preserve">
+    <value>Конвертује „текст“ који представља Булову вредност у Булову вредност.</value>
+    
+  </data>
+  <data name="BooleanArg1" xml:space="preserve">
+    <value>текст</value>
+    
+  </data>
+  <data name="AboutBoolean_text" xml:space="preserve">
+    <value>Текстуална вредност коју треба конвертовати у Булову вредност.</value>
+  </data>
+  <data name="AboutCoalesce" xml:space="preserve">
+    <value>Враћа први аргумент који није празан</value>
+    
+  </data>
+  <data name="CoalesceArg1" xml:space="preserve">
+    <value>вредност</value>
+    
+  </data>
+  <data name="AboutCoalesce_value" xml:space="preserve">
+    <value>Аргумент који треба вратити ако је у питању први аргумент који није празан.</value>
+  </data>
+  <data name="AboutConcatenate" xml:space="preserve">
+    <value>Спаја неколико вредности текста у једну вредност текста.</value>
+    
+  </data>
+  <data name="ConcatenateArg1" xml:space="preserve">
+    <value>текст</value>
+    
+  </data>
+  <data name="AboutConcatenate_text" xml:space="preserve">
+    <value>Текстуална вредност која треба да буде спојена са осталим аргументима.</value>
+  </data>
+  <data name="AboutConcatenateT" xml:space="preserve">
+    <value>Спаја неколико текстуалних вредности или табела у једну колону текстуалних вредности.</value>
+    
+  </data>
+  <data name="ConcatenateTArg1" xml:space="preserve">
+    <value>вредност</value>
+    
+  </data>
+  <data name="AboutConcatenate_value" xml:space="preserve">
+    <value>Текстуална вредност или колона текстуалних вредности која треба да буде спојена са осталим аргументима.</value>
+  </data>
+  <data name="AboutConcat" xml:space="preserve">
+    <value>Ствара све вредности текста створене проценом датог израза над датом табелом у једну вредност текста.</value>
+    
+  </data>
+  <data name="ConcatArg1" xml:space="preserve">
+    <value>табела</value>
+    
+  </data>
+  <data name="ConcatArg2" xml:space="preserve">
+    <value>израз</value>
+    
+  </data>
+  <data name="ConcatArg3" xml:space="preserve">
+    <value>разделник</value>
+    
+  </data>
+  <data name="AboutConcat_table" xml:space="preserve">
+    <value>Вредност табеле над којом израз дат другим параметром треба да буде процењен.</value>
+  </data>
+  <data name="AboutConcat_expression" xml:space="preserve">
+    <value>Израз који ствара текст за процену за сваки ред у датој табели.</value>
+  </data>
+  <data name="AboutConcat_separator" xml:space="preserve">
+    <value>Вредност текста за уметање између састављених редова табеле.</value>
+    
+  </data>
+  <data name="AboutLen" xml:space="preserve">
+    <value>Враћа број знакова у вредности текста.</value>
+    
+  </data>
+  <data name="AboutLen_text" xml:space="preserve">
+    <value>Вредност текста чија ће дужина у знаковима бити враћена.</value>
+  </data>
+  <data name="AboutLenT" xml:space="preserve">
+    <value>Враћа број знакова у вредности текста, процењених по реду у оквиру наведене табеле или колекције.</value>
+    
+  </data>
+  <data name="AboutLen_text_column" xml:space="preserve">
+    <value>Колона са вредностима текста чија ће дужина у знаковима бити враћена (као нова колона).</value>
+  </data>
+  <data name="LenArg1" xml:space="preserve">
+    <value>текст</value>
+    
+  </data>
+  <data name="LenTArg1" xml:space="preserve">
+    <value>текст_колона</value>
+    
+  </data>
+  <data name="AboutUpper" xml:space="preserve">
+    <value>Претвара вредност текста у велика слова.</value>
+    
+  </data>
+  <data name="AboutUpperT" xml:space="preserve">
+    <value>Претвара сва слова у вредности текста, процењене по реду у оквиру наведене табеле или колекције, у велика слова.</value>
+    
+  </data>
+  <data name="AboutUpper_text" xml:space="preserve">
+    <value>Вредност текста за конвертовање у велика слова.</value>
+  </data>
+  <data name="AboutUpper_text_column" xml:space="preserve">
+    <value>Колона са вредностима текста за конвертовање у колону са вредностима текста написаним великим словима.</value>
+  </data>
+  <data name="AboutLower" xml:space="preserve">
+    <value>Конвертује сва слова у вредности текста у мала слова.</value>
+    
+  </data>
+  <data name="AboutLowerT" xml:space="preserve">
+    <value>Конвертује сва слова у вредности текста, процењене по реду у оквиру наведене табеле или колекције, у мала слова.</value>
+    
+  </data>
+  <data name="AboutLower_text" xml:space="preserve">
+    <value>Вредност текста за конвертовање у мала слова.</value>
+  </data>
+  <data name="AboutLower_text_column" xml:space="preserve">
+    <value>Колона са вредностима текста за конвертовање у колону са вредностима текста написаним малим словима.</value>
+  </data>
+  <data name="AboutProper" xml:space="preserve">
+    <value>Конвертује вредност текста у одговарајућа слова; прво слово сваке речи велико, а сва остала слова у мала слова.</value>
+    
+  </data>
+  <data name="AboutProperT" xml:space="preserve">
+    <value>Конвертује вредност текста, проверену по реду у оквиру наведене табеле или колекције, у одговарајућа слова; прво слово сваке речи велико, а сва остала слова у мала слова.</value>
+    
+  </data>
+  <data name="AboutProper_text" xml:space="preserve">
+    <value>Вредност текста за конвертовање у одговарајућу величину слова.</value>
+  </data>
+  <data name="AboutProper_text_column" xml:space="preserve">
+    <value>Колона са вредностима текста за конвертовање у колону са вредностима текста написаним одговарајућим словима.</value>
+  </data>
+  <data name="AboutTrim" xml:space="preserve">
+    <value>Уклања све размаке из вредности текста осим за појединачне размаке између речи.</value>
+    
+  </data>
+  <data name="AboutTrim_text" xml:space="preserve">
+    <value>Вредност текста за конвертовање у скраћивање.</value>
+  </data>
+  <data name="AboutTrim_text_column" xml:space="preserve">
+    <value>Колона са вредностима текста за скраћивање.</value>
+  </data>
+  <data name="AboutTrimEnds" xml:space="preserve">
+    <value>Уклања све размаке с почетка и краја из вредности текста.</value>
+    
+  </data>
+  <data name="AboutTrimEnds_text" xml:space="preserve">
+    <value>Вредност текста за уклањање размака с почетка и краја.</value>
+  </data>
+  <data name="AboutTrimEnds_text_column" xml:space="preserve">
+    <value>Колона са вредностима текста за уклањање размака с почетка и краја.</value>
+  </data>
+  <data name="AboutMid" xml:space="preserve">
+    <value>Враћа знакове из средине вредности текста, с обзиром на почетну позицију и дужину.</value>
+    
+  </data>
+  <data name="AboutMidT" xml:space="preserve">
+    <value>Враћа знакове из средине вредности текста, с обзиром на почетну позицију и дужину, процењене по реду у оквиру наведене табеле или колекције.</value>
+    
+  </data>
+  <data name="AboutMid_text" xml:space="preserve">
+    <value>Вредност текста из које ће знакови бити издвојени.</value>
+  </data>
+  <data name="AboutMid_text_column" xml:space="preserve">
+    <value>Колона са вредностима текста из које ће знакови бити издвојени у нову колону.</value>
+  </data>
+  <data name="AboutMid_start_num" xml:space="preserve">
+    <value>Почети положај са којег треба издвојити знакове.</value>
+  </data>
+  <data name="AboutMid_num_chars" xml:space="preserve">
+    <value>Број знакова за издвајање.</value>
+  </data>
+  <data name="StringFuncArg1" xml:space="preserve">
+    <value>текст</value>
+    
+  </data>
+  <data name="StringTFuncArg1" xml:space="preserve">
+    <value>текст_колона</value>
+    
+  </data>
+  <data name="StringFuncArg2" xml:space="preserve">
+    <value>старт_нум</value>
+    
+  </data>
+  <data name="StringFuncArg3" xml:space="preserve">
+    <value>нум_знакови</value>
+    
+  </data>
+  <data name="AboutReplace" xml:space="preserve">
+    <value>Замените део вредности текста неког другом вредношћу текста.</value>
+    
+  </data>
+  <data name="AboutReplaceT" xml:space="preserve">
+    <value>Замените део вредности текста неког другом вредношћу текста, процењеном по реду у оквиру наведене табеле или колекције.</value>
+    
+  </data>
+  <data name="ReplaceFuncArg1" xml:space="preserve">
+    <value>стари_текст</value>
+    
+  </data>
+  <data name="ReplaceFuncArg4" xml:space="preserve">
+    <value>нови_текст</value>
+    
+  </data>
+  <data name="AboutReplace_old_text" xml:space="preserve">
+    <value>Вредност текста за обраду.</value>
+  </data>
+  <data name="AboutReplace_start_num" xml:space="preserve">
+    <value>Почети положај на којем ће доћи до замене.</value>
+  </data>
+  <data name="AboutReplace_num_chars" xml:space="preserve">
+    <value>Број закова за замену.</value>
+  </data>
+  <data name="AboutReplace_new_text" xml:space="preserve">
+    <value>Вредност текста за замену.</value>
+  </data>
+  <data name="AboutReplace_text_column" xml:space="preserve">
+    <value>Колона вредности текста за обраду.</value>
+  </data>
+  <data name="AboutError" xml:space="preserve">
+    <value>Изазива грешку са прилагођеним вредностима.</value>
+    
+  </data>
+  <data name="AboutError_error_information" xml:space="preserve">
+    <value>Запис који садржи прилагођене вредности за насталу грешку.</value>
+    
+  </data>
+  <data name="ErrorArg1" xml:space="preserve">
+    <value>информације_о_грешци</value>
+    
+  </data>
+  <data name="ErrErrorIrrelevantField" xml:space="preserve">
+    <value>Функција Error користи само поља „Kind“, „Message“, „Notify“, „Control“ и „Property“.</value>
+    
+  </data>
+  <data name="AboutIfError" xml:space="preserve">
+    <value>Процењује и враћа први аргумент без грешке.</value>
+    
+  </data>
+  <data name="IfErrorArg1" xml:space="preserve">
+    <value>вредност</value>
+    
+  </data>
+  <data name="AboutIfError_value" xml:space="preserve">
+    <value>Вредност која се враћа ако није грешка.</value>
+    
+  </data>
+  <data name="IfErrorArg2" xml:space="preserve">
+    <value>резерва</value>
+    
+  </data>
+  <data name="AboutIfError_fallback" xml:space="preserve">
+    <value>Вредност која се враћа ако је у питању први аргумент без грешке.</value>
+    
+  </data>
+  <data name="AboutSubstitute" xml:space="preserve">
+    <value>Замењује постојећи текст новим текстом у вредности текста.</value>
+    
+  </data>
+  <data name="AboutSubstituteT" xml:space="preserve">
+    <value>Замењује постојећи текст новим текстом у вредности текста процењеним по реду у оквиру наведене табеле или колекције.</value>
+    
+  </data>
+  <data name="SubstituteFuncArg1" xml:space="preserve">
+    <value>текст</value>
+    
+  </data>
+  <data name="SubstituteTFuncArg1" xml:space="preserve">
+    <value>текст_колона</value>
+    
+  </data>
+  <data name="SubstituteFuncArg2" xml:space="preserve">
+    <value>стари_текст</value>
+    
+  </data>
+  <data name="SubstituteFuncArg3" xml:space="preserve">
+    <value>нови_текст</value>
+    
+  </data>
+  <data name="SubstituteFuncArg4" xml:space="preserve">
+    <value>инстанца_нум</value>
+    
+  </data>
+  <data name="AboutSubstitute_text" xml:space="preserve">
+    <value>Вредност текста за обраду.</value>
+  </data>
+  <data name="AboutSubstitute_old_text" xml:space="preserve">
+    <value>Текст који треба заменити.</value>
+  </data>
+  <data name="AboutSubstitute_new_text" xml:space="preserve">
+    <value>Текст замене.</value>
+  </data>
+  <data name="AboutSubstitute_instance_num" xml:space="preserve">
+    <value>Наводи које појављивање датог текста треба заменити.</value>
+  </data>
+  <data name="AboutSubstitute_text_column" xml:space="preserve">
+    <value>Колона вредности текста за обраду.</value>
+  </data>
+  <data name="AboutSort" xml:space="preserve">
+    <value>Сортира „извор“ на основу резултата „израза“ процењеног за сваки ред, опционално наводећи „редослед“ сортирања.</value>
+    
+  </data>
+  <data name="SortArg1" xml:space="preserve">
+    <value>извор</value>
+    
+  </data>
+  <data name="SortArg2" xml:space="preserve">
+    <value>израз</value>
+    
+  </data>
+  <data name="SortArg3" xml:space="preserve">
+    <value>редослед</value>
+    
+  </data>
+  <data name="AboutSort_source" xml:space="preserve">
+    <value>Табела за сортирање.</value>
+  </data>
+  <data name="AboutSort_expression" xml:space="preserve">
+    <value>Израз који се проверава у редовима у „извору“ и пружа вредности за сортирање.</value>
+  </data>
+  <data name="AboutSort_order" xml:space="preserve">
+    <value>Растући или опадајући</value>
+  </data>
+  <data name="AboutSortByColumns" xml:space="preserve">
+    <value>Сортира „извор“ на основу колоне, опционално наводећи „редослед“ сортирања.</value>
+    
+  </data>
+  <data name="SortByColumnsArg1" xml:space="preserve">
+    <value>извор</value>
+    
+  </data>
+  <data name="SortByColumnsArg2" xml:space="preserve">
+    <value>колона</value>
+    
+  </data>
+  <data name="SortByColumnsArg3" xml:space="preserve">
+    <value>редослед</value>
+    
+  </data>
+  <data name="AboutSortByColumns_source" xml:space="preserve">
+    <value>Табела за сортирање.</value>
+  </data>
+  <data name="AboutSortByColumns_column" xml:space="preserve">
+    <value>Јединствено име колоне.</value>
+  </data>
+  <data name="AboutSortByColumns_order" xml:space="preserve">
+    <value>Растући или опадајући</value>
+  </data>
+  <data name="AboutSortByColumnsWithOrderValues" xml:space="preserve">
+    <value>Сортира „извор“ на основу индекса подударних вредности у наведеној колони.</value>
+    
+  </data>
+  <data name="SortByColumnsWithOrderValuesArg1" xml:space="preserve">
+    <value>извор</value>
+    
+  </data>
+  <data name="SortByColumnsWithOrderValuesArg2" xml:space="preserve">
+    <value>колона</value>
+    
+  </data>
+  <data name="SortByColumnsWithOrderValuesArg3" xml:space="preserve">
+    <value>вредности</value>
+    
+  </data>
+  <data name="AboutSortByColumns_values" xml:space="preserve">
+    <value>Колона са вредностима која ће се користити за сврхе сортирања. Сортирање се не врши растућим/опадајућим редоследом, али се радије заснивају на индексу подударних вредности у колони </value>
+  </data>
+  <data name="AboutRand" xml:space="preserve">
+    <value>Враћа случајни број већи или једнак 0 и мањи од 1, равномерно распоређен.</value>
+    
+  </data>
+  <data name="AboutRandBetween" xml:space="preserve">
+    <value>Даје насумични број између доњег и горњег, равномерно распоређен.</value>
+    
+  </data>
+  <data name="AboutRandBetween_bottom" xml:space="preserve">
+    <value>Најмањи цео број који функција може да врати.</value>
+  </data>
+  <data name="AboutRandBetween_top" xml:space="preserve">
+    <value>Највећи цео број који функција може да врати. Не сме бити мањи од доњег.</value>
+  </data>
+  <data name="RandBetweenArg1" xml:space="preserve">
+    <value>доњи</value>
+    
+  </data>
+  <data name="RandBetweenArg2" xml:space="preserve">
+    <value>горњи</value>
+    
+  </data>
+  <data name="AboutGUID" xml:space="preserve">
+    <value>Прави GUID од ниске или враћа насумично генерисани GUID ако није наведен ниједан аргумент.</value>
+    
+  </data>
+  <data name="GUIDArg" xml:space="preserve">
+    <value>GUID_ниска</value>
+    
+  </data>
+  <data name="AboutGUID_GUID_string" xml:space="preserve">
+    <value>Ниска за конвертовање у GUID</value>
+    
+  </data>
+  <data name="AboutNow" xml:space="preserve">
+    <value>Враћа тренутни датум и време.</value>
+    
+  </data>
+  <data name="AboutUTCNow" xml:space="preserve">
+    <value>Враћа тренутни датум и време у UTC зони.</value>
+    
+  </data>
+  <data name="AboutTimeZoneOffset" xml:space="preserve">
+    <value>Враћа временску разлику између UTC времена и локалног времена у минутима. На пример, ако је ваша временска зона UTC+2, биће враћена вредност -120.</value>
+    
+  </data>
+  <data name="TimeZoneOffsetArg1" xml:space="preserve">
+    <value>датум</value>
+    
+  </data>
+  <data name="AboutTimeZoneOffset_date" xml:space="preserve">
+    <value>Датум за који се рачуна „TimeZoneOffset“.</value>
+    
+  </data>
+  <data name="AboutToday" xml:space="preserve">
+    <value>Враћа тренутни датум.</value>
+    
+  </data>
+  <data name="AboutUTCToday" xml:space="preserve">
+    <value>Враћа тренутни датум у UTC зони.</value>
+    
+  </data>
+  <data name="AboutWeekNum" xml:space="preserve">
+    <value>Даје број седмице за дати датум.</value>
+    
+  </data>
+  <data name="WeekNumArg1" xml:space="preserve">
+    <value>датум</value>
+    
+  </data>
+  <data name="WeekNumArg2" xml:space="preserve">
+    <value>почетак_седмице</value>
+    
+  </data>
+  <data name="AboutWeekNum_date" xml:space="preserve">
+    <value>Вредност датума за коју ће бити израчунат број седмице.</value>
+  </data>
+  <data name="AboutWeekNum_start_of_week" xml:space="preserve">
+    <value>Вредност из набрајања StartOfWeek или број из одговарајуће Excel функције који означава на који начин ће дани у седмици бити нумерисани.</value>
+    
+  </data>
+  <data name="AboutISOWeekNum" xml:space="preserve">
+    <value>Даје број седмице у складу са ISO правилима за дати датум.</value>
+    
+  </data>
+  <data name="ISOWeekNumArg1" xml:space="preserve">
+    <value>датум</value>
+    
+  </data>
+  <data name="AboutISOWeekNum_date" xml:space="preserve">
+    <value>Вредност датума за коју ће бити израчунат ISO број седмице.</value>
+  </data>
+  <data name="AboutInt" xml:space="preserve">
+    <value>Скраћује „број“ заокруживањем према негативној бесконачности.</value>
+    
+  </data>
+  <data name="AboutIntT" xml:space="preserve">
+    <value>Скраћује вредности у колони бројева заокруживањем према негативној бесконачности.</value>
+    
+  </data>
+  <data name="AboutInt_number" xml:space="preserve">
+    <value>Нумеричка вредност за обраду.</value>
+  </data>
+  <data name="AboutInt_input" xml:space="preserve">
+    <value>Колона нумеричких вредности за обраду.</value>
+  </data>
+  <data name="AboutTrunc" xml:space="preserve">
+    <value>Скраћује „број“ заокруживањем према нули.</value>
+    
+  </data>
+  <data name="AboutTrunc_number" xml:space="preserve">
+    <value>Број који треба скратити.</value>
+  </data>
+  <data name="AboutTrunc_source" xml:space="preserve">
+    <value>Колона са бројевима за скраћивање.</value>
+  </data>
+  <data name="AboutTrunc_num_digits" xml:space="preserve">
+    <value>Број разломских цифара које ће се користити за скраћивање.</value>
+  </data>
+  <data name="AboutTruncT" xml:space="preserve">
+    <value>Скраћује све бројеве у „извору“ заокруживањем на нулу.</value>
+    
+  </data>
+  <data name="TruncArg1" xml:space="preserve">
+    <value>број</value>
+    
+  </data>
+  <data name="TruncArg2" xml:space="preserve">
+    <value>бр_цифара</value>
+    
+  </data>
+  <data name="TruncTArg1" xml:space="preserve">
+    <value>извор</value>
+    
+  </data>
+  <data name="TruncTArg2" xml:space="preserve">
+    <value>бр_цифара</value>
+    
+  </data>
+  <data name="AboutRound" xml:space="preserve">
+    <value>Заокружује „број“ на наведени број цифара.</value>
+    
+  </data>
+  <data name="AboutRoundUp" xml:space="preserve">
+    <value>Заокружује „број“ навише, од нуле.</value>
+    
+  </data>
+  <data name="AboutRoundDown" xml:space="preserve">
+    <value>Заокружује „број“ надоле, према нули.</value>
+    
+  </data>
+  <data name="RoundArg1" xml:space="preserve">
+    <value>број</value>
+    
+  </data>
+  <data name="RoundArg2" xml:space="preserve">
+    <value>нум_цифре</value>
+    
+  </data>
+  <data name="AboutRound_number" xml:space="preserve">
+    <value>Број за заокруживање.</value>
+  </data>
+  <data name="AboutRound_source" xml:space="preserve">
+    <value>Колона са бројевима за заокруживање.</value>
+  </data>
+  <data name="AboutRound_num_digits" xml:space="preserve">
+    <value>Број разломских цифара које ће се користити за заокруживање.</value>
+  </data>
+  <data name="AboutRoundUp_number" xml:space="preserve">
+    <value>Број за заокруживање.</value>
+  </data>
+  <data name="AboutRoundUp_source" xml:space="preserve">
+    <value>Колона са бројевима за заокруживање.</value>
+  </data>
+  <data name="AboutRoundUp_num_digits" xml:space="preserve">
+    <value>Број разломских цифара које ће се користити за заокруживање.</value>
+  </data>
+  <data name="AboutRoundDown_number" xml:space="preserve">
+    <value>Број за заокруживање.</value>
+  </data>
+  <data name="AboutRoundDown_source" xml:space="preserve">
+    <value>Колона са бројевима за заокруживање.</value>
+  </data>
+  <data name="AboutRoundDown_num_digits" xml:space="preserve">
+    <value>Број разломских цифара које ће се користити за заокруживање.</value>
+  </data>
+  <data name="AboutRoundT" xml:space="preserve">
+    <value>Заокружује све бројеве у „извору“ на наведени број цифара.</value>
+    
+  </data>
+  <data name="AboutRoundUpT" xml:space="preserve">
+    <value>Заокружује све бројеве у „извору“ навише, од нуле.</value>
+    
+  </data>
+  <data name="AboutRoundDownT" xml:space="preserve">
+    <value>Заокружује све бројеве у „извору“ надоле, према нули.</value>
+    
+  </data>
+  <data name="RoundTArg1" xml:space="preserve">
+    <value>извор</value>
+    
+  </data>
+  <data name="RoundTArg2" xml:space="preserve">
+    <value>нум_цифре</value>
+    
+  </data>
+  <data name="AboutRGBA" xml:space="preserve">
+    <value>Узима нумеричке вредности за црвене, зелене, плаве и алфа компоненте боје и генерише одређену боју. R, G, B су бројеви између 0 и 255. Алфа је децимални број између 0 и 1.</value>
+    
+  </data>
+  <data name="RGBAArg1" xml:space="preserve">
+    <value>црвена_вредност</value>
+    
+  </data>
+  <data name="RGBAArg2" xml:space="preserve">
+    <value>зелена_вредност</value>
+    
+  </data>
+  <data name="RGBAArg3" xml:space="preserve">
+    <value>плава_вредност</value>
+    
+  </data>
+  <data name="RGBAArg4" xml:space="preserve">
+    <value>алфа_вредност</value>
+    
+  </data>
+  <data name="AboutRGBA_red_value" xml:space="preserve">
+    <value>Црвена компонента, 0 до 255.</value>
+  </data>
+  <data name="AboutRGBA_green_value" xml:space="preserve">
+    <value>Зелена компонента, 0 до 255.</value>
+  </data>
+  <data name="AboutRGBA_blue_value" xml:space="preserve">
+    <value>Плава компонента, 0 до 255.</value>
+  </data>
+  <data name="AboutRGBA_alpha_value" xml:space="preserve">
+    <value>Алфа компонента, између 0 и 1 (или проценат, нпр. 49%).</value>
+  </data>
+  <data name="AboutColorFade" xml:space="preserve">
+    <value>Ствара нову тамну нијансу наведене „боје“, на основу наведеног процента „постепеног појављивања“.</value>
+    
+  </data>
+  <data name="ColorFadeArg1" xml:space="preserve">
+    <value>боја</value>
+    
+  </data>
+  <data name="ColorFadeArg2" xml:space="preserve">
+    <value>постепенопојављивање</value>
+    
+  </data>
+  <data name="AboutColorFade_color" xml:space="preserve">
+    <value>Боја која ће се постепено појављивати.</value>
+  </data>
+  <data name="AboutColorFade_fade" xml:space="preserve">
+    <value>Проценат по којем ће боја избледети. Негативни проценат ствара тамнију нијансу. Позитиван проценат ствара светлију нијансу.</value>
+  </data>
+  <data name="AboutColorFadeT" xml:space="preserve">
+    <value>Ствара нове тамне нијансе наведених вредности „боје“, на основу наведених вредности процента „постепеног појављивања“.</value>
+  </data>
+  <data name="ColorFadeTArg1" xml:space="preserve">
+    <value>боја_или_колона</value>
+    
+  </data>
+  <data name="ColorFadeTArg2" xml:space="preserve">
+    <value>постепенопојављивање_или_колона</value>
+    
+  </data>
+  <data name="AboutColorFade_color_or_column" xml:space="preserve">
+    <value>Боја (или колона вредности боје) које ће се постепено појављивати.</value>
+  </data>
+  <data name="AboutColorFade_fade_or_column" xml:space="preserve">
+    <value>Проценат (или колона са вредностима процената) по којем ће боја избледети. Негативни проценат ствара тамнију нијансу. Позитиван проценат ствара светлију нијансу.</value>
+  </data>
+  <data name="AboutAbs" xml:space="preserve">
+    <value>Враћа апсолутну вредност броја, број без његовог знака.</value>
+    
+  </data>
+  <data name="AboutAbsT" xml:space="preserve">
+    <value>Враћа апсолутне вредности (бројеве без њиховог знака) колоне бројева.</value>
+    
+  </data>
+  <data name="AboutAbs_number" xml:space="preserve">
+    <value>Нумеричка вредност за обраду.</value>
+  </data>
+  <data name="AboutAbs_input" xml:space="preserve">
+    <value>Колона нумеричких вредности за обраду.</value>
+  </data>
+  <data name="AboutSin_number" xml:space="preserve">
+    <value>Нумеричка вредност (у радијанима) коју треба обрадити.</value>
+  </data>
+  <data name="AboutSin_input" xml:space="preserve">
+    <value>Колона нумеричких вредности (у радијанима) које треба обрадити.</value>
+  </data>
+  <data name="AboutSin" xml:space="preserve">
+    <value>Враћа вредност синуса броја.</value>
+    
+  </data>
+  <data name="AboutSinT" xml:space="preserve">
+    <value>Враћа вредности синуса колоне бројева.</value>
+    
+  </data>
+  <data name="AboutAsin_number" xml:space="preserve">
+    <value>Нумеричка вредност за обраду.</value>
+  </data>
+  <data name="AboutAsin_input" xml:space="preserve">
+    <value>Колона нумеричких вредности за обраду.</value>
+  </data>
+  <data name="AboutAsin" xml:space="preserve">
+    <value>Враћа вредност аркус синуса броја (у радијанима).</value>
+    
+  </data>
+  <data name="AboutAsinT" xml:space="preserve">
+    <value>Враћа вредности аркус синуса колоне бројева (у радијанима).</value>
+    
+  </data>
+  <data name="AboutCos" xml:space="preserve">
+    <value>Враћа вредност косинуса броја.</value>
+    
+  </data>
+  <data name="AboutCosT" xml:space="preserve">
+    <value>Враћа вредности косинуса колоне бројева.</value>
+    
+  </data>
+  <data name="AboutCos_number" xml:space="preserve">
+    <value>Нумеричка вредност (у радијанима) коју треба обрадити.</value>
+  </data>
+  <data name="AboutCos_input" xml:space="preserve">
+    <value>Колона нумеричких вредности (у радијанима) које треба обрадити.</value>
+  </data>
+  <data name="AboutAcos" xml:space="preserve">
+    <value>Враћа вредност аркус косинуса броја (у радијанима).</value>
+    
+  </data>
+  <data name="AboutAcos_number" xml:space="preserve">
+    <value>Нумеричка вредност за обраду.</value>
+  </data>
+  <data name="AboutAcosT" xml:space="preserve">
+    <value>Враћа вредности аркус косинуса колоне бројева (у радијанима).</value>
+    
+  </data>
+  <data name="AboutAcos_input" xml:space="preserve">
+    <value>Колона нумеричких вредности за обраду.</value>
+  </data>
+  <data name="AboutAcot_number" xml:space="preserve">
+    <value>Нумеричка вредност за обраду.</value>
+  </data>
+  <data name="AboutAcot_input" xml:space="preserve">
+    <value>Колона нумеричких вредности за обраду.</value>
+  </data>
+  <data name="AboutAcot" xml:space="preserve">
+    <value>Враћа вредност аркус котангенса броја (у радијанима).</value>
+    
+  </data>
+  <data name="AboutAcotT" xml:space="preserve">
+    <value>Враћа вредности аркус котангенса колоне бројева (у радијанима).</value>
+    
+  </data>
+  <data name="AboutTan" xml:space="preserve">
+    <value>Враћа вредност тангенса броја.</value>
+    
+  </data>
+  <data name="AboutTanT" xml:space="preserve">
+    <value>Враћа вредности тангенса колоне бројева.</value>
+    
+  </data>
+  <data name="AboutTan_number" xml:space="preserve">
+    <value>Нумеричка вредност (у радијанима) коју треба обрадити.</value>
+  </data>
+  <data name="AboutTan_input" xml:space="preserve">
+    <value>Колона нумеричких вредности (у радијанима) које треба обрадити.</value>
+  </data>
+  <data name="AboutAtan" xml:space="preserve">
+    <value>Враћа вредност аркус тангенса броја (у радијанима).</value>
+    
+  </data>
+  <data name="AboutAtanT" xml:space="preserve">
+    <value>Враћа вредности аркус тангенса колоне бројева (у радијанима).</value>
+    
+  </data>
+  <data name="AboutAtan_number" xml:space="preserve">
+    <value>Нумеричка вредност за обраду.</value>
+  </data>
+  <data name="AboutAtan_input" xml:space="preserve">
+    <value>Колона нумеричких вредности за обраду.</value>
+  </data>
+  <data name="AboutCot" xml:space="preserve">
+    <value>Враћа вредност котангенса броја.</value>
+    
+  </data>
+  <data name="AboutCotT" xml:space="preserve">
+    <value>Враћа вредности котангенса колоне бројева.</value>
+    
+  </data>
+  <data name="AboutCot_number" xml:space="preserve">
+    <value>Нумеричка вредност (у радијанима) коју треба обрадити.</value>
+  </data>
+  <data name="AboutCot_input" xml:space="preserve">
+    <value>Колона нумеричких вредности (у радијанима) које треба обрадити.</value>
+  </data>
+  <data name="AboutLn" xml:space="preserve">
+    <value>Враћа природни логаритам (основа E) броја.</value>
+    
+  </data>
+  <data name="AboutLnT" xml:space="preserve">
+    <value>Враћа вредности природног логаритма (основа Е) колоне бројева.</value>
+    
+  </data>
+  <data name="AboutLn_number" xml:space="preserve">
+    <value>Нумеричка вредност за обраду.</value>
+  </data>
+  <data name="AboutLn_input" xml:space="preserve">
+    <value>Колона нумеричких вредности за обраду.</value>
+  </data>
+  <data name="AboutLog" xml:space="preserve">
+    <value>Враћа логаритам броја за дату основицу. Подразумевана основица 10.</value>
+    
+  </data>
+  <data name="AboutLogT" xml:space="preserve">
+    <value>Враћа вредности логаритма броја колона или бројева за дату основицу или колону основица. Подразумевана основица је 10.</value>
+    
+  </data>
+  <data name="AboutLog_number" xml:space="preserve">
+    <value>Нумеричка вредност за обраду.</value>
+  </data>
+  <data name="AboutLog_input" xml:space="preserve">
+    <value>Колона нумеричких вредности за обраду.</value>
+  </data>
+  <data name="LogBase" xml:space="preserve">
+    <value>основниброј</value>
+    
+  </data>
+  <data name="AboutLog_base" xml:space="preserve">
+    <value>Основица логаритма.</value>
+  </data>
+  <data name="AboutExp" xml:space="preserve">
+    <value>Враћа Е подигнут на степен неког броја. Да бисте израчунали степене других основа, користите оператор за степеновање (^).</value>
+    
+  </data>
+  <data name="AboutExpT" xml:space="preserve">
+    <value>Враћа колону која садржи Е подигнут на степен сваког одговарајућег броја у колони бројева. Да бисте израчунали степене других основа, користите оператор за степеновање (^).</value>
+    
+  </data>
+  <data name="AboutExp_number" xml:space="preserve">
+    <value>Нумеричка вредност за обраду.</value>
+  </data>
+  <data name="AboutExp_input" xml:space="preserve">
+    <value>Колона нумеричких вредности за обраду.</value>
+  </data>
+  <data name="AboutPi" xml:space="preserve">
+    <value>Враћа вредност броја pi.</value>
+  </data>
+  <data name="AboutRadians" xml:space="preserve">
+    <value>Враћа вредност радијана броја.</value>
+    
+  </data>
+  <data name="AboutRadiansT" xml:space="preserve">
+    <value>Враћа вредности радијана колоне бројева.</value>
+    
+  </data>
+  <data name="AboutRadians_number" xml:space="preserve">
+    <value>Нумеричка вредност (у степенима) коју треба обрадити.</value>
+  </data>
+  <data name="AboutRadians_input" xml:space="preserve">
+    <value>Колона нумеричких вредности (у степенима) које треба обрадити.</value>
+  </data>
+  <data name="AboutDegrees" xml:space="preserve">
+    <value>Враћа вредност степена броја.</value>
+    
+  </data>
+  <data name="AboutDegreesT" xml:space="preserve">
+    <value>Враћа вредности степена колоне бројева.</value>
+    
+  </data>
+  <data name="AboutDegrees_number" xml:space="preserve">
+    <value>Нумеричка вредност (у радијанима) коју треба обрадити.</value>
+  </data>
+  <data name="AboutDegrees_input" xml:space="preserve">
+    <value>Колона нумеричких вредности (у радијанима) које треба обрадити.</value>
+  </data>
+  <data name="AboutAtan2" xml:space="preserve">
+    <value>Враћа аркус тангенс наведене x- и y-координате (у радијанима).</value>
+  </data>
+  <data name="AboutAtan2Arg1" xml:space="preserve">
+    <value>x_координата</value>
+    
+  </data>
+  <data name="AboutAtan2Arg2" xml:space="preserve">
+    <value>y_координата</value>
+    
+  </data>
+  <data name="AboutAtan2_x_coordinate" xml:space="preserve">
+    <value>Координата X.</value>
+  </data>
+  <data name="AboutAtan2_y_coordinate" xml:space="preserve">
+    <value>Координата Y.</value>
+  </data>
+  <data name="AboutSqrt" xml:space="preserve">
+    <value>Враћа квадратни корен броја.</value>
+    
+  </data>
+  <data name="AboutSqrtT" xml:space="preserve">
+    <value>Враћа квадратне корене колоне бројева.</value>
+    
+  </data>
+  <data name="AboutSqrt_number" xml:space="preserve">
+    <value>Нумеричка вредност за обраду.</value>
+  </data>
+  <data name="AboutSqrt_input" xml:space="preserve">
+    <value>Колона нумеричких вредности за обраду.</value>
+  </data>
+  <data name="MathFuncArg1" xml:space="preserve">
+    <value>број</value>
+    
+  </data>
+  <data name="MathTFuncArg1" xml:space="preserve">
+    <value>унос</value>
+    
+  </data>
+  <data name="AboutLeft" xml:space="preserve">
+    <value>Враћа наведени број знакова од почетка вредности текста.</value>
+    
+  </data>
+  <data name="AboutLeftT" xml:space="preserve">
+    <value>Враћа колону која садржи наведени број знакова од почетка вредности текста по реду у оквиру наведене табеле или колекције.</value>
+    
+  </data>
+  <data name="AboutLeft_text" xml:space="preserve">
+    <value>Вредност текста из које треба издвојити знакове.</value>
+  </data>
+  <data name="AboutLeft_num_chars" xml:space="preserve">
+    <value>Број знакова за издвајање.</value>
+  </data>
+  <data name="AboutLeft_text_column" xml:space="preserve">
+    <value>Колона са вредностима текста из које треба издвојити знакове.</value>
+  </data>
+  <data name="AboutRight" xml:space="preserve">
+    <value>Враћа наведени број знакова од краја вредности текста.</value>
+    
+  </data>
+  <data name="AboutRightT" xml:space="preserve">
+    <value>Враћа колону која садржи наведени број знакова од краја вредности текста по реду у оквиру наведене табеле или колекције.</value>
+    
+  </data>
+  <data name="AboutRight_text" xml:space="preserve">
+    <value>Вредност текста из које треба издвојити знакове.</value>
+  </data>
+  <data name="AboutRight_num_chars" xml:space="preserve">
+    <value>Број знакова за издвајање.</value>
+  </data>
+  <data name="AboutRight_text_column" xml:space="preserve">
+    <value>Колона са вредностима текста из које треба издвојити знакове.</value>
+  </data>
+  <data name="LeftRightArg1" xml:space="preserve">
+    <value>текст</value>
+    
+  </data>
+  <data name="LeftRightTArg1" xml:space="preserve">
+    <value>текст_колона</value>
+    
+  </data>
+  <data name="LeftRightArg2" xml:space="preserve">
+    <value>нум_знакови</value>
+    
+  </data>
+  <data name="AboutIsBlank" xml:space="preserve">
+    <value>Проверава да ли је резултат израза празан, и враћа исправно или погрешно.</value>
+    
+  </data>
+  <data name="IsBlankArg1" xml:space="preserve">
+    <value>израз</value>
+    
+  </data>
+  <data name="AboutIsBlank_expression" xml:space="preserve">
+    <value>Израз који ће бити тестиран.</value>
+  </data>
+  <data name="AboutIsBlankOrError" xml:space="preserve">
+    <value>Проверава да ли је резултат израза празан или је грешка, и враћа исправно или погрешно.</value>
+    
+  </data>
+  <data name="IsBlankOrErrorArg1" xml:space="preserve">
+    <value>израз</value>
+    
+  </data>
+  <data name="AboutIsBlankOrError_expression" xml:space="preserve">
+    <value>Израз који ће бити тестиран.</value>
+    
+  </data>
+  <data name="AboutIsEmpty" xml:space="preserve">
+    <value>Проверава да ли је колекција празна и враћа исправно или погрешно.</value>
+    
+  </data>
+  <data name="IsEmptyArg1" xml:space="preserve">
+    <value>извор</value>
+    
+  </data>
+  <data name="AboutIsEmpty_source" xml:space="preserve">
+    <value>Табела за тестирање.</value>
+  </data>
+  <data name="AboutShuffle" xml:space="preserve">
+    <value>Враћа насумично измешану копију улазне табеле „извор“.</value>
+    
+  </data>
+  <data name="ShuffleArg1" xml:space="preserve">
+    <value>извор</value>
+    
+  </data>
+  <data name="AboutShuffle_source" xml:space="preserve">
+    <value>Табела коју треба измешати.</value>
+  </data>
+  <data name="AboutLookUp" xml:space="preserve">
+    <value>Тражи први ред за који наведени услов има вредност исправно и враћа резултат израза проверен у оквиру контекста тог реда ако је обезбеђен израз и цео ред.</value>
+    
+  </data>
+  <data name="LookUpArg1" xml:space="preserve">
+    <value>извор</value>
+    
+  </data>
+  <data name="LookUpArg2" xml:space="preserve">
+    <value>услов</value>
+    
+  </data>
+  <data name="LookUpArg3" xml:space="preserve">
+    <value>резултат</value>
+    
+  </data>
+  <data name="AboutLookUp_source" xml:space="preserve">
+    <value>Табела у којој ће вредности бити тражене.</value>
+  </data>
+  <data name="AboutLookUp_condition" xml:space="preserve">
+    <value>Услов за процену за редове у наведеном уносу.</value>
+  </data>
+  <data name="AboutLookUp_result" xml:space="preserve">
+    <value>Израз који треба проверити у реду који одговара наведеном услову и који ће дати резултат.</value>
+  </data>
+  <data name="AboutStdevP" xml:space="preserve">
+    <value>Израчунава стандардну девијацију на основу целе популације дате у виду аргумената (занемарује логичке вредности и текст).</value>
+    
+  </data>
+  <data name="AboutStdevP_number" xml:space="preserve">
+    <value>Број за укључивање у израчунавање стандардне девијације.</value>
+  </data>
+  <data name="AboutStdevP_source" xml:space="preserve">
+    <value>Табела која наводи популацију за израчунавање стандардне девијације.</value>
+  </data>
+  <data name="AboutStdevP_expression" xml:space="preserve">
+    <value>Израз проверен у редовима у уносу који наводи вредности за израчунавање стандардне девијације.</value>
+  </data>
+  <data name="AboutStdevPT" xml:space="preserve">
+    <value>Израчунава стандардну девијацију на основу целе популације дате у виду колоне (занемарује логичке вредности и текст).</value>
+    
+  </data>
+  <data name="AboutVarP" xml:space="preserve">
+    <value>Израчунава одступање на основу целе популације (занемарује логичке вредности и текст у популацији).</value>
+    
+  </data>
+  <data name="AboutVarP_number" xml:space="preserve">
+    <value>Број за укључивање у израчунавање одступања.</value>
+  </data>
+  <data name="AboutVarP_source" xml:space="preserve">
+    <value>Табела која наводи популацију за израчунавање одступања.</value>
+  </data>
+  <data name="AboutVarP_expression" xml:space="preserve">
+    <value>Израз израчунат преко редова у уносу који наводи вредности за израчунавање одступања.</value>
+  </data>
+  <data name="AboutVarPT" xml:space="preserve">
+    <value>Израчунава одступање на основу целе популације наведено као колона (занемарује логичке вредности и текст у популацији).</value>
+    
+  </data>
+  <data name="SetArg1" xml:space="preserve">
+    <value>променљива</value>
+    
+  </data>
+  <data name="AboutSplit" xml:space="preserve">
+    <value>Дели ниску на подниске помоћу знака за разграничавање.</value>
+    
+  </data>
+  <data name="AboutSplit_text" xml:space="preserve">
+    <value>Текст за дељење на подниске.</value>
+    
+  </data>
+  <data name="AboutSplit_separator" xml:space="preserve">
+    <value>Текст знака за разграничавање који се користи за дељење текста уноса на подниске.</value>
+    
+  </data>
+  <data name="SplitArg1" xml:space="preserve">
+    <value>текст</value>
+    
+  </data>
+  <data name="SplitArg2" xml:space="preserve">
+    <value>разделник</value>
+    
+  </data>
+  <data name="AboutIsType" xml:space="preserve">
+    <value>Враћа „тачно“ ако је наведена вредност датог типа.</value>
+    
+  </data>
+  <data name="IsTypeArg1" xml:space="preserve">
+    <value>вредност</value>
+    
+  </data>
+  <data name="IsTypeArg2" xml:space="preserve">
+    <value>typeTable</value>
+    
+  </data>
+  <data name="AboutAsType" xml:space="preserve">
+    <value>Користи наведену вредност као наведени тип.</value>
+    
+  </data>
+  <data name="AsTypeArg1" xml:space="preserve">
+    <value>вредност</value>
+    
+  </data>
+  <data name="AsTypeArg2" xml:space="preserve">
+    <value>typeTable</value>
+    
+  </data>
+  <data name="AboutAsType_value" xml:space="preserve">
+    <value>Полиморфни запис за експлицитну конверзију у нови тип.</value>
+  </data>
+  <data name="AboutAsType_typeTable" xml:space="preserve">
+    <value>Табела са ентитетима која представља тип који желимо да користимо за вредност.</value>
+  </data>
+  <data name="AboutWith" xml:space="preserve">
+    <value>Извршава формулу наведену као други параметар помоћу опсега који наводи први параметар.</value>
+    
+  </data>
+  <data name="WithArg1" xml:space="preserve">
+    <value>опсег</value>
+    
+  </data>
+  <data name="WithArg2" xml:space="preserve">
+    <value>формула</value>
+    
+  </data>
+  <data name="AboutWith_scope" xml:space="preserve">
+    <value>Опсег помоћу ког се позива формула коју дефинише други параметар.</value>
+    
+  </data>
+  <data name="AboutWith_formula" xml:space="preserve">
+    <value>Формула која се позива помоћу опсега који наводи први параметар.</value>
+    
+  </data>
+  <data name="AboutSequence" xml:space="preserve">
+    <value>Генерише табелу секвенцијалних бројева</value>
+    
+  </data>
+  <data name="SequenceArg1" xml:space="preserve">
+    <value>: број записа</value>
+    
+  </data>
+  <data name="AboutSequence_records" xml:space="preserve">
+    <value>Број записа у табели са једном колоном са називом „Вредност“. Максимално 50.000.</value>
+    
+  </data>
+  <data name="SequenceArg2" xml:space="preserve">
+    <value>почетак</value>
+    
+  </data>
+  <data name="AboutSequence_start" xml:space="preserve">
+    <value>Опционо. Први број у низу. Подразумевано је 1.</value>
+    
+  </data>
+  <data name="SequenceArg3" xml:space="preserve">
+    <value>корак</value>
+    
+  </data>
+  <data name="AboutSequence_step" xml:space="preserve">
+    <value>Опционо. Износ повећања за сваку наредну вредност у табели. Подразумевано је 1.</value>
+    
+  </data>
+  <data name="ErrInvalidDot" xml:space="preserve">
+    <value>Неважећа употреба „.“</value>
+    
+  </data>
+  <data name="ErrUnknownFunction" xml:space="preserve">
+    <value>Позивање непознате или неподржане функције.</value>
+    
+  </data>
+  <data name="ErrUnSupportedComponentBehaviorInvocation" xml:space="preserve">
+    <value>Понашање компоненте се може позвати само из компоненте.</value>
+    
+  </data>
+  <data name="ErrUnSupportedComponentDataPropertyAccess" xml:space="preserve">
+    <value>Својству прилагођених података компоненте са параметрима може се приступити само из компоненте или из излазних својстава компоненте.</value>
+    
+  </data>
+  <data name="ErrBadArity" xml:space="preserve">
+    <value>Неважећи број аргумената: примљено је {0}, а очекује се {1}.</value>
+    
+  </data>
+  <data name="ErrBadArityEven" xml:space="preserve">
+    <value>Неважећи број аргумената: примљено је {0}, а очекује се паран број.</value>
+    
+  </data>
+  <data name="ErrBadArityOdd" xml:space="preserve">
+    <value>Неважећи број аргумената: примљено је {0}, а очекује се непаран број.</value>
+    
+  </data>
+  <data name="ErrBadType" xml:space="preserve">
+    <value>Неважећи тип аргумента.</value>
+    
+  </data>
+  <data name="ErrBadType_Type" xml:space="preserve">
+    <value>Неважећи тип аргумента. Није могуће користити {0} вредности у овом контексту.</value>
+    
+  </data>
+  <data name="ErrBadOperatorTypes" xml:space="preserve">
+    <value>Ова операција није важећа за ове типове: {0}, {1}.</value>
+    
+  </data>
+  <data name="ErrGuidStrictComparison" xml:space="preserve">
+    <value>GUID вредности се могу упоредити само са другим GUID вредностима.</value>
+    
+  </data>
+  <data name="ErrBadRecordFieldType_FieldName_ExpectedType" xml:space="preserve">
+    <value>Неважећи тип за поље „{0}“. Очекиван је тип поља „{1}“.</value>
+    
+  </data>
+  <data name="ErrBadType_ExpectedType" xml:space="preserve">
+    <value>Неважећи тип аргумента. Очекује се {0} вредност.</value>
+    
+  </data>
+  <data name="ErrBadType_ExpectedType_ProvidedType" xml:space="preserve">
+    <value>Неважећи тип аргумента ({1}). Очекује се {0} вредност.</value>
+    
+  </data>
+  <data name="ErrBadSchema_ExpectedType" xml:space="preserve">
+    <value>Неважећи тип аргумента. Очекује се {0} вредност, али другачије шеме.</value>
+    
+  </data>
+  <data name="ErrBadType_ExpectedTypesCSV" xml:space="preserve">
+    <value>Неважећи тип аргумента. Очекује се нешто од следећег: {0}.</value>
+    
+  </data>
+  <data name="ErrInvalidArgs_Func" xml:space="preserve">
+    <value>Функција „{0}“ има неке неважеће аргументе.</value>
+    
+  </data>
+  <data name="ErrNeedTable_Func" xml:space="preserve">
+    <value>Први аргумент „{0}“ треба да буде табела.</value>
+    
+  </data>
+  <data name="ErrInvalidPropertyAccess" xml:space="preserve">
+    <value>Својство очекује обавезан параметар. Користите заграде да бисте проследили обавезни параметар.</value>
+    
+  </data>
+  <data name="ErrNeedTableCol_Func" xml:space="preserve">
+    <value>Први аргумент за „{0}“ треба да буде табела са једном колоном.</value>
+    
+  </data>
+  <data name="ErrInvalidSchemaNeedStringCol_Col" xml:space="preserve">
+    <value>Неважећа шема, очекивана је колона текстуалних вредности за „{0}“.</value>
+    
+  </data>
+  <data name="ErrInvalidSchemaNeedDateCol_Col" xml:space="preserve">
+    <value>Неважећа шема, очекивана је колона вредности датума за „{0}“.</value>
+    
+  </data>
+  <data name="ErrInvalidSchemaNeedNumCol_Col" xml:space="preserve">
+    <value>Неважећа шема, очекивана је колона нумеричких вредности за „{0}“.</value>
+    
+  </data>
+  <data name="ErrInvalidSchemaNeedColorCol_Col" xml:space="preserve">
+    <value>Неважећа шема, очекивана је колона вредности боје за „{0}“.</value>
+    
+  </data>
+  <data name="ErrInvalidSchemaNeedCol" xml:space="preserve">
+    <value>Неважећа шема, очекивана је табела са једном колоном.</value>
+    
+  </data>
+  <data name="ErrNeedRecord" xml:space="preserve">
+    <value>Није могуће користити вредност која није запис у овом контексту.</value>
+    
+  </data>
+  <data name="ErrIncompatibleRecord" xml:space="preserve">
+    <value>Није могуће користити овај запис. Он можда садржи преклапајућа поља некомпатибилних типова.</value>
+    
+  </data>
+  <data name="ErrNeedRecord_Func" xml:space="preserve">
+    <value>Први аргумент за„{0}“ треба да буде запис.</value>
+    
+  </data>
+  <data name="ErrNeedEntity_EntityName" xml:space="preserve">
+    <value>Да бисте користили ову опцију подешену као вредност набрајања или да бисте је користили у функцији Choices, морате да додате ентитет „{0}“ као извор података. Да бисте га додали, у менију „Приказ“ изаберите ставку „Извори података“.</value>
+    
+  </data>
+  <data name="ErrNotAccessibleInCurrentContext" xml:space="preserve">
+    <value>Наведеном својству се не може приступити у овом контексту.</value>
+    
+  </data>
+  <data name="ErrInternalControlInInputProperty" xml:space="preserve">
+    <value>Улазна својства компоненте не могу да упућују на контроле унутар те исте компоненте.</value>
+    
+  </data>
+  <data name="ErrColumnNotAccessibleInCurrentContext" xml:space="preserve">
+    <value>Наведеној колони се не може приступити у овом контексту.</value>
+    
+  </data>
+  <data name="WrnRowScopeOneToNExpandNumberOfCalls" xml:space="preserve">
+    <value>У опсегу записа ове функције упућује се на однос „један према више“ или „више према више“. То може довести до великог броја позива према вашем извору података што може утицати на перформансе.</value>
+    
+  </data>
+  <data name="ErrNumberTooLarge" xml:space="preserve">
+    <value>Нумеричка вредност је превелика.</value>
+    
+  </data>
+  <data name="ErrInvalidDataSource" xml:space="preserve">
+    <value>Овај извор података је неважећи. Поправите грешку у окну „Извори података“ тако што ћете изабрати ставке „Садржај –&gt; Извори података“ или „Приказ –&gt; Опције“</value>
+    
+  </data>
+  <data name="ErrExpectedDataSourceRestriction" xml:space="preserve">
+    <value>Очекивао се идентификатор извора података за ограничавање уметнутог записа.</value>
+    
+  </data>
+  <data name="ErrIncompatibleTypes" xml:space="preserve">
+    <value>Дати типови су некомпатибилни.</value>
+    
+  </data>
+  <data name="ErrTypeError_Ex1_Ex2_Found" xml:space="preserve">
+    <value>Тип овог аргумента „{2}“ није подударан са једним од очекиваних типова „{0}“ или „{1}“.</value>
+    
+  </data>
+  <data name="ErrTypeError_Arg_Expected_Found" xml:space="preserve">
+    <value>Тип овог аргумента „{0}“ није подударан са очекиваним типом „{1}“. Пронађен је тип „{2}“.</value>
+    
+  </data>
+  <data name="ErrTypeErrorRecordIncompatibleWithSource" xml:space="preserve">
+    <value>Тип записа није компатибилан са извором.</value>
+    
+  </data>
+  <data name="ErrExpectedStringLiteralArg_Name" xml:space="preserve">
+    <value>Аргумент „{0}“ је неважећи, очекује се литерал текста.</value>
+    
+  </data>
+  <data name="ErrArgNotAValidIdentifier_Name" xml:space="preserve">
+    <value>Аргумент „{0}“ није важећи идентификатор.</value>
+    
+  </data>
+  <data name="ErrColExists_Name" xml:space="preserve">
+    <value>Колона са именом „{0}“ већ постоји.</value>
+    
+  </data>
+  <data name="ErrColConflict_Name" xml:space="preserve">
+    <value>Неусаглашеност имена колоне за „{0}“.</value>
+    
+  </data>
+  <data name="ErrColDNE_Name" xml:space="preserve">
+    <value>Наведена колона „{0}“ не постоји.</value>
+    
+  </data>
+  <data name="ErrColumnDoesNotExist_Name_Similar" xml:space="preserve">
+    <value>Наведена колона „{0}“ не постоји. Колона са именом које је најсличније је „{1}“.</value>
+    
+  </data>
+  <data name="ErrSortIncorrectOrder" xml:space="preserve">
+    <value>Редослед сортирања је неисправан за тип израза.</value>
+    
+  </data>
+  <data name="ErrSortWrongType" xml:space="preserve">
+    <value>Није могуће сортирати на типу израза.</value>
+    
+  </data>
+  <data name="ErrFunctionDoesNotAcceptThisType_Function_Expected" xml:space="preserve">
+    <value>Грешка типа: {0} очекује {1} или тип колоне табеле {1}.</value>
+    
+  </data>
+  <data name="ErrIncorrectFormat_Func" xml:space="preserve">
+    <value>Неправилно навођење формата за „{0}“.</value>
+    
+  </data>
+  <data name="ErrAsyncLambda" xml:space="preserve">
+    <value>Није могуће користити асинхрона позивања у условима и функцијама вредности.</value>
+    
+  </data>
+  <data name="ErrValueMustBeFullyQualified" xml:space="preserve">
+    <value>Ово је простор за назив, можете да приступите члановима помоћу оператора „.“.</value>
+    
+  </data>
+  <data name="ErrScopeModificationLambda" xml:space="preserve">
+    <value>Ова функција не може да ради на истом извору података који се користи у оквиру {0}.</value>
+    
+  </data>
+  <data name="ErrFunctionDisallowedWithinNondeterministicOperationOrder" xml:space="preserve">
+    <value>Није могуће позвати ову функцију у оквиру {0}.</value>
+    
+  </data>
+  <data name="ErrAsTypeAndIsTypeExpectConnectedDataSource" xml:space="preserve">
+    <value>Неисправан аргумент. Ова формула очекује табелу из повезаног извора података. Функције AsType и IsType захтевају повезане изворе података.</value>
+    
+  </data>
+  <data name="InfoMessage" xml:space="preserve">
+    <value>Порука: </value>
+    
+  </data>
+  <data name="InfoNode_Node" xml:space="preserve">
+    <value>Чвор: {0}</value>
+    
+  </data>
+  <data name="InfoTok_Tok" xml:space="preserve">
+    <value>Ток: {0}</value>
+    
+  </data>
+  <data name="FormatSpan_Min_Lim" xml:space="preserve">
+    <value>({0},{1}) </value>
+    
+  </data>
+  <data name="FormatErrorSeparator" xml:space="preserve">
+    <value>, </value>
+    
+  </data>
+  <data name="AboutDate" xml:space="preserve">
+    <value>Враћа број који представља датум у Power Apps коду датум-време.</value>
+    
+  </data>
+  <data name="DateArg1" xml:space="preserve">
+    <value>година</value>
+    
+  </data>
+  <data name="DateArg2" xml:space="preserve">
+    <value>месец</value>
+    
+  </data>
+  <data name="DateArg3" xml:space="preserve">
+    <value>дан</value>
+    
+  </data>
+  <data name="AboutDate_year" xml:space="preserve">
+    <value>Година.</value>
+  </data>
+  <data name="AboutDate_month" xml:space="preserve">
+    <value>Месец.</value>
+  </data>
+  <data name="AboutDate_day" xml:space="preserve">
+    <value>Дан.</value>
+  </data>
+  <data name="AboutTime" xml:space="preserve">
+    <value>Претвара часове, минуте и секунде у децимални број.</value>
+    
+  </data>
+  <data name="TimeArg1" xml:space="preserve">
+    <value>час</value>
+    
+  </data>
+  <data name="TimeArg2" xml:space="preserve">
+    <value>минут</value>
+    
+  </data>
+  <data name="TimeArg3" xml:space="preserve">
+    <value>секунда</value>
+    
+  </data>
+  <data name="TimeArg4" xml:space="preserve">
+    <value>милисекунда</value>
+    
+  </data>
+  <data name="AboutTime_hour" xml:space="preserve">
+    <value>Компонента часа.</value>
+  </data>
+  <data name="AboutTime_minute" xml:space="preserve">
+    <value>Компонента минута.</value>
+  </data>
+  <data name="AboutTime_second" xml:space="preserve">
+    <value>Компонента секунде.</value>
+  </data>
+  <data name="AboutTime_millisecond" xml:space="preserve">
+    <value>Компонента милисекунде.</value>
+  </data>
+  <data name="AboutDateTime" xml:space="preserve">
+    <value>Креира вредност која представља временску тачку, изражену као датум и време у току дана.</value>
+    
+  </data>
+  <data name="AboutYear" xml:space="preserve">
+    <value>Година враћа годину за дати датум.</value>
+    
+  </data>
+  <data name="YearArg1" xml:space="preserve">
+    <value>датум_време</value>
+    
+  </data>
+  <data name="AboutYear_date_time" xml:space="preserve">
+    <value>Вредност датума из које ће компонента године бити издвојена.</value>
+  </data>
+  <data name="AboutMonth" xml:space="preserve">
+    <value>Враћа месец, број од 1 (јануар) до 12 (децембар).</value>
+    
+  </data>
+  <data name="MonthArg1" xml:space="preserve">
+    <value>датум_време</value>
+    
+  </data>
+  <data name="AboutMonth_date_time" xml:space="preserve">
+    <value>Вредност датума из које ће компонента месеца бити издвојена.</value>
+  </data>
+  <data name="AboutDay" xml:space="preserve">
+    <value>Да враћа дан у месецу, број од 1 до 31.</value>
+    
+  </data>
+  <data name="DayArg1" xml:space="preserve">
+    <value>датум_време</value>
+    
+  </data>
+  <data name="AboutDay_date_time" xml:space="preserve">
+    <value>Вредност датума из које ће компонента дана бити издвојена.</value>
+  </data>
+  <data name="AboutHour" xml:space="preserve">
+    <value>Час враћа час као број између 0 (12:00:00 AM) и 23 (11:00:00 PM).</value>
+    
+  </data>
+  <data name="HourArg1" xml:space="preserve">
+    <value>датум_време</value>
+    
+  </data>
+  <data name="AboutHour_date_time" xml:space="preserve">
+    <value>Вредност датума или времена из које ће компонента бити издвојена.</value>
+  </data>
+  <data name="AboutMinute" xml:space="preserve">
+    <value>Враћа минут, број од 0 до 59.</value>
+    
+  </data>
+  <data name="MinuteArg1" xml:space="preserve">
+    <value>датум_време</value>
+    
+  </data>
+  <data name="AboutMinute_date_time" xml:space="preserve">
+    <value>Вредност датума или времена из које ће компонента минута бити издвојена.</value>
+  </data>
+  <data name="AboutSecond" xml:space="preserve">
+    <value>Враћа секунд, број од 0 до 59.</value>
+    
+  </data>
+  <data name="SecondArg1" xml:space="preserve">
+    <value>датум_време</value>
+    
+  </data>
+  <data name="AboutSecond_date_time" xml:space="preserve">
+    <value>Вредност датума или времена из које ће компонента секунде бити издвојена.</value>
+  </data>
+  <data name="AboutWeekday" xml:space="preserve">
+    <value>Враћа дан у седмици за вредност датума и времена. Опсези резултата су подразумевано од 1 (недеља) до 7 (субота). Можете да наведете другачији опсег са StartOfWeek вредношћу набрајања или кодом функције Microsoft Excel дана у седмици.</value>
+    
+  </data>
+  <data name="WeekdayArg1" xml:space="preserve">
+    <value>датум</value>
+    
+  </data>
+  <data name="WeekdayArg2" xml:space="preserve">
+    <value>почетак_седмице</value>
+    
+  </data>
+  <data name="AboutWeekday_date" xml:space="preserve">
+    <value>Вредност датума за коју ће бити израчунат дан у седмици.</value>
+  </data>
+  <data name="AboutWeekday_start_of_week" xml:space="preserve">
+    <value>Вредност из набрајања StartOfWeek или број из одговарајуће Excel функције који означава на који начин ће дани у седмици бити нумерисани.</value>
+    
+  </data>
+  <data name="AboutCalendar__MonthsLong" xml:space="preserve">
+    <value>Враћа табелу са једном колоном која садржи пуна имена свих месеци.</value>
+    
+  </data>
+  <data name="AboutCalendar__MonthsShort" xml:space="preserve">
+    <value>Враћа табелу са једном колоном која садржи скраћена имена свих месеци.</value>
+    
+  </data>
+  <data name="AboutCalendar__WeekdaysLong" xml:space="preserve">
+    <value>Враћа табелу са једном колоном која садржи пуна имена свих дана у седмици.</value>
+    
+  </data>
+  <data name="AboutCalendar__WeekdaysShort" xml:space="preserve">
+    <value>Враћа табелу са једном колоном која садржи скраћена имена свих дана у седмици.</value>
+    
+  </data>
+  <data name="AboutClock__AmPm" xml:space="preserve">
+    <value>Враћа табелу са једном колоном која садржи ознаке написане великим словима за пре и после поднева.</value>
+    
+  </data>
+  <data name="AboutClock__AmPmShort" xml:space="preserve">
+    <value>Враћа табелу са једном колоном која садржи скраћене ознаке написане великим словима за пре и после поднева.</value>
+    
+  </data>
+  <data name="AboutClock__IsClock24" xml:space="preserve">
+    <value>Враћа Булову вредност која означава да ли сат користи време од 24 часа.</value>
+    
+  </data>
+  <data name="AboutDateValue" xml:space="preserve">
+    <value>Конвертује време у облику текста у број који представља датум у Power Apps коду датум-време.</value>
+    
+  </data>
+  <data name="DateValueArg1" xml:space="preserve">
+    <value>датум_текст</value>
+    
+  </data>
+  <data name="DateValueArg2" xml:space="preserve">
+    <value>кôд_језика</value>
+    
+  </data>
+  <data name="AboutDateValue_date_text" xml:space="preserve">
+    <value>Текстуални приказ ознаке датума/времена, у формату подржаном на платформи.</value>
+  </data>
+  <data name="AboutDateValue_language_code" xml:space="preserve">
+    <value>Шифра језика наведеног текста.</value>
+  </data>
+  <data name="AboutTimeValue" xml:space="preserve">
+    <value>Конвертује време у облику текста у број који представља датум у Microsoft Power Apps коду датум-време, занемарујући део са датумом.</value>
+    
+  </data>
+  <data name="TimeValueArg1" xml:space="preserve">
+    <value>време_текст</value>
+    
+  </data>
+  <data name="TimeValueArg2" xml:space="preserve">
+    <value>кôд_језика</value>
+    
+  </data>
+  <data name="AboutTimeValue_time_text" xml:space="preserve">
+    <value>Текстуални приказ ознаке датума/времена, у формату подржаном на платформи.</value>
+  </data>
+  <data name="AboutTimeValue_language_code" xml:space="preserve">
+    <value>Шифра језика наведеног текста.</value>
+  </data>
+  <data name="ErrAutoRefreshNotAllowed" xml:space="preserve">
+    <value>Функције услуге аутоматског освежавања не могу да се користе у правилима радње.</value>
+    
+  </data>
+  <data name="ErrMultipleValuesForField_Name" xml:space="preserve">
+    <value>Поље са именом „{0}“ наведено је више пута у овом запису.</value>
+    
+  </data>
+  <data name="WarnColumnNameSpecifiedMultipleTimes_Name" xml:space="preserve">
+    <value>Колона са именом „{0}“ наведена је више пута.</value>
+    
+  </data>
+  <data name="WarnLiteralPredicate" xml:space="preserve">
+    <value>Упозорење : Овај предикат је дословна вредност и не упућује на табелу за унос.</value>
+    
+  </data>
+  <data name="WarnDynamicMetadata" xml:space="preserve">
+    <value>Упозорење: Изаберите ставку „Сними шему“ у дну развијене траке за формулу да бисте подесили и освежили шему резултата овог метода. У супротном овај метод неће вратити ниједан резултат.</value>
+    
+  </data>
+  <data name="FindArg1" xml:space="preserve">
+    <value>пронађи_текст</value>
+    
+  </data>
+  <data name="FindArg2" xml:space="preserve">
+    <value>у_тексту</value>
+    
+  </data>
+  <data name="FindArg3" xml:space="preserve">
+    <value>старт_нум</value>
+    
+  </data>
+  <data name="AboutFind_find_text" xml:space="preserve">
+    <value>Текстуална вредност коју треба тражити.</value>
+  </data>
+  <data name="AboutFind_within_text" xml:space="preserve">
+    <value>Вредност текста у којој се врши тражење.</value>
+  </data>
+  <data name="AboutFind_start_num" xml:space="preserve">
+    <value>Опционални почетни положај.</value>
+  </data>
+  <data name="AboutFind" xml:space="preserve">
+    <value>Враћа почетни положај једне вредности текста унутар друге вредности текста. Проналажење разликује мала и велика слова.</value>
+    
+  </data>
+  <data name="AboutFindT" xml:space="preserve">
+    <value>Враћа колону почетних положаја једне вредности текста (или колоне ниски) у оквиру друге вредности текста (или колоне ниски). Проналажење разликује мала и велика слова.</value>
+    
+  </data>
+  <data name="FindTArg1" xml:space="preserve">
+    <value>пронађи_текст_или_колону</value>
+    
+  </data>
+  <data name="FindTArg2" xml:space="preserve">
+    <value>у_тексту_или_колони</value>
+    
+  </data>
+  <data name="FindTArg3" xml:space="preserve">
+    <value>старт_нум</value>
+    
+  </data>
+  <data name="AboutFind_find_text_or_column" xml:space="preserve">
+    <value>Текстуална вредност (или колона текстуалних вредности) коју треба тражити.</value>
+  </data>
+  <data name="AboutFind_within_text_or_column" xml:space="preserve">
+    <value>Вредност текста (или колоне са вредностима текста) у којој треба тражити.</value>
+  </data>
+  <data name="AboutColorValue" xml:space="preserve">
+    <value>Враћа боју која одговара датој нисци боје.</value>
+    
+  </data>
+  <data name="ColorValueArg1" xml:space="preserve">
+    <value>боја_текста</value>
+    
+  </data>
+  <data name="AboutColorValue_color_text" xml:space="preserve">
+    <value>Боја наведена по имену, нпр. „Плава“ или помоћу стандардне шестоцифрене хексидецималне нотације #rrggbb.</value>
+  </data>
+  <data name="ErrInvalidJsonPointer" xml:space="preserve">
+    <value>Неважећи json показивач.</value>
+    
+  </data>
+  <data name="Text" xml:space="preserve">
+    <value>Текст</value>
+  </data>
+  <data name="Logical" xml:space="preserve">
+    <value>Логички</value>
+  </data>
+  <data name="Table" xml:space="preserve">
+    <value>Табела</value>
+  </data>
+  <data name="Behavior" xml:space="preserve">
+    <value>Понашање</value>
+  </data>
+  <data name="DateTime" xml:space="preserve">
+    <value>Датум &amp; време</value>
+  </data>
+  <data name="MathAndStat" xml:space="preserve">
+    <value>Математички &amp; статистички</value>
+  </data>
+  <data name="Information" xml:space="preserve">
+    <value>Информације</value>
+  </data>
+  <data name="Color" xml:space="preserve">
+    <value>Боја</value>
+  </data>
+  <data name="REST" xml:space="preserve">
+    <value>Услуге</value>
+    
+  </data>
+  <data name="FunctionReference_Link" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?LinkId=722347#</value>
+    
+  </data>
+  <data name="InvalidXml_ElementMissingAttribute_ElemName_AttrName" xml:space="preserve">
+    <value>Елементу „{0}“ недостаје атрибут „{1}“.</value>
+    
+  </data>
+  <data name="InvalidXml_AttributeCannotBeEmpty_AttrName" xml:space="preserve">
+    <value>Атрибут „{0}“ не може да буде празна ниска.</value>
+    
+  </data>
+  <data name="InvalidXml_AttributeValueInvalidGuid_AttrName_Value" xml:space="preserve">
+    <value>Атрибут „{0}“ има неважећу GUID вредност: „{1}“.</value>
+    
+  </data>
+  <data name="InvalidJson_MissingRequiredNamedValue_PropName" xml:space="preserve">
+    <value>Својство „{0}“ недостаје.</value>
+    
+  </data>
+  <data name="InvalidJson_NamedValueTypeNotCorrect_PropName_ExpectedType_ActualType" xml:space="preserve">
+    <value>Својство „{0}“ има неважећу вредност типа: {2}. Очекивана вредност типа: {1}.</value>
+    
+  </data>
+  <data name="InvalidJson_NamedValueCannotBeEmpty_PropName" xml:space="preserve">
+    <value>Својство „{0}“ не може да буде празно.</value>
+    
+  </data>
+  <data name="InvalidJson_NamedEnumStringInvalid_PropName_ActualValue" xml:space="preserve">
+    <value>Очекује се да пребројавање „{0}“ има важећу вредност, али је његова вредност {1} изван опсега за пребројавање.</value>
+    
+  </data>
+  <data name="InvalidJson_NamedIntegerOverflow_PropName_ActualValue" xml:space="preserve">
+    <value>Очекује се да својство „{0}“ има вредност целог броја, али је њена вредност {1} изван опсега.</value>
+    
+  </data>
+  <data name="InvalidJson_IndexedValueTypeNotCorrect_Index_ExpectedType_ActualType" xml:space="preserve">
+    <value>Ставка у индексу {0} има неважећу вредност типа: {2}. Очекивана вредност типа: {1}.</value>
+  </data>
+  <data name="InvalidJson_IndexedValueMustBeNonEmpty_Index" xml:space="preserve">
+    <value>Ставка у индексу {0} мора бити ниска која није празна.</value>
+  </data>
+  <data name="AboutDateAdd" xml:space="preserve">
+    <value>Додајте наведени број јединица у датум.</value>
+    
+  </data>
+  <data name="AboutDateDiff" xml:space="preserve">
+    <value>Израчунава разлику између два датума.</value>
+    
+  </data>
+  <data name="DateAddArg1" xml:space="preserve">
+    <value>датум</value>
+    
+  </data>
+  <data name="DateAddArg2" xml:space="preserve">
+    <value>број_јединица</value>
+    
+  </data>
+  <data name="DateAddArg3" xml:space="preserve">
+    <value>јединица</value>
+    
+  </data>
+  <data name="AboutDateAdd_date" xml:space="preserve">
+    <value>Референтна вредност датума.</value>
+  </data>
+  <data name="AboutDateAdd_number_of_units" xml:space="preserve">
+    <value>Број јединица за додавање. Број може да буде негативан.</value>
+  </data>
+  <data name="AboutDateAdd_unit" xml:space="preserve">
+    <value>Јединица која ће се користити, што може бити Years, Quarters, Months, Days, Hours, Minutes, Seconds или Milliseconds.</value>
+    
+  </data>
+  <data name="DateDiffArg1" xml:space="preserve">
+    <value>датум_почетка</value>
+    
+  </data>
+  <data name="DateDiffArg2" xml:space="preserve">
+    <value>датум_завршетка</value>
+    
+  </data>
+  <data name="DateDiffArg3" xml:space="preserve">
+    <value>јединица</value>
+    
+  </data>
+  <data name="AboutDateDiff_start_date" xml:space="preserve">
+    <value>Датум почетка за операцију разлике.</value>
+  </data>
+  <data name="AboutDateDiff_end_date" xml:space="preserve">
+    <value>Датум завршетка за операцију разлике.</value>
+  </data>
+  <data name="AboutDateDiff_unit" xml:space="preserve">
+    <value>Јединица у којој ће бити изражен резултат, што може бити Years, Quarters, Months, Days, Hours, Minutes, Seconds или Milliseconds.</value>
+    
+  </data>
+  <data name="AboutDateAddT" xml:space="preserve">
+    <value>Додајте наведени број јединица у колону са датумима.</value>
+    
+  </data>
+  <data name="AboutDateDiffT" xml:space="preserve">
+    <value>Израчунава разлику између две колоне датума.</value>
+    
+  </data>
+  <data name="DateAddTArg1" xml:space="preserve">
+    <value>колона_датума</value>
+    
+  </data>
+  <data name="DateAddTArg2" xml:space="preserve">
+    <value>број_јединица</value>
+    
+  </data>
+  <data name="DateAddTArg3" xml:space="preserve">
+    <value>јединица</value>
+    
+  </data>
+  <data name="AboutDateAdd_date_column" xml:space="preserve">
+    <value>Колона са вредностима датума.</value>
+  </data>
+  <data name="DateDiffTArg1" xml:space="preserve">
+    <value>колона_датума_почетка</value>
+    
+  </data>
+  <data name="DateDiffTArg2" xml:space="preserve">
+    <value>колона_датума_завршетка</value>
+    
+  </data>
+  <data name="DateDiffTArg3" xml:space="preserve">
+    <value>јединица</value>
+    
+  </data>
+  <data name="AboutDateDiff_start_date_column" xml:space="preserve">
+    <value>Колона датума почетка за операцију разлике.</value>
+  </data>
+  <data name="AboutDateDiff_end_date_column" xml:space="preserve">
+    <value>Колона датума завршетка за операцију разлике.</value>
+  </data>
+  <data name="AboutChar" xml:space="preserve">
+    <value>Враћа знак који је навео кодни број из скупа знакова постављених на вашој платформи.</value>
+    
+  </data>
+  <data name="CharArg1" xml:space="preserve">
+    <value>број</value>
+    
+  </data>
+  <data name="AboutChar_number" xml:space="preserve">
+    <value>Кодни број из скупа знакова постављених на вашој платформи.</value>
+  </data>
+  <data name="AboutCharT" xml:space="preserve">
+    <value>Враћа табелу знакова коју је навео кодни број из скупа знакова постављених на вашој платформи.</value>
+    
+  </data>
+  <data name="CharTArg1" xml:space="preserve">
+    <value>колона_са_бројевима</value>
+    
+  </data>
+  <data name="AboutChar_column_of_numbers" xml:space="preserve">
+    <value>Колона кодних бројева из скупа знакова постављених на платформи.</value>
+  </data>
+  <data name="AboutParseJSON" xml:space="preserve">
+    <value>Конвертује JSON ниску у објекат.</value>
+    
+  </data>
+  <data name="ParseJSONArg1" xml:space="preserve">
+    <value>унос</value>
+    
+  </data>
+  <data name="AboutParseJSON_input" xml:space="preserve">
+    <value>JSON ниска за обраду.</value>
+  </data>
+  <data name="AboutIndex" xml:space="preserve">
+    <value>Даје запис у табели у датом индексу.</value>
+    
+  </data>
+  <data name="IndexArg1" xml:space="preserve">
+    <value>табела</value>
+    
+  </data>
+  <data name="IndexArg2" xml:space="preserve">
+    <value>индекс</value>
+    
+  </data>
+  <data name="AboutIndex_table" xml:space="preserve">
+    <value>Табела.</value>
+  </data>
+  <data name="AboutIndex_index" xml:space="preserve">
+    <value>Индекс записа који треба преузети.</value>
+    
+  </data>
+  <data name="Screen_Name_DisplayName" xml:space="preserve">
+    <value>Име</value>
+    
+  </data>
+  <data name="Screen_Printing_DisplayName" xml:space="preserve">
+    <value>Штампање</value>
+    
+  </data>
+  <data name="Screen_ImagePosition_DisplayName" xml:space="preserve">
+    <value>Положај слике</value>
+    
+  </data>
+  <data name="Screen_Size_DisplayName" xml:space="preserve">
+    <value>Величина</value>
+    
+  </data>
+  <data name="barcode_Type_DisplayName" xml:space="preserve">
+    <value>Тип баркода</value>
+    
+  </data>
+  <data name="camera_Contrast_DisplayName" xml:space="preserve">
+    <value>Контраст</value>
+    
+  </data>
+  <data name="camera_Zoom_DisplayName" xml:space="preserve">
+    <value>Зумирај</value>
+    
+  </data>
+  <data name="camera_Camera_DisplayName" xml:space="preserve">
+    <value>Камера</value>
+    
+  </data>
+  <data name="export_Data_DisplayName" xml:space="preserve">
+    <value>Подаци</value>
+    
+  </data>
+  <data name="Edit" xml:space="preserve">
+    <value>Уреди</value>
+    
+  </data>
+  <data name="Dust" xml:space="preserve">
+    <value>Прашина</value>
+    
+  </data>
+  <data name="image_Image_DisplayName" xml:space="preserve">
+    <value>Слика</value>
+    
+  </data>
+  <data name="icon_Icon_DisplayName" xml:space="preserve">
+    <value>Икона</value>
+    
+  </data>
+  <data name="icon_Rotation_DisplayName" xml:space="preserve">
+    <value>Ротација</value>
+    
+  </data>
+  <data name="image_ImagePosition_DisplayName" xml:space="preserve">
+    <value>Положај слике</value>
+    
+  </data>
+  <data name="image_ImageRotation_DisplayName" xml:space="preserve">
+    <value>Ротирај</value>
+    
+  </data>
+  <data name="ImageRotation_None_DisplayName" xml:space="preserve">
+    <value>Ниједно</value>
+    
+  </data>
+  <data name="label_Live_DisplayName" xml:space="preserve">
+    <value>Уживо</value>
+    
+  </data>
+  <data name="label_Overflow_DisplayName" xml:space="preserve">
+    <value>Вишак</value>
+    
+  </data>
+  <data name="DatePicker_DateTimeZone_DisplayName" xml:space="preserve">
+    <value>Зона датума и времена</value>
+    
+  </data>
+  <data name="DatePicker_Format_DisplayName" xml:space="preserve">
+    <value>Облик</value>
+    
+  </data>
+  <data name="DatePicker_Language_DisplayName" xml:space="preserve">
+    <value>Језик</value>
+    
+  </data>
+  <data name="Calendar_Width_DisplayName" xml:space="preserve">
+    <value>Ширина календара</value>
+    
+  </data>
+  <data name="Hide_Calendar_DisplayName" xml:space="preserve">
+    <value>Сакриј календар</value>
+    
+  </data>
+  <data name="Calendar_StartOfWeek_DisplayName" xml:space="preserve">
+    <value>Почетак седмице</value>
+    
+  </data>
+  <data name="microphone_Mic_DisplayName" xml:space="preserve">
+    <value>MIC</value>
+    
+  </data>
+  <data name="text_Default_DisplayName" xml:space="preserve">
+    <value>Подразумевано</value>
+    
+  </data>
+  <data name="text_Mode_DisplayName" xml:space="preserve">
+    <value>Режим</value>
+    
+  </data>
+  <data name="text_Format_DisplayName" xml:space="preserve">
+    <value>Формат</value>
+    
+  </data>
+  <data name="text_VirtualKeyboardMode_DisplayName" xml:space="preserve">
+    <value>Режим виртуелне тастатуре</value>
+    
+  </data>
+  <data name="text_TeamsTheme_DisplayName" xml:space="preserve">
+    <value>Тема за Teams</value>
+    
+  </data>
+  <data name="text_Clear_DisplayName" xml:space="preserve">
+    <value>Дугме „Обриши“</value>
+    
+  </data>
+  <data name="Align_Left_DisplayName" xml:space="preserve">
+    <value>Поравнај лево</value>
+    
+  </data>
+  <data name="Align_Right_DisplayName" xml:space="preserve">
+    <value>Поравнај десно</value>
+    
+  </data>
+  <data name="Align_Center_DisplayName" xml:space="preserve">
+    <value>Поравнај по центру</value>
+    
+  </data>
+  <data name="Align_Justify_DisplayName" xml:space="preserve">
+    <value>Поравнај</value>
+    
+  </data>
+  <data name="AboutIsNumeric" xml:space="preserve">
+    <value>Проверава да ли је вредност број и враћа исправно или погрешно.</value>
+    
+  </data>
+  <data name="IsNumericArg1" xml:space="preserve">
+    <value>вредност</value>
+    
+  </data>
+  <data name="AboutIsNumeric_value" xml:space="preserve">
+    <value>Вредност за тестирање.</value>
+  </data>
+  <data name="Post" xml:space="preserve">
+    <value>Пошта</value>
+    
+  </data>
+  <data name="AboutDateTimeValue" xml:space="preserve">
+    <value>Конвертује датум и време у облику текста у број који представља датум у Power Apps коду датум-време.</value>
+    
+  </data>
+  <data name="DateTimeValueArg1" xml:space="preserve">
+    <value>време_текст</value>
+    
+  </data>
+  <data name="DateTimeValueArg2" xml:space="preserve">
+    <value>кôд_језика</value>
+    
+  </data>
+  <data name="AboutDateTimeValue_time_text" xml:space="preserve">
+    <value>Текстуални приказ ознаке датума/времена, у формату подржаном на платформи.</value>
+  </data>
+  <data name="AboutDateTimeValue_language_code" xml:space="preserve">
+    <value>Шифра језика наведеног текста.</value>
+  </data>
+  <data name="AboutTable" xml:space="preserve">
+    <value>Креира табелу од наведених записа, са онолико колона колико постоји јединствених поља записа. На пример: Table({key1: val1, key2: val2, ...}, ...)</value>
+    
+  </data>
+  <data name="TableArg1" xml:space="preserve">
+    <value>запис</value>
+    
+  </data>
+  <data name="AboutTable_record" xml:space="preserve">
+    <value>Запис који ће постати ред у добијеној табели.</value>
+  </data>
+  <data name="AboutShowColumns" xml:space="preserve">
+    <value>Враћа табелу са свим колонама уклоњеним из табеле „извор“ осим наведених колона.</value>
+    
+  </data>
+  <data name="ShowColumnsArg1" xml:space="preserve">
+    <value>извор</value>
+    
+  </data>
+  <data name="ShowColumnsArg2" xml:space="preserve">
+    <value>назив_колоне</value>
+    
+  </data>
+  <data name="AboutShowColumns_source" xml:space="preserve">
+    <value>Вредност табеле из које треба уклонити колоне.</value>
+  </data>
+  <data name="AboutShowColumns_column_name" xml:space="preserve">
+    <value>Име колоне коју треба задржати.</value>
+  </data>
+  <data name="AboutIsToday" xml:space="preserve">
+    <value>Проверава да ли је дати датум данашњи и враћа исправно или погрешно.</value>
+    
+  </data>
+  <data name="AboutIsToday_date" xml:space="preserve">
+    <value>Вредност датума за тестирање.</value>
+  </data>
+  <data name="IsTodayFuncArg1" xml:space="preserve">
+    <value>датум</value>
+    
+  </data>
+  <data name="AboutIsUTCToday" xml:space="preserve">
+    <value>Проверава да ли је наведени датум данас у UTC зони и враћа „тачно“ или „нетачно“.</value>
+    
+  </data>
+  <data name="AboutIsUTCToday_date" xml:space="preserve">
+    <value>Вредност датума за тестирање.</value>
+  </data>
+  <data name="IsUTCTodayFuncArg1" xml:space="preserve">
+    <value>датум</value>
+    
+  </data>
+  <data name="AboutMod" xml:space="preserve">
+    <value>Враћа остатак пошто је број подељен делиоцем. Резултат има исти знак као делилац.</value>
+    
+  </data>
+  <data name="AboutModT" xml:space="preserve">
+    <value>Враћа колону која садржи остатак пошто је број (или колону бројева) подељен делиоцем (или колону делилаца).</value>
+    
+  </data>
+  <data name="AboutMod_divisor" xml:space="preserve">
+    <value>Број којим се дели.</value>
+  </data>
+  <data name="AboutMod_divisor_or_column" xml:space="preserve">
+    <value>Број или колона бројева којом се дели.</value>
+  </data>
+  <data name="AboutMod_number" xml:space="preserve">
+    <value>Број за који се проналази остатак.</value>
+  </data>
+  <data name="AboutMod_number_or_column" xml:space="preserve">
+    <value>Број или колона бројева за коју се проналази остатак.</value>
+  </data>
+  <data name="ModFuncArg1" xml:space="preserve">
+    <value>број</value>
+    
+  </data>
+  <data name="ModFuncArg2" xml:space="preserve">
+    <value>делилац</value>
+    
+  </data>
+  <data name="ModTFuncArg1" xml:space="preserve">
+    <value>број_или_колона</value>
+    
+  </data>
+  <data name="ModTFuncArg2" xml:space="preserve">
+    <value>делилац_или_колона</value>
+    
+  </data>
+  <data name="pdfViewer_Document_DisplayName" xml:space="preserve">
+    <value>Документ</value>
+    
+  </data>
+  <data name="pdfViewer_Zoom_DisplayName" xml:space="preserve">
+    <value>Зумирај</value>
+    
+  </data>
+  <data name="pdfViewer_Password_DisplayName" xml:space="preserve">
+    <value>Лозинка</value>
+    
+  </data>
+  <data name="pdfViewer_PasswordState_DisplayName" xml:space="preserve">
+    <value>Стање лозинке</value>
+    
+  </data>
+  <data name="DataDescriptionInvalidFormat_Reason" xml:space="preserve">
+    <value>Опис података је неважећи: {0}</value>
+  </data>
+  <data name="DataDescriptionParserUnknownException" xml:space="preserve">
+    <value>Дошло је до непознате грешке приликом покушаја рашчлањивања описа података.</value>
+  </data>
+  <data name="AboutForAll" xml:space="preserve">
+    <value>Примењује дату формулу на сваки ред у извору података, затим враћа нову табелу са резултатима по реду.</value>
+    
+  </data>
+  <data name="AboutForAll_source" xml:space="preserve">
+    <value>Извор података или табела на којој се ради.</value>
+  </data>
+  <data name="AboutForAll_formula" xml:space="preserve">
+    <value>Формула коју треба проценити за све редове табеле.</value>
+  </data>
+  <data name="ForAllArg1" xml:space="preserve">
+    <value>извор</value>
+    
+  </data>
+  <data name="ForAllArg2" xml:space="preserve">
+    <value>формула</value>
+    
+  </data>
+  <data name="AboutPower" xml:space="preserve">
+    <value>Подиже број x на степен другог броја y. Исто као x^y.</value>
+    
+  </data>
+  <data name="AboutPower_base" xml:space="preserve">
+    <value>Основни број који треба подићи.</value>
+  </data>
+  <data name="AboutPower_exponent" xml:space="preserve">
+    <value>Експонент за који треба подићи основни број.</value>
+  </data>
+  <data name="PowerFuncArg1" xml:space="preserve">
+    <value>основниброј</value>
+    
+  </data>
+  <data name="PowerFuncArg2" xml:space="preserve">
+    <value>експонент</value>
+    
+  </data>
+  <data name="AboutStartsWith" xml:space="preserve">
+    <value>Враћа true ако наведени текст почиње са наведеном почетном ниском.</value>
+    
+  </data>
+  <data name="AboutStartsWith_text" xml:space="preserve">
+    <value>Текст за проверу.</value>
+  </data>
+  <data name="AboutStartsWith_start" xml:space="preserve">
+    <value>Почетна ниска. Ова функција враћа true ако текст почиње овом ниском.</value>
+  </data>
+  <data name="StartsWithArg1" xml:space="preserve">
+    <value>текст</value>
+    
+  </data>
+  <data name="StartsWithArg2" xml:space="preserve">
+    <value>покрени</value>
+    
+  </data>
+  <data name="AboutEndsWith" xml:space="preserve">
+    <value>Враћа true ако се наведени текст завршава наведеном крајњом ниском.</value>
+    
+  </data>
+  <data name="AboutEndsWith_text" xml:space="preserve">
+    <value>Текст за проверу.</value>
+  </data>
+  <data name="AboutEndsWith_end" xml:space="preserve">
+    <value>Крајња ниска. Ова функција враћа true ако се текст завршава овом ниском.</value>
+  </data>
+  <data name="EndsWithArg1" xml:space="preserve">
+    <value>текст</value>
+    
+  </data>
+  <data name="EndsWithArg2" xml:space="preserve">
+    <value>крај</value>
+    
+  </data>
+  <data name="AboutBlank" xml:space="preserve">
+    <value>Враћа поље без вредности (празно)</value>
+  </data>
+  <data name="AboutPowerT" xml:space="preserve">
+    <value>Диже број x (или колону бројева) на други број y (или колону бројева). Исто као x^y.</value>
+    
+  </data>
+  <data name="AboutPower_base_or_column" xml:space="preserve">
+    <value>Број основице (или колона бројева основице) који се диже.</value>
+  </data>
+  <data name="AboutPower_exponent_or_column" xml:space="preserve">
+    <value>Експонент (или колона експонената) за коју се основица диже.</value>
+  </data>
+  <data name="PowerTFuncArg1" xml:space="preserve">
+    <value>основниброј_или_колона</value>
+    
+  </data>
+  <data name="PowerTFuncArg2" xml:space="preserve">
+    <value>експонент_или_колона</value>
+    
+  </data>
+  <data name="Icon_Import_DisplayName" xml:space="preserve">
+    <value>Увези</value>
+    
+  </data>
+  <data name="Icon_AddUser_DisplayName" xml:space="preserve">
+    <value>Додај корисника</value>
+    
+  </data>
+  <data name="Icon_Alarm_DisplayName" xml:space="preserve">
+    <value>Аларм</value>
+    
+  </data>
+  <data name="Icon_Blocked_DisplayName" xml:space="preserve">
+    <value>Блокирано</value>
+    
+  </data>
+  <data name="Icon_Bookmark_DisplayName" xml:space="preserve">
+    <value>Обележивач</value>
+    
+  </data>
+  <data name="Icon_Bug_DisplayName" xml:space="preserve">
+    <value>Грешка</value>
+    
+  </data>
+  <data name="Icon_Calculator_DisplayName" xml:space="preserve">
+    <value>Калкулатор</value>
+    
+  </data>
+  <data name="Icon_Diamond_DisplayName" xml:space="preserve">
+    <value>Дијамант</value>
+    
+  </data>
+  <data name="Icon_DockLeft_DisplayName" xml:space="preserve">
+    <value>Усидри с леве стране</value>
+    
+  </data>
+  <data name="Icon_DockRight_DisplayName" xml:space="preserve">
+    <value>Усидри с десне стране</value>
+    
+  </data>
+  <data name="Icon_Enhance_DisplayName" xml:space="preserve">
+    <value>Побољшање</value>
+    
+  </data>
+  <data name="Icon_Error_DisplayName" xml:space="preserve">
+    <value>Грешка</value>
+    
+  </data>
+  <data name="Icon_Export_DisplayName" xml:space="preserve">
+    <value>Извези</value>
+    
+  </data>
+  <data name="Icon_Flag_DisplayName" xml:space="preserve">
+    <value>Заставица</value>
+    
+  </data>
+  <data name="Icon_Globe_DisplayName" xml:space="preserve">
+    <value>Сфера</value>
+    
+  </data>
+  <data name="Icon_HalfFilledCircle_DisplayName" xml:space="preserve">
+    <value>Полупун круг</value>
+    
+  </data>
+  <data name="Icon_Health_DisplayName" xml:space="preserve">
+    <value>Исправност</value>
+    
+  </data>
+  <data name="Icon_Heart_DisplayName" xml:space="preserve">
+    <value>Срце</value>
+    
+  </data>
+  <data name="Icon_Help_DisplayName" xml:space="preserve">
+    <value>Помоћ</value>
+    
+  </data>
+  <data name="Icon_Hide_DisplayName" xml:space="preserve">
+    <value>Сакриј</value>
+    
+  </data>
+  <data name="Icon_History_DisplayName" xml:space="preserve">
+    <value>Историја</value>
+    
+  </data>
+  <data name="Icon_HorizontalLine_DisplayName" xml:space="preserve">
+    <value>Хоризонтална линија</value>
+    
+  </data>
+  <data name="Icon_Hospital_DisplayName" xml:space="preserve">
+    <value>Болница</value>
+    
+  </data>
+  <data name="Icon_Key_DisplayName" xml:space="preserve">
+    <value>Кључ</value>
+    
+  </data>
+  <data name="Icon_Lightbulb_DisplayName" xml:space="preserve">
+    <value>Сијалица</value>
+    
+  </data>
+  <data name="Icon_LightningBolt_DisplayName" xml:space="preserve">
+    <value>Муња</value>
+    
+  </data>
+  <data name="Icon_Link_DisplayName" xml:space="preserve">
+    <value>Веза</value>
+    
+  </data>
+  <data name="Icon_Manufacture_DisplayName" xml:space="preserve">
+    <value>Производња</value>
+    
+  </data>
+  <data name="Icon_Medical_DisplayName" xml:space="preserve">
+    <value>Медицински</value>
+    
+  </data>
+  <data name="Icon_Microphone_DisplayName" xml:space="preserve">
+    <value>Микрофон</value>
+    
+  </data>
+  <data name="Icon_Notebook_DisplayName" xml:space="preserve">
+    <value>Бележница</value>
+    
+  </data>
+  <data name="Icon_OpenInNewWindow_DisplayName" xml:space="preserve">
+    <value>Отвори у новом прозору</value>
+    
+  </data>
+  <data name="Icon_Phonebook_DisplayName" xml:space="preserve">
+    <value>Телефонски именик</value>
+    
+  </data>
+  <data name="Icon_Print_DisplayName" xml:space="preserve">
+    <value>Штампање</value>
+    
+  </data>
+  <data name="Icon_Publish_DisplayName" xml:space="preserve">
+    <value>Објави</value>
+    
+  </data>
+  <data name="Icon_QuestionMark_DisplayName" xml:space="preserve">
+    <value>Знак питања</value>
+    
+  </data>
+  <data name="Icon_Redo_DisplayName" xml:space="preserve">
+    <value>Понови радњу</value>
+    
+  </data>
+  <data name="Icon_Reset_DisplayName" xml:space="preserve">
+    <value>Успостави почетне вредности</value>
+    
+  </data>
+  <data name="Icon_Ribbon_DisplayName" xml:space="preserve">
+    <value>Трака</value>
+    
+  </data>
+  <data name="Icon_Scan_DisplayName" xml:space="preserve">
+    <value>Скенирај</value>
+    
+  </data>
+  <data name="Icon_Share_DisplayName" xml:space="preserve">
+    <value>Дели</value>
+    
+  </data>
+  <data name="Icon_Shirt_DisplayName" xml:space="preserve">
+    <value>Мајица</value>
+    
+  </data>
+  <data name="Icon_Shop_DisplayName" xml:space="preserve">
+    <value>Куповина</value>
+    
+  </data>
+  <data name="Icon_Signal_DisplayName" xml:space="preserve">
+    <value>Сигнал</value>
+    
+  </data>
+  <data name="Icon_Support_DisplayName" xml:space="preserve">
+    <value>Подршка</value>
+    
+  </data>
+  <data name="Icon_Sync_DisplayName" xml:space="preserve">
+    <value>Синхронизација</value>
+    
+  </data>
+  <data name="Icon_Text_DisplayName" xml:space="preserve">
+    <value>Текст</value>
+    
+  </data>
+  <data name="Icon_ThumbsDown_DisplayName" xml:space="preserve">
+    <value>Палац надоле</value>
+    
+  </data>
+  <data name="Icon_ThumbsUp_DisplayName" xml:space="preserve">
+    <value>Палац нагоре</value>
+    
+  </data>
+  <data name="Icon_Train_DisplayName" xml:space="preserve">
+    <value>Воз</value>
+    
+  </data>
+  <data name="Icon_Tray_DisplayName" xml:space="preserve">
+    <value>Послужавник</value>
+    
+  </data>
+  <data name="Icon_Undo_DisplayName" xml:space="preserve">
+    <value>Опозови радњу</value>
+    
+  </data>
+  <data name="Icon_Unlock_DisplayName" xml:space="preserve">
+    <value>Откључавање</value>
+    
+  </data>
+  <data name="Icon_VerticalLine_DisplayName" xml:space="preserve">
+    <value>Вертикална линија</value>
+    
+  </data>
+  <data name="Icon_Video_DisplayName" xml:space="preserve">
+    <value>Видео</value>
+    
+  </data>
+  <data name="Icon_View_DisplayName" xml:space="preserve">
+    <value>Приказ</value>
+    
+  </data>
+  <data name="Icon_ZoomIn_DisplayName" xml:space="preserve">
+    <value>Увећај</value>
+    
+  </data>
+  <data name="Icon_ZoomOut_DisplayName" xml:space="preserve">
+    <value>Смањи</value>
+    
+  </data>
+  <data name="Icon_BookmarkFilled_DisplayName" xml:space="preserve">
+    <value>Обележивач (попуњен)</value>
+    
+  </data>
+  <data name="Icon_CancelBadge_DisplayName" xml:space="preserve">
+    <value>Откажи (значка)</value>
+    
+  </data>
+  <data name="Icon_CheckBadge_DisplayName" xml:space="preserve">
+    <value>Провера (значка)</value>
+    
+  </data>
+  <data name="Icon_Cut_DisplayName" xml:space="preserve">
+    <value>Исеци</value>
+    
+  </data>
+  <data name="Icon_FilterFlat_DisplayName" xml:space="preserve">
+    <value>Раван филтер</value>
+    
+  </data>
+  <data name="Icon_FilterFlatFilled_DisplayName" xml:space="preserve">
+    <value>Раван филтер (попуњен)</value>
+    
+  </data>
+  <data name="Icon_Leave_DisplayName" xml:space="preserve">
+    <value>Напусти</value>
+    
+  </data>
+  <data name="Icon_Paste_DisplayName" xml:space="preserve">
+    <value>Налепи</value>
+    
+  </data>
+  <data name="Icon_ThumbsDownFilled_DisplayName" xml:space="preserve">
+    <value>Палац надоле (попуњен)</value>
+    
+  </data>
+  <data name="Icon_ThumbsUpFilled_DisplayName" xml:space="preserve">
+    <value>Палац нагоре (попуњен)</value>
+    
+  </data>
+  <data name="Icon_EmojiHappy_DisplayName" xml:space="preserve">
+    <value>Емоџи – Срећа</value>
+    
+  </data>
+  <data name="SuggestRemoteExecutionHint_OpNotSupportedByClient" xml:space="preserve">
+    <value>Није могуће даљински проценити ову формулу. Операција „{0}“ тренутно није подржана у овом контексту.</value>
+    
+  </data>
+  <data name="SuggestRemoteExecutionHint_StringMatchSecondParam" xml:space="preserve">
+    <value>Део ове формуле није могуће проценити даљински. Функција „{0}“ не може да се делегира ако се име поља појављује у другом аргументу.</value>
+    
+  </data>
+  <data name="entityForm_EntityForm_DisplayName" xml:space="preserve">
+    <value>Образац ентитета</value>
+    
+  </data>
+  <data name="BorderStyle_None_DisplayName" xml:space="preserve">
+    <value>Ниједно</value>
+    
+  </data>
+  <data name="BorderStyle_Dashed_DisplayName" xml:space="preserve">
+    <value>Испрекидано</value>
+    
+  </data>
+  <data name="BorderStyle_Solid_DisplayName" xml:space="preserve">
+    <value>Пуно</value>
+    
+  </data>
+  <data name="BorderStyle_Dotted_DisplayName" xml:space="preserve">
+    <value>Тачкасто</value>
+    
+  </data>
+  <data name="DisplayMode_Disabled_DisplayName" xml:space="preserve">
+    <value>Онемогућено</value>
+    
+  </data>
+  <data name="DisplayMode_Edit_DisplayName" xml:space="preserve">
+    <value>Уреди</value>
+    
+  </data>
+  <data name="DisplayMode_View_DisplayName" xml:space="preserve">
+    <value>Приказ</value>
+    
+  </data>
+  <data name="LayoutMode_Manual_DisplayName" xml:space="preserve">
+    <value>Ручно</value>
+    
+  </data>
+  <data name="LayoutMode_Auto_DisplayName" xml:space="preserve">
+    <value>Аутоматски</value>
+    
+  </data>
+  <data name="LayoutDirection_Horizontal_DisplayName" xml:space="preserve">
+    <value>Хоризонтално</value>
+    
+  </data>
+  <data name="LayoutDirection_Vertical_DisplayName" xml:space="preserve">
+    <value>Вертикално</value>
+    
+  </data>
+  <data name="LayoutAlignItems_Start_DisplayName" xml:space="preserve">
+    <value>Почетак</value>
+    
+  </data>
+  <data name="LayoutAlignItems_Center_DisplayName" xml:space="preserve">
+    <value>Центрирано</value>
+    
+  </data>
+  <data name="LayoutAlignItems_End_DisplayName" xml:space="preserve">
+    <value>Крај</value>
+    
+  </data>
+  <data name="LayoutAlignItems_Stretch_DisplayName" xml:space="preserve">
+    <value>Растезање</value>
+    
+  </data>
+  <data name="AlignInContainer_Start_DisplayName" xml:space="preserve">
+    <value>Почетак</value>
+    
+  </data>
+  <data name="AlignInContainer_Center_DisplayName" xml:space="preserve">
+    <value>Центрирано</value>
+    
+  </data>
+  <data name="AlignInContainer_End_DisplayName" xml:space="preserve">
+    <value>Крај</value>
+    
+  </data>
+  <data name="AlignInContainer_Stretch_DisplayName" xml:space="preserve">
+    <value>Растезање</value>
+    
+  </data>
+  <data name="AlignInContainer_SetByContainer_DisplayName" xml:space="preserve">
+    <value>Поставите по контејнеру</value>
+    
+  </data>
+  <data name="LayoutJustifyContent_Start_DisplayName" xml:space="preserve">
+    <value>Почетак</value>
+    
+  </data>
+  <data name="LayoutJustifyContent_Center_DisplayName" xml:space="preserve">
+    <value>Центрирано</value>
+    
+  </data>
+  <data name="LayoutJustifyContent_End_DisplayName" xml:space="preserve">
+    <value>Крај</value>
+    
+  </data>
+  <data name="LayoutJustifyContent_SpaceEvenly_DisplayName" xml:space="preserve">
+    <value>Размак равномерно</value>
+    
+  </data>
+  <data name="LayoutJustifyContent_SpaceAround_DisplayName" xml:space="preserve">
+    <value>Размак около</value>
+    
+  </data>
+  <data name="LayoutJustifyContent_SpaceBetween_DisplayName" xml:space="preserve">
+    <value>Размак између</value>
+    
+  </data>
+  <data name="LayoutOverflow_Hide_DisplayName" xml:space="preserve">
+    <value>Сакриј</value>
+    
+  </data>
+  <data name="LayoutOverflow_Scroll_DisplayName" xml:space="preserve">
+    <value>Листај</value>
+    
+  </data>
+  <data name="Overflow_Hidden_DisplayName" xml:space="preserve">
+    <value>Скривено</value>
+    
+  </data>
+  <data name="Overflow_Scroll_DisplayName" xml:space="preserve">
+    <value>Померање</value>
+    
+  </data>
+  <data name="TextMode_SingleLine_DisplayName" xml:space="preserve">
+    <value>Једна линија</value>
+    
+  </data>
+  <data name="TextMode_Password_DisplayName" xml:space="preserve">
+    <value>Лозинка</value>
+    
+  </data>
+  <data name="TextMode_MultiLine_DisplayName" xml:space="preserve">
+    <value>Више линија</value>
+    
+  </data>
+  <data name="TextFormat_Text_DisplayName" xml:space="preserve">
+    <value>Текст</value>
+    
+  </data>
+  <data name="TextFormat_Number_DisplayName" xml:space="preserve">
+    <value>Број</value>
+    
+  </data>
+  <data name="VirtualKeyboardMode_Auto_DisplayName" xml:space="preserve">
+    <value>Аутоматска тастатура</value>
+    
+  </data>
+  <data name="VirtualKeyboardMode_Numeric_DisplayName" xml:space="preserve">
+    <value>Нумеричка тастатура</value>
+    
+  </data>
+  <data name="VirtualKeyboardMode_Text_DisplayName" xml:space="preserve">
+    <value>Текстуална тастатура</value>
+    
+  </data>
+  <data name="TeamsTheme_Default_DisplayName" xml:space="preserve">
+    <value>Подразумевана тема</value>
+    
+  </data>
+  <data name="TeamsTheme_Dark_DisplayName" xml:space="preserve">
+    <value>Мрачна тема</value>
+    
+  </data>
+  <data name="TeamsTheme_Contrast_DisplayName" xml:space="preserve">
+    <value>Контрастна тема</value>
+    
+  </data>
+  <data name="PenMode_Draw_DisplayName" xml:space="preserve">
+    <value>Цртање</value>
+    
+  </data>
+  <data name="PenMode_Erase_DisplayName" xml:space="preserve">
+    <value>Брисање</value>
+    
+  </data>
+  <data name="DateTimeZone_Local_DisplayName" xml:space="preserve">
+    <value>Локално</value>
+    
+  </data>
+  <data name="DateTimeZone_UTC_DisplayName" xml:space="preserve">
+    <value>UTC време</value>
+    
+  </data>
+  <data name="ImagePosition_Fill_DisplayName" xml:space="preserve">
+    <value>Попуни</value>
+    
+  </data>
+  <data name="ImagePosition_Fit_DisplayName" xml:space="preserve">
+    <value>Уклопи</value>
+    
+  </data>
+  <data name="ImagePosition_Stretch_DisplayName" xml:space="preserve">
+    <value>Развуци</value>
+    
+  </data>
+  <data name="ImagePosition_Tile_DisplayName" xml:space="preserve">
+    <value>Плочица</value>
+    
+  </data>
+  <data name="ImagePosition_Center_DisplayName" xml:space="preserve">
+    <value>Центар</value>
+    
+  </data>
+  <data name="VerticalAlign_Top_DisplayName" xml:space="preserve">
+    <value>Врх</value>
+    
+  </data>
+  <data name="VerticalAlign_Middle_DisplayName" xml:space="preserve">
+    <value>Средина</value>
+    
+  </data>
+  <data name="VerticalAlign_Bottom_DisplayName" xml:space="preserve">
+    <value>Дно</value>
+    
+  </data>
+  <data name="Layout_Horizontal_DisplayName" xml:space="preserve">
+    <value>Хоризонтално</value>
+    
+  </data>
+  <data name="Layout_Vertical_DisplayName" xml:space="preserve">
+    <value>Вертикално</value>
+    
+  </data>
+  <data name="TextPosition_Left_DisplayName" xml:space="preserve">
+    <value>Лево</value>
+    
+  </data>
+  <data name="TextPosition_Right_DisplayName" xml:space="preserve">
+    <value>Десно</value>
+    
+  </data>
+  <data name="Transition_Push_DisplayName" xml:space="preserve">
+    <value>Гурни</value>
+    
+  </data>
+  <data name="Transition_Pop_DisplayName" xml:space="preserve">
+    <value>Искачући</value>
+    
+  </data>
+  <data name="Transition_None_DisplayName" xml:space="preserve">
+    <value>Ниједно</value>
+    
+  </data>
+  <data name="FontWeight_Normal_DisplayName" xml:space="preserve">
+    <value>Нормално</value>
+    
+  </data>
+  <data name="FontWeight_Semibold_DisplayName" xml:space="preserve">
+    <value>Полуподебљано</value>
+    
+  </data>
+  <data name="FontWeight_Bold_DisplayName" xml:space="preserve">
+    <value>Подебљано</value>
+    
+  </data>
+  <data name="FontWeight_Lighter_DisplayName" xml:space="preserve">
+    <value>Светлије</value>
+    
+  </data>
+  <data name="FormPattern_None_DisplayName" xml:space="preserve">
+    <value>Ниједно</value>
+    
+  </data>
+  <data name="FormPattern_Details_DisplayName" xml:space="preserve">
+    <value>Детаљи</value>
+    
+  </data>
+  <data name="FormPattern_List_DisplayName" xml:space="preserve">
+    <value>Листа</value>
+    
+  </data>
+  <data name="FormPattern_CardList_DisplayName" xml:space="preserve">
+    <value>Листа картица</value>
+    
+  </data>
+  <data name="BarcodeType_Auto_DisplayName" xml:space="preserve">
+    <value>Аутоматски</value>
+    
+  </data>
+  <data name="BarcodeType_Aztec_DisplayName" xml:space="preserve">
+    <value>Aztec</value>
+    
+  </data>
+  <data name="BarcodeType_Codabar_DisplayName" xml:space="preserve">
+    <value>Codabar</value>
+    
+  </data>
+  <data name="BarcodeType_DataMatrix_DisplayName" xml:space="preserve">
+    <value>Матрица података</value>
+    
+  </data>
+  <data name="BarcodeType_Ean_DisplayName" xml:space="preserve">
+    <value>EAN</value>
+    
+  </data>
+  <data name="BarcodeType_QRCode_DisplayName" xml:space="preserve">
+    <value>QR Code</value>
+    
+  </data>
+  <data name="BarcodeType_RssExpanded_DisplayName" xml:space="preserve">
+    <value>RSS Expanded</value>
+    
+  </data>
+  <data name="BarcodeType_Upc_DisplayName" xml:space="preserve">
+    <value>UPC</value>
+    
+  </data>
+  <data name="GridStyle_XOnly_DisplayName" xml:space="preserve">
+    <value>Само X</value>
+    
+  </data>
+  <data name="GridStyle_YOnly_DisplayName" xml:space="preserve">
+    <value>Само Y</value>
+    
+  </data>
+  <data name="GridStyle_All_DisplayName" xml:space="preserve">
+    <value>Све</value>
+    
+  </data>
+  <data name="GridStyle_None_DisplayName" xml:space="preserve">
+    <value>Ниједно</value>
+    
+  </data>
+  <data name="FormMode_Edit_DisplayName" xml:space="preserve">
+    <value>Уреди</value>
+    
+  </data>
+  <data name="FormMode_View_DisplayName" xml:space="preserve">
+    <value>Приказ</value>
+    
+  </data>
+  <data name="FormMode_New_DisplayName" xml:space="preserve">
+    <value>Ново</value>
+    
+  </data>
+  <data name="SelectedState_Edit_DisplayName" xml:space="preserve">
+    <value>Уреди</value>
+    
+  </data>
+  <data name="SelectedState_View_DisplayName" xml:space="preserve">
+    <value>Приказ</value>
+    
+  </data>
+  <data name="SelectedState_New_DisplayName" xml:space="preserve">
+    <value>Ново</value>
+    
+  </data>
+  <data name="LoadingSpinner_Controls_DisplayName" xml:space="preserve">
+    <value>Контроле</value>
+    
+  </data>
+  <data name="LoadingSpinner_Data_DisplayName" xml:space="preserve">
+    <value>Подаци</value>
+    
+  </data>
+  <data name="LoadingSpinner_None_DisplayName" xml:space="preserve">
+    <value>Ниједно</value>
+    
+  </data>
+  <data name="NotificationType_Error_DisplayName" xml:space="preserve">
+    <value>Грешка</value>
+    
+  </data>
+  <data name="NotificationType_Warning_DisplayName" xml:space="preserve">
+    <value>Упозорење</value>
+    
+  </data>
+  <data name="NotificationType_Success_DisplayName" xml:space="preserve">
+    <value>Успех</value>
+    
+  </data>
+  <data name="NotificationType_Information_DisplayName" xml:space="preserve">
+    <value>Информације</value>
+    
+  </data>
+  <data name="Icon_Add_DisplayName" xml:space="preserve">
+    <value>Додај</value>
+    
+  </data>
+  <data name="Icon_Cancel_DisplayName" xml:space="preserve">
+    <value>Откажи</value>
+    
+  </data>
+  <data name="Icon_Edit_DisplayName" xml:space="preserve">
+    <value>Уреди</value>
+    
+  </data>
+  <data name="Icon_Check_DisplayName" xml:space="preserve">
+    <value>Провера</value>
+    
+  </data>
+  <data name="Icon_Search_DisplayName" xml:space="preserve">
+    <value>Претражи</value>
+    
+  </data>
+  <data name="Icon_Filter_DisplayName" xml:space="preserve">
+    <value>Филтер</value>
+    
+  </data>
+  <data name="Icon_Sort_DisplayName" xml:space="preserve">
+    <value>Сортирај</value>
+    
+  </data>
+  <data name="Icon_Reload_DisplayName" xml:space="preserve">
+    <value>Поново учитај</value>
+    
+  </data>
+  <data name="Icon_Trash_DisplayName" xml:space="preserve">
+    <value>Смеће</value>
+    
+  </data>
+  <data name="Icon_Save_DisplayName" xml:space="preserve">
+    <value>Сачувај</value>
+    
+  </data>
+  <data name="Icon_Download_DisplayName" xml:space="preserve">
+    <value>Преузми</value>
+    
+  </data>
+  <data name="Icon_Copy_DisplayName" xml:space="preserve">
+    <value>Копирај</value>
+    
+  </data>
+  <data name="Icon_LikeDislike_DisplayName" xml:space="preserve">
+    <value>Свиђа ми се/Не свиђа ми се</value>
+    
+  </data>
+  <data name="Icon_Crop_DisplayName" xml:space="preserve">
+    <value>Исеци</value>
+    
+  </data>
+  <data name="Icon_Pin_DisplayName" xml:space="preserve">
+    <value>Закачи</value>
+    
+  </data>
+  <data name="Icon_ClearDrawing_DisplayName" xml:space="preserve">
+    <value>Јасно цртање</value>
+    
+  </data>
+  <data name="Icon_ExpandView_DisplayName" xml:space="preserve">
+    <value>Развиј приказ</value>
+    
+  </data>
+  <data name="Icon_CollapseView_DisplayName" xml:space="preserve">
+    <value>Скупи приказ</value>
+    
+  </data>
+  <data name="Icon_Draw_DisplayName" xml:space="preserve">
+    <value>Цртање</value>
+    
+  </data>
+  <data name="Icon_Compose_DisplayName" xml:space="preserve">
+    <value>Писање</value>
+    
+  </data>
+  <data name="Icon_Erase_DisplayName" xml:space="preserve">
+    <value>Брисање</value>
+    
+  </data>
+  <data name="Icon_Message_DisplayName" xml:space="preserve">
+    <value>Порука</value>
+    
+  </data>
+  <data name="Icon_Post_DisplayName" xml:space="preserve">
+    <value>Пошта</value>
+    
+  </data>
+  <data name="Icon_AddDocument_DisplayName" xml:space="preserve">
+    <value>Додај документ</value>
+    
+  </data>
+  <data name="Icon_AddLibrary_DisplayName" xml:space="preserve">
+    <value>Додај библиотеку</value>
+    
+  </data>
+  <data name="Icon_Home_DisplayName" xml:space="preserve">
+    <value>Почетак</value>
+    
+  </data>
+  <data name="Icon_Hamburger_DisplayName" xml:space="preserve">
+    <value>Хамбургер</value>
+    
+  </data>
+  <data name="Icon_Settings_DisplayName" xml:space="preserve">
+    <value>Поставке</value>
+    
+  </data>
+  <data name="Icon_More_DisplayName" xml:space="preserve">
+    <value>Још</value>
+    
+  </data>
+  <data name="Icon_Waffle_DisplayName" xml:space="preserve">
+    <value>Вафл</value>
+    
+  </data>
+  <data name="Icon_ChevronLeft_DisplayName" xml:space="preserve">
+    <value>Лево</value>
+    
+  </data>
+  <data name="Icon_ChevronRight_DisplayName" xml:space="preserve">
+    <value>Десно</value>
+    
+  </data>
+  <data name="Icon_ChevronUp_DisplayName" xml:space="preserve">
+    <value>Нагоре</value>
+    
+  </data>
+  <data name="Icon_ChevronDown_DisplayName" xml:space="preserve">
+    <value>Надоле</value>
+    
+  </data>
+  <data name="Icon_NextArrow_DisplayName" xml:space="preserve">
+    <value>Даље</value>
+    
+  </data>
+  <data name="Icon_BackArrow_DisplayName" xml:space="preserve">
+    <value>Назад</value>
+    
+  </data>
+  <data name="Icon_ArrowDown_DisplayName" xml:space="preserve">
+    <value>Стрелица надоле</value>
+    
+  </data>
+  <data name="Icon_ArrowUp_DisplayName" xml:space="preserve">
+    <value>Стрелица нагоре</value>
+    
+  </data>
+  <data name="Icon_ArrowLeft_DisplayName" xml:space="preserve">
+    <value>Стрелица налево</value>
+    
+  </data>
+  <data name="Icon_ArrowRight_DisplayName" xml:space="preserve">
+    <value>Стрелица надесно</value>
+    
+  </data>
+  <data name="Icon_Camera_DisplayName" xml:space="preserve">
+    <value>Камера</value>
+    
+  </data>
+  <data name="Icon_Document_DisplayName" xml:space="preserve">
+    <value>Документ</value>
+    
+  </data>
+  <data name="Icon_DockCheckProperties_DisplayName" xml:space="preserve">
+    <value>Знак потврде документа</value>
+    
+  </data>
+  <data name="Icon_Folder_DisplayName" xml:space="preserve">
+    <value>Фасцикла</value>
+    
+  </data>
+  <data name="Icon_Journal_DisplayName" xml:space="preserve">
+    <value>Дневник</value>
+    
+  </data>
+  <data name="Icon_ForkKnife_DisplayName" xml:space="preserve">
+    <value>Храна</value>
+    
+  </data>
+  <data name="Icon_Transportation_DisplayName" xml:space="preserve">
+    <value>Транспорт</value>
+    
+  </data>
+  <data name="Icon_Airplane_DisplayName" xml:space="preserve">
+    <value>Авион</value>
+    
+  </data>
+  <data name="Icon_Bus_DisplayName" xml:space="preserve">
+    <value>Аутобус</value>
+    
+  </data>
+  <data name="Icon_Cars_DisplayName" xml:space="preserve">
+    <value>Аутомобили</value>
+    
+  </data>
+  <data name="Icon_Money_DisplayName" xml:space="preserve">
+    <value>Новац</value>
+    
+  </data>
+  <data name="Icon_Currency_DisplayName" xml:space="preserve">
+    <value>Валута</value>
+    
+  </data>
+  <data name="Icon_AddToCalendar_DisplayName" xml:space="preserve">
+    <value>Додај у календар</value>
+    
+  </data>
+  <data name="Icon_CalendarBlank_DisplayName" xml:space="preserve">
+    <value>Празан календар</value>
+    
+  </data>
+  <data name="Icon_OfficeBuilding_DisplayName" xml:space="preserve">
+    <value>Пословна зграда</value>
+    
+  </data>
+  <data name="Icon_PaperClip_DisplayName" xml:space="preserve">
+    <value>Спајалица</value>
+    
+  </data>
+  <data name="Icon_Newspaper_DisplayName" xml:space="preserve">
+    <value>Новине</value>
+    
+  </data>
+  <data name="Icon_Lock_DisplayName" xml:space="preserve">
+    <value>Закључај</value>
+    
+  </data>
+  <data name="Icon_Waypoint_DisplayName" xml:space="preserve">
+    <value>Место заустављања</value>
+    
+  </data>
+  <data name="Icon_Location_DisplayName" xml:space="preserve">
+    <value>Локација</value>
+    
+  </data>
+  <data name="Icon_DocumentPDF_DisplayName" xml:space="preserve">
+    <value>PDF документ</value>
+    
+  </data>
+  <data name="Icon_Bell_DisplayName" xml:space="preserve">
+    <value>Звоно</value>
+    
+  </data>
+  <data name="Icon_ShoppingCart_DisplayName" xml:space="preserve">
+    <value>Колица за куповину</value>
+    
+  </data>
+  <data name="Icon_Phone_DisplayName" xml:space="preserve">
+    <value>Телефон</value>
+    
+  </data>
+  <data name="Icon_PhoneHangUp_DisplayName" xml:space="preserve">
+    <value>Крај позива</value>
+    
+  </data>
+  <data name="Icon_Mobile_DisplayName" xml:space="preserve">
+    <value>Мобилно</value>
+    
+  </data>
+  <data name="Icon_Laptop_DisplayName" xml:space="preserve">
+    <value>Лаптоп</value>
+    
+  </data>
+  <data name="Icon_ComputerDesktop_DisplayName" xml:space="preserve">
+    <value>Радна површина рачунара</value>
+    
+  </data>
+  <data name="Icon_Devices_DisplayName" xml:space="preserve">
+    <value>Уређаји</value>
+    
+  </data>
+  <data name="Icon_Controller_DisplayName" xml:space="preserve">
+    <value>Контролер</value>
+    
+  </data>
+  <data name="Icon_Tools_DisplayName" xml:space="preserve">
+    <value>Алатке</value>
+    
+  </data>
+  <data name="Icon_ToolsWrench_DisplayName" xml:space="preserve">
+    <value>Кључ алатки</value>
+    
+  </data>
+  <data name="Icon_Mail_DisplayName" xml:space="preserve">
+    <value>Пошта</value>
+    
+  </data>
+  <data name="Icon_Send_DisplayName" xml:space="preserve">
+    <value>Пошаљи</value>
+    
+  </data>
+  <data name="Icon_Clock_DisplayName" xml:space="preserve">
+    <value>Сат</value>
+    
+  </data>
+  <data name="Icon_ListWatchlistRemind_DisplayName" xml:space="preserve">
+    <value>Подсетник листе</value>
+    
+  </data>
+  <data name="Icon_LogJournal_DisplayName" xml:space="preserve">
+    <value>Дневник евиденција</value>
+    
+  </data>
+  <data name="Icon_Note_DisplayName" xml:space="preserve">
+    <value>Напомена</value>
+    
+  </data>
+  <data name="Icon_PhotosPictures_DisplayName" xml:space="preserve">
+    <value>Оквири слике</value>
+    
+  </data>
+  <data name="Icon_RadarActivityMonitor_DisplayName" xml:space="preserve">
+    <value>Радар</value>
+    
+  </data>
+  <data name="Icon_Tablet_DisplayName" xml:space="preserve">
+    <value>Таблет</value>
+    
+  </data>
+  <data name="Icon_Tag_DisplayName" xml:space="preserve">
+    <value>Ознака</value>
+    
+  </data>
+  <data name="Icon_CameraAperture_DisplayName" xml:space="preserve">
+    <value>Отвор бленде камере</value>
+    
+  </data>
+  <data name="Icon_ColorPicker_DisplayName" xml:space="preserve">
+    <value>Бирач боје</value>
+    
+  </data>
+  <data name="Icon_DetailList_DisplayName" xml:space="preserve">
+    <value>Листа детаља</value>
+    
+  </data>
+  <data name="Icon_DocumentWithContent_DisplayName" xml:space="preserve">
+    <value>Документ са садржајем</value>
+    
+  </data>
+  <data name="Icon_ListScrollEmpty_DisplayName" xml:space="preserve">
+    <value>Празна листа за померање</value>
+    
+  </data>
+  <data name="Icon_ListScrollWatchlist_DisplayName" xml:space="preserve">
+    <value>Надгледање листе за померање</value>
+    
+  </data>
+  <data name="Icon_OptionsList_DisplayName" xml:space="preserve">
+    <value>Листа опција</value>
+    
+  </data>
+  <data name="Icon_People_DisplayName" xml:space="preserve">
+    <value>Људи</value>
+    
+  </data>
+  <data name="Icon_Person_DisplayName" xml:space="preserve">
+    <value>Особа</value>
+    
+  </data>
+  <data name="Icon_EmojiFrown_DisplayName" xml:space="preserve">
+    <value>Emoji – мрштење</value>
+    
+  </data>
+  <data name="Icon_EmojiSmile_DisplayName" xml:space="preserve">
+    <value>Emoji – осмех</value>
+    
+  </data>
+  <data name="Icon_EmojiSad_DisplayName" xml:space="preserve">
+    <value>Emoji – тужно</value>
+    
+  </data>
+  <data name="Icon_EmojiNeutral_DisplayName" xml:space="preserve">
+    <value>Emoji – неутрално</value>
+    
+  </data>
+  <data name="Icon_Warning_DisplayName" xml:space="preserve">
+    <value>Упозорење</value>
+    
+  </data>
+  <data name="Icon_Information_DisplayName" xml:space="preserve">
+    <value>Информације</value>
+    
+  </data>
+  <data name="Icon_Database_DisplayName" xml:space="preserve">
+    <value>База података</value>
+    
+  </data>
+  <data name="Icon_Weather_DisplayName" xml:space="preserve">
+    <value>Временска прогноза</value>
+    
+  </data>
+  <data name="Icon_TrendingHashtag_DisplayName" xml:space="preserve">
+    <value>Hash ознака</value>
+    
+  </data>
+  <data name="Icon_TrendingUpwards_DisplayName" xml:space="preserve">
+    <value>У тренду нагоре</value>
+    
+  </data>
+  <data name="Icon_Items_DisplayName" xml:space="preserve">
+    <value>Ставке</value>
+    
+  </data>
+  <data name="Icon_LevelsLayersItems_DisplayName" xml:space="preserve">
+    <value>Слојеви</value>
+    
+  </data>
+  <data name="Icon_Trending_DisplayName" xml:space="preserve">
+    <value>Тренд</value>
+    
+  </data>
+  <data name="Icon_LineWeight_DisplayName" xml:space="preserve">
+    <value>Дебљина линије</value>
+    
+  </data>
+  <data name="AboutIsError" xml:space="preserve">
+    <value>Враћа информације о томе да ли је дошло до грешке приликом процењивања датог аргумента.</value>
+    
+  </data>
+  <data name="IsErrorArg" xml:space="preserve">
+    <value>вредност</value>
+    
+  </data>
+  <data name="AboutIsError_value" xml:space="preserve">
+    <value>Вредност за коју треба проверити да ли има грешака.</value>
+    
+  </data>
+  <data name="ErrBadArityMinimum" xml:space="preserve">
+    <value>Неважећи број аргумената: примљено је {0}, а очекује се {1} или више.</value>
+    
+  </data>
+  <data name="ErrBadArityRange" xml:space="preserve">
+    <value>Неважећи број аргумената: примљено је {0}, а очекује се {1}–{2}.</value>
+    
+  </data>
+  <data name="ErrGeneralError" xml:space="preserve">
+    <value>{0}</value>
+    
+  </data>
+  <data name="FormulaColumns_NotSupported" xml:space="preserve">
+    <value>Није подржано у колонама формула.</value>
+    
+  </data>
+  <data name="FormulaColumns_ArgNotSupported" xml:space="preserve">
+    <value>Аргумент {0} није подржан за функцију {1} у колонама формула.</value>
+    
+  </data>
+  <data name="FormulaColumns_ArgTypeNotSupported" xml:space="preserve">
+    <value>Није могуће проследити овај аргумент као овај тип у колонама формула.</value>
+    
+  </data>
+  <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
+    <value>За овај аргумент је подржана само вредност литерала.</value>
+    
+  </data>
+  <data name="FormulaColumns_TimeZoneConversion" xml:space="preserve">
+    <value>{0} није могуће извршити на овом уносу без конверзије временске зоне, која није подржана у колонама формула.</value>
+    
+  </data>
+  <data name="FormulaColumns_IncompatibleDateTimes" xml:space="preserve">
+    <value>Ову операцију није могуће извршити на вредностима које имају различита понашања датума и времена.</value>
+    
+  </data>
+  <data name="FormulaColumns_DateTimeFormatNotSupported" xml:space="preserve">
+    <value>У колонама формула подржане су само ниске кратког формата датума и времена.</value>
+    
+  </data>
+  <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
+    <value>Токени обликовања специфични за локални стандард, као што су „.“ и „,“ нису подржани у колонама формула.</value>
+    
+  </data>
+  <data name="FormulaColumns_FunctionNotSupported" xml:space="preserve">
+    <value>Функција {0} није подржана у колонама формула, користите {1} уместо ње.</value>
+    
+  </data>
+  <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
+    <value>Тип резултата {0} није подржан у колонама са формулама.</value>
+    
+  </data>
+  <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
+    <value>Очекивани тип резултата за ову формулу је {0}, али је стварни тип резултата {1}. Није могуће променити тип резултата колоне формуле.</value>
+    
+  </data>
+  <data name="FormulaColumns_ColumnTypeNotSupported" xml:space="preserve">
+    <value>Колоне типа {0} нису подржане у колонама са формулама.</value>
+    
+  </data>
+  <data name="FormulaColumns_ColumnFormatNotSupported" xml:space="preserve">
+    <value>Колоне типа {0} са форматом {1} нису подржане у колонама са формулама.</value>
+    
+  </data>
+  <data name="FormulaColumns_FormulaTooLong" xml:space="preserve">
+    <value>Формуле не могу бити дуже од 1000 знакова.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
+    <value>Очекује се операнд. Формула или израз очекују важећи операнд. На пример, можете да додате операнд „2“ у израз „ 1 + _“ тако да резултат буде „3“. Или, можете да додате операнд „како си“ у израз „Здраво, “&amp; _ “ тако да резултат буде „Здраво, како си“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrOperandExpected_HowToFix_1" xml:space="preserve">
+    <value>Обезбедите вредност за операнд која ће довршити израз. Уверите се да тип операнда (текст, број, датум или вредност true/false) одговара изразу. Подударите бројеве са бројевима, текст са текстом и тако даље. На пример, „1 + ’Здраво’“ није важеће, али „1 + 2“ јесте.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBadToken_ShortMessage" xml:space="preserve">
+    <value>Неочекивани знакови. Знакови се користе у формули на неочекивани начин.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBadToken_LongMessage" xml:space="preserve">
+    <value>На пример, знак „\“ се не очекује после броја, овако: „32\“. Очекује се размак („32 “) како би то био само број 32 или се очекује неки други број (на пример, „323“).</value>
+  </data>
+  <data name="ErrorResource_ErrBadToken_HowToFix_1" xml:space="preserve">
+    <value>Уклоните или замените неочекиване знакове.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBadToken_Link_1" xml:space="preserve">
+    <value>Чланак: Референце формула за Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_UnexpectedCharacterToken_ShortMessage" xml:space="preserve">
+    <value>Неочекивани знак „{0}“ на положају „{1}“ у формули.</value>
+    
+  </data>
+  <data name="ErrorResource_UnexpectedCharacterToken_LongMessage" xml:space="preserve">
+    <value>На пример, знак „\“ се не очекује после броја, овако: „32\“. Очекује се размак („32 “) како би то био само број 32 или се очекује неки други број (на пример, „323“).</value>
+  </data>
+  <data name="ErrorResource_UnexpectedCharacterToken_HowToFix_1" xml:space="preserve">
+    <value>Уклоните или замените неочекивани знак.</value>
+  </data>
+  <data name="ErrorResource_UnexpectedCharacterToken_Link_1" xml:space="preserve">
+    <value>Чланак: Референце формула за Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrMissingEndOfBlockComment_ShortMessage" xml:space="preserve">
+    <value>Недостаје идентификатор краја коментара. Блок-коментар нема идентификатор краја коментара.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrMissingEndOfBlockComment_LongMessage" xml:space="preserve">
+    <value>Сваки блок-коментар мора да почиње са „/*“ и да се завршава са „*/“. Ако сваки блок-коментар не завршите исправно, сав кôд након коментара постаје део тог коментара. Ако коментар има само један ред, можете да га почнете знаком „//“ и не морате да идентификујете крај коментара.</value>
+  </data>
+  <data name="ErrorResource_ErrMissingEndOfBlockComment_HowToFix_1" xml:space="preserve">
+    <value>Додајте „*/“ на крај коментара за блокирање или га промените у скуп " на крај ваш блокирање comment или промените у скуп линијских коментара.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrMissingEndOfBlockComment_Link_1" xml:space="preserve">
+    <value>Чланак: Референце формула за Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_ShortMessage" xml:space="preserve">
+    <value>Неочекивани знакови. Формула садржи „{0}“, а очекује се „{1}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_LongMessage" xml:space="preserve">
+    <value>Ова грешка се јавља уколико, на пример, формула садржи „{{Val@ 7}}“ уместо „{{Val: 7}}“. Када подесите променљиву, синтакса захтева двотачку уместо симбола „@“.</value>
+  </data>
+  <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_HowToFix_1" xml:space="preserve">
+    <value>Уклоните или замените неочекиване знакове очекиваним знаком.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_Link_1" xml:space="preserve">
+    <value>Чланак: Референце формула за Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidName_ShortMessage" xml:space="preserve">
+    <value>Име није важеће. „{0}“ није препознато.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidName_LongMessage" xml:space="preserve">
+    <value>Ова грешка се најчешће јавља кад формула упућује на нешто што више не постоји (на пример, на контролу коју сте избрисали).</value>
+  </data>
+  <data name="ErrorResource_ErrInvalidName_HowToFix_1" xml:space="preserve">
+    <value>Уклоните или исправите референцу на име које није важеће.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidName_Link_1" xml:space="preserve">
+    <value>Чланак: Референце формула за Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_ShortMessage" xml:space="preserve">
+    <value>Име није важеће. Овај идентификатор није препознат.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_LongMessage" xml:space="preserve">
+    <value>Ова грешка се најчешће јавља кад формула упућује на нешто што више не постоји (на пример, на контролу коју сте избрисали).</value>
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_HowToFix_1" xml:space="preserve">
+    <value>Уклоните или исправите референцу на име које није важеће.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_Link_1" xml:space="preserve">
+    <value>Чланак: Референце формула за Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidPropertyReference_ShortMessage" xml:space="preserve">
+    <value>Референца својства није важећа.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidPropertyReference_LongMessage" xml:space="preserve">
+    <value>Ова грешка се појављује када формула упућује на својства понашања компонената са неважећом синтаксом. (На пример, Component.OnCustomChange уместо Component.OnCustomChange())</value>
+  </data>
+  <data name="ErrorResource_ErrInvalidPropertyReference_HowToFix_1" xml:space="preserve">
+    <value>Користите исправну синтаксу при упућивању на својство понашања компонената. На пример, Component.OnCustomChange()</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidPropertyReference_Link_1" xml:space="preserve">
+    <value>Чланак: Референца формуле за PowerApps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidParentUse_ShortMessage" xml:space="preserve">
+    <value>Референца „Parent“ није важећа. Не можете да користите референцу надређеног елемента у овом контексту.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidParentUse_LongMessage" xml:space="preserve">
+    <value>Не можете да користите оператор „Parent“ са контролом која нема надређену контролу. Овај оператор упућује на контролу која хостује дату контролу и чини сва њена својства доступним.</value>
+  </data>
+  <data name="ErrorResource_ErrInvalidParentUse_HowToFix_1" xml:space="preserve">
+    <value>Уклоните оператор „Надређени“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidParentUse_Link_1" xml:space="preserve">
+    <value>Чланак: Додајте и конфигуришите контролу апликације са подлогом у услузи Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrTooManyUps_ShortMessage" xml:space="preserve">
+    <value>Угнежђивање опсега редова је предубоко. Опсег редова формуле премашује 63 нивоа угнежђивања.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrTooManyUps_LongMessage" xml:space="preserve">
+    <value>Сложеност се повећава са сваким нивоом угнежђивања, тако да Power Apps подржава угнежђивање опсега редова само до 63 нивоа.</value>
+  </data>
+  <data name="ErrorResource_ErrTooManyUps_HowToFix_1" xml:space="preserve">
+    <value>Поново напишите формулу са мање нивоа угнежђивања.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrRuleNestedTooDeeply_ShortMessage" xml:space="preserve">
+    <value>Предубоко угнежђивање израза. Израз у формули је угнежђен више од 50 нивоа.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrRuleNestedTooDeeply_LongMessage" xml:space="preserve">
+    <value>Power Apps подржава угнежђивање израза само до 50 нивоа. Израз који се налази овако дубоко тешко је разумети и одржавати.</value>
+  </data>
+  <data name="ErrorResource_ErrRuleNestedTooDeeply_HowToFix_1" xml:space="preserve">
+    <value>Поново напишите формулу са мање нивоа угнежђивања.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrOperatorExpected_ShortMessage" xml:space="preserve">
+    <value>Очекује се оператор. Очекујемо оператор као што је +, * или &amp; у овом делу формуле.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrOperatorExpected_LongMessage" xml:space="preserve">
+    <value>Оператори спајају два операнда. Ова грешка се јавља ако саставите две функције (операнда), а између њих не додате оператор, на пример, Len("mojtekst")Len("mojtekst").</value>
+  </data>
+  <data name="ErrorResource_ErrOperatorExpected_HowToFix_1" xml:space="preserve">
+    <value>Уредите формулу тако да садржи оператор између операнада.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrOperatorExpected_Link_1" xml:space="preserve">
+    <value>Модул: Користите основне формуле</value>
+    
+  </data>
+  <data name="ErrorResource_ErrNumberExpected_ShortMessage" xml:space="preserve">
+    <value>Очекује се број. Очекујемо број у овом делу формуле.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrNumberExpected_LongMessage" xml:space="preserve">
+    <value>Ова грешка се јавља ако користите функцију која захтева број, а ви, на пример, наведете слику.</value>
+  </data>
+  <data name="ErrorResource_ErrNumberExpected_HowToFix_1" xml:space="preserve">
+    <value>Уредите формулу тако да даје број као резултат у овом делу формуле.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrNumberExpected_Link_1" xml:space="preserve">
+    <value>Чланак: Референце формула за Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBooleanExpected_ShortMessage" xml:space="preserve">
+    <value>Очекује се Булова вредност. Очекујемо Булову вредност (тачно/нетачно) у овом делу формуле.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBooleanExpected_LongMessage" xml:space="preserve">
+    <value>Булова вредност је позната и као вредност „тачно/нетачно“ у апликацијама као што је Microsoft Excel. Ова грешка се јавља ако користите функцију која тражи Булову вредност, а ви, на пример, наведете датум.</value>
+  </data>
+  <data name="ErrorResource_ErrBooleanExpected_HowToFix_1" xml:space="preserve">
+    <value>Уредите формулу тако да даје Булову вредност као резултат у овом делу формуле.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBooleanExpected_Link_1" xml:space="preserve">
+    <value>Чланак: Референце формула за Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrColonExpected_ShortMessage" xml:space="preserve">
+    <value>Очекује се двотачка. Очекујемо двотачку (:) у овом делу формуле.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrColonExpected_LongMessage" xml:space="preserve">
+    <value>Двотачка раздваја име поља, које се понекад назива име колоне, од вредности поља у запису (на пример, {Month:"1"}, {Month:"2"}…). Двотачка такође раздваја сате од минута и секунди (на пример, „3:04“).</value>
+  </data>
+  <data name="ErrorResource_ErrColonExpected_HowToFix_1" xml:space="preserve">
+    <value>Уредите формулу тако да садржи двотачку.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrColonExpected_Link_1" xml:space="preserve">
+    <value>Чланак: Приказујте текст, датуме и време у услузи Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorPropertyExpected_ShortMessage" xml:space="preserve">
+    <value>Функција понашања у својству које се не односи на понашање. Не можете да користите ово својство да бисте мењали вредности другде у апликацији.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorPropertyExpected_LongMessage" xml:space="preserve">
+    <value>Функције понашања мењају стање апликације тиме што мењају вредности другде у апликацији. „Navigate“, „Patch“, „UpdateContext“ и „Collect“ представљају уобичајене функције понашања. „OnSelect“, „OnVisible“ и друга „On…“ својства представљају уобичајена својства заснована на понашању.</value>
+  </data>
+  <data name="ErrorResource_ErrBehaviorPropertyExpected_HowToFix_1" xml:space="preserve">
+    <value>Преместите функцију понашања у својство засновано на понашању.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorPropertyExpected_Link_1" xml:space="preserve">
+    <value>Чланак: Објашњење формула понашања за апликације са подлогом у услузи Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrTestPropertyExpected_ShortMessage" xml:space="preserve">
+    <value>Функција за тестирање у својству које није за тестирање. Не можете да користите ово својство за позивање функција које су само за тестирање.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrTestPropertyExpected_LongMessage" xml:space="preserve">
+    <value>Функције за тестирање су оне које се могу користити за симулацију уноса корисника приликом тестирања апликација. „SetProperty“, „SelectRow“ и „Assert“ честе су функције за тестирање. Могу се користити само током тестирања.</value>
+  </data>
+  <data name="ErrorResource_ErrTestPropertyExpected_HowToFix_1" xml:space="preserve">
+    <value>Користите функцију у пробном случају, не у самој апликацији.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrCannotCoerce_SourceType_TargetType_ShortMessage" xml:space="preserve">
+    <value>Није могуће конвертовати овај тип података. Power Apps не може да конвертује {0} у {1}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrCannotCoerce_SourceType_TargetType_LongMessage" xml:space="preserve">
+    <value>Power Apps може да конвертује неке типове података из формуле у друге. На пример, може да конвертује „1“ (ниска) у 1 (број), али не може да конвертује све типове података у све друге типове података. На пример, не може да конвертује слику у број.</value>
+  </data>
+  <data name="ErrorResource_ErrCannotCoerce_SourceType_TargetType_HowToFix_1" xml:space="preserve">
+    <value>Уредите формулу тако да конвертујете дате податке у очекивани тип.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrStringExpected_ShortMessage" xml:space="preserve">
+    <value>Очекује се текст. Очекујемо текст у овом делу формуле.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrStringExpected_LongMessage" xml:space="preserve">
+    <value>Ова грешка се јавља ако користите функцију која захтева текстуални аргумент (или ниску), а ви, на пример, наведете датум.</value>
+  </data>
+  <data name="ErrorResource_ErrStringExpected_HowToFix_1" xml:space="preserve">
+    <value>Уредите формулу тако да даје текст као резултат у овом делу формуле.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrStringExpected_Link_1" xml:space="preserve">
+    <value>Чланак: Референце формула за Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrNumberOrStringExpected_ShortMessage" xml:space="preserve">
+    <value>Очекује се текст или број. Очекујемо текст или број у овом делу формуле.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrNumberOrStringExpected_LongMessage" xml:space="preserve">
+    <value>Ова грешка се јавља ако користите функцију која захтева текст или број, а ви, на пример, наведете Булову вредност (тачно/нетачно).</value>
+  </data>
+  <data name="ErrorResource_ErrNumberOrStringExpected_HowToFix_1" xml:space="preserve">
+    <value>Уредите формулу тако да даје текст или број као резултат у овом делу формуле.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrNumberOrStringExpected_Link_1" xml:space="preserve">
+    <value>Чланак: Референце формула за Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrClosingBracketExpected_ShortMessage" xml:space="preserve">
+    <value>Очекује се затворена заграда. Очекујемо затворену заграду (}) у овом делу формуле.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrClosingBracketExpected_LongMessage" xml:space="preserve">
+    <value>Затворена заграда указује на крај записа (на пример, {Month:"1"}, {Month:"2"}…).</value>
+  </data>
+  <data name="ErrorResource_ErrClosingBracketExpected_HowToFix_1" xml:space="preserve">
+    <value>Уредите формулу тако да садржи заграду.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrEmptyInvalidIdentifier_ShortMessage" xml:space="preserve">
+    <value>Идентификатор нема важећи текст.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrEmptyInvalidIdentifier_HowToFix_1" xml:space="preserve">
+    <value>Уверите се да идентификатор има текст. Ова грешка се јавља када се идентификатор састоји само од празних места или размака.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_ShortMessage" xml:space="preserve">
+    <value>Некомпатибилни типови за поређење. Није могуће поредити ове типове: {0}, {1}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_LongMessage" xml:space="preserve">
+    <value>Не можемо да проценимо формулу зато што вредности које се пореде у формули нису истог типа.</value>
+  </data>
+  <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_HowToFix_1" xml:space="preserve">
+    <value>Можда ћете морати да конвертујете вредност у исти тип, као што је конвертовање ниске датума (нпр. „31.12.2018.“) у вредност датума.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_HowToFix_2" xml:space="preserve">
+    <value>Ако упоређујете записе или табеле, типови поља или колона морају тачно да се подударају.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_Link_1" xml:space="preserve">
+    <value>Модул: Користите основне формуле</value>
+    
+  </data>
+  <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_Link_2" xml:space="preserve">
+    <value>Модул: Правите основне формуле помоћу табела и записа</value>
+    
+  </data>
+  <data name="ErrorResource_ErrServiceFunctionUnknownOptionalParam_Name_ShortMessage" xml:space="preserve">
+    <value>Нема параметра. Ова функција нема опционални параметар „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrServiceFunctionUnknownOptionalParam_Name_HowToFix_1" xml:space="preserve">
+    <value>Како да поправите: Уклоните или преименујте параметар у формули.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrServiceFunctionUnknownOptionalParam_Name_Link_1" xml:space="preserve">
+    <value>Чланак: Референце формула за Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_ShortMessage" xml:space="preserve">
+    <value>Некомпатибилан тип. Колона „{0}“ у извору података који ажурирате очекује тип „{1}“, а ви користите тип „{2}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_HowToFix_1" xml:space="preserve">
+    <value>Можда ћете морати да конвертујете вредност у исти тип, као што је конвертовање ниске датума (нпр. „31.12.2018.“) у вредност датума, или ниску у број.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_Link_1" xml:space="preserve">
+    <value>Модул: Користите основне формуле</value>
+    
+  </data>
+  <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_Link_2" xml:space="preserve">
+    <value>Модул: Правите основне формуле помоћу табела и записа</value>
+    
+  </data>
+  <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_ShortMessage" xml:space="preserve">
+    <value>Недостаје колона. У формули недостаје колона „{0}“ типа „{1}“.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_HowToFix_1" xml:space="preserve">
+    <value>Додајте колону у формулу.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_Link_1" xml:space="preserve">
+    <value>Чланак: Референце формула за Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrTableDoesNotAcceptThisType_ShortMessage" xml:space="preserve">
+    <value>Некомпатибилан тип. Ставка коју покушавате да сместите у табелу припада типу који није компатибилан са табелом.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrTableDoesNotAcceptThisType_HowToFix_1" xml:space="preserve">
+    <value>Уверите се да је тип ставке коју желите да проследите у табелу компатибилан са табелом. Можда ћете, на пример, морати да конвертујете тип ставке у запис.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrTableDoesNotAcceptThisType_Link_1" xml:space="preserve">
+    <value>Модул: Користите основне формуле</value>
+    
+  </data>
+  <data name="ErrorResource_ErrTableDoesNotAcceptThisType_Link_2" xml:space="preserve">
+    <value>Модул: Правите основне формуле помоћу табела и записа</value>
+    
+  </data>
+  <data name="ErrorResource_ErrTypeError_ShortMessage" xml:space="preserve">
+    <value>Некомпатибилан тип. Не можемо да проценимо формулу због грешке везане за тип.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrTypeError_LongMessage" xml:space="preserve">
+    <value>Подаци се можда не подударају са очекиваним типом. (текст, број, датум, табела, запис.)</value>
+  </data>
+  <data name="ErrorResource_ErrTypeError_HowToFix_1" xml:space="preserve">
+    <value>Проверите типове вредности у формули и уверите се да се подударају.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrTypeError_Link_1" xml:space="preserve">
+    <value>Модул: Користите основне формуле</value>
+    
+  </data>
+  <data name="ErrorResource_ErrTypeError_Link_2" xml:space="preserve">
+    <value>Модул: Правите основне формуле помоћу табела и записа</value>
+    
+  </data>
+  <data name="ErrorResource_ErrDateExpected_ShortMessage" xml:space="preserve">
+    <value>Очекује се датум. Очекујемо датум у овом делу формуле.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrDateExpected_LongMessage" xml:space="preserve">
+    <value>Ова грешка се јавља ако користите функцију која захтева датум, а ви, на пример, наведете текст.</value>
+  </data>
+  <data name="ErrorResource_ErrDateExpected_HowToFix_1" xml:space="preserve">
+    <value>Уредите формулу тако да даје датум као резултат у овом делу формуле.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrDateExpected_Link_1" xml:space="preserve">
+    <value>Чланак: Референце формула за Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_ShortMessage" xml:space="preserve">
+    <value>Упозорење о делегирању. Део „{0}“ ове формуле можда неће исправно функционисати на великим скуповима података.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_LongMessage" xml:space="preserve">
+    <value>Извор података можда неће моћи да обради формулу и можда ће вратити непотпун скуп података. Апликација можда неће вратити исправне резултате или се можда неће исправно понашати ако је скуп података непотпун.</value>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_HowToFix_1" xml:space="preserve">
+    <value>Ако ваш скуп података премашује ограничење од 500 записа, али их садржи мање од 2000, пробајте да промените ограничење.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_HowToFix_2" xml:space="preserve">
+    <value>Покушајте да поједноставите формулу.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_HowToFix_3" xml:space="preserve">
+    <value>Покушајте да преместите податке у други извор података.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_Link_1" xml:space="preserve">
+    <value>Чланак: Објашњење делегирања у апликацији са подлогом</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_Link_2" xml:space="preserve">
+    <value>Блог: Ограничења броја редова са подацима за делегирање</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_ShortMessage" xml:space="preserve">
+    <value>Упозорење о делегирању. Истакнути део ове формуле можда неће исправно функционисати са колоном „{0}“ на великим скуповима података.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_LongMessage" xml:space="preserve">
+    <value>Извор података можда неће моћи да обради формулу и можда ће вратити непотпун скуп података. Апликација можда неће вратити исправне резултате или се можда неће исправно понашати ако је скуп података непотпун.</value>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_HowToFix_1" xml:space="preserve">
+    <value>Ако ваш скуп података премашује ограничење од 500 записа, али их садржи мање од 2000, пробајте да промените ограничење.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_HowToFix_2" xml:space="preserve">
+    <value>Покушајте да поједноставите формулу.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_HowToFix_3" xml:space="preserve">
+    <value>Покушајте да преместите податке у други извор података.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_Link_1" xml:space="preserve">
+    <value>Чланак: Објашњење делегирања у апликацији са подлогом</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_Link_2" xml:space="preserve">
+    <value>Блог: Ограничења броја редова са подацима за делегирање</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_ShortMessage" xml:space="preserve">
+    <value>Упозорење о делегирању. Истакнути део ове формуле можда неће исправно функционисати на великим скуповима података.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_LongMessage" xml:space="preserve">
+    <value> Десна страна оператора „in“ треба да буде име колоне из одговарајућег извора података. Извор података можда неће моћи да обради формулу и можда ће вратити непотпун скуп података. Апликација можда неће вратити исправне резултате или се можда неће исправно понашати ако је скуп података непотпун.</value>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_1" xml:space="preserve">
+    <value>Промените ставку са десне стране оператора „in“ тако да буде колона из одговарајућег извора података.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_2" xml:space="preserve">
+    <value>Ако ваш скуп података премашује ограничење од 500 записа, али их садржи мање од 2000, пробајте да промените ограничење.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_3" xml:space="preserve">
+    <value>Покушајте да поједноставите формулу.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_4" xml:space="preserve">
+    <value>Покушајте да преместите податке у други извор података.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_Link_1" xml:space="preserve">
+    <value>Чланак: Објашњење делегирања у апликацији са подлогом</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_Link_2" xml:space="preserve">
+    <value>Блог: Ограничења броја редова са подацима за делегирање</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_ShortMessage" xml:space="preserve">
+    <value>Истакнути део ове формуле можда неће исправно функционисати на великим скуповима података. </value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_LongMessage" xml:space="preserve">
+    <value> Десна страна оператора „in“ није колона из одговарајућег извора података. Извор података можда неће моћи да обради формулу и можда ће вратити непотпун скуп података. Апликација можда неће вратити исправне резултате или се можда неће исправно понашати ако је скуп података непотпун.
+      </value>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_1" xml:space="preserve">
+    <value>Промените ставку са десне стране оператора „in“ тако да буде колона из одговарајућег извора података.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_2" xml:space="preserve">
+    <value>Ако скуп података премашује ограничење од 500 записа, али их садржи мање од 2000, покушајте да промените ограничење.
+      </value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_3" xml:space="preserve">
+    <value>Покушајте да поједноставите формулу.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_4" xml:space="preserve">
+    <value>Покушајте да преместите податке у други извор података.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_Link_1" xml:space="preserve">
+    <value>Чланак: Објашњење делегирања у апликацији са подлогом</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_Link_2" xml:space="preserve">
+    <value>Блог: Ограничења броја редова са подацима за делегирање</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_ShortMessage" xml:space="preserve">
+    <value>Упозорење о делегирању. Истакнути део ове формуле можда неће исправно функционисати на великим скуповима података. Овај конектор не подржава операцију „{0}“.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_LongMessage" xml:space="preserve">
+    <value>Извор података можда неће моћи да обради формулу и можда ће вратити непотпун скуп података. Апликација можда неће вратити исправне резултате или се можда неће исправно понашати ако је скуп података непотпун.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_HowToFix_1" xml:space="preserve">
+    <value>Ако ваш скуп података премашује ограничење од 500 записа, али их садржи мање од 2000, пробајте да промените ограничење.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_HowToFix_2" xml:space="preserve">
+    <value>Покушајте да поједноставите формулу.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_HowToFix_3" xml:space="preserve">
+    <value>Покушајте да преместите податке у други извор података.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_Link_1" xml:space="preserve">
+    <value>Чланак: Објашњење делегирања у апликацији са подлогом</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_Link_2" xml:space="preserve">
+    <value>Блог: Ограничења броја редова са подацима за делегирање</value>
+    
+  </data>
+  <data name="ErrorResource_ErrOnlyOneViewExpected_ShortMessage" xml:space="preserve">
+    <value>Очекује се само један приказ. Очекујемо само један приказ у овом делу формуле.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrOnlyOneViewExpected_HowToFix_1" xml:space="preserve">
+    <value>Уредите формулу тако да има само један приказ у овом делу формуле.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrViewFromCurrentTableExpected_ShortMessage" xml:space="preserve">
+    <value>Очекује се приказ из извора података {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrViewFromCurrentTableExpected_HowToFix_1" xml:space="preserve">
+    <value>Уредите формулу тако да има приказ из извора података {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidControlReference_ShortMessage" xml:space="preserve">
+    <value>Није могуће користити ову контролну референцу у овом својству</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidControlReference_HowToFix_1" xml:space="preserve">
+    <value>Ово својство подржава само референце на опште променљиве, колекције и нека својства контрола и екрана. Погледајте везу за листу подржаних својстава контрола.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidControlReference_Link_1" xml:space="preserve">
+    <value>Референца: ConfirmExit за апликације са подлогом</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidStringInterpolation_ShortMessage" xml:space="preserve">
+    <value>Изрази који се појављују унутар интерполиране ниске морају да имају текстуалну вредност или компатибилан тип вредности.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidStringInterpolation_HowToFix_1" xml:space="preserve">
+    <value>Проверите типове израза унутар интерполиране ниске.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrEmptyIsland_ShortMessage" xml:space="preserve">
+    <value>Празни изрази не смеју да се појављују унутар интерполиране ниске.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrEmptyIsland_HowToFix_1" xml:space="preserve">
+    <value>Проверите да ли има празних израза унутар интерполиране ниске.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrAsNotInContext_ShortMessage" xml:space="preserve">
+    <value>Реч „као“ није дозвољена у овом контексту</value>
+    
+  </data>
+  <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
+    <value>Именована формула мора да се заврши тачком и зарезом.</value>
+    
+  </data>
+</root>

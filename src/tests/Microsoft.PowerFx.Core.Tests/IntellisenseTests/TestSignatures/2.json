@@ -1,0 +1,60 @@
+{
+  "Signatures": [
+    {
+      "Label": "Filter(source, logical_test)",
+      "Documentation": "Returns the rows from the table for which all the specified conditions are true.",
+      "Parameters": [
+        {
+          "Label": "source",
+          "Documentation": "A table to filter."
+        },
+        {
+          "Label": "logical_test",
+          "Documentation": "A logical test to evaluate for each row. Only the rows that pass this test will be included in the result of Filter."
+        }
+      ]
+    },
+    {
+      "Label": "Filter(source, logical_test, logical_test)",
+      "Documentation": "Returns the rows from the table for which all the specified conditions are true.",
+      "Parameters": [
+        {
+          "Label": "source",
+          "Documentation": "A table to filter."
+        },
+        {
+          "Label": "logical_test",
+          "Documentation": "A logical test to evaluate for each row. Only the rows that pass this test will be included in the result of Filter."
+        },
+        {
+          "Label": "logical_test",
+          "Documentation": "A logical test to evaluate for each row. Only the rows that pass this test will be included in the result of Filter."
+        }
+      ]
+    },
+    {
+      "Label": "Filter(source, logical_test, logical_test, logical_test)",
+      "Documentation": "Returns the rows from the table for which all the specified conditions are true.",
+      "Parameters": [
+        {
+          "Label": "source",
+          "Documentation": "A table to filter."
+        },
+        {
+          "Label": "logical_test",
+          "Documentation": "A logical test to evaluate for each row. Only the rows that pass this test will be included in the result of Filter."
+        },
+        {
+          "Label": "logical_test",
+          "Documentation": "A logical test to evaluate for each row. Only the rows that pass this test will be included in the result of Filter."
+        },
+        {
+          "Label": "logical_test",
+          "Documentation": "A logical test to evaluate for each row. Only the rows that pass this test will be included in the result of Filter."
+        }
+      ]
+    }
+  ],
+  "ActiveSignature": 0,
+  "ActiveParameter": 1
+}

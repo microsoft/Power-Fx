@@ -1,0 +1,41 @@
+﻿>> Sort([-2, -1, 5, 1, 2], Value)
+[-2,-1,1,2,5]
+
+>> Sort([-2, -1, 5, 1, 2], Value, SortOrder.Descending)
+[5,2,1,-1,-2]
+
+>> Sort([-2, Blank(), 5, 1, 2], Value)
+[-2,1,2,5,Blank()]
+
+>> Sort([-2, Blank(), 5, 1, 2], Value, SortOrder.Descending)
+[5,2,1,-2,Blank()]
+
+>> Sort([-2, -1, 0, 1, 2], 1 / Value)
+#Error
+
+>> Sort(["a", "b", "D", "x", "J", "C"], Value)
+["a","b","C","D","J","x"]
+
+>> Sort(["a", "b", "D", "x", "J", "C"], Value, SortOrder.Descending)
+["x","J","D","C","b","a"]
+
+>> Sort(["a", "b", Blank(), "x", "J", "C"], Value)
+["a","b","C","J","x",Blank()]
+
+>> Sort(["a", "b", Blank(), "x", "J", "C"], Value, SortOrder.Descending)
+["x","J","C","b","a",Blank()]
+
+>> Sort([true,false,true,false,true], Value)
+[false,false,true,true,true]
+
+>> Sort([true,false,true,false,true], Value, SortOrder.Descending)
+[true,true,true,false,false]
+
+>> Sort([true,false,Blank(),false,true], Value)
+[false,false,true,true,Blank()]
+
+>> Sort([true,false,Blank(),false,true], Value, SortOrder.Descending)
+[true,true,false,false,Blank()]
+
+>> First(LastN(Sort([-2, -1, 0, 1, 2], 1 / Value), 3)).Value
+#Error
