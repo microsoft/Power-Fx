@@ -2,6 +2,7 @@
 // Licensed under the MIT License.
 
 using System;
+using System.Text;
 
 namespace Microsoft.PowerFx.Core.Utils
 {
@@ -105,7 +106,7 @@ namespace Microsoft.PowerFx.Core.Utils
             for (int i = 0; i < strName.Length; i++)
             {
                 char ch = strName[i];
-                if (!CharacterUtils.IsSpace(ch))
+                if (!char.IsWhiteSpace(ch))
                     return true;
             }
 
@@ -126,11 +127,34 @@ namespace Microsoft.PowerFx.Core.Utils
             }
 
             bool fAllSpaces = true;
+            bool fHasSpecialWhiteSpaceCharacters = false;
             fModified = false;
 
             for (int i = 0; i < strName.Length; i++)
             {
-                fAllSpaces = fAllSpaces && (strName[i] == ChSpace);
+                bool fIsSpace = strName[i] == ChSpace;
+                bool fIsWhiteSpace = char.IsWhiteSpace(strName[i]);
+                fAllSpaces = fAllSpaces && fIsWhiteSpace;
+                fHasSpecialWhiteSpaceCharacters = fHasSpecialWhiteSpaceCharacters || (fIsWhiteSpace && !fIsSpace);
+            }
+
+            if (fHasSpecialWhiteSpaceCharacters)
+            {
+                fModified = true;
+                StringBuilder builder = new StringBuilder(strName.Length);
+
+                for (int i=0; i < strName.Length; i++)
+                {
+                    if(char.IsWhiteSpace(strName[i]))
+                    {
+                        builder.Append(ChSpace);
+                    } else
+                    {
+                        builder.Append(strName[i]);
+                    }
+                }
+
+                strName = builder.ToString();
             }
 
             if (!fAllSpaces)
