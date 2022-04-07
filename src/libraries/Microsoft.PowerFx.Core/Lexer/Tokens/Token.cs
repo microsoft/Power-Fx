@@ -1,5 +1,5 @@
-// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
 
 using System;
 using Microsoft.PowerFx.Core.Localization;
@@ -16,15 +16,18 @@ namespace Microsoft.PowerFx.Core.Lexer.Tokens
         }
 
         public TokKind Kind { get; }
+
         public Span Span { get; }
-        public virtual bool IsDottedNamePunctuator { get { return false; } }
+
+        public virtual bool IsDottedNamePunctuator => false;
 
         public abstract Token Clone(Span ts);
 
         /// <summary>
         /// Asserts that the object is in fact of type T before casting.
         /// </summary>
-        public T As<T>() where T : Token
+        public T As<T>()
+            where T : Token
         {
             Contracts.Assert(this is T);
             return (T)this;
@@ -43,10 +46,15 @@ namespace Microsoft.PowerFx.Core.Lexer.Tokens
         public override bool Equals(object that)
         {
             if (that == null)
+            {
                 return false;
+            }
 
             if (!(that is Token))
+            {
                 return false;
+            }
+
             return Equals((Token)that);
         }
 

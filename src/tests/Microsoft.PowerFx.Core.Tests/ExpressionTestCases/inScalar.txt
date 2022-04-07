@@ -5,7 +5,6 @@
 
 
 >> ("a" & 1/0) in "abc"
-/*SqlRunner*/ Compile Error
 #Error 
 
 >> "a" in ("abc" & 1/0)
@@ -39,13 +38,10 @@ true
 // If Blank is on either side, operator is false. 
 // Use If() to coerce Blank to string. 
 >> Blank() in Blank()
-/*InterpreterRunner*/  #Error
-/*SqlRunner*/ Compile Error
 false
 
 // Case where Blank() doesn't act like ""
 >> If(false, "", Blank()) in "abc"
-/*SqlRunner*/ Compile Error
 false
 
 >> "" in If(false, Blank(), "")
@@ -59,15 +55,12 @@ false
 // Sql doesn't yet handle non string literals in LHS
 
 >> 5 in "5"
-/*SqlRunner*/ Compile Error
 true
 
 >> 6 in "5"
-/*SqlRunner*/ Compile Error
 false
 
 >> 1+2 in "3"
-/*SqlRunner*/ Compile Error
 true
 
 >> "1+2" in "3"

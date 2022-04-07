@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+// Licensed under the MIT license.
 
 using System.Collections.Generic;
 using Microsoft.PowerFx.Core.Lexer;
@@ -13,34 +13,30 @@ namespace Microsoft.PowerFx.Core.Localization
     /// </summary>
     internal sealed class LanguageSettings : ILanguageSettings
     {
-        private readonly Dictionary<string, string> _locToInvariantFunctionMap;
-        private readonly Dictionary<string, string> _locToInvariantPunctuatorMap;
-        private readonly Dictionary<string, string> _invariantToLocFunctionMap;
-        private readonly Dictionary<string, string> _invariantToLocPunctuatorMap;
-        private readonly string _cultureName;
-        private readonly string _uiCultureName;
-
         private LanguageSettings _cachedInvariantSettings;
         private int _cacheStamp;
 
-        public string CultureName => _cultureName;
-        public string UICultureName => _uiCultureName;
+        public string CultureName { get; }
+
+        public string UICultureName { get; }
 
         // Locale-specific to Invariant maps
-        public Dictionary<string, string> LocToInvariantFunctionMap => _locToInvariantFunctionMap;
-        public Dictionary<string, string> LocToInvariantPunctuatorMap => _locToInvariantPunctuatorMap;
+        public Dictionary<string, string> LocToInvariantFunctionMap { get; }
+
+        public Dictionary<string, string> LocToInvariantPunctuatorMap { get; }
 
         // Reverse maps
-        public Dictionary<string, string> InvariantToLocFunctionMap => _invariantToLocFunctionMap;
-        public Dictionary<string, string> InvariantToLocPunctuatorMap => _invariantToLocPunctuatorMap;
+        public Dictionary<string, string> InvariantToLocFunctionMap { get; }
+
+        public Dictionary<string, string> InvariantToLocPunctuatorMap { get; }
 
         public void AddFunction(string loc, string invariant)
         {
             Contracts.AssertNonEmpty(loc);
             Contracts.AssertNonEmpty(invariant);
 
-            _locToInvariantFunctionMap[loc] = invariant;
-            _invariantToLocFunctionMap[invariant] = loc;
+            LocToInvariantFunctionMap[loc] = invariant;
+            InvariantToLocFunctionMap[invariant] = loc;
 
             _cacheStamp++;
         }
@@ -50,8 +46,8 @@ namespace Microsoft.PowerFx.Core.Localization
             Contracts.AssertNonEmpty(loc);
             Contracts.AssertNonEmpty(invariant);
 
-            _locToInvariantPunctuatorMap[loc] = invariant;
-            _invariantToLocPunctuatorMap[invariant] = loc;
+            LocToInvariantPunctuatorMap[loc] = invariant;
+            InvariantToLocPunctuatorMap[invariant] = loc;
 
             _cacheStamp++;
         }
@@ -60,14 +56,20 @@ namespace Microsoft.PowerFx.Core.Localization
         {
             if (_cachedInvariantSettings == null || NeedsRefresh(_cachedInvariantSettings))
             {
-                _cachedInvariantSettings = new LanguageSettings("en-US", "en-US");
+                _cachedInvariantSettings = new LanguageSettings("en-US", "en-US")
+                {
+                    _cacheStamp = _cacheStamp
+                };
 
-                _cachedInvariantSettings._cacheStamp = _cacheStamp;
-
-                foreach (var kvp in _locToInvariantFunctionMap)
+                foreach (var kvp in LocToInvariantFunctionMap)
+                {
                     _cachedInvariantSettings.AddFunction(kvp.Value, kvp.Value);
-                foreach (var kvp in _locToInvariantPunctuatorMap)
+                }
+
+                foreach (var kvp in LocToInvariantPunctuatorMap)
+                {
                     _cachedInvariantSettings.AddPunctuator(kvp.Value, kvp.Value);
+                }
             }
 
             return _cachedInvariantSettings;
@@ -84,23 +86,20 @@ namespace Microsoft.PowerFx.Core.Localization
         {
             Contracts.AssertNonEmpty(cultureName);
 
-            _cultureName = cultureName;
-            _uiCultureName = uiCultureName;
+            CultureName = cultureName;
+            UICultureName = uiCultureName;
 
-            _locToInvariantFunctionMap = new Dictionary<string, string>();
-            _locToInvariantPunctuatorMap = new Dictionary<string, string>();
-            _invariantToLocFunctionMap = new Dictionary<string, string>();
-            _invariantToLocPunctuatorMap = new Dictionary<string, string>();
+            LocToInvariantFunctionMap = new Dictionary<string, string>();
+            LocToInvariantPunctuatorMap = new Dictionary<string, string>();
+            InvariantToLocFunctionMap = new Dictionary<string, string>();
+            InvariantToLocPunctuatorMap = new Dictionary<string, string>();
 
             _cacheStamp = 0;
             _cachedInvariantSettings = null;
 
             if (addPunctuators)
             {
-                string dec;
-                string comma;
-                string list;
-                TexlLexer.ChoosePunctuators(this, out dec, out comma, out list);
+                TexlLexer.ChoosePunctuators(this, out var dec, out var comma, out var list);
                 AddPunctuator(dec, TexlLexer.PunctuatorDecimalSeparatorInvariant);
                 AddPunctuator(comma, TexlLexer.PunctuatorCommaInvariant);
                 AddPunctuator(list, TexlLexer.PunctuatorSemicolonInvariant);

@@ -17,4 +17,4 @@
 
 // Table literal, full records.
 >> Table({b:1,a:2},{a:4,b:3})
-[{a:2,b:1},{a:4,b:3}]
+Table({a:2,b:1},{a:4,b:3})

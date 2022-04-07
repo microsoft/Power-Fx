@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+// Licensed under the MIT license.
 
 using System.Collections.Generic;
 using System.Linq;
@@ -16,30 +16,34 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal abstract class MathOneArgFunction : BuiltinFunction
     {
         public override bool SupportsParamCoercion => true;
+
         public override bool IsSelfContained => true;
 
         public MathOneArgFunction(string name, TexlStrings.StringGetter description, FunctionCategories fc)
             : base(name, description, fc, DType.Number, 0, 1, 1, DType.Number)
-        { }
+        {
+        }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
-            yield return new [] { TexlStrings.MathFuncArg1 };
+            yield return new[] { TexlStrings.MathFuncArg1 };
         }
     }
 
     internal abstract class MathOneArgTableFunction : BuiltinFunction
     {
         public override bool SupportsParamCoercion => true;
+
         public override bool IsSelfContained => true;
 
         public MathOneArgTableFunction(string name, TexlStrings.StringGetter description, FunctionCategories fc)
             : base(name, description, fc, DType.EmptyTable, 0, 1, 1, DType.EmptyTable)
-        { }
+        {
+        }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
-            yield return new [] { TexlStrings.MathTFuncArg1 };
+            yield return new[] { TexlStrings.MathTFuncArg1 };
         }
 
         public override string GetUniqueTexlRuntimeName(bool isPrefetching = false)
@@ -56,7 +60,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.Assert(args.Length == 1);
             Contracts.AssertValue(errors);
 
-            bool fValid = base.CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            var fValid = base.CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
             Contracts.Assert(returnType.IsTable);
 
             var arg = args[0];
@@ -74,7 +78,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
 
             if (!fValid)
+            {
                 nodeToCoercedTypeMap = null;
+            }
 
             return fValid;
         }

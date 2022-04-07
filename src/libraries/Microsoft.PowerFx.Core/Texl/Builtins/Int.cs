@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+// Licensed under the MIT license.
 
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
@@ -12,7 +12,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     {
         public IntFunction()
             : base("Int", TexlStrings.AboutInt, FunctionCategories.MathAndStat)
-        { }
+        {
+        }
     }
 
     // Int(E:*[n])
@@ -21,6 +22,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     {
         public IntTableFunction()
             : base("Int", TexlStrings.AboutIntT, FunctionCategories.Table)
-        { }
+        {
+        }
     }
 }

@@ -1,13 +1,14 @@
-// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
 
+using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Core.Binding.BindInfo
 {
     /// <summary>
-    /// Temporary name information used by the Binder<->Document lookup handshake/mechanism.
+    /// Temporary name information used by the Binder---Document lookup handshake/mechanism.
     /// </summary>
     internal struct NameLookupInfo
     {
@@ -15,14 +16,20 @@ namespace Microsoft.PowerFx.Core.Binding.BindInfo
         public readonly DPath Path;
         public readonly int UpCount;
         public readonly DType Type;
-        public readonly DName LogicalName;
+
+        /// <summary>
+        /// Some resolved objects may have a display name associated with them. If this is non-default,
+        /// it has the display name of the object in Data. 
+        /// </summary>
+        public readonly DName DisplayName;
+        public readonly bool IsAsync;
 
         // Optional data associated with a name. May be null.
         public readonly object Data;
 
-        public NameLookupInfo(BindKind kind, DType type, DPath path, int upCount, object data = null, DName logicalName = default(DName))
+        public NameLookupInfo(BindKind kind, DType type, DPath path, int upCount, object data = null, DName displayName = default, bool isAsync = false)
         {
-            Contracts.Assert(BindKind._Min <= kind && kind < BindKind._Lim);
+            Contracts.Assert(kind >= BindKind.Min && kind < BindKind.Lim);
             Contracts.Assert(upCount >= 0);
             Contracts.AssertValueOrNull(data);
 
@@ -31,7 +38,10 @@ namespace Microsoft.PowerFx.Core.Binding.BindInfo
             Path = path;
             UpCount = upCount;
             Data = data;
-            LogicalName = logicalName;
+            DisplayName = displayName;
+
+            // Any connectedDataSourceInfo or option set or view needs to be accessed asynchronously to allow data to be loaded.
+            IsAsync = Data is IExternalTabularDataSource || Kind == BindKind.OptionSet || Kind == BindKind.View || isAsync;
         }
     }
 }

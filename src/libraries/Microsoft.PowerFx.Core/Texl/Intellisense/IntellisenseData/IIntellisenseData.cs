@@ -1,5 +1,5 @@
-// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
 
 using Microsoft.PowerFx.Core.Functions;
 
@@ -13,34 +13,34 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense.IntellisenseData
     internal interface IIntellisenseData
     {
         /// <summary>
-        /// If an Intellisense suggestion is selected, the is the start index that should be replaced
+        /// If an Intellisense suggestion is selected, the is the start index that should be replaced.
         /// </summary>
         public int ReplacementStartIndex { get; }
 
         /// <summary>
         /// The number of indices from <see cref="ReplacementStartIndex"/> that the replacement should
-        /// assume if a suggestion is selected
+        /// assume if a suggestion is selected.
         /// </summary>
         public int ReplacementLength { get; }
 
         /// <summary>
         /// The function that the intellisense data may be associated with.  This value is null if intellisense was
-        /// not called from within a valid function signature
+        /// not called from within a valid function signature.
         /// </summary>
         public TexlFunction CurFunc { get; }
 
         /// <summary>
-        /// The number of argument present in the formula when intellisense is called
+        /// The number of argument present in the formula when intellisense is called.
         /// </summary>
         public int ArgCount { get; }
 
         /// <summary>
-        /// The current index of the cursor position relative to the <see cref="CurFunc"/>'s other arguments
+        /// The current index of the cursor position relative to the <see cref="CurFunc"/>'s other arguments.
         /// </summary>
         public int ArgIndex { get; }
 
         /// <summary>
-        /// The input script for which the Intellisense was called
+        /// The input script for which the Intellisense was called.
         /// </summary>
         public string Script { get; }
 
@@ -51,17 +51,17 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense.IntellisenseData
         /// remain unaltered.
         /// </summary>
         /// <param name="func">
-        /// Function that pertains to the input signature
+        /// Function that pertains to the input signature.
         /// </param>
         /// <param name="argIndex">
-        /// The index of the argument for which Intellisense is being calculated
+        /// The index of the argument for which Intellisense is being calculated.
         /// </param>
         /// <param name="paramName">
-        /// The name of the parameter in the signature
+        /// The name of the parameter in the signature.
         /// </param>
         /// <param name="highlightStart">
         /// The index in the string , which may be highlighted in the UI
-        /// and is thusly named
+        /// and is thusly named.
         /// </param>
         /// <param name="newHighlightStart">
         /// Should be set to the resultant new highlight start position if the method returns true.  If the method
@@ -80,21 +80,21 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense.IntellisenseData
         /// method returns false, this value will be ignored.
         /// </param>
         /// <returns>
-        /// True if the method was augmented, false otherwise
+        /// True if the method was augmented, false otherwise.
         /// </returns>
         public bool TryAugmentSignature(TexlFunction func, int argIndex, string paramName, int highlightStart, out int newHighlightStart, out int newHighlightEnd, out string newParamName, out string newInvariantParamName);
 
         /// <summary>
-        /// Should return a suffix for the provided <see cref="function"/> and <see cref="parameter"/>
+        /// Should return a suffix for the provided <see cref="function"/> and <see cref="parameter"/>.
         /// </summary>
         /// <param name="function">
-        /// The suffix candidate
+        /// The suffix candidate.
         /// </param>
         /// <param name="paramName">
-        /// The parameter of <see cref="function"/> that may be suffixed
+        /// The parameter of <see cref="function"/> that may be suffixed.
         /// </param>
         /// <returns>
-        /// Just the suffix for the parameter, and empty string if no suffix is intended
+        /// Just the suffix for the parameter, and empty string if no suffix is intended.
         /// </returns>
         public string GenerateParameterDescriptionSuffix(TexlFunction function, string paramName);
     }

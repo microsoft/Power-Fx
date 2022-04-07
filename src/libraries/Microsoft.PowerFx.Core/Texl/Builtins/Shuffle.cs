@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+// Licensed under the MIT license.
 
 using System.Collections.Generic;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
@@ -16,16 +16,19 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     {
         // Multiple invocations with the same args may result in different results.
         public override bool IsStateless => false;
+
         public override bool IsSelfContained => true;
+
         public override bool SupportsParamCoercion => false;
 
         public ShuffleFunction()
             : base("Shuffle", TexlStrings.AboutShuffle, FunctionCategories.Table, DType.EmptyTable, 0, 1, 1, DType.EmptyTable)
-        { }
+        {
+        }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
-            yield return new [] { TexlStrings.ShuffleArg1 };
+            yield return new[] { TexlStrings.ShuffleArg1 };
         }
 
         public override bool CheckInvocation(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
@@ -36,11 +39,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.Assert(args.Length == argTypes.Length);
             Contracts.AssertValue(errors);
 
-            bool isValid = base.CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            var isValid = base.CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
 
-            bool fError = false;
+            var fError = false;
             returnType = argTypes[0].ToTable(ref fError);
-            
+
             return isValid && !fError;
         }
     }

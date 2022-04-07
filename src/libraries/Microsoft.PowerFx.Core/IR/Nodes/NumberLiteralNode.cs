@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+// Licensed under the MIT license.
 
 namespace Microsoft.PowerFx.Core.IR.Nodes
 {
@@ -7,7 +7,8 @@ namespace Microsoft.PowerFx.Core.IR.Nodes
     {
         public readonly double LiteralValue;
 
-        public NumberLiteralNode(IRContext irContext, double value) : base(irContext)
+        public NumberLiteralNode(IRContext irContext, double value)
+            : base(irContext)
         {
             LiteralValue = value;
         }

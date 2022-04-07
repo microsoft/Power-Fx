@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+// Licensed under the MIT license.
 
 using System.Collections.Generic;
 using Microsoft.PowerFx.Core.Binding;
@@ -17,20 +17,26 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class CountRowsFunction : FunctionWithTableInput
     {
         public override bool RequiresErrorContext => true;
+
         public override bool IsSelfContained => true;
+
         public override bool SupportsParamCoercion => false;
 
-        public override DelegationCapability FunctionDelegationCapability { get { return DelegationCapability.Count; } }
+        public override DelegationCapability FunctionDelegationCapability => DelegationCapability.Count;
 
         public CountRowsFunction()
             : base("CountRows", TexlStrings.AboutCountRows, FunctionCategories.Table | FunctionCategories.MathAndStat, DType.Number, 0, 1, 1, DType.EmptyTable)
-        { }
+        {
+        }
 
-        public override bool SupportsPaging(CallNode callNode, TexlBinding binding) { return false; }
+        public override bool SupportsPaging(CallNode callNode, TexlBinding binding)
+        {
+            return false;
+        }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
-            yield return new [] { TexlStrings.CountArg1 };
+            yield return new[] { TexlStrings.CountArg1 };
         }
 
         public override bool IsServerDelegatable(CallNode callNode, TexlBinding binding)
@@ -39,10 +45,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertValue(binding);
 
             if (!CheckArgsCount(callNode, binding))
+            {
                 return false;
+            }
 
-            DelegationCapability preferredFunctionDelegationCapability;
-            return TryGetValidDataSourceForDelegation(callNode, binding, out var dataSource, out preferredFunctionDelegationCapability);
+            return TryGetValidDataSourceForDelegation(callNode, binding, out var dataSource, out var preferredFunctionDelegationCapability);
         }
 
         // See if CountDistinct delegation is available. If true, we can make use of it on primary key as a workaround for CountRows delegation
@@ -52,6 +59,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertValue(binding);
 
             preferredFunctionDelegationCapability = FunctionDelegationCapability;
+
             // We ensure Document is available because some tests run with a null Document.
             if ((binding.Document != null
                 && binding.Document.Properties.EnabledFeatures.IsEnhancedDelegationEnabled)
@@ -60,7 +68,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             {
                 // Check that target table is not an expanded entity (1-N/N-N relationships)
                 // TASK 9966488: Enable CountRows/CountIf delegation for table relationships
-                TexlNode[] args = callNode.Args.Children.VerifyValue();
+                var args = callNode.Args.Children.VerifyValue();
                 if (args.Length > 0)
                 {
                     if (binding.GetType(args[0]).HasExpandInfo)
@@ -69,13 +77,17 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                         return false;
                     }
                     else
+                    {
                         return true;
+                    }
                 }
             }
 
             TryGetValidDataSourceForDelegation(callNode, binding, DelegationCapability.CountDistinct, out dataSource);
             if (dataSource != null && dataSource.IsDelegatable)
+            {
                 binding.ErrorContainer.EnsureError(DocumentErrorSeverity.Warning, callNode, TexlStrings.OpNotSupportedByServiceSuggestionMessage_OpNotSupportedByService, Name);
+            }
 
             return false;
         }

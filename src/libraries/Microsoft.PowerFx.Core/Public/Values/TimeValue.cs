@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+// Licensed under the MIT license.
 
 using System;
 using System.Diagnostics.Contracts;
@@ -10,7 +10,8 @@ namespace Microsoft.PowerFx.Core.Public.Values
 {
     public class TimeValue : PrimitiveValue<TimeSpan>
     {
-        internal TimeValue(IRContext irContext, TimeSpan ts) : base(irContext, ts)
+        internal TimeValue(IRContext irContext, TimeSpan ts)
+            : base(irContext, ts)
         {
             Contract.Assert(IRContext.ResultType == FormulaType.Time);
         }

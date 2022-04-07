@@ -1,5 +1,5 @@
-// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
 
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +9,7 @@ using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Syntax.Nodes;
 using Microsoft.PowerFx.Core.Types;
+using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Core.Texl.Builtins
@@ -17,9 +18,13 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class ErrorFunction : BuiltinFunction
     {
         public override bool HasPreciseErrors => true;
+
         public override bool RequiresErrorContext => true;
+
         public override bool CanSuggestInputColumns => true;
+
         public override bool IsSelfContained => true;
+
         public override bool SupportsParamCoercion => true;
 
         public ErrorFunction()
@@ -30,6 +35,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
             yield return new[] { TexlStrings.ErrorArg1 };
+        }
+
+        public override IEnumerable<string> GetRequiredEnumNames()
+        {
+            return new List<string>() { EnumConstants.ErrorKindEnumString };
         }
 
         public override bool CheckInvocation(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
@@ -44,7 +54,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             var reifiedError = ErrorType.ReifiedError();
             var acceptedFields = reifiedError.GetNames(DPath.Root);
             var requiredKindField = acceptedFields.Where(tn => tn.Name == "Kind").First();
-            Contracts.Assert(requiredKindField.Type.IsEnum);
+            Contracts.Assert(requiredKindField.Type.IsEnum || requiredKindField.Type.Kind == DKind.Number);
             var optionalFields = acceptedFields.Where(tn => tn.Name != "Kind");
 
             returnType = DType.ObjNull;
@@ -79,7 +89,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
 
             var argumentKindType = names.First(tn => tn.Name == requiredKindField.Name).Type;
-            if (!argumentKindType.CoercesTo(requiredKindField.Type))
+            if (argumentKindType.IsEnum)
+            {
+                argumentKindType = argumentKindType.GetEnumSupertype();
+            }
+
+            if (argumentKindType.Kind != requiredKindField.Type.Kind)
             {
                 errors.EnsureError(
                     argument,
@@ -93,7 +108,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 return false;
             }
 
-            bool valid = true;
+            var valid = true;
 
             var record = argument.AsRecord();
             foreach (var name in names)
@@ -102,9 +117,14 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 {
                     // If they have a record literal, we can position the errors for rejected fields.
                     if (record != null)
+                    {
                         errors.EnsureError(record.Children.Where((_, i) => record.Ids[i].Name == name.Name).FirstOrDefault() ?? record, TexlStrings.ErrErrorIrrelevantField);
+                    }
                     else
+                    {
                         errors.EnsureError(argument, TexlStrings.ErrErrorIrrelevantField);
+                    }
+
                     valid = false;
                 }
             }
@@ -116,6 +136,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 // A record with the proper types for the fields that are specified.
                 var expectedOptionalFieldsRecord = DType.CreateRecord(
                     acceptedFields.Where(field =>
+
                         // Kind has already been handled before
                         field.Name != "Kind" && names.Any(name => name.Name == field.Name)));
 
@@ -126,6 +147,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 // A table with the proper types for the fields that are specified.
                 var expectedOptionalFieldsTable = DType.CreateTable(
                     acceptedFields.Where(field =>
+
                         // Kind has already been handled before
                         field.Name != "Kind" && names.Any(name => name.Name == field.Name)));
                 typeValid = CheckType(argument, argumentType, expectedOptionalFieldsTable, errors, true, out matchedWithCoercion);

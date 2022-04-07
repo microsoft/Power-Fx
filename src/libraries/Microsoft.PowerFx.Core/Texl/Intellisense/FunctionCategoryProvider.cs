@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+// Licensed under the MIT license.
 
 using System;
 using System.Collections.Generic;
@@ -20,7 +20,9 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
             foreach (var category in Enum.GetValues(typeof(FunctionCategories)))
             {
                 if (category.Equals(FunctionCategories.None))
+                {
                     continue;
+                }
 
                 var str = StringResources.Get("FunctionCategoryName_" + category.ToString());
                 yield return new KeyValuePair<string, string>(category.ToString(), str);

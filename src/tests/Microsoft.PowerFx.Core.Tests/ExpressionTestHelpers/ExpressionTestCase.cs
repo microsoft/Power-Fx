@@ -1,6 +1,7 @@
-// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
 
+using System;
 using System.Collections.Generic;
 using System.IO;
 using Newtonsoft.Json;
@@ -8,10 +9,13 @@ using Xunit.Abstractions;
 
 namespace Microsoft.PowerFx.Core.Tests
 {
-    // Describe a test case in the file. 
-    public class ExpressionTestCase : IXunitSerializable
+    // Wrap a test case for calling from xunit. 
+    public class ExpressionTestCase : TestCase, IXunitSerializable
     {
-        private string _engineName = null;
+        private readonly string _engineName = null;
+
+        // Normally null. Set if the test discovery infrastructure needs to send a notice to the test runner. 
+        public string FailMessage;
 
         public ExpressionTestCase()
         {
@@ -23,54 +27,54 @@ namespace Microsoft.PowerFx.Core.Tests
             _engineName = engineName;
         }
 
-        // Formula string to run 
-        public string Input;
+        public ExpressionTestCase(string engineName, TestCase test)
+            : this(engineName)
+        {
+            Input = test.Input;
+            Expected = test.Expected;
+            SourceFile = test.SourceFile;
+            SourceLine = test.SourceLine;
+            SetupHandlerName = test.SetupHandlerName;
+        }
 
-        // Expected Result, indexed by runner name
-        private Dictionary<string, string> _expected = new Dictionary<string, string>();
-
-        // Location from source file. 
-        public string SourceFile;
-        public int SourceLine;
+        public static ExpressionTestCase Fail(string message)
+        {
+            return new ExpressionTestCase
+            {
+                FailMessage = message
+            };
+        }
 
         public override string ToString()
         {
-            return $"{Path.GetFileName(this.SourceFile)} : {this.SourceLine.ToString("000")} - {Input} = {GetExpected(_engineName)}";
-        }
-
-        public void SetExpected(string expected, string engineName = null)
-        {
-            if (engineName == null)
-            {
-                engineName = "-";
-            }
-            _expected[engineName] = expected;
-        }
-
-        public string GetExpected(string engineName)
-        {
-            if (!_expected.TryGetValue(engineName, out var expected))
-            {
-                return _expected["-"];
-            }
-            return expected;
+            return $"{Path.GetFileName(SourceFile)} : {SourceLine.ToString("000")} - {Input} = {Expected}";
         }
 
         public void Deserialize(IXunitSerializationInfo info)
         {
-            _expected = JsonConvert.DeserializeObject<Dictionary<string, string>>(info.GetValue<string>("expected"));
-            this.Input = info.GetValue<string>("input");
-            this.SourceFile = info.GetValue<string>("sourceFile");
-            this.SourceLine = info.GetValue<int>("sourceLine");
+            try
+            {
+                Expected = info.GetValue<string>("expected");
+                Input = info.GetValue<string>("input");
+                SourceFile = info.GetValue<string>("sourceFile");
+                SourceLine = info.GetValue<int>("sourceLine");
+                SetupHandlerName = info.GetValue<string>("setupHandlerName");
+                FailMessage = info.GetValue<string>("failMessage");
+            }
+            catch (Exception e)
+            {
+                FailMessage = $"Failed to deserialized test {e.Message}";
+            }
         }
 
         public void Serialize(IXunitSerializationInfo info)
         {
-            string expectedJSON = JsonConvert.SerializeObject(_expected);
-            info.AddValue("expected", expectedJSON, typeof(string));
-            info.AddValue("input", this.Input, typeof(string));
-            info.AddValue("sourceFile", this.SourceFile, typeof(string));
-            info.AddValue("sourceLine", this.SourceLine, typeof(int));
+            info.AddValue("expected", Expected, typeof(string));
+            info.AddValue("input", Input, typeof(string));
+            info.AddValue("sourceFile", SourceFile, typeof(string));
+            info.AddValue("sourceLine", SourceLine, typeof(int));
+            info.AddValue("setupHandlerName", SetupHandlerName, typeof(string));
+            info.AddValue("failMessage", FailMessage, typeof(string));
         }
     }
 }

@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+// Licensed under the MIT license.
 
 using System.Collections.Generic;
 using Microsoft.PowerFx.Core.Types;
@@ -20,10 +20,10 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationMetadata
             _columnRestrictions = columnRestrictions;
         }
 
-        protected override Dictionary<DPath, DelegationCapability> ColumnRestrictions { get { return _columnRestrictions; } }
+        protected override Dictionary<DPath, DelegationCapability> ColumnRestrictions => _columnRestrictions;
 
-        public override DelegationCapability DefaultColumnCapabilities { get { return DelegationCapability.Group; } }
+        public override DelegationCapability DefaultColumnCapabilities => DelegationCapability.Group;
 
-        public override DelegationCapability TableCapabilities { get { return DefaultColumnCapabilities; } }
+        public override DelegationCapability TableCapabilities => DefaultColumnCapabilities;
     }
 }

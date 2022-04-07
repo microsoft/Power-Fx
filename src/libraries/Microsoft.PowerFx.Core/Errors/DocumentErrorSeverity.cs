@@ -1,5 +1,5 @@
-// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
 
 using Microsoft.AppMagic.Transport;
 
@@ -8,7 +8,9 @@ namespace Microsoft.PowerFx.Core.Errors
     [TransportType(TransportKind.Enum)]
     public enum DocumentErrorSeverity
     {
+#pragma warning disable SA1300 // Element should begin with upper-case letter
         _Min = Verbose,
+#pragma warning restore SA1300 // Element should begin with upper-case letter
 
         /// <summary>
         /// A suggestion about possible high-level improvements or refactoring that may help the user
@@ -53,6 +55,8 @@ namespace Microsoft.PowerFx.Core.Errors
         /// </summary>
         Critical,
 
+#pragma warning disable SA1300 // Element should begin with upper-case letter
         _Lim = Critical,
+#pragma warning restore SA1300 // Element should begin with upper-case letter
     }
 }

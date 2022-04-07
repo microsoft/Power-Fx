@@ -1,5 +1,5 @@
-// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
 
 namespace Microsoft.PowerFx.Core.Utils
 {
@@ -17,7 +17,7 @@ namespace Microsoft.PowerFx.Core.Utils
 
         public static uint CombineHash(uint u1, uint u2, uint u3, uint u4, uint u5)
         {
-            return ((((u1 << 7) | (u1 >> 25)) ^ u2) ^ (((u3 << 15) | (u3 >> 17)) ^ u4) ^ (u5 << 5));
+            return (((u1 << 7) | (u1 >> 25)) ^ u2) ^ (((u3 << 15) | (u3 >> 17)) ^ u4) ^ (u5 << 5);
         }
 
         public static int CombineHash(int n1, int n2, int n3, int n4)
@@ -34,8 +34,7 @@ namespace Microsoft.PowerFx.Core.Utils
         {
             return CombineHash(
                 CombineHash(u1, u2, u3, u4, u5),
-                CombineHash(u6, u7)
-            );
+                CombineHash(u6, u7));
         }
 
         public static int CombineHash(int n1, int n2, int n3, int n4, int n5, int n6, int n7)
@@ -52,22 +51,25 @@ namespace Microsoft.PowerFx.Core.Utils
             Contracts.AssertValue(str);
 
             uint hash1 = 5381;
-            uint hash2 = hash1;
+            var hash2 = hash1;
 
-            for (int ich = str.Length; ich > 0; )
+            for (var ich = str.Length; ich > 0;)
             {
                 hash1 = ((hash1 << 5) + hash1) ^ str[--ich];
                 if (ich <= 0)
+                {
                     break;
+                }
+
                 hash2 = ((hash2 << 5) + hash2) ^ str[--ich];
             }
 
-            return HashUint(hash1 + hash2 * 1566083941);
+            return HashUint(hash1 + (hash2 * 1566083941));
         }
 
         public static uint HashUint(uint u)
         {
-            ulong uu = u * 0x7ff19519UL; // this number is prime.
+            var uu = u * 0x7ff19519UL; // this number is prime.
             return GetLo(uu) + GetHi(uu);
         }
 

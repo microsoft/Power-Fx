@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+// Licensed under the MIT license.
 
 using Microsoft.PowerFx.Core.Types;
 
@@ -7,7 +7,8 @@ namespace Microsoft.PowerFx.Core.Public.Types
 {
     public class DateTimeType : FormulaType
     {
-        internal DateTimeType() : base(DType.DateTime)
+        internal DateTimeType()
+            : base(DType.DateTime)
         {
         }
 
@@ -16,5 +17,4 @@ namespace Microsoft.PowerFx.Core.Public.Types
             vistor.Visit(this);
         }
     }
-
 }
