@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+// Licensed under the MIT license.
 
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Errors;
@@ -16,16 +16,20 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal abstract class StringTwoArgFunction : BuiltinFunction
     {
         public override bool UseParentScopeForArgumentSuggestions => true;
+
         public override bool IsSelfContained => true;
+
         public override bool SupportsParamCoercion => true;
 
         public StringTwoArgFunction(string name, TexlStrings.StringGetter description)
             : this(name, description, DType.Boolean)
-        { }
+        {
+        }
 
         public StringTwoArgFunction(string name, TexlStrings.StringGetter description, DType returnType)
             : base(name, description, FunctionCategories.Text, returnType, 0, 2, 2, DType.String, DType.String)
-        { }
+        {
+        }
 
         protected bool IsRowScopedServerDelegatableHelper(CallNode callNode, TexlBinding binding, OperationCapabilityMetadata metadata)
         {
@@ -36,9 +40,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             if (binding.ErrorContainer.HasErrors(callNode) ||
                 !CheckArgsCount(callNode, binding) ||
                 !binding.IsRowScope(callNode))
+            {
                 return false;
+            }
 
-            TexlNode[] args = callNode.Args.Children.VerifyValue();
+            var args = callNode.Args.Children.VerifyValue();
             Contracts.Assert(args.Length == MinArity);
 
             if (binding.IsRowScope(args[1]))
@@ -49,31 +55,40 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             foreach (var arg in args)
             {
-                NodeKind argKind = arg.VerifyValue().Kind;
+                var argKind = arg.VerifyValue().Kind;
                 switch (argKind)
                 {
-                case NodeKind.FirstName:
-                    var firstNameStrategy = GetFirstNameNodeDelegationStrategy();
-                    if (!firstNameStrategy.IsValidFirstNameNode(arg.AsFirstName(), binding, null))
-                        return false;
-                    break;
-                case NodeKind.Call:
-                    if (!metadata.IsDelegationSupportedByTable(FunctionDelegationCapability))
-                        return false;
+                    case NodeKind.FirstName:
+                        var firstNameStrategy = GetFirstNameNodeDelegationStrategy();
+                        if (!firstNameStrategy.IsValidFirstNameNode(arg.AsFirstName(), binding, null))
+                        {
+                            return false;
+                        }
 
-                    var cNodeStrategy = GetCallNodeDelegationStrategy();
-                    if (!cNodeStrategy.IsValidCallNode(arg.AsCall(), binding, metadata))
+                        break;
+                    case NodeKind.Call:
+                        if (!metadata.IsDelegationSupportedByTable(FunctionDelegationCapability))
+                        {
+                            return false;
+                        }
+
+                        var cNodeStrategy = GetCallNodeDelegationStrategy();
+                        if (!cNodeStrategy.IsValidCallNode(arg.AsCall(), binding, metadata))
+                        {
+                            return false;
+                        }
+
+                        break;
+                    case NodeKind.StrLit:
+                        break;
+                    case NodeKind.DottedName:
+                        {
+                            var dottedStrategy = GetDottedNameNodeDelegationStrategy();
+                            return dottedStrategy.IsValidDottedNameNode(arg.AsDottedName(), binding, metadata, null);
+                        }
+
+                    default:
                         return false;
-                    break;
-                case NodeKind.StrLit:
-                    break;
-                case NodeKind.DottedName:
-                    {
-                        var dottedStrategy = GetDottedNameNodeDelegationStrategy();
-                        return dottedStrategy.IsValidDottedNameNode(arg.AsDottedName(), binding, metadata, null);
-                    }
-                default:
-                    return false;
                 }
             }
 

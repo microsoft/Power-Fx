@@ -1,0 +1,18 @@
+﻿#OVERRIDE: findt.txt
+
+>> Find("c", ["abc", Error({Kind: "Validation"}), "cde"])
+#Skip
+
+>> Find(["a", Error({Kind: "Validation"}), "b"], "abc")
+#Skip
+
+>> Find(Table({ find: "a" }, { find: Error({Kind: "Validation"}) }, { find: "b" }, Error({Kind: "Validation"}), { find: "c" }), Table({ within: "abc" }, Error({Kind: "Validation"}), { within: Error({Kind: "Validation"}) }, Error({Kind: "Validation"}), { within: "abc" }))
+#Skip
+
+>> Find(Table({ find: "a" }, { find: "b" }, { find: "c" }), Error({Kind: "Validation"}))
+#Skip
+
+>> Find(Error({Kind: "Validation"}), Table({ within: "First" }, { within: "Second" }))
+#Skip
+
+

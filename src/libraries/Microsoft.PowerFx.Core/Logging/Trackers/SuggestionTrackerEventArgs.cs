@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+// Licensed under the MIT license.
 
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Syntax.Nodes;
@@ -10,14 +10,18 @@ namespace Microsoft.PowerFx.Core.Logging.Trackers
     internal interface IAddSuggestionMessageEventArgs
     {
         string Message { get; }
+
         TexlNode Node { get; }
+
         TexlBinding Binding { get; }
     }
 
     internal class AddSuggestionMessageEventArgs : IAddSuggestionMessageEventArgs
     {
         public string Message { get; }
+
         public TexlNode Node { get; }
+
         public TexlBinding Binding { get; }
 
         public AddSuggestionMessageEventArgs(string message, TexlNode node, TexlBinding binding)

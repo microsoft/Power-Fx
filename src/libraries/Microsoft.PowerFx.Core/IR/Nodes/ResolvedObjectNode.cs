@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+// Licensed under the MIT license.
 
 using Microsoft.PowerFx.Core.Utils;
 
@@ -9,7 +9,8 @@ namespace Microsoft.PowerFx.Core.IR.Nodes
     {
         public readonly object Value;
 
-        public ResolvedObjectNode(IRContext irContext, object value) : base(irContext)
+        public ResolvedObjectNode(IRContext irContext, object value)
+            : base(irContext)
         {
             Contracts.AssertValue(value);
 

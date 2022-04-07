@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+// Licensed under the MIT license.
 
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Binding.BindInfo;
@@ -14,16 +14,14 @@ namespace Microsoft.PowerFx.Core.Logging.Trackers
 {
     internal sealed class DelegationTelemetryInfo
     {
-        private readonly string _info;
-
         private DelegationTelemetryInfo(string info)
         {
             Contracts.AssertValue(info);
 
-            _info = info;
+            Info = info;
         }
 
-        public string Info => _info;
+        public string Info { get; }
 
         public static DelegationTelemetryInfo CreateEmptyDelegationTelemetryInfo()
         {
@@ -52,7 +50,9 @@ namespace Microsoft.PowerFx.Core.Logging.Trackers
             Contracts.AssertValueOrNull(func);
 
             if (func == null)
+            {
                 return CreateEmptyDelegationTelemetryInfo();
+            }
 
             return new DelegationTelemetryInfo(func.Name);
         }

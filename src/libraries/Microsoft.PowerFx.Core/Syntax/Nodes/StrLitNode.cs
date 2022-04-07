@@ -1,5 +1,5 @@
-// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
 
 using Microsoft.PowerFx.Core.Lexer.Tokens;
 using Microsoft.PowerFx.Core.Localization;
@@ -9,36 +9,47 @@ using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Core.Syntax.Nodes
 {
-    internal sealed class StrLitNode : TexlNode
+    /// <summary>
+    /// String literal parse node. Example:
+    /// 
+    /// <code>"Hello world"</code>
+    /// </summary>
+    public sealed class StrLitNode : TexlNode
     {
-        public readonly string Value;
+        /// <summary>
+        /// The string value of the literal.
+        /// </summary>
+        public string Value { get; }
 
-        public StrLitNode(ref int idNext, StrLitToken tok)
+        internal StrLitNode(ref int idNext, StrLitToken tok)
             : base(ref idNext, tok, new SourceList(tok))
         {
             Value = tok.Value;
             Contracts.AssertValue(Value);
         }
 
-        public override TexlNode Clone(ref int idNext, Span ts)
+        internal override TexlNode Clone(ref int idNext, Span ts)
         {
             return new StrLitNode(ref idNext, Token.Clone(ts).As<StrLitToken>());
         }
 
+        /// <inheritdoc />
         public override void Accept(TexlVisitor visitor)
         {
             Contracts.AssertValue(visitor);
             visitor.Visit(this);
         }
 
-        public override Result Accept<Result, Context>(TexlFunctionalVisitor<Result, Context> visitor, Context context)
+        /// <inheritdoc />
+        public override TResult Accept<TResult, TContext>(TexlFunctionalVisitor<TResult, TContext> visitor, TContext context)
         {
             return visitor.Visit(this, context);
         }
 
-        public override NodeKind Kind { get { return NodeKind.StrLit; } }
+        /// <inheritdoc />
+        public override NodeKind Kind => NodeKind.StrLit;
 
-        public override StrLitNode AsStrLit()
+        internal override StrLitNode AsStrLit()
         {
             return this;
         }

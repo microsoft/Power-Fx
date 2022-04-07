@@ -1,5 +1,5 @@
-// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
 
 namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
 {
@@ -11,5 +11,6 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
         public const string DidOpen = "textDocument/didOpen";
         public const string PublishDiagnostics = "textDocument/publishDiagnostics";
         public const string SignatureHelp = "textDocument/signatureHelp";
+        public const string CodeAction = "textDocument/codeAction";
     }
 }

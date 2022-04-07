@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+// Licensed under the MIT license.
 
 using System;
 
@@ -11,8 +11,15 @@ namespace Microsoft.AppMagic.Transport
     [AttributeUsage(AttributeTargets.Class)]
     public class TransportConverterAttribute : Attribute
     {
-        public TransportConverterAttribute(Type originalType, Type surrogateType, string alternateTypescriptType = null, string alternateTypescriptConverter = null,
-                                           string cSharpPredicateForOmittingFromDto = null, string csharpQuotedJsonStringExpression = null, string typescriptPropertyStateSyncExpression = null, string typescriptValueExpressionForUndefinedValueAppearingInDto = null)
+        public TransportConverterAttribute(
+            Type originalType,
+            Type surrogateType,
+            string alternateTypescriptType = null,
+            string alternateTypescriptConverter = null,
+            string cSharpPredicateForOmittingFromDto = null,
+            string csharpQuotedJsonStringExpression = null,
+            string typescriptPropertyStateSyncExpression = null,
+            string typescriptValueExpressionForUndefinedValueAppearingInDto = null)
         {
             OriginalType = originalType;
             SurrogateType = surrogateType;
@@ -61,35 +68,5 @@ namespace Microsoft.AppMagic.Transport
         /// instead of null.
         /// </summary>
         public DtoUndefinedValueMapping MethodResultDefaultValue { get; }
-
-    }
-
-    public sealed class PropertyStateSyncDefaultValueExpression
-    {
-        /// <summary>
-        /// If set, indicates that property state synchronization should assume a particular default wire value in CSharp for this type,
-        /// instead of null.
-        /// </summary>
-        public string CSharpQuotedJsonStringExpression { get; set; }
-
-        /// <summary>
-        /// If set, indicates that property state synchronization should assume a particular default wire value in Typescript for this type,
-        /// instead of null.
-        /// </summary>
-        public string TypescriptPropertyStateSyncExpression { get; set; }
-    }
-
-    public sealed class DtoUndefinedValueMapping
-    {
-        /// <summary>
-        /// If set, indicates the expression to get the default type value in the C#.
-        /// </summary>
-        public string CSharpPredicateForOmittingFromDto { get; set; }
-
-        /// <summary>
-        /// If set, indicates that method result should assume a particular default wire value in Typescript for this type,
-        /// instead of null.
-        /// </summary>
-        public string TypescriptValueExpressionForUndefinedValueAppearingInDto { get; set; }
     }
 }

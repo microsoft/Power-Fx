@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+// Licensed under the MIT license.
 
 using System.Collections.Generic;
 using System.Linq;
@@ -18,40 +18,65 @@ namespace Microsoft.PowerFx.Core.Lexer
 
         // references from TS code come via AuthoringCore.d.ts and that needs to be kept current with this file
 
-        public static string CurrentLocaleDecimalSeparator { get { return TexlLexer.LocalizedInstance.LocalizedPunctuatorDecimalSeparator; } }
-        public static string CurrentLocaleListSeparator { get { return TexlLexer.LocalizedInstance.LocalizedPunctuatorListSeparator; } }
-        public static string CurrentLocaleChainingOperator { get { return TexlLexer.LocalizedInstance.LocalizedPunctuatorChainingSeparator; } }
-        public static string CurrentLocalePositiveSymbol { get { return TexlLexer.PunctuatorAdd; } }
-        public static string CurrentLocaleNegativeSymbol { get { return TexlLexer.PunctuatorSub; } }
-        public static string CurrentLocaleMultiplySymbol { get { return TexlLexer.PunctuatorMul; } }
-        public static string CurrentLocaleDivideSymbol { get { return TexlLexer.PunctuatorDiv; } }
-        public static string CurrentLocaleEqual { get { return TexlLexer.PunctuatorEqual; } }
-        public static string CurrentLocaleParenOpen { get { return TexlLexer.PunctuatorParenOpen; } }
-        public static string CurrentLocaleParenClose { get { return TexlLexer.PunctuatorParenClose; } }
-        public static string CurrentLocaleBracketOpen { get { return TexlLexer.PunctuatorBracketOpen; } }
-        public static string CurrentLocaleBracketClose { get { return TexlLexer.PunctuatorBracketClose; } }
-        public static string CurrentLocaleCurlyOpen { get { return TexlLexer.PunctuatorCurlyOpen; } }
-        public static string CurrentLocaleCurlyClose { get { return TexlLexer.PunctuatorCurlyClose; } }
-        public static string CurrentLocalePercent { get { return TexlLexer.PunctuatorPercent; } }
-        public static string CurrentLocaleBang { get { return TexlLexer.PunctuatorBang; } }
-        public static string CurrentLocaleDot { get { return TexlLexer.PunctuatorDot; } }
-        public static string CurrentLocaleCaret { get { return TexlLexer.PunctuatorCaret; } }
-        public static string CurrentLocaleOr { get { return TexlLexer.PunctuatorOr; } }
-        public static string CurrentLocaleAnd { get { return TexlLexer.PunctuatorAnd; } }
-        public static string CurrentLocaleAmpersand { get { return TexlLexer.PunctuatorAmpersand; } }
-        public static string CurrentLocaleGreater { get { return TexlLexer.PunctuatorGreater; } }
-        public static string CurrentLocaleLess { get { return TexlLexer.PunctuatorLess; } }
-        public static string CurrentLocaleGreaterOrEqual { get { return TexlLexer.PunctuatorGreaterOrEqual; } }
-        public static string CurrentLocaleLessOrEqual { get { return TexlLexer.PunctuatorLessOrEqual; } }
-        public static string PunctuatorDotInvariant { get { return TexlLexer.PunctuatorDot; } }
+        public static string CurrentLocaleDecimalSeparator => TexlLexer.LocalizedInstance.LocalizedPunctuatorDecimalSeparator;
+
+        public static string CurrentLocaleListSeparator => TexlLexer.LocalizedInstance.LocalizedPunctuatorListSeparator;
+
+        public static string CurrentLocaleChainingOperator => TexlLexer.LocalizedInstance.LocalizedPunctuatorChainingSeparator;
+
+        public static string CurrentLocalePositiveSymbol => TexlLexer.PunctuatorAdd;
+
+        public static string CurrentLocaleNegativeSymbol => TexlLexer.PunctuatorSub;
+
+        public static string CurrentLocaleMultiplySymbol => TexlLexer.PunctuatorMul;
+
+        public static string CurrentLocaleDivideSymbol => TexlLexer.PunctuatorDiv;
+
+        public static string CurrentLocaleEqual => TexlLexer.PunctuatorEqual;
+
+        public static string CurrentLocaleParenOpen => TexlLexer.PunctuatorParenOpen;
+
+        public static string CurrentLocaleParenClose => TexlLexer.PunctuatorParenClose;
+
+        public static string CurrentLocaleBracketOpen => TexlLexer.PunctuatorBracketOpen;
+
+        public static string CurrentLocaleBracketClose => TexlLexer.PunctuatorBracketClose;
+
+        public static string CurrentLocaleCurlyOpen => TexlLexer.PunctuatorCurlyOpen;
+
+        public static string CurrentLocaleCurlyClose => TexlLexer.PunctuatorCurlyClose;
+
+        public static string CurrentLocalePercent => TexlLexer.PunctuatorPercent;
+
+        public static string CurrentLocaleBang => TexlLexer.PunctuatorBang;
+
+        public static string CurrentLocaleDot => TexlLexer.PunctuatorDot;
+
+        public static string CurrentLocaleCaret => TexlLexer.PunctuatorCaret;
+
+        public static string CurrentLocaleOr => TexlLexer.PunctuatorOr;
+
+        public static string CurrentLocaleAnd => TexlLexer.PunctuatorAnd;
+
+        public static string CurrentLocaleAmpersand => TexlLexer.PunctuatorAmpersand;
+
+        public static string CurrentLocaleGreater => TexlLexer.PunctuatorGreater;
+
+        public static string CurrentLocaleLess => TexlLexer.PunctuatorLess;
+
+        public static string CurrentLocaleGreaterOrEqual => TexlLexer.PunctuatorGreaterOrEqual;
+
+        public static string CurrentLocaleLessOrEqual => TexlLexer.PunctuatorLessOrEqual;
+
+        public static string PunctuatorDotInvariant => TexlLexer.PunctuatorDot;
 
         internal static string ComposeSingleQuotedList(IEnumerable<string> listItems)
         {
             Contracts.AssertValue(listItems);
             Contracts.AssertNonEmpty(listItems);
 
-            string singleQuoteFormat = StringResources.Get("ListItemSingleQuotedFormat");
-            string listSeparator = LocalizationUtils.CurrentLocaleListSeparator + " ";
+            var singleQuoteFormat = StringResources.Get("ListItemSingleQuotedFormat");
+            var listSeparator = CurrentLocaleListSeparator + " ";
             return string.Join(listSeparator, listItems.Select(item => string.Format(singleQuoteFormat, item)));
         }
     }

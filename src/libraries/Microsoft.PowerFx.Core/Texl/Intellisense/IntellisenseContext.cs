@@ -1,11 +1,11 @@
 ﻿// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+// Licensed under the MIT license.
 
 using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Core.Texl.Intellisense
 {
-    internal class IntellisenseContext: IIntellisenseContext
+    internal class IntellisenseContext : IIntellisenseContext
     {
         /// <summary>
         /// The input string for intellisense.
@@ -16,7 +16,6 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
         /// Cursor position for the intellisense input string.
         /// </summary>
         public int CursorPosition { get; private set; }
-
 
         public IntellisenseContext(string inputText, int cursorPosition)
         {

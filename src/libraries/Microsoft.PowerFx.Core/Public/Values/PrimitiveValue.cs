@@ -1,13 +1,17 @@
 ﻿// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+// Licensed under the MIT license.
 
+using System;
+using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using Microsoft.PowerFx.Core.IR;
+using Microsoft.PowerFx.Core.Public.Types;
 
 namespace Microsoft.PowerFx.Core.Public.Values
-{ 
+{
     /// <summary>
     /// Helper for non-aggregate values that are represented as a single .net object.
+    /// See <see cref="BuiltinFormulaTypeConversions"/> for converting between a T and a FormulaType.
     /// </summary>
     /// <typeparam name="T"></typeparam>
     public abstract class PrimitiveValue<T> : ValidFormulaValue
@@ -16,11 +20,12 @@ namespace Microsoft.PowerFx.Core.Public.Values
 
         public T Value => _value;
 
-        internal PrimitiveValue(IRContext irContext, T value) : base(irContext)
+        internal PrimitiveValue(IRContext irContext, T value)
+            : base(irContext)
         {
             Contract.Assert(value != null);
 
-            this._value = value;
+            _value = value;
         }
 
         public override object ToObject()

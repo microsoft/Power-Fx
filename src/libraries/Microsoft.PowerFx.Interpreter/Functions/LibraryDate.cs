@@ -1,16 +1,17 @@
 ﻿// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+// Licensed under the MIT license.
 
-using Microsoft.PowerFx.Core.IR;
 using System;
-using Microsoft.PowerFx.Core.Public.Values;
 using System.Globalization;
+using System.Threading.Tasks;
+using Microsoft.PowerFx.Core.IR;
+using Microsoft.PowerFx.Core.Public.Values;
 
 namespace Microsoft.PowerFx.Functions
 {
-    partial class Library
+    internal partial class Library
     {
-        public static FormulaValue Today(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args)
+        public static async ValueTask<FormulaValue> Today(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args)
         {
             // $$$ timezone?
             var date = DateTime.Today;
@@ -35,7 +36,7 @@ namespace Microsoft.PowerFx.Functions
             }
 
             var now = DateTime.Today;
-            bool same = (arg0.Year == now.Year) && (arg0.Month == now.Month) && (arg0.Day == now.Day);
+            var same = (arg0.Year == now.Year) && (arg0.Month == now.Month) && (arg0.Day == now.Day);
             return new BooleanValue(irContext, same);
         }
 
@@ -94,9 +95,13 @@ namespace Microsoft.PowerFx.Functions
                 }
 
                 if (args[0] is DateTimeValue)
+                {
                     return new DateTimeValue(irContext, newDate);
+                }
                 else
+                {
                     return new DateValue(irContext, newDate.Date);
+                }
             }
             catch
             {
@@ -134,31 +139,31 @@ namespace Microsoft.PowerFx.Functions
 
             var units = (StringValue)args[2];
 
-            TimeSpan diff = end - start;
+            var diff = end - start;
 
             // The function DateDiff only returns a whole number of the units being subtracted, and the precision is given in the unit specified.
             switch (units.Value.ToLower())
             {
                 case "milliseconds":
-                    double milliseconds = Math.Floor(diff.TotalMilliseconds);
+                    var milliseconds = Math.Floor(diff.TotalMilliseconds);
                     return new NumberValue(irContext, milliseconds);
                 case "seconds":
-                    double seconds = Math.Floor(diff.TotalSeconds);
+                    var seconds = Math.Floor(diff.TotalSeconds);
                     return new NumberValue(irContext, seconds);
                 case "minutes":
-                    double minutes = Math.Floor(diff.TotalMinutes);
+                    var minutes = Math.Floor(diff.TotalMinutes);
                     return new NumberValue(irContext, minutes);
                 case "hours":
-                    double hours = Math.Floor(diff.TotalHours);
+                    var hours = Math.Floor(diff.TotalHours);
                     return new NumberValue(irContext, hours);
                 case "days":
-                    double days = Math.Floor(diff.TotalDays);
+                    var days = Math.Floor(diff.TotalDays);
                     return new NumberValue(irContext, days);
                 case "months":
-                    double months = (end.Year - start.Year) * 12 + end.Month - start.Month;
+                    double months = ((end.Year - start.Year) * 12) + end.Month - start.Month;
                     return new NumberValue(irContext, months);
                 case "quarters":
-                    double quarters = (end.Year - start.Year) * 4 + Math.Floor(end.Month / 3.0) - Math.Floor(start.Month / 3.0);
+                    var quarters = ((end.Year - start.Year) * 4) + Math.Floor(end.Month / 3.0) - Math.Floor(start.Month / 3.0);
                     return new NumberValue(irContext, quarters);
                 case "years":
                     double years = end.Year - start.Year;
@@ -324,6 +329,11 @@ namespace Microsoft.PowerFx.Functions
             var month = (int)args[1].Value;
             var day = (int)args[2].Value;
 
+            return DateImpl(irContext, year, month, day);
+        }
+
+        private static FormulaValue DateImpl(IRContext irContext, int year, int month, int day)
+        {
             // The final date is built up this way to allow for inputs which overflow,
             // such as: Date(2000, 25, 69) -> 3/10/2002
             var result = new DateTime(year, 1, 1)
@@ -340,6 +350,11 @@ namespace Microsoft.PowerFx.Functions
             var second = (int)args[2].Value;
             var millisecond = (int)args[3].Value;
 
+            return TimeImpl(irContext, hour, minute, second, millisecond);
+        }
+
+        private static FormulaValue TimeImpl(IRContext irContext, int hour, int minute, int second, int millisecond)
+        {
             // The final time is built up this way to allow for inputs which overflow,
             // such as: Time(10, 70, 360) -> 11:16 AM
             var result = new TimeSpan(hour, 0, 0)
@@ -350,45 +365,75 @@ namespace Microsoft.PowerFx.Functions
             return new TimeValue(irContext, result);
         }
 
-        private static FormulaValue Now(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args)
+        public static FormulaValue DateTimeFunction(IRContext irContext, NumberValue[] args)
+        {
+            var year = (int)args[0].Value;
+            var month = (int)args[1].Value;
+            var day = (int)args[2].Value;
+            var date = DateImpl(IRContext.NotInSource(Core.Public.Types.FormulaType.Date), year, month, day);
+
+            var hour = (int)args[3].Value;
+            var minute = (int)args[4].Value;
+            var second = (int)args[5].Value;
+            var millisecond = (int)args[6].Value;
+            var time = TimeImpl(IRContext.NotInSource(Core.Public.Types.FormulaType.Time), hour, minute, second, millisecond);
+
+            var result = AddDateAndTime(irContext, new[] { date, time });
+
+            return result;
+        }
+
+        private static async ValueTask<FormulaValue> Now(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args)
         {
             return new DateTimeValue(irContext, DateTime.Now);
         }
 
-        public static FormulaValue DateParse(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, StringValue[] args)
+        private static async ValueTask<FormulaValue> DateParse(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, StringValue[] args)
         {
             var str = args[0].Value;
-            if (DateTime.TryParse(str, runner.CultureInfo, DateTimeStyles.None, out DateTime result))
+            if (DateTime.TryParse(str, runner.CultureInfo, DateTimeStyles.None, out var result))
+            {
                 return new DateValue(irContext, result.Date);
+            }
             else
+            {
                 return CommonErrors.InvalidDateTimeError(irContext);
+            }
         }
 
-        public static FormulaValue DateTimeParse(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, StringValue[] args)
+        public static async ValueTask<FormulaValue> DateTimeParse(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, StringValue[] args)
         {
             var str = args[0].Value;
-            if (DateTime.TryParse(str, runner.CultureInfo, DateTimeStyles.None, out DateTime result))
+            if (DateTime.TryParse(str, runner.CultureInfo, DateTimeStyles.None, out var result))
+            {
                 return new DateTimeValue(irContext, result);
+            }
             else
+            {
                 return CommonErrors.InvalidDateTimeError(irContext);
+            }
         }
 
-        public static FormulaValue TimeParse(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, StringValue[] args)
+        public static async ValueTask<FormulaValue> TimeParse(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, StringValue[] args)
         {
             var str = args[0].Value;
-            if (TimeSpan.TryParse(str, runner.CultureInfo, out TimeSpan result))
+            if (TimeSpan.TryParse(str, runner.CultureInfo, out var result))
+            {
                 return new TimeValue(irContext, result);
+            }
             else
+            {
                 return CommonErrors.InvalidDateTimeError(irContext);
+            }
         }
 
         public static FormulaValue TimeZoneOffset(IRContext irContext, FormulaValue[] args)
         {
-            TimeZoneInfo tzInfo = TimeZoneInfo.Local;
+            var tzInfo = TimeZoneInfo.Local;
             if (args.Length == 0)
             {
                 var tzOffsetDays = tzInfo.GetUtcOffset(DateTime.Now).TotalDays;
-                return new NumberValue(irContext, tzOffsetDays  * -1);
+                return new NumberValue(irContext, tzOffsetDays * -1);
             }
 
             switch (args[0])

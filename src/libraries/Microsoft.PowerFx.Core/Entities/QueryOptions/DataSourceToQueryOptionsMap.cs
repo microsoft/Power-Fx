@@ -1,4 +1,7 @@
-﻿using System;
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
+using System;
 using System.Collections.Generic;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
@@ -28,7 +31,9 @@ namespace Microsoft.PowerFx.Core.Entities.QueryOptions
         {
             if (tabularDataSourceInfo == null
                 || _tabularDataQueryOptionsSet.ContainsKey(tabularDataSourceInfo.EntityName))
+            {
                 return false;
+            }
 
             _tabularDataQueryOptionsSet.Add(tabularDataSourceInfo.EntityName, new TabularDataQueryOptions(tabularDataSourceInfo));
             return true;
@@ -36,10 +41,15 @@ namespace Microsoft.PowerFx.Core.Entities.QueryOptions
 
         public TabularDataQueryOptions GetOrCreateQueryOptions(IExternalTabularDataSource tabularDataSourceInfo)
         {
-            if (tabularDataSourceInfo == null) return null;
+            if (tabularDataSourceInfo == null)
+            {
+                return null;
+            }
 
             if (_tabularDataQueryOptionsSet.ContainsKey(tabularDataSourceInfo.EntityName))
+            {
                 return _tabularDataQueryOptionsSet[tabularDataSourceInfo.EntityName];
+            }
 
             var newEntry = new TabularDataQueryOptions(tabularDataSourceInfo);
             _tabularDataQueryOptionsSet.Add(tabularDataSourceInfo.EntityName, newEntry);
@@ -48,7 +58,10 @@ namespace Microsoft.PowerFx.Core.Entities.QueryOptions
 
         public TabularDataQueryOptions GetQueryOptions(IExternalTabularDataSource tabularDataSourceInfo)
         {
-            if (tabularDataSourceInfo == null) return null;
+            if (tabularDataSourceInfo == null)
+            {
+                return null;
+            }
 
             return GetQueryOptions(tabularDataSourceInfo.EntityName);
         }
@@ -58,7 +71,9 @@ namespace Microsoft.PowerFx.Core.Entities.QueryOptions
             Contracts.AssertValid(tabularDataSourceInfoName);
 
             if (_tabularDataQueryOptionsSet.ContainsKey(tabularDataSourceInfoName))
+            {
                 return _tabularDataQueryOptionsSet[tabularDataSourceInfoName];
+            }
 
             return null;
         }
@@ -83,9 +98,10 @@ namespace Microsoft.PowerFx.Core.Entities.QueryOptions
             }
             catch (Exception ex)
             {
-                return new Dictionary<string, object>(){
+                return new Dictionary<string, object>()
+                {
                     { "message", ex.Message },
-                    { "stacktrace", ex.StackTrace}
+                    { "stacktrace", ex.StackTrace }
                 };
             }
         }
@@ -114,7 +130,9 @@ namespace Microsoft.PowerFx.Core.Entities.QueryOptions
                 foreach (var value in qOptions.Value.ExpandDTypes.Values)
                 {
                     if (value.ExpandInfo?.Identity == logicalName)
+                    {
                         return true;
+                    }
                 }
             }
 
@@ -128,7 +146,6 @@ namespace Microsoft.PowerFx.Core.Entities.QueryOptions
             return queryOptions.ExpandDTypes;
         }
 
-
         internal IEnumerable<TabularDataQueryOptions> GetValues()
         {
             return _tabularDataQueryOptionsSet.Values;
@@ -139,7 +156,9 @@ namespace Microsoft.PowerFx.Core.Entities.QueryOptions
             foreach (var qOptions in _tabularDataQueryOptionsSet)
             {
                 if (qOptions.Value.Expands.Count > 0)
+                {
                     return true;
+                }
             }
 
             return false;
@@ -150,7 +169,9 @@ namespace Microsoft.PowerFx.Core.Entities.QueryOptions
             foreach (var qOptions in _tabularDataQueryOptionsSet)
             {
                 if (qOptions.Value.HasNestedManyToOneExpands())
+                {
                     return true;
+                }
             }
 
             return false;

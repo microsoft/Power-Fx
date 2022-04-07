@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+// Licensed under the MIT license.
 
 namespace Microsoft.PowerFx.Core.Lexer
 {
@@ -17,7 +17,6 @@ namespace Microsoft.PowerFx.Core.Lexer
         StrLit,
         Comment,
         Whitespace,
-        ReplaceableLit,
 
         // Punctuators
         Add,
@@ -59,6 +58,12 @@ namespace Microsoft.PowerFx.Core.Lexer
         KeyAnd,
         KeyNot,
         As,
+
+        // Interpolation
+        StrInterpStart,
+        StrInterpEnd,
+        IslandStart,
+        IslandEnd,
 
         Lim
     }

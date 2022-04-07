@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+// Licensed under the MIT license.
 
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -21,7 +21,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     /// and returns the result corresponding to the first matching value. If there is no match,
     /// an optional default value(which is last argument if number of arguments are even) is returned.
     /// Syntax:
-    /// Switch(Value to switch,Value to match 1...[2-N], Value to return for match1...[2-N], [Value to return if there's no match])
+    /// Switch(Value to switch,Value to match 1...[2-N], Value to return for match1...[2-N], [Value to return if there's no match]).
     /// </summary>
     internal sealed class SwitchFunction : BuiltinFunction
     {
@@ -31,8 +31,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         // We do not support coercion for the 1st param, or the match params, only the result params. 
         public override bool SupportsParamCoercion => true;
 
-        public SwitchFunction() :
-            base("Switch", TexlStrings.AboutSwitch, FunctionCategories.Logical, DType.Unknown, 0, 3, int.MaxValue)
+        public SwitchFunction()
+            : base("Switch", TexlStrings.AboutSwitch, FunctionCategories.Logical, DType.Unknown, 0, 3, int.MaxValue)
         {
             // If(cond1, value1, cond2, value2, ..., condN, valueN, [valueFalse], ...)
             // Switch(switch_value, match_value1, match_result1, match_value2, match_result2, ..., match_valueN, match_resultN, [default_result], ...)
@@ -61,19 +61,21 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
 
             // Limit the argCount avoiding potential OOM
-            int argCount = arity > SignatureConstraint.RepeatTopLength ? SignatureConstraint.RepeatTopLength + (arity & 1 ^ 1) : arity;
+            var argCount = arity > SignatureConstraint.RepeatTopLength ? SignatureConstraint.RepeatTopLength + (arity & 1 ^ 1) : arity;
             var signature = new TexlStrings.StringGetter[argCount];
-            bool fEven = (argCount & 1) == 0;
-            int cargCur = fEven ? argCount - 1 : argCount;
+            var fEven = (argCount & 1) == 0;
+            var cargCur = fEven ? argCount - 1 : argCount;
             signature[0] = TexlStrings.SwitchExpression;
-            for (int iarg = 1; iarg < cargCur; iarg += 2)
+            for (var iarg = 1; iarg < cargCur; iarg += 2)
             {
                 signature[iarg] = TexlStrings.SwitchCaseExpr;
                 signature[iarg + 1] = TexlStrings.SwitchCaseArg;
             }
 
             if (fEven)
+            {
                 signature[cargCur] = TexlStrings.SwitchDefaultReturn;
+            }
 
             return new ReadOnlyCollection<TexlStrings.StringGetter[]>(new[] { signature });
         }
@@ -91,32 +93,49 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertValue(errors);
             Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
 
-            int count = args.Length;
+            var count = args.Length;
 
             // Check the switch expression type matches all case expression types in list.
-            bool fArgsValid = true;
-            for (int i = 1; i < count - 1; i += 2)
-                fArgsValid &= CheckType(args[i], argTypes[i], argTypes[0], errors, coerceIfSupported: false, out bool  _);
+            var fArgsValid = true;
+            for (var i = 1; i < count - 1; i += 2)
+            {
+                if (!argTypes[0].Accepts(argTypes[i]) && !argTypes[i].Accepts(argTypes[0]))
+                {
+                    // Type mismatch; using CheckType to fill the errors collection
+                    var validExpectedType = CheckType(args[i], argTypes[i], argTypes[0], errors, coerceIfSupported: false, out bool _);
+                    if (validExpectedType)
+                    {
+                        // Check on the opposite direction
+                        validExpectedType = CheckType(args[0], argTypes[0], argTypes[i], errors, coerceIfSupported: false, out bool _);
+                    }
 
-            DType type = ReturnType;
+                    fArgsValid &= validExpectedType;
+                }
+            }
+
+            var type = ReturnType;
             nodeToCoercedTypeMap = null;
 
             // Are we on a behavior property?
-            bool isBehavior = binding.IsBehavior;
+            var isBehavior = binding.IsBehavior;
 
             // Compute the result type by joining the types of all non-predicate args.
             Contracts.Assert(type == DType.Unknown);
-            for (int i = 2; i < count;)
+            for (var i = 2; i < count;)
             {
-                TexlNode nodeArg = args[i];
-                DType typeArg = argTypes[i];
+                var nodeArg = args[i];
+                var typeArg = argTypes[i];
                 if (typeArg.IsError)
+                {
                     errors.EnsureError(args[i], TexlStrings.ErrTypeError);
+                }
 
-                DType typeSuper = DType.Supertype(type, typeArg);
+                var typeSuper = DType.Supertype(type, typeArg);
 
                 if (!typeSuper.IsError)
+                {
                     type = typeSuper;
+                }
                 else if (type.Kind == DKind.Unknown)
                 {
                     type = typeSuper;
@@ -125,10 +144,15 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 else if (!type.IsError)
                 {
                     if (typeArg.CoercesTo(type))
+                    {
                         CollectionUtils.Add(ref nodeToCoercedTypeMap, nodeArg, type);
+                    }
                     else if (!isBehavior)
                     {
-                        errors.EnsureError(DocumentErrorSeverity.Severe, nodeArg, TexlStrings.ErrBadType_ExpectedType_ProvidedType,
+                        errors.EnsureError(
+                            DocumentErrorSeverity.Severe,
+                            nodeArg,
+                            TexlStrings.ErrBadType_ExpectedType_ProvidedType,
                             type.GetKindString(),
                             typeArg.GetKindString());
                         fArgsValid = false;
@@ -143,7 +167,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 // If there are an odd number of args, the last arg also participates.
                 i += 2;
                 if (i == count)
+                {
                     i--;
+                }
             }
 
             // Update the return type based on the specified invocation args.
@@ -157,21 +183,24 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             dsNodes = new List<FirstNameNode>();
 
             var count = args.Count();
-            for (int i = 2; i < count;)
+            for (var i = 2; i < count;)
             {
-                TexlNode nodeArg = args[i];
+                var nodeArg = args[i];
 
-                IList<FirstNameNode> tmpDsNodes;
-                if (ArgValidators.DataSourceArgNodeValidator.TryGetValidValue(nodeArg, binding, out tmpDsNodes))
+                if (ArgValidators.DataSourceArgNodeValidator.TryGetValidValue(nodeArg, binding, out var tmpDsNodes))
                 {
                     foreach (var node in tmpDsNodes)
+                    {
                         dsNodes.Add(node);
+                    }
                 }
 
                 // If there are an odd number of args, the last arg also participates.
                 i += 2;
                 if (i == count)
+                {
                     i--;
+                }
             }
 
             return dsNodes.Any();
@@ -184,7 +213,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             dsNodes = new List<FirstNameNode>();
             if (callNode.Args.Count < 2)
+            {
                 return false;
+            }
 
             var args = callNode.Args.Children.VerifyValue();
             return TryGetDSNodes(binding, args, out dsNodes);
@@ -192,22 +223,27 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool SupportsPaging(CallNode callNode, TexlBinding binding)
         {
-            IList<FirstNameNode> dsNodes;
-            if (!TryGetDataSourceNodes(callNode, binding, out dsNodes))
+            if (!TryGetDataSourceNodes(callNode, binding, out var dsNodes))
+            {
                 return false;
+            }
 
             var args = callNode.Args.Children.VerifyValue();
             var count = args.Count();
 
-            for (int i = 2; i < count;)
+            for (var i = 2; i < count;)
             {
                 if (!binding.IsPageable(args[i]))
+                {
                     return false;
+                }
 
                 // If there are an odd number of args, the last arg also participates.
                 i += 2;
                 if (i == count)
+                {
                     i--;
+                }
             }
 
             return true;

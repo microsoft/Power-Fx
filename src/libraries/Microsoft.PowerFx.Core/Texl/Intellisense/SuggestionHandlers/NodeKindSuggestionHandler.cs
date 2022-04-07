@@ -1,15 +1,16 @@
 ﻿// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+// Licensed under the MIT license.
 
 using Microsoft.PowerFx.Core.Syntax;
 using Microsoft.PowerFx.Core.Utils;
 
-namespace Microsoft.PowerFx.Core.Texl.Intellisense{
+namespace Microsoft.PowerFx.Core.Texl.Intellisense
+{
     internal partial class Intellisense
     {
         internal abstract class NodeKindSuggestionHandler : ISuggestionHandler
         {
-            private NodeKind _kind;
+            private readonly NodeKind _kind;
 
             public NodeKindSuggestionHandler(NodeKind kind)
             {
@@ -26,7 +27,9 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense{
                 Contracts.AssertValue(intellisenseData.CurNode);
 
                 if (intellisenseData.CurNode.Kind != _kind)
+                {
                     return false;
+                }
 
                 return TryAddSuggestionsForNodeKind(intellisenseData);
             }

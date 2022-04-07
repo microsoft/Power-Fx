@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+// Licensed under the MIT license.
 
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
@@ -10,30 +11,54 @@ using Microsoft.PowerFx.Core.Public.Types;
 namespace Microsoft.PowerFx.Core.Public.Values
 {
     /// <summary>
-    /// In-memory table. 
+    /// In-memory table. Constructed over RecordValues. 
+    /// DValue means items could be error or blank. 
     /// </summary>
-    internal class InMemoryTableValue : TableValue
+    internal class InMemoryTableValue : CollectionTableValue<DValue<RecordValue>>
     {
-        private readonly IEnumerable<DValue<RecordValue>> _records;
+        private readonly RecordType _recordType;
 
-        public override IEnumerable<DValue<RecordValue>> Rows => _records;
-
-        internal InMemoryTableValue(IRContext irContext, IEnumerable<DValue<RecordValue>> records) : base(irContext)
+        internal InMemoryTableValue(IRContext irContext, IEnumerable<DValue<RecordValue>> records)
+            : base(irContext, records)
         {
             Contract.Assert(IRContext.ResultType is TableType);
             var tableType = (TableType)IRContext.ResultType;
-            var recordType = tableType.ToRecord();
-            _records = records.Select(r =>
+            _recordType = tableType.ToRecord();            
+        }
+
+        protected override DValue<RecordValue> Marshal(DValue<RecordValue> record)
+        {
+            if (record.IsValue)
             {
-                if (r.IsValue)
-                {
-                    return DValue<RecordValue>.Of(new InMemoryRecordValue(IRContext.NotInSource(recordType), r.Value.Fields));
-                }
-                else
-                {
-                    return r;
-                }
-            });
+                return DValue<RecordValue>.Of(
+                    new InMemoryRecordValue(IRContext.NotInSource(_recordType), record.Value.Fields));
+            }
+            else 
+            {
+                return record;
+            }
+        }
+    }
+
+    // More constrained table when we know that all values are indeed Records, not error/blank. 
+    // Beware of wrapping/unwrapping in DValues if we already have a RecordValue -
+    // that can create extra IEnumerable wrappers that break direct indexing. 
+    internal class RecordsOnlyTableValue : CollectionTableValue<RecordValue>
+    {
+        private readonly RecordType _recordType;
+
+        internal RecordsOnlyTableValue(IRContext irContext, IEnumerable<RecordValue> records)
+            : base(irContext, records)
+        {
+            Contract.Assert(IRContext.ResultType is TableType);
+            var tableType = (TableType)IRContext.ResultType;
+            _recordType = tableType.ToRecord();
+        }
+
+        protected override DValue<RecordValue> Marshal(RecordValue record)
+        {
+            return DValue<RecordValue>.Of(
+                 new InMemoryRecordValue(IRContext.NotInSource(_recordType), record.Fields));
         }
     }
 }

@@ -1,9 +1,11 @@
 ﻿// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+// Licensed under the MIT license.
 
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Public.Types;
@@ -20,6 +22,7 @@ namespace Microsoft.PowerFx
     internal class CustomTexlFunction : TexlFunction
     {
         public Func<FormulaValue[], FormulaValue> _impl;
+
         public override bool SupportsParamCoercion => true;
 
         public CustomTexlFunction(string name, FormulaType returnType, params FormulaType[] paramTypes)
@@ -28,10 +31,8 @@ namespace Microsoft.PowerFx
         }
 
         public CustomTexlFunction(string name, DType returnType, params DType[] paramTypes)
-            : base(DPath.Root, name, name, SG("Custom func " + name), FunctionCategories.MathAndStat, returnType, 0,
-                  paramTypes.Length, paramTypes.Length, paramTypes)
+            : base(DPath.Root, name, name, SG("Custom func " + name), FunctionCategories.MathAndStat, returnType, 0, paramTypes.Length, paramTypes.Length, paramTypes)
         {
-
         }
 
         public override bool IsSelfContained => true;
@@ -45,7 +46,6 @@ namespace Microsoft.PowerFx
         {
             yield return new[] { SG("Arg 1") };
         }
-
 
         public virtual FormulaValue Invoke(FormulaValue[] args)
         {
@@ -64,7 +64,8 @@ namespace Microsoft.PowerFx
         private FunctionDescr _info;
 
         /// <summary>
-        /// Assume by defaults. Will reflect to get primitive types
+        /// Initializes a new instance of the <see cref="ReflectionFunction"/> class.
+        /// Assume by defaults. Will reflect to get primitive types.
         /// </summary>
         protected ReflectionFunction()
         {
@@ -75,8 +76,8 @@ namespace Microsoft.PowerFx
         // Necessary for Tables/Records
         protected ReflectionFunction(string name, FormulaType returnType, params FormulaType[] paramTypes)
         {
-            var t = this.GetType();
-            MethodInfo m = t.GetMethod("Execute", BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance);
+            var t = GetType();
+            var m = t.GetMethod("Execute", BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance);
             if (m == null)
             {
                 throw new InvalidOperationException($"Missing Execute method");
@@ -84,19 +85,18 @@ namespace Microsoft.PowerFx
 
             _info = new FunctionDescr
             {
-                name = name,
-                retType = returnType,
-                paramTypes = paramTypes,
+                Name = name,
+                RetType = returnType,
+                ParamTypes = paramTypes,
                 _method = m
             };
-
         }
 
-        class FunctionDescr
+        private class FunctionDescr
         {
-            public FormulaType retType;
-            public FormulaType[] paramTypes;
-            public string name;
+            public FormulaType RetType;
+            public FormulaType[] ParamTypes;
+            public string Name;
 
             public MethodInfo _method;
         }
@@ -107,49 +107,58 @@ namespace Microsoft.PowerFx
             {
                 var info = new FunctionDescr();
 
-                var t = this.GetType();
+                var t = GetType();
 
                 var suffix = "Function";
-                info.name = t.Name.Substring(0, t.Name.Length - suffix.Length);
+                info.Name = t.Name.Substring(0, t.Name.Length - suffix.Length);
 
-                MethodInfo m = t.GetMethod("Execute", BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance);
+                var m = t.GetMethod("Execute", BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance);
                 if (m == null)
                 {
                     throw new InvalidOperationException($"Missing Execute method");
                 }
 
-                info.retType = GetType(m.ReturnType);
-                info.paramTypes = Array.ConvertAll(m.GetParameters(), p => GetType(p.ParameterType));
+                info.RetType = GetType(m.ReturnType);
+                info.ParamTypes = Array.ConvertAll(m.GetParameters(), p => GetType(p.ParameterType));
                 info._method = m;
 
                 _info = info;
             }
+
             return _info;
         }
 
-        static FormulaType GetType(Type t)
+        private static FormulaType GetType(Type t)
         {
-            if (t == typeof(NumberValue)) return FormulaType.Number;
+            if (t == typeof(NumberValue))
+            {
+                return FormulaType.Number;
+            }
+
             throw new NotImplementedException($"Marshal type {t.Name}");
         }
 
-
         internal TexlFunction GetTexlFunction()
         {
-            var info = this.Scan();
-            return new CustomTexlFunction(info.name, info.retType, info.paramTypes)
+            var info = Scan();
+            return new CustomTexlFunction(info.Name, info.RetType, info.ParamTypes)
             {
-                _impl = (args) => this.Invoke(args)
+                _impl = (args) => Invoke(args)
             };
         }
 
         public FormulaValue Invoke(FormulaValue[] args)
         {
-            this.Scan();
+            Scan();
             var result = _info._method.Invoke(this, args);
 
             return (FormulaValue)result;
-
         }
+    }
+
+    // A function capable of async invokes. 
+    internal interface IAsyncTexlFunction
+    {
+        Task<FormulaValue> InvokeAsync(FormulaValue[] args, CancellationToken cancel);
     }
 }

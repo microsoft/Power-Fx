@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+// Licensed under the MIT license.
 
 using Microsoft.PowerFx.Core.Utils;
 
@@ -30,15 +30,9 @@ namespace Microsoft.PowerFx.Core.Types
             return new ExpandPath(relatedEntityPath, entityName);
         }
 
-        public static bool operator ==(ExpandPath lhsPath, ExpandPath rhsPath)
-        {
-            return lhsPath.ToString() == rhsPath.ToString();
-        }
+        public static bool operator ==(ExpandPath lhsPath, ExpandPath rhsPath) => lhsPath.ToString() == rhsPath.ToString();
 
-        public static bool operator !=(ExpandPath lhsPath, ExpandPath rhsPath)
-        {
-            return lhsPath.ToString() != rhsPath.ToString();
-        }
+        public static bool operator !=(ExpandPath lhsPath, ExpandPath rhsPath) => lhsPath.ToString() != rhsPath.ToString();
 
         public bool Equals(ExpandPath path)
         {
@@ -55,7 +49,9 @@ namespace Microsoft.PowerFx.Core.Types
             Contracts.AssertValueOrNull(obj);
 
             if (!(obj is ExpandPath))
+            {
                 return false;
+            }
 
             return this == (ExpandPath)obj;
         }
@@ -63,7 +59,9 @@ namespace Microsoft.PowerFx.Core.Types
         public override string ToString()
         {
             if (string.IsNullOrEmpty(RelatedEntityPath))
+            {
                 return EntityName;
+            }
 
             return RelatedEntityPath + PathSeperator + EntityName;
         }

@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+// Licensed under the MIT license.
 
 using System;
 using System.Collections.Generic;
@@ -12,6 +12,7 @@ using Microsoft.PowerFx.Core.Syntax;
 using Microsoft.PowerFx.Core.Syntax.Nodes;
 using Microsoft.PowerFx.Core.Texl.Intellisense.IntellisenseData;
 using Microsoft.PowerFx.Core.Types;
+using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Core.Texl.Intellisense
@@ -21,11 +22,13 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
     internal partial class Intellisense : IIntellisense
     {
         protected readonly IReadOnlyList<ISuggestionHandler> _suggestionHandlers;
+        protected readonly IEnumStore _enumStore;
 
-        public Intellisense(IReadOnlyList<ISuggestionHandler> suggestionHandlers)
+        public Intellisense(IEnumStore enumStore, IReadOnlyList<ISuggestionHandler> suggestionHandlers)
         {
             Contracts.AssertValue(suggestionHandlers);
 
+            _enumStore = enumStore;
             _suggestionHandlers = suggestionHandlers;
         }
 
@@ -40,15 +43,18 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
 
             try
             {
-                IntellisenseData.IntellisenseData intellisenseData;
-                if (!TryInitializeIntellisenseContext(context, binding, formula, out intellisenseData))
+                if (!TryInitializeIntellisenseContext(context, binding, formula, out var intellisenseData))
                 {
                     return new IntellisenseResult(new DefaultIntellisenseData(), new List<IntellisenseSuggestion>());
                 }
 
                 foreach (var handler in _suggestionHandlers)
+                {
                     if (handler.Run(intellisenseData))
+                    {
                         break;
+                    }
+                }
 
                 return Finalize(context, intellisenseData);
             }
@@ -58,6 +64,7 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
                 // return an empty result set along with exception for client use.
                 return new IntellisenseResult(new DefaultIntellisenseData(), new List<IntellisenseSuggestion>(), ex);
             }
+
             // TODO: Hoist scenario tracking out of language module.
             // finally
             // {
@@ -70,19 +77,22 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
             // If we are in a binary operation context, the expected type is relative to the binary operation.
             if (curNode != null && curNode.Parent != null && curNode.Parent.Kind == NodeKind.BinaryOp)
             {
-                BinaryOpNode binaryOpNode = curNode.Parent.CastBinaryOp();
-                DType coercedType;
+                var binaryOpNode = curNode.Parent.CastBinaryOp();
                 TexlNode expectedNode = null;
                 if (cursorPos < binaryOpNode.Token.Span.Min)
+                {
                     // Cursor is before the binary operator. Expected type is equal to the type of right side.
                     expectedNode = binaryOpNode.Right;
+                }
                 else if (cursorPos > binaryOpNode.Token.Span.Lim)
+                {
                     // Cursor is after the binary operator. Expected type is equal to the type of left side.
                     expectedNode = binaryOpNode.Left;
+                }
 
                 if (expectedNode != null)
                 {
-                    expectedType = binding.TryGetCoercedType(expectedNode, out coercedType) ? coercedType : binding.GetType(expectedNode);
+                    expectedType = binding.TryGetCoercedType(expectedNode, out var coercedType) ? coercedType : binding.GetType(expectedNode);
                     return true;
                 }
             }
@@ -98,10 +108,10 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
 
             if (curNode.Kind == NodeKind.Call)
             {
-                CallNode callNode = curNode.CastCall();
+                var callNode = curNode.CastCall();
                 if (callNode.Token.Span.Lim <= cursorPos && callNode.ParenClose != null && cursorPos <= callNode.ParenClose.Span.Min)
                 {
-                    CallInfo info = binding.GetInfo(callNode);
+                    var info = binding.GetInfo(callNode);
 
                     if (info.Function != null)
                     {
@@ -135,16 +145,18 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
             {
                 // Determine a safe start for suggestions whose types match the specified type.
                 // Non-zero sort priorities take precedence over type filtering.
-                int j = 0;
+                var j = 0;
                 while (j < suggestions.Count && suggestions[j].SortPriority > 0)
+                {
                     j++;
+                }
 
                 IntellisenseSuggestion temp;
-                for (int i = j; i < suggestions.Count; i++)
+                for (var i = j; i < suggestions.Count; i++)
                 {
                     if (suggestions[i].Type.Equals(type))
                     {
-                        int k = i;
+                        var k = i;
                         temp = suggestions[k];
                         temp.SetTypematch();
                         while (k > j)
@@ -152,6 +164,7 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
                             suggestions[k] = suggestions[k - 1];
                             k--;
                         }
+
                         suggestions[j++] = temp;
                     }
                 }
@@ -171,7 +184,7 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
                 }
             }
 
-            mask = default(FunctionCategories);
+            mask = default;
             return false;
         }
 
@@ -182,31 +195,33 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
 
             // The string type is too nebulous to push all matching string values to the top of the suggestion list
             if (type == DType.Unknown || type == DType.Error || type == DType.String)
+            {
                 return;
+            }
 
             foreach (var suggestion in suggestions)
+            {
                 if (!suggestion.Type.IsUnknown && type.Accepts(suggestion.Type))
+                {
                     suggestion.SortPriority++;
+                }
+            }
         }
 
         private bool TryInitializeIntellisenseContext(IIntellisenseContext context, TexlBinding binding, Formula formula, out IntellisenseData.IntellisenseData data)
         {
             Contracts.AssertValue(context);
 
-            TexlNode currentNode = TexlNode.FindNode(formula.ParseTree, context.CursorPosition);
-            TexlFunction curFunc;
-            int argIndex, argCount;
-            DType expectedType;
-            IsValidSuggestion isValidSuggestionFunc;
+            var currentNode = TexlNode.FindNode(formula.ParseTree, context.CursorPosition);
 
-            GetFunctionAndTypeInformation(context, currentNode, binding, out curFunc, out argIndex, out argCount, out expectedType, out isValidSuggestionFunc);
+            GetFunctionAndTypeInformation(context, currentNode, binding, out var curFunc, out var argIndex, out var argCount, out var expectedType, out var isValidSuggestionFunc);
             data = CreateData(context, expectedType, binding, curFunc, currentNode, argIndex, argCount, isValidSuggestionFunc, binding.GetExpandEntitiesMissingMetadata(), formula.Comments);
             return true;
         }
 
         protected internal virtual IntellisenseData.IntellisenseData CreateData(IIntellisenseContext context, DType expectedType, TexlBinding binding, TexlFunction curFunc, TexlNode curNode, int argIndex, int argCount, IsValidSuggestion isValidSuggestionFunc, IList<DType> missingTypes, List<CommentToken> comments)
         {
-            return new IntellisenseData.IntellisenseData(context, expectedType, binding, curFunc, curNode, argIndex, argCount, isValidSuggestionFunc, missingTypes, comments);
+            return new IntellisenseData.IntellisenseData(_enumStore, context, expectedType, binding, curFunc, curNode, argIndex, argCount, isValidSuggestionFunc, missingTypes, comments);
         }
 
         private void GetFunctionAndTypeInformation(IIntellisenseContext context, TexlNode curNode, TexlBinding binding, out TexlFunction curFunc, out int argIndex, out int argCount, out DType expectedType, out IsValidSuggestion isValidSuggestionFunc)
@@ -223,14 +238,19 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
                 expectedType = DType.Unknown;
             }
 
-            DType binaryOpExpectedType;
-            if (TryGetExpectedTypeForBinaryOp(binding, curNode, context.CursorPosition, out binaryOpExpectedType))
+            if (TryGetExpectedTypeForBinaryOp(binding, curNode, context.CursorPosition, out var binaryOpExpectedType))
+            {
                 expectedType = binaryOpExpectedType;
+            }
 
             if (curFunc != null)
+            {
                 isValidSuggestionFunc = (intellisenseData, suggestion) => intellisenseData.CurFunc.IsSuggestionTypeValid(intellisenseData.ArgIndex, suggestion.Type);
+            }
             else
+            {
                 isValidSuggestionFunc = Helper.DefaultIsValidSuggestionFunc;
+            }
         }
 
         private IIntellisenseResult Finalize(IIntellisenseContext context, IntellisenseData.IntellisenseData intellisenseData)
@@ -238,20 +258,22 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
             Contracts.AssertValue(context);
             Contracts.AssertValue(intellisenseData);
 
-            DType expectedType = intellisenseData.ExpectedType;
+            var expectedType = intellisenseData.ExpectedType;
 
             TypeMatchPriority(expectedType, intellisenseData.Suggestions);
             TypeMatchPriority(expectedType, intellisenseData.SubstringSuggestions);
             intellisenseData.Suggestions.Sort();
             intellisenseData.SubstringSuggestions.Sort();
-            List<IntellisenseSuggestion> resultSuggestions = intellisenseData.Suggestions.Distinct().ToList();
-            IEnumerable<IntellisenseSuggestion> resultSubstringSuggestions = intellisenseData.SubstringSuggestions.Distinct();
+            var resultSuggestions = intellisenseData.Suggestions.Distinct().ToList();
+            var resultSubstringSuggestions = intellisenseData.SubstringSuggestions.Distinct();
             resultSuggestions.AddRange(resultSubstringSuggestions);
 
             TypeFilter(expectedType, intellisenseData.MatchingStr, ref resultSuggestions);
 
             foreach (var handler in intellisenseData.CleanupHandlers)
+            {
                 handler.Run(context, intellisenseData, resultSuggestions);
+            }
 
             return new IntellisenseResult(intellisenseData, resultSuggestions);
         }
