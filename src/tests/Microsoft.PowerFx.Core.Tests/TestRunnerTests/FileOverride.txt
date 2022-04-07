@@ -1,0 +1,5 @@
+﻿#OVERRIDE: File1.txt
+
+// Override
+>> input1
+override_result1

@@ -1,0 +1,80 @@
+﻿// Text function 
+// https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-text
+
+>> Text(123)
+"123"
+
+>> Text(123.4)
+"123.4"
+
+>> Text(10*10)
+"100"
+
+>> Text(1/2)
+"0.5"
+
+>> Text(123.4, "#.000")
+"123.400"
+
+>> Text(Blank(), "#.000")
+""
+
+>> Text(123.4, Blank())
+""
+
+>> Text(1/0, "#.000")
+#Error
+
+>> Text(0.5, ".##")
+".5"
+
+>> Text(1.5, "000")
+"002"
+
+>> Text(123456789, "#,#")
+"123,456,789"
+
+>> Text(123456789, "#,###")
+"123,456,789"
+
+>> Text(123456789, "0,0.0")
+"123,456,789.0"
+
+>> Text(123456789, "0,00.0")
+"123,456,789.0"
+
+>> Text(123456789, "0,")
+"123456789,"
+
+>> Text(100, "#%‰'eE:")
+"100%‰'eE:"
+
+>> Text(567, "!#!#!#!#!")
+"!!5!6!7!"
+
+>> Text(true)
+"true"
+
+>> Text(false)
+"false"
+
+>> Text("abc")
+"abc"
+
+>> Char(65)
+"A"
+
+>> Char(Blank())
+Blank()
+
+>> Char(660/10)
+"B"
+
+>> Char(1/0)
+#Error
+
+>> Text(Date(2018, 3, 15), "yyyy-MM-dd")
+"2018-03-15"
+
+>> Text(Date(2018, 3, 15), "MM-dd-yyyy")
+"03-15-2018"

@@ -1,0 +1,4520 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="ListItemSingleQuotedFormat" xml:space="preserve">
+    <value>{0}</value>
+    
+  </data>
+  <data name="AboutIf" xml:space="preserve">
+    <value>Kontrollib, kas mõni määratud tingimustest on täidetud ja tagastab vastava väärtuse. Kui ükski tingimus pole täidetud, tagastab funktsioon määratud vaikeväärtuse.</value>
+    
+  </data>
+  <data name="IfArgCond" xml:space="preserve">
+    <value>loogikatest</value>
+    
+  </data>
+  <data name="IfArgTrueValue" xml:space="preserve">
+    <value>tõene_väärtus</value>
+    
+  </data>
+  <data name="IfArgElseValue" xml:space="preserve">
+    <value>muu_väärtus</value>
+    
+  </data>
+  <data name="AboutIf_logical_test" xml:space="preserve">
+    <value>Tingimus, mille tulemuseks on loogikaväärtus.</value>
+  </data>
+  <data name="AboutIf_true_value" xml:space="preserve">
+    <value>Avaldis, mis esitab funktsiooni If tulemuse, kui tingimus on tõene.</value>
+    
+  </data>
+  <data name="AboutIf_else_value" xml:space="preserve">
+    <value>Avaldis, mis esitab funktsiooni If tulemuse, kui kõik määratud tingimused on väärad.</value>
+    
+  </data>
+  <data name="AboutSwitch" xml:space="preserve">
+    <value>Vastendab valemi tulemi väärtuste hulgaga. Vaste leidmisel hinnatakse ja tagastatakse vastav valem. Kui ühtegi vastet ei leita, hinnatakse ja tagastatakse viimane vaikevalem.</value>
+    
+  </data>
+  <data name="SwitchExpression" xml:space="preserve">
+    <value>lüliti_väärtus</value>
+    
+  </data>
+  <data name="SwitchDefaultReturn" xml:space="preserve">
+    <value>vaiketulem</value>
+    
+  </data>
+  <data name="SwitchCaseExpr" xml:space="preserve">
+    <value>vaste_väärtus</value>
+    
+  </data>
+  <data name="SwitchCaseArg" xml:space="preserve">
+    <value>vaste_tulem</value>
+    
+  </data>
+  <data name="AboutSwitch_switch_value" xml:space="preserve">
+    <value>Väärtus, mida võrreldakse iga vaste_väärtusega.</value>
+    
+  </data>
+  <data name="AboutSwitch_match_value" xml:space="preserve">
+    <value>Väärtus, mis vastendatakse lüliti_väärtusega.</value>
+    
+  </data>
+  <data name="AboutSwitch_match_result" xml:space="preserve">
+    <value>Valem, mis hinnatakse ja tagastatakse kui vaste leitakse.</value>
+  </data>
+  <data name="AboutSwitch_default_result" xml:space="preserve">
+    <value>Valem, mis hinnatakse ja tagastatakse kui ühtegi vastet ei leita.</value>
+  </data>
+  <data name="AboutAnd" xml:space="preserve">
+    <value>Kontrollib, kas kõik argumendid on tõesed, ja kui on, tagastab väärtuse Tõene.</value>
+    
+  </data>
+  <data name="AboutOr" xml:space="preserve">
+    <value>Kontrollib, kas mõni argument on tõene, ja tagastab väärtuse Tõene või Väär. Tagastab väärtuse Väär ainult juhul, kui kõik argumendid on väärad.</value>
+    
+  </data>
+  <data name="AboutNot" xml:space="preserve">
+    <value>Muudab väärtuse Tõene väärtuseks Väär ja väärtuse Väär väärtuseks Tõene.</value>
+    
+  </data>
+  <data name="LogicalFuncParam" xml:space="preserve">
+    <value>loogiline</value>
+    
+  </data>
+  <data name="AboutAnd_logical" xml:space="preserve">
+    <value>Loogikaavaldis, mis lisatakse toimingusse And.</value>
+  </data>
+  <data name="AboutOr_logical" xml:space="preserve">
+    <value>Loogikaavaldis, mis lisatakse toimingusse OR.</value>
+  </data>
+  <data name="AboutNot_logical" xml:space="preserve">
+    <value>Loogikaavaldis, mis muudetakse negatiivseks.</value>
+  </data>
+  <data name="AboutCount" xml:space="preserve">
+    <value>Loendab määratud veerus arvväärtused.</value>
+    
+  </data>
+  <data name="AboutCountA" xml:space="preserve">
+    <value>Loendab veerus mittetühjad read.</value>
+    
+  </data>
+  <data name="AboutCountRows" xml:space="preserve">
+    <value>Loendab sisendtabelis või -kogumis olevad read.</value>
+    
+  </data>
+  <data name="CountArg1" xml:space="preserve">
+    <value>allikas</value>
+    
+  </data>
+  <data name="AboutCount_source" xml:space="preserve">
+    <value>Loendatavate väärtuste veerg.</value>
+  </data>
+  <data name="AboutCountA_source" xml:space="preserve">
+    <value>Loendatavate väärtuste veerg.</value>
+  </data>
+  <data name="AboutCountRows_source" xml:space="preserve">
+    <value>Tabel, mille read loendatakse.</value>
+  </data>
+  <data name="AboutCountIf" xml:space="preserve">
+    <value>Loendab määratud tingimusele vastavad read.</value>
+    
+  </data>
+  <data name="CountIfArg1" xml:space="preserve">
+    <value>allikas</value>
+    
+  </data>
+  <data name="CountIfArg2" xml:space="preserve">
+    <value>tingimus</value>
+    
+  </data>
+  <data name="AboutCountIf_source" xml:space="preserve">
+    <value>Tabel, kus loendatakse teatud kriteeriumidele vastavad read.</value>
+  </data>
+  <data name="AboutCountIf_condition" xml:space="preserve">
+    <value>Iga rea puhul arvutatav avaldis, mis määrab, kas rida tuleb loendada.</value>
+  </data>
+  <data name="AboutSumT" xml:space="preserve">
+    <value>Tagastab nende arvude summa, mis on tabeli kontekstis avaldise tulemiks.</value>
+    
+  </data>
+  <data name="AboutMaxT" xml:space="preserve">
+    <value>Tagastab suurima väärtuse, mis on tabeli kontekstis avaldise tulemiks.</value>
+    
+  </data>
+  <data name="AboutMinT" xml:space="preserve">
+    <value>Tagastab vähima väärtuse, mis on tabeli kontekstis avaldise tulemiks.</value>
+    
+  </data>
+  <data name="AboutAverageT" xml:space="preserve">
+    <value>Tagastab tabeli kontekstis arvutatud avaldise arvude keskmise (aritmeetiline keskmine).</value>
+    
+  </data>
+  <data name="StatisticalTArg1" xml:space="preserve">
+    <value>allikas</value>
+    
+  </data>
+  <data name="StatisticalTArg2" xml:space="preserve">
+    <value>avaldis</value>
+    
+  </data>
+  <data name="AboutMin_source" xml:space="preserve">
+    <value>Tabel, mille põhjal miinimum arvutatakse.</value>
+  </data>
+  <data name="AboutMin_expression" xml:space="preserve">
+    <value>Avaldis, mille väärtus arvutatakse sisendtabelis iga rea kohta ja mis esitab selle miinimumi arvutamise toimingu jaoks arvväärtused.</value>
+  </data>
+  <data name="AboutMax_source" xml:space="preserve">
+    <value>Tabel, mille põhjal see maksimum arvutatakse.</value>
+  </data>
+  <data name="AboutMax_expression" xml:space="preserve">
+    <value>Avaldis, mille väärtus arvutatakse sisendtabelis iga rea kohta ja mis esitab selle maksimumi arvutamise toimingu jaoks arvväärtused.</value>
+  </data>
+  <data name="AboutAverage_source" xml:space="preserve">
+    <value>Tabel, mille põhjal see keskmine arvutatakse.</value>
+  </data>
+  <data name="AboutAverage_expression" xml:space="preserve">
+    <value>Avaldis, mille väärtus arvutatakse sisendtabeli iga rea kohta ja mis esitab selle keskmise arvutamise toimingu arvväärtused.</value>
+  </data>
+  <data name="AboutSum_source" xml:space="preserve">
+    <value>Tabel, mille põhjal see summeerimistoiming tehakse.</value>
+  </data>
+  <data name="AboutSum_expression" xml:space="preserve">
+    <value>Avaldis, mille väärtus arvutatakse sisendtabelis iga rea kohta ja mis pakub selle summeerimistoimingu jaoks arvväärtused.</value>
+  </data>
+  <data name="AboutSum" xml:space="preserve">
+    <value>Tagastab oma argumentide summa.</value>
+    
+  </data>
+  <data name="AboutMax" xml:space="preserve">
+    <value>Tagastab väärtuste kogumi suurima väärtuse. Ignoreerib loogikaväärtusi ja teksti.</value>
+    
+  </data>
+  <data name="AboutMin" xml:space="preserve">
+    <value>Tagastab väärtuste kogumi vähima väärtuse. Ignoreerib loogikaväärtusi ja teksti.</value>
+    
+  </data>
+  <data name="AboutAverage" xml:space="preserve">
+    <value>Tagastab oma argumentide keskmise (aritmeetiline keskmine).</value>
+    
+  </data>
+  <data name="StatisticalArg" xml:space="preserve">
+    <value>arv</value>
+    
+  </data>
+  <data name="AboutSum_number" xml:space="preserve">
+    <value>Selle summeerimistoimingu arvväärtus.</value>
+  </data>
+  <data name="AboutMin_number" xml:space="preserve">
+    <value>Selle miinimumi arvutamise toimingu arvväärtus.</value>
+  </data>
+  <data name="AboutMax_number" xml:space="preserve">
+    <value>Selle maksimumi arvutamise toimingu arvväärtus.</value>
+  </data>
+  <data name="AboutAverage_number" xml:space="preserve">
+    <value>Selle keskmise arvutamise toimingu arvväärtus.</value>
+  </data>
+  <data name="AboutAddColumns" xml:space="preserve">
+    <value>Tagastab tabeli uute veergudega, mille esitamiseks on avaldis arvutatud allika põhjal.</value>
+    
+  </data>
+  <data name="AddColumnsArg1" xml:space="preserve">
+    <value>allikas</value>
+    
+  </data>
+  <data name="AddColumnsArg2" xml:space="preserve">
+    <value>veerg</value>
+    
+  </data>
+  <data name="AddColumnsArg3" xml:space="preserve">
+    <value>avaldis</value>
+    
+  </data>
+  <data name="AboutAddColumns_source" xml:space="preserve">
+    <value>Tabel, kuhu veerud lisatakse.</value>
+    
+  </data>
+  <data name="AboutAddColumns_column" xml:space="preserve">
+    <value>Kordumatu veerunimi.</value>
+    
+  </data>
+  <data name="AboutAddColumns_expression" xml:space="preserve">
+    <value>Avaldis, millega esitatakse uue veeru väärtused.</value>
+    
+  </data>
+  <data name="AboutDropColumns" xml:space="preserve">
+    <value>Tagastab tabeli, milles on lähtetabelist eemaldatud üks või mitu määratud veergu.</value>
+    
+  </data>
+  <data name="DropColumnsArg1" xml:space="preserve">
+    <value>allikas</value>
+    
+  </data>
+  <data name="DropColumnsArg2" xml:space="preserve">
+    <value>veeru_nimi</value>
+    
+  </data>
+  <data name="AboutDropColumns_source" xml:space="preserve">
+    <value>Tabeliväärtus, millest veerud eemaldatakse.</value>
+  </data>
+  <data name="AboutDropColumns_column_name" xml:space="preserve">
+    <value>Eemaldatava veeru nimi.</value>
+  </data>
+  <data name="AboutFilter" xml:space="preserve">
+    <value>Tagastab tabelist read, mille kõik määratud tingimused on tõesed.</value>
+    
+  </data>
+  <data name="FilterArg1" xml:space="preserve">
+    <value>allikas</value>
+    
+  </data>
+  <data name="FilterArg2" xml:space="preserve">
+    <value>loogikatest</value>
+    
+  </data>
+  <data name="AboutFilter_source" xml:space="preserve">
+    <value>Filtreeritav tabel.</value>
+  </data>
+  <data name="AboutFilter_logical_test" xml:space="preserve">
+    <value>Loogikatest, mis viiakse läbi iga rea kohta. Ainult read, mis läbivad selle testi, lisatakse filtri tulemustesse.</value>
+  </data>
+  <data name="AboutFirst" xml:space="preserve">
+    <value>Tagastab allika esimese rea.</value>
+    
+  </data>
+  <data name="AboutLast" xml:space="preserve">
+    <value>Tagastab allika viimase rea.</value>
+    
+  </data>
+  <data name="FirstLastArg1" xml:space="preserve">
+    <value>allikas</value>
+    
+  </data>
+  <data name="AboutFirst_source" xml:space="preserve">
+    <value>Tabel, mille esimene rida tagastatakse.</value>
+  </data>
+  <data name="AboutLast_source" xml:space="preserve">
+    <value>Tabel, mille viimane rida tagastatakse.</value>
+  </data>
+  <data name="AboutFirstN" xml:space="preserve">
+    <value>Tagastab allika N esimest rida.</value>
+    
+  </data>
+  <data name="AboutLastN" xml:space="preserve">
+    <value>Tagastab allika N viimast rida.</value>
+    
+  </data>
+  <data name="FirstLastNArg1" xml:space="preserve">
+    <value>allikas</value>
+    
+  </data>
+  <data name="FirstLastNArg2" xml:space="preserve">
+    <value>arv</value>
+    
+  </data>
+  <data name="AboutFirstN_source" xml:space="preserve">
+    <value>Tabel, kust read tagastatakse.</value>
+  </data>
+  <data name="AboutFirstN_count" xml:space="preserve">
+    <value>Tagastatavate ridade arv.</value>
+  </data>
+  <data name="AboutLastN_source" xml:space="preserve">
+    <value>Tabel, kust read tagastatakse.</value>
+  </data>
+  <data name="AboutLastN_count" xml:space="preserve">
+    <value>Tagastatavate ridade arv.</value>
+  </data>
+  <data name="AboutText" xml:space="preserve">
+    <value>Teisendab väärtuse tekstiks spetsiaalses arvuvormingus tekstina ("vorming_tekst").</value>
+    
+  </data>
+  <data name="TextArg1" xml:space="preserve">
+    <value>väärtus</value>
+    
+  </data>
+  <data name="TextArg2" xml:space="preserve">
+    <value>vorming_tekst</value>
+    
+  </data>
+  <data name="TextArg3" xml:space="preserve">
+    <value>keel</value>
+    
+  </data>
+  <data name="AboutText_value" xml:space="preserve">
+    <value>Väärtus, mis vormindatakse tekstiks.</value>
+  </data>
+  <data name="AboutText_format_text" xml:space="preserve">
+    <value>Tekstväärtus, mis määrab, mil viisil väärtus vormindatakse.</value>
+    
+  </data>
+  <data name="AboutText_language" xml:space="preserve">
+    <value>Tekstiks teisendamisel kasutatav keelekood.</value>
+    
+  </data>
+  <data name="AboutValue" xml:space="preserve">
+    <value>Teisendab arvu tähistava teksti arvväärtuseks.</value>
+    
+  </data>
+  <data name="ValueArg1" xml:space="preserve">
+    <value>tekst</value>
+    
+  </data>
+  <data name="ValueArg2" xml:space="preserve">
+    <value>keel</value>
+    
+  </data>
+  <data name="AboutValue_text" xml:space="preserve">
+    <value>Arvväärtuseks teisendatav tekstväärtus.</value>
+  </data>
+  <data name="AboutValue_language" xml:space="preserve">
+    <value>Väärtuse teisendamisel kasutatav keelekood.</value>
+    
+  </data>
+  <data name="AboutBoolean" xml:space="preserve">
+    <value>Teisendab teksti, mis tähistab loogilist väärtust, loogiliseks väärtuseks.</value>
+    
+  </data>
+  <data name="BooleanArg1" xml:space="preserve">
+    <value>tekst</value>
+    
+  </data>
+  <data name="AboutBoolean_text" xml:space="preserve">
+    <value>Tekstiväärtus loogiliseks väärtuseks teisendamise jaoks.</value>
+  </data>
+  <data name="AboutCoalesce" xml:space="preserve">
+    <value>Tagastab esimese mittetühja argumendi</value>
+    
+  </data>
+  <data name="CoalesceArg1" xml:space="preserve">
+    <value>väärtus</value>
+    
+  </data>
+  <data name="AboutCoalesce_value" xml:space="preserve">
+    <value>Tagastatav argument, kui see on esimene mittetühi argument.</value>
+  </data>
+  <data name="AboutConcatenate" xml:space="preserve">
+    <value>Ühendab mitu tekstväärtust üheks tekstväärtuseks.</value>
+    
+  </data>
+  <data name="ConcatenateArg1" xml:space="preserve">
+    <value>tekst</value>
+    
+  </data>
+  <data name="AboutConcatenate_text" xml:space="preserve">
+    <value>Tekstiväärtus, mis ühendatakse ülejäänud argumentidega.</value>
+  </data>
+  <data name="AboutConcatenateT" xml:space="preserve">
+    <value>Ühendab mitu tekstiväärtust või tabelit ühte tekstiväärtuste veergu.</value>
+    
+  </data>
+  <data name="ConcatenateTArg1" xml:space="preserve">
+    <value>väärtus</value>
+    
+  </data>
+  <data name="AboutConcatenate_value" xml:space="preserve">
+    <value>Tekstiväärtus või tekstiväärtuste veerg, mis ühendatakse ülejäänud argumentidega.</value>
+  </data>
+  <data name="AboutConcat" xml:space="preserve">
+    <value>Ühendab kõik antud tabelis määratud avaldise arvutamise teel loodud tekstväärtused üheks tekstväärtuseks.</value>
+    
+  </data>
+  <data name="ConcatArg1" xml:space="preserve">
+    <value>tabel</value>
+    
+  </data>
+  <data name="ConcatArg2" xml:space="preserve">
+    <value>avaldis</value>
+    
+  </data>
+  <data name="ConcatArg3" xml:space="preserve">
+    <value>eraldaja</value>
+    
+  </data>
+  <data name="AboutConcat_table" xml:space="preserve">
+    <value>Tabeliväärtus, mille põhjal arvutatakse teise parameetri määratud avaldise väärtus.</value>
+  </data>
+  <data name="AboutConcat_expression" xml:space="preserve">
+    <value>Määratud tabelis iga rea puhul arvutatav teksti loov avaldis.</value>
+  </data>
+  <data name="AboutConcat_separator" xml:space="preserve">
+    <value>Tabeli ühendatud ridade vahele sisestatav tekstiväärtus.</value>
+    
+  </data>
+  <data name="AboutLen" xml:space="preserve">
+    <value>Tagastab tekstväärtuse märkide arvu.</value>
+    
+  </data>
+  <data name="AboutLen_text" xml:space="preserve">
+    <value>Tekstväärtus, mille puhul tagastatakse pikkus märkides.</value>
+  </data>
+  <data name="AboutLenT" xml:space="preserve">
+    <value>Tagastab tekstväärtuse märkide arvu, mis arvutatakse määratud tabelis või kogumis ridade kaupa.</value>
+    
+  </data>
+  <data name="AboutLen_text_column" xml:space="preserve">
+    <value>Nende tekstväärtuste veerg, mille puhul tagastatakse pikkused märkides (uue veeruna).</value>
+  </data>
+  <data name="LenArg1" xml:space="preserve">
+    <value>tekst</value>
+    
+  </data>
+  <data name="LenTArg1" xml:space="preserve">
+    <value>tekstiveerg</value>
+    
+  </data>
+  <data name="AboutUpper" xml:space="preserve">
+    <value>Rakendab tekstväärtusele suurtähestuse.</value>
+    
+  </data>
+  <data name="AboutUpperT" xml:space="preserve">
+    <value>Rakendab tekstväärtuse kõigile tähtedele suurtähestuse, mis arvutatakse määratud tabelis või kogumis ridade kaupa.</value>
+    
+  </data>
+  <data name="AboutUpper_text" xml:space="preserve">
+    <value>Tekstväärtus, millele rakendatakse suurtähestus.</value>
+  </data>
+  <data name="AboutUpper_text_column" xml:space="preserve">
+    <value>Tekstväärtuste veerg, mis teisendatakse suurtähestusega tekstväärtuste veeruks.</value>
+  </data>
+  <data name="AboutLower" xml:space="preserve">
+    <value>Muudab kõik tekstväärtuses olevad tähed väiketähelisteks.</value>
+    
+  </data>
+  <data name="AboutLowerT" xml:space="preserve">
+    <value>Muudab kõik määratud tabelis või kogumis olevate ridade põhjal arvutatud tekstväärtuse tähed väiketäheliseks.</value>
+    
+  </data>
+  <data name="AboutLower_text" xml:space="preserve">
+    <value>Väiketäheliseks teisendatav tekstväärtus.</value>
+  </data>
+  <data name="AboutLower_text_column" xml:space="preserve">
+    <value>Väiketähelisteks tekstväärtuste veeruks teisendatav tekstväärtuste veerg.</value>
+  </data>
+  <data name="AboutProper" xml:space="preserve">
+    <value>Rakendab tekstväärtusele algsuurtähestuse. Iga sõna esimene täht on suurtäht ja kõik ülejäänud on väiketähed.</value>
+    
+  </data>
+  <data name="AboutProperT" xml:space="preserve">
+    <value>Rakendab tekstväärtusele algsuurtähestuse, mis arvutatakse määratud tabelis või kogumis iga rea kohta. Iga sõna esimene täht on suurtäht ja kõik ülejäänud on väiketähed.</value>
+    
+  </data>
+  <data name="AboutProper_text" xml:space="preserve">
+    <value>Tekstväärtus, millele rakendatakse esisuurtähestus.</value>
+  </data>
+  <data name="AboutProper_text_column" xml:space="preserve">
+    <value>Tekstväärtuste veerg, mis teisendatakse esisuurtähestusega tekstväärtuste veeruks.</value>
+  </data>
+  <data name="AboutTrim" xml:space="preserve">
+    <value>Eemaldab tekstväärtusest kõik tühikud, välja arvatud sõnadevahelised ühekordsed tühikud.</value>
+    
+  </data>
+  <data name="AboutTrim_text" xml:space="preserve">
+    <value>Tekstväärtus, mille tühikud eemaldatakse.</value>
+  </data>
+  <data name="AboutTrim_text_column" xml:space="preserve">
+    <value>Tekstväärtuste veerg, mille tühikud eemaldatakse.</value>
+  </data>
+  <data name="AboutTrimEnds" xml:space="preserve">
+    <value>Eemaldab tekstväärtusest kõik algus- ja lõputühikud.</value>
+    
+  </data>
+  <data name="AboutTrimEnds_text" xml:space="preserve">
+    <value>Tekstväärtus, kust eemaldatakse algus- ja lõputühikud.</value>
+  </data>
+  <data name="AboutTrimEnds_text_column" xml:space="preserve">
+    <value>Tekstväärtuste veerg, kust eemaldatakse algus- ja lõputühikud.</value>
+  </data>
+  <data name="AboutMid" xml:space="preserve">
+    <value>Tagastab tekstväärtuse keskelt märgid, kui määratud on alguspunkt ja pikkus.</value>
+    
+  </data>
+  <data name="AboutMidT" xml:space="preserve">
+    <value>Tagastab tekstväärtuse keskelt märgid, kui määratud on alguspunkt ja pikkus, arvutatakse määratud tabelis või kogumis ridade kaupa.</value>
+    
+  </data>
+  <data name="AboutMid_text" xml:space="preserve">
+    <value>Tekstväärtus, kust märgid ekstraktitakse.</value>
+  </data>
+  <data name="AboutMid_text_column" xml:space="preserve">
+    <value>Tekstväärtuste veerg, millest märgid uude veergu ekstraktitakse.</value>
+  </data>
+  <data name="AboutMid_start_num" xml:space="preserve">
+    <value>Alguspunkt, millest alates märgid ekstraktitakse.</value>
+  </data>
+  <data name="AboutMid_num_chars" xml:space="preserve">
+    <value>Ekstraktitavate märkide arv.</value>
+  </data>
+  <data name="StringFuncArg1" xml:space="preserve">
+    <value>tekst</value>
+    
+  </data>
+  <data name="StringTFuncArg1" xml:space="preserve">
+    <value>tekstiveerg</value>
+    
+  </data>
+  <data name="StringFuncArg2" xml:space="preserve">
+    <value>algusnr</value>
+    
+  </data>
+  <data name="StringFuncArg3" xml:space="preserve">
+    <value>märkide_arv</value>
+    
+  </data>
+  <data name="AboutReplace" xml:space="preserve">
+    <value>Asendab tekstväärtuse osa teise tekstväärtusega.</value>
+    
+  </data>
+  <data name="AboutReplaceT" xml:space="preserve">
+    <value>Asendab tekstväärtuse osa teise tekstväärtusega, mis arvutatakse määratud tabelis või kogumis ridade kaupa.</value>
+    
+  </data>
+  <data name="ReplaceFuncArg1" xml:space="preserve">
+    <value>vana_tekst</value>
+    
+  </data>
+  <data name="ReplaceFuncArg4" xml:space="preserve">
+    <value>uus_tekst</value>
+    
+  </data>
+  <data name="AboutReplace_old_text" xml:space="preserve">
+    <value>Töödeldav tekstväärtus.</value>
+  </data>
+  <data name="AboutReplace_start_num" xml:space="preserve">
+    <value>Alguspunkt, millest alates toimub asendamine.</value>
+  </data>
+  <data name="AboutReplace_num_chars" xml:space="preserve">
+    <value>Asendatavate märkide arv.</value>
+  </data>
+  <data name="AboutReplace_new_text" xml:space="preserve">
+    <value>Uus tekstväärtus.</value>
+  </data>
+  <data name="AboutReplace_text_column" xml:space="preserve">
+    <value>Töödeldavate tekstväärtuste veerg.</value>
+  </data>
+  <data name="AboutError" xml:space="preserve">
+    <value>Loob tõrke kohandatud väärtustega.</value>
+    
+  </data>
+  <data name="AboutError_error_information" xml:space="preserve">
+    <value>Loodud kohandatud väärtusi sisaldaval kirjel ilmnes tõrge.</value>
+    
+  </data>
+  <data name="ErrorArg1" xml:space="preserve">
+    <value>tõrketeave</value>
+    
+  </data>
+  <data name="ErrErrorIrrelevantField" xml:space="preserve">
+    <value>Funktsioon Error kasutab ainult välju "Kind", "Message", "Notify", "Control" ja "Property".</value>
+    
+  </data>
+  <data name="AboutIfError" xml:space="preserve">
+    <value>Hindab ja tagastab esimese mittevigase argumendi.</value>
+    
+  </data>
+  <data name="IfErrorArg1" xml:space="preserve">
+    <value>väärtus</value>
+    
+  </data>
+  <data name="AboutIfError_value" xml:space="preserve">
+    <value>Väärtus, mis tagastatakse, kui see ei ole viga.</value>
+    
+  </data>
+  <data name="IfErrorArg2" xml:space="preserve">
+    <value>varuvorm</value>
+    
+  </data>
+  <data name="AboutIfError_fallback" xml:space="preserve">
+    <value>Väärtus, mis tagastatakse, kui see on esimene mittevigane argument.</value>
+    
+  </data>
+  <data name="AboutSubstitute" xml:space="preserve">
+    <value>Asendab tekstväärtuses olemasoleva teksti uue tekstiga.</value>
+    
+  </data>
+  <data name="AboutSubstituteT" xml:space="preserve">
+    <value>Asendab tekstväärtuses olemasoleva teksti uue tekstiga, mis arvutatakse määratud tabelis või kogumis ridade kaupa.</value>
+    
+  </data>
+  <data name="SubstituteFuncArg1" xml:space="preserve">
+    <value>tekst</value>
+    
+  </data>
+  <data name="SubstituteTFuncArg1" xml:space="preserve">
+    <value>tekstiveerg</value>
+    
+  </data>
+  <data name="SubstituteFuncArg2" xml:space="preserve">
+    <value>vana_tekst</value>
+    
+  </data>
+  <data name="SubstituteFuncArg3" xml:space="preserve">
+    <value>uus_tekst</value>
+    
+  </data>
+  <data name="SubstituteFuncArg4" xml:space="preserve">
+    <value>esinemisjuhu_nr</value>
+    
+  </data>
+  <data name="AboutSubstitute_text" xml:space="preserve">
+    <value>Töödeldav tekstväärtus.</value>
+  </data>
+  <data name="AboutSubstitute_old_text" xml:space="preserve">
+    <value>Asendatav tekst.</value>
+  </data>
+  <data name="AboutSubstitute_new_text" xml:space="preserve">
+    <value>Asendustekst.</value>
+  </data>
+  <data name="AboutSubstitute_instance_num" xml:space="preserve">
+    <value>Määrab, milline määratud teksti esinemiskord tuleb asendada.</value>
+  </data>
+  <data name="AboutSubstitute_text_column" xml:space="preserve">
+    <value>Töödeldavate tekstväärtuste veerg.</value>
+  </data>
+  <data name="AboutSort" xml:space="preserve">
+    <value>Sordib allika vastavalt iga rea põhjal arvutatud avaldise tulemustele, määrates soovi korral sortimisjärjestuse.</value>
+    
+  </data>
+  <data name="SortArg1" xml:space="preserve">
+    <value>allikas</value>
+    
+  </data>
+  <data name="SortArg2" xml:space="preserve">
+    <value>avaldis</value>
+    
+  </data>
+  <data name="SortArg3" xml:space="preserve">
+    <value>järjestus</value>
+    
+  </data>
+  <data name="AboutSort_source" xml:space="preserve">
+    <value>Sorditav tabel.</value>
+  </data>
+  <data name="AboutSort_expression" xml:space="preserve">
+    <value>Avaldis, mille väärtus arvutatakse allikas olevate ridade põhjal ja mis esitab sortimiseks väärtused.</value>
+  </data>
+  <data name="AboutSort_order" xml:space="preserve">
+    <value>Tõusev või laskuv järjestus</value>
+  </data>
+  <data name="AboutSortByColumns" xml:space="preserve">
+    <value>Sordib allika veeru põhjal, määrates soovi korral sortimisjärjestuse.</value>
+    
+  </data>
+  <data name="SortByColumnsArg1" xml:space="preserve">
+    <value>allikas</value>
+    
+  </data>
+  <data name="SortByColumnsArg2" xml:space="preserve">
+    <value>veerg</value>
+    
+  </data>
+  <data name="SortByColumnsArg3" xml:space="preserve">
+    <value>järjestus</value>
+    
+  </data>
+  <data name="AboutSortByColumns_source" xml:space="preserve">
+    <value>Sorditav tabel.</value>
+  </data>
+  <data name="AboutSortByColumns_column" xml:space="preserve">
+    <value>Kordumatu veerunimi.</value>
+  </data>
+  <data name="AboutSortByColumns_order" xml:space="preserve">
+    <value>Tõusev või laskuv järjestus</value>
+  </data>
+  <data name="AboutSortByColumnsWithOrderValues" xml:space="preserve">
+    <value>Sordib allika vastavalt määratud veerus vastavuses olevate väärtuste registrile.</value>
+    
+  </data>
+  <data name="SortByColumnsWithOrderValuesArg1" xml:space="preserve">
+    <value>allikas</value>
+    
+  </data>
+  <data name="SortByColumnsWithOrderValuesArg2" xml:space="preserve">
+    <value>veerg</value>
+    
+  </data>
+  <data name="SortByColumnsWithOrderValuesArg3" xml:space="preserve">
+    <value>väärtused</value>
+    
+  </data>
+  <data name="AboutSortByColumns_values" xml:space="preserve">
+    <value>Sortimiseks kasutatavate väärtuste veerg. Sortimine toimub tõusvas või laskuvas järjestuses, kuid pigem põhineb veerus vastavuses olevate väärtuste registril </value>
+  </data>
+  <data name="AboutRand" xml:space="preserve">
+    <value>Tagastab juhusliku arvu, mis on suurem kui null või sellega võrdne ja väiksem kui 1, ühtlaselt jaotatud.</value>
+    
+  </data>
+  <data name="AboutRandBetween" xml:space="preserve">
+    <value>Tagastab juhusliku arvu suurima ja väikseima vahel, ühtlaselt jaotatuna.</value>
+    
+  </data>
+  <data name="AboutRandBetween_bottom" xml:space="preserve">
+    <value>Väikseim täisarv, mida funktsioon saab tagastada.</value>
+  </data>
+  <data name="AboutRandBetween_top" xml:space="preserve">
+    <value>Suurim täisarv, mida funktsioon saab tagastada. Peab olema väikseimaga võrdne või suurem.</value>
+  </data>
+  <data name="RandBetweenArg1" xml:space="preserve">
+    <value>alla</value>
+    
+  </data>
+  <data name="RandBetweenArg2" xml:space="preserve">
+    <value>üles</value>
+    
+  </data>
+  <data name="AboutGUID" xml:space="preserve">
+    <value>Loob GUID stringist või tagastab juhuslikult loodud GUID, kui argumente pole antud.</value>
+    
+  </data>
+  <data name="GUIDArg" xml:space="preserve">
+    <value>GUID_string</value>
+    
+  </data>
+  <data name="AboutGUID_GUID_string" xml:space="preserve">
+    <value>String, mida teisendada GUID-ks</value>
+    
+  </data>
+  <data name="AboutNow" xml:space="preserve">
+    <value>Tagastab praeguse kuupäeva ja kellaaja.</value>
+    
+  </data>
+  <data name="AboutUTCNow" xml:space="preserve">
+    <value>Tagastab praeguse kuupäeva ja kellaaja UTC ajavööndis.</value>
+    
+  </data>
+  <data name="AboutTimeZoneOffset" xml:space="preserve">
+    <value>Tagastab UTC-kellaaja ja kohaliku kellaaja vahelise ajavahe, minutites. Nt, kui teie ajavööndiks on UTC+2, tagastatakse –120.</value>
+    
+  </data>
+  <data name="TimeZoneOffsetArg1" xml:space="preserve">
+    <value>kuupäev</value>
+    
+  </data>
+  <data name="AboutTimeZoneOffset_date" xml:space="preserve">
+    <value>Kuupäev, millal funktsioon ''TimeZoneOffset' arvutatakse.</value>
+    
+  </data>
+  <data name="AboutToday" xml:space="preserve">
+    <value>Tagastab tänase kuupäeva.</value>
+    
+  </data>
+  <data name="AboutUTCToday" xml:space="preserve">
+    <value>Tagastab praeguse kuupäeva UTC ajavööndis.</value>
+    
+  </data>
+  <data name="AboutWeekNum" xml:space="preserve">
+    <value>Tagastab antud kuupäeva nädalanumbri.</value>
+    
+  </data>
+  <data name="WeekNumArg1" xml:space="preserve">
+    <value>kuupäev</value>
+    
+  </data>
+  <data name="WeekNumArg2" xml:space="preserve">
+    <value>nädala_algus</value>
+    
+  </data>
+  <data name="AboutWeekNum_date" xml:space="preserve">
+    <value>Kuupäevaväärtus, mille jaoks arvutatakse nädalanumber.</value>
+  </data>
+  <data name="AboutWeekNum_start_of_week" xml:space="preserve">
+    <value>T: Väärtus nädala alguse loendist StartOfWeek või arv vastavast Exceli funktsioonist, mis näitab, kuidas nädalapäevad tuleks nummerdada.</value>
+    
+  </data>
+  <data name="AboutISOWeekNum" xml:space="preserve">
+    <value>Tagastab nädalanumbri vastavalt antud kuupäeva ISO-reeglitele.</value>
+    
+  </data>
+  <data name="ISOWeekNumArg1" xml:space="preserve">
+    <value>kuupäev</value>
+    
+  </data>
+  <data name="AboutISOWeekNum_date" xml:space="preserve">
+    <value>Kuupäevaväärtus, mille jaoks arvutatakse ISO-nädalanumber.</value>
+  </data>
+  <data name="AboutInt" xml:space="preserve">
+    <value>Lühendab „numbri“, ümardades negatiivse lõpmatuse suunas.</value>
+    
+  </data>
+  <data name="AboutIntT" xml:space="preserve">
+    <value>Lühendab arvuveerus väärtused, ümardades negatiivse lõpmatuse suunas.</value>
+    
+  </data>
+  <data name="AboutInt_number" xml:space="preserve">
+    <value>Töödeldav arvväärtus.</value>
+  </data>
+  <data name="AboutInt_input" xml:space="preserve">
+    <value>Töödeldavate arvväärtuste veerg.</value>
+  </data>
+  <data name="AboutTrunc" xml:space="preserve">
+    <value>Kärbib „numbri“, ümardades nulli suunas.</value>
+    
+  </data>
+  <data name="AboutTrunc_number" xml:space="preserve">
+    <value>Kärbitav arv.</value>
+  </data>
+  <data name="AboutTrunc_source" xml:space="preserve">
+    <value>Kärbitav arvuveerg.</value>
+  </data>
+  <data name="AboutTrunc_num_digits" xml:space="preserve">
+    <value>Kärpimiseks kasutatav murdosa kohtade arv.</value>
+  </data>
+  <data name="AboutTruncT" xml:space="preserve">
+    <value>Kärbib kõik "sihtkohas" olevad arvud nulli suunas.</value>
+    
+  </data>
+  <data name="TruncArg1" xml:space="preserve">
+    <value>arv</value>
+    
+  </data>
+  <data name="TruncArg2" xml:space="preserve">
+    <value>kohtade_arv</value>
+    
+  </data>
+  <data name="TruncTArg1" xml:space="preserve">
+    <value>allikas</value>
+    
+  </data>
+  <data name="TruncTArg2" xml:space="preserve">
+    <value>kohtade_arv</value>
+    
+  </data>
+  <data name="AboutRound" xml:space="preserve">
+    <value>Ümardab arvu määratud hulga kohtadeni.</value>
+    
+  </data>
+  <data name="AboutRoundUp" xml:space="preserve">
+    <value>Ümardab arvu ülespoole, nullist kaugemale.</value>
+    
+  </data>
+  <data name="AboutRoundDown" xml:space="preserve">
+    <value>Ümardab arvu allapoole, nullile lähemale.</value>
+    
+  </data>
+  <data name="RoundArg1" xml:space="preserve">
+    <value>arv</value>
+    
+  </data>
+  <data name="RoundArg2" xml:space="preserve">
+    <value>kohtade_arv</value>
+    
+  </data>
+  <data name="AboutRound_number" xml:space="preserve">
+    <value>Ümardatav arv.</value>
+  </data>
+  <data name="AboutRound_source" xml:space="preserve">
+    <value>Ümardatav arvuveerg.</value>
+  </data>
+  <data name="AboutRound_num_digits" xml:space="preserve">
+    <value>Ümardamiseks kasutatav murdosa kohtade arv.</value>
+  </data>
+  <data name="AboutRoundUp_number" xml:space="preserve">
+    <value>Ümardatav arv.</value>
+  </data>
+  <data name="AboutRoundUp_source" xml:space="preserve">
+    <value>Ümardatav arvuveerg.</value>
+  </data>
+  <data name="AboutRoundUp_num_digits" xml:space="preserve">
+    <value>Ümardamiseks kasutatav murdosa kohtade arv.</value>
+  </data>
+  <data name="AboutRoundDown_number" xml:space="preserve">
+    <value>Ümardatav arv.</value>
+  </data>
+  <data name="AboutRoundDown_source" xml:space="preserve">
+    <value>Ümardatav arvuveerg.</value>
+  </data>
+  <data name="AboutRoundDown_num_digits" xml:space="preserve">
+    <value>Ümardamiseks kasutatav murdosa kohtade arv.</value>
+  </data>
+  <data name="AboutRoundT" xml:space="preserve">
+    <value>Ümardab kõik allikas olevad arvud määratud hulga kohtadeni.</value>
+    
+  </data>
+  <data name="AboutRoundUpT" xml:space="preserve">
+    <value>Ümardab kõik allikas olevad arvud ülespoole, nullist kaugemale.</value>
+    
+  </data>
+  <data name="AboutRoundDownT" xml:space="preserve">
+    <value>Ümardab kõik allikas olevad arvud allapoole, nullile lähemale.</value>
+    
+  </data>
+  <data name="RoundTArg1" xml:space="preserve">
+    <value>allikas</value>
+    
+  </data>
+  <data name="RoundTArg2" xml:space="preserve">
+    <value>kohtade_arv</value>
+    
+  </data>
+  <data name="AboutRGBA" xml:space="preserve">
+    <value>Kasutab värvi punase (Red), rohelise (Green), sinise (Blue) ja alfa (Alpha) osa ning loob konkreetse värvi. R, G, B on arvud vahemikus 0–255. Alfa on kümnendarv vahemikus 0–1.</value>
+    
+  </data>
+  <data name="RGBAArg1" xml:space="preserve">
+    <value>väärtus_punane</value>
+    
+  </data>
+  <data name="RGBAArg2" xml:space="preserve">
+    <value>väärtus_roheline</value>
+    
+  </data>
+  <data name="RGBAArg3" xml:space="preserve">
+    <value>väärtus_sinine</value>
+    
+  </data>
+  <data name="RGBAArg4" xml:space="preserve">
+    <value>väärtus_alfa</value>
+    
+  </data>
+  <data name="AboutRGBA_red_value" xml:space="preserve">
+    <value>Punase osakaal, 0–255.</value>
+  </data>
+  <data name="AboutRGBA_green_value" xml:space="preserve">
+    <value>Rohelise osakaal, 0–255.</value>
+  </data>
+  <data name="AboutRGBA_blue_value" xml:space="preserve">
+    <value>Sinise osakaal, 0–255.</value>
+  </data>
+  <data name="AboutRGBA_alpha_value" xml:space="preserve">
+    <value>Alfa osakaal 0–1 (või protsent, nt 49%).</value>
+  </data>
+  <data name="AboutColorFade" xml:space="preserve">
+    <value>Loob vastavalt määratud hajutusprotsendile määratud värvist uue varjundi.</value>
+    
+  </data>
+  <data name="ColorFadeArg1" xml:space="preserve">
+    <value>värv</value>
+    
+  </data>
+  <data name="ColorFadeArg2" xml:space="preserve">
+    <value>hajutus</value>
+    
+  </data>
+  <data name="AboutColorFade_color" xml:space="preserve">
+    <value>Muudetav värv.</value>
+  </data>
+  <data name="AboutColorFade_fade" xml:space="preserve">
+    <value>Protsent, mille võrra värvi varjundit muudetakse. Negatiivne protsent loob tumedama varjundi. Positiivne protsent loob heledama varjundi.</value>
+  </data>
+  <data name="AboutColorFadeT" xml:space="preserve">
+    <value>Loob vastavalt määratud hajutusprotsentidele määratud värvidest uued varjundid.</value>
+  </data>
+  <data name="ColorFadeTArg1" xml:space="preserve">
+    <value>värv_või_veerg</value>
+    
+  </data>
+  <data name="ColorFadeTArg2" xml:space="preserve">
+    <value>hajutus_või_veerg</value>
+    
+  </data>
+  <data name="AboutColorFade_color_or_column" xml:space="preserve">
+    <value>Muudetav värv (või värviväärtuste veerg).</value>
+  </data>
+  <data name="AboutColorFade_fade_or_column" xml:space="preserve">
+    <value>Protsent (või protsendiväärtuste veerg), mille võrra värvi (või värviväärtuste veeru) varjundit muudetakse. Negatiivne protsent loob tumedama varjundi. Positiivne protsent loob heledama varjundi.</value>
+  </data>
+  <data name="AboutAbs" xml:space="preserve">
+    <value>Tagastab arvu absoluutväärtuse, mis on sama arv ilma märgita.</value>
+    
+  </data>
+  <data name="AboutAbsT" xml:space="preserve">
+    <value>Tagastab arvuveeru absoluutväärtused (samad arvud ilma märkideta).</value>
+    
+  </data>
+  <data name="AboutAbs_number" xml:space="preserve">
+    <value>Töödeldav arvväärtus.</value>
+  </data>
+  <data name="AboutAbs_input" xml:space="preserve">
+    <value>Töödeldavate arvväärtuste veerg.</value>
+  </data>
+  <data name="AboutSin_number" xml:space="preserve">
+    <value>Töödeldav arvväärtus (radiaanides).</value>
+  </data>
+  <data name="AboutSin_input" xml:space="preserve">
+    <value>Töödeldavate arvväärtuste (radiaanides) veerg.</value>
+  </data>
+  <data name="AboutSin" xml:space="preserve">
+    <value>Tagastab arvu siinuse väärtuse.</value>
+    
+  </data>
+  <data name="AboutSinT" xml:space="preserve">
+    <value>Tagastab arve sisaldava veeru siinuste väärtused.</value>
+    
+  </data>
+  <data name="AboutAsin_number" xml:space="preserve">
+    <value>Töödeldav arvväärtus.</value>
+  </data>
+  <data name="AboutAsin_input" xml:space="preserve">
+    <value>Töödeldavate arvväärtuste veerg.</value>
+  </data>
+  <data name="AboutAsin" xml:space="preserve">
+    <value>Tagastab arvu arkussiinuse väärtuse (radiaanides).</value>
+    
+  </data>
+  <data name="AboutAsinT" xml:space="preserve">
+    <value>Tagastab arve sisaldava veeru arkussiinuste väärtused (radiaanides).</value>
+    
+  </data>
+  <data name="AboutCos" xml:space="preserve">
+    <value>Tagastab arvu koosinuse väärtuse.</value>
+    
+  </data>
+  <data name="AboutCosT" xml:space="preserve">
+    <value>Tagastab arve sisaldava veeru koosinuste väärtused.</value>
+    
+  </data>
+  <data name="AboutCos_number" xml:space="preserve">
+    <value>Töödeldav arvväärtus (radiaanides).</value>
+  </data>
+  <data name="AboutCos_input" xml:space="preserve">
+    <value>Töödeldavate arvväärtuste (radiaanides) veerg.</value>
+  </data>
+  <data name="AboutAcos" xml:space="preserve">
+    <value>Tagastab arvu arkuskoosinuse väärtuse (radiaanides).</value>
+    
+  </data>
+  <data name="AboutAcos_number" xml:space="preserve">
+    <value>Töödeldav arvväärtus.</value>
+  </data>
+  <data name="AboutAcosT" xml:space="preserve">
+    <value>Tagastab arve sisaldava veeru arkuskoosinuste väärtused (radiaanides).</value>
+    
+  </data>
+  <data name="AboutAcos_input" xml:space="preserve">
+    <value>Töödeldavate arvväärtuste veerg.</value>
+  </data>
+  <data name="AboutAcot_number" xml:space="preserve">
+    <value>Töödeldav arvväärtus.</value>
+  </data>
+  <data name="AboutAcot_input" xml:space="preserve">
+    <value>Töödeldavate arvväärtuste veerg.</value>
+  </data>
+  <data name="AboutAcot" xml:space="preserve">
+    <value>Tagastab arvu arkuskootangensi väärtuse (radiaanides).</value>
+    
+  </data>
+  <data name="AboutAcotT" xml:space="preserve">
+    <value>Tagastab arve sisaldava veeru arkuskootangensite väärtused (radiaanides).</value>
+    
+  </data>
+  <data name="AboutTan" xml:space="preserve">
+    <value>Tagastab arvu tangensi väärtuse.</value>
+    
+  </data>
+  <data name="AboutTanT" xml:space="preserve">
+    <value>Tagastab arve sisaldava veeru tangensite väärtused.</value>
+    
+  </data>
+  <data name="AboutTan_number" xml:space="preserve">
+    <value>Töödeldav arvväärtus (radiaanides).</value>
+  </data>
+  <data name="AboutTan_input" xml:space="preserve">
+    <value>Töödeldavate arvväärtuste (radiaanides) veerg.</value>
+  </data>
+  <data name="AboutAtan" xml:space="preserve">
+    <value>Tagastab arvu arkustangensi väärtuse (radiaanides).</value>
+    
+  </data>
+  <data name="AboutAtanT" xml:space="preserve">
+    <value>Tagastab arve sisaldava veeru arkustangensite väärtused (radiaanides).</value>
+    
+  </data>
+  <data name="AboutAtan_number" xml:space="preserve">
+    <value>Töödeldav arvväärtus.</value>
+  </data>
+  <data name="AboutAtan_input" xml:space="preserve">
+    <value>Töödeldavate arvväärtuste veerg.</value>
+  </data>
+  <data name="AboutCot" xml:space="preserve">
+    <value>Tagastab arvu kootangensi väärtuse.</value>
+    
+  </data>
+  <data name="AboutCotT" xml:space="preserve">
+    <value>Tagastab arve sisaldava veeru kootangensite väärtused.</value>
+    
+  </data>
+  <data name="AboutCot_number" xml:space="preserve">
+    <value>Töödeldav arvväärtus (radiaanides).</value>
+  </data>
+  <data name="AboutCot_input" xml:space="preserve">
+    <value>Töödeldavate arvväärtuste (radiaanides) veerg.</value>
+  </data>
+  <data name="AboutLn" xml:space="preserve">
+    <value>Tagastab arvu naturaallogaritmi (alusel E).</value>
+    
+  </data>
+  <data name="AboutLnT" xml:space="preserve">
+    <value>Tagastab arve sisaldava veeru naturaallogaritmide väärtused (alusel E).</value>
+    
+  </data>
+  <data name="AboutLn_number" xml:space="preserve">
+    <value>Töödeldav arvväärtus.</value>
+  </data>
+  <data name="AboutLn_input" xml:space="preserve">
+    <value>Töödeldavate arvväärtuste veerg.</value>
+  </data>
+  <data name="AboutLog" xml:space="preserve">
+    <value>Tagastab arvu logaritmi antud aluse jaoks. Vaikealus on 10.</value>
+    
+  </data>
+  <data name="AboutLogT" xml:space="preserve">
+    <value>Tagastab arvu või arvude veeru logaritmi väärtused antud aluse või aluste veeru jaoks. Vaikealus on 10.</value>
+    
+  </data>
+  <data name="AboutLog_number" xml:space="preserve">
+    <value>Töödeldav arvväärtus.</value>
+  </data>
+  <data name="AboutLog_input" xml:space="preserve">
+    <value>Töödeldavate arvväärtuste veerg.</value>
+  </data>
+  <data name="LogBase" xml:space="preserve">
+    <value>alus</value>
+    
+  </data>
+  <data name="AboutLog_base" xml:space="preserve">
+    <value>Logaritmi alus.</value>
+  </data>
+  <data name="AboutExp" xml:space="preserve">
+    <value>Tagastab E astme. Muude aluste astmete arvutamiseks kasutage astendustehte märki (^).</value>
+    
+  </data>
+  <data name="AboutExpT" xml:space="preserve">
+    <value>Tagastab veeru, milles olevad väärtused on saadud arvu E astendamisel iga arvuveerus oleva arvuga. Muude aluste astmete arvutamiseks kasutage astendustehte märki (^).</value>
+    
+  </data>
+  <data name="AboutExp_number" xml:space="preserve">
+    <value>Töödeldav arvväärtus.</value>
+  </data>
+  <data name="AboutExp_input" xml:space="preserve">
+    <value>Töödeldavate arvväärtuste veerg.</value>
+  </data>
+  <data name="AboutPi" xml:space="preserve">
+    <value>Tagastab pii väärtuse.</value>
+  </data>
+  <data name="AboutRadians" xml:space="preserve">
+    <value>Tagastab arvu väärtuse radiaanides.</value>
+    
+  </data>
+  <data name="AboutRadiansT" xml:space="preserve">
+    <value>Tagastab arve sisaldava veeru väärtused radiaanides.</value>
+    
+  </data>
+  <data name="AboutRadians_number" xml:space="preserve">
+    <value>Töödelav arvväärtus (kraadides).</value>
+  </data>
+  <data name="AboutRadians_input" xml:space="preserve">
+    <value>Töödeldavate arvväärtuste (kraadides) veerg.</value>
+  </data>
+  <data name="AboutDegrees" xml:space="preserve">
+    <value>Tagastab arvu väärtuse kraadides.</value>
+    
+  </data>
+  <data name="AboutDegreesT" xml:space="preserve">
+    <value>Tagastab arve sisaldava veeru väärtused kraadides.</value>
+    
+  </data>
+  <data name="AboutDegrees_number" xml:space="preserve">
+    <value>Töödeldav arvväärtus (radiaanides).</value>
+  </data>
+  <data name="AboutDegrees_input" xml:space="preserve">
+    <value>Töödeldavate arvväärtuste (radiaanides) veerg.</value>
+  </data>
+  <data name="AboutAtan2" xml:space="preserve">
+    <value>Tagastab määratud x- ja y-koordinaatide arkustangensi (radiaanides).</value>
+  </data>
+  <data name="AboutAtan2Arg1" xml:space="preserve">
+    <value>x_koordinaat</value>
+    
+  </data>
+  <data name="AboutAtan2Arg2" xml:space="preserve">
+    <value>y_koordinaat</value>
+    
+  </data>
+  <data name="AboutAtan2_x_coordinate" xml:space="preserve">
+    <value>x-koordinaat.</value>
+  </data>
+  <data name="AboutAtan2_y_coordinate" xml:space="preserve">
+    <value>y-koordinaat.</value>
+  </data>
+  <data name="AboutSqrt" xml:space="preserve">
+    <value>Tagastab arvu ruutjuure.</value>
+    
+  </data>
+  <data name="AboutSqrtT" xml:space="preserve">
+    <value>Tagastab arvuveeru ruutjuured.</value>
+    
+  </data>
+  <data name="AboutSqrt_number" xml:space="preserve">
+    <value>Töödeldav arvväärtus.</value>
+  </data>
+  <data name="AboutSqrt_input" xml:space="preserve">
+    <value>Töödeldavate arvväärtuste veerg.</value>
+  </data>
+  <data name="MathFuncArg1" xml:space="preserve">
+    <value>arv</value>
+    
+  </data>
+  <data name="MathTFuncArg1" xml:space="preserve">
+    <value>sisend</value>
+    
+  </data>
+  <data name="AboutLeft" xml:space="preserve">
+    <value>Tagastab tekstväärtuse algusest määratud arvu märke.</value>
+    
+  </data>
+  <data name="AboutLeftT" xml:space="preserve">
+    <value>Tagastab tekstväärtuse algusest määratud arvu märke sisaldava veeru, mis arvutatakse määratud tabelis või kogumis ridade kaupa.</value>
+    
+  </data>
+  <data name="AboutLeft_text" xml:space="preserve">
+    <value>Tekstväärtus, kust märgid ekstraktitakse.</value>
+  </data>
+  <data name="AboutLeft_num_chars" xml:space="preserve">
+    <value>Ekstraktitavate märkide arv.</value>
+  </data>
+  <data name="AboutLeft_text_column" xml:space="preserve">
+    <value>Tekstväärtuste veerg, millest märgid ekstraktitakse.</value>
+  </data>
+  <data name="AboutRight" xml:space="preserve">
+    <value>Tagastab tekstväärtuse lõpust määratud arvu märke.</value>
+    
+  </data>
+  <data name="AboutRightT" xml:space="preserve">
+    <value>Tagastab tekstväärtuse lõpust määratud arvu märke sisaldava veeru, mis arvutatakse määratud tabelis või kogumis ridade kaupa.</value>
+    
+  </data>
+  <data name="AboutRight_text" xml:space="preserve">
+    <value>Tekstväärtus, kust märgid ekstraktitakse.</value>
+  </data>
+  <data name="AboutRight_num_chars" xml:space="preserve">
+    <value>Ekstraktitavate märkide arv.</value>
+  </data>
+  <data name="AboutRight_text_column" xml:space="preserve">
+    <value>Tekstväärtuste veerg, millest märgid ekstraktitakse.</value>
+  </data>
+  <data name="LeftRightArg1" xml:space="preserve">
+    <value>tekst</value>
+    
+  </data>
+  <data name="LeftRightTArg1" xml:space="preserve">
+    <value>tekstiveerg</value>
+    
+  </data>
+  <data name="LeftRightArg2" xml:space="preserve">
+    <value>märkide_arv</value>
+    
+  </data>
+  <data name="AboutIsBlank" xml:space="preserve">
+    <value>Kontrollib, kas avaldise tulemus on tühiväärtusega, ja tagastab väärtuse Tõene või Väär.</value>
+    
+  </data>
+  <data name="IsBlankArg1" xml:space="preserve">
+    <value>avaldis</value>
+    
+  </data>
+  <data name="AboutIsBlank_expression" xml:space="preserve">
+    <value>Testitav avaldis.</value>
+  </data>
+  <data name="AboutIsBlankOrError" xml:space="preserve">
+    <value>Kontrollib, kas avaldise tulemus on tühiväärtusega või tõrkega, ja tagastab väärtuse Tõene või Väär.</value>
+    
+  </data>
+  <data name="IsBlankOrErrorArg1" xml:space="preserve">
+    <value>avaldis</value>
+    
+  </data>
+  <data name="AboutIsBlankOrError_expression" xml:space="preserve">
+    <value>Testitav avaldis.</value>
+    
+  </data>
+  <data name="AboutIsEmpty" xml:space="preserve">
+    <value>Kontrollib, kas kogum on tühi, ja tagastab väärtuse Tõene või Väär.</value>
+    
+  </data>
+  <data name="IsEmptyArg1" xml:space="preserve">
+    <value>allikas</value>
+    
+  </data>
+  <data name="AboutIsEmpty_source" xml:space="preserve">
+    <value>Testitav tabel.</value>
+  </data>
+  <data name="AboutShuffle" xml:space="preserve">
+    <value>Tagastab sisestatud allikatabeli juhuslikult segatud kirjetega koopia.</value>
+    
+  </data>
+  <data name="ShuffleArg1" xml:space="preserve">
+    <value>allikas</value>
+    
+  </data>
+  <data name="AboutShuffle_source" xml:space="preserve">
+    <value>Segatav tabel.</value>
+  </data>
+  <data name="AboutLookUp" xml:space="preserve">
+    <value>Otsib esimese rea, mille puhul määratud tingimuse väärtus on tõene, ja tagastab selle rea kontekstis arvutatud avaldise tulemuse, kui esitatud avaldis ja kogu rida on teistsugused.</value>
+    
+  </data>
+  <data name="LookUpArg1" xml:space="preserve">
+    <value>allikas</value>
+    
+  </data>
+  <data name="LookUpArg2" xml:space="preserve">
+    <value>tingimus</value>
+    
+  </data>
+  <data name="LookUpArg3" xml:space="preserve">
+    <value>tulemus</value>
+    
+  </data>
+  <data name="AboutLookUp_source" xml:space="preserve">
+    <value>Tabel, kust otsitakse väärtusi.</value>
+  </data>
+  <data name="AboutLookUp_condition" xml:space="preserve">
+    <value>Tingimus, mille väärtus arvutatakse määratud sisendis ridade põhjal.</value>
+  </data>
+  <data name="AboutLookUp_result" xml:space="preserve">
+    <value>Avaldis, mille väärtus arvutatakse määratud tingimusele vastava rea kohta ja mis annab tulemuse.</value>
+  </data>
+  <data name="AboutStdevP" xml:space="preserve">
+    <value>Arvutab standardhälbe argumentidena esitatud täispopulatsiooni alusel (ignoreerib loogikaväärtusi ja teksti).</value>
+    
+  </data>
+  <data name="AboutStdevP_number" xml:space="preserve">
+    <value>Arv, mis lisatakse standardhälbe arvutusse.</value>
+  </data>
+  <data name="AboutStdevP_source" xml:space="preserve">
+    <value>Tabel, mis määrab standardhälbe arvutamiseks populatsiooni.</value>
+  </data>
+  <data name="AboutStdevP_expression" xml:space="preserve">
+    <value>Avaldis, mille väärtus arvutatakse sisendi ridade põhjal ja mis määrab standardhälbe arvutamiseks konkreetsed väärtused.</value>
+  </data>
+  <data name="AboutStdevPT" xml:space="preserve">
+    <value>Arvutab standardhälbe veeruna esitatud täispopulatsiooni alusel (ignoreerib loogikaväärtusi ja veerus olevat teksti).</value>
+    
+  </data>
+  <data name="AboutVarP" xml:space="preserve">
+    <value>Arvutab dispersiooni täispopulatsiooni alusel (ignoreerib loogikaväärtusi ja populatsioonis olevat teksti).</value>
+    
+  </data>
+  <data name="AboutVarP_number" xml:space="preserve">
+    <value>Dispersiooniarvutusse lisatav arv.</value>
+  </data>
+  <data name="AboutVarP_source" xml:space="preserve">
+    <value>Tabel, mis määrab dispersiooni arvutamiseks populatsiooni.</value>
+  </data>
+  <data name="AboutVarP_expression" xml:space="preserve">
+    <value>Avaldis, mille väärtus arvutatakse sisendi ridade põhjal ja mis määrab dispersiooni arvutamiseks konkreetsed väärtused.</value>
+  </data>
+  <data name="AboutVarPT" xml:space="preserve">
+    <value>Arvutab dispersiooni veeruna esitatud täispopulatsiooni alusel (ignoreerib loogikaväärtusi ja veerus olevat teksti).</value>
+    
+  </data>
+  <data name="SetArg1" xml:space="preserve">
+    <value>muutuja</value>
+    
+  </data>
+  <data name="AboutSplit" xml:space="preserve">
+    <value>Tükeldab stringi eraldaja abil alamstringideks.</value>
+    
+  </data>
+  <data name="AboutSplit_text" xml:space="preserve">
+    <value>Alamstringideks tükeldatav tekst.</value>
+    
+  </data>
+  <data name="AboutSplit_separator" xml:space="preserve">
+    <value>Eraldaja tekst, mida kasutatakse sisendteksti alamstringideks tükeldamiseks.</value>
+    
+  </data>
+  <data name="SplitArg1" xml:space="preserve">
+    <value>tekst</value>
+    
+  </data>
+  <data name="SplitArg2" xml:space="preserve">
+    <value>eraldaja</value>
+    
+  </data>
+  <data name="AboutIsType" xml:space="preserve">
+    <value>Tagastab väärtuse tõene, kui antud väärtus on antud tüüpi.</value>
+    
+  </data>
+  <data name="IsTypeArg1" xml:space="preserve">
+    <value>väärtus</value>
+    
+  </data>
+  <data name="IsTypeArg2" xml:space="preserve">
+    <value>typeTable</value>
+    
+  </data>
+  <data name="AboutAsType" xml:space="preserve">
+    <value>Kasutab esitatud väärtust antud tüübina.</value>
+    
+  </data>
+  <data name="AsTypeArg1" xml:space="preserve">
+    <value>väärtus</value>
+    
+  </data>
+  <data name="AsTypeArg2" xml:space="preserve">
+    <value>typeTable</value>
+    
+  </data>
+  <data name="AboutAsType_value" xml:space="preserve">
+    <value>Polümorfne kirje uue tüübina valamiseks.</value>
+  </data>
+  <data name="AboutAsType_typeTable" xml:space="preserve">
+    <value>Olemi tabel, mis esindab seda tüüpi, millena soovime väärtust kasutada.</value>
+  </data>
+  <data name="AboutWith" xml:space="preserve">
+    <value>Käivitab esitatud valemi teise parameetrina, kasutades esimese esitatud ulatust.</value>
+    
+  </data>
+  <data name="WithArg1" xml:space="preserve">
+    <value>ulatus</value>
+    
+  </data>
+  <data name="WithArg2" xml:space="preserve">
+    <value>valem</value>
+    
+  </data>
+  <data name="AboutWith_scope" xml:space="preserve">
+    <value>Teise parameetri määratletud ulatus, millega valemit kutsuda.</value>
+    
+  </data>
+  <data name="AboutWith_formula" xml:space="preserve">
+    <value>Valem, mida kutsutakse esimese parameetri esitatud ulatuse abil.</value>
+    
+  </data>
+  <data name="AboutSequence" xml:space="preserve">
+    <value>Genereerib järjestikuste numbrite tabeli</value>
+    
+  </data>
+  <data name="SequenceArg1" xml:space="preserve">
+    <value>kirjed</value>
+    
+  </data>
+  <data name="AboutSequence_records" xml:space="preserve">
+    <value>Nimega „Väärtus“ kirjete arv ühe veeruga tabelis. Maksimaalselt 50 000.</value>
+    
+  </data>
+  <data name="SequenceArg2" xml:space="preserve">
+    <value>algus</value>
+    
+  </data>
+  <data name="AboutSequence_start" xml:space="preserve">
+    <value>Valikuline. Järjestuse esimene number. Vaikimisi 1.</value>
+    
+  </data>
+  <data name="SequenceArg3" xml:space="preserve">
+    <value>samm</value>
+    
+  </data>
+  <data name="AboutSequence_step" xml:space="preserve">
+    <value>Valikuline. Summa, mille võrra tabeli iga järgmine väärtus muutub. Vaikimisi 1.</value>
+    
+  </data>
+  <data name="ErrInvalidDot" xml:space="preserve">
+    <value>Märki "." kasutatakse valesti</value>
+    
+  </data>
+  <data name="ErrUnknownFunction" xml:space="preserve">
+    <value>Kutsutakse tundmatut või toetuseta funktsiooni.</value>
+    
+  </data>
+  <data name="ErrUnSupportedComponentBehaviorInvocation" xml:space="preserve">
+    <value>Komponendi käitumist saab käivitada ainult komponendi seest.</value>
+    
+  </data>
+  <data name="ErrUnSupportedComponentDataPropertyAccess" xml:space="preserve">
+    <value>Parameetritega komponendi kohandatud andmeatribuudile pääsete juurde ainult komponendi sees või komponendi väljundatribuutidest.</value>
+    
+  </data>
+  <data name="ErrBadArity" xml:space="preserve">
+    <value>Sobimatu argumentide arv: vastuvõetud {0}, eeldatud {1}.</value>
+    
+  </data>
+  <data name="ErrBadArityEven" xml:space="preserve">
+    <value>Sobimatu argumentide arv: vastuvõetud {0}, eeldati paarisarvu.</value>
+    
+  </data>
+  <data name="ErrBadArityOdd" xml:space="preserve">
+    <value>Sobimatu argumentide arv: vastuvõetud {0}, eeldati paaritut arvu.</value>
+    
+  </data>
+  <data name="ErrBadType" xml:space="preserve">
+    <value>Argumendi tüüp ei sobi.</value>
+    
+  </data>
+  <data name="ErrBadType_Type" xml:space="preserve">
+    <value>Argumendi tüüp ei sobi. Väärtusi {0} ei saa selles kontekstis kasutada.</value>
+    
+  </data>
+  <data name="ErrBadOperatorTypes" xml:space="preserve">
+    <value>See toiming ei sobi järgmistele tüüpidele: {0}, {1}.</value>
+    
+  </data>
+  <data name="ErrGuidStrictComparison" xml:space="preserve">
+    <value>GUID-väärtusi saab võrrelda ainult muude GUID-väärtustega.</value>
+    
+  </data>
+  <data name="ErrBadRecordFieldType_FieldName_ExpectedType" xml:space="preserve">
+    <value>Välja '{0}' sobimatu tüüp. Eeldatav väljatüüp on '{1}'.</value>
+    
+  </data>
+  <data name="ErrBadType_ExpectedType" xml:space="preserve">
+    <value>Argumendi tüüp ei sobi. Eeldatakse väärtust {0}.</value>
+    
+  </data>
+  <data name="ErrBadType_ExpectedType_ProvidedType" xml:space="preserve">
+    <value>Argumendi tüüp ei sobi ({1}). Selle asemel eeldatakse väärtust {0}.</value>
+    
+  </data>
+  <data name="ErrBadSchema_ExpectedType" xml:space="preserve">
+    <value>Argumendi tüüp ei sobi. Eeldatakse väärtust {0}, kuid teistsuguse skeemiga.</value>
+    
+  </data>
+  <data name="ErrBadType_ExpectedTypesCSV" xml:space="preserve">
+    <value>Argumendi tüüp ei sobi. Eeldatakse mõnda järgmistest: {0}.</value>
+    
+  </data>
+  <data name="ErrInvalidArgs_Func" xml:space="preserve">
+    <value>Funktsioonil {0} on mõned sobimatud argumendid.</value>
+    
+  </data>
+  <data name="ErrNeedTable_Func" xml:space="preserve">
+    <value>Funktsiooni {0} esimene argument peab olema tabel.</value>
+    
+  </data>
+  <data name="ErrInvalidPropertyAccess" xml:space="preserve">
+    <value>Atribuut eeldab nõutavat parameetrit. Kasutage sulgusid nõutud parameetri edastamiseks.</value>
+    
+  </data>
+  <data name="ErrNeedTableCol_Func" xml:space="preserve">
+    <value>Funktsiooni {0} esimene argument peab olema ühe veeruga tabel.</value>
+    
+  </data>
+  <data name="ErrInvalidSchemaNeedStringCol_Col" xml:space="preserve">
+    <value>Sobimatu skeem, üksuse {0} jaoks eeldati tekstväärtuste veergu.</value>
+    
+  </data>
+  <data name="ErrInvalidSchemaNeedDateCol_Col" xml:space="preserve">
+    <value>Sobimatu skeem, üksuse {0} jaoks eeldati kuupäevaväärtuste veergu.</value>
+    
+  </data>
+  <data name="ErrInvalidSchemaNeedNumCol_Col" xml:space="preserve">
+    <value>Sobimatu skeem, üksuse {0} jaoks eeldati arvväärtuste veergu.</value>
+    
+  </data>
+  <data name="ErrInvalidSchemaNeedColorCol_Col" xml:space="preserve">
+    <value>Sobimatu skeem, üksuse {0} jaoks eeldati värviväärtuste veergu.</value>
+    
+  </data>
+  <data name="ErrInvalidSchemaNeedCol" xml:space="preserve">
+    <value>Sobimatu skeem, eeldati ühe veeruga tabelit.</value>
+    
+  </data>
+  <data name="ErrNeedRecord" xml:space="preserve">
+    <value>Väärtust, mis pole kirje, ei saa selles kontekstis kasutada.</value>
+    
+  </data>
+  <data name="ErrIncompatibleRecord" xml:space="preserve">
+    <value>Seda kirjet ei saa kasutada. See võib sisaldada vastuolulisi välju, mille tüübid ei ühildu.</value>
+    
+  </data>
+  <data name="ErrNeedRecord_Func" xml:space="preserve">
+    <value>Funktsiooni {0} esimene argument peab olema kirje.</value>
+    
+  </data>
+  <data name="ErrNeedEntity_EntityName" xml:space="preserve">
+    <value>Kui see valik on määratud loetelu väärtuseks või on kasutusel funktsioonis Choices, on nõutav olemi '{0}' lisamine andmeallikana. Lisamiseks kasutage menüüd Vaade ja seejärel valige andmeallikad.</value>
+    
+  </data>
+  <data name="ErrNotAccessibleInCurrentContext" xml:space="preserve">
+    <value>Määratud atribuudile ei pääse selles kontekstis juurde.</value>
+    
+  </data>
+  <data name="ErrInternalControlInInputProperty" xml:space="preserve">
+    <value>Komponendis asuvatele juhtelementidele ei saa sama komponendi sisendatribuutides viidata.</value>
+    
+  </data>
+  <data name="ErrColumnNotAccessibleInCurrentContext" xml:space="preserve">
+    <value>Määratud veerule ei pääse selles kontekstis juurde.</value>
+    
+  </data>
+  <data name="WrnRowScopeOneToNExpandNumberOfCalls" xml:space="preserve">
+    <value>Selle funktsiooni kirje ulatuses viidatakse üks-mitmele- või mitu-mitmele-vastavusele. Selle tulemuseks võib olla suur arv teie andmeallikasse tehtavaid kõnesid, mis võib mõjutada jõudlust.</value>
+    
+  </data>
+  <data name="ErrNumberTooLarge" xml:space="preserve">
+    <value>Arvväärtus on liiga suur.</value>
+    
+  </data>
+  <data name="ErrInvalidDataSource" xml:space="preserve">
+    <value>See andmeallikas ei sobi. Parandage viga paanil Andmeallikad, valides Sisu -&gt; Andmeallikad või Vaade -&gt; Suvandid</value>
+    
+  </data>
+  <data name="ErrExpectedDataSourceRestriction" xml:space="preserve">
+    <value>Eeldati, et andmeallika identifikaator piirab tekstisisest kirjet.</value>
+    
+  </data>
+  <data name="ErrIncompatibleTypes" xml:space="preserve">
+    <value>Määratud tüübid ei ühildu.</value>
+    
+  </data>
+  <data name="ErrTypeError_Ex1_Ex2_Found" xml:space="preserve">
+    <value>Selle argumendi {2} tüüp ei vasta eeldatud tüüpidele {0} ega {1}.</value>
+    
+  </data>
+  <data name="ErrTypeError_Arg_Expected_Found" xml:space="preserve">
+    <value>Selle argumendi {0} tüüp ei vasta eeldatud tüübile {1}. Leiti tüüp {2}.</value>
+    
+  </data>
+  <data name="ErrTypeErrorRecordIncompatibleWithSource" xml:space="preserve">
+    <value>Kirje tüüp ei ühildu allikaga.</value>
+    
+  </data>
+  <data name="ErrExpectedStringLiteralArg_Name" xml:space="preserve">
+    <value>Argument {0} ei sobi. Eeldati tekstliteraali.</value>
+    
+  </data>
+  <data name="ErrArgNotAValidIdentifier_Name" xml:space="preserve">
+    <value>Argument {0} pole sobiv identifikaator.</value>
+    
+  </data>
+  <data name="ErrColExists_Name" xml:space="preserve">
+    <value>Veerg nimega {0} on juba olemas.</value>
+    
+  </data>
+  <data name="ErrColConflict_Name" xml:space="preserve">
+    <value>{0}: veerunime konflikt.</value>
+    
+  </data>
+  <data name="ErrColDNE_Name" xml:space="preserve">
+    <value>Määratud veergu {0} pole olemas.</value>
+    
+  </data>
+  <data name="ErrColumnDoesNotExist_Name_Similar" xml:space="preserve">
+    <value>Määratud veergu '{0}' pole olemas. Kõige sarnasema nimega veerg on '{1}'.</value>
+    
+  </data>
+  <data name="ErrSortIncorrectOrder" xml:space="preserve">
+    <value>Sortimisjärjestus ei sobi avaldisetüübi jaoks.</value>
+    
+  </data>
+  <data name="ErrSortWrongType" xml:space="preserve">
+    <value>Avaldisetüüpi ei saa sortida.</value>
+    
+  </data>
+  <data name="ErrFunctionDoesNotAcceptThisType_Function_Expected" xml:space="preserve">
+    <value>Tüübi tõrge: {0} eeldab kas tüüpi {1} või tüübiga {1} tabeliveergu.</value>
+    
+  </data>
+  <data name="ErrIncorrectFormat_Func" xml:space="preserve">
+    <value>Funktsiooni {0} jaoks on määratud vale vorming.</value>
+    
+  </data>
+  <data name="ErrAsyncLambda" xml:space="preserve">
+    <value>Asünkroonseid kutseid ei saa kasutada tingimustes ja väärtusefunktsioonides.</value>
+    
+  </data>
+  <data name="ErrValueMustBeFullyQualified" xml:space="preserve">
+    <value>See on nimeruum, selle liikmetele pääsete juurde tehtemärki '.' kasutades.</value>
+    
+  </data>
+  <data name="ErrScopeModificationLambda" xml:space="preserve">
+    <value>Seda funktsiooni ei saa käitada sama andmeallika puhul, mida kasutatakse üksuses {0}.</value>
+    
+  </data>
+  <data name="ErrFunctionDisallowedWithinNondeterministicOperationOrder" xml:space="preserve">
+    <value>Seda funktsiooni ei saa üksuses {0} kutsuda.</value>
+    
+  </data>
+  <data name="ErrAsTypeAndIsTypeExpectConnectedDataSource" xml:space="preserve">
+    <value>Vale argument. Valem eeldab tabelit ühendatud andmeallikast. Funktsioonid AsType ja IsType nõuavad ühendatud andmeallikaid.</value>
+    
+  </data>
+  <data name="InfoMessage" xml:space="preserve">
+    <value>Teade: </value>
+    
+  </data>
+  <data name="InfoNode_Node" xml:space="preserve">
+    <value>Sõlm: {0}</value>
+    
+  </data>
+  <data name="InfoTok_Tok" xml:space="preserve">
+    <value>Tok: {0}</value>
+    
+  </data>
+  <data name="FormatSpan_Min_Lim" xml:space="preserve">
+    <value>({0},{1}) </value>
+    
+  </data>
+  <data name="FormatErrorSeparator" xml:space="preserve">
+    <value>; </value>
+    
+  </data>
+  <data name="AboutDate" xml:space="preserve">
+    <value>Tagastab arvu, mis tähistab Power Appsi kuupäeva- ja kellaajakoodis kuupäeva.</value>
+    
+  </data>
+  <data name="DateArg1" xml:space="preserve">
+    <value>aasta</value>
+    
+  </data>
+  <data name="DateArg2" xml:space="preserve">
+    <value>kuu</value>
+    
+  </data>
+  <data name="DateArg3" xml:space="preserve">
+    <value>päev</value>
+    
+  </data>
+  <data name="AboutDate_year" xml:space="preserve">
+    <value>Aasta.</value>
+  </data>
+  <data name="AboutDate_month" xml:space="preserve">
+    <value>Kuu.</value>
+  </data>
+  <data name="AboutDate_day" xml:space="preserve">
+    <value>Päev.</value>
+  </data>
+  <data name="AboutTime" xml:space="preserve">
+    <value>Teisendab tunnid, minutid ja sekundid kümnendarvuks.</value>
+    
+  </data>
+  <data name="TimeArg1" xml:space="preserve">
+    <value>tund</value>
+    
+  </data>
+  <data name="TimeArg2" xml:space="preserve">
+    <value>minut</value>
+    
+  </data>
+  <data name="TimeArg3" xml:space="preserve">
+    <value>sekund</value>
+    
+  </data>
+  <data name="TimeArg4" xml:space="preserve">
+    <value>millisekund</value>
+    
+  </data>
+  <data name="AboutTime_hour" xml:space="preserve">
+    <value>Tunnikomponent.</value>
+  </data>
+  <data name="AboutTime_minute" xml:space="preserve">
+    <value>Minutikomponent.</value>
+  </data>
+  <data name="AboutTime_second" xml:space="preserve">
+    <value>Sekundikomponent.</value>
+  </data>
+  <data name="AboutTime_millisecond" xml:space="preserve">
+    <value>Millisekundikomponent.</value>
+  </data>
+  <data name="AboutDateTime" xml:space="preserve">
+    <value>Loob väärtuse, mis tähistab hetke ajas ning mida väljendatakse kuupäeva ja kellaajana.</value>
+    
+  </data>
+  <data name="AboutYear" xml:space="preserve">
+    <value>Aasta tagastab määratud kuupäeva aasta.</value>
+    
+  </data>
+  <data name="YearArg1" xml:space="preserve">
+    <value>kuupäev_ja_kellaaeg</value>
+    
+  </data>
+  <data name="AboutYear_date_time" xml:space="preserve">
+    <value>Kuupäevaväärtus, millest ekstraktitakse aastakomponent.</value>
+  </data>
+  <data name="AboutMonth" xml:space="preserve">
+    <value>Tagastab kuu, mis on arv vahemikus 1 (jaanuar) kuni 12 (detsember).</value>
+    
+  </data>
+  <data name="MonthArg1" xml:space="preserve">
+    <value>kuupäev_ja_kellaaeg</value>
+    
+  </data>
+  <data name="AboutMonth_date_time" xml:space="preserve">
+    <value>Kuupäevaväärtus, millest ekstraktitakse kuukomponent.</value>
+  </data>
+  <data name="AboutDay" xml:space="preserve">
+    <value>Päev tagastab kuupäeva (arvu vahemikus 1–31).</value>
+    
+  </data>
+  <data name="DayArg1" xml:space="preserve">
+    <value>kuupäev_ja_kellaaeg</value>
+    
+  </data>
+  <data name="AboutDay_date_time" xml:space="preserve">
+    <value>Kuupäevaväärtus, millest ekstraktitakse päevakomponent.</value>
+  </data>
+  <data name="AboutHour" xml:space="preserve">
+    <value>Tund tagastab tunni arvuna vahemikus 0 (12:00:00 AM) kuni 23 (11:00:00 PM).</value>
+    
+  </data>
+  <data name="HourArg1" xml:space="preserve">
+    <value>kuupäev_ja_kellaaeg</value>
+    
+  </data>
+  <data name="AboutHour_date_time" xml:space="preserve">
+    <value>Kuupäev või kellaaeg, millest komponent ekstraktitakse.</value>
+  </data>
+  <data name="AboutMinute" xml:space="preserve">
+    <value>Tagastab minuti, mis on arv vahemikus 0–59.</value>
+    
+  </data>
+  <data name="MinuteArg1" xml:space="preserve">
+    <value>kuupäev_ja_kellaaeg</value>
+    
+  </data>
+  <data name="AboutMinute_date_time" xml:space="preserve">
+    <value>Kuupäeva- või kellaajaväärtus, millest ekstraktitakse minutikomponent.</value>
+  </data>
+  <data name="AboutSecond" xml:space="preserve">
+    <value>Tagastab sekundi, mis on arv vahemikus 0–59.</value>
+    
+  </data>
+  <data name="SecondArg1" xml:space="preserve">
+    <value>kuupäev_ja_kellaaeg</value>
+    
+  </data>
+  <data name="AboutSecond_date_time" xml:space="preserve">
+    <value>Kuupäeva- või kellaajaväärtus, millest ekstraktitakse sekundikomponent.</value>
+  </data>
+  <data name="AboutWeekday" xml:space="preserve">
+    <value>Tagastab kuupäeva- ja kellaajaväärtuse nädalapäeva. Vaikimisi on tulemus vahemikus 1 (pühapäev) kuni 7 (laupäev). Nädala alguse loendiväärtuse või Microsoft Exceli funktsiooni Weekday abil saate määrata teistsuguse vahemiku.</value>
+    
+  </data>
+  <data name="WeekdayArg1" xml:space="preserve">
+    <value>kuupäev</value>
+    
+  </data>
+  <data name="WeekdayArg2" xml:space="preserve">
+    <value>nädala_algus</value>
+    
+  </data>
+  <data name="AboutWeekday_date" xml:space="preserve">
+    <value>Kuupäevaväärtus, mille jaoks arvutatakse nädalapäev.</value>
+  </data>
+  <data name="AboutWeekday_start_of_week" xml:space="preserve">
+    <value>T: Väärtus nädala alguse loendist StartOfWeek või arv vastavast Exceli funktsioonist, mis näitab, kuidas nädalapäevad tuleks nummerdada.</value>
+    
+  </data>
+  <data name="AboutCalendar__MonthsLong" xml:space="preserve">
+    <value>Tagastab ühe veeruga tabeli, mis sisaldab iga kuu täisnimesid.</value>
+    
+  </data>
+  <data name="AboutCalendar__MonthsShort" xml:space="preserve">
+    <value>Tagastab ühe veeruga tabeli, mis sisaldab iga kuu lühendeid.</value>
+    
+  </data>
+  <data name="AboutCalendar__WeekdaysLong" xml:space="preserve">
+    <value>Tagastab ühe veeruga tabeli, mis sisaldab kõigi nädalapäevade täisnimesid.</value>
+    
+  </data>
+  <data name="AboutCalendar__WeekdaysShort" xml:space="preserve">
+    <value>Tagastab ühe veeruga tabeli, mis sisaldab kõigi nädalapäevade lühendeid.</value>
+    
+  </data>
+  <data name="AboutClock__AmPm" xml:space="preserve">
+    <value>Tagastab ühe veeruga tabeli, mis sisaldab suurtähelisi tähiseid "enne lõunat" ja "pärast lõunat".</value>
+    
+  </data>
+  <data name="AboutClock__AmPmShort" xml:space="preserve">
+    <value>Tagastab ühe veeruga tabeli, mis sisaldab suurtähelisi lühendeid "enne lõunat" ja "pärast lõunat".</value>
+    
+  </data>
+  <data name="AboutClock__IsClock24" xml:space="preserve">
+    <value>Tagastab loogikaväärtuse, mis tähistab seda, kas kellaaja puhul kasutatakse 24 tunni vormingut.</value>
+    
+  </data>
+  <data name="AboutDateValue" xml:space="preserve">
+    <value>Teisendab kuupäeva tekstivormingust arvuvormingusse, millega tähistatakse Power Appsi kuupäeva- ja kellaajakoodis kuupäeva.</value>
+    
+  </data>
+  <data name="DateValueArg1" xml:space="preserve">
+    <value>kuupäeva_tekst</value>
+    
+  </data>
+  <data name="DateValueArg2" xml:space="preserve">
+    <value>keelekood</value>
+    
+  </data>
+  <data name="AboutDateValue_date_text" xml:space="preserve">
+    <value>Kuupäeva- ja kellaajatempli tekstkuju platvormi toetatud vormingus.</value>
+  </data>
+  <data name="AboutDateValue_language_code" xml:space="preserve">
+    <value>Esitatud teksti keelekood.</value>
+  </data>
+  <data name="AboutTimeValue" xml:space="preserve">
+    <value>Teisendab kellaaja tekstivormingust arvuvormingusse, millega tähistatakse Microsoft Power Appsi kuupäeva- ja kellaajakoodis kuupäeva, ignoreerides mis tahes kuupäevaosa.</value>
+    
+  </data>
+  <data name="TimeValueArg1" xml:space="preserve">
+    <value>kellaaja_tekst</value>
+    
+  </data>
+  <data name="TimeValueArg2" xml:space="preserve">
+    <value>keelekood</value>
+    
+  </data>
+  <data name="AboutTimeValue_time_text" xml:space="preserve">
+    <value>Kuupäeva- ja kellaajatempli tekstkuju platvormi toetatud vormingus.</value>
+  </data>
+  <data name="AboutTimeValue_language_code" xml:space="preserve">
+    <value>Esitatud teksti keelekood.</value>
+  </data>
+  <data name="ErrAutoRefreshNotAllowed" xml:space="preserve">
+    <value>Automaatselt värskendatavaid teenusefunktsioone ei saa toimingureeglites kasutada.</value>
+    
+  </data>
+  <data name="ErrMultipleValuesForField_Name" xml:space="preserve">
+    <value>Väli nimega {0} on selles kirjes määratud mitu korda.</value>
+    
+  </data>
+  <data name="WarnColumnNameSpecifiedMultipleTimes_Name" xml:space="preserve">
+    <value>Veerg nimega {0} on määratud mitu korda.</value>
+    
+  </data>
+  <data name="WarnLiteralPredicate" xml:space="preserve">
+    <value>Hoiatus. See predikaat on literaalväärtus ega viita sisendtabelile.</value>
+    
+  </data>
+  <data name="WarnDynamicMetadata" xml:space="preserve">
+    <value>Hoiatus: valige laiendatud valemiriba allservas „Hõiva skeem”, et seada ja värskendada selle meetodi tulemuse skeemi. Muidu ei tagasta see meetod tulemit.</value>
+    
+  </data>
+  <data name="FindArg1" xml:space="preserve">
+    <value>otsitav_tekst</value>
+    
+  </data>
+  <data name="FindArg2" xml:space="preserve">
+    <value>teksti_seest</value>
+    
+  </data>
+  <data name="FindArg3" xml:space="preserve">
+    <value>algusnr</value>
+    
+  </data>
+  <data name="AboutFind_find_text" xml:space="preserve">
+    <value>Otsitav tekstväärtus.</value>
+  </data>
+  <data name="AboutFind_within_text" xml:space="preserve">
+    <value>Tekstväärtus, millest otsida.</value>
+  </data>
+  <data name="AboutFind_start_num" xml:space="preserve">
+    <value>Valikuline alguspunkt.</value>
+  </data>
+  <data name="AboutFind" xml:space="preserve">
+    <value>Tagastab ühe tekstväärtuse alguspunkti mõnes teises tekstväärtuses. Otsing on tõstutundlik.</value>
+    
+  </data>
+  <data name="AboutFindT" xml:space="preserve">
+    <value>Tagastab ühe tekstväärtuse alguspunktide veeru (või stringide veeru) mõnes teises tekstväärtuses (või stringide veerus). Otsing on tõstutundlik.</value>
+    
+  </data>
+  <data name="FindTArg1" xml:space="preserve">
+    <value>otsitav_tekst_või_veerg</value>
+    
+  </data>
+  <data name="FindTArg2" xml:space="preserve">
+    <value>teksti_või_veeru_seest</value>
+    
+  </data>
+  <data name="FindTArg3" xml:space="preserve">
+    <value>algusnr</value>
+    
+  </data>
+  <data name="AboutFind_find_text_or_column" xml:space="preserve">
+    <value>Otsitav tekstväärtus (või tekstväärtuste veerg).</value>
+  </data>
+  <data name="AboutFind_within_text_or_column" xml:space="preserve">
+    <value>Tekstväärtus (või tekstväärtuste veerg), millest otsida.</value>
+  </data>
+  <data name="AboutColorValue" xml:space="preserve">
+    <value>Tagastab määratud värvistringile vastava värvi.</value>
+    
+  </data>
+  <data name="ColorValueArg1" xml:space="preserve">
+    <value>värvi_tekst</value>
+    
+  </data>
+  <data name="AboutColorValue_color_text" xml:space="preserve">
+    <value>Nime (nt sinine) või standardse kuuekohalise kuueteistkümnendtähise #rrggbb alusel määratav värv.</value>
+  </data>
+  <data name="ErrInvalidJsonPointer" xml:space="preserve">
+    <value>JSON-i viit.</value>
+    
+  </data>
+  <data name="Text" xml:space="preserve">
+    <value>Tekst</value>
+  </data>
+  <data name="Logical" xml:space="preserve">
+    <value>Loogiline</value>
+  </data>
+  <data name="Table" xml:space="preserve">
+    <value>Tabel</value>
+  </data>
+  <data name="Behavior" xml:space="preserve">
+    <value>Käitumine</value>
+  </data>
+  <data name="DateTime" xml:space="preserve">
+    <value>Kuupäev ja kellaaeg</value>
+  </data>
+  <data name="MathAndStat" xml:space="preserve">
+    <value>Matemaatika ja statistika</value>
+  </data>
+  <data name="Information" xml:space="preserve">
+    <value>Teave</value>
+  </data>
+  <data name="Color" xml:space="preserve">
+    <value>Värv</value>
+  </data>
+  <data name="REST" xml:space="preserve">
+    <value>Teenused</value>
+    
+  </data>
+  <data name="FunctionReference_Link" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?LinkId=722347#</value>
+    
+  </data>
+  <data name="InvalidXml_ElementMissingAttribute_ElemName_AttrName" xml:space="preserve">
+    <value>Elemendil {0} puudub atribuut {1}.</value>
+    
+  </data>
+  <data name="InvalidXml_AttributeCannotBeEmpty_AttrName" xml:space="preserve">
+    <value>Atribuut {0} ei tohi olla tühi string.</value>
+    
+  </data>
+  <data name="InvalidXml_AttributeValueInvalidGuid_AttrName_Value" xml:space="preserve">
+    <value>Atribuudil {0} on sobimatu GUID-väärtus {1}.</value>
+    
+  </data>
+  <data name="InvalidJson_MissingRequiredNamedValue_PropName" xml:space="preserve">
+    <value>Atribuut {0} puudub.</value>
+    
+  </data>
+  <data name="InvalidJson_NamedValueTypeNotCorrect_PropName_ExpectedType_ActualType" xml:space="preserve">
+    <value>Atribuudil {0} on sobimatu tüübiväärtus: {2}. Eeldati tüübiväärtust {1}.</value>
+    
+  </data>
+  <data name="InvalidJson_NamedValueCannotBeEmpty_PropName" xml:space="preserve">
+    <value>Atribuut {0} ei tohi olla tühi.</value>
+    
+  </data>
+  <data name="InvalidJson_NamedEnumStringInvalid_PropName_ActualValue" xml:space="preserve">
+    <value>Eeldatakse, et loetelul '{0}' on kehtiv väärtus, kuid selle väärtus {1} on loetelu puhul vahemikust väljas.</value>
+    
+  </data>
+  <data name="InvalidJson_NamedIntegerOverflow_PropName_ActualValue" xml:space="preserve">
+    <value>Eeldatakse, et atribuudil '{0}' on täisarvuline väärtus, kuid selle väärtus {1} on vahemikust väljas.</value>
+    
+  </data>
+  <data name="InvalidJson_IndexedValueTypeNotCorrect_Index_ExpectedType_ActualType" xml:space="preserve">
+    <value>Üksusel on registris {0} sobimatu tüübiväärtus: {2}. Eeldati tüübiväärtust {1}.</value>
+  </data>
+  <data name="InvalidJson_IndexedValueMustBeNonEmpty_Index" xml:space="preserve">
+    <value>Üksus peab registris {0} olema mittetühi string.</value>
+  </data>
+  <data name="AboutDateAdd" xml:space="preserve">
+    <value>Lisab kuupäevale määratud arvu ühikuid.</value>
+    
+  </data>
+  <data name="AboutDateDiff" xml:space="preserve">
+    <value>Arvutab kahe kuupäeva vahelise erinevuse.</value>
+    
+  </data>
+  <data name="DateAddArg1" xml:space="preserve">
+    <value>kuupäev</value>
+    
+  </data>
+  <data name="DateAddArg2" xml:space="preserve">
+    <value>ühikute_arv</value>
+    
+  </data>
+  <data name="DateAddArg3" xml:space="preserve">
+    <value>ühik</value>
+    
+  </data>
+  <data name="AboutDateAdd_date" xml:space="preserve">
+    <value>Kuupäeva viiteväärtus.</value>
+  </data>
+  <data name="AboutDateAdd_number_of_units" xml:space="preserve">
+    <value>Lisatavate ühikute arv. Arv võib olla negatiivne.</value>
+  </data>
+  <data name="AboutDateAdd_unit" xml:space="preserve">
+    <value>Kasutatav ühik, mis võib olla kas: Years, Quarters, Months, Days, Hours, Minutes, Seconds, Milliseconds.</value>
+    
+  </data>
+  <data name="DateDiffArg1" xml:space="preserve">
+    <value>alguskuupäev</value>
+    
+  </data>
+  <data name="DateDiffArg2" xml:space="preserve">
+    <value>lõppkuupäev</value>
+    
+  </data>
+  <data name="DateDiffArg3" xml:space="preserve">
+    <value>ühik</value>
+    
+  </data>
+  <data name="AboutDateDiff_start_date" xml:space="preserve">
+    <value>Alguskuupäev erinevuse arvutamise toimingu jaoks.</value>
+  </data>
+  <data name="AboutDateDiff_end_date" xml:space="preserve">
+    <value>Lõppkuupäev erinevuse arvutamise toimingu jaoks.</value>
+  </data>
+  <data name="AboutDateDiff_unit" xml:space="preserve">
+    <value>Ühik, milles tulemus esitatakse, mis võib olla kas: Years, Quarters, Months, Days, Hours, Minutes, Seconds, Milliseconds.</value>
+    
+  </data>
+  <data name="AboutDateAddT" xml:space="preserve">
+    <value>Lisab kuupäevade veerule määratud arvu ühikuid.</value>
+    
+  </data>
+  <data name="AboutDateDiffT" xml:space="preserve">
+    <value>Arvutab kahe kuupäevaveeru vahelise erinevuse.</value>
+    
+  </data>
+  <data name="DateAddTArg1" xml:space="preserve">
+    <value>kuupäevaveerg</value>
+    
+  </data>
+  <data name="DateAddTArg2" xml:space="preserve">
+    <value>ühikute_arv</value>
+    
+  </data>
+  <data name="DateAddTArg3" xml:space="preserve">
+    <value>ühik</value>
+    
+  </data>
+  <data name="AboutDateAdd_date_column" xml:space="preserve">
+    <value>Kuupäevaväärtuste veerg.</value>
+  </data>
+  <data name="DateDiffTArg1" xml:space="preserve">
+    <value>alguskuupäevade_veerg</value>
+    
+  </data>
+  <data name="DateDiffTArg2" xml:space="preserve">
+    <value>lõppkuupäevade_veerg</value>
+    
+  </data>
+  <data name="DateDiffTArg3" xml:space="preserve">
+    <value>ühik</value>
+    
+  </data>
+  <data name="AboutDateDiff_start_date_column" xml:space="preserve">
+    <value>Alguskuupäevade veerg erinevuse arvutamise toimingu jaoks.</value>
+  </data>
+  <data name="AboutDateDiff_end_date_column" xml:space="preserve">
+    <value>Lõppkuupäevade veerg erinevuse arvutamise toimingu jaoks.</value>
+  </data>
+  <data name="AboutChar" xml:space="preserve">
+    <value>Tagastab teie platvormi märgistikust koodiga määratud märgi.</value>
+    
+  </data>
+  <data name="CharArg1" xml:space="preserve">
+    <value>arv</value>
+    
+  </data>
+  <data name="AboutChar_number" xml:space="preserve">
+    <value>Teie platvormi märgistikust pärit kood.</value>
+  </data>
+  <data name="AboutCharT" xml:space="preserve">
+    <value>Tagastab teie platvormi märgistikust koodidega määratud märkide tabeli.</value>
+    
+  </data>
+  <data name="CharTArg1" xml:space="preserve">
+    <value>arvuveerg</value>
+    
+  </data>
+  <data name="AboutChar_column_of_numbers" xml:space="preserve">
+    <value>Teie platvormi märgistikust pärit koodide veerg.</value>
+  </data>
+  <data name="AboutParseJSON" xml:space="preserve">
+    <value>Teisendab JSON-stringi objektiks.</value>
+    
+  </data>
+  <data name="ParseJSONArg1" xml:space="preserve">
+    <value>sisend</value>
+    
+  </data>
+  <data name="AboutParseJSON_input" xml:space="preserve">
+    <value>Töödeldav JSON-string.</value>
+  </data>
+  <data name="AboutIndex" xml:space="preserve">
+    <value>Tagastab tabelis kirje antud registriga.</value>
+    
+  </data>
+  <data name="IndexArg1" xml:space="preserve">
+    <value>tabel</value>
+    
+  </data>
+  <data name="IndexArg2" xml:space="preserve">
+    <value>register</value>
+    
+  </data>
+  <data name="AboutIndex_table" xml:space="preserve">
+    <value>Tabel.</value>
+  </data>
+  <data name="AboutIndex_index" xml:space="preserve">
+    <value>Toodava kirje register.</value>
+    
+  </data>
+  <data name="Screen_Name_DisplayName" xml:space="preserve">
+    <value>Nimi</value>
+    
+  </data>
+  <data name="Screen_Printing_DisplayName" xml:space="preserve">
+    <value>Printimine</value>
+    
+  </data>
+  <data name="Screen_ImagePosition_DisplayName" xml:space="preserve">
+    <value>Pildi asend</value>
+    
+  </data>
+  <data name="Screen_Size_DisplayName" xml:space="preserve">
+    <value>Suurus</value>
+    
+  </data>
+  <data name="barcode_Type_DisplayName" xml:space="preserve">
+    <value>Vöötkoodi tüüp</value>
+    
+  </data>
+  <data name="camera_Contrast_DisplayName" xml:space="preserve">
+    <value>Kontrastsus</value>
+    
+  </data>
+  <data name="camera_Zoom_DisplayName" xml:space="preserve">
+    <value>Suum</value>
+    
+  </data>
+  <data name="camera_Camera_DisplayName" xml:space="preserve">
+    <value>Kaamera</value>
+    
+  </data>
+  <data name="export_Data_DisplayName" xml:space="preserve">
+    <value>Andmed</value>
+    
+  </data>
+  <data name="Edit" xml:space="preserve">
+    <value>Redigeeri</value>
+    
+  </data>
+  <data name="Dust" xml:space="preserve">
+    <value>Võta tolmu</value>
+    
+  </data>
+  <data name="image_Image_DisplayName" xml:space="preserve">
+    <value>Pilt</value>
+    
+  </data>
+  <data name="icon_Icon_DisplayName" xml:space="preserve">
+    <value>Ikoon</value>
+    
+  </data>
+  <data name="icon_Rotation_DisplayName" xml:space="preserve">
+    <value>Keeramine</value>
+    
+  </data>
+  <data name="image_ImagePosition_DisplayName" xml:space="preserve">
+    <value>Pildi asend</value>
+    
+  </data>
+  <data name="image_ImageRotation_DisplayName" xml:space="preserve">
+    <value>Pööra</value>
+    
+  </data>
+  <data name="ImageRotation_None_DisplayName" xml:space="preserve">
+    <value>Pole</value>
+    
+  </data>
+  <data name="label_Live_DisplayName" xml:space="preserve">
+    <value>Reaalajas</value>
+    
+  </data>
+  <data name="label_Overflow_DisplayName" xml:space="preserve">
+    <value>Ületäide</value>
+    
+  </data>
+  <data name="DatePicker_DateTimeZone_DisplayName" xml:space="preserve">
+    <value>Kuupäeva ajavöönd</value>
+    
+  </data>
+  <data name="DatePicker_Format_DisplayName" xml:space="preserve">
+    <value>Vorming</value>
+    
+  </data>
+  <data name="DatePicker_Language_DisplayName" xml:space="preserve">
+    <value>Keel</value>
+    
+  </data>
+  <data name="Calendar_Width_DisplayName" xml:space="preserve">
+    <value>Kalendri laius</value>
+    
+  </data>
+  <data name="Hide_Calendar_DisplayName" xml:space="preserve">
+    <value>Peida kalender</value>
+    
+  </data>
+  <data name="Calendar_StartOfWeek_DisplayName" xml:space="preserve">
+    <value>Nädala algus</value>
+    
+  </data>
+  <data name="microphone_Mic_DisplayName" xml:space="preserve">
+    <value>Mikrofon</value>
+    
+  </data>
+  <data name="text_Default_DisplayName" xml:space="preserve">
+    <value>Vaikeväärtus</value>
+    
+  </data>
+  <data name="text_Mode_DisplayName" xml:space="preserve">
+    <value>Režiim</value>
+    
+  </data>
+  <data name="text_Format_DisplayName" xml:space="preserve">
+    <value>Vorming</value>
+    
+  </data>
+  <data name="text_VirtualKeyboardMode_DisplayName" xml:space="preserve">
+    <value>Virtuaalklaviatuuri režiim</value>
+    
+  </data>
+  <data name="text_TeamsTheme_DisplayName" xml:space="preserve">
+    <value>Teamsi kujundus</value>
+    
+  </data>
+  <data name="text_Clear_DisplayName" xml:space="preserve">
+    <value>Tühjendusnupp</value>
+    
+  </data>
+  <data name="Align_Left_DisplayName" xml:space="preserve">
+    <value>Joonda vasakule</value>
+    
+  </data>
+  <data name="Align_Right_DisplayName" xml:space="preserve">
+    <value>Joonda paremale</value>
+    
+  </data>
+  <data name="Align_Center_DisplayName" xml:space="preserve">
+    <value>Joonda keskele</value>
+    
+  </data>
+  <data name="Align_Justify_DisplayName" xml:space="preserve">
+    <value>Rööpjoonda</value>
+    
+  </data>
+  <data name="AboutIsNumeric" xml:space="preserve">
+    <value>Kontrollib, kas väärtus on arv, ja tagastab väärtuse Tõene või Väär.</value>
+    
+  </data>
+  <data name="IsNumericArg1" xml:space="preserve">
+    <value>väärtus</value>
+    
+  </data>
+  <data name="AboutIsNumeric_value" xml:space="preserve">
+    <value>Testitav väärtus.</value>
+  </data>
+  <data name="Post" xml:space="preserve">
+    <value>Postita</value>
+    
+  </data>
+  <data name="AboutDateTimeValue" xml:space="preserve">
+    <value>Teisendab kuupäeva ja kellaaja tekstivormingust arvuvormingusse, millega tähistatakse Power Appsi kuupäeva- ja kellaajakoodis kuupäeva.</value>
+    
+  </data>
+  <data name="DateTimeValueArg1" xml:space="preserve">
+    <value>kellaaja_tekst</value>
+    
+  </data>
+  <data name="DateTimeValueArg2" xml:space="preserve">
+    <value>keelekood</value>
+    
+  </data>
+  <data name="AboutDateTimeValue_time_text" xml:space="preserve">
+    <value>Kuupäeva- ja kellaajatempli tekstkuju platvormi toetatud vormingus.</value>
+  </data>
+  <data name="AboutDateTimeValue_language_code" xml:space="preserve">
+    <value>Esitatud teksti keelekood.</value>
+  </data>
+  <data name="AboutTable" xml:space="preserve">
+    <value>Loob määratud kirjete põhjal tabeli, milles on niipalju veerge, kui on kordumatuid kirjevälju. Nt: Tabel({võti1: väärtus1; võti2: väärtus2; ...}; ...)</value>
+    
+  </data>
+  <data name="TableArg1" xml:space="preserve">
+    <value>kirje</value>
+    
+  </data>
+  <data name="AboutTable_record" xml:space="preserve">
+    <value>Kirje, mis muutub tulemitabelis reaks.</value>
+  </data>
+  <data name="AboutShowColumns" xml:space="preserve">
+    <value>Tagastab tabeli, mille allikatabelist on eemaldatud kõik veerud peale määratud veergude.</value>
+    
+  </data>
+  <data name="ShowColumnsArg1" xml:space="preserve">
+    <value>allikas</value>
+    
+  </data>
+  <data name="ShowColumnsArg2" xml:space="preserve">
+    <value>veeru_nimi</value>
+    
+  </data>
+  <data name="AboutShowColumns_source" xml:space="preserve">
+    <value>Tabeliväärtus, millest veerud eemaldatakse.</value>
+  </data>
+  <data name="AboutShowColumns_column_name" xml:space="preserve">
+    <value>Säilitatava veeru nimi.</value>
+  </data>
+  <data name="AboutIsToday" xml:space="preserve">
+    <value>Kontrollib, kas määratud kuupäev on täna, ja tagastab väärtuse Tõene või Väär.</value>
+    
+  </data>
+  <data name="AboutIsToday_date" xml:space="preserve">
+    <value>Testitav kuupäevaväärtus.</value>
+  </data>
+  <data name="IsTodayFuncArg1" xml:space="preserve">
+    <value>kuupäev</value>
+    
+  </data>
+  <data name="AboutIsUTCToday" xml:space="preserve">
+    <value>Kontrollib, kas antud kuupäev on täna UTC ajavööndis ja tagastab tõese või väära.</value>
+    
+  </data>
+  <data name="AboutIsUTCToday_date" xml:space="preserve">
+    <value>Testitav kuupäevaväärtus.</value>
+  </data>
+  <data name="IsUTCTodayFuncArg1" xml:space="preserve">
+    <value>kuupäev</value>
+    
+  </data>
+  <data name="AboutMod" xml:space="preserve">
+    <value>Tagastab jäägi pärast arvu jagamist jagajaga. Tulemusel on sama märk mis jagajal.</value>
+    
+  </data>
+  <data name="AboutModT" xml:space="preserve">
+    <value>Tagastab veeru, mis sisaldab jääki pärast arvu (või arvuveeru) jagamist jagajaga (või jagajate veeruga).</value>
+    
+  </data>
+  <data name="AboutMod_divisor" xml:space="preserve">
+    <value>Arv, millega jagatakse.</value>
+  </data>
+  <data name="AboutMod_divisor_or_column" xml:space="preserve">
+    <value>Arv või arvuveerg, millega jagatakse.</value>
+  </data>
+  <data name="AboutMod_number" xml:space="preserve">
+    <value>Arv, mille jääk leitakse.</value>
+  </data>
+  <data name="AboutMod_number_or_column" xml:space="preserve">
+    <value>Arv või arvuveerg, mille jääk leitakse.</value>
+  </data>
+  <data name="ModFuncArg1" xml:space="preserve">
+    <value>arv</value>
+    
+  </data>
+  <data name="ModFuncArg2" xml:space="preserve">
+    <value>jagaja</value>
+    
+  </data>
+  <data name="ModTFuncArg1" xml:space="preserve">
+    <value>arv_või_veerg</value>
+    
+  </data>
+  <data name="ModTFuncArg2" xml:space="preserve">
+    <value>jagaja_või_veerg</value>
+    
+  </data>
+  <data name="pdfViewer_Document_DisplayName" xml:space="preserve">
+    <value>Dokument</value>
+    
+  </data>
+  <data name="pdfViewer_Zoom_DisplayName" xml:space="preserve">
+    <value>Suum</value>
+    
+  </data>
+  <data name="pdfViewer_Password_DisplayName" xml:space="preserve">
+    <value>Parool</value>
+    
+  </data>
+  <data name="pdfViewer_PasswordState_DisplayName" xml:space="preserve">
+    <value>Parooli olek</value>
+    
+  </data>
+  <data name="DataDescriptionInvalidFormat_Reason" xml:space="preserve">
+    <value>Andmekirjeldus ei sobi: {0}</value>
+  </data>
+  <data name="DataDescriptionParserUnknownException" xml:space="preserve">
+    <value>Andmete kirjelduse sõelumiskatsel ilmnes tundmatu tõrge.</value>
+  </data>
+  <data name="AboutForAll" xml:space="preserve">
+    <value>Rakendab andmeallika igale reale määratud valemi ja seejärel tagastab iga rea kohta uue tulemustega tabeli.</value>
+    
+  </data>
+  <data name="AboutForAll_source" xml:space="preserve">
+    <value>Töödeldav andmeallikas või tabel.</value>
+  </data>
+  <data name="AboutForAll_formula" xml:space="preserve">
+    <value>Valem tabeli kõigi ridade hindamiseks.</value>
+  </data>
+  <data name="ForAllArg1" xml:space="preserve">
+    <value>allikas</value>
+    
+  </data>
+  <data name="ForAllArg2" xml:space="preserve">
+    <value>valem</value>
+    
+  </data>
+  <data name="AboutPower" xml:space="preserve">
+    <value>Arvutab arvu x astme y. Sama mis x^y.</value>
+    
+  </data>
+  <data name="AboutPower_base" xml:space="preserve">
+    <value>Astendatav alus.</value>
+  </data>
+  <data name="AboutPower_exponent" xml:space="preserve">
+    <value>Aluse astendaja.</value>
+  </data>
+  <data name="PowerFuncArg1" xml:space="preserve">
+    <value>alus</value>
+    
+  </data>
+  <data name="PowerFuncArg2" xml:space="preserve">
+    <value>astendaja</value>
+    
+  </data>
+  <data name="AboutStartsWith" xml:space="preserve">
+    <value>Tagastab väärtuse true, kui esitatud tekst algab antud algusstringiga.</value>
+    
+  </data>
+  <data name="AboutStartsWith_text" xml:space="preserve">
+    <value>Kontrollitav tekst.</value>
+  </data>
+  <data name="AboutStartsWith_start" xml:space="preserve">
+    <value>Algusstring. Funktsioon tagastab väärtuse tõene, kui tekst algab selle stringiga.</value>
+  </data>
+  <data name="StartsWithArg1" xml:space="preserve">
+    <value>tekst</value>
+    
+  </data>
+  <data name="StartsWithArg2" xml:space="preserve">
+    <value>algus</value>
+    
+  </data>
+  <data name="AboutEndsWith" xml:space="preserve">
+    <value>Tagastab väärtuse tõene, kui esitatud tekst lõpeb esitatud lõppstringiga.</value>
+    
+  </data>
+  <data name="AboutEndsWith_text" xml:space="preserve">
+    <value>Kontrollitav tekst.</value>
+  </data>
+  <data name="AboutEndsWith_end" xml:space="preserve">
+    <value>Lõppstring. Funktsioon tagastab väärtuse tõene, kui tekst lõpeb selle stringiga.</value>
+  </data>
+  <data name="EndsWithArg1" xml:space="preserve">
+    <value>tekst</value>
+    
+  </data>
+  <data name="EndsWithArg2" xml:space="preserve">
+    <value>lõpp</value>
+    
+  </data>
+  <data name="AboutBlank" xml:space="preserve">
+    <value>Tagastab null- (tühja) väärtuse</value>
+  </data>
+  <data name="AboutPowerT" xml:space="preserve">
+    <value>Tõstab arvu x (või arvude veeru) teise arvu y (või arvude veeru) astmesse. Sama kui x^y.</value>
+    
+  </data>
+  <data name="AboutPower_base_or_column" xml:space="preserve">
+    <value>Tõstetav alusarv (või alusarvude veerg).</value>
+  </data>
+  <data name="AboutPower_exponent_or_column" xml:space="preserve">
+    <value>Aste (või astmete veerg), millesse alus tõstetakse.</value>
+  </data>
+  <data name="PowerTFuncArg1" xml:space="preserve">
+    <value>alus_või_veerg</value>
+    
+  </data>
+  <data name="PowerTFuncArg2" xml:space="preserve">
+    <value>eksponent_või_veerg</value>
+    
+  </data>
+  <data name="Icon_Import_DisplayName" xml:space="preserve">
+    <value>Impordi</value>
+    
+  </data>
+  <data name="Icon_AddUser_DisplayName" xml:space="preserve">
+    <value>Lisa kasutaja</value>
+    
+  </data>
+  <data name="Icon_Alarm_DisplayName" xml:space="preserve">
+    <value>Alarm</value>
+    
+  </data>
+  <data name="Icon_Blocked_DisplayName" xml:space="preserve">
+    <value>Blokeeritud</value>
+    
+  </data>
+  <data name="Icon_Bookmark_DisplayName" xml:space="preserve">
+    <value>Järjehoidja</value>
+    
+  </data>
+  <data name="Icon_Bug_DisplayName" xml:space="preserve">
+    <value>Viga</value>
+    
+  </data>
+  <data name="Icon_Calculator_DisplayName" xml:space="preserve">
+    <value>Kalkulaator</value>
+    
+  </data>
+  <data name="Icon_Diamond_DisplayName" xml:space="preserve">
+    <value>Teemant</value>
+    
+  </data>
+  <data name="Icon_DockLeft_DisplayName" xml:space="preserve">
+    <value>Doki vasakule</value>
+    
+  </data>
+  <data name="Icon_DockRight_DisplayName" xml:space="preserve">
+    <value>Doki paremale</value>
+    
+  </data>
+  <data name="Icon_Enhance_DisplayName" xml:space="preserve">
+    <value>Suurenda</value>
+    
+  </data>
+  <data name="Icon_Error_DisplayName" xml:space="preserve">
+    <value>Tõrge</value>
+    
+  </data>
+  <data name="Icon_Export_DisplayName" xml:space="preserve">
+    <value>Ekspordi</value>
+    
+  </data>
+  <data name="Icon_Flag_DisplayName" xml:space="preserve">
+    <value>Lipp</value>
+    
+  </data>
+  <data name="Icon_Globe_DisplayName" xml:space="preserve">
+    <value>Maailm</value>
+    
+  </data>
+  <data name="Icon_HalfFilledCircle_DisplayName" xml:space="preserve">
+    <value>Pooltäidetud ring</value>
+    
+  </data>
+  <data name="Icon_Health_DisplayName" xml:space="preserve">
+    <value>Tervis</value>
+    
+  </data>
+  <data name="Icon_Heart_DisplayName" xml:space="preserve">
+    <value>Süda</value>
+    
+  </data>
+  <data name="Icon_Help_DisplayName" xml:space="preserve">
+    <value>Spikker</value>
+    
+  </data>
+  <data name="Icon_Hide_DisplayName" xml:space="preserve">
+    <value>Peida</value>
+    
+  </data>
+  <data name="Icon_History_DisplayName" xml:space="preserve">
+    <value>Ajalugu</value>
+    
+  </data>
+  <data name="Icon_HorizontalLine_DisplayName" xml:space="preserve">
+    <value>Horisontaalne rida</value>
+    
+  </data>
+  <data name="Icon_Hospital_DisplayName" xml:space="preserve">
+    <value>Haigla</value>
+    
+  </data>
+  <data name="Icon_Key_DisplayName" xml:space="preserve">
+    <value>Võti</value>
+    
+  </data>
+  <data name="Icon_Lightbulb_DisplayName" xml:space="preserve">
+    <value>Lambipirn</value>
+    
+  </data>
+  <data name="Icon_LightningBolt_DisplayName" xml:space="preserve">
+    <value>Välgunool</value>
+    
+  </data>
+  <data name="Icon_Link_DisplayName" xml:space="preserve">
+    <value>Link</value>
+    
+  </data>
+  <data name="Icon_Manufacture_DisplayName" xml:space="preserve">
+    <value>Tootmine</value>
+    
+  </data>
+  <data name="Icon_Medical_DisplayName" xml:space="preserve">
+    <value>Meditsiin</value>
+    
+  </data>
+  <data name="Icon_Microphone_DisplayName" xml:space="preserve">
+    <value>Mikrofon</value>
+    
+  </data>
+  <data name="Icon_Notebook_DisplayName" xml:space="preserve">
+    <value>Märkmik</value>
+    
+  </data>
+  <data name="Icon_OpenInNewWindow_DisplayName" xml:space="preserve">
+    <value>Ava uues aknas</value>
+    
+  </data>
+  <data name="Icon_Phonebook_DisplayName" xml:space="preserve">
+    <value>Telefoniraamat</value>
+    
+  </data>
+  <data name="Icon_Print_DisplayName" xml:space="preserve">
+    <value>Prindi</value>
+    
+  </data>
+  <data name="Icon_Publish_DisplayName" xml:space="preserve">
+    <value>Avalda</value>
+    
+  </data>
+  <data name="Icon_QuestionMark_DisplayName" xml:space="preserve">
+    <value>Küsimärk</value>
+    
+  </data>
+  <data name="Icon_Redo_DisplayName" xml:space="preserve">
+    <value>Tee uuesti</value>
+    
+  </data>
+  <data name="Icon_Reset_DisplayName" xml:space="preserve">
+    <value>Lähtesta</value>
+    
+  </data>
+  <data name="Icon_Ribbon_DisplayName" xml:space="preserve">
+    <value>Lint</value>
+    
+  </data>
+  <data name="Icon_Scan_DisplayName" xml:space="preserve">
+    <value>Skanni</value>
+    
+  </data>
+  <data name="Icon_Share_DisplayName" xml:space="preserve">
+    <value>Ühiskasutus</value>
+    
+  </data>
+  <data name="Icon_Shirt_DisplayName" xml:space="preserve">
+    <value>Särk</value>
+    
+  </data>
+  <data name="Icon_Shop_DisplayName" xml:space="preserve">
+    <value>Pood</value>
+    
+  </data>
+  <data name="Icon_Signal_DisplayName" xml:space="preserve">
+    <value>Signaal</value>
+    
+  </data>
+  <data name="Icon_Support_DisplayName" xml:space="preserve">
+    <value>Tugi</value>
+    
+  </data>
+  <data name="Icon_Sync_DisplayName" xml:space="preserve">
+    <value>Sünkroonimine</value>
+    
+  </data>
+  <data name="Icon_Text_DisplayName" xml:space="preserve">
+    <value>Tekst</value>
+    
+  </data>
+  <data name="Icon_ThumbsDown_DisplayName" xml:space="preserve">
+    <value>Pöidlad alla</value>
+    
+  </data>
+  <data name="Icon_ThumbsUp_DisplayName" xml:space="preserve">
+    <value>Pöidlad püsti</value>
+    
+  </data>
+  <data name="Icon_Train_DisplayName" xml:space="preserve">
+    <value>Rong</value>
+    
+  </data>
+  <data name="Icon_Tray_DisplayName" xml:space="preserve">
+    <value>Salv</value>
+    
+  </data>
+  <data name="Icon_Undo_DisplayName" xml:space="preserve">
+    <value>Võta tagasi</value>
+    
+  </data>
+  <data name="Icon_Unlock_DisplayName" xml:space="preserve">
+    <value>Ava</value>
+    
+  </data>
+  <data name="Icon_VerticalLine_DisplayName" xml:space="preserve">
+    <value>Vertikaalne rida</value>
+    
+  </data>
+  <data name="Icon_Video_DisplayName" xml:space="preserve">
+    <value>Video</value>
+    
+  </data>
+  <data name="Icon_View_DisplayName" xml:space="preserve">
+    <value>Vaade</value>
+    
+  </data>
+  <data name="Icon_ZoomIn_DisplayName" xml:space="preserve">
+    <value>Suurenda</value>
+    
+  </data>
+  <data name="Icon_ZoomOut_DisplayName" xml:space="preserve">
+    <value>Vähenda</value>
+    
+  </data>
+  <data name="Icon_BookmarkFilled_DisplayName" xml:space="preserve">
+    <value>Järjehoidja (täidetud)</value>
+    
+  </data>
+  <data name="Icon_CancelBadge_DisplayName" xml:space="preserve">
+    <value>Loobu (märk)</value>
+    
+  </data>
+  <data name="Icon_CheckBadge_DisplayName" xml:space="preserve">
+    <value>Märgi (märk)</value>
+    
+  </data>
+  <data name="Icon_Cut_DisplayName" xml:space="preserve">
+    <value>Lõika</value>
+    
+  </data>
+  <data name="Icon_FilterFlat_DisplayName" xml:space="preserve">
+    <value>Lame filter</value>
+    
+  </data>
+  <data name="Icon_FilterFlatFilled_DisplayName" xml:space="preserve">
+    <value>Lame filter (täidetud)</value>
+    
+  </data>
+  <data name="Icon_Leave_DisplayName" xml:space="preserve">
+    <value>Lahku</value>
+    
+  </data>
+  <data name="Icon_Paste_DisplayName" xml:space="preserve">
+    <value>Kleebi</value>
+    
+  </data>
+  <data name="Icon_ThumbsDownFilled_DisplayName" xml:space="preserve">
+    <value>Pöidlad alla (täidetud)</value>
+    
+  </data>
+  <data name="Icon_ThumbsUpFilled_DisplayName" xml:space="preserve">
+    <value>Pöidlad püsti (täidetud)</value>
+    
+  </data>
+  <data name="Icon_EmojiHappy_DisplayName" xml:space="preserve">
+    <value>Emotikon – rõõmus</value>
+    
+  </data>
+  <data name="SuggestRemoteExecutionHint_OpNotSupportedByClient" xml:space="preserve">
+    <value>Osa sellest valemist ei saa kaugühenduse teel hinnata. Toiming '{0}' pole selles kontekstis praegu toetatud.</value>
+    
+  </data>
+  <data name="SuggestRemoteExecutionHint_StringMatchSecondParam" xml:space="preserve">
+    <value>Osa sellest valemist ei saa kaugühenduse teel hinnata. Funktsiooni '{0}' ei saa delegeerida, kui teises argumendis kuvatakse välja nimi.</value>
+    
+  </data>
+  <data name="entityForm_EntityForm_DisplayName" xml:space="preserve">
+    <value>Olemi vorm</value>
+    
+  </data>
+  <data name="BorderStyle_None_DisplayName" xml:space="preserve">
+    <value>Pole</value>
+    
+  </data>
+  <data name="BorderStyle_Dashed_DisplayName" xml:space="preserve">
+    <value>Kriipsjoon</value>
+    
+  </data>
+  <data name="BorderStyle_Solid_DisplayName" xml:space="preserve">
+    <value>Pidevjoon</value>
+    
+  </data>
+  <data name="BorderStyle_Dotted_DisplayName" xml:space="preserve">
+    <value>Punktiirjoon</value>
+    
+  </data>
+  <data name="DisplayMode_Disabled_DisplayName" xml:space="preserve">
+    <value>Keelatud</value>
+    
+  </data>
+  <data name="DisplayMode_Edit_DisplayName" xml:space="preserve">
+    <value>Redigeeri</value>
+    
+  </data>
+  <data name="DisplayMode_View_DisplayName" xml:space="preserve">
+    <value>Vaade</value>
+    
+  </data>
+  <data name="LayoutMode_Manual_DisplayName" xml:space="preserve">
+    <value>Käsitsi</value>
+    
+  </data>
+  <data name="LayoutMode_Auto_DisplayName" xml:space="preserve">
+    <value>Automaatne</value>
+    
+  </data>
+  <data name="LayoutDirection_Horizontal_DisplayName" xml:space="preserve">
+    <value>Horisontaalne</value>
+    
+  </data>
+  <data name="LayoutDirection_Vertical_DisplayName" xml:space="preserve">
+    <value>Vertikaalne</value>
+    
+  </data>
+  <data name="LayoutAlignItems_Start_DisplayName" xml:space="preserve">
+    <value>Algusesse</value>
+    
+  </data>
+  <data name="LayoutAlignItems_Center_DisplayName" xml:space="preserve">
+    <value>Keskele</value>
+    
+  </data>
+  <data name="LayoutAlignItems_End_DisplayName" xml:space="preserve">
+    <value>Lõppu</value>
+    
+  </data>
+  <data name="LayoutAlignItems_Stretch_DisplayName" xml:space="preserve">
+    <value>Venitatud</value>
+    
+  </data>
+  <data name="AlignInContainer_Start_DisplayName" xml:space="preserve">
+    <value>Algusesse</value>
+    
+  </data>
+  <data name="AlignInContainer_Center_DisplayName" xml:space="preserve">
+    <value>Keskele</value>
+    
+  </data>
+  <data name="AlignInContainer_End_DisplayName" xml:space="preserve">
+    <value>Lõppu</value>
+    
+  </data>
+  <data name="AlignInContainer_Stretch_DisplayName" xml:space="preserve">
+    <value>Venitatud</value>
+    
+  </data>
+  <data name="AlignInContainer_SetByContainer_DisplayName" xml:space="preserve">
+    <value>Määratud ümbrisega</value>
+    
+  </data>
+  <data name="LayoutJustifyContent_Start_DisplayName" xml:space="preserve">
+    <value>Algusesse</value>
+    
+  </data>
+  <data name="LayoutJustifyContent_Center_DisplayName" xml:space="preserve">
+    <value>Keskele</value>
+    
+  </data>
+  <data name="LayoutJustifyContent_End_DisplayName" xml:space="preserve">
+    <value>Lõppu</value>
+    
+  </data>
+  <data name="LayoutJustifyContent_SpaceEvenly_DisplayName" xml:space="preserve">
+    <value>Ühtlane jaotus</value>
+    
+  </data>
+  <data name="LayoutJustifyContent_SpaceAround_DisplayName" xml:space="preserve">
+    <value>Võrdsed sõnavahed</value>
+    
+  </data>
+  <data name="LayoutJustifyContent_SpaceBetween_DisplayName" xml:space="preserve">
+    <value>Võrdsed reavahed</value>
+    
+  </data>
+  <data name="LayoutOverflow_Hide_DisplayName" xml:space="preserve">
+    <value>Peida</value>
+    
+  </data>
+  <data name="LayoutOverflow_Scroll_DisplayName" xml:space="preserve">
+    <value>Keri</value>
+    
+  </data>
+  <data name="Overflow_Hidden_DisplayName" xml:space="preserve">
+    <value>Peidetud</value>
+    
+  </data>
+  <data name="Overflow_Scroll_DisplayName" xml:space="preserve">
+    <value>Kerimine</value>
+    
+  </data>
+  <data name="TextMode_SingleLine_DisplayName" xml:space="preserve">
+    <value>Üherealine</value>
+    
+  </data>
+  <data name="TextMode_Password_DisplayName" xml:space="preserve">
+    <value>Parool</value>
+    
+  </data>
+  <data name="TextMode_MultiLine_DisplayName" xml:space="preserve">
+    <value>Mitmerealine</value>
+    
+  </data>
+  <data name="TextFormat_Text_DisplayName" xml:space="preserve">
+    <value>Tekst</value>
+    
+  </data>
+  <data name="TextFormat_Number_DisplayName" xml:space="preserve">
+    <value>Arv</value>
+    
+  </data>
+  <data name="VirtualKeyboardMode_Auto_DisplayName" xml:space="preserve">
+    <value>Automaatne klaviatuur</value>
+    
+  </data>
+  <data name="VirtualKeyboardMode_Numeric_DisplayName" xml:space="preserve">
+    <value>Numbriline klaviatuur</value>
+    
+  </data>
+  <data name="VirtualKeyboardMode_Text_DisplayName" xml:space="preserve">
+    <value>Teksti klaviatuur</value>
+    
+  </data>
+  <data name="TeamsTheme_Default_DisplayName" xml:space="preserve">
+    <value>Vaikekujundus</value>
+    
+  </data>
+  <data name="TeamsTheme_Dark_DisplayName" xml:space="preserve">
+    <value>Tume kujundus</value>
+    
+  </data>
+  <data name="TeamsTheme_Contrast_DisplayName" xml:space="preserve">
+    <value>Kontrastne kujundus</value>
+    
+  </data>
+  <data name="PenMode_Draw_DisplayName" xml:space="preserve">
+    <value>Joonistamine</value>
+    
+  </data>
+  <data name="PenMode_Erase_DisplayName" xml:space="preserve">
+    <value>Kustutamine</value>
+    
+  </data>
+  <data name="DateTimeZone_Local_DisplayName" xml:space="preserve">
+    <value>Kohalik</value>
+    
+  </data>
+  <data name="DateTimeZone_UTC_DisplayName" xml:space="preserve">
+    <value>UTC</value>
+    
+  </data>
+  <data name="ImagePosition_Fill_DisplayName" xml:space="preserve">
+    <value>Täide</value>
+    
+  </data>
+  <data name="ImagePosition_Fit_DisplayName" xml:space="preserve">
+    <value>Sobita</value>
+    
+  </data>
+  <data name="ImagePosition_Stretch_DisplayName" xml:space="preserve">
+    <value>Venitamine</value>
+    
+  </data>
+  <data name="ImagePosition_Tile_DisplayName" xml:space="preserve">
+    <value>Paan</value>
+    
+  </data>
+  <data name="ImagePosition_Center_DisplayName" xml:space="preserve">
+    <value>Keskele</value>
+    
+  </data>
+  <data name="VerticalAlign_Top_DisplayName" xml:space="preserve">
+    <value>Üles</value>
+    
+  </data>
+  <data name="VerticalAlign_Middle_DisplayName" xml:space="preserve">
+    <value>Keskele</value>
+    
+  </data>
+  <data name="VerticalAlign_Bottom_DisplayName" xml:space="preserve">
+    <value>Alla</value>
+    
+  </data>
+  <data name="Layout_Horizontal_DisplayName" xml:space="preserve">
+    <value>Horisontaalne</value>
+    
+  </data>
+  <data name="Layout_Vertical_DisplayName" xml:space="preserve">
+    <value>Vertikaalne</value>
+    
+  </data>
+  <data name="TextPosition_Left_DisplayName" xml:space="preserve">
+    <value>Vasakule</value>
+    
+  </data>
+  <data name="TextPosition_Right_DisplayName" xml:space="preserve">
+    <value>Paremale</value>
+    
+  </data>
+  <data name="Transition_Push_DisplayName" xml:space="preserve">
+    <value>Lükkamine</value>
+    
+  </data>
+  <data name="Transition_Pop_DisplayName" xml:space="preserve">
+    <value>Hüppamine</value>
+    
+  </data>
+  <data name="Transition_None_DisplayName" xml:space="preserve">
+    <value>Pole</value>
+    
+  </data>
+  <data name="FontWeight_Normal_DisplayName" xml:space="preserve">
+    <value>Tavaline</value>
+    
+  </data>
+  <data name="FontWeight_Semibold_DisplayName" xml:space="preserve">
+    <value>Poolpaks</value>
+    
+  </data>
+  <data name="FontWeight_Bold_DisplayName" xml:space="preserve">
+    <value>Paks</value>
+    
+  </data>
+  <data name="FontWeight_Lighter_DisplayName" xml:space="preserve">
+    <value>Väiksem</value>
+    
+  </data>
+  <data name="FormPattern_None_DisplayName" xml:space="preserve">
+    <value>Pole</value>
+    
+  </data>
+  <data name="FormPattern_Details_DisplayName" xml:space="preserve">
+    <value>Üksikasjad</value>
+    
+  </data>
+  <data name="FormPattern_List_DisplayName" xml:space="preserve">
+    <value>Loend</value>
+    
+  </data>
+  <data name="FormPattern_CardList_DisplayName" xml:space="preserve">
+    <value>Kaardi loend</value>
+    
+  </data>
+  <data name="BarcodeType_Auto_DisplayName" xml:space="preserve">
+    <value>Automaatne</value>
+    
+  </data>
+  <data name="BarcodeType_Aztec_DisplayName" xml:space="preserve">
+    <value>Asteek</value>
+    
+  </data>
+  <data name="BarcodeType_Codabar_DisplayName" xml:space="preserve">
+    <value>Codabar</value>
+    
+  </data>
+  <data name="BarcodeType_DataMatrix_DisplayName" xml:space="preserve">
+    <value>Andmemaatriks</value>
+    
+  </data>
+  <data name="BarcodeType_Ean_DisplayName" xml:space="preserve">
+    <value>EAN</value>
+    
+  </data>
+  <data name="BarcodeType_QRCode_DisplayName" xml:space="preserve">
+    <value>QR-kood</value>
+    
+  </data>
+  <data name="BarcodeType_RssExpanded_DisplayName" xml:space="preserve">
+    <value>RSS laiendatud</value>
+    
+  </data>
+  <data name="BarcodeType_Upc_DisplayName" xml:space="preserve">
+    <value>UPC</value>
+    
+  </data>
+  <data name="GridStyle_XOnly_DisplayName" xml:space="preserve">
+    <value>Ainult X</value>
+    
+  </data>
+  <data name="GridStyle_YOnly_DisplayName" xml:space="preserve">
+    <value>Ainult Y</value>
+    
+  </data>
+  <data name="GridStyle_All_DisplayName" xml:space="preserve">
+    <value>Kõik</value>
+    
+  </data>
+  <data name="GridStyle_None_DisplayName" xml:space="preserve">
+    <value>Pole</value>
+    
+  </data>
+  <data name="FormMode_Edit_DisplayName" xml:space="preserve">
+    <value>Redigeeri</value>
+    
+  </data>
+  <data name="FormMode_View_DisplayName" xml:space="preserve">
+    <value>Vaade</value>
+    
+  </data>
+  <data name="FormMode_New_DisplayName" xml:space="preserve">
+    <value>Uus</value>
+    
+  </data>
+  <data name="SelectedState_Edit_DisplayName" xml:space="preserve">
+    <value>Redigeeri</value>
+    
+  </data>
+  <data name="SelectedState_View_DisplayName" xml:space="preserve">
+    <value>Kuva</value>
+    
+  </data>
+  <data name="SelectedState_New_DisplayName" xml:space="preserve">
+    <value>Uus</value>
+    
+  </data>
+  <data name="LoadingSpinner_Controls_DisplayName" xml:space="preserve">
+    <value>Juhtelemendid</value>
+    
+  </data>
+  <data name="LoadingSpinner_Data_DisplayName" xml:space="preserve">
+    <value>Andmed</value>
+    
+  </data>
+  <data name="LoadingSpinner_None_DisplayName" xml:space="preserve">
+    <value>Pole</value>
+    
+  </data>
+  <data name="NotificationType_Error_DisplayName" xml:space="preserve">
+    <value>Tõrge</value>
+    
+  </data>
+  <data name="NotificationType_Warning_DisplayName" xml:space="preserve">
+    <value>Hoiatus</value>
+    
+  </data>
+  <data name="NotificationType_Success_DisplayName" xml:space="preserve">
+    <value>Õnnestus</value>
+    
+  </data>
+  <data name="NotificationType_Information_DisplayName" xml:space="preserve">
+    <value>Teave</value>
+    
+  </data>
+  <data name="Icon_Add_DisplayName" xml:space="preserve">
+    <value>Lisa</value>
+    
+  </data>
+  <data name="Icon_Cancel_DisplayName" xml:space="preserve">
+    <value>Loobu</value>
+    
+  </data>
+  <data name="Icon_Edit_DisplayName" xml:space="preserve">
+    <value>Redigeeri</value>
+    
+  </data>
+  <data name="Icon_Check_DisplayName" xml:space="preserve">
+    <value>Märgi</value>
+    
+  </data>
+  <data name="Icon_Search_DisplayName" xml:space="preserve">
+    <value>Otsi</value>
+    
+  </data>
+  <data name="Icon_Filter_DisplayName" xml:space="preserve">
+    <value>Filtreeri</value>
+    
+  </data>
+  <data name="Icon_Sort_DisplayName" xml:space="preserve">
+    <value>Sordi</value>
+    
+  </data>
+  <data name="Icon_Reload_DisplayName" xml:space="preserve">
+    <value>Laadi uuesti</value>
+    
+  </data>
+  <data name="Icon_Trash_DisplayName" xml:space="preserve">
+    <value>Prügikast</value>
+    
+  </data>
+  <data name="Icon_Save_DisplayName" xml:space="preserve">
+    <value>Salvesta</value>
+    
+  </data>
+  <data name="Icon_Download_DisplayName" xml:space="preserve">
+    <value>Laadi alla</value>
+    
+  </data>
+  <data name="Icon_Copy_DisplayName" xml:space="preserve">
+    <value>Kopeeri</value>
+    
+  </data>
+  <data name="Icon_LikeDislike_DisplayName" xml:space="preserve">
+    <value>Meeldib / ei meeldi</value>
+    
+  </data>
+  <data name="Icon_Crop_DisplayName" xml:space="preserve">
+    <value>Kärbi</value>
+    
+  </data>
+  <data name="Icon_Pin_DisplayName" xml:space="preserve">
+    <value>Kinnita</value>
+    
+  </data>
+  <data name="Icon_ClearDrawing_DisplayName" xml:space="preserve">
+    <value>Kustuta joonistus</value>
+    
+  </data>
+  <data name="Icon_ExpandView_DisplayName" xml:space="preserve">
+    <value>Laienda vaade</value>
+    
+  </data>
+  <data name="Icon_CollapseView_DisplayName" xml:space="preserve">
+    <value>Ahenda vaade</value>
+    
+  </data>
+  <data name="Icon_Draw_DisplayName" xml:space="preserve">
+    <value>Joonistamine</value>
+    
+  </data>
+  <data name="Icon_Compose_DisplayName" xml:space="preserve">
+    <value>Koosta</value>
+    
+  </data>
+  <data name="Icon_Erase_DisplayName" xml:space="preserve">
+    <value>Kustutamine</value>
+    
+  </data>
+  <data name="Icon_Message_DisplayName" xml:space="preserve">
+    <value>Sõnum</value>
+    
+  </data>
+  <data name="Icon_Post_DisplayName" xml:space="preserve">
+    <value>Postita</value>
+    
+  </data>
+  <data name="Icon_AddDocument_DisplayName" xml:space="preserve">
+    <value>Lisa dokument</value>
+    
+  </data>
+  <data name="Icon_AddLibrary_DisplayName" xml:space="preserve">
+    <value>Lisa teek</value>
+    
+  </data>
+  <data name="Icon_Home_DisplayName" xml:space="preserve">
+    <value>Avaleht</value>
+    
+  </data>
+  <data name="Icon_Hamburger_DisplayName" xml:space="preserve">
+    <value>Hamburger</value>
+    
+  </data>
+  <data name="Icon_Settings_DisplayName" xml:space="preserve">
+    <value>Sätted</value>
+    
+  </data>
+  <data name="Icon_More_DisplayName" xml:space="preserve">
+    <value>Rohkem</value>
+    
+  </data>
+  <data name="Icon_Waffle_DisplayName" xml:space="preserve">
+    <value>Vahvlimenüü</value>
+    
+  </data>
+  <data name="Icon_ChevronLeft_DisplayName" xml:space="preserve">
+    <value>Vasakule</value>
+    
+  </data>
+  <data name="Icon_ChevronRight_DisplayName" xml:space="preserve">
+    <value>Paremale</value>
+    
+  </data>
+  <data name="Icon_ChevronUp_DisplayName" xml:space="preserve">
+    <value>Üles</value>
+    
+  </data>
+  <data name="Icon_ChevronDown_DisplayName" xml:space="preserve">
+    <value>Alla</value>
+    
+  </data>
+  <data name="Icon_NextArrow_DisplayName" xml:space="preserve">
+    <value>Edasi</value>
+    
+  </data>
+  <data name="Icon_BackArrow_DisplayName" xml:space="preserve">
+    <value>Tagasi</value>
+    
+  </data>
+  <data name="Icon_ArrowDown_DisplayName" xml:space="preserve">
+    <value>Allanool</value>
+    
+  </data>
+  <data name="Icon_ArrowUp_DisplayName" xml:space="preserve">
+    <value>Ülesnool</value>
+    
+  </data>
+  <data name="Icon_ArrowLeft_DisplayName" xml:space="preserve">
+    <value>Paremnool</value>
+    
+  </data>
+  <data name="Icon_ArrowRight_DisplayName" xml:space="preserve">
+    <value>Vasaknool</value>
+    
+  </data>
+  <data name="Icon_Camera_DisplayName" xml:space="preserve">
+    <value>Kaamera</value>
+    
+  </data>
+  <data name="Icon_Document_DisplayName" xml:space="preserve">
+    <value>Dokument</value>
+    
+  </data>
+  <data name="Icon_DockCheckProperties_DisplayName" xml:space="preserve">
+    <value>Dokumendi märge</value>
+    
+  </data>
+  <data name="Icon_Folder_DisplayName" xml:space="preserve">
+    <value>Kaust</value>
+    
+  </data>
+  <data name="Icon_Journal_DisplayName" xml:space="preserve">
+    <value>Päevik</value>
+    
+  </data>
+  <data name="Icon_ForkKnife_DisplayName" xml:space="preserve">
+    <value>Toit</value>
+    
+  </data>
+  <data name="Icon_Transportation_DisplayName" xml:space="preserve">
+    <value>Transport</value>
+    
+  </data>
+  <data name="Icon_Airplane_DisplayName" xml:space="preserve">
+    <value>Lennuk</value>
+    
+  </data>
+  <data name="Icon_Bus_DisplayName" xml:space="preserve">
+    <value>Buss</value>
+    
+  </data>
+  <data name="Icon_Cars_DisplayName" xml:space="preserve">
+    <value>Autod</value>
+    
+  </data>
+  <data name="Icon_Money_DisplayName" xml:space="preserve">
+    <value>Raha</value>
+    
+  </data>
+  <data name="Icon_Currency_DisplayName" xml:space="preserve">
+    <value>Valuuta</value>
+    
+  </data>
+  <data name="Icon_AddToCalendar_DisplayName" xml:space="preserve">
+    <value>Kalendrisse lisamine</value>
+    
+  </data>
+  <data name="Icon_CalendarBlank_DisplayName" xml:space="preserve">
+    <value>Tühi kalender</value>
+    
+  </data>
+  <data name="Icon_OfficeBuilding_DisplayName" xml:space="preserve">
+    <value>Büroohoone</value>
+    
+  </data>
+  <data name="Icon_PaperClip_DisplayName" xml:space="preserve">
+    <value>Kirjaklamber</value>
+    
+  </data>
+  <data name="Icon_Newspaper_DisplayName" xml:space="preserve">
+    <value>Ajaleht</value>
+    
+  </data>
+  <data name="Icon_Lock_DisplayName" xml:space="preserve">
+    <value>Lukusta</value>
+    
+  </data>
+  <data name="Icon_Waypoint_DisplayName" xml:space="preserve">
+    <value>Marsruudipunkt</value>
+    
+  </data>
+  <data name="Icon_Location_DisplayName" xml:space="preserve">
+    <value>Asukoht</value>
+    
+  </data>
+  <data name="Icon_DocumentPDF_DisplayName" xml:space="preserve">
+    <value>PDF-dokument</value>
+    
+  </data>
+  <data name="Icon_Bell_DisplayName" xml:space="preserve">
+    <value>Kell</value>
+    
+  </data>
+  <data name="Icon_ShoppingCart_DisplayName" xml:space="preserve">
+    <value>Ostukorv</value>
+    
+  </data>
+  <data name="Icon_Phone_DisplayName" xml:space="preserve">
+    <value>Telefon</value>
+    
+  </data>
+  <data name="Icon_PhoneHangUp_DisplayName" xml:space="preserve">
+    <value>Lõpeta kõne</value>
+    
+  </data>
+  <data name="Icon_Mobile_DisplayName" xml:space="preserve">
+    <value>Mobiil</value>
+    
+  </data>
+  <data name="Icon_Laptop_DisplayName" xml:space="preserve">
+    <value>Sülearvuti</value>
+    
+  </data>
+  <data name="Icon_ComputerDesktop_DisplayName" xml:space="preserve">
+    <value>Arvuti (töölaud)</value>
+    
+  </data>
+  <data name="Icon_Devices_DisplayName" xml:space="preserve">
+    <value>Seadmed</value>
+    
+  </data>
+  <data name="Icon_Controller_DisplayName" xml:space="preserve">
+    <value>Kontroller</value>
+    
+  </data>
+  <data name="Icon_Tools_DisplayName" xml:space="preserve">
+    <value>Tööriistad</value>
+    
+  </data>
+  <data name="Icon_ToolsWrench_DisplayName" xml:space="preserve">
+    <value>Tööriistade mutrivõti</value>
+    
+  </data>
+  <data name="Icon_Mail_DisplayName" xml:space="preserve">
+    <value>E-post</value>
+    
+  </data>
+  <data name="Icon_Send_DisplayName" xml:space="preserve">
+    <value>Saada</value>
+    
+  </data>
+  <data name="Icon_Clock_DisplayName" xml:space="preserve">
+    <value>Kell</value>
+    
+  </data>
+  <data name="Icon_ListWatchlistRemind_DisplayName" xml:space="preserve">
+    <value>Loendi meeldetuletus</value>
+    
+  </data>
+  <data name="Icon_LogJournal_DisplayName" xml:space="preserve">
+    <value>Logipäevik</value>
+    
+  </data>
+  <data name="Icon_Note_DisplayName" xml:space="preserve">
+    <value>Märkus</value>
+    
+  </data>
+  <data name="Icon_PhotosPictures_DisplayName" xml:space="preserve">
+    <value>Pildiraamid</value>
+    
+  </data>
+  <data name="Icon_RadarActivityMonitor_DisplayName" xml:space="preserve">
+    <value>Radar</value>
+    
+  </data>
+  <data name="Icon_Tablet_DisplayName" xml:space="preserve">
+    <value>Tahvelarvuti</value>
+    
+  </data>
+  <data name="Icon_Tag_DisplayName" xml:space="preserve">
+    <value>Silt</value>
+    
+  </data>
+  <data name="Icon_CameraAperture_DisplayName" xml:space="preserve">
+    <value>Kaamera ava</value>
+    
+  </data>
+  <data name="Icon_ColorPicker_DisplayName" xml:space="preserve">
+    <value>Värvivalija</value>
+    
+  </data>
+  <data name="Icon_DetailList_DisplayName" xml:space="preserve">
+    <value>Üksikasjaloend</value>
+    
+  </data>
+  <data name="Icon_DocumentWithContent_DisplayName" xml:space="preserve">
+    <value>Sisuga dokument</value>
+    
+  </data>
+  <data name="Icon_ListScrollEmpty_DisplayName" xml:space="preserve">
+    <value>Loendi kerimine, tühi</value>
+    
+  </data>
+  <data name="Icon_ListScrollWatchlist_DisplayName" xml:space="preserve">
+    <value>Loendi kerimine, jälgimisloend</value>
+    
+  </data>
+  <data name="Icon_OptionsList_DisplayName" xml:space="preserve">
+    <value>Suvandite loend</value>
+    
+  </data>
+  <data name="Icon_People_DisplayName" xml:space="preserve">
+    <value>Inimesed</value>
+    
+  </data>
+  <data name="Icon_Person_DisplayName" xml:space="preserve">
+    <value>Isik</value>
+    
+  </data>
+  <data name="Icon_EmojiFrown_DisplayName" xml:space="preserve">
+    <value>Emodži – kulmukortsutus</value>
+    
+  </data>
+  <data name="Icon_EmojiSmile_DisplayName" xml:space="preserve">
+    <value>Emodži – naeratus</value>
+    
+  </data>
+  <data name="Icon_EmojiSad_DisplayName" xml:space="preserve">
+    <value>Emodži – kurb</value>
+    
+  </data>
+  <data name="Icon_EmojiNeutral_DisplayName" xml:space="preserve">
+    <value>Emodži – neutraalne</value>
+    
+  </data>
+  <data name="Icon_Warning_DisplayName" xml:space="preserve">
+    <value>Hoiatus</value>
+    
+  </data>
+  <data name="Icon_Information_DisplayName" xml:space="preserve">
+    <value>Teave</value>
+    
+  </data>
+  <data name="Icon_Database_DisplayName" xml:space="preserve">
+    <value>Andmebaas</value>
+    
+  </data>
+  <data name="Icon_Weather_DisplayName" xml:space="preserve">
+    <value>Ilm</value>
+    
+  </data>
+  <data name="Icon_TrendingHashtag_DisplayName" xml:space="preserve">
+    <value>Trellsilt</value>
+    
+  </data>
+  <data name="Icon_TrendingUpwards_DisplayName" xml:space="preserve">
+    <value>Ülespoole suunatud trend</value>
+    
+  </data>
+  <data name="Icon_Items_DisplayName" xml:space="preserve">
+    <value>Üksused</value>
+    
+  </data>
+  <data name="Icon_LevelsLayersItems_DisplayName" xml:space="preserve">
+    <value>Kihid</value>
+    
+  </data>
+  <data name="Icon_Trending_DisplayName" xml:space="preserve">
+    <value>Populaarsed</value>
+    
+  </data>
+  <data name="Icon_LineWeight_DisplayName" xml:space="preserve">
+    <value>Joone jämedus</value>
+    
+  </data>
+  <data name="AboutIsError" xml:space="preserve">
+    <value>Tagastab, kas antud argumendi hindamisel ilmnes tõrge.</value>
+    
+  </data>
+  <data name="IsErrorArg" xml:space="preserve">
+    <value>väärtus</value>
+    
+  </data>
+  <data name="AboutIsError_value" xml:space="preserve">
+    <value>Väärtus, millele teha tõrgete kontroll.</value>
+    
+  </data>
+  <data name="ErrBadArityMinimum" xml:space="preserve">
+    <value>Sobimatu argumentide arv: vastuvõetud {0}, eeldatud {1} või rohkem.</value>
+    
+  </data>
+  <data name="ErrBadArityRange" xml:space="preserve">
+    <value>Sobimatu argumentide arv: vastuvõetud {0}, eeldatud {1}–{2}.</value>
+    
+  </data>
+  <data name="ErrGeneralError" xml:space="preserve">
+    <value>{0}</value>
+    
+  </data>
+  <data name="FormulaColumns_NotSupported" xml:space="preserve">
+    <value>Ei toetata valemiveergudes.</value>
+    
+  </data>
+  <data name="FormulaColumns_ArgNotSupported" xml:space="preserve">
+    <value>Argumenti {0} ei toetata valemiveergude funktsioonis {1}.</value>
+    
+  </data>
+  <data name="FormulaColumns_ArgTypeNotSupported" xml:space="preserve">
+    <value>Seda argumenti ei saa valemiveergudes selle tüübina edastada.</value>
+    
+  </data>
+  <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
+    <value>Selle argumendi puhul toetatakse ainult sõnasõnalist väärtust.</value>
+    
+  </data>
+  <data name="FormulaColumns_TimeZoneConversion" xml:space="preserve">
+    <value>Toimingut {0} ei saa sellel sisendil teha ilma ajavööndi teisenduseta, mida valemiveergudes ei toetata.</value>
+    
+  </data>
+  <data name="FormulaColumns_IncompatibleDateTimes" xml:space="preserve">
+    <value>Seda toimingut ei saa teha erinevate kuupäeva ja kellaaja käitumisega väärtustel.</value>
+    
+  </data>
+  <data name="FormulaColumns_DateTimeFormatNotSupported" xml:space="preserve">
+    <value>Valemiveergudes toetatakse ainult lühikese vorminguga kuupäeva- ja kellaaja stringe.</value>
+    
+  </data>
+  <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
+    <value>Lokaadipõhiseid vormingutõendeid (nt "." ja ",") valemiveergudes ei toetata.</value>
+    
+  </data>
+  <data name="FormulaColumns_FunctionNotSupported" xml:space="preserve">
+    <value>Üksust {0} ei toetata valemiveergudes, kasutage selle asemel üksust {1}.</value>
+    
+  </data>
+  <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
+    <value>Tulemitüüp {0} pole valemiveergudes toetatud.</value>
+    
+  </data>
+  <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
+    <value>Selle valemi tulemi tüüp peab olema {0}, kuid tegelik tulemi tüüp on {1}. Valemiveeru tulemi tüüpi ei saa muuta.</value>
+    
+  </data>
+  <data name="FormulaColumns_ColumnTypeNotSupported" xml:space="preserve">
+    <value>Veerud, mille tüüp on {0}, pole valemiveergudes toetatud.</value>
+    
+  </data>
+  <data name="FormulaColumns_ColumnFormatNotSupported" xml:space="preserve">
+    <value>Veerud, mille tüüp on {0} ja vorming {1}, pole valemiveergudes toetatud.</value>
+    
+  </data>
+  <data name="FormulaColumns_FormulaTooLong" xml:space="preserve">
+    <value>Valemid ei tohi olla pikemad kui 1000 märki.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
+    <value>Eeldati operandi. Valem või väljend eeldab kehtivat operandi. Näiteks saate lisada operandi '2' väljendile ' 1 +_', nii et tulemus on '3'. Või võite lisada operandi "there" väljendile '"Hi "&amp; _ ', nii et tulemus on 'Hi there'.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrOperandExpected_HowToFix_1" xml:space="preserve">
+    <value>Edastage operandi väärtus, mis lõpetab väljendi. Veenduge, et operandi tüüp (tekst, arv, kuupäev või tõene/väär) sobiks väljendiga. Vastendage arvud arvudega, tekst tekstiga jne. Näiteks '1 + "Hi"' pole sobiv, kuid '1 + 2' on sobiv.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBadToken_ShortMessage" xml:space="preserve">
+    <value>Ootamatud tärgid. Tärke kasutatakse valemis ootamatul viisil.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBadToken_LongMessage" xml:space="preserve">
+    <value>Näiteks tärki '\' ei eeldata pärast arvu, nt nii: '32\'. Tühik ('32') oleks eeldatud nii, et see oleks ainult number 32 või eeldatakse mõnda muud numbrit (nt '323').</value>
+  </data>
+  <data name="ErrorResource_ErrBadToken_HowToFix_1" xml:space="preserve">
+    <value>Eemaldage või asendage ootamatud märgid.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBadToken_Link_1" xml:space="preserve">
+    <value>Artikkel: Power Appsi valemiviide</value>
+    
+  </data>
+  <data name="ErrorResource_UnexpectedCharacterToken_ShortMessage" xml:space="preserve">
+    <value>Valemi asukohas '{1}' on ootamatu märk '{0}'.</value>
+    
+  </data>
+  <data name="ErrorResource_UnexpectedCharacterToken_LongMessage" xml:space="preserve">
+    <value>Näiteks tärki '\' ei eeldata pärast arvu, nt nii: '32\'. Tühik ('32') oleks eeldatud nii, et see oleks ainult number 32 või eeldatakse mõnda muud numbrit (nt '323').</value>
+  </data>
+  <data name="ErrorResource_UnexpectedCharacterToken_HowToFix_1" xml:space="preserve">
+    <value>Eemaldage või asendage ootamatu märk.</value>
+  </data>
+  <data name="ErrorResource_UnexpectedCharacterToken_Link_1" xml:space="preserve">
+    <value>Artikkel: Power Appsi valemiviide</value>
+    
+  </data>
+  <data name="ErrorResource_ErrMissingEndOfBlockComment_ShortMessage" xml:space="preserve">
+    <value>Puuduv lõppkommentaari identifikaator. Plokk-kommentaaril pole lõppkommentaari identifikaatorit.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrMissingEndOfBlockComment_LongMessage" xml:space="preserve">
+    <value>Iga plokk-kommentaar peab algama märkidega '/*' ja lõppema märkidega '*/'. Kui te ei lõpeta iga plokk-kommentaari korralikult, muutub kogu kommentaarile järgnev kood kommnetaari osaks. Kui kommentaar koosneb ainult ühest reast, võite seda alustada märkidega '//' ja kommnetaari lõppu pole vaja märkida.</value>
+  </data>
+  <data name="ErrorResource_ErrMissingEndOfBlockComment_HowToFix_1" xml:space="preserve">
+    <value>Lisage oma plokk-kommentaari lõppu märgid '*/' või muutke see reakommentaaride kogumiks.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrMissingEndOfBlockComment_Link_1" xml:space="preserve">
+    <value>Artikkel: Power Appsi valemiviide</value>
+    
+  </data>
+  <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_ShortMessage" xml:space="preserve">
+    <value>Ootamatud tärgid. Valem sisaldab tärki '{0}', kuid eeldatud on '{1}'.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_LongMessage" xml:space="preserve">
+    <value>See tõrge ilmneb, kui valem sisaldab näiteks üksuse '{{Val@ 7}}' asemel üksust '{{Val: 7}}'. Muutuja määramisel nõuab süntaks @-sümboli asemel koolonit.</value>
+  </data>
+  <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_HowToFix_1" xml:space="preserve">
+    <value>Eemaldage või asendage ootamatud märgid eeldatud märkidega.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_Link_1" xml:space="preserve">
+    <value>Artikkel: Power Appsi valemiviide</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidName_ShortMessage" xml:space="preserve">
+    <value>Nimi ei sobi. Üksust {0} ei tuvastatud.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidName_LongMessage" xml:space="preserve">
+    <value>See tõrge ilmneb kõige sagedamini siis, kui valem viitab millelegi, mida pole enam olemas (näiteks kustutatud juhtelement).</value>
+  </data>
+  <data name="ErrorResource_ErrInvalidName_HowToFix_1" xml:space="preserve">
+    <value>Eemaldage või parandage viide nimele, mis pole sobiv.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidName_Link_1" xml:space="preserve">
+    <value>Artikkel: Power Appsi valemiviide</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_ShortMessage" xml:space="preserve">
+    <value>Nimi ei sobi. Identifikaatorit ei tuvastatud.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_LongMessage" xml:space="preserve">
+    <value>See tõrge ilmneb kõige sagedamini siis, kui valem viitab millelegi, mida pole enam olemas (näiteks kustutatud juhtelement).</value>
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_HowToFix_1" xml:space="preserve">
+    <value>Eemaldage või parandage viide nimele, mis pole sobiv.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_Link_1" xml:space="preserve">
+    <value>Artikkel: Power Appsi valemiviide</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidPropertyReference_ShortMessage" xml:space="preserve">
+    <value>Atribuudiviide ei sobi.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidPropertyReference_LongMessage" xml:space="preserve">
+    <value>See tõrge ilmub siis, kui valem viitab komponendi käitumisatribuutidele, millel on sobimatu süntaks. (Näiteks Component.OnCustomChange, mitte Component.OnCustomChange())</value>
+  </data>
+  <data name="ErrorResource_ErrInvalidPropertyReference_HowToFix_1" xml:space="preserve">
+    <value>Kasutage komponendi käitumisatribuudile viitamiseks õiget süntaksit. Näiteks Component.OnCustomChange()</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidPropertyReference_Link_1" xml:space="preserve">
+    <value>Artikkel: PowerAppsi valemiviide</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidParentUse_ShortMessage" xml:space="preserve">
+    <value>Viide 'Parent' ei sobi. Te ei saa selles kontekstis emajuhtelemendile viidata.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidParentUse_LongMessage" xml:space="preserve">
+    <value>Te ei saa kasutada emaoperaatorit juhtelemendiga, millel pole emajuhtelementi. See operaator viitab juhtelemendile, mis hostib antud juhtelementi ja muudab kõik selle atribuudid kättesaadavaks.</value>
+  </data>
+  <data name="ErrorResource_ErrInvalidParentUse_HowToFix_1" xml:space="preserve">
+    <value>Eemaldage operaator 'Parent'.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidParentUse_Link_1" xml:space="preserve">
+    <value>Artikkel: lõuendirakenduse juhtelemendi lisamine ja konfigureerimine Power Appsis</value>
+    
+  </data>
+  <data name="ErrorResource_ErrTooManyUps_ShortMessage" xml:space="preserve">
+    <value>Reaulatuse pesastus on liiga sügav. Teie valemi reaulatus ületab 63 pesastamistaset.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrTooManyUps_LongMessage" xml:space="preserve">
+    <value>Keerukus suureneb iga pesastamistasemega, mis tähendab, et Power Apps toetab reaulatuse pesastamist ainult kuni tasemeni 63.</value>
+  </data>
+  <data name="ErrorResource_ErrTooManyUps_HowToFix_1" xml:space="preserve">
+    <value>Kirjutage valem väiksema arvu pesastamistasemetega ümber.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrRuleNestedTooDeeply_ShortMessage" xml:space="preserve">
+    <value>Väljend on pesastatud liiga sügavalt. Valemis olev väljend on pesastatud rohkem kui 50 taset.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrRuleNestedTooDeeply_LongMessage" xml:space="preserve">
+    <value>Power Apps toetab avaldise pesastamist ainult kuni tasemeni 50. Nii sügavat avaldist on raske mõista ja hallata.</value>
+  </data>
+  <data name="ErrorResource_ErrRuleNestedTooDeeply_HowToFix_1" xml:space="preserve">
+    <value>Kirjutage valem väiksema arvu pesastamistasemetega ümber.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrOperatorExpected_ShortMessage" xml:space="preserve">
+    <value>Eeldati operaatorit. Siinkohal eeldame valemis operaatorit nagu +, *, või &amp;.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrOperatorExpected_LongMessage" xml:space="preserve">
+    <value>Operaatorid liidavad omavahel kahte operandi. Tõrge ilmneb, kui panete kokku kaks funktsiooni (operandi), kuid nende vahel puudub operaator – nt Len("mytext")Len("mytext").</value>
+  </data>
+  <data name="ErrorResource_ErrOperatorExpected_HowToFix_1" xml:space="preserve">
+    <value>Redigeerige oma valemit nii, et see sisaldaks operandide vahel operaatorit.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrOperatorExpected_Link_1" xml:space="preserve">
+    <value>Moodul: põhivalemite kasutamine</value>
+    
+  </data>
+  <data name="ErrorResource_ErrNumberExpected_ShortMessage" xml:space="preserve">
+    <value>Eeldati arvu. Siinkohal eeldame valemis arvu.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrNumberExpected_LongMessage" xml:space="preserve">
+    <value>See tõrge ilmneb, kui kasutate funktsiooni, mis nõuab arvu, kuid teie esitate selle asemel nt pildi.</value>
+  </data>
+  <data name="ErrorResource_ErrNumberExpected_HowToFix_1" xml:space="preserve">
+    <value>Redigeerige oma valemit nii, et see annab siinkohal valemis tulemuseks arvu.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrNumberExpected_Link_1" xml:space="preserve">
+    <value>Artikkel: Power Appsi valemiviide</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBooleanExpected_ShortMessage" xml:space="preserve">
+    <value>Eeldati kahendmuutujat. Siinkohal eeldame valemis kahendmuutujat (tõene/väär).</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBooleanExpected_LongMessage" xml:space="preserve">
+    <value>Kahendmuutuja on rakendustes nagu Microsoft Excel tuntud ka väärtusena tõene/väär. Tõrge ilmneb, kui kasutate funktsiooni, mis nõuab kahendmuutujat, kuid teie esitate selle asemel nt kuupäeva.</value>
+  </data>
+  <data name="ErrorResource_ErrBooleanExpected_HowToFix_1" xml:space="preserve">
+    <value>Redigeerige oma valemit nii, et see annab siinkohal valemis tulemuseks kahendmuutuja.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBooleanExpected_Link_1" xml:space="preserve">
+    <value>Artikkel: Power Appsi valemiviide</value>
+    
+  </data>
+  <data name="ErrorResource_ErrColonExpected_ShortMessage" xml:space="preserve">
+    <value>Eeldati koolonit. Siinkohal eeldame valemis koolonit (:).</value>
+    
+  </data>
+  <data name="ErrorResource_ErrColonExpected_LongMessage" xml:space="preserve">
+    <value>Koolon eraldab kirjes väljanime (mõnikord nimetatud kui veerunimi) väljaväärtusest (nt {Month:"1"}, {Month:"2"} …). Koolon eraldab ka tunde minutitest ja sekunditest (nt „3:04”).</value>
+  </data>
+  <data name="ErrorResource_ErrColonExpected_HowToFix_1" xml:space="preserve">
+    <value>Redigeerige oma valemit nii, et see sisaldaks koolonit.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrColonExpected_Link_1" xml:space="preserve">
+    <value>Artikkel: Power Appsis teksti, kuupäevade ja kellaaegade kuvamine</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorPropertyExpected_ShortMessage" xml:space="preserve">
+    <value>Käitumise funktsioon on mitte-käitumise atribuut. Te ei saa seda atribuuti kasutada väärtuste muutmiseks mujal rakenduses.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorPropertyExpected_LongMessage" xml:space="preserve">
+    <value>Käitumisfunktsioonid muudavad rakenduse olekut, muutes väärtusi mujal rakenduses. Tavalised käitumisfunktsioonid on 'Navigate', 'Patch', 'UpdateContext' ja 'Collect'. 'OnSelect', 'OnVisible' ning muud algusega 'On …' atribuudid on tavalised käitumispõhised atribuudid.</value>
+  </data>
+  <data name="ErrorResource_ErrBehaviorPropertyExpected_HowToFix_1" xml:space="preserve">
+    <value>Teisaldage käitumisfunktsioon käitumispõhisesse atribuuti.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorPropertyExpected_Link_1" xml:space="preserve">
+    <value>Artikkel: Power Appsi lõuendirakenduste käitumisvalemite mõistmine</value>
+    
+  </data>
+  <data name="ErrorResource_ErrTestPropertyExpected_ShortMessage" xml:space="preserve">
+    <value>Testimisfunktsioon mittetesti atribuudis. Te ei saa seda atribuuti kasutada ainult testi jaoks mõeldud funktsioonide käivitamiseks.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrTestPropertyExpected_LongMessage" xml:space="preserve">
+    <value>Testimisfunktsioonid on need, mida saab rakenduse testimisel kasutada kasutajasisestuse simuleerimiseks. 'SetProperty', 'SelectRow' ja 'Assert' on levinud testimisfunktsioonid. Neid saab kasutada ainult testjuhtumites.</value>
+  </data>
+  <data name="ErrorResource_ErrTestPropertyExpected_HowToFix_1" xml:space="preserve">
+    <value>Kasutage funktsiooni testjuhtumis, mitte rakenduses endas.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrCannotCoerce_SourceType_TargetType_ShortMessage" xml:space="preserve">
+    <value>Seda andmetüüpi ei saa teisendada. Power Apps ei saa teisendada tüüpi {0} tüübiks {1}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrCannotCoerce_SourceType_TargetType_LongMessage" xml:space="preserve">
+    <value>Power Apps võib teie valemis teisendada mõned andmetüübid teisteks tüüpideks. Näiteks saab see teisendada tüübi "1" (string) tüübiks 1 (arv), kuid see ei saa teisendada kõiki andmetüüpe kõigiks teisteks andmetüüpideks. Näiteks ei saa Power Apps teisendada pilti arvuks.</value>
+  </data>
+  <data name="ErrorResource_ErrCannotCoerce_SourceType_TargetType_HowToFix_1" xml:space="preserve">
+    <value>Redigeerige oma valemit nii, et teisendate kõnealused andmed eeldatud tüübiks.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrStringExpected_ShortMessage" xml:space="preserve">
+    <value>Eeldati teksti. Siinkohal eeldame valemis teksti.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrStringExpected_LongMessage" xml:space="preserve">
+    <value>See tõrge ilmneb, kui kasutate funktsiooni, mis nõuab teksti (või stringi) argumenti, kuid teie esitate selle asemel nt kuupäeva.</value>
+  </data>
+  <data name="ErrorResource_ErrStringExpected_HowToFix_1" xml:space="preserve">
+    <value>Redigeerige oma valemit nii, et see annab siinkohal valemis tulemuseks teksti.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrStringExpected_Link_1" xml:space="preserve">
+    <value>Artikkel: Power Appsi valemiviide</value>
+    
+  </data>
+  <data name="ErrorResource_ErrNumberOrStringExpected_ShortMessage" xml:space="preserve">
+    <value>Eeldati teksti või arvu. Siinkohal eeldame valemis teksti või arvu.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrNumberOrStringExpected_LongMessage" xml:space="preserve">
+    <value>See tõrge ilmneb, kui kasutate funktsiooni, mis nõuab teksti või arvu, kuid teie esitate selle asemel nt kahendmuutuja väärtuse (tõene/väär).</value>
+  </data>
+  <data name="ErrorResource_ErrNumberOrStringExpected_HowToFix_1" xml:space="preserve">
+    <value>Redigeerige oma valemit nii, et see annab siinkohal valemis tulemuseks teksti või arvu.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrNumberOrStringExpected_Link_1" xml:space="preserve">
+    <value>Artikkel: Power Appsi valemiviide</value>
+    
+  </data>
+  <data name="ErrorResource_ErrClosingBracketExpected_ShortMessage" xml:space="preserve">
+    <value>Eeldati sulgevat sulgu. Siinkohal eeldame valemis sulgevat sulgu (}).</value>
+    
+  </data>
+  <data name="ErrorResource_ErrClosingBracketExpected_LongMessage" xml:space="preserve">
+    <value>Sulgev sulg tähistab kirje lõppu (nt {Month:"1"}, {Month:"2"} …).</value>
+  </data>
+  <data name="ErrorResource_ErrClosingBracketExpected_HowToFix_1" xml:space="preserve">
+    <value>Redigeerige oma valemit nii, et see sisaldaks sulgu.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrEmptyInvalidIdentifier_ShortMessage" xml:space="preserve">
+    <value>Identifikaatoril puudub sobiv tekst.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrEmptyInvalidIdentifier_HowToFix_1" xml:space="preserve">
+    <value>Veenduge, et teil oleks oma identifikaatorile tekst. See tõrge ilmneb, kui identifikaator koosneb ainult tühiväärtustest või tühikutest.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_ShortMessage" xml:space="preserve">
+    <value>Võrdluse jaoks sobimatud tüübid. Neid tüüpe ei saa võrrelda: {0}, {1}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_LongMessage" xml:space="preserve">
+    <value>Me ei saa teie valemit hinnata, sest valemis hinnatavad väärtused pole sama tüüpi.</value>
+  </data>
+  <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_HowToFix_1" xml:space="preserve">
+    <value>Võib-olla peate väärtuse samale tüübile teisendama, nt teisendama kuupäevastringi (nt "12/31/2018") kuupäeva väärtuseks.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_HowToFix_2" xml:space="preserve">
+    <value>Kui võrdlete kirjeid või tabeleid, peavad välja või veeru tüübid täpselt ühtima.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_Link_1" xml:space="preserve">
+    <value>Moodul: põhivalemite kasutamine</value>
+    
+  </data>
+  <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_Link_2" xml:space="preserve">
+    <value>Moodul: põhivalemite loomine tabelite ja kirjetega</value>
+    
+  </data>
+  <data name="ErrorResource_ErrServiceFunctionUnknownOptionalParam_Name_ShortMessage" xml:space="preserve">
+    <value>Parameeter puudub. Sellel funktsioonil ei ole valikulist parameetrit nimega '{0}'.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrServiceFunctionUnknownOptionalParam_Name_HowToFix_1" xml:space="preserve">
+    <value>Kuidas parandada: eemaldage või nimetage oma valemi parameeter ümber.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrServiceFunctionUnknownOptionalParam_Name_Link_1" xml:space="preserve">
+    <value>Artikkel: Power Appsi valemiviide</value>
+    
+  </data>
+  <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_ShortMessage" xml:space="preserve">
+    <value>Ühildumatu tüüp. Värskendatavas andmeallikas olev veerg '{0}' eeldab tüüpi '{1}', teie kasutate tüüpi '{2}'.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_HowToFix_1" xml:space="preserve">
+    <value>Võib-olla peate väärtuse samale tüübile teisendama, nt teisendama kuupäevastringi (nt "12/31/2018") kuupäeva väärtuseks või stringi arvuks.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_Link_1" xml:space="preserve">
+    <value>Moodul: põhivalemite kasutamine</value>
+    
+  </data>
+  <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_Link_2" xml:space="preserve">
+    <value>Moodul: põhivalemite loomine tabelite ja kirjetega</value>
+    
+  </data>
+  <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_ShortMessage" xml:space="preserve">
+    <value>Veerg on puudu. Valemis puudub veerg '{0}' tüübiga '{1}'.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_HowToFix_1" xml:space="preserve">
+    <value>Lisage valemile veerg.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_Link_1" xml:space="preserve">
+    <value>Artikkel: Power Appsi valemiviide</value>
+    
+  </data>
+  <data name="ErrorResource_ErrTableDoesNotAcceptThisType_ShortMessage" xml:space="preserve">
+    <value>Ühildumatu tüüp. Proovite panna tabelisse üksust, mille tüüp ei ühildu tabeliga.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrTableDoesNotAcceptThisType_HowToFix_1" xml:space="preserve">
+    <value>Veenduge, et üksuse tüüp, mida soovite tabelisse tõugata, ühilduks tabeliga. Võib-olla peate üksuse tüübi teisendama, nt kirjeks.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrTableDoesNotAcceptThisType_Link_1" xml:space="preserve">
+    <value>Moodul: põhivalemite kasutamine</value>
+    
+  </data>
+  <data name="ErrorResource_ErrTableDoesNotAcceptThisType_Link_2" xml:space="preserve">
+    <value>Moodul: põhivalemite loomine tabelite ja kirjetega</value>
+    
+  </data>
+  <data name="ErrorResource_ErrTypeError_ShortMessage" xml:space="preserve">
+    <value>Ühildumatu tüüp. Me ei saa teie valemit tüübi tõrke tõttu hinnata.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrTypeError_LongMessage" xml:space="preserve">
+    <value>Andmed ei pruugi vastata eeldatud tüübile (tekst, arv, kuupäev, tabel, kirje).</value>
+  </data>
+  <data name="ErrorResource_ErrTypeError_HowToFix_1" xml:space="preserve">
+    <value>Kontrollige valemiga seotud väärtuste tüüpe ja veenduge, et tüübid ühtiksid.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrTypeError_Link_1" xml:space="preserve">
+    <value>Moodul: põhivalemite kasutamine</value>
+    
+  </data>
+  <data name="ErrorResource_ErrTypeError_Link_2" xml:space="preserve">
+    <value>Moodul: põhivalemite loomine tabelite ja kirjetega</value>
+    
+  </data>
+  <data name="ErrorResource_ErrDateExpected_ShortMessage" xml:space="preserve">
+    <value>Eeldati kuupäeva. Siinkohal eeldame valemis kuupäeva.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrDateExpected_LongMessage" xml:space="preserve">
+    <value>See tõrge ilmneb, kui kasutate funktsiooni, mis nõuab kuupäeva, kuid teie esitate selle asemel nt teksti.</value>
+  </data>
+  <data name="ErrorResource_ErrDateExpected_HowToFix_1" xml:space="preserve">
+    <value>Redigeerige oma valemit nii, et see annab siinkohal valemis tulemuseks kuupäeva.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrDateExpected_Link_1" xml:space="preserve">
+    <value>Artikkel: Power Appsi valemiviide</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_ShortMessage" xml:space="preserve">
+    <value>Delegeerimise hoiatus. Valemi osa „{0}” ei pruugi suurte andmehulkade puhul õigesti töötada.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_LongMessage" xml:space="preserve">
+    <value>Võib juhtuda, et andmeallikas ei saa valemit töödelda ja võib tagastada pooliku andmehulga. Kui andmehulk on poolik, võib teie rakendus tagastada valed tulemid või käituda valesti.</value>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_HowToFix_1" xml:space="preserve">
+    <value>Kui teie andmehulk ületab 500 kirje piirmäära, kuid sisaldab vähem kui 2000 kirjet, proovige piirmäära lähtestada.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_HowToFix_2" xml:space="preserve">
+    <value>Proovige valemit lihtsustada.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_HowToFix_3" xml:space="preserve">
+    <value>Proovige andmeid teise andmeallikasse teisaldada.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_Link_1" xml:space="preserve">
+    <value>Artikkel: lõuendirakenduse delegeerimise mõistmine</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_Link_2" xml:space="preserve">
+    <value>Ajaveeb: delegeerimise andmerea piirangud</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_ShortMessage" xml:space="preserve">
+    <value>Delegeerimise hoiatus. Valemi esiletõstetud osa ei pruugi suurte andmehulkade puhul veeruga „{0}” õigesti töötada.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_LongMessage" xml:space="preserve">
+    <value>Võib juhtuda, et andmeallikas ei saa valemit töödelda ja võib tagastada pooliku andmehulga. Kui andmehulk on poolik, võib teie rakendus tagastada valed tulemid või käituda valesti.</value>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_HowToFix_1" xml:space="preserve">
+    <value>Kui teie andmehulk ületab 500 kirje piirmäära, kuid sisaldab vähem kui 2000 kirjet, proovige piirmäära lähtestada.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_HowToFix_2" xml:space="preserve">
+    <value>Proovige valemit lihtsustada.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_HowToFix_3" xml:space="preserve">
+    <value>Proovige andmeid teise andmeallikasse teisaldada.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_Link_1" xml:space="preserve">
+    <value>Artikkel: lõuendirakenduse delegeerimise mõistmine</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_Link_2" xml:space="preserve">
+    <value>Ajaveeb: delegeerimise andmerea piirangud</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_ShortMessage" xml:space="preserve">
+    <value>Delegeerimise hoiatus. Valemi esiletõstetud osa ei pruugi suurte andmehulkade puhul õigesti töötada.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_LongMessage" xml:space="preserve">
+    <value> Tehtemärgi „in” parem pool peab olema õigest andmeallikast pärit veeru nimi. Võib juhtuda, et andmeallikas ei saa valemit töödelda ja võib tagastada pooliku andmehulga. Kui andmehulk on poolik, võib teie rakendus tagastada valed tulemid või käituda valesti.</value>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_1" xml:space="preserve">
+    <value>Muutke tehtemärgist „in” paremal olev üksus õigest andmeallikast pärit olevaks veeruks.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_2" xml:space="preserve">
+    <value>Kui teie andmehulk ületab 500 kirje piirmäära, kuid sisaldab vähem kui 2000 kirjet, proovige piirmäära lähtestada.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_3" xml:space="preserve">
+    <value>Proovige valemit lihtsustada.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_4" xml:space="preserve">
+    <value>Proovige andmeid teise andmeallikasse teisaldada.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_Link_1" xml:space="preserve">
+    <value>Artikkel: lõuendirakenduse delegeerimise mõistmine</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_Link_2" xml:space="preserve">
+    <value>Ajaveeb: delegeerimise andmerea piirangud</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_ShortMessage" xml:space="preserve">
+    <value>Valemi esiletõstetud osa ei pruugi suurte andmehulkade puhul õigesti töötada. </value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_LongMessage" xml:space="preserve">
+    <value> Tehtemärgi "in" parem pool ei ole õigest andmeallikast pärit veerg. Võib juhtuda, et andmeallikas ei saa valemit töödelda ja võib tagastada pooliku andmehulga. Kui andmehulk on poolik, võib teie rakendus tagastada valed tulemid või käituda valesti.
+      </value>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_1" xml:space="preserve">
+    <value>Muutke tehtemärgist „in” paremal olev üksus õigest andmeallikast pärit olevaks veeruks.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_2" xml:space="preserve">
+    <value>Kui teie andmehulk ületab 500 kirje piirmäära, kuid sisaldab vähem kui 2000 kirjet, proovige piirmäära lähtestada.
+      </value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_3" xml:space="preserve">
+    <value>Proovige valemit lihtsustada.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_4" xml:space="preserve">
+    <value>Proovige andmeid teise andmeallikasse teisaldada.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_Link_1" xml:space="preserve">
+    <value>Artikkel: lõuendirakenduse delegeerimise mõistmine</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_Link_2" xml:space="preserve">
+    <value>Ajaveeb: delegeerimise andmerea piirangud</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_ShortMessage" xml:space="preserve">
+    <value>Delegeerimise hoiatus. Valemi esiletõstetud osa ei pruugi suurte andmehulkade puhul õigesti töötada. See konnektor ei toeta toimingut „{0}”.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_LongMessage" xml:space="preserve">
+    <value>Võib juhtuda, et andmeallikas ei saa valemit töödelda ja võib tagastada pooliku andmehulga. Kui andmehulk on poolik, võib teie rakendus tagastada valed tulemid või käituda valesti.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_HowToFix_1" xml:space="preserve">
+    <value>Kui teie andmehulk ületab 500 kirje piirmäära, kuid sisaldab vähem kui 2000 kirjet, proovige piirmäära lähtestada.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_HowToFix_2" xml:space="preserve">
+    <value>Proovige valemit lihtsustada.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_HowToFix_3" xml:space="preserve">
+    <value>Proovige andmeid teise andmeallikasse teisaldada.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_Link_1" xml:space="preserve">
+    <value>Artikkel: lõuendirakenduse delegeerimise mõistmine</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_Link_2" xml:space="preserve">
+    <value>Ajaveeb: delegeerimise andmerea piirangud</value>
+    
+  </data>
+  <data name="ErrorResource_ErrOnlyOneViewExpected_ShortMessage" xml:space="preserve">
+    <value>Eeldati ainult ühte vaadet. Eeldame siinkohal valemis ainult ühte vaadet.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrOnlyOneViewExpected_HowToFix_1" xml:space="preserve">
+    <value>Redigeerige oma valemit nii, et sellel oleks siinkohal valemis ainult üks vaade.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrViewFromCurrentTableExpected_ShortMessage" xml:space="preserve">
+    <value>Eeldati vaadet andmeallikast {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrViewFromCurrentTableExpected_HowToFix_1" xml:space="preserve">
+    <value>Redigeerige oma valemit nii, et sellel oleks andmeallikast {0} vaade.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidControlReference_ShortMessage" xml:space="preserve">
+    <value>Selle juhtelemendi viidet ei saa selles atribuudis kasutada</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidControlReference_HowToFix_1" xml:space="preserve">
+    <value>See atribuut toetab ainult viiteid globaalsetele muutujatele, kogumitele ning mõningatele juhtelemendi ja ekraani atribuutidele. Vaadake toetatud juhtelemendi atribuutide loendi linki.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidControlReference_Link_1" xml:space="preserve">
+    <value>Viide: ConfirmExit lõuendirakenduste jaoks</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidStringInterpolation_ShortMessage" xml:space="preserve">
+    <value>Avaldised, mis kuvatakse interpoleeritud stringis, peavad hindama tekstiväärtuse või ühilduva tüübini.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidStringInterpolation_HowToFix_1" xml:space="preserve">
+    <value>Kontrollige avaldiste tüüpe interpoleeritud stringis.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrEmptyIsland_ShortMessage" xml:space="preserve">
+    <value>Tühjad avaldised ei tohi ilmuda interpoleeritud stringis.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrEmptyIsland_HowToFix_1" xml:space="preserve">
+    <value>Kontrollige tühjasid avaldisi interpoleeritud stringis.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrAsNotInContext_ShortMessage" xml:space="preserve">
+    <value>Märksõna "Kui" pole selles kontekstis lubatud</value>
+    
+  </data>
+  <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
+    <value>Nimetatud valem peab lõppema semikooloniga.</value>
+    
+  </data>
+</root>

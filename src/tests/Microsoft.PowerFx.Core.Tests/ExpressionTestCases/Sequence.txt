@@ -1,0 +1,33 @@
+﻿// https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-sequence
+>> Sequence(4)
+[1,2,3,4]
+
+>> Sequence(4,24)
+[24,25,26,27]
+
+>> Sequence(4,4,-1)
+[4,3,2,1]
+
+>> Sequence(4,-100,0.5)
+[-100,-99.5,-99,-98.5]
+
+>> Sequence(.9)
+[]
+
+>> Sequence(Blank())
+Blank()
+
+>> Sequence(4,Blank())
+Blank()
+
+>> Sequence(4,24,Blank())
+Blank()
+
+>> Sequence(1/0)
+#Error
+
+>> Sequence(4,1/0)
+#Error
+
+>> Sequence(4,4,1/0)
+#Error
