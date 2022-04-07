@@ -18,9 +18,9 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense.IntellisenseData
     // The IntellisenseData class contains the pre-parsed data for Intellisense to provide suggestions
     internal class IntellisenseData : IIntellisenseData
     {
-        private readonly EnumStore _enumStore;
+        private readonly IEnumStore _enumStore;
 
-        public IntellisenseData(EnumStore enumStore, IIntellisenseContext context, DType expectedType, TexlBinding binding, TexlFunction curFunc, TexlNode curNode, int argIndex, int argCount, IsValidSuggestion isValidSuggestionFunc, IList<DType> missingTypes, List<CommentToken> comments)
+        public IntellisenseData(IEnumStore enumStore, IIntellisenseContext context, DType expectedType, TexlBinding binding, TexlFunction curFunc, TexlNode curNode, int argIndex, int argCount, IsValidSuggestion isValidSuggestionFunc, IList<DType> missingTypes, List<CommentToken> comments)
         {
             Contracts.AssertValue(context);
             Contracts.AssertValid(expectedType);

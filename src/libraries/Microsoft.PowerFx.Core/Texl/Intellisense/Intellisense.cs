@@ -22,9 +22,9 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
     internal partial class Intellisense : IIntellisense
     {
         protected readonly IReadOnlyList<ISuggestionHandler> _suggestionHandlers;
-        protected readonly EnumStore _enumStore;
+        protected readonly IEnumStore _enumStore;
 
-        public Intellisense(EnumStore enumStore, IReadOnlyList<ISuggestionHandler> suggestionHandlers)
+        public Intellisense(IEnumStore enumStore, IReadOnlyList<ISuggestionHandler> suggestionHandlers)
         {
             Contracts.AssertValue(suggestionHandlers);
 
