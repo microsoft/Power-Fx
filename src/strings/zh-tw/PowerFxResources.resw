@@ -1630,7 +1630,11 @@
     
   </data>
   <data name="ErrUnknownFunction" xml:space="preserve">
-    <value>未知或不受支援函數的引動過程。</value>
+    <value>'{0}' 為未知或不支援的函式。</value>
+    
+  </data>
+  <data name="ErrUnknownNamespaceFunction" xml:space="preserve">
+    <value>'{0}' 為命名空間 '{1}' 中未知或不支援的函式。</value>
     
   </data>
   <data name="ErrUnSupportedComponentBehaviorInvocation" xml:space="preserve">
@@ -1923,11 +1927,39 @@
     <value>毫秒元件。</value>
   </data>
   <data name="AboutDateTime" xml:space="preserve">
-    <value>Creates a value that represents an instant in time, expressed as a date and time of the day.</value>
+    <value>建立代表一個時刻的值，以日期和當天的時間表示。</value>
+    
+  </data>
+  <data name="AboutDateTime_year" xml:space="preserve">
+    <value>年。</value>
+    
+  </data>
+  <data name="AboutDateTime_month" xml:space="preserve">
+    <value>月份。</value>
+    
+  </data>
+  <data name="AboutDateTime_day" xml:space="preserve">
+    <value>日。</value>
+    
+  </data>
+  <data name="AboutDateTime_hour" xml:space="preserve">
+    <value>小時。</value>
+    
+  </data>
+  <data name="AboutDateTime_minute" xml:space="preserve">
+    <value>分鐘。</value>
+    
+  </data>
+  <data name="AboutDateTime_second" xml:space="preserve">
+    <value>秒。</value>
+    
+  </data>
+  <data name="AboutDateTime_millisecond" xml:space="preserve">
+    <value>毫秒。</value>
     
   </data>
   <data name="AboutYear" xml:space="preserve">
-    <value>Year returns the year of a given date.</value>
+    <value>Year 會傳回指定日期的年度。</value>
     
   </data>
   <data name="YearArg1" xml:space="preserve">
