@@ -143,12 +143,13 @@ namespace Microsoft.PowerFx.Core.Utils
                 fModified = true;
                 StringBuilder builder = new StringBuilder(strName.Length);
 
-                for (int i=0; i < strName.Length; i++)
+                for (int i = 0; i < strName.Length; i++)
                 {
-                    if(char.IsWhiteSpace(strName[i]))
+                    if (char.IsWhiteSpace(strName[i]))
                     {
                         builder.Append(ChSpace);
-                    } else
+                    }
+                    else
                     {
                         builder.Append(strName[i]);
                     }
