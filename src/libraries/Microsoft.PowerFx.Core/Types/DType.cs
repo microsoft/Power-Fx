@@ -645,6 +645,27 @@ namespace Microsoft.PowerFx.Core.Types
             return returnType;
         }
 
+        internal static DType DisableDisplayNameProviders(DType type)
+        {
+            type.AssertValid();
+            var returnType = type.Clone();
+            returnType.DisplayNameProvider = DisabledDisplayNameProvider.Instance;
+
+            if (!type.IsAggregate)
+            {
+                return returnType;
+            }
+
+            var fError = false;
+            foreach (var typedName in returnType.GetNames(DPath.Root))
+            {
+                returnType = returnType.SetType(ref fError, DPath.Root.Append(typedName.Name), DisableDisplayNameProviders(typedName.Type), skipCompare: true);
+                Contracts.Assert(!fError);
+            }
+
+            return returnType;
+        }
+
         /// <summary>
         /// This should only be used when constructing DTypes from the public surface to replace an existing display name provider.
         /// </summary>

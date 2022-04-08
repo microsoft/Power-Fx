@@ -14,26 +14,38 @@ using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Core.Syntax.Nodes
 {
-    internal sealed class CallNode : TexlNode
+    /// <summary>
+    /// Function call parse node. Example:
+    /// 
+    /// <code>Head(Args...)</code>
+    /// </summary>
+    public sealed class CallNode : TexlNode
     {
-        public readonly Identifier Head;
-        public readonly ListNode Args;
+        /// <summary>
+        /// The identifier of the function call.
+        /// </summary>
+        public Identifier Head { get; }
+
+        /// <summary>
+        /// The argument list of the function call.
+        /// </summary>
+        public ListNode Args { get; }
 
         // ParenClose can be null.
-        public readonly Token ParenClose;
+        internal readonly Token ParenClose;
 
         // HeadNode is null for simple invocations. It is typically non-null if the head is
         // a more complex expression, e.g. a non-identifier, or a namespace-qualified identifier
         // in the form of a DottedNameNode.
-        public readonly TexlNode HeadNode;
+        internal readonly TexlNode HeadNode;
 
         // Unique invocation id for this node. This is used in order to uniquely identify this node in the document.
-        public readonly string UniqueInvocationId;
+        internal readonly string UniqueInvocationId;
 
         // Parse Tree is assigned a unique id that is used later to create unique node ids.
-        private static volatile int _uniqueInvocationIdNext;
+        internal static volatile int _uniqueInvocationIdNext;
 
-        public CallNode(ref int idNext, Token primaryToken, SourceList sourceList, Identifier head, TexlNode headNode, ListNode args, Token tokParenClose)
+        internal CallNode(ref int idNext, Token primaryToken, SourceList sourceList, Identifier head, TexlNode headNode, ListNode args, Token tokParenClose)
             : base(ref idNext, primaryToken, sourceList)
         {
             Contracts.AssertValue(head);
@@ -71,7 +83,7 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
             UniqueInvocationId = string.Format("Inv_7339A45FDB3141D49CB36063B712F5E0_{0}", invocationId);
         }
 
-        public override TexlNode Clone(ref int idNext, Span ts)
+        internal override TexlNode Clone(ref int idNext, Span ts)
         {
             var args = Args.Clone(ref idNext, ts).AsList();
             var newNodes = new Dictionary<TexlNode, TexlNode>
@@ -89,6 +101,7 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
             return new CallNode(ref idNext, Token.Clone(ts), SourceList.Clone(ts, newNodes), Head.Clone(ts), headNode, args, ParenClose);
         }
 
+        /// <inheritdoc />
         public override void Accept(TexlVisitor visitor)
         {
             Contracts.AssertValue(visitor);
@@ -99,23 +112,26 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
             }
         }
 
+        /// <inheritdoc />
         public override TResult Accept<TResult, TContext>(TexlFunctionalVisitor<TResult, TContext> visitor, TContext context)
         {
             return visitor.Visit(this, context);
         }
 
+        /// <inheritdoc />
         public override NodeKind Kind => NodeKind.Call;
 
-        public override CallNode CastCall()
+        internal override CallNode CastCall()
         {
             return this;
         }
 
-        public override CallNode AsCall()
+        internal override CallNode AsCall()
         {
             return this;
         }
 
+        /// <inheritdoc />
         public override Span GetTextSpan()
         {
             if (ParenClose == null)
@@ -133,6 +149,7 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
             return new Span(Head.Token.Span.Min, ParenClose.Span.Lim);
         }
 
+        /// <inheritdoc />
         public override Span GetCompleteSpan()
         {
             int limit;
@@ -159,7 +176,7 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
 
         // Does the CallNode have an argument/expression that is async without side effects
         // Check 1..N arguments to identify if there is an AsyncWithNoSideEffects expression.
-        public bool HasArgumentAsyncWithNoSideEffects(TexlBinding binding, int firstArgument = 0)
+        internal bool HasArgumentAsyncWithNoSideEffects(TexlBinding binding, int firstArgument = 0)
         {
             // check if the CallNode has any async arguments.
             // some functions don't need to look at all

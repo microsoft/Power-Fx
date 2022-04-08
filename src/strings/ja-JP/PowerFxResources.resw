@@ -1630,7 +1630,11 @@
     
   </data>
   <data name="ErrUnknownFunction" xml:space="preserve">
-    <value>不明な関数、またはサポートされていない関数の呼び出しです。</value>
+    <value>'{0}' は不明またはサポートされていない関数です。</value>
+    
+  </data>
+  <data name="ErrUnknownNamespaceFunction" xml:space="preserve">
+    <value>'{0}' は名前空間 '{1}' 内で不明またはサポートされていない関数です。</value>
     
   </data>
   <data name="ErrUnSupportedComponentBehaviorInvocation" xml:space="preserve">
@@ -1924,6 +1928,34 @@
   </data>
   <data name="AboutDateTime" xml:space="preserve">
     <value>ある瞬間の時間を表す値を作成します。日付と時刻で表します。</value>
+    
+  </data>
+  <data name="AboutDateTime_year" xml:space="preserve">
+    <value>その年。</value>
+    
+  </data>
+  <data name="AboutDateTime_month" xml:space="preserve">
+    <value>その月。</value>
+    
+  </data>
+  <data name="AboutDateTime_day" xml:space="preserve">
+    <value>その日。</value>
+    
+  </data>
+  <data name="AboutDateTime_hour" xml:space="preserve">
+    <value>その時間。</value>
+    
+  </data>
+  <data name="AboutDateTime_minute" xml:space="preserve">
+    <value>その分。</value>
+    
+  </data>
+  <data name="AboutDateTime_second" xml:space="preserve">
+    <value>その秒。</value>
+    
+  </data>
+  <data name="AboutDateTime_millisecond" xml:space="preserve">
+    <value>そのミリ秒。</value>
     
   </data>
   <data name="AboutYear" xml:space="preserve">

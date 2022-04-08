@@ -44,11 +44,35 @@ namespace Microsoft.PowerFx.Tests
         {
             var config = new PowerFxConfig();
             var engine = new Engine(config);
-            var result = engine.Check("3+foo+2"); // foo is undefined 
+            var result = engine.Check("3+foo+2"); // foo is undefined
 
             Assert.False(result.IsSuccess);
             Assert.Single(result.Errors);
             Assert.StartsWith("Error 2-5: Name isn't valid. 'foo' isn't recognized", result.Errors[0].ToString());
+        }
+
+        [Fact]
+        public void CheckBadFunctionError()
+        {
+            var config = new PowerFxConfig();
+            var engine = new Engine(config);
+            var result = engine.Check("abc(123)");
+
+            Assert.False(result.IsSuccess);
+            Assert.Single(result.Errors);
+            Assert.StartsWith("Error 0-8: 'abc' is an unknown or unsupported function.", result.Errors[0].ToString());
+        }
+
+        [Fact]
+        public void CheckBadNamespaceFunctionError()
+        {
+            var config = new PowerFxConfig();
+            var engine = new Engine(config);
+            var result = engine.Check("abc.def(123)");
+
+            Assert.False(result.IsSuccess);
+            Assert.Single(result.Errors);
+            Assert.StartsWith("Error 0-12: 'def' is an unknown or unsupported function in namespace 'abc'.", result.Errors[0].ToString());
         }
 
         [Fact]

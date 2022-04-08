@@ -9,7 +9,6 @@ using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Binding.BindInfo;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Functions;
-using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
@@ -58,9 +57,8 @@ namespace Microsoft.PowerFx.Core.Glue
         public SimpleResolver(PowerFxConfig config)            
         {
             _config = config ?? throw new ArgumentNullException(nameof(config));
-
             _library = config.Functions.ToArray();
-            _enums = config.EnumStore.WithRequiredEnums(_library).EnumSymbols.ToArray();
+            _enums = config.EnumStoreBuilder.Build().EnumSymbols.ToArray();
         }
 
         // for derived classes that need to set INameResolver.Document. 

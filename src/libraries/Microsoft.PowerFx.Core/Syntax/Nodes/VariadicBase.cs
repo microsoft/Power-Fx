@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.PowerFx.Core.Lexer.Tokens;
 using Microsoft.PowerFx.Core.Localization;
@@ -10,13 +11,20 @@ using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Core.Syntax.Nodes
 {
-    // Base for all variadic nodes.
-    internal abstract class VariadicBase : TexlNode
+    /// <summary>
+    /// Base class for all variadic (i.e., with variable number of children) parse nodes.
+    /// </summary>
+    public abstract class VariadicBase : TexlNode
     {
-        public readonly TexlNode[] Children;
+        /// <summary>
+        /// The list of child nodes.
+        /// </summary>
+        public IReadOnlyList<TexlNode> ChildNodes => Children;
+
+        internal readonly TexlNode[] Children;
 
         // Takes ownership of the array.
-        protected VariadicBase(ref int idNext, Token primaryToken, SourceList sourceList, TexlNode[] children)
+        private protected VariadicBase(ref int idNext, Token primaryToken, SourceList sourceList, TexlNode[] children)
             : base(ref idNext, primaryToken, sourceList)
         {
             Contracts.AssertValue(children);
@@ -42,7 +50,7 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
             _depth = maxDepth + 1;
         }
 
-        public TexlNode[] CloneChildren(ref int idNext, Span ts)
+        internal TexlNode[] CloneChildren(ref int idNext, Span ts)
         {
             var clones = new TexlNode[Children.Length];
             for (var x = 0; x < clones.Length; x++)
@@ -53,7 +61,7 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
             return clones;
         }
 
-        public static Token[] Clone(Token[] toks, Span ts)
+        internal static Token[] Clone(Token[] toks, Span ts)
         {
             Contracts.AssertValueOrNull(toks);
             if (toks == null)
@@ -82,6 +90,7 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
             }
         }
 
+        /// <inheritdoc />
         public override Span GetCompleteSpan()
         {
             if (Children.Count() == 0)
