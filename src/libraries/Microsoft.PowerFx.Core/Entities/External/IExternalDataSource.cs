@@ -9,8 +9,6 @@ namespace Microsoft.PowerFx.Core.Entities
 {
     internal interface IExternalDataSource : IExternalEntity
     {
-        public DType Schema { get; }
-
         string Name { get; }
 
         bool IsSelectable { get; }
