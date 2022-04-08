@@ -1630,7 +1630,11 @@
     
   </data>
   <data name="ErrUnknownFunction" xml:space="preserve">
-    <value>Viện dẫn hàm không xác định hoặc không được hỗ trợ.</value>
+    <value>"{0}" là một hàm không xác định hoặc không được hỗ trợ.</value>
+    
+  </data>
+  <data name="ErrUnknownNamespaceFunction" xml:space="preserve">
+    <value>"{0}" là một hàm không xác định hoặc không được hỗ trợ trong không gian tên "{1}".</value>
     
   </data>
   <data name="ErrUnSupportedComponentBehaviorInvocation" xml:space="preserve">
@@ -1924,6 +1928,34 @@
   </data>
   <data name="AboutDateTime" xml:space="preserve">
     <value>Tạo giá trị đại diện cho thời điểm tức thì, được biểu thị bằng ngày và giờ trong ngày.</value>
+    
+  </data>
+  <data name="AboutDateTime_year" xml:space="preserve">
+    <value>Năm.</value>
+    
+  </data>
+  <data name="AboutDateTime_month" xml:space="preserve">
+    <value>Tháng.</value>
+    
+  </data>
+  <data name="AboutDateTime_day" xml:space="preserve">
+    <value>Ngày.</value>
+    
+  </data>
+  <data name="AboutDateTime_hour" xml:space="preserve">
+    <value>Giờ.</value>
+    
+  </data>
+  <data name="AboutDateTime_minute" xml:space="preserve">
+    <value>Phút.</value>
+    
+  </data>
+  <data name="AboutDateTime_second" xml:space="preserve">
+    <value>Lần thứ hai.</value>
+    
+  </data>
+  <data name="AboutDateTime_millisecond" xml:space="preserve">
+    <value>Mili giây.</value>
     
   </data>
   <data name="AboutYear" xml:space="preserve">

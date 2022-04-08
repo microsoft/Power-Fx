@@ -1630,7 +1630,11 @@
     
   </data>
   <data name="ErrUnknownFunction" xml:space="preserve">
-    <value>Ezezaguna den edo onartzen ez den funtzio bati egindako deia.</value>
+    <value>Ezezaguna den edo onartzen ez den funtzio bat da "{0}".</value>
+    
+  </data>
+  <data name="ErrUnknownNamespaceFunction" xml:space="preserve">
+    <value>"{1}" izen-lekuan ezezaguna den edo onartzen ez den funtzio bat da "{0}".</value>
     
   </data>
   <data name="ErrUnSupportedComponentBehaviorInvocation" xml:space="preserve">
@@ -1924,6 +1928,34 @@
   </data>
   <data name="AboutDateTime" xml:space="preserve">
     <value>Une jakin bat adierazten duen balio bat sortzen du, eguneko data eta orduaren bidez adierazten dena.</value>
+    
+  </data>
+  <data name="AboutDateTime_year" xml:space="preserve">
+    <value>Urtea.</value>
+    
+  </data>
+  <data name="AboutDateTime_month" xml:space="preserve">
+    <value>Hilabetea.</value>
+    
+  </data>
+  <data name="AboutDateTime_day" xml:space="preserve">
+    <value>Eguna.</value>
+    
+  </data>
+  <data name="AboutDateTime_hour" xml:space="preserve">
+    <value>Ordua.</value>
+    
+  </data>
+  <data name="AboutDateTime_minute" xml:space="preserve">
+    <value>Minutua.</value>
+    
+  </data>
+  <data name="AboutDateTime_second" xml:space="preserve">
+    <value>Segundoa.</value>
+    
+  </data>
+  <data name="AboutDateTime_millisecond" xml:space="preserve">
+    <value>Milisegundoak.</value>
     
   </data>
   <data name="AboutYear" xml:space="preserve">
