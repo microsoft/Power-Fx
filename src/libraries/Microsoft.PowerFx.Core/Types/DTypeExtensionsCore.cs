@@ -30,7 +30,7 @@ namespace Microsoft.PowerFx.Core.Types
                 foreach (var tabularDataSource in self.AssociatedDataSources)
                 {
                     // Skip if this column doesn't belong to this datasource.
-                    if (skipIfNotInSchema && !tabularDataSource.Schema.Contains(new DName(columnName)))
+                    if (skipIfNotInSchema && !tabularDataSource.Type.Contains(new DName(columnName)))
                     {
                         continue;
                     }
