@@ -92,7 +92,8 @@ For example, to look up the first name of the employee for an order, one would w
 Let’s look more in-depth at all the things that Power Fx is doing for us and the freedom it has to optimize because the formula was declarative:
 
 - **Asynchronous**:  All data operations in Power Fx are asynchronous. The maker doesn’t need to specify this, nor does the maker need to synchronize after the call is over.  The maker doesn’t need to be aware of this concept at all, they don’t need to know what a promise or lambda function is.
-Local and remote.  Power Fx uses the same syntax and functions for data that is local in-memory and remote in a database or service.  The user need not think about this distinction.  Power Fx automatically delegates what it can to the server to process filters and sorts there more efficiently.
+
+- **Local and remote**:  Power Fx uses the same syntax and functions for data that is local in-memory and remote in a database or service.  The user need not think about this distinction.  Power Fx automatically delegates what it can to the server to process filters and sorts there more efficiently.
 
 - **Relational data**:  Orders and Customers are two different tables, related through a many-to-one relationship.  The OData query requires an "$expand" with knowledge of the foreign key, similar to a Join in SQL.  The formula has none of this, in fact, database keys are another concept the maker doesn’t need to know about.  The maker can use simple dot notation to access the entire graph of relationships from a record.
 
@@ -124,7 +125,7 @@ These have been simple examples.  We believe Power Fx makes a great language for
 
 Low-code makers build things that sometimes require the help of an expert or are taken over by a professional developer to maintain and enhance.  Professionals also appreciate that low-code development can be easier, faster, and less costly than building a professional tool.  Not every situation requires the full power of Visual Studio.
 
-Professionals want to use professional tools to be most productive. Power Fx formulas can be stored in [YAML source files](yaml-formula-grammar.md) that are easy to edit using Visual Studio Code, Visual Studio, or any other text editor and enables Power Fx to be put under source control with GitHub, Azure DevOps, or any other source code control system.
+Professionals want to use professional tools to be most productive. Power Fx formulas can be stored in [YAML-based](yaml-formula-grammar.md) [source files](https://powerapps.microsoft.com/en-us/blog/source-code-files-for-canvas-apps/) that are easy to edit using Visual Studio Code, Visual Studio, or any other text editor and enables Power Fx to be put under source control with GitHub, Azure DevOps, or any other source code control system.
 
 ![Pro code vscode](media/overview/pro-code-vscode.gif "Pro code vscode")
 
@@ -233,11 +234,12 @@ Some language such as JavaScript uses the concept of an "undefined" value for un
 
 ## Related articles
 
-[Data types](data-types.md)<br>
-[Operators and identifiers](operators.md)<br>
-[Tables](tables.md)<br>
-[Variables](variables.md)<br>
-[Imperative logic](imperative.md)<br>
-[Global support](global.md)<br>
-[Expression grammar](expression-grammar.md)<br>
-[YAML formula grammar](yaml-formula-grammar.md)
+- [Data types](data-types.md)
+- [Operators and identifiers](operators.md)
+- [Tables](tables.md)
+- [Variables](variables.md)
+- [Imperative logic](imperative.md)
+- [Global support](global.md)
+- [Expression grammar](expression-grammar.md)
+- [YAML formula grammar](yaml-formula-grammar.md)
+- [YAML Source code files](https://powerapps.microsoft.com/en-us/blog/source-code-files-for-canvas-apps/)

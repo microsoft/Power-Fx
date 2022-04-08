@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+// Licensed under the MIT license.
 
 namespace Microsoft.PowerFx.Core.IR.Nodes
 {
@@ -7,7 +7,8 @@ namespace Microsoft.PowerFx.Core.IR.Nodes
     {
         public readonly string LiteralValue;
 
-        public TextLiteralNode(IRContext irContext, string value) : base(irContext)
+        public TextLiteralNode(IRContext irContext, string value)
+            : base(irContext)
         {
             LiteralValue = value;
         }
@@ -16,7 +17,6 @@ namespace Microsoft.PowerFx.Core.IR.Nodes
         {
             return visitor.Visit(this, context);
         }
-
 
         public override string ToString()
         {

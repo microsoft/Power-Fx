@@ -1,3 +1,6 @@
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 using System;
 
 namespace Microsoft.PowerFx.Core.Utils
@@ -44,8 +47,8 @@ namespace Microsoft.PowerFx.Core.Utils
             // base date is still the base date, and a half day displacement from midnight is noon.
             // See ToOADate and the MSDN Online Library at http://MSDN.Microsoft.com/library/default.asp for more information on OLE Automation.
 
-            double integral = Math.Truncate(value);
-            double frac = Math.Abs(value) - Math.Abs(integral);
+            var integral = Math.Truncate(value);
+            var frac = Math.Abs(value) - Math.Abs(integral);
 
             const int HoursPerDay = 24;
             const int MinutesPerDay = 24 * 60;
@@ -56,14 +59,15 @@ namespace Microsoft.PowerFx.Core.Utils
                 result = OleAutomationEpoch + new TimeSpan((int)integral, (int)(frac * HoursPerDay) % HoursPerDay, (int)(frac * MinutesPerDay) % 60, (int)(frac * SecondsPerDay) % 60);
 
                 // Excel stores dates as if they were always UTC, we need to treat as local time.
-                result = System.DateTime.SpecifyKind(result, DateTimeKind.Local).ToUniversalTime();
+                result = DateTime.SpecifyKind(result, DateTimeKind.Local).ToUniversalTime();
             }
             catch (ArgumentOutOfRangeException)
             {
                 // Value could be invalid for TimeSpan.
-                result = default(DateTime);
+                result = default;
                 return false;
             }
+
             return true;
         }
 

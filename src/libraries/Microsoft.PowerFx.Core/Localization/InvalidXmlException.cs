@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+// Licensed under the MIT license.
 
 using System.Xml;
 using System.Xml.Linq;
@@ -13,7 +13,6 @@ namespace Microsoft.PowerFx.Core.Localization
     /// </summary>
     internal sealed class InvalidXmlException : XmlException
     {
-
         /// <param name="reason">The user-friendly reason why the xml document is invalid.</param>
         public InvalidXmlException(string reason)
             : base(reason)
@@ -53,6 +52,5 @@ namespace Microsoft.PowerFx.Core.Localization
             Contracts.AssertValue(xobj, "The ctor chosen requires the invalid XObject argument to be non-null.");
             return ((IXmlLineInfo)xobj).LinePosition;
         }
-
     }
 }

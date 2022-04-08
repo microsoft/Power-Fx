@@ -87,3 +87,39 @@ false
 
 >> Text(Time(10, -30, -360))
 "9:24 AM"
+
+>> Year(Date(2011, 2, 3) + Time(1, 2, 3))
+2011
+
+>> Month(Date(2011, 2, 3) + Time(1, 2, 3))
+2
+
+>> Day(Date(2011, 2, 3) + Time(1, 2, 3))
+3
+
+>> Hour(Date(2011, 2, 3) + Time(1, 2, 3))
+1
+
+>> Minute(Date(2011, 2, 3) + Time(1, 2, 3))
+2
+
+>> Second(Date(2011, 2, 3) + Time(1, 2, 3))
+3
+
+>> Year(Time(1, 2, 3) + Date(2011, 2, 3))
+2011
+
+>> Month(Time(1, 2, 3) + Date(2011, 2, 3))
+2
+
+>> Day(Time(1, 2, 3) + Date(2011, 2, 3))
+3
+
+>> Hour(Time(1, 2, 3) + Date(2011, 2, 3))
+1
+
+>> Minute(Time(1, 2, 3) + Date(2011, 2, 3))
+2
+
+>> Second(Time(1, 2, 3) + Date(2011, 2, 3))
+3

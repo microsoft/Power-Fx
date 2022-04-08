@@ -1,5 +1,5 @@
-// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
 
 using Microsoft.PowerFx.Core.Lexer.Tokens;
 using Microsoft.PowerFx.Core.Localization;
@@ -9,32 +9,38 @@ using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Core.Syntax.Nodes
 {
-    internal sealed class ParentNode : NameNode
+    /// <summary>
+    /// Parent identifier parse node.
+    /// </summary>
+    public sealed class ParentNode : NameNode
     {
-        public ParentNode(ref int idNext, Token tok)
+        internal ParentNode(ref int idNext, Token tok)
             : base(ref idNext, tok, new SourceList(tok))
         {
         }
 
+        /// <inheritdoc />
         public override void Accept(TexlVisitor visitor)
         {
             Contracts.AssertValue(visitor);
             visitor.Visit(this);
         }
 
-        public override Result Accept<Result, Context>(TexlFunctionalVisitor<Result, Context> visitor, Context context)
+        /// <inheritdoc />
+        public override TResult Accept<TResult, TContext>(TexlFunctionalVisitor<TResult, TContext> visitor, TContext context)
         {
             return visitor.Visit(this, context);
         }
 
-        public override TexlNode Clone(ref int idNext, Span ts)
+        internal override TexlNode Clone(ref int idNext, Span ts)
         {
             return new ParentNode(ref idNext, Token.Clone(ts));
         }
 
-        public override NodeKind Kind { get { return NodeKind.Parent; } }
+        /// <inheritdoc />
+        public override NodeKind Kind => NodeKind.Parent;
 
-        public override ParentNode AsParent()
+        internal override ParentNode AsParent()
         {
             return this;
         }

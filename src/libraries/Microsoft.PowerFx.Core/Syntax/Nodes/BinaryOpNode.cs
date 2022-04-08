@@ -1,5 +1,5 @@
-// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
 
 using System;
 using System.Collections.Generic;
@@ -12,13 +12,29 @@ using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Core.Syntax.Nodes
 {
-    internal sealed class BinaryOpNode : TexlNode
+    /// <summary>
+    /// Binary operation parse node. Example:
+    /// 
+    /// <code>Left BinaryOp Right</code>
+    /// </summary>
+    public sealed class BinaryOpNode : TexlNode
     {
-        public readonly TexlNode Left;
-        public readonly TexlNode Right;
-        public readonly BinaryOp Op;
+        /// <summary>
+        /// Left operand of the binary operation.
+        /// </summary>
+        public TexlNode Left { get; }
 
-        public BinaryOpNode(ref int idNext, Token primaryToken, SourceList sourceList, BinaryOp op, TexlNode left, TexlNode right)
+        /// <summary>
+        /// Right operand of the binary operation.
+        /// </summary>
+        public TexlNode Right { get; }
+
+        /// <summary>
+        /// The binary operator.
+        /// </summary>
+        public BinaryOp Op { get; }
+
+        internal BinaryOpNode(ref int idNext, Token primaryToken, SourceList sourceList, BinaryOp op, TexlNode left, TexlNode right)
             : base(ref idNext, primaryToken, sourceList)
         {
             Contracts.AssertValue(left);
@@ -33,7 +49,7 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
             MinChildID = Math.Min(left.MinChildID, right.MinChildID);
         }
 
-        public override TexlNode Clone(ref int idNext, Span ts)
+        internal override TexlNode Clone(ref int idNext, Span ts)
         {
             var left = Left.Clone(ref idNext, ts);
             var right = Right.Clone(ref idNext, ts);
@@ -51,6 +67,7 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
                 right);
         }
 
+        /// <inheritdoc />
         public override void Accept(TexlVisitor visitor)
         {
             Contracts.AssertValue(visitor);
@@ -62,29 +79,36 @@ namespace Microsoft.PowerFx.Core.Syntax.Nodes
             }
         }
 
-        public override Result Accept<Result, Context>(TexlFunctionalVisitor<Result, Context> visitor, Context context)
+        /// <inheritdoc />
+        public override TResult Accept<TResult, TContext>(TexlFunctionalVisitor<TResult, TContext> visitor, TContext context)
         {
             return visitor.Visit(this, context);
         }
 
-        public override NodeKind Kind { get { return NodeKind.BinaryOp; } }
+        /// <inheritdoc />
+        public override NodeKind Kind => NodeKind.BinaryOp;
 
-        public override BinaryOpNode CastBinaryOp()
+        internal override BinaryOpNode CastBinaryOp()
         {
             return this;
         }
 
-        public override BinaryOpNode AsBinaryOp()
+        internal override BinaryOpNode AsBinaryOp()
         {
             return this;
         }
 
+        /// <inheritdoc />
         public override Span GetCompleteSpan()
         {
-            if (this.Token.Kind == TokKind.PercentSign && this.Right.Token.Span.Lim < this.Left.Token.Span.Min)
-                return new Span(this.Right.Token.Span.Min, this.Left.Token.Span.Lim);
+            if (Token.Kind == TokKind.PercentSign && Right.Token.Span.Lim < Left.Token.Span.Min)
+            {
+                return new Span(Right.Token.Span.Min, Left.Token.Span.Lim);
+            }
             else
-                return new Span(this.Left.VerifyValue().GetCompleteSpan().Min, this.Right.VerifyValue().GetCompleteSpan().Lim);
+            {
+                return new Span(Left.VerifyValue().GetCompleteSpan().Min, Right.VerifyValue().GetCompleteSpan().Lim);
+            }
         }
     }
 }

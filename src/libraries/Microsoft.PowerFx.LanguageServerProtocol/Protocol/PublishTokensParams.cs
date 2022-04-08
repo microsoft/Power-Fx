@@ -1,8 +1,8 @@
 ﻿// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+// Licensed under the MIT license.
 
-using Microsoft.PowerFx.Core;
 using System.Collections.Generic;
+using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Public;
 
 namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol

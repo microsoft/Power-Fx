@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+// Licensed under the MIT license.
 
 namespace Microsoft.PowerFx.Core.Public
 {
@@ -13,7 +13,7 @@ namespace Microsoft.PowerFx.Core.Public
     ///  4. Client updates tokenizer (which maps token to theme color) for syntax highlighting
     ///  5. When formula changes in client, client sends didChange with "getTokensFlags=1" (UsedInExpression)
     ///  6. Server sends publishTokens with tokens in existing formula
-    ///  7. Client updates normalizedCompletionLookup & tokenizer
+    ///  7. Client updates normalizedCompletionLookup & tokenizer.
     /// </summary>
     internal enum GetTokensFlags : uint
     {

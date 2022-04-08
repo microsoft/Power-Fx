@@ -1,0 +1,5 @@
+﻿#OVERRIDE: inTable.txt
+
+// Blank() on LHS is still false and treated liked record. 
+>> Blank() in [1, Blank(), 2] 
+#Error

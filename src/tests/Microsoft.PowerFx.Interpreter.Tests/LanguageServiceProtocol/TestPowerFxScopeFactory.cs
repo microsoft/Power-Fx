@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+// Licensed under the MIT license.
 
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Public;
@@ -10,7 +10,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
     {
         public delegate IPowerFxScope GetOrCreateInstanceDelegate(string documentUri);
 
-        private GetOrCreateInstanceDelegate _getOrCreateInstance;
+        private readonly GetOrCreateInstanceDelegate _getOrCreateInstance;
 
         public TestPowerFxScopeFactory(GetOrCreateInstanceDelegate getOrCreateInstance)
         {

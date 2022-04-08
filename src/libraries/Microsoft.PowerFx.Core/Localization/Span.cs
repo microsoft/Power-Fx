@@ -1,5 +1,5 @@
-// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
 
 using System.Collections.Generic;
 using System.Globalization;
@@ -7,15 +7,15 @@ using System.Linq;
 using System.Text;
 using Microsoft.AppMagic.Transport;
 using Microsoft.PowerFx.Core.Utils;
+using StringBuilderCache = Microsoft.PowerFx.Core.Utils.StringBuilderCache<Microsoft.PowerFx.Core.Localization.Span>;
 
 namespace Microsoft.PowerFx.Core.Localization
 {
-    using StringBuilderCache = StringBuilderCache<Span>;
-
     [TransportType(TransportKind.ByValue)]
     public sealed class Span
     {
         public int Min { get; }
+
         public int Lim { get; }
 
         public Span(int min, int lim)
@@ -72,7 +72,7 @@ namespace Microsoft.PowerFx.Core.Localization
             try
             {
                 sb = StringBuilderCache.Acquire(script.Length);
-                int index = 0;
+                var index = 0;
 
                 foreach (var pair in worklist.OrderBy(kvp => kvp.Key.Min))
                 {
@@ -82,14 +82,18 @@ namespace Microsoft.PowerFx.Core.Localization
                 }
 
                 if (index < script.Length)
+                {
                     sb.Append(script, index, script.Length - index);
+                }
 
                 return sb.ToString();
             }
             finally
             {
                 if (sb != null)
+                {
                     StringBuilderCache.Release(sb);
+                }
             }
         }
 
@@ -102,9 +106,9 @@ namespace Microsoft.PowerFx.Core.Localization
 
         public override int GetHashCode()
         {
-            int hashCode = -1160472096;
-            hashCode = hashCode * -1521134295 + Min.GetHashCode();
-            hashCode = hashCode * -1521134295 + Lim.GetHashCode();
+            var hashCode = -1160472096;
+            hashCode = (hashCode * -1521134295) + Min.GetHashCode();
+            hashCode = (hashCode * -1521134295) + Lim.GetHashCode();
             return hashCode;
         }
     }

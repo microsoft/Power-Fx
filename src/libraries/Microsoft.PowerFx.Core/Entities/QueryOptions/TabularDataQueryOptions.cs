@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Types;
@@ -8,22 +11,22 @@ namespace Microsoft.PowerFx.Core.Entities.QueryOptions
 {
     /// <summary>
     /// Store information about data call queryOptions for a particular TabularDataSource and its navigations.
-    /// This should be serializable to "TableQueryOptions" in \src\AppMagic\js\AppMagic.Runtime.App\_AppMagic\Data\Query\QueryOptions.ts
+    /// This should be serializable to "TableQueryOptions" in \src\AppMagic\js\AppMagic.Runtime.App\_AppMagic\Data\Query\QueryOptions.ts.
     /// </summary>
     internal sealed class TabularDataQueryOptions
     {
         public IExternalTabularDataSource TabularDataSourceInfo { get; }
-        
-        public IEnumerable<string> Selects { get { return _selects; } }
 
-        private HashSet<string> _selects { get; }
+        public IEnumerable<string> Selects => _selects;
+
+        private readonly HashSet<string> _selects;
 
         /// <summary>
-        /// List of navigation datasources and their query options
+        /// List of navigation datasources and their query options.
         /// </summary>
-        public IReadOnlyDictionary<ExpandPath, ExpandQueryOptions> Expands { get { return _expandQueryOptions; } }
+        public IReadOnlyDictionary<ExpandPath, ExpandQueryOptions> Expands => ExpandQueryOptions;
 
-        private Dictionary<ExpandPath, ExpandQueryOptions> _expandQueryOptions { get; }
+        private Dictionary<ExpandPath, ExpandQueryOptions> ExpandQueryOptions { get; }
 
         public Dictionary<ExpandPath, DType> ExpandDTypes { get; }
 
@@ -33,16 +36,20 @@ namespace Microsoft.PowerFx.Core.Entities.QueryOptions
             _selects = new HashSet<string>();
             var keyColumns = tabularDataSourceInfo.GetKeyColumns();
             foreach (var keyColumn in keyColumns)
+            {
                 _selects.Add(keyColumn);
+            }
 
-            _expandQueryOptions = new Dictionary<ExpandPath, ExpandQueryOptions>();
+            ExpandQueryOptions = new Dictionary<ExpandPath, ExpandQueryOptions>();
             ExpandDTypes = new Dictionary<ExpandPath, DType>();
         }
 
         public bool AddSelect(string selectColumnName)
         {
             if (string.IsNullOrEmpty(selectColumnName))
+            {
                 return false;
+            }
 
             if (_selects.Contains(selectColumnName)
                 || !TabularDataSourceInfo.CanIncludeSelect(selectColumnName))
@@ -53,24 +60,25 @@ namespace Microsoft.PowerFx.Core.Entities.QueryOptions
             return _selects.Add(selectColumnName);
         }
 
-        public bool AddSelectMultiple(IEnumerable<string> _selects)
+        public bool AddSelectMultiple(IEnumerable<string> selects)
         {
-            if (_selects == null)
+            if (selects == null)
             {
                 return false;
             }
 
             var retVal = false;
 
-            foreach (var select in _selects)
+            foreach (var select in selects)
             {
                 retVal |= AddSelect(select);
             }
 
             return retVal;
         }
+
         /// <summary>
-        /// Helper method used to add related columns like annotated columns for cds navigation fields. ex: _primarycontactid_value
+        /// Helper method used to add related columns like annotated columns for cds navigation fields. ex: _primarycontactid_value.
         /// </summary>
         public void AddRelatedColumns()
         {
@@ -78,11 +86,12 @@ namespace Microsoft.PowerFx.Core.Entities.QueryOptions
             {
                 return;
             }
+
             var cdsDataSourceInfo = TabularDataSourceInfo as IExternalCdsDataSource;
             var selectColumnNames = new HashSet<string>(_selects);
             foreach (var select in selectColumnNames)
             {
-                if (cdsDataSourceInfo.TryGetRelatedColumn(select, out string additionalColumnName) && !_selects.Contains(additionalColumnName))
+                if (cdsDataSourceInfo.TryGetRelatedColumn(select, out var additionalColumnName) && !_selects.Contains(additionalColumnName))
                 {
                     // Add the Annotated value in case a navigation field is referred in selects. (ex: if the Datasource is Accounts and primarycontactid is in selects also append _primarycontactid_value)
                     _selects.Add(additionalColumnName);
@@ -93,7 +102,9 @@ namespace Microsoft.PowerFx.Core.Entities.QueryOptions
         public bool HasNonKeySelects()
         {
             if (!TabularDataSourceInfo.IsSelectable)
+            {
                 return false;
+            }
 
             Contracts.Assert(TabularDataSourceInfo.GetKeyColumns().All(x => _selects.Contains(x)));
 
@@ -107,10 +118,13 @@ namespace Microsoft.PowerFx.Core.Entities.QueryOptions
             RemoveExpand(expand.ExpandInfo);
             var selectColumnName = expand.ExpandInfo.ExpandPath.EntityName;
             if (string.IsNullOrEmpty(selectColumnName) || !(TabularDataSourceInfo is IExternalCdsDataSource))
+            {
                 return false;
-            var CdsDataSourceInfo = TabularDataSourceInfo as IExternalCdsDataSource;
+            }
+
+            var cdsDataSourceInfo = TabularDataSourceInfo as IExternalCdsDataSource;
             if (_selects.Contains(selectColumnName)
-                || !CdsDataSourceInfo.TryGetRelatedColumn(selectColumnName, out string additionalColumnName) || additionalColumnName == null
+                || !cdsDataSourceInfo.TryGetRelatedColumn(selectColumnName, out var additionalColumnName) || additionalColumnName == null
                 || _selects.Contains(additionalColumnName))
             {
                 return false;
@@ -127,26 +141,26 @@ namespace Microsoft.PowerFx.Core.Entities.QueryOptions
                 return false;
             }
 
-            if (_expandQueryOptions.ContainsKey(expandInfo.ExpandPath))
+            if (ExpandQueryOptions.ContainsKey(expandInfo.ExpandPath))
             {
-                expandQueryOptions = (ExpandQueryOptions)_expandQueryOptions[expandInfo.ExpandPath];
+                expandQueryOptions = (ExpandQueryOptions)ExpandQueryOptions[expandInfo.ExpandPath];
                 return false;
             }
 
-            expandQueryOptions = ExpandQueryOptions.CreateExpandQueryOptions(expandInfo);
+            expandQueryOptions = QueryOptions.ExpandQueryOptions.CreateExpandQueryOptions(expandInfo);
             return AddExpand(expandInfo.ExpandPath, expandQueryOptions);
         }
 
         private bool AddExpand(ExpandPath expandPath, ExpandQueryOptions expandQueryOptions)
         {
-            this._expandQueryOptions.Add(expandPath, expandQueryOptions);
+            ExpandQueryOptions.Add(expandPath, expandQueryOptions);
             return true;
         }
 
         internal bool RemoveExpand(IExpandInfo expandInfo)
         {
             Contracts.AssertValue(expandInfo);
-            return _expandQueryOptions.Remove(expandInfo.ExpandPath);
+            return ExpandQueryOptions.Remove(expandInfo.ExpandPath);
         }
 
         internal bool TryGetExpandQueryOptions(IExpandInfo expandInfo, out ExpandQueryOptions expandQueryOptions)
@@ -174,9 +188,13 @@ namespace Microsoft.PowerFx.Core.Entities.QueryOptions
             foreach (var entry in qo.Expands)
             {
                 if (Expands.ContainsKey(entry.Key))
+                {
                     MergeQueryOptions((ExpandQueryOptions)Expands[entry.Key], (ExpandQueryOptions)entry.Value);
+                }
                 else
+                {
                     AddExpand(entry.Key, (ExpandQueryOptions)entry.Value);
+                }
             }
         }
 
@@ -196,12 +214,15 @@ namespace Microsoft.PowerFx.Core.Entities.QueryOptions
                 return false;
             }
 
-            bool isOriginalModified = false;
+            var isOriginalModified = false;
+
             // Update selectedfields first.
             foreach (var selectedFieldToAdd in added.Selects)
             {
                 if (original.Selects.Contains(selectedFieldToAdd))
+                {
                     continue;
+                }
 
                 original.AddSelect(selectedFieldToAdd);
                 isOriginalModified = true;
@@ -218,7 +239,9 @@ namespace Microsoft.PowerFx.Core.Entities.QueryOptions
             foreach (var expand in original.Expands)
             {
                 if (!entityPathToQueryOptionsMap.ContainsKey(expand.ExpandInfo.ExpandPath))
+                {
                     entityPathToQueryOptionsMap[expand.ExpandInfo.ExpandPath] = expand;
+                }
             }
 
             foreach (var expand in added.Expands)
@@ -256,7 +279,7 @@ namespace Microsoft.PowerFx.Core.Entities.QueryOptions
                 }
             }
 
-            _expandQueryOptions[mergeExpandValue.ExpandInfo.ExpandPath] = mergeExpandValue?.Clone();
+            ExpandQueryOptions[mergeExpandValue.ExpandInfo.ExpandPath] = mergeExpandValue?.Clone();
             return true;
         }
 
@@ -274,8 +297,11 @@ namespace Microsoft.PowerFx.Core.Entities.QueryOptions
                     foreach (var childExpand in expand.Expands)
                     {
                         if (AppendExpandQueryOptions(childExpand, mergeExpandValue))
+                        {
                             return true;
+                        }
                     }
+
                     return false;
                 }
             }

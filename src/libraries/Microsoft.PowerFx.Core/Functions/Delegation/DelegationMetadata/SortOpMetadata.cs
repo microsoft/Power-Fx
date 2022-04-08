@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+// Licensed under the MIT license.
 
 using System.Collections.Generic;
 using Microsoft.PowerFx.Core.Types;
@@ -20,20 +20,21 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationMetadata
             _columnRestrictions = columnRestrictions;
         }
 
-        protected override Dictionary<DPath, DelegationCapability> ColumnRestrictions { get { return _columnRestrictions; } }
+        protected override Dictionary<DPath, DelegationCapability> ColumnRestrictions => _columnRestrictions;
 
-        public override DelegationCapability DefaultColumnCapabilities { get { return DelegationCapability.Sort; } }
+        public override DelegationCapability DefaultColumnCapabilities => DelegationCapability.Sort;
 
-        public override DelegationCapability TableCapabilities { get { return DefaultColumnCapabilities; } }
+        public override DelegationCapability TableCapabilities => DefaultColumnCapabilities;
 
         // Returns true if column is marked as AscendingOnly.
         public bool IsColumnAscendingOnly(DPath columnPath)
         {
             Contracts.AssertValid(columnPath);
 
-            DelegationCapability columnRestrictions;
-            if (!TryGetColumnRestrictions(columnPath, out columnRestrictions))
+            if (!TryGetColumnRestrictions(columnPath, out var columnRestrictions))
+            {
                 return false;
+            }
 
             return columnRestrictions.HasCapability(DelegationCapability.SortAscendingOnly);
         }

@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+// Licensed under the MIT license.
 
 using System;
 using System.Collections.Generic;
@@ -27,7 +27,7 @@ namespace Microsoft.PowerFx
         public Action<string, FormulaValue> _onUpdate;
 
         // For recalc, needed for execution 
-        public TexlBinding _binding; 
+        public TexlBinding _binding;
 
         // Cached value
         public FormulaValue _value;

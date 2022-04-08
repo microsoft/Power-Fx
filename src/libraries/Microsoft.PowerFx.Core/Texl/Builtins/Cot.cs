@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+// Licensed under the MIT license.
 
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
@@ -14,7 +14,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public CotFunction()
             : base("Cot", TexlStrings.AboutCot, FunctionCategories.MathAndStat)
-        { }
+        {
+        }
     }
 
     // Cot(E:*[n])
@@ -25,6 +26,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public CotTableFunction()
             : base("Cot", TexlStrings.AboutCotT, FunctionCategories.Table)
-        { }
+        {
+        }
     }
 }

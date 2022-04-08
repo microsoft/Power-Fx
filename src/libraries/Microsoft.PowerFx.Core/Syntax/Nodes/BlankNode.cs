@@ -1,5 +1,5 @@
-// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
 
 using Microsoft.PowerFx.Core.Lexer.Tokens;
 using Microsoft.PowerFx.Core.Localization;
@@ -9,32 +9,35 @@ using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Core.Syntax.Nodes
 {
-    internal sealed class BlankNode : TexlNode
+    public sealed class BlankNode : TexlNode
     {
-        public override NodeKind Kind { get { return NodeKind.Blank; } }
+        /// <inheritdoc />
+        public override NodeKind Kind => NodeKind.Blank;
 
-        public BlankNode(ref int idNext, Token primaryToken)
+        internal BlankNode(ref int idNext, Token primaryToken)
             : base(ref idNext, primaryToken, new SourceList(primaryToken))
         {
         }
 
-        public override TexlNode Clone(ref int idNext, Span ts)
+        internal override TexlNode Clone(ref int idNext, Span ts)
         {
             return new BlankNode(ref idNext, Token.Clone(ts));
         }
 
+        /// <inheritdoc />
         public override void Accept(TexlVisitor visitor)
         {
             Contracts.AssertValue(visitor);
             visitor.Visit(this);
         }
 
-        public override Result Accept<Result, Context>(TexlFunctionalVisitor<Result, Context> visitor, Context context)
+        /// <inheritdoc />
+        public override TResult Accept<TResult, TContext>(TexlFunctionalVisitor<TResult, TContext> visitor, TContext context)
         {
             return visitor.Visit(this, context);
         }
 
-        public override BlankNode AsBlank()
+        internal override BlankNode AsBlank()
         {
             return this;
         }

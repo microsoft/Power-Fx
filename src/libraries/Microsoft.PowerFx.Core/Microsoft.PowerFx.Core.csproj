@@ -20,6 +20,7 @@
 		<Title>Microsoft Power Fx Compiler</Title>
 		<Description>The core library for all Microsoft Power Fx Compiler targets</Description>
 		<Summary>The core library for all Microsoft Power Fx Compiler targets</Summary>
+		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -35,6 +36,10 @@
 		<EmbeddedResource Include="..\..\strings\**\PowerFxResources.resw" Exclude="$(SolutionDir)\strings\qps-ploc\**" Condition="'$(Configuration)' == 'Release'">
 			<Link>Strings\%(RecursiveDir)%(Filename)%(Extension)</Link>
 		</EmbeddedResource>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <AdditionalFiles Include="..\..\stylecop.json" Link="stylecop.json" />
 	</ItemGroup>
 
 	<ItemGroup>

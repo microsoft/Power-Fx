@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+// Licensed under the MIT license.
 
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Logging.Trackers;
@@ -10,6 +10,7 @@ using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Core.Functions.FunctionArgValidators
 {
+    [ThreadSafeImmutable]
     internal sealed class SortOrderValidator : IArgValidator<string>
     {
         public bool TryGetValidValue(TexlNode argNode, TexlBinding binding, out string validatedOrder)
@@ -22,21 +23,23 @@ namespace Microsoft.PowerFx.Core.Functions.FunctionArgValidators
             Contracts.AssertValue(argNode);
             Contracts.AssertValue(binding);
 
-            validatedOrder = "";
+            validatedOrder = string.Empty;
             if (binding.ErrorContainer.HasErrors(argNode))
+            {
                 return false;
+            }
 
             switch (argNode.Kind)
             {
-            case NodeKind.FirstName:
-                return TryGetValidSortOrderNode(argNode.AsFirstName(), binding, out validatedOrder);
-            case NodeKind.DottedName:
-                return TryGetValidSortOrderNode(argNode.AsDottedName(), binding, out validatedOrder);
-            case NodeKind.StrLit:
-                return TryGetValidSortOrderNode(argNode.AsStrLit(), out validatedOrder);
-            default:
-                TrackingProvider.Instance.AddSuggestionMessage("Invalid sortorder node type", argNode, binding);
-                return false;
+                case NodeKind.FirstName:
+                    return TryGetValidSortOrderNode(argNode.AsFirstName(), binding, out validatedOrder);
+                case NodeKind.DottedName:
+                    return TryGetValidSortOrderNode(argNode.AsDottedName(), binding, out validatedOrder);
+                case NodeKind.StrLit:
+                    return TryGetValidSortOrderNode(argNode.AsStrLit(), out validatedOrder);
+                default:
+                    TrackingProvider.Instance.AddSuggestionMessage("Invalid sortorder node type", argNode, binding);
+                    return false;
             }
         }
 
@@ -44,10 +47,12 @@ namespace Microsoft.PowerFx.Core.Functions.FunctionArgValidators
         {
             Contracts.AssertValue(order);
 
-            validatedSortOrder = "";
+            validatedSortOrder = string.Empty;
             order = order.ToLower();
             if (order != LanguageConstants.AscendingSortOrderString && order != LanguageConstants.DescendingSortOrderString)
+            {
                 return false;
+            }
 
             validatedSortOrder = order;
             return true;
@@ -58,17 +63,21 @@ namespace Microsoft.PowerFx.Core.Functions.FunctionArgValidators
             Contracts.AssertValue(node);
             Contracts.AssertValue(binding);
 
-            sortOrder = "";
-            TexlNode lhsNode = node.Left;
+            sortOrder = string.Empty;
+            var lhsNode = node.Left;
             var orderEnum = lhsNode.AsFirstName();
             if (orderEnum == null)
+            {
                 return false;
+            }
 
             // Verify order enum
             if (!VerifyFirstNameNodeIsValidSortOrderEnum(orderEnum, binding))
+            {
                 return false;
+            }
 
-            string order = node.Right.Name.Value;
+            var order = node.Right.Name.Value;
             return IsValidOrderString(order, out sortOrder);
         }
 
@@ -77,14 +86,17 @@ namespace Microsoft.PowerFx.Core.Functions.FunctionArgValidators
             Contracts.AssertValue(node);
             Contracts.AssertValue(binding);
 
-            sortOrder = "";
+            sortOrder = string.Empty;
             var info = binding.GetInfo(node).VerifyValue();
             if (info.Kind != BindKind.Enum)
+            {
                 return false;
+            }
 
-            string order = info.Data as string;
-            if (order == null)
+            if (info.Data is not string order)
+            {
                 return false;
+            }
 
             return IsValidOrderString(order, out sortOrder);
         }
@@ -93,7 +105,7 @@ namespace Microsoft.PowerFx.Core.Functions.FunctionArgValidators
         {
             Contracts.AssertValue(node);
 
-            string order = node.Value;
+            var order = node.Value;
             return IsValidOrderString(order, out sortOrder);
         }
 
@@ -104,13 +116,16 @@ namespace Microsoft.PowerFx.Core.Functions.FunctionArgValidators
 
             var firstNameInfo = binding.GetInfo(node);
             if (firstNameInfo == null || firstNameInfo.Kind != BindKind.Enum)
+            {
                 return false;
-
+            }
 
             if (!binding.NameResolver.TryLookupEnum(new DName(LanguageConstants.SortOrderEnumStringInvariant), out var lookupInfo))
+            {
                 return false;
+            }
 
-            DType type = binding.GetType(node);
+            var type = binding.GetType(node);
 
             return type == lookupInfo.Type;
         }

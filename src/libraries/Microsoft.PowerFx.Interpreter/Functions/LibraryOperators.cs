@@ -1,373 +1,314 @@
 ﻿// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+// Licensed under the MIT license.
 
-using Microsoft.PowerFx.Core.IR;
 using System;
 using System.Linq;
-using Microsoft.PowerFx.Core.Public.Values;
+using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Public.Types;
+using Microsoft.PowerFx.Core.Public.Values;
 
 namespace Microsoft.PowerFx.Functions
 {
     internal static partial class Library
     {
         #region Operator Standard Error Handling Wrappers
-        public static FunctionPtr OperatorBinaryAdd = StandardErrorHandling<NumberValue>(
+        public static readonly AsyncFunctionPtr OperatorBinaryAdd = StandardErrorHandling<NumberValue>(
             expandArguments: NoArgExpansion,
             replaceBlankValues: ReplaceBlankWithZero,
             checkRuntimeTypes: ExactValueType<NumberValue>,
             checkRuntimeValues: FiniteChecker,
             returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
-            targetFunction: NumericAdd
-        );
+            targetFunction: NumericAdd);
 
-        public static FunctionPtr OperatorBinaryMul = StandardErrorHandling<NumberValue>(
+        public static readonly AsyncFunctionPtr OperatorBinaryMul = StandardErrorHandling<NumberValue>(
             expandArguments: NoArgExpansion,
             replaceBlankValues: ReplaceBlankWithZero,
             checkRuntimeTypes: ExactValueType<NumberValue>,
             checkRuntimeValues: FiniteChecker,
             returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
-            targetFunction: NumericMul
-        );
+            targetFunction: NumericMul);
 
-        public static FunctionPtr OperatorBinaryDiv = StandardErrorHandling<NumberValue>(
+        public static readonly AsyncFunctionPtr OperatorBinaryDiv = StandardErrorHandling<NumberValue>(
             expandArguments: NoArgExpansion,
             replaceBlankValues: ReplaceBlankWithZero,
             checkRuntimeTypes: ExactValueType<NumberValue>,
             checkRuntimeValues: DivideByZeroChecker,
             returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
-            targetFunction: NumericDiv
-        );
+            targetFunction: NumericDiv);
 
-        public static FunctionPtr OperatorBinaryGt = StandardErrorHandling<NumberValue>(
+        public static readonly AsyncFunctionPtr OperatorBinaryGt = StandardErrorHandling<NumberValue>(
             expandArguments: NoArgExpansion,
             replaceBlankValues: ReplaceBlankWithZero,
             checkRuntimeTypes: ExactValueType<NumberValue>,
             checkRuntimeValues: FiniteChecker,
             returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
-            targetFunction: NumericGt
-        );
+            targetFunction: NumericGt);
 
-        public static FunctionPtr OperatorBinaryGeq = StandardErrorHandling<NumberValue>(
+        public static readonly AsyncFunctionPtr OperatorBinaryGeq = StandardErrorHandling<NumberValue>(
             expandArguments: NoArgExpansion,
             replaceBlankValues: ReplaceBlankWithZero,
             checkRuntimeTypes: ExactValueType<NumberValue>,
             checkRuntimeValues: FiniteChecker,
             returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
-            targetFunction: NumericGeq
-        );
+            targetFunction: NumericGeq);
 
-        public static FunctionPtr OperatorBinaryLt = StandardErrorHandling<NumberValue>(
+        public static readonly AsyncFunctionPtr OperatorBinaryLt = StandardErrorHandling<NumberValue>(
             expandArguments: NoArgExpansion,
             replaceBlankValues: ReplaceBlankWithZero,
             checkRuntimeTypes: ExactValueType<NumberValue>,
             checkRuntimeValues: FiniteChecker,
             returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
-            targetFunction: NumericLt
-        );
+            targetFunction: NumericLt);
 
-        public static FunctionPtr OperatorBinaryLeq = StandardErrorHandling<NumberValue>(
+        public static readonly AsyncFunctionPtr OperatorBinaryLeq = StandardErrorHandling<NumberValue>(
             expandArguments: NoArgExpansion,
             replaceBlankValues: ReplaceBlankWithZero,
             checkRuntimeTypes: ExactValueType<NumberValue>,
             checkRuntimeValues: FiniteChecker,
             returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
-            targetFunction: NumericLeq
-        );
+            targetFunction: NumericLeq);
 
-        public static FunctionPtr OperatorBinaryEq = StandardErrorHandling<FormulaValue>(
+        public static readonly AsyncFunctionPtr OperatorBinaryEq = StandardErrorHandling<FormulaValue>(
             expandArguments: NoArgExpansion,
             replaceBlankValues: DoNotReplaceBlank,
             checkRuntimeTypes: DeferRuntimeTypeChecking,
             checkRuntimeValues: DeferRuntimeValueChecking,
             returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
-            targetFunction: AreEqual
-        );
+            targetFunction: AreEqual);
 
-        public static FunctionPtr OperatorBinaryNeq = StandardErrorHandling<FormulaValue>(
+        public static readonly AsyncFunctionPtr OperatorBinaryNeq = StandardErrorHandling<FormulaValue>(
             expandArguments: NoArgExpansion,
             replaceBlankValues: DoNotReplaceBlank,
             checkRuntimeTypes: DeferRuntimeTypeChecking,
             checkRuntimeValues: DeferRuntimeValueChecking,
             returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
-            targetFunction: NotEqual
-        );
+            targetFunction: NotEqual);
 
-        public static FunctionPtr OperatorTextIn = StandardErrorHandling(
+        public static readonly AsyncFunctionPtr OperatorTextIn = StandardErrorHandling(
             expandArguments: NoArgExpansion,
             replaceBlankValues: DoNotReplaceBlank,
             checkRuntimeTypes: DeferRuntimeTypeChecking,
             checkRuntimeValues: DeferRuntimeValueChecking,
             returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
-            targetFunction: StringInOperator(false)
-        );
+            targetFunction: StringInOperator(false));
 
-        public static FunctionPtr OperatorTextInExact = StandardErrorHandling(
+        public static readonly AsyncFunctionPtr OperatorTextInExact = StandardErrorHandling(
             expandArguments: NoArgExpansion,
             replaceBlankValues: DoNotReplaceBlank,
             checkRuntimeTypes: DeferRuntimeTypeChecking,
             checkRuntimeValues: DeferRuntimeValueChecking,
             returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
-            targetFunction: StringInOperator(true)
-        );
+            targetFunction: StringInOperator(true));
 
-        public static FunctionPtr OperatorScalarTableIn = StandardErrorHandling(
+        public static readonly AsyncFunctionPtr OperatorScalarTableIn = StandardErrorHandling(
             expandArguments: NoArgExpansion,
             replaceBlankValues: DoNotReplaceBlank,
             checkRuntimeTypes: DeferRuntimeTypeChecking,
             checkRuntimeValues: DeferRuntimeValueChecking,
             returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
-            targetFunction: InScalarTableOperator(false)
-        );
+            targetFunction: InScalarTableOperator(false));
 
-        public static FunctionPtr OperatorScalarTableInExact = StandardErrorHandling(
+        public static readonly AsyncFunctionPtr OperatorScalarTableInExact = StandardErrorHandling(
             expandArguments: NoArgExpansion,
             replaceBlankValues: DoNotReplaceBlank,
             checkRuntimeTypes: DeferRuntimeTypeChecking,
             checkRuntimeValues: DeferRuntimeValueChecking,
             returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
-            targetFunction: InScalarTableOperator(true)
-        );
+            targetFunction: InScalarTableOperator(true));
 
-        public static FunctionPtr OperatorAddDateAndTime = StandardErrorHandling<FormulaValue>(
+        public static readonly AsyncFunctionPtr OperatorAddDateAndTime = StandardErrorHandling<FormulaValue>(
             expandArguments: NoArgExpansion,
             replaceBlankValues: DoNotReplaceBlank,
             checkRuntimeTypes: ExactSequence(
                 DateOrDateTime,
-                ExactValueType<TimeValue>
-                ),
+                ExactValueType<TimeValue>),
             checkRuntimeValues: DeferRuntimeValueChecking,
             returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
-            targetFunction: AddDateAndTime
-        );
+            targetFunction: AddDateAndTime);
 
-        public static FunctionPtr OperatorAddDateAndDay = StandardErrorHandling<FormulaValue>(
+        public static readonly AsyncFunctionPtr OperatorAddDateAndDay = StandardErrorHandling<FormulaValue>(
             expandArguments: NoArgExpansion,
             replaceBlankValues: DoNotReplaceBlank,
             checkRuntimeTypes: ExactSequence(
                 DateOrDateTime,
-                ExactValueType<NumberValue>
-                ),
+                ExactValueType<NumberValue>),
             checkRuntimeValues: FiniteChecker,
             returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
-            targetFunction: AddDateAndDay
-        );
+            targetFunction: AddDateAndDay);
 
-        public static FunctionPtr OperatorAddDateTimeAndDay = StandardErrorHandling<FormulaValue>(
+        public static readonly AsyncFunctionPtr OperatorAddDateTimeAndDay = StandardErrorHandling<FormulaValue>(
             expandArguments: NoArgExpansion,
             replaceBlankValues: DoNotReplaceBlank,
             checkRuntimeTypes: ExactSequence(
                 DateOrDateTime,
-                ExactValueType<NumberValue>
-                ),
+                ExactValueType<NumberValue>),
             checkRuntimeValues: FiniteChecker,
             returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
-            targetFunction: AddDateTimeAndDay
-        );
+            targetFunction: AddDateTimeAndDay);
 
-        public static FunctionPtr OperatorDateDifference = StandardErrorHandling<FormulaValue>(
+        public static readonly AsyncFunctionPtr OperatorDateDifference = StandardErrorHandling<FormulaValue>(
             expandArguments: NoArgExpansion,
             replaceBlankValues: DoNotReplaceBlank,
             checkRuntimeTypes: ExactSequence(
                 DateOrDateTime,
-                DateOrDateTime
-                ),
+                DateOrDateTime),
             checkRuntimeValues: DeferRuntimeValueChecking,
             returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
-            targetFunction: DateDifference
-        );
+            targetFunction: DateDifference);
 
-        public static FunctionPtr OperatorTimeDifference = StandardErrorHandling<FormulaValue>(
+        public static readonly AsyncFunctionPtr OperatorTimeDifference = StandardErrorHandling<FormulaValue>(
             expandArguments: NoArgExpansion,
             replaceBlankValues: DoNotReplaceBlank,
             checkRuntimeTypes: ExactSequence(
                 ExactValueType<TimeValue>,
-                ExactValueType<TimeValue>
-                ),
+                ExactValueType<TimeValue>),
             checkRuntimeValues: DeferRuntimeValueChecking,
             returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
-            targetFunction: TimeDifference
-        );
+            targetFunction: TimeDifference);
 
-        public static FunctionPtr OperatorLtDateTime = StandardErrorHandling<FormulaValue>(
+        public static readonly AsyncFunctionPtr OperatorLtDateTime = StandardErrorHandling<FormulaValue>(
             expandArguments: NoArgExpansion,
             replaceBlankValues: ReplaceBlankWith(
                 new DateTimeValue(IRContext.NotInSource(FormulaType.DateTime), _epoch),
-                new DateTimeValue(IRContext.NotInSource(FormulaType.DateTime), _epoch)
-                ),
+                new DateTimeValue(IRContext.NotInSource(FormulaType.DateTime), _epoch)),
             checkRuntimeTypes: ExactSequence(
                 DateOrDateTime,
-                DateOrDateTime
-                ),
+                DateOrDateTime),
             checkRuntimeValues: DeferRuntimeValueChecking,
             returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
-            targetFunction: LtDateTime
-        );
+            targetFunction: LtDateTime);
 
-        public static FunctionPtr OperatorLeqDateTime = StandardErrorHandling<FormulaValue>(
+        public static readonly AsyncFunctionPtr OperatorLeqDateTime = StandardErrorHandling<FormulaValue>(
             expandArguments: NoArgExpansion,
             replaceBlankValues: ReplaceBlankWith(
                 new DateTimeValue(IRContext.NotInSource(FormulaType.DateTime), _epoch),
-                new DateTimeValue(IRContext.NotInSource(FormulaType.DateTime), _epoch)
-                ),
+                new DateTimeValue(IRContext.NotInSource(FormulaType.DateTime), _epoch)),
             checkRuntimeTypes: ExactSequence(
                 DateOrDateTime,
-                DateOrDateTime
-                ),
+                DateOrDateTime),
             checkRuntimeValues: DeferRuntimeValueChecking,
             returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
-            targetFunction: LeqDateTime
-        );
+            targetFunction: LeqDateTime);
 
-        public static FunctionPtr OperatorGtDateTime = StandardErrorHandling<FormulaValue>(
+        public static readonly AsyncFunctionPtr OperatorGtDateTime = StandardErrorHandling<FormulaValue>(
             expandArguments: NoArgExpansion,
             replaceBlankValues: ReplaceBlankWith(
                 new DateTimeValue(IRContext.NotInSource(FormulaType.DateTime), _epoch),
-                new DateTimeValue(IRContext.NotInSource(FormulaType.DateTime), _epoch)
-                ),
+                new DateTimeValue(IRContext.NotInSource(FormulaType.DateTime), _epoch)),
             checkRuntimeTypes: ExactSequence(
                 DateOrDateTime,
-                DateOrDateTime
-                ),
+                DateOrDateTime),
             checkRuntimeValues: DeferRuntimeValueChecking,
             returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
-            targetFunction: GtDateTime
-        );
+            targetFunction: GtDateTime);
 
-        public static FunctionPtr OperatorGeqDateTime = StandardErrorHandling<FormulaValue>(
+        public static readonly AsyncFunctionPtr OperatorGeqDateTime = StandardErrorHandling<FormulaValue>(
             expandArguments: NoArgExpansion,
             replaceBlankValues: ReplaceBlankWith(
                 new DateTimeValue(IRContext.NotInSource(FormulaType.DateTime), _epoch),
-                new DateTimeValue(IRContext.NotInSource(FormulaType.DateTime), _epoch)
-                ),
+                new DateTimeValue(IRContext.NotInSource(FormulaType.DateTime), _epoch)),
             checkRuntimeTypes: ExactSequence(
                 DateOrDateTime,
-                DateOrDateTime
-                ),
+                DateOrDateTime),
             checkRuntimeValues: DeferRuntimeValueChecking,
             returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
-            targetFunction: GeqDateTime
-        );
+            targetFunction: GeqDateTime);
 
-        public static FunctionPtr OperatorLtDate = StandardErrorHandling<FormulaValue>(
+        public static readonly AsyncFunctionPtr OperatorLtDate = StandardErrorHandling<FormulaValue>(
             expandArguments: NoArgExpansion,
             replaceBlankValues: ReplaceBlankWith(
                 new DateValue(IRContext.NotInSource(FormulaType.Date), _epoch),
-                new DateValue(IRContext.NotInSource(FormulaType.Date), _epoch)
-                ),
+                new DateValue(IRContext.NotInSource(FormulaType.Date), _epoch)),
             checkRuntimeTypes: ExactSequence(
                 DateOrDateTime,
-                DateOrDateTime
-                ),
+                DateOrDateTime),
             checkRuntimeValues: DeferRuntimeValueChecking,
             returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
-            targetFunction: LtDate
-        );
+            targetFunction: LtDate);
 
-        public static FunctionPtr OperatorLeqDate = StandardErrorHandling<FormulaValue>(
+        public static readonly AsyncFunctionPtr OperatorLeqDate = StandardErrorHandling<FormulaValue>(
             expandArguments: NoArgExpansion,
             replaceBlankValues: ReplaceBlankWith(
                 new DateValue(IRContext.NotInSource(FormulaType.Date), _epoch),
-                new DateValue(IRContext.NotInSource(FormulaType.Date), _epoch)
-                ),
+                new DateValue(IRContext.NotInSource(FormulaType.Date), _epoch)),
             checkRuntimeTypes: ExactSequence(
                 DateOrDateTime,
-                DateOrDateTime
-                ),
+                DateOrDateTime),
             checkRuntimeValues: DeferRuntimeValueChecking,
             returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
-            targetFunction: LeqDate
-        );
+            targetFunction: LeqDate);
 
-        public static FunctionPtr OperatorGtDate = StandardErrorHandling<FormulaValue>(
+        public static readonly AsyncFunctionPtr OperatorGtDate = StandardErrorHandling<FormulaValue>(
             expandArguments: NoArgExpansion,
             replaceBlankValues: ReplaceBlankWith(
                 new DateValue(IRContext.NotInSource(FormulaType.Date), _epoch),
-                new DateValue(IRContext.NotInSource(FormulaType.Date), _epoch)
-                ),
+                new DateValue(IRContext.NotInSource(FormulaType.Date), _epoch)),
             checkRuntimeTypes: ExactSequence(
                 DateOrDateTime,
-                DateOrDateTime
-                ),
+                DateOrDateTime),
             checkRuntimeValues: DeferRuntimeValueChecking,
             returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
-            targetFunction: GtDate
-        );
+            targetFunction: GtDate);
 
-        public static FunctionPtr OperatorGeqDate = StandardErrorHandling<FormulaValue>(
+        public static readonly AsyncFunctionPtr OperatorGeqDate = StandardErrorHandling<FormulaValue>(
             expandArguments: NoArgExpansion,
             replaceBlankValues: ReplaceBlankWith(
                 new DateValue(IRContext.NotInSource(FormulaType.Date), _epoch),
-                new DateValue(IRContext.NotInSource(FormulaType.Date), _epoch)
-                ),
+                new DateValue(IRContext.NotInSource(FormulaType.Date), _epoch)),
             checkRuntimeTypes: ExactSequence(
                 DateOrDateTime,
-                DateOrDateTime
-                ),
+                DateOrDateTime),
             checkRuntimeValues: DeferRuntimeValueChecking,
             returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
-            targetFunction: GeqDate
-        );
+            targetFunction: GeqDate);
 
-        public static FunctionPtr OperatorLtTime = StandardErrorHandling<FormulaValue>(
+        public static readonly AsyncFunctionPtr OperatorLtTime = StandardErrorHandling<FormulaValue>(
             expandArguments: NoArgExpansion,
             replaceBlankValues: ReplaceBlankWith(
                 new TimeValue(IRContext.NotInSource(FormulaType.Time), TimeSpan.Zero),
-                new TimeValue(IRContext.NotInSource(FormulaType.Time), TimeSpan.Zero)
-                ),
+                new TimeValue(IRContext.NotInSource(FormulaType.Time), TimeSpan.Zero)),
             checkRuntimeTypes: ExactSequence(
                 ExactValueType<TimeValue>,
-                ExactValueType<TimeValue>
-                ),
+                ExactValueType<TimeValue>),
             checkRuntimeValues: DeferRuntimeValueChecking,
             returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
-            targetFunction: LtTime
-        );
+            targetFunction: LtTime);
 
-        public static FunctionPtr OperatorLeqTime = StandardErrorHandling<FormulaValue>(
+        public static readonly AsyncFunctionPtr OperatorLeqTime = StandardErrorHandling<FormulaValue>(
             expandArguments: NoArgExpansion,
             replaceBlankValues: ReplaceBlankWith(
                 new TimeValue(IRContext.NotInSource(FormulaType.Time), TimeSpan.Zero),
-                new TimeValue(IRContext.NotInSource(FormulaType.Time), TimeSpan.Zero)
-                ),
+                new TimeValue(IRContext.NotInSource(FormulaType.Time), TimeSpan.Zero)),
             checkRuntimeTypes: ExactSequence(
                 ExactValueType<TimeValue>,
-                ExactValueType<TimeValue>
-                ),
+                ExactValueType<TimeValue>),
             checkRuntimeValues: DeferRuntimeValueChecking,
             returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
-            targetFunction: LeqTime
-        );
+            targetFunction: LeqTime);
 
-        public static FunctionPtr OperatorGtTime = StandardErrorHandling<FormulaValue>(
+        public static readonly AsyncFunctionPtr OperatorGtTime = StandardErrorHandling<FormulaValue>(
             expandArguments: NoArgExpansion,
             replaceBlankValues: ReplaceBlankWith(
                 new TimeValue(IRContext.NotInSource(FormulaType.Time), TimeSpan.Zero),
-                new TimeValue(IRContext.NotInSource(FormulaType.Time), TimeSpan.Zero)
-                ),
+                new TimeValue(IRContext.NotInSource(FormulaType.Time), TimeSpan.Zero)),
             checkRuntimeTypes: ExactSequence(
                 ExactValueType<TimeValue>,
-                ExactValueType<TimeValue>
-                ),
+                ExactValueType<TimeValue>),
             checkRuntimeValues: DeferRuntimeValueChecking,
             returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
-            targetFunction: GtTime
-        );
+            targetFunction: GtTime);
 
-        public static FunctionPtr OperatorGeqTime = StandardErrorHandling<FormulaValue>(
+        public static readonly AsyncFunctionPtr OperatorGeqTime = StandardErrorHandling<FormulaValue>(
             expandArguments: NoArgExpansion,
             replaceBlankValues: ReplaceBlankWith(
                 new TimeValue(IRContext.NotInSource(FormulaType.Time), TimeSpan.Zero),
-                new TimeValue(IRContext.NotInSource(FormulaType.Time), TimeSpan.Zero)
-                ),
+                new TimeValue(IRContext.NotInSource(FormulaType.Time), TimeSpan.Zero)),
             checkRuntimeTypes: ExactSequence(
                 ExactValueType<TimeValue>,
-                ExactValueType<TimeValue>
-                ),
+                ExactValueType<TimeValue>),
             checkRuntimeValues: DeferRuntimeValueChecking,
             returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
-            targetFunction: GeqTime
-        );
+            targetFunction: GeqTime);
         #endregion
 
         private static NumberValue NumericAdd(IRContext irContext, NumberValue[] args)
@@ -414,15 +355,15 @@ namespace Microsoft.PowerFx.Functions
 
         private static BooleanValue AreEqual(IRContext irContext, FormulaValue[] args)
         {
-            FormulaValue arg1 = args[0];
-            FormulaValue arg2 = args[1];
+            var arg1 = args[0];
+            var arg2 = args[1];
             return new BooleanValue(irContext, RuntimeHelpers.AreEqual(arg1, arg2));
         }
 
         private static BooleanValue NotEqual(IRContext irContext, FormulaValue[] args)
         {
-            FormulaValue arg1 = args[0];
-            FormulaValue arg2 = args[1];
+            var arg1 = args[0];
+            var arg2 = args[1];
             return new BooleanValue(irContext, !RuntimeHelpers.AreEqual(arg1, arg2));
         }
 
@@ -437,10 +378,12 @@ namespace Microsoft.PowerFx.Functions
                 {
                     return new BooleanValue(irContext, right is BlankValue);
                 }
+
                 if (right is BlankValue)
                 {
                     return new BooleanValue(irContext, false);
                 }
+
                 var leftStr = (StringValue)left;
                 var rightStr = (StringValue)right;
 
@@ -448,6 +391,7 @@ namespace Microsoft.PowerFx.Functions
                 {
                     return new BooleanValue(irContext, rightStr.Value.IndexOf(leftStr.Value) >= 0);
                 }
+
                 return new BooleanValue(irContext, rightStr.Value.ToLowerInvariant().IndexOf(leftStr.Value.ToLowerInvariant()) >= 0);
             };
         }
@@ -466,7 +410,7 @@ namespace Microsoft.PowerFx.Functions
                     left = strLhs.ToLower();
                 }
 
-                TableValue source = (TableValue)right;
+                var source = (TableValue)right;
 
                 foreach (var row in source.Rows)
                 {
@@ -485,6 +429,7 @@ namespace Microsoft.PowerFx.Functions
                         }
                     }
                 }
+
                 return new BooleanValue(irContext, false);
             };
         }
@@ -538,9 +483,13 @@ namespace Microsoft.PowerFx.Functions
             {
                 var result = arg0.AddDays(arg1.Value);
                 if (args[0] is DateTimeValue)
+                {
                     return new DateTimeValue(irContext, result);
+                }
                 else
+                {
                     return new DateValue(irContext, result.Date);
+                }
             }
             catch
             {

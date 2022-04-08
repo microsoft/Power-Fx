@@ -1,5 +1,5 @@
-// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
 
 using System;
 using System.Collections.Generic;
@@ -18,12 +18,14 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
     internal static class ArgumentSuggestions
     {
         internal delegate IEnumerable<KeyValuePair<string, DType>> GetArgumentSuggestionsDelegate(TryGetEnumSymbol tryGetEnumSymbol, bool suggestUnqualifiedName, DType scopeType, int argumentIndex, out bool requiresSuggestionEscaping);
+
         private delegate IEnumerable<KeyValuePair<string, DType>> GetArgumentSuggestionsDelegateWithoutEnum(DType scopeType, int argumentIndex, out bool requiresSuggestionEscaping);
 
         internal delegate bool TryGetEnumSymbol(string symbolName, out EnumSymbol symbol);
 
         internal static readonly Lazy<Dictionary<Type, GetArgumentSuggestionsDelegate>> CustomFunctionSuggestionProviders =
-            new Lazy<Dictionary<Type, GetArgumentSuggestionsDelegate>>(() => new Dictionary<Type, GetArgumentSuggestionsDelegate>
+            new Lazy<Dictionary<Type, GetArgumentSuggestionsDelegate>>(
+                () => new Dictionary<Type, GetArgumentSuggestionsDelegate>
             {
                 { typeof(DateDiffFunction), TimeUnitSuggestions },
                 { typeof(DateAddFunction), TimeUnitSuggestions },
@@ -34,14 +36,16 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
                 { typeof(EndsWithFunction), DiscardEnumParam(StringTypeSuggestions) },
                 { typeof(SplitFunction), DiscardEnumParam(StringTypeSuggestions) },
                 { typeof(StartsWithFunction), DiscardEnumParam(StringTypeSuggestions) },
-                { typeof(TextFunction), TextSuggestions  },
+                { typeof(TextFunction), TextSuggestions },
                 { typeof(ValueFunction), LanguageCodeSuggestion },
             }, isThreadSafe: true);
 
         public static IEnumerable<KeyValuePair<string, DType>> GetArgumentSuggestions(TryGetEnumSymbol tryGetEnumSymbol, bool suggestUnqualifiedEnums, TexlFunction function, DType scopeType, int argumentIndex, out bool requiresSuggestionEscaping)
         {
             if (CustomFunctionSuggestionProviders.Value.TryGetValue(function.GetType(), out var suggestor))
+            {
                 return suggestor(tryGetEnumSymbol, suggestUnqualifiedEnums, scopeType, argumentIndex, out requiresSuggestionEscaping);
+            }
 
             requiresSuggestionEscaping = false;
             return Enumerable.Empty<KeyValuePair<string, DType>>();
@@ -62,37 +66,41 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
         /// This method returns the suggestions for second and third arguments of the Text function.
         /// </summary>
         /// <param name="tryGetEnumSymbol">
-        /// Getter for enum symbols intended for the suggestions
+        /// Getter for enum symbols intended for the suggestions.
         /// </param>
         /// <param name="suggestUnescapedEnums">
-        /// Whether to suggest unescaped enums
+        /// Whether to suggest unescaped enums.
         /// </param>
         /// <param name="scopeType">
-        /// Type of the enclosing scope from where intellisense is run
+        /// Type of the enclosing scope from where intellisense is run.
         /// </param>
         /// <param name="argumentIndex">
-        /// The current index of the argument from where intellisense is run
+        /// The current index of the argument from where intellisense is run.
         /// </param>
         /// <param name="requiresSuggestionEscaping">
-        /// Set to whether the argument needs to be string escaped
+        /// Set to whether the argument needs to be string escaped.
         /// </param>
         /// <returns>
-        /// Enumerable of suggestions wherein the key is the suggestion text and the value is its type
+        /// Enumerable of suggestions wherein the key is the suggestion text and the value is its type.
         /// </returns>
         private static IEnumerable<KeyValuePair<string, DType>> TextSuggestions(TryGetEnumSymbol tryGetEnumSymbol, bool suggestUnescapedEnums, DType scopeType, int argumentIndex, out bool requiresSuggestionEscaping)
         {
             Contracts.Assert(scopeType.IsValid);
-            Contracts.Assert(0 <= argumentIndex);
+            Contracts.Assert(argumentIndex >= 0);
 
             requiresSuggestionEscaping = true;
 
             if (argumentIndex != 1 && argumentIndex != 2)
+            {
                 return EnumerableUtils.Yield<KeyValuePair<string, DType>>();
+            }
 
             if (argumentIndex == 1)
             {
                 if (!DType.DateTime.Accepts(scopeType) || !tryGetEnumSymbol(EnumConstants.DateTimeFormatEnumString, out var enumInfo))
+                {
                     return EnumerableUtils.Yield<KeyValuePair<string, DType>>();
+                }
 
                 var retVal = new List<KeyValuePair<string, DType>>();
                 Contracts.AssertValue(enumInfo);
@@ -100,8 +108,7 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
                 requiresSuggestionEscaping = false;
                 foreach (var name in enumInfo.EnumType.GetNames(DPath.Root))
                 {
-                    string locName;
-                    enumInfo.TryGetLocValueName(name.Name.Value, out locName).Verify();
+                    enumInfo.TryGetLocValueName(name.Name.Value, out var locName).Verify();
                     retVal.Add(new KeyValuePair<string, DType>(TexlLexer.EscapeName(enumInfo.Name) + TexlLexer.PunctuatorDot + TexlLexer.EscapeName(locName), name.Type));
                 }
 
@@ -117,15 +124,15 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
         }
 
         /// <summary>
-        /// Cached list of language code suggestions
+        /// Cached list of language code suggestions.
         /// </summary>
         private static IEnumerable<KeyValuePair<string, DType>> _languageCodeSuggestions;
 
         /// <summary>
-        /// Initializes or retrieves from the cache <see cref="_languageCodeSuggestions"/>
+        /// Initializes or retrieves from the cache <see cref="_languageCodeSuggestions"/>.
         /// </summary>
         /// <returns>
-        /// List of language code suggestions
+        /// List of language code suggestions.
         /// </returns>
         internal static IEnumerable<KeyValuePair<string, DType>> GetLanguageCodeSuggestions()
         {
@@ -143,12 +150,14 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
         private static IEnumerable<KeyValuePair<string, DType>> StringTypeSuggestions(DType scopeType, int argumentIndex, out bool requiresSuggestionEscaping)
         {
             Contracts.AssertValid(scopeType);
-            Contracts.Assert(0 <= argumentIndex);
+            Contracts.Assert(argumentIndex >= 0);
 
             requiresSuggestionEscaping = true;
 
             if (argumentIndex == 0)
+            {
                 return IntellisenseHelper.GetSuggestionsFromType(scopeType, DType.String);
+            }
 
             return EnumerableUtils.Yield<KeyValuePair<string, DType>>();
         }
@@ -156,7 +165,7 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
         private static IEnumerable<KeyValuePair<string, DType>> TimeUnitSuggestions(TryGetEnumSymbol tryGetEnumSymbol, bool suggestUnqualifedEnums, DType scopeType, int argumentIndex, out bool requiresSuggestionEscaping)
         {
             Contracts.Assert(scopeType.IsValid);
-            Contracts.Assert(2 == argumentIndex);
+            Contracts.Assert(argumentIndex == 2);
 
             requiresSuggestionEscaping = false;
             var retVal = new List<KeyValuePair<string, DType>>();
@@ -166,8 +175,7 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
                 Contracts.AssertValue(enumInfo);
                 foreach (var name in enumInfo.EnumType.GetNames(DPath.Root))
                 {
-                    string locName;
-                    enumInfo.TryGetLocValueName(name.Name.Value, out locName).Verify();
+                    enumInfo.TryGetLocValueName(name.Name.Value, out var locName).Verify();
                     if (suggestUnqualifedEnums)
                     {
                         retVal.Add(new KeyValuePair<string, DType>(TexlLexer.EscapeName(locName), name.Type));
@@ -185,7 +193,7 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
         private static IEnumerable<KeyValuePair<string, DType>> LanguageCodeSuggestion(TryGetEnumSymbol tryGetEnumSymbol, bool suggestUnqualifedEnums, DType scopeType, int argumentIndex, out bool requiresSuggestionEscaping)
         {
             Contracts.Assert(scopeType.IsValid);
-            Contracts.Assert(0 <= argumentIndex);
+            Contracts.Assert(argumentIndex >= 0);
 
             requiresSuggestionEscaping = false;
             return argumentIndex == 1 ? GetLanguageCodeSuggestions() : EnumerableUtils.Yield<KeyValuePair<string, DType>>();
@@ -195,12 +203,14 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
         private static IEnumerable<KeyValuePair<string, DType>> IfSuggestions(TryGetEnumSymbol tryGetEnumSymbol, bool suggestUnqualifedEnums, DType scopeType, int argumentIndex, out bool requiresSuggestionEscaping)
         {
             Contracts.Assert(scopeType.IsValid);
-            Contracts.Assert(0 <= argumentIndex);
+            Contracts.Assert(argumentIndex >= 0);
 
             requiresSuggestionEscaping = false;
 
             if (argumentIndex <= 1)
+            {
                 return EnumerableUtils.Yield<KeyValuePair<string, DType>>();
+            }
 
             return scopeType
                 .GetNames(DPath.Root)

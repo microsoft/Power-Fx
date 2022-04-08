@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+// Licensed under the MIT license.
 
 namespace Microsoft.PowerFx.Core.Texl.Intellisense
 {
@@ -8,7 +8,7 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
     {
         // default(TokenType) will resolve to Unknown.
         Unknown,
-        _Min = Unknown,
+        Min = Unknown,
 
         // Control entity.
         Control,
@@ -69,6 +69,13 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
 
         // Parent reference
         Parent,
-        _Lim
+
+        // String interpolation
+        StrInterpStart,
+        StrInterpEnd,
+        IslandStart,
+        IslandEnd,
+
+        Lim
     }
 }

@@ -8,10 +8,15 @@ Power Fx started with Power Apps canvas apps and that is where [you can experien
 
 A start on the language documentation is [available in the docs folder](docs/overview.md).  As with the implementation, it is being extracted from the Power Apps documentation and generalized and that too is going to take some time.
 
+## Overview
+For those new to Power-Fx, this video should answer many of your questions:
+
+[![Power-Fx — The low code programming language for everyone](https://img.youtube.com/vi/ik6k89WNjuk/0.jpg)](https://www.youtube-nocookie.com/embed/ik6k89WNjuk)
+
 ## Samples
 There are samples demonstrating how to consume Power Fx at: https://github.com/microsoft/power-fx-host-samples
 
-You can also see usage examples from the unit tests. 
+You can also see usage examples from the unit tests.
 
 ## Contributing
 

@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+// Licensed under the MIT license.
 
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
@@ -49,21 +49,5 @@ namespace Microsoft.PowerFx.Core.Entities
         public DataTableMetadata ParentTableMetadata { get; }
 
         public DType Type { get; }
-    }
-
-    internal sealed class DataTableMetadata
-    {
-        public string DisplayName { get; }
-
-        public string Name { get; }
-
-        public DataTableMetadata(string name, string DisplayName)
-        {
-            Contracts.AssertNonEmpty(name);
-            Contracts.AssertNonEmpty(DisplayName);
-
-            Name = name;
-            this.DisplayName = DisplayName;
-        }
     }
 }

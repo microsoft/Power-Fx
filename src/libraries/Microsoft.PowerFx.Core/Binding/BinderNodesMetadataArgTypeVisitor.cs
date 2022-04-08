@@ -1,6 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
-
+// Licensed under the MIT license.
 
 using Microsoft.PowerFx.Core.App;
 using Microsoft.PowerFx.Core.Binding.BindInfo;
@@ -17,7 +16,7 @@ namespace Microsoft.PowerFx.Core.Binding
     {
         private sealed class BinderNodesMetadataArgTypeVisitor : Visitor
         {
-            private TexlBinding _txb;
+            private readonly TexlBinding _txb;
 
             public BinderNodesMetadataArgTypeVisitor(TexlBinding binding, INameResolver resolver, DType topScope, bool useThisRecordForRuleScope)
                 : base(binding, resolver, topScope, useThisRecordForRuleScope)
@@ -31,20 +30,20 @@ namespace Microsoft.PowerFx.Core.Binding
             {
                 Contracts.AssertValue(columnMetadata);
 
-                return (columnMetadata?.DataFormat == DataFormat.Lookup);
+                return columnMetadata?.DataFormat == DataFormat.Lookup;
             }
 
             public override void PostVisit(DottedNameNode node)
             {
                 Contracts.AssertValue(node);
 
-                DType lhsType = _txb.GetType(node.Left);
-                DType typeRhs = DType.Invalid;
-                DName nameRhs = node.Right.Name;
+                var lhsType = _txb.GetType(node.Left);
+                var typeRhs = DType.Invalid;
+                var nameRhs = node.Right.Name;
                 FirstNameInfo firstNameInfo;
                 FirstNameNode firstNameNode;
                 IExternalTableMetadata tableMetadata;
-                DType nodeType = DType.Unknown;
+                var nodeType = DType.Unknown;
 
                 if (node.Left.Kind != NodeKind.FirstName &&
                     node.Left.Kind != NodeKind.DottedName)
@@ -74,11 +73,13 @@ namespace Microsoft.PowerFx.Core.Binding
                     var entityInfo = typeRhs.ExpandInfo;
                     Contracts.AssertValue(entityInfo);
 
-                    string entityPath = string.Empty;
+                    var entityPath = string.Empty;
                     if (lhsType.HasExpandInfo)
+                    {
                         entityPath = lhsType.ExpandInfo.ExpandPath.ToString();
+                    }
 
-                    DType expandedEntityType = GetExpandedEntityType(typeRhs, entityPath);
+                    var expandedEntityType = GetExpandedEntityType(typeRhs, entityPath);
 
                     var parentDataSource = entityInfo.ParentDataSource;
                     var metadata = new DataTableMetadata(parentDataSource.Name, parentDataSource.Name);

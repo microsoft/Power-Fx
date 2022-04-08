@@ -1,4 +1,7 @@
-﻿using System;
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,7 +11,7 @@ using Microsoft.PowerFx.Core.Utils;
 namespace Microsoft.PowerFx.Core.IR.Nodes
 {
     /// <summary>
-    /// For Record->Record and Table->Table, provides coercions for individual fields, potentially recursively
+    /// For Record->Record and Table->Table, provides coercions for individual fields, potentially recursively.
     /// </summary>
     internal sealed class AggregateCoercionNode : IntermediateNode
     {
@@ -17,7 +20,8 @@ namespace Microsoft.PowerFx.Core.IR.Nodes
         public readonly IReadOnlyDictionary<DName, IntermediateNode> FieldCoercions;
         public readonly ScopeSymbol Scope;
 
-        public AggregateCoercionNode(IRContext irContext, UnaryOpKind op, ScopeSymbol scope, IntermediateNode child, IReadOnlyDictionary<DName, IntermediateNode> fieldCoercions) : base(irContext)
+        public AggregateCoercionNode(IRContext irContext, UnaryOpKind op, ScopeSymbol scope, IntermediateNode child, IReadOnlyDictionary<DName, IntermediateNode> fieldCoercions)
+            : base(irContext)
         {
             Contracts.AssertValue(child);
             Contracts.Assert(op == UnaryOpKind.RecordToRecord || op == UnaryOpKind.TableToTable);
@@ -27,7 +31,6 @@ namespace Microsoft.PowerFx.Core.IR.Nodes
             Child = child;
             FieldCoercions = fieldCoercions;
         }
-
 
         public override TResult Accept<TResult, TContext>(IRNodeVisitor<TResult, TContext> visitor, TContext context)
         {

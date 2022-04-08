@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+// Licensed under the MIT license.
 
 using System.Collections.Generic;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
@@ -17,17 +17,20 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class MidFunction : BuiltinFunction
     {
         public override bool RequiresErrorContext => true;
+
         public override bool IsSelfContained => true;
+
         public override bool SupportsParamCoercion => true;
 
         public MidFunction()
             : base("Mid", TexlStrings.AboutMid, FunctionCategories.Text, DType.String, 0, 2, 3, DType.String, DType.Number, DType.Number)
-        { }
+        {
+        }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
-            yield return new [] { TexlStrings.StringFuncArg1, TexlStrings.StringFuncArg2 };
-            yield return new [] { TexlStrings.StringFuncArg1, TexlStrings.StringFuncArg2, TexlStrings.StringFuncArg3 };
+            yield return new[] { TexlStrings.StringFuncArg1, TexlStrings.StringFuncArg2 };
+            yield return new[] { TexlStrings.StringFuncArg1, TexlStrings.StringFuncArg2, TexlStrings.StringFuncArg3 };
         }
     }
 
@@ -35,17 +38,20 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class MidTFunction : BuiltinFunction
     {
         public override bool RequiresErrorContext => true;
+
         public override bool IsSelfContained => true;
+
         public override bool SupportsParamCoercion => true;
 
         public MidTFunction()
             : base("Mid", TexlStrings.AboutMidT, FunctionCategories.Table, DType.EmptyTable, 0, 2, 3)
-        { }
+        {
+        }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
-            yield return new [] { TexlStrings.StringTFuncArg1, TexlStrings.StringFuncArg2 };
-            yield return new [] { TexlStrings.StringTFuncArg1, TexlStrings.StringFuncArg2, TexlStrings.StringFuncArg3 };
+            yield return new[] { TexlStrings.StringTFuncArg1, TexlStrings.StringFuncArg2 };
+            yield return new[] { TexlStrings.StringTFuncArg1, TexlStrings.StringFuncArg2, TexlStrings.StringFuncArg3 };
         }
 
         public override string GetUniqueTexlRuntimeName(bool isPrefetching = false)
@@ -62,10 +68,10 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertValue(errors);
             Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
 
-            bool fValid = base.CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            var fValid = CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
 
-            DType type0 = argTypes[0];
-            DType type1 = argTypes[1];
+            var type0 = argTypes[0];
+            var type1 = argTypes[1];
 
             // Arg0 should be either a string or a column of strings.
             // Its type dictates the function return type.
@@ -73,6 +79,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             {
                 // Ensure we have a one-column table of strings
                 fValid &= CheckStringColumnType(type0, args[0], errors, ref nodeToCoercedTypeMap);
+
                 // Borrow the return type from the 1st arg
                 returnType = type0;
             }
@@ -95,7 +102,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             // Arg1 should be either a number or a column of numbers.
             if (type1.IsTable)
+            {
                 fValid &= CheckNumericColumnType(type1, args[1], errors, ref nodeToCoercedTypeMap);
+            }
             else if (!DType.Number.Accepts(type1))
             {
                 if (type1.CoercesTo(DType.Number))
@@ -112,9 +121,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             // Arg2 should be either a number or a column of numbers, if it exists.
             if (argTypes.Length > 2)
             {
-                DType type2 = argTypes[2];
+                var type2 = argTypes[2];
                 if (type2.IsTable)
+                {
                     fValid &= CheckNumericColumnType(type2, args[2], errors, ref nodeToCoercedTypeMap);
+                }
                 else if (!DType.Number.Accepts(type2))
                 {
                     if (type2.CoercesTo(DType.Number))
@@ -136,7 +147,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrTypeError);
                 errors.EnsureError(DocumentErrorSeverity.Severe, args[1], TexlStrings.ErrTypeError);
                 if (args.Length > 2)
+                {
                     errors.EnsureError(DocumentErrorSeverity.Severe, args[2], TexlStrings.ErrTypeError);
+                }
             }
 
             return fValid;

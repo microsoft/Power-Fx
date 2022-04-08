@@ -1,4 +1,7 @@
-﻿using System;
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
+using System;
 using System.IO;
 
 namespace Microsoft.PowerFx.Core.Utils
@@ -23,14 +26,17 @@ namespace Microsoft.PowerFx.Core.Utils
                 {
                     File.Delete(FullPath);
                 }
-                catch { /* Failing to delete here isn't fatal */ }
+                catch
+                { /* Failing to delete here isn't fatal */
+                }
             }
+
             FullPath = null;
         }
     }
 
     /// <summary>
-    /// Return a unique temporary directory and delete it at Dispose
+    /// Return a unique temporary directory and delete it at Dispose.
     /// </summary>
     internal class TempDir : IDisposable
     {
@@ -49,10 +55,12 @@ namespace Microsoft.PowerFx.Core.Utils
                 {
                     Directory.Delete(Dir, recursive: true);
                 }
-                catch { /* Failing to delete here isn't fatal */ }
+                catch
+                { /* Failing to delete here isn't fatal */
+                }
             }
+
             Dir = null;
         }
     }
-
 }
