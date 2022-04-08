@@ -193,12 +193,10 @@ namespace Microsoft.PowerFx.Core.Tests
                         {
                             throw new InvalidOperationException($"Duplicate test cases in {Path.GetFileName(test.SourceFile)} on line {test.SourceLine} and {existingTest.SourceLine}");
                         }
-                        
+
                         // Updating an existing test. 
                         // Inputs are the same, but update the results.
-                        existingTest.Expected = test.Expected;
-                        existingTest.SourceFile = test.SourceFile;
-                        existingTest.SourceLine = test.SourceLine;
+                        existingTest.MarkOverride(test);
                     }
                     else
                     {
