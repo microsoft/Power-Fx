@@ -1,0 +1,91 @@
+<Project>
+
+  <PropertyGroup>
+    <LocalPackageVersion>0.3.0-local</LocalPackageVersion>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PackageOutputPath>$(MSBuildThisFileDirectory)outputpackages</PackageOutputPath>
+  </PropertyGroup>
+
+  <Target Name="CleanOutputpackagesDir" AfterTargets="Clean">
+    <RemoveDir Directories="$(MSBuildThisFileDirectory)outputpackages" />
+  </Target>
+
+  <PropertyGroup>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+
+  <!-- <PropertyGroup>
+    <RunSettingsFilePath>$(MSBuildThisFileDirectory)\CodeCoverage.runsettings</RunSettingsFilePath>
+  </PropertyGroup> -->
+
+  <ItemGroup>
+    <PackageReference Include="StyleCop.Analyzers" Version="1.1.118" PrivateAssets="all" />
+  </ItemGroup>
+  <PropertyGroup>
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+    <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)PowerFx.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <Company>Microsoft</Company>
+
+    <!-- Rules found at: https://aka.ms/Microsoft-NuGet-Compliance -->
+
+    <!-- Per rules,this must be *EXACTLY* "Microsoft. Otherwise Nuget.org will reject the packages." -->
+
+    <Authors>Microsoft</Authors>
+    <Product>Microsoft Bot Builder SDK</Product>
+    <Copyright>© Microsoft Corporation. All rights reserved.</Copyright>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <AssemblyOriginatorKeyFile>$(SolutionDir)\build\35MSSharedLib1024.snk</AssemblyOriginatorKeyFile>
+    <SignAssembly>true</SignAssembly>
+    <DelaySign>true</DelaySign>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <AssemblyOriginatorKeyFile>$(SolutionDir)\build\35MSSharedLib1024.snk</AssemblyOriginatorKeyFile>
+    <SignAssembly>true</SignAssembly>
+    <DelaySign>true</DelaySign>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(SignAssembly)'=='True' ">
+    <DefineConstants>SIGNASSEMBLY</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(TF_BUILD)' != '' ">
+    <DefineConstants>$(DefineConstants);AUTOMATEDBUILD</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <!-- Rules found at: https://aka.ms/Microsoft-NuGet-Compliance -->
+    <PackageProjectUrl>https://github.com/Microsoft/PowerFx-Staging</PackageProjectUrl>
+    <PackageIconUrl>https://raw.githubusercontent.com/microsoft/PowerFx-Staging/master/icon.png</PackageIconUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <PackageIcon>icon.png</PackageIcon>
+    <RepositoryUrl>https://github.com/Microsoft/PowerFx-Staging</RepositoryUrl>
+    <PackageTags>powerfx</PackageTags>
+    <RepositoryType />
+    <NeutralLanguage>en-US</NeutralLanguage>
+    <!--
+      Suppress a warning about upcoming deprecation of PackageLicenseUrl. When embedding licenses are supported,
+      replace PackageLicenseUrl with PackageLicenseExpression.
+    -->
+    <NoWarn>$(NoWarn);NU5125</NoWarn>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+  </PropertyGroup>
+
+  <ItemGroup Condition="'$(GeneratePackageOnBuild)' == 'True'">
+    <None Include="icon.png" Pack="true" PackagePath="\" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <DefaultItemExcludes>.git\**;**\node_modules\**;$(DefaultItemExcludes)</DefaultItemExcludes>
+  </PropertyGroup>
+</Project>

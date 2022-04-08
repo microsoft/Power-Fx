@@ -1,0 +1,146 @@
+﻿>> Find("", "")
+1
+
+>> Find("", "", 1)
+1
+
+>> Find("", "", 2)
+#Error
+
+>> Find("", "textToBeSearchedIn")
+1
+
+>> Find("", "textToBeSearchedIn", 1)
+1
+
+>> Find("", "textToBeSearchedIn", 4)
+4
+
+>> Find("textToFind", "")
+Blank()
+
+>> Find("textToFind", "", 2)
+#Error
+
+>> Find(",", "LastName,FirstName")
+9
+
+>> Find(",", "LastName,FirstName", 2)
+9
+
+>> Find(",", "LastName,FirstName", 9)
+9
+
+>> Find(",", "LastName,FirstName", 9.5)
+9
+
+>> Find(",", "LastName,FirstName", 10)
+Blank()
+
+>> Find("#", "LastName,FirstName")
+Blank()
+
+>> Find("#", "LastName,FirstName", 3)
+Blank()
+
+>> Find("#", "LastName,FirstName", 100)
+#Error
+
+>> Find(",", "LastName,First,Name")
+9
+
+>> Find(",", "LastName,First,Name", 2)
+9
+
+>> Find(",", "LastName,First,Name", 9)
+9
+
+>> Find(",", "LastName,First,Name", 10)
+15
+
+>> Find(",", "LastNameFirstName,")
+18
+
+>> Find(",", "LastNameFirstName,", 18)
+18
+
+>> Find(",", "LastNameFirstName,", 19)
+Blank()
+
+>> Find("MULTIPLECHARS", "LastNameMULTIPLECHARSFirstName")
+9
+
+>> Find("MULTIPLECHARS", "LastNameMULTIPLEFirstName")
+Blank()
+
+>> Find(",", ",,,,,,")
+1
+
+>> Find(",", ",,,,,,", 2)
+2
+
+>> Find(Blank(), Blank())
+1
+
+>> Find(Blank(), Blank(), 2)
+#Error
+
+>> Find(Blank(), "textToBeSearchedIn")
+1
+
+>> Find(Blank(), "textToBeSearchedIn", 2)
+2
+
+>> Find("textToFind", Blank())
+Blank()
+
+>> Find("textToFind", Blank(), 3)
+#Error
+
+>> Find(",", "LastName,FirstName", -1)
+#Error
+
+>> Find(",", "LastName,FirstName", 0)
+#Error
+
+>> Find(",", "LastName,FirstName", Blank())
+Blank()
+
+>> Find("B", "LastNameisBlah")
+11
+
+>> Find("B", "LastNameisblah")
+Blank()
+
+>> Find("b", "LastNameisblah")
+11
+
+>> Find("b", "LastNameisBlah")
+Blank()
+
+>> Find("BB", "LastNameisBBlah")
+11
+
+>> Find("BB", "LastNameisBblah")
+Blank()
+
+>> Find("bb", "LastNameisbblah")
+11
+
+>> Find("bb", "LastNameisbBlah")
+Blank()
+
+>> Find("B", "LastNameisBlahFirstNameisBlah")
+11
+
+>> Find("B", "LastNameisBlahFirstNameisBlah", 2)
+11
+
+>> Find("B", "LastNameisBlahFirstNameisBlah", 11)
+11
+
+>> Find("B", "LastNameisBlahFirstNameisBlah", 12)
+26
+
+>> Find("B", "LastNameisBlahFirstNameisblah", 12)
+Blank()

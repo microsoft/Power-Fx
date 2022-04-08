@@ -1,0 +1,4552 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="ListItemSingleQuotedFormat" xml:space="preserve">
+    <value>„{0}”</value>
+    
+  </data>
+  <data name="AboutIf" xml:space="preserve">
+    <value>Verifică dacă vreuna dintre condițiile specificate este întrunită și returnează valoarea corespunzătoare. Dacă nu este întrunită nicio condiție, funcția returnează valoarea implicită specificată.</value>
+    
+  </data>
+  <data name="IfArgCond" xml:space="preserve">
+    <value>test_logic</value>
+    
+  </data>
+  <data name="IfArgTrueValue" xml:space="preserve">
+    <value>valoare_adevărat</value>
+    
+  </data>
+  <data name="IfArgElseValue" xml:space="preserve">
+    <value>valoare_altfel</value>
+    
+  </data>
+  <data name="AboutIf_logical_test" xml:space="preserve">
+    <value>O condiție care are ca rezultat o valoare booleană.</value>
+  </data>
+  <data name="AboutIf_true_value" xml:space="preserve">
+    <value>O expresie care furnizează rezultatul funcției If atunci când condiția este adevărată.</value>
+    
+  </data>
+  <data name="AboutIf_else_value" xml:space="preserve">
+    <value>O expresie care furnizează rezultatul funcției If atunci când toate condițiile specificate sunt false.</value>
+    
+  </data>
+  <data name="AboutSwitch" xml:space="preserve">
+    <value>Potrivește rezultatul unei formule cu o serie de valori. Când se găsește o potrivire, o formulă corespunzătoare este evaluată și returnată. Dacă nu se găsesc potriviri, se evaluează și se returnează ultima formulă implicită.</value>
+    
+  </data>
+  <data name="SwitchExpression" xml:space="preserve">
+    <value>valoare_comutator</value>
+    
+  </data>
+  <data name="SwitchDefaultReturn" xml:space="preserve">
+    <value>rezultat_implicit</value>
+    
+  </data>
+  <data name="SwitchCaseExpr" xml:space="preserve">
+    <value>valoare_potrivire</value>
+    
+  </data>
+  <data name="SwitchCaseArg" xml:space="preserve">
+    <value>rezultat_potrivire</value>
+    
+  </data>
+  <data name="AboutSwitch_switch_value" xml:space="preserve">
+    <value>Valoarea de comparat cu fiecare valoare_potrivire.</value>
+    
+  </data>
+  <data name="AboutSwitch_match_value" xml:space="preserve">
+    <value>Valoarea de potrivit cu valoare_comutator.</value>
+    
+  </data>
+  <data name="AboutSwitch_match_result" xml:space="preserve">
+    <value>Formula de evaluat și de returnat dacă se găsește o potrivire.</value>
+  </data>
+  <data name="AboutSwitch_default_result" xml:space="preserve">
+    <value>Formula de evaluat și de returnat dacă nu se găsesc potriviri.</value>
+  </data>
+  <data name="AboutAnd" xml:space="preserve">
+    <value>Verifică dacă toate argumentele au valoarea adevărat și returnează adevărat dacă toate argumentele au valoarea adevărat.</value>
+    
+  </data>
+  <data name="AboutOr" xml:space="preserve">
+    <value>Verifică dacă vreunul dintre argumente este adevărat și returnează adevărat sau fals. Returnează fals numai dacă toate argumentele sunt false.</value>
+    
+  </data>
+  <data name="AboutNot" xml:space="preserve">
+    <value>Modifică valorile fals în adevărat și invers.</value>
+    
+  </data>
+  <data name="LogicalFuncParam" xml:space="preserve">
+    <value>logic</value>
+    
+  </data>
+  <data name="AboutAnd_logical" xml:space="preserve">
+    <value>O expresie logică de factorizat în operația And.</value>
+  </data>
+  <data name="AboutOr_logical" xml:space="preserve">
+    <value>O expresie logică de factorizat în operațiunea Sau.</value>
+  </data>
+  <data name="AboutNot_logical" xml:space="preserve">
+    <value>O expresie logică de negat.</value>
+  </data>
+  <data name="AboutCount" xml:space="preserve">
+    <value>Numără valorile numerice din coloana specificată.</value>
+    
+  </data>
+  <data name="AboutCountA" xml:space="preserve">
+    <value>Numără rândurile din coloană care nu sunt goale.</value>
+    
+  </data>
+  <data name="AboutCountRows" xml:space="preserve">
+    <value>Numără rândurile din tabelul de intrare sau din colecție.</value>
+    
+  </data>
+  <data name="CountArg1" xml:space="preserve">
+    <value>sursă</value>
+    
+  </data>
+  <data name="AboutCount_source" xml:space="preserve">
+    <value>O coloană de valori de contorizat.</value>
+  </data>
+  <data name="AboutCountA_source" xml:space="preserve">
+    <value>O coloană de valori de contorizat.</value>
+  </data>
+  <data name="AboutCountRows_source" xml:space="preserve">
+    <value>Un tabel ale cărui rânduri vor fi numărate.</value>
+  </data>
+  <data name="AboutCountIf" xml:space="preserve">
+    <value>Numără rândurile care întrunesc condiția dată.</value>
+    
+  </data>
+  <data name="CountIfArg1" xml:space="preserve">
+    <value>sursă</value>
+    
+  </data>
+  <data name="CountIfArg2" xml:space="preserve">
+    <value>condiție</value>
+    
+  </data>
+  <data name="AboutCountIf_source" xml:space="preserve">
+    <value>Un tabel în care se vor număra rândurile care întrunesc anumite criterii.</value>
+  </data>
+  <data name="AboutCountIf_condition" xml:space="preserve">
+    <value>O expresie evaluată pentru fiecare rând, care specifică dacă rândul trebuie numărat.</value>
+  </data>
+  <data name="AboutSumT" xml:space="preserve">
+    <value>Returnează suma numerelor după care se evaluează expresia în contextul tabelului.</value>
+    
+  </data>
+  <data name="AboutMaxT" xml:space="preserve">
+    <value>Returnează cea mai mare valoare după care se evaluează expresia în contextul tabelului.</value>
+    
+  </data>
+  <data name="AboutMinT" xml:space="preserve">
+    <value>Returnează cea mai mică valoare după care se evaluează expresia în contextul tabelului.</value>
+    
+  </data>
+  <data name="AboutAverageT" xml:space="preserve">
+    <value>Returnează media (aritmetică) a numerelor la care se evaluează expresia în contextul tabelului.</value>
+    
+  </data>
+  <data name="StatisticalTArg1" xml:space="preserve">
+    <value>sursă</value>
+    
+  </data>
+  <data name="StatisticalTArg2" xml:space="preserve">
+    <value>expresie</value>
+    
+  </data>
+  <data name="AboutMin_source" xml:space="preserve">
+    <value>Un tabel pentru care va fi calculată această operațiune de minim.</value>
+  </data>
+  <data name="AboutMin_expression" xml:space="preserve">
+    <value>O expresie evaluată pentru fiecare rând din tabelul de intrare, care furnizează valori numerice pentru această operațiune de minim.</value>
+  </data>
+  <data name="AboutMax_source" xml:space="preserve">
+    <value>Un tabel pentru care va fi calculată această operațiune de maxim.</value>
+  </data>
+  <data name="AboutMax_expression" xml:space="preserve">
+    <value>O expresie evaluată pentru fiecare rând din tabelul de intrare, care furnizează valori numerice pentru această operațiune de maxim.</value>
+  </data>
+  <data name="AboutAverage_source" xml:space="preserve">
+    <value>Un tabel în care va fi calculată această operație de medie.</value>
+  </data>
+  <data name="AboutAverage_expression" xml:space="preserve">
+    <value>O expresie evaluată pentru fiecare rând din tabelul de intrare, care furnizează valori numerice pentru această operație de medie.</value>
+  </data>
+  <data name="AboutSum_source" xml:space="preserve">
+    <value>Un tabel pentru care va fi calculată această operațiune de însumare.</value>
+  </data>
+  <data name="AboutSum_expression" xml:space="preserve">
+    <value>O expresie evaluată pentru fiecare rând din tabelul de intrare, care furnizează valori numerice pentru această operațiune de însumare.</value>
+  </data>
+  <data name="AboutSum" xml:space="preserve">
+    <value>Returnează suma argumentelor sale.</value>
+    
+  </data>
+  <data name="AboutMax" xml:space="preserve">
+    <value>Returnează cea mai mare valoare dintr-un set de valori. Ignoră valorile logice și textul.</value>
+    
+  </data>
+  <data name="AboutMin" xml:space="preserve">
+    <value>Returnează cea mai mică valoare dintr-un set de valori. Ignoră valorile logice și textul.</value>
+    
+  </data>
+  <data name="AboutAverage" xml:space="preserve">
+    <value>Returnează media (aritmetică) a argumentelor sale.</value>
+    
+  </data>
+  <data name="StatisticalArg" xml:space="preserve">
+    <value>număr</value>
+    
+  </data>
+  <data name="AboutSum_number" xml:space="preserve">
+    <value>O valoare numerică pentru această operațiune de însumare.</value>
+  </data>
+  <data name="AboutMin_number" xml:space="preserve">
+    <value>O valoare numerică pentru această operațiune de minim.</value>
+  </data>
+  <data name="AboutMax_number" xml:space="preserve">
+    <value>O valoare numerică pentru această operațiune de maxim.</value>
+  </data>
+  <data name="AboutAverage_number" xml:space="preserve">
+    <value>O valoare numerică pentru această operație de medie.</value>
+  </data>
+  <data name="AboutAddColumns" xml:space="preserve">
+    <value>Returnează un tabel cu coloanele noi calculate prin evaluarea tuturor expresiilor raportate la sursă.</value>
+    
+  </data>
+  <data name="AddColumnsArg1" xml:space="preserve">
+    <value>sursă</value>
+    
+  </data>
+  <data name="AddColumnsArg2" xml:space="preserve">
+    <value>coloană</value>
+    
+  </data>
+  <data name="AddColumnsArg3" xml:space="preserve">
+    <value>expresie</value>
+    
+  </data>
+  <data name="AboutAddColumns_source" xml:space="preserve">
+    <value>Un tabel la care se adaugă coloane.</value>
+    
+  </data>
+  <data name="AboutAddColumns_column" xml:space="preserve">
+    <value>Un nume de coloană unic.</value>
+    
+  </data>
+  <data name="AboutAddColumns_expression" xml:space="preserve">
+    <value>O expresie care furnizează valori pentru coloana nouă.</value>
+    
+  </data>
+  <data name="AboutDropColumns" xml:space="preserve">
+    <value>Returnează un tabel cu una sau mai multe valori „coloane” specificate eliminate din tabelul „sursă”.</value>
+    
+  </data>
+  <data name="DropColumnsArg1" xml:space="preserve">
+    <value>sursă</value>
+    
+  </data>
+  <data name="DropColumnsArg2" xml:space="preserve">
+    <value>nume_coloană</value>
+    
+  </data>
+  <data name="AboutDropColumns_source" xml:space="preserve">
+    <value>O valoare de tabel din care să se elimine coloane.</value>
+  </data>
+  <data name="AboutDropColumns_column_name" xml:space="preserve">
+    <value>Numele unei coloane de eliminat.</value>
+  </data>
+  <data name="AboutFilter" xml:space="preserve">
+    <value>Returnează rândurile din tabelul pentru care toate condițiile specificate sunt adevărate.</value>
+    
+  </data>
+  <data name="FilterArg1" xml:space="preserve">
+    <value>sursă</value>
+    
+  </data>
+  <data name="FilterArg2" xml:space="preserve">
+    <value>test_logic</value>
+    
+  </data>
+  <data name="AboutFilter_source" xml:space="preserve">
+    <value>Un tabel de filtrat.</value>
+  </data>
+  <data name="AboutFilter_logical_test" xml:space="preserve">
+    <value>Un test logic pentru evaluarea fiecărui rând. Doar rândurile care trec acest test vor fi incluse în rezultatul filtrului.</value>
+  </data>
+  <data name="AboutFirst" xml:space="preserve">
+    <value>Returnează primul rând din „sursă”.</value>
+    
+  </data>
+  <data name="AboutLast" xml:space="preserve">
+    <value>Returnează ultimul rând din „sursă”.</value>
+    
+  </data>
+  <data name="FirstLastArg1" xml:space="preserve">
+    <value>sursă</value>
+    
+  </data>
+  <data name="AboutFirst_source" xml:space="preserve">
+    <value>Un tabel în care se va returna primul rând.</value>
+  </data>
+  <data name="AboutLast_source" xml:space="preserve">
+    <value>Un tabel pentru care se va returna ultimul rând.</value>
+  </data>
+  <data name="AboutFirstN" xml:space="preserve">
+    <value>Returnează primele „contor” rânduri din „sursă”.</value>
+    
+  </data>
+  <data name="AboutLastN" xml:space="preserve">
+    <value>Returnează ultimele „contor” rânduri din „sursă”.</value>
+    
+  </data>
+  <data name="FirstLastNArg1" xml:space="preserve">
+    <value>sursă</value>
+    
+  </data>
+  <data name="FirstLastNArg2" xml:space="preserve">
+    <value>contor</value>
+    
+  </data>
+  <data name="AboutFirstN_source" xml:space="preserve">
+    <value>Un tabel de la care se vor returna rânduri.</value>
+  </data>
+  <data name="AboutFirstN_count" xml:space="preserve">
+    <value>Numărul de rânduri de returnat.</value>
+  </data>
+  <data name="AboutLastN_source" xml:space="preserve">
+    <value>Un tabel de la care se vor returna rânduri.</value>
+  </data>
+  <data name="AboutLastN_count" xml:space="preserve">
+    <value>Numărul de rânduri de returnat.</value>
+  </data>
+  <data name="AboutText" xml:space="preserve">
+    <value>Convertește o „valoare” la un text într-un „format_text” de număr specific.</value>
+    
+  </data>
+  <data name="TextArg1" xml:space="preserve">
+    <value>valoare</value>
+    
+  </data>
+  <data name="TextArg2" xml:space="preserve">
+    <value>format_text</value>
+    
+  </data>
+  <data name="TextArg3" xml:space="preserve">
+    <value>limbă</value>
+    
+  </data>
+  <data name="AboutText_value" xml:space="preserve">
+    <value>O valoare de formatat în text.</value>
+  </data>
+  <data name="AboutText_format_text" xml:space="preserve">
+    <value>O valoare text care specifică modul în care va fi formatată „valoarea”.</value>
+    
+  </data>
+  <data name="AboutText_language" xml:space="preserve">
+    <value>Codul de limbă de utilizat la conversia în text.</value>
+    
+  </data>
+  <data name="AboutValue" xml:space="preserve">
+    <value>Convertește un „text” care reprezintă un număr la o valoare numerică.</value>
+    
+  </data>
+  <data name="ValueArg1" xml:space="preserve">
+    <value>text</value>
+    
+  </data>
+  <data name="ValueArg2" xml:space="preserve">
+    <value>limbă</value>
+    
+  </data>
+  <data name="AboutValue_text" xml:space="preserve">
+    <value>Valoarea text căreia să i se efectueze conversia într-o valoare numerică.</value>
+  </data>
+  <data name="AboutValue_language" xml:space="preserve">
+    <value>Codul de limbă de utilizat la conversia valorii.</value>
+    
+  </data>
+  <data name="AboutBoolean" xml:space="preserve">
+    <value>Convertește la o valoare booleană un „text” care reprezintă un boolean.</value>
+    
+  </data>
+  <data name="BooleanArg1" xml:space="preserve">
+    <value>text</value>
+    
+  </data>
+  <data name="AboutBoolean_text" xml:space="preserve">
+    <value>Valoarea textului de convertit la o valoare booleană.</value>
+  </data>
+  <data name="AboutCoalesce" xml:space="preserve">
+    <value>Returnează primul argument nevid</value>
+    
+  </data>
+  <data name="CoalesceArg1" xml:space="preserve">
+    <value>valoare</value>
+    
+  </data>
+  <data name="AboutCoalesce_value" xml:space="preserve">
+    <value>Un argument de returnat dacă este primul argument nevid.</value>
+  </data>
+  <data name="AboutConcatenate" xml:space="preserve">
+    <value>Unește mai multe valori text într-o singură valoare text.</value>
+    
+  </data>
+  <data name="ConcatenateArg1" xml:space="preserve">
+    <value>text</value>
+    
+  </data>
+  <data name="AboutConcatenate_text" xml:space="preserve">
+    <value>O valoare text care urmează a fi concatenată cu restul argumentelor.</value>
+  </data>
+  <data name="AboutConcatenateT" xml:space="preserve">
+    <value>Unește mai multe valori text sau tabele într-o singură coloană de valori text.</value>
+    
+  </data>
+  <data name="ConcatenateTArg1" xml:space="preserve">
+    <value>valoare</value>
+    
+  </data>
+  <data name="AboutConcatenate_value" xml:space="preserve">
+    <value>O valoare text sau o coloană de valori text care urmează a fi concatenate cu restul argumentelor.</value>
+  </data>
+  <data name="AboutConcat" xml:space="preserve">
+    <value>Unește într-o valoare text unică toate valorile text produse prin evaluarea expresiei date peste tabelul dat.</value>
+    
+  </data>
+  <data name="ConcatArg1" xml:space="preserve">
+    <value>tabel</value>
+    
+  </data>
+  <data name="ConcatArg2" xml:space="preserve">
+    <value>expresie</value>
+    
+  </data>
+  <data name="ConcatArg3" xml:space="preserve">
+    <value>separator</value>
+    
+  </data>
+  <data name="AboutConcat_table" xml:space="preserve">
+    <value>O valoare tabel în care va fi evaluată expresia dată de al doilea parametru.</value>
+  </data>
+  <data name="AboutConcat_expression" xml:space="preserve">
+    <value>O expresie care produce text, de evaluat pentru fiecare rând din tabelul dat.</value>
+  </data>
+  <data name="AboutConcat_separator" xml:space="preserve">
+    <value>O valoare text de inserat între rândurile concatenate ale tabelului.</value>
+    
+  </data>
+  <data name="AboutLen" xml:space="preserve">
+    <value>Returnează numărul de caractere dintr-o valoare text.</value>
+    
+  </data>
+  <data name="AboutLen_text" xml:space="preserve">
+    <value>O valoare text pentru care se va returna lungimea în caractere.</value>
+  </data>
+  <data name="AboutLenT" xml:space="preserve">
+    <value>Returnează numărul de caractere dintr-o valoare text, evaluate pentru fiecare rând din cadrul tabelului sau colecției specificate.</value>
+    
+  </data>
+  <data name="AboutLen_text_column" xml:space="preserve">
+    <value>O coloană cu valori text pentru care este returnată lungimea în caractere (sub forma unei coloane noi).</value>
+  </data>
+  <data name="LenArg1" xml:space="preserve">
+    <value>text</value>
+    
+  </data>
+  <data name="LenTArg1" xml:space="preserve">
+    <value>coloană_text</value>
+    
+  </data>
+  <data name="AboutUpper" xml:space="preserve">
+    <value>Convertește o valoare text astfel încât să conțină doar majuscule.</value>
+    
+  </data>
+  <data name="AboutUpperT" xml:space="preserve">
+    <value>Convertește toate literele dintr-o valoare text, evaluate per rând în tabelul sau colecția specificate, la majuscule.</value>
+    
+  </data>
+  <data name="AboutUpper_text" xml:space="preserve">
+    <value>O valoare text căreia i se efectuează conversia la majuscule.</value>
+  </data>
+  <data name="AboutUpper_text_column" xml:space="preserve">
+    <value>O coloană de valori text căreia i se efectuează conversia la o coloană de valori text cu majuscule.</value>
+  </data>
+  <data name="AboutLower" xml:space="preserve">
+    <value>Convertește toate literele dintr-o valoare text la litere mici.</value>
+    
+  </data>
+  <data name="AboutLowerT" xml:space="preserve">
+    <value>Convertește toate literele dintr-o valoare text, evaluate pentru fiecare rând din tabelul sau colecția specificate, la litere mici.</value>
+    
+  </data>
+  <data name="AboutLower_text" xml:space="preserve">
+    <value>O valoare text de convertit la litere mici.</value>
+  </data>
+  <data name="AboutLower_text_column" xml:space="preserve">
+    <value>O coloană cu valori text de convertit la o coloană cu valori text cu litere mici.</value>
+  </data>
+  <data name="AboutProper" xml:space="preserve">
+    <value>Convertește o valoare text la corpul de literă pentru nume proprii, în care prima literă din fiecare cuvânt este literă mare și toate celelalte litere sunt mici.</value>
+    
+  </data>
+  <data name="AboutProperT" xml:space="preserve">
+    <value>Convertește o valoare text, evaluată pentru fiecare rând din tabelul sau colecția specificate, la corpul de literă pentru nume proprii, în care prima literă din fiecare cuvânt este literă mare și toate celelalte litere sunt mici.</value>
+    
+  </data>
+  <data name="AboutProper_text" xml:space="preserve">
+    <value>O valoare text căreia i se efectuează conversia la corpul de literă potrivit.</value>
+  </data>
+  <data name="AboutProper_text_column" xml:space="preserve">
+    <value>O coloană de valori text căreia i se efectuează conversia la o coloană de valori text cu un corp de literă adecvat.</value>
+  </data>
+  <data name="AboutTrim" xml:space="preserve">
+    <value>Elimină toate spațiile dintr-o valoare text, cu excepția spațiilor unice dintre cuvinte.</value>
+    
+  </data>
+  <data name="AboutTrim_text" xml:space="preserve">
+    <value>O valoare text căreia i se efectuează conversia pentru tăierea spațiilor libere.</value>
+  </data>
+  <data name="AboutTrim_text_column" xml:space="preserve">
+    <value>O coloană de valori text cărora li se taie spațiile inițiale și finale.</value>
+  </data>
+  <data name="AboutTrimEnds" xml:space="preserve">
+    <value>Elimină toate spațiile de început și de sfârșit dintr-o valoare text.</value>
+    
+  </data>
+  <data name="AboutTrimEnds_text" xml:space="preserve">
+    <value>O valoare text căreia i se taie spațiile de început și de sfârșit.</value>
+  </data>
+  <data name="AboutTrimEnds_text_column" xml:space="preserve">
+    <value>O coloană de valori text cărora li se taie spațiile de început și de sfârșit.</value>
+  </data>
+  <data name="AboutMid" xml:space="preserve">
+    <value>Returnează caracterele din mijlocul unei valori text, ținând cont de o poziție de început și de o lungime.</value>
+    
+  </data>
+  <data name="AboutMidT" xml:space="preserve">
+    <value>Returnează caracterele din mijlocul unei valori text, ținând cont de o poziție de început și de o lungime, evaluate după fiecare rând din tabelul sau colecția specificate.</value>
+    
+  </data>
+  <data name="AboutMid_text" xml:space="preserve">
+    <value>O valoare text din care vor fi extrase caractere.</value>
+  </data>
+  <data name="AboutMid_text_column" xml:space="preserve">
+    <value>O coloană de valori text din care vor fi extrase caracterele într-o nouă coloană.</value>
+  </data>
+  <data name="AboutMid_start_num" xml:space="preserve">
+    <value>Poziția de început de la care să fie extrase caracterele.</value>
+  </data>
+  <data name="AboutMid_num_chars" xml:space="preserve">
+    <value>Numărul de caractere de extras.</value>
+  </data>
+  <data name="StringFuncArg1" xml:space="preserve">
+    <value>text</value>
+    
+  </data>
+  <data name="StringTFuncArg1" xml:space="preserve">
+    <value>coloană_text</value>
+    
+  </data>
+  <data name="StringFuncArg2" xml:space="preserve">
+    <value>num_start</value>
+    
+  </data>
+  <data name="StringFuncArg3" xml:space="preserve">
+    <value>num_car</value>
+    
+  </data>
+  <data name="AboutReplace" xml:space="preserve">
+    <value>Înlocuiți o parte a unei valori text cu o altă valoare text.</value>
+    
+  </data>
+  <data name="AboutReplaceT" xml:space="preserve">
+    <value>Înlocuiți o parte a unei valori text cu o altă valoare text, evaluată după fiecare rând din tabelul specificat sau colecția specificată.</value>
+    
+  </data>
+  <data name="ReplaceFuncArg1" xml:space="preserve">
+    <value>text_vechi</value>
+    
+  </data>
+  <data name="ReplaceFuncArg4" xml:space="preserve">
+    <value>text_nou</value>
+    
+  </data>
+  <data name="AboutReplace_old_text" xml:space="preserve">
+    <value>Valoarea text de procesat.</value>
+  </data>
+  <data name="AboutReplace_start_num" xml:space="preserve">
+    <value>Poziția de început de la care va avea loc înlocuirea.</value>
+  </data>
+  <data name="AboutReplace_num_chars" xml:space="preserve">
+    <value>Numărul de caractere de înlocuit.</value>
+  </data>
+  <data name="AboutReplace_new_text" xml:space="preserve">
+    <value>O valoare text de înlocuire.</value>
+  </data>
+  <data name="AboutReplace_text_column" xml:space="preserve">
+    <value>O coloană de valori text de procesat.</value>
+  </data>
+  <data name="AboutError" xml:space="preserve">
+    <value>Produce o eroare cu valori particularizate.</value>
+    
+  </data>
+  <data name="AboutError_error_information" xml:space="preserve">
+    <value>O înregistrare care conține valorile particularizate pentru eroarea produsă.</value>
+    
+  </data>
+  <data name="ErrorArg1" xml:space="preserve">
+    <value>error_information</value>
+    
+  </data>
+  <data name="ErrErrorIrrelevantField" xml:space="preserve">
+    <value>Funcția Error utilizează numai câmpurile „Kind”, „Message, „Notify”, „Control” și „Property”.</value>
+    
+  </data>
+  <data name="AboutIfError" xml:space="preserve">
+    <value>Evaluează și returnează primul argument non-eroare.</value>
+    
+  </data>
+  <data name="IfErrorArg1" xml:space="preserve">
+    <value>valoare</value>
+    
+  </data>
+  <data name="AboutIfError_value" xml:space="preserve">
+    <value>Valoarea care este returnată dacă nu este o eroare.</value>
+    
+  </data>
+  <data name="IfErrorArg2" xml:space="preserve">
+    <value>alternativă</value>
+    
+  </data>
+  <data name="AboutIfError_fallback" xml:space="preserve">
+    <value>Valoarea care este returnată dacă este primul argument non-eroare.</value>
+    
+  </data>
+  <data name="AboutSubstitute" xml:space="preserve">
+    <value>Înlocuiește textul existent cu un text nou dintr-o valoare text.</value>
+    
+  </data>
+  <data name="AboutSubstituteT" xml:space="preserve">
+    <value>Înlocuiește textul existent cu un text nou dintr-o valoare text evaluată pentru fiecare rând din tabelul specificat sau colecția specificată.</value>
+    
+  </data>
+  <data name="SubstituteFuncArg1" xml:space="preserve">
+    <value>text</value>
+    
+  </data>
+  <data name="SubstituteTFuncArg1" xml:space="preserve">
+    <value>coloană_text</value>
+    
+  </data>
+  <data name="SubstituteFuncArg2" xml:space="preserve">
+    <value>text_vechi</value>
+    
+  </data>
+  <data name="SubstituteFuncArg3" xml:space="preserve">
+    <value>text_nou</value>
+    
+  </data>
+  <data name="SubstituteFuncArg4" xml:space="preserve">
+    <value>nr_instanță</value>
+    
+  </data>
+  <data name="AboutSubstitute_text" xml:space="preserve">
+    <value>Valoarea text de procesat.</value>
+  </data>
+  <data name="AboutSubstitute_old_text" xml:space="preserve">
+    <value>Textul de înlocuit.</value>
+  </data>
+  <data name="AboutSubstitute_new_text" xml:space="preserve">
+    <value>Un text de înlocuire.</value>
+  </data>
+  <data name="AboutSubstitute_instance_num" xml:space="preserve">
+    <value>Specifică ce apariție a textului dat să fie înlocuită.</value>
+  </data>
+  <data name="AboutSubstitute_text_column" xml:space="preserve">
+    <value>O coloană de valori text de procesat.</value>
+  </data>
+  <data name="AboutSort" xml:space="preserve">
+    <value>Sortează „sursa” pe baza rezultatelor „expresiei” evaluate pentru fiecare rând, specificând în mod opțional o „ordine” de sortare.</value>
+    
+  </data>
+  <data name="SortArg1" xml:space="preserve">
+    <value>sursă</value>
+    
+  </data>
+  <data name="SortArg2" xml:space="preserve">
+    <value>expresie</value>
+    
+  </data>
+  <data name="SortArg3" xml:space="preserve">
+    <value>ordine</value>
+    
+  </data>
+  <data name="AboutSort_source" xml:space="preserve">
+    <value>Tabelul de sortat.</value>
+  </data>
+  <data name="AboutSort_expression" xml:space="preserve">
+    <value>O expresie care se evaluează pentru rândurile din „sursă” și furnizează valori pentru sortare.</value>
+  </data>
+  <data name="AboutSort_order" xml:space="preserve">
+    <value>Ascendent sau descendent</value>
+  </data>
+  <data name="AboutSortByColumns" xml:space="preserve">
+    <value>Sortează „sursa” pe baza coloanei, specificând în mod opțional o „ordine” de sortare.</value>
+    
+  </data>
+  <data name="SortByColumnsArg1" xml:space="preserve">
+    <value>sursă</value>
+    
+  </data>
+  <data name="SortByColumnsArg2" xml:space="preserve">
+    <value>coloană</value>
+    
+  </data>
+  <data name="SortByColumnsArg3" xml:space="preserve">
+    <value>ordine</value>
+    
+  </data>
+  <data name="AboutSortByColumns_source" xml:space="preserve">
+    <value>Tabelul de sortat.</value>
+  </data>
+  <data name="AboutSortByColumns_column" xml:space="preserve">
+    <value>Un nume de coloană unic.</value>
+  </data>
+  <data name="AboutSortByColumns_order" xml:space="preserve">
+    <value>Ascendent sau descendent</value>
+  </data>
+  <data name="AboutSortByColumnsWithOrderValues" xml:space="preserve">
+    <value>Sortează „sursa” pe baza indexului valorilor potrivite din coloana specificată.</value>
+    
+  </data>
+  <data name="SortByColumnsWithOrderValuesArg1" xml:space="preserve">
+    <value>sursă</value>
+    
+  </data>
+  <data name="SortByColumnsWithOrderValuesArg2" xml:space="preserve">
+    <value>coloană</value>
+    
+  </data>
+  <data name="SortByColumnsWithOrderValuesArg3" xml:space="preserve">
+    <value>valori</value>
+    
+  </data>
+  <data name="AboutSortByColumns_values" xml:space="preserve">
+    <value>O coloană de valori de utilizat în scopuri de sortare. Sortarea nu se efectuează ascendent/descendent, ci mai degrabă pe baza indexului valorilor potrivite din coloană </value>
+  </data>
+  <data name="AboutRand" xml:space="preserve">
+    <value>Returnează un număr aleator mai mare sau egal cu 0 și mai mic decât 1, distribuit uniform.</value>
+    
+  </data>
+  <data name="AboutRandBetween" xml:space="preserve">
+    <value>Returnează un număr aleatoriu între jos și sus, distribuit egal.</value>
+    
+  </data>
+  <data name="AboutRandBetween_bottom" xml:space="preserve">
+    <value>Cel mai mic întreg pe care îl poate returna funcția.</value>
+  </data>
+  <data name="AboutRandBetween_top" xml:space="preserve">
+    <value>Cel mai mare întreg pe care îl poate returna funcția. Trebuie să fie egal sau mai mare decât partea de jos.</value>
+  </data>
+  <data name="RandBetweenArg1" xml:space="preserve">
+    <value>jos</value>
+    
+  </data>
+  <data name="RandBetweenArg2" xml:space="preserve">
+    <value>sus</value>
+    
+  </data>
+  <data name="AboutGUID" xml:space="preserve">
+    <value>Creează un GUID dintr-un șir de caractere sau returnează un GUID generat aleator dacă nu s-au furnizat argumente.</value>
+    
+  </data>
+  <data name="GUIDArg" xml:space="preserve">
+    <value>șir_GUID</value>
+    
+  </data>
+  <data name="AboutGUID_GUID_string" xml:space="preserve">
+    <value>Șirul de convertit într-un GUID</value>
+    
+  </data>
+  <data name="AboutNow" xml:space="preserve">
+    <value>Returnează data și ora curente.</value>
+    
+  </data>
+  <data name="AboutUTCNow" xml:space="preserve">
+    <value>Returnează data și ora curentă în fusul orar UTC.</value>
+    
+  </data>
+  <data name="AboutTimeZoneOffset" xml:space="preserve">
+    <value>Returnează diferența de timp dintre ora UTC și ora locală, în minute. De exemplu dacă fusul dvs. orar este UTC+2, se va returna -120.</value>
+    
+  </data>
+  <data name="TimeZoneOffsetArg1" xml:space="preserve">
+    <value>dată</value>
+    
+  </data>
+  <data name="AboutTimeZoneOffset_date" xml:space="preserve">
+    <value>Data la care se calculează „TimeZoneOffset”.</value>
+    
+  </data>
+  <data name="AboutToday" xml:space="preserve">
+    <value>Returnează data curentă.</value>
+    
+  </data>
+  <data name="AboutUTCToday" xml:space="preserve">
+    <value>Returnează data curentă în fusul orar UTC.</value>
+    
+  </data>
+  <data name="AboutWeekNum" xml:space="preserve">
+    <value>Returnează numărul săptămânii dintr-o anumită dată.</value>
+    
+  </data>
+  <data name="WeekNumArg1" xml:space="preserve">
+    <value>dată</value>
+    
+  </data>
+  <data name="WeekNumArg2" xml:space="preserve">
+    <value>începutul_săptămânii</value>
+    
+  </data>
+  <data name="AboutWeekNum_date" xml:space="preserve">
+    <value>O valoare de tip dată pentru care se va calcula numărul săptămânii.</value>
+  </data>
+  <data name="AboutWeekNum_start_of_week" xml:space="preserve">
+    <value>O valoare din enumerarea StartOfWeek sau un număr din funcția Excel corespunzătoare, pentru a indica modul în care ar trebui să fie numerotate zilele săptămânii.</value>
+    
+  </data>
+  <data name="AboutISOWeekNum" xml:space="preserve">
+    <value>Returnează numărul săptămânii conform cu regulile ISO pentru o anumită dată.</value>
+    
+  </data>
+  <data name="ISOWeekNumArg1" xml:space="preserve">
+    <value>dată</value>
+    
+  </data>
+  <data name="AboutISOWeekNum_date" xml:space="preserve">
+    <value>O valoare de tip dată pentru care se va calcula numărul săptămânii conform ISO.</value>
+  </data>
+  <data name="AboutInt" xml:space="preserve">
+    <value>Trunchiază „numărul” rotunjindu-l spre infinit negativ.</value>
+    
+  </data>
+  <data name="AboutIntT" xml:space="preserve">
+    <value>Trunchiază valorile dintr-o coloană de numere rotunjindu-le spre infinit negativ.</value>
+    
+  </data>
+  <data name="AboutInt_number" xml:space="preserve">
+    <value>O valoare numerică de procesat.</value>
+  </data>
+  <data name="AboutInt_input" xml:space="preserve">
+    <value>O coloană de valori numerice de procesat.</value>
+  </data>
+  <data name="AboutTrunc" xml:space="preserve">
+    <value>Trunchiază „numărul” rotunjindu-l spre zero.</value>
+    
+  </data>
+  <data name="AboutTrunc_number" xml:space="preserve">
+    <value>Numărul de trunchiat.</value>
+  </data>
+  <data name="AboutTrunc_source" xml:space="preserve">
+    <value>O coloană de numere de trunchiat.</value>
+  </data>
+  <data name="AboutTrunc_num_digits" xml:space="preserve">
+    <value>Numărul de cifre fracționare de utilizat pentru trunchiere.</value>
+  </data>
+  <data name="AboutTruncT" xml:space="preserve">
+    <value>Trunchiază toate numerele din „sursă” rotunjindu-le spre zero.</value>
+    
+  </data>
+  <data name="TruncArg1" xml:space="preserve">
+    <value>număr</value>
+    
+  </data>
+  <data name="TruncArg2" xml:space="preserve">
+    <value>num_cifre</value>
+    
+  </data>
+  <data name="TruncTArg1" xml:space="preserve">
+    <value>sursă</value>
+    
+  </data>
+  <data name="TruncTArg2" xml:space="preserve">
+    <value>num_cifre</value>
+    
+  </data>
+  <data name="AboutRound" xml:space="preserve">
+    <value>Rotunjește „numărul” la numărul specificat de cifre.</value>
+    
+  </data>
+  <data name="AboutRoundUp" xml:space="preserve">
+    <value>Rotunjește în sus „numărul”, în sens opus lui zero.</value>
+    
+  </data>
+  <data name="AboutRoundDown" xml:space="preserve">
+    <value>Rotunjește „numărul” în jos, spre zero.</value>
+    
+  </data>
+  <data name="RoundArg1" xml:space="preserve">
+    <value>număr</value>
+    
+  </data>
+  <data name="RoundArg2" xml:space="preserve">
+    <value>num_cifre</value>
+    
+  </data>
+  <data name="AboutRound_number" xml:space="preserve">
+    <value>Numărul de rotunjit.</value>
+  </data>
+  <data name="AboutRound_source" xml:space="preserve">
+    <value>O coloană de numere de rotunjit.</value>
+  </data>
+  <data name="AboutRound_num_digits" xml:space="preserve">
+    <value>Numărul de cifre fracționare de utilizat pentru rotunjire.</value>
+  </data>
+  <data name="AboutRoundUp_number" xml:space="preserve">
+    <value>Numărul de rotunjit.</value>
+  </data>
+  <data name="AboutRoundUp_source" xml:space="preserve">
+    <value>O coloană de numere de rotunjit.</value>
+  </data>
+  <data name="AboutRoundUp_num_digits" xml:space="preserve">
+    <value>Numărul de cifre fracționare de utilizat pentru rotunjire.</value>
+  </data>
+  <data name="AboutRoundDown_number" xml:space="preserve">
+    <value>Numărul de rotunjit.</value>
+  </data>
+  <data name="AboutRoundDown_source" xml:space="preserve">
+    <value>O coloană de numere de rotunjit.</value>
+  </data>
+  <data name="AboutRoundDown_num_digits" xml:space="preserve">
+    <value>Numărul de cifre fracționare de utilizat pentru rotunjire.</value>
+  </data>
+  <data name="AboutRoundT" xml:space="preserve">
+    <value>Rotunjește toate numerele din „sursă” la numărul specificat de cifre.</value>
+    
+  </data>
+  <data name="AboutRoundUpT" xml:space="preserve">
+    <value>Rotunjește în sus toate numerele din „sursă”, în sens opus lui zero.</value>
+    
+  </data>
+  <data name="AboutRoundDownT" xml:space="preserve">
+    <value>Rotunjește în jos toate numerele din „sursă”, spre zero.</value>
+    
+  </data>
+  <data name="RoundTArg1" xml:space="preserve">
+    <value>sursă</value>
+    
+  </data>
+  <data name="RoundTArg2" xml:space="preserve">
+    <value>num_cifre</value>
+    
+  </data>
+  <data name="AboutRGBA" xml:space="preserve">
+    <value>Preia valorile numerice pentru componentele roșu, verde, albastru și alfa ale culorii și generează culoarea specifică. R, G, B sunt valori numerice între 0 și 255. Alfa este o valoare zecimală între 0 și 1.</value>
+    
+  </data>
+  <data name="RGBAArg1" xml:space="preserve">
+    <value>valoare_roșu</value>
+    
+  </data>
+  <data name="RGBAArg2" xml:space="preserve">
+    <value>valoare_verde</value>
+    
+  </data>
+  <data name="RGBAArg3" xml:space="preserve">
+    <value>valoare_albastru</value>
+    
+  </data>
+  <data name="RGBAArg4" xml:space="preserve">
+    <value>valoare_alpha</value>
+    
+  </data>
+  <data name="AboutRGBA_red_value" xml:space="preserve">
+    <value>Componenta roșu, de la 0 la 255.</value>
+  </data>
+  <data name="AboutRGBA_green_value" xml:space="preserve">
+    <value>Componenta verde, de la 0 la 255.</value>
+  </data>
+  <data name="AboutRGBA_blue_value" xml:space="preserve">
+    <value>Componenta albastru, de la 0 la 255.</value>
+  </data>
+  <data name="AboutRGBA_alpha_value" xml:space="preserve">
+    <value>Componenta alfa, de la 0 la 1 (sau un procent, cum ar fi 49%).</value>
+  </data>
+  <data name="AboutColorFade" xml:space="preserve">
+    <value>Produce o nuanță nouă a valorii „culoare” specificată, pe baza procentului „estompare” specificat.</value>
+    
+  </data>
+  <data name="ColorFadeArg1" xml:space="preserve">
+    <value>culoare</value>
+    
+  </data>
+  <data name="ColorFadeArg2" xml:space="preserve">
+    <value>estompare</value>
+    
+  </data>
+  <data name="AboutColorFade_color" xml:space="preserve">
+    <value>O culoare de estompat.</value>
+  </data>
+  <data name="AboutColorFade_fade" xml:space="preserve">
+    <value>Un procent după care va fi estompată culoarea. Un procent negativ produce o nuanță mai întunecată. Un procent pozitiv produce o nuanță mai deschisă.</value>
+  </data>
+  <data name="AboutColorFadeT" xml:space="preserve">
+    <value>Produce nuanțe noi ale valorilor „culoare” specificate, pe baza procentelor „estompare” specificate.</value>
+  </data>
+  <data name="ColorFadeTArg1" xml:space="preserve">
+    <value>culoare_sau_coloană</value>
+    
+  </data>
+  <data name="ColorFadeTArg2" xml:space="preserve">
+    <value>estompare_sau_coloană</value>
+    
+  </data>
+  <data name="AboutColorFade_color_or_column" xml:space="preserve">
+    <value>O culoare (sau coloană de valori pentru culori) de estompat.</value>
+  </data>
+  <data name="AboutColorFade_fade_or_column" xml:space="preserve">
+    <value>Un procent (sau o coloană de valori procentuale) după care va fi estompată culoarea (sau coloana de valori de culoare). Un procent negativ produce o nuanță mai întunecată. Un procent pozitiv produce o nuanță mai deschisă.</value>
+  </data>
+  <data name="AboutAbs" xml:space="preserve">
+    <value>Returnează valoarea absolută a unui număr, adică un număr fără semn.</value>
+    
+  </data>
+  <data name="AboutAbsT" xml:space="preserve">
+    <value>Returnează valorile absolute (numere fără semn) ale unei coloane de numere.</value>
+    
+  </data>
+  <data name="AboutAbs_number" xml:space="preserve">
+    <value>O valoare numerică de procesat.</value>
+  </data>
+  <data name="AboutAbs_input" xml:space="preserve">
+    <value>O coloană de valori numerice de procesat.</value>
+  </data>
+  <data name="AboutSin_number" xml:space="preserve">
+    <value>O valoare numerică (în radiani) de procesat.</value>
+  </data>
+  <data name="AboutSin_input" xml:space="preserve">
+    <value>O coloană de valori numerice (în radiani) de procesat.</value>
+  </data>
+  <data name="AboutSin" xml:space="preserve">
+    <value>Returnează valoarea sinusului unui număr.</value>
+    
+  </data>
+  <data name="AboutSinT" xml:space="preserve">
+    <value>Returnează valorile sinusului unei coloane de numere.</value>
+    
+  </data>
+  <data name="AboutAsin_number" xml:space="preserve">
+    <value>O valoare numerică de procesat.</value>
+  </data>
+  <data name="AboutAsin_input" xml:space="preserve">
+    <value>O coloană de valori numerice de procesat.</value>
+  </data>
+  <data name="AboutAsin" xml:space="preserve">
+    <value>Returnează valoarea arcsinusului unui număr (în radiani).</value>
+    
+  </data>
+  <data name="AboutAsinT" xml:space="preserve">
+    <value>Returnează valorile arcsinusului unei coloane de numere (în radiani).</value>
+    
+  </data>
+  <data name="AboutCos" xml:space="preserve">
+    <value>Returnează valoarea cosinusului unui număr.</value>
+    
+  </data>
+  <data name="AboutCosT" xml:space="preserve">
+    <value>Returnează valorile cosinusului unei coloane de numere.</value>
+    
+  </data>
+  <data name="AboutCos_number" xml:space="preserve">
+    <value>O valoare numerică (în radiani) de procesat.</value>
+  </data>
+  <data name="AboutCos_input" xml:space="preserve">
+    <value>O coloană de valori numerice (în radiani) de procesat.</value>
+  </data>
+  <data name="AboutAcos" xml:space="preserve">
+    <value>Returnează valoarea arccosinusului unui număr (în radiani).</value>
+    
+  </data>
+  <data name="AboutAcos_number" xml:space="preserve">
+    <value>O valoare numerică de procesat.</value>
+  </data>
+  <data name="AboutAcosT" xml:space="preserve">
+    <value>Returnează valorile arccosinusului unei coloane de numere (în radiani).</value>
+    
+  </data>
+  <data name="AboutAcos_input" xml:space="preserve">
+    <value>O coloană de valori numerice de procesat.</value>
+  </data>
+  <data name="AboutAcot_number" xml:space="preserve">
+    <value>O valoare numerică de procesat.</value>
+  </data>
+  <data name="AboutAcot_input" xml:space="preserve">
+    <value>O coloană de valori numerice de procesat.</value>
+  </data>
+  <data name="AboutAcot" xml:space="preserve">
+    <value>Returnează valoarea arccotangentei unui număr (în radiani).</value>
+    
+  </data>
+  <data name="AboutAcotT" xml:space="preserve">
+    <value>Returnează valorile arccotangentei unei coloane de numere (în radiani).</value>
+    
+  </data>
+  <data name="AboutTan" xml:space="preserve">
+    <value>Returnează valoarea tangentei unui număr.</value>
+    
+  </data>
+  <data name="AboutTanT" xml:space="preserve">
+    <value>Returnează valorile tangentei unei coloane de numere.</value>
+    
+  </data>
+  <data name="AboutTan_number" xml:space="preserve">
+    <value>O valoare numerică (în radiani) de procesat.</value>
+  </data>
+  <data name="AboutTan_input" xml:space="preserve">
+    <value>O coloană de valori numerice (în radiani) de procesat.</value>
+  </data>
+  <data name="AboutAtan" xml:space="preserve">
+    <value>Returnează valoarea arctangentei unui număr (în radiani).</value>
+    
+  </data>
+  <data name="AboutAtanT" xml:space="preserve">
+    <value>Returnează valorile arctangentei unei coloane de numere (în radiani).</value>
+    
+  </data>
+  <data name="AboutAtan_number" xml:space="preserve">
+    <value>O valoare numerică de procesat.</value>
+  </data>
+  <data name="AboutAtan_input" xml:space="preserve">
+    <value>O coloană de valori numerice de procesat.</value>
+  </data>
+  <data name="AboutCot" xml:space="preserve">
+    <value>Returnează valoarea cotangentei unui număr.</value>
+    
+  </data>
+  <data name="AboutCotT" xml:space="preserve">
+    <value>Returnează valorile cotangentei unei coloane de numere.</value>
+    
+  </data>
+  <data name="AboutCot_number" xml:space="preserve">
+    <value>O valoare numerică (în radiani) de procesat.</value>
+  </data>
+  <data name="AboutCot_input" xml:space="preserve">
+    <value>O coloană de valori numerice (în radiani) de procesat.</value>
+  </data>
+  <data name="AboutLn" xml:space="preserve">
+    <value>Returnează logaritmul natural (în baza E) al unui număr.</value>
+    
+  </data>
+  <data name="AboutLnT" xml:space="preserve">
+    <value>Returnează valorile logaritmice naturale (în baza E) ale unei coloane de numere.</value>
+    
+  </data>
+  <data name="AboutLn_number" xml:space="preserve">
+    <value>O valoare numerică de procesat.</value>
+  </data>
+  <data name="AboutLn_input" xml:space="preserve">
+    <value>O coloană de valori numerice de procesat.</value>
+  </data>
+  <data name="AboutLog" xml:space="preserve">
+    <value>Returnează logaritmul unui număr pentru baza dată. Baza implicită este 10.</value>
+    
+  </data>
+  <data name="AboutLogT" xml:space="preserve">
+    <value>Returnează valorile logaritmice ale unui număr sau ale unei coloane de numere pentru baza sau coloana de baze dată. Baza implicită este 10.</value>
+    
+  </data>
+  <data name="AboutLog_number" xml:space="preserve">
+    <value>O valoare numerică de procesat.</value>
+  </data>
+  <data name="AboutLog_input" xml:space="preserve">
+    <value>O coloană de valori numerice de procesat.</value>
+  </data>
+  <data name="LogBase" xml:space="preserve">
+    <value>bază</value>
+    
+  </data>
+  <data name="AboutLog_base" xml:space="preserve">
+    <value>Baza pentru logaritm.</value>
+  </data>
+  <data name="AboutExp" xml:space="preserve">
+    <value>Returnează E ridicat la puterea unui număr. Pentru a calcula puterile altor baze, utilizați operatorul de exponențiere (^).</value>
+    
+  </data>
+  <data name="AboutExpT" xml:space="preserve">
+    <value>Returnează o coloană care conține E ridicat la puterea fiecărui număr corespunzător dintr-o coloană de numere. Pentru a calcula puterile altor baze, utilizați operatorul de exponențiere (^).</value>
+    
+  </data>
+  <data name="AboutExp_number" xml:space="preserve">
+    <value>O valoare numerică de procesat.</value>
+  </data>
+  <data name="AboutExp_input" xml:space="preserve">
+    <value>O coloană de valori numerice de procesat.</value>
+  </data>
+  <data name="AboutPi" xml:space="preserve">
+    <value>Returnează valoarea numărului pi.</value>
+  </data>
+  <data name="AboutRadians" xml:space="preserve">
+    <value>Returnează valoarea în radiani a unui număr.</value>
+    
+  </data>
+  <data name="AboutRadiansT" xml:space="preserve">
+    <value>Returnează valorile în radiani ale unei coloane de numere.</value>
+    
+  </data>
+  <data name="AboutRadians_number" xml:space="preserve">
+    <value>O valoare numerică (în grade) de procesat.</value>
+  </data>
+  <data name="AboutRadians_input" xml:space="preserve">
+    <value>O coloană de valori numerice (în grade) de procesat.</value>
+  </data>
+  <data name="AboutDegrees" xml:space="preserve">
+    <value>Returnează valoarea în grade a unui număr.</value>
+    
+  </data>
+  <data name="AboutDegreesT" xml:space="preserve">
+    <value>Returnează valorile în grade ale unei coloane de numere.</value>
+    
+  </data>
+  <data name="AboutDegrees_number" xml:space="preserve">
+    <value>O valoare numerică (în radiani) de procesat.</value>
+  </data>
+  <data name="AboutDegrees_input" xml:space="preserve">
+    <value>O coloană de valori numerice (în radiani) de procesat.</value>
+  </data>
+  <data name="AboutAtan2" xml:space="preserve">
+    <value>Returnează (în radiani) arctangenta coordonatelor x și y specificate.</value>
+  </data>
+  <data name="AboutAtan2Arg1" xml:space="preserve">
+    <value>coordonata_x</value>
+    
+  </data>
+  <data name="AboutAtan2Arg2" xml:space="preserve">
+    <value>coordonata_y</value>
+    
+  </data>
+  <data name="AboutAtan2_x_coordinate" xml:space="preserve">
+    <value>Coordonata x.</value>
+  </data>
+  <data name="AboutAtan2_y_coordinate" xml:space="preserve">
+    <value>Coordonata y.</value>
+  </data>
+  <data name="AboutSqrt" xml:space="preserve">
+    <value>Returnează rădăcina pătrată a unui număr.</value>
+    
+  </data>
+  <data name="AboutSqrtT" xml:space="preserve">
+    <value>Returnează rădăcinile pătrate ale unei coloane de numere.</value>
+    
+  </data>
+  <data name="AboutSqrt_number" xml:space="preserve">
+    <value>O valoare numerică de procesat.</value>
+  </data>
+  <data name="AboutSqrt_input" xml:space="preserve">
+    <value>O coloană de valori numerice de procesat.</value>
+  </data>
+  <data name="MathFuncArg1" xml:space="preserve">
+    <value>număr</value>
+    
+  </data>
+  <data name="MathTFuncArg1" xml:space="preserve">
+    <value>intrare</value>
+    
+  </data>
+  <data name="AboutLeft" xml:space="preserve">
+    <value>Returnează numărul de caractere specificat de la începutul unei valori text.</value>
+    
+  </data>
+  <data name="AboutLeftT" xml:space="preserve">
+    <value>Returnează o coloană care conține numărul specificat de caractere de la începutul valorii text, evaluate pentru fiecare rând din tabelul specificat sau colecția specificată.</value>
+    
+  </data>
+  <data name="AboutLeft_text" xml:space="preserve">
+    <value>O valoare text din care se extrag caractere.</value>
+  </data>
+  <data name="AboutLeft_num_chars" xml:space="preserve">
+    <value>Numărul de caractere de extras.</value>
+  </data>
+  <data name="AboutLeft_text_column" xml:space="preserve">
+    <value>O coloană de valori text din care se extrag caractere.</value>
+  </data>
+  <data name="AboutRight" xml:space="preserve">
+    <value>Returnează numărul specificat de caractere de la sfârșitul unei valori text.</value>
+    
+  </data>
+  <data name="AboutRightT" xml:space="preserve">
+    <value>Returnează o coloană care conține numărul specificat de caractere de la sfârșitul unei valori text, evaluate pentru fiecare rând din tabelul specificat sau colecția specificată.</value>
+    
+  </data>
+  <data name="AboutRight_text" xml:space="preserve">
+    <value>O valoare text din care se extrag caractere.</value>
+  </data>
+  <data name="AboutRight_num_chars" xml:space="preserve">
+    <value>Numărul de caractere de extras.</value>
+  </data>
+  <data name="AboutRight_text_column" xml:space="preserve">
+    <value>O coloană de valori text din care se extrag caractere.</value>
+  </data>
+  <data name="LeftRightArg1" xml:space="preserve">
+    <value>text</value>
+    
+  </data>
+  <data name="LeftRightTArg1" xml:space="preserve">
+    <value>coloană_text</value>
+    
+  </data>
+  <data name="LeftRightArg2" xml:space="preserve">
+    <value>num_car</value>
+    
+  </data>
+  <data name="AboutIsBlank" xml:space="preserve">
+    <value>Verifică dacă expresia rezultată este goală și returnează adevărat sau fals.</value>
+    
+  </data>
+  <data name="IsBlankArg1" xml:space="preserve">
+    <value>expresie</value>
+    
+  </data>
+  <data name="AboutIsBlank_expression" xml:space="preserve">
+    <value>O expresie de testat.</value>
+  </data>
+  <data name="AboutIsBlankOrError" xml:space="preserve">
+    <value>Verifică dacă expresia are ca rezultat un rezultat necompletat sau o eroare și returnează true sau false.</value>
+    
+  </data>
+  <data name="IsBlankOrErrorArg1" xml:space="preserve">
+    <value>expresie</value>
+    
+  </data>
+  <data name="AboutIsBlankOrError_expression" xml:space="preserve">
+    <value>O expresie de testat.</value>
+    
+  </data>
+  <data name="AboutIsEmpty" xml:space="preserve">
+    <value>Verifică dacă o colecție este goală și returnează adevărat sau fals.</value>
+    
+  </data>
+  <data name="IsEmptyArg1" xml:space="preserve">
+    <value>sursă</value>
+    
+  </data>
+  <data name="AboutIsEmpty_source" xml:space="preserve">
+    <value>Un tabel de testat.</value>
+  </data>
+  <data name="AboutShuffle" xml:space="preserve">
+    <value>Returnează o copie amestecată aleator a tabelului „sursă” de intrare.</value>
+    
+  </data>
+  <data name="ShuffleArg1" xml:space="preserve">
+    <value>sursă</value>
+    
+  </data>
+  <data name="AboutShuffle_source" xml:space="preserve">
+    <value>Un tabel care va fi amestecat.</value>
+  </data>
+  <data name="AboutLookUp" xml:space="preserve">
+    <value>Caută primul rând pentru care condiția specificată este evaluată la adevărat și returnează rezultatul expresiei evaluate în contextul acelui rând, dacă este furnizată o expresie, sau întregul rând în caz contrar.</value>
+    
+  </data>
+  <data name="LookUpArg1" xml:space="preserve">
+    <value>sursă</value>
+    
+  </data>
+  <data name="LookUpArg2" xml:space="preserve">
+    <value>condiție</value>
+    
+  </data>
+  <data name="LookUpArg3" xml:space="preserve">
+    <value>rezultat</value>
+    
+  </data>
+  <data name="AboutLookUp_source" xml:space="preserve">
+    <value>Un tabel în care se vor căuta valori.</value>
+  </data>
+  <data name="AboutLookUp_condition" xml:space="preserve">
+    <value>O condiție care se va evalua pentru rândurile din intrarea specificată.</value>
+  </data>
+  <data name="AboutLookUp_result" xml:space="preserve">
+    <value>O expresie de evaluat peste rândul care se potrivește condiției specificate și care va furniza rezultatul.</value>
+  </data>
+  <data name="AboutStdevP" xml:space="preserve">
+    <value>Calculează deviația standard pe baza întregii populații date sub formă de argumente (ignoră valorile logice și textul).</value>
+    
+  </data>
+  <data name="AboutStdevP_number" xml:space="preserve">
+    <value>Un număr de factorizat în calculul deviației standard.</value>
+  </data>
+  <data name="AboutStdevP_source" xml:space="preserve">
+    <value>Un tabel care specifică populația pentru calculul deviației standard.</value>
+  </data>
+  <data name="AboutStdevP_expression" xml:space="preserve">
+    <value>O expresie evaluată pentru rândurile din intrare, care specifică valorile pentru calculul deviației standard.</value>
+  </data>
+  <data name="AboutStdevPT" xml:space="preserve">
+    <value>Calculează deviația standard pe baza întregii populații date sub forma unei coloane (ignoră valorile logice și textul din coloană).</value>
+    
+  </data>
+  <data name="AboutVarP" xml:space="preserve">
+    <value>Calculează varianța pe baza întregii populații (ignoră valorile logice și textul din populație).</value>
+    
+  </data>
+  <data name="AboutVarP_number" xml:space="preserve">
+    <value>Un număr de factorizat în calculul varianței.</value>
+  </data>
+  <data name="AboutVarP_source" xml:space="preserve">
+    <value>Un tabel care specifică populația pentru calculul varianței.</value>
+  </data>
+  <data name="AboutVarP_expression" xml:space="preserve">
+    <value>O expresie evaluată pentru rândurile din intrare, care specifică valorile pentru calculul varianței.</value>
+  </data>
+  <data name="AboutVarPT" xml:space="preserve">
+    <value>Calculează varianța pe baza întregii populații specificate drept coloană (ignoră valorile logice și textul din coloană).</value>
+    
+  </data>
+  <data name="SetArg1" xml:space="preserve">
+    <value>variabilă</value>
+    
+  </data>
+  <data name="AboutSplit" xml:space="preserve">
+    <value>Împarte un șir în subșiruri, folosind un delimitator.</value>
+    
+  </data>
+  <data name="AboutSplit_text" xml:space="preserve">
+    <value>Text de împărțit în subșiruri.</value>
+    
+  </data>
+  <data name="AboutSplit_separator" xml:space="preserve">
+    <value>Textul delimitator utilizat pentru a împărți textul introdus în subșiruri.</value>
+    
+  </data>
+  <data name="SplitArg1" xml:space="preserve">
+    <value>text</value>
+    
+  </data>
+  <data name="SplitArg2" xml:space="preserve">
+    <value>separator</value>
+    
+  </data>
+  <data name="AboutIsType" xml:space="preserve">
+    <value>Returnează true dacă valoarea furnizată este de tipul dat.</value>
+    
+  </data>
+  <data name="IsTypeArg1" xml:space="preserve">
+    <value>valoare</value>
+    
+  </data>
+  <data name="IsTypeArg2" xml:space="preserve">
+    <value>typeTable</value>
+    
+  </data>
+  <data name="AboutAsType" xml:space="preserve">
+    <value>Folosește valoarea furnizată ca tipul dat.</value>
+    
+  </data>
+  <data name="AsTypeArg1" xml:space="preserve">
+    <value>valoare</value>
+    
+  </data>
+  <data name="AsTypeArg2" xml:space="preserve">
+    <value>typeTable</value>
+    
+  </data>
+  <data name="AboutAsType_value" xml:space="preserve">
+    <value>Înregistrarea polimorfă de prezenta ca tip nou.</value>
+  </data>
+  <data name="AboutAsType_typeTable" xml:space="preserve">
+    <value>Tabelul de entitate care reprezintă tipul cu care dorim să utilizăm valoarea.</value>
+  </data>
+  <data name="AboutWith" xml:space="preserve">
+    <value>Execută formula furnizată ca al doilea parametru utilizând domeniul de aplicare furnizat de primul.</value>
+    
+  </data>
+  <data name="WithArg1" xml:space="preserve">
+    <value>domeniu_de_acoperire</value>
+    
+  </data>
+  <data name="WithArg2" xml:space="preserve">
+    <value>formulă</value>
+    
+  </data>
+  <data name="AboutWith_scope" xml:space="preserve">
+    <value>Domeniul de aplicare cu care se apelează formula definită de cel de-al doilea parametru.</value>
+    
+  </data>
+  <data name="AboutWith_formula" xml:space="preserve">
+    <value>Formula de apelat folosind domeniul de aplicare furnizat de primul parametru.</value>
+    
+  </data>
+  <data name="AboutSequence" xml:space="preserve">
+    <value>Generează un tabel de numere secvențiale</value>
+    
+  </data>
+  <data name="SequenceArg1" xml:space="preserve">
+    <value>înregistrări</value>
+    
+  </data>
+  <data name="AboutSequence_records" xml:space="preserve">
+    <value>Numărul de înregistrări din tabelul cu o singură coloană cu numele „Valoare”. Maximum 50.000.</value>
+    
+  </data>
+  <data name="SequenceArg2" xml:space="preserve">
+    <value>start</value>
+    
+  </data>
+  <data name="AboutSequence_start" xml:space="preserve">
+    <value>Opțional. Primul număr din secvență. Implicit 1.</value>
+    
+  </data>
+  <data name="SequenceArg3" xml:space="preserve">
+    <value>pas</value>
+    
+  </data>
+  <data name="AboutSequence_step" xml:space="preserve">
+    <value>Opțional. Suma cu care se incrementează fiecare valoare ulterioară din tabel. Implicit 1.</value>
+    
+  </data>
+  <data name="ErrInvalidDot" xml:space="preserve">
+    <value>Utilizare nevalidă a „.”</value>
+    
+  </data>
+  <data name="ErrUnknownFunction" xml:space="preserve">
+    <value>„{0}” este o funcție necunoscută sau neacceptată.</value>
+    
+  </data>
+  <data name="ErrUnknownNamespaceFunction" xml:space="preserve">
+    <value>„{0}” este o funcție necunoscută sau neacceptată în spațiul nume „{1}”.</value>
+    
+  </data>
+  <data name="ErrUnSupportedComponentBehaviorInvocation" xml:space="preserve">
+    <value>Comportamentul componentelor poate fi invocat numai din cadrul unei componente.</value>
+    
+  </data>
+  <data name="ErrUnSupportedComponentDataPropertyAccess" xml:space="preserve">
+    <value>Proprietatea de date particularizate a componentelor cu parametri poate fi accesată numai din interiorul unei componente sau din proprietățile de ieșire ale componentei.</value>
+    
+  </data>
+  <data name="ErrBadArity" xml:space="preserve">
+    <value>Număr nevalid de argumente: s-au primit {0}, se așteptau {1}.</value>
+    
+  </data>
+  <data name="ErrBadArityEven" xml:space="preserve">
+    <value>Număr nevalid de argumente: s-au primit {0}, se aștepta un număr par.</value>
+    
+  </data>
+  <data name="ErrBadArityOdd" xml:space="preserve">
+    <value>Număr nevalid de argumente: s-au primit {0}, se aștepta un număr impar.</value>
+    
+  </data>
+  <data name="ErrBadType" xml:space="preserve">
+    <value>Tip de argument nevalid.</value>
+    
+  </data>
+  <data name="ErrBadType_Type" xml:space="preserve">
+    <value>Tip de argument nevalid. Nu se pot utiliza valori {0} în acest context.</value>
+    
+  </data>
+  <data name="ErrBadOperatorTypes" xml:space="preserve">
+    <value>Această operațiune nu este validă pentru tipurile: {0}, {1}.</value>
+    
+  </data>
+  <data name="ErrGuidStrictComparison" xml:space="preserve">
+    <value>Valorile GUID pot fi comparate numai cu alte valori GUID.</value>
+    
+  </data>
+  <data name="ErrBadRecordFieldType_FieldName_ExpectedType" xml:space="preserve">
+    <value>Tip nevalid pentru câmpul „{0}”. Se aștepta tipul de câmp „{1}”.</value>
+    
+  </data>
+  <data name="ErrBadType_ExpectedType" xml:space="preserve">
+    <value>Tip de argument nevalid. Se așteaptă o valoare {0}.</value>
+    
+  </data>
+  <data name="ErrBadType_ExpectedType_ProvidedType" xml:space="preserve">
+    <value>Tip de argument nevalid ({1}). Se așteaptă în schimb o valoare {0}.</value>
+    
+  </data>
+  <data name="ErrBadSchema_ExpectedType" xml:space="preserve">
+    <value>Tip de argument nevalid. Se așteaptă o valoare {0}, dar dintr-o altă schemă.</value>
+    
+  </data>
+  <data name="ErrBadType_ExpectedTypesCSV" xml:space="preserve">
+    <value>Tip de argument nevalid. Se așteaptă una dintre următoarele: {0}.</value>
+    
+  </data>
+  <data name="ErrInvalidArgs_Func" xml:space="preserve">
+    <value>Funcția „{0}” are câteva argumente nevalide.</value>
+    
+  </data>
+  <data name="ErrNeedTable_Func" xml:space="preserve">
+    <value>Primul argument din „{0}” ar trebui să fie un tabel.</value>
+    
+  </data>
+  <data name="ErrInvalidPropertyAccess" xml:space="preserve">
+    <value>Proprietatea așteaptă un parametru obligatoriu. Utilizați parantezele pentru a transmite parametrul obligatoriu.</value>
+    
+  </data>
+  <data name="ErrNeedTableCol_Func" xml:space="preserve">
+    <value>Primul argument din „{0}” ar trebui să fie un tabel cu o singură coloană.</value>
+    
+  </data>
+  <data name="ErrInvalidSchemaNeedStringCol_Col" xml:space="preserve">
+    <value>Schemă nevalidă, era așteptată o coloană de valori text pentru „{0}”.</value>
+    
+  </data>
+  <data name="ErrInvalidSchemaNeedDateCol_Col" xml:space="preserve">
+    <value>Schemă nevalidă, era așteptată o coloană de valori dată pentru „{0}”.</value>
+    
+  </data>
+  <data name="ErrInvalidSchemaNeedNumCol_Col" xml:space="preserve">
+    <value>Schemă nevalidă, era așteptată o coloană de valori numerice pentru „{0}”.</value>
+    
+  </data>
+  <data name="ErrInvalidSchemaNeedColorCol_Col" xml:space="preserve">
+    <value>Schemă nevalidă, era așteptată o coloană de valori de culoare pentru „{0}”.</value>
+    
+  </data>
+  <data name="ErrInvalidSchemaNeedCol" xml:space="preserve">
+    <value>Schemă nevalidă, era așteptat un tabel cu o coloană.</value>
+    
+  </data>
+  <data name="ErrNeedRecord" xml:space="preserve">
+    <value>Nu se poate utiliza o valoare non-înregistrare în acest context.</value>
+    
+  </data>
+  <data name="ErrIncompatibleRecord" xml:space="preserve">
+    <value>Nu se poate utiliza această înregistrare. Poate conține câmpuri conflictuale, cu tipuri incompatibile.</value>
+    
+  </data>
+  <data name="ErrNeedRecord_Func" xml:space="preserve">
+    <value>Primul argument din „{0}” ar trebui să fie o înregistrare.</value>
+    
+  </data>
+  <data name="ErrNeedEntity_EntityName" xml:space="preserve">
+    <value>Utilizarea acestui set de opțiuni ca valoare de enumerare sau în funcția Choices necesită ca entitatea „{0}” să fie adăugată ca sursă de date. Pentru a-l adăuga, utilizați meniul Vizualizare, apoi selectați Surse de date.</value>
+    
+  </data>
+  <data name="ErrNotAccessibleInCurrentContext" xml:space="preserve">
+    <value>Proprietatea specificată nu este accesibilă în acest context.</value>
+    
+  </data>
+  <data name="ErrInternalControlInInputProperty" xml:space="preserve">
+    <value>Controalele din interiorul unei componente nu pot fi utilizate în proprietățile de intrare ale aceleiași componente.</value>
+    
+  </data>
+  <data name="ErrColumnNotAccessibleInCurrentContext" xml:space="preserve">
+    <value>Coloana specificată nu este accesibilă în acest context.</value>
+    
+  </data>
+  <data name="WrnRowScopeOneToNExpandNumberOfCalls" xml:space="preserve">
+    <value>O relație unu-la-mai-mulți sau mai-mulți-la-mai-mulți este menționată în domeniul de înregistrări al acestei funcții. Acest lucru poate duce la un număr mare de apeluri către sursa de date, care pot afecta performanța.</value>
+    
+  </data>
+  <data name="ErrNumberTooLarge" xml:space="preserve">
+    <value>Valoarea numerică este prea mare.</value>
+    
+  </data>
+  <data name="ErrInvalidDataSource" xml:space="preserve">
+    <value>Această sursă de date este nevalidă. Remediați eroarea din panoul „Surse de date” făcând clic pe „Conținut -&gt; Surse de date” sau pe „Vizualizare -&gt; Opțiuni”</value>
+    
+  </data>
+  <data name="ErrExpectedDataSourceRestriction" xml:space="preserve">
+    <value>Se așteaptă ca un identificator de sursă de date să restricționeze înregistrarea în linie.</value>
+    
+  </data>
+  <data name="ErrIncompatibleTypes" xml:space="preserve">
+    <value>Tipurile date sunt incompatibile.</value>
+    
+  </data>
+  <data name="ErrTypeError_Ex1_Ex2_Found" xml:space="preserve">
+    <value>Tipul acestui argument „{2}” nu corespunde cu unul din tipurile așteptate „{0}” sau „{1}”.</value>
+    
+  </data>
+  <data name="ErrTypeError_Arg_Expected_Found" xml:space="preserve">
+    <value>Tipul acestui argument „{0}” nu corespunde tipului așteptat „{1}”. S-a găsit tipul „{2}”.</value>
+    
+  </data>
+  <data name="ErrTypeErrorRecordIncompatibleWithSource" xml:space="preserve">
+    <value>Tipul înregistrării este incompatibil cu sursa.</value>
+    
+  </data>
+  <data name="ErrExpectedStringLiteralArg_Name" xml:space="preserve">
+    <value>Argumentul „{0}” este nevalid, se aștepta un literal text.</value>
+    
+  </data>
+  <data name="ErrArgNotAValidIdentifier_Name" xml:space="preserve">
+    <value>Argumentul „{0}” nu este un identificator valid.</value>
+    
+  </data>
+  <data name="ErrColExists_Name" xml:space="preserve">
+    <value>O coloană cu numele „{0}” există deja.</value>
+    
+  </data>
+  <data name="ErrColConflict_Name" xml:space="preserve">
+    <value>Conflict de nume de coloană pentru „{0}”.</value>
+    
+  </data>
+  <data name="ErrColDNE_Name" xml:space="preserve">
+    <value>Coloana specificată „{0}” nu există.</value>
+    
+  </data>
+  <data name="ErrColumnDoesNotExist_Name_Similar" xml:space="preserve">
+    <value>Coloana specificată, „{0}” nu există. Coloana cu numele cel mai asemănător este „{1}”.</value>
+    
+  </data>
+  <data name="ErrSortIncorrectOrder" xml:space="preserve">
+    <value>Ordinea de sortare este incorectă pentru tipul expresiei.</value>
+    
+  </data>
+  <data name="ErrSortWrongType" xml:space="preserve">
+    <value>Nu se poate sorta după tipul expresiei.</value>
+    
+  </data>
+  <data name="ErrFunctionDoesNotAcceptThisType_Function_Expected" xml:space="preserve">
+    <value>Eroare de tip: {0} așteaptă {1} sau o coloană de tabel de tip {1}.</value>
+    
+  </data>
+  <data name="ErrIncorrectFormat_Func" xml:space="preserve">
+    <value>Specificator de format incorect pentru „{0}”.</value>
+    
+  </data>
+  <data name="ErrAsyncLambda" xml:space="preserve">
+    <value>Invocările asincrone nu pot fi utilizate în condiții și în funcții de valoare.</value>
+    
+  </data>
+  <data name="ErrValueMustBeFullyQualified" xml:space="preserve">
+    <value>Acesta este un spațiu de nume, puteți accesa membrii săi folosind operatorul „.”.</value>
+    
+  </data>
+  <data name="ErrScopeModificationLambda" xml:space="preserve">
+    <value>Această funcție nu poate opera în aceeași sursă de date care este utilizată în {0}.</value>
+    
+  </data>
+  <data name="ErrFunctionDisallowedWithinNondeterministicOperationOrder" xml:space="preserve">
+    <value>Această funcție nu poate fi invocată în {0}.</value>
+    
+  </data>
+  <data name="ErrAsTypeAndIsTypeExpectConnectedDataSource" xml:space="preserve">
+    <value>Argument incorect. Această formulă așteaptă un tabel dintr-o sursă de date conectată. Funcțiile AsType și IsType necesită surse de date conectate.</value>
+    
+  </data>
+  <data name="InfoMessage" xml:space="preserve">
+    <value>Mesaj: </value>
+    
+  </data>
+  <data name="InfoNode_Node" xml:space="preserve">
+    <value>Nod: {0}</value>
+    
+  </data>
+  <data name="InfoTok_Tok" xml:space="preserve">
+    <value>Tok: {0}</value>
+    
+  </data>
+  <data name="FormatSpan_Min_Lim" xml:space="preserve">
+    <value>({0},{1}) </value>
+    
+  </data>
+  <data name="FormatErrorSeparator" xml:space="preserve">
+    <value>, </value>
+    
+  </data>
+  <data name="AboutDate" xml:space="preserve">
+    <value>Returnează numărul care reprezintă data în codul dată-oră al Power Apps.</value>
+    
+  </data>
+  <data name="DateArg1" xml:space="preserve">
+    <value>an</value>
+    
+  </data>
+  <data name="DateArg2" xml:space="preserve">
+    <value>lună</value>
+    
+  </data>
+  <data name="DateArg3" xml:space="preserve">
+    <value>zi</value>
+    
+  </data>
+  <data name="AboutDate_year" xml:space="preserve">
+    <value>Anul.</value>
+  </data>
+  <data name="AboutDate_month" xml:space="preserve">
+    <value>Luna.</value>
+  </data>
+  <data name="AboutDate_day" xml:space="preserve">
+    <value>Ziua.</value>
+  </data>
+  <data name="AboutTime" xml:space="preserve">
+    <value>Convertește orele, minutele și secundele într-un număr zecimal.</value>
+    
+  </data>
+  <data name="TimeArg1" xml:space="preserve">
+    <value>oră</value>
+    
+  </data>
+  <data name="TimeArg2" xml:space="preserve">
+    <value>minut</value>
+    
+  </data>
+  <data name="TimeArg3" xml:space="preserve">
+    <value>secundă</value>
+    
+  </data>
+  <data name="TimeArg4" xml:space="preserve">
+    <value>milisecundă</value>
+    
+  </data>
+  <data name="AboutTime_hour" xml:space="preserve">
+    <value>Componenta oră.</value>
+  </data>
+  <data name="AboutTime_minute" xml:space="preserve">
+    <value>Componenta minut.</value>
+  </data>
+  <data name="AboutTime_second" xml:space="preserve">
+    <value>Componenta secundă.</value>
+  </data>
+  <data name="AboutTime_millisecond" xml:space="preserve">
+    <value>Componenta milisecundă.</value>
+  </data>
+  <data name="AboutDateTime" xml:space="preserve">
+    <value>Creează o valoare care reprezintă un moment în timp, exprimată ca dată și oră a zilei.</value>
+    
+  </data>
+  <data name="AboutDateTime_year" xml:space="preserve">
+    <value>Anul.</value>
+    
+  </data>
+  <data name="AboutDateTime_month" xml:space="preserve">
+    <value>Luna.</value>
+    
+  </data>
+  <data name="AboutDateTime_day" xml:space="preserve">
+    <value>Ziua.</value>
+    
+  </data>
+  <data name="AboutDateTime_hour" xml:space="preserve">
+    <value>Ora.</value>
+    
+  </data>
+  <data name="AboutDateTime_minute" xml:space="preserve">
+    <value>Minutul.</value>
+    
+  </data>
+  <data name="AboutDateTime_second" xml:space="preserve">
+    <value>Secunda.</value>
+    
+  </data>
+  <data name="AboutDateTime_millisecond" xml:space="preserve">
+    <value>Milisecundele.</value>
+    
+  </data>
+  <data name="AboutYear" xml:space="preserve">
+    <value>Anul returnează anul unei anumite date.</value>
+    
+  </data>
+  <data name="YearArg1" xml:space="preserve">
+    <value>data_ora</value>
+    
+  </data>
+  <data name="AboutYear_date_time" xml:space="preserve">
+    <value>O valoare dată din care va fi extrasă componenta an.</value>
+  </data>
+  <data name="AboutMonth" xml:space="preserve">
+    <value>Returnează luna, un număr de la 1 (ianuarie) la 12 (decembrie).</value>
+    
+  </data>
+  <data name="MonthArg1" xml:space="preserve">
+    <value>data_ora</value>
+    
+  </data>
+  <data name="AboutMonth_date_time" xml:space="preserve">
+    <value>Valoarea dată din care va fi extrasă componenta lună.</value>
+  </data>
+  <data name="AboutDay" xml:space="preserve">
+    <value>Zi returnează ziua din lună, un număr cuprins între 1 și 31.</value>
+    
+  </data>
+  <data name="DayArg1" xml:space="preserve">
+    <value>data_ora</value>
+    
+  </data>
+  <data name="AboutDay_date_time" xml:space="preserve">
+    <value>Valoarea dată din care va fi extrasă componenta zi.</value>
+  </data>
+  <data name="AboutHour" xml:space="preserve">
+    <value>Oră returnează ora ca număr cuprins între 0 (12:00:00) și 23 (23:00:00).</value>
+    
+  </data>
+  <data name="HourArg1" xml:space="preserve">
+    <value>data_ora</value>
+    
+  </data>
+  <data name="AboutHour_date_time" xml:space="preserve">
+    <value>Valoarea dată sau oră din care va fi extrasă componenta.</value>
+  </data>
+  <data name="AboutMinute" xml:space="preserve">
+    <value>Returnează minutul, un număr de la 0 la 59.</value>
+    
+  </data>
+  <data name="MinuteArg1" xml:space="preserve">
+    <value>data_ora</value>
+    
+  </data>
+  <data name="AboutMinute_date_time" xml:space="preserve">
+    <value>Valoarea dată sau oră din care va fi extrasă componenta minut.</value>
+  </data>
+  <data name="AboutSecond" xml:space="preserve">
+    <value>Returnează secunda, un număr de la 0 la 59.</value>
+    
+  </data>
+  <data name="SecondArg1" xml:space="preserve">
+    <value>data_ora</value>
+    
+  </data>
+  <data name="AboutSecond_date_time" xml:space="preserve">
+    <value>Valoarea dată sau oră din care va fi extrasă componenta secundă.</value>
+  </data>
+  <data name="AboutWeekday" xml:space="preserve">
+    <value>Returnează ziua din săptămână a unei valori dată-oră. În mod implicit, rezultatul este cuprins între 1 (duminică) și 7 (sâmbătă). Puteți specifica un alt interval cu o valoare de enumerare StartOfWeek sau un cod de funcție Weekday din Microsoft Excel.</value>
+    
+  </data>
+  <data name="WeekdayArg1" xml:space="preserve">
+    <value>dată</value>
+    
+  </data>
+  <data name="WeekdayArg2" xml:space="preserve">
+    <value>începutul_săptămânii</value>
+    
+  </data>
+  <data name="AboutWeekday_date" xml:space="preserve">
+    <value>O valoare de tip dată pentru care se va calcula ziua din săptămână.</value>
+  </data>
+  <data name="AboutWeekday_start_of_week" xml:space="preserve">
+    <value>O valoare din enumerarea StartOfWeek sau un număr din funcția Excel corespunzătoare, pentru a indica modul în care ar trebui să fie numerotate zilele săptămânii.</value>
+    
+  </data>
+  <data name="AboutCalendar__MonthsLong" xml:space="preserve">
+    <value>Returnează un tabel cu o singură coloană, care conține numele complete ale fiecărei luni.</value>
+    
+  </data>
+  <data name="AboutCalendar__MonthsShort" xml:space="preserve">
+    <value>Returnează un tabel cu o singură coloană, care conține numele prescurtate ale fiecărei luni.</value>
+    
+  </data>
+  <data name="AboutCalendar__WeekdaysLong" xml:space="preserve">
+    <value>Returnează un tabel cu o singură coloană, care conține numele complete ale fiecărei zi a săptămânii.</value>
+    
+  </data>
+  <data name="AboutCalendar__WeekdaysShort" xml:space="preserve">
+    <value>Returnează un tabel cu o singură coloană, care conține numele prescurtate ale fiecărei zi a săptămânii.</value>
+    
+  </data>
+  <data name="AboutClock__AmPm" xml:space="preserve">
+    <value>Returnează un tabel cu o singură coloană, care conține desemnările cu litere mari pentru înainte și după amiază.</value>
+    
+  </data>
+  <data name="AboutClock__AmPmShort" xml:space="preserve">
+    <value>Returnează un tabel cu o singură coloană, care conține desemnările cu litere mari abreviate pentru înainte de amiază și după-amiază.</value>
+    
+  </data>
+  <data name="AboutClock__IsClock24" xml:space="preserve">
+    <value>Returnează o valoare booleană care indică dacă ceasul trebuie să utilizeze formatul de 24 de ore.</value>
+    
+  </data>
+  <data name="AboutDateValue" xml:space="preserve">
+    <value>Convertește o valoare de timp în formă de text la un număr care reprezintă data în codul dată-oră Power Apps.</value>
+    
+  </data>
+  <data name="DateValueArg1" xml:space="preserve">
+    <value>text_dată</value>
+    
+  </data>
+  <data name="DateValueArg2" xml:space="preserve">
+    <value>cod_de_limbă</value>
+    
+  </data>
+  <data name="AboutDateValue_date_text" xml:space="preserve">
+    <value>O reprezentare text a unei mărci de dată/timp, într-un format acceptat de platformă.</value>
+  </data>
+  <data name="AboutDateValue_language_code" xml:space="preserve">
+    <value>Codul de limbă al textului furnizat.</value>
+  </data>
+  <data name="AboutTimeValue" xml:space="preserve">
+    <value>Convertește o valoare de timp în formă de text la un număr care reprezintă data în codul dată-oră Microsoft Power Apps, ignorând orice porțiune de dată calendaristică.</value>
+    
+  </data>
+  <data name="TimeValueArg1" xml:space="preserve">
+    <value>text_timp</value>
+    
+  </data>
+  <data name="TimeValueArg2" xml:space="preserve">
+    <value>cod_de_limbă</value>
+    
+  </data>
+  <data name="AboutTimeValue_time_text" xml:space="preserve">
+    <value>O reprezentare text a unui marcaj de dată/oră, într-un format acceptat de platformă.</value>
+  </data>
+  <data name="AboutTimeValue_language_code" xml:space="preserve">
+    <value>Codul de limbă al textului furnizat.</value>
+  </data>
+  <data name="ErrAutoRefreshNotAllowed" xml:space="preserve">
+    <value>Funcțiile de serviciu cu reîmprospătare automată nu pot fi utilizate în regulile de acțiune.</value>
+    
+  </data>
+  <data name="ErrMultipleValuesForField_Name" xml:space="preserve">
+    <value>Un câmp denumit „{0}” a fost specificat de mai multe ori în această înregistrare.</value>
+    
+  </data>
+  <data name="WarnColumnNameSpecifiedMultipleTimes_Name" xml:space="preserve">
+    <value>O coloană denumită „{0}” a fost specificată de mai multe ori.</value>
+    
+  </data>
+  <data name="WarnLiteralPredicate" xml:space="preserve">
+    <value>Avertisment: acest predicat este o valoare literală și nu face referire la tabelul de intrare.</value>
+    
+  </data>
+  <data name="WarnDynamicMetadata" xml:space="preserve">
+    <value>Avertisment: selectați „Surprindeți schema” în partea de jos a barei de formule extinse pentru a seta și a reîmprospăta schema de rezultate a acestei metode. În caz contrar, această metodă nu va returna niciun rezultat.</value>
+    
+  </data>
+  <data name="FindArg1" xml:space="preserve">
+    <value>găsire_text</value>
+    
+  </data>
+  <data name="FindArg2" xml:space="preserve">
+    <value>în_text</value>
+    
+  </data>
+  <data name="FindArg3" xml:space="preserve">
+    <value>num_start</value>
+    
+  </data>
+  <data name="AboutFind_find_text" xml:space="preserve">
+    <value>O valoare text de căutat.</value>
+  </data>
+  <data name="AboutFind_within_text" xml:space="preserve">
+    <value>Valoarea text în care se caută.</value>
+  </data>
+  <data name="AboutFind_start_num" xml:space="preserve">
+    <value>O poziție de pornire opțională.</value>
+  </data>
+  <data name="AboutFind" xml:space="preserve">
+    <value>Returnează poziția de început a unei valori text din cadrul altei valori text. Căutarea este sensibilă la litere mari și mici.</value>
+    
+  </data>
+  <data name="AboutFindT" xml:space="preserve">
+    <value>Returnează o coloană cu poziții de început ale unei valori text (sau coloane de șiruri) din cadrul altei valori text (sau coloane de șiruri). Căutarea este sensibilă la litere mari și mici.</value>
+    
+  </data>
+  <data name="FindTArg1" xml:space="preserve">
+    <value>găsire_text_sau_coloană</value>
+    
+  </data>
+  <data name="FindTArg2" xml:space="preserve">
+    <value>în_text_sau_coloană</value>
+    
+  </data>
+  <data name="FindTArg3" xml:space="preserve">
+    <value>num_start</value>
+    
+  </data>
+  <data name="AboutFind_find_text_or_column" xml:space="preserve">
+    <value>O valoare text (sau o coloană de valori text) de căutat.</value>
+  </data>
+  <data name="AboutFind_within_text_or_column" xml:space="preserve">
+    <value>Valoarea text (sau coloana de valori text) în care se caută.</value>
+  </data>
+  <data name="AboutColorValue" xml:space="preserve">
+    <value>Returnează culoarea care corespunde șirului de culoare specificat.</value>
+    
+  </data>
+  <data name="ColorValueArg1" xml:space="preserve">
+    <value>culoare_text</value>
+    
+  </data>
+  <data name="AboutColorValue_color_text" xml:space="preserve">
+    <value>O culoare specificată după nume, de exemplu „Albastru”, sau utilizând notația hex standard de 6 cifre #rrggbb.</value>
+  </data>
+  <data name="ErrInvalidJsonPointer" xml:space="preserve">
+    <value>Indicator JSON nevalid.</value>
+    
+  </data>
+  <data name="Text" xml:space="preserve">
+    <value>Text</value>
+  </data>
+  <data name="Logical" xml:space="preserve">
+    <value>Logic</value>
+  </data>
+  <data name="Table" xml:space="preserve">
+    <value>Tabel</value>
+  </data>
+  <data name="Behavior" xml:space="preserve">
+    <value>Comportament</value>
+  </data>
+  <data name="DateTime" xml:space="preserve">
+    <value>Data și ora</value>
+  </data>
+  <data name="MathAndStat" xml:space="preserve">
+    <value>Matematice și statistice</value>
+  </data>
+  <data name="Information" xml:space="preserve">
+    <value>Informații</value>
+  </data>
+  <data name="Color" xml:space="preserve">
+    <value>Culoare</value>
+  </data>
+  <data name="REST" xml:space="preserve">
+    <value>Servicii</value>
+    
+  </data>
+  <data name="FunctionReference_Link" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?LinkId=722347#</value>
+    
+  </data>
+  <data name="InvalidXml_ElementMissingAttribute_ElemName_AttrName" xml:space="preserve">
+    <value>Elementului „{0}” îi lipsește atributul „{1}”.</value>
+    
+  </data>
+  <data name="InvalidXml_AttributeCannotBeEmpty_AttrName" xml:space="preserve">
+    <value>Atributul „{0}” nu poate fi un șir gol.</value>
+    
+  </data>
+  <data name="InvalidXml_AttributeValueInvalidGuid_AttrName_Value" xml:space="preserve">
+    <value>Atributul „{0}” are o valoare GUID nevalidă „{1}”.</value>
+    
+  </data>
+  <data name="InvalidJson_MissingRequiredNamedValue_PropName" xml:space="preserve">
+    <value>Proprietatea „{0}” lipsește.</value>
+    
+  </data>
+  <data name="InvalidJson_NamedValueTypeNotCorrect_PropName_ExpectedType_ActualType" xml:space="preserve">
+    <value>Proprietatea „{0}” are o valoare de tip nevalidă: {2}. Valoarea de tip așteptată: {1}.</value>
+    
+  </data>
+  <data name="InvalidJson_NamedValueCannotBeEmpty_PropName" xml:space="preserve">
+    <value>Proprietatea „{0}” nu poate fi goală.</value>
+    
+  </data>
+  <data name="InvalidJson_NamedEnumStringInvalid_PropName_ActualValue" xml:space="preserve">
+    <value>Se așteaptă ca enumerarea „{0}” să aibă o valoare validă, dar valoarea sa {1} este în afara intervalului de enumerare.</value>
+    
+  </data>
+  <data name="InvalidJson_NamedIntegerOverflow_PropName_ActualValue" xml:space="preserve">
+    <value>Se așteaptă ca proprietatea „{0}” să aibă o valoare de tip întreg, dar valoarea sa {1} este în afara intervalului.</value>
+    
+  </data>
+  <data name="InvalidJson_IndexedValueTypeNotCorrect_Index_ExpectedType_ActualType" xml:space="preserve">
+    <value>Elementul de la indexul {0} are o valoare de tip nevalidă: {2}. Valoare de tip așteptată: {1}.</value>
+  </data>
+  <data name="InvalidJson_IndexedValueMustBeNonEmpty_Index" xml:space="preserve">
+    <value>Elementul de la indexul {0} trebuie să fie un șir care nu este gol.</value>
+  </data>
+  <data name="AboutDateAdd" xml:space="preserve">
+    <value>Adăugați numărul de unități specificat la o dată.</value>
+    
+  </data>
+  <data name="AboutDateDiff" xml:space="preserve">
+    <value>Calculați diferența dintre două date.</value>
+    
+  </data>
+  <data name="DateAddArg1" xml:space="preserve">
+    <value>dată</value>
+    
+  </data>
+  <data name="DateAddArg2" xml:space="preserve">
+    <value>număr_de_unități</value>
+    
+  </data>
+  <data name="DateAddArg3" xml:space="preserve">
+    <value>unitate</value>
+    
+  </data>
+  <data name="AboutDateAdd_date" xml:space="preserve">
+    <value>O valoare dată de referință.</value>
+  </data>
+  <data name="AboutDateAdd_number_of_units" xml:space="preserve">
+    <value>Un număr de unități de adăugat. Numărul poate fi negativ.</value>
+  </data>
+  <data name="AboutDateAdd_unit" xml:space="preserve">
+    <value>Unitatea care se folosește, care poate fi una dintre Years, Quarters, Months, Days, Hours, Minutes, Seconds, Milliseconds.</value>
+    
+  </data>
+  <data name="DateDiffArg1" xml:space="preserve">
+    <value>dată_început</value>
+    
+  </data>
+  <data name="DateDiffArg2" xml:space="preserve">
+    <value>dată_sfârșit</value>
+    
+  </data>
+  <data name="DateDiffArg3" xml:space="preserve">
+    <value>unitate</value>
+    
+  </data>
+  <data name="AboutDateDiff_start_date" xml:space="preserve">
+    <value>O dată de început pentru operația de diferențiere.</value>
+  </data>
+  <data name="AboutDateDiff_end_date" xml:space="preserve">
+    <value>O dată de sfârșit pentru operația de diferențiere.</value>
+  </data>
+  <data name="AboutDateDiff_unit" xml:space="preserve">
+    <value>Unitatea în care se exprimă rezultatul, care poate fi una dintre Years, Quarters, Months, Days, Hours, Minutes, Seconds, Milliseconds.</value>
+    
+  </data>
+  <data name="AboutDateAddT" xml:space="preserve">
+    <value>Adăugați numărul de unități specificat la o coloană de date.</value>
+    
+  </data>
+  <data name="AboutDateDiffT" xml:space="preserve">
+    <value>Calculați diferența dintre două coloane de date.</value>
+    
+  </data>
+  <data name="DateAddTArg1" xml:space="preserve">
+    <value>coloană_dată</value>
+    
+  </data>
+  <data name="DateAddTArg2" xml:space="preserve">
+    <value>număr_de_unități</value>
+    
+  </data>
+  <data name="DateAddTArg3" xml:space="preserve">
+    <value>unitate</value>
+    
+  </data>
+  <data name="AboutDateAdd_date_column" xml:space="preserve">
+    <value>O coloană cu valori de date.</value>
+  </data>
+  <data name="DateDiffTArg1" xml:space="preserve">
+    <value>coloană_dată_început</value>
+    
+  </data>
+  <data name="DateDiffTArg2" xml:space="preserve">
+    <value>coloană_dată_sfârșit</value>
+    
+  </data>
+  <data name="DateDiffTArg3" xml:space="preserve">
+    <value>unitate</value>
+    
+  </data>
+  <data name="AboutDateDiff_start_date_column" xml:space="preserve">
+    <value>O coloană cu datele de început pentru operația de diferențiere.</value>
+  </data>
+  <data name="AboutDateDiff_end_date_column" xml:space="preserve">
+    <value>O coloană cu datele de sfârșit pentru operația de diferențiere.</value>
+  </data>
+  <data name="AboutChar" xml:space="preserve">
+    <value>Returnează caracterul specificat de numărul de cod din setul de caractere de pe platformă.</value>
+    
+  </data>
+  <data name="CharArg1" xml:space="preserve">
+    <value>număr</value>
+    
+  </data>
+  <data name="AboutChar_number" xml:space="preserve">
+    <value>Un număr de cod din setul de caractere de pe platformă.</value>
+  </data>
+  <data name="AboutCharT" xml:space="preserve">
+    <value>Returnează un tabel de caractere specificate de numerele de cod din setul de caractere de pe platformă.</value>
+    
+  </data>
+  <data name="CharTArg1" xml:space="preserve">
+    <value>coloană_de_numere</value>
+    
+  </data>
+  <data name="AboutChar_column_of_numbers" xml:space="preserve">
+    <value>O coloană de numere de cod din setul de caractere de pe platformă.</value>
+  </data>
+  <data name="AboutParseJSON" xml:space="preserve">
+    <value>Convertește un șir JSON într-un obiect.</value>
+    
+  </data>
+  <data name="ParseJSONArg1" xml:space="preserve">
+    <value>intrare</value>
+    
+  </data>
+  <data name="AboutParseJSON_input" xml:space="preserve">
+    <value>Un șir JSON de procesat.</value>
+  </data>
+  <data name="AboutIndex" xml:space="preserve">
+    <value>Returnează înregistrarea de la un index dat dintr-un tabel.</value>
+    
+  </data>
+  <data name="IndexArg1" xml:space="preserve">
+    <value>tabel</value>
+    
+  </data>
+  <data name="IndexArg2" xml:space="preserve">
+    <value>index</value>
+    
+  </data>
+  <data name="AboutIndex_table" xml:space="preserve">
+    <value>Un tabel.</value>
+  </data>
+  <data name="AboutIndex_index" xml:space="preserve">
+    <value>Indexul înregistrării de regăsit.</value>
+    
+  </data>
+  <data name="Screen_Name_DisplayName" xml:space="preserve">
+    <value>Nume</value>
+    
+  </data>
+  <data name="Screen_Printing_DisplayName" xml:space="preserve">
+    <value>Imprimare</value>
+    
+  </data>
+  <data name="Screen_ImagePosition_DisplayName" xml:space="preserve">
+    <value>Poziție imagine</value>
+    
+  </data>
+  <data name="Screen_Size_DisplayName" xml:space="preserve">
+    <value>Dimensiune</value>
+    
+  </data>
+  <data name="barcode_Type_DisplayName" xml:space="preserve">
+    <value>Tip cod de bare</value>
+    
+  </data>
+  <data name="camera_Contrast_DisplayName" xml:space="preserve">
+    <value>Contrast</value>
+    
+  </data>
+  <data name="camera_Zoom_DisplayName" xml:space="preserve">
+    <value>Panoramare</value>
+    
+  </data>
+  <data name="camera_Camera_DisplayName" xml:space="preserve">
+    <value>Cameră</value>
+    
+  </data>
+  <data name="export_Data_DisplayName" xml:space="preserve">
+    <value>Date</value>
+    
+  </data>
+  <data name="Edit" xml:space="preserve">
+    <value>Editare</value>
+    
+  </data>
+  <data name="Dust" xml:space="preserve">
+    <value>Praf</value>
+    
+  </data>
+  <data name="image_Image_DisplayName" xml:space="preserve">
+    <value>Imagine</value>
+    
+  </data>
+  <data name="icon_Icon_DisplayName" xml:space="preserve">
+    <value>Pictogramă</value>
+    
+  </data>
+  <data name="icon_Rotation_DisplayName" xml:space="preserve">
+    <value>Rotire</value>
+    
+  </data>
+  <data name="image_ImagePosition_DisplayName" xml:space="preserve">
+    <value>Poziție imagine</value>
+    
+  </data>
+  <data name="image_ImageRotation_DisplayName" xml:space="preserve">
+    <value>Rotire</value>
+    
+  </data>
+  <data name="ImageRotation_None_DisplayName" xml:space="preserve">
+    <value>Niciunul</value>
+    
+  </data>
+  <data name="label_Live_DisplayName" xml:space="preserve">
+    <value>Live</value>
+    
+  </data>
+  <data name="label_Overflow_DisplayName" xml:space="preserve">
+    <value>Depășire</value>
+    
+  </data>
+  <data name="DatePicker_DateTimeZone_DisplayName" xml:space="preserve">
+    <value>Fus orar dată</value>
+    
+  </data>
+  <data name="DatePicker_Format_DisplayName" xml:space="preserve">
+    <value>Format</value>
+    
+  </data>
+  <data name="DatePicker_Language_DisplayName" xml:space="preserve">
+    <value>Limbă</value>
+    
+  </data>
+  <data name="Calendar_Width_DisplayName" xml:space="preserve">
+    <value>Lățime calendar</value>
+    
+  </data>
+  <data name="Hide_Calendar_DisplayName" xml:space="preserve">
+    <value>Ascundeți calendarul</value>
+    
+  </data>
+  <data name="Calendar_StartOfWeek_DisplayName" xml:space="preserve">
+    <value>Începutul săptămânii</value>
+    
+  </data>
+  <data name="microphone_Mic_DisplayName" xml:space="preserve">
+    <value>Microfon</value>
+    
+  </data>
+  <data name="text_Default_DisplayName" xml:space="preserve">
+    <value>Implicit</value>
+    
+  </data>
+  <data name="text_Mode_DisplayName" xml:space="preserve">
+    <value>Mod</value>
+    
+  </data>
+  <data name="text_Format_DisplayName" xml:space="preserve">
+    <value>Format</value>
+    
+  </data>
+  <data name="text_VirtualKeyboardMode_DisplayName" xml:space="preserve">
+    <value>Mod tastatură virtuală</value>
+    
+  </data>
+  <data name="text_TeamsTheme_DisplayName" xml:space="preserve">
+    <value>Tema Teams</value>
+    
+  </data>
+  <data name="text_Clear_DisplayName" xml:space="preserve">
+    <value>Butonul Golire</value>
+    
+  </data>
+  <data name="Align_Left_DisplayName" xml:space="preserve">
+    <value>Aliniere la stânga</value>
+    
+  </data>
+  <data name="Align_Right_DisplayName" xml:space="preserve">
+    <value>Aliniere la dreapta</value>
+    
+  </data>
+  <data name="Align_Center_DisplayName" xml:space="preserve">
+    <value>Aliniere la centru</value>
+    
+  </data>
+  <data name="Align_Justify_DisplayName" xml:space="preserve">
+    <value>Aliniere stânga-dreapta</value>
+    
+  </data>
+  <data name="AboutIsNumeric" xml:space="preserve">
+    <value>Verifică dacă o valoare este un număr și returnează adevărat sau fals.</value>
+    
+  </data>
+  <data name="IsNumericArg1" xml:space="preserve">
+    <value>valoare</value>
+    
+  </data>
+  <data name="AboutIsNumeric_value" xml:space="preserve">
+    <value>Valoarea de testat.</value>
+  </data>
+  <data name="Post" xml:space="preserve">
+    <value>Postare</value>
+    
+  </data>
+  <data name="AboutDateTimeValue" xml:space="preserve">
+    <value>Convertește o valoare dată-oră în formă de text la un număr care reprezintă data în codul dată-oră Power Apps.</value>
+    
+  </data>
+  <data name="DateTimeValueArg1" xml:space="preserve">
+    <value>text_timp</value>
+    
+  </data>
+  <data name="DateTimeValueArg2" xml:space="preserve">
+    <value>cod_de_limbă</value>
+    
+  </data>
+  <data name="AboutDateTimeValue_time_text" xml:space="preserve">
+    <value>O reprezentare text a unui marcaj de dată/oră, într-un format acceptat de platformă.</value>
+  </data>
+  <data name="AboutDateTimeValue_language_code" xml:space="preserve">
+    <value>Codul de limbă al textului furnizat.</value>
+  </data>
+  <data name="AboutTable" xml:space="preserve">
+    <value>Creează un tabel din înregistrările specificate, având numărul de coloane egal cu numărul de câmpuri unice din înregistrare. De exemplu: Table({key1: val1, key2: val2, ...}, ...)</value>
+    
+  </data>
+  <data name="TableArg1" xml:space="preserve">
+    <value>înregistrare</value>
+    
+  </data>
+  <data name="AboutTable_record" xml:space="preserve">
+    <value>O înregistrare care va deveni un rând în tabelul rezultat.</value>
+  </data>
+  <data name="AboutShowColumns" xml:space="preserve">
+    <value>Returnează un tabel cu toate coloanele eliminate din tabelul „sursă”, cu excepția coloanelor specificate.</value>
+    
+  </data>
+  <data name="ShowColumnsArg1" xml:space="preserve">
+    <value>sursă</value>
+    
+  </data>
+  <data name="ShowColumnsArg2" xml:space="preserve">
+    <value>nume_coloană</value>
+    
+  </data>
+  <data name="AboutShowColumns_source" xml:space="preserve">
+    <value>O valoare de tabel din care să se elimine coloane.</value>
+  </data>
+  <data name="AboutShowColumns_column_name" xml:space="preserve">
+    <value>Numele unei coloane de păstrat.</value>
+  </data>
+  <data name="AboutIsToday" xml:space="preserve">
+    <value>Verifică dacă data specificată este astăzi și returnează adevărat sau fals.</value>
+    
+  </data>
+  <data name="AboutIsToday_date" xml:space="preserve">
+    <value>Valoarea dată de testat.</value>
+  </data>
+  <data name="IsTodayFuncArg1" xml:space="preserve">
+    <value>dată</value>
+    
+  </data>
+  <data name="AboutIsUTCToday" xml:space="preserve">
+    <value>Verifică dacă data respectivă este cea de azi în UTC și returnează adevărat sau fals.</value>
+    
+  </data>
+  <data name="AboutIsUTCToday_date" xml:space="preserve">
+    <value>Valoarea datei de testat.</value>
+  </data>
+  <data name="IsUTCTodayFuncArg1" xml:space="preserve">
+    <value>dată</value>
+    
+  </data>
+  <data name="AboutMod" xml:space="preserve">
+    <value>Returnează restul după ce un număr este împărțit la un divizor. Rezultatul are același semn ca divizorul.</value>
+    
+  </data>
+  <data name="AboutModT" xml:space="preserve">
+    <value>Returnează o coloană care conține restul, după ce un număr (sau o coloană de numere) este împărțit la un divizor (sau la o coloană de divizori).</value>
+    
+  </data>
+  <data name="AboutMod_divisor" xml:space="preserve">
+    <value>Numărul la care să se împartă.</value>
+  </data>
+  <data name="AboutMod_divisor_or_column" xml:space="preserve">
+    <value>Numărul sau coloana de numere la care să se împartă.</value>
+  </data>
+  <data name="AboutMod_number" xml:space="preserve">
+    <value>Numărul pentru care să se găsească restul.</value>
+  </data>
+  <data name="AboutMod_number_or_column" xml:space="preserve">
+    <value>Numărul sau coloana de numere pentru care să se găsească restul.</value>
+  </data>
+  <data name="ModFuncArg1" xml:space="preserve">
+    <value>număr</value>
+    
+  </data>
+  <data name="ModFuncArg2" xml:space="preserve">
+    <value>divizor</value>
+    
+  </data>
+  <data name="ModTFuncArg1" xml:space="preserve">
+    <value>număr_sau_coloană</value>
+    
+  </data>
+  <data name="ModTFuncArg2" xml:space="preserve">
+    <value>divizor_sau_coloană</value>
+    
+  </data>
+  <data name="pdfViewer_Document_DisplayName" xml:space="preserve">
+    <value>Document</value>
+    
+  </data>
+  <data name="pdfViewer_Zoom_DisplayName" xml:space="preserve">
+    <value>Panoramare</value>
+    
+  </data>
+  <data name="pdfViewer_Password_DisplayName" xml:space="preserve">
+    <value>Parolă</value>
+    
+  </data>
+  <data name="pdfViewer_PasswordState_DisplayName" xml:space="preserve">
+    <value>Stare parolă</value>
+    
+  </data>
+  <data name="DataDescriptionInvalidFormat_Reason" xml:space="preserve">
+    <value>Descrierea datelor este nevalidă: {0}</value>
+  </data>
+  <data name="DataDescriptionParserUnknownException" xml:space="preserve">
+    <value>A apărut o eroare necunoscută la încercarea de analizare a descrierii datelor.</value>
+  </data>
+  <data name="AboutForAll" xml:space="preserve">
+    <value>Aplică o formulă dată la fiecare rând dintr-o sursă de date, apoi returnează un tabel nou cu rezultatele pentru fiecare rând.</value>
+    
+  </data>
+  <data name="AboutForAll_source" xml:space="preserve">
+    <value>Sursa de date sau tabelul pe care se operează.</value>
+  </data>
+  <data name="AboutForAll_formula" xml:space="preserve">
+    <value>Formula care să se evalueze pentru toate rândurile din tabel.</value>
+  </data>
+  <data name="ForAllArg1" xml:space="preserve">
+    <value>sursă</value>
+    
+  </data>
+  <data name="ForAllArg2" xml:space="preserve">
+    <value>formulă</value>
+    
+  </data>
+  <data name="AboutPower" xml:space="preserve">
+    <value>Ridică un număr x la puterea definită de alt număr y. Similar cu x^y.</value>
+    
+  </data>
+  <data name="AboutPower_base" xml:space="preserve">
+    <value>Numărul de bază care va fi ridicat la putere.</value>
+  </data>
+  <data name="AboutPower_exponent" xml:space="preserve">
+    <value>Exponentul la care va fi ridicată baza.</value>
+  </data>
+  <data name="PowerFuncArg1" xml:space="preserve">
+    <value>bază</value>
+    
+  </data>
+  <data name="PowerFuncArg2" xml:space="preserve">
+    <value>exponent</value>
+    
+  </data>
+  <data name="AboutStartsWith" xml:space="preserve">
+    <value>Returnează true dacă textul furnizat începe cu șirul de început furnizat.</value>
+    
+  </data>
+  <data name="AboutStartsWith_text" xml:space="preserve">
+    <value>Textul de verificat.</value>
+  </data>
+  <data name="AboutStartsWith_start" xml:space="preserve">
+    <value>Șirul de început. Funcția returnează true dacă textul începe cu acest șir.</value>
+  </data>
+  <data name="StartsWithArg1" xml:space="preserve">
+    <value>text</value>
+    
+  </data>
+  <data name="StartsWithArg2" xml:space="preserve">
+    <value>start</value>
+    
+  </data>
+  <data name="AboutEndsWith" xml:space="preserve">
+    <value>Returnează true dacă textul furnizat se încheie cu șirul de sfârșit furnizat.</value>
+    
+  </data>
+  <data name="AboutEndsWith_text" xml:space="preserve">
+    <value>Textul de verificat.</value>
+  </data>
+  <data name="AboutEndsWith_end" xml:space="preserve">
+    <value>Șirul de sfârșit. Funcția returnează true dacă textul se termină cu acest șir.</value>
+  </data>
+  <data name="EndsWithArg1" xml:space="preserve">
+    <value>text</value>
+    
+  </data>
+  <data name="EndsWithArg2" xml:space="preserve">
+    <value>sfârșit</value>
+    
+  </data>
+  <data name="AboutBlank" xml:space="preserve">
+    <value>Returnează o valoare nulă (necompletat)</value>
+  </data>
+  <data name="AboutPowerT" xml:space="preserve">
+    <value>Ridică un număr x (sau o coloană de numere) la puterea altui număr y (sau coloană de numere). Identic cu x^y.</value>
+    
+  </data>
+  <data name="AboutPower_base_or_column" xml:space="preserve">
+    <value>Numărul bază (sau coloana de numere bază) care va fi ridicat la o putere.</value>
+  </data>
+  <data name="AboutPower_exponent_or_column" xml:space="preserve">
+    <value>Exponentul (sau coloana de exponenți) la care va fi ridicată baza.</value>
+  </data>
+  <data name="PowerTFuncArg1" xml:space="preserve">
+    <value>bază_sau_coloană</value>
+    
+  </data>
+  <data name="PowerTFuncArg2" xml:space="preserve">
+    <value>exponent_sau_coloană</value>
+    
+  </data>
+  <data name="Icon_Import_DisplayName" xml:space="preserve">
+    <value>Import</value>
+    
+  </data>
+  <data name="Icon_AddUser_DisplayName" xml:space="preserve">
+    <value>Adăugare utilizator</value>
+    
+  </data>
+  <data name="Icon_Alarm_DisplayName" xml:space="preserve">
+    <value>Alarmă</value>
+    
+  </data>
+  <data name="Icon_Blocked_DisplayName" xml:space="preserve">
+    <value>Blocat</value>
+    
+  </data>
+  <data name="Icon_Bookmark_DisplayName" xml:space="preserve">
+    <value>Marcaj</value>
+    
+  </data>
+  <data name="Icon_Bug_DisplayName" xml:space="preserve">
+    <value>Eroare</value>
+    
+  </data>
+  <data name="Icon_Calculator_DisplayName" xml:space="preserve">
+    <value>Calculator</value>
+    
+  </data>
+  <data name="Icon_Diamond_DisplayName" xml:space="preserve">
+    <value>Romb</value>
+    
+  </data>
+  <data name="Icon_DockLeft_DisplayName" xml:space="preserve">
+    <value>Andocați la stânga</value>
+    
+  </data>
+  <data name="Icon_DockRight_DisplayName" xml:space="preserve">
+    <value>Andocați la dreapta</value>
+    
+  </data>
+  <data name="Icon_Enhance_DisplayName" xml:space="preserve">
+    <value>Sporire</value>
+    
+  </data>
+  <data name="Icon_Error_DisplayName" xml:space="preserve">
+    <value>Eroare</value>
+    
+  </data>
+  <data name="Icon_Export_DisplayName" xml:space="preserve">
+    <value>Export</value>
+    
+  </data>
+  <data name="Icon_Flag_DisplayName" xml:space="preserve">
+    <value>Semnalizator</value>
+    
+  </data>
+  <data name="Icon_Globe_DisplayName" xml:space="preserve">
+    <value>Glob</value>
+    
+  </data>
+  <data name="Icon_HalfFilledCircle_DisplayName" xml:space="preserve">
+    <value>Cerc pe jumătate umplut</value>
+    
+  </data>
+  <data name="Icon_Health_DisplayName" xml:space="preserve">
+    <value>Sănătate</value>
+    
+  </data>
+  <data name="Icon_Heart_DisplayName" xml:space="preserve">
+    <value>Inima</value>
+    
+  </data>
+  <data name="Icon_Help_DisplayName" xml:space="preserve">
+    <value>Ajutor</value>
+    
+  </data>
+  <data name="Icon_Hide_DisplayName" xml:space="preserve">
+    <value>Ascundere</value>
+    
+  </data>
+  <data name="Icon_History_DisplayName" xml:space="preserve">
+    <value>Istoric</value>
+    
+  </data>
+  <data name="Icon_HorizontalLine_DisplayName" xml:space="preserve">
+    <value>Linie orizontală</value>
+    
+  </data>
+  <data name="Icon_Hospital_DisplayName" xml:space="preserve">
+    <value>Spital</value>
+    
+  </data>
+  <data name="Icon_Key_DisplayName" xml:space="preserve">
+    <value>Cheie</value>
+    
+  </data>
+  <data name="Icon_Lightbulb_DisplayName" xml:space="preserve">
+    <value>Bec</value>
+    
+  </data>
+  <data name="Icon_LightningBolt_DisplayName" xml:space="preserve">
+    <value>Fulger</value>
+    
+  </data>
+  <data name="Icon_Link_DisplayName" xml:space="preserve">
+    <value>Link</value>
+    
+  </data>
+  <data name="Icon_Manufacture_DisplayName" xml:space="preserve">
+    <value>Producție</value>
+    
+  </data>
+  <data name="Icon_Medical_DisplayName" xml:space="preserve">
+    <value>Medical</value>
+    
+  </data>
+  <data name="Icon_Microphone_DisplayName" xml:space="preserve">
+    <value>Microfon</value>
+    
+  </data>
+  <data name="Icon_Notebook_DisplayName" xml:space="preserve">
+    <value>Blocnotes</value>
+    
+  </data>
+  <data name="Icon_OpenInNewWindow_DisplayName" xml:space="preserve">
+    <value>Deschideți în fereastră nouă</value>
+    
+  </data>
+  <data name="Icon_Phonebook_DisplayName" xml:space="preserve">
+    <value>Agendă telefonică</value>
+    
+  </data>
+  <data name="Icon_Print_DisplayName" xml:space="preserve">
+    <value>Imprimare</value>
+    
+  </data>
+  <data name="Icon_Publish_DisplayName" xml:space="preserve">
+    <value>Publicare</value>
+    
+  </data>
+  <data name="Icon_QuestionMark_DisplayName" xml:space="preserve">
+    <value>Semn de întrebare</value>
+    
+  </data>
+  <data name="Icon_Redo_DisplayName" xml:space="preserve">
+    <value>Refacere</value>
+    
+  </data>
+  <data name="Icon_Reset_DisplayName" xml:space="preserve">
+    <value>Resetare</value>
+    
+  </data>
+  <data name="Icon_Ribbon_DisplayName" xml:space="preserve">
+    <value>Panglică</value>
+    
+  </data>
+  <data name="Icon_Scan_DisplayName" xml:space="preserve">
+    <value>Scanare</value>
+    
+  </data>
+  <data name="Icon_Share_DisplayName" xml:space="preserve">
+    <value>Partajare</value>
+    
+  </data>
+  <data name="Icon_Shirt_DisplayName" xml:space="preserve">
+    <value>Cămașă</value>
+    
+  </data>
+  <data name="Icon_Shop_DisplayName" xml:space="preserve">
+    <value>Cumpărare</value>
+    
+  </data>
+  <data name="Icon_Signal_DisplayName" xml:space="preserve">
+    <value>Semnal</value>
+    
+  </data>
+  <data name="Icon_Support_DisplayName" xml:space="preserve">
+    <value>Asistență</value>
+    
+  </data>
+  <data name="Icon_Sync_DisplayName" xml:space="preserve">
+    <value>Sincronizare</value>
+    
+  </data>
+  <data name="Icon_Text_DisplayName" xml:space="preserve">
+    <value>Text</value>
+    
+  </data>
+  <data name="Icon_ThumbsDown_DisplayName" xml:space="preserve">
+    <value>Deget mare în jos</value>
+    
+  </data>
+  <data name="Icon_ThumbsUp_DisplayName" xml:space="preserve">
+    <value>Deget mare în sus</value>
+    
+  </data>
+  <data name="Icon_Train_DisplayName" xml:space="preserve">
+    <value>Tren</value>
+    
+  </data>
+  <data name="Icon_Tray_DisplayName" xml:space="preserve">
+    <value>Tavă</value>
+    
+  </data>
+  <data name="Icon_Undo_DisplayName" xml:space="preserve">
+    <value>Anulare</value>
+    
+  </data>
+  <data name="Icon_Unlock_DisplayName" xml:space="preserve">
+    <value>Deblocare</value>
+    
+  </data>
+  <data name="Icon_VerticalLine_DisplayName" xml:space="preserve">
+    <value>Linie verticală</value>
+    
+  </data>
+  <data name="Icon_Video_DisplayName" xml:space="preserve">
+    <value>Video</value>
+    
+  </data>
+  <data name="Icon_View_DisplayName" xml:space="preserve">
+    <value>Vizualizare</value>
+    
+  </data>
+  <data name="Icon_ZoomIn_DisplayName" xml:space="preserve">
+    <value>Mărire</value>
+    
+  </data>
+  <data name="Icon_ZoomOut_DisplayName" xml:space="preserve">
+    <value>Micșorare</value>
+    
+  </data>
+  <data name="Icon_BookmarkFilled_DisplayName" xml:space="preserve">
+    <value>Marcaj (umplut)</value>
+    
+  </data>
+  <data name="Icon_CancelBadge_DisplayName" xml:space="preserve">
+    <value>Anulare (ecuson)</value>
+    
+  </data>
+  <data name="Icon_CheckBadge_DisplayName" xml:space="preserve">
+    <value>Verificare (ecuson)</value>
+    
+  </data>
+  <data name="Icon_Cut_DisplayName" xml:space="preserve">
+    <value>Decupare</value>
+    
+  </data>
+  <data name="Icon_FilterFlat_DisplayName" xml:space="preserve">
+    <value>Filtru plat</value>
+    
+  </data>
+  <data name="Icon_FilterFlatFilled_DisplayName" xml:space="preserve">
+    <value>Filtru plat (umplut)</value>
+    
+  </data>
+  <data name="Icon_Leave_DisplayName" xml:space="preserve">
+    <value>Ieșire</value>
+    
+  </data>
+  <data name="Icon_Paste_DisplayName" xml:space="preserve">
+    <value>Lipire</value>
+    
+  </data>
+  <data name="Icon_ThumbsDownFilled_DisplayName" xml:space="preserve">
+    <value>Deget mare în jos (umplut)</value>
+    
+  </data>
+  <data name="Icon_ThumbsUpFilled_DisplayName" xml:space="preserve">
+    <value>Deget mare în sus (umplut)</value>
+    
+  </data>
+  <data name="Icon_EmojiHappy_DisplayName" xml:space="preserve">
+    <value>Emoji - Fericit</value>
+    
+  </data>
+  <data name="SuggestRemoteExecutionHint_OpNotSupportedByClient" xml:space="preserve">
+    <value>O parte din această formulă nu poate fi evaluată de la distanță. Operațiunea „{0}” nu este acceptată în prezent în acest context.</value>
+    
+  </data>
+  <data name="SuggestRemoteExecutionHint_StringMatchSecondParam" xml:space="preserve">
+    <value>O parte din această formulă nu poate fi evaluată de la distanță. Funcția „{0}” nu poate fi delegată dacă numele unui câmp apare în al doilea argument.</value>
+    
+  </data>
+  <data name="entityForm_EntityForm_DisplayName" xml:space="preserve">
+    <value>Formular entitate</value>
+    
+  </data>
+  <data name="BorderStyle_None_DisplayName" xml:space="preserve">
+    <value>Niciunul</value>
+    
+  </data>
+  <data name="BorderStyle_Dashed_DisplayName" xml:space="preserve">
+    <value>Liniuțe</value>
+    
+  </data>
+  <data name="BorderStyle_Solid_DisplayName" xml:space="preserve">
+    <value>Solid</value>
+    
+  </data>
+  <data name="BorderStyle_Dotted_DisplayName" xml:space="preserve">
+    <value>Punctat</value>
+    
+  </data>
+  <data name="DisplayMode_Disabled_DisplayName" xml:space="preserve">
+    <value>Dezactivat</value>
+    
+  </data>
+  <data name="DisplayMode_Edit_DisplayName" xml:space="preserve">
+    <value>Editare</value>
+    
+  </data>
+  <data name="DisplayMode_View_DisplayName" xml:space="preserve">
+    <value>Vizualizare</value>
+    
+  </data>
+  <data name="LayoutMode_Manual_DisplayName" xml:space="preserve">
+    <value>Manual</value>
+    
+  </data>
+  <data name="LayoutMode_Auto_DisplayName" xml:space="preserve">
+    <value>Automat</value>
+    
+  </data>
+  <data name="LayoutDirection_Horizontal_DisplayName" xml:space="preserve">
+    <value>Orizontal</value>
+    
+  </data>
+  <data name="LayoutDirection_Vertical_DisplayName" xml:space="preserve">
+    <value>Vertical</value>
+    
+  </data>
+  <data name="LayoutAlignItems_Start_DisplayName" xml:space="preserve">
+    <value>Început</value>
+    
+  </data>
+  <data name="LayoutAlignItems_Center_DisplayName" xml:space="preserve">
+    <value>Centru</value>
+    
+  </data>
+  <data name="LayoutAlignItems_End_DisplayName" xml:space="preserve">
+    <value>Sfârșit</value>
+    
+  </data>
+  <data name="LayoutAlignItems_Stretch_DisplayName" xml:space="preserve">
+    <value>Întindere</value>
+    
+  </data>
+  <data name="AlignInContainer_Start_DisplayName" xml:space="preserve">
+    <value>Început</value>
+    
+  </data>
+  <data name="AlignInContainer_Center_DisplayName" xml:space="preserve">
+    <value>Centru</value>
+    
+  </data>
+  <data name="AlignInContainer_End_DisplayName" xml:space="preserve">
+    <value>Sfârșit</value>
+    
+  </data>
+  <data name="AlignInContainer_Stretch_DisplayName" xml:space="preserve">
+    <value>Întindere</value>
+    
+  </data>
+  <data name="AlignInContainer_SetByContainer_DisplayName" xml:space="preserve">
+    <value>Setare după container</value>
+    
+  </data>
+  <data name="LayoutJustifyContent_Start_DisplayName" xml:space="preserve">
+    <value>Început</value>
+    
+  </data>
+  <data name="LayoutJustifyContent_Center_DisplayName" xml:space="preserve">
+    <value>Centru</value>
+    
+  </data>
+  <data name="LayoutJustifyContent_End_DisplayName" xml:space="preserve">
+    <value>Sfârșit</value>
+    
+  </data>
+  <data name="LayoutJustifyContent_SpaceEvenly_DisplayName" xml:space="preserve">
+    <value>Spațiu uniform</value>
+    
+  </data>
+  <data name="LayoutJustifyContent_SpaceAround_DisplayName" xml:space="preserve">
+    <value>Spațiu în jur</value>
+    
+  </data>
+  <data name="LayoutJustifyContent_SpaceBetween_DisplayName" xml:space="preserve">
+    <value>Spațiu între</value>
+    
+  </data>
+  <data name="LayoutOverflow_Hide_DisplayName" xml:space="preserve">
+    <value>Ascundere</value>
+    
+  </data>
+  <data name="LayoutOverflow_Scroll_DisplayName" xml:space="preserve">
+    <value>Defilare</value>
+    
+  </data>
+  <data name="Overflow_Hidden_DisplayName" xml:space="preserve">
+    <value>Ascuns</value>
+    
+  </data>
+  <data name="Overflow_Scroll_DisplayName" xml:space="preserve">
+    <value>Defilare</value>
+    
+  </data>
+  <data name="TextMode_SingleLine_DisplayName" xml:space="preserve">
+    <value>Linie unică</value>
+    
+  </data>
+  <data name="TextMode_Password_DisplayName" xml:space="preserve">
+    <value>Parolă</value>
+    
+  </data>
+  <data name="TextMode_MultiLine_DisplayName" xml:space="preserve">
+    <value>Multilinie</value>
+    
+  </data>
+  <data name="TextFormat_Text_DisplayName" xml:space="preserve">
+    <value>Text</value>
+    
+  </data>
+  <data name="TextFormat_Number_DisplayName" xml:space="preserve">
+    <value>Număr</value>
+    
+  </data>
+  <data name="VirtualKeyboardMode_Auto_DisplayName" xml:space="preserve">
+    <value>Tastatură automată</value>
+    
+  </data>
+  <data name="VirtualKeyboardMode_Numeric_DisplayName" xml:space="preserve">
+    <value>Tastatură numerică</value>
+    
+  </data>
+  <data name="VirtualKeyboardMode_Text_DisplayName" xml:space="preserve">
+    <value>Tastatură text</value>
+    
+  </data>
+  <data name="TeamsTheme_Default_DisplayName" xml:space="preserve">
+    <value>Temă implicită</value>
+    
+  </data>
+  <data name="TeamsTheme_Dark_DisplayName" xml:space="preserve">
+    <value>Tema Întunecat</value>
+    
+  </data>
+  <data name="TeamsTheme_Contrast_DisplayName" xml:space="preserve">
+    <value>Tema Contrast</value>
+    
+  </data>
+  <data name="PenMode_Draw_DisplayName" xml:space="preserve">
+    <value>Desenare</value>
+    
+  </data>
+  <data name="PenMode_Erase_DisplayName" xml:space="preserve">
+    <value>Ștergere</value>
+    
+  </data>
+  <data name="DateTimeZone_Local_DisplayName" xml:space="preserve">
+    <value>Local</value>
+    
+  </data>
+  <data name="DateTimeZone_UTC_DisplayName" xml:space="preserve">
+    <value>UTC</value>
+    
+  </data>
+  <data name="ImagePosition_Fill_DisplayName" xml:space="preserve">
+    <value>Completare</value>
+    
+  </data>
+  <data name="ImagePosition_Fit_DisplayName" xml:space="preserve">
+    <value>Potrivire</value>
+    
+  </data>
+  <data name="ImagePosition_Stretch_DisplayName" xml:space="preserve">
+    <value>Lărgire</value>
+    
+  </data>
+  <data name="ImagePosition_Tile_DisplayName" xml:space="preserve">
+    <value>Dală</value>
+    
+  </data>
+  <data name="ImagePosition_Center_DisplayName" xml:space="preserve">
+    <value>Centru</value>
+    
+  </data>
+  <data name="VerticalAlign_Top_DisplayName" xml:space="preserve">
+    <value>Sus</value>
+    
+  </data>
+  <data name="VerticalAlign_Middle_DisplayName" xml:space="preserve">
+    <value>Mijloc</value>
+    
+  </data>
+  <data name="VerticalAlign_Bottom_DisplayName" xml:space="preserve">
+    <value>Jos</value>
+    
+  </data>
+  <data name="Layout_Horizontal_DisplayName" xml:space="preserve">
+    <value>Orizontal</value>
+    
+  </data>
+  <data name="Layout_Vertical_DisplayName" xml:space="preserve">
+    <value>Vertical</value>
+    
+  </data>
+  <data name="TextPosition_Left_DisplayName" xml:space="preserve">
+    <value>Partea stângă</value>
+    
+  </data>
+  <data name="TextPosition_Right_DisplayName" xml:space="preserve">
+    <value>Partea dreaptă</value>
+    
+  </data>
+  <data name="Transition_Push_DisplayName" xml:space="preserve">
+    <value>Push</value>
+    
+  </data>
+  <data name="Transition_Pop_DisplayName" xml:space="preserve">
+    <value>Pop</value>
+    
+  </data>
+  <data name="Transition_None_DisplayName" xml:space="preserve">
+    <value>Niciunul</value>
+    
+  </data>
+  <data name="FontWeight_Normal_DisplayName" xml:space="preserve">
+    <value>Normal</value>
+    
+  </data>
+  <data name="FontWeight_Semibold_DisplayName" xml:space="preserve">
+    <value>Semialdin</value>
+    
+  </data>
+  <data name="FontWeight_Bold_DisplayName" xml:space="preserve">
+    <value>Aldin</value>
+    
+  </data>
+  <data name="FontWeight_Lighter_DisplayName" xml:space="preserve">
+    <value>Mai luminos</value>
+    
+  </data>
+  <data name="FormPattern_None_DisplayName" xml:space="preserve">
+    <value>Niciunul</value>
+    
+  </data>
+  <data name="FormPattern_Details_DisplayName" xml:space="preserve">
+    <value>Detalii</value>
+    
+  </data>
+  <data name="FormPattern_List_DisplayName" xml:space="preserve">
+    <value>Listă</value>
+    
+  </data>
+  <data name="FormPattern_CardList_DisplayName" xml:space="preserve">
+    <value>Listă de fișe</value>
+    
+  </data>
+  <data name="BarcodeType_Auto_DisplayName" xml:space="preserve">
+    <value>Automat</value>
+    
+  </data>
+  <data name="BarcodeType_Aztec_DisplayName" xml:space="preserve">
+    <value>Aztec</value>
+    
+  </data>
+  <data name="BarcodeType_Codabar_DisplayName" xml:space="preserve">
+    <value>Codabar</value>
+    
+  </data>
+  <data name="BarcodeType_DataMatrix_DisplayName" xml:space="preserve">
+    <value>Matrice de date</value>
+    
+  </data>
+  <data name="BarcodeType_Ean_DisplayName" xml:space="preserve">
+    <value>EAN</value>
+    
+  </data>
+  <data name="BarcodeType_QRCode_DisplayName" xml:space="preserve">
+    <value>Cod QR</value>
+    
+  </data>
+  <data name="BarcodeType_RssExpanded_DisplayName" xml:space="preserve">
+    <value>RSS extins</value>
+    
+  </data>
+  <data name="BarcodeType_Upc_DisplayName" xml:space="preserve">
+    <value>UPC</value>
+    
+  </data>
+  <data name="GridStyle_XOnly_DisplayName" xml:space="preserve">
+    <value>Doar X</value>
+    
+  </data>
+  <data name="GridStyle_YOnly_DisplayName" xml:space="preserve">
+    <value>Doar Y</value>
+    
+  </data>
+  <data name="GridStyle_All_DisplayName" xml:space="preserve">
+    <value>Toate</value>
+    
+  </data>
+  <data name="GridStyle_None_DisplayName" xml:space="preserve">
+    <value>Niciunul</value>
+    
+  </data>
+  <data name="FormMode_Edit_DisplayName" xml:space="preserve">
+    <value>Editare</value>
+    
+  </data>
+  <data name="FormMode_View_DisplayName" xml:space="preserve">
+    <value>Vizualizare</value>
+    
+  </data>
+  <data name="FormMode_New_DisplayName" xml:space="preserve">
+    <value>Nou</value>
+    
+  </data>
+  <data name="SelectedState_Edit_DisplayName" xml:space="preserve">
+    <value>Editare</value>
+    
+  </data>
+  <data name="SelectedState_View_DisplayName" xml:space="preserve">
+    <value>Vizualizare</value>
+    
+  </data>
+  <data name="SelectedState_New_DisplayName" xml:space="preserve">
+    <value>Nou</value>
+    
+  </data>
+  <data name="LoadingSpinner_Controls_DisplayName" xml:space="preserve">
+    <value>Controale</value>
+    
+  </data>
+  <data name="LoadingSpinner_Data_DisplayName" xml:space="preserve">
+    <value>Date</value>
+    
+  </data>
+  <data name="LoadingSpinner_None_DisplayName" xml:space="preserve">
+    <value>Fără</value>
+    
+  </data>
+  <data name="NotificationType_Error_DisplayName" xml:space="preserve">
+    <value>Eroare</value>
+    
+  </data>
+  <data name="NotificationType_Warning_DisplayName" xml:space="preserve">
+    <value>Avertisment</value>
+    
+  </data>
+  <data name="NotificationType_Success_DisplayName" xml:space="preserve">
+    <value>Succes</value>
+    
+  </data>
+  <data name="NotificationType_Information_DisplayName" xml:space="preserve">
+    <value>Informații</value>
+    
+  </data>
+  <data name="Icon_Add_DisplayName" xml:space="preserve">
+    <value>Adăugare</value>
+    
+  </data>
+  <data name="Icon_Cancel_DisplayName" xml:space="preserve">
+    <value>Anulare</value>
+    
+  </data>
+  <data name="Icon_Edit_DisplayName" xml:space="preserve">
+    <value>Editare</value>
+    
+  </data>
+  <data name="Icon_Check_DisplayName" xml:space="preserve">
+    <value>Verificare</value>
+    
+  </data>
+  <data name="Icon_Search_DisplayName" xml:space="preserve">
+    <value>Căutare</value>
+    
+  </data>
+  <data name="Icon_Filter_DisplayName" xml:space="preserve">
+    <value>Filtrare</value>
+    
+  </data>
+  <data name="Icon_Sort_DisplayName" xml:space="preserve">
+    <value>Sortare</value>
+    
+  </data>
+  <data name="Icon_Reload_DisplayName" xml:space="preserve">
+    <value>Reîncărcare</value>
+    
+  </data>
+  <data name="Icon_Trash_DisplayName" xml:space="preserve">
+    <value>Coș</value>
+    
+  </data>
+  <data name="Icon_Save_DisplayName" xml:space="preserve">
+    <value>Salvare</value>
+    
+  </data>
+  <data name="Icon_Download_DisplayName" xml:space="preserve">
+    <value>Descărcare</value>
+    
+  </data>
+  <data name="Icon_Copy_DisplayName" xml:space="preserve">
+    <value>Copiere</value>
+    
+  </data>
+  <data name="Icon_LikeDislike_DisplayName" xml:space="preserve">
+    <value>Îmi place/Nu îmi place</value>
+    
+  </data>
+  <data name="Icon_Crop_DisplayName" xml:space="preserve">
+    <value>Trunchiere</value>
+    
+  </data>
+  <data name="Icon_Pin_DisplayName" xml:space="preserve">
+    <value>Fixare</value>
+    
+  </data>
+  <data name="Icon_ClearDrawing_DisplayName" xml:space="preserve">
+    <value>Ștergeți desenul</value>
+    
+  </data>
+  <data name="Icon_ExpandView_DisplayName" xml:space="preserve">
+    <value>Extindere vizualizare</value>
+    
+  </data>
+  <data name="Icon_CollapseView_DisplayName" xml:space="preserve">
+    <value>Restrângeți vizualizarea</value>
+    
+  </data>
+  <data name="Icon_Draw_DisplayName" xml:space="preserve">
+    <value>Desenare</value>
+    
+  </data>
+  <data name="Icon_Compose_DisplayName" xml:space="preserve">
+    <value>Compunere</value>
+    
+  </data>
+  <data name="Icon_Erase_DisplayName" xml:space="preserve">
+    <value>Ștergere</value>
+    
+  </data>
+  <data name="Icon_Message_DisplayName" xml:space="preserve">
+    <value>Mesaj</value>
+    
+  </data>
+  <data name="Icon_Post_DisplayName" xml:space="preserve">
+    <value>Postare</value>
+    
+  </data>
+  <data name="Icon_AddDocument_DisplayName" xml:space="preserve">
+    <value>Adăugați un document</value>
+    
+  </data>
+  <data name="Icon_AddLibrary_DisplayName" xml:space="preserve">
+    <value>Adăugați o bibliotecă</value>
+    
+  </data>
+  <data name="Icon_Home_DisplayName" xml:space="preserve">
+    <value>Pornire</value>
+    
+  </data>
+  <data name="Icon_Hamburger_DisplayName" xml:space="preserve">
+    <value>Hamburger</value>
+    
+  </data>
+  <data name="Icon_Settings_DisplayName" xml:space="preserve">
+    <value>Setări</value>
+    
+  </data>
+  <data name="Icon_More_DisplayName" xml:space="preserve">
+    <value>Mai mult</value>
+    
+  </data>
+  <data name="Icon_Waffle_DisplayName" xml:space="preserve">
+    <value>Vafă</value>
+    
+  </data>
+  <data name="Icon_ChevronLeft_DisplayName" xml:space="preserve">
+    <value>Partea stângă</value>
+    
+  </data>
+  <data name="Icon_ChevronRight_DisplayName" xml:space="preserve">
+    <value>Partea dreaptă</value>
+    
+  </data>
+  <data name="Icon_ChevronUp_DisplayName" xml:space="preserve">
+    <value>Sus</value>
+    
+  </data>
+  <data name="Icon_ChevronDown_DisplayName" xml:space="preserve">
+    <value>Jos</value>
+    
+  </data>
+  <data name="Icon_NextArrow_DisplayName" xml:space="preserve">
+    <value>Următorul</value>
+    
+  </data>
+  <data name="Icon_BackArrow_DisplayName" xml:space="preserve">
+    <value>Înapoi</value>
+    
+  </data>
+  <data name="Icon_ArrowDown_DisplayName" xml:space="preserve">
+    <value>Săgeată în jos</value>
+    
+  </data>
+  <data name="Icon_ArrowUp_DisplayName" xml:space="preserve">
+    <value>Săgeată în sus</value>
+    
+  </data>
+  <data name="Icon_ArrowLeft_DisplayName" xml:space="preserve">
+    <value>Săgeată la stânga</value>
+    
+  </data>
+  <data name="Icon_ArrowRight_DisplayName" xml:space="preserve">
+    <value>Săgeată la dreapta</value>
+    
+  </data>
+  <data name="Icon_Camera_DisplayName" xml:space="preserve">
+    <value>Cameră</value>
+    
+  </data>
+  <data name="Icon_Document_DisplayName" xml:space="preserve">
+    <value>Document</value>
+    
+  </data>
+  <data name="Icon_DockCheckProperties_DisplayName" xml:space="preserve">
+    <value>Marcaj în document</value>
+    
+  </data>
+  <data name="Icon_Folder_DisplayName" xml:space="preserve">
+    <value>Folder</value>
+    
+  </data>
+  <data name="Icon_Journal_DisplayName" xml:space="preserve">
+    <value>Jurnal</value>
+    
+  </data>
+  <data name="Icon_ForkKnife_DisplayName" xml:space="preserve">
+    <value>Produse alimentare</value>
+    
+  </data>
+  <data name="Icon_Transportation_DisplayName" xml:space="preserve">
+    <value>Transporturi</value>
+    
+  </data>
+  <data name="Icon_Airplane_DisplayName" xml:space="preserve">
+    <value>Avion</value>
+    
+  </data>
+  <data name="Icon_Bus_DisplayName" xml:space="preserve">
+    <value>Autobuz</value>
+    
+  </data>
+  <data name="Icon_Cars_DisplayName" xml:space="preserve">
+    <value>Mașini</value>
+    
+  </data>
+  <data name="Icon_Money_DisplayName" xml:space="preserve">
+    <value>Bani</value>
+    
+  </data>
+  <data name="Icon_Currency_DisplayName" xml:space="preserve">
+    <value>Monedă</value>
+    
+  </data>
+  <data name="Icon_AddToCalendar_DisplayName" xml:space="preserve">
+    <value>Adăugați în calendar</value>
+    
+  </data>
+  <data name="Icon_CalendarBlank_DisplayName" xml:space="preserve">
+    <value>Calendar necompletat</value>
+    
+  </data>
+  <data name="Icon_OfficeBuilding_DisplayName" xml:space="preserve">
+    <value>Clădire de birouri</value>
+    
+  </data>
+  <data name="Icon_PaperClip_DisplayName" xml:space="preserve">
+    <value>Agrafă de hârtie</value>
+    
+  </data>
+  <data name="Icon_Newspaper_DisplayName" xml:space="preserve">
+    <value>Ziar</value>
+    
+  </data>
+  <data name="Icon_Lock_DisplayName" xml:space="preserve">
+    <value>Lacăt</value>
+    
+  </data>
+  <data name="Icon_Waypoint_DisplayName" xml:space="preserve">
+    <value>Punct de oprire</value>
+    
+  </data>
+  <data name="Icon_Location_DisplayName" xml:space="preserve">
+    <value>Locație</value>
+    
+  </data>
+  <data name="Icon_DocumentPDF_DisplayName" xml:space="preserve">
+    <value>Document PDF</value>
+    
+  </data>
+  <data name="Icon_Bell_DisplayName" xml:space="preserve">
+    <value>Clopoțel</value>
+    
+  </data>
+  <data name="Icon_ShoppingCart_DisplayName" xml:space="preserve">
+    <value>Coș de cumpărături</value>
+    
+  </data>
+  <data name="Icon_Phone_DisplayName" xml:space="preserve">
+    <value>Telefon</value>
+    
+  </data>
+  <data name="Icon_PhoneHangUp_DisplayName" xml:space="preserve">
+    <value>Terminare apel</value>
+    
+  </data>
+  <data name="Icon_Mobile_DisplayName" xml:space="preserve">
+    <value>Mobil</value>
+    
+  </data>
+  <data name="Icon_Laptop_DisplayName" xml:space="preserve">
+    <value>Laptop</value>
+    
+  </data>
+  <data name="Icon_ComputerDesktop_DisplayName" xml:space="preserve">
+    <value>Computer desktop</value>
+    
+  </data>
+  <data name="Icon_Devices_DisplayName" xml:space="preserve">
+    <value>Dispozitive</value>
+    
+  </data>
+  <data name="Icon_Controller_DisplayName" xml:space="preserve">
+    <value>Controler</value>
+    
+  </data>
+  <data name="Icon_Tools_DisplayName" xml:space="preserve">
+    <value>Instrumente</value>
+    
+  </data>
+  <data name="Icon_ToolsWrench_DisplayName" xml:space="preserve">
+    <value>Cheie instrumente</value>
+    
+  </data>
+  <data name="Icon_Mail_DisplayName" xml:space="preserve">
+    <value>E-mail</value>
+    
+  </data>
+  <data name="Icon_Send_DisplayName" xml:space="preserve">
+    <value>Trimitere</value>
+    
+  </data>
+  <data name="Icon_Clock_DisplayName" xml:space="preserve">
+    <value>Ceas</value>
+    
+  </data>
+  <data name="Icon_ListWatchlistRemind_DisplayName" xml:space="preserve">
+    <value>Memento listă</value>
+    
+  </data>
+  <data name="Icon_LogJournal_DisplayName" xml:space="preserve">
+    <value>Înregistrare jurnal</value>
+    
+  </data>
+  <data name="Icon_Note_DisplayName" xml:space="preserve">
+    <value>Notă</value>
+    
+  </data>
+  <data name="Icon_PhotosPictures_DisplayName" xml:space="preserve">
+    <value>Cadre imagine</value>
+    
+  </data>
+  <data name="Icon_RadarActivityMonitor_DisplayName" xml:space="preserve">
+    <value>Radar</value>
+    
+  </data>
+  <data name="Icon_Tablet_DisplayName" xml:space="preserve">
+    <value>Tabletă</value>
+    
+  </data>
+  <data name="Icon_Tag_DisplayName" xml:space="preserve">
+    <value>Etichetă</value>
+    
+  </data>
+  <data name="Icon_CameraAperture_DisplayName" xml:space="preserve">
+    <value>Apertură cameră</value>
+    
+  </data>
+  <data name="Icon_ColorPicker_DisplayName" xml:space="preserve">
+    <value>Selector culoare</value>
+    
+  </data>
+  <data name="Icon_DetailList_DisplayName" xml:space="preserve">
+    <value>Listă detalii</value>
+    
+  </data>
+  <data name="Icon_DocumentWithContent_DisplayName" xml:space="preserve">
+    <value>Document cu conținut</value>
+    
+  </data>
+  <data name="Icon_ListScrollEmpty_DisplayName" xml:space="preserve">
+    <value>Defilarea prin listă este goală</value>
+    
+  </data>
+  <data name="Icon_ListScrollWatchlist_DisplayName" xml:space="preserve">
+    <value>Listă de urmărire defilare prin listă</value>
+    
+  </data>
+  <data name="Icon_OptionsList_DisplayName" xml:space="preserve">
+    <value>Listă de opțiuni</value>
+    
+  </data>
+  <data name="Icon_People_DisplayName" xml:space="preserve">
+    <value>Persoane</value>
+    
+  </data>
+  <data name="Icon_Person_DisplayName" xml:space="preserve">
+    <value>Persoană</value>
+    
+  </data>
+  <data name="Icon_EmojiFrown_DisplayName" xml:space="preserve">
+    <value>Emoji - Încruntat</value>
+    
+  </data>
+  <data name="Icon_EmojiSmile_DisplayName" xml:space="preserve">
+    <value>Emoji - Zâmbet</value>
+    
+  </data>
+  <data name="Icon_EmojiSad_DisplayName" xml:space="preserve">
+    <value>Emoji - Trist</value>
+    
+  </data>
+  <data name="Icon_EmojiNeutral_DisplayName" xml:space="preserve">
+    <value>Emoji - Neutru</value>
+    
+  </data>
+  <data name="Icon_Warning_DisplayName" xml:space="preserve">
+    <value>Avertisment</value>
+    
+  </data>
+  <data name="Icon_Information_DisplayName" xml:space="preserve">
+    <value>Informații</value>
+    
+  </data>
+  <data name="Icon_Database_DisplayName" xml:space="preserve">
+    <value>Bază de date</value>
+    
+  </data>
+  <data name="Icon_Weather_DisplayName" xml:space="preserve">
+    <value>Meteo</value>
+    
+  </data>
+  <data name="Icon_TrendingHashtag_DisplayName" xml:space="preserve">
+    <value>Hashtag</value>
+    
+  </data>
+  <data name="Icon_TrendingUpwards_DisplayName" xml:space="preserve">
+    <value>Tendințe ascendente</value>
+    
+  </data>
+  <data name="Icon_Items_DisplayName" xml:space="preserve">
+    <value>Elemente</value>
+    
+  </data>
+  <data name="Icon_LevelsLayersItems_DisplayName" xml:space="preserve">
+    <value>Straturi</value>
+    
+  </data>
+  <data name="Icon_Trending_DisplayName" xml:space="preserve">
+    <value>Tendințe</value>
+    
+  </data>
+  <data name="Icon_LineWeight_DisplayName" xml:space="preserve">
+    <value>Grosimea liniei</value>
+    
+  </data>
+  <data name="AboutIsError" xml:space="preserve">
+    <value>Returnează dacă a avut loc o eroare la evaluarea argumentului dat.</value>
+    
+  </data>
+  <data name="IsErrorArg" xml:space="preserve">
+    <value>valoare</value>
+    
+  </data>
+  <data name="AboutIsError_value" xml:space="preserve">
+    <value>Valoarea de verificat pentru erori.</value>
+    
+  </data>
+  <data name="ErrBadArityMinimum" xml:space="preserve">
+    <value>Număr nevalid de argumente: s-au primit {0}, se așteptau {1} sau mai multe.</value>
+    
+  </data>
+  <data name="ErrBadArityRange" xml:space="preserve">
+    <value>Număr nevalid de argumente: s-au primit {0}, se așteptau {1}-{2}.</value>
+    
+  </data>
+  <data name="ErrGeneralError" xml:space="preserve">
+    <value>{0}</value>
+    
+  </data>
+  <data name="FormulaColumns_NotSupported" xml:space="preserve">
+    <value>Nu este acceptat în coloanele de formule.</value>
+    
+  </data>
+  <data name="FormulaColumns_ArgNotSupported" xml:space="preserve">
+    <value>Argumentul {0} nu este acceptat pentru funcția {1} din coloanele de formule.</value>
+    
+  </data>
+  <data name="FormulaColumns_ArgTypeNotSupported" xml:space="preserve">
+    <value>Acest argument nu poate fi transmis ca fiind de acest tip în coloanele de formule.</value>
+    
+  </data>
+  <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
+    <value>Doar o valoare literală se acceptă pentru acest argument.</value>
+    
+  </data>
+  <data name="FormulaColumns_TimeZoneConversion" xml:space="preserve">
+    <value>{0} nu poate opera pe această intrare fără o conversie de fus orar fără de care funcția nu este acceptată în coloanele de formule.</value>
+    
+  </data>
+  <data name="FormulaColumns_IncompatibleDateTimes" xml:space="preserve">
+    <value>Această operațiune nu se poate efectua pe valori care prezintă comportamente de dată/oră diferite.</value>
+    
+  </data>
+  <data name="FormulaColumns_DateTimeFormatNotSupported" xml:space="preserve">
+    <value>Numai șirurile scurte de format dată și oră sunt acceptate în coloanele de formule.</value>
+    
+  </data>
+  <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
+    <value>Tokenurile de formatare specifice setărilor regionale, cum ar fi „.” și „,” nu sunt acceptate în coloanele de formule.</value>
+    
+  </data>
+  <data name="FormulaColumns_FunctionNotSupported" xml:space="preserve">
+    <value>{0} nu este acceptată în coloanele de formule, utilizați în schimb {1}.</value>
+    
+  </data>
+  <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
+    <value>Tipul de rezultat {0} nu este acceptat în coloanele de formule.</value>
+    
+  </data>
+  <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
+    <value>Tipul de rezultat al acestei formule trebuie să fie {0}, dar rezultatul actual este de tip {1}. Tipul de rezultat al unei coloane de formule nu poate fi modificat.</value>
+    
+  </data>
+  <data name="FormulaColumns_ColumnTypeNotSupported" xml:space="preserve">
+    <value>Coloanele de tip {0} nu sunt acceptate în coloanele de formule.</value>
+    
+  </data>
+  <data name="FormulaColumns_ColumnFormatNotSupported" xml:space="preserve">
+    <value>Coloanele de tip {0} având formatul {1} nu sunt acceptate în coloanele de formule.</value>
+    
+  </data>
+  <data name="FormulaColumns_FormulaTooLong" xml:space="preserve">
+    <value>Formulele nu pot avea mai mult de 1000 de caractere.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
+    <value>Se aștepta un operand. Formula sau expresia așteaptă un operand valid. De exemplu, puteți adăuga operandul „2” la expresia „1 +_”, astfel încât rezultatul să fie „3”. Alternativ, puteți adăuga operandul „tuturor” la expresia „"Salut "&amp; _”, astfel încât rezultatul să fie „Salut tuturor”.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrOperandExpected_HowToFix_1" xml:space="preserve">
+    <value>Furnizați o valoare de operand care va completa expresia. Asigurați-vă că tipul operandului (text, număr, dată sau true/false) se potrivește cu expresia. Corelați numerele cu numere, textul cu text și așa mai departe. De exemplu, expresia „1 + "Salut"” nu este validă, dar „1 + 2” este validă.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBadToken_ShortMessage" xml:space="preserve">
+    <value>Caractere neașteptate. Caracterele sunt utilizate în formulă într-un mod neașteptat.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBadToken_LongMessage" xml:space="preserve">
+    <value>De exemplu, caracterul „\” nu este așteptat după un număr, în felul următor: „32\”. S-ar aștepta un spațiu („32 ”), astfel încât să fie doar numărul 32 sau un alt număr (precum în „323”).</value>
+  </data>
+  <data name="ErrorResource_ErrBadToken_HowToFix_1" xml:space="preserve">
+    <value>Eliminați sau înlocuiți caracterele neașteptate.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBadToken_Link_1" xml:space="preserve">
+    <value>Articol: referință privind formulele pentru Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_UnexpectedCharacterToken_ShortMessage" xml:space="preserve">
+    <value>Caracterul neașteptat „{0}” la poziția „{1}” din formulă.</value>
+    
+  </data>
+  <data name="ErrorResource_UnexpectedCharacterToken_LongMessage" xml:space="preserve">
+    <value>De exemplu, caracterul „\” nu este așteptat după un număr, în felul următor: „32\”. S-ar aștepta un spațiu („32 ”), astfel încât să fie doar numărul 32 sau un alt număr (precum în „323”).</value>
+  </data>
+  <data name="ErrorResource_UnexpectedCharacterToken_HowToFix_1" xml:space="preserve">
+    <value>Eliminați sau înlocuiți caracterul neașteptat.</value>
+  </data>
+  <data name="ErrorResource_UnexpectedCharacterToken_Link_1" xml:space="preserve">
+    <value>Articol: Referință de formule pentru Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrMissingEndOfBlockComment_ShortMessage" xml:space="preserve">
+    <value>Identificator sfârșit de comentariu lipsă. Comentariul bloc nu are niciun identificator de sfârșit de comentariu.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrMissingEndOfBlockComment_LongMessage" xml:space="preserve">
+    <value>Fiecare comentariu bloc trebuie să înceapă cu „/*” și să se termine cu „*/”. Dacă nu încheiați corect fiecare comentariu bloc, tot codul de după comentariu devine parte a comentariului. Dacă un comentariu cuprinde numai o singură linie, îl puteți începe cu „//” și nu este nevoie să identificați sfârșitul comentariului.</value>
+  </data>
+  <data name="ErrorResource_ErrMissingEndOfBlockComment_HowToFix_1" xml:space="preserve">
+    <value>Adăugați „*/” la sfârșitul comentariului bloc sau transformați-l într-un set de comentarii linie.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrMissingEndOfBlockComment_Link_1" xml:space="preserve">
+    <value>Articol: referință privind formulele pentru Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_ShortMessage" xml:space="preserve">
+    <value>Caractere neașteptate. Formula conține „{0}” unde se așteaptă „{1}”.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_LongMessage" xml:space="preserve">
+    <value>Această eroare apare dacă, de exemplu, o formulă conține „{{Val@ 7}}” în loc de „{{Val: 7}}”. Când setați o variabilă, sintaxa necesită două puncte în locul unui simbol „a rond”.</value>
+  </data>
+  <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_HowToFix_1" xml:space="preserve">
+    <value>Eliminați sau înlocuiți caracterele neașteptate cu un caracter așteptat.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_Link_1" xml:space="preserve">
+    <value>Articol: referință privind formulele pentru Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidName_ShortMessage" xml:space="preserve">
+    <value>Numele nu este valid. „{0}” nu este recunoscut.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidName_LongMessage" xml:space="preserve">
+    <value>Această eroare apare cel mai frecvent atunci când o formulă face referire la ceva care nu mai există (de exemplu, un control pe care l-ați șters).</value>
+  </data>
+  <data name="ErrorResource_ErrInvalidName_HowToFix_1" xml:space="preserve">
+    <value>Eliminați sau corectați referința la nume care nu este validă.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidName_Link_1" xml:space="preserve">
+    <value>Articol: referință privind formulele pentru Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_ShortMessage" xml:space="preserve">
+    <value>Numele nu este valid. Identificatorul nu este recunoscut.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_LongMessage" xml:space="preserve">
+    <value>Această eroare apare cel mai frecvent atunci când o formulă face referire la ceva care nu mai există (de exemplu un control pe care l-ați șters).</value>
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_HowToFix_1" xml:space="preserve">
+    <value>Eliminați sau corectați referința la numele care nu este valid.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_Link_1" xml:space="preserve">
+    <value>Articol: Referință la formule pentru Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidPropertyReference_ShortMessage" xml:space="preserve">
+    <value>Referința la proprietate nu este validă.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidPropertyReference_LongMessage" xml:space="preserve">
+    <value>Această eroare apare când o formulă se referă la proprietățile de comportament ale componentelor cu sintaxă nevalidă. (De exemplu, Component.OnCustomChange în loc de Component.OnCustomChange())</value>
+  </data>
+  <data name="ErrorResource_ErrInvalidPropertyReference_HowToFix_1" xml:space="preserve">
+    <value>Utilizați sintaxa corectă pentru a face referire la proprietatea de comportament a componentelor. De exemplu, Component.OnCustomChange()</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidPropertyReference_Link_1" xml:space="preserve">
+    <value>Articol: Informații de referință privind formulele în PowerApps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidParentUse_ShortMessage" xml:space="preserve">
+    <value>Referința „părinte” nu este validă. Nu se poate face referință la un control părinte în acest context.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidParentUse_LongMessage" xml:space="preserve">
+    <value>Nu puteți utiliza operatorul Parent cu un control care nu are un control părinte. Acest operator se referă la controlul care găzduiește controlul dat și face toate proprietățile sale disponibile.</value>
+  </data>
+  <data name="ErrorResource_ErrInvalidParentUse_HowToFix_1" xml:space="preserve">
+    <value>Eliminați operatorul „Parent”.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidParentUse_Link_1" xml:space="preserve">
+    <value>Articol: Adăugați și configurați un control de aplicație proiectată pe pânză în Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrTooManyUps_ShortMessage" xml:space="preserve">
+    <value>Imbricarea domeniului de rânduri este prea adâncă. Domeniul de rânduri al formulei depășește 63 de niveluri de imbricare.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrTooManyUps_LongMessage" xml:space="preserve">
+    <value>Complexitatea crește cu fiecare nivel de imbricare, de aceea Power Apps acceptă imbricarea rândurilor în domeniul de acoperire doar până la 63 de niveluri.</value>
+  </data>
+  <data name="ErrorResource_ErrTooManyUps_HowToFix_1" xml:space="preserve">
+    <value>Rescrieți formula cu mai puține niveluri de imbricare.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrRuleNestedTooDeeply_ShortMessage" xml:space="preserve">
+    <value>Imbricarea expresiilor este prea adâncă. O expresie din formulă este imbricată pe mai mult de 50 de niveluri.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrRuleNestedTooDeeply_LongMessage" xml:space="preserve">
+    <value>Power Apps acceptă imbricarea expresiilor numai până la 50 de niveluri. O expresie cu o asemenea adâncime este dificil de înțeles și de întreținut.</value>
+  </data>
+  <data name="ErrorResource_ErrRuleNestedTooDeeply_HowToFix_1" xml:space="preserve">
+    <value>Rescrieți formula cu mai puține niveluri de imbricare.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrOperatorExpected_ShortMessage" xml:space="preserve">
+    <value>Se aștepta un operator. Așteptăm un operator, cum ar fi +, * sau &amp; în acest punct din formulă.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrOperatorExpected_LongMessage" xml:space="preserve">
+    <value>Operatorii asociază doi operanzi. Această eroare apare dacă asociați două funcții (operanzi) fără vreun operator între ele; de exemplu Len("textulmeu")Len("textulmeu").</value>
+  </data>
+  <data name="ErrorResource_ErrOperatorExpected_HowToFix_1" xml:space="preserve">
+    <value>Editați-vă formula astfel încât să includă un operator între operanzi.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrOperatorExpected_Link_1" xml:space="preserve">
+    <value>Modul: Utilizarea formulelor de bază</value>
+    
+  </data>
+  <data name="ErrorResource_ErrNumberExpected_ShortMessage" xml:space="preserve">
+    <value>Se aștepta un număr. Așteptăm un număr în acest punct din formulă.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrNumberExpected_LongMessage" xml:space="preserve">
+    <value>Această eroare va avea loc dacă utilizați o funcție care necesită un număr, dar furnizați în schimb, de exemplu, o imagine.</value>
+  </data>
+  <data name="ErrorResource_ErrNumberExpected_HowToFix_1" xml:space="preserve">
+    <value>Editați-vă formula astfel încât să se evalueze la un număr în acest punct din formulă.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrNumberExpected_Link_1" xml:space="preserve">
+    <value>Articol: referință privind formulele pentru Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBooleanExpected_ShortMessage" xml:space="preserve">
+    <value>Se aștepta o valoare booleană. Așteptăm o valoare booleană (true/false) în acest punct din formulă.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBooleanExpected_LongMessage" xml:space="preserve">
+    <value>O valoare booleană este cunoscută și drept valoare true/false în aplicații precum Microsoft Excel. Această eroare va apărea dacă utilizați o funcție care necesită o valoare booleană dar furnizați în schimb o dată, de exemplu.</value>
+  </data>
+  <data name="ErrorResource_ErrBooleanExpected_HowToFix_1" xml:space="preserve">
+    <value>Editați-vă formula astfel încât să se evalueze la o valoare booleană în acest punct din formulă.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBooleanExpected_Link_1" xml:space="preserve">
+    <value>Articol: referință privind formulele pentru Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrColonExpected_ShortMessage" xml:space="preserve">
+    <value>Se așteptau două puncte. Așteptăm două puncte (:) în acest punct din formulă.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrColonExpected_LongMessage" xml:space="preserve">
+    <value>Un semn două puncte separă numele unui câmp, numit uneori nume de coloană, de o valoare de câmp dintr-o înregistrare (de exemplu, {Month:"1"}, {Month:"2"} …). Semnul două puncte separă, de asemenea, orele de minute și secunde (de exemplu, „3:04”).</value>
+  </data>
+  <data name="ErrorResource_ErrColonExpected_HowToFix_1" xml:space="preserve">
+    <value>Editați-vă formula astfel încât să includă un semn două puncte.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrColonExpected_Link_1" xml:space="preserve">
+    <value>Articol: Afișarea textului, datelor și orelor în Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorPropertyExpected_ShortMessage" xml:space="preserve">
+    <value>Funcție de comportament într-o proprietate necomportamentală. Nu puteți utiliza această proprietate pentru a modifica valorile din altă parte a aplicației.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorPropertyExpected_LongMessage" xml:space="preserve">
+    <value>Funcțiile de comportament schimbă starea aplicației, modificând valorile din altă parte a aplicației. „Navigate”, „Patch”, „UpdateContext” și „Collect” sunt funcții de comportament comune. Proprietățile „OnSelect”, „OnVisible” și alte proprietăți „On...” sunt proprietăți comune bazate pe comportament.</value>
+  </data>
+  <data name="ErrorResource_ErrBehaviorPropertyExpected_HowToFix_1" xml:space="preserve">
+    <value>Mutați funcția de comportament la o proprietate bazată pe comportament.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorPropertyExpected_Link_1" xml:space="preserve">
+    <value>Articol: Ce sunt formulele de comportament pentru aplicațiile proiectate pe pânză în Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrTestPropertyExpected_ShortMessage" xml:space="preserve">
+    <value>Funcție de testare într-o proprietate non-test. Nu puteți utiliza această proprietate pentru a invoca funcții doar pentru testare.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrTestPropertyExpected_LongMessage" xml:space="preserve">
+    <value>Funcțiile de testare sunt cele care pot fi utilizate pentru a simula intrarea utilizatorului atunci când se testează o aplicație. „SetProperty”, „SelectRow” și „Assert” sunt funcții comune de testare. Ele pot fi utilizate numai în cazurile de testare.</value>
+  </data>
+  <data name="ErrorResource_ErrTestPropertyExpected_HowToFix_1" xml:space="preserve">
+    <value>Utilizați funcția într-un caz de testare, nu în aplicația în sine.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrCannotCoerce_SourceType_TargetType_ShortMessage" xml:space="preserve">
+    <value>Nu se poate converti acest tip de date. Power Apps nu poate converti acest {0} la {1}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrCannotCoerce_SourceType_TargetType_LongMessage" xml:space="preserve">
+    <value>Power Apps poate converti anumite tipuri de date din formulă la alte tipuri. De exemplu poate converti „1” (șir) la 1 (număr), dar nu poate converti toate tipurile de date de un tip, la toate celelalte tipuri de date. De exemplu nu poate converti o imagine la un număr.</value>
+  </data>
+  <data name="ErrorResource_ErrCannotCoerce_SourceType_TargetType_HowToFix_1" xml:space="preserve">
+    <value>Editați formula astfel încât să faceți conversia datelor în cauză la tipul așteptat.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrStringExpected_ShortMessage" xml:space="preserve">
+    <value>Se aștepta text. Așteptăm un text în acest punct din formulă.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrStringExpected_LongMessage" xml:space="preserve">
+    <value>Această eroare apare dacă utilizați o funcție care necesită un argument text (sau șir de caractere) și furnizați în schimb, de exemplu, o dată.</value>
+  </data>
+  <data name="ErrorResource_ErrStringExpected_HowToFix_1" xml:space="preserve">
+    <value>Editați-vă formula astfel încât să se evalueze la un text în acest punct din formulă.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrStringExpected_Link_1" xml:space="preserve">
+    <value>Articol: referință privind formulele pentru Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrNumberOrStringExpected_ShortMessage" xml:space="preserve">
+    <value>Se aștepta text sau număr. Așteptăm un text sau un număr în acest punct din formulă.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrNumberOrStringExpected_LongMessage" xml:space="preserve">
+    <value>Această eroare va avea loc dacă utilizați o funcție care necesită un text sau un număr, dar furnizați, de exemplu, o valoare booleană (true/false).</value>
+  </data>
+  <data name="ErrorResource_ErrNumberOrStringExpected_HowToFix_1" xml:space="preserve">
+    <value>Editați-vă formula astfel încât să se evalueze la un text sau un număr în acest punct din formulă.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrNumberOrStringExpected_Link_1" xml:space="preserve">
+    <value>Articol: referință privind formulele pentru Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrClosingBracketExpected_ShortMessage" xml:space="preserve">
+    <value>Se aștepta o acoladă de închidere. Așteptăm o acoladă de închidere (}) în acest punct din formulă.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrClosingBracketExpected_LongMessage" xml:space="preserve">
+    <value>O acoladă de închidere indică sfârșitul unei înregistrări (de exemplu, {Month:"1"}, {Month:"2"} …).</value>
+  </data>
+  <data name="ErrorResource_ErrClosingBracketExpected_HowToFix_1" xml:space="preserve">
+    <value>Editați formula astfel încât să includă o acoladă.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrEmptyInvalidIdentifier_ShortMessage" xml:space="preserve">
+    <value>Identificatorul nu are niciun text valid.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrEmptyInvalidIdentifier_HowToFix_1" xml:space="preserve">
+    <value>Asigurați-vă că aveți text pentru identificator. Această eroare apare atunci când identificatorul are numai blancuri sau spații.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_ShortMessage" xml:space="preserve">
+    <value>Tipuri incompatibile într-o comparație. Aceste tipuri nu pot fi comparate: {0}, {1}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_LongMessage" xml:space="preserve">
+    <value>Nu vă putem evalua formula, deoarece valorile comparate în formulă nu sunt de același tip.</value>
+  </data>
+  <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_HowToFix_1" xml:space="preserve">
+    <value>Poate fi necesar să convertiți valoarea astfel încât să fie de același tip, cum ar fi conversia unui șir de caractere de tip dată (de exemplu, „31.12.2018”) la o valoare de tip dată calendaristică.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_HowToFix_2" xml:space="preserve">
+    <value>În cazul în care comparați înregistrări sau tabele, tipurile de câmpuri sau de coloane trebuie să corespundă exact.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_Link_1" xml:space="preserve">
+    <value>Modul: Utilizarea formulelor de bază</value>
+    
+  </data>
+  <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_Link_2" xml:space="preserve">
+    <value>Modul: Crearea de formule de bază cu tabele și înregistrări</value>
+    
+  </data>
+  <data name="ErrorResource_ErrServiceFunctionUnknownOptionalParam_Name_ShortMessage" xml:space="preserve">
+    <value>Niciun parametru. Această funcție nu are niciun parametru opțional cu numele „{0}”.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrServiceFunctionUnknownOptionalParam_Name_HowToFix_1" xml:space="preserve">
+    <value>Cum se remediază: Eliminați sau redenumiți parametrul din formulă.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrServiceFunctionUnknownOptionalParam_Name_Link_1" xml:space="preserve">
+    <value>Articol: referință privind formulele pentru Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_ShortMessage" xml:space="preserve">
+    <value>Tip incompatibil. Coloana „{0}” din sursa de date pe care o actualizați așteaptă un tip „{1}”, iar dvs. utilizați un tip „{2}”.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_HowToFix_1" xml:space="preserve">
+    <value>Poate fi necesar să convertiți valoarea la același tip, cum ar fi conversia unui șir de caractere de tip dată (de exemplu, „31.12.2018”) la o valoare dată sau conversia unui șir de caractere la un număr.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_Link_1" xml:space="preserve">
+    <value>Modul: Utilizarea formulelor de bază</value>
+    
+  </data>
+  <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_Link_2" xml:space="preserve">
+    <value>Modul: Crearea de formule de bază cu tabele și înregistrări</value>
+    
+  </data>
+  <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_ShortMessage" xml:space="preserve">
+    <value>Coloană lipsă. Din formula dvs. lipsește o coloană „{0}” de tip „{1}”.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_HowToFix_1" xml:space="preserve">
+    <value>Adăugați o coloană la formula dvs.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_Link_1" xml:space="preserve">
+    <value>Articol: referință privind formulele pentru Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrTableDoesNotAcceptThisType_ShortMessage" xml:space="preserve">
+    <value>Tip incompatibil. Elementul pe care încercați să-l plasați într-un tabel are un tip care nu este compatibil cu tabelul.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrTableDoesNotAcceptThisType_HowToFix_1" xml:space="preserve">
+    <value>Asigurați-vă că tipul de element pe care doriți să-l transmiteți în tabel este compatibil cu tabelul. Poate fi nevoie să convertiți tipul de element, de exemplu, într-o înregistrare.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrTableDoesNotAcceptThisType_Link_1" xml:space="preserve">
+    <value>Modul: Utilizarea formulelor de bază</value>
+    
+  </data>
+  <data name="ErrorResource_ErrTableDoesNotAcceptThisType_Link_2" xml:space="preserve">
+    <value>Modul: Crearea de formule de bază cu tabele și înregistrări</value>
+    
+  </data>
+  <data name="ErrorResource_ErrTypeError_ShortMessage" xml:space="preserve">
+    <value>Tip incompatibil. Nu vă putem evalua formula din cauza unei erori de tip.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrTypeError_LongMessage" xml:space="preserve">
+    <value>Este posibil ca datele să nu se potrivească cu tipul așteptat. (text, număr, dată, tabel, înregistrare.)</value>
+  </data>
+  <data name="ErrorResource_ErrTypeError_HowToFix_1" xml:space="preserve">
+    <value>Verificați tipurile de valori implicate în formulă și asigurați-vă că tipurile corespund.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrTypeError_Link_1" xml:space="preserve">
+    <value>Modul: Utilizarea formulelor de bază</value>
+    
+  </data>
+  <data name="ErrorResource_ErrTypeError_Link_2" xml:space="preserve">
+    <value>Modul: Crearea de formule de bază cu tabele și înregistrări</value>
+    
+  </data>
+  <data name="ErrorResource_ErrDateExpected_ShortMessage" xml:space="preserve">
+    <value>Se aștepta o dată. Așteptăm o dată în acest punct din formulă.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrDateExpected_LongMessage" xml:space="preserve">
+    <value>Această eroare va avea loc dacă utilizați o funcție care necesită o dată, dar furnizați în schimb, de exemplu, un text.</value>
+  </data>
+  <data name="ErrorResource_ErrDateExpected_HowToFix_1" xml:space="preserve">
+    <value>Editați-vă formula astfel încât să se evalueze la o dată în acest punct din formulă.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrDateExpected_Link_1" xml:space="preserve">
+    <value>Articol: referință privind formulele pentru Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_ShortMessage" xml:space="preserve">
+    <value>Avertisment referitor la delegare. Partea „{0}” din această formulă ar putea să nu funcționeze corect pe seturi mari de date.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_LongMessage" xml:space="preserve">
+    <value>Este posibil ca sursa de date să nu poată procesa formula și să returneze un set de date incomplet. Aplicația ar putea să nu returneze rezultate corecte sau să nu se comporte corect dacă setul de date este incomplet.</value>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_HowToFix_1" xml:space="preserve">
+    <value>Dacă setul de date depășește limita de 500 de înregistrări, dar conține mai puțin de 2.000 de înregistrări, încercați să resetați limita.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_HowToFix_2" xml:space="preserve">
+    <value>Încercați să simplificați formula.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_HowToFix_3" xml:space="preserve">
+    <value>Încercați să mutați datele la o altă sursă de date.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_Link_1" xml:space="preserve">
+    <value>Articol: Ce este delegarea într-o aplicație proiectată pe pânză</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_Link_2" xml:space="preserve">
+    <value>Blog: Limitele rândurilor de date pentru delegare</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_ShortMessage" xml:space="preserve">
+    <value>Avertisment referitor la delegare. Partea evidențiată din această formulă ar putea să nu funcționeze corect cu coloana „{0}” pe seturi mari de date.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_LongMessage" xml:space="preserve">
+    <value>Este posibil ca sursa de date să nu poată procesa formula și să returneze un set de date incomplet. Aplicația ar putea să nu returneze rezultate corecte sau să nu se comporte corect dacă setul de date este incomplet.</value>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_HowToFix_1" xml:space="preserve">
+    <value>Dacă setul de date depășește limita de 500 de înregistrări, dar conține mai puțin de 2.000 de înregistrări, încercați să resetați limita.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_HowToFix_2" xml:space="preserve">
+    <value>Încercați să simplificați formula.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_HowToFix_3" xml:space="preserve">
+    <value>Încercați să mutați datele la o altă sursă de date.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_Link_1" xml:space="preserve">
+    <value>Articol: Ce este delegarea într-o aplicație proiectată pe pânză</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_Link_2" xml:space="preserve">
+    <value>Blog: Limitele rândurilor de date pentru delegare</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_ShortMessage" xml:space="preserve">
+    <value>Avertisment referitor la delegare. Partea evidențiată din această formulă ar putea să nu funcționeze corect pe seturi mari de date.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_LongMessage" xml:space="preserve">
+    <value> Partea din dreapta a operatorului „in” ar trebui să fie un nume de coloană din sursa de date corectă. Este posibil ca sursa de date să nu poată procesa formula și să returneze un set de date incomplet. Aplicația ar putea să nu returneze rezultate corecte sau să nu se comporte corect dacă setul de date este incomplet.</value>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_1" xml:space="preserve">
+    <value>Modificați elementul din partea dreaptă a operatorului „in” astfel încât să fie o coloană din sursa de date corectă.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_2" xml:space="preserve">
+    <value>Dacă setul de date depășește limita de 500 de înregistrări, dar conține mai puțin de 2.000 de înregistrări, încercați să resetați limita.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_3" xml:space="preserve">
+    <value>Încercați să simplificați formula.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_4" xml:space="preserve">
+    <value>Încercați să mutați datele la o altă sursă de date.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_Link_1" xml:space="preserve">
+    <value>Articol: Ce este delegarea într-o aplicație proiectată pe pânză</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_Link_2" xml:space="preserve">
+    <value>Blog: Limitele rândurilor de date pentru delegare</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_ShortMessage" xml:space="preserve">
+    <value>Partea evidențiată din această formulă poate să nu funcționeze corect pe seturi mari de date. </value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_LongMessage" xml:space="preserve">
+    <value> Partea din dreapta a operatorului „in” nu este o coloană din sursa de date corectă. Este posibil ca sursa de date să nu poată procesa formula și să returneze un set de date incomplet. Aplicația ar putea să nu returneze rezultate corecte sau să nu se comporte corect dacă setul de date este incomplet.
+         </value>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_1" xml:space="preserve">
+    <value>Modificați elementul din partea dreaptă a operatorului „in” astfel încât să fie o coloană din sursa de date corectă.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_2" xml:space="preserve">
+    <value>Dacă setul de date depășește limita de 500 de înregistrări, dar conține mai puțin de 2.000 de înregistrări, încercați să resetați limita.
+      </value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_3" xml:space="preserve">
+    <value>Încercați să simplificați formula.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_4" xml:space="preserve">
+    <value>Încercați să mutați datele la o altă sursă de date.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_Link_1" xml:space="preserve">
+    <value>Articol: Ce este delegarea într-o aplicație proiectată pe pânză</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_Link_2" xml:space="preserve">
+    <value>Blog: Limitele rândurilor de date pentru delegare</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_ShortMessage" xml:space="preserve">
+    <value>Avertisment de delegare. Partea evidențiată din această formulă ar putea să nu funcționeze corect pe seturi mari de date. Operațiunea „{0}” nu este acceptată de acest conector.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_LongMessage" xml:space="preserve">
+    <value>Este posibil ca sursa de date să nu poată procesa formula și să returneze un set de date incomplet. Aplicația ar putea să nu returneze rezultate corecte sau să nu se comporte corect dacă setul de date este incomplet.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_HowToFix_1" xml:space="preserve">
+    <value>Dacă setul de date depășește limita de 500 de înregistrări, dar conține mai puțin de 2.000 de înregistrări, încercați să resetați limita.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_HowToFix_2" xml:space="preserve">
+    <value>Încercați să simplificați formula.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_HowToFix_3" xml:space="preserve">
+    <value>Încercați să mutați datele la o altă sursă de date.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_Link_1" xml:space="preserve">
+    <value>Articol: Ce este delegarea într-o aplicație proiectată pe pânză</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_Link_2" xml:space="preserve">
+    <value>Blog: Limitele rândurilor de date pentru delegare</value>
+    
+  </data>
+  <data name="ErrorResource_ErrOnlyOneViewExpected_ShortMessage" xml:space="preserve">
+    <value>Se așteaptă o singură vizualizare. Așteptăm o singură vizualizare în acest punct al formulei.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrOnlyOneViewExpected_HowToFix_1" xml:space="preserve">
+    <value>Editați formula astfel încât să aibă o singură vizualizare în acest punct al formulei.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrViewFromCurrentTableExpected_ShortMessage" xml:space="preserve">
+    <value>Se așteaptă o vizualizare de la sursa de date {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrViewFromCurrentTableExpected_HowToFix_1" xml:space="preserve">
+    <value>Editați formula astfel încât aceasta să aibă vizualizare de la sursa de date {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidControlReference_ShortMessage" xml:space="preserve">
+    <value>Această referință de control nu se poate utiliza în această proprietate</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidControlReference_HowToFix_1" xml:space="preserve">
+    <value>Această proprietate acceptă numai referințe la variabile globale, colecții și câteva proprietăți de control și de ecran. Accesați linkul pentru o listă de proprietăți de control acceptate.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidControlReference_Link_1" xml:space="preserve">
+    <value>Referință: ConfirmExit pentru aplicații proiectate pe pânză</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidStringInterpolation_ShortMessage" xml:space="preserve">
+    <value>Expresiile care apar în cadrul unui șir interpolat trebuie să fie evaluate ca valoare Text sau un tip compatibil.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidStringInterpolation_HowToFix_1" xml:space="preserve">
+    <value>Verificați tipurile de expresii din cadrul șirului interpolat.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrEmptyIsland_ShortMessage" xml:space="preserve">
+    <value>Expresiile vide nu pot apărea într-un șir interpolat.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrEmptyIsland_HowToFix_1" xml:space="preserve">
+    <value>Verificați dacă există expresii goale în șirul interpolat.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrAsNotInContext_ShortMessage" xml:space="preserve">
+    <value>„Ca atare” nu este permis în acest context</value>
+    
+  </data>
+  <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
+    <value>Formula numită trebuie să se termine cu punct și virgulă.</value>
+    
+  </data>
+</root>

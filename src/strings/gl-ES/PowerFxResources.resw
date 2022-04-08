@@ -1,0 +1,4552 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="ListItemSingleQuotedFormat" xml:space="preserve">
+    <value>'{0}'</value>
+    
+  </data>
+  <data name="AboutIf" xml:space="preserve">
+    <value>Comproba se se cumpre algunha das condicións especificadas e devolve o valor correspondente. Se non se cumpre ningunha das condicións, a función devolve o valor predefinido especificado.</value>
+    
+  </data>
+  <data name="IfArgCond" xml:space="preserve">
+    <value>proba_lóxica</value>
+    
+  </data>
+  <data name="IfArgTrueValue" xml:space="preserve">
+    <value>valor_verdadeiro</value>
+    
+  </data>
+  <data name="IfArgElseValue" xml:space="preserve">
+    <value>outro_valor</value>
+    
+  </data>
+  <data name="AboutIf_logical_test" xml:space="preserve">
+    <value>Condición que dá lugar a un valor booleano.</value>
+  </data>
+  <data name="AboutIf_true_value" xml:space="preserve">
+    <value>Expresión que fornece o resultado da operación If cando a condición é verdadeira.</value>
+    
+  </data>
+  <data name="AboutIf_else_value" xml:space="preserve">
+    <value>Expresión que fornece o resultado da operación If cando todas as condicións especificadas son falsas.</value>
+    
+  </data>
+  <data name="AboutSwitch" xml:space="preserve">
+    <value>Fai coincidir o resultado dunha fórmula cunha serie de valores. Ao atopar unha coincidencia, avalíase e devólvese unha fórmula correspondente. Se non se atopa ningunha coincidencia, avalíase e devólvese a última fórmula predefinida.</value>
+    
+  </data>
+  <data name="SwitchExpression" xml:space="preserve">
+    <value>valor_do_conmutador</value>
+    
+  </data>
+  <data name="SwitchDefaultReturn" xml:space="preserve">
+    <value>resultado_predefinido</value>
+    
+  </data>
+  <data name="SwitchCaseExpr" xml:space="preserve">
+    <value>valor_coincidente</value>
+    
+  </data>
+  <data name="SwitchCaseArg" xml:space="preserve">
+    <value>resultado_coincidente</value>
+    
+  </data>
+  <data name="AboutSwitch_switch_value" xml:space="preserve">
+    <value>Valor para comparar con cada valor_de_coincidencia.</value>
+    
+  </data>
+  <data name="AboutSwitch_match_value" xml:space="preserve">
+    <value>Valor para facer coincidir con valor_do_conmutador.</value>
+    
+  </data>
+  <data name="AboutSwitch_match_result" xml:space="preserve">
+    <value>Fórmula que se vai avaliar e devolver se se atopan coincidencias.</value>
+  </data>
+  <data name="AboutSwitch_default_result" xml:space="preserve">
+    <value>Fórmula que se vai avaliar e devolver se non se atopan coincidencias.</value>
+  </data>
+  <data name="AboutAnd" xml:space="preserve">
+    <value>Comproba se todos os argumentos son verdadeiros e devolve verdadeiro se o son.</value>
+    
+  </data>
+  <data name="AboutOr" xml:space="preserve">
+    <value>Comproba se algún dos argumentos é verdadeiro e devolve verdadeiro ou falso. Só devolve falso se todos os argumentos son falsos.</value>
+    
+  </data>
+  <data name="AboutNot" xml:space="preserve">
+    <value>Cambia falso a verdadeiro e verdadeiro a falso.</value>
+    
+  </data>
+  <data name="LogicalFuncParam" xml:space="preserve">
+    <value>lóxica</value>
+    
+  </data>
+  <data name="AboutAnd_logical" xml:space="preserve">
+    <value>Expresión lóxica que se vai factorizar na operación And.</value>
+  </data>
+  <data name="AboutOr_logical" xml:space="preserve">
+    <value>Expresión lóxica que se vai factorizar na operación Or.</value>
+  </data>
+  <data name="AboutNot_logical" xml:space="preserve">
+    <value>Expresión lóxica que se vai negar.</value>
+  </data>
+  <data name="AboutCount" xml:space="preserve">
+    <value>Conta os valores numéricos da columna especificada.</value>
+    
+  </data>
+  <data name="AboutCountA" xml:space="preserve">
+    <value>Conta o número de filas da columna que non están baleiras.</value>
+    
+  </data>
+  <data name="AboutCountRows" xml:space="preserve">
+    <value>Conta o número de filas da táboa ou colección de entrada.</value>
+    
+  </data>
+  <data name="CountArg1" xml:space="preserve">
+    <value>orixe</value>
+    
+  </data>
+  <data name="AboutCount_source" xml:space="preserve">
+    <value>Columna de valores que se van contar.</value>
+  </data>
+  <data name="AboutCountA_source" xml:space="preserve">
+    <value>Columna de valores que se van contar.</value>
+  </data>
+  <data name="AboutCountRows_source" xml:space="preserve">
+    <value>Táboa cuxas filas se van contar.</value>
+  </data>
+  <data name="AboutCountIf" xml:space="preserve">
+    <value>Conta o número de filas que cumpren coa condición indicada.</value>
+    
+  </data>
+  <data name="CountIfArg1" xml:space="preserve">
+    <value>orixe</value>
+    
+  </data>
+  <data name="CountIfArg2" xml:space="preserve">
+    <value>condición</value>
+    
+  </data>
+  <data name="AboutCountIf_source" xml:space="preserve">
+    <value>Táboa na que se contarán as filas que cumpran con determinados criterios.</value>
+  </data>
+  <data name="AboutCountIf_condition" xml:space="preserve">
+    <value>Expresión avaliada para cada fila, que especifica se se debe contar a fila.</value>
+  </data>
+  <data name="AboutSumT" xml:space="preserve">
+    <value>Devolve a suma dos números que avalía a expresión no contexto da táboa.</value>
+    
+  </data>
+  <data name="AboutMaxT" xml:space="preserve">
+    <value>Devolve o valor máis grande que avalía a expresión no contexto da táboa.</value>
+    
+  </data>
+  <data name="AboutMinT" xml:space="preserve">
+    <value>Devolve o valor máis pequeno que avalía a expresión no contexto da táboa.</value>
+    
+  </data>
+  <data name="AboutAverageT" xml:space="preserve">
+    <value>Devolve a media (aritmética) dos números que avalía a expresión no contexto da táboa.</value>
+    
+  </data>
+  <data name="StatisticalTArg1" xml:space="preserve">
+    <value>orixe</value>
+    
+  </data>
+  <data name="StatisticalTArg2" xml:space="preserve">
+    <value>expresión</value>
+    
+  </data>
+  <data name="AboutMin_source" xml:space="preserve">
+    <value>Táboa sobre a que se calculará esta operación Min.</value>
+  </data>
+  <data name="AboutMin_expression" xml:space="preserve">
+    <value>Expresión avaliada sobre cada fila da táboa de entrada, que fornece valores numéricos para esta operación Min.</value>
+  </data>
+  <data name="AboutMax_source" xml:space="preserve">
+    <value>Táboa sobre a que se calculará esta operación Max.</value>
+  </data>
+  <data name="AboutMax_expression" xml:space="preserve">
+    <value>Expresión avaliada sobre cada fila da táboa de entrada, que fornece valores numéricos para esta operación Max.</value>
+  </data>
+  <data name="AboutAverage_source" xml:space="preserve">
+    <value>Táboa sobre a que se calculará esta operación Average.</value>
+  </data>
+  <data name="AboutAverage_expression" xml:space="preserve">
+    <value>Expresión avaliada sobre cada fila da táboa de entrada, que fornece valores numéricos para esta operación Average.</value>
+  </data>
+  <data name="AboutSum_source" xml:space="preserve">
+    <value>Táboa sobre a que se calculará esta operación Sum.</value>
+  </data>
+  <data name="AboutSum_expression" xml:space="preserve">
+    <value>Expresión avaliada sobre cada fila da táboa de entrada, que fornece valores numéricos para esta operación Sum.</value>
+  </data>
+  <data name="AboutSum" xml:space="preserve">
+    <value>Devolve a suma dos seus argumentos.</value>
+    
+  </data>
+  <data name="AboutMax" xml:space="preserve">
+    <value>Devolve o valor máis grande dun conxunto de valores. Ignora o texto e os valores lóxicos.</value>
+    
+  </data>
+  <data name="AboutMin" xml:space="preserve">
+    <value>Devolve o valor máis pequeno dun conxunto de valores. Ignora texto e valores lóxicos.</value>
+    
+  </data>
+  <data name="AboutAverage" xml:space="preserve">
+    <value>Devolve a media (aritmética) dos seus argumentos.</value>
+    
+  </data>
+  <data name="StatisticalArg" xml:space="preserve">
+    <value>número</value>
+    
+  </data>
+  <data name="AboutSum_number" xml:space="preserve">
+    <value>Valor numérico para esta operación Sum.</value>
+  </data>
+  <data name="AboutMin_number" xml:space="preserve">
+    <value>Valor numérico para esta operación Min.</value>
+  </data>
+  <data name="AboutMax_number" xml:space="preserve">
+    <value>Valor numérico para esta operación Max.</value>
+  </data>
+  <data name="AboutAverage_number" xml:space="preserve">
+    <value>Valor numérico para esta operación Average.</value>
+  </data>
+  <data name="AboutAddColumns" xml:space="preserve">
+    <value>Devolve unha táboa con novas columnas calculadas mediante a avaliación de todas as "expresións" sobre a "orixe".</value>
+    
+  </data>
+  <data name="AddColumnsArg1" xml:space="preserve">
+    <value>orixe</value>
+    
+  </data>
+  <data name="AddColumnsArg2" xml:space="preserve">
+    <value>columna</value>
+    
+  </data>
+  <data name="AddColumnsArg3" xml:space="preserve">
+    <value>expresión</value>
+    
+  </data>
+  <data name="AboutAddColumns_source" xml:space="preserve">
+    <value>Táboa á que engadir columnas.</value>
+    
+  </data>
+  <data name="AboutAddColumns_column" xml:space="preserve">
+    <value>Nome de columna único.</value>
+    
+  </data>
+  <data name="AboutAddColumns_expression" xml:space="preserve">
+    <value>Expresión que fornece valores para a nova columna.</value>
+    
+  </data>
+  <data name="AboutDropColumns" xml:space="preserve">
+    <value>Devolve unha táboa cunha ou máis "columnas" especificadas eliminadas da táboa de "orixe".</value>
+    
+  </data>
+  <data name="DropColumnsArg1" xml:space="preserve">
+    <value>orixe</value>
+    
+  </data>
+  <data name="DropColumnsArg2" xml:space="preserve">
+    <value>nome_columna</value>
+    
+  </data>
+  <data name="AboutDropColumns_source" xml:space="preserve">
+    <value>Valor da táboa do que se van eliminar columnas.</value>
+  </data>
+  <data name="AboutDropColumns_column_name" xml:space="preserve">
+    <value>Nome dunha columna que se vai eliminar.</value>
+  </data>
+  <data name="AboutFilter" xml:space="preserve">
+    <value>Devolve as filas da táboa nas que todas as condicións especificadas son verdadeiras.</value>
+    
+  </data>
+  <data name="FilterArg1" xml:space="preserve">
+    <value>orixe</value>
+    
+  </data>
+  <data name="FilterArg2" xml:space="preserve">
+    <value>proba_lóxica</value>
+    
+  </data>
+  <data name="AboutFilter_source" xml:space="preserve">
+    <value>Táboa que se vai filtrar.</value>
+  </data>
+  <data name="AboutFilter_logical_test" xml:space="preserve">
+    <value>Proba lóxica que se vai avaliar para cada fila. Só se incluirán no resultado do filtro as filas que pasen esta proba.</value>
+  </data>
+  <data name="AboutFirst" xml:space="preserve">
+    <value>Devolve a primeira fila de "orixe".</value>
+    
+  </data>
+  <data name="AboutLast" xml:space="preserve">
+    <value>Devolve a última fila de "orixe".</value>
+    
+  </data>
+  <data name="FirstLastArg1" xml:space="preserve">
+    <value>orixe</value>
+    
+  </data>
+  <data name="AboutFirst_source" xml:space="preserve">
+    <value>Táboa cuxa primeira fila se vai devolver.</value>
+  </data>
+  <data name="AboutLast_source" xml:space="preserve">
+    <value>Táboa cuxa última fila se vai devolver.</value>
+  </data>
+  <data name="AboutFirstN" xml:space="preserve">
+    <value>Devolve as primeiras filas de "número total" de "orixe".</value>
+    
+  </data>
+  <data name="AboutLastN" xml:space="preserve">
+    <value>Devolve as últimas filas de "número total" de "orixe".</value>
+    
+  </data>
+  <data name="FirstLastNArg1" xml:space="preserve">
+    <value>orixe</value>
+    
+  </data>
+  <data name="FirstLastNArg2" xml:space="preserve">
+    <value>reconto</value>
+    
+  </data>
+  <data name="AboutFirstN_source" xml:space="preserve">
+    <value>Táboa desde a que se devolverán as filas.</value>
+  </data>
+  <data name="AboutFirstN_count" xml:space="preserve">
+    <value>Número de filas que se van devolver.</value>
+  </data>
+  <data name="AboutLastN_source" xml:space="preserve">
+    <value>Táboa desde a que se devolverán as filas.</value>
+  </data>
+  <data name="AboutLastN_count" xml:space="preserve">
+    <value>Número de filas que se van devolver.</value>
+  </data>
+  <data name="AboutText" xml:space="preserve">
+    <value>Converte un "valor" en texto nun 'format_text' de número específico.</value>
+    
+  </data>
+  <data name="TextArg1" xml:space="preserve">
+    <value>valor</value>
+    
+  </data>
+  <data name="TextArg2" xml:space="preserve">
+    <value>dar_formato_ao_texto</value>
+    
+  </data>
+  <data name="TextArg3" xml:space="preserve">
+    <value>idioma</value>
+    
+  </data>
+  <data name="AboutText_value" xml:space="preserve">
+    <value>Valor que se vai formatar en texto.</value>
+  </data>
+  <data name="AboutText_format_text" xml:space="preserve">
+    <value>Valor de texto que especifica o xeito en que se formatará o "valor".</value>
+    
+  </data>
+  <data name="AboutText_language" xml:space="preserve">
+    <value>Código de idioma que se usará ao converter en texto.</value>
+    
+  </data>
+  <data name="AboutValue" xml:space="preserve">
+    <value>Converte un "texto" que representa un número nun valor numérico.</value>
+    
+  </data>
+  <data name="ValueArg1" xml:space="preserve">
+    <value>texto</value>
+    
+  </data>
+  <data name="ValueArg2" xml:space="preserve">
+    <value>idioma</value>
+    
+  </data>
+  <data name="AboutValue_text" xml:space="preserve">
+    <value>Valor de texto que se vai converter nun valor numérico.</value>
+  </data>
+  <data name="AboutValue_language" xml:space="preserve">
+    <value>Código de idioma que se usará ao converter o valor.</value>
+    
+  </data>
+  <data name="AboutBoolean" xml:space="preserve">
+    <value>Converte un "texto" que representa un booleano nun valor booleano.</value>
+    
+  </data>
+  <data name="BooleanArg1" xml:space="preserve">
+    <value>texto</value>
+    
+  </data>
+  <data name="AboutBoolean_text" xml:space="preserve">
+    <value>Valor de texto que se vai converter nun valor booleano.</value>
+  </data>
+  <data name="AboutCoalesce" xml:space="preserve">
+    <value>Devolve o primeiro argumento que non está en branco</value>
+    
+  </data>
+  <data name="CoalesceArg1" xml:space="preserve">
+    <value>valor</value>
+    
+  </data>
+  <data name="AboutCoalesce_value" xml:space="preserve">
+    <value>Argumento que se vai devolver se se trata do primeiro que non está en branco.</value>
+  </data>
+  <data name="AboutConcatenate" xml:space="preserve">
+    <value>Une varios valores de texto nun só.</value>
+    
+  </data>
+  <data name="ConcatenateArg1" xml:space="preserve">
+    <value>texto</value>
+    
+  </data>
+  <data name="AboutConcatenate_text" xml:space="preserve">
+    <value>Valor de texto que se concatenará co resto de argumentos.</value>
+  </data>
+  <data name="AboutConcatenateT" xml:space="preserve">
+    <value>Une varias táboas ou valores de texto nunha columna de valores de texto.</value>
+    
+  </data>
+  <data name="ConcatenateTArg1" xml:space="preserve">
+    <value>valor</value>
+    
+  </data>
+  <data name="AboutConcatenate_value" xml:space="preserve">
+    <value>Valor de texto ou columna de valores de texto que se concatenará co resto de argumentos.</value>
+  </data>
+  <data name="AboutConcat" xml:space="preserve">
+    <value>Une nun só valor de texto todos os valores de texto producidos ao avaliar a expresión indicada da táboa en cuestión.</value>
+    
+  </data>
+  <data name="ConcatArg1" xml:space="preserve">
+    <value>táboa</value>
+    
+  </data>
+  <data name="ConcatArg2" xml:space="preserve">
+    <value>expresión</value>
+    
+  </data>
+  <data name="ConcatArg3" xml:space="preserve">
+    <value>separador</value>
+    
+  </data>
+  <data name="AboutConcat_table" xml:space="preserve">
+    <value>Valor da táboa sobre o que se vai avaliar a expresión indicada polo segundo parámetro.</value>
+  </data>
+  <data name="AboutConcat_expression" xml:space="preserve">
+    <value>Expresión de produción de texto para avaliar en cada fila da táboa indicada.</value>
+  </data>
+  <data name="AboutConcat_separator" xml:space="preserve">
+    <value>Valor de texto que se vai inserir entre as filas concatenadas da táboa.</value>
+    
+  </data>
+  <data name="AboutLen" xml:space="preserve">
+    <value>Devolve o número de caracteres dun valor de texto.</value>
+    
+  </data>
+  <data name="AboutLen_text" xml:space="preserve">
+    <value>Valor de texto cuxa lonxitude en caracteres se vai devolver.</value>
+  </data>
+  <data name="AboutLenT" xml:space="preserve">
+    <value>Devolve o número de caracteres dun valor de texto, avaliado por fila dentro da táboa ou colección especificadas.</value>
+    
+  </data>
+  <data name="AboutLen_text_column" xml:space="preserve">
+    <value>Columna de valores de texto cuxas lonxitudes en caracteres se devolverán (como unha nova columna).</value>
+  </data>
+  <data name="LenArg1" xml:space="preserve">
+    <value>texto</value>
+    
+  </data>
+  <data name="LenTArg1" xml:space="preserve">
+    <value>columna_texto</value>
+    
+  </data>
+  <data name="AboutUpper" xml:space="preserve">
+    <value>Converte un valor de texto en letras maiúsculas.</value>
+    
+  </data>
+  <data name="AboutUpperT" xml:space="preserve">
+    <value>Converte todas as letras dun valor de texto, avaliado por fila dentro da táboa ou colección especificadas, en maiúsculas.</value>
+    
+  </data>
+  <data name="AboutUpper_text" xml:space="preserve">
+    <value>Valor de texto que se vai converter en maiúsculas.</value>
+  </data>
+  <data name="AboutUpper_text_column" xml:space="preserve">
+    <value>Columna de valores de texto que se van converter nunha columna de valores de texto en maiúsculas.</value>
+  </data>
+  <data name="AboutLower" xml:space="preserve">
+    <value>Converte todas as letras dun valor de texto en minúsculas.</value>
+    
+  </data>
+  <data name="AboutLowerT" xml:space="preserve">
+    <value>Converte todas as letras dun valor de texto, avaliado por fila dentro da táboa ou colección especificadas, en minúsculas.</value>
+    
+  </data>
+  <data name="AboutLower_text" xml:space="preserve">
+    <value>Valor de texto que se vai converter en minúsculas.</value>
+  </data>
+  <data name="AboutLower_text_column" xml:space="preserve">
+    <value>Columna de valores de texto que se van converter nunha columna de valores de texto en minúsculas.</value>
+  </data>
+  <data name="AboutProper" xml:space="preserve">
+    <value>Converte un valor de texto en maiúsculas ou minúsculas, segundo corresponda; a primeira letra de cada palabra en maiúscula e as demais en minúsculas.</value>
+    
+  </data>
+  <data name="AboutProperT" xml:space="preserve">
+    <value>Converte un valor de texto, avaliado por fila dentro da táboa ou colección especificadas, en maiúsculas ou minúsculas, segundo corresponda; a primeira letra de cada palabra en maiúscula e as demais en minúsculas.</value>
+    
+  </data>
+  <data name="AboutProper_text" xml:space="preserve">
+    <value>Valor de texto que se vai converter en maiúsculas ou minúsculas, segundo corresponda.</value>
+  </data>
+  <data name="AboutProper_text_column" xml:space="preserve">
+    <value>Columna de valores de texto que se van converter nunha columna de valores de texto en maiúsculas ou minúsculas, segundo corresponda.</value>
+  </data>
+  <data name="AboutTrim" xml:space="preserve">
+    <value>Elimina todos os espazos dun valor de texto, excepto os espazos simples entre palabras.</value>
+    
+  </data>
+  <data name="AboutTrim_text" xml:space="preserve">
+    <value>Valor de texto que se vai converter para recortar.</value>
+  </data>
+  <data name="AboutTrim_text_column" xml:space="preserve">
+    <value>Columna de valores de texto que se van recortar.</value>
+  </data>
+  <data name="AboutTrimEnds" xml:space="preserve">
+    <value>Elimina todos os espazos iniciais ou finais dun valor de texto.</value>
+    
+  </data>
+  <data name="AboutTrimEnds_text" xml:space="preserve">
+    <value>Valor de texto do que se vai recortar o espazo en branco inicial e final.</value>
+  </data>
+  <data name="AboutTrimEnds_text_column" xml:space="preserve">
+    <value>Columna de valores de texto dos que se van recortar o espazo en branco inicial e final.</value>
+  </data>
+  <data name="AboutMid" xml:space="preserve">
+    <value>Devolve os caracteres do centro dun valor de texto, a partir da lonxitude e da posición inicial.</value>
+    
+  </data>
+  <data name="AboutMidT" xml:space="preserve">
+    <value>Devolve os caracteres do centro dun valor de texto, a partir da lonxitude e da posición inicial, avaliado por fila dentro da táboa ou colección especificadas.</value>
+    
+  </data>
+  <data name="AboutMid_text" xml:space="preserve">
+    <value>Valor de texto do que se van extraer caracteres.</value>
+  </data>
+  <data name="AboutMid_text_column" xml:space="preserve">
+    <value>Columna de valores de texto da que se extraerán caracteres nunha nova columna.</value>
+  </data>
+  <data name="AboutMid_start_num" xml:space="preserve">
+    <value>Posición inicial desde a que extraer os caracteres.</value>
+  </data>
+  <data name="AboutMid_num_chars" xml:space="preserve">
+    <value>Número de caracteres que se van extraer.</value>
+  </data>
+  <data name="StringFuncArg1" xml:space="preserve">
+    <value>texto</value>
+    
+  </data>
+  <data name="StringTFuncArg1" xml:space="preserve">
+    <value>columna_texto</value>
+    
+  </data>
+  <data name="StringFuncArg2" xml:space="preserve">
+    <value>núm_inicial</value>
+    
+  </data>
+  <data name="StringFuncArg3" xml:space="preserve">
+    <value>núm_caracteres</value>
+    
+  </data>
+  <data name="AboutReplace" xml:space="preserve">
+    <value>Substitúa parte dun valor de texto por outro valor de texto.</value>
+    
+  </data>
+  <data name="AboutReplaceT" xml:space="preserve">
+    <value>Substitúa parte dun valor de texto por outro valor de texto, avaliado por fila dentro da táboa ou colección especificadas.</value>
+    
+  </data>
+  <data name="ReplaceFuncArg1" xml:space="preserve">
+    <value>texto_antigo</value>
+    
+  </data>
+  <data name="ReplaceFuncArg4" xml:space="preserve">
+    <value>texto_novo</value>
+    
+  </data>
+  <data name="AboutReplace_old_text" xml:space="preserve">
+    <value>Valor de texto que se vai procesar.</value>
+  </data>
+  <data name="AboutReplace_start_num" xml:space="preserve">
+    <value>Posición inicial na que terá lugar a substitución.</value>
+  </data>
+  <data name="AboutReplace_num_chars" xml:space="preserve">
+    <value>Número de caracteres que se van substituír.</value>
+  </data>
+  <data name="AboutReplace_new_text" xml:space="preserve">
+    <value>Valor de texto de substitución.</value>
+  </data>
+  <data name="AboutReplace_text_column" xml:space="preserve">
+    <value>Columna de valores de texto que se van procesar.</value>
+  </data>
+  <data name="AboutError" xml:space="preserve">
+    <value>Produce un erro cos valores personalizados.</value>
+    
+  </data>
+  <data name="AboutError_error_information" xml:space="preserve">
+    <value>Rexistro que contén os valores personalizados do erro producido.</value>
+    
+  </data>
+  <data name="ErrorArg1" xml:space="preserve">
+    <value>error_information</value>
+    
+  </data>
+  <data name="ErrErrorIrrelevantField" xml:space="preserve">
+    <value>A función Error só usa os campos seguintes: "Kind", "Message", "Notify", "Control" e "Property".</value>
+    
+  </data>
+  <data name="AboutIfError" xml:space="preserve">
+    <value>Avalía e devolve o primeiro argumento sen erros.</value>
+    
+  </data>
+  <data name="IfErrorArg1" xml:space="preserve">
+    <value>valor</value>
+    
+  </data>
+  <data name="AboutIfError_value" xml:space="preserve">
+    <value>Valor que se devolve se non é un erro.</value>
+    
+  </data>
+  <data name="IfErrorArg2" xml:space="preserve">
+    <value>reserva</value>
+    
+  </data>
+  <data name="AboutIfError_fallback" xml:space="preserve">
+    <value>Valor que se devolve se é o primeiro argumento sen erros.</value>
+    
+  </data>
+  <data name="AboutSubstitute" xml:space="preserve">
+    <value>Substitúe o texto existente por texto novo nun valor de texto.</value>
+    
+  </data>
+  <data name="AboutSubstituteT" xml:space="preserve">
+    <value>Substitúe o texto existente por texto novo nun valor de texto avaliado por fila dentro dunha táboa ou colección especificadas.</value>
+    
+  </data>
+  <data name="SubstituteFuncArg1" xml:space="preserve">
+    <value>texto</value>
+    
+  </data>
+  <data name="SubstituteTFuncArg1" xml:space="preserve">
+    <value>columna_texto</value>
+    
+  </data>
+  <data name="SubstituteFuncArg2" xml:space="preserve">
+    <value>texto_antigo</value>
+    
+  </data>
+  <data name="SubstituteFuncArg3" xml:space="preserve">
+    <value>texto_novo</value>
+    
+  </data>
+  <data name="SubstituteFuncArg4" xml:space="preserve">
+    <value>núm_instancia</value>
+    
+  </data>
+  <data name="AboutSubstitute_text" xml:space="preserve">
+    <value>Valor de texto que se vai procesar.</value>
+  </data>
+  <data name="AboutSubstitute_old_text" xml:space="preserve">
+    <value>Texto que se vai substituír.</value>
+  </data>
+  <data name="AboutSubstitute_new_text" xml:space="preserve">
+    <value>Texto de substitución.</value>
+  </data>
+  <data name="AboutSubstitute_instance_num" xml:space="preserve">
+    <value>Especifica que ocorrencia do texto indicado se ten que substituír.</value>
+  </data>
+  <data name="AboutSubstitute_text_column" xml:space="preserve">
+    <value>Columna de valores de texto que se van procesar.</value>
+  </data>
+  <data name="AboutSort" xml:space="preserve">
+    <value>Ordena a "orixe" segundo os resultados da "expresión" avaliada de cada fila, especificando opcionalmente unha "ordenación".</value>
+    
+  </data>
+  <data name="SortArg1" xml:space="preserve">
+    <value>orixe</value>
+    
+  </data>
+  <data name="SortArg2" xml:space="preserve">
+    <value>expresión</value>
+    
+  </data>
+  <data name="SortArg3" xml:space="preserve">
+    <value>orde</value>
+    
+  </data>
+  <data name="AboutSort_source" xml:space="preserve">
+    <value>Táboa que se vai ordenar.</value>
+  </data>
+  <data name="AboutSort_expression" xml:space="preserve">
+    <value>Expresión que se avalía sobre as filas da "orixe" e fornece valores para ordenar.</value>
+  </data>
+  <data name="AboutSort_order" xml:space="preserve">
+    <value>Ascendente ou descendente</value>
+  </data>
+  <data name="AboutSortByColumns" xml:space="preserve">
+    <value>Ordena a "orixe" segundo a columna, especificando opcionalmente unha "ordenación".</value>
+    
+  </data>
+  <data name="SortByColumnsArg1" xml:space="preserve">
+    <value>orixe</value>
+    
+  </data>
+  <data name="SortByColumnsArg2" xml:space="preserve">
+    <value>columna</value>
+    
+  </data>
+  <data name="SortByColumnsArg3" xml:space="preserve">
+    <value>orde</value>
+    
+  </data>
+  <data name="AboutSortByColumns_source" xml:space="preserve">
+    <value>Táboa que se vai ordenar.</value>
+  </data>
+  <data name="AboutSortByColumns_column" xml:space="preserve">
+    <value>Nome de columna único.</value>
+  </data>
+  <data name="AboutSortByColumns_order" xml:space="preserve">
+    <value>Ascendente ou descendente</value>
+  </data>
+  <data name="AboutSortByColumnsWithOrderValues" xml:space="preserve">
+    <value>Ordena a "orixe" segundo o índice de valores coincidentes da columna especificada.</value>
+    
+  </data>
+  <data name="SortByColumnsWithOrderValuesArg1" xml:space="preserve">
+    <value>orixe</value>
+    
+  </data>
+  <data name="SortByColumnsWithOrderValuesArg2" xml:space="preserve">
+    <value>columna</value>
+    
+  </data>
+  <data name="SortByColumnsWithOrderValuesArg3" xml:space="preserve">
+    <value>valores</value>
+    
+  </data>
+  <data name="AboutSortByColumns_values" xml:space="preserve">
+    <value>Columna de valores que se van usar para ordenar. A ordenación non se fai de forma ascendente nin descendente, senón que se basea no índice de valores coincidentes da columna </value>
+  </data>
+  <data name="AboutRand" xml:space="preserve">
+    <value>Devolve un número aleatorio igual ou maior que 0 e menor que 1, distribuído uniformemente.</value>
+    
+  </data>
+  <data name="AboutRandBetween" xml:space="preserve">
+    <value>Devolve un número aleatorio entre o inferior e o superior, distribuído de xeito uniforme.</value>
+    
+  </data>
+  <data name="AboutRandBetween_bottom" xml:space="preserve">
+    <value>Número enteiro máis pequeno que pode devolver a función.</value>
+  </data>
+  <data name="AboutRandBetween_top" xml:space="preserve">
+    <value>Número enteiro máis grande que pode devolver a función. Debe ser igual ou maior que o inferior.</value>
+  </data>
+  <data name="RandBetweenArg1" xml:space="preserve">
+    <value>inferior</value>
+    
+  </data>
+  <data name="RandBetweenArg2" xml:space="preserve">
+    <value>superior</value>
+    
+  </data>
+  <data name="AboutGUID" xml:space="preserve">
+    <value>Crea un GUID a partir dunha cadea ou devolve un GUID xerado aleatoriamente se non se fornece ningún argumento.</value>
+    
+  </data>
+  <data name="GUIDArg" xml:space="preserve">
+    <value>cadea_GUID</value>
+    
+  </data>
+  <data name="AboutGUID_GUID_string" xml:space="preserve">
+    <value>Cadea para converter nun GUID</value>
+    
+  </data>
+  <data name="AboutNow" xml:space="preserve">
+    <value>Devolve a data e hora actuais.</value>
+    
+  </data>
+  <data name="AboutUTCNow" xml:space="preserve">
+    <value>Devolve a data e hora actual na hora UTC.</value>
+    
+  </data>
+  <data name="AboutTimeZoneOffset" xml:space="preserve">
+    <value>Devolve a diferenza horaria entre a hora UTC e a hora local, en minutos. Por exemplo, se o seu fuso horario é UTC+2, devolverase -120.</value>
+    
+  </data>
+  <data name="TimeZoneOffsetArg1" xml:space="preserve">
+    <value>data</value>
+    
+  </data>
+  <data name="AboutTimeZoneOffset_date" xml:space="preserve">
+    <value>Data na que calcular "TimeZoneOffset".</value>
+    
+  </data>
+  <data name="AboutToday" xml:space="preserve">
+    <value>Devolve a data actual.</value>
+    
+  </data>
+  <data name="AboutUTCToday" xml:space="preserve">
+    <value>Devolve a data actual en hora UTC.</value>
+    
+  </data>
+  <data name="AboutWeekNum" xml:space="preserve">
+    <value>Devolve o número da semana para unha data determinada.</value>
+    
+  </data>
+  <data name="WeekNumArg1" xml:space="preserve">
+    <value>data</value>
+    
+  </data>
+  <data name="WeekNumArg2" xml:space="preserve">
+    <value>inicio_de_semana</value>
+    
+  </data>
+  <data name="AboutWeekNum_date" xml:space="preserve">
+    <value>Valor de data para o que se vai calcular o numero de semana.</value>
+  </data>
+  <data name="AboutWeekNum_start_of_week" xml:space="preserve">
+    <value>Valor da enumeración StartOfWeek ou número da función de Excel correspondente para indicar como se deben numerar os días da semana.</value>
+    
+  </data>
+  <data name="AboutISOWeekNum" xml:space="preserve">
+    <value>Devolve o número da semana segundo as regras ISO para unha data determinada.</value>
+    
+  </data>
+  <data name="ISOWeekNumArg1" xml:space="preserve">
+    <value>data</value>
+    
+  </data>
+  <data name="AboutISOWeekNum_date" xml:space="preserve">
+    <value>Valor de data para o que se vai calcular o numero de semana ISO.</value>
+  </data>
+  <data name="AboutInt" xml:space="preserve">
+    <value>Corta o "número" ao arredondar ao infinito negativo.</value>
+    
+  </data>
+  <data name="AboutIntT" xml:space="preserve">
+    <value>Corta os valores dunha columna de números ao arredondar ao infinito negativo.</value>
+    
+  </data>
+  <data name="AboutInt_number" xml:space="preserve">
+    <value>Valor numérico que se vai procesar.</value>
+  </data>
+  <data name="AboutInt_input" xml:space="preserve">
+    <value>Columna de valores numéricos que se van procesar.</value>
+  </data>
+  <data name="AboutTrunc" xml:space="preserve">
+    <value>Trunca o "número" ao arredondar a cero.</value>
+    
+  </data>
+  <data name="AboutTrunc_number" xml:space="preserve">
+    <value>Número que se vai truncar.</value>
+  </data>
+  <data name="AboutTrunc_source" xml:space="preserve">
+    <value>Columna de números que se van truncar.</value>
+  </data>
+  <data name="AboutTrunc_num_digits" xml:space="preserve">
+    <value>Número de díxitos fraccionais que se van usar para truncar.</value>
+  </data>
+  <data name="AboutTruncT" xml:space="preserve">
+    <value>Trunca todos os número de "orixe" ao arredondar a cero.</value>
+    
+  </data>
+  <data name="TruncArg1" xml:space="preserve">
+    <value>número</value>
+    
+  </data>
+  <data name="TruncArg2" xml:space="preserve">
+    <value>núm_decimais</value>
+    
+  </data>
+  <data name="TruncTArg1" xml:space="preserve">
+    <value>orixe</value>
+    
+  </data>
+  <data name="TruncTArg2" xml:space="preserve">
+    <value>núm_decimais</value>
+    
+  </data>
+  <data name="AboutRound" xml:space="preserve">
+    <value>Arredonda o "número" ao número de díxitos especificado.</value>
+    
+  </data>
+  <data name="AboutRoundUp" xml:space="preserve">
+    <value>Arredonda o "número" cara arriba, na dirección oposta a cero.</value>
+    
+  </data>
+  <data name="AboutRoundDown" xml:space="preserve">
+    <value>Arredonda o "número" cara abaixo, cara cero.</value>
+    
+  </data>
+  <data name="RoundArg1" xml:space="preserve">
+    <value>número</value>
+    
+  </data>
+  <data name="RoundArg2" xml:space="preserve">
+    <value>núm_decimais</value>
+    
+  </data>
+  <data name="AboutRound_number" xml:space="preserve">
+    <value>Número que se vai arredondar.</value>
+  </data>
+  <data name="AboutRound_source" xml:space="preserve">
+    <value>Columna de números que se van arredondar.</value>
+  </data>
+  <data name="AboutRound_num_digits" xml:space="preserve">
+    <value>Número de díxitos fraccionais que se van usar para arredondar.</value>
+  </data>
+  <data name="AboutRoundUp_number" xml:space="preserve">
+    <value>Número que se vai arredondar.</value>
+  </data>
+  <data name="AboutRoundUp_source" xml:space="preserve">
+    <value>Columna de números que se van arredondar.</value>
+  </data>
+  <data name="AboutRoundUp_num_digits" xml:space="preserve">
+    <value>Número de díxitos fraccionais que se van usar para arredondar.</value>
+  </data>
+  <data name="AboutRoundDown_number" xml:space="preserve">
+    <value>Número que se vai arredondar.</value>
+  </data>
+  <data name="AboutRoundDown_source" xml:space="preserve">
+    <value>Columna de números que se van arredondar.</value>
+  </data>
+  <data name="AboutRoundDown_num_digits" xml:space="preserve">
+    <value>Número de díxitos fraccionais que se van usar para arredondar.</value>
+  </data>
+  <data name="AboutRoundT" xml:space="preserve">
+    <value>Arredonda todos os números da "orixe" ao número de díxitos especificado.</value>
+    
+  </data>
+  <data name="AboutRoundUpT" xml:space="preserve">
+    <value>Arredonda todos os números da "orixe" cara arriba, na dirección oposta a cero.</value>
+    
+  </data>
+  <data name="AboutRoundDownT" xml:space="preserve">
+    <value>Arredonda todos os números da "orixe" cara abaixo, cara cero.</value>
+    
+  </data>
+  <data name="RoundTArg1" xml:space="preserve">
+    <value>orixe</value>
+    
+  </data>
+  <data name="RoundTArg2" xml:space="preserve">
+    <value>núm_decimais</value>
+    
+  </data>
+  <data name="AboutRGBA" xml:space="preserve">
+    <value>Toma valores numéricos para os compoñentes vermello, verde, azul e alfa da cor e xera a cor específica. R, G, B son valores numéricos entre 0 e 255. Alfa é un decimal entre 0 e 1.</value>
+    
+  </data>
+  <data name="RGBAArg1" xml:space="preserve">
+    <value>valor_vermello</value>
+    
+  </data>
+  <data name="RGBAArg2" xml:space="preserve">
+    <value>valor_verde</value>
+    
+  </data>
+  <data name="RGBAArg3" xml:space="preserve">
+    <value>valor_azul</value>
+    
+  </data>
+  <data name="RGBAArg4" xml:space="preserve">
+    <value>valor_alfa</value>
+    
+  </data>
+  <data name="AboutRGBA_red_value" xml:space="preserve">
+    <value>Compoñente vermello, de 0 a 255.</value>
+  </data>
+  <data name="AboutRGBA_green_value" xml:space="preserve">
+    <value>Compoñente verde, de 0 a 255.</value>
+  </data>
+  <data name="AboutRGBA_blue_value" xml:space="preserve">
+    <value>Compoñente azul, de 0 a 255.</value>
+  </data>
+  <data name="AboutRGBA_alpha_value" xml:space="preserve">
+    <value>Compoñente alfa, de 0 a 1 (ou unha porcentaxe, como 49 %).</value>
+  </data>
+  <data name="AboutColorFade" xml:space="preserve">
+    <value>Xera un novo sombreado da "cor" especificada, baseándose na porcentaxe de "atenuación" especificada.</value>
+    
+  </data>
+  <data name="ColorFadeArg1" xml:space="preserve">
+    <value>cor</value>
+    
+  </data>
+  <data name="ColorFadeArg2" xml:space="preserve">
+    <value>atenuado</value>
+    
+  </data>
+  <data name="AboutColorFade_color" xml:space="preserve">
+    <value>Cor que se vai atenuar.</value>
+  </data>
+  <data name="AboutColorFade_fade" xml:space="preserve">
+    <value>Porcentaxe segundo a cal se atenuará a cor. Unha porcentaxe negativa xera un sombreado máis escuro. Unha porcentaxe positiva xera un sombreado máis claro.</value>
+  </data>
+  <data name="AboutColorFadeT" xml:space="preserve">
+    <value>Xera novos sombreados dos valores da "cor" especificados, baseándose nos valores especificados da porcentaxe de "atenuación".</value>
+  </data>
+  <data name="ColorFadeTArg1" xml:space="preserve">
+    <value>cor_ou_columna</value>
+    
+  </data>
+  <data name="ColorFadeTArg2" xml:space="preserve">
+    <value>atenuado_ou_columna</value>
+    
+  </data>
+  <data name="AboutColorFade_color_or_column" xml:space="preserve">
+    <value>Cor (ou columna de valores de cor) que se vai atenuar.</value>
+  </data>
+  <data name="AboutColorFade_fade_or_column" xml:space="preserve">
+    <value>Porcentaxe (ou columna de valores de porcentaxe) segundo a cal se atenuará a cor (ou a columna de valores de cor). Unha porcentaxe negativa xera un sombreado máis escuro. Unha porcentaxe positiva xera un sombreado máis claro.</value>
+  </data>
+  <data name="AboutAbs" xml:space="preserve">
+    <value>Devolve o valor absoluto dun número; é dicir, un número sen signo.</value>
+    
+  </data>
+  <data name="AboutAbsT" xml:space="preserve">
+    <value>Devolve os valores absolutos (números sen signo) dunha columna de números.</value>
+    
+  </data>
+  <data name="AboutAbs_number" xml:space="preserve">
+    <value>Valor numérico que se vai procesar.</value>
+  </data>
+  <data name="AboutAbs_input" xml:space="preserve">
+    <value>Columna de valores numéricos que se van procesar.</value>
+  </data>
+  <data name="AboutSin_number" xml:space="preserve">
+    <value>Valor numérico (en radiáns) para procesar.</value>
+  </data>
+  <data name="AboutSin_input" xml:space="preserve">
+    <value>Columna de valores numéricos (en radiáns) para procesar.</value>
+  </data>
+  <data name="AboutSin" xml:space="preserve">
+    <value>Devolve o valor do seno dun número.</value>
+    
+  </data>
+  <data name="AboutSinT" xml:space="preserve">
+    <value>Devolve os valores do seno dunha columna de números.</value>
+    
+  </data>
+  <data name="AboutAsin_number" xml:space="preserve">
+    <value>Valor numérico que se vai procesar.</value>
+  </data>
+  <data name="AboutAsin_input" xml:space="preserve">
+    <value>Columna de valores numéricos que se van procesar.</value>
+  </data>
+  <data name="AboutAsin" xml:space="preserve">
+    <value>Devolve o valor do arcoseno (en radiáns) dun número.</value>
+    
+  </data>
+  <data name="AboutAsinT" xml:space="preserve">
+    <value>Devolve os valores do arcoseno (en radiáns) dunha columna de números.</value>
+    
+  </data>
+  <data name="AboutCos" xml:space="preserve">
+    <value>Devolve o valor do coseno dun número.</value>
+    
+  </data>
+  <data name="AboutCosT" xml:space="preserve">
+    <value>Devolve os valores do coseno dunha columna de números.</value>
+    
+  </data>
+  <data name="AboutCos_number" xml:space="preserve">
+    <value>Valor numérico (en radiáns) para procesar.</value>
+  </data>
+  <data name="AboutCos_input" xml:space="preserve">
+    <value>Columna de valores numéricos (en radiáns) para procesar.</value>
+  </data>
+  <data name="AboutAcos" xml:space="preserve">
+    <value>Devolve o valor do arcocoseno (en radiáns) dun número.</value>
+    
+  </data>
+  <data name="AboutAcos_number" xml:space="preserve">
+    <value>Valor numérico que se vai procesar.</value>
+  </data>
+  <data name="AboutAcosT" xml:space="preserve">
+    <value>Devolve os valores do arcocoseno (en radiáns) dunha columna de números.</value>
+    
+  </data>
+  <data name="AboutAcos_input" xml:space="preserve">
+    <value>Columna de valores numéricos que se van procesar.</value>
+  </data>
+  <data name="AboutAcot_number" xml:space="preserve">
+    <value>Valor numérico que se vai procesar.</value>
+  </data>
+  <data name="AboutAcot_input" xml:space="preserve">
+    <value>Columna de valores numéricos que se van procesar.</value>
+  </data>
+  <data name="AboutAcot" xml:space="preserve">
+    <value>Devolve o valor da arcocotanxente (en radiáns) dun número.</value>
+    
+  </data>
+  <data name="AboutAcotT" xml:space="preserve">
+    <value>Devolve os valores da arcocotanxente (en radiáns) dunha columna de números.</value>
+    
+  </data>
+  <data name="AboutTan" xml:space="preserve">
+    <value>Devolve o valor da tanxente dun número.</value>
+    
+  </data>
+  <data name="AboutTanT" xml:space="preserve">
+    <value>Devolve os valores da tanxente dunha columna de números.</value>
+    
+  </data>
+  <data name="AboutTan_number" xml:space="preserve">
+    <value>Valor numérico (en radiáns) para procesar.</value>
+  </data>
+  <data name="AboutTan_input" xml:space="preserve">
+    <value>Columna de valores numéricos (en radiáns) para procesar.</value>
+  </data>
+  <data name="AboutAtan" xml:space="preserve">
+    <value>Devolve o valor da arcotanxente (en radiáns) dun número.</value>
+    
+  </data>
+  <data name="AboutAtanT" xml:space="preserve">
+    <value>Devolve os valores da arcotanxente (en radiáns) dunha columna de números.</value>
+    
+  </data>
+  <data name="AboutAtan_number" xml:space="preserve">
+    <value>Valor numérico que se vai procesar.</value>
+  </data>
+  <data name="AboutAtan_input" xml:space="preserve">
+    <value>Columna de valores numéricos que se van procesar.</value>
+  </data>
+  <data name="AboutCot" xml:space="preserve">
+    <value>Devolve o valor da cotanxente dun número.</value>
+    
+  </data>
+  <data name="AboutCotT" xml:space="preserve">
+    <value>Devolve os valores da cotanxente dunha columna de números.</value>
+    
+  </data>
+  <data name="AboutCot_number" xml:space="preserve">
+    <value>Valor numérico (en radiáns) para procesar.</value>
+  </data>
+  <data name="AboutCot_input" xml:space="preserve">
+    <value>Columna de valores numéricos (en radiáns) para procesar.</value>
+  </data>
+  <data name="AboutLn" xml:space="preserve">
+    <value>Devolve o logaritmo natural (base E) dun número.</value>
+    
+  </data>
+  <data name="AboutLnT" xml:space="preserve">
+    <value>Devolve os valores do logaritmo natural (base E) dunha columna de números.</value>
+    
+  </data>
+  <data name="AboutLn_number" xml:space="preserve">
+    <value>Valor numérico que se vai procesar.</value>
+  </data>
+  <data name="AboutLn_input" xml:space="preserve">
+    <value>Columna de valores numéricos que se van procesar.</value>
+  </data>
+  <data name="AboutLog" xml:space="preserve">
+    <value>Devolve o logaritmo dun número para a base dada. A base predefinida é 10.</value>
+    
+  </data>
+  <data name="AboutLogT" xml:space="preserve">
+    <value>Devolve os valores de logaritmo dun número ou columna de números para a columna de bases ou a base dada. A base predefinida é 10.</value>
+    
+  </data>
+  <data name="AboutLog_number" xml:space="preserve">
+    <value>Valor numérico que se vai procesar.</value>
+  </data>
+  <data name="AboutLog_input" xml:space="preserve">
+    <value>Columna de valores numéricos que se van procesar.</value>
+  </data>
+  <data name="LogBase" xml:space="preserve">
+    <value>base</value>
+    
+  </data>
+  <data name="AboutLog_base" xml:space="preserve">
+    <value>Base do logaritmo.</value>
+  </data>
+  <data name="AboutExp" xml:space="preserve">
+    <value>Devolve E elevado á potencia dun número. Para calcular as potencias doutras bases, use o operador exponencial (^).</value>
+    
+  </data>
+  <data name="AboutExpT" xml:space="preserve">
+    <value>Devolve unha columna que contén E elevado á potencia de cada número correspondente dunha columna de números. Para calcular as potencias doutras bases, use o operador exponencial (^).</value>
+    
+  </data>
+  <data name="AboutExp_number" xml:space="preserve">
+    <value>Valor numérico que se vai procesar.</value>
+  </data>
+  <data name="AboutExp_input" xml:space="preserve">
+    <value>Columna de valores numéricos que se van procesar.</value>
+  </data>
+  <data name="AboutPi" xml:space="preserve">
+    <value>Devolve o valor de pi.</value>
+  </data>
+  <data name="AboutRadians" xml:space="preserve">
+    <value>Devolve o valor do radián dun número.</value>
+    
+  </data>
+  <data name="AboutRadiansT" xml:space="preserve">
+    <value>Devolve os valores do radián dunha columna de números.</value>
+    
+  </data>
+  <data name="AboutRadians_number" xml:space="preserve">
+    <value>Valor numérico (en graos) para procesar.</value>
+  </data>
+  <data name="AboutRadians_input" xml:space="preserve">
+    <value>Columna de valores numéricos (en graos) para procesar.</value>
+  </data>
+  <data name="AboutDegrees" xml:space="preserve">
+    <value>Devolve o valor dos graos dun número.</value>
+    
+  </data>
+  <data name="AboutDegreesT" xml:space="preserve">
+    <value>Devolve os valores dos graos dunha columna de números.</value>
+    
+  </data>
+  <data name="AboutDegrees_number" xml:space="preserve">
+    <value>Valor numérico (en radiáns) para procesar.</value>
+  </data>
+  <data name="AboutDegrees_input" xml:space="preserve">
+    <value>Columna de valores numéricos (en radiáns) para procesar.</value>
+  </data>
+  <data name="AboutAtan2" xml:space="preserve">
+    <value>Devolve a arcotanxente (en radiáns) das coordenadas x e y especificadas.</value>
+  </data>
+  <data name="AboutAtan2Arg1" xml:space="preserve">
+    <value>coordenada_x</value>
+    
+  </data>
+  <data name="AboutAtan2Arg2" xml:space="preserve">
+    <value>coordenada_y</value>
+    
+  </data>
+  <data name="AboutAtan2_x_coordinate" xml:space="preserve">
+    <value>coordenada x.</value>
+  </data>
+  <data name="AboutAtan2_y_coordinate" xml:space="preserve">
+    <value>coordenada y.</value>
+  </data>
+  <data name="AboutSqrt" xml:space="preserve">
+    <value>Devolve a raíz cadrada dun número.</value>
+    
+  </data>
+  <data name="AboutSqrtT" xml:space="preserve">
+    <value>Devolve as raíces cadradas dunha columna de números.</value>
+    
+  </data>
+  <data name="AboutSqrt_number" xml:space="preserve">
+    <value>Valor numérico que se vai procesar.</value>
+  </data>
+  <data name="AboutSqrt_input" xml:space="preserve">
+    <value>Columna de valores numéricos que se van procesar.</value>
+  </data>
+  <data name="MathFuncArg1" xml:space="preserve">
+    <value>número</value>
+    
+  </data>
+  <data name="MathTFuncArg1" xml:space="preserve">
+    <value>entrada</value>
+    
+  </data>
+  <data name="AboutLeft" xml:space="preserve">
+    <value>Devolve o número de caracteres especificado do inicio dun valor de texto.</value>
+    
+  </data>
+  <data name="AboutLeftT" xml:space="preserve">
+    <value>Devolve unha columna que contén o número de caracteres especificado desde o inicio do valor de texto avaliado por fila dentro da táboa ou colección especificadas.</value>
+    
+  </data>
+  <data name="AboutLeft_text" xml:space="preserve">
+    <value>Valor de texto do que se van extraer caracteres.</value>
+  </data>
+  <data name="AboutLeft_num_chars" xml:space="preserve">
+    <value>Número de caracteres que se van extraer.</value>
+  </data>
+  <data name="AboutLeft_text_column" xml:space="preserve">
+    <value>Columna de valores de texto da que se van extraer caracteres.</value>
+  </data>
+  <data name="AboutRight" xml:space="preserve">
+    <value>Devolve o número de caracteres especificado do final dun valor de texto.</value>
+    
+  </data>
+  <data name="AboutRightT" xml:space="preserve">
+    <value>Devolve unha columna que contén o número de caracteres especificado desde o final do valor de texto avaliado por fila dentro da táboa ou colección especificadas.</value>
+    
+  </data>
+  <data name="AboutRight_text" xml:space="preserve">
+    <value>Valor de texto do que se van extraer caracteres.</value>
+  </data>
+  <data name="AboutRight_num_chars" xml:space="preserve">
+    <value>Número de caracteres que se van extraer.</value>
+  </data>
+  <data name="AboutRight_text_column" xml:space="preserve">
+    <value>Columna de valores de texto da que se van extraer caracteres.</value>
+  </data>
+  <data name="LeftRightArg1" xml:space="preserve">
+    <value>texto</value>
+    
+  </data>
+  <data name="LeftRightTArg1" xml:space="preserve">
+    <value>columna_texto</value>
+    
+  </data>
+  <data name="LeftRightArg2" xml:space="preserve">
+    <value>núm_caracteres</value>
+    
+  </data>
+  <data name="AboutIsBlank" xml:space="preserve">
+    <value>Comproba se a expresión dá lugar a un espazo en branco e devolve verdadeiro ou falso.</value>
+    
+  </data>
+  <data name="IsBlankArg1" xml:space="preserve">
+    <value>expresión</value>
+    
+  </data>
+  <data name="AboutIsBlank_expression" xml:space="preserve">
+    <value>Expresión que se vai probar.</value>
+  </data>
+  <data name="AboutIsBlankOrError" xml:space="preserve">
+    <value>Comproba se a expresión dá lugar a un resultado en branco ou un erro e devolve verdadeiro ou falso.</value>
+    
+  </data>
+  <data name="IsBlankOrErrorArg1" xml:space="preserve">
+    <value>expresión</value>
+    
+  </data>
+  <data name="AboutIsBlankOrError_expression" xml:space="preserve">
+    <value>Expresión que se vai probar.</value>
+    
+  </data>
+  <data name="AboutIsEmpty" xml:space="preserve">
+    <value>Comproba se unha colección está baleira e devolve verdadeiro ou falso.</value>
+    
+  </data>
+  <data name="IsEmptyArg1" xml:space="preserve">
+    <value>orixe</value>
+    
+  </data>
+  <data name="AboutIsEmpty_source" xml:space="preserve">
+    <value>Táboa que se vai probar.</value>
+  </data>
+  <data name="AboutShuffle" xml:space="preserve">
+    <value>Devolve unha copia ordenada aleatoriamente da táboa de "orixe" de entrada.</value>
+    
+  </data>
+  <data name="ShuffleArg1" xml:space="preserve">
+    <value>orixe</value>
+    
+  </data>
+  <data name="AboutShuffle_source" xml:space="preserve">
+    <value>Táboa que se vai ordenar aleatoriamente.</value>
+  </data>
+  <data name="AboutLookUp" xml:space="preserve">
+    <value>Consulta a primeira fila na que a condición especificada se avalía como verdadeira e devolve o resultado da expresión avaliada dentro do contexto de dita fila en caso de que se forneza unha expresión ou toda a fila.</value>
+    
+  </data>
+  <data name="LookUpArg1" xml:space="preserve">
+    <value>orixe</value>
+    
+  </data>
+  <data name="LookUpArg2" xml:space="preserve">
+    <value>condición</value>
+    
+  </data>
+  <data name="LookUpArg3" xml:space="preserve">
+    <value>resultado</value>
+    
+  </data>
+  <data name="AboutLookUp_source" xml:space="preserve">
+    <value>Táboa na que se van buscar valores.</value>
+  </data>
+  <data name="AboutLookUp_condition" xml:space="preserve">
+    <value>Condición que se vai avaliar nas filas da entrada especificada.</value>
+  </data>
+  <data name="AboutLookUp_result" xml:space="preserve">
+    <value>Expresión que se vai avaliar sobre a fila que coincide coa condición especificada e que proporcionará o resultado.</value>
+  </data>
+  <data name="AboutStdevP" xml:space="preserve">
+    <value>Calcula a desviación estándar segundo a poboación total indicada como argumentos (ignora os valores lóxicos e o texto).</value>
+    
+  </data>
+  <data name="AboutStdevP_number" xml:space="preserve">
+    <value>Número que se vai factorizar no cálculo da desviación estándar.</value>
+  </data>
+  <data name="AboutStdevP_source" xml:space="preserve">
+    <value>Táboa que especifica a poboación para o cálculo da desviación estándar.</value>
+  </data>
+  <data name="AboutStdevP_expression" xml:space="preserve">
+    <value>Expresión avaliada sobre filas da entrada que especifica valores para o cálculo da desviación estándar.</value>
+  </data>
+  <data name="AboutStdevPT" xml:space="preserve">
+    <value>Calcula a desviación estándar segundo a poboación total indicada como columna (ignora os valores lóxicos e o texto da columna).</value>
+    
+  </data>
+  <data name="AboutVarP" xml:space="preserve">
+    <value>Calcula a diferenza segundo a poboación total (ignora os valores lóxicos e o texto da poboación).</value>
+    
+  </data>
+  <data name="AboutVarP_number" xml:space="preserve">
+    <value>Número que se vai factorizar no cálculo da varianza.</value>
+  </data>
+  <data name="AboutVarP_source" xml:space="preserve">
+    <value>Táboa que especifica a poboación para o cálculo da diferenza.</value>
+  </data>
+  <data name="AboutVarP_expression" xml:space="preserve">
+    <value>Expresión avaliada sobre filas da entrada que especifica valores para o cálculo da diferenza.</value>
+  </data>
+  <data name="AboutVarPT" xml:space="preserve">
+    <value>Calcula a diferenza segundo a poboación total especificada como columna (ignora os valores lóxicos e o texto da columna).</value>
+    
+  </data>
+  <data name="SetArg1" xml:space="preserve">
+    <value>variable</value>
+    
+  </data>
+  <data name="AboutSplit" xml:space="preserve">
+    <value>Divide unha cadea en subcadeas mediante un delimitador.</value>
+    
+  </data>
+  <data name="AboutSplit_text" xml:space="preserve">
+    <value>Texto para dividir en subcadeas.</value>
+    
+  </data>
+  <data name="AboutSplit_separator" xml:space="preserve">
+    <value>Texto do delimitador que se usa para dividir o texto de entrada en subcadeas.</value>
+    
+  </data>
+  <data name="SplitArg1" xml:space="preserve">
+    <value>texto</value>
+    
+  </data>
+  <data name="SplitArg2" xml:space="preserve">
+    <value>separador</value>
+    
+  </data>
+  <data name="AboutIsType" xml:space="preserve">
+    <value>Devolve verdadeiro se o valor proporcionado é do tipo indicado.</value>
+    
+  </data>
+  <data name="IsTypeArg1" xml:space="preserve">
+    <value>valor</value>
+    
+  </data>
+  <data name="IsTypeArg2" xml:space="preserve">
+    <value>typeTable</value>
+    
+  </data>
+  <data name="AboutAsType" xml:space="preserve">
+    <value>Usa o valor proporcionado para o tipo indicado.</value>
+    
+  </data>
+  <data name="AsTypeArg1" xml:space="preserve">
+    <value>valor</value>
+    
+  </data>
+  <data name="AsTypeArg2" xml:space="preserve">
+    <value>typeTable</value>
+    
+  </data>
+  <data name="AboutAsType_value" xml:space="preserve">
+    <value>O rexistro polimórfico que se devolverá como un tipo novo.</value>
+  </data>
+  <data name="AboutAsType_typeTable" xml:space="preserve">
+    <value>Táboa de entidades que representa o valor que se quere usar para o tipo.</value>
+  </data>
+  <data name="AboutWith" xml:space="preserve">
+    <value>Executa a fórmula que se proporciona como segundo parámetro mediante o ámbito proporcionado polo primeiro.</value>
+    
+  </data>
+  <data name="WithArg1" xml:space="preserve">
+    <value>ámbito</value>
+    
+  </data>
+  <data name="WithArg2" xml:space="preserve">
+    <value>fórmula</value>
+    
+  </data>
+  <data name="AboutWith_scope" xml:space="preserve">
+    <value>Ámbito co que chamar á fórmula que definiu o segundo parámetro.</value>
+    
+  </data>
+  <data name="AboutWith_formula" xml:space="preserve">
+    <value>Fórmula á que se debe chamar mediante o ámbito proporcionado polo primeiro parámetro.</value>
+    
+  </data>
+  <data name="AboutSequence" xml:space="preserve">
+    <value>Xera unha táboa de número secuenciais</value>
+    
+  </data>
+  <data name="SequenceArg1" xml:space="preserve">
+    <value>rexistros</value>
+    
+  </data>
+  <data name="AboutSequence_records" xml:space="preserve">
+    <value>Número de rexistros na táboa dunha única columna denominada "Valor". 50 000 como máximo.</value>
+    
+  </data>
+  <data name="SequenceArg2" xml:space="preserve">
+    <value>inicio</value>
+    
+  </data>
+  <data name="AboutSequence_start" xml:space="preserve">
+    <value>Opcional. Primeiro número da secuencia. O valor predefinido é 1.</value>
+    
+  </data>
+  <data name="SequenceArg3" xml:space="preserve">
+    <value>paso</value>
+    
+  </data>
+  <data name="AboutSequence_step" xml:space="preserve">
+    <value>Opcional. Cantidade que se vai aumentar en cada valor subseguinte da táboa. O valor predefinido é 1.</value>
+    
+  </data>
+  <data name="ErrInvalidDot" xml:space="preserve">
+    <value>Uso non válido de '.'</value>
+    
+  </data>
+  <data name="ErrUnknownFunction" xml:space="preserve">
+    <value>"{0}" é unha función descoñecida ou non compatible.</value>
+    
+  </data>
+  <data name="ErrUnknownNamespaceFunction" xml:space="preserve">
+    <value>"{0}" é unha función descoñecida ou non compatible no espazo do nomes "{1}".</value>
+    
+  </data>
+  <data name="ErrUnSupportedComponentBehaviorInvocation" xml:space="preserve">
+    <value>O comportamento do compoñente só se pode invocar dende dentro dun compoñente.</value>
+    
+  </data>
+  <data name="ErrUnSupportedComponentDataPropertyAccess" xml:space="preserve">
+    <value>A propiedade de datos personalizados do compoñente con parámetros só é accesible desde un compoñente ou desde as propiedades de saída do compoñente.</value>
+    
+  </data>
+  <data name="ErrBadArity" xml:space="preserve">
+    <value>Número de argumentos non válido: recibíronse {0} e esperábanse {1}.</value>
+    
+  </data>
+  <data name="ErrBadArityEven" xml:space="preserve">
+    <value>Número de argumentos non válido: recibíronse {0} e esperábase un número par.</value>
+    
+  </data>
+  <data name="ErrBadArityOdd" xml:space="preserve">
+    <value>Número de argumentos non válido: recibíronse {0} e esperábase un número impar.</value>
+    
+  </data>
+  <data name="ErrBadType" xml:space="preserve">
+    <value>Tipo de argumento non válido.</value>
+    
+  </data>
+  <data name="ErrBadType_Type" xml:space="preserve">
+    <value>Tipo de argumento non válido. Non se poden usar valores {0} neste contexto.</value>
+    
+  </data>
+  <data name="ErrBadOperatorTypes" xml:space="preserve">
+    <value>Esta operación non é válida nestes tipos: {0}, {1}.</value>
+    
+  </data>
+  <data name="ErrGuidStrictComparison" xml:space="preserve">
+    <value>Os valores GUID só se poden comparar con outros valores GUID.</value>
+    
+  </data>
+  <data name="ErrBadRecordFieldType_FieldName_ExpectedType" xml:space="preserve">
+    <value>Tipo non válido para o campo "{0}". Espérase un tipo de campo de "{1}".</value>
+    
+  </data>
+  <data name="ErrBadType_ExpectedType" xml:space="preserve">
+    <value>Tipo de argumento non válido. Esperábase un valor {0}.</value>
+    
+  </data>
+  <data name="ErrBadType_ExpectedType_ProvidedType" xml:space="preserve">
+    <value>Tipo de argumento non válido ({1}). Esperábase un valor {0} no seu lugar.</value>
+    
+  </data>
+  <data name="ErrBadSchema_ExpectedType" xml:space="preserve">
+    <value>Tipo de argumento non válido. Esperábase un valor {0}, pero doutro esquema.</value>
+    
+  </data>
+  <data name="ErrBadType_ExpectedTypesCSV" xml:space="preserve">
+    <value>Tipo de argumento non válido. Esperábase un dos seguintes: {0}.</value>
+    
+  </data>
+  <data name="ErrInvalidArgs_Func" xml:space="preserve">
+    <value>A función '{0}' ten algúns argumentos non válidos.</value>
+    
+  </data>
+  <data name="ErrNeedTable_Func" xml:space="preserve">
+    <value>O primeiro argumento de '{0}' debe ser unha táboa.</value>
+    
+  </data>
+  <data name="ErrInvalidPropertyAccess" xml:space="preserve">
+    <value>A propiedade espera un parámetro requirido. Use parénteses para pasar o parámetro requirido.</value>
+    
+  </data>
+  <data name="ErrNeedTableCol_Func" xml:space="preserve">
+    <value>O primeiro argumento de '{0}' debe ser unha táboa dunha columna.</value>
+    
+  </data>
+  <data name="ErrInvalidSchemaNeedStringCol_Col" xml:space="preserve">
+    <value>Esquema non válido. Esperábase unha columna de valores de texto para '{0}'.</value>
+    
+  </data>
+  <data name="ErrInvalidSchemaNeedDateCol_Col" xml:space="preserve">
+    <value>Esquema non válido. Esperábase unha columna de valores de data para '{0}'.</value>
+    
+  </data>
+  <data name="ErrInvalidSchemaNeedNumCol_Col" xml:space="preserve">
+    <value>Esquema non válido. Esperábase unha columna de valores numéricos para '{0}'.</value>
+    
+  </data>
+  <data name="ErrInvalidSchemaNeedColorCol_Col" xml:space="preserve">
+    <value>Esquema non válido. Esperábase unha columna de valores de cor para '{0}'.</value>
+    
+  </data>
+  <data name="ErrInvalidSchemaNeedCol" xml:space="preserve">
+    <value>Esquema non válido. Esperábase unha táboa dunha columna.</value>
+    
+  </data>
+  <data name="ErrNeedRecord" xml:space="preserve">
+    <value>Non se pode usar un valor que non sexa un rexistro neste contexto.</value>
+    
+  </data>
+  <data name="ErrIncompatibleRecord" xml:space="preserve">
+    <value>Non se pode usar este rexistro. É posible que conteña campos de tipos incompatibles en conflito.</value>
+    
+  </data>
+  <data name="ErrNeedRecord_Func" xml:space="preserve">
+    <value>O primeiro argumento de '{0}' debe ser un rexistro.</value>
+    
+  </data>
+  <data name="ErrNeedEntity_EntityName" xml:space="preserve">
+    <value>Ao usar este conxunto de opcións como valor dunha enumeración ou na función Choices, é necesario engadir a entidade "{0}" como orixe de datos. Para engadila, use o menú Ver e, a seguir, seleccione Orixes de datos.</value>
+    
+  </data>
+  <data name="ErrNotAccessibleInCurrentContext" xml:space="preserve">
+    <value>Non se pode acceder á propiedade especificada neste contexto.</value>
+    
+  </data>
+  <data name="ErrInternalControlInInputProperty" xml:space="preserve">
+    <value>Non se pode facer referencia aos controis dun compoñente nas propiedades de entrada dese mesmo compoñente.</value>
+    
+  </data>
+  <data name="ErrColumnNotAccessibleInCurrentContext" xml:space="preserve">
+    <value>Non se pode acceder á columna especificada neste contexto.</value>
+    
+  </data>
+  <data name="WrnRowScopeOneToNExpandNumberOfCalls" xml:space="preserve">
+    <value>Neste ámbito de rexistro desta función faise referencia a unha relación un a varios ou varios a varios. Isto pode provocar un gran número de chamadas á súa orixe de datos, o que pode afectar ao desempeño.</value>
+    
+  </data>
+  <data name="ErrNumberTooLarge" xml:space="preserve">
+    <value>O valor numérico é demasiado longo.</value>
+    
+  </data>
+  <data name="ErrInvalidDataSource" xml:space="preserve">
+    <value>Esta orixe de datos non é válida. Corrixa o erro no panel "Orixes de datos" ao premer "Contido -&gt; Orixes de datos" ou "Visualización -&gt; Opcións"</value>
+    
+  </data>
+  <data name="ErrExpectedDataSourceRestriction" xml:space="preserve">
+    <value>Esperábase un identificador de orixe de datos para restrinxir o rexistro inserido.</value>
+    
+  </data>
+  <data name="ErrIncompatibleTypes" xml:space="preserve">
+    <value>Os tipos indicados son incompatibles.</value>
+    
+  </data>
+  <data name="ErrTypeError_Ex1_Ex2_Found" xml:space="preserve">
+    <value>O tipo deste argumento '{2}' non coincide cun dos seguintes tipos esperados: '{0}' ou '{1}'.</value>
+    
+  </data>
+  <data name="ErrTypeError_Arg_Expected_Found" xml:space="preserve">
+    <value>O tipo deste argumento '{0}' non coincide co tipo esperado '{1}'. Atopouse o tipo '{2}'.</value>
+    
+  </data>
+  <data name="ErrTypeErrorRecordIncompatibleWithSource" xml:space="preserve">
+    <value>O tipo de rexistro é incompatible coa orixe.</value>
+    
+  </data>
+  <data name="ErrExpectedStringLiteralArg_Name" xml:space="preserve">
+    <value>O argumento '{0}' non é válido. Esperábase un texto literal.</value>
+    
+  </data>
+  <data name="ErrArgNotAValidIdentifier_Name" xml:space="preserve">
+    <value>O argumento '{0}' non é un identificador válido.</value>
+    
+  </data>
+  <data name="ErrColExists_Name" xml:space="preserve">
+    <value>Xa existe unha columna denominada '{0}'.</value>
+    
+  </data>
+  <data name="ErrColConflict_Name" xml:space="preserve">
+    <value>Conflito no nome da columna '{0}'.</value>
+    
+  </data>
+  <data name="ErrColDNE_Name" xml:space="preserve">
+    <value>A columna especificada '{0}' non existe.</value>
+    
+  </data>
+  <data name="ErrColumnDoesNotExist_Name_Similar" xml:space="preserve">
+    <value>A columna "{0}" especificada non existe. A columna co nome máis parecido é "{1}".</value>
+    
+  </data>
+  <data name="ErrSortIncorrectOrder" xml:space="preserve">
+    <value>A ordenación do tipo de expresión é incorrecta.</value>
+    
+  </data>
+  <data name="ErrSortWrongType" xml:space="preserve">
+    <value>Non se pode ordenar en función do tipo de expresión.</value>
+    
+  </data>
+  <data name="ErrFunctionDoesNotAcceptThisType_Function_Expected" xml:space="preserve">
+    <value>O erro de tipo {0} esperaba {1} ou unha columna de táboa de tipo {1}.</value>
+    
+  </data>
+  <data name="ErrIncorrectFormat_Func" xml:space="preserve">
+    <value>Especificador de formato incorrecto para '{0}'.</value>
+    
+  </data>
+  <data name="ErrAsyncLambda" xml:space="preserve">
+    <value>As invocacións asíncronas non se poden usar en funcións de valor e condicións.</value>
+    
+  </data>
+  <data name="ErrValueMustBeFullyQualified" xml:space="preserve">
+    <value>Este é un espazo de nomes. Pode acceder aos seus membros co operador ".".</value>
+    
+  </data>
+  <data name="ErrScopeModificationLambda" xml:space="preserve">
+    <value>Esta función non se pode operar na mesma orixe de datos que se usa en {0}.</value>
+    
+  </data>
+  <data name="ErrFunctionDisallowedWithinNondeterministicOperationOrder" xml:space="preserve">
+    <value>Esta función non se pode invocar en {0}.</value>
+    
+  </data>
+  <data name="ErrAsTypeAndIsTypeExpectConnectedDataSource" xml:space="preserve">
+    <value>Argumento incorrecto. Esta fórmula espera unha táboa dunha orixe de datos conectada. As funcións AsType e IsType requiren orixes de datos conectadas.</value>
+    
+  </data>
+  <data name="InfoMessage" xml:space="preserve">
+    <value>Mensaxe: </value>
+    
+  </data>
+  <data name="InfoNode_Node" xml:space="preserve">
+    <value>Nó: {0}</value>
+    
+  </data>
+  <data name="InfoTok_Tok" xml:space="preserve">
+    <value>Tok: {0}</value>
+    
+  </data>
+  <data name="FormatSpan_Min_Lim" xml:space="preserve">
+    <value>({0}, {1}) </value>
+    
+  </data>
+  <data name="FormatErrorSeparator" xml:space="preserve">
+    <value>, </value>
+    
+  </data>
+  <data name="AboutDate" xml:space="preserve">
+    <value>Devolve o número que representa a data en código de data e hora de Power Apps.</value>
+    
+  </data>
+  <data name="DateArg1" xml:space="preserve">
+    <value>ano</value>
+    
+  </data>
+  <data name="DateArg2" xml:space="preserve">
+    <value>mes</value>
+    
+  </data>
+  <data name="DateArg3" xml:space="preserve">
+    <value>día</value>
+    
+  </data>
+  <data name="AboutDate_year" xml:space="preserve">
+    <value>Ano.</value>
+  </data>
+  <data name="AboutDate_month" xml:space="preserve">
+    <value>Mes.</value>
+  </data>
+  <data name="AboutDate_day" xml:space="preserve">
+    <value>Día.</value>
+  </data>
+  <data name="AboutTime" xml:space="preserve">
+    <value>Converte as horas, os minutos e os segundos nun número decimal.</value>
+    
+  </data>
+  <data name="TimeArg1" xml:space="preserve">
+    <value>hora</value>
+    
+  </data>
+  <data name="TimeArg2" xml:space="preserve">
+    <value>minuto</value>
+    
+  </data>
+  <data name="TimeArg3" xml:space="preserve">
+    <value>segundo</value>
+    
+  </data>
+  <data name="TimeArg4" xml:space="preserve">
+    <value>milisegundo</value>
+    
+  </data>
+  <data name="AboutTime_hour" xml:space="preserve">
+    <value>Compoñente hora.</value>
+  </data>
+  <data name="AboutTime_minute" xml:space="preserve">
+    <value>Compoñente minuto.</value>
+  </data>
+  <data name="AboutTime_second" xml:space="preserve">
+    <value>Compoñente segundo.</value>
+  </data>
+  <data name="AboutTime_millisecond" xml:space="preserve">
+    <value>Compoñente milisegundo.</value>
+  </data>
+  <data name="AboutDateTime" xml:space="preserve">
+    <value>Crea un valor que representa un instante no tempo, expresado en forma de data e hora do día.</value>
+    
+  </data>
+  <data name="AboutDateTime_year" xml:space="preserve">
+    <value>Ano.</value>
+    
+  </data>
+  <data name="AboutDateTime_month" xml:space="preserve">
+    <value>Mes.</value>
+    
+  </data>
+  <data name="AboutDateTime_day" xml:space="preserve">
+    <value>Día.</value>
+    
+  </data>
+  <data name="AboutDateTime_hour" xml:space="preserve">
+    <value>Hora.</value>
+    
+  </data>
+  <data name="AboutDateTime_minute" xml:space="preserve">
+    <value>Minuto.</value>
+    
+  </data>
+  <data name="AboutDateTime_second" xml:space="preserve">
+    <value>Segundo.</value>
+    
+  </data>
+  <data name="AboutDateTime_millisecond" xml:space="preserve">
+    <value>Milisegundos.</value>
+    
+  </data>
+  <data name="AboutYear" xml:space="preserve">
+    <value>Ano devolve o ano dunha data indicada.</value>
+    
+  </data>
+  <data name="YearArg1" xml:space="preserve">
+    <value>data_hora</value>
+    
+  </data>
+  <data name="AboutYear_date_time" xml:space="preserve">
+    <value>Valor de data do cal se extraerá o compoñente "ano".</value>
+  </data>
+  <data name="AboutMonth" xml:space="preserve">
+    <value>Devolve o mes, un número de 1 (xaneiro) a 12 (decembro).</value>
+    
+  </data>
+  <data name="MonthArg1" xml:space="preserve">
+    <value>data_hora</value>
+    
+  </data>
+  <data name="AboutMonth_date_time" xml:space="preserve">
+    <value>Valor de data do que se vai extraer o compoñente "mes".</value>
+  </data>
+  <data name="AboutDay" xml:space="preserve">
+    <value>Día devolve o día do mes, un número do 1 ao 31.</value>
+    
+  </data>
+  <data name="DayArg1" xml:space="preserve">
+    <value>data_hora</value>
+    
+  </data>
+  <data name="AboutDay_date_time" xml:space="preserve">
+    <value>Valor de data do que se vai extraer o compoñente "día".</value>
+  </data>
+  <data name="AboutHour" xml:space="preserve">
+    <value>Hora devolve a hora como un número entre 0 (12:00:00 AM) e 23 (11:00:00 PM).</value>
+    
+  </data>
+  <data name="HourArg1" xml:space="preserve">
+    <value>data_hora</value>
+    
+  </data>
+  <data name="AboutHour_date_time" xml:space="preserve">
+    <value>Valor de data ou hora do que se vai extraer o compoñente.</value>
+  </data>
+  <data name="AboutMinute" xml:space="preserve">
+    <value>Devolve o minuto, un número de 0 a 59.</value>
+    
+  </data>
+  <data name="MinuteArg1" xml:space="preserve">
+    <value>data_hora</value>
+    
+  </data>
+  <data name="AboutMinute_date_time" xml:space="preserve">
+    <value>Valor de data ou hora do que se vai extraer o compoñente "minuto".</value>
+  </data>
+  <data name="AboutSecond" xml:space="preserve">
+    <value>Devolve o segundo, un número de 0 a 59.</value>
+    
+  </data>
+  <data name="SecondArg1" xml:space="preserve">
+    <value>data_hora</value>
+    
+  </data>
+  <data name="AboutSecond_date_time" xml:space="preserve">
+    <value>Valor de data ou hora do que se vai extraer o compoñente "segundo".</value>
+  </data>
+  <data name="AboutWeekday" xml:space="preserve">
+    <value>Devolve o día da semana dun valor de data e hora. Por defecto, o resultado vai de 1 (domingo) a 7 (sábado). Pode especificar outro intervalo cun valor de enumeración de StartOfWeek ou cun código da función de día da semana de Microsoft Excel.</value>
+    
+  </data>
+  <data name="WeekdayArg1" xml:space="preserve">
+    <value>data</value>
+    
+  </data>
+  <data name="WeekdayArg2" xml:space="preserve">
+    <value>inicio_de_semana</value>
+    
+  </data>
+  <data name="AboutWeekday_date" xml:space="preserve">
+    <value>Valor de data para o que se vai calcular o día da semana.</value>
+  </data>
+  <data name="AboutWeekday_start_of_week" xml:space="preserve">
+    <value>Valor da enumeración StartOfWeek ou número da función de Excel correspondente para indicar como se deben numerar os días da semana.</value>
+    
+  </data>
+  <data name="AboutCalendar__MonthsLong" xml:space="preserve">
+    <value>Devolve unha táboa dunha única columna que contén os nomes completos de cada mes.</value>
+    
+  </data>
+  <data name="AboutCalendar__MonthsShort" xml:space="preserve">
+    <value>Devolve unha táboa dunha única columna que contén os nomes abreviados de cada mes.</value>
+    
+  </data>
+  <data name="AboutCalendar__WeekdaysLong" xml:space="preserve">
+    <value>Devolve unha táboa dunha única columna que contén os nomes completos de cada día da semana.</value>
+    
+  </data>
+  <data name="AboutCalendar__WeekdaysShort" xml:space="preserve">
+    <value>Devolve unha táboa dunha única columna que contén os nomes abreviados de cada día da semana.</value>
+    
+  </data>
+  <data name="AboutClock__AmPm" xml:space="preserve">
+    <value>Devolve unha táboa dunha única columna que contén as designacións en maiúsculas de antes e despois do mediodía.</value>
+    
+  </data>
+  <data name="AboutClock__AmPmShort" xml:space="preserve">
+    <value>Devolve unha táboa dunha única columna que contén as designacións abreviadas en maiúsculas de antes e despois do mediodía.</value>
+    
+  </data>
+  <data name="AboutClock__IsClock24" xml:space="preserve">
+    <value>Devolve un valor booleano que indica se o reloxo usa o formato de 24 horas.</value>
+    
+  </data>
+  <data name="AboutDateValue" xml:space="preserve">
+    <value>Converte unha data en forma de texto nun número que representa a data do código de data e hora de Power Apps.</value>
+    
+  </data>
+  <data name="DateValueArg1" xml:space="preserve">
+    <value>texto_data</value>
+    
+  </data>
+  <data name="DateValueArg2" xml:space="preserve">
+    <value>código_idioma</value>
+    
+  </data>
+  <data name="AboutDateValue_date_text" xml:space="preserve">
+    <value>Representación de texto dun selo de data/hora nun formato compatible coa plataforma.</value>
+  </data>
+  <data name="AboutDateValue_language_code" xml:space="preserve">
+    <value>Código de idioma do texto fornecido.</value>
+  </data>
+  <data name="AboutTimeValue" xml:space="preserve">
+    <value>Converte unha hora en forma de texto nun número que representa a data en código de data e hora de Microsoft Power Apps, ignorando a parte da data.</value>
+    
+  </data>
+  <data name="TimeValueArg1" xml:space="preserve">
+    <value>texto_hora</value>
+    
+  </data>
+  <data name="TimeValueArg2" xml:space="preserve">
+    <value>código_idioma</value>
+    
+  </data>
+  <data name="AboutTimeValue_time_text" xml:space="preserve">
+    <value>Representación de texto dun selo de data/hora nun formato compatible coa plataforma.</value>
+  </data>
+  <data name="AboutTimeValue_language_code" xml:space="preserve">
+    <value>Código de idioma do texto fornecido.</value>
+  </data>
+  <data name="ErrAutoRefreshNotAllowed" xml:space="preserve">
+    <value>As funcións de servizo de actualización automática non se poden usar en regras de acción.</value>
+    
+  </data>
+  <data name="ErrMultipleValuesForField_Name" xml:space="preserve">
+    <value>Especificouse un campo denominado "{0}" máis dunha vez neste rexistro.</value>
+    
+  </data>
+  <data name="WarnColumnNameSpecifiedMultipleTimes_Name" xml:space="preserve">
+    <value>Especificouse unha columna denominada '{0}' máis dunha vez.</value>
+    
+  </data>
+  <data name="WarnLiteralPredicate" xml:space="preserve">
+    <value>Aviso: este predicado é un valor literal e non fai referencia á táboa de entrada.</value>
+    
+  </data>
+  <data name="WarnDynamicMetadata" xml:space="preserve">
+    <value>Aviso: Seleccione "Capturar esquema" na parte inferior da barra de fórmulas expandida para configurar e actualizar o esquema de resultados deste método. En caso contrario, o método non devolverá ningún resultado.</value>
+    
+  </data>
+  <data name="FindArg1" xml:space="preserve">
+    <value>buscar_texto</value>
+    
+  </data>
+  <data name="FindArg2" xml:space="preserve">
+    <value>dentro_texto</value>
+    
+  </data>
+  <data name="FindArg3" xml:space="preserve">
+    <value>núm_inicial</value>
+    
+  </data>
+  <data name="AboutFind_find_text" xml:space="preserve">
+    <value>Valor de texto que se vai buscar.</value>
+  </data>
+  <data name="AboutFind_within_text" xml:space="preserve">
+    <value>Valor de texto no que buscar.</value>
+  </data>
+  <data name="AboutFind_start_num" xml:space="preserve">
+    <value>Posición inicial opcional.</value>
+  </data>
+  <data name="AboutFind" xml:space="preserve">
+    <value>Devolve a posición inicial dun valor de texto dentro doutro. A busca é capaz de distinguir entre maiúsculas e minúsculas.</value>
+    
+  </data>
+  <data name="AboutFindT" xml:space="preserve">
+    <value>Devolve unha columna de posicións iniciais dun valor de texto (ou columna de cadeas) dentro doutro valor de texto (ou columna de cadeas). A busca é capaz de distinguir entre maiúsculas e minúsculas.</value>
+    
+  </data>
+  <data name="FindTArg1" xml:space="preserve">
+    <value>buscar_texto_ou_columna</value>
+    
+  </data>
+  <data name="FindTArg2" xml:space="preserve">
+    <value>dentro_texto_ou_columna</value>
+    
+  </data>
+  <data name="FindTArg3" xml:space="preserve">
+    <value>núm_inicial</value>
+    
+  </data>
+  <data name="AboutFind_find_text_or_column" xml:space="preserve">
+    <value>Valor de texto (ou columna de valores de texto) que se ten que buscar.</value>
+  </data>
+  <data name="AboutFind_within_text_or_column" xml:space="preserve">
+    <value>Valor de texto (ou columna de valores de texto) no que buscar.</value>
+  </data>
+  <data name="AboutColorValue" xml:space="preserve">
+    <value>Devolve a cor correspondente á cadea de cor indicada.</value>
+    
+  </data>
+  <data name="ColorValueArg1" xml:space="preserve">
+    <value>texto_cor</value>
+    
+  </data>
+  <data name="AboutColorValue_color_text" xml:space="preserve">
+    <value>Cor especificada polo nome, como "Azul", ou coa notación hexadecimal estándar de 6 díxitos #rrggbb.</value>
+  </data>
+  <data name="ErrInvalidJsonPointer" xml:space="preserve">
+    <value>Punteiro JSON non válido.</value>
+    
+  </data>
+  <data name="Text" xml:space="preserve">
+    <value>Texto</value>
+  </data>
+  <data name="Logical" xml:space="preserve">
+    <value>Lóxica</value>
+  </data>
+  <data name="Table" xml:space="preserve">
+    <value>Táboa</value>
+  </data>
+  <data name="Behavior" xml:space="preserve">
+    <value>Comportamento</value>
+  </data>
+  <data name="DateTime" xml:space="preserve">
+    <value>Data e hora</value>
+  </data>
+  <data name="MathAndStat" xml:space="preserve">
+    <value>Matemáticas e estatística</value>
+  </data>
+  <data name="Information" xml:space="preserve">
+    <value>Información</value>
+  </data>
+  <data name="Color" xml:space="preserve">
+    <value>Cor</value>
+  </data>
+  <data name="REST" xml:space="preserve">
+    <value>Servizos</value>
+    
+  </data>
+  <data name="FunctionReference_Link" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?LinkId=722347#</value>
+    
+  </data>
+  <data name="InvalidXml_ElementMissingAttribute_ElemName_AttrName" xml:space="preserve">
+    <value>Falta o atributo '{1}' no elemento '{0}'.</value>
+    
+  </data>
+  <data name="InvalidXml_AttributeCannotBeEmpty_AttrName" xml:space="preserve">
+    <value>O atributo '{0}' non pode ser unha cadea baleira.</value>
+    
+  </data>
+  <data name="InvalidXml_AttributeValueInvalidGuid_AttrName_Value" xml:space="preserve">
+    <value>O atributo '{0}' ten un valor de GUID '{1}' non válido.</value>
+    
+  </data>
+  <data name="InvalidJson_MissingRequiredNamedValue_PropName" xml:space="preserve">
+    <value>Falta a propiedade '{0}'.</value>
+    
+  </data>
+  <data name="InvalidJson_NamedValueTypeNotCorrect_PropName_ExpectedType_ActualType" xml:space="preserve">
+    <value>A propiedade '{0}' ten un valor de tipo non válido: {2}. Esperábase un valor de tipo: {1}.</value>
+    
+  </data>
+  <data name="InvalidJson_NamedValueCannotBeEmpty_PropName" xml:space="preserve">
+    <value>A propiedade '{0}' non pode estar baleira.</value>
+    
+  </data>
+  <data name="InvalidJson_NamedEnumStringInvalid_PropName_ActualValue" xml:space="preserve">
+    <value>Espérase que a enumeración "{0}" teña un valor válido, pero o valor {1} está fóra do intervalo da enumeración.</value>
+    
+  </data>
+  <data name="InvalidJson_NamedIntegerOverflow_PropName_ActualValue" xml:space="preserve">
+    <value>Espérase que a propiedade "{0}" teña un valor enteiro, pero o valor {1} está fóra do intervalo.</value>
+    
+  </data>
+  <data name="InvalidJson_IndexedValueTypeNotCorrect_Index_ExpectedType_ActualType" xml:space="preserve">
+    <value>O elemento do índice {0} ten un valor de tipo non válido: {2}. Esperábase un valor de tipo: {1}.</value>
+  </data>
+  <data name="InvalidJson_IndexedValueMustBeNonEmpty_Index" xml:space="preserve">
+    <value>O elemento do índice {0} non debe ser unha cadea baleira.</value>
+  </data>
+  <data name="AboutDateAdd" xml:space="preserve">
+    <value>Engade o número especificado de unidades a unha data.</value>
+    
+  </data>
+  <data name="AboutDateDiff" xml:space="preserve">
+    <value>Calcule a diferenza entre dúas datas.</value>
+    
+  </data>
+  <data name="DateAddArg1" xml:space="preserve">
+    <value>data</value>
+    
+  </data>
+  <data name="DateAddArg2" xml:space="preserve">
+    <value>número_de_unidades</value>
+    
+  </data>
+  <data name="DateAddArg3" xml:space="preserve">
+    <value>unidade</value>
+    
+  </data>
+  <data name="AboutDateAdd_date" xml:space="preserve">
+    <value>Valor de data de referencia.</value>
+  </data>
+  <data name="AboutDateAdd_number_of_units" xml:space="preserve">
+    <value>Número de unidades que se van engadir. Pode ser negativo.</value>
+  </data>
+  <data name="AboutDateAdd_unit" xml:space="preserve">
+    <value>Unidade que se vai usar, que pode ser Years, Quarters, Months, Days, Hours, Minutes, Seconds, Milliseconds.</value>
+    
+  </data>
+  <data name="DateDiffArg1" xml:space="preserve">
+    <value>data_inicio</value>
+    
+  </data>
+  <data name="DateDiffArg2" xml:space="preserve">
+    <value>data_final</value>
+    
+  </data>
+  <data name="DateDiffArg3" xml:space="preserve">
+    <value>unidade</value>
+    
+  </data>
+  <data name="AboutDateDiff_start_date" xml:space="preserve">
+    <value>Data de inicio da operación de diferenza.</value>
+  </data>
+  <data name="AboutDateDiff_end_date" xml:space="preserve">
+    <value>Data de finalización da operación de diferenza.</value>
+  </data>
+  <data name="AboutDateDiff_unit" xml:space="preserve">
+    <value>Unidade na que se expresará o resultado, que pode ser Years, Quarters, Months, Days, Hours, Minutes, Seconds, Milliseconds.</value>
+    
+  </data>
+  <data name="AboutDateAddT" xml:space="preserve">
+    <value>Engade o número especificado de unidades a unha columna de datas.</value>
+    
+  </data>
+  <data name="AboutDateDiffT" xml:space="preserve">
+    <value>Calcula a diferenza entre dúas columnas de datas.</value>
+    
+  </data>
+  <data name="DateAddTArg1" xml:space="preserve">
+    <value>columna_data</value>
+    
+  </data>
+  <data name="DateAddTArg2" xml:space="preserve">
+    <value>número_de_unidades</value>
+    
+  </data>
+  <data name="DateAddTArg3" xml:space="preserve">
+    <value>unidade</value>
+    
+  </data>
+  <data name="AboutDateAdd_date_column" xml:space="preserve">
+    <value>Columna de valores de data.</value>
+  </data>
+  <data name="DateDiffTArg1" xml:space="preserve">
+    <value>columna_data_inicio</value>
+    
+  </data>
+  <data name="DateDiffTArg2" xml:space="preserve">
+    <value>columna_data_final</value>
+    
+  </data>
+  <data name="DateDiffTArg3" xml:space="preserve">
+    <value>unidade</value>
+    
+  </data>
+  <data name="AboutDateDiff_start_date_column" xml:space="preserve">
+    <value>Columna de datas de inicio da operación de diferenza.</value>
+  </data>
+  <data name="AboutDateDiff_end_date_column" xml:space="preserve">
+    <value>Columna de datas de finalización da operación de diferenza.</value>
+  </data>
+  <data name="AboutChar" xml:space="preserve">
+    <value>Devolve o carácter especificado polo número de código do conxunto de caracteres da plataforma.</value>
+    
+  </data>
+  <data name="CharArg1" xml:space="preserve">
+    <value>número</value>
+    
+  </data>
+  <data name="AboutChar_number" xml:space="preserve">
+    <value>Número de código do conxunto de caracteres da plataforma.</value>
+  </data>
+  <data name="AboutCharT" xml:space="preserve">
+    <value>Devolve unha táboa de caracteres especificados polos números de código do conxunto de caracteres da súa plataforma.</value>
+    
+  </data>
+  <data name="CharTArg1" xml:space="preserve">
+    <value>columna_de_números</value>
+    
+  </data>
+  <data name="AboutChar_column_of_numbers" xml:space="preserve">
+    <value>Columna de números de código do conxunto de caracteres da plataforma.</value>
+  </data>
+  <data name="AboutParseJSON" xml:space="preserve">
+    <value>Converte unha cadea JSON nun obxecto.</value>
+    
+  </data>
+  <data name="ParseJSONArg1" xml:space="preserve">
+    <value>entrada</value>
+    
+  </data>
+  <data name="AboutParseJSON_input" xml:space="preserve">
+    <value>Cadea JSON que se vai procesar.</value>
+  </data>
+  <data name="AboutIndex" xml:space="preserve">
+    <value>Devolve o rexistro dunha táboa nun índice determinado.</value>
+    
+  </data>
+  <data name="IndexArg1" xml:space="preserve">
+    <value>táboa</value>
+    
+  </data>
+  <data name="IndexArg2" xml:space="preserve">
+    <value>índice</value>
+    
+  </data>
+  <data name="AboutIndex_table" xml:space="preserve">
+    <value>Táboa.</value>
+  </data>
+  <data name="AboutIndex_index" xml:space="preserve">
+    <value>Índice do rexistro que se vai recuperar.</value>
+    
+  </data>
+  <data name="Screen_Name_DisplayName" xml:space="preserve">
+    <value>Nome</value>
+    
+  </data>
+  <data name="Screen_Printing_DisplayName" xml:space="preserve">
+    <value>Imprimindo</value>
+    
+  </data>
+  <data name="Screen_ImagePosition_DisplayName" xml:space="preserve">
+    <value>Posición da imaxe</value>
+    
+  </data>
+  <data name="Screen_Size_DisplayName" xml:space="preserve">
+    <value>Tamaño</value>
+    
+  </data>
+  <data name="barcode_Type_DisplayName" xml:space="preserve">
+    <value>Tipo de código de barras</value>
+    
+  </data>
+  <data name="camera_Contrast_DisplayName" xml:space="preserve">
+    <value>Contraste</value>
+    
+  </data>
+  <data name="camera_Zoom_DisplayName" xml:space="preserve">
+    <value>Zoom</value>
+    
+  </data>
+  <data name="camera_Camera_DisplayName" xml:space="preserve">
+    <value>Cámara</value>
+    
+  </data>
+  <data name="export_Data_DisplayName" xml:space="preserve">
+    <value>Datos</value>
+    
+  </data>
+  <data name="Edit" xml:space="preserve">
+    <value>Editar</value>
+    
+  </data>
+  <data name="Dust" xml:space="preserve">
+    <value>Po</value>
+    
+  </data>
+  <data name="image_Image_DisplayName" xml:space="preserve">
+    <value>Imaxe</value>
+    
+  </data>
+  <data name="icon_Icon_DisplayName" xml:space="preserve">
+    <value>Icona</value>
+    
+  </data>
+  <data name="icon_Rotation_DisplayName" xml:space="preserve">
+    <value>Rotación</value>
+    
+  </data>
+  <data name="image_ImagePosition_DisplayName" xml:space="preserve">
+    <value>Posición da imaxe</value>
+    
+  </data>
+  <data name="image_ImageRotation_DisplayName" xml:space="preserve">
+    <value>Rotar</value>
+    
+  </data>
+  <data name="ImageRotation_None_DisplayName" xml:space="preserve">
+    <value>Ningunha</value>
+    
+  </data>
+  <data name="label_Live_DisplayName" xml:space="preserve">
+    <value>Dinámica</value>
+    
+  </data>
+  <data name="label_Overflow_DisplayName" xml:space="preserve">
+    <value>Desbordamento</value>
+    
+  </data>
+  <data name="DatePicker_DateTimeZone_DisplayName" xml:space="preserve">
+    <value>Fuso horario da data</value>
+    
+  </data>
+  <data name="DatePicker_Format_DisplayName" xml:space="preserve">
+    <value>Formato</value>
+    
+  </data>
+  <data name="DatePicker_Language_DisplayName" xml:space="preserve">
+    <value>Idioma</value>
+    
+  </data>
+  <data name="Calendar_Width_DisplayName" xml:space="preserve">
+    <value>Largura do calendario</value>
+    
+  </data>
+  <data name="Hide_Calendar_DisplayName" xml:space="preserve">
+    <value>Ocultar calendario</value>
+    
+  </data>
+  <data name="Calendar_StartOfWeek_DisplayName" xml:space="preserve">
+    <value>Inicio da semana</value>
+    
+  </data>
+  <data name="microphone_Mic_DisplayName" xml:space="preserve">
+    <value>Micro</value>
+    
+  </data>
+  <data name="text_Default_DisplayName" xml:space="preserve">
+    <value>Valor predefinido</value>
+    
+  </data>
+  <data name="text_Mode_DisplayName" xml:space="preserve">
+    <value>Modo</value>
+    
+  </data>
+  <data name="text_Format_DisplayName" xml:space="preserve">
+    <value>Formato</value>
+    
+  </data>
+  <data name="text_VirtualKeyboardMode_DisplayName" xml:space="preserve">
+    <value>Modo de teclado virtual</value>
+    
+  </data>
+  <data name="text_TeamsTheme_DisplayName" xml:space="preserve">
+    <value>Tema de Teams</value>
+    
+  </data>
+  <data name="text_Clear_DisplayName" xml:space="preserve">
+    <value>Botón de borrar</value>
+    
+  </data>
+  <data name="Align_Left_DisplayName" xml:space="preserve">
+    <value>Aliñar á esquerda</value>
+    
+  </data>
+  <data name="Align_Right_DisplayName" xml:space="preserve">
+    <value>Aliñar á dereita</value>
+    
+  </data>
+  <data name="Align_Center_DisplayName" xml:space="preserve">
+    <value>Aliñar ao centro</value>
+    
+  </data>
+  <data name="Align_Justify_DisplayName" xml:space="preserve">
+    <value>Xustificar</value>
+    
+  </data>
+  <data name="AboutIsNumeric" xml:space="preserve">
+    <value>Comproba se un valor é un número e devolve verdadeiro ou falso.</value>
+    
+  </data>
+  <data name="IsNumericArg1" xml:space="preserve">
+    <value>valor</value>
+    
+  </data>
+  <data name="AboutIsNumeric_value" xml:space="preserve">
+    <value>Valor que se vai probar.</value>
+  </data>
+  <data name="Post" xml:space="preserve">
+    <value>Postal</value>
+    
+  </data>
+  <data name="AboutDateTimeValue" xml:space="preserve">
+    <value>Converte unha data e hora en forma de texto nun número que representa a data do código de data e hora de Power Apps.</value>
+    
+  </data>
+  <data name="DateTimeValueArg1" xml:space="preserve">
+    <value>texto_hora</value>
+    
+  </data>
+  <data name="DateTimeValueArg2" xml:space="preserve">
+    <value>código_idioma</value>
+    
+  </data>
+  <data name="AboutDateTimeValue_time_text" xml:space="preserve">
+    <value>Representación de texto dun selo de data/hora nun formato compatible coa plataforma.</value>
+  </data>
+  <data name="AboutDateTimeValue_language_code" xml:space="preserve">
+    <value>Código de idioma do texto fornecido.</value>
+  </data>
+  <data name="AboutTable" xml:space="preserve">
+    <value>Crea unha táboa a partir dos rexistros especificados con tantas columnas como campos de rexistro únicos existen. Por exemplo: Table({key1: val1, key2: val2, ...}, ...)</value>
+    
+  </data>
+  <data name="TableArg1" xml:space="preserve">
+    <value>rexistro</value>
+    
+  </data>
+  <data name="AboutTable_record" xml:space="preserve">
+    <value>Rexistro que se converterá nunha fila da táboa resultante.</value>
+  </data>
+  <data name="AboutShowColumns" xml:space="preserve">
+    <value>Devolve unha táboa con todas as columnas eliminadas da táboa de "orixe", excepto as columnas especificadas.</value>
+    
+  </data>
+  <data name="ShowColumnsArg1" xml:space="preserve">
+    <value>orixe</value>
+    
+  </data>
+  <data name="ShowColumnsArg2" xml:space="preserve">
+    <value>nome_columna</value>
+    
+  </data>
+  <data name="AboutShowColumns_source" xml:space="preserve">
+    <value>Valor da táboa do que se van eliminar columnas.</value>
+  </data>
+  <data name="AboutShowColumns_column_name" xml:space="preserve">
+    <value>Nome dunha columna que se vai conservar.</value>
+  </data>
+  <data name="AboutIsToday" xml:space="preserve">
+    <value>Comproba se a data indicada é hoxe e devolve verdadeiro ou falso.</value>
+    
+  </data>
+  <data name="AboutIsToday_date" xml:space="preserve">
+    <value>Valor de data que se vai probar.</value>
+  </data>
+  <data name="IsTodayFuncArg1" xml:space="preserve">
+    <value>data</value>
+    
+  </data>
+  <data name="AboutIsUTCToday" xml:space="preserve">
+    <value>Comproba se a data indica é hora na hora UTC e devolve verdadeiro ou falso.</value>
+    
+  </data>
+  <data name="AboutIsUTCToday_date" xml:space="preserve">
+    <value>Valor de data que se vai probar.</value>
+  </data>
+  <data name="IsUTCTodayFuncArg1" xml:space="preserve">
+    <value>data</value>
+    
+  </data>
+  <data name="AboutMod" xml:space="preserve">
+    <value>Devolve o aviso despois de que un número se divida entre un divisor. O resultado ten o mesmo signo que o divisor.</value>
+    
+  </data>
+  <data name="AboutModT" xml:space="preserve">
+    <value>Devolve unha columna que contén o aviso despois de que un número (ou unha columna de números) se divida entre un divisor (ou unha columna de divisores).</value>
+    
+  </data>
+  <data name="AboutMod_divisor" xml:space="preserve">
+    <value>Número polo que dividir.</value>
+  </data>
+  <data name="AboutMod_divisor_or_column" xml:space="preserve">
+    <value>Número ou columna de números polos que dividir.</value>
+  </data>
+  <data name="AboutMod_number" xml:space="preserve">
+    <value>Número para o cal se ten que buscar o aviso.</value>
+  </data>
+  <data name="AboutMod_number_or_column" xml:space="preserve">
+    <value>Número ou columna de números para os cales se ten que buscar o aviso.</value>
+  </data>
+  <data name="ModFuncArg1" xml:space="preserve">
+    <value>número</value>
+    
+  </data>
+  <data name="ModFuncArg2" xml:space="preserve">
+    <value>divisor</value>
+    
+  </data>
+  <data name="ModTFuncArg1" xml:space="preserve">
+    <value>número_ou_columna</value>
+    
+  </data>
+  <data name="ModTFuncArg2" xml:space="preserve">
+    <value>divisor_ou_columna</value>
+    
+  </data>
+  <data name="pdfViewer_Document_DisplayName" xml:space="preserve">
+    <value>Documento</value>
+    
+  </data>
+  <data name="pdfViewer_Zoom_DisplayName" xml:space="preserve">
+    <value>Zoom</value>
+    
+  </data>
+  <data name="pdfViewer_Password_DisplayName" xml:space="preserve">
+    <value>Contrasinal</value>
+    
+  </data>
+  <data name="pdfViewer_PasswordState_DisplayName" xml:space="preserve">
+    <value>Estado do contrasinal</value>
+    
+  </data>
+  <data name="DataDescriptionInvalidFormat_Reason" xml:space="preserve">
+    <value>A descrición dos datos non é válida: {0}</value>
+  </data>
+  <data name="DataDescriptionParserUnknownException" xml:space="preserve">
+    <value>Produciuse un erro descoñecido ao tentar analizar a descrición dos datos.</value>
+  </data>
+  <data name="AboutForAll" xml:space="preserve">
+    <value>Aplica unha fórmula determinada en cada fila dunha orixe de datos e, a seguir, devolve unha nova táboa con resultados por fila.</value>
+    
+  </data>
+  <data name="AboutForAll_source" xml:space="preserve">
+    <value>Orixe de datos ou táboa na que operar.</value>
+  </data>
+  <data name="AboutForAll_formula" xml:space="preserve">
+    <value>Fórmula para avaliar todas as filas da táboa.</value>
+  </data>
+  <data name="ForAllArg1" xml:space="preserve">
+    <value>orixe</value>
+    
+  </data>
+  <data name="ForAllArg2" xml:space="preserve">
+    <value>fórmula</value>
+    
+  </data>
+  <data name="AboutPower" xml:space="preserve">
+    <value>Eleva un número x á potencia doutro número y. O mesmo que x^y.</value>
+    
+  </data>
+  <data name="AboutPower_base" xml:space="preserve">
+    <value>O número base que se vai elevar.</value>
+  </data>
+  <data name="AboutPower_exponent" xml:space="preserve">
+    <value>O expoñente polo que se elevará a base.</value>
+  </data>
+  <data name="PowerFuncArg1" xml:space="preserve">
+    <value>base</value>
+    
+  </data>
+  <data name="PowerFuncArg2" xml:space="preserve">
+    <value>expoñente</value>
+    
+  </data>
+  <data name="AboutStartsWith" xml:space="preserve">
+    <value>Devolve true se o texto que se forneceu comeza coa cadea de inicio fornecida.</value>
+    
+  </data>
+  <data name="AboutStartsWith_text" xml:space="preserve">
+    <value>Texto que se vai comprobar.</value>
+  </data>
+  <data name="AboutStartsWith_start" xml:space="preserve">
+    <value>Cadea de inicio. A función devolve verdadeiro se o texto comeza con esta cadea.</value>
+  </data>
+  <data name="StartsWithArg1" xml:space="preserve">
+    <value>texto</value>
+    
+  </data>
+  <data name="StartsWithArg2" xml:space="preserve">
+    <value>inicio</value>
+    
+  </data>
+  <data name="AboutEndsWith" xml:space="preserve">
+    <value>Devolve true se o texto que se forneceu remata coa cadea de finalización fornecida.</value>
+    
+  </data>
+  <data name="AboutEndsWith_text" xml:space="preserve">
+    <value>Texto que se vai comprobar.</value>
+  </data>
+  <data name="AboutEndsWith_end" xml:space="preserve">
+    <value>Cadea de finalización. A función devolve verdadeiro se o texto remata con esta cadea.</value>
+  </data>
+  <data name="EndsWithArg1" xml:space="preserve">
+    <value>texto</value>
+    
+  </data>
+  <data name="EndsWithArg2" xml:space="preserve">
+    <value>final</value>
+    
+  </data>
+  <data name="AboutBlank" xml:space="preserve">
+    <value>Devolve un valor nulo (en branco)</value>
+  </data>
+  <data name="AboutPowerT" xml:space="preserve">
+    <value>Eleva un número x (ou unha columna de números) á potencia doutro número y (ou columna de números). Igual que x^y.</value>
+    
+  </data>
+  <data name="AboutPower_base_or_column" xml:space="preserve">
+    <value>Número base (ou columna de números base) que se vai elevar.</value>
+  </data>
+  <data name="AboutPower_exponent_or_column" xml:space="preserve">
+    <value>Expoñente (ou columna de expoñentes) ao que se elevará a base.</value>
+  </data>
+  <data name="PowerTFuncArg1" xml:space="preserve">
+    <value>base_ou_columna</value>
+    
+  </data>
+  <data name="PowerTFuncArg2" xml:space="preserve">
+    <value>expoñente_ou_columna</value>
+    
+  </data>
+  <data name="Icon_Import_DisplayName" xml:space="preserve">
+    <value>Importar</value>
+    
+  </data>
+  <data name="Icon_AddUser_DisplayName" xml:space="preserve">
+    <value>Engadir usuario</value>
+    
+  </data>
+  <data name="Icon_Alarm_DisplayName" xml:space="preserve">
+    <value>Alarma</value>
+    
+  </data>
+  <data name="Icon_Blocked_DisplayName" xml:space="preserve">
+    <value>Bloqueado</value>
+    
+  </data>
+  <data name="Icon_Bookmark_DisplayName" xml:space="preserve">
+    <value>Marcador</value>
+    
+  </data>
+  <data name="Icon_Bug_DisplayName" xml:space="preserve">
+    <value>Erro</value>
+    
+  </data>
+  <data name="Icon_Calculator_DisplayName" xml:space="preserve">
+    <value>Calculadora</value>
+    
+  </data>
+  <data name="Icon_Diamond_DisplayName" xml:space="preserve">
+    <value>Diamante</value>
+    
+  </data>
+  <data name="Icon_DockLeft_DisplayName" xml:space="preserve">
+    <value>Ancorar á esquerda</value>
+    
+  </data>
+  <data name="Icon_DockRight_DisplayName" xml:space="preserve">
+    <value>Ancorar á dereita</value>
+    
+  </data>
+  <data name="Icon_Enhance_DisplayName" xml:space="preserve">
+    <value>Mellorar</value>
+    
+  </data>
+  <data name="Icon_Error_DisplayName" xml:space="preserve">
+    <value>Erro</value>
+    
+  </data>
+  <data name="Icon_Export_DisplayName" xml:space="preserve">
+    <value>Exportar</value>
+    
+  </data>
+  <data name="Icon_Flag_DisplayName" xml:space="preserve">
+    <value>Marca</value>
+    
+  </data>
+  <data name="Icon_Globe_DisplayName" xml:space="preserve">
+    <value>Globo</value>
+    
+  </data>
+  <data name="Icon_HalfFilledCircle_DisplayName" xml:space="preserve">
+    <value>Círculo medio enchido</value>
+    
+  </data>
+  <data name="Icon_Health_DisplayName" xml:space="preserve">
+    <value>Saúde</value>
+    
+  </data>
+  <data name="Icon_Heart_DisplayName" xml:space="preserve">
+    <value>Corazón</value>
+    
+  </data>
+  <data name="Icon_Help_DisplayName" xml:space="preserve">
+    <value>Axuda</value>
+    
+  </data>
+  <data name="Icon_Hide_DisplayName" xml:space="preserve">
+    <value>Ocultar</value>
+    
+  </data>
+  <data name="Icon_History_DisplayName" xml:space="preserve">
+    <value>Historial</value>
+    
+  </data>
+  <data name="Icon_HorizontalLine_DisplayName" xml:space="preserve">
+    <value>Liña horizontal</value>
+    
+  </data>
+  <data name="Icon_Hospital_DisplayName" xml:space="preserve">
+    <value>Hospital</value>
+    
+  </data>
+  <data name="Icon_Key_DisplayName" xml:space="preserve">
+    <value>Clave</value>
+    
+  </data>
+  <data name="Icon_Lightbulb_DisplayName" xml:space="preserve">
+    <value>Lámpada</value>
+    
+  </data>
+  <data name="Icon_LightningBolt_DisplayName" xml:space="preserve">
+    <value>Raio</value>
+    
+  </data>
+  <data name="Icon_Link_DisplayName" xml:space="preserve">
+    <value>Ligazón</value>
+    
+  </data>
+  <data name="Icon_Manufacture_DisplayName" xml:space="preserve">
+    <value>Fabricar</value>
+    
+  </data>
+  <data name="Icon_Medical_DisplayName" xml:space="preserve">
+    <value>Médico</value>
+    
+  </data>
+  <data name="Icon_Microphone_DisplayName" xml:space="preserve">
+    <value>Micrófono</value>
+    
+  </data>
+  <data name="Icon_Notebook_DisplayName" xml:space="preserve">
+    <value>Caderno de notas</value>
+    
+  </data>
+  <data name="Icon_OpenInNewWindow_DisplayName" xml:space="preserve">
+    <value>Abrir nunha nova ventá</value>
+    
+  </data>
+  <data name="Icon_Phonebook_DisplayName" xml:space="preserve">
+    <value>Axenda telefónica</value>
+    
+  </data>
+  <data name="Icon_Print_DisplayName" xml:space="preserve">
+    <value>Imprimir</value>
+    
+  </data>
+  <data name="Icon_Publish_DisplayName" xml:space="preserve">
+    <value>Publicar</value>
+    
+  </data>
+  <data name="Icon_QuestionMark_DisplayName" xml:space="preserve">
+    <value>Signo de interrogación</value>
+    
+  </data>
+  <data name="Icon_Redo_DisplayName" xml:space="preserve">
+    <value>Refacer</value>
+    
+  </data>
+  <data name="Icon_Reset_DisplayName" xml:space="preserve">
+    <value>Restablecer</value>
+    
+  </data>
+  <data name="Icon_Ribbon_DisplayName" xml:space="preserve">
+    <value>Fita</value>
+    
+  </data>
+  <data name="Icon_Scan_DisplayName" xml:space="preserve">
+    <value>Dixitalizar</value>
+    
+  </data>
+  <data name="Icon_Share_DisplayName" xml:space="preserve">
+    <value>Compartir</value>
+    
+  </data>
+  <data name="Icon_Shirt_DisplayName" xml:space="preserve">
+    <value>Camisa</value>
+    
+  </data>
+  <data name="Icon_Shop_DisplayName" xml:space="preserve">
+    <value>Tenda</value>
+    
+  </data>
+  <data name="Icon_Signal_DisplayName" xml:space="preserve">
+    <value>Sinal</value>
+    
+  </data>
+  <data name="Icon_Support_DisplayName" xml:space="preserve">
+    <value>Asistencia técnica</value>
+    
+  </data>
+  <data name="Icon_Sync_DisplayName" xml:space="preserve">
+    <value>Sincronizar</value>
+    
+  </data>
+  <data name="Icon_Text_DisplayName" xml:space="preserve">
+    <value>Texto</value>
+    
+  </data>
+  <data name="Icon_ThumbsDown_DisplayName" xml:space="preserve">
+    <value>Polgar cara abaixo</value>
+    
+  </data>
+  <data name="Icon_ThumbsUp_DisplayName" xml:space="preserve">
+    <value>Polgar cara arriba</value>
+    
+  </data>
+  <data name="Icon_Train_DisplayName" xml:space="preserve">
+    <value>Tren</value>
+    
+  </data>
+  <data name="Icon_Tray_DisplayName" xml:space="preserve">
+    <value>Bandexa</value>
+    
+  </data>
+  <data name="Icon_Undo_DisplayName" xml:space="preserve">
+    <value>Desfacer</value>
+    
+  </data>
+  <data name="Icon_Unlock_DisplayName" xml:space="preserve">
+    <value>Desbloquear</value>
+    
+  </data>
+  <data name="Icon_VerticalLine_DisplayName" xml:space="preserve">
+    <value>Liña vertical</value>
+    
+  </data>
+  <data name="Icon_Video_DisplayName" xml:space="preserve">
+    <value>Vídeo</value>
+    
+  </data>
+  <data name="Icon_View_DisplayName" xml:space="preserve">
+    <value>Ver</value>
+    
+  </data>
+  <data name="Icon_ZoomIn_DisplayName" xml:space="preserve">
+    <value>Ampliar</value>
+    
+  </data>
+  <data name="Icon_ZoomOut_DisplayName" xml:space="preserve">
+    <value>Reducir</value>
+    
+  </data>
+  <data name="Icon_BookmarkFilled_DisplayName" xml:space="preserve">
+    <value>Marcador (enchido)</value>
+    
+  </data>
+  <data name="Icon_CancelBadge_DisplayName" xml:space="preserve">
+    <value>Cancelar (distintivo)</value>
+    
+  </data>
+  <data name="Icon_CheckBadge_DisplayName" xml:space="preserve">
+    <value>Comprobar (distintivo)</value>
+    
+  </data>
+  <data name="Icon_Cut_DisplayName" xml:space="preserve">
+    <value>Cortar</value>
+    
+  </data>
+  <data name="Icon_FilterFlat_DisplayName" xml:space="preserve">
+    <value>Filtro sen formato</value>
+    
+  </data>
+  <data name="Icon_FilterFlatFilled_DisplayName" xml:space="preserve">
+    <value>Filtro sen formato (enchido)</value>
+    
+  </data>
+  <data name="Icon_Leave_DisplayName" xml:space="preserve">
+    <value>Saír</value>
+    
+  </data>
+  <data name="Icon_Paste_DisplayName" xml:space="preserve">
+    <value>Pegar</value>
+    
+  </data>
+  <data name="Icon_ThumbsDownFilled_DisplayName" xml:space="preserve">
+    <value>Polgar cara abaixo (enchido)</value>
+    
+  </data>
+  <data name="Icon_ThumbsUpFilled_DisplayName" xml:space="preserve">
+    <value>Polgar cara arriba (enchido)</value>
+    
+  </data>
+  <data name="Icon_EmojiHappy_DisplayName" xml:space="preserve">
+    <value>Emoji: feliz</value>
+    
+  </data>
+  <data name="SuggestRemoteExecutionHint_OpNotSupportedByClient" xml:space="preserve">
+    <value>Parte desta fórmula non se pode avaliar de xeito remoto. A operación "{0}" non se admite actualmente neste contexto.</value>
+    
+  </data>
+  <data name="SuggestRemoteExecutionHint_StringMatchSecondParam" xml:space="preserve">
+    <value>Parte desta fórmula non se pode avaliar de xeito remoto. A función "{0}" non se pode delegar se aparece o nome dun campo no segundo argumento.</value>
+    
+  </data>
+  <data name="entityForm_EntityForm_DisplayName" xml:space="preserve">
+    <value>Formulario de entidade</value>
+    
+  </data>
+  <data name="BorderStyle_None_DisplayName" xml:space="preserve">
+    <value>Ningunha</value>
+    
+  </data>
+  <data name="BorderStyle_Dashed_DisplayName" xml:space="preserve">
+    <value>A trazos</value>
+    
+  </data>
+  <data name="BorderStyle_Solid_DisplayName" xml:space="preserve">
+    <value>Sólida</value>
+    
+  </data>
+  <data name="BorderStyle_Dotted_DisplayName" xml:space="preserve">
+    <value>Punteada</value>
+    
+  </data>
+  <data name="DisplayMode_Disabled_DisplayName" xml:space="preserve">
+    <value>Desactivado</value>
+    
+  </data>
+  <data name="DisplayMode_Edit_DisplayName" xml:space="preserve">
+    <value>Editar</value>
+    
+  </data>
+  <data name="DisplayMode_View_DisplayName" xml:space="preserve">
+    <value>Ver</value>
+    
+  </data>
+  <data name="LayoutMode_Manual_DisplayName" xml:space="preserve">
+    <value>Manual</value>
+    
+  </data>
+  <data name="LayoutMode_Auto_DisplayName" xml:space="preserve">
+    <value>Automático</value>
+    
+  </data>
+  <data name="LayoutDirection_Horizontal_DisplayName" xml:space="preserve">
+    <value>Horizontal</value>
+    
+  </data>
+  <data name="LayoutDirection_Vertical_DisplayName" xml:space="preserve">
+    <value>Vertical</value>
+    
+  </data>
+  <data name="LayoutAlignItems_Start_DisplayName" xml:space="preserve">
+    <value>Inicio</value>
+    
+  </data>
+  <data name="LayoutAlignItems_Center_DisplayName" xml:space="preserve">
+    <value>Centro</value>
+    
+  </data>
+  <data name="LayoutAlignItems_End_DisplayName" xml:space="preserve">
+    <value>Fin</value>
+    
+  </data>
+  <data name="LayoutAlignItems_Stretch_DisplayName" xml:space="preserve">
+    <value>Estirar</value>
+    
+  </data>
+  <data name="AlignInContainer_Start_DisplayName" xml:space="preserve">
+    <value>Inicio</value>
+    
+  </data>
+  <data name="AlignInContainer_Center_DisplayName" xml:space="preserve">
+    <value>Centro</value>
+    
+  </data>
+  <data name="AlignInContainer_End_DisplayName" xml:space="preserve">
+    <value>Fin</value>
+    
+  </data>
+  <data name="AlignInContainer_Stretch_DisplayName" xml:space="preserve">
+    <value>Estirar</value>
+    
+  </data>
+  <data name="AlignInContainer_SetByContainer_DisplayName" xml:space="preserve">
+    <value>Configurar por contedor</value>
+    
+  </data>
+  <data name="LayoutJustifyContent_Start_DisplayName" xml:space="preserve">
+    <value>Inicio</value>
+    
+  </data>
+  <data name="LayoutJustifyContent_Center_DisplayName" xml:space="preserve">
+    <value>Centro</value>
+    
+  </data>
+  <data name="LayoutJustifyContent_End_DisplayName" xml:space="preserve">
+    <value>Fin</value>
+    
+  </data>
+  <data name="LayoutJustifyContent_SpaceEvenly_DisplayName" xml:space="preserve">
+    <value>Espazado uniforme</value>
+    
+  </data>
+  <data name="LayoutJustifyContent_SpaceAround_DisplayName" xml:space="preserve">
+    <value>Espazado arredor</value>
+    
+  </data>
+  <data name="LayoutJustifyContent_SpaceBetween_DisplayName" xml:space="preserve">
+    <value>Espazado no medio</value>
+    
+  </data>
+  <data name="LayoutOverflow_Hide_DisplayName" xml:space="preserve">
+    <value>Ocultar</value>
+    
+  </data>
+  <data name="LayoutOverflow_Scroll_DisplayName" xml:space="preserve">
+    <value>Desprazar</value>
+    
+  </data>
+  <data name="Overflow_Hidden_DisplayName" xml:space="preserve">
+    <value>Oculto</value>
+    
+  </data>
+  <data name="Overflow_Scroll_DisplayName" xml:space="preserve">
+    <value>Desprazamento</value>
+    
+  </data>
+  <data name="TextMode_SingleLine_DisplayName" xml:space="preserve">
+    <value>Liña única</value>
+    
+  </data>
+  <data name="TextMode_Password_DisplayName" xml:space="preserve">
+    <value>Contrasinal</value>
+    
+  </data>
+  <data name="TextMode_MultiLine_DisplayName" xml:space="preserve">
+    <value>Multiliña</value>
+    
+  </data>
+  <data name="TextFormat_Text_DisplayName" xml:space="preserve">
+    <value>Texto</value>
+    
+  </data>
+  <data name="TextFormat_Number_DisplayName" xml:space="preserve">
+    <value>Número</value>
+    
+  </data>
+  <data name="VirtualKeyboardMode_Auto_DisplayName" xml:space="preserve">
+    <value>Teclado automático</value>
+    
+  </data>
+  <data name="VirtualKeyboardMode_Numeric_DisplayName" xml:space="preserve">
+    <value>Teclado numérico</value>
+    
+  </data>
+  <data name="VirtualKeyboardMode_Text_DisplayName" xml:space="preserve">
+    <value>Teclado de texto</value>
+    
+  </data>
+  <data name="TeamsTheme_Default_DisplayName" xml:space="preserve">
+    <value>Tema predefinido</value>
+    
+  </data>
+  <data name="TeamsTheme_Dark_DisplayName" xml:space="preserve">
+    <value>Tema escuro</value>
+    
+  </data>
+  <data name="TeamsTheme_Contrast_DisplayName" xml:space="preserve">
+    <value>Tema de contraste</value>
+    
+  </data>
+  <data name="PenMode_Draw_DisplayName" xml:space="preserve">
+    <value>Debuxar</value>
+    
+  </data>
+  <data name="PenMode_Erase_DisplayName" xml:space="preserve">
+    <value>Borrar</value>
+    
+  </data>
+  <data name="DateTimeZone_Local_DisplayName" xml:space="preserve">
+    <value>local</value>
+    
+  </data>
+  <data name="DateTimeZone_UTC_DisplayName" xml:space="preserve">
+    <value>Hora UTC</value>
+    
+  </data>
+  <data name="ImagePosition_Fill_DisplayName" xml:space="preserve">
+    <value>Encher</value>
+    
+  </data>
+  <data name="ImagePosition_Fit_DisplayName" xml:space="preserve">
+    <value>Axustar</value>
+    
+  </data>
+  <data name="ImagePosition_Stretch_DisplayName" xml:space="preserve">
+    <value>Estricar</value>
+    
+  </data>
+  <data name="ImagePosition_Tile_DisplayName" xml:space="preserve">
+    <value>Mosaico</value>
+    
+  </data>
+  <data name="ImagePosition_Center_DisplayName" xml:space="preserve">
+    <value>Centro</value>
+    
+  </data>
+  <data name="VerticalAlign_Top_DisplayName" xml:space="preserve">
+    <value>Superior</value>
+    
+  </data>
+  <data name="VerticalAlign_Middle_DisplayName" xml:space="preserve">
+    <value>Centro</value>
+    
+  </data>
+  <data name="VerticalAlign_Bottom_DisplayName" xml:space="preserve">
+    <value>Inferior</value>
+    
+  </data>
+  <data name="Layout_Horizontal_DisplayName" xml:space="preserve">
+    <value>Horizontal</value>
+    
+  </data>
+  <data name="Layout_Vertical_DisplayName" xml:space="preserve">
+    <value>Vertical</value>
+    
+  </data>
+  <data name="TextPosition_Left_DisplayName" xml:space="preserve">
+    <value>Esquerda</value>
+    
+  </data>
+  <data name="TextPosition_Right_DisplayName" xml:space="preserve">
+    <value>Dereita</value>
+    
+  </data>
+  <data name="Transition_Push_DisplayName" xml:space="preserve">
+    <value>Inserir</value>
+    
+  </data>
+  <data name="Transition_Pop_DisplayName" xml:space="preserve">
+    <value>Emerxente</value>
+    
+  </data>
+  <data name="Transition_None_DisplayName" xml:space="preserve">
+    <value>Ningunha</value>
+    
+  </data>
+  <data name="FontWeight_Normal_DisplayName" xml:space="preserve">
+    <value>Normal</value>
+    
+  </data>
+  <data name="FontWeight_Semibold_DisplayName" xml:space="preserve">
+    <value>Seminegra</value>
+    
+  </data>
+  <data name="FontWeight_Bold_DisplayName" xml:space="preserve">
+    <value>Negra</value>
+    
+  </data>
+  <data name="FontWeight_Lighter_DisplayName" xml:space="preserve">
+    <value>Máis clara</value>
+    
+  </data>
+  <data name="FormPattern_None_DisplayName" xml:space="preserve">
+    <value>Ningunha</value>
+    
+  </data>
+  <data name="FormPattern_Details_DisplayName" xml:space="preserve">
+    <value>Detalles</value>
+    
+  </data>
+  <data name="FormPattern_List_DisplayName" xml:space="preserve">
+    <value>Lista</value>
+    
+  </data>
+  <data name="FormPattern_CardList_DisplayName" xml:space="preserve">
+    <value>Lista de cartóns</value>
+    
+  </data>
+  <data name="BarcodeType_Auto_DisplayName" xml:space="preserve">
+    <value>Automático</value>
+    
+  </data>
+  <data name="BarcodeType_Aztec_DisplayName" xml:space="preserve">
+    <value>Aztec</value>
+    
+  </data>
+  <data name="BarcodeType_Codabar_DisplayName" xml:space="preserve">
+    <value>Código de barras</value>
+    
+  </data>
+  <data name="BarcodeType_DataMatrix_DisplayName" xml:space="preserve">
+    <value>Data Matrix</value>
+    
+  </data>
+  <data name="BarcodeType_Ean_DisplayName" xml:space="preserve">
+    <value>EAN</value>
+    
+  </data>
+  <data name="BarcodeType_QRCode_DisplayName" xml:space="preserve">
+    <value>Código QR</value>
+    
+  </data>
+  <data name="BarcodeType_RssExpanded_DisplayName" xml:space="preserve">
+    <value>RSS Expanded</value>
+    
+  </data>
+  <data name="BarcodeType_Upc_DisplayName" xml:space="preserve">
+    <value>UPC</value>
+    
+  </data>
+  <data name="GridStyle_XOnly_DisplayName" xml:space="preserve">
+    <value>Só eixe X</value>
+    
+  </data>
+  <data name="GridStyle_YOnly_DisplayName" xml:space="preserve">
+    <value>Só eixe Y</value>
+    
+  </data>
+  <data name="GridStyle_All_DisplayName" xml:space="preserve">
+    <value>Todo</value>
+    
+  </data>
+  <data name="GridStyle_None_DisplayName" xml:space="preserve">
+    <value>Ningunha</value>
+    
+  </data>
+  <data name="FormMode_Edit_DisplayName" xml:space="preserve">
+    <value>Editar</value>
+    
+  </data>
+  <data name="FormMode_View_DisplayName" xml:space="preserve">
+    <value>Ver</value>
+    
+  </data>
+  <data name="FormMode_New_DisplayName" xml:space="preserve">
+    <value>Novo</value>
+    
+  </data>
+  <data name="SelectedState_Edit_DisplayName" xml:space="preserve">
+    <value>Editar</value>
+    
+  </data>
+  <data name="SelectedState_View_DisplayName" xml:space="preserve">
+    <value>Ver</value>
+    
+  </data>
+  <data name="SelectedState_New_DisplayName" xml:space="preserve">
+    <value>Novo</value>
+    
+  </data>
+  <data name="LoadingSpinner_Controls_DisplayName" xml:space="preserve">
+    <value>Controis</value>
+    
+  </data>
+  <data name="LoadingSpinner_Data_DisplayName" xml:space="preserve">
+    <value>Datos</value>
+    
+  </data>
+  <data name="LoadingSpinner_None_DisplayName" xml:space="preserve">
+    <value>Ningunha</value>
+    
+  </data>
+  <data name="NotificationType_Error_DisplayName" xml:space="preserve">
+    <value>Erro</value>
+    
+  </data>
+  <data name="NotificationType_Warning_DisplayName" xml:space="preserve">
+    <value>Aviso</value>
+    
+  </data>
+  <data name="NotificationType_Success_DisplayName" xml:space="preserve">
+    <value>Éxito</value>
+    
+  </data>
+  <data name="NotificationType_Information_DisplayName" xml:space="preserve">
+    <value>Información</value>
+    
+  </data>
+  <data name="Icon_Add_DisplayName" xml:space="preserve">
+    <value>Engadir</value>
+    
+  </data>
+  <data name="Icon_Cancel_DisplayName" xml:space="preserve">
+    <value>Cancelar</value>
+    
+  </data>
+  <data name="Icon_Edit_DisplayName" xml:space="preserve">
+    <value>Editar</value>
+    
+  </data>
+  <data name="Icon_Check_DisplayName" xml:space="preserve">
+    <value>Comprobar</value>
+    
+  </data>
+  <data name="Icon_Search_DisplayName" xml:space="preserve">
+    <value>Buscar</value>
+    
+  </data>
+  <data name="Icon_Filter_DisplayName" xml:space="preserve">
+    <value>Filtrar</value>
+    
+  </data>
+  <data name="Icon_Sort_DisplayName" xml:space="preserve">
+    <value>Ordenar</value>
+    
+  </data>
+  <data name="Icon_Reload_DisplayName" xml:space="preserve">
+    <value>Recargar</value>
+    
+  </data>
+  <data name="Icon_Trash_DisplayName" xml:space="preserve">
+    <value>Papeleira</value>
+    
+  </data>
+  <data name="Icon_Save_DisplayName" xml:space="preserve">
+    <value>Gardar</value>
+    
+  </data>
+  <data name="Icon_Download_DisplayName" xml:space="preserve">
+    <value>Descargar</value>
+    
+  </data>
+  <data name="Icon_Copy_DisplayName" xml:space="preserve">
+    <value>Copiar</value>
+    
+  </data>
+  <data name="Icon_LikeDislike_DisplayName" xml:space="preserve">
+    <value>Gústame / Non me gusta</value>
+    
+  </data>
+  <data name="Icon_Crop_DisplayName" xml:space="preserve">
+    <value>Recortar</value>
+    
+  </data>
+  <data name="Icon_Pin_DisplayName" xml:space="preserve">
+    <value>Fixar</value>
+    
+  </data>
+  <data name="Icon_ClearDrawing_DisplayName" xml:space="preserve">
+    <value>Borrar debuxo</value>
+    
+  </data>
+  <data name="Icon_ExpandView_DisplayName" xml:space="preserve">
+    <value>Expandir visualización</value>
+    
+  </data>
+  <data name="Icon_CollapseView_DisplayName" xml:space="preserve">
+    <value>Contraer visualización</value>
+    
+  </data>
+  <data name="Icon_Draw_DisplayName" xml:space="preserve">
+    <value>Debuxar</value>
+    
+  </data>
+  <data name="Icon_Compose_DisplayName" xml:space="preserve">
+    <value>Redactar</value>
+    
+  </data>
+  <data name="Icon_Erase_DisplayName" xml:space="preserve">
+    <value>Borrar</value>
+    
+  </data>
+  <data name="Icon_Message_DisplayName" xml:space="preserve">
+    <value>Mensaxe</value>
+    
+  </data>
+  <data name="Icon_Post_DisplayName" xml:space="preserve">
+    <value>Postal</value>
+    
+  </data>
+  <data name="Icon_AddDocument_DisplayName" xml:space="preserve">
+    <value>Engadir documento</value>
+    
+  </data>
+  <data name="Icon_AddLibrary_DisplayName" xml:space="preserve">
+    <value>Engadir biblioteca</value>
+    
+  </data>
+  <data name="Icon_Home_DisplayName" xml:space="preserve">
+    <value>Inicio</value>
+    
+  </data>
+  <data name="Icon_Hamburger_DisplayName" xml:space="preserve">
+    <value>Hamburguesa</value>
+    
+  </data>
+  <data name="Icon_Settings_DisplayName" xml:space="preserve">
+    <value>Configuración</value>
+    
+  </data>
+  <data name="Icon_More_DisplayName" xml:space="preserve">
+    <value>Máis</value>
+    
+  </data>
+  <data name="Icon_Waffle_DisplayName" xml:space="preserve">
+    <value>Gofre</value>
+    
+  </data>
+  <data name="Icon_ChevronLeft_DisplayName" xml:space="preserve">
+    <value>Esquerda</value>
+    
+  </data>
+  <data name="Icon_ChevronRight_DisplayName" xml:space="preserve">
+    <value>Dereita</value>
+    
+  </data>
+  <data name="Icon_ChevronUp_DisplayName" xml:space="preserve">
+    <value>Arriba</value>
+    
+  </data>
+  <data name="Icon_ChevronDown_DisplayName" xml:space="preserve">
+    <value>Abaixo</value>
+    
+  </data>
+  <data name="Icon_NextArrow_DisplayName" xml:space="preserve">
+    <value>Seguinte</value>
+    
+  </data>
+  <data name="Icon_BackArrow_DisplayName" xml:space="preserve">
+    <value>Atrás</value>
+    
+  </data>
+  <data name="Icon_ArrowDown_DisplayName" xml:space="preserve">
+    <value>Frecha cara abaixo</value>
+    
+  </data>
+  <data name="Icon_ArrowUp_DisplayName" xml:space="preserve">
+    <value>Frecha cara arriba</value>
+    
+  </data>
+  <data name="Icon_ArrowLeft_DisplayName" xml:space="preserve">
+    <value>Frecha cara á esquerda</value>
+    
+  </data>
+  <data name="Icon_ArrowRight_DisplayName" xml:space="preserve">
+    <value>Frecha cara á dereita</value>
+    
+  </data>
+  <data name="Icon_Camera_DisplayName" xml:space="preserve">
+    <value>Cámara</value>
+    
+  </data>
+  <data name="Icon_Document_DisplayName" xml:space="preserve">
+    <value>Documento</value>
+    
+  </data>
+  <data name="Icon_DockCheckProperties_DisplayName" xml:space="preserve">
+    <value>Marca de verificación do documento</value>
+    
+  </data>
+  <data name="Icon_Folder_DisplayName" xml:space="preserve">
+    <value>Cartafol</value>
+    
+  </data>
+  <data name="Icon_Journal_DisplayName" xml:space="preserve">
+    <value>Diario</value>
+    
+  </data>
+  <data name="Icon_ForkKnife_DisplayName" xml:space="preserve">
+    <value>Comida</value>
+    
+  </data>
+  <data name="Icon_Transportation_DisplayName" xml:space="preserve">
+    <value>Transportes</value>
+    
+  </data>
+  <data name="Icon_Airplane_DisplayName" xml:space="preserve">
+    <value>Avión</value>
+    
+  </data>
+  <data name="Icon_Bus_DisplayName" xml:space="preserve">
+    <value>Bus</value>
+    
+  </data>
+  <data name="Icon_Cars_DisplayName" xml:space="preserve">
+    <value>Coches</value>
+    
+  </data>
+  <data name="Icon_Money_DisplayName" xml:space="preserve">
+    <value>Diñeiro</value>
+    
+  </data>
+  <data name="Icon_Currency_DisplayName" xml:space="preserve">
+    <value>Moeda</value>
+    
+  </data>
+  <data name="Icon_AddToCalendar_DisplayName" xml:space="preserve">
+    <value>Engadir ao calendario</value>
+    
+  </data>
+  <data name="Icon_CalendarBlank_DisplayName" xml:space="preserve">
+    <value>Calendario en branco</value>
+    
+  </data>
+  <data name="Icon_OfficeBuilding_DisplayName" xml:space="preserve">
+    <value>Edificio de oficinas</value>
+    
+  </data>
+  <data name="Icon_PaperClip_DisplayName" xml:space="preserve">
+    <value>Clip</value>
+    
+  </data>
+  <data name="Icon_Newspaper_DisplayName" xml:space="preserve">
+    <value>Xornal</value>
+    
+  </data>
+  <data name="Icon_Lock_DisplayName" xml:space="preserve">
+    <value>Bloquear</value>
+    
+  </data>
+  <data name="Icon_Waypoint_DisplayName" xml:space="preserve">
+    <value>Punto de referencia</value>
+    
+  </data>
+  <data name="Icon_Location_DisplayName" xml:space="preserve">
+    <value>Localización</value>
+    
+  </data>
+  <data name="Icon_DocumentPDF_DisplayName" xml:space="preserve">
+    <value>Documento PDF</value>
+    
+  </data>
+  <data name="Icon_Bell_DisplayName" xml:space="preserve">
+    <value>Campaíña</value>
+    
+  </data>
+  <data name="Icon_ShoppingCart_DisplayName" xml:space="preserve">
+    <value>Carro da compra</value>
+    
+  </data>
+  <data name="Icon_Phone_DisplayName" xml:space="preserve">
+    <value>Teléfono</value>
+    
+  </data>
+  <data name="Icon_PhoneHangUp_DisplayName" xml:space="preserve">
+    <value>Finalizar chamada</value>
+    
+  </data>
+  <data name="Icon_Mobile_DisplayName" xml:space="preserve">
+    <value>Mobile</value>
+    
+  </data>
+  <data name="Icon_Laptop_DisplayName" xml:space="preserve">
+    <value>Portátil</value>
+    
+  </data>
+  <data name="Icon_ComputerDesktop_DisplayName" xml:space="preserve">
+    <value>Escritorio do equipo</value>
+    
+  </data>
+  <data name="Icon_Devices_DisplayName" xml:space="preserve">
+    <value>Dispositivos</value>
+    
+  </data>
+  <data name="Icon_Controller_DisplayName" xml:space="preserve">
+    <value>Controlador</value>
+    
+  </data>
+  <data name="Icon_Tools_DisplayName" xml:space="preserve">
+    <value>Ferramentas</value>
+    
+  </data>
+  <data name="Icon_ToolsWrench_DisplayName" xml:space="preserve">
+    <value>Ferramentas</value>
+    
+  </data>
+  <data name="Icon_Mail_DisplayName" xml:space="preserve">
+    <value>Correo</value>
+    
+  </data>
+  <data name="Icon_Send_DisplayName" xml:space="preserve">
+    <value>Enviar</value>
+    
+  </data>
+  <data name="Icon_Clock_DisplayName" xml:space="preserve">
+    <value>Reloxo</value>
+    
+  </data>
+  <data name="Icon_ListWatchlistRemind_DisplayName" xml:space="preserve">
+    <value>Aviso de lista</value>
+    
+  </data>
+  <data name="Icon_LogJournal_DisplayName" xml:space="preserve">
+    <value>Diario de rexistros</value>
+    
+  </data>
+  <data name="Icon_Note_DisplayName" xml:space="preserve">
+    <value>Nota</value>
+    
+  </data>
+  <data name="Icon_PhotosPictures_DisplayName" xml:space="preserve">
+    <value>Marcos da imaxe</value>
+    
+  </data>
+  <data name="Icon_RadarActivityMonitor_DisplayName" xml:space="preserve">
+    <value>Radar</value>
+    
+  </data>
+  <data name="Icon_Tablet_DisplayName" xml:space="preserve">
+    <value>Tableta</value>
+    
+  </data>
+  <data name="Icon_Tag_DisplayName" xml:space="preserve">
+    <value>Etiqueta</value>
+    
+  </data>
+  <data name="Icon_CameraAperture_DisplayName" xml:space="preserve">
+    <value>Apertura da cámara</value>
+    
+  </data>
+  <data name="Icon_ColorPicker_DisplayName" xml:space="preserve">
+    <value>Selector de cores</value>
+    
+  </data>
+  <data name="Icon_DetailList_DisplayName" xml:space="preserve">
+    <value>Lista de detalles</value>
+    
+  </data>
+  <data name="Icon_DocumentWithContent_DisplayName" xml:space="preserve">
+    <value>Documento con contido</value>
+    
+  </data>
+  <data name="Icon_ListScrollEmpty_DisplayName" xml:space="preserve">
+    <value>Desprazamento de lista baleiro</value>
+    
+  </data>
+  <data name="Icon_ListScrollWatchlist_DisplayName" xml:space="preserve">
+    <value>Lista de seguimento de desprazamento de lista</value>
+    
+  </data>
+  <data name="Icon_OptionsList_DisplayName" xml:space="preserve">
+    <value>Lista de opcións</value>
+    
+  </data>
+  <data name="Icon_People_DisplayName" xml:space="preserve">
+    <value>Persoas</value>
+    
+  </data>
+  <data name="Icon_Person_DisplayName" xml:space="preserve">
+    <value>Persoa</value>
+    
+  </data>
+  <data name="Icon_EmojiFrown_DisplayName" xml:space="preserve">
+    <value>Emoji: xesto de reprobación</value>
+    
+  </data>
+  <data name="Icon_EmojiSmile_DisplayName" xml:space="preserve">
+    <value>Emoji: sorriso</value>
+    
+  </data>
+  <data name="Icon_EmojiSad_DisplayName" xml:space="preserve">
+    <value>Emoji: triste</value>
+    
+  </data>
+  <data name="Icon_EmojiNeutral_DisplayName" xml:space="preserve">
+    <value>Emoji: neutro</value>
+    
+  </data>
+  <data name="Icon_Warning_DisplayName" xml:space="preserve">
+    <value>Aviso</value>
+    
+  </data>
+  <data name="Icon_Information_DisplayName" xml:space="preserve">
+    <value>Información</value>
+    
+  </data>
+  <data name="Icon_Database_DisplayName" xml:space="preserve">
+    <value>Base de datos</value>
+    
+  </data>
+  <data name="Icon_Weather_DisplayName" xml:space="preserve">
+    <value>O tempo</value>
+    
+  </data>
+  <data name="Icon_TrendingHashtag_DisplayName" xml:space="preserve">
+    <value>Cancelo</value>
+    
+  </data>
+  <data name="Icon_TrendingUpwards_DisplayName" xml:space="preserve">
+    <value>Tendencias en alza</value>
+    
+  </data>
+  <data name="Icon_Items_DisplayName" xml:space="preserve">
+    <value>Elementos</value>
+    
+  </data>
+  <data name="Icon_LevelsLayersItems_DisplayName" xml:space="preserve">
+    <value>Capas</value>
+    
+  </data>
+  <data name="Icon_Trending_DisplayName" xml:space="preserve">
+    <value>Máis populares</value>
+    
+  </data>
+  <data name="Icon_LineWeight_DisplayName" xml:space="preserve">
+    <value>Grosor da liña</value>
+    
+  </data>
+  <data name="AboutIsError" xml:space="preserve">
+    <value>Devolve se se produciu un erro ao avaliar o argumento indicado.</value>
+    
+  </data>
+  <data name="IsErrorArg" xml:space="preserve">
+    <value>valor</value>
+    
+  </data>
+  <data name="AboutIsError_value" xml:space="preserve">
+    <value>Valor para comprobar se hai erros.</value>
+    
+  </data>
+  <data name="ErrBadArityMinimum" xml:space="preserve">
+    <value>Número de argumentos non válido: recibíronse {0} e esperábanse {1} ou máis.</value>
+    
+  </data>
+  <data name="ErrBadArityRange" xml:space="preserve">
+    <value>Número de argumentos non válido: recibíronse {0} e esperábanse de {1} a {2}.</value>
+    
+  </data>
+  <data name="ErrGeneralError" xml:space="preserve">
+    <value>{0}</value>
+    
+  </data>
+  <data name="FormulaColumns_NotSupported" xml:space="preserve">
+    <value>Non se admite nas columnas de fórmula.</value>
+    
+  </data>
+  <data name="FormulaColumns_ArgNotSupported" xml:space="preserve">
+    <value>O argumento {0} non é compatible coa función {1} nas columnas de fórmula.</value>
+    
+  </data>
+  <data name="FormulaColumns_ArgTypeNotSupported" xml:space="preserve">
+    <value>Este argumento non se pode pasar como este tipo nas columnas de fórmula.</value>
+    
+  </data>
+  <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
+    <value>Só un valor literal é compatible con este argumento.</value>
+    
+  </data>
+  <data name="FormulaColumns_TimeZoneConversion" xml:space="preserve">
+    <value>{0} non se pode realizar nesta entrada sen unha conversión de fuso horario, que non se admite nas columnas de fórmula.</value>
+    
+  </data>
+  <data name="FormulaColumns_IncompatibleDateTimes" xml:space="preserve">
+    <value>Esta operación non se pode realizar en valores de comportamentos de data e hora diferentes.</value>
+    
+  </data>
+  <data name="FormulaColumns_DateTimeFormatNotSupported" xml:space="preserve">
+    <value>Nas columnas de fórmula só se admiten cadeas de formato de data e hora curtas.</value>
+    
+  </data>
+  <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
+    <value>Non se admiten tokens de formatación específicos da configuración rexional (como "." e ",") nas columnas de fórmula.</value>
+    
+  </data>
+  <data name="FormulaColumns_FunctionNotSupported" xml:space="preserve">
+    <value>Non se admite a función {0} nas columnas de fórmula, use {1} no seu lugar.</value>
+    
+  </data>
+  <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
+    <value>Non se admite o tipo de resultado {0} nas columnas de fórmula.</value>
+    
+  </data>
+  <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
+    <value>O tipo de resultado que se espera para esta fórmula é {0}, pero o tipo de resultado real é {1}. Non se pode modificar o tipo de resultado dunha columna de fórmula.</value>
+    
+  </data>
+  <data name="FormulaColumns_ColumnTypeNotSupported" xml:space="preserve">
+    <value>Non se admiten as columnas de tipo {0} nas columnas de fórmula.</value>
+    
+  </data>
+  <data name="FormulaColumns_ColumnFormatNotSupported" xml:space="preserve">
+    <value>Non se admiten as columnas de tipo {0} con formato {1} nas columnas de fórmula.</value>
+    
+  </data>
+  <data name="FormulaColumns_FormulaTooLong" xml:space="preserve">
+    <value>As fórmulas non poden ter máis de 1000 caracteres.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
+    <value>Esperábase un operando. A fórmula ou a expresión esperaba un operando válido. Por exemplo, pode engadir o operando "2" á expresión "1 + _" para que o resultado sexa "3". Ou ben, pode engadir o operando "there" á expresión "'Hi '&amp; _" para que o resultado sexa "Hi there".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrOperandExpected_HowToFix_1" xml:space="preserve">
+    <value>Forneza un valor de operando que concluirá a expresión. Asegúrese de que o tipo de operando (texto, número, data, ou verdadeiro/falso) se axuste automaticamente á expresión. Faga coincidir os números con números, o texto con texto, etc. Por exemplo, "1 + "Hi"" non é válido, pero "1 + 2" é válido.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBadToken_ShortMessage" xml:space="preserve">
+    <value>Caracteres inesperados. Os caracteres úsanse na fórmula dun xeito inesperado.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBadToken_LongMessage" xml:space="preserve">
+    <value>Por exemplo, o carácter "\" non se espera despois dun número, como no caso seguinte: "32\". Esperaríase un espazo ("32 ") para que só sexa o número 32, ou esperaríase outro número (como en "323").</value>
+  </data>
+  <data name="ErrorResource_ErrBadToken_HowToFix_1" xml:space="preserve">
+    <value>Eliminar ou substituír os caracteres inesperados.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBadToken_Link_1" xml:space="preserve">
+    <value>Artigo: Referencia de fórmulas para Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_UnexpectedCharacterToken_ShortMessage" xml:space="preserve">
+    <value>Carácter "{0}" inesperado na posición "{1}" da fórmula.</value>
+    
+  </data>
+  <data name="ErrorResource_UnexpectedCharacterToken_LongMessage" xml:space="preserve">
+    <value>Por exemplo, o carácter "\" non se espera despois dun número, como no caso seguinte: "32\". Esperaríase un espazo ("32 ") para que só sexa o número 32, ou esperaríase outro número (como en "323").</value>
+  </data>
+  <data name="ErrorResource_UnexpectedCharacterToken_HowToFix_1" xml:space="preserve">
+    <value>Elimine ou substitúa o carácter inesperado.</value>
+  </data>
+  <data name="ErrorResource_UnexpectedCharacterToken_Link_1" xml:space="preserve">
+    <value>Artigo: Referencia de fórmulas para Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrMissingEndOfBlockComment_ShortMessage" xml:space="preserve">
+    <value>Falta o identificador do comentario final. O comentario do bloque non ten ningún identificador de comentario final.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrMissingEndOfBlockComment_LongMessage" xml:space="preserve">
+    <value>Cada bloque de comentario debe comezar por "/*" e finalizar con "*/". Se os bloques de comentarios non se finalizan correctamente, o código despois do comentario pasará a formar parte dese comentario. Se un comentario só ten unha liña, pode comezar con "//" e non identificar onde finaliza.</value>
+  </data>
+  <data name="ErrorResource_ErrMissingEndOfBlockComment_HowToFix_1" xml:space="preserve">
+    <value>Engadir "*/" ao final do comentario do bloque, ou modificalo a un conxunto de comentarios de liña.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrMissingEndOfBlockComment_Link_1" xml:space="preserve">
+    <value>Artigo: Referencia de fórmulas para Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_ShortMessage" xml:space="preserve">
+    <value>Caracteres inesperados. A fórmula contén "{0}" onde se esperaba "{1}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_LongMessage" xml:space="preserve">
+    <value>Este erro prodúcese se, por exemplo, unha fórmula contén "{{Val@ 7}}" en lugar de "{{Val: 7}}". Cando se define unha variable, a sintaxe require un punto e coma en lugar dun símbolo "at".</value>
+  </data>
+  <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_HowToFix_1" xml:space="preserve">
+    <value>Elimine ou substitúa os caracteres inesperados cun carácter esperado.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_Link_1" xml:space="preserve">
+    <value>Artigo: Referencia de fórmulas para Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidName_ShortMessage" xml:space="preserve">
+    <value>O nome non é válido. "{0}" non se recoñece.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidName_LongMessage" xml:space="preserve">
+    <value>Este erro adoita aparecer cando unha fórmula fai referencia a algo que xa non existe (por exemplo, un control que eliminou).</value>
+  </data>
+  <data name="ErrorResource_ErrInvalidName_HowToFix_1" xml:space="preserve">
+    <value>Elimine ou corrixa a referencia ao nome que non é válido.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidName_Link_1" xml:space="preserve">
+    <value>Artigo: Referencia de fórmulas para Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_ShortMessage" xml:space="preserve">
+    <value>O nome non é válido. Este identificador non se recoñece.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_LongMessage" xml:space="preserve">
+    <value>Este erro adoita aparecer cando unha fórmula fai referencia a algo que xa non existe (por exemplo, un control que eliminou).</value>
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_HowToFix_1" xml:space="preserve">
+    <value>Elimine ou corrixa a referencia ao nome que non é válido.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_Link_1" xml:space="preserve">
+    <value>Artigo: Referencia de fórmulas para Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidPropertyReference_ShortMessage" xml:space="preserve">
+    <value>A referencia da propiedade non é válida.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidPropertyReference_LongMessage" xml:space="preserve">
+    <value>Este erro aparece cando unha fórmula fai referencia a propiedades de comportamento de compoñentes con sintaxe non válida. (Por exemplo, Component.OnCustomChange en lugar de Component.OnCustomChange())</value>
+  </data>
+  <data name="ErrorResource_ErrInvalidPropertyReference_HowToFix_1" xml:space="preserve">
+    <value>Use a sintaxe correcta para facer referencia á propiedade de comportamento do compoñente. Por exemplo, Component.OnCustomChange()</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidPropertyReference_Link_1" xml:space="preserve">
+    <value>Artigo: Referencia de fórmula de PowerApps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidParentUse_ShortMessage" xml:space="preserve">
+    <value>A referencia "Parent" non é válida. Non se pode facer referencia a un control principal neste contexto.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidParentUse_LongMessage" xml:space="preserve">
+    <value>Non pode utilizar o operador Parent cun control que non ten un control principal. Este operador fai referencia ao control que aloxa o control indicado e pon a disposición todas as súas propiedades.</value>
+  </data>
+  <data name="ErrorResource_ErrInvalidParentUse_HowToFix_1" xml:space="preserve">
+    <value>Eliminar o operador "Parent".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidParentUse_Link_1" xml:space="preserve">
+    <value>Artigo: Adición e configuración dun control de aplicación de lenzo en Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrTooManyUps_ShortMessage" xml:space="preserve">
+    <value>O ámbito da fila está aniñado con demasiada profundidade. O ámbito da fila da fórmula supera os 63 niveis de aniñamento.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrTooManyUps_LongMessage" xml:space="preserve">
+    <value>A complexidade aumenta con cada nivel de aniñamento, polo que Power Apps só admite o aniñamento do ámbito da fila nun máximo de 63 niveis.</value>
+  </data>
+  <data name="ErrorResource_ErrTooManyUps_HowToFix_1" xml:space="preserve">
+    <value>Escriba a fórmula de novo con menos niveis de aniñamento.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrRuleNestedTooDeeply_ShortMessage" xml:space="preserve">
+    <value>O aniñamento da expresión é demasiado profundo. Unha expresión da fórmula está aniñada cunha profundidade de máis de 50 niveis.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrRuleNestedTooDeeply_LongMessage" xml:space="preserve">
+    <value>Power Apps só admite un aniñamento da expresión cunha profundidade de 50 niveis. É difícil manter e comprender unha expresión con esta profundidade.</value>
+  </data>
+  <data name="ErrorResource_ErrRuleNestedTooDeeply_HowToFix_1" xml:space="preserve">
+    <value>Escriba a fórmula de novo con menos niveis de aniñamento.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrOperatorExpected_ShortMessage" xml:space="preserve">
+    <value>Esperábase un operador, como +, * ou &amp;, neste punto da fórmula.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrOperatorExpected_LongMessage" xml:space="preserve">
+    <value>Os operadores unen dous operandos. Este erro prodúcese se coloca dúas funcións (operandos) xuntas sen ningún operador entre elas, por exemplo: Len("mytext")Len("mytext").</value>
+  </data>
+  <data name="ErrorResource_ErrOperatorExpected_HowToFix_1" xml:space="preserve">
+    <value>Edite a fórmula de xeito que inclúa un operador entre os operandos.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrOperatorExpected_Link_1" xml:space="preserve">
+    <value>Módulo: Uso de fórmulas básicas</value>
+    
+  </data>
+  <data name="ErrorResource_ErrNumberExpected_ShortMessage" xml:space="preserve">
+    <value>Esperábase un número neste punto da fórmula.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrNumberExpected_LongMessage" xml:space="preserve">
+    <value>Este erro producirase se usa unha función que requira un numero pero, no seu lugar, fornece unha imaxe.</value>
+  </data>
+  <data name="ErrorResource_ErrNumberExpected_HowToFix_1" xml:space="preserve">
+    <value>Editar a fórmula de xeito que se avalíe como un número neste punto da fórmula.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrNumberExpected_Link_1" xml:space="preserve">
+    <value>Artigo: Referencia de fórmulas para Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBooleanExpected_ShortMessage" xml:space="preserve">
+    <value>Espérase un valor booleano (verdadeiro/falso) neste punto da fórmula.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBooleanExpected_LongMessage" xml:space="preserve">
+    <value>Un valor booleano tamén se coñece como un valor verdadeiro/falso en aplicacións como Microsoft Excel. Este erro producirase se usa unha función que precisa un valor booleano, pero fornece, por exemplo, unha data no seu lugar.</value>
+  </data>
+  <data name="ErrorResource_ErrBooleanExpected_HowToFix_1" xml:space="preserve">
+    <value>Editar a fórmula de xeito que se avalíe como un valor booleano neste punto da fórmula.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBooleanExpected_Link_1" xml:space="preserve">
+    <value>Artigo: Referencia de fórmulas para Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrColonExpected_ShortMessage" xml:space="preserve">
+    <value>Esperábanse dous puntos (:) neste punto da fórmula.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrColonExpected_LongMessage" xml:space="preserve">
+    <value>Os dous puntos separan un nome de campo, tamén denominado nome de columna dun valor de campo nun rexistro (por exemplo, {Month:"1"}, {Month:"2"} …). Os dous puntos tamén separan as horas dos minutos e dos segundos (por exemplo, "3:04").</value>
+  </data>
+  <data name="ErrorResource_ErrColonExpected_HowToFix_1" xml:space="preserve">
+    <value>Editar a fórmula de xeito que inclúa dous puntos.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrColonExpected_Link_1" xml:space="preserve">
+    <value>Artigo: Mostra de texto, datas e horas en Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorPropertyExpected_ShortMessage" xml:space="preserve">
+    <value>Función de comportamento nunha propiedade sen comportamento. Non se pode usar esta propiedade para modificar valores noutro lugar da aplicación.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorPropertyExpected_LongMessage" xml:space="preserve">
+    <value>As funcións de comportamento modifican o estado da aplicación mediante a modificación de valores doutro lugar da aplicación. Algunhas funcións de comportamento comúns son "Navigate", "Patch", "UpdateContext" e "Collect". "OnSelect", "OnVisible" e outras propiedades "On …" son propiedades comúns baseadas en comportamento.</value>
+  </data>
+  <data name="ErrorResource_ErrBehaviorPropertyExpected_HowToFix_1" xml:space="preserve">
+    <value>Mova a función de comportamento a unha propiedade baseada en comportamento.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorPropertyExpected_Link_1" xml:space="preserve">
+    <value>Artigo: Comprender as fórmulas de comportamento para as aplicacións de lenzo en Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrTestPropertyExpected_ShortMessage" xml:space="preserve">
+    <value>Probe a función nunha propiedade que non sexa de proba. Non pode usar esta propiedade para invocar funcións só de proba.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrTestPropertyExpected_LongMessage" xml:space="preserve">
+    <value>As funcións de proba son as que poden usarse para simular a entrada de usuarios ao probar unha aplicación. 'SetProperty', 'SelectRow' e 'Assert' son funcións de proba comúns. Só se poden usar nos casos de proba.</value>
+  </data>
+  <data name="ErrorResource_ErrTestPropertyExpected_HowToFix_1" xml:space="preserve">
+    <value>Use a función nun caso de proba, non na propia aplicación.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrCannotCoerce_SourceType_TargetType_ShortMessage" xml:space="preserve">
+    <value>Non se pode converter este tipo de datos. Power Apps non pode converter este valor de {0} en {1}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrCannotCoerce_SourceType_TargetType_LongMessage" xml:space="preserve">
+    <value>Power Apps pode converter algúns tipos de datos da fórmula noutros. Por exemplo, pode converter "1" (unha cadea) en 1 (un número), pero non pode converter todos os tipos de datos noutros tipo de datos. Por exemplo, non pode converter unha imaxe nun número.</value>
+  </data>
+  <data name="ErrorResource_ErrCannotCoerce_SourceType_TargetType_HowToFix_1" xml:space="preserve">
+    <value>Edite a fórmula para converter os datos da pregunta no tipo esperado.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrStringExpected_ShortMessage" xml:space="preserve">
+    <value>Esperábase texto neste punto da fórmula.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrStringExpected_LongMessage" xml:space="preserve">
+    <value>Este erro prodúcese se usa unha función que precisa un argumento de texto (ou unha cadea) e fornece, por exemplo, unha data no seu lugar.</value>
+  </data>
+  <data name="ErrorResource_ErrStringExpected_HowToFix_1" xml:space="preserve">
+    <value>Editar a fórmula de xeito que se avalíe como un texto neste punto da fórmula.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrStringExpected_Link_1" xml:space="preserve">
+    <value>Artigo: Referencia de fórmulas para Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrNumberOrStringExpected_ShortMessage" xml:space="preserve">
+    <value>Esperábase texto ou un número neste punto da fórmula.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrNumberOrStringExpected_LongMessage" xml:space="preserve">
+    <value>Este erro producirase se usa unha función que precise texto ou un número, pero fornece, por exemplo, un valor booleano (verdadeiro/falso).</value>
+  </data>
+  <data name="ErrorResource_ErrNumberOrStringExpected_HowToFix_1" xml:space="preserve">
+    <value>Editar a fórmula de xeito que se avalíe como un texto ou un número neste punto da fórmula.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrNumberOrStringExpected_Link_1" xml:space="preserve">
+    <value>Artigo: Referencia de fórmulas para Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrClosingBracketExpected_ShortMessage" xml:space="preserve">
+    <value>Esperábase un corchete de peche (}) neste punto da fórmula.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrClosingBracketExpected_LongMessage" xml:space="preserve">
+    <value>Un corchete de peche indica o final dun rexistro (por exemplo, {Month:"1"}, {Month:"2"} …).</value>
+  </data>
+  <data name="ErrorResource_ErrClosingBracketExpected_HowToFix_1" xml:space="preserve">
+    <value>Edite a fórmula de xeito que inclúa un corchete.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrEmptyInvalidIdentifier_ShortMessage" xml:space="preserve">
+    <value>O identificador non ten un texto válido.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrEmptyInvalidIdentifier_HowToFix_1" xml:space="preserve">
+    <value>Asegúrese de que ten texto para o identificador. Este erro prodúcese cando o identificador consiste só en espazos ou espazos en branco.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_ShortMessage" xml:space="preserve">
+    <value>Tipos incompatibles para a comparación. Estes tipos non se poden comparar: {0} e {1}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_LongMessage" xml:space="preserve">
+    <value>Non podemos avaliar a fórmula porque os valores que se están a comparar nela non son do mesmo tipo.</value>
+  </data>
+  <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_HowToFix_1" xml:space="preserve">
+    <value>É posible que precise converter o valor para que sexa do mesmo tipo, como, por exemplo, converter unha cadea de data (p. ex., "12/31/2018") nun valor de data.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_HowToFix_2" xml:space="preserve">
+    <value>Se está a comparar rexistros ou táboas, os tipos de campo ou columna deben coincidir.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_Link_1" xml:space="preserve">
+    <value>Módulo: Uso de fórmulas básicas</value>
+    
+  </data>
+  <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_Link_2" xml:space="preserve">
+    <value>Módulo: Creación de fórmulas básicas con táboas e rexistros</value>
+    
+  </data>
+  <data name="ErrorResource_ErrServiceFunctionUnknownOptionalParam_Name_ShortMessage" xml:space="preserve">
+    <value>Ningún parámetro. Esta función non ten ningún parámetro opcional denominado "{0}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrServiceFunctionUnknownOptionalParam_Name_HowToFix_1" xml:space="preserve">
+    <value>Como corrixilo: Elimine ou cambie o nome do parámetro na fórmula.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrServiceFunctionUnknownOptionalParam_Name_Link_1" xml:space="preserve">
+    <value>Artigo: Referencia de fórmulas para Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_ShortMessage" xml:space="preserve">
+    <value>Tipo incompatible. A columna "{0}" da orixe de datos que está a actualizar espera un tipo "{1}" e vostede está a usar un tipo "{2}".</value>
+    
+  </data>
+  <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_HowToFix_1" xml:space="preserve">
+    <value>É posible que precise converter o valor ao mesmo tipo, como, por exemplo, converter unha cadea de data (p. ex., "12/31/2018") nun valor de data, ou unha cadea nun número.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_Link_1" xml:space="preserve">
+    <value>Módulo: Uso de fórmulas básicas</value>
+    
+  </data>
+  <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_Link_2" xml:space="preserve">
+    <value>Módulo: Creación de fórmulas básicas con táboas e rexistros</value>
+    
+  </data>
+  <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_ShortMessage" xml:space="preserve">
+    <value>Falta a columna. Falta unha columna "{0}" cun tipo de "{1}" na fórmula.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_HowToFix_1" xml:space="preserve">
+    <value>Engade unha columna á fórmula.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_Link_1" xml:space="preserve">
+    <value>Artigo: Referencia de fórmulas para Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrTableDoesNotAcceptThisType_ShortMessage" xml:space="preserve">
+    <value>Tipo incompatible. O elemento que tenta pór nunha táboa ten un tipo que non é compatible coa táboa.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrTableDoesNotAcceptThisType_HowToFix_1" xml:space="preserve">
+    <value>Asegúrese de que o tipo de elemento que quere introducir na táboa é compatible con ela. É posible que teña que converter o tipo de elemento, por exemplo, a un rexistro.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrTableDoesNotAcceptThisType_Link_1" xml:space="preserve">
+    <value>Módulo: Uso de fórmulas básicas</value>
+    
+  </data>
+  <data name="ErrorResource_ErrTableDoesNotAcceptThisType_Link_2" xml:space="preserve">
+    <value>Módulo: Creación de fórmulas básicas con táboas e rexistros</value>
+    
+  </data>
+  <data name="ErrorResource_ErrTypeError_ShortMessage" xml:space="preserve">
+    <value>Tipo incompatible. Non podemos avaliar a fórmula debido a un erro de tipo.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrTypeError_LongMessage" xml:space="preserve">
+    <value>É posible que os datos non coincidan co tipo esperado (texto, número, data, táboa e rexistro).</value>
+  </data>
+  <data name="ErrorResource_ErrTypeError_HowToFix_1" xml:space="preserve">
+    <value>Comprobe os tipos dos valores involucrados na fórmula e asegúrese de que estes coincidan.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrTypeError_Link_1" xml:space="preserve">
+    <value>Módulo: Uso de fórmulas básicas</value>
+    
+  </data>
+  <data name="ErrorResource_ErrTypeError_Link_2" xml:space="preserve">
+    <value>Módulo: Creación de fórmulas básicas con táboas e rexistros</value>
+    
+  </data>
+  <data name="ErrorResource_ErrDateExpected_ShortMessage" xml:space="preserve">
+    <value>Esperábase unha data neste punto da fórmula.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrDateExpected_LongMessage" xml:space="preserve">
+    <value>Este erro producirase se usa unha función que precisa unha data pero, no seu lugar, fornece texto.</value>
+  </data>
+  <data name="ErrorResource_ErrDateExpected_HowToFix_1" xml:space="preserve">
+    <value>Editar a fórmula de xeito que se avalíe como unha data neste punto da fórmula.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrDateExpected_Link_1" xml:space="preserve">
+    <value>Artigo: Referencia de fórmulas para Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_ShortMessage" xml:space="preserve">
+    <value>Aviso de delegación. É posible que a parte "{0}" desta fórmula non funcione correctamente en conxuntos de datos grandes.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_LongMessage" xml:space="preserve">
+    <value>É posible que a orixe de datos non poida procesar a fórmula e que devolva un conxunto de datos incompleto. Pode que a aplicación non devolva resultados correctos ou que funcione de xeito incorrecto se o conxunto de datos está incompleto.</value>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_HowToFix_1" xml:space="preserve">
+    <value>Se o conxunto de datos supera o límite de 500 rexistros, pero contén menos de 2000, tente restablecer o límite.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_HowToFix_2" xml:space="preserve">
+    <value>Tente simplificar a fórmula.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_HowToFix_3" xml:space="preserve">
+    <value>Tente mover os datos a outra orixe de datos.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_Link_1" xml:space="preserve">
+    <value>Artigo: Comprender a delegación nunha aplicación de lenzo</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_Link_2" xml:space="preserve">
+    <value>Blog: Límites de filas de datos para delegación</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_ShortMessage" xml:space="preserve">
+    <value>Aviso de delegación. É posible que a parte destacada desta fórmula non funcione correctamente coa columna "{0}" en conxuntos de datos grandes.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_LongMessage" xml:space="preserve">
+    <value>É posible que a orixe de datos non poida procesar a fórmula e que devolva un conxunto de datos incompleto. Pode que a aplicación non devolva resultados correctos ou que funcione de xeito incorrecto se o conxunto de datos está incompleto.</value>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_HowToFix_1" xml:space="preserve">
+    <value>Se o conxunto de datos supera o límite de 500 rexistros, pero contén menos de 2000, tente restablecer o límite.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_HowToFix_2" xml:space="preserve">
+    <value>Tente simplificar a fórmula.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_HowToFix_3" xml:space="preserve">
+    <value>Tente mover os datos a outra orixe de datos.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_Link_1" xml:space="preserve">
+    <value>Artigo: Comprender a delegación nunha aplicación de lenzo</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_Link_2" xml:space="preserve">
+    <value>Blog: Límites de filas de datos para delegación</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_ShortMessage" xml:space="preserve">
+    <value>Aviso de delegación. É posible que a parte destacada desta fórmula non funcione correctamente en conxuntos de datos grandes.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_LongMessage" xml:space="preserve">
+    <value> A parte dereita do operador "in" debe ser un nome de columna da orixe de datos correcta. É posible que a orixe de datos non poida procesar a fórmula e que devolva un conxunto de datos incompleto. Pode que a aplicación non devolva resultados correctos ou que funcione de xeito incorrecto se o conxunto de datos está incompleto.</value>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_1" xml:space="preserve">
+    <value>Modifique o elemento á dereita do operador "en" para convertelo nunha columna da orixe de datos correcta.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_2" xml:space="preserve">
+    <value>Se o conxunto de datos supera o límite de 500 rexistros, pero contén menos de 2000, tente restablecer o límite.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_3" xml:space="preserve">
+    <value>Tente simplificar a fórmula.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_4" xml:space="preserve">
+    <value>Tente mover os datos a outra orixe de datos.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_Link_1" xml:space="preserve">
+    <value>Artigo: Comprender a delegación nunha aplicación de lenzo</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_Link_2" xml:space="preserve">
+    <value>Blog: Límites de filas de datos para delegación</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_ShortMessage" xml:space="preserve">
+    <value>É posible que a parte destacada desta fórmula non funcione correctamente en conxuntos de datos grandes. </value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_LongMessage" xml:space="preserve">
+    <value> A parte dereita do operador "in" non é unha columna da orixe de datos correcta. É posible que a orixe de datos non poida procesar a fórmula e que devolva un conxunto de datos incompleto. Pode que a aplicación non devolva resultados correctos ou que funcione de xeito incorrecto se o conxunto de datos está incompleto.
+      </value>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_1" xml:space="preserve">
+    <value>Modifique o elemento á dereita do operador "en" para convertelo nunha columna da orixe de datos correcta.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_2" xml:space="preserve">
+    <value>Se o conxunto de datos supera o límite de 500 rexistros, pero contén menos de 2000. Tente restablecer o límite.
+      </value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_3" xml:space="preserve">
+    <value>Tente simplificar a fórmula.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_4" xml:space="preserve">
+    <value>Tente mover os datos a outra orixe de datos.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_Link_1" xml:space="preserve">
+    <value>Artigo: Comprender a delegación nunha aplicación de lenzo</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_Link_2" xml:space="preserve">
+    <value>Blog: Límites de filas de datos para delegación</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_ShortMessage" xml:space="preserve">
+    <value>Aviso de delegación. É posible que a parte destacada desta fórmula non funcione correctamente en conxuntos de datos grandes. A operación "{0}" non é compatible con este conector.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_LongMessage" xml:space="preserve">
+    <value>É posible que a orixe de datos non poida procesar a fórmula e que devolva un conxunto de datos incompleto. Pode que a aplicación non devolva resultados correctos ou que funcione de xeito incorrecto se o conxunto de datos está incompleto.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_HowToFix_1" xml:space="preserve">
+    <value>Se o conxunto de datos supera o límite de 500 rexistros, pero contén menos de 2000, tente restablecer o límite.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_HowToFix_2" xml:space="preserve">
+    <value>Tente simplificar a fórmula.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_HowToFix_3" xml:space="preserve">
+    <value>Tente mover os datos a outra orixe de datos.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_Link_1" xml:space="preserve">
+    <value>Artigo: Comprender a delegación nunha aplicación de lenzo</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_Link_2" xml:space="preserve">
+    <value>Blog: Límites de filas de datos para delegación</value>
+    
+  </data>
+  <data name="ErrorResource_ErrOnlyOneViewExpected_ShortMessage" xml:space="preserve">
+    <value>Esperábase só unha visualización. Espérase só unha visualización neste punto da fórmula.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrOnlyOneViewExpected_HowToFix_1" xml:space="preserve">
+    <value>Edite a fórmula de xeito que só teña unha visualización neste punto da fórmula.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrViewFromCurrentTableExpected_ShortMessage" xml:space="preserve">
+    <value>Esperábase unha visualización da orixe de datos {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrViewFromCurrentTableExpected_HowToFix_1" xml:space="preserve">
+    <value>Edite a fórmula de xeito que teña visualización da orixe de datos {0}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidControlReference_ShortMessage" xml:space="preserve">
+    <value>Esta referencia de control non se pode usar nesta propiedade</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidControlReference_HowToFix_1" xml:space="preserve">
+    <value>Esta propiedade só admite referencias a variables globais, coleccións e algunhas propiedades de control e pantalla. Consulte a ligazón para obter unha lista das propiedades de control compatibles.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidControlReference_Link_1" xml:space="preserve">
+    <value>Referencia: ConfirmExit para aplicacións de lenzo</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidStringInterpolation_ShortMessage" xml:space="preserve">
+    <value>As expresións que aparecen dentro dunha cadea interpolada deben avaliarse como un valor de texto ou un tipo compatible.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidStringInterpolation_HowToFix_1" xml:space="preserve">
+    <value>Comprobe os tipos de expresións dentro da cadea interpolada.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrEmptyIsland_ShortMessage" xml:space="preserve">
+    <value>Dentro dunha cadea interpolada non poden aparecer expresións baleiras.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrEmptyIsland_HowToFix_1" xml:space="preserve">
+    <value>Comprobe as expresións baleiras dentro da cadea interpolada.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrAsNotInContext_ShortMessage" xml:space="preserve">
+    <value>Porque non se permite neste contexto</value>
+    
+  </data>
+  <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
+    <value>As fórmulas con nome deben rematar en punto e coma.</value>
+    
+  </data>
+</root>

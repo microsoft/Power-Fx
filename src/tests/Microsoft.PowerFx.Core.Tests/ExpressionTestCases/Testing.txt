@@ -1,0 +1,5 @@
+// Use this file for local testing of a single test case (Don't actually commit your local changes to this file)
+// See PowerFxEvaluationTests.RunSingleTestCase()
+// Eg:
+// >> Text(Date(9999, 12, 31))
+// "12/31/9999"

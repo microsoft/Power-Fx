@@ -1,0 +1,8 @@
+>> Weekday(Date(2020,7,16))
+5
+
+>> WeekNum(Date(2019,1,6))
+2
+
+>> ISOWeekNum(Date(2019,1,6))
+1
