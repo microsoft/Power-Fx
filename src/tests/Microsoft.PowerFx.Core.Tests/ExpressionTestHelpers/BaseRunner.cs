@@ -38,7 +38,7 @@ namespace Microsoft.PowerFx.Core.Tests
         // - the test is already from an override (so it should have marked #skip)
         // - the test already expected to fail (so we should have gotten the failure)
         //
-        // This allows tests to over lots of overrides for known behavior that isn't implemented.
+        // This allows tests to avoid lots of overrides for known behavior that isn't implemented.
         public string UnsupportedReason;
 
         public RunResult()
@@ -175,54 +175,51 @@ namespace Microsoft.PowerFx.Core.Tests
 
             try
             {
-                try
+                runResult = await RunAsyncInternal(testCase.Input, testCase.SetupHandlerName);
+                result = runResult.Value;
+
+                if (testCase.IsOverride)
                 {
-                    runResult = await RunAsyncInternal(testCase.Input, testCase.SetupHandlerName);
-                    result = runResult.Value;
+                    // Unsupported is just for ignoring large groups of inherited tests. 
+                    // If it's an override, then the override should specify the exact error.
+                    runResult.UnsupportedReason = null;
+                }
 
-                    if (testCase.IsOverride)
+                // Check for a compile-time error.
+                if (runResult.Errors != null && runResult.Errors.Length > 0)
+                {
+                    // Matching text to CheckResult.ThrowOnErrors()
+                    // Expected will contain the full error message, like:
+                    //    Errors: Error 15-16: Incompatible types for comparison. These types can't be compared: UntypedObject, UntypedObject.
+                    var expectedCompilerError = expected.StartsWith("Errors: Error"); // $$$ Match error message. 
+                    if (expectedCompilerError)
                     {
-                        // Unsupported is just for ignoring large groups of inherited tests. 
-                        // If it's an override, then the override should specify the exact error.
-                        runResult.UnsupportedReason = null;
-                    }
+                        var msg = $"Errors: " + string.Join("\r\n", runResult.Errors.Select(err => err.ToString()).ToArray());
+                        var actualStr = msg.Replace("\r\n", "|").Replace("\n", "|");
 
-                    // Check for a compile-time error.
-                    if (runResult.Errors != null && runResult.Errors.Length > 0)
-                    {
-                        // Matching text to CheckResult.ThrowOnErrors()
-                        // Expected will contain the full error message, like:
-                        //    Errors: Error 15-16: Incompatible types for comparison. These types can't be compared: UntypedObject, UntypedObject.
-                        var expectedCompilerError = expected.StartsWith("Errors: Error"); // $$$ Match error message. 
-                        if (expectedCompilerError)
+                        if (actualStr.Contains(expected))
                         {
-                            var msg = $"Errors: " + string.Join("\r\n", runResult.Errors.Select(err => err.ToString()).ToArray());
-                            var actualStr = msg.Replace("\r\n", "|").Replace("\n", "|");
-
-                            if (actualStr.Contains(expected))
-                            {
-                                // Compiler errors result in exceptions
-                                return (TestResult.Pass, null);
-                            }
-                            else if (runResult.UnsupportedReason != null)
-                            {
-                                return (TestResult.Skip, "Unsupported in this engine: " + runResult.UnsupportedReason);
-                            }
-                            else
-                            { 
-                                return (TestResult.Fail, $"Failed, but wrong error message: {msg}");
-                            }
+                            // Compiler errors result in exceptions
+                            return (TestResult.Pass, null);
+                        }
+                        else if (runResult.UnsupportedReason != null)
+                        {
+                            return (TestResult.Skip, "Unsupported in this engine: " + runResult.UnsupportedReason);
+                        }
+                        else
+                        {
+                            return (TestResult.Fail, $"Failed, but wrong error message: {msg}");
                         }
                     }
                 }
-                catch (SetupHandlerNotFoundException)
-                {
-                    return (TestResult.Skip, $"was skipped due to missing setup handler {testCase.SetupHandlerName}");
-                }
+            }
+            catch (SetupHandlerNotFoundException)
+            {
+                return (TestResult.Skip, $"was skipped due to missing setup handler {testCase.SetupHandlerName}");
             }
             catch (Exception e)
             {
-                return (TestResult.Fail, $"Threw exception: {e.Message}");                
+                return (TestResult.Fail, $"Threw exception: {e.Message}");
             }
 
             // Check for a runtime-error
