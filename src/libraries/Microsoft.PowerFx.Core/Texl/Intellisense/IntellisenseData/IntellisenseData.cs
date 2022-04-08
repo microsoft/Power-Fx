@@ -20,9 +20,9 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense.IntellisenseData
     internal class IntellisenseData : IIntellisenseData
     {
         private readonly PowerFxConfig _powerFxConfig;
-        private readonly EnumStore _enumStore;
+        private readonly IEnumStore _enumStore;
 
-        public IntellisenseData(PowerFxConfig powerFxConfig, IIntellisenseContext context, DType expectedType, TexlBinding binding, TexlFunction curFunc, TexlNode curNode, int argIndex, int argCount, IsValidSuggestion isValidSuggestionFunc, IList<DType> missingTypes, List<CommentToken> comments)
+        public IntellisenseData(PowerFxConfig powerFxConfig, IEnumStore enumStore, IIntellisenseContext context, DType expectedType, TexlBinding binding, TexlFunction curFunc, TexlNode curNode, int argIndex, int argCount, IsValidSuggestion isValidSuggestionFunc, IList<DType> missingTypes, List<CommentToken> comments)
         {
             Contracts.AssertValue(context);
             Contracts.AssertValid(expectedType);
@@ -34,7 +34,7 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense.IntellisenseData
             Contracts.AssertValueOrNull(comments);
 
             _powerFxConfig = powerFxConfig;
-            _enumStore = powerFxConfig.EnumStoreBuilder.Build();
+            _enumStore = enumStore;
             ExpectedType = expectedType;
             Suggestions = new IntellisenseSuggestionList();
             SubstringSuggestions = new IntellisenseSuggestionList();

@@ -1630,7 +1630,11 @@
     
   </data>
   <data name="ErrUnknownFunction" xml:space="preserve">
-    <value>Извикване на неизвестна или неподдържана функция.</value>
+    <value>„{0}“ е неизвестна или неподдържана функция.</value>
+    
+  </data>
+  <data name="ErrUnknownNamespaceFunction" xml:space="preserve">
+    <value>„{0}“ е неизвестна или неподдържана функция в пространството на имената „{1}“.</value>
     
   </data>
   <data name="ErrUnSupportedComponentBehaviorInvocation" xml:space="preserve">
@@ -1923,11 +1927,39 @@
     <value>Компонентът на милисекундата.</value>
   </data>
   <data name="AboutDateTime" xml:space="preserve">
-    <value>Creates a value that represents an instant in time, expressed as a date and time of the day.</value>
+    <value>Създава стойност, която представлява момент във времето, изразен като дата и час.</value>
+    
+  </data>
+  <data name="AboutDateTime_year" xml:space="preserve">
+    <value>Годината.</value>
+    
+  </data>
+  <data name="AboutDateTime_month" xml:space="preserve">
+    <value>Месецът.</value>
+    
+  </data>
+  <data name="AboutDateTime_day" xml:space="preserve">
+    <value>Денят.</value>
+    
+  </data>
+  <data name="AboutDateTime_hour" xml:space="preserve">
+    <value>Часът.</value>
+    
+  </data>
+  <data name="AboutDateTime_minute" xml:space="preserve">
+    <value>Минутата.</value>
+    
+  </data>
+  <data name="AboutDateTime_second" xml:space="preserve">
+    <value>Секундата.</value>
+    
+  </data>
+  <data name="AboutDateTime_millisecond" xml:space="preserve">
+    <value>Милисекундите.</value>
     
   </data>
   <data name="AboutYear" xml:space="preserve">
-    <value>Year returns the year of a given date.</value>
+    <value>Year връща годината на дадена дата.</value>
     
   </data>
   <data name="YearArg1" xml:space="preserve">

@@ -508,7 +508,7 @@ namespace Microsoft.PowerFx.Tests
             Assert.True(checkResult.IsSuccess);
             Assert.IsType<StringType>(checkResult.ReturnType);
 
-            var enums = config.EnumStoreBuilder.Build().Enums();
+            var enums = config.EnumStoreBuilder.Build().EnumSymbols;
 
             Assert.True(enums.Count() > 0);
         }

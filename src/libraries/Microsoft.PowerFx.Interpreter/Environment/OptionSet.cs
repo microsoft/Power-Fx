@@ -79,6 +79,6 @@ namespace Microsoft.PowerFx
 
         bool IExternalOptionSet.IsConvertingDisplayNameMapping => false;
 
-        DType IExternalOptionSet.Type => _type;
+        DType IExternalEntity.Type => _type;
     }
 }
