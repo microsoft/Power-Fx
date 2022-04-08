@@ -1,5 +1,64 @@
 ﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
@@ -426,6 +485,17 @@
   <data name="AboutValue_language" xml:space="preserve">
     <value>Код языка, используемый при преобразовании значения.</value>
     
+  </data>
+  <data name="AboutBoolean" xml:space="preserve">
+    <value>Преобразует текст, представляющий логическое значение, в логическое значение.</value>
+    
+  </data>
+  <data name="BooleanArg1" xml:space="preserve">
+    <value>текст</value>
+    
+  </data>
+  <data name="AboutBoolean_text" xml:space="preserve">
+    <value>Текстовое значение для преобразования в логическое значение.</value>
   </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Возвращает первый непустой аргумент</value>
@@ -1368,6 +1438,10 @@
     <value>выражение</value>
     
   </data>
+  <data name="AboutIsBlankOrError_expression" xml:space="preserve">
+    <value>Выражение для проверки.</value>
+    
+  </data>
   <data name="AboutIsEmpty" xml:space="preserve">
     <value>Проверяет, пуста ли коллекция, и возвращает true или false.</value>
     
@@ -1375,6 +1449,9 @@
   <data name="IsEmptyArg1" xml:space="preserve">
     <value>источник</value>
     
+  </data>
+  <data name="AboutIsEmpty_source" xml:space="preserve">
+    <value>Таблица для проверки.</value>
   </data>
   <data name="AboutShuffle" xml:space="preserve">
     <value>Возвращает копию входной таблицы "источника" со строками, перемешанными в случайном порядке.</value>
@@ -1553,7 +1630,11 @@
     
   </data>
   <data name="ErrUnknownFunction" xml:space="preserve">
-    <value>Вызов неизвестной или неподдерживаемой функции.</value>
+    <value>"{0}" — неизвестная или неподдерживаемая функция.</value>
+    
+  </data>
+  <data name="ErrUnknownNamespaceFunction" xml:space="preserve">
+    <value>"{0}" — неизвестная или неподдерживаемая функция в пространстве имен "{1}".</value>
     
   </data>
   <data name="ErrUnSupportedComponentBehaviorInvocation" xml:space="preserve">
@@ -1845,8 +1926,40 @@
   <data name="AboutTime_millisecond" xml:space="preserve">
     <value>Компонент миллисекунд.</value>
   </data>
+  <data name="AboutDateTime" xml:space="preserve">
+    <value>Создает значение, представляющее собой момент времени, выраженный в виде даты и времени суток.</value>
+    
+  </data>
+  <data name="AboutDateTime_year" xml:space="preserve">
+    <value>Год.</value>
+    
+  </data>
+  <data name="AboutDateTime_month" xml:space="preserve">
+    <value>Месяц.</value>
+    
+  </data>
+  <data name="AboutDateTime_day" xml:space="preserve">
+    <value>День.</value>
+    
+  </data>
+  <data name="AboutDateTime_hour" xml:space="preserve">
+    <value>Час.</value>
+    
+  </data>
+  <data name="AboutDateTime_minute" xml:space="preserve">
+    <value>Минута.</value>
+    
+  </data>
+  <data name="AboutDateTime_second" xml:space="preserve">
+    <value>Секунда.</value>
+    
+  </data>
+  <data name="AboutDateTime_millisecond" xml:space="preserve">
+    <value>Миллисекунды.</value>
+    
+  </data>
   <data name="AboutYear" xml:space="preserve">
-    <value>Функция Year возвращает год для заданной даты в виде числа, большего 1900.</value>
+    <value>Функция Year возвращает год из заданной даты.</value>
     
   </data>
   <data name="YearArg1" xml:space="preserve">
@@ -2260,6 +2373,36 @@
   </data>
   <data name="AboutChar_column_of_numbers" xml:space="preserve">
     <value>Столбец номеров кодов из кодировки для вашей платформы.</value>
+  </data>
+  <data name="AboutParseJSON" xml:space="preserve">
+    <value>Преобразует строку JSON в объект.</value>
+    
+  </data>
+  <data name="ParseJSONArg1" xml:space="preserve">
+    <value>входные данные</value>
+    
+  </data>
+  <data name="AboutParseJSON_input" xml:space="preserve">
+    <value>Строка JSON для обработки.</value>
+  </data>
+  <data name="AboutIndex" xml:space="preserve">
+    <value>Возвращает запись в таблице по заданному индексу.</value>
+    
+  </data>
+  <data name="IndexArg1" xml:space="preserve">
+    <value>таблица</value>
+    
+  </data>
+  <data name="IndexArg2" xml:space="preserve">
+    <value>индекс</value>
+    
+  </data>
+  <data name="AboutIndex_table" xml:space="preserve">
+    <value>Таблица.</value>
+  </data>
+  <data name="AboutIndex_index" xml:space="preserve">
+    <value>Индекс записи, которую требуется извлечь.</value>
+    
   </data>
   <data name="Screen_Name_DisplayName" xml:space="preserve">
     <value>Имя</value>
@@ -3788,6 +3931,18 @@
     <value>Ожидаемый тип результата для этой формулы — {0}, однако фактический тип результата — {1}. Изменить тип результата столбца формул невозможно.</value>
     
   </data>
+  <data name="FormulaColumns_ColumnTypeNotSupported" xml:space="preserve">
+    <value>Столбцы типа "{0}" не поддерживаются в столбцах формул.</value>
+    
+  </data>
+  <data name="FormulaColumns_ColumnFormatNotSupported" xml:space="preserve">
+    <value>Столбцы типа "{0}" с форматом {1} не поддерживаются в столбцах формул.</value>
+    
+  </data>
+  <data name="FormulaColumns_FormulaTooLong" xml:space="preserve">
+    <value>Длина формулы не может превышать 1000 символов.</value>
+    
+  </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
     <value>Ожидается операнд. В формуле или выражении ожидается допустимый операнд. Например, вы можете добавить операнд "2" в выражение "1 + _", чтобы получить результат "3", или операнд "день" в выражение «"Добрый "&amp; _ », чтобы получить результат "Добрый день".</value>
     
@@ -3802,7 +3957,6 @@
   </data>
   <data name="ErrorResource_ErrBadToken_LongMessage" xml:space="preserve">
     <value>Например, символ "\" не может идти после числа: "32\". Будет ожидаться либо пробел ("32"), если имеется в виду просто число 32, либо другое число ("323").</value>
-    
   </data>
   <data name="ErrorResource_ErrBadToken_HowToFix_1" xml:space="preserve">
     <value>Удалите или замените непредусмотренные символы.</value>
@@ -3818,11 +3972,9 @@
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_LongMessage" xml:space="preserve">
     <value>Например, символ "\" не может идти после числа: "32\". Будет ожидаться либо пробел ("32"), если имеется в виду просто число 32, либо другое число ("323").</value>
-    
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_HowToFix_1" xml:space="preserve">
     <value>Удалите или замените непредвиденный символ.</value>
-    
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_Link_1" xml:space="preserve">
     <value>Статья: "Справка по формулам для Power Apps"</value>
@@ -3834,7 +3986,6 @@
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_LongMessage" xml:space="preserve">
     <value>Каждый блочный комментарий должен начинаться с "/*" и заканчиваться на "*/". Если блочный комментарий не завершен должным образом, весь последующий код будет считаться частью комментария. Если комментарий состоит из одной строки, вы можете начать его с "//" и не указывать ничего в конце.</value>
-    
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_HowToFix_1" xml:space="preserve">
     <value>Добавьте "*/" в конец блока комментария или измените его на набор однострочных комментариев.</value>
@@ -3850,7 +4001,6 @@
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_LongMessage" xml:space="preserve">
     <value>Эта ошибка возникает, если, например, формула содержит "{{Val@ 7}}" вместо "{{Val: 7}}". При задании переменной синтаксис требует использовать двоеточие, а не символ "@".</value>
-    
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_HowToFix_1" xml:space="preserve">
     <value>Удалите непредусмотренные символы или замените их ожидаемыми.</value>
@@ -3861,12 +4011,11 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidName_ShortMessage" xml:space="preserve">
-    <value>Недопустимое имя. Этот идентификатор не распознан.</value>
+    <value>Недопустимое имя. Не удается распознать "{0}".</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidName_LongMessage" xml:space="preserve">
     <value>Эта ошибка чаще всего возникает, когда формула ссылается на объект, который больше не существует (например, удаленный элемент управления).</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidName_HowToFix_1" xml:space="preserve">
     <value>Удалите или исправьте недопустимую ссылку на имя.</value>
@@ -3876,13 +4025,27 @@
     <value>Статья: ссылка на формулу для Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_ShortMessage" xml:space="preserve">
+    <value>Недопустимое имя. Этот идентификатор не распознан.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_LongMessage" xml:space="preserve">
+    <value>Эта ошибка чаще всего возникает, когда формула ссылается на объект, который больше не существует (например, удаленный элемент управления).</value>
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_HowToFix_1" xml:space="preserve">
+    <value>Удалите или исправьте ссылку на недопустимое имя.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_Link_1" xml:space="preserve">
+    <value>Статья: "Справка по формулам для Power Apps"</value>
+    
+  </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_ShortMessage" xml:space="preserve">
     <value>Недопустимая ссылка на свойство.</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_LongMessage" xml:space="preserve">
     <value>Эта ошибка возникает, когда формула ссылается на свойства поведения компонента с недопустимым синтаксисом (например, Component.OnCustomChange вместо Component.OnCustomChange()).</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_HowToFix_1" xml:space="preserve">
     <value>Используйте правильный синтаксис для ссылки на свойство поведения компонента. Например, Component.OnCustomChange().</value>
@@ -3898,7 +4061,6 @@
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_LongMessage" xml:space="preserve">
     <value>Вы не можете использовать оператор Parent с элементом управления, у которого нет родительского элемента управления. Этот оператор ссылается на элемент управления, в котором размещается указанный элемент, и предоставляет доступ ко всем его свойствам.</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_HowToFix_1" xml:space="preserve">
     <value>Удалите оператор "Parent".</value>
@@ -3914,7 +4076,6 @@
   </data>
   <data name="ErrorResource_ErrTooManyUps_LongMessage" xml:space="preserve">
     <value>С каждым уровнем вложенности сложность возрастает, поэтому Power Apps поддерживает не более 63 уровней вложения в области строки.</value>
-    
   </data>
   <data name="ErrorResource_ErrTooManyUps_HowToFix_1" xml:space="preserve">
     <value>Перепишите формулу, используя меньше уровней вложения.</value>
@@ -3926,7 +4087,6 @@
   </data>
   <data name="ErrorResource_ErrRuleNestedTooDeeply_LongMessage" xml:space="preserve">
     <value>Power Apps поддерживает не более 50 уровней вложения. Выражения с большей глубиной вложения слишком сложны для разбора и поддержки.</value>
-    
   </data>
   <data name="ErrorResource_ErrRuleNestedTooDeeply_HowToFix_1" xml:space="preserve">
     <value>Перепишите формулу, используя меньше уровней вложения.</value>
@@ -3938,7 +4098,6 @@
   </data>
   <data name="ErrorResource_ErrOperatorExpected_LongMessage" xml:space="preserve">
     <value>Операторы соединяют два операнда. Данная ошибка возникает, когда вы ставите рядом две функции (два операнда), но не указываете между ними оператор, например: Len("mytext")Len("mytext").</value>
-    
   </data>
   <data name="ErrorResource_ErrOperatorExpected_HowToFix_1" xml:space="preserve">
     <value>Измените формулу так, чтобы она включала оператор между операндами.</value>
@@ -3954,7 +4113,6 @@
   </data>
   <data name="ErrorResource_ErrNumberExpected_LongMessage" xml:space="preserve">
     <value>Данная ошибка возникает, когда функция требует число, а вы вместо этого передаете ей, например, изображение.</value>
-    
   </data>
   <data name="ErrorResource_ErrNumberExpected_HowToFix_1" xml:space="preserve">
     <value>Измените формулу так, чтобы результатом вычисления в этом месте в формуле было число.</value>
@@ -3970,7 +4128,6 @@
   </data>
   <data name="ErrorResource_ErrBooleanExpected_LongMessage" xml:space="preserve">
     <value>Логическое значение также называют значением true/false (истина/ложь) в некоторых приложениях, например в Microsoft Excel. Данная ошибка возникает, когда функция требует значение логического типа, а вы передаете ей другое, например дату.</value>
-    
   </data>
   <data name="ErrorResource_ErrBooleanExpected_HowToFix_1" xml:space="preserve">
     <value>Измените формулу так, чтобы результатом вычисления в этом месте в формуле было логическое значение.</value>
@@ -3986,7 +4143,6 @@
   </data>
   <data name="ErrorResource_ErrColonExpected_LongMessage" xml:space="preserve">
     <value>Двоеточие отделяет в записи имя поля, иногда называемое именем столбца, от его значения (например, {Month:"1"}, {Month:"2"}…). Двоеточие также разделяет часы, минуты и секунды (например, "3:04").</value>
-    
   </data>
   <data name="ErrorResource_ErrColonExpected_HowToFix_1" xml:space="preserve">
     <value>Измените формулу так, чтобы она включала двоеточие.</value>
@@ -4002,7 +4158,6 @@
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_LongMessage" xml:space="preserve">
     <value>Функции поведения изменяют состояние приложения путем изменения значений в других его областях. Типичные функции поведения: "Navigate" (Переключение экрана), "Patch" (Изменение или объединение записей), "UpdateContext" (Изменение контекста) или "Collect" (Создание коллекции). Типичные свойства, основанные на поведении: "OnSelect" (При выборе), "OnVisible" (При отображении) и другие свойства вида "On…".</value>
-    
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_HowToFix_1" xml:space="preserve">
     <value>Переместите функцию поведения в основанное на поведении свойство.</value>
@@ -4018,7 +4173,6 @@
   </data>
   <data name="ErrorResource_ErrTestPropertyExpected_LongMessage" xml:space="preserve">
     <value>Функции теста — это те функции, которые можно использовать для имитации вводимых пользователем данных при тестировании приложения. Основные функции теста — "SetProperty", "SelectRow" и "Assert". Их можно использовать только в тестовых случаях.</value>
-    
   </data>
   <data name="ErrorResource_ErrTestPropertyExpected_HowToFix_1" xml:space="preserve">
     <value>Используйте функцию в тестовом случае, а не в самом приложении.</value>
@@ -4030,7 +4184,6 @@
   </data>
   <data name="ErrorResource_ErrCannotCoerce_SourceType_TargetType_LongMessage" xml:space="preserve">
     <value>Power Apps может преобразовывать некоторые типы данных в формуле в другие типы. Например, значение "1" (строка) можно преобразовать в 1 (число). Однако это верно не для всех типов данных. Например, преобразовать изображение в число будет невозможно.</value>
-    
   </data>
   <data name="ErrorResource_ErrCannotCoerce_SourceType_TargetType_HowToFix_1" xml:space="preserve">
     <value>Измените формулу, чтобы преобразовать эти данные к ожидаемому типу.</value>
@@ -4042,7 +4195,6 @@
   </data>
   <data name="ErrorResource_ErrStringExpected_LongMessage" xml:space="preserve">
     <value>Эта ошибка возникает, когда функция требует аргумент в виде текста (или строки), а вы вместо этого передаете ей, например, дату.</value>
-    
   </data>
   <data name="ErrorResource_ErrStringExpected_HowToFix_1" xml:space="preserve">
     <value>Измените формулу так, чтобы результатом вычисления в этом месте в формуле был текст.</value>
@@ -4058,7 +4210,6 @@
   </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_LongMessage" xml:space="preserve">
     <value>Данная ошибка возникает, когда функция требует текст или число, а вы вместо этого передаете ей, например, логическое значение (true/false).</value>
-    
   </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_HowToFix_1" xml:space="preserve">
     <value>Измените формулу так, чтобы результатом вычисления в этом месте в формуле был текст или число.</value>
@@ -4074,7 +4225,6 @@
   </data>
   <data name="ErrorResource_ErrClosingBracketExpected_LongMessage" xml:space="preserve">
     <value>Закрывающая фигурная скобка показывает конец записи (например, {Month:"1"}, {Month:"2"}…).</value>
-    
   </data>
   <data name="ErrorResource_ErrClosingBracketExpected_HowToFix_1" xml:space="preserve">
     <value>Измените формулу так, чтобы она включала фигурную скобку.</value>
@@ -4094,7 +4244,6 @@
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_LongMessage" xml:space="preserve">
     <value>Невозможно вычислить формулу, так как сравниваемые в формуле значения имеют разные типы.</value>
-    
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_HowToFix_1" xml:space="preserve">
     <value>Возможно, следует преобразовать значение в тот же тип, например преобразовать строку даты ("31.12.2018") в значение даты.</value>
@@ -4174,7 +4323,6 @@
   </data>
   <data name="ErrorResource_ErrTypeError_LongMessage" xml:space="preserve">
     <value>Возможно, данные не соответствуют ожидаемому типу (текст, число, дата, таблица, запись).</value>
-    
   </data>
   <data name="ErrorResource_ErrTypeError_HowToFix_1" xml:space="preserve">
     <value>Проверьте типы значений, используемые в формуле: они должны совпадать.</value>
@@ -4194,7 +4342,6 @@
   </data>
   <data name="ErrorResource_ErrDateExpected_LongMessage" xml:space="preserve">
     <value>Данная ошибка возникает, когда функция требует дату, а вы вместо этого передаете ей, например, текст.</value>
-    
   </data>
   <data name="ErrorResource_ErrDateExpected_HowToFix_1" xml:space="preserve">
     <value>Измените формулу так, чтобы результатом вычисления в этом месте в формуле была дата.</value>
@@ -4210,7 +4357,6 @@
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_LongMessage" xml:space="preserve">
     <value>Источник данных может не суметь обработать формулу и вернет неполный набор данных. Из-за неполного набора приложение может возвращать неверные результаты или работать некорректно.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_HowToFix_1" xml:space="preserve">
     <value>Если ваши данные превышают предел в 500 записей, но содержат меньше 2000 записей, попробуйте задать новый предел.</value>
@@ -4238,7 +4384,6 @@
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_LongMessage" xml:space="preserve">
     <value>Источник данных может не суметь обработать формулу и вернет неполный набор данных. Из-за неполного набора приложение может возвращать неверные результаты или работать некорректно.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_HowToFix_1" xml:space="preserve">
     <value>Если ваши данные превышают предел в 500 записей, но содержат меньше 2000 записей, попробуйте задать новый предел.</value>
@@ -4266,7 +4411,6 @@
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_LongMessage" xml:space="preserve">
     <value> Элемент справа от оператора "in" должен быть именем столбца из корректного источника данных. Источник может не суметь обработать формулу и вернет неполный набор данных. Из-за неполного набора приложение может возвращать неверные результаты или работать некорректно.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_1" xml:space="preserve">
     <value>Измените элемент справа от оператора "in" на столбец из правильного источника данных.</value>
@@ -4299,7 +4443,6 @@
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_LongMessage" xml:space="preserve">
     <value> Элемент справа от оператора "in" не является столбцом из корректного источника данных. Источник данных может не суметь обработать формулу и вернет неполный набор данных. Из-за неполного набора приложение может возвращать неверные результаты или работать некорректно.
       </value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_1" xml:space="preserve">
     <value>Измените элемент справа от оператора "in" на столбец из правильного источника данных.</value>
@@ -4380,6 +4523,22 @@
   </data>
   <data name="ErrorResource_ErrInvalidControlReference_Link_1" xml:space="preserve">
     <value>Ссылка: ConfirmExit для приложений на основе холста</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidStringInterpolation_ShortMessage" xml:space="preserve">
+    <value>Результатом вычисления выражений внутри интерполированной строки должно быть значение типа "текст" или совместимого типа.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidStringInterpolation_HowToFix_1" xml:space="preserve">
+    <value>Проверьте типы выражений внутри интерполированной строки.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrEmptyIsland_ShortMessage" xml:space="preserve">
+    <value>Внутри интерполированной строки не может быть пустых выражений.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrEmptyIsland_HowToFix_1" xml:space="preserve">
+    <value>Проверьте интерполированную строку на наличие пустых выражений.</value>
     
   </data>
   <data name="ErrorResource_ErrAsNotInContext_ShortMessage" xml:space="preserve">

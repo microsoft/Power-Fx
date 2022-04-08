@@ -1,5 +1,64 @@
 ﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
@@ -426,6 +485,17 @@
   <data name="AboutValue_language" xml:space="preserve">
     <value>Шифра језика коју треба користити приликом конвертовања у вредност.</value>
     
+  </data>
+  <data name="AboutBoolean" xml:space="preserve">
+    <value>Конвертује „текст“ који представља Булову вредност у Булову вредност.</value>
+    
+  </data>
+  <data name="BooleanArg1" xml:space="preserve">
+    <value>текст</value>
+    
+  </data>
+  <data name="AboutBoolean_text" xml:space="preserve">
+    <value>Текстуална вредност коју треба конвертовати у Булову вредност.</value>
   </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Враћа први аргумент који није празан</value>
@@ -1368,6 +1438,10 @@
     <value>израз</value>
     
   </data>
+  <data name="AboutIsBlankOrError_expression" xml:space="preserve">
+    <value>Израз који ће бити тестиран.</value>
+    
+  </data>
   <data name="AboutIsEmpty" xml:space="preserve">
     <value>Проверава да ли је колекција празна и враћа исправно или погрешно.</value>
     
@@ -1375,6 +1449,9 @@
   <data name="IsEmptyArg1" xml:space="preserve">
     <value>извор</value>
     
+  </data>
+  <data name="AboutIsEmpty_source" xml:space="preserve">
+    <value>Табела за тестирање.</value>
   </data>
   <data name="AboutShuffle" xml:space="preserve">
     <value>Враћа насумично измешану копију улазне табеле „извор“.</value>
@@ -1553,7 +1630,11 @@
     
   </data>
   <data name="ErrUnknownFunction" xml:space="preserve">
-    <value>Позивање непознате или неподржане функције.</value>
+    <value>„{0}“ је непозната или неподржана функција.</value>
+    
+  </data>
+  <data name="ErrUnknownNamespaceFunction" xml:space="preserve">
+    <value>„{0}“ је непозната или неподржана функција у простору за имена „{1}“.</value>
     
   </data>
   <data name="ErrUnSupportedComponentBehaviorInvocation" xml:space="preserve">
@@ -1845,8 +1926,40 @@
   <data name="AboutTime_millisecond" xml:space="preserve">
     <value>Компонента милисекунде.</value>
   </data>
+  <data name="AboutDateTime" xml:space="preserve">
+    <value>Креира вредност која представља временску тачку, изражену као датум и време у току дана.</value>
+    
+  </data>
+  <data name="AboutDateTime_year" xml:space="preserve">
+    <value>Година.</value>
+    
+  </data>
+  <data name="AboutDateTime_month" xml:space="preserve">
+    <value>Месец.</value>
+    
+  </data>
+  <data name="AboutDateTime_day" xml:space="preserve">
+    <value>Дан.</value>
+    
+  </data>
+  <data name="AboutDateTime_hour" xml:space="preserve">
+    <value>Сат времена.</value>
+    
+  </data>
+  <data name="AboutDateTime_minute" xml:space="preserve">
+    <value>Минут.</value>
+    
+  </data>
+  <data name="AboutDateTime_second" xml:space="preserve">
+    <value>Секунда.</value>
+    
+  </data>
+  <data name="AboutDateTime_millisecond" xml:space="preserve">
+    <value>Милисекунде.</value>
+    
+  </data>
   <data name="AboutYear" xml:space="preserve">
-    <value>Година враћа годину датог датума, број већи од 1900.</value>
+    <value>Година враћа годину за дати датум.</value>
     
   </data>
   <data name="YearArg1" xml:space="preserve">
@@ -2260,6 +2373,36 @@
   </data>
   <data name="AboutChar_column_of_numbers" xml:space="preserve">
     <value>Колона кодних бројева из скупа знакова постављених на платформи.</value>
+  </data>
+  <data name="AboutParseJSON" xml:space="preserve">
+    <value>Конвертује JSON ниску у објекат.</value>
+    
+  </data>
+  <data name="ParseJSONArg1" xml:space="preserve">
+    <value>унос</value>
+    
+  </data>
+  <data name="AboutParseJSON_input" xml:space="preserve">
+    <value>JSON ниска за обраду.</value>
+  </data>
+  <data name="AboutIndex" xml:space="preserve">
+    <value>Даје запис у табели у датом индексу.</value>
+    
+  </data>
+  <data name="IndexArg1" xml:space="preserve">
+    <value>табела</value>
+    
+  </data>
+  <data name="IndexArg2" xml:space="preserve">
+    <value>индекс</value>
+    
+  </data>
+  <data name="AboutIndex_table" xml:space="preserve">
+    <value>Табела.</value>
+  </data>
+  <data name="AboutIndex_index" xml:space="preserve">
+    <value>Индекс записа који треба преузети.</value>
+    
   </data>
   <data name="Screen_Name_DisplayName" xml:space="preserve">
     <value>Име</value>
@@ -3781,11 +3924,23 @@
     
   </data>
   <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
-    <value>Тип резултата {0} није подржан у колонама формула.</value>
+    <value>Тип резултата {0} није подржан у колонама са формулама.</value>
     
   </data>
   <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
     <value>Очекивани тип резултата за ову формулу је {0}, али је стварни тип резултата {1}. Није могуће променити тип резултата колоне формуле.</value>
+    
+  </data>
+  <data name="FormulaColumns_ColumnTypeNotSupported" xml:space="preserve">
+    <value>Колоне типа {0} нису подржане у колонама са формулама.</value>
+    
+  </data>
+  <data name="FormulaColumns_ColumnFormatNotSupported" xml:space="preserve">
+    <value>Колоне типа {0} са форматом {1} нису подржане у колонама са формулама.</value>
+    
+  </data>
+  <data name="FormulaColumns_FormulaTooLong" xml:space="preserve">
+    <value>Формуле не могу бити дуже од 1000 знакова.</value>
     
   </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
@@ -3802,7 +3957,6 @@
   </data>
   <data name="ErrorResource_ErrBadToken_LongMessage" xml:space="preserve">
     <value>На пример, знак „\“ се не очекује после броја, овако: „32\“. Очекује се размак („32 “) како би то био само број 32 или се очекује неки други број (на пример, „323“).</value>
-    
   </data>
   <data name="ErrorResource_ErrBadToken_HowToFix_1" xml:space="preserve">
     <value>Уклоните или замените неочекиване знакове.</value>
@@ -3818,11 +3972,9 @@
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_LongMessage" xml:space="preserve">
     <value>На пример, знак „\“ се не очекује после броја, овако: „32\“. Очекује се размак („32 “) како би то био само број 32 или се очекује неки други број (на пример, „323“).</value>
-    
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_HowToFix_1" xml:space="preserve">
     <value>Уклоните или замените неочекивани знак.</value>
-    
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_Link_1" xml:space="preserve">
     <value>Чланак: Референце формула за Power Apps</value>
@@ -3834,7 +3986,6 @@
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_LongMessage" xml:space="preserve">
     <value>Сваки блок-коментар мора да почиње са „/*“ и да се завршава са „*/“. Ако сваки блок-коментар не завршите исправно, сав кôд након коментара постаје део тог коментара. Ако коментар има само један ред, можете да га почнете знаком „//“ и не морате да идентификујете крај коментара.</value>
-    
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_HowToFix_1" xml:space="preserve">
     <value>Додајте „*/“ на крај коментара за блокирање или га промените у скуп " на крај ваш блокирање comment или промените у скуп линијских коментара.</value>
@@ -3850,7 +4001,6 @@
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_LongMessage" xml:space="preserve">
     <value>Ова грешка се јавља уколико, на пример, формула садржи „{{Val@ 7}}“ уместо „{{Val: 7}}“. Када подесите променљиву, синтакса захтева двотачку уместо симбола „@“.</value>
-    
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_HowToFix_1" xml:space="preserve">
     <value>Уклоните или замените неочекиване знакове очекиваним знаком.</value>
@@ -3861,12 +4011,11 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidName_ShortMessage" xml:space="preserve">
-    <value>Име није важеће. Овај идентификатор није препознат.</value>
+    <value>Име није важеће. „{0}“ није препознато.</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidName_LongMessage" xml:space="preserve">
     <value>Ова грешка се најчешће јавља кад формула упућује на нешто што више не постоји (на пример, на контролу коју сте избрисали).</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidName_HowToFix_1" xml:space="preserve">
     <value>Уклоните или исправите референцу на име које није важеће.</value>
@@ -3876,13 +4025,27 @@
     <value>Чланак: Референце формула за Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_ShortMessage" xml:space="preserve">
+    <value>Име није важеће. Овај идентификатор није препознат.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_LongMessage" xml:space="preserve">
+    <value>Ова грешка се најчешће јавља кад формула упућује на нешто што више не постоји (на пример, на контролу коју сте избрисали).</value>
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_HowToFix_1" xml:space="preserve">
+    <value>Уклоните или исправите референцу на име које није важеће.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_Link_1" xml:space="preserve">
+    <value>Чланак: Референце формула за Power Apps</value>
+    
+  </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_ShortMessage" xml:space="preserve">
     <value>Референца својства није важећа.</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_LongMessage" xml:space="preserve">
     <value>Ова грешка се појављује када формула упућује на својства понашања компонената са неважећом синтаксом. (На пример, Component.OnCustomChange уместо Component.OnCustomChange())</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_HowToFix_1" xml:space="preserve">
     <value>Користите исправну синтаксу при упућивању на својство понашања компонената. На пример, Component.OnCustomChange()</value>
@@ -3898,7 +4061,6 @@
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_LongMessage" xml:space="preserve">
     <value>Не можете да користите оператор „Parent“ са контролом која нема надређену контролу. Овај оператор упућује на контролу која хостује дату контролу и чини сва њена својства доступним.</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_HowToFix_1" xml:space="preserve">
     <value>Уклоните оператор „Надређени“.</value>
@@ -3914,7 +4076,6 @@
   </data>
   <data name="ErrorResource_ErrTooManyUps_LongMessage" xml:space="preserve">
     <value>Сложеност се повећава са сваким нивоом угнежђивања, тако да Power Apps подржава угнежђивање опсега редова само до 63 нивоа.</value>
-    
   </data>
   <data name="ErrorResource_ErrTooManyUps_HowToFix_1" xml:space="preserve">
     <value>Поново напишите формулу са мање нивоа угнежђивања.</value>
@@ -3926,7 +4087,6 @@
   </data>
   <data name="ErrorResource_ErrRuleNestedTooDeeply_LongMessage" xml:space="preserve">
     <value>Power Apps подржава угнежђивање израза само до 50 нивоа. Израз који се налази овако дубоко тешко је разумети и одржавати.</value>
-    
   </data>
   <data name="ErrorResource_ErrRuleNestedTooDeeply_HowToFix_1" xml:space="preserve">
     <value>Поново напишите формулу са мање нивоа угнежђивања.</value>
@@ -3938,7 +4098,6 @@
   </data>
   <data name="ErrorResource_ErrOperatorExpected_LongMessage" xml:space="preserve">
     <value>Оператори спајају два операнда. Ова грешка се јавља ако саставите две функције (операнда), а између њих не додате оператор, на пример, Len("mojtekst")Len("mojtekst").</value>
-    
   </data>
   <data name="ErrorResource_ErrOperatorExpected_HowToFix_1" xml:space="preserve">
     <value>Уредите формулу тако да садржи оператор између операнада.</value>
@@ -3954,7 +4113,6 @@
   </data>
   <data name="ErrorResource_ErrNumberExpected_LongMessage" xml:space="preserve">
     <value>Ова грешка се јавља ако користите функцију која захтева број, а ви, на пример, наведете слику.</value>
-    
   </data>
   <data name="ErrorResource_ErrNumberExpected_HowToFix_1" xml:space="preserve">
     <value>Уредите формулу тако да даје број као резултат у овом делу формуле.</value>
@@ -3970,7 +4128,6 @@
   </data>
   <data name="ErrorResource_ErrBooleanExpected_LongMessage" xml:space="preserve">
     <value>Булова вредност је позната и као вредност „тачно/нетачно“ у апликацијама као што је Microsoft Excel. Ова грешка се јавља ако користите функцију која тражи Булову вредност, а ви, на пример, наведете датум.</value>
-    
   </data>
   <data name="ErrorResource_ErrBooleanExpected_HowToFix_1" xml:space="preserve">
     <value>Уредите формулу тако да даје Булову вредност као резултат у овом делу формуле.</value>
@@ -3986,7 +4143,6 @@
   </data>
   <data name="ErrorResource_ErrColonExpected_LongMessage" xml:space="preserve">
     <value>Двотачка раздваја име поља, које се понекад назива име колоне, од вредности поља у запису (на пример, {Month:"1"}, {Month:"2"}…). Двотачка такође раздваја сате од минута и секунди (на пример, „3:04“).</value>
-    
   </data>
   <data name="ErrorResource_ErrColonExpected_HowToFix_1" xml:space="preserve">
     <value>Уредите формулу тако да садржи двотачку.</value>
@@ -4002,7 +4158,6 @@
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_LongMessage" xml:space="preserve">
     <value>Функције понашања мењају стање апликације тиме што мењају вредности другде у апликацији. „Navigate“, „Patch“, „UpdateContext“ и „Collect“ представљају уобичајене функције понашања. „OnSelect“, „OnVisible“ и друга „On…“ својства представљају уобичајена својства заснована на понашању.</value>
-    
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_HowToFix_1" xml:space="preserve">
     <value>Преместите функцију понашања у својство засновано на понашању.</value>
@@ -4018,7 +4173,6 @@
   </data>
   <data name="ErrorResource_ErrTestPropertyExpected_LongMessage" xml:space="preserve">
     <value>Функције за тестирање су оне које се могу користити за симулацију уноса корисника приликом тестирања апликација. „SetProperty“, „SelectRow“ и „Assert“ честе су функције за тестирање. Могу се користити само током тестирања.</value>
-    
   </data>
   <data name="ErrorResource_ErrTestPropertyExpected_HowToFix_1" xml:space="preserve">
     <value>Користите функцију у пробном случају, не у самој апликацији.</value>
@@ -4030,7 +4184,6 @@
   </data>
   <data name="ErrorResource_ErrCannotCoerce_SourceType_TargetType_LongMessage" xml:space="preserve">
     <value>Power Apps може да конвертује неке типове података из формуле у друге. На пример, може да конвертује „1“ (ниска) у 1 (број), али не може да конвертује све типове података у све друге типове података. На пример, не може да конвертује слику у број.</value>
-    
   </data>
   <data name="ErrorResource_ErrCannotCoerce_SourceType_TargetType_HowToFix_1" xml:space="preserve">
     <value>Уредите формулу тако да конвертујете дате податке у очекивани тип.</value>
@@ -4042,7 +4195,6 @@
   </data>
   <data name="ErrorResource_ErrStringExpected_LongMessage" xml:space="preserve">
     <value>Ова грешка се јавља ако користите функцију која захтева текстуални аргумент (или ниску), а ви, на пример, наведете датум.</value>
-    
   </data>
   <data name="ErrorResource_ErrStringExpected_HowToFix_1" xml:space="preserve">
     <value>Уредите формулу тако да даје текст као резултат у овом делу формуле.</value>
@@ -4058,7 +4210,6 @@
   </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_LongMessage" xml:space="preserve">
     <value>Ова грешка се јавља ако користите функцију која захтева текст или број, а ви, на пример, наведете Булову вредност (тачно/нетачно).</value>
-    
   </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_HowToFix_1" xml:space="preserve">
     <value>Уредите формулу тако да даје текст или број као резултат у овом делу формуле.</value>
@@ -4074,7 +4225,6 @@
   </data>
   <data name="ErrorResource_ErrClosingBracketExpected_LongMessage" xml:space="preserve">
     <value>Затворена заграда указује на крај записа (на пример, {Month:"1"}, {Month:"2"}…).</value>
-    
   </data>
   <data name="ErrorResource_ErrClosingBracketExpected_HowToFix_1" xml:space="preserve">
     <value>Уредите формулу тако да садржи заграду.</value>
@@ -4094,7 +4244,6 @@
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_LongMessage" xml:space="preserve">
     <value>Не можемо да проценимо формулу зато што вредности које се пореде у формули нису истог типа.</value>
-    
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_HowToFix_1" xml:space="preserve">
     <value>Можда ћете морати да конвертујете вредност у исти тип, као што је конвертовање ниске датума (нпр. „31.12.2018.“) у вредност датума.</value>
@@ -4174,7 +4323,6 @@
   </data>
   <data name="ErrorResource_ErrTypeError_LongMessage" xml:space="preserve">
     <value>Подаци се можда не подударају са очекиваним типом. (текст, број, датум, табела, запис.)</value>
-    
   </data>
   <data name="ErrorResource_ErrTypeError_HowToFix_1" xml:space="preserve">
     <value>Проверите типове вредности у формули и уверите се да се подударају.</value>
@@ -4194,7 +4342,6 @@
   </data>
   <data name="ErrorResource_ErrDateExpected_LongMessage" xml:space="preserve">
     <value>Ова грешка се јавља ако користите функцију која захтева датум, а ви, на пример, наведете текст.</value>
-    
   </data>
   <data name="ErrorResource_ErrDateExpected_HowToFix_1" xml:space="preserve">
     <value>Уредите формулу тако да даје датум као резултат у овом делу формуле.</value>
@@ -4210,7 +4357,6 @@
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_LongMessage" xml:space="preserve">
     <value>Извор података можда неће моћи да обради формулу и можда ће вратити непотпун скуп података. Апликација можда неће вратити исправне резултате или се можда неће исправно понашати ако је скуп података непотпун.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_HowToFix_1" xml:space="preserve">
     <value>Ако ваш скуп података премашује ограничење од 500 записа, али их садржи мање од 2000, пробајте да промените ограничење.</value>
@@ -4238,7 +4384,6 @@
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_LongMessage" xml:space="preserve">
     <value>Извор података можда неће моћи да обради формулу и можда ће вратити непотпун скуп података. Апликација можда неће вратити исправне резултате или се можда неће исправно понашати ако је скуп података непотпун.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_HowToFix_1" xml:space="preserve">
     <value>Ако ваш скуп података премашује ограничење од 500 записа, али их садржи мање од 2000, пробајте да промените ограничење.</value>
@@ -4266,7 +4411,6 @@
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_LongMessage" xml:space="preserve">
     <value> Десна страна оператора „in“ треба да буде име колоне из одговарајућег извора података. Извор података можда неће моћи да обради формулу и можда ће вратити непотпун скуп података. Апликација можда неће вратити исправне резултате или се можда неће исправно понашати ако је скуп података непотпун.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_1" xml:space="preserve">
     <value>Промените ставку са десне стране оператора „in“ тако да буде колона из одговарајућег извора података.</value>
@@ -4299,7 +4443,6 @@
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_LongMessage" xml:space="preserve">
     <value> Десна страна оператора „in“ није колона из одговарајућег извора података. Извор података можда неће моћи да обради формулу и можда ће вратити непотпун скуп података. Апликација можда неће вратити исправне резултате или се можда неће исправно понашати ако је скуп података непотпун.
       </value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_1" xml:space="preserve">
     <value>Промените ставку са десне стране оператора „in“ тако да буде колона из одговарајућег извора података.</value>
@@ -4380,6 +4523,22 @@
   </data>
   <data name="ErrorResource_ErrInvalidControlReference_Link_1" xml:space="preserve">
     <value>Референца: ConfirmExit за апликације са подлогом</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidStringInterpolation_ShortMessage" xml:space="preserve">
+    <value>Изрази који се појављују унутар интерполиране ниске морају да имају текстуалну вредност или компатибилан тип вредности.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidStringInterpolation_HowToFix_1" xml:space="preserve">
+    <value>Проверите типове израза унутар интерполиране ниске.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrEmptyIsland_ShortMessage" xml:space="preserve">
+    <value>Празни изрази не смеју да се појављују унутар интерполиране ниске.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrEmptyIsland_HowToFix_1" xml:space="preserve">
+    <value>Проверите да ли има празних израза унутар интерполиране ниске.</value>
     
   </data>
   <data name="ErrorResource_ErrAsNotInContext_ShortMessage" xml:space="preserve">

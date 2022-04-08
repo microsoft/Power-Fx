@@ -9,6 +9,7 @@ using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Core.Functions.FunctionArgValidators
 {
+    [ThreadSafeImmutable]
     internal sealed class EntityArgNodeValidator : IArgValidator<IExpandInfo>
     {
         public bool TryGetValidValue(TexlNode argNode, TexlBinding binding, out IExpandInfo entityInfo)

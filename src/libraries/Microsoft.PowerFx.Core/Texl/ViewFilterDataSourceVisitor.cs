@@ -98,10 +98,6 @@ namespace Microsoft.PowerFx.Core.Texl
         {
         }
 
-        public override void Visit(ReplaceableNode node)
-        {
-        }
-
         public override void Visit(StrLitNode node)
         {
         }

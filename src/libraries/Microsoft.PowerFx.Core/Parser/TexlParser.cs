@@ -25,14 +25,8 @@ namespace Microsoft.PowerFx.Core.Parser
             // When specified, expression chaining is allowed (e.g. in the context of behavior rules).
             EnableExpressionChaining = 1 << 0,
 
-            // When specified, replaceable expressions are allowed (e.g. wrapped with '##' or '%').
-            AllowReplaceableExpressions = 1 << 1,
-
-            // All parsing capabilities enabled.
-            All = EnableExpressionChaining | AllowReplaceableExpressions,
-
             // When specified, this is a named formula to be parsed. Mutually exclusive to EnableExpressionChaining.
-            NamedFormulas = 1 << 2
+            NamedFormulas = 1 << 1
         }
 
         private readonly TokenCursor _curs;
@@ -149,7 +143,7 @@ namespace Microsoft.PowerFx.Core.Parser
             Contracts.AssertValue(script);
             Contracts.AssertValueOrNull(loc);
 
-            var lexerFlags = flags.HasFlag(Flags.AllowReplaceableExpressions) ? TexlLexer.Flags.AllowReplaceableTokens : TexlLexer.Flags.None;
+            var lexerFlags = TexlLexer.Flags.None;
 
             if (loc == null)
             {
@@ -711,10 +705,6 @@ namespace Microsoft.PowerFx.Core.Parser
                 case TokKind.Self:
                     return new SelfNode(ref _idNext, _curs.TokMove());
 
-                // Replaceable expression.
-                case TokKind.ReplaceableLit:
-                    return ParseReplaceableExpr();
-
                 case TokKind.Eof:
                     return CreateError(_curs.TokCur, TexlStrings.ErrOperandExpected);
 
@@ -831,10 +821,6 @@ namespace Microsoft.PowerFx.Core.Parser
                     PostError(tok, TexlStrings.ErrEmptyInvalidIdentifier);
                 }
             }
-            else if (_curs.TidCur == TokKind.ReplaceableLit)
-            {
-                tok = new IdentToken(_curs.TokMove().As<ReplaceableToken>());
-            }
             else
             {
                 ErrorTid(_curs.TokCur, TokKind.Ident);
@@ -872,15 +858,13 @@ namespace Microsoft.PowerFx.Core.Parser
             {
                 if (_curs.TidCur == TokKind.IslandStart)
                 {
-                    if (i != 0)
+                    var islandStart = _curs.TokMove();
+                    sourceList.Add(new TokenSource(islandStart));
+                    sourceList.Add(ParseTrivia());
+
+                    if (_curs.TidCur == TokKind.IslandEnd)
                     {
-                        var islandStart = _curs.TokMove();
-                        sourceList.Add(new TokenSource(islandStart));
-                        sourceList.Add(ParseTrivia());
-                    }
-                    else
-                    {
-                        _curs.TokMove();
+                        arguments.Add(CreateError(_curs.TokCur, TexlStrings.ErrEmptyIsland));
                     }
                 }
                 else if (_curs.TidCur == TokKind.IslandEnd)
@@ -1314,22 +1298,6 @@ namespace Microsoft.PowerFx.Core.Parser
 
             node.Parser_SetSourceList(new SourceList(new SpreadSource(sources)));
             return node;
-        }
-
-        private TexlNode ParseReplaceableExpr()
-        {
-            Contracts.Assert(_curs.TidCur == TokKind.ReplaceableLit);
-
-            var tok = _curs.TokMove().As<ReplaceableToken>();
-            Contracts.AssertValue(tok);
-
-            if (tok.Value.StartsWith(TexlLexer.LocalizedTokenDelimiterStr, StringComparison.OrdinalIgnoreCase) ||
-                tok.Value.StartsWith(TexlLexer.ContextDependentTokenDelimiterStr, StringComparison.OrdinalIgnoreCase))
-            {
-                return new ReplaceableNode(ref _idNext, tok);
-            }
-
-            return CreateError(tok, TexlStrings.ErrBadToken);
         }
 
         private ErrorNode CreateError(Token tok, ErrorResourceKey errKey, object[] args)

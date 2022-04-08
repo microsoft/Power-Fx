@@ -1,5 +1,64 @@
 ﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
@@ -426,6 +485,17 @@
   <data name="AboutValue_language" xml:space="preserve">
     <value>โค้ดภาษาที่จะใช้ขณะแปลงเป็นค่า</value>
     
+  </data>
+  <data name="AboutBoolean" xml:space="preserve">
+    <value>แปลง 'ข้อความ' ที่แสดงบูลีนเป็นค่าแบบบูลีน</value>
+    
+  </data>
+  <data name="BooleanArg1" xml:space="preserve">
+    <value>ข้อความ</value>
+    
+  </data>
+  <data name="AboutBoolean_text" xml:space="preserve">
+    <value>ค่าข้อความที่จะแปลงเป็นค่าแบบบูลีน</value>
   </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>ส่งคืนอาร์กิวเมนต์แรกที่ไม่ได้เว้นว่าง</value>
@@ -1368,6 +1438,10 @@
     <value>นิพจน์</value>
     
   </data>
+  <data name="AboutIsBlankOrError_expression" xml:space="preserve">
+    <value>นิพจน์ที่จะทดสอบ</value>
+    
+  </data>
   <data name="AboutIsEmpty" xml:space="preserve">
     <value>ตรวจสอบว่าคอลเลกชันว่างเปล่าหรือไม่ และคืนค่า true หรือ false</value>
     
@@ -1375,6 +1449,9 @@
   <data name="IsEmptyArg1" xml:space="preserve">
     <value>แหล่งที่มา</value>
     
+  </data>
+  <data name="AboutIsEmpty_source" xml:space="preserve">
+    <value>ตารางที่จะทดสอบ</value>
   </data>
   <data name="AboutShuffle" xml:space="preserve">
     <value>ส่งคืนสำเนาที่สลับแบบสุ่มของตารางอินพุต 'source'</value>
@@ -1553,7 +1630,11 @@
     
   </data>
   <data name="ErrUnknownFunction" xml:space="preserve">
-    <value>การขอร้องจากฟังก์ชันที่ไม่รู้จักหรือไม่รองรับ</value>
+    <value>'{0}' เป็นฟังก์ชันที่ไม่รู้จักหรือไม่ได้รับการสนับสนุน</value>
+    
+  </data>
+  <data name="ErrUnknownNamespaceFunction" xml:space="preserve">
+    <value>'{0}' เป็นฟังก์ชันที่ไม่รู้จักหรือไม่ได้รับการสนับสนุนใน namespace '{1}'</value>
     
   </data>
   <data name="ErrUnSupportedComponentBehaviorInvocation" xml:space="preserve">
@@ -1845,8 +1926,40 @@
   <data name="AboutTime_millisecond" xml:space="preserve">
     <value>คอมโพเนนต์มิลลิวินาที</value>
   </data>
+  <data name="AboutDateTime" xml:space="preserve">
+    <value>สร้างค่าที่บ่งบอกช่วงของเวลา โดยแสดงเป็นวันที่และเวลาในช่วงวัน</value>
+    
+  </data>
+  <data name="AboutDateTime_year" xml:space="preserve">
+    <value>ปี</value>
+    
+  </data>
+  <data name="AboutDateTime_month" xml:space="preserve">
+    <value>เดือน</value>
+    
+  </data>
+  <data name="AboutDateTime_day" xml:space="preserve">
+    <value>วัน</value>
+    
+  </data>
+  <data name="AboutDateTime_hour" xml:space="preserve">
+    <value>ชั่วโมง</value>
+    
+  </data>
+  <data name="AboutDateTime_minute" xml:space="preserve">
+    <value>นาที</value>
+    
+  </data>
+  <data name="AboutDateTime_second" xml:space="preserve">
+    <value>วินาที</value>
+    
+  </data>
+  <data name="AboutDateTime_millisecond" xml:space="preserve">
+    <value>มิลลิวินาที</value>
+    
+  </data>
   <data name="AboutYear" xml:space="preserve">
-    <value>ปี ส่งกลับปีของวันที่ที่ระบุ เป็นตัวเลขที่มากกว่า 1900</value>
+    <value>ปี ส่งกลับปีของวันที่ที่ระบุ</value>
     
   </data>
   <data name="YearArg1" xml:space="preserve">
@@ -2260,6 +2373,36 @@
   </data>
   <data name="AboutChar_column_of_numbers" xml:space="preserve">
     <value>คอลัมน์ของรหัสตัวเลขจากชุดอักขระบนแพลตฟอร์มของคุณ</value>
+  </data>
+  <data name="AboutParseJSON" xml:space="preserve">
+    <value>แปลงสตริง JSON ให้เป็นออบเจ็กต์</value>
+    
+  </data>
+  <data name="ParseJSONArg1" xml:space="preserve">
+    <value>ข้อมูลป้อนเข้า</value>
+    
+  </data>
+  <data name="AboutParseJSON_input" xml:space="preserve">
+    <value>สตริง JSON ที่จะประมวลผล</value>
+  </data>
+  <data name="AboutIndex" xml:space="preserve">
+    <value>ส่งกลับเรกคอร์ดในตารางตามดัชนีที่กำหนด</value>
+    
+  </data>
+  <data name="IndexArg1" xml:space="preserve">
+    <value>ตาราง</value>
+    
+  </data>
+  <data name="IndexArg2" xml:space="preserve">
+    <value>ดัชนี</value>
+    
+  </data>
+  <data name="AboutIndex_table" xml:space="preserve">
+    <value>ตาราง</value>
+  </data>
+  <data name="AboutIndex_index" xml:space="preserve">
+    <value>ดัชนีของเรกคอร์ดที่จะเรียก</value>
+    
   </data>
   <data name="Screen_Name_DisplayName" xml:space="preserve">
     <value>ชื่อ</value>
@@ -3781,11 +3924,23 @@
     
   </data>
   <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
-    <value>ชนิดผลลัพธ์นี้ {0} ไม่ได้รับการสนับสนุนในคอลัมน์สูตร</value>
+    <value>ชนิดผลลัพธ์ {0} ไม่ได้รับการสนับสนุนในคอลัมน์สูตร</value>
     
   </data>
   <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
     <value>คาดว่าชนิดผลลัพธ์สำหรับสูตรนี้จะเป็น {0} แต่ชนิดผลลัพธ์จริงเป็น {1} ชนิดผลลัพธ์ของคอลัมน์สูตรไม่สามารถเปลี่ยนแปลงได้</value>
+    
+  </data>
+  <data name="FormulaColumns_ColumnTypeNotSupported" xml:space="preserve">
+    <value>คอลัมน์ชนิด {0} ไม่ได้รับการสนับสนุนในคอลัมน์สูตร</value>
+    
+  </data>
+  <data name="FormulaColumns_ColumnFormatNotSupported" xml:space="preserve">
+    <value>คอลัมน์ชนิด {0} ที่มีรูปแบบ {1} ไม่ได้รับการสนับสนุนในคอลัมน์สูตร</value>
+    
+  </data>
+  <data name="FormulaColumns_FormulaTooLong" xml:space="preserve">
+    <value>สูตรต้องมีความยาวไม่เกิน 1000 อักขระ</value>
     
   </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
@@ -3802,7 +3957,6 @@
   </data>
   <data name="ErrorResource_ErrBadToken_LongMessage" xml:space="preserve">
     <value>ตัวอย่างเช่น อักขระ '\' ไม่ใช่อักขระที่ต้องการให้อยู่หลังตัวเลขอย่าง '32\' พื้นที่ว่าง ('32 ') คืออักขระที่ต้องการเพื่อให้มีเพียงตัวเลข 32 หรือตัวเลขอื่น (เช่น '323') จึงจะถูกต้อง</value>
-    
   </data>
   <data name="ErrorResource_ErrBadToken_HowToFix_1" xml:space="preserve">
     <value>ลบหรือแทนที่อักขระที่ไม่คาดคิด</value>
@@ -3818,11 +3972,9 @@
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_LongMessage" xml:space="preserve">
     <value>ตัวอย่างเช่น อักขระ '\' ไม่ใช่อักขระที่ต้องการให้อยู่หลังตัวเลขอย่าง '32\' พื้นที่ว่าง ('32 ') คืออักขระที่ต้องการเพื่อให้มีเพียงตัวเลข 32 หรือตัวเลขอื่น (เช่น '323') จึงจะถูกต้อง</value>
-    
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_HowToFix_1" xml:space="preserve">
     <value>เอาออกหรือแทนอักขระที่ไม่ควรมี</value>
-    
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_Link_1" xml:space="preserve">
     <value>บทความ: การอ้างอิงสูตรสำหรับ Power Apps</value>
@@ -3834,7 +3986,6 @@
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_LongMessage" xml:space="preserve">
     <value>แต่ละข้อคิดเห็นแบบบล็อกต้องเริ่มต้นด้วย '/*' และลงท้ายด้วย '*/' ถ้าคุณไม่ได้ลงท้ายแต่ละข้อคิดเห็นแบบบล็อกอย่างเหมาะสม โค้ดทั้งหมดที่อยู่หลังข้อคิดเห็นจะกลายเป็นส่วนหนึ่งของข้อคิดเห็น ถ้าข้อคิดเห็นมีเพียงบรรทัดเดียว คุณสามารถเริ่มต้นด้วย '//' และไม่ต้องระบุจุดสิ้นสุดของข้อคิดเห็น</value>
-    
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_HowToFix_1" xml:space="preserve">
     <value>เพิ่ม '*/' ไปยังจุดสิ้นสุดของข้อคิดเห็นแบบบล็อกของคุณ หรือเปลี่ยนเป็นชุดของข้อคิดเห็นแบบบรรทัด</value>
@@ -3850,7 +4001,6 @@
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_LongMessage" xml:space="preserve">
     <value>ข้อผิดพลาดนี้เกิดขึ้นได้ในบางกรณี ตัวอย่างเช่น สูตรมี "{{Val@ 7}}" แทนที่จะเป็น "{{Val: 7}}" เมื่อคุณตั้งค่าตัวแปร ไวยากรณ์จะต้องมีเครื่องหมายจุดคู่ แทนที่จะเป็นสัญลักษณ์ "at"</value>
-    
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_HowToFix_1" xml:space="preserve">
     <value>ลบหรือแทนที่อักขระที่ไม่คาดคิดด้วยอักขระที่ต้องการ</value>
@@ -3861,12 +4011,11 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidName_ShortMessage" xml:space="preserve">
-    <value>ชื่อไม่ถูกต้อง ไม่รู้จักตัวกรองนี้</value>
+    <value>ชื่อไม่ถูกต้อง ไม่รู้จัก '{0}'</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidName_LongMessage" xml:space="preserve">
     <value>ข้อผิดพลาดนี้ปรากฏให้เห็นบ่อยที่สุดเมื่อสูตรอ้างอิงไปยังสิ่งที่ไม่มีอยู่อีกต่อไป (เช่น การควบคุมที่คุณได้ลบไปแล้ว)</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidName_HowToFix_1" xml:space="preserve">
     <value>ลบหรือแก้ไขการอ้างอิงถึงชื่อที่ไม่ถูกต้อง</value>
@@ -3876,13 +4025,27 @@
     <value>บทความ: การอ้างอิงสูตรสำหรับ Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_ShortMessage" xml:space="preserve">
+    <value>ชื่อไม่ถูกต้อง ไม่รู้จักตัวระบุนี้</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_LongMessage" xml:space="preserve">
+    <value>ข้อผิดพลาดนี้ปรากฏให้เห็นบ่อยที่สุดเมื่อสูตรอ้างอิงไปยังสิ่งที่ไม่มีอยู่อีกต่อไป (เช่น การควบคุมที่คุณได้ลบไปแล้ว)</value>
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_HowToFix_1" xml:space="preserve">
+    <value>ลบหรือแก้ไขการอ้างอิงถึงชื่อที่ไม่ถูกต้อง</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_Link_1" xml:space="preserve">
+    <value>บทความ: การอ้างอิงสูตรสำหรับ Power Apps</value>
+    
+  </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_ShortMessage" xml:space="preserve">
     <value>การอ้างอิงคุณสมบัติไม่ถูกต้อง</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_LongMessage" xml:space="preserve">
     <value>ข้อผิดพลาดนี้ปรากฏขึ้นเมื่อสูตรอ้างถึงคุณสมบัติลักษณะการทำงานของคอมโพเนนต์ที่มีไวยากรณ์ไม่ถูกต้อง (ตัวอย่างเช่น Component.OnCustomChange แทนที่จะเป็น Component.OnCustomChange())</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_HowToFix_1" xml:space="preserve">
     <value>ใช้ไวยากรณ์ที่ถูกต้องเพื่ออ้างถึงคุณสมบัติลักษณะการทำงานของคอมโพเนนต์ ตัวอย่างเช่น Component.OnCustomChange()</value>
@@ -3898,7 +4061,6 @@
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_LongMessage" xml:space="preserve">
     <value>คุณไม่สามารถใช้ตัวดำเนินการหลักกับการควบคุมที่ไม่มีการควบคุมหลักได้ ตัวดำเนินการนี้อ้างอิงถึงการควบคุมที่โฮสต์การควบคุมที่ให้ไว้ และทำให้คุณสมบัติทั้งหมดพร้อมใช้งาน</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_HowToFix_1" xml:space="preserve">
     <value>ลบตัวดำเนินการ 'หลัก' ออก</value>
@@ -3914,7 +4076,6 @@
   </data>
   <data name="ErrorResource_ErrTooManyUps_LongMessage" xml:space="preserve">
     <value>ความซับซ้อนจะเพิ่มขึ้นในแต่ละระดับการซ้อน ดังนั้น Power Apps จึงสนับสนุนการซ้อนขอบเขตแถวได้ 63 ระดับเท่านั้น</value>
-    
   </data>
   <data name="ErrorResource_ErrTooManyUps_HowToFix_1" xml:space="preserve">
     <value>เขียนสูตรใหม่ด้วยระดับการซ้อนที่น้อยลง</value>
@@ -3926,7 +4087,6 @@
   </data>
   <data name="ErrorResource_ErrRuleNestedTooDeeply_LongMessage" xml:space="preserve">
     <value>Power Apps สนับสนุนการซ้อนนิพจน์ได้ 50 ระดับเท่านั้น นิพจน์ที่ซ้อนกันลึกนี้จะยากต่อการทำความเข้าใจและดูแล</value>
-    
   </data>
   <data name="ErrorResource_ErrRuleNestedTooDeeply_HowToFix_1" xml:space="preserve">
     <value>เขียนสูตรใหม่ด้วยระดับการซ้อนที่น้อยลง</value>
@@ -3938,7 +4098,6 @@
   </data>
   <data name="ErrorResource_ErrOperatorExpected_LongMessage" xml:space="preserve">
     <value>ตัวดำเนินการจะรวมสองตัวถูกดำเนินการเข้าด้วยกัน ข้อผิดพลาดนี้จะเกิดขึ้นถ้าคุณวางสองฟังก์ชัน (ตัวถูกดำเนินการ) เข้าด้วยกันโดยไม่มีตัวดำเนินการระหว่างตัวถูกดำเนินการทั้งสอง ตัวอย่างเช่น Len("mytext")Len("mytext")</value>
-    
   </data>
   <data name="ErrorResource_ErrOperatorExpected_HowToFix_1" xml:space="preserve">
     <value>แก้ไขสูตรของคุณเพื่อให้มีตัวดำเนินการระหว่างตัวถูกดำเนินการ</value>
@@ -3954,7 +4113,6 @@
   </data>
   <data name="ErrorResource_ErrNumberExpected_LongMessage" xml:space="preserve">
     <value>ข้อผิดพลาดนี้จะเกิดขึ้นถ้าคุณใช้ฟังก์ชันที่ต้องการตัวเลขแต่คุณใส่ค่า เช่น รูปภาพแทน</value>
-    
   </data>
   <data name="ErrorResource_ErrNumberExpected_HowToFix_1" xml:space="preserve">
     <value>แก้ไขสูตรของคุณเพื่อให้ประเมินเป็นตัวเลขที่จุดนี้ในสูตร</value>
@@ -3970,7 +4128,6 @@
   </data>
   <data name="ErrorResource_ErrBooleanExpected_LongMessage" xml:space="preserve">
     <value>บูลีนยังเป็นที่รู้จักกันในนามค่า จริง/เท็จ ในแอปพลิเคชัน เช่น Microsoft Excel ข้อผิดพลาดนี้จะเกิดขึ้นถ้าคุณใช้ฟังก์ชันที่ต้องการบูลีนแต่คุณใส่ค่า เช่น วันที่ แทน</value>
-    
   </data>
   <data name="ErrorResource_ErrBooleanExpected_HowToFix_1" xml:space="preserve">
     <value>แก้ไขสูตรของคุณเพื่อให้ประเมินเป็นบูลีนที่จุดนี้ในสูตร</value>
@@ -3986,7 +4143,6 @@
   </data>
   <data name="ErrorResource_ErrColonExpected_LongMessage" xml:space="preserve">
     <value>ทวิภาคจะแยกชื่อเขตข้อมูลหรือที่เรียกว่าชื่อคอลัมน์ จากค่าเขตข้อมูลในระเบียน (ตัวอย่างเช่น {Month:"1"}, {Month:"2"} …) ทวิภาคยังแยกชั่วโมงออกจากนาทีและวินาที (ตัวอย่างเช่น "3:04")</value>
-    
   </data>
   <data name="ErrorResource_ErrColonExpected_HowToFix_1" xml:space="preserve">
     <value>แก้ไขสูตรของคุณเพื่อให้มีเครื่องหมายจุดคู่</value>
@@ -4002,7 +4158,6 @@
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_LongMessage" xml:space="preserve">
     <value>ฟังก์ชันลักษณะการทำงานจะเปลี่ยนสถานะของแอปโดยการเปลี่ยนค่าส่วนอื่นในแอป 'Navigate', 'Patch', 'UpdateContext' และ 'Collect' คือฟังก์ชันลักษณะการทำงานทั่วไป 'OnSelect', 'OnVisible' และคุณสมบัติอื่นๆ ที่ขึ้นต้นด้วย 'On …' คือคุณสมบัติตามลักษณะการทำงานทั่วไป</value>
-    
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_HowToFix_1" xml:space="preserve">
     <value>ย้ายฟังก์ชันลักษณะการทำงานไปยังคุณสมบัติตามลักษณะการทำงาน</value>
@@ -4018,7 +4173,6 @@
   </data>
   <data name="ErrorResource_ErrTestPropertyExpected_LongMessage" xml:space="preserve">
     <value>ฟังก์ชันการทดสอบเป็นฟังก์ชันที่สามารถใช้เพื่อจำลองข้อมูลป้อนเข้าของผู้ใช้เมื่อทดสอบแอป "SetProperty", "SelectRow" และ "Assert" เป็นฟังก์ชันการทดสอบทั่วไป โดยสามารถใช้ได้เฉพาะในกรณีทดสอบเท่านั้น</value>
-    
   </data>
   <data name="ErrorResource_ErrTestPropertyExpected_HowToFix_1" xml:space="preserve">
     <value>ใช้ฟังก์ชันในกรณีทดสอบ ไม่ใช่ในแอป</value>
@@ -4030,7 +4184,6 @@
   </data>
   <data name="ErrorResource_ErrCannotCoerce_SourceType_TargetType_LongMessage" xml:space="preserve">
     <value>Power Apps สามารถแปลงข้อมูลบางชนิดในสูตรของคุณให้เป็นชนิดอื่นได้ ตัวอย่างเช่น สามารถแปลง "1" (สตริง) เป็น 1 (ตัวเลข) ได้ แต่จะไม่สามารถแปลงข้อมูลทุกชนิดให้เป็นชนิดข้อมูลอื่นทุกชนิดได้ ตัวอย่างเช่น ไม่สามารถแปลงรูปเป็นตัวเลขได้</value>
-    
   </data>
   <data name="ErrorResource_ErrCannotCoerce_SourceType_TargetType_HowToFix_1" xml:space="preserve">
     <value>แก้ไขสูตรของคุณเพื่อให้คุณแปลงข้อมูลที่มีปัญหาให้เป็นชนิดที่คาดไว้</value>
@@ -4042,7 +4195,6 @@
   </data>
   <data name="ErrorResource_ErrStringExpected_LongMessage" xml:space="preserve">
     <value>ข้อผิดพลาดนี้จะเกิดขึ้นถ้าคุณใช้ฟังก์ชันที่ต้องการอาร์กิวเมนต์ข้อความ (หรือสตริง) และคุณใส่ค่า เช่น วันที่ แทน</value>
-    
   </data>
   <data name="ErrorResource_ErrStringExpected_HowToFix_1" xml:space="preserve">
     <value>แก้ไขสูตรของคุณเพื่อให้ประเมินเป็นข้อความที่จุดนี้ในสูตร</value>
@@ -4058,7 +4210,6 @@
   </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_LongMessage" xml:space="preserve">
     <value>ข้อผิดพลาดนี้จะเกิดขึ้นถ้าคุณใช้ฟังก์ชันที่ต้องการข้อความหรือตัวเลขแต่คุณใส่ค่า เช่น ค่าบูลีน (จริง/เท็จ) แทน</value>
-    
   </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_HowToFix_1" xml:space="preserve">
     <value>แก้ไขสูตรของคุณเพื่อให้ประเมินเป็นข้อความหรือตัวเลขที่จุดนี้ในสูตร</value>
@@ -4074,7 +4225,6 @@
   </data>
   <data name="ErrorResource_ErrClosingBracketExpected_LongMessage" xml:space="preserve">
     <value>วงเล็บเหลี่ยมปิดจะระบุจุดสิ้นสุดของระเบียน (ตัวอย่างเช่น {Month:"1"}, {Month:"2"} …)</value>
-    
   </data>
   <data name="ErrorResource_ErrClosingBracketExpected_HowToFix_1" xml:space="preserve">
     <value>แก้ไขสูตรของคุณเพื่อให้มีเครื่องหมายวงเล็บเหลี่ยม</value>
@@ -4094,7 +4244,6 @@
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_LongMessage" xml:space="preserve">
     <value>เราไม่สามารถประเมินสูตรของคุณได้เนื่องจากจำนวนที่เปรียบเทียบในสูตรไม่ได้เป็นข้อมูลชนิดเดียวกัน</value>
-    
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_HowToFix_1" xml:space="preserve">
     <value>คุณอาจต้องการแปลงค่าเป็นชนิดเดียวกัน เช่น การแปลงเป็นสตริงวันที่ (เช่น "12/31/2018") เป็นค่าวันที่</value>
@@ -4174,7 +4323,6 @@
   </data>
   <data name="ErrorResource_ErrTypeError_LongMessage" xml:space="preserve">
     <value>ข้อมูลอาจไม่ตรงกับชนิดที่คาดไว้ (ข้อความ ตัวเลข วันที่ ตาราง ระเบียน)</value>
-    
   </data>
   <data name="ErrorResource_ErrTypeError_HowToFix_1" xml:space="preserve">
     <value>ตรวจสอบชนิดของค่าที่เกี่ยวข้องในสูตร และทำให้แน่ใจว่ามีชนิดตรงกัน</value>
@@ -4194,7 +4342,6 @@
   </data>
   <data name="ErrorResource_ErrDateExpected_LongMessage" xml:space="preserve">
     <value>ข้อผิดพลาดนี้จะเกิดขึ้นถ้าคุณใช้ฟังก์ชันที่ต้องการวันที่แต่คุณใส่ค่า เช่น ข้อความแทน</value>
-    
   </data>
   <data name="ErrorResource_ErrDateExpected_HowToFix_1" xml:space="preserve">
     <value>แก้ไขสูตรของคุณเพื่อให้ประเมินเป็นวันที่ที่จุดนี้ในสูตร</value>
@@ -4210,7 +4357,6 @@
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_LongMessage" xml:space="preserve">
     <value>แหล่งข้อมูลอาจไม่สามารถประมวลผลสูตรและอาจส่งชุดข้อมูลที่ไม่สมบูรณ์กลับมา แอปพลิเคชันของคุณอาจไม่ส่งผลลัพธ์ที่ถูกต้องกลับมาหรือทำงานได้อย่างถูกต้องหากชุดข้อมูลไม่สมบูรณ์</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_HowToFix_1" xml:space="preserve">
     <value>หากชุดข้อมูลของคุณเกินขีดจำกัด 500 ระเบียนแต่มีระเบียนน้อยกว่า 2,000 ระเบียน ลองตั้งค่าขีดจำกัดใหม่</value>
@@ -4238,7 +4384,6 @@
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_LongMessage" xml:space="preserve">
     <value>แหล่งข้อมูลอาจไม่สามารถประมวลผลสูตรและอาจส่งชุดข้อมูลที่ไม่สมบูรณ์กลับมา แอปพลิเคชันของคุณอาจไม่ส่งผลลัพธ์ที่ถูกต้องกลับมาหรือทำงานได้อย่างถูกต้องหากชุดข้อมูลไม่สมบูรณ์</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_HowToFix_1" xml:space="preserve">
     <value>หากชุดข้อมูลของคุณเกินขีดจำกัด 500 ระเบียนแต่มีระเบียนน้อยกว่า 2,000 ระเบียน ลองตั้งค่าขีดจำกัดใหม่</value>
@@ -4266,7 +4411,6 @@
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_LongMessage" xml:space="preserve">
     <value> ด้านขวาของตัวดำเนินการ "in" ควรเป็นชื่อคอลัมน์จากแหล่งข้อมูลที่ถูกต้อง แหล่งข้อมูลอาจไม่สามารถประมวลผลสูตรและอาจส่งกลับชุดข้อมูลที่ไม่สมบูรณ์ แอปพลิเคชันของคุณอาจไม่ส่งผลลัพธ์ที่ถูกต้องกลับมาหรือทำงานอย่างถูกต้องถ้าชุดข้อมูลไม่สมบูรณ์</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_1" xml:space="preserve">
     <value>เปลี่ยนแปลงรายการไปทางด้านขวาของตัวดำเนินการ "ใน" ให้เป็นคอลัมน์จากแหล่งข้อมูลที่ถูกต้อง</value>
@@ -4299,7 +4443,6 @@
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_LongMessage" xml:space="preserve">
     <value> ด้านขวาของตัวดำเนินการ "in" ไม่ใช่คอลัมน์จากแหล่งข้อมูลที่ถูกต้อง แหล่งข้อมูลอาจไม่สามารถประมวลผลสูตรและอาจส่งกลับชุดข้อมูลที่ไม่สมบูรณ์ แอปพลิเคชันของคุณอาจไม่ส่งกลับผลลัพธ์ที่ถูกต้องหรือไม่ทำงานอย่างถูกต้องหากชุดข้อมูลไม่สมบูรณ์
       </value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_1" xml:space="preserve">
     <value>เปลี่ยนแปลงรายการไปทางด้านขวาของตัวดำเนินการ "ใน" ให้เป็นคอลัมน์จากแหล่งข้อมูลที่ถูกต้อง</value>
@@ -4380,6 +4523,22 @@
   </data>
   <data name="ErrorResource_ErrInvalidControlReference_Link_1" xml:space="preserve">
     <value>อ้างอิง: ConfirmExit สำหรับแอปพื้นที่ทำงาน</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidStringInterpolation_ShortMessage" xml:space="preserve">
+    <value>นิพจน์ที่ปรากฏภายในสตริงที่แทรกตัวแปรต้องประเมินเป็นค่าข้อความหรือเป็นชนิดที่เข้ากันได้</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidStringInterpolation_HowToFix_1" xml:space="preserve">
+    <value>ตรวจสอบชนิดของนิพจน์ภายในสตริงที่แทรกตัวแปร</value>
+    
+  </data>
+  <data name="ErrorResource_ErrEmptyIsland_ShortMessage" xml:space="preserve">
+    <value>นิพจน์ว่างไม่สามารถปรากฏภายในสตริงที่แทรกตัวแปรได้</value>
+    
+  </data>
+  <data name="ErrorResource_ErrEmptyIsland_HowToFix_1" xml:space="preserve">
+    <value>ตรวจสอบนิพจน์ว่างภายในสตริงที่แทรกตัวแปร</value>
     
   </data>
   <data name="ErrorResource_ErrAsNotInContext_ShortMessage" xml:space="preserve">

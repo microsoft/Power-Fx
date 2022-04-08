@@ -1,5 +1,64 @@
 ﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
@@ -426,6 +485,17 @@
   <data name="AboutValue_language" xml:space="preserve">
     <value>Balioa bihurtzean erabiliko den hizkuntza-kodea.</value>
     
+  </data>
+  <data name="AboutBoolean" xml:space="preserve">
+    <value>Boolear bat adierazten duen "testua" balio boolear bihurtzen du.</value>
+    
+  </data>
+  <data name="BooleanArg1" xml:space="preserve">
+    <value>testua</value>
+    
+  </data>
+  <data name="AboutBoolean_text" xml:space="preserve">
+    <value>Balio boolear bihurtuko den testu-balioa.</value>
   </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Hutsa ez den lehen argumentua itzultzen du</value>
@@ -1368,6 +1438,10 @@
     <value>espresioa</value>
     
   </data>
+  <data name="AboutIsBlankOrError_expression" xml:space="preserve">
+    <value>Probatuko den espresioa.</value>
+    
+  </data>
   <data name="AboutIsEmpty" xml:space="preserve">
     <value>Bilduma hutsik dagoen egiaztatzen du eta "egia" edo "faltsua" balioa itzultzen du.</value>
     
@@ -1375,6 +1449,9 @@
   <data name="IsEmptyArg1" xml:space="preserve">
     <value>iturburua</value>
     
+  </data>
+  <data name="AboutIsEmpty_source" xml:space="preserve">
+    <value>Probatuko den taula.</value>
   </data>
   <data name="AboutShuffle" xml:space="preserve">
     <value>Sarrerako "source" taularen ausazko kopia bat itzultzen du.</value>
@@ -1553,7 +1630,11 @@
     
   </data>
   <data name="ErrUnknownFunction" xml:space="preserve">
-    <value>Ezezaguna den edo onartzen ez den funtzio bati egindako deia.</value>
+    <value>Ezezaguna den edo onartzen ez den funtzio bat da "{0}".</value>
+    
+  </data>
+  <data name="ErrUnknownNamespaceFunction" xml:space="preserve">
+    <value>"{1}" izen-lekuan ezezaguna den edo onartzen ez den funtzio bat da "{0}".</value>
     
   </data>
   <data name="ErrUnSupportedComponentBehaviorInvocation" xml:space="preserve">
@@ -1845,8 +1926,40 @@
   <data name="AboutTime_millisecond" xml:space="preserve">
     <value>Milisegundo-osagaia.</value>
   </data>
+  <data name="AboutDateTime" xml:space="preserve">
+    <value>Une jakin bat adierazten duen balio bat sortzen du, eguneko data eta orduaren bidez adierazten dena.</value>
+    
+  </data>
+  <data name="AboutDateTime_year" xml:space="preserve">
+    <value>Urtea.</value>
+    
+  </data>
+  <data name="AboutDateTime_month" xml:space="preserve">
+    <value>Hilabetea.</value>
+    
+  </data>
+  <data name="AboutDateTime_day" xml:space="preserve">
+    <value>Eguna.</value>
+    
+  </data>
+  <data name="AboutDateTime_hour" xml:space="preserve">
+    <value>Ordua.</value>
+    
+  </data>
+  <data name="AboutDateTime_minute" xml:space="preserve">
+    <value>Minutua.</value>
+    
+  </data>
+  <data name="AboutDateTime_second" xml:space="preserve">
+    <value>Segundoa.</value>
+    
+  </data>
+  <data name="AboutDateTime_millisecond" xml:space="preserve">
+    <value>Milisegundoak.</value>
+    
+  </data>
   <data name="AboutYear" xml:space="preserve">
-    <value>"Year" funtzioak emandako data baten urtea itzultzen du (1900 baino handiagoa den zenbaki bat).</value>
+    <value>"Year" funtzioak emandako data baten urtea itzultzen du.</value>
     
   </data>
   <data name="YearArg1" xml:space="preserve">
@@ -2260,6 +2373,36 @@
   </data>
   <data name="AboutChar_column_of_numbers" xml:space="preserve">
     <value>Plataformako karaktere jokoko kode-zenbakien zutabea.</value>
+  </data>
+  <data name="AboutParseJSON" xml:space="preserve">
+    <value>JSON kateak objektu bihurtzen ditu.</value>
+    
+  </data>
+  <data name="ParseJSONArg1" xml:space="preserve">
+    <value>sarrera</value>
+    
+  </data>
+  <data name="AboutParseJSON_input" xml:space="preserve">
+    <value>Prozesatzeko JSON katea.</value>
+  </data>
+  <data name="AboutIndex" xml:space="preserve">
+    <value>Emandako indizeko taula bateko erregistro bat itzultzen du.</value>
+    
+  </data>
+  <data name="IndexArg1" xml:space="preserve">
+    <value>taula</value>
+    
+  </data>
+  <data name="IndexArg2" xml:space="preserve">
+    <value>indizea</value>
+    
+  </data>
+  <data name="AboutIndex_table" xml:space="preserve">
+    <value>Taula bat.</value>
+  </data>
+  <data name="AboutIndex_index" xml:space="preserve">
+    <value>Eskuratu nahi duzun erregistroaren indizea.</value>
+    
   </data>
   <data name="Screen_Name_DisplayName" xml:space="preserve">
     <value>Izena</value>
@@ -3788,6 +3931,18 @@
     <value>Formularen emaitza motak {0} izan behar du, baina itzuli den emaitza mota {1} da. Gogoan izan ezin duzula aldatu formula-zutabe baten emaitza mota.</value>
     
   </data>
+  <data name="FormulaColumns_ColumnTypeNotSupported" xml:space="preserve">
+    <value>{0} motako zutabeak ez dira onartzen formula-zutabeetan.</value>
+    
+  </data>
+  <data name="FormulaColumns_ColumnFormatNotSupported" xml:space="preserve">
+    <value>{1} formatudun {0} motako zutabeak ez dira onartzen formula-zutabeetan.</value>
+    
+  </data>
+  <data name="FormulaColumns_FormulaTooLong" xml:space="preserve">
+    <value>Formulek ezin dituzte eduki 1.000 karaktere baino gehiago.</value>
+    
+  </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
     <value>Eragingai bat espero zen. Formulak edo espresioak erabil daitekeen eragingai bat espero du. Adibidez, "2" eragingaia gehi dezakezu " 1 +_" espresioan, eta "3" izango da emaitza. Bestela, "there" eragingaia gehi dezakezu ""Hi "&amp; _ " espresioan, eta "Hi there" izango da emaitza.</value>
     
@@ -3802,7 +3957,6 @@
   </data>
   <data name="ErrorResource_ErrBadToken_LongMessage" xml:space="preserve">
     <value>Adibidez, ez da espero "\" karakterea zenbaki baten ondoren erabiltzea (adibidez, "32\"). Zuriune bat gehitu behar duzu ("32 ") zehaztutako zenbakia soilik adierazteko (32), edo beste zenbaki baten parte dela adierazteko (adibidez, "323").</value>
-    
   </data>
   <data name="ErrorResource_ErrBadToken_HowToFix_1" xml:space="preserve">
     <value>Kendu edo aldatu espero ez diren karaktereak.</value>
@@ -3818,11 +3972,9 @@
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_LongMessage" xml:space="preserve">
     <value>Adibidez, ez da espero "\" karakterea zenbaki baten ondoren erabiltzea (adibidez, "32\"). Zuriune bat gehitu behar duzu ("32 ") zehaztutako zenbakia soilik adierazteko (32), edo beste zenbaki baten parte dela adierazteko (adibidez, "323").</value>
-    
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_HowToFix_1" xml:space="preserve">
     <value>Kendu edo ordezkatu ustekabeko karakterea.</value>
-    
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_Link_1" xml:space="preserve">
     <value>Artikulua: Power Apps-erako formula-erreferentzia</value>
@@ -3834,7 +3986,6 @@
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_LongMessage" xml:space="preserve">
     <value>"/*" ikurrarekin hasi eta "*/" ikurrarekin amaitu behar du blokearen iruzkin bakoitzak. Karaktere horiek erabiltzen ez badituzu bloke bakoitza amaitzeko, iruzkinaren ondoan dagoen kode guztia iruzkinaren parte izango da. Iruzkinak lerro bat soilik badu, "//" karaktereekin has daiteke; horri esker, ez duzu iruzkinaren amaiera zehaztu behar.</value>
-    
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_HowToFix_1" xml:space="preserve">
     <value>Gehitu "*/" blokearen iruzkinean, edo alda ezazu lerro-iruzkin multzo batera.</value>
@@ -3850,7 +4001,6 @@
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_LongMessage" xml:space="preserve">
     <value>Adibidez, errore hori gertatuko da formula batek "{{Val@ 7}}" badu "{{Val: 7}}" balioaren ordez. Aldagai bat zehazten duzunean, sintaxiak bi puntuak beharko ditu a bilduaren (@) ikurraren ordez.</value>
-    
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_HowToFix_1" xml:space="preserve">
     <value>Kendu edo aldatu espero ez diren karaktereak espero diren karaktereekin.</value>
@@ -3861,12 +4011,11 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidName_ShortMessage" xml:space="preserve">
-    <value>Izenak balio ez duenez, ez da ezagutu identifikatzailea.</value>
+    <value>Izenak balio ez duenez, ez da ezagutu "{0}".</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidName_LongMessage" xml:space="preserve">
     <value>Normalean, errore hori gertatzen da formula batek jada ez dagoen elementu bati erreferentzia egiten dionean (adibidez, ezabatu duzun kontrol bat).</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidName_HowToFix_1" xml:space="preserve">
     <value>Kendu edo zuzendu erabil ezin daitekeen izenari egindako erreferentzia.</value>
@@ -3876,13 +4025,27 @@
     <value>Artikulua: Power Apps-erako formula-erreferentzia</value>
     
   </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_ShortMessage" xml:space="preserve">
+    <value>Izenak balio ez duenez, ez da ezagutu identifikatzailea.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_LongMessage" xml:space="preserve">
+    <value>Normalean, errore hori gertatzen da formula batek jada ez dagoen elementu bati erreferentzia egiten dionean (adibidez, ezabatu duzun kontrol bat).</value>
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_HowToFix_1" xml:space="preserve">
+    <value>Kendu edo zuzendu erabil ezin daitekeen izenari egindako erreferentzia.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_Link_1" xml:space="preserve">
+    <value>Artikulua: Power Apps-erako formula-erreferentzia</value>
+    
+  </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_ShortMessage" xml:space="preserve">
     <value>Propietate-erreferentziak ez du balio.</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_LongMessage" xml:space="preserve">
     <value>Formulak erabil ezin daitekeen sintaxia duten osagaiaren portaeraren propietateei erreferentzia egiten dienean agertzen da errorea (adibidez, Component.OnCustomChange sintaxia erabiltzen denean Component.OnCustomChange() sintaxiaren ordez).</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_HowToFix_1" xml:space="preserve">
     <value>Erabili sintaxi zuzena osagaiaren portaeraren propietateei erreferentzia egiteko. Adibidez, Component.OnCustomChange().</value>
@@ -3898,7 +4061,6 @@
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_LongMessage" xml:space="preserve">
     <value>Halaber, ezin duzu erabili eragile nagusia kontrol nagusirik ez duen kontrol batekin. Eragile horrek zehaztutako kontrola ostatatzen duen eta propietate guztiak erabilgarri dituen kontrolari egiten dio erreferentzia.</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_HowToFix_1" xml:space="preserve">
     <value>Kendu eragile "nagusia".</value>
@@ -3914,7 +4076,6 @@
   </data>
   <data name="ErrorResource_ErrTooManyUps_LongMessage" xml:space="preserve">
     <value>Zenbat eta habiaratze-maila gehiago eduki, orduan eta zailagoa da izaten da edukia kudeatzea; horregatik, Power Apps-ek errenkada-esparrua 63. mailaraino habiaratzea onartzen du gehienez.</value>
-    
   </data>
   <data name="ErrorResource_ErrTooManyUps_HowToFix_1" xml:space="preserve">
     <value>Idatzi berriro formula habiaratze-maila gutxiago eduki ditzan.</value>
@@ -3926,7 +4087,6 @@
   </data>
   <data name="ErrorResource_ErrRuleNestedTooDeeply_LongMessage" xml:space="preserve">
     <value>Power Apps erabiltzen baduzu, gehienez, 50. mailaraino habiara dezakezu espresioa. Gogoan izan oso zaila dela hain sakon dagoen espresio bat ulertzea eta mantentzea.</value>
-    
   </data>
   <data name="ErrorResource_ErrRuleNestedTooDeeply_HowToFix_1" xml:space="preserve">
     <value>Idatzi berriro formula habiaratze-maila gutxiago eduki ditzan.</value>
@@ -3938,7 +4098,6 @@
   </data>
   <data name="ErrorResource_ErrOperatorExpected_LongMessage" xml:space="preserve">
     <value>Eragileek bi eragigai bateratzen dituzte. Adibidez, errore hau gertatuko da eragilerik ez duten bi funtzio (eragigai) bateratzen dituzunean; hala nola, Len("mytext")Len("mytext").</value>
-    
   </data>
   <data name="ErrorResource_ErrOperatorExpected_HowToFix_1" xml:space="preserve">
     <value>Editatu formula eragile bat eduki dezan eragigaien artean.</value>
@@ -3954,7 +4113,6 @@
   </data>
   <data name="ErrorResource_ErrNumberExpected_LongMessage" xml:space="preserve">
     <value>Adibidez, errore hori gertatuko da irudi bat erabiltzen baduzu zenbaki bat behar duen funtzio batean.</value>
-    
   </data>
   <data name="ErrorResource_ErrNumberExpected_HowToFix_1" xml:space="preserve">
     <value>Editatu formula zenbaki bat erakutsi dezan formularen puntu honetan.</value>
@@ -3970,7 +4128,6 @@
   </data>
   <data name="ErrorResource_ErrBooleanExpected_LongMessage" xml:space="preserve">
     <value>Balio boolear bat Microsoft Excel eta antzeko aplikazioetan erabiltzen den true/false balio bat da. Adibidez, errore hori gertatuko da data bat erabiltzen baduzu balio boolear bat behar duen funtzio batean.</value>
-    
   </data>
   <data name="ErrorResource_ErrBooleanExpected_HowToFix_1" xml:space="preserve">
     <value>Editatu formula balio boolear bat kalkula dezan formularen puntu honetan.</value>
@@ -3986,7 +4143,6 @@
   </data>
   <data name="ErrorResource_ErrColonExpected_LongMessage" xml:space="preserve">
     <value>Eremu-izenak (zutabe-izena ere esaten zaio batzuetan) eta erregistro bateko eremu-balioak (adibidez, {Month:"1"}, {Month:"2"} …) bereizten dituzte bi puntuek; halaber, orduak, minutuak eta segundoak ere bereiz ditzakete (adibidez, "3:04").</value>
-    
   </data>
   <data name="ErrorResource_ErrColonExpected_HowToFix_1" xml:space="preserve">
     <value>Editatu formula bi puntuen karakterea eduki dezan.</value>
@@ -4002,7 +4158,6 @@
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_LongMessage" xml:space="preserve">
     <value>Aplikazioaren egoera aldatzen dute portaera-funtzioek; horretarako, aplikazioaren beste eremu batzuetako balioak aldatzen dituzte. "Navigate", "Patch", "UpdateContext" eta "Collect" dira ohiko portaera-funtzioak. "OnSelect", "OnVisible" eta antzeko "On..." propietateak, ordea, portaeran oinarritutako ohiko propietateak dira.</value>
-    
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_HowToFix_1" xml:space="preserve">
     <value>Eraman portaera-funtzioa portaeran oinarritutako propietate batera.</value>
@@ -4018,7 +4173,6 @@
   </data>
   <data name="ErrorResource_ErrTestPropertyExpected_LongMessage" xml:space="preserve">
     <value>Probako funtzioak aplikazio bat probatzeak erabiltzaile-sarrera simulatzeko erabili daitezkeenak dira. "SetProperty", "SelectRow" eta "Baieztatu" probako funtzio ohikoak dira. Proba-kasuetan soilik erabil daitezke.</value>
-    
   </data>
   <data name="ErrorResource_ErrTestPropertyExpected_HowToFix_1" xml:space="preserve">
     <value>Erabili funtzioa proba-kasu batean, ez aplikazioan.</value>
@@ -4030,7 +4184,6 @@
   </data>
   <data name="ErrorResource_ErrCannotCoerce_SourceType_TargetType_LongMessage" xml:space="preserve">
     <value>Power Apps-ek formulako zenbait daturen mota alda dezake. Adibidez, "1" (kate bat) 1 (zenbaki bat) bihur dezake, baina ezin ditu aldatu datu mota guztiak beste datu mota batzuk. Adibidez, ezin ditu bihurtu irudiak zenbaki.</value>
-    
   </data>
   <data name="ErrorResource_ErrCannotCoerce_SourceType_TargetType_HowToFix_1" xml:space="preserve">
     <value>Editatu formula, datu jakin horiek espero den motakoak izan daitezen.</value>
@@ -4042,7 +4195,6 @@
   </data>
   <data name="ErrorResource_ErrStringExpected_LongMessage" xml:space="preserve">
     <value>Adibidez, errore hori gertatuko da data bat erabiltzen baduzu testu-argumentu bat (edo kate bat) behar duen funtzio batean.</value>
-    
   </data>
   <data name="ErrorResource_ErrStringExpected_HowToFix_1" xml:space="preserve">
     <value>Editatu formula testu bat kalkula dezan formularen puntu honetan.</value>
@@ -4058,7 +4210,6 @@
   </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_LongMessage" xml:space="preserve">
     <value>Adibidez, errore hori gertatuko da balio boolear bat (true/false) erabiltzen baduzu testua edo zenbaki bat behar duen funtzio batean.</value>
-    
   </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_HowToFix_1" xml:space="preserve">
     <value>Editatu formula testu edo zenbaki bat kalkula dezan formularen puntu honetan.</value>
@@ -4074,7 +4225,6 @@
   </data>
   <data name="ErrorResource_ErrClosingBracketExpected_LongMessage" xml:space="preserve">
     <value>Erregistro baten amaiera adierazten du (adibidez, {Month:"1"}, {Month:"2"} …) ixteko giltzak.</value>
-    
   </data>
   <data name="ErrorResource_ErrClosingBracketExpected_HowToFix_1" xml:space="preserve">
     <value>Editatu formula giltzaren karaktere bat eduki dezan.</value>
@@ -4094,7 +4244,6 @@
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_LongMessage" xml:space="preserve">
     <value>Formulan konparatuko diren balioek mota bera ez dutelako ezin dugu ebaluatu formula.</value>
-    
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_HowToFix_1" xml:space="preserve">
     <value>Baliteke balioa bihurtu behar izatea mota bera izan dezan; adibidez, data-kate bat (2018/12/31) data-balio bihur dezakezu.</value>
@@ -4174,7 +4323,6 @@
   </data>
   <data name="ErrorResource_ErrTypeError_LongMessage" xml:space="preserve">
     <value>Agian datuak ez datoz bat espero zen motarekin (testua, zenbakia, data, taula erregistroa).</value>
-    
   </data>
   <data name="ErrorResource_ErrTypeError_HowToFix_1" xml:space="preserve">
     <value>Egiaztatu formularen balio motak eta ziurtatu mota guztiak bat datozela.</value>
@@ -4194,7 +4342,6 @@
   </data>
   <data name="ErrorResource_ErrDateExpected_LongMessage" xml:space="preserve">
     <value>Adibidez, errore hori gertatuko da testua erabiltzen baduzu data bat behar duen funtzio batean.</value>
-    
   </data>
   <data name="ErrorResource_ErrDateExpected_HowToFix_1" xml:space="preserve">
     <value>Editatu formula data bat kalkula dezan formularen puntu honetan.</value>
@@ -4210,7 +4357,6 @@
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_LongMessage" xml:space="preserve">
     <value>Baliteke datu-iturburuak formula prozesatu ezin izatea eta osorik ez dagoen datu multzo bat itzultzea. Baliteke aplikazioak emaitza zuzenak ez itzultzea edo ez funtzionatzea datu multzoa osorik ez badago.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_HowToFix_1" xml:space="preserve">
     <value>Datu multzoak 500 erregistroko muga gainditzen badu, baina 2.000 erregistro baino gutxiago baditu, saiatu muga berrezartzen.</value>
@@ -4238,7 +4384,6 @@
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_LongMessage" xml:space="preserve">
     <value>Baliteke datu-iturburuak formula prozesatu ezin izatea eta osorik ez dagoen datu multzo bat itzultzea. Baliteke aplikazioak emaitza zuzenak ez itzultzea edo ez funtzionatzea datu multzoa osorik ez badago.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_HowToFix_1" xml:space="preserve">
     <value>Datu multzoak 500 erregistroko muga gainditzen badu, baina 2.000 erregistro baino gutxiago baditu, saiatu muga berrezartzen.</value>
@@ -4266,7 +4411,6 @@
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_LongMessage" xml:space="preserve">
     <value> "in" eragilearen eskuineko aldeak datu-iturburu zuzenaren zutabe bat izan behar du. Agian datu-iturburuak ezin du prozesatu formula eta, horregatik, osatu gabeko datu multzo bat itzultzen du. Halaber, datu multzoa osatu gabe badago, baliteke aplikazioak emaitza okerrak itzultzea edo ezin funtzionatzea.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_1" xml:space="preserve">
     <value>Bihurtu "in" eragilearen eskuinean dagoen elementua datu-iturburu zuzenaren zutabe.</value>
@@ -4299,7 +4443,6 @@
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_LongMessage" xml:space="preserve">
     <value> "in" eragilearen eskuineko aldea ez da datu-iturburu zuzenaren zutabe bat. Agian datu-iturburuak ezin du prozesatu formula eta, horregatik, osatu gabeko datu multzo bat itzultzen du. Halaber, datu multzoa osatu gabe badago, baliteke aplikazioak emaitza okerrak itzultzea edo ezin funtzionatzea.
       </value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_1" xml:space="preserve">
     <value>Bihurtu "in" eragilearen eskuinean dagoen elementua datu-iturburu zuzenaren zutabe.</value>
@@ -4380,6 +4523,22 @@
   </data>
   <data name="ErrorResource_ErrInvalidControlReference_Link_1" xml:space="preserve">
     <value>Erreferentzia: Mihise-aplikazioen ConfirmExit</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidStringInterpolation_ShortMessage" xml:space="preserve">
+    <value>Interpolatutako kateen barnean agertzen diren adierazpenek testu-balio edo mota bateragarri bat eman behar dute.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidStringInterpolation_HowToFix_1" xml:space="preserve">
+    <value>Egiaztatu interpolatutako katearen barneko adierazpen motak.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrEmptyIsland_ShortMessage" xml:space="preserve">
+    <value>Ezin da hutsik dagoen adierazpenik egon kate interpolatuan.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrEmptyIsland_HowToFix_1" xml:space="preserve">
+    <value>Egiaztatu hutsik dagoen adierazpenik dagoen kate interpolatuan.</value>
     
   </data>
   <data name="ErrorResource_ErrAsNotInContext_ShortMessage" xml:space="preserve">

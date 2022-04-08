@@ -20,3 +20,18 @@ true
 
 >> OtherOptionSet.OptionA <> TopOptionSetField
 Errors: Error 23-25: Incompatible types for comparison. These types can't be compared: OptionSetValue(OtherOptionSet), OptionSetValue(OptionSet).
+
+>> IsBlank(Nested.InnerOtherOptionSet)
+false
+
+>> IsBlank(If(1 < 0, TopOptionSetField))
+true
+
+>> IsBlankOrError(Nested.InnerOtherOptionSet)
+false
+
+>> IsBlankOrError(If(1 < 0, Nested.InnerOtherOptionSet))
+true
+
+>> IsBlankOrError(If(1 / 0 < 2, TopOptionSetField))
+true

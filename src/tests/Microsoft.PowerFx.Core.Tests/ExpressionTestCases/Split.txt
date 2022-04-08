@@ -34,5 +34,5 @@ Table()
 >> Split(If(1 < 0, ""), "")
 Table()
 
-Split(Text(1/0), "")
+>> Split(Text(1/0), "")
 #Error

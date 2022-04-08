@@ -1,5 +1,64 @@
 ﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
@@ -426,6 +485,17 @@
   <data name="AboutValue_language" xml:space="preserve">
     <value>Väärtuse teisendamisel kasutatav keelekood.</value>
     
+  </data>
+  <data name="AboutBoolean" xml:space="preserve">
+    <value>Teisendab teksti, mis tähistab loogilist väärtust, loogiliseks väärtuseks.</value>
+    
+  </data>
+  <data name="BooleanArg1" xml:space="preserve">
+    <value>tekst</value>
+    
+  </data>
+  <data name="AboutBoolean_text" xml:space="preserve">
+    <value>Tekstiväärtus loogiliseks väärtuseks teisendamise jaoks.</value>
   </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Tagastab esimese mittetühja argumendi</value>
@@ -1368,6 +1438,10 @@
     <value>avaldis</value>
     
   </data>
+  <data name="AboutIsBlankOrError_expression" xml:space="preserve">
+    <value>Testitav avaldis.</value>
+    
+  </data>
   <data name="AboutIsEmpty" xml:space="preserve">
     <value>Kontrollib, kas kogum on tühi, ja tagastab väärtuse Tõene või Väär.</value>
     
@@ -1375,6 +1449,9 @@
   <data name="IsEmptyArg1" xml:space="preserve">
     <value>allikas</value>
     
+  </data>
+  <data name="AboutIsEmpty_source" xml:space="preserve">
+    <value>Testitav tabel.</value>
   </data>
   <data name="AboutShuffle" xml:space="preserve">
     <value>Tagastab sisestatud allikatabeli juhuslikult segatud kirjetega koopia.</value>
@@ -1553,7 +1630,11 @@
     
   </data>
   <data name="ErrUnknownFunction" xml:space="preserve">
-    <value>Kutsutakse tundmatut või toetuseta funktsiooni.</value>
+    <value>„{0}“ on tundmatu või toetuseta funktsioon.</value>
+    
+  </data>
+  <data name="ErrUnknownNamespaceFunction" xml:space="preserve">
+    <value>„{0}“ on tundmatu või toetuseta funktsioon nimeruumis „{1}“.</value>
     
   </data>
   <data name="ErrUnSupportedComponentBehaviorInvocation" xml:space="preserve">
@@ -1845,8 +1926,40 @@
   <data name="AboutTime_millisecond" xml:space="preserve">
     <value>Millisekundikomponent.</value>
   </data>
+  <data name="AboutDateTime" xml:space="preserve">
+    <value>Loob väärtuse, mis tähistab hetke ajas ning mida väljendatakse kuupäeva ja kellaajana.</value>
+    
+  </data>
+  <data name="AboutDateTime_year" xml:space="preserve">
+    <value>Aasta.</value>
+    
+  </data>
+  <data name="AboutDateTime_month" xml:space="preserve">
+    <value>Kuu.</value>
+    
+  </data>
+  <data name="AboutDateTime_day" xml:space="preserve">
+    <value>Päev.</value>
+    
+  </data>
+  <data name="AboutDateTime_hour" xml:space="preserve">
+    <value>Tund.</value>
+    
+  </data>
+  <data name="AboutDateTime_minute" xml:space="preserve">
+    <value>Minut.</value>
+    
+  </data>
+  <data name="AboutDateTime_second" xml:space="preserve">
+    <value>Sekund.</value>
+    
+  </data>
+  <data name="AboutDateTime_millisecond" xml:space="preserve">
+    <value>Millisekundid.</value>
+    
+  </data>
   <data name="AboutYear" xml:space="preserve">
-    <value>Aasta tagastab määratud kuupäeva aasta, mis on 1900-st suurem arv.</value>
+    <value>Aasta tagastab määratud kuupäeva aasta.</value>
     
   </data>
   <data name="YearArg1" xml:space="preserve">
@@ -2260,6 +2373,36 @@
   </data>
   <data name="AboutChar_column_of_numbers" xml:space="preserve">
     <value>Teie platvormi märgistikust pärit koodide veerg.</value>
+  </data>
+  <data name="AboutParseJSON" xml:space="preserve">
+    <value>Teisendab JSON-stringi objektiks.</value>
+    
+  </data>
+  <data name="ParseJSONArg1" xml:space="preserve">
+    <value>sisend</value>
+    
+  </data>
+  <data name="AboutParseJSON_input" xml:space="preserve">
+    <value>Töödeldav JSON-string.</value>
+  </data>
+  <data name="AboutIndex" xml:space="preserve">
+    <value>Tagastab tabelis kirje antud registriga.</value>
+    
+  </data>
+  <data name="IndexArg1" xml:space="preserve">
+    <value>tabel</value>
+    
+  </data>
+  <data name="IndexArg2" xml:space="preserve">
+    <value>register</value>
+    
+  </data>
+  <data name="AboutIndex_table" xml:space="preserve">
+    <value>Tabel.</value>
+  </data>
+  <data name="AboutIndex_index" xml:space="preserve">
+    <value>Toodava kirje register.</value>
+    
   </data>
   <data name="Screen_Name_DisplayName" xml:space="preserve">
     <value>Nimi</value>
@@ -3781,11 +3924,23 @@
     
   </data>
   <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
-    <value>Seda tulemi tüüpi {0} valemiveergudes ei toetata.</value>
+    <value>Tulemitüüp {0} pole valemiveergudes toetatud.</value>
     
   </data>
   <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
     <value>Selle valemi tulemi tüüp peab olema {0}, kuid tegelik tulemi tüüp on {1}. Valemiveeru tulemi tüüpi ei saa muuta.</value>
+    
+  </data>
+  <data name="FormulaColumns_ColumnTypeNotSupported" xml:space="preserve">
+    <value>Veerud, mille tüüp on {0}, pole valemiveergudes toetatud.</value>
+    
+  </data>
+  <data name="FormulaColumns_ColumnFormatNotSupported" xml:space="preserve">
+    <value>Veerud, mille tüüp on {0} ja vorming {1}, pole valemiveergudes toetatud.</value>
+    
+  </data>
+  <data name="FormulaColumns_FormulaTooLong" xml:space="preserve">
+    <value>Valemid ei tohi olla pikemad kui 1000 märki.</value>
     
   </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
@@ -3802,7 +3957,6 @@
   </data>
   <data name="ErrorResource_ErrBadToken_LongMessage" xml:space="preserve">
     <value>Näiteks tärki '\' ei eeldata pärast arvu, nt nii: '32\'. Tühik ('32') oleks eeldatud nii, et see oleks ainult number 32 või eeldatakse mõnda muud numbrit (nt '323').</value>
-    
   </data>
   <data name="ErrorResource_ErrBadToken_HowToFix_1" xml:space="preserve">
     <value>Eemaldage või asendage ootamatud märgid.</value>
@@ -3818,11 +3972,9 @@
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_LongMessage" xml:space="preserve">
     <value>Näiteks tärki '\' ei eeldata pärast arvu, nt nii: '32\'. Tühik ('32') oleks eeldatud nii, et see oleks ainult number 32 või eeldatakse mõnda muud numbrit (nt '323').</value>
-    
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_HowToFix_1" xml:space="preserve">
     <value>Eemaldage või asendage ootamatu märk.</value>
-    
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_Link_1" xml:space="preserve">
     <value>Artikkel: Power Appsi valemiviide</value>
@@ -3834,7 +3986,6 @@
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_LongMessage" xml:space="preserve">
     <value>Iga plokk-kommentaar peab algama märkidega '/*' ja lõppema märkidega '*/'. Kui te ei lõpeta iga plokk-kommentaari korralikult, muutub kogu kommentaarile järgnev kood kommnetaari osaks. Kui kommentaar koosneb ainult ühest reast, võite seda alustada märkidega '//' ja kommnetaari lõppu pole vaja märkida.</value>
-    
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_HowToFix_1" xml:space="preserve">
     <value>Lisage oma plokk-kommentaari lõppu märgid '*/' või muutke see reakommentaaride kogumiks.</value>
@@ -3850,7 +4001,6 @@
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_LongMessage" xml:space="preserve">
     <value>See tõrge ilmneb, kui valem sisaldab näiteks üksuse '{{Val@ 7}}' asemel üksust '{{Val: 7}}'. Muutuja määramisel nõuab süntaks @-sümboli asemel koolonit.</value>
-    
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_HowToFix_1" xml:space="preserve">
     <value>Eemaldage või asendage ootamatud märgid eeldatud märkidega.</value>
@@ -3861,12 +4011,11 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidName_ShortMessage" xml:space="preserve">
-    <value>Nimi ei sobi. Identifikaatorit ei tuvastatud.</value>
+    <value>Nimi ei sobi. Üksust {0} ei tuvastatud.</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidName_LongMessage" xml:space="preserve">
     <value>See tõrge ilmneb kõige sagedamini siis, kui valem viitab millelegi, mida pole enam olemas (näiteks kustutatud juhtelement).</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidName_HowToFix_1" xml:space="preserve">
     <value>Eemaldage või parandage viide nimele, mis pole sobiv.</value>
@@ -3876,13 +4025,27 @@
     <value>Artikkel: Power Appsi valemiviide</value>
     
   </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_ShortMessage" xml:space="preserve">
+    <value>Nimi ei sobi. Identifikaatorit ei tuvastatud.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_LongMessage" xml:space="preserve">
+    <value>See tõrge ilmneb kõige sagedamini siis, kui valem viitab millelegi, mida pole enam olemas (näiteks kustutatud juhtelement).</value>
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_HowToFix_1" xml:space="preserve">
+    <value>Eemaldage või parandage viide nimele, mis pole sobiv.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_Link_1" xml:space="preserve">
+    <value>Artikkel: Power Appsi valemiviide</value>
+    
+  </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_ShortMessage" xml:space="preserve">
     <value>Atribuudiviide ei sobi.</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_LongMessage" xml:space="preserve">
     <value>See tõrge ilmub siis, kui valem viitab komponendi käitumisatribuutidele, millel on sobimatu süntaks. (Näiteks Component.OnCustomChange, mitte Component.OnCustomChange())</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_HowToFix_1" xml:space="preserve">
     <value>Kasutage komponendi käitumisatribuudile viitamiseks õiget süntaksit. Näiteks Component.OnCustomChange()</value>
@@ -3898,7 +4061,6 @@
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_LongMessage" xml:space="preserve">
     <value>Te ei saa kasutada emaoperaatorit juhtelemendiga, millel pole emajuhtelementi. See operaator viitab juhtelemendile, mis hostib antud juhtelementi ja muudab kõik selle atribuudid kättesaadavaks.</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_HowToFix_1" xml:space="preserve">
     <value>Eemaldage operaator 'Parent'.</value>
@@ -3914,7 +4076,6 @@
   </data>
   <data name="ErrorResource_ErrTooManyUps_LongMessage" xml:space="preserve">
     <value>Keerukus suureneb iga pesastamistasemega, mis tähendab, et Power Apps toetab reaulatuse pesastamist ainult kuni tasemeni 63.</value>
-    
   </data>
   <data name="ErrorResource_ErrTooManyUps_HowToFix_1" xml:space="preserve">
     <value>Kirjutage valem väiksema arvu pesastamistasemetega ümber.</value>
@@ -3926,7 +4087,6 @@
   </data>
   <data name="ErrorResource_ErrRuleNestedTooDeeply_LongMessage" xml:space="preserve">
     <value>Power Apps toetab avaldise pesastamist ainult kuni tasemeni 50. Nii sügavat avaldist on raske mõista ja hallata.</value>
-    
   </data>
   <data name="ErrorResource_ErrRuleNestedTooDeeply_HowToFix_1" xml:space="preserve">
     <value>Kirjutage valem väiksema arvu pesastamistasemetega ümber.</value>
@@ -3938,7 +4098,6 @@
   </data>
   <data name="ErrorResource_ErrOperatorExpected_LongMessage" xml:space="preserve">
     <value>Operaatorid liidavad omavahel kahte operandi. Tõrge ilmneb, kui panete kokku kaks funktsiooni (operandi), kuid nende vahel puudub operaator – nt Len("mytext")Len("mytext").</value>
-    
   </data>
   <data name="ErrorResource_ErrOperatorExpected_HowToFix_1" xml:space="preserve">
     <value>Redigeerige oma valemit nii, et see sisaldaks operandide vahel operaatorit.</value>
@@ -3954,7 +4113,6 @@
   </data>
   <data name="ErrorResource_ErrNumberExpected_LongMessage" xml:space="preserve">
     <value>See tõrge ilmneb, kui kasutate funktsiooni, mis nõuab arvu, kuid teie esitate selle asemel nt pildi.</value>
-    
   </data>
   <data name="ErrorResource_ErrNumberExpected_HowToFix_1" xml:space="preserve">
     <value>Redigeerige oma valemit nii, et see annab siinkohal valemis tulemuseks arvu.</value>
@@ -3970,7 +4128,6 @@
   </data>
   <data name="ErrorResource_ErrBooleanExpected_LongMessage" xml:space="preserve">
     <value>Kahendmuutuja on rakendustes nagu Microsoft Excel tuntud ka väärtusena tõene/väär. Tõrge ilmneb, kui kasutate funktsiooni, mis nõuab kahendmuutujat, kuid teie esitate selle asemel nt kuupäeva.</value>
-    
   </data>
   <data name="ErrorResource_ErrBooleanExpected_HowToFix_1" xml:space="preserve">
     <value>Redigeerige oma valemit nii, et see annab siinkohal valemis tulemuseks kahendmuutuja.</value>
@@ -3986,7 +4143,6 @@
   </data>
   <data name="ErrorResource_ErrColonExpected_LongMessage" xml:space="preserve">
     <value>Koolon eraldab kirjes väljanime (mõnikord nimetatud kui veerunimi) väljaväärtusest (nt {Month:"1"}, {Month:"2"} …). Koolon eraldab ka tunde minutitest ja sekunditest (nt „3:04”).</value>
-    
   </data>
   <data name="ErrorResource_ErrColonExpected_HowToFix_1" xml:space="preserve">
     <value>Redigeerige oma valemit nii, et see sisaldaks koolonit.</value>
@@ -4002,7 +4158,6 @@
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_LongMessage" xml:space="preserve">
     <value>Käitumisfunktsioonid muudavad rakenduse olekut, muutes väärtusi mujal rakenduses. Tavalised käitumisfunktsioonid on 'Navigate', 'Patch', 'UpdateContext' ja 'Collect'. 'OnSelect', 'OnVisible' ning muud algusega 'On …' atribuudid on tavalised käitumispõhised atribuudid.</value>
-    
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_HowToFix_1" xml:space="preserve">
     <value>Teisaldage käitumisfunktsioon käitumispõhisesse atribuuti.</value>
@@ -4018,7 +4173,6 @@
   </data>
   <data name="ErrorResource_ErrTestPropertyExpected_LongMessage" xml:space="preserve">
     <value>Testimisfunktsioonid on need, mida saab rakenduse testimisel kasutada kasutajasisestuse simuleerimiseks. 'SetProperty', 'SelectRow' ja 'Assert' on levinud testimisfunktsioonid. Neid saab kasutada ainult testjuhtumites.</value>
-    
   </data>
   <data name="ErrorResource_ErrTestPropertyExpected_HowToFix_1" xml:space="preserve">
     <value>Kasutage funktsiooni testjuhtumis, mitte rakenduses endas.</value>
@@ -4030,7 +4184,6 @@
   </data>
   <data name="ErrorResource_ErrCannotCoerce_SourceType_TargetType_LongMessage" xml:space="preserve">
     <value>Power Apps võib teie valemis teisendada mõned andmetüübid teisteks tüüpideks. Näiteks saab see teisendada tüübi "1" (string) tüübiks 1 (arv), kuid see ei saa teisendada kõiki andmetüüpe kõigiks teisteks andmetüüpideks. Näiteks ei saa Power Apps teisendada pilti arvuks.</value>
-    
   </data>
   <data name="ErrorResource_ErrCannotCoerce_SourceType_TargetType_HowToFix_1" xml:space="preserve">
     <value>Redigeerige oma valemit nii, et teisendate kõnealused andmed eeldatud tüübiks.</value>
@@ -4042,7 +4195,6 @@
   </data>
   <data name="ErrorResource_ErrStringExpected_LongMessage" xml:space="preserve">
     <value>See tõrge ilmneb, kui kasutate funktsiooni, mis nõuab teksti (või stringi) argumenti, kuid teie esitate selle asemel nt kuupäeva.</value>
-    
   </data>
   <data name="ErrorResource_ErrStringExpected_HowToFix_1" xml:space="preserve">
     <value>Redigeerige oma valemit nii, et see annab siinkohal valemis tulemuseks teksti.</value>
@@ -4058,7 +4210,6 @@
   </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_LongMessage" xml:space="preserve">
     <value>See tõrge ilmneb, kui kasutate funktsiooni, mis nõuab teksti või arvu, kuid teie esitate selle asemel nt kahendmuutuja väärtuse (tõene/väär).</value>
-    
   </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_HowToFix_1" xml:space="preserve">
     <value>Redigeerige oma valemit nii, et see annab siinkohal valemis tulemuseks teksti või arvu.</value>
@@ -4074,7 +4225,6 @@
   </data>
   <data name="ErrorResource_ErrClosingBracketExpected_LongMessage" xml:space="preserve">
     <value>Sulgev sulg tähistab kirje lõppu (nt {Month:"1"}, {Month:"2"} …).</value>
-    
   </data>
   <data name="ErrorResource_ErrClosingBracketExpected_HowToFix_1" xml:space="preserve">
     <value>Redigeerige oma valemit nii, et see sisaldaks sulgu.</value>
@@ -4094,7 +4244,6 @@
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_LongMessage" xml:space="preserve">
     <value>Me ei saa teie valemit hinnata, sest valemis hinnatavad väärtused pole sama tüüpi.</value>
-    
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_HowToFix_1" xml:space="preserve">
     <value>Võib-olla peate väärtuse samale tüübile teisendama, nt teisendama kuupäevastringi (nt "12/31/2018") kuupäeva väärtuseks.</value>
@@ -4174,7 +4323,6 @@
   </data>
   <data name="ErrorResource_ErrTypeError_LongMessage" xml:space="preserve">
     <value>Andmed ei pruugi vastata eeldatud tüübile (tekst, arv, kuupäev, tabel, kirje).</value>
-    
   </data>
   <data name="ErrorResource_ErrTypeError_HowToFix_1" xml:space="preserve">
     <value>Kontrollige valemiga seotud väärtuste tüüpe ja veenduge, et tüübid ühtiksid.</value>
@@ -4194,7 +4342,6 @@
   </data>
   <data name="ErrorResource_ErrDateExpected_LongMessage" xml:space="preserve">
     <value>See tõrge ilmneb, kui kasutate funktsiooni, mis nõuab kuupäeva, kuid teie esitate selle asemel nt teksti.</value>
-    
   </data>
   <data name="ErrorResource_ErrDateExpected_HowToFix_1" xml:space="preserve">
     <value>Redigeerige oma valemit nii, et see annab siinkohal valemis tulemuseks kuupäeva.</value>
@@ -4210,7 +4357,6 @@
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_LongMessage" xml:space="preserve">
     <value>Võib juhtuda, et andmeallikas ei saa valemit töödelda ja võib tagastada pooliku andmehulga. Kui andmehulk on poolik, võib teie rakendus tagastada valed tulemid või käituda valesti.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_HowToFix_1" xml:space="preserve">
     <value>Kui teie andmehulk ületab 500 kirje piirmäära, kuid sisaldab vähem kui 2000 kirjet, proovige piirmäära lähtestada.</value>
@@ -4238,7 +4384,6 @@
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_LongMessage" xml:space="preserve">
     <value>Võib juhtuda, et andmeallikas ei saa valemit töödelda ja võib tagastada pooliku andmehulga. Kui andmehulk on poolik, võib teie rakendus tagastada valed tulemid või käituda valesti.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_HowToFix_1" xml:space="preserve">
     <value>Kui teie andmehulk ületab 500 kirje piirmäära, kuid sisaldab vähem kui 2000 kirjet, proovige piirmäära lähtestada.</value>
@@ -4266,7 +4411,6 @@
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_LongMessage" xml:space="preserve">
     <value> Tehtemärgi „in” parem pool peab olema õigest andmeallikast pärit veeru nimi. Võib juhtuda, et andmeallikas ei saa valemit töödelda ja võib tagastada pooliku andmehulga. Kui andmehulk on poolik, võib teie rakendus tagastada valed tulemid või käituda valesti.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_1" xml:space="preserve">
     <value>Muutke tehtemärgist „in” paremal olev üksus õigest andmeallikast pärit olevaks veeruks.</value>
@@ -4299,7 +4443,6 @@
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_LongMessage" xml:space="preserve">
     <value> Tehtemärgi "in" parem pool ei ole õigest andmeallikast pärit veerg. Võib juhtuda, et andmeallikas ei saa valemit töödelda ja võib tagastada pooliku andmehulga. Kui andmehulk on poolik, võib teie rakendus tagastada valed tulemid või käituda valesti.
       </value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_1" xml:space="preserve">
     <value>Muutke tehtemärgist „in” paremal olev üksus õigest andmeallikast pärit olevaks veeruks.</value>
@@ -4380,6 +4523,22 @@
   </data>
   <data name="ErrorResource_ErrInvalidControlReference_Link_1" xml:space="preserve">
     <value>Viide: ConfirmExit lõuendirakenduste jaoks</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidStringInterpolation_ShortMessage" xml:space="preserve">
+    <value>Avaldised, mis kuvatakse interpoleeritud stringis, peavad hindama tekstiväärtuse või ühilduva tüübini.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidStringInterpolation_HowToFix_1" xml:space="preserve">
+    <value>Kontrollige avaldiste tüüpe interpoleeritud stringis.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrEmptyIsland_ShortMessage" xml:space="preserve">
+    <value>Tühjad avaldised ei tohi ilmuda interpoleeritud stringis.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrEmptyIsland_HowToFix_1" xml:space="preserve">
+    <value>Kontrollige tühjasid avaldisi interpoleeritud stringis.</value>
     
   </data>
   <data name="ErrorResource_ErrAsNotInContext_ShortMessage" xml:space="preserve">

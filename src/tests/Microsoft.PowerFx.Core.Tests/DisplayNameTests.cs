@@ -1,26 +1,21 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Public.Types;
-using Microsoft.PowerFx.Core.Public.Values;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Xunit;
-using Xunit.Sdk;
 
 namespace Microsoft.PowerFx.Interpreter.Tests
 {
     public class DisplayNameTests
     {
+        private readonly Engine _engine = new Engine(new PowerFxConfig());
+
         [Fact]
         public void CollisionsThrow()
         {
-            var engine = new RecalcEngine();
             var r1 = new RecordType()
                 .Add(new NamedFormulaType("Num", FormulaType.Number, new DName("DisplayNum")));
 
@@ -69,7 +64,6 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [InlineData("Sum(NestedDisplay /* The source */ , InnerDisplay /* Sum over the InnerDisplay column */)", "Sum(Nested /* The source */ , Inner /* Sum over the InnerDisplay column */)", false)]
         public void ValidateDisplayNames(string inputExpression, string outputExpression, bool toDisplay)
         {
-            var engine = new RecalcEngine();
             var r1 = new RecordType()
                 .Add(new NamedFormulaType("Num", FormulaType.Number, "DisplayNum"))
                 .Add(new NamedFormulaType("B", FormulaType.Boolean, "DisplayB"))
@@ -80,12 +74,12 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             if (toDisplay)
             {
-                var outDisplayExpression = engine.GetDisplayExpression(inputExpression, r1);
+                var outDisplayExpression = _engine.GetDisplayExpression(inputExpression, r1);
                 Assert.Equal(outputExpression, outDisplayExpression);
             }
             else
             {
-                var outInvariantExpression = engine.GetInvariantExpression(outputExpression, r1);
+                var outInvariantExpression = _engine.GetInvariantExpression(outputExpression, r1);
                 Assert.Equal(outputExpression, outInvariantExpression);
             }
         }
@@ -93,12 +87,11 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [Fact]
         public void ConvertToDisplayNamesNoNames()
         {
-            var engine = new RecalcEngine();
             var r1 = new RecordType()
                 .Add(new NamedFormulaType("Num", FormulaType.Number))
                 .Add(new NamedFormulaType("B", FormulaType.Boolean));
 
-            var displayExpressions = engine.GetDisplayExpression("If(B, Num, 1234)", r1);
+            var displayExpressions = _engine.GetDisplayExpression("If(B, Num, 1234)", r1);
 
             Assert.Equal("If(B, Num, 1234)", displayExpressions);
         }
@@ -106,44 +99,60 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [Fact]
         public void ConvertToInvariantNamesNoNames()
         {
-            var engine = new RecalcEngine();
             var r1 = new RecordType()
                 .Add(new NamedFormulaType("Num", FormulaType.Number))
                 .Add(new NamedFormulaType("B", FormulaType.Boolean));
 
-            var displayExpressions = engine.GetInvariantExpression("If(B, Num, 1234)", r1);
+            var displayExpressions = _engine.GetInvariantExpression("If(B, Num, 1234)", r1);
 
             Assert.Equal("If(B, Num, 1234)", displayExpressions);
         }
 
         [Theory]
-        [InlineData("OptionSet.Option1 <> OptionSet.Option2", "OptionSet.option_1 <> OptionSet.option_2", false)]
-        [InlineData("OptionSet.option_1 <> OptionSet.option_2", "OptionSet.Option1 <> OptionSet.Option2", true)]
-        [InlineData("OptionSet.option_1 <> OptionSet.Option2", "OptionSet.Option1 <> OptionSet.Option2", true)]
-        [InlineData("OptionSet.Option1 <> OptionSet.option_2", "OptionSet.option_1 <> OptionSet.option_2", false)]
-        public void OptionSetDisplayNames(string inputExpression, string outputExpression, bool toDisplay)
-        {            
-            var config = new PowerFxConfig(null);
-            var optionSet = new OptionSet("OptionSet", new Dictionary<string, string>() 
-            {
-                    { "option_1", "Option1" },
-                    { "option_2", "Option2" }
-            });
+        [InlineData("If(B, Num, 1234)", "If(A, Num, 1234)", "B", "A")]
+        [InlineData("RecordNest.SomeString", "RecordNest.SomeString", "B", "A")]
+        [InlineData("RecordNest.SomeString", "RecordNest.Foo", "RecordNest.SomeString", "Foo")]
+        [InlineData("RecordNest.SomeString", "Foo.SomeString", "RecordNest", "Foo")]
+        [InlineData("First(Nested).Inner", "First(Nested).Inner", "B", "A")]
+        [InlineData("First(Nested).Inner", "First(Nested).Bar", "Nested.Inner", "Bar")]
+        [InlineData("First(Nested).Inner", "First(Bar).Inner", "Nested", "Bar")]
+        [InlineData("First(Nested).InnerDisplay", "First(Bar).InnerDisplay", "Nested", "Bar")]
+        [InlineData("With({SomeValue: 123}, RecordNest.nest2.datetest)", "With({SomeValue: 123}, RecordNest.nest2.Foo)", "RecordNest.nest2.datetest", "Foo")]
+        [InlineData("With({RecordNest: {nest2: {datetest: 123}}}, RecordNest.nest2.datetest)", "With({RecordNest: {nest2: {datetest: 123}}}, RecordNest.nest2.datetest)", "RecordNest.nest2.datetest", "Foo")]
+        [InlineData("With(RecordNest, SomeString + nest2.datetest)", "With(Foo, SomeString + nest2.datetest)", "RecordNest", "Foo")]
+        [InlineData("With(RecordNest, SomeString + nest2.datetest)", "With(RecordNest, Foo + nest2.datetest)", "RecordNest.SomeString", "Foo")]
+        [InlineData("With(RecordNest, SomeString + nest2.datetest)", "With(RecordNest, SomeString + Foo.datetest)", "RecordNest.nest2", "Foo")]
+        [InlineData("With(RecordNest, SomeString + nest2.datetest)", "With(RecordNest, SomeString + nest2.Foo)", "RecordNest.nest2.datetest", "Foo")]
+        [InlineData("With({value: RecordNest.SomeString}, value & B)", "With({value: RecordNest.'abcd efg'}, value & B)", "RecordNest.SomeString", "abcd efg")]
+        [InlineData("If(B, Text(B), \"B\")", "If(A, Text(A), \"B\")", "B", "A")]
+        [InlineData("B & Invalid()", "A & Invalid()", "B", "A")] // Rename with bind errors
+        [InlineData("B + + + ", "A + + + ", "B", "A")] // Rename with parse errors
+        [InlineData("With({x: RecordNest, y: RecordNest}, x.SomeString & y.SomeString)", "With({x: RecordNest, y: RecordNest}, x.S2 & y.S2)", "RecordNest.SomeString", "S2")]
+        public void RenameParameter(string expressionBase, string expectedExpression, string path, string newName)
+        {
+            var r1 = new RecordType()
+                .Add(new NamedFormulaType("Num", FormulaType.Number, "DisplayNum"))
+                .Add(new NamedFormulaType("B", FormulaType.Boolean, "DisplayB"))
+                .Add(new NamedFormulaType(
+                        "Nested",
+                        new TableType().Add(new NamedFormulaType("Inner", FormulaType.Number, "InnerDisplay")),
+                        "NestedDisplay"))
+                .Add(new NamedFormulaType(
+                        "RecordNest",
+                        new RecordType()
+                            .Add(new NamedFormulaType("SomeString", FormulaType.String, "DisplaySomeString"))
+                            .Add(new NamedFormulaType("nest2", new RecordType().Add(new NamedFormulaType("datetest", FormulaType.DateTime, "DisplayDT")), "DisplayReallyNested")),
+                        "superrecordnest"));
 
-            config.AddOptionSet(optionSet);
-            
-            var engine = new RecalcEngine(config);
-
-            if (toDisplay)
+            var dpath = DPath.Root;
+            foreach (var segment in path.Split('.'))
             {
-                var outDisplayExpression = engine.GetDisplayExpression(inputExpression, new RecordType());
-                Assert.Equal(outputExpression, outDisplayExpression);
+                dpath = dpath.Append(new DName(segment));
             }
-            else
-            {
-                var outInvariantExpression = engine.GetInvariantExpression(outputExpression, new RecordType());
-                Assert.Equal(outputExpression, outInvariantExpression);
-            }        
+
+            var renamer = _engine.CreateFieldRenamer(r1, dpath, new DName(newName));
+
+            Assert.Equal(expectedExpression, renamer.ApplyRename(expressionBase));
         }
     }
 }

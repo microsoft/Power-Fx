@@ -21,3 +21,9 @@ Blank()
 
 >> CountIf([1, 2, 0, 4, 5], 1/Value > 2)
 #Error
+
+>> CountIf([1, 2, 3, 4], 123)
+Errors: Error 22-25: Expected boolean. We expect a boolean (true/false) at this point in the formula.
+
+>> CountIf([1, 2, 3, 4], "abc")
+Errors: Error 22-27: Expected boolean. We expect a boolean (true/false) at this point in the formula.

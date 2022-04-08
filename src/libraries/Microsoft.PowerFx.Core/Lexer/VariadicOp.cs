@@ -3,8 +3,14 @@
 
 namespace Microsoft.PowerFx.Core.Lexer
 {
-    internal enum VariadicOp
+    /// <summary>
+    /// Kinds of variadic operators.
+    /// </summary>
+    public enum VariadicOp
     {
+        /// <summary>
+        /// Formula chaining (;).
+        /// </summary>
         Chain,
     }
 }

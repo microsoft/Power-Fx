@@ -17,7 +17,7 @@ ExpressionElement :
     Comment    
     Token
 
-// Whitepsace
+// Whitespace
 
 Whitespace :
     > any Unicode Space separator (class Zs)
@@ -26,7 +26,7 @@ Whitespace :
     > Horizontal tab character (U+0009)
     > Line feed character (U+000A)
     > Vertical tab character (U+000B)
-    > Form feed chracter (U+000C)
+    > Form feed character (U+000C)
     > Carriage return character (U+000D)
     > Next line character (U+0085)
 
@@ -176,8 +176,8 @@ ContextKeyword :
 // Operators
 
 DecimalSeparator :
-    > `.` (dot) for language that use a dot as the seperator for decimal numbers, for example `1.23`
-    > `,` (comma) for languages that use a comma as the seperator for decimal numbers, for example `1,23`
+    > `.` (dot) for language that use a dot as the separator for decimal numbers, for example `1.23`
+    > `,` (comma) for languages that use a comma as the separator for decimal numbers, for example `1,23`
 
 ListSeparator :
     > `,` (comma) if DecimalSeparator is `.` (dot)

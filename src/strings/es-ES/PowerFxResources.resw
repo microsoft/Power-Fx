@@ -1,5 +1,64 @@
 ﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
@@ -426,6 +485,17 @@
   <data name="AboutValue_language" xml:space="preserve">
     <value>El código de idioma que se usará cuando se convierte el valor.</value>
     
+  </data>
+  <data name="AboutBoolean" xml:space="preserve">
+    <value>Convierte un "texto" que representa un valor booleano en un valor booleano.</value>
+    
+  </data>
+  <data name="BooleanArg1" xml:space="preserve">
+    <value>texto</value>
+    
+  </data>
+  <data name="AboutBoolean_text" xml:space="preserve">
+    <value>Valor de texto que se convertirá en un valor booleano.</value>
   </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Devuelve el primer argumento que no está en blanco.</value>
@@ -1368,6 +1438,10 @@
     <value>expresión</value>
     
   </data>
+  <data name="AboutIsBlankOrError_expression" xml:space="preserve">
+    <value>Una expresión que se va a probar.</value>
+    
+  </data>
   <data name="AboutIsEmpty" xml:space="preserve">
     <value>Comprueba si una colección está vacía y devuelve TRUE o FALSE.</value>
     
@@ -1375,6 +1449,9 @@
   <data name="IsEmptyArg1" xml:space="preserve">
     <value>origen</value>
     
+  </data>
+  <data name="AboutIsEmpty_source" xml:space="preserve">
+    <value>Una tabla que se va a probar.</value>
   </data>
   <data name="AboutShuffle" xml:space="preserve">
     <value>Devuelve una copia ordenada aleatoriamente de la tabla de entrada de origen.</value>
@@ -1553,7 +1630,11 @@
     
   </data>
   <data name="ErrUnknownFunction" xml:space="preserve">
-    <value>Invocación de función desconocida o incompatible.</value>
+    <value>"{0}" es una función desconocida o no admitida.</value>
+    
+  </data>
+  <data name="ErrUnknownNamespaceFunction" xml:space="preserve">
+    <value>"{0}" es una función desconocida o no admitida en el espacio de nombres "{1}".</value>
     
   </data>
   <data name="ErrUnSupportedComponentBehaviorInvocation" xml:space="preserve">
@@ -1845,8 +1926,40 @@
   <data name="AboutTime_millisecond" xml:space="preserve">
     <value>Componente de milisegundo.</value>
   </data>
+  <data name="AboutDateTime" xml:space="preserve">
+    <value>Crea un valor que representa un instante en el tiempo, expresado como fecha y hora del día.</value>
+    
+  </data>
+  <data name="AboutDateTime_year" xml:space="preserve">
+    <value>Año.</value>
+    
+  </data>
+  <data name="AboutDateTime_month" xml:space="preserve">
+    <value>Mes.</value>
+    
+  </data>
+  <data name="AboutDateTime_day" xml:space="preserve">
+    <value>Día.</value>
+    
+  </data>
+  <data name="AboutDateTime_hour" xml:space="preserve">
+    <value>La hora.</value>
+    
+  </data>
+  <data name="AboutDateTime_minute" xml:space="preserve">
+    <value>El minuto.</value>
+    
+  </data>
+  <data name="AboutDateTime_second" xml:space="preserve">
+    <value>El segundo.</value>
+    
+  </data>
+  <data name="AboutDateTime_millisecond" xml:space="preserve">
+    <value>Los milisegundos.</value>
+    
+  </data>
   <data name="AboutYear" xml:space="preserve">
-    <value>Año devuelve el año de una fecha concreta, un número mayor que 1900.</value>
+    <value>Año devuelve el año de una fecha concreta.</value>
     
   </data>
   <data name="YearArg1" xml:space="preserve">
@@ -2260,6 +2373,36 @@
   </data>
   <data name="AboutChar_column_of_numbers" xml:space="preserve">
     <value>Una columna de números de código del conjunto de caracteres de la plataforma.</value>
+  </data>
+  <data name="AboutParseJSON" xml:space="preserve">
+    <value>Convierte una cadena JSON en un objeto.</value>
+    
+  </data>
+  <data name="ParseJSONArg1" xml:space="preserve">
+    <value>entrada</value>
+    
+  </data>
+  <data name="AboutParseJSON_input" xml:space="preserve">
+    <value>Cadena JSON que se procesará.</value>
+  </data>
+  <data name="AboutIndex" xml:space="preserve">
+    <value>Devuelve el registro de una tabla en un índice determinado.</value>
+    
+  </data>
+  <data name="IndexArg1" xml:space="preserve">
+    <value>tabla</value>
+    
+  </data>
+  <data name="IndexArg2" xml:space="preserve">
+    <value>índice</value>
+    
+  </data>
+  <data name="AboutIndex_table" xml:space="preserve">
+    <value>Una tabla</value>
+  </data>
+  <data name="AboutIndex_index" xml:space="preserve">
+    <value>El índice del registro que se recuperará.</value>
+    
   </data>
   <data name="Screen_Name_DisplayName" xml:space="preserve">
     <value>Nombre</value>
@@ -3781,11 +3924,23 @@
     
   </data>
   <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
-    <value>No se admite este tipo de resultado {0} en columnas de fórmula.</value>
+    <value>No se admite el tipo de resultado {0} en las columnas de fórmula.</value>
     
   </data>
   <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
     <value>Se espera que el tipo de resultado de esta fórmula sea {0}, pero el tipo de resultado real es {1}. No se puede cambiar el tipo de resultado de una columna de fórmula.</value>
+    
+  </data>
+  <data name="FormulaColumns_ColumnTypeNotSupported" xml:space="preserve">
+    <value>No se admite las columnas de tipo {0} en las columnas de fórmula.</value>
+    
+  </data>
+  <data name="FormulaColumns_ColumnFormatNotSupported" xml:space="preserve">
+    <value>No se admiten las columnas de tipo {0} con formato {1} en las columnas de fórmula.</value>
+    
+  </data>
+  <data name="FormulaColumns_FormulaTooLong" xml:space="preserve">
+    <value>Las fórmulas no pueden superar los 1000 caracteres.</value>
     
   </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
@@ -3802,7 +3957,6 @@
   </data>
   <data name="ErrorResource_ErrBadToken_LongMessage" xml:space="preserve">
     <value>Por ejemplo, no se espera el carácter "\" después de un número, como en "32\". Se espera un espacio ("32") para que sea, simplemente, el número 32, o bien otro número (por ejemplo, "323").</value>
-    
   </data>
   <data name="ErrorResource_ErrBadToken_HowToFix_1" xml:space="preserve">
     <value>Quite o reemplace los caracteres inesperados.</value>
@@ -3818,11 +3972,9 @@
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_LongMessage" xml:space="preserve">
     <value>Por ejemplo, no se espera el carácter "\" después de un número, como en "32\". Se espera un espacio ("32") para que sea, simplemente, el número 32, o bien otro número (por ejemplo, "323").</value>
-    
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_HowToFix_1" xml:space="preserve">
     <value>Quite o reemplace el carácter inesperado.</value>
-    
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_Link_1" xml:space="preserve">
     <value>Artículo: Referencia de fórmulas para Power Apps</value>
@@ -3834,7 +3986,6 @@
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_LongMessage" xml:space="preserve">
     <value>Cada comentario de bloque debe comenzar con "/*" y terminar con "*/". Si no finaliza cada comentario de bloque correctamente, todo el código después del comentario formará parte del comentario. Si un comentario consta solo de una línea, se puede iniciar con "//" y no identificar el final del comentario.</value>
-    
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_HowToFix_1" xml:space="preserve">
     <value>Agregue "*/" al final del comentario de bloque o cámbielo por un conjunto de comentarios de línea.</value>
@@ -3850,7 +4001,6 @@
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_LongMessage" xml:space="preserve">
     <value>Este error se produce si, por ejemplo, una fórmula contiene "{{Val@ 7}}" en lugar de "{{Val: 7}}". Cuando se define una variable, la sintaxis requiere dos puntos, en lugar del símbolo "arroba".</value>
-    
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_HowToFix_1" xml:space="preserve">
     <value>Quite o reemplace los caracteres inesperados con un carácter válido.</value>
@@ -3861,12 +4011,11 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidName_ShortMessage" xml:space="preserve">
-    <value>El nombre no es válido. No se reconoce el identificador.</value>
+    <value>El nombre no es válido. No se reconoce "{0}".</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidName_LongMessage" xml:space="preserve">
     <value>Normalmente, este error aparece cuando una fórmula hace referencia a un elemento que ya no existe (por ejemplo, un control que se ha eliminado).</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidName_HowToFix_1" xml:space="preserve">
     <value>Quite o corrija la referencia al nombre que no es válida.</value>
@@ -3876,13 +4025,27 @@
     <value>Artículo: Referencia de fórmulas para Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_ShortMessage" xml:space="preserve">
+    <value>El nombre no es válido. No se reconoce el identificador.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_LongMessage" xml:space="preserve">
+    <value>Normalmente, este error aparece cuando una fórmula hace referencia a un elemento que ya no existe (por ejemplo, un control que se ha eliminado).</value>
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_HowToFix_1" xml:space="preserve">
+    <value>Quite o corrija la referencia al nombre que no es válida.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_Link_1" xml:space="preserve">
+    <value>Artículo: Referencia de fórmula para Power Apps</value>
+    
+  </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_ShortMessage" xml:space="preserve">
     <value>La referencia de la propiedad no es válida.</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_LongMessage" xml:space="preserve">
     <value>Este error se produce cuando una fórmula hace referencia a propiedades de comportamiento de componentes con sintaxis no válida. Por ejemplo, Component.OnCustomChange en lugar de Component.OnCustomChange().</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_HowToFix_1" xml:space="preserve">
     <value>Use la sintaxis correcta para hacer referencia a la propiedad de comportamiento del componente. Por ejemplo, Component.OnCustomChange ().</value>
@@ -3898,7 +4061,6 @@
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_LongMessage" xml:space="preserve">
     <value>No se puede usar el operador Parent con un control que no tenga un control principal. Este operador hace referencia al control que hospeda el control específico y hace que todas sus propiedades estén disponibles.</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_HowToFix_1" xml:space="preserve">
     <value>Quite el operador 'Parent'.</value>
@@ -3914,7 +4076,6 @@
   </data>
   <data name="ErrorResource_ErrTooManyUps_LongMessage" xml:space="preserve">
     <value>La complejidad aumenta con cada nivel de anidamiento, por lo que Power Apps solo admite un anidamiento de ámbito de fila de hasta 63 niveles.</value>
-    
   </data>
   <data name="ErrorResource_ErrTooManyUps_HowToFix_1" xml:space="preserve">
     <value>Vuelva a escribir la fórmula con menos niveles de anidamiento.</value>
@@ -3926,7 +4087,6 @@
   </data>
   <data name="ErrorResource_ErrRuleNestedTooDeeply_LongMessage" xml:space="preserve">
     <value>Power Apps admite un anidamiento de expresión de hasta 50 niveles. Una expresión de esta profundidad es difícil de comprender y mantener.</value>
-    
   </data>
   <data name="ErrorResource_ErrRuleNestedTooDeeply_HowToFix_1" xml:space="preserve">
     <value>Vuelva a escribir la fórmula con menos niveles de anidamiento.</value>
@@ -3938,7 +4098,6 @@
   </data>
   <data name="ErrorResource_ErrOperatorExpected_LongMessage" xml:space="preserve">
     <value>Los operadores unen dos operandos. Este error se produce si coloca dos funciones (operandos) juntos sin ningún operador entre ellos, por ejemplo, Len("mytext")Len("mytext").</value>
-    
   </data>
   <data name="ErrorResource_ErrOperatorExpected_HowToFix_1" xml:space="preserve">
     <value>Edite la fórmula para que incluya un operador entre los operandos.</value>
@@ -3954,7 +4113,6 @@
   </data>
   <data name="ErrorResource_ErrNumberExpected_LongMessage" xml:space="preserve">
     <value>Este error se producirá si utiliza una función que requiera un número, pero, por ejemplo, proporciona una imagen en su lugar.</value>
-    
   </data>
   <data name="ErrorResource_ErrNumberExpected_HowToFix_1" xml:space="preserve">
     <value>Edite la fórmula para que se calcule como un número en este punto de la fórmula.</value>
@@ -3970,7 +4128,6 @@
   </data>
   <data name="ErrorResource_ErrBooleanExpected_LongMessage" xml:space="preserve">
     <value>Un valor booleano también se conoce como valor true/false en aplicaciones como Microsoft Excel. Este error se producirá si usa una función que requiere un valor booleano, pero, por ejemplo, proporciona una fecha.</value>
-    
   </data>
   <data name="ErrorResource_ErrBooleanExpected_HowToFix_1" xml:space="preserve">
     <value>Edite la fórmula para que se calcule como un valor booleano en este punto de la fórmula.</value>
@@ -3986,7 +4143,6 @@
   </data>
   <data name="ErrorResource_ErrColonExpected_LongMessage" xml:space="preserve">
     <value>Los dos puntos separan un nombre de campo, que a veces se conoce como nombre de columna, de un valor de campo de un registro (por ejemplo, {Month:"1"}, {Month:"2"}...). Un signo de dos puntos también separa las horas de los minutos y los segundos (por ejemplo, "3:04").</value>
-    
   </data>
   <data name="ErrorResource_ErrColonExpected_HowToFix_1" xml:space="preserve">
     <value>Edite la fórmula para que incluya un signo de dos puntos.</value>
@@ -4002,7 +4158,6 @@
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_LongMessage" xml:space="preserve">
     <value>Las funciones de comportamiento cambian el estado de la aplicación al cambiar valores en otra parte de la aplicación. "Navigate", "Patch", "UpdateContext" y "Collect" son funciones de comportamiento comunes. "OnSelect", "OnVisible" y otras propiedades de tipo "On..." son propiedades comunes basadas en el comportamiento.</value>
-    
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_HowToFix_1" xml:space="preserve">
     <value>Mueva la función de comportamiento a una propiedad basada en el comportamiento.</value>
@@ -4018,7 +4173,6 @@
   </data>
   <data name="ErrorResource_ErrTestPropertyExpected_LongMessage" xml:space="preserve">
     <value>Las funciones de prueba son las que pueden usarse para simular la entrada del usuario al probar una aplicación. “SetProperty”, “SelectRow” y “Assert” son funciones de prueba comunes. Solo pueden usarse en casos de prueba.</value>
-    
   </data>
   <data name="ErrorResource_ErrTestPropertyExpected_HowToFix_1" xml:space="preserve">
     <value>Use la función en un caso de prueba, no en la aplicación en sí.</value>
@@ -4030,7 +4184,6 @@
   </data>
   <data name="ErrorResource_ErrCannotCoerce_SourceType_TargetType_LongMessage" xml:space="preserve">
     <value>Power Apps puede convertir algunos tipos de datos de la fórmula a otros tipos automáticamente. Por ejemplo, puede convertir "1" (una cadena) en 1 (un número), pero no todos los tipos de datos a todos los demás tipos de datos. Por ejemplo, no puede convertir una imagen en un número.</value>
-    
   </data>
   <data name="ErrorResource_ErrCannotCoerce_SourceType_TargetType_HowToFix_1" xml:space="preserve">
     <value>Edite la fórmula para convertir los datos en cuestión al tipo esperado.</value>
@@ -4042,7 +4195,6 @@
   </data>
   <data name="ErrorResource_ErrStringExpected_LongMessage" xml:space="preserve">
     <value>Este error se produce si usa una función que requiere un argumento de texto (o cadena) y, por ejemplo, proporciona una fecha.</value>
-    
   </data>
   <data name="ErrorResource_ErrStringExpected_HowToFix_1" xml:space="preserve">
     <value>Edite la fórmula para que se calcule como texto en este punto de la fórmula.</value>
@@ -4058,7 +4210,6 @@
   </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_LongMessage" xml:space="preserve">
     <value>Este error se producirá si usa una función que requiera texto o un número, pero, por ejemplo, proporciona un valor booleano (true/false).</value>
-    
   </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_HowToFix_1" xml:space="preserve">
     <value>Edite la fórmula para que se calcule como texto o un número en este punto de la fórmula.</value>
@@ -4074,7 +4225,6 @@
   </data>
   <data name="ErrorResource_ErrClosingBracketExpected_LongMessage" xml:space="preserve">
     <value>Una llave de cierre indica el final de un registro (por ejemplo, {Month:"1"}, {Month:"2"}...).</value>
-    
   </data>
   <data name="ErrorResource_ErrClosingBracketExpected_HowToFix_1" xml:space="preserve">
     <value>Edite la fórmula para que incluya una llave.</value>
@@ -4094,7 +4244,6 @@
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_LongMessage" xml:space="preserve">
     <value>No podemos evaluar su fórmula porque los valores que se comparan en la fórmula no son del mismo tipo.</value>
-    
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_HowToFix_1" xml:space="preserve">
     <value>Es posible que deba convertir el valor para que sea del mismo tipo; por ejemplo, de una cadena de fecha (como "31/12/2018") a un valor de fecha.</value>
@@ -4174,7 +4323,6 @@
   </data>
   <data name="ErrorResource_ErrTypeError_LongMessage" xml:space="preserve">
     <value>Es posible que los datos no coincidan con el tipo esperado (texto, número, fecha, tabla o registro).</value>
-    
   </data>
   <data name="ErrorResource_ErrTypeError_HowToFix_1" xml:space="preserve">
     <value>Compruebe los tipos de los valores implicados en la fórmula y asegúrese de que coincidan.</value>
@@ -4194,7 +4342,6 @@
   </data>
   <data name="ErrorResource_ErrDateExpected_LongMessage" xml:space="preserve">
     <value>Este error se producirá si usa una función que requiera una fecha, pero, por ejemplo, proporciona texto.</value>
-    
   </data>
   <data name="ErrorResource_ErrDateExpected_HowToFix_1" xml:space="preserve">
     <value>Edite la fórmula para que se calcule como una fecha en este punto de la fórmula.</value>
@@ -4210,7 +4357,6 @@
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_LongMessage" xml:space="preserve">
     <value>Puede que el origen de datos no pueda procesar la fórmula y que devuelva un conjunto de datos incompleto. Es posible que la aplicación no devuelva resultados correctos o que no se comporte correctamente si el conjunto de datos está incompleto.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_HowToFix_1" xml:space="preserve">
     <value>Si el conjunto de datos supera el límite de 500 registros, pero contiene menos de 2,000, intente restablecer el límite.</value>
@@ -4238,7 +4384,6 @@
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_LongMessage" xml:space="preserve">
     <value>Puede que el origen de datos no pueda procesar la fórmula y que devuelva un conjunto de datos incompleto. Es posible que la aplicación no devuelva resultados correctos o que no se comporte correctamente si el conjunto de datos está incompleto.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_HowToFix_1" xml:space="preserve">
     <value>Si el conjunto de datos supera el límite de 500 registros, pero contiene menos de 2,000, intente restablecer el límite.</value>
@@ -4266,7 +4411,6 @@
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_LongMessage" xml:space="preserve">
     <value> El lado derecho del operador "in" debe ser un nombre de columna del origen de datos correcto. Puede que el origen de datos no sea capaz de procesar la fórmula y que devuelva un conjunto de datos incompleto. Es posible que la aplicación no devuelva resultados correctos o que se comporte incorrectamente si el conjunto de datos está incompleto.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_1" xml:space="preserve">
     <value>Cambie el elemento de la derecha del operador "in" para que sea una columna del origen de datos correcto.</value>
@@ -4299,7 +4443,6 @@
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_LongMessage" xml:space="preserve">
     <value> El lado derecho del operador "in" no es una columna del origen de datos correcto. Puede que el origen de datos no sea capaz de procesar la fórmula y que devuelva un conjunto de datos incompleto. Es posible que la aplicación no devuelva resultados correctos o que se comporte incorrectamente si el conjunto de datos está incompleto.
       </value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_1" xml:space="preserve">
     <value>Cambie el elemento de la derecha del operador "in" para que sea una columna del origen de datos correcto.</value>
@@ -4380,6 +4523,22 @@
   </data>
   <data name="ErrorResource_ErrInvalidControlReference_Link_1" xml:space="preserve">
     <value>Referencia: ConfirmExit para las aplicaciones de lienzo</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidStringInterpolation_ShortMessage" xml:space="preserve">
+    <value>Las expresiones que aparecen dentro de una cadena interpolada deben evaluarse en un valor de texto o en un tipo compatible.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidStringInterpolation_HowToFix_1" xml:space="preserve">
+    <value>Compruebe los tipos de las expresiones dentro de la cadena interpolada.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrEmptyIsland_ShortMessage" xml:space="preserve">
+    <value>Las expresiones vacías no pueden aparecer dentro de una cadena interpolada.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrEmptyIsland_HowToFix_1" xml:space="preserve">
+    <value>Compruebe si hay expresiones vacías dentro de la cadena interpolada.</value>
     
   </data>
   <data name="ErrorResource_ErrAsNotInContext_ShortMessage" xml:space="preserve">

@@ -1,5 +1,64 @@
 ﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
@@ -426,6 +485,17 @@
   <data name="AboutValue_language" xml:space="preserve">
     <value>De taalcode die moet worden gebruikt bij het converteren van de waarde.</value>
     
+  </data>
+  <data name="AboutBoolean" xml:space="preserve">
+    <value>Converteert een 'tekst' die een booleaanse waarde vertegenwoordigt naar een booleaanse waarde.</value>
+    
+  </data>
+  <data name="BooleanArg1" xml:space="preserve">
+    <value>tekst</value>
+    
+  </data>
+  <data name="AboutBoolean_text" xml:space="preserve">
+    <value>De tekstwaarde die moet worden geconverteerd naar een booleaanse waarde.</value>
   </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Hiermee wordt het eerste niet-lege argument geretourneerd</value>
@@ -1368,6 +1438,10 @@
     <value>expressie</value>
     
   </data>
+  <data name="AboutIsBlankOrError_expression" xml:space="preserve">
+    <value>Een expressie die moet worden getest.</value>
+    
+  </data>
   <data name="AboutIsEmpty" xml:space="preserve">
     <value>Hiermee wordt gecontroleerd of een verzameling leeg is en wordt waar of onwaar geretourneerd.</value>
     
@@ -1375,6 +1449,9 @@
   <data name="IsEmptyArg1" xml:space="preserve">
     <value>bron</value>
     
+  </data>
+  <data name="AboutIsEmpty_source" xml:space="preserve">
+    <value>Een tabel die moet worden getest.</value>
   </data>
   <data name="AboutShuffle" xml:space="preserve">
     <value>Hiermee wordt een kopie van de invoertabel 'source' met een willekeurige volgorde weergegeven.</value>
@@ -1553,7 +1630,11 @@
     
   </data>
   <data name="ErrUnknownFunction" xml:space="preserve">
-    <value>Aanroepen van onbekende of niet-ondersteunde functie.</value>
+    <value>{0} is een onbekende of niet-ondersteunde functie.</value>
+    
+  </data>
+  <data name="ErrUnknownNamespaceFunction" xml:space="preserve">
+    <value>{0} is een onbekende of niet-ondersteunde functie in naamruimte {1}.</value>
     
   </data>
   <data name="ErrUnSupportedComponentBehaviorInvocation" xml:space="preserve">
@@ -1845,8 +1926,40 @@
   <data name="AboutTime_millisecond" xml:space="preserve">
     <value>Het millisecondegedeelte.</value>
   </data>
+  <data name="AboutDateTime" xml:space="preserve">
+    <value>Hiermee wordt een waarde gemaakt die een moment in tijd vertegenwoordigt, uitgedrukt als een datum en tijd van de dag.</value>
+    
+  </data>
+  <data name="AboutDateTime_year" xml:space="preserve">
+    <value>Het jaar.</value>
+    
+  </data>
+  <data name="AboutDateTime_month" xml:space="preserve">
+    <value>De maand.</value>
+    
+  </data>
+  <data name="AboutDateTime_day" xml:space="preserve">
+    <value>De dag.</value>
+    
+  </data>
+  <data name="AboutDateTime_hour" xml:space="preserve">
+    <value>Het uur.</value>
+    
+  </data>
+  <data name="AboutDateTime_minute" xml:space="preserve">
+    <value>De minuut.</value>
+    
+  </data>
+  <data name="AboutDateTime_second" xml:space="preserve">
+    <value>De seconde.</value>
+    
+  </data>
+  <data name="AboutDateTime_millisecond" xml:space="preserve">
+    <value>De milliseconden.</value>
+    
+  </data>
   <data name="AboutYear" xml:space="preserve">
-    <value>Jaar retourneert het jaar voor de desbetreffende datum, een getal groter dan 1900.</value>
+    <value>Jaar retourneert het jaar voor de desbetreffende datum.</value>
     
   </data>
   <data name="YearArg1" xml:space="preserve">
@@ -2260,6 +2373,36 @@
   </data>
   <data name="AboutChar_column_of_numbers" xml:space="preserve">
     <value>Een kolom met codenummers van de tekenset op uw platform.</value>
+  </data>
+  <data name="AboutParseJSON" xml:space="preserve">
+    <value>Converteert een JSON-tekenreeks naar een object.</value>
+    
+  </data>
+  <data name="ParseJSONArg1" xml:space="preserve">
+    <value>invoer</value>
+    
+  </data>
+  <data name="AboutParseJSON_input" xml:space="preserve">
+    <value>Een JSON-tekenreeks die moet worden verwerkt.</value>
+  </data>
+  <data name="AboutIndex" xml:space="preserve">
+    <value>Retourneert de record in een tabel bij een bepaalde index.</value>
+    
+  </data>
+  <data name="IndexArg1" xml:space="preserve">
+    <value>tabel</value>
+    
+  </data>
+  <data name="IndexArg2" xml:space="preserve">
+    <value>index</value>
+    
+  </data>
+  <data name="AboutIndex_table" xml:space="preserve">
+    <value>Een tabel.</value>
+  </data>
+  <data name="AboutIndex_index" xml:space="preserve">
+    <value>De index van de record die moet worden opgehaald.</value>
+    
   </data>
   <data name="Screen_Name_DisplayName" xml:space="preserve">
     <value>Naam</value>
@@ -3781,11 +3924,23 @@
     
   </data>
   <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
-    <value>Dit resultaattype {0} wordt niet ondersteund in formulekolommen.</value>
+    <value>Het resultaattype {0} wordt niet ondersteund in formulekolommen.</value>
     
   </data>
   <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
     <value>Het resultaattype voor deze formule is waarschijnlijk {0}, maar het werkelijke resultaattype is {1}. Het resultaattype van een formulekolom kan niet worden gewijzigd.</value>
+    
+  </data>
+  <data name="FormulaColumns_ColumnTypeNotSupported" xml:space="preserve">
+    <value>Kolommen van het type {0} worden niet ondersteund in formulekolommen.</value>
+    
+  </data>
+  <data name="FormulaColumns_ColumnFormatNotSupported" xml:space="preserve">
+    <value>Kolommen van het type {0} met {1} worden niet ondersteund in formulekolommen.</value>
+    
+  </data>
+  <data name="FormulaColumns_FormulaTooLong" xml:space="preserve">
+    <value>Formules kunnen niet langer zijn dan 1000 tekens.</value>
     
   </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
@@ -3802,7 +3957,6 @@
   </data>
   <data name="ErrorResource_ErrBadToken_LongMessage" xml:space="preserve">
     <value>Het teken \ wordt bijvoorbeeld niet verwacht na een getal zoals bij 32\. Er wordt een spatie (32 ) verwacht als het alleen het getal 32 betreft, anders wordt er een ander getal (zoals 323) verwacht.</value>
-    
   </data>
   <data name="ErrorResource_ErrBadToken_HowToFix_1" xml:space="preserve">
     <value>Verwijder de onverwachte tekens of vervang deze.</value>
@@ -3818,11 +3972,9 @@
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_LongMessage" xml:space="preserve">
     <value>Het teken \ wordt bijvoorbeeld niet verwacht na een getal zoals bij 32\. Er wordt een spatie (32) verwacht als het alleen het getal 32 betreft, anders wordt er een ander getal (zoals 323) verwacht.</value>
-    
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_HowToFix_1" xml:space="preserve">
     <value>Verwijder of vervang het onverwachte teken.</value>
-    
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_Link_1" xml:space="preserve">
     <value>Artikel: Formuleverwijzing voor Power Apps</value>
@@ -3834,7 +3986,6 @@
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_LongMessage" xml:space="preserve">
     <value>Elke blokopmerking moet beginnen met /* en eindigen met */. Als u niet alle blokopmerkingen juist afsluit, wordt alle code na de opmerking deel van de opmerking. Als een opmerking uit slechts één regel bestaat, kunt u de opmerking beginnen met // en hoeft u geen id te plaatsen aan het einde van de opmerking.</value>
-    
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_HowToFix_1" xml:space="preserve">
     <value>Voeg */ toe aan het einde van uw blokopmerking of vervang dit door een set regelopmerkingen.</value>
@@ -3850,7 +4001,6 @@
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_LongMessage" xml:space="preserve">
     <value>Deze fout treedt op als een formule bijvoorbeeld {{Val@ 7}} bevat in plaats van {{Val: 7}}. Wanneer u een variabele instelt, vereist de syntaxis een dubbele punt in plaats van een apenstaartje.</value>
-    
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_HowToFix_1" xml:space="preserve">
     <value>Verwijder de onverwachte tekens of vervang deze door een verwacht teken.</value>
@@ -3861,12 +4011,11 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidName_ShortMessage" xml:space="preserve">
-    <value>De naam is ongeldig. Deze id wordt niet herkend.</value>
+    <value>De naam is ongeldig. {0} wordt niet herkend.</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidName_LongMessage" xml:space="preserve">
     <value>Deze fout treedt meestal op wanneer een formule verwijst naar een entiteit die niet meer bestaat (bijvoorbeeld een besturingselement dat u hebt verwijderd).</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidName_HowToFix_1" xml:space="preserve">
     <value>Verwijder of corrigeer de verwijzing naar de ongeldige naam.</value>
@@ -3876,13 +4025,27 @@
     <value>Artikel: Formuleverwijzing voor Power Apps</value>
     
   </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_ShortMessage" xml:space="preserve">
+    <value>De naam is ongeldig. Deze id wordt niet herkend.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_LongMessage" xml:space="preserve">
+    <value>Deze fout treedt meestal op wanneer een formule verwijst naar een entiteit die niet meer bestaat (bijvoorbeeld een besturingselement dat u hebt verwijderd).</value>
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_HowToFix_1" xml:space="preserve">
+    <value>Verwijder of corrigeer de verwijzing naar de ongeldige naam.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_Link_1" xml:space="preserve">
+    <value>Artikel: Formuleverwijzing voor Power Apps</value>
+    
+  </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_ShortMessage" xml:space="preserve">
     <value>De eigenschapsverwijzing is niet geldig.</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_LongMessage" xml:space="preserve">
     <value>Deze fout wordt weergegeven wanneer een formule verwijst naar eigenschappen van componentgedrag met ongeldige syntaxis. (Bijvoorbeeld Component.OnCustomChange in plaats van Component.OnCustomChange())</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_HowToFix_1" xml:space="preserve">
     <value>Gebruik de juiste syntaxis om te verwijzen naar de eigenschap van componentgedrag. Bijvoorbeeld Component.OnCustomChange()</value>
@@ -3898,7 +4061,6 @@
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_LongMessage" xml:space="preserve">
     <value>Deze operator verwijst naar het besturingselement dat host is van het gegeven besturingselement en alle eigenschappen beschikbaar maakt.</value>
-    
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_HowToFix_1" xml:space="preserve">
     <value>Verwijder de bovenliggende operator.</value>
@@ -3914,7 +4076,6 @@
   </data>
   <data name="ErrorResource_ErrTooManyUps_LongMessage" xml:space="preserve">
     <value>Bij elke nestniveau neemt de complexiteit toe. In Power Apps wordt het nesten van rijbereiken tot maximaal 63 niveaus ondersteund.</value>
-    
   </data>
   <data name="ErrorResource_ErrTooManyUps_HowToFix_1" xml:space="preserve">
     <value>Herschrijf de formule met minder geneste niveaus.</value>
@@ -3926,7 +4087,6 @@
   </data>
   <data name="ErrorResource_ErrRuleNestedTooDeeply_LongMessage" xml:space="preserve">
     <value>Power Apps ondersteunt het nesten van expressies tot maximaal 50 niveaus. Een dergelijk diep geneste expressie is moeilijk te begrijpen en onderhouden.</value>
-    
   </data>
   <data name="ErrorResource_ErrRuleNestedTooDeeply_HowToFix_1" xml:space="preserve">
     <value>Herschrijf de formule met minder geneste niveaus.</value>
@@ -3938,7 +4098,6 @@
   </data>
   <data name="ErrorResource_ErrOperatorExpected_LongMessage" xml:space="preserve">
     <value>Met operatoren worden operands samengevoegd. Deze fout doet zich voor als u twee functies (operands) combineert zonder dat hier een operator tussen staat, bijvoorbeeld Len("mijntekst")Len("mijntekst").</value>
-    
   </data>
   <data name="ErrorResource_ErrOperatorExpected_HowToFix_1" xml:space="preserve">
     <value>Bewerk de formule zodat hierin een operator tussen de operands is opgenomen.</value>
@@ -3954,7 +4113,6 @@
   </data>
   <data name="ErrorResource_ErrNumberExpected_LongMessage" xml:space="preserve">
     <value>Deze fout doet zich voor als u een functie gebruikt waarvoor een getal is vereist, maar u bijvoorbeeld een afbeelding opgeeft.</value>
-    
   </data>
   <data name="ErrorResource_ErrNumberExpected_HowToFix_1" xml:space="preserve">
     <value>Bewerk de formule zodat de formule op deze positie resulteert in een getal.</value>
@@ -3970,7 +4128,6 @@
   </data>
   <data name="ErrorResource_ErrBooleanExpected_LongMessage" xml:space="preserve">
     <value>Een booleaanse waarde wordt ook wel een waar/onwaar-waarde genoemd in toepassingen zoals Microsoft Excel of een ja/nee-waarde in SharePoint. Deze fout doet zich voor als u een functie gebruikt waarvoor een booleaanse waarde is vereist, maar u bijvoorbeeld een datum opgeeft.</value>
-    
   </data>
   <data name="ErrorResource_ErrBooleanExpected_HowToFix_1" xml:space="preserve">
     <value>Bewerk de formule zodat de formule op deze positie resulteert in een booleaanse waarde.</value>
@@ -3986,7 +4143,6 @@
   </data>
   <data name="ErrorResource_ErrColonExpected_LongMessage" xml:space="preserve">
     <value>Met een dubbele punt wordt een veldnaam, soms ook een kolomnaam genoemd, gescheiden van een veldwaarde in een record (bijvoorbeeld {Month:"1"}, {Month:"2"} …). Een dubbele punt wordt ook gebruikt voor de scheiding tussen uren, minuten en seconden (bijvoorbeeld "3:04").</value>
-    
   </data>
   <data name="ErrorResource_ErrColonExpected_HowToFix_1" xml:space="preserve">
     <value>Bewerk de formule zodat deze een dubbele punt bevat.</value>
@@ -4002,7 +4158,6 @@
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_LongMessage" xml:space="preserve">
     <value>Gedragsfuncties wijzigen de status van de app door waarden elders in de app te wijzigen. De functies Navigate, Patch, UpdateContext en Collect zijn veelvoorkomende gedragsfuncties. De eigenschappen OnSelect, OnVisible en andere eigenschappen die beginnen met 'On …', zijn veelvoorkomende op gedrag gebaseerde eigenschappen.</value>
-    
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_HowToFix_1" xml:space="preserve">
     <value>De gedragsfunctie verplaatsen naar een op gedrag gebaseerde eigenschap.</value>
@@ -4018,7 +4173,6 @@
   </data>
   <data name="ErrorResource_ErrTestPropertyExpected_LongMessage" xml:space="preserve">
     <value>Testfuncties zijn de functies die kunnen worden gebruikt om gebruikersinvoer te simuleren bij het testen van een app. Veelgebruikte testfuncties zijn SetProperty, SelectRow en Assert. Deze kunnen alleen worden gebruikt in de testcases.</value>
-    
   </data>
   <data name="ErrorResource_ErrTestPropertyExpected_HowToFix_1" xml:space="preserve">
     <value>Gebruik de functie in een testcase, maar niet in de app zelf.</value>
@@ -4030,7 +4184,6 @@
   </data>
   <data name="ErrorResource_ErrCannotCoerce_SourceType_TargetType_LongMessage" xml:space="preserve">
     <value>Power Apps kan bepaalde gegevenstypen in de formule voor u converteren naar andere typen. Het is bijvoorbeeld mogelijk om de tekenreeks 1 te converteren naar het getal 1, maar niet alle gegevenstypen kunnen in andere typen worden omgezet. Een afbeelding kan bijvoorbeeld niet naar een getal worden geconverteerd.</value>
-    
   </data>
   <data name="ErrorResource_ErrCannotCoerce_SourceType_TargetType_HowToFix_1" xml:space="preserve">
     <value>Bewerk de formule zodat u de betrokken gegevens naar het verwachte type kunt converteren.</value>
@@ -4042,7 +4195,6 @@
   </data>
   <data name="ErrorResource_ErrStringExpected_LongMessage" xml:space="preserve">
     <value>Deze fout doet zich voor als u een functie gebruikt waarvoor een argument met tekst (of een tekenreeks) is vereist, maar u bijvoorbeeld een datum opgeeft.</value>
-    
   </data>
   <data name="ErrorResource_ErrStringExpected_HowToFix_1" xml:space="preserve">
     <value>Bewerk de formule zodat de formule op deze positie resulteert in tekst.</value>
@@ -4058,7 +4210,6 @@
   </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_LongMessage" xml:space="preserve">
     <value>Deze fout doet zich voor als u een functie gebruikt waarvoor tekst of een getal is vereist, maar u bijvoorbeeld een booleaanse (waar/onwaar) waarde opgeeft.</value>
-    
   </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_HowToFix_1" xml:space="preserve">
     <value>Bewerk de formule zodat de formule op deze positie resulteert in tekst of een getal.</value>
@@ -4074,7 +4225,6 @@
   </data>
   <data name="ErrorResource_ErrClosingBracketExpected_LongMessage" xml:space="preserve">
     <value>Een afsluitende accolade geeft het einde van een record aan (bijvoorbeeld {Month:"1"}, {Month:"2"} …).</value>
-    
   </data>
   <data name="ErrorResource_ErrClosingBracketExpected_HowToFix_1" xml:space="preserve">
     <value>Bewerk de formule zodanig dat deze een accolade bevat.</value>
@@ -4094,7 +4244,6 @@
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_LongMessage" xml:space="preserve">
     <value>Uw formule kan niet worden geëvalueerd omdat de waarden die in de formule worden vergeleken, niet van hetzelfde type zijn.</value>
-    
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_HowToFix_1" xml:space="preserve">
     <value>Mogelijk moet u de waarde converteren om deze van hetzelfde type te maken, bijvoorbeeld door een datumtekenreeks (zoals '12/31/2018') te converteren naar een datumwaarde.</value>
@@ -4174,7 +4323,6 @@
   </data>
   <data name="ErrorResource_ErrTypeError_LongMessage" xml:space="preserve">
     <value>De gegevens komen mogelijk niet overeen met het verwachte type. (tekst, nummer, datum, tabel, record.)</value>
-    
   </data>
   <data name="ErrorResource_ErrTypeError_HowToFix_1" xml:space="preserve">
     <value>Controleer de typen van de waarden die worden gebruikt in de formule en zorg ervoor dat de typen overeenkomen.</value>
@@ -4194,7 +4342,6 @@
   </data>
   <data name="ErrorResource_ErrDateExpected_LongMessage" xml:space="preserve">
     <value>Deze fout doet zich voor als u een functie gebruikt waarvoor een datum is vereist, maar u bijvoorbeeld tekst opgeeft.</value>
-    
   </data>
   <data name="ErrorResource_ErrDateExpected_HowToFix_1" xml:space="preserve">
     <value>Bewerk de formule zodat de formule op deze positie resulteert in een datum.</value>
@@ -4210,7 +4357,6 @@
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_LongMessage" xml:space="preserve">
     <value>Mogelijk kan de gegevensbron de formule niet verwerken en wordt er een onvolledige gegevensset geretourneerd. Uw toepassing kan onjuiste resultaten retourneren of zich onjuist gedragen als de gegevensset niet compleet is.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_HowToFix_1" xml:space="preserve">
     <value>Als uw gegevensset meer records bevat dan de limiet van 500, maar minder dan 2000 records, kunt u proberen de limiet opnieuw in te stellen.</value>
@@ -4238,7 +4384,6 @@
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_LongMessage" xml:space="preserve">
     <value>Mogelijk kan de gegevensbron de formule niet verwerken en wordt er een onvolledige gegevensset geretourneerd. Uw toepassing kan onjuiste resultaten retourneren of zich onjuist gedragen als de gegevensset niet compleet is.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_HowToFix_1" xml:space="preserve">
     <value>Als uw gegevensset meer records bevat dan de limiet van 500, maar minder dan 2000 records, kunt u proberen de limiet opnieuw in te stellen.</value>
@@ -4266,7 +4411,6 @@
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_LongMessage" xml:space="preserve">
     <value> De rechterzijde van de operator 'in' moet een kolomnaam zijn uit de juiste gegevensbron. Mogelijk kan de gegevensbron de formule niet verwerken en wordt er een onvolledige gegevensset geretourneerd. Uw toepassing kan onjuiste resultaten retourneren of zich onjuist gedragen als de gegevensset niet compleet is.</value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_1" xml:space="preserve">
     <value>Wijzig het item rechts van de operator 'in' naar een kolom uit de juiste gegevensbron.</value>
@@ -4299,7 +4443,6 @@
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_LongMessage" xml:space="preserve">
     <value> De rechterzijde van de operator 'in' is geen kolom uit de juiste gegevensbron. Mogelijk kan de gegevensbron de formule niet verwerken en wordt er een onvolledige gegevensset geretourneerd. Uw toepassing kan onjuiste resultaten retourneren of zich onjuist gedragen als de gegevensset niet compleet is.
         </value>
-    
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_1" xml:space="preserve">
     <value>Wijzig het item rechts van de operator 'in' naar een kolom uit de juiste gegevensbron.</value>
@@ -4380,6 +4523,22 @@
   </data>
   <data name="ErrorResource_ErrInvalidControlReference_Link_1" xml:space="preserve">
     <value>Verwijzing: ConfirmExit voor canvas-apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidStringInterpolation_ShortMessage" xml:space="preserve">
+    <value>Expressies die in een geïnterpoleerde tekenreeks verschijnen, moeten worden geëvalueerd op een tekstwaarde of op een compatibel type.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidStringInterpolation_HowToFix_1" xml:space="preserve">
+    <value>Controleer de typen expressies in de geïnterpoleerde tekenreeks.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrEmptyIsland_ShortMessage" xml:space="preserve">
+    <value>Lege expressies kunnen niet worden weergegeven in een geïnterpoleerde tekenreeks.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrEmptyIsland_HowToFix_1" xml:space="preserve">
+    <value>Controleer op lege expressies in de geïnterpoleerde tekenreeks.</value>
     
   </data>
   <data name="ErrorResource_ErrAsNotInContext_ShortMessage" xml:space="preserve">

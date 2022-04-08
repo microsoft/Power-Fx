@@ -1,0 +1,104 @@
+﻿>> Max(1)
+1
+
+>> Max(Min(Date(2022,3,8)))
+Date(2022,3,8)
+
+>> Max(1,2)
+2
+
+>> Max("1","2")
+2
+
+>> Max(Blank(), 100, -5, "2000", Value("2001"), Text(2002))
+2002
+
+>> Max("200", "2000")
+2000
+
+>> Max(DateTimeValue("November 10, 2014 1:50 PM"), DateTimeValue("November 11, 2014 1:50 PM"))
+DateTime(2014,11,11,13,50,0,0)
+
+>> Max(DateTimeValue("November 10, 2014 1:50 PM"), DateTimeValue("November 10, 2014 2:50 PM"))
+DateTime(2014,11,10,14,50,0,0)
+
+>> Max(Time(1,50,0),Time(2,0,0))
+02:00:00
+
+>> Max(Date(2022,3,8),DateTimeValue("March 08, 2022 1:50 PM"))
+DateTime(2022,3,8,13,50,0,0)
+
+>> Max(Time(3,4,5), Time(2,1/0,8))
+#Error(Kind=Div0)
+
+>> Max(1, 2, {a:3})
+Errors: Error 10-15: Expected number. We expect a number at this point in the formula.
+
+>> Min(1)
+1
+
+>> Min(Min(Date(2022,3,8)))
+Date(2022,3,8)
+
+>> Min(1,2)
+1
+
+>> Min(Sequence(10000), Value)
+1
+
+>> Min(Date(1985,3,5),Date(1986,10,19))
+Date(1985,3,5)
+
+>> Min(-100, If(true, -1000, 200))
+-1000
+
+>> Min(Date(2022,3,8),DateTimeValue("March 08, 2022 1:50 PM"))
+DateTime(2022,3,8,0,0,0,0)
+
+>> Min(1, 3, Sqrt(-1), -3)
+#Error(Kind=Numeric)
+
+>> Min({a:1}, {a:2}, {a:3})
+Errors: Error 4-9: Expected number. We expect a number at this point in the formula.|Error 11-16: Expected number. We expect a number at this point in the formula.|Error 18-23: Expected number. We expect a number at this point in the formula.
+
+>> Max([1, 2, 3, 4, 5], Value)
+5
+
+>> Max(Sequence(33333, 10),Value)
+33342
+
+>> Max(1, 2, 3, Blank(), 2, 3)
+3
+
+>> Max(Table({Name:"John Doe", DOB:Date(1985,3,5)},{Name:"Jane Roe", DOB:Date(1986,10,19)}),DOB)
+Date(1986,10,19)
+
+>> Max(Table({Name:"John Doe", DOB:Date(1985,3,5), Thing: "1"},{Name:"Jane Roe", DOB:Date(1986,10,19), Thing: "2"}),Thing)
+2
+
+>> Max(If(Left("hello", -1), [Date(2020,1,1), Date(2021,2,2)]), Value)
+#Error(Kind=Numeric)
+
+>> Max([1, 2, 1/0, 4, 5], Value)
+#Error(Kind=Div0)
+
+>> Min([1, 2, 3, 4, 5], Value)
+1
+
+>> Min(1, 2, 3, Blank(), 2, 3)
+1
+
+>> Min([1, 2, 3], 4)
+4
+
+>> Min(Sequence(10000), DateAdd(Date(2000,1,1), -Value, TimeUnit.Days))
+Date(1972,8,15)
+
+>> Min([1, 2, 1/0, 4, 5], Value)
+#Error(Kind=Div0)
+
+>> Min(If(Sqrt(-1) < 1, [1,2,3]), Value)
+#Error(Kind=Numeric)
+
+>> Min([1,2,3], [1])
+Errors: Error 13-16: Expected number. We expect a number at this point in the formula.|Error 0-17: The function 'Min' has some invalid arguments.
