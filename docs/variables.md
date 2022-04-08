@@ -43,7 +43,7 @@ The formula for **Label1** has been automatically recalculated, showing the new 
 
 In Power Fx, you can use formulas to determine not only the primary value of a control but also properties such as formatting. In the next example, a formula for the **Color** property of the label will automatically show negative values in red. The **If** function should look familiar from Excel:
 
-`If( Value(Label1.Text) < 0, Red, Black )`
+`If( Value( Label1.Text) > 0, Black, Red )`
 
 ![Animation of conditional formatting](media/variables/recalc-color.gif)
 
