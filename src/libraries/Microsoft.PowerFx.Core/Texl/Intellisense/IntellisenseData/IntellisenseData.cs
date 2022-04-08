@@ -313,14 +313,7 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense.IntellisenseData
         {
             foreach (var global in _powerFxConfig.GetSymbols())
             {
-                var type = DType.Unknown;
-
-                if (global is IExternalOptionSet optionSet)
-                {
-                    type = optionSet.Type;
-                }
-
-                IntellisenseHelper.AddSuggestion(this, _powerFxConfig.GetSuggestableSymbolName(global), SuggestionKind.Global, SuggestionIconKind.Other, type, requiresSuggestionEscaping: true);
+                IntellisenseHelper.AddSuggestion(this, _powerFxConfig.GetSuggestableSymbolName(global), SuggestionKind.Global, SuggestionIconKind.Other, global.Type, requiresSuggestionEscaping: true);
             }
         }
 

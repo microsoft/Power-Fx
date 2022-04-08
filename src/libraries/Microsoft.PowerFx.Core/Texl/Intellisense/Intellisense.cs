@@ -25,12 +25,12 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
         protected readonly IEnumStore _enumStore;
         protected readonly PowerFxConfig _config;
 
-        public Intellisense(IEnumStore enumStore, PowerFxConfig config, IReadOnlyList<ISuggestionHandler> suggestionHandlers)
+        public Intellisense(PowerFxConfig config, IEnumStore enumStore, IReadOnlyList<ISuggestionHandler> suggestionHandlers)
         {
             Contracts.AssertValue(suggestionHandlers);
 
-            _enumStore = enumStore;
             _config = config;
+            _enumStore = enumStore;
             _suggestionHandlers = suggestionHandlers;
         }
 
@@ -229,7 +229,7 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
 
         protected internal virtual IntellisenseData.IntellisenseData CreateData(IIntellisenseContext context, DType expectedType, TexlBinding binding, TexlFunction curFunc, TexlNode curNode, int argIndex, int argCount, IsValidSuggestion isValidSuggestionFunc, IList<DType> missingTypes, List<CommentToken> comments)
         {
-            return new IntellisenseData.IntellisenseData(_config, context, expectedType, binding, curFunc, curNode, argIndex, argCount, isValidSuggestionFunc, missingTypes, comments);
+            return new IntellisenseData.IntellisenseData(_config, _enumStore, context, expectedType, binding, curFunc, curNode, argIndex, argCount, isValidSuggestionFunc, missingTypes, comments);
         }
 
         private void GetFunctionAndTypeInformation(IIntellisenseContext context, TexlNode curNode, TexlBinding binding, out TexlFunction curFunc, out int argIndex, out int argCount, out DType expectedType, out IsValidSuggestion isValidSuggestionFunc)
