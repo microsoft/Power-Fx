@@ -1,12 +1,12 @@
 ﻿// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+// Licensed under the MIT license.
 
 using Microsoft.PowerFx.LanguageServerProtocol.Protocol;
 
 namespace Microsoft.PowerFx.Core
 {
     /// <summary>
-    /// Provides quick fix
+    /// Provides quick fix.
     /// </summary>
     public interface IPowerFxScopeQuickFix
     {

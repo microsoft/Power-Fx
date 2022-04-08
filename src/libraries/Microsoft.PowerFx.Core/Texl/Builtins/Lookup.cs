@@ -1,10 +1,11 @@
 ﻿// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+// Licensed under the MIT license.
 
 using System.Collections.Generic;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Entities;
+using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Functions.Delegation;
 using Microsoft.PowerFx.Core.Functions.Delegation.DelegationMetadata;
@@ -18,8 +19,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // LookUp(source:*, predicate, [projectionFunc])
     internal sealed class LookUpFunction : FilterFunctionBase
     {
-        public override bool RequiresErrorContext { get { return true; } }
-        public override bool SupportsParamCoercion => false;
+        public override bool RequiresErrorContext => true;
+
+        public override bool SupportsParamCoercion => true;
+
+        public override bool HasPreciseErrors => true;
 
         public LookUpFunction()
             : base("LookUp", TexlStrings.AboutLookUp, FunctionCategories.Table, DType.Unknown, 0x6, 2, 3, DType.EmptyTable, DType.Boolean)
@@ -29,8 +33,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
-            yield return new [] { TexlStrings.LookUpArg1, TexlStrings.LookUpArg2 };
-            yield return new [] { TexlStrings.LookUpArg1, TexlStrings.LookUpArg2, TexlStrings.LookUpArg3 };
+            yield return new[] { TexlStrings.LookUpArg1, TexlStrings.LookUpArg2 };
+            yield return new[] { TexlStrings.LookUpArg1, TexlStrings.LookUpArg2, TexlStrings.LookUpArg3 };
         }
 
         public override bool CheckInvocation(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
@@ -41,10 +45,21 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.Assert(args.Length >= 2 && args.Length <= 3);
             Contracts.AssertValue(errors);
 
-            bool fValid = base.CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            var fValid = CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
 
             // The return type is dictated by the last argument (projection) if one exists. Otherwise it's based on first argument (source).
             returnType = args.Length == 2 ? argTypes[0].ToRecord() : argTypes[2];
+
+            // Ensure that the arg at index 1 is boolean or can coerece to boolean if they are OptionSetValues.
+            if (argTypes[1].Kind == DKind.OptionSetValue && argTypes[1].CoercesTo(DType.Boolean))
+            {
+                    CollectionUtils.Add(ref nodeToCoercedTypeMap, args[1], DType.Boolean, allowDupes: true);
+            }
+            else if (!DType.Boolean.Accepts(argTypes[1]))
+            {
+                errors.EnsureError(DocumentErrorSeverity.Severe, args[1], TexlStrings.ErrBooleanExpected);
+                fValid = false;
+            }
 
             return fValid;
         }
@@ -65,12 +80,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertValue(binding);
 
             if (!CheckArgsCount(callNode, binding))
+            {
                 return false;
+            }
 
-            IExternalDataSource dataSource;
             FilterOpMetadata metadata = null;
-            IDelegationMetadata delegationMetadata = null;
-            if (TryGetEntityMetadata(callNode, binding, out delegationMetadata))
+            if (TryGetEntityMetadata(callNode, binding, out IDelegationMetadata delegationMetadata))
             {
                 if (!binding.Document.Properties.EnabledFeatures.IsEnhancedDelegationEnabled ||
                     !TryGetValidDataSourceForDelegation(callNode, binding, DelegationCapability.ArrayLookup, out _))
@@ -83,13 +98,15 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
             else
             {
-                if (!TryGetValidDataSourceForDelegation(callNode, binding, FunctionDelegationCapability, out dataSource))
+                if (!TryGetValidDataSourceForDelegation(callNode, binding, FunctionDelegationCapability, out var dataSource))
+                {
                     return false;
+                }
 
                 metadata = dataSource.DelegationMetadata.FilterDelegationMetadata;
             }
 
-            TexlNode[] args = callNode.Args.Children.VerifyValue();
+            var args = callNode.Args.Children.VerifyValue();
             if (args.Length > 2 && binding.IsDelegatable(args[2]))
             {
                 SuggestDelegationHint(args[2], binding);
@@ -97,7 +114,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
 
             if (args.Length < 2)
+            {
                 return false;
+            }
 
             return IsValidDelegatableFilterPredicateNode(args[1], binding, metadata);
         }

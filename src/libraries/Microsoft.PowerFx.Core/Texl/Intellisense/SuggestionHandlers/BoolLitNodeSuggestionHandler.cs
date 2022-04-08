@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+// Licensed under the MIT license.
 
 using Microsoft.PowerFx.Core.Lexer;
 using Microsoft.PowerFx.Core.Syntax;
@@ -15,15 +15,16 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
         {
             public BoolLitNodeSuggestionHandler()
                 : base(NodeKind.BoolLit)
-            { }
+            {
+            }
 
             internal override bool TryAddSuggestionsForNodeKind(IntellisenseData.IntellisenseData intellisenseData)
             {
                 Contracts.AssertValue(intellisenseData);
 
-                TexlNode curNode = intellisenseData.CurNode;
-                int cursorPos = intellisenseData.CursorPos;
-                BoolLitNode boolNode = curNode.CastBoolLit();
+                var curNode = intellisenseData.CurNode;
+                var cursorPos = intellisenseData.CursorPos;
+                var boolNode = curNode.CastBoolLit();
                 var tokenSpan = curNode.Token.Span;
 
                 if (cursorPos < tokenSpan.Min)
@@ -34,7 +35,7 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
                 else if (cursorPos <= tokenSpan.Lim)
                 {
                     // Cursor is in the middle of the token.
-                    int replacementLength = tokenSpan.Min == cursorPos ? 0 : tokenSpan.Lim - tokenSpan.Min;
+                    var replacementLength = tokenSpan.Min == cursorPos ? 0 : tokenSpan.Lim - tokenSpan.Min;
                     intellisenseData.SetMatchArea(tokenSpan.Min, cursorPos, replacementLength);
                     intellisenseData.BoundTo = boolNode.Value ? TexlLexer.KeywordTrue : TexlLexer.KeywordFalse;
                     IntellisenseHelper.AddSuggestionsForValuePossibilities(intellisenseData, curNode);

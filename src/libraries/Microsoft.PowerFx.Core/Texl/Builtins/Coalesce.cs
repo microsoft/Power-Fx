@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+// Licensed under the MIT license.
 
 using System.Collections.Generic;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
@@ -18,11 +18,13 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class CoalesceFunction : BuiltinFunction
     {
         public override bool IsSelfContained => true;
+
         public override bool SupportsParamCoercion => false;
 
         public CoalesceFunction()
             : base("Coalesce", TexlStrings.AboutCoalesce, FunctionCategories.Information, DType.Unknown, 0, 1, int.MaxValue)
-        { }
+        {
+        }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
@@ -34,7 +36,10 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures(int arity)
         {
             if (arity > 2)
+            {
                 return GetGenericSignatures(arity, TexlStrings.CoalesceArg1);
+            }
+
             return base.GetSignatures(arity);
         }
 
@@ -48,24 +53,28 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             nodeToCoercedTypeMap = null;
 
-            int count = args.Length;
-            bool fArgsValid = true;
-            bool fArgsNonNull = false;
-            DType type = ReturnType;
+            var count = args.Length;
+            var fArgsValid = true;
+            var fArgsNonNull = false;
+            var type = ReturnType;
 
-            for (int i = 0; i < count; i++)
+            for (var i = 0; i < count; i++)
             {
-                TexlNode nodeArg = args[i];
-                DType typeArg = argTypes[i]; 
-                
+                var nodeArg = args[i];
+                var typeArg = argTypes[i];
+
                 if (typeArg.Kind == DKind.ObjNull)
+                {
                     continue;
+                }
 
                 fArgsNonNull = true;
                 if (typeArg.IsError)
+                {
                     errors.EnsureError(args[i], TexlStrings.ErrTypeError);
+                }
 
-                DType typeSuper = DType.Supertype(type, typeArg);
+                var typeSuper = DType.Supertype(type, typeArg);
 
                 if (!typeSuper.IsError)
                 {
@@ -81,10 +90,15 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 {
                     // Types don't resolve normally, coercion needed
                     if (typeArg.CoercesTo(type))
-                        CollectionUtils.Add(ref nodeToCoercedTypeMap, nodeArg, type);
-                    else 
                     {
-                        errors.EnsureError(DocumentErrorSeverity.Severe, nodeArg, TexlStrings.ErrBadType_ExpectedType_ProvidedType,
+                        CollectionUtils.Add(ref nodeToCoercedTypeMap, nodeArg, type);
+                    }
+                    else
+                    {
+                        errors.EnsureError(
+                            DocumentErrorSeverity.Severe,
+                            nodeArg,
+                            TexlStrings.ErrBadType_ExpectedType_ProvidedType,
                             type.GetKindString(),
                             typeArg.GetKindString());
                         fArgsValid = false;
@@ -98,7 +112,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
 
             if (!fArgsNonNull)
+            {
                 type = DType.ObjNull;
+            }
 
             returnType = type;
             return fArgsValid;

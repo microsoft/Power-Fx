@@ -11,7 +11,11 @@
 		<DebugType>Full</DebugType>
 		<DebugSymbols>true</DebugSymbols>
 	</PropertyGroup>
-    
+
+	<ItemGroup>
+	  <AdditionalFiles Include="..\..\stylecop.json" Link="stylecop.json" />
+	</ItemGroup>
+
   <!-- Nuget Properties -->
 	<PropertyGroup>
     <PackageId>Microsoft.PowerFx.Transport.Attributes</PackageId>

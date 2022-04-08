@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+// Licensed under the MIT license.
 
 using Microsoft.PowerFx.Core.Utils;
 
@@ -10,7 +10,8 @@ namespace Microsoft.PowerFx.Core.IR.Nodes
         public readonly IntermediateNode From;
         public readonly DName Field;
 
-        public SingleColumnTableAccessNode(IRContext irContext, IntermediateNode from, DName field) : base(irContext)
+        public SingleColumnTableAccessNode(IRContext irContext, IntermediateNode from, DName field)
+            : base(irContext)
         {
             Contracts.AssertValid(field);
             Contracts.AssertValue(from);

@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+// Licensed under the MIT license.
 
 using System.Collections.Generic;
 using System.Text.Json;
@@ -23,12 +23,14 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationMetadata
             {
                 Contracts.AssertValid(schema);
 
-                List<OperationCapabilityMetadata> capabilities = new List<OperationCapabilityMetadata>();
+                var capabilities = new List<OperationCapabilityMetadata>();
                 foreach (var parser in _metaParsers)
                 {
                     var capabilityMetadata = parser.Parse(dataServiceCapabilitiesJsonObject, schema);
                     if (capabilityMetadata != null)
+                    {
                         capabilities.Add(capabilityMetadata);
+                    }
                 }
 
                 return new CompositeCapabilityMetadata(schema, capabilities);

@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+// Licensed under the MIT license.
 
 using System.Diagnostics.Contracts;
 using System.Linq;
@@ -10,12 +10,14 @@ namespace Microsoft.PowerFx.Core.Public.Types
 {
     public class TableType : AggregateType
     {
-        internal TableType(DType type) : base(type)
+        internal TableType(DType type)
+            : base(type)
         {
             Contract.Assert(type.IsTable);
         }
 
-        public TableType() : base(DType.EmptyTable)
+        public TableType()
+            : base(DType.EmptyTable)
         {
         }
 
@@ -25,7 +27,6 @@ namespace Microsoft.PowerFx.Core.Public.Types
             return new TableType(tableType);
         }
 
-
         public override void Visit(ITypeVistor vistor)
         {
             vistor.Visit(this);
@@ -33,8 +34,7 @@ namespace Microsoft.PowerFx.Core.Public.Types
 
         public TableType Add(NamedFormulaType field)
         {
-            var newType = _type.Add(field._typedName);
-            return new TableType(newType);
+            return new TableType(AddFieldToType(field));
         }
 
         public string SingleColumnFieldName
@@ -45,7 +45,6 @@ namespace Microsoft.PowerFx.Core.Public.Types
                 return GetNames().First().Name;
             }
         }
-
 
         public FormulaType SingleColumnFieldType
         {
@@ -58,7 +57,7 @@ namespace Microsoft.PowerFx.Core.Public.Types
 
         public RecordType ToRecord()
         {
-            return new RecordType(this._type.ToRecord());
+            return new RecordType(_type.ToRecord());
         }
     }
 }

@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+// Licensed under the MIT license.
 
 using System.Collections.Generic;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
@@ -18,18 +18,20 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class LenFunction : StringOneArgFunction
     {
         public override bool HasPreciseErrors => true;
+
         public override bool SupportsParamCoercion => true;
 
         public LenFunction()
             : base("Len", TexlStrings.AboutLen, FunctionCategories.Text, DType.Number)
-        { }
+        {
+        }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
-            yield return new [] { TexlStrings.LenArg1 };
+            yield return new[] { TexlStrings.LenArg1 };
         }
 
-        public override DelegationCapability FunctionDelegationCapability { get { return DelegationCapability.Length; } }
+        public override DelegationCapability FunctionDelegationCapability => DelegationCapability.Length;
 
         public override bool IsRowScopedServerDelegatable(CallNode callNode, TexlBinding binding, OperationCapabilityMetadata metadata)
         {
@@ -41,15 +43,17 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class LenTFunction : BuiltinFunction
     {
         public override bool IsSelfContained => true;
+
         public override bool SupportsParamCoercion => true;
 
         public LenTFunction()
             : base("Len", TexlStrings.AboutLenT, FunctionCategories.Table, DType.EmptyTable, 0, 1, 1, DType.EmptyTable)
-        { }
+        {
+        }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
-            yield return new [] { TexlStrings.LenTArg1 };
+            yield return new[] { TexlStrings.LenTArg1 };
         }
 
         public override string GetUniqueTexlRuntimeName(bool isPrefetching = false)
@@ -66,7 +70,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertValue(errors);
             Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
 
-            bool fValid = base.CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            var fValid = CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
             Contracts.Assert(returnType.IsTable);
 
             // Typecheck the input table
@@ -78,5 +82,4 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return fValid;
         }
     }
-
 }

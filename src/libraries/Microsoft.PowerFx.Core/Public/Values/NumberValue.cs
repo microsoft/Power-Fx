@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+// Licensed under the MIT license.
 
 using System.Diagnostics.Contracts;
 using Microsoft.PowerFx.Core.IR;
@@ -9,7 +9,8 @@ namespace Microsoft.PowerFx.Core.Public.Values
 {
     public class NumberValue : PrimitiveValue<double>
     {
-        internal NumberValue(IRContext irContext, double value) : base(irContext, value)
+        internal NumberValue(IRContext irContext, double value)
+            : base(irContext, value)
         {
             Contract.Assert(IRContext.ResultType == FormulaType.Number);
         }

@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+// Licensed under the MIT license.
 
 using System.Collections.Generic;
 using Microsoft.PowerFx.Core.Functions;
@@ -13,26 +13,28 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class Atan2Function : BuiltinFunction
     {
         public override bool IsSelfContained => true;
+
         public override bool RequiresErrorContext => true;
 
         public Atan2Function()
-            : base("Atan2",
-                  TexlStrings.AboutAtan2,
-                  FunctionCategories.MathAndStat,
-                  DType.Number, // return type
-                  0,            // no lambdas
-                  2,            // min arity of 2
-                  2,            // max arity of 2
-                  DType.Number, // first param is numeric
-                  DType.Number  // second param is numeric
-                  )
-        { }
+            : base(
+                "Atan2",
+                TexlStrings.AboutAtan2,
+                FunctionCategories.MathAndStat,
+                DType.Number, // return type
+                0,            // no lambdas
+                2,            // min arity of 2
+                2,            // max arity of 2
+                DType.Number, // first param is numeric
+                DType.Number) // second param is numeric
+        {
+        }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
-            yield return new [] { TexlStrings.AboutAtan2Arg1, TexlStrings.AboutAtan2Arg2 };
+            yield return new[] { TexlStrings.AboutAtan2Arg1, TexlStrings.AboutAtan2Arg2 };
         }
 
-        public override bool SupportsParamCoercion { get { return true; } }
+        public override bool SupportsParamCoercion => true;
     }
 }

@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+// Licensed under the MIT license.
 
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Functions.Delegation;
@@ -15,14 +15,15 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Corresponding DAX functions: Lower, Upper
     internal sealed class LowerUpperFunction : StringOneArgFunction
     {
-        private bool _isLower;
+        private readonly bool _isLower;
+
         public LowerUpperFunction(bool isLower)
             : base(isLower ? "Lower" : "Upper", isLower ? TexlStrings.AboutLower : TexlStrings.AboutUpper, FunctionCategories.Text)
         {
             _isLower = isLower;
         }
 
-        public override DelegationCapability FunctionDelegationCapability { get { return _isLower ? DelegationCapability.Lower : DelegationCapability.Upper; } }
+        public override DelegationCapability FunctionDelegationCapability => _isLower ? DelegationCapability.Lower : DelegationCapability.Upper;
 
         public override bool IsRowScopedServerDelegatable(CallNode callNode, TexlBinding binding, OperationCapabilityMetadata metadata)
         {
@@ -40,6 +41,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     {
         public LowerUpperTFunction(bool isLower)
             : base(isLower ? "Lower" : "Upper", isLower ? TexlStrings.AboutLowerT : TexlStrings.AboutUpperT, FunctionCategories.Table)
-        { }
+        {
+        }
     }
 }

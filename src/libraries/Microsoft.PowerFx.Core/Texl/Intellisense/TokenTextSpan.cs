@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+// Licensed under the MIT license.
 
 using System.Collections.Generic;
 using Microsoft.AppMagic.Transport;
@@ -49,19 +49,27 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
             if (self == null)
             {
                 if (other == null)
+                {
                     return 0;
+                }
 
                 return -1;
             }
 
             if (other == null)
+            {
                 return 1;
+            }
 
             if (self.TokenType != other.TokenType)
+            {
                 return self.TokenType.CompareTo(other.TokenType);
+            }
 
             if (self.TokenName != other.TokenName)
+            {
                 return self.TokenName.CompareTo(other.TokenName);
+            }
 
             return self.StartIndex.CompareTo(other.StartIndex);
         }

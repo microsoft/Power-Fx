@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+// Licensed under the MIT license.
 
 using System.Collections.Generic;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
@@ -16,8 +16,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class ForAllFunction : FunctionWithTableInput
     {
         public override bool SkipScopeForInlineRecords => true;
+
         public override bool IsSelfContained => true;
+
         public override bool RequiresErrorContext => true;
+
         public override bool SupportsParamCoercion => false;
 
         public ForAllFunction()
@@ -28,7 +31,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
-            yield return new [] { TexlStrings.ForAllArg1, TexlStrings.ForAllArg2 };
+            yield return new[] { TexlStrings.ForAllArg1, TexlStrings.ForAllArg2 };
         }
 
         public override bool CheckInvocation(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
@@ -39,7 +42,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.Assert(args.Length == argTypes.Length);
             Contracts.AssertValue(errors);
 
-            bool fArgsValid = base.CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            var fArgsValid = CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
 
             if (argTypes[1].IsRecord)
             {
@@ -60,14 +63,14 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool HasSuggestionsForParam(int index)
         {
-            Contracts.Assert(0 <= index);
+            Contracts.Assert(index >= 0);
 
             return index == 0;
         }
 
         public override string GetUniqueTexlRuntimeName(bool isPrefetching = false)
         {
-            return GetUniqueTexlRuntimeName(suffix: isPrefetching ? "_ParallelPrefetching" : "");
+            return GetUniqueTexlRuntimeName(suffix: isPrefetching ? "_ParallelPrefetching" : string.Empty);
         }
     }
 }

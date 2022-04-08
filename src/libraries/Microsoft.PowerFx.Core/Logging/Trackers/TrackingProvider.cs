@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+// Licensed under the MIT license.
 
 using System;
 using Microsoft.PowerFx.Core.Binding;
@@ -10,8 +10,10 @@ namespace Microsoft.PowerFx.Core.Logging.Trackers
 {
     internal class TrackingProvider
     {
-        public readonly static TrackingProvider Instance = new TrackingProvider();
+        public static readonly TrackingProvider Instance = new TrackingProvider();
+
         internal event EventHandler<IAddSuggestionMessageEventArgs> AddSuggestionEvent;
+
         internal event EventHandler<IDelegationTrackerEventArgs> DelegationTrackerEvent;
 
         internal void AddSuggestionMessage(string message, TexlNode node, TexlBinding binding)
@@ -19,8 +21,12 @@ namespace Microsoft.PowerFx.Core.Logging.Trackers
             AddSuggestionEvent?.Invoke(this, new AddSuggestionMessageEventArgs(message, node, binding));
         }
 
-        internal void SetDelegationTrackerStatus(DelegationStatus status, TexlNode node, 
-            TexlBinding binding, TexlFunction func, DelegationTelemetryInfo logInfo = null)
+        internal void SetDelegationTrackerStatus(
+            DelegationStatus status,
+            TexlNode node,
+            TexlBinding binding,
+            TexlFunction func,
+            DelegationTelemetryInfo logInfo = null)
         {
             DelegationTrackerEvent?.Invoke(this, new DelegationTrackerEventArgs(status, node, binding, func, logInfo));
         }

@@ -1,5 +1,5 @@
-// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
 
 using System;
 using System.Collections.Generic;
@@ -44,21 +44,20 @@ namespace Microsoft.PowerFx.Core.Types
             return new ValueTree(RedBlackNode<EquatableObject>.Create(items));
         }
 
-        public bool IsEmpty { get { return _root == null; } }
+        public bool IsEmpty => _root == null;
 
-        public int Count { get { return _root == null ? 0 : _root.Count; } }
+        public int Count => _root == null ? 0 : _root.Count;
 
         public bool Contains(string key)
         {
             Contracts.AssertValue(key);
-            EquatableObject value;
-            return TryGetValue(key, out value);
+            return TryGetValue(key, out var value);
         }
 
         public bool TryGetValue(string key, out EquatableObject value)
         {
             Contracts.AssertValue(key);
-            bool fRet = RedBlackNode<EquatableObject>.TryGetValue(_root, key, out value);
+            var fRet = RedBlackNode<EquatableObject>.TryGetValue(_root, key, out value);
             Contracts.Assert(fRet == (value.Object != null));
             return fRet;
         }
@@ -90,7 +89,7 @@ namespace Microsoft.PowerFx.Core.Types
             Contracts.AssertNonEmpty(names);
             Contracts.AssertAllValid(names);
 
-            RedBlackNode<EquatableObject> root = _root;
+            var root = _root;
             foreach (string name in names)
             {
                 Contracts.AssertNonEmpty(name);
@@ -100,15 +99,9 @@ namespace Microsoft.PowerFx.Core.Types
             return new ValueTree(root);
         }
 
-        public static bool operator ==(ValueTree tree1, ValueTree tree2)
-        {
-            return RedBlackNode<EquatableObject>.Equals(tree1._root, tree2._root);
-        }
+        public static bool operator ==(ValueTree tree1, ValueTree tree2) => RedBlackNode<EquatableObject>.Equals(tree1._root, tree2._root);
 
-        public static bool operator !=(ValueTree tree1, ValueTree tree2)
-        {
-            return !(tree1 == tree2);
-        }
+        public static bool operator !=(ValueTree tree1, ValueTree tree2) => !(tree1 == tree2);
 
         public bool Equals(ValueTree other)
         {
@@ -118,19 +111,26 @@ namespace Microsoft.PowerFx.Core.Types
         public override bool Equals(object other)
         {
             if (!(other is ValueTree))
+            {
                 return false;
+            }
+
             return this == (ValueTree)other;
         }
 
         public override int GetHashCode()
         {
-            int hash = 0x79B70F13;
+            var hash = 0x79B70F13;
             if (_root != null)
             {
                 if (_hashCodeCache.ContainsKey(_root))
+                {
                     hash = _hashCodeCache[_root];
+                }
                 else
+                {
                     hash = Hashing.CombineHash(hash, _root.GetHashCode());
+                }
             }
 
             return hash;

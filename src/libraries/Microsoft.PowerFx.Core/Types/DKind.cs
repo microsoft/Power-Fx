@@ -1,5 +1,5 @@
-// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
 
 namespace Microsoft.PowerFx.Core.Types
 {
@@ -20,6 +20,7 @@ namespace Microsoft.PowerFx.Core.Types
         // It represents a type that is not yet known, and it is used primarily for analysis
         // purposes (i.e. Top in static analysis).
         // This type does not have a runtime equivalent.
+#pragma warning disable SA1300 // Element should begin with upper-case letter
         _Min = Unknown,
         Unknown = 1,
 
@@ -82,7 +83,9 @@ namespace Microsoft.PowerFx.Core.Types
         // Complex types
         File = 33,
         LargeImage = 34,
+        UntypedObject = 35,
 
-        _Lim = 35,
+        _Lim = 36,
+#pragma warning restore SA1300 // Element should begin with upper-case letter
     }
 }

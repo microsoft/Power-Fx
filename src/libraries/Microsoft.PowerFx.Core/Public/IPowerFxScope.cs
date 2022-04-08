@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+// Licensed under the MIT license.
 
 using Microsoft.PowerFx.Core.Texl.Intellisense;
 
@@ -18,7 +18,7 @@ namespace Microsoft.PowerFx.Core.Public
         CheckResult Check(string expression);
 
         /// <summary>
-        /// Provide intellisense for expression
+        /// Provide intellisense for expression.
         /// </summary>
         IIntellisenseResult Suggest(string expression, int cursorPosition);
     }

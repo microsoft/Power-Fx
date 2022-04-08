@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+// Licensed under the MIT license.
 
 using System.Collections.Generic;
 using Microsoft.PowerFx.Core.Functions;
@@ -12,11 +12,13 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal abstract class CalendarFunction : BuiltinFunction
     {
         public override bool IsSelfContained => true;
+
         public override bool SupportsParamCoercion => true;
 
         public CalendarFunction(string functionInvariantName, TexlStrings.StringGetter functionDescription)
             : base(new DPath().Append(new DName(LanguageConstants.InvariantCalendarNamespace)), functionInvariantName, functionDescription, FunctionCategories.DateTime, DType.CreateTable(new TypedName(DType.String, new DName("Value"))), 0, 0, 0)
-        { }
+        {
+        }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
@@ -29,7 +31,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     {
         public MonthsLongFunction()
             : base("MonthsLong", TexlStrings.AboutCalendar__MonthsLong)
-        { }
+        {
+        }
     }
 
     // Calendar.MonthsShort()
@@ -37,7 +40,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     {
         public MonthsShortFunction()
             : base("MonthsShort", TexlStrings.AboutCalendar__MonthsShort)
-        { }
+        {
+        }
     }
 
     // Calendar.WeekdaysLong()
@@ -45,7 +49,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     {
         public WeekdaysLongFunction()
             : base("WeekdaysLong", TexlStrings.AboutCalendar__WeekdaysLong)
-        { }
+        {
+        }
     }
 
     // Calendar.WeekdaysShort()
@@ -53,6 +58,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     {
         public WeekdaysShortFunction()
             : base("WeekdaysShort", TexlStrings.AboutCalendar__WeekdaysShort)
-        { }
+        {
+        }
     }
 }

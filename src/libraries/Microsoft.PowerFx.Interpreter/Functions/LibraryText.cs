@@ -1,16 +1,17 @@
 ﻿// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+// Licensed under the MIT license.
 
-using Microsoft.PowerFx.Core.IR;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
-using Microsoft.PowerFx.Core.Public.Values;
-using Microsoft.PowerFx.Core.Functions;
-using Microsoft.PowerFx.Core.Public.Types;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
+using Microsoft.PowerFx.Core.Functions;
+using Microsoft.PowerFx.Core.IR;
+using Microsoft.PowerFx.Core.Public.Types;
+using Microsoft.PowerFx.Core.Public.Values;
 
 namespace Microsoft.PowerFx.Functions
 {
@@ -24,21 +25,31 @@ namespace Microsoft.PowerFx.Functions
             return new StringValue(irContext, str);
         }
 
-        public static FormulaValue Concat(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args)
+        public static async ValueTask<FormulaValue> Concat(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args)
         {// Streaming 
             var arg0 = (TableValue)args[0];
             var arg1 = (LambdaFormulaValue)args[1];
+            var separator = args.Length > 2 ? ((StringValue)args[2]).Value : string.Empty;
 
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
+            var first = true;
 
             foreach (var row in arg0.Rows)
             {
                 if (row.IsValue)
                 {
+                    if (first)
+                    {
+                        first = false;
+                    }
+                    else
+                    {
+                        sb.Append(separator);
+                    }
+
                     var childContext = symbolContext.WithScopeValues(row.Value);
 
-                    // Filter evals to a boolean 
-                    var result = arg1.Eval(runner, childContext);
+                    var result = await arg1.EvalAsync(runner, childContext);
 
                     var str = (StringValue)result;
                     sb.Append(str.Value);
@@ -52,7 +63,7 @@ namespace Microsoft.PowerFx.Functions
         // Operator & maps to this function call.
         public static FormulaValue Concatenate(IRContext irContext, StringValue[] args)
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
 
             foreach (var arg in args)
             {
@@ -64,7 +75,7 @@ namespace Microsoft.PowerFx.Functions
 
         // https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-value
         // Convert string to number
-        public static FormulaValue Value(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args)
+        public static async ValueTask<FormulaValue> Value(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args)
         {
             var arg0 = args[0];
 
@@ -83,8 +94,13 @@ namespace Microsoft.PowerFx.Functions
                 return DateTimeToNumber(irContext, new DateTimeValue[] { dtv });
             }
 
-            var str = ((StringValue)arg0).Value.Trim();
             var styles = NumberStyles.Any;
+            string str = null;
+
+            if (arg0 is StringValue sv)
+            {
+                str = sv.Value.Trim();
+            }
 
             if (string.IsNullOrEmpty(str))
             {
@@ -120,8 +136,27 @@ namespace Microsoft.PowerFx.Functions
             return new NumberValue(irContext, val);
         }
 
+        // Convert string to boolean
+        public static FormulaValue Boolean(IRContext irContext, StringValue[] args)
+        {
+            var arg0 = args[0];
+
+            var str = arg0.Value.Trim().ToLower();
+            if (string.IsNullOrEmpty(str))
+            {
+                return new BlankValue(irContext);
+            }
+
+            if (!bool.TryParse(str, out var val))
+            {
+                return CommonErrors.InvalidBooleanFormatError(irContext);
+            }
+
+            return new BooleanValue(irContext, val);
+        }
+
         // https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-text
-        public static FormulaValue Text(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args)
+        public static async ValueTask<FormulaValue> Text(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args)
         {
             // only DateValue and DateTimeValue are supported for now with custom format strings.
             if (args.Length > 1 && args[0] is StringValue)
@@ -137,32 +172,32 @@ namespace Microsoft.PowerFx.Functions
                 formatString = fs.Value;
             }
 
-
-            CultureInfo suppliedCulture = null;
+            var culture = runner.CultureInfo;
             if (args.Length > 2 && args[2] is StringValue locale)
             {
-                suppliedCulture = new CultureInfo(locale.Value);
+                // Supplied culture
+                culture = new CultureInfo(locale.Value);
             }
 
             switch (args[0])
             {
                 case NumberValue num:
-                    resultString = num.Value.ToString(formatString ?? "g", suppliedCulture ?? runner.CultureInfo);
+                    resultString = num.Value.ToString(formatString ?? "g", culture);
                     break;
                 case StringValue s:
                     resultString = s.Value;
                     break;
                 case DateValue d:
-                    formatString = ExpandDateTimeFormatSpecifiers(formatString, suppliedCulture ?? runner.CultureInfo);
-                    resultString = d.Value.ToString(formatString ?? "M/d/yyyy", suppliedCulture ?? runner.CultureInfo);
+                    formatString = ExpandDateTimeFormatSpecifiers(formatString, culture);
+                    resultString = d.Value.ToString(formatString ?? "M/d/yyyy", culture);
                     break;
                 case DateTimeValue dt:
-                    formatString = ExpandDateTimeFormatSpecifiers(formatString, suppliedCulture ?? runner.CultureInfo);
-                    resultString = dt.Value.ToString(formatString ?? "g", suppliedCulture ?? runner.CultureInfo);
+                    formatString = ExpandDateTimeFormatSpecifiers(formatString, culture);
+                    resultString = dt.Value.ToString(formatString ?? "g", culture);
                     break;
                 case TimeValue t:
-                    formatString = ExpandDateTimeFormatSpecifiers(formatString, suppliedCulture ?? runner.CultureInfo);
-                    resultString = _epoch.Add(t.Value).ToString(formatString ?? "t", suppliedCulture ?? runner.CultureInfo);
+                    formatString = ExpandDateTimeFormatSpecifiers(formatString, culture);
+                    resultString = _epoch.Add(t.Value).ToString(formatString ?? "t", culture);
                     break;
                 default:
                     break;
@@ -179,11 +214,13 @@ namespace Microsoft.PowerFx.Functions
         internal static string ExpandDateTimeFormatSpecifiers(string format, CultureInfo culture)
         {
             if (format == null)
+            {
                 return format;
+            }
 
             var info = DateTimeFormatInfo.GetInstance(culture);
 
-            switch (format.ToLower())
+            switch (format.ToLower().Trim('\''))
             {
                 case "shortdatetime24":
                     // TODO: This might be wrong for some cultures
@@ -216,44 +253,54 @@ namespace Microsoft.PowerFx.Functions
 
         private static string ReplaceWith24HourClock(string format)
         {
-            string pattern = @"^(?<openAMPM>\s*t+\s*)? " +
+            var pattern = @"^(?<openAMPM>\s*t+\s*)? " +
                              @"(?(openAMPM) h+(?<nonHours>[^ht]+)$ " +
                              @"| \s*h+(?<nonHours>[^ht]+)\s*t+)";
-            return Regex.Replace(format, pattern, "HH${nonHours}",
-                                 RegexOptions.IgnorePatternWhitespace);
+            return Regex.Replace(format, pattern, "HH${nonHours}", RegexOptions.IgnorePatternWhitespace);
         }
 
         // https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-isblank-isempty
-        // Take first non-blank value. 
-        // 
-        public static FormulaValue Coalesce(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args)
+        // Take first non-blank value.
+        public static async ValueTask<FormulaValue> Coalesce(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args)
         {
             var errors = new List<ErrorValue>();
 
             foreach (var arg in args)
             {
-                var res = runner.EvalArg<ValidFormulaValue>(arg, symbolContext, arg.IRContext);
+                runner.CheckCancel();
+
+                var res = await runner.EvalArgAsync<ValidFormulaValue>(arg, symbolContext, arg.IRContext);
 
                 if (res.IsValue)
                 {
                     var val = res.Value;
-                    if (!(val is StringValue str && str.Value == ""))
+                    if (!(val is StringValue str && str.Value == string.Empty))
                     {
                         if (errors.Count == 0)
+                        {
                             return res.ToFormulaValue();
+                        }
                         else
+                        {
                             return ErrorValue.Combine(irContext, errors);
+                        }
                     }
                 }
+
                 if (res.IsError)
                 {
                     errors.Add(res.Error);
                 }
             }
+
             if (errors.Count == 0)
+            {
                 return new BlankValue(irContext);
+            }
             else
+            {
                 return ErrorValue.Combine(irContext, errors);
+            }
         }
 
         public static FormulaValue Lower(IRContext irContext, StringValue[] args)
@@ -276,13 +323,13 @@ namespace Microsoft.PowerFx.Functions
         public static FormulaValue Mid(IRContext irContext, FormulaValue[] args)
         {
             var errors = new List<ErrorValue>();
-            NumberValue start = (NumberValue)args[1];
+            var start = (NumberValue)args[1];
             if (double.IsNaN(start.Value) || double.IsInfinity(start.Value) || start.Value <= 0)
             {
                 errors.Add(CommonErrors.ArgumentOutOfRange(start.IRContext));
             }
 
-            NumberValue count = (NumberValue)args[2];
+            var count = (NumberValue)args[2];
             if (double.IsNaN(count.Value) || double.IsInfinity(count.Value) || count.Value < 0)
             {
                 errors.Add(CommonErrors.ArgumentOutOfRange(count.IRContext));
@@ -293,11 +340,11 @@ namespace Microsoft.PowerFx.Functions
                 return ErrorValue.Combine(irContext, errors);
             }
 
-            StringValue source = (StringValue)args[0];
+            var source = (StringValue)args[0];
             var start0Based = (int)(start.Value - 1);
-            if (source.Value == "" || start0Based >= source.Value.Length)
+            if (source.Value == string.Empty || start0Based >= source.Value.Length)
             {
-                return new StringValue(irContext, "");
+                return new StringValue(irContext, string.Empty);
             }
 
             var minCount = Math.Min((int)count.Value, source.Value.Length - start0Based);
@@ -308,8 +355,8 @@ namespace Microsoft.PowerFx.Functions
 
         public static FormulaValue Left(IRContext irContext, FormulaValue[] args)
         {
-            StringValue source = (StringValue)args[0];
-            NumberValue count = (NumberValue)args[1];
+            var source = (StringValue)args[0];
+            var count = (NumberValue)args[1];
 
             if (count.Value >= source.Value.Length)
             {
@@ -321,15 +368,15 @@ namespace Microsoft.PowerFx.Functions
 
         public static FormulaValue Right(IRContext irContext, FormulaValue[] args)
         {
-            StringValue source = (StringValue)args[0];
-            NumberValue count = (NumberValue)args[1];
+            var source = (StringValue)args[0];
+            var count = (NumberValue)args[1];
 
-            if(count.Value == 0)
+            if (count.Value == 0)
             {
-                return new StringValue(irContext, "");
+                return new StringValue(irContext, string.Empty);
             }
 
-            if(count.Value >= source.Value.Length)
+            if (count.Value >= source.Value.Length)
             {
                 return source;
             }
@@ -337,12 +384,28 @@ namespace Microsoft.PowerFx.Functions
             return new StringValue(irContext, source.Value.Substring(source.Value.Length - (int)count.Value, (int)count.Value));
         }
 
+        private static FormulaValue Find(IRContext irContext, FormulaValue[] args)
+        {
+            var findText = (StringValue)args[0];
+            var withinText = (StringValue)args[1];
+            var startIndexValue = (int)((NumberValue)args[2]).Value;
+
+            if (startIndexValue < 1 || startIndexValue > withinText.Value.Length + 1)
+            {
+                return CommonErrors.ArgumentOutOfRange(irContext);
+            }
+
+            var index = withinText.Value.IndexOf(findText.Value, startIndexValue - 1);
+            return index >= 0 ? new NumberValue(irContext, index + 1)
+                              : new BlankValue(irContext);
+        }
+
         private static FormulaValue Replace(IRContext irContext, FormulaValue[] args)
         {
-            StringValue source = (StringValue)args[0];
-            NumberValue start = (NumberValue)args[1];
-            NumberValue count = (NumberValue)args[2];
-            StringValue replacement = (StringValue)args[3];
+            var source = (StringValue)args[0];
+            var start = (NumberValue)args[1];
+            var count = (NumberValue)args[2];
+            var replacement = (StringValue)args[3];
 
             var start0Based = (int)(start.Value - 1);
             var prefix = start0Based < source.Value.Length ? source.Value.Substring(0, start0Based) : source.Value;
@@ -354,7 +417,7 @@ namespace Microsoft.PowerFx.Functions
             return new StringValue(irContext, result);
         }
 
-        public static FormulaValue Split(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, StringValue[] args)
+        public static FormulaValue Split(IRContext irContext, StringValue[] args)
         {
             var text = args[0].Value;
             var separator = args[1].Value;
@@ -364,22 +427,22 @@ namespace Microsoft.PowerFx.Functions
             var substrings = string.IsNullOrEmpty(separator) ? text.Select(c => new string(c, 1)) : text.Split(new string[] { separator }, StringSplitOptions.None);
             var rows = substrings.Select(s => new StringValue(IRContext.NotInSource(FormulaType.String), s));
 
-            return new InMemoryTableValue(irContext, StandardSingleColumnTableFromValues(irContext, rows.ToArray(), BuiltinFunction.OneColumnTableResultName));
+            return new InMemoryTableValue(irContext, StandardSingleColumnTableFromValues(irContext, rows.ToArray(), forceSingleColumn: true, columnName: BuiltinFunction.OneColumnTableResultName));
         }
 
         private static FormulaValue Substitute(IRContext irContext, FormulaValue[] args)
         {
-            StringValue source = (StringValue)args[0];
+            var source = (StringValue)args[0];
 
             if (args[1] is BlankValue || (args[1] is StringValue sv && string.IsNullOrEmpty(sv.Value)))
             {
                 return source;
             }
 
-            StringValue match = (StringValue)args[1];
-            StringValue replacement = (StringValue)args[2];
+            var match = (StringValue)args[1];
+            var replacement = (StringValue)args[2];
 
-            int instanceNum = -1;
+            var instanceNum = -1;
             if (args[3] is NumberValue nv)
             {
                 instanceNum = (int)nv.Value;
@@ -402,6 +465,7 @@ namespace Microsoft.PowerFx.Functions
                     {
                         idx = temp.Length + idx2;
                     }
+
                     sourceValue = temp + sourceValue;
                 }
             }
@@ -426,28 +490,29 @@ namespace Microsoft.PowerFx.Functions
                     sourceValue = sourceValue.Substring(0, idx) + replacement.Value + sourceValue.Substring(idx + match.Value.Length);
                 }
             }
+
             return new StringValue(irContext, sourceValue);
         }
 
         public static FormulaValue StartsWith(IRContext irContext, StringValue[] args)
         {
-            StringValue text = args[0];
-            StringValue start = args[1];
+            var text = args[0];
+            var start = args[1];
 
             return new BooleanValue(irContext, text.Value.StartsWith(start.Value));
         }
 
         public static FormulaValue EndsWith(IRContext irContext, StringValue[] args)
         {
-            StringValue text = args[0];
-            StringValue end = args[1];
+            var text = args[0];
+            var end = args[1];
 
             return new BooleanValue(irContext, text.Value.EndsWith(end.Value));
         }
 
         public static FormulaValue Trim(IRContext irContext, StringValue[] args)
         {
-            StringValue text = args[0];
+            var text = args[0];
 
             // Remove all whitespace except ASCII 10, 11, 12, 13 and 160, then trim to follow Excel's behavior
             var regex = new Regex(@"[^\S\xA0\n\v\f\r]+");
@@ -459,7 +524,7 @@ namespace Microsoft.PowerFx.Functions
 
         public static FormulaValue TrimEnds(IRContext irContext, StringValue[] args)
         {
-            StringValue text = args[0];
+            var text = args[0];
 
             var result = text.Value.Trim();
 
