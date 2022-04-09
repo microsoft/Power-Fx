@@ -1630,7 +1630,11 @@
     
   </data>
   <data name="ErrUnknownFunction" xml:space="preserve">
-    <value>알 수 없거나 지원되지 않는 함수를 호출했습니다.</value>
+    <value>'{0}'은(는) 알 수 없거나 지원되지 않는 함수입니다.</value>
+    
+  </data>
+  <data name="ErrUnknownNamespaceFunction" xml:space="preserve">
+    <value>'{0}'은(는) 알 수 없는 함수 또는 네임스페이스 '{1}'에서 지원되지 않는 함수입니다.</value>
     
   </data>
   <data name="ErrUnSupportedComponentBehaviorInvocation" xml:space="preserve">
@@ -1924,6 +1928,34 @@
   </data>
   <data name="AboutDateTime" xml:space="preserve">
     <value>시점을 나타내는 값을 만듭니다(날짜 및 시간으로 표현됨).</value>
+    
+  </data>
+  <data name="AboutDateTime_year" xml:space="preserve">
+    <value>연도입니다.</value>
+    
+  </data>
+  <data name="AboutDateTime_month" xml:space="preserve">
+    <value>월입니다.</value>
+    
+  </data>
+  <data name="AboutDateTime_day" xml:space="preserve">
+    <value>일입니다.</value>
+    
+  </data>
+  <data name="AboutDateTime_hour" xml:space="preserve">
+    <value>시간입니다.</value>
+    
+  </data>
+  <data name="AboutDateTime_minute" xml:space="preserve">
+    <value>분입니다.</value>
+    
+  </data>
+  <data name="AboutDateTime_second" xml:space="preserve">
+    <value>초입니다.</value>
+    
+  </data>
+  <data name="AboutDateTime_millisecond" xml:space="preserve">
+    <value>밀리초입니다.</value>
     
   </data>
   <data name="AboutYear" xml:space="preserve">

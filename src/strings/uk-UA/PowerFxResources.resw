@@ -1630,7 +1630,11 @@
     
   </data>
   <data name="ErrUnknownFunction" xml:space="preserve">
-    <value>Виклик невідомої або непідтримуваної функції.</value>
+    <value>"{0}" – невідома або непідтримувана функція.</value>
+    
+  </data>
+  <data name="ErrUnknownNamespaceFunction" xml:space="preserve">
+    <value>"{0}" – невідома або непідтримувана функція в просторі імен "{1}".</value>
     
   </data>
   <data name="ErrUnSupportedComponentBehaviorInvocation" xml:space="preserve">
@@ -1923,11 +1927,39 @@
     <value>Компонент мілісекунди.</value>
   </data>
   <data name="AboutDateTime" xml:space="preserve">
-    <value>Creates a value that represents an instant in time, expressed as a date and time of the day.</value>
+    <value>Створює значення, яке представляє момент у часі, виражене як дата та час дня.</value>
+    
+  </data>
+  <data name="AboutDateTime_year" xml:space="preserve">
+    <value>Рік.</value>
+    
+  </data>
+  <data name="AboutDateTime_month" xml:space="preserve">
+    <value>Місяць.</value>
+    
+  </data>
+  <data name="AboutDateTime_day" xml:space="preserve">
+    <value>День.</value>
+    
+  </data>
+  <data name="AboutDateTime_hour" xml:space="preserve">
+    <value>Година.</value>
+    
+  </data>
+  <data name="AboutDateTime_minute" xml:space="preserve">
+    <value>Хвилина.</value>
+    
+  </data>
+  <data name="AboutDateTime_second" xml:space="preserve">
+    <value>Секунда.</value>
+    
+  </data>
+  <data name="AboutDateTime_millisecond" xml:space="preserve">
+    <value>Мілісекунди.</value>
     
   </data>
   <data name="AboutYear" xml:space="preserve">
-    <value>Year returns the year of a given date.</value>
+    <value>Функція "Рік" повертає рік указаної дати.</value>
     
   </data>
   <data name="YearArg1" xml:space="preserve">

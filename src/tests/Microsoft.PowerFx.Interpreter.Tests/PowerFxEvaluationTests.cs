@@ -77,7 +77,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 return result;
             }
 
-            protected override Task<FormulaValue> RunAsyncInternal(string expr, string setupHandlerName)
+            protected override async Task<RunResult> RunAsyncInternal(string expr, string setupHandlerName)
             {
                 FeatureFlags.StringInterpolation = true;
                 RecalcEngine engine;
@@ -85,7 +85,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
                 if (setupHandlerName == "AsyncTestSetup")
                 {
-                    return RunVerifyAsync(expr);
+                    return new RunResult(await RunVerifyAsync(expr));
                 }
 
                 if (setupHandlerName != null) 
@@ -103,8 +103,20 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                     parameters = null;
                 }
 
-                var result = engine.Eval(expr, parameters);
-                return Task.FromResult(result);
+                if (parameters == null)
+                {
+                    parameters = RecordValue.Empty();
+                }
+
+                var check = engine.Check(expr, parameters.Type);
+                if (!check.IsSuccess)
+                {
+                    return new RunResult(check);
+                }
+
+                var newValue = await check.Expression.EvalAsync(parameters, CancellationToken.None);
+
+                return new RunResult(newValue);
             }
         }
     }

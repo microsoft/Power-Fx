@@ -1630,7 +1630,11 @@
     
   </data>
   <data name="ErrUnknownFunction" xml:space="preserve">
-    <value>Invocação de função desconhecida ou sem suporte.</value>
+    <value>'{0}' é uma função desconhecida ou sem suporte.</value>
+    
+  </data>
+  <data name="ErrUnknownNamespaceFunction" xml:space="preserve">
+    <value>'{0}' é uma função desconhecida ou sem suporte no namespace '{1}'.</value>
     
   </data>
   <data name="ErrUnSupportedComponentBehaviorInvocation" xml:space="preserve">
@@ -1923,11 +1927,39 @@
     <value>Componente de milésimo de segundo.</value>
   </data>
   <data name="AboutDateTime" xml:space="preserve">
-    <value>Creates a value that represents an instant in time, expressed as a date and time of the day.</value>
+    <value>Cria um valor que representa um determinado momento, expresso como uma data e uma hora do dia.</value>
+    
+  </data>
+  <data name="AboutDateTime_year" xml:space="preserve">
+    <value>Ano.</value>
+    
+  </data>
+  <data name="AboutDateTime_month" xml:space="preserve">
+    <value>Mês.</value>
+    
+  </data>
+  <data name="AboutDateTime_day" xml:space="preserve">
+    <value>Dia.</value>
+    
+  </data>
+  <data name="AboutDateTime_hour" xml:space="preserve">
+    <value>Hora.</value>
+    
+  </data>
+  <data name="AboutDateTime_minute" xml:space="preserve">
+    <value>Minuto.</value>
+    
+  </data>
+  <data name="AboutDateTime_second" xml:space="preserve">
+    <value>Segundo.</value>
+    
+  </data>
+  <data name="AboutDateTime_millisecond" xml:space="preserve">
+    <value>Milissegundos.</value>
     
   </data>
   <data name="AboutYear" xml:space="preserve">
-    <value>Year returns the year of a given date.</value>
+    <value>Year retorna o ano de uma determinada data.</value>
     
   </data>
   <data name="YearArg1" xml:space="preserve">
