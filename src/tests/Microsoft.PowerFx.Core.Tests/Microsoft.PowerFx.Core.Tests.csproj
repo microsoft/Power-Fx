@@ -26,6 +26,7 @@
     <Title>Microsoft Power Fx Compiler Tests Core</Title>
     <Description>The core test suite for all Microsoft Power Fx Compiler targets</Description>
     <Summary>The core test suite for all Microsoft Power Fx Compiler targets</Summary>
+    <TargetFrameworks>net5</TargetFrameworks>
   </PropertyGroup>
 
   <ItemGroup>

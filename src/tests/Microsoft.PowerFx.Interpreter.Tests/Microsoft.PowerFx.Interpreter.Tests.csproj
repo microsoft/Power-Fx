@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<TargetFramework Condition="'$(BuildTarget)' == 'netcoreapp31'">netcoreapp3.1</TargetFramework>
 		<TargetFrameworks Condition="'$(BuildTarget)' == ''">netcoreapp3.1</TargetFrameworks>
@@ -6,6 +6,7 @@
 		<GenerateDocumentationFile>false</GenerateDocumentationFile>
 		<Configurations>Debug;Release</Configurations>
 		<OutputType>Library</OutputType>
+		<TargetFrameworks>net5</TargetFrameworks>
 	</PropertyGroup>
 	<ItemGroup>
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.11.0" />
