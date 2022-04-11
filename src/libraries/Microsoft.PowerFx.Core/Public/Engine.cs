@@ -7,6 +7,7 @@ using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Glue;
 using Microsoft.PowerFx.Core.Lexer;
+using Microsoft.PowerFx.Core.Lexer.Tokens;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Parser;
 using Microsoft.PowerFx.Core.Public;
@@ -57,6 +58,14 @@ namespace Microsoft.PowerFx
         {
             return new SimpleResolver(alternateConfig ?? Config);
         }
+
+        /// <summary>
+        ///     Tokenize an expression to a sequence of <see cref="Token" />s.
+        /// </summary>
+        /// <param name="expressionText"></param>
+        /// <returns></returns>
+        public IReadOnlyList<Token> Tokenize(string expressionText)
+            => TexlLexer.LocalizedInstance.GetTokens(expressionText);
 
         /// <summary>
         /// Type check a formula without executing it. 
