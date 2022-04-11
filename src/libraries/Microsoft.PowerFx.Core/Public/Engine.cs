@@ -24,8 +24,6 @@ namespace Microsoft.PowerFx
     /// </summary>
     public class Engine : IPowerFxEngine
     {
-        private readonly TexlLexer _lexer;
-
         /// <summary>
         /// Configuration symbols for this Power Fx engine.
         /// </summary>
@@ -39,9 +37,6 @@ namespace Microsoft.PowerFx
         {
             powerFxConfig.Lock();
             Config = powerFxConfig;
-
-            // TODO: Get language settings from config
-            _lexer = TexlLexer.NewInstance(loc: null);
         }
 
         /// <summary>
@@ -68,7 +63,8 @@ namespace Microsoft.PowerFx
         /// </summary>
         /// <param name="expressionText"></param>
         /// <returns></returns>
-        public IReadOnlyList<Token> Tokenize(string expressionText) => _lexer.GetTokens(expressionText);
+        public IReadOnlyList<Token> Tokenize(string expressionText)
+            => TexlLexer.LocalizedInstance.GetTokens(expressionText);
 
         /// <summary>
         /// Type check a formula without executing it. 
@@ -83,7 +79,7 @@ namespace Microsoft.PowerFx
                 parameterType = new RecordType();
             }
 
-            var formula = new Formula(expressionText, loc: Config.LanguageSettings);
+            var formula = new Formula(expressionText);
 
             // TODO: Can we enable expression chaining via some config option?
             formula.EnsureParsed(TexlParser.Flags.None);

@@ -176,20 +176,16 @@ namespace Microsoft.PowerFx.Core.Lexer
 
             if (loc != null)
             {
-                // TODO: This seems like an overkill, but other changes caused tests to start failing here...
-                lock (_prebuiltLexers)
+                if (_prebuiltLexers.TryGetValue(loc.CultureName, out var lexer))
                 {
-                    if (_prebuiltLexers.TryGetValue(loc.CultureName, out var lexer))
-                    {
-                        // In the common case we can built a fresh Lexer based on an existing one using the same locale
-                        return new TexlLexer(lexer);
-                    }
-
-                    // Locale never seen before, so make a fresh Lexer the slow way
-                    lexer = new TexlLexer(loc);
-                    _prebuiltLexers.Add(loc.CultureName, lexer);
-                    return lexer;
+                    // In the common case we can built a fresh Lexer based on an existing one using the same locale
+                    return new TexlLexer(lexer);
                 }
+
+                // Locale never seen before, so make a fresh Lexer the slow way
+                lexer = new TexlLexer(loc);
+                _prebuiltLexers.Add(loc.CultureName, lexer);
+                return lexer;
             }
 
             return new TexlLexer(loc);
