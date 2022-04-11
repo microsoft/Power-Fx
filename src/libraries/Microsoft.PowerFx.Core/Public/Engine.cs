@@ -82,7 +82,6 @@ namespace Microsoft.PowerFx
 
             var formula = new Formula(expressionText);
 
-            // TODO: Can we enable expression chaining via some config option?
             formula.EnsureParsed(TexlParser.Flags.None);
 
             // Ok to continue with binding even if there are parse errors. 
