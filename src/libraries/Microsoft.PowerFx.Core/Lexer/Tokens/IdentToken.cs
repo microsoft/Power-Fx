@@ -7,19 +7,26 @@ using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Core.Lexer.Tokens
 {
-    internal class IdentToken : Token
+    /// <summary>
+    /// Token for an identifier/name.
+    /// </summary>
+    public class IdentToken : Token
     {
-        public readonly bool HasDelimiterStart;
-        public readonly bool HasDelimiterEnd;
-        public readonly bool IsModified;
+        internal readonly bool HasDelimiterStart;
+        internal readonly bool HasDelimiterEnd;
+        internal readonly bool IsModified;
 
         // Unescaped, unmodified value.
         private readonly string _value;
-        public readonly DName Name;
 
-        public const string StrInterpIdent = "Concatenate";
+        /// <summary>
+        /// Identifier represented as <see cref="DName" />.
+        /// </summary>
+        public DName Name { get; }
 
-        public IdentToken(string val, Span span)
+        internal const string StrInterpIdent = "Concatenate";
+
+        internal IdentToken(string val, Span span)
             : this(val, span, false, false)
         {
             Contracts.AssertValue(val);
@@ -31,7 +38,7 @@ namespace Microsoft.PowerFx.Core.Lexer.Tokens
             Name = DName.MakeValid(val, out IsModified);
         }
 
-        public IdentToken(string val, Span spanTok, bool fDelimiterStart, bool fDelimiterEnd)
+        internal IdentToken(string val, Span spanTok, bool fDelimiterStart, bool fDelimiterEnd)
             : base(TokKind.Ident, spanTok)
         {
             // The string may be empty, but shouldn't be null.
@@ -55,16 +62,17 @@ namespace Microsoft.PowerFx.Core.Lexer.Tokens
         {
         }
 
-        public override Token Clone(Span ts)
+        internal override Token Clone(Span ts)
         {
             return new IdentToken(this, ts);
         }
 
         // REVIEW ragru: having a property for every possible error isn't scalable.
-        public bool HasDelimiters => HasDelimiterStart;
+        internal bool HasDelimiters => HasDelimiterStart;
 
-        public bool HasErrors => IsModified || (HasDelimiterStart && !HasDelimiterEnd);
+        internal bool HasErrors => IsModified || (HasDelimiterStart && !HasDelimiterEnd);
 
+        /// <inheritdoc />
         public override string ToString()
         {
             var sb = new StringBuilder();
@@ -73,7 +81,7 @@ namespace Microsoft.PowerFx.Core.Lexer.Tokens
         }
 
         // Prints the original string.
-        public void Format(StringBuilder sb)
+        internal void Format(StringBuilder sb)
         {
             Contracts.AssertValue(sb);
 
@@ -106,6 +114,7 @@ namespace Microsoft.PowerFx.Core.Lexer.Tokens
             }
         }
 
+        /// <inheritdoc />
         public override bool Equals(Token that)
         {
             Contracts.AssertValue(that);

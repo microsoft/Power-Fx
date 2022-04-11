@@ -1,11 +1,10 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using Microsoft.PowerFx.Core.Lexer.Tokens;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Utils;
 
-namespace Microsoft.PowerFx.Core.Lexer
+namespace Microsoft.PowerFx.Core.Lexer.Tokens
 {
     /// <summary>
     /// A token for a series of whitespace characters.
@@ -21,7 +20,7 @@ namespace Microsoft.PowerFx.Core.Lexer
             Value = value;
         }
 
-        public override Token Clone(Span ts)
+        internal override Token Clone(Span ts)
         {
             return new WhitespaceToken(Value, ts);
         }
