@@ -2764,7 +2764,7 @@ namespace Microsoft.PowerFx.Core.Binding
                         relatedDataSource.IsConvertingDisplayNameMapping)
                     {
                         useUpdatedDisplayNames = true;
-                        updatedDisplayNamesType = relatedDataSource.Schema;
+                        updatedDisplayNamesType = relatedDataSource.Type;
                     }
                 }
 
@@ -5661,7 +5661,7 @@ namespace Microsoft.PowerFx.Core.Binding
                     }
                     else
                     {
-                        dataSourceBoundType = dataSourceInfo.Schema;
+                        dataSourceBoundType = dataSourceInfo.Type;
                         nodeType = DType.CreateDTypeWithConnectedDataSourceInfoMetadata(nodeType, dataSourceBoundType.AssociatedDataSources, dataSourceBoundType.DisplayNameProvider);
                     }
                 }

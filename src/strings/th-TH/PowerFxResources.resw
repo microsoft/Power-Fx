@@ -1630,7 +1630,11 @@
     
   </data>
   <data name="ErrUnknownFunction" xml:space="preserve">
-    <value>การขอร้องจากฟังก์ชันที่ไม่รู้จักหรือไม่รองรับ</value>
+    <value>'{0}' เป็นฟังก์ชันที่ไม่รู้จักหรือไม่ได้รับการสนับสนุน</value>
+    
+  </data>
+  <data name="ErrUnknownNamespaceFunction" xml:space="preserve">
+    <value>'{0}' เป็นฟังก์ชันที่ไม่รู้จักหรือไม่ได้รับการสนับสนุนใน namespace '{1}'</value>
     
   </data>
   <data name="ErrUnSupportedComponentBehaviorInvocation" xml:space="preserve">
@@ -1924,6 +1928,34 @@
   </data>
   <data name="AboutDateTime" xml:space="preserve">
     <value>สร้างค่าที่บ่งบอกช่วงของเวลา โดยแสดงเป็นวันที่และเวลาในช่วงวัน</value>
+    
+  </data>
+  <data name="AboutDateTime_year" xml:space="preserve">
+    <value>ปี</value>
+    
+  </data>
+  <data name="AboutDateTime_month" xml:space="preserve">
+    <value>เดือน</value>
+    
+  </data>
+  <data name="AboutDateTime_day" xml:space="preserve">
+    <value>วัน</value>
+    
+  </data>
+  <data name="AboutDateTime_hour" xml:space="preserve">
+    <value>ชั่วโมง</value>
+    
+  </data>
+  <data name="AboutDateTime_minute" xml:space="preserve">
+    <value>นาที</value>
+    
+  </data>
+  <data name="AboutDateTime_second" xml:space="preserve">
+    <value>วินาที</value>
+    
+  </data>
+  <data name="AboutDateTime_millisecond" xml:space="preserve">
+    <value>มิลลิวินาที</value>
     
   </data>
   <data name="AboutYear" xml:space="preserve">

@@ -134,6 +134,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Core.Lexer.Tokens.StrLitToken",
                 "Microsoft.PowerFx.Core.Lexer.Tokens.Token",
                 "Microsoft.PowerFx.Core.DisplayNameUtility",
+                "Microsoft.PowerFx.Core.RenameDriver",
             };
 
             var sb = new StringBuilder();

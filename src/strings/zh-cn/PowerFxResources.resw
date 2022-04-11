@@ -1630,7 +1630,11 @@
     
   </data>
   <data name="ErrUnknownFunction" xml:space="preserve">
-    <value>调用了未知或不支持的函数。</value>
+    <value>'{0}' 为未知或不支持的函数。</value>
+    
+  </data>
+  <data name="ErrUnknownNamespaceFunction" xml:space="preserve">
+    <value>'{0}' 为命名空间 '{1}' 中未知或不支持的函数。</value>
     
   </data>
   <data name="ErrUnSupportedComponentBehaviorInvocation" xml:space="preserve">
@@ -1924,6 +1928,34 @@
   </data>
   <data name="AboutDateTime" xml:space="preserve">
     <value>创建一个以某天的日期和时间来表示瞬间的值。</value>
+    
+  </data>
+  <data name="AboutDateTime_year" xml:space="preserve">
+    <value>年。</value>
+    
+  </data>
+  <data name="AboutDateTime_month" xml:space="preserve">
+    <value>月。</value>
+    
+  </data>
+  <data name="AboutDateTime_day" xml:space="preserve">
+    <value>日。</value>
+    
+  </data>
+  <data name="AboutDateTime_hour" xml:space="preserve">
+    <value>小时。</value>
+    
+  </data>
+  <data name="AboutDateTime_minute" xml:space="preserve">
+    <value>分钟。</value>
+    
+  </data>
+  <data name="AboutDateTime_second" xml:space="preserve">
+    <value>秒。</value>
+    
+  </data>
+  <data name="AboutDateTime_millisecond" xml:space="preserve">
+    <value>毫秒。</value>
     
   </data>
   <data name="AboutYear" xml:space="preserve">

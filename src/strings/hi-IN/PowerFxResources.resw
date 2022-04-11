@@ -1630,7 +1630,11 @@
     
   </data>
   <data name="ErrUnknownFunction" xml:space="preserve">
-    <value>अज्ञात या असमर्थित फ़ंक्शन का आमंत्रण.</value>
+    <value>{0}' एक अज्ञात या असमर्थित फ़ंक्शन है.</value>
+    
+  </data>
+  <data name="ErrUnknownNamespaceFunction" xml:space="preserve">
+    <value>{0}' नामस्थान '{1}' में एक अज्ञात या असमर्थित फ़ंक्शन है.</value>
     
   </data>
   <data name="ErrUnSupportedComponentBehaviorInvocation" xml:space="preserve">
@@ -1923,11 +1927,39 @@
     <value>मिलीसेकंड घटक.</value>
   </data>
   <data name="AboutDateTime" xml:space="preserve">
-    <value>Creates a value that represents an instant in time, expressed as a date and time of the day.</value>
+    <value>ऐसा मान बनाता है जो समय में एक पल को दर्शाता है, जिसे दिन की तिथि और समय के रूप में व्यक्त किया जाता है.</value>
+    
+  </data>
+  <data name="AboutDateTime_year" xml:space="preserve">
+    <value>वर्ष.</value>
+    
+  </data>
+  <data name="AboutDateTime_month" xml:space="preserve">
+    <value>माह.</value>
+    
+  </data>
+  <data name="AboutDateTime_day" xml:space="preserve">
+    <value>दिन.</value>
+    
+  </data>
+  <data name="AboutDateTime_hour" xml:space="preserve">
+    <value>घंटा.</value>
+    
+  </data>
+  <data name="AboutDateTime_minute" xml:space="preserve">
+    <value>मिनट.</value>
+    
+  </data>
+  <data name="AboutDateTime_second" xml:space="preserve">
+    <value>सेकंड.</value>
+    
+  </data>
+  <data name="AboutDateTime_millisecond" xml:space="preserve">
+    <value>मिलीसेकंड.</value>
     
   </data>
   <data name="AboutYear" xml:space="preserve">
-    <value>Year returns the year of a given date.</value>
+    <value>वर्ष दी गई तिथि का वर्ष लौटाता है.</value>
     
   </data>
   <data name="YearArg1" xml:space="preserve">
