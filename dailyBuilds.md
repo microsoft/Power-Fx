@@ -18,7 +18,7 @@ Add a nuget.config file to your project in the same folder as your .csproj or .s
   </packageSources>
 </configuration>
 ```
-Restore packages (using the interactive flag allows dotnet to prompt you for credentials)
+Restore packages (the interactive flag allows dotnet to prompt you for credentials)
 ```
 dotnet restore --interactive
 ```
