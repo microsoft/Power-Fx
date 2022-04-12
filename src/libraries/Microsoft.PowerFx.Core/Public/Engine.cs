@@ -68,6 +68,31 @@ namespace Microsoft.PowerFx
             => TexlLexer.LocalizedInstance.GetTokens(expressionText);
 
         /// <summary>
+        /// Check only syntax of the expression.
+        /// </summary>
+        /// <param name="expressionText"></param>
+        /// <returns></returns>
+        // TODO: This should be done differently, temporary hack!
+        public CheckResult CheckSyntax(string expressionText)
+        {
+            var formula = new Formula(expressionText);
+            formula.EnsureParsed(TexlParser.Flags.None);
+
+            var result = new CheckResult
+            {
+                _formula = formula
+            };
+
+            var errors = formula.GetParseErrors();
+            if (errors != null)
+            {
+                result.SetErrors(errors);
+            }
+
+            return result;
+        }
+
+        /// <summary>
         /// Type check a formula without executing it. 
         /// </summary>
         /// <param name="expressionText"></param>
