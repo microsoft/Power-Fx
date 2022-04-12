@@ -68,6 +68,13 @@ namespace Microsoft.PowerFx.Core.Public
             }
         }
 
+        /// <summary>
+        /// Gets the type of a syntax node.
+        /// </summary>
+        /// <param name="node"></param>
+        /// <returns></returns>
+        public FormulaType GetNodeType(TexlNode node) => FormulaType.Build(_binding.GetType(node));
+
         internal IReadOnlyDictionary<string, TokenResultType> GetTokens(GetTokensFlags flags) => GetTokensUtils.GetTokens(_binding, flags);
 
         internal CheckResult SetErrors(IEnumerable<IDocumentError> errors)
