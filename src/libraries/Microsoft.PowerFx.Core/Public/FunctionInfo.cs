@@ -12,6 +12,7 @@ namespace Microsoft.PowerFx.Core.Public
     /// <summary>
     /// Information about a built-in function.
     /// </summary>
+    [ThreadSafeImmutable]
     public class FunctionInfo
     {
         internal readonly TexlFunction _fnc;

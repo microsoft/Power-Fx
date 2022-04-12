@@ -7,6 +7,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using Microsoft.PowerFx.Core.Lexer.Tokens;
+using Microsoft.PowerFx.Core.Public;
 using Microsoft.PowerFx.Core.Syntax.Nodes;
 using Xunit;
 
@@ -85,6 +86,8 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Core.Public.Types.HyperlinkType",
                 "Microsoft.PowerFx.Core.Public.Types.ExternalTypeKind",
                 "Microsoft.PowerFx.Core.Public.Types.ExternalType",
+                "Microsoft.PowerFx.Core.Public.Types.ErrorType",
+                "Microsoft.PowerFx.Core.Public.Types.UnknownType",
                 "Microsoft.PowerFx.Core.Localization.ErrorResourceKey",
                 "Microsoft.PowerFx.Core.Localization.Span",
                 "Microsoft.PowerFx.Core.Functions.Publish.Capabilities",
@@ -102,6 +105,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Core.Syntax.NodeKind",
                 "Microsoft.PowerFx.Core.Syntax.Visitors.TexlFunctionalVisitor`2",
                 "Microsoft.PowerFx.Core.Syntax.Visitors.TexlVisitor",
+                "Microsoft.PowerFx.Core.Syntax.Visitors.IdentityTexlVisitor",
                 "Microsoft.PowerFx.Core.Syntax.Nodes.AsNode",
                 "Microsoft.PowerFx.Core.Syntax.Nodes.BinaryOpNode",
                 "Microsoft.PowerFx.Core.Syntax.Nodes.BlankNode",
@@ -135,6 +139,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Core.Lexer.Tokens.Token",
                 "Microsoft.PowerFx.Core.DisplayNameUtility",
                 "Microsoft.PowerFx.Core.RenameDriver",
+                "Microsoft.PowerFx.Core.Public.FunctionInfo",
             };
 
             var sb = new StringBuilder();
@@ -162,6 +167,9 @@ namespace Microsoft.PowerFx.Core.Tests
 
         [Fact]
         public void TestTokenTypes() => TestPublicClassHierarchy(typeof(Token), requireAbstractOrSealed: false);
+
+        [Fact]
+        public void TestFunctionInfoTypes() => TestPublicClassHierarchy(typeof(FunctionInfo), requireAbstractOrSealed: false);
 
         private static void TestPublicClassHierarchy(Type rootType, bool requireAbstractOrSealed = true)
         {
