@@ -45,7 +45,7 @@ namespace Microsoft.PowerFx.Core.Lexer.Tokens
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
-        public static string EscapeString(string value) => CharacterUtils.EscapeString(value); // TODO: EscapeString vs. ExcelEscapeString?
+        public static string EscapeString(string value) => CharacterUtils.ExcelEscapeString(value);
 
         internal override Token Clone(Span ts)
         {
