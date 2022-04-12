@@ -61,6 +61,25 @@ namespace Microsoft.PowerFx.Core.Public.Types
             _type = type;
         }
 
+        /// <summary>
+        /// Parses a <see cref="FormulaType" /> from a string specification.
+        /// </summary>
+        /// <param name="typeSec"></param>
+        /// <param name="resType"></param>
+        /// <returns></returns>
+        public static bool TryParse(string typeSec, out FormulaType resType)
+        {
+            resType = null;
+
+            if (DType.TryParse(typeSec, out var t))
+            {
+                resType = Build(t);
+                return true;
+            }
+
+            return false;
+        }
+
         // Get the correct derived type
         internal static FormulaType Build(DType type)
         {
