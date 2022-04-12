@@ -512,6 +512,18 @@ namespace Microsoft.PowerFx.Tests
 
             Assert.True(enums.Count() > 0);
         }
+        
+        /// <summary>
+        /// Issue #263 - Filter should be able to handle empty rows
+        /// </summary>
+        [Fact]
+        public void BlankRowFilter()
+        {
+            var engine = new RecalcEngine();
+            var result = engine.Eval("Index(Filter(Table({a:1},{a:2},If(1<0,{a:3}),{a:4},{a:5}), IsBlank(a) Or a > 0),3)");
+
+            Assert.IsType<BlankValue>(result);
+        }
 
         #region Test
 
