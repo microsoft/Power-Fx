@@ -94,7 +94,7 @@ namespace Microsoft.PowerFx.Core.Public
         {
             var nodesArr = nodes.ToArray();
             var typesArr = types.Select(t => t._type).ToArray();
-            var res = fnc._fnc.CheckInvocation(_binding, nodesArr, typesArr, _binding.ErrorContainer, out var retDType, out _);
+            var res = fnc._fnc.CheckInvocation(nodesArr, typesArr, _binding.ErrorContainer, out var retDType, out _);
 
             if (res)
             {
