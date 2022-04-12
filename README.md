@@ -28,6 +28,13 @@ For those new to Power-Fx, this video should answer many of your questions:
 | Microsoft.PowerFx.Interpreter         | [![BotBuilder Badge](https://buildstats.info/nuget/Microsoft.PowerFx.Interpreter?includePreReleases=true&dWidth=70)](https://www.nuget.org/packages/Microsoft.PowerFx.Interpreter/)
 | Microsoft.PowerFx.Transport.Attributes   | [![BotBuilder Badge](https://buildstats.info/nuget/Microsoft.PowerFx.Transport.Attributes?includePreReleases=true&dWidth=70)](https://www.nuget.org/packages/Microsoft.PowerFx.Transport.Attributes/)
 
+## Daily Builds
+Daily builds of the Power Fx packages are published to Azure Artifacts. 
+- The [Azure Artifacts daily feed](https://dev.azure.com/ConversationalAI/BotFramework/_packaging?_a=feed&feed=SDK) carries the most recent packages. To consume them, specify this package source: 
+`https://pkgs.dev.azure.com/ConversationalAI/BotFramework/_packaging/SDK/nuget/v3/index.json`
+
+- For detailed instructions [visit this page](dailyBuilds.md).
+
 ## Samples
 There are samples demonstrating how to consume Power Fx at: https://github.com/microsoft/power-fx-host-samples
 
