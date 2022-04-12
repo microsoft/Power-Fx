@@ -70,7 +70,10 @@ namespace Microsoft.PowerFx.Core.Lexer.Tokens
         // REVIEW ragru: having a property for every possible error isn't scalable.
         internal bool HasDelimiters => HasDelimiterStart;
 
-        internal bool HasErrors => IsModified || (HasDelimiterStart && !HasDelimiterEnd);
+        /// <summary>
+        /// Whether an identifier has errors.
+        /// </summary>
+        public bool HasErrors => IsModified || (HasDelimiterStart && !HasDelimiterEnd);
 
         /// <inheritdoc />
         public override string ToString()
