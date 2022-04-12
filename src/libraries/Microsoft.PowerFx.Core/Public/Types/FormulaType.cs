@@ -44,6 +44,10 @@ namespace Microsoft.PowerFx.Core.Public.Types
         public static FormulaType Color { get; } = new ColorType();
 
         public static FormulaType Guid { get; } = new GuidType();
+
+        public static FormulaType Unknown { get; } = new UnknownType();
+
+        public static FormulaType Error { get; } = new ErrorType();
         
         /// <summary>
         /// Internal use only to represent an arbitrary (un-backed) option set value.
@@ -99,6 +103,12 @@ namespace Microsoft.PowerFx.Core.Public.Types
 
                 case DKind.UntypedObject:
                     return UntypedObject;
+
+                case DKind.Unknown:
+                    return Unknown;
+
+                case DKind.Error:
+                    return Error;
 
                 default:
                     throw new NotImplementedException($"Not implemented type: {type}");
