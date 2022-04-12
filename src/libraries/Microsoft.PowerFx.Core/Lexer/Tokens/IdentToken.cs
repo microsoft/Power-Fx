@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System.Linq;
 using System.Text;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Utils;
@@ -74,6 +75,14 @@ namespace Microsoft.PowerFx.Core.Lexer.Tokens
         /// Whether an identifier has errors.
         /// </summary>
         public bool HasErrors => IsModified || (HasDelimiterStart && !HasDelimiterEnd);
+
+        // TODO: How to do this properly?
+        public static string MakeValidIdentifier(string value)
+        {
+            var needsDelimiters = string.IsNullOrEmpty(value) || !value.All(TexlLexer.IsSimpleIdentCh);
+            var tmpIdent = new IdentToken(value, new Span(0, 0), needsDelimiters, needsDelimiters);
+            return tmpIdent.ToString();
+        }
 
         /// <inheritdoc />
         public override string ToString()
