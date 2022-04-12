@@ -14,7 +14,7 @@ namespace Microsoft.PowerFx.Core.Public
     /// </summary>
     public class FunctionInfo
     {
-        private readonly TexlFunction _fnc;
+        internal readonly TexlFunction _fnc;
 
         internal FunctionInfo(TexlFunction fnc)
         {

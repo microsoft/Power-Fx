@@ -76,11 +76,37 @@ namespace Microsoft.PowerFx.Core.Public
         public FormulaType GetNodeType(TexlNode node) => FormulaType.Build(_binding.GetType(node));
 
         /// <summary>
-        /// CWhether the node is a constant node.
+        /// Whether the node is a constant node.
         /// </summary>
         /// <param name="node"></param>
         /// <returns></returns>
         public bool IsNodeConstant(TexlNode node) => _binding.IsConstant(node);
+
+        /// <summary>
+        /// Check whether function invocation in type-correct.
+        /// </summary>
+        /// <param name="fnc"></param>
+        /// <param name="nodes"></param>
+        /// <param name="types"></param>
+        /// <param name="retType"></param>
+        /// <returns></returns>
+        public bool CheckInvocation(FunctionInfo fnc, IReadOnlyList<TexlNode> nodes, IReadOnlyList<FormulaType> types, out FormulaType retType)
+        {
+            var nodesArr = nodes.ToArray();
+            var typesArr = types.Select(t => t._type).ToArray();
+            var res = fnc._fnc.CheckInvocation(_binding, nodesArr, typesArr, _binding.ErrorContainer, out var retDType, out _);
+
+            if (res)
+            {
+                retType = FormulaType.Build(retDType);
+            }
+            else
+            {
+                retType = null;
+            }
+
+            return res;
+        }
 
         internal IReadOnlyDictionary<string, TokenResultType> GetTokens(GetTokensFlags flags) => GetTokensUtils.GetTokens(_binding, flags);
 
