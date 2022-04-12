@@ -38,7 +38,7 @@ Daily builds of the Power Fx packages are published to Azure Artifacts.
 ## Samples
 There are samples demonstrating how to consume Power Fx at: https://github.com/microsoft/power-fx-host-samples
 
-You can also see usage examples from the [unit tests](https://github.com/microsoft/Power-Fx/tree/main/src/tests).
+You can also see usage examples in the [unit tests](https://github.com/microsoft/Power-Fx/tree/main/src/tests).
 
 ## Contributing
 
