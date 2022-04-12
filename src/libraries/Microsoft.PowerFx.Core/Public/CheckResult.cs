@@ -8,6 +8,7 @@ using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Public.Types;
 using Microsoft.PowerFx.Core.Syntax;
+using Microsoft.PowerFx.Core.Syntax.Nodes;
 using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Core.Public
@@ -36,6 +37,11 @@ namespace Microsoft.PowerFx.Core.Public
         /// Parsed expression, or null if IsSuccess is false.
         /// </summary>
         public IExpression Expression { get; set; }
+
+        /// <summary>
+        /// Syntax node of the parsed expression.
+        /// </summary>
+        public TexlNode SyntaxNode => _formula?.ParseTree;
 
         public virtual bool IsSuccess => Errors == null;
 
