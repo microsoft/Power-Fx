@@ -47,6 +47,14 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             }
         }
 
+        [Fact]
+        public void Test2()
+        {
+            var runner = new TestRunner(new InterpreterRunner());
+            runner.AddFile(@"D:\dev\pa2\Power-Fx\src\tests\Microsoft.PowerFx.Core.Tests\ExpressionTestCases\Testing.txt");
+            (var total, var failed, var passed, var output) = runner.RunTests();
+        }
+
         // Since test discovery runs in a separate process, run a dedicated 
         // parse pass as a single unit test to verify all the .txt will parse. 
         // This doesn't actually run any tests. 
