@@ -39,3 +39,39 @@
 
 >> First(LastN(Sort([-2, -1, 0, 1, 2], 1 / Value), 3)).Value
 #Error
+
+>> SortByColumns([-2, -1, 5, 1, 2], "Value")
+[-2,-1,1,2,5]
+
+>> SortByColumns([-2, -1, 5, 1, 2], "Value", SortOrder.Descending)
+[5,2,1,-1,-2]
+
+>> SortByColumns([-2, Blank(), 5, 1, 2], "Value")
+[-2,1,2,5,Blank()]
+
+>> SortByColumns([-2, Blank(), 5, 1, 2], "Value", SortOrder.Descending)
+[5,2,1,-2,Blank()]
+
+>> SortByColumns(["a", "b", "D", "x", "J", "C"], "Value")
+["a","b","C","D","J","x"]
+
+>> SortByColumns(["a", "b", "D", "x", "J", "C"], "Value", SortOrder.Descending)
+["x","J","D","C","b","a"]
+
+>> SortByColumns(["a", "b", Blank(), "x", "J", "C"], "Value")
+["a","b","C","J","x",Blank()]
+
+>> SortByColumns(["a", "b", Blank(), "x", "J", "C"], "Value", SortOrder.Descending)
+["x","J","C","b","a",Blank()]
+
+>> SortByColumns([Date(2020, 01, 05), Date(2020, 01, 01), Date(1995, 01, 01)], "Value")
+[Date(1995,1,1),Date(2020,1,1),Date(2020,1,5)]
+
+>> SortByColumns([Date(2020, 01, 05), Date(2020, 01, 01), Date(1995, 01, 01)], "Value", SortOrder.Descending)
+[Date(2020,1,5),Date(2020,1,1),Date(1995,1,1)]
+
+>> SortByColumns(Table({x:1, y:2}, {x:3, y:1}, {x:1, y:5}, {x:2, y:1}), "x", SortOrder.Ascending, "y", SortOrder.Ascending)
+Table({x:1,y:2},{x:1,y:5},{x:2,y:1},{x:3,y:1})
+
+>> SortByColumns(Table({x:1, y:2}, {x:3, y:1}, {x:1, y:5}, {x:2, y:1}), "y", SortOrder.Ascending, "x", SortOrder.Ascending)
+Table({x:2,y:1},{x:3,y:1},{x:1,y:2},{x:1,y:5})

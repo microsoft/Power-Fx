@@ -456,6 +456,18 @@ namespace Microsoft.PowerFx.Functions
                 return ExactValueTypeOrBlank<LambdaFormulaValue>(irContext, index, arg);
             }
         }
+        
+        private static FormulaValue SortByColumnsTypeChecker(IRContext irContext, int index, FormulaValue arg)
+        {
+            if (index == 0)
+            {
+                return ExactValueTypeOrBlank<TableValue>(irContext, index, arg);
+            }
+            else
+            {
+                return ExactValueTypeOrBlank<StringValue>(irContext, index, arg);
+            }
+        }
 
         private static FormulaValue DateOrDateTime(IRContext irContext, int index, FormulaValue arg)
         {

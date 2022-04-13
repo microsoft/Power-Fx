@@ -265,6 +265,109 @@ namespace Microsoft.PowerFx.Functions
                 return SortValueType<BooleanValue, bool>(pairs, irContext, compareToResultModifier);
             }
         }
+        
+        public static async ValueTask<FormulaValue> SortByColumns(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args)
+        {
+            var table = (TableValue)args[0];
+            var tableType = (TableType)table.Type;
+
+            var records = table.Rows.ToList();
+            var errors = new List<ErrorValue>();
+            for (var argIndex = 1; argIndex < args.Length; argIndex += 2)
+            {
+                var fieldName = ((StringValue)args[argIndex]).Value;
+                if (tableType.MaybeGetFieldType(fieldName) is not NumberType and not StringType
+                    and not BooleanType and not DateTimeType and not DateType)
+                {
+                    // column not found error
+                    errors.Add(CommonErrors.RuntimeTypeMismatch(irContext));
+                    break;
+                }
+            }
+
+            if (errors.Count != 0)
+            {
+                return ErrorValue.Combine(irContext, errors);
+            }
+
+            foreach (var record in records)
+            {
+                if (record.IsError)
+                {
+                    errors.Add((ErrorValue)record.ToFormulaValue());
+                    continue;
+                }
+
+                for (var argIndex = 1; argIndex < args.Length; argIndex += 2)
+                {
+                    var fieldName = ((StringValue)args[argIndex]).Value;
+                    var fieldValue = record.Value.GetField(fieldName);
+                    if (fieldValue is ErrorValue fieldErrorValue)
+                    {
+                        errors.Add(fieldErrorValue);
+                    }
+                }
+            }
+
+            if (errors.Count != 0)
+            {
+                return ErrorValue.Combine(irContext, errors);
+            }
+
+            records.Sort((record1, record2) =>
+            {
+                for (var argIndex = 1; argIndex < args.Length; argIndex += 2)
+                {
+                    var fieldName = ((StringValue)args[argIndex]).Value;
+                    var fieldType = tableType.GetFieldType(fieldName);
+                    var a = record1.Value.GetField(fieldName);
+                    var b = record2.Value.GetField(fieldName);
+                    if (a is BlankValue && b is not BlankValue)
+                    {
+                        return 1;
+                    }
+                    else if (b is BlankValue)
+                    {
+                        return -1;
+                    }
+
+                    var compareToResultModifier = 1;
+                    if (argIndex + 1 < args.Length && ((StringValue)args[argIndex + 1]).Value.ToLower() == "descending")
+                    {
+                        compareToResultModifier = -1;
+                    }
+
+                    var compareResult = 0;
+                    switch (fieldType)
+                    {
+                        case NumberType:
+                            compareResult = CompareColumns<NumberValue, double>(a, b);
+                            break;
+                        case StringType:
+                            compareResult = CompareColumns<StringValue, string>(a, b);
+                            break;
+                        case BooleanType:
+                            compareResult = CompareColumns<BooleanValue, bool>(a, b);
+                            break;
+                        case DateType:
+                            compareResult = CompareColumns<DateValue, DateTime>(a, b);
+                            break;
+                        case DateTimeType:
+                            compareResult = CompareColumns<DateTimeValue, DateTime>(a, b);
+                            break;
+                    }
+
+                    if (compareResult != 0)
+                    {
+                        return compareResult * compareToResultModifier;
+                    }
+                }
+
+                return 0;
+            });
+
+            return new InMemoryTableValue(irContext, records);
+        }
 
         private static bool IsValueTypeErrorOrBlank<T>(FormulaValue val)
             where T : FormulaValue
@@ -293,6 +396,15 @@ namespace Microsoft.PowerFx.Functions
             });
 
             return new InMemoryTableValue(irContext, pairs.Select(pair => pair.Key));
+        }
+
+        private static int CompareColumns<TPFxPrimitive, TDotNetPrimitive>(FormulaValue a, FormulaValue b)
+            where TPFxPrimitive : PrimitiveValue<TDotNetPrimitive>
+            where TDotNetPrimitive : IComparable<TDotNetPrimitive>
+        {
+            var n1 = (TPFxPrimitive)a;
+            var n2 = (TPFxPrimitive)b;
+            return n1.Value.CompareTo(n2.Value);
         }
 
         private static async Task<DValue<RecordValue>> LazyFilterRowAsync(
