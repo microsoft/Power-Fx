@@ -30,8 +30,11 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<EmbeddedResource Include="..\..\strings\PowerFxResources.*.resx">
-			<Link>strings\%(RecursiveDir)%(Filename)%(Extension)</Link>
+		<EmbeddedResource Include="..\..\strings\PowerFxResources.*.resx" Condition="'$(Configuration)' == 'Debug'">
+			<Link>strings\%(Filename)%(Extension)</Link>
+		</EmbeddedResource>
+		<EmbeddedResource Include="..\..\strings\PowerFxResources.*.resx" Exclude="..\..\strings\PowerFxResources.qps-ploc.resx" Condition="'$(Configuration)' == 'Release'">
+			<Link>strings\%(Filename)%(Extension)</Link>
 		</EmbeddedResource>
 	</ItemGroup>
 
