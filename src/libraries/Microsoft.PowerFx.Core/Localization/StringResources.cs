@@ -161,7 +161,7 @@ namespace Microsoft.PowerFx.Core.Localization
                 else
                 {                    
                     // Max 10 multivalue tags, although that's absurd. 
-                    for (var i = 0; i < 10; ++i)
+                    for (var i = 1; i < 11; ++i)
                     {
                         var resourceName = ErrorResource.ReswErrorResourcePrefix + key + tag.Value + "_" + i;
                         var member = GetLocaleResource(resourceName, locale);
@@ -173,6 +173,7 @@ namespace Microsoft.PowerFx.Core.Localization
                         if (!members.TryGetValue(tag.Key, out var multiValueKeys))
                         {
                             multiValueKeys = new Dictionary<int, string>();
+                            members.Add(tag.Key, multiValueKeys);
                         }
 
                         multiValueKeys.Add(i, member);
@@ -181,12 +182,13 @@ namespace Microsoft.PowerFx.Core.Localization
                         if (tag.Key == ErrorResource.LinkTag)
                         {
                             // This must exist, and the AssertValue call will fail CI builds if the resource is incorrectly defined. 
-                            var link = GetLocaleResource(resourceName + "_" + ErrorResource.LinkTagUrlTag, locale);
+                            var link = GetLocaleResource(resourceName + "_" + ErrorResource.LinkTagUrlSuffix, locale);
                             Contracts.AssertValue(link);
 
                             if (!members.TryGetValue(ErrorResource.LinkTagUrlTag, out var linkKeys))
                             {
                                 linkKeys = new Dictionary<int, string>();
+                                members.Add(ErrorResource.LinkTagUrlTag, linkKeys);
                             }
 
                             linkKeys.Add(i, member);
