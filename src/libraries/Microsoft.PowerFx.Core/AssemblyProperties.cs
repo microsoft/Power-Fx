@@ -43,3 +43,5 @@ using System.Runtime.InteropServices;
 [assembly: InternalsVisibleTo("Microsoft.PowerFx.Core.Tests")]
 [assembly: InternalsVisibleTo("Microsoft.PowerFx.Interpreter.Tests")]
 #endif
+
+[assembly:NeutralResourcesLanguage("en-US", UltimateResourceFallbackLocation.Satellite)]

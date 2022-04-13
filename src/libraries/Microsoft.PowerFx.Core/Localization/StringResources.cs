@@ -110,30 +110,35 @@ namespace Microsoft.PowerFx.Core.Localization
                 locale = FallbackLocale;
             }
 
-            // Error resources are a bit odd and need to be reassembled from separate keys. Check to see if we've already retrieved one for this locale/key combo first. 
-            if (_errorResources.TryGetValue(locale, out var localizedErrorResources))
+            // Error resources are a bit odd and need to be reassembled from separate keys.
+            // Check to see if we've already retrieved one for this locale/key combo before 
+            // rebuilding the full error resource.
+            lock (_errorResources)
             {
-                if (localizedErrorResources.TryGetValue(resourceKey.Key, out resourceValue))
+                if (_errorResources.TryGetValue(locale, out var localizedErrorResources))
                 {
+                    if (localizedErrorResources.TryGetValue(resourceKey.Key, out resourceValue))
+                    {
+                        return true;
+                    }
+                }
+                else
+                {
+                    localizedErrorResources = new Dictionary<string, ErrorResource>(StringComparer.OrdinalIgnoreCase);
+                    _errorResources.Add(locale, localizedErrorResources);
+                }
+
+                if (TryRebuildErrorResource(resourceKey.Key, locale, out resourceValue))
+                {
+                    localizedErrorResources.Add(resourceKey.Key, resourceValue);
                     return true;
                 }
-            }
-            else
-            {
-                localizedErrorResources = new Dictionary<string, ErrorResource>(StringComparer.OrdinalIgnoreCase);
-                _errorResources.Add(locale, localizedErrorResources);
-            }
 
-            if (TryRebuildErrorResource(resourceKey.Key, locale, out resourceValue))
-            {
-                localizedErrorResources.Add(resourceKey.Key, resourceValue);
-                return true;
-            }
-
-            if (ExternalStringResources != null && ExternalStringResources.TryGetErrorResource(resourceKey, out resourceValue, locale))
-            {
-                localizedErrorResources.Add(resourceKey.Key, resourceValue);
-                return true;
+                if (ExternalStringResources != null && ExternalStringResources.TryGetErrorResource(resourceKey, out resourceValue, locale))
+                {
+                    localizedErrorResources.Add(resourceKey.Key, resourceValue);
+                    return true;
+                }
             }
 
             return false;

@@ -21,6 +21,7 @@
 		<Description>The core library for all Microsoft Power Fx Compiler targets</Description>
 		<Summary>The core library for all Microsoft Power Fx Compiler targets</Summary>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <GenerateNeutralResourcesLanguageAttribute>false</GenerateNeutralResourcesLanguageAttribute>
 	</PropertyGroup>
 
 	<ItemGroup>
