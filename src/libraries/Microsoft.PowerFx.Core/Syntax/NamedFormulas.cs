@@ -53,7 +53,7 @@ namespace Microsoft.PowerFx.Core.Syntax
         /// Ensures that the named formulas have been parsed and if not, parses them.
         /// </summary>
         /// <returns>Tuple of IdentToken and formula.</returns>
-        public IEnumerable<(IdentToken token, Formula formula)> EnsureParsed()
+        public IEnumerable<(IdentToken token, Formula formula, int offset)> EnsureParsed()
         {
             if (_formulasResult == null)
             {
@@ -80,14 +80,14 @@ namespace Microsoft.PowerFx.Core.Syntax
             return _errors ?? Enumerable.Empty<TexlError>();
         }
 
-        private IEnumerable<(IdentToken token, Formula formula)> GetNamedFormulas()
+        private IEnumerable<(IdentToken token, Formula formula, int offset)> GetNamedFormulas()
         {
-            var formulas = new List<(IdentToken, Formula)>();
+            var formulas = new List<(IdentToken, Formula, int)>();
             if (_formulasResult != null)
             {
                 foreach (var nf in _formulasResult)
                 {
-                    formulas.Add((nf.Name, GetFormula(nf.Node, nf.Offset)));
+                    formulas.Add((nf.Name, GetFormula(nf.Node, nf.Offset), nf.Offset));
                 }
             }
 

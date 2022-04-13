@@ -54,7 +54,7 @@ namespace Microsoft.PowerFx.Core.Parser
             Contracts.AssertValue(tokens);
 
             _depth = 0;
-            _curs = new TokenCursor(tokens, flags);
+            _curs = new TokenCursor(tokens);
             _flags = flags;
         }
 
@@ -116,13 +116,12 @@ namespace Microsoft.PowerFx.Core.Parser
                             }
 
                             // Parse expression
+                            offset = _curs.ResetOffset();
                             var result = ParseExpr(Precedence.None);
-
                             namedFormulas.Add(new NamedFormula(thisIdentifier.As<IdentToken>(), result, offset));
                         }
 
                         _curs.TokMove();
-                        offset = _curs.CurrentCharIndex;
                     }
                     else
                     {

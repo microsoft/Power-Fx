@@ -19,13 +19,21 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Theory]
-        [InlineData("x=    \n\n\t2;colStyles=Table({\n\tkey:\"colorPrimary\", \n\tvalue:\"Red\"\n})", 2)]
-
-        //[InlineData("x=158558 +\t                  \n\n289885;y=\n\n     \t2;", 2)]
-        public void EnsureParsedTest(string script, int count)
+        [InlineData("x= \n\n\t2;colStyles=Table({\n\tkey:\"colorPrimary\", \n\tvalue:\"Red\"\n});", 2, "6,18")]
+        [InlineData("x=158558 +\t \n\n289885;y=\n\n \t2;", 2, "2,27")]
+        [InlineData("x=/* */ 2;y=Len(2);z= 1 /*test*/+2;", 3, "8,12,22")]
+        public void EnsureParsedTest(string script, int count, string offsets)
         {
             var namedFormula = new NamedFormulas(script);
             var formulas = namedFormula.EnsureParsed();
+            var offsetList = offsets.Split(",").Select(x => System.Convert.ToInt32(x));
+            Assert.Equal(offsetList.Count(), formulas.Count());
+
+            for (var i = 0; i < formulas.Count(); i++)
+            {
+                Assert.Equal(formulas.ElementAt(i).offset, offsetList.ElementAt(i));
+            }
+
             Assert.NotNull(formulas);
             Assert.Equal(formulas.Count(), count);
         }
