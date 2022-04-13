@@ -668,6 +668,18 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: Lower)
             },
             {
+                BuiltinFunctionsCore.Map,
+                StandardErrorHandling<FormulaValue>(
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactSequence(
+                        ExactValueTypeOrBlank<TableValue>,
+                        ExactValueTypeOrBlank<LambdaFormulaValue>),
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: Map)
+            },
+            {
                 BuiltinFunctionsCore.Max,
                 StandardErrorHandling<FormulaValue>(
                     expandArguments: NoArgExpansion,
@@ -1457,7 +1469,26 @@ namespace Microsoft.PowerFx.Functions
 
         // ForAll([1,2,3,4,5], Value * Value)
         public static async ValueTask<FormulaValue> ForAll(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args)
-        {// Streaming 
+        {
+            var arg0 = (TableValue)args[0];
+            var arg1 = (LambdaFormulaValue)args[1];
+
+            var rowsAsync = LazyForAll(runner, symbolContext, arg0.Rows, arg1);
+
+            // TODO: verify semantics in the case of heterogeneous record lists
+            var rows = await Task.WhenAll(rowsAsync);
+
+            var errors = rows.OfType<ErrorValue>();
+            if (errors.Any())
+            {
+                return ErrorValue.Combine(irContext, errors);
+            }
+
+            return new InMemoryTableValue(irContext, StandardTableNodeRecords(irContext, rows, forceSingleColumn: false));
+        }
+
+        public static async ValueTask<FormulaValue> Map(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args)
+        {
             var arg0 = (TableValue)args[0];
             var arg1 = (LambdaFormulaValue)args[1];
 

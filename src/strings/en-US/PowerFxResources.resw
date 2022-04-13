@@ -3664,6 +3664,24 @@
     <value>formula</value>
     <comment>function_parameter - Second argument to the ForAll function - the formula to evaluate for all rows in the source.</comment>
   </data>
+  <data name="AboutMap" xml:space="preserve">
+    <value>Applies a given formula on each row in a data source, then returns a new table with results per row.</value>
+    <comment>Description of 'Map' function.</comment>
+  </data>
+  <data name="AboutMap_source" xml:space="preserve">
+    <value>The data source or table to operate on.</value>
+  </data>
+  <data name="AboutMap_formula" xml:space="preserve">
+    <value>The formula to evaluate for all rows of the table.</value>
+  </data>
+  <data name="MapArg1" xml:space="preserve">
+    <value>source</value>
+    <comment>function_parameter - First argument to the Map function - the data source (table / collection) to operate on.</comment>
+  </data>
+  <data name="MapArg2" xml:space="preserve">
+    <value>formula</value>
+    <comment>function_parameter - Second argument to the Map function - the formula to evaluate for all rows in the source.</comment>
+  </data>
   <data name="AboutPower" xml:space="preserve">
     <value>Raises a number x to the power of another number y. Same as x^y.</value>
     <comment>Description of 'Power' function.</comment>

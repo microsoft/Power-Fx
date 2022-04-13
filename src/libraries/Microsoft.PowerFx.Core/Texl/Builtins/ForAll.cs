@@ -12,8 +12,7 @@ using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
-    // ForAll(source:*, formula)
-    internal sealed class ForAllFunction : FunctionWithTableInput
+    internal abstract class MapForAllFunctionBase : FunctionWithTableInput
     {
         public override bool SkipScopeForInlineRecords => true;
 
@@ -23,15 +22,10 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool SupportsParamCoercion => false;
 
-        public ForAllFunction()
-            : base("ForAll", TexlStrings.AboutForAll, FunctionCategories.Table, DType.Unknown, 0x2, 2, 2, DType.EmptyTable)
+        public MapForAllFunctionBase(string name, TexlStrings.StringGetter about)
+            : base(name, about, FunctionCategories.Table, DType.EmptyTable, 0x2, 2, 2, DType.EmptyTable)
         {
             ScopeInfo = new FunctionScopeInfo(this);
-        }
-
-        public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
-        {
-            yield return new[] { TexlStrings.ForAllArg1, TexlStrings.ForAllArg2 };
         }
 
         public override bool CheckInvocation(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
@@ -67,10 +61,38 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             return index == 0;
         }
+    }
+
+    // ForAll(source:*, formula)
+    internal sealed class ForAllFunction : MapForAllFunctionBase
+    {
+        public ForAllFunction()
+            : base("ForAll", TexlStrings.AboutForAll)
+        {
+        }
+
+        public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
+        {
+            yield return new[] { TexlStrings.ForAllArg1, TexlStrings.ForAllArg2 };
+        }
 
         public override string GetUniqueTexlRuntimeName(bool isPrefetching = false)
         {
             return GetUniqueTexlRuntimeName(suffix: isPrefetching ? "_ParallelPrefetching" : string.Empty);
+        }
+    }
+
+    // Map(source:*, formula)
+    internal sealed class MapFunction : MapForAllFunctionBase
+    {
+        public MapFunction()
+            : base("Map", TexlStrings.AboutMap)
+        {
+        }
+
+        public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
+        {
+            yield return new[] { TexlStrings.MapArg1, TexlStrings.MapArg2 };
         }
     }
 }
