@@ -92,7 +92,7 @@ namespace Microsoft.PowerFx.Core.Localization
         }
 
         private static readonly string ResourceNamePrefix = "Microsoft.PowerFx.Core.Strings.";
-        private static readonly string ResourceFileName = "PowerFxResources.resw";
+        private static readonly string ResourceFileName = "PowerFxResources.resx";
 
         public static bool TryGetErrorResource(ErrorResourceKey resourceKey, out ErrorResource resourceValue, string locale = null)
         {
