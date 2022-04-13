@@ -2,7 +2,6 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
-using System.Globalization;
 using System.Text;
 using Microsoft.PowerFx.Core.Lexer.Tokens;
 using Microsoft.PowerFx.Core.Localization;
@@ -63,18 +62,18 @@ namespace Microsoft.PowerFx.Core.Errors
         {
             Contracts.AssertValue(sb);
 
-            sb.AppendFormat(CultureInfo.CurrentCulture, TexlStrings.FormatSpan_Min_Lim(), Tok.Span.Min, Tok.Span.Lim);
+            sb.AppendFormat(PowerFxConfig.GetCurrentCulture(), TexlStrings.FormatSpan_Min_Lim(), Tok.Span.Min, Tok.Span.Lim);
 
             if (Node != null)
             {
-                sb.AppendFormat(CultureInfo.CurrentCulture, TexlStrings.InfoNode_Node(), Node.ToString());
+                sb.AppendFormat(PowerFxConfig.GetCurrentCulture(), TexlStrings.InfoNode_Node(), Node.ToString());
             }
             else
             {
-                sb.AppendFormat(CultureInfo.CurrentCulture, TexlStrings.InfoTok_Tok(), Tok.ToString());
+                sb.AppendFormat(PowerFxConfig.GetCurrentCulture(), TexlStrings.InfoTok_Tok(), Tok.ToString());
             }
 
-            sb.AppendFormat(CultureInfo.CurrentCulture, TexlStrings.FormatErrorSeparator());
+            sb.AppendFormat(PowerFxConfig.GetCurrentCulture(), TexlStrings.FormatErrorSeparator());
             base.FormatCore(sb);
         }
     }

@@ -296,7 +296,7 @@ namespace Microsoft.PowerFx.Core.Tests
         {
             if (result is NumberValue n)
             {
-                sb.Append(n.Value);
+                sb.Append(n.Value.ToString(PowerFxConfig.GetCurrentCulture()));
             }
             else if (result is BooleanValue b)
             {

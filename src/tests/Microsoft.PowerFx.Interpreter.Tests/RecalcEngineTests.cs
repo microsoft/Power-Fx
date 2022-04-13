@@ -11,6 +11,7 @@ using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Public;
 using Microsoft.PowerFx.Core.Public.Types;
 using Microsoft.PowerFx.Core.Public.Values;
+using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
@@ -19,7 +20,7 @@ using Xunit.Sdk;
 
 namespace Microsoft.PowerFx.Tests
 {
-    public class RecalcEngineTests
+    public class RecalcEngineTests : PowerFxTest
     {
         [Fact]
         public void PublicSurfaceTests()

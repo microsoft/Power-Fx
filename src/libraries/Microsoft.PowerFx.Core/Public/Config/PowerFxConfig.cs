@@ -23,8 +23,8 @@ namespace Microsoft.PowerFx.Core
         private readonly Dictionary<DName, IExternalEntity> _environmentSymbols;
         private DisplayNameProvider _environmentSymbolDisplayNameProvider;
 
-        // By default, we pull the core functions. 
-        // These can be overridden. 
+        // By default, we pull the core functions.
+        // These can be overridden.
         private IEnumerable<TexlFunction> _coreFunctions = BuiltinFunctionsCore.BuiltinFunctionsLibrary;
 
         internal IEnumerable<TexlFunction> Functions => _coreFunctions.Concat(_extraFunctions.Values);
@@ -33,24 +33,34 @@ namespace Microsoft.PowerFx.Core
 
         internal CultureInfo CultureInfo { get; }
 
-        private PowerFxConfig(CultureInfo cultureInfo, EnumStoreBuilder enumStoreBuilder) 
+        /// <summary>
+        /// Override value for culture, mainly used for tests.
+        /// </summary>
+        public static CultureInfo CultureOverride { get; set; } = null;
+
+        internal static CultureInfo GetCurrentCulture()
         {
-            CultureInfo = cultureInfo ?? CultureInfo.CurrentCulture;
+            return CultureOverride ?? CultureInfo.CurrentCulture;
+        }
+
+        private PowerFxConfig(CultureInfo cultureInfo, EnumStoreBuilder enumStoreBuilder)
+        {
+            CultureInfo = cultureInfo ?? PowerFxConfig.GetCurrentCulture();
             _isLocked = false;
             _extraFunctions = new Dictionary<string, TexlFunction>();
             _environmentSymbols = new Dictionary<DName, IExternalEntity>();
             _environmentSymbolDisplayNameProvider = new SingleSourceDisplayNameProvider();
             EnumStoreBuilder = enumStoreBuilder;
-        }    
+        }
 
         public PowerFxConfig(CultureInfo cultureInfo = null)
-            : this(cultureInfo, new EnumStoreBuilder().WithDefaultEnums()) 
+            : this(cultureInfo, new EnumStoreBuilder().WithDefaultEnums())
         {
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PowerFxConfig"/> class.
-        /// Copy constructor. Should only be used on a locked PowerFxConfig object. 
+        /// Copy constructor. Should only be used on a locked PowerFxConfig object.
         /// </summary>
         /// <param name="other">Config to clone from.</param>
         private PowerFxConfig(PowerFxConfig other)
@@ -65,7 +75,7 @@ namespace Microsoft.PowerFx.Core
         }
 
         /// <summary>
-        /// Stopgap until Enum Store is refactored. Do not rely on, this will be removed. 
+        /// Stopgap until Enum Store is refactored. Do not rely on, this will be removed.
         /// </summary>
         internal static PowerFxConfig BuildWithEnumStore(CultureInfo cultureInfo, EnumStoreBuilder enumStoreBuilder)
         {
@@ -80,7 +90,7 @@ namespace Microsoft.PowerFx.Core
         }
 
         /// <summary>
-        /// List all functions names registered in the config. 
+        /// List all functions names registered in the config.
         /// </summary>
         /// <returns></returns>
         public IEnumerable<string> GetAllFunctionNames()
@@ -116,8 +126,8 @@ namespace Microsoft.PowerFx.Core
             _environmentSymbols.Add(entity.EntityName, entity);
         }
 
-        // Sets the "core" builtin functions. This can vary from host to host. 
-        // Overwrite list and set. 
+        // Sets the "core" builtin functions. This can vary from host to host.
+        // Overwrite list and set.
         internal void SetCoreFunctions(IEnumerable<TexlFunction> functions)
         {
             CheckUnlocked();
@@ -133,7 +143,7 @@ namespace Microsoft.PowerFx.Core
             _extraFunctions.Add(function.GetUniqueTexlRuntimeName(), function);
             EnumStoreBuilder.WithRequiredEnums(new List<TexlFunction>() { function });
         }
-                
+
         internal bool TryGetSymbol(DName name, out IExternalEntity symbol, out DName displayName)
         {
             var lookupName = name;
@@ -158,10 +168,10 @@ namespace Microsoft.PowerFx.Core
         internal PowerFxConfig WithoutDisplayNames()
         {
             return new PowerFxConfig(this) { _environmentSymbolDisplayNameProvider = DisabledDisplayNameProvider.Instance };
-        } 
+        }
 
         internal void Lock()
-        { 
+        {
             CheckUnlocked();
 
             _isLocked = true;

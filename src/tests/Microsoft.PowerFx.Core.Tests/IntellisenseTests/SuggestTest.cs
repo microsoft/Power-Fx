@@ -111,11 +111,11 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         // BoolLitNodeSuggestionHandler
         [InlineData("true|", "true")]
         [InlineData("tru|e", "true", "Trunc")]
-        [InlineData("false |", "-", "*", "/", "&", "&&", "^", "+", "<", "<=", "<>", "=", ">", ">=", "||", "And", "As", "exactin", "in", "Or")]
+        [InlineData("false |", "-", "&", "&&", "*", "/", "^", "||", "+", "<", "<=", "<>", "=", ">", ">=", "And", "As", "exactin", "in", "Or")]
 
         // BinaryOpNodeSuggestionHandler
         [InlineData("1 +|", "+")]
-        [InlineData("1 |+", "-", "*", "/", "&", "&&", "^", "+", "<", "<=", "<>", "=", ">", ">=", "||", "And", "As", "exactin", "in", "Or")]
+        [InlineData("1 |+", "-", "&", "&&", "*", "/", "^", "||", "+", "<", "<=", "<>", "=", ">", ">=", "And", "As", "exactin", "in", "Or")]
         [InlineData("\"1\" in|", "in", "exactin")]
         [InlineData("true &|", "&", "&&")]
 
@@ -125,7 +125,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         [InlineData("Not |")]
 
         // StrNumLitNodeSuggestionHandler
-        [InlineData("1 |", "-", "*", "/", "&", "&&", "^", "+", "<", "<=", "<>", "=", ">", ">=", "||", "And", "As", "exactin", "in", "Or")]
+        [InlineData("1 |", "-", "&", "&&", "*", "/", "^", "||", "+", "<", "<=", "<>", "=", ">", ">=", "And", "As", "exactin", "in", "Or")]
         [InlineData("1|0")]
         [InlineData("\"Clock|\"")]
 
@@ -227,7 +227,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         [InlineData("Test|", "![Test1: s, Test2: n, Test3: h]", "Test1", "Test2", "Test3")]
         [InlineData("RecordName[|", "![RecordName: ![StringName: s, NumberName: n]]", "@NumberName", "@StringName")]
         [InlineData("RecordName[|", "![RecordName: ![]]")]
-        [InlineData("Test |", "![Test: s]", "-", "*", "/", "&", "&&", "^", "+", "<", "<=", "<>", "=", ">", ">=", "||", "And", "As", "exactin", "in", "Or")]
+        [InlineData("Test |", "![Test: s]", "-", "&", "&&", "*", "/", "^", "||", "+", "<", "<=", "<>", "=", ">", ">=", "And", "As", "exactin", "in", "Or")]
 
         // ErrorNodeSuggestionHandler
         [InlineData("ForAll(Table,`|", "![Table: *[Column: s]]", "Column", "ThisRecord")]

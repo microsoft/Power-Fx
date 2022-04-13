@@ -61,6 +61,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 "StringResources.<ShouldThrowIfMissing>k__BackingField",
                 "TexlLexer._lex",
                 "DelegationCapability.maxSingleCapabilityValue",
+                "PowerFxConfig.<CultureOverride>k__BackingField",
             };
 
             AnalyzeThreadSafety.CheckStatics(asm, bugsFieldType, bugNames);

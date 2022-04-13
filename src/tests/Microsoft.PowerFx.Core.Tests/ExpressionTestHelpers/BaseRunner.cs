@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -295,7 +296,7 @@ namespace Microsoft.PowerFx.Core.Tests
                     return (TestResult.Pass, null);
                 }
 
-                if (result is NumberValue numericResult && double.TryParse(expected, out var expectedNumeric))
+                if (result is NumberValue numericResult && double.TryParse(expected, NumberStyles.Any, PowerFxConfig.GetCurrentCulture().NumberFormat, out var expectedNumeric))
                 {
                     if (NumberCompare(numericResult.Value, expectedNumeric))
                     {

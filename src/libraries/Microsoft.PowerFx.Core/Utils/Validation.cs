@@ -6,7 +6,6 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -1403,12 +1402,12 @@ namespace Microsoft.PowerFx.Core.Utils
 
         private static void DbgFailValue(string name)
         {
-            DbgFailCore(string.Format(CultureInfo.CurrentCulture, "Non-null assertion failure: {0}", name));
+            DbgFailCore(string.Format(PowerFxConfig.GetCurrentCulture(), "Non-null assertion failure: {0}", name));
         }
 
         private static void DbgFailValue(string name, string msg)
         {
-            DbgFailCore(string.Format(CultureInfo.CurrentCulture, "Non-null assertion failure: {0}: {1}", name, msg));
+            DbgFailCore(string.Format(PowerFxConfig.GetCurrentCulture(), "Non-null assertion failure: {0}: {1}", name, msg));
         }
 
         private static void DbgFailNull()
@@ -1418,12 +1417,12 @@ namespace Microsoft.PowerFx.Core.Utils
 
         private static void DbgFailNull(string name)
         {
-            DbgFailCore(string.Format(CultureInfo.CurrentCulture, "Null assertion failure: {0}", name));
+            DbgFailCore(string.Format(PowerFxConfig.GetCurrentCulture(), "Null assertion failure: {0}", name));
         }
 
         private static void DbgFailNull(string name, string msg)
         {
-            DbgFailCore(string.Format(CultureInfo.CurrentCulture, "Null assertion failure: {0}: {1}", name, msg));
+            DbgFailCore(string.Format(PowerFxConfig.GetCurrentCulture(), "Null assertion failure: {0}: {1}", name, msg));
         }
 
         private static void DbgFailEmpty()
@@ -1433,7 +1432,7 @@ namespace Microsoft.PowerFx.Core.Utils
 
         private static void DbgFailEmpty(string msg)
         {
-            DbgFailCore(string.Format(CultureInfo.CurrentCulture, "Non-empty assertion failure: {0}", msg));
+            DbgFailCore(string.Format(PowerFxConfig.GetCurrentCulture(), "Non-empty assertion failure: {0}", msg));
         }
 
         private static void DbgFailValid()
@@ -1443,7 +1442,7 @@ namespace Microsoft.PowerFx.Core.Utils
 
         private static void DbgFailValid(string name)
         {
-            DbgFailCore(string.Format(CultureInfo.CurrentCulture, "Validity assertion failure: {0}", name));
+            DbgFailCore(string.Format(PowerFxConfig.GetCurrentCulture(), "Validity assertion failure: {0}", name));
         }
 
         #endregion
@@ -1679,7 +1678,7 @@ namespace Microsoft.PowerFx.Core.Utils
         {
             AssertValue(msg);
             AssertValue(args);
-            return string.Format(CultureInfo.CurrentCulture, msg, args);
+            return string.Format(PowerFxConfig.GetCurrentCulture(), msg, args);
         }
     }
 }

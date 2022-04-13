@@ -246,7 +246,7 @@ namespace Microsoft.PowerFx.Core.Lexer
                 // For V1 we'll pull the glob settings for the current language, and
                 // we'll adjust the ones we can't support. For example, we won't be able to
                 // support '(' for a decimal separator.
-                Culture = CreateCultureInfo(loc != null ? loc.CultureName : CultureInfo.CurrentCulture.Name);
+                Culture = CreateCultureInfo(loc != null ? loc.CultureName : PowerFxConfig.GetCurrentCulture().Name);
 
                 // List and decimal separators.
                 // These are the default global settings. If there is a collision between the two,

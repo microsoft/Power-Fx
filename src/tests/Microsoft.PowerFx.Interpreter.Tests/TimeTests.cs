@@ -2,17 +2,21 @@
 // Licensed under the MIT license.
 
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Threading.Tasks;
+using System.Globalization;
+using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Public.Values;
-using Microsoft.PowerFx.Core.Tests;
 using Xunit;
 
 namespace Microsoft.PowerFx.Interpreter.Tests
 {
-    public class TimeTests
+    public class TimeTests 
     {
+        static TimeTests()
+        {
+            // Need this to run before LanguageConstants.SortOrderEnumString initialization
+            PowerFxConfig.CultureOverride = new CultureInfo("en-US");
+        }
+
         private readonly RecalcEngine engine = new RecalcEngine();
 
         [Fact]
@@ -51,7 +55,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         public void TestConvertToUTC()
         {
             var testTime = DateTime.Now;
-            var result = engine.Eval($"DateTimeValue(\"{testTime.ToString()}\") + TimeZoneOffset()");
+            var result = engine.Eval($"DateTimeValue(\"{testTime.ToString(PowerFxConfig.GetCurrentCulture())}\") + TimeZoneOffset()");
             Assert.NotNull(result);
             if (result is DateTimeValue dateResult)
             {
@@ -70,7 +74,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         public void TestConvertFromUTC()
         {
             var testTime = DateTime.UtcNow.AddHours(-1);
-            var result = engine.Eval($"DateTimeValue(\"{testTime.ToString()}\") + -TimeZoneOffset()");
+            var result = engine.Eval($"DateTimeValue(\"{testTime.ToString(PowerFxConfig.GetCurrentCulture())}\") + -TimeZoneOffset()");
             Assert.NotNull(result);
             if (result is DateTimeValue dateResult)
             {

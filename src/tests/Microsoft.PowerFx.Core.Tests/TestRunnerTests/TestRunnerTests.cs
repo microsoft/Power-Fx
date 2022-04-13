@@ -11,7 +11,7 @@ using Xunit;
 namespace Microsoft.PowerFx.Core.Tests
 {
     // Tests for validating the TestRunner
-    public class TestRunnerTests
+    public class TestRunnerTests : PowerFxTest
     {
         [Fact]
         public void Test1()
@@ -112,7 +112,7 @@ namespace Microsoft.PowerFx.Core.Tests
         {
             var mock = new MockErrorRunner
             {
-                _hook = (expr, setup) => FormulaValue.New(double.Parse(expr))
+                _hook = (expr, setup) => FormulaValue.New(double.Parse(expr, PowerFxConfig.GetCurrentCulture()))
             };
 
             // do both orders. 

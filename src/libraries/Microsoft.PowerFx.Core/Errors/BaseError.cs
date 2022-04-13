@@ -3,7 +3,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Text;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Utils;
@@ -172,7 +171,7 @@ namespace Microsoft.PowerFx.Core.Errors
             {
                 try
                 {
-                    sb.AppendFormat(CultureInfo.CurrentCulture, message, args);
+                    sb.AppendFormat(PowerFxConfig.GetCurrentCulture(), message, args);
                 }
                 catch (FormatException)
                 {

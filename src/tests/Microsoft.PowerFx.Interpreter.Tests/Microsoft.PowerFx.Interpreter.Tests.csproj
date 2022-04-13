@@ -5,8 +5,7 @@
 		<IsPackable>false</IsPackable>
 		<GenerateDocumentationFile>false</GenerateDocumentationFile>
 		<Configurations>Debug;Release</Configurations>
-		<OutputType>Library</OutputType>
-		<TargetFrameworks>net5</TargetFrameworks>
+		<OutputType>Library</OutputType>		
 	</PropertyGroup>
 	<ItemGroup>
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.11.0" />
