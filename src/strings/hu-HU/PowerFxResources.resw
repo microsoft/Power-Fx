@@ -1630,7 +1630,11 @@
     
   </data>
   <data name="ErrUnknownFunction" xml:space="preserve">
-    <value>Ismeretlen vagy nem támogatott függvény hívására került sor.</value>
+    <value>A(z) "{0}" egy ismeretlen vagy nem támogatott függvény.</value>
+    
+  </data>
+  <data name="ErrUnknownNamespaceFunction" xml:space="preserve">
+    <value>A(z) "{0}" egy ismeretlen vagy nem támogatott függvény a(z) "{1}" névtérben.</value>
     
   </data>
   <data name="ErrUnSupportedComponentBehaviorInvocation" xml:space="preserve">
@@ -1922,8 +1926,40 @@
   <data name="AboutTime_millisecond" xml:space="preserve">
     <value>Az ezredmásodperc összetevő.</value>
   </data>
+  <data name="AboutDateTime" xml:space="preserve">
+    <value>Olyan értéket hoz létre, amely egy dátumban és időben kifejezett időpillanatot képvisel.</value>
+    
+  </data>
+  <data name="AboutDateTime_year" xml:space="preserve">
+    <value>Az év.</value>
+    
+  </data>
+  <data name="AboutDateTime_month" xml:space="preserve">
+    <value>A hónap.</value>
+    
+  </data>
+  <data name="AboutDateTime_day" xml:space="preserve">
+    <value>A nap.</value>
+    
+  </data>
+  <data name="AboutDateTime_hour" xml:space="preserve">
+    <value>Az óra.</value>
+    
+  </data>
+  <data name="AboutDateTime_minute" xml:space="preserve">
+    <value>A perc.</value>
+    
+  </data>
+  <data name="AboutDateTime_second" xml:space="preserve">
+    <value>A másodperc.</value>
+    
+  </data>
+  <data name="AboutDateTime_millisecond" xml:space="preserve">
+    <value>Az ezredmásodperc.</value>
+    
+  </data>
   <data name="AboutYear" xml:space="preserve">
-    <value>A Year függvény egy adott dátum év részét adja vissza egy 1900-nál nagyobb szám formájában.</value>
+    <value>A Year függvény egy adott dátum év részét adja vissza.</value>
     
   </data>
   <data name="YearArg1" xml:space="preserve">
@@ -2338,15 +2374,15 @@
   <data name="AboutChar_column_of_numbers" xml:space="preserve">
     <value>A platform karakterkészletéből származó kódszámok oszlopa.</value>
   </data>
-  <data name="AboutParseJson" xml:space="preserve">
+  <data name="AboutParseJSON" xml:space="preserve">
     <value>Objektummá alakít egy JSON-sztringet.</value>
     
   </data>
-  <data name="ParseJsonArg1" xml:space="preserve">
+  <data name="ParseJSONArg1" xml:space="preserve">
     <value>bemenet</value>
     
   </data>
-  <data name="AboutParseJson_input" xml:space="preserve">
+  <data name="AboutParseJSON_input" xml:space="preserve">
     <value>A feldolgozandó JSON-sztring.</value>
   </data>
   <data name="AboutIndex" xml:space="preserve">
@@ -2365,7 +2401,8 @@
     <value>Egy tábla.</value>
   </data>
   <data name="AboutIndex_index" xml:space="preserve">
-    <value>Egy egész számú index.</value>
+    <value>A lekérni kívánt rekord indexe.</value>
+    
   </data>
   <data name="Screen_Name_DisplayName" xml:space="preserve">
     <value>Név</value>
@@ -3974,7 +4011,7 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidName_ShortMessage" xml:space="preserve">
-    <value>A név érvénytelen. Az azonosító nem ismerhető fel.</value>
+    <value>A név érvénytelen. A(z) „{0}” nem ismerhető fel.</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidName_LongMessage" xml:space="preserve">
@@ -3986,6 +4023,21 @@
   </data>
   <data name="ErrorResource_ErrInvalidName_Link_1" xml:space="preserve">
     <value>Cikk: Power Apps-képletreferencia</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_ShortMessage" xml:space="preserve">
+    <value>A név érvénytelen. Az azonosító nem ismerhető fel.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_LongMessage" xml:space="preserve">
+    <value>Ez a hiba leggyakrabban akkor jelenik meg, ha a képlet olyasmire hivatkozik, ami már nem létezik (például egy törölt vezérlőre).</value>
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_HowToFix_1" xml:space="preserve">
+    <value>Távolítsa el vagy javítsa az érvénytelen névre mutató hivatkozást.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_Link_1" xml:space="preserve">
+    <value>Cikk: Power Apps-képletekkel kapcsolatos segédlet</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_ShortMessage" xml:space="preserve">
@@ -4482,11 +4534,11 @@
     
   </data>
   <data name="ErrorResource_ErrEmptyIsland_ShortMessage" xml:space="preserve">
-    <value>Empty expressions cannot appear inside an interpolated string.</value>
+    <value>Az interpolált sztringben nem szerepelhetnek üres kifejezések.</value>
     
   </data>
   <data name="ErrorResource_ErrEmptyIsland_HowToFix_1" xml:space="preserve">
-    <value>Check for empty expressions inside the interpolated string.</value>
+    <value>Az interpolált sztringben található üres kifejezések ellenőrzése.</value>
     
   </data>
   <data name="ErrorResource_ErrAsNotInContext_ShortMessage" xml:space="preserve">

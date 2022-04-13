@@ -78,6 +78,7 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction Hour = _library.Append(new HourFunction());
         public static readonly TexlFunction If = _library.Append(new IfFunction());
         public static readonly TexlFunction IfError = _library.Append(new IfErrorFunction());
+        public static readonly TexlFunction Index = _library.Append(new IndexFunction());
         public static readonly TexlFunction Int = _library.Append(new IntFunction());
         public static readonly TexlFunction IntT = _library.Append(new IntTableFunction());
         public static readonly TexlFunction IsBlank = _library.Append(new IsBlankFunction());
@@ -188,9 +189,9 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction Year = _library.Append(new YearFunction());
 
         // NOTE: These functions should not be part of the core library until they are implemented in all runtimes
-        public static readonly TexlFunction Index = new IndexFunction();
+        public static readonly TexlFunction DateTime = new DateTimeFunction();
         public static readonly TexlFunction Index_UO = new IndexFunction_UO();
-        public static readonly TexlFunction ParseJson = new ParseJsonFunction();
+        public static readonly TexlFunction ParseJSON = new ParseJSONFunction();
         public static readonly TexlFunction Table_UO = new TableFunction_UO();
         public static readonly TexlFunction Text_UO = new TextFunction_UO();
         public static readonly TexlFunction Value_UO = new ValueFunction_UO();

@@ -1630,7 +1630,11 @@
     
   </data>
   <data name="ErrUnknownFunction" xml:space="preserve">
-    <value>Invocação de função desconhecida ou sem suporte.</value>
+    <value>'{0}' é uma função desconhecida ou sem suporte.</value>
+    
+  </data>
+  <data name="ErrUnknownNamespaceFunction" xml:space="preserve">
+    <value>'{0}' é uma função desconhecida ou sem suporte no namespace '{1}'.</value>
     
   </data>
   <data name="ErrUnSupportedComponentBehaviorInvocation" xml:space="preserve">
@@ -1922,8 +1926,40 @@
   <data name="AboutTime_millisecond" xml:space="preserve">
     <value>Componente de milésimo de segundo.</value>
   </data>
+  <data name="AboutDateTime" xml:space="preserve">
+    <value>Cria um valor que representa um determinado momento, expresso como uma data e uma hora do dia.</value>
+    
+  </data>
+  <data name="AboutDateTime_year" xml:space="preserve">
+    <value>Ano.</value>
+    
+  </data>
+  <data name="AboutDateTime_month" xml:space="preserve">
+    <value>Mês.</value>
+    
+  </data>
+  <data name="AboutDateTime_day" xml:space="preserve">
+    <value>Dia.</value>
+    
+  </data>
+  <data name="AboutDateTime_hour" xml:space="preserve">
+    <value>Hora.</value>
+    
+  </data>
+  <data name="AboutDateTime_minute" xml:space="preserve">
+    <value>Minuto.</value>
+    
+  </data>
+  <data name="AboutDateTime_second" xml:space="preserve">
+    <value>Segundo.</value>
+    
+  </data>
+  <data name="AboutDateTime_millisecond" xml:space="preserve">
+    <value>Milissegundos.</value>
+    
+  </data>
   <data name="AboutYear" xml:space="preserve">
-    <value>Year retorna o ano de determinada data, um número maior que 1900.</value>
+    <value>Year retorna o ano de uma determinada data.</value>
     
   </data>
   <data name="YearArg1" xml:space="preserve">
@@ -2338,15 +2374,15 @@
   <data name="AboutChar_column_of_numbers" xml:space="preserve">
     <value>Coluna de números de código do conjunto de caracteres da plataforma.</value>
   </data>
-  <data name="AboutParseJson" xml:space="preserve">
+  <data name="AboutParseJSON" xml:space="preserve">
     <value>Converte uma cadeia JSON em um objeto.</value>
     
   </data>
-  <data name="ParseJsonArg1" xml:space="preserve">
+  <data name="ParseJSONArg1" xml:space="preserve">
     <value>entrada</value>
     
   </data>
-  <data name="AboutParseJson_input" xml:space="preserve">
+  <data name="AboutParseJSON_input" xml:space="preserve">
     <value>Uma cadeia de caracteres JSON a ser processada.</value>
   </data>
   <data name="AboutIndex" xml:space="preserve">
@@ -2365,7 +2401,8 @@
     <value>Uma tabela.</value>
   </data>
   <data name="AboutIndex_index" xml:space="preserve">
-    <value>Um índice de inteiros.</value>
+    <value>O índice do registro a ser recuperado.</value>
+    
   </data>
   <data name="Screen_Name_DisplayName" xml:space="preserve">
     <value>Nome</value>
@@ -3974,7 +4011,7 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidName_ShortMessage" xml:space="preserve">
-    <value>O nome não é válido. Este identificador não é reconhecido.</value>
+    <value>O nome não é válido. '{0}' não é reconhecido.</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidName_LongMessage" xml:space="preserve">
@@ -3986,6 +4023,21 @@
   </data>
   <data name="ErrorResource_ErrInvalidName_Link_1" xml:space="preserve">
     <value>Artigo: Referência de fórmula para o Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_ShortMessage" xml:space="preserve">
+    <value>O nome não é válido. Este identificador não é reconhecido.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_LongMessage" xml:space="preserve">
+    <value>Este erro geralmente ocorre quando uma fórmula se refere a algo que não existe mais (por exemplo, um controle que foi excluído).</value>
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_HowToFix_1" xml:space="preserve">
+    <value>Remova ou corrija a referência ao nome que não é válido.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_Link_1" xml:space="preserve">
+    <value>Artigo: Referência de fórmulas para o Power Apps</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_ShortMessage" xml:space="preserve">
@@ -4482,11 +4534,11 @@
     
   </data>
   <data name="ErrorResource_ErrEmptyIsland_ShortMessage" xml:space="preserve">
-    <value>Empty expressions cannot appear inside an interpolated string.</value>
+    <value>Expressões vazias não podem aparecer dentro de uma cadeia de caracteres interpolada.</value>
     
   </data>
   <data name="ErrorResource_ErrEmptyIsland_HowToFix_1" xml:space="preserve">
-    <value>Check for empty expressions inside the interpolated string.</value>
+    <value>Verifique se há expressões vazias dentro da cadeia de caracteres interpolada.</value>
     
   </data>
   <data name="ErrorResource_ErrAsNotInContext_ShortMessage" xml:space="preserve">

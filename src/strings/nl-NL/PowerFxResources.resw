@@ -1630,7 +1630,11 @@
     
   </data>
   <data name="ErrUnknownFunction" xml:space="preserve">
-    <value>Aanroepen van onbekende of niet-ondersteunde functie.</value>
+    <value>{0} is een onbekende of niet-ondersteunde functie.</value>
+    
+  </data>
+  <data name="ErrUnknownNamespaceFunction" xml:space="preserve">
+    <value>{0} is een onbekende of niet-ondersteunde functie in naamruimte {1}.</value>
     
   </data>
   <data name="ErrUnSupportedComponentBehaviorInvocation" xml:space="preserve">
@@ -1922,8 +1926,40 @@
   <data name="AboutTime_millisecond" xml:space="preserve">
     <value>Het millisecondegedeelte.</value>
   </data>
+  <data name="AboutDateTime" xml:space="preserve">
+    <value>Hiermee wordt een waarde gemaakt die een moment in tijd vertegenwoordigt, uitgedrukt als een datum en tijd van de dag.</value>
+    
+  </data>
+  <data name="AboutDateTime_year" xml:space="preserve">
+    <value>Het jaar.</value>
+    
+  </data>
+  <data name="AboutDateTime_month" xml:space="preserve">
+    <value>De maand.</value>
+    
+  </data>
+  <data name="AboutDateTime_day" xml:space="preserve">
+    <value>De dag.</value>
+    
+  </data>
+  <data name="AboutDateTime_hour" xml:space="preserve">
+    <value>Het uur.</value>
+    
+  </data>
+  <data name="AboutDateTime_minute" xml:space="preserve">
+    <value>De minuut.</value>
+    
+  </data>
+  <data name="AboutDateTime_second" xml:space="preserve">
+    <value>De seconde.</value>
+    
+  </data>
+  <data name="AboutDateTime_millisecond" xml:space="preserve">
+    <value>De milliseconden.</value>
+    
+  </data>
   <data name="AboutYear" xml:space="preserve">
-    <value>Jaar retourneert het jaar voor de desbetreffende datum, een getal groter dan 1900.</value>
+    <value>Jaar retourneert het jaar voor de desbetreffende datum.</value>
     
   </data>
   <data name="YearArg1" xml:space="preserve">
@@ -2338,15 +2374,15 @@
   <data name="AboutChar_column_of_numbers" xml:space="preserve">
     <value>Een kolom met codenummers van de tekenset op uw platform.</value>
   </data>
-  <data name="AboutParseJson" xml:space="preserve">
+  <data name="AboutParseJSON" xml:space="preserve">
     <value>Converteert een JSON-tekenreeks naar een object.</value>
     
   </data>
-  <data name="ParseJsonArg1" xml:space="preserve">
+  <data name="ParseJSONArg1" xml:space="preserve">
     <value>invoer</value>
     
   </data>
-  <data name="AboutParseJson_input" xml:space="preserve">
+  <data name="AboutParseJSON_input" xml:space="preserve">
     <value>Een JSON-tekenreeks die moet worden verwerkt.</value>
   </data>
   <data name="AboutIndex" xml:space="preserve">
@@ -2365,7 +2401,8 @@
     <value>Een tabel.</value>
   </data>
   <data name="AboutIndex_index" xml:space="preserve">
-    <value>Een geheel indexgetal.</value>
+    <value>De index van de record die moet worden opgehaald.</value>
+    
   </data>
   <data name="Screen_Name_DisplayName" xml:space="preserve">
     <value>Naam</value>
@@ -3974,7 +4011,7 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidName_ShortMessage" xml:space="preserve">
-    <value>De naam is ongeldig. Deze id wordt niet herkend.</value>
+    <value>De naam is ongeldig. {0} wordt niet herkend.</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidName_LongMessage" xml:space="preserve">
@@ -3985,6 +4022,21 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidName_Link_1" xml:space="preserve">
+    <value>Artikel: Formuleverwijzing voor Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_ShortMessage" xml:space="preserve">
+    <value>De naam is ongeldig. Deze id wordt niet herkend.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_LongMessage" xml:space="preserve">
+    <value>Deze fout treedt meestal op wanneer een formule verwijst naar een entiteit die niet meer bestaat (bijvoorbeeld een besturingselement dat u hebt verwijderd).</value>
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_HowToFix_1" xml:space="preserve">
+    <value>Verwijder of corrigeer de verwijzing naar de ongeldige naam.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_Link_1" xml:space="preserve">
     <value>Artikel: Formuleverwijzing voor Power Apps</value>
     
   </data>

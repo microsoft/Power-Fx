@@ -1630,7 +1630,11 @@
     
   </data>
   <data name="ErrUnknownFunction" xml:space="preserve">
-    <value>Anrop av en okänd eller icke-stödd funktion.</value>
+    <value>'{0}' är en okänd funktion eller funktion som inte stöds.</value>
+    
+  </data>
+  <data name="ErrUnknownNamespaceFunction" xml:space="preserve">
+    <value>'{0}' är en okänd funktion eller funktion som inte stöds i namnrymden '{1}'.</value>
     
   </data>
   <data name="ErrUnSupportedComponentBehaviorInvocation" xml:space="preserve">
@@ -1922,8 +1926,40 @@
   <data name="AboutTime_millisecond" xml:space="preserve">
     <value>Millisekund-komponenten.</value>
   </data>
+  <data name="AboutDateTime" xml:space="preserve">
+    <value>Skapar ett värde som representerar ett ögonblick i tid, uttryckt som ett datum och en tid på dagen.</value>
+    
+  </data>
+  <data name="AboutDateTime_year" xml:space="preserve">
+    <value>Året.</value>
+    
+  </data>
+  <data name="AboutDateTime_month" xml:space="preserve">
+    <value>Månaden.</value>
+    
+  </data>
+  <data name="AboutDateTime_day" xml:space="preserve">
+    <value>Dagen.</value>
+    
+  </data>
+  <data name="AboutDateTime_hour" xml:space="preserve">
+    <value>Timmen.</value>
+    
+  </data>
+  <data name="AboutDateTime_minute" xml:space="preserve">
+    <value>Minuten.</value>
+    
+  </data>
+  <data name="AboutDateTime_second" xml:space="preserve">
+    <value>Sekunden.</value>
+    
+  </data>
+  <data name="AboutDateTime_millisecond" xml:space="preserve">
+    <value>Millisekunderna.</value>
+    
+  </data>
   <data name="AboutYear" xml:space="preserve">
-    <value>År returnerar året för ett givet datum, ett tal större än 1900.</value>
+    <value>År returnerar året för ett givet datum.</value>
     
   </data>
   <data name="YearArg1" xml:space="preserve">
@@ -2338,15 +2374,15 @@
   <data name="AboutChar_column_of_numbers" xml:space="preserve">
     <value>En kolumn med kodnummer från teckenuppsättningen på din plattform.</value>
   </data>
-  <data name="AboutParseJson" xml:space="preserve">
+  <data name="AboutParseJSON" xml:space="preserve">
     <value>Konverterar en JSON-sträng till ett objekt.</value>
     
   </data>
-  <data name="ParseJsonArg1" xml:space="preserve">
+  <data name="ParseJSONArg1" xml:space="preserve">
     <value>indata</value>
     
   </data>
-  <data name="AboutParseJson_input" xml:space="preserve">
+  <data name="AboutParseJSON_input" xml:space="preserve">
     <value>En JSON-sträng att bearbeta.</value>
   </data>
   <data name="AboutIndex" xml:space="preserve">
@@ -2365,7 +2401,8 @@
     <value>En tabell.</value>
   </data>
   <data name="AboutIndex_index" xml:space="preserve">
-    <value>Ett heltalsindex.</value>
+    <value>Index för den post som ska hämtas.</value>
+    
   </data>
   <data name="Screen_Name_DisplayName" xml:space="preserve">
     <value>Namn</value>
@@ -3974,7 +4011,7 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidName_ShortMessage" xml:space="preserve">
-    <value>Namnet är inte giltigt. Den här identifieraren kan inte identifieras.</value>
+    <value>Namnet är inte giltigt. '{0}' kan inte identifieras.</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidName_LongMessage" xml:space="preserve">
@@ -3985,6 +4022,21 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidName_Link_1" xml:space="preserve">
+    <value>Artikel: formelreferens för Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_ShortMessage" xml:space="preserve">
+    <value>Namnet är inte giltigt. Den här identifieraren kan inte identifieras.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_LongMessage" xml:space="preserve">
+    <value>Det här felet uppstår vanligtvis när en formel refererar till något som inte längre finns (t.ex. en kontroll som har tagits bort).</value>
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_HowToFix_1" xml:space="preserve">
+    <value>Ta bort eller korrigera referensen till det namn som inte är giltigt.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_Link_1" xml:space="preserve">
     <value>Artikel: formelreferens för Power Apps</value>
     
   </data>
@@ -4482,11 +4534,11 @@
     
   </data>
   <data name="ErrorResource_ErrEmptyIsland_ShortMessage" xml:space="preserve">
-    <value>Empty expressions cannot appear inside an interpolated string.</value>
+    <value>Tomma uttryck kan inte visas inuti en interpolerad sträng.</value>
     
   </data>
   <data name="ErrorResource_ErrEmptyIsland_HowToFix_1" xml:space="preserve">
-    <value>Check for empty expressions inside the interpolated string.</value>
+    <value>Kontrollera för tomma uttryck inuti den interpolerade strängen.</value>
     
   </data>
   <data name="ErrorResource_ErrAsNotInContext_ShortMessage" xml:space="preserve">

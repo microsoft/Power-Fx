@@ -27,6 +27,7 @@ using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Core.Functions
 {
+    [ThreadSafeImmutable]
     internal abstract class TexlFunction : IFunction
     {
         // A default "no-op" error container that does not post document errors.
@@ -289,7 +290,7 @@ namespace Microsoft.PowerFx.Core.Functions
 
         // The function's fully qualified locale-specific name, including the namespace.
         // If the function is in the global namespace, this.QualifiedName is the same as this.Name.
-        public string QualifiedName => Namespace.IsRoot ? Name : Namespace.ToDottedSyntax(TexlLexer.PunctuatorDot, escapeInnerName: true) + TexlLexer.PunctuatorDot + TexlLexer.EscapeName(Name);
+        public string QualifiedName => Namespace.IsRoot ? Name : Namespace.ToDottedSyntax() + TexlLexer.PunctuatorDot + TexlLexer.EscapeName(Name);
 
         public TexlFunction(
             DPath theNamespace,
@@ -342,6 +343,13 @@ namespace Microsoft.PowerFx.Core.Functions
         // Return all signatures for this function.
         // Functions with optional parameters have more than one signature.
         public abstract IEnumerable<TexlStrings.StringGetter[]> GetSignatures();
+
+        // Return all enums that are required by this function.
+        // This can be used to generate a list of enums required for a function library.
+        public virtual IEnumerable<string> GetRequiredEnumNames()
+        {
+            return new List<string>();
+        }
 
         // Return all signatures with at most 'arity' parameters.
         public virtual IEnumerable<TexlStrings.StringGetter[]> GetSignatures(int arity)
@@ -1102,6 +1110,11 @@ namespace Microsoft.PowerFx.Core.Functions
             }
 
             if (!TryGetDataSource(callNode, binding, out dataSource))
+            {
+                return false;
+            }
+
+            if (dataSource == null)
             {
                 return false;
             }

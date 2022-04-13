@@ -4,7 +4,7 @@
 namespace Microsoft.PowerFx.Core.Syntax
 {
     // Node kinds. Primarily used by Intellisense.
-    internal enum NodeKind
+    public enum NodeKind
     {
         Blank,
 
@@ -27,7 +27,6 @@ namespace Microsoft.PowerFx.Core.Syntax
         BoolLit,
         NumLit,
         StrLit,
-        Replaceable,
 
         Error,
         StrInterp

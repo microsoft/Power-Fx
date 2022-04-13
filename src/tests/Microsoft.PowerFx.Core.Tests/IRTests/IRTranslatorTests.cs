@@ -2,14 +2,9 @@
 // Licensed under the MIT license.
 
 using System;
-using Microsoft.PowerFx.Core.Binding;
-using Microsoft.PowerFx.Core.Glue;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.IR.Nodes;
-using Microsoft.PowerFx.Core.Parser;
 using Microsoft.PowerFx.Core.Public.Types;
-using Microsoft.PowerFx.Core.Public.Values;
-using Microsoft.PowerFx.Core.Syntax;
 using Microsoft.PowerFx.Core.Types.Enums;
 using Xunit;
 using CallNode = Microsoft.PowerFx.Core.IR.Nodes.CallNode;
@@ -18,34 +13,24 @@ namespace Microsoft.PowerFx.Core.Tests
 {
     public class IRTranslatorTests
     {
-        private readonly EnumStore _enumStore = new EnumStore();
+        private readonly EnumStore _enumStore = new EnumStoreBuilder().WithDefaultEnums().Build();
 
         [Theory]
         [InlineData("CountIf(numtable, val > 0)", ">", typeof(BooleanType))]
         [InlineData("Sum(numtable, Sum(val,0))", "Sum(val,0)", typeof(NumberType))]
         public void TestLazyEvalNode(string expression, string expectedFragment, Type type)
         {
-            var parameterType = new RecordType();
+            var tableType = new TableType()
+                .Add(new NamedFormulaType("val", FormulaType.Number));
 
-            var tableType = new TableType();
-            tableType = tableType.Add(new NamedFormulaType("val", FormulaType.Number));
+            var parameterType = new RecordType()
+                .Add(new NamedFormulaType("numtable", tableType));
 
-            parameterType = parameterType.Add(new NamedFormulaType("numtable", tableType));
-
-            var formula = new Formula(expression);
-            formula.EnsureParsed(TexlParser.Flags.None);
-
-            var binding = TexlBinding.Run(
-                new Glue2DocumentBinderGlue(),
-                formula.ParseTree,
-                new SimpleResolver(_enumStore.EnumSymbols),
-                ruleScope: parameterType._type,
-                useThisRecordForRuleScope: false);
-
-            Assert.False(formula.HasParseErrors);
-            Assert.False(binding.ErrorContainer.HasErrors());
-
-            (var irNode, var ruleScopeSymbol) = IRTranslator.Translate(binding);
+            var engine = new Engine(new PowerFxConfig());
+            var result = engine.Check(expression, parameterType);
+            result.ThrowOnErrors();
+            
+            (var irNode, var ruleScopeSymbol) = IRTranslator.Translate(result._binding);
            
             var callNode = (CallNode)irNode;
 

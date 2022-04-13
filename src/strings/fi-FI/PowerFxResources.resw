@@ -1630,7 +1630,11 @@
     
   </data>
   <data name="ErrUnknownFunction" xml:space="preserve">
-    <value>Tuntemattoman tai ei-tuetun funktion kutsu.</value>
+    <value>{0} on tuntematon tai ei-tuettu funktio.</value>
+    
+  </data>
+  <data name="ErrUnknownNamespaceFunction" xml:space="preserve">
+    <value>{0} on tuntematon tai ei-tuettu funktio nimitilassa {1}.</value>
     
   </data>
   <data name="ErrUnSupportedComponentBehaviorInvocation" xml:space="preserve">
@@ -1922,8 +1926,40 @@
   <data name="AboutTime_millisecond" xml:space="preserve">
     <value>Millisekuntikomponentti.</value>
   </data>
+  <data name="AboutDateTime" xml:space="preserve">
+    <value>Luo arvon, joka edustaa ajanhenkeä ilmaistuna päivämääränä ja aikana.</value>
+    
+  </data>
+  <data name="AboutDateTime_year" xml:space="preserve">
+    <value>Vuosi.</value>
+    
+  </data>
+  <data name="AboutDateTime_month" xml:space="preserve">
+    <value>Kuukausi.</value>
+    
+  </data>
+  <data name="AboutDateTime_day" xml:space="preserve">
+    <value>Päivä.</value>
+    
+  </data>
+  <data name="AboutDateTime_hour" xml:space="preserve">
+    <value>Tunti.</value>
+    
+  </data>
+  <data name="AboutDateTime_minute" xml:space="preserve">
+    <value>Minuutti.</value>
+    
+  </data>
+  <data name="AboutDateTime_second" xml:space="preserve">
+    <value>Sekunti.</value>
+    
+  </data>
+  <data name="AboutDateTime_millisecond" xml:space="preserve">
+    <value>Millisekunnit.</value>
+    
+  </data>
   <data name="AboutYear" xml:space="preserve">
-    <value>Vuosi palauttaa annetun päivämäärän vuoden lukuna, joka on suurempi kuin 1900.</value>
+    <value>Vuosi palauttaa annetun päivämäärän vuoden.</value>
     
   </data>
   <data name="YearArg1" xml:space="preserve">
@@ -2338,15 +2374,15 @@
   <data name="AboutChar_column_of_numbers" xml:space="preserve">
     <value>Alustasi merkistön koodin numeroiden sarake.</value>
   </data>
-  <data name="AboutParseJson" xml:space="preserve">
+  <data name="AboutParseJSON" xml:space="preserve">
     <value>Muuntaa JSON-merkkijonon objektiksi.</value>
     
   </data>
-  <data name="ParseJsonArg1" xml:space="preserve">
+  <data name="ParseJSONArg1" xml:space="preserve">
     <value>syöte</value>
     
   </data>
-  <data name="AboutParseJson_input" xml:space="preserve">
+  <data name="AboutParseJSON_input" xml:space="preserve">
     <value>Käsiteltävä JSON-merkkijono.</value>
   </data>
   <data name="AboutIndex" xml:space="preserve">
@@ -2365,7 +2401,8 @@
     <value>Taulukko.</value>
   </data>
   <data name="AboutIndex_index" xml:space="preserve">
-    <value>Kokonaislukuindeksi.</value>
+    <value>Noudettavan tietueen indeksi.</value>
+    
   </data>
   <data name="Screen_Name_DisplayName" xml:space="preserve">
     <value>Nimi</value>
@@ -3974,7 +4011,7 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidName_ShortMessage" xml:space="preserve">
-    <value>Nimi ei ole kelvollinen. Tätä tunnistetta ei tunnisteta.</value>
+    <value>Nimi ei ole kelvollinen. Kohdetta {0} ei tunnisteta.</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidName_LongMessage" xml:space="preserve">
@@ -3985,6 +4022,21 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidName_Link_1" xml:space="preserve">
+    <value>Artikkeli: Power Appsin kaavojen viiteopas</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_ShortMessage" xml:space="preserve">
+    <value>Nimi ei ole kelvollinen. Tätä tunnistetta ei tunnisteta.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_LongMessage" xml:space="preserve">
+    <value>Tämä virhe esiintyy yleisimmin, kun kaava viittaa johonkin, jota ei enää olemassa (esimerkiksi ohjausobjektiin, jonka olet poistanut).</value>
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_HowToFix_1" xml:space="preserve">
+    <value>Poista tai korjaa viittaus nimeen, joka ei ole kelvollinen.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_Link_1" xml:space="preserve">
     <value>Artikkeli: Power Appsin kaavojen viiteopas</value>
     
   </data>
@@ -4482,11 +4534,11 @@
     
   </data>
   <data name="ErrorResource_ErrEmptyIsland_ShortMessage" xml:space="preserve">
-    <value>Empty expressions cannot appear inside an interpolated string.</value>
+    <value>Interpoloidun merkkijonon sisällä ei voi olla tyhjiä lausekkeita.</value>
     
   </data>
   <data name="ErrorResource_ErrEmptyIsland_HowToFix_1" xml:space="preserve">
-    <value>Check for empty expressions inside the interpolated string.</value>
+    <value>Etsi tyhjiä lausekkeita interpoloidun merkkijonon sisältä.</value>
     
   </data>
   <data name="ErrorResource_ErrAsNotInContext_ShortMessage" xml:space="preserve">

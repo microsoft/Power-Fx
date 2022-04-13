@@ -9,32 +9,38 @@ using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Core.Syntax.Nodes
 {
-    internal sealed class SelfNode : NameNode
+    /// <summary>
+    /// Self identifier parse node.
+    /// </summary>
+    public sealed class SelfNode : NameNode
     {
-        public SelfNode(ref int idNext, Token tok)
+        internal SelfNode(ref int idNext, Token tok)
             : base(ref idNext, tok, new SourceList(tok))
         {
         }
 
+        /// <inheritdoc />
         public override void Accept(TexlVisitor visitor)
         {
             Contracts.AssertValue(visitor);
             visitor.Visit(this);
         }
 
+        /// <inheritdoc />
         public override TResult Accept<TResult, TContext>(TexlFunctionalVisitor<TResult, TContext> visitor, TContext context)
         {
             return visitor.Visit(this, context);
         }
 
-        public override TexlNode Clone(ref int idNext, Span ts)
+        internal override TexlNode Clone(ref int idNext, Span ts)
         {
             return new SelfNode(ref idNext, Token.Clone(ts));
         }
 
+        /// <inheritdoc />
         public override NodeKind Kind => NodeKind.Self;
 
-        public override SelfNode AsSelf()
+        internal override SelfNode AsSelf()
         {
             return this;
         }

@@ -9,7 +9,7 @@ Licensed under the MIT license.
 
 Microsoft Power Fx has a [well-established grammar for expressions](expression-grammar.md) based on Excel. However, when used in Power Apps and other hosts where UI provides the name-to-expression binding for a formula, there is no standard way of editing the formula bindings as text.  
 
-We have selected the industry standard [YAML](https://yaml.org/spec/1.2/spec.html) as our language for this binding. There are already a large number of editors, tools, and libraries for working with YAML.  This article describes how we represent formulas in YAML.
+We have selected the industry standard [YAML](https://yaml.org/spec/1.2/spec.html) as our language for this binding. There are already a large number of editors, tools, and libraries for working with YAML.  This article describes how we represent formulas in YAML.  To see examples YAML source code files in action see this article about [how YAML is used in Power Apps](https://powerapps.microsoft.com/en-us/blog/source-code-files-for-canvas-apps/).
 
 At this time, we support only a restricted subset of YAML. Only the constructs described in this article are supported.  
 
@@ -178,3 +178,7 @@ Record: ={ a: 1, b: 2 }
 the `#` is treated as a comment by YAML even though it is embedded in what Excel would consider a double quoted text string.  In the record case, YAML considers `a:` and `b:` to be another name map binding.  To avoid confusion, we will error on these cases during import.  In these cases, a YAML multi-line form can be used instead.
 
 YAML allows the same name map to be reused, the last silently overriding any previous definitions.  As this can be confusing for a low-code maker and can result in the loss of a property formula, we will error if we see the same name twice.
+
+## Related articles
+
+- [Source code files for Canvas apps](https://powerapps.microsoft.com/en-us/blog/source-code-files-for-canvas-apps/)

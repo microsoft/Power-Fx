@@ -1630,7 +1630,11 @@
     
   </data>
   <data name="ErrUnknownFunction" xml:space="preserve">
-    <value>Invokasi fungsi tidak diketahui atau tidak didukung.</value>
+    <value>'{0}' adalah fungsi yang tidak diketahui atau tidak didukung.</value>
+    
+  </data>
+  <data name="ErrUnknownNamespaceFunction" xml:space="preserve">
+    <value>'{0}' adalah fungsi yang tidak diketahui atau tidak didukung dalam ruang nama '{1}'.</value>
     
   </data>
   <data name="ErrUnSupportedComponentBehaviorInvocation" xml:space="preserve">
@@ -1922,8 +1926,40 @@
   <data name="AboutTime_millisecond" xml:space="preserve">
     <value>Komponen milidetik.</value>
   </data>
+  <data name="AboutDateTime" xml:space="preserve">
+    <value>Membuat nilai yang menunjukkan instan dalam waktu, dinyatakan sebagai tanggal dan waktu dalam sehari.</value>
+    
+  </data>
+  <data name="AboutDateTime_year" xml:space="preserve">
+    <value>Tahun.</value>
+    
+  </data>
+  <data name="AboutDateTime_month" xml:space="preserve">
+    <value>Bulan.</value>
+    
+  </data>
+  <data name="AboutDateTime_day" xml:space="preserve">
+    <value>Hari.</value>
+    
+  </data>
+  <data name="AboutDateTime_hour" xml:space="preserve">
+    <value>Jam.</value>
+    
+  </data>
+  <data name="AboutDateTime_minute" xml:space="preserve">
+    <value>Menit.</value>
+    
+  </data>
+  <data name="AboutDateTime_second" xml:space="preserve">
+    <value>Detik.</value>
+    
+  </data>
+  <data name="AboutDateTime_millisecond" xml:space="preserve">
+    <value>Milidetik.</value>
+    
+  </data>
   <data name="AboutYear" xml:space="preserve">
-    <value>Tahun menampilkan tahun tanggal tertentu, angka lebih besar dari 1900.</value>
+    <value>Tahun menampilkan tahun tanggal tertentu.</value>
     
   </data>
   <data name="YearArg1" xml:space="preserve">
@@ -2338,15 +2374,15 @@
   <data name="AboutChar_column_of_numbers" xml:space="preserve">
     <value>Kolom nomor kode dari set karakter .</value>
   </data>
-  <data name="AboutParseJson" xml:space="preserve">
+  <data name="AboutParseJSON" xml:space="preserve">
     <value>Mengonversi string JSON menjadi objek.</value>
     
   </data>
-  <data name="ParseJsonArg1" xml:space="preserve">
+  <data name="ParseJSONArg1" xml:space="preserve">
     <value>masukan</value>
     
   </data>
-  <data name="AboutParseJson_input" xml:space="preserve">
+  <data name="AboutParseJSON_input" xml:space="preserve">
     <value>String JSON yang akan diproses.</value>
   </data>
   <data name="AboutIndex" xml:space="preserve">
@@ -2365,7 +2401,8 @@
     <value>Tabel.</value>
   </data>
   <data name="AboutIndex_index" xml:space="preserve">
-    <value>Indeks bilangan bulat.</value>
+    <value>Indeks rekaman yang akan diambil.</value>
+    
   </data>
   <data name="Screen_Name_DisplayName" xml:space="preserve">
     <value>Nama</value>
@@ -3974,7 +4011,7 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidName_ShortMessage" xml:space="preserve">
-    <value>Nama tidak valid. Pengidentifikasi ini tidak dikenali.</value>
+    <value>Nama tidak valid. '{0}' tidak dikenali.</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidName_LongMessage" xml:space="preserve">
@@ -3985,6 +4022,21 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidName_Link_1" xml:space="preserve">
+    <value>Artikel: Referensi rumus untuk Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_ShortMessage" xml:space="preserve">
+    <value>Nama tidak valid. Pengidentifikasi ini tidak dikenali.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_LongMessage" xml:space="preserve">
+    <value>Kesalahan ini paling sering muncul saat rumus mengacu pada sesuatu yang tidak ada lagi (misalnya, kontrol yang telah Anda hapus).</value>
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_HowToFix_1" xml:space="preserve">
+    <value>Hapus atau perbaiki referensi untuk nama yang tidak valid.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_Link_1" xml:space="preserve">
     <value>Artikel: Referensi rumus untuk Power Apps</value>
     
   </data>

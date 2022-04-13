@@ -2666,12 +2666,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 return set;
             }
-
-            public override void Visit(ReplaceableNode node)
-            {
-                throw new NotSupportedException("Replaceable nodes are not supported");
-            }
-
+            
             public override void Visit(ErrorNode node)
             {
                 AssertValid();
@@ -2769,7 +2764,7 @@ namespace Microsoft.PowerFx.Core.Binding
                         relatedDataSource.IsConvertingDisplayNameMapping)
                     {
                         useUpdatedDisplayNames = true;
-                        updatedDisplayNamesType = relatedDataSource.Schema;
+                        updatedDisplayNamesType = relatedDataSource.Type;
                     }
                 }
 
@@ -2936,7 +2931,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 if (!haveNameResolver || !_nameResolver.Lookup(node.Ident.Name, out lookupInfo, preferences: lookupPrefs))
                 {
-                    _txb.ErrorContainer.Error(node, TexlStrings.ErrInvalidName);
+                    _txb.ErrorContainer.Error(node, TexlStrings.ErrInvalidName, node.Ident.Name.Value);
                     _txb.SetType(node, DType.Error);
                     _txb.SetInfo(node, FirstNameInfo.Create(node, default(NameLookupInfo)));
                     return;
@@ -2948,6 +2943,18 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 var fnInfo = FirstNameInfo.Create(node, lookupInfo);
                 var lookupType = lookupInfo.Type;
+
+                if (lookupInfo.DisplayName != default) 
+                {
+                    if (_txb.UpdateDisplayNames)
+                    {                    
+                        _txb.NodesToReplace.Add(new KeyValuePair<Token, string>(node.Token, lookupInfo.DisplayName));
+                    }
+                    else if (lookupInfo.Data is IExternalEntity entity)
+                    {
+                        _txb.NodesToReplace.Add(new KeyValuePair<Token, string>(node.Token, entity.EntityName));
+                    }
+                }
 
                 // Internal control references are not allowed in component input properties.
                 if (CheckComponentProperty(lookupInfo.Data as IExternalControl))
@@ -2964,7 +2971,7 @@ namespace Microsoft.PowerFx.Core.Binding
                     if (!TryProcessFirstNameNodeForThisItemAccess(node, lookupInfo, out lookupType, out fnInfo) || lookupType.IsError)
                     {
                         // Property should not include ThisItem, return an error
-                        _txb.ErrorContainer.Error(node, TexlStrings.ErrInvalidName);
+                        _txb.ErrorContainer.Error(node, TexlStrings.ErrInvalidName, node.Ident.Name.Value);
                         _txb.SetType(node, DType.Error);
                         _txb.SetInfo(node, fnInfo ?? FirstNameInfo.Create(node, default(NameLookupInfo)));
                         return;
@@ -3045,8 +3052,7 @@ namespace Microsoft.PowerFx.Core.Binding
                     _txb.ErrorContainer.EnsureError(node, TexlStrings.ErrValueMustBeFullyQualified);
                 }
 
-                // Any connectedDataSourceInfo or option set or view needs to be accessed asynchronously to allow data to be loaded.
-                if (lookupInfo.Data is IExternalTabularDataSource || lookupInfo.Kind == BindKind.OptionSet || lookupInfo.Kind == BindKind.View)
+                if (lookupInfo.IsAsync)
                 {
                     _txb.FlagPathAsAsync(node);
                 }
@@ -3239,7 +3245,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 if (_nameResolver == null || _nameResolver.CurrentEntity == null)
                 {
-                    _txb.ErrorContainer.Error(node, TexlStrings.ErrInvalidName);
+                    _txb.ErrorContainer.Error(node, TexlStrings.ErrInvalidIdentifier);
                     _txb.SetType(node, DType.Error);
                     return;
                 }
@@ -3266,14 +3272,14 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 if (_nameResolver == null || _nameResolver.CurrentEntity == null)
                 {
-                    _txb.ErrorContainer.Error(node, TexlStrings.ErrInvalidName);
+                    _txb.ErrorContainer.Error(node, TexlStrings.ErrInvalidIdentifier);
                     _txb.SetType(node, DType.Error);
                     return;
                 }
 
                 if (!_nameResolver.LookupSelf(out var lookupInfo))
                 {
-                    _txb.ErrorContainer.Error(node, TexlStrings.ErrInvalidName);
+                    _txb.ErrorContainer.Error(node, TexlStrings.ErrInvalidIdentifier);
                     _txb.SetType(node, DType.Error);
                     return;
                 }
@@ -3389,7 +3395,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 {
                     if (_nameResolver == null)
                     {
-                        SetDottedNameError(node, TexlStrings.ErrInvalidName);
+                        SetDottedNameError(node, TexlStrings.ErrInvalidIdentifier);
                         return;
                     }
 
@@ -3414,7 +3420,7 @@ namespace Microsoft.PowerFx.Core.Binding
                     }
                     else
                     {
-                        SetDottedNameError(node, TexlStrings.ErrInvalidName);
+                        SetDottedNameError(node, TexlStrings.ErrInvalidName, node.Right.Name.Value);
                         return;
                     }
                 }
@@ -3422,14 +3428,14 @@ namespace Microsoft.PowerFx.Core.Binding
                 {
                     if (!leftType.TryGetType(nameRhs, out typeRhs))
                     {
-                        SetDottedNameError(node, TexlStrings.ErrInvalidName);
+                        SetDottedNameError(node, TexlStrings.ErrInvalidName, node.Right.Name.Value);
                         return;
                     }
                 }
                 else if (leftType.IsAttachment)
                 {
                     // Error: Attachment Type should never be the left hand side of dotted name node
-                    SetDottedNameError(node, TexlStrings.ErrInvalidName);
+                    SetDottedNameError(node, TexlStrings.ErrInvalidIdentifier);
                 }
                 else if (leftType is IExternalControlType leftControl)
                 {
@@ -3451,7 +3457,7 @@ namespace Microsoft.PowerFx.Core.Binding
                     var template = leftControl.ControlTemplate.VerifyValue();
                     if (!template.TryGetOutputProperty(nameRhs, out var property))
                     {
-                        SetDottedNameError(node, TexlStrings.ErrInvalidName);
+                        SetDottedNameError(node, TexlStrings.ErrInvalidName, node.Right.Name.Value);
                         return;
                     }
 
@@ -3528,7 +3534,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
                         if (!leftType.ToRecord().TryGetType(property.InvariantName, out typeRhs))
                         {
-                            SetDottedNameError(node, TexlStrings.ErrInvalidName);
+                            SetDottedNameError(node, TexlStrings.ErrInvalidName, property.InvariantName);
                             return;
                         }
                     }
@@ -3575,7 +3581,7 @@ namespace Microsoft.PowerFx.Core.Binding
                     {
                         if (!vType.ControlTemplate.TryGetOutputProperty(nameRhs, out var property))
                         {
-                            SetDottedNameError(node, TexlStrings.ErrInvalidName);
+                            SetDottedNameError(node, TexlStrings.ErrInvalidName, node.Right.Name.Value);
                             return;
                         }
 
@@ -3583,14 +3589,14 @@ namespace Microsoft.PowerFx.Core.Binding
                     }
                     else
                     {
-                        SetDottedNameError(node, TexlStrings.ErrInvalidName);
+                        SetDottedNameError(node, TexlStrings.ErrInvalidName, node.Right.Name.Value);
                         return;
                     }
                 }
                 else if (typeRhs is IExternalControlType controlType && controlType.IsMetaField)
                 {
                     // Meta fields are not directly accessible. E.g. dropdown!Selected!meta is an invalid access.
-                    SetDottedNameError(node, TexlStrings.ErrInvalidName);
+                    SetDottedNameError(node, TexlStrings.ErrInvalidName, node.Right.Name.Value);
                     return;
                 }
                 else if (typeRhs.IsExpandEntity)
@@ -4620,7 +4626,15 @@ namespace Microsoft.PowerFx.Core.Binding
                 var overloads = LookupFunctions(funcNamespace, node.Head.Name.Value);
                 if (!overloads.Any())
                 {
-                    _txb.ErrorContainer.Error(node, TexlStrings.ErrUnknownFunction);
+                    if (funcNamespace.ToString() != string.Empty)
+                    {
+                        _txb.ErrorContainer.Error(node, TexlStrings.ErrUnknownNamespaceFunction, node.Head.Name.Value, funcNamespace.ToString());
+                    }
+                    else
+                    {
+                        _txb.ErrorContainer.Error(node, TexlStrings.ErrUnknownFunction, node.Head.Name.Value);
+                    }
+
                     _txb.SetInfo(node, new CallInfo(node));
                     _txb.SetType(node, DType.Error);
 
@@ -5342,7 +5356,7 @@ namespace Microsoft.PowerFx.Core.Binding
                     }
                     else
                     {
-                        _txb.ErrorContainer.Error(node, TexlStrings.ErrInvalidName);
+                        _txb.ErrorContainer.Error(node, TexlStrings.ErrInvalidName, node.Head.Name.Value);
                         _txb.SetInfo(node, new CallInfo(node));
                         _txb.SetType(node, DType.Error);
                         return;
@@ -5647,7 +5661,7 @@ namespace Microsoft.PowerFx.Core.Binding
                     }
                     else
                     {
-                        dataSourceBoundType = dataSourceInfo.Schema;
+                        dataSourceBoundType = dataSourceInfo.Type;
                         nodeType = DType.CreateDTypeWithConnectedDataSourceInfoMetadata(nodeType, dataSourceBoundType.AssociatedDataSources, dataSourceBoundType.DisplayNameProvider);
                     }
                 }
@@ -5742,7 +5756,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 _txb.SetType(
                     node,
-                    exprType.IsValid ? DType.CreateTable(new TypedName(exprType, new DName("Value"))) : DType.EmptyTable);
+                    exprType.IsValid ? DType.CreateTable(new TypedName(exprType, Public.Values.TableValue.ValueDName)) : DType.EmptyTable);
                 SetVariadicNodePurity(node);
                 _txb.SetScopeUseSet(node, JoinScopeUseSets(node.Children));
                 _txb.SetSelfContainedConstant(node, isSelfContainedConstant);

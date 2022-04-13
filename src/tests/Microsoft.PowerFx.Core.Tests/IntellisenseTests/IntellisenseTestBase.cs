@@ -4,14 +4,9 @@
 using System.Linq;
 using System.Text.RegularExpressions;
 using Microsoft.PowerFx.Core;
-using Microsoft.PowerFx.Core.Binding;
-using Microsoft.PowerFx.Core.Glue;
-using Microsoft.PowerFx.Core.Parser;
 using Microsoft.PowerFx.Core.Public.Types;
-using Microsoft.PowerFx.Core.Syntax;
 using Microsoft.PowerFx.Core.Texl.Intellisense;
 using Microsoft.PowerFx.Core.Types;
-using Microsoft.PowerFx.Core.Types.Enums;
 using Xunit;
 
 namespace Microsoft.PowerFx.Tests.IntellisenseTests
@@ -28,16 +23,8 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         /// <param name="expression"></param>
         /// <param name="contextTypeString"></param>
         /// <returns></returns>
-        internal IIntellisenseResult Suggest(string expression, EnumStore enumStore, string contextTypeString = null)
+        internal IIntellisenseResult Suggest(string expression, PowerFxConfig config, string contextTypeString = null)
         {
-            Assert.NotNull(expression);
-
-            var cursorMatches = Regex.Matches(expression, @"\|");
-            Assert.True(cursorMatches.Count == 1, "Invalid cursor.  Exactly one cursor must be specified.");
-            var cursorPosition = cursorMatches.First().Index;
-
-            expression = expression.Replace("|", string.Empty);
-
             RecordType contextType;
             if (contextTypeString != null)
             {
@@ -52,24 +39,27 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
                 contextType = new RecordType();
             }
 
-            return Suggest(expression, contextType, cursorPosition, enumStore);
+            return Suggest(expression, config, contextType);
         }
 
-        internal IIntellisenseResult Suggest(string expression, FormulaType parameterType, int cursorPosition, EnumStore enumStore)
+        internal IIntellisenseResult Suggest(string expression, PowerFxConfig config, RecordType parameterType)
         {
-            var formula = new Formula(expression);
-            formula.EnsureParsed(TexlParser.Flags.None);
+            Assert.NotNull(expression);
 
-            var binding = TexlBinding.Run(
-                new Glue2DocumentBinderGlue(),
-                formula.ParseTree,
-                new SimpleResolver(enumStore.EnumSymbols),
-                ruleScope: parameterType._type,
-                useThisRecordForRuleScope: false);
+            var cursorMatches = Regex.Matches(expression, @"\|");
+            Assert.True(cursorMatches.Count == 1, "Invalid cursor.  Exactly one cursor must be specified.");
+            var cursorPosition = cursorMatches.First().Index;
 
-            var context = new IntellisenseContext(expression, cursorPosition);
-            var intellisense = IntellisenseProvider.GetIntellisense(enumStore);
-            var suggestions = intellisense.Suggest(context, binding, formula);
+            expression = expression.Replace("|", string.Empty);
+
+            return Suggest(expression, parameterType, cursorPosition, config);
+        }
+
+        internal IIntellisenseResult Suggest(string expression, RecordType parameterType, int cursorPosition, PowerFxConfig config)
+        {
+            var engine = new Engine(config);
+
+            var suggestions = engine.Suggest(expression, parameterType, cursorPosition);
 
             if (suggestions.Exception != null)
             {

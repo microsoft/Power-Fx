@@ -1630,7 +1630,11 @@
     
   </data>
   <data name="ErrUnknownFunction" xml:space="preserve">
-    <value>Ezezaguna den edo onartzen ez den funtzio bati egindako deia.</value>
+    <value>Ezezaguna den edo onartzen ez den funtzio bat da "{0}".</value>
+    
+  </data>
+  <data name="ErrUnknownNamespaceFunction" xml:space="preserve">
+    <value>"{1}" izen-lekuan ezezaguna den edo onartzen ez den funtzio bat da "{0}".</value>
     
   </data>
   <data name="ErrUnSupportedComponentBehaviorInvocation" xml:space="preserve">
@@ -1922,8 +1926,40 @@
   <data name="AboutTime_millisecond" xml:space="preserve">
     <value>Milisegundo-osagaia.</value>
   </data>
+  <data name="AboutDateTime" xml:space="preserve">
+    <value>Une jakin bat adierazten duen balio bat sortzen du, eguneko data eta orduaren bidez adierazten dena.</value>
+    
+  </data>
+  <data name="AboutDateTime_year" xml:space="preserve">
+    <value>Urtea.</value>
+    
+  </data>
+  <data name="AboutDateTime_month" xml:space="preserve">
+    <value>Hilabetea.</value>
+    
+  </data>
+  <data name="AboutDateTime_day" xml:space="preserve">
+    <value>Eguna.</value>
+    
+  </data>
+  <data name="AboutDateTime_hour" xml:space="preserve">
+    <value>Ordua.</value>
+    
+  </data>
+  <data name="AboutDateTime_minute" xml:space="preserve">
+    <value>Minutua.</value>
+    
+  </data>
+  <data name="AboutDateTime_second" xml:space="preserve">
+    <value>Segundoa.</value>
+    
+  </data>
+  <data name="AboutDateTime_millisecond" xml:space="preserve">
+    <value>Milisegundoak.</value>
+    
+  </data>
   <data name="AboutYear" xml:space="preserve">
-    <value>"Year" funtzioak emandako data baten urtea itzultzen du (1900 baino handiagoa den zenbaki bat).</value>
+    <value>"Year" funtzioak emandako data baten urtea itzultzen du.</value>
     
   </data>
   <data name="YearArg1" xml:space="preserve">
@@ -2338,15 +2374,15 @@
   <data name="AboutChar_column_of_numbers" xml:space="preserve">
     <value>Plataformako karaktere jokoko kode-zenbakien zutabea.</value>
   </data>
-  <data name="AboutParseJson" xml:space="preserve">
+  <data name="AboutParseJSON" xml:space="preserve">
     <value>JSON kateak objektu bihurtzen ditu.</value>
     
   </data>
-  <data name="ParseJsonArg1" xml:space="preserve">
+  <data name="ParseJSONArg1" xml:space="preserve">
     <value>sarrera</value>
     
   </data>
-  <data name="AboutParseJson_input" xml:space="preserve">
+  <data name="AboutParseJSON_input" xml:space="preserve">
     <value>Prozesatzeko JSON katea.</value>
   </data>
   <data name="AboutIndex" xml:space="preserve">
@@ -2365,7 +2401,8 @@
     <value>Taula bat.</value>
   </data>
   <data name="AboutIndex_index" xml:space="preserve">
-    <value>Osoko zenbakien indizea.</value>
+    <value>Eskuratu nahi duzun erregistroaren indizea.</value>
+    
   </data>
   <data name="Screen_Name_DisplayName" xml:space="preserve">
     <value>Izena</value>
@@ -3974,7 +4011,7 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidName_ShortMessage" xml:space="preserve">
-    <value>Izenak balio ez duenez, ez da ezagutu identifikatzailea.</value>
+    <value>Izenak balio ez duenez, ez da ezagutu "{0}".</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidName_LongMessage" xml:space="preserve">
@@ -3985,6 +4022,21 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidName_Link_1" xml:space="preserve">
+    <value>Artikulua: Power Apps-erako formula-erreferentzia</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_ShortMessage" xml:space="preserve">
+    <value>Izenak balio ez duenez, ez da ezagutu identifikatzailea.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_LongMessage" xml:space="preserve">
+    <value>Normalean, errore hori gertatzen da formula batek jada ez dagoen elementu bati erreferentzia egiten dionean (adibidez, ezabatu duzun kontrol bat).</value>
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_HowToFix_1" xml:space="preserve">
+    <value>Kendu edo zuzendu erabil ezin daitekeen izenari egindako erreferentzia.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_Link_1" xml:space="preserve">
     <value>Artikulua: Power Apps-erako formula-erreferentzia</value>
     
   </data>

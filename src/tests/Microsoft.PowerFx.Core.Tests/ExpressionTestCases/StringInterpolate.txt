@@ -113,3 +113,12 @@ Errors: Error 9-10: Unexpected characters. Characters are used in the formula in
 
 >> $"Hello {}"
 Errors: Error 9-10: Empty expressions cannot appear inside an interpolated string.
+
+>> $"! { {a:1,b:2}.a } !"
+"! 1 !"
+
+>> $"! {First([{a:1,b:2}.a]).Value} !"
+"! 1 !"
+
+>> First([$"{ {a:1,b:2,c:3}.a }"]).Value
+"1"

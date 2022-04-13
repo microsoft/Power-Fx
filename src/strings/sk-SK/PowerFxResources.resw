@@ -1630,7 +1630,11 @@
     
   </data>
   <data name="ErrUnknownFunction" xml:space="preserve">
-    <value>Vyvolanie neznámej alebo nepodporovanej funkcie.</value>
+    <value>{0} je neznáma alebo nepodporovaná funkcia.</value>
+    
+  </data>
+  <data name="ErrUnknownNamespaceFunction" xml:space="preserve">
+    <value>{0} je neznáma alebo nepodporovaná funkcia v priestore názvov {1}.</value>
     
   </data>
   <data name="ErrUnSupportedComponentBehaviorInvocation" xml:space="preserve">
@@ -1922,8 +1926,40 @@
   <data name="AboutTime_millisecond" xml:space="preserve">
     <value>Komponent milisekúnd.</value>
   </data>
+  <data name="AboutDateTime" xml:space="preserve">
+    <value>Vytvorí hodnotu, ktorá predstavuje okamih v čase vyjadrený ako dátum a čas dňa.</value>
+    
+  </data>
+  <data name="AboutDateTime_year" xml:space="preserve">
+    <value>Rok.</value>
+    
+  </data>
+  <data name="AboutDateTime_month" xml:space="preserve">
+    <value>Mesiac.</value>
+    
+  </data>
+  <data name="AboutDateTime_day" xml:space="preserve">
+    <value>Deň.</value>
+    
+  </data>
+  <data name="AboutDateTime_hour" xml:space="preserve">
+    <value>Hodina.</value>
+    
+  </data>
+  <data name="AboutDateTime_minute" xml:space="preserve">
+    <value>Minúta.</value>
+    
+  </data>
+  <data name="AboutDateTime_second" xml:space="preserve">
+    <value>Sekunda.</value>
+    
+  </data>
+  <data name="AboutDateTime_millisecond" xml:space="preserve">
+    <value>Milisekundy.</value>
+    
+  </data>
   <data name="AboutYear" xml:space="preserve">
-    <value>Funkcia Rok vracia rok daného dátumu, číslo väčšie ako 1900.</value>
+    <value>Funkcia Rok vracia rok daného dátumu.</value>
     
   </data>
   <data name="YearArg1" xml:space="preserve">
@@ -2338,15 +2374,15 @@
   <data name="AboutChar_column_of_numbers" xml:space="preserve">
     <value>Stĺpec čísel kódov zo znakovej sady na vašej platforme.</value>
   </data>
-  <data name="AboutParseJson" xml:space="preserve">
+  <data name="AboutParseJSON" xml:space="preserve">
     <value>Konvertuje reťazec JSON na objekt.</value>
     
   </data>
-  <data name="ParseJsonArg1" xml:space="preserve">
+  <data name="ParseJSONArg1" xml:space="preserve">
     <value>vstup</value>
     
   </data>
-  <data name="AboutParseJson_input" xml:space="preserve">
+  <data name="AboutParseJSON_input" xml:space="preserve">
     <value>Reťazec JSON, ktorý sa má spracovať.</value>
   </data>
   <data name="AboutIndex" xml:space="preserve">
@@ -2365,7 +2401,8 @@
     <value>Tabuľka.</value>
   </data>
   <data name="AboutIndex_index" xml:space="preserve">
-    <value>Celočíselný index.</value>
+    <value>Index záznamu, ktorý sa má načítať.</value>
+    
   </data>
   <data name="Screen_Name_DisplayName" xml:space="preserve">
     <value>Názov</value>
@@ -3974,7 +4011,7 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidName_ShortMessage" xml:space="preserve">
-    <value>Názov nie je platný. Tento identifikátor nie je rozpoznaný.</value>
+    <value>Názov nie je platný. Identifikátor {0} sa nerozpoznal.</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidName_LongMessage" xml:space="preserve">
@@ -3985,6 +4022,21 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidName_Link_1" xml:space="preserve">
+    <value>Článok: Referenčné informácie pre vzorce v službe Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_ShortMessage" xml:space="preserve">
+    <value>Názov nie je platný. Tento identifikátor nie je rozpoznaný.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_LongMessage" xml:space="preserve">
+    <value>Táto chyba sa najčastejšie zobrazuje, keď vzorec odkazuje na niečo, čo už neexistuje (napríklad na ovládací prvok, ktorý ste odstránili).</value>
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_HowToFix_1" xml:space="preserve">
+    <value>Odstráňte alebo opravte odkaz na názov, ktorý nie je platný.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_Link_1" xml:space="preserve">
     <value>Článok: Referenčné informácie pre vzorce v službe Power Apps</value>
     
   </data>
@@ -4482,11 +4534,11 @@
     
   </data>
   <data name="ErrorResource_ErrEmptyIsland_ShortMessage" xml:space="preserve">
-    <value>Empty expressions cannot appear inside an interpolated string.</value>
+    <value>Prázdne výrazy sa nemôžu objaviť vnútri interpolovaného reťazca.</value>
     
   </data>
   <data name="ErrorResource_ErrEmptyIsland_HowToFix_1" xml:space="preserve">
-    <value>Check for empty expressions inside the interpolated string.</value>
+    <value>Skontrolujte prázdne výrazy vnútri interpolovaného reťazca.</value>
     
   </data>
   <data name="ErrorResource_ErrAsNotInContext_ShortMessage" xml:space="preserve">

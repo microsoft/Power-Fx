@@ -28,11 +28,14 @@ namespace Microsoft.PowerFx
         /// Initializes a new instance of the <see cref="OptionSet"/> class.
         /// </summary>
         /// <param name="name">The name of the option set. Will be available as a global name in Power Fx expressions.</param>
-        /// <param name="options">The members of the option set. Dictionary of logical name to display name.</param>
-        public OptionSet(string name, IDictionary<string, string> options)
+        /// <param name="options">The members of the option set. Enumerable of pairs of logical name to display name.
+        /// Consider using <see cref="DisplayNameUtility.MakeUnique(IEnumerable{KeyValuePair{string, string}})"/> 
+        /// to ensure that display and logical names for options are unique.
+        /// </param>
+        public OptionSet(string name, IEnumerable<KeyValuePair<DName, DName>> options)
         {
             EntityName = new DName(name);
-            Options = ImmutableDictionary.CreateRange(options.Select(kvp => new KeyValuePair<DName, DName>(new DName(kvp.Key), new DName(kvp.Value))));
+            Options = ImmutableDictionary.CreateRange(options);
 
             _displayNameProvider = new SingleSourceDisplayNameProvider(Options);
             FormulaType = new OptionSetValueType(this);
@@ -76,6 +79,6 @@ namespace Microsoft.PowerFx
 
         bool IExternalOptionSet.IsConvertingDisplayNameMapping => false;
 
-        DType IExternalOptionSet.Type => _type;
+        DType IExternalEntity.Type => _type;
     }
 }

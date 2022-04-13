@@ -37,7 +37,7 @@ namespace Microsoft.PowerFx.Functions
 
             // When evaluating an option set ResolvedObjectNode, we convert the options into a record
             // This allows the use of the FieldAccess operator to get specific option values.
-            return FormulaValue.RecordFromFields(options);
+            return FormulaValue.NewRecordFromFields(options);
         }
 
         public static FormulaValue ResolvedObjectError(ResolvedObjectNode node)

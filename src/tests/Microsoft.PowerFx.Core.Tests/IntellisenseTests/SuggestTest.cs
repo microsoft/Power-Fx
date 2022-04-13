@@ -1,11 +1,10 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.Globalization;
 using System.Linq;
 using Microsoft.PowerFx.Core;
+using Microsoft.PowerFx.Core.Functions;
+using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Core.Types.Enums;
 using Xunit;
 
@@ -27,23 +26,21 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         /// <returns>
         /// List of string representing suggestions.
         /// </returns>
-        private string[] SuggestStrings(string expression, EnumStore enumStore, string contextTypeString = null)
+        private string[] SuggestStrings(string expression, PowerFxConfig config, string contextTypeString = null)
         {
             Assert.NotNull(expression);
 
-            var intellisense = Suggest(expression, enumStore, contextTypeString);
+            var intellisense = Suggest(expression, config, contextTypeString);
             return intellisense.Suggestions.Select(suggestion => suggestion.DisplayText.Text).ToArray();
         }
 
-        private class EmptyEnumStore : EnumStore
-        {
-            private readonly IDictionary<string, string> _enumDict = new Dictionary<string, string>();
+        private readonly PowerFxConfig _default = PowerFxConfig.BuildWithEnumStore(null, new EnumStoreBuilder().WithDefaultEnums());
 
-            protected override IDictionary<string, string> EnumDict => _enumDict;
-        }
-
-        private readonly EnumStore _defaultEnumStore = new EnumStore();
-        private readonly EnumStore _emptyEnumStore = new EmptyEnumStore();
+        // No enums, no functions. Adding functions will add back in associated enums, so to be truly empty, ensure no functions. 
+        private readonly PowerFxConfig _emptyEverything = PowerFxConfig.BuildWithEnumStore(null, new EnumStoreBuilder(), new TexlFunction[0]);
+        
+        // No extra enums, but standard functions (which will include some enums).
+        private readonly PowerFxConfig _minimalEnums = PowerFxConfig.BuildWithEnumStore(null, new EnumStoreBuilder().WithRequiredEnums(BuiltinFunctionsCore.BuiltinFunctionsLibrary));
 
         /// <summary>
         /// Compares expected suggestions with suggestions made by PFx Intellisense for a given
@@ -73,6 +70,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         [InlineData("$\"Hello { First(Table({a:{},b:{},c:{}})).| } World\"", "a", "b", "c")]
         [InlineData("$\"Hello { First(Table({a:{},b:{},c:{}})).|   \"", "a", "b", "c")]
         [InlineData("$\"Hello { {a:{},b:{},c:{}}.|  \"", "a", "b", "c")]
+        [InlineData("First([$\"{ {a:1,b:2,c:3}.|", "a", "b", "c")]
         [InlineData("$\"Hello {\"|")]
         [InlineData("$\"Hello {}\"|")]
         [InlineData("$\"Hello {|}\"")]
@@ -161,12 +159,12 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
             //   https://github.com/nunit/nunit3-vs-adapter/issues/691
 
             FeatureFlags.StringInterpolation = true;
-            var actualSuggestions = SuggestStrings(expression, _defaultEnumStore);
+            var actualSuggestions = SuggestStrings(expression, _default);
             Assert.Equal(expectedSuggestions, actualSuggestions);
         }
 
         /// <summary>
-        /// In cases for Intellisense with an empty enum store.
+        /// In cases for Intellisense with an empty enum store and no function list.
         /// </summary>
         [Theory]
         [InlineData("Color.AliceBl|")]
@@ -176,14 +174,23 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         [InlineData("Disabled|")]
         [InlineData("DisplayMode.D|")]
         [InlineData("DisplayMode|")]
-
-        // Calendar is a namespace for functions, not an enum
-        [InlineData("Calendar.|", "MonthsLong", "MonthsShort", "WeekdaysLong", "WeekdaysShort")]
-        [InlineData("Calendar.Months|", "MonthsLong", "MonthsShort")]
         public void TestSuggestEmptyEnumList(string expression, params string[] expectedSuggestions)
         {
             FeatureFlags.StringInterpolation = true;
-            var actualSuggestions = SuggestStrings(expression, _emptyEnumStore);
+            var actualSuggestions = SuggestStrings(expression, _emptyEverything);
+            Assert.Equal(expectedSuggestions, actualSuggestions);
+        }
+
+        /// <summary>
+        /// In cases for Intellisense with an empty enum store, but still builtin functions. 
+        /// </summary>
+        [Theory]
+        [InlineData("Calendar.|", "MonthsLong", "MonthsShort", "WeekdaysLong", "WeekdaysShort")]
+        [InlineData("Calendar.Months|", "MonthsLong", "MonthsShort")]
+        public void TestSuggestEmptyAll(string expression, params string[] expectedSuggestions)
+        {
+            FeatureFlags.StringInterpolation = true;
+            var actualSuggestions = SuggestStrings(expression, _minimalEnums);
             Assert.Equal(expectedSuggestions, actualSuggestions);
         }
 
@@ -210,7 +217,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         [InlineData("[@|")]
         public void TestNonEmptySuggest(string expression, string context = null)
         {
-            var actualSuggestions = SuggestStrings(expression, _defaultEnumStore, context);
+            var actualSuggestions = SuggestStrings(expression, _default, context);
             Assert.True(actualSuggestions.Length > 0);
         }
 
@@ -228,7 +235,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         {
             Assert.NotNull(context);
 
-            var actualSuggestions = SuggestStrings(expression, _defaultEnumStore, context);
+            var actualSuggestions = SuggestStrings(expression, _default, context);
             Assert.Equal(expectedSuggestions, actualSuggestions);
         }
     }

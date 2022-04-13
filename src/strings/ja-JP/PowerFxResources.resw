@@ -1630,7 +1630,11 @@
     
   </data>
   <data name="ErrUnknownFunction" xml:space="preserve">
-    <value>不明な関数、またはサポートされていない関数の呼び出しです。</value>
+    <value>'{0}' は不明またはサポートされていない関数です。</value>
+    
+  </data>
+  <data name="ErrUnknownNamespaceFunction" xml:space="preserve">
+    <value>'{0}' は名前空間 '{1}' 内で不明またはサポートされていない関数です。</value>
     
   </data>
   <data name="ErrUnSupportedComponentBehaviorInvocation" xml:space="preserve">
@@ -1922,8 +1926,40 @@
   <data name="AboutTime_millisecond" xml:space="preserve">
     <value>ミリ秒コンポーネント。</value>
   </data>
+  <data name="AboutDateTime" xml:space="preserve">
+    <value>ある瞬間の時間を表す値を作成します。日付と時刻で表します。</value>
+    
+  </data>
+  <data name="AboutDateTime_year" xml:space="preserve">
+    <value>その年。</value>
+    
+  </data>
+  <data name="AboutDateTime_month" xml:space="preserve">
+    <value>その月。</value>
+    
+  </data>
+  <data name="AboutDateTime_day" xml:space="preserve">
+    <value>その日。</value>
+    
+  </data>
+  <data name="AboutDateTime_hour" xml:space="preserve">
+    <value>その時間。</value>
+    
+  </data>
+  <data name="AboutDateTime_minute" xml:space="preserve">
+    <value>その分。</value>
+    
+  </data>
+  <data name="AboutDateTime_second" xml:space="preserve">
+    <value>その秒。</value>
+    
+  </data>
+  <data name="AboutDateTime_millisecond" xml:space="preserve">
+    <value>そのミリ秒。</value>
+    
+  </data>
   <data name="AboutYear" xml:space="preserve">
-    <value>Year は、指定の日付の年を 1900 より大きい数値として返します。</value>
+    <value>Year は指定された日付の年を返します。</value>
     
   </data>
   <data name="YearArg1" xml:space="preserve">
@@ -2338,15 +2374,15 @@
   <data name="AboutChar_column_of_numbers" xml:space="preserve">
     <value>お使いのプラットフォームの文字セットのコード番号が入った列。</value>
   </data>
-  <data name="AboutParseJson" xml:space="preserve">
+  <data name="AboutParseJSON" xml:space="preserve">
     <value>JSON 文字列をオブジェクトに変換します。</value>
     
   </data>
-  <data name="ParseJsonArg1" xml:space="preserve">
+  <data name="ParseJSONArg1" xml:space="preserve">
     <value>入力</value>
     
   </data>
-  <data name="AboutParseJson_input" xml:space="preserve">
+  <data name="AboutParseJSON_input" xml:space="preserve">
     <value>処理する JSON 文字列です。</value>
   </data>
   <data name="AboutIndex" xml:space="preserve">
@@ -2365,7 +2401,8 @@
     <value>テーブルです。</value>
   </data>
   <data name="AboutIndex_index" xml:space="preserve">
-    <value>整数インデックスです。</value>
+    <value>取得するレコードのインデックスです。</value>
+    
   </data>
   <data name="Screen_Name_DisplayName" xml:space="preserve">
     <value>名前</value>
@@ -3974,7 +4011,7 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidName_ShortMessage" xml:space="preserve">
-    <value>名前が無効です。この識別子は認識されません。</value>
+    <value>名前が無効です。'{0}' は認識されません。</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidName_LongMessage" xml:space="preserve">
@@ -3985,6 +4022,21 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidName_Link_1" xml:space="preserve">
+    <value>記事: Power Apps の数式のリファレンス</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_ShortMessage" xml:space="preserve">
+    <value>名前が無効です。この識別子は認識されません。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_LongMessage" xml:space="preserve">
+    <value>このエラーが表示されるケースの大半は、存在しなくなったもの (削除したコントロールなど) を数式が参照している場合です。</value>
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_HowToFix_1" xml:space="preserve">
+    <value>名前への無効な参照を削除するか、修正してください。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_Link_1" xml:space="preserve">
     <value>記事: Power Apps の数式のリファレンス</value>
     
   </data>
@@ -4482,11 +4534,11 @@
     
   </data>
   <data name="ErrorResource_ErrEmptyIsland_ShortMessage" xml:space="preserve">
-    <value>Empty expressions cannot appear inside an interpolated string.</value>
+    <value>補間された文字列内に空の式を表示することはできません。</value>
     
   </data>
   <data name="ErrorResource_ErrEmptyIsland_HowToFix_1" xml:space="preserve">
-    <value>Check for empty expressions inside the interpolated string.</value>
+    <value>補間された文字列内にある空の式を確認してください。</value>
     
   </data>
   <data name="ErrorResource_ErrAsNotInContext_ShortMessage" xml:space="preserve">

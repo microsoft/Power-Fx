@@ -19,6 +19,7 @@ using Conditional = System.Diagnostics.ConditionalAttribute;
 
 namespace Microsoft.PowerFx.Core.Types
 {
+    [ThreadSafeImmutable]
     internal class DType : ICheckable
     {
         /// <summary>
@@ -429,6 +430,7 @@ namespace Microsoft.PowerFx.Core.Types
             OptionSetInfo = null;
             ViewInfo = info;
             NamedValueKind = null;
+            DisplayNameProvider = info.DisplayNameProvider;
             AssertValid();
         }
 
@@ -450,6 +452,7 @@ namespace Microsoft.PowerFx.Core.Types
             OptionSetInfo = null;
             ViewInfo = info;
             NamedValueKind = null;
+            DisplayNameProvider = info.DisplayNameProvider;
             AssertValid();
         }
 
@@ -642,6 +645,27 @@ namespace Microsoft.PowerFx.Core.Types
             return returnType;
         }
 
+        internal static DType DisableDisplayNameProviders(DType type)
+        {
+            type.AssertValid();
+            var returnType = type.Clone();
+            returnType.DisplayNameProvider = DisabledDisplayNameProvider.Instance;
+
+            if (!type.IsAggregate)
+            {
+                return returnType;
+            }
+
+            var fError = false;
+            foreach (var typedName in returnType.GetNames(DPath.Root))
+            {
+                returnType = returnType.SetType(ref fError, DPath.Root.Append(typedName.Name), DisableDisplayNameProviders(typedName.Type), skipCompare: true);
+                Contracts.Assert(!fError);
+            }
+
+            return returnType;
+        }
+
         /// <summary>
         /// This should only be used when constructing DTypes from the public surface to replace an existing display name provider.
         /// </summary>
@@ -819,10 +843,10 @@ namespace Microsoft.PowerFx.Core.Types
 
             var typedNames = new List<TypedName>();
 
-            foreach (var kvp in info.DisplayNameMapping)
+            foreach (var name in info.ViewNames)
             {
                 var type = new DType(DKind.ViewValue, info);
-                typedNames.Add(new TypedName(type, new DName(kvp.Key.ToString())));
+                typedNames.Add(new TypedName(type, name));
             }
 
             return new DType(DKind.View, TypeTree.Create(typedNames.Select(TypedNameToKVP)), info);
@@ -2356,18 +2380,6 @@ namespace Microsoft.PowerFx.Core.Types
 
         internal static bool TryGetDisplayNameForColumn(DType type, string logicalName, out string displayName)
         {
-            // If the type is an view, the view info has the mapping
-            if (type != null && type.IsView && type.ViewInfo != null)
-            {
-                if (System.Guid.TryParse(logicalName, out var value) && type.ViewInfo.DisplayNameMapping.TryGetFromFirst(value, out displayName))
-                {
-                    return true;
-                }
-
-                displayName = null;
-                return false;
-            }
-
             // If we are accessing an entity, then the entity info contains the mapping
             if (TryGetEntityMetadataForDisplayNames(type, out var entityMetadata))
             {
@@ -2406,19 +2418,6 @@ namespace Microsoft.PowerFx.Core.Types
 
         internal static bool TryGetLogicalNameForColumn(DType type, string displayName, out string logicalName, bool isThisItem = false)
         {
-            // If the type is a view, the view info has the mapping
-            if (type != null && type.IsView && !isThisItem && type.ViewInfo != null)
-            {
-                if (type.ViewInfo.DisplayNameMapping.TryGetFromSecond(displayName, out var value))
-                {
-                    logicalName = value.ToString();
-                    return true;
-                }
-
-                logicalName = null;
-                return false;
-            }
-
             // If we are accessing an entity, then the entity info contains the mapping
             if (TryGetEntityMetadataForDisplayNames(type, out var entityMetadata))
             {
@@ -2480,29 +2479,6 @@ namespace Microsoft.PowerFx.Core.Types
         /// </returns>
         internal static bool TryGetConvertedDisplayNameAndLogicalNameForColumn(DType type, string displayName, out string logicalName, out string newDisplayName)
         {
-            // If the type is a view, the info has the mapping
-            if (type != null && type.IsView && type.ViewInfo != null)
-            {
-                if (type.ViewInfo.IsConvertingDisplayNameMapping &&
-                    type.ViewInfo.PreviousDisplayNameMapping != null &&
-                    type.ViewInfo.PreviousDisplayNameMapping.TryGetFromSecond(displayName, out var value))
-                {
-                    logicalName = value.ToString();
-                    if (type.ViewInfo.DisplayNameMapping.TryGetFromFirst(value, out newDisplayName))
-                    {
-                        return true;
-                    }
-
-                    // Converting and no new mapping exists for this column, so the display name is also the logical name
-                    newDisplayName = logicalName;
-                    return true;
-                }
-
-                logicalName = null;
-                newDisplayName = null;
-                return false;
-            }
-
             // If we are accessing an entity, then the entity info contains the mapping
             if (TryGetEntityMetadataForDisplayNames(type, out var entityMetadata))
             {

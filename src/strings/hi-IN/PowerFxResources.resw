@@ -1630,7 +1630,11 @@
     
   </data>
   <data name="ErrUnknownFunction" xml:space="preserve">
-    <value>अज्ञात या असमर्थित फ़ंक्शन का आमंत्रण.</value>
+    <value>{0}' एक अज्ञात या असमर्थित फ़ंक्शन है.</value>
+    
+  </data>
+  <data name="ErrUnknownNamespaceFunction" xml:space="preserve">
+    <value>{0}' नामस्थान '{1}' में एक अज्ञात या असमर्थित फ़ंक्शन है.</value>
     
   </data>
   <data name="ErrUnSupportedComponentBehaviorInvocation" xml:space="preserve">
@@ -1922,8 +1926,40 @@
   <data name="AboutTime_millisecond" xml:space="preserve">
     <value>मिलीसेकंड घटक.</value>
   </data>
+  <data name="AboutDateTime" xml:space="preserve">
+    <value>ऐसा मान बनाता है जो समय में एक पल को दर्शाता है, जिसे दिन की तिथि और समय के रूप में व्यक्त किया जाता है.</value>
+    
+  </data>
+  <data name="AboutDateTime_year" xml:space="preserve">
+    <value>वर्ष.</value>
+    
+  </data>
+  <data name="AboutDateTime_month" xml:space="preserve">
+    <value>माह.</value>
+    
+  </data>
+  <data name="AboutDateTime_day" xml:space="preserve">
+    <value>दिन.</value>
+    
+  </data>
+  <data name="AboutDateTime_hour" xml:space="preserve">
+    <value>घंटा.</value>
+    
+  </data>
+  <data name="AboutDateTime_minute" xml:space="preserve">
+    <value>मिनट.</value>
+    
+  </data>
+  <data name="AboutDateTime_second" xml:space="preserve">
+    <value>सेकंड.</value>
+    
+  </data>
+  <data name="AboutDateTime_millisecond" xml:space="preserve">
+    <value>मिलीसेकंड.</value>
+    
+  </data>
   <data name="AboutYear" xml:space="preserve">
-    <value>वर्ष, दिए गए दिनांक का वर्ष लौटाता है, जो कि 1900 से बड़ी संख्या होती है.</value>
+    <value>वर्ष दी गई तिथि का वर्ष लौटाता है.</value>
     
   </data>
   <data name="YearArg1" xml:space="preserve">
@@ -2338,15 +2374,15 @@
   <data name="AboutChar_column_of_numbers" xml:space="preserve">
     <value>आपके प्लेटफ़ॉर्म पर कैरेक्टर सेट से कोड संख्याओं का एक स्तंभ.</value>
   </data>
-  <data name="AboutParseJson" xml:space="preserve">
+  <data name="AboutParseJSON" xml:space="preserve">
     <value>JSON स्ट्रिंग को ऑब्जेक्ट में रूपांतरित करें.</value>
     
   </data>
-  <data name="ParseJsonArg1" xml:space="preserve">
+  <data name="ParseJSONArg1" xml:space="preserve">
     <value>इनपुट</value>
     
   </data>
-  <data name="AboutParseJson_input" xml:space="preserve">
+  <data name="AboutParseJSON_input" xml:space="preserve">
     <value>प्रोसेस की जाने वाली एक JSON स्ट्रिंग.</value>
   </data>
   <data name="AboutIndex" xml:space="preserve">
@@ -2365,7 +2401,8 @@
     <value>तालिका.</value>
   </data>
   <data name="AboutIndex_index" xml:space="preserve">
-    <value>एक पूर्णांक इंडेक्स.</value>
+    <value>रिकॉर्ड का इंडेक्स जिसे पुनर्प्राप्त किया जाना है.</value>
+    
   </data>
   <data name="Screen_Name_DisplayName" xml:space="preserve">
     <value>नाम</value>
@@ -3974,7 +4011,7 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidName_ShortMessage" xml:space="preserve">
-    <value>नाम मान्य नहीं है. इस पहचानकर्ता को पहचाना नहीं गया है.</value>
+    <value>नाम मान्य नहीं है. '{0}' को पहचाना नहीं गया है.</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidName_LongMessage" xml:space="preserve">
@@ -3986,6 +4023,21 @@
   </data>
   <data name="ErrorResource_ErrInvalidName_Link_1" xml:space="preserve">
     <value>आलेख: Power Apps के लिए सूत्र संदर्भ</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_ShortMessage" xml:space="preserve">
+    <value>नाम मान्य नहीं है. इस पहचानकर्ता को पहचाना नहीं गया है.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_LongMessage" xml:space="preserve">
+    <value>यह त्रुटि सामान्यतः सबसे अधिक तब आती है जब कोई फॉर्मूला किसी ऐसी चीज़ को संदर्भित करता है जो अब मौजूद नहीं है (उदाहरण के लिए, आपके द्वारा हटाया गया कोई नियंत्रण).</value>
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_HowToFix_1" xml:space="preserve">
+    <value>उस नाम का संदर्भ निकालें या उसे ठीक करें जो मान्य नहीं है.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_Link_1" xml:space="preserve">
+    <value>लेख: Power Apps के लिए फॉर्मूला संदर्भ</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_ShortMessage" xml:space="preserve">
@@ -4482,11 +4534,11 @@
     
   </data>
   <data name="ErrorResource_ErrEmptyIsland_ShortMessage" xml:space="preserve">
-    <value>Empty expressions cannot appear inside an interpolated string.</value>
+    <value>इंटरपोलेटेड स्ट्रिंग के अंदर खाली अभिव्यक्ति प्रकट नहीं हो सकती.</value>
     
   </data>
   <data name="ErrorResource_ErrEmptyIsland_HowToFix_1" xml:space="preserve">
-    <value>Check for empty expressions inside the interpolated string.</value>
+    <value>इंटरपोलेटेड स्ट्रिंग के अंदर खाली अभिव्यक्तियों की जांच करें.</value>
     
   </data>
   <data name="ErrorResource_ErrAsNotInContext_ShortMessage" xml:space="preserve">

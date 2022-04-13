@@ -7,6 +7,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Public.Types;
@@ -24,7 +25,7 @@ namespace Microsoft.PowerFx.Functions
             return new StringValue(irContext, str);
         }
 
-        public static FormulaValue Concat(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args)
+        public static async ValueTask<FormulaValue> Concat(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args)
         {// Streaming 
             var arg0 = (TableValue)args[0];
             var arg1 = (LambdaFormulaValue)args[1];
@@ -48,7 +49,7 @@ namespace Microsoft.PowerFx.Functions
 
                     var childContext = symbolContext.WithScopeValues(row.Value);
 
-                    var result = arg1.Eval(runner, childContext);
+                    var result = await arg1.EvalAsync(runner, childContext);
 
                     var str = (StringValue)result;
                     sb.Append(str.Value);
@@ -74,7 +75,7 @@ namespace Microsoft.PowerFx.Functions
 
         // https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-value
         // Convert string to number
-        public static FormulaValue Value(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args)
+        public static async ValueTask<FormulaValue> Value(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args)
         {
             var arg0 = args[0];
 
@@ -136,7 +137,7 @@ namespace Microsoft.PowerFx.Functions
         }
 
         // Convert string to boolean
-        public static FormulaValue Boolean(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, StringValue[] args)
+        public static FormulaValue Boolean(IRContext irContext, StringValue[] args)
         {
             var arg0 = args[0];
 
@@ -155,7 +156,7 @@ namespace Microsoft.PowerFx.Functions
         }
 
         // https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-text
-        public static FormulaValue Text(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args)
+        public static async ValueTask<FormulaValue> Text(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args)
         {
             // only DateValue and DateTimeValue are supported for now with custom format strings.
             if (args.Length > 1 && args[0] is StringValue)
@@ -260,13 +261,15 @@ namespace Microsoft.PowerFx.Functions
 
         // https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-isblank-isempty
         // Take first non-blank value.
-        public static FormulaValue Coalesce(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args)
+        public static async ValueTask<FormulaValue> Coalesce(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args)
         {
             var errors = new List<ErrorValue>();
 
             foreach (var arg in args)
             {
-                var res = runner.EvalArg<ValidFormulaValue>(arg, symbolContext, arg.IRContext);
+                runner.CheckCancel();
+
+                var res = await runner.EvalArgAsync<ValidFormulaValue>(arg, symbolContext, arg.IRContext);
 
                 if (res.IsValue)
                 {
@@ -414,7 +417,7 @@ namespace Microsoft.PowerFx.Functions
             return new StringValue(irContext, result);
         }
 
-        public static FormulaValue Split(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, StringValue[] args)
+        public static FormulaValue Split(IRContext irContext, StringValue[] args)
         {
             var text = args[0].Value;
             var separator = args[1].Value;
@@ -424,7 +427,7 @@ namespace Microsoft.PowerFx.Functions
             var substrings = string.IsNullOrEmpty(separator) ? text.Select(c => new string(c, 1)) : text.Split(new string[] { separator }, StringSplitOptions.None);
             var rows = substrings.Select(s => new StringValue(IRContext.NotInSource(FormulaType.String), s));
 
-            return new InMemoryTableValue(irContext, StandardSingleColumnTableFromValues(irContext, rows.ToArray(), BuiltinFunction.OneColumnTableResultName));
+            return new InMemoryTableValue(irContext, StandardSingleColumnTableFromValues(irContext, rows.ToArray(), forceSingleColumn: true, columnName: BuiltinFunction.OneColumnTableResultName));
         }
 
         private static FormulaValue Substitute(IRContext irContext, FormulaValue[] args)

@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
+using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Public;
 using Microsoft.PowerFx.Core.Public.Types;
 using Microsoft.PowerFx.LanguageServerProtocol;
@@ -24,15 +25,100 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             Converters = { new FormulaTypeJsonConverter() }
         };
 
-        protected static List<string> _sendToClientData;
-        protected static TestPowerFxScopeFactory _scopeFactory;
-        protected static TestLanguageServer _testServer;
+        protected List<string> _sendToClientData;
+        protected TestPowerFxScopeFactory _scopeFactory;
+        protected TestLanguageServer _testServer;
 
         public LanguageServerTests()
         {
+            // Create an Engine() that has all the builtin symbols by default. 
+            // Note that interpreter has fewer symbols. 
+            var engine = new Engine(new PowerFxConfig());
+
             _sendToClientData = new List<string>();
-            _scopeFactory = new TestPowerFxScopeFactory((string documentUri) => RecalcEngineScope.FromUri(new RecalcEngine(), documentUri));
+            _scopeFactory = new TestPowerFxScopeFactory((string documentUri) => RecalcEngineScope.FromUri(engine, documentUri));
             _testServer = new TestLanguageServer(_sendToClientData.Add, _scopeFactory);
+        }
+
+        // From JPC spec: https://microsoft.github.io/language-server-protocol/specifications/specification-3-14/
+        private const int ParseError = -32700;
+        private const int InvalidRequest = -32600;
+        private const int MethodNotFound = -32601;
+        private const int InvalidParams = -32602;
+        private const int InternalError = -32603;
+        private const int ServerErrorStart = -32099;
+        private const int ServerErrorEnd = -32000;
+        private const int ServerNotInitialized = -32002;
+        private const int UnknownErrorCode = -32001;
+
+        [Fact]
+        public void TestTopParseError()
+        {
+            var list = new List<Exception>();
+
+            _testServer.LogUnhandledExceptionHandler += (ex) =>
+            {
+                list.Add(ex);
+            };
+            _testServer.OnDataReceived("parse error");
+
+            Assert.Single(list); // ensure handler was invoked. 
+
+            Assert.Single(_sendToClientData);
+            var errorResponse = JsonSerializer.Deserialize<JsonRpcErrorResponse>(_sendToClientData[0], _jsonSerializerOptions);
+            Assert.Equal("2.0", errorResponse.Jsonrpc);
+            Assert.Null(errorResponse.Id);
+            Assert.Equal(InternalError, errorResponse.Error.Code);
+            Assert.Equal(list[0].Message, errorResponse.Error.Message);
+        }
+
+        // Scope facotry that throws. simulate server crashes.
+        private class ErrorScopeFactory : IPowerFxScopeFactory
+        {
+            public IPowerFxScope GetOrCreateInstance(string documentUri)
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        // Exceptions can be thrown oob, test we can register a hook and receive. 
+        // Check for exceptions if the scope object we call back to throws 
+        [Fact]
+        public void TestLogCallbackExceptions()
+        {
+            var scopeFactory = new ErrorScopeFactory();
+            var testServer = new TestLanguageServer(_sendToClientData.Add, scopeFactory);
+
+            var list = new List<Exception>();
+
+            testServer.LogUnhandledExceptionHandler += (ex) =>
+            {
+                list.Add(ex);
+            };
+
+            testServer.OnDataReceived(JsonSerializer.Serialize(new
+            {
+                jsonrpc = "2.0",
+                method = "textDocument/didOpen",
+                @params = new DidOpenTextDocumentParams()
+                {
+                    TextDocument = new TextDocumentItem()
+                    {
+                        Uri = "https://none",
+                        LanguageId = "powerfx",
+                        Version = 1,
+                        Text = "123"
+                    }
+                }
+            }));
+
+            Assert.Single(list); // ensure handler was invoked. 
+
+            var errorResponse = JsonSerializer.Deserialize<JsonRpcErrorResponse>(_sendToClientData[0], _jsonSerializerOptions);
+            Assert.Equal("2.0", errorResponse.Jsonrpc);
+            Assert.Null(errorResponse.Id);
+            Assert.Equal(InternalError, errorResponse.Error.Code);
+            Assert.Equal(list[0].Message, errorResponse.Error.Message);
         }
 
         [Fact]
@@ -69,22 +155,22 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             var errorResponse = JsonSerializer.Deserialize<JsonRpcErrorResponse>(_sendToClientData[0], _jsonSerializerOptions);
             Assert.Equal("2.0", errorResponse.Jsonrpc);
             Assert.Null(errorResponse.Id);
-            Assert.Equal(-32600, errorResponse.Error.Code);
+            Assert.Equal(InvalidRequest, errorResponse.Error.Code);
 
             errorResponse = JsonSerializer.Deserialize<JsonRpcErrorResponse>(_sendToClientData[1], _jsonSerializerOptions);
             Assert.Equal("2.0", errorResponse.Jsonrpc);
             Assert.Null(errorResponse.Id);
-            Assert.Equal(-32600, errorResponse.Error.Code);
+            Assert.Equal(InvalidRequest, errorResponse.Error.Code);
 
             errorResponse = JsonSerializer.Deserialize<JsonRpcErrorResponse>(_sendToClientData[2], _jsonSerializerOptions);
             Assert.Equal("2.0", errorResponse.Jsonrpc);
             Assert.Null(errorResponse.Id);
-            Assert.Equal(-32601, errorResponse.Error.Code);
+            Assert.Equal(MethodNotFound, errorResponse.Error.Code);
 
             errorResponse = JsonSerializer.Deserialize<JsonRpcErrorResponse>(_sendToClientData[3], _jsonSerializerOptions);
             Assert.Equal("2.0", errorResponse.Jsonrpc);
             Assert.Equal("abc", errorResponse.Id);
-            Assert.Equal(-32601, errorResponse.Error.Code);
+            Assert.Equal(MethodNotFound, errorResponse.Error.Code);
         }
 
         [Fact]
@@ -141,7 +227,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             Assert.Equal("textDocument/publishDiagnostics", notification.Method);
             Assert.Equal("powerfx://app", notification.Params.Uri);
             Assert.Single(notification.Params.Diagnostics);
-            Assert.Equal("Name isn't valid. This identifier isn't recognized.", notification.Params.Diagnostics[0].Message);
+            Assert.Equal("Name isn't valid. 'AA' isn't recognized.", notification.Params.Diagnostics[0].Message);
 
             // some invalid cases
             _sendToClientData.Clear();
@@ -150,7 +236,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             var errorResponse = JsonSerializer.Deserialize<JsonRpcErrorResponse>(_sendToClientData[0], _jsonSerializerOptions);
             Assert.Equal("2.0", errorResponse.Jsonrpc);
             Assert.Null(errorResponse.Id);
-            Assert.Equal(-32600, errorResponse.Error.Code);
+            Assert.Equal(InvalidRequest, errorResponse.Error.Code);
 
             _sendToClientData.Clear();
             _testServer.OnDataReceived(JsonSerializer.Serialize(new
@@ -162,7 +248,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             errorResponse = JsonSerializer.Deserialize<JsonRpcErrorResponse>(_sendToClientData[0], _jsonSerializerOptions);
             Assert.Equal("2.0", errorResponse.Jsonrpc);
             Assert.Null(errorResponse.Id);
-            Assert.Equal(-32600, errorResponse.Error.Code);
+            Assert.Equal(InvalidRequest, errorResponse.Error.Code);
 
             _sendToClientData.Clear();
             _testServer.OnDataReceived(JsonSerializer.Serialize(new
@@ -175,7 +261,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             errorResponse = JsonSerializer.Deserialize<JsonRpcErrorResponse>(_sendToClientData[0], _jsonSerializerOptions);
             Assert.Equal("2.0", errorResponse.Jsonrpc);
             Assert.Null(errorResponse.Id);
-            Assert.Equal(-32700, errorResponse.Error.Code);
+            Assert.Equal(ParseError, errorResponse.Error.Code);
         }
 
         private void TestPublishDiagnostics(string uri, string method, string formula, Diagnostic[] expectedDiagnostics)
@@ -219,8 +305,8 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
         }
 
         [Theory]
-        [InlineData("AA", null, "Name isn't valid. This identifier isn't recognized.")]
-        [InlineData("1+CountRowss", null, "Name isn't valid. This identifier isn't recognized.")]
+        [InlineData("AA", null, "Name isn't valid. 'AA' isn't recognized.")]
+        [InlineData("1+CountRowss", null, "Name isn't valid. 'CountRowss' isn't recognized.")]
         [InlineData("CountRows(2)", null, "Invalid argument type (Number). Expecting a Table value instead.", "The function 'CountRows' has some invalid arguments.")]
         public void TestDidOpenErroneousFormula(string formula, string context, params string[] expectedErrors)
         {
@@ -369,7 +455,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             var errorResponse = JsonSerializer.Deserialize<JsonRpcErrorResponse>(_sendToClientData[0], _jsonSerializerOptions);
             Assert.Equal("2.0", errorResponse.Jsonrpc);
             Assert.Equal("123", errorResponse.Id);
-            Assert.Equal(-32602, errorResponse.Error.Code);
+            Assert.Equal(InvalidParams, errorResponse.Error.Code);
         }
 
         [Fact]
@@ -556,7 +642,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             var errorResponse = JsonSerializer.Deserialize<JsonRpcErrorResponse>(_sendToClientData[0], _jsonSerializerOptions);
             Assert.Equal("2.0", errorResponse.Jsonrpc);
             Assert.Equal("123", errorResponse.Id);
-            Assert.Equal(-32602, errorResponse.Error.Code);
+            Assert.Equal(InvalidParams, errorResponse.Error.Code);
         }
 
         [Fact]

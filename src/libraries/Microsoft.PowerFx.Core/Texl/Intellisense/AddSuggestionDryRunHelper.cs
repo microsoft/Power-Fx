@@ -5,6 +5,7 @@ using Microsoft.PowerFx.Core.Types;
 
 namespace Microsoft.PowerFx.Core.Texl.Intellisense
 {
+    [ThreadSafeImmutable]
     internal class AddSuggestionDryRunHelper : AddSuggestionHelper
     {
         protected override bool CheckAndAddSuggestion(IntellisenseSuggestionList suggestions, IntellisenseSuggestion candidate)

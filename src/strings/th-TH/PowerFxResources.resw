@@ -1630,7 +1630,11 @@
     
   </data>
   <data name="ErrUnknownFunction" xml:space="preserve">
-    <value>การขอร้องจากฟังก์ชันที่ไม่รู้จักหรือไม่รองรับ</value>
+    <value>'{0}' เป็นฟังก์ชันที่ไม่รู้จักหรือไม่ได้รับการสนับสนุน</value>
+    
+  </data>
+  <data name="ErrUnknownNamespaceFunction" xml:space="preserve">
+    <value>'{0}' เป็นฟังก์ชันที่ไม่รู้จักหรือไม่ได้รับการสนับสนุนใน namespace '{1}'</value>
     
   </data>
   <data name="ErrUnSupportedComponentBehaviorInvocation" xml:space="preserve">
@@ -1922,8 +1926,40 @@
   <data name="AboutTime_millisecond" xml:space="preserve">
     <value>คอมโพเนนต์มิลลิวินาที</value>
   </data>
+  <data name="AboutDateTime" xml:space="preserve">
+    <value>สร้างค่าที่บ่งบอกช่วงของเวลา โดยแสดงเป็นวันที่และเวลาในช่วงวัน</value>
+    
+  </data>
+  <data name="AboutDateTime_year" xml:space="preserve">
+    <value>ปี</value>
+    
+  </data>
+  <data name="AboutDateTime_month" xml:space="preserve">
+    <value>เดือน</value>
+    
+  </data>
+  <data name="AboutDateTime_day" xml:space="preserve">
+    <value>วัน</value>
+    
+  </data>
+  <data name="AboutDateTime_hour" xml:space="preserve">
+    <value>ชั่วโมง</value>
+    
+  </data>
+  <data name="AboutDateTime_minute" xml:space="preserve">
+    <value>นาที</value>
+    
+  </data>
+  <data name="AboutDateTime_second" xml:space="preserve">
+    <value>วินาที</value>
+    
+  </data>
+  <data name="AboutDateTime_millisecond" xml:space="preserve">
+    <value>มิลลิวินาที</value>
+    
+  </data>
   <data name="AboutYear" xml:space="preserve">
-    <value>ปี ส่งกลับปีของวันที่ที่ระบุ เป็นตัวเลขที่มากกว่า 1900</value>
+    <value>ปี ส่งกลับปีของวันที่ที่ระบุ</value>
     
   </data>
   <data name="YearArg1" xml:space="preserve">
@@ -2338,15 +2374,15 @@
   <data name="AboutChar_column_of_numbers" xml:space="preserve">
     <value>คอลัมน์ของรหัสตัวเลขจากชุดอักขระบนแพลตฟอร์มของคุณ</value>
   </data>
-  <data name="AboutParseJson" xml:space="preserve">
+  <data name="AboutParseJSON" xml:space="preserve">
     <value>แปลงสตริง JSON ให้เป็นออบเจ็กต์</value>
     
   </data>
-  <data name="ParseJsonArg1" xml:space="preserve">
+  <data name="ParseJSONArg1" xml:space="preserve">
     <value>ข้อมูลป้อนเข้า</value>
     
   </data>
-  <data name="AboutParseJson_input" xml:space="preserve">
+  <data name="AboutParseJSON_input" xml:space="preserve">
     <value>สตริง JSON ที่จะประมวลผล</value>
   </data>
   <data name="AboutIndex" xml:space="preserve">
@@ -2365,7 +2401,8 @@
     <value>ตาราง</value>
   </data>
   <data name="AboutIndex_index" xml:space="preserve">
-    <value>ดัชนีจำนวนเต็ม</value>
+    <value>ดัชนีของเรกคอร์ดที่จะเรียก</value>
+    
   </data>
   <data name="Screen_Name_DisplayName" xml:space="preserve">
     <value>ชื่อ</value>
@@ -3974,7 +4011,7 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidName_ShortMessage" xml:space="preserve">
-    <value>ชื่อไม่ถูกต้อง ไม่รู้จักตัวกรองนี้</value>
+    <value>ชื่อไม่ถูกต้อง ไม่รู้จัก '{0}'</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidName_LongMessage" xml:space="preserve">
@@ -3985,6 +4022,21 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidName_Link_1" xml:space="preserve">
+    <value>บทความ: การอ้างอิงสูตรสำหรับ Power Apps</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_ShortMessage" xml:space="preserve">
+    <value>ชื่อไม่ถูกต้อง ไม่รู้จักตัวระบุนี้</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_LongMessage" xml:space="preserve">
+    <value>ข้อผิดพลาดนี้ปรากฏให้เห็นบ่อยที่สุดเมื่อสูตรอ้างอิงไปยังสิ่งที่ไม่มีอยู่อีกต่อไป (เช่น การควบคุมที่คุณได้ลบไปแล้ว)</value>
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_HowToFix_1" xml:space="preserve">
+    <value>ลบหรือแก้ไขการอ้างอิงถึงชื่อที่ไม่ถูกต้อง</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_Link_1" xml:space="preserve">
     <value>บทความ: การอ้างอิงสูตรสำหรับ Power Apps</value>
     
   </data>
@@ -4482,11 +4534,11 @@
     
   </data>
   <data name="ErrorResource_ErrEmptyIsland_ShortMessage" xml:space="preserve">
-    <value>Empty expressions cannot appear inside an interpolated string.</value>
+    <value>นิพจน์ว่างไม่สามารถปรากฏภายในสตริงที่แทรกตัวแปรได้</value>
     
   </data>
   <data name="ErrorResource_ErrEmptyIsland_HowToFix_1" xml:space="preserve">
-    <value>Check for empty expressions inside the interpolated string.</value>
+    <value>ตรวจสอบนิพจน์ว่างภายในสตริงที่แทรกตัวแปร</value>
     
   </data>
   <data name="ErrorResource_ErrAsNotInContext_ShortMessage" xml:space="preserve">

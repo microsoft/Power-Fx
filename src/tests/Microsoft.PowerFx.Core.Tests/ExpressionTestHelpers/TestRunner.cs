@@ -193,12 +193,10 @@ namespace Microsoft.PowerFx.Core.Tests
                         {
                             throw new InvalidOperationException($"Duplicate test cases in {Path.GetFileName(test.SourceFile)} on line {test.SourceLine} and {existingTest.SourceLine}");
                         }
-                        
+
                         // Updating an existing test. 
                         // Inputs are the same, but update the results.
-                        existingTest.Expected = test.Expected;
-                        existingTest.SourceFile = test.SourceFile;
-                        existingTest.SourceLine = test.SourceLine;
+                        existingTest.MarkOverride(test);
                     }
                     else
                     {
@@ -377,6 +375,10 @@ namespace Microsoft.PowerFx.Core.Tests
 
                 sb.Append('}');
             }
+            else if (result is TimeValue tv)
+            {
+                sb.Append(tv.Value.ToString());
+            }
             else if (result is BlankValue)
             {
                 sb.Append("Blank()");
@@ -386,6 +388,12 @@ namespace Microsoft.PowerFx.Core.Tests
                 // Date(YYYY,MM,DD)
                 var date = d.Value;
                 sb.Append($"Date({date.Year},{date.Month},{date.Day})");
+            }
+            else if (result is DateTimeValue dt)
+            {
+                // DateTime(yyyy,MM,dd,HH,mm,ss,fff)
+                var dateTime = dt.Value;
+                sb.Append($"DateTime({dateTime.Year},{dateTime.Month},{dateTime.Day},{dateTime.Hour},{dateTime.Minute},{dateTime.Second},{dateTime.Millisecond})");
             }
             else if (result is ErrorValue)
             {
