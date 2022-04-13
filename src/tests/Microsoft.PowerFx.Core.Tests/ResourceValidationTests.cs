@@ -1,10 +1,13 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
+using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Public.Types;
 using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Core.Types;
@@ -14,6 +17,33 @@ namespace Microsoft.PowerFx.Tests
 {
     public class ResourceValidationTests
     {
+        [Fact]
+        public void ResourceLoadsOnlyRequiredLocales()
+        {
+            var loaded = string.Empty;
+            var loadedCount = 0;
+
+            void ResourceAssemblyLoadHandler(object sender, AssemblyLoadEventArgs args)
+            {
+                loaded = args.LoadedAssembly.FullName;
+                loadedCount++;
+            }
+
+            var currentDomain = AppDomain.CurrentDomain;
+            currentDomain.AssemblyLoad += ResourceAssemblyLoadHandler;
+
+            // Fallback locale is loaded when no others are specified
+            var generalError = StringResources.Get("ErrGeneralError");
+            Assert.Contains("en-US", loaded);
+
+            // Other locales force a new assembly load
+            generalError = StringResources.Get("ErrGeneralError", "de-DE");
+            Assert.Contains("de-DE", loaded);
+
+            // No other assemblies were loaded
+            Assert.Equal(2, loadedCount);
+        }
+
         [Fact]
         public void AllBuiltinFunctionsHaveParameterDescriptions()
         {
