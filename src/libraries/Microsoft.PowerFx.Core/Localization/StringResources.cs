@@ -4,7 +4,9 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
+using System.Resources;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
 using Microsoft.PowerFx.Core.Utils;
@@ -13,12 +15,6 @@ namespace Microsoft.PowerFx.Core.Localization
 {
     internal static class StringResources
     {
-        internal enum ResourceFormat
-        {
-            Resw,
-            Pares
-        }
-
         /// <summary>
         ///  This field is set once on startup by Canvas' Document Server, and allows access to Canvas-specific string keys
         ///  It is a legacy use, left over from when PowerFx was deeply embedded in Canvas, and ideally should be removed if possible.
@@ -31,13 +27,16 @@ namespace Microsoft.PowerFx.Core.Localization
 
         private const string FallbackLocale = "en-US";
 
+        private static readonly ResourceManager _resourceManager = new ResourceManager("Microsoft.PowerFx.Core.strings.PowerFxResources", typeof(StringResources).Assembly);
+        private static readonly Dictionary<string, Dictionary<string, ErrorResource>> _errorResources = new Dictionary<string, Dictionary<string, ErrorResource>>(StringComparer.OrdinalIgnoreCase);
+
         public static ErrorResource GetErrorResource(ErrorResourceKey resourceKey, string locale = null)
         {
-            Contracts.CheckValue(resourceKey.Key, "action");
-            Contracts.CheckValueOrNull(locale, "locale");
+            Contracts.CheckValue(resourceKey.Key, nameof(resourceKey));
+            Contracts.CheckValueOrNull(locale, nameof(locale));
 
             // As foreign languages can lag behind en-US while being localized, if we can't find it then always look in the en-US locale
-            if (!TryGetErrorResource(resourceKey, out var resourceValue, locale) && !TryGetErrorResource(resourceKey, out resourceValue, FallbackLocale))
+            if (!TryGetErrorResource(resourceKey, out var resourceValue, locale))
             {
                 Debug.WriteLine(string.Format("ERROR error resource {0} not found", resourceKey));
                 if (ShouldThrowIfMissing)
@@ -56,18 +55,17 @@ namespace Microsoft.PowerFx.Core.Localization
 
         public static string Get(string resourceKey, string locale = null)
         {
-            Contracts.CheckValue(resourceKey, "action");
-            Contracts.CheckValueOrNull(locale, "locale");
+            Contracts.CheckValue(resourceKey, nameof(resourceKey));
+            Contracts.CheckValueOrNull(locale, nameof(locale));
 
-            // As foreign languages can lag behind en-US while being localized, if we can't find it then always look in the en-US locale
-            if (!TryGet(resourceKey, out var resourceValue, locale) && !TryGet(resourceKey, out resourceValue, FallbackLocale))
+            if (!TryGet(resourceKey, out var resourceValue, locale))
             {
                 // Prior to ErrorResources, error messages were fetched like other string resources.
                 // The resource associated with the key corresponds to the ShortMessage of the new
                 // ErrorResource objects. For backwards compatibility with tests/telemetry that fetched
                 // the error message manually (as opposed to going through the DocError class), we check
                 // if there is an error resource associated with this key if we did not find it normally.
-                if (TryGetErrorResource(new ErrorResourceKey(resourceKey), out var potentialErrorResource, locale) || TryGetErrorResource(new ErrorResourceKey(resourceKey), out potentialErrorResource, FallbackLocale))
+                if (TryGetErrorResource(new ErrorResourceKey(resourceKey), out var potentialErrorResource, locale))
                 {
                     return potentialErrorResource.GetSingleValue(ErrorResource.ShortMessageTag);
                 }
@@ -80,261 +78,128 @@ namespace Microsoft.PowerFx.Core.Localization
             }
 
             return resourceValue;
-        }
-
-        // One resource dictionary per locale
-        private static readonly Dictionary<string, Dictionary<string, string>> Strings = new Dictionary<string, Dictionary<string, string>>();
-        private static readonly Dictionary<string, Dictionary<string, ErrorResource>> ErrorResources = new Dictionary<string, Dictionary<string, ErrorResource>>();
-        private static readonly object DictionaryLock = new object();
-
-        private class TypeFromThisAssembly
-        {
-        }
-
-        private static readonly string ResourceNamePrefix = "Microsoft.PowerFx.Core.Strings.";
-        private static readonly string ResourceFileName = "PowerFxResources.resx";
-
-        public static bool TryGetErrorResource(ErrorResourceKey resourceKey, out ErrorResource resourceValue, string locale = null)
-        {
-            Contracts.CheckValue(resourceKey.Key, "action");
-            Contracts.CheckValueOrNull(locale, "locale");
-
-            if (locale == null)
-            {
-                locale = CurrentLocaleInfo.CurrentUILanguageName;
-
-                // If the locale is not set here, return false immedately and go to the "en-us" fallback
-                if (string.IsNullOrEmpty(locale))
-                {
-                    resourceValue = default;
-                    return false;
-                }
-            }
-
-            if (!ErrorResources.TryGetValue(locale, out var errorResources))
-            {
-                lock (DictionaryLock)
-                {
-                    LoadFromResource(locale, ResourceNamePrefix, typeof(TypeFromThisAssembly), ResourceFileName, ResourceFormat.Resw, out var strings, out errorResources);
-                    Strings[locale] = strings;
-                    ErrorResources[locale] = errorResources;
-                }
-            }
-
-            return errorResources.TryGetValue(resourceKey.Key, out resourceValue) || (ExternalStringResources?.TryGetErrorResource(resourceKey, out resourceValue, locale) ?? false);
-        }
+        }        
 
         public static bool TryGet(string resourceKey, out string resourceValue, string locale = null)
         {
-            Contracts.CheckValue(resourceKey, "action");
-            Contracts.CheckValueOrNull(locale, "locale");
+            Contracts.CheckValue(resourceKey, nameof(resourceKey));
+            Contracts.CheckValueOrNull(locale, nameof(locale));
 
-            if (locale == null)
-            {
-                locale = CurrentLocaleInfo.CurrentUILanguageName;
+            resourceValue = GetLocaleResource(resourceKey, locale);
 
-                // If the locale is not set here, return false immedately and go to the "en-us" fallback
-                if (string.IsNullOrEmpty(locale))
-                {
-                    resourceValue = default;
-                    return false;
-                }
-            }
-
-            if (!Strings.TryGetValue(locale, out var strings))
-            {
-                lock (DictionaryLock)
-                {
-                    LoadFromResource(locale, ResourceNamePrefix, typeof(TypeFromThisAssembly), ResourceFileName, ResourceFormat.Resw, out strings, out var errorResources);
-                    Strings[locale] = strings;
-                    ErrorResources[locale] = errorResources;
-                }
-            }
-
-            return strings.TryGetValue(resourceKey, out resourceValue) || (ExternalStringResources?.TryGet(resourceKey, out resourceValue, locale) ?? false);
+            return resourceValue != null ? true : (ExternalStringResources?.TryGet(resourceKey, out resourceValue, locale) ?? false);
         }
 
-        internal static void LoadFromResource(string locale, string assemblyPrefix, Type typeFromAssembly, string resourceFileName, ResourceFormat resourceFormat, out Dictionary<string, string> strings, out Dictionary<string, ErrorResource> errorResources)
+        private static string GetLocaleResource(string resourceKey, string locale)
         {
-            var assembly = typeFromAssembly.Assembly;
-
-            // This is being done because the filename of the manifest is case sensitive e.g. given zh-CN it was returning English
-            if (locale.Equals("zh-CN"))
+            if (string.IsNullOrEmpty(locale))
             {
-                locale = "zh-cn";
-            }
-            else if (locale.Equals("zh-TW"))
-            {
-                locale = "zh-tw";
-            }
-            else if (locale.Equals("ko-KR"))
-            {
-                locale = "ko-kr";
+                return _resourceManager.GetString(resourceKey);
             }
 
-            using (var res = assembly.GetManifestResourceStream(assemblyPrefix + locale.Replace("-", "_") + "." + resourceFileName))
-            {
-                if (res == null)
-                {
-                    if (locale == FallbackLocale)
-                    {
-                        throw new InvalidProgramException(string.Format("[StringResources] Resources not found for locale '{0}' and failed to find fallback", locale));
-                    }
-
-                    // Load the default ones (recursive, but not infinite due to check above)
-                    LoadFromResource(FallbackLocale, assemblyPrefix, typeFromAssembly, resourceFileName, resourceFormat, out strings, out errorResources);
-                }
-                else
-                {
-                    var loadedStrings = XDocument.Load(res).Descendants(XName.Get("data"));
-                    strings = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-                    errorResources = new Dictionary<string, ErrorResource>(StringComparer.OrdinalIgnoreCase);
-
-                    if (resourceFormat == ResourceFormat.Pares)
-                    {
-                        foreach (var item in loadedStrings)
-                        {
-                            if (item.TryGetNonEmptyAttributeValue("type", out var type) && type == ErrorResource.XmlType)
-                            {
-                                errorResources[item.Attribute("name").Value] = ErrorResource.Parse(item);
-                            }
-                            else
-                            {
-                                strings[item.Attribute("name").Value] = item.Element("value").Value;
-                            }
-                        }
-                    }
-                    else if (resourceFormat == ResourceFormat.Resw)
-                    {
-                        var separatedResourceKeys = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-                        foreach (var item in loadedStrings)
-                        {
-                            var itemName = item.Attribute("name").Value;
-                            if (itemName.StartsWith(ErrorResource.ReswErrorResourcePrefix, StringComparison.OrdinalIgnoreCase))
-                            {
-                                separatedResourceKeys[itemName] = item.Element("value").Value;
-                            }
-                            else
-                            {
-                                strings[itemName] = item.Element("value").Value;
-                            }
-                        }
-
-                        errorResources = PostProcessErrorResources(separatedResourceKeys);
-                    }
-                    else
-                    {
-                        Contracts.Assert(false, "Unknown Resource Format");
-                    }
-                }
-            }
+            return _resourceManager.GetString(resourceKey, CultureInfo.CreateSpecificCulture(locale));
         }
 
-        private static bool TryGetMultiValueSuffix(string resourceKey, string baseSuffix, out string suffix, out int index)
+        public static bool TryGetErrorResource(ErrorResourceKey resourceKey, out ErrorResource resourceValue, string locale = null)
         {
-            var pattern = new Regex(baseSuffix + "_([0-9]*)", RegexOptions.IgnoreCase);
-            var match = pattern.Match(resourceKey);
-            if (match.Success)
+            Contracts.CheckValue(resourceKey.Key, nameof(resourceKey));
+            Contracts.CheckValueOrNull(locale, nameof(locale));
+
+            if (string.IsNullOrEmpty(locale))
             {
-                suffix = match.Value;
-                index = int.Parse(match.Groups[1].Value);
-                return true;
+                locale = FallbackLocale;
             }
 
-            suffix = null;
-            index = 0;
-            return false;
-        }
-
-        private static void UpdateErrorResource(string resourceName, string resourceValue, string tag, int index, Dictionary<string, Dictionary<string, Dictionary<int, string>>> errorResources)
-        {
-            Contracts.AssertValue(errorResources);
-            Contracts.AssertNonEmpty(resourceName);
-            Contracts.AssertNonEmpty(resourceValue);
-
-            if (errorResources.TryGetValue(resourceName, out var tagToValuesDict))
+            // Error resources are a bit odd and need to be reassembled from separate keys. Check to see if we've already retrieved one for this locale/key combo first. 
+            if (_errorResources.TryGetValue(locale, out var localizedErrorResources))
             {
-                if (tagToValuesDict.TryGetValue(tag, out var tagNumberToValuesDict))
+                if (localizedErrorResources.TryGetValue(resourceKey.Key, out resourceValue))
                 {
-                    tagNumberToValuesDict.Add(index, resourceValue);
-                }
-                else
-                {
-                    tagNumberToValuesDict = new Dictionary<int, string>
-                    {
-                        { index, resourceValue }
-                    };
-                    tagToValuesDict.Add(tag, tagNumberToValuesDict);
+                    return true;
                 }
             }
             else
             {
-                tagToValuesDict = new Dictionary<string, Dictionary<int, string>>(StringComparer.OrdinalIgnoreCase);
-                var tagNumberToValuesDict = new Dictionary<int, string>
-                {
-                    { index, resourceValue }
-                };
-                tagToValuesDict.Add(tag, tagNumberToValuesDict);
-                errorResources.Add(resourceName, tagToValuesDict);
+                localizedErrorResources = new Dictionary<string, ErrorResource>(StringComparer.OrdinalIgnoreCase);
+                _errorResources.Add(locale, localizedErrorResources);
             }
+
+            if (TryRebuildErrorResource(resourceKey.Key, locale, out resourceValue))
+            {
+                localizedErrorResources.Add(resourceKey.Key, resourceValue);
+                return true;
+            }
+
+            if (ExternalStringResources != null && ExternalStringResources.TryGetErrorResource(resourceKey, out resourceValue, locale))
+            {
+                localizedErrorResources.Add(resourceKey.Key, resourceValue);
+                return true;
+            }
+
+            return false;
         }
 
-        private static Dictionary<string, ErrorResource> PostProcessErrorResources(Dictionary<string, string> separateResourceKeys)
+        private static bool TryRebuildErrorResource(string key, string locale, out ErrorResource errorResource)
         {
-            // ErrorResource name -> ErrorResourceTag -> tag number -> value
-            var errorResources = new Dictionary<string, Dictionary<string, Dictionary<int, string>>>(StringComparer.OrdinalIgnoreCase);
-
-            foreach (var resource in separateResourceKeys)
+            var members = new Dictionary<string, Dictionary<int, string>>(StringComparer.OrdinalIgnoreCase);
+            foreach (var tag in ErrorResource.ErrorResourceTagToReswSuffix)
             {
-                if (!resource.Key.StartsWith(ErrorResource.ReswErrorResourcePrefix, StringComparison.OrdinalIgnoreCase))
+                if (!ErrorResource.IsTagMultivalue(tag.Key))
                 {
-                    continue;
-                }
-
-                // Skip URLs, we'll handle that paired with the link tag
-                if (resource.Key.EndsWith(ErrorResource.LinkTagUrlTag, StringComparison.OrdinalIgnoreCase))
-                {
-                    continue;
-                }
-
-                foreach (var tag in ErrorResource.ErrorResourceTagToReswSuffix)
-                {
-                    if (!ErrorResource.IsTagMultivalue(tag.Key))
+                    var member = GetLocaleResource(ErrorResource.ReswErrorResourcePrefix + key + tag.Value, locale);
+                    if (member != null)
                     {
-                        if (!resource.Key.EndsWith(tag.Value, StringComparison.OrdinalIgnoreCase))
-                        {
-                            continue;
-                        }
-
                         // Single valued tag, we use index=0 here when inserting
-                        var resourceName = resource.Key.Substring(ErrorResource.ReswErrorResourcePrefix.Length, resource.Key.Length - (ErrorResource.ReswErrorResourcePrefix.Length + tag.Value.Length));
-                        UpdateErrorResource(resourceName, resource.Value, tag.Key, 0, errorResources);
-                        break;
+                        members.Add(tag.Key, new Dictionary<int, string>() { { 0, member } });
                     }
-                    else
+                }
+                else
+                {                    
+                    // Max 10 multivalue tags, although that's absurd. 
+                    for (var i = 0; i < 10; ++i)
                     {
-                        if (!TryGetMultiValueSuffix(resource.Key, tag.Value, out var suffix, out var index))
+                        var resourceName = ErrorResource.ReswErrorResourcePrefix + key + tag.Value + "_" + i;
+                        var member = GetLocaleResource(resourceName, locale);
+                        if (member == null)
                         {
-                            continue;
+                            break;
                         }
 
-                        var resourceName = resource.Key.Substring(ErrorResource.ReswErrorResourcePrefix.Length, resource.Key.Length - (ErrorResource.ReswErrorResourcePrefix.Length + suffix.Length));
-                        UpdateErrorResource(resourceName, resource.Value, tag.Key, index, errorResources);
+                        if (!members.TryGetValue(tag.Key, out var multiValueKeys))
+                        {
+                            multiValueKeys = new Dictionary<int, string>();
+                        }
+
+                        multiValueKeys.Add(i, member);
 
                         // Also handle the URL for link resources
                         if (tag.Key == ErrorResource.LinkTag)
                         {
-                            // This must exist, and the .verify call will fail CI builds if the resource is incorrectly defined. 
-                            separateResourceKeys.TryGetValue(resource.Key + "_url", out var urlValue).Verify();
-                            UpdateErrorResource(resourceName, urlValue, ErrorResource.LinkTagUrlTag, index, errorResources);
-                        }
+                            // This must exist, and the AssertValue call will fail CI builds if the resource is incorrectly defined. 
+                            var link = GetLocaleResource(resourceName + "_" + ErrorResource.LinkTagUrlTag, locale);
+                            Contracts.AssertValue(link);
 
-                        break;
+                            if (!members.TryGetValue(ErrorResource.LinkTagUrlTag, out var linkKeys))
+                            {
+                                linkKeys = new Dictionary<int, string>();
+                            }
+
+                            linkKeys.Add(i, member);
+                        }
                     }
                 }
             }
 
-            return errorResources.ToDictionary(kvp => kvp.Key, kvp => ErrorResource.Reassemble(kvp.Value));
+            if (members.Any())
+            {
+                errorResource = ErrorResource.Reassemble(members);
+                return true;
+            }
+            else
+            {
+                errorResource = null;
+                return false;
+            }
         }
     }
 }
