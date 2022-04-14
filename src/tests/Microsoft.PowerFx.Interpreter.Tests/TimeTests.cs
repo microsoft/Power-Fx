@@ -10,15 +10,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 {
     public class TimeTests : PowerFxTest
     {
-        public TimeTests()
-        {
-            //CultureInfo.CurrentCulture = new CultureInfo("en-US");
-            engine = new RecalcEngine(); 
-        }
 
-#pragma warning disable IDE0044 // Add readonly modifier
-        private RecalcEngine engine;
-#pragma warning restore IDE0044 // Add readonly modifier
+        private readonly RecalcEngine engine = new RecalcEngine();
 
         [Fact]
         public void TestTimeZoneOffsetNonDST()
