@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Globalization;
 using System.Linq;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Utils;
@@ -316,6 +317,11 @@ namespace Microsoft.PowerFx.Core.Types.Enums
 
         internal EnumStoreBuilder WithDefaultEnums()
         {
+            if (CultureInfo.CurrentCulture.Name != "en-US")
+            {
+                throw new Exception("invalid");
+            }
+
             foreach (var defaultEnum in DefaultEnums)
             {
                 if (!_workingEnums.ContainsKey(defaultEnum.Key))

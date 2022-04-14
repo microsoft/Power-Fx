@@ -13,7 +13,13 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 {
     public class DisplayNameTests : PowerFxTest
     {
-        private readonly Engine _engine = new Engine(new PowerFxConfig());
+        public DisplayNameTests()
+            : base()
+        {
+            _engine = new Engine(new PowerFxConfig());
+        }
+
+        private readonly Engine _engine;
 
         [Fact]
         public void CollisionsThrow()

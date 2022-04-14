@@ -14,7 +14,7 @@ namespace Microsoft.PowerFx.Core.Tests
     /// <summary>
     /// Parse test files and invoke runners to execute them. 
     /// </summary>
-    public class TestRunner
+    public class TestRunner : PowerFxTest
     {
         private readonly BaseRunner[] _runners;
 

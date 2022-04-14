@@ -10,7 +10,13 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 {
     public class TimeTests : PowerFxTest
     {
-        private readonly RecalcEngine engine = new RecalcEngine();
+        public TimeTests()
+            : base()
+        {
+            engine = new RecalcEngine();
+        }
+
+        private readonly RecalcEngine engine;
 
         [Fact]
         public void TestTimeZoneOffsetNonDST()
