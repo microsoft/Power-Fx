@@ -301,26 +301,37 @@ namespace Microsoft.PowerFx.Functions
            DValue<RecordValue> row,
            LambdaFormulaValue filter)
         {
+            SymbolContext childContext;
+            
+            // Issue #263 Filter should be able to handle empty rows
             if (row.IsValue)
             {
-                var childContext = context.WithScopeValues(row.Value);
+                childContext = context.WithScopeValues(row.Value);
+            }
+            else if (row.IsBlank)
+            {
+                childContext = context.WithScopeValues(RecordValue.Empty());
+            }
+            else
+            {
+                return null;
+            }
 
-                // Filter evals to a boolean 
-                var result = await filter.EvalAsync(runner, childContext);
-                var include = false;
-                if (result is BooleanValue booleanValue)
-                {
-                    include = booleanValue.Value;
-                }
-                else if (result is ErrorValue errorValue)
-                {
-                    return DValue<RecordValue>.Of(errorValue);
-                }
+            // Filter evals to a boolean 
+            var result = await filter.EvalAsync(runner, childContext);
+            var include = false;
+            if (result is BooleanValue booleanValue)
+            {
+                include = booleanValue.Value;
+            }
+            else if (result is ErrorValue errorValue)
+            {
+                return DValue<RecordValue>.Of(errorValue);
+            }
 
-                if (include)
-                {
-                    return row;
-                }
+            if (include)
+            {
+                return row;
             }
 
             return null;

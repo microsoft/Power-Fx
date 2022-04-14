@@ -50,3 +50,6 @@ Blank()
 
 >> Filter(Sort([-2, -1, 0, 1, 2], 1 / Value), 1/ThisRecord.Value >= 0)
 #Error
+
+>> Filter(Table({a:1},{a:2},If(1<0,{a:3}),{a:4},{a:5}), IsBlank(a) Or a > 0)
+Table({a:1},{a:2},Blank(),{a:4},{a:5})
