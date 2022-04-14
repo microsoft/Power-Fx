@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System.Globalization;
 using System.Linq;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Functions;
@@ -11,7 +12,7 @@ using Xunit;
 namespace Microsoft.PowerFx.Tests.IntellisenseTests
 {
     public class SuggestTests : IntellisenseTestBase
-    {
+    {      
         /// <summary>
         /// This method does the same as <see cref="Suggest"/>, but filters the suggestions by their text so
         /// that they can be more easily compared.
@@ -33,14 +34,14 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
             var intellisense = Suggest(expression, config, contextTypeString);
             return intellisense.Suggestions.Select(suggestion => suggestion.DisplayText.Text).ToArray();
         }
-
-        private readonly PowerFxConfig _default = PowerFxConfig.BuildWithEnumStore(null, new EnumStoreBuilder().WithDefaultEnums());
+        
+        private PowerFxConfig Default => PowerFxConfig.BuildWithEnumStore(null, new EnumStoreBuilder().WithDefaultEnums());
 
         // No enums, no functions. Adding functions will add back in associated enums, so to be truly empty, ensure no functions. 
-        private readonly PowerFxConfig _emptyEverything = PowerFxConfig.BuildWithEnumStore(null, new EnumStoreBuilder(), new TexlFunction[0]);
-        
+        private PowerFxConfig EmptyEverything => PowerFxConfig.BuildWithEnumStore(null, new EnumStoreBuilder(), new TexlFunction[0]);
+
         // No extra enums, but standard functions (which will include some enums).
-        private readonly PowerFxConfig _minimalEnums = PowerFxConfig.BuildWithEnumStore(null, new EnumStoreBuilder().WithRequiredEnums(BuiltinFunctionsCore.BuiltinFunctionsLibrary));
+        private PowerFxConfig MinimalEnums => PowerFxConfig.BuildWithEnumStore(null, new EnumStoreBuilder().WithRequiredEnums(BuiltinFunctionsCore.BuiltinFunctionsLibrary));        
 
         /// <summary>
         /// Compares expected suggestions with suggestions made by PFx Intellisense for a given
@@ -159,7 +160,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
             //   https://github.com/nunit/nunit3-vs-adapter/issues/691
 
             FeatureFlags.StringInterpolation = true;
-            var actualSuggestions = SuggestStrings(expression, _default);
+            var actualSuggestions = SuggestStrings(expression, Default);
             Assert.Equal(expectedSuggestions, actualSuggestions);
         }
 
@@ -177,7 +178,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         public void TestSuggestEmptyEnumList(string expression, params string[] expectedSuggestions)
         {
             FeatureFlags.StringInterpolation = true;
-            var actualSuggestions = SuggestStrings(expression, _emptyEverything);
+            var actualSuggestions = SuggestStrings(expression, EmptyEverything);
             Assert.Equal(expectedSuggestions, actualSuggestions);
         }
 
@@ -190,7 +191,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         public void TestSuggestEmptyAll(string expression, params string[] expectedSuggestions)
         {
             FeatureFlags.StringInterpolation = true;
-            var actualSuggestions = SuggestStrings(expression, _minimalEnums);
+            var actualSuggestions = SuggestStrings(expression, MinimalEnums);
             Assert.Equal(expectedSuggestions, actualSuggestions);
         }
 
@@ -217,7 +218,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         [InlineData("[@|")]
         public void TestNonEmptySuggest(string expression, string context = null)
         {
-            var actualSuggestions = SuggestStrings(expression, _default, context);
+            var actualSuggestions = SuggestStrings(expression, Default, context);
             Assert.True(actualSuggestions.Length > 0);
         }
 
@@ -235,7 +236,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         {
             Assert.NotNull(context);
 
-            var actualSuggestions = SuggestStrings(expression, _default, context);
+            var actualSuggestions = SuggestStrings(expression, Default, context);
             Assert.Equal(expectedSuggestions, actualSuggestions);
         }
     }

@@ -104,7 +104,7 @@ namespace Microsoft.PowerFx
             };
 
             if (result.IsSuccess)
-            {                
+            {
                 result.TopLevelIdentifiers = DependencyFinder.FindDependencies(binding.Top, binding);
 
                 // TODO: Fix FormulaType.Build to not throw exceptions for Enum types then remove this check

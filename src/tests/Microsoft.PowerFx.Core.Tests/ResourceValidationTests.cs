@@ -2,22 +2,17 @@
 // Licensed under the MIT license.
 
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Text.Json;
-using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Localization;
-using Microsoft.PowerFx.Core.Public.Types;
+using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Core.Types;
 using Xunit;
 
 namespace Microsoft.PowerFx.Tests
 {
-    public class ResourceValidationTests
-    {
+    public class ResourceValidationTests : PowerFxTest
+    {       
         [Fact]
         public void ResourceLoadsOnlyRequiredLocales()
         {

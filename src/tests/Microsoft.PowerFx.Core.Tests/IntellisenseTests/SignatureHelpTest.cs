@@ -1,10 +1,10 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System.Globalization;
 using System.IO;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Texl.Intellisense.SignatureHelp;
-using Microsoft.PowerFx.Core.Types.Enums;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Xunit;
@@ -12,7 +12,7 @@ using Xunit;
 namespace Microsoft.PowerFx.Tests.IntellisenseTests
 {
     public class SignatureHelpTest : IntellisenseTestBase
-    {
+    {       
         private const bool RegenerateSignatureHelp = false;
 
         /// <summary>

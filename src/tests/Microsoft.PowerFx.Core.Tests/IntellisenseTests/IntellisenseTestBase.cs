@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Public.Types;
+using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Core.Texl.Intellisense;
 using Microsoft.PowerFx.Core.Types;
 using Xunit;
@@ -14,7 +15,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
     /// <summary>
     /// Provides methods that may be used by Intellisense tests.
     /// </summary>
-    public class IntellisenseTestBase
+    public class IntellisenseTestBase : PowerFxTest
     {
         /// <summary>
         /// This method receives a test case string, along with an optional context type that defines the valid

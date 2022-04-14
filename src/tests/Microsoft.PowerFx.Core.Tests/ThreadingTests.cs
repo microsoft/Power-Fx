@@ -8,7 +8,7 @@ using Xunit;
 namespace Microsoft.PowerFx.Core.Tests
 {
     // Do static analysis to look for potential threading issues. 
-    public class ThreadingTests
+    public class ThreadingTests : PowerFxTest
     {
         [Fact]
         public void CheckFxCore()

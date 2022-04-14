@@ -2,19 +2,17 @@
 // Licensed under the MIT license.
 
 using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using Microsoft.PowerFx.Core.Lexer;
 using Microsoft.PowerFx.Core.Lexer.Tokens;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
-using Microsoft.PowerFx.Core.Utils;
 using Xunit;
 
 namespace Microsoft.PowerFx.Core.Tests
 {
-    public sealed class LexerTests
+    public sealed class LexerTests : PowerFxTest
     {
         private void AssertTokens(string value, params TokKind[] tokKinds)
         {
@@ -425,7 +423,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 TokKind.IslandEnd,
                 TokKind.StrInterpEnd,
                 TokKind.Eof);
-        }        
+        }
 
         [Fact]
         public void TestImbalancedBrackets()

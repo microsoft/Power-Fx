@@ -4,7 +4,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Public.Types;
@@ -15,7 +14,7 @@ using Xunit;
 namespace Microsoft.PowerFx.Tests
 {
     // Test marshaling between C# objectrs and Power Fx values. 
-    public class MarshalTests
+    public class MarshalTests : PowerFxTest
     {
         // Do a trivial marshal.
         [Fact]

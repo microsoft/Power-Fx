@@ -14,7 +14,7 @@ namespace Microsoft.PowerFx.Core.Tests
     /// <summary>
     /// TODO.
     /// </summary>
-    internal class ImmutabilityTests
+    internal class ImmutabilityTests : PowerFxTest
     {
         public static void CheckImmutability(Assembly asm)
         {
