@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -10,7 +11,7 @@ using Microsoft.PowerFx.Core.Public.Types;
 using Microsoft.PowerFx.Core.Public.Values;
 
 namespace Microsoft.PowerFx.Core.Tests
-{    
+{   
     /// <summary>
     /// Parse test files and invoke runners to execute them. 
     /// </summary>
@@ -193,12 +194,10 @@ namespace Microsoft.PowerFx.Core.Tests
                         {
                             throw new InvalidOperationException($"Duplicate test cases in {Path.GetFileName(test.SourceFile)} on line {test.SourceLine} and {existingTest.SourceLine}");
                         }
-                        
+
                         // Updating an existing test. 
                         // Inputs are the same, but update the results.
-                        existingTest.Expected = test.Expected;
-                        existingTest.SourceFile = test.SourceFile;
-                        existingTest.SourceLine = test.SourceLine;
+                        existingTest.MarkOverride(test);
                     }
                     else
                     {
@@ -222,56 +221,28 @@ namespace Microsoft.PowerFx.Core.Tests
             }
         }
 
-        public (int total, int failed, int passed, string output) RunTests()
+        public TestRunFullResults RunTests()
         {
+            var summary = new TestRunFullResults();
+
             if (_runners.Length == 0)
             {
                 throw new InvalidOperationException($"Need to specify a runner to run tests");
             }
 
-            var total = 0;
-            var fail = 0;
-            var pass = 0;
-            var sb = new StringBuilder();
-
             foreach (var testCase in Tests)
             {
                 foreach (var runner in _runners)
                 {
-                    total++;
-
                     var engineName = runner.GetName();
 
                     var (result, msg) = runner.RunAsync(testCase).Result;
 
-                    var prefix = $"Test {Path.GetFileName(testCase.SourceFile)}:{testCase.SourceLine}: ";
-                    switch (result)
-                    {
-                        case TestResult.Pass:
-                            pass++;
-                            sb.Append(".");
-                            break;
-
-                        case TestResult.Fail:
-                            sb.AppendLine();
-                            sb.AppendLine($"FAIL: {engineName}, {Path.GetFileName(testCase.SourceFile)}:{testCase.SourceLine}");
-                            sb.AppendLine($"FAIL: {testCase.Input}");
-                            sb.AppendLine($"{msg}");
-                            sb.AppendLine();
-                            fail++;
-                            break;
-
-                        case TestResult.Skip:
-                            sb.Append("-");
-                            break;
-                    }
+                    summary.AddResult(testCase, result, engineName, msg);                  
                 }
             }
 
-            sb.AppendLine();
-            sb.AppendLine($"{total} total. {pass} passed. {fail} failed");
-            Console.WriteLine(sb.ToString());
-            return (total, fail, pass, sb.ToString());
+            return summary;
         }
 
         public static string TestToString(FormulaValue result)

@@ -1630,7 +1630,11 @@
     
   </data>
   <data name="ErrUnknownFunction" xml:space="preserve">
-    <value>Κλήση άγνωστης ή μη υποστηριζόμενης συνάρτησης.</value>
+    <value>'{0}' είναι μια άγνωστη ή μη υποστηριζόμενη συνάρτηση.</value>
+    
+  </data>
+  <data name="ErrUnknownNamespaceFunction" xml:space="preserve">
+    <value>'{0}' είναι μια άγνωστη ή μη υποστηριζόμενη συνάρτηση στο χώρο ονομάτων '{1}'.</value>
     
   </data>
   <data name="ErrUnSupportedComponentBehaviorInvocation" xml:space="preserve">
@@ -1924,6 +1928,34 @@
   </data>
   <data name="AboutDateTime" xml:space="preserve">
     <value>Δημιουργεί μια τιμή που αναπαριστά μια χρονική στιγμή, η οποία εκφράζεται ως ημερομηνία και ώρα της ημέρας.</value>
+    
+  </data>
+  <data name="AboutDateTime_year" xml:space="preserve">
+    <value>Το έτος.</value>
+    
+  </data>
+  <data name="AboutDateTime_month" xml:space="preserve">
+    <value>Ο μήνας.</value>
+    
+  </data>
+  <data name="AboutDateTime_day" xml:space="preserve">
+    <value>Η ημέρα.</value>
+    
+  </data>
+  <data name="AboutDateTime_hour" xml:space="preserve">
+    <value>Η ώρα.</value>
+    
+  </data>
+  <data name="AboutDateTime_minute" xml:space="preserve">
+    <value>Το λεπτό.</value>
+    
+  </data>
+  <data name="AboutDateTime_second" xml:space="preserve">
+    <value>Το δεύτερο.</value>
+    
+  </data>
+  <data name="AboutDateTime_millisecond" xml:space="preserve">
+    <value>Τα χιλιοστά του δευτερολέπτου.</value>
     
   </data>
   <data name="AboutYear" xml:space="preserve">

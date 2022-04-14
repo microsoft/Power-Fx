@@ -22,12 +22,14 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
     internal partial class Intellisense : IIntellisense
     {
         protected readonly IReadOnlyList<ISuggestionHandler> _suggestionHandlers;
-        protected readonly EnumStore _enumStore;
+        protected readonly IEnumStore _enumStore;
+        protected readonly PowerFxConfig _config;
 
-        public Intellisense(EnumStore enumStore, IReadOnlyList<ISuggestionHandler> suggestionHandlers)
+        public Intellisense(PowerFxConfig config, IEnumStore enumStore, IReadOnlyList<ISuggestionHandler> suggestionHandlers)
         {
             Contracts.AssertValue(suggestionHandlers);
 
+            _config = config;
             _enumStore = enumStore;
             _suggestionHandlers = suggestionHandlers;
         }
@@ -201,7 +203,13 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
 
             foreach (var suggestion in suggestions)
             {
-                if (!suggestion.Type.IsUnknown && type.Accepts(suggestion.Type))
+                if (!suggestion.Type.IsUnknown && 
+
+                    // Most type acceptance is straightforward
+                    (type.Accepts(suggestion.Type) ||
+
+                    // Option Set expected types should also include the option set base as a reccomendation.
+                    (suggestion.Type.IsOptionSet && type.Accepts(DType.CreateOptionSetValueType(suggestion.Type.OptionSetInfo)))))
                 {
                     suggestion.SortPriority++;
                 }
@@ -221,7 +229,7 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
 
         protected internal virtual IntellisenseData.IntellisenseData CreateData(IIntellisenseContext context, DType expectedType, TexlBinding binding, TexlFunction curFunc, TexlNode curNode, int argIndex, int argCount, IsValidSuggestion isValidSuggestionFunc, IList<DType> missingTypes, List<CommentToken> comments)
         {
-            return new IntellisenseData.IntellisenseData(_enumStore, context, expectedType, binding, curFunc, curNode, argIndex, argCount, isValidSuggestionFunc, missingTypes, comments);
+            return new IntellisenseData.IntellisenseData(_config, _enumStore, context, expectedType, binding, curFunc, curNode, argIndex, argCount, isValidSuggestionFunc, missingTypes, comments);
         }
 
         private void GetFunctionAndTypeInformation(IIntellisenseContext context, TexlNode curNode, TexlBinding binding, out TexlFunction curFunc, out int argIndex, out int argCount, out DType expectedType, out IsValidSuggestion isValidSuggestionFunc)
