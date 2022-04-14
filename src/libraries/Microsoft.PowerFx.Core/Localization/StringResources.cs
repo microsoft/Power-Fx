@@ -28,6 +28,8 @@ namespace Microsoft.PowerFx.Core.Localization
         private const string FallbackLocale = "en-US";
 
         private static readonly ResourceManager _resourceManager = new ResourceManager("Microsoft.PowerFx.Core.strings.PowerFxResources", typeof(StringResources).Assembly);
+
+        [ThreadSafeProtectedByLockAttribute("_errorResources")]
         private static readonly Dictionary<string, Dictionary<string, ErrorResource>> _errorResources = new Dictionary<string, Dictionary<string, ErrorResource>>(StringComparer.OrdinalIgnoreCase);
 
         public static ErrorResource GetErrorResource(ErrorResourceKey resourceKey, string locale = null)

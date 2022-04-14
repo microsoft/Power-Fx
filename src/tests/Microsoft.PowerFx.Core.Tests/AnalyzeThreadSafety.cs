@@ -124,6 +124,7 @@ namespace Microsoft.PowerFx.Core.Tests
             typeof(DateTime),
             typeof(System.Text.RegularExpressions.Regex),
             typeof(System.Numerics.BigInteger),
+            typeof(System.Resources.ResourceManager),
         };
 
         // If the instance is readonly, is the type itself immutable ?

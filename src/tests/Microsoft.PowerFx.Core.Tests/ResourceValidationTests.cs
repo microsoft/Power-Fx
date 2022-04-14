@@ -33,19 +33,25 @@ namespace Microsoft.PowerFx.Tests
                 loadedCount++;
             }
 
-            var currentDomain = AppDomain.CurrentDomain;
-            currentDomain.AssemblyLoad += ResourceAssemblyLoadHandler;
+            try 
+            {
+                AppDomain.CurrentDomain.AssemblyLoad += ResourceAssemblyLoadHandler;
 
-            // Fallback locale (en-US) is already loaded above
-            var generalError = StringResources.Get("ErrGeneralError");
-            Assert.Empty(loaded);
+                // Fallback locale (en-US) is already loaded above
+                var generalError = StringResources.Get("ErrGeneralError");
+                Assert.Empty(loaded);
 
-            // Other locales force a new assembly load
-            generalError = StringResources.Get("ErrGeneralError", "de-DE");
-            Assert.Contains("de-DE", loaded);
+                // Other locales force a new assembly load
+                generalError = StringResources.Get("ErrGeneralError", "de-DE");
+                Assert.Contains("de-DE", loaded);
 
-            // No other assemblies were loaded
-            Assert.Equal(1, loadedCount);
+                // No other assemblies were loaded
+                Assert.Equal(1, loadedCount);
+            }
+            finally 
+            {
+                AppDomain.CurrentDomain.AssemblyLoad -= ResourceAssemblyLoadHandler; 
+            }
         }
 
         [Fact]
