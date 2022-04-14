@@ -29,6 +29,7 @@ namespace Microsoft.PowerFx.Core.Localization
         public const string LinkTag = "link";
         public const string LinkTagDisplayTextTag = "value";
         public const string LinkTagUrlTag = "url";
+        public const string LinkTagUrlSuffix = "URL";
 
         internal const string ReswErrorResourcePrefix = "ErrorResource_";
         internal static readonly Dictionary<string, string> ErrorResourceTagToReswSuffix = new Dictionary<string, string>()
