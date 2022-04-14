@@ -11,7 +11,7 @@ using Xunit;
 namespace Microsoft.PowerFx.Core.Tests
 {
     // Tests for validating the TestRunner
-    public class TestRunnerTests
+    public class TestRunnerTests : PowerFxTest
     {
         [Fact]
         public void Test1()

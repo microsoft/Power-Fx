@@ -25,7 +25,7 @@
     <PackageId>Microsoft.PowerFx.Core.Tests</PackageId>
     <Title>Microsoft Power Fx Compiler Tests Core</Title>
     <Description>The core test suite for all Microsoft Power Fx Compiler targets</Description>
-    <Summary>The core test suite for all Microsoft Power Fx Compiler targets</Summary>
+    <Summary>The core test suite for all Microsoft Power Fx Compiler targets</Summary>    
   </PropertyGroup>
 
   <ItemGroup>
