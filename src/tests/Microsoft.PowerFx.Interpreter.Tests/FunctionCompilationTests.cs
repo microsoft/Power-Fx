@@ -19,7 +19,6 @@ namespace Microsoft.PowerFx.Tests
             engine.UpdateVariable("A", 15);
             var check = engine.Check(expression);
             Assert.True(check.IsSuccess);
-            Assert.Null(check.Errors);
             Assert.Equal(FormulaType.String, check.ReturnType);
         }
     }

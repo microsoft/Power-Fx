@@ -98,19 +98,13 @@ namespace Microsoft.PowerFx
 
             var errors = formula.HasParseErrors ? formula.GetParseErrors() : binding.ErrorContainer.GetErrors();
 
-            var result = new CheckResult
+            var result = new CheckResult(errors, binding)
             {
-                _binding = binding,
                 _formula = formula,
             };
 
-            if (errors != null && errors.Any())
-            {
-                result.SetErrors(errors.ToArray());
-                result.Expression = null;
-            }
-            else
-            {
+            if (result.IsSuccess)
+            {                
                 result.TopLevelIdentifiers = DependencyFinder.FindDependencies(binding.Top, binding);
 
                 // TODO: Fix FormulaType.Build to not throw exceptions for Enum types then remove this check
