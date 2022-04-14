@@ -9,7 +9,7 @@ using Xunit;
 
 namespace Microsoft.PowerFx.Core.Tests
 {
-    public class DPathTest 
+    public class DPathTest : PowerFxTest
     {
         [Fact]
         public void TestBasicDPath()

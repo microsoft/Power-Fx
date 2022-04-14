@@ -1,17 +1,28 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System.Globalization;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Public.Types;
+using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Xunit;
 
 namespace Microsoft.PowerFx.Interpreter.Tests
 {
-    public class DisplayNameTests
+    public class DisplayNameTests : PowerFxTest
     {
-        private readonly Engine _engine = new Engine(new PowerFxConfig());
+#pragma warning disable SA1300 // Element should begin with upper-case letter
+        private Engine _engine
+        {
+            get
+            {
+                CultureInfo.CurrentCulture = CultureInfo.GetCultureInfo("en-US");
+                return new Engine(new PowerFxConfig());
+            }
+        }
+#pragma warning restore SA1300 // Element should begin with upper-case letter
 
         [Fact]
         public void CollisionsThrow()

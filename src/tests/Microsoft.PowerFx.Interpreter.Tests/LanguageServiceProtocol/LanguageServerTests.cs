@@ -5,19 +5,19 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Public;
 using Microsoft.PowerFx.Core.Public.Types;
+using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.LanguageServerProtocol;
 using Microsoft.PowerFx.LanguageServerProtocol.Protocol;
 using Xunit;
 
 namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
 {
-    public class LanguageServerTests
-    {
+    public class LanguageServerTests : PowerFxTest
+    {       
         protected static readonly JsonSerializerOptions _jsonSerializerOptions = new JsonSerializerOptions
         {
             PropertyNameCaseInsensitive = true,
@@ -31,9 +31,11 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
 
         public LanguageServerTests()
         {
+            //CultureInfo.CurrentCulture = new CultureInfo("en-US");
+
             // Create an Engine() that has all the builtin symbols by default. 
             // Note that interpreter has fewer symbols. 
-            var engine = new Engine(new PowerFxConfig());
+            var engine = new Engine(new PowerFxConfig(/*new CultureInfo("en-US")*/));
 
             _sendToClientData = new List<string>();
             _scopeFactory = new TestPowerFxScopeFactory((string documentUri) => RecalcEngineScope.FromUri(engine, documentUri));

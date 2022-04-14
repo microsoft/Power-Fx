@@ -2,18 +2,24 @@
 // Licensed under the MIT license.
 
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Threading.Tasks;
+using System.Globalization;
 using Microsoft.PowerFx.Core.Public.Values;
 using Microsoft.PowerFx.Core.Tests;
 using Xunit;
 
 namespace Microsoft.PowerFx.Interpreter.Tests
 {
-    public class TimeTests
+    public class TimeTests : PowerFxTest
     {
-        private readonly RecalcEngine engine = new RecalcEngine();
+        public TimeTests()
+        {
+            //CultureInfo.CurrentCulture = new CultureInfo("en-US");
+            engine = new RecalcEngine(); 
+        }
+
+#pragma warning disable IDE0044 // Add readonly modifier
+        private RecalcEngine engine;
+#pragma warning restore IDE0044 // Add readonly modifier
 
         [Fact]
         public void TestTimeZoneOffsetNonDST()

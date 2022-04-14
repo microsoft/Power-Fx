@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System.Globalization;
 using System.Linq;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Functions;
@@ -12,6 +13,11 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
 {
     public class SuggestTests : IntellisenseTestBase
     {
+        public SuggestTests()
+        {
+            CultureInfo.CurrentCulture = new CultureInfo("en-us");
+        }
+
         /// <summary>
         /// This method does the same as <see cref="Suggest"/>, but filters the suggestions by their text so
         /// that they can be more easily compared.
@@ -34,13 +40,36 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
             return intellisense.Suggestions.Select(suggestion => suggestion.DisplayText.Text).ToArray();
         }
 
-        private readonly PowerFxConfig _default = PowerFxConfig.BuildWithEnumStore(null, new EnumStoreBuilder().WithDefaultEnums());
+#pragma warning disable SA1300 // Element should begin with upper-case letter
+        private PowerFxConfig _default
+        {
+            get
+            {
+                CultureInfo.CurrentCulture = new CultureInfo("en-US");
+                return PowerFxConfig.BuildWithEnumStore(null, new EnumStoreBuilder().WithDefaultEnums());
+            }
+        }
 
         // No enums, no functions. Adding functions will add back in associated enums, so to be truly empty, ensure no functions. 
-        private readonly PowerFxConfig _emptyEverything = PowerFxConfig.BuildWithEnumStore(null, new EnumStoreBuilder(), new TexlFunction[0]);
+        private PowerFxConfig _emptyEverything
+        {
+            get
+            {
+                CultureInfo.CurrentCulture = new CultureInfo("en-US");
+                return PowerFxConfig.BuildWithEnumStore(null, new EnumStoreBuilder(), new TexlFunction[0]);
+            }
+        }
         
         // No extra enums, but standard functions (which will include some enums).
-        private readonly PowerFxConfig _minimalEnums = PowerFxConfig.BuildWithEnumStore(null, new EnumStoreBuilder().WithRequiredEnums(BuiltinFunctionsCore.BuiltinFunctionsLibrary));
+        private PowerFxConfig _minimalEnums
+        {
+            get
+            {
+                CultureInfo.CurrentCulture = new CultureInfo("en-US");
+                return PowerFxConfig.BuildWithEnumStore(null, new EnumStoreBuilder().WithRequiredEnums(BuiltinFunctionsCore.BuiltinFunctionsLibrary));
+            }
+        }
+#pragma warning restore SA1300 // Element should begin with upper-case letter
 
         /// <summary>
         /// Compares expected suggestions with suggestions made by PFx Intellisense for a given

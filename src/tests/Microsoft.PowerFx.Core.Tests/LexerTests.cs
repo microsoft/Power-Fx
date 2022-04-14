@@ -14,7 +14,7 @@ using Xunit;
 
 namespace Microsoft.PowerFx.Core.Tests
 {
-    public sealed class LexerTests
+    public sealed class LexerTests : PowerFxTest
     {
         private void AssertTokens(string value, params TokKind[] tokKinds)
         {

@@ -4,18 +4,19 @@
 using System.Linq;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Public.Types;
+using Microsoft.PowerFx.Core.Tests;
 using Xunit;
 
 namespace Microsoft.PowerFx.Tests
 {
-    public class BindingEngineTests
-    {
+    public class BindingEngineTests : PowerFxTest
+    {       
         [Fact]
         public void CheckSuccess()
         {
             var config = new PowerFxConfig();
             var engine = new Engine(config);
-                        
+
             var result = engine.Check(
                 "3*2+x",
                 new RecordType().Add(
