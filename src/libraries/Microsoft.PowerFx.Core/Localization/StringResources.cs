@@ -27,7 +27,7 @@ namespace Microsoft.PowerFx.Core.Localization
 
         private const string FallbackLocale = "en-US";
 
-        private static readonly ResourceManager _resourceManager = new ResourceManager("Microsoft.PowerFx.Core.strings.PowerFxResources", typeof(StringResources).Assembly);
+        private static readonly ThreadSafeResouceManager _resourceManager = new ThreadSafeResouceManager();
 
         [ThreadSafeProtectedByLockAttribute("_errorResources")]
         private static readonly Dictionary<string, Dictionary<string, ErrorResource>> _errorResources = new Dictionary<string, Dictionary<string, ErrorResource>>(StringComparer.OrdinalIgnoreCase);
@@ -87,19 +87,9 @@ namespace Microsoft.PowerFx.Core.Localization
             Contracts.CheckValue(resourceKey, nameof(resourceKey));
             Contracts.CheckValueOrNull(locale, nameof(locale));
 
-            resourceValue = GetLocaleResource(resourceKey, locale);
+            resourceValue = _resourceManager.GetLocaleResource(resourceKey, locale);
 
             return resourceValue != null ? true : (ExternalStringResources?.TryGet(resourceKey, out resourceValue, locale) ?? false);
-        }
-
-        private static string GetLocaleResource(string resourceKey, string locale)
-        {
-            if (string.IsNullOrEmpty(locale))
-            {
-                return _resourceManager.GetString(resourceKey);
-            }
-
-            return _resourceManager.GetString(resourceKey, CultureInfo.CreateSpecificCulture(locale));
         }
 
         public static bool TryGetErrorResource(ErrorResourceKey resourceKey, out ErrorResource resourceValue, string locale = null)
@@ -153,7 +143,7 @@ namespace Microsoft.PowerFx.Core.Localization
             {
                 if (!ErrorResource.IsTagMultivalue(tag.Key))
                 {
-                    var member = GetLocaleResource(ErrorResource.ReswErrorResourcePrefix + key + tag.Value, locale);
+                    var member = _resourceManager.GetLocaleResource(ErrorResource.ReswErrorResourcePrefix + key + tag.Value, locale);
                     if (member != null)
                     {
                         // Single valued tag, we use index=0 here when inserting
@@ -166,7 +156,7 @@ namespace Microsoft.PowerFx.Core.Localization
                     for (var i = 1; i < 11; ++i)
                     {
                         var resourceName = ErrorResource.ReswErrorResourcePrefix + key + tag.Value + "_" + i;
-                        var member = GetLocaleResource(resourceName, locale);
+                        var member = _resourceManager.GetLocaleResource(resourceName, locale);
                         if (member == null)
                         {
                             break;
@@ -184,7 +174,7 @@ namespace Microsoft.PowerFx.Core.Localization
                         if (tag.Key == ErrorResource.LinkTag)
                         {
                             // This must exist, and the AssertValue call will fail CI builds if the resource is incorrectly defined. 
-                            var link = GetLocaleResource(resourceName + "_" + ErrorResource.LinkTagUrlSuffix, locale);
+                            var link = _resourceManager.GetLocaleResource(resourceName + "_" + ErrorResource.LinkTagUrlSuffix, locale);
                             Contracts.AssertValue(link);
 
                             if (!members.TryGetValue(ErrorResource.LinkTagUrlTag, out var linkKeys))
@@ -210,5 +200,23 @@ namespace Microsoft.PowerFx.Core.Localization
                 return false;
             }
         }
+
+        [ThreadSafeImmutable]
+        private class ThreadSafeResouceManager
+        {
+            // Get methods on this are threadsafe, as long as we never call ReleaseAll()
+            // This wrapper ensures that we don't accidentally do that
+            private readonly ResourceManager _resourceManager = new ResourceManager("Microsoft.PowerFx.Core.strings.PowerFxResources", typeof(StringResources).Assembly);
+
+            public string GetLocaleResource(string resourceKey, string locale)
+            {
+                if (string.IsNullOrEmpty(locale))
+                {
+                    return _resourceManager.GetString(resourceKey);
+                }
+
+                return _resourceManager.GetString(resourceKey, CultureInfo.CreateSpecificCulture(locale));
+            }
+        } 
     }
 }
