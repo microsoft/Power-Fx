@@ -172,15 +172,15 @@ namespace Microsoft.PowerFx.Core.Tests
             }
 
             try
-            {                
+            {
                 runResult = await RunAsyncInternal(testCase.Input, testCase.SetupHandlerName);
                 result = runResult.Value;
-                                
-                // Unsupported is just for ignoring large groups of inherited tests. 
-                // If it's an override, then the override should specify the exact error.
-                if (!testCase.IsOverride && runResult.UnsupportedReason != null)
+
+                if (testCase.IsOverride)
                 {
-                    return (TestResult.Skip, "Unsupported in this engine: " + runResult.UnsupportedReason);
+                    // Unsupported is just for ignoring large groups of inherited tests. 
+                    // If it's an override, then the override should specify the exact error.
+                    runResult.UnsupportedReason = null;
                 }
 
                 // Check for a compile-time error.
@@ -199,6 +199,10 @@ namespace Microsoft.PowerFx.Core.Tests
                         {
                             // Compiler errors result in exceptions
                             return (TestResult.Pass, null);
+                        }
+                        else if (runResult.UnsupportedReason != null)
+                        {
+                            return (TestResult.Skip, "Unsupported in this engine: " + runResult.UnsupportedReason);
                         }
                         else
                         {
@@ -267,6 +271,13 @@ namespace Microsoft.PowerFx.Core.Tests
                 }
 
                 // If the actual result is not an error, we'll fail with a mismatch below
+            }
+            else
+            {
+                if (runResult.UnsupportedReason != null)
+                {
+                    return (TestResult.Skip, "Unsupported in this engine: " + runResult.UnsupportedReason);
+                }
             }
 
             if (result == null)

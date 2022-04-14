@@ -13,16 +13,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 {
     public class DisplayNameTests : PowerFxTest
     {
-#pragma warning disable SA1300 // Element should begin with upper-case letter
-        private Engine _engine
-        {
-            get
-            {
-                CultureInfo.CurrentCulture = CultureInfo.GetCultureInfo("en-US");
-                return new Engine(new PowerFxConfig());
-            }
-        }
-#pragma warning restore SA1300 // Element should begin with upper-case letter
+        private readonly Engine _engine = new Engine(new PowerFxConfig());
 
         [Fact]
         public void CollisionsThrow()

@@ -10,7 +10,7 @@ using Microsoft.PowerFx.Core.Public.Types;
 using Microsoft.PowerFx.Core.Public.Values;
 
 namespace Microsoft.PowerFx.Core.Tests
-{   
+{
     /// <summary>
     /// Parse test files and invoke runners to execute them. 
     /// </summary>
@@ -80,7 +80,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 return true;
             }
 
-            return false;  
+            return false;
         }
 
         public void AddFile(string thisFile)
@@ -101,9 +101,9 @@ namespace Microsoft.PowerFx.Core.Tests
             // #Directive: Parameter
             string fileSetup = null;
             string fileOveride = null;
-            
+
             while (i < lines.Length - 1)
-            {               
+            {
                 var line = lines[i + 1];
                 if (string.IsNullOrWhiteSpace(line) || line.StartsWith("//"))
                 {
@@ -120,7 +120,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
                         // Will remove all cases in this file.
                         // Can apply to multiple files. 
-                        var countRemoved = Tests.RemoveAll(test => string.Equals(Path.GetFileName(test.SourceFile), fileDisable, StringComparison.OrdinalIgnoreCase));                        
+                        var countRemoved = Tests.RemoveAll(test => string.Equals(Path.GetFileName(test.SourceFile), fileDisable, StringComparison.OrdinalIgnoreCase));
                     }
                     else if (TryParseDirective(line, "#SETUP:", ref fileSetup) ||
                       TryParseDirective(line, "#OVERRIDE:", ref fileOveride))
@@ -134,10 +134,10 @@ namespace Microsoft.PowerFx.Core.Tests
 
                     i++;
                     continue;
-                }                
+                }
 
-                break;                
-            }            
+                break;
+            }
 
             while (true)
             {
@@ -180,7 +180,7 @@ namespace Microsoft.PowerFx.Core.Tests
                     // handle engine-specific results
                     if (line.StartsWith("/*"))
                     {
-                        throw new InvalidOperationException($"Multiline comments aren't supported in output");                        
+                        throw new InvalidOperationException($"Multiline comments aren't supported in output");
                     }
 
                     test.Expected = line.Trim();
@@ -207,8 +207,8 @@ namespace Microsoft.PowerFx.Core.Tests
                     }
 
                     test = null;
-                } 
-                else 
+                }
+                else
                 {
                     throw new InvalidOperationException($"Parse error at {Path.GetFileName(thisFile)} on line {i}");
                 }
@@ -220,28 +220,56 @@ namespace Microsoft.PowerFx.Core.Tests
             }
         }
 
-        public TestRunFullResults RunTests()
+        public (int total, int failed, int passed, string output) RunTests()
         {
-            var summary = new TestRunFullResults();
-
             if (_runners.Length == 0)
             {
                 throw new InvalidOperationException($"Need to specify a runner to run tests");
             }
 
+            var total = 0;
+            var fail = 0;
+            var pass = 0;
+            var sb = new StringBuilder();
+
             foreach (var testCase in Tests)
             {
                 foreach (var runner in _runners)
                 {
+                    total++;
+
                     var engineName = runner.GetName();
 
                     var (result, msg) = runner.RunAsync(testCase).Result;
 
-                    summary.AddResult(testCase, result, engineName, msg);                  
+                    var prefix = $"Test {Path.GetFileName(testCase.SourceFile)}:{testCase.SourceLine}: ";
+                    switch (result)
+                    {
+                        case TestResult.Pass:
+                            pass++;
+                            sb.Append(".");
+                            break;
+
+                        case TestResult.Fail:
+                            sb.AppendLine();
+                            sb.AppendLine($"FAIL: {engineName}, {Path.GetFileName(testCase.SourceFile)}:{testCase.SourceLine}");
+                            sb.AppendLine($"FAIL: {testCase.Input}");
+                            sb.AppendLine($"{msg}");
+                            sb.AppendLine();
+                            fail++;
+                            break;
+
+                        case TestResult.Skip:
+                            sb.Append("-");
+                            break;
+                    }
                 }
             }
 
-            return summary;
+            sb.AppendLine();
+            sb.AppendLine($"{total} total. {pass} passed. {fail} failed");
+            Console.WriteLine(sb.ToString());
+            return (total, fail, pass, sb.ToString());
         }
 
         public static string TestToString(FormulaValue result)

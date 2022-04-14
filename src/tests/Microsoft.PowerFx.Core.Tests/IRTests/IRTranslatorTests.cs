@@ -14,26 +14,18 @@ namespace Microsoft.PowerFx.Core.Tests
 {
     public class IRTranslatorTests : PowerFxTest
     {
-#pragma warning disable SA1300 // Element should begin with upper-case letter
-        private EnumStore _enumStore
-        {
-            get
-            {
-                CultureInfo.CurrentCulture = new CultureInfo("en-US");
-                return new EnumStoreBuilder().WithDefaultEnums().Build();
-            }
-        }
-#pragma warning restore SA1300 // Element should begin with upper-case letter
+        private readonly EnumStore _enumStore = new EnumStoreBuilder().WithDefaultEnums().Build();
 
         [Theory]
         [InlineData("CountIf(numtable, val > 0)", ">", typeof(BooleanType))]
         [InlineData("Sum(numtable, Sum(val,0))", "Sum(val,0)", typeof(NumberType))]
         public void TestLazyEvalNode(string expression, string expectedFragment, Type type)
         {
-            CultureInfo.CurrentCulture = new CultureInfo("en-US");
+            var tableType = new TableType()
+                .Add(new NamedFormulaType("val", FormulaType.Number));
 
-            var tableType = new TableType().Add(new NamedFormulaType("val", FormulaType.Number));
-            var parameterType = new RecordType().Add(new NamedFormulaType("numtable", tableType));
+            var parameterType = new RecordType()
+                .Add(new NamedFormulaType("numtable", tableType));
 
             var engine = new Engine(new PowerFxConfig());
             var result = engine.Check(expression, parameterType);

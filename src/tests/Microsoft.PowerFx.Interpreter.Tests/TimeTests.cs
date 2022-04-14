@@ -10,7 +10,6 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 {
     public class TimeTests : PowerFxTest
     {
-
         private readonly RecalcEngine engine = new RecalcEngine();
 
         [Fact]

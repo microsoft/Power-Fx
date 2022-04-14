@@ -15,7 +15,7 @@ using Xunit;
 
 namespace Microsoft.PowerFx.Interpreter.Tests
 {
-    public class ExpressionEvaluationTests
+    public class ExpressionEvaluationTests : PowerFxTest
     {
         internal static Dictionary<string, Func<(RecalcEngine engine, RecordValue parameters)>> SetupHandlers = new Dictionary<string, Func<(RecalcEngine engine, RecordValue parameters)>>() 
         {
@@ -37,8 +37,6 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                     { "35694", "OptionC" },
                     { "123412983", "OptionD" },
             }));
-
-            CultureInfo.CurrentCulture = new CultureInfo("en-US");
 
             var config = new PowerFxConfig(null);
             config.AddOptionSet(optionSet);
@@ -62,7 +60,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             // task completion status.. 
             private async Task<FormulaValue> RunVerifyAsync(string expr)
             {
-                var config = new PowerFxConfig(new CultureInfo("en-US"));
+                var config = new PowerFxConfig(null);
 
                 var verify = new AsyncVerify();
 

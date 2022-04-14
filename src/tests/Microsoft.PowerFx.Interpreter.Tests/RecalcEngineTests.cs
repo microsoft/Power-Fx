@@ -149,11 +149,6 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public void RecalcNoExtraCallbacks()
         {
-            if (CultureInfo.CurrentCulture.Name != "en-US")
-            {
-                throw new Exception("Invalid Culture!");
-            }
-
             var engine = new RecalcEngine();
             engine.UpdateVariable("A1", 1);
             engine.UpdateVariable("A2", 5);
@@ -273,19 +268,6 @@ namespace Microsoft.PowerFx.Tests
             Assert.True(result.ReturnType is NumberType);
             Assert.Single(result.TopLevelIdentifiers);
             Assert.Equal("x", result.TopLevelIdentifiers.First());
-        }
-
-        [Fact]
-        public void CheckSuccessWarning()
-        {
-            var engine = new RecalcEngine();
-
-            // issues a warning, verify it's still successful.
-            var result = engine.Check("Filter([1,2,3],true)");
-
-            Assert.True(result.IsSuccess);
-            Assert.Equal(1, result.Errors.Count(x => x.Severity == Core.Errors.DocumentErrorSeverity.Warning));
-            Assert.NotNull(result.Expression);
         }
 
         [Fact]
