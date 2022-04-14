@@ -11,6 +11,7 @@ namespace Microsoft.PowerFx.Core.Localization
     //
     // Existing keys for error messages are split between here (for general document errors) and
     // Strings.cs (for Texl errors).
+    [ThreadSafeImmutable]
     public struct ErrorResourceKey
     {
         public string Key { get; }

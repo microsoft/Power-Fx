@@ -18,7 +18,7 @@ namespace Microsoft.PowerFx.Core.Lexer.Tokens
             return "\"";
         }
 
-        public override Token Clone(Span ts)
+        internal override Token Clone(Span ts)
         {
             return new StrInterpEndToken(ts);
         }

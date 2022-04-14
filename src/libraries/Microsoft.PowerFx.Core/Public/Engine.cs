@@ -7,6 +7,7 @@ using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Glue;
 using Microsoft.PowerFx.Core.Lexer;
+using Microsoft.PowerFx.Core.Lexer.Tokens;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Parser;
 using Microsoft.PowerFx.Core.Public;
@@ -59,6 +60,14 @@ namespace Microsoft.PowerFx
         }
 
         /// <summary>
+        ///     Tokenize an expression to a sequence of <see cref="Token" />s.
+        /// </summary>
+        /// <param name="expressionText"></param>
+        /// <returns></returns>
+        public IReadOnlyList<Token> Tokenize(string expressionText)
+            => TexlLexer.LocalizedInstance.GetTokens(expressionText);
+
+        /// <summary>
         /// Type check a formula without executing it. 
         /// </summary>
         /// <param name="expressionText"></param>
@@ -89,19 +98,13 @@ namespace Microsoft.PowerFx
 
             var errors = formula.HasParseErrors ? formula.GetParseErrors() : binding.ErrorContainer.GetErrors();
 
-            var result = new CheckResult
+            var result = new CheckResult(errors, binding)
             {
-                _binding = binding,
                 _formula = formula,
             };
 
-            if (errors != null && errors.Any())
-            {
-                result.SetErrors(errors.ToArray());
-                result.Expression = null;
-            }
-            else
-            {
+            if (result.IsSuccess)
+            {                
                 result.TopLevelIdentifiers = DependencyFinder.FindDependencies(binding.Top, binding);
 
                 // TODO: Fix FormulaType.Build to not throw exceptions for Enum types then remove this check
@@ -133,7 +136,7 @@ namespace Microsoft.PowerFx
         /// <returns></returns>
         private protected virtual IIntellisense CreateIntellisense()
         {
-            return IntellisenseProvider.GetIntellisense(Config.EnumStoreBuilder.Build());
+            return IntellisenseProvider.GetIntellisense(Config);
         }
 
         /// <summary>

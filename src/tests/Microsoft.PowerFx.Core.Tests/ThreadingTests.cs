@@ -34,8 +34,6 @@ namespace Microsoft.PowerFx.Core.Tests
                 "DateAddFunction.SubDayStringList",
                 "PrettyPrintVisitor.BinaryPrecedence",
                 "ErrorResource.ErrorResourceTagToReswSuffix",
-                "StringResources.Strings",
-                "StringResources.ErrorResources",
                 "DelegationCapability._binaryOpToDelegationCapabilityMap",
                 "DelegationCapability._unaryOpToDelegationCapabilityMap",
                 "DelegationCapability._operatorToDelegationCapabilityMap",

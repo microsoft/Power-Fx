@@ -28,7 +28,7 @@ namespace Microsoft.PowerFx.Core.Public
         public HashSet<string> TopLevelIdentifiers { get; set; }
 
         /// <summary>
-        /// null on success, else contains errors. 
+        /// List of errors or warnings. Check <see cref="ExpressionError.Severity"/>.
         /// </summary>
         public ExpressionError[] Errors { get; set; }
 
@@ -37,7 +37,10 @@ namespace Microsoft.PowerFx.Core.Public
         /// </summary>
         public IExpression Expression { get; set; }
 
-        public virtual bool IsSuccess => Errors == null;
+        /// <summary>
+        /// True if no errors. 
+        /// </summary>
+        public bool IsSuccess => Errors == null || !Errors.Any(x => x.Severity > DocumentErrorSeverity.Warning);
 
         internal TexlBinding _binding;
 
@@ -66,19 +69,21 @@ namespace Microsoft.PowerFx.Core.Public
 
         internal CheckResult SetErrors(IEnumerable<IDocumentError> errors)
         {
-            Errors = errors.Select(x => new ExpressionError
+            if (errors == null)
             {
-                Message = x.ShortMessage,
-                Span = x.TextSpan,
-                Severity = x.Severity,
-                MessageKey = x.MessageKey
-            }).ToArray();
-
-            if (Errors.Length == 0)
-            {
-                Errors = null;
+                Errors = new ExpressionError[0];
             }
-
+            else
+            {
+                Errors = errors.Select(x => new ExpressionError
+                {
+                    Message = x.ShortMessage,
+                    Span = x.TextSpan,
+                    Severity = x.Severity,
+                    MessageKey = x.MessageKey
+                }).ToArray();
+            }
+            
             return this;
         }
     }
