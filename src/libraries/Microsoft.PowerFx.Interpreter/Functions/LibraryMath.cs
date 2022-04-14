@@ -440,10 +440,14 @@ namespace Microsoft.PowerFx.Functions
         // https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-mod
         public static FormulaValue Mod(IRContext irContext, NumberValue[] args)
         {
-            var arg0 = args[0];
-            var arg1 = args[1];
+            var arg0 = args[0].Value;
+            var arg1 = args[1].Value;
 
-            return new NumberValue(irContext, arg0.Value % arg1.Value);
+            // r = a – N × floor(a/b)
+            var q = (int)Math.Floor(arg0 / arg1);
+            var result = arg0 - (arg1 * q);
+
+            return new NumberValue(irContext, result);
         }
 
         // https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-sequence
