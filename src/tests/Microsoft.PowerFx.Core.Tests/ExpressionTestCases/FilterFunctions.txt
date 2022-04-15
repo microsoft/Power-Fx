@@ -2,10 +2,6 @@
 >> Filter([1,2,3] As X, X.Value > 2)
 [3]
 
-// succeeds with warning
->> Filter([1, 2, 3], true)
-[1,2,3]
-
 // 'ThisRecord is implicit'
 >> Filter([1,2,3], Value >= 2)
 [2,3]

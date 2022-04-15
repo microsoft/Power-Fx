@@ -7,13 +7,14 @@ using System.Linq;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.Json;
+using Microsoft.PowerFx.Core.Tests;
 
 namespace Microsoft.PowerFx.Tests
 {
     // From: https://github.com/microsoft/PowerApps-Language-Tooling/blob/master/src/PAModel/Utility/JsonNormalizer.cs
     // Write out Json in a normalized sorted order. 
     // Orders properties, whitespace/indenting, etc. 
-    public class JsonNormalizer
+    public class JsonNormalizer : PowerFxTest
     {
         public static string Normalize(string jsonStr)
         {

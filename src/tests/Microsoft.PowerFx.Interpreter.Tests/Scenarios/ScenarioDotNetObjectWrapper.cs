@@ -2,22 +2,18 @@
 // Licensed under the MIT license.
 
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Globalization;
 using System.Reflection;
-using Microsoft.PowerFx;
-using Microsoft.PowerFx.Core;
-using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Public.Types;
 using Microsoft.PowerFx.Core.Public.Values;
+using Microsoft.PowerFx.Core.Tests;
 using Xunit;
 
 namespace Microsoft.PowerFx.Interpreter.Tests
 {
     // Demonstrate lazy dynamic marshalling 
-    public class ScenarioDotNetObjectWrapper
-    {
+    public class ScenarioDotNetObjectWrapper : PowerFxTest
+    {        
         private class TestObj
         {
             public int Value { get; set; }

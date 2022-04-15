@@ -1,17 +1,25 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System.Globalization;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Public.Types;
+using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Xunit;
 
 namespace Microsoft.PowerFx.Interpreter.Tests
 {
-    public class DisplayNameTests
+    public class DisplayNameTests : PowerFxTest
     {
-        private readonly Engine _engine = new Engine(new PowerFxConfig());
+        public DisplayNameTests()
+            : base()
+        {
+            _engine = new Engine(new PowerFxConfig());
+        }
+
+        private readonly Engine _engine;
 
         [Fact]
         public void CollisionsThrow()

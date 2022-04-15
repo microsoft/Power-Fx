@@ -8,7 +8,7 @@ using Xunit;
 
 namespace Microsoft.PowerFx.Core.Tests
 {
-    public class NamedFormulasTests
+    public class NamedFormulasTests : PowerFxTest
     {
         [Theory]
         [InlineData("x=1;y=2;")]

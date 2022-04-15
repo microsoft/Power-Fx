@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,6 +12,7 @@ using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Public;
 using Microsoft.PowerFx.Core.Public.Types;
 using Microsoft.PowerFx.Core.Public.Values;
+using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
@@ -19,7 +21,7 @@ using Xunit.Sdk;
 
 namespace Microsoft.PowerFx.Tests
 {
-    public class RecalcEngineTests
+    public class RecalcEngineTests : PowerFxTest
     {
         [Fact]
         public void PublicSurfaceTests()
@@ -266,19 +268,6 @@ namespace Microsoft.PowerFx.Tests
             Assert.True(result.ReturnType is NumberType);
             Assert.Single(result.TopLevelIdentifiers);
             Assert.Equal("x", result.TopLevelIdentifiers.First());
-        }
-
-        [Fact]
-        public void CheckSuccessWarning()
-        {
-            var engine = new RecalcEngine();
-
-            // issues a warning, verify it's still successful.
-            var result = engine.Check("Filter([1,2,3],true)");
-
-            Assert.True(result.IsSuccess);
-            Assert.Equal(1, result.Errors.Count(x => x.Severity == Core.Errors.DocumentErrorSeverity.Warning));
-            Assert.NotNull(result.Expression);
         }
 
         [Fact]

@@ -4,13 +4,14 @@
 using System.Collections.Generic;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Public.Types;
+using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Core.Utils;
 using Xunit;
 
 namespace Microsoft.PowerFx.Interpreter.Tests
 {
     // OptionSets are only in the interpreter. If we move to core, we can move these tests to core too.
-    public class DisplayNameOptionSetTests
+    public class DisplayNameOptionSetTests : PowerFxTest
     {
         [Theory]
         [InlineData("OptionSet.Option1 <> OptionSet.Option2", "OptionSet.option_1 <> OptionSet.option_2", false, "")]
