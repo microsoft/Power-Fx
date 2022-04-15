@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Globalization;
 using System.Linq;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Tests;
@@ -50,7 +51,38 @@ namespace Microsoft.PowerFx.Tests
         }
 
         [Fact]
-        public void TestErrorResourceImport()
+        public void TestResourceImportUsesCurrentUICulture()
+        {
+            var initialCulture = CultureInfo.CurrentUICulture;
+
+            var loaded = string.Empty;
+            var loadedCount = 0;
+            void ResourceAssemblyLoadHandler(object sender, AssemblyLoadEventArgs args)
+            {
+                loaded = args.LoadedAssembly.FullName;
+                loadedCount++;
+            }
+
+            try 
+            {
+                AppDomain.CurrentDomain.AssemblyLoad += ResourceAssemblyLoadHandler;
+                CultureInfo.CurrentUICulture = CultureInfo.CreateSpecificCulture("fr-FR");
+
+                var generalError = StringResources.Get("ErrGeneralError");
+                Assert.Contains("fr-FR", loaded);
+
+                // No other assemblies were loaded
+                Assert.Equal(1, loadedCount);
+            }
+            finally
+            {
+                CultureInfo.CurrentUICulture = initialCulture;
+                AppDomain.CurrentDomain.AssemblyLoad -= ResourceAssemblyLoadHandler; 
+            }
+        }        
+
+        [Fact]
+        public void TestNonEnUSLoads()
         {
             var error = StringResources.GetErrorResource(TexlStrings.ErrIncompatibleTypesForEquality_Left_Right);
 
