@@ -25,8 +25,6 @@ namespace Microsoft.PowerFx.Core.Localization
         // If the dependency on ExternalStringResources is removed, this can be as well
         public static bool ShouldThrowIfMissing { get; set; } = true;
 
-        private const string FallbackLocale = "en-US";
-
         private static readonly ThreadSafeResouceManager _resourceManager = new ThreadSafeResouceManager();
 
         [ThreadSafeProtectedByLockAttribute("_errorResources")]
