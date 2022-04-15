@@ -1630,7 +1630,11 @@
     
   </data>
   <data name="ErrUnknownFunction" xml:space="preserve">
-    <value>Pozivanje nepoznate ili nepodržane funkcije.</value>
+    <value>„{0}” je nepoznata ili nepodržana funkcija.</value>
+    
+  </data>
+  <data name="ErrUnknownNamespaceFunction" xml:space="preserve">
+    <value>„{0}” je nepoznata ili nepodržana funkcija u prostoru za naziv „{1}”.</value>
     
   </data>
   <data name="ErrUnSupportedComponentBehaviorInvocation" xml:space="preserve">
@@ -1924,6 +1928,34 @@
   </data>
   <data name="AboutDateTime" xml:space="preserve">
     <value>Izradite vrijednost koja predstavlja jedan vremenski trenutak, izražen kao datum i doba dana.</value>
+    
+  </data>
+  <data name="AboutDateTime_year" xml:space="preserve">
+    <value>Godina.</value>
+    
+  </data>
+  <data name="AboutDateTime_month" xml:space="preserve">
+    <value>Mjesec.</value>
+    
+  </data>
+  <data name="AboutDateTime_day" xml:space="preserve">
+    <value>Dan.</value>
+    
+  </data>
+  <data name="AboutDateTime_hour" xml:space="preserve">
+    <value>Sat.</value>
+    
+  </data>
+  <data name="AboutDateTime_minute" xml:space="preserve">
+    <value>Minuta.</value>
+    
+  </data>
+  <data name="AboutDateTime_second" xml:space="preserve">
+    <value>Sekunde.</value>
+    
+  </data>
+  <data name="AboutDateTime_millisecond" xml:space="preserve">
+    <value>Milisekunde.</value>
     
   </data>
   <data name="AboutYear" xml:space="preserve">

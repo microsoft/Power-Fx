@@ -1630,7 +1630,11 @@
     
   </data>
   <data name="ErrUnknownFunction" xml:space="preserve">
-    <value>Aufruf einer unbekannten oder nicht unterstützten Funktion.</value>
+    <value>„{0}“ ist eine unbekannte oder nicht unterstützte Funktion.</value>
+    
+  </data>
+  <data name="ErrUnknownNamespaceFunction" xml:space="preserve">
+    <value>„{0}“ ist eine unbekannte oder nicht unterstützte Funktion im Namespace „{1}“.</value>
     
   </data>
   <data name="ErrUnSupportedComponentBehaviorInvocation" xml:space="preserve">
@@ -1924,6 +1928,34 @@
   </data>
   <data name="AboutDateTime" xml:space="preserve">
     <value>Erstellt einen Wert, der einen Zeitpunkt darstellt, ausgedrückt als Datum und Uhrzeit des Tages.</value>
+    
+  </data>
+  <data name="AboutDateTime_year" xml:space="preserve">
+    <value>Das Jahr.</value>
+    
+  </data>
+  <data name="AboutDateTime_month" xml:space="preserve">
+    <value>Der Monat.</value>
+    
+  </data>
+  <data name="AboutDateTime_day" xml:space="preserve">
+    <value>Der Tag.</value>
+    
+  </data>
+  <data name="AboutDateTime_hour" xml:space="preserve">
+    <value>Die Stunde.</value>
+    
+  </data>
+  <data name="AboutDateTime_minute" xml:space="preserve">
+    <value>Die Minute.</value>
+    
+  </data>
+  <data name="AboutDateTime_second" xml:space="preserve">
+    <value>Die Sekunde.</value>
+    
+  </data>
+  <data name="AboutDateTime_millisecond" xml:space="preserve">
+    <value>Die Millisekunden.</value>
     
   </data>
   <data name="AboutYear" xml:space="preserve">

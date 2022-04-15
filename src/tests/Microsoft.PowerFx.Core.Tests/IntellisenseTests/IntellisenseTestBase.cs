@@ -25,14 +25,6 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         /// <returns></returns>
         internal IIntellisenseResult Suggest(string expression, PowerFxConfig config, string contextTypeString = null)
         {
-            Assert.NotNull(expression);
-
-            var cursorMatches = Regex.Matches(expression, @"\|");
-            Assert.True(cursorMatches.Count == 1, "Invalid cursor.  Exactly one cursor must be specified.");
-            var cursorPosition = cursorMatches.First().Index;
-
-            expression = expression.Replace("|", string.Empty);
-
             RecordType contextType;
             if (contextTypeString != null)
             {
@@ -47,7 +39,20 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
                 contextType = new RecordType();
             }
 
-            return Suggest(expression, contextType, cursorPosition, config);
+            return Suggest(expression, config, contextType);
+        }
+
+        internal IIntellisenseResult Suggest(string expression, PowerFxConfig config, RecordType parameterType)
+        {
+            Assert.NotNull(expression);
+
+            var cursorMatches = Regex.Matches(expression, @"\|");
+            Assert.True(cursorMatches.Count == 1, "Invalid cursor.  Exactly one cursor must be specified.");
+            var cursorPosition = cursorMatches.First().Index;
+
+            expression = expression.Replace("|", string.Empty);
+
+            return Suggest(expression, parameterType, cursorPosition, config);
         }
 
         internal IIntellisenseResult Suggest(string expression, RecordType parameterType, int cursorPosition, PowerFxConfig config)

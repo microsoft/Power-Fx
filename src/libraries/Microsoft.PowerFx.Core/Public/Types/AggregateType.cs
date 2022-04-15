@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.PowerFx.Core.Types;
@@ -13,6 +14,26 @@ namespace Microsoft.PowerFx.Core.Public.Types
         internal AggregateType(DType type)
             : base(type)
         {
+        }
+
+        public FormulaType MaybeGetFieldType(string fieldName)
+        {
+            // $$$ Better lookup
+            foreach (var field in GetNames())
+            {
+                if (field.Name == fieldName)
+                {
+                    return field.Type;
+                }
+            }
+
+            return null;
+        }
+
+        public FormulaType GetFieldType(string fieldName)
+        {
+            return MaybeGetFieldType(fieldName) ??
+                throw new InvalidOperationException($"No field {fieldName}");
         }
 
         // Enumerate fields

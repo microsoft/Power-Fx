@@ -359,19 +359,40 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
             var isAsync = binding.IsAsync(node);
             var isPure = binding.IsPure(node);
 
-            if (node is DottedNameNode &&
-                ((binding.GetType(node.AsDottedName().Left).Kind == DKind.OptionSet && binding.GetType(node).Kind == DKind.OptionSetValue) ||
-                (binding.GetType(node.AsDottedName().Left).Kind == DKind.View && binding.GetType(node).Kind == DKind.ViewValue)))
+            if (node is DottedNameNode dottedNameNode)
             {
-                // OptionSet and View Access are delegable despite being async
-                return true;
+                var leftType = binding.GetType(dottedNameNode.Left);
+                var nodeType = binding.GetType(node);
+
+                if (leftType != null && nodeType != null)
+                {
+                    if ((leftType.Kind == DKind.OptionSet && nodeType.Kind == DKind.OptionSetValue) || (leftType.Kind == DKind.View && nodeType.Kind == DKind.ViewValue))
+                    {
+                        // OptionSet and View Access are delegable despite being async
+                        return true;
+                    }
+                }
+                else
+                {
+                    return false;
+                }
             }
 
-            if (node is CallNode && (binding.IsBlockScopedConstant(node) ||
-                (binding.GetInfo(node as CallNode).Function is AsTypeFunction)))
+            if (node is CallNode callNode)
             {
-                // AsType is delegable despite being async
-                return true;
+                var callInfo = binding.GetInfo(callNode);
+                if (callInfo != null)
+                {
+                    if (binding.IsBlockScopedConstant(node) || (callInfo.Function is AsTypeFunction))
+                    {
+                        // AsType is delegable despite being async
+                        return true;
+                    }
+                }
+                else
+                {
+                    return false;
+                }
             }
 
             // Async predicates and impure nodes are not supported.

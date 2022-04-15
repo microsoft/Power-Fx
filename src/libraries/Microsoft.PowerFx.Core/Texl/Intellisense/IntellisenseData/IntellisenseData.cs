@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.PowerFx.Core.Binding;
+using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Lexer;
 using Microsoft.PowerFx.Core.Lexer.Tokens;
@@ -18,9 +19,10 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense.IntellisenseData
     // The IntellisenseData class contains the pre-parsed data for Intellisense to provide suggestions
     internal class IntellisenseData : IIntellisenseData
     {
-        private readonly EnumStore _enumStore;
+        private readonly PowerFxConfig _powerFxConfig;
+        private readonly IEnumStore _enumStore;
 
-        public IntellisenseData(EnumStore enumStore, IIntellisenseContext context, DType expectedType, TexlBinding binding, TexlFunction curFunc, TexlNode curNode, int argIndex, int argCount, IsValidSuggestion isValidSuggestionFunc, IList<DType> missingTypes, List<CommentToken> comments)
+        public IntellisenseData(PowerFxConfig powerFxConfig, IEnumStore enumStore, IIntellisenseContext context, DType expectedType, TexlBinding binding, TexlFunction curFunc, TexlNode curNode, int argIndex, int argCount, IsValidSuggestion isValidSuggestionFunc, IList<DType> missingTypes, List<CommentToken> comments)
         {
             Contracts.AssertValue(context);
             Contracts.AssertValid(expectedType);
@@ -31,6 +33,7 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense.IntellisenseData
             Contracts.AssertValueOrNull(missingTypes);
             Contracts.AssertValueOrNull(comments);
 
+            _powerFxConfig = powerFxConfig;
             _enumStore = enumStore;
             ExpectedType = expectedType;
             Suggestions = new IntellisenseSuggestionList();
@@ -308,6 +311,10 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense.IntellisenseData
         /// </summary>
         internal virtual void AddCustomSuggestionsForGlobals()
         {
+            foreach (var global in _powerFxConfig.GetSymbols())
+            {
+                IntellisenseHelper.AddSuggestion(this, _powerFxConfig.GetSuggestableSymbolName(global), SuggestionKind.Global, SuggestionIconKind.Other, global.Type, requiresSuggestionEscaping: true);
+            }
         }
 
         /// <summary>
@@ -334,7 +341,7 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense.IntellisenseData
         /// <returns>
         /// Sequence of suggestions for first name node context.
         /// </returns>
-        internal virtual IEnumerable<string> SuggestableFirstNames => Enumerable.Empty<string>();
+        internal virtual IEnumerable<string> SuggestableFirstNames => _powerFxConfig.GetSymbols().Select(_powerFxConfig.GetSuggestableSymbolName);
 
         /// <summary>
         /// Invokes <see cref="AddSuggestionsForConstantKeywords"/> to supply suggestions for constant
@@ -447,6 +454,7 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense.IntellisenseData
         /// </summary>
         internal virtual void AddSuggestionsAfterTopLevelErrorNodeSuggestions()
         {
+            AddCustomSuggestionsForGlobals();
         }
 
         public virtual bool TryAugmentSignature(TexlFunction func, int argIndex, string paramName, int highlightStart, out int newHighlightStart, out int newHighlightEnd, out string newParamName, out string newInvariantParamName) =>

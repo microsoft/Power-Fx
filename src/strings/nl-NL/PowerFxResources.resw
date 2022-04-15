@@ -1630,7 +1630,11 @@
     
   </data>
   <data name="ErrUnknownFunction" xml:space="preserve">
-    <value>Aanroepen van onbekende of niet-ondersteunde functie.</value>
+    <value>{0} is een onbekende of niet-ondersteunde functie.</value>
+    
+  </data>
+  <data name="ErrUnknownNamespaceFunction" xml:space="preserve">
+    <value>{0} is een onbekende of niet-ondersteunde functie in naamruimte {1}.</value>
     
   </data>
   <data name="ErrUnSupportedComponentBehaviorInvocation" xml:space="preserve">
@@ -1923,11 +1927,39 @@
     <value>Het millisecondegedeelte.</value>
   </data>
   <data name="AboutDateTime" xml:space="preserve">
-    <value>Creates a value that represents an instant in time, expressed as a date and time of the day.</value>
+    <value>Hiermee wordt een waarde gemaakt die een moment in tijd vertegenwoordigt, uitgedrukt als een datum en tijd van de dag.</value>
+    
+  </data>
+  <data name="AboutDateTime_year" xml:space="preserve">
+    <value>Het jaar.</value>
+    
+  </data>
+  <data name="AboutDateTime_month" xml:space="preserve">
+    <value>De maand.</value>
+    
+  </data>
+  <data name="AboutDateTime_day" xml:space="preserve">
+    <value>De dag.</value>
+    
+  </data>
+  <data name="AboutDateTime_hour" xml:space="preserve">
+    <value>Het uur.</value>
+    
+  </data>
+  <data name="AboutDateTime_minute" xml:space="preserve">
+    <value>De minuut.</value>
+    
+  </data>
+  <data name="AboutDateTime_second" xml:space="preserve">
+    <value>De seconde.</value>
+    
+  </data>
+  <data name="AboutDateTime_millisecond" xml:space="preserve">
+    <value>De milliseconden.</value>
     
   </data>
   <data name="AboutYear" xml:space="preserve">
-    <value>Year returns the year of a given date.</value>
+    <value>Jaar retourneert het jaar voor de desbetreffende datum.</value>
     
   </data>
   <data name="YearArg1" xml:space="preserve">

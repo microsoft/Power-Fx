@@ -57,7 +57,6 @@ namespace Microsoft.PowerFx.Core.Glue
         public SimpleResolver(PowerFxConfig config)            
         {
             _config = config ?? throw new ArgumentNullException(nameof(config));
-
             _library = config.Functions.ToArray();
             _enums = config.EnumStoreBuilder.Build().EnumSymbols.ToArray();
         }

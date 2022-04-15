@@ -7,6 +7,7 @@ using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Glue;
 using Microsoft.PowerFx.Core.Lexer;
+using Microsoft.PowerFx.Core.Lexer.Tokens;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Parser;
 using Microsoft.PowerFx.Core.Public;
@@ -14,6 +15,7 @@ using Microsoft.PowerFx.Core.Public.Types;
 using Microsoft.PowerFx.Core.Syntax;
 using Microsoft.PowerFx.Core.Texl.Intellisense;
 using Microsoft.PowerFx.Core.Types;
+using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx
 {
@@ -47,15 +49,23 @@ namespace Microsoft.PowerFx
         }
 
         /// <summary>
-        /// Create a resolver for use in binding. This is called from <see cref="Check(string, FormulaType)"/>.
+        /// Create a resolver for use in binding. This is called from <see cref="Check(string, RecordType)"/>.
         /// Base classes can override this is there are additional symbols not in the config.
         /// </summary>
-        /// <param name="parameterType"></param>
+        /// <param name="alternateConfig">An alternate config that can be provided. Should default to engine's config if null.</param>
         /// <returns></returns>
-        private protected virtual SimpleResolver CreateResolver()
+        private protected virtual SimpleResolver CreateResolver(PowerFxConfig alternateConfig = null)
         {
-            return new SimpleResolver(Config);
+            return new SimpleResolver(alternateConfig ?? Config);
         }
+
+        /// <summary>
+        ///     Tokenize an expression to a sequence of <see cref="Token" />s.
+        /// </summary>
+        /// <param name="expressionText"></param>
+        /// <returns></returns>
+        public IReadOnlyList<Token> Tokenize(string expressionText)
+            => TexlLexer.LocalizedInstance.GetTokens(expressionText);
 
         /// <summary>
         /// Type check a formula without executing it. 
@@ -88,19 +98,13 @@ namespace Microsoft.PowerFx
 
             var errors = formula.HasParseErrors ? formula.GetParseErrors() : binding.ErrorContainer.GetErrors();
 
-            var result = new CheckResult
+            var result = new CheckResult(errors, binding)
             {
-                _binding = binding,
                 _formula = formula,
             };
 
-            if (errors != null && errors.Any())
-            {
-                result.SetErrors(errors.ToArray());
-                result.Expression = null;
-            }
-            else
-            {
+            if (result.IsSuccess)
+            {                
                 result.TopLevelIdentifiers = DependencyFinder.FindDependencies(binding.Top, binding);
 
                 // TODO: Fix FormulaType.Build to not throw exceptions for Enum types then remove this check
@@ -132,7 +136,7 @@ namespace Microsoft.PowerFx
         /// <returns></returns>
         private protected virtual IIntellisense CreateIntellisense()
         {
-            return IntellisenseProvider.GetIntellisense(Config.EnumStoreBuilder.Build());
+            return IntellisenseProvider.GetIntellisense(Config);
         }
 
         /// <summary>
@@ -152,6 +156,32 @@ namespace Microsoft.PowerFx
         }
 
         /// <summary>
+        /// Creates a renamer instance for updating a field reference from <paramref name="parameters"/> in expressions.
+        /// </summary>
+        /// <param name="parameters">Type of parameters for formula. The fields in the parameter record can 
+        /// be acecssed as top-level identifiers in the formula. Must be the names from before any rename operation is applied.</param>
+        /// <param name="pathToRename">Path to the field to rename.</param>
+        /// <param name="updatedName">New name. Replaces the last segment of <paramref name="pathToRename"/>.</param>
+        /// <returns></returns>
+        public RenameDriver CreateFieldRenamer(RecordType parameters, DPath pathToRename, DName updatedName)
+        {
+            Contracts.CheckValue(parameters, nameof(parameters));
+            Contracts.CheckValid(pathToRename, nameof(pathToRename));
+            Contracts.CheckValid(updatedName, nameof(updatedName));
+
+            /* 
+            ** PowerFxConfig handles symbol lookup in TryGetSymbol. As part of that, if that global entity 
+            ** has a display name and we're in the process of converting an expression from invariant -> display,
+            ** we also return that entities display name so it gets updated. 
+            ** For Rename, we're reusing that invariant->display support, but only doing it for a single name,
+            ** specified by `pathToRename`. So, we need to make sure that names in PowerFxConfig still bind, 
+            ** but that we don't return any display names for them. Thus, we clone a PowerFxConfig but without 
+            ** display name support and construct a resolver from that instead, which we use for the rewrite binding.
+            */
+            return new RenameDriver(parameters, pathToRename, updatedName, CreateResolver(Config.WithoutDisplayNames()));
+        }
+
+        /// <summary>
         /// Convert references in an expression to the invariant form.
         /// </summary>
         /// <param name="expressionText">textual representation of the formula.</param>
@@ -161,7 +191,7 @@ namespace Microsoft.PowerFx
         /// <returns>The formula, with all identifiers converted to invariant form</returns>
         public string GetInvariantExpression(string expressionText, RecordType parameters)
         {
-            return ConvertExpression(expressionText, parameters, toDisplayNames: false);
+            return ConvertExpression(expressionText, parameters, CreateResolver(), toDisplayNames: false);
         }
 
         /// <summary>
@@ -174,15 +204,14 @@ namespace Microsoft.PowerFx
         /// <returns>The formula, with all identifiers converted to display form</returns>
         public string GetDisplayExpression(string expressionText, RecordType parameters)
         {
-            return ConvertExpression(expressionText, parameters, toDisplayNames: true);
+            return ConvertExpression(expressionText, parameters, CreateResolver(), toDisplayNames: true);
         }
 
-        private string ConvertExpression(string expressionText, RecordType parameters, bool toDisplayNames)
+        internal static string ConvertExpression(string expressionText, RecordType parameters, SimpleResolver resolver, bool toDisplayNames)
         {
             var formula = new Formula(expressionText);
             formula.EnsureParsed(TexlParser.Flags.None);
 
-            var resolver = CreateResolver();
             var binding = TexlBinding.Run(
                 new Glue2DocumentBinderGlue(),
                 null,
