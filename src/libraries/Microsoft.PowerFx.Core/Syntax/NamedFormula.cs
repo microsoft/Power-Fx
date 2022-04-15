@@ -12,6 +12,10 @@ namespace Microsoft.PowerFx.Core.Syntax
 
         public TexlNode Node { get; }
 
+        /// <summary>
+        /// Spans for each named formula rule will be relative to this offset
+        /// for named formulas x=1;y = 1 + 2; offset for x will be 2 and 7 for y .  
+        /// </summary>
         public int Offset { get; }
 
         public NamedFormula(IdentToken name, TexlNode node, int offset)
