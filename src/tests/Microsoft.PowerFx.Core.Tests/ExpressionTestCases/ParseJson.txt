@@ -113,3 +113,12 @@ Errors: Error 0-14: Invalid argument type. Expecting one of the following: Numbe
 
 >> ParseJSON("5") <= ParseJSON("5")
 Errors: Error 0-14: Invalid argument type. Expecting one of the following: Number, Date, Time, DateTime.|Error 18-32: Invalid argument type. Expecting one of the following: Number, Date, Time, DateTime.
+
+>> CountRows(ParseJSON("[1, 2, 3]"))
+3
+
+>> CountRows(ParseJSON("[]"))
+0
+
+>> CountRows(ParseJSON("1"))
+#Error
