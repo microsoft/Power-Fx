@@ -197,11 +197,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
         public bool HasSelfReference { get; private set; }
 
-        public bool IsBehavior => NameResolver != null && NameResolver.CurrentPropertyIsBehavior;
-
-        public bool IsConstantData => NameResolver != null && NameResolver.CurrentPropertyIsConstantData;
-
-        public bool IsNavigationAllowed => NameResolver != null && NameResolver.CurrentPropertyAllowsNavigation;
+        public BindingConfig BindingConfig { get; }
 
         public IExternalDocument Document => NameResolver?.Document;
 
@@ -247,9 +243,21 @@ namespace Microsoft.PowerFx.Core.Binding
         /// </summary>
         public DType ContextScope { get; }
 
-        private TexlBinding(IBinderGlue glue, IExternalRuleScopeResolver scopeResolver, DataSourceToQueryOptionsMap queryOptions, TexlNode node, INameResolver resolver, DType ruleScope, bool useThisRecordForRuleScope, bool updateDisplayNames = false, bool forceUpdateDisplayNames = false, IExternalRule rule = null)
+        private TexlBinding(
+            IBinderGlue glue,
+            IExternalRuleScopeResolver scopeResolver,
+            DataSourceToQueryOptionsMap queryOptions,
+            TexlNode node,
+            INameResolver resolver,
+            BindingConfig bindingConfig,
+            DType ruleScope,
+            bool useThisRecordForRuleScope,
+            bool updateDisplayNames = false,
+            bool forceUpdateDisplayNames = false,
+            IExternalRule rule = null)
         {
             Contracts.AssertValue(node);
+            Contracts.AssertValue(bindingConfig);
             Contracts.AssertValueOrNull(resolver);
             Contracts.AssertValueOrNull(scopeResolver);
 
