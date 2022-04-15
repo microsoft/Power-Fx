@@ -90,7 +90,7 @@ namespace Microsoft.PowerFx.Tests
         }        
 
         [Fact]
-        public void TestNonEnUSLoads()
+        public void TestErrorResourceImport()
         {
             var error = StringResources.GetErrorResource(TexlStrings.ErrIncompatibleTypesForEquality_Left_Right);
 
