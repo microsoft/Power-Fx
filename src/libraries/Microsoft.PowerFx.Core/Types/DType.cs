@@ -601,7 +601,7 @@ namespace Microsoft.PowerFx.Core.Types
                     ? 1 +
                       (ChildCount == 0
                           ? 0
-                          : GetNames(DPath.Root)
+                          : GetAllNames(DPath.Root)
                               .Max(tn => tn.Type.MaxDepth))
                     : 0;
 
