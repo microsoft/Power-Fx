@@ -1356,7 +1356,7 @@ namespace Microsoft.PowerFx.Core.Parser
 
         // Returns the current token if it's of the given kind and moves to the next token.
         // If the token is not the right kind, reports an error, leaves the token, and returns null.
-        private Token TokEat(TokKind tid, int offset = 0)
+        private Token TokEat(TokKind tid)
         {
             if (_curs.TidCur == tid)
             {
