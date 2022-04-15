@@ -100,7 +100,7 @@ namespace Microsoft.PowerFx.Core.Localization
             if (string.IsNullOrEmpty(locale))
             {
                 locale = CultureInfo.CurrentUICulture.Name;
-                Contracts.CheckNonEmpty(locale, "currentLocale");
+                Contracts.CheckNonEmpty(locale, "locale");
             }
 
             // Error resources are a bit odd and need to be reassembled from separate keys.
