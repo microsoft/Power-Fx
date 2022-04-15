@@ -93,6 +93,7 @@ namespace Microsoft.PowerFx
                 new Glue2DocumentBinderGlue(),
                 formula.ParseTree,
                 resolver,
+                BindingConfig.Default,
                 ruleScope: parameterType._type,
                 useThisRecordForRuleScope: false);
 
@@ -218,6 +219,7 @@ namespace Microsoft.PowerFx
                 new Core.Entities.QueryOptions.DataSourceToQueryOptionsMap(),
                 formula.ParseTree,
                 resolver,
+                BindingConfig.Default,
                 ruleScope: parameters._type,
                 useThisRecordForRuleScope: false,
                 updateDisplayNames: toDisplayNames,

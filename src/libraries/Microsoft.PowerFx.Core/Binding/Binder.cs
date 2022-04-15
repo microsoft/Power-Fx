@@ -261,6 +261,7 @@ namespace Microsoft.PowerFx.Core.Binding
             Contracts.AssertValueOrNull(resolver);
             Contracts.AssertValueOrNull(scopeResolver);
 
+            BindingConfig = bindingConfig;
             QueryOptions = queryOptions;
             _glue = glue;
             Top = node;
@@ -323,12 +324,23 @@ namespace Microsoft.PowerFx.Core.Binding
 
         // Binds a Texl parse tree.
         // * resolver provides the name context used to bind names to globals, resources, etc. This may be null.
-        public static TexlBinding Run(IBinderGlue glue, IExternalRuleScopeResolver scopeResolver, DataSourceToQueryOptionsMap queryOptionsMap, TexlNode node, INameResolver resolver, bool updateDisplayNames = false, DType ruleScope = null, bool forceUpdateDisplayNames = false, IExternalRule rule = null, bool useThisRecordForRuleScope = false)
+        public static TexlBinding Run(
+            IBinderGlue glue,
+            IExternalRuleScopeResolver scopeResolver,
+            DataSourceToQueryOptionsMap queryOptionsMap,
+            TexlNode node,
+            INameResolver resolver,
+            BindingConfig bindingConfig,
+            bool updateDisplayNames = false,
+            DType ruleScope = null,
+            bool forceUpdateDisplayNames = false,
+            IExternalRule rule = null,
+            bool useThisRecordForRuleScope = false)
         {
             Contracts.AssertValue(node);
             Contracts.AssertValueOrNull(resolver);
 
-            var txb = new TexlBinding(glue, scopeResolver, queryOptionsMap, node, resolver, ruleScope, useThisRecordForRuleScope, updateDisplayNames, forceUpdateDisplayNames, rule: rule);
+            var txb = new TexlBinding(glue, scopeResolver, queryOptionsMap, node, resolver, bindingConfig, ruleScope, useThisRecordForRuleScope, updateDisplayNames, forceUpdateDisplayNames, rule: rule);
             var vis = new Visitor(txb, resolver, ruleScope, useThisRecordForRuleScope);
             vis.Run();
 
@@ -341,14 +353,28 @@ namespace Microsoft.PowerFx.Core.Binding
             return txb;
         }
 
-        public static TexlBinding Run(IBinderGlue glue, TexlNode node, INameResolver resolver, bool updateDisplayNames = false, DType ruleScope = null, bool forceUpdateDisplayNames = false, IExternalRule rule = null)
+        public static TexlBinding Run(
+            IBinderGlue glue,
+            TexlNode node,
+            INameResolver resolver,
+            BindingConfig bindingConfig,
+            bool updateDisplayNames = false,
+            DType ruleScope = null,
+            bool forceUpdateDisplayNames = false,
+            IExternalRule rule = null)
         {
-            return Run(glue, null, new DataSourceToQueryOptionsMap(), node, resolver, updateDisplayNames, ruleScope, forceUpdateDisplayNames, rule);
+            return Run(glue, null, new DataSourceToQueryOptionsMap(), node, resolver, bindingConfig, updateDisplayNames, ruleScope, forceUpdateDisplayNames, rule);
         }
 
-        public static TexlBinding Run(IBinderGlue glue, TexlNode node, INameResolver resolver, DType ruleScope, bool useThisRecordForRuleScope = false)
+        public static TexlBinding Run(
+            IBinderGlue glue,
+            TexlNode node,
+            INameResolver resolver,
+            BindingConfig bindingConfig,
+            DType ruleScope,
+            bool useThisRecordForRuleScope = false)
         {
-            return Run(glue, null, new DataSourceToQueryOptionsMap(), node, resolver, false, ruleScope, false, null, useThisRecordForRuleScope);
+            return Run(glue, null, new DataSourceToQueryOptionsMap(), node, resolver, bindingConfig, false, ruleScope, false, null, useThisRecordForRuleScope);
         }
 
         public void WidenResultType()
@@ -4952,7 +4978,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 }
 
                 // Invalid datasources always result in error
-                if (func.IsBehaviorOnly && !_txb.IsBehavior)
+                if (func.IsBehaviorOnly && !_txb.BindingConfig.AllowsSideEffects)
                 {
                     _txb.ErrorContainer.EnsureError(node, TexlStrings.ErrBehaviorPropertyExpected);
                 }
@@ -4964,7 +4990,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 }
 
                 // Auto-refreshable functions cannot be used in behavior rules.
-                else if (func.IsAutoRefreshable && _txb.IsBehavior)
+                else if (func.IsAutoRefreshable && _txb.BindingConfig.AllowsSideEffects)
                 {
                     _txb.ErrorContainer.EnsureError(node, TexlStrings.ErrAutoRefreshNotAllowed);
                 }
