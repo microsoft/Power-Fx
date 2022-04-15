@@ -54,6 +54,8 @@ namespace Microsoft.PowerFx.Tests
         public void TestResourceImportUsesCurrentUICulture()
         {
             var initialCulture = CultureInfo.CurrentUICulture;
+            var enUsERContent = StringResources.GetErrorResource(TexlStrings.ErrBadToken);
+            var enUsBasicContent = StringResources.Get("AboutAbs");
 
             var loaded = string.Empty;
             var loadedCount = 0;
@@ -68,11 +70,17 @@ namespace Microsoft.PowerFx.Tests
                 AppDomain.CurrentDomain.AssemblyLoad += ResourceAssemblyLoadHandler;
                 CultureInfo.CurrentUICulture = CultureInfo.CreateSpecificCulture("fr-FR");
 
-                var generalError = StringResources.Get("ErrGeneralError");
+                var frERContent = StringResources.GetErrorResource(TexlStrings.ErrBadToken);
+                var frBasicContent = StringResources.Get("AboutAbs");
                 Assert.Contains("fr-FR", loaded);
 
                 // No other assemblies were loaded
                 Assert.Equal(1, loadedCount);
+
+                // Strings are not the same as enUS
+                // Not validating content directly, since it might change
+                Assert.NotEqual(enUsBasicContent, frBasicContent);
+                Assert.NotEqual(enUsERContent.GetSingleValue(ErrorResource.ShortMessageTag), frERContent.GetSingleValue(ErrorResource.ShortMessageTag));
             }
             finally
             {
