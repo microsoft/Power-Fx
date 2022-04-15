@@ -2,22 +2,18 @@
 // Licensed under the MIT license.
 
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.IO;
+using System.Globalization;
 using System.Linq;
-using System.Text.Json;
-using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Localization;
-using Microsoft.PowerFx.Core.Public.Types;
+using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Core.Types;
 using Xunit;
 
 namespace Microsoft.PowerFx.Tests
 {
-    public class ResourceValidationTests
-    {
+    public class ResourceValidationTests : PowerFxTest
+    {       
         [Fact]
         public void ResourceLoadsOnlyRequiredLocales()
         {
@@ -53,6 +49,45 @@ namespace Microsoft.PowerFx.Tests
                 AppDomain.CurrentDomain.AssemblyLoad -= ResourceAssemblyLoadHandler; 
             }
         }
+
+        [Fact]
+        public void TestResourceImportUsesCurrentUICulture()
+        {
+            var initialCulture = CultureInfo.CurrentUICulture;
+            var enUsERContent = StringResources.GetErrorResource(TexlStrings.ErrBadToken);
+            var enUsBasicContent = StringResources.Get("AboutAbs");
+
+            var loaded = string.Empty;
+            var loadedCount = 0;
+            void ResourceAssemblyLoadHandler(object sender, AssemblyLoadEventArgs args)
+            {
+                loaded = args.LoadedAssembly.FullName;
+                loadedCount++;
+            }
+
+            try 
+            {
+                AppDomain.CurrentDomain.AssemblyLoad += ResourceAssemblyLoadHandler;
+                CultureInfo.CurrentUICulture = CultureInfo.CreateSpecificCulture("fr-FR");
+
+                var frERContent = StringResources.GetErrorResource(TexlStrings.ErrBadToken);
+                var frBasicContent = StringResources.Get("AboutAbs");
+                Assert.Contains("fr-FR", loaded);
+
+                // No other assemblies were loaded
+                Assert.Equal(1, loadedCount);
+
+                // Strings are not the same as enUS
+                // Not validating content directly, since it might change
+                Assert.NotEqual(enUsBasicContent, frBasicContent);
+                Assert.NotEqual(enUsERContent.GetSingleValue(ErrorResource.ShortMessageTag), frERContent.GetSingleValue(ErrorResource.ShortMessageTag));
+            }
+            finally
+            {
+                CultureInfo.CurrentUICulture = initialCulture;
+                AppDomain.CurrentDomain.AssemblyLoad -= ResourceAssemblyLoadHandler; 
+            }
+        }        
 
         [Fact]
         public void TestErrorResourceImport()

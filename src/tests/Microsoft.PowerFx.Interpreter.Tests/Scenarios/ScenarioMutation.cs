@@ -3,19 +3,17 @@
 
 using System;
 using System.Collections.Generic;
-using System.Globalization;
-using Microsoft.PowerFx;
 using Microsoft.PowerFx.Core;
-using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Public.Types;
 using Microsoft.PowerFx.Core.Public.Values;
+using Microsoft.PowerFx.Core.Tests;
 using Xunit;
 
 namespace Microsoft.PowerFx.Interpreter.Tests
 {
     // Demonstrate mutation example using IUntypedObject
-    public class ScenarioMutation
-    {
+    public class ScenarioMutation : PowerFxTest
+    {       
         [Fact]
         public void MutabilityTest()
         {

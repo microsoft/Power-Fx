@@ -4,12 +4,13 @@
 using System.Collections.Generic;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Public;
+using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Core.Utils;
 using Xunit;
 
 namespace Microsoft.PowerFx.Tests
 {
-    public class GetTokensUtilsTest
+    public class GetTokensUtilsTest : PowerFxTest
     {
         [Fact]
         public void GetTokensTest()

@@ -83,7 +83,7 @@ namespace Microsoft.PowerFx.Core.Public
                     MessageKey = x.MessageKey
                 }).ToArray();
             }
-            
+
             return this;
         }
     }

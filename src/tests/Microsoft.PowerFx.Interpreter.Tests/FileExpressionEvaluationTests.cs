@@ -1,13 +1,8 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System;
-using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
-using System.Linq;
-using System.Text;
-using Microsoft.PowerFx.Core.Public.Types;
-using Microsoft.PowerFx.Core.Public.Values;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Interpreter.Tests.XUnitExtensions;
 using Xunit;
@@ -15,7 +10,7 @@ using static Microsoft.PowerFx.Interpreter.Tests.ExpressionEvaluationTests;
 
 namespace Microsoft.PowerFx.Interpreter.Tests
 {
-    public class FileExpressionEvaluationTests
+    public class FileExpressionEvaluationTests : PowerFxTest
     {
         private InterpreterRunner _runner;
 
