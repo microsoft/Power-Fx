@@ -271,6 +271,19 @@ namespace Microsoft.PowerFx.Tests
         }
 
         [Fact]
+        public void CheckSuccessWarning()
+        {
+            var engine = new RecalcEngine();
+
+            // issues a warning, verify it's still successful.
+            var result = engine.Check("Filter([1,2,3],true)");
+
+            Assert.True(result.IsSuccess);
+            Assert.Equal(1, result.Errors.Count(x => x.Severity == Core.Errors.DocumentErrorSeverity.Warning));
+            Assert.NotNull(result.Expression);
+        }
+
+        [Fact]
         public void CheckParseError()
         {
             var engine = new RecalcEngine();
