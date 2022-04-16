@@ -92,10 +92,10 @@ namespace Microsoft.PowerFx.Core.Tests
                 Expected = "2"
             });
 
-            var (total, failed, passed, output) = runner.RunTests();
-            Assert.Equal(3, total);
-            Assert.Equal(1, failed);
-            Assert.Equal(2, passed);
+            var summary = runner.RunTests();
+            Assert.Equal(3, summary.Total);
+            Assert.Equal(1, summary.Fail);
+            Assert.Equal(2, summary.Pass);
         }
 
         private const string LongForm5e186 = "5579910311786366000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000";
@@ -128,17 +128,17 @@ namespace Microsoft.PowerFx.Core.Tests
                 Expected = a
             });
 
-            var (total, failed, passed, output) = runner.RunTests();
+            var summary = runner.RunTests();
 
             if (pass)
             {
-                Assert.Equal(0, failed);
-                Assert.Equal(2, passed);
-            }
+                Assert.Equal(0, summary.Fail);
+                Assert.Equal(2, summary.Pass);
+            } 
             else
             {
-                Assert.Equal(2, failed);
-                Assert.Equal(0, passed);
+                Assert.Equal(2, summary.Fail);
+                Assert.Equal(0, summary.Pass);
             }
         }      
 
@@ -276,7 +276,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
         // Cases where a test runner marks unsupported behavior. 
         [Fact]
-        public async Task TestRunnerSkipException()
+        public async Task TestRunnerUnsupported()
         {
             var msg = "msg xyz";
 
@@ -315,7 +315,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 };
                 var result = await runner.RunAsync(test);
 
-                Assert.Equal(TestResult.Fail, result.Item1);
+                Assert.Equal(TestResult.Skip, result.Item1);
             }
         }
 

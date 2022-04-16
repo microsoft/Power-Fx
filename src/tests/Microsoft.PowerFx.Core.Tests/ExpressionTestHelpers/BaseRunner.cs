@@ -72,7 +72,7 @@ namespace Microsoft.PowerFx.Core.Tests
     }
 
     // Base class for running a lightweght test. 
-    public abstract class BaseRunner : PowerFxTest
+    public abstract class BaseRunner
     {
         /// <summary>
         /// Maximum time to run test - this catches potential hangs in the engine. 
@@ -175,12 +175,12 @@ namespace Microsoft.PowerFx.Core.Tests
             {
                 runResult = await RunAsyncInternal(testCase.Input, testCase.SetupHandlerName);
                 result = runResult.Value;
-
-                if (testCase.IsOverride)
+                                
+                // Unsupported is just for ignoring large groups of inherited tests. 
+                // If it's an override, then the override should specify the exact error.
+                if (!testCase.IsOverride && runResult.UnsupportedReason != null)
                 {
-                    // Unsupported is just for ignoring large groups of inherited tests. 
-                    // If it's an override, then the override should specify the exact error.
-                    runResult.UnsupportedReason = null;
+                    return (TestResult.Skip, "Unsupported in this engine: " + runResult.UnsupportedReason);
                 }
 
                 // Check for a compile-time error.
@@ -199,10 +199,6 @@ namespace Microsoft.PowerFx.Core.Tests
                         {
                             // Compiler errors result in exceptions
                             return (TestResult.Pass, null);
-                        }
-                        else if (runResult.UnsupportedReason != null)
-                        {
-                            return (TestResult.Skip, "Unsupported in this engine: " + runResult.UnsupportedReason);
                         }
                         else
                         {
@@ -271,13 +267,6 @@ namespace Microsoft.PowerFx.Core.Tests
                 }
 
                 // If the actual result is not an error, we'll fail with a mismatch below
-            }
-            else
-            {
-                if (runResult.UnsupportedReason != null)
-                {
-                    return (TestResult.Skip, "Unsupported in this engine: " + runResult.UnsupportedReason);
-                }
             }
 
             if (result == null)
