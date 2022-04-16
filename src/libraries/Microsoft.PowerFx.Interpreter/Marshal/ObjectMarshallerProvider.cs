@@ -41,7 +41,7 @@ namespace Microsoft.PowerFx
         /// <returns></returns>
         public virtual bool CanHandleType(Type type)
         {
-            return !(!type.IsClass ||
+            return !(!(type.IsClass || type.IsInterface) ||
                 typeof(FormulaValue).IsAssignableFrom(type) ||
                 typeof(FormulaType).IsAssignableFrom(type));
         }
