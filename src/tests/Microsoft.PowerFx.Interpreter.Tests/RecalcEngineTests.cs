@@ -210,6 +210,22 @@ namespace Microsoft.PowerFx.Tests
         }
 
         [Fact]
+        public void VariableVersusFormula()
+        {
+            var engine = new RecalcEngine();
+            engine.SetFormula("A", "4", OnUpdate);
+            AssertUpdate("A-->4;");
+            engine.SetFormula("B", "A*10", OnUpdate);
+            AssertUpdate("B-->40;");
+
+            engine.UpdateVariable("A", FormulaValue.New(40));
+            AssertUpdate("A-->40;");
+            AssertUpdate("B-->400;");
+            var result = engine.Eval("A + 4");
+            Assert.Equal(44, ((NumberValue)result).Value);
+        }
+
+        [Fact]
         public void PropagateNull()
         {
             var engine = new RecalcEngine();
