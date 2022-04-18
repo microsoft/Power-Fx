@@ -224,6 +224,14 @@ namespace Microsoft.PowerFx
             {
                 if (fi._usedBy.Count == 0)
                 {
+                    foreach (var dependsOnName in fi._dependsOn)
+                    {
+                        if (Formulas.TryGetValue(dependsOnName, out var info))
+                        {
+                            info._usedBy.Remove(name);
+                        }
+                    }
+
                     Formulas.Remove(name);
                 }
                 else
