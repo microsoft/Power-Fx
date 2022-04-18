@@ -33,6 +33,8 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Core.Texl.Intellisense.SignatureHelp.SignatureInformation",
                 "Microsoft.PowerFx.Core.BuiltinFormulaTypeConversions",
                 "Microsoft.PowerFx.Core.PowerFxConfig",
+                "Microsoft.PowerFx.Core.Parser.ParseResult",
+                "Microsoft.PowerFx.Core.Public.ParserOptions",
                 "Microsoft.PowerFx.Core.Public.CheckResult",
                 "Microsoft.PowerFx.Core.Public.ErrorKind",
                 "Microsoft.PowerFx.Core.Public.ExpressionError",
