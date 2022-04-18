@@ -162,7 +162,18 @@ namespace Microsoft.PowerFx.Tests
                 engine.DeleteFormula("B"));
 
             engine.DeleteFormula("D");
-            Assert.False(engine.Formulas.TryGetValue("D", out var ret));
+            Assert.False(engine.Formulas.TryGetValue("D", out var retD));
+
+            engine.DeleteFormula("C");
+            Assert.False(engine.Formulas.TryGetValue("C", out var retC));
+
+            // After C and D are deleted, deleting B should pass
+            engine.DeleteFormula("B");
+
+            // Ensure B is gone
+            engine.Check("B");
+            Assert.Throws<InvalidOperationException>(() =>
+                engine.Check("B").ThrowOnErrors());
         }
 
         // Don't fire for formulas that aren't touched by an update
