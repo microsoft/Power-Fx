@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation.
+// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
 using System;
@@ -143,6 +143,27 @@ namespace Microsoft.PowerFx.Tests
 
             // Batched up (we don't double fire)            
             AssertUpdate("B-->20;C-->25;D-->22;");
+        }
+
+        // depend on grand child directly 
+        [Fact]
+        public void FormulaDelete()
+        {
+            var engine = new RecalcEngine();
+
+            engine.UpdateVariable("A", 1);
+            engine.SetFormula("B", "A*10", OnUpdate);
+            engine.SetFormula("C", "B+5", OnUpdate);
+            engine.SetFormula("D", "B+A", OnUpdate);
+
+            Assert.Throws<InvalidOperationException>(() =>
+                engine.DeleteFormula("X"));
+
+            Assert.Throws<InvalidOperationException>(() =>
+                engine.DeleteFormula("B"));
+
+            engine.DeleteFormula("D");
+            Assert.False(engine.Formulas.TryGetValue("D", out var ret));
         }
 
         // Don't fire for formulas that aren't touched by an update
