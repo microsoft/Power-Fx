@@ -3,7 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.PowerFx.Core.Utils.FormulaSort;
+using Microsoft.PowerFx.Core.Utils;
 using Xunit;
 
 namespace Microsoft.PowerFx.Core.Tests
@@ -113,6 +113,33 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.False(success);
             Assert.Null(result);
             Assert.Null(cycles);
+        }
+
+        [Fact]
+        public void UnusedNodeTest()
+        {
+            var nodes = new List<string>() { "c", "a", "unused" };
+            var edges = new List<TopologicalSortEdge<string>>()
+            {
+                new TopologicalSortEdge<string>("a", "c")
+            };
+
+            var success = TopologicalSort.TrySort(nodes, edges, out var result, out var cycles);
+            Assert.True(success);
+            Assert.NotNull(result);
+            Assert.Null(cycles);
+
+            var indexMap = new Dictionary<string, int>();
+            var index = 0;
+
+            foreach (var item in result)
+            {
+                indexMap[item] = index;
+                index += 1;
+            }
+
+            Assert.True(indexMap.ContainsKey("unused"));
+            Assert.True(indexMap["unused"] < indexMap["c"]);
         }
     }
 }

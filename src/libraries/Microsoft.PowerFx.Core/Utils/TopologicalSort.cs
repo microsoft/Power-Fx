@@ -4,7 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Microsoft.PowerFx.Core.Utils.FormulaSort
+namespace Microsoft.PowerFx.Core.Utils
 {
     internal static class TopologicalSort
     {

@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.PowerFx.Core.Utils.FormulaSort
+namespace Microsoft.PowerFx.Core.Utils
 {
     internal class TopologicalSortEdge<T>
     {
