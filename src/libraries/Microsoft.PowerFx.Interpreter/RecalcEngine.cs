@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation.
+// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
 using System;
@@ -214,9 +214,27 @@ namespace Microsoft.PowerFx
             r.Recalc(name);
         }
 
+        /// <summary>
+        /// Delete formula that was previously created.
+        /// </summary>
+        /// <param name="name">Formula name.</param>
         public void DeleteFormula(string name)
         {
-            throw new NotImplementedException();
+            if (Formulas.TryGetValue(name, out var fi))
+            {
+                if (fi._usedBy.Count == 0)
+                {
+                    Formulas.Remove(name);
+                }
+                else
+                {
+                    throw new InvalidOperationException($"Formula {name} cannot be deleted due to the following dependencies: {string.Join(", ", fi._usedBy)}");
+                }
+            }
+            else
+            {
+                throw new InvalidOperationException($"Formula {name} does not exist");
+            }
         }
 
         /// <summary>
