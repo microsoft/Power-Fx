@@ -142,23 +142,17 @@ namespace Microsoft.PowerFx.Core.Tests
             }
         }      
 
-        [Fact]
-        public void TestBadParse()
+        [Theory]
+        [InlineData("Bad1.txt")]
+        [InlineData("Bad2.txt")]
+        [InlineData("Bad3.txt")]
+        public void TestBadParse(string file)
         {
             var runner = new TestRunner();
 
             Assert.Throws<InvalidOperationException>(
-                () => AddFile(runner, "Bad1.txt"));
-        }
-
-        [Fact]
-        public void TestBad2Parse()
-        {
-            var runner = new TestRunner();
-
-            Assert.Throws<InvalidOperationException>(
-                () => AddFile(runner, "Bad2.txt"));
-        }
+                () => AddFile(runner, file));
+        }        
 
         // #DISABLE directive to remove an entire file. 
         [Fact]

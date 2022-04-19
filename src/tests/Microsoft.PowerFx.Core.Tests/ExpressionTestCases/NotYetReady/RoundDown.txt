@@ -1,0 +1,247 @@
+//ROUNDDOWN(NUMBER, NUMBER_OF_DIGITS)
+
+// ******** INTEGER PARAMETERS ********
+
+// Positive "NUMBER" and "NUMBER_OF_DIGITS" parameter
+
+>> RoundDown(0,0)
+0
+
+>> RoundDown(0,1)
+0
+
+>> RoundDown(230,0)
+230
+
+>> RoundDown(230,1)
+230
+
+>> RoundDown(230,2)
+230
+
+>> RoundDown(230,3)
+230
+
+
+// Negative "NUMBER" Parameter
+
+>> RoundDown(-0,1)
+0
+
+>> RoundDown(-456,0)
+-456
+
+>> RoundDown(-456,1)
+-456
+
+>> RoundDown(-456,2)
+-456
+
+>> RoundDown(-456,3)
+-456
+
+
+// Negative "NUMBER_OF_DIGITS" Parameter
+
+>> RoundDown(3456,-1)
+3450
+
+>> RoundDown(3456,-2)
+3400
+
+>> RoundDown(3456,-3)
+3000
+
+>> RoundDown(3456,-4)
+0
+
+// Negative "NUMBER" and "NUMBER_OF_DIGITS" parameter
+
+>> RoundDown(-3456,-1)
+-3450
+
+>> RoundDown(-3456,-2)
+-3400
+
+>> RoundDown(-3456,-3)
+-3000
+
+>> RoundDown(-3456,-4)
+0
+
+
+// ******** DECIMAL PARAMETERS ********
+// Decimal NUMBER parameter
+
+>> RoundDown(14.123456,0)
+14
+
+>> RoundDown(45.5, 0)
+45
+
+>> RoundDown(45.51, 0)
+45
+
+>> RoundDown(14.123456,1)
+14.1
+
+>> RoundDown(14.123456,2)
+14.12
+
+>> RoundDown(14.123456,3)
+14.123
+
+>> RoundDown(14.123456,4)
+14.1234
+
+>> RoundDown(1412.34,-1)
+1410
+
+>> RoundDown(1412.34,-2)
+1400
+
+>> RoundDown(1600.34,-3)
+1000
+
+// Negative Decimal NUMBER parameter
+
+>> RoundDown(-14.123456,0)
+-14
+
+>> RoundDown(-45.5, 0)
+-45
+
+>> RoundDown(-45.51, 0)
+-45
+
+>> RoundDown(-14.123456,1)
+-14.1
+
+>> RoundDown(-14.123456,2)
+-14.12
+
+>> RoundDown(-14.123456,3)
+-14.123
+
+>> RoundDown(-14.123456,4)
+-14.1234
+
+>> RoundDown(-1412.34,-1)
+-1410
+
+>> RoundDown(-1412.34,-2)
+-1400
+
+>> RoundDown(-1500.34,-3)
+-1000
+
+// Decimal NUMBER and NUMBER_OF_DIGITS parameter
+
+// Excel returns 14.123456
+>> RoundDown(14.123456,1111111111)
+14
+
+>> RoundDown(14.123456,0.123)
+14
+
+>> RoundDown(14.123456,1.67)
+14.1
+
+>> RoundDown(14.123456,2.12)
+14.12
+
+>> RoundDown(-14.123456,3.678)
+-14.123
+
+>> RoundDown(-1412.34567,4.78)
+-1412.3456
+
+>> RoundDown(1412.34,-1.2)
+1410
+
+>> RoundDown(-1412.34,-1.6)
+-1410
+
+>> RoundDown(-1412.34,-2.9)
+-1400
+
+>> RoundDown(1500.34,-3.5)
+1000
+
+>> RoundDown(3*0.415, 2)
+1.24
+
+
+// ******** NULL and ERROR PARAMETERS ********
+>> RoundDown(1/0,1)
+#Error(Kind=Div0)
+
+>> RoundDown(1,1/0)
+#Error(Kind=Div0)
+
+>> RoundDown(Blank(),1)
+0
+
+>> RoundDown(Blank(), -1)
+0
+
+>> RoundDown(56.78, Blank())
+56
+
+>> RoundDown(-56.78, Blank())
+-56
+
+>> RoundDown(Blank(),Blank())
+0
+
+// ******** STRING PARAMETERS ********
+
+>> RoundDown("sampleText",1)
+#Error(Kind=InvalidArgument)
+
+>> RoundDown("10.5678","ABC")
+#Error(Kind=InvalidArgument)
+
+>> RoundDown("-10.5678","2")
+-10.56
+
+>> RoundDown("-10.5678","-2")
+0
+
+>> RoundDown("-10.123", "1.234")
+-10.1
+
+// ******** BOOLEAN PARAMETERS ********
+
+>> RoundDown(true,true)
+1
+
+>> RoundDown(true,false)
+1
+
+>> RoundDown(false,true)
+0
+
+>> RoundDown(false,false)
+0
+
+>> RoundDown("true","false")
+#Error(Kind=InvalidArgument)
+
+
+// ******** FUNCTION VALUE AS PARAMETERS ********
+
+// Excel returns 12/23/1976 in Date format and 28117 in General format
+>> RoundDown(Date(1976, 12,23) , 2)
+220176000000
+
+// Excel returns 12/6/1976 in Date format and 28100 in General format
+>> RoundDown(Date(1976, 12,23) , -2)
+220176000000
+
+//Excel returns 10/1/2022 in Date format and 44835 in General format
+>> RoundDown(Date(2022, 10, 1),3.4)
+1664607600000
+
+// RoundDown(Infinity,0)
+// RoundDown(NaN,0)
