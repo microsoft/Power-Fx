@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
+using System.Linq;
 using System.Text;
 using System.Threading;
 using Microsoft.PowerFx.Core.Lexer.Tokens;
@@ -26,16 +27,6 @@ namespace Microsoft.PowerFx.Core.Lexer
         {
             None,
         }
-
-        // List and decimal separators.
-        // These are the global settings, borrowed from the OS, and will be settable by the user according to their preferences.
-        // If there is a collision between the two, the list separator automatically becomes ;.
-        public string LocalizedPunctuatorDecimalSeparator { get; }
-
-        public string LocalizedPunctuatorListSeparator { get; }
-
-        // The chaining operator has to be disambiguated accordingly.
-        public string LocalizedPunctuatorChainingSeparator { get; }
 
         // Locale-invariant syntax.
         public const string KeywordTrue = "true";
@@ -86,6 +77,10 @@ namespace Microsoft.PowerFx.Core.Lexer
         private const string PunctuatorSemicolonDefault = PunctuatorSemicolonInvariant;
         private const string PunctuatorSemicolonAlt1 = ";;";
 
+        // Pretty Print defaults
+        public const string FourSpaces = "    ";
+        public const string LineBreakAndfourSpaces = "\n    ";
+
         // Keywords are not locale-specific, populate keyword dictionary statically
         private static readonly IReadOnlyDictionary<string, TokKind> _keywords = new Dictionary<string, TokKind>()
         {
@@ -101,111 +96,39 @@ namespace Microsoft.PowerFx.Core.Lexer
             { KeywordAs, TokKind.As },
         };
 
-        private static readonly IReadOnlyDictionary<string, TokKind> _punctuators;
-
-        private readonly char _decimalSeparator;
-
         // Limits the StringBuilderCache TLS memory usage for LexerImpl.
         // Usually our tokens are less than 128 characters long, unless it's a large string.
         private const int DesiredStringBuilderSize = 128;
-
-        private Tuple<string, Flags, Token[]> _cache;
 
         private static readonly Lazy<TexlLexer> _invariantDecimalSeparatorLexer = new Lazy<TexlLexer>(() => new TexlLexer(PunctuatorDecimalSeparatorInvariant));
         private static readonly Lazy<TexlLexer> _commaDecimalSeparatorLexer = new Lazy<TexlLexer>(() => new TexlLexer(PunctuatorCommaInvariant));
 
         public static TexlLexer InvariantLexer => _invariantDecimalSeparatorLexer.Value;
 
-        private static string[] _unaryOperatorKeywords;
-        private static string[] _binaryOperatorKeywords;
-        private static string[] _operatorKeywordsPrimitive;
-        private static string[] _operatorKeywordsAggregate;
-        private static string[] _constantKeywordsDefault;
-        private static string[] _constantKeywordsGetParent;
+        private static readonly IReadOnlyList<string> _unaryOperatorKeywords;
+        private static readonly IReadOnlyList<string> _binaryOperatorKeywords;
+        private static readonly IReadOnlyList<string> _operatorKeywordsPrimitive;
+        private static readonly IReadOnlyList<string> _operatorKeywordsAggregate;
+        private static readonly IReadOnlyList<string> _constantKeywordsDefault;
+        private static readonly IReadOnlyList<string> _constantKeywordsGetParent;
 
-        private readonly IDictionary<string, string> _punctuatorsAndInvariants;
+        private readonly IReadOnlyDictionary<string, TokKind> _punctuators;
+        private readonly char _decimalSeparator;
+        private readonly IReadOnlyDictionary<string, string> _punctuatorsAndInvariants;
         private readonly NumberFormatInfo _numberFormatInfo;
 
-        // Pretty Print defaults
-        public const string FourSpaces = "    ";
-        public const string LineBreakAndfourSpaces = "\n    ";
+        public string LocalizedPunctuatorDecimalSeparator { get; }
+
+        public string LocalizedPunctuatorListSeparator { get; }
+
+        public string LocalizedPunctuatorChainingSeparator { get; }
+
+        private Tuple<string, Flags, Token[]> _cache;
 
         static TexlLexer()
         {
             StringBuilderCache.SetMaxBuilderSize(DesiredStringBuilderSize);
-            PopulateKeywordArrays();
 
-            var punctuators = new Dictionary<string, TokKind>();
-
-            // Invariant punctuators
-            AddPunctuator(punctuators, PunctuatorOr, TokKind.Or);
-            AddPunctuator(punctuators, PunctuatorAnd, TokKind.And);
-            AddPunctuator(punctuators, PunctuatorBang, TokKind.Bang);
-            AddPunctuator(punctuators, PunctuatorAdd, TokKind.Add);
-            AddPunctuator(punctuators, PunctuatorSub, TokKind.Sub);
-            AddPunctuator(punctuators, PunctuatorMul, TokKind.Mul);
-            AddPunctuator(punctuators, PunctuatorDiv, TokKind.Div);
-            AddPunctuator(punctuators, PunctuatorCaret, TokKind.Caret);
-            AddPunctuator(punctuators, PunctuatorParenOpen, TokKind.ParenOpen);
-            AddPunctuator(punctuators, PunctuatorParenClose, TokKind.ParenClose);
-            AddPunctuator(punctuators, PunctuatorEqual, TokKind.Equ);
-            AddPunctuator(punctuators, PunctuatorLess, TokKind.Lss);
-            AddPunctuator(punctuators, PunctuatorLessOrEqual, TokKind.LssEqu);
-            AddPunctuator(punctuators, PunctuatorGreater, TokKind.Grt);
-            AddPunctuator(punctuators, PunctuatorGreaterOrEqual, TokKind.GrtEqu);
-            AddPunctuator(punctuators, PunctuatorNotEqual, TokKind.LssGrt);
-            AddPunctuator(punctuators, PunctuatorDot, TokKind.Dot);
-            AddPunctuator(punctuators, PunctuatorColon, TokKind.Colon);
-            AddPunctuator(punctuators, PunctuatorCurlyOpen, TokKind.CurlyOpen);
-            AddPunctuator(punctuators, PunctuatorCurlyClose, TokKind.CurlyClose);
-            AddPunctuator(punctuators, PunctuatorBracketOpen, TokKind.BracketOpen);
-            AddPunctuator(punctuators, PunctuatorBracketClose, TokKind.BracketClose);
-            AddPunctuator(punctuators, PunctuatorAmpersand, TokKind.Ampersand);
-            AddPunctuator(punctuators, PunctuatorPercent, TokKind.PercentSign);
-            AddPunctuator(punctuators, PunctuatorAt, TokKind.At);
-
-            // Commenting punctuators
-            AddPunctuator(punctuators, PunctuatorBlockComment, TokKind.Comment);
-            AddPunctuator(punctuators, PunctuatorLineComment, TokKind.Comment);
-
-            PopulateKeywordArrays();
-        }
-
-        private static bool AddPunctuator(Dictionary<string, TokKind> punctuators, string str, TokKind tid)
-        {
-            Contracts.AssertNonEmpty(str);
-
-            if (_punctuators.TryGetValue(str, out var tidCur))
-            {
-                if (tidCur == tid)
-                {
-                    return true;
-                }
-
-                if (tidCur != TokKind.None)
-                {
-                    return false;
-                }
-            }
-            else
-            {
-                // Map all prefixes (that aren't already mapped) to TokKind.None.
-                for (var ich = 1; ich < str.Length; ich++)
-                {
-                    var strTmp = str.Substring(0, ich);
-                    if (!_punctuators.TryGetValue(strTmp, out var tidTmp))
-                    {
-                        punctuators.Add(strTmp, TokKind.None);
-                    }
-                }
-            }
-
-            punctuators[str] = tid;
-            return true;
-        }
-
-        private static void PopulateKeywordArrays()
-        {
             _unaryOperatorKeywords = new[]
             {
                 KeywordNot,
@@ -313,7 +236,80 @@ namespace Microsoft.PowerFx.Core.Lexer
             };
 
             _numberFormatInfo = new NumberFormatInfo() { NumberDecimalSeparator = LocalizedPunctuatorDecimalSeparator };
-        }        
+            _decimalSeparator = LocalizedPunctuatorDecimalSeparator[0];
+
+            var punctuators = new Dictionary<string, TokKind>();
+
+            // Invariant punctuators
+            AddPunctuator(punctuators, PunctuatorOr, TokKind.Or);
+            AddPunctuator(punctuators, PunctuatorAnd, TokKind.And);
+            AddPunctuator(punctuators, PunctuatorBang, TokKind.Bang);
+            AddPunctuator(punctuators, PunctuatorAdd, TokKind.Add);
+            AddPunctuator(punctuators, PunctuatorSub, TokKind.Sub);
+            AddPunctuator(punctuators, PunctuatorMul, TokKind.Mul);
+            AddPunctuator(punctuators, PunctuatorDiv, TokKind.Div);
+            AddPunctuator(punctuators, PunctuatorCaret, TokKind.Caret);
+            AddPunctuator(punctuators, PunctuatorParenOpen, TokKind.ParenOpen);
+            AddPunctuator(punctuators, PunctuatorParenClose, TokKind.ParenClose);
+            AddPunctuator(punctuators, PunctuatorEqual, TokKind.Equ);
+            AddPunctuator(punctuators, PunctuatorLess, TokKind.Lss);
+            AddPunctuator(punctuators, PunctuatorLessOrEqual, TokKind.LssEqu);
+            AddPunctuator(punctuators, PunctuatorGreater, TokKind.Grt);
+            AddPunctuator(punctuators, PunctuatorGreaterOrEqual, TokKind.GrtEqu);
+            AddPunctuator(punctuators, PunctuatorNotEqual, TokKind.LssGrt);
+            AddPunctuator(punctuators, PunctuatorDot, TokKind.Dot);
+            AddPunctuator(punctuators, PunctuatorColon, TokKind.Colon);
+            AddPunctuator(punctuators, PunctuatorCurlyOpen, TokKind.CurlyOpen);
+            AddPunctuator(punctuators, PunctuatorCurlyClose, TokKind.CurlyClose);
+            AddPunctuator(punctuators, PunctuatorBracketOpen, TokKind.BracketOpen);
+            AddPunctuator(punctuators, PunctuatorBracketClose, TokKind.BracketClose);
+            AddPunctuator(punctuators, PunctuatorAmpersand, TokKind.Ampersand);
+            AddPunctuator(punctuators, PunctuatorPercent, TokKind.PercentSign);
+            AddPunctuator(punctuators, PunctuatorAt, TokKind.At);
+
+            // Commenting punctuators
+            AddPunctuator(punctuators, PunctuatorBlockComment, TokKind.Comment);
+            AddPunctuator(punctuators, PunctuatorLineComment, TokKind.Comment);
+
+            // Localized
+            AddPunctuator(punctuators, LocalizedPunctuatorListSeparator, TokKind.Comma);
+            AddPunctuator(punctuators, LocalizedPunctuatorChainingSeparator, TokKind.Semicolon);
+
+            _punctuators = punctuators;
+        }
+
+        private static bool AddPunctuator(Dictionary<string, TokKind> punctuators, string str, TokKind tid)
+        {
+            Contracts.AssertNonEmpty(str);
+
+            if (punctuators.TryGetValue(str, out var tidCur))
+            {
+                if (tidCur == tid)
+                {
+                    return true;
+                }
+
+                if (tidCur != TokKind.None)
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                // Map all prefixes (that aren't already mapped) to TokKind.None.
+                for (var ich = 1; ich < str.Length; ich++)
+                {
+                    var strTmp = str.Substring(0, ich);
+                    if (!punctuators.TryGetValue(strTmp, out _))
+                    {
+                        punctuators.Add(strTmp, TokKind.None);
+                    }
+                }
+            }
+
+            punctuators[str] = tid;
+            return true;
+        }
 
         public Token[] LexSource(string text, Flags flags = Flags.None)
         {
@@ -362,6 +358,7 @@ namespace Microsoft.PowerFx.Core.Lexer
 
             // Update the cache and return the result
             var tokensArr = tokens.ToArray();
+
             _cache = new Tuple<string, Flags, Token[]>(text, flags, tokensArr);
             return tokensArr;
         }
@@ -452,10 +449,10 @@ namespace Microsoft.PowerFx.Core.Lexer
         }
 
         // Enumerate all supported unary operator keywords.
-        public static string[] GetUnaryOperatorKeywords() => _unaryOperatorKeywords;
+        public static string[] GetUnaryOperatorKeywords() => _unaryOperatorKeywords.ToArray();
 
         // Enumerate all supported binary operator keywords.
-        public static string[] GetBinaryOperatorKeywords() => _binaryOperatorKeywords;
+        public static string[] GetBinaryOperatorKeywords() => _binaryOperatorKeywords.ToArray();
 
         // Enumerate all supported keywords for the given type.
         // Review hekum - should we have leftType and right type seperately?
@@ -465,23 +462,23 @@ namespace Microsoft.PowerFx.Core.Lexer
 
             if (type.IsPrimitive)
             {
-                return _operatorKeywordsPrimitive;
+                return _operatorKeywordsPrimitive.ToArray();
             }
 
             // TASK 97994: Investigate and Implement the functionality if lhs of  'in' operator is a control type.
             if (type.IsAggregate || type.IsControl)
             {
-                return _operatorKeywordsAggregate;
+                return _operatorKeywordsAggregate.ToArray();
             }
 
             return new string[0];
         }
 
         // Enumerate all supported constant keywords.
-        public static string[] GetConstantKeywords(bool getParent) => getParent ? _constantKeywordsGetParent : _constantKeywordsDefault;
+        public static string[] GetConstantKeywords(bool getParent) => getParent ? _constantKeywordsGetParent.ToArray() : _constantKeywordsDefault.ToArray();
 
         // Enumerate all supported localized punctuators and their invariant counterparts.
-        public IDictionary<string, string> GetPunctuatorsAndInvariants() => _punctuatorsAndInvariants;
+        public IReadOnlyDictionary<string, string> GetPunctuatorsAndInvariants() => _punctuatorsAndInvariants;
 
         // Returns true and sets 'tid' if the specified string is a keyword.
         public static bool IsKeyword(string str, out TokKind tid)

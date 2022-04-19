@@ -195,12 +195,6 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.Equal(2, tokens.Length);
             Assert.Equal(TokKind.NumLit, tokens[0].Kind);
             Assert.Equal(123456.78, tokens[0].As<NumLitToken>().Value);
-
-            tokens = TexlLexer.GetLocalizedInstance(SomeRomanianLikeSettings()).LexSource("10`12345");
-            Assert.NotNull(tokens);
-            Assert.Equal(2, tokens.Length);
-            Assert.Equal(TokKind.NumLit, tokens[0].Kind);
-            Assert.Equal(10.12345, tokens[0].As<NumLitToken>().Value);
         }
 
         [Fact]
@@ -263,11 +257,6 @@ namespace Microsoft.PowerFx.Core.Tests
         private CultureInfo SomeFrenchLikeSettings()
         {
             return new CultureInfo("fr-FR");
-        }
-
-        private CultureInfo SomeRomanianLikeSettings()
-        {
-            return new CultureInfo("ro-RO");
         }
         
         /// <summary>

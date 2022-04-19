@@ -43,7 +43,6 @@ namespace Microsoft.PowerFx.Core.Tests
                 // Potential bugs, Need more review...
                 "ArgumentSuggestions.CustomFunctionSuggestionProviders",
                 "TrackingProvider.Instance",
-                "TexlLexer._prebuiltLexers",
 
                 "DataTypeInfo.NoValidFormat", // returns arrays 
                 "DataTypeInfo.AllowedValuesOnly",
@@ -57,7 +56,6 @@ namespace Microsoft.PowerFx.Core.Tests
                 "CurrentLocaleInfo.<CurrentLCID>k__BackingField",
                 "StringResources.<ExternalStringResources>k__BackingField",
                 "StringResources.<ShouldThrowIfMissing>k__BackingField",
-                "TexlLexer._lex",
                 "DelegationCapability.maxSingleCapabilityValue",
             };
 
