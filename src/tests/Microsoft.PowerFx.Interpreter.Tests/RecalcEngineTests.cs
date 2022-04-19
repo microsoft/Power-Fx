@@ -145,6 +145,24 @@ namespace Microsoft.PowerFx.Tests
             AssertUpdate("B-->20;C-->25;D-->22;");
         }
 
+        [Fact]
+        public void Recalc3()
+        {
+            var engine = new RecalcEngine();
+            engine.UpdateVariable("A", 1);
+            engine.SetFormula("B", "A*2", OnUpdate);
+            AssertUpdate("B-->2;");
+
+            engine.SetFormula("C", "A*2", OnUpdate);
+            AssertUpdate("C-->2;");
+
+            engine.SetFormula("D", "B+C", OnUpdate);
+            AssertUpdate("D-->4;");
+
+            engine.UpdateVariable("A", 2);
+            AssertUpdate("B-->4;C-->4;D-->8"); // Fails with Actual: B-->4;C-->4;D-->6;
+        }
+
         // Don't fire for formulas that aren't touched by an update
         [Fact]
         public void RecalcNoExtraCallbacks()
