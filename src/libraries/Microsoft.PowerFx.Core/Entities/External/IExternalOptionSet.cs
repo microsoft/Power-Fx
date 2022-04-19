@@ -19,7 +19,5 @@ namespace Microsoft.PowerFx.Core.Entities
         bool IsBooleanValued { get; }
 
         bool IsConvertingDisplayNameMapping { get; } 
-
-        DType Type { get; }
     }
 }

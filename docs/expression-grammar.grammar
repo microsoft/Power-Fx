@@ -117,7 +117,7 @@ Identifier :
 
 IdentifierName :
     IdentifierStartCharacter IdentifierContinueCharacters?
-    SingleQuotedIdentifier
+    `'` SingleQuotedIdentifier `'`
 
 IdentifierStartCharacter :
     LetterCharacter
@@ -260,6 +260,7 @@ ReferenceList :
 
 InlineRecord :
     `{` InlineRecordList? `}`
+    Identifier `@` `{` InlineRecordList `}`
 
 InlineRecordList :
     Identifier `:` Expression

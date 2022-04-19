@@ -8,7 +8,7 @@ using Xunit;
 namespace Microsoft.PowerFx.Core.Tests
 {
     // Do static analysis to look for potential threading issues. 
-    public class ThreadingTests
+    public class ThreadingTests : PowerFxTest
     {
         [Fact]
         public void CheckFxCore()
@@ -34,8 +34,6 @@ namespace Microsoft.PowerFx.Core.Tests
                 "DateAddFunction.SubDayStringList",
                 "PrettyPrintVisitor.BinaryPrecedence",
                 "ErrorResource.ErrorResourceTagToReswSuffix",
-                "StringResources.Strings",
-                "StringResources.ErrorResources",
                 "DelegationCapability._binaryOpToDelegationCapabilityMap",
                 "DelegationCapability._unaryOpToDelegationCapabilityMap",
                 "DelegationCapability._operatorToDelegationCapabilityMap",

@@ -1,0 +1,4552 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="ListItemSingleQuotedFormat" xml:space="preserve">
+    <value>'{0}'</value>
+    
+  </data>
+  <data name="AboutIf" xml:space="preserve">
+    <value>Belirtilen koşullardan herhangi birinin karşılanıp karşılanmadığını denetler ve karşılık gelen değeri döndürür. Hiçbir koşul karşılanmadıysa işlev varsayılan değeri döndürür.</value>
+    
+  </data>
+  <data name="IfArgCond" xml:space="preserve">
+    <value>mantıksal_test</value>
+    
+  </data>
+  <data name="IfArgTrueValue" xml:space="preserve">
+    <value>true_değeri</value>
+    
+  </data>
+  <data name="IfArgElseValue" xml:space="preserve">
+    <value>else_değeri</value>
+    
+  </data>
+  <data name="AboutIf_logical_test" xml:space="preserve">
+    <value>Boole değeri oluşturan bir koşul.</value>
+  </data>
+  <data name="AboutIf_true_value" xml:space="preserve">
+    <value>Koşul true olduğunda If işlevinin sonucunu sağlayan bir ifade.</value>
+    
+  </data>
+  <data name="AboutIf_else_value" xml:space="preserve">
+    <value>Belirtilen tüm koşullar false olduğunda If işlevinin sonucunu sağlayan bir ifade.</value>
+    
+  </data>
+  <data name="AboutSwitch" xml:space="preserve">
+    <value>Bir formül sonucunu bir değer kümesi ile eşleştirir. Bir eşleştirme bulunduğunda, karşılık gelen formül değerlendirilir ve döndürülür. Eşleşme bulunmazsa, varsayılan son formül değerlendirilir ve döndürülür.</value>
+    
+  </data>
+  <data name="SwitchExpression" xml:space="preserve">
+    <value>switch_değeri</value>
+    
+  </data>
+  <data name="SwitchDefaultReturn" xml:space="preserve">
+    <value>varsayılan_sonuç</value>
+    
+  </data>
+  <data name="SwitchCaseExpr" xml:space="preserve">
+    <value>match_değeri</value>
+    
+  </data>
+  <data name="SwitchCaseArg" xml:space="preserve">
+    <value>match_sonucu</value>
+    
+  </data>
+  <data name="AboutSwitch_switch_value" xml:space="preserve">
+    <value>Her bir match_değeri ile karşılaştırılacak değer.</value>
+    
+  </data>
+  <data name="AboutSwitch_match_value" xml:space="preserve">
+    <value>switch_değeri ile eşleştirilecek değer.</value>
+    
+  </data>
+  <data name="AboutSwitch_match_result" xml:space="preserve">
+    <value>Eşleşme bulunursa değerlendirilip döndürülecek formül.</value>
+  </data>
+  <data name="AboutSwitch_default_result" xml:space="preserve">
+    <value>Eşleşme bulunmazsa değerlendirilip döndürülecek formül.</value>
+  </data>
+  <data name="AboutAnd" xml:space="preserve">
+    <value>Tüm bağımsız değişkenlerin true olup olmadığını kontrol eder ve hepsi true ise true değerini döndürür.</value>
+    
+  </data>
+  <data name="AboutOr" xml:space="preserve">
+    <value>Bağımsız değişkenlerin true olup olmadığını denetler ve true veya false değeri döndürür. Yalnızca tüm bağımsız değişkenler false ise false değeri döndürür.</value>
+    
+  </data>
+  <data name="AboutNot" xml:space="preserve">
+    <value>False değerleri true, true değerleri ise false olarak değiştirir.</value>
+    
+  </data>
+  <data name="LogicalFuncParam" xml:space="preserve">
+    <value>mantıksal</value>
+    
+  </data>
+  <data name="AboutAnd_logical" xml:space="preserve">
+    <value>And işleminde göz önünde bulundurulacak mantıksal bir ifade.</value>
+  </data>
+  <data name="AboutOr_logical" xml:space="preserve">
+    <value>Or işleminde göz önünde bulundurulacak bir mantıksal ifade.</value>
+  </data>
+  <data name="AboutNot_logical" xml:space="preserve">
+    <value>Negatif yapılacak bir mantıksal ifade.</value>
+  </data>
+  <data name="AboutCount" xml:space="preserve">
+    <value>Belirtilen sütundaki sayısal değerleri hesaplar.</value>
+    
+  </data>
+  <data name="AboutCountA" xml:space="preserve">
+    <value>Sütundaki boş olmayan satırların sayısını hesaplar.</value>
+    
+  </data>
+  <data name="AboutCountRows" xml:space="preserve">
+    <value>Giriş tablosundaki veya koleksiyondaki satır sayısını hesaplar.</value>
+    
+  </data>
+  <data name="CountArg1" xml:space="preserve">
+    <value>kaynak</value>
+    
+  </data>
+  <data name="AboutCount_source" xml:space="preserve">
+    <value>Sayılacak değerleri içeren bir sütun.</value>
+  </data>
+  <data name="AboutCountA_source" xml:space="preserve">
+    <value>Sayılacak değerleri içeren bir sütun.</value>
+  </data>
+  <data name="AboutCountRows_source" xml:space="preserve">
+    <value>Satırları hesaplanacak olan bir tablo.</value>
+  </data>
+  <data name="AboutCountIf" xml:space="preserve">
+    <value>Belirtilen koşulu karşılayan satırların sayısını hesaplar.</value>
+    
+  </data>
+  <data name="CountIfArg1" xml:space="preserve">
+    <value>kaynak</value>
+    
+  </data>
+  <data name="CountIfArg2" xml:space="preserve">
+    <value>koşul</value>
+    
+  </data>
+  <data name="AboutCountIf_source" xml:space="preserve">
+    <value>Belirli ölçütleri karşılayan satırların hesaplanacağı bir tablo.</value>
+  </data>
+  <data name="AboutCountIf_condition" xml:space="preserve">
+    <value>Her satır için değerlendirilen ve ilgili satırın sayılıp sayılmayacağını belirten bir ifade.</value>
+  </data>
+  <data name="AboutSumT" xml:space="preserve">
+    <value>Tablo bağlamında ifadenin değerlendirdiği sayıların toplamını döndürür.</value>
+    
+  </data>
+  <data name="AboutMaxT" xml:space="preserve">
+    <value>İfadenin tablo bağlamında değerlendirdiği en büyük değeri döndürür.</value>
+    
+  </data>
+  <data name="AboutMinT" xml:space="preserve">
+    <value>İfadenin tablo bağlamında değerlendirdiği en küçük değeri döndürür.</value>
+    
+  </data>
+  <data name="AboutAverageT" xml:space="preserve">
+    <value>İfadenin tablo bağlamında değerlendirdiği sayıların ortalamasını (aritmetik ortalama) döndürür.</value>
+    
+  </data>
+  <data name="StatisticalTArg1" xml:space="preserve">
+    <value>kaynak</value>
+    
+  </data>
+  <data name="StatisticalTArg2" xml:space="preserve">
+    <value>ifade</value>
+    
+  </data>
+  <data name="AboutMin_source" xml:space="preserve">
+    <value>Bu minimum değeri alma işleminin gerçekleştirileceği tablo.</value>
+  </data>
+  <data name="AboutMin_expression" xml:space="preserve">
+    <value>Bu minimum değeri alma işlemi için sayısal değerler sağlayan giriş tablosundaki her satırda değerlendirilen bir ifade.</value>
+  </data>
+  <data name="AboutMax_source" xml:space="preserve">
+    <value>Bu maksimum değeri alma işleminin gerçekleştirileceği bir tablo.</value>
+  </data>
+  <data name="AboutMax_expression" xml:space="preserve">
+    <value>Bu maksimum değeri alma işlemi için sayısal değerleri sağlayan giriş tablosundaki her satırda değerlendirilen bir ifade.</value>
+  </data>
+  <data name="AboutAverage_source" xml:space="preserve">
+    <value>Bu ortalama alma işleminin hesaplanacağı bir tablo.</value>
+  </data>
+  <data name="AboutAverage_expression" xml:space="preserve">
+    <value>Giriş tablosundaki her bir satır için değerlendirilen ve bu ortalama alma işlemi için sayısal değerler sağlayan bir ifade.</value>
+  </data>
+  <data name="AboutSum_source" xml:space="preserve">
+    <value>Bu toplamını alma işleminin hesaplanacağı bir tablo.</value>
+  </data>
+  <data name="AboutSum_expression" xml:space="preserve">
+    <value>Bu minimum değeri alma işlemi için sayısal değerler sağlayan, giriş tablosundaki her bir satırda değerlendirilen bir ifade.</value>
+  </data>
+  <data name="AboutSum" xml:space="preserve">
+    <value>Bağımsız değişkenlerinin toplamını döndürür.</value>
+    
+  </data>
+  <data name="AboutMax" xml:space="preserve">
+    <value>Bir değer kümesindeki en büyük değeri döndürür. Mantıksal değerleri ve metni yok sayar.</value>
+    
+  </data>
+  <data name="AboutMin" xml:space="preserve">
+    <value>Bir değer kümesindeki en küçük değeri döndürür. Mantıksal değerleri ve metni yok sayar.</value>
+    
+  </data>
+  <data name="AboutAverage" xml:space="preserve">
+    <value>Bağımsız değişkenlerinin ortalamasını (aritmetik ortalama) döndürür.</value>
+    
+  </data>
+  <data name="StatisticalArg" xml:space="preserve">
+    <value>sayı</value>
+    
+  </data>
+  <data name="AboutSum_number" xml:space="preserve">
+    <value>Bu toplamını alma işlemi için sayısal bir değer.</value>
+  </data>
+  <data name="AboutMin_number" xml:space="preserve">
+    <value>Bu minimum değeri alma işlemi için sayısal bir değer.</value>
+  </data>
+  <data name="AboutMax_number" xml:space="preserve">
+    <value>Bu maksimum değeri alma işlemi için sayısal bir değer.</value>
+  </data>
+  <data name="AboutAverage_number" xml:space="preserve">
+    <value>Bu ortalama alma işlemi için sayısal bir değer.</value>
+  </data>
+  <data name="AboutAddColumns" xml:space="preserve">
+    <value>'source' üzerindeki tüm 'expression' değerlendirilerek hesaplanan yeni sütunların bulunduğu bir tablo döndürür.</value>
+    
+  </data>
+  <data name="AddColumnsArg1" xml:space="preserve">
+    <value>kaynak</value>
+    
+  </data>
+  <data name="AddColumnsArg2" xml:space="preserve">
+    <value>sütun</value>
+    
+  </data>
+  <data name="AddColumnsArg3" xml:space="preserve">
+    <value>ifade</value>
+    
+  </data>
+  <data name="AboutAddColumns_source" xml:space="preserve">
+    <value>Sütunların ekleneceği bir tablo.</value>
+    
+  </data>
+  <data name="AboutAddColumns_column" xml:space="preserve">
+    <value>Benzersiz bir sütun adı.</value>
+    
+  </data>
+  <data name="AboutAddColumns_expression" xml:space="preserve">
+    <value>Yeni sütun için değerler sağlayan bir ifade.</value>
+    
+  </data>
+  <data name="AboutDropColumns" xml:space="preserve">
+    <value>"Kaynak" tablosundan kaldırılan bir veya daha fazla belirtilen "sütunun" yer aldığı bir tablo döndürür.</value>
+    
+  </data>
+  <data name="DropColumnsArg1" xml:space="preserve">
+    <value>kaynak</value>
+    
+  </data>
+  <data name="DropColumnsArg2" xml:space="preserve">
+    <value>sütun_adı</value>
+    
+  </data>
+  <data name="AboutDropColumns_source" xml:space="preserve">
+    <value>Sütunların kaldırılacağı bir tablo değeri.</value>
+  </data>
+  <data name="AboutDropColumns_column_name" xml:space="preserve">
+    <value>Kaldırılacak sütunun adı.</value>
+  </data>
+  <data name="AboutFilter" xml:space="preserve">
+    <value>Tablodan, belirtilen tüm koşulların true olduğu satırları döndürür.</value>
+    
+  </data>
+  <data name="FilterArg1" xml:space="preserve">
+    <value>kaynak</value>
+    
+  </data>
+  <data name="FilterArg2" xml:space="preserve">
+    <value>mantıksal_test</value>
+    
+  </data>
+  <data name="AboutFilter_source" xml:space="preserve">
+    <value>Filtrelenecek tablo.</value>
+  </data>
+  <data name="AboutFilter_logical_test" xml:space="preserve">
+    <value>Her satır için değerlendirilecek mantıksal test. Filtre sonucuna yalnızca bu testi geçen satırlar eklenir.</value>
+  </data>
+  <data name="AboutFirst" xml:space="preserve">
+    <value>'source' öğesinin ilk satırını döndürür.</value>
+    
+  </data>
+  <data name="AboutLast" xml:space="preserve">
+    <value>'source' öğesinin son satırını döndürür.</value>
+    
+  </data>
+  <data name="FirstLastArg1" xml:space="preserve">
+    <value>kaynak</value>
+    
+  </data>
+  <data name="AboutFirst_source" xml:space="preserve">
+    <value>İlk satırı döndürülecek olan tablo.</value>
+  </data>
+  <data name="AboutLast_source" xml:space="preserve">
+    <value>Son satırı döndürülecek olan tablo.</value>
+  </data>
+  <data name="AboutFirstN" xml:space="preserve">
+    <value>'source' öğesinin ilk 'count' satırlarını döndürür.</value>
+    
+  </data>
+  <data name="AboutLastN" xml:space="preserve">
+    <value>'source' öğesinin son 'number' satırlarını döndürür.</value>
+    
+  </data>
+  <data name="FirstLastNArg1" xml:space="preserve">
+    <value>kaynak</value>
+    
+  </data>
+  <data name="FirstLastNArg2" xml:space="preserve">
+    <value>sayı</value>
+    
+  </data>
+  <data name="AboutFirstN_source" xml:space="preserve">
+    <value>Satırların döndürüleceği bir tablo.</value>
+  </data>
+  <data name="AboutFirstN_count" xml:space="preserve">
+    <value>Döndürülecek satır sayısı.</value>
+  </data>
+  <data name="AboutLastN_source" xml:space="preserve">
+    <value>Satırların döndürüleceği bir tablo.</value>
+  </data>
+  <data name="AboutLastN_count" xml:space="preserve">
+    <value>Döndürülecek satır sayısı.</value>
+  </data>
+  <data name="AboutText" xml:space="preserve">
+    <value>Bir 'value' değerini belirli sayıda 'format_text' şeklinde metne dönüştürür.</value>
+    
+  </data>
+  <data name="TextArg1" xml:space="preserve">
+    <value>değer</value>
+    
+  </data>
+  <data name="TextArg2" xml:space="preserve">
+    <value>biçim_metin</value>
+    
+  </data>
+  <data name="TextArg3" xml:space="preserve">
+    <value>dil</value>
+    
+  </data>
+  <data name="AboutText_value" xml:space="preserve">
+    <value>Metin olarak biçimlendirilecek bir değer.</value>
+  </data>
+  <data name="AboutText_format_text" xml:space="preserve">
+    <value>'value' değerinin nasıl biçimlendirileceğini belirten metin değeri.</value>
+    
+  </data>
+  <data name="AboutText_language" xml:space="preserve">
+    <value>Metne dönüştürme işleminde kullanılacak dil kodu.</value>
+    
+  </data>
+  <data name="AboutValue" xml:space="preserve">
+    <value>Sayı gösteren bir 'text' değerini sayısal bir değere dönüştürür.</value>
+    
+  </data>
+  <data name="ValueArg1" xml:space="preserve">
+    <value>metin</value>
+    
+  </data>
+  <data name="ValueArg2" xml:space="preserve">
+    <value>dil</value>
+    
+  </data>
+  <data name="AboutValue_text" xml:space="preserve">
+    <value>Sayısal bir değere dönüştürülecek metin değeri.</value>
+  </data>
+  <data name="AboutValue_language" xml:space="preserve">
+    <value>Değer dönüştürme işleminde kullanılacak dil kodu.</value>
+    
+  </data>
+  <data name="AboutBoolean" xml:space="preserve">
+    <value>Bir boole'yi temsil eden "metni" boole değerine dönüştürür.</value>
+    
+  </data>
+  <data name="BooleanArg1" xml:space="preserve">
+    <value>metin</value>
+    
+  </data>
+  <data name="AboutBoolean_text" xml:space="preserve">
+    <value>Boole değerine dönüştürülecek metin değeri.</value>
+  </data>
+  <data name="AboutCoalesce" xml:space="preserve">
+    <value>Boş olmayan ilk bağımsız değişkeni döndürür</value>
+    
+  </data>
+  <data name="CoalesceArg1" xml:space="preserve">
+    <value>değer</value>
+    
+  </data>
+  <data name="AboutCoalesce_value" xml:space="preserve">
+    <value>Boş olmayan ilk bağımsız değişken olması durumunda döndürülecek bağımsız değişken.</value>
+  </data>
+  <data name="AboutConcatenate" xml:space="preserve">
+    <value>Birçok metin değerini tek bir metin değeri olarak birleştirir.</value>
+    
+  </data>
+  <data name="ConcatenateArg1" xml:space="preserve">
+    <value>metin</value>
+    
+  </data>
+  <data name="AboutConcatenate_text" xml:space="preserve">
+    <value>Bağımsız değişkenlerin geri kalanıyla kesilecek metin değeri.</value>
+  </data>
+  <data name="AboutConcatenateT" xml:space="preserve">
+    <value>Birkaç metin değerini veya tabloyu bir metin değerleri sütununa ekler.</value>
+    
+  </data>
+  <data name="ConcatenateTArg1" xml:space="preserve">
+    <value>değer</value>
+    
+  </data>
+  <data name="AboutConcatenate_value" xml:space="preserve">
+    <value>Bağımsız değişkenlerin geri kalanıyla kesilecek metin değeri veya metin değerleri sütunu.</value>
+  </data>
+  <data name="AboutConcat" xml:space="preserve">
+    <value>Sağlanan tabloda belirtilen ifade tarafından değerlendirilen tüm metin değerlerini tek bir metin değeri olarak birleştirir.</value>
+    
+  </data>
+  <data name="ConcatArg1" xml:space="preserve">
+    <value>tablo</value>
+    
+  </data>
+  <data name="ConcatArg2" xml:space="preserve">
+    <value>ifade</value>
+    
+  </data>
+  <data name="ConcatArg3" xml:space="preserve">
+    <value>ayırıcı</value>
+    
+  </data>
+  <data name="AboutConcat_table" xml:space="preserve">
+    <value>İkinci parametre tarafından sağlanan ifadenin değerlendirileceği bir tablo değeri.</value>
+  </data>
+  <data name="AboutConcat_expression" xml:space="preserve">
+    <value>Belirtilen tablodaki her satır için değerlendirilecek olan metin oluşturucu bir ifade.</value>
+  </data>
+  <data name="AboutConcat_separator" xml:space="preserve">
+    <value>Birleştirilmiş tablo satırları arasına eklenecek metin değeri.</value>
+    
+  </data>
+  <data name="AboutLen" xml:space="preserve">
+    <value>Bir metin değerindeki karakter sayısını döndürür.</value>
+    
+  </data>
+  <data name="AboutLen_text" xml:space="preserve">
+    <value>Karakter uzunluğu döndürülecek metin değeri.</value>
+  </data>
+  <data name="AboutLenT" xml:space="preserve">
+    <value>Belirtilen tablo veya koleksiyonda her satır için değerlendirilen bir metin değerindeki karakter sayısını döndürür.</value>
+    
+  </data>
+  <data name="AboutLen_text_column" xml:space="preserve">
+    <value>Karakter uzunlukları döndürülecek olan (yeni bir sütun olarak) metin değerleri sütunu.</value>
+  </data>
+  <data name="LenArg1" xml:space="preserve">
+    <value>metin</value>
+    
+  </data>
+  <data name="LenTArg1" xml:space="preserve">
+    <value>metin_sütunu</value>
+    
+  </data>
+  <data name="AboutUpper" xml:space="preserve">
+    <value>Bir metin değerinin tüm harflerini büyük harfe dönüştürür.</value>
+    
+  </data>
+  <data name="AboutUpperT" xml:space="preserve">
+    <value>Belirtilen tablo veya koleksiyondaki her satır için değerlendirilen bir metin değerinin tüm harflerini büyük harfe dönüştürür.</value>
+    
+  </data>
+  <data name="AboutUpper_text" xml:space="preserve">
+    <value>Tüm harfleri büyük harfe dönüştürülecek bir metin değeri.</value>
+  </data>
+  <data name="AboutUpper_text_column" xml:space="preserve">
+    <value>Tüm harfleri büyük metin değerleri sütununa dönüştürülecek olan bir metin değerleri sütunu.</value>
+  </data>
+  <data name="AboutLower" xml:space="preserve">
+    <value>Bir metin değerindeki tüm harfleri küçük harfe dönüştürür.</value>
+    
+  </data>
+  <data name="AboutLowerT" xml:space="preserve">
+    <value>Belirtilen tablo veya koleksiyonda her satır için değerlendirilen bir metin değerindeki tüm harfleri küçük harfe dönüştürür.</value>
+    
+  </data>
+  <data name="AboutLower_text" xml:space="preserve">
+    <value>Küçük harfe dönüştürülecek olan bir metin değeri.</value>
+  </data>
+  <data name="AboutLower_text_column" xml:space="preserve">
+    <value>Küçük harfli metin değerlerine dönüştürülecek olan metin değerleri sütunu.</value>
+  </data>
+  <data name="AboutProper" xml:space="preserve">
+    <value>Bir metin değerindeki her sözcüğün ilk harfini büyük harfe, diğer tüm harfleri de küçük harfe dönüştürür.</value>
+    
+  </data>
+  <data name="AboutProperT" xml:space="preserve">
+    <value>Belirtilen tablo veya koleksiyondaki her satır için değerlendirilen bir metin değerindeki her sözcüğün ilk harfini büyük harfe, diğer tüm harfleri küçük harfe dönüştürür.</value>
+    
+  </data>
+  <data name="AboutProper_text" xml:space="preserve">
+    <value>İlk harfi büyük harfe, diğer tüm harfleri küçük harfe dönüştürülecek bir metin değeri.</value>
+  </data>
+  <data name="AboutProper_text_column" xml:space="preserve">
+    <value>İlk harfi büyük harf, diğer tüm harfleri küçük harf olan metin değeri sütununa dönüştürülecek olan bir metin değeri sütunu.</value>
+  </data>
+  <data name="AboutTrim" xml:space="preserve">
+    <value>Kelimeler arasındaki tek boşluklar hariç olmak üzere bir metin değerindeki tüm boşlukları kaldırır.</value>
+    
+  </data>
+  <data name="AboutTrim_text" xml:space="preserve">
+    <value>Kırpma için dönüştürülecek bir metin değeri.</value>
+  </data>
+  <data name="AboutTrim_text_column" xml:space="preserve">
+    <value>Kırpılacak metin değerleri sütunu.</value>
+  </data>
+  <data name="AboutTrimEnds" xml:space="preserve">
+    <value>Bir metin değerinin başındaki ve sonundaki tüm boşlukları kaldırır.</value>
+    
+  </data>
+  <data name="AboutTrimEnds_text" xml:space="preserve">
+    <value>Başındaki ve sonundaki boşluklar kırpılacak olan bir metin değeri.</value>
+  </data>
+  <data name="AboutTrimEnds_text_column" xml:space="preserve">
+    <value>Başındaki ve sonundaki boşluklar kırpılacak olan bir metin değerleri sütunu.</value>
+  </data>
+  <data name="AboutMid" xml:space="preserve">
+    <value>Bir metin değerinin ortasından, başlangıç konumu ve uzunluğu belirtilen karakter dizisini döndürür.</value>
+    
+  </data>
+  <data name="AboutMidT" xml:space="preserve">
+    <value>Belirtilen tablo veya koleksiyonda her satır için değerlendirilen bir metin değerinin ortasından, başlangıç konumu ve uzunluğu belirtilen karakter dizisini döndürür.</value>
+    
+  </data>
+  <data name="AboutMid_text" xml:space="preserve">
+    <value>Karakterlerin ayıklanacağı bir metin değeri.</value>
+  </data>
+  <data name="AboutMid_text_column" xml:space="preserve">
+    <value>Karakterleri yeni bir sütuna ayıklanacak olan bir metin değeri sütunu.</value>
+  </data>
+  <data name="AboutMid_start_num" xml:space="preserve">
+    <value>Karakterlerin ayıklanacağı başlangıç konumu.</value>
+  </data>
+  <data name="AboutMid_num_chars" xml:space="preserve">
+    <value>Ayıklanacak karakter sayısı.</value>
+  </data>
+  <data name="StringFuncArg1" xml:space="preserve">
+    <value>metin</value>
+    
+  </data>
+  <data name="StringTFuncArg1" xml:space="preserve">
+    <value>metin_sütunu</value>
+    
+  </data>
+  <data name="StringFuncArg2" xml:space="preserve">
+    <value>başlangıç_sayısı</value>
+    
+  </data>
+  <data name="StringFuncArg3" xml:space="preserve">
+    <value>sayı_karakterler</value>
+    
+  </data>
+  <data name="AboutReplace" xml:space="preserve">
+    <value>Metin değerinin bir kısmını farklı bir metin değeriyle değiştirin.</value>
+    
+  </data>
+  <data name="AboutReplaceT" xml:space="preserve">
+    <value>Belirtilen tablo veya koleksiyondaki her satır için değerlendirilen bir metin değerinin bir bölümünü farklı bir metin değeriyle değiştirir.</value>
+    
+  </data>
+  <data name="ReplaceFuncArg1" xml:space="preserve">
+    <value>eski_metin</value>
+    
+  </data>
+  <data name="ReplaceFuncArg4" xml:space="preserve">
+    <value>yeni_metin</value>
+    
+  </data>
+  <data name="AboutReplace_old_text" xml:space="preserve">
+    <value>İşlenecek metin değeri.</value>
+  </data>
+  <data name="AboutReplace_start_num" xml:space="preserve">
+    <value>Değiştirmenin gerçekleşeceği başlangıç konumu.</value>
+  </data>
+  <data name="AboutReplace_num_chars" xml:space="preserve">
+    <value>Değiştirilecek karakter sayısı.</value>
+  </data>
+  <data name="AboutReplace_new_text" xml:space="preserve">
+    <value>Yeni metin değeri.</value>
+  </data>
+  <data name="AboutReplace_text_column" xml:space="preserve">
+    <value>İşlenecek metin değerlerini içeren bir sütun.</value>
+  </data>
+  <data name="AboutError" xml:space="preserve">
+    <value>Özel değerlerle bir hata oluşturur.</value>
+    
+  </data>
+  <data name="AboutError_error_information" xml:space="preserve">
+    <value>Oluşturulan hatanın özel değerlerini içeren kayıt.</value>
+    
+  </data>
+  <data name="ErrorArg1" xml:space="preserve">
+    <value>hata_bilgisi</value>
+    
+  </data>
+  <data name="ErrErrorIrrelevantField" xml:space="preserve">
+    <value>Error işlevi yalnızca "Kind", "Message", "Notify", "Control" ve "Property" alanlarını kullanır.</value>
+    
+  </data>
+  <data name="AboutIfError" xml:space="preserve">
+    <value>Hata olmayan ilk bağımsız değişkeni değerlendirir ve döndürür.</value>
+    
+  </data>
+  <data name="IfErrorArg1" xml:space="preserve">
+    <value>value</value>
+    
+  </data>
+  <data name="AboutIfError_value" xml:space="preserve">
+    <value>Hata değilse döndürülecek değer.</value>
+    
+  </data>
+  <data name="IfErrorArg2" xml:space="preserve">
+    <value>geri_dönüş</value>
+    
+  </data>
+  <data name="AboutIfError_fallback" xml:space="preserve">
+    <value>Hata olmayan ilk bağımsız değişkense döndürülecek değer.</value>
+    
+  </data>
+  <data name="AboutSubstitute" xml:space="preserve">
+    <value>Mevcut metni bir metin değerindeki yeni metinle değiştirir.</value>
+    
+  </data>
+  <data name="AboutSubstituteT" xml:space="preserve">
+    <value>Mevcut metni, belirtilen tablo veya koleksiyondaki her satır için değerlendirilen bir metin değerindeki yeni metinle değiştirir.</value>
+    
+  </data>
+  <data name="SubstituteFuncArg1" xml:space="preserve">
+    <value>metin</value>
+    
+  </data>
+  <data name="SubstituteTFuncArg1" xml:space="preserve">
+    <value>metin_sütunu</value>
+    
+  </data>
+  <data name="SubstituteFuncArg2" xml:space="preserve">
+    <value>eski_metin</value>
+    
+  </data>
+  <data name="SubstituteFuncArg3" xml:space="preserve">
+    <value>yeni_metin</value>
+    
+  </data>
+  <data name="SubstituteFuncArg4" xml:space="preserve">
+    <value>örnek_sayısı</value>
+    
+  </data>
+  <data name="AboutSubstitute_text" xml:space="preserve">
+    <value>İşlenecek metin değeri.</value>
+  </data>
+  <data name="AboutSubstitute_old_text" xml:space="preserve">
+    <value>Değiştirilecek metin.</value>
+  </data>
+  <data name="AboutSubstitute_new_text" xml:space="preserve">
+    <value>Yeni metin.</value>
+  </data>
+  <data name="AboutSubstitute_instance_num" xml:space="preserve">
+    <value>Sağlanan metnin hangi oluşumunun değiştirileceğini belirtir.</value>
+  </data>
+  <data name="AboutSubstitute_text_column" xml:space="preserve">
+    <value>İşlenecek metin değerlerini içeren bir sütun.</value>
+  </data>
+  <data name="AboutSort" xml:space="preserve">
+    <value>İsteğe bağlı bir sıralama 'order' değeri belirterek, 'source' öğesini her bir satır için değerlendirilen 'expression' sonuçlarına göre sıralar.</value>
+    
+  </data>
+  <data name="SortArg1" xml:space="preserve">
+    <value>kaynak</value>
+    
+  </data>
+  <data name="SortArg2" xml:space="preserve">
+    <value>ifade</value>
+    
+  </data>
+  <data name="SortArg3" xml:space="preserve">
+    <value>sıra</value>
+    
+  </data>
+  <data name="AboutSort_source" xml:space="preserve">
+    <value>Sıralanacak tablo.</value>
+  </data>
+  <data name="AboutSort_expression" xml:space="preserve">
+    <value>'source' içindeki satırlarda değerlendirilen ve sıralama için değerler sağlayan bir ifade.</value>
+  </data>
+  <data name="AboutSort_order" xml:space="preserve">
+    <value>Artan veya Azalan</value>
+  </data>
+  <data name="AboutSortByColumns" xml:space="preserve">
+    <value>İsteğe bağlı bir sıralama 'order' değeri belirterek 'source' öğesini sütuna göre sıralar.</value>
+    
+  </data>
+  <data name="SortByColumnsArg1" xml:space="preserve">
+    <value>kaynak</value>
+    
+  </data>
+  <data name="SortByColumnsArg2" xml:space="preserve">
+    <value>sütun</value>
+    
+  </data>
+  <data name="SortByColumnsArg3" xml:space="preserve">
+    <value>sıra</value>
+    
+  </data>
+  <data name="AboutSortByColumns_source" xml:space="preserve">
+    <value>Sıralanacak tablo.</value>
+  </data>
+  <data name="AboutSortByColumns_column" xml:space="preserve">
+    <value>Benzersiz bir sütun adı.</value>
+  </data>
+  <data name="AboutSortByColumns_order" xml:space="preserve">
+    <value>Artan veya Azalan</value>
+  </data>
+  <data name="AboutSortByColumnsWithOrderValues" xml:space="preserve">
+    <value>'source' öğesini belirtilen sütundaki eşleşen değerler dizinine göre sıralar.</value>
+    
+  </data>
+  <data name="SortByColumnsWithOrderValuesArg1" xml:space="preserve">
+    <value>kaynak</value>
+    
+  </data>
+  <data name="SortByColumnsWithOrderValuesArg2" xml:space="preserve">
+    <value>sütun</value>
+    
+  </data>
+  <data name="SortByColumnsWithOrderValuesArg3" xml:space="preserve">
+    <value>değerler</value>
+    
+  </data>
+  <data name="AboutSortByColumns_values" xml:space="preserve">
+    <value>Sıralama amaçlı kullanılacak olan değerler sütunu. Sıralama artan/azalan düzende değil sütundaki eşleşen değerler dizinine göre yapılır </value>
+  </data>
+  <data name="AboutRand" xml:space="preserve">
+    <value>0 ya da 0'dan büyük ve 1'den küçük rastgele bir sayıyı eşit dağıtılmış olarak döndürür.</value>
+    
+  </data>
+  <data name="AboutRandBetween" xml:space="preserve">
+    <value>Alt ile üst değer arasında, eşit dağıtılmış rastgele bir sayı döndürür.</value>
+    
+  </data>
+  <data name="AboutRandBetween_bottom" xml:space="preserve">
+    <value>İşlevin döndürebileceği en küçük tamsayı.</value>
+  </data>
+  <data name="AboutRandBetween_top" xml:space="preserve">
+    <value>İşlevin döndürebileceği en büyük tamsayı. Alt değere eşit veya bu değerden büyük olmalıdır.</value>
+  </data>
+  <data name="RandBetweenArg1" xml:space="preserve">
+    <value>alt</value>
+    
+  </data>
+  <data name="RandBetweenArg2" xml:space="preserve">
+    <value>üst</value>
+    
+  </data>
+  <data name="AboutGUID" xml:space="preserve">
+    <value>Bir dizeden GUID oluşturur veya bağımsız değişken sağlanmadıysa rastgele oluşturulmuş bir GUID döndürür.</value>
+    
+  </data>
+  <data name="GUIDArg" xml:space="preserve">
+    <value>GUID_dizesi</value>
+    
+  </data>
+  <data name="AboutGUID_GUID_string" xml:space="preserve">
+    <value>GUID'ye dönüştürülecek dize</value>
+    
+  </data>
+  <data name="AboutNow" xml:space="preserve">
+    <value>Geçerli tarihi ve saati döndürür.</value>
+    
+  </data>
+  <data name="AboutUTCNow" xml:space="preserve">
+    <value>UTC saatinde geçerli tarih ve saati döndürür.</value>
+    
+  </data>
+  <data name="AboutTimeZoneOffset" xml:space="preserve">
+    <value>UTC saati ile yerel saat arasındaki farkı dakika cinsinden döndürür. Örneğin, yerel saat diliminiz UTC+2 ise -120 döndürülür.</value>
+    
+  </data>
+  <data name="TimeZoneOffsetArg1" xml:space="preserve">
+    <value>tarih</value>
+    
+  </data>
+  <data name="AboutTimeZoneOffset_date" xml:space="preserve">
+    <value>'TimeZoneOffset' hesaplamasının yapılacağı tarih.</value>
+    
+  </data>
+  <data name="AboutToday" xml:space="preserve">
+    <value>Geçerli tarihi döndürür.</value>
+    
+  </data>
+  <data name="AboutUTCToday" xml:space="preserve">
+    <value>UTC saatinde geçerli tarihi döndürür.</value>
+    
+  </data>
+  <data name="AboutWeekNum" xml:space="preserve">
+    <value>Belirli bir tarihin hafta numarasını döndürür.</value>
+    
+  </data>
+  <data name="WeekNumArg1" xml:space="preserve">
+    <value>tarih</value>
+    
+  </data>
+  <data name="WeekNumArg2" xml:space="preserve">
+    <value>hafta_başlangıcı</value>
+    
+  </data>
+  <data name="AboutWeekNum_date" xml:space="preserve">
+    <value>Hafta numarasının hesaplanacağı tarih değeri.</value>
+  </data>
+  <data name="AboutWeekNum_start_of_week" xml:space="preserve">
+    <value>Haftanın günlerinin nasıl numaralandırılacağını göstermeye yönelik olarak, StartOfWeek numaralandırmasındaki veya ilgili Excel işlevindeki bir değer.</value>
+    
+  </data>
+  <data name="AboutISOWeekNum" xml:space="preserve">
+    <value>ISO kurallarına göre belirli bir tarihin hafta numarasını döndürür.</value>
+    
+  </data>
+  <data name="ISOWeekNumArg1" xml:space="preserve">
+    <value>tarih</value>
+    
+  </data>
+  <data name="AboutISOWeekNum_date" xml:space="preserve">
+    <value>ISO hafta numarasının hesaplanacağı tarih değeri.</value>
+  </data>
+  <data name="AboutInt" xml:space="preserve">
+    <value>Eksi sonsuza doğru yuvarlayarak "sayıyı" kısaltır.</value>
+    
+  </data>
+  <data name="AboutIntT" xml:space="preserve">
+    <value>Bir sayı sütunundaki değerleri eksi negatife yuvarlayarak kısaltır.</value>
+    
+  </data>
+  <data name="AboutInt_number" xml:space="preserve">
+    <value>İşlenecek sayısal bir değer.</value>
+  </data>
+  <data name="AboutInt_input" xml:space="preserve">
+    <value>İşlenecek sayısal değerleri içeren bir sütun.</value>
+  </data>
+  <data name="AboutTrunc" xml:space="preserve">
+    <value>Sıfıra doğru yuvarlayarak "sayıyı" kısaltır.</value>
+    
+  </data>
+  <data name="AboutTrunc_number" xml:space="preserve">
+    <value>Kısaltılacak sayı.</value>
+  </data>
+  <data name="AboutTrunc_source" xml:space="preserve">
+    <value>Kısaltılacak sayıları içeren bir sütun.</value>
+  </data>
+  <data name="AboutTrunc_num_digits" xml:space="preserve">
+    <value>Kısaltma için kullanılacak kesir basamağı sayısı.</value>
+  </data>
+  <data name="AboutTruncT" xml:space="preserve">
+    <value>Sıfıra doğru yuvarlama yapıldığında "kaynak"taki tüm sayılar kısaltılır.</value>
+    
+  </data>
+  <data name="TruncArg1" xml:space="preserve">
+    <value>sayı</value>
+    
+  </data>
+  <data name="TruncArg2" xml:space="preserve">
+    <value>sayı_rakamlar</value>
+    
+  </data>
+  <data name="TruncTArg1" xml:space="preserve">
+    <value>kaynak</value>
+    
+  </data>
+  <data name="TruncTArg2" xml:space="preserve">
+    <value>sayı_rakamlar</value>
+    
+  </data>
+  <data name="AboutRound" xml:space="preserve">
+    <value>'number' değerini belirtilen basamak sayısına yuvarlar.</value>
+    
+  </data>
+  <data name="AboutRoundUp" xml:space="preserve">
+    <value>'number' değerini sıfırdan ıraksayarak yukarı yuvarlar.</value>
+    
+  </data>
+  <data name="AboutRoundDown" xml:space="preserve">
+    <value>'number' değerini sıfıra yakınsayarak aşağıya yuvarlar.</value>
+    
+  </data>
+  <data name="RoundArg1" xml:space="preserve">
+    <value>sayı</value>
+    
+  </data>
+  <data name="RoundArg2" xml:space="preserve">
+    <value>sayı_rakamlar</value>
+    
+  </data>
+  <data name="AboutRound_number" xml:space="preserve">
+    <value>Yuvarlanacak sayı.</value>
+  </data>
+  <data name="AboutRound_source" xml:space="preserve">
+    <value>Yuvarlanacak sayıları içeren bir sütun.</value>
+  </data>
+  <data name="AboutRound_num_digits" xml:space="preserve">
+    <value>Yuvarlama için kullanılacak kesir basamağı sayısı.</value>
+  </data>
+  <data name="AboutRoundUp_number" xml:space="preserve">
+    <value>Yuvarlanacak sayı.</value>
+  </data>
+  <data name="AboutRoundUp_source" xml:space="preserve">
+    <value>Yuvarlanacak sayıları içeren bir sütun.</value>
+  </data>
+  <data name="AboutRoundUp_num_digits" xml:space="preserve">
+    <value>Yuvarlama için kullanılacak kesir basamağı sayısı.</value>
+  </data>
+  <data name="AboutRoundDown_number" xml:space="preserve">
+    <value>Yuvarlanacak sayı.</value>
+  </data>
+  <data name="AboutRoundDown_source" xml:space="preserve">
+    <value>Yuvarlanacak sayıları içeren bir sütun.</value>
+  </data>
+  <data name="AboutRoundDown_num_digits" xml:space="preserve">
+    <value>Yuvarlama için kullanılacak kesir basamağı sayısı.</value>
+  </data>
+  <data name="AboutRoundT" xml:space="preserve">
+    <value>'source' içindeki tüm sayıları belirtilen basamak sayısına yuvarlar.</value>
+    
+  </data>
+  <data name="AboutRoundUpT" xml:space="preserve">
+    <value>'source' içindeki tüm sayıları sıfırdan ıraksayarak yukarı yuvarlar.</value>
+    
+  </data>
+  <data name="AboutRoundDownT" xml:space="preserve">
+    <value>'source' içindeki tüm sayıları sıfıra yakınsayarak aşağıya yuvarlar.</value>
+    
+  </data>
+  <data name="RoundTArg1" xml:space="preserve">
+    <value>kaynak</value>
+    
+  </data>
+  <data name="RoundTArg2" xml:space="preserve">
+    <value>sayı_rakamlar</value>
+    
+  </data>
+  <data name="AboutRGBA" xml:space="preserve">
+    <value>Rengin Kırmızı, Yeşil, Mavi ve Alfa bileşenlerine ilişkin sayısal değerlerini alır ve belirtilen rengi oluşturur. R, G ve B 0 ile 255 arasında sayısal değerlerdir. Alfa, 0 ile 1 arasındaki bir ondalık değerdir.</value>
+    
+  </data>
+  <data name="RGBAArg1" xml:space="preserve">
+    <value>kırmızı_değeri</value>
+    
+  </data>
+  <data name="RGBAArg2" xml:space="preserve">
+    <value>yeşil_değeri</value>
+    
+  </data>
+  <data name="RGBAArg3" xml:space="preserve">
+    <value>mavi_değeri</value>
+    
+  </data>
+  <data name="RGBAArg4" xml:space="preserve">
+    <value>alfa_değeri</value>
+    
+  </data>
+  <data name="AboutRGBA_red_value" xml:space="preserve">
+    <value>Kırmızı bileşeni (0 ile 255 arasında).</value>
+  </data>
+  <data name="AboutRGBA_green_value" xml:space="preserve">
+    <value>Yeşil bileşeni (0 ile 255 arasında).</value>
+  </data>
+  <data name="AboutRGBA_blue_value" xml:space="preserve">
+    <value>Mavi bileşeni (0 ile 255 arasında).</value>
+  </data>
+  <data name="AboutRGBA_alpha_value" xml:space="preserve">
+    <value>0 ile 1 arasındaki (veya %49 gibi bir yüzdelik değer) alfa bileşeni.</value>
+  </data>
+  <data name="AboutColorFade" xml:space="preserve">
+    <value>Belirtilen "soluklaşma" yüzdesine göre, belirtilen "rengin" yeni bir gölgesini oluşturur.</value>
+    
+  </data>
+  <data name="ColorFadeArg1" xml:space="preserve">
+    <value>renk</value>
+    
+  </data>
+  <data name="ColorFadeArg2" xml:space="preserve">
+    <value>soldurma</value>
+    
+  </data>
+  <data name="AboutColorFade_color" xml:space="preserve">
+    <value>Soluklaştırılacak renk.</value>
+  </data>
+  <data name="AboutColorFade_fade" xml:space="preserve">
+    <value>Renk soluklaştırma yüzdesi. Negatif yüzde değeri daha koyu bir gölge oluşturur. Pozitif yüzde değeri ise daha açık bir gölge oluşturur.</value>
+  </data>
+  <data name="AboutColorFadeT" xml:space="preserve">
+    <value>Belirtilen "soluklaşma" yüzdelerine göre, belirtilen "renk" değerlerinin yeni gölgelerini oluşturur.</value>
+  </data>
+  <data name="ColorFadeTArg1" xml:space="preserve">
+    <value>renk_veya_sütun</value>
+    
+  </data>
+  <data name="ColorFadeTArg2" xml:space="preserve">
+    <value>soldurma_veya_sütun</value>
+    
+  </data>
+  <data name="AboutColorFade_color_or_column" xml:space="preserve">
+    <value>Soluklaştırılacak bir renk (veya renk değerleri sütunu).</value>
+  </data>
+  <data name="AboutColorFade_fade_or_column" xml:space="preserve">
+    <value>Renk (veya renk değerlerinin sütunu) soluklaştırma yüzdesi (veya yüzde değerleri sütunu). Negatif yüzde değeri daha koyu bir gölge oluşturur. Pozitif yüzde değeri ise daha açık bir gölge oluşturur.</value>
+  </data>
+  <data name="AboutAbs" xml:space="preserve">
+    <value>Bir sayının mutlak değerini (işareti olmadan) döndürür.</value>
+    
+  </data>
+  <data name="AboutAbsT" xml:space="preserve">
+    <value>Bir sayı sütununun mutlak değerlerini (işaretleri olmadan) döndürür.</value>
+    
+  </data>
+  <data name="AboutAbs_number" xml:space="preserve">
+    <value>İşlenecek sayısal bir değer.</value>
+  </data>
+  <data name="AboutAbs_input" xml:space="preserve">
+    <value>İşlenecek sayısal değerleri içeren bir sütun.</value>
+  </data>
+  <data name="AboutSin_number" xml:space="preserve">
+    <value>İşlenecek bir sayısal değer (radyan cinsinde).</value>
+  </data>
+  <data name="AboutSin_input" xml:space="preserve">
+    <value>İşlenecek bir sayısal değerler (radyan cinsinde) sütunu.</value>
+  </data>
+  <data name="AboutSin" xml:space="preserve">
+    <value>Bir sayının sinüs değerini döndürür.</value>
+    
+  </data>
+  <data name="AboutSinT" xml:space="preserve">
+    <value>Bir sayı sütununun sinüs değerlerini döndürür.</value>
+    
+  </data>
+  <data name="AboutAsin_number" xml:space="preserve">
+    <value>İşlenecek sayısal bir değer.</value>
+  </data>
+  <data name="AboutAsin_input" xml:space="preserve">
+    <value>İşlenecek sayısal değerleri içeren bir sütun.</value>
+  </data>
+  <data name="AboutAsin" xml:space="preserve">
+    <value>Bir sayının ark sinüs değerini (radyan cinsinde) döndürür.</value>
+    
+  </data>
+  <data name="AboutAsinT" xml:space="preserve">
+    <value>Bir sayı sütununun ark sinüs değerlerini (radyan cinsinde) döndürür.</value>
+    
+  </data>
+  <data name="AboutCos" xml:space="preserve">
+    <value>Bir sayının kosinüs değerini döndürür.</value>
+    
+  </data>
+  <data name="AboutCosT" xml:space="preserve">
+    <value>Bir sayı sütununun kosinüs değerlerini döndürür.</value>
+    
+  </data>
+  <data name="AboutCos_number" xml:space="preserve">
+    <value>İşlenecek bir sayısal değer (radyan cinsinde).</value>
+  </data>
+  <data name="AboutCos_input" xml:space="preserve">
+    <value>İşlenecek bir sayısal değerler (radyan cinsinde) sütunu.</value>
+  </data>
+  <data name="AboutAcos" xml:space="preserve">
+    <value>Bir sayının ark kosinüs değerini (radyan cinsinde) döndürür.</value>
+    
+  </data>
+  <data name="AboutAcos_number" xml:space="preserve">
+    <value>İşlenecek sayısal bir değer.</value>
+  </data>
+  <data name="AboutAcosT" xml:space="preserve">
+    <value>Bir sayı sütununun ark kosinüs değerlerini (radyan cinsinde) döndürür.</value>
+    
+  </data>
+  <data name="AboutAcos_input" xml:space="preserve">
+    <value>İşlenecek sayısal değerleri içeren bir sütun.</value>
+  </data>
+  <data name="AboutAcot_number" xml:space="preserve">
+    <value>İşlenecek sayısal bir değer.</value>
+  </data>
+  <data name="AboutAcot_input" xml:space="preserve">
+    <value>İşlenecek sayısal değerleri içeren bir sütun.</value>
+  </data>
+  <data name="AboutAcot" xml:space="preserve">
+    <value>Bir sayının ark kotanjant değerini (radyan cinsinde) döndürür.</value>
+    
+  </data>
+  <data name="AboutAcotT" xml:space="preserve">
+    <value>Bir sayı sütununun ark kotanjant değerlerini (radyan cinsinde) döndürür.</value>
+    
+  </data>
+  <data name="AboutTan" xml:space="preserve">
+    <value>Bir sayının tanjant değerini döndürür.</value>
+    
+  </data>
+  <data name="AboutTanT" xml:space="preserve">
+    <value>Bir sayı sütununun tanjant değerlerini döndürür.</value>
+    
+  </data>
+  <data name="AboutTan_number" xml:space="preserve">
+    <value>İşlenecek bir sayısal değer (radyan cinsinde).</value>
+  </data>
+  <data name="AboutTan_input" xml:space="preserve">
+    <value>İşlenecek bir sayısal değerler (radyan cinsinde) sütunu.</value>
+  </data>
+  <data name="AboutAtan" xml:space="preserve">
+    <value>Bir sayının ark tanjant değerini (radyan cinsinde) döndürür.</value>
+    
+  </data>
+  <data name="AboutAtanT" xml:space="preserve">
+    <value>Bir sayı sütununun ark tanjant değerlerini (radyan cinsinde) döndürür.</value>
+    
+  </data>
+  <data name="AboutAtan_number" xml:space="preserve">
+    <value>İşlenecek sayısal bir değer.</value>
+  </data>
+  <data name="AboutAtan_input" xml:space="preserve">
+    <value>İşlenecek sayısal değerleri içeren bir sütun.</value>
+  </data>
+  <data name="AboutCot" xml:space="preserve">
+    <value>Bir sayının kotanjant değerini döndürür.</value>
+    
+  </data>
+  <data name="AboutCotT" xml:space="preserve">
+    <value>Bir sayı sütununun kotanjant değerlerini döndürür.</value>
+    
+  </data>
+  <data name="AboutCot_number" xml:space="preserve">
+    <value>İşlenecek bir sayısal değer (radyan cinsinde).</value>
+  </data>
+  <data name="AboutCot_input" xml:space="preserve">
+    <value>İşlenecek bir sayısal değerler (radyan cinsinde) sütunu.</value>
+  </data>
+  <data name="AboutLn" xml:space="preserve">
+    <value>Bir sayının doğal logaritmasını (E tabanı) döndürür.</value>
+    
+  </data>
+  <data name="AboutLnT" xml:space="preserve">
+    <value>Bir sayı sütununun doğal logaritma değerlerini (E tabanı) döndürür.</value>
+    
+  </data>
+  <data name="AboutLn_number" xml:space="preserve">
+    <value>İşlenecek sayısal bir değer.</value>
+  </data>
+  <data name="AboutLn_input" xml:space="preserve">
+    <value>İşlenecek sayısal değerleri içeren bir sütun.</value>
+  </data>
+  <data name="AboutLog" xml:space="preserve">
+    <value>Bir sayının belirtilen tabana göre logaritmasını döndürür. Varsayılan taban: 10.</value>
+    
+  </data>
+  <data name="AboutLogT" xml:space="preserve">
+    <value>Bir sayının veya sayı sütununun belirtilen tabana veya taban sütununa göre logaritmasını döndürür. Varsayılan taban: 10.</value>
+    
+  </data>
+  <data name="AboutLog_number" xml:space="preserve">
+    <value>İşlenecek sayısal bir değer.</value>
+  </data>
+  <data name="AboutLog_input" xml:space="preserve">
+    <value>İşlenecek sayısal değerleri içeren bir sütun.</value>
+  </data>
+  <data name="LogBase" xml:space="preserve">
+    <value>temel</value>
+    
+  </data>
+  <data name="AboutLog_base" xml:space="preserve">
+    <value>Logaritmanın tabanı.</value>
+  </data>
+  <data name="AboutExp" xml:space="preserve">
+    <value>Bir sayının üssünün E sayısının üssü olarak kullanılmasıyla elde edilen sonucu döndürür. Diğer tabanların üslerini hesaplamak için üs olarak gösterme işlecini (^) kullanın.</value>
+    
+  </data>
+  <data name="AboutExpT" xml:space="preserve">
+    <value>Bir sayı sütunundaki her sayının üssünün E sayısının üssü olarak kullanılmasıyla elde edilen sonucun yer aldığı bir sütun döndürür. Diğer tabanların üslerini hesaplamak için üs olarak gösterme işlecini (^) kullanın.</value>
+    
+  </data>
+  <data name="AboutExp_number" xml:space="preserve">
+    <value>İşlenecek sayısal bir değer.</value>
+  </data>
+  <data name="AboutExp_input" xml:space="preserve">
+    <value>İşlenecek sayısal değerleri içeren bir sütun.</value>
+  </data>
+  <data name="AboutPi" xml:space="preserve">
+    <value>Pi değerini döndürür.</value>
+  </data>
+  <data name="AboutRadians" xml:space="preserve">
+    <value>Bir sayının radyan değerini döndürür.</value>
+    
+  </data>
+  <data name="AboutRadiansT" xml:space="preserve">
+    <value>Bir sayı sütununun radyan değerlerini döndürür.</value>
+    
+  </data>
+  <data name="AboutRadians_number" xml:space="preserve">
+    <value>İşlenecek bir sayısal değer (derece cinsinde).</value>
+  </data>
+  <data name="AboutRadians_input" xml:space="preserve">
+    <value>İşlenecek bir sayısal değerler (derece cinsinde) sütunu.</value>
+  </data>
+  <data name="AboutDegrees" xml:space="preserve">
+    <value>Bir sayının açı değerini döndürür.</value>
+    
+  </data>
+  <data name="AboutDegreesT" xml:space="preserve">
+    <value>Bir sayı sütununun açı değerlerini döndürür.</value>
+    
+  </data>
+  <data name="AboutDegrees_number" xml:space="preserve">
+    <value>İşlenecek bir sayısal değer (radyan cinsinde).</value>
+  </data>
+  <data name="AboutDegrees_input" xml:space="preserve">
+    <value>İşlenecek bir sayısal değerler (radyan cinsinde) sütunu.</value>
+  </data>
+  <data name="AboutAtan2" xml:space="preserve">
+    <value>Belirtilen x ve y koordinatlarının ark tanjantını (radyan cinsinde) döndürür.</value>
+  </data>
+  <data name="AboutAtan2Arg1" xml:space="preserve">
+    <value>x_koordinatı</value>
+    
+  </data>
+  <data name="AboutAtan2Arg2" xml:space="preserve">
+    <value>y_koordinatı</value>
+    
+  </data>
+  <data name="AboutAtan2_x_coordinate" xml:space="preserve">
+    <value>x koordinatı.</value>
+  </data>
+  <data name="AboutAtan2_y_coordinate" xml:space="preserve">
+    <value>y koordinatı.</value>
+  </data>
+  <data name="AboutSqrt" xml:space="preserve">
+    <value>Bir sayının karekökünü döndürür.</value>
+    
+  </data>
+  <data name="AboutSqrtT" xml:space="preserve">
+    <value>Bir sayı sütununun kareköklerini döndürür.</value>
+    
+  </data>
+  <data name="AboutSqrt_number" xml:space="preserve">
+    <value>İşlenecek sayısal bir değer.</value>
+  </data>
+  <data name="AboutSqrt_input" xml:space="preserve">
+    <value>İşlenecek sayısal değerleri içeren bir sütun.</value>
+  </data>
+  <data name="MathFuncArg1" xml:space="preserve">
+    <value>sayı</value>
+    
+  </data>
+  <data name="MathTFuncArg1" xml:space="preserve">
+    <value>giriş</value>
+    
+  </data>
+  <data name="AboutLeft" xml:space="preserve">
+    <value>Bir metin değerinin başından belirtilen karakter sayısını döndürür.</value>
+    
+  </data>
+  <data name="AboutLeftT" xml:space="preserve">
+    <value>Belirtilen tablo veya koleksiyonda her satır için değerlendirilen metin değerinin başından itibaren belirtilen sayıda karakterin bulunduğu bir sütun döndürür.</value>
+    
+  </data>
+  <data name="AboutLeft_text" xml:space="preserve">
+    <value>Karakterlerin ayıklanacağı bir metin değeri.</value>
+  </data>
+  <data name="AboutLeft_num_chars" xml:space="preserve">
+    <value>Ayıklanacak karakter sayısı.</value>
+  </data>
+  <data name="AboutLeft_text_column" xml:space="preserve">
+    <value>Karakterlerin ayıklanacağı metin değerlerini içeren bir sütun.</value>
+  </data>
+  <data name="AboutRight" xml:space="preserve">
+    <value>Bir metin değerinin sonundaki belirtilen sayıda karakteri döndürür.</value>
+    
+  </data>
+  <data name="AboutRightT" xml:space="preserve">
+    <value>Belirtilen tablo veya koleksiyondaki her satır için değerlendirilen metin değerinin sonundaki belirtilen sayıda karakteri içeren sütunu döndürür.</value>
+    
+  </data>
+  <data name="AboutRight_text" xml:space="preserve">
+    <value>Karakterlerin ayıklanacağı bir metin değeri.</value>
+  </data>
+  <data name="AboutRight_num_chars" xml:space="preserve">
+    <value>Ayıklanacak karakter sayısı.</value>
+  </data>
+  <data name="AboutRight_text_column" xml:space="preserve">
+    <value>Karakterlerin ayıklanacağı metin değerlerini içeren bir sütun.</value>
+  </data>
+  <data name="LeftRightArg1" xml:space="preserve">
+    <value>metin</value>
+    
+  </data>
+  <data name="LeftRightTArg1" xml:space="preserve">
+    <value>metin_sütunu</value>
+    
+  </data>
+  <data name="LeftRightArg2" xml:space="preserve">
+    <value>sayı_karakterler</value>
+    
+  </data>
+  <data name="AboutIsBlank" xml:space="preserve">
+    <value>İfadenin boş olup olmadığını denetler ve true veya false değeri döndürür.</value>
+    
+  </data>
+  <data name="IsBlankArg1" xml:space="preserve">
+    <value>ifade</value>
+    
+  </data>
+  <data name="AboutIsBlank_expression" xml:space="preserve">
+    <value>Test edilecek ifade.</value>
+  </data>
+  <data name="AboutIsBlankOrError" xml:space="preserve">
+    <value>İfadenin boş sonuçla veya hatayla sonuçlanıp sonuçlanmadığını denetler ve true veya false değeri döndürür.</value>
+    
+  </data>
+  <data name="IsBlankOrErrorArg1" xml:space="preserve">
+    <value>ifade</value>
+    
+  </data>
+  <data name="AboutIsBlankOrError_expression" xml:space="preserve">
+    <value>Test edilecek ifade.</value>
+    
+  </data>
+  <data name="AboutIsEmpty" xml:space="preserve">
+    <value>Bir koleksiyonun boş olup olmadığını denetler ve true veya false değeri döndürür.</value>
+    
+  </data>
+  <data name="IsEmptyArg1" xml:space="preserve">
+    <value>kaynak</value>
+    
+  </data>
+  <data name="AboutIsEmpty_source" xml:space="preserve">
+    <value>Test edilecek tablo.</value>
+  </data>
+  <data name="AboutShuffle" xml:space="preserve">
+    <value>Giriş 'source' tablosunun rastgele karıştırılmış bir kopyasını döndürür.</value>
+    
+  </data>
+  <data name="ShuffleArg1" xml:space="preserve">
+    <value>kaynak</value>
+    
+  </data>
+  <data name="AboutShuffle_source" xml:space="preserve">
+    <value>Karıştırılacak bir tablo.</value>
+  </data>
+  <data name="AboutLookUp" xml:space="preserve">
+    <value>Belirtilen koşulun true olarak değerlendirildiği ilk satırı arar. İfade sağlandıysa ifadenin bu satır bağlamında değerlendirilen sonucunu, sağlanmadıysa tüm satırı döndürür.</value>
+    
+  </data>
+  <data name="LookUpArg1" xml:space="preserve">
+    <value>kaynak</value>
+    
+  </data>
+  <data name="LookUpArg2" xml:space="preserve">
+    <value>koşul</value>
+    
+  </data>
+  <data name="LookUpArg3" xml:space="preserve">
+    <value>sonuç</value>
+    
+  </data>
+  <data name="AboutLookUp_source" xml:space="preserve">
+    <value>Değerlerin aranacağı tablo.</value>
+  </data>
+  <data name="AboutLookUp_condition" xml:space="preserve">
+    <value>Belirtilen girişte satırlar için değerlendirilecek olan koşul.</value>
+  </data>
+  <data name="AboutLookUp_result" xml:space="preserve">
+    <value>Belirtilen koşulla eşleşen satırda değerlendirilecek olan ifade. Böylece sonuç ortaya çıkar.</value>
+  </data>
+  <data name="AboutStdevP" xml:space="preserve">
+    <value>Bağımsız değişkenler olarak sağlanan tüm popülasyon temelinde standart sapmayı hesaplar (mantıksal değerleri ve metni yok sayar).</value>
+    
+  </data>
+  <data name="AboutStdevP_number" xml:space="preserve">
+    <value>Standart sapma hesaplamasında göz önünde bulundurulacak bir sayı.</value>
+  </data>
+  <data name="AboutStdevP_source" xml:space="preserve">
+    <value>Standart sapma hesaplaması için popülasyonu belirten bir tablo.</value>
+  </data>
+  <data name="AboutStdevP_expression" xml:space="preserve">
+    <value>Girişteki satırlarda değerlendirilen ve standart sapma hesaplaması için değerler belirten bir ifade.</value>
+  </data>
+  <data name="AboutStdevPT" xml:space="preserve">
+    <value>Bir sütun olarak sağlanan tüm popülasyon temelinde standart sapmayı hesaplar (sütundaki mantıksal değerleri ve metni yok sayar).</value>
+    
+  </data>
+  <data name="AboutVarP" xml:space="preserve">
+    <value>Tüm popülasyon temelinde varyansı hesaplar (mantıksal değerleri ve popülasyondaki metni yok sayar).</value>
+    
+  </data>
+  <data name="AboutVarP_number" xml:space="preserve">
+    <value>Varyans hesaplamasında göz önünde bulundurulacak bir sayı.</value>
+  </data>
+  <data name="AboutVarP_source" xml:space="preserve">
+    <value>Varyans hesaplaması için popülasyonu belirten bir tablo.</value>
+  </data>
+  <data name="AboutVarP_expression" xml:space="preserve">
+    <value>Varyans hesaplaması için değerler belirten girişteki satırlarda değerlendirilen bir ifade.</value>
+  </data>
+  <data name="AboutVarPT" xml:space="preserve">
+    <value>Bir sütun olarak belirtilen tüm popülasyon temelinde varyansı hesaplar (mantıksal değerleri ve sütundaki metni yok sayar).</value>
+    
+  </data>
+  <data name="SetArg1" xml:space="preserve">
+    <value>değişken</value>
+    
+  </data>
+  <data name="AboutSplit" xml:space="preserve">
+    <value>Sınırlayıcı kullanarak bir dizeyi alt dizelere ayırır.</value>
+    
+  </data>
+  <data name="AboutSplit_text" xml:space="preserve">
+    <value>Alt dizelere ayrılacak metin.</value>
+    
+  </data>
+  <data name="AboutSplit_separator" xml:space="preserve">
+    <value>Giriş metnini alt dizelere ayırmak için kullanılan sınırlayıcı metni.</value>
+    
+  </data>
+  <data name="SplitArg1" xml:space="preserve">
+    <value>metin</value>
+    
+  </data>
+  <data name="SplitArg2" xml:space="preserve">
+    <value>ayırıcı</value>
+    
+  </data>
+  <data name="AboutIsType" xml:space="preserve">
+    <value>Sağlanan değer verilen türde ise true değerini döndürür.</value>
+    
+  </data>
+  <data name="IsTypeArg1" xml:space="preserve">
+    <value>değer</value>
+    
+  </data>
+  <data name="IsTypeArg2" xml:space="preserve">
+    <value>typeTable</value>
+    
+  </data>
+  <data name="AboutAsType" xml:space="preserve">
+    <value>Sağlanan değeri verilen tür olarak kullanır.</value>
+    
+  </data>
+  <data name="AsTypeArg1" xml:space="preserve">
+    <value>değer</value>
+    
+  </data>
+  <data name="AsTypeArg2" xml:space="preserve">
+    <value>typeTable</value>
+    
+  </data>
+  <data name="AboutAsType_value" xml:space="preserve">
+    <value>Yeni tür olarak uygulanacak çok biçimli kayıt.</value>
+  </data>
+  <data name="AboutAsType_typeTable" xml:space="preserve">
+    <value>Değerin hangi tür olarak kullanılmasını istediğimizi gösteren varlık tablosu.</value>
+  </data>
+  <data name="AboutWith" xml:space="preserve">
+    <value>İkinci parametre olarak sağlanan formülü, ilk parametre tarafından sağlanan kapsamı kullanarak yürütür.</value>
+    
+  </data>
+  <data name="WithArg1" xml:space="preserve">
+    <value>kapsam</value>
+    
+  </data>
+  <data name="WithArg2" xml:space="preserve">
+    <value>formül</value>
+    
+  </data>
+  <data name="AboutWith_scope" xml:space="preserve">
+    <value>İkinci parametre tarafından tanımlanan formülü çağırmak için kullanılacak kapsam.</value>
+    
+  </data>
+  <data name="AboutWith_formula" xml:space="preserve">
+    <value>İlk parametrenin sağladığı kapsam kullanılarak çağrılacak formül.</value>
+    
+  </data>
+  <data name="AboutSequence" xml:space="preserve">
+    <value>Sıralı sayılar tablosu oluşturur</value>
+    
+  </data>
+  <data name="SequenceArg1" xml:space="preserve">
+    <value>kayıt</value>
+    
+  </data>
+  <data name="AboutSequence_records" xml:space="preserve">
+    <value>"Değer" adına sahip tek sütunlu tablodaki kayıt sayısı. Maksimum 50.000.</value>
+    
+  </data>
+  <data name="SequenceArg2" xml:space="preserve">
+    <value>başlangıç</value>
+    
+  </data>
+  <data name="AboutSequence_start" xml:space="preserve">
+    <value>İsteğe bağlı. Sıradaki ilk sayı. Varsayılan 1.</value>
+    
+  </data>
+  <data name="SequenceArg3" xml:space="preserve">
+    <value>adım</value>
+    
+  </data>
+  <data name="AboutSequence_step" xml:space="preserve">
+    <value>İsteğe bağlı. Tablodaki izleyen her değeri artırma miktarı. Varsayılan 1.</value>
+    
+  </data>
+  <data name="ErrInvalidDot" xml:space="preserve">
+    <value>Geçersiz "." kullanımı</value>
+    
+  </data>
+  <data name="ErrUnknownFunction" xml:space="preserve">
+    <value>'{0}' is an unknown or unsupported function.</value>
+    
+  </data>
+  <data name="ErrUnknownNamespaceFunction" xml:space="preserve">
+    <value>'{0}' is an unknown or unsupported function in namespace '{1}'.</value>
+    
+  </data>
+  <data name="ErrUnSupportedComponentBehaviorInvocation" xml:space="preserve">
+    <value>Bileşen davranışı yalnızca bir bileşenin içinden çağrılabilir.</value>
+    
+  </data>
+  <data name="ErrUnSupportedComponentDataPropertyAccess" xml:space="preserve">
+    <value>Parametrelere sahip bileşen özel veri özelliğine yalnızca bir bileşenin içinden veya bileşen çıktı özelliklerinden erişilebilir.</value>
+    
+  </data>
+  <data name="ErrBadArity" xml:space="preserve">
+    <value>Geçersiz sayıda bağımsız değişken: {0} alındı, {1} bekleniyordu.</value>
+    
+  </data>
+  <data name="ErrBadArityEven" xml:space="preserve">
+    <value>Geçersiz sayıda bağımsız değişken: {0} alındı, bir çift sayı bekleniyordu.</value>
+    
+  </data>
+  <data name="ErrBadArityOdd" xml:space="preserve">
+    <value>Geçersiz sayıda bağımsız değişken: {0} alındı, bir tek sayı bekleniyordu.</value>
+    
+  </data>
+  <data name="ErrBadType" xml:space="preserve">
+    <value>Geçersiz bağımsız değişken türü.</value>
+    
+  </data>
+  <data name="ErrBadType_Type" xml:space="preserve">
+    <value>Geçersiz bağımsız değişken türü. Bu bağlamda {0} değerleri kullanılamaz.</value>
+    
+  </data>
+  <data name="ErrBadOperatorTypes" xml:space="preserve">
+    <value>Bu işlem şu türlerde geçerli değil: {0}, {1}.</value>
+    
+  </data>
+  <data name="ErrGuidStrictComparison" xml:space="preserve">
+    <value>GUID değerleri yalnızca diğer GUID değerleriyle karşılaştırılabilir.</value>
+    
+  </data>
+  <data name="ErrBadRecordFieldType_FieldName_ExpectedType" xml:space="preserve">
+    <value>'{0}' alanının türü geçersiz. Beklenen alan türü: '{1}'.</value>
+    
+  </data>
+  <data name="ErrBadType_ExpectedType" xml:space="preserve">
+    <value>Geçersiz bağımsız değişken türü. {0} değeri bekleniyor.</value>
+    
+  </data>
+  <data name="ErrBadType_ExpectedType_ProvidedType" xml:space="preserve">
+    <value>Geçersiz bağımsız değişken türü: {1}. Bu bağımsız değişkenin yerine {0} değeri bekleniyor.</value>
+    
+  </data>
+  <data name="ErrBadSchema_ExpectedType" xml:space="preserve">
+    <value>Geçersiz bağımsız değişken türü. Farklı bir şemanın {0} değeri bekleniyor.</value>
+    
+  </data>
+  <data name="ErrBadType_ExpectedTypesCSV" xml:space="preserve">
+    <value>Geçersiz bağımsız değişken türü. Şu bağımsız değişkenlerden biri bekleniyor: {0}.</value>
+    
+  </data>
+  <data name="ErrInvalidArgs_Func" xml:space="preserve">
+    <value>'{0}' işlevinde bazı geçersiz bağımsız değişkenler var.</value>
+    
+  </data>
+  <data name="ErrNeedTable_Func" xml:space="preserve">
+    <value>'{0}' öğesinin ilk bağımsız değişkeninin bir tablo olması gerekir.</value>
+    
+  </data>
+  <data name="ErrInvalidPropertyAccess" xml:space="preserve">
+    <value>Özellik, gerekli bir parametre bekliyor. Lütfen gerekli parametreyi geçirmek için ayraçları kullanın.</value>
+    
+  </data>
+  <data name="ErrNeedTableCol_Func" xml:space="preserve">
+    <value>'{0}' öğesinin ilk bağımsız değişkeninin tek sütunlu bir tablo olması gerekir.</value>
+    
+  </data>
+  <data name="ErrInvalidSchemaNeedStringCol_Col" xml:space="preserve">
+    <value>Geçersiz şema, '{0}' öğesine ilişkin bir metin değerleri sütunu bekleniyor.</value>
+    
+  </data>
+  <data name="ErrInvalidSchemaNeedDateCol_Col" xml:space="preserve">
+    <value>Geçersiz şema, '{0}' öğesine ilişkin bir tarih değerleri sütunu bekleniyor.</value>
+    
+  </data>
+  <data name="ErrInvalidSchemaNeedNumCol_Col" xml:space="preserve">
+    <value>Geçersiz şema, '{0}' öğesine ilişkin bir sayısal değerler sütunu bekleniyor.</value>
+    
+  </data>
+  <data name="ErrInvalidSchemaNeedColorCol_Col" xml:space="preserve">
+    <value>Geçersiz şema, '{0}' öğesine ilişkin bir renk değerleri sütunu bekleniyor.</value>
+    
+  </data>
+  <data name="ErrInvalidSchemaNeedCol" xml:space="preserve">
+    <value>Geçersiz şema, tek sütunlu bir tablo bekleniyor.</value>
+    
+  </data>
+  <data name="ErrNeedRecord" xml:space="preserve">
+    <value>Bu bağlamda kayıt olmayan bir değer kullanılamaz.</value>
+    
+  </data>
+  <data name="ErrIncompatibleRecord" xml:space="preserve">
+    <value>Bu kayıt kullanılamaz. Kayıt, uyumsuz türlerin çakışan alanlarını içeriyor olabilir.</value>
+    
+  </data>
+  <data name="ErrNeedRecord_Func" xml:space="preserve">
+    <value>'{0}' öğesinin ilk bağımsız değişkeninin bir kayıt olması gerekir.</value>
+    
+  </data>
+  <data name="ErrNeedEntity_EntityName" xml:space="preserve">
+    <value>Bu seçenek kümesini bir numaralandırma değeri olarak veya Choices işlevi içinde kullanmak '{0}' varlığının bir Veri Kaynağı olarak eklenmesini gerektirir. Eklemek için, Görünüm menüsünü kullanın ve ardından Veri kaynaklarını seçin.</value>
+    
+  </data>
+  <data name="ErrNotAccessibleInCurrentContext" xml:space="preserve">
+    <value>Belirtilen özellik bu bağlamda erişilebilir değil.</value>
+    
+  </data>
+  <data name="ErrInternalControlInInputProperty" xml:space="preserve">
+    <value>Bir bileşenin içindeki denetimlere, aynı bileşenin giriş özelliklerinde başvurulamaz.</value>
+    
+  </data>
+  <data name="ErrColumnNotAccessibleInCurrentContext" xml:space="preserve">
+    <value>Belirtilen sütun bu bağlamda erişilebilir değil.</value>
+    
+  </data>
+  <data name="WrnRowScopeOneToNExpandNumberOfCalls" xml:space="preserve">
+    <value>Bu işlevin kayıt kapsamında Bir-Çok veya Çok-Çok ilişkisine başvuruluyor. Bu, veri kaynağınıza performansı etkileyebilecek kadar yüksek sayıda çağrının oluşmasına neden olabilir.</value>
+    
+  </data>
+  <data name="ErrNumberTooLarge" xml:space="preserve">
+    <value>Sayısal değer çok büyük.</value>
+    
+  </data>
+  <data name="ErrInvalidDataSource" xml:space="preserve">
+    <value>Bu Veri kaynağı geçersiz. Lütfen sırasıyla şunlara tıklayarak "Veri kaynakları" bölmesindeki hatayı düzeltin: "İçerik -&gt; Veri kaynakları" veya "Görünüm -&gt; Seçenekler"</value>
+    
+  </data>
+  <data name="ErrExpectedDataSourceRestriction" xml:space="preserve">
+    <value>Satır içi kaydı kısıtlamak için bir veri kaynağı tanımlayıcısı bekleniyordu.</value>
+    
+  </data>
+  <data name="ErrIncompatibleTypes" xml:space="preserve">
+    <value>Sağlanan türler uyumsuz.</value>
+    
+  </data>
+  <data name="ErrTypeError_Ex1_Ex2_Found" xml:space="preserve">
+    <value>'{2}' bağımsız değişkeninin türü, beklenen '{0}' veya '{1}' türlerinden biriyle eşleşmiyor.</value>
+    
+  </data>
+  <data name="ErrTypeError_Arg_Expected_Found" xml:space="preserve">
+    <value>'{0}' bağımsız değişkeninin türü, beklenen '{1}' türüyle eşleşmiyor. Bulunan tür: '{2}'.</value>
+    
+  </data>
+  <data name="ErrTypeErrorRecordIncompatibleWithSource" xml:space="preserve">
+    <value>Kayıt türü kaynakla uyumsuz.</value>
+    
+  </data>
+  <data name="ErrExpectedStringLiteralArg_Name" xml:space="preserve">
+    <value>'{0}' bağımsız değişkeni geçersiz, metin sabit değeri bekleniyor.</value>
+    
+  </data>
+  <data name="ErrArgNotAValidIdentifier_Name" xml:space="preserve">
+    <value>'{0}' bağımsız değişkeni geçerli bir tanımlayıcı değil.</value>
+    
+  </data>
+  <data name="ErrColExists_Name" xml:space="preserve">
+    <value>'{0}' adlı bir sütun zaten var.</value>
+    
+  </data>
+  <data name="ErrColConflict_Name" xml:space="preserve">
+    <value>'{0}' için sütun adı çakışıyor.</value>
+    
+  </data>
+  <data name="ErrColDNE_Name" xml:space="preserve">
+    <value>Belirtilen '{0}' sütunu yok.</value>
+    
+  </data>
+  <data name="ErrColumnDoesNotExist_Name_Similar" xml:space="preserve">
+    <value>Belirtilen '{0}' sütunu yok. En benzer ada sahip sütun '{1}'.</value>
+    
+  </data>
+  <data name="ErrSortIncorrectOrder" xml:space="preserve">
+    <value>İfade türüne ilişkin sıralama düzeni yanlış.</value>
+    
+  </data>
+  <data name="ErrSortWrongType" xml:space="preserve">
+    <value>Bu ifade türünde sıralama yapılamaz.</value>
+    
+  </data>
+  <data name="ErrFunctionDoesNotAcceptThisType_Function_Expected" xml:space="preserve">
+    <value>Tür hatası: {0}, {1} veya {1} türünde tablo sütunu bekliyor.</value>
+    
+  </data>
+  <data name="ErrIncorrectFormat_Func" xml:space="preserve">
+    <value>'{0}' işlevine ilişkin biçim tanımlayıcısı yanlış.</value>
+    
+  </data>
+  <data name="ErrAsyncLambda" xml:space="preserve">
+    <value>Zaman uyumsuz çağrılar, koşullarda ve değer işlevlerinde kullanılamaz.</value>
+    
+  </data>
+  <data name="ErrValueMustBeFullyQualified" xml:space="preserve">
+    <value>Bu bir ad alanıdır, '.' işlecini kullanarak üyelerine erişebilirsiniz.</value>
+    
+  </data>
+  <data name="ErrScopeModificationLambda" xml:space="preserve">
+    <value>Bu işlev, {0} içinde kullanılan aynı veri kaynağı üzerinde çalıştırılamaz.</value>
+    
+  </data>
+  <data name="ErrFunctionDisallowedWithinNondeterministicOperationOrder" xml:space="preserve">
+    <value>Bu işlev {0} içinde çağrılamaz.</value>
+    
+  </data>
+  <data name="ErrAsTypeAndIsTypeExpectConnectedDataSource" xml:space="preserve">
+    <value>Geçersiz bağımsız değişken. Bu formül bağlı veri kaynağından bir tablo bekliyor. AsType ve IsType işlevleri bağlı veri kaynakları gerektirir.</value>
+    
+  </data>
+  <data name="InfoMessage" xml:space="preserve">
+    <value>İleti: </value>
+    
+  </data>
+  <data name="InfoNode_Node" xml:space="preserve">
+    <value>Düğüm: {0}</value>
+    
+  </data>
+  <data name="InfoTok_Tok" xml:space="preserve">
+    <value>Tok: {0}</value>
+    
+  </data>
+  <data name="FormatSpan_Min_Lim" xml:space="preserve">
+    <value>({0},{1}) </value>
+    
+  </data>
+  <data name="FormatErrorSeparator" xml:space="preserve">
+    <value>, </value>
+    
+  </data>
+  <data name="AboutDate" xml:space="preserve">
+    <value>Power Apps tarih-saat kodundaki tarihi temsil eden sayıyı döndürür.</value>
+    
+  </data>
+  <data name="DateArg1" xml:space="preserve">
+    <value>yıl</value>
+    
+  </data>
+  <data name="DateArg2" xml:space="preserve">
+    <value>ay</value>
+    
+  </data>
+  <data name="DateArg3" xml:space="preserve">
+    <value>gün</value>
+    
+  </data>
+  <data name="AboutDate_year" xml:space="preserve">
+    <value>Yıl.</value>
+  </data>
+  <data name="AboutDate_month" xml:space="preserve">
+    <value>Ay.</value>
+  </data>
+  <data name="AboutDate_day" xml:space="preserve">
+    <value>Gün.</value>
+  </data>
+  <data name="AboutTime" xml:space="preserve">
+    <value>Saatleri, dakikaları ve saniyeleri ondalık sayılara dönüştürür.</value>
+    
+  </data>
+  <data name="TimeArg1" xml:space="preserve">
+    <value>saat</value>
+    
+  </data>
+  <data name="TimeArg2" xml:space="preserve">
+    <value>dakika</value>
+    
+  </data>
+  <data name="TimeArg3" xml:space="preserve">
+    <value>saniye</value>
+    
+  </data>
+  <data name="TimeArg4" xml:space="preserve">
+    <value>milisaniye</value>
+    
+  </data>
+  <data name="AboutTime_hour" xml:space="preserve">
+    <value>Saat bileşeni.</value>
+  </data>
+  <data name="AboutTime_minute" xml:space="preserve">
+    <value>Dakika bileşeni.</value>
+  </data>
+  <data name="AboutTime_second" xml:space="preserve">
+    <value>Saniye bileşeni.</value>
+  </data>
+  <data name="AboutTime_millisecond" xml:space="preserve">
+    <value>Milisaniye bileşeni.</value>
+  </data>
+  <data name="AboutDateTime" xml:space="preserve">
+    <value>Günün tarih ve saati olarak ifade edilen, zaman içindeki bir anı temsil eden bir değer oluşturur.</value>
+    
+  </data>
+  <data name="AboutDateTime_year" xml:space="preserve">
+    <value>Yıl.</value>
+    
+  </data>
+  <data name="AboutDateTime_month" xml:space="preserve">
+    <value>Ay.</value>
+    
+  </data>
+  <data name="AboutDateTime_day" xml:space="preserve">
+    <value>Gün.</value>
+    
+  </data>
+  <data name="AboutDateTime_hour" xml:space="preserve">
+    <value>Saat.</value>
+    
+  </data>
+  <data name="AboutDateTime_minute" xml:space="preserve">
+    <value>Dakika.</value>
+    
+  </data>
+  <data name="AboutDateTime_second" xml:space="preserve">
+    <value>Saniye.</value>
+    
+  </data>
+  <data name="AboutDateTime_millisecond" xml:space="preserve">
+    <value>Milisaniye.</value>
+    
+  </data>
+  <data name="AboutYear" xml:space="preserve">
+    <value>Yıl, sağlanan bir tarihin yılını döndürür.</value>
+    
+  </data>
+  <data name="YearArg1" xml:space="preserve">
+    <value>tarih_saat</value>
+    
+  </data>
+  <data name="AboutYear_date_time" xml:space="preserve">
+    <value>Yıl bileşeninin ayıklanacağı bir tarih değeri.</value>
+  </data>
+  <data name="AboutMonth" xml:space="preserve">
+    <value>Ayı (1 (Ocak) ile 12 (Aralık) arasında bir sayı) döndürür.</value>
+    
+  </data>
+  <data name="MonthArg1" xml:space="preserve">
+    <value>tarih_saat</value>
+    
+  </data>
+  <data name="AboutMonth_date_time" xml:space="preserve">
+    <value>Ay bileşeninin ayıklanacağı tarih değeri.</value>
+  </data>
+  <data name="AboutDay" xml:space="preserve">
+    <value>Gün, ayın gününü (1 ila 31 arasında bir sayı) döndürür.</value>
+    
+  </data>
+  <data name="DayArg1" xml:space="preserve">
+    <value>tarih_saat</value>
+    
+  </data>
+  <data name="AboutDay_date_time" xml:space="preserve">
+    <value>Gün bileşeninin ayıklanacağı tarih değeri.</value>
+  </data>
+  <data name="AboutHour" xml:space="preserve">
+    <value>Hour işlevi, saati 0 (00:00:00) ile 23 (23:00:00) arasında bir sayı olarak döndürür.</value>
+    
+  </data>
+  <data name="HourArg1" xml:space="preserve">
+    <value>tarih_saat</value>
+    
+  </data>
+  <data name="AboutHour_date_time" xml:space="preserve">
+    <value>Bileşenin ayıklanacağı tarih veya saat değeri.</value>
+  </data>
+  <data name="AboutMinute" xml:space="preserve">
+    <value>Dakikayı (0 ile 59 arasında bir sayı) döndürür.</value>
+    
+  </data>
+  <data name="MinuteArg1" xml:space="preserve">
+    <value>tarih_saat</value>
+    
+  </data>
+  <data name="AboutMinute_date_time" xml:space="preserve">
+    <value>Dakika bileşeninin ayıklanacağı tarih veya saat değeri.</value>
+  </data>
+  <data name="AboutSecond" xml:space="preserve">
+    <value>0 ile 59 arasındaki bir sayı olan saniyeyi döndürür.</value>
+    
+  </data>
+  <data name="SecondArg1" xml:space="preserve">
+    <value>tarih_saat</value>
+    
+  </data>
+  <data name="AboutSecond_date_time" xml:space="preserve">
+    <value>Saniye bileşeninin ayıklanacağı tarih veya saat değeri.</value>
+  </data>
+  <data name="AboutWeekday" xml:space="preserve">
+    <value>Bir tarih saat değerinin hafta içi günlerini döndürür. Varsayılan olarak sonuç 1 (Pazar) ile 7 (Cumartesi) arasında bir değer alır. Bir StartOfWeek numaralandırma değeri veya Microsoft Excel Hafta İçi işlev kodu işe farklı bir aralık belirleyebilirsiniz.</value>
+    
+  </data>
+  <data name="WeekdayArg1" xml:space="preserve">
+    <value>tarih</value>
+    
+  </data>
+  <data name="WeekdayArg2" xml:space="preserve">
+    <value>hafta_başlangıcı</value>
+    
+  </data>
+  <data name="AboutWeekday_date" xml:space="preserve">
+    <value>Haftanın gününün hesaplanacağı tarih değeri.</value>
+  </data>
+  <data name="AboutWeekday_start_of_week" xml:space="preserve">
+    <value>Haftanın günlerinin nasıl numaralandırılacağını göstermeye yönelik olarak, StartOfWeek numaralandırmasındaki veya ilgili Excel işlevindeki bir değer.</value>
+    
+  </data>
+  <data name="AboutCalendar__MonthsLong" xml:space="preserve">
+    <value>Her ayın tam adını içeren tek bir sütun tablosu döndürür.</value>
+    
+  </data>
+  <data name="AboutCalendar__MonthsShort" xml:space="preserve">
+    <value>Her ayın kısaltılmış adını içeren tek bir sütun tablosu döndürür.</value>
+    
+  </data>
+  <data name="AboutCalendar__WeekdaysLong" xml:space="preserve">
+    <value>Her günün tam adını içeren tek bir sütun tablosu döndürür.</value>
+    
+  </data>
+  <data name="AboutCalendar__WeekdaysShort" xml:space="preserve">
+    <value>Her günün kısaltılmış adını içeren tek bir sütun tablosu döndürür.</value>
+    
+  </data>
+  <data name="AboutClock__AmPm" xml:space="preserve">
+    <value>Öğleden öncesi ve sonrası için büyük harf gösterimlerini içeren tek bir sütun tablosu döndürür.</value>
+    
+  </data>
+  <data name="AboutClock__AmPmShort" xml:space="preserve">
+    <value>Öğleden öncesi ve sonrası için kısaltılmış büyük harf gösterimlerini içeren tek bir sütun tablosu döndürür.</value>
+    
+  </data>
+  <data name="AboutClock__IsClock24" xml:space="preserve">
+    <value>Saatin 24 saatlik biçimi kullanıp kullanmadığını gösteren bir boole değeri döndürür.</value>
+    
+  </data>
+  <data name="AboutDateValue" xml:space="preserve">
+    <value>Metin biçimindeki tarih değerini, Power Apps tarih-saat kodunda tarihi temsil eden bir sayıya dönüştürür.</value>
+    
+  </data>
+  <data name="DateValueArg1" xml:space="preserve">
+    <value>tarih_metni</value>
+    
+  </data>
+  <data name="DateValueArg2" xml:space="preserve">
+    <value>dil_kodu</value>
+    
+  </data>
+  <data name="AboutDateValue_date_text" xml:space="preserve">
+    <value>Tarih/saat damgasının platform tarafından desteklenen biçimdeki metin gösterimi.</value>
+  </data>
+  <data name="AboutDateValue_language_code" xml:space="preserve">
+    <value>Sağlanan metnin dil kodu.</value>
+  </data>
+  <data name="AboutTimeValue" xml:space="preserve">
+    <value>Tarih kısımlarını yok sayarak metin biçimindeki bir zamanı, Microsoft Power Apps tarih-saat kodundaki tarihi gösteren bir sayıya dönüştürür.</value>
+    
+  </data>
+  <data name="TimeValueArg1" xml:space="preserve">
+    <value>saat_metni</value>
+    
+  </data>
+  <data name="TimeValueArg2" xml:space="preserve">
+    <value>dil_kodu</value>
+    
+  </data>
+  <data name="AboutTimeValue_time_text" xml:space="preserve">
+    <value>Tarih/saat damgasının platform tarafından desteklenen biçimde metin gösterimi.</value>
+  </data>
+  <data name="AboutTimeValue_language_code" xml:space="preserve">
+    <value>Sağlanan metnin dil kodu.</value>
+  </data>
+  <data name="ErrAutoRefreshNotAllowed" xml:space="preserve">
+    <value>Otomatik olarak yenilenen hizmet işlevleri, Eylem kurallarında kullanılamaz.</value>
+    
+  </data>
+  <data name="ErrMultipleValuesForField_Name" xml:space="preserve">
+    <value>'{0}' adındaki alan bu kayıtta birden çok kez belirtildi.</value>
+    
+  </data>
+  <data name="WarnColumnNameSpecifiedMultipleTimes_Name" xml:space="preserve">
+    <value>'{0}' adlı sütun birçok kez belirtildi.</value>
+    
+  </data>
+  <data name="WarnLiteralPredicate" xml:space="preserve">
+    <value>Uyarı: Bu koşul bir sabit değerdir ve giriş tablosuna başvurmaz.</value>
+    
+  </data>
+  <data name="WarnDynamicMetadata" xml:space="preserve">
+    <value>Uyarı: Bu metodun sonuç şemasını ayarlayıp yenilemek için, genişletilmiş formül çubuğunun altındaki "Şemayı Yakala" seçeneğini belirleyin. Aksi takdirde bu metot sonuç döndürmez.</value>
+    
+  </data>
+  <data name="FindArg1" xml:space="preserve">
+    <value>metin_bul</value>
+    
+  </data>
+  <data name="FindArg2" xml:space="preserve">
+    <value>metin_içinde</value>
+    
+  </data>
+  <data name="FindArg3" xml:space="preserve">
+    <value>başlangıç_sayısı</value>
+    
+  </data>
+  <data name="AboutFind_find_text" xml:space="preserve">
+    <value>Aranacak metin değeri.</value>
+  </data>
+  <data name="AboutFind_within_text" xml:space="preserve">
+    <value>Aranacak metin değeri.</value>
+  </data>
+  <data name="AboutFind_start_num" xml:space="preserve">
+    <value>İsteğe bağlı bir başlangıç konumu.</value>
+  </data>
+  <data name="AboutFind" xml:space="preserve">
+    <value>Bir metin değerinin başka bir metin değerindeki başlangıç konumunu döndürür. Find işlevi büyük/küçük harfe duyarlıdır.</value>
+    
+  </data>
+  <data name="AboutFindT" xml:space="preserve">
+    <value>Bir metin değerinin (veya dizeler sütunu) başka bir metin değerindeki (veya dizeler sütunu) başlangıç konumunu döndürür. Find işlevi büyük/küçük harfe duyarlıdır.</value>
+    
+  </data>
+  <data name="FindTArg1" xml:space="preserve">
+    <value>metin_veya_sütun_bul</value>
+    
+  </data>
+  <data name="FindTArg2" xml:space="preserve">
+    <value>metin_veya_sütun_içinde</value>
+    
+  </data>
+  <data name="FindTArg3" xml:space="preserve">
+    <value>başlangıç_sayısı</value>
+    
+  </data>
+  <data name="AboutFind_find_text_or_column" xml:space="preserve">
+    <value>Aranacak metin değeri (veya metin değerleri sütunu).</value>
+  </data>
+  <data name="AboutFind_within_text_or_column" xml:space="preserve">
+    <value>Aranacak metin değeri (veya metin değerleri sütunu).</value>
+  </data>
+  <data name="AboutColorValue" xml:space="preserve">
+    <value>Belirtilen renk dizesine karşılık gelen rengi döndürür.</value>
+    
+  </data>
+  <data name="ColorValueArg1" xml:space="preserve">
+    <value>renk_metin</value>
+    
+  </data>
+  <data name="AboutColorValue_color_text" xml:space="preserve">
+    <value>Ad ile (ör. "Mavi") veya standart 6 basamaklı onaltılık gösterim (#rrggbb) kullanılarak belirtilen bir renk.</value>
+  </data>
+  <data name="ErrInvalidJsonPointer" xml:space="preserve">
+    <value>Geçersiz JSON işaretçisi.</value>
+    
+  </data>
+  <data name="Text" xml:space="preserve">
+    <value>Metin</value>
+  </data>
+  <data name="Logical" xml:space="preserve">
+    <value>Mantıksal</value>
+  </data>
+  <data name="Table" xml:space="preserve">
+    <value>Tablo</value>
+  </data>
+  <data name="Behavior" xml:space="preserve">
+    <value>Davranış</value>
+  </data>
+  <data name="DateTime" xml:space="preserve">
+    <value>Tarih ve Saat</value>
+  </data>
+  <data name="MathAndStat" xml:space="preserve">
+    <value>Matematik ve İstatistik</value>
+  </data>
+  <data name="Information" xml:space="preserve">
+    <value>Bilgi</value>
+  </data>
+  <data name="Color" xml:space="preserve">
+    <value>Renk</value>
+  </data>
+  <data name="REST" xml:space="preserve">
+    <value>Hizmetler</value>
+    
+  </data>
+  <data name="FunctionReference_Link" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?LinkId=722347#</value>
+    
+  </data>
+  <data name="InvalidXml_ElementMissingAttribute_ElemName_AttrName" xml:space="preserve">
+    <value>'{0}' öğesinde '{1}' özniteliği yok.</value>
+    
+  </data>
+  <data name="InvalidXml_AttributeCannotBeEmpty_AttrName" xml:space="preserve">
+    <value>'{0}' özniteliği boş bir dize olamaz.</value>
+    
+  </data>
+  <data name="InvalidXml_AttributeValueInvalidGuid_AttrName_Value" xml:space="preserve">
+    <value>'{0}' özniteliğinde geçersiz bir GUID değeri var: '{1}'.</value>
+    
+  </data>
+  <data name="InvalidJson_MissingRequiredNamedValue_PropName" xml:space="preserve">
+    <value>'{0}' özelliği eksik.</value>
+    
+  </data>
+  <data name="InvalidJson_NamedValueTypeNotCorrect_PropName_ExpectedType_ActualType" xml:space="preserve">
+    <value>'{0}' özelliğinde geçersiz bir tür değeri var: {2}. Beklenen tür değeri: {1}.</value>
+    
+  </data>
+  <data name="InvalidJson_NamedValueCannotBeEmpty_PropName" xml:space="preserve">
+    <value>'{0}' özelliği boş olamaz.</value>
+    
+  </data>
+  <data name="InvalidJson_NamedEnumStringInvalid_PropName_ActualValue" xml:space="preserve">
+    <value>'{0}' sabit listesinin geçerli bir değere sahip olması bekleniyor, ancak değeri ({1}) sabit liste için aralığın dışında.</value>
+    
+  </data>
+  <data name="InvalidJson_NamedIntegerOverflow_PropName_ActualValue" xml:space="preserve">
+    <value>'{0}' özelliğinin bir tamsayı değerine sahip olması bekleniyor, ancak değeri ({1}) aralığın dışında.</value>
+    
+  </data>
+  <data name="InvalidJson_IndexedValueTypeNotCorrect_Index_ExpectedType_ActualType" xml:space="preserve">
+    <value>{0} dizinindeki öğede geçersiz bir tür değeri var: {2}. Beklenen tür değeri: {1}.</value>
+  </data>
+  <data name="InvalidJson_IndexedValueMustBeNonEmpty_Index" xml:space="preserve">
+    <value>{0} dizinindeki öğe boş olmayan bir dize olmalıdır.</value>
+  </data>
+  <data name="AboutDateAdd" xml:space="preserve">
+    <value>Belirtilen birim sayısını tarihe ekler.</value>
+    
+  </data>
+  <data name="AboutDateDiff" xml:space="preserve">
+    <value>İki tarih arasındaki farkı hesaplar.</value>
+    
+  </data>
+  <data name="DateAddArg1" xml:space="preserve">
+    <value>tarih</value>
+    
+  </data>
+  <data name="DateAddArg2" xml:space="preserve">
+    <value>birim_sayısı</value>
+    
+  </data>
+  <data name="DateAddArg3" xml:space="preserve">
+    <value>birim</value>
+    
+  </data>
+  <data name="AboutDateAdd_date" xml:space="preserve">
+    <value>Başvuru tarihi değeri.</value>
+  </data>
+  <data name="AboutDateAdd_number_of_units" xml:space="preserve">
+    <value>Eklenecek birim sayısı. Sayı negatif olabilir.</value>
+  </data>
+  <data name="AboutDateAdd_unit" xml:space="preserve">
+    <value>Kullanılacak birim (Years, Quarters, Months, Days, Hours, Minutes, Seconds, Milliseconds seçeneklerinden biri).</value>
+    
+  </data>
+  <data name="DateDiffArg1" xml:space="preserve">
+    <value>başlangıç_tarihi</value>
+    
+  </data>
+  <data name="DateDiffArg2" xml:space="preserve">
+    <value>bitiş_tarihi</value>
+    
+  </data>
+  <data name="DateDiffArg3" xml:space="preserve">
+    <value>birim</value>
+    
+  </data>
+  <data name="AboutDateDiff_start_date" xml:space="preserve">
+    <value>Fark alma işlemi için başlangıç tarihi.</value>
+  </data>
+  <data name="AboutDateDiff_end_date" xml:space="preserve">
+    <value>Fark alma işlemi için bitiş tarihi.</value>
+  </data>
+  <data name="AboutDateDiff_unit" xml:space="preserve">
+    <value>Sonucun ifade edileceği birim (Years, Quarters, Months, Days, Hours, Minutes, Seconds, Milliseconds seçeneklerinden biri).</value>
+    
+  </data>
+  <data name="AboutDateAddT" xml:space="preserve">
+    <value>Belirtilen birim sayısını tarihler sütununa ekler.</value>
+    
+  </data>
+  <data name="AboutDateDiffT" xml:space="preserve">
+    <value>İki tarih sütunu arasındaki farkı hesaplar.</value>
+    
+  </data>
+  <data name="DateAddTArg1" xml:space="preserve">
+    <value>tarih_sütunu</value>
+    
+  </data>
+  <data name="DateAddTArg2" xml:space="preserve">
+    <value>birim_sayısı</value>
+    
+  </data>
+  <data name="DateAddTArg3" xml:space="preserve">
+    <value>birim</value>
+    
+  </data>
+  <data name="AboutDateAdd_date_column" xml:space="preserve">
+    <value>Tarih değerlerini içeren bir sütun.</value>
+  </data>
+  <data name="DateDiffTArg1" xml:space="preserve">
+    <value>başlangıç_tarihi_sütunu</value>
+    
+  </data>
+  <data name="DateDiffTArg2" xml:space="preserve">
+    <value>bitiş_tarihi_sütunu</value>
+    
+  </data>
+  <data name="DateDiffTArg3" xml:space="preserve">
+    <value>birim</value>
+    
+  </data>
+  <data name="AboutDateDiff_start_date_column" xml:space="preserve">
+    <value>Fark alma işlemi için başlangıç tarihlerini içeren bir sütun.</value>
+  </data>
+  <data name="AboutDateDiff_end_date_column" xml:space="preserve">
+    <value>Fark alma işlemi için bitiş tarihlerini içeren bir sütun.</value>
+  </data>
+  <data name="AboutChar" xml:space="preserve">
+    <value>Platformunuzda bulunan karakter kümesindeki kod numarası ile belirtilen karakteri döndürür.</value>
+    
+  </data>
+  <data name="CharArg1" xml:space="preserve">
+    <value>sayı</value>
+    
+  </data>
+  <data name="AboutChar_number" xml:space="preserve">
+    <value>Platformunuzdaki karakter kümesinde yer alan bir kod numarası.</value>
+  </data>
+  <data name="AboutCharT" xml:space="preserve">
+    <value>Platformunuzda bulunan karakter kümesindeki kod numaraları ile belirtilen karakter tablosunu döndürür.</value>
+    
+  </data>
+  <data name="CharTArg1" xml:space="preserve">
+    <value>sayı_sütunu</value>
+    
+  </data>
+  <data name="AboutChar_column_of_numbers" xml:space="preserve">
+    <value>Platformunuzdaki karakter kümesinde yer alan kod numaralarını içeren bir sütun.</value>
+  </data>
+  <data name="AboutParseJSON" xml:space="preserve">
+    <value>JSON dizesini nesneye dönüştürür.</value>
+    
+  </data>
+  <data name="ParseJSONArg1" xml:space="preserve">
+    <value>giriş</value>
+    
+  </data>
+  <data name="AboutParseJSON_input" xml:space="preserve">
+    <value>İşlenecek JSON dizesi.</value>
+  </data>
+  <data name="AboutIndex" xml:space="preserve">
+    <value>Belirli bir dizinde bir tablodaki kaydı döndürür.</value>
+    
+  </data>
+  <data name="IndexArg1" xml:space="preserve">
+    <value>tablo</value>
+    
+  </data>
+  <data name="IndexArg2" xml:space="preserve">
+    <value>dizin</value>
+    
+  </data>
+  <data name="AboutIndex_table" xml:space="preserve">
+    <value>Bir tablo.</value>
+  </data>
+  <data name="AboutIndex_index" xml:space="preserve">
+    <value>Alınacak kaydın dizini.</value>
+    
+  </data>
+  <data name="Screen_Name_DisplayName" xml:space="preserve">
+    <value>Ad</value>
+    
+  </data>
+  <data name="Screen_Printing_DisplayName" xml:space="preserve">
+    <value>Baskı</value>
+    
+  </data>
+  <data name="Screen_ImagePosition_DisplayName" xml:space="preserve">
+    <value>Görüntü konumu</value>
+    
+  </data>
+  <data name="Screen_Size_DisplayName" xml:space="preserve">
+    <value>Boyut</value>
+    
+  </data>
+  <data name="barcode_Type_DisplayName" xml:space="preserve">
+    <value>Barkod türü</value>
+    
+  </data>
+  <data name="camera_Contrast_DisplayName" xml:space="preserve">
+    <value>Karşıtlık</value>
+    
+  </data>
+  <data name="camera_Zoom_DisplayName" xml:space="preserve">
+    <value>Yakınlaştır</value>
+    
+  </data>
+  <data name="camera_Camera_DisplayName" xml:space="preserve">
+    <value>Kamera</value>
+    
+  </data>
+  <data name="export_Data_DisplayName" xml:space="preserve">
+    <value>Veriler</value>
+    
+  </data>
+  <data name="Edit" xml:space="preserve">
+    <value>Düzenle</value>
+    
+  </data>
+  <data name="Dust" xml:space="preserve">
+    <value>Dust</value>
+    
+  </data>
+  <data name="image_Image_DisplayName" xml:space="preserve">
+    <value>Görüntü</value>
+    
+  </data>
+  <data name="icon_Icon_DisplayName" xml:space="preserve">
+    <value>Simge</value>
+    
+  </data>
+  <data name="icon_Rotation_DisplayName" xml:space="preserve">
+    <value>Döndürme</value>
+    
+  </data>
+  <data name="image_ImagePosition_DisplayName" xml:space="preserve">
+    <value>Görüntü konumu</value>
+    
+  </data>
+  <data name="image_ImageRotation_DisplayName" xml:space="preserve">
+    <value>Döndür</value>
+    
+  </data>
+  <data name="ImageRotation_None_DisplayName" xml:space="preserve">
+    <value>Hiçbiri</value>
+    
+  </data>
+  <data name="label_Live_DisplayName" xml:space="preserve">
+    <value>Canlı</value>
+    
+  </data>
+  <data name="label_Overflow_DisplayName" xml:space="preserve">
+    <value>Taşır</value>
+    
+  </data>
+  <data name="DatePicker_DateTimeZone_DisplayName" xml:space="preserve">
+    <value>Tarih saat dilimi</value>
+    
+  </data>
+  <data name="DatePicker_Format_DisplayName" xml:space="preserve">
+    <value>Biçim</value>
+    
+  </data>
+  <data name="DatePicker_Language_DisplayName" xml:space="preserve">
+    <value>Dil</value>
+    
+  </data>
+  <data name="Calendar_Width_DisplayName" xml:space="preserve">
+    <value>Takvim genişliği</value>
+    
+  </data>
+  <data name="Hide_Calendar_DisplayName" xml:space="preserve">
+    <value>Takvimi gizle</value>
+    
+  </data>
+  <data name="Calendar_StartOfWeek_DisplayName" xml:space="preserve">
+    <value>Haftanın başı</value>
+    
+  </data>
+  <data name="microphone_Mic_DisplayName" xml:space="preserve">
+    <value>Mik.</value>
+    
+  </data>
+  <data name="text_Default_DisplayName" xml:space="preserve">
+    <value>Varsayılan</value>
+    
+  </data>
+  <data name="text_Mode_DisplayName" xml:space="preserve">
+    <value>Mod</value>
+    
+  </data>
+  <data name="text_Format_DisplayName" xml:space="preserve">
+    <value>Biçim</value>
+    
+  </data>
+  <data name="text_VirtualKeyboardMode_DisplayName" xml:space="preserve">
+    <value>Sanal klavye modu</value>
+    
+  </data>
+  <data name="text_TeamsTheme_DisplayName" xml:space="preserve">
+    <value>Teams teması</value>
+    
+  </data>
+  <data name="text_Clear_DisplayName" xml:space="preserve">
+    <value>Temizle düğmesi</value>
+    
+  </data>
+  <data name="Align_Left_DisplayName" xml:space="preserve">
+    <value>Sola hizala</value>
+    
+  </data>
+  <data name="Align_Right_DisplayName" xml:space="preserve">
+    <value>Sağa hizala</value>
+    
+  </data>
+  <data name="Align_Center_DisplayName" xml:space="preserve">
+    <value>Ortaya hizala</value>
+    
+  </data>
+  <data name="Align_Justify_DisplayName" xml:space="preserve">
+    <value>Yasla</value>
+    
+  </data>
+  <data name="AboutIsNumeric" xml:space="preserve">
+    <value>Değerin bir sayı olup olmadığını denetler ve true ya da false değeri döndürür.</value>
+    
+  </data>
+  <data name="IsNumericArg1" xml:space="preserve">
+    <value>değer</value>
+    
+  </data>
+  <data name="AboutIsNumeric_value" xml:space="preserve">
+    <value>Test edilecek değer.</value>
+  </data>
+  <data name="Post" xml:space="preserve">
+    <value>Yayımla</value>
+    
+  </data>
+  <data name="AboutDateTimeValue" xml:space="preserve">
+    <value>Metin biçimindeki tarih ve saat değerini, Power Apps tarih-saat kodunda tarihi temsil eden bir sayıya dönüştürür.</value>
+    
+  </data>
+  <data name="DateTimeValueArg1" xml:space="preserve">
+    <value>saat_metni</value>
+    
+  </data>
+  <data name="DateTimeValueArg2" xml:space="preserve">
+    <value>dil_kodu</value>
+    
+  </data>
+  <data name="AboutDateTimeValue_time_text" xml:space="preserve">
+    <value>Tarih/saat damgasının platform tarafından desteklenen biçimde metin gösterimi.</value>
+  </data>
+  <data name="AboutDateTimeValue_language_code" xml:space="preserve">
+    <value>Sağlanan metnin dil kodu.</value>
+  </data>
+  <data name="AboutTable" xml:space="preserve">
+    <value>Benzersiz kayıt alanı sayısı kadar sütun içerecek şekilde, belirtilen kayıtlardan bir tablo oluşturur. Örneğin: Tablo({key1: val1, key2: val2, ...}, ...)</value>
+    
+  </data>
+  <data name="TableArg1" xml:space="preserve">
+    <value>kayıt</value>
+    
+  </data>
+  <data name="AboutTable_record" xml:space="preserve">
+    <value>Sonuçta elde edilen tabloda bir satıra dönüşecek olan kayıt.</value>
+  </data>
+  <data name="AboutShowColumns" xml:space="preserve">
+    <value>'source' tablosunda bulunan belirtilen sütunlar haricindeki tüm sütunların kaldırılmış olduğu bir tablo döndürür.</value>
+    
+  </data>
+  <data name="ShowColumnsArg1" xml:space="preserve">
+    <value>kaynak</value>
+    
+  </data>
+  <data name="ShowColumnsArg2" xml:space="preserve">
+    <value>sütun_adı</value>
+    
+  </data>
+  <data name="AboutShowColumns_source" xml:space="preserve">
+    <value>Sütunların kaldırılacağı bir tablo değeri.</value>
+  </data>
+  <data name="AboutShowColumns_column_name" xml:space="preserve">
+    <value>Korunacak sütunun adı.</value>
+  </data>
+  <data name="AboutIsToday" xml:space="preserve">
+    <value>Belirtilen tarihin o sırada geçerli olan gün olup olmadığını denetler ve true ya da false değeri döndürür.</value>
+    
+  </data>
+  <data name="AboutIsToday_date" xml:space="preserve">
+    <value>Test edilecek tarih değeri.</value>
+  </data>
+  <data name="IsTodayFuncArg1" xml:space="preserve">
+    <value>tarih</value>
+    
+  </data>
+  <data name="AboutIsUTCToday" xml:space="preserve">
+    <value>Belirtilen tarihin UTC'de bugün olup olmadığını denetler ve doğru ya da yanlış değerini döndürür.</value>
+    
+  </data>
+  <data name="AboutIsUTCToday_date" xml:space="preserve">
+    <value>Test edilecek tarih değeri.</value>
+  </data>
+  <data name="IsUTCTodayFuncArg1" xml:space="preserve">
+    <value>tarih</value>
+    
+  </data>
+  <data name="AboutMod" xml:space="preserve">
+    <value>Bir sayının, bölenle bölümünden kalanı döndürür. Sonuç bölenle aynı işarete sahiptir.</value>
+    
+  </data>
+  <data name="AboutModT" xml:space="preserve">
+    <value>Bir sayının (veya bir sayı sütunu) bir bölenle (veya bir bölen sütunu) bölümünden kalanı içeren sütunu döndürür.</value>
+    
+  </data>
+  <data name="AboutMod_divisor" xml:space="preserve">
+    <value>Bölen sayı.</value>
+  </data>
+  <data name="AboutMod_divisor_or_column" xml:space="preserve">
+    <value>Bölen sayı veya sayı sütunu.</value>
+  </data>
+  <data name="AboutMod_number" xml:space="preserve">
+    <value>Kalanı bulunacak sayı.</value>
+  </data>
+  <data name="AboutMod_number_or_column" xml:space="preserve">
+    <value>Kalanı bulunacak sayı veya sayı sütunu.</value>
+  </data>
+  <data name="ModFuncArg1" xml:space="preserve">
+    <value>sayı</value>
+    
+  </data>
+  <data name="ModFuncArg2" xml:space="preserve">
+    <value>bölen</value>
+    
+  </data>
+  <data name="ModTFuncArg1" xml:space="preserve">
+    <value>sayı_veya_sütun</value>
+    
+  </data>
+  <data name="ModTFuncArg2" xml:space="preserve">
+    <value>bölen_veya_sütun</value>
+    
+  </data>
+  <data name="pdfViewer_Document_DisplayName" xml:space="preserve">
+    <value>Belge</value>
+    
+  </data>
+  <data name="pdfViewer_Zoom_DisplayName" xml:space="preserve">
+    <value>Yakınlaştır</value>
+    
+  </data>
+  <data name="pdfViewer_Password_DisplayName" xml:space="preserve">
+    <value>Parola</value>
+    
+  </data>
+  <data name="pdfViewer_PasswordState_DisplayName" xml:space="preserve">
+    <value>Parola durumu</value>
+    
+  </data>
+  <data name="DataDescriptionInvalidFormat_Reason" xml:space="preserve">
+    <value>Veri açıklaması geçersiz: {0}</value>
+  </data>
+  <data name="DataDescriptionParserUnknownException" xml:space="preserve">
+    <value>Veri açıklaması ayrıştırılmaya çalışılırken bilinmeyen bir hata oluştu.</value>
+  </data>
+  <data name="AboutForAll" xml:space="preserve">
+    <value>Veri kaynağının her satırında belirli bir formülü uygular ve her satıra ilişkin sonuçların yer aldığı yeni bir tablo döndürür.</value>
+    
+  </data>
+  <data name="AboutForAll_source" xml:space="preserve">
+    <value>Çalıştırma işleminin gerçekleşeceği veri kaynağı veya tablo.</value>
+  </data>
+  <data name="AboutForAll_formula" xml:space="preserve">
+    <value>Tablonun tüm satırları için değerlendirilecek formül.</value>
+  </data>
+  <data name="ForAllArg1" xml:space="preserve">
+    <value>kaynak</value>
+    
+  </data>
+  <data name="ForAllArg2" xml:space="preserve">
+    <value>formül</value>
+    
+  </data>
+  <data name="AboutPower" xml:space="preserve">
+    <value>Bir x sayısını, bir y sayısının üssüne yükseltir (x^y örneğinde olduğu gibi).</value>
+    
+  </data>
+  <data name="AboutPower_base" xml:space="preserve">
+    <value>Yükseltilecek taban sayı.</value>
+  </data>
+  <data name="AboutPower_exponent" xml:space="preserve">
+    <value>Taban sayının yükseltileceği üs.</value>
+  </data>
+  <data name="PowerFuncArg1" xml:space="preserve">
+    <value>temel</value>
+    
+  </data>
+  <data name="PowerFuncArg2" xml:space="preserve">
+    <value>üs</value>
+    
+  </data>
+  <data name="AboutStartsWith" xml:space="preserve">
+    <value>Sağlanan metin sağlanan başlangıç dizesi ile başlıyorsa true döndürür.</value>
+    
+  </data>
+  <data name="AboutStartsWith_text" xml:space="preserve">
+    <value>Denetlenecek metin.</value>
+  </data>
+  <data name="AboutStartsWith_start" xml:space="preserve">
+    <value>Başlangıç dizesi. Metin bu dize ile başlıyorsa işlev true döndürür.</value>
+  </data>
+  <data name="StartsWithArg1" xml:space="preserve">
+    <value>metin</value>
+    
+  </data>
+  <data name="StartsWithArg2" xml:space="preserve">
+    <value>başlangıç</value>
+    
+  </data>
+  <data name="AboutEndsWith" xml:space="preserve">
+    <value>Sağlanan metin, sağlanan bitiş dizesi ile bitiyorsa true döndürür.</value>
+    
+  </data>
+  <data name="AboutEndsWith_text" xml:space="preserve">
+    <value>Denetlenecek metin.</value>
+  </data>
+  <data name="AboutEndsWith_end" xml:space="preserve">
+    <value>Bitiş dizesi. Metin bu dize ile bitiyorsa işlev true döndürür.</value>
+  </data>
+  <data name="EndsWithArg1" xml:space="preserve">
+    <value>metin</value>
+    
+  </data>
+  <data name="EndsWithArg2" xml:space="preserve">
+    <value>end</value>
+    
+  </data>
+  <data name="AboutBlank" xml:space="preserve">
+    <value>Null (boş) değer döndürür</value>
+  </data>
+  <data name="AboutPowerT" xml:space="preserve">
+    <value>Bir x sayısının (veya sayı sütununun), başka bir y sayısı (veya sayı sütunu) ile üssünü alır. Örnek: x^y.</value>
+    
+  </data>
+  <data name="AboutPower_base_or_column" xml:space="preserve">
+    <value>Üssü alınacak taban sayısı (veya taban sayısı sütunu).</value>
+  </data>
+  <data name="AboutPower_exponent_or_column" xml:space="preserve">
+    <value>Tabanın üssü alınırken kullanılacak üs (veya üs sütunu) değeri.</value>
+  </data>
+  <data name="PowerTFuncArg1" xml:space="preserve">
+    <value>temel_veya_sütun</value>
+    
+  </data>
+  <data name="PowerTFuncArg2" xml:space="preserve">
+    <value>üs_veya_sütun</value>
+    
+  </data>
+  <data name="Icon_Import_DisplayName" xml:space="preserve">
+    <value>İçeri aktar</value>
+    
+  </data>
+  <data name="Icon_AddUser_DisplayName" xml:space="preserve">
+    <value>Kullanıcı ekle</value>
+    
+  </data>
+  <data name="Icon_Alarm_DisplayName" xml:space="preserve">
+    <value>Alarm</value>
+    
+  </data>
+  <data name="Icon_Blocked_DisplayName" xml:space="preserve">
+    <value>Engellendi</value>
+    
+  </data>
+  <data name="Icon_Bookmark_DisplayName" xml:space="preserve">
+    <value>Yer işareti</value>
+    
+  </data>
+  <data name="Icon_Bug_DisplayName" xml:space="preserve">
+    <value>Hata</value>
+    
+  </data>
+  <data name="Icon_Calculator_DisplayName" xml:space="preserve">
+    <value>Hesap makinesi</value>
+    
+  </data>
+  <data name="Icon_Diamond_DisplayName" xml:space="preserve">
+    <value>Elmas</value>
+    
+  </data>
+  <data name="Icon_DockLeft_DisplayName" xml:space="preserve">
+    <value>Sola yerleştir</value>
+    
+  </data>
+  <data name="Icon_DockRight_DisplayName" xml:space="preserve">
+    <value>Sağa yerleştir</value>
+    
+  </data>
+  <data name="Icon_Enhance_DisplayName" xml:space="preserve">
+    <value>Geliştirme</value>
+    
+  </data>
+  <data name="Icon_Error_DisplayName" xml:space="preserve">
+    <value>Hata</value>
+    
+  </data>
+  <data name="Icon_Export_DisplayName" xml:space="preserve">
+    <value>Dışarı aktar</value>
+    
+  </data>
+  <data name="Icon_Flag_DisplayName" xml:space="preserve">
+    <value>İşaret</value>
+    
+  </data>
+  <data name="Icon_Globe_DisplayName" xml:space="preserve">
+    <value>Dünya</value>
+    
+  </data>
+  <data name="Icon_HalfFilledCircle_DisplayName" xml:space="preserve">
+    <value>Yarım dolu daire</value>
+    
+  </data>
+  <data name="Icon_Health_DisplayName" xml:space="preserve">
+    <value>Sağlık</value>
+    
+  </data>
+  <data name="Icon_Heart_DisplayName" xml:space="preserve">
+    <value>Kalp</value>
+    
+  </data>
+  <data name="Icon_Help_DisplayName" xml:space="preserve">
+    <value>Yardım</value>
+    
+  </data>
+  <data name="Icon_Hide_DisplayName" xml:space="preserve">
+    <value>Gizle</value>
+    
+  </data>
+  <data name="Icon_History_DisplayName" xml:space="preserve">
+    <value>Geçmiş</value>
+    
+  </data>
+  <data name="Icon_HorizontalLine_DisplayName" xml:space="preserve">
+    <value>Yatay çizgi</value>
+    
+  </data>
+  <data name="Icon_Hospital_DisplayName" xml:space="preserve">
+    <value>Hastane</value>
+    
+  </data>
+  <data name="Icon_Key_DisplayName" xml:space="preserve">
+    <value>Anahtar</value>
+    
+  </data>
+  <data name="Icon_Lightbulb_DisplayName" xml:space="preserve">
+    <value>Ampul</value>
+    
+  </data>
+  <data name="Icon_LightningBolt_DisplayName" xml:space="preserve">
+    <value>Yıldırım</value>
+    
+  </data>
+  <data name="Icon_Link_DisplayName" xml:space="preserve">
+    <value>Bağlantı</value>
+    
+  </data>
+  <data name="Icon_Manufacture_DisplayName" xml:space="preserve">
+    <value>Üretim</value>
+    
+  </data>
+  <data name="Icon_Medical_DisplayName" xml:space="preserve">
+    <value>Tıbbi</value>
+    
+  </data>
+  <data name="Icon_Microphone_DisplayName" xml:space="preserve">
+    <value>Mikrofon</value>
+    
+  </data>
+  <data name="Icon_Notebook_DisplayName" xml:space="preserve">
+    <value>Not Defteri</value>
+    
+  </data>
+  <data name="Icon_OpenInNewWindow_DisplayName" xml:space="preserve">
+    <value>Yeni pencerede aç</value>
+    
+  </data>
+  <data name="Icon_Phonebook_DisplayName" xml:space="preserve">
+    <value>Telefon rehberi</value>
+    
+  </data>
+  <data name="Icon_Print_DisplayName" xml:space="preserve">
+    <value>Yazdırma</value>
+    
+  </data>
+  <data name="Icon_Publish_DisplayName" xml:space="preserve">
+    <value>Yayınla</value>
+    
+  </data>
+  <data name="Icon_QuestionMark_DisplayName" xml:space="preserve">
+    <value>Soru işareti</value>
+    
+  </data>
+  <data name="Icon_Redo_DisplayName" xml:space="preserve">
+    <value>Yinele</value>
+    
+  </data>
+  <data name="Icon_Reset_DisplayName" xml:space="preserve">
+    <value>Sıfırla</value>
+    
+  </data>
+  <data name="Icon_Ribbon_DisplayName" xml:space="preserve">
+    <value>Şerit</value>
+    
+  </data>
+  <data name="Icon_Scan_DisplayName" xml:space="preserve">
+    <value>Tarama</value>
+    
+  </data>
+  <data name="Icon_Share_DisplayName" xml:space="preserve">
+    <value>Paylaş</value>
+    
+  </data>
+  <data name="Icon_Shirt_DisplayName" xml:space="preserve">
+    <value>Tişört</value>
+    
+  </data>
+  <data name="Icon_Shop_DisplayName" xml:space="preserve">
+    <value>Mağaza</value>
+    
+  </data>
+  <data name="Icon_Signal_DisplayName" xml:space="preserve">
+    <value>Sinyal</value>
+    
+  </data>
+  <data name="Icon_Support_DisplayName" xml:space="preserve">
+    <value>Destek</value>
+    
+  </data>
+  <data name="Icon_Sync_DisplayName" xml:space="preserve">
+    <value>Eşitleme</value>
+    
+  </data>
+  <data name="Icon_Text_DisplayName" xml:space="preserve">
+    <value>Metin</value>
+    
+  </data>
+  <data name="Icon_ThumbsDown_DisplayName" xml:space="preserve">
+    <value>Başparmak aşağı</value>
+    
+  </data>
+  <data name="Icon_ThumbsUp_DisplayName" xml:space="preserve">
+    <value>Başparmak yukarı</value>
+    
+  </data>
+  <data name="Icon_Train_DisplayName" xml:space="preserve">
+    <value>Tren</value>
+    
+  </data>
+  <data name="Icon_Tray_DisplayName" xml:space="preserve">
+    <value>Tepsi</value>
+    
+  </data>
+  <data name="Icon_Undo_DisplayName" xml:space="preserve">
+    <value>Geri Al</value>
+    
+  </data>
+  <data name="Icon_Unlock_DisplayName" xml:space="preserve">
+    <value>Kilit açma</value>
+    
+  </data>
+  <data name="Icon_VerticalLine_DisplayName" xml:space="preserve">
+    <value>Dikey çizgi</value>
+    
+  </data>
+  <data name="Icon_Video_DisplayName" xml:space="preserve">
+    <value>Video</value>
+    
+  </data>
+  <data name="Icon_View_DisplayName" xml:space="preserve">
+    <value>Görünüm</value>
+    
+  </data>
+  <data name="Icon_ZoomIn_DisplayName" xml:space="preserve">
+    <value>Yakınlaştırma</value>
+    
+  </data>
+  <data name="Icon_ZoomOut_DisplayName" xml:space="preserve">
+    <value>Uzaklaştırma</value>
+    
+  </data>
+  <data name="Icon_BookmarkFilled_DisplayName" xml:space="preserve">
+    <value>Yer işareti (dolu)</value>
+    
+  </data>
+  <data name="Icon_CancelBadge_DisplayName" xml:space="preserve">
+    <value>İptal (rozet)</value>
+    
+  </data>
+  <data name="Icon_CheckBadge_DisplayName" xml:space="preserve">
+    <value>Onay (rozet)</value>
+    
+  </data>
+  <data name="Icon_Cut_DisplayName" xml:space="preserve">
+    <value>Kes</value>
+    
+  </data>
+  <data name="Icon_FilterFlat_DisplayName" xml:space="preserve">
+    <value>Düz filtre</value>
+    
+  </data>
+  <data name="Icon_FilterFlatFilled_DisplayName" xml:space="preserve">
+    <value>Düz filtre (dolu)</value>
+    
+  </data>
+  <data name="Icon_Leave_DisplayName" xml:space="preserve">
+    <value>Ayrılma</value>
+    
+  </data>
+  <data name="Icon_Paste_DisplayName" xml:space="preserve">
+    <value>Yapıştır</value>
+    
+  </data>
+  <data name="Icon_ThumbsDownFilled_DisplayName" xml:space="preserve">
+    <value>Başparmak aşağı (dolu)</value>
+    
+  </data>
+  <data name="Icon_ThumbsUpFilled_DisplayName" xml:space="preserve">
+    <value>Başparmak yukarı (dolu)</value>
+    
+  </data>
+  <data name="Icon_EmojiHappy_DisplayName" xml:space="preserve">
+    <value>Emoji - Mutlu</value>
+    
+  </data>
+  <data name="SuggestRemoteExecutionHint_OpNotSupportedByClient" xml:space="preserve">
+    <value>Bu formülün bir kısmı uzaktan değerlendirilemiyor. '{0}' işlemi şu anda bu bağlamda desteklenmiyor.</value>
+    
+  </data>
+  <data name="SuggestRemoteExecutionHint_StringMatchSecondParam" xml:space="preserve">
+    <value>Bu formülün bir bölümü uzaktan değerlendirilemiyor. İkinci bağımsız değişkende bir alan adı göründüğünde '{0}' işlevi için temsilci seçilemez.</value>
+    
+  </data>
+  <data name="entityForm_EntityForm_DisplayName" xml:space="preserve">
+    <value>Varlık formu</value>
+    
+  </data>
+  <data name="BorderStyle_None_DisplayName" xml:space="preserve">
+    <value>Hiçbiri</value>
+    
+  </data>
+  <data name="BorderStyle_Dashed_DisplayName" xml:space="preserve">
+    <value>Çizgili</value>
+    
+  </data>
+  <data name="BorderStyle_Solid_DisplayName" xml:space="preserve">
+    <value>Düz</value>
+    
+  </data>
+  <data name="BorderStyle_Dotted_DisplayName" xml:space="preserve">
+    <value>Noktalı</value>
+    
+  </data>
+  <data name="DisplayMode_Disabled_DisplayName" xml:space="preserve">
+    <value>Devre dışı</value>
+    
+  </data>
+  <data name="DisplayMode_Edit_DisplayName" xml:space="preserve">
+    <value>Düzenle</value>
+    
+  </data>
+  <data name="DisplayMode_View_DisplayName" xml:space="preserve">
+    <value>Görünüm</value>
+    
+  </data>
+  <data name="LayoutMode_Manual_DisplayName" xml:space="preserve">
+    <value>El ile</value>
+    
+  </data>
+  <data name="LayoutMode_Auto_DisplayName" xml:space="preserve">
+    <value>Otomatik</value>
+    
+  </data>
+  <data name="LayoutDirection_Horizontal_DisplayName" xml:space="preserve">
+    <value>Yatay</value>
+    
+  </data>
+  <data name="LayoutDirection_Vertical_DisplayName" xml:space="preserve">
+    <value>Dikey</value>
+    
+  </data>
+  <data name="LayoutAlignItems_Start_DisplayName" xml:space="preserve">
+    <value>Başlat</value>
+    
+  </data>
+  <data name="LayoutAlignItems_Center_DisplayName" xml:space="preserve">
+    <value>Ortala</value>
+    
+  </data>
+  <data name="LayoutAlignItems_End_DisplayName" xml:space="preserve">
+    <value>Bitir</value>
+    
+  </data>
+  <data name="LayoutAlignItems_Stretch_DisplayName" xml:space="preserve">
+    <value>Uzat</value>
+    
+  </data>
+  <data name="AlignInContainer_Start_DisplayName" xml:space="preserve">
+    <value>Başlat</value>
+    
+  </data>
+  <data name="AlignInContainer_Center_DisplayName" xml:space="preserve">
+    <value>Ortala</value>
+    
+  </data>
+  <data name="AlignInContainer_End_DisplayName" xml:space="preserve">
+    <value>Bitir</value>
+    
+  </data>
+  <data name="AlignInContainer_Stretch_DisplayName" xml:space="preserve">
+    <value>Uzat</value>
+    
+  </data>
+  <data name="AlignInContainer_SetByContainer_DisplayName" xml:space="preserve">
+    <value>Kapsayıcıya göre ayarla</value>
+    
+  </data>
+  <data name="LayoutJustifyContent_Start_DisplayName" xml:space="preserve">
+    <value>Başlat</value>
+    
+  </data>
+  <data name="LayoutJustifyContent_Center_DisplayName" xml:space="preserve">
+    <value>Ortala</value>
+    
+  </data>
+  <data name="LayoutJustifyContent_End_DisplayName" xml:space="preserve">
+    <value>Bitir</value>
+    
+  </data>
+  <data name="LayoutJustifyContent_SpaceEvenly_DisplayName" xml:space="preserve">
+    <value>Eşit Boşluk</value>
+    
+  </data>
+  <data name="LayoutJustifyContent_SpaceAround_DisplayName" xml:space="preserve">
+    <value>Etrafında Boşluk</value>
+    
+  </data>
+  <data name="LayoutJustifyContent_SpaceBetween_DisplayName" xml:space="preserve">
+    <value>Arasında Boşluk</value>
+    
+  </data>
+  <data name="LayoutOverflow_Hide_DisplayName" xml:space="preserve">
+    <value>Gizle</value>
+    
+  </data>
+  <data name="LayoutOverflow_Scroll_DisplayName" xml:space="preserve">
+    <value>Kaydır</value>
+    
+  </data>
+  <data name="Overflow_Hidden_DisplayName" xml:space="preserve">
+    <value>Gizli</value>
+    
+  </data>
+  <data name="Overflow_Scroll_DisplayName" xml:space="preserve">
+    <value>Kaydır</value>
+    
+  </data>
+  <data name="TextMode_SingleLine_DisplayName" xml:space="preserve">
+    <value>Tek satır</value>
+    
+  </data>
+  <data name="TextMode_Password_DisplayName" xml:space="preserve">
+    <value>Parola</value>
+    
+  </data>
+  <data name="TextMode_MultiLine_DisplayName" xml:space="preserve">
+    <value>Çok satırlı</value>
+    
+  </data>
+  <data name="TextFormat_Text_DisplayName" xml:space="preserve">
+    <value>Metin</value>
+    
+  </data>
+  <data name="TextFormat_Number_DisplayName" xml:space="preserve">
+    <value>Sayı</value>
+    
+  </data>
+  <data name="VirtualKeyboardMode_Auto_DisplayName" xml:space="preserve">
+    <value>Otomatik klavye</value>
+    
+  </data>
+  <data name="VirtualKeyboardMode_Numeric_DisplayName" xml:space="preserve">
+    <value>Sayısal klavye</value>
+    
+  </data>
+  <data name="VirtualKeyboardMode_Text_DisplayName" xml:space="preserve">
+    <value>Metin klavyesi</value>
+    
+  </data>
+  <data name="TeamsTheme_Default_DisplayName" xml:space="preserve">
+    <value>Varsayılan tema</value>
+    
+  </data>
+  <data name="TeamsTheme_Dark_DisplayName" xml:space="preserve">
+    <value>Koyu tema</value>
+    
+  </data>
+  <data name="TeamsTheme_Contrast_DisplayName" xml:space="preserve">
+    <value>Karşıtlık teması</value>
+    
+  </data>
+  <data name="PenMode_Draw_DisplayName" xml:space="preserve">
+    <value>Çiz</value>
+    
+  </data>
+  <data name="PenMode_Erase_DisplayName" xml:space="preserve">
+    <value>Sil</value>
+    
+  </data>
+  <data name="DateTimeZone_Local_DisplayName" xml:space="preserve">
+    <value>Yerel</value>
+    
+  </data>
+  <data name="DateTimeZone_UTC_DisplayName" xml:space="preserve">
+    <value>UTC</value>
+    
+  </data>
+  <data name="ImagePosition_Fill_DisplayName" xml:space="preserve">
+    <value>Dolgu</value>
+    
+  </data>
+  <data name="ImagePosition_Fit_DisplayName" xml:space="preserve">
+    <value>Sığdır</value>
+    
+  </data>
+  <data name="ImagePosition_Stretch_DisplayName" xml:space="preserve">
+    <value>Uzat</value>
+    
+  </data>
+  <data name="ImagePosition_Tile_DisplayName" xml:space="preserve">
+    <value>Kutucuk</value>
+    
+  </data>
+  <data name="ImagePosition_Center_DisplayName" xml:space="preserve">
+    <value>Orta</value>
+    
+  </data>
+  <data name="VerticalAlign_Top_DisplayName" xml:space="preserve">
+    <value>Üst</value>
+    
+  </data>
+  <data name="VerticalAlign_Middle_DisplayName" xml:space="preserve">
+    <value>Orta</value>
+    
+  </data>
+  <data name="VerticalAlign_Bottom_DisplayName" xml:space="preserve">
+    <value>Alt</value>
+    
+  </data>
+  <data name="Layout_Horizontal_DisplayName" xml:space="preserve">
+    <value>Yatay</value>
+    
+  </data>
+  <data name="Layout_Vertical_DisplayName" xml:space="preserve">
+    <value>Dikey</value>
+    
+  </data>
+  <data name="TextPosition_Left_DisplayName" xml:space="preserve">
+    <value>Sol</value>
+    
+  </data>
+  <data name="TextPosition_Right_DisplayName" xml:space="preserve">
+    <value>Sağ</value>
+    
+  </data>
+  <data name="Transition_Push_DisplayName" xml:space="preserve">
+    <value>Gönder</value>
+    
+  </data>
+  <data name="Transition_Pop_DisplayName" xml:space="preserve">
+    <value>Alın</value>
+    
+  </data>
+  <data name="Transition_None_DisplayName" xml:space="preserve">
+    <value>Hiçbiri</value>
+    
+  </data>
+  <data name="FontWeight_Normal_DisplayName" xml:space="preserve">
+    <value>Normal</value>
+    
+  </data>
+  <data name="FontWeight_Semibold_DisplayName" xml:space="preserve">
+    <value>Yarı kalın</value>
+    
+  </data>
+  <data name="FontWeight_Bold_DisplayName" xml:space="preserve">
+    <value>Kalın</value>
+    
+  </data>
+  <data name="FontWeight_Lighter_DisplayName" xml:space="preserve">
+    <value>Daha ince</value>
+    
+  </data>
+  <data name="FormPattern_None_DisplayName" xml:space="preserve">
+    <value>Hiçbiri</value>
+    
+  </data>
+  <data name="FormPattern_Details_DisplayName" xml:space="preserve">
+    <value>Ayrıntılar</value>
+    
+  </data>
+  <data name="FormPattern_List_DisplayName" xml:space="preserve">
+    <value>Liste</value>
+    
+  </data>
+  <data name="FormPattern_CardList_DisplayName" xml:space="preserve">
+    <value>Kart listesi</value>
+    
+  </data>
+  <data name="BarcodeType_Auto_DisplayName" xml:space="preserve">
+    <value>Otomatik</value>
+    
+  </data>
+  <data name="BarcodeType_Aztec_DisplayName" xml:space="preserve">
+    <value>Aztec</value>
+    
+  </data>
+  <data name="BarcodeType_Codabar_DisplayName" xml:space="preserve">
+    <value>Codabar</value>
+    
+  </data>
+  <data name="BarcodeType_DataMatrix_DisplayName" xml:space="preserve">
+    <value>Veri Matrisi</value>
+    
+  </data>
+  <data name="BarcodeType_Ean_DisplayName" xml:space="preserve">
+    <value>EAN</value>
+    
+  </data>
+  <data name="BarcodeType_QRCode_DisplayName" xml:space="preserve">
+    <value>QR Kodu</value>
+    
+  </data>
+  <data name="BarcodeType_RssExpanded_DisplayName" xml:space="preserve">
+    <value>RSS Genişletildi</value>
+    
+  </data>
+  <data name="BarcodeType_Upc_DisplayName" xml:space="preserve">
+    <value>UPC</value>
+    
+  </data>
+  <data name="GridStyle_XOnly_DisplayName" xml:space="preserve">
+    <value>Yalnızca X</value>
+    
+  </data>
+  <data name="GridStyle_YOnly_DisplayName" xml:space="preserve">
+    <value>Yalnızca Y</value>
+    
+  </data>
+  <data name="GridStyle_All_DisplayName" xml:space="preserve">
+    <value>Tümü</value>
+    
+  </data>
+  <data name="GridStyle_None_DisplayName" xml:space="preserve">
+    <value>Hiçbiri</value>
+    
+  </data>
+  <data name="FormMode_Edit_DisplayName" xml:space="preserve">
+    <value>Düzenle</value>
+    
+  </data>
+  <data name="FormMode_View_DisplayName" xml:space="preserve">
+    <value>Görünüm</value>
+    
+  </data>
+  <data name="FormMode_New_DisplayName" xml:space="preserve">
+    <value>Yeni</value>
+    
+  </data>
+  <data name="SelectedState_Edit_DisplayName" xml:space="preserve">
+    <value>Düzenle</value>
+    
+  </data>
+  <data name="SelectedState_View_DisplayName" xml:space="preserve">
+    <value>Görünüm</value>
+    
+  </data>
+  <data name="SelectedState_New_DisplayName" xml:space="preserve">
+    <value>Yeni</value>
+    
+  </data>
+  <data name="LoadingSpinner_Controls_DisplayName" xml:space="preserve">
+    <value>Denetimler</value>
+    
+  </data>
+  <data name="LoadingSpinner_Data_DisplayName" xml:space="preserve">
+    <value>Veri</value>
+    
+  </data>
+  <data name="LoadingSpinner_None_DisplayName" xml:space="preserve">
+    <value>Hiçbiri</value>
+    
+  </data>
+  <data name="NotificationType_Error_DisplayName" xml:space="preserve">
+    <value>Hata</value>
+    
+  </data>
+  <data name="NotificationType_Warning_DisplayName" xml:space="preserve">
+    <value>Uyarı</value>
+    
+  </data>
+  <data name="NotificationType_Success_DisplayName" xml:space="preserve">
+    <value>Başarılı</value>
+    
+  </data>
+  <data name="NotificationType_Information_DisplayName" xml:space="preserve">
+    <value>Bilgi</value>
+    
+  </data>
+  <data name="Icon_Add_DisplayName" xml:space="preserve">
+    <value>Ekle</value>
+    
+  </data>
+  <data name="Icon_Cancel_DisplayName" xml:space="preserve">
+    <value>İptal</value>
+    
+  </data>
+  <data name="Icon_Edit_DisplayName" xml:space="preserve">
+    <value>Düzenle</value>
+    
+  </data>
+  <data name="Icon_Check_DisplayName" xml:space="preserve">
+    <value>Denetle</value>
+    
+  </data>
+  <data name="Icon_Search_DisplayName" xml:space="preserve">
+    <value>Ara</value>
+    
+  </data>
+  <data name="Icon_Filter_DisplayName" xml:space="preserve">
+    <value>Filtre</value>
+    
+  </data>
+  <data name="Icon_Sort_DisplayName" xml:space="preserve">
+    <value>Sırala</value>
+    
+  </data>
+  <data name="Icon_Reload_DisplayName" xml:space="preserve">
+    <value>Yeniden yükle</value>
+    
+  </data>
+  <data name="Icon_Trash_DisplayName" xml:space="preserve">
+    <value>Çöp</value>
+    
+  </data>
+  <data name="Icon_Save_DisplayName" xml:space="preserve">
+    <value>Kaydet</value>
+    
+  </data>
+  <data name="Icon_Download_DisplayName" xml:space="preserve">
+    <value>İndir</value>
+    
+  </data>
+  <data name="Icon_Copy_DisplayName" xml:space="preserve">
+    <value>Kopyala</value>
+    
+  </data>
+  <data name="Icon_LikeDislike_DisplayName" xml:space="preserve">
+    <value>Beğen / Beğenme</value>
+    
+  </data>
+  <data name="Icon_Crop_DisplayName" xml:space="preserve">
+    <value>Kırp</value>
+    
+  </data>
+  <data name="Icon_Pin_DisplayName" xml:space="preserve">
+    <value>Sabitle</value>
+    
+  </data>
+  <data name="Icon_ClearDrawing_DisplayName" xml:space="preserve">
+    <value>Çizimi temizle</value>
+    
+  </data>
+  <data name="Icon_ExpandView_DisplayName" xml:space="preserve">
+    <value>Görünümü genişlet</value>
+    
+  </data>
+  <data name="Icon_CollapseView_DisplayName" xml:space="preserve">
+    <value>Görünümü daralt</value>
+    
+  </data>
+  <data name="Icon_Draw_DisplayName" xml:space="preserve">
+    <value>Çiz</value>
+    
+  </data>
+  <data name="Icon_Compose_DisplayName" xml:space="preserve">
+    <value>Oluştur</value>
+    
+  </data>
+  <data name="Icon_Erase_DisplayName" xml:space="preserve">
+    <value>Sil</value>
+    
+  </data>
+  <data name="Icon_Message_DisplayName" xml:space="preserve">
+    <value>İleti</value>
+    
+  </data>
+  <data name="Icon_Post_DisplayName" xml:space="preserve">
+    <value>Yayımla</value>
+    
+  </data>
+  <data name="Icon_AddDocument_DisplayName" xml:space="preserve">
+    <value>Belge ekle</value>
+    
+  </data>
+  <data name="Icon_AddLibrary_DisplayName" xml:space="preserve">
+    <value>Kitaplık ekle</value>
+    
+  </data>
+  <data name="Icon_Home_DisplayName" xml:space="preserve">
+    <value>Giriş</value>
+    
+  </data>
+  <data name="Icon_Hamburger_DisplayName" xml:space="preserve">
+    <value>Hamburger</value>
+    
+  </data>
+  <data name="Icon_Settings_DisplayName" xml:space="preserve">
+    <value>Ayarlar</value>
+    
+  </data>
+  <data name="Icon_More_DisplayName" xml:space="preserve">
+    <value>Daha fazla</value>
+    
+  </data>
+  <data name="Icon_Waffle_DisplayName" xml:space="preserve">
+    <value>Waffle</value>
+    
+  </data>
+  <data name="Icon_ChevronLeft_DisplayName" xml:space="preserve">
+    <value>Sol</value>
+    
+  </data>
+  <data name="Icon_ChevronRight_DisplayName" xml:space="preserve">
+    <value>Sağ</value>
+    
+  </data>
+  <data name="Icon_ChevronUp_DisplayName" xml:space="preserve">
+    <value>Yukarı</value>
+    
+  </data>
+  <data name="Icon_ChevronDown_DisplayName" xml:space="preserve">
+    <value>Aşağı</value>
+    
+  </data>
+  <data name="Icon_NextArrow_DisplayName" xml:space="preserve">
+    <value>İleri</value>
+    
+  </data>
+  <data name="Icon_BackArrow_DisplayName" xml:space="preserve">
+    <value>Geri</value>
+    
+  </data>
+  <data name="Icon_ArrowDown_DisplayName" xml:space="preserve">
+    <value>Aşağı ok</value>
+    
+  </data>
+  <data name="Icon_ArrowUp_DisplayName" xml:space="preserve">
+    <value>Yukarı ok</value>
+    
+  </data>
+  <data name="Icon_ArrowLeft_DisplayName" xml:space="preserve">
+    <value>Sol ok</value>
+    
+  </data>
+  <data name="Icon_ArrowRight_DisplayName" xml:space="preserve">
+    <value>Sağ ok</value>
+    
+  </data>
+  <data name="Icon_Camera_DisplayName" xml:space="preserve">
+    <value>Kamera</value>
+    
+  </data>
+  <data name="Icon_Document_DisplayName" xml:space="preserve">
+    <value>Belge</value>
+    
+  </data>
+  <data name="Icon_DockCheckProperties_DisplayName" xml:space="preserve">
+    <value>Belge onay işareti</value>
+    
+  </data>
+  <data name="Icon_Folder_DisplayName" xml:space="preserve">
+    <value>Klasör</value>
+    
+  </data>
+  <data name="Icon_Journal_DisplayName" xml:space="preserve">
+    <value>Günlük</value>
+    
+  </data>
+  <data name="Icon_ForkKnife_DisplayName" xml:space="preserve">
+    <value>Yiyecek</value>
+    
+  </data>
+  <data name="Icon_Transportation_DisplayName" xml:space="preserve">
+    <value>Ulaşım</value>
+    
+  </data>
+  <data name="Icon_Airplane_DisplayName" xml:space="preserve">
+    <value>Uçak</value>
+    
+  </data>
+  <data name="Icon_Bus_DisplayName" xml:space="preserve">
+    <value>Veri yolu</value>
+    
+  </data>
+  <data name="Icon_Cars_DisplayName" xml:space="preserve">
+    <value>Otomobiller</value>
+    
+  </data>
+  <data name="Icon_Money_DisplayName" xml:space="preserve">
+    <value>Para</value>
+    
+  </data>
+  <data name="Icon_Currency_DisplayName" xml:space="preserve">
+    <value>Para birimi</value>
+    
+  </data>
+  <data name="Icon_AddToCalendar_DisplayName" xml:space="preserve">
+    <value>Takvime ekle</value>
+    
+  </data>
+  <data name="Icon_CalendarBlank_DisplayName" xml:space="preserve">
+    <value>Takvim boş</value>
+    
+  </data>
+  <data name="Icon_OfficeBuilding_DisplayName" xml:space="preserve">
+    <value>Ofis binası</value>
+    
+  </data>
+  <data name="Icon_PaperClip_DisplayName" xml:space="preserve">
+    <value>Ataş</value>
+    
+  </data>
+  <data name="Icon_Newspaper_DisplayName" xml:space="preserve">
+    <value>Gazete</value>
+    
+  </data>
+  <data name="Icon_Lock_DisplayName" xml:space="preserve">
+    <value>Kilitle</value>
+    
+  </data>
+  <data name="Icon_Waypoint_DisplayName" xml:space="preserve">
+    <value>Güzergah noktası</value>
+    
+  </data>
+  <data name="Icon_Location_DisplayName" xml:space="preserve">
+    <value>Konum</value>
+    
+  </data>
+  <data name="Icon_DocumentPDF_DisplayName" xml:space="preserve">
+    <value>PDF belgesi</value>
+    
+  </data>
+  <data name="Icon_Bell_DisplayName" xml:space="preserve">
+    <value>Zil</value>
+    
+  </data>
+  <data name="Icon_ShoppingCart_DisplayName" xml:space="preserve">
+    <value>Alışveriş sepeti</value>
+    
+  </data>
+  <data name="Icon_Phone_DisplayName" xml:space="preserve">
+    <value>Telefon</value>
+    
+  </data>
+  <data name="Icon_PhoneHangUp_DisplayName" xml:space="preserve">
+    <value>Aramayı sonlandır</value>
+    
+  </data>
+  <data name="Icon_Mobile_DisplayName" xml:space="preserve">
+    <value>Mobil</value>
+    
+  </data>
+  <data name="Icon_Laptop_DisplayName" xml:space="preserve">
+    <value>Dizüstü</value>
+    
+  </data>
+  <data name="Icon_ComputerDesktop_DisplayName" xml:space="preserve">
+    <value>Masaüstü bilgisayar</value>
+    
+  </data>
+  <data name="Icon_Devices_DisplayName" xml:space="preserve">
+    <value>Cihazlar</value>
+    
+  </data>
+  <data name="Icon_Controller_DisplayName" xml:space="preserve">
+    <value>Denetleyici</value>
+    
+  </data>
+  <data name="Icon_Tools_DisplayName" xml:space="preserve">
+    <value>Araçlar</value>
+    
+  </data>
+  <data name="Icon_ToolsWrench_DisplayName" xml:space="preserve">
+    <value>Araçlar anahtarı</value>
+    
+  </data>
+  <data name="Icon_Mail_DisplayName" xml:space="preserve">
+    <value>Posta</value>
+    
+  </data>
+  <data name="Icon_Send_DisplayName" xml:space="preserve">
+    <value>Gönder</value>
+    
+  </data>
+  <data name="Icon_Clock_DisplayName" xml:space="preserve">
+    <value>Saat</value>
+    
+  </data>
+  <data name="Icon_ListWatchlistRemind_DisplayName" xml:space="preserve">
+    <value>Liste anımsatıcı</value>
+    
+  </data>
+  <data name="Icon_LogJournal_DisplayName" xml:space="preserve">
+    <value>Kayıt günlüğü</value>
+    
+  </data>
+  <data name="Icon_Note_DisplayName" xml:space="preserve">
+    <value>Not</value>
+    
+  </data>
+  <data name="Icon_PhotosPictures_DisplayName" xml:space="preserve">
+    <value>Resim çerçeveleri</value>
+    
+  </data>
+  <data name="Icon_RadarActivityMonitor_DisplayName" xml:space="preserve">
+    <value>Radar</value>
+    
+  </data>
+  <data name="Icon_Tablet_DisplayName" xml:space="preserve">
+    <value>Tablet</value>
+    
+  </data>
+  <data name="Icon_Tag_DisplayName" xml:space="preserve">
+    <value>Etiket</value>
+    
+  </data>
+  <data name="Icon_CameraAperture_DisplayName" xml:space="preserve">
+    <value>Kamera diyafram açıklığı</value>
+    
+  </data>
+  <data name="Icon_ColorPicker_DisplayName" xml:space="preserve">
+    <value>Renk seçici</value>
+    
+  </data>
+  <data name="Icon_DetailList_DisplayName" xml:space="preserve">
+    <value>Ayrıntı listesi</value>
+    
+  </data>
+  <data name="Icon_DocumentWithContent_DisplayName" xml:space="preserve">
+    <value>İçeriğe sahip belge</value>
+    
+  </data>
+  <data name="Icon_ListScrollEmpty_DisplayName" xml:space="preserve">
+    <value>Kaydırma listesi boş</value>
+    
+  </data>
+  <data name="Icon_ListScrollWatchlist_DisplayName" xml:space="preserve">
+    <value>Liste kaydırma izleme listesi</value>
+    
+  </data>
+  <data name="Icon_OptionsList_DisplayName" xml:space="preserve">
+    <value>Seçenek listesi</value>
+    
+  </data>
+  <data name="Icon_People_DisplayName" xml:space="preserve">
+    <value>Kişiler</value>
+    
+  </data>
+  <data name="Icon_Person_DisplayName" xml:space="preserve">
+    <value>Kişi</value>
+    
+  </data>
+  <data name="Icon_EmojiFrown_DisplayName" xml:space="preserve">
+    <value>Emoji - Kaş çatma</value>
+    
+  </data>
+  <data name="Icon_EmojiSmile_DisplayName" xml:space="preserve">
+    <value>Emoji - Gülümseme</value>
+    
+  </data>
+  <data name="Icon_EmojiSad_DisplayName" xml:space="preserve">
+    <value>Emoji - Üzgün</value>
+    
+  </data>
+  <data name="Icon_EmojiNeutral_DisplayName" xml:space="preserve">
+    <value>Emoji - Nötr</value>
+    
+  </data>
+  <data name="Icon_Warning_DisplayName" xml:space="preserve">
+    <value>Uyarı</value>
+    
+  </data>
+  <data name="Icon_Information_DisplayName" xml:space="preserve">
+    <value>Bilgi</value>
+    
+  </data>
+  <data name="Icon_Database_DisplayName" xml:space="preserve">
+    <value>Veritabanı</value>
+    
+  </data>
+  <data name="Icon_Weather_DisplayName" xml:space="preserve">
+    <value>Hava Durumu</value>
+    
+  </data>
+  <data name="Icon_TrendingHashtag_DisplayName" xml:space="preserve">
+    <value>Diyez etiketi</value>
+    
+  </data>
+  <data name="Icon_TrendingUpwards_DisplayName" xml:space="preserve">
+    <value>Yukarı doğru eğilim</value>
+    
+  </data>
+  <data name="Icon_Items_DisplayName" xml:space="preserve">
+    <value>Öğeler</value>
+    
+  </data>
+  <data name="Icon_LevelsLayersItems_DisplayName" xml:space="preserve">
+    <value>Katmanlar</value>
+    
+  </data>
+  <data name="Icon_Trending_DisplayName" xml:space="preserve">
+    <value>Eğilim</value>
+    
+  </data>
+  <data name="Icon_LineWeight_DisplayName" xml:space="preserve">
+    <value>Çizgi kalınlığı</value>
+    
+  </data>
+  <data name="AboutIsError" xml:space="preserve">
+    <value>Verilen bağımsız değişken hesaplanırken hata oluştu olup olmadığını döndürür.</value>
+    
+  </data>
+  <data name="IsErrorArg" xml:space="preserve">
+    <value>value</value>
+    
+  </data>
+  <data name="AboutIsError_value" xml:space="preserve">
+    <value>Hataları denetlenecek değer.</value>
+    
+  </data>
+  <data name="ErrBadArityMinimum" xml:space="preserve">
+    <value>Geçersiz sayıda bağımsız değişken: {0} alındı, {1} veya daha fazlası bekleniyordu.</value>
+    
+  </data>
+  <data name="ErrBadArityRange" xml:space="preserve">
+    <value>Geçersiz sayıda bağımsız değişken: {0} alındı, {1}-{2} bekleniyordu.</value>
+    
+  </data>
+  <data name="ErrGeneralError" xml:space="preserve">
+    <value>{0}</value>
+    
+  </data>
+  <data name="FormulaColumns_NotSupported" xml:space="preserve">
+    <value>Formül sütunlarında desteklenmez.</value>
+    
+  </data>
+  <data name="FormulaColumns_ArgNotSupported" xml:space="preserve">
+    <value>{0} bağımsız değişkeni, formül sütunlarında {1} işlevi için desteklenmiyor.</value>
+    
+  </data>
+  <data name="FormulaColumns_ArgTypeNotSupported" xml:space="preserve">
+    <value>Bu bağımsız değişken, formül sütunlarında bu tür olarak geçirilemez.</value>
+    
+  </data>
+  <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
+    <value>Bu bağımsız değişken için yalnızca bir değişmez değer desteklenir.</value>
+    
+  </data>
+  <data name="FormulaColumns_TimeZoneConversion" xml:space="preserve">
+    <value>{0}, formül sütunlarında desteklenmeyen bir saat dilimi dönüşümü olmadan bu girişte gerçekleştirilemez.</value>
+    
+  </data>
+  <data name="FormulaColumns_IncompatibleDateTimes" xml:space="preserve">
+    <value>Bu işlem, farklı Tarih Saat Davranışlarında bulunan değerlerde gerçekleştirilemez.</value>
+    
+  </data>
+  <data name="FormulaColumns_DateTimeFormatNotSupported" xml:space="preserve">
+    <value>Formül sütunlarında yalnızca kısa tarih ve saat biçimi dizeleri desteklenmektedir.</value>
+    
+  </data>
+  <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
+    <value>Formül sütunlarında "." ve "," gibi yerel ayara özel biçimlendirme belirteçleri desteklenmiyor.</value>
+    
+  </data>
+  <data name="FormulaColumns_FunctionNotSupported" xml:space="preserve">
+    <value>{0}, formül sütunlarında desteklenmiyor, bunun yerine {1} kullanın.</value>
+    
+  </data>
+  <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
+    <value>Sonuç türü {0}, formül sütunlarında desteklenmiyor.</value>
+    
+  </data>
+  <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
+    <value>Bu formül için sonuç türünün {0} olması bekleniyordu ancak gerçek sonuç türü {1}. Formül sütununun sonuç türü değiştirilemez.</value>
+    
+  </data>
+  <data name="FormulaColumns_ColumnTypeNotSupported" xml:space="preserve">
+    <value>{0} türündeki sütunlar, formül sütunlarında desteklenmiyor.</value>
+    
+  </data>
+  <data name="FormulaColumns_ColumnFormatNotSupported" xml:space="preserve">
+    <value>{1} biçimindeki {0} türündeki sütunlar, formül sütunlarında desteklenmiyor.</value>
+    
+  </data>
+  <data name="FormulaColumns_FormulaTooLong" xml:space="preserve">
+    <value>Formüller 1000 karakterden uzun olamaz.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
+    <value>İşlenen bekleniyordu. Formül veya ifade geçerli bir işlenen bekliyor. Örneğin, sonucun '3' olması için '2' işlenenini '1 + _' ifadesine ekleyebilirsiniz. Veya sonucun "Hoş geldiniz" olması için "geldiniz" işlenenini '"Hoş "&amp; _ ' işlenenine ekleyebilirsiniz.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrOperandExpected_HowToFix_1" xml:space="preserve">
+    <value>İfade tamamlayacak bir işlenen değeri girin. İşlenen türünün (metin, sayı, tarih veya true/false) ifadeye uyduğundan emin olun. Sayıları sayılarla, metinleri metinle vb. eşleştirin. Örneğin, '1 + "Merhaba"' geçerli değil, ancak '1 + 2' geçerlidir.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBadToken_ShortMessage" xml:space="preserve">
+    <value>Beklenmeyen karakterler. Karakterler formülde beklenmeyen bir biçimde kullanılıyor.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBadToken_LongMessage" xml:space="preserve">
+    <value>Örneğin, '\' karakteri bir sayıdan sonra beklenmez (örneğin, '32\'). Yalnızca 32 sayısı olması için bir boşluk ('32 ') veya başka bir sayı ('323' gibi) bekleniyor.</value>
+  </data>
+  <data name="ErrorResource_ErrBadToken_HowToFix_1" xml:space="preserve">
+    <value>Beklenmeyen karakterleri kaldırın veya değiştirin.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBadToken_Link_1" xml:space="preserve">
+    <value>Makale: Power Apps için formül başvurusu</value>
+    
+  </data>
+  <data name="ErrorResource_UnexpectedCharacterToken_ShortMessage" xml:space="preserve">
+    <value>Formüldeki '{1}' konumunda beklenmeyen '{0}' karakteri.</value>
+    
+  </data>
+  <data name="ErrorResource_UnexpectedCharacterToken_LongMessage" xml:space="preserve">
+    <value>Örneğin, '\' karakteri bir sayıdan sonra beklenmez (örneğin, '32\'). Yalnızca 32 sayısı olması için bir boşluk ('32 ') veya başka bir sayı ('323' gibi) bekleniyor.</value>
+  </data>
+  <data name="ErrorResource_UnexpectedCharacterToken_HowToFix_1" xml:space="preserve">
+    <value>Beklenmeyen karakteri kaldırın veya değiştirin.</value>
+  </data>
+  <data name="ErrorResource_UnexpectedCharacterToken_Link_1" xml:space="preserve">
+    <value>Makale: Power Apps için formül başvurusu</value>
+    
+  </data>
+  <data name="ErrorResource_ErrMissingEndOfBlockComment_ShortMessage" xml:space="preserve">
+    <value>Açıklama sonu tanımlayıcısı eksik. Blok açıklamanın açıklama sonu tanımlayıcısı yok.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrMissingEndOfBlockComment_LongMessage" xml:space="preserve">
+    <value>Her blok açıklama '/*' ile başlamalı ve '*/' ile bitmelidir. Her blok açıklamayı düzgün şekilde sonlandırmazsanız, açıklamadan sonraki tüm kodlar bu açıklamanın bir parçası olur. Açıklama tek bir satırdan oluşuyorsa, '//' ile başlayarak açıklamanın sonunu belirtmeyebilirsiniz.</value>
+  </data>
+  <data name="ErrorResource_ErrMissingEndOfBlockComment_HowToFix_1" xml:space="preserve">
+    <value>Blok açıklamanızın sonuna bir '*/' ekleyin veya açıklamanızı bir satır açıklaması kümesine değiştirin.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrMissingEndOfBlockComment_Link_1" xml:space="preserve">
+    <value>Makale: Power Apps için formül başvurusu</value>
+    
+  </data>
+  <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_ShortMessage" xml:space="preserve">
+    <value>Beklenmeyen karakterler. Formül içeriyor '{1}' beklenirken '{0}' içeriyor.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_LongMessage" xml:space="preserve">
+    <value>Örneğin, bir formül '{{Val: 7}}' yerine '{{Val@ 7}}' içeriyorsa bu hata oluşur. Bir değişken ayarladığınızda, söz dizimi bir "at" simgesi yerine iki nokta üst üste gerektirir.</value>
+  </data>
+  <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_HowToFix_1" xml:space="preserve">
+    <value>Beklenmeyen karakterleri kaldırın veya beklenen bir karakterle değiştirin.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_Link_1" xml:space="preserve">
+    <value>Makale: Power Apps için formül başvurusu</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidName_ShortMessage" xml:space="preserve">
+    <value>Ad geçerli değil. '{0}' tanınmıyor.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidName_LongMessage" xml:space="preserve">
+    <value>Bu hata en yaygın olarak bir formül artık var olmayan bir öğeye (örneğin, silmiş olduğunuz bir denetime) başvurduğunda ortaya çıkar.</value>
+  </data>
+  <data name="ErrorResource_ErrInvalidName_HowToFix_1" xml:space="preserve">
+    <value>Geçerli olmayan ad başvurusunu kaldırın veya düzeltin.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidName_Link_1" xml:space="preserve">
+    <value>Makale: Power Apps için formül başvurusu</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_ShortMessage" xml:space="preserve">
+    <value>Ad geçerli değil. Bu tanımlayıcı tanınmıyor.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_LongMessage" xml:space="preserve">
+    <value>Bu hata en yaygın olarak bir formül artık var olmayan bir öğeye (örneğin, silmiş olduğunuz bir denetime) başvurduğunda ortaya çıkar.</value>
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_HowToFix_1" xml:space="preserve">
+    <value>Geçerli olmayan ad başvurusunu kaldırın veya düzeltin.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidIdentifier_Link_1" xml:space="preserve">
+    <value>Makale: Power Apps için formül başvurusu</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidPropertyReference_ShortMessage" xml:space="preserve">
+    <value>Özellik başvurusu geçerli değil.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidPropertyReference_LongMessage" xml:space="preserve">
+    <value>Bu hata, bir formül geçersiz söz dizimine sahip bileşen davranışı özelliklerine başvurduğunda görüntülenir. (ör. Component.OnCustomChange()) yerine Component.OnCustomChange())</value>
+  </data>
+  <data name="ErrorResource_ErrInvalidPropertyReference_HowToFix_1" xml:space="preserve">
+    <value>Bileşen davranışı özelliğine başvurmak için doğru söz dizimini kullanın. Örneğin, Component.OnCustomChange()</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidPropertyReference_Link_1" xml:space="preserve">
+    <value>Makale: PowerApps için formül başvurusu</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidParentUse_ShortMessage" xml:space="preserve">
+    <value>'Parent' başvurusu geçerli değil. Bu bağlamda bir üst denetime başvurulamaz.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidParentUse_LongMessage" xml:space="preserve">
+    <value>Parent işlecini bir üst denetimi olmayan bir denetim ile kullanamazsınız. Bu işleç, belirtilen denetimi barındıran denetime başvurur ve tüm özelliklerini kullanılabilir yapar.</value>
+  </data>
+  <data name="ErrorResource_ErrInvalidParentUse_HowToFix_1" xml:space="preserve">
+    <value>'Parent' işlecini kaldırın.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidParentUse_Link_1" xml:space="preserve">
+    <value>Makale: Power Apps'te bir tuval uygulaması denetimi ekleme ve yapılandırma</value>
+    
+  </data>
+  <data name="ErrorResource_ErrTooManyUps_ShortMessage" xml:space="preserve">
+    <value>Satır kapsamı çok fazla iç içe geçmiş. Formülünüzün satır kapsamı 63 iç içe geçme düzeyini aşıyor.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrTooManyUps_LongMessage" xml:space="preserve">
+    <value>Her iç içe geçme düzeyinde karmaşıklık arttığından Power Apps yalnızca 63 düzeye kadar satır kapsamı iç içe geçmeyi destekler.</value>
+  </data>
+  <data name="ErrorResource_ErrTooManyUps_HowToFix_1" xml:space="preserve">
+    <value>Formülü daha az sayıda iç içe geçme düzeyi ile yeniden yazın.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrRuleNestedTooDeeply_ShortMessage" xml:space="preserve">
+    <value>İfade çok fazla iç içe geçmiş. Formülünüzdeki bir ifade 50'den fazla düzeyde iç içe geçmiş.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrRuleNestedTooDeeply_LongMessage" xml:space="preserve">
+    <value>Power Apps yalnızca 50 düzeye kadar iç içe geçmeyi destekler. Bu derinlikte bir ifadeyi anlamak ve korumak zor olabilir.</value>
+  </data>
+  <data name="ErrorResource_ErrRuleNestedTooDeeply_HowToFix_1" xml:space="preserve">
+    <value>Formülü daha az sayıda iç içe geçme düzeyi ile yeniden yazın.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrOperatorExpected_ShortMessage" xml:space="preserve">
+    <value>İşleç bekleniyor. Formülde bu noktada +, * veya &amp; gibi bir işleç bekleniyor.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrOperatorExpected_LongMessage" xml:space="preserve">
+    <value>İşleçler iki işleneni birbirine ekler. Bu hata, iki işlevi (işleneni) aralarında bir işleç olmadan kullandığınızda oluşur -- örneğin, Len("metnim")Len("metnim").</value>
+  </data>
+  <data name="ErrorResource_ErrOperatorExpected_HowToFix_1" xml:space="preserve">
+    <value>Formülünüzü işlenenler arasında bir işleç içerecek şekilde düzenleyin.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrOperatorExpected_Link_1" xml:space="preserve">
+    <value>Modül: Temel formülleri kullanma</value>
+    
+  </data>
+  <data name="ErrorResource_ErrNumberExpected_ShortMessage" xml:space="preserve">
+    <value>Sayı bekleniyor. Formülde bu noktada bir sayı bekleniyor.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrNumberExpected_LongMessage" xml:space="preserve">
+    <value>Bu hata, bir sayı gerektiren bir işlev kullandığınızda ancak bunun yerine, örneğin, resim sağladığınızda oluşur.</value>
+  </data>
+  <data name="ErrorResource_ErrNumberExpected_HowToFix_1" xml:space="preserve">
+    <value>Formülünüzü formülün bu noktasında bir sayı verecek şekilde düzenleyin.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrNumberExpected_Link_1" xml:space="preserve">
+    <value>Makale: Power Apps için formül başvurusu</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBooleanExpected_ShortMessage" xml:space="preserve">
+    <value>Boole değeri bekleniyor. Formülde bu noktada bir boole (true/false) değeri bekleniyor.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBooleanExpected_LongMessage" xml:space="preserve">
+    <value>Boole değeri Microsoft Excel gibi uygulamalarda bir true/false değeri olarak da bilinir. Bu hata, Boole gerektiren bir işlev kullandığınızda ancak bunun yerine, örneğin, bir tarih sağladığınızda oluşur.</value>
+  </data>
+  <data name="ErrorResource_ErrBooleanExpected_HowToFix_1" xml:space="preserve">
+    <value>Formülünüzü formülün bu noktasında bir boole değeri verecek şekilde düzenleyin.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBooleanExpected_Link_1" xml:space="preserve">
+    <value>Makale: Power Apps için formül başvurusu</value>
+    
+  </data>
+  <data name="ErrorResource_ErrColonExpected_ShortMessage" xml:space="preserve">
+    <value>İki nokta üst üste bekleniyor. Formülde bu noktada bir iki nokta üst üste (:) bekleniyor.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrColonExpected_LongMessage" xml:space="preserve">
+    <value>İki nokta üst üste bir kayıttaki alan adını (sütun adı olarak da bilinir) alan değerinden ayırır (örneğin, {Month:"1"}, {Month:"2"} …). İki nokta üst üste ayrıca saatler, dakikalar ve saniyeleri de ayırır (örnek, "3:04").</value>
+  </data>
+  <data name="ErrorResource_ErrColonExpected_HowToFix_1" xml:space="preserve">
+    <value>Formülünüzü iki nokta üst üste içerecek şekilde düzenleyin.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrColonExpected_Link_1" xml:space="preserve">
+    <value>Makale: Power Apps'te metin, tarih ve saat gösterme</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorPropertyExpected_ShortMessage" xml:space="preserve">
+    <value>Davranış olmayan bir özellikte davranış işlevi. Bu özelliği uygulamanın başka bir yerinde değerleri değiştirmek için kullanamazsınız.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorPropertyExpected_LongMessage" xml:space="preserve">
+    <value>Davranış işlevleri uygulamanın başka bir yerinde değerleri değiştirerek uygulamanın durumunu değiştirir. 'Navigate', 'Patch', 'UpdateContext' ve 'Collect' yaygın davranış işlevleridir. 'OnSelect', 'OnVisible' ve diğer 'On …' özellikleri yaygın davranış tabanlı özelliklerdir.</value>
+  </data>
+  <data name="ErrorResource_ErrBehaviorPropertyExpected_HowToFix_1" xml:space="preserve">
+    <value>Davranış işlevini davranış tabanlı bir özelliğe taşıyın.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrBehaviorPropertyExpected_Link_1" xml:space="preserve">
+    <value>Makale: Power Apps'te tuval uygulamaları için davranış formüllerini anlama</value>
+    
+  </data>
+  <data name="ErrorResource_ErrTestPropertyExpected_ShortMessage" xml:space="preserve">
+    <value>Test olmayan bir özellikte test işlevi. Bu özelliği yalnızca test işlevlerini çağırmak için kullanamazsınız.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrTestPropertyExpected_LongMessage" xml:space="preserve">
+    <value>Test işlevleri, bir uygulamayı test ederken kullanıcı girişinin benzetimini yapmak için kullanılabilen bağlantılardır. 'SetProperty', 'SelectRow' ve 'Assert', ortak test işlevlerdir. Yalnızca test çalışmaları içinde kullanılabilirler.</value>
+  </data>
+  <data name="ErrorResource_ErrTestPropertyExpected_HowToFix_1" xml:space="preserve">
+    <value>İşlevi uygulamanın kendisinde değil, bir test çalışmasında kullanın.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrCannotCoerce_SourceType_TargetType_ShortMessage" xml:space="preserve">
+    <value>Bu veri türü dönüştürülemiyor. Power Apps bu {0} türünü {1} türüne dönüştüremiyor.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrCannotCoerce_SourceType_TargetType_LongMessage" xml:space="preserve">
+    <value>Power Apps sizin için formülünüzdeki bazı veri türlerini diğer türlere dönüştürebilir. Örneğin, "1" (dize) değerini 1 (sayı) değerine dönüştürebilir ancak tüm veri türlerini diğer tüm veri türlerine dönüştürülemez. Örneğin, bir resmi sayıya dönüştüremez.</value>
+  </data>
+  <data name="ErrorResource_ErrCannotCoerce_SourceType_TargetType_HowToFix_1" xml:space="preserve">
+    <value>Formülünüzü söz konusu verileri beklenen türe dönüştürecek şekilde düzenleyin.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrStringExpected_ShortMessage" xml:space="preserve">
+    <value>Metin bekleniyor. Formülde bu noktada bir metin bekleniyor.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrStringExpected_LongMessage" xml:space="preserve">
+    <value>Bu hata, bir metin (veya dize) bağımsız değişkeni gerektiren bir işlev kullandığınızda ancak bunun yerine, örneğin, tarih sağladığınızda oluşur.</value>
+  </data>
+  <data name="ErrorResource_ErrStringExpected_HowToFix_1" xml:space="preserve">
+    <value>Formülünüzü formülün bu noktasında bir metin verecek şekilde düzenleyin.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrStringExpected_Link_1" xml:space="preserve">
+    <value>Makale: Power Apps için formül başvurusu</value>
+    
+  </data>
+  <data name="ErrorResource_ErrNumberOrStringExpected_ShortMessage" xml:space="preserve">
+    <value>Metin veya sayı bekleniyor. Formülde bu noktada metin veya bir sayı bekleniyor.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrNumberOrStringExpected_LongMessage" xml:space="preserve">
+    <value>Bu hata, bir metin sayı gerektiren bir işlev kullandığınızda ancak bunun yerine, örneğin, bir boole (true/false) değeri sağladığınızda oluşur.</value>
+  </data>
+  <data name="ErrorResource_ErrNumberOrStringExpected_HowToFix_1" xml:space="preserve">
+    <value>Formülünüzü formülün bu noktasında bir metin veya sayı verecek şekilde düzenleyin.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrNumberOrStringExpected_Link_1" xml:space="preserve">
+    <value>Makale: Power Apps için formül başvurusu</value>
+    
+  </data>
+  <data name="ErrorResource_ErrClosingBracketExpected_ShortMessage" xml:space="preserve">
+    <value>Sağ küme ayracı bekleniyor. Formülde bu noktada bir sağ küme ayracı (}) bekleniyor.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrClosingBracketExpected_LongMessage" xml:space="preserve">
+    <value>Sağ ayraç bir kaydın sonunu gösterir (örneğin, {Month:"1"}, {Month:"2"} …).</value>
+  </data>
+  <data name="ErrorResource_ErrClosingBracketExpected_HowToFix_1" xml:space="preserve">
+    <value>Formülünüzü ayraç içerecek şekilde düzenleyin.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrEmptyInvalidIdentifier_ShortMessage" xml:space="preserve">
+    <value>Tanımlayıcıda geçerli metin yok.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrEmptyInvalidIdentifier_HowToFix_1" xml:space="preserve">
+    <value>Tanımlayıcınız için metne sahip olduğunuzdan emin olun. Bu hata, tanımlayıcı yalnızca boşluklardan oluştuğunda oluşur.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_ShortMessage" xml:space="preserve">
+    <value>Karşılaştırma için uyumsuz türler. Bu türler karşılaştıramaz: {0}, {1}.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_LongMessage" xml:space="preserve">
+    <value>Formülde karşılaştırılmakta olan değerler aynı türde olmadığından formülünüzü değerlendiremiyoruz.</value>
+  </data>
+  <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_HowToFix_1" xml:space="preserve">
+    <value>Bir tarih dizesini (örn. "31/12/2018") tarih değerine dönüştürür gibi, değeri aynı türe dönüştürmeniz gerekebilir.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_HowToFix_2" xml:space="preserve">
+    <value>Kayıtları veya tabloları karşılaştırıyorsanız alanlar ve sütun türleri tam olarak eşleşmelidir.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_Link_1" xml:space="preserve">
+    <value>Modül: Temel formülleri kullanma</value>
+    
+  </data>
+  <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_Link_2" xml:space="preserve">
+    <value>Modül: Tablo ve kayıtlarla temel formüller yazma</value>
+    
+  </data>
+  <data name="ErrorResource_ErrServiceFunctionUnknownOptionalParam_Name_ShortMessage" xml:space="preserve">
+    <value>Parametre yok. Bu işlev, '{0}' adlı isteğe bağlı bir parametre içermiyor.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrServiceFunctionUnknownOptionalParam_Name_HowToFix_1" xml:space="preserve">
+    <value>Nasıl düzeltilir: Formülünüzdeki parametreyi kaldırın veya yeniden adlandırın.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrServiceFunctionUnknownOptionalParam_Name_Link_1" xml:space="preserve">
+    <value>Makale: Power Apps için formül başvurusu</value>
+    
+  </data>
+  <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_ShortMessage" xml:space="preserve">
+    <value>Uyumsuz tür. Güncelleştirmekte olduğunuz veri kaynağındaki '{0}' sütunu bir '{1}' türü bekliyor ancak '{2}' türünü kullanıyorsunuz.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_HowToFix_1" xml:space="preserve">
+    <value>Bir tarih dizesini (örn. "31/12/2018") tarih değerine veya dizeyi bir sayıya dönüştürür gibi, değeri aynı türe dönüştürmeniz gerekebilir.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_Link_1" xml:space="preserve">
+    <value>Modül: Temel formülleri kullanma</value>
+    
+  </data>
+  <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_Link_2" xml:space="preserve">
+    <value>Modül: Tablo ve kayıtlarla temel formüller yazma</value>
+    
+  </data>
+  <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_ShortMessage" xml:space="preserve">
+    <value>Sütun eksik. Formülünüzde '{1}' türünde bir '{0}' sütunu eksik.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_HowToFix_1" xml:space="preserve">
+    <value>Formülünüze bir sütun ekleyin.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_Link_1" xml:space="preserve">
+    <value>Makale: Power Apps için formül başvurusu</value>
+    
+  </data>
+  <data name="ErrorResource_ErrTableDoesNotAcceptThisType_ShortMessage" xml:space="preserve">
+    <value>Uyumsuz tür. Bir tabloya koymaya çalıştığınız öğe, tabloyla uyumlu olmayan bir türe sahip.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrTableDoesNotAcceptThisType_HowToFix_1" xml:space="preserve">
+    <value>Tabloya göndermek istediğiniz öğe türünün tabloyla uyumlu olduğundan emin olun. Örneğin öğe türünü kayda dönüştürmeniz gerekebilir.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrTableDoesNotAcceptThisType_Link_1" xml:space="preserve">
+    <value>Modül: Temel formülleri kullanma</value>
+    
+  </data>
+  <data name="ErrorResource_ErrTableDoesNotAcceptThisType_Link_2" xml:space="preserve">
+    <value>Modül: Tablo ve kayıtlarla temel formüller yazma</value>
+    
+  </data>
+  <data name="ErrorResource_ErrTypeError_ShortMessage" xml:space="preserve">
+    <value>Uyumsuz tür. Bir tür hatası nedeniyle formülünüzü değerlendiremiyoruz.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrTypeError_LongMessage" xml:space="preserve">
+    <value>Veriler beklenen türle eşleşmiyor olabilir. (Metin, sayı, tarih, tablo, kayıt.)</value>
+  </data>
+  <data name="ErrorResource_ErrTypeError_HowToFix_1" xml:space="preserve">
+    <value>Formüle dahil edilen değerlerin türlerini denetleyin ve türlerin eşleştiğinden emin olun.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrTypeError_Link_1" xml:space="preserve">
+    <value>Modül: Temel formülleri kullanma</value>
+    
+  </data>
+  <data name="ErrorResource_ErrTypeError_Link_2" xml:space="preserve">
+    <value>Modül: Tablo ve kayıtlarla temel formüller yazma</value>
+    
+  </data>
+  <data name="ErrorResource_ErrDateExpected_ShortMessage" xml:space="preserve">
+    <value>Tarih bekleniyor. Formülde bu noktada bir tarih bekleniyor.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrDateExpected_LongMessage" xml:space="preserve">
+    <value>Bu hata, bir tarih gerektiren bir işlev kullandığınızda ancak bunun yerine, örneğin, metin sağladığınızda oluşur.</value>
+  </data>
+  <data name="ErrorResource_ErrDateExpected_HowToFix_1" xml:space="preserve">
+    <value>Formülünüzü formülün bu noktasında bir tarih verecek şekilde düzenleyin.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrDateExpected_Link_1" xml:space="preserve">
+    <value>Makale: Power Apps için formül başvurusu</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_ShortMessage" xml:space="preserve">
+    <value>Temsilci uyarısı. Bu formülün "{0}" bölümü, büyük veri kümelerinde düzgün çalışmayabilir.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_LongMessage" xml:space="preserve">
+    <value>Veri kaynağı, formülü işleyemeyebilir ve eksik bir veri kümesi döndürebilir. Veri kümesi eksikse uygulamanız doğru sonuçlar döndürmeyebilir veya düzgün çalışmayabilir.</value>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_HowToFix_1" xml:space="preserve">
+    <value>Veri kümeniz 500 kayıt sınırını aşıyor ancak 2000'den az kayıt içeriyorsa sınırı sıfırlamayı deneyin.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_HowToFix_2" xml:space="preserve">
+    <value>Formülü basitleştirmeyi deneyin.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_HowToFix_3" xml:space="preserve">
+    <value>Verilerinizi farklı bir veri kaynağına taşımayı deneyin.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_Link_1" xml:space="preserve">
+    <value>Makale: Tuval uygulamasında temsilciyi anlama</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_Link_2" xml:space="preserve">
+    <value>Blog: Temsilciye yönelik veri satırı sınırları</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_ShortMessage" xml:space="preserve">
+    <value>Temsilci uyarısı. Bu formülün vurgulanan bölümü, büyük veri kümelerinde "{0}" sütunuyla düzgün çalışmayabilir.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_LongMessage" xml:space="preserve">
+    <value>Veri kaynağı, formülü işleyemeyebilir ve eksik bir veri kümesi döndürebilir. Veri kümesi eksikse uygulamanız doğru sonuçlar döndürmeyebilir veya düzgün çalışmayabilir.</value>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_HowToFix_1" xml:space="preserve">
+    <value>Veri kümeniz 500 kayıt sınırını aşıyor ancak 2000'den az kayıt içeriyorsa sınırı sıfırlamayı deneyin.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_HowToFix_2" xml:space="preserve">
+    <value>Formülü basitleştirmeyi deneyin.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_HowToFix_3" xml:space="preserve">
+    <value>Verilerinizi farklı bir veri kaynağına taşımayı deneyin.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_Link_1" xml:space="preserve">
+    <value>Makale: Tuval uygulamasında temsilciyi anlama</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_Link_2" xml:space="preserve">
+    <value>Blog: Temsilciye yönelik veri satırı sınırları</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_ShortMessage" xml:space="preserve">
+    <value>Temsilci uyarısı. Bu formülün vurgulanan bölümü büyük veri kümelerinde düzgün çalışmayabilir.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_LongMessage" xml:space="preserve">
+    <value> "in" işlecinin sağ tarafı doğru veri kaynağından bir sütun adı olmalıdır. Veri kaynağı, formülü işleyemeyebilir ve eksik bir veri kümesi döndürebilir. Veri kümesi eksikse uygulamanız doğru sonuçlar döndürmeyebilir veya düzgün çalışmayabilir.</value>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_1" xml:space="preserve">
+    <value>"in" işlecinin sağındaki öğeyi doğru veri kaynağından bir sütun olacak şekilde değiştirin.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_2" xml:space="preserve">
+    <value>Veri kümeniz 500 kayıt sınırını aşıyor ancak 2000'den az kayıt içeriyorsa sınırı sıfırlamayı deneyin.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_3" xml:space="preserve">
+    <value>Formülü basitleştirmeyi deneyin.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_4" xml:space="preserve">
+    <value>Verilerinizi farklı bir veri kaynağına taşımayı deneyin.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_Link_1" xml:space="preserve">
+    <value>Makale: Tuval uygulamasında temsilciyi anlama</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_Link_2" xml:space="preserve">
+    <value>Blog: Temsilciye yönelik veri satırı sınırları</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_ShortMessage" xml:space="preserve">
+    <value>Bu formülün vurgulanan bölümü, büyük veri kümelerinde düzgün çalışmayabilir. </value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_LongMessage" xml:space="preserve">
+    <value> "in" işlecinin sağ tarafı doğru veri kaynağından bir sütun değil. Veri kaynağı, formülü işleyemeyebilir ve eksik bir veri kümesi döndürebilir. Veri kümesi eksikse uygulamanız doğru sonuçlar döndürmeyebilir veya düzgün çalışmayabilir.
+      </value>
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_1" xml:space="preserve">
+    <value>"in" işlecinin sağındaki öğeyi doğru veri kaynağından bir sütun olacak şekilde değiştirin.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_2" xml:space="preserve">
+    <value>Veri kümeniz, 500 kayıt sınırını aşıyor ancak 2000'den az kayıt içeriyorsa sınırı sıfırlamayı deneyin.
+      </value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_3" xml:space="preserve">
+    <value>Formülü basitleştirmeyi deneyin.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_4" xml:space="preserve">
+    <value>Verilerinizi farklı bir veri kaynağına taşımayı deneyin.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_Link_1" xml:space="preserve">
+    <value>Makale: Tuval uygulamasında temsilciyi anlama</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_Link_2" xml:space="preserve">
+    <value>Blog: Temsilciye yönelik veri satırı sınırları</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_ShortMessage" xml:space="preserve">
+    <value>Temsilci uyarısı. Bu formülün vurgulanan bölümü, büyük veri kümelerinde düzgün çalışmayabilir. "{0}" işlemi bu bağlayıcı tarafından desteklenmiyor.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_LongMessage" xml:space="preserve">
+    <value>Veri kaynağı, formülü işleyemeyebilir ve eksik bir veri kümesi döndürebilir. Veri kümesi eksikse uygulamanız doğru sonuçlar döndürmeyebilir veya düzgün çalışmayabilir.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_HowToFix_1" xml:space="preserve">
+    <value>Veri kümeniz 500 kayıt sınırını aşıyor ancak 2000'den az kayıt içeriyorsa sınırı sıfırlamayı deneyin.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_HowToFix_2" xml:space="preserve">
+    <value>Formülü basitleştirmeyi deneyin.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_HowToFix_3" xml:space="preserve">
+    <value>Verilerinizi farklı bir veri kaynağına taşımayı deneyin.</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_Link_1" xml:space="preserve">
+    <value>Makale: Tuval uygulamasında temsilciyi anlama</value>
+    
+  </data>
+  <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_Link_2" xml:space="preserve">
+    <value>Blog: Temsilciye yönelik veri satırı sınırları</value>
+    
+  </data>
+  <data name="ErrorResource_ErrOnlyOneViewExpected_ShortMessage" xml:space="preserve">
+    <value>Yalnızca bir görünüm bekleniyordu. Formülün bu noktasında yalnızca bir görünüm olması beklenir.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrOnlyOneViewExpected_HowToFix_1" xml:space="preserve">
+    <value>Formülün bu noktasında yalnızca bir görünüm olacak şekilde formülünüzü düzenleyin.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrViewFromCurrentTableExpected_ShortMessage" xml:space="preserve">
+    <value>{0} veri kaynağından bir görünüm bekleniyordu.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrViewFromCurrentTableExpected_HowToFix_1" xml:space="preserve">
+    <value>Formülünüzü {0} veri kaynağından görünüme sahip olacak şekilde düzenleyin.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidControlReference_ShortMessage" xml:space="preserve">
+    <value>Bu denetim başvurusu bu özellikte kullanılamaz</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidControlReference_HowToFix_1" xml:space="preserve">
+    <value>Bu özellik yalnızca genel değişkenler, koleksiyonlar ile bazı denetim ve ekran özelliklerine yönelik başvuruları destekler. Desteklenen denetim özelliklerinin listesi için bağlantıya gidin.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidControlReference_Link_1" xml:space="preserve">
+    <value>Başvuru: Tuval Uygulamaları için ConfirmExit</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidStringInterpolation_ShortMessage" xml:space="preserve">
+    <value>Düz metin arasına kod eklenmiş dizede görünen ifadeler bir Metin değerine veya uyumlu bir türe göre değerlendirmelidir.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidStringInterpolation_HowToFix_1" xml:space="preserve">
+    <value>Düz metin arasına kod eklenmiş dize içindeki ifadelerin türlerini kontrol edin.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrEmptyIsland_ShortMessage" xml:space="preserve">
+    <value>Boş ifadeler, düz metin arasına kod eklenmiş dize içinde görünmez.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrEmptyIsland_HowToFix_1" xml:space="preserve">
+    <value>Düz metin arasına kod eklenmiş dize içinde boş ifade olup olmadığını kontrol edin.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrAsNotInContext_ShortMessage" xml:space="preserve">
+    <value>bu bağlamda As'e izin verilmiyor</value>
+    
+  </data>
+  <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
+    <value>Adlandırılmış formül, noktalı virgülle sona ermelidir.</value>
+    
+  </data>
+</root>

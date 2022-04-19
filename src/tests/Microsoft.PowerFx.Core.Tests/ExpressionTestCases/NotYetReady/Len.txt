@@ -1,0 +1,68 @@
+// ******** STRING PARAMETERS ********
+
+>> Len("foo")
+3
+
+>> Len("foo" & "bar")
+6
+
+>> Len("12345")
+5
+
+>> Len("11111111111111111111111111111111111111111111111111111111111111111111111111111111")
+80
+
+>> Len("This is really very long string This is really very long string This is really very long string This is really very long string This is really very long string This is really very long string This is really very long string This is really very long string This is really very long string This is really very long string This is really very long string This is really very long string This is really very long string This is really very long string This is really very long string This is really very long string This is really very long string This is really very long string")
+575
+
+// ******** NUMBER PARAMETERS ********
+>> Len(12345)
+5
+
+>> Len(-123.45)
+7
+
+// ******** BOOLEAN PARAMETERS ********
+
+>> Len(true)
+4
+
+>> Len(false)
+5
+
+>> Len("true")
+4
+
+>> Len("false")
+5
+
+// ******** BLANK, NULL and ERROR PARAMETERS ********
+
+>> Len("")
+0
+
+>> Len(" ")
+1
+
+>> Len(Blank())
+0
+
+//Invalid operation: Division by zero
+>>Len(1/0)
+#Error(Kind=Div0)
+
+// ******** FUNCTION VALUE AS PARAMETERS ********
+
+>> Len(Text(12, "#.000"))
+6
+
+>> Len(If(true, "foo", "bar!"))
+3
+
+>> Len(Date(1976, 12,23))
+10
+
+// ******* ALL THE PARAMETERS TYPE *******
+
+>> Len("foo" & 67890 & false & Blank() & Text(12, "#.000") & Date(1976, 12,23))
+29

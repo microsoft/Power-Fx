@@ -1,0 +1,92 @@
+// ******** INTEGER PARAMETERS ********
+
+// Positive Integer Parameters
+>> Exp(0)
+1
+
+>> Exp(1)
+2.71828183
+
+>> Exp(5)
+148.4131591
+
+// Excel returns 5.5799E+186
+>> Exp(430)
+5579910311786366000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+
+>> Exp(750)
+#Error(Kind=Numeric)
+
+// Negative Integer Parameters
+
+>> Exp(-0)
+1
+
+>> Exp(-5)
+0.00673795
+
+// PowerFX shows 1.7921435007435765e-187 in the Formula bar and Excel also returns 1.7921E-187
+>> Exp(-430)
+0
+
+>> Exp(-750)
+0
+
+
+// ******** DECIMAL PARAMETERS ********
+
+>> Exp(0.00)
+1
+
+>> Exp(-0.00)
+1
+
+>> Exp(2.34567)
+10.44026536
+
+// PowerFX shows 8.08773763263104E-151 in the Formula bar and Excel also returns 8.0877E-151
+>> Exp(-345.6)
+0
+
+// ******** NULL and ERROR PARAMETERS ********
+>> Exp(1/0)
+#Error(Kind=Div0)
+
+// Excel returns 1
+>> Exp(Blank())
+Blank()
+
+
+// ******** STRING PARAMETERS ********
+
+>> Exp("sampleText")
+#Error(Kind=InvalidArgument)
+
+>> Exp("10")
+22026.46579481
+
+>> Exp("-10.123")
+0.00004015
+
+// ******** BOOLEAN PARAMETERS ********
+
+>> Exp(true)
+2.71828183
+
+>> Exp(false)
+1
+
+>> Exp("true")
+#Error(Kind=InvalidArgument)
+
+>> Exp("false")
+#Error(Kind=InvalidArgument)
+
+// ******** FUNCTION VALUE AS PARAMETERS ********
+
+>> Exp(Ln(2))
+2
+
+
+// Exp(Infinity)
+// Exp(NaN)

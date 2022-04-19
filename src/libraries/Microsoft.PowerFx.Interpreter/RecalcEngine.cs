@@ -66,6 +66,7 @@ namespace Microsoft.PowerFx
             powerFxConfig.AddFunction(BuiltinFunctionsCore.Value_UO);
             powerFxConfig.AddFunction(BuiltinFunctionsCore.Boolean);
             powerFxConfig.AddFunction(BuiltinFunctionsCore.Boolean_UO);
+            powerFxConfig.AddFunction(BuiltinFunctionsCore.CountRows_UO);
 
             return powerFxConfig;
         }
@@ -213,9 +214,35 @@ namespace Microsoft.PowerFx
             r.Recalc(name);
         }
 
+        /// <summary>
+        /// Delete formula that was previously created.
+        /// </summary>
+        /// <param name="name">Formula name.</param>
         public void DeleteFormula(string name)
         {
-            throw new NotImplementedException();
+            if (Formulas.TryGetValue(name, out var fi))
+            {
+                if (fi._usedBy.Count == 0)
+                {
+                    foreach (var dependsOnName in fi._dependsOn)
+                    {
+                        if (Formulas.TryGetValue(dependsOnName, out var info))
+                        {
+                            info._usedBy.Remove(name);
+                        }
+                    }
+
+                    Formulas.Remove(name);
+                }
+                else
+                {
+                    throw new InvalidOperationException($"Formula {name} cannot be deleted due to the following dependencies: {string.Join(", ", fi._usedBy)}");
+                }
+            }
+            else
+            {
+                throw new InvalidOperationException($"Formula {name} does not exist");
+            }
         }
 
         /// <summary>

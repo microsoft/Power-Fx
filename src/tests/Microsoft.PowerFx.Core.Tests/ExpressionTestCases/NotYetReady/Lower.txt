@@ -1,0 +1,82 @@
+// ******** STRING PARAMETERS ********
+
+>> Lower("aBCd eFGhIJK ")
+"abcd efghijk "
+
+>> Lower("Important!")
+"important!"
+
+>> Lower("HeLlO wOrLd")
+"hello world"
+
+>> Lower("all lower")
+"all lower"
+
+>> Lower("ALL CAPS" & " HelLo")
+"all caps hello"
+
+>> Lower("E. E. Cummings")
+"e. e. cummings"
+
+>> Lower("123 456")
+"123 456"
+
+>> Lower(" \\t ")
+" \\t "
+
+// Excel throws compile error - Text values in formula are limited to 255 characters
+>> Lower("This is really very long string This is really very long string This is really very long string This is really very long string This is really very long string This is really very long string This is really very long string This is really very long string This is really very long string This is really very long string This is really very long string This is really very long string This is really very long string This is really very long string This is really very long string This is really very long string This is really very long string This is really very long string")
+"this is really very long string this is really very long string this is really very long string this is really very long string this is really very long string this is really very long string this is really very long string this is really very long string this is really very long string this is really very long string this is really very long string this is really very long string this is really very long string this is really very long string this is really very long string this is really very long string this is really very long string this is really very long string"
+
+
+// ******** NUMBER PARAMETERS ********
+>> Lower(12345)
+"12345"
+
+>> Lower(-123.45)
+"-123.45"
+
+// ******** BOOLEAN PARAMETERS ********
+
+>> Lower(true)
+"true"
+
+>> Lower(false)
+"false"
+
+>> Lower("true")
+"true"
+
+>> Lower("false")
+"false"
+
+// ******** BLANK, NULL and ERROR PARAMETERS ********
+
+>> Lower("")
+""
+
+>> If(Len(Lower(" "))=1,true)   
+true
+
+>> Lower(Blank())
+""
+
+//Invalid operation: Division by zero
+>> Lower(1/0)
+#Error(Kind=Div0)
+
+// ******** FUNCTION VALUE AS PARAMETERS ********
+
+>> Lower(Text(12, "#.000"))
+"12.000"
+
+>> Lower(Concatenate("Jane", "Doe"))
+"janedoe"
+
+>> Lower(Date(1976, 12,23))
+"12/23/1976"
+
+// ******* ALL THE PARAMETERS TYPE *******
+
+>> Lower("Jane" & "Smith" & 67890 & true & Blank() & Text(12, "#.000") & Date(1976, 12,23))
+"janesmith67890true12.00012/23/1976"

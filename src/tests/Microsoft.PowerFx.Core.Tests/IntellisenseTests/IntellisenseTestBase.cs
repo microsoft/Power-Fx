@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Public.Types;
+using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Core.Texl.Intellisense;
 using Microsoft.PowerFx.Core.Types;
 using Xunit;
@@ -14,7 +15,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
     /// <summary>
     /// Provides methods that may be used by Intellisense tests.
     /// </summary>
-    public class IntellisenseTestBase
+    public class IntellisenseTestBase : PowerFxTest
     {
         /// <summary>
         /// This method receives a test case string, along with an optional context type that defines the valid
@@ -25,14 +26,6 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         /// <returns></returns>
         internal IIntellisenseResult Suggest(string expression, PowerFxConfig config, string contextTypeString = null)
         {
-            Assert.NotNull(expression);
-
-            var cursorMatches = Regex.Matches(expression, @"\|");
-            Assert.True(cursorMatches.Count == 1, "Invalid cursor.  Exactly one cursor must be specified.");
-            var cursorPosition = cursorMatches.First().Index;
-
-            expression = expression.Replace("|", string.Empty);
-
             RecordType contextType;
             if (contextTypeString != null)
             {
@@ -47,7 +40,20 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
                 contextType = new RecordType();
             }
 
-            return Suggest(expression, contextType, cursorPosition, config);
+            return Suggest(expression, config, contextType);
+        }
+
+        internal IIntellisenseResult Suggest(string expression, PowerFxConfig config, RecordType parameterType)
+        {
+            Assert.NotNull(expression);
+
+            var cursorMatches = Regex.Matches(expression, @"\|");
+            Assert.True(cursorMatches.Count == 1, "Invalid cursor.  Exactly one cursor must be specified.");
+            var cursorPosition = cursorMatches.First().Index;
+
+            expression = expression.Replace("|", string.Empty);
+
+            return Suggest(expression, parameterType, cursorPosition, config);
         }
 
         internal IIntellisenseResult Suggest(string expression, RecordType parameterType, int cursorPosition, PowerFxConfig config)
