@@ -134,7 +134,7 @@ namespace Microsoft.PowerFx.Core.Utils
             for (var i = 0; i < strName.Length; i++)
             {
                 var ch = strName[i];
-                if (!char.IsWhiteSpace(ch))
+                if (!CharacterUtils.IsSpace(ch))
                 {
                     return true;
                 }
@@ -166,18 +166,18 @@ namespace Microsoft.PowerFx.Core.Utils
 
             for (var i = 0; i < strName.Length; i++)
             {
-                bool fIsSpace = strName[i] == ChSpace;
-                bool fIsWhiteSpace = char.IsWhiteSpace(strName[i]);
+                var fIsSpace = strName[i] == ChSpace;
+                var fIsWhiteSpace = char.IsWhiteSpace(strName[i]);
                 fAllSpaces = fAllSpaces && fIsWhiteSpace;
-                fHasSpecialWhiteSpaceCharacters = fHasSpecialWhiteSpaceCharacters || (fIsWhiteSpace && !fIsSpace);
+                fHasSpecialWhiteSpaceCharacters |= fIsWhiteSpace && !fIsSpace;
             }
 
             if (fHasSpecialWhiteSpaceCharacters)
             {
                 fModified = true;
-                StringBuilder builder = new StringBuilder(strName.Length);
+                var builder = new StringBuilder(strName.Length);
 
-                for (int i = 0; i < strName.Length; i++)
+                for (var i = 0; i < strName.Length; i++)
                 {
                     if (char.IsWhiteSpace(strName[i]))
                     {
