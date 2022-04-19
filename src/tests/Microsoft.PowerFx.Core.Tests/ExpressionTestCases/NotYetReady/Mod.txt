@@ -1,0 +1,244 @@
+//MOD(NUMBER, DIVISOR)
+
+// ******** INTEGER PARAMETERS ********
+
+//Positive "NUMBER" and "DIVISOR" parameter
+
+// Invalid operation: Division by zero
+>> Mod(0,0)
+#Error(Kind=Div0)
+
+>> Mod(0,1)
+0
+
+>> Mod(1E+308,7)
+0
+
+// Invalid operation: Division by zero
+>> Mod(230,0)
+#Error(Kind=Div0)
+
+>> Mod(230,1)
+0
+
+>> Mod(230,2)
+0
+
+>> Mod(230,3)
+2
+
+//Negative "NUMBER" Parameter
+
+>> Mod(-0,1)
+0
+
+// Invalid operation: Division by zero
+>> Mod(-456,0)
+#Error(Kind=Div0)
+
+>> Mod(-456,1)
+0
+
+>> Mod(-456,15)
+9
+
+//Negative "DIVISOR" Parameter
+
+>> Mod(3456,-1)
+0
+
+>> Mod(3456,-2)
+0
+
+>> Mod(3456,-11)
+-9
+
+//Negative "NUMBER" and "DIVISOR" parameter
+
+>> Mod(-3456,-1)
+0
+
+>> Mod(-3456,-2)
+0
+
+>> Mod(-3456,-11)
+-2
+
+// ******** DECIMAL PARAMETERS ********
+// Decimal NUMBER parameter
+
+// Invalid operation: Division by zero
+>> Mod(14.123456,0)
+#Error(Kind=Div0)
+
+>> Mod(14.123456,1)
+0.123456
+
+>> Mod(14.123456,2)
+0.123456
+
+>> Mod(14.123456,3)
+2.123456
+
+>> Mod(14.123456,18)
+14.123456
+
+>> Mod(14.123456,-1)
+-0.876544
+
+>> Mod(14.123456,-2)
+-1.876544
+
+>> Mod(14.123456,-3)
+-0.876544
+
+>> Mod(14.123456,-18)
+-3.876544
+
+//Negative Decimal NUMBER parameter
+
+// Invalid operation: Division by zero
+>> Mod(-14.123456,0)
+#Error(Kind=Div0)
+
+>> Mod(-14.123456,1)
+0.876544
+
+>> Mod(-14.123456,2)
+1.876544
+
+>> Mod(-14.123456,3)
+0.876544
+
+>> Mod(-14.123456,18)
+3.876544
+
+>> Mod(-14.123456,-1)
+-0.123456
+
+>> Mod(-14.123456,-2)
+-0.123456
+
+>> Mod(-14.123456,-3)
+-2.123456
+
+>> Mod(-14.123456,-18)
+-14.123456
+
+//Decimal NUMBER and DIVISOR parameter
+
+>> Mod(14.123456,1111111111)
+14.123456
+
+>> Mod(14.123456,0.123)
+0.101456
+
+>> Mod(14.123456,1.67)
+0.763456
+
+>> Mod(14.123456,2.12)
+1.403456
+
+>> Mod(-14.123456,3.678)
+0.588544
+
+>> Mod(-1412.34567,4.78)
+2.53433
+
+>> Mod(1412.34,-1.2)
+-0.06
+
+>> Mod(-1412.34,-1.6)
+-1.14
+
+>> Mod(-1412.34,-2.9)
+-0.04
+
+>> Mod(1500.34,-3.5)
+-1.16
+
+>> Mod(3*0.415, 2)
+1.245
+
+
+// ******** NULL and ERROR PARAMETERS ********
+// Invalid operation: Division by zero
+>> Mod(1/0,1)
+#Error(Kind=Div0)
+
+>> Mod(1,1/0)
+#Error(Kind=Div0)
+
+>> Mod(Blank(),1)
+0
+
+>> Mod(Blank(), -1)
+0
+
+// Invalid operation: Division by zero
+>> Mod(56.78, Blank())
+#Error(Kind=Div0)
+
+// Invalid operation: Division by zero
+>> Mod(-56.78, Blank())
+#Error(Kind=Div0)
+
+// Invalid operation: Division by zero
+>> Mod(Blank(),Blank())
+#Error(Kind=Div0)
+
+// ******** STRING PARAMETERS ********
+
+>> Mod("sampleText",1)
+#Error(Kind=InvalidArgument)
+
+>> Mod("10.5678","ABC")
+#Error(Kind=InvalidArgument)
+
+>> Mod("-10.5678","2")
+1.4322
+
+>> Mod("-10.5678","-2")
+-0.5678
+
+>> Mod("-10.123", "1.234")
+0.983
+
+// ******** BOOLEAN PARAMETERS ********
+
+>> Mod(true,true)
+0
+
+// Invalid operation: Division by zero
+>> Mod(true,false)
+#Error(Kind=Div0)
+
+>> Mod(false,true)
+0
+
+// Invalid operation: Division by zero
+>> Mod(false,false)
+#Error(Kind=Div0)
+
+>> Mod("false","true")
+#Error(Kind=InvalidArgument)
+
+
+// ******** FUNCTION VALUE AS PARAMETERS ********
+
+// Excel returns 1/1/1900 in Date format and 1 in General format
+>> Mod(Date(1976, 12,23) , 2)
+0
+
+// Excel returns ############################################################################################################################################################################################################################################################### in Date format and -1 in General format
+>> Mod(Date(1976, 12,23) , -2)
+0
+
+// Excel returns 1/2/1900 in Date format and 2.6 in General format
+>> Mod(Date(2022, 10, 1),3.4)
+0.80004883
+
+
+// Mod(Infinity,0)
+// Mod(NaN,0)
+

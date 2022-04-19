@@ -1,0 +1,110 @@
+// ******** INTEGER PARAMETERS ********
+
+// Positive Integer Parameters
+>> Max(0)
+0
+
+>> Max(0,0,0,0)
+0
+
+>> Max(1, 2, 3, 4, 5)
+5
+
+// Excel gives compile error and mention typo in the formula. Suggest to correct 1E+308 to E1+308
+>> Max(1E+308, 1E+308)
+100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+
+
+// Negative Integer Parameters
+
+>> Max(-0)
+0
+
+>> Max(-1, -2, -3, -4, -5)
+-1
+
+>> Max(-123, 234, -3456, 4567, -5678)
+4567
+
+// ******** DECIMAL PARAMETERS ********
+
+>> Max(0.00, -0.00, 0.000)
+0
+
+>> Max(2.34567)
+2.34567
+
+>> Max(-1.23, 23.4, -345.6, 4567.89, -5678.912)
+4567.89
+
+// ******** NULL and ERROR PARAMETERS ********
+>> Max(1/0)
+#Error(Kind=Div0)
+
+>> Max(Blank())
+0
+
+>> Max(1, Blank(), 2, Blank(), 3, Blank(), 4, Blank(), 5)
+5
+
+>> Max(-1, Blank(), -2, Blank(), -3, Blank(), -4, Blank(), -5)
+-1
+
+// ******** STRING PARAMETERS ********
+
+>> Max("sampleText")
+#Error(Kind=InvalidArgument)
+
+>> Max("10")
+10
+
+>> Max("-10.123", 1.234)
+1.234
+
+>> Max("9", "10")
+10
+
+>> Max("100", "AB")
+#Error(Kind=InvalidArgument)
+
+// ******** BOOLEAN PARAMETERS ********
+
+>> Max(true,true)
+1
+
+>> Max(false,false)
+0
+
+>> Max(true,false)
+1
+
+>> Max("true","false")
+#Error(Kind=InvalidArgument)
+
+// ******** FUNCTION VALUE AS PARAMETERS ********
+
+// Excel returns 36526 in General format and 1/1/2000 in Date format
+>> Max(Date(1976, 12,23) , Date(2000, 01, 01))
+946713600000
+
+// Excel returns 44835 and in Date format returns 10/1/2022
+>> Max(Date(2022, 10, 1),20)
+1664607600000
+
+// Excel returns 44835 and in Date format returns 10/1/2022
+>> Max(Date(2022, 10, 1),-20)
+1664607600000
+
+// Excel returns 44835 and in Date format returns 10/1/2022
+>> Max(Date(2022, 10, 1),20.8)
+1664607600000
+
+
+// ******** PARAMETERS OF ALL DATATYPES: Integer, Decimal, Negative, String, Boolean, Function and Null ********
+
+// Excel returns 28117 in General and 12/23/1976 in Date format
+>> Max(21, 10.456, -5, -6.789, "10", true, false, Date(1976,12,23), Blank())
+220176000000
+
+// Max(Infinity)
+// Max(NaN)
