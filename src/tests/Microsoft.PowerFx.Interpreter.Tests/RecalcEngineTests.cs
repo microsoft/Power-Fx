@@ -3,7 +3,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -546,7 +545,7 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public void EmptyEnumStoreTest()
         {
-            var config = PowerFxConfig.BuildWithEnumStore(null, new EnumStoreBuilder());
+            var config = PowerFxConfig.BuildWithEnumStore(null, new EnumStoreBuilder(), PowerFxFlags.None);
 
             var recalcEngine = new RecalcEngine(config);
 

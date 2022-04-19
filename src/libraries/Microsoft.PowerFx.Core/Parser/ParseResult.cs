@@ -2,11 +2,16 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Text;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Lexer.Tokens;
 using Microsoft.PowerFx.Core.Syntax.Nodes;
 using Microsoft.PowerFx.Core.Syntax.SourceInformation;
 using Microsoft.PowerFx.Core.Utils;
+
+[assembly: InternalsVisibleTo("Microsoft.PowerFx.Core.Tests")]
 
 namespace Microsoft.PowerFx.Core.Parser
 {
@@ -39,5 +44,12 @@ namespace Microsoft.PowerFx.Core.Parser
             Before = before;
             After = after;
         }
+
+        internal string ParseErrorText => !HasError ? string.Empty : string.Join("\r\n", Errors.Select((err, i) =>
+        {
+            var sb = new StringBuilder(1024);
+            err.FormatCore(sb);            
+            return $"Err#{++i} {sb}";
+        }));
     }
 }

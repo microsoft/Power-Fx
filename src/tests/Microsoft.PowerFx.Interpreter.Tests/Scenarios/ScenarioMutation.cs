@@ -43,6 +43,33 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             }
         }
 
+        [Fact]
+        public void MutabilityTest_Chain()
+        {
+            var config = new PowerFxConfig(powerFxFlags: PowerFxFlags.EnableExpressionChaining);            
+            config.AddFunction(new Assert2Function());
+            config.AddFunction(new Set2Function());
+            var engine = new RecalcEngine(config);
+
+            var d = new Dictionary<string, FormulaValue>
+            {
+                ["prop"] = FormulaValue.New(123)
+            };
+
+            var obj = MutableObject.New(d);
+            engine.UpdateVariable("obj", obj);
+
+            var exprs = new string[]
+            {
+                "Assert2(obj.prop, 123); Set2(obj, \"prop\", 456); Assert2(obj.prop, 456)"
+            };
+
+            foreach (var expr in exprs)
+            {
+                var x = engine.Eval(expr); // Assert failures will throw.
+            }
+        }
+
         private class Assert2Function : ReflectionFunction
         {
             public Assert2Function()

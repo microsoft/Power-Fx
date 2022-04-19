@@ -2,7 +2,6 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
-using System.Linq;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Glue;
@@ -82,7 +81,7 @@ namespace Microsoft.PowerFx
 
             var formula = new Formula(expressionText);
 
-            formula.EnsureParsed(TexlParser.Flags.None);
+            formula.EnsureParsed(GetTexlParserFlags());
 
             // Ok to continue with binding even if there are parse errors. 
             // We can still use that for intellisense. 
@@ -117,6 +116,16 @@ namespace Microsoft.PowerFx
             }
 
             return result;
+        }
+
+        private TexlParser.Flags GetTexlParserFlags()
+        {
+            return GetTexlParserFlags(Config.PowerFxFlags);
+        }
+
+        private static TexlParser.Flags GetTexlParserFlags(PowerFxFlags powerFxFlags)
+        {
+            return powerFxFlags.HasEnableExpressionChaining() ? TexlParser.Flags.EnableExpressionChaining : TexlParser.Flags.None;
         }
 
         /// <summary>
@@ -191,7 +200,7 @@ namespace Microsoft.PowerFx
         /// <returns>The formula, with all identifiers converted to invariant form</returns>
         public string GetInvariantExpression(string expressionText, RecordType parameters)
         {
-            return ConvertExpression(expressionText, parameters, CreateResolver(), toDisplayNames: false);
+            return ConvertExpression(expressionText, parameters, CreateResolver(), toDisplayNames: false, Config.PowerFxFlags);
         }
 
         /// <summary>
@@ -204,13 +213,13 @@ namespace Microsoft.PowerFx
         /// <returns>The formula, with all identifiers converted to display form</returns>
         public string GetDisplayExpression(string expressionText, RecordType parameters)
         {
-            return ConvertExpression(expressionText, parameters, CreateResolver(), toDisplayNames: true);
+            return ConvertExpression(expressionText, parameters, CreateResolver(), toDisplayNames: true, Config.PowerFxFlags);
         }
 
-        internal static string ConvertExpression(string expressionText, RecordType parameters, SimpleResolver resolver, bool toDisplayNames)
+        internal static string ConvertExpression(string expressionText, RecordType parameters, SimpleResolver resolver, bool toDisplayNames, PowerFxFlags powerFxFlags = PowerFxFlags.None)
         {
             var formula = new Formula(expressionText);
-            formula.EnsureParsed(TexlParser.Flags.None);
+            formula.EnsureParsed(GetTexlParserFlags(powerFxFlags));
 
             var binding = TexlBinding.Run(
                 new Glue2DocumentBinderGlue(),

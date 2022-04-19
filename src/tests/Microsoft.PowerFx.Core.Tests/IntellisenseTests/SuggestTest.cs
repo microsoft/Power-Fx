@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System.Globalization;
 using System.Linq;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Functions;
@@ -35,13 +34,13 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
             return intellisense.Suggestions.Select(suggestion => suggestion.DisplayText.Text).ToArray();
         }
         
-        private PowerFxConfig Default => PowerFxConfig.BuildWithEnumStore(null, new EnumStoreBuilder().WithDefaultEnums());
+        private PowerFxConfig Default => PowerFxConfig.BuildWithEnumStore(null, new EnumStoreBuilder().WithDefaultEnums(), PowerFxFlags.None);
 
         // No enums, no functions. Adding functions will add back in associated enums, so to be truly empty, ensure no functions. 
-        private PowerFxConfig EmptyEverything => PowerFxConfig.BuildWithEnumStore(null, new EnumStoreBuilder(), new TexlFunction[0]);
+        private PowerFxConfig EmptyEverything => PowerFxConfig.BuildWithEnumStore(null, new EnumStoreBuilder(), new TexlFunction[0], PowerFxFlags.None);
 
         // No extra enums, but standard functions (which will include some enums).
-        private PowerFxConfig MinimalEnums => PowerFxConfig.BuildWithEnumStore(null, new EnumStoreBuilder().WithRequiredEnums(BuiltinFunctionsCore.BuiltinFunctionsLibrary));        
+        private PowerFxConfig MinimalEnums => PowerFxConfig.BuildWithEnumStore(null, new EnumStoreBuilder().WithRequiredEnums(BuiltinFunctionsCore.BuiltinFunctionsLibrary), PowerFxFlags.None);        
 
         /// <summary>
         /// Compares expected suggestions with suggestions made by PFx Intellisense for a given

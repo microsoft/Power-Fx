@@ -10,7 +10,7 @@ using Microsoft.PowerFx.Core.Syntax.Nodes;
 using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Core.Errors
-{
+{    
     // TASK: 67034: Cleanup: Eliminate StringIds.
     internal sealed class TexlError : BaseError, IRuleError
     {
@@ -59,7 +59,7 @@ namespace Microsoft.PowerFx.Core.Errors
             _nameMapIDs.Add(name.Value);
         }
 
-        protected override void FormatCore(StringBuilder sb)
+        internal override void FormatCore(StringBuilder sb)
         {
             Contracts.AssertValue(sb);
 

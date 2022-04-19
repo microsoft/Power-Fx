@@ -35,7 +35,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [InlineData("TopOptionSetField <> Op|", "OptionSet", "TopOptionSetField", "OtherOptionSet")]
         public void TestSuggestOptionSets(string expression, params string[] expectedSuggestions)
         {
-            var config = PowerFxConfig.BuildWithEnumStore(null, new EnumStoreBuilder(), new TexlFunction[0]);
+            var config = PowerFxConfig.BuildWithEnumStore(null, new EnumStoreBuilder(), new TexlFunction[0], PowerFxFlags.None);
 
             var optionSet = new OptionSet("OptionSet", DisplayNameUtility.MakeUnique(new Dictionary<string, string>()
             {
