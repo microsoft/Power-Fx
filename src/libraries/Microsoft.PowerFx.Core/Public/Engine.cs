@@ -101,11 +101,8 @@ namespace Microsoft.PowerFx
         /// <returns></returns>
         public CheckResult Check(ParseResult parse, RecordType parameterType = null)
         {
-            if (parameterType == null)
-            {
-                parameterType = new RecordType();
-            }
-            
+            parameterType ??= new RecordType();
+                        
             // Ok to continue with binding even if there are parse errors. 
             // We can still use that for intellisense. 
 

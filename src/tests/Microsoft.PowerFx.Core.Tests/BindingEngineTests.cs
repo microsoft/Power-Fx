@@ -47,9 +47,13 @@ namespace Microsoft.PowerFx.Tests
 
             var r = new RecordType().Add(
                    new NamedFormulaType("x", FormulaType.Number));
-
+                        
             var check = engine.Check(parse, r);
             Assert.True(check.IsSuccess);
+
+            // Can reuse Parse 
+            var check2 = engine.Check(parse, r);
+            Assert.True(check2.IsSuccess);
         }
 
         // Parse and Bind separately. 

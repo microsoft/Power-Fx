@@ -18,21 +18,27 @@ namespace Microsoft.PowerFx.Core.Public
     /// </summary>
     public class CheckResult : IOperationStatus
     {
-        // Null if type can't be determined. 
+        /// <summary> 
+        /// Return type of the expression. Null if type can't be determined. 
+        /// </summary>
         public FormulaType ReturnType { get; set; }
 
         /// <summary>
         /// Names of fields that this formula uses. 
         /// null if unavailable.  
-        /// This is only valid if there are no errors. 
+        /// This is only valid when <see cref="IsSuccess"/> is true.
         /// </summary>
         public HashSet<string> TopLevelIdentifiers { get; set; }
 
         /// <summary>
-        /// List of errors or warnings. Check <see cref="ExpressionError.IsWarning"/>.
+        /// List of errors and warnings. Check <see cref="ExpressionError.IsWarning"/>.
         /// Not null, but empty on success.
         /// </summary>
-        public IEnumerable<ExpressionError> Errors => Parse.Errors.Concat(ExpressionError.New(_binding.ErrorContainer.GetErrors()));
+        public IEnumerable<ExpressionError> Errors => Parse != null ?
+            Parse.Errors.Concat(BindingErrors) :
+            BindingErrors;
+
+        private IEnumerable<ExpressionError> BindingErrors => ExpressionError.New(_binding.ErrorContainer.GetErrors());
 
         /// <summary>
         /// Parsed expression for evaluation. 
@@ -61,9 +67,8 @@ namespace Microsoft.PowerFx.Core.Public
 
         internal CheckResult(ParseResult parse, TexlBinding binding = null)
         {
-            var errors = parse.HasError ? parse._errors : binding.ErrorContainer.GetErrors();
-            Parse = parse;
-
+            Parse = parse ?? throw new ArgumentNullException(nameof(parse));
+           
             _binding = binding;
         }
 
