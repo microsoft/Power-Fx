@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -69,7 +70,7 @@ namespace Microsoft.PowerFx.Core.Syntax
             Contracts.AssertValue(node);
 
             var nlt = node.Value;
-            return LazyList<string>.Of(nlt != null ? nlt.ToString() : node.NumValue.ToString("R", TexlLexer.LocalizedInstance.Culture));
+            return LazyList<string>.Of(nlt != null ? nlt.ToString() : node.NumValue.ToString("R", CultureInfo.CurrentCulture));
         }
 
         public override LazyList<string> Visit(FirstNameNode node, Precedence parentPrecedence)
@@ -241,7 +242,7 @@ namespace Microsoft.PowerFx.Core.Syntax
             switch (node.Op)
             {
                 case VariadicOp.Chain:
-                    var op = SpacedOper(TexlLexer.LocalizedInstance.LocalizedPunctuatorChainingSeparator);
+                    var op = SpacedOper(TexlLexer.GetLocalizedInstance(CultureInfo.CurrentCulture).LocalizedPunctuatorChainingSeparator);
                     var count = node.Count;
                     var result = LazyList<string>.Empty;
 
@@ -251,7 +252,7 @@ namespace Microsoft.PowerFx.Core.Syntax
                             .With(node.Children[i].Accept(this, Precedence.None));
                         if (i != count - 1)
                         {
-                            result = result.With(SpacedOper(TexlLexer.LocalizedInstance.LocalizedPunctuatorChainingSeparator));
+                            result = result.With(SpacedOper(TexlLexer.GetLocalizedInstance(CultureInfo.CurrentCulture).LocalizedPunctuatorChainingSeparator));
                         }
                     }
 
@@ -319,7 +320,7 @@ namespace Microsoft.PowerFx.Core.Syntax
         {
             Contracts.AssertValue(node);
 
-            var listSep = TexlLexer.LocalizedInstance.LocalizedPunctuatorListSeparator + " ";
+            var listSep = TexlLexer.GetLocalizedInstance(CultureInfo.CurrentCulture).LocalizedPunctuatorListSeparator + " ";
             var result = LazyList<string>.Empty;
             for (var i = 0; i < node.Children.Length; ++i)
             {
@@ -338,7 +339,7 @@ namespace Microsoft.PowerFx.Core.Syntax
         {
             Contracts.AssertValue(node);
 
-            var listSep = TexlLexer.LocalizedInstance.LocalizedPunctuatorListSeparator + " ";
+            var listSep = TexlLexer.GetLocalizedInstance(CultureInfo.CurrentCulture).LocalizedPunctuatorListSeparator + " ";
             var result = LazyList<string>.Empty;
             for (var i = 0; i < node.Children.Length; ++i)
             {
@@ -370,7 +371,7 @@ namespace Microsoft.PowerFx.Core.Syntax
         {
             Contracts.AssertValue(node);
 
-            var listSep = TexlLexer.LocalizedInstance.LocalizedPunctuatorListSeparator + " ";
+            var listSep = TexlLexer.GetLocalizedInstance(CultureInfo.CurrentCulture).LocalizedPunctuatorListSeparator + " ";
             var result = LazyList<string>.Empty;
             for (var i = 0; i < node.Children.Length; ++i)
             {

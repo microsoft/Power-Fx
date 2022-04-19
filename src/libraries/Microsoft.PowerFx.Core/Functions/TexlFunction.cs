@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using System.Linq;
 using System.Numerics;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
@@ -1344,7 +1345,7 @@ namespace Microsoft.PowerFx.Core.Functions
                 {
                     Label = Name + (signature == null ?
                         "()" :
-                        ("(" + string.Join(TexlLexer.LocalizedInstance.LocalizedPunctuatorListSeparator + " ", signature.Select(getter => getter(null))) + ")")),
+                        ("(" + string.Join(TexlLexer.GetLocalizedInstance(CultureInfo.CurrentCulture).LocalizedPunctuatorListSeparator + " ", signature.Select(getter => getter(null))) + ")")),
                     Parameters = signature?.Select(getter =>
                     {
                         TryGetParamDescription(getter(locale), out var description);

@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Lexer;
@@ -166,7 +167,7 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
             {
                 var count = 0;
                 var argumentSeparator = string.Empty;
-                var listSep = TexlLexer.LocalizedInstance.LocalizedPunctuatorListSeparator + " ";
+                var listSep = TexlLexer.GetLocalizedInstance(CultureInfo.CurrentCulture).LocalizedPunctuatorListSeparator + " ";
                 var funcDisplayString = new StringBuilder(Text);
                 funcDisplayString.Append('(');
                 foreach (var arg in signature)

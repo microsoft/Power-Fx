@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Lexer;
@@ -61,7 +62,7 @@ namespace Microsoft.PowerFx.Core.Parser
         // Parse the script
         // Parsing strips out parens used to establish precedence, but these may be helpful to the
         // caller, so precedenceTokens provide a list of stripped tokens.
-        internal static ParseResult ParseScript(string script, ILanguageSettings loc = null, Flags flags = Flags.None)
+        internal static ParseResult ParseScript(string script, CultureInfo loc = null, Flags flags = Flags.None)
         {
             Contracts.AssertValue(script);
             Contracts.AssertValueOrNull(loc);
@@ -74,7 +75,7 @@ namespace Microsoft.PowerFx.Core.Parser
             return new ParseResult(parsetree, errors, errors?.Any() ?? false, parser._comments, parser._before, parser._after);
         }
 
-        public static ParseFormulasResult ParseFormulasScript(string script, ILanguageSettings loc = null)
+        public static ParseFormulasResult ParseFormulasScript(string script, CultureInfo loc = null)
         {
             Contracts.AssertValue(script);
             Contracts.AssertValueOrNull(loc);
@@ -138,19 +139,15 @@ namespace Microsoft.PowerFx.Core.Parser
             return new ParseFormulasResult(namedFormulas, _errors);
         }
 
-        private static Token[] TokenizeScript(string script, ILanguageSettings loc = null, Flags flags = Flags.None)
+        private static Token[] TokenizeScript(string script, CultureInfo loc, Flags flags = Flags.None)
         {
             Contracts.AssertValue(script);
             Contracts.AssertValueOrNull(loc);
 
             var lexerFlags = TexlLexer.Flags.None;
+            loc ??= CultureInfo.CurrentCulture;
 
-            if (loc == null)
-            {
-                return TexlLexer.LocalizedInstance.LexSource(script, lexerFlags);
-            }
-
-            return TexlLexer.NewInstance(loc).LexSource(script, lexerFlags);
+            return TexlLexer.GetLocalizedInstance(loc).LexSource(script, lexerFlags);
         }
 
         private TexlNode Parse(ref List<TexlError> errors)

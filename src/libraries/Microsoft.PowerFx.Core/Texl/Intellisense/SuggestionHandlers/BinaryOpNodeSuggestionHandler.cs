@@ -43,7 +43,7 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
                 Contracts.AssertValue(intellisenseData);
 
                 // TASK: 76039: Intellisense: Update intellisense to filter suggestions based on the expected type of the text being typed in UI
-                IntellisenseHelper.AddSuggestionsForMatches(intellisenseData, TexlLexer.LocalizedInstance.GetBinaryOperatorKeywords(), SuggestionKind.BinaryOperator, SuggestionIconKind.Other, requiresSuggestionEscaping: false);
+                IntellisenseHelper.AddSuggestionsForMatches(intellisenseData, TexlLexer.GetBinaryOperatorKeywords(), SuggestionKind.BinaryOperator, SuggestionIconKind.Other, requiresSuggestionEscaping: false);
             }
         }
     }

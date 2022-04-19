@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Lexer.Tokens;
@@ -22,7 +23,7 @@ namespace Microsoft.PowerFx.Core.Syntax
 
         // The language settings used for parsing this script.
         // May be null if the script is to be parsed in the current locale.
-        public readonly ILanguageSettings Loc;
+        public readonly CultureInfo Loc;
         private List<TexlError> _errors;
 
         // This may be null if the script hasn't yet been parsed.
@@ -30,7 +31,7 @@ namespace Microsoft.PowerFx.Core.Syntax
 
         internal List<CommentToken> Comments { get; private set; }
 
-        public Formula(string script, TexlNode tree, ILanguageSettings loc = null)
+        public Formula(string script, TexlNode tree, CultureInfo loc = null)
         {
             Contracts.AssertValue(script);
             Contracts.AssertValueOrNull(loc);
@@ -41,7 +42,7 @@ namespace Microsoft.PowerFx.Core.Syntax
             AssertValid();
         }
 
-        public Formula(string script, ILanguageSettings loc = null)
+        public Formula(string script, CultureInfo loc = null)
     : this(script, null, loc)
         {
         }

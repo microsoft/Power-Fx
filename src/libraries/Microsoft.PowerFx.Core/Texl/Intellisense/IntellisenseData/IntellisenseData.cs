@@ -351,7 +351,7 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense.IntellisenseData
         public virtual void AddSuggestionsForConstantKeywords() =>
             IntellisenseHelper.AddSuggestionsForMatches(
                 this,
-                TexlLexer.LocalizedInstance.GetConstantKeywords(false),
+                TexlLexer.GetConstantKeywords(false),
                 SuggestionKind.KeyWord,
                 SuggestionIconKind.Other,
                 requiresSuggestionEscaping: false);

@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System.Globalization;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Utils;
 
@@ -43,7 +44,7 @@ namespace Microsoft.PowerFx.Core.Lexer.Tokens
         /// <inheritdoc />
         public override string ToString()
         {
-            return Value.ToString("R", TexlLexer.LocalizedInstance.Culture);
+            return Value.ToString("R", CultureInfo.CurrentCulture);
         }
 
         /// <inheritdoc />

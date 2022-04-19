@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Text;
 using System.Threading;
@@ -76,56 +77,54 @@ namespace Microsoft.PowerFx.Core.Lexer
         public const string PunctuatorColon = ":";
         public const string PunctuatorAt = "@";
         public const char IdentifierDelimiter = '\'';
-        public const string UnicodePrefix = "U+";
 
         // These puntuators are related to commenting in the formula bar
         public const string PunctuatorBlockComment = "/*";
         public const string PunctuatorLineComment = "//";
 
-        public const string LocalizedTokenDelimiterStr = "##";
-        public const string ContextDependentTokenDelimiterStr = "%";
-        private const char LocalizedTokenDelimiterChar = '#';
-        private const char ContextDependentTokenDelimiterChar = '%';
-
         // Defaults and options for disambiguation
-        private const string PunctuatorCommaDefault = PunctuatorCommaInvariant;
         private const string PunctuatorSemicolonDefault = PunctuatorSemicolonInvariant;
         private const string PunctuatorSemicolonAlt1 = ";;";
-        private const string PunctuatorSemicolonAlt2 = PunctuatorCommaInvariant;
 
-        // Thousands separators are not currently supported by the language (in any locale).
-        private readonly char _thousandSeparator = '\0';
-        private readonly Dictionary<string, TokKind> _keywords;
-        private readonly Dictionary<string, TokKind> _punctuators;
+        // Keywords are not locale-specific, populate keyword dictionary statically
+        private static readonly IReadOnlyDictionary<string, TokKind> _keywords = new Dictionary<string, TokKind>()
+        {
+            { KeywordTrue, TokKind.True },
+            { KeywordFalse, TokKind.False },
+            { KeywordIn, TokKind.In },
+            { KeywordExactin, TokKind.Exactin },
+            { KeywordSelf, TokKind.Self },
+            { KeywordParent, TokKind.Parent },
+            { KeywordAnd, TokKind.KeyAnd },
+            { KeywordOr, TokKind.KeyOr },
+            { KeywordNot, TokKind.KeyNot },
+            { KeywordAs, TokKind.As },
+        };
+
+        private static readonly IReadOnlyDictionary<string, TokKind> _punctuators;
+
         private readonly char _decimalSeparator;
-
-        // These are the decimal separators supported by the language in V1.
-        // Unicode 00B7 represents mid-dot.
-        // For anything else we'll fall back to invariant.
-        private const string SupportedDecimalSeparators = ".,;`\u00b7";
 
         // Limits the StringBuilderCache TLS memory usage for LexerImpl.
         // Usually our tokens are less than 128 characters long, unless it's a large string.
         private const int DesiredStringBuilderSize = 128;
 
-        public CultureInfo Culture { get; private set; }
-
         private Tuple<string, Flags, Token[]> _cache;
 
-        // We store a list of cached Lexers, based on locale, so we can create new ones much more efficiently
-        // In normal app usage we only have two locales anyway (null and the user's) but Tests use more
-        // The Key to this dictionary is the CultureName
-        private static Dictionary<string, TexlLexer> _prebuiltLexers = new Dictionary<string, TexlLexer>();
+        private static readonly Lazy<TexlLexer> _invariantDecimalSeparatorLexer = new Lazy<TexlLexer>(() => new TexlLexer(PunctuatorDecimalSeparatorInvariant));
+        private static readonly Lazy<TexlLexer> _commaDecimalSeparatorLexer = new Lazy<TexlLexer>(() => new TexlLexer(PunctuatorCommaInvariant));
 
-        private static volatile TexlLexer _lex;
+        public static TexlLexer InvariantLexer => _invariantDecimalSeparatorLexer.Value;
 
-        private string[] _unaryOperatorKeywords;
-        private string[] _binaryOperatorKeywords;
-        private string[] _operatorKeywordsPrimitive;
-        private string[] _operatorKeywordsAggregate;
-        private string[] _constantKeywordsDefault;
-        private string[] _constantKeywordsGetParent;
-        private IDictionary<string, string> _punctuatorsAndInvariants;
+        private static string[] _unaryOperatorKeywords;
+        private static string[] _binaryOperatorKeywords;
+        private static string[] _operatorKeywordsPrimitive;
+        private static string[] _operatorKeywordsAggregate;
+        private static string[] _constantKeywordsDefault;
+        private static string[] _constantKeywordsGetParent;
+
+        private readonly IDictionary<string, string> _punctuatorsAndInvariants;
+        private readonly NumberFormatInfo _numberFormatInfo;
 
         // Pretty Print defaults
         public const string FourSpaces = "    ";
@@ -134,224 +133,45 @@ namespace Microsoft.PowerFx.Core.Lexer
         static TexlLexer()
         {
             StringBuilderCache.SetMaxBuilderSize(DesiredStringBuilderSize);
-        }
+            PopulateKeywordArrays();
 
-        public static TexlLexer LocalizedInstance
-        {
-            get
-            {
-                if (_lex == null)
-                {
-                    Interlocked.CompareExchange(ref _lex, new TexlLexer((ILanguageSettings)null), null);
-                }
+            var punctuators = new Dictionary<string, TokKind>();
 
-                return _lex;
-            }
+            // Invariant punctuators
+            AddPunctuator(punctuators, PunctuatorOr, TokKind.Or);
+            AddPunctuator(punctuators, PunctuatorAnd, TokKind.And);
+            AddPunctuator(punctuators, PunctuatorBang, TokKind.Bang);
+            AddPunctuator(punctuators, PunctuatorAdd, TokKind.Add);
+            AddPunctuator(punctuators, PunctuatorSub, TokKind.Sub);
+            AddPunctuator(punctuators, PunctuatorMul, TokKind.Mul);
+            AddPunctuator(punctuators, PunctuatorDiv, TokKind.Div);
+            AddPunctuator(punctuators, PunctuatorCaret, TokKind.Caret);
+            AddPunctuator(punctuators, PunctuatorParenOpen, TokKind.ParenOpen);
+            AddPunctuator(punctuators, PunctuatorParenClose, TokKind.ParenClose);
+            AddPunctuator(punctuators, PunctuatorEqual, TokKind.Equ);
+            AddPunctuator(punctuators, PunctuatorLess, TokKind.Lss);
+            AddPunctuator(punctuators, PunctuatorLessOrEqual, TokKind.LssEqu);
+            AddPunctuator(punctuators, PunctuatorGreater, TokKind.Grt);
+            AddPunctuator(punctuators, PunctuatorGreaterOrEqual, TokKind.GrtEqu);
+            AddPunctuator(punctuators, PunctuatorNotEqual, TokKind.LssGrt);
+            AddPunctuator(punctuators, PunctuatorDot, TokKind.Dot);
+            AddPunctuator(punctuators, PunctuatorColon, TokKind.Colon);
+            AddPunctuator(punctuators, PunctuatorCurlyOpen, TokKind.CurlyOpen);
+            AddPunctuator(punctuators, PunctuatorCurlyClose, TokKind.CurlyClose);
+            AddPunctuator(punctuators, PunctuatorBracketOpen, TokKind.BracketOpen);
+            AddPunctuator(punctuators, PunctuatorBracketClose, TokKind.BracketClose);
+            AddPunctuator(punctuators, PunctuatorAmpersand, TokKind.Ampersand);
+            AddPunctuator(punctuators, PunctuatorPercent, TokKind.PercentSign);
+            AddPunctuator(punctuators, PunctuatorAt, TokKind.At);
 
-            set
-            {
-                Contracts.AssertValue(value);
-                _lex = value;
-            }
-        }
-
-        public static IList<string> GetKeywordDictionary()
-        {
-            IList<string> strList = new List<string>(LocalizedInstance._keywords.Count);
-
-            var keywords = LocalizedInstance._keywords;
-
-            foreach (var keyword in keywords.Keys)
-            {
-                strList.Add(keyword);
-            }
-
-            return strList;
-        }
-
-        // When loc is null, this creates a new lexer instance for the current locale & language settings.
-        public static TexlLexer NewInstance(ILanguageSettings loc)
-        {
-            Contracts.AssertValueOrNull(loc);
-
-            if (loc != null)
-            {
-                if (_prebuiltLexers.TryGetValue(loc.CultureName, out var lexer))
-                {
-                    // In the common case we can built a fresh Lexer based on an existing one using the same locale
-                    return new TexlLexer(lexer);
-                }
-
-                // Locale never seen before, so make a fresh Lexer the slow way
-                lexer = new TexlLexer(loc);
-                _prebuiltLexers.Add(loc.CultureName, lexer);
-                return lexer;
-            }
-
-            return new TexlLexer(loc);
-        }
-
-        public static void Reset()
-        {
-            _prebuiltLexers = new Dictionary<string, TexlLexer>();
-        }
-
-        // If we are passed an invalid culture, lets fallback to something safe
-        private static CultureInfo CreateCultureInfo(string locale)
-        {
-            try
-            {
-                return new CultureInfo(locale);
-            }
-            catch
-            {
-                return new CultureInfo("en-US");
-            }
-        }
-
-        // Used to control the current locale for tests.
-        public void SetLocale_TestOnly(string loc)
-        {
-            Contracts.AssertValue(loc);
-
-            Culture = CreateCultureInfo(loc);
-        }
-
-        private TexlLexer(ILanguageSettings loc)
-        {
-            Contracts.AssertValueOrNull(loc);
-
-            var fallBack = false;
-            if (loc != null)
-            {
-                // Use the punctuators specified by the given ILanguageSettings instance.
-                // If any are missing, fall back to the default settings.
-                if (!loc.InvariantToLocPunctuatorMap.TryGetValue(PunctuatorDecimalSeparatorInvariant, out var locDecSeparator) ||
-                    !loc.InvariantToLocPunctuatorMap.TryGetValue(PunctuatorCommaInvariant, out var locListSeparator) ||
-                    !loc.InvariantToLocPunctuatorMap.TryGetValue(PunctuatorSemicolonInvariant, out var locChainSeparator))
-                {
-                    locDecSeparator = string.Empty;
-                    locListSeparator = string.Empty;
-                    locChainSeparator = string.Empty;
-                    fallBack = true;
-                }
-
-                LocalizedPunctuatorDecimalSeparator = locDecSeparator;
-                LocalizedPunctuatorListSeparator = locListSeparator;
-                LocalizedPunctuatorChainingSeparator = locChainSeparator;
-            }
-
-            if (fallBack || loc == null)
-            {
-                // For V1 we'll pull the glob settings for the current language, and
-                // we'll adjust the ones we can't support. For example, we won't be able to
-                // support '(' for a decimal separator.
-                Culture = CreateCultureInfo(loc != null ? loc.CultureName : CultureInfo.CurrentCulture.Name);
-
-                // List and decimal separators.
-                // These are the default global settings. If there is a collision between the two,
-                // the list separator automatically becomes ;.
-                LocalizedPunctuatorDecimalSeparator = ChooseDecimalSeparator(Culture.NumberFormat.NumberDecimalSeparator);
-                LocalizedPunctuatorListSeparator = ChooseCommaPunctuator(Culture.TextInfo.ListSeparator);
-
-                // The chaining operator has to be disambiguated accordingly.
-                LocalizedPunctuatorChainingSeparator = ChooseChainingPunctuator();
-            }
-            else
-            {
-                // Form a culture object suitable for parsing numerics.
-                Culture = CreateCultureInfo(loc.CultureName);
-            }
-
-            // Tweak the culture so it respects the lexer's disambiguated separators.
-            Culture.NumberFormat.NumberDecimalSeparator = LocalizedPunctuatorDecimalSeparator;
-            Culture.TextInfo.ListSeparator = LocalizedPunctuatorListSeparator;
-
-            // Only one-character strings are supported for the decimal separator.
-            Contracts.Assert(LocalizedPunctuatorDecimalSeparator.Length == 1);
-            _decimalSeparator = LocalizedPunctuatorDecimalSeparator[0];
-
-            _keywords = new Dictionary<string, TokKind>();
-            _punctuators = new Dictionary<string, TokKind>();
-            _cache = null;
-
-            // Punctuators
-            AddPunctuator(PunctuatorOr, TokKind.Or);
-            AddPunctuator(PunctuatorAnd, TokKind.And);
-            AddPunctuator(PunctuatorBang, TokKind.Bang);
-            AddPunctuator(PunctuatorAdd, TokKind.Add);
-            AddPunctuator(PunctuatorSub, TokKind.Sub);
-            AddPunctuator(PunctuatorMul, TokKind.Mul);
-            AddPunctuator(PunctuatorDiv, TokKind.Div);
-            AddPunctuator(PunctuatorCaret, TokKind.Caret);
-            AddPunctuator(PunctuatorParenOpen, TokKind.ParenOpen);
-            AddPunctuator(PunctuatorParenClose, TokKind.ParenClose);
-            AddPunctuator(PunctuatorEqual, TokKind.Equ);
-            AddPunctuator(PunctuatorLess, TokKind.Lss);
-            AddPunctuator(PunctuatorLessOrEqual, TokKind.LssEqu);
-            AddPunctuator(PunctuatorGreater, TokKind.Grt);
-            AddPunctuator(PunctuatorGreaterOrEqual, TokKind.GrtEqu);
-            AddPunctuator(PunctuatorNotEqual, TokKind.LssGrt);
-            AddPunctuator(LocalizedPunctuatorListSeparator, TokKind.Comma);
-            AddPunctuator(PunctuatorDot, TokKind.Dot);
-            AddPunctuator(PunctuatorColon, TokKind.Colon);
-            AddPunctuator(PunctuatorCurlyOpen, TokKind.CurlyOpen);
-            AddPunctuator(PunctuatorCurlyClose, TokKind.CurlyClose);
-            AddPunctuator(PunctuatorBracketOpen, TokKind.BracketOpen);
-            AddPunctuator(PunctuatorBracketClose, TokKind.BracketClose);
-            AddPunctuator(PunctuatorAmpersand, TokKind.Ampersand);
-            AddPunctuator(PunctuatorPercent, TokKind.PercentSign);
-            AddPunctuator(LocalizedPunctuatorChainingSeparator, TokKind.Semicolon);
-            AddPunctuator(PunctuatorAt, TokKind.At);
-
-            //Commenting punctuators
-            AddPunctuator(PunctuatorBlockComment, TokKind.Comment);
-            AddPunctuator(PunctuatorLineComment, TokKind.Comment);
-
-            // Keywords
-            AddKeyword(KeywordTrue, TokKind.True);
-            AddKeyword(KeywordFalse, TokKind.False);
-            AddKeyword(KeywordIn, TokKind.In);
-            AddKeyword(KeywordExactin, TokKind.Exactin);
-            AddKeyword(KeywordSelf, TokKind.Self);
-            AddKeyword(KeywordParent, TokKind.Parent);
-            AddKeyword(KeywordAnd, TokKind.KeyAnd);
-            AddKeyword(KeywordOr, TokKind.KeyOr);
-            AddKeyword(KeywordNot, TokKind.KeyNot);
-            AddKeyword(KeywordAs, TokKind.As);
+            // Commenting punctuators
+            AddPunctuator(punctuators, PunctuatorBlockComment, TokKind.Comment);
+            AddPunctuator(punctuators, PunctuatorLineComment, TokKind.Comment);
 
             PopulateKeywordArrays();
         }
 
-        // This creates a new Lexer with the same locale as the original, which is a lot less expensive than spinning up a whole new one
-        private TexlLexer(TexlLexer original)
-        {
-            Contracts.AssertValue(original);
-
-            LocalizedPunctuatorDecimalSeparator = original.LocalizedPunctuatorDecimalSeparator;
-            LocalizedPunctuatorListSeparator = original.LocalizedPunctuatorListSeparator;
-            LocalizedPunctuatorChainingSeparator = original.LocalizedPunctuatorChainingSeparator;
-
-            _thousandSeparator = original._thousandSeparator;
-
-            _cache = null;
-
-            // Note that the following objects are NOT Cloned, they are the same as the originals, as they are never written to after initialization
-            _keywords = original._keywords;
-            _punctuators = original._punctuators;
-            _decimalSeparator = original._decimalSeparator;
-            Culture = original.Culture;
-
-            PopulateKeywordArrays();
-        }
-
-        private void AddKeyword(string str, TokKind tid)
-        {
-            Contracts.AssertNonEmpty(str);
-            _keywords.Add(str, tid);
-        }
-
-        private bool AddPunctuator(string str, TokKind tid)
+        private static bool AddPunctuator(Dictionary<string, TokKind> punctuators, string str, TokKind tid)
         {
             Contracts.AssertNonEmpty(str);
 
@@ -375,16 +195,16 @@ namespace Microsoft.PowerFx.Core.Lexer
                     var strTmp = str.Substring(0, ich);
                     if (!_punctuators.TryGetValue(strTmp, out var tidTmp))
                     {
-                        _punctuators.Add(strTmp, TokKind.None);
+                        punctuators.Add(strTmp, TokKind.None);
                     }
                 }
             }
 
-            _punctuators[str] = tid;
+            punctuators[str] = tid;
             return true;
         }
 
-        private void PopulateKeywordArrays()
+        private static void PopulateKeywordArrays()
         {
             _unaryOperatorKeywords = new[]
             {
@@ -454,14 +274,46 @@ namespace Microsoft.PowerFx.Core.Lexer
             {
                 KeywordFalse, KeywordTrue, KeywordParent, KeywordSelf
             };
+        }
+
+        public static TexlLexer GetLocalizedInstance(CultureInfo culture)
+        {
+            culture ??= CultureInfo.InvariantCulture;
+            return culture.NumberFormat.NumberDecimalSeparator == PunctuatorDecimalSeparatorInvariant ? InvariantLexer : _commaDecimalSeparatorLexer.Value;
+        }
+
+        public static IList<string> GetKeywordDictionary()
+        {
+            IList<string> strList = new List<string>(_keywords.Count);
+
+            foreach (var keyword in _keywords.Keys)
+            {
+                strList.Add(keyword);
+            }
+
+            return strList;
+        }
+
+        private TexlLexer(string preferredDecimalSeparator)
+        {
+            // List and decimal separators.
+            // These are the default global settings. If there is a collision between the two,
+            // the list separator automatically becomes ;.
+            LocalizedPunctuatorDecimalSeparator = ChooseDecimalSeparator(preferredDecimalSeparator);
+            LocalizedPunctuatorListSeparator = ChooseListSeparatorPunctuator();
+
+            // The chaining operator has to be disambiguated accordingly.
+            LocalizedPunctuatorChainingSeparator = ChooseChainingPunctuator();
 
             _punctuatorsAndInvariants = new Dictionary<string, string>
             {
-                { LocalizedPunctuatorDecimalSeparator, "." },
+                { LocalizedPunctuatorDecimalSeparator,         "." },
                 { LocalizedPunctuatorListSeparator,            "," },
                 { LocalizedPunctuatorChainingSeparator,        ";" }
             };
-        }
+
+            _numberFormatInfo = new NumberFormatInfo() { NumberDecimalSeparator = LocalizedPunctuatorDecimalSeparator };
+        }        
 
         public Token[] LexSource(string text, Flags flags = Flags.None)
         {
@@ -600,14 +452,14 @@ namespace Microsoft.PowerFx.Core.Lexer
         }
 
         // Enumerate all supported unary operator keywords.
-        public string[] GetUnaryOperatorKeywords() => _unaryOperatorKeywords;
+        public static string[] GetUnaryOperatorKeywords() => _unaryOperatorKeywords;
 
         // Enumerate all supported binary operator keywords.
-        public string[] GetBinaryOperatorKeywords() => _binaryOperatorKeywords;
+        public static string[] GetBinaryOperatorKeywords() => _binaryOperatorKeywords;
 
         // Enumerate all supported keywords for the given type.
         // Review hekum - should we have leftType and right type seperately?
-        public string[] GetOperatorKeywords(DType type)
+        public static string[] GetOperatorKeywords(DType type)
         {
             Contracts.Assert(type.IsValid);
 
@@ -626,13 +478,13 @@ namespace Microsoft.PowerFx.Core.Lexer
         }
 
         // Enumerate all supported constant keywords.
-        public string[] GetConstantKeywords(bool getParent) => getParent ? _constantKeywordsGetParent : _constantKeywordsDefault;
+        public static string[] GetConstantKeywords(bool getParent) => getParent ? _constantKeywordsGetParent : _constantKeywordsDefault;
 
         // Enumerate all supported localized punctuators and their invariant counterparts.
         public IDictionary<string, string> GetPunctuatorsAndInvariants() => _punctuatorsAndInvariants;
 
         // Returns true and sets 'tid' if the specified string is a keyword.
-        public bool IsKeyword(string str, out TokKind tid)
+        public static bool IsKeyword(string str, out TokKind tid)
         {
             return _keywords.TryGetValue(str, out tid);
         }
@@ -696,12 +548,6 @@ namespace Microsoft.PowerFx.Core.Lexer
         // Returns true if the specified character is a new line character.
         public static bool IsNewLineCharacter(char ch) => ch == '\n';
 
-        // Returns true if the specified character is a valid context-dependent token delimiter - '%'.
-        public static bool IsContextDependentTokenDelimiter(char ch) => ch == ContextDependentTokenDelimiterChar;
-
-        // Returns true if the next and current characters form the localizable token delimiter - '##'.
-        public static bool IsLocalizableTokenDelimiter(char ch, char nextCh) => ch == LocalizedTokenDelimiterChar && nextCh == LocalizedTokenDelimiterChar;
-
         // Takes a valid name and changes it to an identifier, escaping if needed.
         public static string EscapeName(DName name)
         {
@@ -710,12 +556,9 @@ namespace Microsoft.PowerFx.Core.Lexer
         }
 
         // Takes a valid name and changes it to an identifier, escaping if needed.
-        public static string EscapeName(string name, TexlLexer instance = null)
+        public static string EscapeName(string name)
         {
             Contracts.Assert(DName.IsValidDName(name));
-            Contracts.AssertValueOrNull(instance);
-
-            instance = instance ?? LocalizedInstance;
 
             var nameLen = name.Length;
             Contracts.Assert(nameLen > 0);
@@ -760,7 +603,7 @@ namespace Microsoft.PowerFx.Core.Lexer
                     return sb.ToString();
                 }
 
-                if (!instance.IsKeyword(name, out var kind))
+                if (!IsKeyword(name, out var kind))
                 {
                     return name;
                 }
@@ -978,7 +821,7 @@ namespace Microsoft.PowerFx.Core.Lexer
         {
             Contracts.AssertNonEmpty(preferred);
 
-            if (preferred.Length == 1 && SupportedDecimalSeparators.Contains(preferred))
+            if (preferred != PunctuatorDecimalSeparatorInvariant)
             {
                 return preferred;
             }
@@ -987,27 +830,18 @@ namespace Microsoft.PowerFx.Core.Lexer
         }
 
         // Choose an unambiguous list separator.
-        private string ChooseCommaPunctuator(string preferred)
+        private string ChooseListSeparatorPunctuator()
         {
-            Contracts.AssertNonEmpty(preferred);
-
             // We can't use the same punctuator, since that would cause an ambiguous grammar:
             //  Foo(1,23, 3,45) could represent two distinct things in a fr-FR locale:
             //      - either the equivalent of Foo(1.23, 3.45)
             //      - or the equivalent of Foo(1, 23, 3, 45)
-            if (preferred != LocalizedPunctuatorDecimalSeparator)
+            if (LocalizedPunctuatorDecimalSeparator == PunctuatorCommaInvariant)
             {
-                return preferred;
+                return PunctuatorSemicolonInvariant;
             }
 
-            // Try to use PunctuatorCommaDefault, if possible.
-            if (preferred != PunctuatorCommaDefault)
-            {
-                return PunctuatorCommaDefault;
-            }
-
-            // Both use comma. Choose ; instead.
-            return PunctuatorSemicolonDefault;
+            return PunctuatorCommaInvariant;
         }
 
         // Choose an unambiguous chaining punctuator.
@@ -1015,41 +849,14 @@ namespace Microsoft.PowerFx.Core.Lexer
         {
             Contracts.Assert(LocalizedPunctuatorListSeparator != LocalizedPunctuatorDecimalSeparator);
 
-            if (LocalizedPunctuatorDecimalSeparator != PunctuatorSemicolonDefault)
-            {
-                // Common case, for en-US: use the default chaining punctuator if possible.
-                if (LocalizedPunctuatorListSeparator != PunctuatorSemicolonDefault)
-                {
-                    return PunctuatorSemicolonDefault;
-                }
-
-                // Use PunctuatorSemicolonAlt1 if possible.
-                if (LocalizedPunctuatorDecimalSeparator != PunctuatorSemicolonAlt1)
-                {
-                    return PunctuatorSemicolonAlt1;
-                }
-
-                // Fallback
-                return PunctuatorSemicolonAlt2;
-            }
-
-            // The default punctuator is not available. Use the PunctuatorSemicolonAlt1 if possible.
-            Contracts.Assert(LocalizedPunctuatorDecimalSeparator == PunctuatorSemicolonDefault);
-            if (LocalizedPunctuatorListSeparator != PunctuatorSemicolonAlt1)
+            if (LocalizedPunctuatorDecimalSeparator == PunctuatorCommaInvariant)
             {
                 return PunctuatorSemicolonAlt1;
             }
 
-            // Fallback
-            return PunctuatorSemicolonAlt2;
-        }
+            Contracts.Assert(LocalizedPunctuatorDecimalSeparator == PunctuatorDecimalSeparatorInvariant);
 
-        internal static void ChoosePunctuators(ILanguageSettings loc, out string dec, out string comma, out string chaining)
-        {
-            var lexer = NewInstance(loc);
-            dec = lexer.LocalizedPunctuatorDecimalSeparator;
-            comma = lexer.LocalizedPunctuatorListSeparator;
-            chaining = lexer.LocalizedPunctuatorChainingSeparator;
+            return PunctuatorSemicolonDefault;
         }
 
         private sealed class LexerImpl
@@ -1370,13 +1177,7 @@ namespace Microsoft.PowerFx.Core.Lexer
                     {
                         if (!CharacterUtils.IsDigit(CurrentChar))
                         {
-                            // TASK: 69508: Globalization: Thousand separator code is disabled.
-                            if (CurrentChar != _lex._thousandSeparator || _lex._thousandSeparator == '\0' || !CharacterUtils.IsDigit(PeekChar(1)))
-                            {
-                                break;
-                            }
-
-                            NextChar();
+                            break;
                         }
 
                         // Push leading zeros as well. All digits are important.
@@ -1408,7 +1209,7 @@ namespace Microsoft.PowerFx.Core.Lexer
                 }
 
                 // Parsing in the current culture, to allow the CLR to correctly parse non-arabic numerals.
-                if (!double.TryParse(_sb.ToString(), NumberStyles.Float, _lex.Culture, out var value) || double.IsNaN(value) || double.IsInfinity(value))
+                if (!double.TryParse(_sb.ToString(), NumberStyles.Float, _lex._numberFormatInfo, out var value) || double.IsNaN(value) || double.IsInfinity(value))
                 {
                     return isCorrect ?
                         new ErrorToken(GetTextSpan(), TexlStrings.ErrNumberTooLarge) :
@@ -1432,7 +1233,7 @@ namespace Microsoft.PowerFx.Core.Lexer
                 var spanTok = GetTextSpan();
 
                 // Only lex a keyword if the identifier didn't start with a delimiter.
-                if (_lex.IsKeyword(str, out var tid) && !fDelimiterStart)
+                if (IsKeyword(str, out var tid) && !fDelimiterStart)
                 {
                     // Lookahead to distinguish Keyword "and/or/not" from Function "and/or/not"
                     if ((tid == TokKind.KeyAnd || tid == TokKind.KeyOr || tid == TokKind.KeyNot) &&
@@ -1773,7 +1574,7 @@ namespace Microsoft.PowerFx.Core.Lexer
                     var position = CurrentPos;
                     var unexpectedChar = Convert.ToUInt16(CurrentChar).ToString("X4");
                     NextChar();
-                    return new ErrorToken(GetTextSpan(), TexlStrings.UnexpectedCharacterToken, string.Concat(UnicodePrefix, unexpectedChar), position);
+                    return new ErrorToken(GetTextSpan(), TexlStrings.UnexpectedCharacterToken, string.Concat("U+", unexpectedChar), position);
                 }
                 else
                 {

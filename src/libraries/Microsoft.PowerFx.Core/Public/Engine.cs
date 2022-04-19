@@ -65,7 +65,7 @@ namespace Microsoft.PowerFx
         /// <param name="expressionText"></param>
         /// <returns></returns>
         public IReadOnlyList<Token> Tokenize(string expressionText)
-            => TexlLexer.LocalizedInstance.GetTokens(expressionText);
+            => TexlLexer.GetLocalizedInstance(Config.CultureInfo).GetTokens(expressionText);
 
         /// <summary>
         /// Type check a formula without executing it. 

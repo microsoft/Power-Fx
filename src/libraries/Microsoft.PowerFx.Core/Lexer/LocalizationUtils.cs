@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Utils;
@@ -18,11 +19,11 @@ namespace Microsoft.PowerFx.Core.Lexer
 
         // references from TS code come via AuthoringCore.d.ts and that needs to be kept current with this file
 
-        public static string CurrentLocaleDecimalSeparator => TexlLexer.LocalizedInstance.LocalizedPunctuatorDecimalSeparator;
+        public static string CurrentLocaleDecimalSeparator => TexlLexer.GetLocalizedInstance(CultureInfo.CurrentCulture).LocalizedPunctuatorDecimalSeparator;
 
-        public static string CurrentLocaleListSeparator => TexlLexer.LocalizedInstance.LocalizedPunctuatorListSeparator;
+        public static string CurrentLocaleListSeparator => TexlLexer.GetLocalizedInstance(CultureInfo.CurrentCulture).LocalizedPunctuatorListSeparator;
 
-        public static string CurrentLocaleChainingOperator => TexlLexer.LocalizedInstance.LocalizedPunctuatorChainingSeparator;
+        public static string CurrentLocaleChainingOperator => TexlLexer.GetLocalizedInstance(CultureInfo.CurrentCulture).LocalizedPunctuatorChainingSeparator;
 
         public static string CurrentLocalePositiveSymbol => TexlLexer.PunctuatorAdd;
 
