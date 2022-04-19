@@ -136,6 +136,14 @@ namespace Microsoft.PowerFx.Functions
             return new NumberValue(irContext, count);
         }
 
+        public static FormulaValue CountA(IRContext irContext, TableValue[] args)
+        {
+            var arg0 = args[0];
+            var count = arg0.Rows.Where(row => row.IsValue).Count();
+
+            return new NumberValue(irContext, count);
+        }
+
         public static async ValueTask<FormulaValue> CountIf(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args)
         {
             // Streaming 

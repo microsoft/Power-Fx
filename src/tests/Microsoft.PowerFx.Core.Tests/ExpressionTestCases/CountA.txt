@@ -1,0 +1,8 @@
+﻿>> CountA(Table({a:1},{a:2},Blank()))
+2
+
+>> CountA(["A","B","",Blank(),Blank(),Blank()])
+3
+
+>> CountA([1,2,3,Blank(),Blank(),Blank()])
+3

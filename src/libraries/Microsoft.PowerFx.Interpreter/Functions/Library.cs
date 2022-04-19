@@ -248,6 +248,16 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: CountRows)
             },
             {
+                BuiltinFunctionsCore.CountA,
+                StandardErrorHandling<TableValue>(
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<TableValue>,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: CountA)
+            },
+            {
                 BuiltinFunctionsCore.CountRows_UO,
                 StandardErrorHandling<UntypedObjectValue>(
                     expandArguments: NoArgExpansion,
