@@ -14,7 +14,7 @@ namespace Microsoft.PowerFx.Core.Public
     /// </summary>
     public class FormulaSet
     {
-        private readonly IPowerFxEngine _engine;
+        private readonly IDependencyFinder _dependencyFinder;
 
         private readonly Dictionary<string, FormulaWithParameters> _formulas = new Dictionary<string, FormulaWithParameters>();
 
@@ -27,9 +27,9 @@ namespace Microsoft.PowerFx.Core.Public
         /// <summary>
         /// Initializes a new instance of the <see cref="FormulaSet"/> class.
         /// </summary>
-        public FormulaSet(IPowerFxEngine engine)
+        public FormulaSet(IDependencyFinder dependencyFinder)
         {
-            _engine = engine;
+            _dependencyFinder = dependencyFinder;
             SortFormulas();
         }
 
@@ -40,10 +40,7 @@ namespace Microsoft.PowerFx.Core.Public
 
             foreach (var kvp in _formulas)
             {
-                var checkResult = _engine.Check(kvp.Value._expression, kvp.Value._schema);
-                var binding = checkResult._binding;
-                var dependencies = DependencyFinder.FindDependencies(binding.Top, binding, addUnknown: true);
-
+                var dependencies = _dependencyFinder.FindDependencies(kvp.Value);
                 foreach (var processFirst in dependencies)
                 {
                     if (_formulas.ContainsKey(processFirst))

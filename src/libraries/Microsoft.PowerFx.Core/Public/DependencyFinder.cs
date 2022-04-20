@@ -14,18 +14,16 @@ namespace Microsoft.PowerFx
     internal class DependencyFinder : IdentityTexlVisitor
     {
         private readonly TexlBinding _binding;
-        private readonly bool _addUnknown;
         public HashSet<string> _vars = new HashSet<string>();
 
-        private DependencyFinder(TexlBinding binding, bool addUnknown)
+        private DependencyFinder(TexlBinding binding)
         {
             _binding = binding;
-            _addUnknown = addUnknown;
         }
 
-        public static HashSet<string> FindDependencies(TexlNode node, TexlBinding binding, bool addUnknown = false)
+        public static HashSet<string> FindDependencies(TexlNode node, TexlBinding binding)
         {
-            var v = new DependencyFinder(binding, addUnknown);
+            var v = new DependencyFinder(binding);
             node.Accept(v);
             return v._vars;
         }
@@ -41,11 +39,6 @@ namespace Microsoft.PowerFx
             if ((info.NestDst == 1 && info.Kind == BindKind.LambdaField) ||
                 (info.Kind == BindKind.ScopeVariable) ||
                 (info.Kind == BindKind.PowerFxResolvedObject))
-            {
-                _vars.Add(name);
-            }
-
-            if (_addUnknown && info.Kind == BindKind.Unknown)
             {
                 _vars.Add(name);
             }

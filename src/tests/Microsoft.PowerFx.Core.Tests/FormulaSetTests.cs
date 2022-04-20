@@ -2,13 +2,45 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
+using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Public;
+using Microsoft.PowerFx.Core.Syntax.Nodes;
+using Microsoft.PowerFx.Core.Syntax.Visitors;
 using Xunit;
 
 namespace Microsoft.PowerFx.Core.Tests
 {
     public class FormulaSetTests
     {
+        private class TestDependencyFinderVisitor : IdentityTexlVisitor
+        {
+            public readonly HashSet<string> _vars = new HashSet<string>();
+
+            public override void Visit(FirstNameNode node)
+            {
+                var name = node.Ident.Name.Value;
+
+                _vars.Add(name);
+
+                base.Visit(node);
+            }
+        }
+
+        private class TestDependencyFinder : IDependencyFinder
+        {
+            public HashSet<string> FindDependencies(FormulaWithParameters formulaWithParameters)
+            {
+                var config = new PowerFxConfig();
+                var engine = new Engine(config);
+
+                var checkResult = engine.Check(formulaWithParameters._expression, formulaWithParameters._schema);
+
+                var v = new TestDependencyFinderVisitor();
+                checkResult._binding.Top.Accept(v);
+                return v._vars;
+            }
+        }
+
         [Fact]
         public void TestFormulaSet()
         {
@@ -24,9 +56,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 { "F", new FormulaWithParameters("D + E") },
             };
 
-            var config = new PowerFxConfig();
-            var engine = new Engine(config);
-            var set = new FormulaSet(engine);
+            var set = new FormulaSet(new TestDependencyFinder());
 
             set.Add(formulas);
 
