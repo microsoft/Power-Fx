@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json;
 using System.Web;
 using Microsoft.PowerFx.Core;
@@ -142,7 +143,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
             var expression = didOpenParams.TextDocument.Text;
             var result = scope.Check(expression);
 
-            PublishDiagnosticsNotification(documentUri, expression, result.Errors);
+            PublishDiagnosticsNotification(documentUri, expression, result.Errors.ToArray());
 
             PublishTokens(documentUri, result);
 
@@ -173,7 +174,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
             var expression = didChangeParams.ContentChanges[0].Text;
             var result = scope.Check(expression);
 
-            PublishDiagnosticsNotification(documentUri, expression, result.Errors);
+            PublishDiagnosticsNotification(documentUri, expression, result.Errors.ToArray());
 
             PublishTokens(documentUri, result);
 

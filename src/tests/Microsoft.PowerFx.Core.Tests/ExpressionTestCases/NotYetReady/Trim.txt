@@ -1,0 +1,77 @@
+// ******** STRING PARAMETERS ********
+
+>> Trim("   Hello     World   ")
+"Hello World"
+
+>> Trim("  Jane  Doe  ")
+"Jane Doe"
+
+>> Trim("  Jack  and   Jill       ")
+"Jack and Jill"
+
+>> Trim("Already trimmed")
+"Already trimmed"
+
+>> Trim("   Venus  ,  Earth ,  Mars ")
+"Venus , Earth , Mars"
+
+>> Trim("Oil and Water  ")
+"Oil and Water"
+
+>> Trim("foo " & " bar   ")
+"foo bar"
+
+>> Trim(" 12345    ")
+"12345"
+
+
+>> Trim("               This is really very long string This is really very long string This is really very long string This is really very long string This is really very long string This is really very long string This is really very long string This is really very long string This is really very long string This is really very long string This is really very long string This is really very long              string This is really very long string This is really very long string This is really very long string This is really very long string This is really very long string This is really verylong string         ")
+"This is really very long string This is really very long string This is really very long string This is really very long string This is really very long string This is really very long string This is really very long string This is really very long string This is really very long string This is really very long string This is really very long string This is really very long string This is really very long string This is really very long string This is really very long string This is really very long string This is really very long string This is really verylong string"
+
+// ******** NUMBER PARAMETERS ********
+>> Trim(  12345    )
+"12345"
+
+>> Trim(  -123.45   )
+"-123.45"
+
+// ******** BOOLEAN PARAMETERS ********
+>> Trim(  true   )
+"true"
+
+>> Trim(  false    )
+"false"
+
+>> Trim(  "true"   )
+"true"
+
+>> Trim("  false    ")
+"false"
+
+// ******** BLANK, NULL and ERROR PARAMETERS ********
+
+>> Trim("")
+""
+
+>> Trim("   ")
+""
+
+>> Trim(Blank())
+""
+
+//Invalid operation: Division by zero
+>> Trim(1/0)
+#Error(Kind=Div0)
+
+>> Trim("  1/0   ")
+"1/0"
+
+// ******** FUNCTION VALUE AS PARAMETERS ********
+
+>> Trim(Concatenate("  Jane   "," Doe   "))
+"Jane Doe"
+
+// ******* ALL THE PARAMETERS TYPE *******
+
+>> Trim("   foo   " & 67890 & "    " & false & Blank() & Text(12, "#.000") & Date(1976, 12,23) & "   ")
+"foo 67890 false12.00012/23/1976"

@@ -17,7 +17,8 @@ namespace Microsoft.PowerFx.Core.Public
         /// </summary>
         /// <param name="expressionText">the string representation of the expression to be checked.</param>
         /// <param name="parameterType">the (composite) type definition required to validate the expression.</param>
+        /// <param name="options">the parser options to use when validating the expression.</param>
         /// <returns></returns>
-        CheckResult Check(string expressionText, RecordType parameterType);
+        CheckResult Check(string expressionText, RecordType parameterType, ParserOptions options = null);
     }
 }

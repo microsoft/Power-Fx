@@ -47,11 +47,14 @@ namespace Microsoft.PowerFx.Core.Tests
 
                 foreach (var dir in new string[] { _filePathCommon, _filePathSpecific })
                 {
-                    var allFiles = Directory.EnumerateFiles(GetDefaultTestDir(dir));
-
-                    foreach (var file in allFiles)
+                    if (dir != null)
                     {
-                        parser.AddFile(file);
+                        var allFiles = Directory.EnumerateFiles(GetDefaultTestDir(dir));
+
+                        foreach (var file in allFiles)
+                        {
+                            parser.AddFile(file);
+                        }
                     }
                 }
 

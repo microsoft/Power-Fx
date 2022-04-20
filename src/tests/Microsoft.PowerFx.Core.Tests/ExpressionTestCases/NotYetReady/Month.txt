@@ -1,0 +1,159 @@
+>> Month(1/1/1970)
+31
+
+>> Month(5/14/1970)
+12
+
+>> Month(Date(2013,12,31))
+12
+
+//Decimal number is truncated to consider only the integer part
+>> Month(Date(2011,5.5,12))
+5
+
+>> Month(DateValue("10/11/2014"))
+10
+
+>> Month(DateTimeValue("1/4/1976 12:30:15:00"))
+1
+
+>> Month(DateTimeValue("6/30/2006"))
+6
+
+>> Month(Date(1976,1,4) + Time(12,30,15))
+1
+
+//Overflow to next month
+>> Month(DateTimeValue("1/32/2006 00:00:00"))
+2
+
+//Underflow to the last month in previous year
+>> Month(DateTimeValue("1/0/2006 00:00:00"))
+12
+
+>> Month(TimeValue("5:00:00"))
+1
+
+>> Month(Time(6,50,50))
+1
+
+// ******************************** NUMBER PARAMETERS ********************************
+
+>> Month(0)
+12
+
+>> Month(1)
+12
+
+>> Month(-1)
+12
+
+>> Month(1.5)
+12
+
+>> Month(11)
+12
+
+// ******************************** STRING PARAMETERS ********************************
+
+>> Month("ABC")
+#Error(Kind=InvalidArgument)
+
+>> Month(DateTimeValue("ABC"))
+#Error(Kind=InvalidArgument)
+
+//Number passed as string
+>> Month("11")
+11
+
+//Boolean passed as string
+>> Month("true")
+#Error(Kind=InvalidArgument)
+
+//Boolean passed as string
+>> Month("false")
+#Error(Kind=InvalidArgument)
+
+// ******************************** BOOLEAN PARAMETERS ********************************
+
+>> Month(DateTimeValue(true))
+#Error(Kind=InvalidArgument)
+
+>> Month(DateTimeValue(false))
+#Error(Kind=InvalidArgument)
+
+>> Month(DateValue(true))
+#Error(Kind=InvalidArgument)
+
+>> Month(DateValue(false))
+#Error(Kind=InvalidArgument)
+
+>> Month(Date(true,true,true))
+1
+
+>> Month(Date(false,false,false))
+11
+
+// ******************************** DATE ADDITION/SUBTRACTION VALUE AS PARAMETERS ********************************
+
+>> Month(DateAdd(Date(2012,2,28), 2))
+3
+
+>> Month(DateAdd(Date(2001,1,1),3,TimeUnit.Months))
+4
+
+>> Month(DateAdd(Date(2001,1,1), 3, Blank()))
+1
+
+>> Month(DateAdd(Date(2001,1,1), Blank()))
+1
+
+>> Month(DateAdd(Date(2001,1,1), 12, TimeUnit.Months))
+1
+
+>> Month(DateAdd(Date(2001,1,1), 3, TimeUnit.Quarters))
+10
+
+>> Month(DateAdd(Date(2001,1,1), 3, "TimeUnit.Quarters"))
+#Error(Kind=NotSupported)
+
+>> Month(DateAdd(Date(2001,1,1), 3, "TimeUnit.quarters"))
+#Error(Kind=NotSupported)
+
+>> Month(DateAdd(Date(2001,1,1), 3, "TimeUnit.quaRTers"))
+#Error(Kind=NotSupported)
+
+>> Month(Date(2011,1,15) + 70)
+3
+
+>> Month(80 + Date(2011,1,15))
+4
+
+>> Month(Date(2011,1,15) - 90)
+10
+
+>> Month((Date(2011,1,15) + 60) + 70)
+5
+
+>> Month((60 + Date(2011,1,15)) + 70)
+5
+
+>> Month((Date(2011,1,15) - 20) - 30)
+11
+
+// ******************************** NULL AND ERROR PARAMETERS ********************************
+
+>> Month(DateTimeValue(Blank()))
+1
+
+>> Month(DateTimeValue(""))
+1
+
+>> Month(Blank())
+1
+
+>> Month("")
+1
+
+>> Month(Date(-1, 2, 3))
+#Error(Kind=InvalidArgument)

@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.PowerFx.Core;
+using Microsoft.PowerFx.Core.Public;
 using Microsoft.PowerFx.Core.Public.Types;
 using Microsoft.PowerFx.Core.Public.Values;
 using Microsoft.PowerFx.Core.Tests;
@@ -46,7 +47,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [Fact]
         public void MutabilityTest_Chain()
         {
-            var config = new PowerFxConfig(powerFxFlags: PowerFxFlags.EnableExpressionChaining);            
+            var config = new PowerFxConfig();            
             config.AddFunction(new Assert2Function());
             config.AddFunction(new Set2Function());
             var engine = new RecalcEngine(config);
@@ -66,7 +67,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             foreach (var expr in exprs)
             {
-                var x = engine.Eval(expr); // Assert failures will throw.
+                var x = engine.Eval(expr, options: new ParserOptions() { AllowsSideEffects = true }); // Assert failures will throw.
             }
         }
 

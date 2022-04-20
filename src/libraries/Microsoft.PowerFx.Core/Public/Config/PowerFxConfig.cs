@@ -31,28 +31,24 @@ namespace Microsoft.PowerFx.Core
 
         internal EnumStoreBuilder EnumStoreBuilder { get; }
 
-        internal CultureInfo CultureInfo { get; }
+        internal CultureInfo CultureInfo { get; }        
 
-        internal PowerFxFlags PowerFxFlags { get;  }
-
-        private PowerFxConfig(CultureInfo cultureInfo, EnumStoreBuilder enumStoreBuilder, PowerFxFlags powerFxFlags) 
+        private PowerFxConfig(CultureInfo cultureInfo, EnumStoreBuilder enumStoreBuilder) 
         {
             CultureInfo = cultureInfo ?? CultureInfo.CurrentCulture;
             _isLocked = false;
             _extraFunctions = new Dictionary<string, TexlFunction>();
             _environmentSymbols = new Dictionary<DName, IExternalEntity>();
             _environmentSymbolDisplayNameProvider = new SingleSourceDisplayNameProvider();
-            EnumStoreBuilder = enumStoreBuilder;
-            PowerFxFlags = powerFxFlags;
+            EnumStoreBuilder = enumStoreBuilder;            
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PowerFxConfig"/> class.        
         /// </summary>
-        /// <param name="cultureInfo">Culture to use.</param>
-        /// <param name="powerFxFlags">PowerFx flags.</param>
-        public PowerFxConfig(CultureInfo cultureInfo = null, PowerFxFlags powerFxFlags = PowerFxFlags.None)
-            : this(cultureInfo, new EnumStoreBuilder().WithDefaultEnums(), powerFxFlags) 
+        /// <param name="cultureInfo">Culture to use.</param>        
+        public PowerFxConfig(CultureInfo cultureInfo = null)
+            : this(cultureInfo, new EnumStoreBuilder().WithDefaultEnums()) 
         {
         }
 
@@ -69,21 +65,20 @@ namespace Microsoft.PowerFx.Core
             _environmentSymbolDisplayNameProvider = other._environmentSymbolDisplayNameProvider;
             _coreFunctions = other._coreFunctions;
             EnumStoreBuilder = other.EnumStoreBuilder;
-            CultureInfo = other.CultureInfo;
-            PowerFxFlags = other.PowerFxFlags;
+            CultureInfo = other.CultureInfo;            
         }
 
         /// <summary>
         /// Stopgap until Enum Store is refactored. Do not rely on, this will be removed. 
         /// </summary>
-        internal static PowerFxConfig BuildWithEnumStore(CultureInfo cultureInfo, EnumStoreBuilder enumStoreBuilder, PowerFxFlags powerFxFlags)
+        internal static PowerFxConfig BuildWithEnumStore(CultureInfo cultureInfo, EnumStoreBuilder enumStoreBuilder)
         {
-            return new PowerFxConfig(cultureInfo, enumStoreBuilder, powerFxFlags);
+            return new PowerFxConfig(cultureInfo, enumStoreBuilder);
         }
 
-        internal static PowerFxConfig BuildWithEnumStore(CultureInfo cultureInfo, EnumStoreBuilder enumStoreBuilder, IEnumerable<TexlFunction> coreFunctions, PowerFxFlags powerFxFlags)
+        internal static PowerFxConfig BuildWithEnumStore(CultureInfo cultureInfo, EnumStoreBuilder enumStoreBuilder, IEnumerable<TexlFunction> coreFunctions)
         {
-            var config = new PowerFxConfig(cultureInfo, enumStoreBuilder, powerFxFlags);
+            var config = new PowerFxConfig(cultureInfo, enumStoreBuilder);
             config.SetCoreFunctions(coreFunctions);
             return config;
         }

@@ -1,0 +1,114 @@
+// ******** STRING PARAMETERS ********
+
+>> Right("HelloWorld", 6)
+"oWorld"
+
+>> Right("HelloWorld", 5.8)
+"oWorld"
+
+>> Right("HelloWorld", "7")
+"loWorld"
+
+>> Right("HelloWorld", 100)
+"HelloWorld"
+
+// ******** NUMBER PARAMETERS ********
+
+>> Right(12345,2)
+"45"
+
+>> Right(-123.45,5)
+"23.45"
+
+// ******** BOOLEAN PARAMETERS ********
+
+>> Right(true,2)
+"ue"
+
+>> Right(false,4)
+"alse"
+
+>> Right("true",2)
+"ue"
+
+>> Right("false",4)
+"alse"
+
+>> Right("HelloWorld",true)
+"d"
+
+>> Right("HelloWorld",false)
+""
+
+>> Right("HelloWorld","true")
+#Error(Kind=InvalidArgument)
+
+>> Right("HelloWorld","false")
+#Error(Kind=InvalidArgument)
+
+// ******** EMPTY STRING, BLANK and ERROR PARAMETERS ********
+
+>> Right("",0)
+""
+
+>> Right(Blank(),0)
+""
+
+>> Right(Blank(),Blank())
+""
+
+>> Right("",50)
+""
+
+>> Right(Blank(),50)
+""
+
+>> If(Len(Right(" ",50))=1,true)   
+true
+
+>> Right("HelloWorld", 0)
+""
+
+>> Right("HelloWorld",Blank())
+""
+
+>> Right("HelloWorld","")
+""
+
+>> Right(Blank(),-1)
+#Error(Kind=InvalidArgument)
+
+//Error: The second argument to the Right function is invalid
+>> Right("HelloWorld", -1)
+#Error(Kind=InvalidArgument)
+
+//Error: The second argument to the Right function is invalid
+>> Right("HelloWorld"," ")
+#Error(Kind=InvalidArgument)
+
+//Invalid operation: Division by zero
+>> Right(1/0,1)
+#Error(Kind=Div0)
+
+//Invalid operation: Division by zero
+>> Right("HelloWorld",1/0)
+#Error(Kind=Div0)
+
+// ******** FUNCTION VALUE AS PARAMETERS ********
+
+>> Right(Text(100), If(true, 1, 0))
+"0"
+
+>> Right(Text(12, "#.000"),5)
+"2.000"
+
+>> Right(Concatenate("Jane", "Doe"),6)
+"aneDoe"
+
+>> Right(Date(1976, 12,23),4)
+"1976"
+
+// ******* ALL THE PARAMETERS TYPE *******
+
+>> Right("Jane" & "Smith" & 67890 & true & Blank() & Text(12, "#.000") & Date(1976, 12,23),10)
+"12/23/1976"

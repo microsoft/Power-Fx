@@ -62,4 +62,8 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="ExpressionTestCases\NotYetReady\" />
+  </ItemGroup>
 </Project>

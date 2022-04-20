@@ -1,0 +1,111 @@
+// ******** STRING PARAMETERS ********
+
+>> Left("HelloWorld", 6)
+"HelloW"
+
+>> Left("HelloWorld", 5.8)
+"Hello"
+
+>> Left("HelloWorld", "7")
+"HelloWo"
+
+>> Left("HelloWorld", 100)
+"HelloWorld"
+
+// ******** NUMBER PARAMETERS ********
+
+>> Left(12345,2)
+"12"
+
+>> Left(-123.45,5)
+"-123."
+
+// ******** BOOLEAN PARAMETERS ********
+
+>> Left(true,2)
+"tr"
+
+>> Left(false,4)
+"fals"
+
+>> Left("true",2)
+"tr"
+
+>> Left("HelloWorld",true)
+"H"
+
+>> Left("HelloWorld",false)
+""
+
+>> Left("HelloWorld","true")
+#Error(Kind=InvalidArgument)
+
+>> Left("HelloWorld","false")
+#Error(Kind=InvalidArgument)
+
+// ******** EMPTY STRING, BLANK and ERROR PARAMETERS ********
+
+>> Left("",0)
+""
+
+>> Left(Blank(),0)
+""
+
+>> Left(Blank(),Blank())
+""
+
+>> Left("",50)
+""
+
+>> Left(Blank(),50)
+""
+
+>> If(Len(Left(" ",50))=1,true)   
+true
+
+>> Left("HelloWorld", 0)
+""
+
+>> Left("HelloWorld",Blank())
+""
+
+>> Left("HelloWorld","")
+""
+
+>> Left(Blank(),-1)
+#Error(Kind=InvalidArgument)
+
+//Error: The second argument to the Left function is invalid
+>> Left("HelloWorld", -1)
+#Error(Kind=InvalidArgument)
+
+//Error: The second argument to the Left function is invalid
+>> Left("HelloWorld"," ")
+#Error(Kind=InvalidArgument)
+
+//Invalid operation: Division by zero
+>> Left(1/0,1)
+#Error(Kind=Div0)
+
+//Invalid operation: Division by zero
+>> Left("HelloWorld",1/0)
+#Error(Kind=Div0)
+
+// ******** FUNCTION VALUE AS PARAMETERS ********
+
+>> Left(Text(100), If(true, 1, 0))
+"1"
+
+>> Left(Text(12, "#.000"),5)
+"12.00"
+
+>> Left(Concatenate("Jane", "Doe"),6)
+"JaneDo"
+
+>> Left(Date(1976, 12,23),4)
+"12/2"
+
+// ******* ALL THE PARAMETERS TYPE *******
+
+>> Left("Jane" & "Smith" & 67890 & true & Blank() & Text(12, "#.000") & Date(1976, 12,23),10)
+"JaneSmith6"

@@ -67,22 +67,42 @@ namespace Microsoft.PowerFx
             => TexlLexer.LocalizedInstance.GetTokens(expressionText);
 
         /// <summary>
-        /// Type check a formula without executing it. 
+        /// Parse the expression without doing any binding.
         /// </summary>
         /// <param name="expressionText"></param>
-        /// <param name="parameterType"></param>
+        /// <param name="options"></param>
         /// <returns></returns>
-        public CheckResult Check(string expressionText, RecordType parameterType = null)
+        public ParseResult Parse(string expressionText, ParserOptions options = null)
         {
-            if (parameterType == null)
-            {
-                parameterType = new RecordType();
-            }
+            options ??= new ParserOptions();
 
-            var formula = new Formula(expressionText);
+            var result = options.Parse(expressionText);
+            return result;
+        }
 
-            formula.EnsureParsed(GetTexlParserFlags());
+        /// <summary>
+        /// Parse and Bind an expression. 
+        /// </summary>
+        /// <param name="expressionText">the expression in plain text. </param>
+        /// <param name="parameterType">types of additional args to pass.</param>
+        /// <param name="options"parser options to use.</param>
+        /// <returns></returns>
+        public CheckResult Check(string expressionText, RecordType parameterType = null, ParserOptions options = null)
+        {
+            var parse = Parse(expressionText, options);
+            return Check(parse, parameterType);
+        }
 
+        /// <summary>
+        /// Type check a formula without executing it. 
+        /// </summary>
+        /// <param name="parse">the parsed expression. Obtain from <see cref="Parse(string)"/>.</param>
+        /// <param name="parameterType">types of additional args to pass.</param>
+        /// <returns></returns>
+        public CheckResult Check(ParseResult parse, RecordType parameterType = null)
+        {
+            parameterType ??= new RecordType();
+                        
             // Ok to continue with binding even if there are parse errors. 
             // We can still use that for intellisense. 
 
@@ -90,17 +110,12 @@ namespace Microsoft.PowerFx
 
             var binding = TexlBinding.Run(
                 new Glue2DocumentBinderGlue(),
-                formula.ParseTree,
+                parse.Root,
                 resolver,
                 ruleScope: parameterType._type,
                 useThisRecordForRuleScope: false);
 
-            var errors = formula.HasParseErrors ? formula.GetParseErrors() : binding.ErrorContainer.GetErrors();
-
-            var result = new CheckResult(errors, binding)
-            {
-                _formula = formula,
-            };
+            var result = new CheckResult(parse, binding);
 
             if (result.IsSuccess)
             {
@@ -116,16 +131,6 @@ namespace Microsoft.PowerFx
             }
 
             return result;
-        }
-
-        private TexlParser.Flags GetTexlParserFlags()
-        {
-            return GetTexlParserFlags(Config.PowerFxFlags);
-        }
-
-        private static TexlParser.Flags GetTexlParserFlags(PowerFxFlags powerFxFlags)
-        {
-            return powerFxFlags.HasEnableExpressionChaining() ? TexlParser.Flags.EnableExpressionChaining : TexlParser.Flags.None;
         }
 
         /// <summary>
@@ -155,7 +160,8 @@ namespace Microsoft.PowerFx
         {
             var result = Check(expression, parameterType);
             var binding = result._binding;
-            var formula = result._formula;
+            var formula = new Formula(expression, null);
+            formula.ApplyParse(result.Parse);
 
             var context = new IntellisenseContext(expression, cursorPosition);
             var intellisense = CreateIntellisense();
@@ -200,7 +206,7 @@ namespace Microsoft.PowerFx
         /// <returns>The formula, with all identifiers converted to invariant form</returns>
         public string GetInvariantExpression(string expressionText, RecordType parameters)
         {
-            return ConvertExpression(expressionText, parameters, CreateResolver(), toDisplayNames: false, Config.PowerFxFlags);
+            return ConvertExpression(expressionText, parameters, CreateResolver(), toDisplayNames: false);
         }
 
         /// <summary>
@@ -213,13 +219,13 @@ namespace Microsoft.PowerFx
         /// <returns>The formula, with all identifiers converted to display form</returns>
         public string GetDisplayExpression(string expressionText, RecordType parameters)
         {
-            return ConvertExpression(expressionText, parameters, CreateResolver(), toDisplayNames: true, Config.PowerFxFlags);
+            return ConvertExpression(expressionText, parameters, CreateResolver(), toDisplayNames: true);
         }
 
-        internal static string ConvertExpression(string expressionText, RecordType parameters, SimpleResolver resolver, bool toDisplayNames, PowerFxFlags powerFxFlags = PowerFxFlags.None)
+        internal static string ConvertExpression(string expressionText, RecordType parameters, SimpleResolver resolver, bool toDisplayNames)
         {
             var formula = new Formula(expressionText);
-            formula.EnsureParsed(GetTexlParserFlags(powerFxFlags));
+            formula.EnsureParsed(TexlParser.Flags.None);
 
             var binding = TexlBinding.Run(
                 new Glue2DocumentBinderGlue(),

@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Globalization;
+using System.Runtime.CompilerServices;
 using System.Text;
 using Microsoft.PowerFx.Core.Lexer.Tokens;
 using Microsoft.PowerFx.Core.Localization;
