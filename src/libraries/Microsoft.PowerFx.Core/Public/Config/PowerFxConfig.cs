@@ -22,7 +22,7 @@ namespace Microsoft.PowerFx.Core
         private readonly Dictionary<string, TexlFunction> _extraFunctions;
         private readonly Dictionary<DName, IExternalEntity> _environmentSymbols;
         private DisplayNameProvider _environmentSymbolDisplayNameProvider;
-        
+
         // By default, we pull the core functions. 
         // These can be overridden. 
         private IEnumerable<TexlFunction> _coreFunctions = BuiltinFunctionsCore.BuiltinFunctionsLibrary;
@@ -31,7 +31,7 @@ namespace Microsoft.PowerFx.Core
 
         internal EnumStoreBuilder EnumStoreBuilder { get; }
 
-        internal CultureInfo CultureInfo { get; }        
+        internal CultureInfo CultureInfo { get; }
 
         private PowerFxConfig(CultureInfo cultureInfo, EnumStoreBuilder enumStoreBuilder) 
         {
@@ -40,7 +40,7 @@ namespace Microsoft.PowerFx.Core
             _extraFunctions = new Dictionary<string, TexlFunction>();
             _environmentSymbols = new Dictionary<DName, IExternalEntity>();
             _environmentSymbolDisplayNameProvider = new SingleSourceDisplayNameProvider();
-            EnumStoreBuilder = enumStoreBuilder;            
+            EnumStoreBuilder = enumStoreBuilder;
         }
 
         /// <summary>
@@ -65,7 +65,7 @@ namespace Microsoft.PowerFx.Core
             _environmentSymbolDisplayNameProvider = other._environmentSymbolDisplayNameProvider;
             _coreFunctions = other._coreFunctions;
             EnumStoreBuilder = other.EnumStoreBuilder;
-            CultureInfo = other.CultureInfo;            
+            CultureInfo = other.CultureInfo;
         }
 
         /// <summary>

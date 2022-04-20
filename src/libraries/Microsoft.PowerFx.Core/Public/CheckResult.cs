@@ -5,10 +5,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.PowerFx.Core.Binding;
-using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Parser;
 using Microsoft.PowerFx.Core.Public.Types;
-using Microsoft.PowerFx.Core.Syntax;
 using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Core.Public
@@ -68,7 +66,7 @@ namespace Microsoft.PowerFx.Core.Public
         internal CheckResult(ParseResult parse, TexlBinding binding = null)
         {
             Parse = parse ?? throw new ArgumentNullException(nameof(parse));
-           
+
             _binding = binding;
         }
 

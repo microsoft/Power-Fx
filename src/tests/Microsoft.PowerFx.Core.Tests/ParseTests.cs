@@ -699,7 +699,7 @@ namespace Microsoft.PowerFx.Core.Tests
             var node = result.Root;            
                         
             Assert.NotNull(node);
-            Assert.False(result.HasError, result.ParseErrorText);            
+            Assert.False(result.HasError, result.ParseErrorText);
 
             var startid = node.Id;
 
