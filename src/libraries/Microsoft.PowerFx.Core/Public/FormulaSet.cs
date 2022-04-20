@@ -4,10 +4,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.PowerFx.Core.Public;
 using Microsoft.PowerFx.Core.Utils;
 
-namespace Microsoft.PowerFx
+namespace Microsoft.PowerFx.Core.Public
 {
     /// <summary>
     /// A set of name/formula paris, which creates and updates a topologically-sorted list
