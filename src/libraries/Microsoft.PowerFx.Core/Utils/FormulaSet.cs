@@ -1,18 +1,17 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Core.Public;
 
-namespace Microsoft.PowerFx.Core.Public
+namespace Microsoft.PowerFx.Core.Utils
 {
     /// <summary>
     /// A set of name/formula paris, which creates and updates a topologically-sorted list
     /// of name/formula pairs.
     /// </summary>
-    public sealed class FormulaSet
+    internal sealed class FormulaSet
     {
         private readonly IDependencyFinder _dependencyFinder;
 
