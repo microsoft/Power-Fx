@@ -12,7 +12,7 @@ namespace Microsoft.PowerFx.Core.Public
     /// A set of name/formula paris, which creates and updates a topologically-sorted list
     /// of name/formula pairs.
     /// </summary>
-    public class FormulaSet
+    public sealed class FormulaSet
     {
         private readonly IDependencyFinder _dependencyFinder;
 
