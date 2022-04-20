@@ -40,6 +40,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Core.Public.ExpressionError",
                 "Microsoft.PowerFx.Core.Public.FormulaSet",
                 "Microsoft.PowerFx.Core.Public.FormulaWithParameters",
+                "Microsoft.PowerFx.Core.Public.IDependencyFinder",
                 "Microsoft.PowerFx.Core.Public.IExpression",
                 "Microsoft.PowerFx.Core.Public.IExpressionExtensions",
                 "Microsoft.PowerFx.Core.Public.IPowerFxEngine",
