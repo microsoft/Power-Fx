@@ -25,6 +25,11 @@ namespace Microsoft.PowerFx.Core.Public
         public IEnumerable<KeyValuePair<string, FormulaWithParameters>> SortedFormulas { get; private set; }
 
         /// <summary>
+        /// Formulas that failed to topologically sort because of cycles.
+        /// </summary>
+        public IEnumerable<KeyValuePair<string, FormulaWithParameters>> Cycles { get; private set; }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="FormulaSet"/> class.
         /// </summary>
         public FormulaSet(IDependencyFinder dependencyFinder)
@@ -53,10 +58,12 @@ namespace Microsoft.PowerFx.Core.Public
             if (TopologicalSort.TrySort(nodes, edges, out var result, out var cycles))
             {
                 SortedFormulas = result.Select(x => new KeyValuePair<string, FormulaWithParameters>(x, _formulas[x]));
+                Cycles = null;
             }
             else
             {
-                throw new InvalidOperationException($"Circular dependencies detected: {string.Join(", ", cycles)}");
+                SortedFormulas = result.Select(x => new KeyValuePair<string, FormulaWithParameters>(x, _formulas[x]));
+                Cycles = cycles.Select(x => new KeyValuePair<string, FormulaWithParameters>(x, _formulas[x]));
             }
         }
 
