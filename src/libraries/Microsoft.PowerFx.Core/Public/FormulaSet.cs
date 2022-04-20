@@ -42,7 +42,7 @@ namespace Microsoft.PowerFx.Core.Public
             {
                 var checkResult = _engine.Check(kvp.Value._expression, kvp.Value._schema);
                 var binding = checkResult._binding;
-                var dependencies = DependencyFinder.FindDependencies(binding.Top, binding);
+                var dependencies = DependencyFinder.FindDependencies(binding.Top, binding, addUnknown: true);
 
                 foreach (var processFirst in dependencies)
                 {
