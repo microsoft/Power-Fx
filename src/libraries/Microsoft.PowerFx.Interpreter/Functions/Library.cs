@@ -912,10 +912,10 @@ namespace Microsoft.PowerFx.Functions
             },
             {
                 BuiltinFunctionsCore.Shuffle,
-                StandardErrorHandling<FormulaValue>(
+                StandardErrorHandling<TableValue>(
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: DoNotReplaceBlank,
-                    checkRuntimeTypes: ExactValueTypeOrBlank<NumberValue>,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<TableValue>,
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: Shuffle)
