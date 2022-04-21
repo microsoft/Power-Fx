@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Text;
 
 namespace Microsoft.PowerFx.Core.Utils
 {
@@ -159,11 +160,36 @@ namespace Microsoft.PowerFx.Core.Utils
             }
 
             var fAllSpaces = true;
+            var fHasSpecialWhiteSpaceCharacters = false;
+            
             fModified = false;
 
             for (var i = 0; i < strName.Length; i++)
             {
-                fAllSpaces = fAllSpaces && (strName[i] == ChSpace);
+                var fIsSpace = strName[i] == ChSpace;
+                var fIsWhiteSpace = char.IsWhiteSpace(strName[i]);
+                fAllSpaces = fAllSpaces && fIsWhiteSpace;
+                fHasSpecialWhiteSpaceCharacters |= fIsWhiteSpace && !fIsSpace;
+            }
+
+            if (fHasSpecialWhiteSpaceCharacters)
+            {
+                fModified = true;
+                var builder = new StringBuilder(strName.Length);
+
+                for (var i = 0; i < strName.Length; i++)
+                {
+                    if (char.IsWhiteSpace(strName[i]))
+                    {
+                        builder.Append(ChSpace);
+                    }
+                    else
+                    {
+                        builder.Append(strName[i]);
+                    }
+                }
+
+                strName = builder.ToString();
             }
 
             if (!fAllSpaces)

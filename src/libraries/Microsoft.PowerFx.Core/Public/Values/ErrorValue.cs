@@ -6,6 +6,9 @@ using Microsoft.PowerFx.Core.IR;
 
 namespace Microsoft.PowerFx.Core.Public.Values
 {
+    /// <summary>
+    /// A Runtime error. 
+    /// </summary>
     public class ErrorValue : FormulaValue
     {
         private readonly List<ExpressionError> _errors = new List<ExpressionError>();

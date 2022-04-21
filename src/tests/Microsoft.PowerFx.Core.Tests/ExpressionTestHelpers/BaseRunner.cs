@@ -52,7 +52,7 @@ namespace Microsoft.PowerFx.Core.Tests
         {
             if (!result.IsSuccess)
             {
-                Errors = result.Errors;
+                Errors = result.Errors.ToArray();
             }
         }
 
@@ -64,7 +64,8 @@ namespace Microsoft.PowerFx.Core.Tests
                 {
                     new ExpressionError
                     {
-                         Message = message
+                         Message = message,
+                         Severity = Core.Errors.DocumentErrorSeverity.Severe
                     }
                 }
             };
