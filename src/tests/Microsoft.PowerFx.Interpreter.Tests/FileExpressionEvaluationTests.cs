@@ -41,7 +41,35 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                     Skip.If(true, prefix + msg);
                     break;
             }
-        } 
+        }
+
+        [InterpreterTheory]
+        [TxtFileData("ExpressionTestCases\\NotYetReady", "InterpreterExpressionTestCases", nameof(InterpreterRunner))]
+        public void InterpreterTestCase_NotReadyTests(ExpressionTestCase testCase)
+        {
+            // This is running against embedded resources, so if you're updating the .txt files,
+            // make sure they build is actually copying them over. 
+            Assert.True(testCase.FailMessage == null, testCase.FailMessage);
+
+            _runner = new InterpreterRunner();
+
+            var (result, msg) = _runner.RunAsync(testCase).Result;
+
+            var prefix = $"Test {Path.GetFileName(testCase.SourceFile)}:{testCase.SourceLine}: ";
+            switch (result)
+            {
+                case TestResult.Pass:
+                    break;
+
+                case TestResult.Fail:
+                    Assert.True(false, prefix + msg);
+                    break;
+
+                case TestResult.Skip:
+                    Skip.If(true, prefix + msg);
+                    break;
+            }
+        }
 
         // Since test discovery runs in a separate process, run a dedicated 
         // parse pass as a single unit test to verify all the .txt will parse. 
