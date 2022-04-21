@@ -481,74 +481,7 @@ namespace Microsoft.PowerFx
             {
                 CheckCancel();
 
-                if (iNode is AggregateCoercionNode aggregateCoercionNode)
-                {
-                    fv = await Visit(aggregateCoercionNode, context);
-                }
-                else if (iNode is BooleanLiteralNode booleanLiteralNode)
-                {
-                    fv = await Visit(booleanLiteralNode, context);
-                }
-                else if (iNode is CallNode callNode)
-                {
-                    fv = await Visit(callNode, context);
-                }
-                else if (iNode is ChainingNode chainingNode)
-                {
-                    fv = await Visit(chainingNode, context);
-                }
-                else if (iNode is ColorLiteralNode colorLiteralNode)
-                {
-                    fv = await Visit(colorLiteralNode, context);
-                }                                
-                else if (iNode is ErrorNode errorNode)
-                {
-                    fv = await Visit(errorNode, context);
-                }
-                else if (iNode is LazyEvalNode lazyEvalNode)
-                {
-                    fv = await Visit(lazyEvalNode, context);
-                }
-                else if (iNode is NumberLiteralNode numberLiteralNode)
-                {
-                    fv = await Visit(numberLiteralNode, context);
-                }
-                else if (iNode is RecordFieldAccessNode recordFieldAccessNode)
-                {
-                    fv = await Visit(recordFieldAccessNode, context);
-                }
-                else if (iNode is RecordNode recordNode)
-                {
-                    fv = await Visit(recordNode, context);  
-                }
-                else if (iNode is ResolvedObjectNode resolvedObjectNode)
-                {
-                    fv = await Visit(resolvedObjectNode, context);
-                }
-                else if (iNode is ScopeAccessNode scopeAccessNode)
-                {
-                    fv = await Visit(scopeAccessNode, context);
-                }
-                else if (iNode is SingleColumnTableAccessNode singleColumnTableAccessNode)
-                {
-                    fv = await Visit(singleColumnTableAccessNode, context);
-                }
-                else if (iNode is TableNode tableNode)
-                {
-                    fv = await Visit(tableNode, context);
-                }
-                else if (iNode is TextLiteralNode textLiteralNode)
-                {
-                    fv = await Visit(textLiteralNode, context);
-                }
-                else if (iNode is UnaryOpNode unaryOpNode)
-                {
-                    fv = await Visit(unaryOpNode, context);
-                }
-                else
-                {
-                    return CommonErrors.NotYetImplementedError(iNode.IRContext, $"In ChainingNode visiting, IntermediateNode of type {iNode.GetType().FullName} is not implemented yet");
-                }
+                fv = await iNode.Accept(this, context);
             }
 
             return fv;

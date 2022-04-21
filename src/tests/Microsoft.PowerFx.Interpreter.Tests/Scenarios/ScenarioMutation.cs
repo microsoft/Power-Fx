@@ -78,6 +78,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                     throw new XunitException($"FormulaValue is ErrorValue: {string.Join("\r\n", ev.Errors)}");
                 }
 
+                Assert.IsType<NumberValue>(x);
+                Assert.Equal(456, ((NumberValue)x).Value);
                 Assert.Equal(456, ((NumberValue)d["prop"]).Value);
             }            
         }
@@ -85,11 +87,11 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         private class Assert2Function : ReflectionFunction
         {
             public Assert2Function()
-                : base("Assert2", FormulaType.Blank, new UntypedObjectType(), FormulaType.Number)
+                : base("Assert2", FormulaType.Number, new UntypedObjectType(), FormulaType.Number)
             {
             }
 
-            public void Execute(UntypedObjectValue obj, NumberValue val)
+            public NumberValue Execute(UntypedObjectValue obj, NumberValue val)
             {
                 var impl = obj.Impl;
                 var actual = impl.GetDouble();
@@ -99,18 +101,15 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 {
                     throw new InvalidOperationException($"Mismatch");
                 }
+
+                return new NumberValue(IRContext.NotInSource(FormulaType.Number), actual);
             }
         }
 
         private class Set2Function : ReflectionFunction
         {
             public Set2Function()
-                : base(
-                      "Set2",
-                      FormulaType.Blank,  // returns
-                      new UntypedObjectType(),
-                      FormulaType.String,
-                      FormulaType.Number) // $$$ Any?
+                : base("Set2", FormulaType.Blank, new UntypedObjectType(), FormulaType.String, FormulaType.Number)
             {
             }
 
@@ -133,7 +132,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 var impl = (MutableObject)obj.Impl;
                 impl.TryGetProperty(propName2.Value, out var propValue);
                 var val = propValue.GetDouble();                
-                impl.Set(propName.Value, new NumberValue(new IRContext(new Core.Localization.Span(0, 0), FormulaType.Number), val));
+                impl.Set(propName.Value, new NumberValue(IRContext.NotInSource(FormulaType.Number), val));
             }
         }
 
