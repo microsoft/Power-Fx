@@ -89,7 +89,13 @@ namespace Microsoft.PowerFx.Functions
                 }
                 else
                 {
-                    return new NumberValue(irContext, _m2Acc / _count);
+                    var result = _m2Acc / _count;
+                    if (double.IsNaN(result) || double.IsInfinity(result))
+                    {
+                        return CommonErrors.ArgumentOutOfRange(irContext);
+                    }
+
+                    return new NumberValue(irContext, result);
                 }
             }
         }
@@ -104,7 +110,13 @@ namespace Microsoft.PowerFx.Functions
                 }
                 else
                 {
-                    return new NumberValue(irContext, Math.Sqrt(_m2Acc / _count));
+                    var result = _m2Acc / _count;
+                    if (double.IsNaN(result) || double.IsInfinity(result))
+                    {
+                        return CommonErrors.ArgumentOutOfRange(irContext);
+                    }
+
+                    return new NumberValue(irContext, Math.Sqrt(result));
                 }
             }
         }
