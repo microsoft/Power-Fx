@@ -34,11 +34,14 @@ namespace Microsoft.PowerFx.Core.Public
         /// List of errors and warnings. Check <see cref="ExpressionError.IsWarning"/>.
         /// Not null, but empty on success.
         /// </summary>
-        public IEnumerable<ExpressionError> Errors => Parse != null ?
-            Parse.Errors.Concat(BindingErrors) :
-            BindingErrors;
+        public IEnumerable<ExpressionError> Errors { get; set; }
 
         private IEnumerable<ExpressionError> BindingErrors => ExpressionError.New(_binding.ErrorContainer.GetErrors());
+
+        internal void SetErrors(IEnumerable<IDocumentError> errors)
+        {
+            Errors = ExpressionError.New(errors);
+        }
 
         /// <summary>
         /// Parsed expression for evaluation. 
@@ -70,6 +73,8 @@ namespace Microsoft.PowerFx.Core.Public
             Parse = parse ?? throw new ArgumentNullException(nameof(parse));
            
             _binding = binding;
+
+            Errors = Parse.Errors.Concat(BindingErrors);
         }
 
         public void ThrowOnErrors()
