@@ -3,13 +3,14 @@
 
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core;
+using Microsoft.PowerFx.Core.Parser;
 using Microsoft.PowerFx.Core.Public.Values;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Interpreter.Tests.Helpers;
 using Microsoft.PowerFx.Tests;
 using Xunit;
 
@@ -61,7 +62,6 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             private async Task<FormulaValue> RunVerifyAsync(string expr)
             {
                 var config = new PowerFxConfig(null);
-
                 var verify = new AsyncVerify();
 
                 // Add Async(),WaitFor() functions 
@@ -83,13 +83,14 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 FeatureFlags.StringInterpolation = true;
                 RecalcEngine engine;
                 RecordValue parameters;
+                var iSetup = InternalSetup.Parse(setupHandlerName);
 
-                if (setupHandlerName == "AsyncTestSetup")
+                if (string.Equals(iSetup.HandlerName, "AsyncTestSetup", StringComparison.OrdinalIgnoreCase))
                 {
                     return new RunResult(await RunVerifyAsync(expr));
                 }
 
-                if (setupHandlerName != null) 
+                if (!string.IsNullOrEmpty(iSetup.HandlerName))
                 {
                     if (!SetupHandlers.TryGetValue(setupHandlerName, out var handler))
                     {
@@ -109,7 +110,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                     parameters = RecordValue.Empty();
                 }
 
-                var check = engine.Check(expr, parameters.Type);
+                var check = engine.Check(expr, parameters.Type, options: iSetup.Flags.ToParserOptions());
                 if (!check.IsSuccess)
                 {
                     return new RunResult(check);
@@ -118,7 +119,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 var newValue = await check.Expression.EvalAsync(parameters, CancellationToken.None);
 
                 return new RunResult(newValue);
-            }
+            }          
         }
     }
 }
