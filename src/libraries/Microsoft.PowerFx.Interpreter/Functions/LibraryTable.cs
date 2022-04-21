@@ -229,13 +229,24 @@ namespace Microsoft.PowerFx.Functions
                 return new KeyValuePair<DValue<RecordValue>, FormulaValue>(row, row.ToFormulaValue());
             }).ToList();
 
-            var errors = new List<ErrorValue>(pairs.Select(pair => pair.Value).OfType<ErrorValue>());
+            var errors = new List<ErrorValue>();
+            bool allNumbers = true, allStrings = true, allBooleans = true, allDatetimes = true, allDates = true;
 
-            var allNumbers = pairs.All(pair => IsValueTypeErrorOrBlank<NumberValue>(pair.Value));
-            var allStrings = pairs.All(pair => IsValueTypeErrorOrBlank<StringValue>(pair.Value));
-            var allBooleans = pairs.All(pair => IsValueTypeErrorOrBlank<BooleanValue>(pair.Value));
+            foreach (var pair in pairs)
+            {
+                allNumbers &= IsValueTypeErrorOrBlank<NumberValue>(pair.Value);
+                allStrings &= IsValueTypeErrorOrBlank<StringValue>(pair.Value);
+                allBooleans &= IsValueTypeErrorOrBlank<BooleanValue>(pair.Value);
+                allDatetimes &= IsValueTypeErrorOrBlank<DateTimeValue>(pair.Value);
+                allDates &= IsValueTypeErrorOrBlank<DateValue>(pair.Value);
 
-            if (!(allNumbers || allStrings || allBooleans))
+                if (pair.Value is ErrorValue errorValue)
+                {
+                    errors.Add(errorValue);
+                }
+            }
+
+            if (!(allNumbers || allStrings || allBooleans || allDatetimes || allDates))
             {
                 errors.Add(CommonErrors.RuntimeTypeMismatch(irContext));
                 return ErrorValue.Combine(irContext, errors);
@@ -260,9 +271,17 @@ namespace Microsoft.PowerFx.Functions
             {
                 return SortValueType<StringValue, string>(pairs, irContext, compareToResultModifier);
             }
-            else
+            else if (allBooleans)
             {
                 return SortValueType<BooleanValue, bool>(pairs, irContext, compareToResultModifier);
+            }
+            else if (allDatetimes)
+            {
+                return SortValueType<DateTimeValue, DateTime>(pairs, irContext, compareToResultModifier);
+            }
+            else
+            {
+                return SortValueType<DateValue, DateTime>(pairs, irContext, compareToResultModifier);
             }
         }
 

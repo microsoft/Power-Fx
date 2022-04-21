@@ -37,5 +37,17 @@
 >> Sort([true,false,Blank(),false,true], Value, SortOrder.Descending)
 [true,true,false,false,Blank()]
 
+>> Sort([Date(2020, 01, 05), Date(2020, 01, 01), Date(1995, 01, 01)], Value)
+[Date(1995,1,1),Date(2020,1,1),Date(2020,1,5)]
+
+>> Sort([Date(2020, 01, 05), Date(2020, 01, 01), Date(1995, 01, 01)], Value, SortOrder.Descending)
+[Date(2020,1,5),Date(2020,1,1),Date(1995,1,1)]
+
+>> Sort([DateTimeValue("May 16, 2019 8:00:00 AM"), DateTimeValue("May 16, 2019 8:00:00 PM"), DateTimeValue("May 16, 2019 8:00:01 PM")], Value)
+[DateTime(2019,5,16,8,0,0,0),DateTime(2019,5,16,20,0,0,0),DateTime(2019,5,16,20,0,1,0)]
+
+>> Sort([DateTimeValue("May 16, 2019 8:00:00 AM"), DateTimeValue("May 16, 2019 8:00:00 PM"), DateTimeValue("May 16, 2019 8:00:01 PM")], Value, SortOrder.Descending)
+[DateTime(2019,5,16,20,0,1,0),DateTime(2019,5,16,20,0,0,0),DateTime(2019,5,16,8,0,0,0)]
+
 >> First(LastN(Sort([-2, -1, 0, 1, 2], 1 / Value), 3)).Value
 #Error
