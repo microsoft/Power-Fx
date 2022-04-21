@@ -13,15 +13,17 @@ namespace Microsoft.PowerFx
     // Used for recalc. 
     internal class DependencyFinder : IdentityTexlVisitor
     {
-        private TexlBinding _binding;
+        private readonly TexlBinding _binding;
         public HashSet<string> _vars = new HashSet<string>();
+
+        private DependencyFinder(TexlBinding binding)
+        {
+            _binding = binding;
+        }
 
         public static HashSet<string> FindDependencies(TexlNode node, TexlBinding binding)
         {
-            var v = new DependencyFinder
-            {
-                _binding = binding
-            };
+            var v = new DependencyFinder(binding);
             node.Accept(v);
             return v._vars;
         }
