@@ -3,12 +3,14 @@
 
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Public;
 using Microsoft.PowerFx.Core.Public.Types;
 using Microsoft.PowerFx.Core.Public.Values;
 using Microsoft.PowerFx.Core.Tests;
+using Microsoft.PowerFx.Tests;
 using Xunit;
 using Xunit.Sdk;
 
@@ -82,6 +84,25 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 Assert.Equal(456, ((NumberValue)x).Value);
                 Assert.Equal(456, ((NumberValue)d["prop"]).Value);
             }            
+        }
+
+        [Fact]
+        public async Task MutabilityTest_Chain2()
+        {
+            var config = new PowerFxConfig();
+            var verify = new AsyncVerify();            
+            var asyncHelper = new AsyncFunctionsHelper(verify);  
+            config.AddFunction(asyncHelper.GetFunction());
+            var waitForHelper = new WaitForFunctionsHelper(verify); 
+            config.AddFunction(waitForHelper.GetFunction());
+            var engine = new RecalcEngine(config);
+
+            // Run in special mode that ensures we're not calling .Result
+            var result = await verify.EvalAsync(engine, "WaitFor(0); WaitFor(1); WaitFor(2)", new ParserOptions() { AllowsSideEffects = true });
+            
+
+            int y = 0;
+
         }
 
         private class Assert2Function : ReflectionFunction
