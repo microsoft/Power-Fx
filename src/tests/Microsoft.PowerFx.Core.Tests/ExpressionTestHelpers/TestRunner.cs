@@ -61,7 +61,7 @@ namespace Microsoft.PowerFx.Core.Tests
         {
             foreach (var file in files)
             {
-                AddFile(file);
+                AddFile(file);                
             }
         }
 
@@ -92,6 +92,9 @@ namespace Microsoft.PowerFx.Core.Tests
             // Skip blanks or "comments"
             // >> indicates input expression
             // next line is expected result.
+
+            Exception ParseError(int lineNumber, string message) => new InvalidOperationException(
+                $"{Path.GetFileName(thisFile)} {lineNumber}: {message}");
 
             TestCase test = null;
 
@@ -129,7 +132,7 @@ namespace Microsoft.PowerFx.Core.Tests
                     }
                     else
                     {
-                        throw new InvalidOperationException($"Unrecognized directive: {line}");
+                        throw ParseError(i, $"Unrecognized directive: {line}");
                     }
 
                     i++;
@@ -155,6 +158,11 @@ namespace Microsoft.PowerFx.Core.Tests
 
                 if (line.StartsWith(">>"))
                 {
+                    if (test != null)
+                    {
+                        throw ParseError(i, $"parse error- multiple test inputs in a row. Previous input is: {test.Input}");
+                    }
+
                     line = line.Substring(2).Trim();
                     test = new TestCase
                     {
@@ -180,7 +188,7 @@ namespace Microsoft.PowerFx.Core.Tests
                     // handle engine-specific results
                     if (line.StartsWith("/*"))
                     {
-                        throw new InvalidOperationException($"Multiline comments aren't supported in output");
+                        throw ParseError(i, $"Multiline comments aren't supported in output");
                     }
 
                     test.Expected = line.Trim();
@@ -191,7 +199,7 @@ namespace Microsoft.PowerFx.Core.Tests
                         // Must be in different sources
                         if (existingTest.SourceFile == test.SourceFile)
                         {
-                            throw new InvalidOperationException($"Duplicate test cases in {Path.GetFileName(test.SourceFile)} on line {test.SourceLine} and {existingTest.SourceLine}");
+                            throw ParseError(i, $"Duplicate test cases in {Path.GetFileName(test.SourceFile)} on line {test.SourceLine} and {existingTest.SourceLine}");
                         }
 
                         // Updating an existing test. 
@@ -210,13 +218,13 @@ namespace Microsoft.PowerFx.Core.Tests
                 }
                 else
                 {
-                    throw new InvalidOperationException($"Parse error at {Path.GetFileName(thisFile)} on line {i}");
+                    throw ParseError(i, $"Parse error");
                 }
             }
 
             if (test != null)
             {
-                throw new InvalidOperationException($"Parse error at {Path.GetFileName(thisFile)} on line {i}, missing test result");
+                throw ParseError(i, "Parse error - missing test result");
             }
         }
 

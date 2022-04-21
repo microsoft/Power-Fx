@@ -1,0 +1,198 @@
+// ******** STRING PARAMETERS ********
+
+>> Mid("abcd", 1, 1)
+"a"
+ 
+>> Mid("abcd", 1, 2)
+"ab"
+ 
+>> Mid("abcd", 1, 3)
+"abc"
+ 
+>> Mid("abcd", 1, 4)
+"abcd"
+ 
+>> Mid("abcd", 1, 5)
+"abcd"
+ 
+>> Mid("abcd", 1, 10000)
+"abcd"
+
+>> Mid("abcd", 2, 0)
+""
+ 
+>> Mid("abcd", 3, 0)
+""
+ 
+>> Mid("abcd", 4, 0)
+""
+ 
+>> Mid("abcd", 5, 0)
+""
+ 
+>> Mid("abcd", 100, 0)
+""
+
+>> Mid("abcd", 2, 1)
+"b"
+ 
+>> Mid("abcd", 2, 2)
+"bc"
+ 
+>> Mid("abcd", 2, 3)
+"bcd"
+ 
+>> Mid("abcd", 3, 1)
+"c"
+ 
+>> Mid("abcd", 3, 2)
+"cd"
+ 
+>> Mid("abcd", 4, 1)
+"d"
+ 
+>> Mid("abcd", 5, 1)
+""
+ 
+>> Mid("abcd", 100, 1)
+""
+
+//Excel doesnt allow two parameters, it needs 3 parameters
+>> Mid("abcd", 1)
+"abcd"
+
+//Excel doesnt allow two parameters, it needs 3 parameters
+>> Mid("abcd", 2)
+"bcd"
+
+//Excel doesnt allow two parameters, it needs 3 parameters
+>> Mid("abcd", 5)
+""
+
+//Excel doesnt allow two parameters, it needs 3 parameters
+>> Mid("abcd", "2",4)
+"bcd"
+
+//Excel doesnt allow two parameters, it needs 3 parameters
+>> Mid("abcd", "2","4")
+"bcd"
+
+//Excel doesnt allow two parameters, it needs 3 parameters
+>> Mid("foobar", 2, 3)
+"oob"
+
+//Excel doesnt allow two parameters, it needs 3 parameters
+>> Mid("foobar", 3)
+"obar"
+
+// numerical parameters are truncated
+>> Mid("abcdef", 3.1, 1.9)
+"c"
+
+>> Mid("foo" & "bar", If(false, 1, 2), 8/4)
+"oo"
+
+// ******** NUMBER PARAMETERS ********
+
+>> Mid(12345,2,5)
+"2345"
+
+//Number passed as a string parameter
+>> Mid("-123.45",5,3)
+".45"
+
+
+// ******** BOOLEAN PARAMETERS ********
+
+//Excel returns "RUE"
+>> Mid(true,2,5)
+"rue"
+
+//Excel returns "LS"
+>> Mid(false,3,2)
+"ls"
+
+>> Mid("true",2,5)
+"rue"
+
+>> Mid("false",3,2)
+"ls"
+
+//Excel doesnt allow two parameters, it needs 3 parameters
+>> Mid("HelloWorld",true)
+"HelloWorld"
+
+>> Mid("HelloWorld",true,true)
+"H"
+
+>> Mid("HelloWorld",true,false)
+""
+
+
+// ******** EMPTY STRING, BLANK and ERROR PARAMETERS ********
+
+>> Mid("abcd", 1, 0)
+""
+
+>> Mid("  ", 1, 4)
+"  "
+
+>> Mid("", 10, 20)
+""
+ 
+>> Mid(Blank(), 10, 20)
+""
+
+//Invalid operation: Division by zero
+//Excel doesnt allow two parameters, it needs 3 parameters
+>> Mid(Text(1/0, "#.000"), 1)
+#Error(Kind=Div0)
+
+//Invalid operation: Division by zero
+>> Mid("abcdef", 1/0, 1)
+#Error(Kind=Div0)
+
+//Invalid operation: Division by zero
+>> Mid("abcdef", 1, 1/0)
+#Error(Kind=Div0)
+
+//PowerFx Error message: The second argument to the 'Mid' function should be greater than or equal to 1
+>> Mid("", 0, 0)
+#Error(Kind=InvalidArgument)
+
+//PowerFx Error message: The second argument to the 'Mid' function should be greater than or equal to 1 
+>> Mid("abcd", 0, 1)
+#Error(Kind=InvalidArgument)
+
+//PowerFx Error message: The second argument to the 'Mid' function should be greater than or equal to 1  
+>> Mid("abcd", -10, 2)
+#Error(Kind=InvalidArgument)
+
+//PowerFx Error message: The third argument to the 'Mid' function should be greater than or equal to 0 
+>> Mid("abcd", 2, -2)
+#Error(Kind=InvalidArgument)
+
+//Invalid argument to the function
+>> Mid("abcd", "abc","def")
+#Error(Kind=InvalidArgument)
+
+// ******** FUNCTION VALUE AS PARAMETERS ********
+
+//Excel doesnt allow two parameters, it needs 3 parameters
+>> Mid(Text(100), If(true, 1, 0),2)
+"10"
+
+>> Mid(Text(12, "#.000"),5,2)
+"00"
+
+>> Mid(Concatenate("Jane", "Doe"),4,3)
+"eDo"
+
+//Excel returns 17
+>> Mid(Date(1976, 12,23),4,6)
+"23/197"
+
+// ******* ALL THE PARAMETERS TYPE *******
+
+>> Mid("Jane" & "Smith" & 67890 & true & Blank() & Text(12, "#.000") & Date(1976, 12,23),10,5)
+"67890"
