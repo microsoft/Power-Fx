@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Parser;
+using Microsoft.PowerFx.Core.Public;
 using Microsoft.PowerFx.Core.Public.Values;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Core.Utils;
@@ -58,7 +59,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             // For async tests, run in special mode. 
             // This does _not_ change evaluation semantics, but does verify .Result isn't called by checking
             // task completion status.. 
-            private async Task<FormulaValue> RunVerifyAsync(string expr)
+            private async Task<FormulaValue> RunVerifyAsync(string expr, ParserOptions options)
             {
                 var config = new PowerFxConfig(null);
                 var verify = new AsyncVerify();
@@ -73,7 +74,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 var engine = new RecalcEngine(config);
 
                 // Run in special mode that ensures we're not calling .Result
-                var result = await verify.EvalAsync(engine, expr);
+                var result = await verify.EvalAsync(engine, expr, options);
                 return result;
             }
 
@@ -86,7 +87,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
                 if (string.Equals(iSetup.HandlerName, "AsyncTestSetup", StringComparison.OrdinalIgnoreCase))
                 {
-                    return new RunResult(await RunVerifyAsync(expr));
+                    return new RunResult(await RunVerifyAsync(expr, iSetup.Flags.ToParserOptions()));
                 }
 
                 if (iSetup.HandlerName != null)

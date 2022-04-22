@@ -1,0 +1,4 @@
+﻿#SETUP: AsyncTestSetup, EnableExpressionChaining
+
+>> WaitFor(0); WaitFor(1); WaitFor(2)
+2
