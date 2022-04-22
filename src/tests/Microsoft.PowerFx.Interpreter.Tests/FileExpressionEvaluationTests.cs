@@ -1,9 +1,11 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System.Collections.Concurrent;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Interpreter.Tests.XUnitExtensions;
 using Xunit;
@@ -43,6 +45,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             }
         }
 
+        private static readonly ConcurrentDictionary<string, string> Stats = new ConcurrentDictionary<string, string>();
+
         [InterpreterTheory]
         [TxtFileData("ExpressionTestCases\\NotYetReady", "InterpreterExpressionTestCases", nameof(InterpreterRunner))]
         public void InterpreterTestCase_NotReadyTests(ExpressionTestCase testCase)
@@ -56,6 +60,9 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var (result, msg) = _runner.RunAsync(testCase).Result;
 
             var prefix = $"Test {Path.GetFileName(testCase.SourceFile)}:{testCase.SourceLine}: ";
+
+            Stats.AddOrUpdate(prefix, msg, (x, y, z) => throw new Exception("Oups"));
+
             switch (result)
             {
                 case TestResult.Pass:
@@ -69,6 +76,24 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                     Skip.If(true, prefix + msg);
                     break;
             }
+        }
+
+        [Fact]
+        public void GetStats()
+        {
+            Thread.Sleep(10000);
+
+            int n = Stats.Count;
+            int m = -1;
+
+            while (m != n)
+            {
+                n = Stats.Count;
+                Thread.Sleep(1000);
+                m = Stats.Count;
+            }
+
+            Assert.Equal(0, m);
         }
 
         // Since test discovery runs in a separate process, run a dedicated 
