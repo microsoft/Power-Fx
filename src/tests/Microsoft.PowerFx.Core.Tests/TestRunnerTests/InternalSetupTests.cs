@@ -90,6 +90,16 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Fact]
+        public void InternalSetup_Parse_HandlerAndTwoFlags2()
+        {
+            var iSetup = InternalSetup.Parse($"SomeHandler, NamedFormulas, EnableExpressionChaining");
+
+            Assert.NotNull(iSetup);
+            Assert.Equal("SomeHandler", iSetup.HandlerName);
+            Assert.Equal(TexlParser.Flags.NamedFormulas | TexlParser.Flags.EnableExpressionChaining, iSetup.Flags);
+        }
+
+        [Fact]
         public void InternalSetup_Parse_TwoHandlers()
         {
             Assert.Throws<ArgumentException>(() => InternalSetup.Parse("Handler1, Handler2"));            
