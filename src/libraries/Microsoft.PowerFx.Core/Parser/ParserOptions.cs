@@ -19,12 +19,13 @@ namespace Microsoft.PowerFx.Core.Public
         /// </summary>
         public bool AllowsSideEffects { get; set; }
                 
+        internal ILanguageSettings LanguageSettings { get; set; }
+
         internal ParseResult Parse(string script)
         {
             var flags = AllowsSideEffects ? TexlParser.Flags.EnableExpressionChaining : TexlParser.Flags.None;
-            ILanguageSettings loc = null;
 
-            return TexlParser.ParseScript(script, loc, flags);
+            return TexlParser.ParseScript(script, LanguageSettings, flags);
         }
     }
 }
