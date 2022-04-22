@@ -11,6 +11,7 @@ using Microsoft.PowerFx.Core.IR.Nodes;
 using Microsoft.PowerFx.Core.IR.Symbols;
 using Microsoft.PowerFx.Core.Lexer;
 using Microsoft.PowerFx.Core.Public.Types;
+using Microsoft.PowerFx.Core.Public.Values;
 using Microsoft.PowerFx.Core.Syntax.Nodes;
 using Microsoft.PowerFx.Core.Syntax.Visitors;
 using Microsoft.PowerFx.Core.Texl;
@@ -837,7 +838,7 @@ namespace Microsoft.PowerFx.Core.IR
                     }
                     else
                     {
-                        throw new NotSupportedException();
+                        return new BooleanLiteralNode(context.GetIRContext(node), false);
                     }
                 }
 

@@ -302,6 +302,36 @@ namespace Microsoft.PowerFx.Tests
         }
 
         [Fact]
+        public void CheckSuccess2()
+        {
+            var config = new PowerFxConfig();
+            var engine = new RecalcEngine(config);
+
+            var result = engine.Check("T.Var = 23", new RecordType()
+                .Add(new NamedFormulaType("T", new RecordType().Add(new NamedFormulaType("Var", FormulaType.String)))));
+
+            Assert.True(result.IsSuccess);
+            Assert.Equal(1, result.Errors.Count(x => x.IsWarning));
+        }
+
+        [Theory]
+        [InlineData(@"""abc"" = 23")]
+        [InlineData(@"23 = ""abc""")]
+        public void CheckSuccess3(string test)
+        {
+            var config = new PowerFxConfig();
+            var engine = new RecalcEngine(config);
+
+            var result = engine.Check(test);
+            Assert.True(result.IsSuccess);
+            Assert.Equal(1, result.Errors.Count(x => x.IsWarning));
+
+            var value = engine.Eval(test);
+            Assert.True(value is BooleanValue);
+            Assert.False(((BooleanValue)value).Value);
+        }
+
+        [Fact]
         public void CheckSuccessWarning()
         {
             var engine = new RecalcEngine();
