@@ -10,12 +10,10 @@ using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Core.Public.Values
 {
+    // Represent record backed by known list of values. 
     internal class InMemoryRecordValue : RecordValue
     {
         private readonly Dictionary<string, FormulaValue> _fields = new Dictionary<string, FormulaValue>();
-
-        public override IEnumerable<NamedValue> Fields =>
-            from field in _fields select new NamedValue(field);
 
         public InMemoryRecordValue(IRContext irContext, IEnumerable<NamedValue> fields)
             : base(irContext)
@@ -29,14 +27,9 @@ namespace Microsoft.PowerFx.Core.Public.Values
             }
         }
 
-        internal override FormulaValue GetField(IRContext irContext, string name)
+        protected override bool TryGetField(FormulaType fieldType, string fieldName, out FormulaValue result)
         {
-            if (_fields.TryGetValue(name, out var value))
-            {
-                return value;
-            }
-
-            return new BlankValue(irContext);
+            return _fields.TryGetValue(fieldName, out result);            
         }
 
         private FormulaValue PropagateFieldType(FormulaValue fieldValue, FormulaType fieldType)

@@ -40,8 +40,9 @@ Blank()
 >> LastN([1, 2, 3, 4, 5], 1/0)
 #Error
 
+// Last2 have all values in column 'b' Blank(), but is still part of the type.
 >> LastN(Table({a:1, b:101}, {a:2}, {a:3}), 2)
-Table({a:2},{a:3})
+Table({a:2,b:Blank()},{a:3,b:Blank()})
 
 >> LastN(Table({a:1}, {a:2}, {a:3}), 2)
 Table({a:2},{a:3})
