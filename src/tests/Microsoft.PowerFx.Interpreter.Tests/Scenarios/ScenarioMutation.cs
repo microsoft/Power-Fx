@@ -48,42 +48,45 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             }
         }
 
-        [Fact]
-        public void MutabilityTest_Chain()
+        [Theory]
+        [InlineData("Assert2(obj.prop, 123); Set2(obj, \"prop\", 456); Assert2(obj.prop, 456)")]
+        [InlineData("Assert2(obj.prop, 123); Set3(obj, \"prop\", \"prop2\"); Assert2(obj.prop, 456)")]       
+        public void MutabilityTest_Chain(string expr)
         {
             var config = new PowerFxConfig();            
             config.AddFunction(new Assert2Function());
             config.AddFunction(new Set2Function());
             config.AddFunction(new Set3Function());
             var engine = new RecalcEngine(config);            
-            var exprs = new string[]
+                      
+            var d = new Dictionary<string, FormulaValue>
             {
-                "Assert2(obj.prop, 123); Set2(obj, \"prop\", 456); Assert2(obj.prop, 456)",
-                "Assert2(obj.prop, 123); Set3(obj, \"prop\", \"prop2\"); Assert2(obj.prop, 456)"
+                ["prop"] = FormulaValue.New(123),
+                ["prop2"] = FormulaValue.New(456)
             };
 
-            foreach (var expr in exprs)
+            var obj = MutableObject.New(d);
+            engine.UpdateVariable("obj", obj);
+
+            var x = engine.Eval(expr, options: new ParserOptions() { AllowsSideEffects = true }); // Assert failures will throw.
+
+            if (x is ErrorValue ev)
             {
-                var d = new Dictionary<string, FormulaValue>
-                {
-                    ["prop"] = FormulaValue.New(123),
-                    ["prop2"] = FormulaValue.New(456)
-                };
+                throw new XunitException($"FormulaValue is ErrorValue: {string.Join("\r\n", ev.Errors)}");
+            }
 
-                var obj = MutableObject.New(d);
-                engine.UpdateVariable("obj", obj);
+            Assert.IsType<NumberValue>(x);
+            Assert.Equal(456, ((NumberValue)x).Value);
+            Assert.Equal(456, ((NumberValue)d["prop"]).Value);                      
+        }
 
-                var x = engine.Eval(expr, options: new ParserOptions() { AllowsSideEffects = true }); // Assert failures will throw.
+        [Fact]
+        public void MutabilityTest_InvalidChain()
+        {
+            var config = new PowerFxConfig();
+            var engine = new RecalcEngine(config);
 
-                if (x is ErrorValue ev)
-                {
-                    throw new XunitException($"FormulaValue is ErrorValue: {string.Join("\r\n", ev.Errors)}");
-                }
-
-                Assert.IsType<NumberValue>(x);
-                Assert.Equal(456, ((NumberValue)x).Value);
-                Assert.Equal(456, ((NumberValue)d["prop"]).Value);
-            }            
+            Assert.Throws<InvalidOperationException>(() => engine.SetFormula("A", "1;2", (str, fv) => { }));
         }
 
         private class Assert2Function : ReflectionFunction
