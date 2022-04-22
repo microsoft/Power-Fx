@@ -3,6 +3,8 @@
 
 using System;
 using System.Globalization;
+using System.Linq;
+using System.Linq.Expressions;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.IR.Nodes;
 using Microsoft.PowerFx.Core.Public.Types;
@@ -53,6 +55,20 @@ namespace Microsoft.PowerFx.Core.Tests
 
             // Type Check
             Assert.Equal(type, lazyEvalNode.IRContext.ResultType.GetType());
+        }
+
+        [Theory]
+        [InlineData(@"""abc"" = 23")]
+        [InlineData(@"23 = ""abc""")]
+        [InlineData(@"23 <> ""abc""")]
+        [InlineData(@"""abc"" <> 23")]
+        public void ValidateWarningIssuedWhenCoerceNotWorking(string expression)
+        {
+            var engine = new Engine(new PowerFxConfig());
+            var result = engine.Check(expression);
+
+            Assert.True(result.IsSuccess);
+            Assert.Equal(1, result.Errors.Count(x => x.IsWarning));
         }
     }
 }
