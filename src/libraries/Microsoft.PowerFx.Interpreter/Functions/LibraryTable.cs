@@ -217,9 +217,12 @@ namespace Microsoft.PowerFx.Functions
             var table = (TableValue)args[0];
             var records = table.Rows.ToList();
 
-            var rng = new Random();
-            var shuffledRecords = records.OrderBy(a => rng.Next()).ToList();
+            lock (_randomizerLock)
+            {
+                _random ??= new Random();
+            }
 
+            var shuffledRecords = records.OrderBy(a => _random.Next()).ToList();
             return new InMemoryTableValue(irContext, shuffledRecords);
         }
 
