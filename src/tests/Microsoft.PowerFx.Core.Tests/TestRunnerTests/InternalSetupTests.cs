@@ -3,11 +3,9 @@
 
 using System;
 using Microsoft.PowerFx.Core.Parser;
-using Microsoft.PowerFx.Core.Tests;
-using Microsoft.PowerFx.Interpreter.Tests.Helpers;
 using Xunit;
 
-namespace Microsoft.PowerFx.Interpreter.Tests
+namespace Microsoft.PowerFx.Core.Tests
 {
     public class InternalSetupTests : PowerFxTest
     {

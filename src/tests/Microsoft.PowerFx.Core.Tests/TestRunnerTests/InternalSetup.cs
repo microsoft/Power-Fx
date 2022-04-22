@@ -5,7 +5,7 @@ using System;
 using System.Linq;
 using Microsoft.PowerFx.Core.Parser;
 
-namespace Microsoft.PowerFx.Interpreter.Tests.Helpers
+namespace Microsoft.PowerFx.Core.Tests
 {
     internal class InternalSetup
     {
@@ -37,11 +37,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests.Helpers
             {
                 throw new ArgumentException("Too many setup handler names!");
             }
-            else
-            {
-                iSetup.HandlerName = parts.FirstOrDefault();
-            }
-
+            
+            iSetup.HandlerName = parts.FirstOrDefault();            
             return iSetup;
         }
     }

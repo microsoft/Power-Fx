@@ -10,7 +10,6 @@ using Microsoft.PowerFx.Core.Parser;
 using Microsoft.PowerFx.Core.Public.Values;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Core.Utils;
-using Microsoft.PowerFx.Interpreter.Tests.Helpers;
 using Microsoft.PowerFx.Tests;
 using Xunit;
 
@@ -90,7 +89,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                     return new RunResult(await RunVerifyAsync(expr));
                 }
 
-                if (!string.IsNullOrEmpty(iSetup.HandlerName))
+                if (iSetup.HandlerName != null)
                 {
                     if (!SetupHandlers.TryGetValue(setupHandlerName, out var handler))
                     {
