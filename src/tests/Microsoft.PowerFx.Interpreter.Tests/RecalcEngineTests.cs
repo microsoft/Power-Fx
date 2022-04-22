@@ -302,7 +302,7 @@ namespace Microsoft.PowerFx.Tests
         }
 
         [Fact]
-        public void CheckSuccess2()
+        public void CanRunWithWarnings()
         {
             var config = new PowerFxConfig();
             var engine = new RecalcEngine(config);
@@ -317,7 +317,7 @@ namespace Microsoft.PowerFx.Tests
         [Theory]
         [InlineData(@"""abc"" = 23")]
         [InlineData(@"23 = ""abc""")]
-        public void CheckSuccess3(string test)
+        public void CanRunWithWarnings2(string test)
         {
             var config = new PowerFxConfig();
             var engine = new RecalcEngine(config);
