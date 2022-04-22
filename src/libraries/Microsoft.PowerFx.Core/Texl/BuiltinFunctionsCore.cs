@@ -37,6 +37,8 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction Average = _library.Append(new AverageFunction());
         public static readonly TexlFunction AverageT = _library.Append(new AverageTableFunction());
         public static readonly TexlFunction Blank = _library.Append(new BlankFunction());
+        public static readonly TexlFunction Boolean = _library.Append(new BooleanFunction());
+        public static readonly TexlFunction Boolean_UO = _library.Append(new BooleanFunction_UO());
         public static readonly TexlFunction Clock24 = _library.Append(new IsClock24Function());
         public static readonly TexlFunction Char = _library.Append(new CharFunction());
         public static readonly TexlFunction CharT = _library.Append(new CharTFunction());
@@ -55,6 +57,7 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction CountA = _library.Append(new CountAFunction());
         public static readonly TexlFunction CountIf = _library.Append(new CountIfFunction());
         public static readonly TexlFunction CountRows = _library.Append(new CountRowsFunction());
+        public static readonly TexlFunction CountRows_UO = _library.Append(new CountRowsFunction_UO());
         public static readonly TexlFunction Date = _library.Append(new DateFunction());
         public static readonly TexlFunction DateAdd = _library.Append(new DateAddFunction());
         public static readonly TexlFunction DateAddT = _library.Append(new DateAddTFunction());
@@ -79,6 +82,7 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction If = _library.Append(new IfFunction());
         public static readonly TexlFunction IfError = _library.Append(new IfErrorFunction());
         public static readonly TexlFunction Index = _library.Append(new IndexFunction());
+        public static readonly TexlFunction Index_UO = _library.Append(new IndexFunction_UO());
         public static readonly TexlFunction Int = _library.Append(new IntFunction());
         public static readonly TexlFunction IntT = _library.Append(new IntTableFunction());
         public static readonly TexlFunction IsBlank = _library.Append(new IsBlankFunction());
@@ -120,6 +124,7 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction Not = _library.Append(new NotFunction());
         public static readonly TexlFunction Now = _library.Append(new NowFunction());
         public static readonly TexlFunction Or = _library.Append(new VariadicLogicalFunction(isAnd: false));
+        public static readonly TexlFunction ParseJSON = _library.Append(new ParseJSONFunction());
         public static readonly TexlFunction Power = _library.Append(new PowerFunction());
         public static readonly TexlFunction PowerT = _library.Append(new PowerTFunction());
         public static readonly TexlFunction Pi = _library.Append(new PiFunction());
@@ -162,6 +167,7 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction SumT = _library.Append(new SumTableFunction());
         public static readonly TexlFunction Switch = _library.Append(new SwitchFunction());
         public static readonly TexlFunction Table = _library.Append(new TableFunction());
+        public static readonly TexlFunction Table_UO = _library.Append(new TableFunction_UO());
         public static readonly TexlFunction Tan = _library.Append(new TanFunction());
         public static readonly TexlFunction TanT = _library.Append(new TanTableFunction());
         public static readonly TexlFunction Time = _library.Append(new TimeFunction());
@@ -177,26 +183,20 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction Upper = _library.Append(new LowerUpperFunction(isLower: false));
         public static readonly TexlFunction UpperT = _library.Append(new LowerUpperTFunction(isLower: false));
         public static readonly TexlFunction Value = _library.Append(new ValueFunction());
+        public static readonly TexlFunction Value_UO = _library.Append(new ValueFunction_UO());
         public static readonly TexlFunction VarP = _library.Append(new VarPFunction());
         public static readonly TexlFunction VarPT = _library.Append(new VarPTableFunction());
         public static readonly TexlFunction Text = _library.Append(new TextFunction());
+        public static readonly TexlFunction Text_UO = _library.Append(new TextFunction_UO());
         public static readonly TexlFunction Weekday = _library.Append(new WeekdayFunction());
         public static readonly TexlFunction WeekdaysLong = _library.Append(new WeekdaysLongFunction());
         public static readonly TexlFunction WeekdaysShort = _library.Append(new WeekdaysShortFunction());
         public static readonly TexlFunction WeekNum = _library.Append(new WeekNumFunction());
         public static readonly TexlFunction With = _library.Append(new WithFunction());
-        public static readonly TexlFunction Year = _library.Append(new YearFunction());
+        public static readonly TexlFunction Year = _library.Append(new YearFunction()); 
 
         // NOTE: These functions should not be part of the core library until they are implemented in all runtimes
         public static readonly TexlFunction DateTime = new DateTimeFunction();
-        public static readonly TexlFunction Index_UO = new IndexFunction_UO();
-        public static readonly TexlFunction ParseJSON = new ParseJSONFunction();
-        public static readonly TexlFunction Table_UO = new TableFunction_UO();
-        public static readonly TexlFunction Text_UO = new TextFunction_UO();
-        public static readonly TexlFunction Value_UO = new ValueFunction_UO();
-        public static readonly TexlFunction Boolean = new BooleanFunction();
-        public static readonly TexlFunction Boolean_UO = new BooleanFunction_UO();
-        public static readonly TexlFunction CountRows_UO = new CountRowsFunction_UO();
 
         public static readonly TexlFunction IsUTCToday = new IsUTCTodayFunction();
         public static readonly TexlFunction UTCNow = new UTCNowFunction();
