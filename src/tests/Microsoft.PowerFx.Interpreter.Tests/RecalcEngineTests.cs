@@ -302,6 +302,19 @@ namespace Microsoft.PowerFx.Tests
         }
 
         [Fact]
+        public void CanRunWithWarnings()
+        {
+            var config = new PowerFxConfig();
+            var engine = new RecalcEngine(config);
+
+            var result = engine.Check("T.Var = 23", new RecordType()
+                .Add(new NamedFormulaType("T", new RecordType().Add(new NamedFormulaType("Var", FormulaType.String)))));
+
+            Assert.True(result.IsSuccess);
+            Assert.Equal(1, result.Errors.Count(x => x.IsWarning));
+        }
+
+        [Fact]
         public void CheckSuccessWarning()
         {
             var engine = new RecalcEngine();
