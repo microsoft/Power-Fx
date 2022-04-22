@@ -86,24 +86,6 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             }            
         }
 
-        //[Fact]
-        //public async Task MutabilityTest_Chain2()
-        //{
-        //    var config = new PowerFxConfig();
-        //    var verify = new AsyncVerify();            
-        //    var asyncHelper = new AsyncFunctionsHelper(verify);  
-        //    config.AddFunction(asyncHelper.GetFunction());
-        //    var waitForHelper = new WaitForFunctionsHelper(verify); 
-        //    config.AddFunction(waitForHelper.GetFunction());
-        //    var engine = new RecalcEngine(config);
-
-        //    // Run in special mode that ensures we're not calling .Result
-        //    var result = await verify.EvalAsync(engine, "WaitFor(0); WaitFor(1); WaitFor(2)", new ParserOptions() { AllowsSideEffects = true });            
-
-        //    int y = 0;
-
-        //}
-
         private class Assert2Function : ReflectionFunction
         {
             public Assert2Function()
