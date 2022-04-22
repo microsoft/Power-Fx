@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.PowerFx.Core.Binding;
+using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Parser;
 using Microsoft.PowerFx.Core.Public.Types;
 using Microsoft.PowerFx.Core.Utils;
