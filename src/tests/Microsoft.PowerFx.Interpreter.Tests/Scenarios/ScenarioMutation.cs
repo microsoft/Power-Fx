@@ -85,8 +85,10 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         {
             var config = new PowerFxConfig();
             var engine = new RecalcEngine(config);
+            var called = false;
 
-            Assert.Throws<InvalidOperationException>(() => engine.SetFormula("A", "1;2", (str, fv) => { }));
+            Assert.Throws<InvalidOperationException>(() => engine.SetFormula("A", "1;2", (str, fv) => { called = true; }));
+            Assert.False(called);
         }
 
         private class Assert2Function : ReflectionFunction
