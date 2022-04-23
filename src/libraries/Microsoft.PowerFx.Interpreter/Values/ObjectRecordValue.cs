@@ -37,5 +37,10 @@ namespace Microsoft.PowerFx
         {
             return _mapping.TryGetField(Source, fieldName, out result);            
         }
+
+        public override object ToObject()
+        {
+            return Source;
+        }
     }
 }

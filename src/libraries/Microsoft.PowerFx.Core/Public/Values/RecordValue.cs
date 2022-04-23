@@ -51,14 +51,14 @@ namespace Microsoft.PowerFx.Core.Public.Values
         }
 
         /// <summary>
-        /// The RecordType of this value. 
+        /// The RecordType of this value.
         /// </summary>
         public new RecordType Type => (RecordType)base.Type;
 
         public static RecordValue Empty()
         {
             var type = new RecordType();
-            return new InMemoryRecordValue(IRContext.NotInSource(type), new List<NamedValue>());
+            return new InMemoryRecordValue(IRContext.NotInSource(type), new Dictionary<string, FormulaValue>());
         }
 
         /// <summary>
@@ -88,39 +88,41 @@ namespace Microsoft.PowerFx.Core.Public.Values
                     throw new InvalidOperationException($"{GetType().Name}.TryGetField({fieldName}) returned true but null.");
                 }
 
+                // Ensure that type is properly projected. 
+                if (result is RecordValue recordValue)
+                {
+                    var compileTimeType = (RecordType)fieldType;
+                    result = CompileTimeTypeWrapperRecordValue.AdjustType(compileTimeType, recordValue);
+                }
+                else if (result is TableValue tableValue)
+                {
+                    result = new InMemoryTableValue(IRContext.NotInSource(fieldType), tableValue.Rows);
+                }
+
                 Contract.Assert(result.Type.Equals(fieldType) || result is ErrorValue || result.Type is BlankType);
 
                 return result;
             }
 
-            // This should be a compiler-error. 
+            // The binder can allow this if the record's static type contains fields not present in the runtime value.
+            // This can happen with record unions: 
+            //   First(Table({a:5}, {b:10})).b 
+            //
             // Fx semantics are to return blank on missing fields. 
             return FormulaValue.NewBlank(fieldType);
         }
 
         /// <summary>
-        /// Derived classes can override. 
+        /// Derived classes must override to provide values for fields. 
         /// </summary>
-        /// <param name="fieldType"></param>
-        /// <param name="fieldName"></param>
-        /// <returns></returns>
-        protected virtual bool TryGetField(FormulaType fieldType, string fieldName, out FormulaValue result)
-        {
-            // Derived class can have more optimized lookup.
-            foreach (var field in Fields)
-            {
-                if (fieldName == field.Name)
-                {
-                    result = field.Value;
-                    return true;
-                }
-            }
-
-            result = null;
-            return false;
-        }
+        /// <param name="fieldType">Expected type of the field.</param>
+        /// <param name="fieldName">Name of the field.</param>
+        /// <param name="result"></param>
+        /// <returns>true if field is present, else false.</returns>
+        protected abstract bool TryGetField(FormulaType fieldType, string fieldName, out FormulaValue result);
 
         // Return an object, which can be used as 'dynamic' to fetch fields. 
+        // If this RecordValue was created around a host object, the host can override and return the source object. 
         public override object ToObject()
         {
             var e = new ExpandoObject();

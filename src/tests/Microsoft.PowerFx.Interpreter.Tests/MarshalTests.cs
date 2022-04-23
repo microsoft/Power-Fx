@@ -287,8 +287,10 @@ namespace Microsoft.PowerFx.Tests
         }
 
         // Test using a marshalled object inside of With()
-        [Fact]
-        public void With()
+        [Theory]
+        [InlineData("With(x, ThisRecord.Field1*10+ThisRecord.Field1)", 2)]
+        [InlineData("{ f1 : x }.f1.Field1", 1)]
+        public void With(string expr, int expectedCount)
         {
             var obj1 = new TestObj();
 
@@ -305,10 +307,108 @@ namespace Microsoft.PowerFx.Tests
             Assert.Equal(0, obj1._counter2);
 
             // Verify lazy access around With(). 
-            var result2 = engine.Eval("With(x, ThisRecord.Field1*10+ThisRecord.Field1)");
+            var result2 = engine.Eval(expr);
 
-            Assert.Equal(2, obj1._counter); // each field access is +1. 
+            Assert.Equal(expectedCount, obj1._counter); // each field access is +1. 
             Assert.Equal(0, obj1._counter2); // Didn't touch field2. 
+        }
+
+        // Test that derived RecordValues can pass through the system "unharmed" and don't get
+        // flattened into InMemoryRecordValue.
+        // There's no type unification here.
+        [Theory]
+        [InlineData("{ f1 : x }.f1")]
+        [InlineData("If(false, { field1 : 12 }, x)")]
+        [InlineData("Last(Table(y,x))")]
+        public void PassThroughRecordValue(string expr)
+        {
+            var x = new MyRecordValue();
+            var y = new MyRecordValue();
+            var engine = new RecalcEngine();
+            engine.UpdateVariable("x", x);
+            engine.UpdateVariable("y", y);
+
+            // Wrap in a record. 
+            var result = engine.Eval(expr);
+
+            var obj = result.ToObject();
+            Assert.True(object.ReferenceEquals(x, obj));
+        }
+
+        [Fact]
+        public void MixRecordValueImplementationsTable()
+        {
+            var x = new MyRecordValue();
+            var engine = new RecalcEngine();
+            engine.UpdateVariable("x", x); // x has field1. 
+
+            // Wrap in a record. 
+            engine.SetFormula("t", "Table(x,{field2:12})", (str, val) => { });
+            var result1 = engine.Eval("First(t).field2");
+            Assert.IsType<BlankValue>(result1);
+
+            var result2 = engine.Eval("Last(t).field1");
+            Assert.IsType<BlankValue>(result2);
+        }
+
+        [Fact]
+        public void MixRecordValueImplementationsIf()
+        {
+            var x = new MyRecordValue();
+            var engine = new RecalcEngine();
+            engine.UpdateVariable("x", x); // x has field1. 
+
+            // Wrap in a record. 
+            var result1 = engine.Eval("If(false, {field1:11, field2:22}, x).field1");
+            Assert.Equal(999.0, result1.ToObject());
+        }
+        
+        [Fact]
+        public void TypeProjectionWithCustomRecords()
+        {
+            var x = new MyRecordValue();
+            var engine = new RecalcEngine();
+            engine.UpdateVariable("x", x); // x has field1. 
+
+            // Ensure that compile-time type unification works even when 
+            // mixing custom derived RecordValues and builtin record values. 
+            var result = engine.Eval(
+@"First(
+        Table(
+            {a:x},
+            {a:{field2:222},b:22}
+        )).a.field1
+");
+
+            Assert.Equal(999.0, result.ToObject());
+        }
+
+        // Example of a host-derived object. 
+        private class MyRecordValue : RecordValue
+        {
+            private static readonly RecordType _type = new RecordType().Add("field1", FormulaType.Number);
+            
+            public MyRecordValue() 
+                : base(_type)
+            {
+            }
+
+            protected override bool TryGetField(FormulaType fieldType, string fieldName, out FormulaValue result)
+            {
+                if (fieldName == "field1")
+                {
+                    result = FormulaValue.New(999);
+                    return true;
+                }
+
+                result = null;
+                return false;                
+            }
+
+            public override object ToObject()
+            {
+                return this;
+            }
         }
 
         private class BasePoco
