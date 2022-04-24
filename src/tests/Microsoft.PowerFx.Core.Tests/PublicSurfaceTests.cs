@@ -89,8 +89,6 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Core.Public.Types.ExternalType",
                 "Microsoft.PowerFx.Core.Localization.ErrorResourceKey",
                 "Microsoft.PowerFx.Core.Localization.Span",
-                "Microsoft.PowerFx.Core.Functions.Publish.Capabilities",
-                "Microsoft.PowerFx.Core.Functions.DLP.RequiredDataSourcePermissions",
                 "Microsoft.PowerFx.Core.Errors.DocumentErrorSeverity",
                 "Microsoft.PowerFx.Core.App.IExternalEnabledFeatures",
                 "Microsoft.PowerFx.Core.App.DefaultEnabledFeatures",
