@@ -1,4 +1,4 @@
-﻿>> CountRows([1, 2, 3, 4, 5])
+>> CountRows([1, 2, 3, 4, 5])
 5
 
 >> CountRows(Blank())
@@ -27,3 +27,36 @@ Errors: Error 22-25: Expected boolean. We expect a boolean (true/false) at this 
 
 >> CountIf([1, 2, 3, 4], "abc")
 Errors: Error 22-27: Expected boolean. We expect a boolean (true/false) at this point in the formula.
+
+>> CountA(["A","B","",Blank()])
+3
+
+>> CountA(["A",1,"",0,Blank()])
+4
+
+>> CountA([1,2,3,Blank(),Blank(),Blank()])
+3
+
+>> CountA([1,2,3,If(1<0,4),Blank()])
+3
+
+>> CountA(Blank())
+Blank()
+
+>> CountA(Sort([-2, -1, 0, 1, 2], 1 / Value))
+#Error
+
+>> CountA(LastN([1,2,3,4], Blank()))
+Blank()
+
+>> CountA([1, 2, 1/0, 4, 5])
+5
+
+>> Count([1, 2, 4, 5])
+4
+
+>> Count([1,2,3,If(1<0,4),Blank()])
+3
+
+>> Count(["1","2","3"])
+0

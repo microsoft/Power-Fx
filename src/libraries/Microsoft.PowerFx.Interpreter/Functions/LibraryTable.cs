@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation.
+// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
 using System;
@@ -133,6 +133,24 @@ namespace Microsoft.PowerFx.Functions
 
             // Streaming 
             var count = arg0.Count();
+            return new NumberValue(irContext, count);
+        }
+
+        // Count
+        public static FormulaValue Count(IRContext irContext, TableValue[] args)
+        {
+            var arg0 = args[0];
+ 
+            var count = arg0.Rows.Where(row => row.Value.GetField(TableValue.ValueName) is NumberValue).Count();
+            return new NumberValue(irContext, count);
+        }
+
+        // CountA
+        public static FormulaValue CountA(IRContext irContext, TableValue[] args)
+        {
+            var arg0 = args[0];
+
+            var count = arg0.Rows.Where(row => row.Value.GetField(TableValue.ValueName) is not BlankValue).Count();
             return new NumberValue(irContext, count);
         }
 
