@@ -9,7 +9,7 @@ namespace Microsoft.PowerFx.Core.Public.Types
     /// <summary>
     /// A binding error type, attached to syntax nodes whose type is incorrect.
     /// </summary>
-    public class BindingErrorType : FormulaType
+    public sealed class BindingErrorType : FormulaType
     {
         internal BindingErrorType()
             : base(DType.Error)
