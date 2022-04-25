@@ -106,13 +106,12 @@ namespace Microsoft.PowerFx.Core.Public
         /// </summary>
         /// <param name="fnc"></param>
         /// <param name="nodes"></param>
-        /// <param name="types"></param>
         /// <param name="retType"></param>
         /// <returns></returns>
-        public bool CheckInvocation(FunctionInfo fnc, IReadOnlyList<TexlNode> nodes, IReadOnlyList<FormulaType> types, out FormulaType retType)
+        public bool CheckInvocation(FunctionInfo fnc, IReadOnlyList<TexlNode> nodes, out FormulaType retType)
         {
             var nodesArr = nodes.ToArray();
-            var typesArr = types.Select(t => t._type).ToArray();
+            var typesArr = nodes.Select(node => GetNodeType(node)._type).ToArray();
             var res = fnc._fnc.CheckInvocation(nodesArr, typesArr, _binding.ErrorContainer, out var retDType, out _);
 
             if (res)
