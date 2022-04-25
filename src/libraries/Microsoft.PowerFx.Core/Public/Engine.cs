@@ -96,7 +96,7 @@ namespace Microsoft.PowerFx
         /// <summary>
         /// Type check a formula without executing it. 
         /// </summary>
-        /// <param name="parse">the parsed expression. Obtain from <see cref="Parse(string)"/>.</param>
+        /// <param name="parse">the parsed expression. Obtain from <see cref="Parse"/>.</param>
         /// <param name="parameterType">types of additional args to pass.</param>
         /// <returns></returns>
         public CheckResult Check(ParseResult parse, RecordType parameterType = null)

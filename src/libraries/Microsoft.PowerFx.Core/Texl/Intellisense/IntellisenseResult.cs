@@ -181,12 +181,12 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
         };
 
         /// <summary>
-        /// Returns a string that represents the full call signature as defined by <see cref="function"/>,
-        /// <see cref="parameters"/>, as well as <see cref="LocalizationUtils.CurrentLocaleListSeparator"/>.
+        /// Returns a string that represents the full call signature as defined by <paramref name="functionName"/>,
+        /// <paramref name="parameters"/>, as well as <see cref="LocalizationUtils.CurrentLocaleListSeparator"/>.
         /// </summary>
         /// <param name="functionName"></param>
         /// <param name="parameters">
-        ///     List of parameters in the relevant signature for <see cref="function"/>.
+        ///     List of parameters in the relevant signature for <paramref name="functionName"/>.
         /// </param>
         /// <returns>
         /// A label that represents the call signature; e.g. <code>Set(variable, lambda)</code>
