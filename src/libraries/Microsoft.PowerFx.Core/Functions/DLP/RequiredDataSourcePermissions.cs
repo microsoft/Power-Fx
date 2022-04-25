@@ -8,7 +8,7 @@ namespace Microsoft.PowerFx.Core.Functions.DLP
 {
     [Flags]
     [TransportType(TransportKind.Enum)]
-    public enum RequiredDataSourcePermissions
+    internal enum RequiredDataSourcePermissions
     {
         None = 0x0,
         Create = 0x1,

@@ -81,3 +81,15 @@ false
 
 >> Time(14,20,30) <> Time(2,30,30)
 true
+
+>> "abc" = 23
+false
+
+>> 23 = "abc"
+false
+
+>> "abc" <> 23
+true
+
+>> 23 <> "abc"
+true

@@ -11,6 +11,7 @@ using Microsoft.PowerFx.Core.IR.Nodes;
 using Microsoft.PowerFx.Core.IR.Symbols;
 using Microsoft.PowerFx.Core.Lexer;
 using Microsoft.PowerFx.Core.Public.Types;
+using Microsoft.PowerFx.Core.Public.Values;
 using Microsoft.PowerFx.Core.Syntax.Nodes;
 using Microsoft.PowerFx.Core.Syntax.Visitors;
 using Microsoft.PowerFx.Core.Texl;
@@ -837,7 +838,12 @@ namespace Microsoft.PowerFx.Core.IR
                     }
                     else
                     {
-                        throw new NotSupportedException();
+                        // In this particular case, we issue a warning
+                        // We only manage = and <> cases here as other comparison operators are more complex to handle
+                        // See https://stackoverflow.com/questions/35050151/excel-if-statement-comparing-text-with-number
+                        return (node.Op == BinaryOp.NotEqual) ? new BooleanLiteralNode(context.GetIRContext(node), true)
+                             : (node.Op == BinaryOp.Equal) ? new BooleanLiteralNode(context.GetIRContext(node), false)
+                             : throw new NotSupportedException();
                     }
                 }
 
