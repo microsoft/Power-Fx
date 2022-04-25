@@ -911,6 +911,16 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: Sequence)
             },
             {
+                BuiltinFunctionsCore.Shuffle,
+                StandardErrorHandling<TableValue>(
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<TableValue>,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: Shuffle)
+            },
+            {
                 BuiltinFunctionsCore.Sin,
                 StandardErrorHandling<NumberValue>(
                     expandArguments: NoArgExpansion,
