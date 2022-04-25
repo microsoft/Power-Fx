@@ -1802,6 +1802,7 @@ namespace Microsoft.PowerFx.Core.Types
         /// Whether or not <see cref="DType"/>'s absense of columns that are defined in <paramref name="type"/>
         /// should affect acceptance.
         /// </param>
+        /// <param name="useLegacyDateTimeAccepts"></param>
         /// <returns>
         /// True if <see cref="DType"/> accepts <paramref name="type"/>, false otherwise.
         /// </returns>
@@ -2851,8 +2852,8 @@ namespace Microsoft.PowerFx.Core.Types
         /// respective JS type:
         /// export interface IJsonFunctionDataDefinition {
         ///     t: string;   // Type (maps to DType.Kind)
-        ///     c?: HashTable.<IJsonFunctionDataDefinition>; // optional children
-        /// }
+        ///     c?: HashTable.IJsonFunctionDataDefinition; // optional children
+        /// }.
         /// </remarks>
         internal string ToJsType(Func<DName, DType, bool> shouldBeIncluded = null)
         {

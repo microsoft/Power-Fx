@@ -21,6 +21,7 @@ namespace Microsoft.PowerFx.Core.Syntax.SourceInformation
         /// A mapping from the old nodes in this piece of the source to the
         /// new cloned ones. Must be complete.
         /// </param>
+        /// <param name="span"></param>
         ITexlSource Clone(Dictionary<TexlNode, TexlNode> newNodes, Span span);
 
         /// <summary>

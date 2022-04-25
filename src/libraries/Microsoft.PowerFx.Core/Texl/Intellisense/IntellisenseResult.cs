@@ -217,7 +217,7 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
         /// Data off of which the result is based.
         /// </param>
         /// <param name="paramName"></param>
-        /// <param name="invariantParamName1></param>
+        /// <param name="invariantParamName"></param>
         /// <param name="funcDisplayString"></param>
         /// <returns></returns>
         private static (string paramName, int highlightStart, int highlightEnd, string funcParamDescription) GetParameterHighlightAndDescription(IIntellisenseData data, string paramName, string invariantParamName, StringBuilder funcDisplayString)

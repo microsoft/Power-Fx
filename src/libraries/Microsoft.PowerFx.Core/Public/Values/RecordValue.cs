@@ -23,7 +23,9 @@ namespace Microsoft.PowerFx.Core.Public.Values
             Contract.Assert(IRContext.ResultType is RecordType);
         }
 
-        // If we have a derived Value, we can get a derived type. 
+        /// <summary>
+        /// If we have a derived Value, we can get a derived type.
+        /// </summary>
         public new RecordType Type => (RecordType)base.Type;
 
         public static RecordValue Empty()
@@ -59,7 +61,9 @@ namespace Microsoft.PowerFx.Core.Public.Values
             return new BlankValue(irContext);
         }
 
-        // Return an object, which can be used as 'dynamic' to fetch fields. 
+        /// <summary>
+        /// Return an object, which can be used as 'dynamic' to fetch fields.
+        /// </summary>
         public override object ToObject()
         {
             var e = new ExpandoObject();
