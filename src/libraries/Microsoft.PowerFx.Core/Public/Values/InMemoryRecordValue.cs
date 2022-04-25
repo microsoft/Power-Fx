@@ -41,12 +41,7 @@ namespace Microsoft.PowerFx.Core.Public.Values
 
         protected override bool TryGetField(FormulaType fieldType, string fieldName, out FormulaValue result)
         {
-            if (!_fields.TryGetValue(fieldName, out result))
-            {
-                return false;
-            }
-              
-            return true;
+            return _fields.TryGetValue(fieldName, out result);
         }
     }
 }

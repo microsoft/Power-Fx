@@ -14,7 +14,6 @@ namespace Microsoft.PowerFx.Core.Public.Values
 
         public static RecordValue AdjustType(RecordType expectedType, RecordValue inner)
         {
-            // TODO - Could this check be in the IR?  And so have IR add calls to TypeOverrideRecordValue?
             if (expectedType.Equals(inner.Type))
             {
                 return inner;
