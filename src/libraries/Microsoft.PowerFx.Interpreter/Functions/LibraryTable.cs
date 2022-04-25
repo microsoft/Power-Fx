@@ -212,6 +212,20 @@ namespace Microsoft.PowerFx.Functions
             return arg0.Index(rowIndex).ToFormulaValue();
         }
 
+        public static FormulaValue Shuffle(IRContext irContext, FormulaValue[] args)
+        {
+            var table = (TableValue)args[0];
+            var records = table.Rows;
+
+            lock (_randomizerLock)
+            {
+                _random ??= new Random();
+            }
+
+            var shuffledRecords = records.OrderBy(a => _random.Next()).ToList();
+            return new InMemoryTableValue(irContext, shuffledRecords);
+        }
+
         public static async ValueTask<FormulaValue> SortTable(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args)
         {
             var arg0 = (TableValue)args[0];
