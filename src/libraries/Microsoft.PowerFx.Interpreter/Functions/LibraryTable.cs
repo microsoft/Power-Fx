@@ -140,8 +140,29 @@ namespace Microsoft.PowerFx.Functions
         public static FormulaValue Count(IRContext irContext, TableValue[] args)
         {
             var arg0 = args[0];
+            var count = 0;
 
-            var count = arg0.Rows.Where(row => row.Value.GetField(TableValue.ValueName) is NumberValue).Count();
+            var errors = new List<ErrorValue>();
+
+            foreach (var row in arg0.Rows)
+            {
+                if (row.Value.GetField(TableValue.ValueName) is ErrorValue error)
+                {
+                    errors.Add(error);
+                    continue;
+                }
+
+                if (row.Value.GetField(TableValue.ValueName) is NumberValue)
+                {
+                    count++;
+                }
+            }
+
+            if (errors.Count != 0)
+            {
+                return ErrorValue.Combine(irContext, errors);
+            }
+
             return new NumberValue(irContext, count);
         }
 
@@ -149,8 +170,29 @@ namespace Microsoft.PowerFx.Functions
         public static FormulaValue CountA(IRContext irContext, TableValue[] args)
         {
             var arg0 = args[0];
+            var count = 0;
 
-            var count = arg0.Rows.Where(row => row.Value.GetField(TableValue.ValueName) is not BlankValue).Count();
+            var errors = new List<ErrorValue>();
+
+            foreach (var row in arg0.Rows)
+            {
+                if (row.Value.GetField(TableValue.ValueName) is ErrorValue error)
+                {
+                    errors.Add(error);
+                    continue;
+                }
+
+                if (row.Value.GetField(TableValue.ValueName) is not BlankValue)
+                {
+                    count++;
+                }
+            }
+
+            if (errors.Count != 0)
+            {
+                return ErrorValue.Combine(irContext, errors);
+            }
+
             return new NumberValue(irContext, count);
         }
 

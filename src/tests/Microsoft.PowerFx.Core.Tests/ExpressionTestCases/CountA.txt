@@ -1,0 +1,17 @@
+﻿>> CountA([1,2,3,Blank()])
+3
+
+>> CountA([1,2,3,Blank(),Blank(),Blank()])
+3
+
+>> CountA([1,2,3,If(1<0,4),Blank()])
+3
+
+>> CountA(Sort([-2, -1, 0, 1, 2], 1 / Value))
+#Error
+
+>> CountA(LastN([1,2,3,4], Blank()))
+Blank()
+
+>> CountA([1, 2, 1/0, 4, 5])
+#Error
