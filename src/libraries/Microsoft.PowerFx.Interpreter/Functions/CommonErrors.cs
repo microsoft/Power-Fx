@@ -55,7 +55,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 Message = "The Number could not be parsed",
                 Span = irContext.SourceContext,
-                Kind = ErrorKind.BadLanguageCode
+                Kind = ErrorKind.InvalidArgument
             });
         }
 

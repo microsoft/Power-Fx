@@ -1,14 +1,17 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
 using System.Collections.Concurrent;
-using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Interpreter.Tests.XUnitExtensions;
 using Xunit;
+using Xunit.Sdk;
 using static Microsoft.PowerFx.Interpreter.Tests.ExpressionEvaluationTests;
 
 namespace Microsoft.PowerFx.Interpreter.Tests
@@ -43,11 +46,9 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                     Skip.If(true, prefix + msg);
                     break;
             }
-        }
+        }        
 
-        private static readonly ConcurrentDictionary<string, string> Stats = new ConcurrentDictionary<string, string>();
-
-        [InterpreterTheory]
+        [InterpreterTheory] //(Skip="NotReadyYet")]
         [TxtFileData("ExpressionTestCases\\NotYetReady", "InterpreterExpressionTestCases", nameof(InterpreterRunner))]
         public void InterpreterTestCase_NotReadyTests(ExpressionTestCase testCase)
         {
@@ -59,9 +60,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             var (result, msg) = _runner.RunAsync(testCase).Result;
 
-            var prefix = $"Test {Path.GetFileName(testCase.SourceFile)}:{testCase.SourceLine}: ";
-
-            Stats.AddOrUpdate(prefix, msg, (x, y, z) => throw new Exception("Oups"));
+            var prefix = $"Test {Path.GetFileName(testCase.SourceFile)}:{testCase.SourceLine}: ";            
 
             switch (result)
             {
@@ -69,6 +68,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                     break;
 
                 case TestResult.Fail:
+                    Stats.AddOrUpdate(prefix, (testCase, msg), (x, z) => throw new Exception("Oups"));
                     Assert.True(false, prefix + msg);
                     break;
 
@@ -78,22 +78,80 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             }
         }
 
+        private enum TestCategory
+        {
+            DidNotReturnAValue, // contains "did not return a value"
+            WrongErrorKind, // Received an error, but expected kind=InvalidArgument and received BadLanguageCode
+            ErrorValue, // contains Microsoft.PowerFx.Core.Public.Values.ErrorValue
+            InvalidResult, //  Expected: 31. actual: 12
+            ThrewException, // contains "Threw exception"
+            Unknown,
+        }
+
+        private TestCategory GetTestCategory(string str)
+        {
+            if (str.Contains("did not return a value"))
+            {
+                return TestCategory.DidNotReturnAValue;
+            }
+            else if (new Regex(@"Received an error, but expected kind=[a-zA-Z0-9]* and received").IsMatch(str))
+            {
+                return TestCategory.WrongErrorKind;
+            }
+            else if (str.Contains("Microsoft.PowerFx.Core.Public.Values.ErrorValue"))
+            {
+                return TestCategory.ErrorValue;
+            }
+            else if (str.Contains("Expected: ") && str.Contains(". actual: "))
+            {
+                return TestCategory.InvalidResult;
+            }
+            else if (str.Contains("Threw exception"))
+            {
+                return TestCategory.ThrewException;
+            }
+
+            return TestCategory.Unknown;            
+        }
+
+        private static readonly ConcurrentDictionary<string, (TestCase TestCase, string Message)> Stats = new ();
+
         [Fact]
         public void GetStats()
         {
-            Thread.Sleep(10000);
+            Thread.Sleep(10000); // Let's things start
 
-            int n = Stats.Count;
-            int m = -1;
+            var n = Stats.Count;
+            var m = -1;
 
             while (m != n)
             {
                 n = Stats.Count;
-                Thread.Sleep(1000);
+                Thread.Sleep(1000); // No test is taking more than 1 sec, so we're safe here
                 m = Stats.Count;
             }
 
-            Assert.Equal(0, m);
+            if (m > 0)
+            {
+                var sb = new StringBuilder(1024);
+
+                sb.AppendLine($"Total: {m}");
+
+                foreach (var testGroup in Stats.Select(tc => new { Category = GetTestCategory(tc.Value.Message), Value = tc.Value })
+                                               .OrderBy(tc => tc.Value.TestCase.SourceFile + tc.Value.TestCase.SourceLine.ToString())
+                                               .GroupBy(tc => tc.Value.TestCase.SourceFile))
+                {
+                    sb.AppendLine($"----- File: {Path.GetFileName(testGroup.First().Value.TestCase.SourceFile)}, Count: {testGroup.Count()} -----");
+
+                    foreach (var category in testGroup.GroupBy(x => x.Category))
+                    {
+                        var tsts = $"{string.Join(", ", category.Take(20).Select(c => $"[{c.Value.TestCase.Input}]"))}{(category.Count() > 20 ? "..." : string.Empty)}";
+                        sb.AppendLine($"   Category: {category.Key}, Count: {category.Count()} - Tests: {tsts}");
+                    }
+                }
+
+                throw new XunitException(sb.ToString());
+            }
         }
 
         // Since test discovery runs in a separate process, run a dedicated 

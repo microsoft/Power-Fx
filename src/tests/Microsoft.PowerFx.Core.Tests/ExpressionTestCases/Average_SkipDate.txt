@@ -1,0 +1,17 @@
+﻿
+// ******** FUNCTION VALUE AS PARAMETERS ********
+
+//Excel returns 32321.5
+// Should be 583444800000
+>> Average(Date(1976, 12,23) , Date(2000, 01, 01))
+#Skip
+
+//Excel returns false as the value of is Average(Date(2022, 10, 1)) in Excel is 44835
+// Should be true
+>> Average(Date(2022, 10, 1)) = 1664607600000
+#Skip
+
+//Excel returns 7032.3085 in General format, while in Date format it returns 4/2/1919
+// Should be 55044000003.0585022
+>> Average(Date(1976, 12,23),true, "10", 1.234)
+#Skip

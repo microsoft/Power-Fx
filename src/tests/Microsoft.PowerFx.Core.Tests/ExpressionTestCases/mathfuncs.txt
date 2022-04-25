@@ -1,18 +1,4 @@
 ﻿
-
->> Average(1,0,5)
-2
-
->> Average("1",0,5) // coerce
-2
-
-// With new error semantics, blank yields error.
->> Average(Blank())
-#Error
-
->> Average(1,Blank(),5)
-3
-
 // scalar 
 >> Sum(1,2)
 3
@@ -43,21 +29,6 @@
 #Error
 
 >> Mod(1, 0)
-#Error
-
->> Abs(-5)
-5
-
->> Abs(5)
-5
-
->> Abs(0)
-0
-
->> Abs(Blank())
-0
-
->> Abs(1/0)
 #Error
 
 >> Exp(1)

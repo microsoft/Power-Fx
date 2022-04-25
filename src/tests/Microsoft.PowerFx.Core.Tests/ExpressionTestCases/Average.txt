@@ -1,4 +1,13 @@
 
+>> Average(1,0,5)
+2
+
+>> Average("1",0,5) // coerce
+2
+
+>> Average(1,Blank(),5)
+3
+
 // ******** INTEGER PARAMETERS ********
 
 // Positive Integer Parameters
@@ -55,7 +64,7 @@
 
 //Excel gives compile error and mention typo in the formula. Suggest to correct 1E+308 to E1+308
 >> Average(1E+308, 1E+308)
-#Error(Kind=Numeric)
+Infinite
 
 // ******** STRING PARAMETERS ********
 
@@ -94,19 +103,22 @@
 >> Average("false","false")
 #Error(Kind=InvalidArgument)
 
-// ******** FUNCTION VALUE AS PARAMETERS ********
+// ***********  TABLE *************
 
-//Excel returns 32321.5
->> Average(Date(1976, 12,23) , Date(2000, 01, 01))
-583444800000
+>> Average([1,2,3], Value)
+2
 
-//Excel returns false as the value of is Average(Date(2022, 10, 1)) in Excel is 44835
->> Average(Date(2022, 10, 1)) = 1664607600000
-true
+>> Average(LastN([1, 2, 3, 4, 5], Blank()), Value)
+Blank()
 
-//Excel returns 7032.3085 in General format, while in Date format it returns 4/2/1919
->> Average(Date(1976, 12,23),true, "10", 1.234)
-55044000003.0585022
+>> Average(Sort([-2, -1, 0, 1, 2], 1 / Value), Value)
+#Error
+
+>> Average(1, 2, 3, Blank(), 2, 2)
+2
+
+>> Average([1, 2, 1/0, 4, 5], Value)
+#Error
 
 
 // Average(Infinity)

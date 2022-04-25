@@ -54,6 +54,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="ExpressionTestCases\Abs_SkipDate.txt" />
+    <None Remove="ExpressionTestCases\Average_SkipDate.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\libraries\Microsoft.PowerFx.Core\Microsoft.PowerFx.Core.csproj" />
   </ItemGroup>
 

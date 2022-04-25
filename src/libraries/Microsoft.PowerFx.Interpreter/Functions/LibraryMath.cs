@@ -549,6 +549,12 @@ namespace Microsoft.PowerFx.Functions
         public static FormulaValue Abs(IRContext irContext, NumberValue[] args)
         {
             var arg0 = args[0];
+            
+            if (arg0 == null) 
+            {
+                return new BlankValue(irContext);
+            }
+
             var x = arg0.Value;
             var val = Math.Abs(x);
             return new NumberValue(irContext, val);
