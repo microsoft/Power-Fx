@@ -437,7 +437,7 @@ namespace Microsoft.PowerFx.Core.Binding
         /// Node to which volatile variables are being added.
         /// </param>
         /// <param name="variables">
-        /// The variables that are to be added to the list associated with <see cref="node"/>.
+        /// The variables that are to be added to the list associated with <paramref name="node"/>.
         /// </param>
         private void AddVolatileVariables(TexlNode node, ImmutableHashSet<string> variables)
         {
@@ -1237,7 +1237,7 @@ namespace Microsoft.PowerFx.Core.Binding
         /// The node of which volatile variables are being requested.
         /// </param>
         /// <returns>
-        /// A list containing the volatile variables of <see cref="node"/>.
+        /// A list containing the volatile variables of <paramref name="node"/>.
         /// </returns>
         private ImmutableHashSet<string> GetVolatileVariables(TexlNode node)
         {
@@ -5422,7 +5422,7 @@ namespace Microsoft.PowerFx.Core.Binding
             }
 
             /// <summary>
-            /// Tries to get the best suited overload for <see cref="node"/> according to <see cref="txb"/> and
+            /// Tries to get the best suited overload for <paramref name="node"/> according to <paramref name="txb"/> and
             /// returns true if it is found.
             /// </summary>
             /// <param name="txb">
@@ -5432,20 +5432,20 @@ namespace Microsoft.PowerFx.Core.Binding
             /// CallNode for which the best overload will be determined.
             /// </param>
             /// <param name="argTypes">
-            /// List of argument types for <see cref="node.Args"/>.
+            /// List of argument types for <paramref name="node.Args"/>.
             /// </param>
             /// <param name="overloads">
-            /// All overloads for <see cref="node"/>. An element of this list will be returned.
+            /// All overloads for <paramref name="node"/>. An element of this list will be returned.
             /// </param>
             /// <param name="bestOverload">
             /// Set to the best overload when this method completes.
             /// </param>
             /// <param name="nodeToCoercedTypeMap">
-            /// Set to the types to which <see cref="node.Args"/> must be coerced in order for
-            /// <see cref="bestOverload"/> to be valid.
+            /// Set to the types to which <paramref name="node.Args"/> must be coerced in order for
+            /// <paramref name="bestOverload"/> to be valid.
             /// </param>
             /// <param name="returnType">
-            /// The return type for <see cref="bestOverload"/>.
+            /// The return type for <paramref name="bestOverload"/>.
             /// </param>
             /// <returns>
             /// True if a valid overload was found, false if not.
