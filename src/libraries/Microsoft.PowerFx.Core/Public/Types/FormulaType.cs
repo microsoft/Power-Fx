@@ -149,13 +149,6 @@ namespace Microsoft.PowerFx.Core.Public.Types
 
         #endregion // Equality
 
-        /// <summary>
-        /// Whether <paramref name="other"/> can be accepted where this type is accepted.
-        /// </summary>
-        /// <param name="other"></param>
-        /// <returns></returns>
-        public bool Accepts(FormulaType other) => _type.Accepts(other._type);
-
         public abstract void Visit(ITypeVistor vistor);
     }
 }
