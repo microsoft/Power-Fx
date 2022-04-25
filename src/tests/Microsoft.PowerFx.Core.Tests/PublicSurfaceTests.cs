@@ -88,7 +88,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Core.Public.Types.HyperlinkType",
                 "Microsoft.PowerFx.Core.Public.Types.ExternalTypeKind",
                 "Microsoft.PowerFx.Core.Public.Types.ExternalType",
-                "Microsoft.PowerFx.Core.Public.Types.ErrorType",
+                "Microsoft.PowerFx.Core.Public.Types.BindingErrorType",
                 "Microsoft.PowerFx.Core.Public.Types.UnknownType",
                 "Microsoft.PowerFx.Core.Localization.ErrorResourceKey",
                 "Microsoft.PowerFx.Core.Localization.Span",
