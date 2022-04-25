@@ -67,7 +67,7 @@ namespace Microsoft.PowerFx.Core.Utils
             }
             else
             {
-                result = null;
+                result = workingResult;
                 cycles = counts.Keys.ToList();
                 return false;
             }
