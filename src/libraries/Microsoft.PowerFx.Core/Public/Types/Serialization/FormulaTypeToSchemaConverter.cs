@@ -87,7 +87,7 @@ namespace Microsoft.PowerFx.Core
                 Result = new FormulaTypeSchema() { Type = FormulaTypeSchema.ParamType.Unknown };
             }
 
-            public void Visit(ErrorType type)
+            public void Visit(BindingErrorType type)
             {
                 Result = new FormulaTypeSchema() { Type = FormulaTypeSchema.ParamType.Error };
             }

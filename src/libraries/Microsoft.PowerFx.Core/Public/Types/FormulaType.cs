@@ -47,7 +47,7 @@ namespace Microsoft.PowerFx.Core.Public.Types
 
         public static FormulaType Unknown { get; } = new UnknownType();
 
-        public static FormulaType Error { get; } = new ErrorType();
+        public static FormulaType BindingError { get; } = new BindingErrorType();
         
         /// <summary>
         /// Internal use only to represent an arbitrary (un-backed) option set value.
@@ -59,25 +59,6 @@ namespace Microsoft.PowerFx.Core.Public.Types
         internal FormulaType(DType type)
         {
             _type = type;
-        }
-
-        /// <summary>
-        /// Parses a <see cref="FormulaType" /> from a string specification.
-        /// </summary>
-        /// <param name="typeSec"></param>
-        /// <param name="resType"></param>
-        /// <returns></returns>
-        public static bool TryParse(string typeSec, out FormulaType resType)
-        {
-            resType = null;
-
-            if (DType.TryParse(typeSec, out var t))
-            {
-                resType = Build(t);
-                return true;
-            }
-
-            return false;
         }
 
         // Get the correct derived type
@@ -127,7 +108,7 @@ namespace Microsoft.PowerFx.Core.Public.Types
                     return Unknown;
 
                 case DKind.Error:
-                    return Error;
+                    return BindingError;
 
                 default:
                     throw new NotImplementedException($"Not implemented type: {type}");

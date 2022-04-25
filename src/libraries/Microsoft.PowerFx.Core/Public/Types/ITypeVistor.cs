@@ -40,6 +40,6 @@ namespace Microsoft.PowerFx.Core.Public.Types
 
         void Visit(UnknownType type);
 
-        void Visit(ErrorType type);
+        void Visit(BindingErrorType type);
     }
 }

@@ -7,14 +7,11 @@ using Microsoft.PowerFx.Core.Types;
 namespace Microsoft.PowerFx.Core.Public.Types
 {
     /// <summary>
-    /// An error type, attached to syntax nodes whose type is incorrect.
+    /// A binding error type, attached to syntax nodes whose type is incorrect.
     /// </summary>
-    public class ErrorType : FormulaType
+    public class BindingErrorType : FormulaType
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ErrorType"/> class.
-        /// </summary>
-        public ErrorType()
+        internal BindingErrorType()
             : base(DType.Error)
         {
         }

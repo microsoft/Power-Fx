@@ -10,10 +10,7 @@ namespace Microsoft.PowerFx.Core.Public.Types
     /// </summary>
     public class UnknownType : FormulaType
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="UnknownType"/> class.
-        /// </summary>
-        public UnknownType()
+        internal UnknownType()
             : base(DType.Unknown)
         {
         }
