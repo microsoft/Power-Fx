@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
 using System.Linq;
 using System.Text;
 using Microsoft.PowerFx.Core.Localization;
@@ -76,10 +77,20 @@ namespace Microsoft.PowerFx.Core.Lexer.Tokens
         /// </summary>
         public bool HasErrors => IsModified || (HasDelimiterStart && !HasDelimiterEnd);
 
-        // TODO: How to do this properly?
+        /// <summary>
+        /// Converts a string value of an identifier to a valid identifier (e.g., "a b" -> "'a b'").
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException">Throw if value is <c>null</c>.</exception>
         public static string MakeValidIdentifier(string value)
         {
-            var needsDelimiters = string.IsNullOrEmpty(value) || !value.All(TexlLexer.IsSimpleIdentCh);
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
+            var needsDelimiters = string.IsNullOrWhiteSpace(value) || !value.All(TexlLexer.IsSimpleIdentCh);
             var tmpIdent = new IdentToken(value, new Span(0, 0), needsDelimiters, needsDelimiters);
             return tmpIdent.ToString();
         }
