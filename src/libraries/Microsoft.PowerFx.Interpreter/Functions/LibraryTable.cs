@@ -212,10 +212,10 @@ namespace Microsoft.PowerFx.Functions
             return arg0.Index(rowIndex).ToFormulaValue();
         }
 
-        public static async ValueTask<FormulaValue> Shuffle(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args)
+        public static FormulaValue Shuffle(IRContext irContext, FormulaValue[] args)
         {
             var table = (TableValue)args[0];
-            var records = table.Rows.ToList();
+            var records = table.Rows;
 
             lock (_randomizerLock)
             {

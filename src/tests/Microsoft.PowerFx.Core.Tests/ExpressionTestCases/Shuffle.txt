@@ -3,3 +3,28 @@
 
 >> Sort(Shuffle([-2, -1, 5, 1, 2]), Value)
 [-2,-1,1,2,5]
+
+>> CountRows(Shuffle([1, 1]))
+2
+
+>> Sort(Shuffle([1, 1]), Value)
+[1,1]
+
+>> Sort(Shuffle(["b", "a"]), Value)
+["a","b"]
+
+>> CountRows(Shuffle(["b", "a"]))
+2
+
+>> Shuffle(Sort([0], 1 / Value))
+#Error
+
+>> Shuffle(Blank())
+Blank()
+
+>> CountRows(Shuffle(Blank()))
+Blank()
+
+>> Shuffle([])
+Table()
+
