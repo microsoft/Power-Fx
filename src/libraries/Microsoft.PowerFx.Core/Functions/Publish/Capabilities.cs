@@ -8,7 +8,7 @@ namespace Microsoft.PowerFx.Core.Functions.Publish
 {
     [TransportType(TransportKind.Enum)]
     [Flags]
-    public enum Capabilities : uint
+    internal enum Capabilities : uint
     {
         None = 0x0,
 

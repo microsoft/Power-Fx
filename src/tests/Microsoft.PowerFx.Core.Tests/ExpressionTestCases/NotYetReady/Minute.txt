@@ -1,0 +1,192 @@
+
+>> Minute(1/1/1970)
+0
+
+>> Minute(5/14/1970)
+0
+
+>> Minute(Time(0,0,0))
+0
+
+>> Minute(Date(1976,1,4) + Time(12,30,15))
+30
+
+>> Minute(Time(23,45,15))
+45
+
+>> Minute(TimeValue("5:45:00"))
+45
+
+//Excel returns 46
+>> Minute(TimeValue("5:45:64"))
+45
+
+//Decimal values not accepted in minute part
+>> Minute(TimeValue("5:50.5:00"))
+#Error(Kind=InvalidArgument)
+
+//Decimal number is truncated to consider only the integer part
+>> Minute(Time(67,45.6,50))
+45
+
+>> Minute(DateTimeValue("1/4/1976 12:30:15:00"))
+30
+
+>> Minute(DateTimeValue("6/30/2006"))
+0
+
+>> Minute(Date(2013,12,31))
+0
+
+>> Minute(DateValue("10/11/2014"))
+0
+
+
+//Minutes Overflow cases
+
+>> Minute(DateTimeValue("12/31/2006 11:60:00"))
+#Error(Kind=InvalidArgument)
+
+>> Minute(TimeValue("5:65:00"))
+#Error(Kind=InvalidArgument)
+
+>> Minute(DateTimeValue("12/32/2006 50:59:59"))
+59
+
+>> Minute(Time(0,60,0))
+1
+
+//Minutes Underflow Cases
+
+>> Minute(DateTimeValue("1/0/2006 -1:00:00"))
+#Error(Kind=InvalidArgument)
+
+>> Minute(Time(24,0,0))
+0
+
+>> Minute(Time(24,1,-59))
+0
+
+>> Minute(Time(1,-1,0))
+59
+
+>> Minute(Time(1,-50,0))
+10
+
+// ******************************** NUMBER PARAMETERS ********************************
+
+>> Minute(0)
+0
+
+>> Minute(1)
+0
+
+>> Minute(-1)
+59
+
+>> Minute(1.5)
+0
+
+>> Minute(11)
+16
+
+// ******************************** STRING PARAMETERS ********************************
+
+>> Minute("ABC")
+#Error(Kind=InvalidArgument)
+
+>> Minute(DateTimeValue("ABC"))
+#Error(Kind=InvalidArgument)
+
+//Number passed as string
+>> Minute("11")
+0
+
+>> Minute("12")
+0
+
+>> Minute("13")
+#Error(Kind=InvalidArgument)
+
+//Boolean passed as string
+>> Minute("true")
+#Error(Kind=InvalidArgument)
+
+//Boolean passed as string
+>> Minute("false")
+#Error(Kind=InvalidArgument)
+
+// ******************************** BOOLEAN PARAMETERS ********************************
+
+>> Minute(DateTimeValue(true))
+#Error(Kind=InvalidArgument)
+
+>> Minute(DateTimeValue(false))
+#Error(Kind=InvalidArgument)
+
+>> Minute(TimeValue(true))
+#Error(Kind=InvalidArgument)
+
+>> Minute(TimeValue(false))
+#Error(Kind=InvalidArgument)
+
+>> Minute(Time(true,true,true))
+1
+
+>> Minute(Time(false,false,false))
+0
+
+// ******************************** ADDITION/SUBTRACTION VALUE AS PARAMETERS ********************************
+
+>> Minute(DateAdd(DateTimeValue("1/1/2000 8:00:00:00 AM"), 2,TimeUnit.Minutes))
+2
+
+>> Minute(DateAdd(DateTimeValue("1/1/2000 12:00:00:00 AM"),60,TimeUnit.Minutes))
+0
+
+>> Minute(DateAdd(DateTimeValue("1/1/2000 12:00:00:00 AM"),460,TimeUnit.Minutes))
+40
+
+>> Minute(DateAdd(DateTimeValue("1/1/2000 12:00:00:00 AM"),65,Blank()))
+0
+
+>> Minute(DateAdd(DateTimeValue("1/1/2000 12:00:00:00 AM"), Blank()))
+0
+
+>> Minute(DateAdd(DateTimeValue("1/1/2000 12:00:00:00"), 4, TimeUnit.Minutes))
+4
+
+>> Minute(DateTimeValue("1/1/2000 12:00:00:00") + 70)
+0
+
+>> Minute(80 + DateTimeValue("1/1/2000 12:00:00:00"))
+0
+
+>> Minute(TimeValue("12:00:00") - 90)
+59
+
+>> Minute((TimeValue("12:00:00") + 60) + 70)
+0
+
+>> Minute((60 + TimeValue("12:00:00") + 70))
+0
+
+>> Minute((DateTimeValue("1/1/2000 12:00:00:00 AM") - 20) - 30)
+0
+
+// ******************************** NULL AND ERROR PARAMETERS ********************************
+
+>> Minute(DateTimeValue(Blank()))
+0
+
+>> Minute(DateTimeValue(""))
+0
+
+>> Minute(Blank())
+0
+
+>> Minute("")
+0
+
+>> Minute(Date(-1, 2, 3))
+#Error(Kind=InvalidArgument)
