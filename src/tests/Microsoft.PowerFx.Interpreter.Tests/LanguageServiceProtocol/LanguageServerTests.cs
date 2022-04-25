@@ -5,19 +5,19 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Public;
 using Microsoft.PowerFx.Core.Public.Types;
+using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.LanguageServerProtocol;
 using Microsoft.PowerFx.LanguageServerProtocol.Protocol;
 using Xunit;
 
 namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
 {
-    public class LanguageServerTests
-    {
+    public class LanguageServerTests : PowerFxTest
+    {       
         protected static readonly JsonSerializerOptions _jsonSerializerOptions = new JsonSerializerOptions
         {
             PropertyNameCaseInsensitive = true,

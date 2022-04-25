@@ -68,47 +68,41 @@ namespace Microsoft.PowerFx
             => TexlLexer.LocalizedInstance.GetTokens(expressionText);
 
         /// <summary>
-        /// Check only syntax of the expression.
+        /// Parse the expression without doing any binding.
         /// </summary>
         /// <param name="expressionText"></param>
+        /// <param name="options"></param>
         /// <returns></returns>
-        // TODO: This should be done differently, temporary hack!
-        public CheckResult CheckSyntax(string expressionText)
+        public ParseResult Parse(string expressionText, ParserOptions options = null)
         {
-            var formula = new Formula(expressionText);
-            formula.EnsureParsed(TexlParser.Flags.None);
+            options ??= new ParserOptions();
 
-            var result = new CheckResult
-            {
-                _formula = formula
-            };
-
-            var errors = formula.GetParseErrors();
-            if (errors != null)
-            {
-                result.SetErrors(errors);
-            }
-
+            var result = options.Parse(expressionText);
             return result;
+        }
+
+        /// <summary>
+        /// Parse and Bind an expression. 
+        /// </summary>
+        /// <param name="expressionText">the expression in plain text. </param>
+        /// <param name="parameterType">types of additional args to pass.</param>
+        /// <returns></returns>
+        public CheckResult Check(string expressionText, RecordType parameterType = null)
+        {
+            var parse = Parse(expressionText);
+            return Check(parse, parameterType);
         }
 
         /// <summary>
         /// Type check a formula without executing it. 
         /// </summary>
-        /// <param name="expressionText"></param>
-        /// <param name="parameterType"></param>
+        /// <param name="parse">the parsed expression. Obtain from <see cref="Parse(string)"/>.</param>
+        /// <param name="parameterType">types of additional args to pass.</param>
         /// <returns></returns>
-        public CheckResult Check(string expressionText, RecordType parameterType = null)
+        public CheckResult Check(ParseResult parse, RecordType parameterType = null)
         {
-            if (parameterType == null)
-            {
-                parameterType = new RecordType();
-            }
-
-            var formula = new Formula(expressionText);
-
-            formula.EnsureParsed(TexlParser.Flags.None);
-
+            parameterType ??= new RecordType();
+                        
             // Ok to continue with binding even if there are parse errors. 
             // We can still use that for intellisense. 
 
@@ -116,25 +110,14 @@ namespace Microsoft.PowerFx
 
             var binding = TexlBinding.Run(
                 new Glue2DocumentBinderGlue(),
-                formula.ParseTree,
+                parse.Root,
                 resolver,
                 ruleScope: parameterType._type,
                 useThisRecordForRuleScope: false);
 
-            var errors = formula.HasParseErrors ? formula.GetParseErrors() : binding.ErrorContainer.GetErrors();
+            var result = new CheckResult(parse, binding);
 
-            var result = new CheckResult
-            {
-                _binding = binding,
-                _formula = formula,
-            };
-
-            if (errors != null && errors.Any())
-            {
-                result.SetErrors(errors.ToArray());
-                result.Expression = null;
-            }
-            else
+            if (result.IsSuccess)
             {
                 result.TopLevelIdentifiers = DependencyFinder.FindDependencies(binding.Top, binding);
 
@@ -177,7 +160,8 @@ namespace Microsoft.PowerFx
         {
             var result = Check(expression, parameterType);
             var binding = result._binding;
-            var formula = result._formula;
+            var formula = new Formula(expression, null);
+            formula.ApplyParse(result.Parse);
 
             var context = new IntellisenseContext(expression, cursorPosition);
             var intellisense = CreateIntellisense();

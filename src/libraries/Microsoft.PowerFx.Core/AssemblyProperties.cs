@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System.Reflection;
+using System.Resources;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
@@ -41,3 +42,5 @@ using System.Runtime.InteropServices;
 [assembly: InternalsVisibleTo("Microsoft.PowerFx.Core.Tests")]
 [assembly: InternalsVisibleTo("Microsoft.PowerFx.Interpreter.Tests")]
 #endif
+
+[assembly:NeutralResourcesLanguage("en-US", UltimateResourceFallbackLocation.Satellite)]

@@ -12,8 +12,8 @@ using Xunit;
 
 namespace Microsoft.PowerFx.Core.Tests
 {
-    public class ParseTests
-    {
+    public class ParseTests : PowerFxTest
+    {      
         [Theory]
         [InlineData("0")]
         [InlineData("-0")]
@@ -529,7 +529,7 @@ namespace Microsoft.PowerFx.Core.Tests
             var node = result.Root;
 
             Assert.NotNull(node);
-            Assert.Null(result.Errors);
+            Assert.Empty(result.Errors);
         }
 
         [Theory]
@@ -563,7 +563,7 @@ namespace Microsoft.PowerFx.Core.Tests
             var node = result.Root;
 
             Assert.NotNull(node);
-            Assert.Null(result.Errors);
+            Assert.Empty(result.Errors);
             Assert.True(node is DottedNameNode);
 
             var dotted = node as DottedNameNode;
@@ -718,10 +718,10 @@ namespace Microsoft.PowerFx.Core.Tests
             var result = TexlParser.ParseScript(script);
             Assert.NotNull(result.Root);
             Assert.True(result.HasError);
-            Assert.True(result.Errors.Count >= count);
+            Assert.True(result._errors.Count >= count);
 
             //Assert.IsTrue(result.Errors.All(err => err.ErrorKind == DocumentErrorKind.AXL && err.TextSpan != null));
-            Assert.True(errorMessage == null || result.Errors.Any(err => err.ShortMessage == errorMessage));
+            Assert.True(errorMessage == null || result._errors.Any(err => err.ShortMessage == errorMessage));
         }
 
         internal void TestFormulasParseRoundtrip(string script)

@@ -3,19 +3,21 @@
 
 using System.Linq;
 using Microsoft.PowerFx.Core;
+using Microsoft.PowerFx.Core.Public;
 using Microsoft.PowerFx.Core.Public.Types;
+using Microsoft.PowerFx.Core.Tests;
 using Xunit;
 
 namespace Microsoft.PowerFx.Tests
 {
-    public class BindingEngineTests
-    {
+    public class BindingEngineTests : PowerFxTest
+    {       
         [Fact]
         public void CheckSuccess()
         {
             var config = new PowerFxConfig();
             var engine = new Engine(config);
-                        
+
             var result = engine.Check(
                 "3*2+x",
                 new RecordType().Add(
@@ -27,6 +29,68 @@ namespace Microsoft.PowerFx.Tests
             Assert.Equal("x", result.TopLevelIdentifiers.First());
         }
 
+        // Parse and Bind separately. 
+        [Fact]
+        public void CheckParseSuccess()
+        {
+            var config = new PowerFxConfig();
+            var engine = new Engine(config);
+            var parse = engine.Parse("3*x");
+
+            Assert.False(parse.HasError);
+            Assert.Empty(parse.Errors);
+
+            Assert.NotNull(parse.Root);
+
+            var str = parse.Root.ToString();
+            Assert.Equal("3 * x", str);
+
+            var r = new RecordType().Add(
+                   new NamedFormulaType("x", FormulaType.Number));
+                        
+            var check = engine.Check(parse, r);
+            Assert.True(check.IsSuccess);
+
+            // Can reuse Parse 
+            var check2 = engine.Check(parse, r);
+            Assert.True(check2.IsSuccess);
+        }
+
+        // Parse and Bind separately. 
+        [Fact]
+        public void CheckChainingParseSuccess()
+        {
+            var opts = new ParserOptions
+            {  
+                AllowsSideEffects = true
+            };
+
+            var config = new PowerFxConfig();
+            var engine = new Engine(config);
+            var parse = engine.Parse("a;b;c", opts);
+
+            Assert.False(parse.HasError);
+            Assert.Empty(parse.Errors);
+
+            Assert.NotNull(parse.Root);
+
+            var str = parse.Root.ToString();
+            Assert.Equal("a ; b ; c", str);
+        }
+
+        [Fact]
+        public void CheckParseOnlyError()
+        {
+            var config = new PowerFxConfig();
+            var engine = new Engine(config);
+            var result = engine.Parse("3*1+");
+
+            Assert.True(result.HasError);
+            Assert.Single(result.Errors);
+                        
+            AssertContainsError(result, "Error 4-4: Expected an operand");
+        }
+
         [Fact]
         public void CheckParseError()
         {
@@ -35,8 +99,8 @@ namespace Microsoft.PowerFx.Tests
             var result = engine.Check("3*1+");
 
             Assert.False(result.IsSuccess);
-            Assert.Single(result.Errors);
-            Assert.StartsWith("Error 4-4: Expected an operand", result.Errors[0].ToString());
+            Assert.True(result.Errors.Count() >= 1);
+            AssertContainsError(result, "Error 4-4: Expected an operand");
         }
 
         [Fact]
@@ -47,8 +111,7 @@ namespace Microsoft.PowerFx.Tests
             var result = engine.Check("3+foo+2"); // foo is undefined
 
             Assert.False(result.IsSuccess);
-            Assert.Single(result.Errors);
-            Assert.StartsWith("Error 2-5: Name isn't valid. 'foo' isn't recognized", result.Errors[0].ToString());
+            AssertContainsError(result, "Error 2-5: Name isn't valid. 'foo' isn't recognized");
         }
 
         [Fact]
@@ -60,7 +123,7 @@ namespace Microsoft.PowerFx.Tests
 
             Assert.False(result.IsSuccess);
             Assert.Single(result.Errors);
-            Assert.StartsWith("Error 0-8: 'abc' is an unknown or unsupported function.", result.Errors[0].ToString());
+            AssertContainsError(result, "Error 0-8: 'abc' is an unknown or unsupported function.");
         }
 
         [Fact]
@@ -72,7 +135,7 @@ namespace Microsoft.PowerFx.Tests
 
             Assert.False(result.IsSuccess);
             Assert.Single(result.Errors);
-            Assert.StartsWith("Error 0-12: 'def' is an unknown or unsupported function in namespace 'abc'.", result.Errors[0].ToString());
+            AssertContainsError(result, "Error 0-12: 'def' is an unknown or unsupported function in namespace 'abc'.");
         }
 
         [Fact]
@@ -84,7 +147,7 @@ namespace Microsoft.PowerFx.Tests
 
             Assert.False(result.IsSuccess);
             Assert.Single(result.Errors);
-            Assert.StartsWith("Error 31-34: Name isn't valid. 'foo' isn't recognized", result.Errors[0].ToString());
+            AssertContainsError(result, "Error 31-34: Name isn't valid. 'foo' isn't recognized");
         }
 
         [Fact]
@@ -95,8 +158,12 @@ namespace Microsoft.PowerFx.Tests
             var result = engine.Check("[1,2,3].foo");
 
             Assert.False(result.IsSuccess);
-            Assert.Single(result.Errors);
-            Assert.StartsWith("Error 7-11: Name isn't valid. 'foo' isn't recognized", result.Errors[0].ToString());
+            AssertContainsError(result, "Error 7-11: Name isn't valid. 'foo' isn't recognized");
+        }
+
+        private void AssertContainsError(IOperationStatus result, string errorMessage)
+        {
+            Assert.Contains(result.Errors, x => x.ToString().StartsWith(errorMessage));
         }
     }
 }

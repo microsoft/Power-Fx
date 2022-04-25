@@ -7,13 +7,14 @@ using Microsoft.PowerFx.Core.Lexer;
 using Microsoft.PowerFx.Core.Logging;
 using Microsoft.PowerFx.Core.Syntax;
 using Microsoft.PowerFx.Core.Syntax.Nodes;
+using Microsoft.PowerFx.Core.Tests;
 using Xunit;
 using static Microsoft.PowerFx.Core.Parser.TexlParser;
 
 namespace Microsoft.PowerFx.Tests
 {
-    public sealed class FormatterTests
-    {
+    public sealed class FormatterTests : PowerFxTest
+    {       
         [Theory]
         [InlineData(
             "Collect(Yep, { a: [1], b: \"Hello\" })",

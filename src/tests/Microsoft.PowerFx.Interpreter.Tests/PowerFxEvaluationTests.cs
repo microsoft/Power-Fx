@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core;
@@ -14,7 +15,7 @@ using Xunit;
 
 namespace Microsoft.PowerFx.Interpreter.Tests
 {
-    public class ExpressionEvaluationTests
+    public class ExpressionEvaluationTests : PowerFxTest
     {
         internal static Dictionary<string, Func<(RecalcEngine engine, RecordValue parameters)>> SetupHandlers = new Dictionary<string, Func<(RecalcEngine engine, RecordValue parameters)>>() 
         {

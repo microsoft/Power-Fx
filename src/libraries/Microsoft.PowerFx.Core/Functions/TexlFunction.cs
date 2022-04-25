@@ -1114,6 +1114,11 @@ namespace Microsoft.PowerFx.Core.Functions
                 return false;
             }
 
+            if (dataSource == null)
+            {
+                return false;
+            }
+
             // Check if DS is server delegatable.
             return dataSource.IsDelegatable &&
                     dataSource.DelegationMetadata.VerifyValue().TableCapabilities.HasCapability(expectedCapability.Capabilities);

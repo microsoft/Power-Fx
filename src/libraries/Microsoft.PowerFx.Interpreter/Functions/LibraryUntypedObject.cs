@@ -126,5 +126,17 @@ namespace Microsoft.PowerFx.Functions
 
             return CommonErrors.RuntimeTypeMismatch(irContext);
         }
+
+        public static FormulaValue CountRows_UO(IRContext irContext, UntypedObjectValue[] args)
+        {
+            var impl = args[0].Impl;
+
+            if (impl.Type is ExternalType externalType && externalType.Kind == ExternalTypeKind.Array)
+            {
+                return new NumberValue(irContext, impl.GetArrayLength());
+            }
+
+            return CommonErrors.RuntimeTypeMismatch(irContext);
+        }
     }
 }

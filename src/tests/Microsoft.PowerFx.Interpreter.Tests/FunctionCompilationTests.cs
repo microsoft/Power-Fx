@@ -2,13 +2,12 @@
 // Licensed under the MIT license.
 
 using Microsoft.PowerFx.Core.Public.Types;
-using Microsoft.PowerFx.Core.Types;
-using Microsoft.PowerFx.Interpreter;
+using Microsoft.PowerFx.Core.Tests;
 using Xunit;
 
 namespace Microsoft.PowerFx.Tests
 {
-    public class FunctionCompilationTests
+    public class FunctionCompilationTests : PowerFxTest
     {
         [Theory]
         [InlineData("Switch(A, 2, \"two\", \"other\")")]
@@ -19,7 +18,6 @@ namespace Microsoft.PowerFx.Tests
             engine.UpdateVariable("A", 15);
             var check = engine.Check(expression);
             Assert.True(check.IsSuccess);
-            Assert.Null(check.Errors);
             Assert.Equal(FormulaType.String, check.ReturnType);
         }
     }
