@@ -5,6 +5,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Public.Types;
 using Microsoft.PowerFx.Core.Public.Values;
@@ -287,8 +289,10 @@ namespace Microsoft.PowerFx.Tests
         }
 
         // Test using a marshalled object inside of With()
-        [Fact]
-        public void With()
+        [Theory]
+        [InlineData("With(x, ThisRecord.Field1*10+ThisRecord.Field1)", 2)]
+        [InlineData("{ f1 : x }.f1.Field1", 1)]
+        public void With(string expr, int expectedCount)
         {
             var obj1 = new TestObj();
 
@@ -305,10 +309,185 @@ namespace Microsoft.PowerFx.Tests
             Assert.Equal(0, obj1._counter2);
 
             // Verify lazy access around With(). 
-            var result2 = engine.Eval("With(x, ThisRecord.Field1*10+ThisRecord.Field1)");
+            var result2 = engine.Eval(expr);
 
-            Assert.Equal(2, obj1._counter); // each field access is +1. 
+            Assert.Equal(expectedCount, obj1._counter); // each field access is +1. 
             Assert.Equal(0, obj1._counter2); // Didn't touch field2. 
+        }
+
+        // Test that derived RecordValues can pass through the system "unharmed" and don't get
+        // flattened into InMemoryRecordValue.
+        // There's no type unification here.
+        [Theory]
+        [InlineData("{ f1 : x }.f1")]
+        [InlineData("If(false, { field1 : 12 }, x)")]
+        [InlineData("Last(Table(y,x))")]
+        public void PassThroughRecordValue(string expr)
+        {
+            var x = new MyRecordValue();
+            var y = new MyRecordValue();
+            var engine = new RecalcEngine();
+            engine.UpdateVariable("x", x);
+            engine.UpdateVariable("y", y);
+
+            // Wrap in a record. 
+            var result = engine.Eval(expr);
+
+            var obj = result.ToObject();
+            Assert.True(object.ReferenceEquals(x, obj));
+        }
+
+        [Fact]
+        public void MixRecordValueImplementationsTable()
+        {
+            var x = new MyRecordValue();
+            var engine = new RecalcEngine();
+            engine.UpdateVariable("x", x); // x has field1. 
+
+            // Wrap in a record. 
+            engine.SetFormula("t", "Table(x,{field2:12})", (str, val) => { });
+            var result1 = engine.Eval("First(t).field2");
+            Assert.IsType<BlankValue>(result1);
+
+            var result2 = engine.Eval("Last(t).field1");
+            Assert.IsType<BlankValue>(result2);
+        }
+
+        [Fact]
+        public void MixRecordValueImplementationsIf()
+        {
+            var x = new MyRecordValue();
+            var engine = new RecalcEngine();
+            engine.UpdateVariable("x", x); // x has field1. 
+
+            // Wrap in a record. 
+            var result1 = engine.Eval("If(false, {field1:11, field2:22}, x).field1");
+            Assert.Equal(999.0, result1.ToObject());
+        }
+        
+        [Fact]
+        public void TypeProjectionWithCustomRecords()
+        {
+            var x = new MyRecordValue();
+            var engine = new RecalcEngine();
+            engine.UpdateVariable("x", x); // x has field1. 
+
+            // Ensure that compile-time type unification works even when 
+            // mixing custom derived RecordValues and builtin record values. 
+            var result = engine.Eval(
+@"First(
+        Table(
+            {a:x},
+            {a:{field2:222},b:22}
+        )).a.field1
+");
+
+            Assert.Equal(999.0, result.ToObject());
+        }
+
+        // Example of a host-derived object. 
+        private class MyRecordValue : RecordValue
+        {
+            private static readonly RecordType _type = new RecordType().Add("field1", FormulaType.Number);
+
+            // Ctor to let tests override and provide wrong types.
+            public MyRecordValue(RecordType type)
+                : base(type)
+            {
+            }
+
+            public MyRecordValue() 
+                : base(_type)
+            {
+            }
+
+            protected override bool TryGetField(FormulaType fieldType, string fieldName, out FormulaValue result)
+            {
+                if (fieldName == "field1")
+                {
+                    result = FormulaValue.New(999);
+                    return true;
+                }
+
+                result = null;
+                return false;                
+            }
+
+            public override object ToObject()
+            {
+                return this;
+            }
+        }
+
+        // Test that we catch poor implementations in host-provided RecordValues.
+        // These are all fortifying against host bugs. 
+        [Theory]
+        [InlineData(typeof(MyRecordValue))]
+        [InlineData(typeof(MyBadRecordValue))]
+        [InlineData(typeof(MyBadRecordValue2))]
+        [InlineData(typeof(MyBadRecordValueMismatch))]
+        [InlineData(typeof(MyBadRecordValueThrows))]        
+        public async Task HostBugNullMismatch(Type recordType)
+        {
+            var x = (RecordValue)Activator.CreateInstance(recordType);
+            var shouldSucceed = recordType == typeof(MyRecordValue);
+
+            var engine = new RecalcEngine();
+            engine.UpdateVariable("x", x); // x has field1. 
+
+            var expr = "x.field1";
+            var checkResult = engine.Check(expr);
+            Assert.True(checkResult.IsSuccess);
+
+            if (shouldSucceed)
+            {
+                // For comparison, verify we can succeed. 
+                var result = await engine.EvalAsync("x.field1", CancellationToken.None);
+                Assert.Equal(999.0, result.ToObject());
+            }
+            else
+            { 
+                await Assert.ThrowsAsync<InvalidOperationException>(async () =>
+                    await engine.EvalAsync("x.field1", CancellationToken.None));
+            }            
+        }
+
+        private class MyBadRecordValueMismatch : MyRecordValue
+        {
+            protected override bool TryGetField(FormulaType fieldType, string fieldName, out FormulaValue result)
+            {
+                // Error! we advertise field1 should be a number!
+                result = FormulaValue.New("a string");
+                return true;
+            }
+        }
+
+        private class MyBadRecordValue : MyRecordValue
+        {
+            protected override bool TryGetField(FormulaType fieldType, string fieldName, out FormulaValue result)
+            {
+                result = null;
+                return true; // Should be false
+            }
+        }
+
+        private class MyBadRecordValue2 : MyRecordValue
+        {
+            protected override bool TryGetField(FormulaType fieldType, string fieldName, out FormulaValue result)
+            {
+                base.TryGetField(fieldType, fieldName, out result);
+                return false; // should be true. 
+            }
+        }
+
+        private class MyBadRecordValueThrows : MyRecordValue
+        {
+            protected override bool TryGetField(FormulaType fieldType, string fieldName, out FormulaValue result)
+            {
+                // Exceptions here are implementation errors and should propagate. 
+                // A fx runtime error should be a ErrorValue instead.
+                throw new InvalidOperationException($"Throw from within");
+            }
         }
 
         private class BasePoco

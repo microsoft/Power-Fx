@@ -34,12 +34,6 @@ namespace Microsoft.PowerFx.Core.Binding
 
         DPath CurrentEntityPath { get; }
 
-        bool CurrentPropertyIsBehavior { get; }
-
-        bool CurrentPropertyIsConstantData { get; }
-
-        bool CurrentPropertyAllowsNavigation { get; }
-
         IEnumerable<TexlFunction> Functions { get; }
 
         // Look up an entity, context variable, or entity part (e.g. enum value) by name.

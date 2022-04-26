@@ -685,12 +685,21 @@ namespace Microsoft.PowerFx.Core.Tests
             TestFormulasParseError(script);
         }
 
-        internal void TestRoundtrip(string script, string expected = null, NodeKind expectedNodeKind = NodeKind.Error, Action<TexlNode> customTest = null)
+        [Theory]
+        [InlineData("A;B;C", "A ; B ; C")]
+        [InlineData("Foo(1);Bar(2)", "Foo(1) ; Bar(2)")]
+        public void TestChainParse(string script, string expected = null)
         {
-            var result = TexlParser.ParseScript(script);
-            var node = result.Root;
+            TestRoundtrip(script, expected, flags: TexlParser.Flags.EnableExpressionChaining);
+        }
+
+        internal void TestRoundtrip(string script, string expected = null, NodeKind expectedNodeKind = NodeKind.Error, Action<TexlNode> customTest = null, TexlParser.Flags flags = TexlParser.Flags.None)
+        {
+            var result = TexlParser.ParseScript(script, flags: flags);
+            var node = result.Root;            
+                        
             Assert.NotNull(node);
-            Assert.False(result.HasError);
+            Assert.False(result.HasError, result.ParseErrorText);
 
             var startid = node.Id;
 
