@@ -8,6 +8,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using Microsoft.PowerFx;
 using Microsoft.PowerFx.Core.Lexer.Tokens;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
@@ -19,7 +20,7 @@ using StringBuilderCache = Microsoft.PowerFx.Core.Utils.StringBuilderCache<Micro
 
 namespace Microsoft.PowerFx.Core.Lexer
 {
-    // TEXL expression lexer
+    [ThreadSafeImmutable]
     internal sealed class TexlLexer
     {
         [Flags]
@@ -100,10 +101,9 @@ namespace Microsoft.PowerFx.Core.Lexer
         // Usually our tokens are less than 128 characters long, unless it's a large string.
         private const int DesiredStringBuilderSize = 128;
 
-        private static readonly Lazy<TexlLexer> _invariantDecimalSeparatorLexer = new Lazy<TexlLexer>(() => new TexlLexer(PunctuatorDecimalSeparatorInvariant));
-        private static readonly Lazy<TexlLexer> _commaDecimalSeparatorLexer = new Lazy<TexlLexer>(() => new TexlLexer(PunctuatorCommaInvariant));
+        public static TexlLexer InvariantLexer { get; } = new TexlLexer(PunctuatorDecimalSeparatorInvariant);
 
-        public static TexlLexer InvariantLexer => _invariantDecimalSeparatorLexer.Value;
+        public static TexlLexer CommaDecimalSeparatorLexer { get; } = new TexlLexer(PunctuatorCommaInvariant);
 
         private static readonly IReadOnlyList<string> _unaryOperatorKeywords;
         private static readonly IReadOnlyList<string> _binaryOperatorKeywords;
@@ -122,8 +122,6 @@ namespace Microsoft.PowerFx.Core.Lexer
         public string LocalizedPunctuatorListSeparator { get; }
 
         public string LocalizedPunctuatorChainingSeparator { get; }
-
-        private Tuple<string, Flags, Token[]> _cache;
 
         static TexlLexer()
         {
@@ -202,7 +200,7 @@ namespace Microsoft.PowerFx.Core.Lexer
         public static TexlLexer GetLocalizedInstance(CultureInfo culture)
         {
             culture ??= CultureInfo.InvariantCulture;
-            return culture.NumberFormat.NumberDecimalSeparator == PunctuatorDecimalSeparatorInvariant ? InvariantLexer : _commaDecimalSeparatorLexer.Value;
+            return culture.NumberFormat.NumberDecimalSeparator == PunctuatorDecimalSeparatorInvariant ? InvariantLexer : CommaDecimalSeparatorLexer;
         }
 
         public static IList<string> GetKeywordDictionary()
@@ -315,21 +313,6 @@ namespace Microsoft.PowerFx.Core.Lexer
         {
             Contracts.AssertValue(text);
 
-            // Check the cache
-            var cacheCopy = _cache;
-            if (cacheCopy != null)
-            {
-                Contracts.AssertValue(cacheCopy.Item1);
-                Contracts.AssertValue(cacheCopy.Item3);
-
-                // Cache hit
-                if (text == cacheCopy.Item1 && flags == cacheCopy.Item2)
-                {
-                    return cacheCopy.Item3;
-                }
-            }
-
-            // Cache miss
             var tokens = new List<Token>();
             StringBuilder sb = null;
 
@@ -358,8 +341,6 @@ namespace Microsoft.PowerFx.Core.Lexer
 
             // Update the cache and return the result
             var tokensArr = tokens.ToArray();
-
-            _cache = new Tuple<string, Flags, Token[]>(text, flags, tokensArr);
             return tokensArr;
         }
 
