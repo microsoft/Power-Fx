@@ -78,6 +78,12 @@ namespace Microsoft.PowerFx.Core.Public.Values
             return GetField(fieldType, fieldName);
         }
 
+        // Create an exception object for when the host violates the TryGetField() contract. 
+        private Exception HostException(string fieldName, string message)
+        {
+            return new InvalidOperationException($"{GetType().Name}.TryGetField({fieldName}): {message}");
+        }
+
         // Internal, for already verified values.
         internal FormulaValue GetField(FormulaType fieldType, string fieldName)
         {
@@ -85,7 +91,7 @@ namespace Microsoft.PowerFx.Core.Public.Values
             {
                 if (result == null)
                 {
-                    throw new InvalidOperationException($"{GetType().Name}.TryGetField({fieldName}) returned true but null.");
+                    throw HostException(fieldName, $"returned true but null.");
                 }
 
                 // Ensure that type is properly projected. 
@@ -97,11 +103,26 @@ namespace Microsoft.PowerFx.Core.Public.Values
                 else if (result is TableValue tableValue)
                 {
                     result = new InMemoryTableValue(IRContext.NotInSource(fieldType), tableValue.Rows);
+                } 
+                else
+                {
+                    // Ensure that the actual type matches the expected type.
+                    if (!result.Type.Equals(fieldType))
+                    {
+                        if (result is not ErrorValue && result.Type is not BlankType)
+                        {
+                            throw HostException(fieldName, $"Wrong field type. Retuned {result.Type._type}, expected {fieldType._type}.");
+                        }
+                    }
                 }
 
                 Contract.Assert(result.Type.Equals(fieldType) || result is ErrorValue || result.Type is BlankType);
 
                 return result;
+            } 
+            else if (result != null)
+            {
+                throw HostException(fieldName, $"returned false with non-null result.");
             }
 
             // The binder can allow this if the record's static type contains fields not present in the runtime value.

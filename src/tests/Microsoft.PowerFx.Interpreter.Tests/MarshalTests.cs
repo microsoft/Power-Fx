@@ -5,6 +5,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Public.Types;
 using Microsoft.PowerFx.Core.Public.Values;
@@ -387,7 +389,13 @@ namespace Microsoft.PowerFx.Tests
         private class MyRecordValue : RecordValue
         {
             private static readonly RecordType _type = new RecordType().Add("field1", FormulaType.Number);
-            
+
+            // Ctor to let tests override and provide wrong types.
+            public MyRecordValue(RecordType type)
+                : base(type)
+            {
+            }
+
             public MyRecordValue() 
                 : base(_type)
             {
@@ -408,6 +416,77 @@ namespace Microsoft.PowerFx.Tests
             public override object ToObject()
             {
                 return this;
+            }
+        }
+
+        // Test that we catch poor implementations in host-provided RecordValues.
+        // These are all fortifying against host bugs. 
+        [Theory]
+        [InlineData(typeof(MyRecordValue))]
+        [InlineData(typeof(MyBadRecordValue))]
+        [InlineData(typeof(MyBadRecordValue2))]
+        [InlineData(typeof(MyBadRecordValueMismatch))]
+        [InlineData(typeof(MyBadRecordValueThrows))]        
+        public async Task HostBugNullMismatch(Type recordType)
+        {
+            var x = (RecordValue)Activator.CreateInstance(recordType);
+            var shouldSucceed = recordType == typeof(MyRecordValue);
+
+            var engine = new RecalcEngine();
+            engine.UpdateVariable("x", x); // x has field1. 
+
+            var expr = "x.field1";
+            var checkResult = engine.Check(expr);
+            Assert.True(checkResult.IsSuccess);
+
+            if (shouldSucceed)
+            {
+                // For comparison, verify we can succeed. 
+                var result = await engine.EvalAsync("x.field1", CancellationToken.None);
+                Assert.Equal(999.0, result.ToObject());
+            }
+            else
+            { 
+                await Assert.ThrowsAsync<InvalidOperationException>(async () =>
+                    await engine.EvalAsync("x.field1", CancellationToken.None));
+            }            
+        }
+
+        private class MyBadRecordValueMismatch : MyRecordValue
+        {
+            protected override bool TryGetField(FormulaType fieldType, string fieldName, out FormulaValue result)
+            {
+                // Error! we advertise field1 should be a number!
+                result = FormulaValue.New("a string");
+                return true;
+            }
+        }
+
+        private class MyBadRecordValue : MyRecordValue
+        {
+            protected override bool TryGetField(FormulaType fieldType, string fieldName, out FormulaValue result)
+            {
+                result = null;
+                return true; // Should be false
+            }
+        }
+
+        private class MyBadRecordValue2 : MyRecordValue
+        {
+            protected override bool TryGetField(FormulaType fieldType, string fieldName, out FormulaValue result)
+            {
+                base.TryGetField(fieldType, fieldName, out result);
+                return false; // should be true. 
+            }
+        }
+
+        private class MyBadRecordValueThrows : MyRecordValue
+        {
+            protected override bool TryGetField(FormulaType fieldType, string fieldName, out FormulaValue result)
+            {
+                // Exceptions here are implementation errors and should propagate. 
+                // A fx runtime error should be a ErrorValue instead.
+                throw new InvalidOperationException($"Throw from within");
             }
         }
 
