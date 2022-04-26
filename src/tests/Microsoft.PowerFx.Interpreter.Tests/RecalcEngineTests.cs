@@ -276,7 +276,7 @@ namespace Microsoft.PowerFx.Tests
             var config = new PowerFxConfig();
 
             // Pick a function in core but not implemented in interpreter.
-            var nyiFunc = BuiltinFunctionsCore.Shuffle;
+            var nyiFunc = BuiltinFunctionsCore.ISOWeekNum;
 
             Assert.Contains(nyiFunc, config.Functions);
 
@@ -299,6 +299,19 @@ namespace Microsoft.PowerFx.Tests
             Assert.True(result.ReturnType is NumberType);
             Assert.Single(result.TopLevelIdentifiers);
             Assert.Equal("x", result.TopLevelIdentifiers.First());
+        }
+
+        [Fact]
+        public void CanRunWithWarnings()
+        {
+            var config = new PowerFxConfig();
+            var engine = new RecalcEngine(config);
+
+            var result = engine.Check("T.Var = 23", new RecordType()
+                .Add(new NamedFormulaType("T", new RecordType().Add(new NamedFormulaType("Var", FormulaType.String)))));
+
+            Assert.True(result.IsSuccess);
+            Assert.Equal(1, result.Errors.Count(x => x.IsWarning));
         }
 
         [Fact]
