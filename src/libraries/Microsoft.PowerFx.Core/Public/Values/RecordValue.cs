@@ -51,7 +51,6 @@ namespace Microsoft.PowerFx.Core.Public.Values
         }
 
         /// <summary>
-        /// If we have a derived Value, we can get a derived type.
         /// The RecordType of this value.
         /// </summary>
         public new RecordType Type => (RecordType)base.Type;
