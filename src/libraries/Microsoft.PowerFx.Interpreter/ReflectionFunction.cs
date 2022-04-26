@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Functions;
@@ -25,6 +26,8 @@ namespace Microsoft.PowerFx
 
         public override bool SupportsParamCoercion => true;
 
+        private readonly string _suffix;
+
         public CustomTexlFunction(string name, FormulaType returnType, params FormulaType[] paramTypes)
             : this(name, returnType._type, Array.ConvertAll(paramTypes, x => x._type))
         {
@@ -33,6 +36,19 @@ namespace Microsoft.PowerFx
         public CustomTexlFunction(string name, DType returnType, params DType[] paramTypes)
             : base(DPath.Root, name, name, SG("Custom func " + name), FunctionCategories.MathAndStat, returnType, 0, paramTypes.Length, paramTypes.Length, paramTypes)
         {
+            _suffix = ComputeOverloadSuffix(paramTypes);
+        }
+
+        private static string ComputeOverloadSuffix(DType[] paramTypes)
+        {
+            var sb = new StringBuilder();
+            foreach (var t in paramTypes)
+            {
+                sb.Append('_');
+                sb.Append(t.Kind);
+            }
+
+            return sb.ToString();
         }
 
         public override bool IsSelfContained => true;
@@ -50,6 +66,11 @@ namespace Microsoft.PowerFx
         public virtual FormulaValue Invoke(FormulaValue[] args)
         {
             return _impl(args);
+        }
+
+        public override string GetUniqueTexlRuntimeName(bool isPrefetching = false)
+        {
+            return GetUniqueTexlRuntimeName(suffix: _suffix);
         }
     }
 
