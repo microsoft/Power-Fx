@@ -2,9 +2,9 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Diagnostics.Contracts;
 using System.Globalization;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.IR;
@@ -469,7 +469,22 @@ namespace Microsoft.PowerFx
         public override async ValueTask<FormulaValue> Visit(ChainingNode node, SymbolContext context)
         {
             CheckCancel();
-            return CommonErrors.NotYetImplementedError(node.IRContext, "Expression chaining");
+
+            if (!node.Nodes.Any())
+            {
+                return CommonErrors.InvalidChain(node.IRContext, node.ToString());
+            }
+
+            FormulaValue fv = null;
+
+            foreach (var iNode in node.Nodes)
+            {
+                CheckCancel();
+
+                fv = await iNode.Accept(this, context);
+            }
+
+            return fv;
         }
 
         public override async ValueTask<FormulaValue> Visit(ResolvedObjectNode node, SymbolContext context)

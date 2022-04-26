@@ -231,7 +231,7 @@ namespace Microsoft.PowerFx.Core.Errors
             FormatInnerError(sb);
         }
 
-        protected virtual void FormatCore(StringBuilder sb)
+        internal virtual void FormatCore(StringBuilder sb)
         {
             Contracts.AssertValue(sb);
 

@@ -88,5 +88,15 @@ namespace Microsoft.PowerFx.Functions
                 Kind = ErrorKind.NotSupported
             });
         }
+
+        public static ErrorValue InvalidChain(IRContext irContext, string message)
+        {
+            return new ErrorValue(irContext, new ExpressionError()
+            {
+                Message = $"Invalid Chain: {message}",
+                Span = irContext.SourceContext,
+                Kind = ErrorKind.NotSupported
+            });
+        }
     }
 }

@@ -2,7 +2,6 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
-using System.Linq;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Glue;
@@ -86,10 +85,11 @@ namespace Microsoft.PowerFx
         /// </summary>
         /// <param name="expressionText">the expression in plain text. </param>
         /// <param name="parameterType">types of additional args to pass.</param>
+        /// <param name="options"parser options to use.</param>
         /// <returns></returns>
-        public CheckResult Check(string expressionText, RecordType parameterType = null)
+        public CheckResult Check(string expressionText, RecordType parameterType = null, ParserOptions options = null)
         {
-            var parse = Parse(expressionText);
+            var parse = Parse(expressionText, options);
             return Check(parse, parameterType);
         }
 
