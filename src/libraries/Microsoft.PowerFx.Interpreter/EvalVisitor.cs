@@ -441,7 +441,7 @@ namespace Microsoft.PowerFx
             }
 
             var record = (RecordValue)left;
-            var val = record.GetField(node.IRContext, node.Field.Value);
+            var val = record.GetField(node.IRContext.ResultType, node.Field.Value);
 
             return val;
         }
