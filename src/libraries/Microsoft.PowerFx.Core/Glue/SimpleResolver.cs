@@ -37,14 +37,6 @@ namespace Microsoft.PowerFx.Core.Glue
 
         DPath INameResolver.CurrentEntityPath => default;
 
-        // Allow behavior properties, like calls to POST.
-        // $$$ this may need to be under a flag so host can enforce read-only properties.
-        bool INameResolver.CurrentPropertyIsBehavior => true;
-
-        bool INameResolver.CurrentPropertyIsConstantData => false;
-
-        bool INameResolver.CurrentPropertyAllowsNavigation => false;
-
         // Expose the list to aide in intellisense suggestions. 
         public IEnumerable<TexlFunction> Functions => _library;
 

@@ -3,11 +3,16 @@
 
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.PowerFx.Core;
+using Microsoft.PowerFx.Core.IR;
+using Microsoft.PowerFx.Core.Public;
 using Microsoft.PowerFx.Core.Public.Types;
 using Microsoft.PowerFx.Core.Public.Values;
 using Microsoft.PowerFx.Core.Tests;
+using Microsoft.PowerFx.Tests;
 using Xunit;
+using Xunit.Sdk;
 
 namespace Microsoft.PowerFx.Interpreter.Tests
 {
@@ -43,14 +48,57 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             }
         }
 
+        [Theory]
+        [InlineData("Assert2(obj.prop, 123); Set2(obj, \"prop\", 456); Assert2(obj.prop, 456)")]
+        [InlineData("Assert2(obj.prop, 123); Set3(obj, \"prop\", \"prop2\"); Assert2(obj.prop, 456)")]       
+        public void MutabilityTest_Chain(string expr)
+        {
+            var config = new PowerFxConfig();            
+            config.AddFunction(new Assert2Function());
+            config.AddFunction(new Set2Function());
+            config.AddFunction(new Set3Function());
+            var engine = new RecalcEngine(config);            
+                      
+            var d = new Dictionary<string, FormulaValue>
+            {
+                ["prop"] = FormulaValue.New(123),
+                ["prop2"] = FormulaValue.New(456)
+            };
+
+            var obj = MutableObject.New(d);
+            engine.UpdateVariable("obj", obj);
+
+            var x = engine.Eval(expr, options: new ParserOptions() { AllowsSideEffects = true }); // Assert failures will throw.
+
+            if (x is ErrorValue ev)
+            {
+                throw new XunitException($"FormulaValue is ErrorValue: {string.Join("\r\n", ev.Errors)}");
+            }
+
+            Assert.IsType<NumberValue>(x);
+            Assert.Equal(456, ((NumberValue)x).Value);
+            Assert.Equal(456, ((NumberValue)d["prop"]).Value);                      
+        }
+
+        [Fact]
+        public void MutabilityTest_InvalidChain()
+        {
+            var config = new PowerFxConfig();
+            var engine = new RecalcEngine(config);
+            var called = false;
+
+            Assert.Throws<InvalidOperationException>(() => engine.SetFormula("A", "1;2", (str, fv) => { called = true; }));
+            Assert.False(called);
+        }
+
         private class Assert2Function : ReflectionFunction
         {
             public Assert2Function()
-                : base("Assert2", FormulaType.Blank, new UntypedObjectType(), FormulaType.Number)
+                : base("Assert2", FormulaType.Number, new UntypedObjectType(), FormulaType.Number)
             {
             }
 
-            public void Execute(UntypedObjectValue obj, NumberValue val)
+            public NumberValue Execute(UntypedObjectValue obj, NumberValue val)
             {
                 var impl = obj.Impl;
                 var actual = impl.GetDouble();
@@ -60,18 +108,15 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 {
                     throw new InvalidOperationException($"Mismatch");
                 }
+
+                return new NumberValue(IRContext.NotInSource(FormulaType.Number), actual);
             }
         }
 
         private class Set2Function : ReflectionFunction
         {
             public Set2Function()
-                : base(
-                      "Set2",
-                      FormulaType.Blank,  // returns
-                      new UntypedObjectType(),
-                      FormulaType.String,
-                      FormulaType.Number) // $$$ Any?
+                : base("Set2", FormulaType.Blank, new UntypedObjectType(), FormulaType.String, FormulaType.Number)
             {
             }
 
@@ -79,6 +124,22 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             {
                 var impl = (MutableObject)obj.Impl;
                 impl.Set(propName.Value, val);
+            }
+        }
+
+        private class Set3Function : ReflectionFunction
+        {
+            public Set3Function()
+                : base("Set3", FormulaType.Blank, new UntypedObjectType(), FormulaType.String, FormulaType.String)
+            {
+            }
+
+            public void Execute(UntypedObjectValue obj, StringValue propName, StringValue propName2)
+            {
+                var impl = (MutableObject)obj.Impl;
+                impl.TryGetProperty(propName2.Value, out var propValue);
+                var val = propValue.GetDouble();                
+                impl.Set(propName.Value, new NumberValue(IRContext.NotInSource(FormulaType.Number), val));
             }
         }
 

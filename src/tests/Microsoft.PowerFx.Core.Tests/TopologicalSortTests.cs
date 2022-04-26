@@ -63,7 +63,8 @@ namespace Microsoft.PowerFx.Core.Tests
 
             var success = TopologicalSort.TrySort(nodes, edges, out var result, out var cycles);
             Assert.False(success);
-            Assert.Null(result);
+            Assert.NotNull(result);
+            Assert.True(result.Count() == 4);
             Assert.NotNull(cycles);
 
             var set = new HashSet<string>(cycles);

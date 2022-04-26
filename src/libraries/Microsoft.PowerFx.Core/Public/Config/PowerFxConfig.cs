@@ -41,8 +41,12 @@ namespace Microsoft.PowerFx.Core
             _environmentSymbols = new Dictionary<DName, IExternalEntity>();
             _environmentSymbolDisplayNameProvider = new SingleSourceDisplayNameProvider();
             EnumStoreBuilder = enumStoreBuilder;
-        }    
+        }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PowerFxConfig"/> class.        
+        /// </summary>
+        /// <param name="cultureInfo">Culture to use.</param>        
         public PowerFxConfig(CultureInfo cultureInfo = null)
             : this(cultureInfo, new EnumStoreBuilder().WithDefaultEnums()) 
         {

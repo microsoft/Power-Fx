@@ -3,7 +3,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -276,7 +275,7 @@ namespace Microsoft.PowerFx.Tests
             var config = new PowerFxConfig();
 
             // Pick a function in core but not implemented in interpreter.
-            var nyiFunc = BuiltinFunctionsCore.Shuffle;
+            var nyiFunc = BuiltinFunctionsCore.ISOWeekNum;
 
             Assert.Contains(nyiFunc, config.Functions);
 
@@ -302,6 +301,19 @@ namespace Microsoft.PowerFx.Tests
         }
 
         [Fact]
+        public void CanRunWithWarnings()
+        {
+            var config = new PowerFxConfig();
+            var engine = new RecalcEngine(config);
+
+            var result = engine.Check("T.Var = 23", new RecordType()
+                .Add(new NamedFormulaType("T", new RecordType().Add(new NamedFormulaType("Var", FormulaType.String)))));
+
+            Assert.True(result.IsSuccess);
+            Assert.Equal(1, result.Errors.Count(x => x.IsWarning));
+        }
+
+        [Fact]
         public void CheckSuccessWarning()
         {
             var engine = new RecalcEngine();
@@ -321,8 +333,7 @@ namespace Microsoft.PowerFx.Tests
             var result = engine.Check("3*1+");
 
             Assert.False(result.IsSuccess);
-            Assert.Single(result.Errors);
-            Assert.StartsWith("Error 4-4: Expected an operand", result.Errors[0].ToString());
+            Assert.StartsWith("Error 4-4: Expected an operand", result.Errors.First().ToString());
         }
 
         [Fact]
@@ -333,7 +344,7 @@ namespace Microsoft.PowerFx.Tests
 
             Assert.False(result.IsSuccess);
             Assert.Single(result.Errors);
-            Assert.StartsWith("Error 2-5: Name isn't valid. 'foo' isn't recognized", result.Errors[0].ToString());
+            Assert.StartsWith("Error 2-5: Name isn't valid. 'foo' isn't recognized", result.Errors.First().ToString());
         }
 
         [Fact]
@@ -344,7 +355,7 @@ namespace Microsoft.PowerFx.Tests
 
             Assert.False(result.IsSuccess);
             Assert.Single(result.Errors);
-            Assert.StartsWith("Error 31-34: Name isn't valid. 'foo' isn't recognized", result.Errors[0].ToString());
+            Assert.StartsWith("Error 31-34: Name isn't valid. 'foo' isn't recognized", result.Errors.First().ToString());
         }
 
         [Fact]
@@ -355,7 +366,7 @@ namespace Microsoft.PowerFx.Tests
 
             Assert.False(result.IsSuccess);
             Assert.Single(result.Errors);
-            Assert.StartsWith("Error 7-11: Name isn't valid. 'foo' isn't recognized", result.Errors[0].ToString());
+            Assert.StartsWith("Error 7-11: Name isn't valid. 'foo' isn't recognized", result.Errors.First().ToString());
         }
 
         [Fact]
@@ -366,7 +377,7 @@ namespace Microsoft.PowerFx.Tests
 
             Assert.False(result.IsSuccess);
             Assert.Single(result.Errors);
-            Assert.StartsWith("Error 2-8: Name isn't valid. 'Value' isn't recognized", result.Errors[0].ToString());
+            Assert.StartsWith("Error 2-8: Name isn't valid. 'Value' isn't recognized", result.Errors.First().ToString());
         }
 
         [Fact]
@@ -419,7 +430,7 @@ namespace Microsoft.PowerFx.Tests
             Assert.False(result.IsSuccess);
             Assert.Null(result.Expression);
             Assert.Single(result.Errors);
-            Assert.StartsWith("Error 2-5: Name isn't valid. 'foo' isn't recognized", result.Errors[0].ToString());
+            Assert.StartsWith("Error 2-5: Name isn't valid. 'foo' isn't recognized", result.Errors.First().ToString());
         }
 
         [Fact]

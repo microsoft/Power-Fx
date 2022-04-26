@@ -59,7 +59,7 @@ namespace Microsoft.PowerFx.Core.Errors
             _nameMapIDs.Add(name.Value);
         }
 
-        protected override void FormatCore(StringBuilder sb)
+        internal override void FormatCore(StringBuilder sb)
         {
             Contracts.AssertValue(sb);
 

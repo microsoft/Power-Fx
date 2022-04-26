@@ -1,0 +1,45 @@
+﻿>> StdevP(1,2,3)
+0.81649658093
+
+>> StdevP([1,2,3], Value)
+0.81649658093
+
+>> StdevP(1, 2/0)
+#Error
+
+>> StdevP(-1)
+0
+
+>> StdevP(0, Blank())
+0
+
+>> StdevP(Blank())
+#Error
+
+>> StdevP("NaN")
+#Error
+
+>> StdevP("NaN", Blank())
+#Error
+
+>> StdevP(Sort([-2, -1, 0, 1, 2], 1 / Value), Value)
+#Error
+
+>> StdevP(CountIf([1,2,3], true))
+0
+
+>> StdevP(CountIf(["1","2","3"], true))
+0
+
+// Infinity
+>> StdevP(-1.7e308,1.7e308)
+#Error
+
+>> StdevP("100", "AB")
+#Error
+
+>> StdevP(false, false)
+0
+
+>> StdevP(false, true)
+0.5
