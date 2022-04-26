@@ -3,7 +3,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -276,7 +275,7 @@ namespace Microsoft.PowerFx.Tests
             var config = new PowerFxConfig();
 
             // Pick a function in core but not implemented in interpreter.
-            var nyiFunc = BuiltinFunctionsCore.Shuffle;
+            var nyiFunc = BuiltinFunctionsCore.ISOWeekNum;
 
             Assert.Contains(nyiFunc, config.Functions);
 

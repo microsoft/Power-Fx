@@ -1,4 +1,4 @@
-﻿#SETUP: AsyncTestSetup
+﻿#SETUP: AsyncTestSetup, EnableExpressionChaining
 
 // Testsetup adds these functions:
 // - Async(N)  returns N, but ... 
@@ -103,3 +103,5 @@ false
 >> AddColumns([0,2,4], "N1", WaitFor(Value), "N2", WaitFor(Value+1))
 Table({N1:0,N2:1,Value:0},{N1:2,N2:3,Value:2},{N1:4,N2:5,Value:4})
 
+>> WaitFor(0); WaitFor(1); WaitFor(2)
+2
