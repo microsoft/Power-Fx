@@ -40,7 +40,6 @@ namespace Microsoft.PowerFx
         /// Initializes a new instance of the <see cref="RecalcEngine"/> class.
         /// Create a new power fx engine. 
         /// </summary>
-        /// <param name="powerFxConfig">Compiler customizations.</param>
         public RecalcEngine()
             : this(new PowerFxConfig(null))
         {
@@ -139,6 +138,7 @@ namespace Microsoft.PowerFx
         /// <param name="expressionText">textual representation of the formula.</param>
         /// <param name="parameters">parameters for formula. The fields in the parameter record can 
         /// be acecssed as top-level identifiers in the formula.</param>
+        /// <param name="options"></param>
         /// <returns>The formula's result.</returns>
         public FormulaValue Eval(string expressionText, RecordValue parameters = null, ParserOptions options = null)
         {

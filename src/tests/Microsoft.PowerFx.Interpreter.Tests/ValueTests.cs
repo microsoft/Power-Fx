@@ -156,8 +156,6 @@ namespace Microsoft.PowerFx.Core.Tests
             private int PrivateProp { get; set; }
 
             internal int InternalProp { get; set; }
-
-            public int publicField;
         }
 
         private class TestRow
