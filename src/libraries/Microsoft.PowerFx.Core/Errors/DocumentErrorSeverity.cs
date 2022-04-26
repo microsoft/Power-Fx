@@ -5,6 +5,9 @@ using Microsoft.AppMagic.Transport;
 
 namespace Microsoft.PowerFx.Core.Errors
 {
+    /// <summary>
+    /// Severity of errors provided.
+    /// </summary>
     [TransportType(TransportKind.Enum)]
     public enum DocumentErrorSeverity
     {
