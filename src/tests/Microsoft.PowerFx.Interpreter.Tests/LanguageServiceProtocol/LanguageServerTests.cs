@@ -305,10 +305,10 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
         }
 
         [Theory]
-        [InlineData("AA", null, "Name isn't valid. 'AA' isn't recognized.")]
-        [InlineData("1+CountRowss", null, "Name isn't valid. 'CountRowss' isn't recognized.")]
-        [InlineData("CountRows(2)", null, "Invalid argument type (Number). Expecting a Table value instead.", "The function 'CountRows' has some invalid arguments.")]
-        public void TestDidOpenErroneousFormula(string formula, string context, params string[] expectedErrors)
+        [InlineData("AA", "Name isn't valid. 'AA' isn't recognized.")]
+        [InlineData("1+CountRowss", "Name isn't valid. 'CountRowss' isn't recognized.")]
+        [InlineData("CountRows(2)", "Invalid argument type (Number). Expecting a Table value instead.", "The function 'CountRows' has some invalid arguments.")]
+        public void TestDidOpenErroneousFormula(string formula, params string[] expectedErrors)
         {
             var expectedDiagnostics = expectedErrors.Select(error => new Diagnostic()
             {

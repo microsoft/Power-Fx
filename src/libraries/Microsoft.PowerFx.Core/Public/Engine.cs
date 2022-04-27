@@ -48,7 +48,7 @@ namespace Microsoft.PowerFx
         }
 
         /// <summary>
-        /// Create a resolver for use in binding. This is called from <see cref="Check(string, RecordType)"/>.
+        /// Create a resolver for use in binding. This is called from <see cref="Check(string, RecordType, ParserOptions)"/>.
         /// Base classes can override this is there are additional symbols not in the config.
         /// </summary>
         /// <param name="alternateConfig">An alternate config that can be provided. Should default to engine's config if null.</param>
@@ -85,7 +85,7 @@ namespace Microsoft.PowerFx
         /// </summary>
         /// <param name="expressionText">the expression in plain text. </param>
         /// <param name="parameterType">types of additional args to pass.</param>
-        /// <param name="options"parser options to use.</param>
+        /// <param name="options">parser options to use.</param>
         /// <returns></returns>
         public CheckResult Check(string expressionText, RecordType parameterType = null, ParserOptions options = null)
         {
