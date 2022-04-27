@@ -482,6 +482,11 @@ namespace Microsoft.PowerFx
                 CheckCancel();
 
                 fv = await iNode.Accept(this, context);
+
+                if (fv is ErrorValue)
+                {
+                    return fv;
+                }
             }
 
             return fv;

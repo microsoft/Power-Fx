@@ -54,6 +54,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="ExpressionTestCases\Chaining.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\libraries\Microsoft.PowerFx.Core\Microsoft.PowerFx.Core.csproj" />
   </ItemGroup>
 
