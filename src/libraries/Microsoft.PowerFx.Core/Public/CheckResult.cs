@@ -101,31 +101,6 @@ namespace Microsoft.PowerFx.Core.Public
         /// <returns></returns>
         public bool IsNodeConstant(TexlNode node) => _binding.IsConstant(node);
 
-        /// <summary>
-        /// Check whether function invocation in type-correct.
-        /// </summary>
-        /// <param name="fnc"></param>
-        /// <param name="args"></param>
-        /// <param name="retType"></param>
-        /// <returns></returns>
-        public bool CheckInvocation(FunctionInfo fnc, IReadOnlyList<TexlNode> args, out FormulaType retType)
-        {
-            var argsArr = args.ToArray();
-            var typesArr = args.Select(node => GetNodeType(node)._type).ToArray();
-            var res = fnc._fnc.CheckInvocation(argsArr, typesArr, _binding.ErrorContainer, out var retDType, out _);
-
-            if (res)
-            {
-                retType = FormulaType.Build(retDType);
-            }
-            else
-            {
-                retType = null;
-            }
-
-            return res;
-        }
-
         internal IReadOnlyDictionary<string, TokenResultType> GetTokens(GetTokensFlags flags) => GetTokensUtils.GetTokens(_binding, flags);
     }
 

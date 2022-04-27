@@ -2,10 +2,7 @@
 // Licensed under the MIT license.
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using Microsoft.PowerFx.Core.Functions;
-using Microsoft.PowerFx.Core.Public.Types;
 
 namespace Microsoft.PowerFx.Core.Public
 {
@@ -36,22 +33,5 @@ namespace Microsoft.PowerFx.Core.Public
         /// Maximal arity of the function.
         /// </summary>
         public int MaxArity => _fnc.MaxArity;
-
-        /// <summary>
-        /// Whether this function has lambdas as parameters.
-        /// </summary>
-        public bool HasLambdas => _fnc.HasLambdas;
-
-        /// <summary>
-        /// Whether the <paramref name="i" />th parameter is a lambda parameter.
-        /// </summary>
-        /// <param name="i"></param>
-        /// <returns></returns>
-        public bool IsLambdaParam(int i) => _fnc.IsLambdaParam(i);
-
-        /// <summary>
-        /// Function parameter types.
-        /// </summary>
-        public IReadOnlyList<FormulaType> ParamTypes => _fnc.ParamTypes.Select(FormulaType.Build).ToList();
     }
 }
