@@ -57,7 +57,7 @@ namespace Microsoft.PowerFx
         /// Formula Type corresponding to this option set.
         /// Use in record/table contexts to define the type of fields using this option set.
         /// </summary>
-        public FormulaType FormulaType { get; }
+        public OptionSetValueType FormulaType { get; }
 
         public bool TryGetValue(DName fieldName, out OptionSetValue optionSetValue)
         {

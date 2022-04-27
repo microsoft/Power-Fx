@@ -7,6 +7,7 @@ using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.IR.Nodes;
 using Microsoft.PowerFx.Core.IR.Symbols;
@@ -492,7 +493,7 @@ namespace Microsoft.PowerFx
             return node.Value switch
             {
                 RecalcFormulaInfo fi => ResolvedObjectHelpers.RecalcFormulaInfo(fi),
-                OptionSet optionSet => ResolvedObjectHelpers.OptionSet(optionSet, node.IRContext),
+                IExternalOptionSet optionSet => ResolvedObjectHelpers.OptionSet(optionSet, node.IRContext),
                 _ => ResolvedObjectHelpers.ResolvedObjectError(node),
             };
         }

@@ -32,5 +32,8 @@ namespace Microsoft.PowerFx.Core.Public.Types
         {
             vistor.Visit(this);
         }
+
+        // $$$ Add this:
+        // public static bool TryGetValue(this OptionSetValueType type, string logicalName, out OptionSetValue osValue)
     }
 }
