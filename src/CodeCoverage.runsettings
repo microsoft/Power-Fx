@@ -20,7 +20,7 @@
             </ModulePaths>
             <Sources>
               <Exclude>
-			          <Source>.*\\xunit\\.*</Source>
+                <Source>.*\\xunit\\.*</Source>
               </Exclude>
             </Sources>
           </CodeCoverage>
