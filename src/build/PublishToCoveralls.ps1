@@ -11,7 +11,7 @@ Param(
 Write-Host Install tools
 $basePath = (get-item $pathToCoverageFiles ).parent.FullName
 $coverageAnalyzer = "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\Team Tools\Dynamic Code Coverage Tools\CodeCoverage.exe"
-dotnet tool install coveralls.net --version 1.0.0 --tool-path tools --add-source https://api.nuget.org/v3/index.json
+dotnet tool install coveralls.net --version 3.0.0 --tool-path tools --add-source https://api.nuget.org/v3/index.json
 $coverageUploader = ".\tools\csmacnz.Coveralls.exe"
 
 # Download temporary version of Archive module that fixes issue on macOS/Linux with path separator
