@@ -1434,9 +1434,9 @@ namespace Microsoft.PowerFx.Functions
 
             foreach (var errorRecord in errorRecords)
             {
-                var messageField = errorRecord.GetField(Core.Types.ErrorType.MessageFieldName) as StringValue;
+                var messageField = errorRecord.GetField(ErrorType.MessageFieldName) as StringValue;
 
-                if (errorRecord.GetField(Core.Types.ErrorType.KindFieldName) is not NumberValue kindField)
+                if (errorRecord.GetField(ErrorType.KindFieldName) is not NumberValue kindField)
                 {
                     return CommonErrors.RuntimeTypeMismatch(irContext);
                 }
