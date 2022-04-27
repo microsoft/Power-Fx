@@ -85,6 +85,14 @@ namespace Microsoft.PowerFx
             return new ParsedExpression(irnode, ruleScopeSymbol);
         }
 
+        public static IExpression CreateEvaluator2(CheckResult result)
+        {
+            result.ThrowOnErrors();
+
+            (var irnode, var ruleScopeSymbol) = IRTranslator.Translate(result._binding);
+            return new ParsedExpression(irnode, ruleScopeSymbol);
+        }
+
         // This handles lookups in the global scope. 
         FormulaValue IScope.Resolve(string name)
         {
