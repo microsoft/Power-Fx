@@ -25,6 +25,10 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense.IntellisenseData
         /// <summary>
         /// No-op, default Intellisense does not augment signatures at this stage.
         /// </summary>
+        /// <param name="func"></param>
+        /// <param name="argIndex"></param>
+        /// <param name="paramName"></param>
+        /// <param name="highlightStart"></param>
         /// <param name="newHighlightStart">
         /// 0 when this method returns.
         /// </param>

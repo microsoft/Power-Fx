@@ -48,7 +48,7 @@ namespace Microsoft.PowerFx
         }
 
         /// <summary>
-        /// Create a resolver for use in binding. This is called from <see cref="Check(string, RecordType)"/>.
+        /// Create a resolver for use in binding. This is called from <see cref="Check(string, RecordType, ParserOptions)"/>.
         /// Base classes can override this is there are additional symbols not in the config.
         /// </summary>
         /// <param name="alternateConfig">An alternate config that can be provided. Should default to engine's config if null.</param>
@@ -85,7 +85,7 @@ namespace Microsoft.PowerFx
         /// </summary>
         /// <param name="expressionText">the expression in plain text. </param>
         /// <param name="parameterType">types of additional args to pass.</param>
-        /// <param name="options"parser options to use.</param>
+        /// <param name="options">parser options to use.</param>
         /// <returns></returns>
         public CheckResult Check(string expressionText, RecordType parameterType = null, ParserOptions options = null)
         {
@@ -96,7 +96,7 @@ namespace Microsoft.PowerFx
         /// <summary>
         /// Type check a formula without executing it. 
         /// </summary>
-        /// <param name="parse">the parsed expression. Obtain from <see cref="Parse(string)"/>.</param>
+        /// <param name="parse">the parsed expression. Obtain from <see cref="Parse"/>.</param>
         /// <param name="parameterType">types of additional args to pass.</param>
         /// <returns></returns>
         public CheckResult Check(ParseResult parse, RecordType parameterType = null)
@@ -203,8 +203,8 @@ namespace Microsoft.PowerFx
         /// <param name="expressionText">textual representation of the formula.</param>
         /// <param name="parameters">Type of parameters for formula. The fields in the parameter record can 
         /// be acecssed as top-level identifiers in the formula. If DisplayNames are used, make sure to have that mapping
-        /// as part of the RecordType.
-        /// <returns>The formula, with all identifiers converted to invariant form</returns>
+        /// as part of the RecordType.</param>
+        /// <returns>The formula, with all identifiers converted to invariant form.</returns>
         public string GetInvariantExpression(string expressionText, RecordType parameters)
         {
             return ConvertExpression(expressionText, parameters, CreateResolver(), toDisplayNames: false);
@@ -216,8 +216,8 @@ namespace Microsoft.PowerFx
         /// <param name="expressionText">textual representation of the formula.</param>
         /// <param name="parameters">Type of parameters for formula. The fields in the parameter record can 
         /// be acecssed as top-level identifiers in the formula. If DisplayNames are used, make sure to have that mapping
-        /// as part of the RecordType.
-        /// <returns>The formula, with all identifiers converted to display form</returns>
+        /// as part of the RecordType.</param>
+        /// <returns>The formula, with all identifiers converted to display form.</returns>
         public string GetDisplayExpression(string expressionText, RecordType parameters)
         {
             return ConvertExpression(expressionText, parameters, CreateResolver(), toDisplayNames: true);

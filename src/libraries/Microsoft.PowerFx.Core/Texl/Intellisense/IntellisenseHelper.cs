@@ -529,8 +529,8 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
         /// <summary>
         /// Adds suggestions for a given node.
         /// </summary>
+        /// <param name="intellisenseData"></param>
         /// <param name="node">Node for which suggestions are needed.</param>
-        /// <param name="hasSpecificSuggestions">Flag to indicate if inner most function has any specific suggestions.</param>
         /// <param name="currentNode">Current node in the traversal.</param>
         public static bool AddTopLevelSuggestionsForGivenNode(IntellisenseData.IntellisenseData intellisenseData, TexlNode node, TexlNode currentNode)
         {

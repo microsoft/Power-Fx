@@ -3,7 +3,9 @@
 
 namespace Microsoft.PowerFx.Core.Texl.Intellisense
 {
-    // The kind of a suggestion.
+    /// <summary>
+    /// The kind of a suggestion.
+    /// </summary>
     public enum SuggestionKind
     {
         Function,

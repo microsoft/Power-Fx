@@ -25,6 +25,7 @@ namespace Microsoft.PowerFx.Core.Public.Values
         /// Construct a table from records. Assumed that Records must be the same type. 
         /// Already having RecordValues (as oppossed to a unknown T or errors) lets us avoid type marshalling.
         /// </summary>
+        /// <param name="recordType"></param>
         /// <param name="values"></param>
         /// <returns></returns>
         public static TableValue NewTable(RecordType recordType, params RecordValue[] values)

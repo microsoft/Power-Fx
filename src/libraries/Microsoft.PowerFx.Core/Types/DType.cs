@@ -1799,11 +1799,12 @@ namespace Microsoft.PowerFx.Core.Types
         /// Type of questionable acceptance.
         /// </param>
         /// <param name="exact">
-        /// Whether or not <see cref="this"/>'s absense of columns that are defined in <see cref="type"/>
+        /// Whether or not <see cref="DType"/>'s absense of columns that are defined in <paramref name="type"/>
         /// should affect acceptance.
         /// </param>
+        /// <param name="useLegacyDateTimeAccepts"></param>
         /// <returns>
-        /// True if <see cref="this"/> accepts <see cref="type"/>, false otherwise.
+        /// True if <see cref="DType"/> accepts <paramref name="type"/>, false otherwise.
         /// </returns>
         public bool Accepts(DType type, bool exact = true, bool useLegacyDateTimeAccepts = false)
         {
@@ -1826,15 +1827,16 @@ namespace Microsoft.PowerFx.Core.Types
         /// Holds the expected type of a type mismatch as well as a field name if the mismatch is aggregate.
         /// If the mismatch is top level, the key of this kvp will be set to null.
         /// </param>
-        /// <param name="schemaDifference">
+        /// <param name="schemaDifferenceType">
         /// Holds the actual type of a type mismatch.
         /// </param>
         /// <param name="exact">
-        /// Whether or not <see cref="this"/>'s absense of columns that are defined in <see cref="type"/>
+        /// Whether or not <see cref="DType"/>'s absense of columns that are defined in <paramref name="type"/>
         /// should affect acceptance.
         /// </param>
+        /// <param name="useLegacyDateTimeAccepts"></param>
         /// <returns>
-        /// True if <see cref="this"/> accepts <see cref="type"/>, false otherwise.
+        /// True if <see cref="DType"/> accepts <paramref name="type"/>, false otherwise.
         /// </returns>
         public virtual bool Accepts(DType type, out KeyValuePair<string, DType> schemaDifference, out DType schemaDifferenceType, bool exact = true, bool useLegacyDateTimeAccepts = false)
         {
@@ -2455,8 +2457,8 @@ namespace Microsoft.PowerFx.Core.Types
         }
 
         /// <summary>
-        /// Returns true iff <see cref="displayName"/> was found within <see cref="type"/>'s old display
-        /// name mapping and sets <see cref="logicalName"/> and <see cref="newDisplayName"/>
+        /// Returns true iff <paramref name="displayName"/> was found within <paramref name="type"/>'s old display
+        /// name mapping and sets <paramref name="logicalName"/> and <paramref name="newDisplayName"/>
         /// according to the new mapping.
         /// </summary>
         /// <param name="type">
@@ -2467,15 +2469,15 @@ namespace Microsoft.PowerFx.Core.Types
         /// Display name used to search.
         /// </param>
         /// <param name="logicalName">
-        /// Will be set to <see cref="displayName"/>'s corresponding logical name if
-        /// <see cref="displayName"/> exists within <see cref="type"/>'s old mapping.
+        /// Will be set to <paramref name="displayName"/>'s corresponding logical name if
+        /// <paramref name="displayName"/> exists within <paramref name="type"/>'s old mapping.
         /// </param>
         /// <param name="newDisplayName">
-        /// Will be set to <see cref="logicalName"/>'s new display name if
-        /// <see cref="displayName"/> exists within <see cref="type"/>'s old mapping.
+        /// Will be set to <paramref name="logicalName"/>'s new display name if
+        /// <paramref name="displayName"/> exists within <paramref name="type"/>'s old mapping.
         /// </param>
         /// <returns>
-        /// Whether <see cref="displayName"/> exists within <see cref="type"/>'s previous display name map.
+        /// Whether <paramref name="displayName"/> exists within <paramref name="type"/>'s previous display name map.
         /// </returns>
         internal static bool TryGetConvertedDisplayNameAndLogicalNameForColumn(DType type, string displayName, out string logicalName, out string newDisplayName)
         {
@@ -2850,8 +2852,8 @@ namespace Microsoft.PowerFx.Core.Types
         /// respective JS type:
         /// export interface IJsonFunctionDataDefinition {
         ///     t: string;   // Type (maps to DType.Kind)
-        ///     c?: HashTable.<IJsonFunctionDataDefinition>; // optional children
-        /// }
+        ///     c?: HashTable.IJsonFunctionDataDefinition; // optional children
+        /// }.
         /// </remarks>
         internal string ToJsType(Func<DName, DType, bool> shouldBeIncluded = null)
         {
