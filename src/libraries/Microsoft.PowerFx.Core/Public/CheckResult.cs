@@ -94,13 +94,6 @@ namespace Microsoft.PowerFx.Core.Public
         /// <returns></returns>
         public FormulaType GetNodeType(TexlNode node) => FormulaType.Build(_binding.GetType(node));
 
-        /// <summary>
-        /// Whether the node is a constant node.
-        /// </summary>
-        /// <param name="node"></param>
-        /// <returns></returns>
-        public bool IsNodeConstant(TexlNode node) => _binding.IsConstant(node);
-
         internal IReadOnlyDictionary<string, TokenResultType> GetTokens(GetTokensFlags flags) => GetTokensUtils.GetTokens(_binding, flags);
     }
 
