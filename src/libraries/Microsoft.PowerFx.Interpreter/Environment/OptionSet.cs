@@ -67,7 +67,7 @@ namespace Microsoft.PowerFx
                 return false;
             }
 
-            optionSetValue = new OptionSetValue(fieldName, IRContext.NotInSource(FormulaType));
+            optionSetValue = new OptionSetValue(fieldName, FormulaType);
             return true;
         }
 
