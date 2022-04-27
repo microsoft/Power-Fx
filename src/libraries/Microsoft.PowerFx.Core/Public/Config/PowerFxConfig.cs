@@ -19,7 +19,7 @@ namespace Microsoft.PowerFx.Core
     public sealed class PowerFxConfig
     {
         private bool _isLocked;
-        private readonly Dictionary<string, TexlFunction> _extraFunctions;
+        private readonly HashSet<TexlFunction> _extraFunctions = new HashSet<TexlFunction>();
         private readonly Dictionary<DName, IExternalEntity> _environmentSymbols;
         private DisplayNameProvider _environmentSymbolDisplayNameProvider;
 
@@ -27,7 +27,7 @@ namespace Microsoft.PowerFx.Core
         // These can be overridden. 
         private IEnumerable<TexlFunction> _coreFunctions = BuiltinFunctionsCore.BuiltinFunctionsLibrary;
 
-        internal IEnumerable<TexlFunction> Functions => _coreFunctions.Concat(_extraFunctions.Values);
+        internal IEnumerable<TexlFunction> Functions => _coreFunctions.Concat(_extraFunctions);
 
         internal EnumStoreBuilder EnumStoreBuilder { get; }
 
@@ -37,7 +37,6 @@ namespace Microsoft.PowerFx.Core
         {
             CultureInfo = cultureInfo ?? CultureInfo.CurrentCulture;
             _isLocked = false;
-            _extraFunctions = new Dictionary<string, TexlFunction>();
             _environmentSymbols = new Dictionary<DName, IExternalEntity>();
             _environmentSymbolDisplayNameProvider = new SingleSourceDisplayNameProvider();
             EnumStoreBuilder = enumStoreBuilder;
@@ -89,7 +88,7 @@ namespace Microsoft.PowerFx.Core
         /// <returns></returns>
         public IEnumerable<string> GetAllFunctionNames()
         {
-            return _extraFunctions.Values.Select(func => func.Name).Distinct();
+            return _extraFunctions.Select(func => func.Name).Distinct();
         }
 
         internal IEnumerable<IExternalEntity> GetSymbols() => _environmentSymbols.Values;
@@ -134,7 +133,7 @@ namespace Microsoft.PowerFx.Core
         {
             CheckUnlocked();
 
-            _extraFunctions.Add(function.GetUniqueTexlRuntimeName(), function);
+            _extraFunctions.Add(function);
             EnumStoreBuilder.WithRequiredEnums(new List<TexlFunction>() { function });
         }
                 
