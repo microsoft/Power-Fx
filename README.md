@@ -1,4 +1,4 @@
-# Microsoft Power Fx
+# Microsoft Power Fx 
 
 ![simple formula using Notify to produce a "Hello, World!" message](docs/media/root/hello-world.png)
 
