@@ -42,11 +42,11 @@
 
 // Excel returns 0
 >> Sum(Blank())
-Blank()
+0
 
 // Excel returns 0
 >> Sum(Blank(),Blank(),Blank(),Blank())
-Blank()
+0
 
 >> Sum(Blank(),0,0,Blank())
 0

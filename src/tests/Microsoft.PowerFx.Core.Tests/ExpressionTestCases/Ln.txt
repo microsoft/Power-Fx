@@ -51,8 +51,7 @@
 
 // Excel returns #Error
 >> Ln(Blank())
-Blank()
-
+#Error(Kind=Numeric)
 
 // ******** STRING PARAMETERS ********
 

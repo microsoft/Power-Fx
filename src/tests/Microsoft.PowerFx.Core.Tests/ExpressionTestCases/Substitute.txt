@@ -12,13 +12,11 @@
 >> Substitute("HelloHelloHello", "He", "Je", Len("He") + 1)
 "HelloHelloJello"
 
-//Excel returns "HelloJelloHello"
 >> Substitute("HelloHelloHello", "He", "Je", 2.4)
-"HelloHelloHello"
+"HelloJelloHello"
 
-//Excel returns "HelloJelloHello"
 >> Substitute("HelloHelloHello", "He", "Je", 2.7)
-"HelloHelloHello"
+"HelloJelloHello"
 
 >> Substitute("HelloHelloHello", "Je", "yy", 1)
 "HelloHelloHello"

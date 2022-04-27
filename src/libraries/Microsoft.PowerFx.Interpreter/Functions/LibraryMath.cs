@@ -25,6 +25,10 @@ namespace Microsoft.PowerFx.Functions
         {
             void Apply(FormulaValue value);
 
+            FormulaValue GetDefault(IRContext context);
+
+            FormulaValue NoElementValue(IRContext context);
+
             FormulaValue GetResult(IRContext irContext);
         }
 
@@ -32,6 +36,7 @@ namespace Microsoft.PowerFx.Functions
         {
             protected int _count;
             protected double _accumulator;
+            protected static readonly double _defaultN = 0d;
 
             public void Apply(FormulaValue value)
             {
@@ -46,11 +51,26 @@ namespace Microsoft.PowerFx.Functions
                 _count++;
             }
 
+            public virtual FormulaValue NoElementValue(IRContext context)
+            {
+                return GetDefault(context);
+            }
+
+            public FormulaValue GetDefault(IRContext context)
+            {
+                return new NumberValue(context, _defaultN);
+            }
+
             public virtual FormulaValue GetResult(IRContext irContext)
             {
                 if (_count == 0)
                 {
-                    return new BlankValue(irContext);
+                    return GetDefault(irContext);
+                }
+
+                if (double.IsInfinity(_accumulator))
+                {
+                    return CommonErrors.OverflowError(irContext);
                 }
 
                 return new NumberValue(irContext, _accumulator);
@@ -81,11 +101,21 @@ namespace Microsoft.PowerFx.Functions
                 _m2Acc += delta * delta2;
             }
 
+            public FormulaValue NoElementValue(IRContext context)
+            {
+                return GetDefault(context);
+            }
+
+            public FormulaValue GetDefault(IRContext context)
+            {
+                return CommonErrors.DivByZeroError(context);
+            }
+
             public virtual FormulaValue GetResult(IRContext irContext)
             {
                 if (_count == 0)
                 {
-                    return CommonErrors.DivByZeroError(irContext);
+                    return GetDefault(irContext);
                 }
                 else
                 {
@@ -94,13 +124,13 @@ namespace Microsoft.PowerFx.Functions
             }
         }
 
-        private class StdDeviaionAgg : VarianceAgg
+        private class StdDeviationAgg : VarianceAgg
         {
             public override FormulaValue GetResult(IRContext irContext)
             {
                 if (_count == 0)
                 {
-                    return CommonErrors.DivByZeroError(irContext);
+                    return GetDefault(irContext);
                 }
                 else
                 {
@@ -110,22 +140,28 @@ namespace Microsoft.PowerFx.Functions
         }
             
         private class MinNumberAgg : IAggregator
-        {
-            protected int _count;
+        {            
             protected double _minValue = double.MaxValue;
+            protected static readonly double _defaultN = 0d;
 
             public void Apply(FormulaValue value)
-            {
-                if (value is BlankValue)
-                {
-                    return;
-                }
+            {             
+                var n1 = value is BlankValue ? _defaultN : ((NumberValue)value).Value;
 
-                var n1 = (NumberValue)value;
-                if (n1.Value < _minValue)
+                if (n1 < _minValue)
                 {
-                    _minValue = n1.Value;
+                    _minValue = n1;
                 }
+            }
+
+            public FormulaValue NoElementValue(IRContext context)
+            {
+                return GetDefault(context);
+            }
+
+            public FormulaValue GetDefault(IRContext context)
+            {
+                return new NumberValue(context, 0);
             }
 
             public FormulaValue GetResult(IRContext irContext)
@@ -136,21 +172,27 @@ namespace Microsoft.PowerFx.Functions
 
         private class MinDateTimeAgg : IAggregator
         {
-            protected int _count;
             protected DateTime _minValueDT = DateTime.MaxValue;
+            protected static readonly DateTime _defaultDT = new DateTime(1900, 1, 1);
 
             public void Apply(FormulaValue value)
-            {
-                if (value is BlankValue)
-                {
-                    return;
-                }
+            {               
+                var n1 = value is BlankValue ? _defaultDT : ((DateValue)value).Value;
 
-                var n1 = (DateTimeValue)value;
-                if (n1.Value < _minValueDT)
+                if (n1 < _minValueDT)
                 {
-                    _minValueDT = n1.Value;
+                    _minValueDT = n1;
                 }
+            }
+
+            public FormulaValue NoElementValue(IRContext context)
+            {
+                return GetDefault(context);
+            }
+
+            public FormulaValue GetDefault(IRContext context)
+            {
+                return new DateValue(context, new DateTime(1900, 1, 1));
             }
 
             public FormulaValue GetResult(IRContext irContext)
@@ -161,21 +203,27 @@ namespace Microsoft.PowerFx.Functions
 
         private class MinDateAgg : IAggregator
         {
-            protected int _count;
             protected DateTime _minValueDT = DateTime.MaxValue;
+            protected static readonly DateTime _defaultDT = new DateTime(1900, 1, 1);
 
             public void Apply(FormulaValue value)
-            {
-                if (value is BlankValue)
-                {
-                    return;
-                }
+            {               
+                var n1 = value is BlankValue ? _defaultDT : ((DateValue)value).Value;
 
-                var n1 = (DateValue)value;
-                if (n1.Value < _minValueDT)
+                if (n1 < _minValueDT)
                 {
-                    _minValueDT = n1.Value;
+                    _minValueDT = n1;
                 }
+            }
+
+            public FormulaValue NoElementValue(IRContext context)
+            {
+                return GetDefault(context);
+            }
+
+            public FormulaValue GetDefault(IRContext context)
+            {
+                return new DateValue(context, new DateTime(1900, 1, 1));
             }
 
             public FormulaValue GetResult(IRContext irContext)
@@ -185,22 +233,28 @@ namespace Microsoft.PowerFx.Functions
         }
 
         private class MinTimeAgg : IAggregator
-        {
-            protected int _count;
+        {            
             protected TimeSpan _minValueT = TimeSpan.MaxValue;
+            private TimeSpan _defaultT = TimeSpan.Zero;
 
             public void Apply(FormulaValue value)
             {
-                if (value is BlankValue)
-                {
-                    return;
-                }
+                var n1 = value is BlankValue ? _defaultT : ((TimeValue)value).Value;
 
-                var n1 = (TimeValue)value;
-                if (n1.Value < _minValueT)
+                if (n1 < _minValueT)
                 {
-                    _minValueT = n1.Value;
+                    _minValueT = n1;
                 }
+            }
+
+            public FormulaValue NoElementValue(IRContext context)
+            {
+                return GetDefault(context);
+            }
+
+            public FormulaValue GetDefault(IRContext context)
+            {
+                return new TimeValue(context, _defaultT);
             }
 
             public FormulaValue GetResult(IRContext irContext)
@@ -210,22 +264,28 @@ namespace Microsoft.PowerFx.Functions
         }
 
         private class MaxNumberAgg : IAggregator
-        {
-            protected int _count;
+        {            
             protected double _maxValue = double.MinValue;
+            private readonly double _defaultN = 0d;
 
             public void Apply(FormulaValue value)
-            {
-                if (value is BlankValue)
-                {
-                    return;
-                }
+            {               
+                var n1 = value is BlankValue ? _defaultN : ((NumberValue)value).Value;
 
-                var n1 = (NumberValue)value;
-                if (n1.Value > _maxValue)
+                if (n1 > _maxValue)
                 {
-                    _maxValue = n1.Value;
+                    _maxValue = n1;
                 }
+            }
+
+            public FormulaValue NoElementValue(IRContext context)
+            {
+                return GetDefault(context);
+            }
+
+            public FormulaValue GetDefault(IRContext context)
+            {
+                return new NumberValue(context, _defaultN);
             }
 
             public FormulaValue GetResult(IRContext irContext)
@@ -235,22 +295,27 @@ namespace Microsoft.PowerFx.Functions
         }
 
         private class MaxDateAgg : IAggregator
-        {
-            protected int _count;
+        {            
             protected DateTime _maxValueDT = DateTime.MinValue;
+            private readonly DateTime _defaultDT = new DateTime(1900, 1, 1);
 
             public void Apply(FormulaValue value)
-            {
-                if (value is BlankValue)
+            {                
+                var n1 = value is BlankValue ? _defaultDT : ((DateValue)value).Value;
+                if (n1 > _maxValueDT)
                 {
-                    return;
+                    _maxValueDT = n1;
                 }
+            }
 
-                var n1 = (DateValue)value;
-                if (n1.Value > _maxValueDT)
-                {
-                    _maxValueDT = n1.Value;
-                }
+            public FormulaValue NoElementValue(IRContext context)
+            {
+                return CommonErrors.DivByZeroError(context);
+            }
+
+            public FormulaValue GetDefault(IRContext context)
+            {
+                return new DateValue(context, new DateTime(1900, 1, 1));
             }
 
             public FormulaValue GetResult(IRContext irContext)
@@ -260,22 +325,28 @@ namespace Microsoft.PowerFx.Functions
         }
 
         private class MaxDateTimeAgg : IAggregator
-        {
-            protected int _count;
+        {            
             protected DateTime _maxValueDT = DateTime.MinValue;
+            private readonly DateTime _defaultDT = new DateTime(1900, 1, 1);
 
             public void Apply(FormulaValue value)
             {
-                if (value is BlankValue)
-                {
-                    return;
-                }
+                var n1 = value is BlankValue ? _defaultDT : ((DateTimeValue)value).Value;
 
-                var n1 = (DateTimeValue)value;
-                if (n1.Value > _maxValueDT)
+                if (n1 > _maxValueDT)
                 {
-                    _maxValueDT = n1.Value;
+                    _maxValueDT = n1;
                 }
+            }
+
+            public FormulaValue NoElementValue(IRContext context)
+            {
+                return CommonErrors.DivByZeroError(context);
+            }
+
+            public FormulaValue GetDefault(IRContext context)
+            {
+                return new DateValue(context, _defaultDT);
             }
 
             public FormulaValue GetResult(IRContext irContext)
@@ -285,22 +356,28 @@ namespace Microsoft.PowerFx.Functions
         }
 
         private class MaxTimeAgg : IAggregator
-        {
-            protected int _count;
+        {            
             protected TimeSpan _maxValueT = TimeSpan.MinValue;
+            private TimeSpan _defaultT = TimeSpan.Zero;
 
             public void Apply(FormulaValue value)
             {
-                if (value is BlankValue)
+                var n1 = value is BlankValue ? _defaultT : ((TimeValue)value).Value;
+                
+                if (n1 > _maxValueT)
                 {
-                    return;
+                    _maxValueT = n1;
                 }
+            }
 
-                var n1 = (TimeValue)value;
-                if (n1.Value > _maxValueT)
-                {
-                    _maxValueT = n1.Value;
-                }
+            public FormulaValue NoElementValue(IRContext context)
+            {
+                return CommonErrors.DivByZeroError(context);
+            }
+
+            public FormulaValue GetDefault(IRContext context)
+            {
+                return new TimeValue(context, TimeSpan.Zero);
             }
 
             public FormulaValue GetResult(IRContext irContext)
@@ -311,11 +388,21 @@ namespace Microsoft.PowerFx.Functions
 
         private class AverageAgg : SumAgg
         {
+            public override FormulaValue NoElementValue(IRContext context)
+            {
+                return CommonErrors.DivByZeroError(context);
+            }
+
             public override FormulaValue GetResult(IRContext irContext)
             {
                 if (_count == 0)
                 {
                     return CommonErrors.DivByZeroError(irContext);
+                }
+
+                if (double.IsInfinity(_accumulator))
+                {
+                    return CommonErrors.OverflowError(irContext);
                 }
 
                 return new NumberValue(irContext, _accumulator / _count);
@@ -324,7 +411,14 @@ namespace Microsoft.PowerFx.Functions
 
         private static FormulaValue RunAggregator(IAggregator agg, IRContext irContext, FormulaValue[] values)
         {
-            foreach (var value in values)
+            var vals = values.Where(v => v is not BlankValue);
+
+            if (!vals.Any())
+            {
+                return agg.NoElementValue(irContext);
+            }
+
+            foreach (var value in vals)
             {
                 agg.Apply(value);
             }
@@ -332,10 +426,10 @@ namespace Microsoft.PowerFx.Functions
             return agg.GetResult(irContext);
         }
 
-        private static async Task<FormulaValue> RunAggregatorAsync(IAggregator agg, EvalVisitor runner, SymbolContext context, IRContext irContext, FormulaValue[] args)
+        private static async Task<FormulaValue> RunAggregatorAsync(IAggregator agg, EvalVisitor runner, SymbolContext context, IRContext irContext, IEnumerable<FormulaValue> args)
         {
-            var arg0 = (TableValue)args[0];
-            var arg1 = (LambdaFormulaValue)args[1];
+            var arg0 = (TableValue)args.First();
+            var arg1 = (LambdaFormulaValue)args.Skip(1).First();
 
             foreach (var row in arg0.Rows)
             {
@@ -379,7 +473,7 @@ namespace Microsoft.PowerFx.Functions
         // Sum([1,2,3], Value * Value)     
         public static async ValueTask<FormulaValue> SumTable(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args)
         {
-            return await RunAggregatorAsync(new SumAgg(), runner, symbolContext, irContext, args);
+            return await RunAggregatorAsync(new SumAgg(), runner, symbolContext, irContext, args.Where(a => a is not BlankValue));
         }
         
         // VarP(1,2,3)
@@ -391,17 +485,17 @@ namespace Microsoft.PowerFx.Functions
         // VarP([1,2,3], Value * Value)
         public static async ValueTask<FormulaValue> VarTable(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args)
         {
-            return await RunAggregatorAsync(new VarianceAgg(), runner, symbolContext, irContext, args);
+            return await RunAggregatorAsync(new VarianceAgg(), runner, symbolContext, irContext, args.Where(a => a is not BlankValue));
         }
 
         internal static FormulaValue Stdev(IRContext irContext, FormulaValue[] args)
         {
-            return RunAggregator(new StdDeviaionAgg(), irContext, args);
+            return RunAggregator(new StdDeviationAgg(), irContext, args);
         }
 
         public static async ValueTask<FormulaValue> StdevTable(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args)
         {
-            return await RunAggregatorAsync(new StdDeviaionAgg(), runner, symbolContext, irContext, args);
+            return await RunAggregatorAsync(new StdDeviationAgg(), runner, symbolContext, irContext, args.Where(a => a is not BlankValue));
         }
 
         // Max(1,2,3)     
@@ -426,7 +520,7 @@ namespace Microsoft.PowerFx.Functions
 
             if (agg != null)
             {
-                return await RunAggregatorAsync(agg, runner, symbolContext, irContext, args);
+                return await RunAggregatorAsync(agg, runner, symbolContext, irContext, args.Where(a => a is not BlankValue));
             }
             else
             {
@@ -456,7 +550,7 @@ namespace Microsoft.PowerFx.Functions
 
             if (agg != null)
             {
-                return await RunAggregatorAsync(agg, runner, symbolContext, irContext, args);                
+                return await RunAggregatorAsync(agg, runner, symbolContext, irContext, args.Where(a => a is not BlankValue));                
             }
             else 
             {
@@ -508,7 +602,7 @@ namespace Microsoft.PowerFx.Functions
                 return CommonErrors.DivByZeroError(irContext);
             }
 
-            return await RunAggregatorAsync(new AverageAgg(), runner, symbolContext, irContext, args);
+            return await RunAggregatorAsync(new AverageAgg(), runner, symbolContext, irContext, args.Where(a => a is not BlankValue));
         }
 
         // https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-mod
@@ -518,8 +612,13 @@ namespace Microsoft.PowerFx.Functions
             var arg1 = args[1].Value;
 
             // r = a – N × floor(a/b)
-            var q = (int)Math.Floor(arg0 / arg1);
+            var q = (long)Math.Floor(arg0 / arg1);
             var result = arg0 - (arg1 * q);
+
+            if (result < -Math.Abs(arg1) || result > Math.Abs(arg1))
+            {
+                result = 0;
+            }
 
             return new NumberValue(irContext, result);
         }
@@ -566,26 +665,47 @@ namespace Microsoft.PowerFx.Functions
             var digitsArg = args[1].Value;
 
             var x = Round(numberArg, digitsArg);
+            if (x == double.NaN)
+            {
+                return CommonErrors.NumericOutOfRange(irContext);
+            }
+
             return new NumberValue(irContext, x);
         }
 
-        public static double Round(double number, double digits)
+        public static double Round(double number, double digits, RoundType rt = RoundType.Default)
         {
-            if (digits == 0)
+            var s = number < 0 ? -1d : 1d;
+            var n = number * s;
+            var dg = digits < 0 ? (int)Math.Ceiling(digits) : (int)Math.Floor(digits);
+
+            if (dg < -15 || dg > 15 || number < -1e20d || number > 1e20d)
             {
-                return Math.Round(number);
+                return number;
             }
 
-            var multiplier = Math.Pow(10, digits < 0 ? Math.Ceiling(digits) : Math.Floor(digits));
-
-            // Deal with catastrophic loss of precision
-            if (IsInvalidDouble(multiplier))
+            var m = Math.Pow(10d, -dg);
+            var eps = m / 1e12d; // used to manage rounding of 1.4499999999999999999996
+          
+            switch (rt)
             {
-                return Math.Round(number);
+                case RoundType.Default:
+                    return s * Math.Floor((n + (m / 2) + eps) / m) * m;
+                case RoundType.Down:
+                    return s * Math.Floor(n / m) * m;
+                case RoundType.Up:
+                    return s * Math.Ceiling(n / m) * m;
             }
 
-            return Math.Round(number * multiplier) / multiplier;
+            return 0;
         }
+
+        public enum RoundType
+        {
+            Default,
+            Up,
+            Down
+        }       
 
         // Char is used for PA string escaping 
         public static FormulaValue RoundUp(IRContext irContext, NumberValue[] args)
@@ -593,31 +713,8 @@ namespace Microsoft.PowerFx.Functions
             var numberArg = args[0].Value;
             var digitsArg = args[1].Value;
 
-            var x = RoundUp(numberArg, digitsArg);
+            var x = Round(numberArg, digitsArg, RoundType.Up);
             return new NumberValue(irContext, x);
-        }
-
-        public static double RoundUp(double number, double digits)
-        {
-            if (digits == 0)
-            {
-                return number < 0 ? Math.Floor(number) : Math.Ceiling(number);
-            }
-
-            var multiplier = Math.Pow(10, digits < 0 ? Math.Ceiling(digits) : Math.Floor(digits));
-
-            // Contracts.Assert(multiplier != 0);
-
-            // Deal with catastrophic loss of precision
-            if (IsInvalidDouble(multiplier))
-            {
-                return number < 0 ? Math.Floor(number) : Math.Ceiling(number);
-            }
-
-            // TASK: 74286: Spec corner case behavior: NaN, +Infinity, -Infinity.
-            return number < 0 ?
-                Math.Floor(number * multiplier) / multiplier :
-                Math.Ceiling(number * multiplier) / multiplier;
         }
 
         public static FormulaValue RoundDown(IRContext irContext, NumberValue[] args)
@@ -625,31 +722,8 @@ namespace Microsoft.PowerFx.Functions
             var numberArg = args[0].Value;
             var digitsArg = args[1].Value;
 
-            var x = RoundDown(numberArg, digitsArg);
+            var x = Round(numberArg, digitsArg, RoundType.Down);
             return new NumberValue(irContext, x);
-        }
-
-        public static double RoundDown(double number, double digits)
-        {
-            if (digits == 0)
-            {
-                return number < 0 ? Math.Ceiling(number) : Math.Floor(number);
-            }
-
-            var multiplier = Math.Pow(10, digits < 0 ? Math.Ceiling(digits) : Math.Floor(digits));
-
-            // DebugContracts.assert(multiplier !== 0);
-
-            // Deal with catastrophic loss of precision
-            if (IsInvalidDouble(multiplier))
-            {
-                return number < 0 ? Math.Ceiling(number) : Math.Floor(number);
-            }
-
-            // TASK: 74286: Spec corner case behavior: NaN, +Infinity, -Infinity.
-            return number < 0 ?
-                Math.Ceiling(number * multiplier) / multiplier :
-                Math.Floor(number * multiplier) / multiplier;
         }
 
         public static FormulaValue Int(IRContext irContext, NumberValue[] args)
@@ -663,6 +737,12 @@ namespace Microsoft.PowerFx.Functions
         public static FormulaValue Ln(IRContext irContext, NumberValue[] args)
         {
             var number = args[0].Value;
+
+            if (number <= 0)
+            {
+                return CommonErrors.ArgumentOutOfRange(irContext);
+            }
+
             return new NumberValue(irContext, Math.Log(number));
         }
 
@@ -670,9 +750,15 @@ namespace Microsoft.PowerFx.Functions
         {
             var number = args[0].Value;
             var numberBase = args[1].Value;
+
             if (numberBase == 1)
             {
                 return GetDiv0Error(irContext);
+            }
+
+            if (number <= 0)
+            {
+                return CommonErrors.ArgumentOutOfRange(irContext);
             }
 
             return new NumberValue(irContext, Math.Log(number, numberBase));
@@ -681,13 +767,20 @@ namespace Microsoft.PowerFx.Functions
         public static FormulaValue Exp(IRContext irContext, NumberValue[] args)
         {
             var exponent = args[0].Value;
-            return new NumberValue(irContext, Math.Pow(Math.E, exponent));
+            var d = Math.Pow(Math.E, exponent);
+
+            if (double.IsInfinity(d))
+            {
+                return CommonErrors.OverflowError(irContext);
+            }
+
+            return new NumberValue(irContext, d);
         }
 
         public static FormulaValue Power(IRContext irContext, NumberValue[] args)
         {
             var number = args[0].Value;
-            var exponent = args[1].Value;
+            var exponent = args[1].Value;            
 
             if (number == 0)
             {
@@ -697,16 +790,18 @@ namespace Microsoft.PowerFx.Functions
                 }
                 else if (exponent == 0)
                 {
-                    return new ErrorValue(irContext, new ExpressionError
-                    {
-                        Kind = ErrorKind.Numeric,
-                        Span = irContext.SourceContext,
-                        Message = "Invalid exponent"
-                    });
+                    return new NumberValue(irContext, 1);
                 }
             }
 
-            var result = new NumberValue(irContext, Math.Pow(number, exponent));
+            var d = Math.Pow(number, exponent);
+
+            if (double.IsInfinity(d))
+            {
+                return CommonErrors.OverflowError(irContext);
+            }
+
+            var result = new NumberValue(irContext, d);
             return FiniteChecker(irContext, 1, result);
         }
 

@@ -48,7 +48,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             }
         }        
 
-        [InterpreterTheory] //(Skip="NotReadyYet")]
+        [InterpreterTheory(Skip="NotReadyYet")]
         [TxtFileData("ExpressionTestCases\\NotYetReady", "InterpreterExpressionTestCases", nameof(InterpreterRunner))]
         public void InterpreterTestCase_NotReadyTests(ExpressionTestCase testCase)
         {
@@ -57,9 +57,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Assert.True(testCase.FailMessage == null, testCase.FailMessage);
 
             _runner = new InterpreterRunner();
-
             var (result, msg) = _runner.RunAsync(testCase).Result;
-
             var prefix = $"Test {Path.GetFileName(testCase.SourceFile)}:{testCase.SourceLine}: ";            
 
             switch (result)
@@ -119,7 +117,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [Fact]
         public void GetStats()
         {
-            Thread.Sleep(10000); // Let's things start
+            Thread.Sleep(1000); // Let's things start
 
             var n = Stats.Count;
             var m = -1;

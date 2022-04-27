@@ -180,7 +180,7 @@
 
 // Excel returns Divison by Zero error
 >> Power(Blank(), -1)
-0
+#Error(Kind=Div0)
 
 >> Power(56.78, Blank())
 1
@@ -190,7 +190,7 @@
 
 // Excel returns error
 >> Power(Blank(),Blank())
-Blank()
+1
 
 
 // ******** STRING PARAMETERS ********

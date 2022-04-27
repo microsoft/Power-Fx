@@ -33,7 +33,7 @@ namespace Microsoft.PowerFx.Functions
                 BuiltinFunctionsCore.Abs,
                 StandardErrorHandling<NumberValue>(
                     expandArguments: NoArgExpansion,
-                    replaceBlankValues: DoNotReplaceBlank,
+                    replaceBlankValues: ReplaceBlankWithZero,
                     checkRuntimeTypes: ExactValueTypeOrBlank<NumberValue>,
                     checkRuntimeValues: FiniteChecker,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
@@ -264,7 +264,7 @@ namespace Microsoft.PowerFx.Functions
                     replaceBlankValues: DoNotReplaceBlank,
                     checkRuntimeTypes: ExactValueTypeOrBlank<NumberValue>,
                     checkRuntimeValues: ExactSequence(
-                        PositiveNumberChecker,
+                        PositiveNumericNumberChecker,
                         FiniteChecker,
                         FiniteChecker),
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
@@ -409,7 +409,7 @@ namespace Microsoft.PowerFx.Functions
                     checkRuntimeValues: ExactSequence(
                         DeferRuntimeValueChecking,
                         DeferRuntimeValueChecking,
-                        StrictPositiveNumberChecker),
+                        StrictArgumentPositiveNumberChecker),
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
                     targetFunction: Find)
             },
@@ -438,7 +438,7 @@ namespace Microsoft.PowerFx.Functions
                                 checkRuntimeValues: ExactSequence(
                                     DeferRuntimeValueChecking,
                                     DeferRuntimeValueChecking,
-                                    StrictPositiveNumberChecker),
+                                    StrictArgumentPositiveNumberChecker),
                                 returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
                                 targetFunction: Find),
                             transposeEmptyTable: false))
@@ -562,7 +562,7 @@ namespace Microsoft.PowerFx.Functions
                         ExactValueTypeOrBlank<NumberValue>),
                     checkRuntimeValues: ExactSequence(
                         DeferRuntimeValueChecking,
-                        StrictPositiveNumberChecker),
+                        StrictNumericPositiveNumberChecker),
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
                     targetFunction: IndexTable)
             },
@@ -576,7 +576,7 @@ namespace Microsoft.PowerFx.Functions
                         ExactValueTypeOrBlank<NumberValue>),
                     checkRuntimeValues: ExactSequence(
                         UntypedObjectArrayChecker,
-                        StrictPositiveNumberChecker),
+                        StrictNumericPositiveNumberChecker),
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
                     targetFunction: Index_UO)
             },
@@ -610,8 +610,8 @@ namespace Microsoft.PowerFx.Functions
                     checkRuntimeTypes: ExactSequence(
                         ExactValueTypeOrBlank<StringValue>,
                         ExactValueTypeOrBlank<NumberValue>),
-                    checkRuntimeValues: PositiveNumberChecker,
-                    returnBehavior: ReturnBehavior.ReturnEmptyStringIfAnyArgIsBlank,
+                    checkRuntimeValues: PositiveNumericNumberChecker,
+                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: Left)
             },
             {
@@ -640,7 +640,7 @@ namespace Microsoft.PowerFx.Functions
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: ReplaceBlankWithZero,
                     checkRuntimeTypes: ExactValueTypeOrBlank<NumberValue>,
-                    checkRuntimeValues: StrictPositiveNumberChecker,
+                    checkRuntimeValues: StrictNumericPositiveNumberChecker,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: Ln)
             },
@@ -650,7 +650,7 @@ namespace Microsoft.PowerFx.Functions
                     expandArguments: InsertDefaultValues(outputArgsCount: 2, fillWith: new NumberValue(IRContext.NotInSource(FormulaType.Number), 10)),
                     replaceBlankValues: ReplaceBlankWithZero,
                     checkRuntimeTypes: ExactValueTypeOrBlank<NumberValue>,
-                    checkRuntimeValues: StrictPositiveNumberChecker,
+                    checkRuntimeValues: StrictNumericPositiveNumberChecker,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: Log)
             },
@@ -856,8 +856,8 @@ namespace Microsoft.PowerFx.Functions
                     checkRuntimeTypes: ExactSequence(
                         ExactValueTypeOrBlank<StringValue>,
                         ExactValueTypeOrBlank<NumberValue>),
-                    checkRuntimeValues: PositiveNumberChecker,
-                    returnBehavior: ReturnBehavior.ReturnEmptyStringIfAnyArgIsBlank,
+                    checkRuntimeValues: PositiveNumericNumberChecker,
+                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: Right)
             },
             {
@@ -1003,7 +1003,7 @@ namespace Microsoft.PowerFx.Functions
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: ReplaceBlankWithZero,
                     checkRuntimeTypes: ExactValueTypeOrBlank<NumberValue>,
-                    checkRuntimeValues: PositiveNumberChecker,
+                    checkRuntimeValues: PositiveNumericNumberChecker,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: Sqrt)
             },
@@ -1021,7 +1021,7 @@ namespace Microsoft.PowerFx.Functions
                         ExactValueTypeOrBlank<StringValue>,
                         ExactValueType<StringValue>,
                         ExactValueTypeOrBlank<NumberValue>),
-                    checkRuntimeValues: StrictPositiveNumberChecker,
+                    checkRuntimeValues: StrictArgumentPositiveNumberChecker,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: Substitute)
             },

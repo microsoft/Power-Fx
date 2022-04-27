@@ -161,8 +161,7 @@
 // Decimal NUMBER and NUMBER_OF_DIGITS parameter
 
 >> Trunc(14.123456,1111111111)
-14
-// Excel returns 14.12346 in General format
+14.123456
 
 >> Trunc(14.123456,0.123)
 14

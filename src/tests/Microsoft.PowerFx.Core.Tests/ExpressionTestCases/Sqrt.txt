@@ -53,8 +53,7 @@
 
 //Excel returns 0
 >> Sqrt(Blank())
-Blank()
-
+0
 
 // ******** STRING PARAMETERS ********
 

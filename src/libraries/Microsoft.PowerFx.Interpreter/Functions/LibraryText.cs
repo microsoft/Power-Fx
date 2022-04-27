@@ -18,9 +18,15 @@ namespace Microsoft.PowerFx.Functions
     internal static partial class Library
     {
         // Char is used for PA string escaping 
-        public static StringValue Char(IRContext irContext, NumberValue[] args)
+        public static FormulaValue Char(IRContext irContext, NumberValue[] args)
         {
             var arg0 = args[0];
+
+            if (arg0.Value < 1 || arg0.Value >= 256)
+            {
+                return CommonErrors.InvalidCharValue(irContext);
+            }
+
             var str = new string((char)arg0.Value, 1);
             return new StringValue(irContext, str);
         }
@@ -93,13 +99,12 @@ namespace Microsoft.PowerFx.Functions
             {
                 return DateTimeToNumber(irContext, new DateTimeValue[] { dtv });
             }
-
-            var styles = NumberStyles.Any;
+            
             string str = null;
 
             if (arg0 is StringValue sv)
             {
-                str = sv.Value.Trim();
+                str = sv.Value; // No Trim
             }
 
             if (string.IsNullOrEmpty(str))
@@ -107,33 +112,103 @@ namespace Microsoft.PowerFx.Functions
                 return new BlankValue(irContext);
             }
 
+            var (val, err) = ConvertToNumber(str, runner.CultureInfo);
+
+            switch (err)
+            {
+                case ConvertionStatus.CannotParse:
+                case ConvertionStatus.DoubleSign:
+                case ConvertionStatus.DoublePercent:
+                case ConvertionStatus.NoNumber:
+                    return CommonErrors.InvalidNumberFormatError(irContext);
+
+                case ConvertionStatus.InvalidNumber:
+                    return CommonErrors.ArgumentOutOfRange(irContext);
+
+                case ConvertionStatus.Ok:
+                    return new NumberValue(irContext, val);
+            }
+
+            throw new NotImplementedException("Unknown ConvertionStatus value");
+        }
+
+        private static (double, ConvertionStatus) ConvertToNumber(string str, CultureInfo culture)
+        {
             double div = 1;
-            if (str[str.Length - 1] == '%')
-            {
-                str = str.Substring(0, str.Length - 1);
-                div = 100;
-                styles = NumberStyles.Number;
-            }
-            else if (str[0] == '%')
-            {
-                str = str.Substring(1, str.Length - 1);
-                div = 100;
-                styles = NumberStyles.Number;
-            }
+            var loop = true;
+            var signFound = false;
+            var percentFound = false;
 
-            if (!double.TryParse(str, styles, runner.CultureInfo, out var val))
+            while (loop)
             {
-                return CommonErrors.InvalidNumberFormatError(irContext);
-            }
+                loop = false;
+                str = str.Trim();
 
-            if (IsInvalidDouble(val))
-            {
-                return CommonErrors.ArgumentOutOfRange(irContext);
-            }
+                if (string.IsNullOrEmpty(str))
+                {
+                    return (0d, ConvertionStatus.NoNumber);
+                }
 
-            val /= div;
+                if (str[str.Length - 1] == '%')
+                {
+                    if (percentFound)
+                    {
+                        return (0d, ConvertionStatus.DoublePercent);
+                    }
 
-            return new NumberValue(irContext, val);
+                    str = str.Substring(0, str.Length - 1);
+                    div *= 100;
+                    percentFound = loop = true;
+                }
+                else if (str[0] == '%')
+                {
+                    if (percentFound)
+                    {
+                        return (0d, ConvertionStatus.DoublePercent);
+                    }
+
+                    str = str.Substring(1, str.Length - 1);
+                    div *= 100;
+                    percentFound = loop = true;
+                }
+                else if (str[0] == '+')
+                {
+                    if (signFound)
+                    {
+                        return (0d, ConvertionStatus.DoubleSign);
+                    }
+
+                    str = str.Substring(1, str.Length - 1);
+                    signFound = loop = true;
+                }
+                else if (str[0] == '-')
+                {
+                    if (signFound)
+                    {
+                        return (0d, ConvertionStatus.DoubleSign);
+                    }
+
+                    str = str.Substring(1, str.Length - 1);
+                    div *= -1;
+                    signFound = loop = true;
+                }                
+            }           
+
+            var err = double.TryParse(str, NumberStyles.Any, culture, out var val);
+
+            return !err ? (0d, ConvertionStatus.CannotParse) :
+                   IsInvalidDouble(val) ? (0d, ConvertionStatus.InvalidNumber) :
+                   (val / div, ConvertionStatus.Ok);
+        }
+
+        private enum ConvertionStatus
+        {
+            Ok,
+            CannotParse,
+            InvalidNumber,
+            DoubleSign,
+            DoublePercent,
+            NoNumber
         }
 
         // Convert string to boolean
@@ -355,34 +430,56 @@ namespace Microsoft.PowerFx.Functions
 
         public static FormulaValue Left(IRContext irContext, FormulaValue[] args)
         {
-            var source = (StringValue)args[0];
-            var count = (NumberValue)args[1];
-
-            if (count.Value >= source.Value.Length)
-            {
-                return source;
-            }
-
-            return new StringValue(irContext, source.Value.Substring(0, (int)count.Value));
+            return LeftOrRight(irContext, args, Left);
         }
 
         public static FormulaValue Right(IRContext irContext, FormulaValue[] args)
         {
-            var source = (StringValue)args[0];
-            var count = (NumberValue)args[1];
+            return LeftOrRight(irContext, args, Right);
+        }
 
-            if (count.Value == 0)
+        private static string Left(string str, int i)
+        {
+            if (i >= str.Length)
+            {
+                return str;
+            }
+
+            return str.Substring(0, i);
+        }
+
+        private static string Right(string str, int i)
+        {
+            if (i >= str.Length)
+            {
+                return str;
+            }
+
+            return str.Substring(str.Length - i);
+        }
+
+        private static FormulaValue LeftOrRight(IRContext irContext, FormulaValue[] args, Func<string, int, string> leftOrRight)
+        {
+            if (args[0] is BlankValue || args[1] is BlankValue)
             {
                 return new StringValue(irContext, string.Empty);
             }
 
-            if (count.Value >= source.Value.Length)
+            if (args[1] is not NumberValue)
             {
-                return source;
+                return CommonErrors.GenericInvalidArgument(irContext);
             }
 
-            return new StringValue(irContext, source.Value.Substring(source.Value.Length - (int)count.Value, (int)count.Value));
-        }
+            var source = (StringValue)args[0];
+            var count = (NumberValue)args[1];
+
+            if (count.Value < 0)
+            {
+                return CommonErrors.GenericInvalidArgument(irContext);
+            }
+
+            return new StringValue(irContext, leftOrRight(source.Value, (int)count.Value));            
+        }       
 
         private static FormulaValue Find(IRContext irContext, FormulaValue[] args)
         {
@@ -499,7 +596,7 @@ namespace Microsoft.PowerFx.Functions
             var text = args[0];
             var start = args[1];
 
-            return new BooleanValue(irContext, text.Value.StartsWith(start.Value));
+            return new BooleanValue(irContext, text.Value.StartsWith(start.Value, StringComparison.OrdinalIgnoreCase));
         }
 
         public static FormulaValue EndsWith(IRContext irContext, StringValue[] args)
@@ -507,7 +604,7 @@ namespace Microsoft.PowerFx.Functions
             var text = args[0];
             var end = args[1];
 
-            return new BooleanValue(irContext, text.Value.EndsWith(end.Value));
+            return new BooleanValue(irContext, text.Value.EndsWith(end.Value, StringComparison.OrdinalIgnoreCase));
         }
 
         public static FormulaValue Trim(IRContext irContext, StringValue[] args)

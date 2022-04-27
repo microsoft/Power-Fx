@@ -56,8 +56,7 @@
 
 // Excel returns 0
 >> Int(Blank())
-Blank()
-
+0
 
 // ******** STRING PARAMETERS ********
 

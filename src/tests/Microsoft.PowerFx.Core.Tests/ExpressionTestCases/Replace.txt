@@ -75,13 +75,11 @@
 >>  Replace("abcd", 100, 1, "P")
 "abcdP"
 
-//Excel returns "aPcd"
 >> Replace("abcd", 2.9, 1.2, "P")
-"aPd"
+"aPcd"
 
-//Excel returns "abPefg"
 >> Replace("abcdefg", 3.7, 2.6, "P")
-"abPfg"
+"abPefg"
 
 >> Replace("abcd", 5e100, 1, "P")
 "abcdP"

@@ -137,9 +137,8 @@
 
 // Decimal NUMBER and NUMBER_OF_DIGITS parameter
 
-// Excel returns 14.123456
 >> RoundDown(14.123456,1111111111)
-14
+14.123456
 
 >> RoundDown(14.123456,0.123)
 14
