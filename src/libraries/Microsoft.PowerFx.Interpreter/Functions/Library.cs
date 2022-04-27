@@ -1363,7 +1363,7 @@ namespace Microsoft.PowerFx.Functions
                             "Message",
                             error.Message == null ? FormulaValue.NewBlank(FormulaType.String) : FormulaValue.New(error.Message));
                         var errorScope = new InMemoryRecordValue(
-                            IRContext.NotInSource(new RecordType(Core.Types.ErrorType.ReifiedError())),
+                            IRContext.NotInSource(new RecordType(ErrorType.ReifiedError())),
                             new[] { kindProperty, messageProperty });
                         allErrors.Add(errorScope);
                     }
@@ -1374,15 +1374,15 @@ namespace Microsoft.PowerFx.Functions
                         new NamedValue(
                             "AllErrors",
                             new InMemoryTableValue(
-                                IRContext.NotInSource(new TableType(Core.Types.ErrorType.ReifiedErrorTable())),
+                                IRContext.NotInSource(new TableType(ErrorType.ReifiedErrorTable())),
                                 allErrors.Select(e => DValue<RecordValue>.Of(e))))
                     };
 
                     var ifErrorScopeParamType = new RecordType(DType.CreateRecord(
                         new[]
                         {
-                            new TypedName(Core.Types.ErrorType.ReifiedError(), new DName("FirstError")),
-                            new TypedName(Core.Types.ErrorType.ReifiedErrorTable(), new DName("AllErrors")),
+                            new TypedName(ErrorType.ReifiedError(), new DName("FirstError")),
+                            new TypedName(ErrorType.ReifiedErrorTable(), new DName("AllErrors")),
                         }));
                     var childContext = symbolContext.WithScopeValues(
                         new InMemoryRecordValue(
