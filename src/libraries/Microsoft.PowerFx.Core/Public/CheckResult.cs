@@ -8,7 +8,6 @@ using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Parser;
 using Microsoft.PowerFx.Core.Public.Types;
-using Microsoft.PowerFx.Core.Syntax.Nodes;
 using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Core.Public
@@ -85,13 +84,6 @@ namespace Microsoft.PowerFx.Core.Public
                 throw new InvalidOperationException($"Errors: " + msg);
             }
         }
-
-        /// <summary>
-        /// Gets the type of a syntax node.
-        /// </summary>
-        /// <param name="node"></param>
-        /// <returns></returns>
-        public FormulaType GetNodeType(TexlNode node) => FormulaType.Build(_binding.GetType(node));
 
         internal IReadOnlyDictionary<string, TokenResultType> GetTokens(GetTokensFlags flags) => GetTokensUtils.GetTokens(_binding, flags);
     }
