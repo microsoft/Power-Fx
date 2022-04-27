@@ -89,7 +89,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             var type = ReturnType;
 
             // Are we on a behavior property?
-            var isBehavior = binding.IsBehavior;
+            var isBehavior = binding.BindingConfig.AllowsSideEffects;
 
             // Compute the result type by joining the types of all non-predicate args.
             Contracts.Assert(type == DType.Unknown);

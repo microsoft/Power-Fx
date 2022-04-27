@@ -14,7 +14,9 @@ using System.Xml.Linq;
 
 namespace Microsoft.PowerFx.Core.Utils
 {
-    // Implement this interface to add AssertValid/CheckValid validation capabilities to your class.
+    /// <summary>
+    /// Implement this interface to add AssertValid/CheckValid validation capabilities to your class.
+    /// </summary>
     public interface ICheckable
     {
         bool IsValid { get; }
@@ -1078,6 +1080,7 @@ namespace Microsoft.PowerFx.Core.Utils
         }
 
         /// <param name="args">Warning: this IEnumerable should not be read-once or it will cause side effects.</param>
+        /// <param name="msg"></param>
         [Conditional("DEBUG")]
         public static void AssertAllNonEmpty(IEnumerable<string> args, string msg)
         {

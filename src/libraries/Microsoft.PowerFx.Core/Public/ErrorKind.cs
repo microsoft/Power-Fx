@@ -3,10 +3,10 @@
 
 namespace Microsoft.PowerFx.Core.Public
 {
-    /*
-     * Indicates the error on a record in a connected data source
-     * This must be kept in sync with the document enum "ErrorKind".
-     */
+    /// <summary>
+    /// Indicates the error on a record in a connected data source. 
+    /// This must be kept in sync with the document enum "ErrorKind".
+    /// </summary>
     public enum ErrorKind
     {
         None = 0,

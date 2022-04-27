@@ -273,7 +273,7 @@ namespace Microsoft.PowerFx.Core.IR
         /// Type that is being coerced to an enum type.
         /// </param>
         /// <param name="toType">
-        /// An enum type that a value of <see cref="fromType"/> is being coerced to.
+        /// An enum type that a value of <paramref name="fromType"/> is being coerced to.
         /// </param>
         /// <returns>
         /// The result will generally resemble the coercion kind whose meaning resembles "fromType to

@@ -3,7 +3,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -393,33 +392,6 @@ namespace Microsoft.PowerFx.Tests
             // check.  In the case of TimeUnit, this is StringType
             Assert.True(result.ReturnType is StringType);
             Assert.Empty(result.TopLevelIdentifiers);
-        }
-
-        [Fact]
-        public void CustomFunction()
-        {
-            var config = new PowerFxConfig(null);
-            config.AddFunction(new TestCustomFunction());
-            var engine = new RecalcEngine(config);
-
-            // Shows up in enuemeration
-            var func = engine.GetAllFunctionNames().First(name => name == "TestCustom");
-            Assert.NotNull(func);
-
-            // Can be invoked. 
-            var result = engine.Eval("TestCustom(2,3)");
-            Assert.Equal(6.0, result.ToObject());
-        }
-
-        // Must have "Function" suffix. 
-        private class TestCustomFunction : ReflectionFunction
-        {
-            // Must have "Execute" method. 
-            public static NumberValue Execute(NumberValue x, NumberValue y)
-            {
-                var val = x.Value * y.Value;
-                return FormulaValue.New(val);
-            }
         }
 
         [Fact]

@@ -17,7 +17,7 @@ namespace Microsoft.PowerFx.Core.Utils
     /// This implementation is copied from the CLR, except this class is generic.
     /// It's done to allow multiple components to use their own <see cref="StringBuilderCache{T}"/> objects.
     /// </remarks>
-    /// <see cref="https://github.com/dotnet/coreclr/blob/master/src/mscorlib/src/System/Text/StringBuilderCache.cs"/>
+    /// <see href="https://github.com/dotnet/coreclr/blob/master/src/mscorlib/src/System/Text/StringBuilderCache.cs"/>
     /// <example>
     /// using SBCache = StringBuilderCache&lt;SampleClass&gt;;
     /// // ...

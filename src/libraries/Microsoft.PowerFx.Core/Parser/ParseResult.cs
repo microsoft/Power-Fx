@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Lexer.Tokens;
 using Microsoft.PowerFx.Core.Public;
@@ -60,5 +61,12 @@ namespace Microsoft.PowerFx.Core.Parser
             Before = before;
             After = after;
         }
+
+        internal string ParseErrorText => !HasError ? string.Empty : string.Join("\r\n", _errors.Select((err, i) =>
+        {
+            var sb = new StringBuilder(1024);
+            err.FormatCore(sb);            
+            return $"Err#{++i} {sb}";
+        }));
     }
 }

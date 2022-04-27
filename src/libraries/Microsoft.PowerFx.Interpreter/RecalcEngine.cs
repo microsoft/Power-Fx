@@ -40,7 +40,6 @@ namespace Microsoft.PowerFx
         /// Initializes a new instance of the <see cref="RecalcEngine"/> class.
         /// Create a new power fx engine. 
         /// </summary>
-        /// <param name="powerFxConfig">Compiler customizations.</param>
         public RecalcEngine()
             : this(new PowerFxConfig(null))
         {
@@ -139,20 +138,21 @@ namespace Microsoft.PowerFx
         /// <param name="expressionText">textual representation of the formula.</param>
         /// <param name="parameters">parameters for formula. The fields in the parameter record can 
         /// be acecssed as top-level identifiers in the formula.</param>
+        /// <param name="options"></param>
         /// <returns>The formula's result.</returns>
-        public FormulaValue Eval(string expressionText, RecordValue parameters = null)
+        public FormulaValue Eval(string expressionText, RecordValue parameters = null, ParserOptions options = null)
         {
-            return EvalAsync(expressionText, CancellationToken.None, parameters).Result;          
+            return EvalAsync(expressionText, CancellationToken.None, parameters, options).Result;          
         }
 
-        public async Task<FormulaValue> EvalAsync(string expressionText, CancellationToken cancel, RecordValue parameters = null)
+        public async Task<FormulaValue> EvalAsync(string expressionText, CancellationToken cancel, RecordValue parameters = null, ParserOptions options = null)
         {
             if (parameters == null)
             {
                 parameters = RecordValue.Empty();
             }
 
-            var check = Check(expressionText, (RecordType)parameters.IRContext.ResultType);
+            var check = Check(expressionText, (RecordType)parameters.IRContext.ResultType, options);
             check.ThrowOnErrors();
 
             var newValue = await check.Expression.EvalAsync(parameters, cancel);

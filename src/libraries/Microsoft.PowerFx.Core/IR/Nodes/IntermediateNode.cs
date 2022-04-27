@@ -12,6 +12,14 @@ namespace Microsoft.PowerFx.Core.IR.Nodes
             IRContext = irContext;
         }
 
+        /// <summary>
+        /// This method visits the node using the visitor and context provided.
+        /// </summary>
+        /// <typeparam name="TResult"></typeparam>
+        /// <typeparam name="TContext"></typeparam>
+        /// <param name="visitor">Visitor to use.</param>
+        /// <param name="context">Context.</param>
+        /// <returns></returns>
         public abstract TResult Accept<TResult, TContext>(IRNodeVisitor<TResult, TContext> visitor, TContext context);
     }
 }
