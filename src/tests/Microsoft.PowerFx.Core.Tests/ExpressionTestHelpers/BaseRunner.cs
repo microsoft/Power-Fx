@@ -231,35 +231,55 @@ namespace Microsoft.PowerFx.Core.Tests
                         return (TestResult.Pass, null);
                     }
 
-                    var actualErrorKind = errorResult.Errors.First().Kind;
-                    if (int.TryParse(expectedErrorKind, out var numericErrorKind))
+                    var expectedErrorKinds = expectedErrorKind.Split(',', StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim()).ToArray();
+
+                    if (errorResult.Errors.Count != expectedErrorKinds.Count())
                     {
-                        // Error given as the internal value
-                        if (numericErrorKind == (int)actualErrorKind)
+                        return (TestResult.Fail, $"Received {errorResult.Errors.Count} errors while we were expecting {expectedErrorKinds.Count()} errors.\r\n" + 
+                                                 $"Received {string.Join(", ", errorResult.Errors.Select(e => e.Kind))} and was expecting {expectedErrorKind}");
+                    }
+
+                    var results = errorResult.Errors.Select((er, i) =>
+                    {
+                        var actualErrorKind = er.Kind;
+                        var eek = expectedErrorKinds[i];
+
+                        if (int.TryParse(eek, out var numericErrorKind))
                         {
-                            return (TestResult.Pass, null);
+                            // Error given as the internal value
+                            if (numericErrorKind == (int)actualErrorKind)
+                            {
+                                return (tr: TestResult.Pass, err: null);
+                            }
+                            else
+                            {
+                                return (tr: TestResult.Fail, err: $"Received an error, but expected kind={eek} and received {actualErrorKind} ({(int)actualErrorKind})");
+                            }
+                        }
+                        else if (Enum.TryParse<ErrorKind>(eek, out var errorKind))
+                        {
+                            // Error given as the enum name
+                            if (errorKind == actualErrorKind)
+                            {
+                                return (tr: TestResult.Pass, null);
+                            }
+                            else
+                            {
+                                return (tr: TestResult.Fail, err: $"Received an error, but expected kind={errorKind} and received {actualErrorKind}");
+                            }
                         }
                         else
                         {
-                            return (TestResult.Fail, $"Received an error, but expected kind={expectedErrorKind} and received {actualErrorKind} ({(int)actualErrorKind})");
+                            return (tr: TestResult.Fail, err: $"Invalid expected error kind: {eek}");
                         }
-                    }
-                    else if (Enum.TryParse<ErrorKind>(expectedErrorKind, out var errorKind))
+                    }).ToArray();
+
+                    if (results.All(r => r.tr == TestResult.Pass))
                     {
-                        // Error given as the enum name
-                        if (errorKind == actualErrorKind)
-                        {
-                            return (TestResult.Pass, null);
-                        }
-                        else
-                        {
-                            return (TestResult.Fail, $"Received an error, but expected kind={errorKind} and received {actualErrorKind}");
-                        }
+                        return (TestResult.Pass, null);
                     }
-                    else
-                    {
-                        return (TestResult.Fail, $"Invalid expected error kind: {expectedErrorKind}");
-                    }
+
+                    return (TestResult.Fail, string.Join("\r\n", results.Select(r => r.err)));
                 }
                 else if (IsError(result))
                 {

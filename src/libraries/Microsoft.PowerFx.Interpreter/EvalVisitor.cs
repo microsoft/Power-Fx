@@ -476,6 +476,7 @@ namespace Microsoft.PowerFx
             }
 
             FormulaValue fv = null;
+            var errors = new List<ExpressionError>();
 
             foreach (var iNode in node.Nodes)
             {
@@ -483,13 +484,13 @@ namespace Microsoft.PowerFx
 
                 fv = await iNode.Accept(this, context);
 
-                if (fv is ErrorValue)
+                if (fv is ErrorValue ev)
                 {
-                    return fv;
+                    errors.AddRange(ev.Errors);
                 }
             }
 
-            return fv;
+            return errors.Any() ? new ErrorValue(node.IRContext, errors) : fv;
         }
 
         public override async ValueTask<FormulaValue> Visit(ResolvedObjectNode node, SymbolContext context)
