@@ -13,7 +13,7 @@ using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Core.Public
 {
-    /// <summary>
+    /// <summary> 
     /// Result of binding an expression. 
     /// </summary>
     public class CheckResult : IOperationStatus
