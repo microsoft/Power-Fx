@@ -1,8 +1,8 @@
-﻿>> CountA([1,2,3,Blank()])
-3
+﻿>> CountA([1,2,3,4,Blank()])
+4
 
->> CountA([1,2,3,Blank(),Blank(),Blank()])
-3
+>> CountA([1,2,Blank(),Blank(),Blank()])
+2
 
 >> CountA([1,2,3,If(1<0,4),Blank()])
 3
@@ -14,4 +14,19 @@
 Blank()
 
 >> CountA([1, 2, 1/0, 4, 5])
+#Error
+
+>> CountA(Table({a:1},{a:2},If(Sqrt(-1)<1,{a:3}),{a:4}))
+#Error
+
+>> CountA(Table({a:1},{a:2},If(1<0,{a:3}), If(1>0,{a:4}),{a:5}))
+4
+
+>> CountA(["","123","abc",Blank()])
+3
+
+>> CountA([1,"1","2",Blank()])
+3
+
+>> CountA(Sort([-2,-1,0,1,2],1/Value))
 #Error

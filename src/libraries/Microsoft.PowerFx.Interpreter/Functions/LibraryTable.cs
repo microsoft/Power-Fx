@@ -146,13 +146,25 @@ namespace Microsoft.PowerFx.Functions
 
             foreach (var row in arg0.Rows)
             {
-                if (row.Value.GetField(TableValue.ValueName) is ErrorValue error)
+                if (row.Value is null)
                 {
-                    errors.Add(error);
+                    if (row.Error is ErrorValue error1)
+                    {
+                        errors.Add(error1);
+                    }
+
                     continue;
                 }
 
-                if (row.Value.GetField(TableValue.ValueName) is NumberValue)
+                var field = row.Value.Fields.First().Value;
+
+                if (field is ErrorValue error2)
+                {
+                    errors.Add(error2);
+                    continue;
+                }
+
+                if (field is NumberValue)
                 {
                     count++;
                 }
@@ -176,13 +188,25 @@ namespace Microsoft.PowerFx.Functions
 
             foreach (var row in arg0.Rows)
             {
-                if (row.Value.GetField(TableValue.ValueName) is ErrorValue error)
+                if (row.Value is null)
                 {
-                    errors.Add(error);
+                    if (row.Error is ErrorValue error1)
+                    {
+                        errors.Add(error1);
+                    }
+
                     continue;
                 }
 
-                if (row.Value.GetField(TableValue.ValueName) is not BlankValue)
+                var field = row.Value.Fields.First().Value;
+
+                if (field is ErrorValue error2)
+                {
+                    errors.Add(error2);
+                    continue;
+                }
+
+                if (field is not BlankValue)
                 {
                     count++;
                 }
