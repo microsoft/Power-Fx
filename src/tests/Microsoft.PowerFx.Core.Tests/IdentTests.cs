@@ -21,6 +21,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("'")]
         [InlineData("''")]
         [InlineData("", "_")]
+        [InlineData("***", null)]
         public void MakeValidIdentifier(string input, string expected = null)
         {
             if (expected == null)
