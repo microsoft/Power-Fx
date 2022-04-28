@@ -12,3 +12,21 @@
 
 >> Proper("hELLO WorLD")
 "Hello World"
+
+>> Proper("è")
+"È"
+
+>> Proper("è è")
+"È È"
+
+>> Proper("è È")
+"È È"
+
+>> Proper("è è!")
+"È È!"
+
+>>Proper("Ò")
+"Ò"
+
+>>Proper("Òè")
+"Òè"
