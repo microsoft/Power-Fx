@@ -356,7 +356,7 @@ namespace Microsoft.PowerFx
                 return await unaryOp(this, context, node.IRContext, args);
             }
 
-            return CommonErrors.UnreachableCodeError(node.IRContext);
+            return CommonErrors.NotYetImplementedError(node.IRContext, $"Unary op {node.Op}");
         }
 
         public override async ValueTask<FormulaValue> Visit(AggregateCoercionNode node, SymbolContext context)

@@ -58,47 +58,9 @@ namespace Microsoft.PowerFx.Core.Public.Types
             _type = type;
         }
 
-        // Entites may be recursive and their Dytype is tagged with additional schema metadata. 
-        // Expand that metadata into a proper Dtype. 
-        private static DType GetExpandedEntityType(DType expandEntityType, string relatedEntityPath)
-        {
-            Contracts.AssertValid(expandEntityType);
-            Contracts.Assert(expandEntityType.HasExpandInfo);
-            Contracts.AssertValue(relatedEntityPath);
-
-            var expandEntityInfo = expandEntityType.ExpandInfo;
-
-            if (expandEntityInfo.ParentDataSource is not IExternalTabularDataSource dsInfo)
-            {
-                return expandEntityType;
-            }
-
-            DType type;
-
-            if (!expandEntityType.TryGetEntityDelegationMetadata(out var metadata))
-            {
-                // We need more metadata to bind this fully
-                return DType.Error;
-            }
-
-            type = expandEntityType.ExpandEntityType(metadata.Schema, metadata.Schema.AssociatedDataSources);
-            Contracts.Assert(type.HasExpandInfo);
-
-            // Update the datasource and relatedEntity path.
-            type.ExpandInfo.UpdateEntityInfo(expandEntityInfo.ParentDataSource, relatedEntityPath);
-
-            return type;
-        }
-
         // Get the correct derived type
         internal static FormulaType Build(DType type)
         {
-            if (type.IsExpandEntity)
-            {
-                var expandedType = GetExpandedEntityType(type, string.Empty);
-                return Build(expandedType);
-            }
-
             switch (type.Kind)
             {
                 case DKind.ObjNull: return Blank;

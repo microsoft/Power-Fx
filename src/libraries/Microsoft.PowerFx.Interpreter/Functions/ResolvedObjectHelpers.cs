@@ -21,8 +21,10 @@ namespace Microsoft.PowerFx.Functions
             return fi._value;
         }
 
-        // $$$ - this allows behavior we really don't want ... can we block in the IR?
-        // OptionSets can act like Records: 
+        // This allows option sets to be standalone identifiers, like:
+        //   Choices(TimeUnit). 
+        //
+        // That it also lets OptionSets act like Records in ways we really don't want: 
         //   TimeUnit.Hours
         //   If(true, TimeUnit).Hours
         //   If(true, TextPosition, Align).Left
