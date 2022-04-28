@@ -28,6 +28,8 @@ namespace Microsoft.PowerFx.Core
             UntypedObject,
             EntityRecord,
             EntityTable,
+            Unknown,
+            Error
         }
 
         /// <summary>
