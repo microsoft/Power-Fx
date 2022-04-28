@@ -793,6 +793,16 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: ParseJSON)
             },
             {
+                BuiltinFunctionsCore.Proper,
+                StandardErrorHandling<StringValue>(
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: ReplaceBlankWithEmptyString,
+                    checkRuntimeTypes: ExactValueType<StringValue>,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
+                    targetFunction: Proper)
+            },
+            {
                 BuiltinFunctionsCore.Pi,
                 Pi
             },

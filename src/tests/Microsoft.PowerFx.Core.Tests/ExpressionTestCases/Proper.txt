@@ -1,0 +1,14 @@
+>> Proper("E. E. Cummings")
+"E. E. Cummings"
+
+>> Proper(Blank())
+""
+
+>> Proper(Text(1/0, "000"))
+#Error
+
+>> Proper("Important!")
+"Important!"
+
+>> Proper("hELLO WorLD")
+"Hello World"
