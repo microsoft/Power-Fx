@@ -1,4 +1,4 @@
->> Proper("E. E. Cummings")
+>> Proper("e. e. cummings")
 "E. E. Cummings"
 
 >> Proper(Blank())
