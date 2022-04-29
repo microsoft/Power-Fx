@@ -4,11 +4,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.PowerFx.Core.Lexer.Tokens;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Syntax.SourceInformation;
 using Microsoft.PowerFx.Core.Syntax.Visitors;
 using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Syntax;
 
 namespace Microsoft.PowerFx.Core.Syntax.Nodes
 {

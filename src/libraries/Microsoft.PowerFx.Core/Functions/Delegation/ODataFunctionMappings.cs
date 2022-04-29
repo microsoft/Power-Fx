@@ -3,7 +3,7 @@
 
 using System;
 using System.Collections.Generic;
-using Microsoft.PowerFx.Core.Lexer;
+using Microsoft.PowerFx.Syntax;
 
 namespace Microsoft.PowerFx.Core.Functions.Delegation
 {

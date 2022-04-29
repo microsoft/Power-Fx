@@ -3,11 +3,11 @@
 
 using System;
 using System.Linq;
-using Microsoft.PowerFx.Core.Lexer;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Parser;
 using Microsoft.PowerFx.Core.Syntax;
 using Microsoft.PowerFx.Core.Syntax.Nodes;
+using Microsoft.PowerFx.Syntax;
 using Xunit;
 
 namespace Microsoft.PowerFx.Core.Tests

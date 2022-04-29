@@ -6,12 +6,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using Microsoft.PowerFx.Core.Functions;
-using Microsoft.PowerFx.Core.Lexer;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Texl.Builtins;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Syntax;
 
 namespace Microsoft.PowerFx.Intellisense
 {

@@ -1,8 +1,8 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using Microsoft.PowerFx.Core.Lexer;
 using Microsoft.PowerFx.Core.Syntax.Nodes;
+using Microsoft.PowerFx.Syntax;
 
 namespace Microsoft.PowerFx.Core.Syntax.Visitors
 {

@@ -6,14 +6,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using Microsoft.PowerFx.Core.Lexer;
-using Microsoft.PowerFx.Core.Lexer.Tokens;
 using Microsoft.PowerFx.Core.Parser;
 using Microsoft.PowerFx.Core.Syntax.Nodes;
 using Microsoft.PowerFx.Core.Syntax.SourceInformation;
 using Microsoft.PowerFx.Core.Syntax.Visitors;
 using Microsoft.PowerFx.Core.UtilityDataStructures;
 using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Syntax;
 
 namespace Microsoft.PowerFx.Core.Syntax
 {

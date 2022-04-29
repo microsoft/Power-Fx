@@ -15,7 +15,6 @@ using Microsoft.PowerFx.Core.Glue;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.IR.Nodes;
 using Microsoft.PowerFx.Core.IR.Symbols;
-using Microsoft.PowerFx.Core.Lexer;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Parser;
 using Microsoft.PowerFx.Core.Public;

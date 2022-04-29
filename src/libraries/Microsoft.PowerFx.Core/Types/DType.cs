@@ -10,11 +10,11 @@ using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions.Delegation;
-using Microsoft.PowerFx.Core.Lexer;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Syntax.Nodes;
 using Microsoft.PowerFx.Core.UtilityDataStructures;
 using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Syntax;
 using Conditional = System.Diagnostics.ConditionalAttribute;
 
 namespace Microsoft.PowerFx.Core.Types

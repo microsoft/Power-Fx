@@ -6,10 +6,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.PowerFx.Core.Functions;
-using Microsoft.PowerFx.Core.Lexer;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Intellisense.IntellisenseData;
 using Microsoft.PowerFx.Intellisense.SignatureHelp;
+using Microsoft.PowerFx.Syntax;
 
 namespace Microsoft.PowerFx.Intellisense
 {

@@ -2,8 +2,7 @@
 // Licensed under the MIT license.
 
 using System;
-using Microsoft.PowerFx.Core.Lexer;
-using Microsoft.PowerFx.Core.Lexer.Tokens;
+using Microsoft.PowerFx.Syntax;
 using Xunit;
 
 namespace Microsoft.PowerFx.Core.Tests

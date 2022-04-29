@@ -6,8 +6,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using Microsoft.PowerFx.Core.Lexer.Tokens;
 using Microsoft.PowerFx.Core.Syntax.Nodes;
+using Microsoft.PowerFx.Syntax;
 using Xunit;
 
 namespace Microsoft.PowerFx.Core.Tests
@@ -54,8 +54,8 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Core.Utils.ICheckable",
 
                 // Lexer and Parser 
-                "Microsoft.PowerFx.Core.Lexer.BinaryOp",
-                "Microsoft.PowerFx.Core.Lexer.TokKind",
+                "Microsoft.PowerFx.Syntax.BinaryOp",
+                "Microsoft.PowerFx.Syntax.TokKind",
                 "Microsoft.PowerFx.Core.Lexer.Tokens.CommentToken",
                 "Microsoft.PowerFx.Core.Lexer.Tokens.ErrorToken",
                 "Microsoft.PowerFx.Core.Lexer.Tokens.IdentToken",
@@ -175,6 +175,8 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         // No public type with TransportType attribute
+        // TransportType is special to Canvas Documents and a tool reflects over it
+        // and it's very brittle.
         [Fact]
         public void NoTransportInPublicTypes()
         {
@@ -200,7 +202,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
         // Assert DocumentErrorSeverity and ErrorSeverity are in sync. 
         [Fact]
-        public void ErrorSeverity()
+        public void ErrorSeverityEnumsMatch()
         {
             var values1 = Enum.GetValues(typeof(Errors.DocumentErrorSeverity));
             var values2 = Enum.GetValues(typeof(ErrorSeverity));

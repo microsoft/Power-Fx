@@ -4,7 +4,7 @@
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Utils;
 
-namespace Microsoft.PowerFx.Core.Lexer.Tokens
+namespace Microsoft.PowerFx.Syntax
 {
     internal class IslandStartToken : Token
     {
