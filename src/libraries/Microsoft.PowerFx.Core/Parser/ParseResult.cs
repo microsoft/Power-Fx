@@ -11,7 +11,7 @@ using Microsoft.PowerFx.Core.Syntax.Nodes;
 using Microsoft.PowerFx.Core.Syntax.SourceInformation;
 using Microsoft.PowerFx.Core.Utils;
 
-namespace Microsoft.PowerFx.Core.Parser
+namespace Microsoft.PowerFx
 {
     /// <summary>
     /// Result of parsing an expression. 

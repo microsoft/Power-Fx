@@ -21,6 +21,23 @@ namespace Microsoft.PowerFx.Core.Tests
 
             var allowed = new HashSet<string>()
             {
+                "Microsoft.PowerFx.PowerFxConfig",
+                "Microsoft.PowerFx.CheckResult",
+                "Microsoft.PowerFx.ParseResult",
+                "Microsoft.PowerFx.FunctionInfo",
+                "Microsoft.PowerFx.NameCollisionException",
+                "Microsoft.PowerFx.ErrorKind",
+                "Microsoft.PowerFx.ExpressionError",
+                "Microsoft.PowerFx.FormulaWithParameters",
+                "Microsoft.PowerFx.Core.Public.IExpression",
+                "Microsoft.PowerFx.Core.Public.IExpressionExtensions",
+                "Microsoft.PowerFx.IPowerFxEngine",
+                "Microsoft.PowerFx.ParserOptions",
+                "Microsoft.PowerFx.Engine",
+                "Microsoft.PowerFx.FeatureFlags",
+
+                // TBD ...
+                "Microsoft.PowerFx.Core.Public.TokenResultType",
                 "Microsoft.PowerFx.Core.App.DefaultEnabledFeatures",
                 "Microsoft.PowerFx.Core.App.IExternalEnabledFeatures",
                 "Microsoft.PowerFx.Core.BuiltinFormulaTypeConversions",
@@ -28,6 +45,8 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Core.Errors.DocumentErrorSeverity",
                 "Microsoft.PowerFx.Core.FormulaTypeSchema",
                 "Microsoft.PowerFx.Core.FormulaTypeToSchemaConverter",                                
+
+                // Lexer and Parser 
                 "Microsoft.PowerFx.Core.Lexer.BinaryOp",
                 "Microsoft.PowerFx.Core.Lexer.TokKind",
                 "Microsoft.PowerFx.Core.Lexer.Tokens.CommentToken",
@@ -40,21 +59,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Core.Lexer.VariadicOp",
                 "Microsoft.PowerFx.Core.Localization.ErrorResourceKey",
                 "Microsoft.PowerFx.Core.Localization.Span",
-                "Microsoft.PowerFx.Core.NameCollisionException",
-                "Microsoft.PowerFx.Core.Parser.ParseResult",
-                "Microsoft.PowerFx.Core.PowerFxConfig",
-                "Microsoft.PowerFx.Core.Public.FunctionInfo",
-                "Microsoft.PowerFx.Core.Public.CheckResult",
-                "Microsoft.PowerFx.Core.Public.ErrorKind",
-                "Microsoft.PowerFx.Core.Public.ExpressionError",
-                "Microsoft.PowerFx.Core.Public.FormulaWithParameters",
-                "Microsoft.PowerFx.Core.Public.IExpression",
-                "Microsoft.PowerFx.Core.Public.IExpressionExtensions",
-                "Microsoft.PowerFx.Core.Public.IPowerFxEngine",
-                "Microsoft.PowerFx.Core.Public.IPowerFxScope",
-                "Microsoft.PowerFx.Core.Public.IPowerFxScopeDisplayName",
-                "Microsoft.PowerFx.Core.Public.ParserOptions",
-                "Microsoft.PowerFx.Core.Public.TokenResultType",
+
                 "Microsoft.PowerFx.Core.Public.Types.AggregateType",
                 "Microsoft.PowerFx.Core.Public.Types.BlankType",
                 "Microsoft.PowerFx.Core.Public.Types.BooleanType",
@@ -99,7 +104,9 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Core.Public.Values.TimeValue",
                 "Microsoft.PowerFx.Core.Public.Values.UntypedObjectValue",
                 "Microsoft.PowerFx.Core.Public.Values.ValidFormulaValue",
+
                 "Microsoft.PowerFx.Core.RenameDriver",
+
                 "Microsoft.PowerFx.Core.Syntax.Identifier",
                 "Microsoft.PowerFx.Core.Syntax.NodeKind",
                 "Microsoft.PowerFx.Core.Syntax.Nodes.AsNode",
@@ -123,22 +130,25 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Core.Syntax.Nodes.UnaryOpNode",
                 "Microsoft.PowerFx.Core.Syntax.Nodes.VariadicBase",
                 "Microsoft.PowerFx.Core.Syntax.Nodes.VariadicOpNode",
+
                 "Microsoft.PowerFx.Core.Syntax.Visitors.IdentityTexlVisitor",
                 "Microsoft.PowerFx.Core.Syntax.Visitors.TexlFunctionalVisitor`2",
                 "Microsoft.PowerFx.Core.Syntax.Visitors.TexlVisitor",
-                "Microsoft.PowerFx.Core.Texl.Intellisense.IIntellisenseResult",
-                "Microsoft.PowerFx.Core.Texl.Intellisense.IIntellisenseSuggestion",
-                "Microsoft.PowerFx.Core.Texl.Intellisense.SignatureHelp.ParameterInformation",
-                "Microsoft.PowerFx.Core.Texl.Intellisense.SignatureHelp.SignatureHelp",
-                "Microsoft.PowerFx.Core.Texl.Intellisense.SignatureHelp.SignatureInformation",
-                "Microsoft.PowerFx.Core.Texl.Intellisense.SuggestionIconKind",
-                "Microsoft.PowerFx.Core.Texl.Intellisense.SuggestionKind",
-                "Microsoft.PowerFx.Core.Texl.Intellisense.UIString",
+
+                "Microsoft.PowerFx.Intellisense.IPowerFxScope",
+                "Microsoft.PowerFx.Intellisense.IPowerFxScopeDisplayName",
+                "Microsoft.PowerFx.Intellisense.IIntellisenseResult",
+                "Microsoft.PowerFx.Intellisense.IIntellisenseSuggestion",
+                "Microsoft.PowerFx.Intellisense.ParameterInformation",
+                "Microsoft.PowerFx.Intellisense.SignatureHelp",
+                "Microsoft.PowerFx.Intellisense.SignatureInformation",
+                "Microsoft.PowerFx.Intellisense.SuggestionIconKind",
+                "Microsoft.PowerFx.Intellisense.SuggestionKind",
+                "Microsoft.PowerFx.Intellisense.UIString",
+
                 "Microsoft.PowerFx.Core.Utils.DName",
                 "Microsoft.PowerFx.Core.Utils.DPath",
-                "Microsoft.PowerFx.Core.Utils.ICheckable",
-                "Microsoft.PowerFx.Engine",
-                "Microsoft.PowerFx.FeatureFlags",
+                "Microsoft.PowerFx.Core.Utils.ICheckable"
             };
 
             var sb = new StringBuilder();

@@ -3,7 +3,7 @@
 
 using Microsoft.PowerFx.Core.Public.Types;
 
-namespace Microsoft.PowerFx.Core.Public
+namespace Microsoft.PowerFx
 {
     /// <summary>
     /// Encapsulate a formula and the parameters it has available. 

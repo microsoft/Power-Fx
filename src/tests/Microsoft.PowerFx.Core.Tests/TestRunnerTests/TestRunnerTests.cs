@@ -339,7 +339,7 @@ namespace Microsoft.PowerFx.Core.Tests
         {
             var errorValue = new ErrorValue(
                 IR.IRContext.NotInSource(Public.Types.FormulaType.Number),
-                new Public.ExpressionError { Kind = Public.ErrorKind.InvalidFunctionUsage });
+                new ExpressionError { Kind = ErrorKind.InvalidFunctionUsage });
             var runner = new MockRunner
             {
                 _hook = (expr, setup) => errorValue // error

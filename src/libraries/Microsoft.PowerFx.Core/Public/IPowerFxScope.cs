@@ -3,7 +3,7 @@
 
 using Microsoft.PowerFx.Core.Texl.Intellisense;
 
-namespace Microsoft.PowerFx.Core.Public
+namespace Microsoft.PowerFx.Intellisense
 {
     /// <summary>
     /// Provide intellisense (Design-time) support. 

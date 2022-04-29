@@ -27,6 +27,8 @@ using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Core.Functions
 {
+    using FunctionInfo = Microsoft.PowerFx.Core.Functions.TransportSchemas.FunctionInfo;
+
     [ThreadSafeImmutable]
     internal abstract class TexlFunction : IFunction
     {

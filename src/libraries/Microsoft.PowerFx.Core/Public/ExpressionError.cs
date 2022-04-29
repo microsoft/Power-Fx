@@ -5,9 +5,10 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Localization;
+using Microsoft.PowerFx.Core.Public;
 using Microsoft.PowerFx.Core.Public.Values;
 
-namespace Microsoft.PowerFx.Core.Public
+namespace Microsoft.PowerFx
 {
     /// <summary>
     /// Error message. This could be a compile time error from parsing or binding, 
