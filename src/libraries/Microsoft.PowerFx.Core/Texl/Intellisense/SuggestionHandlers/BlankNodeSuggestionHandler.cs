@@ -3,7 +3,7 @@
 
 using Microsoft.PowerFx.Core.Syntax;
 
-namespace Microsoft.PowerFx.Core.Texl.Intellisense
+namespace Microsoft.PowerFx.Intellisense
 {
     internal partial class Intellisense
     {

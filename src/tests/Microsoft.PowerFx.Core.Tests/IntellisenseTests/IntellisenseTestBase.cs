@@ -6,8 +6,8 @@ using System.Text.RegularExpressions;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Public.Types;
 using Microsoft.PowerFx.Core.Tests;
-using Microsoft.PowerFx.Core.Texl.Intellisense;
 using Microsoft.PowerFx.Core.Types;
+using Microsoft.PowerFx.Intellisense;
 using Xunit;
 
 namespace Microsoft.PowerFx.Tests.IntellisenseTests

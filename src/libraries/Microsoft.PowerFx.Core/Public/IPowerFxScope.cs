@@ -1,8 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using Microsoft.PowerFx.Core.Texl.Intellisense;
-
 namespace Microsoft.PowerFx.Intellisense
 {
     /// <summary>

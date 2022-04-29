@@ -4,7 +4,7 @@
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Syntax;
 
-namespace Microsoft.PowerFx.Core.Texl.Intellisense
+namespace Microsoft.PowerFx.Intellisense
 {
     internal interface IIntellisense
     {

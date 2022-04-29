@@ -7,11 +7,11 @@ using System.Linq;
 using System.Text;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Lexer;
-using Microsoft.PowerFx.Core.Texl.Intellisense.IntellisenseData;
-using Microsoft.PowerFx.Core.Texl.Intellisense.SignatureHelp;
 using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Intellisense.IntellisenseData;
+using Microsoft.PowerFx.Intellisense.SignatureHelp;
 
-namespace Microsoft.PowerFx.Core.Texl.Intellisense
+namespace Microsoft.PowerFx.Intellisense
 {
     internal class IntellisenseResult : IIntellisenseResult
     {

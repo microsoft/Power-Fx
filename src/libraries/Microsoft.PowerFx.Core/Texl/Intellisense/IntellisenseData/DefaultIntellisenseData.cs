@@ -3,7 +3,7 @@
 
 using Microsoft.PowerFx.Core.Functions;
 
-namespace Microsoft.PowerFx.Core.Texl.Intellisense.IntellisenseData
+namespace Microsoft.PowerFx.Intellisense.IntellisenseData
 {
     /// <summary>
     /// This class represents the default intellisense result.

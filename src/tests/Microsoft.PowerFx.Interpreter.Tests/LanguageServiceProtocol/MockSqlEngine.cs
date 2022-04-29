@@ -3,7 +3,6 @@
 
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Public;
-using Microsoft.PowerFx.Core.Texl.Intellisense;
 using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.LanguageServerProtocol.Protocol;
 
