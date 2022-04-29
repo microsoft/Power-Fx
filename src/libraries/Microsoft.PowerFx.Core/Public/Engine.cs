@@ -9,7 +9,6 @@ using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Parser;
 using Microsoft.PowerFx.Core.Public;
 using Microsoft.PowerFx.Core.Public.Types;
-using Microsoft.PowerFx.Core.Syntax;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Intellisense;

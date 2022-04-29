@@ -2,11 +2,9 @@
 // Licensed under the MIT license.
 
 using System.Linq;
-using Microsoft.PowerFx.Core.Syntax.Nodes;
 using Microsoft.PowerFx.Core.Utils;
-using Microsoft.PowerFx.Syntax;
 
-namespace Microsoft.PowerFx.Core.Syntax.Visitors
+namespace Microsoft.PowerFx.Syntax
 {
     internal sealed class FindNodeVisitor : IdentityTexlVisitor
     {

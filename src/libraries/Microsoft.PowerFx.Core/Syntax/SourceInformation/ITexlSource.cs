@@ -3,10 +3,9 @@
 
 using System.Collections.Generic;
 using Microsoft.PowerFx.Core.Localization;
-using Microsoft.PowerFx.Core.Syntax.Nodes;
 using Microsoft.PowerFx.Syntax;
 
-namespace Microsoft.PowerFx.Core.Syntax.SourceInformation
+namespace Microsoft.PowerFx.Syntax.SourceInformation
 {
     /// <summary>
     /// An individual piece of the source that should be associated with a given

@@ -3,8 +3,6 @@
 
 using System.Linq;
 using Microsoft.PowerFx.Core.Logging;
-using Microsoft.PowerFx.Core.Syntax;
-using Microsoft.PowerFx.Core.Syntax.Nodes;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Syntax;
 using Xunit;

@@ -2,7 +2,7 @@
 // Licensed under the MIT license.
 
 using System.Linq;
-using Microsoft.PowerFx.Core.Syntax;
+using Microsoft.PowerFx.Syntax;
 using Xunit;
 
 namespace Microsoft.PowerFx.Core.Tests

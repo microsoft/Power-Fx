@@ -7,12 +7,11 @@ using System.Linq;
 using System.Threading;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Localization;
-using Microsoft.PowerFx.Core.Syntax.SourceInformation;
-using Microsoft.PowerFx.Core.Syntax.Visitors;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
+using Microsoft.PowerFx.Syntax.SourceInformation;
 
-namespace Microsoft.PowerFx.Core.Syntax.Nodes
+namespace Microsoft.PowerFx.Syntax
 {
     /// <summary>
     /// Function call parse node. Example:

@@ -3,10 +3,9 @@
 
 using System.Linq;
 using Microsoft.PowerFx.Core.Localization;
-using Microsoft.PowerFx.Core.Syntax.SourceInformation;
-using Microsoft.PowerFx.Syntax;
+using Microsoft.PowerFx.Syntax.SourceInformation;
 
-namespace Microsoft.PowerFx.Core.Syntax.Nodes
+namespace Microsoft.PowerFx.Syntax
 {
     /// <summary>
     /// Base class for all parse nodes representing a name/identifier.

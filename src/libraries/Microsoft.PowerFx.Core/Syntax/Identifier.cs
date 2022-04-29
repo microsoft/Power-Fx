@@ -5,7 +5,7 @@ using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
 
-namespace Microsoft.PowerFx.Core.Syntax
+namespace Microsoft.PowerFx.Syntax
 {
     /// <summary>
     /// The identifier during parsing.

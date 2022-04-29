@@ -2,9 +2,6 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
-using Microsoft.PowerFx.Core.Syntax;
-using Microsoft.PowerFx.Core.Syntax.Nodes;
-using Microsoft.PowerFx.Core.Syntax.Visitors;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
 

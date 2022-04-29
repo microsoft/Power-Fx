@@ -5,8 +5,6 @@ using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Binding.BindInfo;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Functions;
-using Microsoft.PowerFx.Core.Syntax;
-using Microsoft.PowerFx.Core.Syntax.Nodes;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
 

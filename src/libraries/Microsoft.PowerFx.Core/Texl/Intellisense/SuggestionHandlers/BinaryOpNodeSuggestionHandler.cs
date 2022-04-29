@@ -2,8 +2,6 @@
 // Licensed under the MIT license.
 
 using Microsoft.PowerFx.Core.Parser;
-using Microsoft.PowerFx.Core.Syntax;
-using Microsoft.PowerFx.Core.Syntax.Nodes;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
 

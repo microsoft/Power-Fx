@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using Microsoft.PowerFx.Core.Syntax.Nodes;
 using Microsoft.PowerFx.Syntax;
 using Xunit;
 
@@ -18,6 +17,13 @@ namespace Microsoft.PowerFx.Core.Tests
         public void Test()
         {
             var asm = typeof(Parser.TexlParser).Assembly;
+
+            // The goal for public namespaces is to make the SDK easy for the consumer. 
+            // Namespace principles for public classes:            // 
+            // - prefer fewer namespaces. See C# for example: https://docs.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis
+            // - For easy discovery, but Engine in "Microsoft.PowerFx".
+            // - For sub areas with many related classes, cluster into a single subnamespace.
+            // - Avoid nesting more than 1 level deep
 
             var allowed = new HashSet<string>()
             {
@@ -52,96 +58,99 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Core.Utils.DName",
                 "Microsoft.PowerFx.Core.Utils.DPath",
                 "Microsoft.PowerFx.Core.Utils.ICheckable",
-
-                // Lexer and Parser 
-                "Microsoft.PowerFx.Syntax.BinaryOp",
-                "Microsoft.PowerFx.Syntax.TokKind",
-                "Microsoft.PowerFx.Core.Lexer.Tokens.CommentToken",
-                "Microsoft.PowerFx.Core.Lexer.Tokens.ErrorToken",
-                "Microsoft.PowerFx.Core.Lexer.Tokens.IdentToken",
-                "Microsoft.PowerFx.Core.Lexer.Tokens.NumLitToken",
-                "Microsoft.PowerFx.Core.Lexer.Tokens.StrLitToken",
-                "Microsoft.PowerFx.Core.Lexer.Tokens.Token",
-                "Microsoft.PowerFx.Core.Lexer.UnaryOp",
-                "Microsoft.PowerFx.Core.Lexer.VariadicOp",
                 "Microsoft.PowerFx.Core.Localization.ErrorResourceKey",
                 "Microsoft.PowerFx.Core.Localization.Span",
 
-                "Microsoft.PowerFx.Core.Syntax.Identifier",
-                "Microsoft.PowerFx.Core.Syntax.NodeKind",
-                "Microsoft.PowerFx.Core.Syntax.Nodes.AsNode",
-                "Microsoft.PowerFx.Core.Syntax.Nodes.BinaryOpNode",
-                "Microsoft.PowerFx.Core.Syntax.Nodes.BlankNode",
-                "Microsoft.PowerFx.Core.Syntax.Nodes.BoolLitNode",
-                "Microsoft.PowerFx.Core.Syntax.Nodes.CallNode",
-                "Microsoft.PowerFx.Core.Syntax.Nodes.DottedNameNode",
-                "Microsoft.PowerFx.Core.Syntax.Nodes.ErrorNode",
-                "Microsoft.PowerFx.Core.Syntax.Nodes.FirstNameNode",
-                "Microsoft.PowerFx.Core.Syntax.Nodes.ListNode",
-                "Microsoft.PowerFx.Core.Syntax.Nodes.NameNode",
-                "Microsoft.PowerFx.Core.Syntax.Nodes.NumLitNode",
-                "Microsoft.PowerFx.Core.Syntax.Nodes.ParentNode",
-                "Microsoft.PowerFx.Core.Syntax.Nodes.RecordNode",
-                "Microsoft.PowerFx.Core.Syntax.Nodes.SelfNode",
-                "Microsoft.PowerFx.Core.Syntax.Nodes.StrInterpNode",
-                "Microsoft.PowerFx.Core.Syntax.Nodes.StrLitNode",
-                "Microsoft.PowerFx.Core.Syntax.Nodes.TableNode",
-                "Microsoft.PowerFx.Core.Syntax.Nodes.TexlNode",
-                "Microsoft.PowerFx.Core.Syntax.Nodes.UnaryOpNode",
-                "Microsoft.PowerFx.Core.Syntax.Nodes.VariadicBase",
-                "Microsoft.PowerFx.Core.Syntax.Nodes.VariadicOpNode",
+                // Lexer                
+                "Microsoft.PowerFx.Syntax.BinaryOp",
+                "Microsoft.PowerFx.Syntax.TokKind",
+                "Microsoft.PowerFx.Syntax.CommentToken",
+                "Microsoft.PowerFx.Syntax.ErrorToken",
+                "Microsoft.PowerFx.Syntax.IdentToken",
+                "Microsoft.PowerFx.Syntax.NumLitToken",
+                "Microsoft.PowerFx.Syntax.StrLitToken",
+                "Microsoft.PowerFx.Syntax.Token",
+                "Microsoft.PowerFx.Syntax.UnaryOp",
+                "Microsoft.PowerFx.Syntax.VariadicOp",
 
-                // $$$ move to syntax 
-                "Microsoft.PowerFx.Core.Syntax.Visitors.IdentityTexlVisitor",
-                "Microsoft.PowerFx.Core.Syntax.Visitors.TexlFunctionalVisitor`2",
-                "Microsoft.PowerFx.Core.Syntax.Visitors.TexlVisitor",
+                // Parse nodes
+                "Microsoft.PowerFx.Syntax.Identifier",
+                "Microsoft.PowerFx.Syntax.NodeKind",
+                "Microsoft.PowerFx.Syntax.AsNode",
+                "Microsoft.PowerFx.Syntax.BinaryOpNode",
+                "Microsoft.PowerFx.Syntax.BlankNode",
+                "Microsoft.PowerFx.Syntax.BoolLitNode",
+                "Microsoft.PowerFx.Syntax.CallNode",
+                "Microsoft.PowerFx.Syntax.DottedNameNode",
+                "Microsoft.PowerFx.Syntax.ErrorNode",
+                "Microsoft.PowerFx.Syntax.FirstNameNode",
+                "Microsoft.PowerFx.Syntax.ListNode",
+                "Microsoft.PowerFx.Syntax.NameNode",
+                "Microsoft.PowerFx.Syntax.NumLitNode",
+                "Microsoft.PowerFx.Syntax.ParentNode",
+                "Microsoft.PowerFx.Syntax.RecordNode",
+                "Microsoft.PowerFx.Syntax.SelfNode",
+                "Microsoft.PowerFx.Syntax.StrInterpNode",
+                "Microsoft.PowerFx.Syntax.StrLitNode",
+                "Microsoft.PowerFx.Syntax.TableNode",
+                "Microsoft.PowerFx.Syntax.TexlNode",
+                "Microsoft.PowerFx.Syntax.UnaryOpNode",
+                "Microsoft.PowerFx.Syntax.VariadicBase",
+                "Microsoft.PowerFx.Syntax.VariadicOpNode",
+                              
+                // Visitors
+                "Microsoft.PowerFx.Syntax.IdentityTexlVisitor",
+                "Microsoft.PowerFx.Syntax.TexlFunctionalVisitor`2",
+                "Microsoft.PowerFx.Syntax.TexlVisitor",
 
-                // $$$ Microsoft.PowerFx.Types
-                "Microsoft.PowerFx.Core.Public.Types.AggregateType",
-                "Microsoft.PowerFx.Core.Public.Types.BlankType",
-                "Microsoft.PowerFx.Core.Public.Types.BooleanType",
-                "Microsoft.PowerFx.Core.Public.Types.ColorType",
-                "Microsoft.PowerFx.Core.Public.Types.DateTimeNoTimeZoneType",
-                "Microsoft.PowerFx.Core.Public.Types.DateTimeType",
-                "Microsoft.PowerFx.Core.Public.Types.DateType",
-                "Microsoft.PowerFx.Core.Public.Types.ExternalType",
-                "Microsoft.PowerFx.Core.Public.Types.ExternalTypeKind",
-                "Microsoft.PowerFx.Core.Public.Types.FormulaType",
-                "Microsoft.PowerFx.Core.Public.Types.GuidType",
-                "Microsoft.PowerFx.Core.Public.Types.HyperlinkType",
-                "Microsoft.PowerFx.Core.Public.Types.ITypeVistor",
-                "Microsoft.PowerFx.Core.Public.Types.NamedFormulaType",
-                "Microsoft.PowerFx.Core.Public.Types.NumberType",
-                "Microsoft.PowerFx.Core.Public.Types.OptionSetValueType",
-                "Microsoft.PowerFx.Core.Public.Types.RecordType",
-                "Microsoft.PowerFx.Core.Public.Types.StringType",
-                "Microsoft.PowerFx.Core.Public.Types.TableType",
-                "Microsoft.PowerFx.Core.Public.Types.TimeType",
-                "Microsoft.PowerFx.Core.Public.Types.BindingErrorType",
-                "Microsoft.PowerFx.Core.Public.Types.UnknownType",
-                "Microsoft.PowerFx.Core.Public.Types.UntypedObjectType",
-                "Microsoft.PowerFx.Core.Public.Values.BlankValue",
-                "Microsoft.PowerFx.Core.Public.Values.BooleanValue",
-                "Microsoft.PowerFx.Core.Public.Values.ColorValue",
-                "Microsoft.PowerFx.Core.Public.Values.DValue`1",
-                "Microsoft.PowerFx.Core.Public.Values.DateTimeValue",
-                "Microsoft.PowerFx.Core.Public.Values.DateValue",
-                "Microsoft.PowerFx.Core.Public.Values.ErrorValue",
-                "Microsoft.PowerFx.Core.Public.Values.FormulaValue",
-                "Microsoft.PowerFx.Core.Public.Values.GuidValue",
-                "Microsoft.PowerFx.Core.Public.Values.IUntypedObject",
-                "Microsoft.PowerFx.Core.Public.Values.IValueVisitor",
-                "Microsoft.PowerFx.Core.Public.Values.NamedValue",
-                "Microsoft.PowerFx.Core.Public.Values.NumberValue",
-                "Microsoft.PowerFx.Core.Public.Values.OptionSetValue",
-                "Microsoft.PowerFx.Core.Public.Values.PrimitiveValue`1",
-                "Microsoft.PowerFx.Core.Public.Values.RecordValue",
-                "Microsoft.PowerFx.Core.Public.Values.StringValue",
-                "Microsoft.PowerFx.Core.Public.Values.TableValue",
-                "Microsoft.PowerFx.Core.Public.Values.TimeValue",
-                "Microsoft.PowerFx.Core.Public.Values.UntypedObjectValue",
-                "Microsoft.PowerFx.Core.Public.Values.ValidFormulaValue",
+                // Power Fx Type system and Values. 
+                "Microsoft.PowerFx.Types.AggregateType",
+                "Microsoft.PowerFx.Types.BlankType",
+                "Microsoft.PowerFx.Types.BooleanType",
+                "Microsoft.PowerFx.Types.ColorType",
+                "Microsoft.PowerFx.Types.DateTimeNoTimeZoneType",
+                "Microsoft.PowerFx.Types.DateTimeType",
+                "Microsoft.PowerFx.Types.DateType",
+                "Microsoft.PowerFx.Types.ExternalType",
+                "Microsoft.PowerFx.Types.ExternalTypeKind",
+                "Microsoft.PowerFx.Types.FormulaType",
+                "Microsoft.PowerFx.Types.GuidType",
+                "Microsoft.PowerFx.Types.HyperlinkType",
+                "Microsoft.PowerFx.Types.ITypeVistor",
+                "Microsoft.PowerFx.Types.NamedFormulaType",
+                "Microsoft.PowerFx.Types.NumberType",
+                "Microsoft.PowerFx.Types.OptionSetValueType",
+                "Microsoft.PowerFx.Types.RecordType",
+                "Microsoft.PowerFx.Types.StringType",
+                "Microsoft.PowerFx.Types.TableType",
+                "Microsoft.PowerFx.Types.TimeType",
+                "Microsoft.PowerFx.Types.BindingErrorType",
+                "Microsoft.PowerFx.Types.UnknownType",
+                "Microsoft.PowerFx.Types.UntypedObjectType",
+                "Microsoft.PowerFx.Types.BlankValue",
+                "Microsoft.PowerFx.Types.BooleanValue",
+                "Microsoft.PowerFx.Types.ColorValue",
+                "Microsoft.PowerFx.Types.DValue`1",
+                "Microsoft.PowerFx.Types.DateTimeValue",
+                "Microsoft.PowerFx.Types.DateValue",
+                "Microsoft.PowerFx.Types.ErrorValue",
+                "Microsoft.PowerFx.Types.FormulaValue",
+                "Microsoft.PowerFx.Types.GuidValue",
+                "Microsoft.PowerFx.Types.IUntypedObject",
+                "Microsoft.PowerFx.Types.IValueVisitor",
+                "Microsoft.PowerFx.Types.NamedValue",
+                "Microsoft.PowerFx.Types.NumberValue",
+                "Microsoft.PowerFx.Types.OptionSetValue",
+                "Microsoft.PowerFx.Types.PrimitiveValue`1",
+                "Microsoft.PowerFx.Types.RecordValue",
+                "Microsoft.PowerFx.Types.StringValue",
+                "Microsoft.PowerFx.Types.TableValue",
+                "Microsoft.PowerFx.Types.TimeValue",
+                "Microsoft.PowerFx.Types.UntypedObjectValue",
+                "Microsoft.PowerFx.Types.ValidFormulaValue",
 
+                // Intellisense classes. Used primarily by the Language Service Provider.
+                // Most evaluators should never need htese. 
                 "Microsoft.PowerFx.Intellisense.IPowerFxScope",
                 "Microsoft.PowerFx.Intellisense.IPowerFxScopeDisplayName",
                 "Microsoft.PowerFx.Intellisense.IIntellisenseResult",
@@ -275,7 +284,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [Fact]
         public static void TestImmutability()
         {
-            var asm = typeof(Syntax.Nodes.TexlNode).Assembly;
+            var asm = typeof(Microsoft.PowerFx.Syntax.TexlNode).Assembly;
             ImmutabilityTests.CheckImmutability(asm);
         }
 
