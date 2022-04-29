@@ -4,6 +4,12 @@
 >> Text(DateAdd(DateTimeValue("1/1/2000 12:00:00:00 AM"),-0,TimeUnit.Milliseconds), "mm/dd/yyyy hh:mm:ss AM/PM")
 "01/01/2000 12:00:00 AM"
 
+>> IsBlank(DateAdd(DateTimeValue("1/1/2000 12:00:00:00 AM"),-0,TimeUnit.Milliseconds))
+false
+
+>> IsError(DateAdd(DateTimeValue("1/1/2000 12:00:00:00 AM"),-0,TimeUnit.Milliseconds))
+false
+
 >> Text(DateAdd(DateTimeValue("1/1/2000 12:00:00:00 AM"),-1,TimeUnit.Milliseconds), "mm/dd/yyyy hh:mm:ss AM/PM")
 "12/31/1999 11:59:59 PM"
 //DateTimeValue("1/09/2014 11:59:59 PM") - This returns 1/09/2014 11:59 PM
@@ -213,6 +219,12 @@
 >> Text(DateAdd(DateTimeValue(Blank()),1, TimeUnit.Days), "mm/dd/yyyy hh:mm:ss AM/PM")
 ""
 
+>> IsBlank(Text(DateAdd(DateTimeValue(Blank()),1, TimeUnit.Days), "mm/dd/yyyy hh:mm:ss AM/PM"))
+true
+
+>> IsError(Text(DateAdd(DateTimeValue(Blank()),1, TimeUnit.Days), "mm/dd/yyyy hh:mm:ss AM/PM"))
+false
+
 //Empty String passed as DateTime parameter
 >> Text(DateAdd(DateTimeValue(""),1, TimeUnit.Days), "mm/dd/yyyy hh:mm:ss AM/PM")
 ""
@@ -247,6 +259,11 @@
 >> Text(DateAdd(DateTimeValue("1/1/2000 12:00:00:00 AM"),1,1/0), "mm/dd/yyyy hh:mm:ss AM/PM")
 #Error(Kind=Div0)
 
+>> IsBlank(DateAdd(DateTimeValue("1/1/2000 12:00:00:00 AM"),1,1/0))
+#Error(Kind=Div0)
+
+>> IsError(DateAdd(DateTimeValue("1/1/2000 12:00:00:00 AM"),1,1/0))
+true
 
 // ******************************** NUMBER PARAMETERS ********************************
 

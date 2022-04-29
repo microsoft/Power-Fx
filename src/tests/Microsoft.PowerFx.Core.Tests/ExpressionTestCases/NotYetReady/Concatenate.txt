@@ -21,8 +21,14 @@ true
 >> Concatenate(Blank())
 ""
 
+>> IsBlank(Concatenate(Blank()))
+true
+
 >> Concatenate(Blank(),Blank())
 ""
+
+>> IsError(Concatenate(Blank(),Blank()))
+false
 
 >> Concatenate(Blank(), " Doe")
 " Doe"
@@ -41,6 +47,12 @@ true
 
 //Invalid operation: Division by zero
 >> Concatenate("Jane", 1/0)
+#Error(Kind=Div0)
+
+>> IsError(Concatenate("Jane", 1/0))
+true
+
+>> IsBlank(Concatenate("Jane", 1/0))
 #Error(Kind=Div0)
 
 //Invalid operation: Division by zero
