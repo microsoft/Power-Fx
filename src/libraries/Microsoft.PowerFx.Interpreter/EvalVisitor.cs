@@ -477,15 +477,21 @@ namespace Microsoft.PowerFx
             }
 
             FormulaValue fv = null;
+            var errors = new List<ExpressionError>();
 
             foreach (var iNode in node.Nodes)
             {
                 CheckCancel();
 
                 fv = await iNode.Accept(this, context);
+
+                if (fv is ErrorValue ev)
+                {
+                    errors.AddRange(ev.Errors);
+                }
             }
 
-            return fv;
+            return errors.Any() ? new ErrorValue(node.IRContext, errors) : fv;
         }
 
         public override async ValueTask<FormulaValue> Visit(ResolvedObjectNode node, SymbolContext context)

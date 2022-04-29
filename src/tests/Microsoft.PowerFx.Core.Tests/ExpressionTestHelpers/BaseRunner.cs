@@ -4,11 +4,13 @@
 using System;
 using System.Diagnostics;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Public;
 using Microsoft.PowerFx.Core.Public.Values;
+using Newtonsoft.Json.Linq;
 
 namespace Microsoft.PowerFx.Core.Tests
 {
@@ -107,20 +109,20 @@ namespace Microsoft.PowerFx.Core.Tests
             });
             t.Start();
             bool success;
-            while (true) 
+            while (true)
             {
                 success = t.Join(Timeout);
                 if (!success && Debugger.IsAttached)
                 {
                     // Aid in debugging.
                     Debugger.Log(0, null, $"Test case {testCase} running...\r\n");
-                    
+
                     // Debugger.Break();
                     continue;
                 }
 
                 break;
-            }            
+            }
 
             if (success)
             {
@@ -163,7 +165,7 @@ namespace Microsoft.PowerFx.Core.Tests
         {
             RunResult runResult = null;
             FormulaValue result = null;
-            
+
             var expected = testCase.Expected;
             var expectedSkip = string.Equals(expected, "#skip", StringComparison.OrdinalIgnoreCase);
             if (expectedSkip)
@@ -176,7 +178,7 @@ namespace Microsoft.PowerFx.Core.Tests
             {
                 runResult = await RunAsyncInternal(testCase.Input, testCase.SetupHandlerName);
                 result = runResult.Value;
-                                
+
                 // Unsupported is just for ignoring large groups of inherited tests. 
                 // If it's an override, then the override should specify the exact error.
                 if (!testCase.IsOverride && runResult.UnsupportedReason != null)
@@ -231,48 +233,74 @@ namespace Microsoft.PowerFx.Core.Tests
                         return (TestResult.Pass, null);
                     }
 
-                    var actualErrorKind = errorResult.Errors.First().Kind;
-                    if (int.TryParse(expectedErrorKind, out var numericErrorKind))
+                    var expectedErrorKinds = expectedErrorKind.Split(',', StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim()).ToArray();
+
+                    if (errorResult.Errors.Count != expectedErrorKinds.Count())
                     {
-                        // Error given as the internal value
-                        if (numericErrorKind == (int)actualErrorKind)
+                        return (TestResult.Fail, $"Received {errorResult.Errors.Count} errors while we were expecting {expectedErrorKinds.Count()} errors.\r\n" +
+                                                 $"Received {string.Join(", ", errorResult.Errors.Select(e => e.Kind))} and was expecting {expectedErrorKind}");
+                    }
+
+                    var results = errorResult.Errors.Select((er, i) =>
+                    {
+                        var actualErrorKind = er.Kind;
+                        var expectedKind = expectedErrorKinds[i];
+
+                        if (int.TryParse(expectedKind, out var numericErrorKind))
                         {
-                            return (TestResult.Pass, null);
+                            // Error given as the internal value
+                            if (numericErrorKind == (int)actualErrorKind)
+                            {
+                                return (tr: TestResult.Pass, err: null);
+                            }
+                            else
+                            {
+                                return (tr: TestResult.Fail, err: $"Received an error, but expected kind={expectedKind} and received {actualErrorKind} ({(int)actualErrorKind})");
+                            }
+                        }
+                        else if (Enum.TryParse<ErrorKind>(expectedKind, out var errorKind))
+                        {
+                            // Error given as the enum name
+                            if (errorKind == actualErrorKind)
+                            {
+                                return (tr: TestResult.Pass, null);
+                            }
+                            else
+                            {
+                                return (tr: TestResult.Fail, err: $"Received an error, but expected kind={errorKind} and received {actualErrorKind}");
+                            }
                         }
                         else
                         {
-                            return (TestResult.Fail, $"Received an error, but expected kind={expectedErrorKind} and received {actualErrorKind} ({(int)actualErrorKind})");
+                            return (tr: TestResult.Fail, err: $"Invalid expected error kind: {expectedKind}");
                         }
-                    }
-                    else if (Enum.TryParse<ErrorKind>(expectedErrorKind, out var errorKind))
+                    }).ToArray();
+
+                    if (results.All(r => r.tr == TestResult.Pass))
                     {
-                        // Error given as the enum name
-                        if (errorKind == actualErrorKind)
-                        {
-                            return (TestResult.Pass, null);
-                        }
-                        else
-                        {
-                            return (TestResult.Fail, $"Received an error, but expected kind={errorKind} and received {actualErrorKind}");
-                        }
+                        return (TestResult.Pass, null);
                     }
-                    else
-                    {
-                        return (TestResult.Fail, $"Invalid expected error kind: {expectedErrorKind}");
-                    }
+
+                    return (TestResult.Fail, string.Join("\r\n", results.Select(r => r.err)));
                 }
                 else if (IsError(result))
                 {
                     // If they override IsError, then do additional checks. 
                     return await RunErrorCaseAsync(testCase);
                 }
-
-                // If the actual result is not an error, we'll fail with a mismatch below
             }
 
+            // If the actual result is not an error, we'll fail with a mismatch below
             if (result == null)
             {
-                return (TestResult.Fail, "did not return a value");
+                var msg = "Did not return a value";
+
+                if (runResult.Errors != null && runResult.Errors.Any())
+                {
+                    msg += string.Join(string.Empty, runResult.Errors.Select(err => "\r\n" + err));
+                }
+
+                return (TestResult.Fail, msg);
             }
             else
             {
