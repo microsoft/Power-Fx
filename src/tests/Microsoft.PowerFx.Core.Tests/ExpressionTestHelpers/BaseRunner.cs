@@ -4,11 +4,13 @@
 using System;
 using System.Diagnostics;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Public;
 using Microsoft.PowerFx.Core.Public.Values;
+using Newtonsoft.Json.Linq;
 
 namespace Microsoft.PowerFx.Core.Tests
 {
@@ -107,20 +109,20 @@ namespace Microsoft.PowerFx.Core.Tests
             });
             t.Start();
             bool success;
-            while (true) 
+            while (true)
             {
                 success = t.Join(Timeout);
                 if (!success && Debugger.IsAttached)
                 {
                     // Aid in debugging.
                     Debugger.Log(0, null, $"Test case {testCase} running...\r\n");
-                    
+
                     // Debugger.Break();
                     continue;
                 }
 
                 break;
-            }            
+            }
 
             if (success)
             {
@@ -163,7 +165,7 @@ namespace Microsoft.PowerFx.Core.Tests
         {
             RunResult runResult = null;
             FormulaValue result = null;
-            
+
             var expected = testCase.Expected;
             var expectedSkip = string.Equals(expected, "#skip", StringComparison.OrdinalIgnoreCase);
             if (expectedSkip)
@@ -176,7 +178,7 @@ namespace Microsoft.PowerFx.Core.Tests
             {
                 runResult = await RunAsyncInternal(testCase.Input, testCase.SetupHandlerName);
                 result = runResult.Value;
-                                
+
                 // Unsupported is just for ignoring large groups of inherited tests. 
                 // If it's an override, then the override should specify the exact error.
                 if (!testCase.IsOverride && runResult.UnsupportedReason != null)
@@ -235,7 +237,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
                     if (errorResult.Errors.Count != expectedErrorKinds.Count())
                     {
-                        return (TestResult.Fail, $"Received {errorResult.Errors.Count} errors while we were expecting {expectedErrorKinds.Count()} errors.\r\n" + 
+                        return (TestResult.Fail, $"Received {errorResult.Errors.Count} errors while we were expecting {expectedErrorKinds.Count()} errors.\r\n" +
                                                  $"Received {string.Join(", ", errorResult.Errors.Select(e => e.Kind))} and was expecting {expectedErrorKind}");
                     }
 
@@ -286,13 +288,19 @@ namespace Microsoft.PowerFx.Core.Tests
                     // If they override IsError, then do additional checks. 
                     return await RunErrorCaseAsync(testCase);
                 }
-
-                // If the actual result is not an error, we'll fail with a mismatch below
             }
 
+            // If the actual result is not an error, we'll fail with a mismatch below
             if (result == null)
             {
-                return (TestResult.Fail, "did not return a value");
+                var msg = "Did not return a value";
+
+                if (runResult.Errors.Any())
+                {
+                    msg += string.Join(string.Empty, runResult.Errors.Select(err => "\r\n" + err));
+                }
+
+                return (TestResult.Fail, msg);
             }
             else
             {
