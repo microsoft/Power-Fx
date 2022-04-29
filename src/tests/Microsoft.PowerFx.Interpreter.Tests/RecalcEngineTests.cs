@@ -26,6 +26,7 @@ namespace Microsoft.PowerFx.Tests
             var asm = typeof(RecalcEngine).Assembly;
 
             var ns = "Microsoft.PowerFx";
+            var nsType = "Microsoft.PowerFx.Types";
             var allowed = new HashSet<string>()
             {
                 $"{ns}.{nameof(RecalcEngine)}",
@@ -33,7 +34,6 @@ namespace Microsoft.PowerFx.Tests
                 $"{ns}.{nameof(RecalcEngineScope)}",
                 $"{ns}.{nameof(PowerFxConfigExtensions)}",
                 $"{ns}.{nameof(OptionSet)}",
-                $"{ns}.{nameof(ObjectRecordValue)}",
                 $"{ns}.{nameof(ITypeMarshallerProvider)}",
                 $"{ns}.{nameof(ITypeMarshaller)}",
                 $"{ns}.{nameof(OptionSet)}",
@@ -43,7 +43,8 @@ namespace Microsoft.PowerFx.Tests
                 $"{ns}.{nameof(PrimitiveTypeMarshaller)}",
                 $"{ns}.{nameof(TableMarshallerProvider)}",
                 $"{ns}.{nameof(TypeMarshallerCache)}",
-                $"{ns}.{nameof(TypeMarshallerCacheExtensions)}"
+                $"{ns}.{nameof(TypeMarshallerCacheExtensions)}",
+                $"{nsType}.{nameof(ObjectRecordValue)}"
             };
 
             var sb = new StringBuilder();
