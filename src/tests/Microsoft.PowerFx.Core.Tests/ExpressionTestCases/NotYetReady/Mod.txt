@@ -1,0 +1,14 @@
+﻿// ******** FUNCTION VALUE AS PARAMETERS ********
+
+// Excel returns 1/1/1900 in Date format and 1 in General format
+>> Mod(Date(1976, 12,23) , 2)
+0
+
+// Excel returns ############################################################################################################################################################################################################################################################### in Date format and -1 in General format
+>> Mod(Date(1976, 12,23) , -2)
+0
+
+// Excel returns 1/2/1900 in Date format and 2.6 in General format
+>> Mod(Date(2022, 10, 1),3.4)
+0.80004883
+

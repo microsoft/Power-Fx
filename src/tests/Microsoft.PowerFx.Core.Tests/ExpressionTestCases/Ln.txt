@@ -83,6 +83,3 @@
 >> Ln(Exp(2))
 2
 
-
-// Ln(Infinity)
-// Ln(NaN)

@@ -81,7 +81,7 @@ true
 
 //Error: The second argument to the Left function is invalid
 >> Left("HelloWorld"," ")
-#Error(Kind=Numeric)
+#Error(Kind=InvalidArgument)
 
 //Invalid operation: Division by zero
 >> Left(1/0,1)

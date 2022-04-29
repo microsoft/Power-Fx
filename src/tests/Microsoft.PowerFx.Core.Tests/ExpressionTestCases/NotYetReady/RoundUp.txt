@@ -1,0 +1,15 @@
+﻿
+// ******** FUNCTION VALUE AS PARAMETERS ********
+
+// Excel returns 12/23/1976 in Date format and 28117 in General format
+>> RoundUp(Date(1976, 12,23) , 2)
+220176000000
+
+// Excel returns 12/23/1976 in Date format and 28117 in General format
+>> Round(Date(1976, 12,23) , -2)
+220176000000
+
+//Excel returns 10/1/2022 in Date format and 44835 in General format
+>> RoundUp(Date(2022, 10, 1),3.4)
+1664607600000
+

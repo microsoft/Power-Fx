@@ -89,32 +89,3 @@
 #Error(Kind=InvalidArgument)
 
 
-// ******** FUNCTION VALUE AS PARAMETERS ********
-
-// Excel returns 64643
->> Sum(Date(1976, 12,23) , Date(2000, 01, 01))
-1166889600000
-
-// Excel returns 10/21/2022
->> Sum(Date(2022, 10, 1),20)
-1664607600020
-
-// Excel returns 10/21/2022
->> Sum(Date(2022, 10, 1),-20)
-1664607599980
-
-// Excel returns 10/21/2022
->> Sum(Date(2022, 10, 1),20.8)
-1664607600020.80004883
-
-
-// ******** PARAMETERS OF ALL DATATYPES: Integer, Decimal, Negative, String, Boolean, Function and Null ********
-
-// Excel returns 1/22/1977
->> Sum(21, 10.456, -5, -6.789, "10", true, false, Date(1976,12,23), Blank())
-220176000030.66699219
-
-// Sum(Infinity,Infinity)
-// Sum(NaN,NaN)
-
-

@@ -105,7 +105,3 @@ Blank()
 >> Char(Len("ThisIsASampleStringWith35Characters"))
 "#"
 
-
-// >> Char(NaN)
-// >> Char(-Infinity)
-// >> Char(Infinity)

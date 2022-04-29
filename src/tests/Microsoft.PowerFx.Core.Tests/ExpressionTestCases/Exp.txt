@@ -95,5 +95,3 @@
 >> Exp(Ln(2))
 2
 
-// Exp(Infinity)
-// Exp(NaN)

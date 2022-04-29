@@ -90,5 +90,3 @@
 >> Sqrt(Power(2,2))
 2
 
-// Sqrt(Infinity)
-// Sqrt(NaN)

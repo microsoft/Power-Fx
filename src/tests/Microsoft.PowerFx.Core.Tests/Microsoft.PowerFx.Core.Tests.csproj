@@ -54,26 +54,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="ExpressionTestCases\Ln.txt" />
-    <None Remove="ExpressionTestCases\Lower.txt" />
-    <None Remove="ExpressionTestCases\Max.txt" />
-    <None Remove="ExpressionTestCases\Mid.txt" />
-    <None Remove="ExpressionTestCases\Min.txt" />
-    <None Remove="ExpressionTestCases\Power.txt" />
-    <None Remove="ExpressionTestCases\Replace.txt" />
-    <None Remove="ExpressionTestCases\Right.txt" />
-    <None Remove="ExpressionTestCases\Round.txt" />
-    <None Remove="ExpressionTestCases\RoundDown.txt" />
-    <None Remove="ExpressionTestCases\RoundUp.txt" />
-    <None Remove="ExpressionTestCases\Sqrt.txt" />
-    <None Remove="ExpressionTestCases\StartsWith.txt" />
-    <None Remove="ExpressionTestCases\Substitute.txt" />
-    <None Remove="ExpressionTestCases\Sum.txt" />
-    <None Remove="ExpressionTestCases\Trim.txt" />
-    <None Remove="ExpressionTestCases\TrimEnds.txt" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\..\libraries\Microsoft.PowerFx.Core\Microsoft.PowerFx.Core.csproj" />
   </ItemGroup>
 
@@ -81,9 +61,5 @@
     <None Update="TestRunnerTests\*.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="ExpressionTestCases\NotYetReady\" />
   </ItemGroup>
 </Project>

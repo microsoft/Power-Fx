@@ -77,17 +77,3 @@ false
 #Error(Kind=InvalidArgument)
 
 
-// ******** FUNCTION VALUE AS PARAMETERS ********
-
->> Date(1976, 12,23) - Date(2000, 01, 01)
--8409
-
->> Abs(Date(1976, 12,23) - Date(2000, 01, 01))
-8409
-
-//Excel returns false, as the value of Abs(Date(2022, 10, 1)) in Excel is 44835 in General format, while in Date format its 10/1/2022
->> Abs(Date(2022, 10, 1)) = 1664607600000
-true
-
-//Abs(Infinity)
-//Abs(NaN)

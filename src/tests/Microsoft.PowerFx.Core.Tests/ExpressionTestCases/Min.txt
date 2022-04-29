@@ -88,32 +88,3 @@
 >> Min("true","false")
 #Error(Kind=InvalidArgument)
 
-
-// ******** FUNCTION VALUE AS PARAMETERS ********
-
-// Excel returns 28117
->> Min(Date(1976, 12,23) , Date(2000, 01, 01))
-220176000000
-
-
-// Excel returns 1/20/1900 by default. If cell datatype is changed to General it returns 20
->> Min(Date(2022, 10, 1),20)
-20
-
-//Excel by default returns ###############################################################################################################################################################################################################################################################, but if cell datatype is changed to General then it returns -20
->> Min(Date(2022, 10, 1),-20)
--20
-
-
-// Excel returns 1/20/1900
->> Min(Date(2022, 10, 1),20.8)
-20.8
-
-// ******** PARAMETERS OF ALL DATATYPES: Integer, Decimal, Negative, String, Boolean, Function and Null ********
-
-//Excel by default returns ###############################################################################################################################################################################################################################################################, but if cell datatype is changed to General then it returns -6.789
->> Min(21, 10.456, -5, -6.789, "10", true, false, Date(1976,12,23), Blank())
--6.789
-
-// Min(Infinity, Infinity)
-// Min(NaN, NaN)
