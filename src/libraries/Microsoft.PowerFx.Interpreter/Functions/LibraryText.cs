@@ -499,17 +499,22 @@ namespace Microsoft.PowerFx.Functions
 
         private static FormulaValue Replace(IRContext irContext, FormulaValue[] args)
         {
-            var source = (StringValue)args[0];
-            var start = (NumberValue)args[1];
-            var count = (NumberValue)args[2];
-            var replacement = (StringValue)args[3];
+            var source = ((StringValue)args[0]).Value;
+            var start = ((NumberValue)args[1]).Value;
+            var count = ((NumberValue)args[2]).Value;
+            var replacement = ((StringValue)args[3]).Value;
 
-            var start0Based = (int)(start.Value - 1);
-            var prefix = start0Based < source.Value.Length ? source.Value.Substring(0, start0Based) : source.Value;
+            if (start >= int.MaxValue)
+            {
+                start = source.Length + 1;
+            }
 
-            var suffixIndex = start0Based + (int)count.Value;
-            var suffix = suffixIndex < source.Value.Length ? source.Value.Substring(suffixIndex) : string.Empty;
-            var result = prefix + replacement.Value + suffix;
+            var start0Based = (int)(start - 1);
+            var prefix = start0Based < source.Length ? source.Substring(0, start0Based) : source;
+
+            var suffixIndex = start0Based + (int)count;
+            var suffix = suffixIndex < source.Length ? source.Substring(suffixIndex) : string.Empty;
+            var result = prefix + replacement + suffix;
 
             return new StringValue(irContext, result);
         }
@@ -542,6 +547,11 @@ namespace Microsoft.PowerFx.Functions
             var instanceNum = -1;
             if (args[3] is NumberValue nv)
             {
+                if (nv.Value >= int.MaxValue)
+                {
+                    return source;
+                }
+
                 instanceNum = (int)nv.Value;
             }
 

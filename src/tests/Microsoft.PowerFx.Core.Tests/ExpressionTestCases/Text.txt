@@ -218,10 +218,6 @@ Blank()
 >> Text(DateTimeValue("March 30, 2022 5:30 PM"), "yyyy")
 "2022"
 
-//Excel throws error
->> Text(1448318857*1000, "mmm. dd, yyyy (hh:mm:ss AM/PM)")
-"Nov. 23, 2015 (02:47:37 PM)"
-
 >> Text(Date(2018, 3, 15), "yyyy-MM-dd")
 "2018-03-15"
 
@@ -231,6 +227,3 @@ Blank()
 //Excel needs two parameters for Text function
 >> Text(DateTimeValue("01/04/2003"))
 "1/4/2003 12:00 AM"
-
->> Text(1234, "dddd mmmm d")
-"Wednesday December 31"

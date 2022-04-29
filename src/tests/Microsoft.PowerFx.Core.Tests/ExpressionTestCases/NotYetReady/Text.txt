@@ -26,6 +26,13 @@
 >> Text(Date(2016,1,31), "xyz")
 "x16z"
 
+//Excel throws error
+>> Text(1448318857*1000, "mmm. dd, yyyy (hh:mm:ss AM/PM)")
+"Nov. 23, 2015 (02:47:37 PM)"
+
+>> Text(1234, "dddd mmmm d")
+"Wednesday December 31"
+
 //Error message: Language code not supported
 >> Text(Date(2016,1,31), "dddd mmmm d", "fsdff")
 #Error
@@ -69,7 +76,6 @@
 //Excel doesn't support DateTimeValue function. Hence replaced it with DateValue function to compare the behavior
 >> Text(DateTimeValue("March 30, 2022 5:30 PM"), "d")
 "30"
-
 
 //Excel doesn't support DateTimeValue function. Hence replaced it with TimeValue function to compare the behavior
 >> Text(DateTimeValue("March 30, 2022 5:30 PM"), "h")
