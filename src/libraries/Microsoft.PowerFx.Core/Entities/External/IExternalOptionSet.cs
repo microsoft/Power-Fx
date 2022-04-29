@@ -2,11 +2,15 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
+using Microsoft.PowerFx.Core.Public.Values;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Core.Entities
 {
+    /// <summary>
+    /// Describe an option set - maybe implemented by each back end over their existing enum-like symbols. 
+    /// </summary>
     internal interface IExternalOptionSet : IExternalEntity
     {
         DisplayNameProvider DisplayNameProvider { get; }
@@ -18,6 +22,8 @@ namespace Microsoft.PowerFx.Core.Entities
                 
         bool IsBooleanValued { get; }
 
-        bool IsConvertingDisplayNameMapping { get; } 
+        bool IsConvertingDisplayNameMapping { get; }
+
+        bool TryGetValue(DName fieldName, out OptionSetValue optionSetValue);
     }
 }

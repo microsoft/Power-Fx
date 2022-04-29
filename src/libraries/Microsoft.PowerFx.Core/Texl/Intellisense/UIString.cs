@@ -5,7 +5,9 @@ using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Core.Texl.Intellisense
 {
-    // Object for the UI display string
+    /// <summary>
+    /// Object for the UI display string.
+    /// </summary>
     public sealed class UIString
     {
         public UIString(string text)

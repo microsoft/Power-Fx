@@ -272,8 +272,6 @@ namespace Microsoft.PowerFx.Core.Tests
         [Fact]
         public async Task TestRunnerUnsupported()
         {
-            var msg = "msg xyz";
-
             var runner = new MockRunner
             {
                 _hook2 = (expr, setup) => new RunResult { UnsupportedReason = "unsupported" }
