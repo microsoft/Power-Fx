@@ -10,9 +10,8 @@ using System.Linq;
 using System.Reflection;
 using System.Text.Json;
 using Microsoft.PowerFx.Core.IR;
-using Microsoft.PowerFx.Core.Public.Types;
 
-namespace Microsoft.PowerFx.Core.Public.Values
+namespace Microsoft.PowerFx.Types
 {
     // Helpers for creating tables from records.
     // For marshalling a dotnet object (T) to a Table, see TypeMarshallerCache.. 

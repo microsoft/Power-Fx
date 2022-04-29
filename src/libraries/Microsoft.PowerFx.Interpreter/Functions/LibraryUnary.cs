@@ -6,8 +6,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.IR.Nodes;
-using Microsoft.PowerFx.Core.Public.Values;
-using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Functions
 {

@@ -3,7 +3,7 @@
 
 using System.Collections.Generic;
 
-namespace Microsoft.PowerFx.Core.Texl.Intellisense
+namespace Microsoft.PowerFx.Intellisense
 {
     internal interface ISpecialCaseHandler
     {

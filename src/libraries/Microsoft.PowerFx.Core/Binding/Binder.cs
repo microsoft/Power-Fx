@@ -17,15 +17,12 @@ using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Functions.Delegation;
 using Microsoft.PowerFx.Core.Glue;
-using Microsoft.PowerFx.Core.Lexer;
-using Microsoft.PowerFx.Core.Lexer.Tokens;
 using Microsoft.PowerFx.Core.Localization;
-using Microsoft.PowerFx.Core.Syntax;
-using Microsoft.PowerFx.Core.Syntax.Nodes;
-using Microsoft.PowerFx.Core.Syntax.Visitors;
 using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Syntax;
+using Microsoft.PowerFx.Types;
 using Conditional = System.Diagnostics.ConditionalAttribute;
 
 namespace Microsoft.PowerFx.Core.Binding
@@ -5790,7 +5787,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 _txb.SetType(
                     node,
-                    exprType.IsValid ? DType.CreateTable(new TypedName(exprType, Public.Values.TableValue.ValueDName)) : DType.EmptyTable);
+                    exprType.IsValid ? DType.CreateTable(new TypedName(exprType, TableValue.ValueDName)) : DType.EmptyTable);
                 SetVariadicNodePurity(node);
                 _txb.SetScopeUseSet(node, JoinScopeUseSets(node.Children));
                 _txb.SetSelfContainedConstant(node, isSelfContainedConstant);

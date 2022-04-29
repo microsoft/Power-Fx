@@ -4,7 +4,7 @@
 using System;
 using Microsoft.PowerFx.Core.Types;
 
-namespace Microsoft.PowerFx.Core.Public.Types
+namespace Microsoft.PowerFx.Types
 {
     /// <summary>
     /// This enum represents types which are not supported by PowerFx

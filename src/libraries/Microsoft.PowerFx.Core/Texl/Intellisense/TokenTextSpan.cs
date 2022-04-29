@@ -4,7 +4,7 @@
 using System.Collections.Generic;
 using Microsoft.AppMagic.Transport;
 
-namespace Microsoft.PowerFx.Core.Texl.Intellisense
+namespace Microsoft.PowerFx.Intellisense
 {
     [TransportType(TransportKind.ByValue)]
     internal interface ITokenTextSpan

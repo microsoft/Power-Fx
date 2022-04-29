@@ -13,7 +13,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [Fact]
         public void CheckFxCore()
         {
-            var asm = typeof(Core.Syntax.Nodes.TexlNode).Assembly;
+            var asm = typeof(Microsoft.PowerFx.Syntax.TexlNode).Assembly;
 
             var bugsFieldType = new HashSet<Type>
             {            

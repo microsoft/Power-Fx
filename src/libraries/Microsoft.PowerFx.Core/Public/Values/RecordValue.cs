@@ -6,9 +6,8 @@ using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Dynamic;
 using Microsoft.PowerFx.Core.IR;
-using Microsoft.PowerFx.Core.Public.Types;
 
-namespace Microsoft.PowerFx.Core.Public.Values
+namespace Microsoft.PowerFx.Types
 {
     /// <summary>
     /// Represent a Record. Records have named fields which can be other values. 

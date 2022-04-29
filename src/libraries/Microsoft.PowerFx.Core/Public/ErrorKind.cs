@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.PowerFx.Core.Public
+namespace Microsoft.PowerFx
 {
     /// <summary>
     /// Indicates the error on a record in a connected data source. 

@@ -3,8 +3,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.Text;
-using Microsoft.PowerFx.Core.Public.Types;
+using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Core
 {
