@@ -554,7 +554,7 @@ namespace Microsoft.PowerFx.Functions
             }
 
             var result = arg0.Subtract(arg1);
-            return new TimeValue(irContext, result);
+            return new NumberValue(irContext, result.Days);
         }
 
         private static FormulaValue TimeDifference(IRContext irContext, FormulaValue[] args)
