@@ -29,3 +29,18 @@
 
 >> 1; If(true, 2; 1/0; 3, 5;6;7)
 #Error(Kind=Div0)
+
+
+// single expressions are not supported as chains
+>> (1;(2;7));3;4
+Errors: Error 2-3: Unexpected characters. The formula contains 'ParenClose' where 'Semicolon' is expected.|Error 5-6: Unexpected characters. The formula contains 'ParenClose' where 'Semicolon' is expected.|Error 7-8: Unexpected characters. Characters are used in the formula in an unexpected way.
+
+
+>> If(true, 1;2 , 4)
+2
+
+>> If(true, 1;If(true, 2, 3) , 4)
+2
+
+>> If(true, 1;If(false, 2, If(false, 3, 5)) , 4)
+5
