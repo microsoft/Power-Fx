@@ -19,7 +19,6 @@ namespace Microsoft.PowerFx
         /// A suggestion about possible high-level improvements or refactoring that may help the user
         /// get a better app experience.
         /// Examples: performance changes
-        /// Verbose messages will not be part of 'ChoreUpdateRulesWithErrors' as they would be analysed when the dependency changes.
         /// </summary>
         Verbose = 0,
 
@@ -27,14 +26,12 @@ namespace Microsoft.PowerFx
         /// A suggestion about possible improvements or refactoring that may help the user
         /// get a better app experience.
         /// Examples: refactoring suggestions.
-        /// Suggestions will not be part of 'ChoreUpdateRulesWithErrors' as they would be analysed when the dependency changes.
         /// </summary>
         Suggestion,
 
         /// <summary>
         /// A warning about a potential problem. These will typically not prevent normal rule execution.
         /// Examples: certain type errors/warnings.
-        /// Warnings will not be part of 'ChoreUpdateRulesWithErrors' as they would be analysed when the dependency changes.
         /// </summary>
         Warning,
 

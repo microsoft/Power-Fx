@@ -46,21 +46,6 @@ namespace Microsoft.PowerFx.Core.Tests
                 // Feature flags are experimental - hosts shouldn't use it. 
                 "Microsoft.PowerFx.Preview.FeatureFlags",
 
-                // TBD ...
-                "Microsoft.PowerFx.Core.RenameDriver",
-                "Microsoft.PowerFx.Core.Public.TokenResultType",
-                "Microsoft.PowerFx.Core.App.DefaultEnabledFeatures",
-                "Microsoft.PowerFx.Core.App.IExternalEnabledFeatures",
-                "Microsoft.PowerFx.Core.BuiltinFormulaTypeConversions",
-                "Microsoft.PowerFx.Core.DisplayNameUtility",
-                "Microsoft.PowerFx.Core.FormulaTypeSchema",
-                "Microsoft.PowerFx.Core.FormulaTypeToSchemaConverter",
-                "Microsoft.PowerFx.Core.Utils.DName",
-                "Microsoft.PowerFx.Core.Utils.DPath",
-                "Microsoft.PowerFx.Core.Utils.ICheckable",
-                "Microsoft.PowerFx.Core.Localization.ErrorResourceKey",
-                "Microsoft.PowerFx.Core.Localization.Span",
-
                 // Lexer                
                 "Microsoft.PowerFx.Syntax.BinaryOp",
                 "Microsoft.PowerFx.Syntax.TokKind",
@@ -161,6 +146,21 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Intellisense.SuggestionIconKind",
                 "Microsoft.PowerFx.Intellisense.SuggestionKind",
                 "Microsoft.PowerFx.Intellisense.UIString",
+                "Microsoft.PowerFx.Intellisense.TokenResultType",
+
+                // TBD ...
+                "Microsoft.PowerFx.Core.RenameDriver",
+                "Microsoft.PowerFx.Core.App.DefaultEnabledFeatures",
+                "Microsoft.PowerFx.Core.App.IExternalEnabledFeatures",
+                "Microsoft.PowerFx.Core.BuiltinFormulaTypeConversions",
+                "Microsoft.PowerFx.Core.DisplayNameUtility",
+                "Microsoft.PowerFx.Core.FormulaTypeSchema",
+                "Microsoft.PowerFx.Core.FormulaTypeToSchemaConverter",
+                "Microsoft.PowerFx.Core.Utils.DName",
+                "Microsoft.PowerFx.Core.Utils.DPath",
+                "Microsoft.PowerFx.Core.Utils.ICheckable",
+                "Microsoft.PowerFx.Core.Localization.ErrorResourceKey",
+                "Microsoft.PowerFx.Core.Localization.Span",
             };
 
             var sb = new StringBuilder();

@@ -2,8 +2,7 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
-using Microsoft.PowerFx.Core;
-using Microsoft.PowerFx.Core.Public;
+using Microsoft.PowerFx.Intellisense;
 
 namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
 {
