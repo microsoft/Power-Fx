@@ -30,3 +30,9 @@
 
 >>Proper("Òè")
 "Òè"
+
+>>Proper("ı")
+"I"
+
+>>Proper("RSVP")
+"Rsvp"

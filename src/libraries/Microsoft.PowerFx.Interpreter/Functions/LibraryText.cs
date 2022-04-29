@@ -315,7 +315,7 @@ namespace Microsoft.PowerFx.Functions
 
         public static async ValueTask<FormulaValue> Proper(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, StringValue[] args)
         {
-            return new StringValue(irContext, runner.CultureInfo.TextInfo.ToTitleCase(args[0].Value));
+            return new StringValue(irContext, runner.CultureInfo.TextInfo.ToTitleCase(args[0].Value.ToLower()));
         }
 
         // https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-len
