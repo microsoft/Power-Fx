@@ -295,7 +295,7 @@ namespace Microsoft.PowerFx.Core.Tests
             {
                 var msg = "Did not return a value";
 
-                if (runResult.Errors.Any())
+                if (runResult.Errors != null && runResult.Errors.Any())
                 {
                     msg += string.Join(string.Empty, runResult.Errors.Select(err => "\r\n" + err));
                 }
