@@ -21,6 +21,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
             var allowed = new HashSet<string>()
             {
+                // Core namespace. 
                 "Microsoft.PowerFx.PowerFxConfig",
                 "Microsoft.PowerFx.CheckResult",
                 "Microsoft.PowerFx.ParseResult",
@@ -34,12 +35,10 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.IPowerFxEngine",
                 "Microsoft.PowerFx.ParserOptions",
                 "Microsoft.PowerFx.Engine",
+                "Microsoft.PowerFx.ErrorSeverity",
 
                 // Feature flags are experimental - hosts shouldn't use it. 
                 "Microsoft.PowerFx.Preview.FeatureFlags",
-
-                // $$$ wrap in a public type instead?
-                "Microsoft.PowerFx.Core.Errors.DocumentErrorSeverity",
 
                 // TBD ...
                 "Microsoft.PowerFx.Core.RenameDriver",
@@ -173,6 +172,50 @@ namespace Microsoft.PowerFx.Core.Tests
 
             // Types we expect to be in the assembly are all there. 
             Assert.Empty(allowed);
+        }
+
+        // No public type with TransportType attribute
+        [Fact]
+        public void NoTransportInPublicTypes()
+        {
+            var exceptionList = new HashSet<string>()
+            {
+                "Microsoft.PowerFx.Core.Localization.Span"
+            };
+
+            var asm = typeof(Parser.TexlParser).Assembly;
+            foreach (var type in asm.GetTypes().Where(t => t.IsPublic))
+            {
+                if (exceptionList.Contains(type.FullName))
+                {
+                    continue;
+                }
+
+                var attrs = type.GetCustomAttributesData();
+
+                var hasTransport = attrs.Any(attr => attr.AttributeType.Namespace.StartsWith("Microsoft.AppMagic.Transport"));
+                Assert.False(hasTransport, $"Types '{type.FullName}' with Transport attribute shouldn't be public.");
+            }
+        }
+
+        // Assert DocumentErrorSeverity and ErrorSeverity are in sync. 
+        [Fact]
+        public void ErrorSeverity()
+        {
+            var values1 = Enum.GetValues(typeof(Errors.DocumentErrorSeverity));
+            var values2 = Enum.GetValues(typeof(ErrorSeverity));
+
+            var len = values1.Length;
+            Assert.Equal(len, values2.Length);
+            
+            for (var i = 0; i < len; i++)
+            {
+                var x = values1.GetValue(i);
+                var y = values1.GetValue(i);
+
+                Assert.Equal((int)x, (int)y);
+                Assert.Equal(x.ToString(), y.ToString());
+            }
         }
 
         [Fact]

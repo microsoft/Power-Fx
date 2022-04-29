@@ -1,18 +1,16 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using Microsoft.AppMagic.Transport;
-
-namespace Microsoft.PowerFx.Core.Errors
+namespace Microsoft.PowerFx
 {
     /// <summary>
-    /// Internal error code - part of Transport Layer and used by Canvas Apps.
-    /// See <see cref="ErrorSeverity"/> for public facing type. 
     /// Severity of errors provided.
     /// </summary>
-    [TransportType(TransportKind.Enum)]
-    internal enum DocumentErrorSeverity
+    public enum ErrorSeverity
     {
+        // These values are a mirror of Microsoft.PowerFx.Core.Errors.DocumentErrorSeverity, 
+        // which is an internal type with [TransportType] attribute.
+
 #pragma warning disable SA1300 // Element should begin with upper-case letter
         _Min = Verbose,
 #pragma warning restore SA1300 // Element should begin with upper-case letter

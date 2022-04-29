@@ -67,7 +67,7 @@ namespace Microsoft.PowerFx.Core.Tests
                     new ExpressionError
                     {
                          Message = message,
-                         Severity = Core.Errors.DocumentErrorSeverity.Severe
+                         Severity = ErrorSeverity.Severe
                     }
                 }
             };

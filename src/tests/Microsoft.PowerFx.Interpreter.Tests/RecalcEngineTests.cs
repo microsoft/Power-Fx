@@ -322,7 +322,7 @@ namespace Microsoft.PowerFx.Tests
             var result = engine.Check("Filter([1,2,3],true)");
 
             Assert.True(result.IsSuccess);
-            Assert.Equal(1, result.Errors.Count(x => x.Severity == Core.Errors.DocumentErrorSeverity.Warning));
+            Assert.Equal(1, result.Errors.Count(x => x.Severity == ErrorSeverity.Warning));
             Assert.NotNull(result.Expression);
         }
 

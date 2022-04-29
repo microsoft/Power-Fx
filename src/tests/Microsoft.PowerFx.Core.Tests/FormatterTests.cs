@@ -78,7 +78,7 @@ namespace Microsoft.PowerFx.Tests
             // Can't pretty print a script with errors.
             var hasErrorsWithSeverityHigherThanWarning = false;
 
-            if (result.Errors != null && result.Errors.Any(x => x.Severity > DocumentErrorSeverity.Warning))
+            if (result.Errors != null && result.Errors.Any(x => x.Severity > ErrorSeverity.Warning))
             {
                 hasErrorsWithSeverityHigherThanWarning = true;
             }

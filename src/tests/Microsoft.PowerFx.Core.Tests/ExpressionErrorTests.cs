@@ -41,7 +41,7 @@ namespace Microsoft.PowerFx.Core.Tests
             {
                 Message = "ouch",
                 Span = new Span(2, 5),
-                Severity = DocumentErrorSeverity.Warning
+                Severity = ErrorSeverity.Warning
             };
 
             // Verify defaults for non-nullable objects
