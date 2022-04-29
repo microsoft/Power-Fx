@@ -34,17 +34,25 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.IPowerFxEngine",
                 "Microsoft.PowerFx.ParserOptions",
                 "Microsoft.PowerFx.Engine",
-                "Microsoft.PowerFx.FeatureFlags",
+
+                // Feature flags are experimental - hosts shouldn't use it. 
+                "Microsoft.PowerFx.Preview.FeatureFlags",
+
+                // $$$ wrap in a public type instead?
+                "Microsoft.PowerFx.Core.Errors.DocumentErrorSeverity",
 
                 // TBD ...
+                "Microsoft.PowerFx.Core.RenameDriver",
                 "Microsoft.PowerFx.Core.Public.TokenResultType",
                 "Microsoft.PowerFx.Core.App.DefaultEnabledFeatures",
                 "Microsoft.PowerFx.Core.App.IExternalEnabledFeatures",
                 "Microsoft.PowerFx.Core.BuiltinFormulaTypeConversions",
                 "Microsoft.PowerFx.Core.DisplayNameUtility",
-                "Microsoft.PowerFx.Core.Errors.DocumentErrorSeverity",
                 "Microsoft.PowerFx.Core.FormulaTypeSchema",
-                "Microsoft.PowerFx.Core.FormulaTypeToSchemaConverter",                                
+                "Microsoft.PowerFx.Core.FormulaTypeToSchemaConverter",
+                "Microsoft.PowerFx.Core.Utils.DName",
+                "Microsoft.PowerFx.Core.Utils.DPath",
+                "Microsoft.PowerFx.Core.Utils.ICheckable",
 
                 // Lexer and Parser 
                 "Microsoft.PowerFx.Core.Lexer.BinaryOp",
@@ -60,6 +68,36 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Core.Localization.ErrorResourceKey",
                 "Microsoft.PowerFx.Core.Localization.Span",
 
+                "Microsoft.PowerFx.Core.Syntax.Identifier",
+                "Microsoft.PowerFx.Core.Syntax.NodeKind",
+                "Microsoft.PowerFx.Core.Syntax.Nodes.AsNode",
+                "Microsoft.PowerFx.Core.Syntax.Nodes.BinaryOpNode",
+                "Microsoft.PowerFx.Core.Syntax.Nodes.BlankNode",
+                "Microsoft.PowerFx.Core.Syntax.Nodes.BoolLitNode",
+                "Microsoft.PowerFx.Core.Syntax.Nodes.CallNode",
+                "Microsoft.PowerFx.Core.Syntax.Nodes.DottedNameNode",
+                "Microsoft.PowerFx.Core.Syntax.Nodes.ErrorNode",
+                "Microsoft.PowerFx.Core.Syntax.Nodes.FirstNameNode",
+                "Microsoft.PowerFx.Core.Syntax.Nodes.ListNode",
+                "Microsoft.PowerFx.Core.Syntax.Nodes.NameNode",
+                "Microsoft.PowerFx.Core.Syntax.Nodes.NumLitNode",
+                "Microsoft.PowerFx.Core.Syntax.Nodes.ParentNode",
+                "Microsoft.PowerFx.Core.Syntax.Nodes.RecordNode",
+                "Microsoft.PowerFx.Core.Syntax.Nodes.SelfNode",
+                "Microsoft.PowerFx.Core.Syntax.Nodes.StrInterpNode",
+                "Microsoft.PowerFx.Core.Syntax.Nodes.StrLitNode",
+                "Microsoft.PowerFx.Core.Syntax.Nodes.TableNode",
+                "Microsoft.PowerFx.Core.Syntax.Nodes.TexlNode",
+                "Microsoft.PowerFx.Core.Syntax.Nodes.UnaryOpNode",
+                "Microsoft.PowerFx.Core.Syntax.Nodes.VariadicBase",
+                "Microsoft.PowerFx.Core.Syntax.Nodes.VariadicOpNode",
+
+                // $$$ move to syntax 
+                "Microsoft.PowerFx.Core.Syntax.Visitors.IdentityTexlVisitor",
+                "Microsoft.PowerFx.Core.Syntax.Visitors.TexlFunctionalVisitor`2",
+                "Microsoft.PowerFx.Core.Syntax.Visitors.TexlVisitor",
+
+                // $$$ Microsoft.PowerFx.Types
                 "Microsoft.PowerFx.Core.Public.Types.AggregateType",
                 "Microsoft.PowerFx.Core.Public.Types.BlankType",
                 "Microsoft.PowerFx.Core.Public.Types.BooleanType",
@@ -105,36 +143,6 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Core.Public.Values.UntypedObjectValue",
                 "Microsoft.PowerFx.Core.Public.Values.ValidFormulaValue",
 
-                "Microsoft.PowerFx.Core.RenameDriver",
-
-                "Microsoft.PowerFx.Core.Syntax.Identifier",
-                "Microsoft.PowerFx.Core.Syntax.NodeKind",
-                "Microsoft.PowerFx.Core.Syntax.Nodes.AsNode",
-                "Microsoft.PowerFx.Core.Syntax.Nodes.BinaryOpNode",
-                "Microsoft.PowerFx.Core.Syntax.Nodes.BlankNode",
-                "Microsoft.PowerFx.Core.Syntax.Nodes.BoolLitNode",
-                "Microsoft.PowerFx.Core.Syntax.Nodes.CallNode",
-                "Microsoft.PowerFx.Core.Syntax.Nodes.DottedNameNode",
-                "Microsoft.PowerFx.Core.Syntax.Nodes.ErrorNode",
-                "Microsoft.PowerFx.Core.Syntax.Nodes.FirstNameNode",
-                "Microsoft.PowerFx.Core.Syntax.Nodes.ListNode",
-                "Microsoft.PowerFx.Core.Syntax.Nodes.NameNode",
-                "Microsoft.PowerFx.Core.Syntax.Nodes.NumLitNode",
-                "Microsoft.PowerFx.Core.Syntax.Nodes.ParentNode",
-                "Microsoft.PowerFx.Core.Syntax.Nodes.RecordNode",
-                "Microsoft.PowerFx.Core.Syntax.Nodes.SelfNode",
-                "Microsoft.PowerFx.Core.Syntax.Nodes.StrInterpNode",
-                "Microsoft.PowerFx.Core.Syntax.Nodes.StrLitNode",
-                "Microsoft.PowerFx.Core.Syntax.Nodes.TableNode",
-                "Microsoft.PowerFx.Core.Syntax.Nodes.TexlNode",
-                "Microsoft.PowerFx.Core.Syntax.Nodes.UnaryOpNode",
-                "Microsoft.PowerFx.Core.Syntax.Nodes.VariadicBase",
-                "Microsoft.PowerFx.Core.Syntax.Nodes.VariadicOpNode",
-
-                "Microsoft.PowerFx.Core.Syntax.Visitors.IdentityTexlVisitor",
-                "Microsoft.PowerFx.Core.Syntax.Visitors.TexlFunctionalVisitor`2",
-                "Microsoft.PowerFx.Core.Syntax.Visitors.TexlVisitor",
-
                 "Microsoft.PowerFx.Intellisense.IPowerFxScope",
                 "Microsoft.PowerFx.Intellisense.IPowerFxScopeDisplayName",
                 "Microsoft.PowerFx.Intellisense.IIntellisenseResult",
@@ -145,10 +153,6 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Intellisense.SuggestionIconKind",
                 "Microsoft.PowerFx.Intellisense.SuggestionKind",
                 "Microsoft.PowerFx.Intellisense.UIString",
-
-                "Microsoft.PowerFx.Core.Utils.DName",
-                "Microsoft.PowerFx.Core.Utils.DPath",
-                "Microsoft.PowerFx.Core.Utils.ICheckable"
             };
 
             var sb = new StringBuilder();

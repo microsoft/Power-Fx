@@ -670,7 +670,7 @@ namespace Microsoft.PowerFx.Core.Parser
                 case TokKind.StrInterpStart:
                     var res = ParseStringInterpolation();
                     var tokCur = _curs.TokCur;
-                    if (FeatureFlags.StringInterpolation)
+                    if (Preview.FeatureFlags.StringInterpolation)
                     {
                         return res;
                     }
