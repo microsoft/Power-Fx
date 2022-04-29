@@ -48,8 +48,18 @@ namespace Microsoft.PowerFx.Core
         /// </summary>
         /// <param name="cultureInfo">Culture to use.</param>        
         public PowerFxConfig(CultureInfo cultureInfo = null)
-            : this(cultureInfo, new EnumStoreBuilder().WithDefaultEnums()) 
+            : this(cultureInfo, new EnumStoreBuilder()) 
         {
+        }
+
+        public void AddDefaultEnums()
+        {
+            EnumStoreBuilder.WithDefaultEnums();
+        }
+
+        public void AddRequiredEnums()
+        {
+            EnumStoreBuilder.WithRequiredEnums(Functions);
         }
 
         /// <summary>

@@ -33,7 +33,9 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
         {
             // Create an Engine() that has all the builtin symbols by default. 
             // Note that interpreter has fewer symbols. 
-            var engine = new Engine(new PowerFxConfig());
+            var config = new PowerFxConfig();
+            config.AddDefaultEnums();
+            var engine = new Engine(config);
 
             _sendToClientData = new List<string>();
             _scopeFactory = new TestPowerFxScopeFactory((string documentUri) => RecalcEngineScope.FromUri(engine, documentUri));
@@ -288,12 +290,16 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             Assert.Equal(uri, notification.Params.Uri);
             Assert.Equal(expectedDiagnostics.Length, notification.Params.Diagnostics.Length);
 
+            var diagnosticsSet = new HashSet<Diagnostic>(expectedDiagnostics);
             for (var i = 0; i < expectedDiagnostics.Length; i++)
             {
                 var expectedDiagnostic = expectedDiagnostics[i];
                 var actualDiagnostic = notification.Params.Diagnostics[i];
-                Assert.Equal(expectedDiagnostic.Message, actualDiagnostic.Message);
+                Assert.True(diagnosticsSet.Where(x => x.Message == actualDiagnostic.Message).Count() == 1);
+                diagnosticsSet.RemoveWhere(x => x.Message == actualDiagnostic.Message);
             }
+
+            Assert.True(diagnosticsSet.Count() == 0);
         }
 
         [Theory]
