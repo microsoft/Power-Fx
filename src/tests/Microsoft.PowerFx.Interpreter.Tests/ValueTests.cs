@@ -3,10 +3,8 @@
 
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
-using Microsoft.PowerFx.Core.Public.Types;
-using Microsoft.PowerFx.Core.Public.Values;
+using Microsoft.PowerFx.Types;
 using Xunit;
 
 // Need to test against some poorly formed classes that violate StyleCop rules. 

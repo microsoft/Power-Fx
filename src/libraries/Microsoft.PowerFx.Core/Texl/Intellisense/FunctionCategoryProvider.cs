@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
 
-namespace Microsoft.PowerFx.Core.Texl.Intellisense
+namespace Microsoft.PowerFx.Intellisense
 {
     internal sealed class FunctionCategoryProvider
     {
