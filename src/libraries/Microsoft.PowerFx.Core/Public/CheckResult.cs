@@ -6,11 +6,10 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Errors;
-using Microsoft.PowerFx.Core.Parser;
 using Microsoft.PowerFx.Core.Public;
-using Microsoft.PowerFx.Core.Public.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
+using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx
 {

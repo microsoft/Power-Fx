@@ -8,8 +8,7 @@ using System.Security.Cryptography;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.PowerFx.Core.Public;
-using Microsoft.PowerFx.Core.Public.Values;
+using Microsoft.PowerFx.Types;
 using Newtonsoft.Json.Linq;
 
 namespace Microsoft.PowerFx.Core.Tests
@@ -109,20 +108,20 @@ namespace Microsoft.PowerFx.Core.Tests
             });
             t.Start();
             bool success;
-            while (true)
+            while (true) 
             {
                 success = t.Join(Timeout);
                 if (!success && Debugger.IsAttached)
                 {
                     // Aid in debugging.
                     Debugger.Log(0, null, $"Test case {testCase} running...\r\n");
-
+                    
                     // Debugger.Break();
                     continue;
                 }
 
                 break;
-            }
+            }            
 
             if (success)
             {
@@ -165,7 +164,7 @@ namespace Microsoft.PowerFx.Core.Tests
         {
             RunResult runResult = null;
             FormulaValue result = null;
-
+            
             var expected = testCase.Expected;
             var expectedSkip = string.Equals(expected, "#skip", StringComparison.OrdinalIgnoreCase);
             if (expectedSkip)
@@ -178,7 +177,7 @@ namespace Microsoft.PowerFx.Core.Tests
             {
                 runResult = await RunAsyncInternal(testCase.Input, testCase.SetupHandlerName);
                 result = runResult.Value;
-
+                                
                 // Unsupported is just for ignoring large groups of inherited tests. 
                 // If it's an override, then the override should specify the exact error.
                 if (!testCase.IsOverride && runResult.UnsupportedReason != null)
@@ -247,31 +246,31 @@ namespace Microsoft.PowerFx.Core.Tests
                         var expectedKind = expectedErrorKinds[i];
 
                         if (int.TryParse(expectedKind, out var numericErrorKind))
+                    {
+                        // Error given as the internal value
+                        if (numericErrorKind == (int)actualErrorKind)
                         {
-                            // Error given as the internal value
-                            if (numericErrorKind == (int)actualErrorKind)
-                            {
                                 return (tr: TestResult.Pass, err: null);
-                            }
-                            else
-                            {
-                                return (tr: TestResult.Fail, err: $"Received an error, but expected kind={expectedKind} and received {actualErrorKind} ({(int)actualErrorKind})");
-                            }
-                        }
-                        else if (Enum.TryParse<ErrorKind>(expectedKind, out var errorKind))
-                        {
-                            // Error given as the enum name
-                            if (errorKind == actualErrorKind)
-                            {
-                                return (tr: TestResult.Pass, null);
-                            }
-                            else
-                            {
-                                return (tr: TestResult.Fail, err: $"Received an error, but expected kind={errorKind} and received {actualErrorKind}");
-                            }
                         }
                         else
                         {
+                                return (tr: TestResult.Fail, err: $"Received an error, but expected kind={expectedKind} and received {actualErrorKind} ({(int)actualErrorKind})");
+                        }
+                    }
+                        else if (Enum.TryParse<ErrorKind>(expectedKind, out var errorKind))
+                    {
+                        // Error given as the enum name
+                        if (errorKind == actualErrorKind)
+                        {
+                                return (tr: TestResult.Pass, null);
+                        }
+                        else
+                        {
+                                return (tr: TestResult.Fail, err: $"Received an error, but expected kind={errorKind} and received {actualErrorKind}");
+                        }
+                    }
+                    else
+                    {
                             return (tr: TestResult.Fail, err: $"Invalid expected error kind: {expectedKind}");
                         }
                     }).ToArray();
@@ -290,7 +289,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 }
             }
 
-            // If the actual result is not an error, we'll fail with a mismatch below
+                // If the actual result is not an error, we'll fail with a mismatch below
             if (result == null)
             {
                 var msg = "Did not return a value";
@@ -298,7 +297,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 if (runResult.Errors != null && runResult.Errors.Any())
                 {
                     msg += string.Join(string.Empty, runResult.Errors.Select(err => "\r\n" + err));
-                }
+            }
 
                 return (TestResult.Fail, msg);
             }

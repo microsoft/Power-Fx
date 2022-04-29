@@ -4,7 +4,7 @@
 using System.Diagnostics;
 using Microsoft.PowerFx.Core.IR;
 
-namespace Microsoft.PowerFx.Core.Public.Values
+namespace Microsoft.PowerFx.Types
 {
     [DebuggerDisplay("Blank() ({Type})")]
     public class BlankValue : FormulaValue

@@ -2,21 +2,13 @@
 // Licensed under the MIT license.
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Diagnostics.Contracts;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Text.Json;
-using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.IR;
-using Microsoft.PowerFx.Core.Public.Types;
-using Microsoft.PowerFx.Core.Public.Values;
+using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx
-{ 
+{
     /// <summary>
     /// Marshal .Net classes (with fields). This supports strong typing and lazy marshalling. 
     /// Handles any IEnumerable (including arrays).

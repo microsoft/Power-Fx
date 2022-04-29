@@ -7,12 +7,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Parser;
-using Microsoft.PowerFx.Core.Public;
-using Microsoft.PowerFx.Core.Public.Values;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Tests;
-using Xunit;
+using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Interpreter.Tests
 {

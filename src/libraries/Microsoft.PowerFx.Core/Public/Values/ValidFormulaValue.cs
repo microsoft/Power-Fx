@@ -3,7 +3,7 @@
 
 using Microsoft.PowerFx.Core.IR;
 
-namespace Microsoft.PowerFx.Core.Public.Values
+namespace Microsoft.PowerFx.Types
 {
     /// <summary>
     /// All values except BlankValue and ErrorValue should inherit from this base class.

@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.PowerFx.Core.Public.Types
+namespace Microsoft.PowerFx.Types
 {
     /// <summary>
     /// Visitor for walking <see cref="FormulaType"/>.

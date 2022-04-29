@@ -7,10 +7,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Glue;
 using Microsoft.PowerFx.Core.IR;
-using Microsoft.PowerFx.Core.Public.Types;
-using Microsoft.PowerFx.Core.Public.Values;
 using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Functions;
+using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx
 {

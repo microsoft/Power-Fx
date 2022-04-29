@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using Microsoft.PowerFx.Core.Public.Types;
+using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx
 {

@@ -5,8 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Localization;
-using Microsoft.PowerFx.Core.Public;
-using Microsoft.PowerFx.Core.Public.Values;
+using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx
 {
