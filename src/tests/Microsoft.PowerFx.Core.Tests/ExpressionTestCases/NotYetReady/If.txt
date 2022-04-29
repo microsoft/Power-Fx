@@ -87,6 +87,18 @@ Blank()
 >> If(Len("Hello")=6, 1, Left("Hello",2)="lo", 2)
 Blank()
 
+// Variadic cases
+>> If(5>=10, "Result1", 6>=10, "Result2", 7>=10, "Result3", 8>=10, "Result4", 9>=10, "Result5")
+Blank()
+
+>> If(5>=10, "Result1", 6>=10, "Result2", 7>=10, "Result3", 8>=10, "Result4", 9>=10, "Result5", "No Matching Results")
+"No Matching Results"
+
+>> If(5>=10, "Result1", 6>=10, "Result2", 7>=10, "Result3", 8>=10, "Result4", 9>=10, "Result5", 10>=10, "Result6", "No Matching Results")
+"Result6"
+
+>> If(5>=10, "Result1", 6>=10, "Result2", 7<=10, "Result3", 8>=10, "Result4", 9>=10, "Result5", 10>=10, "Result6", "No Matching Results")
+"Result3"
 
 // ************************************** AND, OR, NOT Operators **************************************
 
