@@ -40,6 +40,13 @@ namespace Microsoft.PowerFx.Core.Lexer.Tokens
         /// </summary>
         public string Value { get; }
 
+        /// <summary>
+        /// Escapes a string value.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static string EscapeString(string value) => CharacterUtils.ExcelEscapeString(value);
+
         internal override Token Clone(Span ts)
         {
             return new StrLitToken(this, ts);

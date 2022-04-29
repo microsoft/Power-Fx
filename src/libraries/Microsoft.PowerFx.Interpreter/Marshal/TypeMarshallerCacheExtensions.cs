@@ -60,6 +60,7 @@ namespace Microsoft.PowerFx
         /// Create a record by reflecting over the object's public properties.
         /// </summary>
         /// <typeparam name="T">static type to reflect over.</typeparam>
+        /// <param name="cache"></param>
         /// <param name="obj"></param>
         /// <returns>a new record value.</returns>
         public static RecordValue NewRecord<T>(this TypeMarshallerCache cache, T obj)

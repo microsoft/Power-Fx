@@ -111,7 +111,6 @@ namespace Microsoft.PowerFx.Functions
             
         private class MinNumberAgg : IAggregator
         {
-            protected int _count;
             protected double _minValue = double.MaxValue;
 
             public void Apply(FormulaValue value)
@@ -136,7 +135,6 @@ namespace Microsoft.PowerFx.Functions
 
         private class MinDateTimeAgg : IAggregator
         {
-            protected int _count;
             protected DateTime _minValueDT = DateTime.MaxValue;
 
             public void Apply(FormulaValue value)
@@ -161,7 +159,6 @@ namespace Microsoft.PowerFx.Functions
 
         private class MinDateAgg : IAggregator
         {
-            protected int _count;
             protected DateTime _minValueDT = DateTime.MaxValue;
 
             public void Apply(FormulaValue value)
@@ -186,7 +183,6 @@ namespace Microsoft.PowerFx.Functions
 
         private class MinTimeAgg : IAggregator
         {
-            protected int _count;
             protected TimeSpan _minValueT = TimeSpan.MaxValue;
 
             public void Apply(FormulaValue value)
@@ -211,7 +207,6 @@ namespace Microsoft.PowerFx.Functions
 
         private class MaxNumberAgg : IAggregator
         {
-            protected int _count;
             protected double _maxValue = double.MinValue;
 
             public void Apply(FormulaValue value)
@@ -236,7 +231,6 @@ namespace Microsoft.PowerFx.Functions
 
         private class MaxDateAgg : IAggregator
         {
-            protected int _count;
             protected DateTime _maxValueDT = DateTime.MinValue;
 
             public void Apply(FormulaValue value)
@@ -261,7 +255,6 @@ namespace Microsoft.PowerFx.Functions
 
         private class MaxDateTimeAgg : IAggregator
         {
-            protected int _count;
             protected DateTime _maxValueDT = DateTime.MinValue;
 
             public void Apply(FormulaValue value)
@@ -286,7 +279,6 @@ namespace Microsoft.PowerFx.Functions
 
         private class MaxTimeAgg : IAggregator
         {
-            protected int _count;
             protected TimeSpan _maxValueT = TimeSpan.MinValue;
 
             public void Apply(FormulaValue value)

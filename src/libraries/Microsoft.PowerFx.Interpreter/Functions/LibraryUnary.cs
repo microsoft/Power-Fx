@@ -403,21 +403,8 @@ namespace Microsoft.PowerFx.Functions
 
         public static FormulaValue OptionSetValueToString(IRContext irContext, OptionSetValue[] args)
         {
-            // The type checker and IR have already validated that this is a valid OptionSet and that it contains a member matching this Option.
-            // These are just defensive error checks, and should be unreachable.
-            var os = args[0].Type?._type?.OptionSetInfo;
-            if (os is not OptionSet optionSet) 
-            {
-                return CommonErrors.UnreachableCodeError(irContext);
-            }
-
-            var option = args[0].Option;
-
-            if (!optionSet.Options.TryGetValue(new DName(option), out var displayName))
-            { 
-                return CommonErrors.UnreachableCodeError(irContext);
-            }
-
+            var optionSet = args[0];
+            var displayName = optionSet.DisplayName;
             return new StringValue(irContext, displayName);
         }
         #endregion

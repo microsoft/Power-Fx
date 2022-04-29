@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.IR.Nodes;
 using Microsoft.PowerFx.Core.Public;
@@ -20,19 +21,26 @@ namespace Microsoft.PowerFx.Functions
             return fi._value;
         }
 
-        public static FormulaValue OptionSet(OptionSet optionSet, IRContext irContext)
+        // This allows option sets to be standalone identifiers, like:
+        //   Choices(TimeUnit). 
+        //
+        // That it also lets OptionSets act like Records in ways we really don't want: 
+        //   TimeUnit.Hours
+        //   If(true, TimeUnit).Hours
+        //   If(true, TextPosition, Align).Left
+        public static FormulaValue OptionSet(IExternalOptionSet optionSet, IRContext irContext)
         {
             var options = new List<NamedValue>();
-            foreach (var option in optionSet.Options)
+            foreach (var optionName in optionSet.OptionNames)
             {
-                if (!optionSet.TryGetValue(option.Key, out var osValue))
+                if (!optionSet.TryGetValue(optionName, out var osValue))
                 {
                     // This is iterating the Options in the option set
                     // so we already know TryGetValue will succeed, making this unreachable.
-                    return CommonErrors.UnreachableCodeError(irContext); 
+                    return CommonErrors.UnreachableCodeError(irContext);
                 }
 
-                options.Add(new NamedValue(option.Key, osValue));
+                options.Add(new NamedValue(optionName, osValue));
             }
 
             // When evaluating an option set ResolvedObjectNode, we convert the options into a record
