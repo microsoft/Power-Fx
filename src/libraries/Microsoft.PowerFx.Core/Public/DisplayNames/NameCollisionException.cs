@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Microsoft.PowerFx.Core
+namespace Microsoft.PowerFx
 {
     public class NameCollisionException : Exception
     {

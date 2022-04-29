@@ -3,7 +3,7 @@
 
 using Microsoft.PowerFx.Core.Localization;
 
-namespace Microsoft.PowerFx.Core.Lexer.Tokens
+namespace Microsoft.PowerFx.Syntax
 {
     internal class EofToken : Token
     {
@@ -23,7 +23,7 @@ namespace Microsoft.PowerFx.Core.Lexer.Tokens
         {
         }
 
-        public override Token Clone(Span ts)
+        internal override Token Clone(Span ts)
         {
             return new EofToken(this, ts);
         }

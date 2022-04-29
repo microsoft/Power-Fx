@@ -3,27 +3,21 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Localization;
-using Microsoft.PowerFx.Core.Public;
-using Microsoft.PowerFx.Core.Public.Types;
-using Microsoft.PowerFx.Core.Public.Values;
 using Microsoft.PowerFx.Core.Tests;
-using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Types;
 using Xunit;
 using static Microsoft.PowerFx.Core.Localization.TexlStrings;
 
 namespace Microsoft.PowerFx.Tests
 {
     // Test async eval features. 
-    public class RecalcEngineAsyncTests
+    public class RecalcEngineAsyncTests : PowerFxTest
     {
         // Trivial async function that runs synchronously. 
         private static async Task<FormulaValue> Worker(FormulaValue[] args, CancellationToken cancel)

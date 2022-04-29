@@ -5,19 +5,20 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Public;
-using Microsoft.PowerFx.Core.Public.Types;
+using Microsoft.PowerFx.Core.Tests;
+using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.LanguageServerProtocol;
 using Microsoft.PowerFx.LanguageServerProtocol.Protocol;
+using Microsoft.PowerFx.Types;
 using Xunit;
 
 namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
 {
-    public class LanguageServerTests
-    {
+    public class LanguageServerTests : PowerFxTest
+    {       
         protected static readonly JsonSerializerOptions _jsonSerializerOptions = new JsonSerializerOptions
         {
             PropertyNameCaseInsensitive = true,
@@ -305,10 +306,10 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
         }
 
         [Theory]
-        [InlineData("AA", null, "Name isn't valid. 'AA' isn't recognized.")]
-        [InlineData("1+CountRowss", null, "Name isn't valid. 'CountRowss' isn't recognized.")]
-        [InlineData("CountRows(2)", null, "Invalid argument type (Number). Expecting a Table value instead.", "The function 'CountRows' has some invalid arguments.")]
-        public void TestDidOpenErroneousFormula(string formula, string context, params string[] expectedErrors)
+        [InlineData("AA", "Name isn't valid. 'AA' isn't recognized.")]
+        [InlineData("1+CountRowss", "Name isn't valid. 'CountRowss' isn't recognized.")]
+        [InlineData("CountRows(2)", "Invalid argument type (Number). Expecting a Table value instead.", "The function 'CountRows' has some invalid arguments.")]
+        public void TestDidOpenErroneousFormula(string formula, params string[] expectedErrors)
         {
             var expectedDiagnostics = expectedErrors.Select(error => new Diagnostic()
             {

@@ -5,17 +5,20 @@ using System.Collections.Generic;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Errors;
+using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Functions.Delegation;
 using Microsoft.PowerFx.Core.Localization;
-using Microsoft.PowerFx.Core.Syntax.Nodes;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Syntax;
 
 namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
     // CountRows(source:*)
     internal sealed class CountRowsFunction : FunctionWithTableInput
     {
+        public const string CountRowsInvariantFunctionName = "CountRows";
+
         public override bool RequiresErrorContext => true;
 
         public override bool IsSelfContained => true;
@@ -25,7 +28,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override DelegationCapability FunctionDelegationCapability => DelegationCapability.Count;
 
         public CountRowsFunction()
-            : base("CountRows", TexlStrings.AboutCountRows, FunctionCategories.Table | FunctionCategories.MathAndStat, DType.Number, 0, 1, 1, DType.EmptyTable)
+            : base(CountRowsInvariantFunctionName, TexlStrings.AboutCountRows, FunctionCategories.Table | FunctionCategories.MathAndStat, DType.Number, 0, 1, 1, DType.EmptyTable)
         {
         }
 
@@ -101,6 +104,31 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             callNode.Accept(viewFinderVisitor);
 
             return viewFinderVisitor.ContainsView;
+        }
+    }
+
+    // CountRows(arg: O)
+    internal sealed class CountRowsFunction_UO : BuiltinFunction
+    {
+        public override bool RequiresErrorContext => true;
+
+        public override bool IsSelfContained => true;
+
+        public override bool SupportsParamCoercion => false;
+
+        public CountRowsFunction_UO()
+            : base(CountRowsFunction.CountRowsInvariantFunctionName, TexlStrings.AboutCountRows, FunctionCategories.Table | FunctionCategories.MathAndStat, DType.Number, 0, 1, 1, DType.UntypedObject)
+        {
+        }
+
+        public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
+        {
+            yield return new[] { TexlStrings.CountArg1 };
+        }
+
+        public override string GetUniqueTexlRuntimeName(bool isPrefetching = false)
+        {
+            return GetUniqueTexlRuntimeName(suffix: "_UO");
         }
     }
 }

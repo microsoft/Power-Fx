@@ -4,11 +4,14 @@
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Utils;
 
-namespace Microsoft.PowerFx.Core.Lexer.Tokens
+namespace Microsoft.PowerFx.Syntax
 {
-    internal class NumLitToken : Token
+    /// <summary>
+    /// Token for a numeric literal.
+    /// </summary>
+    public class NumLitToken : Token
     {
-        public NumLitToken(double value, Span span)
+        internal NumLitToken(double value, Span span)
             : base(TokKind.NumLit, span)
         {
             Contracts.Assert(value >= double.MinValue && value < double.MaxValue);
@@ -27,18 +30,23 @@ namespace Microsoft.PowerFx.Core.Lexer.Tokens
         {
         }
 
-        public override Token Clone(Span ts)
+        internal override Token Clone(Span ts)
         {
             return new NumLitToken(this, ts);
         }
 
+        /// <summary>
+        /// Numeric value of the token.
+        /// </summary>
         public double Value { get; }
 
+        /// <inheritdoc />
         public override string ToString()
         {
             return Value.ToString("R", TexlLexer.LocalizedInstance.Culture);
         }
 
+        /// <inheritdoc />
         public override bool Equals(Token that)
         {
             Contracts.AssertValue(that);

@@ -34,12 +34,6 @@ namespace Microsoft.PowerFx.Core.Binding
 
         DPath CurrentEntityPath { get; }
 
-        bool CurrentPropertyIsBehavior { get; }
-
-        bool CurrentPropertyIsConstantData { get; }
-
-        bool CurrentPropertyAllowsNavigation { get; }
-
         IEnumerable<TexlFunction> Functions { get; }
 
         // Look up an entity, context variable, or entity part (e.g. enum value) by name.
@@ -54,7 +48,7 @@ namespace Microsoft.PowerFx.Core.Binding
         IEnumerable<TexlFunction> LookupFunctions(DPath theNamespace, string name, bool localeInvariant = false);
 
         /// <returns>
-        /// List of functions in <see cref="nameSpace"/>.
+        /// List of functions in <paramref name="nameSpace"/>.
         /// </returns>
         IEnumerable<TexlFunction> LookupFunctionsInNamespace(DPath nameSpace);
 

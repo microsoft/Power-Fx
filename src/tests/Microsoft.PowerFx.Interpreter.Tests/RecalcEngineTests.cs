@@ -8,18 +8,17 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Functions;
-using Microsoft.PowerFx.Core.Public;
-using Microsoft.PowerFx.Core.Public.Types;
-using Microsoft.PowerFx.Core.Public.Values;
+using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Types;
 using Xunit;
 using Xunit.Sdk;
 
 namespace Microsoft.PowerFx.Tests
 {
-    public class RecalcEngineTests
+    public class RecalcEngineTests : PowerFxTest
     {
         [Fact]
         public void PublicSurfaceTests()
@@ -27,6 +26,7 @@ namespace Microsoft.PowerFx.Tests
             var asm = typeof(RecalcEngine).Assembly;
 
             var ns = "Microsoft.PowerFx";
+            var nsType = "Microsoft.PowerFx.Types";
             var allowed = new HashSet<string>()
             {
                 $"{ns}.{nameof(RecalcEngine)}",
@@ -34,7 +34,6 @@ namespace Microsoft.PowerFx.Tests
                 $"{ns}.{nameof(RecalcEngineScope)}",
                 $"{ns}.{nameof(PowerFxConfigExtensions)}",
                 $"{ns}.{nameof(OptionSet)}",
-                $"{ns}.{nameof(ObjectRecordValue)}",
                 $"{ns}.{nameof(ITypeMarshallerProvider)}",
                 $"{ns}.{nameof(ITypeMarshaller)}",
                 $"{ns}.{nameof(OptionSet)}",
@@ -44,7 +43,8 @@ namespace Microsoft.PowerFx.Tests
                 $"{ns}.{nameof(PrimitiveTypeMarshaller)}",
                 $"{ns}.{nameof(TableMarshallerProvider)}",
                 $"{ns}.{nameof(TypeMarshallerCache)}",
-                $"{ns}.{nameof(TypeMarshallerCacheExtensions)}"
+                $"{ns}.{nameof(TypeMarshallerCacheExtensions)}",
+                $"{nsType}.{nameof(ObjectRecordValue)}"
             };
 
             var sb = new StringBuilder();
@@ -141,6 +141,37 @@ namespace Microsoft.PowerFx.Tests
 
             // Batched up (we don't double fire)            
             AssertUpdate("B-->20;C-->25;D-->22;");
+        }
+        
+        [Fact]
+        public void DeleteFormula()
+        {
+            var engine = new RecalcEngine();
+
+            engine.UpdateVariable("A", 1);
+            engine.SetFormula("B", "A*10", OnUpdate);
+            engine.SetFormula("C", "B+5", OnUpdate);
+            engine.SetFormula("D", "B+A", OnUpdate);
+
+            Assert.Throws<InvalidOperationException>(() =>
+                engine.DeleteFormula("X"));
+
+            Assert.Throws<InvalidOperationException>(() =>
+                engine.DeleteFormula("B"));
+
+            engine.DeleteFormula("D");
+            Assert.False(engine.Formulas.TryGetValue("D", out var retD));
+
+            engine.DeleteFormula("C");
+            Assert.False(engine.Formulas.TryGetValue("C", out var retC));
+
+            // After C and D are deleted, deleting B should pass
+            engine.DeleteFormula("B");
+
+            // Ensure B is gone
+            engine.Check("B");
+            Assert.Throws<InvalidOperationException>(() =>
+                engine.Check("B").ThrowOnErrors());
         }
 
         // Don't fire for formulas that aren't touched by an update
@@ -243,7 +274,7 @@ namespace Microsoft.PowerFx.Tests
             var config = new PowerFxConfig();
 
             // Pick a function in core but not implemented in interpreter.
-            var nyiFunc = BuiltinFunctionsCore.Shuffle;
+            var nyiFunc = BuiltinFunctionsCore.ISOWeekNum;
 
             Assert.Contains(nyiFunc, config.Functions);
 
@@ -269,14 +300,39 @@ namespace Microsoft.PowerFx.Tests
         }
 
         [Fact]
+        public void CanRunWithWarnings()
+        {
+            var config = new PowerFxConfig();
+            var engine = new RecalcEngine(config);
+
+            var result = engine.Check("T.Var = 23", new RecordType()
+                .Add(new NamedFormulaType("T", new RecordType().Add(new NamedFormulaType("Var", FormulaType.String)))));
+
+            Assert.True(result.IsSuccess);
+            Assert.Equal(1, result.Errors.Count(x => x.IsWarning));
+        }
+
+        [Fact]
+        public void CheckSuccessWarning()
+        {
+            var engine = new RecalcEngine();
+
+            // issues a warning, verify it's still successful.
+            var result = engine.Check("Filter([1,2,3],true)");
+
+            Assert.True(result.IsSuccess);
+            Assert.Equal(1, result.Errors.Count(x => x.Severity == ErrorSeverity.Warning));
+            Assert.NotNull(result.Expression);
+        }
+
+        [Fact]
         public void CheckParseError()
         {
             var engine = new RecalcEngine();
             var result = engine.Check("3*1+");
 
             Assert.False(result.IsSuccess);
-            Assert.Single(result.Errors);
-            Assert.StartsWith("Error 4-4: Expected an operand", result.Errors[0].ToString());
+            Assert.StartsWith("Error 4-4: Expected an operand", result.Errors.First().ToString());
         }
 
         [Fact]
@@ -287,7 +343,7 @@ namespace Microsoft.PowerFx.Tests
 
             Assert.False(result.IsSuccess);
             Assert.Single(result.Errors);
-            Assert.StartsWith("Error 2-5: Name isn't valid. 'foo' isn't recognized", result.Errors[0].ToString());
+            Assert.StartsWith("Error 2-5: Name isn't valid. 'foo' isn't recognized", result.Errors.First().ToString());
         }
 
         [Fact]
@@ -298,7 +354,7 @@ namespace Microsoft.PowerFx.Tests
 
             Assert.False(result.IsSuccess);
             Assert.Single(result.Errors);
-            Assert.StartsWith("Error 31-34: Name isn't valid. 'foo' isn't recognized", result.Errors[0].ToString());
+            Assert.StartsWith("Error 31-34: Name isn't valid. 'foo' isn't recognized", result.Errors.First().ToString());
         }
 
         [Fact]
@@ -309,7 +365,7 @@ namespace Microsoft.PowerFx.Tests
 
             Assert.False(result.IsSuccess);
             Assert.Single(result.Errors);
-            Assert.StartsWith("Error 7-11: Name isn't valid. 'foo' isn't recognized", result.Errors[0].ToString());
+            Assert.StartsWith("Error 7-11: Name isn't valid. 'foo' isn't recognized", result.Errors.First().ToString());
         }
 
         [Fact]
@@ -320,7 +376,7 @@ namespace Microsoft.PowerFx.Tests
 
             Assert.False(result.IsSuccess);
             Assert.Single(result.Errors);
-            Assert.StartsWith("Error 2-8: Name isn't valid. 'Value' isn't recognized", result.Errors[0].ToString());
+            Assert.StartsWith("Error 2-8: Name isn't valid. 'Value' isn't recognized", result.Errors.First().ToString());
         }
 
         [Fact]
@@ -338,33 +394,6 @@ namespace Microsoft.PowerFx.Tests
         }
 
         [Fact]
-        public void CustomFunction()
-        {
-            var config = new PowerFxConfig(null);
-            config.AddFunction(new TestCustomFunction());
-            var engine = new RecalcEngine(config);
-
-            // Shows up in enuemeration
-            var func = engine.GetAllFunctionNames().First(name => name == "TestCustom");
-            Assert.NotNull(func);
-
-            // Can be invoked. 
-            var result = engine.Eval("TestCustom(2,3)");
-            Assert.Equal(6.0, result.ToObject());
-        }
-
-        // Must have "Function" suffix. 
-        private class TestCustomFunction : ReflectionFunction
-        {
-            // Must have "Execute" method. 
-            public static NumberValue Execute(NumberValue x, NumberValue y)
-            {
-                var val = x.Value * y.Value;
-                return FormulaValue.New(val);
-            }
-        }
-
-        [Fact]
         public void CheckBindErrorWithParseExpression()
         {
             var engine = new RecalcEngine();
@@ -373,7 +402,7 @@ namespace Microsoft.PowerFx.Tests
             Assert.False(result.IsSuccess);
             Assert.Null(result.Expression);
             Assert.Single(result.Errors);
-            Assert.StartsWith("Error 2-5: Name isn't valid. 'foo' isn't recognized", result.Errors[0].ToString());
+            Assert.StartsWith("Error 2-5: Name isn't valid. 'foo' isn't recognized", result.Errors.First().ToString());
         }
 
         [Fact]

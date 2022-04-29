@@ -6,15 +6,15 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core;
-using Microsoft.PowerFx.Core.Public.Values;
+using Microsoft.PowerFx.Core.Parser;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Tests;
-using Xunit;
+using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Interpreter.Tests
 {
-    public class ExpressionEvaluationTests
+    public class ExpressionEvaluationTests : PowerFxTest
     {
         internal static Dictionary<string, Func<(RecalcEngine engine, RecordValue parameters)>> SetupHandlers = new Dictionary<string, Func<(RecalcEngine engine, RecordValue parameters)>>() 
         {
@@ -57,10 +57,9 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             // For async tests, run in special mode. 
             // This does _not_ change evaluation semantics, but does verify .Result isn't called by checking
             // task completion status.. 
-            private async Task<FormulaValue> RunVerifyAsync(string expr)
+            private async Task<FormulaValue> RunVerifyAsync(string expr, ParserOptions options)
             {
                 var config = new PowerFxConfig(null);
-
                 var verify = new AsyncVerify();
 
                 // Add Async(),WaitFor() functions 
@@ -73,22 +72,23 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 var engine = new RecalcEngine(config);
 
                 // Run in special mode that ensures we're not calling .Result
-                var result = await verify.EvalAsync(engine, expr);
+                var result = await verify.EvalAsync(engine, expr, options);
                 return result;
             }
 
             protected override async Task<RunResult> RunAsyncInternal(string expr, string setupHandlerName)
             {
-                FeatureFlags.StringInterpolation = true;
+                Preview.FeatureFlags.StringInterpolation = true;
                 RecalcEngine engine;
                 RecordValue parameters;
+                var iSetup = InternalSetup.Parse(setupHandlerName);
 
-                if (setupHandlerName == "AsyncTestSetup")
+                if (string.Equals(iSetup.HandlerName, "AsyncTestSetup", StringComparison.OrdinalIgnoreCase))
                 {
-                    return new RunResult(await RunVerifyAsync(expr));
+                    return new RunResult(await RunVerifyAsync(expr, iSetup.Flags.ToParserOptions()));
                 }
 
-                if (setupHandlerName != null) 
+                if (iSetup.HandlerName != null)
                 {
                     if (!SetupHandlers.TryGetValue(setupHandlerName, out var handler))
                     {
@@ -108,7 +108,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                     parameters = RecordValue.Empty();
                 }
 
-                var check = engine.Check(expr, parameters.Type);
+                var check = engine.Check(expr, parameters.Type, options: iSetup.Flags.ToParserOptions());
                 if (!check.IsSuccess)
                 {
                     return new RunResult(check);
@@ -117,7 +117,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 var newValue = await check.Expression.EvalAsync(parameters, CancellationToken.None);
 
                 return new RunResult(newValue);
-            }
+            }          
         }
     }
 }

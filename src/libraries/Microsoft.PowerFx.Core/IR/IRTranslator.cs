@@ -9,24 +9,22 @@ using Microsoft.PowerFx.Core.Binding.BindInfo;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.IR.Nodes;
 using Microsoft.PowerFx.Core.IR.Symbols;
-using Microsoft.PowerFx.Core.Lexer;
-using Microsoft.PowerFx.Core.Public.Types;
-using Microsoft.PowerFx.Core.Syntax.Nodes;
-using Microsoft.PowerFx.Core.Syntax.Visitors;
 using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Syntax;
+using Microsoft.PowerFx.Types;
 using BinaryOpNode = Microsoft.PowerFx.Core.IR.Nodes.BinaryOpNode;
 using CallNode = Microsoft.PowerFx.Core.IR.Nodes.CallNode;
 using ErrorNode = Microsoft.PowerFx.Core.IR.Nodes.ErrorNode;
 using RecordNode = Microsoft.PowerFx.Core.IR.Nodes.RecordNode;
 using TableNode = Microsoft.PowerFx.Core.IR.Nodes.TableNode;
-using TexlBinaryOpNode = Microsoft.PowerFx.Core.Syntax.Nodes.BinaryOpNode;
-using TexlCallNode = Microsoft.PowerFx.Core.Syntax.Nodes.CallNode;
-using TexlErrorNode = Microsoft.PowerFx.Core.Syntax.Nodes.ErrorNode;
-using TexlRecordNode = Microsoft.PowerFx.Core.Syntax.Nodes.RecordNode;
-using TexlTableNode = Microsoft.PowerFx.Core.Syntax.Nodes.TableNode;
-using TexlUnaryOpNode = Microsoft.PowerFx.Core.Syntax.Nodes.UnaryOpNode;
+using TexlBinaryOpNode = Microsoft.PowerFx.Syntax.BinaryOpNode;
+using TexlCallNode = Microsoft.PowerFx.Syntax.CallNode;
+using TexlErrorNode = Microsoft.PowerFx.Syntax.ErrorNode;
+using TexlRecordNode = Microsoft.PowerFx.Syntax.RecordNode;
+using TexlTableNode = Microsoft.PowerFx.Syntax.TableNode;
+using TexlUnaryOpNode = Microsoft.PowerFx.Syntax.UnaryOpNode;
 using UnaryOpNode = Microsoft.PowerFx.Core.IR.Nodes.UnaryOpNode;
 
 namespace Microsoft.PowerFx.Core.IR
@@ -755,9 +753,14 @@ namespace Microsoft.PowerFx.Core.IR
                             // Date + '-DateTime' => in days
                             // Date + '-Date' => in days
 
-                            // Ensure that this is really '-Date' - Binding should always catch this, but let's make sure...
-                            Contracts.Assert(node.Right.AsUnaryOpLit().VerifyValue().Op == UnaryOp.Minus);
-                            return new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.DateDifference, left, right);
+                            // Binding produces this as '-Date'. This should be cleaned up when we switch to a proper sub op. 
+                            if (right is not UnaryOpNode unaryNode || unaryNode.Op != UnaryOpKind.Negate)
+                            {
+                                throw new NotSupportedException();
+                            }
+
+                            // Use the child of the negate as the rhs for datediff
+                            return new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.DateDifference, left, unaryNode.Child);
                         }
                         else if (rightType == DType.Time)
                         {
@@ -837,7 +840,12 @@ namespace Microsoft.PowerFx.Core.IR
                     }
                     else
                     {
-                        throw new NotSupportedException();
+                        // In this particular case, we issue a warning
+                        // We only manage = and <> cases here as other comparison operators are more complex to handle
+                        // See https://stackoverflow.com/questions/35050151/excel-if-statement-comparing-text-with-number
+                        return (node.Op == BinaryOp.NotEqual) ? new BooleanLiteralNode(context.GetIRContext(node), true)
+                             : (node.Op == BinaryOp.Equal) ? new BooleanLiteralNode(context.GetIRContext(node), false)
+                             : throw new NotSupportedException();
                     }
                 }
 

@@ -4,9 +4,8 @@
 using System;
 using System.Diagnostics.Contracts;
 using Microsoft.PowerFx.Core.IR;
-using Microsoft.PowerFx.Core.Public.Types;
 
-namespace Microsoft.PowerFx.Core.Public.Values
+namespace Microsoft.PowerFx.Types
 {
     /// <summary>
     /// Represents a Date only, without a time component, in the local time zone.

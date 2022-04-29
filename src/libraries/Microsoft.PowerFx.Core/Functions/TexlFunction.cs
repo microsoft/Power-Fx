@@ -17,16 +17,16 @@ using Microsoft.PowerFx.Core.Functions.DLP;
 using Microsoft.PowerFx.Core.Functions.FunctionArgValidators;
 using Microsoft.PowerFx.Core.Functions.Publish;
 using Microsoft.PowerFx.Core.Functions.TransportSchemas;
-using Microsoft.PowerFx.Core.Lexer;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Logging.Trackers;
-using Microsoft.PowerFx.Core.Syntax;
-using Microsoft.PowerFx.Core.Syntax.Nodes;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Syntax;
 
 namespace Microsoft.PowerFx.Core.Functions
 {
+    using FunctionInfo = Microsoft.PowerFx.Core.Functions.TransportSchemas.FunctionInfo;
+
     [ThreadSafeImmutable]
     internal abstract class TexlFunction : IFunction
     {
@@ -1114,13 +1114,18 @@ namespace Microsoft.PowerFx.Core.Functions
                 return false;
             }
 
+            if (dataSource == null)
+            {
+                return false;
+            }
+
             // Check if DS is server delegatable.
             return dataSource.IsDelegatable &&
                     dataSource.DelegationMetadata.VerifyValue().TableCapabilities.HasCapability(expectedCapability.Capabilities);
         }
 
         /// <summary>
-        /// Removes the Attachments field from <see cref="itemType"/> if it is defined and returns true if
+        /// Removes the Attachments field from <paramref name="itemType"/> if it is defined and returns true if
         /// successful and false if an error was present.  If the Attachments field is not defined, does nothing
         /// and returns true.
         /// </summary>
@@ -1131,10 +1136,10 @@ namespace Microsoft.PowerFx.Core.Functions
         /// </remarks>
         /// <param name="itemType">Type that may define Attachments.</param>
         /// <param name="errors">Errors.</param>
-        /// <param name="node">Node to which <see cref="itemType"/> is associated.</param>
+        /// <param name="node">Node to which <paramref name="itemType"/> is associated.</param>
         /// <returns>
         /// True if operation succeeded, if no Attachments field is defined or the Attachments field
-        /// has been successfully removed from <see cref="itemType"/>, false otherwise.
+        /// has been successfully removed from <paramref name="itemType"/>, false otherwise.
         /// </returns>
         protected bool DropAttachmentsIfExists(ref DType itemType, IErrorContainer errors, TexlNode node)
         {

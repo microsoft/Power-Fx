@@ -4,9 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using Microsoft.PowerFx.Core.IR;
-using Microsoft.PowerFx.Core.Public.Types;
-using Microsoft.PowerFx.Core.Public.Values;
+using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx
 {
@@ -20,14 +18,19 @@ namespace Microsoft.PowerFx
         protected readonly IReadOnlyDictionary<string, Func<object, FormulaValue>> _mapping;
 
         /// <inheritdoc/>
-        public FormulaType Type { get; private set; }
+        FormulaType ITypeMarshaller.Type => Type;
+
+        /// <summary>
+        /// Strongly typed wrapper for Type. 
+        /// </summary>
+        public RecordType Type { get; private set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ObjectMarshaller"/> class.
         /// </summary>
         /// <param name="type">The FormulaType that these objects product.</param>
         /// <param name="fieldMap">A mapping of fx field names to functions that produce that field. </param>
-        public ObjectMarshaller(FormulaType type, IReadOnlyDictionary<string, Func<object, FormulaValue>> fieldMap)
+        public ObjectMarshaller(RecordType type, IReadOnlyDictionary<string, Func<object, FormulaValue>> fieldMap)
         {
             if (!(type is RecordType))
             {
@@ -41,7 +44,7 @@ namespace Microsoft.PowerFx
         /// <inheritdoc/>
         public virtual FormulaValue Marshal(object source)
         {
-            var value = new ObjectRecordValue(IRContext.NotInSource(Type), source, this);
+            var value = new ObjectRecordValue(Type, source, this);
             return value;
         }
 

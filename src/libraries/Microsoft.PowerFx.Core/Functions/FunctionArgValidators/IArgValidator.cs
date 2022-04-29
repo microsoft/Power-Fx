@@ -2,7 +2,7 @@
 // Licensed under the MIT license.
 
 using Microsoft.PowerFx.Core.Binding;
-using Microsoft.PowerFx.Core.Syntax.Nodes;
+using Microsoft.PowerFx.Syntax;
 
 namespace Microsoft.PowerFx.Core.Functions.FunctionArgValidators
 {

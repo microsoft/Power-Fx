@@ -3,7 +3,7 @@
 
 using Microsoft.PowerFx.Core.Types.Enums;
 
-namespace Microsoft.PowerFx.Core.Texl.Intellisense
+namespace Microsoft.PowerFx.Intellisense
 {
     internal static class IntellisenseProvider
     {
@@ -25,9 +25,9 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
             new Intellisense.RecordNodeSuggestionHandler(),
         };
 
-        internal static IIntellisense GetIntellisense(IEnumStore enumStore)
+        internal static IIntellisense GetIntellisense(PowerFxConfig config)
         {
-            return new Intellisense(enumStore, SuggestionHandlers);
+            return new Intellisense(config, config.EnumStoreBuilder.Build(), SuggestionHandlers);
         }
     }
 }

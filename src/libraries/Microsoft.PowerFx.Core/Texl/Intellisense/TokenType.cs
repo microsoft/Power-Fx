@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.PowerFx.Core.Texl.Intellisense
+namespace Microsoft.PowerFx.Intellisense
 {
     // Keep in sync with src/AppMagic/js/AppMagic.WebAuthoring/Constants/Texl.ts
     internal enum TokenType

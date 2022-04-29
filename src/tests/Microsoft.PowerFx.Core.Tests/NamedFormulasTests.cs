@@ -2,13 +2,12 @@
 // Licensed under the MIT license.
 
 using System.Linq;
-using Microsoft.PowerFx.Core.Lexer.Tokens;
-using Microsoft.PowerFx.Core.Syntax;
+using Microsoft.PowerFx.Syntax;
 using Xunit;
 
 namespace Microsoft.PowerFx.Core.Tests
 {
-    public class NamedFormulasTests
+    public class NamedFormulasTests : PowerFxTest
     {
         [Theory]
         [InlineData("x=1;y=2;")]

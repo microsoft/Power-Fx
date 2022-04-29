@@ -2,11 +2,10 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
-using Microsoft.PowerFx.Core.Lexer.Tokens;
 using Microsoft.PowerFx.Core.Localization;
-using Microsoft.PowerFx.Core.Syntax.Nodes;
+using Microsoft.PowerFx.Syntax;
 
-namespace Microsoft.PowerFx.Core.Syntax.SourceInformation
+namespace Microsoft.PowerFx.Syntax.SourceInformation
 {
     /// <summary>
     /// An individual piece of the source that should be associated with a given
@@ -21,6 +20,7 @@ namespace Microsoft.PowerFx.Core.Syntax.SourceInformation
         /// A mapping from the old nodes in this piece of the source to the
         /// new cloned ones. Must be complete.
         /// </param>
+        /// <param name="span"></param>
         ITexlSource Clone(Dictionary<TexlNode, TexlNode> newNodes, Span span);
 
         /// <summary>

@@ -197,6 +197,7 @@ namespace Microsoft.PowerFx.Core.Errors
         /// format to specify HowToFix messages.
         /// </summary>
         /// <param name="messageKey">Key for the error message.</param>
+        /// <param name="locale"></param>
         /// <returns>List of how to fix messages. Null if none exist.</returns>
         internal static IList<string> GetHowToFix(string messageKey, string locale = null)
         {
@@ -231,7 +232,7 @@ namespace Microsoft.PowerFx.Core.Errors
             FormatInnerError(sb);
         }
 
-        protected virtual void FormatCore(StringBuilder sb)
+        internal virtual void FormatCore(StringBuilder sb)
         {
             Contracts.AssertValue(sb);
 

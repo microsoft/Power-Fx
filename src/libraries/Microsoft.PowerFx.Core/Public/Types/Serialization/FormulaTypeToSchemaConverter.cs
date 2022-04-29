@@ -3,8 +3,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.Text;
-using Microsoft.PowerFx.Core.Public.Types;
+using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Core
 {
@@ -82,8 +81,18 @@ namespace Microsoft.PowerFx.Core
                 Result = new FormulaTypeSchema() { Type = FormulaTypeSchema.ParamType.UntypedObject };
             }
 
-#endregion
-#region Complex Types
+            public void Visit(UnknownType type)
+            {
+                Result = new FormulaTypeSchema() { Type = FormulaTypeSchema.ParamType.Unknown };
+            }
+
+            public void Visit(BindingErrorType type)
+            {
+                Result = new FormulaTypeSchema() { Type = FormulaTypeSchema.ParamType.Error };
+            }
+
+            #endregion
+            #region Complex Types
 
             public void Visit(OptionSetValueType type)
             {

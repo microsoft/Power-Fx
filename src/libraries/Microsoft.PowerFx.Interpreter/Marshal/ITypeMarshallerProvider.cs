@@ -2,8 +2,7 @@
 // Licensed under the MIT license.
 
 using System;
-using Microsoft.PowerFx.Core.Public.Types;
-using Microsoft.PowerFx.Core.Public.Values;
+using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx
 {
@@ -13,9 +12,16 @@ namespace Microsoft.PowerFx
     [ThreadSafeImmutable]
     public interface ITypeMarshallerProvider
     {
-        // Return false if it doesn't handle it. 
-        // A single ITypeMarshaller can be created once per type and then reused for each instance.
-        // Pass in a cache for aggregate types that need to marshal sub types. 
+        /// <summary>
+        /// Return false if it doesn't handle it. 
+        /// A single ITypeMarshaller can be created once per type and then reused for each instance. 
+        /// Pass in a cache for aggregate types that need to marshal sub types.
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="cache"></param>
+        /// <param name="maxDepth"></param>
+        /// <param name="marshaller"></param>
+        /// <returns></returns>
         public bool TryGetMarshaller(Type type, TypeMarshallerCache cache, int maxDepth, out ITypeMarshaller marshaller);
     }
 
@@ -36,7 +42,7 @@ namespace Microsoft.PowerFx
         /// <returns>a formulaValue for this instance of type <see cref="Type"/>.</returns>
         /// <remarks>
         /// Implementor can assume that:
-        /// - value is not null. The cache wrapper it in a <see cref="NullCheckerMarshaller"/>
+        /// - value is not null. The cache wrapper it in a <see cref="TypeMarshallerCache.NullCheckerMarshaller"/>
         /// - the value matches the type check in the provider.
         /// </remarks>
         public FormulaValue Marshal(object value);

@@ -4,8 +4,11 @@
 using System.Collections.Generic;
 using Microsoft.PowerFx.Core.IR;
 
-namespace Microsoft.PowerFx.Core.Public.Values
+namespace Microsoft.PowerFx.Types
 {
+    /// <summary>
+    /// A Runtime error. 
+    /// </summary>
     public class ErrorValue : FormulaValue
     {
         private readonly List<ExpressionError> _errors = new List<ExpressionError>();

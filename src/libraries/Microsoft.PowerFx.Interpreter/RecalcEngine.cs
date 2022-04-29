@@ -3,29 +3,13 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.PowerFx.Core;
-using Microsoft.PowerFx.Core.Binding;
-using Microsoft.PowerFx.Core.Entities;
-using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Glue;
 using Microsoft.PowerFx.Core.IR;
-using Microsoft.PowerFx.Core.IR.Nodes;
-using Microsoft.PowerFx.Core.IR.Symbols;
-using Microsoft.PowerFx.Core.Lexer;
-using Microsoft.PowerFx.Core.Localization;
-using Microsoft.PowerFx.Core.Parser;
-using Microsoft.PowerFx.Core.Public;
-using Microsoft.PowerFx.Core.Public.Types;
-using Microsoft.PowerFx.Core.Public.Values;
-using Microsoft.PowerFx.Core.Syntax;
 using Microsoft.PowerFx.Core.Texl;
-using Microsoft.PowerFx.Core.Texl.Intellisense;
-using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Functions;
+using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx
 {
@@ -40,7 +24,6 @@ namespace Microsoft.PowerFx
         /// Initializes a new instance of the <see cref="RecalcEngine"/> class.
         /// Create a new power fx engine. 
         /// </summary>
-        /// <param name="powerFxConfig">Compiler customizations.</param>
         public RecalcEngine()
             : this(new PowerFxConfig(null))
         {
@@ -66,6 +49,7 @@ namespace Microsoft.PowerFx
             powerFxConfig.AddFunction(BuiltinFunctionsCore.Value_UO);
             powerFxConfig.AddFunction(BuiltinFunctionsCore.Boolean);
             powerFxConfig.AddFunction(BuiltinFunctionsCore.Boolean_UO);
+            powerFxConfig.AddFunction(BuiltinFunctionsCore.CountRows_UO);
 
             return powerFxConfig;
         }
@@ -138,20 +122,21 @@ namespace Microsoft.PowerFx
         /// <param name="expressionText">textual representation of the formula.</param>
         /// <param name="parameters">parameters for formula. The fields in the parameter record can 
         /// be acecssed as top-level identifiers in the formula.</param>
+        /// <param name="options"></param>
         /// <returns>The formula's result.</returns>
-        public FormulaValue Eval(string expressionText, RecordValue parameters = null)
+        public FormulaValue Eval(string expressionText, RecordValue parameters = null, ParserOptions options = null)
         {
-            return EvalAsync(expressionText, CancellationToken.None, parameters).Result;          
+            return EvalAsync(expressionText, CancellationToken.None, parameters, options).Result;          
         }
 
-        public async Task<FormulaValue> EvalAsync(string expressionText, CancellationToken cancel, RecordValue parameters = null)
+        public async Task<FormulaValue> EvalAsync(string expressionText, CancellationToken cancel, RecordValue parameters = null, ParserOptions options = null)
         {
             if (parameters == null)
             {
                 parameters = RecordValue.Empty();
             }
 
-            var check = Check(expressionText, (RecordType)parameters.IRContext.ResultType);
+            var check = Check(expressionText, (RecordType)parameters.IRContext.ResultType, options);
             check.ThrowOnErrors();
 
             var newValue = await check.Expression.EvalAsync(parameters, cancel);
@@ -213,9 +198,35 @@ namespace Microsoft.PowerFx
             r.Recalc(name);
         }
 
+        /// <summary>
+        /// Delete formula that was previously created.
+        /// </summary>
+        /// <param name="name">Formula name.</param>
         public void DeleteFormula(string name)
         {
-            throw new NotImplementedException();
+            if (Formulas.TryGetValue(name, out var fi))
+            {
+                if (fi._usedBy.Count == 0)
+                {
+                    foreach (var dependsOnName in fi._dependsOn)
+                    {
+                        if (Formulas.TryGetValue(dependsOnName, out var info))
+                        {
+                            info._usedBy.Remove(name);
+                        }
+                    }
+
+                    Formulas.Remove(name);
+                }
+                else
+                {
+                    throw new InvalidOperationException($"Formula {name} cannot be deleted due to the following dependencies: {string.Join(", ", fi._usedBy)}");
+                }
+            }
+            else
+            {
+                throw new InvalidOperationException($"Formula {name} does not exist");
+            }
         }
 
         /// <summary>

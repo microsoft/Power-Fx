@@ -4,7 +4,7 @@
 using System;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Functions;
-using Microsoft.PowerFx.Core.Syntax.Nodes;
+using Microsoft.PowerFx.Syntax;
 
 namespace Microsoft.PowerFx.Core.Logging.Trackers
 {

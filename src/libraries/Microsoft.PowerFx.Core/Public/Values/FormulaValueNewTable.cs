@@ -11,9 +11,8 @@ using System.Reflection;
 using System.Text.Json;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.IR;
-using Microsoft.PowerFx.Core.Public.Types;
 
-namespace Microsoft.PowerFx.Core.Public.Values
+namespace Microsoft.PowerFx.Types
 {
     // Marshalling a tables. 
     // Tables need to know their record type.
@@ -25,6 +24,7 @@ namespace Microsoft.PowerFx.Core.Public.Values
         /// Construct a table from records. Assumed that Records must be the same type. 
         /// Already having RecordValues (as oppossed to a unknown T or errors) lets us avoid type marshalling.
         /// </summary>
+        /// <param name="recordType"></param>
         /// <param name="values"></param>
         /// <returns></returns>
         public static TableValue NewTable(RecordType recordType, params RecordValue[] values)

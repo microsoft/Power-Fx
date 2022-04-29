@@ -3,7 +3,7 @@
 
 using System;
 
-namespace Microsoft.PowerFx
+namespace Microsoft.PowerFx.Preview
 {
     /// <summary>
     /// Hosts can enable these flags to try out early features. 

@@ -5,13 +5,13 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.PowerFx.Core.Public.Values;
+using Microsoft.PowerFx.Types;
 using Xunit;
 
 namespace Microsoft.PowerFx.Core.Tests
 {
     // Tests for validating the TestRunner
-    public class TestRunnerTests
+    public class TestRunnerTests : PowerFxTest
     {
         [Fact]
         public void Test1()
@@ -92,10 +92,10 @@ namespace Microsoft.PowerFx.Core.Tests
                 Expected = "2"
             });
 
-            var (total, failed, passed, output) = runner.RunTests();
-            Assert.Equal(3, total);
-            Assert.Equal(1, failed);
-            Assert.Equal(2, passed);
+            var summary = runner.RunTests();
+            Assert.Equal(3, summary.Total);
+            Assert.Equal(1, summary.Fail);
+            Assert.Equal(2, summary.Pass);
         }
 
         private const string LongForm5e186 = "5579910311786366000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000";
@@ -128,37 +128,31 @@ namespace Microsoft.PowerFx.Core.Tests
                 Expected = a
             });
 
-            var (total, failed, passed, output) = runner.RunTests();
+            var summary = runner.RunTests();
 
             if (pass)
             {
-                Assert.Equal(0, failed);
-                Assert.Equal(2, passed);
+                Assert.Equal(0, summary.Fail);
+                Assert.Equal(2, summary.Pass);
             } 
             else
             {
-                Assert.Equal(2, failed);
-                Assert.Equal(0, passed);
+                Assert.Equal(2, summary.Fail);
+                Assert.Equal(0, summary.Pass);
             }
         }      
 
-        [Fact]
-        public void TestBadParse()
+        [Theory]
+        [InlineData("Bad1.txt")]
+        [InlineData("Bad2.txt")]
+        [InlineData("Bad3.txt")]
+        public void TestBadParse(string file)
         {
             var runner = new TestRunner();
 
             Assert.Throws<InvalidOperationException>(
-                () => AddFile(runner, "Bad1.txt"));
-        }
-
-        [Fact]
-        public void TestBad2Parse()
-        {
-            var runner = new TestRunner();
-
-            Assert.Throws<InvalidOperationException>(
-                () => AddFile(runner, "Bad2.txt"));
-        }
+                () => AddFile(runner, file));
+        }        
 
         // #DISABLE directive to remove an entire file. 
         [Fact]
@@ -180,7 +174,7 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.Equal("filedisable.txt:input3", tests[0].GetUniqueId(null));
         }
 
-        private static readonly ErrorValue _errorValue = new ErrorValue(IR.IRContext.NotInSource(Public.Types.FormulaType.Number));
+        private static readonly ErrorValue _errorValue = new ErrorValue(IR.IRContext.NotInSource(FormulaType.Number));
 
         private class MockRunner : BaseRunner
         {
@@ -276,10 +270,8 @@ namespace Microsoft.PowerFx.Core.Tests
 
         // Cases where a test runner marks unsupported behavior. 
         [Fact]
-        public async Task TestRunnerSkipException()
+        public async Task TestRunnerUnsupported()
         {
-            var msg = "msg xyz";
-
             var runner = new MockRunner
             {
                 _hook2 = (expr, setup) => new RunResult { UnsupportedReason = "unsupported" }
@@ -315,7 +307,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 };
                 var result = await runner.RunAsync(test);
 
-                Assert.Equal(TestResult.Fail, result.Item1);                
+                Assert.Equal(TestResult.Skip, result.Item1);
             }
         }
 
@@ -346,8 +338,8 @@ namespace Microsoft.PowerFx.Core.Tests
         public async Task TestRunnerErrorKindMatching()
         {
             var errorValue = new ErrorValue(
-                IR.IRContext.NotInSource(Public.Types.FormulaType.Number),
-                new Public.ExpressionError { Kind = Public.ErrorKind.InvalidFunctionUsage });
+                IR.IRContext.NotInSource(FormulaType.Number),
+                new ExpressionError { Kind = ErrorKind.InvalidFunctionUsage });
             var runner = new MockRunner
             {
                 _hook = (expr, setup) => errorValue // error

@@ -7,7 +7,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.PowerFx.Core.Public.Values;
+using Microsoft.PowerFx.Types;
 using Xunit;
 
 namespace Microsoft.PowerFx.Tests
@@ -71,9 +71,9 @@ namespace Microsoft.PowerFx.Tests
             tsc.SetResult(1); // signals eval to keep running.
         }
 
-        public async Task<FormulaValue> EvalAsync(RecalcEngine engine, string expr)
+        public async Task<FormulaValue> EvalAsync(RecalcEngine engine, string expr, ParserOptions options = null)
         {
-            var task = engine.EvalAsync(expr, CancellationToken.None);
+            var task = engine.EvalAsync(expr, CancellationToken.None, options: options);
 
             var i = 0;
             while (HasOutanding)

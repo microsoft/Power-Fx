@@ -1,25 +1,34 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
+using System.Linq;
 using System.Text;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Utils;
 
-namespace Microsoft.PowerFx.Core.Lexer.Tokens
+namespace Microsoft.PowerFx.Syntax
 {
-    internal class IdentToken : Token
+    /// <summary>
+    /// Token for an identifier/name.
+    /// </summary>
+    public class IdentToken : Token
     {
-        public readonly bool HasDelimiterStart;
-        public readonly bool HasDelimiterEnd;
-        public readonly bool IsModified;
+        internal readonly bool HasDelimiterStart;
+        internal readonly bool HasDelimiterEnd;
+        internal readonly bool IsModified;
 
         // Unescaped, unmodified value.
         private readonly string _value;
-        public readonly DName Name;
 
-        public const string StrInterpIdent = "Concatenate";
+        /// <summary>
+        /// Identifier represented as <see cref="DName" />.
+        /// </summary>
+        public DName Name { get; }
 
-        public IdentToken(string val, Span span)
+        internal const string StrInterpIdent = "Concatenate";
+
+        internal IdentToken(string val, Span span)
             : this(val, span, false, false)
         {
             Contracts.AssertValue(val);
@@ -31,7 +40,7 @@ namespace Microsoft.PowerFx.Core.Lexer.Tokens
             Name = DName.MakeValid(val, out IsModified);
         }
 
-        public IdentToken(string val, Span spanTok, bool fDelimiterStart, bool fDelimiterEnd)
+        internal IdentToken(string val, Span spanTok, bool fDelimiterStart, bool fDelimiterEnd)
             : base(TokKind.Ident, spanTok)
         {
             // The string may be empty, but shouldn't be null.
@@ -55,16 +64,38 @@ namespace Microsoft.PowerFx.Core.Lexer.Tokens
         {
         }
 
-        public override Token Clone(Span ts)
+        internal override Token Clone(Span ts)
         {
             return new IdentToken(this, ts);
         }
 
         // REVIEW ragru: having a property for every possible error isn't scalable.
-        public bool HasDelimiters => HasDelimiterStart;
+        internal bool HasDelimiters => HasDelimiterStart;
 
+        /// <summary>
+        /// Whether an identifier has errors.
+        /// </summary>
         public bool HasErrors => IsModified || (HasDelimiterStart && !HasDelimiterEnd);
 
+        /// <summary>
+        /// Converts a string value of an identifier to a valid identifier (e.g., "a b" -> "'a b'").
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException">Throw if value is <c>null</c>.</exception>
+        public static string MakeValidIdentifier(string value)
+        {
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
+            var needsDelimiters = string.IsNullOrWhiteSpace(value) || !value.All(TexlLexer.IsSimpleIdentCh);
+            var tmpIdent = new IdentToken(value, new Span(0, 0), needsDelimiters, needsDelimiters);
+            return tmpIdent.ToString();
+        }
+
+        /// <inheritdoc />
         public override string ToString()
         {
             var sb = new StringBuilder();
@@ -73,7 +104,7 @@ namespace Microsoft.PowerFx.Core.Lexer.Tokens
         }
 
         // Prints the original string.
-        public void Format(StringBuilder sb)
+        internal void Format(StringBuilder sb)
         {
             Contracts.AssertValue(sb);
 
@@ -106,6 +137,7 @@ namespace Microsoft.PowerFx.Core.Lexer.Tokens
             }
         }
 
+        /// <inheritdoc />
         public override bool Equals(Token that)
         {
             Contracts.AssertValue(that);

@@ -3,17 +3,15 @@
 
 using System;
 using System.Linq;
-using Microsoft.PowerFx.Core.Lexer;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Parser;
-using Microsoft.PowerFx.Core.Syntax;
-using Microsoft.PowerFx.Core.Syntax.Nodes;
+using Microsoft.PowerFx.Syntax;
 using Xunit;
 
 namespace Microsoft.PowerFx.Core.Tests
 {
-    public class ParseTests
-    {
+    public class ParseTests : PowerFxTest
+    {      
         [Theory]
         [InlineData("0")]
         [InlineData("-0")]
@@ -529,7 +527,7 @@ namespace Microsoft.PowerFx.Core.Tests
             var node = result.Root;
 
             Assert.NotNull(node);
-            Assert.Null(result.Errors);
+            Assert.Empty(result.Errors);
         }
 
         [Theory]
@@ -563,7 +561,7 @@ namespace Microsoft.PowerFx.Core.Tests
             var node = result.Root;
 
             Assert.NotNull(node);
-            Assert.Null(result.Errors);
+            Assert.Empty(result.Errors);
             Assert.True(node is DottedNameNode);
 
             var dotted = node as DottedNameNode;
@@ -685,12 +683,21 @@ namespace Microsoft.PowerFx.Core.Tests
             TestFormulasParseError(script);
         }
 
-        internal void TestRoundtrip(string script, string expected = null, NodeKind expectedNodeKind = NodeKind.Error, Action<TexlNode> customTest = null)
+        [Theory]
+        [InlineData("A;B;C", "A ; B ; C")]
+        [InlineData("Foo(1);Bar(2)", "Foo(1) ; Bar(2)")]
+        public void TestChainParse(string script, string expected = null)
         {
-            var result = TexlParser.ParseScript(script);
-            var node = result.Root;
+            TestRoundtrip(script, expected, flags: TexlParser.Flags.EnableExpressionChaining);
+        }
+
+        internal void TestRoundtrip(string script, string expected = null, NodeKind expectedNodeKind = NodeKind.Error, Action<TexlNode> customTest = null, TexlParser.Flags flags = TexlParser.Flags.None)
+        {
+            var result = TexlParser.ParseScript(script, flags: flags);
+            var node = result.Root;            
+                        
             Assert.NotNull(node);
-            Assert.False(result.HasError);
+            Assert.False(result.HasError, result.ParseErrorText);
 
             var startid = node.Id;
 
@@ -718,10 +725,10 @@ namespace Microsoft.PowerFx.Core.Tests
             var result = TexlParser.ParseScript(script);
             Assert.NotNull(result.Root);
             Assert.True(result.HasError);
-            Assert.True(result.Errors.Count >= count);
+            Assert.True(result._errors.Count >= count);
 
             //Assert.IsTrue(result.Errors.All(err => err.ErrorKind == DocumentErrorKind.AXL && err.TextSpan != null));
-            Assert.True(errorMessage == null || result.Errors.Any(err => err.ShortMessage == errorMessage));
+            Assert.True(errorMessage == null || result._errors.Any(err => err.ShortMessage == errorMessage));
         }
 
         internal void TestFormulasParseRoundtrip(string script)

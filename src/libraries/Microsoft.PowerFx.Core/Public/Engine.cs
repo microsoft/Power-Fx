@@ -2,19 +2,16 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
-using System.Linq;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Glue;
-using Microsoft.PowerFx.Core.Lexer;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Parser;
-using Microsoft.PowerFx.Core.Public;
-using Microsoft.PowerFx.Core.Public.Types;
-using Microsoft.PowerFx.Core.Syntax;
-using Microsoft.PowerFx.Core.Texl.Intellisense;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Intellisense;
+using Microsoft.PowerFx.Syntax;
+using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx
 {
@@ -48,7 +45,7 @@ namespace Microsoft.PowerFx
         }
 
         /// <summary>
-        /// Create a resolver for use in binding. This is called from <see cref="Check(string, RecordType)"/>.
+        /// Create a resolver for use in binding. This is called from <see cref="Check(string, RecordType, ParserOptions)"/>.
         /// Base classes can override this is there are additional symbols not in the config.
         /// </summary>
         /// <param name="alternateConfig">An alternate config that can be provided. Should default to engine's config if null.</param>
@@ -59,22 +56,50 @@ namespace Microsoft.PowerFx
         }
 
         /// <summary>
-        /// Type check a formula without executing it. 
+        ///     Tokenize an expression to a sequence of <see cref="Token" />s.
         /// </summary>
         /// <param name="expressionText"></param>
-        /// <param name="parameterType"></param>
         /// <returns></returns>
-        public CheckResult Check(string expressionText, RecordType parameterType = null)
+        public IReadOnlyList<Token> Tokenize(string expressionText)
+            => TexlLexer.LocalizedInstance.GetTokens(expressionText);
+
+        /// <summary>
+        /// Parse the expression without doing any binding.
+        /// </summary>
+        /// <param name="expressionText"></param>
+        /// <param name="options"></param>
+        /// <returns></returns>
+        public ParseResult Parse(string expressionText, ParserOptions options = null)
         {
-            if (parameterType == null)
-            {
-                parameterType = new RecordType();
-            }
+            options ??= new ParserOptions();
 
-            var formula = new Formula(expressionText);
+            var result = options.Parse(expressionText);
+            return result;
+        }
 
-            formula.EnsureParsed(TexlParser.Flags.None);
+        /// <summary>
+        /// Parse and Bind an expression. 
+        /// </summary>
+        /// <param name="expressionText">the expression in plain text. </param>
+        /// <param name="parameterType">types of additional args to pass.</param>
+        /// <param name="options">parser options to use.</param>
+        /// <returns></returns>
+        public CheckResult Check(string expressionText, RecordType parameterType = null, ParserOptions options = null)
+        {
+            var parse = Parse(expressionText, options);
+            return Check(parse, parameterType);
+        }
 
+        /// <summary>
+        /// Type check a formula without executing it. 
+        /// </summary>
+        /// <param name="parse">the parsed expression. Obtain from <see cref="Parse"/>.</param>
+        /// <param name="parameterType">types of additional args to pass.</param>
+        /// <returns></returns>
+        public CheckResult Check(ParseResult parse, RecordType parameterType = null)
+        {
+            parameterType ??= new RecordType();
+                        
             // Ok to continue with binding even if there are parse errors. 
             // We can still use that for intellisense. 
 
@@ -82,25 +107,15 @@ namespace Microsoft.PowerFx
 
             var binding = TexlBinding.Run(
                 new Glue2DocumentBinderGlue(),
-                formula.ParseTree,
+                parse.Root,
                 resolver,
+                BindingConfig.Default,
                 ruleScope: parameterType._type,
                 useThisRecordForRuleScope: false);
 
-            var errors = formula.HasParseErrors ? formula.GetParseErrors() : binding.ErrorContainer.GetErrors();
+            var result = new CheckResult(parse, binding);
 
-            var result = new CheckResult
-            {
-                _binding = binding,
-                _formula = formula,
-            };
-
-            if (errors != null && errors.Any())
-            {
-                result.SetErrors(errors.ToArray());
-                result.Expression = null;
-            }
-            else
+            if (result.IsSuccess)
             {
                 result.TopLevelIdentifiers = DependencyFinder.FindDependencies(binding.Top, binding);
 
@@ -133,7 +148,7 @@ namespace Microsoft.PowerFx
         /// <returns></returns>
         private protected virtual IIntellisense CreateIntellisense()
         {
-            return IntellisenseProvider.GetIntellisense(Config.EnumStoreBuilder.Build());
+            return IntellisenseProvider.GetIntellisense(Config);
         }
 
         /// <summary>
@@ -143,7 +158,8 @@ namespace Microsoft.PowerFx
         {
             var result = Check(expression, parameterType);
             var binding = result._binding;
-            var formula = result._formula;
+            var formula = new Formula(expression, null);
+            formula.ApplyParse(result.Parse);
 
             var context = new IntellisenseContext(expression, cursorPosition);
             var intellisense = CreateIntellisense();
@@ -184,8 +200,8 @@ namespace Microsoft.PowerFx
         /// <param name="expressionText">textual representation of the formula.</param>
         /// <param name="parameters">Type of parameters for formula. The fields in the parameter record can 
         /// be acecssed as top-level identifiers in the formula. If DisplayNames are used, make sure to have that mapping
-        /// as part of the RecordType.
-        /// <returns>The formula, with all identifiers converted to invariant form</returns>
+        /// as part of the RecordType.</param>
+        /// <returns>The formula, with all identifiers converted to invariant form.</returns>
         public string GetInvariantExpression(string expressionText, RecordType parameters)
         {
             return ConvertExpression(expressionText, parameters, CreateResolver(), toDisplayNames: false);
@@ -197,8 +213,8 @@ namespace Microsoft.PowerFx
         /// <param name="expressionText">textual representation of the formula.</param>
         /// <param name="parameters">Type of parameters for formula. The fields in the parameter record can 
         /// be acecssed as top-level identifiers in the formula. If DisplayNames are used, make sure to have that mapping
-        /// as part of the RecordType.
-        /// <returns>The formula, with all identifiers converted to display form</returns>
+        /// as part of the RecordType.</param>
+        /// <returns>The formula, with all identifiers converted to display form.</returns>
         public string GetDisplayExpression(string expressionText, RecordType parameters)
         {
             return ConvertExpression(expressionText, parameters, CreateResolver(), toDisplayNames: true);
@@ -215,6 +231,7 @@ namespace Microsoft.PowerFx
                 new Core.Entities.QueryOptions.DataSourceToQueryOptionsMap(),
                 formula.ParseTree,
                 resolver,
+                BindingConfig.Default,
                 ruleScope: parameters._type,
                 useThisRecordForRuleScope: false,
                 updateDisplayNames: toDisplayNames,

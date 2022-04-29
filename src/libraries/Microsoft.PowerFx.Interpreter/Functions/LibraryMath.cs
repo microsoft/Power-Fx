@@ -6,9 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.IR;
-using Microsoft.PowerFx.Core.Public;
-using Microsoft.PowerFx.Core.Public.Types;
-using Microsoft.PowerFx.Core.Public.Values;
+using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Functions
 {
@@ -57,9 +55,60 @@ namespace Microsoft.PowerFx.Functions
             }
         }
 
-        private class MinNumberAgg : IAggregator
+        private class VarianceAgg : IAggregator
         {
             protected int _count;
+            protected double _meanAcc;
+            protected double _m2Acc;
+
+            // Implementation of Welford's Algorithm:  https://en.wikipedia.org/wiki/Algorithms_for_calculating_variance
+
+            public void Apply(FormulaValue value)
+            {
+                if (value is BlankValue)
+                {
+                    return;
+                }
+
+                var n1 = (NumberValue)value;
+
+                _count++;
+                var delta = n1.Value - _meanAcc;
+                _meanAcc += delta / _count;
+                var delta2 = n1.Value - _meanAcc;
+                _m2Acc += delta * delta2;
+            }
+
+            public virtual FormulaValue GetResult(IRContext irContext)
+            {
+                if (_count == 0)
+                {
+                    return CommonErrors.DivByZeroError(irContext);
+                }
+                else
+                {
+                    return FiniteChecker(irContext, 0, new NumberValue(irContext, _m2Acc / _count));
+                }
+            }
+        }
+
+        private class StdDeviaionAgg : VarianceAgg
+        {
+            public override FormulaValue GetResult(IRContext irContext)
+            {
+                if (_count == 0)
+                {
+                    return CommonErrors.DivByZeroError(irContext);
+                }
+                else
+                {
+                    return FiniteChecker(irContext, 0, new NumberValue(irContext, Math.Sqrt(_m2Acc / _count)));
+                }
+            }
+        }
+            
+        private class MinNumberAgg : IAggregator
+        {
             protected double _minValue = double.MaxValue;
 
             public void Apply(FormulaValue value)
@@ -84,7 +133,6 @@ namespace Microsoft.PowerFx.Functions
 
         private class MinDateTimeAgg : IAggregator
         {
-            protected int _count;
             protected DateTime _minValueDT = DateTime.MaxValue;
 
             public void Apply(FormulaValue value)
@@ -109,7 +157,6 @@ namespace Microsoft.PowerFx.Functions
 
         private class MinDateAgg : IAggregator
         {
-            protected int _count;
             protected DateTime _minValueDT = DateTime.MaxValue;
 
             public void Apply(FormulaValue value)
@@ -134,7 +181,6 @@ namespace Microsoft.PowerFx.Functions
 
         private class MinTimeAgg : IAggregator
         {
-            protected int _count;
             protected TimeSpan _minValueT = TimeSpan.MaxValue;
 
             public void Apply(FormulaValue value)
@@ -159,7 +205,6 @@ namespace Microsoft.PowerFx.Functions
 
         private class MaxNumberAgg : IAggregator
         {
-            protected int _count;
             protected double _maxValue = double.MinValue;
 
             public void Apply(FormulaValue value)
@@ -184,7 +229,6 @@ namespace Microsoft.PowerFx.Functions
 
         private class MaxDateAgg : IAggregator
         {
-            protected int _count;
             protected DateTime _maxValueDT = DateTime.MinValue;
 
             public void Apply(FormulaValue value)
@@ -209,7 +253,6 @@ namespace Microsoft.PowerFx.Functions
 
         private class MaxDateTimeAgg : IAggregator
         {
-            protected int _count;
             protected DateTime _maxValueDT = DateTime.MinValue;
 
             public void Apply(FormulaValue value)
@@ -234,7 +277,6 @@ namespace Microsoft.PowerFx.Functions
 
         private class MaxTimeAgg : IAggregator
         {
-            protected int _count;
             protected TimeSpan _maxValueT = TimeSpan.MinValue;
 
             public void Apply(FormulaValue value)
@@ -328,6 +370,28 @@ namespace Microsoft.PowerFx.Functions
         public static async ValueTask<FormulaValue> SumTable(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args)
         {
             return await RunAggregatorAsync(new SumAgg(), runner, symbolContext, irContext, args);
+        }
+        
+        // VarP(1,2,3)
+        internal static FormulaValue Var(IRContext irContext, FormulaValue[] args)
+        {
+            return RunAggregator(new VarianceAgg(), irContext, args);
+        }
+
+        // VarP([1,2,3], Value * Value)
+        public static async ValueTask<FormulaValue> VarTable(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args)
+        {
+            return await RunAggregatorAsync(new VarianceAgg(), runner, symbolContext, irContext, args);
+        }
+
+        internal static FormulaValue Stdev(IRContext irContext, FormulaValue[] args)
+        {
+            return RunAggregator(new StdDeviaionAgg(), irContext, args);
+        }
+
+        public static async ValueTask<FormulaValue> StdevTable(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args)
+        {
+            return await RunAggregatorAsync(new StdDeviaionAgg(), runner, symbolContext, irContext, args);
         }
 
         // Max(1,2,3)     
@@ -440,10 +504,14 @@ namespace Microsoft.PowerFx.Functions
         // https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-mod
         public static FormulaValue Mod(IRContext irContext, NumberValue[] args)
         {
-            var arg0 = args[0];
-            var arg1 = args[1];
+            var arg0 = args[0].Value;
+            var arg1 = args[1].Value;
 
-            return new NumberValue(irContext, arg0.Value % arg1.Value);
+            // r = a – N × floor(a/b)
+            var q = (int)Math.Floor(arg0 / arg1);
+            var result = arg0 - (arg1 * q);
+
+            return new NumberValue(irContext, result);
         }
 
         // https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-sequence

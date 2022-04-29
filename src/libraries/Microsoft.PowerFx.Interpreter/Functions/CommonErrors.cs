@@ -2,8 +2,7 @@
 // Licensed under the MIT license.
 
 using Microsoft.PowerFx.Core.IR;
-using Microsoft.PowerFx.Core.Public;
-using Microsoft.PowerFx.Core.Public.Values;
+using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Functions
 {
@@ -84,6 +83,16 @@ namespace Microsoft.PowerFx.Functions
             return new ErrorValue(irContext, new ExpressionError()
             {
                 Message = $"Not implemented: {message}",
+                Span = irContext.SourceContext,
+                Kind = ErrorKind.NotSupported
+            });
+        }
+
+        public static ErrorValue InvalidChain(IRContext irContext, string message)
+        {
+            return new ErrorValue(irContext, new ExpressionError()
+            {
+                Message = $"Invalid Chain: {message}",
                 Span = irContext.SourceContext,
                 Kind = ErrorKind.NotSupported
             });

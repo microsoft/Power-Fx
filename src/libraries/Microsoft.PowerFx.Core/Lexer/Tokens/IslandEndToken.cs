@@ -4,7 +4,7 @@
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Utils;
 
-namespace Microsoft.PowerFx.Core.Lexer.Tokens
+namespace Microsoft.PowerFx.Syntax
 {
     internal class IslandEndToken : Token
     {
@@ -18,7 +18,7 @@ namespace Microsoft.PowerFx.Core.Lexer.Tokens
             return "}";
         }
 
-        public override Token Clone(Span ts)
+        internal override Token Clone(Span ts)
         {
             return new IslandEndToken(ts);
         }

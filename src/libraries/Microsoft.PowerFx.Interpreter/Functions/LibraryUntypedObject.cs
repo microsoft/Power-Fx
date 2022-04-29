@@ -5,9 +5,7 @@ using System.Collections.Generic;
 using System.Text.Json;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.IR;
-using Microsoft.PowerFx.Core.Public;
-using Microsoft.PowerFx.Core.Public.Types;
-using Microsoft.PowerFx.Core.Public.Values;
+using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Functions
 {
@@ -122,6 +120,18 @@ namespace Microsoft.PowerFx.Functions
             {
                 var b = impl.GetBoolean();
                 return new BooleanValue(irContext, b);
+            }
+
+            return CommonErrors.RuntimeTypeMismatch(irContext);
+        }
+
+        public static FormulaValue CountRows_UO(IRContext irContext, UntypedObjectValue[] args)
+        {
+            var impl = args[0].Impl;
+
+            if (impl.Type is ExternalType externalType && externalType.Kind == ExternalTypeKind.Array)
+            {
+                return new NumberValue(irContext, impl.GetArrayLength());
             }
 
             return CommonErrors.RuntimeTypeMismatch(irContext);

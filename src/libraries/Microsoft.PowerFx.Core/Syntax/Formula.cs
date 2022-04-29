@@ -4,18 +4,21 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.PowerFx.Core.Errors;
-using Microsoft.PowerFx.Core.Lexer.Tokens;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Parser;
-using Microsoft.PowerFx.Core.Syntax.Nodes;
 using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Syntax;
 using Conditional = System.Diagnostics.ConditionalAttribute;
 
-namespace Microsoft.PowerFx.Core.Syntax
+namespace Microsoft.PowerFx.Syntax
 {
-    // This encapsulates a Texl formula, its parse tree and any parse errors. Note that
-    // it doesn't include TexlBinding information, since that depends on context, while parsing
-    // does not.
+    /// <summary>
+    /// This encapsulates a Texl formula, its parse tree and any parse errors. Note that
+    /// it doesn't include TexlBinding information, since that depends on context, while parsing
+    /// does not.
+    /// This a <see cref="ParseResult"/> plus the original expression text. 
+    /// This is also used by intellisense. 
+    /// </summary>
     internal sealed class Formula
     {
         public readonly string Script;
@@ -66,15 +69,20 @@ namespace Microsoft.PowerFx.Core.Syntax
             if (ParseTree == null)
             {
                 var result = TexlParser.ParseScript(Script, loc: Loc, flags: flags);
-                ParseTree = result.Root;
-                _errors = result.Errors;
-                Comments = result.Comments;
-                HasParseErrors = result.HasError;
-                Contracts.AssertValue(ParseTree);
-                AssertValid();
+                ApplyParse(result);
             }
 
             return _errors == null;
+        }
+
+        internal void ApplyParse(ParseResult result)
+        {
+            ParseTree = result.Root;
+            _errors = result._errors;
+            Comments = result.Comments;
+            HasParseErrors = result.HasError;
+            Contracts.AssertValue(ParseTree);
+            AssertValid();
         }
 
         public IEnumerable<TexlError> GetParseErrors()

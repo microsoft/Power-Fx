@@ -13,10 +13,32 @@ For those new to Power-Fx, this video should answer many of your questions:
 
 [![Power-Fx — The low code programming language for everyone](https://img.youtube.com/vi/ik6k89WNjuk/0.jpg)](https://www.youtube-nocookie.com/embed/ik6k89WNjuk)
 
+## Build Status
+
+ | Branch | Description        | Build Status | Coverage Status | Test Status |
+ |--------|--------------------|--------------|-----------------|-------------|
+ |Main | 0.2.* Preview Builds |[![Build Status](https://dev.azure.com/FuseLabs/SDK_v4/_apis/build/status/PowerFx/PowerFx-signed?branchName=main)](https://dev.azure.com/FuseLabs/SDK_v4/_build/latest?definitionId=1410&branchName=main) |[![Coverage Status](https://coveralls.io/repos/github/microsoft/Power-Fx/badge.svg?branch=main)](https://coveralls.io/github/microsoft/Power-Fx?branch=main) |[![Tests Status](https://fuselabs.visualstudio.com/SDK_v4/_apis/build/status/PowerFx/PowerFx-PR?branchName=main)](https://fuselabs.visualstudio.com/SDK_v4/_build/latest?definitionId=1469&branchName=main)
+
+## Packages
+
+| Name                                  | Released Package |
+|---------------------------------------|------------------|
+| Microsoft.PowerFx.Core                | [![BotBuilder Badge](https://buildstats.info/nuget/Microsoft.PowerFx.Core?includePreReleases=true&dWidth=70)](https://www.nuget.org/packages/Microsoft.PowerFx.Core/)
+| Microsoft.PowerFx.Core.Tests          |                                  |
+| Microsoft.PowerFx.Interpreter         | [![BotBuilder Badge](https://buildstats.info/nuget/Microsoft.PowerFx.Interpreter?includePreReleases=true&dWidth=70)](https://www.nuget.org/packages/Microsoft.PowerFx.Interpreter/)
+| Microsoft.PowerFx.Transport.Attributes   | [![BotBuilder Badge](https://buildstats.info/nuget/Microsoft.PowerFx.Transport.Attributes?includePreReleases=true&dWidth=70)](https://www.nuget.org/packages/Microsoft.PowerFx.Transport.Attributes/)
+
+## Daily Builds
+Daily builds of the Power Fx packages are published to Azure Artifacts. 
+- The [Azure Artifacts daily feed](https://dev.azure.com/ConversationalAI/BotFramework/_packaging?_a=feed&feed=SDK) carries the most recent packages. To consume them, specify this package source: 
+`https://pkgs.dev.azure.com/ConversationalAI/BotFramework/_packaging/SDK/nuget/v3/index.json`
+
+- For detailed instructions [visit this page](dailyBuilds.md).
+
 ## Samples
 There are samples demonstrating how to consume Power Fx at: https://github.com/microsoft/power-fx-host-samples
 
-You can also see usage examples from the unit tests.
+You can also see usage examples in the [unit tests](https://github.com/microsoft/Power-Fx/tree/main/src/tests).
 
 ## Contributing
 

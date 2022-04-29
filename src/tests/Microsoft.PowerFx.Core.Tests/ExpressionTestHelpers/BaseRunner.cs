@@ -2,15 +2,14 @@
 // Licensed under the MIT license.
 
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Text;
+using System.Security.Cryptography;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.PowerFx.Core.Public;
-using Microsoft.PowerFx.Core.Public.Values;
+using Microsoft.PowerFx.Types;
+using Newtonsoft.Json.Linq;
 
 namespace Microsoft.PowerFx.Core.Tests
 {
@@ -22,7 +21,7 @@ namespace Microsoft.PowerFx.Core.Tests
     /// If the eval used unsupported behavior, set UnsupportedReason to a message.
     /// This may cause th etest to get skipped rather than fail. 
     /// </summary>
-    public class RunResult
+    public class RunResult 
     {
         // Test case had a Compilation error.
         // Null if none. 
@@ -54,7 +53,7 @@ namespace Microsoft.PowerFx.Core.Tests
         {
             if (!result.IsSuccess)
             {
-                Errors = result.Errors;
+                Errors = result.Errors.ToArray();
             }
         }
 
@@ -66,7 +65,8 @@ namespace Microsoft.PowerFx.Core.Tests
                 {
                     new ExpressionError
                     {
-                         Message = message
+                         Message = message,
+                         Severity = ErrorSeverity.Severe
                     }
                 }
             };
@@ -177,12 +177,12 @@ namespace Microsoft.PowerFx.Core.Tests
             {
                 runResult = await RunAsyncInternal(testCase.Input, testCase.SetupHandlerName);
                 result = runResult.Value;
-
-                if (testCase.IsOverride)
+                                
+                // Unsupported is just for ignoring large groups of inherited tests. 
+                // If it's an override, then the override should specify the exact error.
+                if (!testCase.IsOverride && runResult.UnsupportedReason != null)
                 {
-                    // Unsupported is just for ignoring large groups of inherited tests. 
-                    // If it's an override, then the override should specify the exact error.
-                    runResult.UnsupportedReason = null;
+                    return (TestResult.Skip, "Unsupported in this engine: " + runResult.UnsupportedReason);
                 }
 
                 // Check for a compile-time error.
@@ -201,10 +201,6 @@ namespace Microsoft.PowerFx.Core.Tests
                         {
                             // Compiler errors result in exceptions
                             return (TestResult.Pass, null);
-                        }
-                        else if (runResult.UnsupportedReason != null)
-                        {
-                            return (TestResult.Skip, "Unsupported in this engine: " + runResult.UnsupportedReason);
                         }
                         else
                         {
@@ -236,55 +232,74 @@ namespace Microsoft.PowerFx.Core.Tests
                         return (TestResult.Pass, null);
                     }
 
-                    var actualErrorKind = errorResult.Errors.First().Kind;
-                    if (int.TryParse(expectedErrorKind, out var numericErrorKind))
+                    var expectedErrorKinds = expectedErrorKind.Split(',', StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim()).ToArray();
+
+                    if (errorResult.Errors.Count != expectedErrorKinds.Count())
+                    {
+                        return (TestResult.Fail, $"Received {errorResult.Errors.Count} errors while we were expecting {expectedErrorKinds.Count()} errors.\r\n" +
+                                                 $"Received {string.Join(", ", errorResult.Errors.Select(e => e.Kind))} and was expecting {expectedErrorKind}");
+                    }
+
+                    var results = errorResult.Errors.Select((er, i) =>
+                    {
+                        var actualErrorKind = er.Kind;
+                        var expectedKind = expectedErrorKinds[i];
+
+                        if (int.TryParse(expectedKind, out var numericErrorKind))
                     {
                         // Error given as the internal value
                         if (numericErrorKind == (int)actualErrorKind)
                         {
-                            return (TestResult.Pass, null);
+                                return (tr: TestResult.Pass, err: null);
                         }
                         else
                         {
-                            return (TestResult.Fail, $"Received an error, but expected kind={expectedErrorKind} and received {actualErrorKind} ({(int)actualErrorKind})");
+                                return (tr: TestResult.Fail, err: $"Received an error, but expected kind={expectedKind} and received {actualErrorKind} ({(int)actualErrorKind})");
                         }
                     }
-                    else if (Enum.TryParse<ErrorKind>(expectedErrorKind, out var errorKind))
+                        else if (Enum.TryParse<ErrorKind>(expectedKind, out var errorKind))
                     {
                         // Error given as the enum name
                         if (errorKind == actualErrorKind)
                         {
-                            return (TestResult.Pass, null);
+                                return (tr: TestResult.Pass, null);
                         }
                         else
                         {
-                            return (TestResult.Fail, $"Received an error, but expected kind={errorKind} and received {actualErrorKind}");
+                                return (tr: TestResult.Fail, err: $"Received an error, but expected kind={errorKind} and received {actualErrorKind}");
                         }
                     }
                     else
                     {
-                        return (TestResult.Fail, $"Invalid expected error kind: {expectedErrorKind}");
+                            return (tr: TestResult.Fail, err: $"Invalid expected error kind: {expectedKind}");
+                        }
+                    }).ToArray();
+
+                    if (results.All(r => r.tr == TestResult.Pass))
+                    {
+                        return (TestResult.Pass, null);
                     }
+
+                    return (TestResult.Fail, string.Join("\r\n", results.Select(r => r.err)));
                 }
                 else if (IsError(result))
                 {
                     // If they override IsError, then do additional checks. 
                     return await RunErrorCaseAsync(testCase);
                 }
+            }
 
                 // If the actual result is not an error, we'll fail with a mismatch below
-            }
-            else
-            {
-                if (runResult.UnsupportedReason != null)
-                {
-                    return (TestResult.Skip, "Unsupported in this engine: " + runResult.UnsupportedReason);
-                }
-            }
-
             if (result == null)
             {
-                return (TestResult.Fail, "did not return a value");
+                var msg = "Did not return a value";
+
+                if (runResult.Errors != null && runResult.Errors.Any())
+                {
+                    msg += string.Join(string.Empty, runResult.Errors.Select(err => "\r\n" + err));
+            }
+
+                return (TestResult.Fail, msg);
             }
             else
             {

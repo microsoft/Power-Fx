@@ -6,12 +6,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.PowerFx.Core.Functions;
-using Microsoft.PowerFx.Core.Lexer;
-using Microsoft.PowerFx.Core.Texl.Intellisense.IntellisenseData;
-using Microsoft.PowerFx.Core.Texl.Intellisense.SignatureHelp;
 using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Intellisense.IntellisenseData;
+using Microsoft.PowerFx.Intellisense.SignatureHelp;
+using Microsoft.PowerFx.Syntax;
 
-namespace Microsoft.PowerFx.Core.Texl.Intellisense
+namespace Microsoft.PowerFx.Intellisense
 {
     internal class IntellisenseResult : IIntellisenseResult
     {
@@ -181,12 +181,12 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
         };
 
         /// <summary>
-        /// Returns a string that represents the full call signature as defined by <see cref="function"/>,
-        /// <see cref="parameters"/>, as well as <see cref="LocalizationUtils.CurrentLocaleListSeparator"/>.
+        /// Returns a string that represents the full call signature as defined by <paramref name="functionName"/>,
+        /// <paramref name="parameters"/>, as well as <see cref="LocalizationUtils.CurrentLocaleListSeparator"/>.
         /// </summary>
         /// <param name="functionName"></param>
         /// <param name="parameters">
-        ///     List of parameters in the relevant signature for <see cref="function"/>.
+        ///     List of parameters in the relevant signature for <paramref name="functionName"/>.
         /// </param>
         /// <returns>
         /// A label that represents the call signature; e.g. <code>Set(variable, lambda)</code>
@@ -217,7 +217,7 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
         /// Data off of which the result is based.
         /// </param>
         /// <param name="paramName"></param>
-        /// <param name="invariantParamName1></param>
+        /// <param name="invariantParamName"></param>
         /// <param name="funcDisplayString"></param>
         /// <returns></returns>
         private static (string paramName, int highlightStart, int highlightEnd, string funcParamDescription) GetParameterHighlightAndDescription(IIntellisenseData data, string paramName, string invariantParamName, StringBuilder funcDisplayString)

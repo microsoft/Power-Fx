@@ -1,9 +1,11 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.PowerFx.Core.Texl.Intellisense
+namespace Microsoft.PowerFx.Intellisense
 {
-    // The kind of a suggestion.
+    /// <summary>
+    /// The kind of a suggestion.
+    /// </summary>
     public enum SuggestionKind
     {
         Function,

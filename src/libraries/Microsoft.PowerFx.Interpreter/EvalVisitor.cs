@@ -2,18 +2,17 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Diagnostics.Contracts;
 using System.Globalization;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.IR.Nodes;
 using Microsoft.PowerFx.Core.IR.Symbols;
-using Microsoft.PowerFx.Core.Public;
-using Microsoft.PowerFx.Core.Public.Types;
-using Microsoft.PowerFx.Core.Public.Values;
 using Microsoft.PowerFx.Functions;
+using Microsoft.PowerFx.Types;
 using static Microsoft.PowerFx.Functions.Library;
 
 namespace Microsoft.PowerFx
@@ -355,7 +354,7 @@ namespace Microsoft.PowerFx
                 return await unaryOp(this, context, node.IRContext, args);
             }
 
-            return CommonErrors.UnreachableCodeError(node.IRContext);
+            return CommonErrors.NotYetImplementedError(node.IRContext, $"Unary op {node.Op}");
         }
 
         public override async ValueTask<FormulaValue> Visit(AggregateCoercionNode node, SymbolContext context)
@@ -441,7 +440,7 @@ namespace Microsoft.PowerFx
             }
 
             var record = (RecordValue)left;
-            var val = record.GetField(node.IRContext, node.Field.Value);
+            var val = record.GetField(node.IRContext.ResultType, node.Field.Value);
 
             return val;
         }
@@ -469,7 +468,28 @@ namespace Microsoft.PowerFx
         public override async ValueTask<FormulaValue> Visit(ChainingNode node, SymbolContext context)
         {
             CheckCancel();
-            return CommonErrors.NotYetImplementedError(node.IRContext, "Expression chaining");
+
+            if (!node.Nodes.Any())
+            {
+                return CommonErrors.InvalidChain(node.IRContext, node.ToString());
+            }
+
+            FormulaValue fv = null;
+            var errors = new List<ExpressionError>();
+
+            foreach (var iNode in node.Nodes)
+            {
+                CheckCancel();
+
+                fv = await iNode.Accept(this, context);
+
+                if (fv is ErrorValue ev)
+                {
+                    errors.AddRange(ev.Errors);
+                }
+            }
+
+            return errors.Any() ? new ErrorValue(node.IRContext, errors) : fv;
         }
 
         public override async ValueTask<FormulaValue> Visit(ResolvedObjectNode node, SymbolContext context)
@@ -477,7 +497,7 @@ namespace Microsoft.PowerFx
             return node.Value switch
             {
                 RecalcFormulaInfo fi => ResolvedObjectHelpers.RecalcFormulaInfo(fi),
-                OptionSet optionSet => ResolvedObjectHelpers.OptionSet(optionSet, node.IRContext),
+                IExternalOptionSet optionSet => ResolvedObjectHelpers.OptionSet(optionSet, node.IRContext),
                 _ => ResolvedObjectHelpers.ResolvedObjectError(node),
             };
         }

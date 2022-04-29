@@ -3,9 +3,8 @@
 
 using System.Collections.Generic;
 using Microsoft.PowerFx.Core.IR;
-using Microsoft.PowerFx.Core.Public.Values;
 
-namespace Microsoft.PowerFx
+namespace Microsoft.PowerFx.Types
 {
     // Table based on a .net collection class. 
     // T is marhsalled via a ITypeMarshaller.

@@ -5,22 +5,28 @@ using System.Linq;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Utils;
 
-namespace Microsoft.PowerFx.Core.Lexer.Tokens
+namespace Microsoft.PowerFx.Syntax
 {
-    internal class ErrorToken : Token
+    /// <summary>
+    /// Token for lexing error.
+    /// </summary>
+    public class ErrorToken : Token
     {
-        // May produce null, if there is no available detail for this error token.
+        /// <summary>
+        /// Errors description key.
+        /// May produce null, if there is no available detail for this error token.
+        /// </summary>
         public ErrorResourceKey? DetailErrorKey { get; }
 
         // Args for ErrorResourceKey("UnexpectedCharacterToken")'s format string used in UnexpectedCharacterTokenError/LexError inside Lexer.cs.
-        public object[] ResourceKeyFormatStringArgs { get; }
+        internal object[] ResourceKeyFormatStringArgs { get; }
 
-        public ErrorToken(Span span)
+        internal ErrorToken(Span span)
             : this(span, null)
         {
         }
 
-        public ErrorToken(Span span, ErrorResourceKey? detailErrorKey)
+        internal ErrorToken(Span span, ErrorResourceKey? detailErrorKey)
             : base(TokKind.Error, span)
         {
             Contracts.AssertValueOrNull(detailErrorKey);
@@ -28,7 +34,7 @@ namespace Microsoft.PowerFx.Core.Lexer.Tokens
             DetailErrorKey = detailErrorKey;
         }
 
-        public ErrorToken(Span span, ErrorResourceKey? detailErrorKey, params object[] args)
+        internal ErrorToken(Span span, ErrorResourceKey? detailErrorKey, params object[] args)
             : base(TokKind.Error, span)
         {
             Contracts.AssertValueOrNull(detailErrorKey);
@@ -49,11 +55,12 @@ namespace Microsoft.PowerFx.Core.Lexer.Tokens
         {
         }
 
-        public override Token Clone(Span ts)
+        internal override Token Clone(Span ts)
         {
             return new ErrorToken(this, ts);
         }
 
+        /// <inheritdoc />
         public override bool Equals(Token that)
         {
             Contracts.AssertValue(that);

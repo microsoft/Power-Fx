@@ -3,7 +3,7 @@
 
 using Microsoft.PowerFx.Core.Utils;
 
-namespace Microsoft.PowerFx.Core.Texl.Intellisense
+namespace Microsoft.PowerFx.Intellisense
 {
     internal class IntellisenseContext : IIntellisenseContext
     {

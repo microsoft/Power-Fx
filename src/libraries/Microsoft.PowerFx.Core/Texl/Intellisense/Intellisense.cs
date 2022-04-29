@@ -5,17 +5,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.PowerFx.Core.Binding;
-using Microsoft.PowerFx.Core.Binding.BindInfo;
 using Microsoft.PowerFx.Core.Functions;
-using Microsoft.PowerFx.Core.Lexer.Tokens;
-using Microsoft.PowerFx.Core.Syntax;
-using Microsoft.PowerFx.Core.Syntax.Nodes;
-using Microsoft.PowerFx.Core.Texl.Intellisense.IntellisenseData;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Intellisense.IntellisenseData;
+using Microsoft.PowerFx.Syntax;
 
-namespace Microsoft.PowerFx.Core.Texl.Intellisense
+namespace Microsoft.PowerFx.Intellisense
 {
     internal delegate bool IsValidSuggestion(IntellisenseData.IntellisenseData intellisenseData, IntellisenseSuggestion suggestion);
 
@@ -23,11 +20,13 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
     {
         protected readonly IReadOnlyList<ISuggestionHandler> _suggestionHandlers;
         protected readonly IEnumStore _enumStore;
+        protected readonly PowerFxConfig _config;
 
-        public Intellisense(IEnumStore enumStore, IReadOnlyList<ISuggestionHandler> suggestionHandlers)
+        public Intellisense(PowerFxConfig config, IEnumStore enumStore, IReadOnlyList<ISuggestionHandler> suggestionHandlers)
         {
             Contracts.AssertValue(suggestionHandlers);
 
+            _config = config;
             _enumStore = enumStore;
             _suggestionHandlers = suggestionHandlers;
         }
@@ -201,7 +200,13 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
 
             foreach (var suggestion in suggestions)
             {
-                if (!suggestion.Type.IsUnknown && type.Accepts(suggestion.Type))
+                if (!suggestion.Type.IsUnknown && 
+
+                    // Most type acceptance is straightforward
+                    (type.Accepts(suggestion.Type) ||
+
+                    // Option Set expected types should also include the option set base as a reccomendation.
+                    (suggestion.Type.IsOptionSet && type.Accepts(DType.CreateOptionSetValueType(suggestion.Type.OptionSetInfo)))))
                 {
                     suggestion.SortPriority++;
                 }
@@ -221,7 +226,7 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
 
         protected internal virtual IntellisenseData.IntellisenseData CreateData(IIntellisenseContext context, DType expectedType, TexlBinding binding, TexlFunction curFunc, TexlNode curNode, int argIndex, int argCount, IsValidSuggestion isValidSuggestionFunc, IList<DType> missingTypes, List<CommentToken> comments)
         {
-            return new IntellisenseData.IntellisenseData(_enumStore, context, expectedType, binding, curFunc, curNode, argIndex, argCount, isValidSuggestionFunc, missingTypes, comments);
+            return new IntellisenseData.IntellisenseData(_config, _enumStore, context, expectedType, binding, curFunc, curNode, argIndex, argCount, isValidSuggestionFunc, missingTypes, comments);
         }
 
         private void GetFunctionAndTypeInformation(IIntellisenseContext context, TexlNode curNode, TexlBinding binding, out TexlFunction curFunc, out int argIndex, out int argCount, out DType expectedType, out IsValidSuggestion isValidSuggestionFunc)
