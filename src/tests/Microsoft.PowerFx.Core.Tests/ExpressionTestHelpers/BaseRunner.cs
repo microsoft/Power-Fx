@@ -244,9 +244,9 @@ namespace Microsoft.PowerFx.Core.Tests
                     var results = errorResult.Errors.Select((er, i) =>
                     {
                         var actualErrorKind = er.Kind;
-                        var expectedErrorKing = expectedErrorKinds[i];
+                        var expectedKind = expectedErrorKinds[i];
 
-                        if (int.TryParse(expectedErrorKing, out var numericErrorKind))
+                        if (int.TryParse(expectedKind, out var numericErrorKind))
                         {
                             // Error given as the internal value
                             if (numericErrorKind == (int)actualErrorKind)
@@ -255,10 +255,10 @@ namespace Microsoft.PowerFx.Core.Tests
                             }
                             else
                             {
-                                return (tr: TestResult.Fail, err: $"Received an error, but expected kind={expectedErrorKing} and received {actualErrorKind} ({(int)actualErrorKind})");
+                                return (tr: TestResult.Fail, err: $"Received an error, but expected kind={expectedKind} and received {actualErrorKind} ({(int)actualErrorKind})");
                             }
                         }
-                        else if (Enum.TryParse<ErrorKind>(expectedErrorKing, out var errorKind))
+                        else if (Enum.TryParse<ErrorKind>(expectedKind, out var errorKind))
                         {
                             // Error given as the enum name
                             if (errorKind == actualErrorKind)
@@ -272,7 +272,7 @@ namespace Microsoft.PowerFx.Core.Tests
                         }
                         else
                         {
-                            return (tr: TestResult.Fail, err: $"Invalid expected error kind: {expectedErrorKing}");
+                            return (tr: TestResult.Fail, err: $"Invalid expected error kind: {expectedKind}");
                         }
                     }).ToArray();
 
