@@ -756,9 +756,14 @@ namespace Microsoft.PowerFx.Core.IR
                             // Date + '-DateTime' => in days
                             // Date + '-Date' => in days
 
-                            // Ensure that this is really '-Date' - Binding should always catch this, but let's make sure...
-                            Contracts.Assert(node.Right.AsUnaryOpLit().VerifyValue().Op == UnaryOp.Minus);
-                            return new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.DateDifference, left, right);
+                            // Binding produces this as '-Date'. This should be cleaned up when we switch to a proper sub op. 
+                            if (right is not UnaryOpNode unaryNode || unaryNode.Op != UnaryOpKind.Negate)
+                            {
+                                throw new NotSupportedException();
+                            }
+
+                            // Use the child of the negate as the rhs for datediff
+                            return new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.DateDifference, left, unaryNode.Child);
                         }
                         else if (rightType == DType.Time)
                         {

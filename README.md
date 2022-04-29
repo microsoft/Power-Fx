@@ -15,14 +15,14 @@ For those new to Power-Fx, this video should answer many of your questions:
 
 ## Build Status
 
- | Branch | Description        | Build Status | Coverage Status |
- |----|---------------|--------------|--------------|
- |Main | 0.2.* Preview Builds |[![Build Status](https://dev.azure.com/FuseLabs/SDK_v4/_apis/build/status/PowerFx/PowerFx-signed?branchName=main)](https://dev.azure.com/FuseLabs/SDK_v4/_build/latest?definitionId=1410&branchName=main) |[![Coverage Status](https://coveralls.io/repos/github/microsoft/Power-Fx/badge.svg?branch=main)](https://coveralls.io/github/microsoft/Power-Fx?branch=main)
+ | Branch | Description        | Build Status | Coverage Status | Test Status |
+ |--------|--------------------|--------------|-----------------|-------------|
+ |Main | 0.2.* Preview Builds |[![Build Status](https://dev.azure.com/FuseLabs/SDK_v4/_apis/build/status/PowerFx/PowerFx-signed?branchName=main)](https://dev.azure.com/FuseLabs/SDK_v4/_build/latest?definitionId=1410&branchName=main) |[![Coverage Status](https://coveralls.io/repos/github/microsoft/Power-Fx/badge.svg?branch=main)](https://coveralls.io/github/microsoft/Power-Fx?branch=main) |[![Tests Status](https://fuselabs.visualstudio.com/SDK_v4/_apis/build/status/PowerFx/PowerFx-PR?branchName=main)](https://fuselabs.visualstudio.com/SDK_v4/_build/latest?definitionId=1469&branchName=main)
 
 ## Packages
 
-| Name                                  | Released Package
-|---------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Name                                  | Released Package |
+|---------------------------------------|------------------|
 | Microsoft.PowerFx.Core                | [![BotBuilder Badge](https://buildstats.info/nuget/Microsoft.PowerFx.Core?includePreReleases=true&dWidth=70)](https://www.nuget.org/packages/Microsoft.PowerFx.Core/)
 | Microsoft.PowerFx.Core.Tests          |                                  |
 | Microsoft.PowerFx.Interpreter         | [![BotBuilder Badge](https://buildstats.info/nuget/Microsoft.PowerFx.Interpreter?includePreReleases=true&dWidth=70)](https://www.nuget.org/packages/Microsoft.PowerFx.Interpreter/)
