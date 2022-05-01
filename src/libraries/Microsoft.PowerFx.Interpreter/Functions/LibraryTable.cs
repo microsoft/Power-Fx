@@ -144,21 +144,21 @@ namespace Microsoft.PowerFx.Functions
 
             foreach (var row in arg0.Rows)
             {
-                if (row.Value is null)
+                if (row.IsBlank)
                 {
-                    if (row.Error is ErrorValue error1)
-                    {
-                        errors.Add(error1);
-                    }
-
+                    continue;
+                }
+                else if (row.IsError)
+                {
+                    errors.Add(row.Error);
                     continue;
                 }
 
                 var field = row.Value.Fields.First().Value;
 
-                if (field is ErrorValue error2)
+                if (field is ErrorValue error)
                 {
-                    errors.Add(error2);
+                    errors.Add(error);
                     continue;
                 }
 
@@ -186,21 +186,21 @@ namespace Microsoft.PowerFx.Functions
 
             foreach (var row in arg0.Rows)
             {
-                if (row.Value is null)
+                if (row.IsBlank)
                 {
-                    if (row.Error is ErrorValue error1)
-                    {
-                        errors.Add(error1);
-                    }
-
+                    continue;
+                }
+                else if (row.IsError)
+                {
+                    errors.Add(row.Error);
                     continue;
                 }
 
                 var field = row.Value.Fields.First().Value;
 
-                if (field is ErrorValue error2)
+                if (field is ErrorValue error)
                 {
-                    errors.Add(error2);
+                    errors.Add(error);
                     continue;
                 }
 
