@@ -1,15 +1,11 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Text;
 using Microsoft.PowerFx.Core.IR;
-using Microsoft.PowerFx.Core.Public.Types;
 using Microsoft.PowerFx.Core.Utils;
 
-namespace Microsoft.PowerFx.Core.Public.Values
+namespace Microsoft.PowerFx.Types
 {
     /// <summary>
     /// A value within an option set. 

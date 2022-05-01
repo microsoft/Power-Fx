@@ -4,9 +4,8 @@
 using System.Diagnostics.Contracts;
 using System.Drawing;
 using Microsoft.PowerFx.Core.IR;
-using Microsoft.PowerFx.Core.Public.Types;
 
-namespace Microsoft.PowerFx.Core.Public.Values
+namespace Microsoft.PowerFx.Types
 {
     public class ColorValue : PrimitiveValue<Color>
     {

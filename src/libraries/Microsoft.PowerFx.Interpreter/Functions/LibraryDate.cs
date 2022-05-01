@@ -5,7 +5,7 @@ using System;
 using System.Globalization;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.IR;
-using Microsoft.PowerFx.Core.Public.Values;
+using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Functions
 {
@@ -370,13 +370,13 @@ namespace Microsoft.PowerFx.Functions
             var year = (int)args[0].Value;
             var month = (int)args[1].Value;
             var day = (int)args[2].Value;
-            var date = DateImpl(IRContext.NotInSource(Core.Public.Types.FormulaType.Date), year, month, day);
+            var date = DateImpl(IRContext.NotInSource(FormulaType.Date), year, month, day);
 
             var hour = (int)args[3].Value;
             var minute = (int)args[4].Value;
             var second = (int)args[5].Value;
             var millisecond = (int)args[6].Value;
-            var time = TimeImpl(IRContext.NotInSource(Core.Public.Types.FormulaType.Time), hour, minute, second, millisecond);
+            var time = TimeImpl(IRContext.NotInSource(FormulaType.Time), hour, minute, second, millisecond);
 
             var result = AddDateAndTime(irContext, new[] { date, time });
 

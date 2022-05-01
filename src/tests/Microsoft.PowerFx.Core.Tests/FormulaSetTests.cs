@@ -3,9 +3,8 @@
 
 using System.Collections.Generic;
 using Microsoft.PowerFx.Core.Public;
-using Microsoft.PowerFx.Core.Syntax.Nodes;
-using Microsoft.PowerFx.Core.Syntax.Visitors;
 using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Syntax;
 using Xunit;
 
 namespace Microsoft.PowerFx.Core.Tests

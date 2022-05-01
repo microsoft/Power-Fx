@@ -2,14 +2,11 @@
 // Licensed under the MIT license.
 
 using System;
-using System.Collections;
-using System.Linq;
-using Microsoft.PowerFx.Core.Public.Types;
-using Microsoft.PowerFx.Core.Public.Values;
+using Microsoft.PowerFx.Types;
 using Xunit;
 
 namespace Microsoft.PowerFx.Core.Tests
-{    
+{
     public class PrimitiveTests
     {
         private static readonly TypeMarshallerCache _cache = new TypeMarshallerCache();

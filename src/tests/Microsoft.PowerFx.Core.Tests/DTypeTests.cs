@@ -1,11 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System.Collections;
-using System.IO;
-using System.Linq;
-using System.Text.Json;
-using Microsoft.PowerFx.Core.Public.Types;
 using Microsoft.PowerFx.Core.Types;
 using Xunit;
 

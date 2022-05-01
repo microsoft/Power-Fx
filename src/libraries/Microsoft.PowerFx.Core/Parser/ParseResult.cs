@@ -5,13 +5,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.PowerFx.Core.Errors;
-using Microsoft.PowerFx.Core.Lexer.Tokens;
-using Microsoft.PowerFx.Core.Public;
-using Microsoft.PowerFx.Core.Syntax.Nodes;
-using Microsoft.PowerFx.Core.Syntax.SourceInformation;
 using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Syntax;
+using Microsoft.PowerFx.Syntax.SourceInformation;
 
-namespace Microsoft.PowerFx.Core.Parser
+namespace Microsoft.PowerFx
 {
     /// <summary>
     /// Result of parsing an expression. 

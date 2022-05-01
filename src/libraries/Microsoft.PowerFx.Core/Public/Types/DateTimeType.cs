@@ -3,7 +3,7 @@
 
 using Microsoft.PowerFx.Core.Types;
 
-namespace Microsoft.PowerFx.Core.Public.Types
+namespace Microsoft.PowerFx.Types
 {
     public class DateTimeType : FormulaType
     {

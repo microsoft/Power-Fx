@@ -3,7 +3,7 @@
 
 using Microsoft.PowerFx.Core.Types;
 
-namespace Microsoft.PowerFx.Core.Texl.Intellisense
+namespace Microsoft.PowerFx.Intellisense
 {
     [ThreadSafeImmutable]
     internal class AddSuggestionDryRunHelper : AddSuggestionHelper

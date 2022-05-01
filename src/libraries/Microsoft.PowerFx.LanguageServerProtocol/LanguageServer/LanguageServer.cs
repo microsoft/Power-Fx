@@ -9,8 +9,8 @@ using System.Web;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Public;
-using Microsoft.PowerFx.Core.Texl.Intellisense;
 using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.LanguageServerProtocol.Protocol;
 
 namespace Microsoft.PowerFx.LanguageServerProtocol
@@ -408,14 +408,14 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
         /// <returns>
         /// <see cref="DiagnosticSeverity"/> equivalent to <see cref="DocumentErrorSeverity"/>.
         /// </returns>
-        private DiagnosticSeverity DocumentSeverityToDiagnosticSeverityMap(DocumentErrorSeverity severity) => severity switch
+        private DiagnosticSeverity DocumentSeverityToDiagnosticSeverityMap(ErrorSeverity severity) => severity switch
         {
-            DocumentErrorSeverity.Critical => DiagnosticSeverity.Error,
-            DocumentErrorSeverity.Severe => DiagnosticSeverity.Error,
-            DocumentErrorSeverity.Moderate => DiagnosticSeverity.Error,
-            DocumentErrorSeverity.Warning => DiagnosticSeverity.Warning,
-            DocumentErrorSeverity.Suggestion => DiagnosticSeverity.Hint,
-            DocumentErrorSeverity.Verbose => DiagnosticSeverity.Information,
+            ErrorSeverity.Critical => DiagnosticSeverity.Error,
+            ErrorSeverity.Severe => DiagnosticSeverity.Error,
+            ErrorSeverity.Moderate => DiagnosticSeverity.Error,
+            ErrorSeverity.Warning => DiagnosticSeverity.Warning,
+            ErrorSeverity.Suggestion => DiagnosticSeverity.Hint,
+            ErrorSeverity.Verbose => DiagnosticSeverity.Information,
             _ => DiagnosticSeverity.Information
         };
 

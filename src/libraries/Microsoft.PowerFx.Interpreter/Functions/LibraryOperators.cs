@@ -4,8 +4,7 @@
 using System;
 using System.Linq;
 using Microsoft.PowerFx.Core.IR;
-using Microsoft.PowerFx.Core.Public.Types;
-using Microsoft.PowerFx.Core.Public.Values;
+using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Functions
 {

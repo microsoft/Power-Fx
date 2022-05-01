@@ -4,7 +4,7 @@
 using System.Diagnostics;
 using Microsoft.PowerFx.Core.Types;
 
-namespace Microsoft.PowerFx.Core.Public.Types
+namespace Microsoft.PowerFx.Types
 {
     [DebuggerDisplay("{_type}:tzi")]
     public class DateTimeNoTimeZoneType : FormulaType

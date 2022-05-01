@@ -3,9 +3,9 @@
 
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.PowerFx.Core.Public.Values;
+using Microsoft.PowerFx.Types;
 
-namespace Microsoft.PowerFx.Core.Public
+namespace Microsoft.PowerFx
 {
     /// <summary>
     /// A parsed expression.
