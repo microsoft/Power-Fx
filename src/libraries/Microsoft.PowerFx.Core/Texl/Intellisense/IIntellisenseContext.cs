@@ -3,7 +3,7 @@
 
 using Microsoft.AppMagic.Transport;
 
-namespace Microsoft.PowerFx.Intellisense
+namespace Microsoft.PowerFx.Core.Texl.Intellisense
 {
     [TransportType(TransportKind.ByValue)]
     internal interface IIntellisenseContext
