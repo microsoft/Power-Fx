@@ -98,10 +98,10 @@
 #Error(Kind=InvalidArgument)
 
 >> Average("true","true")
-#Error(Kind=InvalidArgument)
+#Error(Kind=InvalidArgument, InvalidArgument)
 
 >> Average("false","false")
-#Error(Kind=InvalidArgument)
+#Error(Kind=InvalidArgument, InvalidArgument)
 
 // ***********  TABLE *************
 

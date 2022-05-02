@@ -226,7 +226,7 @@
 1
 
 >> Power("true","false")
-#Error(Kind=InvalidArgument)
+#Error(Kind=InvalidArgument, InvalidArgument)
 
 // ******** FUNCTION VALUE AS PARAMETERS ********
 

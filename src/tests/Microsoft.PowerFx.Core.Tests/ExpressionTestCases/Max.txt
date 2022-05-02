@@ -79,4 +79,4 @@
 1
 
 >> Max("true","false")
-#Error(Kind=InvalidArgument)
+#Error(Kind=InvalidArgument, InvalidArgument)

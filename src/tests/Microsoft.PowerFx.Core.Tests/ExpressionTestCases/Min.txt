@@ -86,5 +86,5 @@
 0
 
 >> Min("true","false")
-#Error(Kind=InvalidArgument)
+#Error(Kind=InvalidArgument, InvalidArgument)
 

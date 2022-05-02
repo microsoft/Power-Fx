@@ -86,6 +86,6 @@
 1
 
 >> Sum("true","false")
-#Error(Kind=InvalidArgument)
+#Error(Kind=InvalidArgument, InvalidArgument)
 
 

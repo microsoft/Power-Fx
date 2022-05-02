@@ -227,6 +227,6 @@
 0
 
 >> Round("true","false")
-#Error(Kind=InvalidArgument)
+#Error(Kind=InvalidArgument, InvalidArgument)
 
 

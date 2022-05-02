@@ -222,6 +222,6 @@
 #Error(Kind=Div0)
 
 >> Mod("false","true")
-#Error(Kind=InvalidArgument)
+#Error(Kind=InvalidArgument, InvalidArgument)
 
 
