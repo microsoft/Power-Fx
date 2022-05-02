@@ -4,7 +4,7 @@
 using System;
 using Microsoft.PowerFx.Core.Functions;
 
-namespace Microsoft.PowerFx.Core.Public
+namespace Microsoft.PowerFx
 {
     /// <summary>
     /// Information about a built-in function.

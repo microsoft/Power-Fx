@@ -3,10 +3,9 @@
 
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Logging.Trackers;
-using Microsoft.PowerFx.Core.Syntax;
-using Microsoft.PowerFx.Core.Syntax.Nodes;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Syntax;
 
 namespace Microsoft.PowerFx.Core.Functions.FunctionArgValidators
 {

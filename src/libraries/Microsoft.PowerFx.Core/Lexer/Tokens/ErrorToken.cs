@@ -5,7 +5,7 @@ using System.Linq;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Utils;
 
-namespace Microsoft.PowerFx.Core.Lexer.Tokens
+namespace Microsoft.PowerFx.Syntax
 {
     /// <summary>
     /// Token for lexing error.

@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.PowerFx.Core.Public
+namespace Microsoft.PowerFx.Intellisense
 {
     /// <summary>
     /// Token result type (this matches formula bar token type defined in PowerAppsTheme.ts).

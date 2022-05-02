@@ -3,7 +3,7 @@
 
 using Microsoft.PowerFx.Core.Types;
 
-namespace Microsoft.PowerFx.Core.Public.Types
+namespace Microsoft.PowerFx.Types
 {
     /// <summary>
     /// An unknown type, attached to syntax nodes whose type cannot be determined.

@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.PowerFx.Core.Utils;
 
-namespace Microsoft.PowerFx.Core.Texl.Intellisense
+namespace Microsoft.PowerFx.Intellisense
 {
     // Specialized IntellisenseSuggestion list that allows for some effient operations on the list.
     // For example, checking if the list contains a suggestion with a particular display name is

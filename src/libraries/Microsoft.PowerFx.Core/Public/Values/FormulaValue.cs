@@ -9,9 +9,8 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using Microsoft.PowerFx.Core.IR;
-using Microsoft.PowerFx.Core.Public.Types;
 
-namespace Microsoft.PowerFx.Core.Public.Values
+namespace Microsoft.PowerFx.Types
 {
     /// <summary>
     /// Represent a value in the formula expression. 

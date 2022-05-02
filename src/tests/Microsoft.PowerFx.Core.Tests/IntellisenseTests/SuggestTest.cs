@@ -159,7 +159,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
             // Note that the expression string needs to have balanced quotes or we hit a bug in NUnit running the tests:
             //   https://github.com/nunit/nunit3-vs-adapter/issues/691
 
-            FeatureFlags.StringInterpolation = true;
+            Preview.FeatureFlags.StringInterpolation = true;
             var actualSuggestions = SuggestStrings(expression, Default);
             Assert.Equal(expectedSuggestions, actualSuggestions);
         }
@@ -177,7 +177,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         [InlineData("DisplayMode|")]
         public void TestSuggestEmptyEnumList(string expression, params string[] expectedSuggestions)
         {
-            FeatureFlags.StringInterpolation = true;
+            Preview.FeatureFlags.StringInterpolation = true;
             var actualSuggestions = SuggestStrings(expression, EmptyEverything);
             Assert.Equal(expectedSuggestions, actualSuggestions);
         }
@@ -190,7 +190,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         [InlineData("Calendar.Months|", "MonthsLong", "MonthsShort")]
         public void TestSuggestEmptyAll(string expression, params string[] expectedSuggestions)
         {
-            FeatureFlags.StringInterpolation = true;
+            Preview.FeatureFlags.StringInterpolation = true;
             var actualSuggestions = SuggestStrings(expression, MinimalEnums);
             Assert.Equal(expectedSuggestions, actualSuggestions);
         }

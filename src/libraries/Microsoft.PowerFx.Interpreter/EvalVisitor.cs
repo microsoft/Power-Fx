@@ -11,10 +11,8 @@ using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.IR.Nodes;
 using Microsoft.PowerFx.Core.IR.Symbols;
-using Microsoft.PowerFx.Core.Public;
-using Microsoft.PowerFx.Core.Public.Types;
-using Microsoft.PowerFx.Core.Public.Values;
 using Microsoft.PowerFx.Functions;
+using Microsoft.PowerFx.Types;
 using static Microsoft.PowerFx.Functions.Library;
 
 namespace Microsoft.PowerFx
@@ -477,15 +475,21 @@ namespace Microsoft.PowerFx
             }
 
             FormulaValue fv = null;
+            var errors = new List<ExpressionError>();
 
             foreach (var iNode in node.Nodes)
             {
                 CheckCancel();
 
                 fv = await iNode.Accept(this, context);
+
+                if (fv is ErrorValue ev)
+                {
+                    errors.AddRange(ev.Errors);
+                }
             }
 
-            return fv;
+            return errors.Any() ? new ErrorValue(node.IRContext, errors) : fv;
         }
 
         public override async ValueTask<FormulaValue> Visit(ResolvedObjectNode node, SymbolContext context)

@@ -3,7 +3,7 @@
 
 using Microsoft.PowerFx.Core.Functions;
 
-namespace Microsoft.PowerFx.Core.Texl.Intellisense.IntellisenseData
+namespace Microsoft.PowerFx.Intellisense.IntellisenseData
 {
     /// <summary>
     /// A transient runtime representation of data necessary to complete <see cref="Intellisense.Suggest"/>.
