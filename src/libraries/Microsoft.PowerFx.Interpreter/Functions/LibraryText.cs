@@ -128,7 +128,7 @@ namespace Microsoft.PowerFx.Functions
                     return new NumberValue(irContext, val);
             }
 
-            throw new NotImplementedException("Unknown ConvertionStatus value");
+            throw new NotImplementedException($"Unknown ConvertionStatus value {err}");
         }
 
         private static (double, ConvertionStatus) ConvertToNumber(string str, CultureInfo culture)
