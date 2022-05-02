@@ -34,7 +34,6 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             // Create an Engine() that has all the builtin symbols by default. 
             // Note that interpreter has fewer symbols. 
             var config = new PowerFxConfig();
-            config.AddDefaultEnums();
             var engine = new Engine(config);
 
             _sendToClientData = new List<string>();
