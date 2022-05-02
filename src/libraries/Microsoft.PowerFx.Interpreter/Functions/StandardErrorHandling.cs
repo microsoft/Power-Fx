@@ -484,7 +484,13 @@ namespace Microsoft.PowerFx.Functions
             if (arg is NumberValue numberValue)
             {
                 var number = numberValue.Value;
-                if (IsInvalidDouble(number))
+
+                if (double.IsNaN(number))
+                {
+                    return CommonErrors.NumericOutOfRange(irContext);
+                }
+
+                if (double.IsInfinity(number))
                 {
                     return CommonErrors.OverflowError(irContext);
                 }

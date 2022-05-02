@@ -465,13 +465,12 @@ namespace Microsoft.PowerFx.Functions
                 return new StringValue(irContext, string.Empty);
             }
 
-            if (args[1] is not NumberValue)
+            if (args[1] is not NumberValue count)
             {
                 return CommonErrors.GenericInvalidArgument(irContext);
             }
 
-            var source = (StringValue)args[0];
-            var count = (NumberValue)args[1];
+            var source = (StringValue)args[0];            
 
             if (count.Value < 0)
             {

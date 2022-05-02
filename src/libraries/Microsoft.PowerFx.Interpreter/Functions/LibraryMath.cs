@@ -25,8 +25,6 @@ namespace Microsoft.PowerFx.Functions
         {
             void Apply(FormulaValue value);
 
-            FormulaValue GetDefault(IRContext context);
-
             FormulaValue NoElementValue(IRContext context);
 
             FormulaValue GetResult(IRContext irContext);
@@ -192,7 +190,7 @@ namespace Microsoft.PowerFx.Functions
 
             public FormulaValue GetDefault(IRContext context)
             {
-                return new DateValue(context, new DateTime(1900, 1, 1));
+                return new DateValue(context, _defaultDT);
             }
 
             public FormulaValue GetResult(IRContext irContext)
@@ -223,7 +221,7 @@ namespace Microsoft.PowerFx.Functions
 
             public FormulaValue GetDefault(IRContext context)
             {
-                return new DateValue(context, new DateTime(1900, 1, 1));
+                return new DateValue(context, _defaultDT);
             }
 
             public FormulaValue GetResult(IRContext irContext)
@@ -315,7 +313,7 @@ namespace Microsoft.PowerFx.Functions
 
             public FormulaValue GetDefault(IRContext context)
             {
-                return new DateValue(context, new DateTime(1900, 1, 1));
+                return new DateValue(context, _defaultDT);
             }
 
             public FormulaValue GetResult(IRContext irContext)
@@ -377,7 +375,7 @@ namespace Microsoft.PowerFx.Functions
 
             public FormulaValue GetDefault(IRContext context)
             {
-                return new TimeValue(context, TimeSpan.Zero);
+                return new TimeValue(context, _defaultT);
             }
 
             public FormulaValue GetResult(IRContext irContext)
@@ -426,10 +424,10 @@ namespace Microsoft.PowerFx.Functions
             return agg.GetResult(irContext);
         }
 
-        private static async Task<FormulaValue> RunAggregatorAsync(IAggregator agg, EvalVisitor runner, SymbolContext context, IRContext irContext, IEnumerable<FormulaValue> args)
+        private static async Task<FormulaValue> RunAggregatorAsync(IAggregator agg, EvalVisitor runner, SymbolContext context, IRContext irContext, FormulaValue[] args)
         {
-            var arg0 = (TableValue)args.First();
-            var arg1 = (LambdaFormulaValue)args.Skip(1).First();
+            var arg0 = (TableValue)args.Where(a => a is not BlankValue).First();
+            var arg1 = (LambdaFormulaValue)args.Where(a => a is not BlankValue).Skip(1).First();
 
             foreach (var row in arg0.Rows)
             {
@@ -473,7 +471,7 @@ namespace Microsoft.PowerFx.Functions
         // Sum([1,2,3], Value * Value)     
         public static async ValueTask<FormulaValue> SumTable(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args)
         {
-            return await RunAggregatorAsync(new SumAgg(), runner, symbolContext, irContext, args.Where(a => a is not BlankValue));
+            return await RunAggregatorAsync(new SumAgg(), runner, symbolContext, irContext, args);
         }
         
         // VarP(1,2,3)
@@ -485,7 +483,7 @@ namespace Microsoft.PowerFx.Functions
         // VarP([1,2,3], Value * Value)
         public static async ValueTask<FormulaValue> VarTable(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args)
         {
-            return await RunAggregatorAsync(new VarianceAgg(), runner, symbolContext, irContext, args.Where(a => a is not BlankValue));
+            return await RunAggregatorAsync(new VarianceAgg(), runner, symbolContext, irContext, args);
         }
 
         internal static FormulaValue Stdev(IRContext irContext, FormulaValue[] args)
@@ -495,7 +493,7 @@ namespace Microsoft.PowerFx.Functions
 
         public static async ValueTask<FormulaValue> StdevTable(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args)
         {
-            return await RunAggregatorAsync(new StdDeviationAgg(), runner, symbolContext, irContext, args.Where(a => a is not BlankValue));
+            return await RunAggregatorAsync(new StdDeviationAgg(), runner, symbolContext, irContext, args);
         }
 
         // Max(1,2,3)     
@@ -520,7 +518,7 @@ namespace Microsoft.PowerFx.Functions
 
             if (agg != null)
             {
-                return await RunAggregatorAsync(agg, runner, symbolContext, irContext, args.Where(a => a is not BlankValue));
+                return await RunAggregatorAsync(agg, runner, symbolContext, irContext, args);
             }
             else
             {
@@ -550,7 +548,7 @@ namespace Microsoft.PowerFx.Functions
 
             if (agg != null)
             {
-                return await RunAggregatorAsync(agg, runner, symbolContext, irContext, args.Where(a => a is not BlankValue));                
+                return await RunAggregatorAsync(agg, runner, symbolContext, irContext, args);                
             }
             else 
             {
@@ -602,7 +600,7 @@ namespace Microsoft.PowerFx.Functions
                 return CommonErrors.DivByZeroError(irContext);
             }
 
-            return await RunAggregatorAsync(new AverageAgg(), runner, symbolContext, irContext, args.Where(a => a is not BlankValue));
+            return await RunAggregatorAsync(new AverageAgg(), runner, symbolContext, irContext, args);
         }
 
         // https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-mod
@@ -615,6 +613,8 @@ namespace Microsoft.PowerFx.Functions
             var q = (long)Math.Floor(arg0 / arg1);
             var result = arg0 - (arg1 * q);
 
+            // We validate the reminder is in a valid range.
+            // This is mainly to support very large numbers (like 1E+308) where the calculation could be incorrect
             if (result < -Math.Abs(arg1) || result > Math.Abs(arg1))
             {
                 result = 0;
@@ -651,7 +651,7 @@ namespace Microsoft.PowerFx.Functions
             
             if (arg0 == null) 
             {
-                return new BlankValue(irContext);
+                return new NumberValue(irContext, 0d);
             }
 
             var x = arg0.Value;
@@ -673,7 +673,7 @@ namespace Microsoft.PowerFx.Functions
             return new NumberValue(irContext, x);
         }
 
-        public static double Round(double number, double digits, RoundType rt = RoundType.Default)
+        internal static double Round(double number, double digits, RoundType rt = RoundType.Default)
         {
             var s = number < 0 ? -1d : 1d;
             var n = number * s;
