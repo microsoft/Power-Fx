@@ -200,7 +200,7 @@ namespace Microsoft.PowerFx.Functions
         private class MinDateAgg : IAggregator
         {
             protected DateTime _minValueDT = DateTime.MaxValue;
-            protected static readonly DateTime _defaultDT =new DateTime(1899, 12, 30);
+            protected static readonly DateTime _defaultDT = new DateTime(1899, 12, 30);
 
             public void Apply(FormulaValue value)
             {               
@@ -293,7 +293,7 @@ namespace Microsoft.PowerFx.Functions
         private class MaxDateAgg : IAggregator
         {            
             protected DateTime _maxValueDT = DateTime.MinValue;
-            private readonly DateTime _defaultDT =new DateTime(1899, 12, 30);
+            private readonly DateTime _defaultDT = new DateTime(1899, 12, 30);
 
             public void Apply(FormulaValue value)
             {                
@@ -323,7 +323,7 @@ namespace Microsoft.PowerFx.Functions
         private class MaxDateTimeAgg : IAggregator
         {            
             protected DateTime _maxValueDT = DateTime.MinValue;
-            private readonly DateTime _defaultDT =new DateTime(1899, 12, 30);
+            private readonly DateTime _defaultDT = new DateTime(1899, 12, 30);
 
             public void Apply(FormulaValue value)
             {
