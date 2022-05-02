@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.PowerFx.Core.Public.Types
+namespace Microsoft.PowerFx.Types
 {
     /// <summary>
     /// Visitor for walking <see cref="FormulaType"/>.
@@ -37,5 +37,9 @@ namespace Microsoft.PowerFx.Core.Public.Types
         void Visit(GuidType type);
 
         void Visit(ColorType type);
+
+        void Visit(UnknownType type);
+
+        void Visit(BindingErrorType type);
     }
 }

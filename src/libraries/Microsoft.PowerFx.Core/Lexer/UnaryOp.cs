@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.PowerFx.Core.Lexer
+namespace Microsoft.PowerFx.Syntax
 {
     /// <summary>
     /// Kinds of unary operators.

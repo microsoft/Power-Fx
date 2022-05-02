@@ -2,7 +2,7 @@
 // Licensed under the MIT license.
 
 using Microsoft.PowerFx.Core.IR;
-using Microsoft.PowerFx.Core.Public.Values;
+using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Functions
 {

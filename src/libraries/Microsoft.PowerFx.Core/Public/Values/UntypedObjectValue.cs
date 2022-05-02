@@ -8,9 +8,8 @@ using System.Diagnostics.Contracts;
 using System.Text;
 using System.Text.Json;
 using Microsoft.PowerFx.Core.IR;
-using Microsoft.PowerFx.Core.Public.Types;
 
-namespace Microsoft.PowerFx.Core.Public.Values
+namespace Microsoft.PowerFx.Types
 {
     /// <summary>
     /// The backing implementation for UntypedObjectValue, for example Json, Xml,

@@ -4,10 +4,9 @@
 using System;
 using System.Globalization;
 using System.Linq;
-using Microsoft.PowerFx.Core.Lexer;
-using Microsoft.PowerFx.Core.Lexer.Tokens;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
+using Microsoft.PowerFx.Syntax;
 using Xunit;
 
 namespace Microsoft.PowerFx.Core.Tests

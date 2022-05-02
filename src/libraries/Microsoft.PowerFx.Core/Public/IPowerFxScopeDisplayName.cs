@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.PowerFx.Core.Public
+namespace Microsoft.PowerFx.Intellisense
 {
     /// <summary>
     /// Provide display name translation.

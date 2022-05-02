@@ -5,17 +5,15 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.PowerFx.Core.Binding;
-using Microsoft.PowerFx.Core.Binding.BindInfo;
 using Microsoft.PowerFx.Core.Functions;
-using Microsoft.PowerFx.Core.Lexer.Tokens;
-using Microsoft.PowerFx.Core.Syntax;
-using Microsoft.PowerFx.Core.Syntax.Nodes;
-using Microsoft.PowerFx.Core.Texl.Intellisense.IntellisenseData;
+using Microsoft.PowerFx.Core.Texl.Intellisense;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Intellisense.IntellisenseData;
+using Microsoft.PowerFx.Syntax;
 
-namespace Microsoft.PowerFx.Core.Texl.Intellisense
+namespace Microsoft.PowerFx.Intellisense
 {
     internal delegate bool IsValidSuggestion(IntellisenseData.IntellisenseData intellisenseData, IntellisenseSuggestion suggestion);
 

@@ -2,8 +2,9 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
+using Microsoft.PowerFx.Core.Texl.Intellisense;
 
-namespace Microsoft.PowerFx.Core.Texl.Intellisense
+namespace Microsoft.PowerFx.Intellisense
 {
     internal interface ISpecialCaseHandler
     {

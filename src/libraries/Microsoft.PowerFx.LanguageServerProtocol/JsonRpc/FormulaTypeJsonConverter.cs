@@ -6,8 +6,8 @@ using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Microsoft.PowerFx.Core;
-using Microsoft.PowerFx.Core.Public.Types;
 using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.LanguageServerProtocol
 {

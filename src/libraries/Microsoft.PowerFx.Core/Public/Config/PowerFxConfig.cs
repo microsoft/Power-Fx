@@ -5,13 +5,15 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Functions;
+using Microsoft.PowerFx.Core.Public;
 using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
 
-namespace Microsoft.PowerFx.Core
+namespace Microsoft.PowerFx
 {
     /// <summary>
     /// A container that allows for compiler customization.
@@ -50,6 +52,11 @@ namespace Microsoft.PowerFx.Core
             : this(cultureInfo, new EnumStoreBuilder().WithDefaultEnums()) 
         {
         }
+
+        /// <summary>
+        /// Information about available functions.
+        /// </summary>
+        public IEnumerable<FunctionInfo> FunctionInfos => Functions.Select(f => new FunctionInfo(f));
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PowerFxConfig"/> class.
