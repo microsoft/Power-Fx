@@ -6,10 +6,12 @@ using Microsoft.AppMagic.Transport;
 namespace Microsoft.PowerFx.Core.Errors
 {
     /// <summary>
+    /// Internal error code - part of Transport Layer and used by Canvas Apps.
+    /// See <see cref="ErrorSeverity"/> for public facing type. 
     /// Severity of errors provided.
     /// </summary>
     [TransportType(TransportKind.Enum)]
-    public enum DocumentErrorSeverity
+    internal enum DocumentErrorSeverity
     {
 #pragma warning disable SA1300 // Element should begin with upper-case letter
         _Min = Verbose,

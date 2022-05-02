@@ -1,16 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System;
-using System.Collections.Generic;
-using System.Diagnostics.Contracts;
-using System.Dynamic;
-using System.Reflection;
-using Microsoft.PowerFx.Core.IR;
-using Microsoft.PowerFx.Core.Public.Types;
-using Microsoft.PowerFx.Core.Public.Values;
-
-namespace Microsoft.PowerFx
+namespace Microsoft.PowerFx.Types
 {    
     /// <summary>
     /// Represent a Record that's backed by a DotNet object. 

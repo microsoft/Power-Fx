@@ -4,7 +4,7 @@
 using System.Globalization;
 using System.IO;
 using Microsoft.PowerFx.Core;
-using Microsoft.PowerFx.Core.Texl.Intellisense.SignatureHelp;
+using Microsoft.PowerFx.Intellisense.SignatureHelp;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Xunit;

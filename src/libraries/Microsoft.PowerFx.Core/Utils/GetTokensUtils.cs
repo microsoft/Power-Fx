@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Public;
+using Microsoft.PowerFx.Intellisense;
 
 namespace Microsoft.PowerFx.Core.Utils
 {

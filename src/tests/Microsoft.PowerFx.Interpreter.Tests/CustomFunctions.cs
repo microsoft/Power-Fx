@@ -1,22 +1,10 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.PowerFx.Core;
-using Microsoft.PowerFx.Core.Functions;
-using Microsoft.PowerFx.Core.Public;
-using Microsoft.PowerFx.Core.Public.Types;
-using Microsoft.PowerFx.Core.Public.Values;
 using Microsoft.PowerFx.Core.Tests;
-using Microsoft.PowerFx.Core.Texl;
-using Microsoft.PowerFx.Core.Types.Enums;
-using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Types;
 using Xunit;
-using Xunit.Sdk;
 
 namespace Microsoft.PowerFx.Tests
 {
@@ -34,17 +22,17 @@ namespace Microsoft.PowerFx.Tests
             Assert.NotNull(func);
 
             // Can be invoked. 
-            var result = engine.Eval("TestCustom(2,3)");
-            Assert.Equal(6.0, result.ToObject());
+            var result = engine.Eval("TestCustom(3,true)");
+            Assert.Equal("3,True", result.ToObject());
         }
 
         // Must have "Function" suffix. 
         private class TestCustomFunction : ReflectionFunction
         {
             // Must have "Execute" method. 
-            public static NumberValue Execute(NumberValue x, NumberValue y)
+            public static StringValue Execute(NumberValue x, BooleanValue b)
             {
-                var val = x.Value * y.Value;
+                var val = x.Value.ToString() + "," + b.Value.ToString();
                 return FormulaValue.New(val);
             }
         }
