@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Types;
 
@@ -21,9 +22,7 @@ namespace Microsoft.PowerFx.Functions
         // Support for aggregators. Helpers to ensure that Scalar and Tabular behave the same.
         private interface IAggregator
         {
-            void Apply(FormulaValue value);
-
-            FormulaValue NoElementValue(IRContext context);
+            void Apply(FormulaValue value);            
 
             FormulaValue GetResult(IRContext irContext);
         }
@@ -138,30 +137,32 @@ namespace Microsoft.PowerFx.Functions
         private class MinNumberAgg : IAggregator
         {            
             protected double _minValue = double.MaxValue;
-            protected static readonly double _defaultN = 0d;
+            protected int _count = 0;
 
             public void Apply(FormulaValue value)
-            {             
-                var n1 = value is BlankValue ? _defaultN : ((NumberValue)value).Value;
+            {            
+                if (value is BlankValue)
+                {
+                    return;
+                }
+
+                var n1 = ((NumberValue)value).Value;
 
                 if (n1 < _minValue)
                 {
                     _minValue = n1;
                 }
-            }
 
-            public FormulaValue NoElementValue(IRContext context)
-            {
-                return GetDefault(context);
-            }
-
-            public FormulaValue GetDefault(IRContext context)
-            {
-                return new NumberValue(context, 0);
+                _count++;
             }
 
             public FormulaValue GetResult(IRContext irContext)
             {
+                if (_count == 0)
+                {
+                    return new BlankValue(irContext);
+                }
+
                 return new NumberValue(irContext, _minValue);
             }
         }
@@ -169,30 +170,32 @@ namespace Microsoft.PowerFx.Functions
         private class MinDateTimeAgg : IAggregator
         {
             protected DateTime _minValueDT = DateTime.MaxValue;
-            protected static readonly DateTime _defaultDT = new DateTime(1899, 12, 30);
+            protected int _count = 0;
 
             public void Apply(FormulaValue value)
-            {               
-                var n1 = value is BlankValue ? _defaultDT : ((DateValue)value).Value;
+            {           
+                if (value is BlankValue)
+                {
+                    return;
+                }
+
+                var n1 = ((DateValue)value).Value;
 
                 if (n1 < _minValueDT)
                 {
                     _minValueDT = n1;
                 }
-            }
 
-            public FormulaValue NoElementValue(IRContext context)
-            {
-                return GetDefault(context);
+                _count++;
             }
-
-            public FormulaValue GetDefault(IRContext context)
-            {
-                return new DateValue(context, _defaultDT);
-            }
-
+        
             public FormulaValue GetResult(IRContext irContext)
             {
+                if (_count == 0)
+                {
+                    return new BlankValue(irContext);
+                }
+
                 return new DateTimeValue(irContext, _minValueDT);
             }
         }
@@ -200,30 +203,32 @@ namespace Microsoft.PowerFx.Functions
         private class MinDateAgg : IAggregator
         {
             protected DateTime _minValueDT = DateTime.MaxValue;
-            protected static readonly DateTime _defaultDT = new DateTime(1899, 12, 30);
+            protected int _count = 0;
 
             public void Apply(FormulaValue value)
             {               
-                var n1 = value is BlankValue ? _defaultDT : ((DateValue)value).Value;
+                if (value is BlankValue)
+                { 
+                    return;
+                }
+
+                var n1 = ((DateValue)value).Value;
 
                 if (n1 < _minValueDT)
                 {
                     _minValueDT = n1;
                 }
-            }
 
-            public FormulaValue NoElementValue(IRContext context)
-            {
-                return GetDefault(context);
-            }
-
-            public FormulaValue GetDefault(IRContext context)
-            {
-                return new DateValue(context, _defaultDT);
-            }
+                _count++;
+            }           
 
             public FormulaValue GetResult(IRContext irContext)
             {
+                if (_count == 0)
+                {
+                    return new BlankValue(irContext);
+                }
+
                 return new DateValue(irContext, _minValueDT);
             }
         }
@@ -231,30 +236,32 @@ namespace Microsoft.PowerFx.Functions
         private class MinTimeAgg : IAggregator
         {            
             protected TimeSpan _minValueT = TimeSpan.MaxValue;
-            private TimeSpan _defaultT = TimeSpan.Zero;
+            protected int _count = 0;
 
             public void Apply(FormulaValue value)
             {
-                var n1 = value is BlankValue ? _defaultT : ((TimeValue)value).Value;
+                if (value is BlankValue)
+                {
+                    return;
+                }
+
+                var n1 = ((TimeValue)value).Value;
 
                 if (n1 < _minValueT)
                 {
                     _minValueT = n1;
                 }
-            }
 
-            public FormulaValue NoElementValue(IRContext context)
-            {
-                return GetDefault(context);
-            }
-
-            public FormulaValue GetDefault(IRContext context)
-            {
-                return new TimeValue(context, _defaultT);
-            }
+                _count++;
+            }           
 
             public FormulaValue GetResult(IRContext irContext)
             {
+                if (_count == 0)
+                {
+                    return new BlankValue(irContext);
+                }
+
                 return new TimeValue(irContext, _minValueT);
             }
         }
@@ -262,30 +269,32 @@ namespace Microsoft.PowerFx.Functions
         private class MaxNumberAgg : IAggregator
         {            
             protected double _maxValue = double.MinValue;
-            private readonly double _defaultN = 0d;
+            protected int _count = 0;
 
             public void Apply(FormulaValue value)
-            {               
-                var n1 = value is BlankValue ? _defaultN : ((NumberValue)value).Value;
+            {            
+                if (value is BlankValue)
+                {
+                    return;
+                }
+
+                var n1 = ((NumberValue)value).Value;
 
                 if (n1 > _maxValue)
                 {
                     _maxValue = n1;
                 }
-            }
 
-            public FormulaValue NoElementValue(IRContext context)
-            {
-                return GetDefault(context);
-            }
-
-            public FormulaValue GetDefault(IRContext context)
-            {
-                return new NumberValue(context, _defaultN);
-            }
+                _count++;
+            }      
 
             public FormulaValue GetResult(IRContext irContext)
             {
+                if (_count == 0)
+                {
+                    return new BlankValue(irContext);
+                }
+
                 return new NumberValue(irContext, _maxValue);
             }
         }
@@ -293,29 +302,32 @@ namespace Microsoft.PowerFx.Functions
         private class MaxDateAgg : IAggregator
         {            
             protected DateTime _maxValueDT = DateTime.MinValue;
-            private readonly DateTime _defaultDT = new DateTime(1899, 12, 30);
+            protected int _count = 0;
 
             public void Apply(FormulaValue value)
-            {                
-                var n1 = value is BlankValue ? _defaultDT : ((DateValue)value).Value;
+            {   
+                if (value is BlankValue)
+                {
+                    return;
+                }
+
+                var n1 = ((DateValue)value).Value;
+
                 if (n1 > _maxValueDT)
                 {
                     _maxValueDT = n1;
                 }
-            }
 
-            public FormulaValue NoElementValue(IRContext context)
-            {
-                return CommonErrors.DivByZeroError(context);
-            }
-
-            public FormulaValue GetDefault(IRContext context)
-            {
-                return new DateValue(context, _defaultDT);
-            }
+                _count++;
+            }       
 
             public FormulaValue GetResult(IRContext irContext)
             {
+                if (_count == 0)
+                {
+                    return new BlankValue(irContext);
+                }
+
                 return new DateValue(irContext, _maxValueDT);
             }
         }
@@ -323,30 +335,32 @@ namespace Microsoft.PowerFx.Functions
         private class MaxDateTimeAgg : IAggregator
         {            
             protected DateTime _maxValueDT = DateTime.MinValue;
-            private readonly DateTime _defaultDT = new DateTime(1899, 12, 30);
+            protected int _count = 0;
 
             public void Apply(FormulaValue value)
             {
-                var n1 = value is BlankValue ? _defaultDT : ((DateTimeValue)value).Value;
+                if (value is BlankValue)
+                {
+                    return;
+                }
+            
+                var n1 = ((DateTimeValue)value).Value;
 
                 if (n1 > _maxValueDT)
                 {
                     _maxValueDT = n1;
                 }
-            }
 
-            public FormulaValue NoElementValue(IRContext context)
-            {
-                return CommonErrors.DivByZeroError(context);
-            }
-
-            public FormulaValue GetDefault(IRContext context)
-            {
-                return new DateValue(context, _defaultDT);
-            }
+                _count++;
+            }          
 
             public FormulaValue GetResult(IRContext irContext)
             {
+                if (_count == 0)
+                {
+                    return new BlankValue(irContext);
+                }
+
                 return new DateTimeValue(irContext, _maxValueDT);
             }
         }
@@ -354,30 +368,32 @@ namespace Microsoft.PowerFx.Functions
         private class MaxTimeAgg : IAggregator
         {            
             protected TimeSpan _maxValueT = TimeSpan.MinValue;
-            private TimeSpan _defaultT = TimeSpan.Zero;
+            protected int _count = 0;
 
             public void Apply(FormulaValue value)
             {
-                var n1 = value is BlankValue ? _defaultT : ((TimeValue)value).Value;
+                if (value is BlankValue)
+                {
+                    return;
+                }
+
+                var n1 = ((TimeValue)value).Value;
                 
                 if (n1 > _maxValueT)
                 {
                     _maxValueT = n1;
                 }
-            }
 
-            public FormulaValue NoElementValue(IRContext context)
-            {
-                return CommonErrors.DivByZeroError(context);
-            }
-
-            public FormulaValue GetDefault(IRContext context)
-            {
-                return new TimeValue(context, _defaultT);
-            }
+                _count++;
+            }           
 
             public FormulaValue GetResult(IRContext irContext)
             {
+                if (_count == 0)
+                {
+                    return new BlankValue(irContext);
+                }
+
                 return new TimeValue(irContext, _maxValueT);
             }
         }
@@ -406,15 +422,8 @@ namespace Microsoft.PowerFx.Functions
         }
 
         private static FormulaValue RunAggregator(IAggregator agg, IRContext irContext, FormulaValue[] values)
-        {
-            var vals = values.Where(v => v is not BlankValue);
-
-            if (!vals.Any())
-            {
-                return agg.NoElementValue(irContext);
-            }
-
-            foreach (var value in vals)
+        {            
+            foreach (var value in values.Where(v => v is not BlankValue))
             {
                 agg.Apply(value);
             }
@@ -424,8 +433,8 @@ namespace Microsoft.PowerFx.Functions
 
         private static async Task<FormulaValue> RunAggregatorAsync(IAggregator agg, EvalVisitor runner, SymbolContext context, IRContext irContext, FormulaValue[] args)
         {
-            var arg0 = (TableValue)args.Where(a => a is not BlankValue).First();
-            var arg1 = (LambdaFormulaValue)args.Where(a => a is not BlankValue).Skip(1).First();
+            var arg0 = (TableValue)args.First();
+            var arg1 = (LambdaFormulaValue)args.Skip(1).First();
 
             foreach (var row in arg0.Rows)
             {

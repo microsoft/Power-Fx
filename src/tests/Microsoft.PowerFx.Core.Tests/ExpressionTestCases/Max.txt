@@ -42,7 +42,7 @@
 #Error(Kind=Div0)
 
 >> Max(Blank())
-0
+Blank()
 
 >> Max(1, Blank(), 2, Blank(), 3, Blank(), 4, Blank(), 5)
 5

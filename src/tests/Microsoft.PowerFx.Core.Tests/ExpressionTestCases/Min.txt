@@ -43,10 +43,10 @@
 #Error(Kind=Div0)
 
 >> Min(Blank())
-0
+Blank()
 
 >> Min(Blank(),Blank(),Blank(),Blank())
-0
+Blank()
 
 >> Min(Blank(),0,0,Blank())
 0
