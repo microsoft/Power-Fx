@@ -38,6 +38,12 @@
 >> Abs(1/0)
 #Error(Kind=Div0)
 
+>> IsError(Abs(1/0))
+true
+
+>> IsBlank(Abs(1/0))
+#Error(Kind=Div0)
+
 //Excel returns 0
 >> Abs(Blank())
 Blank()
@@ -49,9 +55,15 @@ false
 >> IsBlank(Abs(Blank()))
 true
 
+>> IsError(Abs(Blank()))
+false
+
 // ******** STRING PARAMETERS ********
 
 >> Abs("sampleText")
+#Error(Kind=InvalidArgument)
+
+>> IsBlank(Abs("sampleText"))
 #Error(Kind=InvalidArgument)
 
 >> Abs("10")

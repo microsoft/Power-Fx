@@ -16,6 +16,12 @@ Date(1976,7,4)
 >> Date(-1,1,1)
 #Error(Kind=InvalidArgument)
 
+>> IsBlank(Date(-1,1,1))
+#Error(Kind=InvalidArgument)
+
+>> IsError(Date(-1,1,1))
+true
+
 >> Date(10000,1,1)
 #Error(Kind=InvalidArgument)
 
@@ -56,12 +62,24 @@ Date(1899,11,30)
 >> Date(1900.67,2.7,12.2)
 Date(1900,2,12)
 
+>> IsBlank(Date(1900.67,2.7,12.2))
+false
+
+>> IsError(Date(1900.67,2.7,12.2))
+false
+
 
 // ******** NULL and ERROR PARAMETERS ********
 
 // Excel considers 1900 as default year when passed blank year and returns 11/29/1900 for above parameters
 >> Date(Blank(),11,29)
 Blank()
+
+>> IsBlank(Date(Blank(),11,29))
+true
+
+>> IsError(Date(Blank(),11,29))
+false
 
 // Excel considers 12 as default month when passed blank month and returns 12/14/1975 for above parameters
 >> Date(1975,Blank(),14)

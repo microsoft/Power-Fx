@@ -38,6 +38,12 @@
 >> Average(Blank())
 #Error(Kind=Div0)
 
+>> IsBlank(Average(Blank()))
+#Error(Kind=Div0)
+
+>> IsError(Average(Blank()))
+true
+
 >> Average("")
 #Error(Kind=Div0)
 
@@ -47,15 +53,30 @@
 >> Average(Blank(),Blank(),Blank(),Blank())
 #Error(Kind=Div0)
 
+>> IsBlank(Average(Blank(),Blank(),Blank(),Blank()))
+#Error(Kind=Div0)
+
+>> IsError(Average(Blank(),Blank(),Blank(),Blank()))
+true
+
 >> Average(1, Blank(), 2, Blank(), 3, Blank(), 4, Blank(), 5)
 3
 
 >> Average(-2, Blank(), -2, Blank(), -3, Blank(), -4, Blank(), -5)
 -3.2
 
-//Excel gives compile error and mention typo in the formula. Suggest to correct 1E+308 to E1+308
+//Excel returns IE+307
+>> Average(1E+307, 1E+307)
+10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+
 >> Average(1E+308, 1E+308)
-#Error(Kind=Numeric)
+Error(Kind=Numeric)
+
+>> IsBlank(Average(1E+308, 1E+308))
+Error(Kind=Numeric)
+
+>> IsError(Average(1E+308, 1E+308))
+true
 
 // ******** STRING PARAMETERS ********
 
@@ -67,6 +88,9 @@
 
 >> Average("-10.123", 1.234)
 -4.4445
+
+>> IsError(Average("-10.123", 1.234))
+false
 
 >> Average("9", "10")
 9.5
