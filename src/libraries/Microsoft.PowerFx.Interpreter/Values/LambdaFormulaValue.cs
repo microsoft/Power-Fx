@@ -6,9 +6,8 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.IR.Nodes;
-using Microsoft.PowerFx.Core.Public.Values;
 
-namespace Microsoft.PowerFx
+namespace Microsoft.PowerFx.Types
 {
     [DebuggerDisplay("{_tree}")]
     internal class LambdaFormulaValue : FormulaValue

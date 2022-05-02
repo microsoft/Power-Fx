@@ -3,7 +3,7 @@
 
 using Microsoft.PowerFx.Core.Types.Enums;
 
-namespace Microsoft.PowerFx.Core.Texl.Intellisense
+namespace Microsoft.PowerFx.Intellisense
 {
     internal static class IntellisenseProvider
     {

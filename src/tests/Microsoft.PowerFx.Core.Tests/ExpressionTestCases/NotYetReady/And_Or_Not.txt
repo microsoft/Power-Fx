@@ -1,0 +1,414 @@
+
+// ************************************** AND BOOLEAN LOGIC CASES **************************************
+
+//================================Function notation===================================
+
+>> And(true)
+true
+
+>> And(false)
+true
+
+>> And(true,true)
+true
+
+>> And(true,false)
+false
+
+>> And(false,false)
+false
+
+>> And(true,true,true,false)
+false
+
+>> And(false,true,true,true,false)
+false
+
+
+// ============================Visual Basic operator notation==========================
+
+>> true
+true
+
+>> false
+false
+
+>> true And true
+true
+
+>> true And false
+true
+
+>> false And false
+false
+
+>> true And true And true And false
+false
+
+>> false And true And true And true And false
+false
+
+
+// ============================Javascript operator notation============================
+
+>> true && true
+true
+
+>> true && false
+true
+
+>> false && false
+true
+
+>> true && true && true && false 
+true
+
+>> false && true && true && true && true && false
+false
+
+
+// =========================Null, Empty String and Error cases =========================
+
+//Test short-circuiting. Error condition in second argument not evaluated
+>> And(false, true, 1/0=1)
+false
+
+>> And(true, true, false, 1/0=1)
+false
+
+>> And(true, true, true, 1/0=1)
+#Error(Kind=Div0)
+
+>> And(1/0 = 7, true)
+#Error(Kind=Div0)
+
+>> And(Blank(), true)
+Blank()
+
+>> And(Blank(), false)
+Blank()
+
+>> And(Blank(), Blank())
+Blank()
+
+>> And(true, true, true, true, Blank(), true)
+Blank()
+
+>> And("", true)
+false
+
+>> And("", false)
+false
+
+>> And("", "")
+false
+
+>> And(true, true, true, true, "", true)
+Blank()
+
+// ====================== AND boolean logic between different datatyps ===================
+
+// 1. First Argument - Number and Second Argument - Other Datatypes
+
+>> And(1,1)
+true
+
+>> And(1,0)
+false
+
+>> And(23,-23.5)
+true
+
+>> And(0,"0")
+false
+
+>> And(1,"1")
+false
+
+>> And(1,"ABC")
+false
+
+>> And(-24.5,"true")
+true
+
+>> And(1,true)
+true
+
+>> And(1,false)
+false
+
+>> And(0,false)
+false
+
+// 2. First Argument - String and Second Argument - Other Datatypes
+
+>> And("1",0)
+false
+
+>> And("ABC",1)
+false
+
+>> And("ABC","ABC")
+false
+
+>> And("ABC","abc")
+false
+
+>> And("ABC",true)
+false
+
+>> And("ABC",false)
+false
+
+>> And("true",true)
+true
+
+>> And("false",true)
+false
+
+>> And("true","true")
+true
+
+
+// 3. First Argument - Boolean and Second Argument - Other Datatypes
+
+>> And(true,1)
+true
+
+>> And(true,-23.5)
+true
+
+>> And(true,0)
+false
+
+>> And(false,1)
+false
+
+>> And(true, "1") 
+false
+
+>> And(true, "true")
+true
+
+>> And(true, "false")
+false
+
+>> And(true, true)
+true
+
+// ************************************** OR BOOLEAN LOGIC CASES **************************************
+
+//================================Function notation===================================
+
+>> Or(true)
+true
+
+>> Or(false)
+false
+
+>> Or(true,true)
+true
+
+>> Or(true,false)
+true
+
+>> Or(false,false)
+false
+
+>> Or(true,false,false,false)
+true
+
+>> Or(false,false,false,true)
+true
+
+>> Or(false,true,true,true,false)
+true
+
+
+// ============================Visual Basic operator notation==========================
+
+>> true Or true
+true
+
+>> true Or false
+true
+
+>> false Or false
+true
+
+>> true Or false Or false Or false
+true
+
+>> false Or false Or false Or true
+true
+
+>> false Or true Or true Or true Or false
+true
+
+// ============================Javascript operator notation============================
+
+>> true || true
+true
+
+>> true || false
+true
+
+>> false || false
+true
+
+>> true || false || false || false
+true
+
+>> false || false || false || true
+true
+
+>> false || true || true || true || false
+true
+
+
+// ============================Null, Empty String and Error cases =======================
+
+//Test short-circuiting. Error condition in second argument not evaluated
+>> Or(true, 1/0=1, true, false)
+true
+
+>> Or(false, 1/0=1)
+#Error(Kind=Div0)
+
+>> Or(1/0=7, true)
+#Error(Kind=Div0)
+
+>> Or(Blank(), true)
+true
+
+>> Or(Blank(), false)
+false
+
+>> Or(Blank(), Blank())
+Blank()
+
+>> Or("", true)
+true
+
+>> Or("", false)
+false
+
+>> Or("", "")
+false
+
+// ====================== OR boolean logic between different datatyps ===================
+
+// 1. First Argument - Number Or Second Argument - Other Datatypes
+
+>> Or(1,1)
+true
+
+>> Or(23,-23.5)
+true
+
+>> Or(1,"1")
+true
+
+>> Or(0,"1")
+false
+
+>> Or(1,"ABC")
+true
+
+>> Or(24,true)
+true
+
+>> Or(1,false)
+true
+
+// 2. First Argument - String Or Second Argument - Other Datatypes
+
+>> Or("1",1)
+true
+
+>> Or("ABC",11)
+false
+
+>> Or("ABC","ABC")
+false
+
+>> Or("ABC","abc")
+false
+
+>> Or("ABC",true)
+true
+
+>> Or("ABC",false)
+false
+
+// 3. First Argument - Boolean Or Second Argument - Other Datatypes
+
+>> Or(true,1)
+true
+
+>> Or(true,-23.5)
+true
+
+>> Or(true,0)
+true
+
+>> Or(false,1)
+true
+
+>> Or(true, "true")
+true
+
+// ************************************** NOT BOOLEAN LOGIC CASES **************************************
+
+//================================Function notation===================================
+
+>> Not(true)
+false
+
+>> Not(false)
+true
+
+>> Not(1)
+false
+
+>> Not(0)
+true
+
+>> Not("1")
+true
+
+>> Not("0")
+true
+
+>> Not("true")
+false
+
+>> Not("false")
+true
+
+// ============================Visual Basic operator notation==========================
+
+>> Not true
+false
+
+>> Not false
+true
+
+// ============================Javascript operator notation============================
+	
+>> !true
+false
+
+>> !false
+true
+
+// ============================Null, Empty String and Error cases ========================
+
+>> Not(1/0=1)
+#Error(Kind=Div0)
+
+>> Not(Blank())
+true
+
+>> Not("")
+true

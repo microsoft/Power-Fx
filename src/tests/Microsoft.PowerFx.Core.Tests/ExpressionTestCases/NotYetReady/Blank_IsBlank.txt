@@ -1,0 +1,101 @@
+
+//NOTE: Most of the Blank() and IsBlank() scenarios are covered in other functions. This file consist of few more Blank()scenarios
+
+// ========= Arithmetic operations with Blank() - Numerically Blank() evaluates to 0, but Blank() is not 0 =========
+
+>> Blank()
+Blank()
+
+>> IsBlank(Blank())
+true
+
+>> Blank() - Blank()
+0
+
+>> Blank() + Blank()
+0
+
+>> IsBlank(Blank() + Blank())
+false
+
+>> 5 + Blank()
+5
+
+>> Blank() - 5
+-5
+
+>> -5 < Blank()
+true
+
+>> 5 < Blank()
+false
+
+>> Blank()%
+0
+
+>> 5 / Blank()
+#Error(Kind=Div0)
+
+>> Blank() = 0 
+false
+
+>> Blank() <> 0
+true
+
+>> 0 = Blank()
+false
+
+>> 0 <> Blank()
+true
+
+>> IsBlank(0)
+false
+
+
+// ========= String operations: Blank() acts as "", but Blank() is not a string  =========
+
+>> "A" & Blank() & "B"
+"AB"
+
+>> Blank() = ""
+false
+
+>> Blank() <> ""
+true
+
+>> Len(Blank()) 
+0
+
+>> Blank() = Blank()
+true
+
+
+// ========= Boolean operations =========
+>> Not(Blank())
+true
+
+>> IsBlank(false)
+false
+
+>> IsBlank(true)
+false
+
+// ========= Empty String =========
+>> IsBlank("")
+true
+
+
+// ========= Whitespace =========
+>> IsBlank(" ")
+false
+
+
+// ========= Error expressions =========
+>> IsBlank(Abs(1/0))
+#Error(Kind=Div0)
+
+>> IsBlank(Abs("sampleText"))
+#Error(Kind=InvalidArgument)
+
+>> IsBlank(Ln(0.00))
+#Error(Kind=Numeric)

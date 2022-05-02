@@ -4,9 +4,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.PowerFx.Core.Syntax.Nodes;
 
-namespace Microsoft.PowerFx.Core.Syntax.Visitors
+namespace Microsoft.PowerFx.Syntax
 {
     /// <summary>
     /// A base visitor for returning results that can be easily aggregated (lists, booleans, sums).
