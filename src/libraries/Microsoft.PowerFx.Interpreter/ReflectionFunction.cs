@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
@@ -130,9 +131,14 @@ namespace Microsoft.PowerFx
 
         private static FormulaType GetType(Type t)
         {
-            if (t == typeof(NumberValue))
+            // Handle any FormulaType deriving from Primitive<T>
+            var tBase = t.BaseType;
+            if (Utility.TryGetElementType(tBase, typeof(PrimitiveValue<>), out var typeArg))
             {
-                return FormulaType.Number;
+                if (BuiltinFormulaTypeConversions.TryGetFormulaType(typeArg, out var formulaType))
+                {
+                    return formulaType;
+                }
             }
 
             throw new NotImplementedException($"Marshal type {t.Name}");
