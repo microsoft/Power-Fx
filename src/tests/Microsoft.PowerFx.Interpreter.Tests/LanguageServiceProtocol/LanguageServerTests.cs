@@ -33,8 +33,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
         {
             // Create an Engine() that has all the builtin symbols by default. 
             // Note that interpreter has fewer symbols. 
-            var config = new PowerFxConfig();
-            var engine = new Engine(config);
+            var engine = new Engine(new PowerFxConfig());
 
             _sendToClientData = new List<string>();
             _scopeFactory = new TestPowerFxScopeFactory((string documentUri) => RecalcEngineScope.FromUri(engine, documentUri));
