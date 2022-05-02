@@ -45,17 +45,15 @@ namespace Microsoft.PowerFx
         {
             if (collection != typeof(string))
             {
-                if (collection.IsGenericType && collection.GetGenericTypeDefinition() == typeof(IEnumerable<>))
+                if (Utility.TryGetElementType(collection, typeof(IEnumerable<>), out elementType))
                 {
-                    elementType = collection.GenericTypeArguments[0];
                     return true;
                 }
 
                 foreach (var t1 in collection.GetInterfaces())
                 {
-                    if (t1.IsGenericType && t1.GetGenericTypeDefinition() == typeof(IEnumerable<>))
-                    {
-                        elementType = t1.GenericTypeArguments[0];
+                    if (Utility.TryGetElementType(t1, typeof(IEnumerable<>), out elementType))
+                    {                        
                         return true;
                     }
                 }

@@ -26,5 +26,20 @@ namespace Microsoft.PowerFx
 
             return results;
         }
+
+        // Helper. Given a type Foo<T>,  extract the T when genericDef is Foo<>.
+        public static bool TryGetElementType(Type type, Type genericDef, out Type elementType)
+        {
+            if (type.IsGenericType && type.GetGenericTypeDefinition() == genericDef)
+            {
+                elementType = type.GenericTypeArguments[0];
+                return true;
+            }
+            else
+            {
+                elementType = null;
+                return false;
+            }
+        }
     }
 }
