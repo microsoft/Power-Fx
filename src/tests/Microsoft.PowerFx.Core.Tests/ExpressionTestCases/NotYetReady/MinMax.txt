@@ -2,5 +2,5 @@
 DateTime(2022,3,8,0,0,0,0)
 
 >> Max(If(Left("hello", -1), [Date(2020,1,1), Date(2021,2,2)]), Value)
-#Error(Kind=Argument)
+#Error(Kind=InvalidArgument)
 
