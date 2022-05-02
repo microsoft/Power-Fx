@@ -138,7 +138,7 @@ namespace Microsoft.PowerFx.Functions
             var signFound = false;
             var percentFound = false;
 
-            while (loop)
+            for (var loopCount = 0; loop && loopCount < 5; loopCount++)
             {
                 loop = false;
                 str = str.Trim();
@@ -190,7 +190,7 @@ namespace Microsoft.PowerFx.Functions
                     str = str.Substring(1, str.Length - 1);
                     div *= -1;
                     signFound = loop = true;
-                }                
+                }                                  
             }           
 
             var err = double.TryParse(str, NumberStyles.Any, culture, out var val);
