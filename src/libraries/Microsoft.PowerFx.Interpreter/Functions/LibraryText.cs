@@ -98,7 +98,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 return DateTimeToNumber(irContext, new DateTimeValue[] { dtv });
             }
-            
+
             string str = null;
 
             if (arg0 is StringValue sv)
@@ -113,16 +113,12 @@ namespace Microsoft.PowerFx.Functions
 
             var (val, err) = ConvertToNumber(str, runner.CultureInfo);
 
-            switch (err)
+            if (err == ConvertionStatus.Ok)
             {
-                case ConvertionStatus.InvalidNumber:
-                    return CommonErrors.ArgumentOutOfRange(irContext);
-
-                case ConvertionStatus.Ok:
-                    return new NumberValue(irContext, val);
+                return new NumberValue(irContext, val);
             }
 
-            throw new NotImplementedException($"Unknown ConvertionStatus value {err}");
+            return CommonErrors.ArgumentOutOfRange(irContext);
         }
 
         // Converts numbers that can be signed and be percentages
@@ -135,14 +131,17 @@ namespace Microsoft.PowerFx.Functions
                 return (0d, ConvertionStatus.InvalidNumber);
             }
 
-            if (str[0] == '%' || str[str.Length - 1] == '%')
+            var startingPercent = str[0] == '%';
+            var endingPercent = str[str.Length - 1] == '%';
+
+            if (startingPercent || endingPercent)
             {
-                if (str[0] == '%' && str[str.Length - 1] == '%')
+                if (startingPercent && endingPercent)
                 {
                     return (0d, ConvertionStatus.InvalidNumber);
                 }
 
-                var pct = ConvertPercentageToNumber(str[0] == '%' ? str.Substring(1) : str.Substring(0, str.Length - 1), culture);
+                var pct = ConvertPercentageToNumber(startingPercent ? str.Substring(1) : str.Substring(0, str.Length - 1), culture);
                 return (pct.Item1 / 100d, pct.Item2);
             }                                 
 
@@ -198,7 +197,7 @@ namespace Microsoft.PowerFx.Functions
                 return (-sn.Item1, sn.Item2);
             }
 
-            return ConvertNumber(str, culture);
+            return ConvertUnsignedNoPercentNumber(str, culture);
         }
 
         private static (double, ConvertionStatus) ConvertSignedNumberPossiblyPercent(string str, CultureInfo culture)
@@ -215,18 +214,21 @@ namespace Microsoft.PowerFx.Functions
                 return (0d, ConvertionStatus.InvalidNumber);
             }
 
-            if (str[0] == '%' || str[str.Length - 1] == '%')
+            var startingPercent = str[0] == '%';
+            var endingPercent = str[str.Length - 1] == '%';
+
+            if (startingPercent || endingPercent)
             {
-                if (str[0] == '%' && str[str.Length - 1] == '%')
+                if (startingPercent && endingPercent)
                 {
                     return (0d, ConvertionStatus.InvalidNumber);
                 }
 
-                var pct = ConvertNumber(str[0] == '%' ? str.Substring(1) : str.Substring(0, str.Length - 1), culture);
+                var pct = ConvertUnsignedNoPercentNumber(startingPercent ? str.Substring(1) : str.Substring(0, str.Length - 1), culture);
                 return (pct.Item1 / 100d, pct.Item2);
             }
 
-            return ConvertNumber(str, culture);
+            return ConvertUnsignedNoPercentNumber(str, culture);
         }
 
         private static (double, ConvertionStatus) ConvertSignedNumberNoPercentage(string str, CultureInfo culture)
@@ -248,10 +250,10 @@ namespace Microsoft.PowerFx.Functions
                 return (0d, ConvertionStatus.InvalidNumber);
             }
 
-            return ConvertNumber(str, culture);
+            return ConvertUnsignedNoPercentNumber(str, culture);
         }
 
-        private static (double, ConvertionStatus) ConvertNumber(string str, CultureInfo culture)
+        private static (double, ConvertionStatus) ConvertUnsignedNoPercentNumber(string str, CultureInfo culture)
         {
             str = str.Trim();
 
