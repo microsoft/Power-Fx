@@ -75,13 +75,11 @@
 >>  Replace("abcd", 100, 1, "P")
 "abcdP"
 
-//Excel returns "aPcd"
 >> Replace("abcd", 2.9, 1.2, "P")
-"aPd"
+"aPcd"
 
-//Excel returns "abPefg"
 >> Replace("abcdefg", 3.7, 2.6, "P")
-"abPfg"
+"abPefg"
 
 >> Replace("abcd", 5e100, 1, "P")
 "abcdP"
@@ -153,7 +151,7 @@
 
 //Error message: The second argument to the "Value" function should be greater than or equal to 1
 >> Replace("abcabcabc", -1, -2, "mm")
-#Error(Kind=InvalidArgument)
+#Error(Kind=InvalidArgument, InvalidArgument)
 
 //Error message: The second argument to the "Value" function should be greater than or equal to 1
 >> Replace("", 0, 0, "")
@@ -185,7 +183,7 @@
 
 //Error message: Invalid arguments to the 'Value' function
 >> Replace("HelloWorld","true","false","mm")
-#Error(Kind=InvalidArgument)
+#Error(Kind=InvalidArgument, InvalidArgument)
 
 //Invalid operation: Division by zero
 >> Replace("abcdef", 1/0, 1, "mm")
@@ -197,7 +195,7 @@
 
 //Invalid argument to the function
 >> Replace("abcd", "abc", "def", "mm")
-#Error(Kind=InvalidArgument)
+#Error(Kind=InvalidArgument, InvalidArgument)
 
 // ******** FUNCTION VALUE AS PARAMETERS ********
 
