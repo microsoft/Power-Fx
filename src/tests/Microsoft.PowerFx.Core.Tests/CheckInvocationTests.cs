@@ -2,8 +2,6 @@
 // Licensed under the MIT license.
 
 using System;
-using System.Collections.Generic;
-using System.Text;
 using Microsoft.PowerFx.Types;
 using Xunit;
 
@@ -87,8 +85,8 @@ namespace Microsoft.PowerFx.Core.Tests
             var checkResult2 = engine.Check(parseResult2);
             var args2 = parseResult2.Root.AsCall().Args.ChildNodes;
 
-            var mixedNodes = new[] { args1[0], args2[0], args1[1] };
-            checkResult2.ValidateInvocation("If", mixedNodes, out _);
+            var mixedNodes = new[] { args2[0], args1[0], args2[1] };
+            Assert.Throws<ArgumentException>(() => checkResult2.ValidateInvocation("If", mixedNodes, out _));
         }
     }
 }

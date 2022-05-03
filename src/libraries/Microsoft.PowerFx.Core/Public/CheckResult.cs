@@ -108,6 +108,25 @@ namespace Microsoft.PowerFx
         public bool ValidateInvocation(string fncName, IReadOnlyList<TexlNode> args, out FormulaType retType)
         {
             retType = null;
+
+            if (args is null)
+            {
+                throw new ArgumentNullException(nameof(args));
+            }
+
+            foreach (var arg in args)
+            {
+                if (arg is null)
+                {
+                    throw new ArgumentNullException(nameof(args));
+                }
+
+                if (!_binding.IsNodeValid(arg))
+                {
+                    throw new ArgumentException("Argument does not belong to this result");
+                }
+            }
+
             var fnc = _binding.NameResolver.Functions
                               .Where(fnc => fnc.Name == fncName && args.Count >= fnc.MinArity && args.Count <= fnc.MaxArity)
                               .FirstOrDefault();
@@ -115,8 +134,6 @@ namespace Microsoft.PowerFx
             {
                 return false;
             }
-
-            // TODO: Check that all args are valid (belong to the binder)
 
             var types = args.Select(node => _binding.GetType(node)).ToArray();
             var result = fnc.CheckInvocation(_binding, args.ToArray(), types, _binding.ErrorContainer, out var retDType, out _);
