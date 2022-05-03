@@ -3,10 +3,13 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Glue;
 using Microsoft.PowerFx.Core.IR;
+using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Types;
@@ -32,6 +35,66 @@ namespace Microsoft.PowerFx
         public RecalcEngine(PowerFxConfig powerFxConfig)
             : base(AddInterpreterFunctions(powerFxConfig))
         {
+        }
+
+        // This is tricky ... config file is locked. But we need a config to be able to parse and bind. 
+        internal Dictionary<string, TexlFunction> _customFuncs = new Dictionary<string, TexlFunction>();
+
+        // would also be a good generic helper 
+        private static NamedValue[] Zip(NamedFormulaType[] parameters, FormulaValue[] args)
+        {
+            var result = new NamedValue[args.Length];
+            for (var i = 0; i < args.Length; i++)
+            {
+                result[i] = new NamedValue(parameters[i].Name, args[i]);
+            }
+
+            return result;
+        }
+
+        public void DefineFunction(string name, string body, params NamedFormulaType[] parameters)
+        {
+            // $$$ Would be a good helper function 
+            var record = new RecordType();
+            foreach (var p in parameters)
+            {
+                record = record.Add(p);
+            }
+
+            var check = Check(body, record);
+            check.ThrowOnErrors();
+
+            var retType = check.ReturnType; // infer return result!
+
+            var func = new MyTexlFunction(name, retType, parameters.Select(x => x.Type).ToArray())
+            {
+                _parameterNames = parameters,
+                _expr = check.Expression
+            };
+
+            _customFuncs[name] = func;
+        }
+
+        private class MyTexlFunction : CustomTexlFunction, IAsyncTexlFunction
+        {
+            internal NamedFormulaType[] _parameterNames;
+            internal IExpression _expr;
+
+            public MyTexlFunction(string name, FormulaType returnType, params FormulaType[] paramTypes)
+                : base(name, returnType, paramTypes)
+            {
+            }
+
+            public async Task<FormulaValue> InvokeAsync(FormulaValue[] args, CancellationToken cancel)
+            {
+                // $$$ There's a lot of unnecessary string packing overhead here 
+                // because Eval wants a Record rather than a resolved arg array.                 
+                var parameters = FormulaValue.NewRecordFromFields(Zip(_parameterNames, args));
+
+                var result = await _expr.EvalAsync(parameters, cancel);
+
+                return result;
+            }
         }
 
         // Add Builtin functions that aren't yet in the shared library. 

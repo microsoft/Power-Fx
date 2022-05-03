@@ -467,7 +467,27 @@ namespace Microsoft.PowerFx.Tests
             Assert.False(config.TryGetSymbol(new DName("foo"), out _, out _));
 
             Assert.DoesNotContain(BuiltinFunctionsCore.Abs, config.Functions);
-        }        
+        }
+
+        [Fact]
+        public void DefFunc()
+        {
+            var config = new PowerFxConfig(null);
+            var recalcEngine = new RecalcEngine(config);
+
+            var body = @"
+x * y
+";
+            recalcEngine.DefineFunction(
+                "foo",
+                body,
+                new NamedFormulaType("x", FormulaType.Number),
+                new NamedFormulaType("y", FormulaType.Number));
+
+            var result = recalcEngine.Eval("foo(3,4) + 5");
+
+            Assert.Equal(17.0, result.ToObject());
+        }
 
         [Fact]
         public void OptionSetChecks()
