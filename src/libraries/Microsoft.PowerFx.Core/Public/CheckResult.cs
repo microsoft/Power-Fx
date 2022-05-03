@@ -7,6 +7,7 @@ using System.Linq;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Public;
+using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.Syntax;
@@ -93,6 +94,35 @@ namespace Microsoft.PowerFx
         /// <param name="node"></param>
         /// <returns></returns>
         public FormulaType GetNodeType(TexlNode node) => FormulaType.Build(_binding.GetType(node));
+
+        /// <summary>
+        /// Checks whether a call to a function with name <paramref name="fncName" /> is valid with argument list
+        /// <paramref name="args" />. Additionally returns (as an out parameter) the return type of this invocation.
+        /// 
+        /// Note: all arguments must belong to the formula that belongs to this <see cref="CheckResult" />.
+        /// </summary>
+        /// <param name="fncName"></param>
+        /// <param name="args"></param>
+        /// <param name="retType"></param>
+        /// <returns></returns>
+        public bool ValidateInvocation(string fncName, IReadOnlyList<TexlNode> args, out FormulaType retType)
+        {
+            retType = null;
+            var fnc = _binding.NameResolver.Functions
+                              .Where(fnc => fnc.Name == fncName && args.Count >= fnc.MinArity && args.Count <= fnc.MaxArity)
+                              .FirstOrDefault();
+            if (fnc is null)
+            {
+                return false;
+            }
+
+            // TODO: Check that all args are valid (belong to the binder)
+
+            var types = args.Select(node => _binding.GetType(node)).ToArray();
+            var result = fnc.CheckInvocation(args.ToArray(), types, _binding.ErrorContainer, out var retDType, out _);
+            retType = FormulaType.Build(retDType);
+            return result;
+        }
 
         internal IReadOnlyDictionary<string, TokenResultType> GetTokens(GetTokensFlags flags) => GetTokensUtils.GetTokens(_binding, flags);
     }
