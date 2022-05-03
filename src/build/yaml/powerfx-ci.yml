@@ -76,7 +76,7 @@ steps:
 - powershell: 'echo "##vso[task.setvariable variable=CoverallsToken]$(PowerFxCoverallsToken)"'
   displayName: 'Set CoverallsToken for PublishToCoveralls.ps1'
   continueOnError: true
-  condition: and(succeeded(), eq(variables['System.PullRequest.IsFork'], 'false'))
+  condition: and(succeeded(), ne(variables['PowerFxCoverallsToken'], ''), eq(variables['System.PullRequest.IsFork'], 'false'))
 
 - task: PowerShell@2
   displayName: 'Upload Coverage Files to Coveralls.io https://coveralls.io/github/microsoft/Power-Fx'
@@ -85,7 +85,7 @@ steps:
     filePath: './$(Build.SourcesDirectory)\src\build\PublishToCoveralls.ps1'
     arguments: '-pathToCoverageFiles "$(Build.SourcesDirectory)\CodeCoverage" -serviceName "PR build"'
   continueOnError: true
-  condition: and(succeeded(), eq(variables['System.PullRequest.IsFork'], 'false'))
+  condition: and(succeeded(), ne(variables['PowerFxCoverallsToken'], ''), eq(variables['System.PullRequest.IsFork'], 'false'))
 
 - script: |
    cd ..
