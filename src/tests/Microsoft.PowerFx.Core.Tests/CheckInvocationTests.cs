@@ -69,5 +69,26 @@ namespace Microsoft.PowerFx.Core.Tests
             var result7 = checkResult.ValidateInvocation("IfError", args7, out _);
             Assert.True(result7);
         }
+
+        [Fact]
+        public void InvalidNodes()
+        {
+            var config = new PowerFxConfig();
+            var engine = new Engine(config);
+
+            var formula1 = "If(true, false, true)";
+            var parseResult1 = engine.Parse(formula1);
+            Assert.True(parseResult1.IsSuccess);
+            var args1 = parseResult1.Root.AsCall().Args.ChildNodes;
+
+            var formula2 = "If(false, true, false)";
+            var parseResult2 = engine.Parse(formula2);
+            Assert.True(parseResult2.IsSuccess);
+            var checkResult2 = engine.Check(parseResult2);
+            var args2 = parseResult2.Root.AsCall().Args.ChildNodes;
+
+            var mixedNodes = new[] { args1[0], args2[0], args1[1] };
+            checkResult2.ValidateInvocation("If", mixedNodes, out _);
+        }
     }
 }
