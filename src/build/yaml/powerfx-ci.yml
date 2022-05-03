@@ -1,0 +1,103 @@
+pool:
+  name: Azure Pipelines
+  demands:
+  - msbuild
+  - visualstudio
+  - vstest
+
+#Your build pipeline references an undefined variable named ‘Parameters.solution’. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab. See https://go.microsoft.com/fwlink/?linkid=865972
+#Your build pipeline references an undefined variable named ‘Parameters.solution’. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab. See https://go.microsoft.com/fwlink/?linkid=865972
+#Your build pipeline references the ‘BuildConfiguration’ variable, which you’ve selected to be settable at queue time. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab, and then select the option to make it settable at queue time. See https://go.microsoft.com/fwlink/?linkid=865971
+#Your build pipeline references the ‘BuildConfiguration’ variable, which you’ve selected to be settable at queue time. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab, and then select the option to make it settable at queue time. See https://go.microsoft.com/fwlink/?linkid=865971
+#Your build pipeline references the ‘BuildConfiguration’ variable, which you’ve selected to be settable at queue time. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab, and then select the option to make it settable at queue time. See https://go.microsoft.com/fwlink/?linkid=865971
+#Your build pipeline references a secret variable named ‘PowerFxCoverallsToken’. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab, and then select the option to make it secret. See https://go.microsoft.com/fwlink/?linkid=865972
+variables:
+  BuildPlatform: 'any cpu'
+
+steps:
+- task: NuGetCommand@2
+  displayName: 'NuGet restore'
+  inputs:
+    restoreSolution: '$(Parameters.solution)'
+    feedsToUse: config
+    nugetConfigPath: .
+
+- powershell: |
+   gci env:* | sort-object name | Format-Table -AutoSize -Wrap
+   
+  displayName: 'Display env vars'
+
+- task: VSBuild@1
+  displayName: 'Build Microsoft.PowerFx.sln'
+  inputs:
+    solution: '$(Parameters.solution)'
+    vsVersion: 16.0
+    msbuildArgs: '-p:SignAssembly=false -p:delaySign=false'
+    platform: '$(BuildPlatform)'
+    configuration: '$(BuildConfiguration)'
+
+- powershell: |
+    Remove-Item CodeCoverage -Force -Recurse -ErrorAction Ignore
+    New-Item CodeCoverage -ItemType Directory -Force
+    
+  displayName: 'Create CodeCoverage directory'
+
+- task: DotNetCoreCLI@2
+  displayName: 'dotnet test'
+  inputs:
+    command: test
+    projects: 'src\tests\**\*.Tests.csproj'
+    arguments: '--configuration $(BuildConfiguration) --collect "Code Coverage"'
+  enabled: false
+
+- task: VSTest@2
+  displayName: VsTest
+  inputs:
+    testAssemblyVer2: |
+     src\tests\*\bin\**\*.Tests.dll
+     !**\*TestAdapter.dll
+     !**\obj\**
+    resultsFolder: '$(Build.ArtifactStagingDirectory)\TestResults'
+    runSettingsFile: 'src\CodeCoverage.runsettings'
+    codeCoverageEnabled: true
+    configuration: '$(BuildConfiguration)'
+
+- powershell: |
+   # This task copies the code coverage file created by dotnet test into a well known location. In all
+   # checks I've done, dotnet test ALWAYS outputs the coverage file to the temp directory. $(Agent.TempDirectory)
+   # My attempts to override this and have it go directly to the CodeCoverage directory have
+   # all failed, so I'm just doing the copy here.  (cmullins)
+   
+   Get-ChildItem -Path $(Build.ArtifactStagingDirectory)\TestResults -Include "*.coverage" -Recurse | Copy-Item -Destination CodeCoverage
+   
+   
+  displayName: 'Copy .coverage Files to CodeCoverage folder'
+
+- powershell: 'echo "##vso[task.setvariable variable=CoverallsToken]$(PowerFxCoverallsToken)"'
+  displayName: 'Set CoverallsToken for PublishToCoveralls.ps1'
+  continueOnError: true
+  condition: and(succeeded(), eq(variables['System.PullRequest.IsFork'], 'false'))
+
+- task: PowerShell@2
+  displayName: 'Upload Coverage Files to Coveralls.io https://coveralls.io/github/microsoft/Power-Fx'
+  inputs:
+    targetType: filePath
+    filePath: './$(Build.SourcesDirectory)\src\build\PublishToCoveralls.ps1'
+    arguments: '-pathToCoverageFiles "$(Build.SourcesDirectory)\CodeCoverage" -serviceName "PR build"'
+  continueOnError: true
+  condition: and(succeeded(), eq(variables['System.PullRequest.IsFork'], 'false'))
+
+- script: |
+   cd ..
+   dir *.* /s
+  displayName: 'Dir workspace'
+  continueOnError: true
+  condition: succeededOrFailed()
+
+- script: |
+   cd $(Agent.TempDirectory)
+   dir *.* /s
+  displayName: 'Dir $(Agent.TempDirectory)'
+  enabled: false
+  continueOnError: true
+  condition: succeededOrFailed()
