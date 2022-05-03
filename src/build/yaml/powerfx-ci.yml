@@ -15,6 +15,7 @@ variables:
 stages:
 - stage: Build
   jobs:
+  - job:
     steps:
     - task: NuGetCommand@2
       displayName: 'NuGet restore'
