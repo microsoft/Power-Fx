@@ -162,7 +162,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
             }
 
             var nodeType = binding.GetType(column);
-            return DType.String.Accepts(nodeType) || nodeType.CoercesTo(DType.String);
+            return DType.String.Accepts(nodeType) || nodeType.CoercesTo(DType.String) || (nodeType.IsMultiSelectOptionSet() && nodeType.IsTable);
         }
 
         public override bool IsOpSupportedByTable(OperationCapabilityMetadata metadata, TexlNode node, TexlBinding binding)
