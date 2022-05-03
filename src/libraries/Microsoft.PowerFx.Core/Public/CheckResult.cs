@@ -119,7 +119,7 @@ namespace Microsoft.PowerFx
             // TODO: Check that all args are valid (belong to the binder)
 
             var types = args.Select(node => _binding.GetType(node)).ToArray();
-            var result = fnc.CheckInvocation(args.ToArray(), types, _binding.ErrorContainer, out var retDType, out _);
+            var result = fnc.CheckInvocation(_binding, args.ToArray(), types, _binding.ErrorContainer, out var retDType, out _);
             retType = FormulaType.Build(retDType);
             return result;
         }
