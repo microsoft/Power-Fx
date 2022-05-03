@@ -22,17 +22,17 @@ namespace Microsoft.PowerFx.Tests
             Assert.NotNull(func);
 
             // Can be invoked. 
-            var result = engine.Eval("TestCustom(2,3)");
-            Assert.Equal(6.0, result.ToObject());
+            var result = engine.Eval("TestCustom(3,true)");
+            Assert.Equal("3,True", result.ToObject());
         }
 
         // Must have "Function" suffix. 
         private class TestCustomFunction : ReflectionFunction
         {
             // Must have "Execute" method. 
-            public static NumberValue Execute(NumberValue x, NumberValue y)
+            public static StringValue Execute(NumberValue x, BooleanValue b)
             {
-                var val = x.Value * y.Value;
+                var val = x.Value.ToString() + "," + b.Value.ToString();
                 return FormulaValue.New(val);
             }
         }

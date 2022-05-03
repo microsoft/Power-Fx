@@ -49,7 +49,7 @@ namespace Microsoft.PowerFx
         /// </summary>
         /// <param name="cultureInfo">Culture to use.</param>        
         public PowerFxConfig(CultureInfo cultureInfo = null)
-            : this(cultureInfo, new EnumStoreBuilder().WithDefaultEnums()) 
+            : this(cultureInfo, new EnumStoreBuilder().WithRequiredEnums(BuiltinFunctionsCore.BuiltinFunctionsLibrary)) 
         {
         }
 

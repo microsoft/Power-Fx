@@ -1,11 +1,21 @@
+
+>> Exp(1)
+2.71828182845904
+
+>> Exp(2.302585092994045)
+10
+
+>> Ln(Exp(2))
+2
+
+>> Round(Exp(2), 2)
+7.39
+
 // ******** INTEGER PARAMETERS ********
 
 // Positive Integer Parameters
 >> Exp(0)
 1
-
->> Exp(1)
-2.71828183
 
 >> Exp(5)
 148.4131591
@@ -32,7 +42,6 @@
 >> Exp(-750)
 0
 
-
 // ******** DECIMAL PARAMETERS ********
 
 >> Exp(0.00)
@@ -54,8 +63,7 @@
 
 // Excel returns 1
 >> Exp(Blank())
-Blank()
-
+1
 
 // ******** STRING PARAMETERS ********
 
@@ -87,6 +95,3 @@ Blank()
 >> Exp(Ln(2))
 2
 
-
-// Exp(Infinity)
-// Exp(NaN)
