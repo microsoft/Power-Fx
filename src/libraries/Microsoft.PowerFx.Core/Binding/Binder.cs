@@ -2681,7 +2681,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 if (_txb.Document.Properties.EnabledFeatures.IsEnhancedDelegationEnabled && typeLeft.IsTable)
                 {
-                    // Table in table: RHS must be a table with a compatible schema. No coercion is allowed.
+                    // Table in table: RHS must be a single column table with a compatible schema. No coercion is allowed.
                     if (typeRight.IsTable)
                     {
                         var names = typeRight.GetNames(DPath.Root);
@@ -2698,7 +2698,7 @@ namespace Microsoft.PowerFx.Core.Binding
                             return false;
                         }
 
-                        if (typedName.Type.Accepts(typeLeft) || typeLeft.Accepts(typedName.Type))
+                        if (typeLeft.Accepts(typedName.Type))
                         {
                             return true;
                         }
