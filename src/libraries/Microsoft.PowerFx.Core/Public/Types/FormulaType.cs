@@ -75,9 +75,7 @@ namespace Microsoft.PowerFx.Types
             if (expandEntityInfo.ParentDataSource is not IExternalTabularDataSource dsInfo)
             {
                 return expandEntityType;
-            }
-
-            DType type;
+            }                        
 
             if (!expandEntityType.TryGetEntityDelegationMetadata(out var metadata))
             {
@@ -85,7 +83,7 @@ namespace Microsoft.PowerFx.Types
                 return DType.Error;
             }
 
-            type = expandEntityType.ExpandEntityType(metadata.Schema, metadata.Schema.AssociatedDataSources);
+            var type = expandEntityType.ExpandEntityType(metadata.Schema, metadata.Schema.AssociatedDataSources);
             Contracts.Assert(type.HasExpandInfo);
 
             // Update the datasource and relatedEntity path.
