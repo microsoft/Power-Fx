@@ -224,6 +224,16 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: Cot)
             },
             {
+                BuiltinFunctionsCore.Count,
+                StandardErrorHandling<TableValue>(
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<TableValue>,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: Count)
+            },
+            {
                 BuiltinFunctionsCore.CountIf,
                 StandardErrorHandling<FormulaValue>(
                     expandArguments: NoArgExpansion,
@@ -236,16 +246,6 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: CountIf)
             },
             {
-                BuiltinFunctionsCore.CountRows,
-                StandardErrorHandling<TableValue>(
-                    expandArguments: NoArgExpansion,
-                    replaceBlankValues: DoNotReplaceBlank,
-                    checkRuntimeTypes: ExactValueTypeOrBlank<TableValue>,
-                    checkRuntimeValues: DeferRuntimeValueChecking,
-                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
-                    targetFunction: CountRows)
-            },
-            {
                 BuiltinFunctionsCore.CountA,
                 StandardErrorHandling<TableValue>(
                     expandArguments: NoArgExpansion,
@@ -256,14 +256,14 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: CountA)
             },
             {
-                BuiltinFunctionsCore.Count,
+                BuiltinFunctionsCore.CountRows,
                 StandardErrorHandling<TableValue>(
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: DoNotReplaceBlank,
                     checkRuntimeTypes: ExactValueTypeOrBlank<TableValue>,
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
-                    targetFunction: Count)
+                    targetFunction: CountRows)
             },
             {
                 BuiltinFunctionsCore.CountRows_UO,
