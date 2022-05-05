@@ -135,7 +135,7 @@ namespace Microsoft.PowerFx
             var tBase = t.BaseType;
             if (Utility.TryGetElementType(tBase, typeof(PrimitiveValue<>), out var typeArg))
             {
-                if (BuiltinFormulaTypeConversions.TryGetFormulaType(typeArg, out var formulaType))
+                if (PrimitiveValueConversions.TryGetFormulaType(typeArg, out var formulaType))
                 {
                     return formulaType;
                 }

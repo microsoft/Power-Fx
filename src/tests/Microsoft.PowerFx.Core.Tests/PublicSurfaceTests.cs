@@ -89,6 +89,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Syntax.TexlVisitor",
 
                 // Power Fx Type system and Values. 
+                "Microsoft.PowerFx.Types.PrimitiveValueConversions",
                 "Microsoft.PowerFx.Types.AggregateType",
                 "Microsoft.PowerFx.Types.BlankType",
                 "Microsoft.PowerFx.Types.BooleanType",
@@ -152,7 +153,6 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Core.RenameDriver",
                 "Microsoft.PowerFx.Core.App.DefaultEnabledFeatures",
                 "Microsoft.PowerFx.Core.App.IExternalEnabledFeatures",
-                "Microsoft.PowerFx.Core.BuiltinFormulaTypeConversions",
                 "Microsoft.PowerFx.Core.DisplayNameUtility",
                 "Microsoft.PowerFx.Core.FormulaTypeSchema",
                 "Microsoft.PowerFx.Core.FormulaTypeToSchemaConverter",
