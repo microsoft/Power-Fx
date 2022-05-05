@@ -52,6 +52,14 @@ namespace Microsoft.PowerFx
         /// <returns></returns>
         private protected virtual SimpleResolver CreateResolver(PowerFxConfig alternateConfig = null)
         {
+            // TODO:
+            // Option (a) - throw an exception if not SimpleResolver as contract requires it
+            // Option (b) - redesign this to makes sense
+            return CreateCustomResolver(alternateConfig) as SimpleResolver;
+        }
+
+        private protected virtual INameResolver CreateCustomResolver(PowerFxConfig alternateConfig = null)
+        {
             return new SimpleResolver(alternateConfig ?? Config);
         }
 
@@ -103,7 +111,7 @@ namespace Microsoft.PowerFx
             // Ok to continue with binding even if there are parse errors. 
             // We can still use that for intellisense. 
 
-            var resolver = CreateResolver();
+            var resolver = CreateCustomResolver();
 
             var binding = TexlBinding.Run(
                 new Glue2DocumentBinderGlue(),
