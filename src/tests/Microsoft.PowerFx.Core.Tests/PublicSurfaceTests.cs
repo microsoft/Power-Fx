@@ -47,6 +47,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Preview.FeatureFlags",
 
                 // Lexer                
+                "Microsoft.PowerFx.Syntax.Span",
                 "Microsoft.PowerFx.Syntax.BinaryOp",
                 "Microsoft.PowerFx.Syntax.TokKind",
                 "Microsoft.PowerFx.Syntax.CommentToken",
@@ -159,8 +160,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Core.Utils.DName",
                 "Microsoft.PowerFx.Core.Utils.DPath",
                 "Microsoft.PowerFx.Core.Utils.ICheckable",
-                "Microsoft.PowerFx.Core.Localization.ErrorResourceKey",
-                "Microsoft.PowerFx.Core.Localization.Span",
+                "Microsoft.PowerFx.Core.Localization.ErrorResourceKey"
             };
 
             var sb = new StringBuilder();
@@ -191,7 +191,7 @@ namespace Microsoft.PowerFx.Core.Tests
         {
             var exceptionList = new HashSet<string>()
             {
-                "Microsoft.PowerFx.Core.Localization.Span"
+                "Microsoft.PowerFx.Syntax.Span"
             };
 
             var asm = typeof(Parser.TexlParser).Assembly;
