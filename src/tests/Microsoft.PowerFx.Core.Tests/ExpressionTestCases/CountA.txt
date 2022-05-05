@@ -8,16 +8,16 @@
 3
 
 >> CountA(Sort([-2, -1, 0, 1, 2], 1 / Value))
-#Error
+#Error(Kind=Div0)
 
 >> CountA(LastN([1,2,3,4], Blank()))
 Blank()
 
 >> CountA([1, 2, 1/0, 4, 5])
-#Error
+#Error(Kind=Div0)
 
 >> CountA(Table({a:1},{a:2},If(Sqrt(-1)<1,{a:3}),{a:4}))
-#Error
+#Error(Kind=Numeric)
 
 >> CountA(Table({a:1},{a:2},If(1<0,{a:3}), If(1>0,{a:4}),{a:5}))
 4
@@ -27,6 +27,3 @@ Blank()
 
 >> CountA([1,"1","2",Blank()])
 3
-
->> CountA(Sort([-2,-1,0,1,2],1/Value))
-#Error
