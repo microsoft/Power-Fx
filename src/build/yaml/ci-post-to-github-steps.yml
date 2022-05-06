@@ -56,7 +56,7 @@ steps:
        
        # Search for our string.
        if ($log.Contains($stringToCheckFor)) {
-           if ($container.id -gt 1) $found = $true;
+           if ($container.id -gt 1) { $found = $true; }
            $log;
            $mess = 'String "' + $stringToCheckFor + '" found in log #' + $container.id;
            Write-Host $mess;
@@ -74,7 +74,8 @@ steps:
   displayName: 'Verify Publish Compat Results success'
   ignoreLASTEXITCODE: true
   continueOnError: true
-  condition: and(succeeded(), eq(variables['Build.Reason'], 'PullRequest'))
+  condition: succeededOrFailed()
+  # condition: and(succeeded(), eq(variables['Build.Reason'], 'PullRequest'))
 
 - script: |
    cd ..
