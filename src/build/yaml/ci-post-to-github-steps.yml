@@ -72,6 +72,7 @@ steps:
        throw $mess;
    }
   displayName: 'Verify Publish Compat Results success'
+  ignoreLASTEXITCODE: true
   continueOnError: true
   condition: and(succeeded(), eq(variables['Build.Reason'], 'PullRequest'))
 
