@@ -67,7 +67,7 @@ steps:
         $log = Invoke-RestMethod "$uri" -Method Get -ContentType "application/json" -Headers $header;
       
         # Search for our string.
-        if ($log.Contains($taskToCheck) {
+        if ($log.Contains($taskToCheck)) {
           $log;
           if ($log.Contains($stringToCheckFor)) {
             $found = $true;
