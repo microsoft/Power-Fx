@@ -124,6 +124,7 @@ stages:
     steps:
     - powershell: |
         Write-Host "Hi there";
+        $multiconfig = '{';
         $env:BotBuilderDll.Split(",") | ForEach {
           $library = $_.Trim()
           $threadName = $library -replace "Microsoft.", "";
