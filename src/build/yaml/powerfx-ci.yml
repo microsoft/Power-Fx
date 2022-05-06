@@ -6,6 +6,8 @@ pool:
   - vstest
 
 variables:
+  ApiCompatVersion: 0.2.1-preview
+  BotBuilderDll: Microsoft.PowerFx.Core,Microsoft.PowerFx.Interpreter,Microsoft.PowerFx.LanguageServerProtocol,Microsoft.PowerFx.Transport.Attributes
   BuildPlatform: 'any cpu'
   Parameters.solution: src/Microsoft.PowerFx.sln
 # BuildConfiguration: define this in Azure
@@ -18,24 +20,24 @@ stages:
   - job:
     steps:
     - task: NuGetCommand@2
-      displayName: 'NuGet restore'
       inputs:
         restoreSolution: '$(Parameters.solution)'
         feedsToUse: config
         nugetConfigPath: .
+      displayName: 'NuGet restore'
 
     - powershell: |
         gci env:* | sort-object name | Format-Table -AutoSize -Wrap
       displayName: 'Display env vars'
 
     - task: VSBuild@1
-      displayName: 'Build Microsoft.PowerFx.sln'
       inputs:
         solution: '$(Parameters.solution)'
         vsVersion: 16.0
         msbuildArgs: '-p:SignAssembly=false -p:delaySign=false'
         platform: '$(BuildPlatform)'
         configuration: '$(BuildConfiguration)'
+      displayName: 'Build Microsoft.PowerFx.sln'
 
     - powershell: |
         Remove-Item CodeCoverage -Force -Recurse -ErrorAction Ignore
@@ -43,15 +45,14 @@ stages:
       displayName: 'Create CodeCoverage directory'
 
     - task: DotNetCoreCLI@2
-      displayName: 'dotnet test'
       inputs:
         command: test
         projects: 'src\tests\**\*.Tests.csproj'
         arguments: '--configuration $(BuildConfiguration) --collect "Code Coverage"'
+      displayName: 'dotnet test'
       enabled: false
 
     - task: VSTest@2
-      displayName: VsTest
       inputs:
         testAssemblyVer2: |
           src\tests\*\bin\**\*.Tests.dll
@@ -61,6 +62,7 @@ stages:
         runSettingsFile: 'src\CodeCoverage.runsettings'
         codeCoverageEnabled: true
         configuration: '$(BuildConfiguration)'
+      displayName: VsTest
 
     - powershell: |
         # This task copies the code coverage file created by dotnet test into a well known location. In all
@@ -77,18 +79,38 @@ stages:
       condition: and(succeeded(), ne(variables['PowerFxCoverallsToken'], ''), eq(variables['System.PullRequest.IsFork'], 'false'))
 
     - task: PowerShell@2
-      displayName: 'Upload Coverage Files to Coveralls.io https://coveralls.io/github/microsoft/Power-Fx'
       inputs:
         targetType: filePath
         filePath: './$(Build.SourcesDirectory)\src\build\PublishToCoveralls.ps1'
         arguments: '-pathToCoverageFiles "$(Build.SourcesDirectory)\CodeCoverage" -serviceName "PR build"'
+      displayName: 'Upload Coverage Files to Coveralls.io https://coveralls.io/github/microsoft/Power-Fx'
       continueOnError: true
       condition: and(succeeded(), ne(variables['PowerFxCoverallsToken'], ''), eq(variables['System.PullRequest.IsFork'], 'false'))
+
+    - powershell: |
+        New-Item -ItemType directory -Path "outputLibraries\" -Force
+        
+        $buildTarget = $env:BuildConfiguration;
+        
+        $env:BotBuilderDll.Split(",") | ForEach {
+          $library = $_.Trim()
+          Write-Host $library
+      
+          Get-ChildItem -Path "./src/libraries/$library/bin/$buildTarget/netstandard2.0/$library.dll" -Recurse | Copy-Item -Destination 'outputLibraries\' -Force
+        }
+      displayName: 'Copy DLLs to outputLibraries folder'
+
+    - task: PublishPipelineArtifact@0
+      inputs:
+        artifactName: 'BotBuilderDLLs-$(BuildConfiguration)-$(BuildTarget)'
+        targetPath: outputLibraries
+      displayName: 'Publish Microsoft.Bot.Builder DLLs artifact'
+      continueOnError: true
 
     - script: |
         cd ..
         dir *.* /s
-        displayName: 'Dir workspace'
+      displayName: 'Dir workspace'
       continueOnError: true
       condition: succeededOrFailed()
 
@@ -96,10 +118,33 @@ stages:
   dependsOn: Build
   condition: and(succeeded(), ne(variables['DisableApiCompatibityValidation'], 'true'))
   variables:
-    skipComponentGovernanceDetection: true # the task is already injected into the build job, so skip it.
+    skipComponentGovernanceDetection: true # the task is already injected into the build job, so skip it here.
   jobs:
   - job: generate_multiconfig_var
     steps:
     - powershell: |
         Write-Host "Hi there";
+        $env:BotBuilderDll.Split(",") | ForEach {
+          $library = $_.Trim()
+          $threadName = $library -replace "Microsoft.", "";
+          $multiconfig += "'" + $threadName + "':{'BotBuilderDll':'" + $library + "'}, ";
+        }
+        $multiconfig = $multiconfig.TrimEnd(' ').TrimEnd(',') + "}";
+        echo $multiconfig
+        "##vso[task.setVariable variable=MULTICONFIG;isOutput=true]$multiconfig"
       name: generate_var
+
+    - script: echo $(generate_var.MULTICONFIG)
+      name: show var MULTICONFIG
+
+  - job: check_api_for
+    dependsOn: generate_multiconfig_var
+    condition: ne(dependencies.generate_multiconfig_var.outputs['generate_var.MULTICONFIG'], '{}')
+    timeoutInMinutes: 10
+    strategy:
+      maxParallel: 10
+      matrix: $[ dependencies.generate_multiconfig_var.outputs['generate_var.MULTICONFIG'] ]
+
+    steps:
+    - template: ci-api-validation-steps.yml
+
