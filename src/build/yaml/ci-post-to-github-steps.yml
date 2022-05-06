@@ -20,7 +20,7 @@ steps:
   condition: and(succeeded(), eq(variables['Build.Reason'], 'PullRequest'), ne(variables['System.PullRequest.IsFork'], 'True'))
 
 - powershell: |
-    for ($i = 0; $i -lt 30; $i++)
+    for ($i = 0; $i -lt 15; $i++)
     {
       Write-Host "$i seconds";
       Start-Sleep -Milliseconds 1000;
@@ -34,8 +34,8 @@ steps:
     # Calls the Azure DevOps REST API.
     # Enable OAuth token access in the pipeline agent job for $(System.Accesstoken) to populate.
 
-    $stringToCheckFor = 'status: 201';
     $taskToCheck = 'Publish Compat Results to Github';
+    $stringToCheckFor = 'status: 201';
     
     #  Start-Sleep -Milliseconds 1000 # Give time for the last log to become available
     
@@ -59,18 +59,21 @@ steps:
     Write-Host 'Checking the logs:';
     $found = $false;
     foreach ($container in $runLogContainers.value) {
-      if ($container.id -ge $containersCount - 5) {
+      # Search only the last 3 task logs.
+      if ($container.id -gt $containersCount - 3) {
         $container.id;
         $uri = $container.url;
         $uri;
         $log = Invoke-RestMethod "$uri" -Method Get -ContentType "application/json" -Headers $header;
       
         # Search for our string.
-        if ($log.Contains($taskToCheck) -and $log.Contains($stringToCheckFor)) {
+        if ($log.Contains($taskToCheck) {
+          $log;
+          if ($log.Contains($stringToCheckFor)) {
             $found = $true;
-            $log;
             $mess = 'String "' + $stringToCheckFor + '" found in log #' + $container.id;
             Write-Host $mess;
+          }
         } else {
             ($log -split '\r?\n')[0] + '...';  # Print first line
         }
