@@ -107,6 +107,7 @@ steps:
       $baseline;
     }
   displayName: 'Compatibility Check'
+  continueOnError: true
   condition: succeededOrFailed()
 
 - task: PublishBuildArtifacts@1
