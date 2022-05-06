@@ -56,7 +56,7 @@ steps:
        
        # Search for our string.
        if (!$found -and $log.Contains($stringToCheckFor)) {
-           $found = $true;
+           # $found = $true;
            $log;
            $mess = 'String "' + $stringToCheckFor + '" found in log #' + $container.id;
            Write-Host $mess;
