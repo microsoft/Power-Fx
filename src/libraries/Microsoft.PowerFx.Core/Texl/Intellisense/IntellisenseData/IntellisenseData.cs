@@ -163,7 +163,7 @@ namespace Microsoft.PowerFx.Intellisense.IntellisenseData
         /// <summary>
         /// Should unqualified enums be suggested.
         /// </summary>
-        internal virtual bool SuggestUnqualifiedEnums => true;
+        internal virtual bool SuggestUnqualifiedEnums => false;
 
         /// <summary>
         /// Retrieves an <see cref="EnumSymbol"/> from <paramref name="binding"/> (if necessary).
