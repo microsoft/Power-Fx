@@ -26,7 +26,7 @@ steps:
    # Calls the Azure DevOps REST API.
    # Enable OAuth token access in the pipeline agent job for $(System.Accesstoken) to populate.
 
-   $stringToCheckFor = '201 Created';
+   $stringToCheckFor = 'status: 201';
    
    Start-Sleep -Milliseconds 1000 # Give time for the last log to become available
    
@@ -71,7 +71,6 @@ steps:
        $mess =  'Publish Compat Results failed. Is there a PR associated with this build? String "' + $stringToCheckFor + '" not found in the logs';
        throw $mess;
    }
-   
   displayName: 'Verify Publish Compat Results success'
   continueOnError: true
   condition: and(succeeded(), eq(variables['Build.Reason'], 'PullRequest'))
