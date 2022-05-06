@@ -60,6 +60,11 @@ namespace Microsoft.PowerFx
             return CreateSimpleResolver(alternateConfig);
         }
 
+        private protected virtual IBinderGlue CreateCustomBinderGlue()
+        {
+            return new Glue2DocumentBinderGlue();
+        }
+
         /// <summary>
         ///     Tokenize an expression to a sequence of <see cref="Token" />s.
         /// </summary>
@@ -109,9 +114,10 @@ namespace Microsoft.PowerFx
             // We can still use that for intellisense. 
 
             var resolver = CreateCustomResolver();
+            var glue = CreateCustomBinderGlue();
 
             var binding = TexlBinding.Run(
-                new Glue2DocumentBinderGlue(),
+                glue,
                 parse.Root,
                 resolver,
                 BindingConfig.Default,
