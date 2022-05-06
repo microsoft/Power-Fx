@@ -90,19 +90,17 @@ stages:
     - powershell: |
         New-Item -ItemType directory -Path "outputLibraries\" -Force
         
-        $buildTarget = $env:BuildConfiguration;
-        
         $env:BotBuilderDll.Split(",") | ForEach {
           $library = $_.Trim()
           Write-Host $library
       
-          Get-ChildItem -Path "./src/libraries/$library/bin/$buildTarget/netstandard2.0/$library.dll" -Recurse | Copy-Item -Destination 'outputLibraries\' -Force
+          Get-ChildItem -Path "./src/libraries/$library/bin/$(BuildConfiguration)/netstandard2.0/$library.dll" -Recurse | Copy-Item -Destination 'outputLibraries\' -Force
         }
       displayName: 'Copy DLLs to outputLibraries folder'
 
     - task: PublishPipelineArtifact@0
       inputs:
-        artifactName: 'BotBuilderDLLs-$(BuildConfiguration)-$(BuildTarget)'
+        artifactName: 'BotBuilderDLLs-$(BuildConfiguration)'
         targetPath: outputLibraries
       displayName: 'Publish Microsoft.Bot.Builder DLLs artifact'
       continueOnError: true

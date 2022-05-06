@@ -2,7 +2,7 @@ steps:
 - task: DownloadPipelineArtifact@1
   displayName: 'Download BotBuilderDLLs artifact'
   inputs:
-    artifactName: 'BotBuilderDLLs-Debug-Windows-netcoreapp31'
+    artifactName: 'BotBuilderDLLs-$(BuildConfiguration)'
     targetPath: '$(System.ArtifactsDirectory)/Artifacts'
 
 - task: NuGetCommand@2
@@ -10,13 +10,6 @@ steps:
   inputs:
     command: custom
     arguments: 'install $(BotBuilderDll) -Version $(ApiCompatVersion) -OutputDirectory $(System.DefaultWorkingDirectory)\DownloadedNuGet'
-
-- task: CmdLine@1
-  displayName: 'Run dir'
-  inputs:
-    filename: dir
-    arguments: '..\*.* /s'
-  enabled: false
 
 - task: SOUTHWORKS.binaries-comparer.custom-build-release-task.binaries-comparer@0
   displayName: 'Compare Binaries'
@@ -120,8 +113,7 @@ steps:
   condition: succeededOrFailed()
 
 - script: |
-   cd ..
-   dir /s
+   dir .. /s
   displayName: 'Dir workspace'
   continueOnError: true
   condition: succeededOrFailed()
