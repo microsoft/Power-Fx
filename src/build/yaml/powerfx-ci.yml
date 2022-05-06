@@ -25,12 +25,12 @@ stages:
 - stage: Build
   jobs:
   - job: post_results_to_gitHub
-    variables:
-      BuildConfiguration: $(BuildConfiguration)
+    # variables:
+    #   BuildConfiguration: $(BuildConfiguration)
     steps:
     - template: ci-post-to-github-steps.yml
 
-  - job:
+  - job: build_and_test
     steps:
     - task: NuGetCommand@2
       inputs:
@@ -163,7 +163,7 @@ stages:
   - job: post_results_to_gitHub
     dependsOn: check_api_for
     condition: ne(dependencies.generate_multiconfig_var.outputs['generate_var.MULTICONFIG'], '{}')
-    variables:
-      BuildConfiguration: $(BuildConfiguration)
+    # variables:
+    #   BuildConfiguration: $(BuildConfiguration)
     steps:
     - template: ci-post-to-github-steps.yml
