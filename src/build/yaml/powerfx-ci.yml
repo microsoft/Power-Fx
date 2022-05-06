@@ -135,7 +135,7 @@ stages:
       name: generate_var
 
     - script: echo $(generate_var.MULTICONFIG)
-      name: show var MULTICONFIG
+      displayName: show var MULTICONFIG
 
   - job: check_api_for
     dependsOn: generate_multiconfig_var
