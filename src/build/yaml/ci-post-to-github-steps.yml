@@ -50,13 +50,14 @@ steps:
    $found = $false;
    foreach ($container in $runLogContainers.value) {
        $container.id;
+       $container;
        $uri = $container.url;
        $uri;
        $log = Invoke-RestMethod "$uri" -Method Get -ContentType "application/json" -Headers $header;
        
        # Search for our string.
-       if ($log.Contains($stringToCheckFor)) {
-           if ($container.id -gt 1) { $found = $true; }
+       if ($log.Contains($stringToCheckFor) -and $container.id -gt 2) {
+           if ($container.id -gt 2) { $found = $true; }
            $log;
            $mess = 'String "' + $stringToCheckFor + '" found in log #' + $container.id;
            Write-Host $mess;
