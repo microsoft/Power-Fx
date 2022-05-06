@@ -8,7 +8,7 @@ steps:
     downloadType: specific
     itemPattern: '**\*.txt'
     downloadPath: '$(System.ArtifactsDirectory)\ApiCompat'
-  # condition: and(succeeded(), eq(variables['Build.Reason'], 'PullRequest'))
+  condition: and(succeeded(), eq(variables['Build.Reason'], 'PullRequest'))
 
 - task: SOUTHWORKS.github-pr-comment.custom-publish-comment-task.github-pr-comment@0
   displayName: 'Publish Compat Results to Github'
@@ -17,7 +17,7 @@ steps:
     bodyFilePath: '$(System.ArtifactsDirectory)\ApiCompat'
     getSubFolders: true
   # Skip forks, as they can't get credentials.
-  # condition: and(succeeded(), eq(variables['Build.Reason'], 'PullRequest'), ne(variables['System.PullRequest.IsFork'], 'True'))
+  condition: and(succeeded(), eq(variables['Build.Reason'], 'PullRequest'), ne(variables['System.PullRequest.IsFork'], 'True'))
 
 - powershell: |
    # Check for string in the logs in the current DevOps pipeline run.
@@ -74,8 +74,7 @@ steps:
   displayName: 'Verify Publish Compat Results success'
   ignoreLASTEXITCODE: true
   continueOnError: true
-  condition: succeededOrFailed()
-  # condition: and(succeeded(), eq(variables['Build.Reason'], 'PullRequest'))
+  condition: and(succeeded(), eq(variables['Build.Reason'], 'PullRequest'))
 
 - script: |
    cd ..

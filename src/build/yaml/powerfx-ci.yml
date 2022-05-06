@@ -24,11 +24,11 @@ variables:
 stages:
 - stage: Build
   jobs:
-  - job: post_results_to_gitHub
-    # variables:
-    #   BuildConfiguration: $(BuildConfiguration)
-    steps:
-    - template: ci-post-to-github-steps.yml
+  # - job: post_results_to_gitHub
+  #   # variables:
+  #   #   BuildConfiguration: $(BuildConfiguration)
+  #   steps:
+  #   - template: ci-post-to-github-steps.yml
 
   - job: build_and_test
     steps:
