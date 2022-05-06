@@ -80,7 +80,7 @@ steps:
     # If not found, throw an error.
     if (!$found) {
       Write-Host;
-      $mess = "$taskToCheck failed. Is there a PR associated with this build? String '" + $stringToCheckFor + "' not found in the log";
+      $mess = "$taskToCheck failed. Is there a PR associated with this build? String '" + $stringToCheckFor + "' not found in the log.";
       throw $mess;
     }
   displayName: 'Verify Publish Compat Results success'
