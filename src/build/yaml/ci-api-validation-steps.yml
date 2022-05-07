@@ -1,0 +1,123 @@
+steps:
+- powershell: 'gci env:* | sort-object name | Format-Table -AutoSize -Wrap'
+  displayName: 'Display env vars'
+
+- task: DownloadPipelineArtifact@1
+  displayName: 'Download the new PowerFx Dlls from Artifacts'
+  inputs:
+    artifactName: 'PowerFxDlls-$(BuildConfiguration)'
+    targetPath: '$(System.ArtifactsDirectory)/Artifacts'
+
+- task: NuGetCommand@2
+  displayName: 'NuGet install $(PackageName) $(ApiCompatVersion)'
+  inputs:
+    command: custom
+    arguments: 'install $(PackageName) -Version $(ApiCompatVersion) -OutputDirectory $(System.DefaultWorkingDirectory)\DownloadedNuGet'
+
+- task: SOUTHWORKS.binaries-comparer.custom-build-release-task.binaries-comparer@0
+  displayName: 'Compare binaries'
+  inputs:
+    contractsRootFolder: 'DownloadedNuGet\$(PackageName).$(ApiCompatVersion)\lib\netstandard2.0'
+    contractsFileName: '$(PackageName).dll'
+    implFolder: '$(System.ArtifactsDirectory)/Artifacts'
+    failOnIssue: false
+    resolveFx: false
+    generateLog: true
+    outputFilename: '$(PackageName).$(ApiCompatVersion).CompatResults.txt'
+    outputFolder: '$(Build.ArtifactStagingDirectory)'
+    useBaseline: false
+
+- powershell: |
+    $filePath = "$(Build.ArtifactStagingDirectory)\$(PackageName).$(ApiCompatVersion).CompatResults.txt"
+    $nugetLink = "compared against [version $(ApiCompatVersion)](https://www.nuget.org/packages/$(PackageName)/$(ApiCompatVersion)).";
+    Write-Host "Compatibility Check:"; 
+
+    if (-not (Test-Path $filePath)) {
+      $content = "The binary compatibility report for library '$(PackageName)' wasn't generated. This may have happened because the NuGet library '$(PackageName)' for version '$(ApiCompatVersion)' was unavailable or a connectivity issue."
+      New-Item -Path '$(Build.ArtifactStagingDirectory)' -Name '$(PackageName).$(ApiCompatVersion).CompatResults.txt' -ItemType "file" -Value $content
+      $content;
+      return;
+    }
+
+    $baseline = Get-Content $filePath -Raw;
+    Write-Host "`n[Compare binaries task]"; 
+    Write-Host "`nOriginal result:"; 
+    $baseline;
+
+    # When the Api Compat task has Binary compatibility issues, this process will filter out the Classes
+    # and then validates if still exists remaining issues.
+    if ($baseline.ToString().Trim().StartsWith(':x:')) {
+      Write-Host "`n[Class exclusion]"; 
+      $excludeClasses = "$($env:ApiCompatExcludeClasses)".Trim().Split(',') | Where-Object { ($_.Trim().Length -gt 0) } | ForEach-Object { $_.Trim() };
+      
+      if ($excludeClasses) {
+        Write-Host "`nList of classes to exclude:"; 
+        $excludeClasses | ForEach-Object { "  - " + $_ }
+      }
+      else {
+        Write-Host "`nThere are no classes to exclude."; 
+      }
+      
+      $content = ($baseline -split '<details\>|<\/details\>');
+      $header = $content[0].SubString($content[0].IndexOf('Binary') - 1).Trim();
+      $issues = $content[1].Trim();
+      $issues = ($issues -replace '```', '').Split([Environment]::NewLine);
+
+      # Filter out issues based on Class name.
+      $issues = @(
+        $issues | Where-Object {
+          $line = $_;
+          if (-not $line.Trim()) {
+            return $false;
+          }
+          if ($excludeClasses) {
+            foreach ($class in $excludeClasses) {
+              $pattern = "'$class";
+              if ($line -match $pattern) { 
+                return $false;
+              }
+            }
+          }
+          return $true;
+        } | ForEach-Object { $_.Trim() }
+      )
+
+      # Creates new file content.
+      if ($issues) {
+        $newFile = @();
+        $newfile += ":x: $($issues.Length) $header $nugetLink";
+        $newFile += '<details>';
+        $newFile += "";
+        $newFile += '```';
+        $newfile += $issues;
+        $newFile += '```';
+        $newFile += "";
+        $newFile += '</details>';
+        
+        $newFile = $newFile -join [Environment]::NewLine;
+        Write-Host "##vso[task.complete result=Failed;]";
+      }
+      else {
+        $newFile = ":heavy_check_mark: No Binary Compatibility issues for **$(PackageName)** $nugetLink";
+      }
+
+      $baseline = $newFile;
+      [system.io.file]::WriteAllText($filePath, $baseline);
+      Write-Host "`nProcessed result:"; 
+      $baseline;
+    }
+  displayName: 'Compatibility check'
+  continueOnError: true
+  condition: succeededOrFailed()
+
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish CompatResults artifact'
+  inputs:
+    ArtifactName: '$(PackageName).$(ApiCompatVersion).CompatResults'
+  condition: succeededOrFailed()
+
+- script: |
+   dir .. /s
+  displayName: 'Dir workspace'
+  continueOnError: true
+  condition: succeededOrFailed()

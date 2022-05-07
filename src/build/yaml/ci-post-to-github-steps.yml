@@ -1,0 +1,97 @@
+steps:
+- powershell: 'gci env:* | sort-object name | Format-Table -AutoSize -Wrap'
+  displayName: 'Display env vars'
+
+- task: DownloadBuildArtifacts@0
+  displayName: 'Download CompatResults artifact'
+  inputs:
+    downloadType: specific
+    itemPattern: '**\*.txt'
+    downloadPath: '$(System.ArtifactsDirectory)\ApiCompat'
+  condition: and(succeeded(), eq(variables['Build.Reason'], 'PullRequest'))
+
+- task: SOUTHWORKS.github-pr-comment.custom-publish-comment-task.github-pr-comment@0
+  displayName: 'Publish compat results to Github'
+  inputs:
+    userToken: '$(GitHubCommentApiKey)'
+    bodyFilePath: '$(System.ArtifactsDirectory)\ApiCompat'
+    getSubFolders: true
+  # Skip forks, as they can't get credentials.
+  condition: and(succeeded(), eq(variables['Build.Reason'], 'PullRequest'), ne(variables['System.PullRequest.IsFork'], 'True'))
+
+- powershell: |
+    for ($i = 0; $i -lt 15; $i++)
+    {
+      Write-Host "$i seconds";
+      Start-Sleep -Milliseconds 1000;
+    }
+  displayName: 'Wait for last task log to finish writing'
+
+- powershell: |
+    # Check task log for a "success" string in the current pipeline run.
+    # 
+    # Note: The log for the task immediately before this may not yet be available.
+    # Calls the Azure DevOps REST API.
+    # Enable OAuth token access in the pipeline agent job for $(System.Accesstoken) to populate.
+
+    $taskToCheck = 'Publish Compat Results to Github';
+    $successStringToCheckFor = 'status: 201';
+    
+    $collectionUri = "$env:SYSTEM_COLLECTIONURI";  # e.g. 'https://fuselabs.visualstudio.com'
+    $teamProjectId = "$env:SYSTEM_TEAMPROJECTID";  # e.g. '86659c66-c9df-418a-a371-7de7aed35064' = SDK_v4
+    
+    # Get the current build ID.
+    $buildId = "$env:BUILD_BUILDID";
+    Write-Host 'Build ID = ' $buildId;
+    
+    # Get the log containers for the run.
+    $uri = "$collectionUri/$teamProjectId/_apis/build/builds/$buildId/logs";
+    
+    $token = [System.Convert]::ToBase64String([System.Text.Encoding]::ASCII.GetBytes(":$(System.AccessToken)"));
+    $header = @{authorization = "Basic $token"};
+    
+    $runLogContainers = Invoke-RestMethod "$uri" -Method Get -ContentType "application/json" -Headers $header;
+    $containersCount = $runLogContainers.count;
+
+    # Get the log from each log container.
+    Write-Host 'Checking the logs:';
+    $found = $false;
+    foreach ($container in $runLogContainers.value) {
+      # Search only the last 3 task logs.
+      if ($container.id -gt $containersCount - 3) {
+        $container.id;
+        $uri = $container.url;
+        $uri;
+        $log = Invoke-RestMethod "$uri" -Method Get -ContentType "application/json" -Headers $header;
+      
+        # Search for the success string.
+        if ($log.Contains($taskToCheck)) {
+          $log;
+          if ($log.Contains($successStringToCheckFor)) {
+            $found = $true;
+            $mess = 'String "' + $successStringToCheckFor + '" found in log #' + $container.id;
+            Write-Host $mess;
+          }
+        } else {
+            ($log -split '\r?\n')[0] + '...';  # Print first line
+        }
+      }
+    }
+   
+    # If not found, throw an error.
+    if (!$found) {
+      Write-Host;
+      $mess = "$taskToCheck failed. Is there a PR associated with this build? String '" + $successStringToCheckFor + "' not found in the log.";
+      throw $mess;
+    }
+  displayName: 'Verify Publish Compat Results success'
+  ignoreLASTEXITCODE: true
+  continueOnError: true
+  condition: and(succeeded(), eq(variables['Build.Reason'], 'PullRequest'))
+
+- script: |
+   cd ..
+   dir /s
+  displayName: 'Dir workspace'
+  continueOnError: true
+  condition: succeededOrFailed()
