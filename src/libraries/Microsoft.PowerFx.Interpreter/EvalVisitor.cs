@@ -45,14 +45,7 @@ namespace Microsoft.PowerFx
         {
             if (arg is LambdaFormulaValue lambda)
             {
-                var val = await lambda.EvalAsync(this, context);
-                return val switch
-                {
-                    T t => DValue<T>.Of(t),
-                    BlankValue b => DValue<T>.Of(b),
-                    ErrorValue e => DValue<T>.Of(e),
-                    _ => DValue<T>.Of(CommonErrors.RuntimeTypeMismatch(irContext))
-                };
+                arg = await lambda.EvalAsync(this, context);
             }
 
             return arg switch
