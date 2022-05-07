@@ -20,7 +20,7 @@ steps:
   condition: and(succeeded(), eq(variables['Build.Reason'], 'PullRequest'), ne(variables['System.PullRequest.IsFork'], 'True'))
 
 - powershell: |
-    for ($i = 0; $i -lt 15; $i++)
+    for ($i = 0; $i -lt 30; $i++)
     {
       Write-Host "$i seconds";
       Start-Sleep -Milliseconds 1000;
@@ -34,7 +34,7 @@ steps:
     # Calls the Azure DevOps REST API.
     # Enable OAuth token access in the pipeline agent job for $(System.Accesstoken) to populate.
 
-    $taskToCheck = 'Publish Compat Results to Github';
+    $taskToCheck = 'Publish compat results to Github';
     $successStringToCheckFor = 'status: 201';
     
     $collectionUri = "$env:SYSTEM_COLLECTIONURI";  # e.g. 'https://fuselabs.visualstudio.com'
