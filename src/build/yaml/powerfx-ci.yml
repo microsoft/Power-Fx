@@ -14,7 +14,7 @@ pool:
 
 variables:
   ApiCompatVersion: 0.2.1-preview
-  BotBuilderDll: Microsoft.PowerFx.Core,Microsoft.PowerFx.Interpreter,Microsoft.PowerFx.LanguageServerProtocol,Microsoft.PowerFx.Transport.Attributes
+  PackageNames: Microsoft.PowerFx.Core,Microsoft.PowerFx.Interpreter,Microsoft.PowerFx.LanguageServerProtocol,Microsoft.PowerFx.Transport.Attributes
   BuildPlatform: 'any cpu'
   Parameters.solution: src/Microsoft.PowerFx.sln
 # BuildConfiguration: define this in Azure
@@ -24,12 +24,6 @@ variables:
 stages:
 - stage: Build
   jobs:
-  # - job: post_results_to_gitHub
-  #   # variables:
-  #   #   BuildConfiguration: $(BuildConfiguration)
-  #   steps:
-  #   - template: ci-post-to-github-steps.yml
-
   - job: build_and_test
     steps:
     - task: NuGetCommand@2
@@ -103,7 +97,7 @@ stages:
     - powershell: |
         New-Item -ItemType directory -Path "outputLibraries\" -Force
         
-        $env:BotBuilderDll.Split(",") | ForEach {
+        $env:PackageNames.Split(",") | ForEach {
           $library = $_.Trim()
           Write-Host $library
       
@@ -113,9 +107,9 @@ stages:
 
     - task: PublishPipelineArtifact@0
       inputs:
-        artifactName: 'BotBuilderDLLs-$(BuildConfiguration)'
+        artifactName: 'PowerFxDlls-$(BuildConfiguration)'
         targetPath: outputLibraries
-      displayName: 'Publish Microsoft.Bot.Builder DLLs artifact'
+      displayName: 'Publish the PowerFx Dlls to Artifacts'
       continueOnError: true
 
     - script: |
@@ -134,12 +128,11 @@ stages:
   - job: generate_multiconfig_var
     steps:
     - powershell: |
-        Write-Host "Hi there";
         $multiconfig = '{';
-        $env:BotBuilderDll.Split(",") | ForEach {
+        $env:PackageNames.Split(",") | ForEach {
           $library = $_.Trim()
           $threadName = $library -replace "Microsoft.", "";
-          $multiconfig += "'" + $threadName + "':{'BotBuilderDll':'" + $library + "'}, ";
+          $multiconfig += "'" + $threadName + "':{'PackageName':'" + $library + "'}, ";
         }
         $multiconfig = $multiconfig.TrimEnd(' ').TrimEnd(',') + "}";
         echo $multiconfig
