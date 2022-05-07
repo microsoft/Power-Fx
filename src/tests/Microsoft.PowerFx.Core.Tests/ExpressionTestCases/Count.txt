@@ -1,0 +1,17 @@
+﻿>> Count([0,""])
+1
+
+>> Count([1, 2, 1/0, 4, 5])
+#Error(Kind=Div0)
+
+>> Count([1,"4", Blank()])
+2
+
+>> Count(Table({a:1},{a:2},If(Sqrt(-1)<1,{a:3}),{a:4}))
+#Error(Kind=Numeric)
+
+>> Count(Table({a:1},{a:2},If(1<0,{a:3}),{a:4}))
+3
+
+>> Count(Sort([-2,-1,0,1,2],1/Value))
+#Error(Kind=Div0)
