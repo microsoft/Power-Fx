@@ -1,6 +1,6 @@
 #SETUP: OptionSetTestSetup
 
-// Both logicla and display names bind
+// Both logical and display names bind
 >> OptionSet.option_1
 OptionSet.option_1 
 
