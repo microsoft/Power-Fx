@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.PowerFx.Types;
 using Xunit;
@@ -53,11 +54,11 @@ namespace Microsoft.PowerFx.Core.Tests
             double? val2 = val;
             var formulaValue2 = FormulaValue.New((double?)val); // nullable overload
             Assert.Equal(expectedStr, formulaValue2.Dump());
-           
+
             var formulaValue3 = FormulaValue.New((double?)null);
             Assert.IsType<NumberType>(formulaValue3.Type);
             Assert.IsType<BlankValue>(formulaValue3);
-        }    
+        }
 
         [Theory]
         [InlineData("abc", "\"abc\"")]
@@ -168,7 +169,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [Fact]
         public void Table()
         {
-            TableValue val = _cache.NewTable(                
+            TableValue val = _cache.NewTable(
                 new TestRow { a = 10, str = "alpha" },
                 new TestRow { a = 15, str = "beta" });
 
@@ -183,7 +184,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
             Assert.Equal("Table({a:10,str:\"alpha\"},{a:15,str:\"beta\"})", resultStr);
         }
-                
+
         [Fact]
         public void TableFromRecords()
         {
@@ -193,7 +194,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
             var result1 = ((RecordValue)val.Index(2).Value).GetField("a").ToObject();
             Assert.Equal(15.0, result1);
-                        
+
             dynamic d = val.ToObject();
             Assert.Equal(10.0, d[0].a);
 
@@ -211,7 +212,7 @@ namespace Microsoft.PowerFx.Core.Tests
         {
             var cache = new TypeMarshallerCache();
             RecordValue r1 = _cache.NewRecord(new { a = 10, b = 20, c = 30 });
-            RecordValue r2 = _cache.NewRecord(new { a = 11,         c = 31 });
+            RecordValue r2 = _cache.NewRecord(new { a = 11, c = 31 });
             TableValue val = FormulaValue.NewTable(r1.Type, r1, r2);
 
             // Users first type 
@@ -221,7 +222,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
             var result2 = ((RecordValue)val.Index(2).Value).GetField("b");
             Assert.IsType<BlankValue>(result2);
-            Assert.IsType<NumberType>(result2.Type);        
+            Assert.IsType<NumberType>(result2.Type);
         }
 
         [Fact]
@@ -259,7 +260,7 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.Equal("[10,20]", resultStr);
 
             // Must use NewSingleColumnTable to create a single column table.
-            Assert.Throws<InvalidOperationException>(() => NewTableT(r1, r2));            
+            Assert.Throws<InvalidOperationException>(() => NewTableT(r1, r2));
         }
 
         [Fact]
@@ -308,6 +309,33 @@ namespace Microsoft.PowerFx.Core.Tests
 
             Assert.True(r.GetField("missing") is BlankValue);
             Assert.Equal(15.1, r.GetField("number").ToObject());
+        }
+
+        [Fact]
+        public void DeriveFromValidFormulaValue()
+        {
+            // Only Blank and Error can derive from FormulaValue directly.
+            // All else should derive from ValidFormulaValue. 
+            // See ValidFormulaValue for explanation. 
+            var set = new HashSet<Type>
+            {
+                typeof(BlankValue),
+                typeof(ErrorValue),
+                typeof(ValidFormulaValue),
+                typeof(LambdaFormulaValue), // Special, can eval to any FormulaValue.
+            };
+
+            var asmInterpreter = typeof(RecalcEngine).Assembly;
+            var asmCore = typeof(Engine).Assembly;
+            var allTypes = asmInterpreter.GetTypes().Concat(asmCore.GetTypes());
+
+            foreach (var type in allTypes)
+            {
+                if (type.BaseType == typeof(FormulaValue))
+                {
+                    Assert.True(set.Contains(type), $"Type {type.FullName} should derive from {typeof(ValidFormulaValue).FullName}, not FormulaValue.");
+                }
+            }
         }
     }
 
