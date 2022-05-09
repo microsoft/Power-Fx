@@ -4,7 +4,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.PowerFx.Core.Binding;
-using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Texl.Intellisense;
 using Microsoft.PowerFx.Core.Types;
@@ -51,6 +50,7 @@ namespace Microsoft.PowerFx.Intellisense.IntellisenseData
             MissingTypes = missingTypes;
             BoundTo = string.Empty;
             CleanupHandlers = new List<ISpecialCaseHandler>();
+            SuggestUnqualifiedEnums = context.Flags.HasSuggestUnqualifiedEnums();
         }
 
         internal DType ExpectedType { get; }
@@ -163,7 +163,7 @@ namespace Microsoft.PowerFx.Intellisense.IntellisenseData
         /// <summary>
         /// Should unqualified enums be suggested.
         /// </summary>
-        internal virtual bool SuggestUnqualifiedEnums => false;
+        internal virtual bool SuggestUnqualifiedEnums { get; set; }
 
         /// <summary>
         /// Retrieves an <see cref="EnumSymbol"/> from <paramref name="binding"/> (if necessary).

@@ -5,8 +5,8 @@ using System.Collections.Generic;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Glue;
-using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Parser;
+using Microsoft.PowerFx.Core.Texl.Intellisense;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Intellisense;
@@ -154,14 +154,14 @@ namespace Microsoft.PowerFx
         /// <summary>
         /// Get intellisense from the formula.
         /// </summary>
-        public IIntellisenseResult Suggest(string expression, RecordType parameterType, int cursorPosition)
+        public IIntellisenseResult Suggest(string expression, RecordType parameterType, int cursorPosition, IntellisenseFlags intellisenseFlags = IntellisenseFlags.Default)
         {
             var result = Check(expression, parameterType);
             var binding = result._binding;
             var formula = new Formula(expression, null);
             formula.ApplyParse(result.Parse);
 
-            var context = new IntellisenseContext(expression, cursorPosition);
+            var context = new IntellisenseContext(expression, cursorPosition, intellisenseFlags);
             var intellisense = CreateIntellisense();
             var suggestions = intellisense.Suggest(context, binding, formula);
 
