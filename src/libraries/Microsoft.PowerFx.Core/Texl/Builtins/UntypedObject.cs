@@ -14,8 +14,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     {
         public const string ParseJSONInvariantFunctionName = "ParseJSON";
 
-        public override bool RequiresErrorContext => true;
-
         public override bool IsSelfContained => true;
 
         public override bool SupportsParamCoercion => false;
@@ -36,8 +34,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class IndexFunction_UO : BuiltinFunction
     {
         public const string IndexInvariantFunctionName = "Index";
-
-        public override bool RequiresErrorContext => true;
 
         public override bool IsSelfContained => true;
 

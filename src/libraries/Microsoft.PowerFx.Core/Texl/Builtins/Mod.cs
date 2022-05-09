@@ -19,8 +19,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool IsSelfContained => true;
 
-        public override bool RequiresErrorContext => true;
-
         public ModFunction()
             : base("Mod", TexlStrings.AboutMod, FunctionCategories.MathAndStat, DType.Number, 0, 2, 2, DType.Number, DType.Number)
         {
@@ -38,8 +36,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override bool SupportsParamCoercion => true;
 
         public override bool IsSelfContained => true;
-
-        public override bool RequiresErrorContext => true;
 
         public ModTFunction()
             : base("Mod", TexlStrings.AboutModT, FunctionCategories.Table, DType.EmptyTable, 0, 2, 2)

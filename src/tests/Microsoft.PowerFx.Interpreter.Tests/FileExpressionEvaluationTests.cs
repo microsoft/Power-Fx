@@ -46,7 +46,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                     Skip.If(true, prefix + msg);
                     break;
             }
-        }        
+        }
 
         // Since test discovery runs in a separate process, run a dedicated 
         // parse pass as a single unit test to verify all the .txt will parse. 

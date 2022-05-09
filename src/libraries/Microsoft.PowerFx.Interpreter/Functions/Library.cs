@@ -224,6 +224,26 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: Cot)
             },
             {
+                BuiltinFunctionsCore.Count,
+                StandardErrorHandling<TableValue>(
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<TableValue>,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: Count)
+            },
+            {
+                BuiltinFunctionsCore.CountA,
+                StandardErrorHandling<TableValue>(
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<TableValue>,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: CountA)
+            },
+            {
                 BuiltinFunctionsCore.CountIf,
                 StandardErrorHandling<FormulaValue>(
                     expandArguments: NoArgExpansion,

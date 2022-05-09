@@ -10,8 +10,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Equivalent DAX function: Sqrt
     internal sealed class SqrtFunction : MathOneArgFunction
     {
-        public override bool RequiresErrorContext => true;
-
         public SqrtFunction()
             : base("Sqrt", TexlStrings.AboutSqrt, FunctionCategories.MathAndStat)
         {
@@ -22,8 +20,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Table overload that computes the square root values of each item in the input table.
     internal sealed class SqrtTableFunction : MathOneArgTableFunction
     {
-        public override bool RequiresErrorContext => true;
-
         public SqrtTableFunction()
             : base("Sqrt", TexlStrings.AboutSqrtT, FunctionCategories.Table)
         {
