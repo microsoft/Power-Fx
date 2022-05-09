@@ -19,8 +19,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     {
         private readonly DelegationCapability _delegationCapability;
 
-        public override bool RequiresErrorContext => true;
-
         public override DelegationCapability FunctionDelegationCapability => _delegationCapability;
 
         public MinMaxTableFunction(bool isMin)

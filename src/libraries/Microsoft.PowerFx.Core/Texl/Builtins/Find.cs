@@ -11,14 +11,15 @@ using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
 
+#pragma warning disable SA1402 // File may only contain a single type
+#pragma warning disable SA1649 // File name should match first type name
+
 namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
     // Find(find_text:s, within_text:s, [start_index:n])
     // Equivalent DAX function: Find
     internal sealed class FindFunction : BuiltinFunction
     {
-        public override bool RequiresErrorContext => true;
-
         public override bool IsSelfContained => true;
 
         public override bool SupportsParamCoercion => true;
@@ -38,8 +39,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Find(find_text:s|*[s], within_text:s|*[s], [start_index:n|*[n]])
     internal sealed class FindTFunction : BuiltinFunction
     {
-        public override bool RequiresErrorContext => true;
-
         public override bool IsSelfContained => true;
 
         public override bool SupportsParamCoercion => true;
@@ -148,3 +147,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         }
     }
 }
+
+#pragma warning restore SA1402 // File may only contain a single type
+#pragma warning restore SA1649 // File name should match first type name

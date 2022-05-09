@@ -4,14 +4,15 @@
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
 
+#pragma warning disable SA1402 // File may only contain a single type
+#pragma warning disable SA1649 // File name should match first type name
+
 namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
     // Cot(number:n)
     // Equivalent Excel function: Cot
     internal sealed class CotFunction : MathOneArgFunction
     {
-        public override bool RequiresErrorContext => true;
-
         public CotFunction()
             : base("Cot", TexlStrings.AboutCot, FunctionCategories.MathAndStat)
         {
@@ -22,11 +23,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Table overload that computes the cotangent of each item in the input table.
     internal sealed class CotTableFunction : MathOneArgTableFunction
     {
-        public override bool RequiresErrorContext => true;
-
         public CotTableFunction()
             : base("Cot", TexlStrings.AboutCotT, FunctionCategories.Table)
         {
         }
     }
 }
+
+#pragma warning restore SA1402 // File may only contain a single type
+#pragma warning restore SA1649 // File name should match first type name
