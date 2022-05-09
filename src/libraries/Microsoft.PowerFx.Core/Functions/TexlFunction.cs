@@ -181,9 +181,6 @@ namespace Microsoft.PowerFx.Core.Functions
         // Return true if this function can return a type with ExpandInfo.
         public virtual bool CanReturnExpandInfo => false;
 
-        // Return true if this function requires error context info.
-        public virtual bool RequiresErrorContext => false;
-
         // Return true if this function requires binding context info.
         public virtual bool RequiresBindingContext => false;
 

@@ -12,14 +12,15 @@ using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
 
+#pragma warning disable SA1402 // File may only contain a single type
+#pragma warning disable SA1649 // File name should match first type name
+
 namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
     // First(source:*)
     // Last(source:*)
     internal sealed class FirstLastFunction : FunctionWithTableInput
     {
-        public override bool RequiresErrorContext => _isFirst;
-
         public override bool IsSelfContained => true;
 
         public override bool SupportsParamCoercion => false;
@@ -99,3 +100,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         }
     }
 }
+
+#pragma warning restore SA1402 // File may only contain a single type
+#pragma warning restore SA1649 // File name should match first type name
