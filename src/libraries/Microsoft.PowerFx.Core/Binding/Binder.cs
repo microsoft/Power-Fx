@@ -3935,6 +3935,9 @@ namespace Microsoft.PowerFx.Core.Binding
                     case BinaryOp.Add:
                         PostVisitBinaryOpNodeAddition(node);
                         break;
+                    case BinaryOp.Sub:
+                        PostVisitBinaryOpNodeSubtraction(node);
+                        break;
                     case BinaryOp.Power:
                     case BinaryOp.Mul:
                     case BinaryOp.Div:
@@ -4178,6 +4181,120 @@ namespace Microsoft.PowerFx.Core.Binding
                                 break;
                             default:
                                 // Regular Addition
+                                CheckType(node.Left, DType.Number, /* coerced: */ DType.String, DType.Boolean);
+                                CheckType(node.Right, DType.Number, /* coerced: */ DType.String, DType.Boolean);
+                                _txb.SetType(node, DType.Number);
+                                break;
+                        }
+
+                        break;
+                }
+            }
+
+            private void PostVisitBinaryOpNodeSubtraction(BinaryOpNode node)
+            {
+                AssertValid();
+                Contracts.AssertValue(node);
+                Contracts.Assert(node.Op == BinaryOp.Sub);
+
+                var left = _txb.GetType(node.Left);
+                var right = _txb.GetType(node.Right);
+                var leftKind = left.Kind;
+                var rightKind = right.Kind;
+
+                void ReportInvalidOperation()
+                {
+                    _txb.SetType(node, DType.Error);
+                    _txb.ErrorContainer.EnsureError(
+                        DocumentErrorSeverity.Severe,
+                        node,
+                        TexlStrings.ErrBadOperatorTypes,
+                        left.GetKindString(),
+                        right.GetKindString());
+                }
+
+                switch (leftKind)
+                {
+                    case DKind.DateTime:
+                        switch (rightKind)
+                        {
+                            case DKind.DateTime:
+                            case DKind.Date:
+                                // DateTime - DateTime = Number
+                                // DateTime - Date = Number
+                                _txb.SetType(node, DType.Number);
+                                break;
+                            case DKind.Time:
+                                // DateTime - Time in any other arrangement is an error
+                                ReportInvalidOperation();
+                                break;
+                            default:
+                                // DateTime - number = DateTime
+                                CheckType(node.Right, DType.Number, /* coerced: */ DType.String, DType.Boolean);
+                                _txb.SetType(node, DType.DateTime);
+                                break;
+                        }
+
+                        break;
+                    case DKind.Date:
+                        switch (rightKind)
+                        {
+                            case DKind.Date:
+                            case DKind.DateTime:
+                                _txb.SetType(node, DType.Number);
+                                break;
+                            case DKind.Time:
+                                ReportInvalidOperation();
+                                break;
+                            default:
+                                // Date - number = Date
+                                CheckType(node.Right, DType.Number, /* coerced: */ DType.String, DType.Boolean);
+                                _txb.SetType(node, DType.Date);
+                                break;
+                        }
+
+                        break;
+                    case DKind.Time:
+                        switch (rightKind)
+                        {
+                            case DKind.Time:
+                                // Time - Time = Number
+                                _txb.SetType(node, DType.Number);
+
+                                break;
+                            case DKind.Date:
+                            case DKind.DateTime:
+                                // Time - Date is an error
+                                ReportInvalidOperation();
+                                break;
+                            default:
+                                // Time - number = Time
+                                CheckType(node.Right, DType.Number, /* coerced: */ DType.String, DType.Boolean);
+                                _txb.SetType(node, DType.Time);
+                                break;
+                        }
+
+                        break;
+                    default:
+                        switch (rightKind)
+                        {
+                            case DKind.DateTime:
+                                // number - DateTime = DateTime
+                                CheckType(node.Left, DType.Number, /* coerced: */ DType.String, DType.Boolean);
+                                _txb.SetType(node, DType.DateTime);
+                                break;
+                            case DKind.Date:
+                                // number - Date = Date
+                                CheckType(node.Left, DType.Number, /* coerced: */ DType.String, DType.Boolean);
+                                _txb.SetType(node, DType.Date);
+                                break;
+                            case DKind.Time:
+                                // number - Time = Time
+                                CheckType(node.Left, DType.Number, /* coerced: */ DType.String, DType.Boolean);
+                                _txb.SetType(node, DType.Time);
+                                break;
+                            default:
+                                // Regular subtraction
                                 CheckType(node.Left, DType.Number, /* coerced: */ DType.String, DType.Boolean);
                                 CheckType(node.Right, DType.Number, /* coerced: */ DType.String, DType.Boolean);
                                 _txb.SetType(node, DType.Number);

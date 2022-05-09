@@ -214,6 +214,9 @@ namespace Microsoft.PowerFx.Core.IR
                     case BinaryOp.Add:
                         binaryOpResult = GetAddBinaryOp(context, node, left, right, leftType, rightType);
                         break;
+                    case BinaryOp.Sub:
+                        binaryOpResult = GetSubBinaryOp(context, node, left, right, leftType, rightType);
+                        break;
                     case BinaryOp.Mul:
                         binaryOpResult = new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.MulNumbers, left, right);
                         break;
@@ -819,6 +822,67 @@ namespace Microsoft.PowerFx.Core.IR
                             default:
                                 // Number + Number
                                 return new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.AddNumbers, left, right);
+                        }
+                }
+            }
+
+            private static IntermediateNode GetSubBinaryOp(IRTranslatorContext context, TexlBinaryOpNode node, IntermediateNode left, IntermediateNode right, DType leftType, DType rightType)
+            {
+                Contracts.AssertValue(node);
+                Contracts.Assert(node.Op == BinaryOp.Sub);
+
+                switch (leftType.Kind)
+                {
+                    case DKind.Date:
+                        if (rightType == DType.DateTime || rightType == DType.Date)
+                        {
+                            // Date - DateTime => in days
+                            // Date - Date => in days
+                            return new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.DateDifference, left, right);
+                        }
+                        else
+                        {
+                            return new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.SubDateAndDay, left, right);
+                        }
+
+                    case DKind.Time:
+                        if (rightType == DType.Time)
+                        {
+                            // Time - Time => in ms
+                            return new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.SubNumbers, left, right);
+                        }
+                        else
+                        {
+                            // Time + Number
+                            return new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.AddTimeAndMilliseconds, left, right);
+                        }
+
+                    case DKind.DateTime:
+                        if (rightType == DType.DateTime || rightType == DType.Date)
+                        {
+                            // DateTime - DateTime => in days
+                            // DateTime - Date => in days
+                            return new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.DateDifference, left, right);
+                        }
+                        else
+                        {
+                            return new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.SubDateTimeAndDay, left, right);
+                        }
+
+                    default:
+                        switch (rightType.Kind)
+                        {
+                            case DKind.Date:
+                                // Number - Date
+                                return new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.SubDateAndDay, right, left);
+                            case DKind.Time:
+                                // Number - Date
+                                return new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.SubTimeAndMilliseconds, right, left);
+                            case DKind.DateTime:
+                                return new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.SubDateTimeAndDay, right, left);
+                            default:
+                                // Number - Number
+                                return new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.SubNumbers, left, right);
                         }
                 }
             }

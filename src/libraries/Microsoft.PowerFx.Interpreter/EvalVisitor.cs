@@ -194,6 +194,8 @@ namespace Microsoft.PowerFx
             {
                 case BinaryOpKind.AddNumbers:
                     return OperatorBinaryAdd(this, context, node.IRContext, args);
+                case BinaryOpKind.SubNumbers:
+                    return OperatorBinarySub(this, context, node.IRContext, args);
                 case BinaryOpKind.MulNumbers:
                     return OperatorBinaryMul(this, context, node.IRContext, args);
                 case BinaryOpKind.DivNumbers:
@@ -257,6 +259,10 @@ namespace Microsoft.PowerFx
                     return OperatorAddDateAndDay(this, context, node.IRContext, args);
                 case BinaryOpKind.AddDateTimeAndDay:
                     return OperatorAddDateTimeAndDay(this, context, node.IRContext, args);
+                case BinaryOpKind.SubDateAndDay:
+                    return OperatorSubDateAndDay(this, context, node.IRContext, args);
+                case BinaryOpKind.SubDateTimeAndDay:
+                    return OperatorSubDateTimeAndDay(this, context, node.IRContext, args);
                 case BinaryOpKind.DateDifference:
                     return OperatorDateDifference(this, context, node.IRContext, args);
                 case BinaryOpKind.TimeDifference:

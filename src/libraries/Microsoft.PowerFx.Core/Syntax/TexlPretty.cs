@@ -186,6 +186,8 @@ namespace Microsoft.PowerFx.Syntax
                     return PrettyBinary(SpacedOper(TexlLexer.PunctuatorAmpersand), parentPrecedence, Precedence.Concat, node.Left, node.Right);
                 case BinaryOp.Add:
                     return PrettyBinary(SpacedOper(TexlLexer.PunctuatorAdd), parentPrecedence, Precedence.Add, node.Left, node.Right);
+                case BinaryOp.Sub:
+                    return PrettyBinary(SpacedOper(TexlLexer.PunctuatorSub), parentPrecedence, Precedence.Add, node.Left, node.Right);
                 case BinaryOp.Mul:
                     return PrettyBinary(SpacedOper(TexlLexer.PunctuatorMul), parentPrecedence, Precedence.Mul, node.Left, node.Right);
                 case BinaryOp.Div:
@@ -440,6 +442,7 @@ namespace Microsoft.PowerFx.Syntax
                 { BinaryOp.And, Precedence.And },
                 { BinaryOp.Concat, Precedence.Concat },
                 { BinaryOp.Add, Precedence.Add },
+                { BinaryOp.Sub, Precedence.Add },
                 { BinaryOp.Mul, Precedence.Mul },
                 { BinaryOp.Div, Precedence.Mul },
                 { BinaryOp.In, Precedence.In },

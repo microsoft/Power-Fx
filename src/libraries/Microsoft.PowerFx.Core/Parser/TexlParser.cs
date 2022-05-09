@@ -372,8 +372,8 @@ namespace Microsoft.PowerFx.Core.Parser
                             tok = _curs.TokMove();
                             rightTrivia = ParseTrivia();
                             right = ParseExpr(Precedence.Add + 1);
-                            right = new UnaryOpNode(ref _idNext, tok, right.SourceList, UnaryOp.Minus, right);
-                            node = MakeBinary(BinaryOp.Add, node, leftTrivia, tok, rightTrivia, right);
+                            node = MakeBinary(BinaryOp.Sub, node, leftTrivia, tok, rightTrivia, right);
+
                             break;
 
                         case TokKind.Add:

@@ -29,6 +29,11 @@ namespace Microsoft.PowerFx.Syntax
         Add,
 
         /// <summary>
+        /// Arithmetic subtraction (-).
+        /// </summary>
+        Sub,
+
+        /// <summary>
         /// Arithmetic multiplication (*).
         /// </summary>
         Mul,

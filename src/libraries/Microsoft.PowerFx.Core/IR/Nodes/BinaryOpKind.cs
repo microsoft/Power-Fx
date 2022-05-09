@@ -17,6 +17,11 @@ namespace Microsoft.PowerFx.Core.IR.Nodes
         AddDateTimeAndDay,
         AddTimeAndMilliseconds, // Time + Number (Milliseconds)
 
+        SubNumbers,
+        SubDateAndDay,
+        SubDateTimeAndDay,
+        SubTimeAndMilliseconds, // Not yet implemented
+
         DateDifference,
         TimeDifference,
 

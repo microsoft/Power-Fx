@@ -88,7 +88,7 @@ Blank()
 Errors: Error 0-14: Invalid argument type. Expecting one of the following: Number, Text, Boolean.|Error 17-31: Invalid argument type. Expecting one of the following: Number, Text, Boolean.
 
 >> ParseJSON("5") - ParseJSON("5")
-Errors: Error 17-31: Invalid argument type. Expecting one of the following: Number, Text, Boolean.|Error 0-14: Invalid argument type. Expecting one of the following: Number, Text, Boolean.
+Errors: Error 0-14: Invalid argument type. Expecting one of the following: Number, Text, Boolean.|Error 17-31: Invalid argument type. Expecting one of the following: Number, Text, Boolean.
 
 >> ParseJSON("5") * ParseJSON("5")
 Errors: Error 0-14: Invalid argument type. Expecting one of the following: Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime.|Error 17-31: Invalid argument type. Expecting one of the following: Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime.
