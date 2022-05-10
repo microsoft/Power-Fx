@@ -39,6 +39,7 @@ using System.Runtime.CompilerServices;
 [assembly: InternalsVisibleTo("Microsoft.PowerFx.LanguageServerProtocol")]
 [assembly: InternalsVisibleTo("Microsoft.PowerFx.Core.Tests")]
 [assembly: InternalsVisibleTo("Microsoft.PowerFx.Interpreter.Tests")]
+[assembly: InternalsVisibleTo("PowerFx.Dataverse")]
 #endif
 
 [assembly:NeutralResourcesLanguage("en-US", UltimateResourceFallbackLocation.Satellite)]
