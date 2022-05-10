@@ -38,8 +38,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             SignatureConstraint = new SignatureConstraint(omitStartIndex: 5, repeatSpan: 2, endNonRepeatCount: 0, repeatTopLength: 9);
         }
 
-        public override bool RequiresErrorContext => true;
-
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
             // Enumerate just the base overloads (the first 2 possibilities).
@@ -370,8 +368,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             : base("SortByColumns", TexlStrings.AboutSortByColumnsWithOrderValues, FunctionCategories.Table, DType.EmptyTable, 0, 3, 3, DType.EmptyTable, DType.String, DType.EmptyTable)
         {
         }
-
-        public override bool RequiresErrorContext => true;
 
         public override string GetUniqueTexlRuntimeName(bool isPrefetching = false)
         {

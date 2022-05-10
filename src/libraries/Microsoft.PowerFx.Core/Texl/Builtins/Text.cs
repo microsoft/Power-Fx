@@ -21,8 +21,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     {
         public override bool SupportsParamCoercion => true;
 
-        public override bool RequiresErrorContext => true;
-
         public override bool IsSelfContained => true;
 
         public TextFunction()
@@ -176,8 +174,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class TextFunction_UO : BuiltinFunction
     {
         public override bool SupportsParamCoercion => false;
-
-        public override bool RequiresErrorContext => true;
 
         public override bool IsSelfContained => true;
 

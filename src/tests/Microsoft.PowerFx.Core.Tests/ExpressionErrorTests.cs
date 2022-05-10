@@ -1,15 +1,9 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System;
 using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
 using Microsoft.PowerFx.Core.Errors;
-using Microsoft.PowerFx.Core.Localization;
-using Microsoft.PowerFx.Core.Public;
-using Microsoft.PowerFx.Core.Types;
-using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Syntax;
 using Xunit;
 
 namespace Microsoft.PowerFx.Core.Tests

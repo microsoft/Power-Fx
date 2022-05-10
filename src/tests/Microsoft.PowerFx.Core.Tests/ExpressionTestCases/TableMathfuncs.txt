@@ -1,6 +1,9 @@
 ﻿// Sum on empty list 
 >> IsBlank(Sum(Filter([1,2,3],Value > 10), Value))
-true
+false
+
+>> Sum(Filter([1,2,3],Value > 10), Value)
+0
 
 // Table overload of Sum
 >> Sum([1,2,3], Value)
@@ -19,19 +22,4 @@ Blank()
 #Error
 
 >> IsBlank(Average(Filter([1,2,3],Value > 10), Value))
-#Error
-
->> Average([1,2,3], Value)
-2
-
->> Average(LastN([1, 2, 3, 4, 5], Blank()), Value)
-Blank()
-
->> Average(Sort([-2, -1, 0, 1, 2], 1 / Value), Value)
-#Error
-
->> Average(1, 2, 3, Blank(), 2, 2)
-2
-
->> Average([1, 2, 1/0, 4, 5], Value)
 #Error

@@ -174,7 +174,7 @@
 
 //Invalid argument to the function
 >> Mid("abcd", "abc","def")
-#Error(Kind=InvalidArgument)
+#Error(Kind=InvalidArgument, InvalidArgument)
 
 // ******** FUNCTION VALUE AS PARAMETERS ********
 

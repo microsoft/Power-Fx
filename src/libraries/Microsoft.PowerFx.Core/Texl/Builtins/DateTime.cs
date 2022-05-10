@@ -23,8 +23,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Equivalent DAX/Excel function: Date
     internal sealed class DateFunction : BuiltinFunction
     {
-        public override bool RequiresErrorContext => true;
-
         public override bool IsSelfContained => true;
 
         public override bool HasPreciseErrors => true;
@@ -46,8 +44,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal abstract class ExtractDateTimeFunctionBase : BuiltinFunction
     {
         public override bool HasPreciseErrors => true;
-
-        public override bool RequiresErrorContext => true;
 
         public override bool IsSelfContained => true;
 
@@ -75,8 +71,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Equivalent DAX/Excel function: Time
     internal sealed class TimeFunction : BuiltinFunction
     {
-        public override bool RequiresErrorContext => true;
-
         public override bool IsSelfContained => true;
 
         public override bool HasPreciseErrors => true;
@@ -98,8 +92,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // DateTime(year, month, day, hour, minute, second[, millisecond])
     internal sealed class DateTimeFunction : BuiltinFunction
     {
-        public override bool RequiresErrorContext => true;
-
         public override bool IsSelfContained => true;
 
         public override bool HasPreciseErrors => true;
@@ -224,8 +216,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Equivalent DAX/Excel function: Weekday
     internal sealed class WeekdayFunction : BuiltinFunction
     {
-        public override bool RequiresErrorContext => true;
-
         public override bool IsSelfContained => true;
 
         public override bool HasPreciseErrors => true;
@@ -253,8 +243,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Equivalent DAX/Excel function: WeekNum
     internal sealed class WeekNumFunction : BuiltinFunction
     {
-        public override bool RequiresErrorContext => true;
-
         public override bool IsSelfContained => true;
 
         public override bool HasPreciseErrors => true;
@@ -299,8 +287,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
     internal abstract class DateTimeGenericFunction : BuiltinFunction
     {
-        public override bool RequiresErrorContext => true;
-
         public override bool IsSelfContained => true;
 
         public override bool HasPreciseErrors => true;
@@ -381,8 +367,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // DateAdd(timestamp: d, delta: n, [ unit: TimeUnits ]) : d
     internal sealed class DateAddFunction : BuiltinFunction
     {
-        public override bool RequiresErrorContext => true;
-
         public override bool IsSelfContained => true;
 
         public override bool SupportsParamCoercion => true;
@@ -455,8 +439,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // DateAdd(timestamp:d|*[d], delta:n|*[n], [unit:TimeUnits])
     internal sealed class DateAddTFunction : BuiltinFunction
     {
-        public override bool RequiresErrorContext => true;
-
         public override bool IsSelfContained => true;
 
         public override bool SupportsParamCoercion => true;
@@ -569,8 +551,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // DateDiff(startdate: d, enddate : d, [ unit: TimeUnits ]) : n
     internal sealed class DateDiffFunction : BuiltinFunction
     {
-        public override bool RequiresErrorContext => true;
-
         public override bool IsSelfContained => true;
 
         public override bool HasPreciseErrors => true;
@@ -605,8 +585,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // DateDiffT(start:d|*[d], end:d|*[d], [unit:TimeUnits])
     internal sealed class DateDiffTFunction : BuiltinFunction
     {
-        public override bool RequiresErrorContext => true;
-
         public override bool IsSelfContained => true;
 
         public override bool SupportsParamCoercion => true;
