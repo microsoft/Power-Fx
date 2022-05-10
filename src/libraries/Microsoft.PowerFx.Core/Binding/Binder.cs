@@ -393,6 +393,11 @@ namespace Microsoft.PowerFx.Core.Binding
             return _typeMap[node.Id];
         }
 
+        /// <summary>
+        /// Checks that the node is associated with this binding. This is critical so that node IDs are valid.
+        /// </summary>
+        /// <param name="node"></param>
+        /// <returns></returns>
         public bool IsNodeValid(TexlNode node)
         {
             Contracts.AssertValue(node);
