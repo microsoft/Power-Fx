@@ -102,6 +102,12 @@ namespace Microsoft.PowerFx.Types
                 case DKind.OptionSet:
                     return new RecordType(DType.CreateRecord(type.GetAllNames(DPath.Root)));
 
+                case DKind.Control:
+                    // TODO: Make sure this works
+                    var controlType = type as IExternalControlType;
+
+                    return null;
+
                 case DKind.UntypedObject:
                     return UntypedObject;
 
@@ -112,7 +118,7 @@ namespace Microsoft.PowerFx.Types
                     return BindingError;
 
                 default:
-                    throw new NotImplementedException($"Not implemented type: {type}");
+                    throw new NotImplementedException($"Not implemented type: {type} ({type.Kind}) ({type?.GetType().FullName})");
             }
         }
 
