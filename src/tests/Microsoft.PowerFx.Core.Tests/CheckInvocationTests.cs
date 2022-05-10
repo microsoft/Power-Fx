@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System;
+using System.ComponentModel.DataAnnotations;
 using Microsoft.PowerFx.Types;
 using Xunit;
 
@@ -68,6 +69,41 @@ namespace Microsoft.PowerFx.Core.Tests
             var args7 = args;
             var result7 = checkResult.ValidateInvocation("IfError", args7, out var _);
             Assert.True(result7);
+        }
+
+        [Theory]
+        [InlineData("SUM(X)")]
+        [InlineData("SUM(1)")]
+        [InlineData("SUM(X, 1)")]
+        [InlineData("SUM(Y, X)")]
+        [InlineData("SUM(Y, X, Y)")]
+        [InlineData("SUM(T)")]
+        [InlineData("SUM(T, A + B)")]
+        [InlineData("SUM(T, A + B, 1)")]
+        public void CheckOverloads(string formula)
+        {
+            var config = new PowerFxConfig();
+            var engine = new Engine(config);
+
+            var tableType =
+                new TableType().Add(new NamedFormulaType("A", FormulaType.Number))
+                               .Add(new NamedFormulaType("B", FormulaType.Number));
+            var formulaParams =
+                new RecordType().Add("X", FormulaType.Number).Add("Y", FormulaType.Number).Add("Table", tableType);
+
+            var parseResult = engine.Parse(formula);
+            var args = parseResult.Root.AsCall().Args.ChildNodes;
+            var fnc = parseResult.Root.AsCall().Head;
+            var fncName = fnc.Namespace.IsRoot ? fnc.Name.Value : $"{fnc.Namespace.ToDottedSyntax()}.{fnc.Name.Value}";
+
+            Assert.True(parseResult.IsSuccess);
+
+            var checkResult = engine.Check(parseResult, formulaParams);
+            var expectedType = checkResult.IsSuccess ? checkResult.ReturnType : null;
+            var validateResult = checkResult.ValidateInvocation(fncName, args, out var retType);
+
+            Assert.Equal(checkResult.IsSuccess, validateResult);
+            Assert.Equal(expectedType, retType);
         }
 
         [Fact]
