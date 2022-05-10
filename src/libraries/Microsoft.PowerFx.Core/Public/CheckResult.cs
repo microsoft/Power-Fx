@@ -127,20 +127,26 @@ namespace Microsoft.PowerFx
                 }
             }
 
-            var fnc = _binding.NameResolver.Functions
+            var types = args.Select(node => _binding.GetType(node)).ToArray();
+
+            // Note: there could be multiple functions (e.g., overloads) with the same name and arity,
+            //  hence loop through candidates and check whether one of them matches.
+            var fncs = _binding.NameResolver.Functions
                               .Where(fnc => fnc.Name == functionName && args.Count >= fnc.MinArity
-                                                && args.Count <= fnc.MaxArity)
-                              .FirstOrDefault();
-            if (fnc == null)
+                                                && args.Count <= fnc.MaxArity);
+            foreach (var fnc in fncs)
             {
-                return false;
+                var result =
+                    fnc.CheckInvocation(_binding, args.ToArray(), types, _binding.ErrorContainer, out var retDType, out _);
+
+                if (result)
+                {
+                    retType = FormulaType.Build(retDType);
+                    return true;
+                }
             }
 
-            var types = args.Select(node => _binding.GetType(node)).ToArray();
-            var result =
-                fnc.CheckInvocation(_binding, args.ToArray(), types, _binding.ErrorContainer, out var retDType, out _);
-            retType = FormulaType.Build(retDType);
-            return result;
+            return false;
         }
 
         internal IReadOnlyDictionary<string, TokenResultType> GetTokens(GetTokensFlags flags) => GetTokensUtils.GetTokens(_binding, flags);
