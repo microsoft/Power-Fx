@@ -1,80 +1,7 @@
-// ******** INTEGER PARAMETERS ********
-// Positive Integer Parameters
+﻿// ******** FUNCTION VALUE AS PARAMETERS ********
 
->> Abs(0)
-0
-
->> Abs(2)
-2
-
->> Abs(1E+308)
-100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-
-// Negative Integer Parameters
-
->> Abs(-0)
-0
-
->> Abs(-2)
-2
-
->> Abs(-1E+308)
-100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-
-// ******** DECIMAL PARAMETERS ********
->> Abs(2.2)
-2.2
-
->> Abs(-2.2)
-2.2
-
->> Abs(123456.789)
-123456.789
-
->> Abs(-123456.789)
-123456.789
-
-// ******** NULL and ERROR PARAMETERS ********
->> Abs(1/0)
-#Error(Kind=Div0)
-
-//Excel returns 0
->> Abs(Blank())
-Blank()
-
-//Excel returns true
->> Abs(Blank()) = 0
-false
-
->> IsBlank(Abs(Blank()))
-true
-
-// ******** STRING PARAMETERS ********
-
->> Abs("sampleText")
-#Error(Kind=InvalidArgument)
-
->> Abs("10")
-10
-
->> Abs("-10.123")
-10.123
-
-// ******** BOOLEAN PARAMETERS ********
-
->> Abs(true)
-1
-
->> Abs(false)
-0
-
->> Abs("true")
-#Error(Kind=InvalidArgument)
-
->> Abs("false")
-#Error(Kind=InvalidArgument)
-
-// ******** FUNCTION VALUE AS PARAMETERS ********
+>> Date(1976, 12,23) - Date(2000, 01, 01)
+-8409
 
 >> Abs(Date(1976, 12,23) - Date(2000, 01, 01))
 8409
@@ -82,7 +9,3 @@ true
 //Excel returns false, as the value of Abs(Date(2022, 10, 1)) in Excel is 44835 in General format, while in Date format its 10/1/2022
 >> Abs(Date(2022, 10, 1)) = 1664607600000
 true
-
-
-//Abs(Infinity)
-//Abs(NaN)

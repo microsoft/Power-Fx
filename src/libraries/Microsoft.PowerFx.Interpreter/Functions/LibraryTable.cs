@@ -134,6 +134,90 @@ namespace Microsoft.PowerFx.Functions
             return new NumberValue(irContext, count);
         }
 
+        // Count
+        public static FormulaValue Count(IRContext irContext, TableValue[] args)
+        {
+            var arg0 = args[0];
+            var count = 0;
+
+            var errors = new List<ErrorValue>();
+
+            foreach (var row in arg0.Rows)
+            {
+                if (row.IsBlank)
+                {
+                    continue;
+                }
+                else if (row.IsError)
+                {
+                    errors.Add(row.Error);
+                    continue;
+                }
+
+                var field = row.Value.Fields.First().Value;
+
+                if (field is ErrorValue error)
+                {
+                    errors.Add(error);
+                    continue;
+                }
+
+                if (field is NumberValue)
+                {
+                    count++;
+                }
+            }
+
+            if (errors.Count != 0)
+            {
+                return ErrorValue.Combine(irContext, errors);
+            }
+
+            return new NumberValue(irContext, count);
+        }
+
+        // CountA
+        public static FormulaValue CountA(IRContext irContext, TableValue[] args)
+        {
+            var arg0 = args[0];
+            var count = 0;
+
+            var errors = new List<ErrorValue>();
+
+            foreach (var row in arg0.Rows)
+            {
+                if (row.IsBlank)
+                {
+                    continue;
+                }
+                else if (row.IsError)
+                {
+                    errors.Add(row.Error);
+                    continue;
+                }
+
+                var field = row.Value.Fields.First().Value;
+
+                if (field is ErrorValue error)
+                {
+                    errors.Add(error);
+                    continue;
+                }
+
+                if (field is not BlankValue)
+                {
+                    count++;
+                }
+            }
+
+            if (errors.Count != 0)
+            {
+                return ErrorValue.Combine(irContext, errors);
+            }
+
+            return new NumberValue(irContext, count);
+        }
+
         public static async ValueTask<FormulaValue> CountIf(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args)
         {
             // Streaming 

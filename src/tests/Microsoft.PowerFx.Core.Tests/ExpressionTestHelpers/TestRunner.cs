@@ -374,6 +374,10 @@ namespace Microsoft.PowerFx.Core.Tests
                 var dateTime = dt.Value;
                 sb.Append($"DateTime({dateTime.Year},{dateTime.Month},{dateTime.Day},{dateTime.Hour},{dateTime.Minute},{dateTime.Second},{dateTime.Millisecond})");
             }
+            else if (result is OptionSetValue opt)
+            {
+                sb.Append($"{opt.Type.OptionSetName}.{opt.Option}");
+            }
             else if (result is ErrorValue)
             {
                 sb.Append(result);

@@ -17,7 +17,7 @@ namespace Microsoft.PowerFx
         /// <inheritdoc/>
         public bool TryGetMarshaller(Type type, TypeMarshallerCache cache, int maxDepth, out ITypeMarshaller marshaler)
         {
-            if (BuiltinFormulaTypeConversions.TryGetFormulaType(type, out var fxType))
+            if (PrimitiveValueConversions.TryGetFormulaType(type, out var fxType))
             {
                 marshaler = new PrimitiveTypeMarshaller(fxType);
                 return true;

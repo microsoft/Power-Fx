@@ -55,7 +55,7 @@ namespace Microsoft.PowerFx.Types
         {
             // This is a convenience method. For anything requiring more control,
             // use NewTable and be explicit. 
-            if (!BuiltinFormulaTypeConversions.TryGetFormulaType(typeof(T), out var fxType))
+            if (!PrimitiveValueConversions.TryGetFormulaType(typeof(T), out var fxType))
             {
                 throw new InvalidOperationException($"Use NewTable() instead");
             }

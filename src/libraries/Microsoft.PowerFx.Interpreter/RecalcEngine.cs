@@ -65,6 +65,23 @@ namespace Microsoft.PowerFx
         /// <inheritdoc/>
         protected override IExpression CreateEvaluator(CheckResult result)
         {
+            return CreateEvaluatorDirect(result);
+        }
+
+        /// <summary>
+        /// Create an evaluator over the existing binding. 
+        /// </summary>
+        /// <param name="result">A successful binding from a previous call to <see cref="Engine.Check(string, RecordType, ParserOptions)"/>. </param>
+        /// <returns></returns>
+        public static IExpression CreateEvaluatorDirect(CheckResult result)
+        {
+            if (result._binding == null)
+            {
+                throw new InvalidOperationException($"Requires successful binding");
+            }
+
+            result.ThrowOnErrors();            
+
             (var irnode, var ruleScopeSymbol) = IRTranslator.Translate(result._binding);
             return new ParsedExpression(irnode, ruleScopeSymbol);
         }
