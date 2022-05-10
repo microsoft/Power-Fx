@@ -38,6 +38,8 @@ namespace Microsoft.PowerFx.Types
 
         void Visit(ColorType type);
 
+        void Visit(ControlType type);
+
         void Visit(UnknownType type);
 
         void Visit(BindingErrorType type);

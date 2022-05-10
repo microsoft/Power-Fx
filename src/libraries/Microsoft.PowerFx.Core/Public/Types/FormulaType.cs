@@ -103,10 +103,7 @@ namespace Microsoft.PowerFx.Types
                     return new RecordType(DType.CreateRecord(type.GetAllNames(DPath.Root)));
 
                 case DKind.Control:
-                    // TODO: Make sure this works
-                    var controlType = type as IExternalControlType;
-
-                    return null;
+                    return new ControlType(type);
 
                 case DKind.UntypedObject:
                     return UntypedObject;
