@@ -54,17 +54,19 @@ namespace Microsoft.PowerFx.Core.Tests
 
             // Remove two args
             var args5 = new[] { args[1] };
-            var result5 = checkResult.ValidateInvocation("If", args5, out _);
+            var result5 = checkResult.ValidateInvocation("If", args5, out var returnType5);
             Assert.False(result5);
+            Assert.Null(returnType5); // Not part of contract, but we expect this to be null
 
             // Use different (invalid) function
             var args6 = args;
-            var result6 = checkResult.ValidateInvocation("CountIf", args6, out _);
+            var result6 = checkResult.ValidateInvocation("CountIf", args6, out var returnType6);
             Assert.False(result6);
+            Assert.Null(returnType6);
 
             // Use different (valid) function
             var args7 = args;
-            var result7 = checkResult.ValidateInvocation("IfError", args7, out _);
+            var result7 = checkResult.ValidateInvocation("IfError", args7, out var _);
             Assert.True(result7);
         }
 
