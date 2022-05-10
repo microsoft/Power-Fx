@@ -109,14 +109,14 @@ namespace Microsoft.PowerFx
         {
             retType = null;
 
-            if (args is null)
+            if (args == null)
             {
                 throw new ArgumentNullException(nameof(args));
             }
 
             foreach (var arg in args)
             {
-                if (arg is null)
+                if (arg == null)
                 {
                     throw new ArgumentNullException(nameof(args));
                 }
@@ -131,7 +131,7 @@ namespace Microsoft.PowerFx
                               .Where(fnc => fnc.Name == functionName && args.Count >= fnc.MinArity
                                                 && args.Count <= fnc.MaxArity)
                               .FirstOrDefault();
-            if (fnc is null)
+            if (fnc == null)
             {
                 return false;
             }
