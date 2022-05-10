@@ -96,16 +96,16 @@ namespace Microsoft.PowerFx
         public FormulaType GetNodeType(TexlNode node) => FormulaType.Build(_binding.GetType(node));
 
         /// <summary>
-        /// Checks whether a call to a function with name <paramref name="fncName" /> is valid with argument list
+        /// Checks whether a call to a function with name <paramref name="functionName" /> is valid with argument list
         /// <paramref name="args" />. Additionally returns (as an out parameter) the return type of this invocation.
         /// 
         /// Note: all arguments must belong to the formula that belongs to this <see cref="CheckResult" />.
         /// </summary>
-        /// <param name="fncName"></param>
+        /// <param name="functionName"></param>
         /// <param name="args"></param>
         /// <param name="retType"></param>
         /// <returns></returns>
-        public bool ValidateInvocation(string fncName, IReadOnlyList<TexlNode> args, out FormulaType retType)
+        public bool ValidateInvocation(string functionName, IReadOnlyList<TexlNode> args, out FormulaType retType)
         {
             retType = null;
 
@@ -128,7 +128,8 @@ namespace Microsoft.PowerFx
             }
 
             var fnc = _binding.NameResolver.Functions
-                              .Where(fnc => fnc.Name == fncName && args.Count >= fnc.MinArity && args.Count <= fnc.MaxArity)
+                              .Where(fnc => fnc.Name == functionName && args.Count >= fnc.MinArity
+                                                && args.Count <= fnc.MaxArity)
                               .FirstOrDefault();
             if (fnc is null)
             {
@@ -136,7 +137,8 @@ namespace Microsoft.PowerFx
             }
 
             var types = args.Select(node => _binding.GetType(node)).ToArray();
-            var result = fnc.CheckInvocation(_binding, args.ToArray(), types, _binding.ErrorContainer, out var retDType, out _);
+            var result =
+                fnc.CheckInvocation(_binding, args.ToArray(), types, _binding.ErrorContainer, out var retDType, out _);
             retType = FormulaType.Build(retDType);
             return result;
         }
