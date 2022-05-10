@@ -40,6 +40,8 @@ namespace Microsoft.PowerFx.Types
 
         void Visit(ControlType type);
 
+        void Visit(UnsupportedType type);
+
         void Visit(UnknownType type);
 
         void Visit(BindingErrorType type);
