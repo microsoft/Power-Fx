@@ -1,6 +1,8 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Reflection;
 using Microsoft.PowerFx.Core.Tests;
@@ -70,6 +72,9 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             public T _value;
         }
 
+        // TypeMarshaller that will claim all Wrapper<T> objects and:
+        // - marshal it as a T. This can chain to other marshallers. 
+        // - but still ToObject() as the original Wrapper<T>. 
         private class WrapperMarshallerProvider : ITypeMarshallerProvider
         {
             private static bool GetElementType(Type type, Type genericDef, out Type elementType)
@@ -116,7 +121,37 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 public FormulaValue Marshal(object value)
                 {
                     var x = (Wrapper<T>)value;
-                    return _inner.Marshal(x._value);
+                    var result = _inner.Marshal(x._value);
+
+                    // Wrap so that we can still chain ToObject(). 
+                    return new WrapperRecordValue((RecordValue)result, value);
+                }
+            }
+
+            // Demonstrating wrapping a RecordValue as overriding the ToObject() property
+            private class WrapperRecordValue : RecordValue
+            {
+                private readonly RecordValue _inner;
+                private readonly object _source;
+
+                public WrapperRecordValue(RecordValue inner, object source)
+                    : base(inner.Type)
+                {
+                    _inner = inner;
+                    _source = source;
+                }
+
+                public override object ToObject()
+                {
+                    // Return the override for ToObject. 
+                    return _source;
+                }
+
+                protected override bool TryGetField(FormulaType fieldType, string fieldName, out FormulaValue result)
+                {
+                    // Forward all field lookups
+                    result = _inner.GetField(fieldName);
+                    return true;
                 }
             }
         }
@@ -124,11 +159,16 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [Fact]
         public void TestWrapper()
         {
-            var custom = new WrapperMarshallerProvider();
-            var cache = new TypeMarshallerCache().NewPrepend(custom);
+            // Demonstrate that we can create a marshaller to handle Wrapper<T>, 
+            // and it chains the T meaning that it picks up any other custom
+            // marshallers for the T. 
+            var custom1 = new WrapperMarshallerProvider();
+            var custom2 = new CustomObjectMarshallerProvider();
+            var cache = TypeMarshallerCache.New(custom2).NewPrepend(custom1);
 
             var inner = new TestObj
             {
+                // custom2 will marshall as 'FieldDisplay1'
                 Field1 = 10,
                 Field2 = 20
             };
@@ -140,7 +180,10 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var engine = new RecalcEngine();
             engine.UpdateVariable("x", x);
 
-            var result1 = engine.Eval("x.Field1");
+            var result2 = engine.Eval("x");
+            Assert.True(ReferenceEquals(result2.ToObject(), obj));
+
+            var result1 = engine.Eval("x.FieldDisplay1");
             Assert.Equal(10.0, ((NumberValue)result1).Value);
         }
 
