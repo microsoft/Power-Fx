@@ -3,6 +3,7 @@
 
 using System;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
 using Xunit;
 
@@ -104,6 +105,19 @@ namespace Microsoft.PowerFx.Core.Tests
 
             Assert.Equal(checkResult.IsSuccess, validateResult);
             Assert.Equal(expectedType, retType);
+        }
+
+        [Fact]
+        public void CheckNamespace()
+        {
+            var config = new PowerFxConfig();
+            var engine = new Engine(config);
+            var formula = "true"; // does not matter what the formula is (not using arguments from it)
+            var checkResult = engine.Check(formula);
+            Assert.True(checkResult.IsSuccess);
+
+            var result = checkResult.ValidateInvocation("Clock.AmPm", new TexlNode[0], out var _);
+            Assert.True(result);
         }
 
         [Fact]
