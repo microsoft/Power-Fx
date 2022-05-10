@@ -1,7 +1,7 @@
 <Project>
 
   <PropertyGroup>
-    <LocalPackageVersion>0.2.1-preview.99999999-99999</LocalPackageVersion>
+    <LocalPackageVersion>0.3.0-local</LocalPackageVersion>
   </PropertyGroup>
 
   <PropertyGroup>
