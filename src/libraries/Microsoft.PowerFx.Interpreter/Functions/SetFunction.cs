@@ -27,10 +27,9 @@ namespace Microsoft.PowerFx.Interpreter
     //   Set(var,newValue)
     internal class RecalcEngineSetFunction : TexlFunction
     {
-        // Should set to False, but then we need to be able to bind behavior functions. 
-        //public override bool IsSelfContained => false;
-        public override bool IsSelfContained => true;
-        
+        // Set() is a behavior function. 
+        public override bool IsSelfContained => false;
+                
         public override IEnumerable<StringGetter[]> GetSignatures()
         {
             yield return new[] { TexlStrings.SetArg1, TexlStrings.SetArg2 };

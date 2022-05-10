@@ -117,8 +117,8 @@ namespace Microsoft.PowerFx
             return val;
         }
 
-        // Handle the Set() function - which is unique because
-        // it has an l-value for the first arg. 
+        // Handle the Set() function -
+        // Set is unique because it has an l-value for the first arg. 
         // Async params can't have out-params. 
         // Return null if not handled. Else non-null if handled.
         private async Task<FormulaValue> TryHandleSet(CallNode node, SymbolContext context)
@@ -134,14 +134,14 @@ namespace Microsoft.PowerFx
 
             var newValue = await arg1.Accept(this, context);
 
-            // ensure this is a firstname node            
+            // Binder has already ensured this is a first name node. 
             if (arg0 is ResolvedObjectNode obj)
             {
-                // $$$ Should we have an interface here instead?
-                // Set(variable, newValue);   
-                if (obj.Value is RecalcFormulaInfo fi)
+                if (obj.Value is ICanSetValue fi)
                 {
-                    fi._value = newValue;
+                    fi.SetValue(newValue);
+
+                    // Set() returns true. 
                     return FormulaValue.New(true);
                 }
             }
@@ -529,7 +529,7 @@ namespace Microsoft.PowerFx
         {
             return node.Value switch
             {
-                RecalcFormulaInfo fi => ResolvedObjectHelpers.RecalcFormulaInfo(fi),
+                ICanGetValue fi => fi.Value,
                 IExternalOptionSet optionSet => ResolvedObjectHelpers.OptionSet(optionSet, node.IRContext),
                 _ => ResolvedObjectHelpers.ResolvedObjectError(node),
             };
