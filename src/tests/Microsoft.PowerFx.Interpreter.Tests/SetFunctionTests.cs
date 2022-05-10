@@ -20,7 +20,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var engine = new RecalcEngine(config);
 
             engine.UpdateVariable("x", FormulaValue.New(12));
-                        
+
             var r1 = engine.Eval("x", null, _opts); // 12
             Assert.Equal(12.0, r1.ToObject());
 
@@ -57,6 +57,19 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             // Fails, arg0 is not a settable object. 
             result = engine.Check("Set({y:x}.y, 20)", null, _opts);
+            Assert.False(result.IsSuccess);
+        }
+
+        // Set() can only be called if it's enabled.
+        [Fact]
+        public void TestSetVarFailureEnabled()
+        {
+            var config = new PowerFxConfig();
+            var engine = new RecalcEngine(config);
+
+            engine.UpdateVariable("x", FormulaValue.New(12));
+
+            var result = engine.Check("Set(x, 15)", null, _opts);
             Assert.False(result.IsSuccess);
         }
     }
