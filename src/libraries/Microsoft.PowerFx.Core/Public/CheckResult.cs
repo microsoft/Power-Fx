@@ -114,16 +114,16 @@ namespace Microsoft.PowerFx
                 throw new ArgumentNullException(nameof(args));
             }
 
-            foreach (var arg in args)
+            foreach ((var arg, var index) in args.Select((value, index) => (value, index)))
             {
                 if (arg == null)
                 {
-                    throw new ArgumentNullException(nameof(args));
+                    throw new ArgumentNullException(nameof(args), $"Argument {index} is null");
                 }
 
                 if (!_binding.IsNodeValid(arg))
                 {
-                    throw new ArgumentException("Argument does not belong to this result");
+                    throw new ArgumentException($"Argument {index} does not belong to this result");
                 }
             }
 
