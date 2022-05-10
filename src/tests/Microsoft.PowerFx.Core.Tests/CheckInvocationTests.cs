@@ -2,7 +2,9 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
 using Xunit;
@@ -140,5 +142,14 @@ namespace Microsoft.PowerFx.Core.Tests
             var mixedNodes = new[] { args2[0], args1[0], args2[1] };
             Assert.Throws<ArgumentException>(() => checkResult2.ValidateInvocation("If", mixedNodes, out _));
         }
+    }
+
+    internal static class ValidateUtils
+    {
+        public static bool ValidateInvocation(
+            this CheckResult result,
+            string fncName,
+            IReadOnlyList<TexlNode> args,
+            out FormulaType retType) => new IntellisenseOperations(result).ValidateInvocation(fncName, args, out retType);
     }
 }
