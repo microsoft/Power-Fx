@@ -418,8 +418,6 @@ namespace Microsoft.PowerFx.Core.Binding
             Contracts.AssertIndex(node.Id, _typeMap.Length);
             Contracts.Assert(_typeMap[node.Id] == null || !_typeMap[node.Id].IsValid || type.IsError);
 
-            // TODO: Should we do this here? It's easy because it's called for each node, but then again it's not doing what it says is doing.
-            // TODO: Should we just rename the method?
             _nodeMap[node.Id] = node;
             _typeMap[node.Id] = type;
         }
