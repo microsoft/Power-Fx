@@ -149,6 +149,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Intellisense.SuggestionKind",
                 "Microsoft.PowerFx.Intellisense.UIString",
                 "Microsoft.PowerFx.Intellisense.TokenResultType",
+                "Microsoft.PowerFx.Intellisense.IntellisenseOperations",
 
                 // TBD ...
                 "Microsoft.PowerFx.Core.RenameDriver",
