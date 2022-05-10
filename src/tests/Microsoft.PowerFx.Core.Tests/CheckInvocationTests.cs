@@ -16,8 +16,6 @@ namespace Microsoft.PowerFx.Core.Tests
         [Fact]
         public void CheckIf()
         {
-            // TODO: Split into multiple tests? Need to replicate common stuff?
-
             var formula = "If(!IsBlank(X), \"Hello \" & X & \"!\", \"Hello world!\")";
 
             var config = new PowerFxConfig();
