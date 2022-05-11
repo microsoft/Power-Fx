@@ -6,6 +6,9 @@ using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
 
+#pragma warning disable SA1402 // File may only contain a single type
+#pragma warning disable SA1649 // File name should match first type name
+
 namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
     // Atan2(number:x, number:y)
@@ -13,8 +16,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class Atan2Function : BuiltinFunction
     {
         public override bool IsSelfContained => true;
-
-        public override bool RequiresErrorContext => true;
 
         public Atan2Function()
             : base(
@@ -38,3 +39,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override bool SupportsParamCoercion => true;
     }
 }
+
+#pragma warning restore SA1402 // File may only contain a single type
+#pragma warning restore SA1649 // File name should match first type name

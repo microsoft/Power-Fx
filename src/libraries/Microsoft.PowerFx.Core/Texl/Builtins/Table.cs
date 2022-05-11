@@ -88,8 +88,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
     internal class TableFunction_UO : BuiltinFunction
     {
-        public override bool RequiresErrorContext => true;
-
         public override bool IsSelfContained => true;
 
         public override bool SupportsParamCoercion => false;

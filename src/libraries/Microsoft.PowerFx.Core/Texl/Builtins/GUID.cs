@@ -36,8 +36,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // GUID(GuidString:s)
     internal sealed class GUIDPureFunction : BuiltinFunction
     {
-        public override bool RequiresErrorContext => true;
-
         public override bool IsSelfContained => true;
 
         public override bool SupportsParamCoercion => false;

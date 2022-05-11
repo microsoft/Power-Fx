@@ -19,8 +19,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool IsSelfContained => true;
 
-        public override bool RequiresErrorContext => true;
-
         public PowerFunction()
             : base("Power", TexlStrings.AboutPower, FunctionCategories.MathAndStat, DType.Number, 0, 2, 2, DType.Number, DType.Number)
         {
@@ -39,8 +37,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override bool SupportsParamCoercion => true;
 
         public override bool IsSelfContained => true;
-
-        public override bool RequiresErrorContext => true;
 
         public PowerTFunction()
             : base("Power", TexlStrings.AboutPowerT, FunctionCategories.MathAndStat, DType.EmptyTable, 0, 2, 2)

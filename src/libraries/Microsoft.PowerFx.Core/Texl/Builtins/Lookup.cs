@@ -19,8 +19,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // LookUp(source:*, predicate, [projectionFunc])
     internal sealed class LookUpFunction : FilterFunctionBase
     {
-        public override bool RequiresErrorContext => true;
-
         public override bool SupportsParamCoercion => true;
 
         public override bool HasPreciseErrors => true;
@@ -53,7 +51,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             // Ensure that the arg at index 1 is boolean or can coerece to boolean if they are OptionSetValues.
             if (argTypes[1].Kind == DKind.OptionSetValue && argTypes[1].CoercesTo(DType.Boolean))
             {
-                    CollectionUtils.Add(ref nodeToCoercedTypeMap, args[1], DType.Boolean, allowDupes: true);
+                CollectionUtils.Add(ref nodeToCoercedTypeMap, args[1], DType.Boolean, allowDupes: true);
             }
             else if (!DType.Boolean.Accepts(argTypes[1]))
             {

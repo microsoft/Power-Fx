@@ -10,8 +10,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Corresponding Excel function: VARP
     internal sealed class VarPFunction : StatisticalFunction
     {
-        public override bool RequiresErrorContext => true;
-
         public VarPFunction()
             : base("VarP", TexlStrings.AboutVarP, FunctionCategories.MathAndStat)
         {
@@ -22,8 +20,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Corresponding DAX function: VAR.P
     internal sealed class VarPTableFunction : StatisticalTableFunction
     {
-        public override bool RequiresErrorContext => true;
-
         public VarPTableFunction()
             : base("VarP", TexlStrings.AboutVarPT, FunctionCategories.Table)
         {
