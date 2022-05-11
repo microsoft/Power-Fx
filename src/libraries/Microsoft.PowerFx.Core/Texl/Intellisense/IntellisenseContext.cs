@@ -16,7 +16,7 @@ namespace Microsoft.PowerFx.Intellisense
         /// <summary>
         /// Cursor position for the intellisense input string.
         /// </summary>
-        public int CursorPosition { get; private set; }        
+        public int CursorPosition { get; private set; }
 
         public IntellisenseContext(string inputText, int cursorPosition)
         {
@@ -24,7 +24,7 @@ namespace Microsoft.PowerFx.Intellisense
             Contracts.CheckParam(cursorPosition >= 0 && cursorPosition <= inputText.Length, "cursorPosition");
 
             InputText = inputText;
-            CursorPosition = cursorPosition;            
+            CursorPosition = cursorPosition;
         }
 
         public void InsertTextAtCursorPos(string insertedText)
