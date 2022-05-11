@@ -25,6 +25,7 @@ steps:
   condition: and(succeeded(), eq(variables['Build.Reason'], 'PullRequest'), ne(variables['System.PullRequest.IsFork'], 'True'))
 
 - powershell: |
+    # This task compensates for the 'Publish compat results...' task above which can fail silently.
     # Check task log for a "success" string in the current pipeline run.
     # If not succeeded, fail this task.
     # 
