@@ -49,7 +49,7 @@ namespace Microsoft.PowerFx.Intellisense.IntellisenseData
             ReplacementStartIndex = context.CursorPosition;
             MissingTypes = missingTypes;
             BoundTo = string.Empty;
-            CleanupHandlers = new List<ISpecialCaseHandler>();            
+            CleanupHandlers = new List<ISpecialCaseHandler>();
         }
 
         internal DType ExpectedType { get; }
