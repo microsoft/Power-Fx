@@ -19,8 +19,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     {
         public const string ValueInvariantFunctionName = "Value";
 
-        public override bool RequiresErrorContext => true;
-
         public override bool IsSelfContained => true;
 
         public override bool SupportsParamCoercion => true;
@@ -86,8 +84,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Value(arg:O)
     internal sealed class ValueFunction_UO : BuiltinFunction
     {
-        public override bool RequiresErrorContext => true;
-
         public override bool IsSelfContained => true;
 
         public override bool SupportsParamCoercion => false;

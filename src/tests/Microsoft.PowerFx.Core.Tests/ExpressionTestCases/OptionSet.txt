@@ -1,5 +1,16 @@
 #SETUP: OptionSetTestSetup
 
+// Both logical and display names bind
+>> OptionSet.option_1
+OptionSet.option_1 
+
+>> OptionSet.Option1 
+OptionSet.option_1 
+
+// Can use in If
+>> If(true, OptionSet.Option1)
+OptionSet.option_1 
+
 >> OptionSet.Option1 <> OptionSet.Option2
 true
 

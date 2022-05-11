@@ -11,8 +11,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // TimeZoneOffset()
     internal sealed class TimeZoneOffsetFunction : BuiltinFunction
     {
-        public override bool RequiresErrorContext => true;
-
         public override bool IsSelfContained => true;
 
         public override bool SupportsParamCoercion => true;
