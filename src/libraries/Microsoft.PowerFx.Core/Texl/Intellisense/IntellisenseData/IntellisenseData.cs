@@ -49,8 +49,7 @@ namespace Microsoft.PowerFx.Intellisense.IntellisenseData
             ReplacementStartIndex = context.CursorPosition;
             MissingTypes = missingTypes;
             BoundTo = string.Empty;
-            CleanupHandlers = new List<ISpecialCaseHandler>();
-            SuggestUnqualifiedEnums = Binding.NameResolver.SuggestUnqualifiedEnums;
+            CleanupHandlers = new List<ISpecialCaseHandler>();            
         }
 
         internal DType ExpectedType { get; }
@@ -163,7 +162,7 @@ namespace Microsoft.PowerFx.Intellisense.IntellisenseData
         ///// <summary>
         ///// Should unqualified enums be suggested.
         ///// </summary>
-        internal virtual bool SuggestUnqualifiedEnums { get; set; }
+        internal bool SuggestUnqualifiedEnums => Binding.NameResolver.SuggestUnqualifiedEnums;
 
         /// <summary>
         /// Retrieves an <see cref="EnumSymbol"/> from <paramref name="binding"/> (if necessary).
