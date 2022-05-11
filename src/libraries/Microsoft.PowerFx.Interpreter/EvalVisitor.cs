@@ -160,9 +160,6 @@ namespace Microsoft.PowerFx
                 return setResult;
             }            
 
-            // Sum(  [1,2,3], Value * Value)
-            // return base.PreVisit(node);
-
             var func = node.Function;
 
             var carg = node.Args.Count;

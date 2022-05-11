@@ -29,13 +29,11 @@ namespace Microsoft.PowerFx
         public TexlBinding _binding;
 
         // Cached value
-        public FormulaValue _value;
-
-        public FormulaValue Value => _value;
+        public FormulaValue Value { get; set; }
 
         void ICanSetValue.SetValue(FormulaValue newValue)
         {
-            _value = newValue;
+            Value = newValue;
         }
     }
 
