@@ -16,6 +16,6 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
         /// <summary>
         /// Cursor position for the intellisense input string.
         /// </summary>
-        public int CursorPosition { get; }                
+        public int CursorPosition { get; }
     }
 }
