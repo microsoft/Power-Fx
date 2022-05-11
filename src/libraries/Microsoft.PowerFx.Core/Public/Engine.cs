@@ -48,12 +48,11 @@ namespace Microsoft.PowerFx
         /// Create a resolver for use in binding. This is called from <see cref="Check(string, RecordType, ParserOptions)"/>.
         /// Base classes can override this is there are additional symbols not in the config.
         /// </summary>
-        /// <param name="alternateConfig">An alternate config that can be provided. Should default to engine's config if null.</param>
-        /// <param name="suggestUnqualifiedEnums">Suggests unqualified enumerations.</param>
+        /// <param name="alternateConfig">An alternate config that can be provided. Should default to engine's config if null.</param>        
         /// <returns></returns>
-        private protected virtual SimpleResolver CreateResolver(PowerFxConfig alternateConfig = null, bool suggestUnqualifiedEnums = false)
+        private protected virtual SimpleResolver CreateResolver(PowerFxConfig alternateConfig = null)
         {
-            return new SimpleResolver(alternateConfig ?? Config, suggestUnqualifiedEnums);
+            return new SimpleResolver(alternateConfig ?? Config);
         }
 
         /// <summary>
@@ -104,7 +103,7 @@ namespace Microsoft.PowerFx
             // Ok to continue with binding even if there are parse errors. 
             // We can still use that for intellisense. 
 
-            var resolver = CreateResolver(suggestUnqualifiedEnums: false);
+            var resolver = CreateResolver();
 
             var binding = TexlBinding.Run(
                 new Glue2DocumentBinderGlue(),
@@ -192,7 +191,7 @@ namespace Microsoft.PowerFx
             ** but that we don't return any display names for them. Thus, we clone a PowerFxConfig but without 
             ** display name support and construct a resolver from that instead, which we use for the rewrite binding.
             */
-            return new RenameDriver(parameters, pathToRename, updatedName, CreateResolver(Config.WithoutDisplayNames(), false));
+            return new RenameDriver(parameters, pathToRename, updatedName, CreateResolver(Config.WithoutDisplayNames()));
         }
 
         /// <summary>
@@ -205,7 +204,7 @@ namespace Microsoft.PowerFx
         /// <returns>The formula, with all identifiers converted to invariant form.</returns>
         public string GetInvariantExpression(string expressionText, RecordType parameters)
         {
-            return ConvertExpression(expressionText, parameters, CreateResolver(suggestUnqualifiedEnums: false), toDisplayNames: false);
+            return ConvertExpression(expressionText, parameters, CreateResolver(), toDisplayNames: false);
         }
 
         /// <summary>
@@ -218,7 +217,7 @@ namespace Microsoft.PowerFx
         /// <returns>The formula, with all identifiers converted to display form.</returns>
         public string GetDisplayExpression(string expressionText, RecordType parameters)
         {
-            return ConvertExpression(expressionText, parameters, CreateResolver(suggestUnqualifiedEnums: false), toDisplayNames: true);
+            return ConvertExpression(expressionText, parameters, CreateResolver(), toDisplayNames: true);
         }
 
         internal static string ConvertExpression(string expressionText, RecordType parameters, SimpleResolver resolver, bool toDisplayNames)
