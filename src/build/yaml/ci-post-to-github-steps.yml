@@ -3,12 +3,12 @@ steps:
   displayName: 'Display env vars'
 
 - task: DownloadBuildArtifacts@0
-  displayName: 'Download CompatResults artifact'
+  displayName: 'Download compat results artifact'
   inputs:
     downloadType: specific
     itemPattern: '**\*.txt'
     downloadPath: '$(System.ArtifactsDirectory)\ApiCompat'
-  condition: and(succeeded(), eq(variables['Build.Reason'], 'PullRequest'))
+  condition: and(succeeded(), eq(variables['Build.Reason'], 'PullRequest'), ne(variables['System.PullRequest.IsFork'], 'True'))
 
 - task: SOUTHWORKS.github-pr-comment.custom-publish-comment-task.github-pr-comment@0
   displayName: 'Publish compat results to Github'
@@ -20,17 +20,15 @@ steps:
   condition: and(succeeded(), eq(variables['Build.Reason'], 'PullRequest'), ne(variables['System.PullRequest.IsFork'], 'True'))
 
 - powershell: |
-    for ($i = 0; $i -lt 30; $i++)
-    {
-      Write-Host "$i seconds";
-      Start-Sleep -Milliseconds 1000;
-    }
+    Start-Sleep -Seconds 30
   displayName: 'Wait for last task log to finish writing'
+  condition: and(succeeded(), eq(variables['Build.Reason'], 'PullRequest'), ne(variables['System.PullRequest.IsFork'], 'True'))
 
 - powershell: |
     # Check task log for a "success" string in the current pipeline run.
+    # If not succeeded, fail this task.
     # 
-    # Note: The log for the task immediately before this may not yet be available.
+    # Note: The target task needs time to finish writing its log. Hence the wait task above.
     # Calls the Azure DevOps REST API.
     # Enable OAuth token access in the pipeline agent job for $(System.Accesstoken) to populate.
 
@@ -73,7 +71,7 @@ steps:
             Write-Host $mess;
           }
         } else {
-            ($log -split '\r?\n')[0] + '...';  # Print first line
+          ($log -split '\r?\n')[0] + '...';  # Print first line
         }
       }
     }
@@ -84,10 +82,10 @@ steps:
       $mess = "$taskToCheck failed. Is there a PR associated with this build? String '" + $successStringToCheckFor + "' not found in the log.";
       throw $mess;
     }
-  displayName: 'Verify Publish Compat Results success'
+  displayName: 'Verify publish compat results success'
   ignoreLASTEXITCODE: true
   continueOnError: true
-  condition: and(succeeded(), eq(variables['Build.Reason'], 'PullRequest'))
+  condition: and(succeeded(), eq(variables['Build.Reason'], 'PullRequest'), ne(variables['System.PullRequest.IsFork'], 'True'))
 
 - script: |
    cd ..
