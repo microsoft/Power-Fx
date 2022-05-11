@@ -6436,4 +6436,16 @@
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula '{0}' already exists.</value>
   </data>
+  <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
+    <value>The first argument of '{0}' should be a valid variable name, and cannot conflict with any existing control, screen, collection, or data source names. Found type '{1}'</value>
+    <comment>Error Message</comment>
+  </data>
+  <data name="AboutSet" xml:space="preserve">
+    <value>Create and set a global variable.</value>
+    <comment>Description of 'Set' function.</comment>
+  </data>
+  <data name="SetArg2" xml:space="preserve">
+    <value>value</value>
+    <comment>function_parameter - Second argument to the Set function - any Power Apps value.</comment>
+  </data>
 </root>

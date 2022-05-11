@@ -69,7 +69,9 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 var waitForHelper = new WaitForFunctionsHelper(verify);
                 config.AddFunction(waitForHelper.GetFunction());
 
+                config.EnableSetFunction();
                 var engine = new RecalcEngine(config);
+                engine.UpdateVariable("varNumber", 9999);
 
                 // Run in special mode that ensures we're not calling .Result
                 var result = await verify.EvalAsync(engine, expr, options);

@@ -37,6 +37,10 @@ namespace Microsoft.PowerFx.Core.Localization
         public static StringGetter CountIfArg1 = (b) => StringResources.Get("CountIfArg1", b);
         public static StringGetter CountIfArg2 = (b) => StringResources.Get("CountIfArg2", b);
 
+        public static StringGetter AboutSet = (b) => StringResources.Get("AboutSet", b);
+        public static StringGetter SetArg1 = (b) => StringResources.Get("SetArg1", b);
+        public static StringGetter SetArg2 = (b) => StringResources.Get("SetArg2", b);
+
         public static StringGetter AboutSumT = (b) => StringResources.Get("AboutSumT", b);
         public static StringGetter AboutMaxT = (b) => StringResources.Get("AboutMaxT", b);
         public static StringGetter AboutMinT = (b) => StringResources.Get("AboutMinT", b);
@@ -491,6 +495,7 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrIncompatibleRecord = new ErrorResourceKey("ErrIncompatibleRecord");
         public static ErrorResourceKey ErrNeedRecord_Func = new ErrorResourceKey("ErrNeedRecord_Func");
         public static ErrorResourceKey ErrNeedEntity_EntityName = new ErrorResourceKey("ErrNeedEntity_EntityName");
+        public static ErrorResourceKey ErrNeedValidVariableName_Arg = new ErrorResourceKey("ErrNeedValidVariableName_Arg");
         public static ErrorResourceKey ErrOperatorExpected = new ErrorResourceKey("ErrOperatorExpected");
         public static ErrorResourceKey ErrNumberExpected = new ErrorResourceKey("ErrNumberExpected");
         public static ErrorResourceKey ErrNumberTooLarge = new ErrorResourceKey("ErrNumberTooLarge");
