@@ -11,36 +11,17 @@ namespace Microsoft.PowerFx.Functions
     internal static partial class Library
     {
         #region Operator Standard Error Handling Wrappers
-        public static readonly AsyncFunctionPtr OperatorBinaryAdd = StandardErrorHandling<NumberValue>(
-            expandArguments: NoArgExpansion,
-            replaceBlankValues: ReplaceBlankWithZero,
-            checkRuntimeTypes: ExactValueType<NumberValue>,
-            checkRuntimeValues: FiniteChecker,
-            returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
+        public static readonly AsyncFunctionPtr OperatorBinaryAdd = StandardMath<NumberValue>(
             targetFunction: NumericAdd);
 
-        public static readonly AsyncFunctionPtr OperatorBinaryMul = StandardErrorHandling<NumberValue>(
-            expandArguments: NoArgExpansion,
-            replaceBlankValues: ReplaceBlankWithZero,
-            checkRuntimeTypes: ExactValueType<NumberValue>,
-            checkRuntimeValues: FiniteChecker,
-            returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
+        public static readonly AsyncFunctionPtr OperatorBinaryMul = StandardMath<NumberValue>(
             targetFunction: NumericMul);
 
-        public static readonly AsyncFunctionPtr OperatorBinaryDiv = StandardErrorHandling<NumberValue>(
-            expandArguments: NoArgExpansion,
-            replaceBlankValues: ReplaceBlankWithZero,
-            checkRuntimeTypes: ExactValueType<NumberValue>,
-            checkRuntimeValues: DivideByZeroChecker,
-            returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
-            targetFunction: NumericDiv);
+        public static readonly AsyncFunctionPtr OperatorBinaryDiv = StandardMath<NumberValue>(
+            targetFunction: NumericDiv,
+            checkRuntimeValues: DivideByZeroChecker);
 
-        public static readonly AsyncFunctionPtr OperatorBinarySub = StandardErrorHandling<NumberValue>(
-            expandArguments: NoArgExpansion,
-            replaceBlankValues: ReplaceBlankWithZero,
-            checkRuntimeTypes: ExactValueType<NumberValue>,
-            checkRuntimeValues: FiniteChecker,
-            returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
+        public static readonly AsyncFunctionPtr OperatorBinarySub = StandardMath<NumberValue>(
             targetFunction: NumericSub);
 
         public static readonly AsyncFunctionPtr OperatorBinaryGt = StandardErrorHandling<NumberValue>(
@@ -507,30 +488,11 @@ namespace Microsoft.PowerFx.Functions
 
         private static FormulaValue SubDateAndTime(IRContext irContext, FormulaValue[] args)
         {
-            DateTime arg0;
-            switch (args[0])
-            {
-                case DateTimeValue dtv:
-                    arg0 = dtv.Value;
-                    break;
-                case DateValue dv:
-                    arg0 = dv.Value;
-                    break;
-                default:
-                    return CommonErrors.RuntimeTypeMismatch(irContext);
-            }
+            var args1 = (TimeValue)args[1];
 
-            var arg1 = (TimeValue)args[1];
+            args[1] = new TimeValue(irContext, -args1.Value);
 
-            try
-            {
-                var result = arg0.Add(-arg1.Value);
-                return new DateTimeValue(irContext, result);
-            }
-            catch
-            {
-                return CommonErrors.ArgumentOutOfRange(irContext);
-            }
+            return AddDateAndTime(irContext, args);
         }
 
         private static FormulaValue AddDateAndDay(IRContext irContext, FormulaValue[] args)
@@ -570,37 +532,11 @@ namespace Microsoft.PowerFx.Functions
 
         private static FormulaValue SubDateAndDay(IRContext irContext, FormulaValue[] args)
         {
-            DateTime arg0;
-            switch (args[0])
-            {
-                case DateTimeValue dtv:
-                    arg0 = dtv.Value;
-                    break;
-                case DateValue dv:
-                    arg0 = dv.Value;
-                    break;
-                default:
-                    return CommonErrors.RuntimeTypeMismatch(irContext);
-            }
-
             var arg1 = (NumberValue)args[1];
 
-            try
-            {
-                var result = arg0.AddDays(-arg1.Value);
-                if (args[0] is DateTimeValue)
-                {
-                    return new DateTimeValue(irContext, result);
-                }
-                else
-                {
-                    return new DateValue(irContext, result.Date);
-                }
-            }
-            catch
-            {
-                return CommonErrors.ArgumentOutOfRange(irContext);
-            }
+            args[1] = new NumberValue(irContext, -arg1.Value);
+
+            return AddDateAndDay(irContext, args);
         }
 
         private static FormulaValue AddDateTimeAndDay(IRContext irContext, FormulaValue[] args)
@@ -633,30 +569,11 @@ namespace Microsoft.PowerFx.Functions
 
         private static FormulaValue SubDateTimeAndDay(IRContext irContext, FormulaValue[] args)
         {
-            DateTime arg0;
-            switch (args[0])
-            {
-                case DateTimeValue dtv:
-                    arg0 = dtv.Value;
-                    break;
-                case DateValue dv:
-                    arg0 = dv.Value;
-                    break;
-                default:
-                    return CommonErrors.RuntimeTypeMismatch(irContext);
-            }
-
             var arg1 = (NumberValue)args[1];
 
-            try
-            {
-                var result = arg0.AddDays(-arg1.Value);
-                return new DateTimeValue(irContext, result);
-            }
-            catch
-            {
-                return CommonErrors.ArgumentOutOfRange(irContext);
-            }
+            args[1] = new NumberValue(irContext, -arg1.Value);
+
+            return AddDateTimeAndDay(irContext, args);
         }
 
         private static FormulaValue DateDifference(IRContext irContext, FormulaValue[] args)

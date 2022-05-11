@@ -622,5 +622,20 @@ namespace Microsoft.PowerFx.Functions
             return arg;
         }
         #endregion
+
+        private static AsyncFunctionPtr StandardMath<T>(
+            Func<IRContext, T[], FormulaValue> targetFunction,
+            Func<IRContext, int, FormulaValue, FormulaValue> checkRuntimeValues = null,
+            ReturnBehavior returnBehavior = ReturnBehavior.AlwaysEvaluateAndReturnResult)
+            where T : FormulaValue
+        {
+            checkRuntimeValues = checkRuntimeValues ?? FiniteChecker;
+
+            return StandardErrorHandling<T>(NoArgExpansion, ReplaceBlankWithZero, ExactValueType<NumberValue>, checkRuntimeValues, ReturnBehavior.AlwaysEvaluateAndReturnResult, (runner, symbolContext, irContext, args) =>
+            {
+                var result = targetFunction(irContext, args);
+                return new ValueTask<FormulaValue>(result);
+            });
+        }
     }
 }

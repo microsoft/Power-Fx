@@ -753,17 +753,9 @@ namespace Microsoft.PowerFx.Core.IR
                     case DKind.Date:
                         if (rightType == DType.DateTime || rightType == DType.Date)
                         {
-                            // Date + '-DateTime' => in days
-                            // Date + '-Date' => in days
-
-                            // Binding produces this as '-Date'. This should be cleaned up when we switch to a proper sub op. 
-                            if (right is not UnaryOpNode unaryNode || unaryNode.Op != UnaryOpKind.Negate)
-                            {
-                                throw new NotSupportedException();
-                            }
-
-                            // Use the child of the negate as the rhs for datediff
-                            return new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.DateDifference, left, unaryNode.Child);
+                            // Date + DateTime => not supported
+                            // Date + Date => not supported
+                            throw new NotSupportedException();
                         }
                         else if (rightType == DType.Time)
                         {
@@ -796,12 +788,9 @@ namespace Microsoft.PowerFx.Core.IR
                     case DKind.DateTime:
                         if (rightType == DType.DateTime || rightType == DType.Date)
                         {
-                            // DateTime + '-DateTime' => in days
-                            // DateTime + '-Date' => in days
-
-                            // Ensure that this is really '-Date' - Binding should always catch this, but let's make sure...
-                            Contracts.Assert(node.Right.AsUnaryOpLit().VerifyValue().Op == UnaryOp.Minus);
-                            return new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.DateDifference, left, right);
+                            // DateTime + DateTime => not supported
+                            // DateTime + Date => not supported
+                            throw new NotSupportedException();
                         }
                         else
                         {
