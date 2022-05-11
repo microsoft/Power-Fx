@@ -36,6 +36,10 @@ namespace Microsoft.PowerFx.Core.Binding
 
         IEnumerable<TexlFunction> Functions { get; }
 
+        // This advertises whether the INameResolver instance will suggest unqualified enums ("Hours")
+        // or only qualified enums ("TimeUnit.Hours").
+        // This must be consistent with how the other Lookup functions behave.
+        // Intellisense can use this when suggesting completion options.
         bool SuggestUnqualifiedEnums { get; }
 
         // Look up an entity, context variable, or entity part (e.g. enum value) by name.

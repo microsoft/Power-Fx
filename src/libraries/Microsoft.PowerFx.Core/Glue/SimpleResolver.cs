@@ -42,24 +42,22 @@ namespace Microsoft.PowerFx.Core.Glue
 
         IExternalEntity INameResolver.CurrentEntity => null;
 
-        public bool SuggestUnqualifiedEnums { get; private set; }
+        public bool SuggestUnqualifiedEnums => false;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SimpleResolver"/> class.
         /// </summary>
-        /// <param name="config"></param>
-        /// <param name="suggestUnqualifiedEnums"></param>
-        public SimpleResolver(PowerFxConfig config, bool suggestUnqualifiedEnums = false)
+        /// <param name="config"></param>        
+        public SimpleResolver(PowerFxConfig config)
         {
             _config = config ?? throw new ArgumentNullException(nameof(config));
             _library = config.Functions.ToArray();
-            _enums = config.EnumStoreBuilder.Build().EnumSymbols.ToArray();
-            SuggestUnqualifiedEnums = suggestUnqualifiedEnums;
+            _enums = config.EnumStoreBuilder.Build().EnumSymbols.ToArray();            
         }
 
         // for derived classes that need to set INameResolver.Document. 
-        protected SimpleResolver(PowerFxConfig config, IExternalDocument document, bool suggestUnqualifiedEnums = false)
-            : this(config, suggestUnqualifiedEnums)
+        protected SimpleResolver(PowerFxConfig config, IExternalDocument document)
+            : this(config)
         {
             _document = document;
         }
