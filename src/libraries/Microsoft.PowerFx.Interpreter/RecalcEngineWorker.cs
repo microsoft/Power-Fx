@@ -44,7 +44,7 @@ namespace Microsoft.PowerFx
             {
                 var info = _parent.Formulas[varName];
 
-                var newValue = info._value;
+                var newValue = info.Value;
                 info._onUpdate?.Invoke(varName, newValue);
             }
         }
@@ -71,18 +71,18 @@ namespace Microsoft.PowerFx
 
                 var newValue = irnode.Accept(v, SymbolContext.New()).Result;
 
-                var equal = fi._value != null && // null on initial run. 
-                    RuntimeHelpers.AreEqual(newValue, fi._value);
+                var equal = fi.Value != null && // null on initial run. 
+                    RuntimeHelpers.AreEqual(newValue, fi.Value);
 
                 if (!equal)
                 {
                     _sendUpdates.Add(name);
                 }
 
-                fi._value = newValue;
+                fi.Value = newValue;
             }
 
-            _calcs[name] = fi._value;
+            _calcs[name] = fi.Value;
         }
 
         // Recalc Name and any downstream formulas that may now be updated.

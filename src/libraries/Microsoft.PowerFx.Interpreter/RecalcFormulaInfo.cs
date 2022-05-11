@@ -10,7 +10,7 @@ namespace Microsoft.PowerFx
 {
     // Information needed for recalc engine
     // Could represent either a fixed variable or a formula. 
-    internal class RecalcFormulaInfo
+    internal class RecalcFormulaInfo : ICanGetValue, ICanSetValue
     {
         // Other variables that this formula depends on. 
         public HashSet<string> _dependsOn;
@@ -29,6 +29,21 @@ namespace Microsoft.PowerFx
         public TexlBinding _binding;
 
         // Cached value
-        public FormulaValue _value;
+        public FormulaValue Value { get; set; }
+
+        void ICanSetValue.SetValue(FormulaValue newValue)
+        {
+            Value = newValue;
+        }
+    }
+
+    internal interface ICanSetValue
+    {
+        void SetValue(FormulaValue newValue);
+    }
+
+    internal interface ICanGetValue
+    {
+        FormulaValue Value { get; }
     }
 }

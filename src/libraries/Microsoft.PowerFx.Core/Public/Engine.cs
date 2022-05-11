@@ -87,7 +87,9 @@ namespace Microsoft.PowerFx
         public CheckResult Check(string expressionText, RecordType parameterType = null, ParserOptions options = null)
         {
             var parse = Parse(expressionText, options);
-            return Check(parse, parameterType);
+
+            var bindingConfig = new BindingConfig(options?.AllowsSideEffects == true);
+            return CheckInternal(parse, parameterType, bindingConfig);
         }
 
         /// <summary>
@@ -97,6 +99,11 @@ namespace Microsoft.PowerFx
         /// <param name="parameterType">types of additional args to pass.</param>
         /// <returns></returns>
         public CheckResult Check(ParseResult parse, RecordType parameterType = null)
+        {
+            return CheckInternal(parse, parameterType, BindingConfig.Default);
+        }
+
+        private CheckResult CheckInternal(ParseResult parse, RecordType parameterType, BindingConfig bindingConfig)
         {
             parameterType ??= new RecordType();
                         
@@ -109,7 +116,7 @@ namespace Microsoft.PowerFx
                 new Glue2DocumentBinderGlue(),
                 parse.Root,
                 resolver,
-                BindingConfig.Default,
+                bindingConfig,
                 ruleScope: parameterType._type,
                 useThisRecordForRuleScope: false);
 
