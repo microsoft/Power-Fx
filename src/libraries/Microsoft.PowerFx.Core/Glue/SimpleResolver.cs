@@ -27,7 +27,7 @@ namespace Microsoft.PowerFx.Core.Glue
         private readonly TexlFunction[] _library;
         private readonly EnumSymbol[] _enums = new EnumSymbol[] { };
 
-        private readonly IExternalDocument _document;
+        private readonly IExternalDocument _document;        
 
         IExternalDocument INameResolver.Document => _document;
 
@@ -42,20 +42,24 @@ namespace Microsoft.PowerFx.Core.Glue
 
         IExternalEntity INameResolver.CurrentEntity => null;
 
+        public bool SuggestUnqualifiedEnums { get; private set; }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="SimpleResolver"/> class.
         /// </summary>
         /// <param name="config"></param>
-        public SimpleResolver(PowerFxConfig config)            
+        /// <param name="suggestUnqualifiedEnums"></param>
+        public SimpleResolver(PowerFxConfig config, bool suggestUnqualifiedEnums = false)
         {
             _config = config ?? throw new ArgumentNullException(nameof(config));
             _library = config.Functions.ToArray();
             _enums = config.EnumStoreBuilder.Build().EnumSymbols.ToArray();
+            SuggestUnqualifiedEnums = suggestUnqualifiedEnums;
         }
 
         // for derived classes that need to set INameResolver.Document. 
-        protected SimpleResolver(PowerFxConfig config, IExternalDocument document)
-            : this(config)
+        protected SimpleResolver(PowerFxConfig config, IExternalDocument document, bool suggestUnqualifiedEnums = false)
+            : this(config, suggestUnqualifiedEnums)
         {
             _document = document;
         }

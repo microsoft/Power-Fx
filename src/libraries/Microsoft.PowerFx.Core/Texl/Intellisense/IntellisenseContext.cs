@@ -16,21 +16,15 @@ namespace Microsoft.PowerFx.Intellisense
         /// <summary>
         /// Cursor position for the intellisense input string.
         /// </summary>
-        public int CursorPosition { get; private set; }
+        public int CursorPosition { get; private set; }        
 
-        /// <summary>
-        /// Flags controlling Intellisense bahavior.
-        /// </summary>
-        public IntellisenseFlags Flags { get; private set; }
-
-        public IntellisenseContext(string inputText, int cursorPosition, IntellisenseFlags flags)
+        public IntellisenseContext(string inputText, int cursorPosition)
         {
             Contracts.CheckValue(inputText, "inputText");
             Contracts.CheckParam(cursorPosition >= 0 && cursorPosition <= inputText.Length, "cursorPosition");
 
             InputText = inputText;
-            CursorPosition = cursorPosition;
-            Flags = flags;
+            CursorPosition = cursorPosition;            
         }
 
         public void InsertTextAtCursorPos(string insertedText)

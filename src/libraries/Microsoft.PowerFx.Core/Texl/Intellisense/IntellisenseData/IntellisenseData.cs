@@ -50,7 +50,7 @@ namespace Microsoft.PowerFx.Intellisense.IntellisenseData
             MissingTypes = missingTypes;
             BoundTo = string.Empty;
             CleanupHandlers = new List<ISpecialCaseHandler>();
-            SuggestUnqualifiedEnums = context.Flags.HasSuggestUnqualifiedEnums();
+            SuggestUnqualifiedEnums = Binding.NameResolver.SuggestUnqualifiedEnums;
         }
 
         internal DType ExpectedType { get; }
@@ -160,9 +160,9 @@ namespace Microsoft.PowerFx.Intellisense.IntellisenseData
                     select enumSymbol).Count() > 1;
         }
 
-        /// <summary>
-        /// Should unqualified enums be suggested.
-        /// </summary>
+        ///// <summary>
+        ///// Should unqualified enums be suggested.
+        ///// </summary>
         internal virtual bool SuggestUnqualifiedEnums { get; set; }
 
         /// <summary>
@@ -277,7 +277,7 @@ namespace Microsoft.PowerFx.Intellisense.IntellisenseData
             Contracts.AssertValue(function);
             Contracts.AssertValue(scopeType);
 
-            return ArgumentSuggestions.GetArgumentSuggestions(TryGetEnumSymbol, SuggestUnqualifiedEnums, function, scopeType, argumentIndex, out requiresSuggestionEscaping);
+            return ArgumentSuggestions.GetArgumentSuggestions(TryGetEnumSymbol,  SuggestUnqualifiedEnums, function, scopeType, argumentIndex, out requiresSuggestionEscaping);
         }
 
         /// <summary>

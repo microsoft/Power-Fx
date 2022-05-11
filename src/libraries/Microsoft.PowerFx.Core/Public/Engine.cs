@@ -49,10 +49,11 @@ namespace Microsoft.PowerFx
         /// Base classes can override this is there are additional symbols not in the config.
         /// </summary>
         /// <param name="alternateConfig">An alternate config that can be provided. Should default to engine's config if null.</param>
+        /// <param name="suggestUnqualifiedEnums">Suggests unqualified enumerations.</param>
         /// <returns></returns>
-        private protected virtual SimpleResolver CreateResolver(PowerFxConfig alternateConfig = null)
+        private protected virtual SimpleResolver CreateResolver(PowerFxConfig alternateConfig = null, bool suggestUnqualifiedEnums = false)
         {
-            return new SimpleResolver(alternateConfig ?? Config);
+            return new SimpleResolver(alternateConfig ?? Config, suggestUnqualifiedEnums);
         }
 
         /// <summary>
@@ -103,7 +104,7 @@ namespace Microsoft.PowerFx
             // Ok to continue with binding even if there are parse errors. 
             // We can still use that for intellisense. 
 
-            var resolver = CreateResolver();
+            var resolver = CreateResolver(suggestUnqualifiedEnums: false);
 
             var binding = TexlBinding.Run(
                 new Glue2DocumentBinderGlue(),
@@ -154,14 +155,14 @@ namespace Microsoft.PowerFx
         /// <summary>
         /// Get intellisense from the formula.
         /// </summary>
-        public IIntellisenseResult Suggest(string expression, RecordType parameterType, int cursorPosition, IntellisenseFlags intellisenseFlags = IntellisenseFlags.Default)
+        public IIntellisenseResult Suggest(string expression, RecordType parameterType, int cursorPosition)
         {
             var result = Check(expression, parameterType);
             var binding = result._binding;
             var formula = new Formula(expression, null);
             formula.ApplyParse(result.Parse);
 
-            var context = new IntellisenseContext(expression, cursorPosition, intellisenseFlags);
+            var context = new IntellisenseContext(expression, cursorPosition);
             var intellisense = CreateIntellisense();
             var suggestions = intellisense.Suggest(context, binding, formula);
 
@@ -191,7 +192,7 @@ namespace Microsoft.PowerFx
             ** but that we don't return any display names for them. Thus, we clone a PowerFxConfig but without 
             ** display name support and construct a resolver from that instead, which we use for the rewrite binding.
             */
-            return new RenameDriver(parameters, pathToRename, updatedName, CreateResolver(Config.WithoutDisplayNames()));
+            return new RenameDriver(parameters, pathToRename, updatedName, CreateResolver(Config.WithoutDisplayNames(), false));
         }
 
         /// <summary>
@@ -204,7 +205,7 @@ namespace Microsoft.PowerFx
         /// <returns>The formula, with all identifiers converted to invariant form.</returns>
         public string GetInvariantExpression(string expressionText, RecordType parameters)
         {
-            return ConvertExpression(expressionText, parameters, CreateResolver(), toDisplayNames: false);
+            return ConvertExpression(expressionText, parameters, CreateResolver(suggestUnqualifiedEnums: false), toDisplayNames: false);
         }
 
         /// <summary>
@@ -217,7 +218,7 @@ namespace Microsoft.PowerFx
         /// <returns>The formula, with all identifiers converted to display form.</returns>
         public string GetDisplayExpression(string expressionText, RecordType parameters)
         {
-            return ConvertExpression(expressionText, parameters, CreateResolver(), toDisplayNames: true);
+            return ConvertExpression(expressionText, parameters, CreateResolver(suggestUnqualifiedEnums: false), toDisplayNames: true);
         }
 
         internal static string ConvertExpression(string expressionText, RecordType parameters, SimpleResolver resolver, bool toDisplayNames)

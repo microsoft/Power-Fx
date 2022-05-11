@@ -36,6 +36,8 @@ namespace Microsoft.PowerFx.Core.Binding
 
         IEnumerable<TexlFunction> Functions { get; }
 
+        bool SuggestUnqualifiedEnums { get; }
+
         // Look up an entity, context variable, or entity part (e.g. enum value) by name.
         bool Lookup(DName name, out NameLookupInfo nameInfo, NameLookupPreferences preferences = NameLookupPreferences.None);
 

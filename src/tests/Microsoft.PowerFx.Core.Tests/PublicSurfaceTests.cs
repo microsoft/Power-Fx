@@ -148,8 +148,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Intellisense.SuggestionIconKind",
                 "Microsoft.PowerFx.Intellisense.SuggestionKind",
                 "Microsoft.PowerFx.Intellisense.UIString",
-                "Microsoft.PowerFx.Intellisense.TokenResultType",
-                "Microsoft.PowerFx.Core.Texl.Intellisense.IntellisenseFlags",
+                "Microsoft.PowerFx.Intellisense.TokenResultType",                
 
                 // TBD ...
                 "Microsoft.PowerFx.Core.RenameDriver",

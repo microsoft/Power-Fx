@@ -16,10 +16,8 @@ namespace Microsoft.PowerFx
         private readonly RecalcEngine _parent;
         private readonly PowerFxConfig _powerFxConfig;
 
-        public RecalcEngineResolver(
-            RecalcEngine parent,
-            PowerFxConfig powerFxConfig)
-            : base(powerFxConfig)
+        public RecalcEngineResolver(RecalcEngine parent, PowerFxConfig powerFxConfig, bool suggestUnqualifiedEnums = false)
+            : base(powerFxConfig, suggestUnqualifiedEnums)
         {
             _parent = parent;
             _powerFxConfig = powerFxConfig;
