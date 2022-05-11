@@ -14,14 +14,15 @@ using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
 
+#pragma warning disable SA1402 // File may only contain a single type
+#pragma warning disable SA1649 // File name should match first type name
+
 namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
     // CountIf(source:*, predicate:b [, predicate:b, ...])
     // Corresponding DAX function: CountAX, CountX
     internal sealed class CountIfFunction : FilterFunctionBase
     {
-        public override bool RequiresErrorContext => true;
-
         public override bool SupportsParamCoercion => true;
 
         public override bool HasPreciseErrors => true;
@@ -137,3 +138,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         }
     }
 }
+
+#pragma warning restore SA1402 // File may only contain a single type
+#pragma warning restore SA1649 // File name should match first type name

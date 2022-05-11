@@ -16,8 +16,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Substitute(source:s, match:s, replacement:s, [instanceCount:n])
     internal sealed class SubstituteFunction : BuiltinFunction
     {
-        public override bool RequiresErrorContext => true;
-
         public override bool IsSelfContained => true;
 
         public override bool SupportsParamCoercion => true;
@@ -37,8 +35,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Substitute(source:s|*[s], match:s|*[s], replacement:s|*[s], [instanceCount:n|*[n]])
     internal sealed class SubstituteTFunction : BuiltinFunction
     {
-        public override bool RequiresErrorContext => true;
-
         public override bool IsSelfContained => true;
 
         public override bool SupportsParamCoercion => true;
