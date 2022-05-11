@@ -4,7 +4,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.PowerFx.Core.Binding;
-using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Texl.Intellisense;
 using Microsoft.PowerFx.Core.Types;
@@ -160,10 +159,10 @@ namespace Microsoft.PowerFx.Intellisense.IntellisenseData
                     select enumSymbol).Count() > 1;
         }
 
-        /// <summary>
-        /// Should unqualified enums be suggested.
-        /// </summary>
-        internal virtual bool SuggestUnqualifiedEnums => true;
+        ///// <summary>
+        ///// Should unqualified enums be suggested.
+        ///// </summary>
+        internal bool SuggestUnqualifiedEnums => Binding.NameResolver.SuggestUnqualifiedEnums;
 
         /// <summary>
         /// Retrieves an <see cref="EnumSymbol"/> from <paramref name="binding"/> (if necessary).
@@ -277,7 +276,7 @@ namespace Microsoft.PowerFx.Intellisense.IntellisenseData
             Contracts.AssertValue(function);
             Contracts.AssertValue(scopeType);
 
-            return ArgumentSuggestions.GetArgumentSuggestions(TryGetEnumSymbol, SuggestUnqualifiedEnums, function, scopeType, argumentIndex, out requiresSuggestionEscaping);
+            return ArgumentSuggestions.GetArgumentSuggestions(TryGetEnumSymbol,  SuggestUnqualifiedEnums, function, scopeType, argumentIndex, out requiresSuggestionEscaping);
         }
 
         /// <summary>
