@@ -10,8 +10,8 @@ namespace Microsoft.PowerFx.Types
     /// <summary>
     /// A value within an option set. 
     /// </summary>
-    [DebuggerDisplay("{ToString})")]
-    public class OptionSetValue : FormulaValue
+    [DebuggerDisplay("{ToString()})")]
+    public class OptionSetValue : ValidFormulaValue
     {
         /// <summary>
         /// Logical name for this option set value.
