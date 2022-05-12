@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.AppMagic.Transport;
 using Microsoft.PowerFx.Core.Localization;
+using Microsoft.PowerFx.Syntax;
 
 namespace Microsoft.PowerFx.Core.Errors
 {

@@ -47,6 +47,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Preview.FeatureFlags",
 
                 // Lexer                
+                "Microsoft.PowerFx.Syntax.Span",
                 "Microsoft.PowerFx.Syntax.BinaryOp",
                 "Microsoft.PowerFx.Syntax.TokKind",
                 "Microsoft.PowerFx.Syntax.CommentToken",
@@ -89,6 +90,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Syntax.TexlVisitor",
 
                 // Power Fx Type system and Values. 
+                "Microsoft.PowerFx.Types.PrimitiveValueConversions",
                 "Microsoft.PowerFx.Types.AggregateType",
                 "Microsoft.PowerFx.Types.BlankType",
                 "Microsoft.PowerFx.Types.BooleanType",
@@ -135,7 +137,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Types.ValidFormulaValue",
 
                 // Intellisense classes. Used primarily by the Language Service Provider.
-                // Most evaluators should never need htese. 
+                // Most evaluators should never need these. 
                 "Microsoft.PowerFx.Intellisense.IPowerFxScope",
                 "Microsoft.PowerFx.Intellisense.IPowerFxScopeDisplayName",
                 "Microsoft.PowerFx.Intellisense.IIntellisenseResult",
@@ -146,21 +148,19 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Intellisense.SuggestionIconKind",
                 "Microsoft.PowerFx.Intellisense.SuggestionKind",
                 "Microsoft.PowerFx.Intellisense.UIString",
-                "Microsoft.PowerFx.Intellisense.TokenResultType",
+                "Microsoft.PowerFx.Intellisense.TokenResultType",                
 
                 // TBD ...
                 "Microsoft.PowerFx.Core.RenameDriver",
                 "Microsoft.PowerFx.Core.App.DefaultEnabledFeatures",
                 "Microsoft.PowerFx.Core.App.IExternalEnabledFeatures",
-                "Microsoft.PowerFx.Core.BuiltinFormulaTypeConversions",
                 "Microsoft.PowerFx.Core.DisplayNameUtility",
                 "Microsoft.PowerFx.Core.FormulaTypeSchema",
                 "Microsoft.PowerFx.Core.FormulaTypeToSchemaConverter",
                 "Microsoft.PowerFx.Core.Utils.DName",
                 "Microsoft.PowerFx.Core.Utils.DPath",
                 "Microsoft.PowerFx.Core.Utils.ICheckable",
-                "Microsoft.PowerFx.Core.Localization.ErrorResourceKey",
-                "Microsoft.PowerFx.Core.Localization.Span",
+                "Microsoft.PowerFx.Core.Localization.ErrorResourceKey"
             };
 
             var sb = new StringBuilder();
@@ -191,7 +191,7 @@ namespace Microsoft.PowerFx.Core.Tests
         {
             var exceptionList = new HashSet<string>()
             {
-                "Microsoft.PowerFx.Core.Localization.Span"
+                "Microsoft.PowerFx.Syntax.Span"
             };
 
             var asm = typeof(Parser.TexlParser).Assembly;

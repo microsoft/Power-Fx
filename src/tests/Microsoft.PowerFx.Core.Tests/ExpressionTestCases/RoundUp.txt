@@ -1,0 +1,229 @@
+// ROUNDUP(NUMBER, NUMBER_OF_DIGITS)
+
+// ******** INTEGER PARAMETERS ********
+
+// Positive "NUMBER" and "NUMBER_OF_DIGITS" parameter
+
+>> RoundUp(0,0)
+0
+
+>> RoundUp(0,1)
+0
+
+>> RoundUp(230,0)
+230
+
+>> RoundUp(230,1)
+230
+
+>> RoundUp(230,2)
+230
+
+>> RoundUp(230,3)
+230
+
+
+// Negative "NUMBER" Parameter
+
+>> RoundUp(-0,1)
+0
+
+>> RoundUp(-456,0)
+-456
+
+>> RoundUp(-456,1)
+-456
+
+>> RoundUp(-456,2)
+-456
+
+>> RoundUp(-456,3)
+-456
+
+
+// Negative "NUMBER_OF_DIGITS" Parameter
+
+>> RoundUp(3456,-1)
+3460
+
+>> RoundUp(3456,-2)
+3500
+
+>> RoundUp(3456,-3)
+4000
+
+>> RoundUp(3456,-4)
+10000
+
+// Negative "NUMBER" and "NUMBER_OF_DIGITS" parameter
+
+>> RoundUp(-3456,-1)
+-3460
+
+>> RoundUp(-3456,-2)
+-3500
+
+>> RoundUp(-3456,-3)
+-4000
+
+>> RoundUp(-3456,-4)
+-10000
+
+
+// ******** DECIMAL PARAMETERS ********
+// Decimal NUMBER parameter
+
+>> RoundUp(14.123456,0)
+15
+
+>> RoundUp(45.5, 0)
+46
+
+>> RoundUp(45.51, 0)
+46
+
+>> RoundUp(14.123456,1)
+14.2
+
+>> RoundUp(14.123456,2)
+14.13
+
+>> RoundUp(14.123456,3)
+14.124
+
+>> RoundUp(14.123456,4)
+14.1235
+
+>> RoundUp(1412.34,-1)
+1420
+
+>> RoundUp(1412.34,-2)
+1500
+
+>> RoundUp(1500.34,-3)
+2000
+
+// Negative Decimal NUMBER parameter
+
+>> RoundUp(-14.123456,0)
+-15
+
+>> RoundUp(-45.5, 0)
+-46
+
+>> RoundUp(-45.51, 0)
+-46
+
+>> RoundUp(-14.123456,1)
+-14.2
+
+>> RoundUp(-14.123456,2)
+-14.13
+
+>> RoundUp(-14.123456,3)
+-14.124
+
+>> RoundUp(-14.123456,4)
+-14.1235
+
+>> RoundUp(-1412.34,-1)
+-1420
+
+>> RoundUp(-1412.34,-2)
+-1500
+
+>> RoundUp(-1500.34,-3)
+-2000
+
+// Decimal NUMBER and NUMBER_OF_DIGITS parameter
+
+>> RoundUp(14.123456,1111111111)
+14.123456
+
+>> RoundUp(14.123456,0.123)
+15
+
+>> RoundUp(14.123456,1.67)
+14.2
+
+>> RoundUp(14.123456,2.12)
+14.13
+
+>> RoundUp(-14.123456,3.678)
+-14.124
+
+>> RoundUp(-1412.34567,4.78)
+-1412.3457
+
+>> RoundUp(1412.34,-1.2)
+1420
+
+>> RoundUp(-1412.34,-1.6)
+-1420
+
+>> RoundUp(-1412.34,-2.9)
+-1500
+
+>> RoundUp(1500.34,-3.5)
+2000
+
+>> RoundUp(3*0.415, 2)
+1.25
+
+
+// ******** NULL and ERROR PARAMETERS ********
+>> RoundUp(1/0,1)
+#Error(Kind=Div0)
+
+>> RoundUp(1,1/0)
+#Error(Kind=Div0)
+
+>> RoundUp(Blank(),1)
+0
+
+>> RoundUp(Blank(), -1)
+0
+
+>> RoundUp(56.78, Blank())
+57
+
+>> RoundUp(-56.78, Blank())
+-57
+
+>> RoundUp(Blank(),Blank())
+0
+
+// ******** STRING PARAMETERS ********
+
+>> RoundUp("sampleText",1)
+#Error(Kind=InvalidArgument)
+
+>> RoundUp("10.5678","ABC")
+#Error(Kind=InvalidArgument)
+
+>> RoundUp("-10.5678","2")
+-10.57
+
+>> RoundUp("-10.5678","-2")
+-100
+
+>> RoundUp("-10.123", "1.234")
+-10.2
+
+// ******** BOOLEAN PARAMETERS ********
+
+>> RoundUp(true,true)
+1
+
+>> RoundUp(true,false)
+1
+
+>> RoundUp(false,true)
+0
+
+>> RoundUp(false,false)
+0
+
+>> RoundUp("true","false")
+#Error(Kind=InvalidArgument, InvalidArgument)
+

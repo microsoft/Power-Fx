@@ -17,9 +17,15 @@ namespace Microsoft.PowerFx.Functions
     internal static partial class Library
     {
         // Char is used for PA string escaping 
-        public static StringValue Char(IRContext irContext, NumberValue[] args)
+        public static FormulaValue Char(IRContext irContext, NumberValue[] args)
         {
             var arg0 = args[0];
+
+            if (arg0.Value < 1 || arg0.Value >= 256)
+            {
+                return CommonErrors.InvalidCharValue(irContext);
+            }
+
             var str = new string((char)arg0.Value, 1);
             return new StringValue(irContext, str);
         }
@@ -93,12 +99,11 @@ namespace Microsoft.PowerFx.Functions
                 return DateTimeToNumber(irContext, new DateTimeValue[] { dtv });
             }
 
-            var styles = NumberStyles.Any;
             string str = null;
 
             if (arg0 is StringValue sv)
             {
-                str = sv.Value.Trim();
+                str = sv.Value; // No Trim
             }
 
             if (string.IsNullOrEmpty(str))
@@ -106,35 +111,16 @@ namespace Microsoft.PowerFx.Functions
                 return new BlankValue(irContext);
             }
 
-            double div = 1;
-            if (str[str.Length - 1] == '%')
+            var (val, err) = ConvertToNumber(str, runner.CultureInfo);
+
+            if (err == ConvertionStatus.Ok)
             {
-                str = str.Substring(0, str.Length - 1);
-                div = 100;
-                styles = NumberStyles.Number;
-            }
-            else if (str[0] == '%')
-            {
-                str = str.Substring(1, str.Length - 1);
-                div = 100;
-                styles = NumberStyles.Number;
+                return new NumberValue(irContext, val);
             }
 
-            if (!double.TryParse(str, styles, runner.CultureInfo, out var val))
-            {
-                return CommonErrors.InvalidNumberFormatError(irContext);
-            }
-
-            if (IsInvalidDouble(val))
-            {
-                return CommonErrors.ArgumentOutOfRange(irContext);
-            }
-
-            val /= div;
-
-            return new NumberValue(irContext, val);
+            return CommonErrors.ArgumentOutOfRange(irContext);
         }
-
+        
         // Convert string to boolean
         public static FormulaValue Boolean(IRContext irContext, StringValue[] args)
         {
@@ -359,34 +345,55 @@ namespace Microsoft.PowerFx.Functions
 
         public static FormulaValue Left(IRContext irContext, FormulaValue[] args)
         {
-            var source = (StringValue)args[0];
-            var count = (NumberValue)args[1];
-
-            if (count.Value >= source.Value.Length)
-            {
-                return source;
-            }
-
-            return new StringValue(irContext, source.Value.Substring(0, (int)count.Value));
+            return LeftOrRight(irContext, args, Left);
         }
 
         public static FormulaValue Right(IRContext irContext, FormulaValue[] args)
         {
-            var source = (StringValue)args[0];
-            var count = (NumberValue)args[1];
+            return LeftOrRight(irContext, args, Right);
+        }
 
-            if (count.Value == 0)
+        private static string Left(string str, int i)
+        {
+            if (i >= str.Length)
+            {
+                return str;
+            }
+
+            return str.Substring(0, i);
+        }
+
+        private static string Right(string str, int i)
+        {
+            if (i >= str.Length)
+            {
+                return str;
+            }
+
+            return str.Substring(str.Length - i);
+        }
+
+        private static FormulaValue LeftOrRight(IRContext irContext, FormulaValue[] args, Func<string, int, string> leftOrRight)
+        {
+            if (args[0] is BlankValue || args[1] is BlankValue)
             {
                 return new StringValue(irContext, string.Empty);
             }
 
-            if (count.Value >= source.Value.Length)
+            if (args[1] is not NumberValue count)
             {
-                return source;
+                return CommonErrors.GenericInvalidArgument(irContext);
             }
 
-            return new StringValue(irContext, source.Value.Substring(source.Value.Length - (int)count.Value, (int)count.Value));
-        }
+            var source = (StringValue)args[0];            
+
+            if (count.Value < 0)
+            {
+                return CommonErrors.GenericInvalidArgument(irContext);
+            }
+
+            return new StringValue(irContext, leftOrRight(source.Value, (int)count.Value));            
+        }       
 
         private static FormulaValue Find(IRContext irContext, FormulaValue[] args)
         {
@@ -406,17 +413,22 @@ namespace Microsoft.PowerFx.Functions
 
         private static FormulaValue Replace(IRContext irContext, FormulaValue[] args)
         {
-            var source = (StringValue)args[0];
-            var start = (NumberValue)args[1];
-            var count = (NumberValue)args[2];
-            var replacement = (StringValue)args[3];
+            var source = ((StringValue)args[0]).Value;
+            var start = ((NumberValue)args[1]).Value;
+            var count = ((NumberValue)args[2]).Value;
+            var replacement = ((StringValue)args[3]).Value;
 
-            var start0Based = (int)(start.Value - 1);
-            var prefix = start0Based < source.Value.Length ? source.Value.Substring(0, start0Based) : source.Value;
+            if (start >= int.MaxValue)
+            {
+                start = source.Length + 1;
+            }
 
-            var suffixIndex = start0Based + (int)count.Value;
-            var suffix = suffixIndex < source.Value.Length ? source.Value.Substring(suffixIndex) : string.Empty;
-            var result = prefix + replacement.Value + suffix;
+            var start0Based = (int)(start - 1);
+            var prefix = start0Based < source.Length ? source.Substring(0, start0Based) : source;
+
+            var suffixIndex = start0Based + (int)count;
+            var suffix = suffixIndex < source.Length ? source.Substring(suffixIndex) : string.Empty;
+            var result = prefix + replacement + suffix;
 
             return new StringValue(irContext, result);
         }
@@ -449,6 +461,11 @@ namespace Microsoft.PowerFx.Functions
             var instanceNum = -1;
             if (args[3] is NumberValue nv)
             {
+                if (nv.Value >= int.MaxValue)
+                {
+                    return source;
+                }
+
                 instanceNum = (int)nv.Value;
             }
 
@@ -503,7 +520,7 @@ namespace Microsoft.PowerFx.Functions
             var text = args[0];
             var start = args[1];
 
-            return new BooleanValue(irContext, text.Value.StartsWith(start.Value));
+            return new BooleanValue(irContext, text.Value.StartsWith(start.Value, StringComparison.OrdinalIgnoreCase));
         }
 
         public static FormulaValue EndsWith(IRContext irContext, StringValue[] args)
@@ -511,7 +528,7 @@ namespace Microsoft.PowerFx.Functions
             var text = args[0];
             var end = args[1];
 
-            return new BooleanValue(irContext, text.Value.EndsWith(end.Value));
+            return new BooleanValue(irContext, text.Value.EndsWith(end.Value, StringComparison.OrdinalIgnoreCase));
         }
 
         public static FormulaValue Trim(IRContext irContext, StringValue[] args)

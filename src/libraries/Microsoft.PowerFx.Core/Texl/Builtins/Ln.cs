@@ -12,8 +12,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     {
         public override bool HasPreciseErrors => true;
 
-        public override bool RequiresErrorContext => true;
-
         public LnFunction()
             : base("Ln", TexlStrings.AboutLn, FunctionCategories.MathAndStat)
         {
@@ -25,8 +23,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class LnTableFunction : MathOneArgTableFunction
     {
         public override bool HasPreciseErrors => true;
-
-        public override bool RequiresErrorContext => true;
 
         public LnTableFunction()
             : base("Ln", TexlStrings.AboutLnT, FunctionCategories.Table)

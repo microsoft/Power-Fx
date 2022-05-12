@@ -57,10 +57,15 @@
 >> Char(Blank())
 Blank()
 
+>> IsBlank(Char(Blank()))
+true
+
+>> IsError(Char(Blank()))
+false
+
 //Invalid operation: Division by zero
 >> Char(1/0)
 #Error(Kind=Div0)
-
 
 // ******** STRING PARAMETERS ********
 
@@ -100,13 +105,14 @@ Blank()
 >> Char("false")
 #Error(Kind=InvalidArgument)
 
+>> IsBlank(Char("false"))
+#Error(Kind=InvalidArgument)
+
+>> IsError(Char("false"))
+true
 
 // ******** FUNCTION VALUE AS PARAMETERS ********
 
 >> Char(Len("ThisIsASampleStringWith35Characters"))
 "#"
 
-
-// >> Char(NaN)
-// >> Char(-Infinity)
-// >> Char(Infinity)

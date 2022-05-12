@@ -8,6 +8,9 @@
 // WaitFor(N) will *fail* if it's started before WaitFor(N-1) completes. 
 // This ensures things that must be serial are indeed serial. 
 
+>> Set(varNumber, WaitFor(0)+1); Set(varNumber, WaitFor(1)*10+varNumber); varNumber
+11
+
 >> Async(0)
 0
 

@@ -7,9 +7,9 @@ using System.Linq;
 using System.Text;
 using Microsoft.AppMagic.Transport;
 using Microsoft.PowerFx.Core.Utils;
-using StringBuilderCache = Microsoft.PowerFx.Core.Utils.StringBuilderCache<Microsoft.PowerFx.Core.Localization.Span>;
+using StringBuilderCache = Microsoft.PowerFx.Core.Utils.StringBuilderCache<Microsoft.PowerFx.Syntax.Span>;
 
-namespace Microsoft.PowerFx.Core.Localization
+namespace Microsoft.PowerFx.Syntax
 {
     /// <summary>
     /// Span in the text formula.

@@ -10,8 +10,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Corresponding Excel function: STDEV.P
     internal sealed class StdevPFunction : StatisticalFunction
     {
-        public override bool RequiresErrorContext => true;
-
         public StdevPFunction()
             : base("StdevP", TexlStrings.AboutStdevP, FunctionCategories.MathAndStat)
         {
@@ -22,8 +20,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Corresponding DAX function: STDEV.P
     internal sealed class StdevPTableFunction : StatisticalTableFunction
     {
-        public override bool RequiresErrorContext => true;
-
         public StdevPTableFunction()
             : base("StdevP", TexlStrings.AboutStdevPT, FunctionCategories.Table)
         {

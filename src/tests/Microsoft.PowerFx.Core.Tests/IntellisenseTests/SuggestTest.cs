@@ -121,7 +121,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         [InlineData("true &|", "&", "&&")]
 
         // UnaryOpNodeSuggestionHandler
-        [InlineData("Not| false", "Not", "Note", "Notebook", "NotFound", "NotificationType", "NotificationType.Error", "NotificationType.Information", "NotificationType.Success", "NotificationType.Warning", "NotSupported", "FileNotFound")]
+        [InlineData("Not| false", "Not", "NotificationType", "NotificationType.Error", "NotificationType.Information", "NotificationType.Success", "NotificationType.Warning", "ErrorKind.FileNotFound", "ErrorKind.NotFound", "ErrorKind.NotSupported", "Icon.Note", "Icon.Notebook")]
         [InlineData("| Not false")]
         [InlineData("Not |")]
 
@@ -147,10 +147,10 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         [InlineData("|")]
 
         // AddSuggestionsForEnums
-        [InlineData("Edit|", "EditPermissions", "DataSourceInfo.EditPermission", "DisplayMode.Edit", "FormMode.Edit", "Icon.Edit", "RecordInfo.EditPermission", "SelectedState.Edit")]
-        [InlineData("Value(Edit|", "EditPermissions", "DataSourceInfo.EditPermission", "DisplayMode.Edit", "FormMode.Edit", "Icon.Edit", "RecordInfo.EditPermission", "SelectedState.Edit")]
+        [InlineData("Edit|", "DataSourceInfo.EditPermission", "DisplayMode.Edit", "ErrorKind.EditPermissions", "FormMode.Edit", "Icon.Edit", "RecordInfo.EditPermission", "SelectedState.Edit")]
+        [InlineData("Value(Edit|", "DataSourceInfo.EditPermission", "DisplayMode.Edit", "ErrorKind.EditPermissions", "FormMode.Edit", "Icon.Edit", "RecordInfo.EditPermission", "SelectedState.Edit")]
         [InlineData("DisplayMode.E|", "Edit", "Disabled", "View")]
-        [InlineData("Disabled|", "Disabled")]
+        [InlineData("Disabled|", "DisplayMode.Disabled")]
         [InlineData("DisplayMode.D|", "Disabled", "Edit")]
         [InlineData("DisplayMode|", "DisplayMode", "DisplayMode.Disabled", "DisplayMode.Edit", "DisplayMode.View")]
         [InlineData("$\"Hello {DisplayMode|} World!\"", "DisplayMode", "DisplayMode.Disabled", "DisplayMode.Edit", "DisplayMode.View")]
