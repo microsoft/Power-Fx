@@ -29,7 +29,10 @@ namespace Microsoft.PowerFx.Core.Tests
             }
 
             var validIdentifier = IdentToken.MakeValidIdentifier(input);
-            var token = TexlLexer.LocalizedInstance.GetTokens(validIdentifier)[0] as IdentToken;
+            var token = TexlLexer.InvariantLexer.GetTokens(validIdentifier)[0] as IdentToken;
+            Assert.Equal(expected, token.Name.Value);
+
+            token = TexlLexer.CommaDecimalSeparatorLexer.GetTokens(validIdentifier)[0] as IdentToken;
             Assert.Equal(expected, token.Name.Value);
         }
 
