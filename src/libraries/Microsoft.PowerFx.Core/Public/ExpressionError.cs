@@ -4,10 +4,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.PowerFx.Core.Errors;
-using Microsoft.PowerFx.Core.Localization;
-using Microsoft.PowerFx.Core.Public.Values;
+using Microsoft.PowerFx.Syntax;
+using Microsoft.PowerFx.Types;
 
-namespace Microsoft.PowerFx.Core.Public
+namespace Microsoft.PowerFx
 {
     /// <summary>
     /// Error message. This could be a compile time error from parsing or binding, 
@@ -30,14 +30,14 @@ namespace Microsoft.PowerFx.Core.Public
         /// </summary>
         public ErrorKind Kind { get; set; }
 
-        public DocumentErrorSeverity Severity { get; set; } = DocumentErrorSeverity.Severe;
+        public ErrorSeverity Severity { get; set; } = ErrorSeverity.Severe;
 
         public string MessageKey { get; set; }
 
         /// <summary>
         /// A warning does not prevent executing the error. See <see cref="Severity"/> for more details.
         /// </summary>
-        public bool IsWarning => Severity < DocumentErrorSeverity.Severe;
+        public bool IsWarning => Severity < ErrorSeverity.Severe;
 
         public override string ToString()
         {
@@ -59,7 +59,7 @@ namespace Microsoft.PowerFx.Core.Public
             {
                 Message = error.ShortMessage,
                 Span = error.TextSpan,
-                Severity = error.Severity,
+                Severity = (ErrorSeverity)error.Severity,
                 MessageKey = error.MessageKey
             };
         }

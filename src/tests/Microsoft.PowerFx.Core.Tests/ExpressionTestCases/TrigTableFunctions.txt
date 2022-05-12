@@ -2,10 +2,10 @@
 Table({a:0},{a:0.5},{a:1})
 
 >> Sin(Table({a:0},{a:1/0},{a:Pi()/2}))
-Table({a:0},{a:Microsoft.PowerFx.Core.Public.Values.ErrorValue},{a:1})
+Table({a:0},{a:Microsoft.PowerFx.Types.ErrorValue},{a:1})
 
 >> Sin(Table({a:0},{a:Pi()/6},If(1/0<2,{a:Pi()})))
-Table({a:0},{a:0.5},Microsoft.PowerFx.Core.Public.Values.ErrorValue)
+Table({a:0},{a:0.5},Microsoft.PowerFx.Types.ErrorValue)
 
 >> Round(Sin([0, Pi(), Pi()/2, -Pi()/2, 3*Pi()/2, 2*Pi(), Pi()/4, -Pi()/4, Blank()]), 4)
 [0, 0, 1, -1, -1, -0, 0.7071, -0.7071, 0]
@@ -14,10 +14,10 @@ Table({a:0},{a:0.5},Microsoft.PowerFx.Core.Public.Values.ErrorValue)
 Table({a:1},{a:0.5},{a:0})
 
 >> Cos(Table({a:1/0},{a:Pi()/3},{a:Pi()/2}))
-Table({a:Microsoft.PowerFx.Core.Public.Values.ErrorValue},{a:0.5},{a:0})
+Table({a:Microsoft.PowerFx.Types.ErrorValue},{a:0.5},{a:0})
 
 >> Cos(Table({a:0},If(1/0<2,{a:Pi()/3}),{a:Pi()/2}))
-Table({a:1},Microsoft.PowerFx.Core.Public.Values.ErrorValue,{a:0})
+Table({a:1},Microsoft.PowerFx.Types.ErrorValue,{a:0})
 
 >> Round(Cos([0, Pi(), Pi()/2, -Pi()/2, 3*Pi()/2, 2*Pi(), Pi()/4, -Pi()/4, Blank()]), 4)
 [1, -1, 0, 0, -0, 1, 0.7071, 0.7071, 1]
@@ -26,10 +26,10 @@ Table({a:1},Microsoft.PowerFx.Core.Public.Values.ErrorValue,{a:0})
 Table({a:0},{a:1},{a:-1})
 
 >> Tan(Table({a:1/0},{a:Pi()/4},{a:-Pi()/4}))
-Table({a:Microsoft.PowerFx.Core.Public.Values.ErrorValue},{a:1},{a:-1})
+Table({a:Microsoft.PowerFx.Types.ErrorValue},{a:1},{a:-1})
 
 >> Tan(Table(If(1/0<2,{a:0}),{a:Pi()/4},{a:-Pi()/4}))
-Table(Microsoft.PowerFx.Core.Public.Values.ErrorValue,{a:1},{a:-1})
+Table(Microsoft.PowerFx.Types.ErrorValue,{a:1},{a:-1})
 
 >> Round(Tan([0, Pi(), 2*Pi(), Pi()/4, -Pi()/4, Blank()]), 4)
 [0, -0, -0, 1, -1, 0]
@@ -38,10 +38,10 @@ Table(Microsoft.PowerFx.Core.Public.Values.ErrorValue,{a:1},{a:-1})
 Table({a:0},{a:1},{a:-1})
 
 >> Cot(Table({a:Pi()/2},{a:0},{a:-Pi()/4}))
-Table({a:0},{a:Microsoft.PowerFx.Core.Public.Values.ErrorValue},{a:-1})
+Table({a:0},{a:Microsoft.PowerFx.Types.ErrorValue},{a:-1})
 
 >> Cot(Table({a:Pi()/2},If(Sqrt(-1)<1,{a:Pi()/4}),{a:-Pi()/4}))
-Table({a:0},Microsoft.PowerFx.Core.Public.Values.ErrorValue,{a:-1})
+Table({a:0},Microsoft.PowerFx.Types.ErrorValue,{a:-1})
 
 >> Round(Cot([Pi()/2, -Pi()/2, 3*Pi()/2, Pi()/4, -Pi()/4]), 4)
 [0, -0, 0, 1, -1]

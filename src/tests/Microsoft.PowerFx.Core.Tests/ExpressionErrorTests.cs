@@ -1,17 +1,9 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System;
 using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
 using Microsoft.PowerFx.Core.Errors;
-using Microsoft.PowerFx.Core.Lexer;
-using Microsoft.PowerFx.Core.Lexer.Tokens;
-using Microsoft.PowerFx.Core.Localization;
-using Microsoft.PowerFx.Core.Public;
-using Microsoft.PowerFx.Core.Types;
-using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Syntax;
 using Xunit;
 
 namespace Microsoft.PowerFx.Core.Tests
@@ -41,7 +33,7 @@ namespace Microsoft.PowerFx.Core.Tests
             {
                 Message = "ouch",
                 Span = new Span(2, 5),
-                Severity = DocumentErrorSeverity.Warning
+                Severity = ErrorSeverity.Warning
             };
 
             // Verify defaults for non-nullable objects

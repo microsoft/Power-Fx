@@ -7,7 +7,7 @@ using System.Linq;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Utils;
 
-namespace Microsoft.PowerFx.Core.Lexer
+namespace Microsoft.PowerFx.Syntax
 {
     internal sealed class LocalizationUtils
     {

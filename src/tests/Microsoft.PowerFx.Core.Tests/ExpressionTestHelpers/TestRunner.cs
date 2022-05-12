@@ -6,8 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using Microsoft.PowerFx.Core.Public.Types;
-using Microsoft.PowerFx.Core.Public.Values;
+using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Core.Tests
 {
@@ -374,6 +373,10 @@ namespace Microsoft.PowerFx.Core.Tests
                 // DateTime(yyyy,MM,dd,HH,mm,ss,fff)
                 var dateTime = dt.Value;
                 sb.Append($"DateTime({dateTime.Year},{dateTime.Month},{dateTime.Day},{dateTime.Hour},{dateTime.Minute},{dateTime.Second},{dateTime.Millisecond})");
+            }
+            else if (result is OptionSetValue opt)
+            {
+                sb.Append($"{opt.Type.OptionSetName}.{opt.Option}");
             }
             else if (result is ErrorValue)
             {

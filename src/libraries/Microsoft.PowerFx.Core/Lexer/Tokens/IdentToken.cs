@@ -1,11 +1,13 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
+using System.Linq;
 using System.Text;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Utils;
 
-namespace Microsoft.PowerFx.Core.Lexer.Tokens
+namespace Microsoft.PowerFx.Syntax
 {
     /// <summary>
     /// Token for an identifier/name.
@@ -70,7 +72,28 @@ namespace Microsoft.PowerFx.Core.Lexer.Tokens
         // REVIEW ragru: having a property for every possible error isn't scalable.
         internal bool HasDelimiters => HasDelimiterStart;
 
-        internal bool HasErrors => IsModified || (HasDelimiterStart && !HasDelimiterEnd);
+        /// <summary>
+        /// Whether an identifier has errors.
+        /// </summary>
+        public bool HasErrors => IsModified || (HasDelimiterStart && !HasDelimiterEnd);
+
+        /// <summary>
+        /// Converts a string value of an identifier to a valid identifier (e.g., "a b" -> "'a b'").
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException">Throw if value is <c>null</c>.</exception>
+        public static string MakeValidIdentifier(string value)
+        {
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
+            var needsDelimiters = string.IsNullOrWhiteSpace(value) || !value.All(TexlLexer.IsSimpleIdentCh);
+            var tmpIdent = new IdentToken(value, new Span(0, 0), needsDelimiters, needsDelimiters);
+            return tmpIdent.ToString();
+        }
 
         /// <inheritdoc />
         public override string ToString()

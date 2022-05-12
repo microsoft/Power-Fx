@@ -4,10 +4,11 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 
-namespace Microsoft.PowerFx.Core.Public.Types
+namespace Microsoft.PowerFx.Types
 {
     /// <summary>
     /// Base class for type of a Formula. 
@@ -44,6 +45,10 @@ namespace Microsoft.PowerFx.Core.Public.Types
         public static FormulaType Color { get; } = new ColorType();
 
         public static FormulaType Guid { get; } = new GuidType();
+
+        public static FormulaType Unknown { get; } = new UnknownType();
+
+        public static FormulaType BindingError { get; } = new BindingErrorType();
         
         /// <summary>
         /// Internal use only to represent an arbitrary (un-backed) option set value.
@@ -57,9 +62,45 @@ namespace Microsoft.PowerFx.Core.Public.Types
             _type = type;
         }
 
+        // Entites may be recursive and their Dytype is tagged with additional schema metadata. 
+        // Expand that metadata into a proper Dtype. 
+        private static DType GetExpandedEntityType(DType expandEntityType, string relatedEntityPath)
+        {
+            Contracts.AssertValid(expandEntityType);
+            Contracts.Assert(expandEntityType.HasExpandInfo);
+            Contracts.AssertValue(relatedEntityPath);
+
+            var expandEntityInfo = expandEntityType.ExpandInfo;
+
+            if (expandEntityInfo.ParentDataSource is not IExternalTabularDataSource dsInfo)
+            {
+                return expandEntityType;
+            }                        
+
+            if (!expandEntityType.TryGetEntityDelegationMetadata(out var metadata))
+            {
+                // We need more metadata to bind this fully
+                return DType.Error;
+            }
+
+            var type = expandEntityType.ExpandEntityType(metadata.Schema, metadata.Schema.AssociatedDataSources);
+            Contracts.Assert(type.HasExpandInfo);
+
+            // Update the datasource and relatedEntity path.
+            type.ExpandInfo.UpdateEntityInfo(expandEntityInfo.ParentDataSource, relatedEntityPath);
+
+            return type;
+        }
+
         // Get the correct derived type
         internal static FormulaType Build(DType type)
         {
+            if (type.IsExpandEntity)
+            {
+                var expandedType = GetExpandedEntityType(type, string.Empty);
+                return Build(expandedType);
+            }
+
             switch (type.Kind)
             {
                 case DKind.ObjNull: return Blank;
@@ -99,6 +140,12 @@ namespace Microsoft.PowerFx.Core.Public.Types
 
                 case DKind.UntypedObject:
                     return UntypedObject;
+
+                case DKind.Unknown:
+                    return Unknown;
+
+                case DKind.Error:
+                    return BindingError;
 
                 default:
                     throw new NotImplementedException($"Not implemented type: {type}");

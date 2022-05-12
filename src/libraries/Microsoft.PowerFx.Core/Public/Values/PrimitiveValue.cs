@@ -1,17 +1,15 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System;
-using System.Collections.Generic;
 using System.Diagnostics.Contracts;
+using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.IR;
-using Microsoft.PowerFx.Core.Public.Types;
 
-namespace Microsoft.PowerFx.Core.Public.Values
+namespace Microsoft.PowerFx.Types
 {
     /// <summary>
     /// Helper for non-aggregate values that are represented as a single .net object.
-    /// See <see cref="BuiltinFormulaTypeConversions"/> for converting between a T and a FormulaType.
+    /// See <see cref="PrimitiveValueConversions"/> for converting between a T and a FormulaType.
     /// </summary>
     /// <typeparam name="T"></typeparam>
     public abstract class PrimitiveValue<T> : ValidFormulaValue

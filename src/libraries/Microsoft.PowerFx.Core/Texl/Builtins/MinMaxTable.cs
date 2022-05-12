@@ -6,9 +6,9 @@ using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions.Delegation;
 using Microsoft.PowerFx.Core.Localization;
-using Microsoft.PowerFx.Core.Syntax.Nodes;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Syntax;
 
 namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
@@ -18,8 +18,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class MinMaxTableFunction : StatisticalTableFunction
     {
         private readonly DelegationCapability _delegationCapability;
-
-        public override bool RequiresErrorContext => true;
 
         public override DelegationCapability FunctionDelegationCapability => _delegationCapability;
 

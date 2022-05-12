@@ -1,9 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using Microsoft.PowerFx.Core.Syntax.Nodes;
-
-namespace Microsoft.PowerFx.Core.Syntax.Visitors
+namespace Microsoft.PowerFx.Syntax
 {
     /// <summary>
     ///     A visitor that passes a context to each visit method and where each visit method returns a result.

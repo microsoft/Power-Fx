@@ -19,7 +19,7 @@
 #Error(Kind=Numeric)
 
 >> Log(-8, -2)
-#Error(Kind=Numeric)
+#Error(Kind=Numeric, Numeric)
 
 >> Log(10, 1)
 #Error(Kind=Div0)
@@ -34,7 +34,7 @@
 #Error(Kind=Numeric)
 
 >> Log(Blank(), Blank())
-#Error(Kind=Numeric)
+#Error(Kind=Numeric, Numeric)
 
 >> Log(1/0)
 #Error(Kind=Div0)

@@ -5,7 +5,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.PowerFx.Core.Public.Values;
+using Microsoft.PowerFx.Types;
 using Xunit;
 
 namespace Microsoft.PowerFx.Core.Tests
@@ -174,7 +174,7 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.Equal("filedisable.txt:input3", tests[0].GetUniqueId(null));
         }
 
-        private static readonly ErrorValue _errorValue = new ErrorValue(IR.IRContext.NotInSource(Public.Types.FormulaType.Number));
+        private static readonly ErrorValue _errorValue = new ErrorValue(IR.IRContext.NotInSource(FormulaType.Number));
 
         private class MockRunner : BaseRunner
         {
@@ -272,8 +272,6 @@ namespace Microsoft.PowerFx.Core.Tests
         [Fact]
         public async Task TestRunnerUnsupported()
         {
-            var msg = "msg xyz";
-
             var runner = new MockRunner
             {
                 _hook2 = (expr, setup) => new RunResult { UnsupportedReason = "unsupported" }
@@ -340,8 +338,8 @@ namespace Microsoft.PowerFx.Core.Tests
         public async Task TestRunnerErrorKindMatching()
         {
             var errorValue = new ErrorValue(
-                IR.IRContext.NotInSource(Public.Types.FormulaType.Number),
-                new Public.ExpressionError { Kind = Public.ErrorKind.InvalidFunctionUsage });
+                IR.IRContext.NotInSource(FormulaType.Number),
+                new ExpressionError { Kind = ErrorKind.InvalidFunctionUsage });
             var runner = new MockRunner
             {
                 _hook = (expr, setup) => errorValue // error

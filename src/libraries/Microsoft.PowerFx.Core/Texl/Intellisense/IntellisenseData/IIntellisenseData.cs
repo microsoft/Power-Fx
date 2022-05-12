@@ -3,7 +3,7 @@
 
 using Microsoft.PowerFx.Core.Functions;
 
-namespace Microsoft.PowerFx.Core.Texl.Intellisense.IntellisenseData
+namespace Microsoft.PowerFx.Intellisense.IntellisenseData
 {
     /// <summary>
     /// A transient runtime representation of data necessary to complete <see cref="Intellisense.Suggest"/>.
@@ -85,13 +85,13 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense.IntellisenseData
         public bool TryAugmentSignature(TexlFunction func, int argIndex, string paramName, int highlightStart, out int newHighlightStart, out int newHighlightEnd, out string newParamName, out string newInvariantParamName);
 
         /// <summary>
-        /// Should return a suffix for the provided <see cref="function"/> and <see cref="parameter"/>.
+        /// Should return a suffix for the provided <paramref name="function"/> and <paramref name="paramName"/>.
         /// </summary>
         /// <param name="function">
         /// The suffix candidate.
         /// </param>
         /// <param name="paramName">
-        /// The parameter of <see cref="function"/> that may be suffixed.
+        /// The parameter of <paramref name="function"/> that may be suffixed.
         /// </param>
         /// <returns>
         /// Just the suffix for the parameter, and empty string if no suffix is intended.

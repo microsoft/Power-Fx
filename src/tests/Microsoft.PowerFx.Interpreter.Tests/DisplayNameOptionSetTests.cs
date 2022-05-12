@@ -2,10 +2,11 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.PowerFx.Core;
-using Microsoft.PowerFx.Core.Public.Types;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Types;
 using Xunit;
 
 namespace Microsoft.PowerFx.Interpreter.Tests
@@ -47,6 +48,42 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             }
         }
 
+        // Verify methods to go between OptionSet/Type/Value
+        [Fact]
+        public void TestHelpers()
+        {
+            var optionSet = new OptionSet("OptionSetName", DisplayNameUtility.MakeUnique(new Dictionary<string, string>()
+            {
+                    { "option_1", "DisplayOption1" },
+                    { "option_2", "DisplayOption2" }
+            }));
+            var type = optionSet.FormulaType;
+
+            Assert.Equal("OptionSetName", type.OptionSetName.Value);
+
+            var ok = type.TryGetValue("option_2", out var val2);
+            Assert.True(ok);
+
+            Assert.Equal("option_2", val2.Option);
+            Assert.Equal("DisplayOption2", val2.DisplayName);
+
+            ok = type.TryGetValue("missing", out var valMissing);
+            Assert.False(ok);
+
+            // Can't lookup by display name - avoids ambiguities. 
+            ok = type.TryGetValue(val2.DisplayName, out valMissing);
+            Assert.False(ok);
+
+            // Parent Type matches.
+            var type2 = val2.Type;
+            Assert.True(object.ReferenceEquals(val2.Type, type));
+
+            var names = type.LogicalNames.Select(x => x.Value).OrderBy(x => x).ToArray();
+            Assert.Equal(2, names.Length);
+            Assert.Equal("option_1", names[0]);
+            Assert.Equal("option_2", names[1]);
+        }
+
         [Fact]
         public void PowerFxConfigCollisionsThrow()
         {
@@ -77,6 +114,26 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Assert.Equal("NonColliding", displayName.Value);
             Assert.True(config.TryGetSymbol(new DName("SomeDisplayName"), out _, out displayName));
             Assert.Equal("SomeDisplayName", displayName.Value);
+        }
+
+        [Fact]
+        public void Sample()
+        {
+            var config = new PowerFxConfig();
+            var displayNames = DisplayNameUtility.MakeUnique(new Dictionary<string, string>
+            {
+                { "option_1", "Option1" },
+                { "option_2", "Option2" }
+            });
+
+            var option = new OptionSet("OptionSet", displayNames);
+
+            config.AddOptionSet(option);
+
+            var engine = new RecalcEngine(config);
+
+            var expression = "If(true, OptionSet.Option1)";
+            var value = engine.Eval(expression);
         }
     }
 }

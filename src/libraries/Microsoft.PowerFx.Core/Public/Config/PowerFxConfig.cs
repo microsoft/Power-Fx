@@ -5,13 +5,15 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Functions;
+using Microsoft.PowerFx.Core.Public;
 using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
 
-namespace Microsoft.PowerFx.Core
+namespace Microsoft.PowerFx
 {
     /// <summary>
     /// A container that allows for compiler customization.
@@ -19,7 +21,7 @@ namespace Microsoft.PowerFx.Core
     public sealed class PowerFxConfig
     {
         private bool _isLocked;
-        private readonly Dictionary<string, TexlFunction> _extraFunctions;
+        private readonly HashSet<TexlFunction> _extraFunctions = new HashSet<TexlFunction>();
         private readonly Dictionary<DName, IExternalEntity> _environmentSymbols;
         private DisplayNameProvider _environmentSymbolDisplayNameProvider;
 
@@ -27,7 +29,7 @@ namespace Microsoft.PowerFx.Core
         // These can be overridden. 
         private IEnumerable<TexlFunction> _coreFunctions = BuiltinFunctionsCore.BuiltinFunctionsLibrary;
 
-        internal IEnumerable<TexlFunction> Functions => _coreFunctions.Concat(_extraFunctions.Values);
+        internal IEnumerable<TexlFunction> Functions => _coreFunctions.Concat(_extraFunctions);
 
         internal EnumStoreBuilder EnumStoreBuilder { get; }
 
@@ -37,7 +39,6 @@ namespace Microsoft.PowerFx.Core
         {
             CultureInfo = cultureInfo ?? CultureInfo.CurrentCulture;
             _isLocked = false;
-            _extraFunctions = new Dictionary<string, TexlFunction>();
             _environmentSymbols = new Dictionary<DName, IExternalEntity>();
             _environmentSymbolDisplayNameProvider = new SingleSourceDisplayNameProvider();
             EnumStoreBuilder = enumStoreBuilder;
@@ -48,9 +49,14 @@ namespace Microsoft.PowerFx.Core
         /// </summary>
         /// <param name="cultureInfo">Culture to use.</param>        
         public PowerFxConfig(CultureInfo cultureInfo = null)
-            : this(cultureInfo, new EnumStoreBuilder().WithDefaultEnums()) 
+            : this(cultureInfo, new EnumStoreBuilder().WithRequiredEnums(BuiltinFunctionsCore.BuiltinFunctionsLibrary)) 
         {
         }
+
+        /// <summary>
+        /// Information about available functions.
+        /// </summary>
+        public IEnumerable<FunctionInfo> FunctionInfos => Functions.Select(f => new FunctionInfo(f));
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PowerFxConfig"/> class.
@@ -89,7 +95,7 @@ namespace Microsoft.PowerFx.Core
         /// <returns></returns>
         public IEnumerable<string> GetAllFunctionNames()
         {
-            return _extraFunctions.Values.Select(func => func.Name).Distinct();
+            return _extraFunctions.Select(func => func.Name).Distinct();
         }
 
         internal IEnumerable<IExternalEntity> GetSymbols() => _environmentSymbols.Values;
@@ -134,7 +140,7 @@ namespace Microsoft.PowerFx.Core
         {
             CheckUnlocked();
 
-            _extraFunctions.Add(function.GetUniqueTexlRuntimeName(), function);
+            _extraFunctions.Add(function);
             EnumStoreBuilder.WithRequiredEnums(new List<TexlFunction>() { function });
         }
                 

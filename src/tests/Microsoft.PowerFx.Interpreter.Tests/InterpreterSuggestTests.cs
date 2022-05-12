@@ -5,9 +5,9 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Functions;
-using Microsoft.PowerFx.Core.Public.Types;
 using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Tests.IntellisenseTests;
+using Microsoft.PowerFx.Types;
 using Xunit;
 
 namespace Microsoft.PowerFx.Interpreter.Tests
@@ -59,6 +59,16 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                     .Add(new NamedFormulaType("InnerOtherOptionSet", otherOptionSet.FormulaType))));
 
             var actualSuggestions = SuggestStrings(expression, config, parameterType);
+            Assert.Equal(expectedSuggestions, actualSuggestions);
+        }
+
+        [Theory]
+        [InlineData("Hou|", "Hour", "TimeUnit.Hours")]
+        public void TestSuggestHour(string expression, params string[] expectedSuggestions)
+        {
+            var config = new PowerFxConfig();
+
+            var actualSuggestions = SuggestStrings(expression, config, null);
             Assert.Equal(expectedSuggestions, actualSuggestions);
         }
     }

@@ -1,17 +1,9 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Binding.BindInfo;
-using Microsoft.PowerFx.Core.Entities;
-using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Glue;
-using Microsoft.PowerFx.Core.Public.Types;
-using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx
@@ -24,9 +16,7 @@ namespace Microsoft.PowerFx
         private readonly RecalcEngine _parent;
         private readonly PowerFxConfig _powerFxConfig;
 
-        public RecalcEngineResolver(
-            RecalcEngine parent,
-            PowerFxConfig powerFxConfig)
+        public RecalcEngineResolver(RecalcEngine parent, PowerFxConfig powerFxConfig)
             : base(powerFxConfig)
         {
             _parent = parent;

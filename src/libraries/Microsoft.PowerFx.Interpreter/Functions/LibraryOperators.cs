@@ -4,8 +4,7 @@
 using System;
 using System.Linq;
 using Microsoft.PowerFx.Core.IR;
-using Microsoft.PowerFx.Core.Public.Types;
-using Microsoft.PowerFx.Core.Public.Values;
+using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Functions
 {
@@ -554,7 +553,7 @@ namespace Microsoft.PowerFx.Functions
             }
 
             var result = arg0.Subtract(arg1);
-            return new TimeValue(irContext, result);
+            return new NumberValue(irContext, result.Days);
         }
 
         private static FormulaValue TimeDifference(IRContext irContext, FormulaValue[] args)

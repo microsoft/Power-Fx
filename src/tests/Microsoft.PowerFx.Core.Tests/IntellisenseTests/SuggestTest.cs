@@ -121,7 +121,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         [InlineData("true &|", "&", "&&")]
 
         // UnaryOpNodeSuggestionHandler
-        [InlineData("Not| false", "Not", "Note", "Notebook", "NotFound", "NotificationType", "NotificationType.Error", "NotificationType.Information", "NotificationType.Success", "NotificationType.Warning", "NotSupported", "FileNotFound")]
+        [InlineData("Not| false", "Not", "NotificationType", "NotificationType.Error", "NotificationType.Information", "NotificationType.Success", "NotificationType.Warning", "ErrorKind.FileNotFound", "ErrorKind.NotFound", "ErrorKind.NotSupported", "Icon.Note", "Icon.Notebook")]
         [InlineData("| Not false")]
         [InlineData("Not |")]
 
@@ -147,10 +147,10 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         [InlineData("|")]
 
         // AddSuggestionsForEnums
-        [InlineData("Edit|", "EditPermissions", "DataSourceInfo.EditPermission", "DisplayMode.Edit", "FormMode.Edit", "Icon.Edit", "RecordInfo.EditPermission", "SelectedState.Edit")]
-        [InlineData("Value(Edit|", "EditPermissions", "DataSourceInfo.EditPermission", "DisplayMode.Edit", "FormMode.Edit", "Icon.Edit", "RecordInfo.EditPermission", "SelectedState.Edit")]
+        [InlineData("Edit|", "DataSourceInfo.EditPermission", "DisplayMode.Edit", "ErrorKind.EditPermissions", "FormMode.Edit", "Icon.Edit", "RecordInfo.EditPermission", "SelectedState.Edit")]
+        [InlineData("Value(Edit|", "DataSourceInfo.EditPermission", "DisplayMode.Edit", "ErrorKind.EditPermissions", "FormMode.Edit", "Icon.Edit", "RecordInfo.EditPermission", "SelectedState.Edit")]
         [InlineData("DisplayMode.E|", "Edit", "Disabled", "View")]
-        [InlineData("Disabled|", "Disabled")]
+        [InlineData("Disabled|", "DisplayMode.Disabled")]
         [InlineData("DisplayMode.D|", "Disabled", "Edit")]
         [InlineData("DisplayMode|", "DisplayMode", "DisplayMode.Disabled", "DisplayMode.Edit", "DisplayMode.View")]
         [InlineData("$\"Hello {DisplayMode|} World!\"", "DisplayMode", "DisplayMode.Disabled", "DisplayMode.Edit", "DisplayMode.View")]
@@ -159,7 +159,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
             // Note that the expression string needs to have balanced quotes or we hit a bug in NUnit running the tests:
             //   https://github.com/nunit/nunit3-vs-adapter/issues/691
 
-            FeatureFlags.StringInterpolation = true;
+            Preview.FeatureFlags.StringInterpolation = true;
             var actualSuggestions = SuggestStrings(expression, Default);
             Assert.Equal(expectedSuggestions, actualSuggestions);
         }
@@ -177,7 +177,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         [InlineData("DisplayMode|")]
         public void TestSuggestEmptyEnumList(string expression, params string[] expectedSuggestions)
         {
-            FeatureFlags.StringInterpolation = true;
+            Preview.FeatureFlags.StringInterpolation = true;
             var actualSuggestions = SuggestStrings(expression, EmptyEverything);
             Assert.Equal(expectedSuggestions, actualSuggestions);
         }
@@ -190,7 +190,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         [InlineData("Calendar.Months|", "MonthsLong", "MonthsShort")]
         public void TestSuggestEmptyAll(string expression, params string[] expectedSuggestions)
         {
-            FeatureFlags.StringInterpolation = true;
+            Preview.FeatureFlags.StringInterpolation = true;
             var actualSuggestions = SuggestStrings(expression, MinimalEnums);
             Assert.Equal(expectedSuggestions, actualSuggestions);
         }

@@ -4,14 +4,15 @@
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
 
+#pragma warning disable SA1402 // File may only contain a single type
+#pragma warning disable SA1649 // File name should match first type name
+
 namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
     // Cos(number:n)
     // Equivalent Excel function: Cos
     internal sealed class CosFunction : MathOneArgFunction
     {
-        public override bool RequiresErrorContext => true;
-
         public CosFunction()
             : base("Cos", TexlStrings.AboutCos, FunctionCategories.MathAndStat)
         {
@@ -22,11 +23,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Table overload that computes the cosine of each item in the input table.
     internal sealed class CosTableFunction : MathOneArgTableFunction
     {
-        public override bool RequiresErrorContext => true;
-
         public CosTableFunction()
             : base("Cos", TexlStrings.AboutCosT, FunctionCategories.Table)
         {
         }
     }
 }
+
+#pragma warning restore SA1402 // File may only contain a single type
+#pragma warning restore SA1649 // File name should match first type name

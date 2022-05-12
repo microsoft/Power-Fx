@@ -2,21 +2,13 @@
 // Licensed under the MIT license.
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Diagnostics.Contracts;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Text.Json;
-using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.IR;
-using Microsoft.PowerFx.Core.Public.Types;
-using Microsoft.PowerFx.Core.Public.Values;
+using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx
-{ 
+{
     /// <summary>
     /// Marshal .Net classes (with fields). This supports strong typing and lazy marshalling. 
     /// Handles any IEnumerable (including arrays).
@@ -53,17 +45,15 @@ namespace Microsoft.PowerFx
         {
             if (collection != typeof(string))
             {
-                if (collection.IsGenericType && collection.GetGenericTypeDefinition() == typeof(IEnumerable<>))
+                if (Utility.TryGetElementType(collection, typeof(IEnumerable<>), out elementType))
                 {
-                    elementType = collection.GenericTypeArguments[0];
                     return true;
                 }
 
                 foreach (var t1 in collection.GetInterfaces())
                 {
-                    if (t1.IsGenericType && t1.GetGenericTypeDefinition() == typeof(IEnumerable<>))
-                    {
-                        elementType = t1.GenericTypeArguments[0];
+                    if (Utility.TryGetElementType(t1, typeof(IEnumerable<>), out elementType))
+                    {                        
                         return true;
                     }
                 }

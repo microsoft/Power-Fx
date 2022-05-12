@@ -2,8 +2,7 @@
 // Licensed under the MIT license.
 
 using Microsoft.PowerFx.Core.IR;
-using Microsoft.PowerFx.Core.Public;
-using Microsoft.PowerFx.Core.Public.Values;
+using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Functions
 {
@@ -25,7 +24,27 @@ namespace Microsoft.PowerFx.Functions
             {
                 Message = "Argument out of range",
                 Span = irContext.SourceContext,
+                Kind = ErrorKind.InvalidArgument
+            });
+        }
+
+        public static ErrorValue NumericOutOfRange(IRContext irContext)
+        {
+            return new ErrorValue(irContext, new ExpressionError()
+            {
+                Message = "Numeric out of range",
+                Span = irContext.SourceContext,
                 Kind = ErrorKind.Numeric
+            });
+        }
+
+        public static ErrorValue InvalidCharValue(IRContext irContext)
+        {
+            return new ErrorValue(irContext, new ExpressionError()
+            {
+                Message = "Invalid Char value, must be in 1...255 range",
+                Span = irContext.SourceContext,
+                Kind = ErrorKind.InvalidArgument
             });
         }
 
@@ -36,6 +55,16 @@ namespace Microsoft.PowerFx.Functions
                 Message = "Divide by zero",
                 Span = irContext.SourceContext,
                 Kind = ErrorKind.Div0
+            });
+        }
+
+        public static ErrorValue OverflowError(IRContext irContext)
+        {
+            return new ErrorValue(irContext, new ExpressionError()
+            {
+                Message = "Overflow",
+                Span = irContext.SourceContext,
+                Kind = ErrorKind.Numeric
             });
         }
 
@@ -55,7 +84,17 @@ namespace Microsoft.PowerFx.Functions
             {
                 Message = "The Number could not be parsed",
                 Span = irContext.SourceContext,
-                Kind = ErrorKind.BadLanguageCode
+                Kind = ErrorKind.InvalidArgument
+            });
+        }
+
+        public static ErrorValue GenericInvalidArgument(IRContext irContext)
+        {
+            return new ErrorValue(irContext, new ExpressionError()
+            {
+                Message = "Invalid Argument",
+                Span = irContext.SourceContext,
+                Kind = ErrorKind.InvalidArgument
             });
         }
 

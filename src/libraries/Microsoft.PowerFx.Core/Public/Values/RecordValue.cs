@@ -6,9 +6,8 @@ using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Dynamic;
 using Microsoft.PowerFx.Core.IR;
-using Microsoft.PowerFx.Core.Public.Types;
 
-namespace Microsoft.PowerFx.Core.Public.Values
+namespace Microsoft.PowerFx.Types
 {
     /// <summary>
     /// Represent a Record. Records have named fields which can be other values. 
@@ -142,8 +141,11 @@ namespace Microsoft.PowerFx.Core.Public.Values
         /// <returns>true if field is present, else false.</returns>
         protected abstract bool TryGetField(FormulaType fieldType, string fieldName, out FormulaValue result);
 
-        // Return an object, which can be used as 'dynamic' to fetch fields. 
-        // If this RecordValue was created around a host object, the host can override and return the source object. 
+        /// <summary>
+        /// Return an object, which can be used as 'dynamic' to fetch fields. 
+        /// If this RecordValue was created around a host object, the host can override and return the source object.
+        /// </summary>
+        /// <returns></returns>
         public override object ToObject()
         {
             var e = new ExpandoObject();

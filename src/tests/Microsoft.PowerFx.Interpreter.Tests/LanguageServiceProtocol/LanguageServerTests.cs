@@ -8,10 +8,11 @@ using System.Text.Json;
 using System.Text.RegularExpressions;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Public;
-using Microsoft.PowerFx.Core.Public.Types;
 using Microsoft.PowerFx.Core.Tests;
+using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.LanguageServerProtocol;
 using Microsoft.PowerFx.LanguageServerProtocol.Protocol;
+using Microsoft.PowerFx.Types;
 using Xunit;
 
 namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
@@ -288,12 +289,16 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             Assert.Equal(uri, notification.Params.Uri);
             Assert.Equal(expectedDiagnostics.Length, notification.Params.Diagnostics.Length);
 
+            var diagnosticsSet = new HashSet<Diagnostic>(expectedDiagnostics);
             for (var i = 0; i < expectedDiagnostics.Length; i++)
             {
                 var expectedDiagnostic = expectedDiagnostics[i];
                 var actualDiagnostic = notification.Params.Diagnostics[i];
-                Assert.Equal(expectedDiagnostic.Message, actualDiagnostic.Message);
+                Assert.True(diagnosticsSet.Where(x => x.Message == actualDiagnostic.Message).Count() == 1);
+                diagnosticsSet.RemoveWhere(x => x.Message == actualDiagnostic.Message);
             }
+
+            Assert.True(diagnosticsSet.Count() == 0);
         }
 
         [Theory]
@@ -305,10 +310,10 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
         }
 
         [Theory]
-        [InlineData("AA", null, "Name isn't valid. 'AA' isn't recognized.")]
-        [InlineData("1+CountRowss", null, "Name isn't valid. 'CountRowss' isn't recognized.")]
-        [InlineData("CountRows(2)", null, "Invalid argument type (Number). Expecting a Table value instead.", "The function 'CountRows' has some invalid arguments.")]
-        public void TestDidOpenErroneousFormula(string formula, string context, params string[] expectedErrors)
+        [InlineData("AA", "Name isn't valid. 'AA' isn't recognized.")]
+        [InlineData("1+CountRowss", "Name isn't valid. 'CountRowss' isn't recognized.")]
+        [InlineData("CountRows(2)", "Invalid argument type (Number). Expecting a Table value instead.", "The function 'CountRows' has some invalid arguments.")]
+        public void TestDidOpenErroneousFormula(string formula, params string[] expectedErrors)
         {
             var expectedDiagnostics = expectedErrors.Select(error => new Diagnostic()
             {

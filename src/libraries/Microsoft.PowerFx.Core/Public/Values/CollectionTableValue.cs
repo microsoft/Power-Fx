@@ -4,7 +4,7 @@
 using System.Collections.Generic;
 using Microsoft.PowerFx.Core.IR;
 
-namespace Microsoft.PowerFx.Core.Public.Values
+namespace Microsoft.PowerFx.Types
 {
     /// <summary>
     /// Create a TableValue over a dotnet collection class.

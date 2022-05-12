@@ -6,11 +6,11 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
 using Microsoft.PowerFx.Core.Functions;
-using Microsoft.PowerFx.Core.Lexer;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Syntax;
 
-namespace Microsoft.PowerFx.Core.Texl.Intellisense
+namespace Microsoft.PowerFx.Intellisense
 {
     // Represents an intellisense suggestion.
     // Implements IComparable as Suggestion will be used in a List that will be sorted.

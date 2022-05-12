@@ -2,7 +2,8 @@
 // Licensed under the MIT license.
 
 using Microsoft.PowerFx.Core.Localization;
-using Microsoft.PowerFx.Core.Public.Types;
+using Microsoft.PowerFx.Syntax;
+using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Core.IR
 {

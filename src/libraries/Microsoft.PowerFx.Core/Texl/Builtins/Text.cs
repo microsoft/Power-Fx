@@ -6,10 +6,10 @@ using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Localization;
-using Microsoft.PowerFx.Core.Syntax.Nodes;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Syntax;
 
 namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
@@ -20,8 +20,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class TextFunction : BuiltinFunction
     {
         public override bool SupportsParamCoercion => true;
-
-        public override bool RequiresErrorContext => true;
 
         public override bool IsSelfContained => true;
 
@@ -176,8 +174,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class TextFunction_UO : BuiltinFunction
     {
         public override bool SupportsParamCoercion => false;
-
-        public override bool RequiresErrorContext => true;
 
         public override bool IsSelfContained => true;
 

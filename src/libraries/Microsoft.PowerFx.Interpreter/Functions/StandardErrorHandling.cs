@@ -7,9 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.IR;
-using Microsoft.PowerFx.Core.Public;
-using Microsoft.PowerFx.Core.Public.Types;
-using Microsoft.PowerFx.Core.Public.Values;
+using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Functions
 {
@@ -484,16 +482,37 @@ namespace Microsoft.PowerFx.Functions
             if (arg is NumberValue numberValue)
             {
                 var number = numberValue.Value;
-                if (IsInvalidDouble(number))
+
+                if (double.IsNaN(number))
                 {
-                    return CommonErrors.ArgumentOutOfRange(irContext);
+                    return CommonErrors.NumericOutOfRange(irContext);
+                }
+
+                if (double.IsInfinity(number))
+                {
+                    return CommonErrors.OverflowError(irContext);
                 }
             }
 
             return arg;
         }
 
-        private static FormulaValue PositiveNumberChecker(IRContext irContext, int index, FormulaValue arg)
+        private static FormulaValue PositiveNumericNumberChecker(IRContext irContext, int index, FormulaValue arg)
+        {
+            var finiteCheckResult = FiniteChecker(irContext, index, arg);
+            if (finiteCheckResult is NumberValue numberArg)
+            {
+                var number = numberArg.Value;
+                if (number < 0)
+                {
+                    return CommonErrors.NumericOutOfRange(irContext);
+                }
+            }
+
+            return arg;
+        }
+
+        private static FormulaValue PositiveArgumentNumberChecker(IRContext irContext, int index, FormulaValue arg)
         {
             var finiteCheckResult = FiniteChecker(irContext, index, arg);
             if (finiteCheckResult is NumberValue numberArg)
@@ -508,7 +527,7 @@ namespace Microsoft.PowerFx.Functions
             return arg;
         }
 
-        private static FormulaValue StrictPositiveNumberChecker(IRContext irContext, int index, FormulaValue arg)
+        private static FormulaValue StrictArgumentPositiveNumberChecker(IRContext irContext, int index, FormulaValue arg)
         {
             var finiteCheckResult = FiniteChecker(irContext, index, arg);
             if (finiteCheckResult is NumberValue numberArg)
@@ -517,6 +536,21 @@ namespace Microsoft.PowerFx.Functions
                 if (number <= 0)
                 {
                     return CommonErrors.ArgumentOutOfRange(irContext);
+                }
+            }
+
+            return arg;
+        }
+
+        private static FormulaValue StrictNumericPositiveNumberChecker(IRContext irContext, int index, FormulaValue arg)
+        {
+            var finiteCheckResult = FiniteChecker(irContext, index, arg);
+            if (finiteCheckResult is NumberValue numberArg)
+            {
+                var number = numberArg.Value;
+                if (number <= 0)
+                {
+                    return CommonErrors.NumericOutOfRange(irContext);
                 }
             }
 
@@ -552,12 +586,12 @@ namespace Microsoft.PowerFx.Functions
                     });
                 }
 
-                return StrictPositiveNumberChecker(irContext, index, arg);
+                return StrictArgumentPositiveNumberChecker(irContext, index, arg);
             }
 
             if (index == 2)
             {
-                return PositiveNumberChecker(irContext, index, arg);
+                return PositiveArgumentNumberChecker(irContext, index, arg);
             }
 
             return arg;

@@ -2,12 +2,9 @@
 // Licensed under the MIT license.
 
 using System.Linq;
-using Microsoft.PowerFx.Core.Errors;
-using Microsoft.PowerFx.Core.Lexer;
 using Microsoft.PowerFx.Core.Logging;
-using Microsoft.PowerFx.Core.Syntax;
-using Microsoft.PowerFx.Core.Syntax.Nodes;
 using Microsoft.PowerFx.Core.Tests;
+using Microsoft.PowerFx.Syntax;
 using Xunit;
 using static Microsoft.PowerFx.Core.Parser.TexlParser;
 
@@ -70,7 +67,7 @@ namespace Microsoft.PowerFx.Tests
         [InlineData("RGBA(\n    255,\n    /*r   */255,   ", true)]
         public void TestSeverityLevelsForPrettyPrint(string script, bool expected)
         {
-            FeatureFlags.StringInterpolation = true;
+            Preview.FeatureFlags.StringInterpolation = true;
             var result = ParseScript(
                 script,
                 flags: Flags.EnableExpressionChaining);
@@ -78,7 +75,7 @@ namespace Microsoft.PowerFx.Tests
             // Can't pretty print a script with errors.
             var hasErrorsWithSeverityHigherThanWarning = false;
 
-            if (result.Errors != null && result.Errors.Any(x => x.Severity > DocumentErrorSeverity.Warning))
+            if (result.Errors != null && result.Errors.Any(x => x.Severity > ErrorSeverity.Warning))
             {
                 hasErrorsWithSeverityHigherThanWarning = true;
             }
@@ -154,7 +151,7 @@ namespace Microsoft.PowerFx.Tests
         [InlineData("$\"Hello {\"World\"}\"/*b*/", "$\"Hello {\"World\"}\"/*b*/")]
         public void TestPrettyPrint(string script, string expected)
         {
-            FeatureFlags.StringInterpolation = true;
+            Preview.FeatureFlags.StringInterpolation = true;
             var result = Format(script);
             Assert.NotNull(result);
             Assert.Equal(expected, result);

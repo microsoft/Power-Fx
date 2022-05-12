@@ -6,9 +6,9 @@ using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Localization;
-using Microsoft.PowerFx.Core.Syntax.Nodes;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Syntax;
 
 namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
@@ -17,8 +17,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     //  Right(arg:s, count:n)
     internal sealed class LeftRightScalarFunction : BuiltinFunction
     {
-        public override bool RequiresErrorContext => true;
-
         public override bool IsSelfContained => true;
 
         public override bool SupportsParamCoercion => true;
@@ -39,8 +37,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     //  Right(arg:*[_:s], count:n)
     internal sealed class LeftRightTableScalarFunction : BuiltinFunction
     {
-        public override bool RequiresErrorContext => true;
-
         public override bool IsSelfContained => true;
 
         public override bool SupportsParamCoercion => true;
@@ -89,8 +85,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     //  Right(arg:*[_:s], count:*[_:n])
     internal sealed class LeftRightTableTableFunction : BuiltinFunction
     {
-        public override bool RequiresErrorContext => true;
-
         public override bool IsSelfContained => true;
 
         public override bool SupportsParamCoercion => true;
@@ -142,8 +136,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     //  Right(arg:s, count:*[_:n])
     internal sealed class LeftRightScalarTableFunction : BuiltinFunction
     {
-        public override bool RequiresErrorContext => true;
-
         public override bool IsSelfContained => true;
 
         public override bool SupportsParamCoercion => true;

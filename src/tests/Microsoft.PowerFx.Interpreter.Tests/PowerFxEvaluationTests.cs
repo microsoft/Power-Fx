@@ -7,12 +7,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Parser;
-using Microsoft.PowerFx.Core.Public;
-using Microsoft.PowerFx.Core.Public.Values;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Tests;
-using Xunit;
+using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Interpreter.Tests
 {
@@ -71,7 +69,9 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 var waitForHelper = new WaitForFunctionsHelper(verify);
                 config.AddFunction(waitForHelper.GetFunction());
 
+                config.EnableSetFunction();
                 var engine = new RecalcEngine(config);
+                engine.UpdateVariable("varNumber", 9999);
 
                 // Run in special mode that ensures we're not calling .Result
                 var result = await verify.EvalAsync(engine, expr, options);
@@ -80,7 +80,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             protected override async Task<RunResult> RunAsyncInternal(string expr, string setupHandlerName)
             {
-                FeatureFlags.StringInterpolation = true;
+                Preview.FeatureFlags.StringInterpolation = true;
                 RecalcEngine engine;
                 RecordValue parameters;
                 var iSetup = InternalSetup.Parse(setupHandlerName);

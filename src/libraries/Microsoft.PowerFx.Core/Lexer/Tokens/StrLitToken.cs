@@ -4,7 +4,7 @@
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Utils;
 
-namespace Microsoft.PowerFx.Core.Lexer.Tokens
+namespace Microsoft.PowerFx.Syntax
 {
     /// <summary>
     /// Token for a string literal.
@@ -39,6 +39,13 @@ namespace Microsoft.PowerFx.Core.Lexer.Tokens
         /// Value of the string literal.
         /// </summary>
         public string Value { get; }
+
+        /// <summary>
+        /// Escapes a string value.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static string EscapeString(string value) => CharacterUtils.ExcelEscapeString(value);
 
         internal override Token Clone(Span ts)
         {

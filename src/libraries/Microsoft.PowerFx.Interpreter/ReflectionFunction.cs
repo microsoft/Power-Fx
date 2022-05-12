@@ -4,14 +4,15 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Localization;
-using Microsoft.PowerFx.Core.Public.Types;
-using Microsoft.PowerFx.Core.Public.Values;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Types;
 using static Microsoft.PowerFx.Core.Localization.TexlStrings;
 
 namespace Microsoft.PowerFx
@@ -32,7 +33,7 @@ namespace Microsoft.PowerFx
 
         public CustomTexlFunction(string name, DType returnType, params DType[] paramTypes)
             : base(DPath.Root, name, name, SG("Custom func " + name), FunctionCategories.MathAndStat, returnType, 0, paramTypes.Length, paramTypes.Length, paramTypes)
-        {
+        {            
         }
 
         public override bool IsSelfContained => true;
@@ -130,9 +131,14 @@ namespace Microsoft.PowerFx
 
         private static FormulaType GetType(Type t)
         {
-            if (t == typeof(NumberValue))
+            // Handle any FormulaType deriving from Primitive<T>
+            var tBase = t.BaseType;
+            if (Utility.TryGetElementType(tBase, typeof(PrimitiveValue<>), out var typeArg))
             {
-                return FormulaType.Number;
+                if (PrimitiveValueConversions.TryGetFormulaType(typeArg, out var formulaType))
+                {
+                    return formulaType;
+                }
             }
 
             throw new NotImplementedException($"Marshal type {t.Name}");

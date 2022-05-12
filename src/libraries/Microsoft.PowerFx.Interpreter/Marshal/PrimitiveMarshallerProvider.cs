@@ -5,8 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using Microsoft.PowerFx.Core;
-using Microsoft.PowerFx.Core.Public.Types;
-using Microsoft.PowerFx.Core.Public.Values;
+using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx
 {
@@ -18,7 +17,7 @@ namespace Microsoft.PowerFx
         /// <inheritdoc/>
         public bool TryGetMarshaller(Type type, TypeMarshallerCache cache, int maxDepth, out ITypeMarshaller marshaler)
         {
-            if (BuiltinFormulaTypeConversions.TryGetFormulaType(type, out var fxType))
+            if (PrimitiveValueConversions.TryGetFormulaType(type, out var fxType))
             {
                 marshaler = new PrimitiveTypeMarshaller(fxType);
                 return true;

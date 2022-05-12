@@ -1,41 +1,66 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Text;
 using Microsoft.PowerFx.Core.IR;
+using Microsoft.PowerFx.Core.Utils;
 
-namespace Microsoft.PowerFx.Core.Public.Values
+namespace Microsoft.PowerFx.Types
 {
-    [DebuggerDisplay("OptionSetValue ({Option})")]
-    public class OptionSetValue : FormulaValue
+    /// <summary>
+    /// A value within an option set. 
+    /// </summary>
+    [DebuggerDisplay("{ToString()})")]
+    public class OptionSetValue : ValidFormulaValue
     {
         /// <summary>
         /// Logical name for this option set value.
         /// </summary>
-        public readonly string Option;
+        public string Option { get; private set; }
 
-        internal OptionSetValue(string option, IRContext irContext)
-            : base(irContext)
+        internal OptionSetValue(string option, OptionSetValueType type)
+            : base(IRContext.NotInSource(type))
         {
             Option = option;
         }
 
+        public new OptionSetValueType Type => (OptionSetValueType)base.Type;
+
         public override object ToObject()
         {
-            return Option;
+            return DisplayName;
         }
 
         public override string ToString()
         {
-            return $"OptionSetValue ({Option})";
+            return $"OptionSetValue ({Option}={DisplayName})";
         }
 
         public override void Visit(IValueVisitor visitor)
         {
             visitor.Visit(this);
         }
+                
+        /// <summary>
+        /// Get the display name for this value. If no display name is available, 
+        /// returns the logical name <see cref="Option"/>.
+        /// </summary>
+        public string DisplayName
+        {
+            get
+            {
+                var info = Type._type.OptionSetInfo;
+
+                var displayNameProvider = info.DisplayNameProvider;
+
+                var logicalName = Option;
+                if (displayNameProvider.TryGetDisplayName(new DName(logicalName), out var displayName))
+                {
+                    return displayName.Value;
+                }
+
+                return logicalName;
+            }
+        }        
     }
 }

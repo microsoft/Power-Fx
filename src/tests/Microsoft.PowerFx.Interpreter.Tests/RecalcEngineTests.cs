@@ -8,13 +8,11 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Functions;
-using Microsoft.PowerFx.Core.Public;
-using Microsoft.PowerFx.Core.Public.Types;
-using Microsoft.PowerFx.Core.Public.Values;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Types;
 using Xunit;
 using Xunit.Sdk;
 
@@ -28,6 +26,7 @@ namespace Microsoft.PowerFx.Tests
             var asm = typeof(RecalcEngine).Assembly;
 
             var ns = "Microsoft.PowerFx";
+            var nsType = "Microsoft.PowerFx.Types";
             var allowed = new HashSet<string>()
             {
                 $"{ns}.{nameof(RecalcEngine)}",
@@ -35,7 +34,6 @@ namespace Microsoft.PowerFx.Tests
                 $"{ns}.{nameof(RecalcEngineScope)}",
                 $"{ns}.{nameof(PowerFxConfigExtensions)}",
                 $"{ns}.{nameof(OptionSet)}",
-                $"{ns}.{nameof(ObjectRecordValue)}",
                 $"{ns}.{nameof(ITypeMarshallerProvider)}",
                 $"{ns}.{nameof(ITypeMarshaller)}",
                 $"{ns}.{nameof(OptionSet)}",
@@ -45,7 +43,8 @@ namespace Microsoft.PowerFx.Tests
                 $"{ns}.{nameof(PrimitiveTypeMarshaller)}",
                 $"{ns}.{nameof(TableMarshallerProvider)}",
                 $"{ns}.{nameof(TypeMarshallerCache)}",
-                $"{ns}.{nameof(TypeMarshallerCacheExtensions)}"
+                $"{ns}.{nameof(TypeMarshallerCacheExtensions)}",
+                $"{nsType}.{nameof(ObjectRecordValue)}"
             };
 
             var sb = new StringBuilder();
@@ -322,7 +321,7 @@ namespace Microsoft.PowerFx.Tests
             var result = engine.Check("Filter([1,2,3],true)");
 
             Assert.True(result.IsSuccess);
-            Assert.Equal(1, result.Errors.Count(x => x.Severity == Core.Errors.DocumentErrorSeverity.Warning));
+            Assert.Equal(1, result.Errors.Count(x => x.Severity == ErrorSeverity.Warning));
             Assert.NotNull(result.Expression);
         }
 
@@ -392,33 +391,6 @@ namespace Microsoft.PowerFx.Tests
             // check.  In the case of TimeUnit, this is StringType
             Assert.True(result.ReturnType is StringType);
             Assert.Empty(result.TopLevelIdentifiers);
-        }
-
-        [Fact]
-        public void CustomFunction()
-        {
-            var config = new PowerFxConfig(null);
-            config.AddFunction(new TestCustomFunction());
-            var engine = new RecalcEngine(config);
-
-            // Shows up in enuemeration
-            var func = engine.GetAllFunctionNames().First(name => name == "TestCustom");
-            Assert.NotNull(func);
-
-            // Can be invoked. 
-            var result = engine.Eval("TestCustom(2,3)");
-            Assert.Equal(6.0, result.ToObject());
-        }
-
-        // Must have "Function" suffix. 
-        private class TestCustomFunction : ReflectionFunction
-        {
-            // Must have "Execute" method. 
-            public static NumberValue Execute(NumberValue x, NumberValue y)
-            {
-                var val = x.Value * y.Value;
-                return FormulaValue.New(val);
-            }
         }
 
         [Fact]

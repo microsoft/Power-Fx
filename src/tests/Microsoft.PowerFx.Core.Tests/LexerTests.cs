@@ -4,10 +4,9 @@
 using System;
 using System.Globalization;
 using System.Linq;
-using Microsoft.PowerFx.Core.Lexer;
-using Microsoft.PowerFx.Core.Lexer.Tokens;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
+using Microsoft.PowerFx.Syntax;
 using Xunit;
 
 namespace Microsoft.PowerFx.Core.Tests
@@ -131,7 +130,7 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.Equal(TokKind.Ident, tokens[2].Kind);
             Assert.Equal(TokKind.Comma, tokens[3].Kind);
             Assert.Equal(TokKind.Error, tokens[4].Kind);
-            Assert.Equal((tokens[4] as ErrorToken).ResourceKeyFormatStringArgs.Length, 2);
+            Assert.Equal(2, (tokens[4] as ErrorToken).ResourceKeyFormatStringArgs.Length);
             Assert.Equal((tokens[4] as ErrorToken).DetailErrorKey.Value, TexlStrings.UnexpectedCharacterToken);
             Assert.Equal(TokKind.BracketOpen, tokens[5].Kind);
             Assert.Equal(TokKind.BracketClose, tokens[6].Kind);
@@ -144,7 +143,7 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.NotNull(tokens);
             Assert.Equal(9, tokens.Length);
             Assert.Equal(TokKind.Error, tokens[0].Kind);
-            Assert.Equal((tokens[0] as ErrorToken).ResourceKeyFormatStringArgs.Length, 2);
+            Assert.Equal(2, (tokens[0] as ErrorToken).ResourceKeyFormatStringArgs.Length);
             Assert.Equal((tokens[0] as ErrorToken).DetailErrorKey.Value, TexlStrings.UnexpectedCharacterToken);
         }
 

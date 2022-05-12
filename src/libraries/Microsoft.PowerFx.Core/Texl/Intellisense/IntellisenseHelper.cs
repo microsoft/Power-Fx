@@ -5,16 +5,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.PowerFx.Core.Binding;
-using Microsoft.PowerFx.Core.Binding.BindInfo;
 using Microsoft.PowerFx.Core.Functions;
-using Microsoft.PowerFx.Core.Lexer;
-using Microsoft.PowerFx.Core.Syntax;
-using Microsoft.PowerFx.Core.Syntax.Nodes;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Syntax;
 
-namespace Microsoft.PowerFx.Core.Texl.Intellisense
+namespace Microsoft.PowerFx.Intellisense
 {
     internal static class IntellisenseHelper
     {
@@ -529,8 +526,8 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
         /// <summary>
         /// Adds suggestions for a given node.
         /// </summary>
+        /// <param name="intellisenseData"></param>
         /// <param name="node">Node for which suggestions are needed.</param>
-        /// <param name="hasSpecificSuggestions">Flag to indicate if inner most function has any specific suggestions.</param>
         /// <param name="currentNode">Current node in the traversal.</param>
         public static bool AddTopLevelSuggestionsForGivenNode(IntellisenseData.IntellisenseData intellisenseData, TexlNode node, TexlNode currentNode)
         {
