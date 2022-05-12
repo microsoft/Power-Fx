@@ -13,11 +13,6 @@ namespace Microsoft.PowerFx.Functions
     // Core operations for turning ResolvedObjects into PowerFx values
     internal static class ResolvedObjectHelpers
     {
-        public static FormulaValue RecalcFormulaInfo(RecalcFormulaInfo fi)
-        {
-            return fi._value;
-        }
-
         // This allows option sets to be standalone identifiers, like:
         //   Choices(TimeUnit). 
         //
