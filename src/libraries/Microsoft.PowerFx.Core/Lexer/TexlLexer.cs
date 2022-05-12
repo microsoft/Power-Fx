@@ -219,10 +219,10 @@ namespace Microsoft.PowerFx.Syntax
             // These are the default global settings. If there is a collision between the two,
             // the list separator automatically becomes ;.
             LocalizedPunctuatorDecimalSeparator = ChooseDecimalSeparator(preferredDecimalSeparator);
-            LocalizedPunctuatorListSeparator = ChooseListSeparatorPunctuator();
+            LocalizedPunctuatorListSeparator = ChooseListSeparatorPunctuator(LocalizedPunctuatorDecimalSeparator);
 
             // The chaining operator has to be disambiguated accordingly.
-            LocalizedPunctuatorChainingSeparator = ChooseChainingPunctuator();
+            LocalizedPunctuatorChainingSeparator = ChooseChainingPunctuator(LocalizedPunctuatorListSeparator, LocalizedPunctuatorDecimalSeparator);
 
             _punctuatorsAndInvariants = new Dictionary<string, string>
             {
@@ -337,7 +337,6 @@ namespace Microsoft.PowerFx.Syntax
                 }
             }
 
-            // Update the cache and return the result
             var tokensArr = tokens.ToArray();
             return tokensArr;
         }
@@ -793,7 +792,7 @@ namespace Microsoft.PowerFx.Syntax
         }
 
         // Choose an unambiguous decimal separator.
-        private string ChooseDecimalSeparator(string preferred)
+        private static string ChooseDecimalSeparator(string preferred)
         {
             Contracts.AssertNonEmpty(preferred);
 
@@ -806,13 +805,13 @@ namespace Microsoft.PowerFx.Syntax
         }
 
         // Choose an unambiguous list separator.
-        private string ChooseListSeparatorPunctuator()
+        private static string ChooseListSeparatorPunctuator(string decimalSeparator)
         {
             // We can't use the same punctuator, since that would cause an ambiguous grammar:
             //  Foo(1,23, 3,45) could represent two distinct things in a fr-FR locale:
             //      - either the equivalent of Foo(1.23, 3.45)
             //      - or the equivalent of Foo(1, 23, 3, 45)
-            if (LocalizedPunctuatorDecimalSeparator == PunctuatorCommaInvariant)
+            if (decimalSeparator == PunctuatorCommaInvariant)
             {
                 return PunctuatorSemicolonInvariant;
             }
@@ -821,16 +820,16 @@ namespace Microsoft.PowerFx.Syntax
         }
 
         // Choose an unambiguous chaining punctuator.
-        private string ChooseChainingPunctuator()
+        private static string ChooseChainingPunctuator(string listSeparator, string decimalSeparator)
         {
-            Contracts.Assert(LocalizedPunctuatorListSeparator != LocalizedPunctuatorDecimalSeparator);
+            Contracts.Assert(listSeparator != decimalSeparator);
 
-            if (LocalizedPunctuatorDecimalSeparator == PunctuatorCommaInvariant)
+            if (decimalSeparator == PunctuatorCommaInvariant)
             {
                 return PunctuatorSemicolonAlt1;
             }
 
-            Contracts.Assert(LocalizedPunctuatorDecimalSeparator == PunctuatorDecimalSeparatorInvariant);
+            Contracts.Assert(decimalSeparator == PunctuatorDecimalSeparatorInvariant);
 
             return PunctuatorSemicolonDefault;
         }

@@ -189,7 +189,7 @@ namespace Microsoft.PowerFx.Core.Tests
         {
             Token[] tokens;
 
-            tokens = TexlLexer.GetLocalizedInstance(SomeFrenchLikeSettings()).LexSource("123456,78");
+            tokens = TexlLexer.GetLocalizedInstance(GetFrenchSettings()).LexSource("123456,78");
             Assert.NotNull(tokens);
             Assert.Equal(2, tokens.Length);
             Assert.Equal(TokKind.NumLit, tokens[0].Kind);
@@ -201,7 +201,7 @@ namespace Microsoft.PowerFx.Core.Tests
         {
             Token[] tokens;
 
-            tokens = TexlLexer.GetLocalizedInstance(SomeFrenchLikeSettings()).LexSource("[1,2;2,3;4]");
+            tokens = TexlLexer.GetLocalizedInstance(GetFrenchSettings()).LexSource("[1,2;2,3;4]");
             Assert.NotNull(tokens);
             Assert.Equal(8, tokens.Length);
             Assert.Equal(TokKind.BracketOpen, tokens[0].Kind);
@@ -222,7 +222,7 @@ namespace Microsoft.PowerFx.Core.Tests
         {
             Token[] tokens;
 
-            tokens = TexlLexer.GetLocalizedInstance(SomeFrenchLikeSettings()).LexSource("A ;; B ;; C");
+            tokens = TexlLexer.GetLocalizedInstance(GetFrenchSettings()).LexSource("A ;; B ;; C");
             Assert.NotNull(tokens);
             Assert.Equal(10, tokens.Length);
             Assert.Equal(TokKind.Ident, tokens[0].Kind);
@@ -253,7 +253,7 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.Equal(fragment, span.GetFragment(script));
         }
 
-        private CultureInfo SomeFrenchLikeSettings()
+        private CultureInfo GetFrenchSettings()
         {
             return new CultureInfo("fr-FR");
         }
