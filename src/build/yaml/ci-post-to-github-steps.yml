@@ -13,7 +13,7 @@ steps:
   displayName: 'Copy results for publish to Artifacts'
   inputs:
     SourceFolder: '$(System.ArtifactsDirectory)\ApiCompat'
-    Contents: '*.txt'
+    Contents: '**\*.txt'
     TargetFolder: '$(System.ArtifactsDirectory)\ApiCompatibilityResults'
     flattenFolders: true
 
