@@ -61,7 +61,7 @@ namespace Microsoft.PowerFx
         /// <param name="expressionText"></param>
         /// <returns></returns>
         public IReadOnlyList<Token> Tokenize(string expressionText)
-            => TexlLexer.LocalizedInstance.GetTokens(expressionText);
+            => TexlLexer.GetLocalizedInstance(Config.CultureInfo).GetTokens(expressionText);
 
         /// <summary>
         /// Parse the expression without doing any binding.
