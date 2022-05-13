@@ -13,10 +13,10 @@ pool:
   - vstest
 
 variables:
-  ApiCompatVersion: 0.2.2-preview
-  PackageNames: Microsoft.PowerFx.Core,Microsoft.PowerFx.Interpreter,Microsoft.PowerFx.LanguageServerProtocol,Microsoft.PowerFx.Transport.Attributes
+  ApiVersionBenchmark: 0.2.2-preview # The packages version against which the new package APIs are to be validated.
+  PackagesToValidate: Microsoft.PowerFx.Core,Microsoft.PowerFx.Interpreter,Microsoft.PowerFx.LanguageServerProtocol,Microsoft.PowerFx.Transport.Attributes
   BuildPlatform: 'any cpu'
-  Parameters.solution: src/Microsoft.PowerFx.sln
+  BuildSolution: src/Microsoft.PowerFx.sln
 # BuildConfiguration: define this in Azure
 # DisableApiCompatibityValidation: define this in Azure, settable by user.
 # PowerFxCoverallsToken: define this in Azure
@@ -28,7 +28,7 @@ stages:
     steps:
     - task: NuGetCommand@2
       inputs:
-        restoreSolution: '$(Parameters.solution)'
+        restoreSolution: '$(BuildSolution)'
         feedsToUse: config
         nugetConfigPath: .
       displayName: 'NuGet restore'
@@ -39,7 +39,7 @@ stages:
 
     - task: VSBuild@1
       inputs:
-        solution: '$(Parameters.solution)'
+        solution: '$(BuildSolution)'
         vsVersion: 16.0
         msbuildArgs: '-p:SignAssembly=false -p:delaySign=false'
         platform: '$(BuildPlatform)'
@@ -97,7 +97,7 @@ stages:
     - powershell: |
         New-Item -ItemType directory -Path "outputLibraries\" -Force
         
-        $env:PackageNames.Split(",") | ForEach {
+        $env:PackagesToValidate.Split(",") | ForEach {
           $library = $_.Trim()
           Write-Host $library
       
@@ -129,7 +129,7 @@ stages:
     steps:
     - powershell: |
         $multiconfig = '{';
-        $env:PackageNames.Split(",") | ForEach {
+        $env:PackagesToValidate.Split(",") | ForEach {
           $library = $_.Trim()
           $threadName = $library -replace "Microsoft.", "";
           $multiconfig += "'" + $threadName + "':{'PackageName':'" + $library + "'}, ";
