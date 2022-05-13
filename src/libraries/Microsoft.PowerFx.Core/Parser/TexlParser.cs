@@ -47,7 +47,7 @@ namespace Microsoft.PowerFx.Core.Parser
         // collected by the next call to ParseTrivia.
         private ITexlSource _extraTrivia;
 
-        private TexlParser(Token[] tokens, Flags flags)
+        private TexlParser(IReadOnlyList<Token> tokens, Flags flags)
         {
             Contracts.AssertValue(tokens);
 
@@ -136,7 +136,7 @@ namespace Microsoft.PowerFx.Core.Parser
             return new ParseFormulasResult(namedFormulas, _errors);
         }
 
-        private static Token[] TokenizeScript(string script, CultureInfo loc, Flags flags = Flags.None)
+        private static IReadOnlyList<Token> TokenizeScript(string script, CultureInfo loc, Flags flags = Flags.None)
         {
             Contracts.AssertValue(script);
             Contracts.AssertValueOrNull(loc);

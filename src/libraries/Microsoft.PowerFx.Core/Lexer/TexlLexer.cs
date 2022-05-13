@@ -201,16 +201,9 @@ namespace Microsoft.PowerFx.Syntax
             return culture.NumberFormat.NumberDecimalSeparator == PunctuatorDecimalSeparatorInvariant ? InvariantLexer : CommaDecimalSeparatorLexer;
         }
 
-        public static IList<string> GetKeywordDictionary()
+        public static IReadOnlyList<string> GetKeywordDictionary()
         {
-            IList<string> strList = new List<string>(_keywords.Count);
-
-            foreach (var keyword in _keywords.Keys)
-            {
-                strList.Add(keyword);
-            }
-
-            return strList;
+            return _keywords.Keys.ToList();
         }
 
         private TexlLexer(string preferredDecimalSeparator)
@@ -307,7 +300,7 @@ namespace Microsoft.PowerFx.Syntax
             return true;
         }
 
-        public Token[] LexSource(string text, Flags flags = Flags.None)
+        public IReadOnlyList<Token> LexSource(string text, Flags flags = Flags.None)
         {
             Contracts.AssertValue(text);
 
@@ -337,8 +330,7 @@ namespace Microsoft.PowerFx.Syntax
                 }
             }
 
-            var tokensArr = tokens.ToArray();
-            return tokensArr;
+            return tokens;
         }
 
         public List<Token> GetTokens(string text)
@@ -427,33 +419,33 @@ namespace Microsoft.PowerFx.Syntax
         }
 
         // Enumerate all supported unary operator keywords.
-        public static string[] GetUnaryOperatorKeywords() => _unaryOperatorKeywords.ToArray();
+        public static IReadOnlyList<string> GetUnaryOperatorKeywords() => _unaryOperatorKeywords;
 
         // Enumerate all supported binary operator keywords.
-        public static string[] GetBinaryOperatorKeywords() => _binaryOperatorKeywords.ToArray();
+        public static IReadOnlyList<string> GetBinaryOperatorKeywords() => _binaryOperatorKeywords;
 
         // Enumerate all supported keywords for the given type.
         // Review hekum - should we have leftType and right type seperately?
-        public static string[] GetOperatorKeywords(DType type)
+        public static IReadOnlyList<string> GetOperatorKeywords(DType type)
         {
             Contracts.Assert(type.IsValid);
 
             if (type.IsPrimitive)
             {
-                return _operatorKeywordsPrimitive.ToArray();
+                return _operatorKeywordsPrimitive;
             }
 
             // TASK 97994: Investigate and Implement the functionality if lhs of  'in' operator is a control type.
             if (type.IsAggregate || type.IsControl)
             {
-                return _operatorKeywordsAggregate.ToArray();
+                return _operatorKeywordsAggregate;
             }
 
-            return new string[0];
+            return new List<string>();
         }
 
         // Enumerate all supported constant keywords.
-        public static string[] GetConstantKeywords(bool getParent) => getParent ? _constantKeywordsGetParent.ToArray() : _constantKeywordsDefault.ToArray();
+        public static IReadOnlyList<string> GetConstantKeywords(bool getParent) => getParent ? _constantKeywordsGetParent : _constantKeywordsDefault;
 
         // Enumerate all supported localized punctuators and their invariant counterparts.
         public IReadOnlyDictionary<string, string> GetPunctuatorsAndInvariants() => _punctuatorsAndInvariants;

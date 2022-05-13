@@ -17,7 +17,7 @@ namespace Microsoft.PowerFx.Core.Tests
         {
             var tokens = TexlLexer.InvariantLexer.LexSource(value);
             Assert.NotNull(tokens);
-            Assert.Equal(tokKinds.Length, tokens.Length);
+            Assert.Equal(tokKinds.Length, tokens.Count);
             Assert.True(tokens.Zip(tokKinds, (t, k) => t.Kind == k).All(b => b));
         }
 
@@ -103,14 +103,13 @@ namespace Microsoft.PowerFx.Core.Tests
         [Fact]
         public void TestZeroWidthSpaceCharacters()
         {
-            Token[] tokens;
             string value;
 
             // No Zero Width Space after comma
             value = "ClearCollect(Temp1,[])";
-            tokens = TexlLexer.InvariantLexer.LexSource(value, TexlLexer.Flags.None);
+            var tokens = TexlLexer.InvariantLexer.LexSource(value, TexlLexer.Flags.None);
             Assert.NotNull(tokens);
-            Assert.Equal(8, tokens.Length);
+            Assert.Equal(8, tokens.Count);
             Assert.Equal(TokKind.Ident, tokens[0].Kind);
             Assert.Equal(TokKind.ParenOpen, tokens[1].Kind);
             Assert.Equal(TokKind.Ident, tokens[2].Kind);
@@ -124,7 +123,7 @@ namespace Microsoft.PowerFx.Core.Tests
             value = "ClearCollect(Temp1," + char.ConvertFromUtf32(8203) + "[])";
             tokens = TexlLexer.InvariantLexer.LexSource(value, TexlLexer.Flags.None);
             Assert.NotNull(tokens);
-            Assert.Equal(9, tokens.Length);
+            Assert.Equal(9, tokens.Count);
             Assert.Equal(TokKind.Ident, tokens[0].Kind);
             Assert.Equal(TokKind.ParenOpen, tokens[1].Kind);
             Assert.Equal(TokKind.Ident, tokens[2].Kind);
@@ -141,7 +140,7 @@ namespace Microsoft.PowerFx.Core.Tests
             value = string.Format("{0}", '\u200B') + "ClearCollect(Temp1,[])";
             tokens = TexlLexer.InvariantLexer.LexSource(value, TexlLexer.Flags.None);
             Assert.NotNull(tokens);
-            Assert.Equal(9, tokens.Length);
+            Assert.Equal(9, tokens.Count);
             Assert.Equal(TokKind.Error, tokens[0].Kind);
             Assert.Equal(2, (tokens[0] as ErrorToken).ResourceKeyFormatStringArgs.Length);
             Assert.Equal((tokens[0] as ErrorToken).DetailErrorKey.Value, TexlStrings.UnexpectedCharacterToken);
@@ -150,11 +149,9 @@ namespace Microsoft.PowerFx.Core.Tests
         [Fact]
         public void TestLexDottedNames()
         {
-            Token[] tokens;
-
-            tokens = TexlLexer.InvariantLexer.LexSource("A!B");
+            var tokens = TexlLexer.InvariantLexer.LexSource("A!B");
             Assert.NotNull(tokens);
-            Assert.Equal(4, tokens.Length);
+            Assert.Equal(4, tokens.Count);
             Assert.Equal(TokKind.Ident, tokens[0].Kind);
             Assert.Equal(TokKind.Bang, tokens[1].Kind);
             Assert.Equal(TokKind.Ident, tokens[2].Kind);
@@ -163,7 +160,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
             tokens = TexlLexer.InvariantLexer.LexSource("A.B.C");
             Assert.NotNull(tokens);
-            Assert.Equal(6, tokens.Length);
+            Assert.Equal(6, tokens.Count);
             Assert.Equal(TokKind.Ident, tokens[0].Kind);
             Assert.Equal(TokKind.Dot, tokens[1].Kind);
             Assert.Equal(TokKind.Ident, tokens[2].Kind);
@@ -175,7 +172,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
             tokens = TexlLexer.InvariantLexer.LexSource("A[B]");
             Assert.NotNull(tokens);
-            Assert.Equal(5, tokens.Length);
+            Assert.Equal(5, tokens.Count);
             Assert.Equal(TokKind.Ident, tokens[0].Kind);
             Assert.Equal(TokKind.BracketOpen, tokens[1].Kind);
             Assert.Equal(TokKind.Ident, tokens[2].Kind);
@@ -187,11 +184,9 @@ namespace Microsoft.PowerFx.Core.Tests
         [Fact]
         public void TestLexNumbersWithLanguageSettings()
         {
-            Token[] tokens;
-
-            tokens = TexlLexer.GetLocalizedInstance(GetFrenchSettings()).LexSource("123456,78");
+            var tokens = TexlLexer.GetLocalizedInstance(GetFrenchSettings()).LexSource("123456,78");
             Assert.NotNull(tokens);
-            Assert.Equal(2, tokens.Length);
+            Assert.Equal(2, tokens.Count);
             Assert.Equal(TokKind.NumLit, tokens[0].Kind);
             Assert.Equal(123456.78, tokens[0].As<NumLitToken>().Value);
         }
@@ -199,11 +194,9 @@ namespace Microsoft.PowerFx.Core.Tests
         [Fact]
         public void TestLexListsWithLanguageSettings()
         {
-            Token[] tokens;
-
-            tokens = TexlLexer.GetLocalizedInstance(GetFrenchSettings()).LexSource("[1,2;2,3;4]");
+            var tokens = TexlLexer.GetLocalizedInstance(GetFrenchSettings()).LexSource("[1,2;2,3;4]");
             Assert.NotNull(tokens);
-            Assert.Equal(8, tokens.Length);
+            Assert.Equal(8, tokens.Count);
             Assert.Equal(TokKind.BracketOpen, tokens[0].Kind);
             Assert.Equal(TokKind.NumLit, tokens[1].Kind);
             Assert.Equal(1.2, tokens[1].As<NumLitToken>().Value);
@@ -220,11 +213,9 @@ namespace Microsoft.PowerFx.Core.Tests
         [Fact]
         public void TestLexSemicolonListsWithLanguageSettings()
         {
-            Token[] tokens;
-
-            tokens = TexlLexer.GetLocalizedInstance(GetFrenchSettings()).LexSource("A ;; B ;; C");
+            var tokens = TexlLexer.GetLocalizedInstance(GetFrenchSettings()).LexSource("A ;; B ;; C");
             Assert.NotNull(tokens);
-            Assert.Equal(10, tokens.Length);
+            Assert.Equal(10, tokens.Count);
             Assert.Equal(TokKind.Ident, tokens[0].Kind);
             Assert.Equal("A", tokens[0].As<IdentToken>().Name.Value);
             Assert.Equal(TokKind.Whitespace, tokens[1].Kind);
@@ -272,7 +263,7 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.Contains(TexlLexer.KeywordNot, unaryOperatorKeywords);
             expectedUOKeywordLength += 1;
 
-            Assert.True(unaryOperatorKeywords?.Length == expectedUOKeywordLength);
+            Assert.True(unaryOperatorKeywords?.Count == expectedUOKeywordLength);
 
             // GetBinaryOperatorKeywords
 
@@ -283,7 +274,7 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.Contains(TexlLexer.KeywordAnd, binaryOperatorKeywords);
             Assert.Contains(TexlLexer.KeywordOr, binaryOperatorKeywords);
 
-            Assert.True(binaryOperatorKeywords?.Length == expectedBOKeywordLength);
+            Assert.True(binaryOperatorKeywords?.Count == expectedBOKeywordLength);
 
             Assert.Contains(TexlLexer.PunctuatorAmpersand, binaryOperatorKeywords);
             Assert.Contains(TexlLexer.PunctuatorAnd, binaryOperatorKeywords);
@@ -313,7 +304,7 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.Contains(TexlLexer.KeywordAnd, primitiveOperatorKeywords);
             Assert.Contains(TexlLexer.KeywordOr, primitiveOperatorKeywords);
 
-            Assert.True(primitiveOperatorKeywords?.Length == expectedPOKeywordLength);
+            Assert.True(primitiveOperatorKeywords?.Count == expectedPOKeywordLength);
 
             Assert.Contains(TexlLexer.PunctuatorAmpersand, primitiveOperatorKeywords);
             Assert.Contains(TexlLexer.PunctuatorEqual, primitiveOperatorKeywords);
@@ -334,25 +325,25 @@ namespace Microsoft.PowerFx.Core.Tests
 
             // Aggregate/Control type.
             var aggregateOperatorKeywords = TexlLexer.GetOperatorKeywords(new DType(DKind.Table));
-            Assert.True(aggregateOperatorKeywords?.Length == 3);
+            Assert.True(aggregateOperatorKeywords?.Count == 3);
             Assert.Contains(TexlLexer.KeywordIn, aggregateOperatorKeywords);
             Assert.Contains(TexlLexer.KeywordExactin, aggregateOperatorKeywords);
             Assert.Contains(TexlLexer.KeywordAs, aggregateOperatorKeywords);
 
             // Not a primitive nor an aggregate type.
             var errorOperatorKeywords = TexlLexer.GetOperatorKeywords(new DType(DKind.Error));
-            Assert.True(errorOperatorKeywords?.Length == 0);
+            Assert.True(errorOperatorKeywords?.Count == 0);
 
             // GetConstantKeywords
 
             var constantKeywords = TexlLexer.GetConstantKeywords(getParent: false);
-            Assert.True(constantKeywords?.Length == 3);
+            Assert.True(constantKeywords?.Count == 3);
             Assert.Contains(TexlLexer.KeywordFalse, constantKeywords);
             Assert.Contains(TexlLexer.KeywordTrue, constantKeywords);
             Assert.Contains(TexlLexer.KeywordSelf, constantKeywords);
 
             constantKeywords = TexlLexer.GetConstantKeywords(getParent: true);
-            Assert.True(constantKeywords?.Length == 4);
+            Assert.True(constantKeywords?.Count == 4);
             Assert.Contains(TexlLexer.KeywordFalse, constantKeywords);
             Assert.Contains(TexlLexer.KeywordTrue, constantKeywords);
             Assert.Contains(TexlLexer.KeywordParent, constantKeywords);
@@ -370,8 +361,6 @@ namespace Microsoft.PowerFx.Core.Tests
         [Fact]
         public void TestUnsupportedDecimalSeparatorCausesFallback()
         {
-            Token[] tokens;
-
             // Simulate an override of the decimal separator to something that AXL does not support.
             var oldCulture = CultureInfo.CurrentCulture;
             var newCulture = new CultureInfo(CultureInfo.CurrentCulture.Name);
@@ -382,9 +371,9 @@ namespace Microsoft.PowerFx.Core.Tests
             var lexer = TexlLexer.GetLocalizedInstance(null);
             Assert.Equal(lexer.LocalizedPunctuatorDecimalSeparator, TexlLexer.PunctuatorDecimalSeparatorInvariant);
 
-            tokens = lexer.LexSource("123456.78");
+            var tokens = lexer.LexSource("123456.78");
             Assert.NotNull(tokens);
-            Assert.Equal(2, tokens.Length);
+            Assert.Equal(2, tokens.Count);
             Assert.Equal(TokKind.NumLit, tokens[0].Kind);
             Assert.Equal(123456.78, tokens[0].As<NumLitToken>().Value);
 
@@ -471,6 +460,14 @@ namespace Microsoft.PowerFx.Core.Tests
                 TokKind.StrLit,
                 TokKind.StrInterpEnd,
                 TokKind.Eof);
+        }
+
+        [Fact]
+        public void LexerIdentityTest()
+        {
+            Assert.True(object.ReferenceEquals(TexlLexer.InvariantLexer, TexlLexer.InvariantLexer));
+            Assert.True(object.ReferenceEquals(TexlLexer.CommaDecimalSeparatorLexer, TexlLexer.CommaDecimalSeparatorLexer));
+            Assert.False(object.ReferenceEquals(TexlLexer.InvariantLexer, TexlLexer.CommaDecimalSeparatorLexer));
         }
     }
 }
