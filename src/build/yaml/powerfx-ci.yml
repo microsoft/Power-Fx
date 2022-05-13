@@ -13,7 +13,7 @@ pool:
   - vstest
 
 variables:
-  ApiCompatVersion: 0.2.1-preview
+  ApiCompatVersion: 0.2.2-preview
   PackageNames: Microsoft.PowerFx.Core,Microsoft.PowerFx.Interpreter,Microsoft.PowerFx.LanguageServerProtocol,Microsoft.PowerFx.Transport.Attributes
   BuildPlatform: 'any cpu'
   Parameters.solution: src/Microsoft.PowerFx.sln
