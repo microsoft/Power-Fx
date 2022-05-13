@@ -201,7 +201,7 @@ namespace Microsoft.PowerFx.Syntax
             return culture.NumberFormat.NumberDecimalSeparator == PunctuatorDecimalSeparatorInvariant ? InvariantLexer : CommaDecimalSeparatorLexer;
         }
 
-        public static IReadOnlyList<string> GetKeywordDictionary()
+        public static IReadOnlyList<string> GetKeywords()
         {
             return _keywords.Keys.ToList();
         }
