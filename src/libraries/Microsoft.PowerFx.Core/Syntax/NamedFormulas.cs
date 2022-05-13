@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Localization;
@@ -24,7 +25,7 @@ namespace Microsoft.PowerFx.Syntax
 
         // The language settings used for parsing this script.
         // May be null if the script is to be parsed in the current locale.
-        public readonly ILanguageSettings Loc;
+        public readonly CultureInfo Loc;
 
         public bool IsParsed => _formulasResult != null;
 
@@ -39,7 +40,7 @@ namespace Microsoft.PowerFx.Syntax
         /// </summary>
         /// <param name="script"></param>
         /// <param name="loc"></param>
-        public NamedFormulas(string script, ILanguageSettings loc = null)
+        public NamedFormulas(string script, CultureInfo loc = null)
         {
             Contracts.AssertValue(script);
             Contracts.AssertValueOrNull(loc);

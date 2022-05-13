@@ -137,7 +137,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Types.ValidFormulaValue",
 
                 // Intellisense classes. Used primarily by the Language Service Provider.
-                // Most evaluators should never need htese. 
+                // Most evaluators should never need these. 
                 "Microsoft.PowerFx.Intellisense.IPowerFxScope",
                 "Microsoft.PowerFx.Intellisense.IPowerFxScopeDisplayName",
                 "Microsoft.PowerFx.Intellisense.IIntellisenseResult",
@@ -148,7 +148,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Intellisense.SuggestionIconKind",
                 "Microsoft.PowerFx.Intellisense.SuggestionKind",
                 "Microsoft.PowerFx.Intellisense.UIString",
-                "Microsoft.PowerFx.Intellisense.TokenResultType",
+                "Microsoft.PowerFx.Intellisense.TokenResultType",                
 
                 // TBD ...
                 "Microsoft.PowerFx.Core.RenameDriver",
