@@ -1884,7 +1884,7 @@ namespace Microsoft.PowerFx.Core.Types
                         return TreeAccepts(this, TypeTree, type.TypeTree, out schemaDifference, out schemaDifferenceType, exact, useLegacyDateTimeAccepts);
                     }
 
-                    accepts = type.Kind == DKind.Unknown;
+                    accepts = (IsMultiSelectOptionSet() && TypeTree.GetPairs().First().Value.OptionSetInfo == type.OptionSetInfo) || type.Kind == DKind.Unknown;
                     break;
 
                 case DKind.Enum:
