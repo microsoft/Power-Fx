@@ -33,7 +33,7 @@ namespace Microsoft.PowerFx
 
         internal EnumStoreBuilder EnumStoreBuilder { get; }
 
-        internal CultureInfo CultureInfo { get; }
+        public CultureInfo CultureInfo { get; }
 
         private PowerFxConfig(CultureInfo cultureInfo, EnumStoreBuilder enumStoreBuilder) 
         {
