@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using Microsoft.PowerFx.Core.Functions;
@@ -87,7 +88,7 @@ namespace Microsoft.PowerFx.Intellisense
                     var signatureIndex = 0;
                     var argumentSeparator = string.Empty;
                     var highlightedFuncParamDescription = string.Empty;
-                    var listSep = TexlLexer.LocalizedInstance.LocalizedPunctuatorListSeparator + " ";
+                    var listSep = TexlLexer.GetLocalizedInstance(CultureInfo.CurrentCulture).LocalizedPunctuatorListSeparator + " ";
                     var funcDisplayString = new StringBuilder(func.Name);
                     funcDisplayString.Append('(');
 

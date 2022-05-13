@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
+using System.Globalization;
 using Microsoft.PowerFx.Core.Texl.Intellisense;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
@@ -57,7 +58,7 @@ namespace Microsoft.PowerFx.Intellisense
                     if (script[i] != suggestion.Text[j])
                     {
                         var curChar = script.Substring(i, 1);
-                        if (curChar != TexlLexer.PunctuatorParenClose && curChar != TexlLexer.LocalizedInstance.LocalizedPunctuatorListSeparator)
+                        if (curChar != TexlLexer.PunctuatorParenClose && curChar != TexlLexer.GetLocalizedInstance(CultureInfo.CurrentCulture).LocalizedPunctuatorListSeparator)
                         {
                             found = false;
                         }
