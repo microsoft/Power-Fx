@@ -135,6 +135,27 @@ namespace Microsoft.PowerFx.Functions
             });
         }
 
+        /// <summary>
+        /// A wrapper that allows standard error handling to apply to simple math operations.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="targetFunction">The implementation of the builtin function.</param>
+        /// <param name="checkRuntimeValues">This stage can be used to generate errors if specific values occur in the arguments, for example infinity, NaN, etc.</param>
+        /// <returns></returns>
+        private static AsyncFunctionPtr StandardMath<T>(
+            Func<IRContext, T[], FormulaValue> targetFunction,
+            Func<IRContext, int, FormulaValue, FormulaValue> checkRuntimeValues = null)
+            where T : FormulaValue
+        {
+            checkRuntimeValues = checkRuntimeValues ?? FiniteChecker;
+
+            return StandardErrorHandling<T>(NoArgExpansion, ReplaceBlankWithZero, ExactValueType<NumberValue>, checkRuntimeValues, ReturnBehavior.AlwaysEvaluateAndReturnResult, (runner, symbolContext, irContext, args) =>
+            {
+                var result = targetFunction(irContext, args);
+                return new ValueTask<FormulaValue>(result);
+            });
+        }
+
         #region Single Column Table Functions
         public static Func<EvalVisitor, SymbolContext, IRContext, TableValue[], ValueTask<FormulaValue>> StandardSingleColumnTable<T>(Func<EvalVisitor, SymbolContext, IRContext, T[], FormulaValue> targetFunction) 
             where T : FormulaValue
@@ -622,20 +643,5 @@ namespace Microsoft.PowerFx.Functions
             return arg;
         }
         #endregion
-
-        private static AsyncFunctionPtr StandardMath<T>(
-            Func<IRContext, T[], FormulaValue> targetFunction,
-            Func<IRContext, int, FormulaValue, FormulaValue> checkRuntimeValues = null,
-            ReturnBehavior returnBehavior = ReturnBehavior.AlwaysEvaluateAndReturnResult)
-            where T : FormulaValue
-        {
-            checkRuntimeValues = checkRuntimeValues ?? FiniteChecker;
-
-            return StandardErrorHandling<T>(NoArgExpansion, ReplaceBlankWithZero, ExactValueType<NumberValue>, checkRuntimeValues, ReturnBehavior.AlwaysEvaluateAndReturnResult, (runner, symbolContext, irContext, args) =>
-            {
-                var result = targetFunction(irContext, args);
-                return new ValueTask<FormulaValue>(result);
-            });
-        }
     }
 }

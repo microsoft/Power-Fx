@@ -114,16 +114,6 @@ namespace Microsoft.PowerFx.Functions
             returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
             targetFunction: AddDateAndTime);
 
-        public static readonly AsyncFunctionPtr OperatorSubDateAndTime = StandardErrorHandling<FormulaValue>(
-            expandArguments: NoArgExpansion,
-            replaceBlankValues: DoNotReplaceBlank,
-            checkRuntimeTypes: ExactSequence(
-                DateOrDateTime,
-                ExactValueType<TimeValue>),
-            checkRuntimeValues: DeferRuntimeValueChecking,
-            returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
-            targetFunction: SubDateAndTime);
-
         public static readonly AsyncFunctionPtr OperatorAddDateAndDay = StandardErrorHandling<FormulaValue>(
             expandArguments: NoArgExpansion,
             replaceBlankValues: DoNotReplaceBlank,
@@ -486,15 +476,6 @@ namespace Microsoft.PowerFx.Functions
             }
         }
 
-        private static FormulaValue SubDateAndTime(IRContext irContext, FormulaValue[] args)
-        {
-            var args1 = (TimeValue)args[1];
-
-            args[1] = new TimeValue(irContext, -args1.Value);
-
-            return AddDateAndTime(irContext, args);
-        }
-
         private static FormulaValue AddDateAndDay(IRContext irContext, FormulaValue[] args)
         {
             DateTime arg0;
@@ -534,7 +515,7 @@ namespace Microsoft.PowerFx.Functions
         {
             var arg1 = (NumberValue)args[1];
 
-            args[1] = new NumberValue(irContext, -arg1.Value);
+            args[1] = FormulaValue.New(-arg1.Value);
 
             return AddDateAndDay(irContext, args);
         }
@@ -571,7 +552,7 @@ namespace Microsoft.PowerFx.Functions
         {
             var arg1 = (NumberValue)args[1];
 
-            args[1] = new NumberValue(irContext, -arg1.Value);
+            args[1] = FormulaValue.New(-arg1.Value);
 
             return AddDateTimeAndDay(irContext, args);
         }
