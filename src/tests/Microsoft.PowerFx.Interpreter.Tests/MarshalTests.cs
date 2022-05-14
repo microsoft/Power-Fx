@@ -57,6 +57,11 @@ namespace Microsoft.PowerFx.Tests
 
             // Type is a required parameter - being explicit. 
             Assert.Throws<ArgumentNullException>(() => cache.Marshal((object)17, (Type)null));
+
+            // Must be more specific than object
+            Assert.Throws<ArgumentException>(() => cache.Marshal((object)17));
+
+            cache.Marshal(17); // ok, 
         }
 
         [Fact]
