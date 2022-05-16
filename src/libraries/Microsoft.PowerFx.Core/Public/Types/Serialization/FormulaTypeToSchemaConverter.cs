@@ -81,8 +81,6 @@ namespace Microsoft.PowerFx.Core
                 Result = new FormulaTypeSchema() { Type = FormulaTypeSchema.ParamType.UntypedObject };
             }
 
-            public void Visit(ControlType type) => throw new NotImplementedException();
-
             public void Visit(UnsupportedType type) => throw new NotImplementedException();
 
             public void Visit(UnknownType type)

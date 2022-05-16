@@ -138,9 +138,6 @@ namespace Microsoft.PowerFx.Types
                 case DKind.OptionSet:
                     return new RecordType(DType.CreateRecord(type.GetAllNames(DPath.Root)));
 
-                case DKind.Control:
-                    return new ControlType(type);
-
                 case DKind.UntypedObject:
                     return UntypedObject;
 

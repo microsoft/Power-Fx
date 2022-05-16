@@ -135,7 +135,6 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Types.TimeValue",
                 "Microsoft.PowerFx.Types.UntypedObjectValue",
                 "Microsoft.PowerFx.Types.ValidFormulaValue",
-                "Microsoft.PowerFx.Types.ControlType",
                 "Microsoft.PowerFx.Types.UnsupportedType",
 
                 // Intellisense classes. Used primarily by the Language Service Provider.
