@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
+using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Glue;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
@@ -12,9 +13,9 @@ namespace Microsoft.PowerFx.Core
     public sealed class RenameDriver
     {
         private readonly RecordType _parameters;
-        private readonly SimpleResolver _resolver;
+        private readonly INameResolver _resolver;
 
-        internal RenameDriver(RecordType parameters, DPath pathToRename, DName updatedName, SimpleResolver resolver)
+        internal RenameDriver(RecordType parameters, DPath pathToRename, DName updatedName, INameResolver resolver)
         {
             var segments = new Queue<DName>(pathToRename.Segments());
             Contracts.CheckParam(segments.Count > 0, nameof(parameters));

@@ -50,17 +50,12 @@ namespace Microsoft.PowerFx
         /// </summary>
         /// <param name="alternateConfig">An alternate config that can be provided. Should default to engine's config if null.</param>
         /// <returns></returns>
-        private protected virtual SimpleResolver CreateSimpleResolver(PowerFxConfig alternateConfig = null)
+        private protected virtual INameResolver CreateResolver(PowerFxConfig alternateConfig = null)
         {
             return new SimpleResolver(alternateConfig ?? Config);
         }
 
-        private protected virtual INameResolver CreateCustomResolver(PowerFxConfig alternateConfig = null)
-        {
-            return CreateSimpleResolver(alternateConfig);
-        }
-
-        private protected virtual IBinderGlue CreateCustomBinderGlue()
+        private protected virtual IBinderGlue CreateBinderGlue()
         {
             return new Glue2DocumentBinderGlue();
         }
@@ -113,8 +108,8 @@ namespace Microsoft.PowerFx
             // Ok to continue with binding even if there are parse errors. 
             // We can still use that for intellisense. 
 
-            var resolver = CreateCustomResolver();
-            var glue = CreateCustomBinderGlue();
+            var resolver = CreateResolver();
+            var glue = CreateBinderGlue();
 
             var binding = TexlBinding.Run(
                 glue,
@@ -202,7 +197,7 @@ namespace Microsoft.PowerFx
             ** but that we don't return any display names for them. Thus, we clone a PowerFxConfig but without 
             ** display name support and construct a resolver from that instead, which we use for the rewrite binding.
             */
-            return new RenameDriver(parameters, pathToRename, updatedName, CreateSimpleResolver(Config.WithoutDisplayNames()));
+            return new RenameDriver(parameters, pathToRename, updatedName, CreateResolver(Config.WithoutDisplayNames()));
         }
 
         /// <summary>
@@ -215,7 +210,7 @@ namespace Microsoft.PowerFx
         /// <returns>The formula, with all identifiers converted to invariant form.</returns>
         public string GetInvariantExpression(string expressionText, RecordType parameters)
         {
-            return ConvertExpression(expressionText, parameters, CreateSimpleResolver(), toDisplayNames: false);
+            return ConvertExpression(expressionText, parameters, CreateResolver(), toDisplayNames: false);
         }
 
         /// <summary>
@@ -228,10 +223,10 @@ namespace Microsoft.PowerFx
         /// <returns>The formula, with all identifiers converted to display form.</returns>
         public string GetDisplayExpression(string expressionText, RecordType parameters)
         {
-            return ConvertExpression(expressionText, parameters, CreateSimpleResolver(), toDisplayNames: true);
+            return ConvertExpression(expressionText, parameters, CreateResolver(), toDisplayNames: true);
         }
 
-        internal static string ConvertExpression(string expressionText, RecordType parameters, SimpleResolver resolver, bool toDisplayNames)
+        internal static string ConvertExpression(string expressionText, RecordType parameters, INameResolver resolver, bool toDisplayNames)
         {
             var formula = new Formula(expressionText);
             formula.EnsureParsed(TexlParser.Flags.None);
