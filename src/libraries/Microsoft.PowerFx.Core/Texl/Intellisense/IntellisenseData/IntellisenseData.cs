@@ -4,7 +4,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.PowerFx.Core.Binding;
-using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Texl.Intellisense;
 using Microsoft.PowerFx.Core.Types;
@@ -17,7 +16,7 @@ namespace Microsoft.PowerFx.Intellisense.IntellisenseData
     // The IntellisenseData class contains the pre-parsed data for Intellisense to provide suggestions
     internal class IntellisenseData : IIntellisenseData
     {
-        private readonly PowerFxConfig _powerFxConfig;
+        protected readonly PowerFxConfig _powerFxConfig;
         private readonly IEnumStore _enumStore;
 
         public IntellisenseData(PowerFxConfig powerFxConfig, IEnumStore enumStore, IIntellisenseContext context, DType expectedType, TexlBinding binding, TexlFunction curFunc, TexlNode curNode, int argIndex, int argCount, IsValidSuggestion isValidSuggestionFunc, IList<DType> missingTypes, List<CommentToken> comments)
@@ -160,10 +159,10 @@ namespace Microsoft.PowerFx.Intellisense.IntellisenseData
                     select enumSymbol).Count() > 1;
         }
 
-        /// <summary>
-        /// Should unqualified enums be suggested.
-        /// </summary>
-        internal virtual bool SuggestUnqualifiedEnums => true;
+        ///// <summary>
+        ///// Should unqualified enums be suggested.
+        ///// </summary>
+        internal bool SuggestUnqualifiedEnums => Binding.NameResolver.SuggestUnqualifiedEnums;
 
         /// <summary>
         /// Retrieves an <see cref="EnumSymbol"/> from <paramref name="binding"/> (if necessary).
@@ -277,7 +276,7 @@ namespace Microsoft.PowerFx.Intellisense.IntellisenseData
             Contracts.AssertValue(function);
             Contracts.AssertValue(scopeType);
 
-            return ArgumentSuggestions.GetArgumentSuggestions(TryGetEnumSymbol, SuggestUnqualifiedEnums, function, scopeType, argumentIndex, out requiresSuggestionEscaping);
+            return ArgumentSuggestions.GetArgumentSuggestions(TryGetEnumSymbol,  SuggestUnqualifiedEnums, function, scopeType, argumentIndex, out requiresSuggestionEscaping);
         }
 
         /// <summary>
@@ -349,7 +348,7 @@ namespace Microsoft.PowerFx.Intellisense.IntellisenseData
         public virtual void AddSuggestionsForConstantKeywords() =>
             IntellisenseHelper.AddSuggestionsForMatches(
                 this,
-                TexlLexer.LocalizedInstance.GetConstantKeywords(false),
+                TexlLexer.GetConstantKeywords(false),
                 SuggestionKind.KeyWord,
                 SuggestionIconKind.Other,
                 requiresSuggestionEscaping: false);

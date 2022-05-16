@@ -2702,7 +2702,33 @@ namespace Microsoft.PowerFx.Core.Binding
                     return false;
                 }
 
-                // table in anything: not supported
+                if (_txb.Document.Properties.EnabledFeatures.IsEnhancedDelegationEnabled && typeLeft.IsTable)
+                {
+                    // Table in table: RHS must be a single column table with a compatible schema. No coercion is allowed.
+                    if (typeRight.IsTable)
+                    {
+                        var names = typeRight.GetNames(DPath.Root);
+                        if (names.Count() != 1)
+                        {
+                            _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Severe, right, TexlStrings.ErrInvalidSchemaNeedCol);
+                            return false;
+                        }
+
+                        var typedName = names.Single();
+                        if (!typeLeft.CoercesTo(typedName.Type))
+                        {
+                            _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Severe, right, TexlStrings.ErrCannotCoerce_SourceType_TargetType, typeLeft.GetKindString(), typedName.Type.GetKindString());
+                            return false;
+                        }
+
+                        if (typeLeft.Accepts(typedName.Type))
+                        {
+                            return true;
+                        }
+                    }
+                }
+
+                // Table in scalar or Table in Record or Table in unsupported table: not supported
                 _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Severe, left, TexlStrings.ErrBadType_Type, typeLeft.GetKindString());
                 return false;
             }
@@ -2720,7 +2746,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 return set;
             }
-            
+
             public override void Visit(ErrorNode node)
             {
                 AssertValid();
@@ -2998,10 +3024,10 @@ namespace Microsoft.PowerFx.Core.Binding
                 var fnInfo = FirstNameInfo.Create(node, lookupInfo);
                 var lookupType = lookupInfo.Type;
 
-                if (lookupInfo.DisplayName != default) 
+                if (lookupInfo.DisplayName != default)
                 {
                     if (_txb.UpdateDisplayNames)
-                    {                    
+                    {
                         _txb.NodesToReplace.Add(new KeyValuePair<Token, string>(node.Token, lookupInfo.DisplayName));
                     }
                     else if (lookupInfo.Data is IExternalEntity entity)

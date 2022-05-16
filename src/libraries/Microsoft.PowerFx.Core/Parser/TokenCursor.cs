@@ -11,19 +11,19 @@ namespace Microsoft.PowerFx.Core.Parser
 {
     internal sealed class TokenCursor
     {
-        private readonly Token[] _tokens;
+        private readonly IReadOnlyList<Token> _tokens;
         private readonly int _tokenCount;
 
         private int _currentTokenIndex;
         private Token _currentToken;
         private TokKind _currentTokenId;
 
-        public TokenCursor(Token[] rgtok)
+        public TokenCursor(IReadOnlyList<Token> rgtok)
         {
             Contracts.AssertValue(rgtok);
-            Contracts.Assert(rgtok.Length > 0 && rgtok[rgtok.Length - 1].Kind == TokKind.Eof);
+            Contracts.Assert(rgtok.Count > 0 && rgtok[rgtok.Count - 1].Kind == TokKind.Eof);
             _tokens = rgtok;
-            _tokenCount = _tokens.Length;
+            _tokenCount = _tokens.Count;
 
             _currentToken = _tokens[0];
             _currentTokenId = _currentToken.Kind;
@@ -44,7 +44,7 @@ namespace Microsoft.PowerFx.Core.Parser
         private void AssertValid()
         {
             Contracts.AssertValue(_tokens);
-            Contracts.Assert(_tokenCount > 0 && _tokenCount <= _tokens.Length);
+            Contracts.Assert(_tokenCount > 0 && _tokenCount <= _tokens.Count);
             Contracts.Assert(_tokens[_tokenCount - 1].Kind == TokKind.Eof);
 
             Contracts.AssertIndex(_currentTokenIndex, _tokenCount);

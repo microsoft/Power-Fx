@@ -162,6 +162,12 @@ namespace Microsoft.PowerFx
                 throw new ArgumentNullException(nameof(type));
             }
 
+            // Object is just as bad null. Likely a hosting bug - host should provide specific type. 
+            if (type == typeof(object))
+            {
+                throw new ArgumentException($"Must provide specific type");
+            }
+
             var tm = GetMarshaller(type);
             return tm.Marshal(value);
         }
