@@ -61,7 +61,11 @@ namespace Microsoft.PowerFx.Intellisense
             var types = args.Select(node => _checkResult._binding.GetType(node)).ToArray();
 
             // TODO: Horrible hack to get function identifier name - how to do this in idiomatic way?
-            var fncIdent = TexlParser.ParseScript($"{functionName}()").Root.AsCall().Head;
+            var fncIdent = TexlParser.ParseScript($"{functionName}()").Root.AsCall()?.Head;
+            if (fncIdent == null)
+            {
+                return false;
+            }
 
             // Note: there could be multiple functions (e.g., overloads) with the same name and arity,
             //  hence loop through candidates and check whether one of them matches.

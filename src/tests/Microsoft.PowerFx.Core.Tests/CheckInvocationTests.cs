@@ -120,6 +120,22 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.True(result);
         }
 
+        [Theory]
+        [InlineData("Not a fnc name")]
+        [InlineData("'fnc")]
+        [InlineData("something()")]
+        public void InvalidFncNames(string invalidFncName)
+        {
+            var config = new PowerFxConfig();
+            var engine = new Engine(config);
+            var formula = "true"; // does not matter what the formula is (not using arguments from it)
+            var checkResult = engine.Check(formula);
+            Assert.True(checkResult.IsSuccess);
+
+            var result = checkResult.ValidateInvocation(invalidFncName, new TexlNode[0], out var _);
+            Assert.False(result);
+        }
+
         [Fact]
         public void InvalidNodes()
         {
