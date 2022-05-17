@@ -20,7 +20,6 @@ namespace Microsoft.PowerFx.Core.IR.Nodes
         SubNumbers,
         SubDateAndDay,
         SubDateTimeAndDay,
-        SubTimeAndMilliseconds, // Not yet implemented
 
         DateDifference,
         TimeDifference,

@@ -751,7 +751,7 @@ namespace Microsoft.PowerFx.Core.IR
                     case DKind.Date:
                         if (rightType == DType.DateTime || rightType == DType.Date)
                         {
-                            Contracts.Assert(node.Op == BinaryOp.Sub);
+                            Contracts.Check(node.Op == BinaryOp.Sub, "Addition between date/datetime values is not supported");
 
                             // Date - DateTime => in days
                             // Date - Date => in days
@@ -759,7 +759,7 @@ namespace Microsoft.PowerFx.Core.IR
                         }
                         else if (rightType == DType.Time)
                         {
-                            Contracts.Assert(node.Op == BinaryOp.Add);
+                            Contracts.Check(node.Op == BinaryOp.Add, "Subtraction between date and time values is not supported");
 
                             // Date + Time => DateTime
                             // Date - Time => not supported
@@ -780,7 +780,7 @@ namespace Microsoft.PowerFx.Core.IR
                     case DKind.Time:
                         if (rightType == DType.Date)
                         {
-                            Contracts.Assert(node.Op == BinaryOp.Add);
+                            Contracts.Check(node.Op == BinaryOp.Add, "Subtraction between date and time values is not supported");
 
                             // Time + Date => DateTime
                             // Time - Date => not supported
@@ -788,7 +788,7 @@ namespace Microsoft.PowerFx.Core.IR
                         }
                         else if (rightType == DType.Time)
                         {
-                            Contracts.Assert(node.Op == BinaryOp.Sub);
+                            Contracts.Check(node.Op == BinaryOp.Sub, "Addition between time values is not supported");
 
                             // Time - Time => in ms
                             // Time + Time => not supported
@@ -796,7 +796,7 @@ namespace Microsoft.PowerFx.Core.IR
                         }
                         else
                         {
-                            Contracts.Assert(node.Op == BinaryOp.Add);
+                            Contracts.Check(node.Op == BinaryOp.Add, "Subtraction between time and number values is not supported");
 
                             // Time + Number
                             return new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.AddTimeAndMilliseconds, left, right);
@@ -805,7 +805,7 @@ namespace Microsoft.PowerFx.Core.IR
                     case DKind.DateTime:
                         if (rightType == DType.DateTime || rightType == DType.Date)
                         {
-                            Contracts.Assert(node.Op == BinaryOp.Sub);
+                            Contracts.Check(node.Op == BinaryOp.Sub, "Addition between datetime and datetime/date values is not supported");
 
                             // DateTime - DateTime => in days
                             // DateTime - Date => in days
@@ -838,7 +838,7 @@ namespace Microsoft.PowerFx.Core.IR
                                 }
 
                             case DKind.Time:
-                                Contracts.Assert(node.Op == BinaryOp.Add);
+                                Contracts.Check(node.Op == BinaryOp.Add, "Subtraction between number and time values is not supported");
 
                                 // Number + Time
                                 return new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.AddTimeAndMilliseconds, right, left);
