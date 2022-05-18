@@ -195,8 +195,8 @@
     <Rule Id="SA1625" Action="None" />
     <!-- End XM Documentation Warnings-->
     <!-- File/Class Naming Guidelines: These conflict with our function files mostly -->
-    <Rule Id="SA1402" Action="Warning" />
-    <Rule Id="SA1649" Action="Warning" />
+    <Rule Id="SA1402" Action="None" />
+    <Rule Id="SA1649" Action="None" />
     <!-- End File/Class Naming Guidelines-->
   </Rules>
 </RuleSet>
