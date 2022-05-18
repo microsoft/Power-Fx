@@ -1,3 +1,4 @@
+@echo off
 setlocal enabledelayedexpansion
 
 set MSBUILDARGS=-p:PublishRepositoryUrl=true -p:GeneratePackages=true -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg -p:InternalBuild=true -p:Configuration=Debug -p:Platform="Any CPU"
