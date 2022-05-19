@@ -248,6 +248,7 @@ namespace Microsoft.PowerFx.Core.Tests
         {
             return new CultureInfo("fr-FR");
         }
+
         /// <summary>
         /// Checks that the keyword arrays are properly constructed during the <see cref="TexlLexer"/> initialization.
         /// </summary>
