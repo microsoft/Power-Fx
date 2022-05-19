@@ -140,7 +140,6 @@ namespace Microsoft.PowerFx.Core.Tests
                 // Intellisense classes. Used primarily by the Language Service Provider.
                 // Most evaluators should never need these. 
                 "Microsoft.PowerFx.Intellisense.IPowerFxScope",
-                "Microsoft.PowerFx.Intellisense.IPowerFxScopeDisplayName",
                 "Microsoft.PowerFx.Intellisense.IIntellisenseResult",
                 "Microsoft.PowerFx.Intellisense.IIntellisenseSuggestion",
                 "Microsoft.PowerFx.Intellisense.IntellisenseOperations",

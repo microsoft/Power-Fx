@@ -288,10 +288,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
             var scope = _scopeFactory.GetOrCreateInstance(documentUri);
 
             var expression = initialFixupParams.TextDocument.Text;
-            if (scope is IPowerFxScopeDisplayName scopeDisplayName)
-            {
-                expression = scopeDisplayName.TranslateToDisplayName(expression);
-            }
+            expression = scope.ConvertToDisplay(expression);
 
             _sendToClient(JsonRpcHelper.CreateSuccessResult(id, new TextDocumentItem()
             {

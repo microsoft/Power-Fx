@@ -55,5 +55,10 @@ namespace Microsoft.PowerFx
         {
             return _engine.Suggest(expression, _contextType, cursorPosition);
         }
+
+        public string ConvertToDisplay(string expression)
+        {
+            return _engine.GetDisplayExpression(expression, _contextType);
+        }
     }
 }

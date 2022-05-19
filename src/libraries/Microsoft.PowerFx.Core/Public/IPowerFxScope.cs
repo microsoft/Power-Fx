@@ -19,5 +19,10 @@ namespace Microsoft.PowerFx.Intellisense
         /// Provide intellisense for expression.
         /// </summary>
         IIntellisenseResult Suggest(string expression, int cursorPosition);
+
+        /// <summary>
+        /// Converts punctuators and identifiers in an expression to the appropriate display format.
+        /// </summary>
+        string ConvertToDisplay(string expression);
     }
 }
