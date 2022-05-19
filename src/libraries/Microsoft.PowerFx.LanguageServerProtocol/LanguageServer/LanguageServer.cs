@@ -12,6 +12,7 @@ using Microsoft.PowerFx.Core.Public;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.LanguageServerProtocol.Protocol;
+using Microsoft.PowerFx.Syntax;
 
 namespace Microsoft.PowerFx.LanguageServerProtocol
 {
@@ -428,30 +429,10 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
             if (errors != null)
             {
                 foreach (var item in errors)
-                {
-                    var span = item.Span;
-                    var startCode = expression.Substring(0, span.Min);
-                    var code = expression.Substring(span.Min, span.Lim - span.Min);
-                    var startLine = startCode.Split(EOL).Length;
-                    var startChar = GetCharPosition(expression, span.Min);
-                    var endLine = startLine + code.Split(EOL).Length - 1;
-                    var endChar = GetCharPosition(expression, span.Lim) - 1;
-
+                {                    
                     diagnostics.Add(new Diagnostic()
                     {
-                        Range = new Protocol.Range()
-                        {
-                            Start = new Position()
-                            {
-                                Character = startChar,
-                                Line = startLine
-                            },
-                            End = new Position()
-                            {
-                                Character = endChar,
-                                Line = endLine
-                            }
-                        },
+                        Range = GetRange(expression, item.Span),
                         Message = item.Message,
                         Severity = DocumentSeverityToDiagnosticSeverityMap(item.Severity)
                     });
@@ -466,6 +447,41 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
                     Uri = uri,
                     Diagnostics = diagnostics.ToArray()
                 }));
+        }
+
+        /// <summary>
+        /// Construct a Range based on a Span for a given expression.
+        /// </summary>
+        /// <param name="expression">The expression.</param>
+        /// <param name="span">The Span.</param>
+        /// <returns>Generated Range.</returns>
+        public static Range GetRange(string expression, Span span)
+        {                       
+            var startChar = GetCharPosition(expression, span.Min) - 1;
+            var endChar = GetCharPosition(expression, span.Lim) - 1;
+
+            var startCode = expression.Substring(0, span.Min);
+            var code = expression.Substring(span.Min, span.Lim - span.Min);
+            var startLine = startCode.Split(EOL).Length;
+            var endLine = startLine + code.Split(EOL).Length - 1;
+
+            var range = new Range()
+            {
+                Start = new Position()
+                {
+                    Character = startChar,
+                    Line = startLine
+                },
+                End = new Position()
+                {
+                    Character = endChar,
+                    Line = endLine
+                }
+            };
+
+            Contracts.Assert(range.IsValid());
+
+            return range;
         }
 
         private void PublishTokens(string documentUri, CheckResult result)
@@ -535,7 +551,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
         /// <param name="expression">The expression content.</param>
         /// <param name="position">The charactor position (starts with 0).</param>
         /// <returns>The charactor position (starts with 1) from its line.</returns>
-        protected int GetCharPosition(string expression, int position)
+        protected static int GetCharPosition(string expression, int position)
         {
             Contracts.AssertValue(expression);
             Contracts.Assert(position >= 0);

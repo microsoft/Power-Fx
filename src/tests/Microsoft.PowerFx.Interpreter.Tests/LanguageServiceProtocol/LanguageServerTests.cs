@@ -12,6 +12,7 @@ using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.LanguageServerProtocol;
 using Microsoft.PowerFx.LanguageServerProtocol.Protocol;
+using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
 using Xunit;
 
@@ -341,6 +342,30 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
                 },
             };
             TestPublishDiagnostics("powerfx://app", "textDocument/didOpen", formula, expectedDiagnostics);
+        }
+
+        [Fact]
+        public void TestDidOpenWithErrors()
+        {
+            _testServer.OnDataReceived(JsonSerializer.Serialize(new
+            {
+                jsonrpc = "2.0",
+                method = "textDocument/didOpen",
+                @params = new DidOpenTextDocumentParams()
+                {
+                    TextDocument = new TextDocumentItem()
+                    {
+                        Uri = "powerfx://app",
+                        LanguageId = "powerfx",
+                        Version = 1,
+                        Text = "Concatenate("
+                    }
+                }
+            }));
+            var diag = JsonSerializer.Deserialize<JsonRpcPublishDiagnosticsNotification>(_sendToClientData[0], _jsonSerializerOptions).Params.Diagnostics.First(d => d.Message == "Unexpected characters. The formula contains 'ParenClose' where 'Eof' is expected.");
+
+            Assert.Equal(12, diag.Range.Start.Character);
+            Assert.Equal(12, diag.Range.End.Character);
         }
 
         [Fact]
