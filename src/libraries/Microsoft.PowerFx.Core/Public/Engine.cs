@@ -210,7 +210,8 @@ namespace Microsoft.PowerFx
         /// <returns>The formula, with all identifiers converted to invariant form.</returns>
         public string GetInvariantExpression(string expressionText, RecordType parameters)
         {
-            return ConvertExpression(expressionText, parameters, CreateResolver(), toDisplayNames: false);
+            return ConvertExpression(
+                expressionText, parameters, CreateResolver(), CreateBinderGlue(), toDisplayNames: false);
         }
 
         /// <summary>
@@ -223,16 +224,17 @@ namespace Microsoft.PowerFx
         /// <returns>The formula, with all identifiers converted to display form.</returns>
         public string GetDisplayExpression(string expressionText, RecordType parameters)
         {
-            return ConvertExpression(expressionText, parameters, CreateResolver(), toDisplayNames: true);
+            return ConvertExpression(
+                expressionText, parameters, CreateResolver(), CreateBinderGlue(), toDisplayNames: true);
         }
 
-        internal static string ConvertExpression(string expressionText, RecordType parameters, INameResolver resolver, bool toDisplayNames)
+        internal static string ConvertExpression(string expressionText, RecordType parameters, INameResolver resolver, IBinderGlue glue, bool toDisplayNames)
         {
             var formula = new Formula(expressionText);
             formula.EnsureParsed(TexlParser.Flags.None);
 
             var binding = TexlBinding.Run(
-                new Glue2DocumentBinderGlue(),
+                glue,
                 null,
                 new Core.Entities.QueryOptions.DataSourceToQueryOptionsMap(),
                 formula.ParseTree,
