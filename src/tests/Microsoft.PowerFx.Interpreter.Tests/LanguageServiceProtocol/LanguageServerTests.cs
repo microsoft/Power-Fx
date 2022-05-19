@@ -345,7 +345,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
         }
 
         [Fact]
-        public void TestConcatenateStartAndEndChars()
+        public void TestDidOpenWithErrors()
         {
             _testServer.OnDataReceived(JsonSerializer.Serialize(new
             {
