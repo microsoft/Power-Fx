@@ -308,35 +308,50 @@ namespace Microsoft.PowerFx.Functions
             return new InMemoryTableValue(irContext, shuffledRecords);
         }
 
+        private static async Task<(DValue<RecordValue> row, FormulaValue sortValue)> ApplySortLambda(EvalVisitor runner, SymbolContext symbolContext, DValue<RecordValue> row, LambdaFormulaValue lambda)
+        {
+            if (!row.IsValue)
+            {
+                return (row, row.ToFormulaValue());
+            }
+            
+            var childContext = symbolContext.WithScopeValues(row.Value);
+            var sortValue = await lambda.EvalAsync(runner, childContext);
+
+            return (row, sortValue);
+        }
+
         public static async ValueTask<FormulaValue> SortTable(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args)
         {
             var arg0 = (TableValue)args[0];
             var arg1 = (LambdaFormulaValue)args[1];
             var arg2 = (StringValue)args[2];
 
-            var pairs = arg0.Rows.Select(row =>
-            {
-                if (row.IsValue)
-                {
-                    var childContext = symbolContext.WithScopeValues(row.Value);
-                    return new KeyValuePair<DValue<RecordValue>, FormulaValue>(row, arg1.EvalAsync(runner, childContext).Result);
-                }
+            //var pairs = arg0.Rows.Select(row =>
+            //{
+            //    if (row.IsValue)
+            //    {
+            //        var childContext = symbolContext.WithScopeValues(row.Value);
+            //        return new KeyValuePair<DValue<RecordValue>, FormulaValue>(row, arg1.EvalAsync(runner, childContext).Result);
+            //    }
 
-                return new KeyValuePair<DValue<RecordValue>, FormulaValue>(row, row.ToFormulaValue());
-            }).ToList();
+            //    return new KeyValuePair<DValue<RecordValue>, FormulaValue>(row, row.ToFormulaValue());
+            //}).ToList();
+
+            var pairs = (await Task.WhenAll(arg0.Rows.Select(row => ApplySortLambda(runner, symbolContext, row, arg1)))).ToList();
 
             var errors = new List<ErrorValue>();
             bool allNumbers = true, allStrings = true, allBooleans = true, allDatetimes = true, allDates = true;
 
-            foreach (var pair in pairs)
+            foreach (var (row, sortValue) in pairs)
             {
-                allNumbers &= IsValueTypeErrorOrBlank<NumberValue>(pair.Value);
-                allStrings &= IsValueTypeErrorOrBlank<StringValue>(pair.Value);
-                allBooleans &= IsValueTypeErrorOrBlank<BooleanValue>(pair.Value);
-                allDatetimes &= IsValueTypeErrorOrBlank<DateTimeValue>(pair.Value);
-                allDates &= IsValueTypeErrorOrBlank<DateValue>(pair.Value);
+                allNumbers &= IsValueTypeErrorOrBlank<NumberValue>(sortValue);
+                allStrings &= IsValueTypeErrorOrBlank<StringValue>(sortValue);
+                allBooleans &= IsValueTypeErrorOrBlank<BooleanValue>(sortValue);
+                allDatetimes &= IsValueTypeErrorOrBlank<DateTimeValue>(sortValue);
+                allDates &= IsValueTypeErrorOrBlank<DateValue>(sortValue);
 
-                if (pair.Value is ErrorValue errorValue)
+                if (sortValue is ErrorValue errorValue)
                 {
                     errors.Add(errorValue);
                 }
@@ -387,27 +402,27 @@ namespace Microsoft.PowerFx.Functions
             return val is T || val is BlankValue || val is ErrorValue;
         }
 
-        private static FormulaValue SortValueType<TPFxPrimitive, TDotNetPrimitive>(List<KeyValuePair<DValue<RecordValue>, FormulaValue>> pairs, IRContext irContext, int compareToResultModifier)
+        private static FormulaValue SortValueType<TPFxPrimitive, TDotNetPrimitive>(List<(DValue<RecordValue> row, FormulaValue sortValue)> pairs, IRContext irContext, int compareToResultModifier)
             where TPFxPrimitive : PrimitiveValue<TDotNetPrimitive>
             where TDotNetPrimitive : IComparable<TDotNetPrimitive>
         {
             pairs.Sort((a, b) =>
             {
-                if (a.Value is BlankValue)
+                if (a.sortValue is BlankValue)
                 {
-                    return b.Value is BlankValue ? 0 : 1;
+                    return b.sortValue is BlankValue ? 0 : 1;
                 }
-                else if (b.Value is BlankValue)
+                else if (b.sortValue is BlankValue)
                 {
                     return -1;
                 }
 
-                var n1 = a.Value as TPFxPrimitive;
-                var n2 = b.Value as TPFxPrimitive;
+                var n1 = a.sortValue as TPFxPrimitive;
+                var n2 = b.sortValue as TPFxPrimitive;
                 return n1.Value.CompareTo(n2.Value) * compareToResultModifier;
             });
 
-            return new InMemoryTableValue(irContext, pairs.Select(pair => pair.Key));
+            return new InMemoryTableValue(irContext, pairs.Select(pair => pair.row));
         }
 
         private static async Task<DValue<RecordValue>> LazyFilterRowAsync(

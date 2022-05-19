@@ -174,7 +174,7 @@
     <Rule Id="SA1643" Action="Error" />
     <Rule Id="SA1648" Action="Error" />
     <Rule Id="SA1651" Action="Error" />
-    <Rule Id="SX1309" Action="Error" /> <!-- FieldNamesShouldBeginWithUnderscores -->
+    <Rule Id="SX1309" Action="Error" />
     <!-- XML Documentation Warnings, disabled until we take a pass over docs -->
     <Rule Id="SA1574" Action="None" />
     <Rule Id="SA1600" Action="None" />

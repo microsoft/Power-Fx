@@ -97,7 +97,7 @@ namespace Microsoft.PowerFx.Core.Tests
         /// </summary>
         /// <param name="test">test case to run.</param>
         /// <returns>status from running.</returns>
-        public async Task<(TestResult, string)> RunAsync(TestCase testCase)
+        public (TestResult result, string message) RunAsync(TestCase testCase)
         {
             var result = TestResult.Fail;
             string message = null;

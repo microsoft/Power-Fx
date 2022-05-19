@@ -242,7 +242,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 {
                     var engineName = runner.GetName();
 
-                    var (result, msg) = runner.RunAsync(testCase).Result;
+                    var (result, msg) = runner.RunAsync(testCase);
 
                     summary.AddResult(testCase, result, engineName, msg);                  
                 }
