@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
+using System.Globalization;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Glue;
@@ -77,6 +78,9 @@ namespace Microsoft.PowerFx
         public ParseResult Parse(string expressionText, ParserOptions options = null)
         {
             options ??= new ParserOptions();
+            
+            // If culture isn't explicitly set, use the one from PowerFx Config
+            options.Culture ??= Config.CultureInfo;
 
             var result = options.Parse(expressionText);
             return result;
@@ -171,7 +175,7 @@ namespace Microsoft.PowerFx
         {
             var result = Check(expression, parameterType);
             var binding = result._binding;
-            var formula = new Formula(expression, null);
+            var formula = new Formula(expression, Config.CultureInfo);
             formula.ApplyParse(result.Parse);
 
             var context = new IntellisenseContext(expression, cursorPosition);
@@ -204,7 +208,7 @@ namespace Microsoft.PowerFx
             ** but that we don't return any display names for them. Thus, we clone a PowerFxConfig but without 
             ** display name support and construct a resolver from that instead, which we use for the rewrite binding.
             */
-            return new RenameDriver(parameters, pathToRename, updatedName, CreateResolver(Config.WithoutDisplayNames()), CreateBinderGlue());
+            return new RenameDriver(parameters, pathToRename, updatedName, this, CreateResolver(Config.WithoutDisplayNames()), CreateBinderGlue());
         }
 
         /// <summary>
@@ -217,8 +221,7 @@ namespace Microsoft.PowerFx
         /// <returns>The formula, with all identifiers converted to invariant form.</returns>
         public string GetInvariantExpression(string expressionText, RecordType parameters)
         {
-            return ConvertExpression(
-                expressionText, parameters, CreateResolver(), CreateBinderGlue(), toDisplayNames: false);
+            return ExpressionLocalizationHelper.ConvertExpression(expressionText, parameters, CreateResolver(), CreateBinderGlue(), Config.CultureInfo, toDisplay: false);
         }
 
         /// <summary>
@@ -231,34 +234,7 @@ namespace Microsoft.PowerFx
         /// <returns>The formula, with all identifiers converted to display form.</returns>
         public string GetDisplayExpression(string expressionText, RecordType parameters)
         {
-            return ConvertExpression(
-                expressionText, parameters, CreateResolver(), CreateBinderGlue(), toDisplayNames: true);
-        }
-
-        internal static string ConvertExpression(string expressionText, RecordType parameters, INameResolver resolver, IBinderGlue glue, bool toDisplayNames)
-        {
-            var formula = new Formula(expressionText);
-            formula.EnsureParsed(TexlParser.Flags.None);
-
-            var binding = TexlBinding.Run(
-                glue,
-                null,
-                new Core.Entities.QueryOptions.DataSourceToQueryOptionsMap(),
-                formula.ParseTree,
-                resolver,
-                BindingConfig.Default,
-                ruleScope: parameters._type,
-                useThisRecordForRuleScope: false,
-                updateDisplayNames: toDisplayNames,
-                forceUpdateDisplayNames: toDisplayNames);
-
-            Dictionary<Span, string> worklist = new ();
-            foreach (var token in binding.NodesToReplace)
-            {
-                worklist.Add(token.Key.Span, TexlLexer.EscapeName(token.Value));
-            }
-
-            return Span.ReplaceSpans(expressionText, worklist);
+            return ExpressionLocalizationHelper.ConvertExpression(expressionText, parameters, CreateResolver(), CreateBinderGlue(), Config.CultureInfo, toDisplay: true);
         }
     }
 }

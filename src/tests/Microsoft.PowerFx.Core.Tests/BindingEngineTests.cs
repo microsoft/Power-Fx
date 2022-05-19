@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System.Globalization;
 using System.Linq;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Types;
@@ -99,6 +100,25 @@ namespace Microsoft.PowerFx.Tests
             Assert.False(result.IsSuccess);
             Assert.True(result.Errors.Count() >= 1);
             AssertContainsError(result, "Error 4-4: Expected an operand");
+        }        
+
+        [Fact]
+        public void CheckParseErrorCommaSeparatedLocale()
+        {
+            var engine = new Engine(new PowerFxConfig(CultureInfo.GetCultureInfo("it-IT")));
+            var result = engine.Parse("3.145");
+
+            Assert.False(result.IsSuccess);
+            Assert.StartsWith("Error 2-5: Unexpected character", result.Errors.First().ToString());
+        }
+
+        [Fact]
+        public void CheckParseSuccessCommaSeparatedLocale()
+        {
+            var engine = new Engine(new PowerFxConfig(CultureInfo.GetCultureInfo("de-DE")));
+            var result = engine.Parse("Function(args; separated; by; semicolons) + 123,456");
+
+            Assert.True(result.IsSuccess);
         }
 
         [Fact]
