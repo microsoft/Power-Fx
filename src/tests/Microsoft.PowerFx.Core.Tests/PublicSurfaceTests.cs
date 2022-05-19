@@ -143,13 +143,14 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Intellisense.IPowerFxScopeDisplayName",
                 "Microsoft.PowerFx.Intellisense.IIntellisenseResult",
                 "Microsoft.PowerFx.Intellisense.IIntellisenseSuggestion",
+                "Microsoft.PowerFx.Intellisense.IntellisenseOperations",
                 "Microsoft.PowerFx.Intellisense.SignatureHelp.ParameterInformation",
                 "Microsoft.PowerFx.Intellisense.SignatureHelp.SignatureHelp",
                 "Microsoft.PowerFx.Intellisense.SignatureHelp.SignatureInformation",
                 "Microsoft.PowerFx.Intellisense.SuggestionIconKind",
                 "Microsoft.PowerFx.Intellisense.SuggestionKind",
                 "Microsoft.PowerFx.Intellisense.UIString",
-                "Microsoft.PowerFx.Intellisense.TokenResultType",                
+                "Microsoft.PowerFx.Intellisense.TokenResultType",
 
                 // TBD ...
                 "Microsoft.PowerFx.Core.RenameDriver",

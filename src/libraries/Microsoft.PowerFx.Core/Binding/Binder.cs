@@ -46,6 +46,9 @@ namespace Microsoft.PowerFx.Core.Binding
         // The local scope resolver associated with this binding.
         public readonly IExternalRuleScopeResolver LocalRuleScopeResolver;
 
+        // Maps IDs to nodes
+        private readonly TexlNode[] _nodeMap;
+
         // Maps Ids to Types, where the Id is an index in the array.
         private readonly DType[] _typeMap;
         private readonly DType[] _coerceMap;
@@ -276,6 +279,7 @@ namespace Microsoft.PowerFx.Core.Binding
             }
 
             CoercedToplevelType = DType.Invalid;
+            _nodeMap = new TexlNode[idLim];
             _infoMap = new object[idLim];
             _compilerGeneratedCallNodes = new CallNode[idLim];
             _asyncMap = new bool[idLim];
@@ -389,6 +393,24 @@ namespace Microsoft.PowerFx.Core.Binding
             return _typeMap[node.Id];
         }
 
+        /// <summary>
+        /// Checks that the node is associated with this binding. This is critical so that node IDs are valid.
+        /// </summary>
+        /// <param name="node"></param>
+        /// <returns></returns>
+        public bool IsNodeValid(TexlNode node)
+        {
+            Contracts.AssertValue(node);
+
+            if (node.Id >= _nodeMap.Length)
+            {
+                return false;
+            }
+
+            var nodeById = _nodeMap[node.Id];
+            return ReferenceEquals(node, nodeById);
+        }
+
         private void SetType(TexlNode node, DType type)
         {
             Contracts.AssertValue(node);
@@ -396,6 +418,7 @@ namespace Microsoft.PowerFx.Core.Binding
             Contracts.AssertIndex(node.Id, _typeMap.Length);
             Contracts.Assert(_typeMap[node.Id] == null || !_typeMap[node.Id].IsValid || type.IsError);
 
+            _nodeMap[node.Id] = node;
             _typeMap[node.Id] = type;
         }
 
