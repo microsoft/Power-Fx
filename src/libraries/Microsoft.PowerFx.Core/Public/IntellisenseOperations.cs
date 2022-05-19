@@ -91,6 +91,7 @@ namespace Microsoft.PowerFx.Intellisense
             return false;
         }
 
+        // Parse a function name string into an identifier (namespace and name).
         internal static bool TryParseFunctionNameWithNamespace(string functionName, out Identifier ident)
         {
             ident = null;
