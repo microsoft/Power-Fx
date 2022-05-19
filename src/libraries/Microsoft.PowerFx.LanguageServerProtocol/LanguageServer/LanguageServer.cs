@@ -433,7 +433,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
                     var startCode = expression.Substring(0, span.Min);
                     var code = expression.Substring(span.Min, span.Lim - span.Min);
                     var startLine = startCode.Split(EOL).Length;
-                    var startChar = GetCharPosition(expression, span.Min);
+                    var startChar = GetCharPosition(expression, span.Min) - 1;
                     var endLine = startLine + code.Split(EOL).Length - 1;
                     var endChar = GetCharPosition(expression, span.Lim) - 1;
 
