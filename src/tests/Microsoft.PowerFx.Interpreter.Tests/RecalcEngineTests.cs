@@ -282,6 +282,15 @@ namespace Microsoft.PowerFx.Tests
             var engine = new RecalcEngine(config);
 
             Assert.DoesNotContain(nyiFunc, config.Functions);
+                
+            var names = engine.GetAllFunctionNames().ToArray();
+            Assert.True(names.Length > 100);
+
+            // Spot check some known functions
+            Assert.Contains("Cos", names);
+            Assert.Contains("ParseJSON", names);
+
+            Assert.Contains("Cos", names);
         }
 
         [Fact]

@@ -5,8 +5,8 @@ using System.Collections.Generic;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Glue;
-using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Parser;
+using Microsoft.PowerFx.Core.Texl.Intellisense;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Intellisense;
@@ -48,7 +48,7 @@ namespace Microsoft.PowerFx
         /// Create a resolver for use in binding. This is called from <see cref="Check(string, RecordType, ParserOptions)"/>.
         /// Base classes can override this is there are additional symbols not in the config.
         /// </summary>
-        /// <param name="alternateConfig">An alternate config that can be provided. Should default to engine's config if null.</param>
+        /// <param name="alternateConfig">An alternate config that can be provided. Should default to engine's config if null.</param>        
         /// <returns></returns>
         private protected virtual INameResolver CreateResolver(PowerFxConfig alternateConfig = null)
         {
@@ -66,7 +66,7 @@ namespace Microsoft.PowerFx
         /// <param name="expressionText"></param>
         /// <returns></returns>
         public IReadOnlyList<Token> Tokenize(string expressionText)
-            => TexlLexer.LocalizedInstance.GetTokens(expressionText);
+            => TexlLexer.GetLocalizedInstance(Config.CultureInfo).GetTokens(expressionText);
 
         /// <summary>
         /// Parse the expression without doing any binding.
@@ -92,7 +92,9 @@ namespace Microsoft.PowerFx
         public CheckResult Check(string expressionText, RecordType parameterType = null, ParserOptions options = null)
         {
             var parse = Parse(expressionText, options);
-            return Check(parse, parameterType);
+
+            var bindingConfig = new BindingConfig(options?.AllowsSideEffects == true);
+            return CheckInternal(parse, parameterType, bindingConfig);
         }
 
         /// <summary>
@@ -102,6 +104,11 @@ namespace Microsoft.PowerFx
         /// <param name="parameterType">types of additional args to pass.</param>
         /// <returns></returns>
         public CheckResult Check(ParseResult parse, RecordType parameterType = null)
+        {
+            return CheckInternal(parse, parameterType, BindingConfig.Default);
+        }
+
+        private CheckResult CheckInternal(ParseResult parse, RecordType parameterType, BindingConfig bindingConfig)
         {
             parameterType ??= new RecordType();
                         
@@ -115,7 +122,7 @@ namespace Microsoft.PowerFx
                 glue,
                 parse.Root,
                 resolver,
-                BindingConfig.Default,
+                bindingConfig,
                 ruleScope: parameterType._type,
                 useThisRecordForRuleScope: false);
 
