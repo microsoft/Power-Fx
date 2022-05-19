@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System.Diagnostics;
 using Microsoft.PowerFx.Core.Types;
 
 namespace Microsoft.PowerFx.Types
@@ -8,6 +9,7 @@ namespace Microsoft.PowerFx.Types
     /// <summary>
     /// Type not currently supported by the API.
     /// </summary>
+    [DebuggerDisplay("Kind={_type.Kind} TypeFullName={_type.GetType().FullName}")]
     public class UnsupportedType : FormulaType
     {
         internal UnsupportedType(DType type)
@@ -20,7 +22,5 @@ namespace Microsoft.PowerFx.Types
         {
             visitor.Visit(this);
         }
-
-        internal string Description => $"kind={_type.Kind} fullTypeName={_type.GetType().FullName}";
     }
 }
