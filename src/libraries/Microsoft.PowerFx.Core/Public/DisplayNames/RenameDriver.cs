@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
+using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Glue;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
@@ -12,9 +13,10 @@ namespace Microsoft.PowerFx.Core
     public sealed class RenameDriver
     {
         private readonly RecordType _parameters;
-        private readonly SimpleResolver _resolver;
+        private readonly INameResolver _resolver;
+        private readonly IBinderGlue _binder;
 
-        internal RenameDriver(RecordType parameters, DPath pathToRename, DName updatedName, SimpleResolver resolver)
+        internal RenameDriver(RecordType parameters, DPath pathToRename, DName updatedName, INameResolver resolver, IBinderGlue binder)
         {
             var segments = new Queue<DName>(pathToRename.Segments());
             Contracts.CheckParam(segments.Count > 0, nameof(parameters));
@@ -22,6 +24,7 @@ namespace Microsoft.PowerFx.Core
             // After this point, _parameters should have at most one logical->display pair that can change in this conversion
             _parameters = RenameFormulaTypeHelper(parameters, segments, updatedName) as RecordType;
             _resolver = resolver;
+            _binder = binder;
         }
 
         /// <summary>
@@ -31,7 +34,7 @@ namespace Microsoft.PowerFx.Core
         /// <returns>Expression with rename applied.</returns>
         public string ApplyRename(string expressionText)
         {
-            return Engine.ConvertExpression(expressionText, _parameters, _resolver, true);
+            return Engine.ConvertExpression(expressionText, _parameters, _resolver, _binder, true);
         }
 
         private static FormulaType RenameFormulaTypeHelper(AggregateType nestedType, Queue<DName> segments, DName updatedName)

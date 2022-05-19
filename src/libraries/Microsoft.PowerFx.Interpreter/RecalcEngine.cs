@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Glue;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Texl;
@@ -55,7 +56,7 @@ namespace Microsoft.PowerFx
         }
 
         /// <inheritdoc/>
-        private protected override SimpleResolver CreateResolver(PowerFxConfig alternateConfig = null)
+        private protected override INameResolver CreateResolver(PowerFxConfig alternateConfig = null)
         {
             // The RecalcEngineResolver allows access to the values from UpdateValue. 
             var resolver = new RecalcEngineResolver(this, alternateConfig ?? Config);
