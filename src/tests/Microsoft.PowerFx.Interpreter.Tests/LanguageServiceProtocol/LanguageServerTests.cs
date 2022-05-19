@@ -362,7 +362,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
                     }
                 }
             }));
-            var diag = JsonSerializer.Deserialize<JsonRpcPublishDiagnosticsNotification>(_sendToClientData[0], _jsonSerializerOptions).Params.Diagnostics[0];
+            var diag = JsonSerializer.Deserialize<JsonRpcPublishDiagnosticsNotification>(_sendToClientData[0], _jsonSerializerOptions).Params.Diagnostics.First(d => d.Message == "Unexpected characters. The formula contains 'ParenClose' where 'Eof' is expected.");
 
             Assert.Equal(12, diag.Range.Start.Character);
             Assert.Equal(12, diag.Range.End.Character);
