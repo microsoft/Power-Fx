@@ -33,7 +33,7 @@ namespace Microsoft.PowerFx
 
         internal EnumStoreBuilder EnumStoreBuilder { get; }
 
-        internal CultureInfo CultureInfo { get; }
+        public CultureInfo CultureInfo { get; }
 
         private PowerFxConfig(CultureInfo cultureInfo, EnumStoreBuilder enumStoreBuilder) 
         {
@@ -95,7 +95,7 @@ namespace Microsoft.PowerFx
         /// <returns></returns>
         public IEnumerable<string> GetAllFunctionNames()
         {
-            return _extraFunctions.Select(func => func.Name).Distinct();
+            return Functions.Select(func => func.Name).Distinct();
         }
 
         internal IEnumerable<IExternalEntity> GetSymbols() => _environmentSymbols.Values;

@@ -93,7 +93,7 @@ namespace Microsoft.PowerFx.Tests
         [InlineData("If(\n    Text(\n        Value(ThisItem.Expense)\n    )= \"0\",\n    \"$\",\n    Text(\n        Value(ThisItem.Expense),\n        \"$#,##\"\n    )\n)", "If(Text(Value(ThisItem.Expense))=\"0\",\"$\",Text(Value(ThisItem.Expense),\"$#,##\"))")]
         public void TestRemoveWhiteSpace(string script, string expected)
         {
-            var result = TexlLexer.LocalizedInstance.RemoveWhiteSpace(script);
+            var result = TexlLexer.InvariantLexer.RemoveWhiteSpace(script);
             Assert.NotNull(result);
             Assert.Equal(result, expected);
         }

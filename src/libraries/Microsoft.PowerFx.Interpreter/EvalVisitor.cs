@@ -12,6 +12,7 @@ using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.IR.Nodes;
 using Microsoft.PowerFx.Core.IR.Symbols;
 using Microsoft.PowerFx.Functions;
+using Microsoft.PowerFx.Interpreter;
 using Microsoft.PowerFx.Types;
 using static Microsoft.PowerFx.Functions.Library;
 
@@ -116,12 +117,48 @@ namespace Microsoft.PowerFx
             return val;
         }
 
+        // Handle the Set() function -
+        // Set is unique because it has an l-value for the first arg. 
+        // Async params can't have out-params. 
+        // Return null if not handled. Else non-null if handled.
+        private async Task<FormulaValue> TryHandleSet(CallNode node, SymbolContext context)
+        {
+            // Special case Set() calls because they take an LValue. 
+            if (node.Function.GetType() != typeof(RecalcEngineSetFunction))
+            {
+                return null;
+            }
+
+            var arg0 = node.Args[0];
+            var arg1 = node.Args[1];
+
+            var newValue = await arg1.Accept(this, context);
+
+            // Binder has already ensured this is a first name node. 
+            if (arg0 is ResolvedObjectNode obj)
+            {
+                if (obj.Value is ICanSetValue fi)
+                {
+                    fi.SetValue(newValue);
+
+                    // Set() returns true. 
+                    return FormulaValue.New(true);
+                }
+            }
+
+            // Fail?
+            return CommonErrors.UnreachableCodeError(node.IRContext);
+        }
+
         public override async ValueTask<FormulaValue> Visit(CallNode node, SymbolContext context)
         {
             CheckCancel();
-
-            // Sum(  [1,2,3], Value * Value)
-            // return base.PreVisit(node);
+            
+            var setResult = await TryHandleSet(node, context);
+            if (setResult != null)
+            {
+                return setResult;
+            }            
 
             var func = node.Function;
 
@@ -489,7 +526,7 @@ namespace Microsoft.PowerFx
         {
             return node.Value switch
             {
-                RecalcFormulaInfo fi => ResolvedObjectHelpers.RecalcFormulaInfo(fi),
+                ICanGetValue fi => fi.Value,
                 IExternalOptionSet optionSet => ResolvedObjectHelpers.OptionSet(optionSet, node.IRContext),
                 _ => ResolvedObjectHelpers.ResolvedObjectError(node),
             };

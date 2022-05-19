@@ -92,7 +92,7 @@ namespace Microsoft.PowerFx
         {
             if (Formulas.TryGetValue(name, out var info))
             {
-                return info._value;
+                return info.Value;
             }
 
             // Binder should have caught. 
@@ -121,13 +121,13 @@ namespace Microsoft.PowerFx
                     throw new NotSupportedException($"Can't change '{name}''s type from {fi._type} to {x.Type}.");
                 }
 
-                fi._value = x;
+                fi.Value = x;
 
                 // Be sure to preserve used-by set. 
             }
             else
             {
-                Formulas[name] = new RecalcFormulaInfo { _value = x, _type = x.IRContext.ResultType };
+                Formulas[name] = new RecalcFormulaInfo { Value = x, _type = x.IRContext.ResultType };
             }
 
             // Could trigger recalcs?
@@ -255,7 +255,7 @@ namespace Microsoft.PowerFx
         public FormulaValue GetValue(string name)
         {
             var fi = Formulas[name];
-            return fi._value;
+            return fi.Value;
         }
     } // end class RecalcEngine
 }
