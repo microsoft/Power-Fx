@@ -120,11 +120,8 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.True(result);
         }
 
-        [Theory]
-        [InlineData("Not a fnc name")]
-        [InlineData("'fnc")]
-        [InlineData("something()")]
-        public void InvalidFncNames(string invalidFncName)
+        [Fact]
+        public void InvalidFncNames()
         {
             var config = new PowerFxConfig();
             var engine = new Engine(config);
@@ -132,7 +129,7 @@ namespace Microsoft.PowerFx.Core.Tests
             var checkResult = engine.Check(formula);
             Assert.True(checkResult.IsSuccess);
 
-            var result = checkResult.ValidateInvocation(invalidFncName, new TexlNode[0], out var _);
+            var result = checkResult.ValidateInvocation("invalid fnc name", new TexlNode[0], out var _);
             Assert.False(result);
         }
 
@@ -155,6 +152,35 @@ namespace Microsoft.PowerFx.Core.Tests
 
             var mixedNodes = new[] { args2[0], args1[0], args2[1] };
             Assert.Throws<ArgumentException>(() => checkResult2.ValidateInvocation("If", mixedNodes, out _));
+        }
+
+        [Theory]
+        [InlineData("normalFnc", "normalFnc")]
+        [InlineData("ns1.normalFnc", "normalFnc", "ns1")]
+        [InlineData("ns1.ns2.someFnc", "someFnc", "ns1.ns2")]
+        [InlineData("'escaped fnc name'", "escaped fnc name")]
+        [InlineData("ns1.'escaped fnc name'", "escaped fnc name", "ns1")]
+        [InlineData("ns1.'escaped namespace'.'escaped fnc name'", "escaped fnc name", "ns1.'escaped namespace'")]
+        [InlineData("invalid fnc", null)]
+        [InlineData("ns1.", null)]
+        [InlineData(".fnc", null)]
+        [InlineData("abc(", null)]
+        public void FunctionNameParse(string fncName, string expectedName, string expectedNs = "")
+        {
+            var expectedResult = expectedName != null;
+
+            var result = IntellisenseOperations.TryParseFunctionNameWithNamespace(fncName, out var ident);
+            Assert.Equal(expectedResult, result);
+
+            if (result)
+            {
+                Assert.Equal(expectedName, ident.Name.Value);
+                Assert.Equal(expectedNs, ident.Namespace.ToDottedSyntax());
+            }
+            else
+            {
+                Assert.Null(ident);
+            }
         }
     }
 

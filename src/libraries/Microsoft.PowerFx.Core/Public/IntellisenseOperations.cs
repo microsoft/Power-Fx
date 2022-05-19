@@ -60,9 +60,7 @@ namespace Microsoft.PowerFx.Intellisense
 
             var types = args.Select(node => _checkResult._binding.GetType(node)).ToArray();
 
-            // TODO: Horrible hack to get function identifier name - how to do this in idiomatic way?
-            var fncIdent = TexlParser.ParseScript($"{functionName}()").Root.AsCall()?.Head;
-            if (fncIdent == null)
+            if (!TryParseFunctionNameWithNamespace(functionName, out var fncIdent))
             {
                 return false;
             }
@@ -91,6 +89,19 @@ namespace Microsoft.PowerFx.Intellisense
             }
 
             return false;
+        }
+
+        internal static bool TryParseFunctionNameWithNamespace(string functionName, out Identifier ident)
+        {
+            ident = null;
+            var parseResult = TexlParser.ParseScript($"{functionName}()");
+            if (!parseResult.IsSuccess)
+            {
+                return false;
+            }
+
+            ident = parseResult.Root.AsCall()?.Head;
+            return ident != null;
         }
     }
 }
