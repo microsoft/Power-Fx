@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Globalization;
+using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Glue;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
@@ -14,10 +15,11 @@ namespace Microsoft.PowerFx.Core
     {
         private readonly RecordType _baseParameters;
         private readonly RecordType _renameParameters;
-        private readonly SimpleResolver _resolver;
+        private readonly INameResolver _resolver;
         private readonly Engine _engine;
+        private readonly IBinderGlue _binderGlue;
 
-        internal RenameDriver(RecordType parameters, DPath pathToRename, DName updatedName, SimpleResolver resolver, Engine engine)
+        internal RenameDriver(RecordType parameters, DPath pathToRename, DName updatedName, Engine engine, INameResolver resolver, IBinderGlue binderGlue)
         {
             var segments = new Queue<DName>(pathToRename.Segments());
             Contracts.CheckParam(segments.Count > 0, nameof(parameters));
@@ -28,6 +30,7 @@ namespace Microsoft.PowerFx.Core
             _renameParameters = RenameFormulaTypeHelper(parameters, segments, updatedName) as RecordType;
             _resolver = resolver;
             _engine = engine;
+            _binderGlue = binderGlue;
         }
 
         /// <summary>
@@ -39,7 +42,7 @@ namespace Microsoft.PowerFx.Core
         {
             // Ensure expression is converted to invariant before applying rename.
             var invariantExpression = _engine.GetInvariantExpression(expressionText, _baseParameters);
-            return ExpressionLocalizationHelper.ConvertExpression(invariantExpression, _renameParameters, _resolver, CultureInfo.InvariantCulture, true);
+            return ExpressionLocalizationHelper.ConvertExpression(invariantExpression, _renameParameters, _resolver, _binderGlue, CultureInfo.InvariantCulture, true);
         }
 
         private static FormulaType RenameFormulaTypeHelper(AggregateType nestedType, Queue<DName> segments, DName updatedName)

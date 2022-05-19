@@ -135,6 +135,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Types.TimeValue",
                 "Microsoft.PowerFx.Types.UntypedObjectValue",
                 "Microsoft.PowerFx.Types.ValidFormulaValue",
+                "Microsoft.PowerFx.Types.UnsupportedType",
 
                 // Intellisense classes. Used primarily by the Language Service Provider.
                 // Most evaluators should never need these. 
@@ -142,13 +143,14 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Intellisense.IPowerFxScopeDisplayName",
                 "Microsoft.PowerFx.Intellisense.IIntellisenseResult",
                 "Microsoft.PowerFx.Intellisense.IIntellisenseSuggestion",
+                "Microsoft.PowerFx.Intellisense.IntellisenseOperations",
                 "Microsoft.PowerFx.Intellisense.SignatureHelp.ParameterInformation",
                 "Microsoft.PowerFx.Intellisense.SignatureHelp.SignatureHelp",
                 "Microsoft.PowerFx.Intellisense.SignatureHelp.SignatureInformation",
                 "Microsoft.PowerFx.Intellisense.SuggestionIconKind",
                 "Microsoft.PowerFx.Intellisense.SuggestionKind",
                 "Microsoft.PowerFx.Intellisense.UIString",
-                "Microsoft.PowerFx.Intellisense.TokenResultType",                
+                "Microsoft.PowerFx.Intellisense.TokenResultType",
 
                 // TBD ...
                 "Microsoft.PowerFx.Core.RenameDriver",
