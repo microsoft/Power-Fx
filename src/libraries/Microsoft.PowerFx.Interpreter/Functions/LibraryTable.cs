@@ -327,17 +327,6 @@ namespace Microsoft.PowerFx.Functions
             var arg1 = (LambdaFormulaValue)args[1];
             var arg2 = (StringValue)args[2];
 
-            //var pairs = arg0.Rows.Select(row =>
-            //{
-            //    if (row.IsValue)
-            //    {
-            //        var childContext = symbolContext.WithScopeValues(row.Value);
-            //        return new KeyValuePair<DValue<RecordValue>, FormulaValue>(row, arg1.EvalAsync(runner, childContext).Result);
-            //    }
-
-            //    return new KeyValuePair<DValue<RecordValue>, FormulaValue>(row, row.ToFormulaValue());
-            //}).ToList();
-
             var pairs = (await Task.WhenAll(arg0.Rows.Select(row => ApplySortLambda(runner, symbolContext, row, arg1)))).ToList();
 
             var errors = new List<ErrorValue>();
