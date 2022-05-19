@@ -8,7 +8,7 @@ using Microsoft.PowerFx.LanguageServerProtocol;
 using Microsoft.PowerFx.Syntax;
 using Xunit;
 
-namespace Microsoft.PowerFx.Interpreter.Tests
+namespace Microsoft.PowerFx.Interpreter.Tests.LanguageServiceProtocol
 {
     public class LSPTests
     {

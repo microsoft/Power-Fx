@@ -465,7 +465,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
             var startLine = startCode.Split(EOL).Length;
             var endLine = startLine + code.Split(EOL).Length - 1;
 
-            return new Range()
+            var range = new Range()
             {
                 Start = new Position()
                 {
@@ -478,6 +478,10 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
                     Line = endLine
                 }
             };
+
+            Contracts.Assert(range.IsValid());
+
+            return range;
         }
 
         private void PublishTokens(string documentUri, CheckResult result)
