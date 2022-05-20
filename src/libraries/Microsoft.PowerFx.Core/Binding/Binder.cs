@@ -2702,8 +2702,7 @@ namespace Microsoft.PowerFx.Core.Binding
                     return false;
                 }
 
-                if ((_txb.Document == null || _txb.Document.Properties.EnabledFeatures.IsEnhancedDelegationEnabled)
-                    && typeLeft.IsTable)
+                if (_txb.Document != null && _txb.Document.Properties.EnabledFeatures.IsEnhancedDelegationEnabled && typeLeft.IsTable)
                 {
                     // Table in table: RHS must be a single column table with a compatible schema. No coercion is allowed.
                     if (typeRight.IsTable)
