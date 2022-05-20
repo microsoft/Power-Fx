@@ -231,19 +231,8 @@ namespace Microsoft.PowerFx.Core.Utils
                 return (GetUniCatFlags(ch) & UniCatFlags.SpaceSeparator) != 0;
             }
 
-            switch (ch)
-            {
-                case ' ':
-                // character tabulation
-                case '\u0009':
-                // line tabulation
-                case '\u000B':
-                // form feed
-                case '\u000C':
-                    return true;
-            }
-
-            return false;
+            // Character is regular space or tab
+            return ch == 32 || IsTabulation(ch);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -257,6 +246,21 @@ namespace Microsoft.PowerFx.Core.Utils
                 {
                     return true;
                 }
+            }
+
+            return false;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool IsTabulation(char ch)
+        {
+            switch (ch)
+            {
+                // character tabulation
+                case '\u0009':
+                // line tabulation
+                case '\u000B':
+                    return true;
             }
 
             return false;
@@ -277,6 +281,8 @@ namespace Microsoft.PowerFx.Core.Utils
                 case '\u2028':
                 // Unicode paragraph separator
                 case '\u2029':
+                // form feed
+                case '\u000C':
                     return true;
             }
 
