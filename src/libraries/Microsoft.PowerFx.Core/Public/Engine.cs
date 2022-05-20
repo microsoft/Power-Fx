@@ -127,8 +127,7 @@ namespace Microsoft.PowerFx
                 parse.Root,
                 resolver,
                 bindingConfig,
-                ruleScope: parameterType._type,
-                useThisRecordForRuleScope: false);
+                ruleScope: parameterType._type);
 
             var result = new CheckResult(parse, binding);
 
@@ -221,7 +220,7 @@ namespace Microsoft.PowerFx
         /// <returns>The formula, with all identifiers converted to invariant form.</returns>
         public string GetInvariantExpression(string expressionText, RecordType parameters)
         {
-            return ExpressionLocalizationHelper.ConvertExpression(expressionText, parameters, CreateResolver(), CreateBinderGlue(), Config.CultureInfo, toDisplay: false);
+            return ExpressionLocalizationHelper.ConvertExpression(expressionText, parameters, BindingConfig.Default, CreateResolver(), CreateBinderGlue(), Config.CultureInfo, toDisplay: false);
         }
 
         /// <summary>
@@ -234,7 +233,7 @@ namespace Microsoft.PowerFx
         /// <returns>The formula, with all identifiers converted to display form.</returns>
         public string GetDisplayExpression(string expressionText, RecordType parameters)
         {
-            return ExpressionLocalizationHelper.ConvertExpression(expressionText, parameters, CreateResolver(), CreateBinderGlue(), Config.CultureInfo, toDisplay: true);
+            return ExpressionLocalizationHelper.ConvertExpression(expressionText, parameters, BindingConfig.Default, CreateResolver(), CreateBinderGlue(), Config.CultureInfo, toDisplay: true);
         }
     }
 }

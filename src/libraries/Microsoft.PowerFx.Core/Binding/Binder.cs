@@ -251,7 +251,6 @@ namespace Microsoft.PowerFx.Core.Binding
             INameResolver resolver,
             BindingConfig bindingConfig,
             DType ruleScope,
-            bool useThisRecordForRuleScope,
             bool updateDisplayNames = false,
             bool forceUpdateDisplayNames = false,
             IExternalRule rule = null)
@@ -305,7 +304,7 @@ namespace Microsoft.PowerFx.Core.Binding
             HasParentItemReference = false;
 
             ContextScope = ruleScope;
-            BinderNodeMetadataArgTypeVisitor = new BinderNodesMetadataArgTypeVisitor(this, resolver, ruleScope, useThisRecordForRuleScope);
+            BinderNodeMetadataArgTypeVisitor = new BinderNodesMetadataArgTypeVisitor(this, resolver, ruleScope, BindingConfig.UseThisRecordForRuleScope);
             HasReferenceToAttachment = false;
             NodesToReplace = new List<KeyValuePair<Token, string>>();
             UpdateDisplayNames = updateDisplayNames;
@@ -335,14 +334,13 @@ namespace Microsoft.PowerFx.Core.Binding
             bool updateDisplayNames = false,
             DType ruleScope = null,
             bool forceUpdateDisplayNames = false,
-            IExternalRule rule = null,
-            bool useThisRecordForRuleScope = false)
+            IExternalRule rule = null)
         {
             Contracts.AssertValue(node);
             Contracts.AssertValueOrNull(resolver);
 
-            var txb = new TexlBinding(glue, scopeResolver, queryOptionsMap, node, resolver, bindingConfig, ruleScope, useThisRecordForRuleScope, updateDisplayNames, forceUpdateDisplayNames, rule: rule);
-            var vis = new Visitor(txb, resolver, ruleScope, useThisRecordForRuleScope);
+            var txb = new TexlBinding(glue, scopeResolver, queryOptionsMap, node, resolver, bindingConfig, ruleScope, updateDisplayNames, forceUpdateDisplayNames, rule: rule);
+            var vis = new Visitor(txb, resolver, ruleScope, bindingConfig.UseThisRecordForRuleScope);
             vis.Run();
 
             // Determine if a rename has occured at the top level
@@ -372,10 +370,9 @@ namespace Microsoft.PowerFx.Core.Binding
             TexlNode node,
             INameResolver resolver,
             BindingConfig bindingConfig,
-            DType ruleScope,
-            bool useThisRecordForRuleScope = false)
+            DType ruleScope)
         {
-            return Run(glue, null, new DataSourceToQueryOptionsMap(), node, resolver, bindingConfig, false, ruleScope, false, null, useThisRecordForRuleScope);
+            return Run(glue, null, new DataSourceToQueryOptionsMap(), node, resolver, bindingConfig, false, ruleScope, false, null);
         }
 
         public void WidenResultType()
