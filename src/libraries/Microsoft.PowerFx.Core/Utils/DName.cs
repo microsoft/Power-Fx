@@ -160,26 +160,26 @@ namespace Microsoft.PowerFx.Core.Utils
             }
 
             var fAllSpaces = true;
-            var fHasSpecialWhiteSpaceCharacters = false;
+            var fHasDisallowedWhiteSpaceCharacters = false;
             
             fModified = false;
 
             for (var i = 0; i < strName.Length; i++)
             {
-                var fIsSpace = CharacterUtils.IsDNameAllowedSpace(strName[i]);
-                var fIsWhiteSpace = char.IsWhiteSpace(strName[i]);
-                fAllSpaces = fAllSpaces && fIsWhiteSpace;
-                fHasSpecialWhiteSpaceCharacters |= fIsWhiteSpace && !fIsSpace;
+                var fIsSpace = strName[i] == ChSpace;
+                var fIsDisallowedWhiteSpace = CharacterUtils.IsTabulation(strName[i]) || CharacterUtils.IsLineTerm(strName[i]);
+                fAllSpaces = fAllSpaces && (fIsDisallowedWhiteSpace || fIsSpace);
+                fHasDisallowedWhiteSpaceCharacters |= fIsDisallowedWhiteSpace;
             }
 
-            if (fHasSpecialWhiteSpaceCharacters)
+            if (fHasDisallowedWhiteSpaceCharacters)
             {
                 fModified = true;
                 var builder = new StringBuilder(strName.Length);
 
                 for (var i = 0; i < strName.Length; i++)
                 {
-                    if (char.IsWhiteSpace(strName[i]) && !CharacterUtils.IsDNameAllowedSpace(strName[i]))
+                    if (CharacterUtils.IsTabulation(strName[i]) || CharacterUtils.IsLineTerm(strName[i]))
                     {
                         builder.Append(ChSpace);
                     }
