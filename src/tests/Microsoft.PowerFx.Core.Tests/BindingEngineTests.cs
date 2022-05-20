@@ -179,6 +179,18 @@ namespace Microsoft.PowerFx.Tests
             AssertContainsError(result, "Error 7-11: Name isn't valid. 'foo' isn't recognized");
         }
 
+        [Fact]
+        public void TableInRegressionError()
+        {
+            var config = new PowerFxConfig();
+            var engine = new Engine(config);
+            var formula = "Table() in \"\"";
+            var result = engine.Check(formula);
+
+            Assert.False(result.IsSuccess);
+            AssertContainsError(result, "Error 0-7: Invalid argument type. Cannot use Table values in this context.");
+        }
+
         private void AssertContainsError(IOperationStatus result, string errorMessage)
         {
             Assert.Contains(result.Errors, x => x.ToString().StartsWith(errorMessage));
