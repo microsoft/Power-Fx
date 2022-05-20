@@ -2840,7 +2840,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 if (!useUpdatedDisplayNames && type.HasExpandInfo && type.ExpandInfo.ParentDataSource.Kind == DataSourceKind.CdsNative)
                 {
-                    if (_txb.Document.GlobalScope.TryGetCdsDataSourceWithLogicalName(((IExternalCdsDataSource)type.ExpandInfo.ParentDataSource).DatasetName, type.ExpandInfo.Identity, out var relatedDataSource) &&
+                    if (_txb.Document != null && _txb.Document.GlobalScope.TryGetCdsDataSourceWithLogicalName(((IExternalCdsDataSource)type.ExpandInfo.ParentDataSource).DatasetName, type.ExpandInfo.Identity, out var relatedDataSource) &&
                         relatedDataSource.IsConvertingDisplayNameMapping)
                     {
                         useUpdatedDisplayNames = true;
@@ -4507,7 +4507,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 if (_txb._glue.IsComponentScopedPropertyFunction(infoTexlFunction))
                 {
                     // Component custom behavior properties can only be accessed by controls within a component.
-                    if (_txb.Document.TryGetControlByUniqueId(infoTexlFunction.Namespace.Name.Value, out var lhsControl) &&
+                    if (_txb.Document != null && _txb.Document.TryGetControlByUniqueId(infoTexlFunction.Namespace.Name.Value, out var lhsControl) &&
                         lhsControl.Template.TryGetProperty(infoTexlFunction.Name, out var rhsProperty))
                     {
                         return IsValidAccessToScopedProperty(lhsControl, rhsProperty, currentControl, currentProperty);
@@ -4534,7 +4534,7 @@ namespace Microsoft.PowerFx.Core.Binding
                     {
                         // We only have to check the property's rule and the calling arguments for purity as scoped variables
                         // (default values) are by definition data rules and therefore always pure.
-                        if (_txb.Document.TryGetControlByUniqueId(infoTexlFunction.Namespace.Name.Value, out var ctrl) &&
+                        if (_txb.Document != null && _txb.Document.TryGetControlByUniqueId(infoTexlFunction.Namespace.Name.Value, out var ctrl) &&
                             ctrl.TryGetRule(new DName(infoTexlFunction.Name), out var rule))
                         {
                             hasSideEffects |= rule.Binding.HasSideEffects(rule.Binding.Top);
