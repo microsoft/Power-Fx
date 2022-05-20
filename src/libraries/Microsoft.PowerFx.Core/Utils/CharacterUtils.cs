@@ -261,6 +261,20 @@ namespace Microsoft.PowerFx.Core.Utils
 
             return false;
         }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool IsDNameAllowedSpace(char ch)
+        {
+            switch (ch)
+            {
+                case ' ':
+                // Full-Width space used in CJK languages
+                case '\u3000':
+                    return true;
+            }
+
+            return false;
+        }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsLineTerm(char ch)

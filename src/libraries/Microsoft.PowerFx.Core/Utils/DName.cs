@@ -166,7 +166,7 @@ namespace Microsoft.PowerFx.Core.Utils
 
             for (var i = 0; i < strName.Length; i++)
             {
-                var fIsSpace = strName[i] == ChSpace;
+                var fIsSpace = CharacterUtils.IsDNameAllowedSpace(strName[i]);
                 var fIsWhiteSpace = char.IsWhiteSpace(strName[i]);
                 fAllSpaces = fAllSpaces && fIsWhiteSpace;
                 fHasSpecialWhiteSpaceCharacters |= fIsWhiteSpace && !fIsSpace;
@@ -179,7 +179,7 @@ namespace Microsoft.PowerFx.Core.Utils
 
                 for (var i = 0; i < strName.Length; i++)
                 {
-                    if (char.IsWhiteSpace(strName[i]))
+                    if (char.IsWhiteSpace(strName[i]) && !CharacterUtils.IsDNameAllowedSpace(strName[i]))
                     {
                         builder.Append(ChSpace);
                     }
