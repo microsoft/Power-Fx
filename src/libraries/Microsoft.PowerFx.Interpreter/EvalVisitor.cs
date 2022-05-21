@@ -522,14 +522,14 @@ namespace Microsoft.PowerFx
             return errors.Any() ? new ErrorValue(node.IRContext, errors) : fv;
         }
 
-        public override ValueTask<FormulaValue> Visit(ResolvedObjectNode node, SymbolContext context)
+        public override async ValueTask<FormulaValue> Visit(ResolvedObjectNode node, SymbolContext context)
         {
-            return new ValueTask<FormulaValue>(node.Value switch
+            return node.Value switch
             {
                 ICanGetValue fi => fi.Value,
                 IExternalOptionSet optionSet => ResolvedObjectHelpers.OptionSet(optionSet, node.IRContext),
                 _ => ResolvedObjectHelpers.ResolvedObjectError(node),
-            });
+            };
         }
     }
 }
