@@ -63,12 +63,12 @@ namespace Microsoft.PowerFx
             return new StringValue(node.IRContext, node.LiteralValue);
         }
 
-        public override async  ValueTask<FormulaValue> Visit(NumberLiteralNode node, SymbolContext context)
+        public override async ValueTask<FormulaValue> Visit(NumberLiteralNode node, SymbolContext context)
         {
             return new NumberValue(node.IRContext, node.LiteralValue);
         }
 
-        public override  async ValueTask<FormulaValue> Visit(BooleanLiteralNode node, SymbolContext context)
+        public override async ValueTask<FormulaValue> Visit(BooleanLiteralNode node, SymbolContext context)
         {
             return new BooleanValue(node.IRContext, node.LiteralValue);
         }
@@ -215,10 +215,10 @@ namespace Microsoft.PowerFx
             var arg1 = await node.Left.Accept(this, context);
             var arg2 = await node.Right.Accept(this, context);
             var args = new FormulaValue[] { arg1, arg2 };
-            return VisitBinaryOpNode(node, context, args);
+            return await VisitBinaryOpNode(node, context, args);
         }
 
-        private FormulaValue VisitBinaryOpNode(BinaryOpNode node, SymbolContext context, FormulaValue[] args)
+        private ValueTask<FormulaValue> VisitBinaryOpNode(BinaryOpNode node, SymbolContext context, FormulaValue[] args)
         { 
             switch (node.Op)
             {
@@ -316,10 +316,10 @@ namespace Microsoft.PowerFx
                 case BinaryOpKind.GeqTime:
                     return OperatorGeqTime(this, context, node.IRContext, args);
                 case BinaryOpKind.DynamicGetField:
-                    return OperatorDynamicGetField(node, args);
+                    return new ValueTask<FormulaValue>(OperatorDynamicGetField(node, args));
 
                 default:
-                    return CommonErrors.UnreachableCodeError(node.IRContext);
+                    return new ValueTask<FormulaValue>(CommonErrors.UnreachableCodeError(node.IRContext));
             }
         }
 

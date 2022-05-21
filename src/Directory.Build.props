@@ -28,8 +28,9 @@
     <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)PowerFx.ruleset</CodeAnalysisRuleSet>
     <!--
       Disabled CS1591 (Missing XML Comment for Public). Reenable to track down remaining missing documentation
+      Disabled CS1998 (Async method lacks await operator): Exception handling for methods returning a task that don't use await is likely to cause confusion.
     -->
-    <NoWarn>$(NoWarn);CS1591</NoWarn>
+    <NoWarn>$(NoWarn);CS1591;CS1998</NoWarn>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
 
