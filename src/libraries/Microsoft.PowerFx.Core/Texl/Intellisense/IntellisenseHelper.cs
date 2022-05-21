@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.PowerFx.Core.Binding;
-using Microsoft.PowerFx.Core.Binding.BindInfo;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Types.Enums;
@@ -216,7 +215,7 @@ namespace Microsoft.PowerFx.Intellisense
             intellisenseData.Suggestions.Clear();
             intellisenseData.SubstringSuggestions.Clear();
             intellisenseData.SetMatchArea(intellisenseData.ReplacementStartIndex, intellisenseData.ReplacementStartIndex);
-            AddSuggestionsForMatches(intellisenseData, TexlLexer.LocalizedInstance.GetOperatorKeywords(type), SuggestionKind.BinaryOperator, SuggestionIconKind.Other, requiresSuggestionEscaping: false);
+            AddSuggestionsForMatches(intellisenseData, TexlLexer.GetOperatorKeywords(type), SuggestionKind.BinaryOperator, SuggestionIconKind.Other, requiresSuggestionEscaping: false);
         }
 
         /// <summary>
@@ -722,7 +721,7 @@ namespace Microsoft.PowerFx.Intellisense
             Contracts.AssertValue(intellisenseData);
 
             // TASK: 76039: Intellisense: Update intellisense to filter suggestions based on the expected type of the text being typed in UI
-            AddSuggestionsForMatches(intellisenseData, TexlLexer.LocalizedInstance.GetUnaryOperatorKeywords(), SuggestionKind.KeyWord, SuggestionIconKind.Other, requiresSuggestionEscaping: false);
+            AddSuggestionsForMatches(intellisenseData, TexlLexer.GetUnaryOperatorKeywords(), SuggestionKind.KeyWord, SuggestionIconKind.Other, requiresSuggestionEscaping: false);
         }
 
         public static void AddSuggestionsForEnums(IntellisenseData.IntellisenseData intellisenseData)

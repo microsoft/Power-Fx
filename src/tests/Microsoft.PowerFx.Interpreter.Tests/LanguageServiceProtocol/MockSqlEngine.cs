@@ -8,7 +8,7 @@ using Microsoft.PowerFx.LanguageServerProtocol.Protocol;
 
 namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
 {
-    public class MockSqlEngine : IPowerFxScope, IPowerFxScopeDisplayName, IPowerFxScopeQuickFix
+    public class MockSqlEngine : IPowerFxScope, IPowerFxScopeQuickFix
     {
         public CheckResult Check(string expression)
         {
@@ -20,7 +20,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             throw new System.NotImplementedException();
         }
 
-        public string TranslateToDisplayName(string expression)
+        public string ConvertToDisplay(string expression)
         {
             return expression.Replace("new_price", "Price").Replace("new_quantity", "Quantity");
         }

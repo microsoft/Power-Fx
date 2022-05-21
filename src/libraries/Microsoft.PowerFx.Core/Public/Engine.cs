@@ -2,11 +2,12 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
+using System.Globalization;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Glue;
-using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Parser;
+using Microsoft.PowerFx.Core.Texl.Intellisense;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Intellisense;
@@ -48,11 +49,16 @@ namespace Microsoft.PowerFx
         /// Create a resolver for use in binding. This is called from <see cref="Check(string, RecordType, ParserOptions)"/>.
         /// Base classes can override this is there are additional symbols not in the config.
         /// </summary>
-        /// <param name="alternateConfig">An alternate config that can be provided. Should default to engine's config if null.</param>
+        /// <param name="alternateConfig">An alternate config that can be provided. Should default to engine's config if null.</param>        
         /// <returns></returns>
-        private protected virtual SimpleResolver CreateResolver(PowerFxConfig alternateConfig = null)
+        private protected virtual INameResolver CreateResolver(PowerFxConfig alternateConfig = null)
         {
             return new SimpleResolver(alternateConfig ?? Config);
+        }
+
+        private protected virtual IBinderGlue CreateBinderGlue()
+        {
+            return new Glue2DocumentBinderGlue();
         }
 
         /// <summary>
@@ -61,7 +67,7 @@ namespace Microsoft.PowerFx
         /// <param name="expressionText"></param>
         /// <returns></returns>
         public IReadOnlyList<Token> Tokenize(string expressionText)
-            => TexlLexer.LocalizedInstance.GetTokens(expressionText);
+            => TexlLexer.GetLocalizedInstance(Config.CultureInfo).GetTokens(expressionText);
 
         /// <summary>
         /// Parse the expression without doing any binding.
@@ -72,6 +78,9 @@ namespace Microsoft.PowerFx
         public ParseResult Parse(string expressionText, ParserOptions options = null)
         {
             options ??= new ParserOptions();
+            
+            // If culture isn't explicitly set, use the one from PowerFx Config
+            options.Culture ??= Config.CultureInfo;
 
             var result = options.Parse(expressionText);
             return result;
@@ -111,14 +120,14 @@ namespace Microsoft.PowerFx
             // We can still use that for intellisense. 
 
             var resolver = CreateResolver();
+            var glue = CreateBinderGlue();
 
             var binding = TexlBinding.Run(
-                new Glue2DocumentBinderGlue(),
+                glue,
                 parse.Root,
                 resolver,
                 bindingConfig,
-                ruleScope: parameterType._type,
-                useThisRecordForRuleScope: false);
+                ruleScope: parameterType._type);
 
             var result = new CheckResult(parse, binding);
 
@@ -165,7 +174,7 @@ namespace Microsoft.PowerFx
         {
             var result = Check(expression, parameterType);
             var binding = result._binding;
-            var formula = new Formula(expression, null);
+            var formula = new Formula(expression, Config.CultureInfo);
             formula.ApplyParse(result.Parse);
 
             var context = new IntellisenseContext(expression, cursorPosition);
@@ -198,7 +207,7 @@ namespace Microsoft.PowerFx
             ** but that we don't return any display names for them. Thus, we clone a PowerFxConfig but without 
             ** display name support and construct a resolver from that instead, which we use for the rewrite binding.
             */
-            return new RenameDriver(parameters, pathToRename, updatedName, CreateResolver(Config.WithoutDisplayNames()));
+            return new RenameDriver(parameters, pathToRename, updatedName, this, CreateResolver(Config.WithoutDisplayNames()), CreateBinderGlue());
         }
 
         /// <summary>
@@ -211,7 +220,7 @@ namespace Microsoft.PowerFx
         /// <returns>The formula, with all identifiers converted to invariant form.</returns>
         public string GetInvariantExpression(string expressionText, RecordType parameters)
         {
-            return ConvertExpression(expressionText, parameters, CreateResolver(), toDisplayNames: false);
+            return ExpressionLocalizationHelper.ConvertExpression(expressionText, parameters, BindingConfig.Default, CreateResolver(), CreateBinderGlue(), Config.CultureInfo, toDisplay: false);
         }
 
         /// <summary>
@@ -224,33 +233,7 @@ namespace Microsoft.PowerFx
         /// <returns>The formula, with all identifiers converted to display form.</returns>
         public string GetDisplayExpression(string expressionText, RecordType parameters)
         {
-            return ConvertExpression(expressionText, parameters, CreateResolver(), toDisplayNames: true);
-        }
-
-        internal static string ConvertExpression(string expressionText, RecordType parameters, SimpleResolver resolver, bool toDisplayNames)
-        {
-            var formula = new Formula(expressionText);
-            formula.EnsureParsed(TexlParser.Flags.None);
-
-            var binding = TexlBinding.Run(
-                new Glue2DocumentBinderGlue(),
-                null,
-                new Core.Entities.QueryOptions.DataSourceToQueryOptionsMap(),
-                formula.ParseTree,
-                resolver,
-                BindingConfig.Default,
-                ruleScope: parameters._type,
-                useThisRecordForRuleScope: false,
-                updateDisplayNames: toDisplayNames,
-                forceUpdateDisplayNames: toDisplayNames);
-
-            Dictionary<Span, string> worklist = new ();
-            foreach (var token in binding.NodesToReplace)
-            {
-                worklist.Add(token.Key.Span, TexlLexer.EscapeName(token.Value));
-            }
-
-            return Span.ReplaceSpans(expressionText, worklist);
+            return ExpressionLocalizationHelper.ConvertExpression(expressionText, parameters, BindingConfig.Default, CreateResolver(), CreateBinderGlue(), Config.CultureInfo, toDisplay: true);
         }
     }
 }

@@ -46,6 +46,9 @@ namespace Microsoft.PowerFx.Core.Binding
         // The local scope resolver associated with this binding.
         public readonly IExternalRuleScopeResolver LocalRuleScopeResolver;
 
+        // Maps IDs to nodes
+        private readonly TexlNode[] _nodeMap;
+
         // Maps Ids to Types, where the Id is an index in the array.
         private readonly DType[] _typeMap;
         private readonly DType[] _coerceMap;
@@ -248,7 +251,6 @@ namespace Microsoft.PowerFx.Core.Binding
             INameResolver resolver,
             BindingConfig bindingConfig,
             DType ruleScope,
-            bool useThisRecordForRuleScope,
             bool updateDisplayNames = false,
             bool forceUpdateDisplayNames = false,
             IExternalRule rule = null)
@@ -276,6 +278,7 @@ namespace Microsoft.PowerFx.Core.Binding
             }
 
             CoercedToplevelType = DType.Invalid;
+            _nodeMap = new TexlNode[idLim];
             _infoMap = new object[idLim];
             _compilerGeneratedCallNodes = new CallNode[idLim];
             _asyncMap = new bool[idLim];
@@ -301,7 +304,7 @@ namespace Microsoft.PowerFx.Core.Binding
             HasParentItemReference = false;
 
             ContextScope = ruleScope;
-            BinderNodeMetadataArgTypeVisitor = new BinderNodesMetadataArgTypeVisitor(this, resolver, ruleScope, useThisRecordForRuleScope);
+            BinderNodeMetadataArgTypeVisitor = new BinderNodesMetadataArgTypeVisitor(this, resolver, ruleScope, BindingConfig.UseThisRecordForRuleScope);
             HasReferenceToAttachment = false;
             NodesToReplace = new List<KeyValuePair<Token, string>>();
             UpdateDisplayNames = updateDisplayNames;
@@ -331,14 +334,13 @@ namespace Microsoft.PowerFx.Core.Binding
             bool updateDisplayNames = false,
             DType ruleScope = null,
             bool forceUpdateDisplayNames = false,
-            IExternalRule rule = null,
-            bool useThisRecordForRuleScope = false)
+            IExternalRule rule = null)
         {
             Contracts.AssertValue(node);
             Contracts.AssertValueOrNull(resolver);
 
-            var txb = new TexlBinding(glue, scopeResolver, queryOptionsMap, node, resolver, bindingConfig, ruleScope, useThisRecordForRuleScope, updateDisplayNames, forceUpdateDisplayNames, rule: rule);
-            var vis = new Visitor(txb, resolver, ruleScope, useThisRecordForRuleScope);
+            var txb = new TexlBinding(glue, scopeResolver, queryOptionsMap, node, resolver, bindingConfig, ruleScope, updateDisplayNames, forceUpdateDisplayNames, rule: rule);
+            var vis = new Visitor(txb, resolver, ruleScope, bindingConfig.UseThisRecordForRuleScope);
             vis.Run();
 
             // Determine if a rename has occured at the top level
@@ -368,10 +370,9 @@ namespace Microsoft.PowerFx.Core.Binding
             TexlNode node,
             INameResolver resolver,
             BindingConfig bindingConfig,
-            DType ruleScope,
-            bool useThisRecordForRuleScope = false)
+            DType ruleScope)
         {
-            return Run(glue, null, new DataSourceToQueryOptionsMap(), node, resolver, bindingConfig, false, ruleScope, false, null, useThisRecordForRuleScope);
+            return Run(glue, null, new DataSourceToQueryOptionsMap(), node, resolver, bindingConfig, false, ruleScope, false, null);
         }
 
         public void WidenResultType()
@@ -389,6 +390,24 @@ namespace Microsoft.PowerFx.Core.Binding
             return _typeMap[node.Id];
         }
 
+        /// <summary>
+        /// Checks that the node is associated with this binding. This is critical so that node IDs are valid.
+        /// </summary>
+        /// <param name="node"></param>
+        /// <returns></returns>
+        public bool IsNodeValid(TexlNode node)
+        {
+            Contracts.AssertValue(node);
+
+            if (node.Id >= _nodeMap.Length)
+            {
+                return false;
+            }
+
+            var nodeById = _nodeMap[node.Id];
+            return ReferenceEquals(node, nodeById);
+        }
+
         private void SetType(TexlNode node, DType type)
         {
             Contracts.AssertValue(node);
@@ -396,6 +415,7 @@ namespace Microsoft.PowerFx.Core.Binding
             Contracts.AssertIndex(node.Id, _typeMap.Length);
             Contracts.Assert(_typeMap[node.Id] == null || !_typeMap[node.Id].IsValid || type.IsError);
 
+            _nodeMap[node.Id] = node;
             _typeMap[node.Id] = type;
         }
 
@@ -2679,7 +2699,33 @@ namespace Microsoft.PowerFx.Core.Binding
                     return false;
                 }
 
-                // table in anything: not supported
+                if (_txb.Document != null && _txb.Document.Properties.EnabledFeatures.IsEnhancedDelegationEnabled && typeLeft.IsTable)
+                {
+                    // Table in table: RHS must be a single column table with a compatible schema. No coercion is allowed.
+                    if (typeRight.IsTable)
+                    {
+                        var names = typeRight.GetNames(DPath.Root);
+                        if (names.Count() != 1)
+                        {
+                            _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Severe, right, TexlStrings.ErrInvalidSchemaNeedCol);
+                            return false;
+                        }
+
+                        var typedName = names.Single();
+                        if (!typeLeft.CoercesTo(typedName.Type))
+                        {
+                            _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Severe, right, TexlStrings.ErrCannotCoerce_SourceType_TargetType, typeLeft.GetKindString(), typedName.Type.GetKindString());
+                            return false;
+                        }
+
+                        if (typeLeft.Accepts(typedName.Type))
+                        {
+                            return true;
+                        }
+                    }
+                }
+
+                // Table in scalar or Table in Record or Table in unsupported table: not supported
                 _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Severe, left, TexlStrings.ErrBadType_Type, typeLeft.GetKindString());
                 return false;
             }
@@ -2697,7 +2743,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 return set;
             }
-            
+
             public override void Visit(ErrorNode node)
             {
                 AssertValid();
@@ -2791,7 +2837,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 if (!useUpdatedDisplayNames && type.HasExpandInfo && type.ExpandInfo.ParentDataSource.Kind == DataSourceKind.CdsNative)
                 {
-                    if (_txb.Document.GlobalScope.TryGetCdsDataSourceWithLogicalName(((IExternalCdsDataSource)type.ExpandInfo.ParentDataSource).DatasetName, type.ExpandInfo.Identity, out var relatedDataSource) &&
+                    if (_txb.Document != null && _txb.Document.GlobalScope.TryGetCdsDataSourceWithLogicalName(((IExternalCdsDataSource)type.ExpandInfo.ParentDataSource).DatasetName, type.ExpandInfo.Identity, out var relatedDataSource) &&
                         relatedDataSource.IsConvertingDisplayNameMapping)
                     {
                         useUpdatedDisplayNames = true;
@@ -2975,10 +3021,10 @@ namespace Microsoft.PowerFx.Core.Binding
                 var fnInfo = FirstNameInfo.Create(node, lookupInfo);
                 var lookupType = lookupInfo.Type;
 
-                if (lookupInfo.DisplayName != default) 
+                if (lookupInfo.DisplayName != default)
                 {
                     if (_txb.UpdateDisplayNames)
-                    {                    
+                    {
                         _txb.NodesToReplace.Add(new KeyValuePair<Token, string>(node.Token, lookupInfo.DisplayName));
                     }
                     else if (lookupInfo.Data is IExternalEntity entity)
@@ -4458,7 +4504,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 if (_txb._glue.IsComponentScopedPropertyFunction(infoTexlFunction))
                 {
                     // Component custom behavior properties can only be accessed by controls within a component.
-                    if (_txb.Document.TryGetControlByUniqueId(infoTexlFunction.Namespace.Name.Value, out var lhsControl) &&
+                    if (_txb.Document != null && _txb.Document.TryGetControlByUniqueId(infoTexlFunction.Namespace.Name.Value, out var lhsControl) &&
                         lhsControl.Template.TryGetProperty(infoTexlFunction.Name, out var rhsProperty))
                     {
                         return IsValidAccessToScopedProperty(lhsControl, rhsProperty, currentControl, currentProperty);
@@ -4485,7 +4531,7 @@ namespace Microsoft.PowerFx.Core.Binding
                     {
                         // We only have to check the property's rule and the calling arguments for purity as scoped variables
                         // (default values) are by definition data rules and therefore always pure.
-                        if (_txb.Document.TryGetControlByUniqueId(infoTexlFunction.Namespace.Name.Value, out var ctrl) &&
+                        if (_txb.Document != null && _txb.Document.TryGetControlByUniqueId(infoTexlFunction.Namespace.Name.Value, out var ctrl) &&
                             ctrl.TryGetRule(new DName(infoTexlFunction.Name), out var rule))
                         {
                             hasSideEffects |= rule.Binding.HasSideEffects(rule.Binding.Top);

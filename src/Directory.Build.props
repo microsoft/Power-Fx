@@ -40,20 +40,10 @@
     <Copyright>© Microsoft Corporation. All rights reserved.</Copyright>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+  <PropertyGroup>
     <AssemblyOriginatorKeyFile>$(SolutionDir)\build\35MSSharedLib1024.snk</AssemblyOriginatorKeyFile>
     <SignAssembly>true</SignAssembly>
     <DelaySign>true</DelaySign>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <AssemblyOriginatorKeyFile>$(SolutionDir)\build\35MSSharedLib1024.snk</AssemblyOriginatorKeyFile>
-    <SignAssembly>true</SignAssembly>
-    <DelaySign>true</DelaySign>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(SignAssembly)'=='True' ">
-    <DefineConstants>SIGNASSEMBLY</DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(TF_BUILD)' != '' ">
@@ -62,12 +52,12 @@
 
   <PropertyGroup>
     <!-- Rules found at: https://aka.ms/Microsoft-NuGet-Compliance -->
-    <PackageProjectUrl>https://github.com/Microsoft/PowerFx-Staging</PackageProjectUrl>
-    <PackageIconUrl>https://raw.githubusercontent.com/microsoft/PowerFx-Staging/master/icon.png</PackageIconUrl>
+    <PackageProjectUrl>https://github.com/microsoft/Power-Fx</PackageProjectUrl>
+    <PackageIconUrl>https://raw.githubusercontent.com/microsoft/Power-Fx/master/icon.png</PackageIconUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <PackageIcon>icon.png</PackageIcon>
-    <RepositoryUrl>https://github.com/Microsoft/PowerFx-Staging</RepositoryUrl>
+    <RepositoryUrl>https://github.com/microsoft/Power-Fx</RepositoryUrl>
     <PackageTags>powerfx</PackageTags>
     <RepositoryType />
     <NeutralLanguage>en-US</NeutralLanguage>

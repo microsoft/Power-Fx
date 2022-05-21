@@ -61,5 +61,15 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var actualSuggestions = SuggestStrings(expression, config, parameterType);
             Assert.Equal(expectedSuggestions, actualSuggestions);
         }
+
+        [Theory]
+        [InlineData("Hou|", "Hour", "TimeUnit.Hours")]
+        public void TestSuggestHour(string expression, params string[] expectedSuggestions)
+        {
+            var config = new PowerFxConfig();
+
+            var actualSuggestions = SuggestStrings(expression, config, null);
+            Assert.Equal(expectedSuggestions, actualSuggestions);
+        }
     }
 }
