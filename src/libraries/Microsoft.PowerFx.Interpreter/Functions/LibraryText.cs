@@ -80,7 +80,7 @@ namespace Microsoft.PowerFx.Functions
 
         // https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-value
         // Convert string to number
-        public static async ValueTask<FormulaValue> Value(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args)
+        public static FormulaValue Value(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args)
         {
             var arg0 = args[0];
 
@@ -141,7 +141,7 @@ namespace Microsoft.PowerFx.Functions
         }
 
         // https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-text
-        public static async ValueTask<FormulaValue> Text(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args)
+        public static FormulaValue Text(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args)
         {
             // only DateValue and DateTimeValue are supported for now with custom format strings.
             if (args.Length > 1 && args[0] is StringValue)
@@ -298,7 +298,7 @@ namespace Microsoft.PowerFx.Functions
             return new StringValue(irContext, args[0].Value.ToUpper());
         }
 
-        public static async ValueTask<FormulaValue> Proper(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, StringValue[] args)
+        public static FormulaValue Proper(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, StringValue[] args)
         {
             return new StringValue(irContext, runner.CultureInfo.TextInfo.ToTitleCase(args[0].Value.ToLower()));
         }

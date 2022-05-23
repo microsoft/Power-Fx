@@ -174,7 +174,7 @@
     <Rule Id="SA1643" Action="Error" />
     <Rule Id="SA1648" Action="Error" />
     <Rule Id="SA1651" Action="Error" />
-    <Rule Id="SX1309" Action="Error" /> <!-- FieldNamesShouldBeginWithUnderscores -->
+    <Rule Id="SX1309" Action="Error" />
     <!-- XML Documentation Warnings, disabled until we take a pass over docs -->
     <Rule Id="SA1574" Action="None" />
     <Rule Id="SA1600" Action="None" />
@@ -195,8 +195,8 @@
     <Rule Id="SA1625" Action="None" />
     <!-- End XM Documentation Warnings-->
     <!-- File/Class Naming Guidelines: These conflict with our function files mostly -->
-    <Rule Id="SA1402" Action="Warning" />
-    <Rule Id="SA1649" Action="Warning" />
+    <Rule Id="SA1402" Action="None" />
+    <Rule Id="SA1649" Action="None" />
     <!-- End File/Class Naming Guidelines-->
   </Rules>
 </RuleSet>

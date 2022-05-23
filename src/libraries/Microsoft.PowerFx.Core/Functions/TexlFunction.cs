@@ -486,7 +486,7 @@ namespace Microsoft.PowerFx.Core.Functions
 
         /// <summary>
         /// True if the evaluation of the param at the 0-based index is controlled by the function in question
-        /// e.g. conditionally evaluated, repeatedly evaluated, etc.., false otherwise
+        /// e.g. conditionally evaluated, repeatedly evaluated, etc.., false otherwise.
         /// All lambda params are Lazy, but others may also be, including short-circuit booleans, conditionals, etc..
         /// </summary>
         /// <param name="index">Parameter index, 0-based.</param>
