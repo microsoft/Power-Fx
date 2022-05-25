@@ -1,0 +1,68 @@
+// NUMERIC RECORDS
+
+>> IsEmpty([1234])
+false
+
+>> IsEmpty([1, 2, 3, 4, 5])
+false
+
+// BOOLEAN RECORDS
+
+>> IsEmpty([false])
+false
+
+>> IsEmpty( ['Hello'])
+false
+
+// STRING RECORDS
+
+>> IsEmpty("")
+false
+
+>> IsEmpty(Table({a:"1"},{a:"two"},{a:"three"},{a:"four"},{a:"five"}))
+false
+
+// DATE/TIME/DATETIMEVALUE RECORDS
+
+>> IsEmpty([Date(2022,12,12)])
+false
+
+>> IsEmpty([Time(6,30,30)])
+false
+
+>> IsEmpty(Table({a:DateTimeValue("5/12/2022 6:30:30 PM")},{a:DateTimeValue("May 19, 2022")}))
+false
+
+// BLANK RECORDS
+
+>> IsEmpty([])
+true
+
+>> IsEmpty(Blank())
+false
+
+>> IsEmpty([Blank()])
+false
+
+﻿>> IsEmpty([Blank(),Blank(),Blank(),Blank(),Blank()])
+false
+
+>> IsEmpty(Table(Blank()))
+false
+
+>> IsEmpty(Table({a:Blank()}))
+false
+
+>> IsEmpty(Table({a:Blank()},{a:Blank()},{a:Blank()}))
+false
+
+>> IsEmpty(LastN([1,2,3,4], Blank()))
+false
+
+// ERROR RECORDS
+
+>> IsEmpty([1/0])
+false
+
+>> IsEmpty(Table({a:1/0},{a:Sqrt(-1)}))
+false

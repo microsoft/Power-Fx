@@ -1,0 +1,145 @@
+﻿// ******** TABLE WITH NO BLANK RECORDS ********
+
+>> Count([0])
+1
+
+>> Count([1])
+1
+
+>> Count(Table({a:1},{a:2},{a:3}))
+3
+
+﻿>> Count([1, 2, 3, 4, 5])
+5
+
+// ******** TABLE WITH FEW BLANK RECORDS ********
+
+﻿>> Count([0,""])
+1
+
+>> Count([1,2,3,4,Blank()])
+4
+
+>> Count([1,2,Blank(),Blank(),Blank()])
+2
+
+>> Count([1,2,3,If(1<0,4),Blank()])
+3
+
+>> Count(Table({a:1},{a:Blank()},{a:2},{a:Blank()} ))
+2
+
+>> Count(Table({a:1},{a:2},If(1<0,{a:3}),If(1>0,{a:4}),{a:5}))
+4
+
+>> Count(LastN([1,2,3,4], Blank()))
+Blank()
+
+>> Count([1,"1","2",Blank()])
+3
+
+//One blank record
+>> Count([Blank()])
+0
+
+//All blank records
+﻿>> Count([Blank(),Blank(),Blank(),Blank(),Blank()])
+0
+
+>> Count(Table({a:Blank()},{a:Blank()},{a:Blank()}))
+0
+
+// ******** ALL DATATPYE RECORDS ********
+
+>> Count([1,true,false,Date(2022,12,12),Time(6,30,30),DateTimeValue("5/12/2022 6:30:30 PM"),"abc"])
+#Error(Kind=InvalidArgument)
+
+>> Count([1,true,false,Date(2022,12,12),Time(6,30,30),DateTimeValue("5/12/2022 6:30:30 PM")])
+6
+
+
+// ******** NULL and ERROR RECORDS ********
+
+//Few error records
+>> Count([1, 2, 1/0, 4, 5])
+#Error(Kind=Div0)
+
+>> Count(Table({a:1},{a:2},If(Sqrt(-1)<1,{a:3}),{a:4}))
+#Error(Kind=Numeric)
+
+//All error records
+>> Count([1/0])
+#Error(Kind=Div0)
+
+>> Count(Table({a:1/0},{a:Sqrt(-1)}))
+#Error(Kind=Div0)
+
+>> Count(Sort([-2,-1,0,1,2],1/Value))
+#Error(Kind=Div0)
+
+
+// ************************************** COERCION CASES **************************************
+
+// Note: Count function accepts different dataype only in the array notation. In the table notation, all the records should be of the same datatype. Thus coercion cases will be applicable only for the array notation expressions 
+
+// ====================== FIRST RECORD NUMBER, SECOND RECORD OTHER DATAYPE ======================
+
+//Number-Number
+>> Count([1,2])
+2
+
+>> Count(Table({a:1},{a:2}))
+2
+
+//Number-String
+>> Count([1,"2"])
+2
+
+>> Count([1,"two"])
+#Error(Kind=InvalidArgument)
+
+//Number-Boolean
+>> Count([1,true])
+2
+
+>> Count([1,false])
+2
+
+//Number-Date
+>> Count([1,Date(2022,12,12)])
+2
+
+>> Count([1,DateValue("May 12, 2022")])
+2
+
+
+//Number-Time
+>> Count([1,Time(6,30,30)])
+2
+
+>> Count([1,DateValue("12:15 PM")])
+2
+
+//Number-DateTimeValue
+>> Count([1,DateTimeValue("5/12/2022 6:30:30 PM")])
+2
+
+// ====================== FIRST RECORD STRING, SECOND RECORD OTHER DATAYPE ======================
+
+// Count function doesn't accept string values as the first record in the array notation
+
+// ====================== FIRST RECORD BOOLEAN, SECOND RECORD OTHER DATAYPE ======================
+
+// Count function doesn't accept boolean values as the first record in the array notation
+
+// ====================== FIRST RECORD DATE, SECOND RECORD OTHER DATAYPE ======================
+
+// Count function doesn't accept Date values as the first record in the array notation
+
+// ====================== FIRST RECORD TIME, SECOND RECORD OTHER DATAYPE ======================
+
+// Count function doesn't accept Time values as the first record in the array notation
+
+// ====================== FIRST RECORD DATETIME, SECOND RECORD OTHER DATAYPE ======================
+
+// Count function doesn't accept Datetime values as the first record in the array notation

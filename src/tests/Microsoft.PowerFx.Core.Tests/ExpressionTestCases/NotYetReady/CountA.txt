@@ -1,0 +1,338 @@
+// ******** TABLE WITH NO BLANK RECORDS ********
+
+>> CountA([0])
+1
+
+>> CountA([1])
+1
+
+// NUMERIC RECORDS
+
+>> CountA([1, 2, 3, 4, 5])
+5
+
+>> CountA(Table({a:1},{a:2},{a:3}))
+3
+
+// STRING RECORDS
+
+>> CountA(["1", "one", "two", "three", "four"])
+5
+
+>> CountA(Table({a:"1"},{a:"two"},{a:"three"},{a:"four"},{a:"five"}))
+5
+
+// BOOLEAN RECORDS
+
+>> CountA([true, false])
+2
+
+>> CountA(Table({a:true},{a:false}))
+2
+
+// DATE/TIME/DATETIMEVALUE RECORDS
+
+>> CountA([Date(2022,12,12), DateValue("10/01/2014")])
+2
+
+>> CountA(Table({a:Date(2022,12,12)},{a:DateValue("10/01/2014")}))
+2
+
+>> CountA([DateTimeValue("5/12/2022 6:30:30 PM"), DateTimeValue("May 19, 2022")])
+2
+
+>> CountA(Table({a:DateTimeValue("5/12/2022 6:30:30 PM")},{a:DateTimeValue("May 19, 2022")}))
+2
+
+//  ALL DATATPYE RECORDS 
+
+﻿>> CountA([1, "2", "two", true, false, Date(2022,12,12),Time(6,30,30),DateTimeValue("5/12/2022 6:30:30 PM")])
+#Error(Kind=InvalidArgument)
+
+﻿>> CountA([1, "2", true, false, Date(2022,12,12),Time(6,30,30),DateTimeValue("5/12/2022 6:30:30 PM")])
+7
+
+// ******** TABLE WITH NO BLANK RECORDS ********
+
+﻿>> CountA([0,""])
+1
+
+>> CountA(["",""," ",1]
+4
+
+>> CountA([1,2,3,4,Blank()])
+4
+
+﻿>> CountA([1, "2", true, false, Blank(), "", " ", Date(2022,12,12),Time(6,30,30),DateTimeValue("5/12/2022 6:30:30 PM")])
+#Error(Kind=InvalidArgument)
+
+>> CountA([1,"2", true, Blank(),Blank(),Blank()])
+3
+
+>> CountA([1,Date(2022,12,12),"3",If(1<0,4),Blank()])
+3
+
+>> CountA(Table({a:false},{a:Blank()},{a:true},{a:Blank()}))
+2
+
+>> CountA(Table({a:"1"},{a:"2"},If(1<0,{a:"3"}),If(1>0,{a:"4"}),{a:"5"}))
+4
+
+>> CountA(LastN([1,2,3,4], Blank()))
+Blank()
+
+>> CountA([LastN([1,2,3,4]), Blank()])
+1
+
+//One blank record
+>> CountA([Blank()])
+0
+
+//All blank records
+﻿>> CountA([Blank(),Blank(),Blank(),Blank(),Blank()])
+0
+
+>> CountA(Table({a:Blank()},{a:Blank()},{a:Blank()}))
+0
+
+﻿>> CountA(["",""," ",Blank(),Blank()])
+3
+
+>> CountA(Table({a:""},{a:" "},{a:Blank()}))
+2
+
+// ******** NULL and ERROR RECORDS ********
+
+//Few error records
+>> CountA([1, "2", 1/0, true, false, Blank(), "", " ", Date(2022,12,12),Time(6,30,30),DateTimeValue("5/12/2022 6:30:30 PM")])
+#Error(Kind=Div0)
+
+>> CountA(Table({a:1},{a:2},If(Sqrt(-1)<1,{a:3}),{a:4}))
+#Error(Kind=Numeric)
+
+//All error records
+>> CountA([1/0])
+#Error(Kind=Div0)
+
+>> CountA(Table({a:1/0},{a:Sqrt(-1)}))
+#Error(Kind=Div0)
+
+>> CountA(Sort(["-2","-1","0",1,2],1/Value))
+#Error(Kind=Div0)
+
+>> CountA([Date(2022,12,12), Time(6,30,30), 1/0, DateTimeValue("5/12/2022 6:30:30 PM")])
+#Error(Kind=Div0)
+
+// ************************************** COERCION CASES **************************************
+
+// Note: CountA function accepts different dataype only in the array notation. In the table notation, all the records should be of the same datatype. Thus coercion cases will be applicable only for the array notation expressions 
+
+// ====================== FIRST RECORD NUMBER, SECOND RECORD OTHER DATAYPE ======================
+
+//Number-Number
+>> CountA([1,2])
+2
+
+>> CountA(Table({a:1},{a:2}))
+2
+
+//Number-String
+>> CountA([1,"2"])
+2
+
+>> CountA([1,"two"])
+#Error(Kind=InvalidArgument)
+
+//Number-Boolean
+>> CountA([1,true])
+2
+
+>> CountA([1,false])
+2
+
+//Number-Date
+>> CountA([1,Date(2022,12,12)])
+2
+
+>> CountA([1,DateValue("May 12, 2022")])
+2
+
+
+//Number-Time
+>> CountA([1,Time(6,30,30)])
+2
+
+>> CountA([1,TimeValue("12:15 PM")])
+2
+
+//Number-DateTimeValue
+>> CountA([1,DateTimeValue("5/12/2022 6:30:30 PM")])
+2
+
+// ====================== FIRST RECORD STRING, SECOND RESULT OTHER DATAYPE ======================
+
+//String-Number
+>> CountA(["Hello",2])
+2
+
+//String-String
+>> CountA(["Hello","2"])
+2
+
+>> CountA(Table({a:"Hello"},{a:"2"}))
+2
+
+>> CountA(["Hello","two"])
+#Error(Kind=InvalidArgument)
+
+//String-Boolean
+>> CountA(["Hello",true])
+2
+
+>> CountA(["Hello",false])
+2
+
+//String-Date
+>> CountA(["Hello",Date(2022,12,12)])
+2
+
+>> CountA(["Hello",DateValue("May 12, 2022")])
+2
+
+
+//String-Time
+>> CountA(["Hello",Time(6,30,30)])
+2
+
+>> CountA(["Hello",TimeValue("12:15 PM")])
+2
+
+//String-DateTimeValue
+>> CountA(["Hello",DateTimeValue("5/12/2022 6:30:30 PM")])
+2
+
+// ====================== FIRST RECORD BOOLEAN, SECOND RESULT OTHER DATAYPE ======================
+
+//Boolean-Number
+>> CountA([true,2])
+2
+
+//Boolean-String
+>> CountA([true,"2"])
+2
+
+>> CountA([true,"two"])
+#Error(Kind=InvalidArgument)
+
+//Boolean-Boolean
+>> CountA([true,false])
+2
+
+// ====================== FIRST RECORD DATE, SECOND RESULT OTHER DATAYPE ======================
+
+//Date-Number
+>> CountA([Date(2022,12,12),2])
+2
+
+//Date-Date
+>> CountA([Date(2022,12,12),"2"])
+2
+
+>> CountA([Date(2022,12,12),"two"])
+#Error(Kind=InvalidArgument)
+
+//Date-Boolean coercion not allowed
+
+//Date-Date
+>> CountA([Date(2022,12,12),Date(2022,12,12)])
+2
+
+>> CountA([Date(2022,12,12),DateValue("May 12, 2022")])
+2
+
+>> CountA(Table({a:Date(2022,12,12)},{a:Date(2022,12,12)}))
+2
+
+//Date-Time
+>> CountA([Date(2022,12,12),Time(6,30,30)])
+2
+
+>> CountA([Date(2022,12,12),TimeValue("12:15 PM")])
+2
+
+//Date-DateTimeValue
+>> CountA([Date(2022,12,12),DateTimeValue("5/12/2022 6:30:30 PM")])
+2
+
+// ====================== FIRST RECORD TIME, SECOND RESULT OTHER DATAYPE ======================
+
+//Time-Number
+>> CountA([Time(6,30,30),2])
+2
+
+//Time-String
+>> CountA([Time(6,30,30),"2"])
+2
+
+>> CountA([Time(6,30,30),"two"])
+#Error(Kind=InvalidArgument)
+
+//Time-Boolean coercion not allowed
+
+//Time-Date
+>> CountA([Time(6,30,30),Date(2022,12,12)])
+2
+
+>> CountA([Time(6,30,30),DateValue("May 12, 2022")])
+2
+
+//Time-Time
+>> CountA([Time(6,30,30),Time(6,30,30)])
+2
+
+>> CountA([Time(6,30,30),TimeValue("12:15 PM")])
+2
+
+>> CountA(Table({a:Time(6,30,30)},{a:Time(6,30,30)}))
+2
+
+//Time-DateTimeValue
+>> CountA([Time(6,30,30),DateTimeValue("5/12/2022 6:30:30 PM")])
+2
+
+// ====================== FIRST RECORD DATETIME, SECOND RESULT OTHER DATAYPE ======================
+
+//Datetime-Number
+>> CountA([DateTimeValue("5/12/2022 6:30:30 PM"),2])
+2
+
+//Datetime-String
+>> CountA([DateTimeValue("5/12/2022 6:30:30 PM"),"2"])
+2
+
+>> CountA([DateTimeValue("5/12/2022 6:30:30 PM"),"two"])
+#Error(Kind=InvalidArgument)
+
+
+//Datetime-Boolean coercion not allowed
+
+//Datetime-Date
+>> CountA([DateTimeValue("5/12/2022 6:30:30 PM"),Date(2022,12,12)])
+2
+
+>> CountA([DateTimeValue("5/12/2022 6:30:30 PM"),DateValue("May 12, 2022")])
+2
+
+//Datetime-Time
+>> CountA([DateTimeValue("5/12/2022 6:30:30 PM"),Time(6,30,30)])
+2
+
+>> CountA([DateTimeValue("5/12/2022 6:30:30 PM"),TimeValue("12:15 PM")])
+2
+
+//Datetime-DateTimeValue
+>> CountA([DateTimeValue("5/12/2022 6:30:30 PM"),DateTimeValue("5/12/2022 6:30:30 PM")])
+2
+
+>> CountA(Table({a:DateTimeValue("5/12/2022 6:30:30 PM")},{a:DateTimeValue("5/12/2022 6:30:30 PM")}))
+2
