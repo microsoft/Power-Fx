@@ -38,7 +38,7 @@ namespace Microsoft.PowerFx.Tests
         }
 
         // Table of heterogenous cells. 
-        private DataTable CreateDataTable()
+        private DataTable CreateObjectDataTable()
         {
             var table = new DataTable();
 
@@ -62,7 +62,7 @@ namespace Microsoft.PowerFx.Tests
         {
             var engine = new RecalcEngine();
 
-            var table = CreateDataTable();
+            var table = CreateObjectDataTable();
 
             var cache = new TypeMarshallerCache()
                 .WithDynamicMarshallers(new DataTableMarshallerProvider());
@@ -79,6 +79,47 @@ namespace Microsoft.PowerFx.Tests
 
             var result3 = engine.Eval("Sum(robintable, Value(ThisRecord.Column1))");
             Assert.Equal(101.0 + 201 + 301, result3.ToObject());
+        }
+
+        // Create table with strong typing
+        private DataTable CreateDataTable()
+        {
+            var table = new DataTable();
+
+            table.Columns.Add("Scores", typeof(int));
+            table.Columns.Add("Names", typeof(string));
+
+            table.Rows.Add(10, "name1");
+            table.Rows.Add(20, "name2");
+            table.Rows.Add(30, "name3");
+
+            return table;
+        }
+
+        // Eval against a strongly typed data table 
+        // Strong typing means we don't need extra Value()/Text() functions. 
+        [Fact]
+        public void DataTableEvalTest2()
+        {
+            var engine = new RecalcEngine();
+
+            var table = CreateDataTable();
+
+            var cache = new TypeMarshallerCache()
+                .WithDynamicMarshallers(new DataTableMarshallerProvider());
+
+            var robinTable = cache.Marshal(table);
+
+            engine.UpdateVariable("robintable", robinTable);
+
+            var result1 = engine.Eval("Index(robintable, 2).Scores"); // 20
+            var result2 = engine.Eval("Index(robintable, 3).Names"); // "name3"
+
+            Assert.Equal(20.0, result1.ToObject());
+            Assert.Equal("name3", result2.ToObject());
+
+            var result3 = engine.Eval("Sum(robintable, ThisRecord.Scores)");
+            Assert.Equal(60.0, result3.ToObject());
         }
 
         [Fact]
