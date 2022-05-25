@@ -48,11 +48,14 @@ namespace Microsoft.PowerFx.Types
         internal RecordsOnlyTableValue(IRContext irContext, IEnumerable<RecordValue> records)
             : base(irContext, records)
         {
+            // $$$ public, no IRContext .. 
+
             Contract.Assert(IRContext.ResultType is TableType);
             var tableType = (TableType)IRContext.ResultType;
             _recordType = tableType.ToRecord();
         }
 
+        // $$$ Why is this wrapping?
         protected override DValue<RecordValue> Marshal(RecordValue record)
         {
             return DValue<RecordValue>.Of(

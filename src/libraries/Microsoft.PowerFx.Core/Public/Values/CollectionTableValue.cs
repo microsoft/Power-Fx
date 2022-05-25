@@ -14,6 +14,8 @@ namespace Microsoft.PowerFx.Types
     /// <typeparam name="T">The element type of the collection.</typeparam>
     internal abstract class CollectionTableValue<T> : TableValue
     {
+        // $$ Public? 
+
         // Required - basic enumeration. This is the source object. 
         private readonly IEnumerable<T> _enumerator; // required. supports enumeration;
 

@@ -47,4 +47,14 @@ namespace Microsoft.PowerFx
         /// </remarks>
         public FormulaValue Marshal(object value);
     }
+
+    /// <summary>
+    /// Try to marshal a dynamic type such as a Dictionary, JObject, or DataTable.
+    /// Unlike <see cref="ITypeMarshaller"/>, the static type does not infer the runtime FormulaType. 
+    /// </summary>
+    [ThreadSafeImmutable]
+    public interface IDynamicTypeMarshaller
+    {
+        bool TryMarshal(TypeMarshallerCache cache, object value, out FormulaValue result);
+    }
 }

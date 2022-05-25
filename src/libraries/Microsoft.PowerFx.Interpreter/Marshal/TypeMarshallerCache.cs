@@ -39,6 +39,8 @@ namespace Microsoft.PowerFx
         /// </summary>
         private readonly IEnumerable<ITypeMarshallerProvider> _marshallers;
 
+        private readonly IEnumerable<IDynamicTypeMarshaller> _dynamicMarshallers;
+
         // Take a private array to get a snapshot and ensure the enumeration doesn't change
         private TypeMarshallerCache(ITypeMarshallerProvider[] marshallers)
         {
@@ -52,6 +54,18 @@ namespace Microsoft.PowerFx
         public TypeMarshallerCache()
             : this(_defaults.ToArray())
         {
+        }
+
+        // $$$ Fix 
+        // Cloning ctor
+        private TypeMarshallerCache(
+            Dictionary<Type, ITypeMarshaller> cache,
+            IEnumerable<ITypeMarshallerProvider> marshallers,
+            IEnumerable<IDynamicTypeMarshaller> dynamicMarshallers)
+        {
+            _cache = cache;
+            _marshallers = marshallers;
+            _dynamicMarshallers = dynamicMarshallers;
         }
 
         /// <summary>
@@ -72,6 +86,16 @@ namespace Microsoft.PowerFx
             IEnumerable<ITypeMarshallerProvider> list = providers;
 
             return NewPrepend(list);
+        }
+
+        public TypeMarshallerCache WithDynamicMarshallers(params IDynamicTypeMarshaller[] dynamicMarshallers)
+        {
+            if (dynamicMarshallers == null)
+            {
+                throw new ArgumentNullException(nameof(dynamicMarshallers));
+            }
+
+            return new TypeMarshallerCache(_cache, _marshallers, dynamicMarshallers);
         }
 
         private static ITypeMarshallerProvider[] NewList(ObjectMarshallerProvider objectProvider)
@@ -166,6 +190,17 @@ namespace Microsoft.PowerFx
             if (type == typeof(object))
             {
                 throw new ArgumentException($"Must provide specific type");
+            }
+
+            if (_dynamicMarshallers != null)
+            {
+                foreach (var dynamicMarshaller in _dynamicMarshallers)
+                {
+                    if (dynamicMarshaller.TryMarshal(this, value, out var result))
+                    {
+                        return result;
+                    }
+                }
             }
 
             var tm = GetMarshaller(type);

@@ -106,7 +106,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         // Wrap a .net object. 
         // This will lazily marshal through the object as it's accessed.
         [DebuggerDisplay("{_source}")]
-        private class Wrapper : IUntypedObject
+        public class Wrapper : IUntypedObject
         {
             public readonly object _source;
 
