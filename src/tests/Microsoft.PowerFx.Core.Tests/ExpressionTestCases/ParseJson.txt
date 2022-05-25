@@ -32,6 +32,12 @@ Blank()
 >> Value(ParseJSON("{""a"": 5}").b)
 Blank()
 
+>> Text(Index(ParseJSON("{""a"": 5, ""b"": [{""c"": 174 }, {""c"": ""foo"" }] }").b, 2).c)
+"foo"
+
+>> Value(Index(ParseJSON("{""a"": 5, ""b"": [{""c"": 19 }, {""c"": ""foo"" }] }").b, 1).c)
+19
+
 >> Value(ParseJSON("""s""").a)
 #Error
 
