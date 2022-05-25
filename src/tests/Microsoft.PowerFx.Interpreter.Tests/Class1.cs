@@ -47,7 +47,7 @@ namespace Microsoft.PowerFx.Tests
             table.Columns.Add(string.Empty, typeof(object));
 
             var row1 = new object[] { 101, "str1b", true };
-            var row2 = new object[] { "str201", "str202", "str203" };
+            var row2 = new object[] { 201, "str202", "str203" };
             var row3 = new object[] { 301, 302, 303 };
 
             table.Rows.Add(row1);
@@ -76,6 +76,9 @@ namespace Microsoft.PowerFx.Tests
 
             Assert.Equal(101.0, result1.ToObject());
             Assert.Equal("str202", result2.ToObject());
+
+            var result3 = engine.Eval("Sum(robintable, Value(ThisRecord.Column1))");
+            Assert.Equal(101.0 + 201 + 301, result3.ToObject());
         }
 
         [Fact]
@@ -176,9 +179,7 @@ namespace Microsoft.PowerFx.Tests
             {
                 if (value is DataTable dataTable)
                 {
-                    var wrapper = new Wrapper(dataTable);
-                    result = new RecordsOnlyTableValue(
-                        IRContext.NotInSource(wrapper.TableType), wrapper);
+                    result = new DataTableValue(dataTable);
                     return true;
                 }
 
@@ -186,12 +187,41 @@ namespace Microsoft.PowerFx.Tests
                 return false;
             }
 
-            // Expose an individual row of the DataTable as a RecordValue
-            private class RowWrapper : RecordValue
+            // Wrap a System.Data.DataTable as a Power Fx TableValue
+            private class DataTableValue : CollectionTableValue<DataRow>
+            {
+                public DataTableValue(DataTable dataTable)
+                    : base(ComputeType(dataTable), new DataTableWrapper(dataTable))
+                {
+                }
+
+                // Type is a record matching the columnNames, and each field is type is IUntypedObject.
+                // $$$ USe Columns.DataType to have stronger schema?
+                public static RecordType ComputeType(DataTable dataTable)
+                {
+                    var recordType = new RecordType();
+                    foreach (DataColumn column in dataTable.Columns)
+                    {
+                        recordType = recordType.Add(column.ColumnName, FormulaType.UntypedObject);
+                    }
+
+                    return recordType;
+                }
+
+                protected override DValue<RecordValue> Marshal(DataRow item)
+                {
+                    var record = new DataRowRecordValue(RecordType, item);
+
+                    return DValue<RecordValue>.Of(record);
+                }
+            }
+
+            // Wrap an individual DataRow of the DataTable as a Power Fx RecordValue
+            private class DataRowRecordValue : RecordValue
             {
                 private readonly DataRow _row;
 
-                public RowWrapper(RecordType type, DataRow row) 
+                public DataRowRecordValue(RecordType type, DataRow row)
                     : base(type)
                 {
                     _row = row;
@@ -202,83 +232,38 @@ namespace Microsoft.PowerFx.Tests
                     var value = _row[fieldName];
                     result = WrapDotNetObjectAsUntypedValue(value);
                     return true;
-                }                
+                }
             }
 
-            // Wrap the entire DataTable.
-            private class Wrapper : IReadOnlyList<RecordValue>
+            // This class shouldn't be necessary, but DataTable is legacy and doesn't implement generic interfaces. 
+            // Wrap and expose the generic interfaces that it ought to be implementing. 
+            private class DataTableWrapper : IReadOnlyList<DataRow>
             {
                 private readonly DataTable _dataTable;
 
-                public readonly RecordType _recordType;
-
-                public TableType TableType => _recordType.ToTable();
-
-                public Wrapper(DataTable dataTable)
-                {
-                    _dataTable = dataTable;
-
-                    var recordType = new RecordType();
-                    foreach (DataColumn column in _dataTable.Columns)
-                    {
-                        recordType = recordType.Add(column.ColumnName, FormulaType.UntypedObject);
-                    }
-
-                    _recordType = recordType;
-                }
-
-                public RecordValue this[int index0]
-                {
-                    get
-                    {
-                        var row = _dataTable.Rows[index0];
-                        return new RowWrapper(_recordType, row);
-                    }
-                }
-
                 public int Count => _dataTable.Rows.Count;
 
-                public IEnumerator<RecordValue> GetEnumerator()
+                public DataRow this[int index] => _dataTable.Rows[index];
+
+                public DataTableWrapper(DataTable dataTable)
                 {
-                    return new RowEnumerator(this);
+                    _dataTable = dataTable;
+                }
+                
+                public IEnumerator<DataRow> GetEnumerator()
+                {
+                    // DataTable is legacy and doesn't implement generic interfaces. 
+                    foreach (DataRow row in _dataTable.Rows)
+                    {
+                        yield return row;
+                    }
                 }
 
                 IEnumerator IEnumerable.GetEnumerator()
                 {
-                    return new RowEnumerator(this);
+                    return _dataTable.Rows.GetEnumerator();
                 }
-
-                private class RowEnumerator : IEnumerator<RecordValue>
-                {
-                    private int _index = -1;
-
-                    private readonly Wrapper _parent;
-
-                    public RowEnumerator(Wrapper parent)
-                    {
-                        _parent = parent;
-                    }
-
-                    public RecordValue Current => _parent[_index];
-
-                    object IEnumerator.Current => Current;
-
-                    public void Dispose()
-                    {
-                    }
-
-                    public bool MoveNext()
-                    {
-                        _index++;
-                        return _index == _parent.Count;
-                    }
-
-                    public void Reset()
-                    {
-                        _index = -1;
-                    }
-                }
-            }          
+            }
         }
     }
 }
