@@ -194,7 +194,7 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Fact]
-        public async Task TestRunnerSuccess()
+        public void TestRunnerSuccess()
         {
             var runner = new MockRunner
             {
@@ -205,13 +205,13 @@ namespace Microsoft.PowerFx.Core.Tests
             {
                 Expected = "1"
             };
-            var result = await runner.RunAsync(test);
+            var (result, message) = runner.RunTestCase(test);
 
-            Assert.Equal(TestResult.Pass, result.Item1);
+            Assert.Equal(TestResult.Pass, result);
         }
 
         [Fact]
-        public async Task TestRunnerFail()
+        public void TestRunnerFail()
         {
             var runner = new MockRunner
             {
@@ -222,13 +222,13 @@ namespace Microsoft.PowerFx.Core.Tests
             {
                 Expected = "2" // Mismatch!
             };
-            var result = await runner.RunAsync(test);
+            var (result, message) = runner.RunTestCase(test);
 
-            Assert.Equal(TestResult.Fail, result.Item1);
+            Assert.Equal(TestResult.Fail, result);
         }
 
         [Fact]
-        public async Task TestRunnerNumericTolerance()
+        public void TestRunnerNumericTolerance()
         {
             var runner = new MockRunner
             {
@@ -239,21 +239,21 @@ namespace Microsoft.PowerFx.Core.Tests
             {
                 Expected = "1.2345654" // difference less than 1e-5
             };
-            var result = await runner.RunAsync(test);
+            var (result, message) = runner.RunTestCase(test);
 
-            Assert.Equal(TestResult.Pass, result.Item1);
+            Assert.Equal(TestResult.Pass, result);
 
             test = new TestCase
             {
                 Expected = "1.23455" // difference more than 1e-5
             };
-            result = await runner.RunAsync(test);
+            (result, message) = runner.RunTestCase(test);
 
-            Assert.Equal(TestResult.Fail, result.Item1);
+            Assert.Equal(TestResult.Fail, result);
         }
 
         [Fact]
-        public async Task TestRunnerSkip()
+        public void TestRunnerSkip()
         {
             var runner = new MockRunner();
 
@@ -262,15 +262,15 @@ namespace Microsoft.PowerFx.Core.Tests
             {
                 Expected = "#SKIP"
             };
-            var result = await runner.RunAsync(test);
+            var (result, message) = runner.RunTestCase(test);
 
-            Assert.Equal(TestResult.Skip, result.Item1);
-            Assert.NotNull(result.Item2);
+            Assert.Equal(TestResult.Skip, result);
+            Assert.NotNull(message);
         }
 
         // Cases where a test runner marks unsupported behavior. 
         [Fact]
-        public async Task TestRunnerUnsupported()
+        public void TestRunnerUnsupported()
         {
             var runner = new MockRunner
             {
@@ -282,10 +282,10 @@ namespace Microsoft.PowerFx.Core.Tests
                     Expected = "1",
                     OverrideFrom = "yes"
                 };
-                var result = await runner.RunAsync(test);
+                var (result, message) = runner.RunTestCase(test);
 
                 // Fail! Unsupported is only for non-overrides
-                Assert.Equal(TestResult.Fail, result.Item1);
+                Assert.Equal(TestResult.Fail, result);
             }
 
             {
@@ -293,10 +293,10 @@ namespace Microsoft.PowerFx.Core.Tests
                 {
                     Expected = "1",
                 };
-                var result = await runner.RunAsync(test);
+                var (result, message) = runner.RunTestCase(test);
 
                 // Yes, unsupported can skip non-overrides
-                Assert.Equal(TestResult.Skip, result.Item1);                
+                Assert.Equal(TestResult.Skip, result);
             }
 
             {
@@ -305,14 +305,14 @@ namespace Microsoft.PowerFx.Core.Tests
                 {
                     Expected = "#error",
                 };
-                var result = await runner.RunAsync(test);
+                var (result, message) = runner.RunTestCase(test);
 
-                Assert.Equal(TestResult.Skip, result.Item1);
+                Assert.Equal(TestResult.Skip, result);
             }
         }
 
         [Fact]
-        public async Task TestRunnerError()
+        public void TestRunnerError()
         {
             var runner = new MockRunner
             {
@@ -323,19 +323,19 @@ namespace Microsoft.PowerFx.Core.Tests
             {
                 Expected = "#ERROR"
             };
-            var result = await runner.RunAsync(test);
+            var (result, message) = runner.RunTestCase(test);
 
-            Assert.Equal(TestResult.Pass, result.Item1);
+            Assert.Equal(TestResult.Pass, result);
 
             // It's a failure if #error casesucceeds. 
             runner._hook = (expr, setup) => FormulaValue.New(1); // success
-            result = await runner.RunAsync(test);
+            (result, message) = runner.RunTestCase(test);
 
-            Assert.Equal(TestResult.Fail, result.Item1);
+            Assert.Equal(TestResult.Fail, result);
         }
 
         [Fact]
-        public async Task TestRunnerErrorKindMatching()
+        public void TestRunnerErrorKindMatching()
         {
             var errorValue = new ErrorValue(
                 IR.IRContext.NotInSource(FormulaType.Number),
@@ -349,33 +349,33 @@ namespace Microsoft.PowerFx.Core.Tests
             {
                 Expected = "#Error(Kind=InvalidFunctionUsage)" // validation by enum name
             };
-            var result = await runner.RunAsync(test);
-            Assert.Equal(TestResult.Pass, result.Item1);
+            var (result, message) = runner.RunTestCase(test);
+            Assert.Equal(TestResult.Pass, result);
 
             test = new TestCase
             {
                 Expected = "#Error(Kind=16)" // // validation by enum value
             };
-            result = await runner.RunAsync(test);
-            Assert.Equal(TestResult.Pass, result.Item1);
+            (result, message) = runner.RunTestCase(test);
+            Assert.Equal(TestResult.Pass, result);
 
             test = new TestCase
             {
                 Expected = "#Error(Kind=Div0)" // // failure if error kind does not match
             };
-            result = await runner.RunAsync(test);
-            Assert.Equal(TestResult.Fail, result.Item1);
+            (result, message) = runner.RunTestCase(test);
+            Assert.Equal(TestResult.Fail, result);
 
             test = new TestCase
             {
                 Expected = "#Error(Kind=13)" // // failure if numeric error kind does not match
             };
-            result = await runner.RunAsync(test);
-            Assert.Equal(TestResult.Fail, result.Item1);
+            (result, message) = runner.RunTestCase(test);
+            Assert.Equal(TestResult.Fail, result);
         }
 
         [Fact]
-        public async Task TestRunnerCompilerError()
+        public void TestRunnerCompilerError()
         {
             // Compiler error is a throw from Check()
             var runner = new MockRunner
@@ -387,25 +387,25 @@ namespace Microsoft.PowerFx.Core.Tests
             {
                 Expected = "Errors: Error X"
             };
-            var result = await runner.RunAsync(test);
+            var (result, message) = runner.RunTestCase(test);
 
-            Assert.Equal(TestResult.Pass, result.Item1);
+            Assert.Equal(TestResult.Pass, result);
 
             // It's a failure if we have the wrong error
             runner._hook2 = (expr, setup) => RunResult.FromError("Y");
-            result = await runner.RunAsync(test);
+            (result, message) = runner.RunTestCase(test);
 
-            Assert.Equal(TestResult.Fail, result.Item1);
+            Assert.Equal(TestResult.Fail, result);
 
             // Failure if the compiler error is unexpected
             test.Expected = "1";
-            result = await runner.RunAsync(test);
+            (result, message) = runner.RunTestCase(test);
 
-            Assert.Equal(TestResult.Fail, result.Item1);
+            Assert.Equal(TestResult.Fail, result);
         }
 
         [Fact]
-        public async Task TestSetupHandler()
+        public void TestSetupHandler()
         {
             const string handlerName = "myhandler";
 
@@ -424,9 +424,9 @@ namespace Microsoft.PowerFx.Core.Tests
                 SetupHandlerName = handlerName
             };
             test.Expected = "1";
-            var result = await runner.RunAsync(test);
+            var (result, message) = runner.RunTestCase(test);
 
-            Assert.Equal(TestResult.Skip, result.Item1);
+            Assert.Equal(TestResult.Skip, result);
         }
 
         // Override IsError
@@ -451,7 +451,7 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Fact]
-        public async Task TestErrorOverride()
+        public void TestErrorOverride()
         {
             // Test override BaseRunner.IsError
             var runner = new MockErrorRunner
@@ -473,17 +473,17 @@ namespace Microsoft.PowerFx.Core.Tests
             };
 
             // On #error for x, test runner  will also call IsError(x)
-            var result = await runner.RunAsync(test);
-            Assert.Equal(TestResult.Pass, result.Item1);
+            var (result, message) = runner.RunTestCase(test);
+            Assert.Equal(TestResult.Pass, result);
 
             runner._isError = (value) => false;
-            result = await runner.RunAsync(test);
-            Assert.Equal(TestResult.Fail, result.Item1);
+            (result, message) = runner.RunTestCase(test);
+            Assert.Equal(TestResult.Fail, result);
         }
 
         // Ensure the #error test fails if the IsError(x) followup call doesn't return true. 
         [Fact]
-        public async Task TestErrorOverride2()
+        public void TestErrorOverride2()
         {
             // Test override BaseRunner.IsError
             var runner = new MockErrorRunner
@@ -505,9 +505,9 @@ namespace Microsoft.PowerFx.Core.Tests
             };
 
             // On #error for x, test runner  will also call IsError(x)
-            var result = await runner.RunAsync(test);
-            Assert.Equal(TestResult.Fail, result.Item1);
-            Assert.Contains("(IsError() followup call", result.Item2);
+            var (result, message) = runner.RunTestCase(test);
+            Assert.Equal(TestResult.Fail, result);
+            Assert.Contains("(IsError() followup call", message);
         }
 
         private static void AddFile(TestRunner runner, string filename)

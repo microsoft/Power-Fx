@@ -1,7 +1,6 @@
 <!-- Contains common properties that apply to projects under the Libraries folder -->
 <Project>
   <PropertyGroup>
-    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
     <GeneratePackageOnBuild>$(GeneratePackages)</GeneratePackageOnBuild>
   </PropertyGroup>
 

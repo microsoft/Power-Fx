@@ -316,14 +316,14 @@ namespace Microsoft.PowerFx
                 case BinaryOpKind.GeqTime:
                     return OperatorGeqTime(this, context, node.IRContext, args);
                 case BinaryOpKind.DynamicGetField:
-                    return OperatorDynamicGetField(node, args);
+                    return new ValueTask<FormulaValue>(OperatorDynamicGetField(node, args));
 
                 default:
                     return new ValueTask<FormulaValue>(CommonErrors.UnreachableCodeError(node.IRContext));
             }
         }
 
-        private static async ValueTask<FormulaValue> OperatorDynamicGetField(BinaryOpNode node, FormulaValue[] args)
+        private static FormulaValue OperatorDynamicGetField(BinaryOpNode node, FormulaValue[] args)
         {
             var arg1 = args[0];
             var arg2 = args[1];

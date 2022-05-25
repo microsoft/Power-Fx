@@ -48,17 +48,18 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
                 FormulaTypeSchema.ParamType.Time => FormulaType.Time,
                 FormulaTypeSchema.ParamType.DateTime => FormulaType.DateTime,
                 FormulaTypeSchema.ParamType.Color => FormulaType.Color,
-                FormulaTypeSchema.ParamType.Guid => FormulaType.Guid,                
+                FormulaTypeSchema.ParamType.Guid => FormulaType.Guid,
                 FormulaTypeSchema.ParamType.DateTimeNoTimeZone => FormulaType.DateTimeNoTimeZone,
                 FormulaTypeSchema.ParamType.Blank => FormulaType.Blank,
                 FormulaTypeSchema.ParamType.Hyperlink => FormulaType.Hyperlink,
                 FormulaTypeSchema.ParamType.UntypedObject => FormulaType.UntypedObject,
                 FormulaTypeSchema.ParamType.Record => GetAggregateType(schema.Fields, isTable: false),
-                FormulaTypeSchema.ParamType.Table => GetAggregateType(schema.Fields, isTable: true),                
-                
+                FormulaTypeSchema.ParamType.Table => GetAggregateType(schema.Fields, isTable: true),
+
                 FormulaTypeSchema.ParamType.OptionSetValue => throw new NotImplementedException(),
                 FormulaTypeSchema.ParamType.EntityRecord => throw new NotSupportedException(),
                 FormulaTypeSchema.ParamType.EntityTable => throw new NotSupportedException(),
+                _ => throw new NotImplementedException(),
             };
         }
 

@@ -13,11 +13,11 @@ namespace Microsoft.PowerFx.Interpreter.Tests.XUnitExtensions
 {
     public class InterpreterTheoryDiscoverer : IXunitTestCaseDiscoverer
     {
-        private readonly TheoryDiscoverer theoryDiscoverer;
+        private readonly TheoryDiscoverer _theoryDiscoverer;
 
         public InterpreterTheoryDiscoverer(IMessageSink diagnosticMessageSink)
         {
-            theoryDiscoverer = new TheoryDiscoverer(diagnosticMessageSink);
+            _theoryDiscoverer = new TheoryDiscoverer(diagnosticMessageSink);
         }
 
         public IEnumerable<IXunitTestCase> Discover(ITestFrameworkDiscoveryOptions discoveryOptions, ITestMethod testMethod, IAttributeInfo factAttribute)
@@ -29,7 +29,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests.XUnitExtensions
 
             var skippingExceptionNames = skippingExceptions.Select(ex => ex.FullName).ToArray();
 
-            return (IEnumerable<IXunitTestCase>)theoryDiscoverer.Discover(discoveryOptions, testMethod, factAttribute)
+            return (IEnumerable<IXunitTestCase>)_theoryDiscoverer.Discover(discoveryOptions, testMethod, factAttribute)
                                    .Select(testCase => new InterpreterTestCase(testCase, skippingExceptionNames));
         }
     }
