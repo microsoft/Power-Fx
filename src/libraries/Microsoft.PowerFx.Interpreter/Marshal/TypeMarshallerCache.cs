@@ -42,9 +42,12 @@ namespace Microsoft.PowerFx
         private readonly IEnumerable<IDynamicTypeMarshaller> _dynamicMarshallers;
 
         // Take a private array to get a snapshot and ensure the enumeration doesn't change
-        private TypeMarshallerCache(ITypeMarshallerProvider[] marshallers)
+        private TypeMarshallerCache(
+            IEnumerable<ITypeMarshallerProvider> marshallers,
+            IDynamicTypeMarshaller[] dynamicMarshallers = null)
         {
             _marshallers = marshallers;
+            _dynamicMarshallers = dynamicMarshallers;
         }
 
         /// <summary>
@@ -52,21 +55,9 @@ namespace Microsoft.PowerFx
         /// Create marshaller with default list.
         /// </summary>
         public TypeMarshallerCache()
-            : this(_defaults.ToArray())
+            : this(_defaults.ToArray(), null)
         {
-        }
-
-        // $$$ Fix 
-        // Cloning ctor
-        private TypeMarshallerCache(
-            Dictionary<Type, ITypeMarshaller> cache,
-            IEnumerable<ITypeMarshallerProvider> marshallers,
-            IEnumerable<IDynamicTypeMarshaller> dynamicMarshallers)
-        {
-            _cache = cache;
-            _marshallers = marshallers;
-            _dynamicMarshallers = dynamicMarshallers;
-        }
+        }     
 
         /// <summary>
         /// Create a new cache that includes the new providers and then chains to this cache.
@@ -88,6 +79,12 @@ namespace Microsoft.PowerFx
             return NewPrepend(list);
         }
 
+        /// <summary>
+        /// Return a new cache that includes the given dynamic marshallers. 
+        /// These will be invoked on <see cref="TypeMarshallerCache.Marshal{T}(T)"/>.
+        /// </summary>
+        /// <param name="dynamicMarshallers"></param>
+        /// <returns></returns>
         public TypeMarshallerCache WithDynamicMarshallers(params IDynamicTypeMarshaller[] dynamicMarshallers)
         {
             if (dynamicMarshallers == null)
@@ -95,7 +92,7 @@ namespace Microsoft.PowerFx
                 throw new ArgumentNullException(nameof(dynamicMarshallers));
             }
 
-            return new TypeMarshallerCache(_cache, _marshallers, dynamicMarshallers);
+            return new TypeMarshallerCache(_marshallers, dynamicMarshallers);
         }
 
         private static ITypeMarshallerProvider[] NewList(ObjectMarshallerProvider objectProvider)
@@ -192,6 +189,7 @@ namespace Microsoft.PowerFx
                 throw new ArgumentException($"Must provide specific type");
             }
 
+            // Dynamic marshallers can only act on the runtime value.
             if (_dynamicMarshallers != null)
             {
                 foreach (var dynamicMarshaller in _dynamicMarshallers)

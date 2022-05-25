@@ -38,8 +38,6 @@ namespace Microsoft.PowerFx.Tests
         {
         }
 
-        // Type is a record matching the columnNames, and each field is type is IUntypedObject.
-        // $$$ USe Columns.DataType to have stronger schema?
         public static RecordType ComputeType(DataTable dataTable)
         {
             var recordType = new RecordType();
@@ -78,9 +76,10 @@ namespace Microsoft.PowerFx.Tests
             {
                 var value = _row[fieldName];
 
+                // The expected fieldType was determined in ComputeType based on Column.DataType.
                 if (fieldType == FormulaType.UntypedObject)
                 {
-                    result = WrapDotNetObjectAsUntypedValue(value);
+                    result = PrimitiveWrapperAsUnknownObject.New(value);
                 } 
                 else
                 {
@@ -88,14 +87,7 @@ namespace Microsoft.PowerFx.Tests
                 }
 
                 return true;
-            }
-
-            private static UntypedObjectValue WrapDotNetObjectAsUntypedValue(object item)
-            {
-                // Would be nice if this was easier...
-                UntypedObjectValue objFx = FormulaValue.New(new ScenarioDotNetObjectWrapper.Wrapper(item));
-                return objFx;
-            }
+            }  
         }
     }
 

@@ -1,16 +1,8 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Data;
-using System.Reflection;
-using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.PowerFx.Core.IR;
-using Microsoft.PowerFx.Core.Tests;
-using Microsoft.PowerFx.Interpreter.Tests;
 using Microsoft.PowerFx.Types;
 using Xunit;
 
@@ -160,57 +152,6 @@ namespace Microsoft.PowerFx.Tests
 
             Assert.Equal(1.0, result1.ToObject());
             Assert.Equal("string", result2.ToObject());
-        }
-
-        // Marshal a heterogenous List<object> to Table of UntypedValue.
-        private class ObjectListMarshallerProvider : ITypeMarshallerProvider
-        {
-            public bool TryGetMarshaller(Type type, TypeMarshallerCache cache, int maxDepth, out ITypeMarshaller marshaller)
-            {
-                if (type == typeof(List<object>))
-                {
-                    marshaller = new ObjectListMarshaller();
-                    return true;
-                }
-
-                marshaller = null;
-                return false;
-            }
-
-            private class ObjectListMarshaller : ITypeMarshaller
-            {
-                public FormulaType Type => _type.ToTable();
-
-                private readonly RecordType _type;
-
-                public ObjectListMarshaller()
-                {
-                    _type = new RecordType().Add(TableValue.ValueName, FormulaType.UntypedObject);
-                }
-
-                public FormulaValue Marshal(object value)
-                {
-                    var list = (IEnumerable<object>)value;
-                    
-                    var fxRecords = new List<RecordValue>();
-                    foreach (var item in list)
-                    {                        
-                        var objFx = WrapDotNetObjectAsUntypedValue(item);
-                        
-                        var record = FormulaValue.NewRecordFromFields(new NamedValue(TableValue.ValueName, objFx));
-                        fxRecords.Add(record);
-                    }
-
-                    return FormulaValue.NewTable(_type, fxRecords.ToArray());
-                }
-            }
-        }
-
-        private static UntypedObjectValue WrapDotNetObjectAsUntypedValue(object item)
-        {
-            // Would be nice if this was easier...
-            UntypedObjectValue objFx = FormulaValue.New(new ScenarioDotNetObjectWrapper.Wrapper(item));
-            return objFx;
         }
     }
 }
