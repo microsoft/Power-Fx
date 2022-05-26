@@ -112,6 +112,15 @@ namespace Microsoft.PowerFx.Tests
 
             var result3 = engine.Eval("Sum(robintable, ThisRecord.Scores)");
             Assert.Equal(60.0, result3.ToObject());
+
+            // Access field not on the table 
+            var result4 = engine.Eval(@"
+First(
+    Table(
+        First(robintable), 
+        { Other : 5}
+     )).Other");
+            Assert.IsType<BlankValue>(result4);
         }
 
         [Fact]

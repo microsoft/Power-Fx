@@ -56,8 +56,10 @@ namespace Microsoft.PowerFx.Tests
 
         protected override DValue<RecordValue> Marshal(DataRow item)
         {
+            // We could check item.RowError and return an error for the whole row. 
+            
+            // Return value
             var record = new DataRowRecordValue(RecordType, item);
-
             return DValue<RecordValue>.Of(record);
         }
 
@@ -72,9 +74,30 @@ namespace Microsoft.PowerFx.Tests
                 _row = row;
             }
 
+            // DataRow doesn't have a TryGetValue! 
+            // So just catch the exception.
+            private bool TryGetValue(DataRow row, string fieldName, out object value)
+            {
+                try
+                {
+                    value = _row[fieldName];
+                    return true;
+                }
+                catch
+                {
+                    value = null;
+                    return false;
+                }
+            }
+
             protected override bool TryGetField(FormulaType fieldType, string fieldName, out FormulaValue result)
             {
-                var value = _row[fieldName];
+                // DataRow doesn't have a way to check if 
+                if (!TryGetValue(_row, fieldName, out var value))
+                {
+                    result = null;
+                    return false;
+                }
 
                 // The expected fieldType was determined in ComputeType based on Column.DataType.
                 if (fieldType == FormulaType.UntypedObject)
