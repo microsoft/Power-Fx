@@ -35,6 +35,11 @@ namespace Microsoft.PowerFx.Tests
                 {
                     return FormulaType.Number;
                 }
+                
+                if (_source is bool)
+                {
+                    return FormulaType.Boolean;
+                }
 
                 if (_source is string)
                 {
@@ -78,7 +83,14 @@ namespace Microsoft.PowerFx.Tests
 
         public bool GetBoolean()
         {
-            throw new NotImplementedException();
+            Assert.True(Type == FormulaType.Boolean);
+
+            if (_source is bool b)
+            {
+                return b;
+            }
+
+            throw new InvalidOperationException($"Not a boolean type");
         }
 
         public double GetDouble()

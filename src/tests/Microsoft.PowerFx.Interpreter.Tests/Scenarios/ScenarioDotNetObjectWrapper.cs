@@ -21,6 +21,10 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             // Recursion, but handled since we're dynamically marshalling. 
             public TestObj Next { get; set; }
 
+            public bool Flag { get; set; }
+
+            public string Msg { get; set; }
+
             // Verify we don't eagerly touch all properties
             public string Fail => throw new NotImplementedException("Don't call this");
         }
@@ -37,6 +41,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [InlineData("IsBlank(obj.Next.Next)", true)]
         [InlineData("IsBlank(obj.Next)", false)]
         [InlineData("obj.Next.Next", null)]
+        [InlineData("Boolean(obj.Flag)", true)]
+        [InlineData("Text(obj.Msg)", "xyz")]
         [InlineData("IsBlank(Index(array, 3))", true)]
         [InlineData("Text(Index(array, 2))", "two")]
         [InlineData("Index(array, 0)", "#error")] // Out of bounds, low
@@ -53,8 +59,11 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 Next = new TestObj
                 {
                     Value = 20
-                }
+                },
+                Flag = true,
+                Msg = "xyz"
             };
+
             Add(engine, "obj", obj);
 
             var array = new string[] { "one", "two", null, "four" };            

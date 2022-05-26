@@ -11,7 +11,7 @@ using Xunit;
 namespace Microsoft.PowerFx.Tests
 {
     /// <summary>
-    /// Marshal a heterogenous List of Object using <see cref="UnknownType"/>.
+    /// Marshal a heterogenous List of Object using <see cref="UntypedObjectType"/>.
     /// </summary>
     internal class ObjectListMarshallerProvider : ITypeMarshallerProvider
     {
