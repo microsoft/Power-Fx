@@ -29,7 +29,7 @@ namespace Microsoft.PowerFx.Tests
 
     // Wrap a System.Data.DataTable as a Power Fx TableValue
     // Marshal DataTable as a Table of Records. 
-    // Use column has type info if available; else marshal as untyped object.
+    // Use the column's type info, if available; else marshal as untyped object.
     // All marshalling is done lazily so we avoid copying the whole table.
     internal class DataTableValue : CollectionTableValue<DataRow>
     {
