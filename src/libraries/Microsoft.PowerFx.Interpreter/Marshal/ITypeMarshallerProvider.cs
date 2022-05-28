@@ -47,4 +47,17 @@ namespace Microsoft.PowerFx
         /// </remarks>
         public FormulaValue Marshal(object value);
     }
+
+    /// <summary>
+    /// Some types (like Dictionary, JObject, or DataTable) are dynamic.     
+    /// Dynamic marshallers can take a runtime instance and then inspect the runtime properties 
+    /// and create a strongly-typed <see cref="FormulaType"/>.
+    /// Whereas <see cref="ITypeMarshaller"/> only accepts the static type, so it must marshal these
+    /// dynamic objects as weakly-typed <see cref="UntypedObjectType"/>.
+    /// </summary>
+    [ThreadSafeImmutable]
+    public interface IDynamicTypeMarshaller
+    {
+        bool TryMarshal(TypeMarshallerCache cache, object value, out FormulaValue result);
+    }
 }

@@ -36,6 +36,7 @@ namespace Microsoft.PowerFx.Tests
                 $"{ns}.{nameof(OptionSet)}",
                 $"{ns}.{nameof(ITypeMarshallerProvider)}",
                 $"{ns}.{nameof(ITypeMarshaller)}",
+                $"{ns}.{nameof(IDynamicTypeMarshaller)}",
                 $"{ns}.{nameof(OptionSet)}",
                 $"{ns}.{nameof(ObjectMarshallerProvider)}",
                 $"{ns}.{nameof(ObjectMarshaller)}",
@@ -43,7 +44,7 @@ namespace Microsoft.PowerFx.Tests
                 $"{ns}.{nameof(PrimitiveTypeMarshaller)}",
                 $"{ns}.{nameof(TableMarshallerProvider)}",
                 $"{ns}.{nameof(TypeMarshallerCache)}",
-                $"{ns}.{nameof(TypeMarshallerCacheExtensions)}",
+                $"{ns}.{nameof(TypeMarshallerCacheExtensions)}",                
                 $"{nsType}.{nameof(ObjectRecordValue)}"
             };
 
