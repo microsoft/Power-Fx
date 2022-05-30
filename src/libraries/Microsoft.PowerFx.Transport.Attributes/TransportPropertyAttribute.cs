@@ -26,13 +26,13 @@ namespace Microsoft.AppMagic.Transport
         public bool GenerateSynchronousSetterTemplateInProxyClass { get; }
 
         /// <summary>
-        /// If the marked property is a <see cref="ITrackedCollection"/>, and it gets updated,
+        /// If the marked property is a <c>ITrackedCollection</c>, and it gets updated,
         /// state synchronization will not send the entire collection to the client, only
         /// a set of differences to be applied.
         /// </summary>
         /// <remarks>
         /// Be careful when using this feature, because the state synchronization on the client side
-        /// for such <see cref="ITrackedCollection"/> instances may not be complete after a method
+        /// for such <c>ITrackedCollection</c> instances may not be complete after a method
         /// return, if out-of-order execution happens.
         /// Collection is not passed fully each time here, but as a set of differences, and they
         /// need to be applied in order.
