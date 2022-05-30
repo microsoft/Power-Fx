@@ -5762,6 +5762,10 @@
     <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
     <comment>{Locked}</comment>
   </data>
+  <data name="ErrorResource_ErrInvalidField_ShortMessage" xml:space="preserve">
+    <value>Name isn't valid. '{0}' does not contain a field named '{1}'. </value>
+    <comment>Error Message.</comment>
+  </data>
   <data name="ErrorResource_ErrInvalidName_ShortMessage" xml:space="preserve">
     <value>Name isn't valid. '{0}' isn't recognized.</value>
     <comment>Error Message.</comment>

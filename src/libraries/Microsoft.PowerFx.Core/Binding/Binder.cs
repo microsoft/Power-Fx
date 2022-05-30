@@ -3666,7 +3666,16 @@ namespace Microsoft.PowerFx.Core.Binding
                     }
                     else
                     {
-                        SetDottedNameError(node, TexlStrings.ErrInvalidName, node.Right.Name.Value);
+                        FirstNameNode lhsFirstNameNode;
+                        if ((lhsFirstNameNode = node.Left.AsFirstName()) != null)
+                        {
+                            SetDottedNameError(node, TexlStrings.ErrInvalidField, lhsFirstNameNode.Ident.Name.Value, node.Right.Name.Value);
+                        }
+                        else
+                        {
+                            SetDottedNameError(node, TexlStrings.ErrInvalidName, node.Right.Name.Value);
+                        }
+                        
                         return;
                     }
                 }

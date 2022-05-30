@@ -455,6 +455,7 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey UnexpectedCharacterToken = new ErrorResourceKey("UnexpectedCharacterToken");
         public static ErrorResourceKey ErrMissingEndOfBlockComment = new ErrorResourceKey("ErrMissingEndOfBlockComment");
         public static ErrorResourceKey ErrExpectedFound_Ex_Fnd = new ErrorResourceKey("ErrExpectedFound_Ex_Fnd");
+        public static ErrorResourceKey ErrInvalidField = new ErrorResourceKey("ErrInvalidField");
         public static ErrorResourceKey ErrInvalidName = new ErrorResourceKey("ErrInvalidName");
         public static ErrorResourceKey ErrInvalidIdentifier = new ErrorResourceKey("ErrInvalidIdentifier");
         public static ErrorResourceKey ErrInvalidPropertyAccess = new ErrorResourceKey("ErrInvalidPropertyAccess");
