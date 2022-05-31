@@ -2,6 +2,7 @@
 <Project>
   <PropertyGroup>
     <GeneratePackageOnBuild>$(GeneratePackages)</GeneratePackageOnBuild>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
