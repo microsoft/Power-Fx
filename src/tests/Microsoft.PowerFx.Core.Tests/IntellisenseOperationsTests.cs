@@ -182,6 +182,32 @@ namespace Microsoft.PowerFx.Core.Tests
                 Assert.Null(ident);
             }
         }
+
+        // TODO: What are some further interesting cases?
+        [Theory]
+        [InlineData("Filter", 0, false)]
+        [InlineData("Filter", 1, true)]
+        [InlineData("Filter", 2, true)]
+        [InlineData("Filter", 42, true)]
+        [InlineData("If", 0, false)]
+        [InlineData("If", 1, false)]
+        [InlineData("If", 2, false)]
+        [InlineData("If", 42, false)]
+        public void CheckRowScope(string fncName, int arg, bool expectedResult)
+        {
+            var engine = new Engine(new PowerFxConfig());
+            var checkResult = engine.Check("0"); // Check on a dummy formula to obtain the result
+
+            var intellisense = new IntellisenseOperations(checkResult);
+            var resultString = intellisense.IsRowScopeArg(fncName, arg);
+            Assert.Equal(expectedResult, resultString);
+
+            var fncParseOk = IntellisenseOperations.TryParseFunctionNameWithNamespace(fncName, out Identifier ident);
+            Assert.True(fncParseOk);
+
+            var resultIdent = intellisense.IsRowScopeArg(ident, arg);
+            Assert.Equal(expectedResult, resultIdent);
+        }
     }
 
     internal static class ValidateUtils
