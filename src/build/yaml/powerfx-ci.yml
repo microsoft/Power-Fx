@@ -41,7 +41,6 @@ stages:
       inputs:
         solution: '$(BuildSolution)'
         vsVersion: 16.0
-        msbuildArgs: '-p:SignAssembly=false -p:delaySign=false'
         platform: '$(BuildPlatform)'
         configuration: '$(BuildConfiguration)'
       displayName: 'Build Microsoft.PowerFx.sln'
