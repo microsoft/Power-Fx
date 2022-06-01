@@ -148,7 +148,7 @@ namespace Microsoft.PowerFx.Types
                     return BindingError;
 
                 default:
-                    throw new NotImplementedException($"Not implemented type: {type}");
+                    return new UnsupportedType(type);
             }
         }
 

@@ -17,11 +17,11 @@ namespace Microsoft.PowerFx.Interpreter.Tests.XUnitExtensions
 {
     public class InterpreterTestCase : LongLivedMarshalByRefObject, IXunitTestCase
     {
-        private IXunitTestCase testCase;
+        private IXunitTestCase _testCase;
 
         public InterpreterTestCase(IXunitTestCase testCase, string[] skippingExceptionNames)
         {
-            this.testCase = testCase;
+            this._testCase = testCase;
             SkippingExceptionNames = skippingExceptionNames;
         }
 
@@ -38,52 +38,52 @@ namespace Microsoft.PowerFx.Interpreter.Tests.XUnitExtensions
 
         public Exception InitializationException { get; set; }
 
-        public IMethodInfo Method => testCase.Method;
+        public IMethodInfo Method => _testCase.Method;
 
         public int Timeout { get; set; }
 
-        public string DisplayName => testCase.DisplayName;
+        public string DisplayName => _testCase.DisplayName;
 
-        public string SkipReason => testCase.SkipReason;
+        public string SkipReason => _testCase.SkipReason;
 
         public ISourceInformation SourceInformation
         {
-            get => testCase.SourceInformation;
-            set => testCase.SourceInformation = value;
+            get => _testCase.SourceInformation;
+            set => _testCase.SourceInformation = value;
         }
 
-        public ITestMethod TestMethod => testCase.TestMethod;
+        public ITestMethod TestMethod => _testCase.TestMethod;
 
-        public object[] TestMethodArguments => testCase.TestMethodArguments;
+        public object[] TestMethodArguments => _testCase.TestMethodArguments;
 
         public Dictionary<string, List<string>> Traits
         {
             get
             {
-                var expressionTestCase = testCase.TestMethodArguments[0] as ExpressionTestCase;
-                testCase.Traits.Add("File", new List<string>() { Path.GetFileName(expressionTestCase.SourceFile) });
-                return testCase.Traits;
+                var expressionTestCase = _testCase.TestMethodArguments[0] as ExpressionTestCase;
+                _testCase.Traits.Add("File", new List<string>() { Path.GetFileName(expressionTestCase.SourceFile) });
+                return _testCase.Traits;
             }
         }
 
-        public string UniqueID => testCase.UniqueID;
+        public string UniqueID => _testCase.UniqueID;
 
         public void Deserialize(IXunitSerializationInfo info)
         {
             SkippingExceptionNames = info.GetValue<string[]>(nameof(SkippingExceptionNames));
-            testCase = info.GetValue<IXunitTestCase>("InnerTestCase");
+            _testCase = info.GetValue<IXunitTestCase>("InnerTestCase");
         }
 
         public void Serialize(IXunitSerializationInfo info)
         {
             info.AddValue(nameof(SkippingExceptionNames), SkippingExceptionNames);
-            info.AddValue("InnerTestCase", testCase);
+            info.AddValue("InnerTestCase", _testCase);
         }
 
         public async Task<RunSummary> RunAsync(IMessageSink diagnosticMessageSink, IMessageBus messageBus, object[] constructorArguments, ExceptionAggregator aggregator, CancellationTokenSource cancellationTokenSource)
         {
             var messageBusInterceptor = new SkippableTestMessageBus(messageBus, SkippingExceptionNames ?? (new string[1] { "Xunit.SkipException" }));
-            var result = await testCase.RunAsync(diagnosticMessageSink, messageBusInterceptor, constructorArguments, aggregator, cancellationTokenSource).ConfigureAwait(false);
+            var result = await _testCase.RunAsync(diagnosticMessageSink, messageBusInterceptor, constructorArguments, aggregator, cancellationTokenSource).ConfigureAwait(false);
             result.Failed -= messageBusInterceptor.SkippedCount;
             result.Skipped += messageBusInterceptor.SkippedCount;
             return result;

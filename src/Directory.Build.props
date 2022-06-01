@@ -26,6 +26,12 @@
   <PropertyGroup>
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
     <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)PowerFx.ruleset</CodeAnalysisRuleSet>
+    <!--
+      Disabled CS1591 (Missing XML Comment for Public). Reenable to track down remaining missing documentation
+      Disabled CS1998 (Async method lacks await operator): Exception handling for methods returning a task that don't use await is likely to cause confusion.
+    -->
+    <NoWarn>$(NoWarn);CS1591;CS1998</NoWarn>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -40,20 +46,10 @@
     <Copyright>© Microsoft Corporation. All rights reserved.</Copyright>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+  <PropertyGroup>
     <AssemblyOriginatorKeyFile>$(SolutionDir)\build\35MSSharedLib1024.snk</AssemblyOriginatorKeyFile>
     <SignAssembly>true</SignAssembly>
     <DelaySign>true</DelaySign>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <AssemblyOriginatorKeyFile>$(SolutionDir)\build\35MSSharedLib1024.snk</AssemblyOriginatorKeyFile>
-    <SignAssembly>true</SignAssembly>
-    <DelaySign>true</DelaySign>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(SignAssembly)'=='True' ">
-    <DefineConstants>SIGNASSEMBLY</DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(TF_BUILD)' != '' ">

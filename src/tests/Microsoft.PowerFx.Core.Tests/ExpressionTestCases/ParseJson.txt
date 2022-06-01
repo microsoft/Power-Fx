@@ -122,3 +122,12 @@ Errors: Error 0-14: Invalid argument type. Expecting one of the following: Numbe
 
 >> CountRows(ParseJSON("1"))
 #Error
+
+// --- Testing heterogeneous arrays --
+
+>> Text(Index(ParseJSON("{""a"": 5, ""b"": [{""c"": 174 }, {""c"": ""foo"" }] }").b, 2).c)
+"foo"
+
+>> Value(Index(ParseJSON("{""a"": 5, ""b"": [{""c"": 19 }, {""c"": ""foo"" }] }").b, 1).c)
+19
+

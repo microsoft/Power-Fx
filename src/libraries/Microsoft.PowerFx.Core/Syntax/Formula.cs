@@ -5,10 +5,8 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using Microsoft.PowerFx.Core.Errors;
-using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Parser;
 using Microsoft.PowerFx.Core.Utils;
-using Microsoft.PowerFx.Syntax;
 using Conditional = System.Diagnostics.ConditionalAttribute;
 
 namespace Microsoft.PowerFx.Syntax
@@ -46,7 +44,7 @@ namespace Microsoft.PowerFx.Syntax
         }
 
         public Formula(string script, CultureInfo loc = null)
-    : this(script, null, loc)
+            : this(script, null, loc)
         {
         }
 

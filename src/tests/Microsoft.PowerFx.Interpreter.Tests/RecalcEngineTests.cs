@@ -36,6 +36,7 @@ namespace Microsoft.PowerFx.Tests
                 $"{ns}.{nameof(OptionSet)}",
                 $"{ns}.{nameof(ITypeMarshallerProvider)}",
                 $"{ns}.{nameof(ITypeMarshaller)}",
+                $"{ns}.{nameof(IDynamicTypeMarshaller)}",
                 $"{ns}.{nameof(OptionSet)}",
                 $"{ns}.{nameof(ObjectMarshallerProvider)}",
                 $"{ns}.{nameof(ObjectMarshaller)}",
@@ -43,7 +44,7 @@ namespace Microsoft.PowerFx.Tests
                 $"{ns}.{nameof(PrimitiveTypeMarshaller)}",
                 $"{ns}.{nameof(TableMarshallerProvider)}",
                 $"{ns}.{nameof(TypeMarshallerCache)}",
-                $"{ns}.{nameof(TypeMarshallerCacheExtensions)}",
+                $"{ns}.{nameof(TypeMarshallerCacheExtensions)}",                
                 $"{nsType}.{nameof(ObjectRecordValue)}"
             };
 
@@ -282,6 +283,15 @@ namespace Microsoft.PowerFx.Tests
             var engine = new RecalcEngine(config);
 
             Assert.DoesNotContain(nyiFunc, config.Functions);
+                
+            var names = engine.GetAllFunctionNames().ToArray();
+            Assert.True(names.Length > 100);
+
+            // Spot check some known functions
+            Assert.Contains("Cos", names);
+            Assert.Contains("ParseJSON", names);
+
+            Assert.Contains("Cos", names);
         }
 
         [Fact]

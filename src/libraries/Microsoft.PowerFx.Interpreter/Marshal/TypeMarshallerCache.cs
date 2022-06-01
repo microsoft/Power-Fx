@@ -39,10 +39,15 @@ namespace Microsoft.PowerFx
         /// </summary>
         private readonly IEnumerable<ITypeMarshallerProvider> _marshallers;
 
+        private readonly IEnumerable<IDynamicTypeMarshaller> _dynamicMarshallers;
+
         // Take a private array to get a snapshot and ensure the enumeration doesn't change
-        private TypeMarshallerCache(ITypeMarshallerProvider[] marshallers)
+        private TypeMarshallerCache(
+            IEnumerable<ITypeMarshallerProvider> marshallers,
+            IDynamicTypeMarshaller[] dynamicMarshallers = null)
         {
             _marshallers = marshallers;
+            _dynamicMarshallers = dynamicMarshallers;
         }
 
         /// <summary>
@@ -50,9 +55,9 @@ namespace Microsoft.PowerFx
         /// Create marshaller with default list.
         /// </summary>
         public TypeMarshallerCache()
-            : this(_defaults.ToArray())
+            : this(_defaults.ToArray(), null)
         {
-        }
+        }     
 
         /// <summary>
         /// Create a new cache that includes the new providers and then chains to this cache.
@@ -72,6 +77,22 @@ namespace Microsoft.PowerFx
             IEnumerable<ITypeMarshallerProvider> list = providers;
 
             return NewPrepend(list);
+        }
+
+        /// <summary>
+        /// Return a new cache that includes the given dynamic marshallers. 
+        /// These will be invoked on <see cref="TypeMarshallerCache.Marshal{T}(T)"/>.
+        /// </summary>
+        /// <param name="dynamicMarshallers"></param>
+        /// <returns></returns>
+        public TypeMarshallerCache WithDynamicMarshallers(params IDynamicTypeMarshaller[] dynamicMarshallers)
+        {
+            if (dynamicMarshallers == null)
+            {
+                throw new ArgumentNullException(nameof(dynamicMarshallers));
+            }
+
+            return new TypeMarshallerCache(_marshallers, dynamicMarshallers);
         }
 
         private static ITypeMarshallerProvider[] NewList(ObjectMarshallerProvider objectProvider)
@@ -160,6 +181,24 @@ namespace Microsoft.PowerFx
             if (type == null)
             {
                 throw new ArgumentNullException(nameof(type));
+            }
+
+            // Object is just as bad null. Likely a hosting bug - host should provide specific type. 
+            if (type == typeof(object))
+            {
+                throw new ArgumentException($"Must provide specific type");
+            }
+
+            // Dynamic marshallers can only act on the runtime value.
+            if (_dynamicMarshallers != null)
+            {
+                foreach (var dynamicMarshaller in _dynamicMarshallers)
+                {
+                    if (dynamicMarshaller.TryMarshal(this, value, out var result))
+                    {
+                        return result;
+                    }
+                }
             }
 
             var tm = GetMarshaller(type);

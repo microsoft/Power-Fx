@@ -40,7 +40,7 @@ namespace Microsoft.PowerFx.Functions
         /// <param name="returnBehavior">A flag that can be used to activate pre-defined early return behavior, such as returning Blank() if any argument is Blank().</param>
         /// <param name="targetFunction">The implementation of the builtin function.</param>
         /// <returns></returns>
-        private static AsyncFunctionPtr StandardErrorHandling<T>(
+        private static AsyncFunctionPtr StandardErrorHandlingAsync<T>(
                 Func<IRContext, IEnumerable<FormulaValue>, IEnumerable<FormulaValue>> expandArguments,
                 Func<IRContext, int, FormulaValue> replaceBlankValues,
                 Func<IRContext, int, FormulaValue, FormulaValue> checkRuntimeTypes,
@@ -117,7 +117,7 @@ namespace Microsoft.PowerFx.Functions
         }
 
         // A wrapper that allows standard error handling to apply to
-        // functions which accept the simpler parameter list of
+        // sync functions which accept the simpler parameter list of
         // an array of arguments, ignoring context, runner etc.
         private static AsyncFunctionPtr StandardErrorHandling<T>(
             Func<IRContext, IEnumerable<FormulaValue>, IEnumerable<FormulaValue>> expandArguments,
@@ -128,11 +128,40 @@ namespace Microsoft.PowerFx.Functions
             Func<IRContext, T[], FormulaValue> targetFunction)
             where T : FormulaValue
         {
-            return StandardErrorHandling<T>(expandArguments, replaceBlankValues, checkRuntimeTypes, checkRuntimeValues, returnBehavior, (runner, symbolContext, irContext, args) =>
+            return StandardErrorHandlingAsync<T>(expandArguments, replaceBlankValues, checkRuntimeTypes, checkRuntimeValues, returnBehavior, (runner, symbolContext, irContext, args) =>
             {                
                 var result = targetFunction(irContext, args);
                 return new ValueTask<FormulaValue>(result);
             });
+        }
+
+        // A wrapper that allows standard error handling to apply to
+        // sync functions with the full parameter list
+        private static AsyncFunctionPtr StandardErrorHandling<T>(
+            Func<IRContext, IEnumerable<FormulaValue>, IEnumerable<FormulaValue>> expandArguments,
+            Func<IRContext, int, FormulaValue> replaceBlankValues,
+            Func<IRContext, int, FormulaValue, FormulaValue> checkRuntimeTypes,
+            Func<IRContext, int, FormulaValue, FormulaValue> checkRuntimeValues,
+            ReturnBehavior returnBehavior,
+            Func<EvalVisitor, SymbolContext, IRContext, T[], FormulaValue> targetFunction)
+            where T : FormulaValue
+        {
+            return StandardErrorHandlingAsync<T>(expandArguments, replaceBlankValues, checkRuntimeTypes, checkRuntimeValues, returnBehavior, (runner, symbolContext, irContext, args) =>
+            {                
+                var result = targetFunction(runner, symbolContext, irContext, args);
+                return new ValueTask<FormulaValue>(result);
+            });
+        }
+
+        // A wrapper for a function with no error handling behavior whatsoever.
+        private static AsyncFunctionPtr NoErrorHandling(
+            Func<IRContext, FormulaValue[], FormulaValue> targetFunction)
+        {
+            return (_, _, irContext, args) =>
+            {                
+                var result = targetFunction(irContext, args);
+                return new ValueTask<FormulaValue>(result);
+            };
         }
 
         #region Single Column Table Functions
