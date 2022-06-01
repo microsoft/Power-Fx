@@ -35,7 +35,10 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
 {
     [System.Diagnostics.DebuggerDisplay("ServiceFunction: {LocaleSpecificName}")]
     // [RequiresErrorContext]
-    internal sealed class ServiceFunction : BuiltinFunction, IAsyncTexlFunction
+    internal sealed class ServiceFunction : BuiltinFunction
+#if !canvas
+        , IAsyncTexlFunction
+#endif
     {
         private readonly List<string[]> _signatures;
         private readonly string[] _orderedRequiredParams;
@@ -380,7 +383,7 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
         }
 
 #if !canvas
-        // $$$ Provide as hook 
+        // Provide as hook for execution. 
         public IAsyncTexlFunction _invoker;
         public async Task<FormulaValue> InvokeAsync(FormulaValue[] args, CancellationToken cancel)
         {

@@ -23,9 +23,12 @@ namespace Microsoft.PowerFx.Connectors
     // Given a swagger definition, handles:
     //  - signature information to create a ServiceFunction
     //  - reverse mapping to map from function signature back to swagger.
-    // $$$ Does "x-ms-visibility": "important" impact ordering?
     internal class ArgumentMapper
     {
+        // All connectors have an internal parameter named connectionId. 
+        // This is handled specially and value passed by connector. 
+        private const string ConnectionIdParamName = "connectionId";
+
         public readonly IEnumerable<OpenApiParameter> _openApiParameters;
 
         public ArgumentMapper(IEnumerable<OpenApiParameter> parameters)
@@ -53,7 +56,7 @@ namespace Microsoft.PowerFx.Connectors
                     // "Internal" params aren't shown in teh signature. So we need some way of knowing what they are.
                     // connectorId is a special-cases internal parameter, the channel will stamp it.
                     // Else it have a default value. 
-                    if (name == "connectionId" || param.HasDefaultValue())
+                    if (name == ConnectionIdParamName || param.HasDefaultValue())
                     {
                         continue;
                     }
@@ -143,7 +146,6 @@ namespace Microsoft.PowerFx.Connectors
 
                 if (optionalArg is RecordValue record)
                 {
-                    // $$$ This is wrong for Body...
                     foreach (var field in record.Fields)
                     {
                         map[field.Name] = field.Value;

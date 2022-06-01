@@ -120,8 +120,6 @@ namespace Microsoft.PowerFx.Tests
             await Assert.ThrowsAsync<InvalidOperationException>(async () => await engine.EvalAsync("Test.GetKey(\"Key1\")", CancellationToken.None));            
         }
 
-        // $$$ Test with caching...
-
         // We can bind without calling.
         // In this case, w edon't needd a http client at all.
         [Fact]

@@ -45,8 +45,6 @@ namespace Microsoft.PowerFx.Connectors
     /// </summary>
     public class CachingHttpClient : ICachingHttpClient
     {
-        // $$$ Empty on max size. Don't monotonically grow...
-
         // For GETs, map of URL to response
         private readonly Dictionary<string, Dictionary<string, FormulaValue>> _cache = new Dictionary<string, Dictionary<string, FormulaValue>>(StringComparer.Ordinal);
 
