@@ -3666,10 +3666,13 @@ namespace Microsoft.PowerFx.Core.Binding
                     }
                     else
                     {
-                        FirstNameNode lhsFirstNameNode;
-                        if ((lhsFirstNameNode = node.Left.AsFirstName()) != null)
+                        if (node.Left is FirstNameNode lhsFirstNameNode)
                         {
                             SetDottedNameError(node, TexlStrings.ErrInvalidField, lhsFirstNameNode.Ident.Name.Value, node.Right.Name.Value);
+                        }
+                        else if (node.Left is DottedNameNode lhsDottedNameNode)
+                        {
+                            SetDottedNameError(node, TexlStrings.ErrInvalidField, lhsDottedNameNode.Right.Name.Value, node.Right.Name.Value);
                         }
                         else
                         {
