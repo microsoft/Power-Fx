@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Parser;
 using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
@@ -67,9 +68,8 @@ namespace Microsoft.PowerFx.Intellisense
 
             // Note: there could be multiple functions (e.g., overloads) with the same name and arity,
             //  hence loop through candidates and check whether one of them matches.
-            var fncs = _checkResult._binding.NameResolver.Functions
-                                   .Where(fnc => fnc.Name == fncIdent.Name && fnc.Namespace == fncIdent.Namespace
-                                                    && args.Count >= fnc.MinArity && args.Count <= fnc.MaxArity);
+            var fncs = GetFunctionsByIdentifier(fncIdent).Where(fnc => args.Count >= fnc.MinArity && args.Count <= fnc.MaxArity);
+
             foreach (var fnc in fncs)
             {
                 var result =
@@ -89,6 +89,67 @@ namespace Microsoft.PowerFx.Intellisense
             }
 
             return false;
+        }
+
+        /// <summary>
+        /// Checks whether function's n-th argument is row scoped.
+        /// </summary>
+        /// <param name="functionIdentifier"></param>
+        /// <param name="argNum"></param>
+        /// <returns></returns>
+        public bool IsRowScopeArg(Identifier functionIdentifier, int argNum)
+        {
+            if (functionIdentifier is null)
+            {
+                throw new ArgumentNullException(nameof(functionIdentifier));
+            }
+
+            if (argNum < 0)
+            {
+                throw new ArgumentException("Expected non-negative value", nameof(argNum));
+            }
+
+            var fncs = GetFunctionsByIdentifier(functionIdentifier);
+
+            foreach (var fnc in fncs)
+            {
+                if (fnc.ScopeInfo == null || fnc.ScopeInfo.AppliesToArgument == null)
+                {
+                    continue;
+                }
+
+                return fnc.ScopeInfo.AppliesToArgument(argNum);
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Checks whether function's n-th argument is row scoped.
+        /// </summary>
+        /// <param name="functionName"></param>
+        /// <param name="argNum"></param>
+        /// <returns></returns>
+        public bool IsRowScopeArg(string functionName, int argNum)
+        {
+            if (functionName == null)
+            {
+                throw new ArgumentNullException(nameof(functionName));
+            }
+
+            if (!TryParseFunctionNameWithNamespace(functionName, out Identifier ident))
+            {
+                return false;
+            }
+
+            return IsRowScopeArg(ident, argNum);
+        }
+
+        // Gets all functions by identifier (possible multiple results due to overloads).
+        private IEnumerable<TexlFunction> GetFunctionsByIdentifier(Identifier ident)
+        {
+            return _checkResult._binding.NameResolver.Functions
+                                        .Where(fnc => fnc.Name == ident.Name && fnc.Namespace == ident.Namespace);
         }
 
         // Parse a function name string into an identifier (namespace and name).
