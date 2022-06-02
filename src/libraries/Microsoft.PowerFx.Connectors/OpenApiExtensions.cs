@@ -15,18 +15,27 @@ namespace Microsoft.PowerFx.Connectors
     internal static class OpenApiExtensions
     {
         public static string GetBasePath(this OpenApiDocument openApiDocument)
-        {
-            string basePath = null;
-            if (openApiDocument?.Servers.Count == 1)
+        {            
+            if (openApiDocument.Servers == null)
             {
-                // This is a full URL that will pull in 'basePath' property from connectors. 
-                // Extract BasePath back out from this. 
-                var fullPath = openApiDocument.Servers[0].Url;
-                var uri = new Uri(fullPath);
-                basePath = uri.PathAndQuery;
+                return null;
             }
 
-            return basePath;
+            // See https://spec.openapis.org/oas/v3.1.0#server-object
+            var count = openApiDocument.Servers.Count;
+            switch (count)
+            {
+                case 0: return null; // None
+                case 1:
+                    // This is a full URL that will pull in 'basePath' property from connectors. 
+                    // Extract BasePath back out from this. 
+                    var fullPath = openApiDocument.Servers[0].Url;
+                    var uri = new Uri(fullPath);
+                    var basePath = uri.PathAndQuery;
+                    return basePath;
+                default:
+                    throw new NotImplementedException($"Multiple servers not supported");
+            }
         }
 
         // Get suggested options values.  Returns null if none. 
@@ -111,16 +120,9 @@ namespace Microsoft.PowerFx.Connectors
             return param.Schema.Default != null;
         }
 
-        public static bool IsInternal(this OpenApiParameter param)
-        {
-            var exts = param.Extensions;
-            if (exts.TryGetValue("x-ms-visibility", out var val))
-            {
-                return true;
-            }
-
-            return false;
-        }
+        // Internal parameters are not showen to the user. 
+        // They can have a default value or be special cased by the infrastructure (like "connectionId").
+        public static bool IsInternal(this OpenApiParameter param) => param.Extensions.TryGetValue("x-ms-visibility", out _);
 
         // See https://swagger.io/docs/specification/data-models/data-types/
         public static FormulaType ToFormulaType(this OpenApiSchema schema)
@@ -186,6 +188,8 @@ namespace Microsoft.PowerFx.Connectors
             }
         }
 
+        private const string _applicationJson = "application/json";
+
         public static FormulaType GetReturnType(this OpenApiOperation op)
         {
             var responses = op.Responses;
@@ -205,12 +209,13 @@ namespace Microsoft.PowerFx.Connectors
             }
 
             // Responses is a list by content-type. Find "application/json"
+            // Headers are case insensitive.
             foreach (var kv3 in response200.Content)
             {
                 var mediaType = kv3.Key;
                 var response = kv3.Value;
 
-                if (mediaType == "application/json")
+                if (string.Equals(mediaType, _applicationJson, StringComparison.OrdinalIgnoreCase))
                 {
                     if (response.Schema == null)
                     {
@@ -224,7 +229,7 @@ namespace Microsoft.PowerFx.Connectors
             }
 
             // Returns something, but not json. 
-            throw new InvalidOperationException($"Unsupported return type");
+            throw new InvalidOperationException($"Unsupported return type - must have {_applicationJson}");
         }
     }
 }

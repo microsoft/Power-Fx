@@ -131,6 +131,7 @@ namespace Microsoft.PowerFx.Connectors
         private static bool IsSafeHttpMethod(HttpMethod httpMethod)
         {
             // HTTP/1.1 spec states that only GET and HEAD requests are 'safe' by default.
+            // https://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html
             return httpMethod == HttpMethod.Get ||
                 httpMethod == HttpMethod.Head;
         }

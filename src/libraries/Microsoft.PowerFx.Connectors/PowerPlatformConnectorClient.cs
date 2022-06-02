@@ -57,7 +57,7 @@ namespace Microsoft.PowerFx.Connectors
         public override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
             var url = request.RequestUri.ToString();
-            if (url[0] != '/')
+            if (request.RequestUri.IsAbsoluteUri)
             {
                 // Client has Basepath set. 
                 // x-ms-request-url needs relative URL. 

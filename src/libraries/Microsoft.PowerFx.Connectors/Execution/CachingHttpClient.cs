@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
@@ -45,7 +46,8 @@ namespace Microsoft.PowerFx.Connectors
     /// </summary>
     public class CachingHttpClient : ICachingHttpClient
     {
-        // For GETs, map of URL to response
+        // For GETs, map of (CacheScope) -> (requestKey --> FormulaValue). 
+        // requestKeyu is a URL-like, relative to the cache scope. 
         private readonly Dictionary<string, Dictionary<string, FormulaValue>> _cache = new Dictionary<string, Dictionary<string, FormulaValue>>(StringComparer.Ordinal);
 
         public CachingHttpClient()
