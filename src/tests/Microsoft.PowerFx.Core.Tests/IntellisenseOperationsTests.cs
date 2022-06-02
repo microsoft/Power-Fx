@@ -205,6 +205,8 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("Clock.AmPm", 1, false)]
         [InlineData("Clock.AmPm", 2, false)]
         [InlineData("Clock.AmPm", 42, false)]
+        [InlineData("And", 0, false)]
+        [InlineData("And", 1, false)]
         public void CheckRowScope(string fncName, int arg, bool expectedResult)
         {
             var engine = new Engine(new PowerFxConfig());
