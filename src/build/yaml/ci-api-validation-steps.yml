@@ -17,7 +17,7 @@ steps:
 - task: SOUTHWORKS.binaries-comparer.custom-build-release-task.binaries-comparer@0
   displayName: 'Compare binaries'
   inputs:
-    contractsRootFolder: 'ContractAssemblies'
+    contractsRootFolder: 'PowerFxPackages\microsoft.powerfx.core.0.2.2-preview\lib\netstandard2.0'
     contractsFileName: '$(PackageName).dll'
     implFolder: 'ImplementationAssemblies'
     failOnIssue: false

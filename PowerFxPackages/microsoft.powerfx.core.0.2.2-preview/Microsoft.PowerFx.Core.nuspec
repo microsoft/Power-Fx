@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
+  <metadata>
+    <id>Microsoft.PowerFx.Core</id>
+    <version>0.2.2-preview</version>
+    <title>Microsoft Power Fx Compiler</title>
+    <authors>Microsoft</authors>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <license type="expression">MIT</license>
+    <licenseUrl>https://licenses.nuget.org/MIT</licenseUrl>
+    <icon>icon.png</icon>
+    <projectUrl>https://github.com/Microsoft/PowerFx-Staging</projectUrl>
+    <iconUrl>https://raw.githubusercontent.com/microsoft/PowerFx-Staging/master/icon.png</iconUrl>
+    <description>The core library for all Microsoft Power Fx Compiler targets</description>
+    <copyright>© Microsoft Corporation. All rights reserved.</copyright>
+    <tags>powerfx</tags>
+    <repository type="git" url="https://github.com/Microsoft/PowerFx-Staging" commit="28050c074b90c4df83d047bd187e81315e2098b6" />
+    <dependencies>
+      <group targetFramework=".NETStandard2.0">
+        <dependency id="Microsoft.PowerFx.Transport.Attributes" version="0.2.2-preview" exclude="Build,Analyzers" />
+        <dependency id="System.Collections.Immutable" version="5.0.0" exclude="Build,Analyzers" />
+        <dependency id="System.Memory" version="4.5.4" exclude="Build,Analyzers" />
+        <dependency id="System.Text.Json" version="5.0.2" exclude="Build,Analyzers" />
+      </group>
+    </dependencies>
+  </metadata>
+</package>
