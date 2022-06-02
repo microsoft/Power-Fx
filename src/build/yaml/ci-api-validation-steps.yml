@@ -19,7 +19,7 @@ steps:
   inputs:
     contractsRootFolder: 'PowerFxPackages\microsoft.powerfx.core.0.2.2-preview\lib\netstandard2.0'
     contractsFileName: '$(PackageName).dll'
-    implFolder: 'ImplementationAssemblies'
+    implFolder: '$(System.ArtifactsDirectory)/Artifacts'
     failOnIssue: false
     resolveFx: false
     generateLog: true
