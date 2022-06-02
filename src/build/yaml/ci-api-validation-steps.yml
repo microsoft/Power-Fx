@@ -2,10 +2,11 @@ steps:
 - powershell: 'gci env:* | sort-object name | Format-Table -AutoSize -Wrap'
   displayName: 'Display env vars'
 
-- task: DownloadPipelineArtifact@1
-  displayName: 'Download OutputDlls-$(BuildConfiguration) from Artifacts'
+- task: DownloadPipelineArtifact@2
+  displayName: 'Download $(PackageName).dll from Artifacts'
   inputs:
     artifactName: 'OutputDlls-$(BuildConfiguration)'
+    patterns: '$(PackageName).dll'
     targetPath: '$(System.ArtifactsDirectory)/Artifacts'
 
 - task: NuGetCommand@2
