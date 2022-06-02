@@ -11,7 +11,7 @@ using Xunit;
 
 namespace Microsoft.PowerFx.Core.Tests
 {
-    public class CheckInvocationTests : PowerFxTest
+    public class IntellisenseOperationsTests : PowerFxTest
     {
         [Fact]
         public void CheckIf()
@@ -181,6 +181,46 @@ namespace Microsoft.PowerFx.Core.Tests
             {
                 Assert.Null(ident);
             }
+        }
+
+        // TODO: What are some further interesting cases?
+        [Theory]
+        [InlineData("Filter", 0, false)]
+        [InlineData("Filter", 1, true)]
+        [InlineData("Filter", 2, true)]
+        [InlineData("Filter", 42, true)]
+        [InlineData("If", 0, false)]
+        [InlineData("If", 1, false)]
+        [InlineData("If", 2, false)]
+        [InlineData("If", 42, false)]
+        [InlineData("Sum", 0, false)]
+        [InlineData("Sum", 1, true)]
+        [InlineData("Sum", 2, true)]
+        [InlineData("Sum", 42, true)]
+        [InlineData("NonExistentFnc", 0, false)]
+        [InlineData("NonExistentFnc", 1, false)]
+        [InlineData("NonExistentFnc", 2, false)]
+        [InlineData("NonExistentFnc", 42, false)]
+        [InlineData("Clock.AmPm", 0, false)]
+        [InlineData("Clock.AmPm", 1, false)]
+        [InlineData("Clock.AmPm", 2, false)]
+        [InlineData("Clock.AmPm", 42, false)]
+        [InlineData("And", 0, false)]
+        [InlineData("And", 1, false)]
+        public void CheckRowScope(string fncName, int arg, bool expectedResult)
+        {
+            var engine = new Engine(new PowerFxConfig());
+            var checkResult = engine.Check("0"); // Check on a dummy formula to obtain the result
+
+            var intellisense = new IntellisenseOperations(checkResult);
+            var resultString = intellisense.MaybeRowScopeArg(fncName, arg);
+            Assert.Equal(expectedResult, resultString);
+
+            var fncParseOk = IntellisenseOperations.TryParseFunctionNameWithNamespace(fncName, out Identifier ident);
+            Assert.True(fncParseOk);
+
+            var resultIdent = intellisense.MaybeRowScopeArg(ident, arg);
+            Assert.Equal(expectedResult, resultIdent);
         }
     }
 
