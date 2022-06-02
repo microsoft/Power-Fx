@@ -199,13 +199,13 @@ namespace Microsoft.PowerFx.Core.Tests
             var checkResult = engine.Check("0"); // Check on a dummy formula to obtain the result
 
             var intellisense = new IntellisenseOperations(checkResult);
-            var resultString = intellisense.IsRowScopeArg(fncName, arg);
+            var resultString = intellisense.MightBeRowScopeArg(fncName, arg);
             Assert.Equal(expectedResult, resultString);
 
             var fncParseOk = IntellisenseOperations.TryParseFunctionNameWithNamespace(fncName, out Identifier ident);
             Assert.True(fncParseOk);
 
-            var resultIdent = intellisense.IsRowScopeArg(ident, arg);
+            var resultIdent = intellisense.MightBeRowScopeArg(ident, arg);
             Assert.Equal(expectedResult, resultIdent);
         }
     }

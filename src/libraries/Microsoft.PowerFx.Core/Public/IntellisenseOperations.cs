@@ -92,12 +92,12 @@ namespace Microsoft.PowerFx.Intellisense
         }
 
         /// <summary>
-        /// Checks whether function's n-th argument is row scoped.
+        /// Checks whether function's n-th argument can be row scoped in any of the overload of the function.
         /// </summary>
         /// <param name="functionIdentifier"></param>
         /// <param name="argNum"></param>
         /// <returns></returns>
-        public bool IsRowScopeArg(Identifier functionIdentifier, int argNum)
+        public bool MightBeRowScopeArg(Identifier functionIdentifier, int argNum)
         {
             if (functionIdentifier is null)
             {
@@ -118,19 +118,22 @@ namespace Microsoft.PowerFx.Intellisense
                     continue;
                 }
 
-                return fnc.ScopeInfo.AppliesToArgument(argNum);
+                if (fnc.ScopeInfo.AppliesToArgument(argNum))
+                {
+                    return true;
+                }
             }
 
             return false;
         }
 
         /// <summary>
-        /// Checks whether function's n-th argument is row scoped.
+        /// Checks whether function's n-th argument can be row scoped in any of the overload of the function.
         /// </summary>
         /// <param name="functionName"></param>
         /// <param name="argNum"></param>
         /// <returns></returns>
-        public bool IsRowScopeArg(string functionName, int argNum)
+        public bool MightBeRowScopeArg(string functionName, int argNum)
         {
             if (functionName == null)
             {
@@ -142,7 +145,7 @@ namespace Microsoft.PowerFx.Intellisense
                 return false;
             }
 
-            return IsRowScopeArg(ident, argNum);
+            return MightBeRowScopeArg(ident, argNum);
         }
 
         // Gets all functions by identifier (possible multiple results due to overloads).
