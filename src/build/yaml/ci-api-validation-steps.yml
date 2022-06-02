@@ -3,7 +3,7 @@ steps:
   displayName: 'Display env vars'
 
 - task: DownloadPipelineArtifact@2
-  displayName: 'Download OutputDlls-$(BuildConfiguration) from Artifacts'
+  displayName: 'Download $(PackageName).dll from Artifacts'
   inputs:
     artifactName: 'OutputDlls-$(BuildConfiguration)'
     patterns: '$(PackageName).dll'
