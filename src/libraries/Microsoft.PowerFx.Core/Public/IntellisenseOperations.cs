@@ -97,7 +97,7 @@ namespace Microsoft.PowerFx.Intellisense
         /// <param name="functionIdentifier"></param>
         /// <param name="argNum"></param>
         /// <returns></returns>
-        public bool MightBeRowScopeArg(Identifier functionIdentifier, int argNum)
+        public bool MaybeRowScopeArg(Identifier functionIdentifier, int argNum)
         {
             if (functionIdentifier is null)
             {
@@ -133,7 +133,7 @@ namespace Microsoft.PowerFx.Intellisense
         /// <param name="functionName"></param>
         /// <param name="argNum"></param>
         /// <returns></returns>
-        public bool MightBeRowScopeArg(string functionName, int argNum)
+        public bool MaybeRowScopeArg(string functionName, int argNum)
         {
             if (functionName == null)
             {
@@ -145,7 +145,7 @@ namespace Microsoft.PowerFx.Intellisense
                 return false;
             }
 
-            return MightBeRowScopeArg(ident, argNum);
+            return MaybeRowScopeArg(ident, argNum);
         }
 
         // Gets all functions by identifier (possible multiple results due to overloads).
