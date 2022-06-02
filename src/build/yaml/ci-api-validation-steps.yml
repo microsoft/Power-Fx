@@ -17,9 +17,9 @@ steps:
 - task: SOUTHWORKS.binaries-comparer.custom-build-release-task.binaries-comparer@0
   displayName: 'Compare binaries'
   inputs:
-    contractsRootFolder: 'DownloadedNuGet\$(PackageName).$(ApiVersionBenchmark)\lib\netstandard2.0'
+    contractsRootFolder: 'ContractAssemblies'
     contractsFileName: '$(PackageName).dll'
-    implFolder: '$(System.ArtifactsDirectory)/Artifacts'
+    implFolder: 'ImplementationAssemblies'
     failOnIssue: false
     resolveFx: false
     generateLog: true
