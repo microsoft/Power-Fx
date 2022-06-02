@@ -6,7 +6,7 @@ steps:
   displayName: 'Download OutputDlls-$(BuildConfiguration) from Artifacts'
   inputs:
     artifactName: 'OutputDlls-$(BuildConfiguration)'
-    patterns: '**\$(PackageName).dll'
+    patterns: '**/$(PackageName).dll'
     targetPath: '$(System.ArtifactsDirectory)/Artifacts'
 
 - task: NuGetCommand@2
