@@ -193,6 +193,18 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("If", 1, false)]
         [InlineData("If", 2, false)]
         [InlineData("If", 42, false)]
+        [InlineData("Sum", 0, false)]
+        [InlineData("Sum", 1, true)]
+        [InlineData("Sum", 2, true)]
+        [InlineData("Sum", 42, true)]
+        [InlineData("NonExistentFnc", 0, false)]
+        [InlineData("NonExistentFnc", 1, false)]
+        [InlineData("NonExistentFnc", 2, false)]
+        [InlineData("NonExistentFnc", 42, false)]
+        [InlineData("Clock.AmPm", 0, false)]
+        [InlineData("Clock.AmPm", 1, false)]
+        [InlineData("Clock.AmPm", 2, false)]
+        [InlineData("Clock.AmPm", 42, false)]
         public void CheckRowScope(string fncName, int arg, bool expectedResult)
         {
             var engine = new Engine(new PowerFxConfig());
