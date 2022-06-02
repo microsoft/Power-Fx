@@ -3,9 +3,9 @@ steps:
   displayName: 'Display env vars'
 
 - task: DownloadPipelineArtifact@1
-  displayName: 'Download the new PowerFx Dlls from Artifacts'
+  displayName: 'Download OutputDlls-$(BuildConfiguration) from Artifacts'
   inputs:
-    artifactName: 'PowerFxDlls-$(BuildConfiguration)'
+    artifactName: 'OutputDlls-$(BuildConfiguration)'
     targetPath: '$(System.ArtifactsDirectory)/Artifacts'
 
 - task: NuGetCommand@2

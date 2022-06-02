@@ -106,9 +106,9 @@ stages:
 
     - task: PublishPipelineArtifact@0
       inputs:
-        artifactName: 'PowerFxDlls-$(BuildConfiguration)'
+        artifactName: 'OutputDlls-$(BuildConfiguration)'
         targetPath: outputLibraries
-      displayName: 'Publish the PowerFx Dlls to Artifacts'
+      displayName: 'Push to OutputDlls-$(BuildConfiguration) in Artifacts'
       continueOnError: true
 
     - script: |
