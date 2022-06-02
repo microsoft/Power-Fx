@@ -2,7 +2,7 @@ steps:
 - powershell: 'gci env:* | sort-object name | Format-Table -AutoSize -Wrap'
   displayName: 'Display env vars'
 
-- task: DownloadPipelineArtifact@1
+- task: DownloadPipelineArtifact@2
   displayName: 'Download OutputDlls-$(BuildConfiguration) from Artifacts'
   inputs:
     artifactName: 'OutputDlls-$(BuildConfiguration)'
