@@ -13,7 +13,7 @@ pool:
   - vstest
 
 variables:
-  ApiVersionBenchmark: 0.2.2-preview # The packages version against which the new package APIs are to be validated.
+  ApiContractVersion: 0.2.2-preview # The packages version against which the new package APIs are to be validated.
   PackagesToValidate: Microsoft.PowerFx.Core,Microsoft.PowerFx.Interpreter,Microsoft.PowerFx.LanguageServerProtocol,Microsoft.PowerFx.Transport.Attributes
   BuildPlatform: 'any cpu'
   BuildSolution: src/Microsoft.PowerFx.sln

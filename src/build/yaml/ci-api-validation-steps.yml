@@ -10,32 +10,32 @@ steps:
     targetPath: '$(System.ArtifactsDirectory)/Artifacts'
 
 - task: NuGetCommand@2
-  displayName: 'NuGet install $(PackageName) $(ApiVersionBenchmark)'
+  displayName: 'NuGet install $(PackageName) $(ApiContractVersion)'
   inputs:
     command: custom
-    arguments: 'install $(PackageName) -Version $(ApiVersionBenchmark) -OutputDirectory $(System.DefaultWorkingDirectory)\DownloadedNuGet'
+    arguments: 'install $(PackageName) -Version $(ApiContractVersion) -OutputDirectory $(System.DefaultWorkingDirectory)\DownloadedNuGet'
 
 - task: SOUTHWORKS.binaries-comparer.custom-build-release-task.binaries-comparer@0
   displayName: 'Compare binaries'
   inputs:
-    contractsRootFolder: 'DownloadedNuGet\$(PackageName).$(ApiVersionBenchmark)\lib\netstandard2.0'
+    contractsRootFolder: 'DownloadedNuGet\$(PackageName).$(ApiContractVersion)\lib\netstandard2.0'
     contractsFileName: '$(PackageName).dll'
     implFolder: '$(System.ArtifactsDirectory)/Artifacts'
     failOnIssue: false
     resolveFx: false
     generateLog: true
-    outputFilename: '$(PackageName).$(ApiVersionBenchmark).CompatResults.txt'
+    outputFilename: '$(PackageName).$(ApiContractVersion).CompatResults.txt'
     outputFolder: '$(Build.ArtifactStagingDirectory)'
     useBaseline: false
 
 - powershell: |
-    $filePath = "$(Build.ArtifactStagingDirectory)\$(PackageName).$(ApiVersionBenchmark).CompatResults.txt"
-    $nugetLink = "compared against [version $(ApiVersionBenchmark)](https://www.nuget.org/packages/$(PackageName)/$(ApiVersionBenchmark)).";
+    $filePath = "$(Build.ArtifactStagingDirectory)\$(PackageName).$(ApiContractVersion).CompatResults.txt"
+    $nugetLink = "compared against [version $(ApiContractVersion)](https://www.nuget.org/packages/$(PackageName)/$(ApiContractVersion)).";
     Write-Host "Compatibility Check:"; 
 
     if (-not (Test-Path $filePath)) {
-      $content = "The binary compatibility report for library '$(PackageName)' wasn't generated. This may have happened because the NuGet library '$(PackageName)' for version '$(ApiVersionBenchmark)' was unavailable or a connectivity issue."
-      New-Item -Path '$(Build.ArtifactStagingDirectory)' -Name '$(PackageName).$(ApiVersionBenchmark).CompatResults.txt' -ItemType "file" -Value $content
+      $content = "The binary compatibility report for library '$(PackageName)' wasn't generated. This may have happened because the NuGet library '$(PackageName)' for version '$(ApiContractVersion)' was unavailable or a connectivity issue."
+      New-Item -Path '$(Build.ArtifactStagingDirectory)' -Name '$(PackageName).$(ApiContractVersion).CompatResults.txt' -ItemType "file" -Value $content
       $content;
       return;
     }
@@ -114,7 +114,7 @@ steps:
 - task: PublishBuildArtifacts@1
   displayName: 'Publish CompatResults artifact'
   inputs:
-    ArtifactName: '$(PackageName).$(ApiVersionBenchmark).CompatResults'
+    ArtifactName: '$(PackageName).$(ApiContractVersion).CompatResults'
   condition: succeededOrFailed()
 
 - script: |
