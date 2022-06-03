@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
 using System.Collections.Generic;
 using Microsoft.PowerFx.Core.IR;
 
@@ -12,7 +13,7 @@ namespace Microsoft.PowerFx.Types
     /// (such as Enumeration, Count, Index).
     /// </summary>
     /// <typeparam name="T">The element type of the collection.</typeparam>
-    internal abstract class CollectionTableValue<T> : TableValue
+    public abstract class CollectionTableValue<T> : TableValue
     {
         // Required - basic enumeration. This is the source object. 
         private readonly IEnumerable<T> _enumerator; // required. supports enumeration;
@@ -21,14 +22,22 @@ namespace Microsoft.PowerFx.Types
         private readonly IReadOnlyList<T> _sourceIndex; // maybe null. supports index. 
         private readonly IReadOnlyCollection<T> _sourceCount; // maybe null. supports count;
 
+        public CollectionTableValue(RecordType recordType, IEnumerable<T> source)
+          : this(IRContext.NotInSource(recordType.ToTable()), source)
+        {
+            RecordType = recordType;
+        }
+
         internal CollectionTableValue(IRContext irContext, IEnumerable<T> source)
          : base(irContext)
         {
-            _enumerator = source;
+            _enumerator = source ?? throw new ArgumentNullException(nameof(source));
 
             _sourceIndex = source as IReadOnlyList<T>;
             _sourceCount = source as IReadOnlyCollection<T>;
         }
+
+        public RecordType RecordType { get; }
 
         protected abstract DValue<RecordValue> Marshal(T item);
 

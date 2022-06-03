@@ -136,6 +136,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Types.UntypedObjectValue",
                 "Microsoft.PowerFx.Types.ValidFormulaValue",
                 "Microsoft.PowerFx.Types.UnsupportedType",
+                "Microsoft.PowerFx.Types.CollectionTableValue`1",
 
                 // Intellisense classes. Used primarily by the Language Service Provider.
                 // Most evaluators should never need these. 

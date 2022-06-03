@@ -13,7 +13,7 @@ using Xunit;
 
 namespace Microsoft.PowerFx.Tests
 {
-    // Test marshaling between C# objectrs and Power Fx values. 
+    // Test marshaling between C# objects and Power Fx values. 
     public class MarshalTests : PowerFxTest
     {
         // Do a trivial marshal.
@@ -841,6 +841,40 @@ namespace Microsoft.PowerFx.Tests
             // Table doesn't have indexer, so index is a linear scan. 
             var result1 = (RecordValue)fxTable.Index(2).Value;
             Assert.Equal(21.0, result1.GetField("Field1").ToObject());
+        }
+
+        private class MyDynamicMarshaller : IDynamicTypeMarshaller
+        {
+            public FormulaValue _result;
+
+            public bool TryMarshal(TypeMarshallerCache cache, object value, out FormulaValue result)
+            {
+                result = _result;
+                return result != null;
+            }
+        }
+
+        [Fact]
+        public void DynamicMarshaller()
+        {
+            var marshaller = new MyDynamicMarshaller
+            {
+                _result = FormulaValue.New(15)
+            };
+            var cache = new TypeMarshallerCache()
+                .WithDynamicMarshallers(marshaller);
+
+            var obj = 333;
+
+            // Invokes marshaller
+            // Dynamic marshallers run before Static ones, so it will take precedence. 
+            var result = cache.Marshal(obj);
+            Assert.True(object.ReferenceEquals(marshaller._result, result));
+
+            // Disable dynamic marshaller. Static will claim it. 
+            marshaller._result = null;
+            var result2 = cache.Marshal(obj);
+            Assert.Equal(333.0, result2.ToObject());
         }
     }
 }
