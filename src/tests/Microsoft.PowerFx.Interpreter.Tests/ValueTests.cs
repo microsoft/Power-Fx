@@ -156,7 +156,9 @@ namespace Microsoft.PowerFx.Core.Tests
 
             internal int InternalProp { get; set; }
 
+#pragma warning disable CS0649 // Unassigned field is intended here to test marshalling
             public int publicField;
+#pragma warning restore CS0649
         }
 
         private class TestRow

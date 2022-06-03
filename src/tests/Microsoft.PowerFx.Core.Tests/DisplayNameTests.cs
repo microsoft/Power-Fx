@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System.Globalization;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Core.Types;
@@ -15,7 +16,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         public DisplayNameTests()
             : base()
         {
-            _engine = new Engine(new PowerFxConfig());
+            _engine = new Engine(new PowerFxConfig(CultureInfo.InvariantCulture));
         }
 
         private readonly Engine _engine;
@@ -86,7 +87,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             }
             else
             {
-                var outInvariantExpression = _engine.GetInvariantExpression(outputExpression, r1);
+                var outInvariantExpression = _engine.GetInvariantExpression(inputExpression, r1);
                 Assert.Equal(outputExpression, outInvariantExpression);
             }
         }
@@ -123,7 +124,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [InlineData("First(Nested).Inner", "First(Nested).Inner", "B", "A")]
         [InlineData("First(Nested).Inner", "First(Nested).Bar", "Nested.Inner", "Bar")]
         [InlineData("First(Nested).Inner", "First(Bar).Inner", "Nested", "Bar")]
-        [InlineData("First(Nested).InnerDisplay", "First(Bar).InnerDisplay", "Nested", "Bar")]
+        [InlineData("First(Nested).InnerDisplay", "First(Bar).Inner", "Nested", "Bar")]
+        [InlineData("First(Nested).InnerDisplay", "First(Nested).InnerRenamedLogicalName", "Nested.Inner", "InnerRenamedLogicalName")]
         [InlineData("With({SomeValue: 123}, RecordNest.nest2.datetest)", "With({SomeValue: 123}, RecordNest.nest2.Foo)", "RecordNest.nest2.datetest", "Foo")]
         [InlineData("With({RecordNest: {nest2: {datetest: 123}}}, RecordNest.nest2.datetest)", "With({RecordNest: {nest2: {datetest: 123}}}, RecordNest.nest2.datetest)", "RecordNest.nest2.datetest", "Foo")]
         [InlineData("With(RecordNest, SomeString + nest2.datetest)", "With(Foo, SomeString + nest2.datetest)", "RecordNest", "Foo")]
@@ -160,6 +162,53 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var renamer = _engine.CreateFieldRenamer(r1, dpath, new DName(newName));
 
             Assert.Equal(expectedExpression, renamer.ApplyRename(expressionBase));
+        }
+    }
+
+    public class CommaSeparatedDecimalLocaleConversionTests
+    {
+        public CommaSeparatedDecimalLocaleConversionTests()
+        {
+            _engine = new Engine(new PowerFxConfig(CultureInfo.GetCultureInfo("fr-FR")));
+        }
+
+        private readonly Engine _engine;
+
+        [Theory]
+        [InlineData("If(B, Num, 1234.56)", "If(DisplayB; DisplayNum; 1234,56)", true)]
+        [InlineData("123456.789", "123456,789", true)]
+        [InlineData("a;b;c;d;e;", "a;;b;;c;;d;;e;;", true)]
+        [InlineData("If(DisplayB, DisplayNum, 1234)", "If(DisplayB; DisplayNum; 1234)", true)]
+        [InlineData("If(DisplayB, Num, 1234)", "If(DisplayB; DisplayNum; 1234)", true)]
+        [InlineData("Sum(Nested, Inner)", "Sum(NestedDisplay; InnerDisplay)", true)]
+        [InlineData("Sum(Nested /* The source */ , Inner /* Sum over the InnerDisplay column */)", "Sum(NestedDisplay /* The source */ ; InnerDisplay /* Sum over the InnerDisplay column */)", true)]
+        [InlineData("If(DisplayB; DisplayNum; 1234,56)", "If(B, Num, 1234.56)", false)]
+        [InlineData("123456,789", "123456.789", false)]
+        [InlineData("a;;b;;c;;d;;e;;", "a;b;c;d;e;", false)]
+        [InlineData("If(B; Num; 1234)", "If(B, Num, 1234)", false)]
+        [InlineData("If(DisplayB; Num; 1234)", "If(B, Num, 1234)", false)]
+        [InlineData("Sum(NestedDisplay; InnerDisplay)", "Sum(Nested, Inner)", false)]
+        [InlineData("Sum(NestedDisplay /* The source */ ; InnerDisplay /* Sum over the InnerDisplay column */)", "Sum(Nested /* The source */ , Inner /* Sum over the InnerDisplay column */)", false)]
+        public void ValidateExpressionConversionCommaSeparatedLocale(string inputExpression, string outputExpression, bool toDisplay)
+        {
+            var r1 = new RecordType()
+                .Add(new NamedFormulaType("Num", FormulaType.Number, "DisplayNum"))
+                .Add(new NamedFormulaType("B", FormulaType.Boolean, "DisplayB"))
+                .Add(new NamedFormulaType(
+                    "Nested",
+                    new TableType().Add(new NamedFormulaType("Inner", FormulaType.Number, "InnerDisplay")),
+                    "NestedDisplay"));
+
+            if (toDisplay)
+            {
+                var outDisplayExpression = _engine.GetDisplayExpression(inputExpression, r1);
+                Assert.Equal(outputExpression, outDisplayExpression);
+            }
+            else
+            {
+                var outInvariantExpression = _engine.GetInvariantExpression(inputExpression, r1);
+                Assert.Equal(outputExpression, outInvariantExpression);
+            }
         }
     }
 }

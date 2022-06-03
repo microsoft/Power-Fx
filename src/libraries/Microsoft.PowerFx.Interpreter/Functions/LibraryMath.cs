@@ -812,7 +812,7 @@ namespace Microsoft.PowerFx.Functions
             return FiniteChecker(irContext, 1, result);
         }
 
-        private static async ValueTask<FormulaValue> Rand(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args)
+        private static FormulaValue Rand(IRContext irContext, FormulaValue[] args)
         {
             lock (_randomizerLock)
             {
@@ -854,7 +854,7 @@ namespace Microsoft.PowerFx.Functions
             }
         }
 
-        private static async ValueTask<FormulaValue> Pi(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args)
+        private static FormulaValue Pi(IRContext irContext, FormulaValue[] args)
         {
             return new NumberValue(irContext, Math.PI);
         }

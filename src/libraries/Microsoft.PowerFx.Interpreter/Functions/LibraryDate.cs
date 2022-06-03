@@ -11,7 +11,7 @@ namespace Microsoft.PowerFx.Functions
 {
     internal partial class Library
     {
-        public static async ValueTask<FormulaValue> Today(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args)
+        public static FormulaValue Today(IRContext irContext, FormulaValue[] args)
         {
             // $$$ timezone?
             var date = DateTime.Today;
@@ -383,12 +383,12 @@ namespace Microsoft.PowerFx.Functions
             return result;
         }
 
-        private static async ValueTask<FormulaValue> Now(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args)
+        private static FormulaValue Now(IRContext irContext, FormulaValue[] args)
         {
             return new DateTimeValue(irContext, DateTime.Now);
         }
 
-        private static async ValueTask<FormulaValue> DateParse(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, StringValue[] args)
+        private static FormulaValue DateParse(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, StringValue[] args)
         {
             var str = args[0].Value;
             if (DateTime.TryParse(str, runner.CultureInfo, DateTimeStyles.None, out var result))
@@ -401,7 +401,7 @@ namespace Microsoft.PowerFx.Functions
             }
         }
 
-        public static async ValueTask<FormulaValue> DateTimeParse(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, StringValue[] args)
+        public static FormulaValue DateTimeParse(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, StringValue[] args)
         {
             var str = args[0].Value;
             if (DateTime.TryParse(str, runner.CultureInfo, DateTimeStyles.None, out var result))
@@ -414,7 +414,7 @@ namespace Microsoft.PowerFx.Functions
             }
         }
 
-        public static async ValueTask<FormulaValue> TimeParse(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, StringValue[] args)
+        public static FormulaValue TimeParse(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, StringValue[] args)
         {
             var str = args[0].Value;
             if (TimeSpan.TryParse(str, runner.CultureInfo, out var result))

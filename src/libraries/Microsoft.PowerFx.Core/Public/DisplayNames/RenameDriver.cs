@@ -2,6 +2,8 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
+using System.Globalization;
+using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Glue;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
@@ -11,27 +13,36 @@ namespace Microsoft.PowerFx.Core
 {
     public sealed class RenameDriver
     {
-        private readonly RecordType _parameters;
-        private readonly SimpleResolver _resolver;
+        private readonly RecordType _baseParameters;
+        private readonly RecordType _renameParameters;
+        private readonly INameResolver _resolver;
+        private readonly Engine _engine;
+        private readonly IBinderGlue _binderGlue;
 
-        internal RenameDriver(RecordType parameters, DPath pathToRename, DName updatedName, SimpleResolver resolver)
+        internal RenameDriver(RecordType parameters, DPath pathToRename, DName updatedName, Engine engine, INameResolver resolver, IBinderGlue binderGlue)
         {
             var segments = new Queue<DName>(pathToRename.Segments());
             Contracts.CheckParam(segments.Count > 0, nameof(parameters));
 
-            // After this point, _parameters should have at most one logical->display pair that can change in this conversion
-            _parameters = RenameFormulaTypeHelper(parameters, segments, updatedName) as RecordType;
+            _baseParameters = parameters;
+
+            // After this point, _renameParameters should have at most one logical->display pair that can change in this conversion
+            _renameParameters = RenameFormulaTypeHelper(parameters, segments, updatedName) as RecordType;
             _resolver = resolver;
+            _engine = engine;
+            _binderGlue = binderGlue;
         }
 
         /// <summary>
         /// Applies rename operation to <paramref name="expressionText"/>.
         /// </summary>
         /// <param name="expressionText">Expression in which to rename the parameter field.</param>
-        /// <returns>Expression with rename applied.</returns>
+        /// <returns>Expression with rename applied, in invariant locale.</returns>
         public string ApplyRename(string expressionText)
         {
-            return Engine.ConvertExpression(expressionText, _parameters, _resolver, true);
+            // Ensure expression is converted to invariant before applying rename.
+            var invariantExpression = _engine.GetInvariantExpression(expressionText, _baseParameters);
+            return ExpressionLocalizationHelper.ConvertExpression(invariantExpression, _renameParameters, BindingConfig.Default, _resolver, _binderGlue, CultureInfo.InvariantCulture, true);
         }
 
         private static FormulaType RenameFormulaTypeHelper(AggregateType nestedType, Queue<DName> segments, DName updatedName)

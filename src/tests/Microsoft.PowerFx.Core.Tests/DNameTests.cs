@@ -17,6 +17,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("Name\nAbcd", "Name Abcd", true)]
         [InlineData("   ", "_   ", true)]
         [InlineData(" \t ", "_   ", true)]
+        [InlineData("Name\u3000Abcd", "Name\u3000Abcd", false)]
         public void TestMakeValid(string name, string expected, bool expectedModified)
         {
             var result = DName.MakeValid(name, out var modified);

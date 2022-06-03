@@ -11,6 +11,11 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
             End = new Position();
         }
 
+        public bool IsValid()
+        {
+            return (Start.Line < End.Line) || (Start.Line == End.Line && Start.Character <= End.Character);
+        }
+
         /// <summary>
         /// The range's start position.
         /// </summary>

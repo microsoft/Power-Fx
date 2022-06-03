@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation.
+﻿case BinaryOp.Sub:// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
 using System;
@@ -129,7 +129,7 @@ namespace Microsoft.PowerFx.Functions
             where T : FormulaValue
         {
             return StandardErrorHandlingAsync<T>(expandArguments, replaceBlankValues, checkRuntimeTypes, checkRuntimeValues, returnBehavior, (runner, symbolContext, irContext, args) =>
-            {
+            {                
                 var result = targetFunction(irContext, args);
                 return new ValueTask<FormulaValue>(result);
             });
@@ -168,7 +168,7 @@ namespace Microsoft.PowerFx.Functions
             where T : FormulaValue
         {
             return StandardErrorHandlingAsync<T>(expandArguments, replaceBlankValues, checkRuntimeTypes, checkRuntimeValues, returnBehavior, (runner, symbolContext, irContext, args) =>
-            {
+            {                
                 var result = targetFunction(runner, symbolContext, irContext, args);
                 return new ValueTask<FormulaValue>(result);
             });
@@ -179,7 +179,7 @@ namespace Microsoft.PowerFx.Functions
             Func<IRContext, FormulaValue[], FormulaValue> targetFunction)
         {
             return (_, _, irContext, args) =>
-            {
+            {                
                 var result = targetFunction(irContext, args);
                 return new ValueTask<FormulaValue>(result);
             };
