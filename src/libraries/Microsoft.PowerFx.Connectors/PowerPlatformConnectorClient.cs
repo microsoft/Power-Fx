@@ -81,9 +81,9 @@ namespace Microsoft.PowerFx.Connectors
             req.Headers.Add("x-ms-client-environment-id", "/providers/Microsoft.PowerApps/environments/" + EnvironmentId);
             req.Headers.Add("x-ms-user-agent", $"PowerFx/{Version}");
 
-            req.Headers.Add("x-ms-request-url", url); 
+            req.Headers.Add("x-ms-request-url", url);
 
-            // $$$ Body? 
+            // $$$ handle body parameter which may need to be copied over from incoming request to APIM request.  
 
             var response = await _client.SendAsync(req, cancellationToken);
             return response;

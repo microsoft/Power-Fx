@@ -164,7 +164,7 @@ namespace Microsoft.PowerFx.Connectors
                     return obj;
 
                 case null:
-                    // Missing a schema is ok - that signifies void. 
+                    // Missing a schema is ok.
                     // But if we do have a schema, it must be valid.
                     throw new InvalidOperationException($"Null/Invalid schema");
             }

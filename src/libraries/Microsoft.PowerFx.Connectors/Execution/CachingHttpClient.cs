@@ -31,6 +31,11 @@ namespace Microsoft.PowerFx.Connectors
     {
         public static ICachingHttpClient Instance { get; } = new NonCachingClient();
 
+        // Use Instance property
+        private NonCachingClient()
+        {
+        }
+
         public void Reset(string cacheScope)
         {
         }
