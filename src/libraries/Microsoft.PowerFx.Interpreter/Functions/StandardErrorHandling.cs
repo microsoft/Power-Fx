@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation.
+﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
 using System;
@@ -155,7 +155,7 @@ namespace Microsoft.PowerFx.Functions
                 return new ValueTask<FormulaValue>(result);
             });
         }
-
+        
         // A wrapper that allows standard error handling to apply to
         // sync functions with the full parameter list
         private static AsyncFunctionPtr StandardErrorHandling<T>(
@@ -186,7 +186,7 @@ namespace Microsoft.PowerFx.Functions
         }
 
         #region Single Column Table Functions
-        public static Func<EvalVisitor, SymbolContext, IRContext, TableValue[], ValueTask<FormulaValue>> StandardSingleColumnTable<T>(Func<EvalVisitor, SymbolContext, IRContext, T[], FormulaValue> targetFunction)
+        public static Func<EvalVisitor, SymbolContext, IRContext, TableValue[], ValueTask<FormulaValue>> StandardSingleColumnTable<T>(Func<EvalVisitor, SymbolContext, IRContext, T[], FormulaValue> targetFunction) 
             where T : FormulaValue
         {
             return (runner, symbolContext, irContext, args) =>
@@ -325,7 +325,7 @@ namespace Microsoft.PowerFx.Functions
          * As a concrete example, Concatenate(["a", "b"], ["1", "2"]) => ["a1", "b2"]
         */
         public static Func<EvalVisitor, SymbolContext, IRContext, FormulaValue[], ValueTask<FormulaValue>> MultiSingleColumnTable(
-            AsyncFunctionPtr targetFunction,
+            AsyncFunctionPtr targetFunction, 
             bool transposeEmptyTable)
         {
             return async (runner, symbolContext, irContext, args) =>
