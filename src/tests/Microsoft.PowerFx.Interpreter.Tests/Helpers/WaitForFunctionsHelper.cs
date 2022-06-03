@@ -14,7 +14,7 @@ namespace Microsoft.PowerFx.Tests
         {
         }
 
-        protected override async Task OnWaitPolicyAsync(int x)
+        protected override Task OnWaitPolicyAsync(int x)
         {
             // Fail if any previous instance started before this one.
             var t = WaitFor(x);
@@ -22,6 +22,8 @@ namespace Microsoft.PowerFx.Tests
             {
                 throw new InvalidOperationException($"Task {x} has not completed. Bad parallelism");
             }
+
+            return t;
         }
     }
 }

@@ -19,7 +19,8 @@ namespace Microsoft.PowerFx.Tests
     // Test async eval features. 
     public class RecalcEngineAsyncTests : PowerFxTest
     {
-        // Trivial async function that runs synchronously. 
+        // Intentionally trivial async function that runs synchronously. 
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
         private static async Task<FormulaValue> Worker(FormulaValue[] args, CancellationToken cancel)
         {
             var n = (NumberValue)args[0];
@@ -27,6 +28,7 @@ namespace Microsoft.PowerFx.Tests
             var result = FormulaValue.New(n.Value * 2);
             return result;
         }
+#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
 
         // Call a single async function 
         [Fact]

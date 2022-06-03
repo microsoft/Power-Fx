@@ -30,7 +30,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             _runner = new InterpreterRunner();
 
-            var (result, msg) = _runner.RunAsync(testCase).Result;
+            var (result, msg) = _runner.RunTestCase(testCase);
 
             var prefix = $"Test {Path.GetFileName(testCase.SourceFile)}:{testCase.SourceLine}: ";
             switch (result)

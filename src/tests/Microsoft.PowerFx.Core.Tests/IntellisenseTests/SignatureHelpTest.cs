@@ -44,10 +44,12 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
 
                 if (RegenerateSignatureHelp)
                 {
+                    #pragma warning disable CS0162 // Unreachable code due to a local switch to regenerate baseline files
                     if (!JToken.DeepEquals(actualSignatureHelp, expectedSignatureHelp))
                     {
                         WriteSignatureHelp(signatureHelpPath, signatureHelp);
                     }
+                    #pragma warning restore CS0162
                 }
                 else
                 {
