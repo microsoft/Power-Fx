@@ -130,11 +130,11 @@
     
   </data>
   <data name="IfArgTrueValue" xml:space="preserve">
-    <value>true_value</value>
+    <value>true_값</value>
     
   </data>
   <data name="IfArgElseValue" xml:space="preserve">
-    <value>else_value</value>
+    <value>else_값</value>
     
   </data>
   <data name="AboutIf_logical_test" xml:space="preserve">
@@ -153,27 +153,27 @@
     
   </data>
   <data name="SwitchExpression" xml:space="preserve">
-    <value>switch_value</value>
+    <value>전환_값</value>
     
   </data>
   <data name="SwitchDefaultReturn" xml:space="preserve">
-    <value>default_result</value>
+    <value>기본_결과</value>
     
   </data>
   <data name="SwitchCaseExpr" xml:space="preserve">
-    <value>match_value</value>
+    <value>일치_값</value>
     
   </data>
   <data name="SwitchCaseArg" xml:space="preserve">
-    <value>match_result</value>
+    <value>일치_결과</value>
     
   </data>
   <data name="AboutSwitch_switch_value" xml:space="preserve">
-    <value>각 match_value에 대해 비교할 값입니다.</value>
+    <value>각 일치_값에 대해 비교할 값입니다.</value>
     
   </data>
   <data name="AboutSwitch_match_value" xml:space="preserve">
-    <value>switch_value와 일치시킬 값입니다.</value>
+    <value>전환_값과 일치시킬 값입니다.</value>
     
   </data>
   <data name="AboutSwitch_match_result" xml:space="preserve">
@@ -441,7 +441,7 @@
     <value>반환할 행 수입니다.</value>
   </data>
   <data name="AboutText" xml:space="preserve">
-    <value>'값'을 지정된 수의 'format_text' 텍스트로 변환합니다.</value>
+    <value>'값'을 지정된 수의 '형식_텍스트' 텍스트로 변환합니다.</value>
     
   </data>
   <data name="TextArg1" xml:space="preserve">
@@ -449,7 +449,7 @@
     
   </data>
   <data name="TextArg2" xml:space="preserve">
-    <value>서식_텍스트</value>
+    <value>형식_텍스트</value>
     
   </data>
   <data name="TextArg3" xml:space="preserve">
@@ -1646,15 +1646,15 @@
     
   </data>
   <data name="ErrBadArity" xml:space="preserve">
-    <value>인수 개수가 잘못되었습니다. {1}개가 필요하지만 {0}개를 수신했습니다. </value>
+    <value>인수 개수가 잘못되었습니다. {1}개가 필요하지만 {0}개를 수신했습니다.</value>
     
   </data>
   <data name="ErrBadArityEven" xml:space="preserve">
-    <value>인수 개수가 잘못되었습니다. 짝수가 필요하지만 {0}개를 수신했습니다. </value>
+    <value>인수 개수가 잘못되었습니다. 짝수가 필요하지만 {0}개를 수신했습니다.</value>
     
   </data>
   <data name="ErrBadArityOdd" xml:space="preserve">
-    <value>인수 개수가 잘못되었습니다. 홀수가 필요하지만 {0}개를 수신했습니다. </value>
+    <value>인수 개수가 잘못되었습니다. 홀수가 필요하지만 {0}개를 수신했습니다.</value>
     
   </data>
   <data name="ErrBadType" xml:space="preserve">
@@ -3124,7 +3124,7 @@
     
   </data>
   <data name="LayoutAlignItems_End_DisplayName" xml:space="preserve">
-    <value>끝</value>
+    <value>종료</value>
     
   </data>
   <data name="LayoutAlignItems_Stretch_DisplayName" xml:space="preserve">
@@ -3140,7 +3140,7 @@
     
   </data>
   <data name="AlignInContainer_End_DisplayName" xml:space="preserve">
-    <value>끝</value>
+    <value>종료</value>
     
   </data>
   <data name="AlignInContainer_Stretch_DisplayName" xml:space="preserve">
@@ -3160,7 +3160,7 @@
     
   </data>
   <data name="LayoutJustifyContent_End_DisplayName" xml:space="preserve">
-    <value>끝</value>
+    <value>종료</value>
     
   </data>
   <data name="LayoutJustifyContent_SpaceEvenly_DisplayName" xml:space="preserve">
@@ -3384,7 +3384,7 @@
     
   </data>
   <data name="GridStyle_All_DisplayName" xml:space="preserve">
-    <value>모두</value>
+    <value>전체</value>
     
   </data>
   <data name="GridStyle_None_DisplayName" xml:space="preserve">
@@ -3556,7 +3556,7 @@
     
   </data>
   <data name="Icon_More_DisplayName" xml:space="preserve">
-    <value>많음</value>
+    <value>더 보기</value>
     
   </data>
   <data name="Icon_Waffle_DisplayName" xml:space="preserve">
@@ -3876,7 +3876,7 @@
     
   </data>
   <data name="ErrBadArityMinimum" xml:space="preserve">
-    <value>인수 개수가 잘못되었습니다. {1}개 이상이 필요하지만 {0}개를 수신했습니다. </value>
+    <value>인수 개수가 잘못되었습니다. {1}개 이상이 필요하지만 {0}개를 수신했습니다.</value>
     
   </data>
   <data name="ErrBadArityRange" xml:space="preserve">
@@ -3944,7 +3944,7 @@
     
   </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
-    <value>피연산자가 필요합니다. 수식 또는 식에는 유효한 피연산자가 필요합니다. 예를 들어, 식 ' 1 +_'에 피연산자 '2'를 추가하여 결과 값이 '3'이 되게 만들 수 있습니다. 또는 식 '"Hi "&amp; _ '에 피연산자 "there"를 추가하여 'Hi there' 결과 값을 얻을 수 있습니다.</value>
+    <value>피연산자가 필요합니다. 수식 또는 식에는 유효한 피연산자가 필요합니다. 예를 들어, 식 ' 1 +_'에 피연산자 '2'를 추가하여 결과 값이 '3'이 되게 만들 수 있습니다. 또는 식 '"Hi "&amp; _ '에 피연산자 "there"를 추가하여 'Hi there' 결과를 얻을 수 있습니다.</value>
     
   </data>
   <data name="ErrorResource_ErrOperandExpected_HowToFix_1" xml:space="preserve">
@@ -4547,6 +4547,21 @@
   </data>
   <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
     <value>이름이 지정된 수식은 세미콜론으로 끝나야 합니다.</value>
+    
+  </data>
+  <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
+    <value>NamedFormula '{0}'이(가) 이미 있습니다.</value>
+  </data>
+  <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
+    <value>'{0}'의 첫 번째 인수가 올바른 변수 이름이어야 하며, 기존 컨트롤, 화면, 컬렉션 또는 데이터 원본 이름과 충돌할 수 없습니다. 검색된 유형: '{1}'</value>
+    
+  </data>
+  <data name="AboutSet" xml:space="preserve">
+    <value>전역 변수를 만들고 설정합니다.</value>
+    
+  </data>
+  <data name="SetArg2" xml:space="preserve">
+    <value>값</value>
     
   </data>
 </root>

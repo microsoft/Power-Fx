@@ -441,7 +441,7 @@
     <value>Antall rader som skal returneres.</value>
   </data>
   <data name="AboutText" xml:space="preserve">
-    <value>Konverterer en verdi til tekst i det bestemte tallformatet format_tekst. </value>
+    <value>Konverterer en verdi til tekst i det bestemte tallformatet format_tekst.</value>
     
   </data>
   <data name="TextArg1" xml:space="preserve">
@@ -720,7 +720,7 @@
     
   </data>
   <data name="ErrErrorIrrelevantField" xml:space="preserve">
-    <value>Error-funksjonen bruker bare feltene «Kind», «Message», «Notify», «Control» og «Property»</value>
+    <value>Funksjonen Error bruker bare feltene Kind, Message, Notify, Control og Property.</value>
     
   </data>
   <data name="AboutIfError" xml:space="preserve">
@@ -1630,11 +1630,11 @@
     
   </data>
   <data name="ErrUnknownFunction" xml:space="preserve">
-    <value>'{0}' is an unknown or unsupported function.</value>
+    <value>{0} er en ukjent eller ikke støttet funksjon.</value>
     
   </data>
   <data name="ErrUnknownNamespaceFunction" xml:space="preserve">
-    <value>'{0}' is an unknown or unsupported function in namespace '{1}'.</value>
+    <value>{0} er en ukjent eller ikke støttet funksjon i navneområdet {1}.</value>
     
   </data>
   <data name="ErrUnSupportedComponentBehaviorInvocation" xml:space="preserve">
@@ -1846,7 +1846,7 @@
     
   </data>
   <data name="ErrAsTypeAndIsTypeExpectConnectedDataSource" xml:space="preserve">
-    <value>Feil argument. Denne formelen forventer en tabell fra en tilkoblet datakilde. AsType og IsType krever tilkoblede datakilder.</value>
+    <value>Feil argument. Denne formelen forventer en tabell fra en tilkoblet datakilde. Funksjonene AsType og IsType krever tilkoblede datakilder.</value>
     
   </data>
   <data name="InfoMessage" xml:space="preserve">
@@ -2681,7 +2681,7 @@
     
   </data>
   <data name="pdfViewer_PasswordState_DisplayName" xml:space="preserve">
-    <value>Passordstatus</value>
+    <value>Passordtilstand</value>
     
   </data>
   <data name="DataDescriptionInvalidFormat_Reason" xml:space="preserve">
@@ -2960,7 +2960,7 @@
     
   </data>
   <data name="Icon_Support_DisplayName" xml:space="preserve">
-    <value>Støtte</value>
+    <value>Kundestøtte</value>
     
   </data>
   <data name="Icon_Sync_DisplayName" xml:space="preserve">
@@ -3272,7 +3272,7 @@
     
   </data>
   <data name="VerticalAlign_Top_DisplayName" xml:space="preserve">
-    <value>Topp</value>
+    <value>Øverst</value>
     
   </data>
   <data name="VerticalAlign_Middle_DisplayName" xml:space="preserve">
@@ -3680,7 +3680,7 @@
     
   </data>
   <data name="Icon_Location_DisplayName" xml:space="preserve">
-    <value>Posisjon</value>
+    <value>Sted</value>
     
   </data>
   <data name="Icon_DocumentPDF_DisplayName" xml:space="preserve">
@@ -4078,7 +4078,7 @@
     <value>Kompleksiteten øker med hvert nestingsnivå, så Power Apps støtter kun nesting av rad-område opptil 63 nivåer.</value>
   </data>
   <data name="ErrorResource_ErrTooManyUps_HowToFix_1" xml:space="preserve">
-    <value>Skriv om formelen med færre nestingnivåer.</value>
+    <value>Skriv om formelen med færre nestingsnivåer.</value>
     
   </data>
   <data name="ErrorResource_ErrRuleNestedTooDeeply_ShortMessage" xml:space="preserve">
@@ -4089,7 +4089,7 @@
     <value>Power Apps støtter nesting av uttrykk kun opptil 50 nivåer. Et så dypt uttrykk er vanskelig å forstå og vedlikeholde.</value>
   </data>
   <data name="ErrorResource_ErrRuleNestedTooDeeply_HowToFix_1" xml:space="preserve">
-    <value>Skriv om formelen med færre nestingnivåer.</value>
+    <value>Skriv om formelen med færre nestingsnivåer.</value>
     
   </data>
   <data name="ErrorResource_ErrOperatorExpected_ShortMessage" xml:space="preserve">
@@ -4359,7 +4359,7 @@
     <value>Det kan hende at datakilden ikke får behandlet formelen og dermed returnerer et ufullstendig datasett. Det kan hende at programmet ikke returnerer riktige resultater eller fungerer som det skal, hvis datasettet er ufullstendig.</value>
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_HowToFix_1" xml:space="preserve">
-    <value>Hvis datasettet overskrider grensen på 500 poster, men inneholder mindre enn 2 000 poster, kan du prøve å tilbakestille grensen.</value>
+    <value>Hvis datasettet overskrider grensen på 500 poster, men inneholder færre enn 2000 poster, kan du prøve å tilbakestille grensen.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_HowToFix_2" xml:space="preserve">
@@ -4386,7 +4386,7 @@
     <value>Det kan hende at datakilden ikke får behandlet formelen og dermed returnerer et ufullstendig datasett. Det kan hende at programmet ikke returnerer riktige resultater eller fungerer som det skal, hvis datasettet er ufullstendig.</value>
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_HowToFix_1" xml:space="preserve">
-    <value>Hvis datasettet overskrider grensen på 500 poster, men inneholder mindre enn 2 000 poster, kan du prøve å tilbakestille grensen.</value>
+    <value>Hvis datasettet overskrider grensen på 500 poster, men inneholder færre enn 2000 poster, kan du prøve å tilbakestille grensen.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_HowToFix_2" xml:space="preserve">
@@ -4417,7 +4417,7 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_2" xml:space="preserve">
-    <value>Hvis datasettet overskrider grensen på 500 poster, men inneholder mindre enn 2 000 poster, kan du prøve å tilbakestille grensen.</value>
+    <value>Hvis datasettet overskrider grensen på 500 poster, men inneholder færre enn 2000 poster, kan du prøve å tilbakestille grensen.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_3" xml:space="preserve">
@@ -4449,7 +4449,7 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_2" xml:space="preserve">
-    <value>Hvis datasettet overskrider grensen på 500 poster, men inneholder færre enn 2 000 poster, kan du prøve å tilbakestille grensen.
+    <value>Hvis datasettet overskrider grensen på 500 poster, men inneholder færre enn 2000 poster, kan du prøve å tilbakestille grensen.
         </value>
     
   </data>
@@ -4478,7 +4478,7 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_HowToFix_1" xml:space="preserve">
-    <value>Hvis datasettet overskrider grensen på 500 poster, men inneholder mindre enn 2 000 poster, kan du prøve å tilbakestille grensen.</value>
+    <value>Hvis datasettet overskrider grensen på 500 poster, men inneholder færre enn 2000 poster, kan du prøve å tilbakestille grensen.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_HowToFix_2" xml:space="preserve">
@@ -4547,6 +4547,21 @@
   </data>
   <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
     <value>Navngitt formel må slutte med et semikolon.</value>
+    
+  </data>
+  <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
+    <value>NamedFormula {0} finnes allerede.</value>
+  </data>
+  <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
+    <value>Det første argumentet {0} skal være et gyldig variabelnavn og kan ikke komme i konflikt med noen eksisterende kontroll-, skjerm-, samling- eller datakildenavn. Fant typen {1}</value>
+    
+  </data>
+  <data name="AboutSet" xml:space="preserve">
+    <value>Opprett og angi en global variabel.</value>
+    
+  </data>
+  <data name="SetArg2" xml:space="preserve">
+    <value>verdi</value>
     
   </data>
 </root>

@@ -441,7 +441,7 @@
     <value>Počet riadkov na vrátenie.</value>
   </data>
   <data name="AboutText" xml:space="preserve">
-    <value>Skonvertuje hodnotu na text vo formáte format_text konkrétneho čísla.</value>
+    <value>Skonvertuje hodnotu na text v špeciálnom číselnom formáte formát_text.</value>
     
   </data>
   <data name="TextArg1" xml:space="preserve">
@@ -449,7 +449,7 @@
     
   </data>
   <data name="TextArg2" xml:space="preserve">
-    <value>formát_textu</value>
+    <value>formát_text</value>
     
   </data>
   <data name="TextArg3" xml:space="preserve">
@@ -716,7 +716,7 @@
     
   </data>
   <data name="ErrorArg1" xml:space="preserve">
-    <value>error_information</value>
+    <value>informácie_o_chybe</value>
     
   </data>
   <data name="ErrErrorIrrelevantField" xml:space="preserve">
@@ -4547,6 +4547,21 @@
   </data>
   <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
     <value>Pomenovaný vzorec sa musí končiť bodkočiarkou.</value>
+    
+  </data>
+  <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
+    <value>NamedFormula {0} už existuje.</value>
+  </data>
+  <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
+    <value>Prvý argument pre {0} musí byť platný názov premennej a nemôže byť v konflikte so žiadnym existujúcim názvom ovládacieho prvku, obrazovky, kolekcie alebo zdroja údajov. Nájdený typ: {1}</value>
+    
+  </data>
+  <data name="AboutSet" xml:space="preserve">
+    <value>Vytvorte a nastavte globálnu premennú.</value>
+    
+  </data>
+  <data name="SetArg2" xml:space="preserve">
+    <value>hodnota</value>
     
   </data>
 </root>

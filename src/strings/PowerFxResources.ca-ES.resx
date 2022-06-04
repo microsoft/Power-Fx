@@ -157,7 +157,7 @@
     
   </data>
   <data name="SwitchDefaultReturn" xml:space="preserve">
-    <value>resultat_perdefecte</value>
+    <value>resultat_per_defecte</value>
     
   </data>
   <data name="SwitchCaseExpr" xml:space="preserve">
@@ -441,7 +441,7 @@
     <value>Nombre de files que es retornaran.</value>
   </data>
   <data name="AboutText" xml:space="preserve">
-    <value>Converteix un element 'value' en text en un nombre específic 'format_text'.</value>
+    <value>Converteix un element "valor" en text en un nombre específic "text_del_format".</value>
     
   </data>
   <data name="TextArg1" xml:space="preserve">
@@ -449,7 +449,7 @@
     
   </data>
   <data name="TextArg2" xml:space="preserve">
-    <value>format_text</value>
+    <value>text_del_format</value>
     
   </data>
   <data name="TextArg3" xml:space="preserve">
@@ -498,7 +498,7 @@
     <value>Valor de text que es convertirà en un valor booleà.</value>
   </data>
   <data name="AboutCoalesce" xml:space="preserve">
-    <value>Retorna el primer argument que no està en blanc.</value>
+    <value>Retorna el primer argument que no està en blanc</value>
     
   </data>
   <data name="CoalesceArg1" xml:space="preserve">
@@ -716,7 +716,7 @@
     
   </data>
   <data name="ErrorArg1" xml:space="preserve">
-    <value>error_information</value>
+    <value>informació_de_l'error</value>
     
   </data>
   <data name="ErrErrorIrrelevantField" xml:space="preserve">
@@ -799,7 +799,7 @@
     
   </data>
   <data name="SortArg3" xml:space="preserve">
-    <value>ordre</value>
+    <value>ordena</value>
     
   </data>
   <data name="AboutSort_source" xml:space="preserve">
@@ -824,7 +824,7 @@
     
   </data>
   <data name="SortByColumnsArg3" xml:space="preserve">
-    <value>ordre</value>
+    <value>ordena</value>
     
   </data>
   <data name="AboutSortByColumns_source" xml:space="preserve">
@@ -1766,7 +1766,7 @@
     
   </data>
   <data name="ErrInvalidDataSource" xml:space="preserve">
-    <value>La font de dades no és vàlida. Podeu solucionar l'error a la subfinestra "Fonts de dades" si feu clic a "Contingut -&gt; Fonts de dades" o "Visualitza -&gt; Opcions".</value>
+    <value>La font de dades no és vàlida. Podeu solucionar l'error a la subfinestra "Fonts de dades" si feu clic a "Contingut -&gt; Fonts de dades" o "Visualitza -&gt; Opcions"</value>
     
   </data>
   <data name="ErrExpectedDataSourceRestriction" xml:space="preserve">
@@ -1838,7 +1838,7 @@
     
   </data>
   <data name="ErrScopeModificationLambda" xml:space="preserve">
-    <value>Aquesta funció no pot operar en el mateix origen de dades que s'utilitza a {0}.</value>
+    <value>Aquesta funció no pot operar en la mateixa font de dades que s'utilitza a {0}.</value>
     
   </data>
   <data name="ErrFunctionDisallowedWithinNondeterministicOperationOrder" xml:space="preserve">
@@ -2691,7 +2691,7 @@
     <value>S'ha produït un error desconegut en intentar analitzar la descripció de les dades.</value>
   </data>
   <data name="AboutForAll" xml:space="preserve">
-    <value>Aplica una fórmula proporcionada a cada fila d'un origen de les dades i després retorna una taula nova amb els resultats per fila.</value>
+    <value>Aplica una fórmula proporcionada a cada fila d'una font de dades i després retorna una taula nova amb els resultats per fila.</value>
     
   </data>
   <data name="AboutForAll_source" xml:space="preserve">
@@ -3236,7 +3236,7 @@
     
   </data>
   <data name="PenMode_Draw_DisplayName" xml:space="preserve">
-    <value>Permet dibuixar.</value>
+    <value>Permet dibuixar</value>
     
   </data>
   <data name="PenMode_Erase_DisplayName" xml:space="preserve">
@@ -3272,7 +3272,7 @@
     
   </data>
   <data name="VerticalAlign_Top_DisplayName" xml:space="preserve">
-    <value>Part superior</value>
+    <value>Màxim</value>
     
   </data>
   <data name="VerticalAlign_Middle_DisplayName" xml:space="preserve">
@@ -3280,7 +3280,7 @@
     
   </data>
   <data name="VerticalAlign_Bottom_DisplayName" xml:space="preserve">
-    <value>Part inferior</value>
+    <value>Mínim</value>
     
   </data>
   <data name="Layout_Horizontal_DisplayName" xml:space="preserve">
@@ -3300,7 +3300,7 @@
     
   </data>
   <data name="Transition_Push_DisplayName" xml:space="preserve">
-    <value>Permet la inserció.</value>
+    <value>Permet la inserció</value>
     
   </data>
   <data name="Transition_Pop_DisplayName" xml:space="preserve">
@@ -3368,7 +3368,7 @@
     
   </data>
   <data name="BarcodeType_RssExpanded_DisplayName" xml:space="preserve">
-    <value>RSS ampliat</value>
+    <value>RSS expandit</value>
     
   </data>
   <data name="BarcodeType_Upc_DisplayName" xml:space="preserve">
@@ -3516,7 +3516,7 @@
     
   </data>
   <data name="Icon_Draw_DisplayName" xml:space="preserve">
-    <value>Permet dibuixar.</value>
+    <value>Permet dibuixar</value>
     
   </data>
   <data name="Icon_Compose_DisplayName" xml:space="preserve">
@@ -3944,7 +3944,7 @@
     
   </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
-    <value>S'espera un operand. La fórmula o l'expressió espera un operand vàlid. Per exemple, podeu afegir l'operand "2" a l'expressió "1 + _" per tal que el resultat sigui "3". També podeu afegir l'operand "com esteu?" a l'expressió "Hola, "&amp; _ " per tal que el resultat sigui "Hola, com esteu?".</value>
+    <value>S'espera un operand. La fórmula o l'expressió espera un operand vàlid. Per exemple, podeu afegir l'operand "2" a l'expressió "1 + _" per tal que el resultat sigui "3". També podeu afegir l'operand "com esteu?" a l'expressió ""Hola, "&amp; _ " per tal que el resultat sigui "Hola, com esteu?".</value>
     
   </data>
   <data name="ErrorResource_ErrOperandExpected_HowToFix_1" xml:space="preserve">
@@ -4048,11 +4048,11 @@
     <value>Aquest error apareix quan una fórmula fa referència a propietats del comportament del component amb una sintaxi no vàlida. (Per exemple, Component.OnCustomChange en lloc de Component.OnCustomChange().)</value>
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_HowToFix_1" xml:space="preserve">
-    <value>Utilitzeu la sintaxi correcta per referir-vos a la propietat del comportament del component. Per exemple, Component.OnCustomChange().</value>
+    <value>Utilitzeu la sintaxi correcta per referir-vos a la propietat del comportament del component. Per exemple, Component.OnCustomChange()</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_Link_1" xml:space="preserve">
-    <value>Article: Referència de fórmula del PowerApps</value>
+    <value>Article: Referència de fórmules del PowerApps</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_ShortMessage" xml:space="preserve">
@@ -4123,7 +4123,7 @@
     
   </data>
   <data name="ErrorResource_ErrBooleanExpected_ShortMessage" xml:space="preserve">
-    <value>S'esperava un booleà. S'espera un booleà ("true"/"false") en aquest punt de la fórmula.</value>
+    <value>S'esperava un booleà. S'espera un booleà (true/false) en aquest punt de la fórmula.</value>
     
   </data>
   <data name="ErrorResource_ErrBooleanExpected_LongMessage" xml:space="preserve">
@@ -4359,7 +4359,7 @@
     <value>És possible que la font de dades no pugui processar la fórmula i retorni un conjunt de dades incomplet. Així mateix, és possible que l'aplicació no retorni resultats correctes o que es comporti incorrectament si el conjunt de dades està incomplet.</value>
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_HowToFix_1" xml:space="preserve">
-    <value>Si el vostre conjunt de dades supera el límit de 500 registres, però en conté menys de 2.000, proveu de restablir el límit.</value>
+    <value>Si el vostre conjunt de dades supera el límit de 500 registres, però en conté menys de 2.000, proveu de restablir-ne el límit.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_HowToFix_2" xml:space="preserve">
@@ -4386,7 +4386,7 @@
     <value>És possible que la font de dades no pugui processar la fórmula i retorni un conjunt de dades incomplet. Així mateix, és possible que l'aplicació no retorni resultats correctes o que es comporti incorrectament si el conjunt de dades està incomplet.</value>
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_HowToFix_1" xml:space="preserve">
-    <value>Si el vostre conjunt de dades supera el límit de 500 registres, però en conté menys de 2.000, proveu de restablir el límit.</value>
+    <value>Si el vostre conjunt de dades supera el límit de 500 registres, però en conté menys de 2.000, proveu de restablir-ne el límit.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_HowToFix_2" xml:space="preserve">
@@ -4417,7 +4417,7 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_2" xml:space="preserve">
-    <value>Si el vostre conjunt de dades supera el límit de 500 registres, però en conté menys de 2.000, proveu de restablir el límit.</value>
+    <value>Si el vostre conjunt de dades supera el límit de 500 registres, però en conté menys de 2.000, proveu de restablir-ne el límit.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_3" xml:space="preserve">
@@ -4478,7 +4478,7 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_HowToFix_1" xml:space="preserve">
-    <value>Si el vostre conjunt de dades supera el límit de 500 registres, però en conté menys de 2.000, proveu de restablir el límit.</value>
+    <value>Si el vostre conjunt de dades supera el límit de 500 registres, però en conté menys de 2.000, proveu de restablir-ne el límit.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_HowToFix_2" xml:space="preserve">
@@ -4514,7 +4514,7 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidControlReference_ShortMessage" xml:space="preserve">
-    <value>Aquesta referència de control no es pot utilitzar en aquesta propietat.</value>
+    <value>Aquesta referència de control no es pot utilitzar en aquesta propietat</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidControlReference_HowToFix_1" xml:space="preserve">
@@ -4542,11 +4542,26 @@
     
   </data>
   <data name="ErrorResource_ErrAsNotInContext_ShortMessage" xml:space="preserve">
-    <value>La paraula clau "As" no es permet en aquest context.</value>
+    <value>La paraula clau "As" no es permet en aquest context</value>
     
   </data>
   <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
     <value>La fórmula amb nom ha d'acabar amb un punt i coma.</value>
+    
+  </data>
+  <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
+    <value>La fórmula NamedFormula "{0}" ja existeix.</value>
+  </data>
+  <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
+    <value>El primer argument de "{0}" ha de ser un nom de variable vàlid i no pot entrar en conflicte amb cap nom existent de control, pantalla, col·lecció o origen de dades. S'ha trobat el tipus "{1}".</value>
+    
+  </data>
+  <data name="AboutSet" xml:space="preserve">
+    <value>Crea i defineix una variable global.</value>
+    
+  </data>
+  <data name="SetArg2" xml:space="preserve">
+    <value>valor</value>
     
   </data>
 </root>

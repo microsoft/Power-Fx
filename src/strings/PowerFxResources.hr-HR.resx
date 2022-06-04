@@ -441,7 +441,7 @@
     <value>Broj redaka koji se vraća.</value>
   </data>
   <data name="AboutText" xml:space="preserve">
-    <value>Pretvara "vrijednost" u tekst u navedenom "obliku_teksta" broja.</value>
+    <value>Pretvara „vrijednost” u tekst u navedenom broju stavki „oblikovanje_teksta”.</value>
     
   </data>
   <data name="TextArg1" xml:space="preserve">
@@ -716,7 +716,7 @@
     
   </data>
   <data name="ErrorArg1" xml:space="preserve">
-    <value>error_information</value>
+    <value>informacije_pogreške</value>
     
   </data>
   <data name="ErrErrorIrrelevantField" xml:space="preserve">
@@ -2205,7 +2205,7 @@
     <value>Datum i vrijeme</value>
   </data>
   <data name="MathAndStat" xml:space="preserve">
-    <value>Matematičke &amp; statističke</value>
+    <value>Matematičke i statističke</value>
   </data>
   <data name="Information" xml:space="preserve">
     <value>Informacije</value>
@@ -4547,6 +4547,21 @@
   </data>
   <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
     <value>Imenovana formula mora završiti točkom sa zarezom.</value>
+    
+  </data>
+  <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
+    <value>NamedFormula „{0}” već postoji.</value>
+  </data>
+  <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
+    <value>Prvi argument za "{0}" mora biti valjani naziv varijable i ne smije biti u sukobu s postojećim nazivima za kontrole, zaslone, zbirke ili izvore podataka. Pronađena je vrsta "{1}"</value>
+    
+  </data>
+  <data name="AboutSet" xml:space="preserve">
+    <value>Izradite i postavite globalnu varijablu.</value>
+    
+  </data>
+  <data name="SetArg2" xml:space="preserve">
+    <value>vrijednost</value>
     
   </data>
 </root>
