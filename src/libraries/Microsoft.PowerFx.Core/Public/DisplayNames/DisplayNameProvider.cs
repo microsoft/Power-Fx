@@ -10,7 +10,7 @@ using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Core
 {
-    internal abstract class DisplayNameProvider
+    public abstract class DisplayNameProvider
     {
         public abstract bool TryGetLogicalName(DName displayName, out DName logicalName);
 
@@ -24,5 +24,11 @@ namespace Microsoft.PowerFx.Core
         /// <see cref="TryGetLogicalName(DName, out DName)"/>, with the newDisplayName output populated by the first arg. 
         /// </summary>
         public abstract bool TryRemapLogicalAndDisplayNames(DName displayName, out DName logicalName, out DName newDisplayName);
+
+        public abstract IEnumerable<KeyValuePair<DName, DName>> LogicalToDisplayPairs { get; }
+
+        internal DisplayNameProvider()
+        {
+        }
     }
 }

@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.App.Controls;
@@ -20,7 +21,7 @@ namespace Microsoft.PowerFx
 {
     public class OptionSet : IExternalOptionSet
     {
-        private readonly SingleSourceDisplayNameProvider _displayNameProvider;
+        private readonly DisplayNameProvider _displayNameProvider;
         private readonly DType _type;
 
         /// <summary>
@@ -28,8 +29,7 @@ namespace Microsoft.PowerFx
         /// </summary>
         /// <param name="name">The name of the option set. Will be available as a global name in Power Fx expressions.</param>
         /// <param name="options">The members of the option set. Enumerable of pairs of logical name to display name.
-        /// Consider using <see cref="DisplayNameUtility.MakeUnique(IEnumerable{KeyValuePair{string, string}})"/> 
-        /// to ensure that display and logical names for options are unique.
+        /// NameCollisionException is thrown if display and logical names for options are not unique.
         /// </param>
         public OptionSet(string name, IEnumerable<KeyValuePair<DName, DName>> options)
         {
@@ -40,7 +40,25 @@ namespace Microsoft.PowerFx
             FormulaType = new OptionSetValueType(this);
             _type = DType.CreateOptionSetType(this);
         }
-        
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="OptionSet"/> class.
+        /// </summary>
+        /// <param name="name">The name of the option set. Will be available as a global name in Power Fx expressions.</param>
+        /// <param name="displayNameProvider">The DisplayNameProvider for the members of the OptionSet.
+        /// Consider using <see cref="DisplayNameUtility.MakeUnique(IEnumerable{KeyValuePair{string, string}})"/> to generate
+        /// the DisplayNameProvider.
+        /// </param>
+        public OptionSet(string name, DisplayNameProvider displayNameProvider)
+        {
+            EntityName = new DName(name);
+            Options = displayNameProvider.LogicalToDisplayPairs.ToImmutableDictionary();
+
+            _displayNameProvider = displayNameProvider;
+            FormulaType = new OptionSetValueType(this);
+            _type = DType.CreateOptionSetType(this);
+        }
+
         /// <summary>
         /// Name of the option set, referenceable from expressions.
         /// </summary>

@@ -15,6 +15,8 @@ namespace Microsoft.PowerFx.Core
     {
         public static DisabledDisplayNameProvider Instance { get; } = new DisabledDisplayNameProvider();
 
+        public override IEnumerable<KeyValuePair<DName, DName>> LogicalToDisplayPairs => throw new NotImplementedException();
+
         private DisabledDisplayNameProvider()
         {
         }
