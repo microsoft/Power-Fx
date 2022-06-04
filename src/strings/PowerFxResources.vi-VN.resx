@@ -441,7 +441,7 @@
     <value>Số hàng cần trả về.</value>
   </data>
   <data name="AboutText" xml:space="preserve">
-    <value>Chuyển đổi một 'giá trị' thành văn bản trong một số 'văn bản_định dạng' cụ thể.</value>
+    <value>Chuyển đổi "giá_trị" thành văn bản trong "văn_bản_định_dạng" dạng số cụ thể.</value>
     
   </data>
   <data name="TextArg1" xml:space="preserve">
@@ -449,7 +449,7 @@
     
   </data>
   <data name="TextArg2" xml:space="preserve">
-    <value>định_dạng_văn_bản</value>
+    <value>văn_bản_định_dạng</value>
     
   </data>
   <data name="TextArg3" xml:space="preserve">
@@ -4547,6 +4547,21 @@
   </data>
   <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
     <value>Công thức được đặt tên phải kết thúc bằng dấu chấm phẩy.</value>
+    
+  </data>
+  <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
+    <value>NamedFormula "{0}" đã tồn tại.</value>
+  </data>
+  <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
+    <value>Đối số đầu tiên của '{0}' phải là một tên biến hợp lệ và không được xung đột với bất kỳ điều khiển, màn hình, tuyển tập hoặc tên nguồn dữ liệu nào. Loại tìm được '{1}'</value>
+    
+  </data>
+  <data name="AboutSet" xml:space="preserve">
+    <value>Tạo và đặt biến toàn cục.</value>
+    
+  </data>
+  <data name="SetArg2" xml:space="preserve">
+    <value>giá trị</value>
     
   </data>
 </root>

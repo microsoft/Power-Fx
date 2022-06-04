@@ -153,7 +153,7 @@
     
   </data>
   <data name="SwitchExpression" xml:space="preserve">
-    <value>valeur_basculement</value>
+    <value>valeur_commutateur</value>
     
   </data>
   <data name="SwitchDefaultReturn" xml:space="preserve">
@@ -441,7 +441,7 @@
     <value>Nombre de lignes à retourner.</value>
   </data>
   <data name="AboutText" xml:space="preserve">
-    <value>Convertit une « valeur » en texte dans un « texte_format » numérique spécifique.</value>
+    <value>Convertit une 'valeur' en texte dans un 'format_texte' numérique spécifique.</value>
     
   </data>
   <data name="TextArg1" xml:space="preserve">
@@ -724,7 +724,7 @@
     
   </data>
   <data name="AboutIfError" xml:space="preserve">
-    <value>Évalue et retourne le premier argument qui n'est pas une erreur.</value>
+    <value>Évalue et retourne le premier argument qui n’est pas une erreur.</value>
     
   </data>
   <data name="IfErrorArg1" xml:space="preserve">
@@ -732,7 +732,7 @@
     
   </data>
   <data name="AboutIfError_value" xml:space="preserve">
-    <value>Valeur qui est retournée s'il ne s'agit pas d'une erreur.</value>
+    <value>Valeur qui est retournée s’il ne s’agit pas d’une erreur.</value>
     
   </data>
   <data name="IfErrorArg2" xml:space="preserve">
@@ -740,7 +740,7 @@
     
   </data>
   <data name="AboutIfError_fallback" xml:space="preserve">
-    <value>Valeur qui est retournée s'il s'agit du premier argument qui n'est pas une erreur.</value>
+    <value>Valeur qui est retournée s’il s’agit du premier argument qui n’est pas une erreur.</value>
     
   </data>
   <data name="AboutSubstitute" xml:space="preserve">
@@ -874,7 +874,7 @@
     
   </data>
   <data name="RandBetweenArg2" xml:space="preserve">
-    <value>top</value>
+    <value>Haut</value>
     
   </data>
   <data name="AboutGUID" xml:space="preserve">
@@ -898,7 +898,7 @@
     
   </data>
   <data name="AboutTimeZoneOffset" xml:space="preserve">
-    <value>Retourne la différence d'heure entre l'heure UTC et l'heure locale, en minutes. Par exemple, si votre fuseau horaire est UTC+2, -120 est retourné.</value>
+    <value>Retourne la différence d’heure entre l’heure UTC et l’heure locale, en minutes. Par exemple, si votre fuseau horaire est UTC+2, -120 est retourné.</value>
     
   </data>
   <data name="TimeZoneOffsetArg1" xml:space="preserve">
@@ -926,7 +926,7 @@
     
   </data>
   <data name="WeekNumArg2" xml:space="preserve">
-    <value>start_of_week</value>
+    <value>début_de_semaine</value>
     
   </data>
   <data name="AboutWeekNum_date" xml:space="preserve">
@@ -983,7 +983,7 @@
     
   </data>
   <data name="TruncArg2" xml:space="preserve">
-    <value>num_digits</value>
+    <value>nb_chiffres</value>
     
   </data>
   <data name="TruncTArg1" xml:space="preserve">
@@ -991,7 +991,7 @@
     
   </data>
   <data name="TruncTArg2" xml:space="preserve">
-    <value>num_digits</value>
+    <value>nb_chiffres</value>
     
   </data>
   <data name="AboutRound" xml:space="preserve">
@@ -1011,7 +1011,7 @@
     
   </data>
   <data name="RoundArg2" xml:space="preserve">
-    <value>nombre_chiffres</value>
+    <value>nb_chiffres</value>
     
   </data>
   <data name="AboutRound_number" xml:space="preserve">
@@ -1058,7 +1058,7 @@
     
   </data>
   <data name="RoundTArg2" xml:space="preserve">
-    <value>nombre_chiffres</value>
+    <value>nb_chiffres</value>
     
   </data>
   <data name="AboutRGBA" xml:space="preserve">
@@ -1528,7 +1528,7 @@
     
   </data>
   <data name="AboutSplit" xml:space="preserve">
-    <value>Fractionne une chaîne en sous-chaînes à l'aide d'un délimiteur.</value>
+    <value>Fractionne une chaîne en sous-chaînes à l’aide d’un délimiteur.</value>
     
   </data>
   <data name="AboutSplit_text" xml:space="preserve">
@@ -1770,7 +1770,7 @@
     
   </data>
   <data name="ErrExpectedDataSourceRestriction" xml:space="preserve">
-    <value>Un identificateur de source de données était attendu pour restreindre l'enregistrement inclus.</value>
+    <value>Un identificateur de source de données était attendu pour restreindre l’enregistrement inclus.</value>
     
   </data>
   <data name="ErrIncompatibleTypes" xml:space="preserve">
@@ -1850,7 +1850,7 @@
     
   </data>
   <data name="InfoMessage" xml:space="preserve">
-    <value>Message :</value>
+    <value>Message : </value>
     
   </data>
   <data name="InfoNode_Node" xml:space="preserve">
@@ -1959,7 +1959,7 @@
     
   </data>
   <data name="AboutYear" xml:space="preserve">
-    <value>Année retourne l’année d’une date donnée</value>
+    <value>Année retourne l’année d’une date donnée.</value>
     
   </data>
   <data name="YearArg1" xml:space="preserve">
@@ -2473,7 +2473,7 @@
     
   </data>
   <data name="label_Live_DisplayName" xml:space="preserve">
-    <value>En direct</value>
+    <value>Actif</value>
     
   </data>
   <data name="label_Overflow_DisplayName" xml:space="preserve">
@@ -2489,7 +2489,7 @@
     
   </data>
   <data name="DatePicker_Language_DisplayName" xml:space="preserve">
-    <value>Langage</value>
+    <value>Langue</value>
     
   </data>
   <data name="Calendar_Width_DisplayName" xml:space="preserve">
@@ -2709,7 +2709,7 @@
     
   </data>
   <data name="AboutPower" xml:space="preserve">
-    <value>Élève un nombre x à la puissance d'un nombre y. Identique à la formule x^y.</value>
+    <value>Élève un nombre x à la puissance d’un nombre y. Identique à la formule x^y.</value>
     
   </data>
   <data name="AboutPower_base" xml:space="preserve">
@@ -2766,7 +2766,7 @@
     <value>Retourne une valeur null (vide)</value>
   </data>
   <data name="AboutPowerT" xml:space="preserve">
-    <value>Élève un nombre x (ou une colonne de nombres) à la puissance d'un autre nombre y (ou d'une colonne de nombres). Identique à x^y.</value>
+    <value>Élève un nombre x (ou une colonne de nombres) à la puissance d’un autre nombre y (ou d’une colonne de nombres). Identique à x^y.</value>
     
   </data>
   <data name="AboutPower_base_or_column" xml:space="preserve">
@@ -3116,7 +3116,7 @@
     
   </data>
   <data name="LayoutAlignItems_Start_DisplayName" xml:space="preserve">
-    <value>Début</value>
+    <value>Démarrer</value>
     
   </data>
   <data name="LayoutAlignItems_Center_DisplayName" xml:space="preserve">
@@ -3132,7 +3132,7 @@
     
   </data>
   <data name="AlignInContainer_Start_DisplayName" xml:space="preserve">
-    <value>Début</value>
+    <value>Démarrer</value>
     
   </data>
   <data name="AlignInContainer_Center_DisplayName" xml:space="preserve">
@@ -3152,7 +3152,7 @@
     
   </data>
   <data name="LayoutJustifyContent_Start_DisplayName" xml:space="preserve">
-    <value>Début</value>
+    <value>Démarrer</value>
     
   </data>
   <data name="LayoutJustifyContent_Center_DisplayName" xml:space="preserve">
@@ -3384,7 +3384,7 @@
     
   </data>
   <data name="GridStyle_All_DisplayName" xml:space="preserve">
-    <value>Tout</value>
+    <value>Tous</value>
     
   </data>
   <data name="GridStyle_None_DisplayName" xml:space="preserve">
@@ -3492,7 +3492,7 @@
     
   </data>
   <data name="Icon_LikeDislike_DisplayName" xml:space="preserve">
-    <value>J'aime/Je n'aime pas</value>
+    <value>J’aime/Je n’aime pas</value>
     
   </data>
   <data name="Icon_Crop_DisplayName" xml:space="preserve">
@@ -3692,7 +3692,7 @@
     
   </data>
   <data name="Icon_ShoppingCart_DisplayName" xml:space="preserve">
-    <value>Panier d'achat</value>
+    <value>Panier d’achat</value>
     
   </data>
   <data name="Icon_Phone_DisplayName" xml:space="preserve">
@@ -3768,7 +3768,7 @@
     
   </data>
   <data name="Icon_Tag_DisplayName" xml:space="preserve">
-    <value>Balise</value>
+    <value>Indicateur</value>
     
   </data>
   <data name="Icon_CameraAperture_DisplayName" xml:space="preserve">
@@ -3800,7 +3800,7 @@
     
   </data>
   <data name="Icon_People_DisplayName" xml:space="preserve">
-    <value>Contacts</value>
+    <value>Personnes</value>
     
   </data>
   <data name="Icon_Person_DisplayName" xml:space="preserve">
@@ -3864,7 +3864,7 @@
     
   </data>
   <data name="AboutIsError" xml:space="preserve">
-    <value>Indique si une erreur s'est produite lors de l'évaluation de l'argument spécifié.</value>
+    <value>Indique si une erreur s’est produite lors de l’évaluation de l’argument spécifié.</value>
     
   </data>
   <data name="IsErrorArg" xml:space="preserve">
@@ -3928,7 +3928,7 @@
     
   </data>
   <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
-    <value>Le type de résultat de cette formule doit être {0} , mais le type de résultat réel est {1}. Le type de résultat d’une colonne de formule ne peut pas être modifié.</value>
+    <value>Le type de résultat de cette formule doit être {0}, mais le type de résultat réel est {1}. Le type de résultat d’une colonne de formule ne peut pas être modifié.</value>
     
   </data>
   <data name="FormulaColumns_ColumnTypeNotSupported" xml:space="preserve">
@@ -4041,7 +4041,7 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_ShortMessage" xml:space="preserve">
-    <value>La référence de propriété n'est pas valide.</value>
+    <value>La référence de propriété n’est pas valide.</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_LongMessage" xml:space="preserve">
@@ -4067,7 +4067,7 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_Link_1" xml:space="preserve">
-    <value>Article : Ajouter et configurer un contrôle d'application canevas dans Power Apps</value>
+    <value>Article : Ajouter et configurer un contrôle d’application canevas dans Power Apps</value>
     
   </data>
   <data name="ErrorResource_ErrTooManyUps_ShortMessage" xml:space="preserve">
@@ -4168,14 +4168,14 @@
     
   </data>
   <data name="ErrorResource_ErrTestPropertyExpected_ShortMessage" xml:space="preserve">
-    <value>Fonction de test dans une propriété qui n'est pas un test. Vous ne pouvez pas utiliser cette propriété pour appeler des fonctions de test uniquement.</value>
+    <value>Fonction de test dans une propriété qui n’est pas un test. Vous ne pouvez pas utiliser cette propriété pour appeler des fonctions de test uniquement.</value>
     
   </data>
   <data name="ErrorResource_ErrTestPropertyExpected_LongMessage" xml:space="preserve">
     <value>Les fonctions de test peuvent être utilisées pour simuler des entrées utilisateur lors du test d'une application. « SetProperty », « SelectRow » et « Assert » sont des fonctions de test courantes qui ne peuvent être utilisées que dans les cas de test.</value>
   </data>
   <data name="ErrorResource_ErrTestPropertyExpected_HowToFix_1" xml:space="preserve">
-    <value>Utilisez la fonction dans un cas de test, et non dans l'application.</value>
+    <value>Utilisez la fonction dans un cas de test, et non dans l’application.</value>
     
   </data>
   <data name="ErrorResource_ErrCannotCoerce_SourceType_TargetType_ShortMessage" xml:space="preserve">
@@ -4262,7 +4262,7 @@
     
   </data>
   <data name="ErrorResource_ErrServiceFunctionUnknownOptionalParam_Name_ShortMessage" xml:space="preserve">
-    <value>Aucun paramètre. Cette fonction n'a aucun paramètre facultatif nommé « {0} ».</value>
+    <value>Aucun paramètre. Cette fonction n’a aucun paramètre facultatif nommé « {0} ».</value>
     
   </data>
   <data name="ErrorResource_ErrServiceFunctionUnknownOptionalParam_Name_HowToFix_1" xml:space="preserve">
@@ -4290,7 +4290,7 @@
     
   </data>
   <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_ShortMessage" xml:space="preserve">
-    <value>Colonne manquante. Votre formule n'a pas de colonne « {0} » avec un type de « {1} ».</value>
+    <value>Colonne manquante. Votre formule n’a pas de colonne « {0} » avec un type de « {1} ».</value>
     
   </data>
   <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_HowToFix_1" xml:space="preserve">
@@ -4302,7 +4302,7 @@
     
   </data>
   <data name="ErrorResource_ErrTableDoesNotAcceptThisType_ShortMessage" xml:space="preserve">
-    <value>Type incompatible. L'élément que vous voulez placer dans une table a un type qui n'est pas compatible avec la table.</value>
+    <value>Type incompatible. L’élément que vous voulez placer dans une table a un type qui n’est pas compatible avec la table.</value>
     
   </data>
   <data name="ErrorResource_ErrTableDoesNotAcceptThisType_HowToFix_1" xml:space="preserve">
@@ -4325,7 +4325,7 @@
     <value>Les données peuvent ne pas correspondre au type attendu (texte, nombre, date, table, enregistrement).</value>
   </data>
   <data name="ErrorResource_ErrTypeError_HowToFix_1" xml:space="preserve">
-    <value>Vérifiez les types des valeurs impliquées dans la formule et assurez-vous qu'ils correspondent.</value>
+    <value>Vérifiez les types des valeurs impliquées dans la formule et assurez-vous qu’ils correspondent.</value>
     
   </data>
   <data name="ErrorResource_ErrTypeError_Link_1" xml:space="preserve">
@@ -4413,7 +4413,7 @@
     <value>La partie située à droite de l’opérateur « in » doit être un nom de colonne de la source de données appropriée. La source de données n’est peut-être pas en mesure de traiter la formule et peut retourner un jeu de données incomplet. Il se peut que votre application ne puisse pas retourner de résultats corrects ni fonctionner correctement si le jeu de données est incomplet.</value>
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_1" xml:space="preserve">
-    <value>Modifiez l'élément à droite de l'opérateur « in » pour qu'il représente une colonne de la source de données appropriée.</value>
+    <value>Modifiez l’élément à droite de l’opérateur « in » pour qu’il représente une colonne de la source de données appropriée.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_2" xml:space="preserve">
@@ -4437,7 +4437,7 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_ShortMessage" xml:space="preserve">
-    <value>La partie de cette formule en surbrillance peut ne pas fonctionner correctement sur des jeux de données volumineux.</value>
+    <value>La partie de cette formule en surbrillance peut ne pas fonctionner correctement sur des jeux de données volumineux. </value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_LongMessage" xml:space="preserve">
@@ -4445,7 +4445,7 @@
       </value>
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_1" xml:space="preserve">
-    <value>Modifiez l'élément à droite de l'opérateur « in » pour qu'il représente une colonne de la source de données appropriée.</value>
+    <value>Modifiez l’élément à droite de l’opérateur « in » pour qu’il représente une colonne de la source de données appropriée.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_2" xml:space="preserve">
@@ -4547,6 +4547,21 @@
   </data>
   <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
     <value>La formule nommée doit se terminer par un point-virgule.</value>
+    
+  </data>
+  <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
+    <value>NamedFormula '{0}' existe déjà.</value>
+  </data>
+  <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
+    <value>Le premier argument de « {0} » doit être un nom de variable valide et ne peut pas entrer en conflit avec les noms existants de contrôle, écran, collection ou source de données. Type trouvé « {1} »</value>
+    
+  </data>
+  <data name="AboutSet" xml:space="preserve">
+    <value>Créez et définissez une variable globale.</value>
+    
+  </data>
+  <data name="SetArg2" xml:space="preserve">
+    <value>valeur</value>
     
   </data>
 </root>

@@ -3944,7 +3944,7 @@
     
   </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
-    <value>Oczekiwano operandu. Formuła lub wyrażenie oczekuje prawidłowego operandu. Na przykład możesz dodać operand „2” do wyrażenia „1 + _”, aby otrzymać wynik „3”, lub operand „dobry” do wyrażenia „"Dzień "&amp; _”, aby otrzymać wynik „Dzień dobry”.</value>
+    <value>Oczekiwano argumentu operacji. Formuła lub wyrażenie oczekuje prawidłowego argumentu operacji. Na przykład możesz dodać argument operacji „2” do wyrażenia „1 +_”, co spowoduje, że wynikiem wyrażenia będzie „3”. Możesz też dodać argument operacji „dobry” do wyrażenia „"Dzień "&amp; _”, co spowoduje, że wynikiem wyrażenia będzie „Dzień dobry”.</value>
     
   </data>
   <data name="ErrorResource_ErrOperandExpected_HowToFix_1" xml:space="preserve">
@@ -4093,7 +4093,7 @@
     
   </data>
   <data name="ErrorResource_ErrOperatorExpected_ShortMessage" xml:space="preserve">
-    <value>Oczekiwano operatora. W tym miejscu w formule oczekujemy operatora, takiego jak +, * lub &amp;.</value>
+    <value>Oczekiwany jest operator. W tym miejscu w formule oczekujemy operatora, takiego jak +, * lub &amp;.</value>
     
   </data>
   <data name="ErrorResource_ErrOperatorExpected_LongMessage" xml:space="preserve">
@@ -4547,6 +4547,21 @@
   </data>
   <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
     <value>Nazwana formuła musi kończyć się średnikiem.</value>
+    
+  </data>
+  <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
+    <value>Nazwana formuła „{0}” już istnieje.</value>
+  </data>
+  <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
+    <value>Pierwszy argument elementu „{0}” powinien być prawidłową nazwą zmiennej i nie może powodować konfliktu z żadnymi istniejącymi nazwami kontrolek, ekranów, kolekcji ani źródeł danych. Znaleziono typ „{1}”</value>
+    
+  </data>
+  <data name="AboutSet" xml:space="preserve">
+    <value>Utwórz i ustaw zmienną globalną.</value>
+    
+  </data>
+  <data name="SetArg2" xml:space="preserve">
+    <value>wartość</value>
     
   </data>
 </root>

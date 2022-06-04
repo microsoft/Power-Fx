@@ -153,7 +153,7 @@
     
   </data>
   <data name="SwitchExpression" xml:space="preserve">
-    <value>मान स्विच करें</value>
+    <value>स्विच_मान</value>
     
   </data>
   <data name="SwitchDefaultReturn" xml:space="preserve">
@@ -441,7 +441,7 @@
     <value>लौटाई जाने वाली पंक्तियों की संख्या.</value>
   </data>
   <data name="AboutText" xml:space="preserve">
-    <value>किसी विशिष्ट संख्या 'format_text' में किसी 'मान' को पाठ में रूपांतरित करता है.</value>
+    <value>किसी 'मान' को विशिष्ट संख्या 'प्रारूप _पाठ' में टेक्स्ट में बदलता है.</value>
     
   </data>
   <data name="TextArg1" xml:space="preserve">
@@ -449,7 +449,7 @@
     
   </data>
   <data name="TextArg2" xml:space="preserve">
-    <value>फॉर्मेट_पाठ</value>
+    <value>प्रारूप _पाठ</value>
     
   </data>
   <data name="TextArg3" xml:space="preserve">
@@ -716,7 +716,7 @@
     
   </data>
   <data name="ErrorArg1" xml:space="preserve">
-    <value>error_information</value>
+    <value>त्रुटि_सूचना</value>
     
   </data>
   <data name="ErrErrorIrrelevantField" xml:space="preserve">
@@ -1133,7 +1133,7 @@
     
   </data>
   <data name="AboutAbsT" xml:space="preserve">
-    <value>संख्याओं के स्तंभ के पूर्ण मान (चिह्न रहित संख्याएं) लौटाता है.</value>
+    <value>संख्याओं के स्तंभ के निरपेक्ष मान (चिह्न रहित संख्याएं) लौटाता है.</value>
     
   </data>
   <data name="AboutAbs_number" xml:space="preserve">
@@ -1626,7 +1626,7 @@
     
   </data>
   <data name="ErrInvalidDot" xml:space="preserve">
-    <value>.' का अमान्य उपयोग</value>
+    <value>'.' का अमान्य उपयोग</value>
     
   </data>
   <data name="ErrUnknownFunction" xml:space="preserve">
@@ -1878,7 +1878,7 @@
     
   </data>
   <data name="DateArg2" xml:space="preserve">
-    <value>माह</value>
+    <value>महीना</value>
     
   </data>
   <data name="DateArg3" xml:space="preserve">
@@ -2449,11 +2449,11 @@
     
   </data>
   <data name="image_Image_DisplayName" xml:space="preserve">
-    <value>छवि</value>
+    <value>इमेज</value>
     
   </data>
   <data name="icon_Icon_DisplayName" xml:space="preserve">
-    <value>चिह्न</value>
+    <value>आइकन</value>
     
   </data>
   <data name="icon_Rotation_DisplayName" xml:space="preserve">
@@ -4449,7 +4449,7 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_2" xml:space="preserve">
-    <value>यदि आपके डेटा सेट में 500 की रिकॉर्ड सीमा से अधिक लेकिन 2,000 से कम रिकॉर्ड शामिल हैं, तो सीमा रीसेट करने का प्रयास करें.
+    <value>यदि आपका डेटा सेट 500 रिकॉर्ड सीमा से अधिक है, लेकिन उसमें 2,000 से कम रिकॉर्ड शामिल हैं, तो सीमा रीसेट करने का प्रयास करें
       </value>
     
   </data>
@@ -4547,6 +4547,21 @@
   </data>
   <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
     <value>नामांकित सूत्र अर्धविराम के साथ समाप्त होना चाहिए.</value>
+    
+  </data>
+  <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
+    <value>NamedFormula '{0}' पहले से मौजूद है.</value>
+  </data>
+  <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
+    <value>'{0}' का पहला तर्क कोई मान्य चर नाम होना चाहिए और इसका किसी मौजूदा नियंत्रण, स्क्रीन, संग्रहण या डेटा स्रोत नामों से विरोध नहीं हो सकता. प्रकार '{1}' ढ़ूंढ़ा गया</value>
+    
+  </data>
+  <data name="AboutSet" xml:space="preserve">
+    <value>ग्लोबल चर बनाएँ और सेट करें.</value>
+    
+  </data>
+  <data name="SetArg2" xml:space="preserve">
+    <value>मान</value>
     
   </data>
 </root>

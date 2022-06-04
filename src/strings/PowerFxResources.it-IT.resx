@@ -716,7 +716,7 @@
     
   </data>
   <data name="ErrorArg1" xml:space="preserve">
-    <value>error_information</value>
+    <value>informazione_errore</value>
     
   </data>
   <data name="ErrErrorIrrelevantField" xml:space="preserve">
@@ -983,7 +983,7 @@
     
   </data>
   <data name="TruncArg2" xml:space="preserve">
-    <value>num_digits</value>
+    <value>cifre_numeriche</value>
     
   </data>
   <data name="TruncTArg1" xml:space="preserve">
@@ -991,7 +991,7 @@
     
   </data>
   <data name="TruncTArg2" xml:space="preserve">
-    <value>num_digits</value>
+    <value>cifre_numeriche</value>
     
   </data>
   <data name="AboutRound" xml:space="preserve">
@@ -4547,6 +4547,21 @@
   </data>
   <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
     <value>La formula con nome deve terminare con un punto e virgola.</value>
+    
+  </data>
+  <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
+    <value>NamedFormula "{0}" esiste già.</value>
+  </data>
+  <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
+    <value>Il primo argomento di '{0}' deve essere un nome di variabile valido non in conflitto con i nomi di controlli, schermate, raccolte o origini dati esistenti. Tipo trovato: '{1}'</value>
+    
+  </data>
+  <data name="AboutSet" xml:space="preserve">
+    <value>Crea e imposta una variabile globale.</value>
+    
+  </data>
+  <data name="SetArg2" xml:space="preserve">
+    <value>valore</value>
     
   </data>
 </root>

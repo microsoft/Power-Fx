@@ -468,7 +468,7 @@
     
   </data>
   <data name="AboutValue" xml:space="preserve">
-    <value>Pretvara „tekst“ koji predstavlja broj u numeričku vrednost.</value>
+    <value>Konvertuje „tekst“ koji predstavlja broj u numeričku vrednost.</value>
     
   </data>
   <data name="ValueArg1" xml:space="preserve">
@@ -531,7 +531,7 @@
     <value>Tekstualna vrednost ili kolona tekstualnih vrednosti koja treba da bude spojena sa ostalim argumentima.</value>
   </data>
   <data name="AboutConcat" xml:space="preserve">
-    <value>Stvara sve vrednosti teksta stvorene procenom datog izraza nad datom tabelom u jednu vrednost teksta.</value>
+    <value>Spaja sve vrednosti teksta stvorene procenom datog izraza nad datom tabelom u jednu vrednost teksta.</value>
     
   </data>
   <data name="ConcatArg1" xml:space="preserve">
@@ -579,11 +579,11 @@
     
   </data>
   <data name="AboutUpper" xml:space="preserve">
-    <value>Pretvara vrednost teksta u velika slova.</value>
+    <value>Konvertuje vrednost teksta u velika slova.</value>
     
   </data>
   <data name="AboutUpperT" xml:space="preserve">
-    <value>Pretvara sva slova u vrednosti teksta, procenjene po redu u okviru navedene tabele ili kolekcije, u velika slova.</value>
+    <value>Konvertuje sva slova u vrednosti teksta, procenjene po redu u okviru navedene tabele ili kolekcije, u velika slova.</value>
     
   </data>
   <data name="AboutUpper_text" xml:space="preserve">
@@ -669,7 +669,7 @@
     
   </data>
   <data name="StringFuncArg2" xml:space="preserve">
-    <value>start_num</value>
+    <value>početnibroj</value>
     
   </data>
   <data name="StringFuncArg3" xml:space="preserve">
@@ -1738,7 +1738,7 @@
     
   </data>
   <data name="ErrNeedRecord_Func" xml:space="preserve">
-    <value>Prvi argument za„{0}“ treba da bude zapis.</value>
+    <value>Prvi argument za „{0}“ treba da bude zapis.</value>
     
   </data>
   <data name="ErrNeedEntity_EntityName" xml:space="preserve">
@@ -1895,7 +1895,7 @@
     <value>Dan.</value>
   </data>
   <data name="AboutTime" xml:space="preserve">
-    <value>Pretvara časove, minute i sekunde u decimalni broj.</value>
+    <value>Konvertuje časove, minute i sekunde u decimalni broj.</value>
     
   </data>
   <data name="TimeArg1" xml:space="preserve">
@@ -2120,7 +2120,7 @@
     
   </data>
   <data name="WarnLiteralPredicate" xml:space="preserve">
-    <value>Upozorenje : Ovaj predikat je doslovna vrednost i ne upućuje na tabelu za unos.</value>
+    <value>Upozorenje: Ovaj predikat je vrednost literala i ne upućuje na tabelu za unos.</value>
     
   </data>
   <data name="WarnDynamicMetadata" xml:space="preserve">
@@ -2136,7 +2136,7 @@
     
   </data>
   <data name="FindArg3" xml:space="preserve">
-    <value>start_num</value>
+    <value>početnibroj</value>
     
   </data>
   <data name="AboutFind_find_text" xml:space="preserve">
@@ -2165,7 +2165,7 @@
     
   </data>
   <data name="FindTArg3" xml:space="preserve">
-    <value>start_num</value>
+    <value>početnibroj</value>
     
   </data>
   <data name="AboutFind_find_text_or_column" xml:space="preserve">
@@ -2202,10 +2202,10 @@
     <value>Ponašanje</value>
   </data>
   <data name="DateTime" xml:space="preserve">
-    <value>Datum &amp; vreme</value>
+    <value>Datum i vreme</value>
   </data>
   <data name="MathAndStat" xml:space="preserve">
-    <value>Matematički &amp; statistički</value>
+    <value>Matematički i statistički</value>
   </data>
   <data name="Information" xml:space="preserve">
     <value>Informacije</value>
@@ -2246,7 +2246,7 @@
     
   </data>
   <data name="InvalidJson_NamedEnumStringInvalid_PropName_ActualValue" xml:space="preserve">
-    <value>Očekuje se da prebrojavanje „{0}“ ima važeću vrednost, ali je njegova vrednost {1} izvan opsega za prebrojavanje.</value>
+    <value>Očekuje se da nabrajanje „{0}“ ima važeću vrednost, ali je njegova vrednost {1} izvan opsega za nabrajanje.</value>
     
   </data>
   <data name="InvalidJson_NamedIntegerOverflow_PropName_ActualValue" xml:space="preserve">
@@ -2405,7 +2405,7 @@
     
   </data>
   <data name="Screen_Name_DisplayName" xml:space="preserve">
-    <value>Ime</value>
+    <value>Naziv</value>
     
   </data>
   <data name="Screen_Printing_DisplayName" xml:space="preserve">
@@ -2421,7 +2421,7 @@
     
   </data>
   <data name="barcode_Type_DisplayName" xml:space="preserve">
-    <value>Tip barkoda</value>
+    <value>Tip bar-koda</value>
     
   </data>
   <data name="camera_Contrast_DisplayName" xml:space="preserve">
@@ -2681,7 +2681,7 @@
     
   </data>
   <data name="pdfViewer_PasswordState_DisplayName" xml:space="preserve">
-    <value>Stanje lozinke</value>
+    <value>Status lozinke</value>
     
   </data>
   <data name="DataDescriptionInvalidFormat_Reason" xml:space="preserve">
@@ -3056,7 +3056,7 @@
     
   </data>
   <data name="Icon_EmojiHappy_DisplayName" xml:space="preserve">
-    <value>Emodži – Sreća</value>
+    <value>Emodži – sreća</value>
     
   </data>
   <data name="SuggestRemoteExecutionHint_OpNotSupportedByClient" xml:space="preserve">
@@ -3340,7 +3340,7 @@
     
   </data>
   <data name="FormPattern_CardList_DisplayName" xml:space="preserve">
-    <value>Listakartica</value>
+    <value>Lista kartica</value>
     
   </data>
   <data name="BarcodeType_Auto_DisplayName" xml:space="preserve">
@@ -3364,7 +3364,7 @@
     
   </data>
   <data name="BarcodeType_QRCode_DisplayName" xml:space="preserve">
-    <value>QR Code</value>
+    <value>QR šifra</value>
     
   </data>
   <data name="BarcodeType_RssExpanded_DisplayName" xml:space="preserve">
@@ -3460,7 +3460,7 @@
     
   </data>
   <data name="Icon_Search_DisplayName" xml:space="preserve">
-    <value>Pretraži</value>
+    <value>Pretraga</value>
     
   </data>
   <data name="Icon_Filter_DisplayName" xml:space="preserve">
@@ -3556,7 +3556,7 @@
     
   </data>
   <data name="Icon_More_DisplayName" xml:space="preserve">
-    <value>Još</value>
+    <value>Više</value>
     
   </data>
   <data name="Icon_Waffle_DisplayName" xml:space="preserve">
@@ -3840,7 +3840,7 @@
     
   </data>
   <data name="Icon_TrendingHashtag_DisplayName" xml:space="preserve">
-    <value>Hash oznaka</value>
+    <value>Heš oznaka</value>
     
   </data>
   <data name="Icon_TrendingUpwards_DisplayName" xml:space="preserve">
@@ -4052,7 +4052,7 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_Link_1" xml:space="preserve">
-    <value>Članak: Referenca formule za PowerApps</value>
+    <value>Članak: Reference formula za PowerApps</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_ShortMessage" xml:space="preserve">
@@ -4449,7 +4449,7 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_2" xml:space="preserve">
-    <value>Ako skup podataka premašuje ograničenje od 500 zapisa, ali ih sadrži manje od 2000, pokušajte da promenite ograničenje.
+    <value>Ako vaš skup podataka premašuje ograničenje od 500 zapisa, ali ih sadrži manje od 2000, probajte da promenite ograničenje.
       </value>
     
   </data>
@@ -4547,6 +4547,21 @@
   </data>
   <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
     <value>Imenovana formula mora da se završi tačkom i zarezom.</value>
+    
+  </data>
+  <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
+    <value>NamedFormula „{0}“ već postoji.</value>
+  </data>
+  <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
+    <value>Prvi argument za „{0}“ treba da bude važeće ime promenljive i ne može da bude neusaglašeno ni sa jednim imenom postojeće kontrole, ekrana, kolekcije ili izvora podataka. Pronađen je tip „{1}“</value>
+    
+  </data>
+  <data name="AboutSet" xml:space="preserve">
+    <value>Napravite i podesite globalnu promenljivu.</value>
+    
+  </data>
+  <data name="SetArg2" xml:space="preserve">
+    <value>vrednost</value>
     
   </data>
 </root>

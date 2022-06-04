@@ -3944,7 +3944,7 @@
     
   </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
-    <value>Eeldati operandi. Valem või väljend eeldab kehtivat operandi. Näiteks saate lisada operandi '2' väljendile ' 1 +_', nii et tulemus on '3'. Või võite lisada operandi "there" väljendile '"Hi "&amp; _ ', nii et tulemus on 'Hi there'.</value>
+    <value>Eeldati operandi. Valem või väljend eeldab kehtivat operandi. Näiteks saate lisada operandi „2“ avaldisele „ 1 +_“, nii et tulemus on „3“. Või võite lisada operandi "there" avaldisele „"Hi "&amp; _ “, nii et tulemus on „Hi there“.</value>
     
   </data>
   <data name="ErrorResource_ErrOperandExpected_HowToFix_1" xml:space="preserve">
@@ -4547,6 +4547,21 @@
   </data>
   <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
     <value>Nimetatud valem peab lõppema semikooloniga.</value>
+    
+  </data>
+  <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
+    <value>NamedFormula '{0}' on juba olemas.</value>
+  </data>
+  <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
+    <value>Üksuse '{0}' esimene argument peab olema kehtiv muutuja nimi ja see ei tohi olla vastuolus ühegi olemasoleva juhtelemendi, ekraani, kogumi või andmeallika nimega. Leitud tüüp '{1}'</value>
+    
+  </data>
+  <data name="AboutSet" xml:space="preserve">
+    <value>Saate luua ja seadistada globaalse muutuja.</value>
+    
+  </data>
+  <data name="SetArg2" xml:space="preserve">
+    <value>väärtus</value>
     
   </data>
 </root>
