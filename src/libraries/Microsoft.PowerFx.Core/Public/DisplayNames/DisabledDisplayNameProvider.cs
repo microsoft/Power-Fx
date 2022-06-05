@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Text;
 using Microsoft.PowerFx.Core.Utils;
 
@@ -15,7 +16,7 @@ namespace Microsoft.PowerFx.Core
     {
         public static DisabledDisplayNameProvider Instance { get; } = new DisabledDisplayNameProvider();
 
-        public override IEnumerable<KeyValuePair<DName, DName>> LogicalToDisplayPairs => throw new NotImplementedException();
+        public override IEnumerable<KeyValuePair<DName, DName>> LogicalToDisplayPairs => ImmutableDictionary<DName, DName>.Empty;
 
         private DisabledDisplayNameProvider()
         {

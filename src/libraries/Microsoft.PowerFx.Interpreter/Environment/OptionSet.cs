@@ -32,13 +32,8 @@ namespace Microsoft.PowerFx
         /// NameCollisionException is thrown if display and logical names for options are not unique.
         /// </param>
         public OptionSet(string name, IEnumerable<KeyValuePair<DName, DName>> options)
+            : this(name, new SingleSourceDisplayNameProvider(options))
         {
-            EntityName = new DName(name);
-            Options = ImmutableDictionary.CreateRange(options);
-
-            _displayNameProvider = new SingleSourceDisplayNameProvider(Options);
-            FormulaType = new OptionSetValueType(this);
-            _type = DType.CreateOptionSetType(this);
         }
 
         /// <summary>
