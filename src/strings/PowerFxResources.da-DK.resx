@@ -169,7 +169,7 @@
     
   </data>
   <data name="AboutSwitch_switch_value" xml:space="preserve">
-    <value>Værdi, der skal sammenlignes med hver match_værdi.</value>
+    <value>Værdi, der skal sammenlignes med hver matchværdi.</value>
     
   </data>
   <data name="AboutSwitch_match_value" xml:space="preserve">
@@ -669,7 +669,7 @@
     
   </data>
   <data name="StringFuncArg2" xml:space="preserve">
-    <value>start_num</value>
+    <value>startnummer</value>
     
   </data>
   <data name="StringFuncArg3" xml:space="preserve">
@@ -2136,7 +2136,7 @@
     
   </data>
   <data name="FindArg3" xml:space="preserve">
-    <value>start_num</value>
+    <value>startnummer</value>
     
   </data>
   <data name="AboutFind_find_text" xml:space="preserve">
@@ -2165,7 +2165,7 @@
     
   </data>
   <data name="FindTArg3" xml:space="preserve">
-    <value>start_num</value>
+    <value>startnummer</value>
     
   </data>
   <data name="AboutFind_find_text_or_column" xml:space="preserve">
@@ -3944,7 +3944,7 @@
     
   </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
-    <value>Der forventedes en operand. Formlen eller udtrykket forventer en gyldig operand. Du kan for eksempel føje operanden '2' til udtrykket '1 + _' så resultatet er '3'. Eller du kan tilføje operanden "der" til udtrykket ' "Hej" &amp; _ ', så resultatet er 'Hej der'.</value>
+    <value>Der forventedes en operand. Formlen eller udtrykket forventer en gyldig operand. Du kan f.eks. føje operanden "2" til udtrykket "1 +_", så resultatet er "3". Eller du kan føje operanden "der" til udtrykket ""Hej" &amp; _ ", så resultatet er "Hej der".</value>
     
   </data>
   <data name="ErrorResource_ErrOperandExpected_HowToFix_1" xml:space="preserve">
@@ -4093,7 +4093,7 @@
     
   </data>
   <data name="ErrorResource_ErrOperatorExpected_ShortMessage" xml:space="preserve">
-    <value>Operator forventet. Vi forventer en operator, f.eks. "+", "*", eller "&amp;" på dette sted i formlen.</value>
+    <value>Operator forventet. Vi forventer en operator, f.eks. +, *, eller &amp; på dette sted i formlen.</value>
     
   </data>
   <data name="ErrorResource_ErrOperatorExpected_LongMessage" xml:space="preserve">
@@ -4547,6 +4547,21 @@
   </data>
   <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
     <value>Den navngivne formel skal slutte med et semikolon.</value>
+    
+  </data>
+  <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
+    <value>NamedFormula '{0}' findes allerede.</value>
+  </data>
+  <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
+    <value>Det første argument for "{0}" skal være et gyldigt variabelnavn, og navnet må ikke være i konflikt med navne på eksisterende kontrolelementer, skærme, samlinger eller datakilder. Funden type: "{1}"</value>
+    
+  </data>
+  <data name="AboutSet" xml:space="preserve">
+    <value>Opret og indstil en global variabel.</value>
+    
+  </data>
+  <data name="SetArg2" xml:space="preserve">
+    <value>værdi</value>
     
   </data>
 </root>

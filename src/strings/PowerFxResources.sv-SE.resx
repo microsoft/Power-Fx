@@ -169,11 +169,11 @@
     
   </data>
   <data name="AboutSwitch_switch_value" xml:space="preserve">
-    <value>Värde att jämföra med varje match_value.</value>
+    <value>Värde att jämföra med varje matcha_värde.</value>
     
   </data>
   <data name="AboutSwitch_match_value" xml:space="preserve">
-    <value>Värde som matchar switch_value.</value>
+    <value>Värde som matchar växla_värde.</value>
     
   </data>
   <data name="AboutSwitch_match_result" xml:space="preserve">
@@ -441,7 +441,7 @@
     <value>Antalet rader att returnera.</value>
   </data>
   <data name="AboutText" xml:space="preserve">
-    <value>Konverterar ett värde till text i ett specifikt tal format_text.</value>
+    <value>Konverterar ett värde till text i ett specifikt textformat för tal.</value>
     
   </data>
   <data name="TextArg1" xml:space="preserve">
@@ -449,7 +449,7 @@
     
   </data>
   <data name="TextArg2" xml:space="preserve">
-    <value>format_text</value>
+    <value>textformat</value>
     
   </data>
   <data name="TextArg3" xml:space="preserve">
@@ -2136,7 +2136,7 @@
     
   </data>
   <data name="FindArg3" xml:space="preserve">
-    <value>start_num</value>
+    <value>startnummer</value>
     
   </data>
   <data name="AboutFind_find_text" xml:space="preserve">
@@ -2165,7 +2165,7 @@
     
   </data>
   <data name="FindTArg3" xml:space="preserve">
-    <value>start_num</value>
+    <value>startnummer</value>
     
   </data>
   <data name="AboutFind_find_text_or_column" xml:space="preserve">
@@ -3484,7 +3484,7 @@
     
   </data>
   <data name="Icon_Download_DisplayName" xml:space="preserve">
-    <value>Hämta</value>
+    <value>Ladda ned</value>
     
   </data>
   <data name="Icon_Copy_DisplayName" xml:space="preserve">
@@ -4547,6 +4547,21 @@
   </data>
   <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
     <value>Den namngivna formeln måste sluta med ett semikolon.</value>
+    
+  </data>
+  <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
+    <value>NamedFormula '{0}' finns redan.</value>
+  </data>
+  <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
+    <value>Det första argumentet för {0} ska vara ett giltigt variabelnamn och kan inte vara i konflikt med något befintligt namn på en kontroll, skärm, samling eller datakälla. Hittade typen {1}</value>
+    
+  </data>
+  <data name="AboutSet" xml:space="preserve">
+    <value>Skapa och ställ in en global variabel.</value>
+    
+  </data>
+  <data name="SetArg2" xml:space="preserve">
+    <value>värde</value>
     
   </data>
 </root>

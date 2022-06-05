@@ -441,7 +441,7 @@
     <value>Atgriežamo rindu skaits.</value>
   </data>
   <data name="AboutText" xml:space="preserve">
-    <value>Pārvērš vienumu "value" par tekstu konkrētā skaitļu vienumā "format_text".</value>
+    <value>Pārvērš vienumu “vērtība” par konkrētu skaitli “formatēt_tekstu”.</value>
     
   </data>
   <data name="TextArg1" xml:space="preserve">
@@ -2509,7 +2509,7 @@
     
   </data>
   <data name="text_Default_DisplayName" xml:space="preserve">
-    <value>Noklusējums</value>
+    <value>Noklusējuma vērtība</value>
     
   </data>
   <data name="text_Mode_DisplayName" xml:space="preserve">
@@ -3460,7 +3460,7 @@
     
   </data>
   <data name="Icon_Search_DisplayName" xml:space="preserve">
-    <value>Meklēt</value>
+    <value>Meklēšana</value>
     
   </data>
   <data name="Icon_Filter_DisplayName" xml:space="preserve">
@@ -4093,7 +4093,7 @@
     
   </data>
   <data name="ErrorResource_ErrOperatorExpected_ShortMessage" xml:space="preserve">
-    <value>Ir paredzēts operators. Šajā formulas posmā tiek gaidīts kāds operators, piemēram, +, * vai &amp;.</value>
+    <value>Ir paredzēts operators. Šajā formulas vietā ir paredzēts kāds operators, piemēram, +, * vai &amp;.</value>
     
   </data>
   <data name="ErrorResource_ErrOperatorExpected_LongMessage" xml:space="preserve">
@@ -4547,6 +4547,21 @@
   </data>
   <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
     <value>Nosauktajai formulai jābeidzas ar semikolu.</value>
+    
+  </data>
+  <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
+    <value>Formula ar nosaukumu “{0}” jau pastāv.</value>
+  </data>
+  <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
+    <value>Funkcijas {0} pirmajam argumentam jābūt derīgam mainīgā nosaukumam, kas nedrīkst konfliktēt ne ar vienu esošu vadīklas, ekrāna, kolekcijas vai datu avota nosaukumu. Atrastais tips: {1}.</value>
+    
+  </data>
+  <data name="AboutSet" xml:space="preserve">
+    <value>Izveidojiet un iestatiet globālu mainīgo.</value>
+    
+  </data>
+  <data name="SetArg2" xml:space="preserve">
+    <value>vērtība</value>
     
   </data>
 </root>
