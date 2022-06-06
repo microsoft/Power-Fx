@@ -12,9 +12,9 @@ namespace Microsoft.PowerFx.Core
 {
     public abstract class DisplayNameProvider
     {
-        public abstract bool TryGetLogicalName(DName displayName, out DName logicalName);
+        internal abstract bool TryGetLogicalName(DName displayName, out DName logicalName);
 
-        public abstract bool TryGetDisplayName(DName logicalName, out DName displayName);
+        internal abstract bool TryGetDisplayName(DName logicalName, out DName displayName);
 
         /// <summary>
         /// This function attempts to remap logical and display names given a display name.
@@ -23,11 +23,11 @@ namespace Microsoft.PowerFx.Core
         /// If this isn't supported by a given display name provider, this should return the same as 
         /// <see cref="TryGetLogicalName(DName, out DName)"/>, with the newDisplayName output populated by the first arg. 
         /// </summary>
-        public abstract bool TryRemapLogicalAndDisplayNames(DName displayName, out DName logicalName, out DName newDisplayName);
+        internal abstract bool TryRemapLogicalAndDisplayNames(DName displayName, out DName logicalName, out DName newDisplayName);
 
-        public abstract IEnumerable<KeyValuePair<DName, DName>> LogicalToDisplayPairs { get; }
+        internal abstract IEnumerable<KeyValuePair<DName, DName>> LogicalToDisplayPairs { get; }
 
-        internal DisplayNameProvider()
+        private protected DisplayNameProvider()
         {
         }
     }
