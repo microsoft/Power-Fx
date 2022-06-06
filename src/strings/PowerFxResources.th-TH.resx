@@ -2202,10 +2202,10 @@
     <value>พฤติกรรม</value>
   </data>
   <data name="DateTime" xml:space="preserve">
-    <value>วันที่ &amp; เวลา</value>
+    <value>วันที่และเวลา</value>
   </data>
   <data name="MathAndStat" xml:space="preserve">
-    <value>คณิตศาสตร์ &amp; ทางสถิติ</value>
+    <value>คณิตศาสตร์และทางสถิติ</value>
   </data>
   <data name="Information" xml:space="preserve">
     <value>ข้อมูล</value>
@@ -4547,6 +4547,21 @@
   </data>
   <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
     <value>สูตรที่ระบุชื่อต้องลงท้ายด้วยเครื่องหมายอัฒภาค</value>
+    
+  </data>
+  <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
+    <value>มี NamedFormula '{0}' อยู่แล้ว</value>
+  </data>
+  <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
+    <value>อาร์กิวเมนต์แรกของ '{0}' ควรเป็นชื่อตัวแปรที่ถูกต้อง และไม่สามารถขัดแย้งกับการควบคุม หน้าจอ การรวบรวม หรือชื่อของแหล่งข้อมูลที่มีอยู่ พบประเภท '{1}'</value>
+    
+  </data>
+  <data name="AboutSet" xml:space="preserve">
+    <value>สร้างและตั้งค่าตัวแปรส่วนกลาง</value>
+    
+  </data>
+  <data name="SetArg2" xml:space="preserve">
+    <value>ค่า</value>
     
   </data>
 </root>
