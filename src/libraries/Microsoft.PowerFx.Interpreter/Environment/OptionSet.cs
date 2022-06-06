@@ -31,7 +31,7 @@ namespace Microsoft.PowerFx
         /// <param name="options">The members of the option set. Enumerable of pairs of logical name to display name.
         /// NameCollisionException is thrown if display and logical names for options are not unique.
         /// </param>
-        public OptionSet(string name, IEnumerable<KeyValuePair<DName, DName>> options)
+        public OptionSet(string name, ImmutableDictionary<DName, DName> options)
             : this(name, new SingleSourceDisplayNameProvider(options))
         {
         }
@@ -47,7 +47,7 @@ namespace Microsoft.PowerFx
         public OptionSet(string name, DisplayNameProvider displayNameProvider)
         {
             EntityName = new DName(name);
-            Options = displayNameProvider.LogicalToDisplayPairs.ToImmutableDictionary();
+            Options = displayNameProvider.LogicalToDisplayPairs;
 
             _displayNameProvider = displayNameProvider;
             FormulaType = new OptionSetValueType(this);

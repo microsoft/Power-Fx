@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Text;
 using Microsoft.PowerFx.Core.UtilityDataStructures;
@@ -25,7 +26,7 @@ namespace Microsoft.PowerFx.Core
         /// </summary>
         internal abstract bool TryRemapLogicalAndDisplayNames(DName displayName, out DName logicalName, out DName newDisplayName);
 
-        internal abstract IEnumerable<KeyValuePair<DName, DName>> LogicalToDisplayPairs { get; }
+        internal abstract ImmutableDictionary<DName, DName> LogicalToDisplayPairs { get; }
 
         private protected DisplayNameProvider()
         {
