@@ -716,7 +716,7 @@
     
   </data>
   <data name="ErrorArg1" xml:space="preserve">
-    <value>error_information</value>
+    <value>информация_об_ошибке</value>
     
   </data>
   <data name="ErrErrorIrrelevantField" xml:space="preserve">
@@ -926,7 +926,7 @@
     
   </data>
   <data name="WeekNumArg2" xml:space="preserve">
-    <value>start_of_week</value>
+    <value>начало_недели</value>
     
   </data>
   <data name="AboutWeekNum_date" xml:space="preserve">
@@ -983,7 +983,7 @@
     
   </data>
   <data name="TruncArg2" xml:space="preserve">
-    <value>num_digits</value>
+    <value>число_цифр</value>
     
   </data>
   <data name="TruncTArg1" xml:space="preserve">
@@ -991,7 +991,7 @@
     
   </data>
   <data name="TruncTArg2" xml:space="preserve">
-    <value>num_digits</value>
+    <value>число_цифр</value>
     
   </data>
   <data name="AboutRound" xml:space="preserve">
@@ -4547,6 +4547,21 @@
   </data>
   <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
     <value>Именованная формула должна заканчиваться точкой с запятой.</value>
+    
+  </data>
+  <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
+    <value>Именованная формула "{0}" уже существует.</value>
+  </data>
+  <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
+    <value>Первый аргумент "{0}" должен быть допустимым именем переменной и не может конфликтовать с существующими именами элементов управления, экрана, коллекции или источника данных. Найден тип "{1}"</value>
+    
+  </data>
+  <data name="AboutSet" xml:space="preserve">
+    <value>Создание и задание глобальной переменной.</value>
+    
+  </data>
+  <data name="SetArg2" xml:space="preserve">
+    <value>значение</value>
     
   </data>
 </root>

@@ -441,7 +441,7 @@
     <value>Počet řádků, které se mají vrátit</value>
   </data>
   <data name="AboutText" xml:space="preserve">
-    <value>Převede hodnotu na text v určitém číselném textovém formátu.</value>
+    <value>Převede hodnotu na text v určitém číselném formátu_textu.</value>
     
   </data>
   <data name="TextArg1" xml:space="preserve">
@@ -716,7 +716,7 @@
     
   </data>
   <data name="ErrorArg1" xml:space="preserve">
-    <value>error_information</value>
+    <value>chybová_informace</value>
     
   </data>
   <data name="ErrErrorIrrelevantField" xml:space="preserve">
@@ -926,7 +926,7 @@
     
   </data>
   <data name="WeekNumArg2" xml:space="preserve">
-    <value>start_of_week</value>
+    <value>začátek_týdne</value>
     
   </data>
   <data name="AboutWeekNum_date" xml:space="preserve">
@@ -983,7 +983,7 @@
     
   </data>
   <data name="TruncArg2" xml:space="preserve">
-    <value>num_digits</value>
+    <value>počet_číslic</value>
     
   </data>
   <data name="TruncTArg1" xml:space="preserve">
@@ -991,7 +991,7 @@
     
   </data>
   <data name="TruncTArg2" xml:space="preserve">
-    <value>num_digits</value>
+    <value>počet_číslic</value>
     
   </data>
   <data name="AboutRound" xml:space="preserve">
@@ -4547,6 +4547,21 @@
   </data>
   <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
     <value>Pojmenovaný vzorec musí končit středníkem.</value>
+    
+  </data>
+  <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
+    <value>NamedFormula '{0}' již existuje.</value>
+  </data>
+  <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
+    <value>První argument funkce {0} by měl být platný název proměnné a nemůže být v konfliktu s existujícím názvem ovládacího prvku, obrazovky, kolekce nebo zdroje dat. Našel se typ {1}.</value>
+    
+  </data>
+  <data name="AboutSet" xml:space="preserve">
+    <value>Vytvořte a nastavte globální proměnnou.</value>
+    
+  </data>
+  <data name="SetArg2" xml:space="preserve">
+    <value>hodnota</value>
     
   </data>
 </root>

@@ -441,7 +441,7 @@
     <value>Itzuliko den errenkada kopurua.</value>
   </data>
   <data name="AboutText" xml:space="preserve">
-    <value>"value" elementua "format_text" zenbaki zehatza duen testu bihurtzen du.</value>
+    <value>"value" elementua bihurtzen du "formateatu_testua" zenbaki zehatz baten testu.</value>
     
   </data>
   <data name="TextArg1" xml:space="preserve">
@@ -449,7 +449,7 @@
     
   </data>
   <data name="TextArg2" xml:space="preserve">
-    <value>forma_eman_testuari</value>
+    <value>formateatu_testua</value>
     
   </data>
   <data name="TextArg3" xml:space="preserve">
@@ -716,7 +716,7 @@
     
   </data>
   <data name="ErrorArg1" xml:space="preserve">
-    <value>error_information</value>
+    <value>errorearen_informazioa</value>
     
   </data>
   <data name="ErrErrorIrrelevantField" xml:space="preserve">
@@ -4547,6 +4547,21 @@
   </data>
   <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
     <value>Izendatutako formulak puntu eta komaz amaitu behar du.</value>
+    
+  </data>
+  <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
+    <value>Badago "{0}" deitzen den formula bat.</value>
+  </data>
+  <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
+    <value>"{0}" elementuaren lehen argumentuak balio duen aldagai-izen bat izan behar du eta ezin da gatazkan egon lehendik dauden kontrolen, pantailen, bildumen edo datu-iturburuen izenekin. Hau da aurkitutako mota: "{1}".</value>
+    
+  </data>
+  <data name="AboutSet" xml:space="preserve">
+    <value>Sortu eta ezarri aldagai orokor bat.</value>
+    
+  </data>
+  <data name="SetArg2" xml:space="preserve">
+    <value>balioa</value>
     
   </data>
 </root>

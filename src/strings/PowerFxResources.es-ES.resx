@@ -441,7 +441,7 @@
     <value>Número de filas que se va a devolver.</value>
   </data>
   <data name="AboutText" xml:space="preserve">
-    <value>Convierte un "valor" en texto con un "formato_texto" de número específico.</value>
+    <value>Convierte un "valor" a texto con un "formato_texto" de número específico.</value>
     
   </data>
   <data name="TextArg1" xml:space="preserve">
@@ -449,7 +449,7 @@
     
   </data>
   <data name="TextArg2" xml:space="preserve">
-    <value>dar_formato_al_texto</value>
+    <value>formato_texto</value>
     
   </data>
   <data name="TextArg3" xml:space="preserve">
@@ -716,7 +716,7 @@
     
   </data>
   <data name="ErrorArg1" xml:space="preserve">
-    <value>error_information</value>
+    <value>información_error</value>
     
   </data>
   <data name="ErrErrorIrrelevantField" xml:space="preserve">
@@ -2473,7 +2473,7 @@
     
   </data>
   <data name="label_Live_DisplayName" xml:space="preserve">
-    <value>Activo</value>
+    <value>En vivo</value>
     
   </data>
   <data name="label_Overflow_DisplayName" xml:space="preserve">
@@ -3384,7 +3384,7 @@
     
   </data>
   <data name="GridStyle_All_DisplayName" xml:space="preserve">
-    <value>Todas</value>
+    <value>Todo</value>
     
   </data>
   <data name="GridStyle_None_DisplayName" xml:space="preserve">
@@ -4547,6 +4547,21 @@
   </data>
   <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
     <value>La fórmula con nombre debe terminar con punto y coma.</value>
+    
+  </data>
+  <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
+    <value>Ya existe una NamedFormula "{0}".</value>
+  </data>
+  <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
+    <value>El primer argumento de "{0}" debe ser un nombre de variable válido que no entre en conflicto con ningún nombre de origen de datos, colección, pantalla o control existente. Tipo encontrado "{1}".</value>
+    
+  </data>
+  <data name="AboutSet" xml:space="preserve">
+    <value>Permite crear y establecer una variable global.</value>
+    
+  </data>
+  <data name="SetArg2" xml:space="preserve">
+    <value>valor</value>
     
   </data>
 </root>

@@ -716,7 +716,7 @@
     
   </data>
   <data name="ErrorArg1" xml:space="preserve">
-    <value>error_information</value>
+    <value>informacije_o_napaki</value>
     
   </data>
   <data name="ErrErrorIrrelevantField" xml:space="preserve">
@@ -3944,7 +3944,7 @@
     
   </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
-    <value>Pričakovan je bil operand. Formula ali izraz pričakuje veljaven operand. Operand »2« lahko na primer dodate v izraz »1 +_ «, da bo rezultat »3«. V izraz »"Lep pozdrav "&amp; _« pa lahko dodate operand »vsem«, da dobite rezultat »lep pozdrav vsem«.</value>
+    <value>Pričakovan je bil operand. Formula ali izraz pričakuje veljaven operand. Operand »2« lahko na primer dodate v izraz »1 + _«, da bo rezultat »3«. V izraz »"Lep pozdrav "&amp; _« pa lahko dodate operand »vsem«, da dobite rezultat »Lep pozdrav vsem«.</value>
     
   </data>
   <data name="ErrorResource_ErrOperandExpected_HowToFix_1" xml:space="preserve">
@@ -4093,7 +4093,7 @@
     
   </data>
   <data name="ErrorResource_ErrOperatorExpected_ShortMessage" xml:space="preserve">
-    <value>Pričakovan je operator. Na tem mestu v formuli je pričakovan operator, kot je +, * ali &amp;.</value>
+    <value>Pričakovan je operator. Na tem mestu v formuli je pričakovan operator, kot je +, &amp; ali *.</value>
     
   </data>
   <data name="ErrorResource_ErrOperatorExpected_LongMessage" xml:space="preserve">
@@ -4547,6 +4547,21 @@
   </data>
   <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
     <value>Navedena formula se mora končati s podpičjem.</value>
+    
+  </data>
+  <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
+    <value>NamedFormula »{0}« že obstaja.</value>
+  </data>
+  <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
+    <value>Prvi argument za »{0}« mora biti veljavno ime spremenljivke in ne sme biti v sporu z nobenim obstoječim imenom kontrolnika, zaslona, zbirke ali vira podatkov. Najdena je bila vrsta »{1}«.</value>
+    
+  </data>
+  <data name="AboutSet" xml:space="preserve">
+    <value>Ustvarjanje in nastavljanje globalne spremenljivke.</value>
+    
+  </data>
+  <data name="SetArg2" xml:space="preserve">
+    <value>vrednost</value>
     
   </data>
 </root>

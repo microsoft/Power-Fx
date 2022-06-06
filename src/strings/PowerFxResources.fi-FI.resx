@@ -441,7 +441,7 @@
     <value>Palautettavien rivien määrä.</value>
   </data>
   <data name="AboutText" xml:space="preserve">
-    <value>Muuntaa value-merkkijonon tekstiksi määritetyssä luvussa format_text.</value>
+    <value>Muuntaa arvon tekstiksi tietyssä numerossa muotoiltu_teksti.</value>
     
   </data>
   <data name="TextArg1" xml:space="preserve">
@@ -449,7 +449,7 @@
     
   </data>
   <data name="TextArg2" xml:space="preserve">
-    <value>muodon_teksti</value>
+    <value>muotoiltu_teksti</value>
     
   </data>
   <data name="TextArg3" xml:space="preserve">
@@ -926,7 +926,7 @@
     
   </data>
   <data name="WeekNumArg2" xml:space="preserve">
-    <value>start_of_week</value>
+    <value>viikon_alku</value>
     
   </data>
   <data name="AboutWeekNum_date" xml:space="preserve">
@@ -983,7 +983,7 @@
     
   </data>
   <data name="TruncArg2" xml:space="preserve">
-    <value>num_digits</value>
+    <value>num_numeroa</value>
     
   </data>
   <data name="TruncTArg1" xml:space="preserve">
@@ -991,7 +991,7 @@
     
   </data>
   <data name="TruncTArg2" xml:space="preserve">
-    <value>num_digits</value>
+    <value>num_numeroa</value>
     
   </data>
   <data name="AboutRound" xml:space="preserve">
@@ -2060,11 +2060,11 @@
     
   </data>
   <data name="AboutClock__AmPm" xml:space="preserve">
-    <value>Palauttaa yksittäisen sarakkeen, joka sisältää isolla kirjoitetut määritykset ajankohdalle ennen keskipäivää ja sen jälkeen.</value>
+    <value>Palauttaa yksittäisen sarakkeen sisältävän taulukon, joka sisältää isolla kirjoitetut määritykset ajankohdalle ennen keskipäivää ja sen jälkeen.</value>
     
   </data>
   <data name="AboutClock__AmPmShort" xml:space="preserve">
-    <value>Palauttaa yksittäisen sarakkeen, joka sisältää lyhennetyt isolla kirjoitetut määritykset ajankohdalle ennen keskipäivää ja sen jälkeen.</value>
+    <value>Palauttaa yksittäisen sarakkeen sisältävän taulukon, joka sisältää lyhennetyt isolla kirjoitetut määritykset ajankohdalle ennen keskipäivää ja sen jälkeen.</value>
     
   </data>
   <data name="AboutClock__IsClock24" xml:space="preserve">
@@ -2980,7 +2980,7 @@
     
   </data>
   <data name="Icon_Train_DisplayName" xml:space="preserve">
-    <value>Juna</value>
+    <value>Harjoittaa</value>
     
   </data>
   <data name="Icon_Tray_DisplayName" xml:space="preserve">
@@ -3440,7 +3440,7 @@
     
   </data>
   <data name="NotificationType_Information_DisplayName" xml:space="preserve">
-    <value>Tiedot</value>
+    <value>Tietoja</value>
     
   </data>
   <data name="Icon_Add_DisplayName" xml:space="preserve">
@@ -3460,7 +3460,7 @@
     
   </data>
   <data name="Icon_Search_DisplayName" xml:space="preserve">
-    <value>Hae</value>
+    <value>Haku</value>
     
   </data>
   <data name="Icon_Filter_DisplayName" xml:space="preserve">
@@ -3556,7 +3556,7 @@
     
   </data>
   <data name="Icon_More_DisplayName" xml:space="preserve">
-    <value>Enemmän</value>
+    <value>Lisää</value>
     
   </data>
   <data name="Icon_Waffle_DisplayName" xml:space="preserve">
@@ -3828,7 +3828,7 @@
     
   </data>
   <data name="Icon_Information_DisplayName" xml:space="preserve">
-    <value>Tiedot</value>
+    <value>Tietoja</value>
     
   </data>
   <data name="Icon_Database_DisplayName" xml:space="preserve">
@@ -4547,6 +4547,21 @@
   </data>
   <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
     <value>Nimetyn kaavan täytyy päättyä puolipisteeseen.</value>
+    
+  </data>
+  <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
+    <value>NamedFormula '{0}' on jo olemassa.</value>
+  </data>
+  <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
+    <value>Kohteen {0} ensimmäisen argumentin on oltava kelvollinen muuttujan nimi, eikä se voi olla ristiriidassa minkään olemassa olevan ohjausobjektin, näytön, kokoelman tai tietolähteen nimen kanssa. Löytyi tyyppi {1}</value>
+    
+  </data>
+  <data name="AboutSet" xml:space="preserve">
+    <value>Luo ja aseta yleinen muuttuja.</value>
+    
+  </data>
+  <data name="SetArg2" xml:space="preserve">
+    <value>arvo</value>
     
   </data>
 </root>
