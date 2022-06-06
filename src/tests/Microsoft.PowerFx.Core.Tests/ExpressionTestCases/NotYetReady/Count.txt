@@ -12,7 +12,7 @@
 ﻿>> Count([1, 2, 3, 4, 5])
 5
 
-// ******** TABLE WITH FEW BLANK RECORDS ********
+// ******** TABLE WITH BLANK RECORDS ********
 
 ﻿>> Count([0,""])
 1
@@ -49,7 +49,7 @@ Blank()
 >> Count(Table({a:Blank()},{a:Blank()},{a:Blank()}))
 0
 
-// ******** ALL DATATPYE RECORDS ********
+// ******** ALL DATATYPE RECORDS ********
 
 >> Count([1,true,false,Date(2022,12,12),Time(6,30,30),DateTimeValue("5/12/2022 6:30:30 PM"),"abc"])
 #Error(Kind=InvalidArgument)

@@ -47,12 +47,12 @@
 >> CountRows(Table({a:DateTimeValue("5/12/2022 6:30:30 PM")},{a:DateTimeValue("May 19, 2022")}))
 2
 
-//  ALL DATATPYE RECORDS 
+//  ALL DATATYPE RECORDS 
 
 ﻿>> CountRows([1, "2", "two", true, false, Date(2022,12,12),Time(6,30,30),DateTimeValue("5/12/2022 6:30:30 PM")])
 8
 
-// ******** TABLE WITH NO BLANK RECORDS ********
+// ******** TABLE WITH BLANK RECORDS ********
 
 ﻿>> CountRows([0,""])
 2

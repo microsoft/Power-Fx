@@ -44,7 +44,7 @@
 >> CountA(Table({a:DateTimeValue("5/12/2022 6:30:30 PM")},{a:DateTimeValue("May 19, 2022")}))
 2
 
-//  ALL DATATPYE RECORDS 
+//  ALL DATATYPE RECORDS 
 
 ﻿>> CountA([1, "2", "two", true, false, Date(2022,12,12),Time(6,30,30),DateTimeValue("5/12/2022 6:30:30 PM")])
 #Error(Kind=InvalidArgument)
@@ -52,7 +52,7 @@
 ﻿>> CountA([1, "2", true, false, Date(2022,12,12),Time(6,30,30),DateTimeValue("5/12/2022 6:30:30 PM")])
 7
 
-// ******** TABLE WITH NO BLANK RECORDS ********
+// ******** TABLE WITH BLANK RECORDS ********
 
 ﻿>> CountA([0,""])
 1
@@ -222,7 +222,7 @@ Blank()
 2
 
 >> CountA([true,"two"])
-#Error(Kind=InvalidArgument)
+2
 
 //Boolean-Boolean
 >> CountA([true,false])
