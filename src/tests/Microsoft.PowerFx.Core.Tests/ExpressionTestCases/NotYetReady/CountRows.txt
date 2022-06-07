@@ -76,7 +76,7 @@
 5
 
 >> CountRows(LastN([1,2,3,4], Blank()))
-Blank()
+0
 
 >> CountRows([LastN([1,2,3,4]), Blank()])
 2
