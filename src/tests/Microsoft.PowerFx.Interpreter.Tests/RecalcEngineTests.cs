@@ -390,53 +390,6 @@ namespace Microsoft.PowerFx.Tests
         }
 
         [Fact]
-        public void CheckDottedBindError3()
-        {
-            var engine = new RecalcEngine();
-            var result = engine.Check(
-                "x.B", 
-                new RecordType().Add(
-                    new NamedFormulaType(
-                        "x", 
-                        new RecordType().Add(
-                            new NamedFormulaType("A", FormulaType.Number)))));
-
-            Assert.False(result.IsSuccess);
-            Assert.Null(result.Expression);
-            Assert.StartsWith("Error 1-3: Name isn't valid. 'x' does not contain a field named 'B'", result.Errors.First().ToString());
-        }
-
-        [Fact]
-        public void CheckDottedBindError4()
-        {
-            var engine = new RecalcEngine();
-            var result = engine.Check("Filter([1,2,3] As X, X.B > 0)");
-
-            Assert.False(result.IsSuccess);
-            Assert.Null(result.Expression);
-            Assert.StartsWith("Error 22-24: Name isn't valid. 'X' does not contain a field named 'B'", result.Errors.First().ToString());
-        }
-
-        [Fact]
-        public void CheckDottedBindError5()
-        {
-            var engine = new RecalcEngine();
-            var result = engine.Check(
-               "A.B.D",
-               new RecordType().Add(
-                   new NamedFormulaType(
-                       "A",
-                       new RecordType().Add(
-                           new NamedFormulaType(
-                               "B", 
-                               new RecordType().Add("C", new NumberType()))))));
-
-            Assert.False(result.IsSuccess);
-            Assert.Null(result.Expression);
-            Assert.StartsWith("Error 3-5: Name isn't valid. 'B' does not contain a field named 'D'", result.Errors.First().ToString());
-        }
-
-        [Fact]
         public void CheckBindEnum()
         {
             var engine = new RecalcEngine();
