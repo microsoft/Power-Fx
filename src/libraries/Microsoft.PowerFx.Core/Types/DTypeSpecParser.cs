@@ -38,7 +38,7 @@ namespace Microsoft.PowerFx.Core.Types
             {
                 token = DType.MapKindToStr(DKind.Blob);
             }
-
+            
             // Note that control types "v" or "E" are parsed to Error, since the type spec language is not a mechanism for serializing/deserializing controls.
             if (token == DType.MapKindToStr(DKind.Control) || token == DType.MapKindToStr(DKind.DataEntity))
             {

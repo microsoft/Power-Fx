@@ -128,8 +128,11 @@ namespace Microsoft.PowerFx.Core.Types
 
         public ValueTree ValueTree { get; }
 
-        // This is only used by attachment type. DocumentDataType is used to workaround the issue of having cycles in struct type.
+        // This is only used by attachment type.
         protected readonly DType _attachmentType;
+
+        // Intended future home of all lazy type expansion (Control, Attachment, Relationship, Other)
+        private readonly LazilyExpandableDType _lazyExpandMetadata;
 
         internal HashSet<IExternalTabularDataSource> AssociatedDataSources { get; }
 
@@ -162,7 +165,7 @@ namespace Microsoft.PowerFx.Core.Types
 
         public DType(DKind kind)
         {
-            Contracts.Assert(kind >= DKind._Min && kind < DKind._Lim);
+            Contracts.Assert(kind >= DKind._Min && kind < DKind._Lim && (kind != DKind.LazyTable && kind != DKind.LazyRecord));
 
             Kind = kind;
             TypeTree = default;
@@ -172,6 +175,7 @@ namespace Microsoft.PowerFx.Core.Types
             PolymorphicInfo = null;
             Metadata = null;
             _attachmentType = null;
+            _lazyExpandMetadata = null;
             AssociatedDataSources = new HashSet<IExternalTabularDataSource>();
             OptionSetInfo = null;
             ViewInfo = null;
@@ -218,7 +222,7 @@ namespace Microsoft.PowerFx.Core.Types
         // Constructor for aggregate types (record, table)
         public DType(DKind kind, TypeTree tree, bool isFile = false, bool isLargeImage = false)
         {
-            Contracts.Assert(kind >= DKind._Min && kind < DKind._Lim);
+            Contracts.Assert(kind >= DKind._Min && kind < DKind._Lim && (kind != DKind.LazyTable && kind != DKind.LazyRecord));
             tree.AssertValid();
             Contracts.Assert(tree.IsEmpty || kind == DKind.Table || kind == DKind.Record);
 
@@ -230,6 +234,7 @@ namespace Microsoft.PowerFx.Core.Types
             PolymorphicInfo = null;
             Metadata = null;
             _attachmentType = null;
+            _lazyExpandMetadata = null;
             AssociatedDataSources = new HashSet<IExternalTabularDataSource>();
             OptionSetInfo = null;
             ViewInfo = null;
@@ -3690,8 +3695,12 @@ namespace Microsoft.PowerFx.Core.Types
                     return "c";
                 case DKind.Record:
                     return "!";
+                case DKind.LazyRecord:
+                    return "r!";
                 case DKind.Table:
                     return "*";
+                case DKind.LazyTable:
+                    return "r*";
                 case DKind.Enum:
                     return "%";
                 case DKind.Media:
