@@ -2,9 +2,11 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Dynamic;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.OpenApi.Readers;
 using Microsoft.PowerFx.Connectors;
 using Microsoft.PowerFx.Core.Tests;
 using Xunit;
@@ -136,5 +138,19 @@ namespace Microsoft.PowerFx.Tests
             var r1 = engine.Check("Test.GetKey(\"Key1\")");
             Assert.True(r1.IsSuccess);
         }
+
+        [Fact]
+        public void BasicHttpBindingWithHeader()
+        {
+            var config = new PowerFxConfig();
+            var apiDoc = Helpers.ReadSwagger(@"Swagger\TestOpenAPI2.json");
+            
+            config.AddService("Test", apiDoc, null);
+
+            var engine = new Engine(config);
+
+            var r1 = engine.Check("Test.GetWeatherWithHeader({ id : 11 })");
+            Assert.True(r1.IsSuccess);
+        }        
     }
 }
