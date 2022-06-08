@@ -5,18 +5,24 @@ true
 false
 
 >> Boolean("x")
-false
+#Error
 
 >> Boolean(" true")
-false
+#Error
 
 >> Boolean(" false")
-false
+#Error
 
 >> Boolean("True")
-false
+true
 
 >> Boolean("False")
+false
+
+>> Boolean("TRUE")
+true
+
+>> Boolean("FALSE")
 false
 
 >> Boolean(Text(Blank()))
@@ -26,7 +32,7 @@ Blank()
 #Error
 
 >> Boolean("0")
-false
+#Error
 
 >> Boolean(0)
 Errors: Error 0-10: The function 'Boolean' has some invalid arguments.|Error 8-9: Invalid argument type (Number). Expecting a Text value instead.

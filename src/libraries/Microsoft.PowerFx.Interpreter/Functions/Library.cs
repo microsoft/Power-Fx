@@ -129,7 +129,7 @@ namespace Microsoft.PowerFx.Functions
                     checkRuntimeTypes: ExactValueTypeOrBlank<StringValue>,
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
-                    targetFunction: Boolean)
+                    targetFunction: TextToBoolean)
             },
             {
                 BuiltinFunctionsCore.Boolean_UO,

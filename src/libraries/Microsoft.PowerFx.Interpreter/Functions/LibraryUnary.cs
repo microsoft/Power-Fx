@@ -281,10 +281,19 @@ namespace Microsoft.PowerFx.Functions
             return new NumberValue(irContext, b ? 1.0 : 0.0);
         }
 
-        public static BooleanValue TextToBoolean(IRContext irContext, StringValue[] args)
+        public static FormulaValue TextToBoolean(IRContext irContext, StringValue[] args)
         {
-            var s = args[0].Value;
-            return new BooleanValue(irContext, s == "true");
+            var lower = args[0].Value.ToLower();
+            if (lower == "true")
+            {
+                return new BooleanValue(irContext, true);
+            }
+            else if (lower == "false")
+            {
+                return new BooleanValue(irContext, false);
+            }
+
+            return CommonErrors.InvalidBooleanFormatError(irContext);
         }
 
         public static FormulaValue DateToNumber(IRContext irContext, FormulaValue[] args)
