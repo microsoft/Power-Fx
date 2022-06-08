@@ -52,6 +52,24 @@ namespace Microsoft.PowerFx.Tests
             AssertLog(testConnector, "GET http://localhost:5000/Keys?keyName=Key1");
         }
 
+        [Fact]
+        public async void BasicHttpCallWithHeader()
+        {
+            var testConnector = new LoggingTestServer(@"Swagger\TestOpenAPI2.json");
+            testConnector.SetResponse(@"[{""date"":""2022-06-09T17:43:33.6483791+02:00"",""temperatureC"":-15,""temperatureF"":6,""summary"":""Bracing"",""index"":121},{""date"":""2022-06-10T17:43:33.6483939+02:00"",""temperatureC"":46,""temperatureF"":114,""summary"":""Freezing"",""index"":121},{""date"":""2022-06-11T17:43:33.6483941+02:00"",""temperatureC"":3,""temperatureF"":37,""summary"":""Bracing"",""index"":121},{""date"":""2022-06-12T17:43:33.6483943+02:00"",""temperatureC"":34,""temperatureF"":93,""summary"":""Warm"",""index"":121},{""date"":""2022-06-13T17:43:33.6483945+02:00"",""temperatureC"":27,""temperatureF"":80,""summary"":""Mild"",""index"":121}]");
+
+            var config = new PowerFxConfig();
+            config.AddService("Test", testConnector._apiDocument, new HttpClient(testConnector) { BaseAddress = _fakeBaseAddress });
+
+            var engine = new RecalcEngine(config);
+
+            var r1 = await engine.EvalAsync("Test.GetWeatherWithHeader({ id : 11 })", CancellationToken.None);
+            dynamic i1 = (ExpandoObject)((object[])r1.ToObject())[0];
+            Assert.Equal(121, i1.index);
+
+            AssertLog(testConnector, "GET http://localhost:5000/weather/header\r\n id: 11");
+        }
+
         // Allow side-effects for executing behavior functions (any POST)
         private static readonly ParserOptions _optionsPost = new ParserOptions
         {
@@ -137,20 +155,6 @@ namespace Microsoft.PowerFx.Tests
 
             var r1 = engine.Check("Test.GetKey(\"Key1\")");
             Assert.True(r1.IsSuccess);
-        }
-
-        [Fact]
-        public void BasicHttpBindingWithHeader()
-        {
-            var config = new PowerFxConfig();
-            var apiDoc = Helpers.ReadSwagger(@"Swagger\TestOpenAPI2.json");
-            
-            config.AddService("Test", apiDoc, null);
-
-            var engine = new Engine(config);
-
-            var r1 = engine.Check("Test.GetWeatherWithHeader({ id : 11 })");
-            Assert.True(r1.IsSuccess);
-        }        
+        }      
     }
 }

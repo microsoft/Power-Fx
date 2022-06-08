@@ -58,7 +58,11 @@ namespace Microsoft.PowerFx.Connectors
         {
             var path = _path;
             var query = new StringBuilder();
-            var headers = new Dictionary<string, string>();
+
+            // https://stackoverflow.com/questions/5258977/are-http-headers-case-sensitive
+            // Header names are not case sensitive.
+            // From RFC 2616 - "Hypertext Transfer Protocol -- HTTP/1.1", Section 4.2, "Message Headers"
+            var headers = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 
             var map = _argMapper.ConvertToSwagger(args);
             foreach (var param in _argMapper._openApiParameters)
