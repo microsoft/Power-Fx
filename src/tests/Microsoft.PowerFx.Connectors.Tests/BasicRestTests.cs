@@ -64,10 +64,28 @@ namespace Microsoft.PowerFx.Tests
             var engine = new RecalcEngine(config);
 
             var r1 = await engine.EvalAsync("Test.GetWeatherWithHeader({ id : 11 })", CancellationToken.None);
-            dynamic i1 = (ExpandoObject)((object[])r1.ToObject())[0];
-            Assert.Equal(121, i1.index);
+            dynamic i1 = r1.ToObject();
+            Assert.Equal(121, i1[0].index);
 
             AssertLog(testConnector, "GET http://localhost:5000/weather/header\r\n id: 11");
+        }
+
+        [Fact]
+        public async void BasicHttpCallWithTwoHeaders()
+        {
+            var testConnector = new LoggingTestServer(@"Swagger\TestOpenAPI2.json");
+            testConnector.SetResponse(@"[{""date"":""2022-06-09T17:43:33.6483791+02:00"",""temperatureC"":-15,""temperatureF"":6,""summary"":""Bracing"",""index"":121},{""date"":""2022-06-10T17:43:33.6483939+02:00"",""temperatureC"":46,""temperatureF"":114,""summary"":""Freezing"",""index"":121},{""date"":""2022-06-11T17:43:33.6483941+02:00"",""temperatureC"":3,""temperatureF"":37,""summary"":""Bracing"",""index"":121},{""date"":""2022-06-12T17:43:33.6483943+02:00"",""temperatureC"":34,""temperatureF"":93,""summary"":""Warm"",""index"":121},{""date"":""2022-06-13T17:43:33.6483945+02:00"",""temperatureC"":27,""temperatureF"":80,""summary"":""Mild"",""index"":121}]");
+
+            var config = new PowerFxConfig();
+            config.AddService("Test", testConnector._apiDocument, new HttpClient(testConnector) { BaseAddress = _fakeBaseAddress });
+
+            var engine = new RecalcEngine(config);
+
+            var r1 = await engine.EvalAsync("Test.GetWeatherWithHeader2({ id : 11, id2 : 12 })", CancellationToken.None);
+            dynamic i1 = r1.ToObject();
+            Assert.Equal(121, i1[0].index);
+
+            AssertLog(testConnector, "GET http://localhost:5000/weather/header2\r\n id: 11\r\n id2: 12");
         }
 
         // Allow side-effects for executing behavior functions (any POST)

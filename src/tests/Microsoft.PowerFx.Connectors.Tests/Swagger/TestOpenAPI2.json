@@ -39,6 +39,47 @@
           }
         }
       }
+    },
+    "/weather/header2": {
+      "get": {
+        "tags": [
+          "WeatherForecast"
+        ],
+        "summary": "Get Weather Forecast From Header",
+        "operationId": "GetWeatherWithHeader2",
+        "produces": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "id",
+            "description": "",
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "header",
+            "name": "id2",
+            "description": "",
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/WeatherForecast"
+              }
+            }
+          }
+        }
+      }
     }
   },
   "definitions": {    

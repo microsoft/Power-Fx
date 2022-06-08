@@ -99,16 +99,13 @@ namespace Microsoft.PowerFx.Connectors
             // $$$ Not handling Body yet...
             var request = new HttpRequestMessage(_method, url);
 
-            if (headers.Any())
+            foreach (var kv in headers)
             {
-                foreach (var kv in headers)
-                {
-                    request.Headers.Add(kv.Key, kv.Value);
-                }
+                request.Headers.Add(kv.Key, kv.Value);
             }
 
             return request;
-        }   
+        }
 
         public async Task<FormulaValue> DecodeResponseAsync(HttpResponseMessage response)
         {
