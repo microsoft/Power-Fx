@@ -63,6 +63,9 @@ true
 >> Boolean(ParseJSON("false"))
 false
 
+>> Boolean(ParseJSON("null"))
+Blank()
+
 >> ParseJSON("{""a"": null}").a
 Blank()
 
