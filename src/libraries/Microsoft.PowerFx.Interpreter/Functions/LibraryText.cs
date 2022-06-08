@@ -126,16 +126,7 @@ namespace Microsoft.PowerFx.Functions
         {
             var arg0 = args[0];
 
-            var str = arg0.Value.Trim().ToLower();
-            if (string.IsNullOrEmpty(str))
-            {
-                return new BlankValue(irContext);
-            }
-
-            if (!bool.TryParse(str, out var val))
-            {
-                return CommonErrors.InvalidBooleanFormatError(irContext);
-            }
+            var val = args[0].Value == "true";
 
             return new BooleanValue(irContext, val);
         }

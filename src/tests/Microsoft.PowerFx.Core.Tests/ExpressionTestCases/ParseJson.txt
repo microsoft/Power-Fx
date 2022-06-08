@@ -46,7 +46,7 @@ Blank()
 "s"
 
 >> Text(ParseJSON("null"))
-""
+Blank()
 
 >> Text(ParseJSON("true"))
 #Error
