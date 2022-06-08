@@ -5766,6 +5766,21 @@
     <value>Name isn't valid. '{0}' does not contain a field named '{1}'. </value>
     <comment>Error Message.</comment>
   </data>
+  <data name="ErrorResource_ErrInvalidField_LongMessage" xml:space="preserve">
+    <value>This error appears most commonly when a formula refers to something that no longer exists (for example, a control that you've deleted).</value>
+  </data>
+  <data name="ErrorResource_ErrInvalidField_HowToFix_1" xml:space="preserve">
+    <value>Remove or correct the reference to the name that isn't valid.</value>
+    <comment>1 How to fix the error. </comment>
+  </data>
+  <data name="ErrorResource_ErrInvalidField_Link_1" xml:space="preserve">
+    <value>Article: Formula reference for Power Apps</value>
+    <comment>Article: Formula reference for Power Apps</comment>
+  </data>
+  <data name="ErrorResource_ErrInvalidField_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=2132478</value>
+    <comment>{Locked}</comment>
+  </data>
   <data name="ErrorResource_ErrInvalidName_ShortMessage" xml:space="preserve">
     <value>Name isn't valid. '{0}' isn't recognized.</value>
     <comment>Error Message.</comment>
