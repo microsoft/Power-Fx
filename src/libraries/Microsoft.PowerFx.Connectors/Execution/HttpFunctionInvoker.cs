@@ -2,6 +2,8 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading;
@@ -44,6 +46,7 @@ namespace Microsoft.PowerFx.Connectors
             {
                 case ParameterLocation.Path:
                 case ParameterLocation.Query:
+                case ParameterLocation.Header:
                     break;
 
                 default:
@@ -55,6 +58,7 @@ namespace Microsoft.PowerFx.Connectors
         {
             var path = _path;
             var query = new StringBuilder();
+            var headers = new Dictionary<string, string>();
 
             var map = _argMapper.ConvertToSwagger(args);
             foreach (var param in _argMapper._openApiParameters)
@@ -76,6 +80,10 @@ namespace Microsoft.PowerFx.Connectors
                             query.Append(HttpUtility.UrlEncode(valueStr));
                             break;
 
+                        case ParameterLocation.Header:
+                            headers.Add(param.Name, valueStr);
+                            break;
+
                         default:
                             throw new NotImplementedException($"{param.In}");
                     }
@@ -86,6 +94,15 @@ namespace Microsoft.PowerFx.Connectors
 
             // $$$ Not handling Body yet...
             var request = new HttpRequestMessage(_method, url);
+
+            if (headers.Any())
+            {
+                foreach (var kv in headers)
+                {
+                    request.Headers.Add(kv.Key, kv.Value);
+                }
+            }
+
             return request;
         }   
 
