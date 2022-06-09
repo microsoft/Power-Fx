@@ -10,7 +10,6 @@ using Microsoft.OpenApi.Readers;
 using Microsoft.PowerFx.Connectors;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Types;
-using SharpYaml.Tokens;
 using Xunit;
 
 namespace Microsoft.PowerFx.Tests
@@ -29,23 +28,21 @@ namespace Microsoft.PowerFx.Tests
 
             testConnector._log.Clear();
         }
-        
-        private const string Response = @"[{""date"":""2022-06-09T17:43:33.6483791+02:00"",""temperatureC"":-15,""temperatureF"":6,""summary"":""Bracing"",""index"":121}]";
-
+               
         [Theory]
-        [InlineData(2, @"Test.GetWeatherWithHeader({ id : 11 })", Response, 121, "GET http://localhost:5000/weather/header\r\n id: 11")]
-        [InlineData(2, @"Test.GetWeatherWithHeader()", Response, 121, "GET http://localhost:5000/weather/header")]
-        [InlineData(2, @"Test.GetWeatherWithHeaderStr({ str : ""a b"" })", Response, 121, "GET http://localhost:5000/weather/headerStr\r\n str: a b")]
-        [InlineData(2, @"Test.GetWeatherWithHeaderStr()", Response, 121, "GET http://localhost:5000/weather/headerStr")]
-        [InlineData(2, @"Test.GetWeatherWithHeader2({ id : 11, id2 : 12 })", Response, 121, "GET http://localhost:5000/weather/header2\r\n id: 11\r\n id2: 12")]
-        [InlineData(2, @"Test.GetWeatherWithHeader2({ id : 11 })", Response, 121, "GET http://localhost:5000/weather/header2\r\n id: 11")]
-        [InlineData(2, @"Test.GetWeatherWithHeader2({ id2 : 12 })", Response, 121, "GET http://localhost:5000/weather/header2\r\n id2: 12")]
-        [InlineData(2, @"Test.GetWeatherWithHeader2()", Response, 121, "GET http://localhost:5000/weather/header2")]
-        [InlineData(2, @"Test.GetWeather3(4, 8, 10, { i : 7, j : 9, k : 11 })", Response, 121, "GET http://localhost:5000/weather3?i=7&ir=4&k=11&kr=10\r\n j: 9\r\n jr: 8")]
-        [InlineData(2, @"Test.GetWeather3(4, 8, 10, { i : 5 })", Response, 121, "GET http://localhost:5000/weather3?i=5&ir=4&kr=10\r\n jr: 8")]
-        [InlineData(1, @"Test.GetKey(""Key1"")", "55", 55, "GET http://localhost:5000/Keys?keyName=Key1")]
+        [InlineData(2, @"Test.GetWeatherWithHeader({ id : 11 })", "GET http://localhost:5000/weather/header\r\n id: 11")]
+        [InlineData(2, @"Test.GetWeatherWithHeader()", "GET http://localhost:5000/weather/header")]
+        [InlineData(2, @"Test.GetWeatherWithHeaderStr({ str : ""a b"" })", "GET http://localhost:5000/weather/headerStr\r\n str: a b")]
+        [InlineData(2, @"Test.GetWeatherWithHeaderStr()", "GET http://localhost:5000/weather/headerStr")]
+        [InlineData(2, @"Test.GetWeatherWithHeader2({ id : 11, id2 : 12 })", "GET http://localhost:5000/weather/header2\r\n id: 11\r\n id2: 12")]
+        [InlineData(2, @"Test.GetWeatherWithHeader2({ id : 11 })", "GET http://localhost:5000/weather/header2\r\n id: 11")]
+        [InlineData(2, @"Test.GetWeatherWithHeader2({ id2 : 12 })", "GET http://localhost:5000/weather/header2\r\n id2: 12")]
+        [InlineData(2, @"Test.GetWeatherWithHeader2()", "GET http://localhost:5000/weather/header2")]
+        [InlineData(2, @"Test.GetWeather3(4, 8, 10, { i : 7, j : 9, k : 11 })", "GET http://localhost:5000/weather3?i=7&ir=4&k=11&kr=10\r\n j: 9\r\n jr: 8")]
+        [InlineData(2, @"Test.GetWeather3(4, 8, 10, { i : 5 })", "GET http://localhost:5000/weather3?i=5&ir=4&kr=10\r\n jr: 8")]
+        [InlineData(1, @"Test.GetKey(""Key1"")", "GET http://localhost:5000/Keys?keyName=Key1")]
 
-        public async void ValidateHttpCalls(int apiFileNumber, string fxQuery, string fakeResponse, int expectedValue, string httpQuery)
+        public async void ValidateHttpCalls(int apiFileNumber, string fxQuery, string httpQuery)
         {
             string swaggerFile;
 
@@ -62,7 +59,7 @@ namespace Microsoft.PowerFx.Tests
             }
 
             var testConnector = new LoggingTestServer(swaggerFile);
-            testConnector.SetResponse(fakeResponse);
+            testConnector.SetResponse("0");
                                
             var config = new PowerFxConfig();
             config.AddService("Test", testConnector._apiDocument, new HttpClient(testConnector) { BaseAddress = _fakeBaseAddress });
@@ -74,36 +71,12 @@ namespace Microsoft.PowerFx.Tests
             Assert.NotNull(result);
 
             var r = (dynamic)result.ToObject();
-            var val = r is Array ? r[0].index : r;
-            Assert.Equal(expectedValue, val);
+            Assert.NotNull(r);
 
             AssertLog(testConnector, httpQuery);
         }
 
-        [Fact]
-        public async Task BasicHttpCall()
-        {
-            var testConnector = new LoggingTestServer(@"Swagger\TestOpenAPI.json");
-
-            var httpClient = new HttpClient(testConnector)
-            {
-                BaseAddress = _fakeBaseAddress
-            };
-
-            var config = new PowerFxConfig();
-            var apiDoc = testConnector._apiDocument;
-            
-            config.AddService("Test", apiDoc, httpClient);
-
-            var engine = new RecalcEngine(config);
-
-            testConnector.SetResponse("55");
-            var r1 = await engine.EvalAsync("Test.GetKey(\"Key1\")", CancellationToken.None);            
-            Assert.Equal(55.0, r1.ToObject());
-
-            AssertLog(testConnector, "GET http://localhost:5000/Keys?keyName=Key1");
-        }
-
+        // Allow side-effects for executing behavior functions (any POST)
         private static readonly ParserOptions _optionsPost = new ParserOptions
         {
             AllowsSideEffects = true
