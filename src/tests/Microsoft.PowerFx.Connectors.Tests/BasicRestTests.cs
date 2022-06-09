@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 using Microsoft.OpenApi.Readers;
 using Microsoft.PowerFx.Connectors;
 using Microsoft.PowerFx.Core.Tests;
+using Microsoft.PowerFx.Types;
+using SharpYaml.Tokens;
 using Xunit;
 
 namespace Microsoft.PowerFx.Tests
@@ -26,6 +28,56 @@ namespace Microsoft.PowerFx.Tests
             Assert.Equal(expectedLog, log);
 
             testConnector._log.Clear();
+        }
+        
+        private const string Response = @"[{""date"":""2022-06-09T17:43:33.6483791+02:00"",""temperatureC"":-15,""temperatureF"":6,""summary"":""Bracing"",""index"":121}]";
+
+        [Theory]
+        [InlineData(2, @"Test.GetWeatherWithHeader({ id : 11 })", Response, 121, "GET http://localhost:5000/weather/header\r\n id: 11")]
+        [InlineData(2, @"Test.GetWeatherWithHeader()", Response, 121, "GET http://localhost:5000/weather/header")]
+        [InlineData(2, @"Test.GetWeatherWithHeaderStr({ str : ""a b"" })", Response, 121, "GET http://localhost:5000/weather/headerStr\r\n str: a b")]
+        [InlineData(2, @"Test.GetWeatherWithHeaderStr()", Response, 121, "GET http://localhost:5000/weather/headerStr")]
+        [InlineData(2, @"Test.GetWeatherWithHeader2({ id : 11, id2 : 12 })", Response, 121, "GET http://localhost:5000/weather/header2\r\n id: 11\r\n id2: 12")]
+        [InlineData(2, @"Test.GetWeatherWithHeader2({ id : 11 })", Response, 121, "GET http://localhost:5000/weather/header2\r\n id: 11")]
+        [InlineData(2, @"Test.GetWeatherWithHeader2({ id2 : 12 })", Response, 121, "GET http://localhost:5000/weather/header2\r\n id2: 12")]
+        [InlineData(2, @"Test.GetWeatherWithHeader2()", Response, 121, "GET http://localhost:5000/weather/header2")]
+        [InlineData(2, @"Test.GetWeather3(4, 8, 10, { i : 7, j : 9, k : 11 })", Response, 121, "GET http://localhost:5000/weather3?i=7&ir=4&k=11&kr=10\r\n j: 9\r\n jr: 8")]
+        [InlineData(2, @"Test.GetWeather3(4, 8, 10, { i : 5 })", Response, 121, "GET http://localhost:5000/weather3?i=5&ir=4&kr=10\r\n jr: 8")]
+        [InlineData(1, @"Test.GetKey(""Key1"")", "55", 55, "GET http://localhost:5000/Keys?keyName=Key1")]
+
+        public async void ValidateHttpCalls(int apiFileNumber, string fxQuery, string fakeResponse, int expectedValue, string httpQuery)
+        {
+            string swaggerFile;
+
+            switch (apiFileNumber)
+            {
+                case 1:
+                    swaggerFile = @"Swagger\TestOpenAPI.json";
+                    break;
+                case 2:
+                    swaggerFile = @"Swagger\TestOpenAPI2.json";
+                    break;
+                default:
+                    throw new ArgumentException("Invalid apiFileNumber");                    
+            }
+
+            var testConnector = new LoggingTestServer(swaggerFile);
+            testConnector.SetResponse(fakeResponse);
+                               
+            var config = new PowerFxConfig();
+            config.AddService("Test", testConnector._apiDocument, new HttpClient(testConnector) { BaseAddress = _fakeBaseAddress });
+            var engine = new RecalcEngine(config);
+
+            Assert.True(engine.Check(fxQuery).IsSuccess);
+
+            var result = await engine.EvalAsync(fxQuery, CancellationToken.None);
+            Assert.NotNull(result);
+
+            var r = (dynamic)result.ToObject();
+            var val = r is Array ? r[0].index : r;
+            Assert.Equal(expectedValue, val);
+
+            AssertLog(testConnector, httpQuery);
         }
 
         [Fact]
@@ -52,69 +104,6 @@ namespace Microsoft.PowerFx.Tests
             AssertLog(testConnector, "GET http://localhost:5000/Keys?keyName=Key1");
         }
 
-        [Fact]
-        public async void BasicHttpCallWithHeader()
-        {
-            var testConnector = new LoggingTestServer(@"Swagger\TestOpenAPI2.json");
-            testConnector.SetResponse(@"[{""date"":""2022-06-09T17:43:33.6483791+02:00"",""temperatureC"":-15,""temperatureF"":6,""summary"":""Bracing"",""index"":121},{""date"":""2022-06-10T17:43:33.6483939+02:00"",""temperatureC"":46,""temperatureF"":114,""summary"":""Freezing"",""index"":121},{""date"":""2022-06-11T17:43:33.6483941+02:00"",""temperatureC"":3,""temperatureF"":37,""summary"":""Bracing"",""index"":121},{""date"":""2022-06-12T17:43:33.6483943+02:00"",""temperatureC"":34,""temperatureF"":93,""summary"":""Warm"",""index"":121},{""date"":""2022-06-13T17:43:33.6483945+02:00"",""temperatureC"":27,""temperatureF"":80,""summary"":""Mild"",""index"":121}]");
-
-            var config = new PowerFxConfig();
-            config.AddService("Test", testConnector._apiDocument, new HttpClient(testConnector) { BaseAddress = _fakeBaseAddress });
-
-            var engine = new RecalcEngine(config);
-
-            var r1 = await engine.EvalAsync("Test.GetWeatherWithHeader({ id : 11 })", CancellationToken.None);
-            dynamic i1 = r1.ToObject();
-            Assert.Equal(121, i1[0].index);
-
-            AssertLog(testConnector, "GET http://localhost:5000/weather/header\r\n id: 11");
-        }
-
-        [Fact]
-        public async void BasicHttpCallWithTwoHeaders()
-        {
-            var testConnector = new LoggingTestServer(@"Swagger\TestOpenAPI2.json");
-            testConnector.SetResponse(@"[{""date"":""2022-06-09T17:43:33.6483791+02:00"",""temperatureC"":-15,""temperatureF"":6,""summary"":""Bracing"",""index"":121},{""date"":""2022-06-10T17:43:33.6483939+02:00"",""temperatureC"":46,""temperatureF"":114,""summary"":""Freezing"",""index"":121},{""date"":""2022-06-11T17:43:33.6483941+02:00"",""temperatureC"":3,""temperatureF"":37,""summary"":""Bracing"",""index"":121},{""date"":""2022-06-12T17:43:33.6483943+02:00"",""temperatureC"":34,""temperatureF"":93,""summary"":""Warm"",""index"":121},{""date"":""2022-06-13T17:43:33.6483945+02:00"",""temperatureC"":27,""temperatureF"":80,""summary"":""Mild"",""index"":121}]");
-
-            var config = new PowerFxConfig();
-            config.AddService("Test", testConnector._apiDocument, new HttpClient(testConnector) { BaseAddress = _fakeBaseAddress });
-
-            var engine = new RecalcEngine(config);
-
-            var r1 = await engine.EvalAsync("Test.GetWeatherWithHeader2({ id : 11, id2 : 12 })", CancellationToken.None);
-            dynamic i1 = r1.ToObject();
-            Assert.Equal(121, i1[0].index);
-
-            AssertLog(testConnector, "GET http://localhost:5000/weather/header2\r\n id: 11\r\n id2: 12");
-        }
-
-        [Fact]
-        public async void ComplexHttpCall()
-        {
-            var response = @"[{""date"":""2022-06-09T17:43:33.6483791+02:00"",""temperatureC"":-15,""temperatureF"":6,""summary"":""Bracing"",""index"":121},{""date"":""2022-06-10T17:43:33.6483939+02:00"",""temperatureC"":46,""temperatureF"":114,""summary"":""Freezing"",""index"":121},{""date"":""2022-06-11T17:43:33.6483941+02:00"",""temperatureC"":3,""temperatureF"":37,""summary"":""Bracing"",""index"":121},{""date"":""2022-06-12T17:43:33.6483943+02:00"",""temperatureC"":34,""temperatureF"":93,""summary"":""Warm"",""index"":121},{""date"":""2022-06-13T17:43:33.6483945+02:00"",""temperatureC"":27,""temperatureF"":80,""summary"":""Mild"",""index"":121}]";
-            var testConnector = new LoggingTestServer(@"Swagger\TestOpenAPI2.json");
-            testConnector.SetResponse(response);
-
-            var config = new PowerFxConfig();
-            config.AddService("Test", testConnector._apiDocument, new HttpClient(testConnector) { BaseAddress = _fakeBaseAddress });
-
-            var engine = new RecalcEngine(config);
-
-            var r1 = await engine.EvalAsync("Test.GetWeather3(4, 8, 10, { i : 7, j : 9, k : 11 })", CancellationToken.None);
-            dynamic i1 = r1.ToObject();
-            Assert.Equal(121, i1[0].index);
-
-            AssertLog(testConnector, "GET http://localhost:5000/weather3?i=7&ir=4&k=11&kr=10\r\n j: 9\r\n jr: 8");
-
-            testConnector.SetResponse(response);
-            var r2 = await engine.EvalAsync("Test.GetWeather3(4, 8, 10, { i : 5 })", CancellationToken.None);
-            dynamic i2 = r2.ToObject();
-            Assert.Equal(121, i2[0].index);
-
-            AssertLog(testConnector, "GET http://localhost:5000/weather3?i=5&ir=4&kr=10\r\n jr: 8");
-        }
-
-        // Allow side-effects for executing behavior functions (any POST)
         private static readonly ParserOptions _optionsPost = new ParserOptions
         {
             AllowsSideEffects = true
@@ -182,23 +171,6 @@ namespace Microsoft.PowerFx.Tests
             testConnector.SetResponse("55");
 
             await Assert.ThrowsAsync<InvalidOperationException>(async () => await engine.EvalAsync("Test.GetKey(\"Key1\")", CancellationToken.None));            
-        }
-
-        // We can bind without calling.
-        // In this case, w edon't needd a http client at all.
-        [Fact]
-        public void BasicHttpBinding()
-        {
-            var config = new PowerFxConfig();
-            var apiDoc = Helpers.ReadSwagger(@"Swagger\TestOpenAPI.json");
-
-            // If we don't pass httpClient, we can still bind, we just can't invoke.
-            config.AddService("Test", apiDoc, null);
-
-            var engine = new Engine(config);
-
-            var r1 = engine.Check("Test.GetKey(\"Key1\")");
-            Assert.True(r1.IsSuccess);
-        }      
+        }     
     }
 }

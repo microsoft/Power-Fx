@@ -139,7 +139,7 @@ namespace Microsoft.PowerFx.Connectors
                 map[name] = value;
             }
 
-            if (_optionalParamInfo.Length > 0)
+            if (_optionalParamInfo.Length > 0 && args.Length > 0)
             {
                 var optionalArg = args[args.Length - 1];
 
