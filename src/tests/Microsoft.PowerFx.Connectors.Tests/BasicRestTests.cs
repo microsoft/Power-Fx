@@ -144,6 +144,23 @@ namespace Microsoft.PowerFx.Tests
             testConnector.SetResponse("55");
 
             await Assert.ThrowsAsync<InvalidOperationException>(async () => await engine.EvalAsync("Test.GetKey(\"Key1\")", CancellationToken.None));            
-        }     
+        }
+
+        // We can bind without calling.
+        // In this case, w edon't needd a http client at all.
+        [Fact]
+        public void BasicHttpBinding()
+        {
+            var config = new PowerFxConfig();
+            var apiDoc = Helpers.ReadSwagger(@"Swagger\TestOpenAPI.json");
+
+            // If we don't pass httpClient, we can still bind, we just can't invoke.
+            config.AddService("Test", apiDoc, null);
+
+            var engine = new Engine(config);
+
+            var r1 = engine.Check("Test.GetKey(\"Key1\")");
+            Assert.True(r1.IsSuccess);
+        }
     }
 }
