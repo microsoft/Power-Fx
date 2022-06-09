@@ -4,7 +4,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Microsoft.AppMagic.Authoring;
 using Microsoft.OpenApi.Models;
 using Microsoft.PowerFx.Core.Types;
@@ -140,7 +139,7 @@ namespace Microsoft.PowerFx.Connectors
                 map[name] = value;
             }
 
-            if (_optionalParamInfo.Length > 0)
+            if (_optionalParamInfo.Length > 0 && args.Length > 0)
             {
                 var optionalArg = args[args.Length - 1];
 

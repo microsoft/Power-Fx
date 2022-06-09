@@ -11,6 +11,7 @@
 	  <None Remove="Swagger\MSNWeather.json" />
 	  <None Remove="Swagger\MSNWeather_Response.json" />
 	  <None Remove="Swagger\TestOpenAPI.json" />
+	  <None Remove="Swagger\TestOpenAPI2.json" />
 	</ItemGroup>
 	<ItemGroup>
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.11.0" />
