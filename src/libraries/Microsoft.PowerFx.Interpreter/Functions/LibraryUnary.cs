@@ -290,7 +290,7 @@ namespace Microsoft.PowerFx.Functions
                 return new BlankValue(irContext);
             }
 
-            var lower = val.ToLower();
+            var lower = val.ToLowerInvariant();
             if (lower == "true")
             {
                 return new BooleanValue(irContext, true);

@@ -5,13 +5,13 @@ true
 false
 
 >> Boolean("x")
-#Error
+#Error(Kind=InvalidArgument)
 
 >> Boolean(" true")
-#Error
+#Error(Kind=InvalidArgument)
 
 >> Boolean(" false")
-#Error
+#Error(Kind=InvalidArgument)
 
 >> Boolean("True")
 true
@@ -32,7 +32,7 @@ Blank()
 #Error(Kind=Div0)
 
 >> Boolean("0")
-#Error
+#Error(Kind=InvalidArgument)
 
 >> Boolean(0)
 Errors: Error 0-10: The function 'Boolean' has some invalid arguments.|Error 8-9: Invalid argument type (Number). Expecting a Text value instead.

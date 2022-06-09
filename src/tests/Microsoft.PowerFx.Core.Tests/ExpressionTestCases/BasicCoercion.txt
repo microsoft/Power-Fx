@@ -35,10 +35,10 @@ true
 
 // can coorce text to bool via logical operators
 >> "true" && "anything"
-#Error
+#Error(Kind=InvalidArgument)
 
 >> "anything" || "true"
-#Error
+#Error(Kind=InvalidArgument)
 
 // blank coorces to false via logical operators
 >> true && !Blank()
