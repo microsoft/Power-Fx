@@ -2,11 +2,14 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Dynamic;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.OpenApi.Readers;
 using Microsoft.PowerFx.Connectors;
 using Microsoft.PowerFx.Core.Tests;
+using Microsoft.PowerFx.Types;
 using Xunit;
 
 namespace Microsoft.PowerFx.Tests
@@ -25,29 +28,52 @@ namespace Microsoft.PowerFx.Tests
 
             testConnector._log.Clear();
         }
+               
+        [Theory]
+        [InlineData(2, @"Test.GetWeatherWithHeader({ id : 11 })", "GET http://localhost:5000/weather/header\r\n id: 11")]
+        [InlineData(2, @"Test.GetWeatherWithHeader()", "GET http://localhost:5000/weather/header")]
+        [InlineData(2, @"Test.GetWeatherWithHeaderStr({ str : ""a b"" })", "GET http://localhost:5000/weather/headerStr\r\n str: a b")]
+        [InlineData(2, @"Test.GetWeatherWithHeaderStr()", "GET http://localhost:5000/weather/headerStr")]
+        [InlineData(2, @"Test.GetWeatherWithHeader2({ id : 11, id2 : 12 })", "GET http://localhost:5000/weather/header2\r\n id: 11\r\n id2: 12")]
+        [InlineData(2, @"Test.GetWeatherWithHeader2({ id : 11 })", "GET http://localhost:5000/weather/header2\r\n id: 11")]
+        [InlineData(2, @"Test.GetWeatherWithHeader2({ id2 : 12 })", "GET http://localhost:5000/weather/header2\r\n id2: 12")]
+        [InlineData(2, @"Test.GetWeatherWithHeader2()", "GET http://localhost:5000/weather/header2")]
+        [InlineData(2, @"Test.GetWeather3(4, 8, 10, { i : 7, j : 9, k : 11 })", "GET http://localhost:5000/weather3?i=7&ir=4&k=11&kr=10\r\n j: 9\r\n jr: 8")]
+        [InlineData(2, @"Test.GetWeather3(4, 8, 10, { i : 5 })", "GET http://localhost:5000/weather3?i=5&ir=4&kr=10\r\n jr: 8")]
+        [InlineData(1, @"Test.GetKey(""Key1"")", "GET http://localhost:5000/Keys?keyName=Key1")]
 
-        [Fact]
-        public async Task BasicHttpCall()
+        public async void ValidateHttpCalls(int apiFileNumber, string fxQuery, string httpQuery)
         {
-            var testConnector = new LoggingTestServer(@"Swagger\TestOpenAPI.json");
+            string swaggerFile;
 
-            var httpClient = new HttpClient(testConnector)
+            switch (apiFileNumber)
             {
-                BaseAddress = _fakeBaseAddress
-            };
+                case 1:
+                    swaggerFile = @"Swagger\TestOpenAPI.json";
+                    break;
+                case 2:
+                    swaggerFile = @"Swagger\TestOpenAPI2.json";
+                    break;
+                default:
+                    throw new ArgumentException("Invalid apiFileNumber");                    
+            }
 
+            var testConnector = new LoggingTestServer(swaggerFile);
+            testConnector.SetResponse("0");
+                               
             var config = new PowerFxConfig();
-            var apiDoc = testConnector._apiDocument;
-            
-            config.AddService("Test", apiDoc, httpClient);
-
+            config.AddService("Test", testConnector._apiDocument, new HttpClient(testConnector) { BaseAddress = _fakeBaseAddress });
             var engine = new RecalcEngine(config);
 
-            testConnector.SetResponse("55");
-            var r1 = await engine.EvalAsync("Test.GetKey(\"Key1\")", CancellationToken.None);            
-            Assert.Equal(55.0, r1.ToObject());
+            Assert.True(engine.Check(fxQuery).IsSuccess);
 
-            AssertLog(testConnector, "GET http://localhost:5000/Keys?keyName=Key1");
+            var result = await engine.EvalAsync(fxQuery, CancellationToken.None);
+            Assert.NotNull(result);
+
+            var r = (dynamic)result.ToObject();
+            Assert.NotNull(r);
+
+            AssertLog(testConnector, httpQuery);
         }
 
         // Allow side-effects for executing behavior functions (any POST)
