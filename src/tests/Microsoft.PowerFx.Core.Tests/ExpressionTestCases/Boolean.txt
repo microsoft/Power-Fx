@@ -29,7 +29,7 @@ false
 Blank()
 
 >> Boolean(Text(1/0))
-#Error
+#Error(Kind=Div0)
 
 >> Boolean("0")
 #Error

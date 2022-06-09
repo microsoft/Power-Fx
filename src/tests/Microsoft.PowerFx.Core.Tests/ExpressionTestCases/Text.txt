@@ -5,7 +5,7 @@
 "123.400"
 
 >> Text(Blank(), "#.000")
-Blank()
+""
 
 >> Char(65)
 "A"
@@ -129,10 +129,10 @@ Blank()
 
 //Excel needs two parameters for Text function
 >> Text(Blank())
-Blank()
+""
 
 >> Text(Blank(), Blank())
-Blank()
+""
 
 //Excel needs two parameters for Text function
 >> Text("")
@@ -144,24 +144,24 @@ Blank()
 
 //Excel returns "$"
 >> Text(Blank(), "$ #,###")
-Blank()
+""
 
 >> Text(Blank(), "#,#")
-Blank()
+""
 
 >> Text(Blank(), "#,###")
-Blank()
+""
 
 >> Text(123.4, Blank())
-Blank()
+""
 
 //Excel throws error
 >> Text(DateTimeValue(Blank()), DateTimeFormat.LongDate)
-Blank()
+""
 
 //Excel throws error
 >> Text(DateTimeValue("March 30, 2022 5:30 PM"), Blank())
-Blank()
+""
 
 >> Text(Date(2016,1,31), "pqr")
 "pqr"

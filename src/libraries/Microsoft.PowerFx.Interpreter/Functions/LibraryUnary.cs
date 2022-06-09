@@ -283,7 +283,14 @@ namespace Microsoft.PowerFx.Functions
 
         public static FormulaValue TextToBoolean(IRContext irContext, StringValue[] args)
         {
-            var lower = args[0].Value.ToLower();
+            var val = args[0].Value;
+
+            if (string.IsNullOrEmpty(val))
+            {
+                return new BlankValue(irContext);
+            }
+
+            var lower = val.ToLower();
             if (lower == "true")
             {
                 return new BooleanValue(irContext, true);
