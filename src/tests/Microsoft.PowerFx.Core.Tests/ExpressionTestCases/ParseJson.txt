@@ -46,7 +46,7 @@ Blank()
 "s"
 
 >> Text(ParseJSON("null"))
-""
+Blank()
 
 >> Text(ParseJSON("true"))
 #Error
@@ -62,6 +62,9 @@ true
 
 >> Boolean(ParseJSON("false"))
 false
+
+>> Boolean(ParseJSON("null"))
+Blank()
 
 >> ParseJSON("{""a"": null}").a
 Blank()
