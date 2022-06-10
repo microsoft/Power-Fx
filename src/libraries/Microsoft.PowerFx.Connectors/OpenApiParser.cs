@@ -3,12 +3,14 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Numerics;
 using Microsoft.AppMagic.Authoring.Texl.Builtins;
 using Microsoft.OpenApi.Models;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Connectors
 {
@@ -49,7 +51,7 @@ namespace Microsoft.PowerFx.Connectors
 
                 foreach (var kv2 in ops.Operations)
                 {
-                    var verb = kv2.Key.ToHttpMethod(); // "GET"
+                    var verb = kv2.Key.ToHttpMethod(); // "GET", "POST"
                     var op = kv2.Value;
 
                     if (op.IsTrigger())
@@ -58,12 +60,7 @@ namespace Microsoft.PowerFx.Connectors
                     }
 
                     var operationName = op.OperationId ?? path.Replace("/", string.Empty);
-
-                    if (op.RequestBody != null)
-                    {
-                        // RequestBody can be ambiguous- treat as a single record? splat as parameters?
-                        throw new NotImplementedException($"Request body");
-                    }
+                    var bodyType = null as FormulaType;
 
                     var returnType = op.GetReturnType();
 
@@ -72,7 +69,7 @@ namespace Microsoft.PowerFx.Connectors
                         path = basePath + path;
                     }
 
-                    var argMapper = new ArgumentMapper(op.Parameters);
+                    var argMapper = new ArgumentMapper(op.Parameters, op.RequestBody);
 
                     IAsyncTexlFunction invoker = null;
                     if (httpClient != null)

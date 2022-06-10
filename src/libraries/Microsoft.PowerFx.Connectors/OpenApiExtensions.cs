@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using Microsoft.OpenApi.Any;
+using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.PowerFx.Types;
 
@@ -38,8 +39,18 @@ namespace Microsoft.PowerFx.Connectors
             }
         }
 
+        public static string GetBodyName(this OpenApiRequestBody requestBody)
+        {
+            if (requestBody.Extensions.TryGetValue("x-bodyName", out IOpenApiExtension value) && value is OpenApiString oas)
+            {
+                return oas.Value;
+            }
+           
+            return null;
+        }
+
         // Get suggested options values.  Returns null if none. 
-        public static string[] GetOptions(this OpenApiParameter param)
+        public static string[] GetOptions(this FxOpenApiParameter param)
         {
             // x-ms-enum-values is: array of { value :string, displayName:string}.
             if (param.Extensions.TryGetValue("x-ms-enum-values", out var value))
@@ -79,7 +90,7 @@ namespace Microsoft.PowerFx.Connectors
             return isTrigger;
         }
 
-        public static bool TryGetDefaultValue(this OpenApiParameter param, out string defaultValue)
+        public static bool TryGetDefaultValue(this FxOpenApiParameter param, out string defaultValue)
         {
             var x = param.Schema.Default;
             if (x == null)
@@ -115,7 +126,7 @@ namespace Microsoft.PowerFx.Connectors
             throw new NotImplementedException($"Unknown default value type {x.GetType().FullName}");
         }
 
-        public static bool HasDefaultValue(this OpenApiParameter param)
+        public static bool HasDefaultValue(this FxOpenApiParameter param)
         {
             return param.Schema.Default != null;
         }

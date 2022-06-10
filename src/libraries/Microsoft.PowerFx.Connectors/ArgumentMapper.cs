@@ -9,6 +9,7 @@ using Microsoft.OpenApi.Models;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Types;
+using SharpYaml.Schemas;
 using Contracts = Microsoft.PowerFx.Core.Utils.Contracts;
 
 namespace Microsoft.PowerFx.Connectors
@@ -27,17 +28,33 @@ namespace Microsoft.PowerFx.Connectors
         // All connectors have an internal parameter named connectionId. 
         // This is handled specially and value passed by connector. 
         private const string ConnectionIdParamName = "connectionId";
+        public const string BodyParameter = "body";
 
-        public readonly IEnumerable<OpenApiParameter> _openApiParameters;
+        public List<FxOpenApiParameter> _openApiParameters;        
 
-        public ArgumentMapper(IEnumerable<OpenApiParameter> parameters)
+        #region ServiceFunction args
+
+        // Useful for passing into a ServiceFunction
+        public readonly ServiceFunctionParameterTemplate[] _requiredParamInfo;
+        public readonly ServiceFunctionParameterTemplate[] _optionalParamInfo;
+
+        public readonly Dictionary<string, Tuple<string, DType>> _parameterDefaultValues = new Dictionary<string, Tuple<string, DType>>();
+        public readonly Dictionary<TypedName, List<string>> _parameterOptions = new Dictionary<TypedName, List<string>>();
+
+        public readonly DType[] _parameterTypes; // length of _arityMax
+
+        public readonly int _arityMin;
+        public readonly int _arityMax;
+        #endregion // ServiceFunction args
+
+        public ArgumentMapper(IEnumerable<OpenApiParameter> parameters, OpenApiRequestBody requestBody)
         {
-            _openApiParameters = parameters;
+            _openApiParameters = parameters.Select(p => p.ToFxOpenApiParameter()).ToList();            
 
-            var requiredParams = new List<OpenApiParameter>();
-            var optionalParams = new List<OpenApiParameter>();
+            var requiredParams = new List<FxOpenApiParameter>();
+            var optionalParams = new List<FxOpenApiParameter>();
 
-            foreach (var param in parameters)
+            foreach (var param in _openApiParameters)
             {
                 var name = param.Name;
 
@@ -52,9 +69,9 @@ namespace Microsoft.PowerFx.Connectors
 
                 if (param.IsInternal())
                 {
-                    // "Internal" params aren't shown in teh signature. So we need some way of knowing what they are.
+                    // "Internal" params aren't shown in the signature. So we need some way of knowing what they are.
                     // connectorId is a special-cases internal parameter, the channel will stamp it.
-                    // Else it have a default value. 
+                    // Else it has a default value. 
                     if (name == ConnectionIdParamName || param.HasDefaultValue())
                     {
                         continue;
@@ -82,6 +99,25 @@ namespace Microsoft.PowerFx.Connectors
                 }
             }
 
+            if (requestBody != null)
+            {                
+                var schema = requestBody.Content.First().Value.Schema;
+                var bodyName = requestBody.GetBodyName() ?? BodyParameter;
+
+                if (schema.AllOf.Any() || schema.AnyOf.Any() || schema.Not != null || schema.Items != null || schema.AdditionalProperties != null)
+                {                    
+                    throw new NotImplementedException($"OpenApiSchema is not supported");
+                }
+                else
+                {                    
+                    var bodyType = schema.ToFormulaType();
+                    var bodyParameter = new FxOpenApiParameter(schema, bodyName, string.Empty, FxParameterLocation.Body, requestBody.Required);
+                    
+                    _openApiParameters.Add(bodyParameter);
+                    optionalParams.Add(bodyParameter);
+                }
+            }
+
             _optionalParamInfo = optionalParams.ConvertAll(x => Convert(x)).ToArray();
             _requiredParamInfo = requiredParams.ConvertAll(x => Convert(x)).ToArray();
 
@@ -92,21 +128,6 @@ namespace Microsoft.PowerFx.Connectors
 
             _parameterTypes = GetParamTypes(_requiredParamInfo, _optionalParamInfo).ToArray();
         }
-
-        #region ServiceFunction args
-
-        // Useful for passing into a ServiceFunction
-        public readonly ServiceFunctionParameterTemplate[] _requiredParamInfo;
-        public readonly ServiceFunctionParameterTemplate[] _optionalParamInfo;
-
-        public readonly Dictionary<string, Tuple<string, DType>> _parameterDefaultValues = new Dictionary<string, Tuple<string, DType>>();
-        public readonly Dictionary<TypedName, List<string>> _parameterOptions = new Dictionary<TypedName, List<string>>();
-
-        public readonly DType[] _parameterTypes; // length of _arityMax
-
-        public readonly int _arityMin;
-        public readonly int _arityMax;
-        #endregion // ServiceFunction args
 
         // Usfeul for invoking.
         // Arguments are all positional. 
@@ -175,7 +196,7 @@ namespace Microsoft.PowerFx.Connectors
             return parameters;
         }
 
-        private static ServiceFunctionParameterTemplate Convert(OpenApiParameter apiParam)
+        private static ServiceFunctionParameterTemplate Convert(FxOpenApiParameter apiParam)
         {
             var paramType = apiParam.Schema.ToFormulaType()._type;
             var typedName = new TypedName(paramType, new DName(apiParam.Name));

@@ -61,6 +61,16 @@ namespace Microsoft.PowerFx.Tests
                 _log.AppendLine($" {headerName}: {value}");
             }
 
+            var httpContent = request?.Content;
+            if (httpContent != null)
+            {
+                var content = await httpContent.ReadAsStringAsync();
+                if (!string.IsNullOrEmpty(content))
+                {
+                    _log.AppendLine($" [body] {content}");
+                }
+            }
+
             var response = _nextResponse;
             _nextResponse = null;
             return response;

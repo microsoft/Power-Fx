@@ -6,10 +6,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
-using Microsoft.OpenApi.Models;
+using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Connectors
@@ -40,15 +41,17 @@ namespace Microsoft.PowerFx.Connectors
             _returnType = returnType;
         }
 
-        internal static void VerifyCanHandle(ParameterLocation? location)
+        internal static void VerifyCanHandle(FxParameterLocation? location)
         {
             switch (location.Value)
             {
-                case ParameterLocation.Path:
-                case ParameterLocation.Query:
-                case ParameterLocation.Header:
+                case FxParameterLocation.Path:
+                case FxParameterLocation.Query:
+                case FxParameterLocation.Header:
+                case FxParameterLocation.Body:
                     break;
 
+                case FxParameterLocation.Cookie:
                 default:
                     throw new NotImplementedException($"Unsupported ParameterIn {location}");
             }
@@ -56,38 +59,58 @@ namespace Microsoft.PowerFx.Connectors
 
         public HttpRequestMessage BuildRequest(FormulaValue[] args)
         {
-            var path = _path;
+            var path = _path; 
             var query = new StringBuilder();
 
             // https://stackoverflow.com/questions/5258977/are-http-headers-case-sensitive
             // Header names are not case sensitive.
             // From RFC 2616 - "Hypertext Transfer Protocol -- HTTP/1.1", Section 4.2, "Message Headers"
             var headers = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+            string body = null;
 
             var map = _argMapper.ConvertToSwagger(args);
             foreach (var param in _argMapper._openApiParameters)
             {
-                if (map.TryGetValue(param.Name, out var paramValue))
+                if (param.In == FxParameterLocation.Body && param.Schema.Properties != null && param.Schema.Properties.Any())
+                {
+                    var props = new Dictionary<string, object>();
+
+                    foreach (var property in param.Schema.Properties)
+                    {
+                        if (map.TryGetValue(property.Key, out var paramValue))
+                        {                             
+                            props.Add(property.Key, JsonSerializer.Serialize(paramValue.ToObject()));
+                        }
+                    }
+
+                    body = $"{{ {string.Join(", ", props.Select(p => $"{p.Key}: {p.Value}"))} }}";
+                }
+                else if (map.TryGetValue(param.Name, out var paramValue))
                 {
                     var valueStr = paramValue.ToObject().ToString();
 
                     switch (param.In.Value)
                     {
-                        case ParameterLocation.Path:
+                        case FxParameterLocation.Path:
                             path = path.Replace("{" + param.Name + "}", HttpUtility.UrlEncode(valueStr));
                             break;
 
-                        case ParameterLocation.Query:
+                        case FxParameterLocation.Query:
                             query.Append((query.Length == 0) ? "?" : "&");
                             query.Append(param.Name);
                             query.Append('=');
                             query.Append(HttpUtility.UrlEncode(valueStr));
                             break;
 
-                        case ParameterLocation.Header:
+                        case FxParameterLocation.Header:
                             headers.Add(param.Name, valueStr);
                             break;
 
+                        case FxParameterLocation.Body:                            
+                            body = paramValue.ToObject().ToString();
+                            break;
+
+                        case FxParameterLocation.Cookie:
                         default:
                             throw new NotImplementedException($"{param.In}");
                     }
@@ -102,6 +125,11 @@ namespace Microsoft.PowerFx.Connectors
             foreach (var kv in headers)
             {
                 request.Headers.Add(kv.Key, kv.Value);
+            }
+
+            if (!string.IsNullOrEmpty(body))
+            {
+                request.Content = new StringContent(body);
             }
 
             return request;

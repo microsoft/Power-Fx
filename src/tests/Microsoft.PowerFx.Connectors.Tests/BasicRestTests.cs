@@ -2,14 +2,12 @@
 // Licensed under the MIT license.
 
 using System;
-using System.Dynamic;
+using System.Linq;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.OpenApi.Readers;
 using Microsoft.PowerFx.Connectors;
 using Microsoft.PowerFx.Core.Tests;
-using Microsoft.PowerFx.Types;
 using Xunit;
 
 namespace Microsoft.PowerFx.Tests
@@ -40,23 +38,18 @@ namespace Microsoft.PowerFx.Tests
         [InlineData(2, @"Test.GetWeatherWithHeader2()", "GET http://localhost:5000/weather/header2")]
         [InlineData(2, @"Test.GetWeather3(4, 8, 10, { i : 7, j : 9, k : 11 })", "GET http://localhost:5000/weather3?i=7&ir=4&k=11&kr=10\r\n j: 9\r\n jr: 8")]
         [InlineData(2, @"Test.GetWeather3(4, 8, 10, { i : 5 })", "GET http://localhost:5000/weather3?i=5&ir=4&kr=10\r\n jr: 8")]
-        [InlineData(1, @"Test.GetKey(""Key1"")", "GET http://localhost:5000/Keys?keyName=Key1")]
-
+        [InlineData(1, @"Test.GetKey(""Key1"")",  "GET http://localhost:5000/Keys?keyName=Key1")]
+        [InlineData(3, @"Test.PostWeatherWithId({body: 5})", "POST http://localhost:5000/weatherPost\r\n [body] 5")]
+        [InlineData(3, @"Test.PostWeatherWithInputObject({x: [1], y:2})", "POST http://localhost:5000/weatherPost2\r\n [body] { x: [1], y: 2 }")]        
         public async void ValidateHttpCalls(int apiFileNumber, string fxQuery, string httpQuery)
         {
-            string swaggerFile;
-
-            switch (apiFileNumber)
+            var swaggerFile = apiFileNumber switch
             {
-                case 1:
-                    swaggerFile = @"Swagger\TestOpenAPI.json";
-                    break;
-                case 2:
-                    swaggerFile = @"Swagger\TestOpenAPI2.json";
-                    break;
-                default:
-                    throw new ArgumentException("Invalid apiFileNumber");                    
-            }
+                1 => @"Swagger\TestOpenAPI.json",
+                2 => @"Swagger\TestOpenAPI2.json",
+                3 => @"Swagger\TestOpenAPI3.json",
+                _ => throw new ArgumentException("Invalid apiFileNumber"),
+            };
 
             var testConnector = new LoggingTestServer(swaggerFile);
             testConnector.SetResponse("0");
@@ -65,9 +58,10 @@ namespace Microsoft.PowerFx.Tests
             config.AddService("Test", testConnector._apiDocument, new HttpClient(testConnector) { BaseAddress = _fakeBaseAddress });
             var engine = new RecalcEngine(config);
 
-            Assert.True(engine.Check(fxQuery).IsSuccess);
+            var checkResult = engine.Check(fxQuery, options: _optionsPost);
+            Assert.True(checkResult.IsSuccess, string.Join("\r\n", checkResult.Errors.Select(er => er.Message)));
 
-            var result = await engine.EvalAsync(fxQuery, CancellationToken.None);
+            var result = await engine.EvalAsync(fxQuery, CancellationToken.None, options: _optionsPost);
             Assert.NotNull(result);
 
             var r = (dynamic)result.ToObject();
