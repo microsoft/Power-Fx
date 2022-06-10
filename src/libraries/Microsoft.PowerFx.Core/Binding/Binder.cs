@@ -138,7 +138,7 @@ namespace Microsoft.PowerFx.Core.Binding
             get
             {
 #if DEBUG
-                if (NameResolver.CurrentEntity is IExternalControl && NameResolver.CurrentProperty.IsValid && NameResolver.TryGetCurrentControlProperty(out var currentProperty))
+                if (NameResolver != null && NameResolver.CurrentEntity is IExternalControl && NameResolver.CurrentProperty.IsValid && NameResolver.TryGetCurrentControlProperty(out var currentProperty))
                 {
                     Contracts.Assert(_property == currentProperty);
                 }

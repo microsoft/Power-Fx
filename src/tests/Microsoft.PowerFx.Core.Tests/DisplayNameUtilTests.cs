@@ -27,11 +27,11 @@ namespace Microsoft.PowerFx.Core.Tests
 
             if (expectedDisplayNames == null) 
             {
-                Assert.Throws<ArgumentException>(() => DisplayNameUtility.MakeUnique(input));
+                Assert.Throws<ArgumentException>(() => DisplayNameUtility.MakeUnique(input).LogicalToDisplayPairs);
             }
             else
             {
-                var result = DisplayNameUtility.MakeUnique(input);
+                var result = DisplayNameUtility.MakeUnique(input).LogicalToDisplayPairs;
                 var expectedResult = logicalNames.Zip(expectedDisplayNames, (logical, display) => new KeyValuePair<DName, DName>(new DName(logical), new DName(display)));
 
                 Assert.Equal(expectedResult.OrderBy(kvp => kvp.Key.Value), result.OrderBy(kvp => kvp.Key.Value));

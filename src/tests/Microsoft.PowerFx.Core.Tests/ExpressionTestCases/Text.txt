@@ -111,8 +111,6 @@ Blank()
 >> Text(false)
 "false"
 
-
-
 //Excel needs two parameters for Text function
 >> Text("true")
 "true"
@@ -161,13 +159,9 @@ Blank()
 >> Text(DateTimeValue(Blank()), DateTimeFormat.LongDate)
 ""
 
-
-
 //Excel throws error
 >> Text(DateTimeValue("March 30, 2022 5:30 PM"), Blank())
 ""
-
-
 
 >> Text(Date(2016,1,31), "pqr")
 "pqr"
