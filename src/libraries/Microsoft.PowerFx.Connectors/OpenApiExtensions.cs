@@ -159,7 +159,7 @@ namespace Microsoft.PowerFx.Connectors
                     }
                     else
                     {
-                        throw new NotImplementedException();                    
+                        throw new NotImplementedException();
                     }
 
                 case "object":
@@ -178,25 +178,26 @@ namespace Microsoft.PowerFx.Connectors
                     // Missing a schema is ok.
                     // But if we do have a schema, it must be valid.
                     throw new InvalidOperationException($"Null/Invalid schema");
-            }
 
-            throw new NotImplementedException($"{schema.Type}");
+                default:
+
+                    throw new NotImplementedException($"{schema.Type}");
+            }
         }
 
         public static HttpMethod ToHttpMethod(this OperationType key)
         {
-            switch (key)
+            return key switch
             {
-                case OperationType.Get: return HttpMethod.Get;
-                case OperationType.Put: return HttpMethod.Put;
-                case OperationType.Post: return HttpMethod.Post;
-                case OperationType.Delete: return HttpMethod.Delete;
-                case OperationType.Options: return HttpMethod.Options;
-                case OperationType.Head: return HttpMethod.Head;
-                case OperationType.Trace: return HttpMethod.Trace;
-                default:
-                    return new HttpMethod(key.ToString());
-            }
+                OperationType.Get => HttpMethod.Get,
+                OperationType.Put => HttpMethod.Put,
+                OperationType.Post => HttpMethod.Post,
+                OperationType.Delete => HttpMethod.Delete,
+                OperationType.Options => HttpMethod.Options,
+                OperationType.Head => HttpMethod.Head,
+                OperationType.Trace => HttpMethod.Trace,                
+                _ => new HttpMethod(key.ToString())
+            };
         }
 
         private const string _applicationJson = "application/json";

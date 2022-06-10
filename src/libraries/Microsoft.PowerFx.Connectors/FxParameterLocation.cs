@@ -6,7 +6,7 @@ using Microsoft.OpenApi.Models;
 
 namespace Microsoft.PowerFx.Connectors
 {
-    public enum FxParameterLocation
+    internal enum FxParameterLocation
     {
         Query,
         Header,
@@ -15,7 +15,7 @@ namespace Microsoft.PowerFx.Connectors
         Body
     }
 
-    public static partial class FxExtentions
+    internal static partial class FxExtentions
     {
         public static FxParameterLocation? ToFxParameterLocation(this ParameterLocation? location)
         {

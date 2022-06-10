@@ -7,7 +7,7 @@ using Microsoft.OpenApi.Models;
 
 namespace Microsoft.PowerFx.Connectors
 {
-    public class FxOpenApiParameter
+    internal class FxOpenApiParameter
     {
         private readonly FxParameterLocation? _in;
         private readonly OpenApiParameter _param;
@@ -45,7 +45,7 @@ namespace Microsoft.PowerFx.Connectors
         public IDictionary<string, IOpenApiExtension> Extensions => _param.Extensions;
     }
 
-    public static partial class FxExtensions
+    internal static partial class FxExtensions
     {
         public static FxOpenApiParameter ToFxOpenApiParameter(this OpenApiParameter param) => new (param);        
     }
