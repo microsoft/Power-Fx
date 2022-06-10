@@ -190,27 +190,32 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         // Demonstrate how to lazily marshal a property bag to a strongly typed value if we're given the type
         private static RecordValue Marshal(Dictionary<string, object> values, TypeMarshallerCache cache, RecordType type)
         {
-            var fieldMap = new Dictionary<string, Func<object, FormulaValue>>();
-            foreach (var kv in values)
+            (RecordType fxType, IReadOnlyDictionary<string, Func<object, FormulaValue>> mapping) MarashalFunc()
             {
-                var fieldName = kv.Key;
-
-                var marshaller = cache.GetMarshaller(kv.Value.GetType());
-                var expectedType = type.GetFieldType(fieldName);
-
-                Assert.True(marshaller.Type.Equals(expectedType));
-
-                fieldMap[fieldName] = (source) => 
+                var fieldMap = new Dictionary<string, Func<object, FormulaValue>>();
+                foreach (var kv in values)
                 {
-                    var dict = (Dictionary<string, object>)source;
-                    var fieldValue = dict[fieldName];
-                    
-                    var result = marshaller.Marshal(fieldValue);
-                    return result;
-                };
+                    var fieldName = kv.Key;
+
+                    var marshaller = cache.GetMarshaller(kv.Value.GetType());
+                    var expectedType = type.GetFieldType(fieldName);
+
+                    Assert.True(marshaller.Type.Equals(expectedType));
+
+                    fieldMap[fieldName] = (source) =>
+                    {
+                        var dict = (Dictionary<string, object>)source;
+                        var fieldValue = dict[fieldName];
+
+                        var result = marshaller.Marshal(fieldValue);
+                        return result;
+                    };
+                }
+
+                return (type, fieldMap);
             }
 
-            var om = new ObjectMarshaller(() => type);
+            var om = new ObjectMarshaller(MarashalFunc);
             
             var value = (RecordValue)om.Marshal(values);
             return value;

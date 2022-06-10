@@ -16,12 +16,24 @@ namespace Microsoft.PowerFx
     [DebuggerDisplay("ObjMarshal({Type})")]
     public class ObjectMarshaller : ITypeMarshaller
     {
-        public delegate RecordType GetMaterializedType();
+        public delegate (RecordType fxType, IReadOnlyDictionary<string, Func<object, FormulaValue>>) GetMaterializedTypeAndMapping();
 
-        public delegate Func<object, FormulaValue> GetFieldMapping(string powerFxFieldName);
+        private IReadOnlyDictionary<string, Func<object, FormulaValue>> _mapping;
+        private readonly GetMaterializedTypeAndMapping _materializeFunc;
 
-        // Map fx field name to a function produces the formula value given the dotnet object.
-        private readonly IReadOnlyDictionary<string, Func<object, FormulaValue>> _mapping;
+        // Map of fx field name to a function produces the formula value given the dotnet object.
+        private IReadOnlyDictionary<string, Func<object, FormulaValue>> MaterializedMapping
+        {
+            get
+            {
+                if (_mapping == null)
+                {       
+                    _materializeFunc();
+                }
+
+                return _mapping;
+            }
+        }
 
         /// <inheritdoc/>
         FormulaType ITypeMarshaller.Type => Type;
@@ -31,11 +43,10 @@ namespace Microsoft.PowerFx
         /// </summary>
         public RecordType Type { get; }
 
-        public ObjectMarshaller(GetMaterializedType getMaterializedType, GetFieldMapping getFieldMapping)
+        public ObjectMarshaller(GetMaterializedTypeAndMapping materializeFunc)
         {
-            var lazyTypeProvider = new LazyTypeProvider(() => getMaterializedType()._type, LazyMarshalledTypeMetadata.Record);
-            Type = new RecordType(lazyTypeProvider.ExpandedType);
-            _mapping = new Dictionary<string, Func<object, FormulaValue>>();
+            _materializeFunc = materializeFunc;
+            Type = new LazyTypeProvider(MaterializeTypeAndMapping, LazyMarshalledTypeMetadata.Record).Type;
         }
 
         /// <inheritdoc/>
@@ -45,11 +56,18 @@ namespace Microsoft.PowerFx
             return value;
         }
 
+        private DType MaterializeTypeAndMapping()
+        {
+            var (type, mapping) = _materializeFunc();
+            _mapping = mapping;
+            return type._type;
+        }
+
         // Get the value of the field. 
         // Return null on missing
         internal bool TryGetField(object source, string name, out FormulaValue fieldValue)
         {
-            if (_mapping.TryGetValue(name, out var getter))
+            if (MaterializedMapping.TryGetValue(name, out var getter))
             {
                 fieldValue = getter(source);
                 return true;
@@ -61,7 +79,7 @@ namespace Microsoft.PowerFx
 
         internal IEnumerable<NamedValue> GetFields(object source)
         {
-            foreach (var kv in _mapping)
+            foreach (var kv in MaterializedMapping)
             {
                 var fieldName = kv.Key;
                 var getter = kv.Value;

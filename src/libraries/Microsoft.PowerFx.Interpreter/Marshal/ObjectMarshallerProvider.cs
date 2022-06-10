@@ -39,11 +39,11 @@ namespace Microsoft.PowerFx
                 return false;
             }
 
-            marshaler = new ObjectMarshaller(type, cache, GetMaterializedType);
+            marshaler = new ObjectMarshaller(() => GetMaterializedTypeAndMapping(type, cache));
             return true;
         }
             
-        private RecordType GetMaterializedType(Type type, TypeMarshallerCache cache)
+        private (RecordType fxType, IReadOnlyDictionary<string, Func<object, FormulaValue>>) GetMaterializedTypeAndMapping(Type type, TypeMarshallerCache cache)
         {
             var mapping = new Dictionary<string, Func<object, FormulaValue>>(StringComparer.OrdinalIgnoreCase);
             var fxType = new RecordType();
@@ -79,7 +79,7 @@ namespace Microsoft.PowerFx
                 fxType = fxType.Add(fxName, fxFieldType);
             }
 
-            return fxType;
+            return (fxType, mapping);
         }
     }
 }
