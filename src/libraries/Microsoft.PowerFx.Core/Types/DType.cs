@@ -478,10 +478,26 @@ namespace Microsoft.PowerFx.Core.Types
             AssertValid();
         }
 
-        internal DType(LazyTypeProvider provider, bool isTable) 
-            : this(isTable ? DKind.LazyTable : DKind.LazyRecord)
+        internal DType(LazyTypeProvider provider, bool isTable)
         {
+            Contracts.AssertValue(provider);
+            
             _lazyTypeProvider = provider;
+            Kind = isTable ? DKind.LazyTable : DKind.LazyRecord;
+
+            TypeTree = default;
+            EnumSuperkind = default;
+            ValueTree = default;
+            ExpandInfo = null;
+            PolymorphicInfo = null;
+            Metadata = null;
+            _attachmentType = null;
+            AssociatedDataSources = new HashSet<IExternalTabularDataSource>();
+            OptionSetInfo = null;
+            ViewInfo = null;
+            NamedValueKind = null;
+
+            AssertValid();
         }
 
         [Conditional("DEBUG")]
@@ -543,7 +559,7 @@ namespace Microsoft.PowerFx.Core.Types
 
         public bool IsView => Kind == DKind.View || Kind == DKind.ViewValue;
 
-        public bool IsAggregate => Kind == DKind.Table || Kind == DKind.Record || Kind == DKind.ObjNull;
+        public bool IsAggregate => IsRecord || IsTable;
 
         public bool IsPrimitive => (Kind >= DKind._MinPrimitive && Kind < DKind._LimPrimitive) || Kind == DKind.ObjNull;
 
@@ -1051,8 +1067,11 @@ namespace Microsoft.PowerFx.Core.Types
 
             switch (Kind)
             {
+                case DKind.LazyRecord:
                 case DKind.Record:
                     return this;
+                case DKind.LazyTable:
+                    return _lazyTypeProvider.ExpandedType.ToRecord();
                 case DKind.Table:
                 case DKind.DataEntity:
                 case DKind.Control:
@@ -1079,8 +1098,11 @@ namespace Microsoft.PowerFx.Core.Types
 
             switch (Kind)
             {
+                case DKind.LazyTable:
                 case DKind.Table:
                     return this;
+                case DKind.LazyRecord:
+                    return _lazyTypeProvider.ExpandedType.ToTable();
                 case DKind.Record:
                 case DKind.DataEntity:
                 case DKind.Control:
@@ -1107,8 +1129,11 @@ namespace Microsoft.PowerFx.Core.Types
 
             switch (Kind)
             {
+                case DKind.LazyTable:
                 case DKind.Table:
                     return this;
+                case DKind.LazyRecord:
+                    return _lazyTypeProvider.ExpandedType.ToTable();
                 case DKind.Record:
                 case DKind.DataEntity:
                 case DKind.Control:
@@ -1655,6 +1680,12 @@ namespace Microsoft.PowerFx.Core.Types
             AssertValid();
 
             fError |= !TryGetType(path, out var type);
+
+            if (type.IsLazyType)
+            {
+                type = type._lazyTypeProvider.ExpandedType;
+            }
+
             if (!type.IsAggregate && !type.IsEnum)
             {
                 fError = true;
@@ -1856,6 +1887,12 @@ namespace Microsoft.PowerFx.Core.Types
                 case DKind.Record:
                 case DKind.File:
                 case DKind.LargeImage:
+
+                    if (type.Kind == DKind.LazyRecord)
+                    {
+                        type = type._lazyTypeProvider.ExpandedType;
+                    }
+
                     if (Kind == type.Kind)
                     {
                         return TreeAccepts(this, TypeTree, type.TypeTree, out schemaDifference, out schemaDifferenceType, exact, useLegacyDateTimeAccepts);
@@ -1865,6 +1902,11 @@ namespace Microsoft.PowerFx.Core.Types
                     break;
 
                 case DKind.Table:
+                    if (type.Kind == DKind.LazyTable)
+                    {
+                        type = type._lazyTypeProvider.ExpandedType;
+                    }
+
                     if (Kind == type.Kind || type.IsExpandEntity)
                     {
                         return TreeAccepts(this, TypeTree, type.TypeTree, out schemaDifference, out schemaDifferenceType, exact, useLegacyDateTimeAccepts);
@@ -1984,6 +2026,37 @@ namespace Microsoft.PowerFx.Core.Types
                     break;
                 case DKind.UntypedObject:
                     accepts = type.Kind == DKind.UntypedObject || type.Kind == DKind.Unknown;
+                    break;
+
+                case DKind.LazyRecord:
+                    if (type.Kind == DKind.Record)
+                    {
+                        var thisType = type._lazyTypeProvider.ExpandedType;
+                        return TreeAccepts(thisType, thisType.TypeTree, type.TypeTree, out schemaDifference, out schemaDifferenceType, exact, useLegacyDateTimeAccepts);
+                    }
+                    else if (type.Kind == DKind.LazyRecord)
+                    {
+                        // $$$ Can we use reference equality here to avoid expanding?
+                        // Need to handle lazy.Accpets(lazy) and avoid infinite recursion.
+                        Contracts.Assert(false);
+                    }
+
+                    accepts = type.Kind == DKind.Unknown;
+                    break;
+                case DKind.LazyTable:
+                    if (type.Kind == DKind.Table)
+                    {
+                        var thisType = type._lazyTypeProvider.ExpandedType;
+                        return TreeAccepts(thisType, thisType.TypeTree, type.TypeTree, out schemaDifference, out schemaDifferenceType, exact, useLegacyDateTimeAccepts);
+                    }
+                    else if (type.Kind == DKind.LazyTable)
+                    {
+                        // $$$ Can we use reference equality here to avoid expanding?
+                        // Need to handle lazy.Accpets(lazy) and avoid infinite recursion.
+                        Contracts.Assert(false);
+                    }
+
+                    accepts = type.Kind == DKind.Unknown;
                     break;
                 default:
                     Contracts.Assert(false);

@@ -13,19 +13,26 @@ namespace Microsoft.PowerFx.Core.Types
     {
         internal delegate DType GetExpandedType();
 
+        private readonly GetExpandedType _expansionFunc;
         private readonly Lazy<DType> _expandedType;
 
         public readonly ILazyTypeMetadata LazyTypeMetadata;
-        public readonly RecordType Type;
+        public readonly DType Type;
 
         internal DType ExpandedType => _expandedType.Value;
 
         public LazyTypeProvider(GetExpandedType expansionFunc, ILazyTypeMetadata lazyTypeMetadata)
         {
-            _expandedType = new Lazy<DType>(() => expansionFunc());
-
+            _expansionFunc = expansionFunc;
             LazyTypeMetadata = lazyTypeMetadata;
-            Type = new RecordType(new DType(this, lazyTypeMetadata.IsTable));
+
+            _expandedType = new Lazy<DType>(ExpandType);
+            Type = new DType(this, lazyTypeMetadata.IsTable);
+        }
+
+        private DType ExpandType()
+        {
+            return LazyTypeMetadata.IsTable ? _expansionFunc().ToTable() : _expansionFunc().ToRecord();
         }
 
         // $$ Could be used for lazy field retrieval?

@@ -46,7 +46,7 @@ namespace Microsoft.PowerFx
         public ObjectMarshaller(GetMaterializedTypeAndMapping materializeFunc)
         {
             _materializeFunc = materializeFunc;
-            Type = new LazyTypeProvider(MaterializeTypeAndMapping, LazyMarshalledTypeMetadata.Record).Type;
+            Type = new RecordType(new LazyTypeProvider(MaterializeTypeAndMapping, LazyMarshalledTypeMetadata.Record).Type);
         }
 
         /// <inheritdoc/>
