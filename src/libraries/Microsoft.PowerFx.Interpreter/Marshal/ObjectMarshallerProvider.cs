@@ -28,7 +28,7 @@ namespace Microsoft.PowerFx
         }
 
         /// <inheritdoc/>
-        public bool TryGetMarshaller(Type type, TypeMarshallerCache cache, int maxDepth, out ITypeMarshaller marshaler)
+        public bool TryGetMarshaller(Type type, TypeMarshallerCache cache, out ITypeMarshaller marshaler)
         {        
             if (!type.IsClass || 
                 typeof(FormulaValue).IsAssignableFrom(type) ||
@@ -39,8 +39,13 @@ namespace Microsoft.PowerFx
                 return false;
             }
 
+            marshaler = new ObjectMarshaller(type, cache, GetMaterializedType);
+            return true;
+        }
+            
+        private RecordType GetMaterializedType(Type type, TypeMarshallerCache cache)
+        {
             var mapping = new Dictionary<string, Func<object, FormulaValue>>(StringComparer.OrdinalIgnoreCase);
-
             var fxType = new RecordType();
 
             foreach (var prop in type.GetProperties(BindingFlags.Public | BindingFlags.Instance))
@@ -56,7 +61,7 @@ namespace Microsoft.PowerFx
                     continue;
                 }
 
-                var tm = cache.GetMarshaller(prop.PropertyType, maxDepth);
+                var tm = cache.GetMarshaller(prop.PropertyType);
                 var fxFieldType = tm.Type;
 
                 // Basic .net property
@@ -74,8 +79,7 @@ namespace Microsoft.PowerFx
                 fxType = fxType.Add(fxName, fxFieldType);
             }
 
-            marshaler = new ObjectMarshaller(fxType, mapping);
-            return true;
-        }      
+            return fxType;
+        }
     }
 }

@@ -4,6 +4,8 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Reflection;
+using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx
@@ -14,6 +16,10 @@ namespace Microsoft.PowerFx
     [DebuggerDisplay("ObjMarshal({Type})")]
     public class ObjectMarshaller : ITypeMarshaller
     {
+        public delegate RecordType GetMaterializedType();
+
+        public delegate Func<object, FormulaValue> GetFieldMapping(string powerFxFieldName);
+
         // Map fx field name to a function produces the formula value given the dotnet object.
         private readonly IReadOnlyDictionary<string, Func<object, FormulaValue>> _mapping;
 
@@ -23,22 +29,13 @@ namespace Microsoft.PowerFx
         /// <summary>
         /// Strongly typed wrapper for Type. 
         /// </summary>
-        public RecordType Type { get; private set; }
+        public RecordType Type { get; }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ObjectMarshaller"/> class.
-        /// </summary>
-        /// <param name="type">The FormulaType that these objects product.</param>
-        /// <param name="fieldMap">A mapping of fx field names to functions that produce that field. </param>
-        public ObjectMarshaller(RecordType type, IReadOnlyDictionary<string, Func<object, FormulaValue>> fieldMap)
+        public ObjectMarshaller(GetMaterializedType getMaterializedType, GetFieldMapping getFieldMapping)
         {
-            if (!(type is RecordType))
-            {
-                throw new ArgumentException($"type must be a record, not ${type}");
-            }
-
-            Type = type;
-            _mapping = fieldMap;
+            var lazyTypeProvider = new LazyTypeProvider(() => getMaterializedType()._type, LazyMarshalledTypeMetadata.Record);
+            Type = new RecordType(lazyTypeProvider.ExpandedType);
+            _mapping = new Dictionary<string, Func<object, FormulaValue>>();
         }
 
         /// <inheritdoc/>

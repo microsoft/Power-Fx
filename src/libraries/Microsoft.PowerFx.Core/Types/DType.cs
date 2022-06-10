@@ -132,7 +132,7 @@ namespace Microsoft.PowerFx.Core.Types
         protected readonly DType _attachmentType;
 
         // Intended future home of all lazy type expansion (Control, Attachment, Relationship, Other)
-        private readonly LazilyExpandableDType _lazyExpandMetadata;
+        private readonly LazyTypeProvider _lazyTypeProvider;
 
         internal HashSet<IExternalTabularDataSource> AssociatedDataSources { get; }
 
@@ -163,9 +163,9 @@ namespace Microsoft.PowerFx.Core.Types
         {
         }
 
-        public DType(DKind kind)
+        internal DType(DKind kind)
         {
-            Contracts.Assert(kind >= DKind._Min && kind < DKind._Lim && (kind != DKind.LazyTable && kind != DKind.LazyRecord));
+            Contracts.Assert(kind >= DKind._Min && kind < DKind._Lim);
 
             Kind = kind;
             TypeTree = default;
@@ -175,7 +175,6 @@ namespace Microsoft.PowerFx.Core.Types
             PolymorphicInfo = null;
             Metadata = null;
             _attachmentType = null;
-            _lazyExpandMetadata = null;
             AssociatedDataSources = new HashSet<IExternalTabularDataSource>();
             OptionSetInfo = null;
             ViewInfo = null;
@@ -222,7 +221,7 @@ namespace Microsoft.PowerFx.Core.Types
         // Constructor for aggregate types (record, table)
         public DType(DKind kind, TypeTree tree, bool isFile = false, bool isLargeImage = false)
         {
-            Contracts.Assert(kind >= DKind._Min && kind < DKind._Lim && (kind != DKind.LazyTable && kind != DKind.LazyRecord));
+            Contracts.Assert(kind >= DKind._Min && kind < DKind._Lim);
             tree.AssertValid();
             Contracts.Assert(tree.IsEmpty || kind == DKind.Table || kind == DKind.Record);
 
@@ -234,7 +233,6 @@ namespace Microsoft.PowerFx.Core.Types
             PolymorphicInfo = null;
             Metadata = null;
             _attachmentType = null;
-            _lazyExpandMetadata = null;
             AssociatedDataSources = new HashSet<IExternalTabularDataSource>();
             OptionSetInfo = null;
             ViewInfo = null;
@@ -480,6 +478,12 @@ namespace Microsoft.PowerFx.Core.Types
             AssertValid();
         }
 
+        internal DType(LazyTypeProvider provider, bool isTable) 
+            : this(isTable ? DKind.LazyTable : DKind.LazyRecord)
+        {
+            _lazyTypeProvider = provider;
+        }
+
         [Conditional("DEBUG")]
         internal void AssertValid()
         {
@@ -492,6 +496,8 @@ namespace Microsoft.PowerFx.Core.Types
             Contracts.Assert(Kind != DKind.Enum || (EnumSuperkind >= DKind._Min && EnumSuperkind < DKind._Lim && EnumSuperkind != DKind.Enum));
             Contracts.Assert((Metadata != null) == (Kind == DKind.Metadata));
             Contracts.Assert((_attachmentType != null) == (Kind == DKind.Attachment));
+            Contracts.Assert((_lazyTypeProvider != null) == (Kind == DKind.LazyRecord || Kind == DKind.LazyTable));
+
 #if DEBUG
             if (ExpandInfo != null)
             {
@@ -515,9 +521,9 @@ namespace Microsoft.PowerFx.Core.Types
 
         public bool IsError => Kind == DKind.Error;
 
-        public bool IsRecord => Kind == DKind.Record || Kind == DKind.ObjNull;
+        public bool IsRecord => Kind == DKind.Record || Kind == DKind.ObjNull || Kind == DKind.LazyRecord;
 
-        public bool IsTable => Kind == DKind.Table || Kind == DKind.ObjNull;
+        public bool IsTable => Kind == DKind.Table || Kind == DKind.ObjNull || Kind == DKind.LazyTable;
 
         public bool IsEnum => Kind == DKind.Enum || Kind == DKind.ObjNull;
 
@@ -577,6 +583,8 @@ namespace Microsoft.PowerFx.Core.Types
         public DType AttachmentType => _attachmentType;
 
         public bool HasExpandInfo => ExpandInfo != null;
+
+        public bool IsLazyType => Kind == DKind.LazyRecord || Kind == DKind.LazyTable;
 
         public bool HasPolymorphicInfo => PolymorphicInfo != null;
 
@@ -1199,6 +1207,10 @@ namespace Microsoft.PowerFx.Core.Types
                 case DKind.OptionSet:
                 case DKind.View:
                     return TypeTree.TryGetValue(name, out type);
+
+                case DKind.LazyRecord:
+                case DKind.LazyTable:
+                    return _lazyTypeProvider.TryGetFieldType(name, out type);
                 case DKind.Enum:
                     if (ValueTree.Contains(name.Value))
                     {
@@ -1330,13 +1342,20 @@ namespace Microsoft.PowerFx.Core.Types
         public DType Add(DName name, DType type)
         {
             AssertValid();
-            Contracts.Assert(IsAggregate);
+            Contracts.Assert(IsAggregate || IsLazyType);
             Contracts.Assert(name.IsValid);
             type.AssertValid();
 
-            Contracts.Assert(!TypeTree.Contains(name));
-            var tree = TypeTree.SetItem(name, type);
-            var newType = new DType(Kind, tree, AssociatedDataSources, DisplayNameProvider);
+            var currentType = this;
+            if (IsLazyType)
+            {
+                // Adding to a lazy type requires expansion
+                currentType = _lazyTypeProvider.ExpandedType;
+            } 
+
+            Contracts.Assert(!currentType.TypeTree.Contains(name));
+            var tree = currentType.TypeTree.SetItem(name, type);
+            var newType = new DType(currentType.Kind, tree, currentType.AssociatedDataSources, currentType.DisplayNameProvider);
 
             return newType;
         }
@@ -1345,48 +1364,10 @@ namespace Microsoft.PowerFx.Core.Types
         public DType Add(TypedName typedName)
         {
             AssertValid();
-            Contracts.Assert(IsAggregate);
+            Contracts.Assert(IsAggregate || IsLazyType);
             Contracts.Assert(typedName.IsValid);
 
             return Add(typedName.Name, typedName.Type);
-        }
-
-        // Return a new type based on this, with additional named member fields of some specified types.
-        public DType AddMulti(ref bool fError, DPath path, params TypedName[] typedNames)
-        {
-            return AddMulti(ref fError, path, (IEnumerable<TypedName>)typedNames);
-        }
-
-        // Return a new type based on this, with additional named member fields of a specified type.
-        public DType AddMulti(ref bool fError, DPath path, IEnumerable<TypedName> typedNames)
-        {
-            AssertValid();
-            Contracts.AssertValue(typedNames);
-
-            fError |= !TryGetType(path, out var typeOuter);
-            if (!typeOuter.IsAggregate)
-            {
-                fError = true;
-                return this;
-            }
-
-            Contracts.Assert(typeOuter.IsRecord || typeOuter.IsTable);
-
-            var tree = typeOuter.TypeTree;
-            foreach (var tn in typedNames)
-            {
-                Contracts.Assert(tn.IsValid);
-                if (tree.TryGetValue(tn.Name, out var typeCur))
-                {
-                    fError = true;
-                }
-
-                tree = tree.SetItem(tn.Name, tn.Type);
-            }
-
-            typeOuter = new DType(typeOuter.Kind, tree, AssociatedDataSources, DisplayNameProvider);
-
-            return SetType(ref fError, path, typeOuter);
         }
 
         // Drop the specified name/field from path's type, and return the resulting type.

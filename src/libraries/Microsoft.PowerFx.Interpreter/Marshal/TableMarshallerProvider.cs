@@ -16,7 +16,7 @@ namespace Microsoft.PowerFx
     public class TableMarshallerProvider : ITypeMarshallerProvider
     {
         /// <inheritdoc/>
-        public bool TryGetMarshaller(Type type, TypeMarshallerCache cache, int maxDepth, out ITypeMarshaller marshaler)
+        public bool TryGetMarshaller(Type type, TypeMarshallerCache cache, out ITypeMarshaller marshaler)
         {
             if (!IsIEnumerableT(type, out var et))
             {
@@ -24,7 +24,7 @@ namespace Microsoft.PowerFx
                 return false;
             }
 
-            var rowMarshaller = cache.GetMarshaller(et, maxDepth);
+            var rowMarshaller = cache.GetMarshaller(et);
              
             if (rowMarshaller.Type is not RecordType recordType)
             {               
