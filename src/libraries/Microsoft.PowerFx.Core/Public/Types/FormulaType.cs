@@ -105,8 +105,12 @@ namespace Microsoft.PowerFx.Types
             {
                 case DKind.ObjNull: return Blank;
 
-                case DKind.Record: return new RecordType(type);
-                case DKind.Table: return new TableType(type);
+                case DKind.Record: 
+                case DKind.LazyRecord: 
+                    return new RecordType(type);
+                case DKind.Table: 
+                case DKind.LazyTable: 
+                    return new TableType(type);
 
                 case DKind.Number: return Number;
                 case DKind.String: return String;

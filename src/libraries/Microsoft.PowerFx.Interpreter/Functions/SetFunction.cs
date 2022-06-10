@@ -77,7 +77,7 @@ namespace Microsoft.PowerFx.Interpreter
 
             var arg1 = argTypes[1];
 
-            if (!arg1.Equals(arg0))
+            if (!arg1.Accepts(arg0))
             {
                 errors.EnsureError(DocumentErrorSeverity.Critical, args[1], ErrBadType);
                 return false;
