@@ -29,7 +29,7 @@ Blank()
 []
 
 >> FirstN([1, 2, 3, 4, 5], Blank())
-Blank()
+[]
 
 >> FirstN(Blank(), 2)
 Blank()
