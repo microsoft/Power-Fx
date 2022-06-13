@@ -10,7 +10,6 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
-using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Connectors
@@ -26,10 +25,10 @@ namespace Microsoft.PowerFx.Connectors
         private readonly ICachingHttpClient _cache;
 
         public HttpFunctionInvoker(
-            HttpMessageInvoker httpClient, 
-            HttpMethod method, 
-            string path, 
-            FormulaType returnType, 
+            HttpMessageInvoker httpClient,
+            HttpMethod method,
+            string path,
+            FormulaType returnType,
             ArgumentMapper argMapper,
             ICachingHttpClient cache = null)
         {
@@ -59,7 +58,7 @@ namespace Microsoft.PowerFx.Connectors
 
         public HttpRequestMessage BuildRequest(FormulaValue[] args)
         {
-            var path = _path; 
+            var path = _path;
             var query = new StringBuilder();
 
             // https://stackoverflow.com/questions/5258977/are-http-headers-case-sensitive
@@ -78,7 +77,7 @@ namespace Microsoft.PowerFx.Connectors
                     foreach (var property in param.Schema.Properties)
                     {
                         if (map.TryGetValue(property.Key, out var paramValue))
-                        {                             
+                        {
                             props.Add(property.Key, JsonSerializer.Serialize(paramValue.ToObject()));
                         }
                     }
@@ -106,7 +105,7 @@ namespace Microsoft.PowerFx.Connectors
                             headers.Add(param.Name, valueStr);
                             break;
 
-                        case FxParameterLocation.Body:                            
+                        case FxParameterLocation.Body:
                             body = paramValue.ToObject().ToString();
                             break;
 
@@ -163,7 +162,7 @@ namespace Microsoft.PowerFx.Connectors
             // $$$ Proper marshalling?,  use _returnType;
             // If schema was an array, we returned a Single Column Table type for it. 
             // Need to ensure we marshal it consistency here. 
-            var result = FormulaValue.FromJson(json);            
+            var result = FormulaValue.FromJson(json);
 
             return result;
         }
@@ -180,7 +179,7 @@ namespace Microsoft.PowerFx.Connectors
                 _cache.Reset(cacheScope);
                 key = null; // don't bother caching
             }
-                        
+
             var result2 = await _cache.TryGetAsync(cacheScope, key, async () =>
             {
                 var response = await _httpClient.SendAsync(request, cancel);

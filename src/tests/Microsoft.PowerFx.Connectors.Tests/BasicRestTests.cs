@@ -17,7 +17,7 @@ namespace Microsoft.PowerFx.Tests
     {
         // Must set the BaseAddress on an httpClient, even if we don't actually use it. 
         // All the Send() methods will enforce this. 
-        private static readonly Uri _fakeBaseAddress = new Uri("http://localhost:5000");
+        private static readonly Uri _fakeBaseAddress = new ("http://localhost:5000");
         
         private static void AssertLog(LoggingTestServer testConnector, string expectedLog)
         {
@@ -40,7 +40,7 @@ namespace Microsoft.PowerFx.Tests
         [InlineData(2, @"Test.GetWeather3(4, 8, 10, { i : 5 })", "GET http://localhost:5000/weather3?i=5&ir=4&kr=10\r\n jr: 8")]
         [InlineData(1, @"Test.GetKey(""Key1"")",  "GET http://localhost:5000/Keys?keyName=Key1")]
         [InlineData(3, @"Test.PostWeatherWithId({body: 5})", "POST http://localhost:5000/weatherPost\r\n [body] 5")]
-        [InlineData(3, @"Test.PostWeatherWithInputObject({x: [1], y:2})", "POST http://localhost:5000/weatherPost2\r\n [body] { x: [1], y: 2 }")]        
+        [InlineData(3, @"Test.PostWeatherWithInputObject({x: [1], y:2})", "POST http://localhost:5000/weatherPost2\r\n [body] { x: [1], y: 2 }")]
         public async void ValidateHttpCalls(int apiFileNumber, string fxQuery, string httpQuery)
         {
             var swaggerFile = apiFileNumber switch
@@ -71,7 +71,7 @@ namespace Microsoft.PowerFx.Tests
         }
 
         // Allow side-effects for executing behavior functions (any POST)
-        private static readonly ParserOptions _optionsPost = new ParserOptions
+        private static readonly ParserOptions _optionsPost = new ()
         {
             AllowsSideEffects = true
         };
