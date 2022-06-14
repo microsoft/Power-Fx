@@ -18,7 +18,7 @@ namespace Microsoft.PowerFx.Tests
     internal class LoggingTestServer : HttpMessageHandler
     {
         // Log HTTP calls. 
-        public StringBuilder _log = new StringBuilder();
+        public StringBuilder _log = new ();
 
         public OpenApiDocument _apiDocument;
 

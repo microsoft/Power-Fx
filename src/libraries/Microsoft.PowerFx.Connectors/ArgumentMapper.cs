@@ -38,8 +38,8 @@ namespace Microsoft.PowerFx.Connectors
         public readonly ServiceFunctionParameterTemplate[] _requiredParamInfo;
         public readonly ServiceFunctionParameterTemplate[] _optionalParamInfo;
 
-        public readonly Dictionary<string, Tuple<string, DType>> _parameterDefaultValues = new Dictionary<string, Tuple<string, DType>>();
-        public readonly Dictionary<TypedName, List<string>> _parameterOptions = new Dictionary<TypedName, List<string>>();
+        public readonly Dictionary<string, Tuple<string, DType>> _parameterDefaultValues = new ();
+        public readonly Dictionary<TypedName, List<string>> _parameterOptions = new ();
 
         public readonly DType[] _parameterTypes; // length of _arityMax
 
@@ -100,22 +100,32 @@ namespace Microsoft.PowerFx.Connectors
             }
 
             if (requestBody != null)
-            {                
-                var schema = requestBody.Content.First().Value.Schema;
+            {
                 var bodyName = requestBody.GetBodyName() ?? BodyParameter;
+                FxOpenApiParameter bodyParameter;
 
-                if (schema.AllOf.Any() || schema.AnyOf.Any() || schema.Not != null || schema.Items != null || schema.AdditionalProperties != null)
-                {                    
-                    throw new NotImplementedException($"OpenApiSchema is not supported");
+                if (requestBody.Content != null && requestBody.Content.Any())
+                {
+                    var schema = requestBody.Content.First().Value.Schema;                    
+
+                    if (schema.AllOf.Any() || schema.AnyOf.Any() || schema.Not != null || schema.Items != null || schema.AdditionalProperties != null)
+                    {
+                        throw new NotImplementedException($"OpenApiSchema is not supported");
+                    }
+                    else
+                    {
+                        var bodyType = schema.ToFormulaType();
+                        bodyParameter = new FxOpenApiParameter(schema, bodyName, string.Empty, FxParameterLocation.Body, requestBody.Required);                        
+                    }
                 }
                 else
-                {                    
-                    var bodyType = schema.ToFormulaType();
-                    var bodyParameter = new FxOpenApiParameter(schema, bodyName, string.Empty, FxParameterLocation.Body, requestBody.Required);
-                    
-                    _openApiParameters.Add(bodyParameter);
-                    optionalParams.Add(bodyParameter);
+                {
+                    // If the content isn't specified, we will expect a string in the body
+                    bodyParameter = new FxOpenApiParameter(new OpenApiSchema() { Type = "string" }, bodyName, string.Empty, FxParameterLocation.Body, requestBody.Required);                    
                 }
+
+                _openApiParameters.Add(bodyParameter);
+                (requestBody.Required ? requiredParams : optionalParams).Add(bodyParameter);
             }
 
             _optionalParamInfo = optionalParams.ConvertAll(x => Convert(x)).ToArray();

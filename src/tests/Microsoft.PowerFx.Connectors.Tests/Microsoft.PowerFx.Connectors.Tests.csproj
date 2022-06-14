@@ -8,6 +8,8 @@
 		<OutputType>Library</OutputType>		
 	</PropertyGroup>
 	<ItemGroup>
+	  <None Remove="Responses\AzureBlobStorage_Response.json" />
+	  <None Remove="Swagger\AzureBlobStorage.json" />
 	  <None Remove="Swagger\MSNWeather.json" />
 	  <None Remove="Swagger\MSNWeather_Response.json" />
 	  <None Remove="Swagger\TestOpenAPI.json" />

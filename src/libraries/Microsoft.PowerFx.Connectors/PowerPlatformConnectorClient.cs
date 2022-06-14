@@ -66,24 +66,20 @@ namespace Microsoft.PowerFx.Connectors
 
             url = url.Replace("{connectionId}", ConnectionId);
 
-            var method = request.Method;
-            var useCache = method == HttpMethod.Get;
-
+            var method = request.Method;            
             var authToken = GetAuthToken();
 
             var req = new HttpRequestMessage(HttpMethod.Post, $"https://{Endpoint}/invoke");
             req.Headers.Add("authority", Endpoint);
             req.Headers.Add("scheme", "https");
-            req.Headers.Add("path", "/invoke");
+            req.Headers.Add("path", "/invoke");                       
             req.Headers.Add("x-ms-client-session-id", SessionId);
             req.Headers.Add("x-ms-request-method", method.ToString());
             req.Headers.Add("authorization", "Bearer " + authToken);
             req.Headers.Add("x-ms-client-environment-id", "/providers/Microsoft.PowerApps/environments/" + EnvironmentId);
             req.Headers.Add("x-ms-user-agent", $"PowerFx/{Version}");
-
             req.Headers.Add("x-ms-request-url", url);
-
-            // $$$ handle body parameter which may need to be copied over from incoming request to APIM request.  
+            req.Content = request.Content;                
 
             var response = await _client.SendAsync(req, cancellationToken);
             return response;
