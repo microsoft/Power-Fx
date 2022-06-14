@@ -107,13 +107,15 @@ namespace Microsoft.PowerFx.Tests
             testConnector.SetResponseFromFile(@"Responses\AzureBlobStorage_Response.json");
 
             var result = await engine.EvalAsync(
-                @"AzureBlobStorage.CreateFile(""container"", ""bora1.jpg"", ""abc"")",
+                @"AzureBlobStorage.CreateFile(""container"", ""bora1.txt"", ""abc"").Size",
                 CancellationToken.None, 
                 options: new ParserOptions() { AllowsSideEffects = true });
 
-            var res = (ExpandoObject)result.ToObject();
-            var propertyList = res.ToList();
-            var size = (double)propertyList.First(prop => prop.Key == "Size").Value;
+            dynamic res = result.ToObject();                       
+            var size = (double)res;
+
+            //var propertyList = res.ToList();
+            //var size = (double)propertyList.First(prop => prop.Key == "Size").Value;
 
             Assert.Equal(3.0, size);
 
@@ -132,8 +134,9 @@ namespace Microsoft.PowerFx.Tests
  x-ms-client-environment-id: /providers/Microsoft.PowerApps/environments/839eace6-59ab-4243-97ec-a5b8fcc104e4
  x-ms-client-session-id: ccccbff3-9d2c-44b2-bee6-cf24aab10b7e
  x-ms-request-method: POST
- x-ms-request-url: /apim/azureblob/453f61fa88434d42addb987063b1d7d2/datasets/default/files?folderPath=container&name=bora1.jpg
+ x-ms-request-url: /apim/azureblob/453f61fa88434d42addb987063b1d7d2/datasets/default/files?folderPath=container&name=bora1.txt
  x-ms-user-agent: PowerFx/{version}
+ [header] Content-Type: text/plain; charset=utf-8
  [body] abc
 ";
             

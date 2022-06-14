@@ -8,15 +8,6 @@
 		<OutputType>Library</OutputType>		
 	</PropertyGroup>
 	<ItemGroup>
-    <None Remove="Responses\AzureBlobStorage_Response.json" />
-    <None Remove="Swagger\AzureBlobStorage.json" />
-    <None Remove="Swagger\MSNWeather.json" />
-    <None Remove="Swagger\MSNWeather_Response.json" />
-    <None Remove="Swagger\TestOpenAPI.json" />
-    <None Remove="Swagger\TestOpenAPI2.json" />
-    <None Remove="Swagger\TestOpenAPI3.json" />
-	</ItemGroup>
-	<ItemGroup>
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.11.0" />
         <PackageReference Include="xunit" Version="2.4.1" />
         <PackageReference Include="xunit.extensibility.core" Version="2.4.1" />
@@ -33,9 +24,6 @@
 
     <ItemGroup>
       <EmbeddedResource Include="Swagger\*.json" />
-    </ItemGroup>
-
-    <ItemGroup>
       <EmbeddedResource Include="Responses\*.json" />
     </ItemGroup>
 

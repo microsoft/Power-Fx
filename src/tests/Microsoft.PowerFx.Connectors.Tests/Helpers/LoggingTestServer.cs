@@ -64,9 +64,17 @@ namespace Microsoft.PowerFx.Tests
             var httpContent = request?.Content;
             if (httpContent != null)
             {
+                if (httpContent.Headers != null)
+                {
+                    foreach (var h in httpContent.Headers)
+                    {
+                        _log.AppendLine($" [header] {h.Key}: {string.Join(", ", h.Value)}");                            
+                    }
+                }
+
                 var content = await httpContent.ReadAsStringAsync();
                 if (!string.IsNullOrEmpty(content))
-                {
+                {                    
                     _log.AppendLine($" [body] {content}");
                 }
             }
