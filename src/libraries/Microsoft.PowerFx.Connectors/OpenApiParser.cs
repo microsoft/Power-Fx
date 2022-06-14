@@ -59,9 +59,7 @@ namespace Microsoft.PowerFx.Connectors
                         continue;
                     }
 
-                    var operationName = op.OperationId ?? path.Replace("/", string.Empty);
-                    var bodyType = null as FormulaType;
-
+                    var operationName = op.OperationId ?? path.Replace("/", string.Empty);                    
                     var returnType = op.GetReturnType();
 
                     if (basePath != null)
