@@ -72,7 +72,7 @@ namespace Microsoft.PowerFx.Connectors
             var req = new HttpRequestMessage(HttpMethod.Post, $"https://{Endpoint}/invoke");
             req.Headers.Add("authority", Endpoint);
             req.Headers.Add("scheme", "https");
-            req.Headers.Add("path", "/invoke");                       
+            req.Headers.Add("path", "/invoke");
             req.Headers.Add("x-ms-client-session-id", SessionId);
             req.Headers.Add("x-ms-request-method", method.ToString());
             req.Headers.Add("authorization", "Bearer " + authToken);

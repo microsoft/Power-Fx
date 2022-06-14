@@ -9,7 +9,6 @@ using Microsoft.OpenApi.Models;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Types;
-using SharpYaml.Schemas;
 using Contracts = Microsoft.PowerFx.Core.Utils.Contracts;
 
 namespace Microsoft.PowerFx.Connectors
@@ -30,7 +29,7 @@ namespace Microsoft.PowerFx.Connectors
         private const string ConnectionIdParamName = "connectionId";
         public const string BodyParameter = "body";
 
-        public List<FxOpenApiParameter> _openApiParameters;        
+        public List<FxOpenApiParameter> _openApiParameters;
 
         #region ServiceFunction args
 
@@ -49,7 +48,7 @@ namespace Microsoft.PowerFx.Connectors
 
         public ArgumentMapper(IEnumerable<OpenApiParameter> parameters, OpenApiRequestBody requestBody)
         {
-            _openApiParameters = parameters.Select(p => p.ToFxOpenApiParameter()).ToList();            
+            _openApiParameters = parameters.Select(p => p.ToFxOpenApiParameter()).ToList();
 
             var requiredParams = new List<FxOpenApiParameter>();
             var optionalParams = new List<FxOpenApiParameter>();

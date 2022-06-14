@@ -8,12 +8,12 @@
 		<OutputType>Library</OutputType>		
 	</PropertyGroup>
 	<ItemGroup>
-	  <None Remove="Responses\AzureBlobStorage_Response.json" />
-	  <None Remove="Swagger\AzureBlobStorage.json" />
-	  <None Remove="Swagger\MSNWeather.json" />
-	  <None Remove="Swagger\MSNWeather_Response.json" />
-	  <None Remove="Swagger\TestOpenAPI.json" />
-	  <None Remove="Swagger\TestOpenAPI2.json" />
+    <None Remove="Responses\AzureBlobStorage_Response.json" />
+    <None Remove="Swagger\AzureBlobStorage.json" />
+    <None Remove="Swagger\MSNWeather.json" />
+    <None Remove="Swagger\MSNWeather_Response.json" />
+    <None Remove="Swagger\TestOpenAPI.json" />
+    <None Remove="Swagger\TestOpenAPI2.json" />
     <None Remove="Swagger\TestOpenAPI3.json" />
 	</ItemGroup>
 	<ItemGroup>
