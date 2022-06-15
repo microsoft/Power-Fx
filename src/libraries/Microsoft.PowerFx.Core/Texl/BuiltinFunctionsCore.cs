@@ -198,6 +198,9 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction Boolean_UO = new BooleanFunction_UO();
         public static readonly TexlFunction CountRows_UO = new CountRowsFunction_UO();
 
+        public static readonly TexlFunction Base64Encode = new Base64EncodeFunction();
+        public static readonly TexlFunction Base64Decode = new Base64DecodeFunction();
+
         public static readonly TexlFunction IsUTCToday = new IsUTCTodayFunction();
         public static readonly TexlFunction UTCNow = new UTCNowFunction();
         public static readonly TexlFunction UTCToday = new UTCTodayFunction();

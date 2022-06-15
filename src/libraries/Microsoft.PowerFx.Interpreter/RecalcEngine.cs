@@ -51,6 +51,8 @@ namespace Microsoft.PowerFx
             powerFxConfig.AddFunction(BuiltinFunctionsCore.Boolean);
             powerFxConfig.AddFunction(BuiltinFunctionsCore.Boolean_UO);
             powerFxConfig.AddFunction(BuiltinFunctionsCore.CountRows_UO);
+            powerFxConfig.AddFunction(BuiltinFunctionsCore.Base64Encode);
+            powerFxConfig.AddFunction(BuiltinFunctionsCore.Base64Decode);
 
             return powerFxConfig;
         }

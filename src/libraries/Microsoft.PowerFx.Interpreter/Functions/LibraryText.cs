@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Buffers.Text;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -531,6 +532,24 @@ namespace Microsoft.PowerFx.Functions
             var result = text.Value.Trim();
 
             return new StringValue(irContext, result);
+        }
+
+        public static FormulaValue Base64Encode(IRContext irContext, StringValue[] args)
+        {
+            var text = args[0].Value;
+            var bytes = Encoding.UTF8.GetBytes(text);
+
+            var encoded = Convert.ToBase64String(bytes);
+            return new StringValue(irContext, encoded);
+        }
+
+        public static FormulaValue Base64Decode(IRContext irContext, StringValue[] args)
+        {
+            var text = args[0].Value;
+            var bytes = Convert.FromBase64String(text);
+
+            var decoded = Encoding.UTF8.GetString(bytes);
+            return new StringValue(irContext, decoded);
         }
     }
 }

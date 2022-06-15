@@ -1,0 +1,17 @@
+﻿>> Base64Encode("The quick brown fox jumps over the lazy dog")
+"VGhlIHF1aWNrIGJyb3duIGZveCBqdW1wcyBvdmVyIHRoZSBsYXp5IGRvZw=="
+
+>> Base64Encode(Text(1/0))
+#Error(Kind=Div0)
+
+>> Base64Encode(Blank())
+Blank()
+
+>> Base64Decode("VGhlIHF1aWNrIGJyb3duIGZveCBqdW1wcyBvdmVyIHRoZSBsYXp5IGRvZw==")
+"The quick brown fox jumps over the lazy dog"
+
+>> Base64Decode(Text(1/0))
+#Error(Kind=Div0)
+
+>> Base64Decode(Blank())
+Blank()

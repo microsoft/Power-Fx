@@ -2404,6 +2404,20 @@
     <value>The index of the record to be retrieved.</value>
     <comment>function_parameter - Second argument of the Index function - Number type.</comment>
   </data>
+  <data name="AboutBase64Encode" xml:space="preserve">
+    <value>Encodes an input string with the Base64 encoding.</value>
+    <comment>Description of 'Base64Encode' function.</comment>
+  </data>
+  <data name="AboutBase64Encode_arg" xml:space="preserve">
+    <value>A text value to be encoded.</value>
+  </data>
+  <data name="AboutBase64Decode" xml:space="preserve">
+    <value>Decodes a Base64 encoded input string.</value>
+    <comment>Description of 'Base64Decode' function.</comment>
+  </data>
+  <data name="AboutBase64Decode_arg" xml:space="preserve">
+    <value>A text value to be decoded.</value>
+  </data>
   <data name="FormMode_Edit_Name" xml:space="preserve">
     <value>Edit</value>
     <comment>{Locked} Enum value</comment>
