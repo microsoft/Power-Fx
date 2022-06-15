@@ -29,31 +29,31 @@ namespace Microsoft.PowerFx.Connectors
         private const string ConnectionIdParamName = "connectionId";
         public const string BodyParameter = "body";
 
-        public List<FxOpenApiParameter> _openApiParameters;
+        public List<FxOpenApiParameter> OpenApiParameters;
 
         #region ServiceFunction args
 
         // Useful for passing into a ServiceFunction
-        public readonly ServiceFunctionParameterTemplate[] _requiredParamInfo;
-        public readonly ServiceFunctionParameterTemplate[] _optionalParamInfo;
+        public readonly ServiceFunctionParameterTemplate[] RequiredParamInfo;
+        public readonly ServiceFunctionParameterTemplate[] OptionalParamInfo;
+        public readonly DType[] _parameterTypes; // length of ArityMax        
+        public readonly string ContentType;
+        public readonly int ArityMin;
+        public readonly int ArityMax;
 
-        public readonly Dictionary<string, Tuple<string, DType>> _parameterDefaultValues = new ();
-        public readonly Dictionary<TypedName, List<string>> _parameterOptions = new ();
-
-        public readonly DType[] _parameterTypes; // length of _arityMax
-
-        public readonly int _arityMin;
-        public readonly int _arityMax;
+        private readonly Dictionary<string, Tuple<string, DType>> _parameterDefaultValues = new ();
+        private readonly Dictionary<TypedName, List<string>> _parameterOptions = new ();        
         #endregion // ServiceFunction args
 
         public ArgumentMapper(IEnumerable<OpenApiParameter> parameters, OpenApiRequestBody requestBody)
         {
-            _openApiParameters = parameters.Select(p => p.ToFxOpenApiParameter()).ToList();
+            OpenApiParameters = parameters.Select(p => p.ToFxOpenApiParameter()).ToList();
+            ContentType = "application/json"; // default
 
             var requiredParams = new List<FxOpenApiParameter>();
             var optionalParams = new List<FxOpenApiParameter>();
 
-            foreach (var param in _openApiParameters)
+            foreach (var param in OpenApiParameters)
             {
                 var name = param.Name;
 
@@ -105,37 +105,41 @@ namespace Microsoft.PowerFx.Connectors
 
                 if (requestBody.Content != null && requestBody.Content.Any())
                 {
-                    var schema = requestBody.Content.First().Value.Schema;                    
+                    var ct = requestBody.Content.GetContentTypeAndSchema();
+                    var schema = ct.Value.Schema;
+
+                    ContentType = ct.Key;
 
                     if (schema.AllOf.Any() || schema.AnyOf.Any() || schema.Not != null || schema.Items != null || schema.AdditionalProperties != null)
                     {
                         throw new NotImplementedException($"OpenApiSchema is not supported");
                     }
                     else
-                    {
+                    {                        
                         var bodyType = schema.ToFormulaType();
-                        bodyParameter = new FxOpenApiParameter(schema, bodyName, string.Empty, FxParameterLocation.Body, requestBody.Required);                        
+
+                        bodyParameter = new FxOpenApiParameter(schema, bodyName, string.Empty, FxParameterLocation.Body, requestBody.Required);
                     }
                 }
                 else
                 {
-                    // If the content isn't specified, we will expect a string in the body
+                    // If the content isn't specified, we will expect a string in the body                    
                     bodyParameter = new FxOpenApiParameter(new OpenApiSchema() { Type = "string" }, bodyName, string.Empty, FxParameterLocation.Body, requestBody.Required);                    
                 }
 
-                _openApiParameters.Add(bodyParameter);
+                OpenApiParameters.Add(bodyParameter);
                 (requestBody.Required ? requiredParams : optionalParams).Add(bodyParameter);
             }
 
-            _optionalParamInfo = optionalParams.ConvertAll(x => Convert(x)).ToArray();
-            _requiredParamInfo = requiredParams.ConvertAll(x => Convert(x)).ToArray();
+            OptionalParamInfo = optionalParams.ConvertAll(x => Convert(x)).ToArray();
+            RequiredParamInfo = requiredParams.ConvertAll(x => Convert(x)).ToArray();
 
             // Required params are first N params in the final list. 
             // Optional params are fields on a single record argument at the end.
-            _arityMin = requiredParams.Count;
-            _arityMax = _arityMin + (optionalParams.Count == 0 ? 0 : 1);
+            ArityMin = requiredParams.Count;
+            ArityMax = ArityMin + (optionalParams.Count == 0 ? 0 : 1);
 
-            _parameterTypes = GetParamTypes(_requiredParamInfo, _optionalParamInfo).ToArray();
+            _parameterTypes = GetParamTypes(RequiredParamInfo, OptionalParamInfo).ToArray();
         }
 
         // Usfeul for invoking.
@@ -145,13 +149,13 @@ namespace Microsoft.PowerFx.Connectors
         public Dictionary<string, FormulaValue> ConvertToSwagger(FormulaValue[] args)
         {
             // Type check should have caught this.
-            Contracts.Assert(args.Length >= _arityMin);
-            Contracts.Assert(args.Length <= _arityMax);
+            Contracts.Assert(args.Length >= ArityMin);
+            Contracts.Assert(args.Length <= ArityMax);
 
             // First N are required params. 
             // Last param is a record with each field being an optional.
 
-            var map = new Dictionary<string, FormulaValue>(StringComparer.Ordinal);
+            var map = new Dictionary<string, FormulaValue>(StringComparer.OrdinalIgnoreCase);
 
             // Seed with default values. This will get over written if provided. 
             foreach (var kv in _parameterDefaultValues)
@@ -161,15 +165,15 @@ namespace Microsoft.PowerFx.Connectors
                 map[name] = FormulaValue.New(value);
             }
 
-            for (var i = 0; i < _requiredParamInfo.Length; i++)
+            for (var i = 0; i < RequiredParamInfo.Length; i++)
             {
-                var name = _requiredParamInfo[i].TypedName.Name;
+                var name = RequiredParamInfo[i].TypedName.Name;
                 var value = args[i];
 
                 map[name] = value;
             }
 
-            if (_optionalParamInfo.Length > 0 && args.Length > 0)
+            if (OptionalParamInfo.Length > 0 && args.Length > 0)
             {
                 var optionalArg = args[args.Length - 1];
 

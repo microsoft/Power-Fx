@@ -6,10 +6,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
-using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
+using Microsoft.PowerFx.Connectors.Execution;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Connectors
@@ -68,7 +68,7 @@ namespace Microsoft.PowerFx.Connectors
             string body = null;
 
             var map = _argMapper.ConvertToSwagger(args);
-            foreach (var param in _argMapper._openApiParameters)
+            foreach (var param in _argMapper.OpenApiParameters)
             {
                 if (param.In == FxParameterLocation.Body && param.Schema.Properties != null && param.Schema.Properties.Any())
                 {
@@ -78,11 +78,16 @@ namespace Microsoft.PowerFx.Connectors
                     {
                         if (map.TryGetValue(property.Key, out var paramValue))
                         {
-                            props.Add(property.Key, JsonSerializer.Serialize(paramValue.ToObject()));
+                            props.Add(property.Key, paramValue.ToObject());
                         }
                     }
 
-                    body = $"{{ {string.Join(", ", props.Select(p => $"{p.Key}: {p.Value}"))} }}";
+                    body = _argMapper.ContentType switch
+                    {
+                       "application/x-www-form-urlencoded" => props.ToFormUrlEncoded(),
+                       "application/xml" => props.ToXml(param.Schema.Reference.Id ?? "Xml"),
+                       _ => props.ToJson()
+                    };                    
                 }
                 else if (map.TryGetValue(param.Name, out var paramValue))
                 {
@@ -119,7 +124,7 @@ namespace Microsoft.PowerFx.Connectors
             var url = path + query.ToString();
 
             // $$$ Not handling Body yet...
-            var request = new HttpRequestMessage(_method, url);
+            var request = new HttpRequestMessage(_method, url);            
 
             foreach (var kv in headers)
             {
@@ -127,8 +132,8 @@ namespace Microsoft.PowerFx.Connectors
             }
 
             if (!string.IsNullOrEmpty(body))
-            {
-                request.Content = new StringContent(body);
+            {                
+                request.Content = new StringContent(body, Encoding.Default, _argMapper.ContentType);                
             }
 
             return request;

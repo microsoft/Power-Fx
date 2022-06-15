@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
@@ -163,6 +164,7 @@ namespace Microsoft.PowerFx.Connectors
                     }
 
                 case "object":
+                case null: // xml
                     var obj = new RecordType();
                     foreach (var kv in schema.Properties)
                     {
@@ -172,12 +174,7 @@ namespace Microsoft.PowerFx.Connectors
                         obj = obj.Add(propName, propType);
                     }
 
-                    return obj;
-
-                case null:
-                    // Missing a schema is ok.
-                    // But if we do have a schema, it must be valid.
-                    throw new InvalidOperationException($"Null/Invalid schema");
+                    return obj;                
 
                 default:
 
@@ -242,6 +239,36 @@ namespace Microsoft.PowerFx.Connectors
 
             // Returns something, but not json. 
             throw new InvalidOperationException($"Unsupported return type - must have {_applicationJson}");
+        }
+
+        private static readonly List<string> _knownContentTypes = new () { "text/json", "application/xml", "application/x-www-form-urlencoded", "application/json" };
+
+        public static KeyValuePair<string, OpenApiMediaType> GetContentTypeAndSchema(this IDictionary<string, OpenApiMediaType> content)
+        {
+            List<KeyValuePair<string, OpenApiMediaType>> list = new ();
+
+            foreach (var ct in _knownContentTypes)
+            {
+                var kvp = content.FirstOrDefault(c => c.Key == ct);
+
+                if (kvp.Key != null)
+                {
+                    if ((kvp.Key == "application/json" && !kvp.Value.Schema.Properties.Any()) ||
+                        (kvp.Key == "text/json" && kvp.Value.Schema.Properties.Any()))
+                    {
+                        continue;
+                    }
+
+                    list.Add(kvp);
+                }
+            }
+
+            if (list.Any())
+            {
+                return list.First();
+            }
+
+            throw new NotImplementedException($"Cannot determine Content-Type {string.Join(", ", content.Keys)}");
         }
     }
 }

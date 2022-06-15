@@ -39,8 +39,10 @@ namespace Microsoft.PowerFx.Tests
         [InlineData(2, @"Test.GetWeather3(4, 8, 10, { i : 7, j : 9, k : 11 })", "GET http://localhost:5000/weather3?i=7&ir=4&k=11&kr=10\r\n j: 9\r\n jr: 8")]
         [InlineData(2, @"Test.GetWeather3(4, 8, 10, { i : 5 })", "GET http://localhost:5000/weather3?i=5&ir=4&kr=10\r\n jr: 8")]
         [InlineData(1, @"Test.GetKey(""Key1"")",  "GET http://localhost:5000/Keys?keyName=Key1")]
-        [InlineData(3, @"Test.PostWeatherWithId({body: 5})", "POST http://localhost:5000/weatherPost\r\n [header] Content-Type: text/plain; charset=utf-8\r\n [body] 5")]
-        [InlineData(3, @"Test.PostWeatherWithInputObject({x: [1], y:2})", "POST http://localhost:5000/weatherPost2\r\n [header] Content-Type: text/plain; charset=utf-8\r\n [body] { x: [1], y: 2 }")]
+        [InlineData(3, @"Test.PostWeatherWithId({body: 5})", "POST http://localhost:5000/weatherPost\r\n [header] Content-Type: text/json; charset=utf-8\r\n [body] 5")]
+        [InlineData(3, @"Test.PostWeatherWithInputObject({x: [1], y:2})", "POST http://localhost:5000/weatherPost2\r\n [header] Content-Type: application/json; charset=utf-8\r\n [body] {x:[1],y:2}")]
+        [InlineData(4, @"Test.PostWeatherWithUrlEncodedBody({x: [1, 2], y:3 })", "POST http://localhost:5000/weatherPost5\r\n [header] Content-Type: application/x-www-form-urlencoded; charset=utf-8\r\n [body] X=1&X=2&Y=3")]
+        [InlineData(3, @"Test.PostWeatherWithXML({x: [1, 2], y:3 })", "POST http://localhost:5000/weatherPostXML\r\n [header] Content-Type: application/xml; charset=utf-8\r\n [body] <Input><x><e>1</e><e>2</e></x><y>3</y></Input>")]
         public async void ValidateHttpCalls(int apiFileNumber, string fxQuery, string httpQuery)
         {
             var swaggerFile = apiFileNumber switch
@@ -48,6 +50,7 @@ namespace Microsoft.PowerFx.Tests
                 1 => @"Swagger\TestOpenAPI.json",
                 2 => @"Swagger\TestOpenAPI2.json",
                 3 => @"Swagger\TestOpenAPI3.json",
+                4 => @"Swagger\TestOpenAPI4.json",
                 _ => throw new ArgumentException("Invalid apiFileNumber"),
             };
 

@@ -3,14 +3,12 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
 using System.Numerics;
 using Microsoft.AppMagic.Authoring.Texl.Builtins;
 using Microsoft.OpenApi.Models;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
-using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Connectors
 {
@@ -98,8 +96,8 @@ namespace Microsoft.PowerFx.Connectors
                         description, // Template.GetFunctionDescription(funcTemplate.Name),
                         returnType._type,
                         BigInteger.Zero,
-                        argMapper._arityMin,
-                        argMapper._arityMax,
+                        argMapper.ArityMin,
+                        argMapper.ArityMax,
                         isBehavior,
                         isAutoRefreshable,
                         isDynamic,
@@ -107,8 +105,8 @@ namespace Microsoft.PowerFx.Connectors
                         cacheTimeoutMs,
                         isHidden,
                         parameterOptions,
-                        argMapper._optionalParamInfo,
-                        argMapper._requiredParamInfo,
+                        argMapper.OptionalParamInfo,
+                        argMapper.RequiredParamInfo,
                         parameterDefaultValues,
                         "action", //  funcTemplate.ActionName,??
                         argMapper._parameterTypes)
