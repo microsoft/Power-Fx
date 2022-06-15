@@ -983,7 +983,7 @@
     
   </data>
   <data name="TruncArg2" xml:space="preserve">
-    <value>num_digits</value>
+    <value>桁数</value>
     
   </data>
   <data name="TruncTArg1" xml:space="preserve">
@@ -991,7 +991,7 @@
     
   </data>
   <data name="TruncTArg2" xml:space="preserve">
-    <value>num_digits</value>
+    <value>桁数</value>
     
   </data>
   <data name="AboutRound" xml:space="preserve">
@@ -1066,7 +1066,7 @@
     
   </data>
   <data name="RGBAArg1" xml:space="preserve">
-    <value>赤の値</value>
+    <value>赤値</value>
     
   </data>
   <data name="RGBAArg2" xml:space="preserve">
@@ -3100,7 +3100,7 @@
     
   </data>
   <data name="LayoutMode_Manual_DisplayName" xml:space="preserve">
-    <value>マニュアル</value>
+    <value>手動</value>
     
   </data>
   <data name="LayoutMode_Auto_DisplayName" xml:space="preserve">
@@ -3556,7 +3556,7 @@
     
   </data>
   <data name="Icon_More_DisplayName" xml:space="preserve">
-    <value>すべて表示</value>
+    <value>詳細表示</value>
     
   </data>
   <data name="Icon_Waffle_DisplayName" xml:space="preserve">
@@ -3740,7 +3740,7 @@
     
   </data>
   <data name="Icon_Clock_DisplayName" xml:space="preserve">
-    <value>時計</value>
+    <value>クロック</value>
     
   </data>
   <data name="Icon_ListWatchlistRemind_DisplayName" xml:space="preserve">
@@ -4547,6 +4547,21 @@
   </data>
   <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
     <value>名前付き計算式はセミコロンで終わる必要があります。</value>
+    
+  </data>
+  <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
+    <value>NamedFormula '{0}'は既に存在します。</value>
+  </data>
+  <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
+    <value>最初の引数 '{0}' は有効な変数名である必要があります。これは、既存のコントロール、画面、コレクション、またはデータ ソースの名前と競合することができません。見つかった型 '{1}'</value>
+    
+  </data>
+  <data name="AboutSet" xml:space="preserve">
+    <value>グローバル変数を作成して設定します。</value>
+    
+  </data>
+  <data name="SetArg2" xml:space="preserve">
+    <value>値</value>
     
   </data>
 </root>

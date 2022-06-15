@@ -8,8 +8,6 @@ namespace Microsoft.PowerFx.Core.Entities
 {
     internal interface IExternalCdsDataSource : IExternalTabularDataSource
     {
-        string PrimaryNameField { get; }
-
         string DatasetName { get; }
 
         IExternalDocument Document { get; }

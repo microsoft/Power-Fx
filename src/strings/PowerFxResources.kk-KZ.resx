@@ -441,7 +441,7 @@
     <value>Қайтарылатын жолдар саны.</value>
   </data>
   <data name="AboutText" xml:space="preserve">
-    <value>Мәнді "format_text" арқылы берілген нақты сандық пішімде мәтінге түрлендіреді.</value>
+    <value>"Мәнді" "пішімдік_мәтін" арқылы берілген нақты сандық пішімдегі мәтінге түрлендіреді.</value>
     
   </data>
   <data name="TextArg1" xml:space="preserve">
@@ -449,7 +449,7 @@
     
   </data>
   <data name="TextArg2" xml:space="preserve">
-    <value>пішім_мәтін</value>
+    <value>пішімдік_мәтін</value>
     
   </data>
   <data name="TextArg3" xml:space="preserve">
@@ -4547,6 +4547,21 @@
   </data>
   <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
     <value>Аталған формула үтір нүктемен аяқталуға тиіс.</value>
+    
+  </data>
+  <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
+    <value>NamedFormula "{0}" бұрыннан бар.</value>
+  </data>
+  <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
+    <value>"{0}" бірінші аргументі жарамды айнымалы атауы болуы тиіс және ол бар басқару элементі, экран, жиынтық немесе деректер көзі атауларына қайшы келмеуі тиіс. Табылған түрі: "{1}"</value>
+    
+  </data>
+  <data name="AboutSet" xml:space="preserve">
+    <value>Глобалдық айнымалы жасап орнатыңыз.</value>
+    
+  </data>
+  <data name="SetArg2" xml:space="preserve">
+    <value>мән</value>
     
   </data>
 </root>

@@ -8,10 +8,6 @@ namespace Microsoft.PowerFx.Core.App.Controls
 {
     internal interface IExternalControl : IExternalEntity
     {
-        bool IsDataComponentDefinition { get; }
-
-        bool IsDataComponentInstance { get; }
-
         IExternalControlTemplate Template { get; }
 
         bool IsComponentControl { get; }
@@ -28,15 +24,7 @@ namespace Microsoft.PowerFx.Core.App.Controls
 
         bool IsAppGlobalControl { get; }
 
-        string UniqueId { get; }
-
-        bool IsComponentInstance { get; }
-
-        bool IsComponentDefinition { get; }
-
         bool IsCommandComponentInstance { get; }
-
-        IExternalControlType GetControlDType();
 
         IExternalControlType GetControlDType(bool calculateAugmentedExpandoType, bool isDataLimited);
 

@@ -17,8 +17,6 @@ namespace Microsoft.PowerFx.Core.App.Controls
 
         bool ShouldIncludeThisItemInFormula { get; }
 
-        DName Name { get; }
-
         bool IsTestCaseProperty { get; }
 
         bool UseForDataQuerySelects { get; }
@@ -38,12 +36,6 @@ namespace Microsoft.PowerFx.Core.App.Controls
         TexlFunction ScopeFunctionPrototype { get; }
 
         DType Type { get; }
-
-        bool IsTable { get; }
-
-        bool IsEnum { get; }
-
-        bool Hidden { get; }
 
         DType GetOpaqueType();
     }

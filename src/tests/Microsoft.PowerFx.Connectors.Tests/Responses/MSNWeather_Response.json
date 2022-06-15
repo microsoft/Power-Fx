@@ -1,0 +1,66 @@
+﻿{
+  "responses": {
+    "weather": {
+      "current": {
+        "baro": 30.05,
+        "cap": "Partly sunny",
+        "capAbbr": "Partly sunny",
+        "daytime": "d",
+        "dewPt": 48.0,
+        "feels": 51.0,
+        "rh": 80.0,
+        "icon": 3,
+        "pvdrIcon": "3",
+        "urlIcon": "http://img-s-msn-com.akamaized.net/tenant/amp/entityid/AAehLNN.img",
+        "wx": "",
+        "sky": "SCT",
+        "temp": 53.0,
+        "uv": 4.0,
+        "uvDesc": "Moderate",
+        "vis": 9.9,
+        "waterTemp": 32.0,
+        "windDir": 196,
+        "windSpd": 19.0,
+        "windGust": 34.0,
+        "created": "2022-05-18T19:20:07+00:00",
+        "pvdrCap": "Partly sunny",
+        "aqi": 23.0,
+        "aqiSeverity": "Good air",
+        "aqLevel": 10,
+        "primaryPollutant": "Ozone 57 μg/m³",
+        "aqiValidTime": "2022-05-19T02:00:00+00:00",
+        "richCaps": [],
+        "cloudCover": 37.0,
+        "alertSignificance": "Y",
+        "alertCount": 1
+      },
+      "provider": {
+        "name": "Foreca",
+        "url": "http://www.foreca.com"
+      },
+      "aqiProvider": {
+        "name": "AirNow"
+      }
+    },
+    "source": {
+      "id": "105809844",
+      "coordinates": {
+        "lat": 47.60621,
+        "lon": -122.33207
+      },
+      "location": "Seattle, WA",
+      "utcOffset": "-07:00:00",
+      "countryCode": "US"
+    }
+  },
+  "units": {
+    "system": "Imperial",
+    "pressure": "in",
+    "temperature": "‎°F",
+    "speed": "mph",
+    "height": "in",
+    "distance": "mi",
+    "time": "s"
+  },
+  "copyright": "Copyright © 2022 Microsoft and its suppliers. All rights reserved. This API cannot be accessed and the content and any results may not be used, reproduced or transmitted in any manner without express written permission from Microsoft Corporation."
+}

@@ -441,7 +441,7 @@
     <value>Bilangan baris untuk dikembalikan.</value>
   </data>
   <data name="AboutText" xml:space="preserve">
-    <value>Menukarkan 'nilai' kepada teks dalam nombor yang ditentukan 'format_teks'.</value>
+    <value>Menukar 'nilai' kepada teks dalam nombor 'format_teks' yang ditentukan.</value>
     
   </data>
   <data name="TextArg1" xml:space="preserve">
@@ -449,7 +449,7 @@
     
   </data>
   <data name="TextArg2" xml:space="preserve">
-    <value>teks_format</value>
+    <value>format_teks</value>
     
   </data>
   <data name="TextArg3" xml:space="preserve">
@@ -716,7 +716,7 @@
     
   </data>
   <data name="ErrorArg1" xml:space="preserve">
-    <value>error_information</value>
+    <value>ralat_maklumat</value>
     
   </data>
   <data name="ErrErrorIrrelevantField" xml:space="preserve">
@@ -926,7 +926,7 @@
     
   </data>
   <data name="WeekNumArg2" xml:space="preserve">
-    <value>start_of_week</value>
+    <value>permulaan_minggu</value>
     
   </data>
   <data name="AboutWeekNum_date" xml:space="preserve">
@@ -983,7 +983,7 @@
     
   </data>
   <data name="TruncArg2" xml:space="preserve">
-    <value>num_digits</value>
+    <value>no_angka</value>
     
   </data>
   <data name="TruncTArg1" xml:space="preserve">
@@ -991,7 +991,7 @@
     
   </data>
   <data name="TruncTArg2" xml:space="preserve">
-    <value>num_digits</value>
+    <value>no_angka</value>
     
   </data>
   <data name="AboutRound" xml:space="preserve">
@@ -4547,6 +4547,21 @@
   </data>
   <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
     <value>Formula yang dinamakan mesti tamat dengan koma bernoktah.</value>
+    
+  </data>
+  <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
+    <value>NamedFormula '{0}' sudah wujud.</value>
+  </data>
+  <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
+    <value>Argumen pertama '{0}' mestilah nama pemboleh ubah yang sah dan tidak boleh berkonflik dengan sebarang nama kawalan, skrin, koleksi atau sumber data sedia ada. Jenis ditemui '{1}'</value>
+    
+  </data>
+  <data name="AboutSet" xml:space="preserve">
+    <value>Cipta dan tetapkan pemboleh ubah global.</value>
+    
+  </data>
+  <data name="SetArg2" xml:space="preserve">
+    <value>nilai</value>
     
   </data>
 </root>

@@ -1,0 +1,866 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "version": "1.0.0",
+        "title": "MSN Weather",
+        "description": "MSN Weather gets you the very latest weather forecast, including temperature, humidity, precipitation for your location.",
+        "x-ms-connector-name": "msnweather",
+        "x-ms-api-annotation": {
+            "status": "Production"
+        },
+        "contact": {
+            "name": "Microsoft"
+        }
+    },
+    "host" :"firstrelease-001.azure-apim.net",
+    "basePath": "/apim/msnweather",
+    "schemes": [
+        "https"
+    ],
+    "produces": [
+        "application/json"
+    ],
+    "paths": {
+        "/{connectionId}/current/{Location}": {
+            "get": {
+                "summary": "Get current weather",
+                "description": "Get the current weather for a location.",
+                "operationId": "CurrentWeather",
+                "parameters": [
+                    {
+                        "name": "connectionId",
+                        "in": "path",
+                        "required": true,
+                        "type": "string",
+                        "x-ms-visibility": "internal"
+                    },
+                    {
+                        "$ref": "#/parameters/Location"
+                    },
+                    {
+                        "$ref": "#/parameters/Units"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/CurrentWeather"
+                        }
+                    }
+                },
+                "deprecated": false,
+                "x-ms-visibility": "advanced",
+                "externalDocs": {
+                    "url": "https://docs.microsoft.com/connectors/msnweather/#get-current-weather"
+                }
+            }
+        },
+        "/{connectionId}/trigger/current/weather/{Location}": {
+            "get": {
+                "summary": "When the current weather changes",
+                "description": "Triggers a new flow when the specified weather measure changes for a location.",
+                "operationId": "OnCurrentWeatherChange",
+                "parameters": [
+                    {
+                        "name": "connectionId",
+                        "in": "path",
+                        "required": true,
+                        "type": "string",
+                        "x-ms-visibility": "internal"
+                    },
+                    {
+                        "$ref": "#/parameters/Location"
+                    },
+                    {
+                        "$ref": "#/parameters/Measure"
+                    },
+                    {
+                        "name": "When",
+                        "in": "query",
+                        "required": true,
+                        "description": "The condition the trigger will be checking. Valid options are 'Is equal to', 'Goes over', or 'Goes below'. For example, if the measure is 'temperature' and this parameter is set to 'Goes below' then the trigger will fire when the temperature goes below the target value.",
+                        "x-ms-summary": "When the measure...",
+                        "type": "string",
+                        "default": "Is equal to",
+                        "enum": [
+                            "Is equal to",
+                            "Goes over",
+                            "Goes below"
+                        ],
+                        "x-ms-enum-values": [
+                            {
+                                "value": "Is equal to",
+                                "displayName": "Is equal to"
+                            },
+                            {
+                                "value": "Goes over",
+                                "displayName": "Goes over"
+                            },
+                            {
+                                "value": "Goes below",
+                                "displayName": "Goes below"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "Target",
+                        "in": "query",
+                        "required": true,
+                        "description": "The target value for the specified measure.",
+                        "x-ms-summary": "Target",
+                        "type": "number",
+                        "format": "float",
+                        "x-ms-test-value": 0
+                    },
+                    {
+                        "name": "units",
+                        "in": "query",
+                        "required": true,
+                        "type": "string",
+                        "description": "The units for the measure value and the target value.",
+                        "x-ms-summary": "Units",
+                        "x-ms-dynamic-values": {
+                            "operationId": "GetMeasureUnits",
+                            "parameters": {
+                                "Location": {
+                                    "parameter": "Location"
+                                },
+                                "Measure": {
+                                    "parameter": "Measure"
+                                }
+                            },
+                            "value-path": "units",
+                            "value-title": "displayText"
+                        },
+                        "x-ms-test-value": "Metric"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/CurrentWeather"
+                        }
+                    }
+                },
+                "deprecated": false,
+                "x-ms-trigger": "single",
+                "x-ms-trigger-hint": "When the current weather changes.",
+                "x-ms-visibility": "important",
+                "externalDocs": {
+                    "url": "https://docs.microsoft.com/connectors/msnweather/#when-the-current-weather-changes"
+                }
+            }
+        },
+        "/{connectionId}/trigger/current/conditions/{Location}": {
+            "get": {
+                "summary": "When the current conditions change",
+                "description": "Triggers a new flow when the conditions change for a location.",
+                "operationId": "OnCurrentConditionsChange",
+                "parameters": [
+                    {
+                        "name": "connectionId",
+                        "in": "path",
+                        "required": true,
+                        "type": "string",
+                        "x-ms-visibility": "internal"
+                    },
+                    {
+                        "$ref": "#/parameters/Location"
+                    },
+                    {
+                        "$ref": "#/parameters/Units"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/CurrentWeather"
+                        }
+                    }
+                },
+                "deprecated": false,
+                "x-ms-trigger": "single",
+                "x-ms-trigger-hint": "When the current conditions change.",
+                "x-ms-visibility": "advanced",
+                "externalDocs": {
+                    "url": "https://docs.microsoft.com/connectors/msnweather/#when-the-current-conditions-change"
+                }
+            }
+        },
+        "/{connectionId}/forecast/today/{Location}": {
+            "get": {
+                "summary": "Get forecast for today",
+                "description": "Get the forecast for the current day in the specified location.",
+                "operationId": "TodaysForecast",
+                "parameters": [
+                    {
+                        "name": "connectionId",
+                        "in": "path",
+                        "required": true,
+                        "type": "string",
+                        "x-ms-visibility": "internal"
+                    },
+                    {
+                        "$ref": "#/parameters/Location"
+                    },
+                    {
+                        "$ref": "#/parameters/Units"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/WeatherForecast"
+                        }
+                    }
+                },
+                "deprecated": false,
+                "x-ms-visibility": "important",
+                "externalDocs": {
+                    "url": "https://docs.microsoft.com/connectors/msnweather/#get-forecast-for-today"
+                }
+            }
+        },
+        "/{connectionId}/forecast/tomorrow/{Location}": {
+            "get": {
+                "summary": "Get the forecast for tomorrow",
+                "description": "Get the forecast for tomorrow in the specified location.",
+                "operationId": "TomorrowsForecast",
+                "parameters": [
+                    {
+                        "name": "connectionId",
+                        "in": "path",
+                        "required": true,
+                        "type": "string",
+                        "x-ms-visibility": "internal"
+                    },
+                    {
+                        "$ref": "#/parameters/Location"
+                    },
+                    {
+                        "$ref": "#/parameters/Units"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/WeatherForecast"
+                        }
+                    }
+                },
+                "deprecated": false,
+                "x-ms-visibility": "advanced",
+                "externalDocs": {
+                    "url": "https://docs.microsoft.com/connectors/msnweather/#get-the-forecast-for-tomorrow"
+                }
+            }
+        },
+        "/{connectionId}/current/units/{Location}": {
+            "get": {
+                "summary": "Get Measure Units",
+                "description": "Get Measure Units",
+                "operationId": "GetMeasureUnits",
+                "parameters": [
+                    {
+                        "name": "connectionId",
+                        "in": "path",
+                        "required": true,
+                        "type": "string",
+                        "x-ms-visibility": "internal"
+                    },
+                    {
+                        "$ref": "#/parameters/Location"
+                    },
+                    {
+                        "$ref": "#/parameters/Measure"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/MeasureUnits"
+                        }
+                    }
+                },
+                "deprecated": false,
+                "x-ms-visibility": "internal",
+                "externalDocs": {
+                    "url": "https://docs.microsoft.com/connectors/msnweather/#get-measure-units"
+                }
+            }
+        }
+    },
+    "definitions": {
+        "CurrentWeather": {
+            "type": "object",
+            "properties": {
+                "responses": {
+                    "type": "object",
+                    "properties": {
+                        "weather": {
+                            "type": "object",
+                            "properties": {
+                                "current": {
+                                    "type": "object",
+                                    "properties": {
+                                        "baro": {
+                                            "format": "float",
+                                            "type": "number",
+                                            "x-ms-summary": "Pressure",
+                                            "description": "The atmospheric pressure."
+                                        },
+                                        "cap": {
+                                            "type": "string",
+                                            "x-ms-summary": "Conditions",
+                                            "description": "A caption of weather conditions such as rainy, sunny, etc."
+                                        },
+                                        "dewPt": {
+                                            "format": "float",
+                                            "type": "number",
+                                            "x-ms-summary": "Dewpoint",
+                                            "x-ms-visibility": "advanced",
+                                            "description": "The temperature at which dew forms."
+                                        },
+                                        "feels": {
+                                            "format": "float",
+                                            "type": "number",
+                                            "x-ms-summary": "Apparent Temperature",
+                                            "x-ms-visibility": "advanced",
+                                            "description": "The apparent temperature, or feels-like temperature."
+                                        },
+                                        "rh": {
+                                            "format": "float",
+                                            "type": "number",
+                                            "x-ms-summary": "Humidity",
+                                            "description": "The relative humidity percentage."
+                                        },
+                                        "wx": {
+                                            "type": "string",
+                                            "x-ms-summary": "METAR weather conditions",
+                                            "x-ms-visibility": "advanced",
+                                            "description": "The METAR code of weather conditions."
+                                        },
+                                        "sky": {
+                                            "type": "string",
+                                            "x-ms-summary": "METAR Sky Conditions",
+                                            "x-ms-visibility": "advanced",
+                                            "description": "The METAR code of sky conditions."
+                                        },
+                                        "temp": {
+                                            "format": "float",
+                                            "type": "number",
+                                            "x-ms-summary": "Temperature",
+                                            "description": "The current temperature."
+                                        },
+                                        "uv": {
+                                            "format": "float",
+                                            "type": "number",
+                                            "x-ms-summary": "UV Index",
+                                            "description": "The numerical UV index."
+                                        },
+                                        "uvDesc": {
+                                            "type": "string",
+                                            "x-ms-summary": "UV Index Description",
+                                            "x-ms-visibility": "advanced",
+                                            "description": "A description of the meaning of the UV index."
+                                        },
+                                        "vis": {
+                                            "format": "float",
+                                            "type": "number",
+                                            "x-ms-summary": "Visibility Distance",
+                                            "x-ms-visibility": "advanced",
+                                            "description": "The visibility distance."
+                                        },
+                                        "windDir": {
+                                            "format": "int32",
+                                            "type": "integer",
+                                            "x-ms-summary": "Wind Direction",
+                                            "x-ms-visibility": "advanced",
+                                            "description": "The wind direction in degrees clockwise from north."
+                                        },
+                                        "windSpd": {
+                                            "format": "float",
+                                            "type": "number",
+                                            "x-ms-summary": "Wind Speed",
+                                            "description": "The wind speed."
+                                        },
+                                        "windGust": {
+                                            "format": "float",
+                                            "type": "number",
+                                            "x-ms-summary": "Wind Gust Speed",
+                                            "x-ms-visibility": "advanced",
+                                            "description": "The wind gust speed."
+                                        },
+                                        "created": {
+                                            "format": "date-time",
+                                            "type": "string",
+                                            "x-ms-summary": "Last Updated",
+                                            "description": "The datetime at which provider created the current condition."
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "source": {
+                            "type": "object",
+                            "properties": {
+                                "coordinates": {
+                                    "type": "object",
+                                    "properties": {
+                                        "lat": {
+                                            "format": "float",
+                                            "type": "number",
+                                            "x-ms-summary": "Latitude",
+                                            "x-ms-visibility": "advanced",
+                                            "description": "The latitude of the location."
+                                        },
+                                        "lon": {
+                                            "format": "float",
+                                            "type": "number",
+                                            "x-ms-summary": "Longitude",
+                                            "x-ms-visibility": "advanced",
+                                            "description": "The longitude of the location."
+                                        }
+                                    }
+                                },
+                                "location": {
+                                    "type": "string",
+                                    "x-ms-summary": "Location",
+                                    "description": "The location for which provider created the current condition."
+                                }
+                            }
+                        }
+                    }
+                },
+                "units": {
+                    "type": "object",
+                    "properties": {
+                        "system": {
+                            "type": "string",
+                            "x-ms-summary": "Unit System",
+                            "description": "Units used in data set (metric or imperial).",
+                            "x-ms-visibility": "internal"
+                        },
+                        "pressure": {
+                            "type": "string",
+                            "x-ms-summary": "Pressure Units",
+                            "x-ms-visibility": "advanced",
+                            "description": "Units used for pressure measurements."
+                        },
+                        "temperature": {
+                            "type": "string",
+                            "x-ms-summary": "Temperature Units",
+                            "description": "Units used for temperature measurements."
+                        },
+                        "speed": {
+                            "type": "string",
+                            "x-ms-summary": "Speed Units",
+                            "x-ms-visibility": "advanced",
+                            "description": "Units used for speed measurements."
+                        },
+                        "distance": {
+                            "type": "string",
+                            "x-ms-summary": "Distance Units",
+                            "x-ms-visibility": "advanced",
+                            "description": "Units used for distance measurements."
+                        }
+                    }
+                }
+            }
+        },
+        "WeatherForecast": {
+            "type": "object",
+            "properties": {
+                "responses": {
+                    "type": "object",
+                    "properties": {
+                        "daily": {
+                            "type": "object",
+                            "properties": {
+                                "day": {
+                                    "type": "object",
+                                    "properties": {
+                                        "cap": {
+                                            "type": "string",
+                                            "x-ms-summary": "Conditions",
+                                            "x-ms-visibility": "advanced",
+                                            "description": "The caption of weather conditions such as rainy, sunny, etc."
+                                        },
+                                        "precip": {
+                                            "format": "float",
+                                            "type": "number",
+                                            "x-ms-summary": "Rain Chance",
+                                            "x-ms-visibility": "advanced",
+                                            "description": "The chance of precipitation (%)."
+                                        },
+                                        "wx": {
+                                            "type": "string",
+                                            "x-ms-summary": "METAR Weather Conditions",
+                                            "x-ms-visibility": "advanced",
+                                            "description": "The METAR code of weather conditions."
+                                        },
+                                        "sky": {
+                                            "type": "string",
+                                            "x-ms-summary": "METAR Sky Conditions",
+                                            "x-ms-visibility": "advanced",
+                                            "description": "The METAR code of sky conditions."
+                                        },
+                                        "windDir": {
+                                            "format": "int32",
+                                            "type": "integer",
+                                            "x-ms-summary": "Wind Direction",
+                                            "x-ms-visibility": "advanced",
+                                            "description": "The wind direction in degrees clockwise from north."
+                                        },
+                                        "windSpd": {
+                                            "format": "float",
+                                            "type": "number",
+                                            "x-ms-summary": "Wind Speed",
+                                            "x-ms-visibility": "advanced",
+                                            "description": "The wind speed."
+                                        },
+                                        "summary": {
+                                            "type": "string",
+                                            "x-ms-summary": "Summary",
+                                            "description": "A text summary of the forecast.",
+                                            "x-ms-visibility": "advanced"
+                                        }
+                                    },
+                                    "x-ms-summary": "Day"
+                                },
+                                "night": {
+                                    "type": "object",
+                                    "properties": {
+                                        "cap": {
+                                            "type": "string",
+                                            "x-ms-summary": "Conditions",
+                                            "x-ms-visibility": "advanced",
+                                            "description": "The caption of weather conditions such as rainy, sunny, etc."
+                                        },
+                                        "precip": {
+                                            "format": "float",
+                                            "type": "number",
+                                            "x-ms-summary": "Rain Chance",
+                                            "x-ms-visibility": "advanced",
+                                            "description": "The chance of precipitation (%)."
+                                        },
+                                        "wx": {
+                                            "type": "string",
+                                            "x-ms-summary": "METAR Weather Conditions",
+                                            "x-ms-visibility": "advanced",
+                                            "description": "The METAR code of weather conditions."
+                                        },
+                                        "sky": {
+                                            "type": "string",
+                                            "x-ms-summary": "METAR Sky Conditions",
+                                            "x-ms-visibility": "advanced",
+                                            "description": "The METAR code of sky conditions."
+                                        },
+                                        "windDir": {
+                                            "format": "int32",
+                                            "type": "integer",
+                                            "x-ms-summary": "Wind Direction",
+                                            "x-ms-visibility": "advanced",
+                                            "description": "The wind direction in degrees clockwise from north."
+                                        },
+                                        "windSpd": {
+                                            "format": "float",
+                                            "type": "number",
+                                            "x-ms-summary": "Wind Speed",
+                                            "x-ms-visibility": "advanced",
+                                            "description": "The wind speed."
+                                        },
+                                        "summary": {
+                                            "type": "string",
+                                            "x-ms-summary": "Summary",
+                                            "description": "A text summary of the forecast.",
+                                            "x-ms-visibility": "advanced"
+                                        }
+                                    },
+                                    "x-ms-summary": "Night"
+                                },
+                                "pvdrCap": {
+                                    "type": "string",
+                                    "x-ms-summary": "Conditions",
+                                    "description": "The caption of weather conditions such as rainy, sunny, etc."
+                                },
+                                "valid": {
+                                    "format": "date-time",
+                                    "type": "string",
+                                    "x-ms-summary": "Date",
+                                    "description": "The datetime at which the forecast is valid."
+                                },
+                                "precip": {
+                                    "format": "float",
+                                    "type": "number",
+                                    "x-ms-summary": "Rain Chance",
+                                    "description": "The chance of precipitation (%)."
+                                },
+                                "windMax": {
+                                    "format": "float",
+                                    "type": "number",
+                                    "x-ms-summary": "Max Wind Speed",
+                                    "description": "The peak wind speed for the day."
+                                },
+                                "windMaxDir": {
+                                    "format": "int32",
+                                    "type": "integer",
+                                    "x-ms-summary": "Max Wind Direction",
+                                    "x-ms-visibility": "advanced",
+                                    "description": "The direction of the peak wind for the day."
+                                },
+                                "rhHi": {
+                                    "format": "float",
+                                    "type": "number",
+                                    "x-ms-summary": "Humidity High",
+                                    "description": "The high relative humidity point for the day."
+                                },
+                                "rhLo": {
+                                    "format": "float",
+                                    "type": "number",
+                                    "x-ms-summary": "Humidity Low",
+                                    "description": "The low relative humidity point for the day."
+                                },
+                                "tempHi": {
+                                    "format": "float",
+                                    "type": "number",
+                                    "x-ms-summary": "Temperature High",
+                                    "description": "The high temperature."
+                                },
+                                "tempLo": {
+                                    "format": "float",
+                                    "type": "number",
+                                    "x-ms-summary": "Temperature Low",
+                                    "description": "The low temperature."
+                                },
+                                "uv": {
+                                    "format": "float",
+                                    "type": "number",
+                                    "x-ms-summary": "UV Index",
+                                    "description": "The numerical UV index."
+                                },
+                                "uvDesc": {
+                                    "type": "string",
+                                    "x-ms-summary": "UV Index Description",
+                                    "x-ms-visibility": "advanced",
+                                    "description": "A description of the meaning of the UV index."
+                                },
+                                "created": {
+                                    "format": "date-time",
+                                    "type": "string",
+                                    "x-ms-summary": "Forecast Date",
+                                    "x-ms-visibility": "advanced",
+                                    "description": "The datetime at which the daily forecast was derived."
+                                }
+                            }
+                        },
+                        "almanac": {
+                            "type": "object",
+                            "properties": {
+                                "sunrise": {
+                                    "format": "date-time",
+                                    "type": "string",
+                                    "x-ms-summary": "Sunrise Time",
+                                    "x-ms-visibility": "advanced",
+                                    "description": "Time of sunrise on the day of this forecast."
+                                },
+                                "sunset": {
+                                    "format": "date-time",
+                                    "type": "string",
+                                    "x-ms-summary": "Sunset Time",
+                                    "x-ms-visibility": "advanced",
+                                    "description": "Time of sunset on the day of this forecast."
+                                },
+                                "moonrise": {
+                                    "format": "date-time",
+                                    "type": "string",
+                                    "x-ms-summary": "Moonrise Time",
+                                    "x-ms-visibility": "advanced",
+                                    "description": "Time of moonrise on the day of this forecast."
+                                },
+                                "moonset": {
+                                    "format": "date-time",
+                                    "type": "string",
+                                    "x-ms-summary": "Moonset Time",
+                                    "x-ms-visibility": "advanced",
+                                    "description": "Time of moonset on the day of this forecast."
+                                },
+                                "moonPhase": {
+                                    "type": "string",
+                                    "x-ms-summary": "Moon Phase",
+                                    "x-ms-visibility": "advanced",
+                                    "description": "The phase of the moon the day of this forecast."
+                                },
+                                "moonPhaseCode": {
+                                    "type": "string",
+                                    "x-ms-summary": "Moon Phase Code",
+                                    "x-ms-visibility": "advanced",
+                                    "description": "The code representing the phase of the moon."
+                                }
+                            }
+                        },
+                        "source": {
+                            "type": "object",
+                            "properties": {
+                                "coordinates": {
+                                    "type": "object",
+                                    "properties": {
+                                        "lat": {
+                                            "format": "float",
+                                            "type": "number",
+                                            "x-ms-summary": "Latitude",
+                                            "x-ms-visibility": "advanced",
+                                            "description": "The latitude of the location."
+                                        },
+                                        "lon": {
+                                            "format": "float",
+                                            "type": "number",
+                                            "x-ms-summary": "Longitude",
+                                            "x-ms-visibility": "advanced",
+                                            "description": "The longitude of the location."
+                                        }
+                                    }
+                                },
+                                "location": {
+                                    "type": "string",
+                                    "x-ms-summary": "Location",
+                                    "description": "The location for which provider created the forecast."
+                                }
+                            }
+                        }
+                    }
+                },
+                "units": {
+                    "type": "object",
+                    "properties": {
+                        "system": {
+                            "type": "string",
+                            "x-ms-summary": "Unit System",
+                            "description": "Units used in data set (metric or imperial).",
+                            "x-ms-visibility": "internal"
+                        },
+                        "pressure": {
+                            "type": "string",
+                            "x-ms-summary": "Pressure Units",
+                            "x-ms-visibility": "advanced",
+                            "description": "Units used for pressure measurements."
+                        },
+                        "temperature": {
+                            "type": "string",
+                            "x-ms-summary": "Temperature Units",
+                            "description": "Units used for temperature measurements."
+                        },
+                        "speed": {
+                            "type": "string",
+                            "x-ms-summary": "Speed Units",
+                            "x-ms-visibility": "advanced",
+                            "description": "Units used for speed measurements."
+                        },
+                        "distance": {
+                            "type": "string",
+                            "x-ms-summary": "Distance Units",
+                            "x-ms-visibility": "advanced",
+                            "description": "Units used for distance measurements."
+                        }
+                    }
+                }
+            }
+        },
+        "MeasureUnits": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "displayText": {
+                        "type": "string"
+                    },
+                    "units": {
+                        "type": "string"
+                    }
+                }
+            }
+        }
+    },
+    "parameters": {
+        "Location": {
+            "name": "Location",
+            "in": "path",
+            "required": true,
+            "description": "The location search query. Valid inputs are City, Region, State, Country, Landmark, Postal Code, latitude and longitude",
+            "x-ms-summary": "Location",
+            "x-ms-test-value": "Redmond",
+            "type": "string"
+        },
+        "Units": {
+            "name": "units",
+            "in": "query",
+            "required": true,
+            "description": "The measurement system used for all the meausre values in the request and response. Valid options are 'Imperial' and 'Metric'.",
+            "x-ms-summary": "Units",
+            "type": "string",
+            "default": "Imperial",
+            "enum": [
+                "Imperial",
+                "Metric"
+            ],
+            "x-ms-enum-values": [
+                {
+                    "value": "Imperial",
+                    "displayName": "Imperial"
+                },
+                {
+                    "value": "Metric",
+                    "displayName": "Metric"
+                }
+            ]
+        },
+        "Measure": {
+            "name": "Measure",
+            "in": "query",
+            "required": true,
+            "description": "The weather measure used for this operation. Valid options are 'Temperature', 'UV Index', 'Humidity' or 'Wind Speed'.",
+            "x-ms-summary": "Measure",
+            "type": "string",
+            "default": "Temperature",
+            "enum": [
+                "Temperature",
+                "UV Index",
+                "Humidity",
+                "Wind Speed"
+            ],
+            "x-ms-enum-values": [
+                {
+                    "value": "Temperature",
+                    "displayName": "Temperature"
+                },
+                {
+                    "value": "UV Index",
+                    "displayName": "UV Index"
+                },
+                {
+                    "value": "Humidity",
+                    "displayName": "Humidity"
+                },
+                {
+                    "value": "Wind Speed",
+                    "displayName": "Wind Speed"
+                }
+            ]
+        }
+    },
+    "x-ms-connector-metadata": [
+        {
+            "propertyName": "Website",
+            "propertyValue": "https://www.msn.com/weather"
+        }
+    ],
+    "externalDocs": {
+        "url": "https://docs.microsoft.com/connectors/msnweather"
+    }
+}

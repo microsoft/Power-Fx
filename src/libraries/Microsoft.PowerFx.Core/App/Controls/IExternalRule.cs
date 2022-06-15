@@ -19,9 +19,5 @@ namespace Microsoft.PowerFx.Core.App.Controls
         TexlBinding Binding { get; }
 
         bool HasErrors { get; }
-
-        bool HasControlPropertyDependency(string referencedControlUniqueId);
-
-        void SetDelegationTrackerStatus(TexlNode node, DelegationStatus status, DelegationTelemetryInfo logInfo, TexlFunction func);
     }
 }

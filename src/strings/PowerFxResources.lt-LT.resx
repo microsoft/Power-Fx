@@ -441,7 +441,7 @@
     <value>Eilučių, kurias reikia pateikti, skaičius.</value>
   </data>
   <data name="AboutText" xml:space="preserve">
-    <value>Konvertuoja reikšmę į tekstą konkrečiame skaičiaus teksto_formate.</value>
+    <value>Konvertuoja parametrą „reikšmė“ į tekstą konkrečiu skaičiaus formatu „teksto_formatas“.</value>
     
   </data>
   <data name="TextArg1" xml:space="preserve">
@@ -449,7 +449,7 @@
     
   </data>
   <data name="TextArg2" xml:space="preserve">
-    <value>formatuoti_tekstą</value>
+    <value>teksto_formatas</value>
     
   </data>
   <data name="TextArg3" xml:space="preserve">
@@ -3252,7 +3252,7 @@
     
   </data>
   <data name="ImagePosition_Fill_DisplayName" xml:space="preserve">
-    <value>Užpildyti</value>
+    <value>Užpildas</value>
     
   </data>
   <data name="ImagePosition_Fit_DisplayName" xml:space="preserve">
@@ -3460,7 +3460,7 @@
     
   </data>
   <data name="Icon_Search_DisplayName" xml:space="preserve">
-    <value>Ieškoti</value>
+    <value>Paieška</value>
     
   </data>
   <data name="Icon_Filter_DisplayName" xml:space="preserve">
@@ -3544,7 +3544,7 @@
     
   </data>
   <data name="Icon_Home_DisplayName" xml:space="preserve">
-    <value>Pagrindinis puslapis</value>
+    <value>Pagrindinis</value>
     
   </data>
   <data name="Icon_Hamburger_DisplayName" xml:space="preserve">
@@ -4093,7 +4093,7 @@
     
   </data>
   <data name="ErrorResource_ErrOperatorExpected_ShortMessage" xml:space="preserve">
-    <value>Numatomas operatorius. Šioje formulės dalyje numatomas operatorius, pvz., +, * arba &amp; .</value>
+    <value>Numatomas operatorius. Šioje formulės dalyje numatomas operatorius, pvz., +, * arba &amp;.</value>
     
   </data>
   <data name="ErrorResource_ErrOperatorExpected_LongMessage" xml:space="preserve">
@@ -4547,6 +4547,21 @@
   </data>
   <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
     <value>Įvardytoji formulė turi baigtis kabliataškiu.</value>
+    
+  </data>
+  <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
+    <value>NamedFormula „{0}“ jau yra.</value>
+  </data>
+  <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
+    <value>Pirmasis {0} argumentas turi būti tinkamas kintamojo pavadinimas ir negali būti nesuderinamas su esamais valdiklių, ekranų, rinkinių arba duomenų šaltinių pavadinimais. Rastas tipas {1}</value>
+    
+  </data>
+  <data name="AboutSet" xml:space="preserve">
+    <value>Sukurkite ir nustatykite visuotinį kintamąjį.</value>
+    
+  </data>
+  <data name="SetArg2" xml:space="preserve">
+    <value>reikšmė</value>
     
   </data>
 </root>

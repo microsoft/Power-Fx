@@ -120,25 +120,6 @@ namespace Microsoft.PowerFx.Functions
 
             return CommonErrors.ArgumentOutOfRange(irContext);
         }
-        
-        // Convert string to boolean
-        public static FormulaValue Boolean(IRContext irContext, StringValue[] args)
-        {
-            var arg0 = args[0];
-
-            var str = arg0.Value.Trim().ToLower();
-            if (string.IsNullOrEmpty(str))
-            {
-                return new BlankValue(irContext);
-            }
-
-            if (!bool.TryParse(str, out var val))
-            {
-                return CommonErrors.InvalidBooleanFormatError(irContext);
-            }
-
-            return new BooleanValue(irContext, val);
-        }
 
         // https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-text
         public static FormulaValue Text(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args)
