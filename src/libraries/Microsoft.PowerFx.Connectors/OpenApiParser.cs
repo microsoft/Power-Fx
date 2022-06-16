@@ -15,11 +15,7 @@ namespace Microsoft.PowerFx.Connectors
     internal class OpenApiParser
     {
         // Parse an OpenApiDocument and return functions. 
-        public static List<ServiceFunction> Parse(
-            string functionNamespace, 
-            OpenApiDocument openApiDocument, 
-            HttpMessageInvoker httpClient = null, 
-            ICachingHttpClient cache = null)
+        public static List<ServiceFunction> Parse(string functionNamespace, OpenApiDocument openApiDocument, HttpMessageInvoker httpClient = null, ICachingHttpClient cache = null)
         {
             if (openApiDocument == null)
             {
@@ -32,9 +28,7 @@ namespace Microsoft.PowerFx.Connectors
             }
 
             var newFunctions = new List<ServiceFunction>();
-
             var basePath = openApiDocument.GetBasePath();
-
             DPath theNamespace = DPath.Root.Append(new DName(functionNamespace));
 
             if (openApiDocument.Paths == null)
@@ -65,7 +59,7 @@ namespace Microsoft.PowerFx.Connectors
                         path = basePath + path;
                     }
 
-                    var argMapper = new ArgumentMapper(op.Parameters, op.RequestBody);
+                    var argMapper = new ArgumentMapper(op.Parameters, op);
 
                     IAsyncTexlFunction invoker = null;
                     if (httpClient != null)

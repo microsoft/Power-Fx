@@ -11,11 +11,11 @@ using System.Xml.Linq;
 
 namespace Microsoft.PowerFx.Connectors.Execution
 {
-    public static class SerializationExtensions
+    internal static class SerializationExtensions
     {
-        public static string ToJson(this Dictionary<string, object> dic) => Regex.Replace(JsonSerializer.Serialize(dic), @"""(?<k>\w+)"":", "$1:");
+        internal static string ToJson(this Dictionary<string, object> dic) => Regex.Replace(JsonSerializer.Serialize(dic), @"""(?<k>\w+)"":", "$1:");
 
-        public static string ToFormUrlEncoded(this Dictionary<string, object> dic) => JsonDocument.Parse(JsonSerializer.Serialize(dic)).RootElement.JsonElementToString(null);
+        internal static string ToFormUrlEncoded(this Dictionary<string, object> dic) => JsonDocument.Parse(JsonSerializer.Serialize(dic)).RootElement.JsonElementToString(null);
 
         private static string JsonElementToString(this JsonElement je, string prefix) => je.ValueKind switch
         {
@@ -30,7 +30,7 @@ namespace Microsoft.PowerFx.Connectors.Execution
             _ => throw new NotImplementedException($"Unknown ValueKind {je.ValueKind}")
         };
 
-        public static string ToXml(this Dictionary<string, object> dic, string rootName)
+        internal static string ToXml(this Dictionary<string, object> dic, string rootName)
         {
             var root = new XElement(rootName);
             JsonDocument.Parse(JsonSerializer.Serialize(dic)).RootElement.JsonElementToXml(root);

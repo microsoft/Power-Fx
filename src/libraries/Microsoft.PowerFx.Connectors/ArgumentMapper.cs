@@ -29,7 +29,7 @@ namespace Microsoft.PowerFx.Connectors
         private const string ConnectionIdParamName = "connectionId";
         public const string BodyParameter = "body";
 
-        public List<FxOpenApiParameter> OpenApiParameters;
+        public List<OpenApiParameter> OpenApiParameters;
 
         #region ServiceFunction args
 
@@ -40,18 +40,22 @@ namespace Microsoft.PowerFx.Connectors
         public readonly string ContentType;
         public readonly int ArityMin;
         public readonly int ArityMax;
+        public readonly OpenApiOperation Operation;
 
         private readonly Dictionary<string, Tuple<string, DType>> _parameterDefaultValues = new ();
-        private readonly Dictionary<TypedName, List<string>> _parameterOptions = new ();        
+        private readonly Dictionary<TypedName, List<string>> _parameterOptions = new ();
         #endregion // ServiceFunction args
 
-        public ArgumentMapper(IEnumerable<OpenApiParameter> parameters, OpenApiRequestBody requestBody)
+        public bool HasBodyParameter => Operation.RequestBody != null;
+
+        public ArgumentMapper(IEnumerable<OpenApiParameter> parameters, OpenApiOperation operation)
         {
-            OpenApiParameters = parameters.Select(p => p.ToFxOpenApiParameter()).ToList();
+            OpenApiParameters = parameters.ToList();
+            Operation = operation;
             ContentType = "application/json"; // default
 
-            var requiredParams = new List<FxOpenApiParameter>();
-            var optionalParams = new List<FxOpenApiParameter>();
+            var requiredParams = new List<OpenApiParameter>();
+            var optionalParams = new List<OpenApiParameter>();
 
             foreach (var param in OpenApiParameters)
             {
@@ -98,10 +102,11 @@ namespace Microsoft.PowerFx.Connectors
                 }
             }
 
-            if (requestBody != null)
+            if (HasBodyParameter)
             {
+                var requestBody = operation.RequestBody;
                 var bodyName = requestBody.GetBodyName() ?? BodyParameter;
-                FxOpenApiParameter bodyParameter;
+                OpenApiParameter bodyParameter;
 
                 if (requestBody.Content != null && requestBody.Content.Any())
                 {
@@ -115,21 +120,20 @@ namespace Microsoft.PowerFx.Connectors
                         throw new NotImplementedException($"OpenApiSchema is not supported");
                     }
                     else
-                    {                        
-                        var bodyType = schema.ToFormulaType();
-
-                        bodyParameter = new FxOpenApiParameter(schema, bodyName, string.Empty, FxParameterLocation.Body, requestBody.Required);
+                    {                                               
+                        bodyParameter = new OpenApiParameter() { Schema = schema, Name = bodyName, Description = string.Empty, Required = requestBody.Required };
                     }
                 }
                 else
                 {
                     // If the content isn't specified, we will expect a string in the body                    
-                    bodyParameter = new FxOpenApiParameter(new OpenApiSchema() { Type = "string" }, bodyName, string.Empty, FxParameterLocation.Body, requestBody.Required);                    
+                    ContentType = "text/plain";
+                    bodyParameter = new OpenApiParameter() { Schema = new OpenApiSchema() { Type = "string" }, Name = bodyName, Description = string.Empty, Required = requestBody.Required };                    
                 }
 
                 OpenApiParameters.Add(bodyParameter);
                 (requestBody.Required ? requiredParams : optionalParams).Add(bodyParameter);
-            }
+            }           
 
             OptionalParamInfo = optionalParams.ConvertAll(x => Convert(x)).ToArray();
             RequiredParamInfo = requiredParams.ConvertAll(x => Convert(x)).ToArray();
@@ -184,7 +188,7 @@ namespace Microsoft.PowerFx.Connectors
                         map[field.Name] = field.Value;
                     }
                 }
-                else                
+                else
                 {
                     // Type check should have caught this. 
                     throw new InvalidOperationException($"Optional arg must be the last arg and a record");
@@ -209,17 +213,14 @@ namespace Microsoft.PowerFx.Connectors
             return parameters;
         }
 
-        private static ServiceFunctionParameterTemplate Convert(FxOpenApiParameter apiParam)
+        private static ServiceFunctionParameterTemplate Convert(OpenApiParameter apiParam)
         {
             var paramType = apiParam.Schema.ToFormulaType()._type;
             var typedName = new TypedName(paramType, new DName(apiParam.Name));
 
             apiParam.TryGetDefaultValue(out var defaultValue);
 
-            return new ServiceFunctionParameterTemplate(
-                typedName,
-                apiParam.Description,
-                defaultValue);
+            return new ServiceFunctionParameterTemplate(typedName, apiParam.Description, defaultValue);
         }
     }
 }

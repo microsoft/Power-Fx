@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
+using Microsoft.OpenApi.Models;
 using Microsoft.PowerFx.Connectors.Execution;
 using Microsoft.PowerFx.Types;
 
@@ -24,13 +25,7 @@ namespace Microsoft.PowerFx.Connectors
         private readonly ArgumentMapper _argMapper;
         private readonly ICachingHttpClient _cache;
 
-        public HttpFunctionInvoker(
-            HttpMessageInvoker httpClient,
-            HttpMethod method,
-            string path,
-            FormulaType returnType,
-            ArgumentMapper argMapper,
-            ICachingHttpClient cache = null)
+        public HttpFunctionInvoker(HttpMessageInvoker httpClient, HttpMethod method, string path, FormulaType returnType, ArgumentMapper argMapper, ICachingHttpClient cache = null)
         {
             _httpClient = httpClient;
             _method = method;
@@ -40,17 +35,17 @@ namespace Microsoft.PowerFx.Connectors
             _returnType = returnType;
         }
 
-        internal static void VerifyCanHandle(FxParameterLocation? location)
+        internal static void VerifyCanHandle(ParameterLocation? location)
         {
             switch (location.Value)
             {
-                case FxParameterLocation.Path:
-                case FxParameterLocation.Query:
-                case FxParameterLocation.Header:
-                case FxParameterLocation.Body:
+                case ParameterLocation.Path:
+                case ParameterLocation.Query:
+                case ParameterLocation.Header:
+                //case FxParameterLocation.Body:
                     break;
 
-                case FxParameterLocation.Cookie:
+                case ParameterLocation.Cookie:
                 default:
                     throw new NotImplementedException($"Unsupported ParameterIn {location}");
             }
@@ -70,7 +65,7 @@ namespace Microsoft.PowerFx.Connectors
             var map = _argMapper.ConvertToSwagger(args);
             foreach (var param in _argMapper.OpenApiParameters)
             {
-                if (param.In == FxParameterLocation.Body && param.Schema.Properties != null && param.Schema.Properties.Any())
+                if (param.In == null && param.Schema.Properties != null && param.Schema.Properties.Any())
                 {
                     var props = new Dictionary<string, object>();
 
@@ -93,31 +88,34 @@ namespace Microsoft.PowerFx.Connectors
                 {
                     var valueStr = paramValue.ToObject().ToString();
 
-                    switch (param.In.Value)
+                    if (param.In == null)
                     {
-                        case FxParameterLocation.Path:
-                            path = path.Replace("{" + param.Name + "}", HttpUtility.UrlEncode(valueStr));
-                            break;
-
-                        case FxParameterLocation.Query:
-                            query.Append((query.Length == 0) ? "?" : "&");
-                            query.Append(param.Name);
-                            query.Append('=');
-                            query.Append(HttpUtility.UrlEncode(valueStr));
-                            break;
-
-                        case FxParameterLocation.Header:
-                            headers.Add(param.Name, valueStr);
-                            break;
-
-                        case FxParameterLocation.Body:
-                            body = paramValue.ToObject().ToString();
-                            break;
-
-                        case FxParameterLocation.Cookie:
-                        default:
-                            throw new NotImplementedException($"{param.In}");
+                        body = paramValue.ToObject().ToString();
                     }
+                    else
+                    {
+                        switch (param.In.Value)
+                        {
+                            case ParameterLocation.Path:
+                                path = path.Replace("{" + param.Name + "}", HttpUtility.UrlEncode(valueStr));
+                                break;
+
+                            case ParameterLocation.Query:
+                                query.Append((query.Length == 0) ? "?" : "&");
+                                query.Append(param.Name);
+                                query.Append('=');
+                                query.Append(HttpUtility.UrlEncode(valueStr));
+                                break;
+
+                            case ParameterLocation.Header:
+                                headers.Add(param.Name, valueStr);
+                                break;                           
+
+                            case ParameterLocation.Cookie:
+                            default:
+                                throw new NotImplementedException($"{param.In}");
+                        }
+                    }                    
                 }
             }
 
@@ -133,6 +131,7 @@ namespace Microsoft.PowerFx.Connectors
 
             if (!string.IsNullOrEmpty(body))
             {                
+                // $$$ Might need System.Net.Http.FormUrlEncodedContent()
                 request.Content = new StringContent(body, Encoding.Default, _argMapper.ContentType);                
             }
 

@@ -51,7 +51,7 @@ namespace Microsoft.PowerFx.Connectors
         }
 
         // Get suggested options values.  Returns null if none. 
-        public static string[] GetOptions(this FxOpenApiParameter param)
+        public static string[] GetOptions(this OpenApiParameter param)
         {
             // x-ms-enum-values is: array of { value :string, displayName:string}.
             if (param.Extensions.TryGetValue("x-ms-enum-values", out var value))
@@ -91,7 +91,7 @@ namespace Microsoft.PowerFx.Connectors
             return isTrigger;
         }
 
-        public static bool TryGetDefaultValue(this FxOpenApiParameter param, out string defaultValue)
+        public static bool TryGetDefaultValue(this OpenApiParameter param, out string defaultValue)
         {
             var x = param.Schema.Default;
             if (x == null)
@@ -127,7 +127,7 @@ namespace Microsoft.PowerFx.Connectors
             throw new NotImplementedException($"Unknown default value type {x.GetType().FullName}");
         }
 
-        public static bool HasDefaultValue(this FxOpenApiParameter param)
+        public static bool HasDefaultValue(this OpenApiParameter param)
         {
             return param.Schema.Default != null;
         }
@@ -160,7 +160,7 @@ namespace Microsoft.PowerFx.Connectors
                     }
                     else
                     {
-                        throw new NotImplementedException();
+                        throw new NotImplementedException("Unsupported type of array");
                     }
 
                 case "object":
