@@ -3,33 +3,13 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text.Json;
-using System.Text.RegularExpressions;
-using System.Web;
 using System.Xml.Linq;
 
 namespace Microsoft.PowerFx.Connectors.Execution
 {
     internal static class SerializationExtensions
-    {
-        internal static string ToJson(this Dictionary<string, object> dic) => JsonSerializer.Serialize(dic);
-
-        internal static string ToFormUrlEncoded(this Dictionary<string, object> dic) => JsonDocument.Parse(JsonSerializer.Serialize(dic)).RootElement.JsonElementToString(null);
-
-        private static string JsonElementToString(this JsonElement je, string prefix) => je.ValueKind switch
-        {
-            JsonValueKind.Array => string.Join($"&", je.EnumerateArray().Select(innerJe => innerJe.JsonElementToString(prefix))),
-            JsonValueKind.False => $"{prefix}=0",
-            JsonValueKind.Null => $"{prefix}=null",
-            JsonValueKind.Number => $"{prefix}={je.GetDouble()}",
-            JsonValueKind.Object => string.Join("&", je.EnumerateObject().Select(innerJp => innerJp.Value.JsonElementToString($"{(prefix == null ? string.Empty : prefix + ".")}{innerJp.Name}"))),
-            JsonValueKind.String => $"{prefix}={HttpUtility.UrlEncode(je.GetString())}",
-            JsonValueKind.True => $"{prefix}=0",
-            JsonValueKind.Undefined => $"{prefix}=null",
-            _ => throw new NotImplementedException($"Unknown ValueKind {je.ValueKind}")
-        };
-
+    {      
         internal static string ToXml(this Dictionary<string, object> dic, string rootName)
         {
             var root = new XElement(rootName);

@@ -51,6 +51,49 @@
           }
         }
       }
+    },
+    "/weatherPost7": {
+      "post": {
+        "tags": [
+          "WeatherForecast"
+        ],
+        "operationId": "PostWeather7",
+        "consumes": [
+          "application/json",
+          "text/json",
+          "application/*+json",
+          "application/xml",
+          "text/xml",
+          "application/*+xml"
+        ],
+        "produces": [
+          "text/plain",
+          "application/json",
+          "text/json",
+          "application/xml",
+          "text/xml"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/Input2"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/WeatherForecast"
+              }
+            }
+          }
+        }
+      }
     }
   },
   "definitions": {
@@ -67,6 +110,25 @@
         "y": {
           "format": "int32",
           "type": "integer"
+        }
+      }
+    },
+    "Input2": {
+      "type": "object",
+      "properties": {
+        "z": {
+          "$ref": "#/definitions/Input"
+        },
+        "dt": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "db": {
+          "format": "double",
+          "type": "number"
+        },
+        "str": {
+          "type": "string"
         }
       }
     },

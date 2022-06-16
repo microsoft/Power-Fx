@@ -67,22 +67,7 @@ namespace Microsoft.PowerFx.Connectors
             {
                 if (param.In == null && param.Schema.Properties != null && param.Schema.Properties.Any())
                 {
-                    var props = new Dictionary<string, object>();
-
-                    foreach (var property in param.Schema.Properties)
-                    {
-                        if (map.TryGetValue(property.Key, out var paramValue))
-                        {
-                            props.Add(property.Key, paramValue.ToObject());
-                        }
-                    }
-
-                    body = _argMapper.ContentType.ToLowerInvariant() switch
-                    {
-                        OpenApiExtensions.ContentType_XWwwFormUrlEncoded => props.ToFormUrlEncoded(),
-                        OpenApiExtensions.ContentType_ApplicationXml => props.ToXml(param.Schema.Reference.Id ?? "Xml"),
-                       _ => props.ToJson()
-                    };                    
+                    body = GetBody(param, map);
                 }
                 else if (map.TryGetValue(param.Name, out var paramValue))
                 {
@@ -90,6 +75,7 @@ namespace Microsoft.PowerFx.Connectors
 
                     if (param.In == null)
                     {
+                        // No schema, we send the raw value
                         body = paramValue.ToObject().ToString();
                     }
                     else
@@ -136,6 +122,33 @@ namespace Microsoft.PowerFx.Connectors
             }
 
             return request;
+        }
+
+        private string GetBody(OpenApiParameter param, Dictionary<string, FormulaValue> map)
+        {
+            var props = GetSchemaPropertyValues(param, map);
+
+            return _argMapper.ContentType.ToLowerInvariant() switch
+            {
+                OpenApiExtensions.ContentType_XWwwFormUrlEncoded => new OpenApiFormUrlEncoder(param.Schema, props).ToUrlEncodedForm(),
+                OpenApiExtensions.ContentType_ApplicationXml => props.ToXml(param.Schema.Reference.Id ?? "Xml"),
+                _ => new OpenApiJsonSerializer(param.Schema, props).ToJson() 
+            };
+        }
+
+        private Dictionary<string, object> GetSchemaPropertyValues(OpenApiParameter param, Dictionary<string, FormulaValue> map)
+        {
+            var props = new Dictionary<string, object>();
+
+            foreach (var property in param.Schema.Properties)
+            {
+                if (map.TryGetValue(property.Key, out var paramValue))
+                {
+                    props.Add(property.Key, paramValue.ToObject());
+                }
+            }
+
+            return props;
         }
 
         public async Task<FormulaValue> DecodeResponseAsync(HttpResponseMessage response)

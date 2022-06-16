@@ -248,10 +248,10 @@ namespace Microsoft.PowerFx.Connectors
 
         private static readonly List<string> _knownContentTypes = new ()
         {
-            ContentType_TextJson,
-            ContentType_ApplicationXml,
+            ContentType_ApplicationJson,
             ContentType_XWwwFormUrlEncoded,
-            ContentType_ApplicationJson
+            ContentType_TextJson,
+            ContentType_ApplicationXml,            
         };        
 
         public static KeyValuePair<string, OpenApiMediaType> GetContentTypeAndSchema(this IDictionary<string, OpenApiMediaType> content)
