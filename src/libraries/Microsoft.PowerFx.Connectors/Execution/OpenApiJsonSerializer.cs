@@ -6,10 +6,10 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.IO;
-using System.Text;
-using Microsoft.OpenApi.Models;
-using System.Text.Json;
 using System.Linq;
+using System.Text;
+using System.Text.Json;
+using Microsoft.OpenApi.Models;
 
 namespace Microsoft.PowerFx.Connectors.Execution
 {
@@ -35,6 +35,7 @@ namespace Microsoft.PowerFx.Connectors.Execution
             {
                 WriteProperty(prop);
             }
+
             _writer.WriteEndObject();
             _writer.Flush();
             var json = Encoding.UTF8.GetString(_stream.ToArray());
@@ -69,10 +70,12 @@ namespace Microsoft.PowerFx.Connectors.Execution
                     {
                         throw new ArgumentException($"Type mismatch, expecting an array for {property.Key} and {value} is {value.GetType().FullName}");
                     }
+
                     foreach (var item in @enum)
                     {
                         WriteValue(item);
                     }
+
                     _writer.WriteEndArray();
                     break;
 
@@ -90,6 +93,7 @@ namespace Microsoft.PowerFx.Connectors.Execution
                     {
                         WriteProperty(prop, value);
                     }
+
                     _writer.WriteEndObject();
                     break;
 

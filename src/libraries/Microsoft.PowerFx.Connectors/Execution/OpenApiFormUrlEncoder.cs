@@ -1,10 +1,13 @@
-﻿using System;
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Dynamic;
+using System.Linq;
 using System.Text;
 using Microsoft.OpenApi.Models;
-using System.Linq;
 
 namespace Microsoft.PowerFx.Connectors.Execution
 {
@@ -66,6 +69,7 @@ namespace Microsoft.PowerFx.Connectors.Execution
                     {
                         throw new ArgumentException($"Type mismatch, expecting an array for {property.Key} and {value} is {value.GetType().FullName}");
                     }
+
                     foreach (var item in @enum)
                     {
                         AddSeparator();
@@ -74,10 +78,12 @@ namespace Microsoft.PowerFx.Connectors.Execution
                             _writer.Append(prefix);
                             _writer.Append('.');
                         }
+
                         _writer.Append(property.Key);
                         _writer.Append('=');
                         WriteValue(item, property.Key);
-                    }                    
+                    }
+
                     break;
 
                 case "null":
@@ -93,7 +99,8 @@ namespace Microsoft.PowerFx.Connectors.Execution
                     foreach (var prop in property.Value.Properties)
                     {                        
                         WriteProperty(prop, value, innerPrefix);
-                    }                   
+                    }
+
                     break;
 
                 default:
@@ -109,6 +116,7 @@ namespace Microsoft.PowerFx.Connectors.Execution
                 _writer.Append(prefix);
                 _writer.Append('.');
             }
+
             _writer.Append(name);
             _writer.Append('=');
             
