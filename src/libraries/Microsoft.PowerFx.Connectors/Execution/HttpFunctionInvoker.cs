@@ -77,10 +77,10 @@ namespace Microsoft.PowerFx.Connectors
                         }
                     }
 
-                    body = _argMapper.ContentType switch
+                    body = _argMapper.ContentType.ToLowerInvariant() switch
                     {
-                       "application/x-www-form-urlencoded" => props.ToFormUrlEncoded(),
-                       "application/xml" => props.ToXml(param.Schema.Reference.Id ?? "Xml"),
+                        OpenApiExtensions.ContentType_XWwwFormUrlEncoded => props.ToFormUrlEncoded(),
+                        OpenApiExtensions.ContentType_ApplicationXml => props.ToXml(param.Schema.Reference.Id ?? "Xml"),
                        _ => props.ToJson()
                     };                    
                 }

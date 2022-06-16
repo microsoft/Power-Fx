@@ -114,9 +114,6 @@ namespace Microsoft.PowerFx.Tests
             dynamic res = result.ToObject();                       
             var size = (double)res;
 
-            //var propertyList = res.ToList();
-            //var size = (double)propertyList.First(prop => prop.Key == "Size").Value;
-
             Assert.Equal(3.0, size);
 
             // PowerPlatform Connectors transform the request significantly from what was in the swagger. 

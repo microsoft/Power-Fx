@@ -13,7 +13,7 @@ namespace Microsoft.PowerFx.Connectors.Execution
 {
     internal static class SerializationExtensions
     {
-        internal static string ToJson(this Dictionary<string, object> dic) => Regex.Replace(JsonSerializer.Serialize(dic), @"""(?<k>\w+)"":", "$1:");
+        internal static string ToJson(this Dictionary<string, object> dic) => JsonSerializer.Serialize(dic);
 
         internal static string ToFormUrlEncoded(this Dictionary<string, object> dic) => JsonDocument.Parse(JsonSerializer.Serialize(dic)).RootElement.JsonElementToString(null);
 

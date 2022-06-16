@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Models;
+using Microsoft.PowerFx.Connectors;
 using Xunit;
 
 namespace Microsoft.PowerFx.Tests
@@ -42,7 +43,7 @@ namespace Microsoft.PowerFx.Tests
 
             var response = new HttpResponseMessage(HttpStatusCode.OK)
             {
-                Content = new StringContent(json, Encoding.UTF8, "application/json")
+                Content = new StringContent(json, Encoding.UTF8, OpenApiExtensions.ContentType_ApplicationJson)
             };
             _nextResponse = response;
         }

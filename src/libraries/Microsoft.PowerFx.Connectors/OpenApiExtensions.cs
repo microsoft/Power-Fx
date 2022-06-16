@@ -14,7 +14,7 @@ namespace Microsoft.PowerFx.Connectors
 {
     // See definitions for x-ms extensions:
     // https://docs.microsoft.com/en-us/connectors/custom-connectors/openapi-extensions#x-ms-visibility
-    internal static class OpenApiExtensions
+    public static class OpenApiExtensions
     {
         public static string GetBasePath(this OpenApiDocument openApiDocument)
         {            
@@ -195,9 +195,7 @@ namespace Microsoft.PowerFx.Connectors
                 OperationType.Trace => HttpMethod.Trace,                
                 _ => new HttpMethod(key.ToString())
             };
-        }
-
-        private const string _applicationJson = "application/json";
+        }        
 
         public static FormulaType GetReturnType(this OpenApiOperation op)
         {
@@ -224,7 +222,7 @@ namespace Microsoft.PowerFx.Connectors
                 var mediaType = kv3.Key;
                 var response = kv3.Value;
 
-                if (string.Equals(mediaType, _applicationJson, StringComparison.OrdinalIgnoreCase))
+                if (string.Equals(mediaType, ContentType_ApplicationJson, StringComparison.OrdinalIgnoreCase))
                 {
                     if (response.Schema == null)
                     {
@@ -238,10 +236,23 @@ namespace Microsoft.PowerFx.Connectors
             }
 
             // Returns something, but not json. 
-            throw new InvalidOperationException($"Unsupported return type - must have {_applicationJson}");
+            throw new InvalidOperationException($"Unsupported return type - must have {ContentType_ApplicationJson}");
         }
 
-        private static readonly List<string> _knownContentTypes = new () { "text/json", "application/xml", "application/x-www-form-urlencoded", "application/json" };
+        // Keep these constants all lower case
+        public const string ContentType_TextJson = "text/json";
+        public const string ContentType_ApplicationXml = "application/xml";
+        public const string ContentType_XWwwFormUrlEncoded = "application/x-www-form-urlencoded";
+        public const string ContentType_ApplicationJson = "application/json";
+        public const string ContentType_TextPlain = "text/plain";
+
+        private static readonly List<string> _knownContentTypes = new ()
+        {
+            ContentType_TextJson,
+            ContentType_ApplicationXml,
+            ContentType_XWwwFormUrlEncoded,
+            ContentType_ApplicationJson
+        };        
 
         public static KeyValuePair<string, OpenApiMediaType> GetContentTypeAndSchema(this IDictionary<string, OpenApiMediaType> content)
         {
@@ -253,8 +264,8 @@ namespace Microsoft.PowerFx.Connectors
 
                 if (kvp.Key != null)
                 {
-                    if ((kvp.Key == "application/json" && !kvp.Value.Schema.Properties.Any()) ||
-                        (kvp.Key == "text/json" && kvp.Value.Schema.Properties.Any()))
+                    if ((kvp.Key == ContentType_ApplicationJson && !kvp.Value.Schema.Properties.Any()) ||
+                        (kvp.Key == ContentType_TextJson && kvp.Value.Schema.Properties.Any()))
                     {
                         continue;
                     }

@@ -52,7 +52,7 @@ namespace Microsoft.PowerFx.Connectors
         {
             OpenApiParameters = parameters.ToList();
             Operation = operation;
-            ContentType = "application/json"; // default
+            ContentType = OpenApiExtensions.ContentType_ApplicationJson; // default
 
             var requiredParams = new List<OpenApiParameter>();
             var optionalParams = new List<OpenApiParameter>();
@@ -127,7 +127,7 @@ namespace Microsoft.PowerFx.Connectors
                 else
                 {
                     // If the content isn't specified, we will expect a string in the body                    
-                    ContentType = "text/plain";
+                    ContentType = OpenApiExtensions.ContentType_TextPlain;
                     bodyParameter = new OpenApiParameter() { Schema = new OpenApiSchema() { Type = "string" }, Name = bodyName, Description = string.Empty, Required = requestBody.Required };                    
                 }
 
