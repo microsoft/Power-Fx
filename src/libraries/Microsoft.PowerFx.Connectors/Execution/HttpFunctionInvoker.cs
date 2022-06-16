@@ -41,8 +41,7 @@ namespace Microsoft.PowerFx.Connectors
             {
                 case ParameterLocation.Path:
                 case ParameterLocation.Query:
-                case ParameterLocation.Header:
-                //case FxParameterLocation.Body:
+                case ParameterLocation.Header:                
                     break;
 
                 case ParameterLocation.Cookie:

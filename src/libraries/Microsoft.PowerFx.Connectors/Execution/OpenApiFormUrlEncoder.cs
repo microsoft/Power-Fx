@@ -64,7 +64,7 @@ namespace Microsoft.PowerFx.Connectors.Execution
                 case "array":                    
                     if (value is not IEnumerable @enum)
                     {
-                        throw new ArgumentException($"Type mismatch, excepcting an array for {property.Key} and {value} is {value.GetType().FullName}");
+                        throw new ArgumentException($"Type mismatch, expecting an array for {property.Key} and {value} is {value.GetType().FullName}");
                     }
                     foreach (var item in @enum)
                     {
