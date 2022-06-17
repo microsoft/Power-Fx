@@ -121,19 +121,20 @@ namespace Microsoft.PowerFx.Connectors
         }
 
         private ByteArrayContent GetBody(OpenApiParameter param, Dictionary<string, FormulaValue> map)
-        {
-            var props = GetSchemaPropertyValues(param, map);
+        {                        
+            var namedValues = map.Select(kvp => new NamedValue(kvp.Key, kvp.Value));            
 
             var bodyStr = _argMapper.ContentType.ToLowerInvariant() switch
-            {
-                OpenApiExtensions.ContentType_XWwwFormUrlEncoded => new OpenApiFormUrlEncoder(param.Schema, props).ToUrlEncodedForm(),
-                OpenApiExtensions.ContentType_ApplicationXml => props.ToXml(param.Schema.Reference.Id ?? "Xml"),
-                _ => new OpenApiJsonSerializer(param.Schema, props).ToJson() 
+            {                
+                OpenApiExtensions.ContentType_XWwwFormUrlEncoded => new OpenApiFormUrlEncoder().Serialize(param.Schema, namedValues),
+                OpenApiExtensions.ContentType_ApplicationXml => GetSchemaPropertyValues(param, map).ToXml(param.Schema.Reference.Id ?? "Xml"),
+                _ => new OpenApiJsonSerializer().Serialize(param.Schema, namedValues)
             };
 
             return new StringContent(bodyStr, Encoding.Default, _argMapper.ContentType);
         }
-
+        
+        // $$$ To be removed after XML serializer implementation
         private Dictionary<string, object> GetSchemaPropertyValues(OpenApiParameter param, Dictionary<string, FormulaValue> map)
         {
             var props = new Dictionary<string, object>();
