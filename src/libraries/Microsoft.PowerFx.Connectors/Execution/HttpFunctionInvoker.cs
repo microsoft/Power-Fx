@@ -59,7 +59,7 @@ namespace Microsoft.PowerFx.Connectors
             // Header names are not case sensitive.
             // From RFC 2616 - "Hypertext Transfer Protocol -- HTTP/1.1", Section 4.2, "Message Headers"
             var headers = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-            string body = null;
+            ByteArrayContent body = null;
 
             var map = _argMapper.ConvertToSwagger(args);
             foreach (var param in _argMapper.OpenApiParameters)
@@ -75,7 +75,7 @@ namespace Microsoft.PowerFx.Connectors
                     if (param.In == null)
                     {
                         // No schema, we send the raw value
-                        body = paramValue.ToObject().ToString();
+                        body = new StringContent(paramValue.ToObject().ToString(), Encoding.Default, _argMapper.ContentType);
                     }
                     else
                     {
@@ -104,9 +104,7 @@ namespace Microsoft.PowerFx.Connectors
                 }
             }
 
-            var url = path + query.ToString();
-
-            // $$$ Not handling Body yet...
+            var url = path + query.ToString();            
             var request = new HttpRequestMessage(_method, url);            
 
             foreach (var kv in headers)
@@ -114,25 +112,26 @@ namespace Microsoft.PowerFx.Connectors
                 request.Headers.Add(kv.Key, kv.Value);
             }
 
-            if (!string.IsNullOrEmpty(body))
+            if (body != null)
             {                
-                // $$$ Might need System.Net.Http.FormUrlEncodedContent()
-                request.Content = new StringContent(body, Encoding.Default, _argMapper.ContentType);                
+                request.Content = body;
             }
 
             return request;
         }
 
-        private string GetBody(OpenApiParameter param, Dictionary<string, FormulaValue> map)
+        private ByteArrayContent GetBody(OpenApiParameter param, Dictionary<string, FormulaValue> map)
         {
             var props = GetSchemaPropertyValues(param, map);
 
-            return _argMapper.ContentType.ToLowerInvariant() switch
+            var bodyStr = _argMapper.ContentType.ToLowerInvariant() switch
             {
                 OpenApiExtensions.ContentType_XWwwFormUrlEncoded => new OpenApiFormUrlEncoder(param.Schema, props).ToUrlEncodedForm(),
                 OpenApiExtensions.ContentType_ApplicationXml => props.ToXml(param.Schema.Reference.Id ?? "Xml"),
                 _ => new OpenApiJsonSerializer(param.Schema, props).ToJson() 
             };
+
+            return new StringContent(bodyStr, Encoding.Default, _argMapper.ContentType);
         }
 
         private Dictionary<string, object> GetSchemaPropertyValues(OpenApiParameter param, Dictionary<string, FormulaValue> map)

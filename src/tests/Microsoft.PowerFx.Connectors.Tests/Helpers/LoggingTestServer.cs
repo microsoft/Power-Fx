@@ -69,7 +69,7 @@ namespace Microsoft.PowerFx.Tests
                 {
                     foreach (var h in httpContent.Headers)
                     {
-                        _log.AppendLine($" [header] {h.Key}: {string.Join(", ", h.Value)}");                            
+                        _log.AppendLine($" [content-header] {h.Key}: {string.Join(", ", h.Value)}");                            
                     }
                 }
 

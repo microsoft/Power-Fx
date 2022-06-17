@@ -27,7 +27,7 @@ namespace Microsoft.PowerFx.Connectors
         // All connectors have an internal parameter named connectionId. 
         // This is handled specially and value passed by connector. 
         private const string ConnectionIdParamName = "connectionId";
-        public const string BodyParameter = "body";
+        public const string DefaultBodyParameter = "body";
 
         public List<OpenApiParameter> OpenApiParameters;
 
@@ -105,15 +105,15 @@ namespace Microsoft.PowerFx.Connectors
             if (HasBodyParameter)
             {
                 var requestBody = operation.RequestBody;
-                var bodyName = requestBody.GetBodyName() ?? BodyParameter;
+                var bodyName = requestBody.GetBodyName() ?? DefaultBodyParameter;
                 OpenApiParameter bodyParameter;
 
                 if (requestBody.Content != null && requestBody.Content.Any())
                 {
                     var ct = requestBody.Content.GetContentTypeAndSchema();
-                    var schema = ct.Value.Schema;
+                    var schema = ct.MediaType.Schema;
 
-                    ContentType = ct.Key;
+                    ContentType = ct.ContentType;
 
                     if (schema.AllOf.Any() || schema.AnyOf.Any() || schema.Not != null || schema.Items != null || schema.AdditionalProperties != null)
                     {
@@ -121,14 +121,14 @@ namespace Microsoft.PowerFx.Connectors
                     }
                     else
                     {                                               
-                        bodyParameter = new OpenApiParameter() { Schema = schema, Name = bodyName, Description = string.Empty, Required = requestBody.Required };
+                        bodyParameter = new OpenApiParameter() { Schema = schema, Name = bodyName, Description = "Body", Required = requestBody.Required };
                     }
                 }
                 else
                 {
                     // If the content isn't specified, we will expect a string in the body                    
                     ContentType = OpenApiExtensions.ContentType_TextPlain;
-                    bodyParameter = new OpenApiParameter() { Schema = new OpenApiSchema() { Type = "string" }, Name = bodyName, Description = string.Empty, Required = requestBody.Required };                    
+                    bodyParameter = new OpenApiParameter() { Schema = new OpenApiSchema() { Type = "string" }, Name = bodyName, Description = "Body", Required = requestBody.Required };                    
                 }
 
                 OpenApiParameters.Add(bodyParameter);
@@ -137,7 +137,7 @@ namespace Microsoft.PowerFx.Connectors
 
             OptionalParamInfo = optionalParams.ConvertAll(x => Convert(x)).ToArray();
             RequiredParamInfo = requiredParams.ConvertAll(x => Convert(x)).ToArray();
-
+                
             // Required params are first N params in the final list. 
             // Optional params are fields on a single record argument at the end.
             ArityMin = requiredParams.Count;

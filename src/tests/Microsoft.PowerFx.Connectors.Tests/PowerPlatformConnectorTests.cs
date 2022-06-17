@@ -133,7 +133,7 @@ namespace Microsoft.PowerFx.Tests
  x-ms-request-method: POST
  x-ms-request-url: /apim/azureblob/453f61fa88434d42addb987063b1d7d2/datasets/default/files?folderPath=container&name=bora1.txt
  x-ms-user-agent: PowerFx/{version}
- [header] Content-Type: text/plain; charset=utf-8
+ [content-header] Content-Type: text/plain; charset=utf-8
  [body] abc
 ";
             

@@ -254,29 +254,28 @@ namespace Microsoft.PowerFx.Connectors
             ContentType_ApplicationXml,            
         };        
 
-        public static KeyValuePair<string, OpenApiMediaType> GetContentTypeAndSchema(this IDictionary<string, OpenApiMediaType> content)
+        /// <summary>
+        /// Identifies which ContentType and Schema to use.
+        /// </summary>
+        /// <param name="content"></param>
+        /// <returns>RequestBody content dictionary of possible content types and associated schemas.</returns>
+        /// <exception cref="NotImplementedException">When we cannot determine the content type to use.</exception>
+        public static (string ContentType, OpenApiMediaType MediaType) GetContentTypeAndSchema(this IDictionary<string, OpenApiMediaType> content)
         {
-            List<KeyValuePair<string, OpenApiMediaType>> list = new ();
+            Dictionary<string, OpenApiMediaType> list = new ();
 
             foreach (var ct in _knownContentTypes)
-            {
-                var kvp = content.FirstOrDefault(c => c.Key == ct);
-
-                if (kvp.Key != null)
+            {                
+                if (content.TryGetValue(ct, out var mediaType))
                 {
-                    if ((kvp.Key == ContentType_ApplicationJson && !kvp.Value.Schema.Properties.Any()) ||
-                        (kvp.Key == ContentType_TextJson && kvp.Value.Schema.Properties.Any()))
+                    if ((ct == ContentType_ApplicationJson && !mediaType.Schema.Properties.Any()) ||
+                        (ct == ContentType_TextJson && mediaType.Schema.Properties.Any()))
                     {
                         continue;
                     }
 
-                    list.Add(kvp);
+                    return (ct, mediaType);
                 }
-            }
-
-            if (list.Any())
-            {
-                return list.First();
             }
 
             throw new NotImplementedException($"Cannot determine Content-Type {string.Join(", ", content.Keys)}");
