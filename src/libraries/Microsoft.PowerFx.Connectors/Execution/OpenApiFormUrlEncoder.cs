@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Text;
 
 namespace Microsoft.PowerFx.Connectors.Execution
@@ -105,7 +106,7 @@ namespace Microsoft.PowerFx.Connectors.Execution
 
         private string GetPrefix()
         {
-            return string.Join(".", _stack);
+            return string.Join(".", _stack.Where(e => !string.IsNullOrEmpty(e)));
         }
     }
 }
