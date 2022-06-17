@@ -12,29 +12,29 @@ namespace Microsoft.PowerFx.Connectors.Execution
 {
     internal abstract class FormulaValueSerializer
     {
-        internal abstract string GetResult();
+        protected abstract string GetResult();
 
-        internal abstract void StartObject(string name = null);
+        protected abstract void StartObject(string name = null);
 
-        internal abstract void EndObject();
+        protected abstract void EndObject();
 
-        internal abstract void StartArray(string name = null);
+        protected abstract void StartArray(string name = null);
 
-        internal abstract void StartArrayElement(string name);
+        protected abstract void StartArrayElement(string name);
 
-        internal abstract void EndArray();
+        protected abstract void EndArray();
 
-        internal abstract void WritePropertyName(string name);
+        protected abstract void WritePropertyName(string name);
 
-        internal abstract void WriteNullValue();
+        protected abstract void WriteNullValue();
 
-        internal abstract void WriteNumberValue(double numberValue);
+        protected abstract void WriteNumberValue(double numberValue);
 
-        internal abstract void WriteStringValue(string stringValue);
+        protected abstract void WriteStringValue(string stringValue);
 
-        internal abstract void WriteBooleanValue(bool booleanValue);
+        protected abstract void WriteBooleanValue(bool booleanValue);
 
-        internal abstract void WriteDateTimeValue(DateTime dateTimeValue);        
+        protected abstract void WriteDateTimeValue(DateTime dateTimeValue);        
 
         internal string Serialize(OpenApiSchema schema, IEnumerable<NamedValue> fields)
         {            

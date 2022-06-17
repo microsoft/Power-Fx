@@ -21,44 +21,44 @@ namespace Microsoft.PowerFx.Connectors.Execution
             _writer = new Utf8JsonWriter(_stream, new JsonWriterOptions());
         }
 
-        internal override string GetResult()
+        protected override string GetResult()
         {
             _writer.Flush();
             return Encoding.UTF8.GetString(_stream.ToArray());
         }
 
-        internal override void WritePropertyName(string name)
+        protected override void WritePropertyName(string name)
         {
             _writer.WritePropertyName(name);
         }
 
-        internal override void WriteNullValue()
+        protected override void WriteNullValue()
         {
             _writer.WriteNullValue();
         }
 
-        internal override void WriteNumberValue(double numberValue)
+        protected override void WriteNumberValue(double numberValue)
         {
             _writer.WriteNumberValue(numberValue);
         }
 
-        internal override void WriteBooleanValue(bool booleanValue)
+        protected override void WriteBooleanValue(bool booleanValue)
         {
             _writer.WriteBooleanValue(booleanValue);
         }
 
-        internal override void WriteDateTimeValue(DateTime dateTimeValue)
+        protected override void WriteDateTimeValue(DateTime dateTimeValue)
         {
             // ISO 8601
             _writer.WriteStringValue(dateTimeValue.ToString("o", CultureInfo.InvariantCulture));
         }
 
-        internal override void WriteStringValue(string stringValue)
+        protected override void WriteStringValue(string stringValue)
         {
             _writer.WriteStringValue(stringValue);
         }
 
-        internal override void StartObject(string name = null)
+        protected override void StartObject(string name = null)
         {
             if (string.IsNullOrEmpty(name))
             {
@@ -70,12 +70,12 @@ namespace Microsoft.PowerFx.Connectors.Execution
             }
         }
 
-        internal override void EndObject()
+        protected override void EndObject()
         {
             _writer.WriteEndObject();
         }
 
-        internal override void StartArray(string name = null)
+        protected override void StartArray(string name = null)
         {
             if (string.IsNullOrEmpty(name))
             {
@@ -87,12 +87,12 @@ namespace Microsoft.PowerFx.Connectors.Execution
             }
         }
 
-        internal override void EndArray()
+        protected override void EndArray()
         {
             _writer.WriteEndArray();
         }
 
-        internal override void StartArrayElement(string name)
+        protected override void StartArrayElement(string name)
         {
             // Do nothing
         }

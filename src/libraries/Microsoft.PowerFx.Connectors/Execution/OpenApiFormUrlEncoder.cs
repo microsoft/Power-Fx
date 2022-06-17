@@ -22,13 +22,13 @@ namespace Microsoft.PowerFx.Connectors.Execution
             _arrayIndex = new Stack<int>();
         }
 
-        internal override void StartArray(string name = null)
+        protected override void StartArray(string name = null)
         {
             WritePropertyName(name);
             _arrayIndex.Push(0);
         }
 
-        internal override void StartArrayElement(string name)
+        protected override void StartArrayElement(string name)
         {
             var currentIndex = _arrayIndex.Pop();
             if (currentIndex++ != 0)
@@ -39,47 +39,47 @@ namespace Microsoft.PowerFx.Connectors.Execution
             _arrayIndex.Push(currentIndex);
         }
 
-        internal override void EndArray()
+        protected override void EndArray()
         {
             _arrayIndex.Pop();
         }
 
-        internal override void StartObject(string prefix = null)
+        protected override void StartObject(string prefix = null)
         {
             _stack.Push(prefix);
         }
 
-        internal override void EndObject()
+        protected override void EndObject()
         {
             _stack.Pop();
         }
 
-        internal override string GetResult()
+        protected override string GetResult()
         {
             return _writer.ToString();
         }
 
-        internal override void WriteBooleanValue(bool booleanValue)
+        protected override void WriteBooleanValue(bool booleanValue)
         {
             _writer.Append(booleanValue ? "true" : "false");
         }
 
-        internal override void WriteDateTimeValue(DateTime dateTimeValue)
+        protected override void WriteDateTimeValue(DateTime dateTimeValue)
         {
             _writer.Append(dateTimeValue.ToString("o", CultureInfo.InvariantCulture));
         }
 
-        internal override void WriteNullValue()
+        protected override void WriteNullValue()
         {
             // Do nothing
         }
 
-        internal override void WriteNumberValue(double numberValue)
+        protected override void WriteNumberValue(double numberValue)
         {
             _writer.Append(numberValue);
         }
 
-        internal override void WritePropertyName(string name)
+        protected override void WritePropertyName(string name)
         {
             AddSeparator();
             var prefix = GetPrefix();
@@ -94,7 +94,7 @@ namespace Microsoft.PowerFx.Connectors.Execution
             _writer.Append('=');
         }
 
-        internal override void WriteStringValue(string stringValue)
+        protected override void WriteStringValue(string stringValue)
         {
             _writer.Append(stringValue);
         }
