@@ -8,6 +8,7 @@ using System.Xml.Linq;
 
 namespace Microsoft.PowerFx.Connectors.Execution
 {
+    // $$$ To be removed
     internal static class SerializationExtensions
     {      
         internal static string ToXml(this Dictionary<string, object> dic, string rootName)

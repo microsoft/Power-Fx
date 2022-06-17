@@ -13,32 +13,35 @@ namespace Microsoft.PowerFx.Connectors.Execution
     {
         private readonly StringBuilder _writer;
         private readonly Stack<string> _stack;
-        private int _arrayIndex;
+        private readonly Stack<int> _arrayIndex;
 
         internal OpenApiFormUrlEncoder()
         {
             _writer = new StringBuilder(1024);    
-            _stack = new Stack<string>();       
-            _arrayIndex = 0;
+            _stack = new Stack<string>();
+            _arrayIndex = new Stack<int>();
         }
 
         internal override void StartArray(string name = null)
         {
             WritePropertyName(name);
-            _arrayIndex = 0;
+            _arrayIndex.Push(0);
         }
 
         internal override void StartArrayElement(string name)
         {
-            if (_arrayIndex++ != 0)
+            var currentIndex = _arrayIndex.Pop();
+            if (currentIndex++ != 0)
             {
                 WritePropertyName(name);
             }
+
+            _arrayIndex.Push(currentIndex);
         }
 
         internal override void EndArray()
         {
-            // Do nothing
+            _arrayIndex.Pop();
         }
 
         internal override void StartObject(string prefix = null)
