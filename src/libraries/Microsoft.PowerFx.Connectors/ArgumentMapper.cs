@@ -169,23 +169,37 @@ namespace Microsoft.PowerFx.Connectors
                 map[name] = FormulaValue.New(value);
             }
 
+            // Required parameters are always first
             for (var i = 0; i < RequiredParamInfo.Length; i++)
-            {
-                var name = RequiredParamInfo[i].TypedName.Name;
+            {               
+                var parameterName = RequiredParamInfo[i].TypedName.Name;
                 var value = args[i];
 
-                map[name] = value;
+                // Objects are always flattenned
+                if (value is RecordValue record)
+                {
+                    foreach (var field in record.Fields)
+                    {                       
+                        map.Add(field.Name, field.Value);
+                    }
+                }
+                else
+                {
+                    map.Add(parameterName, value);
+                }
             }
 
+            // Optional parameters are next and stored in a Record
             if (OptionalParamInfo.Length > 0 && args.Length > 0)
             {
                 var optionalArg = args[args.Length - 1];
 
+                // Objects are always flattenned
                 if (optionalArg is RecordValue record)
                 {
                     foreach (var field in record.Fields)
                     {
-                        map[field.Name] = field.Value;
+                        map.Add(field.Name, field.Value);
                     }
                 }
                 else

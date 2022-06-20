@@ -42,8 +42,11 @@ namespace Microsoft.PowerFx.Tests
         [InlineData(3, @"Test.PostWeatherWithId({body: 5})", "POST http://localhost:5000/weatherPost\r\n [content-header] Content-Type: text/json; charset=utf-8\r\n [body] 5")]
         [InlineData(3, @"Test.PostWeatherWithInputObject({x: [1], y:2})", "POST http://localhost:5000/weatherPost2\r\n [content-header] Content-Type: application/json; charset=utf-8\r\n [body] {\"x\":[1],\"y\":2}")]
         [InlineData(4, @"Test.PostWeather7({z: {x: [1, 2], y:3 }, dt: ""2022-06-16T13:26:24.900Z"", db:0, str:""str"" })", "POST http://localhost:5000/weatherPost7\r\n [content-header] Content-Type: application/json; charset=utf-8\r\n [body] {\"z\":{\"x\":[1,2],\"y\":3},\"dt\":\"2022-06-16T13:26:24.900Z\",\"db\":0,\"str\":\"str\"}")]
+        [InlineData(4, @"Test.PostWeather8({z: {x: [1, 2], y:3 }, dt: ""2022-06-16T13:26:24.900Z"", db:0, str:""str"" })", "POST http://localhost:5000/weatherPost8\r\n [content-header] Content-Type: application/json; charset=utf-8\r\n [body] {\"z\":{\"x\":[1,2],\"y\":3},\"dt\":\"2022-06-16T13:26:24.900Z\",\"db\":0,\"str\":\"str\"}")]        
         [InlineData(4, @"Test.PostWeatherWithUrlEncodedBody({x: [1, 2], y:3})", "POST http://localhost:5000/weatherPost5\r\n [content-header] Content-Type: application/x-www-form-urlencoded; charset=utf-8\r\n [body] X=1&X=2&Y=3")]
         [InlineData(3, @"Test.PostWeatherWithXML({x: [1, 2], y:3 })", "POST http://localhost:5000/weatherPostXML\r\n [content-header] Content-Type: application/xml; charset=utf-8\r\n [body] <Input><x><e>1</e><e>2</e></x><y>3</y></Input>")]
+        [InlineData(4, @"Test.GetT5(4, 6, {Id_A:1, Name_A: ""def"", Count:14, 'Object_B.Id_B': 2, 'Object_B.Name_B': ""ghi"", 'Object_B.Count': 7})", "GET http://localhost:5000/weather/t5?Id_A=1&Name_A=def&Count=14&Object_B.Id_B=2&Object_B.Name_B=ghi&Object_B.Count=7&d=4&Name_B=6")]
+        [InlineData(4, @"Test.GetT6({d: 11, Name_B: 12, Id_A:1, Name_A: ""def"", Count:14, 'Object_B.Id_B': 2, 'Object_B.Name_B': ""ghi"", 'Object_B.Count': 7})", "GET http://localhost:5000/weather/t6?Id_A=1&Name_A=def&Count=14&Object_B.Id_B=2&Object_B.Name_B=ghi&Object_B.Count=7&d=11&Name_B=12")]
         public async void ValidateHttpCalls(int apiFileNumber, string fxQuery, string httpQuery)
         {
             var swaggerFile = apiFileNumber switch
