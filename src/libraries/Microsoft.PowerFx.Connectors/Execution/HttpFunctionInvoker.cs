@@ -127,13 +127,12 @@ namespace Microsoft.PowerFx.Connectors
             var bodyStr = _argMapper.ContentType.ToLowerInvariant() switch
             {                
                 OpenApiExtensions.ContentType_XWwwFormUrlEncoded => new OpenApiFormUrlEncoder().Serialize(param.Schema, namedValues),
-                OpenApiExtensions.ContentType_ApplicationXml =>  new OpenApiXmlSerializer().Serialize(param.Schema, namedValues),
+                OpenApiExtensions.ContentType_ApplicationXml => new OpenApiXmlSerializer().Serialize(param.Schema, namedValues),
                 _ => new OpenApiJsonSerializer().Serialize(param.Schema, namedValues)
             };
 
             return new StringContent(bodyStr, Encoding.Default, _argMapper.ContentType);
-        }
-               
+        }               
 
         public async Task<FormulaValue> DecodeResponseAsync(HttpResponseMessage response)
         {

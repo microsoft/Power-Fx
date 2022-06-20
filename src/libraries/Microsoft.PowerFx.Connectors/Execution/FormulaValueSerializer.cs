@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using Microsoft.OpenApi.Models;
+using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Connectors.Execution
@@ -36,7 +37,10 @@ namespace Microsoft.PowerFx.Connectors.Execution
 
         protected abstract void WriteBooleanValue(bool booleanValue);
 
-        protected abstract void WriteDateTimeValue(DateTime dateTimeValue);        
+        protected abstract void WriteDateTimeValue(DateTime dateTimeValue);
+
+        internal static readonly DType DType_Table = new (DKind.Table);
+        internal static readonly DType DType_Record = new (DKind.Record);
 
         internal string Serialize(OpenApiSchema schema, IEnumerable<NamedValue> fields)
         {
@@ -68,22 +72,22 @@ namespace Microsoft.PowerFx.Connectors.Execution
         {
             switch (propertySchema.Type)
             {
-                case "array":                    
+                case "array":
+                    // array
+                    AssertType(DType_Table, fv, propertyName);
                     StartArray(propertyName);
-                    
-                    if (fv is not TableValue tv)
-                    {
-                        throw new ArgumentException($"Type mismatch, expecting an array for {propertyName} and {fv.ToObject()} is {fv.GetType().FullName}");
-                    }
-
-                    foreach (var item in tv.Rows)
+                         
+                    foreach (var item in (fv as TableValue).Rows)
                     {
                         if (item.Value is not RecordValue rva)
                         {
                             throw new ArgumentException($"Invalid type in array, expecting a RecordValue for {propertyName}, row type is {item.GetType().FullName}");
                         }
 
-                        Contract.Assert(rva.Fields.Count() == 1);
+                        if (rva.Fields.Count() != 1)
+                        {
+                            throw new ArgumentException($"Incompatible Table for supporting array, RecordValue has more than one column - propertyName {propertyName}, number of fields {rva.Fields.Count()}");
+                        }
 
                         StartArrayElement(propertyName);
                         WriteValue(rva.Fields.First().Value);
@@ -93,24 +97,56 @@ namespace Microsoft.PowerFx.Connectors.Execution
                     break;
 
                 case "null":
-                case "number":
-                case "boolean":
-                case "integer":
-                case "string":
+                    // nullable
+                    AssertType(DType.ObjNull, fv, propertyName);
                     WritePropertyValue(propertyName, fv);
                     break;
 
-                case "object":                    
-                    if (fv is not RecordValue rvo)
-                    {
-                        throw new ArgumentException($"Invalid type in object, expecting a RecordValue for property {propertyName}, object type is {fv.GetType().FullName}");
-                    }
-                    
-                    WriteObject(propertyName, propertySchema, rvo.Fields);                    
+                case "number":
+                    // float, double
+                    AssertType(DType.Number, fv, propertyName);
+                    WritePropertyValue(propertyName, fv);
+                    break;
+
+                case "boolean":
+                    AssertType(DType.Boolean, fv, propertyName);
+                    WritePropertyValue(propertyName, fv);
+                    break;
+
+                case "integer":
+                    // int16, int32, int64
+                    AssertType(DType.Number, fv, propertyName);
+                    WritePropertyValue(propertyName, fv);
+                    break;
+
+                case "string":
+                    // string, binary, date, date-time, password, byte (base64)
+                    WritePropertyValue(propertyName, fv);
+                    break;
+
+                case "object":
+                    // collection of property/value pairs
+                    AssertType(DType_Record, fv, propertyName);                                        
+                    WriteObject(propertyName, propertySchema, (fv as RecordValue).Fields);                    
                     break;
 
                 default:
-                    throw new NotImplementedException($"Not support property type {propertySchema.Type} for property {propertyName}");
+                    throw new NotImplementedException($"Not supported property type {propertySchema.Type} for property {propertyName}");
+            }
+        }
+
+        private void AssertType(DType expectedType, FormulaValue fv, string propertyName)
+        {
+            if (fv == null || fv.Type == null)
+            {
+                throw new ArgumentException($"Missing valid FormulaValue for property {propertyName}");
+            }
+
+            var actualType = fv.Type._type;
+
+            if (expectedType.Kind != actualType.Kind)
+            {
+                throw new ArgumentException($"Type mismatch for property {propertyName}, expected type {expectedType.Kind} and got {actualType.Kind}");
             }
         }
 

@@ -4,12 +4,13 @@
 using System;
 using System.Globalization;
 using System.IO;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.Json;
 using Microsoft.OpenApi.Models;
 
 namespace Microsoft.PowerFx.Connectors.Execution
-{
+{    
     internal class OpenApiJsonSerializer : FormulaValueSerializer
     {        
         private readonly MemoryStream _stream;

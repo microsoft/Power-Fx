@@ -21,7 +21,6 @@ namespace Microsoft.PowerFx.Connectors.Execution
             _stack = new Stack<XElement>();
         }
 
-
         protected override void StartSerialization(OpenApiSchema schema)
         {
             _rootName = schema.Reference.Id ?? "Xml";            
@@ -56,6 +55,7 @@ namespace Microsoft.PowerFx.Connectors.Execution
             {
                 _stack.Peek().Add(xe);
             }
+
             _stack.Push(xe);
         }
 
