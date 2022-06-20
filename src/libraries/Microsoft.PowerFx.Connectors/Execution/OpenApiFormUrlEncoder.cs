@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using Microsoft.OpenApi.Models;
 
 namespace Microsoft.PowerFx.Connectors.Execution
 {
@@ -110,6 +111,11 @@ namespace Microsoft.PowerFx.Connectors.Execution
         private string GetPrefix()
         {
             return string.Join(".", _stack.Where(e => !string.IsNullOrEmpty(e)));
+        }
+
+        protected override void StartSerialization(OpenApiSchema schema)
+        {
+            // Do nothing
         }
     }
 }

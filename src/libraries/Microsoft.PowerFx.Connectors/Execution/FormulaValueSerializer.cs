@@ -14,6 +14,8 @@ namespace Microsoft.PowerFx.Connectors.Execution
     {
         protected abstract string GetResult();
 
+        protected abstract void StartSerialization(OpenApiSchema schema);
+
         protected abstract void StartObject(string name = null);
 
         protected abstract void EndObject();
@@ -37,9 +39,9 @@ namespace Microsoft.PowerFx.Connectors.Execution
         protected abstract void WriteDateTimeValue(DateTime dateTimeValue);        
 
         internal string Serialize(OpenApiSchema schema, IEnumerable<NamedValue> fields)
-        {            
+        {
+            StartSerialization(schema);
             WriteObject(null, schema, fields);           
-
             return GetResult();
         }
 

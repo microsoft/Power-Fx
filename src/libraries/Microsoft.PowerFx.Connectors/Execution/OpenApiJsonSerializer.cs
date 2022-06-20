@@ -6,6 +6,7 @@ using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Text.Json;
+using Microsoft.OpenApi.Models;
 
 namespace Microsoft.PowerFx.Connectors.Execution
 {
@@ -93,6 +94,11 @@ namespace Microsoft.PowerFx.Connectors.Execution
         }
 
         protected override void StartArrayElement(string name)
+        {
+            // Do nothing
+        }
+
+        protected override void StartSerialization(OpenApiSchema schema)
         {
             // Do nothing
         }

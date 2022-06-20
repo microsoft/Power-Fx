@@ -127,28 +127,13 @@ namespace Microsoft.PowerFx.Connectors
             var bodyStr = _argMapper.ContentType.ToLowerInvariant() switch
             {                
                 OpenApiExtensions.ContentType_XWwwFormUrlEncoded => new OpenApiFormUrlEncoder().Serialize(param.Schema, namedValues),
-                OpenApiExtensions.ContentType_ApplicationXml => GetSchemaPropertyValues(param, map).ToXml(param.Schema.Reference.Id ?? "Xml"),
+                OpenApiExtensions.ContentType_ApplicationXml =>  new OpenApiXmlSerializer().Serialize(param.Schema, namedValues),
                 _ => new OpenApiJsonSerializer().Serialize(param.Schema, namedValues)
             };
 
             return new StringContent(bodyStr, Encoding.Default, _argMapper.ContentType);
         }
-        
-        // $$$ To be removed after XML serializer implementation
-        private Dictionary<string, object> GetSchemaPropertyValues(OpenApiParameter param, Dictionary<string, FormulaValue> map)
-        {
-            var props = new Dictionary<string, object>();
-
-            foreach (var property in param.Schema.Properties)
-            {
-                if (map.TryGetValue(property.Key, out var paramValue))
-                {
-                    props.Add(property.Key, paramValue.ToObject());
-                }
-            }
-
-            return props;
-        }
+               
 
         public async Task<FormulaValue> DecodeResponseAsync(HttpResponseMessage response)
         {
