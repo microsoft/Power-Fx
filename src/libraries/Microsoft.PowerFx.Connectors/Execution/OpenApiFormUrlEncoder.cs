@@ -15,7 +15,8 @@ namespace Microsoft.PowerFx.Connectors.Execution
         private readonly Stack<string> _stack;
         private readonly Stack<int> _arrayIndex;
 
-        internal OpenApiFormUrlEncoder()
+        internal OpenApiFormUrlEncoder(bool schemaLessBody)
+            : base(schemaLessBody)
         {
             _writer = new StringBuilder(1024);    
             _stack = new Stack<string>();
@@ -39,7 +40,7 @@ namespace Microsoft.PowerFx.Connectors.Execution
             _arrayIndex.Push(currentIndex);
         }
 
-        protected override void EndArray(string name = null)
+        protected override void EndArray()
         {
             _arrayIndex.Pop();
         }
@@ -117,7 +118,7 @@ namespace Microsoft.PowerFx.Connectors.Execution
             // Do nothing
         }
 
-        internal override void EndSerialization(string refId)
+        internal override void EndSerialization()
         {
             // Do nothing
         }

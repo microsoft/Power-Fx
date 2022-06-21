@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.OpenApi.Models;
-using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Connectors.Execution
@@ -16,7 +15,7 @@ namespace Microsoft.PowerFx.Connectors.Execution
 
         internal abstract void StartSerialization(string referenceId);
 
-        internal abstract void EndSerialization(string referenceId);
+        internal abstract void EndSerialization();
 
         protected abstract void StartObject(string name = null);
 
@@ -26,7 +25,7 @@ namespace Microsoft.PowerFx.Connectors.Execution
 
         protected abstract void StartArrayElement(string name);
 
-        protected abstract void EndArray(string name = null);
+        protected abstract void EndArray();
 
         protected abstract void WritePropertyName(string name);
 
@@ -40,8 +39,12 @@ namespace Microsoft.PowerFx.Connectors.Execution
 
         protected abstract void WriteDateTimeValue(DateTime dateTimeValue);
 
-        internal static readonly DType DType_Table = new (DKind.Table);
-        internal static readonly DType DType_Record = new (DKind.Record);
+        protected bool _schemaLessBody;
+
+        internal FormulaValueSerializer(bool schemaLessBody)
+        {
+            _schemaLessBody = schemaLessBody;
+        }
 
         internal void SerializeValue(string paramName, OpenApiSchema schema, FormulaValue value)
         {
@@ -93,7 +96,7 @@ namespace Microsoft.PowerFx.Connectors.Execution
                         WriteValue(rva.Fields.First().Value);
                     }
                     
-                    EndArray(propertyName);
+                    EndArray();
                     break;
 
                 case "null":

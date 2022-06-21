@@ -74,7 +74,7 @@ namespace Microsoft.PowerFx.Connectors
 
             if (bodyParts.Any())
             {
-                body = GetBody(_argMapper.ReferenceId, bodyParts);
+                body = GetBody(_argMapper.ReferenceId, _argMapper.SchemaLessBody, bodyParts);
             }
 
             foreach (var param in _argMapper.OpenApiParameters)
@@ -123,14 +123,14 @@ namespace Microsoft.PowerFx.Connectors
             return request;
         }
        
-        private ByteArrayContent GetBody(string referenceId, Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)> map)
+        private ByteArrayContent GetBody(string referenceId, bool schemaLessBody, Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)> map)
         {
             FormulaValueSerializer serializer = _argMapper.ContentType.ToLowerInvariant() switch
             {
-                OpenApiExtensions.ContentType_XWwwFormUrlEncoded => new OpenApiFormUrlEncoder(),
-                OpenApiExtensions.ContentType_ApplicationXml => new OpenApiXmlSerializer(),
-                OpenApiExtensions.ContentType_TextPlain => new OpenApiTextSerializer(),
-                _ => new OpenApiJsonSerializer()
+                OpenApiExtensions.ContentType_XWwwFormUrlEncoded => new OpenApiFormUrlEncoder(schemaLessBody),
+                OpenApiExtensions.ContentType_ApplicationXml => new OpenApiXmlSerializer(schemaLessBody),
+                OpenApiExtensions.ContentType_TextPlain => new OpenApiTextSerializer(schemaLessBody),
+                _ => new OpenApiJsonSerializer(schemaLessBody)
             };
             
             serializer.StartSerialization(referenceId);
@@ -139,7 +139,7 @@ namespace Microsoft.PowerFx.Connectors
                 serializer.SerializeValue(kv.Key, kv.Value.Schema, kv.Value.Value);
             }
 
-            serializer.EndSerialization(referenceId);
+            serializer.EndSerialization();
 
             return new StringContent(serializer.GetResult(), Encoding.Default, _argMapper.ContentType);
         }

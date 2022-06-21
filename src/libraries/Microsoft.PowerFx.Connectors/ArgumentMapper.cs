@@ -31,6 +31,7 @@ namespace Microsoft.PowerFx.Connectors
 
         public List<OpenApiParameter> OpenApiParameters;
         public List<OpenApiParameter> OpenApiBodyParameters;
+        public bool SchemaLessBody = false;
 
         #region ServiceFunction args
 
@@ -137,8 +138,8 @@ namespace Microsoft.PowerFx.Connectors
                         }
                     }
                     else
-                    {
-                        ReferenceId = "body";
+                    {                        
+                        SchemaLessBody = true;
                         bodyParameter = new OpenApiParameter() { Schema = schema, Name = bodyName, Description = "Body", Required = requestBody.Required };
 
                         OpenApiBodyParameters.Add(bodyParameter);

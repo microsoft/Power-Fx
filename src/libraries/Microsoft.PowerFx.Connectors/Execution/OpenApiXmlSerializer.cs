@@ -14,13 +14,13 @@ namespace Microsoft.PowerFx.Connectors.Execution
         private readonly Stack<XElement> _stack;
         private string _rootName;
 
-        public OpenApiXmlSerializer()
-            : base()
+        public OpenApiXmlSerializer(bool schemaLessBody)
+            : base(schemaLessBody)
         {            
             _stack = new Stack<XElement>();
         }
 
-        protected override void EndArray(string name = null)
+        protected override void EndArray()
         {
             EndObject();
         }
@@ -104,7 +104,7 @@ namespace Microsoft.PowerFx.Connectors.Execution
             _root = _stack.Peek();
         }
 
-        internal override void EndSerialization(string refId)
+        internal override void EndSerialization()
         {
             // Do nothing
         }

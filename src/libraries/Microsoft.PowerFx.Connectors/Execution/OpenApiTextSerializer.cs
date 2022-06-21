@@ -11,12 +11,13 @@ namespace Microsoft.PowerFx.Connectors.Execution
     {
         private readonly StringBuilder _writer;
 
-        internal OpenApiTextSerializer()
+        internal OpenApiTextSerializer(bool schemaLessBody)
+            : base(schemaLessBody)
         {
             _writer = new StringBuilder(1024);
         }
 
-        protected override void EndArray(string name = null)
+        protected override void EndArray()
         {            
         }
 
@@ -62,11 +63,7 @@ namespace Microsoft.PowerFx.Connectors.Execution
         protected override void WriteStringValue(string stringValue)
         {
             _writer.Append(stringValue);
-        }
-
-        internal override void EndSerialization(string refId)
-        {            
-        }
+        }     
 
         internal override string GetResult()
         {
@@ -75,6 +72,10 @@ namespace Microsoft.PowerFx.Connectors.Execution
 
         internal override void StartSerialization(string refId)
         {            
+        }
+
+        internal override void EndSerialization()
+        {
         }
     }
 }

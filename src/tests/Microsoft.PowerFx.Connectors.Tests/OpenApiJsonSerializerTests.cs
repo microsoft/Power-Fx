@@ -18,9 +18,9 @@ namespace Microsoft.PowerFx.Tests
         private string SerializeJson(Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)> parameters) => Serialize<OpenApiJsonSerializer>(parameters);
 
         private string Serialize<T>(Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)> parameters)
-            where T : FormulaValueSerializer, new()
+            where T : FormulaValueSerializer
         {
-            var jsonSerializer = new T();
+            var jsonSerializer = (FormulaValueSerializer)Activator.CreateInstance(typeof(T), new object[] { false });
             jsonSerializer.StartSerialization(null);
             
             if (parameters != null)
@@ -31,7 +31,7 @@ namespace Microsoft.PowerFx.Tests
                 }
             }
 
-            jsonSerializer.EndSerialization(null);
+            jsonSerializer.EndSerialization();
             return jsonSerializer.GetResult();
         }
 

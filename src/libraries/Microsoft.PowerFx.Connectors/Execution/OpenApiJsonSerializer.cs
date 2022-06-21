@@ -13,9 +13,10 @@ namespace Microsoft.PowerFx.Connectors.Execution
     {
         private readonly MemoryStream _stream;
         private readonly Utf8JsonWriter _writer;
+        private bool _topPropertyWritten = false;
 
-        public OpenApiJsonSerializer()
-            : base()
+        public OpenApiJsonSerializer(bool schemaLessBody)
+            : base(schemaLessBody)
         {
             _stream = new MemoryStream();
             _writer = new Utf8JsonWriter(_stream, new JsonWriterOptions());
@@ -28,9 +29,10 @@ namespace Microsoft.PowerFx.Connectors.Execution
         }
 
         protected override void WritePropertyName(string name)
-        {
-            if (name != "body")
+        {         
+            if (!_schemaLessBody || _topPropertyWritten)
             {
+                _topPropertyWritten = true;
                 _writer.WritePropertyName(name);
             }
         }
@@ -63,8 +65,9 @@ namespace Microsoft.PowerFx.Connectors.Execution
 
         protected override void StartObject(string name = null)
         {
-            if (string.IsNullOrEmpty(name) || name == "body")
+            if (string.IsNullOrEmpty(name) || (_schemaLessBody && !_topPropertyWritten))
             {
+                _topPropertyWritten = true;
                 _writer.WriteStartObject();
             }
             else
@@ -75,7 +78,7 @@ namespace Microsoft.PowerFx.Connectors.Execution
 
         protected override void EndObject(string name = null)
         {
-            if (name != "body")
+            if (!_schemaLessBody || _topPropertyWritten)
             {
                 _writer.WriteEndObject();
             }
@@ -83,8 +86,9 @@ namespace Microsoft.PowerFx.Connectors.Execution
 
         protected override void StartArray(string name = null)
         {
-            if (string.IsNullOrEmpty(name) || name == "body")
+            if (string.IsNullOrEmpty(name) || (_schemaLessBody && !_topPropertyWritten))
             {
+                _topPropertyWritten = true;
                 _writer.WriteStartArray();
             }
             else
@@ -93,7 +97,7 @@ namespace Microsoft.PowerFx.Connectors.Execution
             }
         }
 
-        protected override void EndArray(string name = null)
+        protected override void EndArray()
         {
             _writer.WriteEndArray();
         }
@@ -105,15 +109,15 @@ namespace Microsoft.PowerFx.Connectors.Execution
 
         internal override void StartSerialization(string refId)
         {
-            if (refId != "body")
+            if (!_schemaLessBody)
             {
                 StartObject();
             }
         }
 
-        internal override void EndSerialization(string refId)
+        internal override void EndSerialization()
         {
-            if (refId != "body")
+            if (!_schemaLessBody)
             {
                 EndObject();
             }
