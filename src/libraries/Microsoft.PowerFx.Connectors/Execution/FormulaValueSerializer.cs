@@ -103,6 +103,7 @@ namespace Microsoft.PowerFx.Connectors.Execution
                 case "number":
                     // float, double                    
                     WritePropertyName(propertyName);
+
                     if (fv is NumberValue numberValue)
                     {
                         WriteNumberValue(numberValue.Value);
@@ -111,10 +112,12 @@ namespace Microsoft.PowerFx.Connectors.Execution
                     {
                         throw new ArgumentException($"Expected NumberValue (number) and got {fv?.GetType()?.Name ?? "<null>"} value, for property {propertyName}");
                     }
+
                     break;
                 case "boolean":
                     // bool
                     WritePropertyName(propertyName);
+
                     if (fv is BooleanValue booleanValue)
                     {
                         WriteBooleanValue(booleanValue.Value);
@@ -123,11 +126,13 @@ namespace Microsoft.PowerFx.Connectors.Execution
                     {
                         throw new ArgumentException($"Expected BooleanValue and got {fv?.GetType()?.Name ?? "<null>"} value, for property {propertyName}");
                     }
+
                     break;
 
                 case "integer":
                     // int16, int32, int64                    
                     WritePropertyName(propertyName);
+
                     if (fv is NumberValue integerValue)
                     {
                         WriteNumberValue(integerValue.Value);
@@ -136,11 +141,13 @@ namespace Microsoft.PowerFx.Connectors.Execution
                     {
                         throw new ArgumentException($"Expected NumberValue (integer) and got {fv?.GetType()?.Name ?? "<null>"} value, for property {propertyName}");
                     }
+
                     break;
 
                 case "string":
                     // string, binary, date, date-time, password, byte (base64)
                     WritePropertyName(propertyName);
+
                     if (fv is StringValue stringValue)
                     {
                         WriteStringValue(stringValue.Value);
@@ -154,6 +161,7 @@ namespace Microsoft.PowerFx.Connectors.Execution
                     {
                         throw new ArgumentException($"Expected StringValue and got {fv?.GetType()?.Name ?? "<null>"} value, for property {propertyName}");
                     }
+
                     break;
 
                 case "object":

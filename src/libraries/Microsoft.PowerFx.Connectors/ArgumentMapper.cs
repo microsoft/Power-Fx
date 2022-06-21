@@ -125,24 +125,19 @@ namespace Microsoft.PowerFx.Connectors
                         throw new NotImplementedException($"OpenApiSchema is not supported");
                     }
                     else if (schema.Properties.Any())
-                    {                        
+                    {
                         foreach (var prop in schema.Properties)
                         {
                             var required = schema.Required.Contains(prop.Key);
-                            
+
                             bodyParameter = new OpenApiParameter() { Schema = prop.Value, Name = prop.Key, Description = "Body", Required = required };
                             OpenApiBodyParameters.Add(bodyParameter);
 
-                            (required ? requiredBodyParams : optionalBodyParams).Add(prop);                            
-                        }                        
+                            (required ? requiredBodyParams : optionalBodyParams).Add(prop);
+                        }
                     }
-                    //else if (schema.Items != null && schema.Type == "array")
-                    //{
-                    //    int u = 0;
-                    //}
                     else
                     {
-                        //ContentType = OpenApiExtensions.ContentType_TextPlain;
                         ReferenceId = "body";
                         bodyParameter = new OpenApiParameter() { Schema = schema, Name = bodyName, Description = "Body", Required = requestBody.Required };
 
