@@ -10,6 +10,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
 using Microsoft.OpenApi.Models;
+using Microsoft.PowerFx.Connectors.Execution;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Connectors
@@ -24,13 +25,7 @@ namespace Microsoft.PowerFx.Connectors
         private readonly ArgumentMapper _argMapper;
         private readonly ICachingHttpClient _cache;
 
-        public HttpFunctionInvoker(
-            HttpMessageInvoker httpClient, 
-            HttpMethod method, 
-            string path, 
-            FormulaType returnType, 
-            ArgumentMapper argMapper,
-            ICachingHttpClient cache = null)
+        public HttpFunctionInvoker(HttpMessageInvoker httpClient, HttpMethod method, string path, FormulaType returnType, ArgumentMapper argMapper, ICachingHttpClient cache = null)
         {
             _httpClient = httpClient;
             _method = method;
@@ -46,9 +41,10 @@ namespace Microsoft.PowerFx.Connectors
             {
                 case ParameterLocation.Path:
                 case ParameterLocation.Query:
-                case ParameterLocation.Header:
+                case ParameterLocation.Header:                
                     break;
 
+                case ParameterLocation.Cookie:
                 default:
                     throw new NotImplementedException($"Unsupported ParameterIn {location}");
             }
@@ -63,9 +59,25 @@ namespace Microsoft.PowerFx.Connectors
             // Header names are not case sensitive.
             // From RFC 2616 - "Hypertext Transfer Protocol -- HTTP/1.1", Section 4.2, "Message Headers"
             var headers = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+            HttpContent body = null;            
+            Dictionary<string, (OpenApiSchema, FormulaValue)> bodyParts = new ();
 
             var map = _argMapper.ConvertToSwagger(args);
-            foreach (var param in _argMapper._openApiParameters)
+
+            foreach (var param in _argMapper.OpenApiBodyParameters)
+            {
+                if (map.TryGetValue(param.Name, out var paramValue))
+                {
+                    bodyParts.Add(param.Name, (param.Schema, paramValue));
+                }               
+            }
+
+            if (bodyParts.Any())
+            {
+                body = GetBody(_argMapper.ReferenceId, _argMapper.SchemaLessBody, bodyParts);
+            }
+
+            foreach (var param in _argMapper.OpenApiParameters)
             {
                 if (map.TryGetValue(param.Name, out var paramValue))
                 {
@@ -88,23 +100,47 @@ namespace Microsoft.PowerFx.Connectors
                             headers.Add(param.Name, valueStr);
                             break;
 
+                        case ParameterLocation.Cookie:
                         default:
                             throw new NotImplementedException($"{param.In}");
                     }
                 }
             }
 
-            var url = path + query.ToString();
-
-            // $$$ Not handling Body yet...
-            var request = new HttpRequestMessage(_method, url);
+            var url = path + query.ToString();            
+            var request = new HttpRequestMessage(_method, url);            
 
             foreach (var kv in headers)
             {
                 request.Headers.Add(kv.Key, kv.Value);
             }
 
+            if (body != null)
+            {                
+                request.Content = body;
+            }
+
             return request;
+        }
+       
+        private HttpContent GetBody(string referenceId, bool schemaLessBody, Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)> map)
+        {
+            FormulaValueSerializer serializer = _argMapper.ContentType.ToLowerInvariant() switch
+            {
+                OpenApiExtensions.ContentType_XWwwFormUrlEncoded => new OpenApiFormUrlEncoder(schemaLessBody),                
+                OpenApiExtensions.ContentType_TextPlain => new OpenApiTextSerializer(schemaLessBody),
+                _ => new OpenApiJsonSerializer(schemaLessBody)
+            };
+            
+            serializer.StartSerialization(referenceId);
+            foreach (var kv in map)
+            {
+                serializer.SerializeValue(kv.Key, kv.Value.Schema, kv.Value.Value);
+            }
+
+            serializer.EndSerialization();
+
+            return new StringContent(serializer.GetResult(), Encoding.Default, _argMapper.ContentType);
         }
 
         public async Task<FormulaValue> DecodeResponseAsync(HttpResponseMessage response)
@@ -135,7 +171,7 @@ namespace Microsoft.PowerFx.Connectors
             // $$$ Proper marshalling?,  use _returnType;
             // If schema was an array, we returned a Single Column Table type for it. 
             // Need to ensure we marshal it consistency here. 
-            var result = FormulaValue.FromJson(json);            
+            var result = FormulaValue.FromJson(json);
 
             return result;
         }
@@ -152,7 +188,7 @@ namespace Microsoft.PowerFx.Connectors
                 _cache.Reset(cacheScope);
                 key = null; // don't bother caching
             }
-                        
+
             var result2 = await _cache.TryGetAsync(cacheScope, key, async () =>
             {
                 var response = await _httpClient.SendAsync(request, cancel);
