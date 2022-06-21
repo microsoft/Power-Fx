@@ -39,7 +39,7 @@ namespace Microsoft.PowerFx.Connectors.Execution
 
         protected abstract void WriteDateTimeValue(DateTime dateTimeValue);
 
-        protected bool _schemaLessBody;
+        protected readonly bool _schemaLessBody;
 
         internal FormulaValueSerializer(bool schemaLessBody)
         {

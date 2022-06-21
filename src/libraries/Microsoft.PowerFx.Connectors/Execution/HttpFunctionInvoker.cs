@@ -59,7 +59,7 @@ namespace Microsoft.PowerFx.Connectors
             // Header names are not case sensitive.
             // From RFC 2616 - "Hypertext Transfer Protocol -- HTTP/1.1", Section 4.2, "Message Headers"
             var headers = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-            ByteArrayContent body = null;            
+            HttpContent body = null;            
             Dictionary<string, (OpenApiSchema, FormulaValue)> bodyParts = new ();
 
             var map = _argMapper.ConvertToSwagger(args);
@@ -123,7 +123,7 @@ namespace Microsoft.PowerFx.Connectors
             return request;
         }
        
-        private ByteArrayContent GetBody(string referenceId, bool schemaLessBody, Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)> map)
+        private HttpContent GetBody(string referenceId, bool schemaLessBody, Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)> map)
         {
             FormulaValueSerializer serializer = _argMapper.ContentType.ToLowerInvariant() switch
             {
