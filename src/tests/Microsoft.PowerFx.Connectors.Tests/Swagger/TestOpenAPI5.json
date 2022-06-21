@@ -1,0 +1,202 @@
+﻿{
+  "swagger": "2.0",
+  "info": {
+    "title": "Weather Forecast Sample Site",
+    "description": "Weather Forecast Sample Site",
+    "version": "v1"
+  },
+  "paths": {
+    "/weather/t7": {
+      "post": {
+        "tags": [
+          "WeatherForecast"
+        ],
+        "summary": "T7",
+        "operationId": "GetT7",
+        "consumes": [
+          "application/json",
+          "text/json",
+          "application/*+json",
+          "application/xml",
+          "text/xml",
+          "application/*+xml"
+        ],
+        "produces": [
+          "text/plain",
+          "application/json",
+          "text/json",
+          "application/xml",
+          "text/xml"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/ObjectC"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/WeatherForecast"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/weather/t8": {
+      "post": {
+        "tags": [
+          "WeatherForecast"
+        ],
+        "summary": "T8",
+        "operationId": "GetT8",
+        "consumes": [
+          "application/json",
+          "text/json",
+          "application/*+json",
+          "application/xml",
+          "text/xml",
+          "application/*+xml"
+        ],
+        "produces": [
+          "text/plain",
+          "application/json",
+          "text/json",
+          "application/xml",
+          "text/xml"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "type": "array",
+              "items": {
+                "format": "int32",
+                "type": "integer"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/WeatherForecast"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "ProblemDetails": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "status": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "detail": {
+          "type": "string"
+        },
+        "instance": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": {}
+    },
+    "WeatherForecast": {
+      "required": [
+        "date",
+        "temperatureC"
+      ],
+      "type": "object",
+      "properties": {
+        "date": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "temperatureC": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "temperatureF": {
+          "format": "int32",
+          "type": "integer",
+          "readOnly": true
+        },
+        "summary": {
+          "default": "No Summary",
+          "type": "string"
+        },
+        "index": {
+          "format": "int32",
+          "type": "integer"
+        }
+      }
+    },
+    "ObjectB": {
+      "required": [
+        "countB",
+        "id_B",
+        "name_B"
+      ],
+      "type": "object",
+      "properties": {
+        "id_B": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "name_B": {
+          "type": "string"
+        },
+        "countB": {
+          "format": "int32",
+          "type": "integer"
+        }
+      }
+    },
+    "ObjectC": {
+      "required": [
+        "count",
+        "id_A",
+        "name_A",
+        "object_B"
+      ],
+      "type": "object",
+      "properties": {
+        "id_A": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "name_A": {
+          "type": "string"
+        },
+        "count": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "object_B": {
+          "$ref": "#/definitions/ObjectB"
+        }
+      }
+    }
+  }
+}
