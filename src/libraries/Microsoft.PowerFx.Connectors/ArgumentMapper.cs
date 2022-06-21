@@ -30,6 +30,7 @@ namespace Microsoft.PowerFx.Connectors
         public const string DefaultBodyParameter = "body";
 
         public List<OpenApiParameter> OpenApiParameters;
+        public List<OpenApiParameter> OpenApiBodyParameters;
 
         #region ServiceFunction args
 
@@ -38,6 +39,7 @@ namespace Microsoft.PowerFx.Connectors
         public readonly ServiceFunctionParameterTemplate[] OptionalParamInfo;
         public readonly DType[] _parameterTypes; // length of ArityMax        
         public readonly string ContentType;
+        public readonly string ReferenceId;
         public readonly int ArityMin;
         public readonly int ArityMax;
         public readonly OpenApiOperation Operation;
@@ -51,21 +53,23 @@ namespace Microsoft.PowerFx.Connectors
         public ArgumentMapper(IEnumerable<OpenApiParameter> parameters, OpenApiOperation operation)
         {
             OpenApiParameters = parameters.ToList();
+            OpenApiBodyParameters = new List<OpenApiParameter>();
             Operation = operation;
             ContentType = OpenApiExtensions.ContentType_ApplicationJson; // default
 
             var requiredParams = new List<OpenApiParameter>();
             var optionalParams = new List<OpenApiParameter>();
+            var requiredBodyParams = new List<KeyValuePair<string, OpenApiSchema>>();
+            var optionalBodyParams = new List<KeyValuePair<string, OpenApiSchema>>();            
 
             foreach (var param in OpenApiParameters)
             {
                 var name = param.Name;
-
-                HttpFunctionInvoker.VerifyCanHandle(param.In);
-
                 var paramType = param.Schema.ToFormulaType();
 
-                if (param.TryGetDefaultValue(out var defaultValue))
+                HttpFunctionInvoker.VerifyCanHandle(param.In);
+                
+                if (param.Schema.TryGetDefaultValue(out var defaultValue))
                 {
                     _parameterDefaultValues[name] = Tuple.Create(defaultValue, paramType._type);
                 }
@@ -114,34 +118,56 @@ namespace Microsoft.PowerFx.Connectors
                     var schema = ct.MediaType.Schema;
 
                     ContentType = ct.ContentType;
+                    ReferenceId = schema?.Reference?.Id;
 
-                    if (schema.AllOf.Any() || schema.AnyOf.Any() || schema.Not != null || schema.Items != null || schema.AdditionalProperties != null)
+                    if (schema.AllOf.Any() || schema.AnyOf.Any() || schema.Not != null || schema.AdditionalProperties != null || (schema.Items != null && schema.Type != "array"))
                     {
                         throw new NotImplementedException($"OpenApiSchema is not supported");
                     }
+                    else if (schema.Properties.Any())
+                    {                        
+                        foreach (var prop in schema.Properties)
+                        {
+                            var required = schema.Required.Contains(prop.Key);
+                            
+                            bodyParameter = new OpenApiParameter() { Schema = prop.Value, Name = prop.Key, Description = "Body", Required = required };
+                            OpenApiBodyParameters.Add(bodyParameter);
+
+                            (required ? requiredBodyParams : optionalBodyParams).Add(prop);                            
+                        }                        
+                    }
+                    //else if (schema.Items != null && schema.Type == "array")
+                    //{
+                    //    int u = 0;
+                    //}
                     else
-                    {                                               
+                    {
+                        //ContentType = OpenApiExtensions.ContentType_TextPlain;
+                        ReferenceId = "body";
                         bodyParameter = new OpenApiParameter() { Schema = schema, Name = bodyName, Description = "Body", Required = requestBody.Required };
+
+                        OpenApiBodyParameters.Add(bodyParameter);
+                        (requestBody.Required ? requiredParams : optionalParams).Add(bodyParameter);
                     }
                 }
                 else
                 {
-                    // If the content isn't specified, we will expect a string in the body                    
+                    // If the content isn't specified, we will expect a string in the body
                     ContentType = OpenApiExtensions.ContentType_TextPlain;
-                    bodyParameter = new OpenApiParameter() { Schema = new OpenApiSchema() { Type = "string" }, Name = bodyName, Description = "Body", Required = requestBody.Required };                    
+                    bodyParameter = new OpenApiParameter() { Schema = new OpenApiSchema() { Type = "string" }, Name = bodyName, Description = "Body", Required = requestBody.Required };
+
+                    OpenApiBodyParameters.Add(bodyParameter);
+                    (requestBody.Required ? requiredParams : optionalParams).Add(bodyParameter);
                 }
+            }
 
-                OpenApiParameters.Add(bodyParameter);
-                (requestBody.Required ? requiredParams : optionalParams).Add(bodyParameter);
-            }           
+            RequiredParamInfo = requiredParams.ConvertAll(x => Convert(x)).Union(requiredBodyParams.ConvertAll(x => Convert(x))).ToArray();
+            OptionalParamInfo = optionalParams.ConvertAll(x => Convert(x)).Union(optionalBodyParams.ConvertAll(x => Convert(x))).ToArray();
 
-            OptionalParamInfo = optionalParams.ConvertAll(x => Convert(x)).ToArray();
-            RequiredParamInfo = requiredParams.ConvertAll(x => Convert(x)).ToArray();
-                
             // Required params are first N params in the final list. 
             // Optional params are fields on a single record argument at the end.
-            ArityMin = requiredParams.Count;
-            ArityMax = ArityMin + (optionalParams.Count == 0 ? 0 : 1);
+            ArityMin = RequiredParamInfo.Length;
+            ArityMax = ArityMin + (OptionalParamInfo.Length == 0 ? 0 : 1);
 
             _parameterTypes = GetParamTypes(RequiredParamInfo, OptionalParamInfo).ToArray();
         }
@@ -171,19 +197,19 @@ namespace Microsoft.PowerFx.Connectors
 
             // Required parameters are always first
             for (var i = 0; i < RequiredParamInfo.Length; i++)
-            {               
+            {
                 var parameterName = RequiredParamInfo[i].TypedName.Name;
                 var value = args[i];
 
                 // Objects are always flattenned
-                if (value is RecordValue record)
+                if (value is RecordValue record && !(RequiredParamInfo[i].Description == "Body"))
                 {
                     foreach (var field in record.Fields)
-                    {                       
+                    {
                         map.Add(field.Name, field.Value);
                     }
                 }
-                else
+                else if (!map.ContainsKey(parameterName))
                 {
                     map.Add(parameterName, value);
                 }
@@ -232,9 +258,19 @@ namespace Microsoft.PowerFx.Connectors
             var paramType = apiParam.Schema.ToFormulaType()._type;
             var typedName = new TypedName(paramType, new DName(apiParam.Name));
 
-            apiParam.TryGetDefaultValue(out var defaultValue);
+            apiParam.Schema.TryGetDefaultValue(out var defaultValue);
 
             return new ServiceFunctionParameterTemplate(typedName, apiParam.Description, defaultValue);
+        }
+
+        private static ServiceFunctionParameterTemplate Convert(KeyValuePair<string, OpenApiSchema> apiProperty)
+        {
+            var paramType = apiProperty.Value.ToFormulaType()._type;
+            var typedName = new TypedName(paramType, new DName(apiProperty.Key));
+
+            apiProperty.Value.TryGetDefaultValue(out var defaultValue);
+
+            return new ServiceFunctionParameterTemplate(typedName, "Body", defaultValue);
         }
     }
 }

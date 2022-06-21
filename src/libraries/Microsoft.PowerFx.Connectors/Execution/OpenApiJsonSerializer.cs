@@ -4,26 +4,24 @@
 using System;
 using System.Globalization;
 using System.IO;
-using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.Json;
-using Microsoft.OpenApi.Models;
 
 namespace Microsoft.PowerFx.Connectors.Execution
-{    
+{
     internal class OpenApiJsonSerializer : FormulaValueSerializer
-    {        
+    {
         private readonly MemoryStream _stream;
-        private readonly Utf8JsonWriter _writer;        
+        private readonly Utf8JsonWriter _writer;
 
-        internal OpenApiJsonSerializer()
+        public OpenApiJsonSerializer()
             : base()
         {
             _stream = new MemoryStream();
             _writer = new Utf8JsonWriter(_stream, new JsonWriterOptions());
         }
 
-        protected override string GetResult()
+        internal override string GetResult()
         {
             _writer.Flush();
             return Encoding.UTF8.GetString(_stream.ToArray());
@@ -31,7 +29,10 @@ namespace Microsoft.PowerFx.Connectors.Execution
 
         protected override void WritePropertyName(string name)
         {
-            _writer.WritePropertyName(name);
+            if (name != "body")
+            {
+                _writer.WritePropertyName(name);
+            }
         }
 
         protected override void WriteNullValue()
@@ -62,34 +63,37 @@ namespace Microsoft.PowerFx.Connectors.Execution
 
         protected override void StartObject(string name = null)
         {
-            if (string.IsNullOrEmpty(name))
+            if (string.IsNullOrEmpty(name) || name == "body")
             {
                 _writer.WriteStartObject();
             }
             else
             {
-                _writer.WriteStartObject(JsonEncodedText.Encode(name));
+                _writer.WriteStartObject(name);
             }
         }
 
-        protected override void EndObject()
+        protected override void EndObject(string name = null)
         {
-            _writer.WriteEndObject();
+            if (name != "body")
+            {
+                _writer.WriteEndObject();
+            }
         }
 
         protected override void StartArray(string name = null)
         {
-            if (string.IsNullOrEmpty(name))
+            if (string.IsNullOrEmpty(name) || name == "body")
             {
                 _writer.WriteStartArray();
             }
             else
             {
-                _writer.WriteStartArray(JsonEncodedText.Encode(name));
+                _writer.WriteStartArray(name);
             }
         }
 
-        protected override void EndArray()
+        protected override void EndArray(string name = null)
         {
             _writer.WriteEndArray();
         }
@@ -99,9 +103,20 @@ namespace Microsoft.PowerFx.Connectors.Execution
             // Do nothing
         }
 
-        protected override void StartSerialization(OpenApiSchema schema)
+        internal override void StartSerialization(string refId)
         {
-            // Do nothing
+            if (refId != "body")
+            {
+                StartObject();
+            }
+        }
+
+        internal override void EndSerialization(string refId)
+        {
+            if (refId != "body")
+            {
+                EndObject();
+            }
         }
     }
 }

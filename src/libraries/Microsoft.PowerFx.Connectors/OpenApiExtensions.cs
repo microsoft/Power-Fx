@@ -91,9 +91,10 @@ namespace Microsoft.PowerFx.Connectors
             return isTrigger;
         }
 
-        public static bool TryGetDefaultValue(this OpenApiParameter param, out string defaultValue)
+        public static bool TryGetDefaultValue(this OpenApiSchema schema, out string defaultValue)
         {
-            var x = param.Schema.Default;
+            var x = schema.Default;
+
             if (x == null)
             {
                 defaultValue = null;

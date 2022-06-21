@@ -3,13 +3,11 @@
 
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
+using System.Text.Json;
 using Microsoft.OpenApi.Models;
 using Microsoft.PowerFx.Connectors.Execution;
-using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Tests;
-using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Types;
 using Xunit;
 
@@ -17,128 +15,189 @@ namespace Microsoft.PowerFx.Tests
 {
     public class OpenApiJsonSerializerTests : PowerFxTest
     {
+        private string SerializeJson(Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)> parameters) => Serialize<OpenApiJsonSerializer>(parameters);
+
+        private string Serialize<T>(Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)> parameters)
+            where T : FormulaValueSerializer, new()
+        {
+            var jsonSerializer = new T();
+            jsonSerializer.StartSerialization(null);
+            
+            if (parameters != null)
+            {
+                foreach (var parameter in parameters)
+                {
+                    jsonSerializer.SerializeValue(parameter.Key, parameter.Value.Schema, parameter.Value.Value);
+                }
+            }
+
+            jsonSerializer.EndSerialization(null);
+            return jsonSerializer.GetResult();
+        }
+
+        private TableValue GetArray(params double[] values)
+        {
+            return FormulaValue.NewSingleColumnTable(values.Select(v => FormulaValue.New(v)));
+        }
+
+        private TableValue GetArray(params string[] values)
+        {
+            return FormulaValue.NewSingleColumnTable(values.Select(v => FormulaValue.New(v)));
+        }
+
+        private TableValue GetTable(RecordValue recordValue)
+        {
+            return FormulaValue.NewTable(recordValue.Type, recordValue);
+        }
+
         [Fact]
         public void JsonSerializer_Empty()
         {
-            var jsonSerializer = new OpenApiJsonSerializer();
-            var schema = new OpenApiSchema();
-            var fields = new List<NamedValue>();
-
-            var str = jsonSerializer.Serialize(schema, fields);
+            var str = SerializeJson(null);
             Assert.Equal("{}", str);
         }
 
         [Fact]
         public void JsonSerializer_SingleInteger()
         {
-            var jsonSerializer = new OpenApiJsonSerializer();
-            var schema = new OpenApiSchema() { Properties = new Dictionary<string, OpenApiSchema>() { ["a"] = new OpenApiSchema() { Type = "integer" } } };
-            var fields = new List<NamedValue>() { new NamedValue("a", FormulaValue.New(1)) };
+            var str = SerializeJson(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
+            {
+                ["a"] = (new OpenApiSchema() { Type = "integer" }, FormulaValue.New(1))
+            });
 
-            var str = jsonSerializer.Serialize(schema, fields);
             Assert.Equal(@"{""a"":1}", str);
         }
 
         [Fact]
-        public void JsonSerializer_SingleInteger_NoField()
+        public void JsonSerializer_EscapedKey()
         {
-            var jsonSerializer = new OpenApiJsonSerializer();
-            var schema = new OpenApiSchema() { Properties = new Dictionary<string, OpenApiSchema>() { ["a"] = new OpenApiSchema() { Type = "integer" } } };
-            var fields = new List<NamedValue>();
+            var str = SerializeJson(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
+            {
+                ["a\\b\"c\""] = (new OpenApiSchema() { Type = "integer" }, FormulaValue.New(1))
+            });
 
-            var ex = Assert.Throws<NotImplementedException>(() => jsonSerializer.Serialize(schema, fields));
-            Assert.Equal("Missing property a, object is too complex or not supported", ex.Message);
+            Assert.Equal(@"{""a\\b\u0022c\u0022"":1}", str);
         }
 
         [Fact]
-        public void JsonSerializer_SingleInteger_InvalidValue()
+        public void JsonSerializer_SingleInteger_NoValue()
         {
-            var jsonSerializer = new OpenApiJsonSerializer();
-            var schema = new OpenApiSchema() { Properties = new Dictionary<string, OpenApiSchema>() { ["a"] = new OpenApiSchema() { Type = "integer" } } };
-            var fields = new List<NamedValue>() { new NamedValue("a", null) };
+            var ex = Assert.Throws<ArgumentException>(() => SerializeJson(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
+            {
+                ["a"] = (new OpenApiSchema() { Type = "integer" }, null)
+            }));
 
-            var ex = Assert.Throws<ArgumentException>(() => jsonSerializer.Serialize(schema, fields));
-            Assert.Equal("Missing valid FormulaValue for property a", ex.Message);
+            Assert.Equal("Expected NumberValue (integer) and got <null> value, for property a", ex.Message);           
+        }
+
+        [Fact]
+        public void JsonSerializer_SingleInteger_NoSchema()
+        {
+            var ex = Assert.Throws<ArgumentException>(() => SerializeJson(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
+            {
+                ["a"] = (null, null)
+            }));
+            
+            Assert.Equal("Missing schema for property a", ex.Message);
         }
 
         [Fact]
         public void JsonSerializer_Integer_String_Mismatch()
         {
-            var jsonSerializer = new OpenApiJsonSerializer();
-            var schema = new OpenApiSchema() { Properties = new Dictionary<string, OpenApiSchema>() { ["a"] = new OpenApiSchema() { Type = "integer" } } };
-            var fields = new List<NamedValue>() { new NamedValue("a", FormulaValue.New("abc")) };
+            var ex = Assert.Throws<ArgumentException>(() => SerializeJson(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
+            {
+                ["a"] = (new OpenApiSchema() { Type = "integer" }, FormulaValue.New("abc"))
+            }));
 
-            var ex = Assert.Throws<ArgumentException>(() => jsonSerializer.Serialize(schema, fields));
-            Assert.Equal("Type mismatch for property a, expected type Number and got String", ex.Message);
+            Assert.Equal("Expected NumberValue (integer) and got StringValue value, for property a", ex.Message);
         }
 
         [Fact]
         public void JsonSerializer_TwoIntegers()
         {
-            var jsonSerializer = new OpenApiJsonSerializer();
-            var schema = new OpenApiSchema() { Properties = new Dictionary<string, OpenApiSchema>() { ["a"] = new OpenApiSchema() { Type = "integer" }, ["b"] = new OpenApiSchema() { Type = "integer" } } };
-            var fields = new List<NamedValue>() { new NamedValue("b", FormulaValue.New(-2)), new NamedValue("a", FormulaValue.New(1)) };
-
-            var str = jsonSerializer.Serialize(schema, fields);
+            var str = SerializeJson(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
+            {
+                ["a"] = (new OpenApiSchema() { Type = "integer" }, FormulaValue.New(1)),
+                ["b"] = (new OpenApiSchema() { Type = "integer" }, FormulaValue.New(-2))
+            });
+            
             Assert.Equal(@"{""a"":1,""b"":-2}", str);
         }
 
         [Fact]
         public void JsonSerializer_String()
         {
-            var jsonSerializer = new OpenApiJsonSerializer();
-            var schema = new OpenApiSchema() { Properties = new Dictionary<string, OpenApiSchema>() { ["a"] = new OpenApiSchema() { Type = "string" } } };
-            var fields = new List<NamedValue>() { new NamedValue("a", FormulaValue.New("abc")) };
+            var str = SerializeJson(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
+            {
+                ["a"] = (new OpenApiSchema() { Type = "string" }, FormulaValue.New("abc"))
+            });
 
-            var str = jsonSerializer.Serialize(schema, fields);
             Assert.Equal(@"{""a"":""abc""}", str);
         }
 
         [Fact]
         public void JsonSerializer_Bool()
         {
-            var jsonSerializer = new OpenApiJsonSerializer();
-            var schema = new OpenApiSchema() { Properties = new Dictionary<string, OpenApiSchema>() { ["a"] = new OpenApiSchema() { Type = "boolean" }, ["b"] = new OpenApiSchema() { Type = "boolean" } } };
-            var fields = new List<NamedValue>() { new NamedValue("a", FormulaValue.New(true)), new NamedValue("b", FormulaValue.New(false)) };
-
-            var str = jsonSerializer.Serialize(schema, fields);
+            var str = SerializeJson(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
+            {
+                ["a"] = (new OpenApiSchema() { Type = "boolean" }, FormulaValue.New(true)),
+                ["b"] = (new OpenApiSchema() { Type = "boolean" }, FormulaValue.New(false))
+            });
+            
             Assert.Equal(@"{""a"":true,""b"":false}", str);
         }
 
         [Fact]
         public void JsonSerializer_Array()
-        {
-            var jsonSerializer = new OpenApiJsonSerializer();
-            var schema = new OpenApiSchema() { Properties = new Dictionary<string, OpenApiSchema>() { ["a"] = new OpenApiSchema() { Type = "array", Format = "int" } } };                            
-            var fields = new List<NamedValue>() { new NamedValue("a", FormulaValue.NewSingleColumnTable(FormulaValue.New(1), FormulaValue.New(2))) };
+        {            
+            var str = SerializeJson(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
+            {
+                ["a"] = (new OpenApiSchema() { Type = "array", Format = "int" }, GetArray(1, 2))
+            });
 
-            var str = jsonSerializer.Serialize(schema, fields);
             Assert.Equal(@"{""a"":[1,2]}", str);
         }
 
         [Fact]
-        public void JsonSerializer_Array_Invalid()
+        public void JsonSerializer_Array_String()
         {
-            var jsonSerializer = new OpenApiJsonSerializer();
-            var schema = new OpenApiSchema() { Properties = new Dictionary<string, OpenApiSchema>() { ["a"] = new OpenApiSchema() { Type = "array", Format = "int" } } };
-            var record = FormulaValue.NewRecordFromFields(new NamedValue("a", FormulaValue.New(1)), new NamedValue("b", FormulaValue.New("foo")));
-            var table = new InMemoryTableValue(IRContext.NotInSource(TableType.FromRecord(record.Type)), new List<RecordValue>() { record }.Select(r => DValue<RecordValue>.Of(r)));
-            var fields = new List<NamedValue>() { new NamedValue("a", table) };
+            var str = SerializeJson(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
+            {
+                ["a"] = (new OpenApiSchema() { Type = "array", Format = "string" }, GetArray("abc", "def"))
+            });
 
-            var ex = Assert.Throws<ArgumentException>(() => jsonSerializer.Serialize(schema, fields));
-            Assert.Equal("Incompatible Table for supporting array, RecordValue has more than one column - propertyName a, number of fields 2", ex.Message);
+            Assert.Equal(@"{""a"":[""abc"",""def""]}", str);
         }
 
         [Fact]
-        public void JsonSerializer_Date()
-        {
-            var now = DateTime.Now;
-            var jsonSerializer = new OpenApiJsonSerializer();
-            var schema = new OpenApiSchema() { Properties = new Dictionary<string, OpenApiSchema>() { ["a"] = new OpenApiSchema() { Type = "string", Format = "date-time" } } };
-            var fields = new List<NamedValue>() { new NamedValue("a", FormulaValue.New(now)) };
+        public void JsonSerializer_Array_Invalid()
+        {            
+            var ex = Assert.Throws<ArgumentException>(() => SerializeJson(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
+            {
+                ["a"] = (new OpenApiSchema() { Type = "array", Format = "int" }, GetTable(FormulaValue.NewRecordFromFields(new NamedValue("a", FormulaValue.New(1)), new NamedValue("b", FormulaValue.New("foo")))))
+            }));
 
-            var str = jsonSerializer.Serialize(schema, fields);
-            Assert.Equal($@"{{""a"":""{now.ToString("o", CultureInfo.InvariantCulture).Replace("+", "\u002B")}""}}", str);
+            Assert.Equal("Incompatible Table for supporting array, RecordValue has more than one column - propertyName a, number of fields 2", ex.Message);
+        }
+
+        [Theory]
+        [InlineData("2022-06-21T14:36:59.9353993+02:00")]
+        [InlineData("2022-06-21T14:36:59.9353993-08:00")]
+        public void JsonSerializer_Date(string dateString)
+        {
+            var date = DateTime.Parse(dateString);
+            var str = SerializeJson(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
+            {
+                ["A"] = (new OpenApiSchema() { Type = "string", Format = "date-time" }, FormulaValue.New(date))
+            });
+
+            var obj = JsonSerializer.Deserialize<DateTimeType>(str);
+            Assert.Equal(date, obj.A);
+        }
+
+        private class DateTimeType
+        {
+            public DateTime A { get; set; }
         }
     }
 }

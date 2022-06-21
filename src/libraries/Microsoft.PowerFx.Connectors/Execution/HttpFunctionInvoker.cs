@@ -59,48 +59,51 @@ namespace Microsoft.PowerFx.Connectors
             // Header names are not case sensitive.
             // From RFC 2616 - "Hypertext Transfer Protocol -- HTTP/1.1", Section 4.2, "Message Headers"
             var headers = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-            ByteArrayContent body = null;
+            ByteArrayContent body = null;            
+            Dictionary<string, (OpenApiSchema, FormulaValue)> bodyParts = new ();
 
             var map = _argMapper.ConvertToSwagger(args);
+
+            foreach (var param in _argMapper.OpenApiBodyParameters)
+            {
+                if (map.TryGetValue(param.Name, out var paramValue))
+                {
+                    bodyParts.Add(param.Name, (param.Schema, paramValue));
+                }               
+            }
+
+            if (bodyParts.Any())
+            {
+                body = GetBody(_argMapper.ReferenceId, bodyParts);
+            }
+
             foreach (var param in _argMapper.OpenApiParameters)
             {
-                if (param.In == null && param.Schema.Properties != null && param.Schema.Properties.Any())
-                {
-                    body = GetBody(param, map);
-                }
-                else if (map.TryGetValue(param.Name, out var paramValue))
+                if (map.TryGetValue(param.Name, out var paramValue))
                 {
                     var valueStr = paramValue.ToObject().ToString();
 
-                    if (param.In == null)
+                    switch (param.In.Value)
                     {
-                        // No schema, we send the raw value
-                        body = new StringContent(paramValue.ToObject().ToString(), Encoding.Default, _argMapper.ContentType);
+                        case ParameterLocation.Path:
+                            path = path.Replace("{" + param.Name + "}", HttpUtility.UrlEncode(valueStr));
+                            break;
+
+                        case ParameterLocation.Query:
+                            query.Append((query.Length == 0) ? "?" : "&");
+                            query.Append(param.Name);
+                            query.Append('=');
+                            query.Append(HttpUtility.UrlEncode(valueStr));
+                            break;
+
+                        case ParameterLocation.Header:
+                            headers.Add(param.Name, valueStr);
+                            break;
+
+                        case ParameterLocation.Cookie:
+                        default:
+                            throw new NotImplementedException($"{param.In}");
                     }
-                    else
-                    {
-                        switch (param.In.Value)
-                        {
-                            case ParameterLocation.Path:
-                                path = path.Replace("{" + param.Name + "}", HttpUtility.UrlEncode(valueStr));
-                                break;
-
-                            case ParameterLocation.Query:
-                                query.Append((query.Length == 0) ? "?" : "&");
-                                query.Append(param.Name);
-                                query.Append('=');
-                                query.Append(HttpUtility.UrlEncode(valueStr));
-                                break;
-
-                            case ParameterLocation.Header:
-                                headers.Add(param.Name, valueStr);
-                                break;                           
-
-                            case ParameterLocation.Cookie:
-                            default:
-                                throw new NotImplementedException($"{param.In}");
-                        }
-                    }                    
                 }
             }
 
@@ -119,20 +122,27 @@ namespace Microsoft.PowerFx.Connectors
 
             return request;
         }
-
-        private ByteArrayContent GetBody(OpenApiParameter param, Dictionary<string, FormulaValue> map)
-        {                        
-            var namedValues = map.Select(kvp => new NamedValue(kvp.Key, kvp.Value));            
-
-            var bodyStr = _argMapper.ContentType.ToLowerInvariant() switch
-            {                
-                OpenApiExtensions.ContentType_XWwwFormUrlEncoded => new OpenApiFormUrlEncoder().Serialize(param.Schema, namedValues),
-                OpenApiExtensions.ContentType_ApplicationXml => new OpenApiXmlSerializer().Serialize(param.Schema, namedValues),
-                _ => new OpenApiJsonSerializer().Serialize(param.Schema, namedValues)
+       
+        private ByteArrayContent GetBody(string referenceId, Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)> map)
+        {
+            FormulaValueSerializer serializer = _argMapper.ContentType.ToLowerInvariant() switch
+            {
+                OpenApiExtensions.ContentType_XWwwFormUrlEncoded => new OpenApiFormUrlEncoder(),
+                OpenApiExtensions.ContentType_ApplicationXml => new OpenApiXmlSerializer(),
+                OpenApiExtensions.ContentType_TextPlain => new OpenApiTextSerializer(),
+                _ => new OpenApiJsonSerializer()
             };
+            
+            serializer.StartSerialization(referenceId);
+            foreach (var kv in map)
+            {
+                serializer.SerializeValue(kv.Key, kv.Value.Schema, kv.Value.Value);
+            }
 
-            return new StringContent(bodyStr, Encoding.Default, _argMapper.ContentType);
-        }               
+            serializer.EndSerialization(referenceId);
+
+            return new StringContent(serializer.GetResult(), Encoding.Default, _argMapper.ContentType);
+        }
 
         public async Task<FormulaValue> DecodeResponseAsync(HttpResponseMessage response)
         {

@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
-using Microsoft.OpenApi.Models;
 
 namespace Microsoft.PowerFx.Connectors.Execution
 {
@@ -40,7 +39,7 @@ namespace Microsoft.PowerFx.Connectors.Execution
             _arrayIndex.Push(currentIndex);
         }
 
-        protected override void EndArray()
+        protected override void EndArray(string name = null)
         {
             _arrayIndex.Pop();
         }
@@ -50,12 +49,12 @@ namespace Microsoft.PowerFx.Connectors.Execution
             _stack.Push(prefix);
         }
 
-        protected override void EndObject()
+        protected override void EndObject(string name = null)
         {
             _stack.Pop();
         }
 
-        protected override string GetResult()
+        internal override string GetResult()
         {
             return _writer.ToString();
         }
@@ -113,7 +112,12 @@ namespace Microsoft.PowerFx.Connectors.Execution
             return string.Join(".", _stack.Where(e => !string.IsNullOrEmpty(e)));
         }
 
-        protected override void StartSerialization(OpenApiSchema schema)
+        internal override void StartSerialization(string refId)
+        {
+            // Do nothing
+        }
+
+        internal override void EndSerialization(string refId)
         {
             // Do nothing
         }

@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Xml.Linq;
-using Microsoft.OpenApi.Models;
 
 namespace Microsoft.PowerFx.Connectors.Execution
 {
@@ -21,17 +20,12 @@ namespace Microsoft.PowerFx.Connectors.Execution
             _stack = new Stack<XElement>();
         }
 
-        protected override void StartSerialization(OpenApiSchema schema)
-        {
-            _rootName = schema.Reference.Id ?? "Xml";            
-        }
-
-        protected override void EndArray()
+        protected override void EndArray(string name = null)
         {
             EndObject();
         }
 
-        protected override string GetResult()
+        internal override string GetResult()
         {
             return _root.ToString(SaveOptions.DisableFormatting);
         }
@@ -59,7 +53,7 @@ namespace Microsoft.PowerFx.Connectors.Execution
             _stack.Push(xe);
         }
 
-        protected override void EndObject()
+        protected override void EndObject(string name = null)
         {
             var xe = _stack.Pop();
 
@@ -101,6 +95,18 @@ namespace Microsoft.PowerFx.Connectors.Execution
         protected override void WriteStringValue(string stringValue)
 {
             _stack.Pop().Value = stringValue;
+        }
+
+        internal override void StartSerialization(string refId)
+        {
+            _rootName = refId ?? "Xml";
+            StartObject(_rootName);
+            _root = _stack.Peek();
+        }
+
+        internal override void EndSerialization(string refId)
+        {
+            // Do nothing
         }
     }
 }

@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Drawing;
 using System.Linq;
 using System.Net.Http;
 using System.Threading;
@@ -47,6 +48,8 @@ namespace Microsoft.PowerFx.Tests
         [InlineData(3, @"Test.PostWeatherWithXML({x: [1, 2], y:3 })", "POST http://localhost:5000/weatherPostXML\r\n [content-header] Content-Type: application/xml; charset=utf-8\r\n [body] <Input><x><e>1</e><e>2</e></x><y>3</y></Input>")]
         [InlineData(4, @"Test.GetT5(4, 6, {Id_A:1, Name_A: ""def"", Count:14, 'Object_B.Id_B': 2, 'Object_B.Name_B': ""ghi"", 'Object_B.Count': 7})", "GET http://localhost:5000/weather/t5?Id_A=1&Name_A=def&Count=14&Object_B.Id_B=2&Object_B.Name_B=ghi&Object_B.Count=7&d=4&Name_B=6")]
         [InlineData(4, @"Test.GetT6({d: 11, Name_B: 12, Id_A:1, Name_A: ""def"", Count:14, 'Object_B.Id_B': 2, 'Object_B.Name_B': ""ghi"", 'Object_B.Count': 7})", "GET http://localhost:5000/weather/t6?Id_A=1&Name_A=def&Count=14&Object_B.Id_B=2&Object_B.Name_B=ghi&Object_B.Count=7&d=11&Name_B=12")]
+        [InlineData(5, @"Test.GetT7(1, ""abc"", 5, { id_B: 4, name_B: ""foo"", countB: 44 })", "POST http://localhost:5000/weather/t7\r\n [content-header] Content-Type: application/json; charset=utf-8\r\n [body] {\"id_A\":1,\"name_A\":\"abc\",\"count\":5,\"object_B\":{\"id_B\":4,\"name_B\":\"foo\",\"countB\":44}}")]
+        [InlineData(5, @"Test.GetT8({body: Table({Value: 1}, {Value: 3})})", "POST http://localhost:5000/weather/t8\r\n [content-header] Content-Type: text/json; charset=utf-8\r\n [body] [1,3]")]
         public async void ValidateHttpCalls(int apiFileNumber, string fxQuery, string httpQuery)
         {
             var swaggerFile = apiFileNumber switch
@@ -55,6 +58,7 @@ namespace Microsoft.PowerFx.Tests
                 2 => @"Swagger\TestOpenAPI2.json",
                 3 => @"Swagger\TestOpenAPI3.json",
                 4 => @"Swagger\TestOpenAPI4.json",
+                5 => @"Swagger\TestOpenAPI5.json",
                 _ => throw new ArgumentException("Invalid apiFileNumber"),
             };
 
