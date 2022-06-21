@@ -241,8 +241,7 @@ namespace Microsoft.PowerFx.Connectors
         }
 
         // Keep these constants all lower case
-        public const string ContentType_TextJson = "text/json";
-        public const string ContentType_ApplicationXml = "application/xml";
+        public const string ContentType_TextJson = "text/json";        
         public const string ContentType_XWwwFormUrlEncoded = "application/x-www-form-urlencoded";
         public const string ContentType_ApplicationJson = "application/json";
         public const string ContentType_TextPlain = "text/plain";
@@ -251,8 +250,7 @@ namespace Microsoft.PowerFx.Connectors
         {
             ContentType_ApplicationJson,
             ContentType_XWwwFormUrlEncoded,
-            ContentType_TextJson,
-            ContentType_ApplicationXml,            
+            ContentType_TextJson            
         };        
 
         /// <summary>
@@ -279,7 +277,8 @@ namespace Microsoft.PowerFx.Connectors
                 }
             }
 
-            throw new NotImplementedException($"Cannot determine Content-Type {string.Join(", ", content.Keys)}");
+            // Cannot determine Content-Type
+            return (null, null);
         }
     }
 }

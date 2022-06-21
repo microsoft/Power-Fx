@@ -116,34 +116,38 @@ namespace Microsoft.PowerFx.Connectors
                 if (requestBody.Content != null && requestBody.Content.Any())
                 {
                     var ct = requestBody.Content.GetContentTypeAndSchema();
-                    var schema = ct.MediaType.Schema;
 
-                    ContentType = ct.ContentType;
-                    ReferenceId = schema?.Reference?.Id;
+                    if (!string.IsNullOrEmpty(ct.ContentType) && ct.MediaType != null)
+                    {
+                        var schema = ct.MediaType.Schema;
 
-                    if (schema.AllOf.Any() || schema.AnyOf.Any() || schema.Not != null || schema.AdditionalProperties != null || (schema.Items != null && schema.Type != "array"))
-                    {
-                        throw new NotImplementedException($"OpenApiSchema is not supported");
-                    }
-                    else if (schema.Properties.Any())
-                    {
-                        foreach (var prop in schema.Properties)
+                        ContentType = ct.ContentType;
+                        ReferenceId = schema?.Reference?.Id;
+
+                        if (schema.AllOf.Any() || schema.AnyOf.Any() || schema.Not != null || schema.AdditionalProperties != null || (schema.Items != null && schema.Type != "array"))
                         {
-                            var required = schema.Required.Contains(prop.Key);
-
-                            bodyParameter = new OpenApiParameter() { Schema = prop.Value, Name = prop.Key, Description = "Body", Required = required };
-                            OpenApiBodyParameters.Add(bodyParameter);
-
-                            (required ? requiredBodyParams : optionalBodyParams).Add(prop);
+                            throw new NotImplementedException($"OpenApiSchema is not supported");
                         }
-                    }
-                    else
-                    {                        
-                        SchemaLessBody = true;
-                        bodyParameter = new OpenApiParameter() { Schema = schema, Name = bodyName, Description = "Body", Required = requestBody.Required };
+                        else if (schema.Properties.Any())
+                        {
+                            foreach (var prop in schema.Properties)
+                            {
+                                var required = schema.Required.Contains(prop.Key);
 
-                        OpenApiBodyParameters.Add(bodyParameter);
-                        (requestBody.Required ? requiredParams : optionalParams).Add(bodyParameter);
+                                bodyParameter = new OpenApiParameter() { Schema = prop.Value, Name = prop.Key, Description = "Body", Required = required };
+                                OpenApiBodyParameters.Add(bodyParameter);
+
+                                (required ? requiredBodyParams : optionalBodyParams).Add(prop);
+                            }
+                        }
+                        else
+                        {
+                            SchemaLessBody = true;
+                            bodyParameter = new OpenApiParameter() { Schema = schema, Name = bodyName, Description = "Body", Required = requestBody.Required };
+
+                            OpenApiBodyParameters.Add(bodyParameter);
+                            (requestBody.Required ? requiredParams : optionalParams).Add(bodyParameter);
+                        }
                     }
                 }
                 else

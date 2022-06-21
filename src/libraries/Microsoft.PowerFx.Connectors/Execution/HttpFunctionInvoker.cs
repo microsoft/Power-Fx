@@ -127,8 +127,7 @@ namespace Microsoft.PowerFx.Connectors
         {
             FormulaValueSerializer serializer = _argMapper.ContentType.ToLowerInvariant() switch
             {
-                OpenApiExtensions.ContentType_XWwwFormUrlEncoded => new OpenApiFormUrlEncoder(schemaLessBody),
-                OpenApiExtensions.ContentType_ApplicationXml => new OpenApiXmlSerializer(schemaLessBody),
+                OpenApiExtensions.ContentType_XWwwFormUrlEncoded => new OpenApiFormUrlEncoder(schemaLessBody),                
                 OpenApiExtensions.ContentType_TextPlain => new OpenApiTextSerializer(schemaLessBody),
                 _ => new OpenApiJsonSerializer(schemaLessBody)
             };
