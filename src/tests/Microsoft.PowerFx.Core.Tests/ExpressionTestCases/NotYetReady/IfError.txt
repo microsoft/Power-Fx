@@ -22,8 +22,8 @@
 >> IfError(1, {a:1}, 2, {a:2}, {a:3}).a
 3
 
->> IfError({a:{a1:true},b:"hello"}, {a:1,b:"error 1"}, {a:{a1:{a2:3}},b:"world"}, {a:1,b:"error 2"}, {a:1,b:"valid"}, {a:1,b:"error 3"}).a
-1
+>> IfError({a:{a1:true},b:"hello"}, {a:1,b:"error 1"}, {a:{a1:{a2:3}},b:"world"}, {a:2,b:"error 2"}, {a:3,b:"valid"}, {a:4,b:"error 3"}).a
+3
 
 
 // ********** ERROR PARAMETERS *************
@@ -32,7 +32,7 @@
 3
 
 >> IfError(1/0, -1)
-3
+-1
 
 >> IfError(1/0, FirstError.Kind)
 13
@@ -42,6 +42,9 @@
 
 >> IfError(Error({Kind:12}), FirstError.Kind)
 12
+
+>> IfError( 1/0, Sqrt(4))
+2
 
 >> IfError(0, 1, Sqrt(-2), 2)
 2
@@ -58,9 +61,6 @@
 >> IfError({a:1, b:"hello"}, {a:2, b:"good morning"}, {a:1/0, b:"Error"}).a
 #Error(Kind=Div0)
 
->> IfError( 1/0, Notify( "There was an internal problem" ) )
-1
-
 >> IfError(Error({Kind: ErrorKind.Validation}),"Error")
 "Error"
 
@@ -68,7 +68,7 @@
 "Error"
 
 >> IfError(Error({Kind:ErrorKind.InvalidArgument}),"Error")
-#Error(Kind=InvalidArgument)
+"Error"
 
 
 // ********** COERCION CASE BETWEEN TEST VALUE AND REPLACEMENT VALUE *************
