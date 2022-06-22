@@ -204,7 +204,7 @@ namespace Microsoft.PowerFx.Tests
         {
             var str = SerializeJson(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
             {
-                ["a"] = (SchemaArrayInteger, GetArray(GetRecord(("Value", FormulaValue.NewBlank()))))
+                ["a"] = (SchemaArrayInteger, GetArray(GetRecord((TableValue.ValueName, FormulaValue.NewBlank()))))
             });
 
             Assert.Equal(@"{""a"":[null]}", str);
@@ -263,7 +263,7 @@ namespace Microsoft.PowerFx.Tests
         {
             var ex = Assert.Throws<NotImplementedException>(() => SerializeJson(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
             {
-                ["a"] = (SchemaArrayObject, GetArray(GetRecord(("Value", GetRecord(("z", FormulaValue.New(2)))))))
+                ["a"] = (SchemaArrayObject, GetArray(GetRecord((TableValue.ValueName, GetRecord(("z", FormulaValue.New(2)))))))
             }));
 
             Assert.Equal("Not supported type Microsoft.PowerFx.Types.InMemoryRecordValue for value", ex.Message);
