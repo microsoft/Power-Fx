@@ -186,6 +186,6 @@ namespace Microsoft.PowerFx.Types
 
         #endregion // Equality
 
-        public abstract void Visit(ITypeVistor vistor);
+        public abstract void Visit(ITypeVisitor vistor);
     }
 }

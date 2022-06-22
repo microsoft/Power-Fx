@@ -18,7 +18,7 @@ namespace Microsoft.PowerFx.Types
         }
 
         /// <inheritdoc />
-        public override void Visit(ITypeVistor visitor)
+        public override void Visit(ITypeVisitor visitor)
         {
             visitor.Visit(this);
         }
