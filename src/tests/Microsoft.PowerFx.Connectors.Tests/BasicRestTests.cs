@@ -49,6 +49,7 @@ namespace Microsoft.PowerFx.Tests
         [InlineData(4, @"Test.GetT6({d: 11, Name_B: 12, Id_A:1, Name_A: ""def"", Count:14, 'Object_B.Id_B': 2, 'Object_B.Name_B': ""ghi"", 'Object_B.Count': 7})", "GET http://localhost:5000/weather/t6?Id_A=1&Name_A=def&Count=14&Object_B.Id_B=2&Object_B.Name_B=ghi&Object_B.Count=7&d=11&Name_B=12")]
         [InlineData(5, @"Test.GetT7(1, ""abc"", 5, { id_B: 4, name_B: ""foo"", countB: 44 })", "POST http://localhost:5000/weather/t7\r\n [content-header] Content-Type: application/json; charset=utf-8\r\n [body] {\"id_A\":1,\"name_A\":\"abc\",\"count\":5,\"object_B\":{\"id_B\":4,\"name_B\":\"foo\",\"countB\":44}}")]
         [InlineData(5, @"Test.GetT8({body: Table({Value: 1}, {Value: 3})})", "POST http://localhost:5000/weather/t8\r\n [content-header] Content-Type: text/json; charset=utf-8\r\n [body] [1,3]")]
+        [InlineData(5, @"Test.GetT8a(Table({Value: 1}, {Value: 444}))", "POST http://localhost:5000/weather/t8a\r\n [content-header] Content-Type: text/json; charset=utf-8\r\n [body] [1,444]")]
         public async void ValidateHttpCalls(int apiFileNumber, string fxQuery, string httpQuery)
         {
             var swaggerFile = apiFileNumber switch

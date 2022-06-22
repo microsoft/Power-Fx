@@ -97,6 +97,55 @@
           }
         }
       }
+    },
+    "/weather/t8a": {
+      "post": {
+        "tags": [
+          "WeatherForecast"
+        ],
+        "summary": "T8A",
+        "operationId": "GetT8a",
+        "consumes": [
+          "application/json",
+          "text/json",
+          "application/*+json",
+          "application/xml",
+          "text/xml",
+          "application/*+xml"
+        ],
+        "produces": [
+          "text/plain",
+          "application/json",
+          "text/json",
+          "application/xml",
+          "text/xml"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "format": "int32",
+                "type": "integer"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/WeatherForecast"
+              }
+            }
+          }
+        }
+      }
     }
   },
   "definitions": {
