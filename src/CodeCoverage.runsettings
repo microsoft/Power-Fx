@@ -11,11 +11,14 @@
           <CodeCoverage>
             <ModulePaths>
               <Include>
-                <ModulePath>.*\Microsoft.PowerFx.Core.dll$</ModulePath>
-                <ModulePath>.*\Microsoft.PowerFx.Interpreter.dll$</ModulePath>
+                <ModulePath>.*\Microsoft.PowerFx.Connectors.dll</ModulePath>
+                <ModulePath>.*\Microsoft.PowerFx.Core.dll</ModulePath>
+                <ModulePath>.*\Microsoft.PowerFx.Interpreter.dll</ModulePath>
+                <ModulePath>.*\Microsoft.PowerFx.LanguageServerProtocol.dll</ModulePath>
+                <ModulePath>.*\Microsoft.PowerFx.Transport.Attributes.dll</ModulePath>
               </Include>
               <Exclude>
-                <ModulePath>.*\*.tests.dll</ModulePath>
+                <ModulePath>.*\*.Tests.dll</ModulePath>
               </Exclude>
             </ModulePaths>
             <Sources>

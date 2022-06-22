@@ -11,7 +11,7 @@ namespace Microsoft.PowerFx.Connectors.Execution
     {
         private readonly StringBuilder _writer;
 
-        internal OpenApiTextSerializer(bool schemaLessBody)
+        public OpenApiTextSerializer(bool schemaLessBody)
             : base(schemaLessBody)
         {
             _writer = new StringBuilder(1024);

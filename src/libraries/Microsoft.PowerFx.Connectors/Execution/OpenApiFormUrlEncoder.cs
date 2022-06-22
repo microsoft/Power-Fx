@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using System.Web;
 
 namespace Microsoft.PowerFx.Connectors.Execution
 {
@@ -15,7 +16,7 @@ namespace Microsoft.PowerFx.Connectors.Execution
         private readonly Stack<string> _stack;
         private readonly Stack<int> _arrayIndex;
 
-        internal OpenApiFormUrlEncoder(bool schemaLessBody)
+        public OpenApiFormUrlEncoder(bool schemaLessBody)
             : base(schemaLessBody)
         {
             _writer = new StringBuilder(1024);    
@@ -67,7 +68,7 @@ namespace Microsoft.PowerFx.Connectors.Execution
 
         protected override void WriteDateTimeValue(DateTime dateTimeValue)
         {
-            _writer.Append(dateTimeValue.ToString("o", CultureInfo.InvariantCulture));
+            _writer.Append(HttpUtility.UrlEncode(dateTimeValue.ToString("o", CultureInfo.InvariantCulture)));
         }
 
         protected override void WriteNullValue()
@@ -87,17 +88,17 @@ namespace Microsoft.PowerFx.Connectors.Execution
 
             if (!string.IsNullOrEmpty(prefix))
             {
-                _writer.Append(prefix);
+                _writer.Append(HttpUtility.UrlEncode(prefix));
                 _writer.Append('.');
             }
 
-            _writer.Append(name);
+            _writer.Append(HttpUtility.UrlEncode(name));
             _writer.Append('=');
         }
 
         protected override void WriteStringValue(string stringValue)
         {
-            _writer.Append(stringValue);
+            _writer.Append(HttpUtility.UrlEncode(stringValue));
         }
 
         private void AddSeparator()

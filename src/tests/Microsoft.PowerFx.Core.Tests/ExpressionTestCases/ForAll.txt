@@ -24,8 +24,9 @@
 >> ForAll(Sort([60, 61, 62, 63, 64], 1/Value), Char(Value))
 ["@","?",">","=","<"]
 
+// ForAll with empty table
 >> ForAll(FirstN([60, 61, 62, 63, 64], Blank()), Char(Value))
-Blank()
+[]
 
 >> ForAll(Sort([60, 61, 0, 63, 64], 1/Value), Char(Value))
 #Error
