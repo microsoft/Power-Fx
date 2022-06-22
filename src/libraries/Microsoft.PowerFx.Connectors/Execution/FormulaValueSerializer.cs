@@ -92,6 +92,11 @@ namespace Microsoft.PowerFx.Connectors.Execution
                             throw new ArgumentException($"Incompatible Table for supporting array, RecordValue has more than one column - propertyName {propertyName}, number of fields {rva.Fields.Count()}");
                         }
 
+                        if (rva.Fields.First().Name != "Value")
+                        {
+                            throw new ArgumentException($"Incompatible Table for supporting array, RecordValue doesn't have 'Value' column - propertyName {propertyName}");
+                        }
+
                         StartArrayElement(propertyName);
                         WriteValue(rva.Fields.First().Value);
                     }
@@ -101,7 +106,7 @@ namespace Microsoft.PowerFx.Connectors.Execution
 
                 case "null":
                     // nullable
-                    throw new NotImplementedException("null schema type not supported yet");                    
+                    throw new NotImplementedException($"null schema type not supported yet for property {propertyName}");                    
 
                 case "number":
                     // float, double                    
