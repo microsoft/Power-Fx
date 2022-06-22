@@ -122,6 +122,14 @@ namespace Microsoft.PowerFx.Tests
         }
 
         [Fact]
+        public void CheckParseSuccessCommaSeparatedLocaleUsingStatic()
+        {
+            var result = Engine.Parse("Function(args; separated; by; semicolons) + 123,456", null, CultureInfo.GetCultureInfo("de-DE"));
+
+            Assert.True(result.IsSuccess);
+        }
+
+        [Fact]
         public void CheckBindError()
         {
             var config = new PowerFxConfig();
