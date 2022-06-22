@@ -18,6 +18,16 @@ namespace Microsoft.PowerFx.Functions
             });
         }
 
+        public static ErrorValue MaxCallDepth(IRContext irContext)
+        {
+            return new ErrorValue(irContext, new ExpressionError()
+            {
+                Message = "Max call depth reached",
+                Span = irContext.SourceContext,
+                Kind = ErrorKind.Internal, //Todo: change this out for a new kind of ErrorKind error.
+            });
+        }
+
         public static ErrorValue ArgumentOutOfRange(IRContext irContext)
         {
             return new ErrorValue(irContext, new ExpressionError()

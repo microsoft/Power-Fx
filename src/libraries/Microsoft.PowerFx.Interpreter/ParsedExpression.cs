@@ -25,7 +25,7 @@ namespace Microsoft.PowerFx
 
         public Task<FormulaValue> EvalAsync(RecordValue parameters, CancellationToken cancel)
         {
-            var ev2 = new EvalVisitor(_cultureInfo, cancel);            
+            var ev2 = new EvalVisitor(_cultureInfo, cancel, 20);            
 
             var newValue = _irnode.Accept(ev2, SymbolContext.NewTopScope(_topScopeSymbol, parameters));
 

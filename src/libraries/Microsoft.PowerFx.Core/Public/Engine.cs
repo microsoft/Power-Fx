@@ -46,6 +46,15 @@ namespace Microsoft.PowerFx
         }
 
         /// <summary>
+        /// Returns the maximum number of recursive function calls.
+        /// </summary>
+        /// <returns></returns>
+        public int GetMaxCallDepth()
+        {
+            return Config.GetMaxCallDepth();
+        }
+
+        /// <summary>
         /// Create a resolver for use in binding. This is called from <see cref="Check(string, RecordType, ParserOptions)"/>.
         /// Base classes can override this is there are additional symbols not in the config.
         /// </summary>

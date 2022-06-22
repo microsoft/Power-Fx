@@ -54,6 +54,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="ExpressionTestCases\NotYetReady\RecursionTest.txt" />
+    <None Remove="ExpressionTestCases\Recursion.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\libraries\Microsoft.PowerFx.Core\Microsoft.PowerFx.Core.csproj" />
   </ItemGroup>
 
@@ -61,9 +66,5 @@
     <None Update="TestRunnerTests\*.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="ExpressionTestCases\NotYetReady\" />
   </ItemGroup>
 </Project>

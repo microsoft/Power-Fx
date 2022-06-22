@@ -26,9 +26,11 @@ namespace Microsoft.PowerFx
         public CultureInfo CultureInfo { get; }
 
         private readonly CancellationToken _cancel;
+        private readonly int _maxRecursionDepth;
 
-        public EvalVisitor(CultureInfo cultureInfo, CancellationToken cancel)
+        public EvalVisitor(CultureInfo cultureInfo, CancellationToken cancel, int maxRecursionDepth)
         {
+            _maxRecursionDepth = maxRecursionDepth;
             CultureInfo = cultureInfo;
             _cancel = cancel;
         }
@@ -153,6 +155,12 @@ namespace Microsoft.PowerFx
         public override async ValueTask<FormulaValue> Visit(CallNode node, SymbolContext context)
         {
             CheckCancel();
+
+            //Don't know if this is the best place to put this increment call.
+            if (!context.IncrementCallDepth(_maxRecursionDepth))
+            {
+                return CommonErrors.MaxCallDepth(node.IRContext);
+            }
             
             var setResult = await TryHandleSet(node, context);
             if (setResult != null)
@@ -184,7 +192,7 @@ namespace Microsoft.PowerFx
             }
 
             var childContext = context.WithScope(node.Scope);
-
+            context.DecrementCallDepth();
             if (func is IAsyncTexlFunction asyncFunc)
             {
                 var result = await asyncFunc.InvokeAsync(args, _cancel);

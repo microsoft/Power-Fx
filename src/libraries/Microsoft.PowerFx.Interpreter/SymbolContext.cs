@@ -2,7 +2,9 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
+using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.IR.Symbols;
+using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx
@@ -15,10 +17,35 @@ namespace Microsoft.PowerFx
     // of this class in the bodies of the various .visit methods
     internal sealed class SymbolContext
     {
-        public SymbolContext(ScopeSymbol currentScope, Dictionary<int, IScope> scopeValues)
+        private int _currentCallDepth = 0;
+
+        public SymbolContext(ScopeSymbol currentScope, Dictionary<int, IScope> scopeValues, int currentCallDepth)
         {
             CurrentScope = currentScope;
             ScopeValues = scopeValues;
+            _currentCallDepth = currentCallDepth;
+        }
+
+        /// <summary>
+        /// Increments the runtime call depth counter.
+        /// </summary>
+        /// <param name="maxRecursionDepth"></param>
+        /// <returns>False when you go over the recursive depth limit, true normally.</returns>
+        public bool IncrementCallDepth(int maxRecursionDepth)
+        {
+            _currentCallDepth++;
+            if (_currentCallDepth > maxRecursionDepth)
+            {
+                return false;
+            }
+
+            System.Diagnostics.Debug.WriteLine($"CurrentCallDepth: {_currentCallDepth}");
+            return true;
+        }
+
+        public void DecrementCallDepth()
+        {
+            _currentCallDepth--;
         }
 
         public ScopeSymbol CurrentScope { get; } = null;
@@ -27,17 +54,17 @@ namespace Microsoft.PowerFx
 
         public static SymbolContext New()
         {
-            return new SymbolContext(null, new Dictionary<int, IScope>());
+            return new SymbolContext(null, new Dictionary<int, IScope>(), 0);
         }
 
         public static SymbolContext NewTopScope(ScopeSymbol topScope, RecordValue ruleScope)
         {
-            return new SymbolContext(topScope, new Dictionary<int, IScope>() { { topScope.Id, new RecordScope(ruleScope) } });
+            return new SymbolContext(topScope, new Dictionary<int, IScope>() { { topScope.Id, new RecordScope(ruleScope) } }, 0);
         }
 
         public SymbolContext WithScope(ScopeSymbol currentScope)
         {
-            return new SymbolContext(currentScope, ScopeValues);
+            return new SymbolContext(currentScope, ScopeValues, _currentCallDepth);
         }
 
         public SymbolContext WithScopeValues(IScope scopeValues)
@@ -46,7 +73,7 @@ namespace Microsoft.PowerFx
             {
                 [CurrentScope.Id] = scopeValues
             };
-            return new SymbolContext(CurrentScope, newScopeValues);
+            return new SymbolContext(CurrentScope, newScopeValues, _currentCallDepth);
         }
 
         public SymbolContext WithScopeValues(RecordValue scopeValues)

@@ -24,6 +24,7 @@ namespace Microsoft.PowerFx
         private readonly HashSet<TexlFunction> _extraFunctions = new HashSet<TexlFunction>();
         private readonly Dictionary<DName, IExternalEntity> _environmentSymbols;
         private DisplayNameProvider _environmentSymbolDisplayNameProvider;
+        private readonly int _maxCallDepth = 100;
 
         // By default, we pull the core functions. 
         // These can be overridden. 
@@ -96,6 +97,15 @@ namespace Microsoft.PowerFx
         public IEnumerable<string> GetAllFunctionNames()
         {
             return Functions.Select(func => func.Name).Distinct();
+        }
+
+        /// <summary>
+        /// Gets the max number of recursive function calls allowed.
+        /// </summary>
+        /// <returns></returns>
+        public int GetMaxCallDepth()
+        {
+            return _maxCallDepth;
         }
 
         internal IEnumerable<IExternalEntity> GetSymbols() => _environmentSymbols.Values;
