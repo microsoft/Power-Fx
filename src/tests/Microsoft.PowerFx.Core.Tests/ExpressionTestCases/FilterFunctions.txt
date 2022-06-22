@@ -42,9 +42,11 @@ Table({Value:1},{Value:2},Microsoft.PowerFx.Types.ErrorValue,{Value:3},{Value:4}
 >> Filter([1,2,0,3,4], Blank())
 []
 
+// Filter empty table
 >> Filter(LastN([1,2,3,4], Blank()), 1/ThisRecord.Value >= 0)
-Blank()
+[]
 
+// Filter blank table
 >> Filter(Blank(), Blank())
 Blank()
 

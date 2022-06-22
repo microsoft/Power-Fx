@@ -9,7 +9,12 @@ false
 >> Sum([1,2,3], Value)
 6
 
+// Sum empty table
 >> Sum(LastN([1, 2, 3, 4, 5], Blank()), Value)
+0
+
+// Sum blank table
+>> Sum(If(1<0,[1, 2, 3, 4, 5]), Value)
 Blank()
 
 >> Sum(Sort([-2, -1, 0, 1, 2], 1 / Value), Value)
