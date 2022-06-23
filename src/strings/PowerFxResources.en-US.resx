@@ -6438,7 +6438,7 @@
   </data>
   <data name="ErrorResource_NameConflict" xml:space="preserve">
     <value>Can't create a {0} named '{1}' because that name is already used for a {2}.</value>
-    <comment> 0 - Entity that is about to be created/renamed, 1 - Name of the entity, 2 - Type of entity that is already using the name</comment>
+    <comment>{0} - Entity that is about to be created/renamed, {1} - Name of the entity, {2} - Type of entity that is already using the name.</comment>
   </data>
   <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
     <value>The first argument of '{0}' should be a valid variable name, and cannot conflict with any existing control, screen, collection, or data source names. Found type '{1}'</value>
