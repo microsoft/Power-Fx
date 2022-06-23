@@ -58,6 +58,16 @@ namespace Microsoft.PowerFx.Functions
 
         public static FormulaValue FirstN(IRContext irContext, FormulaValue[] args)
         {
+            if (args[0] is BlankValue)
+            {
+                return new BlankValue(irContext);
+            }
+
+            if (args[0] is not TableValue)
+            {
+                return CommonErrors.RuntimeTypeMismatch(irContext);
+            }
+
             var arg0 = (TableValue)args[0];
             var arg1 = (NumberValue)args[1];
 
@@ -67,6 +77,16 @@ namespace Microsoft.PowerFx.Functions
 
         public static FormulaValue LastN(IRContext irContext, FormulaValue[] args)
         {
+            if (args[0] is BlankValue)
+            {
+                return new BlankValue(irContext);
+            }
+
+            if (args[0] is not TableValue)
+            {
+                return CommonErrors.RuntimeTypeMismatch(irContext);
+            }
+
             var arg0 = (TableValue)args[0];
             var arg1 = (NumberValue)args[1];
 
@@ -125,101 +145,141 @@ namespace Microsoft.PowerFx.Functions
         }
 
         // CountRows
-        public static FormulaValue CountRows(IRContext irContext, TableValue[] args)
+        public static FormulaValue CountRows(IRContext irContext, FormulaValue[] args)
         {
             var arg0 = args[0];
 
-            // Streaming 
-            var count = arg0.Count();
-            return new NumberValue(irContext, count);
+            if (arg0 is BlankValue)
+            {
+                return new NumberValue(irContext, 0);
+            }
+
+            if (arg0 is TableValue table)
+            {
+                var errors = table.Rows.Where(r => r.IsError).Select(r => r.Error);
+                if (errors.Any())
+                {
+                    return ErrorValue.Combine(irContext, errors);
+                }
+
+                var count = table.Count();
+                return new NumberValue(irContext, count);
+            }
+
+            return CommonErrors.RuntimeTypeMismatch(irContext);
         }
 
         // Count
-        public static FormulaValue Count(IRContext irContext, TableValue[] args)
+        public static FormulaValue Count(IRContext irContext, FormulaValue[] args)
         {
             var arg0 = args[0];
             var count = 0;
 
-            var errors = new List<ErrorValue>();
-
-            foreach (var row in arg0.Rows)
+            if (arg0 is BlankValue)
             {
-                if (row.IsBlank)
-                {
-                    continue;
-                }
-                else if (row.IsError)
-                {
-                    errors.Add(row.Error);
-                    continue;
-                }
-
-                var field = row.Value.Fields.First().Value;
-
-                if (field is ErrorValue error)
-                {
-                    errors.Add(error);
-                    continue;
-                }
-
-                if (field is NumberValue)
-                {
-                    count++;
-                }
+                return new NumberValue(irContext, 0);
             }
 
-            if (errors.Count != 0)
+            if (arg0 is TableValue table)
             {
-                return ErrorValue.Combine(irContext, errors);
+                var errors = new List<ErrorValue>();
+
+                foreach (var row in table.Rows)
+                {
+                    if (row.IsBlank)
+                    {
+                        continue;
+                    }
+                    else if (row.IsError)
+                    {
+                        errors.Add(row.Error);
+                        continue;
+                    }
+
+                    var field = row.Value.Fields.First().Value;
+
+                    if (field is ErrorValue error)
+                    {
+                        errors.Add(error);
+                        continue;
+                    }
+
+                    if (field is NumberValue)
+                    {
+                        count++;
+                    }
+                }
+
+                if (errors.Count != 0)
+                {
+                    return ErrorValue.Combine(irContext, errors);
+                }
+
+                return new NumberValue(irContext, count);
             }
 
-            return new NumberValue(irContext, count);
+            return CommonErrors.RuntimeTypeMismatch(irContext);
         }
 
         // CountA
-        public static FormulaValue CountA(IRContext irContext, TableValue[] args)
+        public static FormulaValue CountA(IRContext irContext, FormulaValue[] args)
         {
             var arg0 = args[0];
-            var count = 0;
-
-            var errors = new List<ErrorValue>();
-
-            foreach (var row in arg0.Rows)
+            if (arg0 is BlankValue)
             {
-                if (row.IsBlank)
-                {
-                    continue;
-                }
-                else if (row.IsError)
-                {
-                    errors.Add(row.Error);
-                    continue;
-                }
-
-                var field = row.Value.Fields.First().Value;
-
-                if (field is ErrorValue error)
-                {
-                    errors.Add(error);
-                    continue;
-                }
-
-                if (field is not BlankValue)
-                {
-                    count++;
-                }
+                return new NumberValue(irContext, 0);
             }
 
-            if (errors.Count != 0)
+            if (arg0 is TableValue table)
             {
-                return ErrorValue.Combine(irContext, errors);
+                var count = 0;
+
+                var errors = new List<ErrorValue>();
+
+                foreach (var row in table.Rows)
+                {
+                    if (row.IsBlank)
+                    {
+                        continue;
+                    }
+                    else if (row.IsError)
+                    {
+                        errors.Add(row.Error);
+                        continue;
+                    }
+
+                    var field = row.Value.Fields.First().Value;
+
+                    if (field is ErrorValue error)
+                    {
+                        errors.Add(error);
+                        continue;
+                    }
+
+                    if (field is not BlankValue)
+                    {
+                        count++;
+                    }
+                }
+
+                if (errors.Count != 0)
+                {
+                    return ErrorValue.Combine(irContext, errors);
+                }
+
+                return new NumberValue(irContext, count);
             }
 
-            return new NumberValue(irContext, count);
+            return CommonErrors.RuntimeTypeMismatch(irContext);
         }
 
         public static async ValueTask<FormulaValue> CountIf(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args)
         {
+            if (args[0] is BlankValue)
+            {
+                return new NumberValue(irContext, 0);
+            }
+
             // Streaming 
             var sources = (TableValue)args[0];
             var filter = (LambdaFormulaValue)args[1];
@@ -281,7 +341,7 @@ namespace Microsoft.PowerFx.Functions
             }
 
             var rows = await LazyFilterAsync(runner, symbolContext, arg0.Rows, arg1);
-            
+
             return new InMemoryTableValue(irContext, rows);
         }
 
@@ -314,7 +374,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 return (row, row.ToFormulaValue());
             }
-            
+
             var childContext = symbolContext.WithScopeValues(row.Value);
             var sortValue = await lambda.EvalAsync(runner, childContext);
 
@@ -421,7 +481,7 @@ namespace Microsoft.PowerFx.Functions
            LambdaFormulaValue filter)
         {
             SymbolContext childContext;
-            
+
             // Issue #263 Filter should be able to handle empty rows
             if (row.IsValue)
             {
@@ -460,11 +520,11 @@ namespace Microsoft.PowerFx.Functions
             EvalVisitor runner,
             SymbolContext context,
             IEnumerable<DValue<RecordValue>> sources,
-            LambdaFormulaValue filter, 
+            LambdaFormulaValue filter,
             int topN = int.MaxValue)
         {
             var tasks = new List<Task<DValue<RecordValue>>>();
-            
+
             // Filter needs to allow running in parallel. 
             foreach (var row in sources)
             {

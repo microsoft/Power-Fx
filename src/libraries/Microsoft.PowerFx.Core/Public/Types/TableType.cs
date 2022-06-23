@@ -27,7 +27,7 @@ namespace Microsoft.PowerFx.Types
             return new TableType(tableType);
         }
 
-        public override void Visit(ITypeVistor vistor)
+        public override void Visit(ITypeVisitor vistor)
         {
             vistor.Visit(this);
         }

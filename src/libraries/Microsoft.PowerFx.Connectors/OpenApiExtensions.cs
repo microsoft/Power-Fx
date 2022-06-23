@@ -3,8 +3,10 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using Microsoft.OpenApi.Any;
+using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.PowerFx.Types;
 
@@ -12,7 +14,7 @@ namespace Microsoft.PowerFx.Connectors
 {
     // See definitions for x-ms extensions:
     // https://docs.microsoft.com/en-us/connectors/custom-connectors/openapi-extensions#x-ms-visibility
-    internal static class OpenApiExtensions
+    public static class OpenApiExtensions
     {
         public static string GetBasePath(this OpenApiDocument openApiDocument)
         {            
@@ -36,6 +38,16 @@ namespace Microsoft.PowerFx.Connectors
                 default:
                     throw new NotImplementedException($"Multiple servers not supported");
             }
+        }
+
+        public static string GetBodyName(this OpenApiRequestBody requestBody)
+        {
+            if (requestBody.Extensions.TryGetValue("x-bodyName", out IOpenApiExtension value) && value is OpenApiString oas)
+            {
+                return oas.Value;
+            }
+           
+            return null;
         }
 
         // Get suggested options values.  Returns null if none. 
@@ -79,9 +91,10 @@ namespace Microsoft.PowerFx.Connectors
             return isTrigger;
         }
 
-        public static bool TryGetDefaultValue(this OpenApiParameter param, out string defaultValue)
+        public static bool TryGetDefaultValue(this OpenApiSchema schema, out string defaultValue)
         {
-            var x = param.Schema.Default;
+            var x = schema.Default;
+
             if (x == null)
             {
                 defaultValue = null;
@@ -148,10 +161,11 @@ namespace Microsoft.PowerFx.Connectors
                     }
                     else
                     {
-                        throw new NotImplementedException();                    
+                        throw new NotImplementedException("Unsupported type of array");
                     }
 
                 case "object":
+                case null: // xml
                     var obj = new RecordType();
                     foreach (var kv in schema.Properties)
                     {
@@ -161,34 +175,28 @@ namespace Microsoft.PowerFx.Connectors
                         obj = obj.Add(propName, propType);
                     }
 
-                    return obj;
+                    return obj;                
 
-                case null:
-                    // Missing a schema is ok.
-                    // But if we do have a schema, it must be valid.
-                    throw new InvalidOperationException($"Null/Invalid schema");
+                default:
+
+                    throw new NotImplementedException($"{schema.Type}");
             }
-
-            throw new NotImplementedException($"{schema.Type}");
         }
 
         public static HttpMethod ToHttpMethod(this OperationType key)
         {
-            switch (key)
+            return key switch
             {
-                case OperationType.Get: return HttpMethod.Get;
-                case OperationType.Put: return HttpMethod.Put;
-                case OperationType.Post: return HttpMethod.Post;
-                case OperationType.Delete: return HttpMethod.Delete;
-                case OperationType.Options: return HttpMethod.Options;
-                case OperationType.Head: return HttpMethod.Head;
-                case OperationType.Trace: return HttpMethod.Trace;
-                default:
-                    return new HttpMethod(key.ToString());
-            }
-        }
-
-        private const string _applicationJson = "application/json";
+                OperationType.Get => HttpMethod.Get,
+                OperationType.Put => HttpMethod.Put,
+                OperationType.Post => HttpMethod.Post,
+                OperationType.Delete => HttpMethod.Delete,
+                OperationType.Options => HttpMethod.Options,
+                OperationType.Head => HttpMethod.Head,
+                OperationType.Trace => HttpMethod.Trace,                
+                _ => new HttpMethod(key.ToString())
+            };
+        }        
 
         public static FormulaType GetReturnType(this OpenApiOperation op)
         {
@@ -215,7 +223,7 @@ namespace Microsoft.PowerFx.Connectors
                 var mediaType = kv3.Key;
                 var response = kv3.Value;
 
-                if (string.Equals(mediaType, _applicationJson, StringComparison.OrdinalIgnoreCase))
+                if (string.Equals(mediaType, ContentType_ApplicationJson, StringComparison.OrdinalIgnoreCase))
                 {
                     if (response.Schema == null)
                     {
@@ -229,7 +237,48 @@ namespace Microsoft.PowerFx.Connectors
             }
 
             // Returns something, but not json. 
-            throw new InvalidOperationException($"Unsupported return type - must have {_applicationJson}");
+            throw new InvalidOperationException($"Unsupported return type - must have {ContentType_ApplicationJson}");
+        }
+
+        // Keep these constants all lower case
+        public const string ContentType_TextJson = "text/json";        
+        public const string ContentType_XWwwFormUrlEncoded = "application/x-www-form-urlencoded";
+        public const string ContentType_ApplicationJson = "application/json";
+        public const string ContentType_TextPlain = "text/plain";
+
+        private static readonly List<string> _knownContentTypes = new ()
+        {
+            ContentType_ApplicationJson,
+            ContentType_XWwwFormUrlEncoded,
+            ContentType_TextJson            
+        };        
+
+        /// <summary>
+        /// Identifies which ContentType and Schema to use.
+        /// </summary>
+        /// <param name="content"></param>
+        /// <returns>RequestBody content dictionary of possible content types and associated schemas.</returns>
+        /// <exception cref="NotImplementedException">When we cannot determine the content type to use.</exception>
+        public static (string ContentType, OpenApiMediaType MediaType) GetContentTypeAndSchema(this IDictionary<string, OpenApiMediaType> content)
+        {
+            Dictionary<string, OpenApiMediaType> list = new ();
+
+            foreach (var ct in _knownContentTypes)
+            {                
+                if (content.TryGetValue(ct, out var mediaType))
+                {
+                    if ((ct == ContentType_ApplicationJson && !mediaType.Schema.Properties.Any()) ||
+                        (ct == ContentType_TextJson && mediaType.Schema.Properties.Any()))
+                    {
+                        continue;
+                    }
+
+                    return (ct, mediaType);
+                }
+            }
+
+            // Cannot determine Content-Type
+            return (null, null);
         }
     }
 }

@@ -1,8 +1,13 @@
 ﻿>> CountIf([1, 2, 3, 4, 5], Value > 2)
 3
 
+// CountIf with empty table
 >> CountIf(LastN([1,2,3,4], Blank()), Value > 2)
-Blank()
+0
+
+// CountIf with blank table
+>> CountIf(If(1<0,[1,2,3,4]), Value > 2)
+0
 
 >> CountIf(Sort([-2, -1, 0, 1, 2], 1 / Value), Value > 2)
 #Error

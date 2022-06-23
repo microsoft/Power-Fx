@@ -3,12 +3,14 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace Microsoft.PowerFx.Types
 {
     /// <summary>
     /// Helper class for representing fields or columns.
     /// </summary>
+    [DebuggerDisplay("{Name}={Value}")]
     public class NamedValue
     {
         public string Name { get; }
