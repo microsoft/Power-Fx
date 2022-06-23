@@ -441,7 +441,7 @@
     <value>A visszaadandó sorok száma.</value>
   </data>
   <data name="AboutText" xml:space="preserve">
-    <value>Az „érték” argumentumot a meghatározott szöveges formátumú számmá alakítja át.</value>
+    <value>Az „érték” argumentumot a meghatározott „szövegformátum” számmá alakítja át.</value>
     
   </data>
   <data name="TextArg1" xml:space="preserve">
@@ -449,7 +449,7 @@
     
   </data>
   <data name="TextArg2" xml:space="preserve">
-    <value>szöveg_formátuma</value>
+    <value>szövegformátum</value>
     
   </data>
   <data name="TextArg3" xml:space="preserve">
@@ -716,7 +716,7 @@
     
   </data>
   <data name="ErrorArg1" xml:space="preserve">
-    <value>error_information</value>
+    <value>hibaadatok</value>
     
   </data>
   <data name="ErrErrorIrrelevantField" xml:space="preserve">
@@ -1766,7 +1766,7 @@
     
   </data>
   <data name="ErrInvalidDataSource" xml:space="preserve">
-    <value>Az adatforrás érvénytelen. Javítsa ki a hibát az „Adatforrások” panelen. Ehhez kattintson a „Tartalom -&gt; Adatforrások” vagy a „Nézet -&gt; Beállítások” parancsra.</value>
+    <value>Az adatforrás érvénytelen. Javítsa ki a hibát az „Adatforrások” panelen. Ehhez kattintson a „Tartalom -&gt; Adatforrások” vagy a „Nézet -&gt; Beállítások” parancsra</value>
     
   </data>
   <data name="ErrExpectedDataSourceRestriction" xml:space="preserve">
@@ -1790,7 +1790,7 @@
     
   </data>
   <data name="ErrExpectedStringLiteralArg_Name" xml:space="preserve">
-    <value>A(z) {0} argumentum érvénytelen, az elvárás szövegliterál.</value>
+    <value>A(z) {0} argumentum érvénytelen, az elvárás szöveges konstansérték.</value>
     
   </data>
   <data name="ErrArgNotAValidIdentifier_Name" xml:space="preserve">
@@ -2120,7 +2120,7 @@
     
   </data>
   <data name="WarnLiteralPredicate" xml:space="preserve">
-    <value>Figyelem: Ez a predikátum egy literálérték, és nem hivatkozik a bemeneti táblára.</value>
+    <value>Figyelem: Ez a predikátum egy konstansérték, és nem hivatkozik a bemeneti táblára.</value>
     
   </data>
   <data name="WarnDynamicMetadata" xml:space="preserve">
@@ -2429,7 +2429,7 @@
     
   </data>
   <data name="camera_Zoom_DisplayName" xml:space="preserve">
-    <value>Nagyítás</value>
+    <value>Nagyítás/kicsinyítés</value>
     
   </data>
   <data name="camera_Camera_DisplayName" xml:space="preserve">
@@ -2673,7 +2673,7 @@
     
   </data>
   <data name="pdfViewer_Zoom_DisplayName" xml:space="preserve">
-    <value>Nagyítás</value>
+    <value>Nagyítás/kicsinyítés</value>
     
   </data>
   <data name="pdfViewer_Password_DisplayName" xml:space="preserve">
@@ -3244,7 +3244,7 @@
     
   </data>
   <data name="DateTimeZone_Local_DisplayName" xml:space="preserve">
-    <value>helyi</value>
+    <value>Helyi</value>
     
   </data>
   <data name="DateTimeZone_UTC_DisplayName" xml:space="preserve">
@@ -3500,7 +3500,7 @@
     
   </data>
   <data name="Icon_Pin_DisplayName" xml:space="preserve">
-    <value>Rögzítés</value>
+    <value>Kitűzés</value>
     
   </data>
   <data name="Icon_ClearDrawing_DisplayName" xml:space="preserve">
@@ -4547,6 +4547,21 @@
   </data>
   <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
     <value>A megnevezett képletnek pontosvesszővel kell végződnie.</value>
+    
+  </data>
+  <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
+    <value>A(z) '{0}' NamedFormula már létezik.</value>
+  </data>
+  <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
+    <value>A(z) {0} első argumentumának egy érvényes változónévnek kell lennie, amely semmilyen meglévő vezérlő, képernyő, gyűjtemény vagy adatforrás nevével nem ütközhet. A talált típus: {1}</value>
+    
+  </data>
+  <data name="AboutSet" xml:space="preserve">
+    <value>Egy globális változó létrehozása és beállítása.</value>
+    
+  </data>
+  <data name="SetArg2" xml:space="preserve">
+    <value>érték</value>
     
   </data>
 </root>

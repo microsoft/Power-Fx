@@ -130,11 +130,11 @@
     
   </data>
   <data name="IfArgTrueValue" xml:space="preserve">
-    <value>true_value</value>
+    <value>valor_verdadeiro</value>
     
   </data>
   <data name="IfArgElseValue" xml:space="preserve">
-    <value>else_value</value>
+    <value>outro_valor</value>
     
   </data>
   <data name="AboutIf_logical_test" xml:space="preserve">
@@ -153,27 +153,27 @@
     
   </data>
   <data name="SwitchExpression" xml:space="preserve">
-    <value>switch_value</value>
+    <value>valor_alternância</value>
     
   </data>
   <data name="SwitchDefaultReturn" xml:space="preserve">
-    <value>default_result</value>
+    <value>resultado_padrão</value>
     
   </data>
   <data name="SwitchCaseExpr" xml:space="preserve">
-    <value>match_value</value>
+    <value>valor_correspondência</value>
     
   </data>
   <data name="SwitchCaseArg" xml:space="preserve">
-    <value>match_result</value>
+    <value>resultado_correspondência</value>
     
   </data>
   <data name="AboutSwitch_switch_value" xml:space="preserve">
-    <value>Valor a ser comparado com cada match_value.</value>
+    <value>Valor a ser comparado com cada valor_correspondência.</value>
     
   </data>
   <data name="AboutSwitch_match_value" xml:space="preserve">
-    <value>Valor a ser correspondido a switch_value.</value>
+    <value>Valor a ser correspondido a valor_alternância.</value>
     
   </data>
   <data name="AboutSwitch_match_result" xml:space="preserve">
@@ -441,7 +441,7 @@
     <value>Número de linhas a ser retornadas.</value>
   </data>
   <data name="AboutText" xml:space="preserve">
-    <value>Converte um 'value' (valor) em texto em um 'format_text' específico de número.</value>
+    <value>Converte um 'valor' em texto em um 'formato_texto' específico de número.</value>
     
   </data>
   <data name="TextArg1" xml:space="preserve">
@@ -3680,7 +3680,7 @@
     
   </data>
   <data name="Icon_Location_DisplayName" xml:space="preserve">
-    <value>Local</value>
+    <value>Localização</value>
     
   </data>
   <data name="Icon_DocumentPDF_DisplayName" xml:space="preserve">
@@ -4547,6 +4547,21 @@
   </data>
   <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
     <value>A fórmula nomeada deve terminar com um ponto e vírgula.</value>
+    
+  </data>
+  <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
+    <value>A NamedFormula '{0}' já existe.</value>
+  </data>
+  <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
+    <value>O primeiro argumento de '{0}' deve ser um nome de variável válido e não pode entrar em conflito com qualquer nome de controle, tela, coleção ou fonte de dados existente. Tipo encontrado '{1}'</value>
+    
+  </data>
+  <data name="AboutSet" xml:space="preserve">
+    <value>Crie e defina uma variável global.</value>
+    
+  </data>
+  <data name="SetArg2" xml:space="preserve">
+    <value>valor</value>
     
   </data>
 </root>

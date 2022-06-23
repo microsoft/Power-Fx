@@ -441,7 +441,7 @@
     <value>Броят редове за връщане.</value>
   </data>
   <data name="AboutText" xml:space="preserve">
-    <value>Преобразува „стойност“ в текст в конкретен брой „format_text“.</value>
+    <value>Преобразува „стойност“ в текст в конкретен брой „формат_натекста“.</value>
     
   </data>
   <data name="TextArg1" xml:space="preserve">
@@ -716,7 +716,7 @@
     
   </data>
   <data name="ErrorArg1" xml:space="preserve">
-    <value>error_information</value>
+    <value>информация_загрешка</value>
     
   </data>
   <data name="ErrErrorIrrelevantField" xml:space="preserve">
@@ -4547,6 +4547,21 @@
   </data>
   <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
     <value>Наименуваната формула трябва да завършва с точка и запетая.</value>
+    
+  </data>
+  <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
+    <value>NamedFormula „{0}“ вече съществува.</value>
+  </data>
+  <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
+    <value>Първият аргумент на „{0}“ трябва да е валидно име на променлива и не може да е в конфликт с име на съществуваща контрола, екран, колекция или източник на данни. Открит е тип „{1}“</value>
+    
+  </data>
+  <data name="AboutSet" xml:space="preserve">
+    <value>Създаване и задаване на глобална променлива.</value>
+    
+  </data>
+  <data name="SetArg2" xml:space="preserve">
+    <value>стойност</value>
     
   </data>
 </root>

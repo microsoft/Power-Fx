@@ -23,7 +23,7 @@ namespace Microsoft.PowerFx.Core
         /// </summary>
         /// <param name="logicalToDisplayPairs">Enumerable of (logical, display) pairs.</param>
         /// <returns>Enumerable of unique (logical, display) pairs.</returns>
-        public static IEnumerable<KeyValuePair<DName, DName>> MakeUnique(IEnumerable<KeyValuePair<string, string>> logicalToDisplayPairs)
+        public static DisplayNameProvider MakeUnique(IEnumerable<KeyValuePair<string, string>> logicalToDisplayPairs)
         {
             var displayNameMapping = new BidirectionalDictionary<DName, DName>();
             var usedNames = new HashSet<DName>();
@@ -105,7 +105,7 @@ namespace Microsoft.PowerFx.Core
                 throw new ArgumentException($"Duplicate logical names {logicalName}");
             }
 
-            return displayNameMapping;
+            return new SingleSourceDisplayNameProvider(displayNameMapping);
         }
 
         private static DName ConstructFallbackName(DName display, DName logical)

@@ -26,7 +26,7 @@ Blank()
 []
 
 >> LastN([1, 2, 3, 4, 5], Blank())
-Blank()
+[]
 
 >> LastN(Blank(), 2)
 Blank()

@@ -359,7 +359,7 @@
     
   </data>
   <data name="AboutDropColumns" xml:space="preserve">
-    <value>Gibt eine Tabelle zurück, bei der eine oder mehrere angegebene "Spalten" aus der Quelltabelle "Quelle" entfernt wurden.</value>
+    <value>Gibt eine Tabelle zurück, bei der eine oder mehrere angegebene „Spalten“ aus der Tabelle „Quelle“ entfernt wurden.</value>
     
   </data>
   <data name="DropColumnsArg1" xml:space="preserve">
@@ -395,11 +395,11 @@
     <value>Eine Wahrheitsprüfung, die für jede Zeile ausgewertet wird. Nur Zeilen, die diese Prüfung bestehen, sind im Ergebnis des Filters enthalten.</value>
   </data>
   <data name="AboutFirst" xml:space="preserve">
-    <value>Gibt die erste Zeile von "Quelle" zurück.</value>
+    <value>Gibt die erste Zeile von „Quelle“ zurück.</value>
     
   </data>
   <data name="AboutLast" xml:space="preserve">
-    <value>Gibt die letzte Zeile von "Quelle" zurück.</value>
+    <value>Gibt die letzte Zeile von „Quelle“ zurück.</value>
     
   </data>
   <data name="FirstLastArg1" xml:space="preserve">
@@ -413,11 +413,11 @@
     <value>Eine Tabelle, deren letzte Zeile zurückgegeben werden soll.</value>
   </data>
   <data name="AboutFirstN" xml:space="preserve">
-    <value>Gibt die ersten "Anzahl" Zeilen von "Quelle" zurück.</value>
+    <value>Gibt die ersten „Anzahl“-Zeilen von „Quelle“ zurück.</value>
     
   </data>
   <data name="AboutLastN" xml:space="preserve">
-    <value>Gibt die letzten "Anzahl" (count) Zeilen von "Quelle" (source) zurück.</value>
+    <value>Gibt die letzten „Anzahl“-Zeilen von „Quelle“ zurück.</value>
     
   </data>
   <data name="FirstLastNArg1" xml:space="preserve">
@@ -441,7 +441,7 @@
     <value>Die Anzahl der zurückzugebenden Zeilen.</value>
   </data>
   <data name="AboutText" xml:space="preserve">
-    <value>Konvertiert einen "Wert" in einer bestimmten Anzahl "Format_Text" in eine Zahl.</value>
+    <value>Konvertiert einen „Wert“ in einer bestimmten Anzahl „Formattext“ in eine Zahl.</value>
     
   </data>
   <data name="TextArg1" xml:space="preserve">
@@ -449,7 +449,7 @@
     
   </data>
   <data name="TextArg2" xml:space="preserve">
-    <value>Format_Text</value>
+    <value>Formattext</value>
     
   </data>
   <data name="TextArg3" xml:space="preserve">
@@ -460,7 +460,7 @@
     <value>Ein als Text zu formatierender Wert.</value>
   </data>
   <data name="AboutText_format_text" xml:space="preserve">
-    <value>Ein Textwert, der angibt, in welcher Weise der Wert "Wert" formatiert werden soll.</value>
+    <value>Ein Textwert, der angibt, in welcher Weise „Wert“ formatiert werden soll.</value>
     
   </data>
   <data name="AboutText_language" xml:space="preserve">
@@ -468,7 +468,7 @@
     
   </data>
   <data name="AboutValue" xml:space="preserve">
-    <value>Konvertiert einen "Text", der eine Zahl darstellt, in einen Zahlenwert.</value>
+    <value>Konvertiert einen „Text“, der eine Zahl darstellt, in einen Zahlenwert.</value>
     
   </data>
   <data name="ValueArg1" xml:space="preserve">
@@ -720,7 +720,7 @@
     
   </data>
   <data name="ErrErrorIrrelevantField" xml:space="preserve">
-    <value>Die Error-Funktion verwendet nur die Felder "Kind", "Message", "Notify", "Control" und "Property".</value>
+    <value>Die Error-Funktion verwendet nur die Felder „Kind“, „Message“, „Notify“, „Control“ und „Property“.</value>
     
   </data>
   <data name="AboutIfError" xml:space="preserve">
@@ -787,7 +787,7 @@
     <value>Eine Spalte mit zu verarbeitenden Textwerten.</value>
   </data>
   <data name="AboutSort" xml:space="preserve">
-    <value>Sortiert die "Quelle" auf der Grundlage der Ergebnisse des Ausdrucks "Ausdruck" bei Auswertung pro Zeile, wobei optional eine Sortierreihenfolge "Reihenfolge" angegeben werden kann.</value>
+    <value>Sortiert die „Quelle“ auf der Grundlage der Ergebnisse des Ausdrucks „Ausdruck“ bei Auswertung pro Zeile, wobei optional eine Sortierreihenfolge „Reihenfolge“ angegeben werden kann.</value>
     
   </data>
   <data name="SortArg1" xml:space="preserve">
@@ -812,7 +812,7 @@
     <value>Aufsteigend oder absteigend</value>
   </data>
   <data name="AboutSortByColumns" xml:space="preserve">
-    <value>Sortiert "Quelle" auf der Grundlage der Spalte, wobei optional eine Sortierreihenfolge "Reihenfolge" angegeben werden kann.</value>
+    <value>Sortiert „Quelle“ auf der Grundlage der Spalte, wobei optional eine Sortierreihenfolge „Reihenfolge“ angegeben werden kann.</value>
     
   </data>
   <data name="SortByColumnsArg1" xml:space="preserve">
@@ -837,7 +837,7 @@
     <value>Aufsteigend oder absteigend</value>
   </data>
   <data name="AboutSortByColumnsWithOrderValues" xml:space="preserve">
-    <value>Sortiert "Quelle" basierend auf dem Index übereinstimmender Werte in der angegebenen Spalte.</value>
+    <value>Sortiert „Quelle“ basierend auf dem Index übereinstimmender Werte in der angegebenen Spalte.</value>
     
   </data>
   <data name="SortByColumnsWithOrderValuesArg1" xml:space="preserve">
@@ -906,7 +906,7 @@
     
   </data>
   <data name="AboutTimeZoneOffset_date" xml:space="preserve">
-    <value>Das Datum, auf dessen Grundlage "TimeZoneOffset" berechnet wird.</value>
+    <value>Das Datum, auf dessen Grundlage „TimeZoneOffset“ berechnet wird.</value>
     
   </data>
   <data name="AboutToday" xml:space="preserve">
@@ -995,15 +995,15 @@
     
   </data>
   <data name="AboutRound" xml:space="preserve">
-    <value>Rundet "Zahl" auf die angegebene Anzahl Stellen.</value>
+    <value>Rundet „Zahl“ auf die angegebene Anzahl Stellen.</value>
     
   </data>
   <data name="AboutRoundUp" xml:space="preserve">
-    <value>Rundet "Zahl" weg von null auf.</value>
+    <value>Rundet „Zahl“ weg von NULL auf.</value>
     
   </data>
   <data name="AboutRoundDown" xml:space="preserve">
-    <value>Rundet "Zahl" nach null ab.</value>
+    <value>Rundet „Zahl“ nach NULL ab.</value>
     
   </data>
   <data name="RoundArg1" xml:space="preserve">
@@ -1042,15 +1042,15 @@
     <value>Die Anzahl der Dezimalstellen, die beim Runden berücksichtigt werden.</value>
   </data>
   <data name="AboutRoundT" xml:space="preserve">
-    <value>Rundet alle Zahlen in "Quelle" auf die angegebene Anzahl Stellen.</value>
+    <value>Rundet alle Zahlen in „Quelle“ auf die angegebene Anzahl Stellen.</value>
     
   </data>
   <data name="AboutRoundUpT" xml:space="preserve">
-    <value>Rundet alle Zahlen in "Quelle" weg von null auf.</value>
+    <value>Rundet alle Zahlen in „Quelle“ weg von NULL auf.</value>
     
   </data>
   <data name="AboutRoundDownT" xml:space="preserve">
-    <value>Rundet alle Zahlen in "Quelle" nach null ab.</value>
+    <value>Rundet alle Zahlen in „Quelle“ nach NULL ab.</value>
     
   </data>
   <data name="RoundTArg1" xml:space="preserve">
@@ -1094,7 +1094,7 @@
     <value>Die Alphakomponente von 0 bis 1 (oder ein Prozentwert, wie etwa 49 %).</value>
   </data>
   <data name="AboutColorFade" xml:space="preserve">
-    <value>Generiert einen neuen Farbton der angegebenen "Farbe", basierend auf dem angegebenen Prozentsatz für die Ausbleichung "Ausblenden".</value>
+    <value>Generiert einen neuen Farbton der angegebenen „Farbe“, basierend auf dem angegebenen Prozentsatz für die Ausbleichung „Ausblenden“.</value>
     
   </data>
   <data name="ColorFadeArg1" xml:space="preserve">
@@ -1163,19 +1163,19 @@
     <value>Eine Spalte mit zu verarbeitenden Zahlenwerten.</value>
   </data>
   <data name="AboutAsin" xml:space="preserve">
-    <value>Gibt den Arcussinuswert (im Bogenmaß) für eine Zahl zurück.</value>
+    <value>Gibt den Arkussinuswert (im Bogenmaß) für eine Zahl zurück.</value>
     
   </data>
   <data name="AboutAsinT" xml:space="preserve">
-    <value>Gibt die Arcussinuswerte (im Bogenmaß) für eine Spalte mit Zahlen zurück.</value>
+    <value>Gibt die Arkussinuswerte (im Bogenmaß) für eine Spalte mit Zahlen zurück.</value>
     
   </data>
   <data name="AboutCos" xml:space="preserve">
-    <value>Gibt den Cosinuswert für eine Zahl zurück.</value>
+    <value>Gibt den Kosinuswert für eine Zahl zurück.</value>
     
   </data>
   <data name="AboutCosT" xml:space="preserve">
-    <value>Gibt die Cosinuswerte für eine Spalte mit Zahlen zurück.</value>
+    <value>Gibt die Kosinuswerte für eine Spalte mit Zahlen zurück.</value>
     
   </data>
   <data name="AboutCos_number" xml:space="preserve">
@@ -1185,14 +1185,14 @@
     <value>Eine Spalte mit numerischen Werten (im Bogenmaß), die zu verarbeiten sind.</value>
   </data>
   <data name="AboutAcos" xml:space="preserve">
-    <value>Gibt den Arcuscosinuswert (im Bogenmaß) für eine Zahl zurück.</value>
+    <value>Gibt den Arkuskosinuswert (im Bogenmaß) für eine Zahl zurück.</value>
     
   </data>
   <data name="AboutAcos_number" xml:space="preserve">
     <value>Ein zu verarbeitender Zahlenwert.</value>
   </data>
   <data name="AboutAcosT" xml:space="preserve">
-    <value>Gibt die Arcuscosinuswerte (im Bogenmaß) für eine Spalte mit Zahlen zurück.</value>
+    <value>Gibt die Arkuskosinuswerte (im Bogenmaß) für eine Spalte mit Zahlen zurück.</value>
     
   </data>
   <data name="AboutAcos_input" xml:space="preserve">
@@ -1205,11 +1205,11 @@
     <value>Eine Spalte mit zu verarbeitenden Zahlenwerten.</value>
   </data>
   <data name="AboutAcot" xml:space="preserve">
-    <value>Gibt den Arcuscotangenswert (im Bogenmaß) für eine Zahl zurück.</value>
+    <value>Gibt den Arkuskotangenswert (im Bogenmaß) für eine Zahl zurück.</value>
     
   </data>
   <data name="AboutAcotT" xml:space="preserve">
-    <value>Gibt die Arcuscotangenswerte (im Bogenmaß) für eine Spalte mit Zahlen zurück.</value>
+    <value>Gibt die Arkuskotangenswerte (im Bogenmaß) für eine Spalte mit Zahlen zurück.</value>
     
   </data>
   <data name="AboutTan" xml:space="preserve">
@@ -1227,11 +1227,11 @@
     <value>Eine Spalte mit numerischen Werten (im Bogenmaß), die zu verarbeiten sind.</value>
   </data>
   <data name="AboutAtan" xml:space="preserve">
-    <value>Gibt den Arcustangenswert (im Bogenmaß) für eine Zahl zurück.</value>
+    <value>Gibt den Arkustangenswert (im Bogenmaß) für eine Zahl zurück.</value>
     
   </data>
   <data name="AboutAtanT" xml:space="preserve">
-    <value>Gibt die Arcustangenswerte (im Bogenmaß) für eine Spalte mit Zahlen zurück.</value>
+    <value>Gibt die Arkustangenswerte (im Bogenmaß) für eine Spalte mit Zahlen zurück.</value>
     
   </data>
   <data name="AboutAtan_number" xml:space="preserve">
@@ -1241,11 +1241,11 @@
     <value>Eine Spalte mit zu verarbeitenden Zahlenwerten.</value>
   </data>
   <data name="AboutCot" xml:space="preserve">
-    <value>Gibt den Cotangenswert für eine Zahl zurück.</value>
+    <value>Gibt den Kotangenswert für eine Zahl zurück.</value>
     
   </data>
   <data name="AboutCotT" xml:space="preserve">
-    <value>Gibt die Cotangenswerte für eine Spalte mit Zahlen zurück.</value>
+    <value>Gibt die Kotangenswerte für eine Spalte mit Zahlen zurück.</value>
     
   </data>
   <data name="AboutCot_number" xml:space="preserve">
@@ -1454,7 +1454,7 @@
     <value>Eine zu prüfende Tabelle.</value>
   </data>
   <data name="AboutShuffle" xml:space="preserve">
-    <value>Gibt eine zufällig durchmischte Kopie der Eingabetabelle "Quelle" zurück.</value>
+    <value>Gibt eine zufällig durchmischte Kopie der Eingabetabelle „Quelle“ zurück.</value>
     
   </data>
   <data name="ShuffleArg1" xml:space="preserve">
@@ -1626,7 +1626,7 @@
     
   </data>
   <data name="ErrInvalidDot" xml:space="preserve">
-    <value>Unzulässige Verwendung von ".".</value>
+    <value>Unzulässige Verwendung von „.“</value>
     
   </data>
   <data name="ErrUnknownFunction" xml:space="preserve">
@@ -1694,11 +1694,11 @@
     
   </data>
   <data name="ErrInvalidArgs_Func" xml:space="preserve">
-    <value>Die Funktion "{0}" weist ungültige Argumente auf.</value>
+    <value>Die Funktion „{0}“ weist ungültige Argumente auf.</value>
     
   </data>
   <data name="ErrNeedTable_Func" xml:space="preserve">
-    <value>Das erste Argument von "{0}" sollte eine Tabelle sein.</value>
+    <value>Das erste Argument von „{0}“ sollte eine Tabelle sein.</value>
     
   </data>
   <data name="ErrInvalidPropertyAccess" xml:space="preserve">
@@ -1706,23 +1706,23 @@
     
   </data>
   <data name="ErrNeedTableCol_Func" xml:space="preserve">
-    <value>Das erste Argument von "{0}" sollte eine einspaltige Tabelle sein.</value>
+    <value>Das erste Argument von „{0}“ sollte eine einspaltige Tabelle sein.</value>
     
   </data>
   <data name="ErrInvalidSchemaNeedStringCol_Col" xml:space="preserve">
-    <value>Ungültiges Schema, es wurde eine Spalte mit Textwerten für "{0}" erwartet.</value>
+    <value>Ungültiges Schema, es wurde eine Spalte mit Textwerten für „{0}“ erwartet.</value>
     
   </data>
   <data name="ErrInvalidSchemaNeedDateCol_Col" xml:space="preserve">
-    <value>Ungültiges Schema, es wurde eine Spalte mit Datumswerten für "{0}" erwartet.</value>
+    <value>Ungültiges Schema, es wurde eine Spalte mit Datumswerten für „{0}“ erwartet.</value>
     
   </data>
   <data name="ErrInvalidSchemaNeedNumCol_Col" xml:space="preserve">
-    <value>Ungültiges Schema, es wurde eine Spalte mit Zahlenwerten für "{0}" erwartet.</value>
+    <value>Ungültiges Schema, es wurde eine Spalte mit Zahlenwerten für „{0}“ erwartet.</value>
     
   </data>
   <data name="ErrInvalidSchemaNeedColorCol_Col" xml:space="preserve">
-    <value>Ungültiges Schema, es wurde eine Spalte mit Farbwerten für "{0}" erwartet.</value>
+    <value>Ungültiges Schema, es wurde eine Spalte mit Farbwerten für „{0}“ erwartet.</value>
     
   </data>
   <data name="ErrInvalidSchemaNeedCol" xml:space="preserve">
@@ -1738,7 +1738,7 @@
     
   </data>
   <data name="ErrNeedRecord_Func" xml:space="preserve">
-    <value>Das erste Argument von "{0}" sollte ein Datensatz sein.</value>
+    <value>Das erste Argument von „{0}“ sollte ein Datensatz sein.</value>
     
   </data>
   <data name="ErrNeedEntity_EntityName" xml:space="preserve">
@@ -1766,7 +1766,7 @@
     
   </data>
   <data name="ErrInvalidDataSource" xml:space="preserve">
-    <value>Diese Datenquelle ist ungültig. Beheben Sie den Fehler im Abschnitt "Datenquellen", indem Sie auf "Inhalt &gt; Datenquellen" oder "Ansicht &gt; Optionen" klicken.</value>
+    <value>Diese Datenquelle ist ungültig. Beheben Sie den Fehler im Abschnitt „Datenquellen“, indem Sie auf „Inhalt &gt; Datenquellen“ oder „Ansicht &gt; Optionen“ klicken.</value>
     
   </data>
   <data name="ErrExpectedDataSourceRestriction" xml:space="preserve">
@@ -1778,11 +1778,11 @@
     
   </data>
   <data name="ErrTypeError_Ex1_Ex2_Found" xml:space="preserve">
-    <value>Der Typ dieses Arguments "{2}" stimmt nicht mit einem der erwarteten Typen "{0}" oder "{1}" überein.</value>
+    <value>Der Typ dieses Arguments „{2}“ stimmt nicht mit einem der erwarteten Typen „{0}“ oder „{1}“ überein.</value>
     
   </data>
   <data name="ErrTypeError_Arg_Expected_Found" xml:space="preserve">
-    <value>Der Typ dieses Arguments "{0}" stimmt nicht mit dem erwarteten Typ "{1}" überein. Gefunden wurde Typ "{2}".</value>
+    <value>Der Typ dieses Arguments „{0}“ stimmt nicht mit dem erwarteten Typ „{1}“ überein. Gefunden wurde Typ „{2}“.</value>
     
   </data>
   <data name="ErrTypeErrorRecordIncompatibleWithSource" xml:space="preserve">
@@ -1790,23 +1790,23 @@
     
   </data>
   <data name="ErrExpectedStringLiteralArg_Name" xml:space="preserve">
-    <value>Das Argument "{0}" ist ungültig, ein Textliteral wird erwartet.</value>
+    <value>Das Argument „{0}“ ist ungültig, ein Textliteral wird erwartet.</value>
     
   </data>
   <data name="ErrArgNotAValidIdentifier_Name" xml:space="preserve">
-    <value>Das Argument "{0}" ist kein gültiger Bezeichner.</value>
+    <value>Das Argument „{0}“ ist kein gültiger Bezeichner.</value>
     
   </data>
   <data name="ErrColExists_Name" xml:space="preserve">
-    <value>Eine Spalte mit dem Namen "{0}" ist bereits vorhanden.</value>
+    <value>Eine Spalte mit dem Namen „{0}“ ist bereits vorhanden.</value>
     
   </data>
   <data name="ErrColConflict_Name" xml:space="preserve">
-    <value>Spaltennamenkonflikt für "{0}".</value>
+    <value>Spaltennamenkonflikt für „{0}“.</value>
     
   </data>
   <data name="ErrColDNE_Name" xml:space="preserve">
-    <value>Die angegebene Spalte "{0}" ist nicht vorhanden.</value>
+    <value>Die angegebene Spalte „{0}“ ist nicht vorhanden.</value>
     
   </data>
   <data name="ErrColumnDoesNotExist_Name_Similar" xml:space="preserve">
@@ -1822,11 +1822,11 @@
     
   </data>
   <data name="ErrFunctionDoesNotAcceptThisType_Function_Expected" xml:space="preserve">
-    <value>Typfehler: "{0}" erwartet entweder "{1}" oder eine Tabellenspalte des Typs "{1}".</value>
+    <value>Typfehler: „{0}“ erwartet entweder „{1}“ oder eine Tabellenspalte des Typs „{1}“.</value>
     
   </data>
   <data name="ErrIncorrectFormat_Func" xml:space="preserve">
-    <value>Ungültiger Formatbezeichner für "{0}".</value>
+    <value>Ungültiger Formatbezeichner für „{0}“.</value>
     
   </data>
   <data name="ErrAsyncLambda" xml:space="preserve">
@@ -1838,11 +1838,11 @@
     
   </data>
   <data name="ErrScopeModificationLambda" xml:space="preserve">
-    <value>Diese Funktion kann nicht dieselbe Datenquelle bearbeiten, die in "{0}" verwendet wird.</value>
+    <value>Diese Funktion kann nicht dieselbe Datenquelle bearbeiten, die in „{0}“ verwendet wird.</value>
     
   </data>
   <data name="ErrFunctionDisallowedWithinNondeterministicOperationOrder" xml:space="preserve">
-    <value>Diese Funktion kann innerhalb von "{0}" nicht aufgerufen werden.</value>
+    <value>Diese Funktion kann innerhalb von „{0}“ nicht aufgerufen werden.</value>
     
   </data>
   <data name="ErrAsTypeAndIsTypeExpectConnectedDataSource" xml:space="preserve">
@@ -1850,7 +1850,7 @@
     
   </data>
   <data name="InfoMessage" xml:space="preserve">
-    <value>Nachricht:</value>
+    <value>Nachricht: </value>
     
   </data>
   <data name="InfoNode_Node" xml:space="preserve">
@@ -1862,7 +1862,7 @@
     
   </data>
   <data name="FormatSpan_Min_Lim" xml:space="preserve">
-    <value>"{0}"[{1}]</value>
+    <value>({0},{1}) </value>
     
   </data>
   <data name="FormatErrorSeparator" xml:space="preserve">
@@ -1981,7 +1981,7 @@
     <value>Der Datumswert, aus dem die Monatskomponente extrahiert werden soll.</value>
   </data>
   <data name="AboutDay" xml:space="preserve">
-    <value>"Tag" gibt den Tag des Monats zurück, eine Zahl von 1 bis 31.</value>
+    <value>„Tag“ gibt den Tag des Monats zurück, eine Zahl von 1 bis 31.</value>
     
   </data>
   <data name="DayArg1" xml:space="preserve">
@@ -1992,7 +1992,7 @@
     <value>Der Datumswert, aus dem die Tageskomponente extrahiert werden soll.</value>
   </data>
   <data name="AboutHour" xml:space="preserve">
-    <value>"Hour" gibt die Stunde als Zahl zwischen 0 (Mitternacht) und 23 (11 Uhr nachts) zurück.</value>
+    <value>„Stunde“ gibt die Stunde als Zahl zwischen 0 (Mitternacht) und 23 (11 Uhr nachts) zurück.</value>
     
   </data>
   <data name="HourArg1" xml:space="preserve">
@@ -2112,11 +2112,11 @@
     
   </data>
   <data name="ErrMultipleValuesForField_Name" xml:space="preserve">
-    <value>Ein Feld mit dem Namen "{0}" wurde mehrfach angegeben.</value>
+    <value>Ein Feld mit dem Namen „{0}“ wurde mehrfach angegeben.</value>
     
   </data>
   <data name="WarnColumnNameSpecifiedMultipleTimes_Name" xml:space="preserve">
-    <value>Eine Spalte mit dem Namen "{0}" wurde mehrfach angegeben.</value>
+    <value>Eine Spalte mit dem Namen „{0}“ wurde mehrfach angegeben.</value>
     
   </data>
   <data name="WarnLiteralPredicate" xml:space="preserve">
@@ -2222,35 +2222,35 @@
     
   </data>
   <data name="InvalidXml_ElementMissingAttribute_ElemName_AttrName" xml:space="preserve">
-    <value>Dem Element "{0}" fehlt das Attribut "{1}".</value>
+    <value>Dem Element „{0}“ fehlt das Attribut „{1}“.</value>
     
   </data>
   <data name="InvalidXml_AttributeCannotBeEmpty_AttrName" xml:space="preserve">
-    <value>Das Attribut "{0}" darf keine leere Zeichenfolge sein.</value>
+    <value>Das Attribut „{0}“ darf keine leere Zeichenfolge sein.</value>
     
   </data>
   <data name="InvalidXml_AttributeValueInvalidGuid_AttrName_Value" xml:space="preserve">
-    <value>Das Attribut "{0}" weist einen ungültigen GUID-Wert "{1}" auf.</value>
+    <value>Das Attribut „{0}“ weist einen ungültigen GUID-Wert „{1}“ auf.</value>
     
   </data>
   <data name="InvalidJson_MissingRequiredNamedValue_PropName" xml:space="preserve">
-    <value>Die Eigenschaft "{0}" fehlt.</value>
+    <value>Die Eigenschaft „{0}“ fehlt.</value>
     
   </data>
   <data name="InvalidJson_NamedValueTypeNotCorrect_PropName_ExpectedType_ActualType" xml:space="preserve">
-    <value>Die Eigenschaft "{0}" weist den ungültigen Typwert "{2}" auf. Erwarteter Typwert: {1}.</value>
+    <value>Die Eigenschaft „{0}“ weist den ungültigen Typwert „{2}“ auf. Erwarteter Typwert: {1}.</value>
     
   </data>
   <data name="InvalidJson_NamedValueCannotBeEmpty_PropName" xml:space="preserve">
-    <value>Die Eigenschaft "{0}" darf nicht leer sein.</value>
+    <value>Die Eigenschaft „{0}“ darf nicht leer sein.</value>
     
   </data>
   <data name="InvalidJson_NamedEnumStringInvalid_PropName_ActualValue" xml:space="preserve">
-    <value>Für die Enumeration "{0}" wird ein gültiger Wert erwartet, der Wert "{1}" liegt jedoch außerhalb des gültigen Bereichs für die Enumeration.</value>
+    <value>Für die Enumeration „{0}“ wird ein gültiger Wert erwartet, der Wert „{1}“ liegt jedoch außerhalb des gültigen Bereichs für die Enumeration.</value>
     
   </data>
   <data name="InvalidJson_NamedIntegerOverflow_PropName_ActualValue" xml:space="preserve">
-    <value>Für die Eigenschaft "{0}" wird ein ganzzahliger Wert erwartet, der zugehörige Wert "{1}" liegt jedoch außerhalb des gültigen Bereichs.</value>
+    <value>Für die Eigenschaft „{0}“ wird ein ganzzahliger Wert erwartet, der zugehörige Wert „{1}“ liegt jedoch außerhalb des gültigen Bereichs.</value>
     
   </data>
   <data name="InvalidJson_IndexedValueTypeNotCorrect_Index_ExpectedType_ActualType" xml:space="preserve">
@@ -2529,7 +2529,7 @@
     
   </data>
   <data name="text_Clear_DisplayName" xml:space="preserve">
-    <value>Schaltfläche "Löschen"</value>
+    <value>Schaltfläche „Löschen“</value>
     
   </data>
   <data name="Align_Left_DisplayName" xml:space="preserve">
@@ -2593,7 +2593,7 @@
     <value>Ein Datensatz, der in der resultierenden Tabelle zu einer Zeile wird.</value>
   </data>
   <data name="AboutShowColumns" xml:space="preserve">
-    <value>Gibt eine Tabelle zurück, bei der alle mit Ausnahme der angegebenen Spalten aus der Quelltabelle "Quelle" entfernt wurden.</value>
+    <value>Gibt eine Tabelle zurück, bei der alle mit Ausnahme der angegebenen Spalten aus der Quelltabelle „Quelle“ entfernt wurden.</value>
     
   </data>
   <data name="ShowColumnsArg1" xml:space="preserve">
@@ -2766,7 +2766,7 @@
     <value>Gibt einen NULL-Wert (leer) zurück.</value>
   </data>
   <data name="AboutPowerT" xml:space="preserve">
-    <value>Potenziert eine Zahl x (oder eine Spalte mit Zahlen) mit einer anderen Zahl y (oder einer Spalte von Zahlen). Entspricht "x^y".</value>
+    <value>Potenziert eine Zahl x (oder eine Spalte mit Zahlen) mit einer anderen Zahl y (oder einer Spalte von Zahlen). Entspricht „x^y“.</value>
     
   </data>
   <data name="AboutPower_base_or_column" xml:space="preserve">
@@ -3060,11 +3060,11 @@
     
   </data>
   <data name="SuggestRemoteExecutionHint_OpNotSupportedByClient" xml:space="preserve">
-    <value>Ein Teil dieser Formel kann nicht remote ausgewertet werden. Der Vorgang "{0}" wird in diesem Kontext aktuell nicht unterstützt.</value>
+    <value>Ein Teil dieser Formel kann nicht remote ausgewertet werden. Der Vorgang „{0}“ wird in diesem Kontext aktuell nicht unterstützt.</value>
     
   </data>
   <data name="SuggestRemoteExecutionHint_StringMatchSecondParam" xml:space="preserve">
-    <value>Ein Teil dieser Formel kann nicht remote ausgewertet werden. Die Funktion "{0}" kann nicht delegiert werden, wenn ein Feldname im zweiten Argument vorhanden ist.</value>
+    <value>Ein Teil dieser Formel kann nicht remote ausgewertet werden. Die Funktion „{0}“ kann nicht delegiert werden, wenn ein Feldname im zweiten Argument vorhanden ist.</value>
     
   </data>
   <data name="entityForm_EntityForm_DisplayName" xml:space="preserve">
@@ -3528,7 +3528,7 @@
     
   </data>
   <data name="Icon_Message_DisplayName" xml:space="preserve">
-    <value>Meldung</value>
+    <value>Nachricht</value>
     
   </data>
   <data name="Icon_Post_DisplayName" xml:space="preserve">
@@ -3768,7 +3768,7 @@
     
   </data>
   <data name="Icon_Tag_DisplayName" xml:space="preserve">
-    <value>Kategorie</value>
+    <value>Tag</value>
     
   </data>
   <data name="Icon_CameraAperture_DisplayName" xml:space="preserve">
@@ -3988,7 +3988,7 @@
     <value>Jeder Kommentarblock muss mit "/*" beginnen und mit "*/" enden. Wenn Sie einen Kommentarblock nicht ordnungsgemäß beenden, wird der gesamte auf den Kommentar folgende Code zu einem Teil des Kommentars. Wenn ein Kommentar nur eine Zeile umfasst, können Sie diese mit "//" beginnen. Das Ende des Kommentars muss in diesem Fall nicht gekennzeichnet werden.</value>
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_HowToFix_1" xml:space="preserve">
-    <value>Fügen Sie "*/" am Ende Ihres Kommentarblocks hinzu, oder ändern Sie ihn in eine Reihe von Zeilenkommentaren.</value>
+    <value>Fügen Sie „*/“ am Ende Ihres Kommentarblocks hinzu, oder ändern Sie ihn in eine Reihe von Zeilenkommentaren.</value>
     
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_Link_1" xml:space="preserve">
@@ -3996,7 +3996,7 @@
     
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_ShortMessage" xml:space="preserve">
-    <value>Unerwartete Zeichen. Die Formel enthält "{0}", es wird aber "{1}" erwartet.</value>
+    <value>Unerwartete Zeichen. Die Formel enthält „{0}“, es wird aber „{1}“ erwartet.</value>
     
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_LongMessage" xml:space="preserve">
@@ -4052,18 +4052,18 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_Link_1" xml:space="preserve">
-    <value>Artikel: Formelbezug für PowerApps</value>
+    <value>Artikel: Formelreferenz für PowerApps</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_ShortMessage" xml:space="preserve">
-    <value>Der Verweis auf "Parent" ist ungültig. Sie können in diesem Kontext nicht auf ein übergeordnetes Steuerelement verweisen.</value>
+    <value>Der Verweis auf „Parent“ ist ungültig. Sie können in diesem Kontext nicht auf ein übergeordnetes Steuerelement verweisen.</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_LongMessage" xml:space="preserve">
     <value>Sie können den Parent-Operator nicht mit einem Steuerelement verwenden, das kein übergeordnetes Steuerelement besitzt. Dieser Operator bezieht sich auf das Steuerelement, das das angegebene Steuerelement hostet, und stellt alle zugehörigen Eigenschaften zur Verfügung.</value>
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_HowToFix_1" xml:space="preserve">
-    <value>Entfernen Sie den Operator "Parent".</value>
+    <value>Entfernen Sie den Operator „Parent“.</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidParentUse_Link_1" xml:space="preserve">
@@ -4179,7 +4179,7 @@
     
   </data>
   <data name="ErrorResource_ErrCannotCoerce_SourceType_TargetType_ShortMessage" xml:space="preserve">
-    <value>Dieser Datentyp kann nicht konvertiert werden. Power Apps kann diese Daten vom Typ "{0}" nicht in den Typ "{1}" konvertieren.</value>
+    <value>Dieser Datentyp kann nicht konvertiert werden. Power Apps kann diese Daten vom Typ „{0}“ nicht in den Typ „{1}“ konvertieren.</value>
     
   </data>
   <data name="ErrorResource_ErrCannotCoerce_SourceType_TargetType_LongMessage" xml:space="preserve">
@@ -4262,7 +4262,7 @@
     
   </data>
   <data name="ErrorResource_ErrServiceFunctionUnknownOptionalParam_Name_ShortMessage" xml:space="preserve">
-    <value>Kein Parameter. Diese Funktion umfasst keinen optionalen Parameter mit dem Namen "{0}".</value>
+    <value>Kein Parameter. Diese Funktion umfasst keinen optionalen Parameter mit dem Namen „{0}“.</value>
     
   </data>
   <data name="ErrorResource_ErrServiceFunctionUnknownOptionalParam_Name_HowToFix_1" xml:space="preserve">
@@ -4274,7 +4274,7 @@
     
   </data>
   <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_ShortMessage" xml:space="preserve">
-    <value>Nicht kompatibler Typ. Die Spalte "{0}" in der zu aktualisierenden Datenquelle erwartet einen Typ "{1}", aber Sie verwenden einen Typ "{2}".</value>
+    <value>Nicht kompatibler Typ. Die Spalte „{0}“ in der zu aktualisierenden Datenquelle erwartet einen Typ „{1}“, aber Sie verwenden einen Typ „{2}“.</value>
     
   </data>
   <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_HowToFix_1" xml:space="preserve">
@@ -4290,7 +4290,7 @@
     
   </data>
   <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_ShortMessage" xml:space="preserve">
-    <value>Fehlende Spalte. In Ihrer Formel fehlt eine Spalte "{0}" vom Typ "{1}".</value>
+    <value>Fehlende Spalte. In Ihrer Formel fehlt eine Spalte „{0}“ vom Typ „{1}“.</value>
     
   </data>
   <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_HowToFix_1" xml:space="preserve">
@@ -4352,7 +4352,7 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_ShortMessage" xml:space="preserve">
-    <value>Warnung zur Delegierung. Der Teil "{0}" dieser Formel funktioniert für große Datasets möglicherweise nicht ordnungsgemäß.</value>
+    <value>Warnung zur Delegierung. Der Teil „{0}“ dieser Formel funktioniert für große Datasets möglicherweise nicht ordnungsgemäß.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_LongMessage" xml:space="preserve">
@@ -4379,7 +4379,7 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_ShortMessage" xml:space="preserve">
-    <value>Warnung zur Delegierung. Der hervorgehobene Teil dieser Formel funktioniert möglicherweise nicht ordnungsgemäß mit der Spalte "{0}" in großen Datasets.</value>
+    <value>Warnung zur Delegierung. Der hervorgehobene Teil dieser Formel funktioniert möglicherweise nicht ordnungsgemäß mit der Spalte „{0}“ in großen Datasets.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_LongMessage" xml:space="preserve">
@@ -4413,7 +4413,7 @@
     <value> Auf der rechten Seite des Operators "in" muss eine Spalte aus der richtigen Datenquelle angegeben werden. Die Datenquelle kann die Formel möglicherweise nicht verarbeiten und könnte ein unvollständiges Dataset zurückgeben. Ihre Anwendung liefert eventuell keine korrekten Ergebnisse oder verhält sich nicht ordnungsgemäß, wenn das Dataset unvollständig ist.</value>
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_1" xml:space="preserve">
-    <value>Ändern Sie das Element rechts neben dem Operator "in", um eine Spalte aus der richtigen Datenquelle anzugeben.</value>
+    <value>Ändern Sie das Element rechts neben dem Operator „in“, um eine Spalte aus der richtigen Datenquelle anzugeben.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_2" xml:space="preserve">
@@ -4445,7 +4445,7 @@
       </value>
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_1" xml:space="preserve">
-    <value>Ändern Sie das Element rechts neben dem Operator "in", um eine Spalte aus der richtigen Datenquelle anzugeben.</value>
+    <value>Ändern Sie das Element rechts neben dem Operator „in“, um eine Spalte aus der richtigen Datenquelle anzugeben.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_2" xml:space="preserve">
@@ -4506,11 +4506,11 @@
     
   </data>
   <data name="ErrorResource_ErrViewFromCurrentTableExpected_ShortMessage" xml:space="preserve">
-    <value>Ansicht aus Datenquelle "{0}" erwartet.</value>
+    <value>Ansicht aus Datenquelle „{0}“ erwartet.</value>
     
   </data>
   <data name="ErrorResource_ErrViewFromCurrentTableExpected_HowToFix_1" xml:space="preserve">
-    <value>Bearbeiten Sie Ihre Formel so, dass sie über eine Ansicht aus der Datenquelle "{0}" verfügt.</value>
+    <value>Bearbeiten Sie Ihre Formel so, dass sie über eine Ansicht aus der Datenquelle „{0}“ verfügt.</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidControlReference_ShortMessage" xml:space="preserve">
@@ -4542,11 +4542,26 @@
     
   </data>
   <data name="ErrorResource_ErrAsNotInContext_ShortMessage" xml:space="preserve">
-    <value>"As" ist in diesem Kontext nicht zulässig.</value>
+    <value>„As“ ist in diesem Kontext nicht zulässig.</value>
     
   </data>
   <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
     <value>Die benannte Formel muss mit einem Semikolon enden.</value>
+    
+  </data>
+  <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
+    <value>NamedFormula „{0}“ ist bereits vorhanden.</value>
+  </data>
+  <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
+    <value>Das erste Argument von "{0}" muss ein gültiger Variablenname sein, der nicht in Konflikt mit vorhandenen Steuerelement-, Bildschirm-, Sammlungs- oder Datenquellennamen stehen darf. Gefundener Typ: "{1}"</value>
+    
+  </data>
+  <data name="AboutSet" xml:space="preserve">
+    <value>Hiermit wird eine globale Variable erstellt und festgelegt.</value>
+    
+  </data>
+  <data name="SetArg2" xml:space="preserve">
+    <value>Wert</value>
     
   </data>
 </root>

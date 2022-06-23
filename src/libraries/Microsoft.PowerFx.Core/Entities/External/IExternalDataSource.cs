@@ -26,9 +26,5 @@ namespace Microsoft.PowerFx.Core.Entities
         IExternalTableMetadata TableMetadata { get; }
 
         IDelegationMetadata DelegationMetadata { get; }
-
-        string ScopeId { get; }
-
-        bool IsComponentScoped { get; }
     }
 }

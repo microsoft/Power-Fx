@@ -138,7 +138,7 @@ namespace Microsoft.PowerFx.Core.Binding
             get
             {
 #if DEBUG
-                if (NameResolver.CurrentEntity is IExternalControl && NameResolver.CurrentProperty.IsValid && NameResolver.TryGetCurrentControlProperty(out var currentProperty))
+                if (NameResolver != null && NameResolver.CurrentEntity is IExternalControl && NameResolver.CurrentProperty.IsValid && NameResolver.TryGetCurrentControlProperty(out var currentProperty))
                 {
                     Contracts.Assert(_property == currentProperty);
                 }
@@ -2869,7 +2869,12 @@ namespace Microsoft.PowerFx.Core.Binding
                     if (DType.TryGetLogicalNameForColumn(updatedDisplayNamesType, ident.Name.Value, out var maybeLogicalName, isThisItem))
                     {
                         logicalNodeName = new DName(maybeLogicalName);
-                        _txb.NodesToReplace.Add(new KeyValuePair<Token, string>(ident.Token, maybeLogicalName));
+                        
+                        // If we're updating display names, we don't want to accidentally rewrite something that hasn't changed to it's logical name. 
+                        if (!_txb.UpdateDisplayNames)
+                        {
+                            _txb.NodesToReplace.Add(new KeyValuePair<Token, string>(ident.Token, maybeLogicalName));
+                        }
                     }
                 }
 
