@@ -210,7 +210,6 @@ namespace Microsoft.PowerFx.Tests
             var config = new PowerFxConfig();
             config.AddFunction(new BehaviorFunction());
 
-            var fncs = config.Functions.Where(fnc => !fnc.IsSelfContained).ToList();
             var engine = new Engine(config);
             var formula = "Behavior(); Behavior()";
             var options = new ParserOptions { AllowsSideEffects = true };
