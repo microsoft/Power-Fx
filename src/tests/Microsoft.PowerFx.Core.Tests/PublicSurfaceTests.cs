@@ -104,7 +104,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Types.FormulaType",
                 "Microsoft.PowerFx.Types.GuidType",
                 "Microsoft.PowerFx.Types.HyperlinkType",
-                "Microsoft.PowerFx.Types.ITypeVistor",
+                "Microsoft.PowerFx.Types.ITypeVisitor",
                 "Microsoft.PowerFx.Types.NamedFormulaType",
                 "Microsoft.PowerFx.Types.NumberType",
                 "Microsoft.PowerFx.Types.OptionSetValueType",
