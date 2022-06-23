@@ -219,7 +219,7 @@ namespace Microsoft.PowerFx.Tests
             Assert.True(result1.IsSuccess);
 
             var parseResult2 = engine.Parse(formula, options);
-            var result2 = engine.Check(parseResult2);
+            var result2 = engine.Check(parseResult2, options: options);
             Assert.True(result2.IsSuccess);
         }
 
