@@ -6437,7 +6437,7 @@
     <value>NamedFormula '{0}' already exists.</value>
   </data>
   <data name="ErrNamedFormula_NameConflict" xml:space="preserve">
-    <value>NamedFormula '{0}' cannot conflict with any existing named formula, control, screen, collection, global variable or data source names.</value>
+    <value>Can't create a {0} named {1} because that name is already used for a {2}.</value>
   </data>
   <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
     <value>The first argument of '{0}' should be a valid variable name, and cannot conflict with any existing control, screen, collection, or data source names. Found type '{1}'</value>
