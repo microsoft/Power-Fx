@@ -42,6 +42,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.ParserOptions",
                 "Microsoft.PowerFx.Engine",
                 "Microsoft.PowerFx.ErrorSeverity",
+                "Microsoft.PowerFx.OptionSet",
 
                 // Feature flags are experimental - hosts shouldn't use it. 
                 "Microsoft.PowerFx.Preview.FeatureFlags",
