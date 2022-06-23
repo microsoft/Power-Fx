@@ -208,11 +208,11 @@ namespace Microsoft.PowerFx.Tests
         public void CheckParseResultSideEffects()
         {
             var config = new PowerFxConfig();
-            config.AddFunction(new DummyFunction());
+            config.AddFunction(new BehaviorFunction());
 
             var fncs = config.Functions.Where(fnc => !fnc.IsSelfContained).ToList();
             var engine = new Engine(config);
-            var formula = "Dummy(); Dummy()";
+            var formula = "Behavior(); Behavior()";
             var options = new ParserOptions { AllowsSideEffects = true };
 
             var result1 = engine.Check(formula, options: options);
@@ -223,13 +223,16 @@ namespace Microsoft.PowerFx.Tests
             Assert.True(result2.IsSuccess);
         }
 
-        private class DummyFunction : TexlFunction
+        /// <summary>
+        /// A function with behavior/side-effects used in testing.
+        /// </summary>
+        private class BehaviorFunction : TexlFunction
         {
-            public DummyFunction()
+            public BehaviorFunction()
                 : base(
                       DPath.Root,
-                      "Dummy",
-                      "Dummy",
+                      "Behavior",
+                      "Behavior",
                       TexlStrings.AboutSet, // just to add something
                       FunctionCategories.Behavior,
                       DType.Boolean,
