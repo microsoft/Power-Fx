@@ -143,7 +143,12 @@ namespace Microsoft.PowerFx
             _extraFunctions.Add(function);
             EnumStoreBuilder.WithRequiredEnums(new List<TexlFunction>() { function });
         }
-                
+
+        public void AddOptionSet(OptionSet optionSet, DName optionalDisplayName = default)
+        {
+            AddEntity(optionSet, optionalDisplayName);
+        }
+
         internal bool TryGetSymbol(DName name, out IExternalEntity symbol, out DName displayName)
         {
             var lookupName = name;
