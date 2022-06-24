@@ -26,13 +26,13 @@ namespace Microsoft.PowerFx
         public CultureInfo CultureInfo { get; }
 
         private readonly CancellationToken _cancel;
-        private readonly int _maxRecursionDepth;
+        private readonly EvalContext _context;
 
-        public EvalVisitor(CultureInfo cultureInfo, CancellationToken cancel, int maxRecursionDepth)
+        public EvalVisitor(CultureInfo cultureInfo, CancellationToken cancel, EvalContext evalContext)
         {
-            _maxRecursionDepth = maxRecursionDepth;
             CultureInfo = cultureInfo;
             _cancel = cancel;
+            _context = evalContext;
         }
                 
         // Check this cooperatively - especially in any loop. 
@@ -157,7 +157,7 @@ namespace Microsoft.PowerFx
             CheckCancel();
 
             //Don't know if this is the best place to put this increment call.
-            if (!context.IncrementCallDepth(_maxRecursionDepth))
+            if (!_context.IncrementCallDepth())
             {
                 return CommonErrors.MaxCallDepth(node.IRContext);
             }
@@ -192,15 +192,16 @@ namespace Microsoft.PowerFx
             }
 
             var childContext = context.WithScope(node.Scope);
-            context.DecrementCallDepth();
             if (func is IAsyncTexlFunction asyncFunc)
             {
                 var result = await asyncFunc.InvokeAsync(args, _cancel);
+                _context.DecrementCallDepth();
                 return result;
             }
             else if (func is CustomTexlFunction customFunc)
             {
                 var result = customFunc.Invoke(args);
+                _context.DecrementCallDepth();
                 return result;
             }
             else
@@ -210,10 +211,11 @@ namespace Microsoft.PowerFx
                     var result = await ptr(this, childContext, node.IRContext, args);
 
                     Contract.Assert(result.IRContext.ResultType == node.IRContext.ResultType || result is ErrorValue || result.IRContext.ResultType is BlankType);
-
+                    _context.DecrementCallDepth();
                     return result;
                 }
 
+                _context.DecrementCallDepth();
                 return CommonErrors.NotYetImplementedError(node.IRContext, $"Missing func: {func.Name}");
             }
         }

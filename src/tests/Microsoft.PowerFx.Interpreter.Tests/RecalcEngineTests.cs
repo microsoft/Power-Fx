@@ -240,6 +240,99 @@ namespace Microsoft.PowerFx.Tests
         }
 
         [Fact]
+        public void DefFunc()
+        {
+            var config = new PowerFxConfig(null);
+            var recalcEngine = new RecalcEngine(config);
+
+            var body = @"
+x * y
+";
+            recalcEngine.DefineFunction(
+                "foo",
+                FormulaType.Number,
+                body,
+                new NamedFormulaType("x", FormulaType.Number),
+                new NamedFormulaType("y", FormulaType.Number));
+
+            recalcEngine.BindAllUDFs();
+            var result = recalcEngine.Eval("foo(3,4) + 5");
+
+            Assert.Equal(17.0, result.ToObject());
+        }
+
+        [Fact]
+        public void DefRecursiveFunc()
+        {
+            var config = new PowerFxConfig(null);
+            var recalcEngine = new RecalcEngine(config);
+            var body = @"If(x=0,foo(1),If(x=1,foo(2),If(x=2,2)))";
+            recalcEngine.DefineFunction(
+                "foo",
+                FormulaType.Number,
+                body,
+                new NamedFormulaType("x", FormulaType.Number));
+
+            recalcEngine.BindAllUDFs();
+            var result = recalcEngine.Eval("foo(0)");
+            Assert.Equal(2.0, result.ToObject());
+        }
+
+        [Fact]
+        public void DefSimpleRecursiveFunc()
+        {
+            var config = new PowerFxConfig(null);
+            var recalcEngine = new RecalcEngine(config);
+            var body = @"foo()";
+            recalcEngine.DefineFunction(
+                "foo",
+                FormulaType.Blank,
+                body);
+
+            recalcEngine.BindAllUDFs();
+            var result = recalcEngine.Eval("foo()");
+            Assert.IsType<ErrorValue>(result);
+        }
+
+        [Fact]
+        public void DefHailstoneSequence()
+        {
+            var config = new PowerFxConfig(null);
+            var recalcEngine = new RecalcEngine(config);
+            var body = @"If(Not(x = 1), If(Mod(x, 2)=0, hailstone(x/2), hailstone(3*x+1)), x)";
+            recalcEngine.DefineFunction(
+                "hailstone",
+                FormulaType.Number,
+                body,
+                new NamedFormulaType("x", FormulaType.Number));
+            recalcEngine.BindAllUDFs();
+            Assert.Equal(1.0, recalcEngine.Eval("hailstone(192)").ToObject());
+        }
+
+        [Fact]
+        public void DefMutualRecursionFunc()
+        {
+            var config = new PowerFxConfig(null);
+            var recalcEngine = new RecalcEngine(config);
+            var bodyEven = @"If(number = 0, true, odd(Abs(number)-1))";
+            var bodyOdd = @"If(number = 0, false, even(Abs(number)-1))";
+
+            recalcEngine.DefineFunction(
+                "odd",
+                FormulaType.Boolean,
+                bodyOdd,
+                new NamedFormulaType("number", FormulaType.Number));
+            recalcEngine.DefineFunction(
+                "even",
+                FormulaType.Boolean,
+                bodyEven,
+                new NamedFormulaType("number", FormulaType.Number));
+            recalcEngine.BindAllUDFs();
+            Assert.Equal(true, recalcEngine.Eval("odd(17)").ToObject());
+            Assert.Equal(false, recalcEngine.Eval("even(17)").ToObject());
+        }
+
+        [Fact]
         public void PropagateNull()
         {
             var engine = new RecalcEngine();

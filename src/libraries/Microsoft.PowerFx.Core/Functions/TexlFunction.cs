@@ -69,6 +69,9 @@ namespace Microsoft.PowerFx.Core.Functions
 
         private string _cachedLocaleName;
 
+        // Return true if the function is a User Defined Function and false otherwise.
+        public virtual bool IsUDF => false;
+
         // Return true if the function should be hidden from the formular bar, false otherwise.
         public virtual bool IsHidden => false;
 
