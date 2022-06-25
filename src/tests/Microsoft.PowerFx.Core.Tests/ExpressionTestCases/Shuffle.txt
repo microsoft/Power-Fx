@@ -23,7 +23,7 @@
 Blank()
 
 >> CountRows(Shuffle(Blank()))
-Blank()
+0
 
 >> Shuffle([])
 Table()

@@ -75,7 +75,12 @@
     Value)
 "CDCD"
 
+// Concat with empty table
 >> Concat(ForAll(FirstN([60, 61, 62, 63, 64], Blank()), Char(Value)), Value)
+""
+
+// Concat with blank table
+>> Concat(ForAll(If(1<0,[60, 61, 62]), Char(Value)), Value)
 Blank()
 
 >> Concat(ForAll(Sort([60, 61, 0, 63, 64], 1/Value), Char(Value)), Value)

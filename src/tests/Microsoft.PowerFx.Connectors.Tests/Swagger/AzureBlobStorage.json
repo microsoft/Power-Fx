@@ -1,0 +1,2200 @@
+﻿{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0",
+    "title": "Azure Blob Storage",
+    "description": "Microsoft Azure Storage provides a massively scalable, durable, and highly available storage for data on the cloud, and serves as the data storage solution for modern applications. Connect to Blob Storage to perform various operations such as create, update, get and delete on blobs in your Azure Storage account.",
+    "x-ms-api-annotation": {
+      "status": "Production"
+    }
+  },
+  "host": "tip1-shared.azure-apim.net",
+  "basePath": "/apim/azureblob",
+  "schemes": [
+    "https"
+  ],
+  "paths": {
+    "/{connectionId}/testconnection": {
+      "get": {
+        "tags": [
+          "AzureBlobDiagnostic"
+        ],
+        "operationId": "TestConnection",
+        "consumes": [],
+        "produces": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "default": {
+            "description": "Operation Failed."
+          }
+        },
+        "deprecated": false,
+        "x-ms-visibility": "internal",
+        "parameters": [
+          {
+            "name": "connectionId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "internal"
+          }
+        ]
+      }
+    },
+    "/{connectionId}/$metadata.json/datasets": {
+      "get": {
+        "tags": [
+          "FileTransferDataSetsMetadata"
+        ],
+        "operationId": "GetDataSetsMetadata",
+        "consumes": [],
+        "produces": [
+          "application/json",
+          "text/json",
+          "application/xml",
+          "text/xml"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/DataSetsMetadata"
+            }
+          },
+          "default": {
+            "description": "Operation Failed."
+          }
+        },
+        "deprecated": false,
+        "x-ms-visibility": "internal",
+        "parameters": [
+          {
+            "name": "connectionId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "internal"
+          }
+        ]
+      }
+    },
+    "/{connectionId}/datasets/default/files/{id}": {
+      "get": {
+        "tags": [
+          "FileTransferFileData"
+        ],
+        "summary": "Get Blob Metadata",
+        "description": "This operation retrieves blob metadata using blob id.",
+        "operationId": "GetFileMetadata",
+        "consumes": [],
+        "produces": [
+          "application/json",
+          "text/json",
+          "application/xml",
+          "text/xml"
+        ],
+        "parameters": [
+          {
+            "name": "connectionId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "internal"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Specify the blob",
+            "required": true,
+            "x-ms-url-encoding": "double",
+            "x-ms-dynamic-values": {
+              "capability": "file-picker",
+              "parameters": {
+                "isFolder": false,
+                "fileFilter": [],
+                "dataset": null
+              },
+              "value-path": "Id"
+            },
+            "x-ms-summary": "Blob",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/BlobMetadata"
+            }
+          },
+          "default": {
+            "description": "Operation Failed."
+          }
+        },
+        "deprecated": false,
+        "x-ms-visibility": "advanced"
+      },
+      "put": {
+        "tags": [
+          "FileTransferFileData"
+        ],
+        "summary": "Update blob",
+        "description": "This operation updates a blob in Azure Blob Storage.",
+        "operationId": "UpdateFile",
+        "consumes": [],
+        "produces": [
+          "application/json",
+          "text/json",
+          "application/xml",
+          "text/xml"
+        ],
+        "parameters": [
+          {
+            "name": "connectionId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "internal"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Specify the blob to update",
+            "required": true,
+            "x-ms-url-encoding": "double",
+            "x-ms-dynamic-values": {
+              "capability": "file-picker",
+              "parameters": {
+                "isFolder": false,
+                "fileFilter": [],
+                "dataset": null
+              },
+              "value-path": "Id"
+            },
+            "x-ms-summary": "Blob",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "description": "Specify the content of the blob to update",
+            "required": true,
+            "schema": {
+              "format": "binary",
+              "type": "string"
+            },
+            "x-ms-summary": "Blob content"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/BlobMetadata"
+            }
+          },
+          "default": {
+            "description": "Operation Failed."
+          }
+        },
+        "deprecated": false
+      },
+      "delete": {
+        "tags": [
+          "FileTransferFileData"
+        ],
+        "summary": "Delete blob",
+        "description": "This operation deletes a blob.",
+        "operationId": "DeleteFile",
+        "consumes": [],
+        "produces": [],
+        "parameters": [
+          {
+            "name": "connectionId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "internal"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Specify the blob to delete",
+            "required": true,
+            "x-ms-url-encoding": "double",
+            "x-ms-dynamic-values": {
+              "capability": "file-picker",
+              "parameters": {
+                "isFolder": false,
+                "fileFilter": [],
+                "dataset": null
+              },
+              "value-path": "Id"
+            },
+            "x-ms-summary": "Blob",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "default": {
+            "description": "Operation Failed."
+          }
+        },
+        "deprecated": false
+      },
+      "patch": {
+        "tags": [
+          "FileTransferFileData"
+        ],
+        "summary": "Append blob",
+        "description": "This operation appends to a blob.",
+        "operationId": "AppendFile",
+        "consumes": [],
+        "produces": [
+          "application/json",
+          "text/json",
+          "application/xml",
+          "text/xml"
+        ],
+        "parameters": [
+          {
+            "name": "connectionId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "internal"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Specify the blob to append to",
+            "required": true,
+            "x-ms-url-encoding": "double",
+            "x-ms-dynamic-values": {
+              "capability": "file-picker",
+              "parameters": {
+                "isFolder": false,
+                "fileFilter": [],
+                "dataset": null
+              },
+              "value-path": "Id"
+            },
+            "x-ms-summary": "Blob",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "description": "Specify the content of the blob to append",
+            "required": true,
+            "schema": {
+              "format": "binary",
+              "type": "string"
+            },
+            "x-ms-summary": "Blob content"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/BlobMetadata"
+            }
+          },
+          "default": {
+            "description": "Operation Failed."
+          }
+        },
+        "deprecated": false,
+        "x-ms-visibility": "internal"
+      }
+    },
+    "/{connectionId}/datasets/default/GetFileByPath": {
+      "get": {
+        "tags": [
+          "FileTransferFileData"
+        ],
+        "summary": "Get Blob Metadata using path",
+        "description": "This operation retrieves blob metadata using path.",
+        "operationId": "GetFileMetadataByPath",
+        "consumes": [],
+        "produces": [
+          "application/json",
+          "text/json",
+          "application/xml",
+          "text/xml"
+        ],
+        "parameters": [
+          {
+            "name": "connectionId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "internal"
+          },
+          {
+            "name": "path",
+            "in": "query",
+            "description": "Specify unique path to the blob",
+            "required": true,
+            "x-ms-url-encoding": "double",
+            "x-ms-dynamic-values": {
+              "capability": "file-picker",
+              "parameters": {
+                "isFolder": false,
+                "fileFilter": [],
+                "dataset": null
+              },
+              "value-path": "Path"
+            },
+            "x-ms-summary": "Blob path",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/BlobMetadata"
+            }
+          },
+          "default": {
+            "description": "Operation Failed."
+          }
+        },
+        "deprecated": false,
+        "x-ms-visibility": "advanced"
+      }
+    },
+    "/{connectionId}/datasets/default/GetFileContentByPath": {
+      "get": {
+        "tags": [
+          "FileTransferFileData"
+        ],
+        "summary": "Get blob content using path",
+        "description": "This operation retrieves blob contents using path",
+        "operationId": "GetFileContentByPath",
+        "consumes": [],
+        "produces": [],
+        "parameters": [
+          {
+            "name": "connectionId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "internal"
+          },
+          {
+            "name": "path",
+            "in": "query",
+            "description": "Specify unique path to the blob",
+            "required": true,
+            "x-ms-url-encoding": "double",
+            "x-ms-dynamic-values": {
+              "capability": "file-picker",
+              "parameters": {
+                "isFolder": false,
+                "fileFilter": [],
+                "dataset": null
+              },
+              "value-path": "Path"
+            },
+            "x-ms-summary": "Blob path",
+            "type": "string"
+          },
+          {
+            "name": "inferContentType",
+            "in": "query",
+            "description": "Infer content-type based on extension",
+            "required": false,
+            "x-ms-summary": "Infer Content Type",
+            "x-ms-visibility": "advanced",
+            "type": "boolean",
+            "default": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "format": "binary",
+              "description": "The content of the file.",
+              "type": "string",
+              "x-ms-summary": "File Content"
+            }
+          },
+          "default": {
+            "description": "Operation Failed."
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/{connectionId}/datasets/default/files/{id}/content": {
+      "get": {
+        "tags": [
+          "FileTransferFileData"
+        ],
+        "summary": "Get blob content",
+        "description": "This operation retrieves blob contents using id.",
+        "operationId": "GetFileContent",
+        "consumes": [],
+        "produces": [],
+        "parameters": [
+          {
+            "name": "connectionId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "internal"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Specify the blob",
+            "required": true,
+            "x-ms-url-encoding": "double",
+            "x-ms-dynamic-values": {
+              "capability": "file-picker",
+              "parameters": {
+                "isFolder": false,
+                "fileFilter": [],
+                "dataset": null
+              },
+              "value-path": "Id"
+            },
+            "x-ms-summary": "Blob",
+            "type": "string"
+          },
+          {
+            "name": "inferContentType",
+            "in": "query",
+            "description": "Infer content-type based on extension",
+            "required": false,
+            "x-ms-summary": "Infer Content Type",
+            "x-ms-visibility": "advanced",
+            "type": "boolean",
+            "default": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "format": "binary",
+              "description": "The content of the file.",
+              "type": "string",
+              "x-ms-summary": "File Content"
+            }
+          },
+          "default": {
+            "description": "Operation Failed."
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/{connectionId}/datasets/default/files": {
+      "post": {
+        "tags": [
+          "FileTransferFileData"
+        ],
+        "summary": "Create blob",
+        "description": "This operation uploads a blob to Azure Blob Storage.",
+        "operationId": "CreateFile",
+        "consumes": [],
+        "produces": [
+          "application/json",
+          "text/json",
+          "application/xml",
+          "text/xml"
+        ],
+        "parameters": [
+          {
+            "name": "connectionId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "internal"
+          },
+          {
+            "name": "folderPath",
+            "in": "query",
+            "description": "Specify folder path to upload",
+            "required": true,
+            "x-ms-url-encoding": "double",
+            "x-ms-dynamic-values": {
+              "capability": "file-picker",
+              "parameters": {
+                "isFolder": true,
+                "fileFilter": [],
+                "dataset": null
+              },
+              "value-path": "Path"
+            },
+            "x-ms-summary": "Folder path",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "description": "Specify name of the blob to create",
+            "required": true,
+            "x-ms-url-encoding": "double",
+            "x-ms-summary": "Blob name",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "description": "Specify content of the blob to upload",
+            "required": true,
+            "schema": {
+              "format": "binary",
+              "type": "string"
+            },
+            "x-ms-summary": "Blob content"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/BlobMetadata"
+            }
+          },
+          "default": {
+            "description": "Operation Failed."
+          }
+        },
+        "deprecated": false,
+        "x-ms-visibility": "important"
+      }
+    },
+    "/{connectionId}/datasets/default/copyFile": {
+      "post": {
+        "tags": [
+          "FileTransferFileData"
+        ],
+        "summary": "Copy blob",
+        "description": "This operation copies a blob.",
+        "operationId": "CopyFile",
+        "consumes": [],
+        "produces": [
+          "application/json",
+          "text/json",
+          "application/xml",
+          "text/xml"
+        ],
+        "parameters": [
+          {
+            "name": "connectionId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "internal"
+          },
+          {
+            "name": "source",
+            "in": "query",
+            "description": "Specify the Url to source blob",
+            "required": true,
+            "x-ms-url-encoding": "double",
+            "x-ms-summary": "Source url",
+            "type": "string"
+          },
+          {
+            "name": "destination",
+            "in": "query",
+            "description": "Specify the destination blob path, including target blobname",
+            "required": true,
+            "x-ms-url-encoding": "double",
+            "x-ms-summary": "Destination blob path",
+            "type": "string"
+          },
+          {
+            "name": "overwrite",
+            "in": "query",
+            "description": "Should the destination blob be overwritten (true/false)?",
+            "required": false,
+            "x-ms-summary": "Overwrite?",
+            "type": "boolean",
+            "default": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/BlobMetadata"
+            }
+          },
+          "default": {
+            "description": "Operation Failed."
+          }
+        },
+        "deprecated": false,
+        "x-ms-visibility": "advanced"
+      }
+    },
+    "/{connectionId}/api/blob/files/{id}": {
+      "get": {
+        "tags": [
+          "FileTransferFileData"
+        ],
+        "operationId": "GetFileMetadata_Old",
+        "consumes": [],
+        "produces": [
+          "application/json",
+          "text/json",
+          "application/xml",
+          "text/xml"
+        ],
+        "parameters": [
+          {
+            "name": "connectionId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "internal"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "x-ms-url-encoding": "double",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/BlobMetadata"
+            }
+          },
+          "default": {
+            "description": "Operation Failed."
+          }
+        },
+        "deprecated": false,
+        "x-ms-visibility": "internal"
+      },
+      "put": {
+        "tags": [
+          "FileTransferFileData"
+        ],
+        "operationId": "UpdateFile_Old",
+        "consumes": [],
+        "produces": [
+          "application/json",
+          "text/json",
+          "application/xml",
+          "text/xml"
+        ],
+        "parameters": [
+          {
+            "name": "connectionId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "internal"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "x-ms-url-encoding": "double",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "format": "binary",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/BlobMetadata"
+            }
+          },
+          "default": {
+            "description": "Operation Failed."
+          }
+        },
+        "deprecated": false,
+        "x-ms-visibility": "internal"
+      },
+      "delete": {
+        "tags": [
+          "FileTransferFileData"
+        ],
+        "operationId": "DeleteFile_Old",
+        "consumes": [],
+        "produces": [],
+        "parameters": [
+          {
+            "name": "connectionId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "internal"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "x-ms-url-encoding": "double",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "default": {
+            "description": "Operation Failed."
+          }
+        },
+        "deprecated": false,
+        "x-ms-visibility": "internal"
+      }
+    },
+    "/{connectionId}/api/blob/GetFileByPath": {
+      "get": {
+        "tags": [
+          "FileTransferFileData"
+        ],
+        "operationId": "GetFileMetadataByPath_Old",
+        "consumes": [],
+        "produces": [
+          "application/json",
+          "text/json",
+          "application/xml",
+          "text/xml"
+        ],
+        "parameters": [
+          {
+            "name": "connectionId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "internal"
+          },
+          {
+            "name": "path",
+            "in": "query",
+            "required": true,
+            "x-ms-url-encoding": "double",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/BlobMetadata"
+            }
+          },
+          "default": {
+            "description": "Operation Failed."
+          }
+        },
+        "deprecated": false,
+        "x-ms-visibility": "internal"
+      }
+    },
+    "/{connectionId}/api/blob/GetFileContentByPath": {
+      "get": {
+        "tags": [
+          "FileTransferFileData"
+        ],
+        "operationId": "GetFileContentByPath_Old",
+        "consumes": [],
+        "produces": [],
+        "parameters": [
+          {
+            "name": "connectionId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "internal"
+          },
+          {
+            "name": "path",
+            "in": "query",
+            "required": true,
+            "x-ms-url-encoding": "double",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "format": "binary",
+              "type": "string"
+            }
+          },
+          "default": {
+            "description": "Operation Failed."
+          }
+        },
+        "deprecated": false,
+        "x-ms-visibility": "internal"
+      }
+    },
+    "/{connectionId}/api/blob/files/{id}/content": {
+      "get": {
+        "tags": [
+          "FileTransferFileData"
+        ],
+        "operationId": "GetFileContent_Old",
+        "consumes": [],
+        "produces": [],
+        "parameters": [
+          {
+            "name": "connectionId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "internal"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "x-ms-url-encoding": "double",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "format": "binary",
+              "type": "string"
+            }
+          },
+          "default": {
+            "description": "Operation Failed."
+          }
+        },
+        "deprecated": false,
+        "x-ms-visibility": "internal"
+      }
+    },
+    "/{connectionId}/api/blob/files": {
+      "post": {
+        "tags": [
+          "FileTransferFileData"
+        ],
+        "operationId": "CreateFile_Old",
+        "consumes": [],
+        "produces": [
+          "application/json",
+          "text/json",
+          "application/xml",
+          "text/xml"
+        ],
+        "parameters": [
+          {
+            "name": "connectionId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "internal"
+          },
+          {
+            "name": "folderPath",
+            "in": "query",
+            "required": true,
+            "x-ms-url-encoding": "double",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "required": true,
+            "x-ms-url-encoding": "double",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "format": "binary",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/BlobMetadata"
+            }
+          },
+          "default": {
+            "description": "Operation Failed."
+          }
+        },
+        "deprecated": false,
+        "x-ms-visibility": "internal"
+      }
+    },
+    "/{connectionId}/api/blob/copyFile": {
+      "post": {
+        "tags": [
+          "FileTransferFileData"
+        ],
+        "operationId": "CopyFile_Old",
+        "consumes": [],
+        "produces": [
+          "application/json",
+          "text/json",
+          "application/xml",
+          "text/xml"
+        ],
+        "parameters": [
+          {
+            "name": "connectionId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "internal"
+          },
+          {
+            "name": "source",
+            "in": "query",
+            "required": true,
+            "x-ms-url-encoding": "double",
+            "type": "string"
+          },
+          {
+            "name": "destination",
+            "in": "query",
+            "required": true,
+            "x-ms-url-encoding": "double",
+            "type": "string"
+          },
+          {
+            "name": "overwrite",
+            "in": "query",
+            "required": false,
+            "type": "boolean",
+            "default": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/BlobMetadata"
+            }
+          },
+          "default": {
+            "description": "Operation Failed."
+          }
+        },
+        "deprecated": false,
+        "x-ms-visibility": "internal"
+      }
+    },
+    "/{connectionId}/datasets/default/triggers/onnewfile": {
+      "get": {
+        "tags": [
+          "FileTransferFileDataTrigger"
+        ],
+        "summary": "When a blob is added",
+        "description": "This operation triggers a flow when a blob is added in a container. The trigger will fetch both the file metadata as well as the content of the file.",
+        "operationId": "OnNewFile",
+        "consumes": [],
+        "produces": [],
+        "parameters": [
+          {
+            "name": "connectionId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "internal"
+          },
+          {
+            "name": "folderId",
+            "in": "query",
+            "description": "Select a container",
+            "required": true,
+            "x-ms-url-encoding": "double",
+            "x-ms-dynamic-values": {
+              "capability": "file-picker",
+              "parameters": {
+                "isFolder": true,
+                "fileFilter": [],
+                "dataset": null
+              },
+              "value-path": "Id"
+            },
+            "x-ms-summary": "Container",
+            "type": "string"
+          },
+          {
+            "name": "inferContentType",
+            "in": "query",
+            "description": "Infer content-type based on extension",
+            "required": false,
+            "x-ms-summary": "Infer Content Type",
+            "x-ms-visibility": "advanced",
+            "type": "boolean",
+            "default": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "format": "binary",
+              "description": "The content of the file.",
+              "type": "string",
+              "x-ms-summary": "File Content"
+            },
+            "headers": {
+              "x-ms-file-id": {
+                "description": "File identifier",
+                "type": "string"
+              },
+              "x-ms-file-name": {
+                "description": "File name",
+                "type": "string"
+              },
+              "x-ms-file-path": {
+                "description": "File path",
+                "type": "string"
+              },
+              "x-ms-file-etag": {
+                "description": "File entity tag",
+                "type": "string"
+              },
+              "Content-Type": {
+                "description": "File content type",
+                "type": "string"
+              }
+            }
+          },
+          "default": {
+            "description": "Operation Failed."
+          }
+        },
+        "deprecated": false,
+        "x-ms-visibility": "internal",
+        "x-ms-trigger": "single",
+        "x-ms-trigger-hint": "To see it work now, add a blob in the container you selected.",
+        "x-ms-api-annotation": {
+          "status": "Preview"
+        }
+      }
+    },
+    "/{connectionId}/datasets/default/triggers/onupdatedfile": {
+      "get": {
+        "tags": [
+          "FileTransferFileDataTrigger"
+        ],
+        "summary": "When a blob is added or modified",
+        "description": "This operation triggers a flow when a blob is added or modified in a container. The trigger will fetch both the file metadata as well as the content of the file.",
+        "operationId": "OnUpdatedFile",
+        "consumes": [],
+        "produces": [],
+        "parameters": [
+          {
+            "name": "connectionId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "internal"
+          },
+          {
+            "name": "folderId",
+            "in": "query",
+            "description": "Select a container",
+            "required": true,
+            "x-ms-url-encoding": "double",
+            "x-ms-dynamic-values": {
+              "capability": "file-picker",
+              "parameters": {
+                "isFolder": true,
+                "fileFilter": [],
+                "dataset": null
+              },
+              "value-path": "Id"
+            },
+            "x-ms-summary": "Container",
+            "type": "string"
+          },
+          {
+            "name": "includeFileContent",
+            "in": "query",
+            "description": "If set to true, file content will also be retrieved along with the trigger response",
+            "required": false,
+            "x-ms-summary": "Include file content",
+            "x-ms-visibility": "internal",
+            "type": "boolean",
+            "default": true
+          },
+          {
+            "name": "inferContentType",
+            "in": "query",
+            "description": "Infer content-type based on extension",
+            "required": false,
+            "x-ms-summary": "Infer Content Type",
+            "x-ms-visibility": "advanced",
+            "type": "boolean",
+            "default": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "format": "binary",
+              "description": "The content of the file.",
+              "type": "string",
+              "x-ms-summary": "File Content"
+            },
+            "headers": {
+              "x-ms-file-id": {
+                "description": "File identifier",
+                "type": "string"
+              },
+              "x-ms-file-name": {
+                "description": "File name",
+                "type": "string"
+              },
+              "x-ms-file-path": {
+                "description": "File path",
+                "type": "string"
+              },
+              "x-ms-file-etag": {
+                "description": "File entity tag",
+                "type": "string"
+              },
+              "Content-Type": {
+                "description": "File content type",
+                "type": "string"
+              }
+            }
+          },
+          "default": {
+            "description": "Operation Failed."
+          }
+        },
+        "deprecated": false,
+        "x-ms-trigger": "single",
+        "x-ms-trigger-hint": "To see it works now, add or change a blob in the container you selected.",
+        "x-ms-visibility": "internal",
+        "x-ms-api-annotation": {
+          "status": "Preview"
+        }
+      }
+    },
+    "/{connectionId}/datasets/default/triggers/batch/onnewfile": {
+      "get": {
+        "tags": [
+          "FileTransferFileDataTrigger"
+        ],
+        "operationId": "OnNewFiles",
+        "consumes": [],
+        "produces": [
+          "application/json",
+          "text/json",
+          "application/xml",
+          "text/xml"
+        ],
+        "parameters": [
+          {
+            "name": "connectionId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "internal"
+          },
+          {
+            "name": "folderId",
+            "in": "query",
+            "required": true,
+            "x-ms-dynamic-values": {
+              "capability": "file-picker",
+              "parameters": {
+                "isFolder": true,
+                "fileFilter": [],
+                "dataset": null
+              },
+              "value-path": "Id"
+            },
+            "type": "string"
+          },
+          {
+            "name": "maxFileCount",
+            "in": "query",
+            "required": false,
+            "x-ms-summary": "Number of files to return from the trigger",
+            "x-ms-visibility": "advanced",
+            "type": "integer",
+            "format": "int32",
+            "default": 10
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/BlobMetadata"
+              },
+              "x-ms-summary": "List of Files"
+            }
+          },
+          "default": {
+            "description": "Operation Failed."
+          }
+        },
+        "deprecated": false,
+        "x-ms-visibility": "internal",
+        "x-ms-trigger": "batch"
+      }
+    },
+    "/{connectionId}/datasets/default/triggers/batch/onupdatedfile": {
+      "get": {
+        "tags": [
+          "FileTransferFileDataTrigger"
+        ],
+        "summary": "When one or more blobs are added or modified (metadata only)",
+        "description": "This operation triggers a flow when one or more blobs are added or modified in a container. This trigger will only fetch the file metadata. To get the file content, you can use the \"Get file content\" operation.",
+        "operationId": "OnUpdatedFiles",
+        "consumes": [],
+        "produces": [
+          "application/json",
+          "text/json",
+          "application/xml",
+          "text/xml"
+        ],
+        "parameters": [
+          {
+            "name": "connectionId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "internal"
+          },
+          {
+            "name": "folderId",
+            "in": "query",
+            "description": "Select a container",
+            "required": true,
+            "x-ms-dynamic-values": {
+              "capability": "file-picker",
+              "parameters": {
+                "isFolder": true,
+                "fileFilter": [],
+                "dataset": null
+              },
+              "value-path": "Id"
+            },
+            "x-ms-summary": "Container",
+            "type": "string"
+          },
+          {
+            "name": "maxFileCount",
+            "in": "query",
+            "description": "Max blob count (1-100)",
+            "required": false,
+            "x-ms-summary": "Number of blobs",
+            "x-ms-visibility": "advanced",
+            "type": "integer",
+            "format": "int32",
+            "default": 10
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/BlobMetadata"
+              },
+              "x-ms-summary": "List of Files"
+            }
+          },
+          "default": {
+            "description": "Operation Failed."
+          }
+        },
+        "deprecated": false,
+        "x-ms-visibility": "important",
+        "x-ms-trigger": "batch",
+        "x-ms-trigger-hint": "To see it work now, add or change blobs in the container you selected.",
+        "x-ms-api-annotation": {
+          "status": "Preview"
+        }
+      }
+    },
+    "/{connectionId}/api/trigger/onnewfile": {
+      "get": {
+        "tags": [
+          "FileTransferFileDataTrigger"
+        ],
+        "operationId": "OnNewFile_Old",
+        "consumes": [],
+        "produces": [],
+        "parameters": [
+          {
+            "name": "connectionId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "internal"
+          },
+          {
+            "name": "folderId",
+            "in": "query",
+            "required": true,
+            "x-ms-url-encoding": "double",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "format": "binary",
+              "type": "string"
+            },
+            "headers": {
+              "x-ms-file-id": {
+                "description": "File identifier",
+                "type": "string"
+              },
+              "x-ms-file-name": {
+                "description": "File name",
+                "type": "string"
+              },
+              "x-ms-file-path": {
+                "description": "File path",
+                "type": "string"
+              },
+              "x-ms-file-etag": {
+                "description": "File entity tag",
+                "type": "string"
+              },
+              "Content-Type": {
+                "description": "File content type",
+                "type": "string"
+              }
+            }
+          },
+          "default": {
+            "description": "Operation Failed."
+          }
+        },
+        "deprecated": false,
+        "x-ms-visibility": "internal",
+        "x-ms-trigger": "single"
+      }
+    },
+    "/{connectionId}/api/trigger/onupdatedfile": {
+      "get": {
+        "tags": [
+          "FileTransferFileDataTrigger"
+        ],
+        "operationId": "OnUpdatedFile_Old",
+        "consumes": [],
+        "produces": [],
+        "parameters": [
+          {
+            "name": "connectionId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "internal"
+          },
+          {
+            "name": "folderId",
+            "in": "query",
+            "required": true,
+            "x-ms-url-encoding": "double",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "format": "binary",
+              "type": "string"
+            },
+            "headers": {
+              "x-ms-file-id": {
+                "description": "File identifier",
+                "type": "string"
+              },
+              "x-ms-file-name": {
+                "description": "File name",
+                "type": "string"
+              },
+              "x-ms-file-path": {
+                "description": "File path",
+                "type": "string"
+              },
+              "x-ms-file-etag": {
+                "description": "File entity tag",
+                "type": "string"
+              },
+              "Content-Type": {
+                "description": "File content type",
+                "type": "string"
+              }
+            }
+          },
+          "default": {
+            "description": "Operation Failed."
+          }
+        },
+        "deprecated": false,
+        "x-ms-visibility": "internal",
+        "x-ms-trigger": "single"
+      }
+    },
+    "/{connectionId}/datasets/default/folders/{id}": {
+      "get": {
+        "tags": [
+          "FileTransferFolderData"
+        ],
+        "summary": "List blobs in container",
+        "description": "This operation lists blobs in a container.",
+        "operationId": "ListFolder",
+        "consumes": [],
+        "produces": [
+          "application/json",
+          "text/json",
+          "application/xml",
+          "text/xml"
+        ],
+        "parameters": [
+          {
+            "name": "connectionId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "internal"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Specify the folder",
+            "required": true,
+            "x-ms-url-encoding": "double",
+            "x-ms-dynamic-values": {
+              "capability": "file-picker",
+              "parameters": {
+                "isFolder": true,
+                "fileFilter": [],
+                "dataset": null
+              },
+              "value-path": "Id"
+            },
+            "x-ms-summary": "Folder",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/BlobMetadata"
+              }
+            }
+          },
+          "default": {
+            "description": "Operation Failed."
+          }
+        },
+        "deprecated": false,
+        "x-ms-visibility": "internal",
+        "x-ms-api-annotation": {
+          "status": "Preview"
+        }
+      }
+    },
+    "/{connectionId}/datasets/default/foldersV2/{id}": {
+      "get": {
+        "tags": [
+          "FileTransferFolderData"
+        ],
+        "summary": "List blobs",
+        "description": "This operation lists blobs in a container.",
+        "operationId": "ListFolderV2",
+        "consumes": [],
+        "produces": [
+          "application/json",
+          "text/json",
+          "application/xml",
+          "text/xml"
+        ],
+        "parameters": [
+          {
+            "name": "connectionId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "internal"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Specify the folder",
+            "required": true,
+            "x-ms-url-encoding": "double",
+            "x-ms-dynamic-values": {
+              "capability": "file-picker",
+              "parameters": {
+                "isFolder": true,
+                "fileFilter": [],
+                "dataset": null
+              },
+              "value-path": "Id"
+            },
+            "x-ms-summary": "Folder",
+            "type": "string"
+          },
+          {
+            "name": "nextPageMarker",
+            "in": "query",
+            "required": false,
+            "x-ms-summary": "Paging Marker",
+            "x-ms-visibility": "internal",
+            "type": "string",
+            "default": ""
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/BlobMetadataPage"
+            }
+          },
+          "default": {
+            "description": "Operation Failed."
+          }
+        },
+        "deprecated": false,
+        "x-ms-visibility": "advanced",
+        "x-ms-pageable": {
+          "nextLinkName": "nextLink"
+        },
+        "x-ms-api-annotation": {
+          "status": "Preview"
+        }
+      }
+    },
+    "/{connectionId}/datasets/default/folders": {
+      "get": {
+        "tags": [
+          "FileTransferFolderData"
+        ],
+        "summary": "List blobs in root folder",
+        "description": "This operation lists blobs in the Azure Blob Storage root folder.",
+        "operationId": "ListRootFolder",
+        "consumes": [],
+        "produces": [
+          "application/json",
+          "text/json",
+          "application/xml",
+          "text/xml"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/BlobMetadata"
+              }
+            }
+          },
+          "default": {
+            "description": "Operation Failed."
+          }
+        },
+        "deprecated": false,
+        "x-ms-visibility": "internal",
+        "x-ms-api-annotation": {
+          "status": "Preview"
+        },
+        "parameters": [
+          {
+            "name": "connectionId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "internal"
+          }
+        ]
+      }
+    },
+    "/{connectionId}/datasets/default/foldersV2": {
+      "get": {
+        "tags": [
+          "FileTransferFolderData"
+        ],
+        "summary": "List blobs in root folder",
+        "description": "This operation lists blobs in the Azure Blob Storage root folder.",
+        "operationId": "ListRootFolderV2",
+        "consumes": [],
+        "produces": [
+          "application/json",
+          "text/json",
+          "application/xml",
+          "text/xml"
+        ],
+        "parameters": [
+          {
+            "name": "connectionId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "internal"
+          },
+          {
+            "name": "nextPageMarker",
+            "in": "query",
+            "required": false,
+            "x-ms-summary": "Paging Marker",
+            "x-ms-visibility": "internal",
+            "type": "string",
+            "default": ""
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/BlobMetadataPage"
+            }
+          },
+          "default": {
+            "description": "Operation Failed."
+          }
+        },
+        "deprecated": false,
+        "x-ms-visibility": "internal",
+        "x-ms-pageable": {
+          "nextLinkName": "nextLink"
+        },
+        "x-ms-api-annotation": {
+          "status": "Preview"
+        }
+      }
+    },
+    "/{connectionId}/datasets/default/rootfolders": {
+      "get": {
+        "tags": [
+          "FileTransferFolderData"
+        ],
+        "operationId": "ListAllRootFolders",
+        "consumes": [],
+        "produces": [
+          "application/json",
+          "text/json",
+          "application/xml",
+          "text/xml"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/BlobMetadata"
+              }
+            }
+          },
+          "default": {
+            "description": "Operation Failed."
+          }
+        },
+        "deprecated": false,
+        "x-ms-visibility": "internal",
+        "x-ms-api-annotation": {
+          "status": "Preview",
+          "family": "ListAllRootFolders",
+          "revision": 1
+        },
+        "parameters": [
+          {
+            "name": "connectionId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "internal"
+          }
+        ]
+      }
+    },
+    "/{connectionId}/datasets/default/rootfoldersV2": {
+      "get": {
+        "tags": [
+          "FileTransferFolderData"
+        ],
+        "operationId": "ListAllRootFoldersV2",
+        "consumes": [],
+        "produces": [
+          "application/json",
+          "text/json",
+          "application/xml",
+          "text/xml"
+        ],
+        "parameters": [
+          {
+            "name": "connectionId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "internal"
+          },
+          {
+            "name": "nextPageMarker",
+            "in": "query",
+            "required": false,
+            "x-ms-summary": "Paging Marker",
+            "x-ms-visibility": "internal",
+            "type": "string",
+            "default": ""
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/BlobMetadataPage"
+            }
+          },
+          "default": {
+            "description": "Operation Failed."
+          }
+        },
+        "deprecated": false,
+        "x-ms-visibility": "internal",
+        "x-ms-pageable": {
+          "nextLinkName": "nextLink"
+        },
+        "x-ms-api-annotation": {
+          "status": "Preview",
+          "family": "ListAllRootFolders",
+          "revision": 2,
+          "comment": "Support pages"
+        }
+      }
+    },
+    "/{connectionId}/datasets/default/extractFolderV2": {
+      "post": {
+        "tags": [
+          "FileTransferFolderData"
+        ],
+        "summary": "Extract archive to folder",
+        "description": "This operation extracts an archive blob into a folder (example: .zip).",
+        "operationId": "ExtractFolderV2",
+        "consumes": [],
+        "produces": [
+          "application/json",
+          "text/json",
+          "application/xml",
+          "text/xml"
+        ],
+        "parameters": [
+          {
+            "name": "connectionId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "internal"
+          },
+          {
+            "name": "source",
+            "in": "query",
+            "description": "Specify the path to the archive blob",
+            "required": true,
+            "x-ms-url-encoding": "double",
+            "x-ms-dynamic-values": {
+              "capability": "file-picker",
+              "parameters": {
+                "isFolder": false,
+                "fileFilter": [
+                  "application/zip",
+                  "application/x-zip-compressed"
+                ],
+                "dataset": null
+              },
+              "value-path": "Path"
+            },
+            "x-ms-summary": "Source archive blob path",
+            "type": "string"
+          },
+          {
+            "name": "destination",
+            "in": "query",
+            "description": "Specify the path in Azure Blob Storage to extract the archive contents",
+            "required": true,
+            "x-ms-url-encoding": "double",
+            "x-ms-dynamic-values": {
+              "capability": "file-picker",
+              "parameters": {
+                "isFolder": true,
+                "fileFilter": [],
+                "dataset": null
+              },
+              "value-path": "Path"
+            },
+            "x-ms-summary": "Destination folder path",
+            "type": "string"
+          },
+          {
+            "name": "overwrite",
+            "in": "query",
+            "description": "Should destination blob be overwritten (true/false)?",
+            "required": false,
+            "x-ms-summary": "Overwrite?",
+            "type": "boolean",
+            "default": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/BlobMetadata"
+              }
+            }
+          },
+          "default": {
+            "description": "Operation Failed."
+          }
+        },
+        "deprecated": false,
+        "x-ms-visibility": "advanced"
+      }
+    },
+    "/{connectionId}/api/blob/folders/{id}": {
+      "get": {
+        "tags": [
+          "FileTransferFolderData"
+        ],
+        "operationId": "ListFolder_Old",
+        "consumes": [],
+        "produces": [
+          "application/json",
+          "text/json",
+          "application/xml",
+          "text/xml"
+        ],
+        "parameters": [
+          {
+            "name": "connectionId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "internal"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "x-ms-url-encoding": "double",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/BlobMetadata"
+              }
+            }
+          },
+          "default": {
+            "description": "Operation Failed."
+          }
+        },
+        "deprecated": false,
+        "x-ms-visibility": "internal"
+      }
+    },
+    "/{connectionId}/api/blob/folders": {
+      "get": {
+        "tags": [
+          "FileTransferFolderData"
+        ],
+        "operationId": "ListRootFolder_Old",
+        "consumes": [],
+        "produces": [
+          "application/json",
+          "text/json",
+          "application/xml",
+          "text/xml"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/BlobMetadata"
+              }
+            }
+          },
+          "default": {
+            "description": "Operation Failed."
+          }
+        },
+        "deprecated": false,
+        "x-ms-visibility": "internal",
+        "parameters": [
+          {
+            "name": "connectionId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "internal"
+          }
+        ]
+      }
+    },
+    "/{connectionId}/api/blob/extractFolder": {
+      "post": {
+        "tags": [
+          "FileTransferFolderData"
+        ],
+        "operationId": "ExtractFolder_Old",
+        "consumes": [],
+        "produces": [],
+        "parameters": [
+          {
+            "name": "connectionId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-ms-visibility": "internal"
+          },
+          {
+            "name": "source",
+            "in": "query",
+            "required": true,
+            "x-ms-url-encoding": "double",
+            "type": "string"
+          },
+          {
+            "name": "destination",
+            "in": "query",
+            "required": true,
+            "x-ms-url-encoding": "double",
+            "type": "string"
+          },
+          {
+            "name": "overwrite",
+            "in": "query",
+            "required": false,
+            "type": "boolean",
+            "default": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "default": {
+            "description": "Operation Failed."
+          }
+        },
+        "deprecated": false,
+        "x-ms-visibility": "internal"
+      }
+    }
+  },
+  "definitions": {
+    "DataSetsMetadata": {
+      "description": "Dataset metadata",
+      "type": "object",
+      "properties": {
+        "tabular": {
+          "$ref": "#/definitions/TabularDataSetsMetadata",
+          "description": "Tabular dataset metadata"
+        },
+        "blob": {
+          "$ref": "#/definitions/BlobDataSetsMetadata",
+          "description": "Blob dataset metadata"
+        }
+      }
+    },
+    "TabularDataSetsMetadata": {
+      "description": "Tabular dataset metadata",
+      "type": "object",
+      "properties": {
+        "source": {
+          "description": "Dataset source",
+          "type": "string"
+        },
+        "displayName": {
+          "description": "Dataset display name",
+          "type": "string"
+        },
+        "urlEncoding": {
+          "description": "Dataset url encoding",
+          "type": "string"
+        },
+        "tableDisplayName": {
+          "description": "Table display name",
+          "type": "string"
+        },
+        "tablePluralName": {
+          "description": "Table plural display name",
+          "type": "string"
+        }
+      }
+    },
+    "BlobDataSetsMetadata": {
+      "description": "Blob dataset metadata",
+      "type": "object",
+      "properties": {
+        "source": {
+          "description": "Blob dataset source",
+          "type": "string"
+        },
+        "displayName": {
+          "description": "Blob dataset display name",
+          "type": "string"
+        },
+        "urlEncoding": {
+          "description": "Blob dataset url encoding",
+          "type": "string"
+        }
+      }
+    },
+    "BlobMetadata": {
+      "description": "Blob metadata",
+      "type": "object",
+      "properties": {
+        "Id": {
+          "description": "The unique id of the file or folder.",
+          "type": "string"
+        },
+        "Name": {
+          "description": "The name of the file or folder.",
+          "type": "string"
+        },
+        "DisplayName": {
+          "description": "The display name of the file or folder.",
+          "type": "string"
+        },
+        "Path": {
+          "description": "The path of the file or folder.",
+          "type": "string"
+        },
+        "LastModified": {
+          "format": "date-time",
+          "description": "The date and time the file or folder was last modified.",
+          "type": "string"
+        },
+        "Size": {
+          "format": "int64",
+          "description": "The size of the file or folder.",
+          "type": "integer"
+        },
+        "MediaType": {
+          "description": "The media type of the file or folder.",
+          "type": "string"
+        },
+        "IsFolder": {
+          "description": "A boolean value (true, false) to indicate whether or not the blob is a folder.",
+          "type": "boolean"
+        },
+        "ETag": {
+          "description": "The etag of the file or folder.",
+          "type": "string"
+        },
+        "FileLocator": {
+          "description": "The filelocator of the file or folder.",
+          "type": "string"
+        },
+        "LastModifiedBy": {
+          "description": "The user who last modified the file or folder.",
+          "type": "string",
+          "x-ms-visibility": "internal"
+        }
+      }
+    },
+    "Object": {
+      "type": "object",
+      "properties": {}
+    },
+    "BlobMetadataPage": {
+      "description": "Represents a page of blob metadata.",
+      "type": "object",
+      "properties": {
+        "value": {
+          "description": "Blob metadata collection.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/BlobMetadata"
+          },
+          "readOnly": true
+        },
+        "nextLink": {
+          "description": "An Url which can be used to retrieve the next page.",
+          "type": "string",
+          "x-ms-visibility": "internal"
+        }
+      }
+    }
+  },
+  "x-ms-capabilities": {
+    "file-picker": {
+      "open": {
+        "operationId": "ListAllRootFoldersV2"
+      },
+      "browse": {
+        "operationId": "ListFolderV2",
+        "parameters": {
+          "id": {
+            "value-property": "Id"
+          }
+        }
+      },
+      "value-collection": "value",
+      "value-title": "DisplayName",
+      "value-folder-property": "IsFolder",
+      "value-media-property": "MediaType"
+    },
+    "testConnection": {
+      "operationId": "TestConnection",
+      "parameters": {}
+    }
+  }
+}

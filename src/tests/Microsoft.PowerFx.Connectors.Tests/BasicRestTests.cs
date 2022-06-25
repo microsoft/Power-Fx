@@ -2,14 +2,13 @@
 // Licensed under the MIT license.
 
 using System;
-using System.Dynamic;
+using System.Drawing;
+using System.Linq;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.OpenApi.Readers;
 using Microsoft.PowerFx.Connectors;
 using Microsoft.PowerFx.Core.Tests;
-using Microsoft.PowerFx.Types;
 using Xunit;
 
 namespace Microsoft.PowerFx.Tests
@@ -19,7 +18,7 @@ namespace Microsoft.PowerFx.Tests
     {
         // Must set the BaseAddress on an httpClient, even if we don't actually use it. 
         // All the Send() methods will enforce this. 
-        private static readonly Uri _fakeBaseAddress = new Uri("http://localhost:5000");
+        private static readonly Uri _fakeBaseAddress = new ("http://localhost:5000");
         
         private static void AssertLog(LoggingTestServer testConnector, string expectedLog)
         {
@@ -40,23 +39,28 @@ namespace Microsoft.PowerFx.Tests
         [InlineData(2, @"Test.GetWeatherWithHeader2()", "GET http://localhost:5000/weather/header2")]
         [InlineData(2, @"Test.GetWeather3(4, 8, 10, { i : 7, j : 9, k : 11 })", "GET http://localhost:5000/weather3?i=7&ir=4&k=11&kr=10\r\n j: 9\r\n jr: 8")]
         [InlineData(2, @"Test.GetWeather3(4, 8, 10, { i : 5 })", "GET http://localhost:5000/weather3?i=5&ir=4&kr=10\r\n jr: 8")]
-        [InlineData(1, @"Test.GetKey(""Key1"")", "GET http://localhost:5000/Keys?keyName=Key1")]
-
+        [InlineData(1, @"Test.GetKey(""Key1"")",  "GET http://localhost:5000/Keys?keyName=Key1")]
+        [InlineData(3, @"Test.PostWeatherWithId({body: 5})", "POST http://localhost:5000/weatherPost\r\n [content-header] Content-Type: text/json; charset=utf-8\r\n [body] 5")]
+        [InlineData(3, @"Test.PostWeatherWithInputObject({x: [1], y:2})", "POST http://localhost:5000/weatherPost2\r\n [content-header] Content-Type: application/json; charset=utf-8\r\n [body] {\"x\":[1],\"y\":2}")]
+        [InlineData(4, @"Test.PostWeather7({z: {x: [1, 2], y:3 }, dt: ""2022-06-16T13:26:24.900Z"", db:0, str:""str"" })", "POST http://localhost:5000/weatherPost7\r\n [content-header] Content-Type: application/json; charset=utf-8\r\n [body] {\"z\":{\"x\":[1,2],\"y\":3},\"dt\":\"2022-06-16T13:26:24.900Z\",\"db\":0,\"str\":\"str\"}")]
+        [InlineData(4, @"Test.PostWeather8({z: {x: [1, 2], y:3 }, dt: ""2022-06-16T13:26:24.900Z"", db:0, str:""str"" })", "POST http://localhost:5000/weatherPost8\r\n [content-header] Content-Type: application/json; charset=utf-8\r\n [body] {\"z\":{\"x\":[1,2],\"y\":3},\"dt\":\"2022-06-16T13:26:24.900Z\",\"db\":0,\"str\":\"str\"}")]        
+        [InlineData(4, @"Test.PostWeatherWithUrlEncodedBody({x: [1, 2], y:3})", "POST http://localhost:5000/weatherPost5\r\n [content-header] Content-Type: application/x-www-form-urlencoded; charset=utf-8\r\n [body] X=1&X=2&Y=3")]        
+        [InlineData(4, @"Test.GetT5(4, 6, {Id_A:1, Name_A: ""def"", Count:14, 'Object_B.Id_B': 2, 'Object_B.Name_B': ""ghi"", 'Object_B.Count': 7})", "GET http://localhost:5000/weather/t5?Id_A=1&Name_A=def&Count=14&Object_B.Id_B=2&Object_B.Name_B=ghi&Object_B.Count=7&d=4&Name_B=6")]
+        [InlineData(4, @"Test.GetT6({d: 11, Name_B: 12, Id_A:1, Name_A: ""def"", Count:14, 'Object_B.Id_B': 2, 'Object_B.Name_B': ""ghi"", 'Object_B.Count': 7})", "GET http://localhost:5000/weather/t6?Id_A=1&Name_A=def&Count=14&Object_B.Id_B=2&Object_B.Name_B=ghi&Object_B.Count=7&d=11&Name_B=12")]
+        [InlineData(5, @"Test.GetT7(1, ""abc"", 5, { id_B: 4, name_B: ""foo"", countB: 44 })", "POST http://localhost:5000/weather/t7\r\n [content-header] Content-Type: application/json; charset=utf-8\r\n [body] {\"id_A\":1,\"name_A\":\"abc\",\"count\":5,\"object_B\":{\"id_B\":4,\"name_B\":\"foo\",\"countB\":44}}")]
+        [InlineData(5, @"Test.GetT8({body: Table({Value: 1}, {Value: 3})})", "POST http://localhost:5000/weather/t8\r\n [content-header] Content-Type: text/json; charset=utf-8\r\n [body] [1,3]")]
+        [InlineData(5, @"Test.GetT8a(Table({Value: 1}, {Value: 444}))", "POST http://localhost:5000/weather/t8a\r\n [content-header] Content-Type: text/json; charset=utf-8\r\n [body] [1,444]")]
         public async void ValidateHttpCalls(int apiFileNumber, string fxQuery, string httpQuery)
         {
-            string swaggerFile;
-
-            switch (apiFileNumber)
+            var swaggerFile = apiFileNumber switch
             {
-                case 1:
-                    swaggerFile = @"Swagger\TestOpenAPI.json";
-                    break;
-                case 2:
-                    swaggerFile = @"Swagger\TestOpenAPI2.json";
-                    break;
-                default:
-                    throw new ArgumentException("Invalid apiFileNumber");                    
-            }
+                1 => @"Swagger\TestOpenAPI.json",
+                2 => @"Swagger\TestOpenAPI2.json",
+                3 => @"Swagger\TestOpenAPI3.json",
+                4 => @"Swagger\TestOpenAPI4.json",
+                5 => @"Swagger\TestOpenAPI5.json",
+                _ => throw new ArgumentException("Invalid apiFileNumber"),
+            };
 
             var testConnector = new LoggingTestServer(swaggerFile);
             testConnector.SetResponse("0");
@@ -65,9 +69,10 @@ namespace Microsoft.PowerFx.Tests
             config.AddService("Test", testConnector._apiDocument, new HttpClient(testConnector) { BaseAddress = _fakeBaseAddress });
             var engine = new RecalcEngine(config);
 
-            Assert.True(engine.Check(fxQuery).IsSuccess);
+            var checkResult = engine.Check(fxQuery, options: _optionsPost);
+            Assert.True(checkResult.IsSuccess, string.Join("\r\n", checkResult.Errors.Select(er => er.Message)));
 
-            var result = await engine.EvalAsync(fxQuery, CancellationToken.None);
+            var result = await engine.EvalAsync(fxQuery, CancellationToken.None, options: _optionsPost);
             Assert.NotNull(result);
 
             var r = (dynamic)result.ToObject();
@@ -77,7 +82,7 @@ namespace Microsoft.PowerFx.Tests
         }
 
         // Allow side-effects for executing behavior functions (any POST)
-        private static readonly ParserOptions _optionsPost = new ParserOptions
+        private static readonly ParserOptions _optionsPost = new ()
         {
             AllowsSideEffects = true
         };

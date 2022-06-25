@@ -12,7 +12,7 @@ namespace Microsoft.PowerFx.Types
         {
         }
 
-        public override void Visit(ITypeVistor vistor)
+        public override void Visit(ITypeVisitor vistor)
         {
             vistor.Visit(this);
         }

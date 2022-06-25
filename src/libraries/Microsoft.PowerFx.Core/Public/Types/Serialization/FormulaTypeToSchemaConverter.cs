@@ -16,7 +16,7 @@ namespace Microsoft.PowerFx.Core
             return visitor.Result;
         }
 
-        private class FormulaTypeToSchemaVisitor : ITypeVistor
+        private class FormulaTypeToSchemaVisitor : ITypeVisitor
         {
             public FormulaTypeSchema Result;
 

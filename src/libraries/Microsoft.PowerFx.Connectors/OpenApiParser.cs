@@ -15,11 +15,7 @@ namespace Microsoft.PowerFx.Connectors
     internal class OpenApiParser
     {
         // Parse an OpenApiDocument and return functions. 
-        public static List<ServiceFunction> Parse(
-            string functionNamespace, 
-            OpenApiDocument openApiDocument, 
-            HttpMessageInvoker httpClient = null, 
-            ICachingHttpClient cache = null)
+        public static List<ServiceFunction> Parse(string functionNamespace, OpenApiDocument openApiDocument, HttpMessageInvoker httpClient = null, ICachingHttpClient cache = null)
         {
             if (openApiDocument == null)
             {
@@ -32,9 +28,7 @@ namespace Microsoft.PowerFx.Connectors
             }
 
             var newFunctions = new List<ServiceFunction>();
-
             var basePath = openApiDocument.GetBasePath();
-
             DPath theNamespace = DPath.Root.Append(new DName(functionNamespace));
 
             if (openApiDocument.Paths == null)
@@ -49,7 +43,7 @@ namespace Microsoft.PowerFx.Connectors
 
                 foreach (var kv2 in ops.Operations)
                 {
-                    var verb = kv2.Key.ToHttpMethod(); // "GET"
+                    var verb = kv2.Key.ToHttpMethod(); // "GET", "POST"
                     var op = kv2.Value;
 
                     if (op.IsTrigger())
@@ -57,14 +51,7 @@ namespace Microsoft.PowerFx.Connectors
                         continue;
                     }
 
-                    var operationName = op.OperationId ?? path.Replace("/", string.Empty);
-
-                    if (op.RequestBody != null)
-                    {
-                        // RequestBody can be ambiguous- treat as a single record? splat as parameters?
-                        throw new NotImplementedException($"Request body");
-                    }
-
+                    var operationName = op.OperationId ?? path.Replace("/", string.Empty);                    
                     var returnType = op.GetReturnType();
 
                     if (basePath != null)
@@ -72,7 +59,7 @@ namespace Microsoft.PowerFx.Connectors
                         path = basePath + path;
                     }
 
-                    var argMapper = new ArgumentMapper(op.Parameters);
+                    var argMapper = new ArgumentMapper(op.Parameters, op);
 
                     IAsyncTexlFunction invoker = null;
                     if (httpClient != null)
@@ -103,8 +90,8 @@ namespace Microsoft.PowerFx.Connectors
                         description, // Template.GetFunctionDescription(funcTemplate.Name),
                         returnType._type,
                         BigInteger.Zero,
-                        argMapper._arityMin,
-                        argMapper._arityMax,
+                        argMapper.ArityMin,
+                        argMapper.ArityMax,
                         isBehavior,
                         isAutoRefreshable,
                         isDynamic,
@@ -112,8 +99,8 @@ namespace Microsoft.PowerFx.Connectors
                         cacheTimeoutMs,
                         isHidden,
                         parameterOptions,
-                        argMapper._optionalParamInfo,
-                        argMapper._requiredParamInfo,
+                        argMapper.OptionalParamInfo,
+                        argMapper.RequiredParamInfo,
                         parameterDefaultValues,
                         "action", //  funcTemplate.ActionName,??
                         argMapper._parameterTypes)

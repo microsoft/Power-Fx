@@ -33,7 +33,7 @@ namespace Microsoft.PowerFx.Types
             Kind = kind;
         }
 
-        public override void Visit(ITypeVistor vistor)
+        public override void Visit(ITypeVisitor vistor)
         {
             throw new NotImplementedException();
         }

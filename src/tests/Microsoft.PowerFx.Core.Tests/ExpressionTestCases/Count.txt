@@ -4,6 +4,9 @@
 >> Count([1, 2, 1/0, 4, 5])
 #Error(Kind=Div0)
 
+>> Count(If(1<0,[1,2,3]))
+0
+
 >> Count([1,"4", Blank()])
 2
 
