@@ -528,8 +528,9 @@ Table({First:"Helio",Last:#Error(Kind=25),Age:263,Gender:"Unknown",Vaccinated:Bl
   { First: "Emily", Age: 29, Properties: { Vaccinated: true, HasDog: Blank() }},
   { First: "Helio", Age: 63, Properties: { Vaccinated: Blank(), HasDog: Blank() }},
   { First: "Mary", Age: 48, Properties: Blank()},
-  { First: "Titan", Age: 79, Properties: Blank() }),Properties.HasDog)
+  { First: "Titan", Age: 79, Properties: Blank() }),Coalesce(Properties.HasDog, false))
 Table({Age:17,First:"John",Properties:{HasDog:false,Vaccinated:false}},{Age:2,First:"Bob",Properties:{HasDog:true,Vaccinated:true}},{Age:5,First:"Alice",Properties:{HasDog:true,Vaccinated:true}},{Age:29,First:"Emily",Properties:{HasDog:Blank(),Vaccinated:true}},{Age:63,First:"Helio",Properties:{HasDog:Blank(),Vaccinated:Blank()}},{Age:48,First:"Mary",Properties:Blank()},{Age:79,First:"Titan",Properties:Blank()})
+
 
 // SORT HIERARCHICAL DATA ON BOOL EXPRESSION - DESCENDING ORDER 
 
@@ -547,11 +548,24 @@ Table({Age:2,First:"Bob",Properties:{HasDog:true,Vaccinated:true}},{Age:5,First:
 // SORT HIERARCHICAL DATA ON STRING EXPRESSION - ASCENDING ORDER 
 
 >> Sort(Table(
-  { First: "Bob", Age: 2, Properties: { Vaccinated: true, HasDog: true }},
-  { First: "Alice", Age: 5, Properties: { Vaccinated: true, HasDog: true }},
-  { First: "John", Age: 17, Properties: { Vaccinated: false, HasDog: false }},
-  { First: "Emily", Age: 29, Properties: { Vaccinated: true, HasDog: Blank() }},
-  { First: "Helio", Age: 63, Properties: { Vaccinated: Blank(), HasDog: Blank() }},
+  { First: "Bob", Age: 2, Properties: { Last: "Smith", Vaccinated: true, HasDog: true }},
+  { First: "Alice", Age: 5, Properties: { Last: "Miller", Vaccinated: true, HasDog: true }},
+  { First: "John", Age: 17, Properties: { Last:"Jones", Vaccinated: false, HasDog: false }},
+  { First: "Emily", Age: 29, Properties: { Last:"Harris", Vaccinated: true, HasDog: Blank() }},
+  { First: "Helio", Age: 63, Properties: { Last:"Miller", Vaccinated: Blank(), HasDog: Blank() }},
   { First: "Mary", Age: 48, Properties: Blank()},
-  { First: "Titan", Age: 79, Properties: Blank() }),Coalesce(Properties.Vaccinated, false))
-Table({Age:17,First:"John",Properties:{HasDog:false,Vaccinated:false}},{Age:63,First:"Helio",Properties:{HasDog:Blank(),Vaccinated:Blank()}},{Age:48,First:"Mary",Properties:Blank()},{Age:79,First:"Titan",Properties:Blank()},{Age:2,First:"Bob",Properties:{HasDog:true,Vaccinated:true}},{Age:5,First:"Alice",Properties:{HasDog:true,Vaccinated:true}},{Age:29,First:"Emily",Properties:{HasDog:Blank(),Vaccinated:true}})
+  { First: "Titan", Age: 79, Properties: Blank() }),Properties.Last)
+Table({Age:29,First:"Emily",Properties:{HasDog:Blank(),Last:"Harris",Vaccinated:true}},{Age:17,First:"John",Properties:{HasDog:false,Last:"Jones",Vaccinated:false}},{Age:5,First:"Alice",Properties:{HasDog:true,Last:"Miller",Vaccinated:true}},{Age:63,First:"Helio",Properties:{HasDog:Blank(),Last:"Miller",Vaccinated:Blank()}},{Age:2,First:"Bob",Properties:{HasDog:true,Last:"Smith",Vaccinated:true}},{Age:48,First:"Mary",Properties:Blank()},{Age:79,First:"Titan",Properties:Blank()})
+
+
+// SORT HIERARCHICAL DATA ON STRING EXPRESSION - DESCENCDING ORDER 
+
+>> Sort(Table(
+  { First: "Bob", Age: 2, Properties: { Last: "Smith", Vaccinated: true, HasDog: true }},
+  { First: "Alice", Age: 5, Properties: { Last: "Miller", Vaccinated: true, HasDog: true }},
+  { First: "John", Age: 17, Properties: { Last:"Jones", Vaccinated: false, HasDog: false }},
+  { First: "Emily", Age: 29, Properties: { Last:"Harris", Vaccinated: true, HasDog: Blank() }},
+  { First: "Helio", Age: 63, Properties: { Last:"Miller", Vaccinated: Blank(), HasDog: Blank() }},
+  { First: "Mary", Age: 48, Properties: Blank()},
+  { First: "Titan", Age: 79, Properties: Blank() }),Properties.Last, SortOrder.Descending)
+Table({Age:2,First:"Bob",Properties:{HasDog:true,Last:"Smith",Vaccinated:true}},{Age:5,First:"Alice",Properties:{HasDog:true,Last:"Miller",Vaccinated:true}},{Age:63,First:"Helio",Properties:{HasDog:Blank(),Last:"Miller",Vaccinated:Blank()}},{Age:17,First:"John",Properties:{HasDog:false,Last:"Jones",Vaccinated:false}},{Age:29,First:"Emily",Properties:{HasDog:Blank(),Last:"Harris",Vaccinated:true}},{Age:48,First:"Mary",Properties:Blank()},{Age:79,First:"Titan",Properties:Blank()})
