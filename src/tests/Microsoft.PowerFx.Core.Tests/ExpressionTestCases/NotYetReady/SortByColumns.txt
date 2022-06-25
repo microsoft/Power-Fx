@@ -102,7 +102,7 @@ Table({Value:-2},{Value:-1},{Value:0},{Value:1},{Value:2})
 // ******** NULL and ERROR PARAMETERS ********
 
 >> SortByColumns([-2, -1, 5, 1, 2], SortOrder.Descending)
-#Error(Kind=InvalidFunctionUsage 
+#Error(Kind=InvalidFunctionUsage)
 
 //Error passed as one of the table records
 >> SortByColumns([-2, -1, 5, 1/0, 2], Value)
@@ -512,8 +512,8 @@ Table({Age:2,First:"Andrew",Gender:"Male",HasDog:true,Last:"Smith",Vaccinated:fa
 // SORT ON TABLE WITH COLUMNS HAVING SPECIAL CHARACTERS - DESCENDING ORDER
 
 >>  SortByColumns(Table(
-  { "A\"B": "Bob" }, { "A\"B": "Alice" }, { "A\"B": "Mary" }, { "A\"B": "Wonderland" }, { "A\"B": "Samantha" }), "A\""B", SortOrder.Descending)
-Table({ "A\"B": "Wonderland" }, { "A\"B": "Samantha" }, { "A\"B": "Mary" }, { "A\"B": "Bob" }, { "A\"B": "Alice" })
+  { 'A\"B': "Bob" }, { 'A\"B': "Alice" }, { 'A\"B': "Mary" }, { 'A\"B': "Wonderland" }, { 'A\"B': "Samantha" }), "A\""B", SortOrder.Descending)
+Table({ 'A\"B': "Wonderland" }, { 'A\"B': "Samantha" }, { 'A\"B': "Mary" }, { 'A\"B': "Bob" }, { 'A\"B': "Alice" })
 
 // SORT ON TABLE WITH SOME COLUMNS HAVING ERROR VALUES - ASCENDING ORDER
 

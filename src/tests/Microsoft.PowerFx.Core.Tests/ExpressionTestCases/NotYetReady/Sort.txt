@@ -106,11 +106,11 @@
 #Error(Kind=Validation)
 
 >> Sort([1/0], Blank())
-#Error(Kind=Div0)
+Table({Value:#Error(Kind=13)})
 
 // Sort error with bool value as sort formula
 >> Sort([1/0],true)
-#Error(Kind=Div0)
+Table({Value:#Error(Kind=13)})
 
 >> Sort([Blank()],true)
 [Blank()]
