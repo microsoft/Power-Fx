@@ -100,5 +100,11 @@ true
 true
 
 // Multiple Datatype Properties
->> IsEmpty(Filter(Table({a:1},{b:true},{a:2, b:false},{a:1,c:Date(2022,12,1)},{b:true, d:TimeValue("5:00 AM")},{d:Time(4,0,0), e:DateTimeValue("Jun 19 2022 4:00 PM")}),a>3))
+>> IsEmpty(
+   Filter(
+   Table(
+   {a:1,b:true,c:Date(2022,12,1),d:Time(12,34,56),e:DateTimeValue("2012-12-12 12:12:12")},
+   {a:5,b:false,c:Date(2022,12,1),d:TimeValue("5:00 AM"),e:DateTimeValue("2012-12-12 12:12:12")},
+   {a:6,b:true,c:Date(2022,12,1),d:Time(12,34,56),e:DateTimeValue("Jun 19 2022 4:00 PM")}
+   ),a > 10))
 true
