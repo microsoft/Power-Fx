@@ -156,7 +156,6 @@ namespace Microsoft.PowerFx
         {
             CheckCancel();
 
-            //Don't know if this is the best place to put this increment call.
             if (!_context.IncrementCallDepth())
             {
                 return CommonErrors.MaxCallDepth(node.IRContext);

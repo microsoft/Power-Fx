@@ -38,9 +38,6 @@ namespace Microsoft.PowerFx.Interpreter
 
             _mutex.ReleaseMutex();
             
-            // The following line is just debug to keep track of call depth. Its painful to have to google it everytime I test recursion so I'm leaving it here commented out.
-            // If this breaks some sort of convention I'll remove the comment.
-            //System.Diagnostics.Debug.WriteLine($"CurrentCallDepth: {_currentCallDepth}");
             return true;
         }
 

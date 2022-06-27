@@ -55,7 +55,6 @@
 
   <ItemGroup>
     <None Remove="ExpressionTestCases\NotYetReady\RecursionTest.txt" />
-    <None Remove="ExpressionTestCases\Recursion.txt" />
   </ItemGroup>
 
   <ItemGroup>
