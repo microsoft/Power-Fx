@@ -54,6 +54,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="ExpressionTestCases\Index_NoValue.txt" />
+    <None Remove="ExpressionTestCases\Record_NoValue.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\libraries\Microsoft.PowerFx.Core\Microsoft.PowerFx.Core.csproj" />
   </ItemGroup>
 

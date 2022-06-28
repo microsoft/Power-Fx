@@ -21,6 +21,40 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             // make sure they build is actually copying them over. 
             Assert.True(testCase.FailMessage == null, testCase.FailMessage);
 
+            Preview.FeatureFlags._inTests = true;
+            Preview.FeatureFlags.NoValueInRecordArrays = false;
+
+            _runner = new InterpreterRunner();
+
+            var (result, msg) = _runner.RunTestCase(testCase);
+
+            var prefix = $"Test {Path.GetFileName(testCase.SourceFile)}:{testCase.SourceLine}: ";
+            switch (result)
+            {
+                case TestResult.Pass:
+                    break;
+
+                case TestResult.Fail:
+                    Assert.True(false, prefix + msg);
+                    break;
+
+                case TestResult.Skip:
+                    Skip.If(true, prefix + msg);
+                    break;
+            }
+        }
+
+        [InterpreterTheory]
+        [TxtFileData(@"ExpressionTestCases\NoValueInRecordArrays", "InterpreterExpressionTestCases", nameof(InterpreterRunner))]
+        public void InterpreterTestCase_NoValueInRecordArrays(ExpressionTestCase testCase)
+        {
+            // This is running against embedded resources, so if you're updating the .txt files,
+            // make sure they build is actually copying them over. 
+            Assert.True(testCase.FailMessage == null, testCase.FailMessage);
+
+            Preview.FeatureFlags._inTests = true;
+            Preview.FeatureFlags.NoValueInRecordArrays = true;
+
             _runner = new InterpreterRunner();
 
             var (result, msg) = _runner.RunTestCase(testCase);

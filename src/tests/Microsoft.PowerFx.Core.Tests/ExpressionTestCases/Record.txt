@@ -15,11 +15,11 @@ false
 >> IsBlank({ x : Blank(), y : 2}.x)
 true
 
->> First([{a: 1}]).a
+>> First([{a: 1}]).Value.a
 1
 
->> First([{a: 1, b:"abc"}]).b
+>> First([{a: 1, b:"abc"}]).Value.b
 "abc"
 
->> First([{a: 1}]).Value.a
-Errors: Error 15-21: Name isn't valid. 'Value' isn't recognized.|Error 21-23: Invalid use of '.'
+>> First([{a: 1}]).a
+Errors: Error 15-17: Name isn't valid. 'a' isn't recognized.

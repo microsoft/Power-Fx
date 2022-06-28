@@ -13,7 +13,13 @@ namespace Microsoft.PowerFx.Preview
     /// </summary>
     public static class FeatureFlags
     {
+        /// <summary>
+        /// allows setting flags as will during tests.
+        /// </summary>
+        internal static bool _inTests = false;
+
         private static bool _stringInterpolation = false;
+        private static bool _noValueInRecordArrays = false;
 
         /// <summary>
         /// Enable String Interpolation feature. 
@@ -25,12 +31,27 @@ namespace Microsoft.PowerFx.Preview
             set
             {
                 // Once flipped, can't unflip. 
-                if (!value) 
+                if (!value && !_inTests) 
                 { 
                     throw new NotSupportedException("Can't change field after it's set");
                 }
 
                 _stringInterpolation = value;
+            }
+        }
+
+        public static bool NoValueInRecordArrays
+        {
+            get => _noValueInRecordArrays;
+            set
+            {
+                // Once flipped, can't unflip. 
+                if (!value && !_inTests)
+                {
+                    throw new NotSupportedException("Can't change field after it's set");
+                }
+
+                _noValueInRecordArrays = value;
             }
         }
     }

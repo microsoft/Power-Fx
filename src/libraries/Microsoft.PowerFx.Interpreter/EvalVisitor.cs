@@ -87,7 +87,7 @@ namespace Microsoft.PowerFx
                 args[i] = arg;
             }
             
-            var tableValue = new InMemoryTableValue(node.IRContext, StandardTableNodeRecords(node.IRContext, args, forceSingleColumn: false));
+            var tableValue = new InMemoryTableValue(node.IRContext, StandardTableNodeRecords(node.IRContext, args, forceSingleColumn: !Preview.FeatureFlags.NoValueInRecordArrays));
 
             return tableValue;
         }
