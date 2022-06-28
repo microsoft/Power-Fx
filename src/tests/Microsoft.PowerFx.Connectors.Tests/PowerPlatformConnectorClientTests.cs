@@ -43,11 +43,11 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [InlineData("Patch")]
         [InlineData("Put")]
         [InlineData("Trace")]
-        [InlineData("Get", "SomeHeader,SomeValue")]
-        [InlineData("Get", "SomeHeader,SomeValue;SomeHeader2,SomeValue2")]
-        [InlineData("Get", "SomeHeader,SomeValue;SomeHeader2,SomeValue2,AnotherValue")]
+        [InlineData("Get", "SomeHeader:SomeValue")]
+        [InlineData("Get", "SomeHeader:SomeValue;SomeHeader2:SomeValue2")]
+        [InlineData("Get", "SomeHeader:SomeValue;SomeHeader2:SomeValue2:AnotherValue")]
         [InlineData("Post", null, "abc")]
-        [InlineData("Post", "SomeHeader,SomeValue", "abc")]
+        [InlineData("Post", "SomeHeader:SomeValue", "abc")]
         public void PowerPlatformConnectorClient_TransformRequest(string method, string extraHeaders = null, string content = null)
         {
             var client = Client;
@@ -57,7 +57,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             {
                 foreach (var kvp in extraHeaders.Split(";"))
                 {
-                    var hv = kvp.Split(",");
+                    var hv = kvp.Split(":");
                     request.Headers.Add(hv.First(), hv.Skip(1));
                 }
             }
