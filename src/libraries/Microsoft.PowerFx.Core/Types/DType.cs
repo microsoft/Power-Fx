@@ -1334,7 +1334,7 @@ namespace Microsoft.PowerFx.Core.Types
         public DType Add(DName name, DType type)
         {
             AssertValid();
-            Contracts.Assert(IsAggregate || IsLazyType);
+            Contracts.Assert(IsAggregate);
             Contracts.Assert(name.IsValid);
             type.AssertValid();
 
@@ -1354,7 +1354,7 @@ namespace Microsoft.PowerFx.Core.Types
         public DType Add(TypedName typedName)
         {
             AssertValid();
-            Contracts.Assert(IsAggregate || IsLazyType);
+            Contracts.Assert(IsAggregate);
             Contracts.Assert(typedName.IsValid);
 
             return Add(typedName.Name, typedName.Type);
@@ -2763,7 +2763,8 @@ namespace Microsoft.PowerFx.Core.Types
                 Hashing.HashInt((int)Kind),
                 Hashing.HashInt((int)EnumSuperkind),
                 TypeTree.GetHashCode(),
-                ValueTree.GetHashCode());
+                ValueTree.GetHashCode(),
+                LazyTypeProvider?.GetHashCode() ?? 0);
         }
 
         public override bool Equals(object obj)
@@ -2774,7 +2775,8 @@ namespace Microsoft.PowerFx.Core.Types
                EnumSuperkind == other.EnumSuperkind &&
                ValueTree == other.ValueTree &&
                HasExpandInfo == other.HasExpandInfo &&
-               NamedValueKind == other.NamedValueKind;
+               NamedValueKind == other.NamedValueKind &&
+               (LazyTypeProvider?.LazyTypeMetadata.Equals(other.LazyTypeProvider?.LazyTypeMetadata) ?? other.LazyTypeProvider == null);
         }
 
         // Viewing DType.Invalid in the debugger should be allowed

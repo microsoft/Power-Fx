@@ -61,6 +61,8 @@ namespace Microsoft.PowerFx
             return false;
         }
 
+        internal IEnumerable<DName> UsedFields => _marshallerMapping.Keys;
+
         // Helper Function, ensures that when a field is accessed via LazyTypeProvider, we also add it's
         // value marshalling function to the mapping.
         private LazyTypeProvider.FieldTypeGetter UseFieldType(DName fieldName, FieldTypeAndValueMashallerGetter fieldTypeAndValueMarshaller)

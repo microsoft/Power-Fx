@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Core.Tests
@@ -251,12 +252,13 @@ namespace Microsoft.PowerFx.Core.Tests
             return summary;
         }
 
-        public static string TestToString(FormulaValue result)
+        // Setting touchAllFields for a FormulaValue with unbounded depth (marshalled from recursive loops,...) will crash.
+        public static string TestToString(FormulaValue result, bool touchAllFields = false)
         {
             var sb = new StringBuilder();
             try
             {
-                TestToString(result, sb);
+                TestToString(result, sb, touchAllFields);
             }
             catch (Exception e)
             {
@@ -268,10 +270,10 @@ namespace Microsoft.PowerFx.Core.Tests
             return actualStr;
         }
 
-        // $$$ Move onto FormulaValue. 
         // Result here should be a string value that could be parsed. 
         // Normalize so we can use this in test cases. 
-        internal static void TestToString(FormulaValue result, StringBuilder sb)
+        // Setting touchAllFields for a FormulaValue with unbounded depth (marshalled from recursive loops,...) will crash.
+        internal static void TestToString(FormulaValue result, StringBuilder sb, bool touchAllFields = false)
         {
             if (result is NumberValue n)
             {
@@ -314,11 +316,11 @@ namespace Microsoft.PowerFx.Core.Tests
                     {
                         if (row.IsValue)
                         {
-                            TestToString(row.Value, sb);
+                            TestToString(row.Value, sb, touchAllFields);
                         }
                         else
                         {
-                            TestToString(row.ToFormulaValue(), sb);
+                            TestToString(row.ToFormulaValue(), sb, touchAllFields);
                         }
                     }
 
@@ -336,6 +338,11 @@ namespace Microsoft.PowerFx.Core.Tests
             }
             else if (result is RecordValue r)
             {
+                if (touchAllFields)
+                {
+                    EnsureThisLevelFieldsMarshalled(r.Type._type);
+                }
+
                 var fields = r.Fields.ToArray();
                 Array.Sort(fields, (a, b) => string.CompareOrdinal(a.Name, b.Name));
 
@@ -385,6 +392,20 @@ namespace Microsoft.PowerFx.Core.Tests
             else
             {
                 throw new InvalidOperationException($"unsupported value type: {result.GetType().Name}");
+            }
+        }
+
+        private static void EnsureThisLevelFieldsMarshalled(DType type)
+        {
+            if (!type.IsLazyType)
+            {
+                return;
+            }
+
+            foreach (var name in type.LazyTypeProvider.FieldNames)
+            {
+                // Touch the field to ensure its marshaller is present.
+                type.TryGetType(name, out _);
             }
         }
     }

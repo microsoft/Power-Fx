@@ -22,7 +22,6 @@ namespace Microsoft.PowerFx.Types
             : base(irContext)
         {
             Contract.Assert(IRContext.ResultType is RecordType);
-            var recordType = (RecordType)IRContext.ResultType;
 
             _fields = fields;
         }

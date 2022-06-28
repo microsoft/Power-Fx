@@ -182,7 +182,7 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.Equal(15.0, d[1].a);
 
             // Verify runtime json
-            var resultStr = val.Dump();
+            var resultStr = val.Dump(touchAllFields: true);
 
             Assert.Equal("Table({a:10,str:\"alpha\"},{a:15,str:\"beta\"})", resultStr);
         }
@@ -194,6 +194,9 @@ namespace Microsoft.PowerFx.Core.Tests
             RecordValue r2 = _cache.NewRecord(new TestRow { a = 15, str = "beta" });
             TableValue val = FormulaValue.NewTable(r1.Type, r1, r2);
 
+            // Ensure the marshaller is populated for "a"
+            val.Type._type.TryGetType(new Utils.DName("a"), out _);
+
             var result1 = ((RecordValue)val.Index(2).Value).GetField("a").ToObject();
             Assert.Equal(15.0, result1);
 
@@ -201,23 +204,20 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.Equal(10.0, d[0].a);
 
             // Verify runtime json
-            var resultStr = val.Dump();
+            var resultStr = val.Dump(touchAllFields: true);
             Assert.Equal("Table({a:10,str:\"alpha\"},{a:15,str:\"beta\"})", resultStr);
 
             TableValue val2 = NewTableT(r1, r2);
-            Assert.Equal(resultStr, val2.Dump());
+            Assert.Equal(resultStr, val2.Dump(touchAllFields: true));
         }
 
         // Heterogenous table.
         [Fact]
         public void TableFromMixedRecords()
         {
-            var cache = new TypeMarshallerCache();
             RecordValue r1 = _cache.NewRecord(new { a = 10, b = 20, c = 30 });
             RecordValue r2 = _cache.NewRecord(new { a = 11, c = 31 });
             TableValue val = FormulaValue.NewTable(r1.Type, r1, r2);
-
-            // Users first type 
 
             var result1 = ((RecordValue)val.Index(2).Value).GetField("a").ToObject();
             Assert.Equal(11.0, result1);
@@ -343,9 +343,9 @@ namespace Microsoft.PowerFx.Core.Tests
 
     public static class FormulaValueExtensions
     {
-        public static string Dump(this FormulaValue value)
+        public static string Dump(this FormulaValue value, bool touchAllFields = false)
         {
-            return TestRunner.TestToString(value);
+            return TestRunner.TestToString(value, touchAllFields);
         }
     }
 }

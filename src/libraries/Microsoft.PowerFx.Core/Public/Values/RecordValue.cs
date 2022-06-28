@@ -18,7 +18,7 @@ namespace Microsoft.PowerFx.Types
         /// Fields and their values directly available on this record. 
         /// The field names should match the names on <see cref="Type"/>. 
         /// </summary>
-        public IEnumerable<NamedValue> Fields
+        public virtual IEnumerable<NamedValue> Fields
         {
             get
             {

@@ -1,6 +1,8 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System.Collections.Generic;
+
 namespace Microsoft.PowerFx.Types
 {    
     /// <summary>
@@ -16,17 +18,37 @@ namespace Microsoft.PowerFx.Types
 
         private readonly ObjectMarshaller _mapping;
 
-        internal ObjectRecordValue(RecordType type, object source, ObjectMarshaller marshaler) 
+        internal ObjectRecordValue(RecordType type, object source, ObjectMarshaller marshaller)
             : base(type)
         {
             Source = source;
-            _mapping = marshaler;
+            _mapping = marshaller;
         }
-                
+
+        public override IEnumerable<NamedValue> Fields
+        {
+            get
+            {
+                foreach (var name in _mapping.UsedFields)
+                {
+                    var fieldType = Type.GetFieldType(name);
+                    var value = GetField(fieldType, name);
+                    yield return new NamedValue(name, value);
+                }
+            }
+        }
+
         /// <inheritdoc/>
         protected override bool TryGetField(FormulaType fieldType, string fieldName, out FormulaValue result)
         {
-            return _mapping.TryGetField(Source, fieldName, out result);            
+            if (_mapping.TryGetField(Source, fieldName, out result))
+            {
+                return true;
+            }
+
+            // Retrieving the type might populate the mapping for this field
+            fieldType = Type.MaybeGetFieldType(fieldName);
+            return fieldType != null && _mapping.TryGetField(Source, fieldName, out result);
         }
 
         public override object ToObject()

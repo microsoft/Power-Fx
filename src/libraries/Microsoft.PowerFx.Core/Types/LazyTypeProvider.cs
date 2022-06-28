@@ -19,6 +19,8 @@ namespace Microsoft.PowerFx.Types
         private readonly ImmutableDictionary<DName, FieldTypeGetter> _fieldTypeGetters;
         private readonly Dictionary<DName, DType> _expandedFields = new Dictionary<DName, DType>();
 
+        public IEnumerable<DName> FieldNames => _fieldTypeGetters.Keys;
+
         public readonly ILazyTypeMetadata LazyTypeMetadata;
 
         public LazyTypeProvider(ILazyTypeMetadata metadata, Dictionary<DName, FieldTypeGetter> fieldTypeGetters)

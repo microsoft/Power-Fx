@@ -525,7 +525,7 @@ namespace Microsoft.PowerFx.Tests
             var cache = new TypeMarshallerCache();
             var fxObj = (RecordValue)cache.Marshal(obj, marshalAsType);
 
-            Assert.Equal(expected, fxObj.Dump());
+            Assert.Equal(expected, fxObj.Dump(touchAllFields: true));
         }
              
         // Use 'new' to create a property in derived that collides with base. 
@@ -555,7 +555,7 @@ namespace Microsoft.PowerFx.Tests
             else
             {
                 var fxObj = cache.Marshal(obj, marshalAsType);
-                Assert.Equal(expected, fxObj.Dump());
+                Assert.Equal(expected, fxObj.Dump(touchAllFields: true));
             }
         }
 
@@ -583,7 +583,7 @@ namespace Microsoft.PowerFx.Tests
             var cache = new TypeMarshallerCache();
 
             var fxObj = cache.Marshal(obj, marshalAsType);
-            Assert.Equal(expected, fxObj.Dump());            
+            Assert.Equal(expected, fxObj.Dump(touchAllFields: true));            
         }
 
         // Marshal an array of records to a table. 
@@ -693,7 +693,7 @@ namespace Microsoft.PowerFx.Tests
 
         // Fails to marshal without the customer marshaller. 
         [Fact]
-        public void FailWithoutCustomMarshaller()
+        public async Task FailWithoutCustomMarshaller()
         {
             var cache = new TypeMarshallerCache();
 
@@ -710,8 +710,11 @@ namespace Microsoft.PowerFx.Tests
                 }
             };
 
-            // $$$ TODO: This no longer throws because marshalling the type of Widget is lazy
-            Assert.Throws<InvalidOperationException>(() => cache.Marshal(obj));
+            var engine = new RecalcEngine();
+            engine.UpdateVariable("x", cache.Marshal(obj));
+            
+            // Accessing the field throws due to a marshalling failure
+            await Assert.ThrowsAsync<InvalidOperationException>(async () => await engine.EvalAsync("x.Widget1", new CancellationToken()));
         }
 
         // Test a custom marshaler. 
