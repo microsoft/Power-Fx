@@ -69,19 +69,12 @@ namespace Microsoft.PowerFx.Types
             return new LazyTypeProvider(LazyTypeMetadata, _fieldTypeGetters.RemoveRange(names));
         }
 
-        // Primarily used for DType Accepts to preserve Relationship/Attachments behavior. 
         // Specifically covers the `LazyType.Accepts(nonLazyType)` case.
         // In general, this would only occur for imperative use cases like validating Patch/Collect/...
         // Where the value being patched is non-lazy
-        // This use case does not currently apply to marshalled types, and if that changes, we can revisit this behavior. 
+        // Beyond that scenario, fully expanding a lazy type should not be done.  
         internal bool TryGetExpandedType(bool isTable, out DType expandedType)
         {
-            expandedType = DType.Invalid;
-            if (!LazyTypeMetadata.IsFullExpansionAllowed) 
-            {
-                return false;
-            }
-
             var fields = _fieldTypeGetters.Select(kvp => new TypedName(kvp.Value()._type, kvp.Key));
 
             expandedType = isTable ? DType.CreateTable(fields) : DType.CreateRecord(fields);

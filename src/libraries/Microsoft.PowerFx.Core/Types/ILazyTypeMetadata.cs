@@ -5,6 +5,5 @@ namespace Microsoft.PowerFx.Types
 {
     public interface ILazyTypeMetadata
     {
-        bool IsFullExpansionAllowed { get; }
     }
 }

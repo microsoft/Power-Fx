@@ -132,7 +132,7 @@ namespace Microsoft.PowerFx.Core.Types
         protected readonly DType _attachmentType;
 
         // Intended future home of all lazy type expansion (Control, Attachment, Relationship, Other)
-        private readonly LazyTypeProvider _lazyTypeProvider;
+        internal readonly LazyTypeProvider LazyTypeProvider;
 
         internal HashSet<IExternalTabularDataSource> AssociatedDataSources { get; }
 
@@ -482,7 +482,7 @@ namespace Microsoft.PowerFx.Core.Types
         {
             Contracts.AssertValue(provider);
             
-            _lazyTypeProvider = provider;
+            LazyTypeProvider = provider;
             Kind = isTable ? DKind.LazyTable : DKind.LazyRecord;
 
             TypeTree = default;
@@ -512,7 +512,7 @@ namespace Microsoft.PowerFx.Core.Types
             Contracts.Assert(Kind != DKind.Enum || (EnumSuperkind >= DKind._Min && EnumSuperkind < DKind._Lim && EnumSuperkind != DKind.Enum));
             Contracts.Assert((Metadata != null) == (Kind == DKind.Metadata));
             Contracts.Assert((_attachmentType != null) == (Kind == DKind.Attachment));
-            Contracts.Assert((_lazyTypeProvider != null) == (Kind == DKind.LazyRecord || Kind == DKind.LazyTable));
+            Contracts.Assert((LazyTypeProvider != null) == (Kind == DKind.LazyRecord || Kind == DKind.LazyTable));
 
 #if DEBUG
             if (ExpandInfo != null)
@@ -1056,7 +1056,7 @@ namespace Microsoft.PowerFx.Core.Types
                 case DKind.Record:
                     return this;
                 case DKind.LazyTable:
-                    return new DType(_lazyTypeProvider, isTable: false);
+                    return new DType(LazyTypeProvider, isTable: false);
                 case DKind.Table:
                 case DKind.DataEntity:
                 case DKind.Control:
@@ -1100,7 +1100,7 @@ namespace Microsoft.PowerFx.Core.Types
                 case DKind.Table:
                     return this;
                 case DKind.LazyRecord:
-                    return new DType(_lazyTypeProvider, isTable: true);
+                    return new DType(LazyTypeProvider, isTable: true);
                 case DKind.Record:
                 case DKind.DataEntity:
                 case DKind.Control:
@@ -1202,7 +1202,7 @@ namespace Microsoft.PowerFx.Core.Types
 
                 case DKind.LazyRecord:
                 case DKind.LazyTable:
-                    return _lazyTypeProvider.TryGetFieldType(name, out type);
+                    return LazyTypeProvider.TryGetFieldType(name, out type);
                 case DKind.Enum:
                     if (ValueTree.Contains(name.Value))
                     {
@@ -1340,7 +1340,7 @@ namespace Microsoft.PowerFx.Core.Types
 
             if (IsLazyType)
             {
-                return new DType(_lazyTypeProvider.AddField(name, type), IsTable);
+                return new DType(LazyTypeProvider.AddField(name, type), IsTable);
             } 
 
             Contracts.Assert(!TypeTree.Contains(name));
@@ -1377,7 +1377,7 @@ namespace Microsoft.PowerFx.Core.Types
 
             if (IsLazyType)
             {
-                return new DType(_lazyTypeProvider.DropField(name), IsTable);
+                return new DType(LazyTypeProvider.DropField(name), IsTable);
             }
 
             var tree = typeOuter.TypeTree.RemoveItem(ref fError, name);
@@ -1513,7 +1513,7 @@ namespace Microsoft.PowerFx.Core.Types
             
             if (typeOuter.IsLazyType)
             {
-                return new DType(_lazyTypeProvider.DropFields(rgname), IsTable);
+                return new DType(LazyTypeProvider.DropFields(rgname), IsTable);
             }
 
             Contracts.Assert(typeOuter.IsRecord || typeOuter.IsTable);
@@ -1662,11 +1662,11 @@ namespace Microsoft.PowerFx.Core.Types
             {
                 case DKind.LazyRecord:
                 case DKind.LazyTable:
-                    Contracts.AssertValue(_lazyTypeProvider);
-                    return other._lazyTypeProvider.LazyTypeMetadata.Equals(_lazyTypeProvider.LazyTypeMetadata);
+                    Contracts.AssertValue(LazyTypeProvider);
+                    return other.LazyTypeProvider.LazyTypeMetadata.Equals(LazyTypeProvider.LazyTypeMetadata) && IsTable == other.IsTable;
                 case DKind.Record:
                 case DKind.Table:
-                    if (!_lazyTypeProvider.TryGetExpandedType(IsTable, out var expandedType))
+                    if (!LazyTypeProvider.TryGetExpandedType(IsTable, out var expandedType))
                     {
                         return false;
                     }
@@ -1940,10 +1940,8 @@ namespace Microsoft.PowerFx.Core.Types
                     accepts = type.Kind == DKind.UntypedObject || type.Kind == DKind.Unknown;
                     break;
 
-                case DKind.LazyRecord:
-                    accepts = AcceptsLazyType(type);
-                    break;
                 case DKind.LazyTable:
+                case DKind.LazyRecord:
                     accepts = AcceptsLazyType(type);
                     break;
                 default:

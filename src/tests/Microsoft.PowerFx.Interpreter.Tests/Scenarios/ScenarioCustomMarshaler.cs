@@ -200,8 +200,12 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                     var marshaller = cache.GetMarshaller(kv.Value.GetType());
                     var expectedType = type.GetFieldType(fieldName);                        
 
-                    Assert.True(expectedType._type.Accepts(marshaller.Type._type, exact: true));
-                    return (expectedType,
+                    Assert.True(expectedType._type.Accepts(marshaller.Type._type, exact: true) || 
+                        (marshaller.Type._type.IsLazyType &&
+                        marshaller.Type._type.LazyTypeProvider.LazyTypeMetadata is LazyMarshalledTypeMetadata lazyMarshalledTypeMetadata &&
+                        lazyMarshalledTypeMetadata.FromType == kv.Value.GetType()));
+
+                    return (marshaller.Type,
                             (object objSource) =>
                             {
                                 var dict = (Dictionary<string, object>)objSource;

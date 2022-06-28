@@ -20,7 +20,7 @@ namespace Microsoft.PowerFx.Interpreter
     // Implementation of a Set function which just chains to 
     // RecalcEngine.UpdateVariable().
     // Set has no return value. 
-    // Whereas Powerapp's Set() will implicitly define arg0,
+    // Whereas PowerApps' Set() will implicitly define arg0,
     //  this Set() requires arg0 was already defined and has a type.
     //
     // Called as:
@@ -77,7 +77,7 @@ namespace Microsoft.PowerFx.Interpreter
 
             var arg1 = argTypes[1];
 
-            if (!arg1.Accepts(arg0))
+            if (!arg0.Accepts(arg1))
             {
                 errors.EnsureError(DocumentErrorSeverity.Critical, args[1], ErrBadType);
                 return false;
