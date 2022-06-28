@@ -1550,40 +1550,6 @@ namespace Microsoft.PowerFx.Core.Types
             return SetType(ref fError, path, new DType(typeOuter.Kind, tree, AssociatedDataSources, DisplayNameProvider));
         }
 
-        // Drop everything but the specified names/fields from path's type, and return the resulting type.
-        // If a name/field (that was specified to be kept) is missing, we are returning a new type
-        // with the type for the missing field as Error and fError will be true.
-        public DType KeepMulti(ref bool fError, DPath path, params DName[] rgname)
-        {
-            AssertValid();
-            Contracts.AssertNonEmpty(rgname);
-            Contracts.AssertAllValid(rgname);
-
-            fError |= !TryGetType(path, out var typeOuter);
-            if (!typeOuter.IsAggregate)
-            {
-                fError = true;
-                return this;
-            }
-
-            Contracts.Assert(typeOuter.IsRecord || typeOuter.IsTable);
-
-            var tree = default(TypeTree);
-
-            foreach (var name in rgname)
-            {
-                if (!typeOuter.TryGetType(name, out var typeCur))
-                {
-                    fError = true;
-                    typeCur = Error;
-                }
-
-                tree = tree.SetItem(name, typeCur);
-            }
-
-            return SetType(ref fError, path, new DType(typeOuter.Kind, tree, AssociatedDataSources, DisplayNameProvider));
-        }
-
         // Get ALL the fields/names at the specified path, including hidden meta fields
         // and other special fields.
         public IEnumerable<TypedName> GetAllNames(DPath path)
@@ -2849,60 +2815,6 @@ namespace Microsoft.PowerFx.Core.Types
             return sb.ToString();
         }
 
-        /// <summary>
-        /// Returns a JS representation of this DType.
-        /// </summary>
-        /// <returns>A JS representation of this DType.</returns>
-        /// <remarks>The representation is an object with a required member 't', of type string
-        /// (which maps to the _kind property) and an optional member 'c', of type object, with
-        /// keys named on the children properties for this DType, and values representing their
-        /// respective JS type:
-        /// export interface IJsonFunctionDataDefinition {
-        ///     t: string;   // Type (maps to DType.Kind)
-        ///     c?: HashTable.IJsonFunctionDataDefinition; // optional children
-        /// }.
-        /// </remarks>
-        internal string ToJsType(Func<DName, DType, bool> shouldBeIncluded = null)
-        {
-            var sb = new StringBuilder();
-            ToJsType(sb, shouldBeIncluded);
-            return sb.ToString();
-        }
-
-        public void ToJsType(StringBuilder builder, Func<DName, DType, bool> shouldBeIncluded = null)
-        {
-            if (shouldBeIncluded == null)
-            {
-                shouldBeIncluded = (a, b) => true;
-            }
-
-            var kindStr = MapKindToStr(Kind);
-            switch (Kind)
-            {
-                case DKind.Table:
-                case DKind.Record:
-                    builder.Append("{t:\"").Append(kindStr).Append("\",c:{");
-
-                    var sep = string.Empty;
-                    foreach (var tn in GetNames(DPath.Root).Where(tn => shouldBeIncluded(tn.Name, tn.Type)))
-                    {
-                        builder.Append(sep);
-                        EscapeJSPropertyName(builder, tn.Name);
-                        builder.Append(":");
-                        tn.Type.ToJsType(builder, shouldBeIncluded);
-                        sep = ",";
-                    }
-
-                    builder.Append("}}");
-                    return;
-                default:
-                    builder.Append("{t:\"").Append(kindStr).Append("\"}");
-                    return;
-            }
-        }
-
-        private static readonly Regex NoNeedEscape = new Regex("^[a-zA-Z_][0-9a-zA-Z]*$");
-
         protected DType(
             DKind kind,
             TypeTree typeTree,
@@ -2935,39 +2847,6 @@ namespace Microsoft.PowerFx.Core.Types
             ViewInfo = viewInfo;
             NamedValueKind = namedValueKind;
             DisplayNameProvider = displayNameProvider;
-        }
-
-        private static void EscapeJSPropertyName(StringBuilder builder, string name)
-        {
-            if (NoNeedEscape.IsMatch(name))
-            {
-                builder.Append(name);
-            }
-            else
-            {
-                builder.Append("\"");
-
-                for (var i = 0; i < name.Length; i++)
-                {
-                    var c = name[i];
-                    const string needsEscaping = "\\\"";
-                    if (c >= ' ' && c <= '~')
-                    {
-                        if (needsEscaping.Contains(c))
-                        {
-                            builder.Append("\\");
-                        }
-
-                        builder.Append(c);
-                    }
-                    else
-                    {
-                        builder.Append(string.Format("\\u{0:x4}", (int)c));
-                    }
-                }
-
-                builder.Append("\"");
-            }
         }
 
         public void AppendTo(StringBuilder sb)
