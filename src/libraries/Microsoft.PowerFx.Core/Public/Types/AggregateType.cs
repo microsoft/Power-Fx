@@ -19,16 +19,12 @@ namespace Microsoft.PowerFx.Types
 
         public FormulaType MaybeGetFieldType(string fieldName)
         {
-            // $$$ Better lookup
-            foreach (var field in GetNames())
+            if (!_type.TryGetType(new DName(fieldName), out var fieldType))
             {
-                if (field.Name == fieldName)
-                {
-                    return field.Type;
-                }
+                return null;
             }
 
-            return null;
+            return FormulaType.Build(fieldType);
         }
 
         public FormulaType GetFieldType(string fieldName)

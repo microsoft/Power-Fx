@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Reflection;
 using Microsoft.PowerFx.Core.Tests;
+using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Types;
 using Xunit;
 
@@ -190,32 +191,31 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         // Demonstrate how to lazily marshal a property bag to a strongly typed value if we're given the type
         private static RecordValue Marshal(Dictionary<string, object> values, TypeMarshallerCache cache, RecordType type)
         {
-            (RecordType fxType, IReadOnlyDictionary<string, Func<object, FormulaValue>> mapping) MarshallFunc()
+            var fieldGetters = new Dictionary<DName, ObjectMarshaller.FieldTypeAndValueMashallerGetter>();
+            foreach (var kv in values)
             {
-                var fieldMap = new Dictionary<string, Func<object, FormulaValue>>();
-                foreach (var kv in values)
+                var fieldName = kv.Key;
+                (FormulaType fieldType, ObjectMarshaller.FieldValueMarshaller fieldValueMarshaller) TypeAndMarshallerGetter()
                 {
-                    var fieldName = kv.Key;
-
                     var marshaller = cache.GetMarshaller(kv.Value.GetType());
-                    var expectedType = type.GetFieldType(fieldName);
+                    var expectedType = type.GetFieldType(fieldName);                        
 
-                    Assert.True(marshaller.Type.Equals(expectedType));
+                    Assert.True(expectedType._type.Accepts(marshaller.Type._type, exact: true));
+                    return (expectedType,
+                            (object objSource) =>
+                            {
+                                var dict = (Dictionary<string, object>)objSource;
+                                var fieldValue = dict[fieldName];
 
-                    fieldMap[fieldName] = (source) =>
-                    {
-                        var dict = (Dictionary<string, object>)source;
-                        var fieldValue = dict[fieldName];
-
-                        var result = marshaller.Marshal(fieldValue);
-                        return result;
-                    };
+                                var result = marshaller.Marshal(fieldValue);
+                                return result;
+                            });
                 }
 
-                return (type, fieldMap);
+                fieldGetters.Add(new DName(fieldName), TypeAndMarshallerGetter);
             }
 
-            var om = new ObjectMarshaller(MarshallFunc);
+            var om = new ObjectMarshaller(fieldGetters, typeof(Dictionary<string, object>));
             
             var value = (RecordValue)om.Marshal(values);
             return value;

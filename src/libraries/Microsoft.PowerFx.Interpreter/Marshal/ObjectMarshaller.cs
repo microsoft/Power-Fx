@@ -23,7 +23,7 @@ namespace Microsoft.PowerFx
         public delegate (FormulaType fieldType, FieldValueMarshaller fieldValueMarshaller) FieldTypeAndValueMashallerGetter();
 
         // Map fx field name to a function produces the formula value given the dotnet object.
-        private readonly Dictionary<DName, FieldValueMarshaller> _marshallerMapping;
+        private readonly Dictionary<DName, FieldValueMarshaller> _marshallerMapping = new Dictionary<DName, FieldValueMarshaller>();
 
         /// <inheritdoc/>
         FormulaType ITypeMarshaller.Type => Type;

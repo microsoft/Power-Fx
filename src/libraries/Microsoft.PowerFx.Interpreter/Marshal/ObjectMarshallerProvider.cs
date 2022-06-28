@@ -57,6 +57,11 @@ namespace Microsoft.PowerFx
 
                 var validFxName = DName.MakeValid(fxName, out _);
 
+                if (fieldGetters.ContainsKey(validFxName))
+                {
+                    throw new NameCollisionException(validFxName);
+                }
+
                 (FormulaType fieldType, ObjectMarshaller.FieldValueMarshaller fieldValueMarshaller) TypeAndMarshallerGetter()
                 {
                     var tm = cache.GetMarshaller(prop.PropertyType);

@@ -13,6 +13,7 @@ using Microsoft.PowerFx.Core.Functions.Delegation;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
+using Microsoft.PowerFx.Types;
 using Conditional = System.Diagnostics.ConditionalAttribute;
 
 namespace Microsoft.PowerFx.Core.Types
@@ -974,34 +975,6 @@ namespace Microsoft.PowerFx.Core.Types
             return Kind.ToString();
         }
 
-        public DType ToRecord()
-        {
-            AssertValid();
-
-            switch (Kind)
-            {
-                case DKind.Record:
-                    return this;
-                case DKind.Table:
-                case DKind.Control:
-                case DKind.DataEntity:
-                    if (ExpandInfo != null)
-                    {
-                        return new DType(DKind.Record, ExpandInfo, TypeTree);
-                    }
-                    else
-                    {
-                        return new DType(DKind.Record, TypeTree, AssociatedDataSources, DisplayNameProvider);
-                    }
-
-                case DKind.ObjNull:
-                    return EmptyRecord;
-                default:
-                    Contracts.Assert(false, "Bad source kind for ToRecord");
-                    return EmptyRecord;
-            }
-        }
-
         // WARNING! This method is dangerous, for several reasons (below). Clients need to
         // rethink their strategy, and consider using the proper DType representation with
         // embedded "v" types instead, and dig into those types as needed for additional
@@ -1059,6 +1032,19 @@ namespace Microsoft.PowerFx.Core.Types
 
             return expands;
         }
+        
+        public DType ToRecord()
+        {
+            var fError = false;
+            var type = ToRecord(ref fError);
+            
+            if (fError) 
+            {
+                Contracts.Assert(false, "Bad source kind for ToRecord");
+            }
+
+            return type;
+        }
 
         public DType ToRecord(ref bool fError)
         {
@@ -1093,33 +1079,15 @@ namespace Microsoft.PowerFx.Core.Types
 
         public DType ToTable()
         {
-            AssertValid();
-
-            switch (Kind)
+            var fError = false;
+            var type = ToTable(ref fError);
+            
+            if (fError) 
             {
-                case DKind.LazyTable:
-                case DKind.Table:
-                    return this;
-                case DKind.LazyRecord:
-                    return new DType(_lazyTypeProvider, isTable: true);
-                case DKind.Record:
-                case DKind.DataEntity:
-                case DKind.Control:
-                    if (ExpandInfo != null)
-                    {
-                        return new DType(DKind.Table, ExpandInfo, TypeTree);
-                    }
-                    else
-                    {
-                        return new DType(DKind.Table, TypeTree, AssociatedDataSources, DisplayNameProvider);
-                    }
-
-                case DKind.ObjNull:
-                    return EmptyTable;
-                default:
-                    Contracts.Assert(false, "Bad source kind for ToTable");
-                    return EmptyTable;
+                Contracts.Assert(false, "Bad source kind for ToTable");
             }
+
+            return type;
         }
 
         public DType ToTable(ref bool fError)
@@ -1541,6 +1509,11 @@ namespace Microsoft.PowerFx.Core.Types
             {
                 fError = true;
                 return this;
+            }
+            
+            if (typeOuter.IsLazyType)
+            {
+                return new DType(_lazyTypeProvider.DropFields(rgname), IsTable);
             }
 
             Contracts.Assert(typeOuter.IsRecord || typeOuter.IsTable);

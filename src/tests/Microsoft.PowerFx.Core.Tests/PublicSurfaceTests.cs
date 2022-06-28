@@ -138,6 +138,10 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Types.ValidFormulaValue",
                 "Microsoft.PowerFx.Types.UnsupportedType",
                 "Microsoft.PowerFx.Types.CollectionTableValue`1",
+                
+                // Used by marshallers
+                "Microsoft.PowerFx.Types.ILazyTypeMetadata",
+                "Microsoft.PowerFx.Types.LazyTypeProvider",
 
                 // Intellisense classes. Used primarily by the Language Service Provider.
                 // Most evaluators should never need these. 

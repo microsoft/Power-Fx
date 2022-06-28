@@ -6,10 +6,11 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Text;
+using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Types;
 
-namespace Microsoft.PowerFx.Core.Types
+namespace Microsoft.PowerFx.Types
 {
     public sealed class LazyTypeProvider
     {
@@ -42,6 +43,7 @@ namespace Microsoft.PowerFx.Core.Types
             {
                 type = getter()._type;
                 _expandedFields.Add(name, type);
+                return true;
             }
 
             return false;
@@ -59,6 +61,12 @@ namespace Microsoft.PowerFx.Core.Types
         internal LazyTypeProvider DropField(DName name)
         {
             return new LazyTypeProvider(LazyTypeMetadata, _fieldTypeGetters.Remove(name));
+        }
+
+        // Used for DType modifications without full expansion (e.g. as part of DropColumns/ShowColumns/...)
+        internal LazyTypeProvider DropFields(IEnumerable<DName> names)
+        {
+            return new LazyTypeProvider(LazyTypeMetadata, _fieldTypeGetters.RemoveRange(names));
         }
 
         // Primarily used for DType Accepts to preserve Relationship/Attachments behavior. 
