@@ -19,6 +19,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         private const string TestAuthToken = "AuthToken1234";
 
         private PowerPlatformConnectorClient Client => new (TestEndpoint, TestEnvironmentId, TestConnectionId, () => TestAuthToken, new HttpMessageInvoker(TestHandler));
+
         private TestHandler TestHandler => new ();
             
         [Fact]
