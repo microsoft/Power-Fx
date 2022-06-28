@@ -21,7 +21,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         private PowerPlatformConnectorClient Client => new (TestEndpoint, TestEnvironmentId, TestConnectionId, () => TestAuthToken, new HttpMessageInvoker(TestHandler));
 
         private TestHandler TestHandler => new ();
-            
+
         [Fact]
         public void PowerPlatformConnectorClient_Constructor()
         {
@@ -43,11 +43,11 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [InlineData("Patch")]
         [InlineData("Put")]
         [InlineData("Trace")]
-        [InlineData("Get", "SomeHeader|SomeValue")]
-        [InlineData("Get", "SomeHeader|SomeValue;SomeHeader2|SomeValue2")]
-        [InlineData("Get", "SomeHeader|SomeValue;SomeHeader2|SomeValue2|AnotherValue")]
+        [InlineData("Get", "SomeHeader,SomeValue")]
+        [InlineData("Get", "SomeHeader,SomeValue;SomeHeader2,SomeValue2")]
+        [InlineData("Get", "SomeHeader,SomeValue;SomeHeader2,SomeValue2,AnotherValue")]
         [InlineData("Post", null, "abc")]
-        [InlineData("Post", "SomeHeader|SomeValue", "abc")]
+        [InlineData("Post", "SomeHeader,SomeValue", "abc")]
         public void PowerPlatformConnectorClient_TransformRequest(string method, string extraHeaders = null, string content = null)
         {
             var client = Client;
@@ -57,7 +57,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             {
                 foreach (var kvp in extraHeaders.Split(";"))
                 {
-                    var hv = kvp.Split("|");
+                    var hv = kvp.Split(",");
                     request.Headers.Add(hv.First(), hv.Skip(1));
                 }
             }
@@ -66,7 +66,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             {
                 request.Content = new StringContent(content);
             }
-            
+
             var transformedRequest = client.Transform(request);
 
             Assert.NotNull(transformedRequest);
@@ -78,7 +78,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         }
 
         private void ValidateHeaders(HttpRequestMessage request, HttpRequestMessage transformedRequest)
-        { 
+        {
             foreach (var header in transformedRequest.Headers)
             {
                 switch (header.Key)
@@ -121,7 +121,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             }
 
             Assert.Equal(request.Headers.Count() + 9, transformedRequest.Headers.Count());
-        }       
+        }
     }
 
     internal class TestHandler : DelegatingHandler
@@ -131,7 +131,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, System.Threading.CancellationToken cancellationToken)
         {
             Request = request;
-            return await base.SendAsync(request, cancellationToken);            
+            return await base.SendAsync(request, cancellationToken);
         }
     }
 }
