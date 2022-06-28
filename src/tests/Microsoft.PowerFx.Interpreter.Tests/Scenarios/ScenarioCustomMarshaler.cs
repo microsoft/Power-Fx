@@ -190,7 +190,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         // Demonstrate how to lazily marshal a property bag to a strongly typed value if we're given the type
         private static RecordValue Marshal(Dictionary<string, object> values, TypeMarshallerCache cache, RecordType type)
         {
-            (RecordType fxType, IReadOnlyDictionary<string, Func<object, FormulaValue>> mapping) MarashalFunc()
+            (RecordType fxType, IReadOnlyDictionary<string, Func<object, FormulaValue>> mapping) MarshallFunc()
             {
                 var fieldMap = new Dictionary<string, Func<object, FormulaValue>>();
                 foreach (var kv in values)
@@ -215,7 +215,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 return (type, fieldMap);
             }
 
-            var om = new ObjectMarshaller(MarashalFunc);
+            var om = new ObjectMarshaller(MarshallFunc);
             
             var value = (RecordValue)om.Marshal(values);
             return value;
