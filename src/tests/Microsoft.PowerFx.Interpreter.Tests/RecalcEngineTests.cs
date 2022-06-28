@@ -8,6 +8,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Functions;
+using Microsoft.PowerFx.Core.Localization;
+using Microsoft.PowerFx.Core.Parser;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Core.Types.Enums;
@@ -250,7 +252,6 @@ x * y
 ";
             recalcEngine.DefineFunction(
                 "foo",
-                FormulaType.Number,
                 body,
                 new NamedFormulaType("x", FormulaType.Number),
                 new NamedFormulaType("y", FormulaType.Number));
@@ -269,7 +270,6 @@ x * y
             var body = @"If(x=0,foo(1),If(x=1,foo(2),If(x=2,2)))";
             recalcEngine.DefineFunction(
                 "foo",
-                FormulaType.Number,
                 body,
                 new NamedFormulaType("x", FormulaType.Number));
 
@@ -286,7 +286,6 @@ x * y
             var body = @"foo()";
             recalcEngine.DefineFunction(
                 "foo",
-                FormulaType.Blank,
                 body);
 
             recalcEngine.BindAllUDFs();
@@ -302,11 +301,53 @@ x * y
             var body = @"If(Not(x = 1), If(Mod(x, 2)=0, hailstone(x/2), hailstone(3*x+1)), x)";
             recalcEngine.DefineFunction(
                 "hailstone",
-                FormulaType.Number,
                 body,
                 new NamedFormulaType("x", FormulaType.Number));
             recalcEngine.BindAllUDFs();
             Assert.Equal(1.0, recalcEngine.Eval("hailstone(192)").ToObject());
+        }
+
+        [Fact]
+        public void DefParserTest()
+        {
+            var config = new PowerFxConfig(null);
+            var recalcEngine = new RecalcEngine(config);
+            Assert.False(recalcEngine.BindFunctions("Odd(number As Number) = If(number = 0, false, Even(Abs(number)-1)); Even(number As Number) = If(number = 0, true, Odd(Abs(number)-1));").Any());
+            Assert.Equal(true, recalcEngine.Eval("Odd(17)").ToObject());
+            Assert.Equal(false, recalcEngine.Eval("Even(17)").ToObject());
+        }
+
+        [Fact]
+        public void UDFRecursiveGCD()
+        {
+            var config = new PowerFxConfig(null);
+            var recalcEngine = new RecalcEngine(config);
+            Assert.False(recalcEngine.BindFunctions(@"GCD(a As Number, b As Number) = If(b = 0, a, GCD(b, Mod(a, b)));").Any());
+            Assert.Equal(5.0, recalcEngine.Eval("GCD(20, 15)").ToObject());
+        }
+
+        [Fact]
+        public void UDFParseFail()
+        {
+            var config = new PowerFxConfig(null);
+            var recalcEngine = new RecalcEngine(config);
+            var errs = recalcEngine.BindFunctions("Foo() Abs(1);");
+            foreach (var err in errs)
+            {
+                System.Diagnostics.Debug.WriteLine($"CurrentCallDepth: {err}");
+            }
+
+            Assert.True(errs.Any());
+        }
+
+        [Fact]
+        public void UDFRecursiveFail()
+        {
+            var config = new PowerFxConfig(null);
+            var recalcEngine = new RecalcEngine(config);
+            Assert.False(recalcEngine.BindFunctions("Foo() = Foo();").Any());
+            var result = recalcEngine.Eval("Foo()");
+            Assert.IsType<ErrorValue>(result);
         }
 
         [Fact]
@@ -319,12 +360,10 @@ x * y
 
             recalcEngine.DefineFunction(
                 "odd",
-                FormulaType.Boolean,
                 bodyOdd,
                 new NamedFormulaType("number", FormulaType.Number));
             recalcEngine.DefineFunction(
                 "even",
-                FormulaType.Boolean,
                 bodyEven,
                 new NamedFormulaType("number", FormulaType.Number));
             recalcEngine.BindAllUDFs();

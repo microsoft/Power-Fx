@@ -1,9 +1,11 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.PowerFx.Core.Parser;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx
@@ -16,8 +18,8 @@ namespace Microsoft.PowerFx
             internal IExpression _expr;
             internal LazyCheck _check;
 
-            public UDFTexlFunction(string name, FormulaType returnType, params FormulaType[] paramTypes)
-                : base(name, returnType, paramTypes)
+            public UDFTexlFunction(string name, params FormulaType[] paramTypes)
+                : base(name, FormulaType.Blank, paramTypes)
             {
             }
 
@@ -63,7 +65,21 @@ namespace Microsoft.PowerFx
             public CheckResult Get() => _engine.Check(_expressionText, _parameterType, _options);
         }
 
-        public void DefineFunction(string name, FormulaType retType, string body, params NamedFormulaType[] parameters)
+        public IEnumerable<ExpressionError> BindFunctions(string script)
+        {
+            var udfs = TexlParser.ParseUDFsScript(script);
+            foreach (var udf in udfs.UDFs)
+            {
+                NamedFormulaType[] parameters = udf.Args.Select(arg => new NamedFormulaType(arg._varIdent.ToString(), FormulaType.GetFromStringOrNull(arg._varType.ToString()))).ToArray();
+                DefineFunction(udf._ident.ToString(), udf._body.ToString(), parameters);
+            }
+
+            BindAllUDFs();
+
+            return udfs.ExpErrors;
+        }
+
+        internal void DefineFunction(string name, string body, params NamedFormulaType[] parameters)
         {
             // $$$ Would be a good helper function 
             var record = new RecordType();
@@ -78,7 +94,7 @@ namespace Microsoft.PowerFx
 
             //var retType = check.ReturnType; // infer return result!
 
-            var func = new UDFTexlFunction(name, retType, parameters.Select(x => x.Type).ToArray())
+            var func = new UDFTexlFunction(name, parameters.Select(x => x.Type).ToArray())
             {
                 _parameterNames = parameters,
                 _check = check,
@@ -90,7 +106,7 @@ namespace Microsoft.PowerFx
             _funcsToBind.Add(func);
         }
 
-        public void BindAllUDFs()
+        internal void BindAllUDFs()
         {
             foreach (var func in _funcsToBind)
             {

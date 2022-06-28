@@ -62,6 +62,25 @@ namespace Microsoft.PowerFx.Types
             _type = type;
         }
 
+        public static FormulaType[] GetValidTypes()
+        {
+            FormulaType[] validTypes = { Blank, Boolean, Number, String, Time, Date, DateTime, DateTimeNoTimeZone, Hyperlink, Color, Guid };
+            return validTypes;
+        }
+
+        public static FormulaType GetFromStringOrNull(string formula)
+        {
+            foreach (FormulaType formulaType in GetValidTypes())
+            {
+                if (formulaType.ToString().Equals(formula))
+                {
+                    return formulaType;
+                }
+            }
+
+            return null;
+        }
+
         // Entites may be recursive and their Dytype is tagged with additional schema metadata. 
         // Expand that metadata into a proper Dtype. 
         private static DType GetExpandedEntityType(DType expandEntityType, string relatedEntityPath)

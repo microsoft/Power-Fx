@@ -59,6 +59,17 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Theory]
+        [InlineData("x=1+1;")]
+        public void GetParseComplexNoErrorsTest(string script)
+        {
+            var namedFormula = new NamedFormulas(script);
+            namedFormula.EnsureParsed();
+
+            var errors = namedFormula.GetParseErrors();
+            Assert.Empty(errors);
+        }
+
+        [Theory]
         [InlineData("x=1;y=2;", "1", "2")]
         public void GetNamedFormulasTest(string script, string expectedX, string expectedY)
         {
