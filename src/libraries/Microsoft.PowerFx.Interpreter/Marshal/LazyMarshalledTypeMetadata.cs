@@ -5,20 +5,33 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.PowerFx.Core.Types;
+using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx
 {
     [ThreadSafeImmutable]
     internal class LazyMarshalledTypeMetadata : ILazyTypeMetadata
     {
-        public static readonly LazyMarshalledTypeMetadata Table = new LazyMarshalledTypeMetadata(true);
-        public static readonly LazyMarshalledTypeMetadata Record = new LazyMarshalledTypeMetadata(false);
+        public Type FromType { get; }
 
-        public bool IsTable { get; }
-
-        private LazyMarshalledTypeMetadata(bool isTable)
+        public LazyMarshalledTypeMetadata(Type fromType)
         {
-            IsTable = isTable;
+            FromType = fromType;
         }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is not LazyMarshalledTypeMetadata otherMetadata)
+            {
+                return false;
+            }
+
+            return otherMetadata.FromType.Equals(FromType);
+        }
+
+        public override int GetHashCode()
+        {
+            return FromType.GetHashCode();
+        } 
     }
 }

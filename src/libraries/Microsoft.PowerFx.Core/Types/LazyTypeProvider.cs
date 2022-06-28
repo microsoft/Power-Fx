@@ -9,36 +9,34 @@ using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Core.Types
 {
-    internal class LazyTypeProvider
+    public class LazyTypeProvider
     {
-        internal delegate DType GetExpandedType();
+        public delegate FormulaType FieldTypeGetter();
 
-        private readonly GetExpandedType _expansionFunc;
-        private readonly Lazy<DType> _expandedType;
+        private readonly IReadOnlyDictionary<DName, FieldTypeGetter> _fieldTypeGetters;
+        private readonly Dictionary<DName, DType> _expandedFields = new Dictionary<DName, DType>();
 
         public readonly ILazyTypeMetadata LazyTypeMetadata;
-        public readonly DType Type;
 
-        internal DType ExpandedType => _expandedType.Value;
-
-        public LazyTypeProvider(GetExpandedType expansionFunc, ILazyTypeMetadata lazyTypeMetadata)
-        {
-            _expansionFunc = expansionFunc;
-            LazyTypeMetadata = lazyTypeMetadata;
-
-            _expandedType = new Lazy<DType>(ExpandType);
-            Type = new DType(this, lazyTypeMetadata.IsTable);
+        public LazyTypeProvider(ILazyTypeMetadata metadata, IReadOnlyDictionary<DName, FieldTypeGetter> fieldTypeGetters)
+        {            
+            LazyTypeMetadata = metadata;
+            _fieldTypeGetters = fieldTypeGetters;
         }
 
-        private DType ExpandType()
+        internal bool TryGetFieldType(DName name, out DType type)
         {
-            return LazyTypeMetadata.IsTable ? _expansionFunc().ToTable() : _expansionFunc().ToRecord();
-        }
+            if (_expandedFields.TryGetValue(name, out type))
+            {
+                return true;
+            }
+            else if (_fieldTypeGetters.TryGetValue(name, out var getter))
+            {
+                type = getter()._type;
+                _expandedFields.Add(name, type);
+            }
 
-        // $$ Could be used for lazy field retrieval?
-        public bool TryGetFieldType(DName name, out DType type)
-        {
-            return ExpandedType.TryGetType(name, out type);
+            return false;
         }
     }
 }

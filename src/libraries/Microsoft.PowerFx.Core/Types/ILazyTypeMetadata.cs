@@ -3,11 +3,7 @@
 
 namespace Microsoft.PowerFx.Core.Types
 {
-    internal interface ILazyTypeMetadata
+    public interface ILazyTypeMetadata
     {
-        /// <summary>
-        /// True if the lazily expanded type should be a table, false for a record.
-        /// </summary>
-        bool IsTable { get; }
     }
 }

@@ -4,6 +4,8 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using Microsoft.PowerFx.Core.Types;
+using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx
@@ -39,15 +41,7 @@ namespace Microsoft.PowerFx
                 return false;
             }
 
-            marshaler = new ObjectMarshaller(() => GetMaterializedTypeAndMapping(type, cache));
-            return true;
-        }
-            
-        private (RecordType fxType, IReadOnlyDictionary<string, Func<object, FormulaValue>>) GetMaterializedTypeAndMapping(Type type, TypeMarshallerCache cache)
-        {
-            var mapping = new Dictionary<string, Func<object, FormulaValue>>(StringComparer.OrdinalIgnoreCase);
-            var fxType = new RecordType();
-
+            var fieldGetters = new Dictionary<DName, ObjectMarshaller.FieldTypeAndValueMashallerGetter>();
             foreach (var prop in type.GetProperties(BindingFlags.Public | BindingFlags.Instance))
             {
                 if (!prop.CanRead)
@@ -61,25 +55,24 @@ namespace Microsoft.PowerFx
                     continue;
                 }
 
-                var tm = cache.GetMarshaller(prop.PropertyType);
-                var fxFieldType = tm.Type;
+                var validFxName = DName.MakeValid(fxName, out _);
 
-                // Basic .net property
-                if (mapping.ContainsKey(fxName))
+                (FormulaType fieldType, ObjectMarshaller.FieldValueMarshaller fieldValueMarshaller) TypeAndMarshallerGetter()
                 {
-                    throw new NameCollisionException(fxName);
+                    var tm = cache.GetMarshaller(prop.PropertyType);
+                    return (tm.Type,
+                            (object objSource) =>
+                            {
+                                var propValue = prop.GetValue(objSource);
+                                return tm.Marshal(propValue);
+                            });
                 }
 
-                mapping[fxName] = (object objSource) =>
-                {
-                    var propValue = prop.GetValue(objSource);
-                    return tm.Marshal(propValue);
-                };
-
-                fxType = fxType.Add(fxName, fxFieldType);
+                fieldGetters.Add(validFxName, TypeAndMarshallerGetter);
             }
 
-            return (fxType, mapping);
+            marshaler = new ObjectMarshaller(fieldGetters, type);
+            return true;
         }
     }
 }

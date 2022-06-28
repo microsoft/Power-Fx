@@ -4,8 +4,10 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Reflection;
 using Microsoft.PowerFx.Core.Types;
+using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx
@@ -16,24 +18,12 @@ namespace Microsoft.PowerFx
     [DebuggerDisplay("ObjMarshal({Type})")]
     public class ObjectMarshaller : ITypeMarshaller
     {
-        public delegate (RecordType fxType, IReadOnlyDictionary<string, Func<object, FormulaValue>>) GetMaterializedTypeAndMapping();
+        public delegate FormulaValue FieldValueMarshaller(object source);
 
-        private IReadOnlyDictionary<string, Func<object, FormulaValue>> _mapping;
-        private readonly GetMaterializedTypeAndMapping _materializeFunc;
+        public delegate (FormulaType fieldType, FieldValueMarshaller fieldValueMarshaller) FieldTypeAndValueMashallerGetter();
 
-        // Map of fx field name to a function produces the formula value given the dotnet object.
-        private IReadOnlyDictionary<string, Func<object, FormulaValue>> MaterializedMapping
-        {
-            get
-            {
-                if (_mapping == null)
-                {       
-                    _materializeFunc();
-                }
-
-                return _mapping;
-            }
-        }
+        // Map fx field name to a function produces the formula value given the dotnet object.
+        private readonly Dictionary<DName, FieldValueMarshaller> _marshallerMapping;
 
         /// <inheritdoc/>
         FormulaType ITypeMarshaller.Type => Type;
@@ -43,10 +33,11 @@ namespace Microsoft.PowerFx
         /// </summary>
         public RecordType Type { get; }
 
-        public ObjectMarshaller(GetMaterializedTypeAndMapping materializeFunc)
+        public ObjectMarshaller(Dictionary<DName, FieldTypeAndValueMashallerGetter> fieldGetters, Type fromType)
         {
-            _materializeFunc = materializeFunc;
-            Type = new RecordType(new LazyTypeProvider(MaterializeTypeAndMapping, LazyMarshalledTypeMetadata.Record).Type);
+            var fieldTypeGetters = fieldGetters.ToDictionary(kvp => kvp.Key, kvp => UseFieldType(kvp.Key, kvp.Value));
+            var provider = new LazyTypeProvider(new LazyMarshalledTypeMetadata(fromType), fieldTypeGetters);
+            Type = RecordType.FromLazyProvider(provider);
         }
 
         /// <inheritdoc/>
@@ -56,18 +47,11 @@ namespace Microsoft.PowerFx
             return value;
         }
 
-        private DType MaterializeTypeAndMapping()
-        {
-            var (type, mapping) = _materializeFunc();
-            _mapping = mapping;
-            return type._type;
-        }
-
         // Get the value of the field. 
-        // Return null on missing
+        // Return null if the field was unused or doesn't exist.
         internal bool TryGetField(object source, string name, out FormulaValue fieldValue)
         {
-            if (MaterializedMapping.TryGetValue(name, out var getter))
+            if (_marshallerMapping.TryGetValue(new DName(name), out var getter))
             {
                 fieldValue = getter(source);
                 return true;
@@ -77,16 +61,16 @@ namespace Microsoft.PowerFx
             return false;
         }
 
-        internal IEnumerable<NamedValue> GetFields(object source)
+        // Helper Function, ensures that when a field is accessed via LazyTypeProvider, we also add it's
+        // value marshalling function to the mapping.
+        private LazyTypeProvider.FieldTypeGetter UseFieldType(DName fieldName, FieldTypeAndValueMashallerGetter fieldTypeAndValueMarshaller)
         {
-            foreach (var kv in MaterializedMapping)
+            return () =>
             {
-                var fieldName = kv.Key;
-                var getter = kv.Value;
-
-                var value = getter(source);
-                yield return new NamedValue(fieldName, value);
-            }
+                var (fieldType, valueMarshaller) = fieldTypeAndValueMarshaller();
+                _marshallerMapping[fieldName] = valueMarshaller;
+                return fieldType;
+            };
         }
     }
 }

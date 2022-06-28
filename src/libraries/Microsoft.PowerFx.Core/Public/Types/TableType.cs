@@ -27,6 +27,11 @@ namespace Microsoft.PowerFx.Types
             return new TableType(tableType);
         }
 
+        public static TableType FromLazyProvider(LazyTypeProvider provider)
+        {
+            return new TableType(new DType(provider, isTable: true));
+        }
+
         public override void Visit(ITypeVisitor vistor)
         {
             vistor.Visit(this);

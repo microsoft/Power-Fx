@@ -20,6 +20,11 @@ namespace Microsoft.PowerFx.Types
             : base(DType.EmptyRecord)
         {
         }
+        
+        public static RecordType FromLazyProvider(LazyTypeProvider provider)
+        {
+            return new RecordType(new DType(provider, isTable: false));
+        }
 
         public override void Visit(ITypeVisitor vistor)
         {
