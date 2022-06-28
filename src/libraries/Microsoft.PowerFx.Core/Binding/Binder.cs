@@ -4747,7 +4747,7 @@ namespace Microsoft.PowerFx.Core.Binding
                     Scope maybeScope = null;
                     var startArg = 0;
 
-                    // Construct a scope if diplay names are enabled and this function requires a data source scope for inline records
+                    // Construct a scope if display names are enabled and this function requires a data source scope for inline records
                     if (_txb.Document != null && _txb.Document.Properties.EnabledFeatures.IsUseDisplayNameMetadataEnabled &&
                         overloads.Where(func => func.RequiresDataSourceScope).Any() && node.Args.Count > 0)
                     {
@@ -5836,9 +5836,8 @@ namespace Microsoft.PowerFx.Core.Binding
                     }
                 }
 
-                _txb.SetType(
-                    node,
-                    exprType.IsValid ? DType.CreateTable(new TypedName(exprType, TableValue.ValueDName)) : DType.EmptyTable);
+                DType tableType = exprType.IsValid ? (exprType.IsRecord ? DType.CreateTable(exprType.GetNames(DPath.Root)) : DType.CreateTable(new TypedName(exprType, TableValue.ValueDName))) : DType.EmptyTable;
+                _txb.SetType(node, tableType);
                 SetVariadicNodePurity(node);
                 _txb.SetScopeUseSet(node, JoinScopeUseSets(node.Children));
                 _txb.SetSelfContainedConstant(node, isSelfContainedConstant);

@@ -86,9 +86,8 @@ namespace Microsoft.PowerFx
                 var arg = await child.Accept(this, context);
                 args[i] = arg;
             }
-
-            // This is always a single column table
-            var tableValue = new InMemoryTableValue(node.IRContext, StandardTableNodeRecords(node.IRContext, args, forceSingleColumn: true));
+            
+            var tableValue = new InMemoryTableValue(node.IRContext, StandardTableNodeRecords(node.IRContext, args, forceSingleColumn: false));
 
             return tableValue;
         }

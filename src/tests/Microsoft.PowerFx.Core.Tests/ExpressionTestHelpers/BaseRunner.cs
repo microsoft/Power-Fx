@@ -215,7 +215,7 @@ namespace Microsoft.PowerFx.Core.Tests
             }
             catch (Exception e)
             {
-                return (TestResult.Fail, $"Threw exception: {e.Message}");
+                return (TestResult.Fail, $"Threw exception: {e.Message}, {e.StackTrace}");
             }
 
             // Check for a runtime-error

@@ -15,8 +15,8 @@ false
 >> IsBlank({ x : Blank(), y : 2}.x)
 true
 
->> First([{a: 1}]).Value.a
+>> First([{a: 1}]).a
 1
 
->> First([{a: 1, b:"abc"}]).Value.b
+>> First([{a: 1, b:"abc"}]).b
 "abc"
