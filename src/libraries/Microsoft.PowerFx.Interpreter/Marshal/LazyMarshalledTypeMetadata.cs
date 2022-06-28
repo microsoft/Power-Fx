@@ -12,6 +12,8 @@ namespace Microsoft.PowerFx
     [ThreadSafeImmutable]
     internal class LazyMarshalledTypeMetadata : ILazyTypeMetadata
     {
+        public bool IsFullExpansionAllowed => false;
+
         public Type FromType { get; }
 
         public LazyMarshalledTypeMetadata(Type fromType)

@@ -1070,7 +1070,7 @@ namespace Microsoft.PowerFx.Core.Types
                 case DKind.Record:
                     return this;
                 case DKind.LazyTable:
-                    return _lazyTypeProvider.ExpandedType.ToRecord();
+                    return new DType(_lazyTypeProvider, isTable: false);
                 case DKind.Table:
                 case DKind.DataEntity:
                 case DKind.Control:
@@ -1101,7 +1101,7 @@ namespace Microsoft.PowerFx.Core.Types
                 case DKind.Table:
                     return this;
                 case DKind.LazyRecord:
-                    return _lazyTypeProvider.ExpandedType.ToTable();
+                    return new DType(_lazyTypeProvider, isTable: true);
                 case DKind.Record:
                 case DKind.DataEntity:
                 case DKind.Control:
@@ -1132,7 +1132,7 @@ namespace Microsoft.PowerFx.Core.Types
                 case DKind.Table:
                     return this;
                 case DKind.LazyRecord:
-                    return _lazyTypeProvider.ExpandedType.ToTable();
+                    return new DType(_lazyTypeProvider, isTable: true);
                 case DKind.Record:
                 case DKind.DataEntity:
                 case DKind.Control:
@@ -1370,16 +1370,14 @@ namespace Microsoft.PowerFx.Core.Types
             Contracts.Assert(name.IsValid);
             type.AssertValid();
 
-            var currentType = this;
             if (IsLazyType)
             {
-                // Adding to a lazy type requires expansion
-                currentType = _lazyTypeProvider.ExpandedType;
+                return new DType(_lazyTypeProvider.AddField(name, type), IsTable);
             } 
 
-            Contracts.Assert(!currentType.TypeTree.Contains(name));
-            var tree = currentType.TypeTree.SetItem(name, type);
-            var newType = new DType(currentType.Kind, tree, currentType.AssociatedDataSources, currentType.DisplayNameProvider);
+            Contracts.Assert(!TypeTree.Contains(name));
+            var tree = TypeTree.SetItem(name, type);
+            var newType = new DType(Kind, tree, AssociatedDataSources, DisplayNameProvider);
 
             return newType;
         }
@@ -1408,6 +1406,11 @@ namespace Microsoft.PowerFx.Core.Types
             }
 
             Contracts.Assert(typeOuter.IsRecord || typeOuter.IsTable);
+
+            if (IsLazyType)
+            {
+                return new DType(_lazyTypeProvider.DropField(name), IsTable);
+            }
 
             var tree = typeOuter.TypeTree.RemoveItem(ref fError, name);
             if (fError)
@@ -1581,44 +1584,6 @@ namespace Microsoft.PowerFx.Core.Types
             return SetType(ref fError, path, new DType(typeOuter.Kind, tree, AssociatedDataSources, DisplayNameProvider));
         }
 
-        // If a name/field (that was specified to be split) is missing, we are returning a new type
-        // with the type for the missing field as Error and fError will be true.
-        public DType Split(ref bool fError, out DType typeRest, params DName[] rgname)
-        {
-            AssertValid();
-            Contracts.AssertNonEmpty(rgname);
-            Contracts.AssertAllValid(rgname);
-
-            if (!IsAggregate)
-            {
-                fError = true;
-                typeRest = Error;
-                return this;
-            }
-
-            Contracts.Assert(IsRecord || IsTable);
-
-            var treeRest = TypeTree;
-            var treeWith = default(TypeTree);
-
-            foreach (var name in rgname)
-            {
-                if (TypeTree.TryGetValue(name, out var typeCur))
-                {
-                    treeWith = treeWith.SetItem(name, typeCur);
-                    treeRest = treeRest.RemoveItem(ref fError, name);
-                }
-                else
-                {
-                    fError = true;
-                    treeWith = treeWith.SetItem(name, Error);
-                }
-            }
-
-            typeRest = new DType(Kind, treeRest, AssociatedDataSources, DisplayNameProvider);
-            return new DType(Kind, treeWith, AssociatedDataSources, DisplayNameProvider);
-        }
-
         // Get ALL the fields/names at the specified path, including hidden meta fields
         // and other special fields.
         public IEnumerable<TypedName> GetAllNames(DPath path)
@@ -1679,11 +1644,6 @@ namespace Microsoft.PowerFx.Core.Types
             AssertValid();
 
             fError |= !TryGetType(path, out var type);
-
-            if (type.IsLazyType)
-            {
-                type = type._lazyTypeProvider.ExpandedType;
-            }
 
             if (!type.IsAggregate && !type.IsEnum)
             {
@@ -1752,6 +1712,30 @@ namespace Microsoft.PowerFx.Core.Types
             }
 
             return fValid;
+        }
+
+        private bool AcceptsLazyType(DType other)
+        {
+            Contracts.AssertValid(other);
+            Contracts.Assert(IsLazyType);
+
+            switch (other.Kind)
+            {
+                case DKind.LazyRecord:
+                case DKind.LazyTable:
+                    Contracts.AssertValue(_lazyTypeProvider);
+                    return other._lazyTypeProvider.LazyTypeMetadata.Equals(_lazyTypeProvider.LazyTypeMetadata);
+                case DKind.Record:
+                case DKind.Table:
+                    if (!_lazyTypeProvider.TryGetExpandedType(IsTable, out var expandedType))
+                    {
+                        return false;
+                    }
+
+                    return expandedType.Accepts(other, true);
+                default:
+                    return other.Kind == DKind.Unknown;
+            }
         }
 
         private bool AcceptsEntityType(DType type)
@@ -1886,13 +1870,7 @@ namespace Microsoft.PowerFx.Core.Types
                 case DKind.Record:
                 case DKind.File:
                 case DKind.LargeImage:
-
-                    if (type.Kind == DKind.LazyRecord)
-                    {
-                        type = type._lazyTypeProvider.ExpandedType;
-                    }
-
-                    if (Kind == type.Kind)
+                    if (Kind == type.Kind || type.IsLazyType)
                     {
                         return TreeAccepts(this, TypeTree, type.TypeTree, out schemaDifference, out schemaDifferenceType, exact, useLegacyDateTimeAccepts);
                     }
@@ -1901,12 +1879,8 @@ namespace Microsoft.PowerFx.Core.Types
                     break;
 
                 case DKind.Table:
-                    if (type.Kind == DKind.LazyTable)
-                    {
-                        type = type._lazyTypeProvider.ExpandedType;
-                    }
 
-                    if (Kind == type.Kind || type.IsExpandEntity)
+                    if (Kind == type.Kind || type.IsLazyType)
                     {
                         return TreeAccepts(this, TypeTree, type.TypeTree, out schemaDifference, out schemaDifferenceType, exact, useLegacyDateTimeAccepts);
                     }
@@ -2028,34 +2002,10 @@ namespace Microsoft.PowerFx.Core.Types
                     break;
 
                 case DKind.LazyRecord:
-                    if (type.Kind == DKind.Record)
-                    {
-                        var thisType = type._lazyTypeProvider.ExpandedType;
-                        return TreeAccepts(thisType, thisType.TypeTree, type.TypeTree, out schemaDifference, out schemaDifferenceType, exact, useLegacyDateTimeAccepts);
-                    }
-                    else if (type.Kind == DKind.LazyRecord)
-                    {
-                        // $$$ Can we use reference equality here to avoid expanding?
-                        // Need to handle lazy.Accpets(lazy) and avoid infinite recursion.
-                        Contracts.Assert(false);
-                    }
-
-                    accepts = type.Kind == DKind.Unknown;
+                    accepts = AcceptsLazyType(type);
                     break;
                 case DKind.LazyTable:
-                    if (type.Kind == DKind.Table)
-                    {
-                        var thisType = type._lazyTypeProvider.ExpandedType;
-                        return TreeAccepts(thisType, thisType.TypeTree, type.TypeTree, out schemaDifference, out schemaDifferenceType, exact, useLegacyDateTimeAccepts);
-                    }
-                    else if (type.Kind == DKind.LazyTable)
-                    {
-                        // $$$ Can we use reference equality here to avoid expanding?
-                        // Need to handle lazy.Accpets(lazy) and avoid infinite recursion.
-                        Contracts.Assert(false);
-                    }
-
-                    accepts = type.Kind == DKind.Unknown;
+                    accepts = AcceptsLazyType(type);
                     break;
                 default:
                     Contracts.Assert(false);
