@@ -109,6 +109,9 @@
 2
 
 >> Average(LastN([1, 2, 3, 4, 5], Blank()), Value)
+#Error(Kind=Div0)
+
+>> Average(If(1<0,[1, 2, 3]), Value)
 Blank()
 
 >> Average(Sort([-2, -1, 0, 1, 2], 1 / Value), Value)

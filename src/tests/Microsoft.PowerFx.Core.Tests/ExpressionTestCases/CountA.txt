@@ -10,8 +10,11 @@
 >> CountA(Sort([-2, -1, 0, 1, 2], 1 / Value))
 #Error(Kind=Div0)
 
+>> CountA(If(1<0,[1,2,3]))
+0
+
 >> CountA(LastN([1,2,3,4], Blank()))
-Blank()
+0
 
 >> CountA([1, 2, 1/0, 4, 5])
 #Error(Kind=Div0)

@@ -29,11 +29,11 @@ namespace Microsoft.PowerFx.Connector.Tests
             var allowed = new HashSet<string>()
             {
               "Microsoft.PowerFx.ConfigExtensions",
-
               "Microsoft.PowerFx.Connectors.PowerPlatformConnectorClient",
               "Microsoft.PowerFx.Connectors.ICachingHttpClient",
               "Microsoft.PowerFx.Connectors.NonCachingClient",
-              "Microsoft.PowerFx.Connectors.CachingHttpClient"
+              "Microsoft.PowerFx.Connectors.CachingHttpClient",
+              "Microsoft.PowerFx.Connectors.OpenApiExtensions"
             };
 
             var sb = new StringBuilder();

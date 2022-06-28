@@ -11,4 +11,7 @@ Table({Div:20,Value:1},{Div:10,Value:2},{Div:Microsoft.PowerFx.Types.ErrorValue,
 #Error(Kind=Div0)
 
 >> AddColumns(LastN([1, 2, 3, 4, 5], Blank()), "Double", Value * 2)
+Table()
+
+>> AddColumns(If(1<0, [1, 2, 3]), "Double", Value * 2)
 Blank()

@@ -2,10 +2,16 @@
 5
 
 >> CountRows(Blank())
-Blank()
+0
+
+>> CountRows(If(1<0,[1]))
+0
 
 >> CountRows(Sort([-2, -1, 0, 1, 2], 1 / Value))
-#Error
+#Error(Kind=Div0)
+
+>> CountRows(Filter([-2, -1, 0, 1, 2], 1 / Value < 3))
+#Error(Kind=Div0)
 
 >> CountRows([1, 2, 1/0, 4, 5])
 5

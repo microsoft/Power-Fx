@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Models;
+using Microsoft.PowerFx.Connectors;
 using Xunit;
 
 namespace Microsoft.PowerFx.Tests
@@ -18,7 +19,7 @@ namespace Microsoft.PowerFx.Tests
     internal class LoggingTestServer : HttpMessageHandler
     {
         // Log HTTP calls. 
-        public StringBuilder _log = new StringBuilder();
+        public StringBuilder _log = new ();
 
         public OpenApiDocument _apiDocument;
 
@@ -42,7 +43,7 @@ namespace Microsoft.PowerFx.Tests
 
             var response = new HttpResponseMessage(HttpStatusCode.OK)
             {
-                Content = new StringContent(json, Encoding.UTF8, "application/json")
+                Content = new StringContent(json, Encoding.UTF8, OpenApiExtensions.ContentType_ApplicationJson)
             };
             _nextResponse = response;
         }
@@ -59,6 +60,24 @@ namespace Microsoft.PowerFx.Tests
                 var headerName = kv.Key;
                 var value = kv.Value.First();
                 _log.AppendLine($" {headerName}: {value}");
+            }
+
+            var httpContent = request?.Content;
+            if (httpContent != null)
+            {
+                if (httpContent.Headers != null)
+                {
+                    foreach (var h in httpContent.Headers)
+                    {
+                        _log.AppendLine($" [content-header] {h.Key}: {string.Join(", ", h.Value)}");                            
+                    }
+                }
+
+                var content = await httpContent.ReadAsStringAsync();
+                if (!string.IsNullOrEmpty(content))
+                {                    
+                    _log.AppendLine($" [body] {content}");
+                }
             }
 
             var response = _nextResponse;

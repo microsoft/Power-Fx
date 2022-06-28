@@ -115,25 +115,5 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Assert.True(config.TryGetSymbol(new DName("SomeDisplayName"), out _, out displayName));
             Assert.Equal("SomeDisplayName", displayName.Value);
         }
-
-        [Fact]
-        public void Sample()
-        {
-            var config = new PowerFxConfig();
-            var displayNames = DisplayNameUtility.MakeUnique(new Dictionary<string, string>
-            {
-                { "option_1", "Option1" },
-                { "option_2", "Option2" }
-            });
-
-            var option = new OptionSet("OptionSet", displayNames);
-
-            config.AddOptionSet(option);
-
-            var engine = new RecalcEngine(config);
-
-            var expression = "If(true, OptionSet.Option1)";
-            var value = engine.Eval(expression);
-        }
     }
 }

@@ -77,10 +77,22 @@ namespace Microsoft.PowerFx
         /// <returns></returns>
         public ParseResult Parse(string expressionText, ParserOptions options = null)
         {
+            return Parse(expressionText, options, Config.CultureInfo);
+        }
+
+        /// <summary>
+        /// Parse the expression without doing any binding.
+        /// </summary>
+        /// <param name="expressionText"></param>
+        /// <param name="options"></param>
+        /// <param name="cultureInfo"></param>
+        /// <returns></returns>
+        public static ParseResult Parse(string expressionText, ParserOptions options = null, CultureInfo cultureInfo = null)
+        {
             options ??= new ParserOptions();
-            
+
             // If culture isn't explicitly set, use the one from PowerFx Config
-            options.Culture ??= Config.CultureInfo;
+            options.Culture ??= cultureInfo;
 
             var result = options.Parse(expressionText);
             return result;
@@ -96,20 +108,20 @@ namespace Microsoft.PowerFx
         public CheckResult Check(string expressionText, RecordType parameterType = null, ParserOptions options = null)
         {
             var parse = Parse(expressionText, options);
-
-            var bindingConfig = new BindingConfig(options?.AllowsSideEffects == true);
-            return CheckInternal(parse, parameterType, bindingConfig);
+            return Check(parse, parameterType, options);
         }
 
         /// <summary>
         /// Type check a formula without executing it. 
         /// </summary>
-        /// <param name="parse">the parsed expression. Obtain from <see cref="Parse"/>.</param>
+        /// <param name="parse">the parsed expression. Obtain from <see cref="Parse(string, ParserOptions)"/>.</param>
         /// <param name="parameterType">types of additional args to pass.</param>
+        /// <param name="options">parser options to use.</param>
         /// <returns></returns>
-        public CheckResult Check(ParseResult parse, RecordType parameterType = null)
+        public CheckResult Check(ParseResult parse, RecordType parameterType = null, ParserOptions options = null)
         {
-            return CheckInternal(parse, parameterType, BindingConfig.Default);
+            var bindingConfig = new BindingConfig(options?.AllowsSideEffects == true);
+            return CheckInternal(parse, parameterType, bindingConfig);
         }
 
         private CheckResult CheckInternal(ParseResult parse, RecordType parameterType, BindingConfig bindingConfig)

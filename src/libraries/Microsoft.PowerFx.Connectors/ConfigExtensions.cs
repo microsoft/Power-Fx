@@ -4,9 +4,11 @@
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using Microsoft.OpenApi.Expressions;
 using Microsoft.OpenApi.Models;
 using Microsoft.PowerFx.Connectors;
 using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx
 {
@@ -47,6 +49,16 @@ namespace Microsoft.PowerFx
 
             var functionInfos = functions.ConvertAll(function => new FunctionInfo(function));
             return functionInfos;
+        }
+
+        public static void Add(this Dictionary<string, FormulaValue> map, string fieldName, FormulaValue value)
+        {
+            if (map.ContainsKey(fieldName))
+            {
+                throw new InvalidOperationException($"Invalid schema, two parameters have the same name {fieldName}");
+            }
+
+            map[fieldName] = value;
         }
     }
 }

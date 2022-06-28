@@ -104,7 +104,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 Message = "The value could not be interpreted as a Boolean",
                 Span = irContext.SourceContext,
-                Kind = ErrorKind.BadLanguageCode
+                Kind = ErrorKind.InvalidArgument
             });
         }
 
