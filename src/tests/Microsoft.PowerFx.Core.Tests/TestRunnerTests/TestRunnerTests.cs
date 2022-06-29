@@ -69,7 +69,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [Fact]
         public void TestList()
         {
-            var mock = new MockErrorRunner
+            using var mock = new MockErrorRunner
             {
                 _hook = (expr, setup) => FormulaValue.New(int.Parse(expr))
             };
@@ -110,7 +110,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("-" + LongForm5e186, LongForm5e186, false)] // large positive vs. negative
         public void TestLargeNumberPass(string a, string b, bool pass)
         {
-            var mock = new MockErrorRunner
+            using var mock = new MockErrorRunner
             {
                 _hook = (expr, setup) => FormulaValue.New(double.Parse(expr))
             };
@@ -196,10 +196,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [Fact]
         public void TestRunnerSuccess()
         {
-            var runner = new MockRunner
-            {
-                _hook = (expr, setup) => FormulaValue.New(1)
-            };
+            using var runner = new MockRunner { _hook = (expr, setup) => FormulaValue.New(1) };
 
             var test = new TestCase
             {
@@ -213,10 +210,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [Fact]
         public void TestRunnerFail()
         {
-            var runner = new MockRunner
-            {
-                _hook = (expr, setup) => FormulaValue.New(1)
-            };
+            using var runner = new MockRunner { _hook = (expr, setup) => FormulaValue.New(1) };
 
             var test = new TestCase
             {
@@ -230,10 +224,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [Fact]
         public void TestRunnerNumericTolerance()
         {
-            var runner = new MockRunner
-            {
-                _hook = (expr, setup) => FormulaValue.New(1.23456789)
-            };
+            using var runner = new MockRunner { _hook = (expr, setup) => FormulaValue.New(1.23456789) };
 
             var test = new TestCase
             {
@@ -255,7 +246,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [Fact]
         public void TestRunnerSkip()
         {
-            var runner = new MockRunner();
+            using var runner = new MockRunner();
 
             // #SKIP won't even call runner.
             var test = new TestCase
@@ -272,10 +263,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [Fact]
         public void TestRunnerUnsupported()
         {
-            var runner = new MockRunner
-            {
-                _hook2 = (expr, setup) => new RunResult { UnsupportedReason = "unsupported" }
-            };
+            using var runner = new MockRunner { _hook2 = (expr, setup) => new RunResult { UnsupportedReason = "unsupported" } };
             {
                 var test = new TestCase
                 {
@@ -314,10 +302,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [Fact]
         public void TestRunnerError()
         {
-            var runner = new MockRunner
-            {
-                _hook = (expr, setup) => _errorValue // error
-            };
+            using var runner = new MockRunner { _hook = (expr, setup) => _errorValue /* error */ };
 
             var test = new TestCase
             {
@@ -337,13 +322,9 @@ namespace Microsoft.PowerFx.Core.Tests
         [Fact]
         public void TestRunnerErrorKindMatching()
         {
-            var errorValue = new ErrorValue(
-                IR.IRContext.NotInSource(FormulaType.Number),
-                new ExpressionError { Kind = ErrorKind.InvalidFunctionUsage });
-            var runner = new MockRunner
-            {
-                _hook = (expr, setup) => errorValue // error
-            };
+            var errorValue = new ErrorValue(IR.IRContext.NotInSource(FormulaType.Number), new ExpressionError { Kind = ErrorKind.InvalidFunctionUsage });
+            
+            using var runner = new MockRunner { _hook = (expr, setup) => errorValue /* error */ };
 
             var test = new TestCase
             {
@@ -378,10 +359,7 @@ namespace Microsoft.PowerFx.Core.Tests
         public void TestRunnerCompilerError()
         {
             // Compiler error is a throw from Check()
-            var runner = new MockRunner
-            {
-                _hook2 = (expr, setup) => RunResult.FromError("X")
-            };
+            using var runner = new MockRunner { _hook2 = (expr, setup) => RunResult.FromError("X") };
 
             var test = new TestCase
             {
@@ -409,7 +387,7 @@ namespace Microsoft.PowerFx.Core.Tests
         {
             const string handlerName = "myhandler";
 
-            var runner = new MockRunner
+            using var runner = new MockRunner
             {
                 _hook = (expr, setup) =>
                 {
@@ -421,9 +399,10 @@ namespace Microsoft.PowerFx.Core.Tests
 
             var test = new TestCase
             {
-                SetupHandlerName = handlerName
+                SetupHandlerName = handlerName,
+                Expected = "1"
             };
-            test.Expected = "1";
+
             var (result, message) = runner.RunTestCase(test);
 
             Assert.Equal(TestResult.Skip, result);
@@ -454,7 +433,7 @@ namespace Microsoft.PowerFx.Core.Tests
         public void TestErrorOverride()
         {
             // Test override BaseRunner.IsError
-            var runner = new MockErrorRunner
+            using var runner = new MockErrorRunner
             {
                 _hook = (expr, setup) =>
                     expr switch
@@ -486,7 +465,7 @@ namespace Microsoft.PowerFx.Core.Tests
         public void TestErrorOverride2()
         {
             // Test override BaseRunner.IsError
-            var runner = new MockErrorRunner
+            using var runner = new MockErrorRunner
             {
                 _hook = (expr, setup) =>
                     expr switch

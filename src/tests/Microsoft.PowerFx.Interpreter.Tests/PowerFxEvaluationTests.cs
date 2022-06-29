@@ -53,7 +53,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         }        
 
         internal class InterpreterRunner : BaseRunner
-        {
+        {            
             // For async tests, run in special mode. 
             // This does _not_ change evaluation semantics, but does verify .Result isn't called by checking
             // task completion status.. 

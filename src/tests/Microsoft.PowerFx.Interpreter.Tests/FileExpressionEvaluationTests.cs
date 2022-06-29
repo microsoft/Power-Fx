@@ -10,9 +10,7 @@ using static Microsoft.PowerFx.Interpreter.Tests.ExpressionEvaluationTests;
 namespace Microsoft.PowerFx.Interpreter.Tests
 {
     public class FileExpressionEvaluationTests : PowerFxTest
-    {
-        private InterpreterRunner _runner;
-
+    {        
         [InterpreterTheory]
         [TxtFileData("ExpressionTestCases", "InterpreterExpressionTestCases", nameof(InterpreterRunner))]
         public void InterpreterTestCase(ExpressionTestCase testCase)
@@ -21,12 +19,11 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             // make sure they build is actually copying them over. 
             Assert.True(testCase.FailMessage == null, testCase.FailMessage);
 
+            using var runner = new InterpreterRunner();
             Preview.FeatureFlags._inTests = true;
             Preview.FeatureFlags.NoValueInRecordArrays = false;
 
-            _runner = new InterpreterRunner();
-
-            var (result, msg) = _runner.RunTestCase(testCase);
+            var (result, msg) = runner.RunTestCase(testCase);
 
             var prefix = $"Test {Path.GetFileName(testCase.SourceFile)}:{testCase.SourceLine}: ";
             switch (result)
@@ -45,19 +42,18 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         }
 
         [InterpreterTheory]
-        [TxtFileData(@"ExpressionTestCases\NoValueInRecordArrays", "InterpreterExpressionTestCases", nameof(InterpreterRunner))]
+        [TxtFileData(@"ExpressionTestCases\NoValueInRecordArrays", null, nameof(InterpreterRunner))]
         public void InterpreterTestCase_NoValueInRecordArrays(ExpressionTestCase testCase)
         {
             // This is running against embedded resources, so if you're updating the .txt files,
             // make sure they build is actually copying them over. 
             Assert.True(testCase.FailMessage == null, testCase.FailMessage);
-
+            
+            using var runner = new InterpreterRunner();
             Preview.FeatureFlags._inTests = true;
             Preview.FeatureFlags.NoValueInRecordArrays = true;
 
-            _runner = new InterpreterRunner();
-
-            var (result, msg) = _runner.RunTestCase(testCase);
+            var (result, msg) = runner.RunTestCase(testCase);
 
             var prefix = $"Test {Path.GetFileName(testCase.SourceFile)}:{testCase.SourceLine}: ";
             switch (result)

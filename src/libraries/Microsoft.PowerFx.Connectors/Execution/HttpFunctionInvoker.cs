@@ -125,22 +125,34 @@ namespace Microsoft.PowerFx.Connectors
        
         private HttpContent GetBody(string referenceId, bool schemaLessBody, Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)> map)
         {
-            FormulaValueSerializer serializer = _argMapper.ContentType.ToLowerInvariant() switch
+            FormulaValueSerializer serializer = null;
+
+            try
             {
-                OpenApiExtensions.ContentType_XWwwFormUrlEncoded => new OpenApiFormUrlEncoder(schemaLessBody),                
-                OpenApiExtensions.ContentType_TextPlain => new OpenApiTextSerializer(schemaLessBody),
-                _ => new OpenApiJsonSerializer(schemaLessBody)
-            };
-            
-            serializer.StartSerialization(referenceId);
-            foreach (var kv in map)
-            {
-                serializer.SerializeValue(kv.Key, kv.Value.Schema, kv.Value.Value);
+                serializer = _argMapper.ContentType.ToLowerInvariant() switch
+                {
+                    OpenApiExtensions.ContentType_XWwwFormUrlEncoded => new OpenApiFormUrlEncoder(schemaLessBody),
+                    OpenApiExtensions.ContentType_TextPlain => new OpenApiTextSerializer(schemaLessBody),
+                    _ => new OpenApiJsonSerializer(schemaLessBody)
+                };
+
+                serializer.StartSerialization(referenceId);
+                foreach (var kv in map)
+                {
+                    serializer.SerializeValue(kv.Key, kv.Value.Schema, kv.Value.Value);
+                }
+
+                serializer.EndSerialization();
+
+                return new StringContent(serializer.GetResult(), Encoding.Default, _argMapper.ContentType);
             }
-
-            serializer.EndSerialization();
-
-            return new StringContent(serializer.GetResult(), Encoding.Default, _argMapper.ContentType);
+            finally
+            {
+                if (serializer != null && serializer is IDisposable disp)
+                {
+                    disp.Dispose();
+                }
+            }
         }
 
         public async Task<FormulaValue> DecodeResponseAsync(HttpResponseMessage response)
