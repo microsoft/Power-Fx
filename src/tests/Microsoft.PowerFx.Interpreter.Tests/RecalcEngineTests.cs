@@ -8,6 +8,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Functions;
+using Microsoft.PowerFx.Core.Localization;
+using Microsoft.PowerFx.Core.Parser;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Core.Types.Enums;
@@ -250,8 +252,8 @@ x * y
 ";
             recalcEngine.DefineFunction(
                 "foo",
-                FormulaType.Number,
                 body,
+                FormulaType.Number,
                 new NamedFormulaType("x", FormulaType.Number),
                 new NamedFormulaType("y", FormulaType.Number));
 
@@ -269,8 +271,8 @@ x * y
             var body = @"If(x=0,foo(1),If(x=1,foo(2),If(x=2,2)))";
             recalcEngine.DefineFunction(
                 "foo",
-                FormulaType.Number,
                 body,
+                FormulaType.Number,
                 new NamedFormulaType("x", FormulaType.Number));
 
             recalcEngine.BindAllUDFs();
@@ -286,8 +288,8 @@ x * y
             var body = @"foo()";
             recalcEngine.DefineFunction(
                 "foo",
-                FormulaType.Blank,
-                body);
+                body, 
+                FormulaType.Blank);
 
             recalcEngine.BindAllUDFs();
             var result = recalcEngine.Eval("foo()");
@@ -302,8 +304,8 @@ x * y
             var body = @"If(Not(x = 1), If(Mod(x, 2)=0, hailstone(x/2), hailstone(3*x+1)), x)";
             recalcEngine.DefineFunction(
                 "hailstone",
-                FormulaType.Number,
                 body,
+                FormulaType.Number,
                 new NamedFormulaType("x", FormulaType.Number));
             recalcEngine.BindAllUDFs();
             Assert.Equal(1.0, recalcEngine.Eval("hailstone(192)").ToObject());
@@ -319,13 +321,13 @@ x * y
 
             recalcEngine.DefineFunction(
                 "odd",
-                FormulaType.Boolean,
                 bodyOdd,
+                FormulaType.Boolean,
                 new NamedFormulaType("number", FormulaType.Number));
             recalcEngine.DefineFunction(
                 "even",
-                FormulaType.Boolean,
                 bodyEven,
+                FormulaType.Boolean,
                 new NamedFormulaType("number", FormulaType.Number));
             recalcEngine.BindAllUDFs();
             Assert.Equal(true, recalcEngine.Eval("odd(17)").ToObject());

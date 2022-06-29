@@ -38,11 +38,10 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
   </ItemGroup>
-  
-	<ItemGroup>
-	  <AdditionalFiles Include="..\..\stylecop.json" Link="stylecop.json" />
-	</ItemGroup>
 
+  <ItemGroup>
+    <AdditionalFiles Include="..\..\stylecop.json" Link="stylecop.json" />
+  </ItemGroup>
   <ItemGroup>
     <Content Include="ExpressionTestCases\**">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -54,11 +53,16 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="ExpressionTestCases\NotYetReady\RecursionTest.txt" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\..\libraries\Microsoft.PowerFx.Core\Microsoft.PowerFx.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="TestRunnerTests\*.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="ExpressionTestCases\NotYetReady\" />
+  </ItemGroup>
 </Project>
