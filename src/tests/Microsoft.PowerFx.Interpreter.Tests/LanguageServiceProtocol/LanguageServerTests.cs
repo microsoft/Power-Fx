@@ -15,6 +15,7 @@ using Microsoft.PowerFx.LanguageServerProtocol.Protocol;
 using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
 using Xunit;
+using static Microsoft.PowerFx.Interpreter.Tests.ExpressionEvaluationTests;
 
 namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
 {
@@ -840,8 +841,12 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
         [InlineData(false, "{}", "{ type: 123 }", @"{""Type"":""Record"",""Fields"":{""type"":{""Type"":""Number""}}}")]
         public void TestPublishExpressionType_AggregateShapes(bool noValueInRecordArrays, string context, string expression, string expectedTypeJson)
         {
+            // used to isolate the test 
+            using var runner = new InterpreterRunner(); 
+
             Preview.FeatureFlags._inTests = true;
             Preview.FeatureFlags.NoValueInRecordArrays = noValueInRecordArrays;
+
             var documentUri = $"powerfx://app?context={context}&getExpressionType=true";
             _testServer.OnDataReceived(JsonSerializer.Serialize(new
             {
