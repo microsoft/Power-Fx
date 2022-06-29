@@ -1,9 +1,11 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.PowerFx.Core.Parser;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx
@@ -63,7 +65,7 @@ namespace Microsoft.PowerFx
             public CheckResult Get() => _engine.Check(_expressionText, _parameterType, _options);
         }
 
-        public void DefineFunction(string name, FormulaType retType, string body, params NamedFormulaType[] parameters)
+        internal void DefineFunction(string name, string body, FormulaType returnType, params NamedFormulaType[] parameters)
         {
             // $$$ Would be a good helper function 
             var record = new RecordType();
@@ -74,23 +76,17 @@ namespace Microsoft.PowerFx
 
             var check = new LazyCheck(this, body, record);
 
-            //check.ThrowOnErrors();
-
-            //var retType = check.ReturnType; // infer return result!
-
-            var func = new UDFTexlFunction(name, retType, parameters.Select(x => x.Type).ToArray())
+            var func = new UDFTexlFunction(name, returnType, parameters.Select(x => x.Type).ToArray())
             {
                 _parameterNames = parameters,
                 _check = check,
-
-                //_expr = check.Expression
             };
 
             _customFuncs[name] = func;
             _funcsToBind.Add(func);
         }
 
-        public void BindAllUDFs()
+        internal void BindAllUDFs()
         {
             foreach (var func in _funcsToBind)
             {
