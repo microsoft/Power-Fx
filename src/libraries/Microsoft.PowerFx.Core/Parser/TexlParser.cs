@@ -83,6 +83,102 @@ namespace Microsoft.PowerFx.Core.Parser
             return parser.ParseFormulas(script);
         }
 
+        public static ParseUDFsResult ParseUDFsScript(string script, CultureInfo loc = null)
+        {
+            Contracts.AssertValue(script);
+            Contracts.AssertValueOrNull(loc);
+
+            var formulaTokens = TokenizeScript(script, loc, Flags.NamedFormulas);
+            var parser = new TexlParser(formulaTokens, Flags.NamedFormulas);
+
+            return parser.ParseUDFs(script);
+        }
+
+        private ParseUDFsResult ParseUDFs(string script)
+        {
+            var udfs = new List<UDF>();
+            ParseTrivia();
+
+            while (_curs.TokCur.Kind != TokKind.Eof)
+            {
+                var args = new HashSet<Arg>();
+                ParseTrivia();
+
+                // Store the name of the UDF.
+                var ident = TokEat(TokKind.Ident);
+                if (ident == null)
+                {
+                    CreateError(_curs.TokCur, TexlStrings.ErrUDF_MissingIdentifier);
+                    break;
+                }
+
+                if (TokEat(TokKind.ParenOpen) == null)
+                {
+                    CreateError(_curs.TokCur, TexlStrings.ErrUDF_MissingOpenParen);
+                    break;
+                }
+
+                ParseTrivia();
+                
+                // Parse arguments.
+                while (_curs.TokCur.Kind != TokKind.ParenClose)
+                {
+                    ParseTrivia();
+                    var varIdent = TokEat(TokKind.Ident);
+                    ParseTrivia();
+                    if (TokEat(TokKind.As) == null)
+                    {
+                        CreateError(_curs.TokCur, TexlStrings.ErrUDF_MissingAs);
+                        break;
+                    }
+
+                    ParseTrivia();
+                    var varType = TokEat(TokKind.Ident);
+                    ParseTrivia();
+                    args.Add(new Arg(varIdent.As<IdentToken>(), varType.As<IdentToken>()));
+                    if (_curs.TokCur.Kind != TokKind.ParenClose && _curs.TokCur.Kind != TokKind.Comma)
+                    {
+                        CreateError(_curs.TokCur, TexlStrings.ErrUDF_MissingComma);
+                        return new ParseUDFsResult(udfs, _errors);
+                    }
+                    else if (_curs.TokCur.Kind == TokKind.Comma)
+                    {
+                        TokEat(TokKind.Comma);
+                    }
+                }
+
+                TokEat(TokKind.ParenClose);
+
+                ParseTrivia();
+                if (TokEat(TokKind.Equ) == null)
+                {
+                    CreateError(_curs.TokCur, TexlStrings.ErrUDF_MissingEqual);
+                    break;
+                }
+
+                ParseTrivia();
+
+                // Parse body
+                while (_curs.TokCur.Kind != TokKind.Semicolon)
+                {
+                    // Check if we're at EOF before a semicolon is found
+                    if (_curs.TidCur == TokKind.Eof)
+                    {
+                        CreateError(_curs.TokCur, TexlStrings.ErrUDF_MissingSemicolon);
+                        return new ParseUDFsResult(udfs, _errors);
+                    }
+
+                    // Parse expression
+                    var result = ParseExpr(Precedence.None);
+                    udfs.Add(new UDF(ident.As<IdentToken>(), args, result));
+                }
+
+                TokEat(TokKind.Semicolon);
+            }
+
+            return new ParseUDFsResult(udfs, _errors);
+        }
+
         private ParseFormulasResult ParseFormulas(string script)
         {
             var namedFormulas = new List<KeyValuePair<IdentToken, TexlNode>>();
@@ -114,7 +210,6 @@ namespace Microsoft.PowerFx.Core.Parser
 
                             // Parse expression
                             var result = ParseExpr(Precedence.None);
-
                             namedFormulas.Add(new KeyValuePair<IdentToken, TexlNode>(thisIdentifier.As<IdentToken>(), result));
                         }
 

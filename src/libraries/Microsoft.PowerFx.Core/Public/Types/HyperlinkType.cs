@@ -17,5 +17,10 @@ namespace Microsoft.PowerFx.Types
         {
             throw new NotImplementedException();
         }
+
+        public override string ToString()
+        {
+            return "Hyperlink";
+        }
     }
 }
