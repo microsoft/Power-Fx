@@ -41,7 +41,7 @@ namespace Microsoft.PowerFx.Connectors
             {
                 case ParameterLocation.Path:
                 case ParameterLocation.Query:
-                case ParameterLocation.Header:                
+                case ParameterLocation.Header:
                     break;
 
                 case ParameterLocation.Cookie:
@@ -59,7 +59,7 @@ namespace Microsoft.PowerFx.Connectors
             // Header names are not case sensitive.
             // From RFC 2616 - "Hypertext Transfer Protocol -- HTTP/1.1", Section 4.2, "Message Headers"
             var headers = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-            HttpContent body = null;            
+            HttpContent body = null;
             Dictionary<string, (OpenApiSchema, FormulaValue)> bodyParts = new ();
 
             var map = _argMapper.ConvertToSwagger(args);
@@ -69,7 +69,7 @@ namespace Microsoft.PowerFx.Connectors
                 if (map.TryGetValue(param.Name, out var paramValue))
                 {
                     bodyParts.Add(param.Name, (param.Schema, paramValue));
-                }               
+                }
             }
 
             if (bodyParts.Any())
@@ -107,8 +107,8 @@ namespace Microsoft.PowerFx.Connectors
                 }
             }
 
-            var url = path + query.ToString();            
-            var request = new HttpRequestMessage(_method, url);            
+            var url = path + query.ToString();
+            var request = new HttpRequestMessage(_method, url);
 
             foreach (var kv in headers)
             {
@@ -116,43 +116,31 @@ namespace Microsoft.PowerFx.Connectors
             }
 
             if (body != null)
-            {                
+            {
                 request.Content = body;
             }
 
             return request;
         }
-       
+
         private HttpContent GetBody(string referenceId, bool schemaLessBody, Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)> map)
         {
-            FormulaValueSerializer serializer = null;
-
-            try
+            FormulaValueSerializer serializer = _argMapper.ContentType.ToLowerInvariant() switch
             {
-                serializer = _argMapper.ContentType.ToLowerInvariant() switch
-                {
-                    OpenApiExtensions.ContentType_XWwwFormUrlEncoded => new OpenApiFormUrlEncoder(schemaLessBody),
-                    OpenApiExtensions.ContentType_TextPlain => new OpenApiTextSerializer(schemaLessBody),
-                    _ => new OpenApiJsonSerializer(schemaLessBody)
-                };
+                OpenApiExtensions.ContentType_XWwwFormUrlEncoded => new OpenApiFormUrlEncoder(schemaLessBody),
+                OpenApiExtensions.ContentType_TextPlain => new OpenApiTextSerializer(schemaLessBody),
+                _ => new OpenApiJsonSerializer(schemaLessBody)
+            };
 
-                serializer.StartSerialization(referenceId);
-                foreach (var kv in map)
-                {
-                    serializer.SerializeValue(kv.Key, kv.Value.Schema, kv.Value.Value);
-                }
-
-                serializer.EndSerialization();
-
-                return new StringContent(serializer.GetResult(), Encoding.Default, _argMapper.ContentType);
-            }
-            finally
+            serializer.StartSerialization(referenceId);
+            foreach (var kv in map)
             {
-                if (serializer != null && serializer is IDisposable disp)
-                {
-                    disp.Dispose();
-                }
+                serializer.SerializeValue(kv.Key, kv.Value.Schema, kv.Value.Value);
             }
+
+            serializer.EndSerialization();
+
+            return new StringContent(serializer.GetResult(), Encoding.Default, _argMapper.ContentType);
         }
 
         public async Task<FormulaValue> DecodeResponseAsync(HttpResponseMessage response)

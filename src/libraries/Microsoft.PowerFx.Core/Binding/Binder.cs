@@ -5836,7 +5836,12 @@ namespace Microsoft.PowerFx.Core.Binding
                     }
                 }
                 
-                DType tableType = exprType.IsValid ? (Preview.FeatureFlags.NoValueInRecordArrays && exprType.IsRecord ? DType.CreateTable(exprType.GetNames(DPath.Root)) : DType.CreateTable(new TypedName(exprType, TableValue.ValueDName))) : DType.EmptyTable;
+                DType tableType = exprType.IsValid 
+                    ? (Preview.FeatureFlags.TableSyntaxDoesntWrapRecords && exprType.IsRecord 
+                        ? DType.CreateTable(exprType.GetNames(DPath.Root)) 
+                        : DType.CreateTable(new TypedName(exprType, TableValue.ValueDName))) 
+                    : DType.EmptyTable;
+
                 _txb.SetType(node, tableType);
                 SetVariadicNodePurity(node);
                 _txb.SetScopeUseSet(node, JoinScopeUseSets(node.Children));

@@ -21,7 +21,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             using var runner = new InterpreterRunner();
             Preview.FeatureFlags._inTests = true;
-            Preview.FeatureFlags.NoValueInRecordArrays = false;
+            Preview.FeatureFlags.TableSyntaxDoesntWrapRecords = false;
 
             var (result, msg) = runner.RunTestCase(testCase);
 
@@ -51,7 +51,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             
             using var runner = new InterpreterRunner();
             Preview.FeatureFlags._inTests = true;
-            Preview.FeatureFlags.NoValueInRecordArrays = true;
+            Preview.FeatureFlags.TableSyntaxDoesntWrapRecords = true;
 
             var (result, msg) = runner.RunTestCase(testCase);
 

@@ -839,13 +839,13 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
         [InlineData(false, "{}", "[{ A: 1 }, { B: true }]", @"{""Type"":""Table"",""Fields"":{""Value"":{""Type"":""Record"",""Fields"":{""A"":{""Type"":""Number""},""B"":{""Type"":""Boolean""}}}}}")]
         [InlineData(false, "{}", "{A: 1, B: { C: { D: \"Qwerty\" }, E: true } }", @"{""Type"":""Record"",""Fields"":{""A"":{""Type"":""Number""},""B"":{""Type"":""Record"",""Fields"":{""C"":{""Type"":""Record"",""Fields"":{""D"":{""Type"":""String""}}},""E"":{""Type"":""Boolean""}}}}}")]
         [InlineData(false, "{}", "{ type: 123 }", @"{""Type"":""Record"",""Fields"":{""type"":{""Type"":""Number""}}}")]
-        public void TestPublishExpressionType_AggregateShapes(bool noValueInRecordArrays, string context, string expression, string expectedTypeJson)
+        public void TestPublishExpressionType_AggregateShapes(bool tableSyntaxDoesntWrapRecords, string context, string expression, string expectedTypeJson)
         {
             // used to isolate the test 
             using var runner = new InterpreterRunner(); 
 
             Preview.FeatureFlags._inTests = true;
-            Preview.FeatureFlags.NoValueInRecordArrays = noValueInRecordArrays;
+            Preview.FeatureFlags.TableSyntaxDoesntWrapRecords = tableSyntaxDoesntWrapRecords;
 
             var documentUri = $"powerfx://app?context={context}&getExpressionType=true";
             _testServer.OnDataReceived(JsonSerializer.Serialize(new

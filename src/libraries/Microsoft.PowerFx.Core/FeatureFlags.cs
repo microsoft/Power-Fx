@@ -14,12 +14,12 @@ namespace Microsoft.PowerFx.Preview
     public static class FeatureFlags
     {
         /// <summary>
-        /// allows setting flags as will during tests.
+        /// Allows setting flags as will during tests.
         /// </summary>
         internal static bool _inTests = false;
 
         private static bool _stringInterpolation = false;
-        private static bool _noValueInRecordArrays = false;
+        private static bool _tableSyntaxDoesntWrapRecords = false;
 
         /// <summary>
         /// Enable String Interpolation feature. 
@@ -28,31 +28,23 @@ namespace Microsoft.PowerFx.Preview
         public static bool StringInterpolation
         {
             get => _stringInterpolation;
-            set
-            {
-                // Once flipped, can't unflip. 
-                if (!value && !_inTests) 
-                { 
-                    throw new NotSupportedException("Can't change field after it's set");
-                }
-
-                _stringInterpolation = value;
-            }
+            set => _stringInterpolation = ProtectedSet(value);
         }
 
-        public static bool NoValueInRecordArrays
+        public static bool TableSyntaxDoesntWrapRecords
         {
-            get => _noValueInRecordArrays;
-            set
-            {
-                // Once flipped, can't unflip. 
-                if (!value && !_inTests)
-                {
-                    throw new NotSupportedException("Can't change field after it's set");
-                }
+            get => _tableSyntaxDoesntWrapRecords;
+            set => _tableSyntaxDoesntWrapRecords = ProtectedSet(value);
+        }
 
-                _noValueInRecordArrays = value;
+        private static bool ProtectedSet(bool @value)
+        {
+            if (!value && !_inTests)
+            {
+                throw new NotSupportedException("Can't change field after it's set");
             }
+
+            return @value;
         }
     }
 }
