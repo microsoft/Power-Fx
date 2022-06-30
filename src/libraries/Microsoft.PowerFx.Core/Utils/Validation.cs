@@ -1200,7 +1200,7 @@ namespace Microsoft.PowerFx.Core.Utils
 #if DEBUG
             for (var i = 0; i < Size(args); i++)
             {
-                if (ReferenceEquals(args[i], null) || !args[i].IsValid)
+                if (!args[i].IsValid)
                 {
                     DbgFail();
                 }
@@ -1217,7 +1217,7 @@ namespace Microsoft.PowerFx.Core.Utils
             {
                 foreach (var arg in args.Values)
                 {
-                    if (ReferenceEquals(arg, null) || !arg.IsValid)
+                    if (!arg.IsValid)
                     {
                         DbgFail();
                     }
@@ -1257,7 +1257,7 @@ namespace Microsoft.PowerFx.Core.Utils
 #if DEBUG
             foreach (var arg in args)
             {
-                if (ReferenceEquals(arg, null) || !arg.IsValid)
+                if (!arg.IsValid)
                 {
                     DbgFailValid();
                 }
@@ -1272,7 +1272,7 @@ namespace Microsoft.PowerFx.Core.Utils
 #if DEBUG
             for (var i = 0; i < Size(args); i++)
             {
-                if (ReferenceEquals(args[i], null) || !args[i].IsValid)
+                if (!args[i].IsValid)
                 {
                     DbgFailValid();
                 }

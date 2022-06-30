@@ -103,7 +103,7 @@ namespace Microsoft.PowerFx.Intellisense
             Contracts.AssertValue(input);
             Contracts.AssertValue(match);
 
-            return match.Length == 0 ? true : input.StartsWith(match, StringComparison.OrdinalIgnoreCase);
+            return match.Length == 0 || input.StartsWith(match, StringComparison.OrdinalIgnoreCase);
         }
 
         public static UIString DisambiguateGlobals(IntellisenseSuggestionList curList, UIString curSuggestion, SuggestionKind suggestionKind, DType type)

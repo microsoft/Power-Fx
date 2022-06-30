@@ -421,9 +421,9 @@ namespace Microsoft.PowerFx.Core.Tests
 
             var test = new TestCase
             {
-                SetupHandlerName = handlerName
+                SetupHandlerName = handlerName,
+                Expected = "1"
             };
-            test.Expected = "1";
             var (result, message) = runner.RunTestCase(test);
 
             Assert.Equal(TestResult.Skip, result);
