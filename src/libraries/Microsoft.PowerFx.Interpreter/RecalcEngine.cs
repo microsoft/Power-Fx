@@ -12,6 +12,7 @@ using Microsoft.PowerFx.Core.Glue;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Functions;
+using Microsoft.PowerFx.Interpreter;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx
@@ -167,21 +168,35 @@ namespace Microsoft.PowerFx
         /// <returns>The formula's result.</returns>
         public FormulaValue Eval(string expressionText, RecordValue parameters = null, ParserOptions options = null)
         {
-            return EvalAsync(expressionText, CancellationToken.None, parameters, options).Result;          
+            try
+            {
+                return EvalAsync(expressionText, CancellationToken.None, parameters, options).Result;
+            }
+            catch (RuntimeMaxCallDepthException)
+            {
+                return CommonErrors.MaxCallDepth(new IRContext(new Syntax.Span(0, expressionText.Length - 1), FormulaType.BindingError));
+            }
         }
 
         public async Task<FormulaValue> EvalAsync(string expressionText, CancellationToken cancel, RecordValue parameters = null, ParserOptions options = null)
         {
-            if (parameters == null)
+            try
             {
-                parameters = RecordValue.Empty();
+                if (parameters == null)
+                {
+                    parameters = RecordValue.Empty();
+                }
+
+                var check = Check(expressionText, (RecordType)parameters.IRContext.ResultType, options);
+                check.ThrowOnErrors();
+
+                var newValue = await check.Expression.EvalAsync(parameters, cancel);
+                return newValue;
             }
-
-            var check = Check(expressionText, (RecordType)parameters.IRContext.ResultType, options);
-            check.ThrowOnErrors();
-
-            var newValue = await check.Expression.EvalAsync(parameters, cancel);
-            return newValue;
+            catch (RuntimeMaxCallDepthException)
+            {
+                return CommonErrors.MaxCallDepth(new IRContext(new Syntax.Span(0, expressionText.Length - 1), FormulaType.BindingError));
+            }
         }
 
         // Invoke onUpdate() each time this formula is changed, passing in the new value. 

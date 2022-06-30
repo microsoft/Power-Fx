@@ -158,7 +158,7 @@ namespace Microsoft.PowerFx
 
             if (!_context.IncrementCallDepth())
             {
-                return CommonErrors.MaxCallDepth(node.IRContext);
+                throw new RuntimeMaxCallDepthException();
             }
             
             var setResult = await TryHandleSet(node, context);
