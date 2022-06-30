@@ -63,7 +63,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationMetadata
                 return new ODataOpMetadata(schema, oDataReplacement);
             }
 
-            private DPath GetReplacementPath(string alias, DPath currentColumnPath)
+            private static DPath GetReplacementPath(string alias, DPath currentColumnPath)
             {
                 if (alias.Contains("/"))
                 {

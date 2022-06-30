@@ -64,7 +64,7 @@ namespace Microsoft.PowerFx.Syntax
             return node.Left.Accept(this, context);
         }
 
-        private IEnumerable<TResult> Lazily(params Func<TResult>[] actions)
+        private static IEnumerable<TResult> Lazily(params Func<TResult>[] actions)
         {
             foreach (var action in actions)
             {

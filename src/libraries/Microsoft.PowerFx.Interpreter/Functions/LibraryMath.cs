@@ -54,7 +54,7 @@ namespace Microsoft.PowerFx.Functions
                 return GetDefault(context);
             }
 
-            public FormulaValue GetDefault(IRContext context)
+            public static FormulaValue GetDefault(IRContext context)
             {
                 return new NumberValue(context, _defaultN);
             }
@@ -99,12 +99,12 @@ namespace Microsoft.PowerFx.Functions
                 _m2Acc += delta * delta2;
             }
 
-            public FormulaValue NoElementValue(IRContext context)
+            public static FormulaValue NoElementValue(IRContext context)
             {
                 return GetDefault(context);
             }
 
-            public FormulaValue GetDefault(IRContext context)
+            public static FormulaValue GetDefault(IRContext context)
             {
                 return CommonErrors.DivByZeroError(context);
             }

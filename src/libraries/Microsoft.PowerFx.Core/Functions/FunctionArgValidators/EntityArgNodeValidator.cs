@@ -26,7 +26,7 @@ namespace Microsoft.PowerFx.Core.Functions.FunctionArgValidators
             };
         }
 
-        private bool TryGetEntityInfo(CallNode callNode, TexlBinding binding, out IExpandInfo entityInfo)
+        private static bool TryGetEntityInfo(CallNode callNode, TexlBinding binding, out IExpandInfo entityInfo)
         {
             Contracts.AssertValueOrNull(callNode);
             Contracts.AssertValue(binding);
@@ -49,10 +49,10 @@ namespace Microsoft.PowerFx.Core.Functions.FunctionArgValidators
                 return false;
             }
 
-            return function.TryGetEntityInfo(callNode, binding, out entityInfo);
+            return TexlFunction.TryGetEntityInfo(callNode, binding, out entityInfo);
         }
 
-        private bool TryGetEntityInfo(FirstNameNode firstName, TexlBinding binding, out IExpandInfo entityInfo)
+        private static bool TryGetEntityInfo(FirstNameNode firstName, TexlBinding binding, out IExpandInfo entityInfo)
         {
             Contracts.AssertValueOrNull(firstName);
             Contracts.AssertValue(binding);
@@ -66,7 +66,7 @@ namespace Microsoft.PowerFx.Core.Functions.FunctionArgValidators
             return binding.TryGetEntityInfo(firstName, out entityInfo);
         }
 
-        private bool TryGetEntityInfo(DottedNameNode dottedNameNode, TexlBinding binding, out IExpandInfo entityInfo)
+        private static bool TryGetEntityInfo(DottedNameNode dottedNameNode, TexlBinding binding, out IExpandInfo entityInfo)
         {
             Contracts.AssertValueOrNull(dottedNameNode);
             Contracts.AssertValue(binding);

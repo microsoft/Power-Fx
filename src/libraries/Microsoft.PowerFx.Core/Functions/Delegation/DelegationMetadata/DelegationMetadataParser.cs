@@ -11,7 +11,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationMetadata
     {
         private sealed class DelegationMetadataParser
         {
-            public CompositeCapabilityMetadata Parse(string delegationMetadataJson, DType tableSchema)
+            public static CompositeCapabilityMetadata Parse(string delegationMetadataJson, DType tableSchema)
             {
                 Contracts.AssertValid(tableSchema);
 

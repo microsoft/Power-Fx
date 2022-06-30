@@ -71,7 +71,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
                 suggestionKey = TexlStrings.SuggestRemoteExecutionHint;
             }
 
-            if (args == null || args.Length == 0)
+            if (args.Length == 0)
             {
                 binding.ErrorContainer.EnsureError(DocumentErrorSeverity.Warning, node, (ErrorResourceKey)suggestionKey, Function.Name);
             }
@@ -236,7 +236,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
             return IsDelegatableColumnNode(node, binding, opDelStrategy, Function.FunctionDelegationCapability);
         }
 
-        private IDelegationMetadata GetCapabilityMetadata(FirstNameInfo info)
+        private static IDelegationMetadata GetCapabilityMetadata(FirstNameInfo info)
         {
             Contracts.AssertValue(info);
 
@@ -410,7 +410,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
             return true;
         }
 
-        private bool IsUserCallNodeDelegable(TexlNode node, TexlBinding binding)
+        private static bool IsUserCallNodeDelegable(TexlNode node, TexlBinding binding)
         {
             if ((node is DottedNameNode)
                 && (node.AsDottedName().Left is CallNode)

@@ -86,12 +86,7 @@ namespace Microsoft.PowerFx
         /// <param name="dynamicMarshallers"></param>
         /// <returns></returns>
         public TypeMarshallerCache WithDynamicMarshallers(params IDynamicTypeMarshaller[] dynamicMarshallers)
-        {
-            if (dynamicMarshallers == null)
-            {
-                throw new ArgumentNullException(nameof(dynamicMarshallers));
-            }
-
+        {            
             return new TypeMarshallerCache(_marshallers, dynamicMarshallers);
         }
 

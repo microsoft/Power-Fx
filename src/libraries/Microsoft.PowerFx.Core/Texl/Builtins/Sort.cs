@@ -270,7 +270,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return result;
         }
 
-        private bool IsSortOrderSuppportedByColumn(string order, SortOpMetadata metadata, DPath columnPath)
+        private static bool IsSortOrderSuppportedByColumn(string order, SortOpMetadata metadata, DPath columnPath)
         {
             Contracts.AssertValue(order);
             Contracts.AssertValue(metadata);

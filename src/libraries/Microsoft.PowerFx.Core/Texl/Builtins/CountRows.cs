@@ -93,7 +93,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return false;
         }
 
-        private bool ExpressionContainsView(CallNode callNode, TexlBinding binding)
+        private static bool ExpressionContainsView(CallNode callNode, TexlBinding binding)
         {
             Contracts.AssertValue(callNode);
             Contracts.AssertValue(binding);

@@ -42,12 +42,7 @@ namespace Microsoft.PowerFx.Core.Utils
         {
             if (string.IsNullOrEmpty(s))
             {
-                if (ReferenceEquals(s, null))
-                {
-                    throw ExceptValue(paramName);
-                }
-
-                throw ExceptEmpty(paramName);
+                throw ExceptValue(paramName);
             }
         }
 
@@ -55,12 +50,7 @@ namespace Microsoft.PowerFx.Core.Utils
         {
             if (string.IsNullOrEmpty(s))
             {
-                if (ReferenceEquals(s, null))
-                {
-                    throw ExceptValue(paramName, sid);
-                }
-
-                throw ExceptEmpty(paramName, sid);
+                throw ExceptValue(paramName, sid);
             }
         }
 

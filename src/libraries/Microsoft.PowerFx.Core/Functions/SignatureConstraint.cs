@@ -88,7 +88,7 @@ namespace Microsoft.PowerFx.Core.Functions
                 !IsIndexInRange(argIndex, headOmitRange[0], headOmitRange[1]);
         }
 
-        private bool IsIndexInRange(int index, int startIndex, int endIndex)
+        private static bool IsIndexInRange(int index, int startIndex, int endIndex)
         {
             return index >= startIndex && index < endIndex;
         }

@@ -329,7 +329,7 @@ namespace Microsoft.PowerFx.Intellisense
             IsTypeMatch = true;
         }
 
-        private bool IsExactMatch(string input, string match)
+        private static bool IsExactMatch(string input, string match)
         {
             Contracts.AssertValue(input);
             Contracts.AssertValue(match);

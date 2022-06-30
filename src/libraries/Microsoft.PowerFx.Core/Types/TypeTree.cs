@@ -5,6 +5,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Core.Types
@@ -30,6 +31,8 @@ namespace Microsoft.PowerFx.Core.Types
         public static bool operator !=(TypeTree tree1, TypeTree tree2) => !(tree1 == tree2);
 
         [Conditional("PARANOID_VALIDATION")]
+        [SuppressMessage("Performance", "CA1822: Mark members as static", Justification = "n/a")]
+
         internal void AssertValid()
         {
 #if PARANOID_VALIDATION

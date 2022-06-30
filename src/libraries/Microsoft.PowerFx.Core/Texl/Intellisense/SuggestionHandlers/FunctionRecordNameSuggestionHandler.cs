@@ -90,7 +90,7 @@ namespace Microsoft.PowerFx.Intellisense
                 return intellisenseData.TryAddFunctionRecordSuggestions(func, callNode, columnName);
             }
 
-            private DType GetAggregateType(TexlFunction func, CallNode callNode, IntellisenseData.IntellisenseData intellisenseData)
+            private static DType GetAggregateType(TexlFunction func, CallNode callNode, IntellisenseData.IntellisenseData intellisenseData)
             {
                 Contracts.AssertValue(func);
                 Contracts.AssertValue(callNode);

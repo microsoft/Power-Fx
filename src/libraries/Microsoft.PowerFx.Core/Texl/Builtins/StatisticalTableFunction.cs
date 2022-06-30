@@ -98,7 +98,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return firstNameStrategy.IsValidFirstNameNode(args[1].AsFirstName(), binding, null);
         }
 
-        private bool ExpressionContainsView(CallNode callNode, TexlBinding binding)
+        private static bool ExpressionContainsView(CallNode callNode, TexlBinding binding)
         {
             Contracts.AssertValue(callNode);
             Contracts.AssertValue(binding);

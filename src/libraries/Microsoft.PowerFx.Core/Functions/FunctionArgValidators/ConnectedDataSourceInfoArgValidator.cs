@@ -27,7 +27,7 @@ namespace Microsoft.PowerFx.Core.Functions.FunctionArgValidators
             };
         }
 
-        private bool TryGetDsInfo(CallNode callNode, TexlBinding binding, out IExternalDataSource dsInfo)
+        private static bool TryGetDsInfo(CallNode callNode, TexlBinding binding, out IExternalDataSource dsInfo)
         {
             Contracts.AssertValueOrNull(callNode);
             Contracts.AssertValue(binding);
@@ -55,7 +55,7 @@ namespace Microsoft.PowerFx.Core.Functions.FunctionArgValidators
             return success;
         }
 
-        private bool TryGetDsInfo(FirstNameNode firstName, TexlBinding binding, out IExternalDataSource dsInfo)
+        private static bool TryGetDsInfo(FirstNameNode firstName, TexlBinding binding, out IExternalDataSource dsInfo)
         {
             Contracts.AssertValueOrNull(firstName);
             Contracts.AssertValue(binding);
@@ -76,7 +76,7 @@ namespace Microsoft.PowerFx.Core.Functions.FunctionArgValidators
                 binding.EntityScope.TryGetEntity(firstNameInfo.Name, out dsInfo);
         }
 
-        private bool TryGetDsInfo(DottedNameNode dottedNameNode, TexlBinding binding, out IExternalDataSource dsInfo)
+        private static bool TryGetDsInfo(DottedNameNode dottedNameNode, TexlBinding binding, out IExternalDataSource dsInfo)
         {
             Contracts.AssertValueOrNull(dottedNameNode);
             Contracts.AssertValue(binding);

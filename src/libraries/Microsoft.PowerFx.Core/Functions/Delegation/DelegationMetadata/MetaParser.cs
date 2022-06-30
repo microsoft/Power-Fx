@@ -13,7 +13,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationMetadata
         {
             public abstract OperationCapabilityMetadata Parse(JsonElement dataServiceCapabilitiesJsonObject, DType schema);
 
-            protected DelegationCapability ParseColumnCapability(JsonElement columnCapabilityJsonObj, string capabilityKey)
+            protected static DelegationCapability ParseColumnCapability(JsonElement columnCapabilityJsonObj, string capabilityKey)
             {
                 Contracts.AssertNonEmpty(capabilityKey);
 

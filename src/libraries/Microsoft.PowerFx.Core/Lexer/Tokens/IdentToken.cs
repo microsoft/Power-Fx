@@ -89,7 +89,7 @@ namespace Microsoft.PowerFx.Syntax
                 throw new ArgumentNullException(nameof(value));
             }
 
-            var needsDelimiters = string.IsNullOrWhiteSpace(value) || !value.All(TexlLexer.IsSimpleIdentCh);
+            var needsDelimiters = !value.All(TexlLexer.IsSimpleIdentCh);
             var tmpIdent = new IdentToken(value, new Span(0, 0), needsDelimiters, needsDelimiters);
             return tmpIdent.ToString();
         }

@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Core.Types
@@ -22,6 +23,8 @@ namespace Microsoft.PowerFx.Core.Types
         }
 
         [Conditional("PARANOID_VALIDATION")]
+        [SuppressMessage("Performance", "CA1822: Mark members as static", Justification = "n/a")]
+
         internal void AssertValid()
         {
 #if PARANOID_VALIDATION

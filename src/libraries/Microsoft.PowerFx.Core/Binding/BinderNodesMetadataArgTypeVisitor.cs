@@ -25,7 +25,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 _txb = binding;
             }
 
-            private bool IsColumnMultiChoice(IExternalColumnMetadata columnMetadata)
+            private static bool IsColumnMultiChoice(IExternalColumnMetadata columnMetadata)
             {
                 Contracts.AssertValue(columnMetadata);
 

@@ -133,7 +133,7 @@ namespace Microsoft.PowerFx.Core.Binding
         /// <summary>
         /// Default name used to access a Lambda scope.
         /// </summary>
-        internal DName ThisRecordDefaultName => new ("ThisRecord");
+        internal static DName ThisRecordDefaultName => new ("ThisRecord");
 
         // Property to which current rule is being bound to. It could be null in the absence of NameResolver.        
         public IExternalControlProperty Property
@@ -630,7 +630,7 @@ namespace Microsoft.PowerFx.Core.Binding
             // It is possible for function to be null here if it referred to
             // a service function from a service we are in the process of
             // deregistering.
-            return GetInfo(callNode).VerifyValue().Function?.TryGetEntityInfo(node, this, out info) ?? false;
+            return TexlFunction.TryGetEntityInfo(node, this, out info);
         }
 
         internal IExternalRule Rule { get; }
@@ -2318,7 +2318,7 @@ namespace Microsoft.PowerFx.Core.Binding
             return _isUnliftable[node.Id];
         }
 
-        public bool IsInfoKindDataSource(NameInfo info)
+        public static bool IsInfoKindDataSource(NameInfo info)
         {
             return info.Kind == BindKind.Data || info.Kind == BindKind.ScopeCollection;
         }
@@ -2441,12 +2441,13 @@ namespace Microsoft.PowerFx.Core.Binding
                 _txb = txb;
                 _nameResolver = resolver;
 
-                _topScope = new Scope(null, null, topScope ?? DType.Error, useThisRecordForRuleScope ? txb.ThisRecordDefaultName : default);
+                _topScope = new Scope(null, null, topScope ?? DType.Error, useThisRecordForRuleScope ? ThisRecordDefaultName : default);
                 _currentScope = _topScope;
                 _currentScopeDsNodeId = -1;
             }
 
             [Conditional("DEBUG")]
+            [SuppressMessage("Performance", "CA1822: Mark members as static", Justification = "n/a")]
             private void AssertValid()
             {
 #if DEBUG
@@ -5602,7 +5603,7 @@ namespace Microsoft.PowerFx.Core.Binding
             /// <summary>
             /// Returns best overload in case there are no matches based on first argument and order.
             /// </summary>
-            private TexlFunction FindBestErrorOverload(TexlFunction[] overloads, DType[] argTypes, int cArg)
+            private static TexlFunction FindBestErrorOverload(TexlFunction[] overloads, DType[] argTypes, int cArg)
             {
                 var candidates = overloads.Where(overload => overload.MinArity <= cArg && cArg <= overload.MaxArity);
                 if (cArg == 0)

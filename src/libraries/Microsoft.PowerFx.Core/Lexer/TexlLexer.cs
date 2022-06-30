@@ -358,7 +358,7 @@ namespace Microsoft.PowerFx.Syntax
             return result;
         }
 
-        public string GetMinifiedScript(string text, List<Token> tokens)
+        public static string GetMinifiedScript(string text, List<Token> tokens)
         {
             Contracts.AssertValue(text);
             Contracts.AssertValue(tokens);
@@ -835,6 +835,7 @@ namespace Microsoft.PowerFx.Syntax
             private int _currentTokenPos; // The start of the current token.
 
             [SuppressMessage("Style", "IDE0060:Remove unused parameter flags", Justification = "n/a")]
+            [SuppressMessage("Style", "CA1801:Remove unused parameter", Justification = "n/a")]
             public LexerImpl(TexlLexer lex, string text, StringBuilder sb, Flags flags)
             {
                 Contracts.AssertValue(lex);
@@ -1167,7 +1168,7 @@ namespace Microsoft.PowerFx.Syntax
                 return new NumLitToken(value, GetTextSpan());
             }
 
-            private bool IsSign(char ch)
+            private static bool IsSign(char ch)
             {
                 return ch == PunctuatorAdd[0] || ch == PunctuatorSub[0];
             }

@@ -383,7 +383,7 @@ namespace Microsoft.PowerFx.Syntax
             return right.Token.ToString();
         }
 
-        private LazyList<string> ApplyPrecedence(Precedence parentPrecedence, Precedence precedence, LazyList<string> strings)
+        private static LazyList<string> ApplyPrecedence(Precedence parentPrecedence, Precedence precedence, LazyList<string> strings)
         {
             if (parentPrecedence > precedence)
             {
@@ -414,7 +414,7 @@ namespace Microsoft.PowerFx.Syntax
                     .With(right.Accept(this, precRight)));
         }
 
-        private string SpacedOper(string op)
+        private static string SpacedOper(string op)
         {
             Contracts.AssertNonEmpty(op);
 
@@ -924,12 +924,12 @@ namespace Microsoft.PowerFx.Syntax
             return token.Span.GetFragment(_script).TrimEnd(' ');
         }
 
-        private string GetNewLine(int indentation)
+        private static string GetNewLine(int indentation)
         {
             return "\n" + GetNewLineIndent(indentation);
         }
 
-        private string GetNewLineIndent(int indentation)
+        private static string GetNewLineIndent(int indentation)
         {
             return string.Concat(Enumerable.Repeat("    ", indentation - 1));
         }
@@ -943,7 +943,7 @@ namespace Microsoft.PowerFx.Syntax
                 IndentDepth = indentDepth;
             }
 
-            public Context With(int indentDepth)
+            public static Context With(int indentDepth)
             {
                 return new Context(indentDepth);
             }

@@ -161,7 +161,7 @@ namespace Microsoft.PowerFx.Core.Errors
             Links = errorResource?.HelpLinks;
         }
 
-        private string FormatMessage(string message, params object[] args)
+        private static string FormatMessage(string message, params object[] args)
         {
             if (message == null)
             {
@@ -169,7 +169,7 @@ namespace Microsoft.PowerFx.Core.Errors
             }
 
             var sb = new StringBuilder();
-            if (args != null && args.Length > 0)
+            if (args.Length > 0)
             {
                 try
                 {

@@ -393,7 +393,7 @@ namespace Microsoft.PowerFx.Core.Logging
             return ApplyPrecedence(parentPrecedence, Precedence.SingleExpr, result);
         }
 
-        private LazyList<string> ApplyPrecedence(Precedence parentPrecedence, Precedence precedence, LazyList<string> strings)
+        private static LazyList<string> ApplyPrecedence(Precedence parentPrecedence, Precedence precedence, LazyList<string> strings)
         {
             if (parentPrecedence > precedence)
             {
@@ -424,7 +424,7 @@ namespace Microsoft.PowerFx.Core.Logging
                     .With(right.Accept(this, precRight)));
         }
 
-        private string SpacedOper(string op)
+        private static string SpacedOper(string op)
         {
             Contracts.AssertNonEmpty(op);
 

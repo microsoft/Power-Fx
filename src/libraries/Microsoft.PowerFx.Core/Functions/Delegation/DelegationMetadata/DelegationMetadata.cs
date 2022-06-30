@@ -17,9 +17,8 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationMetadata
         public DelegationMetadata(DType schema, string delegationMetadataJson)
         {
             Contracts.AssertValid(schema);
-
-            var metadataParser = new DelegationMetadataParser();
-            _compositeMetadata = metadataParser.Parse(delegationMetadataJson, schema);
+           
+            _compositeMetadata = DelegationMetadataParser.Parse(delegationMetadataJson, schema);
             Contracts.AssertValue(_compositeMetadata);
 
             Schema = schema;

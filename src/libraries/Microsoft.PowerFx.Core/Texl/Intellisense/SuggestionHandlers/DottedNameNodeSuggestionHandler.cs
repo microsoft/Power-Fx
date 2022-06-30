@@ -77,7 +77,7 @@ namespace Microsoft.PowerFx.Intellisense
                 return true;
             }
 
-            private void AddSuggestionsForLeftNodeScope(IntellisenseData.IntellisenseData intellisenseData, TexlNode leftNode, bool isOneColumnTable, DType leftType)
+            private static void AddSuggestionsForLeftNodeScope(IntellisenseData.IntellisenseData intellisenseData, TexlNode leftNode, bool isOneColumnTable, DType leftType)
             {
                 Contracts.AssertValue(intellisenseData);
                 Contracts.AssertValue(leftNode);
@@ -106,7 +106,7 @@ namespace Microsoft.PowerFx.Intellisense
                 intellisenseData.OnAddedSuggestionsForLeftNodeScope(leftNode);
             }
 
-            internal void AddSuggestionsForNamespace(IntellisenseData.IntellisenseData intellisenseData, IEnumerable<TexlFunction> namespaceFunctions)
+            internal static void AddSuggestionsForNamespace(IntellisenseData.IntellisenseData intellisenseData, IEnumerable<TexlFunction> namespaceFunctions)
             {
                 Contracts.AssertValue(intellisenseData);
                 Contracts.AssertValue(namespaceFunctions);

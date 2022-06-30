@@ -182,7 +182,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
             return true;
         }
 
-        private bool IsColumnNode(TexlNode node, TexlBinding binding)
+        private static bool IsColumnNode(TexlNode node, TexlBinding binding)
         {
             Contracts.AssertValue(node);
             Contracts.AssertValue(binding);

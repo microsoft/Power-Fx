@@ -1,6 +1,8 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
+
 namespace Microsoft.PowerFx.Core.Public
 {
     /// <summary>
@@ -15,6 +17,7 @@ namespace Microsoft.PowerFx.Core.Public
     ///  6. Server sends publishTokens with tokens in existing formula
     ///  7. Client updates normalizedCompletionLookup and tokenizer.
     /// </summary>
+    [Flags]
     internal enum GetTokensFlags : uint
     {
         /// <summary>

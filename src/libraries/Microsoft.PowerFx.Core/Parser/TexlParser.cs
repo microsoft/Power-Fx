@@ -138,6 +138,7 @@ namespace Microsoft.PowerFx.Core.Parser
         }
 
         [SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "n/a")]
+        [SuppressMessage("Style", "CA1801:Remove unused parameter", Justification = "n/a")]
         private static IReadOnlyList<Token> TokenizeScript(string script, CultureInfo loc, Flags flags = Flags.None)
         {
             Contracts.AssertValue(script);

@@ -15,7 +15,7 @@ namespace Microsoft.PowerFx.Intellisense
         /// Returns a list of all the function categories in the document.
         /// The enumerated function categories are locale-specific.
         /// </summary>
-        public IEnumerable<KeyValuePair<string, string>> GetFunctionCategories()
+        public static IEnumerable<KeyValuePair<string, string>> GetFunctionCategories()
         {
             foreach (var category in Enum.GetValues(typeof(FunctionCategories)))
             {
@@ -33,7 +33,7 @@ namespace Microsoft.PowerFx.Intellisense
         /// Returns a list of all the function categories in the document.
         /// The enumerated function categories are locale-specific.
         /// </summary>
-        public Task<IEnumerable<KeyValuePair<string, string>>> GetFunctionCategoriesAsync()
+        public static Task<IEnumerable<KeyValuePair<string, string>>> GetFunctionCategoriesAsync()
         {
             return Task.FromResult(GetFunctionCategories());
         }

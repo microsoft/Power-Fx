@@ -369,7 +369,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
             _sendToClient(JsonRpcHelper.CreateSuccessResult(id, codeActions));
         }
 
-        private CompletionItemKind GetCompletionItemKind(SuggestionKind kind)
+        private static CompletionItemKind GetCompletionItemKind(SuggestionKind kind)
         {
             return kind switch
             {
@@ -398,7 +398,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
         /// <returns>
         /// <see cref="DiagnosticSeverity"/> equivalent to <see cref="DocumentErrorSeverity"/>.
         /// </returns>
-        private DiagnosticSeverity DocumentSeverityToDiagnosticSeverityMap(ErrorSeverity severity) => severity switch
+        private static DiagnosticSeverity DocumentSeverityToDiagnosticSeverityMap(ErrorSeverity severity) => severity switch
         {
             ErrorSeverity.Critical => DiagnosticSeverity.Error,
             ErrorSeverity.Severe => DiagnosticSeverity.Error,
@@ -517,7 +517,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
         }
 
         [SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "n/a")]
-        private bool TryParseParams<T>(string json, out T result)
+        private static bool TryParseParams<T>(string json, out T result)
         {
             Contracts.AssertNonEmpty(json);
 
@@ -561,7 +561,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
         /// Get the position offset (starts with 0) in Expression from line/character (starts with 0)
         /// e.g. "123", line:0, char:1 => 1.
         /// </summary>
-        protected int GetPosition(string expression, int line, int character)
+        protected static int GetPosition(string expression, int line, int character)
         {
             Contracts.AssertValue(expression);
             Contracts.Assert(line >= 0);

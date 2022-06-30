@@ -12,9 +12,9 @@
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   
-  <PropertyGroup>
-    <EnableNETAnalyzers>True</EnableNETAnalyzers>
-    <AnalysisLevel>latest-all</AnalysisLevel>
+  <PropertyGroup>    
+		<EnableNETAnalyzers>True</EnableNETAnalyzers>
+		<AnalysisLevel>latest</AnalysisLevel>    
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
@@ -23,6 +23,13 @@
 
 	<ItemGroup>
 	  <AdditionalFiles Include="..\..\stylecop.json" Link="stylecop.json" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="6.0.0">
+	    <PrivateAssets>all</PrivateAssets>
+	    <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+	  </PackageReference>
 	</ItemGroup>
 
   <!-- Nuget Properties -->

@@ -178,7 +178,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return fArgsValid;
         }
 
-        private bool TryGetDSNodes(TexlBinding binding, TexlNode[] args, out IList<FirstNameNode> dsNodes)
+        private static bool TryGetDSNodes(TexlBinding binding, TexlNode[] args, out IList<FirstNameNode> dsNodes)
         {
             dsNodes = new List<FirstNameNode>();
 

@@ -25,9 +25,7 @@ using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
 
 namespace Microsoft.PowerFx.Core.Functions
-{
-    using FunctionInfo = Microsoft.PowerFx.Core.Functions.TransportSchemas.FunctionInfo;
-
+{    
     [ThreadSafeImmutable]
     internal abstract class TexlFunction : IFunction
     {
@@ -65,7 +63,7 @@ namespace Microsoft.PowerFx.Core.Functions
 
         private SignatureConstraint _signatureConstraint;
 
-        private FunctionInfo _cachedFunctionInfo;
+        private Microsoft.PowerFx.Core.Functions.TransportSchemas.FunctionInfo _cachedFunctionInfo;
 
         private string _cachedLocaleName;
 
@@ -694,7 +692,7 @@ namespace Microsoft.PowerFx.Core.Functions
         }
 
         // Returns a entityInfo for a function if function operates on entity.
-        public bool TryGetEntityInfo(CallNode callNode, TexlBinding binding, out IExpandInfo entityInfo)
+        public static bool TryGetEntityInfo(CallNode callNode, TexlBinding binding, out IExpandInfo entityInfo)
         {
             Contracts.AssertValue(callNode);
             Contracts.AssertValue(binding);
@@ -1139,7 +1137,7 @@ namespace Microsoft.PowerFx.Core.Functions
         /// True if operation succeeded, if no Attachments field is defined or the Attachments field
         /// has been successfully removed from <paramref name="itemType"/>, false otherwise.
         /// </returns>
-        protected bool DropAttachmentsIfExists(ref DType itemType, IErrorContainer errors, TexlNode node)
+        protected static bool DropAttachmentsIfExists(ref DType itemType, IErrorContainer errors, TexlNode node)
         {
             Contracts.AssertValid(itemType);
             Contracts.AssertValue(errors);
@@ -1154,7 +1152,7 @@ namespace Microsoft.PowerFx.Core.Functions
         }
 
         // Helper to drop all of a single types from a result type
-        protected bool DropAllOfKindNested(ref DType itemType, IErrorContainer errors, TexlNode node, DKind kind)
+        protected static bool DropAllOfKindNested(ref DType itemType, IErrorContainer errors, TexlNode node, DKind kind)
         {
             Contracts.AssertValid(itemType);
             Contracts.AssertValue(errors);
@@ -1325,7 +1323,7 @@ namespace Microsoft.PowerFx.Core.Functions
 
         #endregion
 
-        internal FunctionInfo Info(string locale)
+        internal Microsoft.PowerFx.Core.Functions.TransportSchemas.FunctionInfo Info(string locale)
         {
             // If the locale has changed, we want to reset the function info to one of the new locale
             if (CurrentLocaleInfo.CurrentUILanguageName == _cachedLocaleName && _cachedFunctionInfo != null)
@@ -1334,7 +1332,7 @@ namespace Microsoft.PowerFx.Core.Functions
             }
 
             _cachedLocaleName = CurrentLocaleInfo.CurrentUILanguageName;
-            return _cachedFunctionInfo = new FunctionInfo()
+            return _cachedFunctionInfo = new Microsoft.PowerFx.Core.Functions.TransportSchemas.FunctionInfo()
             {
                 Label = Name,
                 Detail = Description,

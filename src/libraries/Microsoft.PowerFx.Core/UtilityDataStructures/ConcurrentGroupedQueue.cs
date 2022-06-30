@@ -138,7 +138,7 @@ namespace Microsoft.PowerFx.Core.UtilityDataStructures
             _itemGroupQueue = new Queue<ItemGroup>();
         }
 
-        private ItemGroup CreateNewItemGroup(T change)
+        private static ItemGroup CreateNewItemGroup(T change)
         {
             if (change.IsBlocking)
             {

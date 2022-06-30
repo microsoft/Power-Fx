@@ -57,7 +57,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
             return base.IsSupportedOpNode(node, metadata, binding);
         }
 
-        public bool IsRHSDelegableTable(TexlBinding binding, BinaryOpNode binaryOpNode, OperationCapabilityMetadata metadata)
+        public static bool IsRHSDelegableTable(TexlBinding binding, BinaryOpNode binaryOpNode, OperationCapabilityMetadata metadata)
         {
             Contracts.AssertValue(binding);
             Contracts.AssertValue(binaryOpNode);

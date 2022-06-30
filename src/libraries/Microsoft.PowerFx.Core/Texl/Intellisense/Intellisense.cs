@@ -232,7 +232,7 @@ namespace Microsoft.PowerFx.Intellisense
             return new IntellisenseData.IntellisenseData(_config, _enumStore, context, expectedType, binding, curFunc, curNode, argIndex, argCount, isValidSuggestionFunc, missingTypes, comments);
         }
 
-        private void GetFunctionAndTypeInformation(IIntellisenseContext context, TexlNode curNode, TexlBinding binding, out TexlFunction curFunc, out int argIndex, out int argCount, out DType expectedType, out IsValidSuggestion isValidSuggestionFunc)
+        private static void GetFunctionAndTypeInformation(IIntellisenseContext context, TexlNode curNode, TexlBinding binding, out TexlFunction curFunc, out int argIndex, out int argCount, out DType expectedType, out IsValidSuggestion isValidSuggestionFunc)
         {
             Contracts.AssertValue(context);
             Contracts.AssertValue(curNode);
@@ -261,7 +261,7 @@ namespace Microsoft.PowerFx.Intellisense
             }
         }
 
-        private IIntellisenseResult Finalize(IIntellisenseContext context, IntellisenseData.IntellisenseData intellisenseData)
+        private static IIntellisenseResult Finalize(IIntellisenseContext context, IntellisenseData.IntellisenseData intellisenseData)
         {
             Contracts.AssertValue(context);
             Contracts.AssertValue(intellisenseData);
@@ -290,6 +290,7 @@ namespace Microsoft.PowerFx.Intellisense
     internal static class Helper
     {
         [SuppressMessage("Style", "IDE0060:Remove Unused Parameter", Justification = "n/a")]
+        [SuppressMessage("Style", "CA1801:Remove unused parameter", Justification = "n/a")]
         internal static bool DefaultIsValidSuggestionFunc(IntellisenseData.IntellisenseData intellisenseData, IntellisenseSuggestion suggestion)
         {            
             return true;

@@ -192,7 +192,7 @@ namespace Microsoft.PowerFx.Intellisense
         /// <returns>
         /// A label that represents the call signature; e.g. <code>Set(variable, lambda)</code>
         /// </returns>
-        private string CreateFunctionSignature(string functionName, IEnumerable<ParameterInformation> parameters = null)
+        private static string CreateFunctionSignature(string functionName, IEnumerable<ParameterInformation> parameters = null)
         {
             Contracts.AssertValue(functionName);
             Contracts.AssertValue(functionName);
@@ -254,7 +254,7 @@ namespace Microsoft.PowerFx.Intellisense
 
         // GroupBy(source, column_name, column_name, ..., column_name, ..., group_name, ...)
         // AddColumns(source, column, expression, column, expression, ..., column, expression, ...)
-        internal bool CanParamOmit(TexlFunction func, int argCount, int argIndex, int signatureCount, int signatureIndex)
+        internal static bool CanParamOmit(TexlFunction func, int argCount, int argIndex, int signatureCount, int signatureIndex)
         {
             Contracts.AssertValue(func);
             Contracts.Assert(func.MaxArity == int.MaxValue);
@@ -270,7 +270,7 @@ namespace Microsoft.PowerFx.Intellisense
 
         // 1. For a function with limited MaxArity, The first time the count becomes equal to the argIndex, that's the arg we want to highlight
         // 2. For variadic function with repeating params in the signature, we highlight the param which indicates the corresponding position.
-        internal bool ArgNeedsHighlight(TexlFunction func, int argCount, int argIndex, int signatureCount, int signatureIndex)
+        internal static bool ArgNeedsHighlight(TexlFunction func, int argCount, int argIndex, int signatureCount, int signatureIndex)
         {
             Contracts.AssertValue(func);
 

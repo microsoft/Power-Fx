@@ -12,9 +12,9 @@
 		<TargetFramework>netstandard2.0</TargetFramework>
 		<PackageId>Microsoft.PowerFx.Interpreter</PackageId>
 		<Title>Microsoft Power Fx Compiler - Interpreter Target</Title>
-		<Description>The Interpreter the Power Fx compiler</Description>
-    <EnableNETAnalyzers>True</EnableNETAnalyzers>
-    <AnalysisLevel>latest-all</AnalysisLevel>
+		<Description>The Interpreter the Power Fx compiler</Description>    
+		<EnableNETAnalyzers>True</EnableNETAnalyzers>
+		<AnalysisLevel>latest</AnalysisLevel>    
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
@@ -27,6 +27,10 @@
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="6.0.0" />
+		<PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="6.0.0">
+		  <PrivateAssets>all</PrivateAssets>
+		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
 		<PackageReference Include="System.Text.Json" Version="5.0.2" />
 		<PackageReference Include="System.Collections.Immutable" Version="5.0.0" />
 		<PackageReference Include="System.Memory" Version="4.5.4" />

@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Conditional = System.Diagnostics.ConditionalAttribute;
 
@@ -268,6 +269,7 @@ LYieldSelf:
         protected abstract RedBlackNode<T> CloneStructure(T value);
 
         [Conditional("PARANOID_VALIDATION")]
+        [SuppressMessage("Performance", "CA1822: Mark members as static", Justification = "n/a")]
         internal void AssertValid()
         {
 #if PARANOID_VALIDATION

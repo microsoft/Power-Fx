@@ -69,7 +69,7 @@ namespace Microsoft.PowerFx.Core.Types.Enums
             }
         }
 
-        private bool TryGetLocalizedEnumValue(IReadOnlyDictionary<string, Dictionary<string, string>> customEnumLocDict, string enumName, string enumValue, out string locValue)
+        private static bool TryGetLocalizedEnumValue(IReadOnlyDictionary<string, Dictionary<string, string>> customEnumLocDict, string enumName, string enumValue, out string locValue)
         {
             Contracts.AssertValue(enumName);
             Contracts.AssertValue(enumValue);

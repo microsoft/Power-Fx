@@ -16,7 +16,7 @@ namespace Microsoft.PowerFx.Core.Functions.FunctionArgValidators
             return TryGetValidSortOrder(argNode, binding, out validatedOrder);
         }
 
-        private bool TryGetValidSortOrder(TexlNode argNode, TexlBinding binding, out string validatedOrder)
+        private static bool TryGetValidSortOrder(TexlNode argNode, TexlBinding binding, out string validatedOrder)
         {
             Contracts.AssertValue(argNode);
             Contracts.AssertValue(binding);
@@ -41,7 +41,7 @@ namespace Microsoft.PowerFx.Core.Functions.FunctionArgValidators
             }
         }
 
-        private bool IsValidOrderString(string order, out string validatedSortOrder)
+        private static bool IsValidOrderString(string order, out string validatedSortOrder)
         {
             Contracts.AssertValue(order);
 
@@ -56,7 +56,7 @@ namespace Microsoft.PowerFx.Core.Functions.FunctionArgValidators
             return true;
         }
 
-        private bool TryGetValidSortOrderNode(DottedNameNode node, TexlBinding binding, out string sortOrder)
+        private static bool TryGetValidSortOrderNode(DottedNameNode node, TexlBinding binding, out string sortOrder)
         {
             Contracts.AssertValue(node);
             Contracts.AssertValue(binding);
@@ -79,7 +79,7 @@ namespace Microsoft.PowerFx.Core.Functions.FunctionArgValidators
             return IsValidOrderString(order, out sortOrder);
         }
 
-        private bool TryGetValidSortOrderNode(FirstNameNode node, TexlBinding binding, out string sortOrder)
+        private static bool TryGetValidSortOrderNode(FirstNameNode node, TexlBinding binding, out string sortOrder)
         {
             Contracts.AssertValue(node);
             Contracts.AssertValue(binding);
@@ -99,7 +99,7 @@ namespace Microsoft.PowerFx.Core.Functions.FunctionArgValidators
             return IsValidOrderString(order, out sortOrder);
         }
 
-        private bool TryGetValidSortOrderNode(StrLitNode node, out string sortOrder)
+        private static bool TryGetValidSortOrderNode(StrLitNode node, out string sortOrder)
         {
             Contracts.AssertValue(node);
 
@@ -107,7 +107,7 @@ namespace Microsoft.PowerFx.Core.Functions.FunctionArgValidators
             return IsValidOrderString(order, out sortOrder);
         }
 
-        private bool VerifyFirstNameNodeIsValidSortOrderEnum(FirstNameNode node, TexlBinding binding)
+        private static bool VerifyFirstNameNodeIsValidSortOrderEnum(FirstNameNode node, TexlBinding binding)
         {
             Contracts.AssertValue(node);
             Contracts.AssertValue(binding);

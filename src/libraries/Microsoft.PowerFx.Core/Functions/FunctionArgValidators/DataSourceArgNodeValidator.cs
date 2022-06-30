@@ -36,7 +36,7 @@ namespace Microsoft.PowerFx.Core.Functions.FunctionArgValidators
             return dsNodes.Count > 0;
         }
 
-        private bool TryGetDsNodes(CallNode callNode, TexlBinding binding, out IList<FirstNameNode> dsInfos)
+        private static bool TryGetDsNodes(CallNode callNode, TexlBinding binding, out IList<FirstNameNode> dsInfos)
         {
             Contracts.AssertValueOrNull(callNode);
             Contracts.AssertValue(binding);
@@ -62,7 +62,7 @@ namespace Microsoft.PowerFx.Core.Functions.FunctionArgValidators
             return function.TryGetDataSourceNodes(callNode, binding, out dsInfos);
         }
 
-        private bool TryGetDsNode(FirstNameNode firstName, TexlBinding binding, out FirstNameNode dsNode)
+        private static bool TryGetDsNode(FirstNameNode firstName, TexlBinding binding, out FirstNameNode dsNode)
         {
             Contracts.AssertValueOrNull(firstName);
             Contracts.AssertValue(binding);
