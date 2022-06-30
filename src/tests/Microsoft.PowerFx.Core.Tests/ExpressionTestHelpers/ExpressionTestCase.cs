@@ -11,24 +11,16 @@ namespace Microsoft.PowerFx.Core.Tests
 {
     // Wrap a test case for calling from xunit. 
     public class ExpressionTestCase : TestCase, IXunitSerializable
-    {
-        private readonly string _engineName = null;
-
+    {        
         // Normally null. Set if the test discovery infrastructure needs to send a notice to the test runner. 
         public string FailMessage;
 
         public ExpressionTestCase()
-        {
-            _engineName = "-";
+        {           
         }
 
-        public ExpressionTestCase(string engineName)
-        {
-            _engineName = engineName;
-        }
-
-        public ExpressionTestCase(string engineName, TestCase test)
-            : this(engineName)
+        public ExpressionTestCase(TestCase test)
+            : this()
         {
             Input = test.Input;
             Expected = test.Expected;

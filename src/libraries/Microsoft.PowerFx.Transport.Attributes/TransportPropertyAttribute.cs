@@ -9,7 +9,7 @@ namespace Microsoft.AppMagic.Transport
     /// Enables transport on the specified property. See <see cref="TransportTypeAttribute"/> for more information.
     /// </summary>
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
-    public class TransportPropertyAttribute : Attribute
+    public sealed class TransportPropertyAttribute : Attribute
     {
         public TransportPropertyAttribute(bool generateSynchronousSetterTemplateInProxyClass = false, bool useDiffSync = false)
         {

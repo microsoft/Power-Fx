@@ -32,9 +32,9 @@ namespace Microsoft.PowerFx.Types
         {
         }
 
-        public override void Visit(ITypeVisitor vistor)
+        public override void Visit(ITypeVisitor visitor)
         {
-            vistor.Visit(this);
+            visitor.Visit(this);
         }
 
         /// <summary>
@@ -53,7 +53,7 @@ namespace Microsoft.PowerFx.Types
             var info = _type.OptionSetInfo;
 
             // Verify this value exists in the option set. 
-            if (info.DisplayNameProvider.TryGetDisplayName(new DName(logicalName), out var displayName))
+            if (info.DisplayNameProvider.TryGetDisplayName(new DName(logicalName), out var _))
             {
                 osValue = new OptionSetValue(logicalName, this);
                 return true;

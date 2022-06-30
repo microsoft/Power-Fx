@@ -36,13 +36,11 @@ namespace Microsoft.PowerFx.Core.Binding
             {
                 Contracts.AssertValue(node);
 
-                var lhsType = _txb.GetType(node.Left);
-                var typeRhs = DType.Invalid;
-                var nameRhs = node.Right.Name;
+                var lhsType = _txb.GetType(node.Left);                                
                 FirstNameInfo firstNameInfo;
                 FirstNameNode firstNameNode;
                 IExternalTableMetadata tableMetadata;
-                var nodeType = DType.Unknown;
+                DType nodeType;
 
                 if (node.Left.Kind != NodeKind.FirstName &&
                     node.Left.Kind != NodeKind.DottedName)
@@ -51,9 +49,9 @@ namespace Microsoft.PowerFx.Core.Binding
                     return;
                 }
 
-                nameRhs = GetLogicalNodeNameAndUpdateDisplayNames(lhsType, node.Right);
+                var nameRhs = GetLogicalNodeNameAndUpdateDisplayNames(lhsType, node.Right);
 
-                if (!lhsType.TryGetType(nameRhs, out typeRhs))
+                if (!lhsType.TryGetType(nameRhs, out var typeRhs))
                 {
                     SetDottedNameError(node, TexlStrings.ErrInvalidName);
                     return;

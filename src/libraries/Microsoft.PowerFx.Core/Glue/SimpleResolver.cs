@@ -25,7 +25,7 @@ namespace Microsoft.PowerFx.Core.Glue
         private readonly PowerFxConfig _config;
 
         private readonly TexlFunction[] _library;
-        private readonly EnumSymbol[] _enums = new EnumSymbol[] { };
+        private readonly EnumSymbol[] _enums = Array.Empty<EnumSymbol>();
 
         private readonly IExternalDocument _document;        
 
@@ -102,7 +102,7 @@ namespace Microsoft.PowerFx.Core.Glue
         public IEnumerable<TexlFunction> LookupFunctions(DPath theNamespace, string name, bool localeInvariant = false)
         {
             Contracts.Check(theNamespace.IsValid, "The namespace is invalid.");
-            Contracts.CheckNonEmpty(name, "name");
+            Contracts.CheckNonEmpty(name, nameof(name));
 
             // See TexlFunctionsLibrary.Lookup
             // return _functionLibrary.Lookup(theNamespace, name, localeInvariant, null);            

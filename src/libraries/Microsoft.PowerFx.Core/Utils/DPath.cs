@@ -89,7 +89,7 @@ namespace Microsoft.PowerFx.Core.Utils
         /// <summary>
         /// The "root" path.
         /// </summary>
-        public static DPath Root { get; } = default;
+        public static DPath Root { get; }
 
         private DPath(Node node)
         {
@@ -139,7 +139,7 @@ namespace Microsoft.PowerFx.Core.Utils
             {
                 if (index < 0 || index >= Length)
                 {
-                    throw new ArgumentOutOfRangeException();
+                    throw new ArgumentOutOfRangeException(nameof(index));
                 }
 
                 var node = _node;
@@ -330,7 +330,7 @@ namespace Microsoft.PowerFx.Core.Utils
         public override bool Equals(object obj)
         {
             Contracts.AssertValueOrNull(obj);
-            if (!(obj is DPath))
+            if (obj is not DPath)
             {
                 return false;
             }

@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Microsoft.AppMagic.Transport
 {
@@ -9,7 +10,8 @@ namespace Microsoft.AppMagic.Transport
     /// Applied to a converter class. Provides a conversion for a custom type.
     /// </summary>
     [AttributeUsage(AttributeTargets.Class)]
-    public class TransportConverterAttribute : Attribute
+    [SuppressMessage("Design", "CA1019: Define accessors for attribute arguments", Justification = "n/a")]
+    public sealed class TransportConverterAttribute : Attribute
     {
         public TransportConverterAttribute(
             Type originalType,

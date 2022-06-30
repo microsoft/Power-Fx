@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Syntax
@@ -27,7 +26,7 @@ namespace Microsoft.PowerFx.Syntax
         {
             Contracts.AssertValue(that);
 
-            if (!(that is StrInterpStartToken))
+            if (that is not StrInterpStartToken)
             {
                 return false;
             }

@@ -1,9 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System.Collections.Generic;
 using System.Text.Json;
-using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Types;
 
@@ -24,22 +22,15 @@ namespace Microsoft.PowerFx.Functions
             {
                 get
                 {
-                    switch (_element.ValueKind)
+                    return _element.ValueKind switch
                     {
-                        case JsonValueKind.Object:
-                            return ExternalType.ObjectType;
-                        case JsonValueKind.Array:
-                            return ExternalType.ArrayType;
-                        case JsonValueKind.String:
-                            return FormulaType.String;
-                        case JsonValueKind.Number:
-                            return FormulaType.Number;
-                        case JsonValueKind.True:
-                        case JsonValueKind.False:
-                            return FormulaType.Boolean;
-                    }
-
-                    return FormulaType.Blank;
+                        JsonValueKind.Object => ExternalType.ObjectType,
+                        JsonValueKind.Array => ExternalType.ArrayType,
+                        JsonValueKind.String => FormulaType.String,
+                        JsonValueKind.Number => FormulaType.Number,
+                        JsonValueKind.True or JsonValueKind.False => FormulaType.Boolean,
+                        _ => FormulaType.Blank,
+                    };
                 }
             }
 

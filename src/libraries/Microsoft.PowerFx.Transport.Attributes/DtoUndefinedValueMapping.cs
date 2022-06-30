@@ -1,8 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System;
-
 namespace Microsoft.AppMagic.Transport
 {
     public sealed class DtoUndefinedValueMapping

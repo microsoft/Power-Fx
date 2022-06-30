@@ -28,14 +28,14 @@ namespace Microsoft.PowerFx
         }
 
         /// <inheritdoc/>
-        public bool TryGetMarshaller(Type type, TypeMarshallerCache cache, int maxDepth, out ITypeMarshaller marshaler)
+        public bool TryGetMarshaller(Type type, TypeMarshallerCache cache, int maxDepth, out ITypeMarshaller marshaller)
         {        
             if (!type.IsClass || 
                 typeof(FormulaValue).IsAssignableFrom(type) ||
                 typeof(FormulaType).IsAssignableFrom(type))
             {
                 // Explicitly reject FormulaValue/FormulaType to catch common bugs. 
-                marshaler = null;
+                marshaller = null;
                 return false;
             }
 
@@ -74,7 +74,7 @@ namespace Microsoft.PowerFx
                 fxType = fxType.Add(fxName, fxFieldType);
             }
 
-            marshaler = new ObjectMarshaller(fxType, mapping);
+            marshaller = new ObjectMarshaller(fxType, mapping);
             return true;
         }      
     }

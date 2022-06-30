@@ -1,6 +1,9 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
+using System.Collections.Generic;
+
 namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
 {
     /// <summary>
@@ -15,7 +18,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
         /// </summary>
         public CodeAction()
         {
-            Diagnostics = new Diagnostic[] { };
+            Diagnostics = Array.Empty<Diagnostic>();
         }
 
         /// <summary>
@@ -31,7 +34,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
         /// <summary>
         /// An array of diagnostic information items.
         /// </summary>
-        public Diagnostic[] Diagnostics { get; set; }
+        public IEnumerable<Diagnostic> Diagnostics { get; set; }
 
         /// <summary>
         /// Gets or sets supported code action edits.

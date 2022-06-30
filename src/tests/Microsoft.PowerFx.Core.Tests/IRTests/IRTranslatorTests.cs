@@ -16,11 +16,8 @@ namespace Microsoft.PowerFx.Core.Tests
     {
         public IRTranslatorTests()
             : base()
-        {
-            _enumStore = new EnumStoreBuilder().WithDefaultEnums().Build();
-        }
-
-        private readonly EnumStore _enumStore;
+        {            
+        }        
 
         [Theory]
         [InlineData("CountIf(numtable, val > 0)", ">", typeof(BooleanType))]
@@ -37,7 +34,7 @@ namespace Microsoft.PowerFx.Core.Tests
             var result = engine.Check(expression, parameterType);
             result.ThrowOnErrors();
             
-            (var irNode, var ruleScopeSymbol) = IRTranslator.Translate(result._binding);
+            (var irNode, var _) = IRTranslator.Translate(result._binding);
            
             var callNode = (CallNode)irNode;
 

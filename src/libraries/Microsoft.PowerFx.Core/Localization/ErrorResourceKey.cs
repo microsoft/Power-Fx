@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
 using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Core.Localization
@@ -11,7 +12,7 @@ namespace Microsoft.PowerFx.Core.Localization
     /// Existing keys for error messages are split between here (for general document errors) and Strings.cs (for Texl errors).
     /// </summary>
     [ThreadSafeImmutable]
-    public struct ErrorResourceKey
+    public struct ErrorResourceKey : IEquatable<ErrorResourceKey>
     {
         public string Key { get; }
 
@@ -21,5 +22,24 @@ namespace Microsoft.PowerFx.Core.Localization
 
             Key = key;
         }
+
+        public bool Equals(ErrorResourceKey other)
+        {
+            return other.Key == Key;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return obj is ErrorResourceKey key && Equals(key);
+        }
+
+        public override int GetHashCode()
+        {
+            return Key.GetHashCode();
+        }
+
+        public static bool operator ==(ErrorResourceKey left, ErrorResourceKey right) => left.Equals(right);
+
+        public static bool operator !=(ErrorResourceKey left, ErrorResourceKey right) => !(left == right);
     }
 }

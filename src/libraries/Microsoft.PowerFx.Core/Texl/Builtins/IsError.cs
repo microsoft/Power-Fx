@@ -40,8 +40,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             nodeToCoercedTypeMap = null;
 
-            var type = ReturnType;
-
             Contracts.Assert(ReturnType == DType.Boolean);
 
             returnType = ReturnType;

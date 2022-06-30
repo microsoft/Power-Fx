@@ -29,8 +29,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests.XUnitExtensions
 
             var skippingExceptionNames = skippingExceptions.Select(ex => ex.FullName).ToArray();
 
-            return (IEnumerable<IXunitTestCase>)_theoryDiscoverer.Discover(discoveryOptions, testMethod, factAttribute)
-                                   .Select(testCase => new InterpreterTestCase(testCase, skippingExceptionNames));
+            return _theoryDiscoverer.Discover(discoveryOptions, testMethod, factAttribute)
+                                    .Select(testCase => new InterpreterTestCase(testCase, skippingExceptionNames));
         }
     }
 }

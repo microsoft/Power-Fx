@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
 using System.Globalization;
 using System.Linq;
 using Microsoft.PowerFx.Core.Utils;
@@ -46,7 +47,7 @@ namespace Microsoft.PowerFx.Core.Types
                 return true;
             }
 
-            var typeIdx = _typeEncodings.IndexOf(token);
+            var typeIdx = _typeEncodings.IndexOf(token, StringComparison.OrdinalIgnoreCase);
             if (typeIdx < 0)
             {
                 type = DType.Invalid;
@@ -114,7 +115,7 @@ namespace Microsoft.PowerFx.Core.Types
             while (lexer.TryNextToken(out token) && token != "]")
             {
                 var name = token;
-                if (name.Length >= 2 && name.StartsWith("'") && name.EndsWith("'"))
+                if (name.Length >= 2 && name.StartsWith("'", StringComparison.OrdinalIgnoreCase) && name.EndsWith("'", StringComparison.OrdinalIgnoreCase))
                 {
                     name = TexlLexer.UnescapeName(name);
                 }
@@ -168,7 +169,7 @@ namespace Microsoft.PowerFx.Core.Types
             while (lexer.TryNextToken(out token) && token != "]")
             {
                 var name = token;
-                if (name.Length >= 2 && name.StartsWith("'") && name.EndsWith("'"))
+                if (name.Length >= 2 && name.StartsWith("'", StringComparison.OrdinalIgnoreCase) && name.EndsWith("'", StringComparison.OrdinalIgnoreCase))
                 {
                     name = name.TrimStart('\'').TrimEnd('\'');
                 }

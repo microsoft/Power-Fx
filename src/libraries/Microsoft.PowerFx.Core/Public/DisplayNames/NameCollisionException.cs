@@ -2,8 +2,6 @@
 // Licensed under the MIT license.
 
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Microsoft.PowerFx
 {
@@ -15,6 +13,15 @@ namespace Microsoft.PowerFx
             : base($"Name {collidingDisplayName} has a collision with another display or logical name")
         {
             CollidingDisplayName = collidingDisplayName;
+        }
+
+        public NameCollisionException()
+        {
+        }
+
+        public NameCollisionException(string message, Exception innerException) 
+            : base(message, innerException)
+        {
         }
     }
 }

@@ -2,9 +2,6 @@
 // Licensed under the MIT license.
 
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx
@@ -15,16 +12,16 @@ namespace Microsoft.PowerFx
     public class PrimitiveMarshallerProvider : ITypeMarshallerProvider
     {      
         /// <inheritdoc/>
-        public bool TryGetMarshaller(Type type, TypeMarshallerCache cache, int maxDepth, out ITypeMarshaller marshaler)
+        public bool TryGetMarshaller(Type type, TypeMarshallerCache cache, int maxDepth, out ITypeMarshaller marshaller)
         {
             if (PrimitiveValueConversions.TryGetFormulaType(type, out var fxType))
             {
-                marshaler = new PrimitiveTypeMarshaller(fxType);
+                marshaller = new PrimitiveTypeMarshaller(fxType);
                 return true;
             }
 
             // Not supported
-            marshaler = null;
+            marshaller = null;
             return false;
         }
     }

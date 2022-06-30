@@ -30,8 +30,8 @@ namespace Microsoft.PowerFx.Syntax
 
         internal Span(int min, int lim)
         {
-            Contracts.CheckParam(min >= 0, "min");
-            Contracts.CheckParam(lim >= min, "lim");
+            Contracts.CheckParam(min >= 0, nameof(min));
+            Contracts.CheckParam(lim >= min, nameof(lim));
 
             Min = min;
             Lim = lim;

@@ -2,8 +2,8 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
-using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Types;
 
@@ -42,6 +42,7 @@ namespace Microsoft.PowerFx.Functions
 
         // https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/show-text-dates-times
         // https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-dateadd-datediff
+        [SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "n/a")]
         public static FormulaValue DateAdd(IRContext irContext, FormulaValue[] args)
         {
             DateTime datetime;
@@ -63,7 +64,7 @@ namespace Microsoft.PowerFx.Functions
             try
             {
                 DateTime newDate;
-                switch (units.Value.ToLower())
+                switch (units.Value.ToLowerInvariant())
                 {
                     case "milliseconds":
                         newDate = datetime.AddMilliseconds(delta.Value);
@@ -142,7 +143,7 @@ namespace Microsoft.PowerFx.Functions
             var diff = end - start;
 
             // The function DateDiff only returns a whole number of the units being subtracted, and the precision is given in the unit specified.
-            switch (units.Value.ToLower())
+            switch (units.Value.ToLowerInvariant())
             {
                 case "milliseconds":
                     var milliseconds = Math.Floor(diff.TotalMilliseconds);
@@ -436,15 +437,12 @@ namespace Microsoft.PowerFx.Functions
                 return new NumberValue(irContext, tzOffsetDays * -1);
             }
 
-            switch (args[0])
+            return args[0] switch
             {
-                case DateTimeValue dtv:
-                    return new NumberValue(irContext, tzInfo.GetUtcOffset(dtv.Value.ToUniversalTime()).TotalDays * -1);
-                case DateValue dv:
-                    return new NumberValue(irContext, tzInfo.GetUtcOffset(dv.Value.ToUniversalTime()).TotalDays * -1);
-                default:
-                    return CommonErrors.InvalidDateTimeError(irContext);
-            }
+                DateTimeValue dtv => new NumberValue(irContext, tzInfo.GetUtcOffset(dtv.Value.ToUniversalTime()).TotalDays * -1),
+                DateValue dv => new NumberValue(irContext, tzInfo.GetUtcOffset(dv.Value.ToUniversalTime()).TotalDays * -1),
+                _ => CommonErrors.InvalidDateTimeError(irContext),
+            };
         }
     }
 }

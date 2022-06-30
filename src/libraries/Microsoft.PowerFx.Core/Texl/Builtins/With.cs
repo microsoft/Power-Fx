@@ -46,7 +46,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertValue(errors);
 
             // Base call yields unknown return type, so we set it accordingly below
-            var fArgsValid = CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            var fArgsValid = CheckInvocation(args, argTypes, errors, out _, out nodeToCoercedTypeMap);
 
             // Return type determined by second argument (function)
             // Since CheckInvocation is called on partial functions, return type should be error when a second argument is undefined

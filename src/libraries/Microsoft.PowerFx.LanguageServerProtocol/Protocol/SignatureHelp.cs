@@ -1,6 +1,9 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+
 namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
 {
     /// <summary>
@@ -8,13 +11,14 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
     /// callable. There can be multiple signatures but only one
     /// active and only one active parameter.
     /// </summary>
+    [SuppressMessage("Naming", "CA1724: Type names should not match namespaces", Justification = "n/a")]
     public class SignatureHelp
     {
         /// <summary>
         /// One or more signatures. If no signatures are available the signature help
         /// request should return `null`.
         /// </summary>
-        public SignatureInformation[] Signatures { get; set; }
+        public IEnumerable<SignatureInformation> Signatures { get; set; }
 
         /// <summary>
         /// The active signature. If omitted or the value lies outside the

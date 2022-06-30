@@ -7,8 +7,6 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Resources;
-using System.Text.RegularExpressions;
-using System.Xml.Linq;
 using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Core.Localization
@@ -27,7 +25,7 @@ namespace Microsoft.PowerFx.Core.Localization
 
         private static readonly ThreadSafeResouceManager _resourceManager = new ThreadSafeResouceManager();
 
-        [ThreadSafeProtectedByLockAttribute("_errorResources")]
+        [ThreadSafeProtectedByLockAttribute]
         private static readonly Dictionary<string, Dictionary<string, ErrorResource>> _errorResources = new Dictionary<string, Dictionary<string, ErrorResource>>(StringComparer.OrdinalIgnoreCase);
 
         public static ErrorResource GetErrorResource(ErrorResourceKey resourceKey, string locale = null)
@@ -38,7 +36,7 @@ namespace Microsoft.PowerFx.Core.Localization
             // As foreign languages can lag behind en-US while being localized, if we can't find it then always look in the en-US locale
             if (!TryGetErrorResource(resourceKey, out var resourceValue, locale))
             {
-                Debug.WriteLine(string.Format("ERROR error resource {0} not found", resourceKey));
+                Debug.WriteLine(string.Format(CultureInfo.InvariantCulture, "ERROR error resource {0} not found", resourceKey));
                 if (ShouldThrowIfMissing)
                 {
                     throw new System.IO.FileNotFoundException(resourceKey.Key);
@@ -70,7 +68,7 @@ namespace Microsoft.PowerFx.Core.Localization
                     return potentialErrorResource.GetSingleValue(ErrorResource.ShortMessageTag);
                 }
 
-                Debug.WriteLine(string.Format("ERROR resource string {0} not found", resourceKey));
+                Debug.WriteLine(string.Format(CultureInfo.InvariantCulture, "ERROR resource string {0} not found", resourceKey));
                 if (ShouldThrowIfMissing)
                 {
                     throw new System.IO.FileNotFoundException(resourceKey);
@@ -87,7 +85,7 @@ namespace Microsoft.PowerFx.Core.Localization
 
             resourceValue = _resourceManager.GetLocaleResource(resourceKey, locale);
 
-            return resourceValue != null ? true : (ExternalStringResources?.TryGet(resourceKey, out resourceValue, locale) ?? false);
+            return resourceValue != null || (ExternalStringResources?.TryGet(resourceKey, out resourceValue, locale) ?? false);
         }
 
         public static bool TryGetErrorResource(ErrorResourceKey resourceKey, out ErrorResource resourceValue, string locale = null)
@@ -98,7 +96,7 @@ namespace Microsoft.PowerFx.Core.Localization
             if (string.IsNullOrEmpty(locale))
             {
                 locale = CultureInfo.CurrentUICulture.Name;
-                Contracts.CheckNonEmpty(locale, "locale");
+                Contracts.CheckNonEmpty(locale, nameof(locale));
             }
 
             // Error resources are a bit odd and need to be reassembled from separate keys.
@@ -206,12 +204,12 @@ namespace Microsoft.PowerFx.Core.Localization
             // Get methods on this are threadsafe, as long as we never call ReleaseAll()
             // This wrapper ensures that we don't accidentally do that
             private readonly ResourceManager _resourceManager = new ResourceManager("Microsoft.PowerFx.Core.strings.PowerFxResources", typeof(StringResources).Assembly);
-
+            
             public string GetLocaleResource(string resourceKey, string locale)
             {
                 if (string.IsNullOrEmpty(locale))
                 {
-                    return _resourceManager.GetString(resourceKey);
+                    return _resourceManager.GetString(resourceKey, CultureInfo.CurrentUICulture);
                 }
 
                 return _resourceManager.GetString(resourceKey, CultureInfo.CreateSpecificCulture(locale));

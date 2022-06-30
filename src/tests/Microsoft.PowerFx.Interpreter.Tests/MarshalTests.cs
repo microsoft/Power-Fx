@@ -56,7 +56,7 @@ namespace Microsoft.PowerFx.Tests
             var cache = new TypeMarshallerCache();
 
             // Type is a required parameter - being explicit. 
-            Assert.Throws<ArgumentNullException>(() => cache.Marshal((object)17, (Type)null));
+            Assert.Throws<ArgumentNullException>(() => cache.Marshal(17, null));
 
             // Must be more specific than object
             Assert.Throws<ArgumentException>(() => cache.Marshal((object)17));
@@ -312,7 +312,7 @@ namespace Microsoft.PowerFx.Tests
             Assert.Equal(0, obj1._counter2);
 
             // Verify lazy access around With(). 
-            var result2 = engine.Eval(expr);
+            _ = engine.Eval(expr);
 
             Assert.Equal(expectedCount, obj1._counter); // each field access is +1. 
             Assert.Equal(0, obj1._counter2); // Didn't touch field2. 
@@ -734,7 +734,7 @@ namespace Microsoft.PowerFx.Tests
             Assert.Equal(1, marshaler._counter);
 
             // Verify TypeMarshaller comes from cache and we don't call TryGetMarshaller again. 
-            var w1 = cache.Marshal(obj.Widget1);
+            _ = cache.Marshal(obj.Widget1);
             Assert.Equal(1, marshaler._counter);
 
             var engine = new RecalcEngine();
@@ -793,7 +793,7 @@ namespace Microsoft.PowerFx.Tests
 
             var fxTable = (TableValue)cache.Marshal(myTable);
 
-            var result1 = fxTable.Index(2);
+            _ = fxTable.Index(2);
             Assert.Equal(10, values[0]._counter); // no field fetch
             Assert.Equal(20, values[1]._counter);
             Assert.Equal(0, values[0]._counter2);
@@ -839,7 +839,7 @@ namespace Microsoft.PowerFx.Tests
             var fxTable = (TableValue)cache.Marshal(myTable.GetTable());
 
             // Table doesn't have indexer, so index is a linear scan. 
-            var result1 = (RecordValue)fxTable.Index(2).Value;
+            var result1 = fxTable.Index(2).Value;
             Assert.Equal(21.0, result1.GetField("Field1").ToObject());
         }
 

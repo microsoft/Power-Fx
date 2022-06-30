@@ -30,7 +30,7 @@ namespace Microsoft.PowerFx.Core.Utils
 
         public override bool Equals(object other)
         {
-            if (!(other is EquatableObject))
+            if (other is not EquatableObject)
             {
                 return false;
             }
@@ -60,13 +60,13 @@ namespace Microsoft.PowerFx.Core.Utils
             var isString = Object is string;
             if (isString)
             {
-                sb.Append("\"");
+                sb.Append('\\');
             }
 
             sb.Append(Object);
             if (isString)
             {
-                sb.Append("\"");
+                sb.Append('\"');
             }
         }
     }

@@ -3,7 +3,6 @@
 
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Entities;
-using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
 
@@ -18,19 +17,14 @@ namespace Microsoft.PowerFx.Core.Functions.FunctionArgValidators
             Contracts.AssertValue(binding);
 
             dsInfo = null;
-            switch (argNode.Kind)
+            return argNode.Kind switch
             {
-                case NodeKind.FirstName:
-                    return TryGetDsInfo(argNode.AsFirstName(), binding, out dsInfo);
-                case NodeKind.Call:
-                    return TryGetDsInfo(argNode.AsCall(), binding, out dsInfo);
-                case NodeKind.DottedName:
-                    return TryGetDsInfo(argNode.AsDottedName(), binding, out dsInfo);
-                case NodeKind.As:
-                    return TryGetValidValue(argNode.AsAsNode().Left, binding, out dsInfo);
-            }
-
-            return false;
+                NodeKind.FirstName => TryGetDsInfo(argNode.AsFirstName(), binding, out dsInfo),
+                NodeKind.Call => TryGetDsInfo(argNode.AsCall(), binding, out dsInfo),
+                NodeKind.DottedName => TryGetDsInfo(argNode.AsDottedName(), binding, out dsInfo),
+                NodeKind.As => TryGetValidValue(argNode.AsAsNode().Left, binding, out dsInfo),
+                _ => false,
+            };
         }
 
         private bool TryGetDsInfo(CallNode callNode, TexlBinding binding, out IExternalDataSource dsInfo)
@@ -57,7 +51,7 @@ namespace Microsoft.PowerFx.Core.Functions.FunctionArgValidators
             }
 
             var success = function.TryGetDataSource(callNode, binding, out var external);
-            dsInfo = (IExternalDataSource)external;
+            dsInfo = external;
             return success;
         }
 

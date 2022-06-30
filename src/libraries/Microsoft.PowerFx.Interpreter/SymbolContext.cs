@@ -21,9 +21,9 @@ namespace Microsoft.PowerFx
             ScopeValues = scopeValues;
         }
 
-        public ScopeSymbol CurrentScope { get; } = null;
+        public ScopeSymbol CurrentScope { get; }
 
-        public Dictionary<int, IScope> ScopeValues { get; } = null;
+        public Dictionary<int, IScope> ScopeValues { get; }
 
         public static SymbolContext New()
         {

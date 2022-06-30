@@ -51,7 +51,6 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.Equal(expectedStr, resultStr);
 
             // Nullable overloads
-            double? val2 = val;
             var formulaValue2 = FormulaValue.New((double?)val); // nullable overload
             Assert.Equal(expectedStr, formulaValue2.Dump());
 
@@ -81,8 +80,6 @@ namespace Microsoft.PowerFx.Core.Tests
             RecordValue r = FormulaValue.NewRecordFromFields(
                 new NamedValue("Num", FormulaValue.New(15)),
                 new NamedValue("Str", FormulaValue.New("hello")));
-
-            RecordType rt = (RecordType)r.Type;
 
             // Access as a dynamic
             dynamic d = r.ToObject();
@@ -175,7 +172,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 new TestRow { a = 10, str = "alpha" },
                 new TestRow { a = 15, str = "beta" });
 
-            var field1 = ((StringValue)((RecordValue)val.Index(2).Value).GetField("str")).Value;
+            var field1 = ((StringValue)val.Index(2).Value.GetField("str")).Value;
             Assert.Equal("beta", field1);
 
             dynamic d = val.ToObject();
@@ -194,7 +191,7 @@ namespace Microsoft.PowerFx.Core.Tests
             RecordValue r2 = _cache.NewRecord(new TestRow { a = 15, str = "beta" });
             TableValue val = FormulaValue.NewTable(r1.Type, r1, r2);
 
-            var result1 = ((RecordValue)val.Index(2).Value).GetField("a").ToObject();
+            var result1 = val.Index(2).Value.GetField("a").ToObject();
             Assert.Equal(15.0, result1);
 
             dynamic d = val.ToObject();
@@ -211,18 +208,17 @@ namespace Microsoft.PowerFx.Core.Tests
         // Heterogenous table.
         [Fact]
         public void TableFromMixedRecords()
-        {
-            var cache = new TypeMarshallerCache();
+        {            
             RecordValue r1 = _cache.NewRecord(new { a = 10, b = 20, c = 30 });
             RecordValue r2 = _cache.NewRecord(new { a = 11, c = 31 });
             TableValue val = FormulaValue.NewTable(r1.Type, r1, r2);
 
             // Users first type 
 
-            var result1 = ((RecordValue)val.Index(2).Value).GetField("a").ToObject();
+            var result1 = val.Index(2).Value.GetField("a").ToObject();
             Assert.Equal(11.0, result1);
 
-            var result2 = ((RecordValue)val.Index(2).Value).GetField("b");
+            var result2 = val.Index(2).Value.GetField("b");
             Assert.IsType<BlankValue>(result2);
             Assert.IsType<NumberType>(result2.Type);
         }

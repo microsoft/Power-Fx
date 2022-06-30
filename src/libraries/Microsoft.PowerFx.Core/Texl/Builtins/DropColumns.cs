@@ -94,7 +94,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 var columnName = new DName(nameNode.Value);
 
                 // Verify that the name exists.
-                if (!returnType.TryGetType(columnName, out var columnType))
+                if (!returnType.TryGetType(columnName, out var _))
                 {
                     fArgsValid = false;
                     returnType.ReportNonExistingName(FieldNameKind.Logical, errors, columnName, nameArg);

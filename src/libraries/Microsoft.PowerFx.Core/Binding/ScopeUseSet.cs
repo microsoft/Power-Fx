@@ -19,7 +19,7 @@ namespace Microsoft.PowerFx.Core.Binding
         // maximum algorithmic complexity of O(n^64).
         public const int MaxUpCount = 63;
 
-        public static readonly ScopeUseSet GlobalsOnly = default;
+        public static readonly ScopeUseSet GlobalsOnly;
 
         // 0 means only globals are used (default).
         // A value other than zero means lambda parameters are used, as follows:
@@ -35,7 +35,7 @@ namespace Microsoft.PowerFx.Core.Binding
         public bool IsLambdaScope => _levels != 0;
 
         public ScopeUseSet(int singleLevel)
-            : this((long)(1L << singleLevel))
+            : this(1L << singleLevel)
         {
             Contracts.AssertIndexInclusive(singleLevel, MaxUpCount);
         }
@@ -47,12 +47,12 @@ namespace Microsoft.PowerFx.Core.Binding
 
         public ScopeUseSet Union(ScopeUseSet other)
         {
-            return new ScopeUseSet((long)(_levels | other._levels));
+            return new ScopeUseSet(_levels | other._levels);
         }
 
         public ScopeUseSet TranslateToParentScope()
         {
-            return new ScopeUseSet((long)(_levels >> 1));
+            return new ScopeUseSet(_levels >> 1);
         }
 
         public int GetInnermost()
@@ -94,7 +94,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 }
             }
 
-            sb.Append("}");
+            sb.Append('}');
             return sb.ToString();
         }
     }

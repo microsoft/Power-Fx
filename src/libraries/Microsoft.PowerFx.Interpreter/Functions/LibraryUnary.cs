@@ -3,7 +3,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.IR.Nodes;
 using Microsoft.PowerFx.Types;
@@ -345,15 +344,12 @@ namespace Microsoft.PowerFx.Functions
 
         public static FormulaValue DateToDateTime(IRContext irContext, FormulaValue[] args)
         {
-            switch (args[0])
+            return args[0] switch
             {
-                case DateTimeValue dtv:
-                    return dtv;
-                case DateValue dv:
-                    return new DateTimeValue(irContext, dv.Value);
-                default:
-                    return CommonErrors.RuntimeTypeMismatch(irContext);
-            }
+                DateTimeValue dtv => dtv,
+                DateValue dv => new DateTimeValue(irContext, dv.Value),
+                _ => CommonErrors.RuntimeTypeMismatch(irContext),
+            };
         }
 
         public static FormulaValue DateTimeToDate(IRContext irContext, FormulaValue[] args)

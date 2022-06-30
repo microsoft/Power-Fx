@@ -82,7 +82,7 @@ namespace Microsoft.PowerFx.Core.Entities.QueryOptions
         /// </summary>
         public void AddRelatedColumns()
         {
-            if (!(TabularDataSourceInfo is IExternalCdsDataSource))
+            if (TabularDataSourceInfo is not IExternalCdsDataSource)
             {
                 return;
             }
@@ -108,7 +108,7 @@ namespace Microsoft.PowerFx.Core.Entities.QueryOptions
 
             Contracts.Assert(TabularDataSourceInfo.GetKeyColumns().All(x => _selects.Contains(x)));
 
-            return TabularDataSourceInfo.GetKeyColumns().Count() < _selects.Count
+            return TabularDataSourceInfo.GetKeyColumns().Count < _selects.Count
                  && _selects.Count < TexlBinding.MaxSelectsToInclude;
         }
 
@@ -117,7 +117,7 @@ namespace Microsoft.PowerFx.Core.Entities.QueryOptions
             Contracts.AssertValue(expand);
             RemoveExpand(expand.ExpandInfo);
             var selectColumnName = expand.ExpandInfo.ExpandPath.EntityName;
-            if (string.IsNullOrEmpty(selectColumnName) || !(TabularDataSourceInfo is IExternalCdsDataSource))
+            if (string.IsNullOrEmpty(selectColumnName) || TabularDataSourceInfo is not IExternalCdsDataSource)
             {
                 return false;
             }
@@ -143,7 +143,7 @@ namespace Microsoft.PowerFx.Core.Entities.QueryOptions
 
             if (ExpandQueryOptions.ContainsKey(expandInfo.ExpandPath))
             {
-                expandQueryOptions = (ExpandQueryOptions)ExpandQueryOptions[expandInfo.ExpandPath];
+                expandQueryOptions = ExpandQueryOptions[expandInfo.ExpandPath];
                 return false;
             }
 
@@ -169,7 +169,7 @@ namespace Microsoft.PowerFx.Core.Entities.QueryOptions
             {
                 if (expandQueryOptionsKVP.Value.ExpandInfo.ExpandPath == expandInfo.ExpandPath)
                 {
-                    expandQueryOptions = (ExpandQueryOptions)expandQueryOptionsKVP.Value;
+                    expandQueryOptions = expandQueryOptionsKVP.Value;
                     return true;
                 }
             }
@@ -189,11 +189,11 @@ namespace Microsoft.PowerFx.Core.Entities.QueryOptions
             {
                 if (Expands.ContainsKey(entry.Key))
                 {
-                    MergeQueryOptions((ExpandQueryOptions)Expands[entry.Key], (ExpandQueryOptions)entry.Value);
+                    MergeQueryOptions(Expands[entry.Key], entry.Value);
                 }
                 else
                 {
-                    AddExpand(entry.Key, (ExpandQueryOptions)entry.Value);
+                    AddExpand(entry.Key, entry.Value);
                 }
             }
         }
@@ -269,13 +269,13 @@ namespace Microsoft.PowerFx.Core.Entities.QueryOptions
                     && srcExpandInfo.Name == mergedExpandInfo.Name
                     && srcExpandInfo.IsTable == mergedExpandInfo.IsTable)
                 {
-                    return MergeQueryOptions((ExpandQueryOptions)expand.Value, mergeExpandValue);
+                    return MergeQueryOptions(expand.Value, mergeExpandValue);
                 }
 
                 if (!string.IsNullOrEmpty(mergeExpandValue.ExpandInfo.ExpandPath.RelatedEntityPath)
                     && mergeExpandValue.ExpandInfo.ExpandPath.RelatedEntityPath.Contains(expand.Value.ExpandInfo.ExpandPath.EntityName))
                 {
-                    return AppendExpandQueryOptions((ExpandQueryOptions)expand.Value, mergeExpandValue);
+                    return AppendExpandQueryOptions(expand.Value, mergeExpandValue);
                 }
             }
 
@@ -346,8 +346,7 @@ namespace Microsoft.PowerFx.Core.Entities.QueryOptions
         {
             foreach (var expandKvp in Expands)
             {
-                if (!expandKvp.Value.ExpandInfo.IsTable
-                    && ((ExpandQueryOptions)expandKvp.Value).HasManyToOneExpand())
+                if (!expandKvp.Value.ExpandInfo.IsTable && expandKvp.Value.HasManyToOneExpand())
                 {
                     return true;
                 }

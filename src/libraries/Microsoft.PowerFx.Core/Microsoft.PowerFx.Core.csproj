@@ -21,7 +21,13 @@
 		<Summary>The core library for all Microsoft Power Fx Compiler targets</Summary>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 		<GenerateNeutralResourcesLanguageAttribute>false</GenerateNeutralResourcesLanguageAttribute>
-	</PropertyGroup>
+    <EnableNETAnalyzers>True</EnableNETAnalyzers>
+    <AnalysisLevel>latest-all</AnalysisLevel>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <CodeAnalysisTreatWarningsAsErrors>true</CodeAnalysisTreatWarningsAsErrors>
+  </PropertyGroup>
 
 	<ItemGroup>
 		<PackageReference Include="System.Text.Json" Version="5.0.2" />

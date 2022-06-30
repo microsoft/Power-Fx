@@ -11,9 +11,6 @@ using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
 
-#pragma warning disable SA1402 // File may only contain a single type
-#pragma warning disable SA1649 // File name should match first type name
-
 namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
     // Find(find_text:s, within_text:s, [start_index:n])
@@ -68,7 +65,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertValue(errors);
             Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
 
-            var fValid = CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            var fValid = CheckInvocation(args, argTypes, errors, out _, out nodeToCoercedTypeMap);
 
             var type0 = argTypes[0];
             var type1 = argTypes[1];
@@ -147,6 +144,3 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         }
     }
 }
-
-#pragma warning restore SA1402 // File may only contain a single type
-#pragma warning restore SA1649 // File name should match first type name

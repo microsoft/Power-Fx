@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Functions;
@@ -32,11 +33,12 @@ namespace Microsoft.PowerFx.Intellisense
             _suggestionHandlers = suggestionHandlers;
         }
 
+        [SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "n/a")]
         public IIntellisenseResult Suggest(IntellisenseContext context, TexlBinding binding, Formula formula)
         {
-            Contracts.CheckValue(context, "context");
-            Contracts.CheckValue(binding, "binding");
-            Contracts.CheckValue(formula, "formula");
+            Contracts.CheckValue(context, nameof(context));
+            Contracts.CheckValue(binding, nameof(binding));
+            Contracts.CheckValue(formula, nameof(formula));
 
             // TODO: Hoist scenario tracking out of language module.
             // Guid suggestScenarioGuid = Common.Telemetry.Log.Instance.StartScenario("IntellisenseSuggest");
@@ -287,9 +289,9 @@ namespace Microsoft.PowerFx.Intellisense
 
     internal static class Helper
     {
+        [SuppressMessage("Style", "IDE0060:Remove Unused Parameter", Justification = "n/a")]
         internal static bool DefaultIsValidSuggestionFunc(IntellisenseData.IntellisenseData intellisenseData, IntellisenseSuggestion suggestion)
-        {
-            //return intellisenseData.ExpectedType.Accepts(suggestion.Type);
+        {            
             return true;
         }
     }

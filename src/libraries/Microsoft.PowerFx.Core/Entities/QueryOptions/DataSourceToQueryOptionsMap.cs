@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 
@@ -83,6 +84,7 @@ namespace Microsoft.PowerFx.Core.Entities.QueryOptions
             return _tabularDataQueryOptionsSet.Values;
         }
 
+        [SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "n/a")]
         internal Dictionary<string, object> ToDebugObject()
         {
             try

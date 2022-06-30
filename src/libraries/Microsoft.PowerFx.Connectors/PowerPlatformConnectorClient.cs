@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -51,12 +52,13 @@ namespace Microsoft.PowerFx.Connectors
             // Must set to allow callers to invoke SendAsync() via other helper methods.
             BaseAddress = new Uri("https://" + endpoint); // Uri.Parse will validate endpoint syntax. 
         }
-                
+
+        [SuppressMessage("Reliability", "CA2000: Dispose objects before losing scope", Justification = "Callers must manage response properly")]
         public override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
             HttpRequestMessage req = Transform(request);
 
-            var response = await _client.SendAsync(req, cancellationToken);
+            var response = await _client.SendAsync(req, cancellationToken).ConfigureAwait(false);
             return response;
         }
 

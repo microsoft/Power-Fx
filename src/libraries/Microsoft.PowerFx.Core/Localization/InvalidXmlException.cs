@@ -52,5 +52,14 @@ namespace Microsoft.PowerFx.Core.Localization
             Contracts.AssertValue(xobj, "The ctor chosen requires the invalid XObject argument to be non-null.");
             return ((IXmlLineInfo)xobj).LinePosition;
         }
+
+        public InvalidXmlException()
+        {
+        }
+
+        public InvalidXmlException(string message, System.Exception innerException) 
+            : base(message, innerException)
+        {
+        }
     }
 }

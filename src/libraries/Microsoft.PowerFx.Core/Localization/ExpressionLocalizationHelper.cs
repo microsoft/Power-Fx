@@ -4,7 +4,6 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Text;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Glue;
 using Microsoft.PowerFx.Core.Parser;
@@ -71,7 +70,7 @@ namespace Microsoft.PowerFx.Core
                         break;
                     case TokKind.NumLit:
                         var numLit = token.Span.GetFragment(script);
-                        var decimalSeparatorIndex = numLit.IndexOf(sourceDecimalSeparator);
+                        var decimalSeparatorIndex = numLit.IndexOf(sourceDecimalSeparator, StringComparison.OrdinalIgnoreCase);
                         if (decimalSeparatorIndex >= 0)
                         {
                             var newMin = span.Min + decimalSeparatorIndex;

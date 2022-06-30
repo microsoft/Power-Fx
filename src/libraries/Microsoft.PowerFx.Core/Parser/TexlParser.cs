@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 using Microsoft.PowerFx.Core.Errors;
@@ -38,7 +39,7 @@ namespace Microsoft.PowerFx.Core.Parser
         private int _depth;
         private const int MaxAllowedExpressionDepth = 50;
 
-        private readonly List<CommentToken> _comments = new List<CommentToken>();
+        private readonly List<CommentToken> _comments = new ();
         private SourceList _before;
         private SourceList _after;
 
@@ -80,10 +81,10 @@ namespace Microsoft.PowerFx.Core.Parser
             var formulaTokens = TokenizeScript(script, loc, Flags.NamedFormulas);
             var parser = new TexlParser(formulaTokens, Flags.NamedFormulas);
 
-            return parser.ParseFormulas(script);
+            return parser.ParseFormulas();
         }
 
-        private ParseFormulasResult ParseFormulas(string script)
+        private ParseFormulasResult ParseFormulas()
         {
             var namedFormulas = new List<KeyValuePair<IdentToken, TexlNode>>();
             ParseTrivia();
@@ -136,6 +137,7 @@ namespace Microsoft.PowerFx.Core.Parser
             return new ParseFormulasResult(namedFormulas, _errors);
         }
 
+        [SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "n/a")]
         private static IReadOnlyList<Token> TokenizeScript(string script, CultureInfo loc, Flags flags = Flags.None)
         {
             Contracts.AssertValue(script);
@@ -201,7 +203,7 @@ namespace Microsoft.PowerFx.Core.Parser
 
         private ITexlSource ParseTrivia(TokenCursor cursor = null)
         {
-            cursor = cursor ?? _curs;
+            cursor ??= _curs;
             var sources = new List<ITexlSource>();
 
             if (_extraTrivia != null)
@@ -237,7 +239,7 @@ namespace Microsoft.PowerFx.Core.Parser
             }
             while (triviaFound);
 
-            if (sources.Count() == 1)
+            if (sources.Count == 1)
             {
                 return sources.Single();
             }
@@ -641,7 +643,7 @@ namespace Microsoft.PowerFx.Core.Parser
                 case TokKind.BracketOpen:
                     if (_curs.TidPeek() == TokKind.At)
                     {
-                        return ParseBracketIdentifierAsFirstName(accountForAllPrecedenceTokens: true);
+                        return ParseBracketIdentifierAsFirstName();
                     }
 
                     return ParseTableExpr();
@@ -748,7 +750,7 @@ namespace Microsoft.PowerFx.Core.Parser
         }
 
         // Parses an identifier delimited by brackets, e.g. [@foo]
-        private FirstNameNode ParseBracketIdentifierAsFirstName(bool accountForAllPrecedenceTokens = false)
+        private FirstNameNode ParseBracketIdentifierAsFirstName()
         {
             Contracts.Assert(_curs.TidCur == TokKind.BracketOpen);
             Contracts.Assert(_curs.TidPeek() == TokKind.At);
@@ -825,6 +827,7 @@ namespace Microsoft.PowerFx.Core.Parser
             return new Identifier(at, tok);
         }
 
+        [SuppressMessage("Maintainability", "CA1508: Avoid dead conditional code", Justification = "False positive")]
         private TexlNode ParseStringInterpolation()
         {
             Contracts.Assert(_curs.TidCur == TokKind.StrInterpStart);
@@ -845,7 +848,7 @@ namespace Microsoft.PowerFx.Core.Parser
                 var tokenEnd = _curs.TokMove();
                 sourceList.Add(new TokenSource(tokenEnd));
 
-                return new StrInterpNode(ref _idNext, strInterpStart, new SourceList(sourceList), new TexlNode[0], tokenEnd);
+                return new StrInterpNode(ref _idNext, strInterpStart, new SourceList(sourceList), Array.Empty<TexlNode>(), tokenEnd);
             }
 
             for (var i = 0; ; i++)
@@ -944,7 +947,7 @@ namespace Microsoft.PowerFx.Core.Parser
                 var right = new ListNode(
                     ref _idNext,
                     _curs.TokCur,
-                    new TexlNode[0],
+                    Array.Empty<TexlNode>(),
                     null,
                     new SourceList(
                         new TokenSource(leftParen),
@@ -1040,6 +1043,7 @@ namespace Microsoft.PowerFx.Core.Parser
                 parenClose);
         }
 
+        [SuppressMessage("Maintainability", "CA1508: Avoid dead conditional code", Justification = "False positive")]
         private TexlNode ParseExprChain(TexlNode node, ITexlSource leftTrivia)
         {
             Contracts.AssertValue(node);
@@ -1086,6 +1090,7 @@ namespace Microsoft.PowerFx.Core.Parser
 
         // Parse a record expression of the form: {id:expr, id:expr, ...}
         // or of the form ident@{id:expr, id:expr}
+        [SuppressMessage("Maintainability", "CA1508: Avoid dead conditional code", Justification = "False positive")]
         private RecordNode ParseRecordExpr(ITexlSource sourceRestrictionTrivia, Identifier sourceRestriction = null)
         {
             Contracts.Assert(_curs.TidCur == TokKind.CurlyOpen || _curs.TidCur == TokKind.At);
@@ -1121,7 +1126,7 @@ namespace Microsoft.PowerFx.Core.Parser
                         sourceRestriction.Token,
                         new SourceList(
                             new SpreadSource(sourceList),
-                            curlyClose != null ? (ITexlSource)new TokenSource(curlyClose) : new SpreadSource()),
+                            curlyClose != null ? new TokenSource(curlyClose) : new SpreadSource()),
                         ids.ToArray(),
                         exprs.ToArray(),
                         null,
@@ -1249,7 +1254,7 @@ namespace Microsoft.PowerFx.Core.Parser
                 sourceList.Add(ParseTrivia());
             }
 
-            var commaArray = commas?.ToArray();
+            var commaArray = commas.ToArray();
 
             var bracketClose = TokEat(TokKind.BracketClose);
             if (bracketClose != null)
@@ -1333,20 +1338,6 @@ namespace Microsoft.PowerFx.Core.Parser
             return err;
         }
 
-        // Eats a token of the given kind.
-        // If the token is not the right kind, reports an error and leaves it.
-        private bool EatTid(TokKind tid)
-        {
-            if (_curs.TidCur == tid)
-            {
-                _curs.TokMove();
-                return true;
-            }
-
-            ErrorTid(_curs.TokCur, tid);
-            return false;
-        }
-
         // Returns the current token if it's of the given kind and moves to the next token.
         // If the token is not the right kind, reports an error, leaves the token, and returns null.
         private Token TokEat(TokKind tid)
@@ -1370,59 +1361,34 @@ namespace Microsoft.PowerFx.Core.Parser
         // Gets the string corresponding to token kinds used in binary or unary nodes.
         internal static string GetTokString(TokKind kind)
         {
-            switch (kind)
+            return kind switch
             {
-                case TokKind.And:
-                    return TexlLexer.PunctuatorAnd;
-                case TokKind.Or:
-                    return TexlLexer.PunctuatorOr;
-                case TokKind.Bang:
-                    return TexlLexer.PunctuatorBang;
-                case TokKind.Add:
-                    return TexlLexer.PunctuatorAdd;
-                case TokKind.Sub:
-                    return TexlLexer.PunctuatorSub;
-                case TokKind.Mul:
-                    return TexlLexer.PunctuatorMul;
-                case TokKind.Div:
-                    return TexlLexer.PunctuatorDiv;
-                case TokKind.Caret:
-                    return TexlLexer.PunctuatorCaret;
-                case TokKind.Ampersand:
-                    return TexlLexer.PunctuatorAmpersand;
-                case TokKind.PercentSign:
-                    return TexlLexer.PunctuatorPercent;
-                case TokKind.Equ:
-                    return TexlLexer.PunctuatorEqual;
-                case TokKind.Lss:
-                    return TexlLexer.PunctuatorLess;
-                case TokKind.LssEqu:
-                    return TexlLexer.PunctuatorLessOrEqual;
-                case TokKind.Grt:
-                    return TexlLexer.PunctuatorGreater;
-                case TokKind.GrtEqu:
-                    return TexlLexer.PunctuatorGreaterOrEqual;
-                case TokKind.LssGrt:
-                    return TexlLexer.PunctuatorNotEqual;
-                case TokKind.Dot:
-                    return TexlLexer.PunctuatorDot;
-                case TokKind.In:
-                    return TexlLexer.KeywordIn;
-                case TokKind.Exactin:
-                    return TexlLexer.KeywordExactin;
-                case TokKind.BracketOpen:
-                    return TexlLexer.PunctuatorBracketOpen;
-                case TokKind.KeyOr:
-                    return TexlLexer.KeywordOr;
-                case TokKind.KeyAnd:
-                    return TexlLexer.KeywordAnd;
-                case TokKind.KeyNot:
-                    return TexlLexer.KeywordNot;
-                case TokKind.As:
-                    return TexlLexer.KeywordAs;
-                default:
-                    return string.Empty;
-            }
+                TokKind.And => TexlLexer.PunctuatorAnd,
+                TokKind.Or => TexlLexer.PunctuatorOr,
+                TokKind.Bang => TexlLexer.PunctuatorBang,
+                TokKind.Add => TexlLexer.PunctuatorAdd,
+                TokKind.Sub => TexlLexer.PunctuatorSub,
+                TokKind.Mul => TexlLexer.PunctuatorMul,
+                TokKind.Div => TexlLexer.PunctuatorDiv,
+                TokKind.Caret => TexlLexer.PunctuatorCaret,
+                TokKind.Ampersand => TexlLexer.PunctuatorAmpersand,
+                TokKind.PercentSign => TexlLexer.PunctuatorPercent,
+                TokKind.Equ => TexlLexer.PunctuatorEqual,
+                TokKind.Lss => TexlLexer.PunctuatorLess,
+                TokKind.LssEqu => TexlLexer.PunctuatorLessOrEqual,
+                TokKind.Grt => TexlLexer.PunctuatorGreater,
+                TokKind.GrtEqu => TexlLexer.PunctuatorGreaterOrEqual,
+                TokKind.LssGrt => TexlLexer.PunctuatorNotEqual,
+                TokKind.Dot => TexlLexer.PunctuatorDot,
+                TokKind.In => TexlLexer.KeywordIn,
+                TokKind.Exactin => TexlLexer.KeywordExactin,
+                TokKind.BracketOpen => TexlLexer.PunctuatorBracketOpen,
+                TokKind.KeyOr => TexlLexer.KeywordOr,
+                TokKind.KeyAnd => TexlLexer.KeywordAnd,
+                TokKind.KeyNot => TexlLexer.KeywordNot,
+                TokKind.As => TexlLexer.KeywordAs,
+                _ => string.Empty,
+            };
         }
 
         public static string Format(string text)

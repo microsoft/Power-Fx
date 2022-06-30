@@ -2,9 +2,7 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
-using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Utils;
-using Microsoft.PowerFx.Syntax;
 
 namespace Microsoft.PowerFx.Syntax.SourceInformation
 {

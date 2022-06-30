@@ -7,10 +7,14 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
+using System.Xml.Linq;
+
+#if DEBUG
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Xml.Linq;
+#endif
 
 namespace Microsoft.PowerFx.Core.Utils
 {
@@ -316,7 +320,7 @@ namespace Microsoft.PowerFx.Core.Utils
 
         public static void CheckXmlDocumentString(string text, string paramName)
         {
-            CheckXmlDocumentString(text, paramName, out var parsedXDocument);
+            CheckXmlDocumentString(text, paramName, out var _);
         }
 
         public static void CheckXmlDocumentStringOrNull(string text, string paramName)
@@ -890,6 +894,9 @@ namespace Microsoft.PowerFx.Core.Utils
         }
 
         [Conditional("DEBUG")]
+#if DEBUG
+        [SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "n/a")]
+#endif
         public static void AssertXmlDocumentString(string text)
         {
 #if DEBUG
@@ -1406,12 +1413,12 @@ namespace Microsoft.PowerFx.Core.Utils
 
         private static void DbgFailValue(string name)
         {
-            DbgFailCore(string.Format(CultureInfo.CurrentCulture, "Non-null assertion failure: {0}", name));
+            DbgFailCore(string.Format(CultureInfo.InvariantCulture, "Non-null assertion failure: {0}", name));
         }
 
         private static void DbgFailValue(string name, string msg)
         {
-            DbgFailCore(string.Format(CultureInfo.CurrentCulture, "Non-null assertion failure: {0}: {1}", name, msg));
+            DbgFailCore(string.Format(CultureInfo.InvariantCulture, "Non-null assertion failure: {0}: {1}", name, msg));
         }
 
         private static void DbgFailNull()
@@ -1421,12 +1428,12 @@ namespace Microsoft.PowerFx.Core.Utils
 
         private static void DbgFailNull(string name)
         {
-            DbgFailCore(string.Format(CultureInfo.CurrentCulture, "Null assertion failure: {0}", name));
+            DbgFailCore(string.Format(CultureInfo.InvariantCulture,  "Null assertion failure: {0}", name));
         }
 
         private static void DbgFailNull(string name, string msg)
         {
-            DbgFailCore(string.Format(CultureInfo.CurrentCulture, "Null assertion failure: {0}: {1}", name, msg));
+            DbgFailCore(string.Format(CultureInfo.InvariantCulture,  "Null assertion failure: {0}: {1}", name, msg));
         }
 
         private static void DbgFailEmpty()
@@ -1436,7 +1443,7 @@ namespace Microsoft.PowerFx.Core.Utils
 
         private static void DbgFailEmpty(string msg)
         {
-            DbgFailCore(string.Format(CultureInfo.CurrentCulture, "Non-empty assertion failure: {0}", msg));
+            DbgFailCore(string.Format(CultureInfo.InvariantCulture,  "Non-empty assertion failure: {0}", msg));
         }
 
         private static void DbgFailValid()
@@ -1446,7 +1453,7 @@ namespace Microsoft.PowerFx.Core.Utils
 
         private static void DbgFailValid(string name)
         {
-            DbgFailCore(string.Format(CultureInfo.CurrentCulture, "Validity assertion failure: {0}", name));
+            DbgFailCore(string.Format(CultureInfo.InvariantCulture,  "Validity assertion failure: {0}", name));
         }
 
         #endregion
@@ -1494,11 +1501,13 @@ namespace Microsoft.PowerFx.Core.Utils
             return list == null ? 0 : list.Count;
         }
 
+#if DEBUG
         /// <summary>Note: This will actualize the IEnumerable. Care should be taken to only use this when the list is not read-once.</summary>
         private static int Size<T>(IEnumerable<T> list)
         {
             return list == null ? 0 : list.Count();
         }
+#endif
 
         // Internal for unit tests
         internal static bool IsValid(int index, int count, int available)
@@ -1682,7 +1691,7 @@ namespace Microsoft.PowerFx.Core.Utils
         {
             AssertValue(msg);
             AssertValue(args);
-            return string.Format(CultureInfo.CurrentCulture, msg, args);
+            return string.Format(CultureInfo.InvariantCulture,  msg, args);
         }
     }
 }

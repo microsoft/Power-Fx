@@ -2,7 +2,6 @@
 // Licensed under the MIT license.
 
 using System.Linq;
-using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax.SourceInformation;
 
@@ -112,7 +111,7 @@ namespace Microsoft.PowerFx.Syntax
         // TODO: Should we keep this internal?
         public Span GetSourceBasedSpan()
         {
-            if (SourceList.Tokens.Count() == 0)
+            if (!SourceList.Tokens.Any())
             {
                 return GetCompleteSpan();
             }

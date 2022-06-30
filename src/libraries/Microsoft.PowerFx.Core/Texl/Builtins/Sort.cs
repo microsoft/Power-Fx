@@ -2,12 +2,10 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
-using System.Linq;
+using System.Globalization;
 using System.Text;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
-using Microsoft.PowerFx.Core.Binding.BindInfo;
-using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Functions.Delegation;
 using Microsoft.PowerFx.Core.Functions.Delegation.DelegationMetadata;
@@ -133,7 +131,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 return false;
             }
 
-            SortOpMetadata metadata = null;
+            SortOpMetadata metadata;
             if (TryGetEntityMetadata(callNode, binding, out IDelegationMetadata delegationMetadata))
             {
                 if (!binding.Document.Properties.EnabledFeatures.IsEnhancedDelegationEnabled ||
@@ -184,7 +182,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
 
             const string defaultSortOrder = LanguageConstants.AscendingSortOrderString;
-            var cargs = args.Count();
+            var cargs = args.Length;
 
             // Verify that the third argument (If present) is an Enum or string literal.
             if (cargs < 3 && IsSortOrderSuppportedByColumn(callNode, binding, defaultSortOrder, metadata, columnName))
@@ -239,22 +237,18 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             var separator = string.Empty;
 
             var primitiveColumnsAndComparatorIds = new StringBuilder();
-            primitiveColumnsAndComparatorIds.Append("{");
+            primitiveColumnsAndComparatorIds.Append('{');
 
             foreach (var column in allColumns)
             {
                 if (column.Type.IsPrimitive && !column.Type.IsOptionSet)
                 {
-                    primitiveColumnsAndComparatorIds.AppendFormat(
-                        "{0}\"{1}\":{2}",
-                        separator,
-                        CharacterUtils.EscapeString(column.Name),
-                        GetSortComparatorIdForType(column.Type));
+                    primitiveColumnsAndComparatorIds.AppendFormat(CultureInfo.InvariantCulture, "{0}\"{1}\":{2}", separator, CharacterUtils.EscapeString(column.Name), GetSortComparatorIdForType(column.Type));
                     separator = ",";
                 }
             }
 
-            primitiveColumnsAndComparatorIds.Append("}");
+            primitiveColumnsAndComparatorIds.Append('}');
 
             return primitiveColumnsAndComparatorIds.ToString();
         }
@@ -282,7 +276,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertValue(metadata);
             Contracts.AssertValid(columnPath);
 
-            order = order.ToLower();
+            order = order.ToLowerInvariant();
 
             // If column is marked as ascending only then return false if order requested is descending.
             return order != LanguageConstants.DescendingSortOrderString || !metadata.IsColumnAscendingOnly(columnPath);

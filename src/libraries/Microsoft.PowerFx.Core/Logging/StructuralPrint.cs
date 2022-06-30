@@ -60,7 +60,6 @@ namespace Microsoft.PowerFx.Core.Logging
         {
             Contracts.AssertValue(node);
 
-            var nlt = node.Value;
             return LazyList<string>.Of("#$number$#");
         }
 
@@ -117,7 +116,7 @@ namespace Microsoft.PowerFx.Core.Logging
             {
                 if (node.RightNode != null)
                 {
-                    values = values.With(node.RightNode?.Accept(this, parentPrecedence));
+                    values = values.With(node.RightNode.Accept(this, parentPrecedence));
                 }
                 else
                 {

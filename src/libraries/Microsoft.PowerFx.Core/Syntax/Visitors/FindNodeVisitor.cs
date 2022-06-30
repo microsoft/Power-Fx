@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System.Linq;
 using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Syntax
@@ -78,7 +77,7 @@ namespace Microsoft.PowerFx.Syntax
 
             if (_cursorPosition <= node.Token.Span.Min // Cursor position is before the $"
                 || (node.StrInterpEnd != null && node.StrInterpEnd is StrInterpEndToken && node.StrInterpEnd.Span.Lim <= _cursorPosition) // Cursor is after the close quote.
-                || node.Children.Count() == 0) //// Cursor is inside empty string interpolation.
+                || node.Children.Length == 0) //// Cursor is inside empty string interpolation.
             {
                 _result = node;
                 return false;

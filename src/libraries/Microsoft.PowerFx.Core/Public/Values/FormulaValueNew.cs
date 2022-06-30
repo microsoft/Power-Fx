@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.PowerFx.Core.IR;
 
 namespace Microsoft.PowerFx.Types
@@ -37,7 +38,7 @@ namespace Microsoft.PowerFx.Types
         public static NumberValue New(long number)
         {
             // $$$ Is this safe? or loss in precision?
-            return new NumberValue(IRContext.NotInSource(FormulaType.Number), (double)number);
+            return new NumberValue(IRContext.NotInSource(FormulaType.Number), number);
         }
 
         public static NumberValue New(int number)
@@ -50,6 +51,7 @@ namespace Microsoft.PowerFx.Types
             return new NumberValue(IRContext.NotInSource(FormulaType.Number), number);
         }
 
+        [SuppressMessage("Naming", "CA1720:Identifiers should not contain type names", Justification = "n/a")]
         public static GuidValue New(Guid guid)
         {
             return new GuidValue(IRContext.NotInSource(FormulaType.Guid), guid);

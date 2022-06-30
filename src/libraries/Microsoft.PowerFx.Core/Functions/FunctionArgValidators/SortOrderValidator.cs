@@ -3,7 +3,6 @@
 
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Logging.Trackers;
-using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
 
@@ -47,7 +46,7 @@ namespace Microsoft.PowerFx.Core.Functions.FunctionArgValidators
             Contracts.AssertValue(order);
 
             validatedSortOrder = string.Empty;
-            order = order.ToLower();
+            order = order.ToLowerInvariant();
             if (order != LanguageConstants.AscendingSortOrderString && order != LanguageConstants.DescendingSortOrderString)
             {
                 return false;

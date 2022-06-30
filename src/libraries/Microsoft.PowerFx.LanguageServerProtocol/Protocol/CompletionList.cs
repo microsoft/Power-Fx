@@ -1,13 +1,16 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
+using System.Collections.Generic;
+
 namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
 {
     public class CompletionList
     {
         public CompletionList()
         {
-            Items = new CompletionItem[] { };
+            Items = Array.Empty<CompletionItem>();
         }
 
         /// <summary>
@@ -19,6 +22,6 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
         /// <summary>
         /// The completion items.
         /// </summary>
-        public CompletionItem[] Items { get; set; }
+        public IEnumerable<CompletionItem> Items { get; set; }
     }
 }

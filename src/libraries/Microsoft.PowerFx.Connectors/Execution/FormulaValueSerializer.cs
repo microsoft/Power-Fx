@@ -178,7 +178,7 @@ namespace Microsoft.PowerFx.Connectors.Execution
                     break;
 
                 default:
-                    throw new NotImplementedException($"Not supported property type {propertySchema?.Type ?? "<null>"} for property {propertyName}");
+                    throw new NotImplementedException($"Not supported property type {propertySchema.Type ?? "<null>"} for property {propertyName}");
             }
         }
       

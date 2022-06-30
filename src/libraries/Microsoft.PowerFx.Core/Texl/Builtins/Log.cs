@@ -64,7 +64,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.Assert(args.Length == argTypes.Length);
             Contracts.AssertValue(errors);
 
-            var fValid = base.CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            var fValid = base.CheckInvocation(args, argTypes, errors, out _, out _);
             fValid &= CheckAllParamsAreTypeOrSingleColumnTable(DType.Number, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
 
             return fValid;

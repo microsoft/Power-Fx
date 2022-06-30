@@ -1,17 +1,16 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using Microsoft.PowerFx.Core.App;
 using Microsoft.PowerFx.Core.Types;
-using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Core.Entities
 {
     internal static class DataTypeInfo
     {
-        private static readonly DataFormat[] NoValidFormat = new DataFormat[0];
+        private static readonly DataFormat[] NoValidFormat = Array.Empty<DataFormat>();
         private static readonly DataFormat[] AllowedValuesOnly = new[] { DataFormat.AllowedValues };
 
         private static readonly IReadOnlyDictionary<DKind, DataFormat[]> _validDataFormatsPerDKind = new Dictionary<DKind, DataFormat[]>

@@ -1,9 +1,8 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
@@ -28,6 +27,7 @@ namespace Microsoft.PowerFx.Types
 
         public static FormulaType Number { get; } = new NumberType();
 
+        [SuppressMessage("Naming", "CA1720:Identifiers should not contain type names", Justification="n/a")]
         public static FormulaType String { get; } = new StringType();
 
         public static FormulaType Time { get; } = new TimeType();
@@ -44,6 +44,7 @@ namespace Microsoft.PowerFx.Types
 
         public static FormulaType Color { get; } = new ColorType();
 
+        [SuppressMessage("Naming", "CA1720:Identifiers should not contain type names", Justification = "n/a")]
         public static FormulaType Guid { get; } = new GuidType();
 
         public static FormulaType Unknown { get; } = new UnknownType();
@@ -72,7 +73,7 @@ namespace Microsoft.PowerFx.Types
 
             var expandEntityInfo = expandEntityType.ExpandInfo;
 
-            if (expandEntityInfo.ParentDataSource is not IExternalTabularDataSource dsInfo)
+            if (expandEntityInfo.ParentDataSource is not IExternalTabularDataSource)
             {
                 return expandEntityType;
             }                        
@@ -169,9 +170,9 @@ namespace Microsoft.PowerFx.Types
 
         public static bool operator !=(FormulaType a, FormulaType b) => !(a == b);
 
-        public override bool Equals(object other)
+        public override bool Equals(object obj)
         {
-            if (other is FormulaType t)
+            if (obj is FormulaType t)
             {
                 return _type.Equals(t._type);
             }
@@ -186,6 +187,6 @@ namespace Microsoft.PowerFx.Types
 
         #endregion // Equality
 
-        public abstract void Visit(ITypeVisitor vistor);
+        public abstract void Visit(ITypeVisitor visitor);
     }
 }

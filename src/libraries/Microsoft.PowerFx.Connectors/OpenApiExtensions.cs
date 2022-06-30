@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Net.Http;
 using Microsoft.OpenApi.Any;
@@ -109,13 +110,13 @@ namespace Microsoft.PowerFx.Connectors
 
             if (x is OpenApiInteger intVal)
             {
-                defaultValue = intVal.Value.ToString();
+                defaultValue = intVal.Value.ToString(CultureInfo.InvariantCulture);
                 return true;
             }
 
             if (x is OpenApiDouble dbl)
             {
-                defaultValue = dbl.Value.ToString();
+                defaultValue = dbl.Value.ToString(CultureInfo.InvariantCulture);
                 return true;
             }
 
@@ -260,9 +261,7 @@ namespace Microsoft.PowerFx.Connectors
         /// <returns>RequestBody content dictionary of possible content types and associated schemas.</returns>
         /// <exception cref="NotImplementedException">When we cannot determine the content type to use.</exception>
         public static (string ContentType, OpenApiMediaType MediaType) GetContentTypeAndSchema(this IDictionary<string, OpenApiMediaType> content)
-        {
-            Dictionary<string, OpenApiMediaType> list = new ();
-
+        {            
             foreach (var ct in _knownContentTypes)
             {                
                 if (content.TryGetValue(ct, out var mediaType))

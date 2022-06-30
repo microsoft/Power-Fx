@@ -17,17 +17,13 @@ namespace Microsoft.PowerFx.Core.Functions.FunctionArgValidators
             Contracts.AssertValue(binding);
 
             entityInfo = null;
-            switch (argNode.Kind)
+            return argNode.Kind switch
             {
-                case NodeKind.FirstName:
-                    return TryGetEntityInfo(argNode.AsFirstName(), binding, out entityInfo);
-                case NodeKind.Call:
-                    return TryGetEntityInfo(argNode.AsCall(), binding, out entityInfo);
-                case NodeKind.DottedName:
-                    return TryGetEntityInfo(argNode.AsDottedName(), binding, out entityInfo);
-            }
-
-            return false;
+                NodeKind.FirstName => TryGetEntityInfo(argNode.AsFirstName(), binding, out entityInfo),
+                NodeKind.Call => TryGetEntityInfo(argNode.AsCall(), binding, out entityInfo),
+                NodeKind.DottedName => TryGetEntityInfo(argNode.AsDottedName(), binding, out entityInfo),
+                _ => false,
+            };
         }
 
         private bool TryGetEntityInfo(CallNode callNode, TexlBinding binding, out IExpandInfo entityInfo)

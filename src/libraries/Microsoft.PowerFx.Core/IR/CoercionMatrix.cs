@@ -55,17 +55,13 @@ namespace Microsoft.PowerFx.Core.IR
                 case DKind.Hyperlink:
                     if (DType.String.Accepts(fromType))
                     {
-                        switch (fromType.Kind)
+                        return fromType.Kind switch
                         {
-                            case DKind.Blob:
-                                return CoercionKind.BlobToHyperlink;
-                            case DKind.Image:
-                                return CoercionKind.ImageToHyperlink;
-                            case DKind.Media:
-                                return CoercionKind.MediaToHyperlink;
-                            default:
-                                return CoercionKind.TextToHyperlink;
-                        }
+                            DKind.Blob => CoercionKind.BlobToHyperlink,
+                            DKind.Image => CoercionKind.ImageToHyperlink,
+                            DKind.Media => CoercionKind.MediaToHyperlink,
+                            _ => CoercionKind.TextToHyperlink,
+                        };
                     }
 
                     Contracts.Assert(false, "Unsupported type coercion");
@@ -326,17 +322,13 @@ namespace Microsoft.PowerFx.Core.IR
             }
             else if (DType.Hyperlink.Accepts(fromType))
             {
-                switch (fromType.Kind)
+                return fromType.Kind switch
                 {
-                    case DKind.Blob:
-                        return CoercionKind.BlobToHyperlink;
-                    case DKind.Image:
-                        return CoercionKind.ImageToHyperlink;
-                    case DKind.Media:
-                        return CoercionKind.MediaToHyperlink;
-                    default:
-                        return CoercionKind.None;
-                }
+                    DKind.Blob => CoercionKind.BlobToHyperlink,
+                    DKind.Image => CoercionKind.ImageToHyperlink,
+                    DKind.Media => CoercionKind.MediaToHyperlink,
+                    _ => CoercionKind.None,
+                };
             }
             else if (DType.OptionSetValue.Accepts(fromType))
             {

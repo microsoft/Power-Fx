@@ -4,7 +4,6 @@
 using System.Collections.Generic;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
-using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Functions.Delegation;
@@ -43,7 +42,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.Assert(args.Length >= 2 && args.Length <= 3);
             Contracts.AssertValue(errors);
 
-            var fValid = CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            var fValid = CheckInvocation(args, argTypes, errors, out _, out nodeToCoercedTypeMap);
 
             // The return type is dictated by the last argument (projection) if one exists. Otherwise it's based on first argument (source).
             returnType = args.Length == 2 ? argTypes[0].ToRecord() : argTypes[2];
@@ -82,7 +81,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 return false;
             }
 
-            FilterOpMetadata metadata = null;
+            FilterOpMetadata metadata;
             if (TryGetEntityMetadata(callNode, binding, out IDelegationMetadata delegationMetadata))
             {
                 if (!binding.Document.Properties.EnabledFeatures.IsEnhancedDelegationEnabled ||

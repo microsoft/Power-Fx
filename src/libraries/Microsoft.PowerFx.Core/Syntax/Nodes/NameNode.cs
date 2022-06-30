@@ -2,7 +2,6 @@
 // Licensed under the MIT license.
 
 using System.Linq;
-using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Syntax.SourceInformation;
 
 namespace Microsoft.PowerFx.Syntax
@@ -20,7 +19,7 @@ namespace Microsoft.PowerFx.Syntax
         /// <inheritdoc />
         public override Span GetCompleteSpan()
         {
-            if (SourceList.Tokens.Count() == 0)
+            if (!SourceList.Tokens.Any())
             {
                 return base.GetCompleteSpan();
             }

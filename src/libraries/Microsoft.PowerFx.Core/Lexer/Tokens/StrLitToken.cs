@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Syntax
@@ -53,16 +52,16 @@ namespace Microsoft.PowerFx.Syntax
         }
 
         /// <inheritdoc />
-        public override bool Equals(Token that)
+        public override bool Equals(Token other)
         {
-            Contracts.AssertValue(that);
+            Contracts.AssertValue(other);
 
-            if (!(that is StrLitToken))
+            if (other is not StrLitToken)
             {
                 return false;
             }
 
-            return Value == that.As<StrLitToken>().Value && base.Equals(that);
+            return Value == other.As<StrLitToken>().Value && base.Equals(other);
         }
     }
 }

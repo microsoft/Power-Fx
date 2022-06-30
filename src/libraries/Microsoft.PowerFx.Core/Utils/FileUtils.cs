@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 
 namespace Microsoft.PowerFx.Core.Utils
@@ -18,6 +19,7 @@ namespace Microsoft.PowerFx.Core.Utils
             FullPath = Path.GetTempFileName() + ".msapp";
         }
 
+        [SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "n/a")]
         public void Dispose()
         {
             if (FullPath != null && File.Exists(FullPath))
@@ -47,6 +49,7 @@ namespace Microsoft.PowerFx.Core.Utils
             Dir = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
         }
 
+        [SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "n/a")]
         public void Dispose()
         {
             if (Dir != null && Directory.Exists(Dir))

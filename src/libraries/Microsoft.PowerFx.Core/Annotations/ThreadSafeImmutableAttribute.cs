@@ -9,7 +9,7 @@ namespace Microsoft.PowerFx
     /// This type is thread safe because it's immutable. 
     /// </summary>
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Interface)]
-    internal class ThreadSafeImmutableAttribute : Attribute
+    internal sealed class ThreadSafeImmutableAttribute : Attribute
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ThreadSafeImmutableAttribute"/> class.

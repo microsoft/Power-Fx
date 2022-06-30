@@ -76,7 +76,7 @@ namespace Microsoft.PowerFx.Tests
 
             // DataRow doesn't have a TryGetValue! 
             // So just catch the exception.
-            private bool TryGetValue(DataRow row, string fieldName, out object value)
+            private bool TryGetValue(string fieldName, out object value)
             {
                 try
                 {
@@ -93,7 +93,7 @@ namespace Microsoft.PowerFx.Tests
             protected override bool TryGetField(FormulaType fieldType, string fieldName, out FormulaValue result)
             {
                 // DataRow doesn't have a way to check if 
-                if (!TryGetValue(_row, fieldName, out var value))
+                if (!TryGetValue(fieldName, out var value))
                 {
                     result = null;
                     return false;

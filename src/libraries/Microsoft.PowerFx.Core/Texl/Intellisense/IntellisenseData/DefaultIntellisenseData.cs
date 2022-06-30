@@ -24,11 +24,7 @@ namespace Microsoft.PowerFx.Intellisense.IntellisenseData
 
         /// <summary>
         /// No-op, default Intellisense does not augment signatures at this stage.
-        /// </summary>
-        /// <param name="func"></param>
-        /// <param name="argIndex"></param>
-        /// <param name="paramName"></param>
-        /// <param name="highlightStart"></param>
+        /// </summary>               
         /// <param name="newHighlightStart">
         /// 0 when this method returns.
         /// </param>
@@ -44,7 +40,7 @@ namespace Microsoft.PowerFx.Intellisense.IntellisenseData
         /// <returns>
         /// False.
         /// </returns>
-        public static bool DefaultTryAugmentSignature(TexlFunction func, int argIndex, string paramName, int highlightStart, out int newHighlightStart, out int newHighlightEnd, out string newParamName, out string newInvariantParamName)
+        public static bool DefaultTryAugmentSignature(out int newHighlightStart, out int newHighlightEnd, out string newParamName, out string newInvariantParamName)
         {
             newHighlightStart = 0;
             newHighlightEnd = 0;
@@ -54,20 +50,14 @@ namespace Microsoft.PowerFx.Intellisense.IntellisenseData
         }
 
         public bool TryAugmentSignature(TexlFunction func, int argIndex, string paramName, int highlightStart, out int newHighlightStart, out int newHighlightEnd, out string newParamName, out string newInvariantParamName) =>
-            DefaultTryAugmentSignature(func, argIndex, paramName, highlightStart, out newHighlightStart, out newHighlightEnd, out newParamName, out newInvariantParamName);
+            DefaultTryAugmentSignature(out newHighlightStart, out newHighlightEnd, out newParamName, out newInvariantParamName);
 
         /// <summary>
         /// Returns nothing, default Intellisense does not suffix parameters by default.
         /// </summary>
-        /// <param name="function">
-        /// The function that will not be suffixed.
-        /// </param>
-        /// <param name="paramName">
-        /// The parameter that will not be suffixed.
-        /// </param>
         /// <returns><see cref="string.Empty"/>.</returns>
-        public static string GenerateDefaultParameterDescriptionSuffix(TexlFunction function, string paramName) => string.Empty;
+        public static string GenerateDefaultParameterDescriptionSuffix() => string.Empty;
 
-        public string GenerateParameterDescriptionSuffix(TexlFunction function, string paramName) => GenerateDefaultParameterDescriptionSuffix(function, paramName);
+        public string GenerateParameterDescriptionSuffix(TexlFunction function, string paramName) => GenerateDefaultParameterDescriptionSuffix();
     }
 }

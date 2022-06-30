@@ -12,9 +12,6 @@ using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
 
-#pragma warning disable SA1402 // File may only contain a single type
-#pragma warning disable SA1649 // File name should match first type name
-
 namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
     // AddColumns(source:*[...], name:s, valueFunc:func<_>, name:s, valueFunc:func<_>, ...)
@@ -63,7 +60,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertValue(errors);
             Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
 
-            var fArgsValid = CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            var fArgsValid = CheckInvocation(args, argTypes, errors, out _, out nodeToCoercedTypeMap);
 
             // The first arg determines the scope type for the lambda params, and the return type.
             fArgsValid &= ScopeInfo.CheckInput(args[0], argTypes[0], errors, out var typeScope);
@@ -110,7 +107,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 }
 
                 // Verify that the name doesn't already exist as either a logical or display name
-                if (typeScope.TryGetType(columnName, out var columnType) || DType.TryGetLogicalNameForColumn(typeScope, columnName, out var unused))
+                if (typeScope.TryGetType(columnName, out var _) || DType.TryGetLogicalNameForColumn(typeScope, columnName, out var _))
                 {
                     fArgsValid = false;
                     errors.EnsureError(DocumentErrorSeverity.Moderate, nameArg, TexlStrings.ErrColExists_Name, columnName);
@@ -122,7 +119,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     break;
                 }
 
-                columnType = argTypes[i + 1];
+                var columnType = argTypes[i + 1];
 
                 // Augment the result type to include the specified column, and verify that it
                 // hasn't been specified already within the same invocation.
@@ -185,6 +182,3 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         }
     }
 }
-
-#pragma warning restore SA1402 // File may only contain a single type
-#pragma warning restore SA1649 // File name should match first type name

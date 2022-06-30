@@ -20,8 +20,8 @@ namespace Microsoft.PowerFx.Intellisense
 
         public IntellisenseContext(string inputText, int cursorPosition)
         {
-            Contracts.CheckValue(inputText, "inputText");
-            Contracts.CheckParam(cursorPosition >= 0 && cursorPosition <= inputText.Length, "cursorPosition");
+            Contracts.CheckValue(inputText, nameof(inputText));
+            Contracts.CheckParam(cursorPosition >= 0 && cursorPosition <= inputText.Length, nameof(cursorPosition));
 
             InputText = inputText;
             CursorPosition = cursorPosition;

@@ -1,9 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System.Globalization;
 using System.Linq;
-using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Core.Types.Enums;
@@ -161,7 +159,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
 
             Preview.FeatureFlags.StringInterpolation = true;
             var actualSuggestions = SuggestStrings(expression, Default);
-            Assert.Equal(expectedSuggestions, actualSuggestions);
+            Assert.Equal(expectedSuggestions.OrderBy(s => s), actualSuggestions.OrderBy(s => s));
         }
 
         /// <summary>
@@ -237,7 +235,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
             Assert.NotNull(context);
 
             var actualSuggestions = SuggestStrings(expression, Default, context);
-            Assert.Equal(expectedSuggestions, actualSuggestions);
+            Assert.Equal(expectedSuggestions.OrderBy(s => s), actualSuggestions.OrderBy(s => s));
         }
     }
 }

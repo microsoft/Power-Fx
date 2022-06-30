@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Types;
@@ -388,10 +389,10 @@ namespace Microsoft.PowerFx.Functions
 
                 if (exact)
                 {
-                    return new BooleanValue(irContext, rightStr.Value.IndexOf(leftStr.Value) >= 0);
+                    return new BooleanValue(irContext, rightStr.Value.IndexOf(leftStr.Value, StringComparison.Ordinal) >= 0);
                 }
 
-                return new BooleanValue(irContext, rightStr.Value.ToLowerInvariant().IndexOf(leftStr.Value.ToLowerInvariant()) >= 0);
+                return new BooleanValue(irContext, rightStr.Value.IndexOf(leftStr.Value, StringComparison.OrdinalIgnoreCase) >= 0);
             };
         }
 
@@ -433,6 +434,7 @@ namespace Microsoft.PowerFx.Functions
             };
         }
 
+        [SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "n/a")]
         private static FormulaValue AddDateAndTime(IRContext irContext, FormulaValue[] args)
         {
             DateTime arg0;
@@ -461,6 +463,7 @@ namespace Microsoft.PowerFx.Functions
             }
         }
 
+        [SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "n/a")]
         private static FormulaValue AddDateAndDay(IRContext irContext, FormulaValue[] args)
         {
             DateTime arg0;
@@ -496,6 +499,7 @@ namespace Microsoft.PowerFx.Functions
             }
         }
 
+        [SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "n/a")]
         private static FormulaValue AddDateTimeAndDay(IRContext irContext, FormulaValue[] args)
         {
             DateTime arg0;

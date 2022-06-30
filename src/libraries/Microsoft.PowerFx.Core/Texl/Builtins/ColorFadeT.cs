@@ -12,9 +12,6 @@ using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
 
-#pragma warning disable SA1402 // File may only contain a single type
-#pragma warning disable SA1649 // File name should match first type name
-
 namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
     // ColorFade(color:c|*[c], fadeDelta:n|*[n])
@@ -62,8 +59,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             var type0 = argTypes[0];
             var type1 = argTypes[1];
 
-            var otherType = DType.Invalid;
-            TexlNode otherArg = null;
+            DType otherType;
+            TexlNode otherArg;
 
             // At least one of the arguments has to be a table.
             if (type0.IsTable)
@@ -143,6 +140,3 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         }
     }
 }
-
-#pragma warning restore SA1402 // File may only contain a single type
-#pragma warning restore SA1649 // File name should match first type name

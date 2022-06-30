@@ -6,7 +6,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
     /// <summary>
     /// Code action kind constants.
     /// </summary>
-    public class CodeActionKind
+    public static class CodeActionKind
     {
         /// <summary>
         /// Code action kind quickfix.

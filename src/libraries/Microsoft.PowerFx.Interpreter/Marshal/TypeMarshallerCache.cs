@@ -24,13 +24,13 @@ namespace Microsoft.PowerFx
 
         // Map from a .net type to the marshaller for that type
         // Cache must be thread-safe. 
-        [ThreadSafeProtectedByLock("_cache")]
+        [ThreadSafeProtectedByLock]
         private readonly Dictionary<Type, ITypeMarshaller> _cache = new Dictionary<Type, ITypeMarshaller>();
 
         /// <summary>
         /// Empty type marshaller, without any defaults. 
         /// </summary>
-        public static TypeMarshallerCache Empty { get; } = new TypeMarshallerCache(new ITypeMarshallerProvider[0]);
+        public static TypeMarshallerCache Empty { get; } = new TypeMarshallerCache(Array.Empty<ITypeMarshallerProvider>());
 
         private static readonly IEnumerable<ITypeMarshallerProvider> _defaults = NewList(new ObjectMarshallerProvider());
 

@@ -2,7 +2,6 @@
 // Licensed under the MIT license.
 
 using System;
-using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Syntax
@@ -52,36 +51,36 @@ namespace Microsoft.PowerFx.Syntax
         /// <inheritdoc />
         public override int GetHashCode()
         {
-            return (int)Kind ^ (int)0x7AFF9182;
+            return (int)Kind ^ 0x7AFF9182;
         }
 
         /// <inheritdoc />
-        public override bool Equals(object that)
+        public override bool Equals(object obj)
         {
-            if (that == null)
+            if (obj == null)
             {
                 return false;
             }
 
-            if (!(that is Token))
+            if (obj is not Token)
             {
                 return false;
             }
 
-            return Equals((Token)that);
+            return Equals((Token)obj);
         }
 
         /// <summary>
         /// Determines whether the specified <see cref="Token" /> is equal to the current one.
         /// </summary>
-        /// <param name="that"></param>
+        /// <param name="other"></param>
         /// <returns></returns>
-        public virtual bool Equals(Token that)
+        public virtual bool Equals(Token other)
         {
-            Contracts.AssertValue(that);
+            Contracts.AssertValue(other);
 
             // Ensure the tokens have the same kind
-            return Kind == that.Kind;
+            return Kind == other.Kind;
         }
     }
 }

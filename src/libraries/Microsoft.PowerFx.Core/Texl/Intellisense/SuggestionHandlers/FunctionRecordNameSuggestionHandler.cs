@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using Microsoft.PowerFx.Core.Binding.BindInfo;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
@@ -85,7 +84,7 @@ namespace Microsoft.PowerFx.Intellisense
                         suggestionsAdded |= IntellisenseHelper.AddSuggestion(intellisenseData, suggestion, SuggestionKind.Field, SuggestionIconKind.Other, DType.String, requiresSuggestionEscaping: false);
                     }
 
-                    return suggestionsAdded && columnName != null;
+                    return suggestionsAdded;
                 }
 
                 return intellisenseData.TryAddFunctionRecordSuggestions(func, callNode, columnName);
@@ -187,7 +186,7 @@ namespace Microsoft.PowerFx.Intellisense
                     return false;
                 }
 
-                if (!(listNode.Parent is CallNode cNode))
+                if (listNode.Parent is not CallNode cNode)
                 {
                     callNode = null;
                     return false;

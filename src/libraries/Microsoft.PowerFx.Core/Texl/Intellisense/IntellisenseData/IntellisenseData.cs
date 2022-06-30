@@ -455,10 +455,9 @@ namespace Microsoft.PowerFx.Intellisense.IntellisenseData
         }
 
         public virtual bool TryAugmentSignature(TexlFunction func, int argIndex, string paramName, int highlightStart, out int newHighlightStart, out int newHighlightEnd, out string newParamName, out string newInvariantParamName) =>
-            DefaultIntellisenseData.DefaultTryAugmentSignature(func, argIndex, paramName, highlightStart, out newHighlightStart, out newHighlightEnd, out newParamName, out newInvariantParamName);
+            DefaultIntellisenseData.DefaultTryAugmentSignature(out newHighlightStart, out newHighlightEnd, out newParamName, out newInvariantParamName);
 
-        public virtual string GenerateParameterDescriptionSuffix(TexlFunction function, string paramName) =>
-            DefaultIntellisenseData.GenerateDefaultParameterDescriptionSuffix(function, paramName);
+        public virtual string GenerateParameterDescriptionSuffix(TexlFunction function, string paramName) => DefaultIntellisenseData.GenerateDefaultParameterDescriptionSuffix();
 
         internal bool SetMatchArea(int startIndex, int endIndex, int replacementLength = -1)
         {

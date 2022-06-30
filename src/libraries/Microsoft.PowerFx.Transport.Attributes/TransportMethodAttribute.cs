@@ -9,7 +9,7 @@ namespace Microsoft.AppMagic.Transport
     /// Enables transport on the specified method. See <see cref="TransportTypeAttribute"/> for more information.
     /// </summary>
     [AttributeUsage(AttributeTargets.Method)]
-    public class TransportMethodAttribute : Attribute
+    public sealed class TransportMethodAttribute : Attribute
     {
         public TransportMethodAttribute(bool supportSynchronousClient = false, TransportBatchingMode batchingMode = TransportBatchingMode.Default, bool isParallel = false)
         {

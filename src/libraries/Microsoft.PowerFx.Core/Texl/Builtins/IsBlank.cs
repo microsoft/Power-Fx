@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
+using System.Globalization;
 using System.Numerics;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
@@ -110,7 +111,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             if (args[0] is not FirstNameNode node)
             {
-                var message = string.Format("Arg1 is not a firstname node, instead it is {0}", args[0].Kind);
+                var message = string.Format(CultureInfo.InvariantCulture, "Arg1 is not a firstname node, instead it is {0}", args[0].Kind);
                 AddSuggestionMessageToTelemetry(message, args[0], binding);
                 return false;
             }

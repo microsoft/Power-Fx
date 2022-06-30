@@ -5,12 +5,10 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 using Microsoft.PowerFx.Core.Parser;
 using Microsoft.PowerFx.Core.UtilityDataStructures;
 using Microsoft.PowerFx.Core.Utils;
-using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Syntax.SourceInformation;
 
 namespace Microsoft.PowerFx.Syntax
@@ -238,8 +236,7 @@ namespace Microsoft.PowerFx.Syntax
 
             switch (node.Op)
             {
-                case VariadicOp.Chain:
-                    var op = SpacedOper(TexlLexer.GetLocalizedInstance(CultureInfo.CurrentCulture).LocalizedPunctuatorChainingSeparator);
+                case VariadicOp.Chain:                    
                     var count = node.Count;
                     var result = LazyList<string>.Empty;
 
@@ -295,18 +292,13 @@ namespace Microsoft.PowerFx.Syntax
             Contracts.AssertValue(node);
 
             var result = LazyList<string>.Empty;
-            var sb = new StringBuilder();
             if (!node.Head.Namespace.IsRoot)
             {
-                result = result.With(
-                    node.Head.Namespace.ToDottedSyntax(),
-                    TexlLexer.PunctuatorDot);
+                result = result.With(node.Head.Namespace.ToDottedSyntax(), TexlLexer.PunctuatorDot);
             }
 
             result = result
-                .With(
-                    node.Head.Token.ToString(),
-                    TexlLexer.PunctuatorParenOpen)
+                .With(node.Head.Token.ToString(), TexlLexer.PunctuatorParenOpen)
                 .With(node.Args.Accept(this, Precedence.Primary))
                 .With(TexlLexer.PunctuatorParenClose);
 
@@ -615,7 +607,7 @@ namespace Microsoft.PowerFx.Syntax
 
             var builder = LazyList<string>.Empty;
             var firstNode = true;
-            foreach (var source in node.SourceList.Sources.Where(source => !(source is WhitespaceSource)))
+            foreach (var source in node.SourceList.Sources.Where(source => source is not WhitespaceSource))
             {
                 if (source is NodeSource leftOrRight)
                 {
@@ -650,7 +642,7 @@ namespace Microsoft.PowerFx.Syntax
             if (node.Op == VariadicOp.Chain)
             {
                 var result = LazyList<string>.Empty;
-                foreach (var source in node.SourceList.Sources.Where(source => !(source is WhitespaceSource)))
+                foreach (var source in node.SourceList.Sources.Where(source => source is not WhitespaceSource))
                 {
                     if (source is NodeSource nodeSource)
                     {
@@ -681,7 +673,7 @@ namespace Microsoft.PowerFx.Syntax
 
             var result = LazyList<string>.Empty;
             var withinIsland = false;
-            foreach (var source in node.SourceList.Sources.Where(source => !(source is WhitespaceSource)))
+            foreach (var source in node.SourceList.Sources.Where(source => source is not WhitespaceSource))
             {
                 if (source is NodeSource nodeSource)
                 {
@@ -828,13 +820,13 @@ namespace Microsoft.PowerFx.Syntax
                         .With(GetScriptForToken(tokenSource.Token))
                         .With(GetNewLine(context.IndentDepth + 1));
                 }
-                else if (commentToken != null && (previousToken?.Kind == TokKind.CurlyOpen || previousToken?.Kind == TokKind.Comma) && !commentToken.Value.StartsWith("//") && !commentToken.Value.StartsWith("\n"))
+                else if (commentToken != null && (previousToken?.Kind == TokKind.CurlyOpen || previousToken?.Kind == TokKind.Comma) && !commentToken.Value.StartsWith("//", StringComparison.OrdinalIgnoreCase) && !commentToken.Value.StartsWith("\n", StringComparison.OrdinalIgnoreCase))
                 {
                     result = result
                         .With(GetScriptForToken(tokenSource.Token))
                         .With(GetNewLine(context.IndentDepth + 1));
                 }
-                else if (commentToken != null && (previousToken?.Kind == TokKind.CurlyOpen || previousToken?.Kind == TokKind.Comma) && !commentToken.Value.StartsWith("//") && commentToken.Value.StartsWith("\n"))
+                else if (commentToken != null && (previousToken?.Kind == TokKind.CurlyOpen || previousToken?.Kind == TokKind.Comma) && !commentToken.Value.StartsWith("//", StringComparison.OrdinalIgnoreCase) && commentToken.Value.StartsWith("\n", StringComparison.OrdinalIgnoreCase))
                 {
                     result = result
                         .With(GetScriptForToken(tokenSource.Token).TrimStart())
@@ -860,7 +852,7 @@ namespace Microsoft.PowerFx.Syntax
             var useNewlines = node.Count > 1 || hasNewline;
 
             var result = LazyList<string>.Empty;
-            foreach (var source in node.SourceList.Sources.Where(source => !(source is WhitespaceSource)))
+            foreach (var source in node.SourceList.Sources.Where(source => source is not WhitespaceSource))
             {
                 var tokenSource = source as TokenSource;
                 if (source is NodeSource nodeSource)

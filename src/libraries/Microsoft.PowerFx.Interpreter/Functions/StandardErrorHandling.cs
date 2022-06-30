@@ -112,7 +112,7 @@ namespace Microsoft.PowerFx.Functions
                         break;
                 }
 
-                return await targetFunction(runner, symbolContext, irContext, runtimeValuesChecked.Select(arg => arg as T).ToArray());
+                return await targetFunction(runner, symbolContext, irContext, runtimeValuesChecked.Select(arg => arg as T).ToArray()).ConfigureAwait(false);
             };
         }
 
@@ -340,7 +340,7 @@ namespace Microsoft.PowerFx.Functions
 
                     var targetArgs = list.Select((dv, i) => dv.IsValue ? dv.Value.GetField(names[i]) : dv.ToFormulaValue()).ToArray();
 
-                    var namedValue = new NamedValue(BuiltinFunction.OneColumnTableResultNameStr, await targetFunction(runner, symbolContext, IRContext.NotInSource(itemType), targetArgs));
+                    var namedValue = new NamedValue(BuiltinFunction.OneColumnTableResultNameStr, await targetFunction(runner, symbolContext, IRContext.NotInSource(itemType), targetArgs).ConfigureAwait(false));
                     var record = new InMemoryRecordValue(IRContext.NotInSource(resultType), new List<NamedValue>() { namedValue });
                     resultRows.Add(DValue<RecordValue>.Of(record));
                 }

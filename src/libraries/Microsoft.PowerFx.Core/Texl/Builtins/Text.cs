@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
 using System.Collections.Generic;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Errors;
@@ -112,7 +113,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 var fmt = formatNode.Value;
 
                 // But firstly skip any locale-prefix
-                if (fmt.StartsWith("[$-"))
+                if (fmt.StartsWith("[$-", StringComparison.OrdinalIgnoreCase))
                 {
                     var end = fmt.IndexOf(']', 3);
                     if (end > 0)

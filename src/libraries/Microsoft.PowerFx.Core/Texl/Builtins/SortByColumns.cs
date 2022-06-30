@@ -3,10 +3,10 @@
 
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using System.Linq;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
-using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Entities.QueryOptions;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
@@ -171,7 +171,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             if (binding.IsAsync(node))
             {
-                var message = string.Format("Function:{0}, SortOrderNode is async", Name);
+                var message = string.Format(CultureInfo.InvariantCulture, "Function:{0}, SortOrderNode is async", Name);
                 AddSuggestionMessageToTelemetry(message, node, binding);
                 return false;
             }
@@ -215,7 +215,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 return false;
             }
 
-            SortOpMetadata metadata = null;
+            SortOpMetadata metadata;
             if (TryGetEntityMetadata(callNode, binding, out IDelegationMetadata delegationMetadata))
             {
                 if (!binding.Document.Properties.EnabledFeatures.IsEnhancedDelegationEnabled ||
@@ -238,7 +238,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
 
             var args = callNode.Args.Children.VerifyValue();
-            var cargs = args.Count();
+            var cargs = args.Length;
 
             const string defaultSortOrder = LanguageConstants.AscendingSortOrderString;
 
@@ -277,7 +277,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertValue(metadata);
             Contracts.AssertValid(columnPath);
 
-            order = order.ToLower();
+            order = order.ToLowerInvariant();
 
             // If column is marked as ascending only then return false if order requested is descending.
             return order != LanguageConstants.DescendingSortOrderString || !metadata.IsColumnAscendingOnly(columnPath);

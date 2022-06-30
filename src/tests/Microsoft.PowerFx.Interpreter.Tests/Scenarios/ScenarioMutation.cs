@@ -39,7 +39,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             foreach (var expr in exprs)
             {
-                var x = engine.Eval(expr); // Assert failures will throw.
+                _ = engine.Eval(expr); // Assert failures will throw.
             }
         }
 

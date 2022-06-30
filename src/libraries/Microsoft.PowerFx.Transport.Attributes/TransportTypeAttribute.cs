@@ -26,7 +26,7 @@ namespace Microsoft.AppMagic.Transport
     /// See specification for more information: https://microsoft.sharepoint.com/teams/appPlatform/PowerApps/Shared%20Documents/Engineering/WebAuthoring/NextTransportFull.docx?web=1.
     /// </remarks>
     [AttributeUsage(AttributeTargets.Interface | AttributeTargets.Class | AttributeTargets.Enum)]
-    public class TransportTypeAttribute : Attribute
+    public sealed class TransportTypeAttribute : Attribute
     {
         public TransportKind Kind { get; }
 

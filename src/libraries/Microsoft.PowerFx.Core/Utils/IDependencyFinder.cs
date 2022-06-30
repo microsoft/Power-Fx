@@ -2,7 +2,6 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
-using Microsoft.PowerFx.Core.Public;
 
 namespace Microsoft.PowerFx.Core.Utils
 {

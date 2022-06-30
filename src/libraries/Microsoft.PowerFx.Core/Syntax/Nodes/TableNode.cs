@@ -3,9 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Utils;
-using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Syntax.SourceInformation;
 
 namespace Microsoft.PowerFx.Syntax
@@ -79,7 +77,7 @@ namespace Microsoft.PowerFx.Syntax
             {
                 lim = BracketClose.Span.Lim;
             }
-            else if (Children.Count() == 0)
+            else if (Children.Length == 0)
             {
                 lim = Token.VerifyValue().Span.Lim;
             }

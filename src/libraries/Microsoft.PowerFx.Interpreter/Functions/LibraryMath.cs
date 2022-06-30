@@ -3,9 +3,9 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Types;
 
@@ -16,7 +16,7 @@ namespace Microsoft.PowerFx.Functions
     {
         private static readonly object _randomizerLock = new object();
 
-        [ThreadSafeProtectedByLock(nameof(_randomizerLock))]
+        [ThreadSafeProtectedByLock]
         private static Random _random;
 
         // Support for aggregators. Helpers to ensure that Scalar and Tabular behave the same.
@@ -31,7 +31,10 @@ namespace Microsoft.PowerFx.Functions
         {
             protected int _count;
             protected double _accumulator;
-            protected static readonly double _defaultN = 0d;
+
+#pragma warning disable CS0649 // Compiler Warning (level 4): Field is never assigned to, and will always have its default value
+            protected static readonly double _defaultN;
+#pragma warning restore CS0649
 
             public void Apply(FormulaValue value)
             {
@@ -137,7 +140,7 @@ namespace Microsoft.PowerFx.Functions
         private class MinNumberAgg : IAggregator
         {            
             protected double _minValue = double.MaxValue;
-            protected int _count = 0;
+            protected int _count;
 
             public void Apply(FormulaValue value)
             {            
@@ -170,7 +173,7 @@ namespace Microsoft.PowerFx.Functions
         private class MinDateTimeAgg : IAggregator
         {
             protected DateTime _minValueDT = DateTime.MaxValue;
-            protected int _count = 0;
+            protected int _count;
 
             public void Apply(FormulaValue value)
             {           
@@ -203,7 +206,7 @@ namespace Microsoft.PowerFx.Functions
         private class MinDateAgg : IAggregator
         {
             protected DateTime _minValueDT = DateTime.MaxValue;
-            protected int _count = 0;
+            protected int _count;
 
             public void Apply(FormulaValue value)
             {               
@@ -236,7 +239,7 @@ namespace Microsoft.PowerFx.Functions
         private class MinTimeAgg : IAggregator
         {            
             protected TimeSpan _minValueT = TimeSpan.MaxValue;
-            protected int _count = 0;
+            protected int _count;
 
             public void Apply(FormulaValue value)
             {
@@ -269,7 +272,7 @@ namespace Microsoft.PowerFx.Functions
         private class MaxNumberAgg : IAggregator
         {            
             protected double _maxValue = double.MinValue;
-            protected int _count = 0;
+            protected int _count;
 
             public void Apply(FormulaValue value)
             {            
@@ -302,7 +305,7 @@ namespace Microsoft.PowerFx.Functions
         private class MaxDateAgg : IAggregator
         {            
             protected DateTime _maxValueDT = DateTime.MinValue;
-            protected int _count = 0;
+            protected int _count;
 
             public void Apply(FormulaValue value)
             {   
@@ -335,7 +338,7 @@ namespace Microsoft.PowerFx.Functions
         private class MaxDateTimeAgg : IAggregator
         {            
             protected DateTime _maxValueDT = DateTime.MinValue;
-            protected int _count = 0;
+            protected int _count;
 
             public void Apply(FormulaValue value)
             {
@@ -368,7 +371,7 @@ namespace Microsoft.PowerFx.Functions
         private class MaxTimeAgg : IAggregator
         {            
             protected TimeSpan _maxValueT = TimeSpan.MinValue;
-            protected int _count = 0;
+            protected int _count;
 
             public void Apply(FormulaValue value)
             {
@@ -441,7 +444,7 @@ namespace Microsoft.PowerFx.Functions
                 if (row.IsValue)
                 {
                     var childContext = context.WithScopeValues(row.Value);
-                    var value = await arg1.EvalAsync(runner, childContext);
+                    var value = await arg1.EvalAsync(runner, childContext).ConfigureAwait(false);
 
                     if (value is NumberValue number)
                     {
@@ -478,7 +481,7 @@ namespace Microsoft.PowerFx.Functions
         // Sum([1,2,3], Value * Value)     
         public static async ValueTask<FormulaValue> SumTable(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args)
         {
-            return await RunAggregatorAsync(new SumAgg(), runner, symbolContext, irContext, args);
+            return await RunAggregatorAsync(new SumAgg(), runner, symbolContext, irContext, args).ConfigureAwait(false);
         }
         
         // VarP(1,2,3)
@@ -490,7 +493,7 @@ namespace Microsoft.PowerFx.Functions
         // VarP([1,2,3], Value * Value)
         public static async ValueTask<FormulaValue> VarTable(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args)
         {
-            return await RunAggregatorAsync(new VarianceAgg(), runner, symbolContext, irContext, args);
+            return await RunAggregatorAsync(new VarianceAgg(), runner, symbolContext, irContext, args).ConfigureAwait(false);
         }
 
         internal static FormulaValue Stdev(IRContext irContext, FormulaValue[] args)
@@ -500,7 +503,7 @@ namespace Microsoft.PowerFx.Functions
 
         public static async ValueTask<FormulaValue> StdevTable(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args)
         {
-            return await RunAggregatorAsync(new StdDeviationAgg(), runner, symbolContext, irContext, args);
+            return await RunAggregatorAsync(new StdDeviationAgg(), runner, symbolContext, irContext, args).ConfigureAwait(false);
         }
 
         // Max(1,2,3)     
@@ -525,7 +528,7 @@ namespace Microsoft.PowerFx.Functions
 
             if (agg != null)
             {
-                return await RunAggregatorAsync(agg, runner, symbolContext, irContext, args);
+                return await RunAggregatorAsync(agg, runner, symbolContext, irContext, args).ConfigureAwait(false);
             }
             else
             {
@@ -555,7 +558,7 @@ namespace Microsoft.PowerFx.Functions
 
             if (agg != null)
             {
-                return await RunAggregatorAsync(agg, runner, symbolContext, irContext, args);                
+                return await RunAggregatorAsync(agg, runner, symbolContext, irContext, args).ConfigureAwait(false);                
             }
             else 
             {
@@ -602,12 +605,12 @@ namespace Microsoft.PowerFx.Functions
         {
             var arg0 = (TableValue)args[0];
 
-            if (arg0.Rows.Count() == 0)
+            if (!arg0.Rows.Any())
             {
                 return CommonErrors.DivByZeroError(irContext);
             }
 
-            return await RunAggregatorAsync(new AverageAgg(), runner, symbolContext, irContext, args);
+            return await RunAggregatorAsync(new AverageAgg(), runner, symbolContext, irContext, args).ConfigureAwait(false);
         }
 
         // https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-mod
@@ -672,7 +675,7 @@ namespace Microsoft.PowerFx.Functions
             var digitsArg = args[1].Value;
 
             var x = Round(numberArg, digitsArg);
-            if (x == double.NaN)
+            if (double.IsNaN(x))
             {
                 return CommonErrors.NumericOutOfRange(irContext);
             }
@@ -693,18 +696,14 @@ namespace Microsoft.PowerFx.Functions
 
             var m = Math.Pow(10d, -dg);
             var eps = m / 1e12d; // used to manage rounding of 1.4499999999999999999996
-          
-            switch (rt)
-            {
-                case RoundType.Default:
-                    return s * Math.Floor((n + (m / 2) + eps) / m) * m;
-                case RoundType.Down:
-                    return s * Math.Floor(n / m) * m;
-                case RoundType.Up:
-                    return s * Math.Ceiling(n / m) * m;
-            }
 
-            return 0;
+            return rt switch
+            {
+                RoundType.Default => s * Math.Floor((n + (m / 2) + eps) / m) * m,
+                RoundType.Down => s * Math.Floor(n / m) * m,
+                RoundType.Up => s * Math.Ceiling(n / m) * m,
+                _ => 0,
+            };
         }
 
         public enum RoundType
@@ -812,6 +811,7 @@ namespace Microsoft.PowerFx.Functions
             return FiniteChecker(irContext, 1, result);
         }
 
+        [SuppressMessage("Security", "CA5394: Do not use insecure randomness", Justification = "Not used for encryption or security purpose")]
         private static FormulaValue Rand(IRContext irContext, FormulaValue[] args)
         {
             lock (_randomizerLock)
@@ -825,6 +825,7 @@ namespace Microsoft.PowerFx.Functions
             }
         }
 
+        [SuppressMessage("Security", "CA5394: Do not use insecure randomness", Justification = "Not used for encryption or security purpose")]
         public static FormulaValue RandBetween(IRContext irContext, NumberValue[] args)
         {
             var lower = args[0].Value;

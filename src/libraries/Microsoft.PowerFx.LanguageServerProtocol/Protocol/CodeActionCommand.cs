@@ -1,6 +1,9 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
+using System.Collections.Generic;
+
 namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
 {
     /// <summary>
@@ -14,7 +17,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
         /// </summary>
         public CodeActionCommand()
         {
-            Arguments = new object[] { };
+            Arguments = Array.Empty<object>();
         }
 
         /// <summary>
@@ -30,6 +33,6 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
         /// <summary>
         /// Gets or sets command arguments.
         /// </summary>
-        public object[] Arguments { get; set; }
+        public IEnumerable<object> Arguments { get; set; }
     }
 }

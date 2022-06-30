@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text.Json;
 using System.Web;
@@ -37,6 +38,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
 
         public delegate void NotifyDidChange(DidChangeTextDocumentParams didChangeParams);
 
+        [SuppressMessage("Design", "CA1003: Use generic event handler instances", Justification = "n/a")]
         public event NotifyDidChange OnDidChange;
 
         private static readonly JsonSerializerOptions _jsonSerializerOptions = new JsonSerializerOptions()
@@ -50,6 +52,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
         /// Callback for host to get notified of unhandled exceptions that are happening asynchronously.
         /// This should be used for logging purposes. 
         /// </summary>
+        [SuppressMessage("Design", "CA1003: Use generic event handler instances", Justification = "n/a")]
         public event OnLogUnhandledExceptionHandler LogUnhandledExceptionHandler;
 
         public LanguageServer(SendToClient sendToClient, IPowerFxScopeFactory scopeFactory)
@@ -64,6 +67,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
         /// <summary>
         /// Received request/notification payload from client.
         /// </summary>
+        [SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "n/a")]
         public void OnDataReceived(string jsonRpcPayload)
         {
             Contracts.AssertValue(jsonRpcPayload);
@@ -367,33 +371,21 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
 
         private CompletionItemKind GetCompletionItemKind(SuggestionKind kind)
         {
-            switch (kind)
+            return kind switch
             {
-                case SuggestionKind.Function:
-                    return CompletionItemKind.Method;
-                case SuggestionKind.KeyWord:
-                    return CompletionItemKind.Keyword;
-                case SuggestionKind.Global:
-                    return CompletionItemKind.Variable;
-                case SuggestionKind.Field:
-                    return CompletionItemKind.Field;
-                case SuggestionKind.Alias:
-                    return CompletionItemKind.Variable;
-                case SuggestionKind.Enum:
-                    return CompletionItemKind.Enum;
-                case SuggestionKind.BinaryOperator:
-                    return CompletionItemKind.Operator;
-                case SuggestionKind.Local:
-                    return CompletionItemKind.Variable;
-                case SuggestionKind.ServiceFunctionOption:
-                    return CompletionItemKind.Method;
-                case SuggestionKind.Service:
-                    return CompletionItemKind.Module;
-                case SuggestionKind.ScopeVariable:
-                    return CompletionItemKind.Variable;
-                default:
-                    return CompletionItemKind.Text;
-            }
+                SuggestionKind.Alias => CompletionItemKind.Variable,
+                SuggestionKind.BinaryOperator => CompletionItemKind.Operator,
+                SuggestionKind.Enum => CompletionItemKind.Enum,
+                SuggestionKind.Field => CompletionItemKind.Field,
+                SuggestionKind.Function => CompletionItemKind.Method,
+                SuggestionKind.Global => CompletionItemKind.Variable,
+                SuggestionKind.KeyWord => CompletionItemKind.Keyword,
+                SuggestionKind.Local => CompletionItemKind.Variable,
+                SuggestionKind.ScopeVariable => CompletionItemKind.Variable,
+                SuggestionKind.Service => CompletionItemKind.Module,
+                SuggestionKind.ServiceFunctionOption => CompletionItemKind.Method,
+                _ => CompletionItemKind.Text,
+            };
         }
 
         /// <summary>
@@ -524,6 +516,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
                 }));
         }
 
+        [SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "n/a")]
         private bool TryParseParams<T>(string json, out T result)
         {
             Contracts.AssertNonEmpty(json);

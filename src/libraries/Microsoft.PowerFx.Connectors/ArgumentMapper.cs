@@ -31,7 +31,7 @@ namespace Microsoft.PowerFx.Connectors
 
         public List<OpenApiParameter> OpenApiParameters;
         public List<OpenApiParameter> OpenApiBodyParameters;
-        public bool SchemaLessBody = false;
+        public bool SchemaLessBody;
 
         #region ServiceFunction args
 

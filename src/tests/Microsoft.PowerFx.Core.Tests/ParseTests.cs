@@ -454,7 +454,7 @@ namespace Microsoft.PowerFx.Core.Tests
                     Assert.Null(node.AsCall().HeadNode);
                     Assert.NotNull(node.AsCall().Head);
                     Assert.True(node.AsCall().Head is Identifier);
-                    Assert.True((node.AsCall().Head as Identifier).Namespace.IsRoot);
+                    Assert.True(node.AsCall().Head.Namespace.IsRoot);
                 });
 
             TestRoundtrip(
@@ -466,8 +466,8 @@ namespace Microsoft.PowerFx.Core.Tests
 
                     Assert.NotNull(node.AsCall().Head);
                     Assert.True(node.AsCall().Head is Identifier);
-                    Assert.False((node.AsCall().Head as Identifier).Namespace.IsRoot);
-                    Assert.Equal("Netflix.Services", (node.AsCall().Head as Identifier).Namespace.ToDottedSyntax());
+                    Assert.False(node.AsCall().Head.Namespace.IsRoot);
+                    Assert.Equal("Netflix.Services", node.AsCall().Head.Namespace.ToDottedSyntax());
 
                     Assert.NotNull(node.AsCall().HeadNode);
                     Assert.True(node.AsCall().HeadNode is DottedNameNode);

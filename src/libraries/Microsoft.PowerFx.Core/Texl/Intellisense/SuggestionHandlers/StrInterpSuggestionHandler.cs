@@ -40,10 +40,7 @@ namespace Microsoft.PowerFx.Intellisense
                     return false;
                 }
                 else
-                {
-                    // If there was no close quote we would have an error node.
-                    Contracts.Assert(strInterpNode.StrInterpEnd != null);
-
+                {                    
                     if (cursorPos <= strInterpNode.StrInterpEnd.Span.Min)
                     {
                         IntellisenseHelper.AddSuggestionsForTopLevel(intellisenseData, strInterpNode);

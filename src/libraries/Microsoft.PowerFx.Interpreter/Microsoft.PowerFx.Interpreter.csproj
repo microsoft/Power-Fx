@@ -13,7 +13,14 @@
 		<PackageId>Microsoft.PowerFx.Interpreter</PackageId>
 		<Title>Microsoft Power Fx Compiler - Interpreter Target</Title>
 		<Description>The Interpreter the Power Fx compiler</Description>
-	</PropertyGroup>
+    <EnableNETAnalyzers>True</EnableNETAnalyzers>
+    <AnalysisLevel>latest-all</AnalysisLevel>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <CodeAnalysisTreatWarningsAsErrors>true</CodeAnalysisTreatWarningsAsErrors>
+  </PropertyGroup>
+  
 	<ItemGroup>
 	  <AdditionalFiles Include="..\..\stylecop.json" Link="stylecop.json" />
 	</ItemGroup>

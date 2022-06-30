@@ -1,14 +1,8 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Diagnostics.Contracts;
-using System.IO;
 using System.Linq;
-using System.Reflection;
-using System.Text.Json;
 using Microsoft.PowerFx.Core.IR;
 
 namespace Microsoft.PowerFx.Types

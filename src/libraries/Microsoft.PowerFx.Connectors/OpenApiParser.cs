@@ -24,7 +24,7 @@ namespace Microsoft.PowerFx.Connectors
 
             if (string.IsNullOrWhiteSpace(functionNamespace))
             {
-                throw new ArgumentException(nameof(functionNamespace));
+                throw new ArgumentException($"{functionNamespace} is null or empty", nameof(functionNamespace));
             }
 
             var newFunctions = new List<ServiceFunction>();

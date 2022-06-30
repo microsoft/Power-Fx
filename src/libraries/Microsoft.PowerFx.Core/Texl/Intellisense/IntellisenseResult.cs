@@ -93,7 +93,7 @@ namespace Microsoft.PowerFx.Intellisense
                     funcDisplayString.Append('(');
 
                     var parameters = new List<ParameterInformation>();
-                    while (signatureIndex < signature.Count())
+                    while (signatureIndex < signature.Length)
                     {
                         Contracts.AssertValue(signature[signatureIndex]);
                         funcDisplayString.Append(argumentSeparator);
@@ -109,13 +109,13 @@ namespace Microsoft.PowerFx.Intellisense
                             Label = paramName
                         });
 
-                        if (ArgNeedsHighlight(func, argCount, argIndex, signature.Count(), signatureIndex))
+                        if (ArgNeedsHighlight(func, argCount, argIndex, signature.Length, signatureIndex))
                         {
                             (highlightStart, highlightEnd, highlightedFuncParamDescription) = (parameterHighlightStart, parameterHighlightEnd, funcParamDescription);
                         }
 
                         // For variadic function, we want to generate FuncName(arg1,arg1,...,arg1,...) as description.
-                        if (func.SignatureConstraint != null && argCount > func.SignatureConstraint.RepeatTopLength && CanParamOmit(func, argCount, argIndex, signature.Count(), signatureIndex))
+                        if (func.SignatureConstraint != null && argCount > func.SignatureConstraint.RepeatTopLength && CanParamOmit(func, argCount, argIndex, signature.Length, signatureIndex))
                         {
                             funcDisplayString.Append("...");
                             signatureIndex += func.SignatureConstraint.RepeatSpan;
@@ -159,7 +159,7 @@ namespace Microsoft.PowerFx.Intellisense
                     {
                         Documentation = func.Description,
                         Label = CreateFunctionSignature(func.Name),
-                        Parameters = new ParameterInformation[0]
+                        Parameters = Array.Empty<ParameterInformation>()
                     };
                     _functionSignatures.Add(signatureInformation);
                     _functionOverloads.Add(new IntellisenseSuggestion(new UIString(func.Name + "()", 0, func.Name.Length + 1), SuggestionKind.Function, SuggestionIconKind.Function, func.ReturnType, string.Empty, 0, func.Description, func.Name));

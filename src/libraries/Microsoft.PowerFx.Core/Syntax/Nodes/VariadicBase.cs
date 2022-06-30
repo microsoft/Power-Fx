@@ -3,9 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Utils;
-using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Syntax.SourceInformation;
 
 namespace Microsoft.PowerFx.Syntax
@@ -92,7 +90,7 @@ namespace Microsoft.PowerFx.Syntax
         /// <inheritdoc />
         public override Span GetCompleteSpan()
         {
-            if (Children.Count() == 0)
+            if (Children.Length == 0)
             {
                 return new Span(Token.VerifyValue().Span.Min, Token.VerifyValue().Span.Lim);
             }

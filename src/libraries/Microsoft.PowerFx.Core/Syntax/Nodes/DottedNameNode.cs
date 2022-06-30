@@ -3,9 +3,7 @@
 
 using System;
 using System.Collections.Generic;
-using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Utils;
-using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Syntax.SourceInformation;
 
 namespace Microsoft.PowerFx.Syntax
@@ -64,7 +62,7 @@ namespace Microsoft.PowerFx.Syntax
             // Also, dotted names can't mix tokens, except for []. E.g. foo[bar]!car is valid, but foo.bar!car is not.
             Contracts.Assert(primaryToken.Kind == TokKind.BracketOpen ?
                 left is FirstNameNode :
-                !(left is DottedNameNode) || left.AsDottedName().Token.Kind == TokKind.BracketOpen || left.AsDottedName().Token.Kind == primaryToken.Kind);
+                left is not DottedNameNode || left.AsDottedName().Token.Kind == TokKind.BracketOpen || left.AsDottedName().Token.Kind == primaryToken.Kind);
 
             Left = left;
             Left.Parent = this;
@@ -161,11 +159,11 @@ namespace Microsoft.PowerFx.Syntax
                         names.Push(firstNameNode.Ident.Name);
                         reachedLeft = true;
                         break;
-                    case ParentNode parentNode:
+                    case ParentNode:
                         names.Push(new DName(TexlLexer.KeywordParent));
                         reachedLeft = true;
                         break;
-                    case SelfNode selfNode:
+                    case SelfNode:
                         names.Push(new DName(TexlLexer.KeywordSelf));
                         reachedLeft = true;
                         break;

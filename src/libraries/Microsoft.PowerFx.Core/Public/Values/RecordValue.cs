@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics.Contracts;
 using System.Dynamic;
 using Microsoft.PowerFx.Core.IR;
@@ -11,7 +12,8 @@ namespace Microsoft.PowerFx.Types
 {
     /// <summary>
     /// Represent a Record. Records have named fields which can be other values. 
-    /// </summary>
+    /// </summary>    
+    [SuppressMessage("Design", "CA1012:Abstract type should not have public constructors", Justification = "n/a")]
     public abstract class RecordValue : ValidFormulaValue
     {
         /// <summary>

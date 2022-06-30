@@ -182,7 +182,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         {
             dsNodes = new List<FirstNameNode>();
 
-            var count = args.Count();
+            var count = args.Length;
             for (var i = 2; i < count;)
             {
                 var nodeArg = args[i];
@@ -223,13 +223,13 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool SupportsPaging(CallNode callNode, TexlBinding binding)
         {
-            if (!TryGetDataSourceNodes(callNode, binding, out var dsNodes))
+            if (!TryGetDataSourceNodes(callNode, binding, out var _))
             {
                 return false;
             }
 
             var args = callNode.Args.Children.VerifyValue();
-            var count = args.Count();
+            var count = args.Length;
 
             for (var i = 2; i < count;)
             {

@@ -1,6 +1,9 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
+using System.Collections.Generic;
+
 namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
 {
     /// <summary>
@@ -14,18 +17,18 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
         /// </summary>
         public CodeActionContext()
         {
-            Diagnostics = new Diagnostic[] { };
-            Only = new string[] { };
+            Diagnostics = Array.Empty<Diagnostic>();
+            Only = Array.Empty<string>();
         }
 
         /// <summary>
         /// An array of diagnostic information items.
         /// </summary>
-        public Diagnostic[] Diagnostics { get; set; }
+        public IEnumerable<Diagnostic> Diagnostics { get; set; }
 
         /// <summary>
         /// List of code action kind string values.
         /// </summary>
-        public string[] Only { get; set; }
+        public IEnumerable<string> Only { get; set; }
     }
 }

@@ -14,7 +14,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         private InterpreterRunner _runner;
 
         [InterpreterTheory]
-        [TxtFileData("ExpressionTestCases", "InterpreterExpressionTestCases", nameof(InterpreterRunner))]
+        [TxtFileData("ExpressionTestCases", "InterpreterExpressionTestCases")]
         public void InterpreterTestCase(ExpressionTestCase testCase)
         {
             // This is running against embedded resources, so if you're updating the .txt files,

@@ -55,14 +55,14 @@ namespace Microsoft.PowerFx.Core.Types
         public bool Contains(string key)
         {
             Contracts.AssertValue(key);
-            return TryGetValue(key, out var value);
+            return TryGetValue(key, out var _);
         }
 
         public bool TryGetValue(string key, out DType value)
         {
             Contracts.AssertValue(key);
             var fRet = RedBlackNode<DType>.TryGetValue(_root, key, out value);
-            value = value ?? DType.Invalid;
+            value ??= DType.Invalid;
             Contracts.Assert(fRet == value.IsValid);
             return fRet;
         }
@@ -111,7 +111,7 @@ namespace Microsoft.PowerFx.Core.Types
 
         public override bool Equals(object obj)
         {
-            if (!(obj is TypeTree))
+            if (obj is not TypeTree)
             {
                 return false;
             }

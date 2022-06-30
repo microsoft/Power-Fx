@@ -2,7 +2,6 @@
 // Licensed under the MIT license.
 
 using System.Globalization;
-using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Syntax
@@ -48,17 +47,17 @@ namespace Microsoft.PowerFx.Syntax
         }
 
         /// <inheritdoc />
-        public override bool Equals(Token that)
+        public override bool Equals(Token other)
         {
-            Contracts.AssertValue(that);
+            Contracts.AssertValue(other);
 
-            if (!(that is NumLitToken))
+            if (other is not NumLitToken)
             {
                 return false;
             }
 
-            var thatNumLitToken = that.As<NumLitToken>();
-            return Value == thatNumLitToken.Value && base.Equals(that);
+            var thatNumLitToken = other.As<NumLitToken>();
+            return Value == thatNumLitToken.Value && base.Equals(other);
         }
     }
 }

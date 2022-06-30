@@ -2,11 +2,9 @@
 // Licensed under the MIT license.
 
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics.Contracts;
-using System.Text;
-using System.Text.Json;
 using Microsoft.PowerFx.Core.IR;
 
 namespace Microsoft.PowerFx.Types
@@ -41,6 +39,7 @@ namespace Microsoft.PowerFx.Types
     [DebuggerDisplay("UntypedObjectValue({Impl})")]
     public class UntypedObjectValue : ValidFormulaValue
     {
+        [SuppressMessage("Naming", "CA1711:Identifiers should not have incorrect suffix", Justification = "Design choice")]
         public IUntypedObject Impl { get; }
 
         internal UntypedObjectValue(IRContext irContext, IUntypedObject impl)

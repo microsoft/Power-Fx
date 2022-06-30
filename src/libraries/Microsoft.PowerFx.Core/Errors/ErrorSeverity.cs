@@ -5,7 +5,7 @@ namespace Microsoft.PowerFx
 {
     /// <summary>
     /// Severity of errors provided.
-    /// </summary>
+    /// </summary>    
     public enum ErrorSeverity
     {
         // These values are a mirror of Microsoft.PowerFx.Core.Errors.DocumentErrorSeverity, 

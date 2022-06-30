@@ -32,7 +32,7 @@ namespace Microsoft.PowerFx
         /// <param name="fieldMap">A mapping of fx field names to functions that produce that field. </param>
         public ObjectMarshaller(RecordType type, IReadOnlyDictionary<string, Func<object, FormulaValue>> fieldMap)
         {
-            if (!(type is RecordType))
+            if (type is null)
             {
                 throw new ArgumentException($"type must be a record, not ${type}");
             }
@@ -42,10 +42,9 @@ namespace Microsoft.PowerFx
         }
 
         /// <inheritdoc/>
-        public FormulaValue Marshal(object source)
+        public FormulaValue Marshal(object value)
         {
-            var value = new ObjectRecordValue(Type, source, this);
-            return value;
+            return new ObjectRecordValue(Type, value, this);            
         }
 
         // Get the value of the field. 

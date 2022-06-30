@@ -4,7 +4,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Intellisense
@@ -170,7 +169,7 @@ namespace Microsoft.PowerFx.Intellisense
 
             var sugText = item.Text;
             _textToSuggestions[sugText].Remove(item);
-            if (_textToSuggestions[sugText].Count() == 0)
+            if (_textToSuggestions[sugText].Count == 0)
             {
                 _textToSuggestions.Remove(sugText);
             }

@@ -1,10 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System.Collections.Generic;
-using Microsoft.PowerFx.Core.Types;
-using Microsoft.PowerFx.Core.Utils;
-
 namespace Microsoft.PowerFx.Core.Functions.Delegation
 {
     // Operator strings which are part of delegation metadata Json.

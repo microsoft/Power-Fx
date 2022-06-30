@@ -13,7 +13,7 @@ namespace Microsoft.PowerFx.Preview
     /// </summary>
     public static class FeatureFlags
     {
-        private static bool _stringInterpolation = false;
+        private static bool _stringInterpolation;
 
         /// <summary>
         /// Enable String Interpolation feature. 

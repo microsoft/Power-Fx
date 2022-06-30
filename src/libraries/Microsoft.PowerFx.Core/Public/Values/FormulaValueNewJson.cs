@@ -3,11 +3,9 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Diagnostics.Contracts;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Text.Json;
 using Microsoft.PowerFx.Core.IR;
 
@@ -43,32 +41,17 @@ namespace Microsoft.PowerFx.Types
         /// <param name="element"></param>
         public static FormulaValue FromJson(JsonElement element)
         {
-            switch (element.ValueKind)
+            return element.ValueKind switch
             {
-                case JsonValueKind.Null:
-                    return new BlankValue(IRContext.NotInSource(FormulaType.Blank));
-
-                case JsonValueKind.Number:
-                    return new NumberValue(IRContext.NotInSource(FormulaType.Number), element.GetDouble());
-
-                case JsonValueKind.String:
-                    return new StringValue(IRContext.NotInSource(FormulaType.String), element.GetString());
-
-                case JsonValueKind.False:
-                    return new BooleanValue(IRContext.NotInSource(FormulaType.Boolean), false);
-
-                case JsonValueKind.True:
-                    return new BooleanValue(IRContext.NotInSource(FormulaType.Boolean), true);
-
-                case JsonValueKind.Object:
-                    return RecordFromJsonObject(element);
-
-                case JsonValueKind.Array:
-                    return TableFromJsonArray(element);
-
-                default:
-                    throw new NotImplementedException($"Unrecognized JsonElement {element.ValueKind}");
-            }
+                JsonValueKind.Null => new BlankValue(IRContext.NotInSource(FormulaType.Blank)),
+                JsonValueKind.Number => new NumberValue(IRContext.NotInSource(FormulaType.Number), element.GetDouble()),
+                JsonValueKind.String => new StringValue(IRContext.NotInSource(FormulaType.String), element.GetString()),
+                JsonValueKind.False => new BooleanValue(IRContext.NotInSource(FormulaType.Boolean), false),
+                JsonValueKind.True => new BooleanValue(IRContext.NotInSource(FormulaType.Boolean), true),
+                JsonValueKind.Object => RecordFromJsonObject(element),
+                JsonValueKind.Array => TableFromJsonArray(element),
+                _ => throw new NotImplementedException($"Unrecognized JsonElement {element.ValueKind}"),
+            };
         }
 
         // Json objects parse to records. 

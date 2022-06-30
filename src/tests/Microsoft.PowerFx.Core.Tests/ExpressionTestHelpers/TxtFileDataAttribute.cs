@@ -4,7 +4,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using Xunit.Sdk;
 
@@ -19,14 +18,12 @@ namespace Microsoft.PowerFx.Core.Tests
     public class TxtFileDataAttribute : DataAttribute
     {
         private readonly string _filePathCommon;
-        private readonly string _filePathSpecific;
-        private readonly string _engineName;
+        private readonly string _filePathSpecific;        
         
-        public TxtFileDataAttribute(string filePathCommon, string filePathSpecific, string engineName)
+        public TxtFileDataAttribute(string filePathCommon, string filePathSpecific)
         {
             _filePathCommon = filePathCommon;
-            _filePathSpecific = filePathSpecific;
-            _engineName = engineName;
+            _filePathSpecific = filePathSpecific;            
         }
 
         public override IEnumerable<object[]> GetData(MethodInfo testMethod)
@@ -60,7 +57,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
                 foreach (var test in parser.Tests)
                 {
-                    var item = new ExpressionTestCase(_engineName, test);
+                    var item = new ExpressionTestCase(test);
 
                     list.Add(new object[] { item });
                 }

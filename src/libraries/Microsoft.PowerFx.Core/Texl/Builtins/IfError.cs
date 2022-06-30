@@ -184,7 +184,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     }
 
                     // A chain nested within a larger non-call structure.
-                    if (!(chainNode.Parent is ListNode) || !(chainNode.Parent.Parent is CallNode))
+                    if (chainNode.Parent is not ListNode || chainNode.Parent.Parent is not CallNode)
                     {
                         return false;
                     }
@@ -202,7 +202,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 }
 
                 // Walk up the parent chain to the outer invocation.
-                if (!(ancestor.Parent is ListNode) || !(ancestor.Parent.Parent is CallNode))
+                if (ancestor.Parent is not ListNode || ancestor.Parent.Parent is not CallNode)
                 {
                     return false;
                 }

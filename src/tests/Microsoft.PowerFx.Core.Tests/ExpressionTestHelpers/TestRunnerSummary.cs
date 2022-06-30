@@ -1,13 +1,10 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Text;
-using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Core.Tests
 {
@@ -29,7 +26,6 @@ namespace Microsoft.PowerFx.Core.Tests
             Total++;
 
             var file = Path.GetFileName(testCase.SourceFile);
-            var prefix = $"Test {file}:{testCase.SourceLine}: ";
             switch (result)
             {
                 case TestResult.Pass:

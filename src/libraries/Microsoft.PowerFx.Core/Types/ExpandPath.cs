@@ -1,11 +1,12 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
 using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Core.Types
 {
-    internal struct ExpandPath
+    internal struct ExpandPath : IEquatable<ExpandPath>
     {
         internal const char PathSeperator = '/';
 
@@ -48,7 +49,7 @@ namespace Microsoft.PowerFx.Core.Types
         {
             Contracts.AssertValueOrNull(obj);
 
-            if (!(obj is ExpandPath))
+            if (obj is not ExpandPath)
             {
                 return false;
             }

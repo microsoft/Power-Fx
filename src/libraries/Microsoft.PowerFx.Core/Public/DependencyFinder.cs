@@ -3,7 +3,6 @@
 
 using System.Collections.Generic;
 using Microsoft.PowerFx.Core.Binding;
-using Microsoft.PowerFx.Core.Binding.BindInfo;
 using Microsoft.PowerFx.Syntax;
 
 namespace Microsoft.PowerFx

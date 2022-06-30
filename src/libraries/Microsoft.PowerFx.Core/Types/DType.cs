@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -26,7 +27,7 @@ namespace Microsoft.PowerFx.Core.Types
         /// the expected type exactly, however, so it is necessary to set this value for a single aggregate DType
         /// and not for the individual field types within.
         /// </summary>
-        public bool AreFieldsOptional { get; set; } = false;
+        public bool AreFieldsOptional { get; set; }
 
         public const char EnumPrefix = '%';
         public const string MetaFieldName = "meta-6de62757-ecb6-4be6-bb85-349b3c7938a9";
@@ -1218,7 +1219,7 @@ namespace Microsoft.PowerFx.Core.Types
                 return true;
             }
 
-            var fRet = TryGetType(path.Parent, out type);
+            _ = TryGetType(path.Parent, out type);
 
             if (type.IsEnum)
             {
@@ -1304,7 +1305,7 @@ namespace Microsoft.PowerFx.Core.Types
 
             Contracts.Assert(typeOuter.IsRecord || typeOuter.IsTable);
 
-            if (typeOuter.TypeTree.TryGetValue(name, out var typeCur))
+            if (typeOuter.TypeTree.TryGetValue(name, out var _))
             {
                 fError = true;
             }
@@ -1772,16 +1773,13 @@ namespace Microsoft.PowerFx.Core.Types
             Contracts.Assert(Kind == DKind.Attachment);
             Contracts.AssertValue(_attachmentType);
 
-            switch (type.Kind)
+            return type.Kind switch
             {
-                case DKind.Attachment:
-                    return _attachmentType.Accepts(type.AttachmentType, exact: true);
-                case DKind.Table:
-                case DKind.Record:
-                    return _attachmentType.Accepts(type, exact: true);
-                default:
-                    return type.Kind == DKind.Unknown;
-            }
+                DKind.Attachment => _attachmentType.Accepts(type.AttachmentType, exact: true),
+                DKind.Table or 
+                DKind.Record => _attachmentType.Accepts(type, exact: true),
+                _ => type.Kind == DKind.Unknown,
+            };
         }
 
         /// <summary>
@@ -2879,7 +2877,7 @@ namespace Microsoft.PowerFx.Core.Types
                     {
                         builder.Append(sep);
                         EscapeJSPropertyName(builder, tn.Name);
-                        builder.Append(":");
+                        builder.Append(':');
                         tn.Type.ToJsType(builder, shouldBeIncluded);
                         sep = ",";
                     }
@@ -2936,7 +2934,7 @@ namespace Microsoft.PowerFx.Core.Types
             }
             else
             {
-                builder.Append("\"");
+                builder.Append('\"');
 
                 for (var i = 0; i < name.Length; i++)
                 {
@@ -2946,18 +2944,18 @@ namespace Microsoft.PowerFx.Core.Types
                     {
                         if (needsEscaping.Contains(c))
                         {
-                            builder.Append("\\");
+                            builder.Append('\\');
                         }
 
                         builder.Append(c);
                     }
                     else
                     {
-                        builder.Append(string.Format("\\u{0:x4}", (int)c));
+                        builder.Append(string.Format(CultureInfo.InvariantCulture, "\\u{0:x4}", (int)c));
                     }
                 }
 
-                builder.Append("\"");
+                builder.Append('\"');
             }
         }
 
@@ -3389,13 +3387,13 @@ namespace Microsoft.PowerFx.Core.Types
                 case DKind.String:
                     if (value is bool boolean1)
                     {
-                        newValue = (string)(boolean1 ? TexlLexer.KeywordTrue : TexlLexer.KeywordFalse);
+                        newValue = boolean1 ? TexlLexer.KeywordTrue : TexlLexer.KeywordFalse;
                         return true;
                     }
 
                     if (value is double double2)
                     {
-                        newValue = double2.ToString("R");
+                        newValue = double2.ToString("R", CultureInfo.CurrentCulture);
                         return true;
                     }
 
@@ -3407,7 +3405,7 @@ namespace Microsoft.PowerFx.Core.Types
 
                     if (value is DateTime time2)
                     {
-                        newValue = time2.ToLocalTime().ToString();
+                        newValue = time2.ToLocalTime().ToString(CultureInfo.CurrentCulture);
                         return true;
                     }
 
@@ -3635,14 +3633,12 @@ namespace Microsoft.PowerFx.Core.Types
                 return sourceType.CoercesTo(destinationType);
             }
 
-            switch (destinationType.Kind)
+            return destinationType.Kind switch
             {
-                case DKind.Boolean:
-                case DKind.String:
-                    return true;
-                default:
-                    return false;
-            }
+                DKind.Boolean or 
+                DKind.String => true,
+                _ => false,
+            };
         }
 
         internal static bool AreCompatibleTypes(DType type1, DType type2)
@@ -3655,88 +3651,52 @@ namespace Microsoft.PowerFx.Core.Types
 
         internal static string MapKindToStr(DKind kind)
         {
-            switch (kind)
+            return kind switch
             {
-                default:
-                    return "x";
-                case DKind.Unknown:
-                    return "?";
-                case DKind.Error:
-                    return "e";
-                case DKind.Boolean:
-                    return "b";
-                case DKind.Number:
-                    return "n";
-                case DKind.String:
-                    return "s";
-                case DKind.Hyperlink:
-                    return "h";
-                case DKind.DateTime:
-                    return "d";
-                case DKind.Date:
-                    return "D";
-                case DKind.Time:
-                    return "T";
-                case DKind.DateTimeNoTimeZone:
-                    return "Z";
-                case DKind.Image:
-                    return "i";
-                case DKind.PenImage:
-                    return "p";
-                case DKind.Currency:
-                    return "$";
-                case DKind.Color:
-                    return "c";
-                case DKind.Record:
-                    return "!";
-                case DKind.Table:
-                    return "*";
-                case DKind.Enum:
-                    return "%";
-                case DKind.Media:
-                    return "m";
-                case DKind.Blob:
-                    return "o";
-                case DKind.LegacyBlob:
-                    return "a";
-                case DKind.Guid:
-                    return "g";
-                case DKind.Control:
-                    return "v";
-                case DKind.DataEntity:
-                    return "E";
-                case DKind.Metadata:
-                    return "M";
-                case DKind.ObjNull:
-                    return "N";
-                case DKind.Attachment:
-                    return "A";
-                case DKind.OptionSet:
-                    return "L";
-                case DKind.OptionSetValue:
-                    return "l";
-                case DKind.Polymorphic:
-                    return "P";
-                case DKind.View:
-                    return "Q";
-                case DKind.ViewValue:
-                    return "q";
-                case DKind.File:
-                    return "F";
-                case DKind.LargeImage:
-                    return "I";
-                case DKind.NamedValue:
-                    return "V";
-                case DKind.UntypedObject:
-                    return "O";
-            }
+                DKind.Attachment => "A",
+                DKind.Blob => "o",
+                DKind.Boolean => "b",
+                DKind.Color => "c",
+                DKind.Control => "v",
+                DKind.Currency => "$",
+                DKind.DataEntity => "E",
+                DKind.Date => "D",
+                DKind.DateTime => "d",
+                DKind.DateTimeNoTimeZone => "Z",
+                DKind.Enum => "%",
+                DKind.Error => "e",
+                DKind.File => "F",
+                DKind.Guid => "g",
+                DKind.Hyperlink => "h",
+                DKind.Image => "i",
+                DKind.LargeImage => "I",
+                DKind.LegacyBlob => "a",
+                DKind.Media => "m",
+                DKind.Metadata => "M",
+                DKind.NamedValue => "V",
+                DKind.Number => "n",
+                DKind.ObjNull => "N",
+                DKind.OptionSet => "L",
+                DKind.OptionSetValue => "l",
+                DKind.PenImage => "p",
+                DKind.Polymorphic => "P",
+                DKind.Record => "!",
+                DKind.String => "s",
+                DKind.Table => "*",
+                DKind.Time => "T",
+                DKind.Unknown => "?",
+                DKind.UntypedObject => "O",
+                DKind.View => "Q",
+                DKind.ViewValue => "q",
+                _ => "x",
+            };
         }
 
         private static void AppendAggregateType(StringBuilder sb, TypeTree tree)
         {
             Contracts.AssertValue(sb);
 
-            sb.Append("[");
+            sb.Append('[');
 
             var strPre = string.Empty;
             foreach (var kvp in tree.GetPairs())
@@ -3744,19 +3704,19 @@ namespace Microsoft.PowerFx.Core.Types
                 Contracts.Assert(kvp.Value.IsValid);
                 sb.Append(strPre);
                 sb.Append(TexlLexer.EscapeName(kvp.Key));
-                sb.Append(":");
+                sb.Append(':');
                 kvp.Value.AppendTo(sb);
                 strPre = ", ";
             }
 
-            sb.Append("]");
+            sb.Append(']');
         }
 
         private static void AppendOptionSetOrViewType(StringBuilder sb, TypeTree tree)
         {
             Contracts.AssertValue(sb);
 
-            sb.Append("{");
+            sb.Append('{');
 
             var strPre = string.Empty;
             foreach (var kvp in tree.GetPairs())
@@ -3764,12 +3724,12 @@ namespace Microsoft.PowerFx.Core.Types
                 Contracts.Assert(kvp.Value.IsValid);
                 sb.Append(strPre);
                 sb.Append(TexlLexer.EscapeName(kvp.Key));
-                sb.Append(":");
+                sb.Append(':');
                 kvp.Value.AppendTo(sb);
                 strPre = ", ";
             }
 
-            sb.Append("}");
+            sb.Append('}');
         }
 
         private static void AppendEnumType(StringBuilder sb, ValueTree tree, DKind enumSuperkind)
@@ -3777,7 +3737,7 @@ namespace Microsoft.PowerFx.Core.Types
             Contracts.AssertValue(sb);
 
             sb.Append(MapKindToStr(enumSuperkind));
-            sb.Append("[");
+            sb.Append('[');
 
             var strPre = string.Empty;
             foreach (var kvp in tree.GetPairs())
@@ -3786,12 +3746,12 @@ namespace Microsoft.PowerFx.Core.Types
                 Contracts.AssertValue(kvp.Value.Object);
                 sb.Append(strPre);
                 sb.Append(TexlLexer.EscapeName(kvp.Key));
-                sb.Append(":");
+                sb.Append(':');
                 kvp.Value.AppendTo(sb);
                 strPre = ", ";
             }
 
-            sb.Append("]");
+            sb.Append(']');
         }
 
         // Produces a DType from a string representation in our reduced type algebra language.
@@ -3800,14 +3760,6 @@ namespace Microsoft.PowerFx.Core.Types
             Contracts.AssertNonEmpty(typeSpec);
 
             return DTypeSpecParser.TryParse(new DTypeSpecLexer(typeSpec), out type);
-        }
-
-        internal static DType ParseOrReturnNull(string typeSpec)
-        {
-            Contracts.AssertNonEmpty(typeSpec);
-
-            TryParse(typeSpec, out var returnValue);
-            return returnValue;
         }
 
         public bool HasMetaField()
@@ -3820,7 +3772,7 @@ namespace Microsoft.PowerFx.Core.Types
         {
             if (!IsAggregate ||
                 !TryGetType(new DName(MetaFieldName), out var field) ||
-                !(field is IExternalControlType control) ||
+                field is not IExternalControlType control ||
                 !control.ControlTemplate.IsMetaLoc)
             {
                 metaFieldType = null;

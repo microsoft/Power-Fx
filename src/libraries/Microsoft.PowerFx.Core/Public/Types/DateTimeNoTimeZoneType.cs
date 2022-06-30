@@ -14,9 +14,9 @@ namespace Microsoft.PowerFx.Types
         {
         }
 
-        public override void Visit(ITypeVisitor vistor)
+        public override void Visit(ITypeVisitor visitor)
         {
-            vistor.Visit(this);
+            visitor.Visit(this);
         }
     }
 }

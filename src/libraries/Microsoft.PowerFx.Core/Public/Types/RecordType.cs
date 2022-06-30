@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System;
 using System.Diagnostics.Contracts;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
@@ -21,9 +20,9 @@ namespace Microsoft.PowerFx.Types
         {
         }
 
-        public override void Visit(ITypeVisitor vistor)
+        public override void Visit(ITypeVisitor visitor)
         {
-            vistor.Visit(this);
+            visitor.Visit(this);
         }
 
         public RecordType Add(NamedFormulaType field)

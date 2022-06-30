@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Types;
@@ -50,7 +51,7 @@ namespace Microsoft.PowerFx
         }
 
         // Just recalc Name. 
-        private void RecalcWorker2(string name)
+        private async Task RecalcWorker2(string name)
         {
             if (_calcs.ContainsKey(name))
             {
@@ -64,12 +65,9 @@ namespace Microsoft.PowerFx
             {
                 var binding = fi._binding;
 
-                (var irnode, var ruleScopeSymbol) = IRTranslator.Translate(binding);
-
-                var scope = this;
+                (var irnode, var _) = IRTranslator.Translate(binding);                
                 var v = new EvalVisitor(_cultureInfo, CancellationToken.None);
-
-                var newValue = irnode.Accept(v, SymbolContext.New()).Result;
+                var newValue = await irnode.Accept(v, SymbolContext.New()).ConfigureAwait(false);
 
                 var equal = fi.Value != null && // null on initial run. 
                     RuntimeHelpers.AreEqual(newValue, fi.Value);
@@ -88,7 +86,7 @@ namespace Microsoft.PowerFx
         // Recalc Name and any downstream formulas that may now be updated.
         private void RecalcWorkerAndPropagate(string name)
         {
-            RecalcWorker2(name);
+            RecalcWorker2(name).GetAwaiter().GetResult();
 
             var fi = _parent.Formulas[name];
 
@@ -105,7 +103,7 @@ namespace Microsoft.PowerFx
             if (!_calcs.TryGetValue(name, out var value))
             {
                 // Dependency is not yet recalced. 
-                RecalcWorker2(name);
+                RecalcWorker2(name).GetAwaiter().GetResult();
 
                 value = _calcs[name];
             }

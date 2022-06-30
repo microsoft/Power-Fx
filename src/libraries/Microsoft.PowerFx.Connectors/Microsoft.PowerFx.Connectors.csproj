@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk" ToolsVersion="15.0">
+﻿<Project Sdk="Microsoft.NET.Sdk" ToolsVersion="15.0">
 	<PropertyGroup>
 		<Version Condition=" '$(ReleasePackageVersion)' == '' ">$(LocalPackageVersion)</Version>
 		<Version Condition=" '$(ReleasePackageVersion)' != '' ">$(ReleasePackageVersion)</Version>
@@ -14,7 +14,13 @@
 		<Title>Microsoft Power Fx Connector Support</Title>
 		<Description>Connectors</Description>
 		<EnforceCodeStyleInBuild>false</EnforceCodeStyleInBuild>
+		<EnableNETAnalyzers>True</EnableNETAnalyzers>
+		<AnalysisLevel>latest-all</AnalysisLevel>
 	</PropertyGroup>
+  
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <CodeAnalysisTreatWarningsAsErrors>true</CodeAnalysisTreatWarningsAsErrors>
+  </PropertyGroup>
 
 	<ItemGroup>
 	  <AdditionalFiles Include="..\..\stylecop.json" Link="stylecop.json" />

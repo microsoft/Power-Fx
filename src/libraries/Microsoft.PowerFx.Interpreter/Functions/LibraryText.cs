@@ -54,7 +54,7 @@ namespace Microsoft.PowerFx.Functions
 
                     var childContext = symbolContext.WithScopeValues(row.Value);
 
-                    var result = await arg1.EvalAsync(runner, childContext);
+                    var result = await arg1.EvalAsync(runner, childContext).ConfigureAwait(false);
 
                     var str = (StringValue)result;
                     sb.Append(str.Value);
@@ -186,35 +186,24 @@ namespace Microsoft.PowerFx.Functions
 
             var info = DateTimeFormatInfo.GetInstance(culture);
 
-            switch (format.ToLower().Trim('\''))
+            return format.ToLowerInvariant().Trim('\'') switch
             {
-                case "shortdatetime24":
-                    // TODO: This might be wrong for some cultures
-                    return ReplaceWith24HourClock(info.ShortDatePattern + " " + info.ShortTimePattern);
-                case "shortdatetime":
-                    // TODO: This might be wrong for some cultures
-                    return info.ShortDatePattern + " " + info.ShortTimePattern;
-                case "shorttime24":
-                    return ReplaceWith24HourClock(info.ShortTimePattern);
-                case "shorttime":
-                    return info.ShortTimePattern;
-                case "shortdate":
-                    return info.ShortDatePattern;
-                case "longdatetime24":
-                    return ReplaceWith24HourClock(info.FullDateTimePattern);
-                case "longdatetime":
-                    return info.FullDateTimePattern;
-                case "longtime24":
-                    return ReplaceWith24HourClock(info.LongTimePattern);
-                case "longtime":
-                    return info.LongTimePattern;
-                case "longdate":
-                    return info.LongDatePattern;
-                case "utc":
-                    return info.UniversalSortableDateTimePattern;
-            }
+                // TODO: This might be wrong for some cultures
+                "shortdatetime24" => ReplaceWith24HourClock(info.ShortDatePattern + " " + info.ShortTimePattern),
 
-            return format;
+                // TODO: This might be wrong for some cultures
+                "shortdatetime" => info.ShortDatePattern + " " + info.ShortTimePattern,
+                "shorttime24" => ReplaceWith24HourClock(info.ShortTimePattern),
+                "shorttime" => info.ShortTimePattern,
+                "shortdate" => info.ShortDatePattern,
+                "longdatetime24" => ReplaceWith24HourClock(info.FullDateTimePattern),
+                "longdatetime" => info.FullDateTimePattern,
+                "longtime24" => ReplaceWith24HourClock(info.LongTimePattern),
+                "longtime" => info.LongTimePattern,
+                "longdate" => info.LongDatePattern,
+                "utc" => info.UniversalSortableDateTimePattern,
+                _ => format,
+            };
         }
 
         private static string ReplaceWith24HourClock(string format)
@@ -235,12 +224,12 @@ namespace Microsoft.PowerFx.Functions
             {
                 runner.CheckCancel();
 
-                var res = await runner.EvalArgAsync<ValidFormulaValue>(arg, symbolContext, arg.IRContext);
+                var res = await runner.EvalArgAsync<ValidFormulaValue>(arg, symbolContext, arg.IRContext).ConfigureAwait(false);
 
                 if (res.IsValue)
                 {
                     var val = res.Value;
-                    if (!(val is StringValue str && str.Value == string.Empty))
+                    if (!(val is StringValue str && string.IsNullOrEmpty(str.Value)))
                     {
                         if (errors.Count == 0)
                         {
@@ -271,17 +260,17 @@ namespace Microsoft.PowerFx.Functions
 
         public static FormulaValue Lower(IRContext irContext, StringValue[] args)
         {
-            return new StringValue(irContext, args[0].Value.ToLower());
+            return new StringValue(irContext, args[0].Value.ToLowerInvariant());
         }
 
         public static FormulaValue Upper(IRContext irContext, StringValue[] args)
         {
-            return new StringValue(irContext, args[0].Value.ToUpper());
+            return new StringValue(irContext, args[0].Value.ToUpperInvariant());
         }
 
         public static FormulaValue Proper(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, StringValue[] args)
         {
-            return new StringValue(irContext, runner.CultureInfo.TextInfo.ToTitleCase(args[0].Value.ToLower()));
+            return new StringValue(irContext, runner.CultureInfo.TextInfo.ToTitleCase(args[0].Value.ToLowerInvariant()));
         }
 
         // https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-len
@@ -313,7 +302,7 @@ namespace Microsoft.PowerFx.Functions
 
             var source = (StringValue)args[0];
             var start0Based = (int)(start.Value - 1);
-            if (source.Value == string.Empty || start0Based >= source.Value.Length)
+            if (string.IsNullOrEmpty(source.Value) || start0Based >= source.Value.Length)
             {
                 return new StringValue(irContext, string.Empty);
             }
@@ -387,7 +376,7 @@ namespace Microsoft.PowerFx.Functions
                 return CommonErrors.ArgumentOutOfRange(irContext);
             }
 
-            var index = withinText.Value.IndexOf(findText.Value, startIndexValue - 1);
+            var index = withinText.Value.IndexOf(findText.Value, startIndexValue - 1, StringComparison.Ordinal);
             return index >= 0 ? new NumberValue(irContext, index + 1)
                               : new BlankValue(irContext);
         }
@@ -451,14 +440,14 @@ namespace Microsoft.PowerFx.Functions
             }
 
             var sourceValue = source.Value;
-            var idx = sourceValue.IndexOf(match.Value);
+            var idx = sourceValue.IndexOf(match.Value, StringComparison.Ordinal);
             if (instanceNum < 0)
             {
                 while (idx >= 0)
                 {
                     var temp = sourceValue.Substring(0, idx) + replacement.Value;
                     sourceValue = sourceValue.Substring(idx + match.Value.Length);
-                    var idx2 = sourceValue.IndexOf(match.Value);
+                    var idx2 = sourceValue.IndexOf(match.Value, StringComparison.Ordinal);
                     if (idx2 < 0)
                     {
                         idx = idx2;
@@ -476,7 +465,7 @@ namespace Microsoft.PowerFx.Functions
                 var num = 0;
                 while (idx >= 0 && ++num < instanceNum)
                 {
-                    var idx2 = sourceValue.Substring(idx + match.Value.Length).IndexOf(match.Value);
+                    var idx2 = sourceValue.Substring(idx + match.Value.Length).IndexOf(match.Value, StringComparison.Ordinal);
                     if (idx2 < 0)
                     {
                         idx = idx2;

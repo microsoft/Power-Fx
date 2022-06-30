@@ -51,7 +51,7 @@ namespace Microsoft.PowerFx.Core.Types
         public bool Contains(string key)
         {
             Contracts.AssertValue(key);
-            return TryGetValue(key, out var value);
+            return TryGetValue(key, out var _);
         }
 
         public bool TryGetValue(string key, out EquatableObject value)
@@ -110,7 +110,7 @@ namespace Microsoft.PowerFx.Core.Types
 
         public override bool Equals(object other)
         {
-            if (!(other is ValueTree))
+            if (other is not ValueTree)
             {
                 return false;
             }

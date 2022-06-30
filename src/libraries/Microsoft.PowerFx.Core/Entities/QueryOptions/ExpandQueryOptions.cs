@@ -90,7 +90,7 @@ namespace Microsoft.PowerFx.Core.Entities.QueryOptions
 
         public void AddRelatedColumns()
         {
-            if (!(ExpandInfo.ParentDataSource is IExternalCdsDataSource))
+            if (ExpandInfo.ParentDataSource is not IExternalCdsDataSource)
             {
                 return;
             }
@@ -119,7 +119,7 @@ namespace Microsoft.PowerFx.Core.Entities.QueryOptions
                 return false;
             }
 
-            if (ExpandInfo.ParentDataSource == null || !(ExpandInfo.ParentDataSource is IExternalCdsDataSource))
+            if (ExpandInfo.ParentDataSource == null || ExpandInfo.ParentDataSource is not IExternalCdsDataSource)
             {
                 return false;
             }

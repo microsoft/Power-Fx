@@ -12,9 +12,6 @@ using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
 
-#pragma warning disable SA1402 // File may only contain a single type
-#pragma warning disable SA1649 // File name should match first type name
-
 namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
     // First(source:*)
@@ -52,7 +49,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.Assert(args.Length == argTypes.Length);
             Contracts.AssertValue(errors);
 
-            var fArgsValid = CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            var fArgsValid = CheckInvocation(args, argTypes, errors, out _, out nodeToCoercedTypeMap);
 
             var arg0Type = argTypes[0];
             if (arg0Type.IsTable)
@@ -80,13 +77,13 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
 
             // If has top capability (e.g. Dataverse)
-            if (TryGetValidDataSourceForDelegation(callNode, binding, FunctionDelegationCapability, out var dataSource))
+            if (TryGetValidDataSourceForDelegation(callNode, binding, FunctionDelegationCapability, out var _))
             {
                 return true;
-            }
+            }            
 
             // If is a client-side pageable data source
-            if (TryGetDataSource(callNode, binding, out dataSource) && dataSource.Kind == DataSourceKind.Connected && dataSource.IsPageable)
+            if (TryGetDataSource(callNode, binding, out var dataSource) && dataSource.Kind == DataSourceKind.Connected && dataSource.IsPageable)
             {
                 return true;
             }
@@ -100,6 +97,3 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         }
     }
 }
-
-#pragma warning restore SA1402 // File may only contain a single type
-#pragma warning restore SA1649 // File name should match first type name

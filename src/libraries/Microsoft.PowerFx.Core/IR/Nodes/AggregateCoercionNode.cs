@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -42,7 +41,7 @@ namespace Microsoft.PowerFx.Core.IR.Nodes
             var sb = new StringBuilder();
             sb.Append($"AggregateCoercion({Op}, ");
             sb.Append(string.Join(", ", FieldCoercions.Select(fc => $"{fc.Key.Value} <- {fc.Value}")));
-            sb.Append(")");
+            sb.Append(')');
             return sb.ToString();
         }
     }

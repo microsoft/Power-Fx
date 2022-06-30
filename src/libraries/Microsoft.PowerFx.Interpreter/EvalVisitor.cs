@@ -46,7 +46,7 @@ namespace Microsoft.PowerFx
         {
             if (arg is LambdaFormulaValue lambda)
             {
-                arg = await lambda.EvalAsync(this, context);
+                arg = await lambda.EvalAsync(this, context).ConfigureAwait(false);
             }
 
             return arg switch
@@ -83,7 +83,7 @@ namespace Microsoft.PowerFx
                 CheckCancel();
 
                 var child = node.Values[i];
-                var arg = await child.Accept(this, context);
+                var arg = await child.Accept(this, context).ConfigureAwait(false);
                 args[i] = arg;
             }
 
@@ -104,7 +104,7 @@ namespace Microsoft.PowerFx
                 var name = field.Key;
                 var value = field.Value;
 
-                var rhsValue = await value.Accept(this, context);
+                var rhsValue = await value.Accept(this, context).ConfigureAwait(false);
                 fields.Add(new NamedValue(name.Value, rhsValue));
             }
 
@@ -113,7 +113,7 @@ namespace Microsoft.PowerFx
 
         public override async ValueTask<FormulaValue> Visit(LazyEvalNode node, SymbolContext context)
         {
-            var val = await node.Child.Accept(this, context);
+            var val = await node.Child.Accept(this, context).ConfigureAwait(false);
             return val;
         }
 
@@ -132,7 +132,7 @@ namespace Microsoft.PowerFx
             var arg0 = node.Args[0];
             var arg1 = node.Args[1];
 
-            var newValue = await arg1.Accept(this, context);
+            var newValue = await arg1.Accept(this, context).ConfigureAwait(false);
 
             // Binder has already ensured this is a first name node. 
             if (arg0 is ResolvedObjectNode obj)
@@ -154,7 +154,7 @@ namespace Microsoft.PowerFx
         {
             CheckCancel();
             
-            var setResult = await TryHandleSet(node, context);
+            var setResult = await TryHandleSet(node, context).ConfigureAwait(false);
             if (setResult != null)
             {
                 return setResult;
@@ -175,7 +175,7 @@ namespace Microsoft.PowerFx
 
                 if (!isLambda)
                 {
-                    args[i] = await child.Accept(this, context);
+                    args[i] = await child.Accept(this, context).ConfigureAwait(false);
                 }
                 else
                 {
@@ -187,7 +187,7 @@ namespace Microsoft.PowerFx
 
             if (func is IAsyncTexlFunction asyncFunc)
             {
-                var result = await asyncFunc.InvokeAsync(args, _cancel);
+                var result = await asyncFunc.InvokeAsync(args, _cancel).ConfigureAwait(false);
                 return result;
             }
             else if (func is CustomTexlFunction customFunc)
@@ -199,7 +199,7 @@ namespace Microsoft.PowerFx
             {
                 if (FuncsByName.TryGetValue(func, out var ptr))
                 {
-                    var result = await ptr(this, childContext, node.IRContext, args);
+                    var result = await ptr(this, childContext, node.IRContext, args).ConfigureAwait(false);
 
                     Contract.Assert(result.IRContext.ResultType == node.IRContext.ResultType || result is ErrorValue || result.IRContext.ResultType is BlankType);
 
@@ -212,115 +212,75 @@ namespace Microsoft.PowerFx
 
         public override async ValueTask<FormulaValue> Visit(BinaryOpNode node, SymbolContext context)
         {
-            var arg1 = await node.Left.Accept(this, context);
-            var arg2 = await node.Right.Accept(this, context);
+            var arg1 = await node.Left.Accept(this, context).ConfigureAwait(false);
+            var arg2 = await node.Right.Accept(this, context).ConfigureAwait(false);
             var args = new FormulaValue[] { arg1, arg2 };
-            return await VisitBinaryOpNode(node, context, args);
+            return await VisitBinaryOpNode(node, context, args).ConfigureAwait(false);
         }
 
         private ValueTask<FormulaValue> VisitBinaryOpNode(BinaryOpNode node, SymbolContext context, FormulaValue[] args)
-        { 
-            switch (node.Op)
+        {
+            return node.Op switch
             {
-                case BinaryOpKind.AddNumbers:
-                    return OperatorBinaryAdd(this, context, node.IRContext, args);
-                case BinaryOpKind.MulNumbers:
-                    return OperatorBinaryMul(this, context, node.IRContext, args);
-                case BinaryOpKind.DivNumbers:
-                    return OperatorBinaryDiv(this, context, node.IRContext, args);
-                case BinaryOpKind.EqBlob:
-
-                case BinaryOpKind.EqBoolean:
-                case BinaryOpKind.EqColor:
-                case BinaryOpKind.EqCurrency:
-                case BinaryOpKind.EqDate:
-                case BinaryOpKind.EqDateTime:
-                case BinaryOpKind.EqGuid:
-                case BinaryOpKind.EqHyperlink:
-                case BinaryOpKind.EqImage:
-                case BinaryOpKind.EqMedia:
-                case BinaryOpKind.EqNumbers:
-                case BinaryOpKind.EqOptionSetValue:
-                case BinaryOpKind.EqText:
-                case BinaryOpKind.EqTime:
-                    return OperatorBinaryEq(this, context, node.IRContext, args);
-
-                case BinaryOpKind.NeqBlob:
-                case BinaryOpKind.NeqBoolean:
-                case BinaryOpKind.NeqColor:
-                case BinaryOpKind.NeqCurrency:
-                case BinaryOpKind.NeqDate:
-                case BinaryOpKind.NeqDateTime:
-                case BinaryOpKind.NeqGuid:
-                case BinaryOpKind.NeqHyperlink:
-                case BinaryOpKind.NeqImage:
-                case BinaryOpKind.NeqMedia:
-                case BinaryOpKind.NeqNumbers:
-                case BinaryOpKind.NeqOptionSetValue:
-                case BinaryOpKind.NeqText:
-                case BinaryOpKind.NeqTime:
-                    return OperatorBinaryNeq(this, context, node.IRContext, args);
-
-                case BinaryOpKind.GtNumbers:
-                    return OperatorBinaryGt(this, context, node.IRContext, args);
-                case BinaryOpKind.GeqNumbers:
-                    return OperatorBinaryGeq(this, context, node.IRContext, args);
-                case BinaryOpKind.LtNumbers:
-                    return OperatorBinaryLt(this, context, node.IRContext, args);
-                case BinaryOpKind.LeqNumbers:
-                    return OperatorBinaryLeq(this, context, node.IRContext, args);
-
-                case BinaryOpKind.InText:
-                    return OperatorTextIn(this, context, node.IRContext, args);
-                case BinaryOpKind.ExactInText:
-                    return OperatorTextInExact(this, context, node.IRContext, args);
-
-                case BinaryOpKind.InScalarTable:
-                    return OperatorScalarTableIn(this, context, node.IRContext, args);
-
-                case BinaryOpKind.ExactInScalarTable:
-                    return OperatorScalarTableInExact(this, context, node.IRContext, args);
-
-                case BinaryOpKind.AddDateAndTime:
-                    return OperatorAddDateAndTime(this, context, node.IRContext, args);
-                case BinaryOpKind.AddDateAndDay:
-                    return OperatorAddDateAndDay(this, context, node.IRContext, args);
-                case BinaryOpKind.AddDateTimeAndDay:
-                    return OperatorAddDateTimeAndDay(this, context, node.IRContext, args);
-                case BinaryOpKind.DateDifference:
-                    return OperatorDateDifference(this, context, node.IRContext, args);
-                case BinaryOpKind.TimeDifference:
-                    return OperatorTimeDifference(this, context, node.IRContext, args);
-                case BinaryOpKind.LtDateTime:
-                    return OperatorLtDateTime(this, context, node.IRContext, args);
-                case BinaryOpKind.LeqDateTime:
-                    return OperatorLeqDateTime(this, context, node.IRContext, args);
-                case BinaryOpKind.GtDateTime:
-                    return OperatorGtDateTime(this, context, node.IRContext, args);
-                case BinaryOpKind.GeqDateTime:
-                    return OperatorGeqDateTime(this, context, node.IRContext, args);
-                case BinaryOpKind.LtDate:
-                    return OperatorLtDate(this, context, node.IRContext, args);
-                case BinaryOpKind.LeqDate:
-                    return OperatorLeqDate(this, context, node.IRContext, args);
-                case BinaryOpKind.GtDate:
-                    return OperatorGtDate(this, context, node.IRContext, args);
-                case BinaryOpKind.GeqDate:
-                    return OperatorGeqDate(this, context, node.IRContext, args);
-                case BinaryOpKind.LtTime:
-                    return OperatorLtTime(this, context, node.IRContext, args);
-                case BinaryOpKind.LeqTime:
-                    return OperatorLeqTime(this, context, node.IRContext, args);
-                case BinaryOpKind.GtTime:
-                    return OperatorGtTime(this, context, node.IRContext, args);
-                case BinaryOpKind.GeqTime:
-                    return OperatorGeqTime(this, context, node.IRContext, args);
-                case BinaryOpKind.DynamicGetField:
-                    return new ValueTask<FormulaValue>(OperatorDynamicGetField(node, args));
-
-                default:
-                    return new ValueTask<FormulaValue>(CommonErrors.UnreachableCodeError(node.IRContext));
-            }
+                BinaryOpKind.AddNumbers => OperatorBinaryAdd(this, context, node.IRContext, args),
+                BinaryOpKind.MulNumbers => OperatorBinaryMul(this, context, node.IRContext, args),
+                BinaryOpKind.DivNumbers => OperatorBinaryDiv(this, context, node.IRContext, args),
+                BinaryOpKind.EqBlob or
+                BinaryOpKind.EqBoolean or 
+                BinaryOpKind.EqColor or
+                BinaryOpKind.EqCurrency or
+                BinaryOpKind.EqDate or
+                BinaryOpKind.EqDateTime or
+                BinaryOpKind.EqGuid or
+                BinaryOpKind.EqHyperlink or
+                BinaryOpKind.EqImage or
+                BinaryOpKind.EqMedia or
+                BinaryOpKind.EqNumbers or
+                BinaryOpKind.EqOptionSetValue or
+                BinaryOpKind.EqText or
+                BinaryOpKind.EqTime => OperatorBinaryEq(this, context, node.IRContext, args),
+                BinaryOpKind.NeqBlob or
+                BinaryOpKind.NeqBoolean or 
+                BinaryOpKind.NeqColor or
+                BinaryOpKind.NeqCurrency or
+                BinaryOpKind.NeqDate or
+                BinaryOpKind.NeqDateTime or
+                BinaryOpKind.NeqGuid or
+                BinaryOpKind.NeqHyperlink or
+                BinaryOpKind.NeqImage or
+                BinaryOpKind.NeqMedia or
+                BinaryOpKind.NeqNumbers or
+                BinaryOpKind.NeqOptionSetValue or
+                BinaryOpKind.NeqText or 
+                BinaryOpKind.NeqTime => OperatorBinaryNeq(this, context, node.IRContext, args),
+                BinaryOpKind.GtNumbers => OperatorBinaryGt(this, context, node.IRContext, args),
+                BinaryOpKind.GeqNumbers => OperatorBinaryGeq(this, context, node.IRContext, args),
+                BinaryOpKind.LtNumbers => OperatorBinaryLt(this, context, node.IRContext, args),
+                BinaryOpKind.LeqNumbers => OperatorBinaryLeq(this, context, node.IRContext, args),
+                BinaryOpKind.InText => OperatorTextIn(this, context, node.IRContext, args),
+                BinaryOpKind.ExactInText => OperatorTextInExact(this, context, node.IRContext, args),
+                BinaryOpKind.InScalarTable => OperatorScalarTableIn(this, context, node.IRContext, args),
+                BinaryOpKind.ExactInScalarTable => OperatorScalarTableInExact(this, context, node.IRContext, args),
+                BinaryOpKind.AddDateAndTime => OperatorAddDateAndTime(this, context, node.IRContext, args),
+                BinaryOpKind.AddDateAndDay => OperatorAddDateAndDay(this, context, node.IRContext, args),
+                BinaryOpKind.AddDateTimeAndDay => OperatorAddDateTimeAndDay(this, context, node.IRContext, args),
+                BinaryOpKind.DateDifference => OperatorDateDifference(this, context, node.IRContext, args),
+                BinaryOpKind.TimeDifference => OperatorTimeDifference(this, context, node.IRContext, args),
+                BinaryOpKind.LtDateTime => OperatorLtDateTime(this, context, node.IRContext, args),
+                BinaryOpKind.LeqDateTime => OperatorLeqDateTime(this, context, node.IRContext, args),
+                BinaryOpKind.GtDateTime => OperatorGtDateTime(this, context, node.IRContext, args),
+                BinaryOpKind.GeqDateTime => OperatorGeqDateTime(this, context, node.IRContext, args),
+                BinaryOpKind.LtDate => OperatorLtDate(this, context, node.IRContext, args),
+                BinaryOpKind.LeqDate => OperatorLeqDate(this, context, node.IRContext, args),
+                BinaryOpKind.GtDate => OperatorGtDate(this, context, node.IRContext, args),
+                BinaryOpKind.GeqDate => OperatorGeqDate(this, context, node.IRContext, args),
+                BinaryOpKind.LtTime => OperatorLtTime(this, context, node.IRContext, args),
+                BinaryOpKind.LeqTime => OperatorLeqTime(this, context, node.IRContext, args),
+                BinaryOpKind.GtTime => OperatorGtTime(this, context, node.IRContext, args),
+                BinaryOpKind.GeqTime => OperatorGeqTime(this, context, node.IRContext, args),
+                BinaryOpKind.DynamicGetField => new ValueTask<FormulaValue>(OperatorDynamicGetField(node, args)),
+                _ => new ValueTask<FormulaValue>(CommonErrors.UnreachableCodeError(node.IRContext)),
+            };
         }
 
         private static FormulaValue OperatorDynamicGetField(BinaryOpNode node, FormulaValue[] args)
@@ -376,12 +336,12 @@ namespace Microsoft.PowerFx
 
         public override async ValueTask<FormulaValue> Visit(UnaryOpNode node, SymbolContext context)
         {
-            var arg1 = await node.Child.Accept(this, context);
+            var arg1 = await node.Child.Accept(this, context).ConfigureAwait(false);
             var args = new FormulaValue[] { arg1 };
 
             if (UnaryOps.TryGetValue(node.Op, out var unaryOp))
             {
-                return await unaryOp(this, context, node.IRContext, args);
+                return await unaryOp(this, context, node.IRContext, args).ConfigureAwait(false);
             }
 
             return CommonErrors.NotYetImplementedError(node.IRContext, $"Unary op {node.Op}");
@@ -389,7 +349,7 @@ namespace Microsoft.PowerFx
 
         public override async ValueTask<FormulaValue> Visit(AggregateCoercionNode node, SymbolContext context)
         {
-            var arg1 = await node.Child.Accept(this, context);
+            var arg1 = await node.Child.Accept(this, context).ConfigureAwait(false);
 
             if (node.Op == UnaryOpKind.TableToTable)
             {
@@ -411,7 +371,7 @@ namespace Microsoft.PowerFx
                             var record = row.Value;
                             var newScope = scopeContext.WithScopeValues(record);
 
-                            var newValue = await coercion.Value.Accept(this, newScope);
+                            var newValue = await coercion.Value.Accept(this, newScope).ConfigureAwait(false);
                             var name = coercion.Key;
                             fields.Add(new NamedValue(name.Value, newValue));
                         }
@@ -457,7 +417,7 @@ namespace Microsoft.PowerFx
 
         public override async ValueTask<FormulaValue> Visit(RecordFieldAccessNode node, SymbolContext context)
         {
-            var left = await node.From.Accept(this, context);
+            var left = await node.From.Accept(this, context).ConfigureAwait(false);
 
             if (left is BlankValue)
             {
@@ -511,7 +471,7 @@ namespace Microsoft.PowerFx
             {
                 CheckCancel();
 
-                fv = await iNode.Accept(this, context);
+                fv = await iNode.Accept(this, context).ConfigureAwait(false);
 
                 if (fv is ErrorValue ev)
                 {

@@ -1,8 +1,8 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics.Contracts;
-using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.IR;
 
 namespace Microsoft.PowerFx.Types
@@ -14,7 +14,8 @@ namespace Microsoft.PowerFx.Types
     /// <typeparam name="T"></typeparam>
     public abstract class PrimitiveValue<T> : ValidFormulaValue
     {
-        protected readonly T _value;
+        [SuppressMessage("Naming", "SA1300:Element should begin with an uppercase letter", Justification = "n/a")]
+        protected T _value { get; private set; }
 
         public T Value => _value;
 

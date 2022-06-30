@@ -27,9 +27,9 @@ namespace Microsoft.PowerFx.Types
             return new TableType(tableType);
         }
 
-        public override void Visit(ITypeVisitor vistor)
+        public override void Visit(ITypeVisitor visitor)
         {
-            vistor.Visit(this);
+            visitor.Visit(this);
         }
 
         public TableType Add(NamedFormulaType field)

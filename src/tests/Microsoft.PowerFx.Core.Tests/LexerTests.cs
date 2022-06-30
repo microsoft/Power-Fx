@@ -39,8 +39,8 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.True(TexlLexer.TryNameOrIdentifierToName("Name\bAbcd", out name));
             Assert.Equal("Name\bAbcd", name);
 
-            Assert.False(TexlLexer.TryNameOrIdentifierToName(string.Empty, out name));
-            Assert.False(TexlLexer.TryNameOrIdentifierToName("   ", out name));
+            Assert.False(TexlLexer.TryNameOrIdentifierToName(string.Empty, out _));
+            Assert.False(TexlLexer.TryNameOrIdentifierToName("   ", out _));
 
             Assert.True(TexlLexer.TryNameOrIdentifierToName("   'Escaped Name'", out name));
             Assert.Equal("Escaped Name", name);
@@ -51,7 +51,7 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.True(TexlLexer.TryNameOrIdentifierToName("   'Escaped '' Name'''", out name));
             Assert.Equal("Escaped ' Name'", name);
 
-            Assert.False(TexlLexer.TryNameOrIdentifierToName("   '   ' ", out name));
+            Assert.False(TexlLexer.TryNameOrIdentifierToName("   '   ' ", out _));
 
             Assert.True(TexlLexer.TryNameOrIdentifierToName("   ''''", out name));
             Assert.Equal("'", name);
@@ -59,8 +59,8 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.True(TexlLexer.TryNameOrIdentifierToName("   'Escaped Name'   ", out name));
             Assert.Equal("Escaped Name", name);
 
-            Assert.False(TexlLexer.TryNameOrIdentifierToName("   'Escaped Name   ", out name));
-            Assert.False(TexlLexer.TryNameOrIdentifierToName("   'Escaped Name  ' abc ", out name));
+            Assert.False(TexlLexer.TryNameOrIdentifierToName("   'Escaped Name   ", out _));
+            Assert.False(TexlLexer.TryNameOrIdentifierToName("   'Escaped Name  ' abc ", out _));
 
             Assert.True(TexlLexer.TryNameOrIdentifierToName("   '#a!>>?'", out name));
             Assert.Equal("#a!>>?", name);
@@ -137,7 +137,7 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.Equal(TokKind.Eof, tokens[8].Kind);
 
             // Zero Width Space at the beginning of the formula
-            value = string.Format("{0}", '\u200B') + "ClearCollect(Temp1,[])";
+            value = string.Format(CultureInfo.InvariantCulture, "{0}", '\u200B') + "ClearCollect(Temp1,[])";
             tokens = TexlLexer.InvariantLexer.LexSource(value, TexlLexer.Flags.None);
             Assert.NotNull(tokens);
             Assert.Equal(9, tokens.Count);

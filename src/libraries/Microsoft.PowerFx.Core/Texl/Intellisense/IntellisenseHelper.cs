@@ -70,7 +70,7 @@ namespace Microsoft.PowerFx.Intellisense
                 }
 
                 Contracts.Assert(iarg < carg);
-                funcCur = (TexlFunction)info.Function;
+                funcCur = info.Function;
                 return true;
             }
 
@@ -97,13 +97,13 @@ namespace Microsoft.PowerFx.Intellisense
 
             return result &= script[cursor] != ',';
         }
-
+        
         public static bool IsMatch(string input, string match)
         {
             Contracts.AssertValue(input);
             Contracts.AssertValue(match);
 
-            return match == string.Empty ? true : input.StartsWith(match, StringComparison.OrdinalIgnoreCase);
+            return match.Length == 0 ? true : input.StartsWith(match, StringComparison.OrdinalIgnoreCase);
         }
 
         public static UIString DisambiguateGlobals(IntellisenseSuggestionList curList, UIString curSuggestion, SuggestionKind suggestionKind, DType type)
@@ -142,7 +142,7 @@ namespace Microsoft.PowerFx.Intellisense
                     var dispText = curList[index].DisplayText;
 
                     // If we are already using the global syntax, we should not add it again.
-                    if (dispText.Text.StartsWith(TexlLexer.PunctuatorBracketOpen + TexlLexer.PunctuatorAt))
+                    if (dispText.Text.StartsWith(TexlLexer.PunctuatorBracketOpen + TexlLexer.PunctuatorAt, StringComparison.OrdinalIgnoreCase))
                     {
                         continue;
                     }
@@ -747,7 +747,7 @@ namespace Microsoft.PowerFx.Intellisense
             if (suggestions.Count + substringSuggestions.Count == countSuggBefore + countSubSuggBefore + 1 && intellisenseData.SuggestUnqualifiedEnums)
             {
                 var enumSuggestion = suggestions.Count > countSuggBefore ? suggestions[countSuggBefore].Text : substringSuggestions[countSubSuggBefore].Text;
-                var dotIndex = enumSuggestion.LastIndexOf(TexlLexer.PunctuatorDot);
+                var dotIndex = enumSuggestion.LastIndexOf(TexlLexer.PunctuatorDot, StringComparison.OrdinalIgnoreCase);
 
                 // Assert '.' is not present or not at the beginning or the end of the EnumSuggestion
                 Contracts.Assert(dotIndex == -1 || (dotIndex > 0 && dotIndex < enumSuggestion.Length - 1));
@@ -785,7 +785,7 @@ namespace Microsoft.PowerFx.Intellisense
             Contracts.AssertValue(intellisenseData);
             Contracts.AssertValue(node);
 
-            var suggestionCount = intellisenseData.Suggestions.Count() + intellisenseData.SubstringSuggestions.Count();
+            var suggestionCount = intellisenseData.Suggestions.Count + intellisenseData.SubstringSuggestions.Count;
             AddSuggestionsForRuleScope(intellisenseData);
             AddSuggestionsForTopLevel(intellisenseData, node);
             AddSuggestionsForFunctions(intellisenseData);
@@ -798,7 +798,7 @@ namespace Microsoft.PowerFx.Intellisense
 
             intellisenseData.AddCustomSuggestionsForValuePossibilities();
 
-            return suggestionCount < (intellisenseData.Suggestions.Count() + intellisenseData.SubstringSuggestions.Count());
+            return suggestionCount < (intellisenseData.Suggestions.Count + intellisenseData.SubstringSuggestions.Count);
         }
 
         internal static bool IsPunctuatorColonNextToCursor(int cursorPos, string script)

@@ -109,7 +109,7 @@ namespace Microsoft.PowerFx.Core.Errors
         /// </summary>
         public Exception InternalException { get; }
 
-        private static readonly string HowToFixSuffix = "_HowToFix";
+        private const string HowToFixSuffix = "_HowToFix";
 
         internal BaseError(IDocumentError innerError, Exception internalException, DocumentErrorKind kind, DocumentErrorSeverity severity, ErrorResourceKey errKey, params object[] args)
             : this(innerError, internalException, kind, severity, errKey, textSpan: null, sinkTypeErrors: null, args: args)

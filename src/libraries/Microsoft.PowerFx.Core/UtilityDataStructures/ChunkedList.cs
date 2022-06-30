@@ -4,6 +4,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Core.UtilityDataStructures
@@ -44,9 +45,9 @@ namespace Microsoft.PowerFx.Core.UtilityDataStructures
             }
         }
 
-        public int Count { get; private set; } = 0;
+        public int Count { get; private set; }
 
-        public bool IsReadOnly { get; } = false;
+        public bool IsReadOnly { get; }
 
         public void Add(T item)
         {
@@ -177,12 +178,13 @@ namespace Microsoft.PowerFx.Core.UtilityDataStructures
 
             public T Current { get; private set; }
 
-            object System.Collections.IEnumerator.Current
+            object IEnumerator.Current
             {
+                [SuppressMessage("Usage", "CA2201:Do not raise reserved exception types", Justification = "n/a")]
                 get
                 {
                     if (_index == 0 || _index == _list.Count + 1)
-                    {
+                    {                        
                         throw new IndexOutOfRangeException("ChunkedList out of range index accessed");
                     }
 
@@ -190,7 +192,7 @@ namespace Microsoft.PowerFx.Core.UtilityDataStructures
                 }
             }
 
-            void System.Collections.IEnumerator.Reset()
+            void IEnumerator.Reset()
             {
                 if (_version != _list._version)
                 {

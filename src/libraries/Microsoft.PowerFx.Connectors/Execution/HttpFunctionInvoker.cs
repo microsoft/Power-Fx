@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
@@ -122,31 +123,44 @@ namespace Microsoft.PowerFx.Connectors
 
             return request;
         }
-       
+
+        [SuppressMessage("Reliability", "CA2000: Dispose objects before losing scope", Justification = "False positive")]
         private HttpContent GetBody(string referenceId, bool schemaLessBody, Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)> map)
         {
-            FormulaValueSerializer serializer = _argMapper.ContentType.ToLowerInvariant() switch
+            FormulaValueSerializer serializer = null;
+
+            try
             {
-                OpenApiExtensions.ContentType_XWwwFormUrlEncoded => new OpenApiFormUrlEncoder(schemaLessBody),                
-                OpenApiExtensions.ContentType_TextPlain => new OpenApiTextSerializer(schemaLessBody),
-                _ => new OpenApiJsonSerializer(schemaLessBody)
-            };
-            
-            serializer.StartSerialization(referenceId);
-            foreach (var kv in map)
-            {
-                serializer.SerializeValue(kv.Key, kv.Value.Schema, kv.Value.Value);
+                serializer = _argMapper.ContentType.ToLowerInvariant() switch
+                {
+                    OpenApiExtensions.ContentType_XWwwFormUrlEncoded => new OpenApiFormUrlEncoder(schemaLessBody),
+                    OpenApiExtensions.ContentType_TextPlain => new OpenApiTextSerializer(schemaLessBody),
+                    _ => new OpenApiJsonSerializer(schemaLessBody)
+                };
+
+                serializer.StartSerialization(referenceId);
+                foreach (var kv in map)
+                {
+                    serializer.SerializeValue(kv.Key, kv.Value.Schema, kv.Value.Value);
+                }
+
+                serializer.EndSerialization();
+
+                return new StringContent(serializer.GetResult(), Encoding.Default, _argMapper.ContentType);
             }
-
-            serializer.EndSerialization();
-
-            return new StringContent(serializer.GetResult(), Encoding.Default, _argMapper.ContentType);
+            finally
+            {
+                if (serializer is IDisposable disp)
+                {
+                    disp.Dispose();
+                }
+            }
         }
 
         public async Task<FormulaValue> DecodeResponseAsync(HttpResponseMessage response)
         {
             // $$$ Do we need to check response media type to confirm that the content is indeed json?
-            var json = await response.Content.ReadAsStringAsync();
+            var json = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 
             if (!response.IsSuccessStatusCode)
             {
@@ -176,10 +190,10 @@ namespace Microsoft.PowerFx.Connectors
             return result;
         }
 
-        public async Task<FormulaValue> InvokeAsync(string cacheScope, CancellationToken cancel, FormulaValue[] args)
+        public async Task<FormulaValue> InvokeAsync(string cacheScope, FormulaValue[] args, CancellationToken cancel)
         {
             FormulaValue result;
-            var request = BuildRequest(args);
+            using var request = BuildRequest(args);
 
             var key = request.RequestUri.ToString();
 
@@ -189,14 +203,12 @@ namespace Microsoft.PowerFx.Connectors
                 key = null; // don't bother caching
             }
 
-            var result2 = await _cache.TryGetAsync(cacheScope, key, async () =>
+            return await _cache.TryGetAsync(cacheScope, key, async () =>
             {
-                var response = await _httpClient.SendAsync(request, cancel);
-                result = await DecodeResponseAsync(response);
+                using var response = await _httpClient.SendAsync(request, cancel).ConfigureAwait(false);
+                result = await DecodeResponseAsync(response).ConfigureAwait(false);
                 return result;
-            });
-
-            return result2;
+            }).ConfigureAwait(false);            
         }
     }
 
@@ -214,7 +226,7 @@ namespace Microsoft.PowerFx.Connectors
 
         public Task<FormulaValue> InvokeAsync(FormulaValue[] args, CancellationToken cancel)
         {
-            return _invoker.InvokeAsync(_cacheScope, cancel, args);
+            return _invoker.InvokeAsync(_cacheScope, args, cancel);
         }
     }
 }

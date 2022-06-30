@@ -85,9 +85,9 @@ namespace Microsoft.PowerFx.Core.Utils
             var lengthForBuilder = EstimateEscapedStringLength(length) + 2 /* for the quotes */;
             var sb = StringBuilderCache.Acquire(lengthForBuilder);
 
-            sb.Append("\"");
+            sb.Append('\"');
             InternalEscapeString(input, length, /* lengthForBuilder */ 0, ref sb, finalizeBuilder: false); // 'lengthForBuilder' will not be used.
-            sb.Append("\"");
+            sb.Append('\"');
 
             return StringBuilderCache.GetStringAndRelease(sb);
         }
@@ -127,7 +127,7 @@ namespace Microsoft.PowerFx.Core.Utils
                 }
                 else
                 {
-                    UpdateEscapeInternals("_" + ((uint)ch).ToString("X"), name, estimatedLength, i, ref charsToAdd, ref sb);
+                    UpdateEscapeInternals("_" + ((uint)ch).ToString("X", CultureInfo.InvariantCulture), name, estimatedLength, i, ref charsToAdd, ref sb);
                 }
             }
 
@@ -254,39 +254,39 @@ namespace Microsoft.PowerFx.Core.Utils
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsTabulation(char ch)
         {
-            switch (ch)
+            return ch switch
             {
-                // character tabulation
-                case '\u0009':
-                // line tabulation
-                case '\u000B':
-                    return true;
-            }
-
-            return false;
+                // character and line tabulation
+                '\u0009' or 
+                '\u000B' => true,
+                _ => false,
+            };
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsLineTerm(char ch)
         {
-            switch (ch)
+            return ch switch
             {
                 // line feed, unicode 0x000A
-                case '\n':
+                '\n' or
+                
                 // carriage return, unicode 0x000D
-                case '\r':
+                '\r' or
+                
                 // Unicode next line
-                case '\u0085':
+                '\u0085' or
+                
                 // Unicode line separator
-                case '\u2028':
+                '\u2028' or
+                
                 // Unicode paragraph separator
-                case '\u2029':
+                '\u2029' or
+                
                 // form feed
-                case '\u000C':
-                    return true;
-            }
-
-            return false;
+                '\u000C' => true,
+                _ => false,
+            };
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

@@ -27,7 +27,7 @@ namespace Microsoft.PowerFx.Core.Types
         {
             var sb = new StringBuilder();
             sb.Append(Name);
-            sb.Append(":");
+            sb.Append(':');
             Type.AppendTo(sb);
             return sb.ToString();
         }
@@ -44,7 +44,7 @@ namespace Microsoft.PowerFx.Core.Types
         public override bool Equals(object obj)
         {
             Contracts.AssertValueOrNull(obj);
-            if (!(obj is TypedName))
+            if (obj is not TypedName)
             {
                 return false;
             }

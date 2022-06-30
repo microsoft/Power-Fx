@@ -508,9 +508,9 @@ LYieldSelf:
             Contracts.Assert(iikvpMin <= rgikvp.Length && iikvpLim <= rgikvp.Length);
 
             var nodeCount = iikvpLim - iikvpMin;
-            var half = 0;
-            RedBlackNode<T> left = null;
-            RedBlackNode<T> right = null;
+            int half;
+            RedBlackNode<T> left;
+            RedBlackNode<T> right;
             var leftColor = Color.Black;
 
             // What is this 'magic' test "if (((nodeCount + 2) & (nodeCount + 1)) == 0)" below?

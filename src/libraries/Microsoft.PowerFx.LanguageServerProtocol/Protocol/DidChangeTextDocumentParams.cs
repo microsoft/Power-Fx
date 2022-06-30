@@ -1,6 +1,9 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
+using System.Diagnostics.CodeAnalysis;
+
 namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
 {
     public class DidChangeTextDocumentParams
@@ -15,6 +18,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
         /// <summary>
         /// The actual content changes.
         /// </summary>
-        public TextDocumentContentChangeEvent[] ContentChanges { get; set; } = new TextDocumentContentChangeEvent[] { };
+        [SuppressMessage("Performance", "CA1819:Properties should not return arrays", Justification = "n/a")]
+        public TextDocumentContentChangeEvent[] ContentChanges { get; set; } = Array.Empty<TextDocumentContentChangeEvent>();
     }
 }

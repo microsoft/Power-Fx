@@ -61,16 +61,16 @@ namespace Microsoft.PowerFx.Syntax
         }
 
         /// <inheritdoc />
-        public override bool Equals(Token that)
+        public override bool Equals(Token other)
         {
-            Contracts.AssertValue(that);
+            Contracts.AssertValue(other);
 
-            if (that is not ErrorToken other)
+            if (other is not ErrorToken otherToken)
             {
                 return false;
             }
 
-            return DetailErrorKey?.Key == other.DetailErrorKey?.Key && base.Equals(other) && Enumerable.SequenceEqual(ResourceKeyFormatStringArgs, other.ResourceKeyFormatStringArgs);
+            return DetailErrorKey?.Key == otherToken.DetailErrorKey?.Key && base.Equals(otherToken) && Enumerable.SequenceEqual(ResourceKeyFormatStringArgs, otherToken.ResourceKeyFormatStringArgs);
         }
     }
 }

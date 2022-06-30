@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Binding;
-using Microsoft.PowerFx.Core.Glue;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Functions;
@@ -157,7 +156,7 @@ namespace Microsoft.PowerFx
             var check = Check(expressionText, (RecordType)parameters.IRContext.ResultType, options);
             check.ThrowOnErrors();
 
-            var newValue = await check.Expression.EvalAsync(parameters, cancel);
+            var newValue = await check.Expression.EvalAsync(parameters, cancel).ConfigureAwait(false);
             return newValue;
         }
 

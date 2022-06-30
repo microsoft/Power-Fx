@@ -1,6 +1,9 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
+using System.Diagnostics.CodeAnalysis;
+
 namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
 {
     public class PublishDiagnosticsParams
@@ -8,7 +11,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
         public PublishDiagnosticsParams()
         {
             Uri = string.Empty;
-            Diagnostics = new Diagnostic[] { };
+            Diagnostics = Array.Empty<Diagnostic>();
         }
 
         /// <summary>
@@ -19,6 +22,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
         /// <summary>
         /// An array of diagnostic information items.
         /// </summary>
+        [SuppressMessage("Performance", "CA1819:Properties should not return arrays", Justification = "n/a")]
         public Diagnostic[] Diagnostics { get; set; }
     }
 }

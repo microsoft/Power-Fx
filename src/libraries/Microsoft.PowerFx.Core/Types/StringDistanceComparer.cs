@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Microsoft.PowerFx.Core.Types
 {
@@ -62,6 +63,7 @@ namespace Microsoft.PowerFx.Core.Types
             return _cache[other];
         }
 
+        [SuppressMessage("Performance", "CA1814: Prefer jagged arrays over multidimensional", Justification = "n/a")]
         private static float CoreDistance(string left, string right)
         {
             var distances = new float[left.Length + 1, right.Length + 1];

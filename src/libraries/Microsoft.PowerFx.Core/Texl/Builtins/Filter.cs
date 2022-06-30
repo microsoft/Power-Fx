@@ -4,7 +4,6 @@
 using System.Collections.Generic;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
-using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Functions.Delegation;
@@ -13,9 +12,6 @@ using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
-
-#pragma warning disable SA1402 // File may only contain a single type
-#pragma warning disable SA1649 // File name should match first type name
 
 namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
@@ -58,7 +54,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             nodeToCoercedTypeMap = null;
             var viewCount = 0;
 
-            var fArgsValid = CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            var fArgsValid = CheckInvocation(args, argTypes, errors, out _, out _);
 
             var dataSourceVisitor = new ViewFilterDataSourceVisitor(binding);
 
@@ -140,7 +136,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 return false;
             }
 
-            FilterOpMetadata metadata = null;
+            FilterOpMetadata metadata;
             if (TryGetEntityMetadata(callNode, binding, out IDelegationMetadata delegationMetadata))
             {
                 if (!binding.Document.Properties.EnabledFeatures.IsEnhancedDelegationEnabled ||
@@ -183,6 +179,3 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         }
     }
 }
-
-#pragma warning restore SA1402 // File may only contain a single type
-#pragma warning restore SA1649 // File name should match first type name

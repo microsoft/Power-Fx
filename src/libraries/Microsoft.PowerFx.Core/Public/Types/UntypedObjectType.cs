@@ -1,9 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System;
-using System.Collections.Generic;
-using System.Text;
 using Microsoft.PowerFx.Core.Types;
 
 namespace Microsoft.PowerFx.Types
@@ -15,9 +12,9 @@ namespace Microsoft.PowerFx.Types
         {
         }
 
-        public override void Visit(ITypeVisitor vistor)
+        public override void Visit(ITypeVisitor visitor)
         {
-            vistor.Visit(this);
+            visitor.Visit(this);
         }
     }
 }

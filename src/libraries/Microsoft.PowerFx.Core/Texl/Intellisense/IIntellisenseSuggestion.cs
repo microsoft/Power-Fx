@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Microsoft.PowerFx.Intellisense
 {
@@ -46,6 +47,7 @@ namespace Microsoft.PowerFx.Intellisense
         /// Returns the list of suggestions for the overload of the function.
         /// This is populated only if the suggestion kind is a function and if the function has overloads.
         /// </summary>
+        [SuppressMessage("Naming", "CA1716:Identifiers should not match keywords", Justification = "n/a")]
         IEnumerable<IIntellisenseSuggestion> Overloads { get; }
 
         /// <summary>

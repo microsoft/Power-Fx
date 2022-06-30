@@ -60,7 +60,7 @@ namespace Microsoft.PowerFx.Core.Utils
         {
             Contracts.AssertValueOrNull(obj);
 
-            if (!(obj is DName))
+            if (obj is not DName)
             {
                 return false;
             }

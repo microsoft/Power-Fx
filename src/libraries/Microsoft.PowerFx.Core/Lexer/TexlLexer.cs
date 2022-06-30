@@ -3,11 +3,10 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 using System.Text;
-using System.Threading;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
@@ -103,12 +102,74 @@ namespace Microsoft.PowerFx.Syntax
 
         public static TexlLexer CommaDecimalSeparatorLexer { get; } = new TexlLexer(PunctuatorCommaInvariant);
 
-        private static readonly IReadOnlyList<string> _unaryOperatorKeywords;
-        private static readonly IReadOnlyList<string> _binaryOperatorKeywords;
-        private static readonly IReadOnlyList<string> _operatorKeywordsPrimitive;
-        private static readonly IReadOnlyList<string> _operatorKeywordsAggregate;
-        private static readonly IReadOnlyList<string> _constantKeywordsDefault;
-        private static readonly IReadOnlyList<string> _constantKeywordsGetParent;
+        private static readonly IReadOnlyList<string> _unaryOperatorKeywords = new[]
+        {
+            KeywordNot,
+            PunctuatorBang
+        };
+
+        private static readonly IReadOnlyList<string> _binaryOperatorKeywords = new[]
+        {
+            PunctuatorAmpersand,
+            PunctuatorAnd,
+            PunctuatorOr,
+            PunctuatorAdd,
+            PunctuatorSub,
+            PunctuatorMul,
+            PunctuatorDiv,
+            PunctuatorEqual,
+            PunctuatorLess,
+            PunctuatorLessOrEqual,
+            PunctuatorGreater,
+            PunctuatorGreaterOrEqual,
+            PunctuatorNotEqual,
+            PunctuatorCaret,
+
+            KeywordAnd,
+            KeywordOr,
+            KeywordIn,
+            KeywordExactin,
+            KeywordAs
+        };
+
+        private static readonly IReadOnlyList<string> _operatorKeywordsPrimitive = new[]
+        {
+            PunctuatorAmpersand,
+            PunctuatorEqual,
+            PunctuatorNotEqual,
+            PunctuatorAdd,
+            PunctuatorSub,
+            PunctuatorMul,
+            PunctuatorDiv,
+            PunctuatorCaret,
+            PunctuatorAnd,
+            PunctuatorOr,
+            PunctuatorLess,
+            PunctuatorLessOrEqual,
+            PunctuatorGreater,
+            PunctuatorGreaterOrEqual,
+
+            KeywordAnd,
+            KeywordOr,
+            KeywordIn,
+            KeywordExactin,
+            KeywordAs
+        };
+
+        private static readonly IReadOnlyList<string> _operatorKeywordsAggregate = new[]
+        {
+            KeywordIn, KeywordExactin, KeywordAs
+        };
+
+        private static readonly IReadOnlyList<string> _constantKeywordsDefault = new[]
+        {
+            KeywordFalse, KeywordTrue, KeywordSelf
+        };
+
+        private static readonly IReadOnlyList<string> _constantKeywordsGetParent = new[]
+        {
+            KeywordFalse, KeywordTrue, KeywordParent, KeywordSelf
+        };
 
         private readonly IReadOnlyDictionary<string, TokKind> _punctuators;
         private readonly char _decimalSeparator;
@@ -124,75 +185,6 @@ namespace Microsoft.PowerFx.Syntax
         static TexlLexer()
         {
             StringBuilderCache.SetMaxBuilderSize(DesiredStringBuilderSize);
-
-            _unaryOperatorKeywords = new[]
-            {
-                KeywordNot,
-                PunctuatorBang
-            };
-
-            _binaryOperatorKeywords = new[]
-            {
-                PunctuatorAmpersand,
-                PunctuatorAnd,
-                PunctuatorOr,
-                PunctuatorAdd,
-                PunctuatorSub,
-                PunctuatorMul,
-                PunctuatorDiv,
-                PunctuatorEqual,
-                PunctuatorLess,
-                PunctuatorLessOrEqual,
-                PunctuatorGreater,
-                PunctuatorGreaterOrEqual,
-                PunctuatorNotEqual,
-                PunctuatorCaret,
-
-                KeywordAnd,
-                KeywordOr,
-                KeywordIn,
-                KeywordExactin,
-                KeywordAs
-            };
-
-            _operatorKeywordsPrimitive = new[]
-            {
-                PunctuatorAmpersand,
-                PunctuatorEqual,
-                PunctuatorNotEqual,
-                PunctuatorAdd,
-                PunctuatorSub,
-                PunctuatorMul,
-                PunctuatorDiv,
-                PunctuatorCaret,
-                PunctuatorAnd,
-                PunctuatorOr,
-                PunctuatorLess,
-                PunctuatorLessOrEqual,
-                PunctuatorGreater,
-                PunctuatorGreaterOrEqual,
-
-                KeywordAnd,
-                KeywordOr,
-                KeywordIn,
-                KeywordExactin,
-                KeywordAs
-            };
-
-            _operatorKeywordsAggregate = new[]
-            {
-                KeywordIn, KeywordExactin, KeywordAs
-            };
-
-            _constantKeywordsDefault = new[]
-            {
-                KeywordFalse, KeywordTrue, KeywordSelf
-            };
-
-            _constantKeywordsGetParent = new[]
-            {
-                KeywordFalse, KeywordTrue, KeywordParent, KeywordSelf
-            };
         }
 
         public static TexlLexer GetLocalizedInstance(CultureInfo culture)
@@ -350,25 +342,19 @@ namespace Microsoft.PowerFx.Syntax
 
         public static bool RequiresWhiteSpace(Token tk)
         {
-            bool result;
-            switch (tk.Kind)
+            var result = tk.Kind switch
             {
-                case TokKind.True:
-                case TokKind.False:
-                case TokKind.In:
-                case TokKind.Exactin:
-                case TokKind.Parent:
-                case TokKind.KeyAnd:
-                case TokKind.KeyNot:
-                case TokKind.KeyOr:
-                case TokKind.As:
-                    result = true;
-                    break;
-                default:
-                    result = false;
-                    break;
-            }
-
+                TokKind.True or
+                TokKind.False or
+                TokKind.In or
+                TokKind.Exactin or
+                TokKind.Parent or
+                TokKind.KeyAnd or
+                TokKind.KeyNot or
+                TokKind.KeyOr or
+                TokKind.As => true,
+                _ => false,
+            };
             return result;
         }
 
@@ -412,7 +398,6 @@ namespace Microsoft.PowerFx.Syntax
                 return text;
             }
 
-            var textLength = text.Length;
             var result = GetMinifiedScript(text, tokens);
 
             return result;
@@ -849,6 +834,7 @@ namespace Microsoft.PowerFx.Syntax
 
             private int _currentTokenPos; // The start of the current token.
 
+            [SuppressMessage("Style", "IDE0060:Remove unused parameter flags", Justification = "n/a")]
             public LexerImpl(TexlLexer lex, string text, StringBuilder sb, Flags flags)
             {
                 Contracts.AssertValue(lex);
@@ -926,7 +912,7 @@ namespace Microsoft.PowerFx.Syntax
                         break;
                     }
 
-                    foundTok = Dispatch(true, true);
+                    foundTok = Dispatch();
                 }
 
                 _currentTokenPos = lookaheadTokenStart;
@@ -961,7 +947,7 @@ namespace Microsoft.PowerFx.Syntax
                         return null;
                     }
 
-                    var tok = Dispatch(true, true);
+                    var tok = Dispatch();
                     if (tok != null)
                     {
                         return tok;
@@ -979,10 +965,8 @@ namespace Microsoft.PowerFx.Syntax
 
             /// <summary>
             /// Forms a new token.
-            /// </summary>
-            /// <param name="allowContextDependentTokens">Enables the <c>%text%</c> expression support.</param>
-            /// <param name="allowLocalizableTokens">Enables the <c>##text##</c> expression support.</param>
-            private Token Dispatch(bool allowContextDependentTokens, bool allowLocalizableTokens)
+            /// </summary>            
+            private Token Dispatch()
             {
                 StartToken();
                 var ch = CurrentChar;
@@ -1058,9 +1042,6 @@ namespace Microsoft.PowerFx.Syntax
 
                     if (tidCur == TokKind.Comment)
                     {
-                        tidPunc = tidCur;
-                        punctuatorLength = _sb.Length;
-
                         return LexComment(_sb.Length);
                     }
 
@@ -1238,7 +1219,6 @@ namespace Microsoft.PowerFx.Syntax
 
                 // Delimited identifier.
                 NextChar();
-                var ichStrMin = CurrentPos;
 
                 // Accept any characters up to the next unescaped identifier delimiter.
                 // String will be corrected in the IdentToken if needed.
@@ -1466,8 +1446,8 @@ namespace Microsoft.PowerFx.Syntax
                     _sb.Append(NextChar());
                 }
 
-                Contracts.Assert(_sb.ToString().Equals("/*") || _sb.ToString().Equals("//"));
-                var commentEnd = _sb.ToString().StartsWith("/*") ? "*/" : "\n";
+                Contracts.Assert(_sb.ToString().Equals("/*", StringComparison.OrdinalIgnoreCase) || _sb.ToString().Equals("//", StringComparison.OrdinalIgnoreCase));
+                var commentEnd = _sb.ToString().StartsWith("/*", StringComparison.OrdinalIgnoreCase) ? "*/" : "\n";
 
                 // Comment initiation takes up two chars, so must - 1 to get start
                 var startingPosition = CurrentPos - 1;
@@ -1479,7 +1459,7 @@ namespace Microsoft.PowerFx.Syntax
 
                     // "str.Length >= commentLength + commentEnd.Length"  ensures block comment of "/*/"
                     // does not satisfy starts with "/*" and ends with "*/" conditions
-                    if (str.EndsWith(commentEnd) && str.Length >= commentLength + commentEnd.Length)
+                    if (str.EndsWith(commentEnd, StringComparison.OrdinalIgnoreCase) && str.Length >= commentLength + commentEnd.Length)
                     {
                         break;
                     }
@@ -1525,7 +1505,7 @@ namespace Microsoft.PowerFx.Syntax
                 }
 
                 var commentToken = new CommentToken(_sb.ToString(), GetTextSpan());
-                if (_sb.ToString().Trim().StartsWith("/*") && !_sb.ToString().Trim().EndsWith("*/"))
+                if (_sb.ToString().Trim().StartsWith("/*", StringComparison.OrdinalIgnoreCase) && !_sb.ToString().Trim().EndsWith("*/", StringComparison.OrdinalIgnoreCase))
                 {
                     commentToken.IsOpenBlock = true;
                 }
@@ -1539,7 +1519,7 @@ namespace Microsoft.PowerFx.Syntax
                 if (CurrentChar > 255)
                 {
                     var position = CurrentPos;
-                    var unexpectedChar = Convert.ToUInt16(CurrentChar).ToString("X4");
+                    var unexpectedChar = Convert.ToUInt16(CurrentChar).ToString("X4", CultureInfo.InvariantCulture);
                     NextChar();
                     return new ErrorToken(GetTextSpan(), TexlStrings.UnexpectedCharacterToken, string.Concat("U+", unexpectedChar), position);
                 }

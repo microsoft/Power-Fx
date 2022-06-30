@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Errors;
@@ -29,6 +30,7 @@ namespace Microsoft.PowerFx
         /// null if unavailable.  
         /// This is only valid when <see cref="IsSuccess"/> is true.
         /// </summary>
+        [SuppressMessage("Usage", "CA2227: Collection properties should be read only", Justification = "n/a")]
         public HashSet<string> TopLevelIdentifiers { get; set; }
 
         /// <summary>

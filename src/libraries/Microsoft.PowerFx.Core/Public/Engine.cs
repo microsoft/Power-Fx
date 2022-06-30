@@ -2,12 +2,11 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Glue;
-using Microsoft.PowerFx.Core.Parser;
-using Microsoft.PowerFx.Core.Texl.Intellisense;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Intellisense;
@@ -105,6 +104,7 @@ namespace Microsoft.PowerFx
         /// <param name="parameterType">types of additional args to pass.</param>
         /// <param name="options">parser options to use.</param>
         /// <returns></returns>
+        [SuppressMessage("Globalization", "CA1304:Specify CultureInfo", Justification = "Call to Parse() manages CultureInfo")]
         public CheckResult Check(string expressionText, RecordType parameterType = null, ParserOptions options = null)
         {
             var parse = Parse(expressionText, options);

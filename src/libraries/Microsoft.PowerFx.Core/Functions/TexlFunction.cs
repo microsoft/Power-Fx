@@ -239,7 +239,7 @@ namespace Microsoft.PowerFx.Core.Functions
                 // The invariant name is used to form a URL. It cannot contain spaces and other
                 // funky characters. We have tests that enforce this constraint. If we ever need
                 // such characters (#, &, %, ?), they need to be encoded here, e.g. %20, etc.
-                StringResources.Get("FunctionReference_Link") + char.ToLower(LocaleInvariantName.First());
+                StringResources.Get("FunctionReference_Link") + char.ToLowerInvariant(LocaleInvariantName.First());
 
         /// <summary>
         /// Might need to reset if Function is variadic function.
@@ -526,7 +526,7 @@ namespace Microsoft.PowerFx.Core.Functions
         {
             Contracts.AssertValue(callNode);
             Contracts.AssertValue(callNode.Args);
-            Contracts.Assert(paramIndex >= 0 && paramIndex < callNode.Args.Children.Count());
+            Contracts.Assert(paramIndex >= 0 && paramIndex < callNode.Args.Children.Length);
             Contracts.AssertValue(binding);
 
             var child = callNode.Args.Children[paramIndex].VerifyValue();
@@ -1057,7 +1057,7 @@ namespace Microsoft.PowerFx.Core.Functions
             Contracts.AssertValue(node);
             Contracts.AssertValue(binding);
 
-            var message = string.Format("Function:{0}, Message:{1}", Name, telemetryMessage);
+            var message = string.Format(CultureInfo.InvariantCulture, "Function:{0}, Message:{1}", Name, telemetryMessage);
             TrackingProvider.Instance.AddSuggestionMessage(message, node, binding);
         }
 
@@ -1087,7 +1087,7 @@ namespace Microsoft.PowerFx.Core.Functions
             }
 
             var args = callNode.Args.Children.VerifyValue();
-            var cargs = args.Count();
+            var cargs = args.Length;
             return !(cargs < MinArity || cargs > MaxArity);
         }
 

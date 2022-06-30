@@ -4,7 +4,6 @@
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
-using Microsoft.OpenApi.Expressions;
 using Microsoft.OpenApi.Models;
 using Microsoft.PowerFx.Connectors;
 using Microsoft.PowerFx.Core.Utils;
@@ -33,7 +32,7 @@ namespace Microsoft.PowerFx
 
             if (!DName.IsValidDName(functionNamespace))
             {
-                throw new ArgumentException(nameof(functionNamespace), $"invalid functionNamespace: {functionNamespace}");
+                throw new ArgumentException($"invalid functionNamespace: {functionNamespace}", nameof(functionNamespace));
             }
 
             if (openApiDocument == null)

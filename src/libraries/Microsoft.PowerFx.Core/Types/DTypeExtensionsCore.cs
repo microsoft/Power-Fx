@@ -35,7 +35,7 @@ namespace Microsoft.PowerFx.Core.Types
                         continue;
                     }
 
-                    retval |= dataSourceToQueryOptionsMap.AddSelect((IExternalTabularDataSource)tabularDataSource, new DName(columnName));
+                    retval |= dataSourceToQueryOptionsMap.AddSelect(tabularDataSource, new DName(columnName));
 
                     if (columnType.IsExpandEntity && columnType.ExpandInfo != null && !skipExpands)
                     {

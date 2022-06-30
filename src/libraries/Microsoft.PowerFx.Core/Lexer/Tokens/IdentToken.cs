@@ -4,7 +4,6 @@
 using System;
 using System.Linq;
 using System.Text;
-using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Syntax
@@ -138,16 +137,16 @@ namespace Microsoft.PowerFx.Syntax
         }
 
         /// <inheritdoc />
-        public override bool Equals(Token that)
+        public override bool Equals(Token other)
         {
-            Contracts.AssertValue(that);
+            Contracts.AssertValue(other);
 
-            if (!(that is IdentToken))
+            if (other is not IdentToken)
             {
                 return false;
             }
 
-            return Name == that.As<IdentToken>().Name && base.Equals(that);
+            return Name == other.As<IdentToken>().Name && base.Equals(other);
         }
     }
 }

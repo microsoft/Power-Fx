@@ -69,9 +69,6 @@ namespace Microsoft.PowerFx.Intellisense
                 }
                 else
                 {
-                    // If there was no closed parenthesis we would have an error node.
-                    Contracts.Assert(callNode.ParenClose != null);
-
                     if (cursorPos <= callNode.ParenClose.Span.Min)
                     {
                         // Cursor position is before the closed parenthesis and there are no arguments.

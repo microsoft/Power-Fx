@@ -13,14 +13,12 @@ namespace Microsoft.PowerFx
     /// </summary>
     internal class RecalcEngineResolver : SimpleResolver
     {
-        private readonly RecalcEngine _parent;
-        private readonly PowerFxConfig _powerFxConfig;
+        private readonly RecalcEngine _parent;        
 
         public RecalcEngineResolver(RecalcEngine parent, PowerFxConfig powerFxConfig)
             : base(powerFxConfig)
         {
-            _parent = parent;
-            _powerFxConfig = powerFxConfig;
+            _parent = parent;            
         }
 
         public override bool Lookup(DName name, out NameLookupInfo nameInfo, NameLookupPreferences preferences = NameLookupPreferences.None)

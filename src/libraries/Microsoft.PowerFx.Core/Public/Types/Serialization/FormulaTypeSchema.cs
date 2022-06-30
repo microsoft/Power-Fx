@@ -1,14 +1,14 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Microsoft.PowerFx.Core
 {
     public class FormulaTypeSchema
     {
+        [SuppressMessage("Naming", "CA1720:Identifiers should not contain type names", Justification = "n/a")]
         public enum ParamType
         {
             Number,
@@ -40,6 +40,7 @@ namespace Microsoft.PowerFx.Core
         /// <summary>
         /// Optional. For Records and Tables, contains the list of fields.
         /// </summary>
+        [SuppressMessage("Usage", "CA2227: Collection properties should be read only", Justification = "n/a")]
         public Dictionary<string, FormulaTypeSchema> Fields { get; set; }
         
         /// <summary>
