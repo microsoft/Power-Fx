@@ -9,8 +9,6 @@ using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
 
-#pragma warning disable SA1649 // File name should match first type name
-
 namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
     // FirstN(source:*, [count:n])
@@ -66,4 +64,3 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         }
     }
 }
-#pragma warning restore SA1649 // File name should match first type name

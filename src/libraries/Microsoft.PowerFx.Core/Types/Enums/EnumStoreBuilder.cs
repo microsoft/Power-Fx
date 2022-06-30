@@ -346,10 +346,7 @@ namespace Microsoft.PowerFx.Core.Types.Enums
 
         private IEnumerable<Tuple<DName, DName, DType>> EnumTuples()
         {
-            CollectionUtils.EnsureInstanceCreated(ref _enumTypes, () =>
-            {
-                return RegenerateEnumTypes();
-            });
+            CollectionUtils.EnsureInstanceCreated(ref _enumTypes, () => RegenerateEnumTypes());
 
             var list = ImmutableList.CreateBuilder<Tuple<DName, DName, DType>>();
             foreach (var enumSpec in _workingEnums)

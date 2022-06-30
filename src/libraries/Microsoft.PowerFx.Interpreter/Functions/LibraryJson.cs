@@ -18,21 +18,15 @@ namespace Microsoft.PowerFx.Functions
                 _element = element;
             }
 
-            public FormulaType Type
+            public FormulaType Type => _element.ValueKind switch
             {
-                get
-                {
-                    return _element.ValueKind switch
-                    {
-                        JsonValueKind.Object => ExternalType.ObjectType,
-                        JsonValueKind.Array => ExternalType.ArrayType,
-                        JsonValueKind.String => FormulaType.String,
-                        JsonValueKind.Number => FormulaType.Number,
-                        JsonValueKind.True or JsonValueKind.False => FormulaType.Boolean,
-                        _ => FormulaType.Blank,
-                    };
-                }
-            }
+                JsonValueKind.Object => ExternalType.ObjectType,
+                JsonValueKind.Array => ExternalType.ArrayType,
+                JsonValueKind.String => FormulaType.String,
+                JsonValueKind.Number => FormulaType.Number,
+                JsonValueKind.True or JsonValueKind.False => FormulaType.Boolean,
+                _ => FormulaType.Blank,
+            };
 
             public IUntypedObject this[int index] => new JsonUntypedObject(_element[index]);
 

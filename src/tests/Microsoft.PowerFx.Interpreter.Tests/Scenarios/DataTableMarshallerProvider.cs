@@ -4,7 +4,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
-using Microsoft.PowerFx.Interpreter.Tests;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Tests

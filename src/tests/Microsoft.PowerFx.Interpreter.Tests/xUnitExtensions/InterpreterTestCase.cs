@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Tests;
@@ -21,7 +20,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests.XUnitExtensions
 
         public InterpreterTestCase(IXunitTestCase testCase, string[] skippingExceptionNames)
         {
-            this._testCase = testCase;
+            _testCase = testCase;
             SkippingExceptionNames = skippingExceptionNames;
         }
 

@@ -2,8 +2,6 @@
 // Licensed under the MIT license.
 
 using System;
-using System.Diagnostics;
-using System.Reflection;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Tests;
 using Microsoft.PowerFx.Types;

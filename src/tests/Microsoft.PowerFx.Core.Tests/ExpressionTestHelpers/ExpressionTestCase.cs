@@ -2,9 +2,7 @@
 // Licensed under the MIT license.
 
 using System;
-using System.Collections.Generic;
 using System.IO;
-using Newtonsoft.Json;
 using Xunit.Abstractions;
 
 namespace Microsoft.PowerFx.Core.Tests

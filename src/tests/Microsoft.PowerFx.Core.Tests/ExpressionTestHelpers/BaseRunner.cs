@@ -4,12 +4,10 @@
 using System;
 using System.Diagnostics;
 using System.Linq;
-using System.Security.Cryptography;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Types;
-using Newtonsoft.Json.Linq;
 
 namespace Microsoft.PowerFx.Core.Tests
 {

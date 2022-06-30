@@ -927,12 +927,6 @@ namespace Microsoft.PowerFx.Syntax
                 _currentTokenPos = CurrentPos;
             }
 
-            // Resets current read position to the beginning of the current token.
-            private void ResetToken()
-            {
-                CurrentPos = _currentTokenPos;
-            }
-
             private Span GetTextSpan()
             {
                 return new Span(_currentTokenPos, CurrentPos);

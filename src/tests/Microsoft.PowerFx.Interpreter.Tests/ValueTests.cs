@@ -8,11 +8,6 @@ using System.Linq;
 using Microsoft.PowerFx.Types;
 using Xunit;
 
-// Need to test against some poorly formed classes that violate StyleCop rules. 
-#pragma warning disable IDE0007 // Use implicit type
-#pragma warning disable SA1300 // Element should begin with upper-case letter
-#pragma warning disable SA1307 // Accessible fields should begin with upper-case letter
-
 namespace Microsoft.PowerFx.Core.Tests
 {
     public class ValueTests
@@ -100,41 +95,41 @@ namespace Microsoft.PowerFx.Core.Tests
         {
             var obj = new TestRowPrimitives
             {
-                numberInt = 15,
-                numberDouble = 15.1,
-                boolean = true,
-                str = "hello",
-                datetime = new DateTime(1999, 3, 1),
-                timespan = TimeSpan.FromDays(3)
+                NumberInt = 15,
+                NumberDouble = 15.1,
+                Boolean = true,
+                Str = "hello",
+                Datetime = new DateTime(1999, 3, 1),
+                Timespan = TimeSpan.FromDays(3)
             };
 
             RecordValue r = _cache.NewRecord(obj);
             dynamic d = r.ToObject();
 
-            Assert.Equal((double)obj.numberInt, d.numberInt);
-            Assert.Equal(obj.numberDouble, d.numberDouble);
-            Assert.Equal(obj.boolean, d.boolean);
-            Assert.Equal(obj.str, d.str);
-            Assert.Equal(obj.datetime, d.datetime);
-            Assert.Equal(obj.timespan, d.timespan);
+            Assert.Equal((double)obj.NumberInt, d.NumberInt);
+            Assert.Equal(obj.NumberDouble, d.NumberDouble);
+            Assert.Equal(obj.Boolean, d.Boolean);
+            Assert.Equal(obj.Str, d.Str);
+            Assert.Equal(obj.Datetime, d.Datetime);
+            Assert.Equal(obj.Timespan, d.Timespan);
         }
 
         // Test the different types of primitives that can get marshalled. 
         private class TestRowPrimitives
         {
-            public int numberInt { get; set; }
+            public int NumberInt { get; set; }
 
-            public double numberDouble { get; set; }
+            public double NumberDouble { get; set; }
 
-            public bool boolean { get; set; }
+            public bool Boolean { get; set; }
 
-            public string str { get; set; }
+            public string Str { get; set; }
 
-            public DateTime datetime { get; set; }
+            public DateTime Datetime { get; set; }
 
-            public DateTimeOffset dto { get; set; }
+            public DateTimeOffset Dto { get; set; }
 
-            public TimeSpan timespan { get; set; }
+            public TimeSpan Timespan { get; set; }
         }
 
         [Fact]
@@ -154,52 +149,52 @@ namespace Microsoft.PowerFx.Core.Tests
             internal int InternalProp { get; set; }
 
 #pragma warning disable CS0649 // Unassigned field is intended here to test marshalling
-            public int publicField;
+            public int PublicField;
 #pragma warning restore CS0649
         }
 
         private class TestRow
         {
-            public double a { get; set; }
+            public double A { get; set; }
 
-            public string str { get; set; }
+            public string Str { get; set; }
         }
 
         [Fact]
         public void Table()
         {
             TableValue val = _cache.NewTable(
-                new TestRow { a = 10, str = "alpha" },
-                new TestRow { a = 15, str = "beta" });
+                new TestRow { A = 10, Str = "alpha" },
+                new TestRow { A = 15, Str = "beta" });
 
-            var field1 = ((StringValue)val.Index(2).Value.GetField("str")).Value;
+            var field1 = ((StringValue)val.Index(2).Value.GetField("Str")).Value;
             Assert.Equal("beta", field1);
 
             dynamic d = val.ToObject();
-            Assert.Equal(15.0, d[1].a);
+            Assert.Equal(15.0, d[1].A);
 
             // Verify runtime json
             var resultStr = val.Dump();
 
-            Assert.Equal("Table({a:10,str:\"alpha\"},{a:15,str:\"beta\"})", resultStr);
+            Assert.Equal("Table({A:10,Str:\"alpha\"},{A:15,Str:\"beta\"})", resultStr);
         }
 
         [Fact]
         public void TableFromRecords()
         {
-            RecordValue r1 = _cache.NewRecord(new TestRow { a = 10, str = "alpha" });
-            RecordValue r2 = _cache.NewRecord(new TestRow { a = 15, str = "beta" });
+            RecordValue r1 = _cache.NewRecord(new TestRow { A = 10, Str = "alpha" });
+            RecordValue r2 = _cache.NewRecord(new TestRow { A = 15, Str = "beta" });
             TableValue val = FormulaValue.NewTable(r1.Type, r1, r2);
 
-            var result1 = val.Index(2).Value.GetField("a").ToObject();
+            var result1 = val.Index(2).Value.GetField("A").ToObject();
             Assert.Equal(15.0, result1);
 
             dynamic d = val.ToObject();
-            Assert.Equal(10.0, d[0].a);
+            Assert.Equal(10.0, d[0].A);
 
             // Verify runtime json
             var resultStr = val.Dump();
-            Assert.Equal("Table({a:10,str:\"alpha\"},{a:15,str:\"beta\"})", resultStr);
+            Assert.Equal("Table({A:10,Str:\"alpha\"},{A:15,Str:\"beta\"})", resultStr);
 
             TableValue val2 = NewTableT(r1, r2);
             Assert.Equal(resultStr, val2.Dump());
@@ -264,9 +259,8 @@ namespace Microsoft.PowerFx.Core.Tests
         [Fact]
         public void SingleColumnTable()
         {
-            TableValue value = (TableValue)FormulaValue.FromJson("[1,2,3]");
-
-            TableType type = (TableType)value.Type;
+            var value = (TableValue)FormulaValue.FromJson("[1,2,3]");
+            var type = (TableType)value.Type;
 
             TableType typeExpected = new TableType()
                 .Add(new NamedFormulaType("Value", FormulaType.Number));

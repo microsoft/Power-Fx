@@ -37,7 +37,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
         public static string CreateErrorResult(string id, ErrorCode code, string message) => CreateErrorResult(id, new
         {
             code = (int)code,
-            message = message
+            message
         });
 
         private static string CreateErrorResult(string id, object error) => JsonSerializer.Serialize(

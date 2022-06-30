@@ -5,7 +5,6 @@ using System;
 using System.Linq;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.IR.Nodes;
-using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Types;
 using Xunit;
 using CallNode = Microsoft.PowerFx.Core.IR.Nodes.CallNode;

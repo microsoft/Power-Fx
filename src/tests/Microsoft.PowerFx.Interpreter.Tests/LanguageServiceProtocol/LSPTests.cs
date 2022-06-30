@@ -1,9 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System;
-using System.Collections.Generic;
-using System.Text;
 using Microsoft.PowerFx.LanguageServerProtocol;
 using Microsoft.PowerFx.Syntax;
 using Xunit;

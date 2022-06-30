@@ -397,13 +397,7 @@ namespace Microsoft.PowerFx.Functions
             return new StringValue(IRContext.NotInSource(FormulaType.String), string.Empty);
         }
 
-        private static Func<IRContext, int, FormulaValue> ReplaceBlankWith(params FormulaValue[] values)
-        {
-            return (irContext, index) =>
-            {
-                return values[index];
-            };
-        }
+        private static Func<IRContext, int, FormulaValue> ReplaceBlankWith(params FormulaValue[] values) => (irContext, index) => values[index];
 
         private static Func<IRContext, int, FormulaValue> ReplaceBlankWithZeroForSpecificIndices(params int[] indices)
         {
@@ -460,13 +454,7 @@ namespace Microsoft.PowerFx.Functions
             }
         }
 
-        private static Func<IRContext, int, FormulaValue, FormulaValue> ExactSequence(params Func<IRContext, int, FormulaValue, FormulaValue>[] runtimeChecks)
-        {
-            return (irContext, index, arg) =>
-            {
-                return runtimeChecks[index](irContext, index, arg);
-            };
-        }
+        private static Func<IRContext, int, FormulaValue, FormulaValue> ExactSequence(params Func<IRContext, int, FormulaValue, FormulaValue>[] runtimeChecks) => (irContext, index, arg) => runtimeChecks[index](irContext, index, arg);
 
         private static FormulaValue AddColumnsTypeChecker(IRContext irContext, int index, FormulaValue arg)
         {

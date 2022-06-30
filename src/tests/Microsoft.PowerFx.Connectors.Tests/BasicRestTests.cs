@@ -2,7 +2,6 @@
 // Licensed under the MIT license.
 
 using System;
-using System.Drawing;
 using System.Linq;
 using System.Net.Http;
 using System.Threading;

@@ -3,10 +3,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.Data;
-using Microsoft.PowerFx.Interpreter.Tests;
 using Microsoft.PowerFx.Types;
-using Xunit;
 
 namespace Microsoft.PowerFx.Tests
 {

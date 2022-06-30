@@ -1,9 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System.Globalization;
 using System.IO;
-using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Intellisense.SignatureHelp;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;

@@ -8,9 +8,6 @@ using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
 
-#pragma warning disable SA1402 // File may only contain a single type
-#pragma warning disable SA1649 // File name should match first type name
-
 namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
     // EndsWith(text:s, end:s):b
@@ -42,6 +39,3 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         // Add overload for single-column table as the input for both endsWith and startsWith.
     }
 }
-
-#pragma warning restore SA1402 // File may only contain a single type
-#pragma warning restore SA1649 // File name should match first type name
