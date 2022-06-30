@@ -1,0 +1,321 @@
+// ****************************** BLANK PARAMETER ******************************
+
+>> Coalesce(Blank(), 1)
+1
+
+>> Coalesce(Blank())
+Blank()
+
+// ****************************** EMPTY STRING PARAMETER ******************************
+
+>> Coalesce("", "2")
+"2"
+
+>> Coalesce("", "a")
+"a"
+
+>> Coalesce("")
+Blank()
+
+>> Coalesce("","")
+Blank()
+
+>> Coalesce(Blank(), "", Blank(), "", "3", "4")
+"3"
+
+>> Coalesce(Blank(), "", Blank(), "", Blank(), " ", "3", "4")
+" "
+
+// ****************************** NON-EMPTY STRING PARAMETER ******************************
+>> Coalesce(" ", "a")
+" "
+
+>> Coalesce(5, 1/0)
+5
+
+>> Coalesce(false,true)
+false
+
+>> Coalesce(true,false)
+true
+
+// ****************************** ERROR PARAMETER ******************************
+
+>> Coalesce(Blank(), 1/0, 10)
+#Error(Kind=Div0)
+
+>> Coalesce(1/0, Blank(), 10)
+#Error(Kind=Div0)
+
+>> Coalesce(1/0, 10, Blank())
+#Error(Kind=Div0)
+
+>> Coalesce(Blank(), 1, ErrorKind.BadLanguageCode)
+1
+
+>> Coalesce("", 1, ErrorKind.BadLanguageCode)
+"1"
+
+>> Coalesce(ErrorKind.BadLanguageCode,"",1)
+14
+
+>> Coalesce(ErrorKind.BadRegex,Blank(),1)
+15
+
+// ****************************** DATATYPE CONVERSION CASES ******************************
+
+// NUMBER-NUMBER
+>> Coalesce(Blank(), 1, 2)
+1
+
+>> Coalesce("", 1, 2)
+"1"
+
+// NUMBER-STRING
+>> Coalesce(Blank(), 1, "Hello")
+1
+
+>> Coalesce("", 1, "2")
+"1"
+
+// NUMBER-BOOLEAN
+>> Coalesce(Blank(), 1, true)
+1
+
+>> Coalesce("", 1, false)
+"1"
+
+// NUMBER-DATE
+>> Coalesce(Blank(), 1, Date(12,12,2000))
+1
+
+>> Coalesce("", 1, DateValue("12 Feb 2000"))
+"1"
+
+// NUMBER-TIME
+>> Coalesce(Blank(), 1, Time(6,30,00))
+1
+
+>> Coalesce("", 1, TimeValue("6:30 PM"))
+"1"
+
+// NUMBER-DATETIME
+>> Coalesce(Blank(), 1, DateTimeValue("12 Feb 2000, 6:30 PM"))
+1
+
+>> Coalesce("", 1, DateTimeValue("12 Feb 2000, 6:30 PM"))
+"1"
+
+// ******************************************************************************************
+
+// STRING-NUMBER
+>> Coalesce(Blank(), "Hello", 2)
+"Hello"
+
+>> Coalesce("", "Hello", 2)
+"Hello"
+
+// STRING-STRING
+>> Coalesce(Blank(), "Hello", "ABC")
+"Hello"
+
+>> Coalesce("", "Hello", "2")
+"Hello"
+
+// STRING-BOOLEAN
+>> Coalesce(Blank(), "Hello", true)
+"Hello"
+
+>> Coalesce("", "Hello", false)
+"Hello"
+
+// STRING-DATE
+>> Coalesce(Blank(), "Hello", Date(12,12,2000))
+"Hello"
+
+>> Coalesce("", "Hello", DateValue("12 Feb 2000"))
+"Hello"
+
+// STRING-TIME
+>> Coalesce(Blank(), "Hello", Time(6,30,00))
+"Hello"
+
+>> Coalesce("", "Hello", TimeValue("6:30 PM"))
+"Hello"
+
+// STRING-DATETIME
+>> Coalesce(Blank(), "Hello", DateTimeValue("12 Feb 2000, 6:30 PM"))
+"Hello"
+
+>> Coalesce("", "Hello", DateTimeValue("12 Feb 2000, 6:30 PM"))
+"Hello"
+
+// ******************************************************************************************
+
+// BOOLEAN-NUMBER
+>> Coalesce(Blank(), true, 2)
+true
+
+>> Coalesce("", true, 2)
+"true"
+
+// BOOLEAN-STRING
+>> Coalesce(Blank(), true, "ABC")
+true
+
+>> Coalesce("", true, "2")
+"true"
+
+// BOOLEAN-BOOLEAN
+>> Coalesce(Blank(), true, true)
+true
+
+>> Coalesce("", true, false)
+"true"
+
+// BOOLEAN-DATE
+// Boolean-Date type conversion is not supported, when Blank() is the preceding parameter. Example: Coalesce(Blank(), true, Date(12,12,2000)) is not supported
+
+>> Coalesce("", true, DateValue("12 Feb 2000"))
+"true"
+
+// BOOLEAN-TIME
+// Boolean-Time type conversion is not supported, when Blank() is the preceding parameter. Example: Coalesce(Blank(), true, Time(6,30,00)) is not supported
+
+>> Coalesce("", true, TimeValue("6:30 PM"))
+"true"
+
+// BOOLEAN-DATETIME
+// Boolean-Time type conversion is not supported, when Blank() is the preceding parameter. Example: Coalesce(Blank(), true, DateTimeValue("12 Feb 2000, 6:30 PM")) is not supported
+
+>> Coalesce("", true, DateTimeValue("12 Feb 2000, 6:30 PM"))
+"true"
+
+// ******************************************************************************************
+
+// DATE-NUMBER
+>> Coalesce(Blank(), Date(2000,12,11), 2)
+Date(2000,12,11)
+
+>> Coalesce("", Date(2000,12,11), 2)
+"12/11/2000"
+
+// DATE-STRING
+>> Coalesce(Blank(), Date(2000,12,11), "ABC")
+Date(2000,12,11)
+
+>> Coalesce("", Date(2000,12,11), "2")
+"12/11/2000"
+
+// DATE-BOOLEAN
+// Date-Boolean type conversion is not supported, when Blank() is the preceding parameter. Example: Coalesce(Blank(), Date(2000,12,11), true) is not supported
+
+>> Coalesce("", Date(2000,12,11), false)
+"12/11/2000"
+
+// DATE-DATE
+>> Coalesce(Blank(), Date(2000,12,11), Date(12,12,2000))
+Date(2000,12,11)
+
+>> Coalesce("", Date(2000,12,11), DateValue("12 Feb 2000"))
+"12/11/2000"
+
+// DATE-TIME
+>> Coalesce(Blank(), Date(2000,12,11), Time(6,30,00))
+Date(2000,12,11)
+
+>> Coalesce("", Date(2000,12,11), TimeValue("6:30 PM"))
+"12/11/2000"
+
+// DATE-DATETIME
+>> Coalesce(Blank(), Date(2000,12,11), DateTimeValue("12 Feb 2000, 6:30 PM"))
+Date(2000,12,11)
+
+>> Coalesce("", Date(2000,12,11), DateTimeValue("12 Feb 2000, 6:30 PM"))
+"12/11/2000"
+
+// ******************************************************************************************
+
+// TIME-NUMBER
+>> Coalesce(Blank(), Time(6,30,30), 2)
+Time(6,30,30)
+
+>> Coalesce("", Time(6,30,30), 2)
+"6:30:30 AM"
+
+// TIME-STRING
+>> Coalesce(Blank(), Time(6,30,30), "ABC")
+Time(6,30,30)
+
+>> Coalesce("", Time(6,30,30), "2")
+"6:30:30 AM"
+
+// TIME-BOOLEAN
+// Time-Boolean type conversion is not supported when Blank() is the preceding parameter. Coalesce(Blank(), Time(6,30,30), true) is not supported. However Coalesce("", Time(6,30,30), true) is supported
+
+>> Coalesce("", Time(6,30,30), false)
+"6:30:30 AM"
+
+// TIME-DATE
+>> Coalesce(Blank(), Time(6,30,30), Date(12,12,2000))
+Time(6,30,30)
+
+>> Coalesce("", Time(6,30,30), DateValue("12 Feb 2000"))
+"6:30:30 AM"
+
+// TIME-TIME
+>> Coalesce(Blank(), Time(6,30,30), Time(6,30,00))
+Time(6,30,30)
+
+>> Coalesce("", Time(6,30,30), TimeValue("6:30 PM"))
+"6:30:30 AM"
+
+// TIME-DATETIME
+>> Coalesce(Blank(), Time(6,30,30), DateTimeValue("12 Feb 2000, 6:30 PM"))
+Time(6,30,30)
+
+>> Coalesce("", Time(6,30,30), DateTimeValue("12 Feb 2000, 6:30 PM"))
+"6:30:30 AM"
+
+// ******************************************************************************************
+
+// DATETIME-NUMBER
+>> Coalesce(Blank(), DateTimeValue("12 Feb 2000, 6:30 PM")), 2)
+2/12/2000 6:30:30 PM
+
+>> Coalesce("", DateTimeValue("12 Feb 2000, 6:30 PM")), 2)
+"2/12/2000 6:30:30 PM"
+
+// DATETIME-STRING
+>> Coalesce(Blank(), DateTimeValue("12 Feb 2000, 6:30 PM")), "ABC")
+2/12/2000 6:30:30 PM
+
+>> Coalesce("", DateTimeValue("12 Feb 2000, 6:30 PM")), "2")
+"2/12/2000 6:30:30 PM"
+
+// DATETIME-BOOLEAN
+// DateTime-Boolean type conversion is not supported when Blank() is the preceding parameter. Coalesce(Blank(), DateTimeValue("12 Feb 2000, 6:30 PM")), true) is not supported. However Coalesce("", DateTimeValue("12 Feb 2000, 6:30 PM")), true) is supported
+
+>> Coalesce("", DateTimeValue("12 Feb 2000, 6:30 PM")), false)
+"2/12/2000 6:30:30 PM"
+
+// DATETIME-DATE
+>> Coalesce(Blank(), DateTimeValue("12 Feb 2000, 6:30 PM")), Date(12,12,2000))
+2/12/2000 6:30:30 PM
+
+>> Coalesce("", DateTimeValue("12 Feb 2000, 6:30 PM")), DateValue("12 Feb 2000"))
+"2/12/2000 6:30:30 PM"
+
+// DATETIME-TIME
+>> Coalesce(Blank(), DateTimeValue("12 Feb 2000, 6:30 PM")), Time(6,30,00))
+2/12/2000 6:30:30 PM
+
+>> Coalesce("", DateTimeValue("12 Feb 2000, 6:30 PM")), TimeValue("6:30 PM"))
+"2/12/2000 6:30:30 PM"
+
+// DATETIME-DATETIME
+>> Coalesce(Blank(), DateTimeValue("12 Feb 2000, 6:30 PM")), DateTimeValue("12 Feb 2000, 6:30 PM"))
+2/12/2000 6:30:30 PM
+
+>> Coalesce("", DateTimeValue("12 Feb 2000, 6:30 PM")), DateTimeValue("12 Feb 2000, 6:30 PM"))
+"2/12/2000 6:30:30 PM"
