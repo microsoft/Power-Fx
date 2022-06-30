@@ -1287,7 +1287,7 @@ namespace Microsoft.PowerFx.Core.Utils
 #if DEBUG
             for (var i = 0; i < Size(args); i++)
             {
-                if (ReferenceEquals(args[i], null) || !args[i].IsValid)
+                if (!args[i].IsValid)
                 {
                     DbgFailValid(msg);
                 }
