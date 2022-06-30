@@ -195,6 +195,9 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction Text_UO = new TextFunction_UO();
         public static readonly TexlFunction Value_UO = new ValueFunction_UO();
         public static readonly TexlFunction Boolean = new BooleanFunction();
+        public static readonly TexlFunction Boolean_T = new BooleanFunction_T();
+        public static readonly TexlFunction BooleanN = new BooleanNFunction();
+        public static readonly TexlFunction BooleanN_T = new BooleanNFunction_T();
         public static readonly TexlFunction Boolean_UO = new BooleanFunction_UO();
         public static readonly TexlFunction CountRows_UO = new CountRowsFunction_UO();
 
