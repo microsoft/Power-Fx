@@ -74,7 +74,7 @@ namespace Microsoft.PowerFx.Core.Tests
     }
 
     // Base class for running a lightweght test. 
-    public abstract class BaseRunner : ExclusiveRunner
+    public abstract class BaseRunner
     {
         /// <summary>
         /// Maximum time to run test - this catches potential hangs in the engine. 

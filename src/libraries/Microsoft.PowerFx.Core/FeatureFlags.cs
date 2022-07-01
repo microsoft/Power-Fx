@@ -23,7 +23,7 @@ namespace Microsoft.PowerFx.Preview
 
         /// <summary>
         /// Enable String Interpolation feature. 
-        /// Added 12/3/2021.
+        /// Added 3rd Dec 2021.
         /// </summary>
         public static bool StringInterpolation
         {
@@ -31,6 +31,10 @@ namespace Microsoft.PowerFx.Preview
             set => _stringInterpolation = ProtectedSet(value);
         }
 
+        /// <summary>
+        /// Enable Table syntax to not add "Value:" extra layer.
+        /// Added on 1st July 2022.
+        /// </summary>
         public static bool TableSyntaxDoesntWrapRecords
         {
             get => _tableSyntaxDoesntWrapRecords;

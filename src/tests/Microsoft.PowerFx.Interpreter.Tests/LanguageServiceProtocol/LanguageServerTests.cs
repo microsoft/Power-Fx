@@ -19,6 +19,7 @@ using static Microsoft.PowerFx.Interpreter.Tests.ExpressionEvaluationTests;
 
 namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
 {
+    [Collection("Interpreter")]
     public class LanguageServerTests : PowerFxTest
     {       
         protected static readonly JsonSerializerOptions _jsonSerializerOptions = new JsonSerializerOptions
@@ -841,9 +842,6 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
         [InlineData(false, "{}", "{ type: 123 }", @"{""Type"":""Record"",""Fields"":{""type"":{""Type"":""Number""}}}")]
         public void TestPublishExpressionType_AggregateShapes(bool tableSyntaxDoesntWrapRecords, string context, string expression, string expectedTypeJson)
         {
-            // used to isolate the test 
-            using var runner = new InterpreterRunner(); 
-
             Preview.FeatureFlags._inTests = true;
             Preview.FeatureFlags.TableSyntaxDoesntWrapRecords = tableSyntaxDoesntWrapRecords;
 

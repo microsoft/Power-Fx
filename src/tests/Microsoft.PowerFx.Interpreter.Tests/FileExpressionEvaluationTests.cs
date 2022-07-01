@@ -9,17 +9,18 @@ using static Microsoft.PowerFx.Interpreter.Tests.ExpressionEvaluationTests;
 
 namespace Microsoft.PowerFx.Interpreter.Tests
 {
+    [Collection("Interpreter")]
     public class FileExpressionEvaluationTests : PowerFxTest
     {        
         [InterpreterTheory]
-        [TxtFileData("ExpressionTestCases", "InterpreterExpressionTestCases", nameof(InterpreterRunner))]
+        [TxtFileData("ExpressionTestCases", "InterpreterExpressionTestCases", nameof(InterpreterRunner))]        
         public void InterpreterTestCase(ExpressionTestCase testCase)
         {
             // This is running against embedded resources, so if you're updating the .txt files,
             // make sure they build is actually copying them over. 
             Assert.True(testCase.FailMessage == null, testCase.FailMessage);
 
-            using var runner = new InterpreterRunner();
+            var runner = new InterpreterRunner();
             Preview.FeatureFlags._inTests = true;
             Preview.FeatureFlags.TableSyntaxDoesntWrapRecords = false;
 
@@ -42,14 +43,14 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         }
 
         [InterpreterTheory]
-        [TxtFileData(@"ExpressionTestCases\NoValueInRecordArrays", null, nameof(InterpreterRunner))]
-        public void InterpreterTestCase_NoValueInRecordArrays(ExpressionTestCase testCase)
+        [TxtFileData(@"ExpressionTestCases\TableSyntaxDoesntWrapRecords", null, nameof(InterpreterRunner))]
+        public void InterpreterTestCase_TableSyntaxDoesntWrapRecords(ExpressionTestCase testCase)
         {
             // This is running against embedded resources, so if you're updating the .txt files,
             // make sure they build is actually copying them over. 
             Assert.True(testCase.FailMessage == null, testCase.FailMessage);
             
-            using var runner = new InterpreterRunner();
+            var runner = new InterpreterRunner();
             Preview.FeatureFlags._inTests = true;
             Preview.FeatureFlags.TableSyntaxDoesntWrapRecords = true;
 

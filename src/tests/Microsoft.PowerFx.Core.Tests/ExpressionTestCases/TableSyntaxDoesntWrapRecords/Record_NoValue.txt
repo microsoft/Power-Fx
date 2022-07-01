@@ -1,4 +1,4 @@
-﻿// Feature NoValueInRecordArrays set
+﻿// Feature TableSyntaxDoesntWrapRecords set
 
 >> First([{a: 1}]).a
 1
@@ -8,3 +8,6 @@
 
 >> First([{a: 1}]).Value.a
 Errors: Error 15-21: Name isn't valid. 'Value' isn't recognized.|Error 21-23: Invalid use of '.'
+
+>> First([ { Value : 10 } ]).Value
+10

@@ -1,0 +1,4 @@
+﻿// Feature TableSyntaxDoesntWrapRecords set
+
+>> Index([ { a: 10, b: "asdf"}, { a: 20, b: "second"}, { a: 30, b: "third"}], 1).b
+"asdf"
