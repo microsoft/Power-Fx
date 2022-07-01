@@ -2,9 +2,12 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
+using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
+using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Syntax;
 
 namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
@@ -26,6 +29,108 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
             yield return new[] { TexlStrings.BooleanArg1 };
+        }
+    }
+
+    // Boolean(E:*[s])
+    // Corresponding Excel and DAX function: Boolean
+    internal sealed class BooleanFunction_T : BuiltinFunction
+    {
+        public override bool IsSelfContained => true;
+
+        public override bool SupportsParamCoercion => false;
+
+        public BooleanFunction_T()
+            : base(BooleanFunction.BooleanInvariantFunctionName, TexlStrings.AboutBooleanT, FunctionCategories.Table, DType.EmptyTable, 0, 1, 1, DType.EmptyTable)
+        {
+        }
+
+        public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
+        {
+            yield return new[] { TexlStrings.BooleanTArg1 };
+        }
+
+        public override string GetUniqueTexlRuntimeName(bool isPrefetching = false)
+        {
+            return GetUniqueTexlRuntimeName(suffix: "_T");
+        }
+
+        public override bool CheckInvocation(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        {
+            var fValid = base.CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            Contracts.Assert(returnType.IsTable);
+
+            var arg = args[0];
+            var argType = argTypes[0];
+            fValid &= CheckStringColumnType(argType, arg, errors, ref nodeToCoercedTypeMap);
+
+            var rowType = DType.EmptyRecord.Add(new TypedName(DType.Boolean, ColumnName_Value));
+            returnType = rowType.ToTable();
+
+            return fValid;
+        }
+    }
+
+    // Boolean(arg:n)
+    // Corresponding Excel and DAX function: Boolean
+    internal sealed class BooleanNFunction : BuiltinFunction
+    {
+        public override bool IsSelfContained => true;
+
+        public override bool SupportsParamCoercion => false;
+
+        public BooleanNFunction()
+            : base(BooleanFunction.BooleanInvariantFunctionName, TexlStrings.AboutBooleanN, FunctionCategories.Text, DType.Boolean, 0, 1, 1, DType.Number)
+        {
+        }
+
+        public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
+        {
+            yield return new[] { TexlStrings.BooleanNArg1 };
+        }
+
+        public override string GetUniqueTexlRuntimeName(bool isPrefetching = false)
+        {
+            return GetUniqueTexlRuntimeName(suffix: "N");
+        }
+    }
+
+    // Boolean(E:*[n])
+    // Corresponding Excel and DAX function: Boolean
+    internal sealed class BooleanNFunction_T : BuiltinFunction
+    {
+        public override bool IsSelfContained => true;
+
+        public override bool SupportsParamCoercion => false;
+
+        public BooleanNFunction_T()
+            : base(BooleanFunction.BooleanInvariantFunctionName, TexlStrings.AboutBooleanNT, FunctionCategories.Table, DType.EmptyTable, 0, 1, 1, DType.EmptyTable)
+        {
+        }
+
+        public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
+        {
+            yield return new[] { TexlStrings.BooleanNTArg1 };
+        }
+
+        public override string GetUniqueTexlRuntimeName(bool isPrefetching = false)
+        {
+            return GetUniqueTexlRuntimeName(suffix: "N_T");
+        }
+
+        public override bool CheckInvocation(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        {
+            var fValid = base.CheckInvocation(args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            Contracts.Assert(returnType.IsTable);
+
+            var arg = args[0];
+            var argType = argTypes[0];
+            fValid &= CheckNumericColumnType(argType, arg, errors, ref nodeToCoercedTypeMap);
+
+            var rowType = DType.EmptyRecord.Add(new TypedName(DType.Boolean, ColumnName_Value));
+            returnType = rowType.ToTable();
+
+            return fValid;
         }
     }
 

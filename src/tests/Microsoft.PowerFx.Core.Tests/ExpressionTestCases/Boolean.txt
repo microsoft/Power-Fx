@@ -34,11 +34,23 @@ Blank()
 >> Boolean("0")
 #Error(Kind=InvalidArgument)
 
+>> Boolean(["true", "True", "TRUE", "false", "False", "FALSE"])
+[true,true,true,false,false,false]
+
 >> Boolean(0)
-Errors: Error 0-10: The function 'Boolean' has some invalid arguments.|Error 8-9: Invalid argument type (Number). Expecting a Text value instead.
+false
+
+>> Boolean(1)
+true
+
+>> Boolean(2)
+true
+
+>> Boolean([0, 1, 2])
+[false,true,true]
 
 >> Boolean([])
-Errors: Error 0-11: The function 'Boolean' has some invalid arguments.|Error 8-10: Invalid argument type (Table). Expecting a Text value instead.
+Errors: Error 0-11: The function 'Boolean' has some invalid arguments.|Error 8-10: Invalid schema, expected a one-column table.
 
 >> Boolean(true)
 Errors: Error 0-13: The function 'Boolean' has some invalid arguments.|Error 8-12: Invalid argument type (Boolean). Expecting a Text value instead.
