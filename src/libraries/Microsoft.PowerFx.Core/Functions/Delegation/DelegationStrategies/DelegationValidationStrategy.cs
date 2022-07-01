@@ -61,7 +61,8 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
         }
 
         // Helper used to provide hints when we detect non-delegable parts of the expression due to server restrictions.
-        [SuppressMessage("Performance", "CA1820: Test for empty strings using string length", Justification = "n/a")]
+        [SuppressMessage("Performance", "CA1820: Test for empty strings using string length", Justification = "n/a")] 
+        [SuppressMessage("Performance", "CA1508: Avoid dead conditional code", Justification = "n/a")]
         protected void SuggestDelegationHint(TexlNode node, TexlBinding binding, ErrorResourceKey? suggestionKey, params object[] args)
         {
             Contracts.AssertValue(node);
