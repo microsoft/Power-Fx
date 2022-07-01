@@ -13,7 +13,7 @@ namespace Microsoft.PowerFx.Core.Tests
 {
     public sealed class LexerTests : PowerFxTest
     {
-        private void AssertTokens(string value, params TokKind[] tokKinds)
+        private static void AssertTokens(string value, params TokKind[] tokKinds)
         {
             var tokens = TexlLexer.InvariantLexer.LexSource(value);
             Assert.NotNull(tokens);
@@ -244,7 +244,7 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.Equal(fragment, span.GetFragment(script));
         }
 
-        private CultureInfo GetFrenchSettings()
+        private static CultureInfo GetFrenchSettings()
         {
             return new CultureInfo("fr-FR");
         }

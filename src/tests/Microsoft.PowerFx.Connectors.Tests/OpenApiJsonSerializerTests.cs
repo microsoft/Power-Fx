@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using Microsoft.OpenApi.Models;
 using Microsoft.PowerFx.Core.Tests;
@@ -335,11 +336,13 @@ namespace Microsoft.PowerFx.Tests
             Assert.Equal(date, obj.A);
         }
 
+        [SuppressMessage("Performance", "CA1812: Avoid uninstantiated internal classes", Justification = "Used in tests")]
         private class DateTimeType
         {
             public DateTime A { get; set; }
         }
 
+        [SuppressMessage("Performance", "CA1812: Avoid uninstantiated internal classes", Justification = "Used in tests")]
         private class DateTimeArrayType
         {
             public DateTime[] A { get; set; }

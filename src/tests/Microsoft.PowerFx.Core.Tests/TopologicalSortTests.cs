@@ -83,7 +83,7 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.True(success);
             Assert.NotNull(result);
             Assert.Null(cycles);
-            Assert.True(result.Count() == 0);
+            Assert.False(result.Any());
         }
 
         [Fact]

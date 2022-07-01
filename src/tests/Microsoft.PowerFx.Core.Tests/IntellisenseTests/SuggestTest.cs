@@ -25,7 +25,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         /// <returns>
         /// List of string representing suggestions.
         /// </returns>
-        private string[] SuggestStrings(string expression, PowerFxConfig config, string contextTypeString = null)
+        private static string[] SuggestStrings(string expression, PowerFxConfig config, string contextTypeString = null)
         {
             Assert.NotNull(expression);
 
@@ -33,13 +33,13 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
             return intellisense.Suggestions.Select(suggestion => suggestion.DisplayText.Text).ToArray();
         }
         
-        private PowerFxConfig Default => PowerFxConfig.BuildWithEnumStore(null, new EnumStoreBuilder().WithDefaultEnums());
+        private static PowerFxConfig Default => PowerFxConfig.BuildWithEnumStore(null, new EnumStoreBuilder().WithDefaultEnums());
 
         // No enums, no functions. Adding functions will add back in associated enums, so to be truly empty, ensure no functions. 
-        private PowerFxConfig EmptyEverything => PowerFxConfig.BuildWithEnumStore(null, new EnumStoreBuilder(), new TexlFunction[0]);
+        private static PowerFxConfig EmptyEverything => PowerFxConfig.BuildWithEnumStore(null, new EnumStoreBuilder(), new TexlFunction[0]);
 
         // No extra enums, but standard functions (which will include some enums).
-        private PowerFxConfig MinimalEnums => PowerFxConfig.BuildWithEnumStore(null, new EnumStoreBuilder().WithRequiredEnums(BuiltinFunctionsCore.BuiltinFunctionsLibrary));        
+        private static PowerFxConfig MinimalEnums => PowerFxConfig.BuildWithEnumStore(null, new EnumStoreBuilder().WithRequiredEnums(BuiltinFunctionsCore.BuiltinFunctionsLibrary));        
 
         /// <summary>
         /// Compares expected suggestions with suggestions made by PFx Intellisense for a given

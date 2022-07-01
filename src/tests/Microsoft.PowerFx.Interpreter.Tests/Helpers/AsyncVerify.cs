@@ -31,7 +31,7 @@ namespace Microsoft.PowerFx.Tests
             var task = BeginAsyncCallWorker(idx);
             var timer = Task.Delay(TimeSpan.FromSeconds(10));
 
-            if (await Task.WhenAny(task, timer) == task)
+            if (await Task.WhenAny(task, timer).ConfigureAwait(false) == task)
             {
                 return; // Success
             }
@@ -42,7 +42,7 @@ namespace Microsoft.PowerFx.Tests
                 Debugger.Break();
             }
 
-            await task;
+            await task.ConfigureAwait(false);
         }
 
         private Task BeginAsyncCallWorker(int idx)
@@ -89,7 +89,7 @@ namespace Microsoft.PowerFx.Tests
                 await Task.Yield();
             }
 
-            var result = await task;
+            var result = await task.ConfigureAwait(false);
             return result;
         }
     }

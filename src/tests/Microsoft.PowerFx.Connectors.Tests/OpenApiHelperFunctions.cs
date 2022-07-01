@@ -53,27 +53,27 @@ namespace Microsoft.PowerFx.Connectors.Tests
         internal static string Serialize<T>(Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)> parameters, bool schemaLessBody)
             where T : FormulaValueSerializer
         {
-            FormulaValueSerializer jsonSerializer = null;
+            FormulaValueSerializer serializer = null;
 
             try
             {
-                jsonSerializer = (FormulaValueSerializer)Activator.CreateInstance(typeof(T), new object[] { schemaLessBody });
-                jsonSerializer.StartSerialization(null);
+                serializer = (FormulaValueSerializer)Activator.CreateInstance(typeof(T), new object[] { schemaLessBody });
+                serializer.StartSerialization(null);
 
                 if (parameters != null)
                 {
                     foreach (var parameter in parameters)
                     {
-                        jsonSerializer.SerializeValue(parameter.Key, parameter.Value.Schema, parameter.Value.Value);
+                        serializer.SerializeValue(parameter.Key, parameter.Value.Schema, parameter.Value.Value);
                     }
                 }
 
-                jsonSerializer.EndSerialization();
-                return jsonSerializer.GetResult();
+                serializer.EndSerialization();
+                return serializer.GetResult();
             }
             finally
             {
-                if (jsonSerializer != null && jsonSerializer is IDisposable disp)
+                if (serializer is IDisposable disp)
                 {
                     disp.Dispose();
                 }

@@ -14,7 +14,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 {
     public class InterpreterSuggestTests : IntellisenseTestBase
     {
-        private string[] SuggestStrings(string expression, PowerFxConfig config, RecordType parameterType)
+        private static string[] SuggestStrings(string expression, PowerFxConfig config, RecordType parameterType)
         {
             Assert.NotNull(expression);
 

@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Types;
@@ -107,6 +108,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             }
 
             // The adapter will access Wrapper<T>._value and chain to inner marshaller.
+            [SuppressMessage("Performance", "CA1812: Avoid uninstantiated internal classes", Justification = "Used in tests")]
             public class Adapter<T> : ITypeMarshaller
             {
                 private readonly ITypeMarshaller _inner;

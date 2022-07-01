@@ -46,10 +46,12 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
         private const int MethodNotFound = -32601;
         private const int InvalidParams = -32602;
         private const int InternalError = -32603;
-        private const int ServerErrorStart = -32099;
-        private const int ServerErrorEnd = -32000;
-        private const int ServerNotInitialized = -32002;
-        private const int UnknownErrorCode = -32001;
+
+        // Keeping for reference
+        //private const int ServerErrorStart = -32099;
+        //private const int ServerErrorEnd = -32000;
+        //private const int ServerNotInitialized = -32002;
+        //private const int UnknownErrorCode = -32001;
 
         [Fact]
         public void TestTopParseError()
@@ -297,7 +299,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
                 diagnosticsSet.RemoveWhere(x => x.Message == actualDiagnostic.Message);
             }
 
-            Assert.True(diagnosticsSet.Count() == 0);
+            Assert.False(diagnosticsSet.Any());
         }
 
         [Theory]
@@ -552,20 +554,20 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             var position = matches[0].Index;
             expression = expression.Substring(0, position) + expression[position + 1] + expression.Substring(position + 3);
 
-            Assert.Equal(expected, _testServer.TestGetCharPosition(expression, position));
+            Assert.Equal(expected, TestLanguageServer.TestGetCharPosition(expression, position));
         }
 
         [Fact]
         public void TestGetPosition()
         {
-            Assert.Equal(0, _testServer.TestGetPosition("123", 0, 0));
-            Assert.Equal(1, _testServer.TestGetPosition("123", 0, 1));
-            Assert.Equal(2, _testServer.TestGetPosition("123", 0, 2));
-            Assert.Equal(4, _testServer.TestGetPosition("123\n123456\n12345", 1, 0));
-            Assert.Equal(5, _testServer.TestGetPosition("123\n123456\n12345", 1, 1));
-            Assert.Equal(11, _testServer.TestGetPosition("123\n123456\n12345", 2, 0));
-            Assert.Equal(13, _testServer.TestGetPosition("123\n123456\n12345", 2, 2));
-            Assert.Equal(3, _testServer.TestGetPosition("123", 0, 999));
+            Assert.Equal(0, TestLanguageServer.TestGetPosition("123", 0, 0));
+            Assert.Equal(1, TestLanguageServer.TestGetPosition("123", 0, 1));
+            Assert.Equal(2, TestLanguageServer.TestGetPosition("123", 0, 2));
+            Assert.Equal(4, TestLanguageServer.TestGetPosition("123\n123456\n12345", 1, 0));
+            Assert.Equal(5, TestLanguageServer.TestGetPosition("123\n123456\n12345", 1, 1));
+            Assert.Equal(11, TestLanguageServer.TestGetPosition("123\n123456\n12345", 2, 0));
+            Assert.Equal(13, TestLanguageServer.TestGetPosition("123\n123456\n12345", 2, 2));
+            Assert.Equal(3, TestLanguageServer.TestGetPosition("123", 0, 999));
         }
 
         [Fact]

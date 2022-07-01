@@ -64,7 +64,7 @@ namespace Microsoft.PowerFx.Core.Tests
         {
             var namedFormula = new NamedFormulas(script);
             var formulas = namedFormula.EnsureParsed();
-            formulas.OrderBy(formula => formula.formula.Script);
+            _ = formulas.OrderBy(formula => formula.formula.Script);
 
             Assert.NotNull(formulas);
 

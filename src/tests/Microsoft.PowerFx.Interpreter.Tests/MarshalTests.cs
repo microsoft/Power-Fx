@@ -4,6 +4,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
@@ -166,7 +167,7 @@ namespace Microsoft.PowerFx.Tests
         // Basic marshaling hook. 
         private class Custom1ObjectMarshallerProvider : ObjectMarshallerProvider
         {
-            public int _hookCounter = 0;
+            public int _hookCounter;
 
             public override string GetFxName(PropertyInfo propertyInfo)
             {
@@ -445,16 +446,17 @@ namespace Microsoft.PowerFx.Tests
             if (shouldSucceed)
             {
                 // For comparison, verify we can succeed. 
-                var result = await engine.EvalAsync("x.field1", CancellationToken.None);
+                var result = await engine.EvalAsync("x.field1", CancellationToken.None).ConfigureAwait(false);
                 Assert.Equal(999.0, result.ToObject());
             }
             else
             { 
                 await Assert.ThrowsAsync<InvalidOperationException>(async () =>
-                    await engine.EvalAsync("x.field1", CancellationToken.None));
+                    await engine.EvalAsync("x.field1", CancellationToken.None).ConfigureAwait(false)).ConfigureAwait(false);
             }            
         }
 
+        [SuppressMessage("Performance", "CA1812: Avoid uninstantiated internal classes", Justification = "Used in InlineData")]
         private class MyBadRecordValueMismatch : MyRecordValue
         {
             protected override bool TryGetField(FormulaType fieldType, string fieldName, out FormulaValue result)
@@ -465,6 +467,7 @@ namespace Microsoft.PowerFx.Tests
             }
         }
 
+        [SuppressMessage("Performance", "CA1812: Avoid uninstantiated internal classes", Justification = "Used in InlineData")]
         private class MyBadRecordValue : MyRecordValue
         {
             protected override bool TryGetField(FormulaType fieldType, string fieldName, out FormulaValue result)
@@ -474,6 +477,7 @@ namespace Microsoft.PowerFx.Tests
             }
         }
 
+        [SuppressMessage("Performance", "CA1812: Avoid uninstantiated internal classes", Justification = "Used in InlineData")]
         private class MyBadRecordValue2 : MyRecordValue
         {
             protected override bool TryGetField(FormulaType fieldType, string fieldName, out FormulaValue result)
@@ -483,6 +487,7 @@ namespace Microsoft.PowerFx.Tests
             }
         }
 
+        [SuppressMessage("Performance", "CA1812: Avoid uninstantiated internal classes", Justification = "Used in InlineData")]
         private class MyBadRecordValueThrows : MyRecordValue
         {
             protected override bool TryGetField(FormulaType fieldType, string fieldName, out FormulaValue result)
@@ -621,6 +626,7 @@ namespace Microsoft.PowerFx.Tests
         }
 
         // None of these should marshal. 
+        [SuppressMessage("Performance", "CA1812: Avoid uninstantiated internal classes", Justification = "Used in tests")]
         private class PocoNotMarshalled
         {
             private int Prop1 { get; set; } // not public
@@ -657,7 +663,7 @@ namespace Microsoft.PowerFx.Tests
         // Custom marshaller. Marshal Widget objects as Strings with a "W" prefix. 
         private class WidgetMarshallerProvider : ITypeMarshallerProvider
         {
-            public int _counter = 0;
+            public int _counter;
 
             public bool TryGetMarshaller(Type type, TypeMarshallerCache cache, int maxDepth, out ITypeMarshaller marshaler)
             {

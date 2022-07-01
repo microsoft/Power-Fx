@@ -30,7 +30,7 @@ namespace Microsoft.PowerFx.Tests
         }
 
         // Table of heterogenous cells. 
-        private DataTable CreateObjectDataTable()
+        private static DataTable CreateObjectDataTable()
         {
             var table = new DataTable();
 
@@ -54,7 +54,7 @@ namespace Microsoft.PowerFx.Tests
         {
             var engine = new RecalcEngine();
 
-            var table = CreateObjectDataTable();
+            using var table = CreateObjectDataTable();
 
             var cache = new TypeMarshallerCache()
                 .WithDynamicMarshallers(new DataTableMarshallerProvider());
@@ -74,7 +74,7 @@ namespace Microsoft.PowerFx.Tests
         }
 
         // Create table with strong typing
-        private DataTable CreateDataTable()
+        private static DataTable CreateDataTable()
         {
             var table = new DataTable();
 
@@ -95,7 +95,7 @@ namespace Microsoft.PowerFx.Tests
         {
             var engine = new RecalcEngine();
 
-            var table = CreateDataTable();
+            using var table = CreateDataTable();
 
             var cache = new TypeMarshallerCache()
                 .WithDynamicMarshallers(new DataTableMarshallerProvider());

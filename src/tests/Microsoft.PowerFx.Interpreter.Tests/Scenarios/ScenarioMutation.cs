@@ -93,7 +93,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             {
             }
 
-            public NumberValue Execute(UntypedObjectValue obj, NumberValue val)
+            public static NumberValue Execute(UntypedObjectValue obj, NumberValue val)
             {
                 var impl = obj.Impl;
                 var actual = impl.GetDouble();
@@ -115,7 +115,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             {
             }
 
-            public void Execute(UntypedObjectValue obj, StringValue propName, FormulaValue val)
+            public static void Execute(UntypedObjectValue obj, StringValue propName, FormulaValue val)
             {
                 var impl = (MutableObject)obj.Impl;
                 impl.Set(propName.Value, val);
@@ -129,7 +129,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             {
             }
 
-            public void Execute(UntypedObjectValue obj, StringValue propName, StringValue propName2)
+            public static void Execute(UntypedObjectValue obj, StringValue propName, StringValue propName2)
             {
                 var impl = (MutableObject)obj.Impl;
                 impl.TryGetProperty(propName2.Value, out var propValue);

@@ -13,8 +13,8 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
         {
         }
 
-        public int TestGetCharPosition(string expression, int position) => GetCharPosition(expression, position);
+        public static int TestGetCharPosition(string expression, int position) => GetCharPosition(expression, position);
 
-        public int TestGetPosition(string expression, int line, int character) => GetPosition(expression, line, character);
+        public static int TestGetPosition(string expression, int line, int character) => GetPosition(expression, line, character);
     }
 }

@@ -30,7 +30,7 @@ namespace Microsoft.PowerFx.Core.Tests
             {
                 case TestResult.Pass:
                     Pass++;
-                    _output.Append(".");
+                    _output.Append('.');
                     break;
 
                 case TestResult.Fail:
@@ -50,7 +50,7 @@ namespace Microsoft.PowerFx.Core.Tests
                     break;
 
                 case TestResult.Skip:
-                    _output.Append("-");
+                    _output.Append('-');
                     break;
             }
         }

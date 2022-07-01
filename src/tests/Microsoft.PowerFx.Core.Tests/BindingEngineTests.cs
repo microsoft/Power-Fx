@@ -91,7 +91,7 @@ namespace Microsoft.PowerFx.Tests
 
             Assert.True(result.HasError);
             Assert.Single(result.Errors);
-                        
+
             AssertContainsError(result, "Error 4-4: Expected an operand");
         }
 
@@ -103,7 +103,7 @@ namespace Microsoft.PowerFx.Tests
             var result = engine.Check("3*1+");
 
             Assert.False(result.IsSuccess);
-            Assert.True(result.Errors.Count() >= 1);
+            Assert.True(result.Errors.Any());
             AssertContainsError(result, "Error 4-4: Expected an operand");
         }        
 
@@ -249,7 +249,7 @@ namespace Microsoft.PowerFx.Tests
             }
         }
 
-        private void AssertContainsError(IOperationStatus result, string errorMessage)
+        private static void AssertContainsError(IOperationStatus result, string errorMessage)
         {
             Assert.Contains(result.Errors, x => x.ToString().StartsWith(errorMessage));
         }

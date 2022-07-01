@@ -18,14 +18,15 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         private const string TestConnectionId = "9f8196668cbd431990bcca95b3ec1e23";
         private const string TestAuthToken = "AuthToken1234";
 
-        private PowerPlatformConnectorClient Client => new (TestEndpoint, TestEnvironmentId, TestConnectionId, () => TestAuthToken, new HttpMessageInvoker(TestHandler));
+        private static PowerPlatformConnectorClient Client(HttpMessageInvoker httpMessageInvoker) => new (TestEndpoint, TestEnvironmentId, TestConnectionId, () => TestAuthToken, httpMessageInvoker);
 
-        private TestHandler TestHandler => new ();
+        private static TestHandler TestHandler => new ();
 
         [Fact]
         public void PowerPlatformConnectorClient_Constructor()
         {
-            var client = Client;
+            using var invoker = new HttpMessageInvoker(TestHandler);
+            using var client = Client(invoker);
 
             Assert.NotNull(client);
             Assert.Equal(TestEndpoint, client.Endpoint);
@@ -50,8 +51,9 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [InlineData("Post", "SomeHeader:SomeValue", "abc")]
         public void PowerPlatformConnectorClient_TransformRequest(string method, string extraHeaders = null, string content = null)
         {
-            var client = Client;
-            var request = new HttpRequestMessage(new HttpMethod(method), "/{connectionId}/test/someUri");
+            using var invoker = new HttpMessageInvoker(TestHandler);
+            using var client = Client(invoker);
+            using var request = new HttpRequestMessage(new HttpMethod(method), "/{connectionId}/test/someUri");
 
             if (!string.IsNullOrEmpty(extraHeaders))
             {
@@ -77,7 +79,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Assert.Null(TestHandler.Request);
         }
 
-        private void ValidateHeaders(HttpRequestMessage request, HttpRequestMessage transformedRequest)
+        private static void ValidateHeaders(HttpRequestMessage request, HttpRequestMessage transformedRequest)
         {
             foreach (var header in transformedRequest.Headers)
             {
@@ -131,7 +133,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, System.Threading.CancellationToken cancellationToken)
         {
             Request = request;
-            return await base.SendAsync(request, cancellationToken);
+            return await base.SendAsync(request, cancellationToken).ConfigureAwait(false);
         }
     }
 }

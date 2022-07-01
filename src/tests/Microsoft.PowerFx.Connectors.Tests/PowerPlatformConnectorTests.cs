@@ -19,17 +19,17 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public async Task MSNWeatherConnector_CurrentWeather()
         {
-            var testConnector = new LoggingTestServer(@"Swagger\MSNWeather.json");
+            using var testConnector = new LoggingTestServer(@"Swagger\MSNWeather.json");
             var apiDoc = testConnector._apiDocument;
 
             var config = new PowerFxConfig();
-
-            HttpClient client = new PowerPlatformConnectorClient(
+            using var httpClient = new HttpClient(testConnector);
+            using HttpClient client = new PowerPlatformConnectorClient(
                 "firstrelease-001.azure-apim.net", // endpoint
                 "839eace6-59ab-4243-97ec-a5b8fcc104e4", // environment
                 "shared-msnweather-8d08e763-937a-45bf-a2ea-c5ed-ecc70ca4", // connectionId
                 () => "AuthToken1",
-                new HttpClient(testConnector))
+                httpClient)
             {
                 SessionId = "MySessionId"
             };
@@ -46,7 +46,7 @@ namespace Microsoft.PowerFx.Tests
 
             var result = await engine.EvalAsync(
                 "MSNWeather.CurrentWeather(\"Redmond\", \"Imperial\").responses.weather.current.temp",
-                CancellationToken.None);
+                CancellationToken.None).ConfigureAwait(false);
 
             Assert.Equal(53.0, result.ToObject()); // from response
 
@@ -74,17 +74,18 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public async Task AzureBlobConnector_UploadFile()
         {
-            var testConnector = new LoggingTestServer(@"Swagger\AzureBlobStorage.json");
+            using var testConnector = new LoggingTestServer(@"Swagger\AzureBlobStorage.json");
             var apiDoc = testConnector._apiDocument;                       
             var config = new PowerFxConfig();
             var token = @"AuthToken2";
 
-            HttpClient client = new PowerPlatformConnectorClient(
+            using var httpClient = new HttpClient(testConnector);
+            using HttpClient client = new PowerPlatformConnectorClient(
                 "firstrelease-001.azure-apim.net",      // endpoint
                 "839eace6-59ab-4243-97ec-a5b8fcc104e4", // environment
                 "453f61fa88434d42addb987063b1d7d2",     // connectionId
                 () => $"{token}",
-                new HttpClient(testConnector))
+                httpClient)
             {
                 SessionId = "ccccbff3-9d2c-44b2-bee6-cf24aab10b7e"
             };
@@ -102,7 +103,7 @@ namespace Microsoft.PowerFx.Tests
             var result = await engine.EvalAsync(
                 @"AzureBlobStorage.CreateFile(""container"", ""bora1.txt"", ""abc"").Size",
                 CancellationToken.None, 
-                options: new ParserOptions() { AllowsSideEffects = true });
+                options: new ParserOptions() { AllowsSideEffects = true }).ConfigureAwait(false);
 
             dynamic res = result.ToObject();                       
             var size = (double)res;

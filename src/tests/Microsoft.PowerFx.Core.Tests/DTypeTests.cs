@@ -31,18 +31,20 @@ namespace Microsoft.PowerFx.Tests
             Assert.Equal(1, new DType(DKind.Record).MaxDepth);
             Assert.Equal(1, new DType(DKind.Table).MaxDepth);
 
-            DType.TryParse("*[A:n, B:s, C:b]", out var dType1);
+            _ = DType.TryParse("*[A:n, B:s, C:b]", out var dType1);
             Assert.Equal(1, dType1.MaxDepth);
 
             var metaFieldName = "'meta-6de62757-ecb6-4be6-bb85-349b3c7938a9'";
-            DType.TryParse("*[" + metaFieldName + ":![A:n, B:s, C:b]", out var dType2);
+            _ = DType.TryParse("*[" + metaFieldName + ":![A:n, B:s, C:b]", out var dType2);
             Assert.Equal(0, dType2.MaxDepth);
 
-            DType.TryParse("*[A:![A:n]]", out var dType3);
+            _ = DType.TryParse("*[A:![A:n]]", out var dType3);
             Assert.Equal(2, dType3.MaxDepth);
-            DType.TryParse("*[A:![B:*[C:n]]]", out var dType4);
+
+            _ = DType.TryParse("*[A:![B:*[C:n]]]", out var dType4);
             Assert.Equal(3, dType4.MaxDepth);
-            DType.TryParse("*[X:*[Y:n], A:![B:*[C:n]]]", out var dType5);
+
+            _ = DType.TryParse("*[X:*[Y:n], A:![B:*[C:n]]]", out var dType5);
             Assert.Equal(3, dType5.MaxDepth);
         }
     }

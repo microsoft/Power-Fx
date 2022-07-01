@@ -691,7 +691,7 @@ namespace Microsoft.PowerFx.Core.Tests
             TestRoundtrip(script, expected, flags: TexlParser.Flags.EnableExpressionChaining);
         }
 
-        internal void TestRoundtrip(string script, string expected = null, NodeKind expectedNodeKind = NodeKind.Error, Action<TexlNode> customTest = null, TexlParser.Flags flags = TexlParser.Flags.None)
+        internal static void TestRoundtrip(string script, string expected = null, NodeKind expectedNodeKind = NodeKind.Error, Action<TexlNode> customTest = null, TexlParser.Flags flags = TexlParser.Flags.None)
         {
             var result = TexlParser.ParseScript(script, flags: flags);
             var node = result.Root;            
@@ -720,7 +720,7 @@ namespace Microsoft.PowerFx.Core.Tests
             customTest?.Invoke(node);
         }
 
-        internal void TestParseErrors(string script, int count = 1, string errorMessage = null)
+        internal static void TestParseErrors(string script, int count = 1, string errorMessage = null)
         {
             var result = TexlParser.ParseScript(script);
             Assert.NotNull(result.Root);
@@ -731,14 +731,14 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.True(errorMessage == null || result._errors.Any(err => err.ShortMessage == errorMessage));
         }
 
-        internal void TestFormulasParseRoundtrip(string script)
+        internal static void TestFormulasParseRoundtrip(string script)
         {
             var result = TexlParser.ParseFormulasScript(script);
 
             Assert.False(result.HasError);
         }
 
-        internal void TestFormulasParseError(string script)
+        internal static void TestFormulasParseError(string script)
         {
             var result = TexlParser.ParseFormulasScript(script);
 

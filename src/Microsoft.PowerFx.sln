@@ -30,6 +30,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Directory.Build.Props = Directory.Build.Props
 		PowerFx.Off.ruleset = PowerFx.Off.ruleset
 		PowerFx.ruleset = PowerFx.ruleset
+		PowerFx.Tests.ruleset = PowerFx.Tests.ruleset
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.PowerFx.Transport.Attributes", "libraries\Microsoft.PowerFx.Transport.Attributes\Microsoft.PowerFx.Transport.Attributes.csproj", "{ED98A690-863A-443C-9DBB-8F0F5BCACE2B}"

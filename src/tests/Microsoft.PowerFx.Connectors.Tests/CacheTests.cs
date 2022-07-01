@@ -37,7 +37,7 @@ namespace Microsoft.PowerFx.Tests
             return (double)r1.ToObject();
         }
 
-        public async Task<FormulaValue> New(double n)
+        public static async Task<FormulaValue> New(double n)
         {
             return FormulaValue.New(n);
         }

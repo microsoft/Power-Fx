@@ -1,30 +1,21 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <RuleSet Name="Rules for StyleCop.Analyzers" Description="Source analysis rules treat as errors for BotBuilder-DotNet solution." ToolsVersion="16.0">
   <Rules AnalyzerId="Microsoft.CodeQuality.Analyzers" RuleNamespace="Microsoft.CodeQuality.Analyzers">
-    <Rule Id="CA1054" Action="None" />
-    <!-- UriParametersShouldNotBeStrings -->
-    <Rule Id="CA1062" Action="None" />
-    <!-- ValidateArgumentsOfPublicMethods -->
-    <Rule Id="CA1308" Action="None" />
-    <!-- Normalize strings to uppercase (most of our operations are normalized on lowercase -->
-    <Rule Id="CA1822" Action="Warning" />
-    <!-- Ignore Mark members as static -->
+    <Rule Id="CA1054" Action="None" />    <!-- UriParametersShouldNotBeStrings -->
+    <Rule Id="CA1062" Action="None" />    <!-- ValidateArgumentsOfPublicMethods -->
+    <Rule Id="CA1308" Action="None" />    <!-- Normalize strings to uppercase (most of our operations are normalized on lowercase -->
+    <Rule Id="CA1822" Action="Warning" /> <!-- Ignore Mark members as static -->
   </Rules>
   <Rules AnalyzerId="Microsoft.NetCore.Analyzers" RuleNamespace="Microsoft.NetCore.Analyzers">
-    <Rule Id="CA1303" Action="Warning" />
-    <!-- DoNotPassLiteralsAsLocalizedParameters -->
+    <Rule Id="CA1303" Action="Warning" /> <!-- DoNotPassLiteralsAsLocalizedParameters -->
   </Rules>
   <Rules AnalyzerId="Microsoft.NetCore.CSharp.Analyzers" RuleNamespace="Microsoft.NetCore.CSharp.Analyzers">
-    <Rule Id="CA1309" Action="Warning" />
-    <!-- Use ordinal StringComparison -->
+    <Rule Id="CA1309" Action="Warning" /> <!-- Use ordinal StringComparison -->
   </Rules>
   <Rules AnalyzerId="Microsoft.VisualStudio.Threading.Analyzers.CSharp" RuleNamespace="Microsoft.VisualStudio.Threading.Analyzers.CSharp">
-    <Rule Id="VSTHRD002" Action="None" />
-    <!-- Avoid problematic synchronous waits -->
-    <Rule Id="VSTHRD003" Action="None" />
-    <!-- Avoid awaiting foreign Tasks -->
-    <Rule Id="VSTHRD011" Action="None" />
-    <!-- Use AsyncLazy<T> -->
+    <Rule Id="VSTHRD002" Action="None" />    <!-- Avoid problematic synchronous waits -->
+    <Rule Id="VSTHRD003" Action="None" />    <!-- Avoid awaiting foreign Tasks -->
+    <Rule Id="VSTHRD011" Action="None" />    <!-- Use AsyncLazy<T> -->
   </Rules>
   <Rules AnalyzerId="StyleCop.Analyzers" RuleNamespace="StyleCop.Analyzers">
     <Rule Id="SA0001" Action="None" />
@@ -34,8 +25,7 @@
     <Rule Id="SA1002" Action="Error" />
     <Rule Id="SA1003" Action="Error" />
     <Rule Id="SA1004" Action="Error" />
-    <Rule Id="SA1005" Action="None" />
-    <!-- SingleLineCommentsMustBeginWithSingleSpace -->
+    <Rule Id="SA1005" Action="None" />    <!-- SingleLineCommentsMustBeginWithSingleSpace -->
     <Rule Id="SA1006" Action="Error" />
     <Rule Id="SA1007" Action="Error" />
     <Rule Id="SA1008" Action="Error" />
@@ -58,8 +48,7 @@
     <Rule Id="SA1025" Action="Error" />
     <Rule Id="SA1026" Action="Error" />
     <Rule Id="SA1027" Action="Error" />
-    <Rule Id="SA1028" Action="None" />
-    <!-- Code should not contain trailing whitespace -->
+    <Rule Id="SA1028" Action="None" />    <!-- Code should not contain trailing whitespace -->
     <Rule Id="SA1100" Action="Error" />
     <Rule Id="SA1102" Action="Error" />
     <Rule Id="SA1103" Action="Error" />
@@ -82,8 +71,7 @@
     <Rule Id="SA1121" Action="Error" />
     <Rule Id="SA1122" Action="Error" />
     <Rule Id="SA1123" Action="Error" />
-    <Rule Id="SA1124" Action="None" />
-    <!-- DoNotUseRegions-->
+    <Rule Id="SA1124" Action="None" />    <!-- DoNotUseRegions-->
     <Rule Id="SA1125" Action="Error" />
     <Rule Id="SA1127" Action="Error" />
     <Rule Id="SA1128" Action="Error" />
@@ -97,14 +85,10 @@
     <Rule Id="SA1137" Action="Error" />
     <Rule Id="SA1139" Action="Error" />
     <Rule Id="SA1200" Action="None" />
-    <Rule Id="SA1201" Action="None" />
-    <!-- ElementsMustAppearInTheCorrectOrder (This is a good rule, but not followed in the code currently)-->
-    <Rule Id="SA1202" Action="None" />
-    <!-- Same -->
-    <Rule Id="SA1203" Action="None" />
-    <!-- Same -->
-    <Rule Id="SA1204" Action="None" />
-    <!-- Same -->
+    <Rule Id="SA1201" Action="None" />    <!-- ElementsMustAppearInTheCorrectOrder (This is a good rule, but not followed in the code currently)-->
+    <Rule Id="SA1202" Action="None" />    <!-- Same -->
+    <Rule Id="SA1203" Action="None" />    <!-- Same -->
+    <Rule Id="SA1204" Action="None" />    <!-- Same -->
     <Rule Id="SA1205" Action="Error" />
     <Rule Id="SA1206" Action="Error" />
     <Rule Id="SA1207" Action="Error" />
@@ -121,21 +105,18 @@
     <Rule Id="SA1302" Action="Error" />
     <Rule Id="SA1303" Action="Error" />
     <Rule Id="SA1304" Action="Error" />
-    <Rule Id="SA1305" Action="None" />
-    <!-- FieldNamesMustNotUseHungarianNotation -->
+    <Rule Id="SA1305" Action="None" />    <!-- FieldNamesMustNotUseHungarianNotation -->
     <Rule Id="SA1306" Action="Error" />
     <Rule Id="SA1307" Action="Error" />
     <Rule Id="SA1308" Action="Error" />
     <Rule Id="SA1309" Action="None" />
-    <Rule Id="SA1310" Action="None" />
-    <!-- FieldNamesMustNotContainUnderscore: We have existing code that breaks this -->
+    <Rule Id="SA1310" Action="None" />    <!-- FieldNamesMustNotContainUnderscore: We have existing code that breaks this -->
     <Rule Id="SA1311" Action="Error" />
     <Rule Id="SA1312" Action="Error" />
     <Rule Id="SA1313" Action="Error" />
     <Rule Id="SA1314" Action="Error" />
     <Rule Id="SA1400" Action="Error" />
-    <Rule Id="SA1401" Action="None" />
-    <!-- FieldsMustBePrivate: Disabled, no automated fix and breaks existing uses -->
+    <Rule Id="SA1401" Action="None" />    <!-- FieldsMustBePrivate: Disabled, no automated fix and breaks existing uses -->
     <Rule Id="SA1403" Action="Warning" />
     <Rule Id="SA1404" Action="Error" />
     <Rule Id="SA1405" Action="Error" />
@@ -145,12 +126,9 @@
     <Rule Id="SA1410" Action="Error" />
     <Rule Id="SA1411" Action="Error" />
     <Rule Id="SA1412" Action="Error" />
-    <Rule Id="SA1413" Action="None" />
-    <!-- UseTrailingCommasInMultiLineInitializers-->
-    <Rule Id="SA1101" Action="None" />
-    <!-- PrefixLocalCallsWithThis -->
-    <Rule Id="SA1129" Action="None" />
-    <!-- DoNotUseDefaultValueTypeConstructor-->
+    <Rule Id="SA1413" Action="None" />    <!-- UseTrailingCommasInMultiLineInitializers-->
+    <Rule Id="SA1101" Action="None" />    <!-- PrefixLocalCallsWithThis -->
+    <Rule Id="SA1129" Action="None" />    <!-- DoNotUseDefaultValueTypeConstructor-->
     <Rule Id="SA1500" Action="Error" />
     <Rule Id="SA1501" Action="Error" />
     <Rule Id="SA1502" Action="Error" />
@@ -163,8 +141,7 @@
     <Rule Id="SA1509" Action="Error" />
     <Rule Id="SA1510" Action="Error" />
     <Rule Id="SA1511" Action="Error" />
-    <Rule Id="SA1512" Action="None" />
-    <!-- SingleLineCommentsMustNotBeFollowedByBlankLine -->
+    <Rule Id="SA1512" Action="None" />    <!-- SingleLineCommentsMustNotBeFollowedByBlankLine -->
     <Rule Id="SA1513" Action="Error" />
     <Rule Id="SA1514" Action="Error" />
     <Rule Id="SA1515" Action="Error" />
@@ -197,8 +174,7 @@
     <Rule Id="SA1643" Action="Error" />
     <Rule Id="SA1648" Action="Error" />
     <Rule Id="SA1651" Action="Error" />
-    <Rule Id="SX1309" Action="Error" />
-    <!-- XML Documentation Warnings, disabled until we take a pass over docs -->
+    <Rule Id="SX1309" Action="Error" />    <!-- XML Documentation Warnings, disabled until we take a pass over docs -->
     <Rule Id="SA1574" Action="None" />
     <Rule Id="SA1600" Action="None" />
     <Rule Id="SA1601" Action="None" />
@@ -215,8 +191,8 @@
     <Rule Id="SA1618" Action="None" />
     <Rule Id="SA1622" Action="None" />
     <Rule Id="SA1623" Action="None" />
-    <Rule Id="SA1625" Action="None" />
-    <!-- End XM Documentation Warnings-->
+    <Rule Id="SA1625" Action="None" />    
+    <!-- End XM Documentation Warnings-->    
     <!-- File/Class Naming Guidelines: These conflict with our function files mostly -->
     <Rule Id="SA1402" Action="None" />
     <Rule Id="SA1649" Action="None" />

@@ -149,7 +149,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 Expected = "true"
             };
 
-            var (result, msg) = await RunAsync2(case2);
+            var (result, msg) = await RunAsync2(case2).ConfigureAwait(false);
             if (result == TestResult.Fail)
             {
                 msg += " (IsError() followup call)";
@@ -173,7 +173,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
             try
             {
-                runResult = await RunAsyncInternal(testCase.Input, testCase.SetupHandlerName);
+                runResult = await RunAsyncInternal(testCase.Input, testCase.SetupHandlerName).ConfigureAwait(false);
                 result = runResult.Value;
                                 
                 // Unsupported is just for ignoring large groups of inherited tests. 
@@ -232,9 +232,9 @@ namespace Microsoft.PowerFx.Core.Tests
 
                     var expectedErrorKinds = expectedErrorKind.Split(',', StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim()).ToArray();
 
-                    if (errorResult.Errors.Count != expectedErrorKinds.Count())
+                    if (errorResult.Errors.Count != expectedErrorKinds.Length)
                     {
-                        return (TestResult.Fail, $"Received {errorResult.Errors.Count} errors while we were expecting {expectedErrorKinds.Count()} errors.\r\n" +
+                        return (TestResult.Fail, $"Received {errorResult.Errors.Count} errors while we were expecting {expectedErrorKinds.Length} errors.\r\n" +
                                                  $"Received {string.Join(", ", errorResult.Errors.Select(e => e.Kind))} and was expecting {expectedErrorKind}");
                     }
 
@@ -283,7 +283,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 else if (IsError(result))
                 {
                     // If they override IsError, then do additional checks. 
-                    return await RunErrorCaseAsync(testCase);
+                    return await RunErrorCaseAsync(testCase).ConfigureAwait(false);
                 }
             }
 

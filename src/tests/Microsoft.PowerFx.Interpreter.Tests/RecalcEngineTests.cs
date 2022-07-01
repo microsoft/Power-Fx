@@ -443,7 +443,7 @@ namespace Microsoft.PowerFx.Tests
             CheckThroughInterface(engine);
         }
 
-        private void CheckThroughInterface(IPowerFxEngine engine)
+        private static void CheckThroughInterface(IPowerFxEngine engine)
         {
             var result = engine.Check(
                "3*2+x",
@@ -547,7 +547,7 @@ namespace Microsoft.PowerFx.Tests
 
             var enums = config.EnumStoreBuilder.Build().EnumSymbols;
 
-            Assert.True(enums.Count() > 0);
+            Assert.True(enums.Any());
         }
 
         #region Test
