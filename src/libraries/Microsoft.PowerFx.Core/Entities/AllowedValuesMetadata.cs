@@ -11,7 +11,7 @@ namespace Microsoft.PowerFx.Core.Entities
 {
     internal sealed class AllowedValuesMetadata
     {
-        private static readonly DName ValueColumnName = new DName("Value");
+        internal static readonly DName ValueColumnName = new DName("Value");
 
         public static AllowedValuesMetadata CreateForValue(DType valueType)
         {

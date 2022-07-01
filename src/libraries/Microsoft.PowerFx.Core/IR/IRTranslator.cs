@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Binding.BindInfo;
+using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.IR.Nodes;
 using Microsoft.PowerFx.Core.IR.Symbols;
@@ -104,7 +105,26 @@ namespace Microsoft.PowerFx.Core.IR
                 Contracts.AssertValue(context);
 
                 var children = node.Children.Select(child => child.Accept(this, context)).ToArray();
-                return MaybeInjectCoercion(node, new TableNode(context.GetIRContext(node), children), context);
+                var irContext = context.GetIRContext(node);
+
+                if (!Preview.FeatureFlags.TableSyntaxDoesntWrapRecords || children.First() is not RecordNode)
+                {
+                    // Let's add "Value:" here                    
+                    var recordNodes = new List<RecordNode>();                    
+
+                    foreach (var childNode in children)
+                    {
+                        var values = new Dictionary<DName, IntermediateNode> { { AllowedValuesMetadata.ValueColumnName, childNode } };
+                        var rt = new RecordType().Add(TableValue.ValueName, childNode.IRContext.ResultType);
+
+                        recordNodes.Add(new RecordNode(new IRContext(childNode.IRContext.SourceContext, rt), values));
+                    }
+
+                    children = recordNodes.ToArray();                    
+                    irContext = new IRContext(node.GetCompleteSpan(), irContext.ResultType);
+                }
+
+                return MaybeInjectCoercion(node, new TableNode(irContext, children), context);
             }
 
             public override IntermediateNode Visit(TexlUnaryOpNode node, IRTranslatorContext context)
