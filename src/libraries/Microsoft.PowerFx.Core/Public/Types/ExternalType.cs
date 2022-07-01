@@ -2,7 +2,6 @@
 // Licensed under the MIT license.
 
 using System;
-using System.Diagnostics.CodeAnalysis;
 using Microsoft.PowerFx.Core.Types;
 
 namespace Microsoft.PowerFx.Types
@@ -10,8 +9,7 @@ namespace Microsoft.PowerFx.Types
     /// <summary>
     /// This enum represents types which are not supported by PowerFx
     /// but which may be supported by external data formats.
-    /// </summary>
-    [SuppressMessage("Naming", "CA1720:Identifiers should not contain type names", Justification="n/a")]
+    /// </summary>    
     public enum ExternalTypeKind
     {
         Array, // PowerFx only supports single-column tables

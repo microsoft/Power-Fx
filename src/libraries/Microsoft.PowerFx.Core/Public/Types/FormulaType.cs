@@ -2,7 +2,6 @@
 // Licensed under the MIT license.
 
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
@@ -26,8 +25,7 @@ namespace Microsoft.PowerFx.Types
         public static FormulaType Boolean { get; } = new BooleanType();
 
         public static FormulaType Number { get; } = new NumberType();
-
-        [SuppressMessage("Naming", "CA1720:Identifiers should not contain type names", Justification="n/a")]
+        
         public static FormulaType String { get; } = new StringType();
 
         public static FormulaType Time { get; } = new TimeType();
@@ -43,8 +41,7 @@ namespace Microsoft.PowerFx.Types
         public static FormulaType Hyperlink { get; } = new HyperlinkType();
 
         public static FormulaType Color { get; } = new ColorType();
-
-        [SuppressMessage("Naming", "CA1720:Identifiers should not contain type names", Justification = "n/a")]
+        
         public static FormulaType Guid { get; } = new GuidType();
 
         public static FormulaType Unknown { get; } = new UnknownType();

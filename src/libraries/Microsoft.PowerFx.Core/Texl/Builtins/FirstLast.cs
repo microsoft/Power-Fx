@@ -77,7 +77,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
 
             // If has top capability (e.g. Dataverse)
-            if (TryGetValidDataSourceForDelegation(callNode, binding, FunctionDelegationCapability, out var _))
+            if (TryGetValidDataSourceForDelegation(callNode, binding, FunctionDelegationCapability, out _))
             {
                 return true;
             }            

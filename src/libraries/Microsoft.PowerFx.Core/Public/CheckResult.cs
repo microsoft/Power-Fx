@@ -3,7 +3,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Errors;
@@ -17,7 +16,7 @@ namespace Microsoft.PowerFx
 {
     /// <summary>
     /// Result of binding an expression. 
-    /// </summary>
+    /// </summary>    
     public class CheckResult : IOperationStatus
     {
         /// <summary> 
@@ -29,9 +28,8 @@ namespace Microsoft.PowerFx
         /// Names of fields that this formula uses. 
         /// null if unavailable.  
         /// This is only valid when <see cref="IsSuccess"/> is true.
-        /// </summary>
-        [SuppressMessage("Usage", "CA2227: Collection properties should be read only", Justification = "n/a")]
-        public HashSet<string> TopLevelIdentifiers { get; set; }
+        /// </summary>        
+        public HashSet<string> TopLevelIdentifiers { get; internal set; }
 
         /// <summary>
         /// List of errors and warnings. Check <see cref="ExpressionError.IsWarning"/>.

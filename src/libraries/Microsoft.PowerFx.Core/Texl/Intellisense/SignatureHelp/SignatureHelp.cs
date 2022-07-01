@@ -6,7 +6,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace Microsoft.PowerFx.Intellisense.SignatureHelp
 {
-    [SuppressMessage("Naming", "CA1724: Type names should not match namespaces", Justification = "n/a")]
+    [SuppressMessage("Naming", "CA1724: Type names should not match namespaces", Justification = "n/a")]    
     public class SignatureHelp
     {
         public IEnumerable<SignatureInformation> Signatures { get; set; }

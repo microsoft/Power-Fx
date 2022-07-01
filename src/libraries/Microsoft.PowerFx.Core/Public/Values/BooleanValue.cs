@@ -5,7 +5,7 @@ using System.Diagnostics.Contracts;
 using Microsoft.PowerFx.Core.IR;
 
 namespace Microsoft.PowerFx.Types
-{
+{    
     public class BooleanValue : PrimitiveValue<bool>
     {
         internal BooleanValue(IRContext irContext, bool value)

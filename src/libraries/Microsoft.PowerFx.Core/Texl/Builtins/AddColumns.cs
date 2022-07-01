@@ -107,7 +107,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 }
 
                 // Verify that the name doesn't already exist as either a logical or display name
-                if (typeScope.TryGetType(columnName, out var _) || DType.TryGetLogicalNameForColumn(typeScope, columnName, out var _))
+                if (typeScope.TryGetType(columnName, out _) || DType.TryGetLogicalNameForColumn(typeScope, columnName, out _))
                 {
                     fArgsValid = false;
                     errors.EnsureError(DocumentErrorSeverity.Moderate, nameArg, TexlStrings.ErrColExists_Name, columnName);

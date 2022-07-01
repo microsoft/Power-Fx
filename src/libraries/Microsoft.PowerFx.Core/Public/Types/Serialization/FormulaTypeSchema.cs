@@ -7,8 +7,7 @@ using System.Diagnostics.CodeAnalysis;
 namespace Microsoft.PowerFx.Core
 {
     public class FormulaTypeSchema
-    {
-        [SuppressMessage("Naming", "CA1720:Identifiers should not contain type names", Justification = "n/a")]
+    {        
         public enum ParamType
         {
             Number,

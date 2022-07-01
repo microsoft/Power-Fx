@@ -11,7 +11,7 @@ namespace Microsoft.PowerFx
         // These values are a mirror of Microsoft.PowerFx.Core.Errors.DocumentErrorSeverity, 
         // which is an internal type with [TransportType] attribute.
 
-#pragma warning disable SA1300 // Element should begin with upper-case letter
+#pragma warning disable SA1300 // Element should begin with upper-case letter        
         _Min = Verbose,
 #pragma warning restore SA1300 // Element should begin with upper-case letter
 

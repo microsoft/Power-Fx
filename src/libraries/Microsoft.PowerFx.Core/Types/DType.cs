@@ -619,7 +619,7 @@ namespace Microsoft.PowerFx.Core.Types
         {
             Contracts.AssertValid(fieldPath);
 
-            return IsAggregate && TryGetType(fieldPath, out var _);
+            return IsAggregate && TryGetType(fieldPath, out _);
         }
 
         public static DType AttachDataSourceInfo(DType type, IExternalTabularDataSource dsInfo, bool attachToNestedType = true)
@@ -1305,7 +1305,7 @@ namespace Microsoft.PowerFx.Core.Types
 
             Contracts.Assert(typeOuter.IsRecord || typeOuter.IsTable);
 
-            if (typeOuter.TypeTree.TryGetValue(name, out var _))
+            if (typeOuter.TypeTree.TryGetValue(name, out _))
             {
                 fError = true;
             }

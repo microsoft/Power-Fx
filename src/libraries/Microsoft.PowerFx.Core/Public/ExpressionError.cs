@@ -13,7 +13,7 @@ namespace Microsoft.PowerFx
     /// <summary>
     /// Error message. This could be a compile time error from parsing or binding, 
     /// or it could be a runtime error wrapped in a <see cref="ErrorValue"/>.
-    /// </summary>
+    /// </summary>    
     public class ExpressionError
     {
         /// <summary>

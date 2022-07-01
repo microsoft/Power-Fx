@@ -23,6 +23,7 @@ using Microsoft.PowerFx.Core.Logging.Trackers;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
+using FuncInfo = Microsoft.PowerFx.Core.Functions.TransportSchemas.FunctionInfo;
 
 namespace Microsoft.PowerFx.Core.Functions
 {    
@@ -63,7 +64,7 @@ namespace Microsoft.PowerFx.Core.Functions
 
         private SignatureConstraint _signatureConstraint;
 
-        private Microsoft.PowerFx.Core.Functions.TransportSchemas.FunctionInfo _cachedFunctionInfo;
+        private FuncInfo _cachedFunctionInfo;
 
         private string _cachedLocaleName;
 
@@ -1323,7 +1324,7 @@ namespace Microsoft.PowerFx.Core.Functions
 
         #endregion
 
-        internal Microsoft.PowerFx.Core.Functions.TransportSchemas.FunctionInfo Info(string locale)
+        internal FuncInfo Info(string locale)
         {
             // If the locale has changed, we want to reset the function info to one of the new locale
             if (CurrentLocaleInfo.CurrentUILanguageName == _cachedLocaleName && _cachedFunctionInfo != null)
@@ -1332,7 +1333,7 @@ namespace Microsoft.PowerFx.Core.Functions
             }
 
             _cachedLocaleName = CurrentLocaleInfo.CurrentUILanguageName;
-            return _cachedFunctionInfo = new Microsoft.PowerFx.Core.Functions.TransportSchemas.FunctionInfo()
+            return _cachedFunctionInfo = new FuncInfo()
             {
                 Label = Name,
                 Detail = Description,

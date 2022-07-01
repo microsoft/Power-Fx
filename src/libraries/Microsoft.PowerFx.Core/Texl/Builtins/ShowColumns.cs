@@ -104,7 +104,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 }
 
                 // Verify that the name was only specified once.
-                if (colsToKeep.TryGetType(columnName, out var _))
+                if (colsToKeep.TryGetType(columnName, out _))
                 {
                     isValidInvocation = false;
                     errors.EnsureError(DocumentErrorSeverity.Warning, nameArg, TexlStrings.WarnColumnNameSpecifiedMultipleTimes_Name, columnName);

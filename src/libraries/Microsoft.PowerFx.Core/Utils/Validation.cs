@@ -310,7 +310,7 @@ namespace Microsoft.PowerFx.Core.Utils
 
         public static void CheckXmlDocumentString(string text, string paramName)
         {
-            CheckXmlDocumentString(text, paramName, out var _);
+            CheckXmlDocumentString(text, paramName, out _);
         }
 
         public static void CheckXmlDocumentStringOrNull(string text, string paramName)

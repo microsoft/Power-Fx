@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Binding.BindInfo;
@@ -60,11 +61,12 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
         }
 
         // Helper used to provide hints when we detect non-delegable parts of the expression due to server restrictions.
+        [SuppressMessage("Performance", "CA1820: Test for empty strings using string length", Justification = "n/a")]
         protected void SuggestDelegationHint(TexlNode node, TexlBinding binding, ErrorResourceKey? suggestionKey, params object[] args)
         {
             Contracts.AssertValue(node);
             Contracts.AssertValue(binding);
-            Contracts.Assert(suggestionKey == null || suggestionKey.Value.Key == null || suggestionKey.Value.Key.Length == 0);
+            Contracts.Assert(suggestionKey == null || suggestionKey?.Key != string.Empty);
 
             if (suggestionKey == null)
             {

@@ -320,7 +320,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool SupportsPaging(CallNode callNode, TexlBinding binding)
         {
-            if (!TryGetDataSourceNodes(callNode, binding, out var _))
+            if (!TryGetDataSourceNodes(callNode, binding, out _))
             {
                 return false;
             }

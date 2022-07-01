@@ -14,7 +14,7 @@ namespace Microsoft.PowerFx.Core.Errors
     // Base interface for reporting document wide errors. All internal components
     // that need to expose error details publicly should derive from this interface.
     [TransportType(TransportKind.ByValue)]
-    [TransportUnion(typeof(IRuleError), typeof(IDocumentError))]
+    [TransportUnion(typeof(IRuleError), typeof(IDocumentError))]    
     internal interface IDocumentError
     {
         /// <summary>

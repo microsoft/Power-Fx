@@ -198,6 +198,8 @@ csharp_style_prefer_extended_property_pattern = true:suggestion
 dotnet_diagnostic.IDE0004.severity = warning
 # IDE0005: Using directive is unnecessary
 dotnet_diagnostic.IDE0005.severity = warning
+# IDE0032: Use auto property
+dotnet_diagnostic.IDE0032.severity = none
 # IDE0052: Private member can be removed as the value assigned to it is never read
 dotnet_diagnostic.IDE0052.severity = warning
 # IDE0054: Use compound assignment

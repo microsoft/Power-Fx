@@ -142,9 +142,7 @@ namespace Microsoft.PowerFx.Core.Tests
         // These member kinds are not marshalled.  
         private class RowDontMarshal
         {
-            public static int StaticProp { get; set; }
-
-            private int PrivateProp { get; set; }
+            public static int StaticProp { get; set; }            
 
             internal int InternalProp { get; set; }
 

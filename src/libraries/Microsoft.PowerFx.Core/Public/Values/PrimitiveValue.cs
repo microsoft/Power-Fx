@@ -11,7 +11,7 @@ namespace Microsoft.PowerFx.Types
     /// Helper for non-aggregate values that are represented as a single .net object.
     /// See <see cref="PrimitiveValueConversions"/> for converting between a T and a FormulaType.
     /// </summary>
-    /// <typeparam name="T"></typeparam>
+    /// <typeparam name="T"></typeparam>    
     public abstract class PrimitiveValue<T> : ValidFormulaValue
     {
         [SuppressMessage("Naming", "SA1300:Element should begin with an uppercase letter", Justification = "n/a")]

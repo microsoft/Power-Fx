@@ -16,7 +16,7 @@ namespace Microsoft.PowerFx.Core.IR
         {
         }
 
-        public InvalidCoercionException(string message, Exception innerException)
+        public InvalidCoercionException(string message, Exception innerException) 
             : base(message, innerException)
         {
         }

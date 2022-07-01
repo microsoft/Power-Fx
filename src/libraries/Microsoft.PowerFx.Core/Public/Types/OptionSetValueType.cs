@@ -53,7 +53,7 @@ namespace Microsoft.PowerFx.Types
             var info = _type.OptionSetInfo;
 
             // Verify this value exists in the option set. 
-            if (info.DisplayNameProvider.TryGetDisplayName(new DName(logicalName), out var _))
+            if (info.DisplayNameProvider.TryGetDisplayName(new DName(logicalName), out _))
             {
                 osValue = new OptionSetValue(logicalName, this);
                 return true;

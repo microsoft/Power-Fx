@@ -33,7 +33,7 @@ namespace Microsoft.AppMagic.Transport
     /// union marked class or interface will be represented on the wire as a union so that the other party knows which kind of proxy to create.
     /// </remarks>
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property | AttributeTargets.ReturnValue | AttributeTargets.Parameter | AttributeTargets.Class | AttributeTargets.Interface)]
-    [SuppressMessage("Design", "CA1019: Define accessors for attribute arguments", Justification = "n/a")]
+    [SuppressMessage("Design", "CA1019: Define accessors for attribute arguments", Justification = "n/a")]    
     public sealed class TransportUnionAttribute : Attribute
     {
         public ReadOnlyCollection<Type> PossibleTypes { get; }

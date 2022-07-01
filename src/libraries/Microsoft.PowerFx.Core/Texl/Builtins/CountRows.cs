@@ -50,7 +50,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 return false;
             }
 
-            return TryGetValidDataSourceForDelegation(callNode, binding, out var _, out var _);
+            return TryGetValidDataSourceForDelegation(callNode, binding, out _, out _);
         }
 
         // See if CountDistinct delegation is available. If true, we can make use of it on primary key as a workaround for CountRows delegation

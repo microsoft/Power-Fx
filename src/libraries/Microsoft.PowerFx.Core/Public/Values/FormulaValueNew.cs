@@ -2,7 +2,6 @@
 // Licensed under the MIT license.
 
 using System;
-using System.Diagnostics.CodeAnalysis;
 using Microsoft.PowerFx.Core.IR;
 
 namespace Microsoft.PowerFx.Types
@@ -50,8 +49,7 @@ namespace Microsoft.PowerFx.Types
         {
             return new NumberValue(IRContext.NotInSource(FormulaType.Number), number);
         }
-
-        [SuppressMessage("Naming", "CA1720:Identifiers should not contain type names", Justification = "n/a")]
+        
         public static GuidValue New(Guid guid)
         {
             return new GuidValue(IRContext.NotInSource(FormulaType.Guid), guid);

@@ -67,7 +67,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
             // Use different (valid) function
             var args7 = args;
-            var result7 = checkResult.ValidateInvocation("IfError", args7, out var _);
+            var result7 = checkResult.ValidateInvocation("IfError", args7, out _);
             Assert.True(result7);
         }
 
@@ -115,7 +115,7 @@ namespace Microsoft.PowerFx.Core.Tests
             var checkResult = engine.Check(formula);
             Assert.True(checkResult.IsSuccess);
 
-            var result = checkResult.ValidateInvocation("Clock.AmPm", new TexlNode[0], out var _);
+            var result = checkResult.ValidateInvocation("Clock.AmPm", new TexlNode[0], out _);
             Assert.True(result);
         }
 
@@ -128,7 +128,7 @@ namespace Microsoft.PowerFx.Core.Tests
             var checkResult = engine.Check(formula);
             Assert.True(checkResult.IsSuccess);
 
-            var result = checkResult.ValidateInvocation("invalid fnc name", new TexlNode[0], out var _);
+            var result = checkResult.ValidateInvocation("invalid fnc name", new TexlNode[0], out _);
             Assert.False(result);
         }
 

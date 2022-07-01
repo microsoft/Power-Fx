@@ -54,7 +54,7 @@ namespace Microsoft.PowerFx.Core.Types
         public bool Contains(string key)
         {
             Contracts.AssertValue(key);
-            return TryGetValue(key, out var _);
+            return TryGetValue(key, out _);
         }
 
         public bool TryGetValue(string key, out EquatableObject value)

@@ -14,7 +14,7 @@ namespace Microsoft.PowerFx.Connectors.Execution
         private readonly MemoryStream _stream;
         private readonly Utf8JsonWriter _writer;
         private bool _topPropertyWritten;
-        private bool _disposedValue;
+        private bool _wasDisabled;
 
         public OpenApiJsonSerializer(bool schemaLessBody)
             : base(schemaLessBody)
@@ -126,22 +126,15 @@ namespace Microsoft.PowerFx.Connectors.Execution
 
         protected virtual void Dispose(bool disposing)
         {
-            if (!_disposedValue)
+            if (!_wasDisabled)
             {
                 if (disposing)
                 {
-                    if (_writer != null)
-                    {
-                        _writer.Dispose();
-                    }
-
-                    if (_stream != null)
-                    { 
-                        _stream.Dispose();
-                    }
+                    _writer?.Dispose();
+                    _stream?.Dispose();
                 }
 
-                _disposedValue = true;
+                _wasDisabled = true;
             }
         }
 

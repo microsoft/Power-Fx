@@ -93,8 +93,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
         // Property to which current rule is being bound to. It could be null in the absence of NameResolver.
         private readonly IExternalControlProperty _property;
-
-        [SuppressMessage("Style", "IDE0032:Use auto property", Justification = "n/a")]
+        
         private readonly IExternalControl _control;
 
         // Whether a node is scoped to app or not. Used by translator for component scoped variable references.
@@ -2810,7 +2809,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
             public DName GetLogicalNodeNameAndUpdateDisplayNames(DType type, Identifier ident, bool isThisItem = false)
             {
-                return GetLogicalNodeNameAndUpdateDisplayNames(type, ident, out var _, isThisItem);
+                return GetLogicalNodeNameAndUpdateDisplayNames(type, ident, out _, isThisItem);
             }
 
             public DName GetLogicalNodeNameAndUpdateDisplayNames(DType type, Identifier ident, out string newDisplayName, bool isThisItem = false)
@@ -5705,13 +5704,13 @@ namespace Microsoft.PowerFx.Core.Binding
 
                     // If scope type is a data source, the node may be a display name instead of logical.
                     // Attempt to get the logical name to use for type checking
-                    if (!scope.SkipForInlineRecords && (DType.TryGetConvertedDisplayNameAndLogicalNameForColumn(scope.Type, name.Value, out var maybeLogicalName, out var _) ||
+                    if (!scope.SkipForInlineRecords && (DType.TryGetConvertedDisplayNameAndLogicalNameForColumn(scope.Type, name.Value, out var maybeLogicalName, out _) ||
                         DType.TryGetLogicalNameForColumn(scope.Type, name.Value, out maybeLogicalName)))
                     {
                         name = new DName(maybeLogicalName);
                     }
 
-                    if (scope.Type.TryGetType(name, out var _))
+                    if (scope.Type.TryGetType(name, out _))
                     {
                         return true;
                     }

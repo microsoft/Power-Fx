@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 
 namespace Microsoft.PowerFx.Intellisense
-{
+{    
     public interface IIntellisenseResult
     {
         /// <summary>
