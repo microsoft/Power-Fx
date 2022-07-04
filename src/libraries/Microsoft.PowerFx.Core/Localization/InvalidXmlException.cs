@@ -13,6 +13,15 @@ namespace Microsoft.PowerFx.Core.Localization
     /// </summary>
     internal sealed class InvalidXmlException : XmlException
     {
+        private InvalidXmlException()
+        {
+        }
+
+        private InvalidXmlException(string message, System.Exception innerException)
+            : base(message, innerException)
+        {
+        }
+
         /// <param name="reason">The user-friendly reason why the xml document is invalid.</param>
         public InvalidXmlException(string reason)
             : base(reason)
@@ -51,15 +60,6 @@ namespace Microsoft.PowerFx.Core.Localization
         {
             Contracts.AssertValue(xobj, "The ctor chosen requires the invalid XObject argument to be non-null.");
             return ((IXmlLineInfo)xobj).LinePosition;
-        }
-
-        public InvalidXmlException()
-        {
-        }
-
-        public InvalidXmlException(string message, System.Exception innerException) 
-            : base(message, innerException)
-        {
         }
     }
 }

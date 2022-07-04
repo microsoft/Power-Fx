@@ -15,11 +15,11 @@ namespace Microsoft.PowerFx
             CollidingDisplayName = collidingDisplayName;
         }
 
-        public NameCollisionException()
+        private NameCollisionException()
         {
         }
 
-        public NameCollisionException(string message, Exception innerException) 
+        private NameCollisionException(string message, Exception innerException)
             : base(message, innerException)
         {
         }

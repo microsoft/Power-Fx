@@ -50,7 +50,7 @@ namespace Microsoft.PowerFx
             else
             {
                 return $"{prefix} {Message}";
-            }    
+            }
         }
 
         // Build the public object from an internal error object. 
@@ -73,7 +73,7 @@ namespace Microsoft.PowerFx
             }
             else
             {
-                return errors.Select(x => ExpressionError.New(x)).ToArray();
+                return errors.Select(x => New(x));
             }
         }
     }

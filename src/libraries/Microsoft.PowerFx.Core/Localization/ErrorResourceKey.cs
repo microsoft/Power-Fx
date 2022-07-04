@@ -38,8 +38,8 @@ namespace Microsoft.PowerFx.Core.Localization
             return Key.GetHashCode();
         }
 
-        public static bool operator ==(ErrorResourceKey left, ErrorResourceKey right) => left.Equals(right);
+        public static bool operator ==(ErrorResourceKey left, ErrorResourceKey right) => string.Equals(left.Key, right.Key, StringComparison.Ordinal);
 
-        public static bool operator !=(ErrorResourceKey left, ErrorResourceKey right) => !(left == right);
+        public static bool operator !=(ErrorResourceKey left, ErrorResourceKey right) => !string.Equals(left.Key, right.Key, StringComparison.Ordinal);
     }
 }

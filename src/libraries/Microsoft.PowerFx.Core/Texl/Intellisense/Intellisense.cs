@@ -33,7 +33,7 @@ namespace Microsoft.PowerFx.Intellisense
             _suggestionHandlers = suggestionHandlers;
         }
 
-        [SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "n/a")]
+        [SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "like No need to crash the process in case of exception during intellisense; instead we return an empty result set along with exception for client use.")]
         public IIntellisenseResult Suggest(IntellisenseContext context, TexlBinding binding, Formula formula)
         {
             Contracts.CheckValue(context, nameof(context));
@@ -203,7 +203,7 @@ namespace Microsoft.PowerFx.Intellisense
 
             foreach (var suggestion in suggestions)
             {
-                if (!suggestion.Type.IsUnknown && 
+                if (!suggestion.Type.IsUnknown &&
 
                     // Most type acceptance is straightforward
                     (type.Accepts(suggestion.Type) ||
@@ -292,7 +292,7 @@ namespace Microsoft.PowerFx.Intellisense
         [SuppressMessage("Style", "IDE0060:Remove Unused Parameter", Justification = "n/a")]
         [SuppressMessage("Style", "CA1801:Remove unused parameter", Justification = "n/a")]
         internal static bool DefaultIsValidSuggestionFunc(IntellisenseData.IntellisenseData intellisenseData, IntellisenseSuggestion suggestion)
-        {            
+        {
             return true;
         }
     }

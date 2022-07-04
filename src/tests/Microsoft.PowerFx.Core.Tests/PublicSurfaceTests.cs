@@ -164,8 +164,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Core.Utils.DName",
                 "Microsoft.PowerFx.Core.Utils.DPath",
                 "Microsoft.PowerFx.Core.Utils.ICheckable",
-                "Microsoft.PowerFx.Core.Localization.ErrorResourceKey",
-                "Microsoft.PowerFx.Core.Types.Enums.InvalidEnumException"
+                "Microsoft.PowerFx.Core.Localization.ErrorResourceKey"
             };
 
             var sb = new StringBuilder();
@@ -223,7 +222,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
             var len = values1.Length;
             Assert.Equal(len, values2.Length);
-            
+
             for (var i = 0; i < len; i++)
             {
                 var x = values1.GetValue(i);
