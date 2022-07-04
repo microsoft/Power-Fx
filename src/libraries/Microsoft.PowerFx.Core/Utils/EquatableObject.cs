@@ -60,7 +60,7 @@ namespace Microsoft.PowerFx.Core.Utils
             var isString = Object is string;
             if (isString)
             {
-                sb.Append('\\');
+                sb.Append('\"');
             }
 
             sb.Append(Object);

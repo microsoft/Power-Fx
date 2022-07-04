@@ -47,7 +47,7 @@ namespace Microsoft.PowerFx.Core.Types
                 return true;
             }
 
-            var typeIdx = _typeEncodings.IndexOf(token, StringComparison.OrdinalIgnoreCase);
+            var typeIdx = _typeEncodings.IndexOf(token, StringComparison.Ordinal);
             if (typeIdx < 0)
             {
                 type = DType.Invalid;
