@@ -51,13 +51,13 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public void DType_TextRole()
         {
-            var _dType = @"%s[Default:""default"", Heading1:""heading1"", Heading2:""heading2"", Heading3:""heading3"", Heading4:""heading4""]";
+            var type = @"%s[Default:""default"", Heading1:""heading1"", Heading2:""heading2"", Heading3:""heading3"", Heading4:""heading4""]";
 
-            var b = DType.TryParse(_dType, out var dType);
+            var b = DType.TryParse(type, out var dType);
             Assert.True(b);
 
             var str = dType.ToString();
-            Assert.Equal(_dType, str);
+            Assert.Equal(type, str);
         }
     }
 }
