@@ -134,13 +134,13 @@ namespace Microsoft.PowerFx.Core.Tests
             {
                 Assert.Equal(0, summary.Fail);
                 Assert.Equal(2, summary.Pass);
-            } 
+            }
             else
             {
                 Assert.Equal(2, summary.Fail);
                 Assert.Equal(0, summary.Pass);
             }
-        }      
+        }
 
         [Theory]
         [InlineData("Bad1.txt")]
@@ -152,7 +152,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
             Assert.Throws<InvalidOperationException>(
                 () => AddFile(runner, file));
-        }        
+        }
 
         // #DISABLE directive to remove an entire file. 
         [Fact]
@@ -323,8 +323,11 @@ namespace Microsoft.PowerFx.Core.Tests
         public void TestRunnerErrorKindMatching()
         {
             var errorValue = new ErrorValue(IR.IRContext.NotInSource(FormulaType.Number), new ExpressionError { Kind = ErrorKind.InvalidFunctionUsage });
-            
-            var runner = new MockRunner { _hook = (expr, setup) => errorValue /* error */ };
+
+            var runner = new MockRunner
+            {
+                _hook = (expr, setup) => errorValue // error
+            };
 
             var test = new TestCase
             {

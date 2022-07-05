@@ -107,24 +107,22 @@ namespace Microsoft.PowerFx.Core.IR
                 var children = node.Children.Select(child => child.Accept(this, context)).ToArray();
                 var irContext = context.GetIRContext(node);
 
-                if (!Preview.FeatureFlags.TableSyntaxDoesntWrapRecords || children.First() is not RecordNode)
+                if (!Preview.FeatureFlags.TableSyntaxDoesntWrapRecords || (children.Any() && children.First() is not RecordNode))
                 {
                     // Let's add "Value:" here                    
-                    var recordNodes = new List<RecordNode>();                    
+                    children = children.Select(childNode =>
+                        new RecordNode(
+                            new IRContext(childNode.IRContext.SourceContext, new RecordType().Add(TableValue.ValueName, childNode.IRContext.ResultType)),
+                            new Dictionary<DName, IntermediateNode>
+                            {
+                                { AllowedValuesMetadata.ValueColumnName, childNode }
+                            }))
+                        .ToArray();
 
-                    foreach (var childNode in children)
-                    {
-                        var values = new Dictionary<DName, IntermediateNode> { { AllowedValuesMetadata.ValueColumnName, childNode } };
-                        var rt = new RecordType().Add(TableValue.ValueName, childNode.IRContext.ResultType);
-
-                        recordNodes.Add(new RecordNode(new IRContext(childNode.IRContext.SourceContext, rt), values));
-                    }
-
-                    children = recordNodes.ToArray();                    
                     irContext = new IRContext(node.GetCompleteSpan(), irContext.ResultType);
                 }
 
-                return MaybeInjectCoercion(node, new TableNode(irContext, children), context);
+                return MaybeInjectCoercion(node, new CallNode(irContext, BuiltinFunctionsCore.Table, children), context);
             }
 
             public override IntermediateNode Visit(TexlUnaryOpNode node, IRTranslatorContext context)

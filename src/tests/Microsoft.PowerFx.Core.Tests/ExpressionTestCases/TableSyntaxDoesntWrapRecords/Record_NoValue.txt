@@ -11,3 +11,6 @@ Errors: Error 15-21: Name isn't valid. 'Value' isn't recognized.|Error 21-23: In
 
 >> First([ { Value : 10 } ]).Value
 10
+
+>> []
+Table()
