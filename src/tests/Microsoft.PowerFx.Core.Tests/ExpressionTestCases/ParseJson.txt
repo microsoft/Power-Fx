@@ -134,3 +134,20 @@ Errors: Error 0-14: Invalid argument type. Expecting one of the following: Numbe
 >> Value(Index(ParseJSON("{""a"": 5, ""b"": [{""c"": 19 }, {""c"": ""foo"" }] }").b, 1).c)
 19
 
+>> DateDiff(DateValue(ParseJSON("""2011-01-15""")) , DateValue(ParseJSON("""2011-01-30""")))
+15
+
+>> DateValue(ParseJSON("null"))
+Blank()
+
+>> DateValue(ParseJSON("""abcdef"""))
+#Error(Kind=BadLanguageCode)
+
+>> DateDiff(DateTimeValue(ParseJSON("""2011-01-15T08:00:00.000Z""")) , DateTimeValue(ParseJSON("""2011-01-30T08:00:00.000Z""")))
+15
+
+>> DateTimeValue(ParseJSON("null"))
+Blank()
+
+>> DateTimeValue(ParseJSON("""abcdef"""))
+#Error(Kind=BadLanguageCode)
