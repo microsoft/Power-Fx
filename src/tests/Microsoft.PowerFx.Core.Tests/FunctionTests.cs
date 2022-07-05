@@ -17,7 +17,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [Fact]
         public void TestAllBuiltinFunctionsHaveParameterDescriptions()
         {
-            var texlFunctionsLibrary = BuiltinFunctionsCore.AllBuiltinFunctions;
+            var texlFunctionsLibrary = BuiltinFunctionsCore.TestOnly_AllBuiltinFunctions;
             var functions = texlFunctionsLibrary
                 .Where(x => !x.FunctionCategoriesMask.HasFlag(FunctionCategories.REST));
 

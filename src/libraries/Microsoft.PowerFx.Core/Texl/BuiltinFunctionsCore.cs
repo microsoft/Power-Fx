@@ -16,7 +16,7 @@ namespace Microsoft.PowerFx.Core.Texl
     {
         public static IEnumerable<TexlFunction> BuiltinFunctionsLibrary => _library;
 
-        public static IEnumerable<TexlFunction> AllBuiltinFunctions => _library.Concat(_featureGateFunctions);
+        internal static IEnumerable<TexlFunction> TestOnly_AllBuiltinFunctions => _library.Concat(_featureGateFunctions);
 
         // Functions in this list are shared and may show up in other hosts by default.
         private static readonly List<TexlFunction> _library = new List<TexlFunction>(200);
