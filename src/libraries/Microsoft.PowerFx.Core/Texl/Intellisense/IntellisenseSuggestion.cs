@@ -210,6 +210,7 @@ namespace Microsoft.PowerFx.Intellisense
             sb.AppendLine();
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Globalization", "CA1310:Specify StringComparison for correctness", Justification = "n/a")]
         public int CompareTo(IntellisenseSuggestion other)
         {
             Contracts.AssertValueOrNull(other);
@@ -231,7 +232,7 @@ namespace Microsoft.PowerFx.Intellisense
                 return 1;
             }
 
-            return SortPriority == other.SortPriority ? string.Compare(Text, other.Text, StringComparison.Ordinal) : (int)(other.SortPriority - SortPriority);
+            return SortPriority == other.SortPriority ? Text.CompareTo(other.Text) : (int)(other.SortPriority - SortPriority);
         }
 
         public bool Equals(IntellisenseSuggestion other)
