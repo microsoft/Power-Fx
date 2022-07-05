@@ -72,6 +72,13 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             return fValid;
         }
+
+        public override bool TryGetParamDescription(string paramName, out string paramDescription)
+        {
+            Contracts.AssertNonEmpty(paramName);
+
+            return StringResources.TryGet("AboutBooleanT_" + paramName, out paramDescription);
+        }
     }
 
     // Boolean(arg:n)
@@ -95,6 +102,13 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override string GetUniqueTexlRuntimeName(bool isPrefetching = false)
         {
             return GetUniqueTexlRuntimeName(suffix: "N");
+        }
+
+        public override bool TryGetParamDescription(string paramName, out string paramDescription)
+        {
+            Contracts.AssertNonEmpty(paramName);
+
+            return StringResources.TryGet("AboutBooleanN_" + paramName, out paramDescription);
         }
     }
 
@@ -134,6 +148,13 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             returnType = rowType.ToTable();
 
             return fValid;
+        }
+
+        public override bool TryGetParamDescription(string paramName, out string paramDescription)
+        {
+            Contracts.AssertNonEmpty(paramName);
+
+            return StringResources.TryGet("AboutBooleanNT_" + paramName, out paramDescription);
         }
     }
 
