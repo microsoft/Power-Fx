@@ -142,7 +142,7 @@ namespace Microsoft.PowerFx.Intellisense
                     var dispText = curList[index].DisplayText;
 
                     // If we are already using the global syntax, we should not add it again.
-                    if (dispText.Text.StartsWith(TexlLexer.PunctuatorBracketOpen + TexlLexer.PunctuatorAt, StringComparison.OrdinalIgnoreCase))
+                    if (dispText.Text.StartsWith(TexlLexer.PunctuatorBracketOpen + TexlLexer.PunctuatorAt, StringComparison.Ordinal))
                     {
                         continue;
                     }

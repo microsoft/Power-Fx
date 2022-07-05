@@ -20,19 +20,13 @@ namespace Microsoft.PowerFx.Types
         /// <param name="jsonString"></param>
         public static FormulaValue FromJson(string jsonString)
         {
-            try
-            {
-                using var document = JsonDocument.Parse(jsonString);
-                using var jsonMemStream = new MemoryStream();
-                var propBag = document.RootElement;
+            // $$$ Add error handling
 
-                return FromJson(propBag);
-            }
-            catch
-            {
-                // $$$ better error handling here?
-                throw;
-            }
+            using var document = JsonDocument.Parse(jsonString);
+            using var jsonMemStream = new MemoryStream();
+            var propBag = document.RootElement;
+
+            return FromJson(propBag);
         }
 
         /// <summary>

@@ -42,7 +42,7 @@ namespace Microsoft.PowerFx.Connectors
             {
                 case ParameterLocation.Path:
                 case ParameterLocation.Query:
-                case ParameterLocation.Header:                
+                case ParameterLocation.Header:
                     break;
 
                 case ParameterLocation.Cookie:
@@ -60,7 +60,7 @@ namespace Microsoft.PowerFx.Connectors
             // Header names are not case sensitive.
             // From RFC 2616 - "Hypertext Transfer Protocol -- HTTP/1.1", Section 4.2, "Message Headers"
             var headers = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-            HttpContent body = null;            
+            HttpContent body = null;
             Dictionary<string, (OpenApiSchema, FormulaValue)> bodyParts = new ();
 
             var map = _argMapper.ConvertToSwagger(args);
@@ -70,7 +70,7 @@ namespace Microsoft.PowerFx.Connectors
                 if (map.TryGetValue(param.Name, out var paramValue))
                 {
                     bodyParts.Add(param.Name, (param.Schema, paramValue));
-                }               
+                }
             }
 
             if (bodyParts.Any())
@@ -108,8 +108,8 @@ namespace Microsoft.PowerFx.Connectors
                 }
             }
 
-            var url = path + query.ToString();            
-            var request = new HttpRequestMessage(_method, url);            
+            var url = path + query.ToString();
+            var request = new HttpRequestMessage(_method, url);
 
             foreach (var kv in headers)
             {
@@ -117,7 +117,7 @@ namespace Microsoft.PowerFx.Connectors
             }
 
             if (body != null)
-            {                
+            {
                 request.Content = body;
             }
 
@@ -208,7 +208,7 @@ namespace Microsoft.PowerFx.Connectors
                 using var response = await _httpClient.SendAsync(request, cancel).ConfigureAwait(false);
                 result = await DecodeResponseAsync(response).ConfigureAwait(false);
                 return result;
-            }).ConfigureAwait(false);            
+            }).ConfigureAwait(false);
         }
     }
 

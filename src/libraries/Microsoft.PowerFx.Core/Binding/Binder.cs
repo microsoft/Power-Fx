@@ -93,7 +93,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
         // Property to which current rule is being bound to. It could be null in the absence of NameResolver.
         private readonly IExternalControlProperty _property;
-        
+
         private readonly IExternalControl _control;
 
         // Whether a node is scoped to app or not. Used by translator for component scoped variable references.
@@ -2429,9 +2429,6 @@ namespace Microsoft.PowerFx.Core.Binding
             private readonly TexlBinding _txb;
             private Scope _currentScope;
 
-            [SuppressMessage("Style", "IDE0052:Private member can be removed as the value assigned to it is never read", Justification = "n/a")]
-            private int _currentScopeDsNodeId;
-
             public Visitor(TexlBinding txb, INameResolver resolver, DType topScope, bool useThisRecordForRuleScope)
             {
                 Contracts.AssertValue(txb);
@@ -2442,7 +2439,6 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 _topScope = new Scope(null, null, topScope ?? DType.Error, useThisRecordForRuleScope ? ThisRecordDefaultName : default);
                 _currentScope = _topScope;
-                _currentScopeDsNodeId = -1;
             }
 
             [Conditional("DEBUG")]
@@ -2868,7 +2864,7 @@ namespace Microsoft.PowerFx.Core.Binding
                     if (DType.TryGetLogicalNameForColumn(updatedDisplayNamesType, ident.Name.Value, out var maybeLogicalName, isThisItem))
                     {
                         logicalNodeName = new DName(maybeLogicalName);
-                        
+
                         // If we're updating display names, we don't want to accidentally rewrite something that hasn't changed to it's logical name. 
                         if (!_txb.UpdateDisplayNames)
                         {
@@ -2890,7 +2886,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 // Reset name lookup preferences.
                 var lookupPrefs = NameLookupPreferences.None;
-                var nodeName = node.Ident.Name;                
+                var nodeName = node.Ident.Name;
 
                 // If node is a global variable but it appears in its own weight table, we know its state has changed
                 // in a "younger" sibling or cousin node, vis. some predecessor statement in a chained operation
@@ -3062,7 +3058,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 else if (lookupInfo.Kind == BindKind.DeprecatedImplicitThisItem)
                 {
                     _txb._hasThisItemReference = true;
-                    
+
                     // If the ThisItem reference is an entity, the type should be expanded.
                     if (lookupType.IsExpandEntity)
                     {
@@ -4234,7 +4230,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 }
             }
 
-            [SuppressMessage("Maintainability", "CA1508: Avoid dead conditional code", Justification = "False positive")]
+            [SuppressMessage("Maintainability", "CA1508: Avoid dead conditional code", Justification = "False positive - node.Parent?.Parent?.Kind != NodeKind.Call always true")]
             public override void PostVisit(AsNode node)
             {
                 Contracts.AssertValue(node);
@@ -4858,12 +4854,6 @@ namespace Microsoft.PowerFx.Core.Binding
                 var nodeInput = args[0];
                 _txb.AddVolatileVariables(nodeInput, volatileVariables);
                 nodeInput.Accept(this);
-
-                FirstNameNode dsNode;
-                if (maybeFunc.TryGetDataSourceNodes(node, _txb, out var dsNodes) && ((dsNode = dsNodes.FirstOrDefault()) != default(FirstNameNode)))
-                {
-                    _currentScopeDsNodeId = dsNode.Id;
-                }
 
                 var typeInput = argTypes[0] = _txb.GetType(nodeInput);
 
@@ -5748,7 +5738,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 for (var i = 0; i < node.Count; i++)
                 {
                     var displayName = node.Ids[i].Name.Value;
-                    var fieldName = node.Ids[i].Name;                    
+                    var fieldName = node.Ids[i].Name;
 
                     isSelfContainedConstant &= _txb.IsSelfContainedConstant(node.Children[i]);
 

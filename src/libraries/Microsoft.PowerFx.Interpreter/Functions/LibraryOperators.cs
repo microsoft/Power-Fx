@@ -387,12 +387,7 @@ namespace Microsoft.PowerFx.Functions
                 var leftStr = (StringValue)left;
                 var rightStr = (StringValue)right;
 
-                if (exact)
-                {
-                    return new BooleanValue(irContext, rightStr.Value.IndexOf(leftStr.Value, StringComparison.Ordinal) >= 0);
-                }
-
-                return new BooleanValue(irContext, rightStr.Value.IndexOf(leftStr.Value, StringComparison.OrdinalIgnoreCase) >= 0);
+                return new BooleanValue(irContext, rightStr.Value.IndexOf(leftStr.Value, exact ? StringComparison.Ordinal : StringComparison.OrdinalIgnoreCase) >= 0);
             };
         }
 

@@ -31,12 +31,7 @@ namespace Microsoft.PowerFx
         /// <param name="type">The FormulaType that these objects product.</param>
         /// <param name="fieldMap">A mapping of fx field names to functions that produce that field. </param>
         public ObjectMarshaller(RecordType type, IReadOnlyDictionary<string, Func<object, FormulaValue>> fieldMap)
-        {
-            if (type is null)
-            {
-                throw new ArgumentException($"type must be a record, not ${type}");
-            }
-
+        {            
             Type = type;
             _mapping = fieldMap;
         }

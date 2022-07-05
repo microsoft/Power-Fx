@@ -33,7 +33,7 @@ namespace Microsoft.PowerFx.Intellisense
             _suggestionHandlers = suggestionHandlers;
         }
 
-        [SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "like No need to crash the process in case of exception during intellisense; instead we return an empty result set along with exception for client use.")]
+        [SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "No need to crash the process in case of exception during intellisense; instead we return an empty result set along with exception for client use.")]
         public IIntellisenseResult Suggest(IntellisenseContext context, TexlBinding binding, Formula formula)
         {
             Contracts.CheckValue(context, nameof(context));
