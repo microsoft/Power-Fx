@@ -164,9 +164,14 @@ namespace Microsoft.PowerFx.Functions
             if (impl.Type == FormulaType.String)
             {
                 var s = impl.GetString();
-                if (DateTime.TryParseExact(s, "yyyy-MM-dd'T'HH:mm:ss.FFFK", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime res))
+
+                // Year-month-date, the literal T, Hours-minutes-seconds
+                // F is 10ths of a second if non-zero, K is time zone information
+                var iso8601Format = "yyyy-MM-dd'T'HH:mm:ss.FFFK";
+
+                if (DateTime.TryParseExact(s, iso8601Format, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime res))
                 {
-                    return new DateValue(irContext, res);
+                    return new DateTimeValue(irContext, res);
                 }
 
                 return CommonErrors.InvalidDateTimeError(irContext);
