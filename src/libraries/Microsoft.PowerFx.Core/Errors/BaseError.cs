@@ -169,7 +169,7 @@ namespace Microsoft.PowerFx.Core.Errors
             }
 
             var sb = new StringBuilder();
-            if (args.Length > 0)
+            if (args != null && args.Length > 0)
             {
                 try
                 {
