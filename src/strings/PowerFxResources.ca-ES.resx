@@ -497,6 +497,39 @@
   <data name="AboutBoolean_text" xml:space="preserve">
     <value>Valor de text que es convertirà en un valor booleà.</value>
   </data>
+  <data name="AboutBooleanT" xml:space="preserve">
+    <value>Converteix una columna de valors de text en una columna de valors booleans.</value>
+    
+  </data>
+  <data name="BooleanTArg1" xml:space="preserve">
+    <value>entrada</value>
+    
+  </data>
+  <data name="AboutBooleanT_input" xml:space="preserve">
+    <value>Columna de valors de text que es processarà.</value>
+  </data>
+  <data name="AboutBooleanN" xml:space="preserve">
+    <value>Converteix un "nombre" en un valor booleà.</value>
+    
+  </data>
+  <data name="BooleanNArg1" xml:space="preserve">
+    <value>nombre</value>
+    
+  </data>
+  <data name="AboutBooleanN_number" xml:space="preserve">
+    <value>Valor numèric que es convertirà en un valor booleà.</value>
+  </data>
+  <data name="AboutBooleanNT" xml:space="preserve">
+    <value>Converteix una columna de valors numèrics en una columna de valors booleans.</value>
+    
+  </data>
+  <data name="BooleanNTArg1" xml:space="preserve">
+    <value>entrada</value>
+    
+  </data>
+  <data name="AboutBooleanNT_input" xml:space="preserve">
+    <value>Columna de valors numèrics que es processarà.</value>
+  </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Retorna el primer argument que no està en blanc</value>
     
@@ -1140,7 +1173,7 @@
     <value>Valor numèric que es processarà.</value>
   </data>
   <data name="AboutAbs_input" xml:space="preserve">
-    <value>Columna de valors numèrics que es processarà.</value>
+    <value>Columna de valors numèrics que es processaran.</value>
   </data>
   <data name="AboutSin_number" xml:space="preserve">
     <value>Valor numèric (en radians) que es processarà.</value>
@@ -1160,7 +1193,7 @@
     <value>Valor numèric que es processarà.</value>
   </data>
   <data name="AboutAsin_input" xml:space="preserve">
-    <value>Columna de valors numèrics que es processarà.</value>
+    <value>Columna de valors numèrics que es processaran.</value>
   </data>
   <data name="AboutAsin" xml:space="preserve">
     <value>Retorna el valor d'arc sinus (en radians) d'un nombre.</value>
@@ -1196,13 +1229,13 @@
     
   </data>
   <data name="AboutAcos_input" xml:space="preserve">
-    <value>Columna de valors numèrics que es processarà.</value>
+    <value>Columna de valors numèrics que es processaran.</value>
   </data>
   <data name="AboutAcot_number" xml:space="preserve">
     <value>Valor numèric que es processarà.</value>
   </data>
   <data name="AboutAcot_input" xml:space="preserve">
-    <value>Columna de valors numèrics que es processarà.</value>
+    <value>Columna de valors numèrics que es processaran.</value>
   </data>
   <data name="AboutAcot" xml:space="preserve">
     <value>Retorna el valor d'arc cotangent (en radians) d'un nombre.</value>
@@ -1238,7 +1271,7 @@
     <value>Valor numèric que es processarà.</value>
   </data>
   <data name="AboutAtan_input" xml:space="preserve">
-    <value>Columna de valors numèrics que es processarà.</value>
+    <value>Columna de valors numèrics que es processaran.</value>
   </data>
   <data name="AboutCot" xml:space="preserve">
     <value>Retorna el valor de cotangent d'un nombre.</value>
@@ -1266,7 +1299,7 @@
     <value>Valor numèric que es processarà.</value>
   </data>
   <data name="AboutLn_input" xml:space="preserve">
-    <value>Columna de valors numèrics que es processarà.</value>
+    <value>Columna de valors numèrics que es processaran.</value>
   </data>
   <data name="AboutLog" xml:space="preserve">
     <value>Retorna el logaritme d'un número d'una base determinada. La base per defecte és 10.</value>
@@ -1280,7 +1313,7 @@
     <value>Valor numèric que es processarà.</value>
   </data>
   <data name="AboutLog_input" xml:space="preserve">
-    <value>Columna de valors numèrics que es processarà.</value>
+    <value>Columna de valors numèrics que es processaran.</value>
   </data>
   <data name="LogBase" xml:space="preserve">
     <value>base</value>
@@ -1301,7 +1334,7 @@
     <value>Valor numèric que es processarà.</value>
   </data>
   <data name="AboutExp_input" xml:space="preserve">
-    <value>Columna de valors numèrics que es processarà.</value>
+    <value>Columna de valors numèrics que es processaran.</value>
   </data>
   <data name="AboutPi" xml:space="preserve">
     <value>Retorna el valor de pi.</value>
@@ -1363,7 +1396,7 @@
     <value>Valor numèric que es processarà.</value>
   </data>
   <data name="AboutSqrt_input" xml:space="preserve">
-    <value>Columna de valors numèrics que es processarà.</value>
+    <value>Columna de valors numèrics que es processaran.</value>
   </data>
   <data name="MathFuncArg1" xml:space="preserve">
     <value>nombre</value>
@@ -4367,7 +4400,7 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_HowToFix_3" xml:space="preserve">
-    <value>Proveu de desplaçar les dades a una font de dades diferent.</value>
+    <value>Proveu de moure les dades a una font de dades diferent.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_Link_1" xml:space="preserve">
@@ -4394,7 +4427,7 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_HowToFix_3" xml:space="preserve">
-    <value>Proveu de desplaçar les dades a una font de dades diferent.</value>
+    <value>Proveu de moure les dades a una font de dades diferent.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_Link_1" xml:space="preserve">
@@ -4425,7 +4458,7 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_4" xml:space="preserve">
-    <value>Proveu de desplaçar les dades a una font de dades diferent.</value>
+    <value>Proveu de moure les dades a una font de dades diferent.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_Link_1" xml:space="preserve">
@@ -4458,7 +4491,7 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_4" xml:space="preserve">
-    <value>Proveu de desplaçar les dades a una font de dades diferent.</value>
+    <value>Proveu de moure les dades a una font de dades diferent.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_Link_1" xml:space="preserve">
@@ -4486,7 +4519,7 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_HowToFix_3" xml:space="preserve">
-    <value>Proveu de desplaçar les dades a una font de dades diferent.</value>
+    <value>Proveu de moure les dades a una font de dades diferent.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_Link_1" xml:space="preserve">
@@ -4551,6 +4584,10 @@
   </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>La fórmula NamedFormula "{0}" ja existeix.</value>
+  </data>
+  <data name="ErrorResource_NameConflict" xml:space="preserve">
+    <value>No es pot crear cap {0} amb el nom "{1}" perquè aquest nom ja s'utilitza per a {2}.</value>
+    
   </data>
   <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
     <value>El primer argument de "{0}" ha de ser un nom de variable vàlid i no pot entrar en conflicte amb cap nom existent de control, pantalla, col·lecció o origen de dades. S'ha trobat el tipus "{1}".</value>

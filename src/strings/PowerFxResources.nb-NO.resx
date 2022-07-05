@@ -497,6 +497,39 @@
   <data name="AboutBoolean_text" xml:space="preserve">
     <value>Tekstverdien som skal konverteres til en boolsk verdi.</value>
   </data>
+  <data name="AboutBooleanT" xml:space="preserve">
+    <value>Konverterer en kolonne med tekstverdier til en kolonne med boolske verdier.</value>
+    
+  </data>
+  <data name="BooleanTArg1" xml:space="preserve">
+    <value>inndata</value>
+    
+  </data>
+  <data name="AboutBooleanT_input" xml:space="preserve">
+    <value>En kolonne med tekstverdier som skal behandles.</value>
+  </data>
+  <data name="AboutBooleanN" xml:space="preserve">
+    <value>Konverterer et tall til en boolsk verdi.</value>
+    
+  </data>
+  <data name="BooleanNArg1" xml:space="preserve">
+    <value>tall</value>
+    
+  </data>
+  <data name="AboutBooleanN_number" xml:space="preserve">
+    <value>Tallverdien som skal konverteres til en boolsk verdi.</value>
+  </data>
+  <data name="AboutBooleanNT" xml:space="preserve">
+    <value>Konverterer en kolonne med numeriske verdier til en kolonne med boolske verdier.</value>
+    
+  </data>
+  <data name="BooleanNTArg1" xml:space="preserve">
+    <value>inndata</value>
+    
+  </data>
+  <data name="AboutBooleanNT_input" xml:space="preserve">
+    <value>En kolonne med tallverdier som skal behandles.</value>
+  </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Returnerer det første argumentet som ikke er tomt</value>
     
@@ -3956,7 +3989,7 @@
     
   </data>
   <data name="ErrorResource_ErrBadToken_LongMessage" xml:space="preserve">
-    <value>For eksempel kan ikke tegnet «\» komme etter et tall, slik som dette: «32\». Det forventes et mellomrom (32), slik at det bare er tallet 32, eller et annet tall (f.eks. 323) forventes.</value>
+    <value>Tegnet «\» kan for eksempel ikke komme etter et tall, slik som dette: «32\». Det forventes et mellomrom (32), slik at det bare er tallet 32, eller et annet tall (f.eks. 323) forventes.</value>
   </data>
   <data name="ErrorResource_ErrBadToken_HowToFix_1" xml:space="preserve">
     <value>Fjern eller erstatt uventede tegn.</value>
@@ -4551,6 +4584,10 @@
   </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula {0} finnes allerede.</value>
+  </data>
+  <data name="ErrorResource_NameConflict" xml:space="preserve">
+    <value>Kan ikke opprette {0} med navnet {1} fordi navnet allerede brukes for {2}.</value>
+    
   </data>
   <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
     <value>Det første argumentet {0} skal være et gyldig variabelnavn og kan ikke komme i konflikt med noen eksisterende kontroll-, skjerm-, samling- eller datakildenavn. Fant typen {1}</value>

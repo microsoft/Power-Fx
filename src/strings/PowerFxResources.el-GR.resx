@@ -497,6 +497,39 @@
   <data name="AboutBoolean_text" xml:space="preserve">
     <value>Η τιμή κειμένου για μετατροπή σε δυαδική τιμή.</value>
   </data>
+  <data name="AboutBooleanT" xml:space="preserve">
+    <value>Μετατρέπει μια στήλη τιμών κειμένου σε στήλη δυαδικών τιμών.</value>
+    
+  </data>
+  <data name="BooleanTArg1" xml:space="preserve">
+    <value>δεδομένα_εισόδου</value>
+    
+  </data>
+  <data name="AboutBooleanT_input" xml:space="preserve">
+    <value>Μια στήλη τιμών κειμένου για επεξεργασία.</value>
+  </data>
+  <data name="AboutBooleanN" xml:space="preserve">
+    <value>Μετατρέπει έναν "αριθμό" σε δυαδική τιμή.</value>
+    
+  </data>
+  <data name="BooleanNArg1" xml:space="preserve">
+    <value>αριθμός</value>
+    
+  </data>
+  <data name="AboutBooleanN_number" xml:space="preserve">
+    <value>Η τιμή κειμένου για μετατροπή σε δυαδική τιμή.</value>
+  </data>
+  <data name="AboutBooleanNT" xml:space="preserve">
+    <value>Μετατρέπει μια στήλη αριθμητικών τιμών σε στήλη δυαδικών τιμών.</value>
+    
+  </data>
+  <data name="BooleanNTArg1" xml:space="preserve">
+    <value>δεδομένα_εισόδου</value>
+    
+  </data>
+  <data name="AboutBooleanNT_input" xml:space="preserve">
+    <value>Στήλη αριθμητικών τιμών για επεξεργασία.</value>
+  </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Επιστρέφει το πρώτο μη κενό όρισμα</value>
     
@@ -3956,7 +3989,7 @@
     
   </data>
   <data name="ErrorResource_ErrBadToken_LongMessage" xml:space="preserve">
-    <value>Για παράδειγμα, ο χαρακτήρας "\" δεν αναμένεται μετά από έναν αριθμό, για παράδειγμα: "32\". Αναμένεται ένα κενό διάστημα ("32"), ώστε να είναι μόνο ο αριθμός 32, ή ένας άλλος αριθμός (όπως "323").</value>
+    <value>Για παράδειγμα, ο χαρακτήρας «\» δεν αναμένεται μετά από έναν αριθμό, για παράδειγμα: «32\». Αναμένεται ένα κενό διάστημα («32»), ώστε να είναι μόνο ο αριθμός 32, ή ένας άλλος αριθμός (όπως «323»).</value>
   </data>
   <data name="ErrorResource_ErrBadToken_HowToFix_1" xml:space="preserve">
     <value>Καταργήστε ή αντικαταστήστε τους μη αναμενόμενους χαρακτήρες.</value>
@@ -4551,6 +4584,10 @@
   </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>Το όνομα NamedFormula '{0}' υπάρχει ήδη.</value>
+  </data>
+  <data name="ErrorResource_NameConflict" xml:space="preserve">
+    <value>Δεν είναι δυνατή η δημιουργία {0} με όνομα '{1}', επειδή αυτό το όνομα χρησιμοποιείται ήδη για μια {2}.</value>
+    
   </data>
   <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
     <value>Το πρώτο όρισμα του "{0}" πρέπει να είναι ένα έγκυρο όνομα μεταβλητής και δεν πρέπει να έρχεται σε διένεξη με τυχόν υπάρχοντα ονόματα στοιχείου ελέγχου, οθόνης, συλλογής ή προέλευσης δεδομένων. Εντοπίστηκε τύπος "{1}"</value>

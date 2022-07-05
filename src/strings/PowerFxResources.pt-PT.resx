@@ -497,6 +497,39 @@
   <data name="AboutBoolean_text" xml:space="preserve">
     <value>O valor de texto a converter num valor booleano.</value>
   </data>
+  <data name="AboutBooleanT" xml:space="preserve">
+    <value>Converts a column of text values to a column of boolean values.</value>
+    
+  </data>
+  <data name="BooleanTArg1" xml:space="preserve">
+    <value>entrada</value>
+    
+  </data>
+  <data name="AboutBooleanT_input" xml:space="preserve">
+    <value>Uma coluna de valores de texto a processar.</value>
+  </data>
+  <data name="AboutBooleanN" xml:space="preserve">
+    <value>Converte um "número" num valor booleano.</value>
+    
+  </data>
+  <data name="BooleanNArg1" xml:space="preserve">
+    <value>número</value>
+    
+  </data>
+  <data name="AboutBooleanN_number" xml:space="preserve">
+    <value>O valor numérico a converter num valor booleano.</value>
+  </data>
+  <data name="AboutBooleanNT" xml:space="preserve">
+    <value>Converts a column of numeric values to a column of boolean values.</value>
+    
+  </data>
+  <data name="BooleanNTArg1" xml:space="preserve">
+    <value>entrada</value>
+    
+  </data>
+  <data name="AboutBooleanNT_input" xml:space="preserve">
+    <value>Uma coluna de valores numéricos a processar.</value>
+  </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Devolve o primeiro argumento que não está em branco</value>
     
@@ -1428,7 +1461,7 @@
     
   </data>
   <data name="AboutIsBlank_expression" xml:space="preserve">
-    <value>Uma expressão para ser testada.</value>
+    <value>Uma expressão a testar.</value>
   </data>
   <data name="AboutIsBlankOrError" xml:space="preserve">
     <value>Verifica se a expressão resulta em branco ou num erro e devolve verdadeiro ou falso.</value>
@@ -2615,7 +2648,7 @@
     
   </data>
   <data name="AboutIsToday_date" xml:space="preserve">
-    <value>A data para testar.</value>
+    <value>O valor de data a testar.</value>
   </data>
   <data name="IsTodayFuncArg1" xml:space="preserve">
     <value>data</value>
@@ -3963,7 +3996,7 @@
     
   </data>
   <data name="ErrorResource_ErrBadToken_Link_1" xml:space="preserve">
-    <value>Artigo: referência de fórmula para o Power Apps</value>
+    <value>Artigo: referência de fórmulas do Power Apps</value>
     
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_ShortMessage" xml:space="preserve">
@@ -3992,7 +4025,7 @@
     
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_Link_1" xml:space="preserve">
-    <value>Artigo: referência de fórmula para o Power Apps</value>
+    <value>Artigo: referência de fórmulas do Power Apps</value>
     
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_ShortMessage" xml:space="preserve">
@@ -4007,7 +4040,7 @@
     
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_Link_1" xml:space="preserve">
-    <value>Artigo: referência de fórmula para o Power Apps</value>
+    <value>Artigo: referência de fórmulas do Power Apps</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidName_ShortMessage" xml:space="preserve">
@@ -4015,14 +4048,14 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidName_LongMessage" xml:space="preserve">
-    <value>Este erro aparece mais frequentemente quando uma fórmula se refere a algo que já não existe (por exemplo, um controlo que eliminou).</value>
+    <value>Este erro aparece mais frequentemente quando uma fórmula referencia algo que já não existe (por exemplo, um controlo que eliminou).</value>
   </data>
   <data name="ErrorResource_ErrInvalidName_HowToFix_1" xml:space="preserve">
     <value>Remova ou corrija a referência para o nome que não é válida.</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidName_Link_1" xml:space="preserve">
-    <value>Artigo: referência de fórmula para o Power Apps</value>
+    <value>Artigo: referência de fórmulas do Power Apps</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidIdentifier_ShortMessage" xml:space="preserve">
@@ -4033,7 +4066,7 @@
     <value>Este erro aparece mais frequentemente quando uma fórmula referencia algo que já não existe (por exemplo, um controlo que eliminou).</value>
   </data>
   <data name="ErrorResource_ErrInvalidIdentifier_HowToFix_1" xml:space="preserve">
-    <value>Remova ou corrija a referência inválida para o nome.</value>
+    <value>Remova ou corrija a referência para o nome que não é válida.</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidIdentifier_Link_1" xml:space="preserve">
@@ -4119,7 +4152,7 @@
     
   </data>
   <data name="ErrorResource_ErrNumberExpected_Link_1" xml:space="preserve">
-    <value>Artigo: referência de fórmula para o Power Apps</value>
+    <value>Artigo: referência de fórmulas do Power Apps</value>
     
   </data>
   <data name="ErrorResource_ErrBooleanExpected_ShortMessage" xml:space="preserve">
@@ -4134,7 +4167,7 @@
     
   </data>
   <data name="ErrorResource_ErrBooleanExpected_Link_1" xml:space="preserve">
-    <value>Artigo: referência de fórmula para o Power Apps</value>
+    <value>Artigo: referência de fórmulas do Power Apps</value>
     
   </data>
   <data name="ErrorResource_ErrColonExpected_ShortMessage" xml:space="preserve">
@@ -4201,7 +4234,7 @@
     
   </data>
   <data name="ErrorResource_ErrStringExpected_Link_1" xml:space="preserve">
-    <value>Artigo: referência de fórmula para o Power Apps</value>
+    <value>Artigo: referência de fórmulas do Power Apps</value>
     
   </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_ShortMessage" xml:space="preserve">
@@ -4216,7 +4249,7 @@
     
   </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_Link_1" xml:space="preserve">
-    <value>Artigo: referência de fórmula para o Power Apps</value>
+    <value>Artigo: referência de fórmulas do Power Apps</value>
     
   </data>
   <data name="ErrorResource_ErrClosingBracketExpected_ShortMessage" xml:space="preserve">
@@ -4270,7 +4303,7 @@
     
   </data>
   <data name="ErrorResource_ErrServiceFunctionUnknownOptionalParam_Name_Link_1" xml:space="preserve">
-    <value>Artigo: referência de fórmula para o Power Apps</value>
+    <value>Artigo: referência de fórmulas do Power Apps</value>
     
   </data>
   <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_ShortMessage" xml:space="preserve">
@@ -4298,7 +4331,7 @@
     
   </data>
   <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_Link_1" xml:space="preserve">
-    <value>Artigo: referência de fórmula para o Power Apps</value>
+    <value>Artigo: referência de fórmulas do Power Apps</value>
     
   </data>
   <data name="ErrorResource_ErrTableDoesNotAcceptThisType_ShortMessage" xml:space="preserve">
@@ -4348,7 +4381,7 @@
     
   </data>
   <data name="ErrorResource_ErrDateExpected_Link_1" xml:space="preserve">
-    <value>Artigo: referência de fórmula para o Power Apps</value>
+    <value>Artigo: referência de fórmulas do Power Apps</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_ShortMessage" xml:space="preserve">
@@ -4367,15 +4400,15 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_HowToFix_3" xml:space="preserve">
-    <value>Tente mover os dados para uma origem de dados diferentes.</value>
+    <value>Tente mover os seus dados para outra origem de dados.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_Link_1" xml:space="preserve">
-    <value>Artigo: compreender a delegação numa aplicação de tela</value>
+    <value>Artigo: noções básicas sobre delegação numa aplicação de tela</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_Link_2" xml:space="preserve">
-    <value>Blogue: limites de linha de dados para delegação</value>
+    <value>Blogue: limites de linhas de dados para delegação</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_ShortMessage" xml:space="preserve">
@@ -4394,15 +4427,15 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_HowToFix_3" xml:space="preserve">
-    <value>Tente mover os dados para uma origem de dados diferentes.</value>
+    <value>Tente mover os seus dados para outra origem de dados.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_Link_1" xml:space="preserve">
-    <value>Artigo: compreender a delegação numa aplicação de tela</value>
+    <value>Artigo: noções básicas sobre delegação numa aplicação de tela</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_Link_2" xml:space="preserve">
-    <value>Blogue: limites de linha de dados para delegação</value>
+    <value>Blogue: limites de linhas de dados para delegação</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_ShortMessage" xml:space="preserve">
@@ -4425,15 +4458,15 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_4" xml:space="preserve">
-    <value>Tente mover os dados para uma origem de dados diferentes.</value>
+    <value>Tente mover os seus dados para outra origem de dados.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_Link_1" xml:space="preserve">
-    <value>Artigo: compreender a delegação numa aplicação de tela</value>
+    <value>Artigo: noções básicas sobre delegação numa aplicação de tela</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_Link_2" xml:space="preserve">
-    <value>Blogue: limites de linha de dados para delegação</value>
+    <value>Blogue: limites de linhas de dados para delegação</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_ShortMessage" xml:space="preserve">
@@ -4449,7 +4482,7 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_2" xml:space="preserve">
-    <value>Se o conjunto de dados exceder o limite de 500 registos, mas contiver menos de 2.000 registos, tente repor o limite.
+    <value>Se o conjunto de dados exceder o limite de 500 registos, mas contiver menos de 2000 registos, tente repor o limite.
       </value>
     
   </data>
@@ -4458,15 +4491,15 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_4" xml:space="preserve">
-    <value>Tente mover os dados para uma origem de dados diferentes.</value>
+    <value>Tente mover os seus dados para outra origem de dados.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_Link_1" xml:space="preserve">
-    <value>Artigo: compreender a delegação numa aplicação de tela</value>
+    <value>Artigo: noções básicas sobre delegação numa aplicação de tela</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_Link_2" xml:space="preserve">
-    <value>Blogue: limites de linha de dados para delegação</value>
+    <value>Blogue: limites de linhas de dados para delegação</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_ShortMessage" xml:space="preserve">
@@ -4486,15 +4519,15 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_HowToFix_3" xml:space="preserve">
-    <value>Tente mover os dados para uma origem de dados diferentes.</value>
+    <value>Tente mover os seus dados para outra origem de dados.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_Link_1" xml:space="preserve">
-    <value>Artigo: compreender a delegação numa aplicação de tela</value>
+    <value>Artigo: noções básicas sobre delegação numa aplicação de tela</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_Link_2" xml:space="preserve">
-    <value>Blogue: limites de linha de dados para delegação</value>
+    <value>Blogue: limites de linhas de dados para delegação</value>
     
   </data>
   <data name="ErrorResource_ErrOnlyOneViewExpected_ShortMessage" xml:space="preserve">
@@ -4551,6 +4584,10 @@
   </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>A NamedFormula "{0}" já existe.</value>
+  </data>
+  <data name="ErrorResource_NameConflict" xml:space="preserve">
+    <value>Não é possível criar uma entidade de {0} com o nome "{1}" porque este nome já está a ser utilizado para uma entidade de {2}.</value>
+    
   </data>
   <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
     <value>O primeiro argumento de "{0}" tem de ser um nome de variável válido e não pode entrar em conflito com qualquer controlo, ecrã, coleção ou nome de origens de dados existentes. Tipo encontrado "{1}"</value>

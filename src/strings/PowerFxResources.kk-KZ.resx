@@ -497,6 +497,39 @@
   <data name="AboutBoolean_text" xml:space="preserve">
     <value>Логикалық мәнге түрлендірілетін мәтін мәні.</value>
   </data>
+  <data name="AboutBooleanT" xml:space="preserve">
+    <value>Converts a column of text values to a column of boolean values.</value>
+    
+  </data>
+  <data name="BooleanTArg1" xml:space="preserve">
+    <value>input</value>
+    
+  </data>
+  <data name="AboutBooleanT_input" xml:space="preserve">
+    <value>A column of text values to process.</value>
+  </data>
+  <data name="AboutBooleanN" xml:space="preserve">
+    <value>Converts a 'number' to a boolean value.</value>
+    
+  </data>
+  <data name="BooleanNArg1" xml:space="preserve">
+    <value>number</value>
+    
+  </data>
+  <data name="AboutBooleanN_number" xml:space="preserve">
+    <value>The number value to convert to a boolean value.</value>
+  </data>
+  <data name="AboutBooleanNT" xml:space="preserve">
+    <value>Converts a column of numeric values to a column of boolean values.</value>
+    
+  </data>
+  <data name="BooleanNTArg1" xml:space="preserve">
+    <value>input</value>
+    
+  </data>
+  <data name="AboutBooleanNT_input" xml:space="preserve">
+    <value>A column of number values to process.</value>
+  </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Бірінші бос емес аргументті қайтарады</value>
     
@@ -3963,7 +3996,7 @@
     
   </data>
   <data name="ErrorResource_ErrBadToken_Link_1" xml:space="preserve">
-    <value>Мақала. Power Apps үшін формула сілтемесі</value>
+    <value>Мақала: Power Apps үшін формула сілтемесі</value>
     
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_ShortMessage" xml:space="preserve">
@@ -3992,7 +4025,7 @@
     
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_Link_1" xml:space="preserve">
-    <value>Мақала. Power Apps үшін формула сілтемесі</value>
+    <value>Мақала: Power Apps үшін формула сілтемесі</value>
     
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_ShortMessage" xml:space="preserve">
@@ -4007,7 +4040,7 @@
     
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_Link_1" xml:space="preserve">
-    <value>Мақала. Power Apps үшін формула сілтемесі</value>
+    <value>Мақала: Power Apps үшін формула сілтемесі</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidName_ShortMessage" xml:space="preserve">
@@ -4015,14 +4048,14 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidName_LongMessage" xml:space="preserve">
-    <value>Формула бұдан былай жоқ элементке (мысалы, жойылған басқару элементіне) сілтеме жасаған кезде, көбінесе осы пайда болады.</value>
+    <value>Формула бұдан былай жоқ элементке (мысалы, жойылған басқару элементіне) қатысты болған кезде, осы қате жиі пайда болады.</value>
   </data>
   <data name="ErrorResource_ErrInvalidName_HowToFix_1" xml:space="preserve">
     <value>Сілтемені жойыңыз немесе жарамды атқа түзетіңіз.</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidName_Link_1" xml:space="preserve">
-    <value>Мақала. Power Apps үшін формула сілтемесі</value>
+    <value>Мақала: Power Apps үшін формула сілтемесі</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidIdentifier_ShortMessage" xml:space="preserve">
@@ -4033,11 +4066,11 @@
     <value>Формула бұдан былай жоқ элементке (мысалы, жойылған басқару элементіне) қатысты болған кезде, осы қате жиі пайда болады.</value>
   </data>
   <data name="ErrorResource_ErrInvalidIdentifier_HowToFix_1" xml:space="preserve">
-    <value>Жарамсыз атаудың сілтемесін жойыңыз немесе түзетіңіз.</value>
+    <value>Сілтемені жойыңыз немесе жарамды атқа түзетіңіз.</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidIdentifier_Link_1" xml:space="preserve">
-    <value>Мақала: Power Apps бағдарламасының формула сілтемесі</value>
+    <value>Мақала: Power Apps үшін формула сілтемесі</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_ShortMessage" xml:space="preserve">
@@ -4119,7 +4152,7 @@
     
   </data>
   <data name="ErrorResource_ErrNumberExpected_Link_1" xml:space="preserve">
-    <value>Мақала. Power Apps үшін формула сілтемесі</value>
+    <value>Мақала: Power Apps үшін формула сілтемесі</value>
     
   </data>
   <data name="ErrorResource_ErrBooleanExpected_ShortMessage" xml:space="preserve">
@@ -4134,7 +4167,7 @@
     
   </data>
   <data name="ErrorResource_ErrBooleanExpected_Link_1" xml:space="preserve">
-    <value>Мақала. Power Apps үшін формула сілтемесі</value>
+    <value>Мақала: Power Apps үшін формула сілтемесі</value>
     
   </data>
   <data name="ErrorResource_ErrColonExpected_ShortMessage" xml:space="preserve">
@@ -4201,7 +4234,7 @@
     
   </data>
   <data name="ErrorResource_ErrStringExpected_Link_1" xml:space="preserve">
-    <value>Мақала. Power Apps үшін формула сілтемесі</value>
+    <value>Мақала: Power Apps үшін формула сілтемесі</value>
     
   </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_ShortMessage" xml:space="preserve">
@@ -4216,7 +4249,7 @@
     
   </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_Link_1" xml:space="preserve">
-    <value>Мақала. Power Apps үшін формула сілтемесі</value>
+    <value>Мақала: Power Apps үшін формула сілтемесі</value>
     
   </data>
   <data name="ErrorResource_ErrClosingBracketExpected_ShortMessage" xml:space="preserve">
@@ -4270,7 +4303,7 @@
     
   </data>
   <data name="ErrorResource_ErrServiceFunctionUnknownOptionalParam_Name_Link_1" xml:space="preserve">
-    <value>Мақала. Power Apps үшін формула сілтемесі</value>
+    <value>Мақала: Power Apps үшін формула сілтемесі</value>
     
   </data>
   <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_ShortMessage" xml:space="preserve">
@@ -4298,7 +4331,7 @@
     
   </data>
   <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_Link_1" xml:space="preserve">
-    <value>Мақала. Power Apps үшін формула сілтемесі</value>
+    <value>Мақала: Power Apps үшін формула сілтемесі</value>
     
   </data>
   <data name="ErrorResource_ErrTableDoesNotAcceptThisType_ShortMessage" xml:space="preserve">
@@ -4348,7 +4381,7 @@
     
   </data>
   <data name="ErrorResource_ErrDateExpected_Link_1" xml:space="preserve">
-    <value>Мақала. Power Apps үшін формула сілтемесі</value>
+    <value>Мақала: Power Apps үшін формула сілтемесі</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_ShortMessage" xml:space="preserve">
@@ -4449,7 +4482,7 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_2" xml:space="preserve">
-    <value>Егер деректер жиынтығы 500 жазба шегінен асып, онда 2000 жазбадан аз болса, шекті қайта орнатып көріңіз.
+    <value>Егер деректер жиынтығы 500 жазба шегінен асатын болса, бірақ онда 2000 жазбадан азырақ болса, шекті қайта орнатып көріңіз.
       </value>
     
   </data>
@@ -4551,6 +4584,10 @@
   </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula "{0}" бұрыннан бар.</value>
+  </data>
+  <data name="ErrorResource_NameConflict" xml:space="preserve">
+    <value>"{1}" атты {0} жасау мүмкін емес, себебі бұл атау {2} үшін пайдаланылған.</value>
+    
   </data>
   <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
     <value>"{0}" бірінші аргументі жарамды айнымалы атауы болуы тиіс және ол бар басқару элементі, экран, жиынтық немесе деректер көзі атауларына қайшы келмеуі тиіс. Табылған түрі: "{1}"</value>

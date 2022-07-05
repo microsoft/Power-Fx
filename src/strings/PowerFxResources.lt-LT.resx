@@ -497,6 +497,39 @@
   <data name="AboutBoolean_text" xml:space="preserve">
     <value>Teksto reikšmė, kurią reikia konvertuoti į Bulio logikos reikšmę.</value>
   </data>
+  <data name="AboutBooleanT" xml:space="preserve">
+    <value>Converts a column of text values to a column of boolean values.</value>
+    
+  </data>
+  <data name="BooleanTArg1" xml:space="preserve">
+    <value>input</value>
+    
+  </data>
+  <data name="AboutBooleanT_input" xml:space="preserve">
+    <value>A column of text values to process.</value>
+  </data>
+  <data name="AboutBooleanN" xml:space="preserve">
+    <value>Converts a 'number' to a boolean value.</value>
+    
+  </data>
+  <data name="BooleanNArg1" xml:space="preserve">
+    <value>number</value>
+    
+  </data>
+  <data name="AboutBooleanN_number" xml:space="preserve">
+    <value>The number value to convert to a boolean value.</value>
+  </data>
+  <data name="AboutBooleanNT" xml:space="preserve">
+    <value>Converts a column of numeric values to a column of boolean values.</value>
+    
+  </data>
+  <data name="BooleanNTArg1" xml:space="preserve">
+    <value>input</value>
+    
+  </data>
+  <data name="AboutBooleanNT_input" xml:space="preserve">
+    <value>A column of number values to process.</value>
+  </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Pateikiamas pirmasis netuščias argumentas</value>
     
@@ -2615,7 +2648,7 @@
     
   </data>
   <data name="AboutIsToday_date" xml:space="preserve">
-    <value>Duomenų reikšmė, kurią reikia patikrinti.</value>
+    <value>Datos reikšmė, kurią reikia patikrinti.</value>
   </data>
   <data name="IsTodayFuncArg1" xml:space="preserve">
     <value>data</value>
@@ -4551,6 +4584,10 @@
   </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula „{0}“ jau yra.</value>
+  </data>
+  <data name="ErrorResource_NameConflict" xml:space="preserve">
+    <value>Negalima sukurti {0} su pavadinimu {1}, nes šis pavadinimas jau naudojamas {2}.</value>
+    
   </data>
   <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
     <value>Pirmasis {0} argumentas turi būti tinkamas kintamojo pavadinimas ir negali būti nesuderinamas su esamais valdiklių, ekranų, rinkinių arba duomenų šaltinių pavadinimais. Rastas tipas {1}</value>

@@ -497,6 +497,39 @@
   <data name="AboutBoolean_text" xml:space="preserve">
     <value>ค่าข้อความที่จะแปลงเป็นค่าแบบบูลีน</value>
   </data>
+  <data name="AboutBooleanT" xml:space="preserve">
+    <value>แปลงคอลัมน์ของค่าข้อความเป็นคอลัมน์ของค่าแบบบูลีน</value>
+    
+  </data>
+  <data name="BooleanTArg1" xml:space="preserve">
+    <value>ข้อมูลป้อนเข้า</value>
+    
+  </data>
+  <data name="AboutBooleanT_input" xml:space="preserve">
+    <value>คอลัมน์ของค่าข้อความที่จะดำเนินการ</value>
+  </data>
+  <data name="AboutBooleanN" xml:space="preserve">
+    <value>แปลง 'ตัวเลข' เป็นค่าแบบบูลีน</value>
+    
+  </data>
+  <data name="BooleanNArg1" xml:space="preserve">
+    <value>ตัวเลข</value>
+    
+  </data>
+  <data name="AboutBooleanN_number" xml:space="preserve">
+    <value>ค่าตัวเลขที่จะแปลงเป็นค่าแบบบูลีน</value>
+  </data>
+  <data name="AboutBooleanNT" xml:space="preserve">
+    <value>แปลงคอลัมน์ของค่าตัวเลขเป็นคอลัมน์ของค่าแบบบูลีน</value>
+    
+  </data>
+  <data name="BooleanNTArg1" xml:space="preserve">
+    <value>ข้อมูลป้อนเข้า</value>
+    
+  </data>
+  <data name="AboutBooleanNT_input" xml:space="preserve">
+    <value>คอลัมน์ของค่าตัวเลขที่จะดำเนินการ</value>
+  </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>ส่งคืนอาร์กิวเมนต์แรกที่ไม่ได้เว้นว่าง</value>
     
@@ -956,10 +989,10 @@
     
   </data>
   <data name="AboutInt_number" xml:space="preserve">
-    <value>ค่าตัวเลขที่จะประมวลผล</value>
+    <value>ค่าตัวเลขที่จะดำเนินการ</value>
   </data>
   <data name="AboutInt_input" xml:space="preserve">
-    <value>คอลัมน์ของค่าตัวเลขที่จะประมวลผล</value>
+    <value>คอลัมน์ของค่าตัวเลขที่จะดำเนินการ</value>
   </data>
   <data name="AboutTrunc" xml:space="preserve">
     <value>ตัดทอน 'ตัวเลข' โดยการปัดเศษไปยังศูนย์</value>
@@ -1428,7 +1461,7 @@
     
   </data>
   <data name="AboutIsBlank_expression" xml:space="preserve">
-    <value>นิพจน์จะถูกทดสอบ</value>
+    <value>นิพจน์ที่จะทดสอบ</value>
   </data>
   <data name="AboutIsBlankOrError" xml:space="preserve">
     <value>ตรวจสอบว่านิพจน์ส่งผลให้เกิดผลลัพธ์ที่ว่างเปล่าหรือมีข้อผิดพลาด และส่งกลับค่า จริง หรือ เท็จ</value>
@@ -4359,7 +4392,7 @@
     <value>แหล่งข้อมูลอาจไม่สามารถประมวลผลสูตรและอาจส่งชุดข้อมูลที่ไม่สมบูรณ์กลับมา แอปพลิเคชันของคุณอาจไม่ส่งผลลัพธ์ที่ถูกต้องกลับมาหรือทำงานได้อย่างถูกต้องหากชุดข้อมูลไม่สมบูรณ์</value>
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_HowToFix_1" xml:space="preserve">
-    <value>หากชุดข้อมูลของคุณเกินขีดจำกัด 500 ระเบียนแต่มีระเบียนน้อยกว่า 2,000 ระเบียน ลองตั้งค่าขีดจำกัดใหม่</value>
+    <value>หากชุดข้อมูลของคุณเกินขีดจำกัดที่ 500 เรกคอร์ดแต่ไม่เกิน 2,000 เรกคอร์ด ให้ลองตั้งค่าขีดจำกัดใหม่</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_HowToFix_2" xml:space="preserve">
@@ -4386,7 +4419,7 @@
     <value>แหล่งข้อมูลอาจไม่สามารถประมวลผลสูตรและอาจส่งชุดข้อมูลที่ไม่สมบูรณ์กลับมา แอปพลิเคชันของคุณอาจไม่ส่งผลลัพธ์ที่ถูกต้องกลับมาหรือทำงานได้อย่างถูกต้องหากชุดข้อมูลไม่สมบูรณ์</value>
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_HowToFix_1" xml:space="preserve">
-    <value>หากชุดข้อมูลของคุณเกินขีดจำกัด 500 ระเบียนแต่มีระเบียนน้อยกว่า 2,000 ระเบียน ลองตั้งค่าขีดจำกัดใหม่</value>
+    <value>หากชุดข้อมูลของคุณเกินขีดจำกัดที่ 500 เรกคอร์ดแต่ไม่เกิน 2,000 เรกคอร์ด ให้ลองตั้งค่าขีดจำกัดใหม่</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_HowToFix_2" xml:space="preserve">
@@ -4417,7 +4450,7 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_2" xml:space="preserve">
-    <value>หากชุดข้อมูลของคุณเกินขีดจำกัด 500 ระเบียนแต่มีระเบียนน้อยกว่า 2,000 ระเบียน ลองตั้งค่าขีดจำกัดใหม่</value>
+    <value>หากชุดข้อมูลของคุณเกินขีดจำกัดที่ 500 เรกคอร์ดแต่ไม่เกิน 2,000 เรกคอร์ด ให้ลองตั้งค่าขีดจำกัดใหม่</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_3" xml:space="preserve">
@@ -4478,7 +4511,7 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_HowToFix_1" xml:space="preserve">
-    <value>หากชุดข้อมูลของคุณเกินขีดจำกัด 500 ระเบียนแต่มีระเบียนน้อยกว่า 2,000 ระเบียน ลองตั้งค่าขีดจำกัดใหม่</value>
+    <value>หากชุดข้อมูลของคุณเกินขีดจำกัดที่ 500 เรกคอร์ดแต่ไม่เกิน 2,000 เรกคอร์ด ให้ลองตั้งค่าขีดจำกัดใหม่</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_HowToFix_2" xml:space="preserve">
@@ -4551,6 +4584,10 @@
   </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>มี NamedFormula '{0}' อยู่แล้ว</value>
+  </data>
+  <data name="ErrorResource_NameConflict" xml:space="preserve">
+    <value>ไม่สามารถสร้าง {0} ที่ชื่อ '{1}' ได้เนื่องจากชื่อนั้นใช้สำหรับ {2} อยู่แล้ว</value>
+    
   </data>
   <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
     <value>อาร์กิวเมนต์แรกของ '{0}' ควรเป็นชื่อตัวแปรที่ถูกต้อง และไม่สามารถขัดแย้งกับการควบคุม หน้าจอ การรวบรวม หรือชื่อของแหล่งข้อมูลที่มีอยู่ พบประเภท '{1}'</value>
