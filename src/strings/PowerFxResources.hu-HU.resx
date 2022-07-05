@@ -497,6 +497,39 @@
   <data name="AboutBoolean_text" xml:space="preserve">
     <value>A logikai értékké alakítandó szövegérték.</value>
   </data>
+  <data name="AboutBooleanT" xml:space="preserve">
+    <value>Szöveges értékekből álló oszlopot logikai értékek oszlopává alakít át.</value>
+    
+  </data>
+  <data name="BooleanTArg1" xml:space="preserve">
+    <value>bemenet</value>
+    
+  </data>
+  <data name="AboutBooleanT_input" xml:space="preserve">
+    <value>A feldolgozandó szöveges értékeket tartalmazó oszlop.</value>
+  </data>
+  <data name="AboutBooleanN" xml:space="preserve">
+    <value>Átalakít egy "számot" logikai értékké.</value>
+    
+  </data>
+  <data name="BooleanNArg1" xml:space="preserve">
+    <value>szám</value>
+    
+  </data>
+  <data name="AboutBooleanN_number" xml:space="preserve">
+    <value>A logikai értékké alakítandó számérték.</value>
+  </data>
+  <data name="AboutBooleanNT" xml:space="preserve">
+    <value>Numerikus értékekből álló oszlopot logikai értékek oszlopává alakít át.</value>
+    
+  </data>
+  <data name="BooleanNTArg1" xml:space="preserve">
+    <value>bemenet</value>
+    
+  </data>
+  <data name="AboutBooleanNT_input" xml:space="preserve">
+    <value>A feldolgozandó számértékeket tartalmazó oszlop.</value>
+  </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Az első nem üres argumentumot adja vissza</value>
     
@@ -956,10 +989,10 @@
     
   </data>
   <data name="AboutInt_number" xml:space="preserve">
-    <value>A feldolgozni kívánt numerikus érték.</value>
+    <value>A feldolgozandó számérték.</value>
   </data>
   <data name="AboutInt_input" xml:space="preserve">
-    <value>A feldolgozni kívánt, numerikus értékeket tartalmazó oszlop.</value>
+    <value>A feldolgozandó számértékeket tartalmazó oszlop.</value>
   </data>
   <data name="AboutTrunc" xml:space="preserve">
     <value>A szám csonkolása a nulla felé kerekítéssel.</value>
@@ -3963,7 +3996,7 @@
     
   </data>
   <data name="ErrorResource_ErrBadToken_Link_1" xml:space="preserve">
-    <value>Cikk: Power Apps-képletreferencia</value>
+    <value>Cikk: Power Apps-képletekkel kapcsolatos segédlet</value>
     
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_ShortMessage" xml:space="preserve">
@@ -3992,7 +4025,7 @@
     
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_Link_1" xml:space="preserve">
-    <value>Cikk: Power Apps-képletreferencia</value>
+    <value>Cikk: Power Apps-képletekkel kapcsolatos segédlet</value>
     
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_ShortMessage" xml:space="preserve">
@@ -4007,7 +4040,7 @@
     
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_Link_1" xml:space="preserve">
-    <value>Cikk: Power Apps-képletreferencia</value>
+    <value>Cikk: Power Apps-képletekkel kapcsolatos segédlet</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidName_ShortMessage" xml:space="preserve">
@@ -4018,11 +4051,11 @@
     <value>Ez a hiba leggyakrabban akkor jelenik meg, ha a képlet már nem létező dologra (például egy törölt vezérlőre) hivatkozik.</value>
   </data>
   <data name="ErrorResource_ErrInvalidName_HowToFix_1" xml:space="preserve">
-    <value>Távolítsa el vagy javítsa az érvénytelen névre való hivatkozást.</value>
+    <value>Távolítsa el vagy javítsa az érvénytelen névre mutató hivatkozást.</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidName_Link_1" xml:space="preserve">
-    <value>Cikk: Power Apps-képletreferencia</value>
+    <value>Cikk: Power Apps-képletekkel kapcsolatos segédlet</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidIdentifier_ShortMessage" xml:space="preserve">
@@ -4030,7 +4063,7 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidIdentifier_LongMessage" xml:space="preserve">
-    <value>Ez a hiba leggyakrabban akkor jelenik meg, ha a képlet olyasmire hivatkozik, ami már nem létezik (például egy törölt vezérlőre).</value>
+    <value>Ez a hiba leggyakrabban akkor jelenik meg, ha a képlet már nem létező dologra (például egy törölt vezérlőre) hivatkozik.</value>
   </data>
   <data name="ErrorResource_ErrInvalidIdentifier_HowToFix_1" xml:space="preserve">
     <value>Távolítsa el vagy javítsa az érvénytelen névre mutató hivatkozást.</value>
@@ -4119,7 +4152,7 @@
     
   </data>
   <data name="ErrorResource_ErrNumberExpected_Link_1" xml:space="preserve">
-    <value>Cikk: Power Apps-képletreferencia</value>
+    <value>Cikk: Power Apps-képletekkel kapcsolatos segédlet</value>
     
   </data>
   <data name="ErrorResource_ErrBooleanExpected_ShortMessage" xml:space="preserve">
@@ -4134,7 +4167,7 @@
     
   </data>
   <data name="ErrorResource_ErrBooleanExpected_Link_1" xml:space="preserve">
-    <value>Cikk: Power Apps-képletreferencia</value>
+    <value>Cikk: Power Apps-képletekkel kapcsolatos segédlet</value>
     
   </data>
   <data name="ErrorResource_ErrColonExpected_ShortMessage" xml:space="preserve">
@@ -4201,7 +4234,7 @@
     
   </data>
   <data name="ErrorResource_ErrStringExpected_Link_1" xml:space="preserve">
-    <value>Cikk: Power Apps-képletreferencia</value>
+    <value>Cikk: Power Apps-képletekkel kapcsolatos segédlet</value>
     
   </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_ShortMessage" xml:space="preserve">
@@ -4216,7 +4249,7 @@
     
   </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_Link_1" xml:space="preserve">
-    <value>Cikk: Power Apps-képletreferencia</value>
+    <value>Cikk: Power Apps-képletekkel kapcsolatos segédlet</value>
     
   </data>
   <data name="ErrorResource_ErrClosingBracketExpected_ShortMessage" xml:space="preserve">
@@ -4270,7 +4303,7 @@
     
   </data>
   <data name="ErrorResource_ErrServiceFunctionUnknownOptionalParam_Name_Link_1" xml:space="preserve">
-    <value>Cikk: Power Apps-képletreferencia</value>
+    <value>Cikk: Power Apps-képletekkel kapcsolatos segédlet</value>
     
   </data>
   <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_ShortMessage" xml:space="preserve">
@@ -4298,7 +4331,7 @@
     
   </data>
   <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_Link_1" xml:space="preserve">
-    <value>Cikk: Power Apps-képletreferencia</value>
+    <value>Cikk: Power Apps-képletekkel kapcsolatos segédlet</value>
     
   </data>
   <data name="ErrorResource_ErrTableDoesNotAcceptThisType_ShortMessage" xml:space="preserve">
@@ -4348,7 +4381,7 @@
     
   </data>
   <data name="ErrorResource_ErrDateExpected_Link_1" xml:space="preserve">
-    <value>Cikk: Power Apps-képletreferencia</value>
+    <value>Cikk: Power Apps-képletekkel kapcsolatos segédlet</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_ShortMessage" xml:space="preserve">
@@ -4371,7 +4404,7 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_Link_1" xml:space="preserve">
-    <value>Cikk: A vászonalkalmazásokban való delegálás ismertetése</value>
+    <value>Cikk: A vászonalapú alkalmazásban való delegálás ismertetése</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_Link_2" xml:space="preserve">
@@ -4398,7 +4431,7 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_Link_1" xml:space="preserve">
-    <value>Cikk: A vászonalkalmazásokban való delegálás ismertetése</value>
+    <value>Cikk: A vászonalapú alkalmazásban való delegálás ismertetése</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_Link_2" xml:space="preserve">
@@ -4429,7 +4462,7 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_Link_1" xml:space="preserve">
-    <value>Cikk: A vászonalkalmazásokban való delegálás ismertetése</value>
+    <value>Cikk: A vászonalapú alkalmazásban való delegálás ismertetése</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_Link_2" xml:space="preserve">
@@ -4449,8 +4482,8 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_2" xml:space="preserve">
-    <value>Ha az adathalmaz túllépi az 500 rekordot jelző korlátot, de kevesebb mint 2000 rekordot tartalmaz, próbálja meg alaphelyzetbe állítani a korlátot.
-      </value>
+    <value>Ha az adathalmaz a megengedettnél (500) több, de 2000-nél kevesebb rekordot tartalmaz, próbálja meg alaphelyzetbe állítani a határértéket.
+</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_3" xml:space="preserve">
@@ -4462,7 +4495,7 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_Link_1" xml:space="preserve">
-    <value>Cikk: A vászonalkalmazásokban való delegálás ismertetése</value>
+    <value>Cikk: A vászonalapú alkalmazásban való delegálás ismertetése</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_Link_2" xml:space="preserve">
@@ -4490,7 +4523,7 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_Link_1" xml:space="preserve">
-    <value>Cikk: A vászonalkalmazásokban való delegálás ismertetése</value>
+    <value>Cikk: A vászonalapú alkalmazásban való delegálás ismertetése</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_Link_2" xml:space="preserve">
@@ -4551,6 +4584,10 @@
   </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>A(z) '{0}' NamedFormula már létezik.</value>
+  </data>
+  <data name="ErrorResource_NameConflict" xml:space="preserve">
+    <value>Nem lehet létrehozni {1} nevű {0} lehetőséget, mert ezt a nevet már a(z) {2} használja.</value>
+    
   </data>
   <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
     <value>A(z) {0} első argumentumának egy érvényes változónévnek kell lennie, amely semmilyen meglévő vezérlő, képernyő, gyűjtemény vagy adatforrás nevével nem ütközhet. A talált típus: {1}</value>

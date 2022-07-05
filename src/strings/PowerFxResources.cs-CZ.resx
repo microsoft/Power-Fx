@@ -497,6 +497,39 @@
   <data name="AboutBoolean_text" xml:space="preserve">
     <value>Textová hodnota, kterou chcete převést na logickou hodnotu.</value>
   </data>
+  <data name="AboutBooleanT" xml:space="preserve">
+    <value>Převede sloupec textových hodnot na sloupec logických hodnot.</value>
+    
+  </data>
+  <data name="BooleanTArg1" xml:space="preserve">
+    <value>vstup</value>
+    
+  </data>
+  <data name="AboutBooleanT_input" xml:space="preserve">
+    <value>Sloupec textových hodnot, který chcete zpracovat.</value>
+  </data>
+  <data name="AboutBooleanN" xml:space="preserve">
+    <value>Převede 'číslo' na logickou hodnotu.</value>
+    
+  </data>
+  <data name="BooleanNArg1" xml:space="preserve">
+    <value>číslo</value>
+    
+  </data>
+  <data name="AboutBooleanN_number" xml:space="preserve">
+    <value>Číselná hodnota, kterou chcete převést na logickou hodnotu.</value>
+  </data>
+  <data name="AboutBooleanNT" xml:space="preserve">
+    <value>Převede sloupec číselných hodnot na sloupec logických hodnot.</value>
+    
+  </data>
+  <data name="BooleanNTArg1" xml:space="preserve">
+    <value>vstup</value>
+    
+  </data>
+  <data name="AboutBooleanNT_input" xml:space="preserve">
+    <value>Sloupec číselných hodnot, které se mají zpracovat.</value>
+  </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Vrátí první neprázdný argument.</value>
     
@@ -1137,10 +1170,10 @@
     
   </data>
   <data name="AboutAbs_number" xml:space="preserve">
-    <value>Číselná hodnota, která se má zpracovat</value>
+    <value>Číselná hodnota, která se má zpracovat.</value>
   </data>
   <data name="AboutAbs_input" xml:space="preserve">
-    <value>Sloupec číselných hodnot, které se mají zpracovat</value>
+    <value>Sloupec číselných hodnot, které se mají zpracovat.</value>
   </data>
   <data name="AboutSin_number" xml:space="preserve">
     <value>Číselná hodnota (v radiánech), která se má zpracovat.</value>
@@ -1157,10 +1190,10 @@
     
   </data>
   <data name="AboutAsin_number" xml:space="preserve">
-    <value>Číselná hodnota, která se má zpracovat</value>
+    <value>Číselná hodnota, která se má zpracovat.</value>
   </data>
   <data name="AboutAsin_input" xml:space="preserve">
-    <value>Sloupec číselných hodnot, které se mají zpracovat</value>
+    <value>Sloupec číselných hodnot, které se mají zpracovat.</value>
   </data>
   <data name="AboutAsin" xml:space="preserve">
     <value>Vrátí hodnotu arkus sinus (v radiánech) pro číslo.</value>
@@ -1189,20 +1222,20 @@
     
   </data>
   <data name="AboutAcos_number" xml:space="preserve">
-    <value>Číselná hodnota, která se má zpracovat</value>
+    <value>Číselná hodnota, která se má zpracovat.</value>
   </data>
   <data name="AboutAcosT" xml:space="preserve">
     <value>Vrátí hodnoty arkus kosinus (v radiánech) pro sloupec čísel.</value>
     
   </data>
   <data name="AboutAcos_input" xml:space="preserve">
-    <value>Sloupec číselných hodnot, které se mají zpracovat</value>
+    <value>Sloupec číselných hodnot, které se mají zpracovat.</value>
   </data>
   <data name="AboutAcot_number" xml:space="preserve">
-    <value>Číselná hodnota, která se má zpracovat</value>
+    <value>Číselná hodnota, která se má zpracovat.</value>
   </data>
   <data name="AboutAcot_input" xml:space="preserve">
-    <value>Sloupec číselných hodnot, které se mají zpracovat</value>
+    <value>Sloupec číselných hodnot, které se mají zpracovat.</value>
   </data>
   <data name="AboutAcot" xml:space="preserve">
     <value>Vrátí hodnotu arkus kotangens (v radiánech) pro číslo.</value>
@@ -1235,10 +1268,10 @@
     
   </data>
   <data name="AboutAtan_number" xml:space="preserve">
-    <value>Číselná hodnota, která se má zpracovat</value>
+    <value>Číselná hodnota, která se má zpracovat.</value>
   </data>
   <data name="AboutAtan_input" xml:space="preserve">
-    <value>Sloupec číselných hodnot, které se mají zpracovat</value>
+    <value>Sloupec číselných hodnot, které se mají zpracovat.</value>
   </data>
   <data name="AboutCot" xml:space="preserve">
     <value>Vrátí hodnotu kotangens pro číslo.</value>
@@ -1263,10 +1296,10 @@
     
   </data>
   <data name="AboutLn_number" xml:space="preserve">
-    <value>Číselná hodnota, která se má zpracovat</value>
+    <value>Číselná hodnota, která se má zpracovat.</value>
   </data>
   <data name="AboutLn_input" xml:space="preserve">
-    <value>Sloupec číselných hodnot, které se mají zpracovat</value>
+    <value>Sloupec číselných hodnot, které se mají zpracovat.</value>
   </data>
   <data name="AboutLog" xml:space="preserve">
     <value>Vrátí logaritmus čísla při daném základu. Výchozí základ je 10.</value>
@@ -1277,10 +1310,10 @@
     
   </data>
   <data name="AboutLog_number" xml:space="preserve">
-    <value>Číselná hodnota, která se má zpracovat</value>
+    <value>Číselná hodnota, která se má zpracovat.</value>
   </data>
   <data name="AboutLog_input" xml:space="preserve">
-    <value>Sloupec číselných hodnot, které se mají zpracovat</value>
+    <value>Sloupec číselných hodnot, které se mají zpracovat.</value>
   </data>
   <data name="LogBase" xml:space="preserve">
     <value>základ</value>
@@ -1298,10 +1331,10 @@
     
   </data>
   <data name="AboutExp_number" xml:space="preserve">
-    <value>Číselná hodnota, která se má zpracovat</value>
+    <value>Číselná hodnota, která se má zpracovat.</value>
   </data>
   <data name="AboutExp_input" xml:space="preserve">
-    <value>Sloupec číselných hodnot, které se mají zpracovat</value>
+    <value>Sloupec číselných hodnot, které se mají zpracovat.</value>
   </data>
   <data name="AboutPi" xml:space="preserve">
     <value>Vrátí hodnotu pí.</value>
@@ -1360,10 +1393,10 @@
     
   </data>
   <data name="AboutSqrt_number" xml:space="preserve">
-    <value>Číselná hodnota, která se má zpracovat</value>
+    <value>Číselná hodnota, která se má zpracovat.</value>
   </data>
   <data name="AboutSqrt_input" xml:space="preserve">
-    <value>Sloupec číselných hodnot, které se mají zpracovat</value>
+    <value>Sloupec číselných hodnot, které se mají zpracovat.</value>
   </data>
   <data name="MathFuncArg1" xml:space="preserve">
     <value>číslo</value>
@@ -1428,7 +1461,7 @@
     
   </data>
   <data name="AboutIsBlank_expression" xml:space="preserve">
-    <value>Výraz, který se má testovat</value>
+    <value>Výraz, který se má testovat.</value>
   </data>
   <data name="AboutIsBlankOrError" xml:space="preserve">
     <value>Zkontroluje, jestli je výsledek výrazu prázdný nebo chyba, a vrátí hodnotu true, nebo false.</value>
@@ -2615,7 +2648,7 @@
     
   </data>
   <data name="AboutIsToday_date" xml:space="preserve">
-    <value>Hodnota kalendářního data, která se má testovat</value>
+    <value>Hodnota kalendářního data, která se má testovat.</value>
   </data>
   <data name="IsTodayFuncArg1" xml:space="preserve">
     <value>datum</value>
@@ -3956,7 +3989,7 @@
     
   </data>
   <data name="ErrorResource_ErrBadToken_LongMessage" xml:space="preserve">
-    <value>Například znak \ se neočekává za číslicí, třeba takto: 32\. Očekávalo by se, že se použije mezera (32 ), což by znamenalo prostě číslo 32, nebo by se očekávala jiná číslice (třeba 323).</value>
+    <value>Například znak \ se neočekává za číslicí, třeba takto: 32\. Očekávalo by se, že se použije mezera (32), což by znamenalo prostě číslo 32, nebo by se očekávala jiná číslice (třeba 323).</value>
   </data>
   <data name="ErrorResource_ErrBadToken_HowToFix_1" xml:space="preserve">
     <value>Odeberte nebo nahraďte neočekávané znaky.</value>
@@ -4551,6 +4584,10 @@
   </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula '{0}' již existuje.</value>
+  </data>
+  <data name="ErrorResource_NameConflict" xml:space="preserve">
+    <value>Nelze vytvořit {0} s názvem '{1}', protože tento název se již používá pro {2}.</value>
+    
   </data>
   <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
     <value>První argument funkce {0} by měl být platný název proměnné a nemůže být v konfliktu s existujícím názvem ovládacího prvku, obrazovky, kolekce nebo zdroje dat. Našel se typ {1}.</value>

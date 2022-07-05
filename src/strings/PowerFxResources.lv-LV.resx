@@ -497,6 +497,39 @@
   <data name="AboutBoolean_text" xml:space="preserve">
     <value>Teksts, kas jāpārvērš par Būla vērtību.</value>
   </data>
+  <data name="AboutBooleanT" xml:space="preserve">
+    <value>Converts a column of text values to a column of boolean values.</value>
+    
+  </data>
+  <data name="BooleanTArg1" xml:space="preserve">
+    <value>input</value>
+    
+  </data>
+  <data name="AboutBooleanT_input" xml:space="preserve">
+    <value>A column of text values to process.</value>
+  </data>
+  <data name="AboutBooleanN" xml:space="preserve">
+    <value>Converts a 'number' to a boolean value.</value>
+    
+  </data>
+  <data name="BooleanNArg1" xml:space="preserve">
+    <value>number</value>
+    
+  </data>
+  <data name="AboutBooleanN_number" xml:space="preserve">
+    <value>The number value to convert to a boolean value.</value>
+  </data>
+  <data name="AboutBooleanNT" xml:space="preserve">
+    <value>Converts a column of numeric values to a column of boolean values.</value>
+    
+  </data>
+  <data name="BooleanNTArg1" xml:space="preserve">
+    <value>input</value>
+    
+  </data>
+  <data name="AboutBooleanNT_input" xml:space="preserve">
+    <value>A column of number values to process.</value>
+  </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Atgriež pirmo argumentu, kurš nav tukšs.</value>
     
@@ -959,7 +992,7 @@
     <value>Apstrādājamā skaitliskā vērtība.</value>
   </data>
   <data name="AboutInt_input" xml:space="preserve">
-    <value>Apstrādājamo skaitlisko vērtību kolonna.</value>
+    <value>Apstrādājamā skaitlisko vērtību kolonna.</value>
   </data>
   <data name="AboutTrunc" xml:space="preserve">
     <value>Saīsina “skaitli”, noapaļojot līdz nullei.</value>
@@ -3977,7 +4010,7 @@
     <value>Noņemt vai aizstāt neparedzēto rakstzīmi.</value>
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_Link_1" xml:space="preserve">
-    <value>Raksts: Formula reference for Power Apps (Formulas atsauce pakalpojumam Power Apps)</value>
+    <value>Raksts: Formula reference for Power Apps (Formulas atsauce pakalpojumam Power Apps)</value>
     
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_ShortMessage" xml:space="preserve">
@@ -4018,7 +4051,7 @@
     <value>Visbiežāk šī kļūda rodas tad, ja formulā ir iekļauta atsauce uz kaut ko, kas vairs nepastāv (piemēram, izdzēstu vadīklu).</value>
   </data>
   <data name="ErrorResource_ErrInvalidName_HowToFix_1" xml:space="preserve">
-    <value>Noņemiet vai labojiet atsauci uz nederīgo nosaukumu.</value>
+    <value>Noņemiet atsauci vai labojiet tās nosaukumu uz nederīgu.</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidName_Link_1" xml:space="preserve">
@@ -4037,7 +4070,7 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidIdentifier_Link_1" xml:space="preserve">
-    <value>Raksts: Formula reference for Power Apps (Formulas atsauce pakalpojumam Power Apps)</value>
+    <value>Raksts: Formula reference for Power Apps (Formulas atsauce pakalpojumam Power Apps)</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_ShortMessage" xml:space="preserve">
@@ -4359,7 +4392,7 @@
     <value>Datu avots var nespēt apstrādāt formulu un var atgriezt nepilnīgu datu kopu. Ja datu kopa ir nepilnīga, programma var atgriezt nepareizus rezultātus vai darboties nepareizi.</value>
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_HowToFix_1" xml:space="preserve">
-    <value>Ja datu kopā ir pārsniegts 500 ierakstu ierobežojums, bet tajā ir mazāk par 2000 ierakstiem, mēģiniet atiestatīt ierobežojumu.</value>
+    <value>Ja datu kopā ir pārsniegts 500 ierakstu ierobežojums, bet tajā ir mazāk par 2000 ierakstiem, mēģiniet atiestatīt ierobežojumu.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_HowToFix_2" xml:space="preserve">
@@ -4386,7 +4419,7 @@
     <value>Datu avots var nespēt apstrādāt formulu un var atgriezt nepilnīgu datu kopu. Ja datu kopa ir nepilnīga, programma var atgriezt nepareizus rezultātus vai darboties nepareizi.</value>
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_HowToFix_1" xml:space="preserve">
-    <value>Ja datu kopā ir pārsniegts 500 ierakstu ierobežojums, bet tajā ir mazāk par 2000 ierakstiem, mēģiniet atiestatīt ierobežojumu.</value>
+    <value>Ja datu kopā ir pārsniegts 500 ierakstu ierobežojums, bet tajā ir mazāk par 2000 ierakstiem, mēģiniet atiestatīt ierobežojumu.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_HowToFix_2" xml:space="preserve">
@@ -4417,7 +4450,7 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_2" xml:space="preserve">
-    <value>Ja datu kopā ir pārsniegts 500 ierakstu ierobežojums, bet tajā ir mazāk par 2000 ierakstiem, mēģiniet atiestatīt ierobežojumu.</value>
+    <value>Ja datu kopā ir pārsniegts 500 ierakstu ierobežojums, bet tajā ir mazāk par 2000 ierakstiem, mēģiniet atiestatīt ierobežojumu.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_3" xml:space="preserve">
@@ -4478,7 +4511,7 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_HowToFix_1" xml:space="preserve">
-    <value>Ja datu kopā ir pārsniegts 500 ierakstu ierobežojums, bet tajā ir mazāk par 2000 ierakstiem, mēģiniet atiestatīt ierobežojumu.</value>
+    <value>Ja datu kopā ir pārsniegts 500 ierakstu ierobežojums, bet tajā ir mazāk par 2000 ierakstiem, mēģiniet atiestatīt ierobežojumu.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_HowToFix_2" xml:space="preserve">
@@ -4551,6 +4584,10 @@
   </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>Formula ar nosaukumu “{0}” jau pastāv.</value>
+  </data>
+  <data name="ErrorResource_NameConflict" xml:space="preserve">
+    <value>Nevar izveidot {0} ar nosaukumu “{1}”, jo šis nosaukums jau tiek izmantots šim: {2}.</value>
+    
   </data>
   <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
     <value>Funkcijas {0} pirmajam argumentam jābūt derīgam mainīgā nosaukumam, kas nedrīkst konfliktēt ne ar vienu esošu vadīklas, ekrāna, kolekcijas vai datu avota nosaukumu. Atrastais tips: {1}.</value>

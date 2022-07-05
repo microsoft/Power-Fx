@@ -497,6 +497,39 @@
   <data name="AboutBoolean_text" xml:space="preserve">
     <value>Textová hodnota, ktorá sa má skonvertovať na booleovskú hodnotu.</value>
   </data>
+  <data name="AboutBooleanT" xml:space="preserve">
+    <value>Konvertuje stĺpec textových hodnôt na stĺpec booleovských hodnôt.</value>
+    
+  </data>
+  <data name="BooleanTArg1" xml:space="preserve">
+    <value>vstup</value>
+    
+  </data>
+  <data name="AboutBooleanT_input" xml:space="preserve">
+    <value>Stĺpec textových hodnôt na spracovanie.</value>
+  </data>
+  <data name="AboutBooleanN" xml:space="preserve">
+    <value>Konvertuje číslo na booleovskú hodnotu.</value>
+    
+  </data>
+  <data name="BooleanNArg1" xml:space="preserve">
+    <value>číslo</value>
+    
+  </data>
+  <data name="AboutBooleanN_number" xml:space="preserve">
+    <value>Číselná hodnota, ktorá sa má konvertovať na booleovskú hodnotu.</value>
+  </data>
+  <data name="AboutBooleanNT" xml:space="preserve">
+    <value>Konvertuje stĺpec číselných hodnôt na stĺpec booleovských hodnôt.</value>
+    
+  </data>
+  <data name="BooleanNTArg1" xml:space="preserve">
+    <value>vstup</value>
+    
+  </data>
+  <data name="AboutBooleanNT_input" xml:space="preserve">
+    <value>Stĺpec číselných hodnôt na spracovanie.</value>
+  </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Vráti prvý argument, ktorý nie je prázdny</value>
     
@@ -1140,7 +1173,7 @@
     <value>Numerická hodnota na spracovanie.</value>
   </data>
   <data name="AboutAbs_input" xml:space="preserve">
-    <value>Stĺpec numerických hodnôt na spracovanie.</value>
+    <value>Stĺpec numerických hodnôt určených na spracovanie.</value>
   </data>
   <data name="AboutSin_number" xml:space="preserve">
     <value>Číselná hodnota (v radiánoch) na spracovanie.</value>
@@ -1160,7 +1193,7 @@
     <value>Numerická hodnota na spracovanie.</value>
   </data>
   <data name="AboutAsin_input" xml:space="preserve">
-    <value>Stĺpec numerických hodnôt na spracovanie.</value>
+    <value>Stĺpec numerických hodnôt určených na spracovanie.</value>
   </data>
   <data name="AboutAsin" xml:space="preserve">
     <value>Vráti hodnotu arkus sínus (v radiánoch) čísla.</value>
@@ -1196,13 +1229,13 @@
     
   </data>
   <data name="AboutAcos_input" xml:space="preserve">
-    <value>Stĺpec numerických hodnôt na spracovanie.</value>
+    <value>Stĺpec numerických hodnôt určených na spracovanie.</value>
   </data>
   <data name="AboutAcot_number" xml:space="preserve">
     <value>Numerická hodnota na spracovanie.</value>
   </data>
   <data name="AboutAcot_input" xml:space="preserve">
-    <value>Stĺpec numerických hodnôt na spracovanie.</value>
+    <value>Stĺpec numerických hodnôt určených na spracovanie.</value>
   </data>
   <data name="AboutAcot" xml:space="preserve">
     <value>Vráti hodnotu arkus kotangens (v radiánoch) čísla.</value>
@@ -1238,7 +1271,7 @@
     <value>Numerická hodnota na spracovanie.</value>
   </data>
   <data name="AboutAtan_input" xml:space="preserve">
-    <value>Stĺpec numerických hodnôt na spracovanie.</value>
+    <value>Stĺpec numerických hodnôt určených na spracovanie.</value>
   </data>
   <data name="AboutCot" xml:space="preserve">
     <value>Vráti hodnotu kotangens čísla.</value>
@@ -1266,7 +1299,7 @@
     <value>Numerická hodnota na spracovanie.</value>
   </data>
   <data name="AboutLn_input" xml:space="preserve">
-    <value>Stĺpec numerických hodnôt na spracovanie.</value>
+    <value>Stĺpec numerických hodnôt určených na spracovanie.</value>
   </data>
   <data name="AboutLog" xml:space="preserve">
     <value>Vráti logaritmus čísla v prípade zadaného základu. Predvolený základ je 10.</value>
@@ -1280,7 +1313,7 @@
     <value>Numerická hodnota na spracovanie.</value>
   </data>
   <data name="AboutLog_input" xml:space="preserve">
-    <value>Stĺpec numerických hodnôt na spracovanie.</value>
+    <value>Stĺpec numerických hodnôt určených na spracovanie.</value>
   </data>
   <data name="LogBase" xml:space="preserve">
     <value>základ</value>
@@ -1301,7 +1334,7 @@
     <value>Numerická hodnota na spracovanie.</value>
   </data>
   <data name="AboutExp_input" xml:space="preserve">
-    <value>Stĺpec numerických hodnôt na spracovanie.</value>
+    <value>Stĺpec numerických hodnôt určených na spracovanie.</value>
   </data>
   <data name="AboutPi" xml:space="preserve">
     <value>Vráti hodnotu pí.</value>
@@ -1363,7 +1396,7 @@
     <value>Numerická hodnota na spracovanie.</value>
   </data>
   <data name="AboutSqrt_input" xml:space="preserve">
-    <value>Stĺpec numerických hodnôt na spracovanie.</value>
+    <value>Stĺpec numerických hodnôt určených na spracovanie.</value>
   </data>
   <data name="MathFuncArg1" xml:space="preserve">
     <value>číslo</value>
@@ -2615,7 +2648,7 @@
     
   </data>
   <data name="AboutIsToday_date" xml:space="preserve">
-    <value>Dátumová hodnota na testovanie.</value>
+    <value>Hodnota dátumu, ktorá sa má otestovať.</value>
   </data>
   <data name="IsTodayFuncArg1" xml:space="preserve">
     <value>dátum</value>
@@ -4551,6 +4584,10 @@
   </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula {0} už existuje.</value>
+  </data>
+  <data name="ErrorResource_NameConflict" xml:space="preserve">
+    <value>Nemožno vytvoriť entitu {0} s názvom {1}, pretože tento názov sa už používa pre {2}.</value>
+    
   </data>
   <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
     <value>Prvý argument pre {0} musí byť platný názov premennej a nemôže byť v konflikte so žiadnym existujúcim názvom ovládacieho prvku, obrazovky, kolekcie alebo zdroja údajov. Nájdený typ: {1}</value>
