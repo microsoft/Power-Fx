@@ -14,6 +14,7 @@ namespace Microsoft.PowerFx.Interpreter
 
         // We can set this up to read from powerfx config, but it isn't nessecary yet.
         private readonly int _maxCallDepth;
+
         private readonly Mutex _mutex = new Mutex();
 
         internal EvalContext(int maxCallDepth = 100)
@@ -28,24 +29,18 @@ namespace Microsoft.PowerFx.Interpreter
         /// <returns>False when you go over the recursive depth limit, true normally.</returns>
         public bool IncrementCallDepth()
         {
-            _mutex.WaitOne();
-            _currentCallDepth++;
+            Interlocked.Increment(ref _currentCallDepth);
             if (_currentCallDepth >= _maxCallDepth)
             {
-                _mutex.ReleaseMutex();
                 return false;
             }
-
-            _mutex.ReleaseMutex();
             
             return true;
         }
 
         public void DecrementCallDepth()
         {
-            _mutex.WaitOne();
-            _currentCallDepth--;
-            _mutex.ReleaseMutex();
+            Interlocked.Decrement(ref _currentCallDepth);
         }
     }
 }

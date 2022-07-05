@@ -36,7 +36,7 @@ namespace Microsoft.PowerFx
 
         public CultureInfo CultureInfo { get; }
 
-        private PowerFxConfig(CultureInfo cultureInfo, int maxCallDepth, EnumStoreBuilder enumStoreBuilder) 
+        private PowerFxConfig(CultureInfo cultureInfo, EnumStoreBuilder enumStoreBuilder) 
         {
             CultureInfo = cultureInfo ?? CultureInfo.CurrentCulture;
             _isLocked = false;
@@ -48,10 +48,9 @@ namespace Microsoft.PowerFx
         /// <summary>
         /// Initializes a new instance of the <see cref="PowerFxConfig"/> class.        
         /// </summary>
-        /// <param name="cultureInfo">Culture to use.</param>
-        /// <param name="maxCallDepth"></param>        
-        public PowerFxConfig(CultureInfo cultureInfo = null, int maxCallDepth = 100)
-            : this(cultureInfo, maxCallDepth, new EnumStoreBuilder().WithRequiredEnums(BuiltinFunctionsCore.BuiltinFunctionsLibrary)) 
+        /// <param name="cultureInfo">Culture to use.</param>   
+        public PowerFxConfig(CultureInfo cultureInfo = null)
+            : this(cultureInfo, new EnumStoreBuilder().WithRequiredEnums(BuiltinFunctionsCore.BuiltinFunctionsLibrary)) 
         {
         }
 
@@ -80,14 +79,14 @@ namespace Microsoft.PowerFx
         /// <summary>
         /// Stopgap until Enum Store is refactored. Do not rely on, this will be removed. 
         /// </summary>
-        internal static PowerFxConfig BuildWithEnumStore(CultureInfo cultureInfo, EnumStoreBuilder enumStoreBuilder, int maxCallDepth = 100)
+        internal static PowerFxConfig BuildWithEnumStore(CultureInfo cultureInfo, EnumStoreBuilder enumStoreBuilder)
         {
-            return new PowerFxConfig(cultureInfo, maxCallDepth, enumStoreBuilder);
+            return new PowerFxConfig(cultureInfo, enumStoreBuilder);
         }
 
-        internal static PowerFxConfig BuildWithEnumStore(CultureInfo cultureInfo, EnumStoreBuilder enumStoreBuilder, IEnumerable<TexlFunction> coreFunctions, int maxCallDepth = 100)
+        internal static PowerFxConfig BuildWithEnumStore(CultureInfo cultureInfo, EnumStoreBuilder enumStoreBuilder, IEnumerable<TexlFunction> coreFunctions)
         {
-            var config = new PowerFxConfig(cultureInfo, maxCallDepth, enumStoreBuilder);
+            var config = new PowerFxConfig(cultureInfo, enumStoreBuilder);
             config.SetCoreFunctions(coreFunctions);
             return config;
         }
@@ -105,7 +104,7 @@ namespace Microsoft.PowerFx
         /// Gets the max number of recursive function calls allowed.
         /// </summary>
         /// <returns></returns>
-        public int GetMaxCallDepth()
+        internal int GetMaxCallDepth()
         {
             return _maxCallDepth;
         }

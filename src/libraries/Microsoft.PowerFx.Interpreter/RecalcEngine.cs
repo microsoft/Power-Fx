@@ -14,6 +14,7 @@ using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Interpreter;
 using Microsoft.PowerFx.Types;
+using static Microsoft.PowerFx.Interpreter.UDFHelper;
 
 namespace Microsoft.PowerFx
 {
@@ -25,7 +26,6 @@ namespace Microsoft.PowerFx
         internal Dictionary<string, RecalcFormulaInfo> Formulas { get; } = new Dictionary<string, RecalcFormulaInfo>();
 
         internal Dictionary<string, TexlFunction> _customFuncs = new Dictionary<string, TexlFunction>();
-        private readonly HashSet<UDFTexlFunction> _funcsToBind = new HashSet<UDFTexlFunction>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RecalcEngine"/> class.
@@ -94,23 +94,6 @@ namespace Microsoft.PowerFx
             return new ParsedExpression(irnode, ruleScopeSymbol, new Interpreter.EvalContext(maxCallDepth));
         }
 
-        // would also be a good generic helper 
-        private static NamedValue[] Zip(NamedFormulaType[] parameters, FormulaValue[] args)
-        {
-            if (parameters.Length != args.Length)
-            {
-                throw new ArgumentException();
-            }
-
-            var result = new NamedValue[args.Length];
-            for (var i = 0; i < args.Length; i++)
-            {
-                result[i] = new NamedValue(parameters[i].Name, args[i]);
-            }
-
-            return result;
-        }
-
         // This handles lookups in the global scope. 
         FormulaValue IScope.Resolve(string name)
         {
@@ -168,28 +151,20 @@ namespace Microsoft.PowerFx
         /// <returns>The formula's result.</returns>
         public FormulaValue Eval(string expressionText, RecordValue parameters = null, ParserOptions options = null)
         {
-            try
-            {
-                return EvalAsync(expressionText, CancellationToken.None, parameters, options).Result;
-            }
-            catch (RuntimeMaxCallDepthException)
-            {
-                return CommonErrors.MaxCallDepth(new IRContext(new Syntax.Span(0, expressionText.Length - 1), FormulaType.BindingError));
-            }
+            return EvalAsync(expressionText, CancellationToken.None, parameters, options).Result;
         }
 
         public async Task<FormulaValue> EvalAsync(string expressionText, CancellationToken cancel, RecordValue parameters = null, ParserOptions options = null)
         {
+            if (parameters == null)
+            {
+                parameters = RecordValue.Empty();
+            }
+
+            var check = Check(expressionText, (RecordType)parameters.IRContext.ResultType, options);
+            check.ThrowOnErrors();
             try
             {
-                if (parameters == null)
-                {
-                    parameters = RecordValue.Empty();
-                }
-
-                var check = Check(expressionText, (RecordType)parameters.IRContext.ResultType, options);
-                check.ThrowOnErrors();
-
                 var newValue = await check.Expression.EvalAsync(parameters, cancel);
                 return newValue;
             }
@@ -197,6 +172,87 @@ namespace Microsoft.PowerFx
             {
                 return CommonErrors.MaxCallDepth(new IRContext(new Syntax.Span(0, expressionText.Length - 1), FormulaType.BindingError));
             }
+        }
+
+        /// <summary>
+        /// For private use because we don't want anyone defining a function without binding it.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="body"></param>
+        /// <param name="returnType"></param>
+        /// <param name="parameters"></param>
+        /// <returns></returns>
+        private UDFLazyBinder DefineFunction(string name, string body, FormulaType returnType, params NamedFormulaType[] parameters)
+        {
+            // $$$ Would be a good helper function 
+            var record = new RecordType();
+            foreach (var p in parameters)
+            {
+                record = record.Add(p);
+            }
+
+            var check = new LazyCheck(this, body, record);
+
+            var func = new UDFTexlFunction(name, returnType, parameters.Select(x => x.Type).ToArray())
+            {
+                _parameterNames = parameters,
+                _check = check,
+            };
+
+            if (_customFuncs.ContainsKey(name))
+            {
+                return new UDFLazyBinder(
+                    new ExpressionError()
+                {
+                    Message = "Function name already defined",
+                    Span = null,
+                    Kind = ErrorKind.Internal, //Todo: change this out for a new kind of ErrorKind error.
+                }, name);
+            }
+
+            _customFuncs[name] = func;
+            return new UDFLazyBinder(func, name);
+        }
+
+        private void RemoveFunction(string name)
+        {
+            _customFuncs.Remove(name);
+        }
+
+        /// <summary>
+        /// Tries to define and bind all the functions here. If any function names conflict returns an expression error. 
+        /// Also returns any errors from binding failing. All functions defined here are removed if any of them contain errors.
+        /// </summary>
+        /// <param name="udfDefinitions"></param>
+        /// <returns></returns>
+        internal IEnumerable<ExpressionError> DefineFunctions(params UDFDefinition[] udfDefinitions)
+        {
+            var expressionErrors = new List<ExpressionError>();
+
+            var binders = new List<UDFLazyBinder>();
+            foreach (UDFDefinition definition in udfDefinitions)
+            {
+                binders.Add(DefineFunction(definition._name, definition._body, definition._returnType, definition._parameters));
+            }
+            
+            foreach (UDFLazyBinder lazyBinder in binders)
+            {
+                var possibleErrors = lazyBinder.Bind();
+                if (possibleErrors.Any())
+                {
+                    expressionErrors.AddRange(possibleErrors);
+                }
+            }
+
+            if (expressionErrors.Any())
+            {
+                foreach (UDFLazyBinder lazyBinder in binders)
+                {
+                    RemoveFunction(lazyBinder._name);
+                }
+            }
+
+            return expressionErrors;
         }
 
         // Invoke onUpdate() each time this formula is changed, passing in the new value. 

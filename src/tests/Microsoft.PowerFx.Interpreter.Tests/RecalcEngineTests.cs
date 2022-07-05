@@ -17,6 +17,7 @@ using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Types;
 using Xunit;
 using Xunit.Sdk;
+using static Microsoft.PowerFx.Interpreter.UDFHelper;
 
 namespace Microsoft.PowerFx.Tests
 {
@@ -247,20 +248,15 @@ namespace Microsoft.PowerFx.Tests
             var config = new PowerFxConfig(null);
             var recalcEngine = new RecalcEngine(config);
 
-            var body = @"
-x * y
-";
-            recalcEngine.DefineFunction(
+            IEnumerable<ExpressionError> enumerable = recalcEngine.DefineFunctions(
+            new UDFDefinition(
                 "foo",
-                body,
-                FormulaType.Number,
+                "x * y", 
+                FormulaType.Number, 
                 new NamedFormulaType("x", FormulaType.Number),
-                new NamedFormulaType("y", FormulaType.Number));
-
-            recalcEngine.BindAllUDFs();
-            var result = recalcEngine.Eval("foo(3,4) + 5");
-
-            Assert.Equal(17.0, result.ToObject());
+                new NamedFormulaType("y", FormulaType.Number)));
+            Assert.False(enumerable.Any());
+            Assert.Equal(17.0, recalcEngine.Eval("foo(3,4) + 5").ToObject());
         }
 
         [Fact]
@@ -269,15 +265,15 @@ x * y
             var config = new PowerFxConfig(null);
             var recalcEngine = new RecalcEngine(config);
             var body = @"If(x=0,foo(1),If(x=1,foo(2),If(x=2,2)))";
-            recalcEngine.DefineFunction(
-                "foo",
-                body,
-                FormulaType.Number,
-                new NamedFormulaType("x", FormulaType.Number));
-
-            recalcEngine.BindAllUDFs();
+            IEnumerable<ExpressionError> enumerable = recalcEngine.DefineFunctions(
+                new UDFDefinition(
+                    "foo",
+                    body,
+                    FormulaType.Number,
+                    new NamedFormulaType("x", FormulaType.Number)));
             var result = recalcEngine.Eval("foo(0)");
             Assert.Equal(2.0, result.ToObject());
+            Assert.False(enumerable.Any());
         }
 
         [Fact]
@@ -285,13 +281,11 @@ x * y
         {
             var config = new PowerFxConfig(null);
             var recalcEngine = new RecalcEngine(config);
-            var body = @"foo()";
-            recalcEngine.DefineFunction(
-                "foo",
-                body, 
-                FormulaType.Blank);
-
-            recalcEngine.BindAllUDFs();
+            Assert.False(recalcEngine.DefineFunctions(
+                new UDFDefinition(
+                    "foo",
+                    "foo()",
+                    FormulaType.Blank)).Any());
             var result = recalcEngine.Eval("foo()");
             Assert.IsType<ErrorValue>(result);
         }
@@ -302,12 +296,12 @@ x * y
             var config = new PowerFxConfig(null);
             var recalcEngine = new RecalcEngine(config);
             var body = @"If(Not(x = 1), If(Mod(x, 2)=0, hailstone(x/2), hailstone(3*x+1)), x)";
-            recalcEngine.DefineFunction(
-                "hailstone",
-                body,
-                FormulaType.Number,
-                new NamedFormulaType("x", FormulaType.Number));
-            recalcEngine.BindAllUDFs();
+            var funcName = "hailstone";
+            var returnType = FormulaType.Number;
+            var variable = new NamedFormulaType("x", FormulaType.Number);
+
+            Assert.False(recalcEngine.DefineFunctions(
+                new UDFDefinition(funcName, body, returnType, variable)).Any());
             Assert.Equal(1.0, recalcEngine.Eval("hailstone(192)").ToObject());
         }
 
@@ -319,19 +313,72 @@ x * y
             var bodyEven = @"If(number = 0, true, odd(Abs(number)-1))";
             var bodyOdd = @"If(number = 0, false, even(Abs(number)-1))";
 
-            recalcEngine.DefineFunction(
+            var udfOdd = new UDFDefinition(
                 "odd",
                 bodyOdd,
                 FormulaType.Boolean,
                 new NamedFormulaType("number", FormulaType.Number));
-            recalcEngine.DefineFunction(
+            var udfEven = new UDFDefinition(
                 "even",
                 bodyEven,
                 FormulaType.Boolean,
                 new NamedFormulaType("number", FormulaType.Number));
-            recalcEngine.BindAllUDFs();
+
+            Assert.False(recalcEngine.DefineFunctions(udfOdd, udfEven).Any());
+
             Assert.Equal(true, recalcEngine.Eval("odd(17)").ToObject());
             Assert.Equal(false, recalcEngine.Eval("even(17)").ToObject());
+        }
+
+        [Fact]
+        public void RedefinitionError()
+        {
+            var config = new PowerFxConfig(null);
+            var recalcEngine = new RecalcEngine(config);
+            Assert.True(recalcEngine.DefineFunctions(
+                new UDFDefinition("foo", "foo()", FormulaType.Blank),
+                new UDFDefinition("foo", "x+1", FormulaType.Number)).Any());
+            try
+            {
+                recalcEngine.Eval("foo()");
+                Assert.True(false);
+            }
+            catch (System.AggregateException)
+            {
+            }
+        }
+
+        [Fact]
+        public void UDFBodySyntaxErrorTest()
+        {
+            var config = new PowerFxConfig(null);
+            var recalcEngine = new RecalcEngine(config);
+            Assert.True(recalcEngine.DefineFunctions(new UDFDefinition("foo", "x[", FormulaType.Blank)).Any());
+        }
+
+        [Fact]
+        public void UDFIncorrectParametersTest()
+        {
+            var config = new PowerFxConfig(null);
+            var recalcEngine = new RecalcEngine(config);
+            Assert.False(recalcEngine.DefineFunctions(new UDFDefinition("foo", "x+1", FormulaType.Number, new NamedFormulaType("x", FormulaType.Number))).Any());
+            try
+            {
+                var result = recalcEngine.Eval("foo(false)");
+                Assert.True(false);
+            }
+            catch (AggregateException)
+            {
+            }
+
+            try
+            {
+                var result = recalcEngine.Eval("foo(1)");
+            }
+            catch (AggregateException)
+            {
+                Assert.True(false);
+            }
         }
 
         [Fact]
