@@ -17,8 +17,8 @@ namespace Microsoft.PowerFx.Core.Binding
         {
             private readonly TexlBinding _txb;
 
-            public BinderNodesMetadataArgTypeVisitor(TexlBinding binding, INameResolver resolver, DType topScope, bool useThisRecordForRuleScope, Feature feature)
-                : base(binding, resolver, topScope, useThisRecordForRuleScope, feature)
+            public BinderNodesMetadataArgTypeVisitor(TexlBinding binding, INameResolver resolver, DType topScope, bool useThisRecordForRuleScope, Features features)
+                : base(binding, resolver, topScope, useThisRecordForRuleScope, features)
             {
                 Contracts.AssertValue(binding);
 

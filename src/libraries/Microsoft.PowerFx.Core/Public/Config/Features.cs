@@ -6,7 +6,7 @@ using System;
 namespace Microsoft.PowerFx
 {
     [Flags]
-    public enum Feature : int
+    public enum Features : int
     {
         None = 0x0,
 

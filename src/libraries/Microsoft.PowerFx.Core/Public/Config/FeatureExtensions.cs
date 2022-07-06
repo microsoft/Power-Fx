@@ -5,6 +5,6 @@ namespace Microsoft.PowerFx
 {
     internal static class FeatureExtensions
     {
-        public static bool HasTableSyntaxDoesntWrapRecords(this Feature feature) => feature.HasFlag(Feature.TableSyntaxDoesntWrapRecords);
+        internal static bool HasTableSyntaxDoesntWrapRecords(this Features feature) => feature.HasFlag(Features.TableSyntaxDoesntWrapRecords);
     }
 }

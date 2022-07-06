@@ -82,7 +82,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 RecalcEngine engine;
                 RecordValue parameters;
                 var iSetup = InternalSetup.Parse(setupHandlerName);
-                var config = new PowerFxConfig(feature: iSetup.Feature);
+                var config = new PowerFxConfig(features: iSetup.Features);
 
                 if (string.Equals(iSetup.HandlerName, "AsyncTestSetup", StringComparison.OrdinalIgnoreCase))
                 {

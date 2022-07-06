@@ -34,12 +34,12 @@ namespace Microsoft.PowerFx
 
         public CultureInfo CultureInfo { get; }
 
-        public Feature Feature { get; }
+        public Features Features { get; }
 
-        private PowerFxConfig(CultureInfo cultureInfo, EnumStoreBuilder enumStoreBuilder, Feature feature = Feature.None) 
+        private PowerFxConfig(CultureInfo cultureInfo, EnumStoreBuilder enumStoreBuilder, Features features = Features.None) 
         {
             CultureInfo = cultureInfo ?? CultureInfo.CurrentCulture;
-            Feature = feature;
+            Features = features;
             _isLocked = false;
             _environmentSymbols = new Dictionary<DName, IExternalEntity>();
             _environmentSymbolDisplayNameProvider = new SingleSourceDisplayNameProvider();
@@ -50,9 +50,9 @@ namespace Microsoft.PowerFx
         /// Initializes a new instance of the <see cref="PowerFxConfig"/> class.        
         /// </summary>
         /// <param name="cultureInfo">Culture to use.</param>      
-        /// <param name="feature">Features to use.</param>
-        public PowerFxConfig(CultureInfo cultureInfo = null, Feature feature = Feature.None)
-            : this(cultureInfo, new EnumStoreBuilder().WithRequiredEnums(BuiltinFunctionsCore.BuiltinFunctionsLibrary), feature) 
+        /// <param name="features">Features to use.</param>
+        public PowerFxConfig(CultureInfo cultureInfo = null, Features features = Features.None)
+            : this(cultureInfo, new EnumStoreBuilder().WithRequiredEnums(BuiltinFunctionsCore.BuiltinFunctionsLibrary), features) 
         {
         }
 

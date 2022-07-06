@@ -13,7 +13,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
         internal TexlParser.Flags Flags { get; set; }
 
-        internal Feature Feature { get; set; }
+        internal Features Features { get; set; }
 
         internal static InternalSetup Parse(string setupHandlerName)
         {
@@ -33,9 +33,9 @@ namespace Microsoft.PowerFx.Core.Tests
                     iSetup.Flags |= flag;
                     parts.Remove(part);
                 }
-                else if (Enum.TryParse<Feature>(part, out var f))
+                else if (Enum.TryParse<Features>(part, out var f))
                 {
-                    iSetup.Feature |= f;
+                    iSetup.Features |= f;
                     parts.Remove(part); 
                 }                
             }

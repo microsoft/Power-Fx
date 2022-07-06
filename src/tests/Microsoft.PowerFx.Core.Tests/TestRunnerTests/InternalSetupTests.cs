@@ -106,7 +106,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
             Assert.NotNull(iSetup);
             Assert.Null(iSetup.HandlerName);
-            Assert.Equal(Feature.TableSyntaxDoesntWrapRecords, iSetup.Feature);
+            Assert.Equal(Features.TableSyntaxDoesntWrapRecords, iSetup.Features);
         }
 
         [Fact]

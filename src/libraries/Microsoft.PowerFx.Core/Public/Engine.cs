@@ -140,7 +140,7 @@ namespace Microsoft.PowerFx
                 resolver,
                 bindingConfig,
                 ruleScope: parameterType._type,
-                feature: Config.Feature);
+                features: Config.Features);
 
             var result = new CheckResult(parse, binding);
 

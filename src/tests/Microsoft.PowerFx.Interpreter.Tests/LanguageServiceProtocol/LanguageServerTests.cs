@@ -30,9 +30,9 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
         {            
         }
 
-        private (List<string> sendToClientData, TestPowerFxScopeFactory scopeFactory, TestLanguageServer testServer) Init(Feature feature = Feature.None)
+        private (List<string> sendToClientData, TestPowerFxScopeFactory scopeFactory, TestLanguageServer testServer) Init(Features features = Features.None)
         {
-            var engine = new Engine(new PowerFxConfig(feature: feature));
+            var engine = new Engine(new PowerFxConfig(features: features));
             var sendToClientData = new List<string>();
             var scopeFactory = new TestPowerFxScopeFactory((string documentUri) => RecalcEngineScope.FromUri(engine, documentUri));
             var testServer = new TestLanguageServer(sendToClientData.Add, scopeFactory);
@@ -857,7 +857,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
         [InlineData(false, "{}", "{ type: 123 }", @"{""Type"":""Record"",""Fields"":{""type"":{""Type"":""Number""}}}")]
         public void TestPublishExpressionType_AggregateShapes(bool tableSyntaxDoesntWrapRecords, string context, string expression, string expectedTypeJson)
         {
-            (var sendToClientData, var scopeFactory, var tServer) = Init(tableSyntaxDoesntWrapRecords ? Feature.TableSyntaxDoesntWrapRecords : Feature.None);
+            (var sendToClientData, var scopeFactory, var tServer) = Init(tableSyntaxDoesntWrapRecords ? Features.TableSyntaxDoesntWrapRecords : Features.None);
 
             var documentUri = $"powerfx://app?context={context}&getExpressionType=true";
             tServer.OnDataReceived(JsonSerializer.Serialize(new
