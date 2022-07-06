@@ -3,7 +3,6 @@
 
 using System;
 using System.Text;
-using Microsoft.PowerFx.Core.ContractsUtils;
 
 namespace Microsoft.PowerFx.Core.Utils
 {
