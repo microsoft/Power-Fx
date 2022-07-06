@@ -73,25 +73,6 @@ namespace Microsoft.PowerFx
             return new BooleanValue(node.IRContext, node.LiteralValue);
         }
 
-        public override async ValueTask<FormulaValue> Visit(TableNode node, SymbolContext context)
-        {
-            var len = node.Values.Count;
-
-            var args = new FormulaValue[len];
-            for (var i = 0; i < len; i++)
-            {
-                CheckCancel();
-
-                var child = node.Values[i];
-                var arg = await child.Accept(this, context);
-                args[i] = arg;
-            }
-
-            var tableValue = new InMemoryTableValue(node.IRContext, StandardTableNodeRecords(node.IRContext, args, forceSingleColumn: false));
-
-            return tableValue;
-        }
-
         public override async ValueTask<FormulaValue> Visit(RecordNode node, SymbolContext context)
         {
             var fields = new List<NamedValue>();

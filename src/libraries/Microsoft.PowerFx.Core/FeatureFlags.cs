@@ -13,13 +13,7 @@ namespace Microsoft.PowerFx.Preview
     /// </summary>
     public static class FeatureFlags
     {
-        /// <summary>
-        /// Allows setting flags as will during tests.
-        /// </summary>
-        internal static bool _inTests = false;
-
         private static bool _stringInterpolation = false;
-        private static bool _tableSyntaxDoesntWrapRecords = false;
 
         /// <summary>
         /// Enable String Interpolation feature. 
@@ -31,19 +25,9 @@ namespace Microsoft.PowerFx.Preview
             set => _stringInterpolation = ProtectedSet(value);
         }
 
-        /// <summary>
-        /// Enable Table syntax to not add "Value:" extra layer.
-        /// Added on 1st July 2022.
-        /// </summary>
-        public static bool TableSyntaxDoesntWrapRecords
-        {
-            get => _tableSyntaxDoesntWrapRecords;
-            set => _tableSyntaxDoesntWrapRecords = ProtectedSet(value);
-        }
-
         private static bool ProtectedSet(bool @value)
         {
-            if (!value && !_inTests)
+            if (!value)
             {
                 throw new NotSupportedException("Can't change field after it's set");
             }

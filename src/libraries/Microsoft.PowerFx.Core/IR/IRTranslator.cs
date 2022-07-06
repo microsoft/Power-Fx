@@ -5,11 +5,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.PowerFx.Core.Binding;
-using Microsoft.PowerFx.Core.Binding.BindInfo;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.IR.Nodes;
 using Microsoft.PowerFx.Core.IR.Symbols;
+using Microsoft.PowerFx.Core.Public.Config;
 using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
@@ -19,7 +19,6 @@ using BinaryOpNode = Microsoft.PowerFx.Core.IR.Nodes.BinaryOpNode;
 using CallNode = Microsoft.PowerFx.Core.IR.Nodes.CallNode;
 using ErrorNode = Microsoft.PowerFx.Core.IR.Nodes.ErrorNode;
 using RecordNode = Microsoft.PowerFx.Core.IR.Nodes.RecordNode;
-using TableNode = Microsoft.PowerFx.Core.IR.Nodes.TableNode;
 using TexlBinaryOpNode = Microsoft.PowerFx.Syntax.BinaryOpNode;
 using TexlCallNode = Microsoft.PowerFx.Syntax.CallNode;
 using TexlErrorNode = Microsoft.PowerFx.Syntax.ErrorNode;
@@ -107,7 +106,7 @@ namespace Microsoft.PowerFx.Core.IR
                 var children = node.Children.Select(child => child.Accept(this, context)).ToArray();
                 var irContext = context.GetIRContext(node);
 
-                if (!Preview.FeatureFlags.TableSyntaxDoesntWrapRecords || (children.Any() && children.First() is not RecordNode))
+                if (!context.Binding.Feature.HasTableSyntaxDoesntWrapRecords() || (children.Any() && children.First() is not RecordNode))
                 {
                     // Let's add "Value:" here                    
                     children = children.Select(childNode =>

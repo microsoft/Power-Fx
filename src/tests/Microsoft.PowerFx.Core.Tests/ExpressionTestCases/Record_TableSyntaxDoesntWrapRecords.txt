@@ -1,4 +1,4 @@
-﻿// Feature TableSyntaxDoesntWrapRecords set
+﻿#SETUP: TableSyntaxDoesntWrapRecords
 
 >> First([{a: 1}]).a
 1

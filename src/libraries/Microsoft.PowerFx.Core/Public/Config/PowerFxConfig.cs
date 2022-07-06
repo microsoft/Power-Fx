@@ -8,7 +8,7 @@ using System.Linq;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Functions;
-using Microsoft.PowerFx.Core.Public;
+using Microsoft.PowerFx.Core.Public.Config;
 using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
@@ -35,9 +35,12 @@ namespace Microsoft.PowerFx
 
         public CultureInfo CultureInfo { get; }
 
-        private PowerFxConfig(CultureInfo cultureInfo, EnumStoreBuilder enumStoreBuilder) 
+        public Feature Feature { get; }
+
+        private PowerFxConfig(CultureInfo cultureInfo, EnumStoreBuilder enumStoreBuilder, Feature feature = Feature.None) 
         {
             CultureInfo = cultureInfo ?? CultureInfo.CurrentCulture;
+            Feature = feature;
             _isLocked = false;
             _environmentSymbols = new Dictionary<DName, IExternalEntity>();
             _environmentSymbolDisplayNameProvider = new SingleSourceDisplayNameProvider();
@@ -47,9 +50,10 @@ namespace Microsoft.PowerFx
         /// <summary>
         /// Initializes a new instance of the <see cref="PowerFxConfig"/> class.        
         /// </summary>
-        /// <param name="cultureInfo">Culture to use.</param>        
-        public PowerFxConfig(CultureInfo cultureInfo = null)
-            : this(cultureInfo, new EnumStoreBuilder().WithRequiredEnums(BuiltinFunctionsCore.BuiltinFunctionsLibrary)) 
+        /// <param name="cultureInfo">Culture to use.</param>      
+        /// <param name="feature">Features to use.</param>
+        public PowerFxConfig(CultureInfo cultureInfo = null, Feature feature = Feature.None)
+            : this(cultureInfo, new EnumStoreBuilder().WithRequiredEnums(BuiltinFunctionsCore.BuiltinFunctionsLibrary), feature) 
         {
         }
 

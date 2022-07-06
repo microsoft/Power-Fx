@@ -4,6 +4,7 @@
 using System;
 using System.Linq;
 using Microsoft.PowerFx.Core.Parser;
+using Microsoft.PowerFx.Core.Public.Config;
 
 namespace Microsoft.PowerFx.Core.Tests
 {
@@ -12,6 +13,8 @@ namespace Microsoft.PowerFx.Core.Tests
         internal string HandlerName { get; set; }
 
         internal TexlParser.Flags Flags { get; set; }
+
+        internal Feature Feature { get; set; }
 
         internal static InternalSetup Parse(string setupHandlerName)
         {
@@ -22,7 +25,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 return iSetup;
             }
             
-            var parts = setupHandlerName.Split(",").Select(x => x.Trim()).Where(x => !string.IsNullOrEmpty(x)).ToList();           
+            var parts = setupHandlerName.Split(",").Select(x => x.Trim()).Where(x => !string.IsNullOrEmpty(x)).ToList();
             
             foreach (var part in parts.ToArray())
             {
@@ -31,6 +34,11 @@ namespace Microsoft.PowerFx.Core.Tests
                     iSetup.Flags |= flag;
                     parts.Remove(part);
                 }
+                else if (Enum.TryParse<Feature>(part, out var f))
+                {
+                    iSetup.Feature |= f;
+                    parts.Remove(part); 
+                }                
             }
 
             if (parts.Count > 1)

@@ -100,6 +100,16 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Fact]
+        public void InternalSetup_Parse_TableSyntaxDoesntWrapRecordsFlags()
+        {
+            var iSetup = InternalSetup.Parse($"TableSyntaxDoesntWrapRecords");
+
+            Assert.NotNull(iSetup);
+            Assert.Null(iSetup.HandlerName);
+            Assert.Equal(Public.Config.Feature.TableSyntaxDoesntWrapRecords, iSetup.Feature);
+        }
+
+        [Fact]
         public void InternalSetup_Parse_TwoHandlers()
         {
             Assert.Throws<ArgumentException>(() => InternalSetup.Parse("Handler1, Handler2"));            

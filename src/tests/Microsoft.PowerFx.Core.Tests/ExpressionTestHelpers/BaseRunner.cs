@@ -98,39 +98,37 @@ namespace Microsoft.PowerFx.Core.Tests
         /// <param name="test">test case to run.</param>
         /// <returns>status from running.</returns>
         public (TestResult result, string message) RunTestCase(TestCase testCase)
-        {
-            var result = TestResult.Fail;
-            string message = null;
-
-            var t = new Thread(() =>
+        {           
+            var t = Task.Factory.StartNew(() =>
             {
-                (result, message) = RunAsync2(testCase).Result;
+                var t = RunAsync2(testCase);
+                t.ConfigureAwait(false);
+
+                return t.Result;
             });
-            t.Start();
-            bool success;
-            while (true) 
+
+            while (true)
             {
-                success = t.Join(Timeout);
-                if (!success && Debugger.IsAttached)
+                Task.WaitAny(t, Task.Delay(Timeout));
+
+                if (t.IsCompletedSuccessfully)
                 {
-                    // Aid in debugging.
-                    Debugger.Log(0, null, $"Test case {testCase} running...\r\n");
-                    
-                    // Debugger.Break();
-                    continue;
+                    return t.Result;
                 }
+                else
+                {
+                    // Timeout!!!
+                    if (Debugger.IsAttached && !t.IsCompleted)
+                    {
+                        // Aid in debugging.
+                        Debugger.Log(0, null, $"Test case {testCase} running...\r\n");
 
-                break;
-            }            
+                        // Debugger.Break();
+                        continue;
+                    }
 
-            if (success)
-            {
-                return (result, message);
-            }
-            else
-            {
-                // Timeout!!!
-                return (TestResult.Fail, $"Timeout after {Timeout}");
+                    return (TestResult.Fail, $"Timeout after {Timeout}");
+                }
             }
         }
 

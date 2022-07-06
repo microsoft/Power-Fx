@@ -1,4 +1,4 @@
-﻿// Feature TableSyntaxDoesntWrapRecords set
+﻿#SETUP: TableSyntaxDoesntWrapRecords
 
 >> Index([ { a: 10, b: "asdf"}, { a: 20, b: "second"}, { a: 30, b: "third"}], 1).b
 "asdf"

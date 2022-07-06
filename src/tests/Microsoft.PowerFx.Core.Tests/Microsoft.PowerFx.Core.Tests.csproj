@@ -65,5 +65,6 @@
 
   <ItemGroup>
     <Folder Include="ExpressionTestCases\NotYetReady\" />
+    <Folder Include="ExpressionTestCases\TableSyntaxDoesntWrapRecords\" />
   </ItemGroup>
 </Project>

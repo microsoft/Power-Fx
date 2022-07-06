@@ -3,10 +3,12 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using Microsoft.PowerFx.Core;
+using Microsoft.PowerFx.Core.Public.Config;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.LanguageServerProtocol;
@@ -16,7 +18,6 @@ using Xunit;
 
 namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
 {
-    [Collection("Interpreter")]
     public class LanguageServerTests : PowerFxTest
     {
         protected static readonly JsonSerializerOptions _jsonSerializerOptions = new JsonSerializerOptions
@@ -27,10 +28,14 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
         };
 
         protected List<string> _sendToClientData;
+        protected List<string> _sendToClientDataTableSyntaxDoesntWrapRecords;
         protected TestPowerFxScopeFactory _scopeFactory;
+        protected TestPowerFxScopeFactory _scopeFactoryTableSyntaxDoesntWrapRecords;
         protected TestLanguageServer _testServer;
+        protected TestLanguageServer _testServerTableSyntaxDoesntWrapRecords;
 
         public LanguageServerTests()
+            : base()
         {
             // Create an Engine() that has all the builtin symbols by default. 
             // Note that interpreter has fewer symbols. 
@@ -39,6 +44,12 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             _sendToClientData = new List<string>();
             _scopeFactory = new TestPowerFxScopeFactory((string documentUri) => RecalcEngineScope.FromUri(engine, documentUri));
             _testServer = new TestLanguageServer(_sendToClientData.Add, _scopeFactory);
+
+            var engineTableSyntaxDoesntWrapRecords = new Engine(new PowerFxConfig(feature: Feature.TableSyntaxDoesntWrapRecords));
+
+            _sendToClientDataTableSyntaxDoesntWrapRecords = new List<string>();
+            _scopeFactoryTableSyntaxDoesntWrapRecords = new TestPowerFxScopeFactory((string documentUri) => RecalcEngineScope.FromUri(engineTableSyntaxDoesntWrapRecords, documentUri));
+            _testServerTableSyntaxDoesntWrapRecords = new TestLanguageServer(_sendToClientDataTableSyntaxDoesntWrapRecords.Add, _scopeFactoryTableSyntaxDoesntWrapRecords);
         }
 
         // From JPC spec: https://microsoft.github.io/language-server-protocol/specifications/specification-3-14/
@@ -839,11 +850,11 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
         [InlineData(false, "{}", "{ type: 123 }", @"{""Type"":""Record"",""Fields"":{""type"":{""Type"":""Number""}}}")]
         public void TestPublishExpressionType_AggregateShapes(bool tableSyntaxDoesntWrapRecords, string context, string expression, string expectedTypeJson)
         {
-            Preview.FeatureFlags._inTests = true;
-            Preview.FeatureFlags.TableSyntaxDoesntWrapRecords = tableSyntaxDoesntWrapRecords;
+            var tServer = tableSyntaxDoesntWrapRecords ? _testServerTableSyntaxDoesntWrapRecords : _testServer;
+            var sendToClientData = tableSyntaxDoesntWrapRecords ? _sendToClientDataTableSyntaxDoesntWrapRecords : _sendToClientData;
 
             var documentUri = $"powerfx://app?context={context}&getExpressionType=true";
-            _testServer.OnDataReceived(JsonSerializer.Serialize(new
+            tServer.OnDataReceived(JsonSerializer.Serialize(new
             {
                 jsonrpc = "2.0",
                 method = "textDocument/didOpen",
@@ -859,8 +870,8 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
                 }
             }));
 
-            Assert.Equal(2, _sendToClientData.Count);
-            var response = JsonSerializer.Deserialize<JsonRpcPublishExpressionTypeNotification>(_sendToClientData[1], _jsonSerializerOptions);
+            Assert.Equal(2, sendToClientData.Count);
+            var response = JsonSerializer.Deserialize<JsonRpcPublishExpressionTypeNotification>(sendToClientData[1], _jsonSerializerOptions);
             Assert.Equal("$/publishExpressionType", response.Method);
             Assert.Equal(documentUri, response.Params.Uri);
             Assert.Equal(expectedTypeJson, JsonSerializer.Serialize(response.Params.Type, _jsonSerializerOptions));
