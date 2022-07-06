@@ -114,7 +114,7 @@ namespace Microsoft.PowerFx.Core.IR
                             new IRContext(childNode.IRContext.SourceContext, new RecordType().Add(TableValue.ValueName, childNode.IRContext.ResultType)),
                             new Dictionary<DName, IntermediateNode>
                             {
-                                { AllowedValuesMetadata.ValueColumnName, childNode }
+                                { TableValue.ValueDName, childNode }
                             }))
                         .ToArray();
 
