@@ -54,13 +54,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Remove="ExpressionTestCases\TableSyntaxDoesntWrapRecords\**" />
-    <Content Remove="ExpressionTestCases\TableSyntaxDoesntWrapRecords\**" />
-    <EmbeddedResource Remove="ExpressionTestCases\TableSyntaxDoesntWrapRecords\**" />
-    <None Remove="ExpressionTestCases\TableSyntaxDoesntWrapRecords\**" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\..\libraries\Microsoft.PowerFx.Core\Microsoft.PowerFx.Core.csproj" />
   </ItemGroup>
 
