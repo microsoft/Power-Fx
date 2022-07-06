@@ -304,7 +304,7 @@
     <Rule Id="CA1721" Action="Warning" />
     <Rule Id="CA1724" Action="None" />       <!-- REQUIRED * CA1724: Type names should not match namespaces -->
     <Rule Id="CA1725" Action="None" />       <!-- REQUIRED * CA1725: Parameter names should match base declaration -->
-    <Rule Id="CA1801" Action="Warning" />
+    <Rule Id="CA1801" Action="None" />       <!-- REQUIRED * CA1801: Review unused parameters -->
     <Rule Id="CA1802" Action="None" />       <!-- REQUIRED * CA1802: Use Literals Where Appropriate -->
     <Rule Id="CA1805" Action="None" />       <!-- REQUIRED * CA1805: Member 'xxx' is explicitly initialized to its default value -->
     <Rule Id="CA1806" Action="None" />       <!-- REQUIRED * CA1806: Do not ignore method results -->
