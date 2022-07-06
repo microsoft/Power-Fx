@@ -2,7 +2,6 @@
 // Licensed under the MIT license.
 
 using System.Linq;
-using Microsoft.PowerFx.Core.ContractsUtils;
 using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Intellisense
@@ -12,7 +11,7 @@ namespace Microsoft.PowerFx.Intellisense
         internal sealed class CommentNodeSuggestionHandler : ISuggestionHandler
         {
             public bool Run(IntellisenseData.IntellisenseData intellisenseData)
-            {                
+            {
                 Contracts.AssertValue(intellisenseData);
 
                 var cursorPos = intellisenseData.CursorPos;

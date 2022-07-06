@@ -2,7 +2,6 @@
 // Licensed under the MIT license.
 
 using System.Numerics;
-using Microsoft.PowerFx.Core.ContractsUtils;
 using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Core.Functions

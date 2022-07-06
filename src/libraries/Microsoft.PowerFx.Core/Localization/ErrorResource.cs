@@ -4,7 +4,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
-using Microsoft.PowerFx.Core.ContractsUtils;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Utils;
 

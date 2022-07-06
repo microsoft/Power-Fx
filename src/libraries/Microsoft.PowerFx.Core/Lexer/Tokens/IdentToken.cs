@@ -4,7 +4,7 @@
 using System;
 using System.Linq;
 using System.Text;
-using Microsoft.PowerFx.Core.ContractsUtils;
+using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Syntax

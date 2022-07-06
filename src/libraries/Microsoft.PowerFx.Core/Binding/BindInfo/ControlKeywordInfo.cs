@@ -2,7 +2,6 @@
 // Licensed under the MIT license.
 
 using Microsoft.PowerFx.Core.App.Controls;
-using Microsoft.PowerFx.Core.ContractsUtils;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
 

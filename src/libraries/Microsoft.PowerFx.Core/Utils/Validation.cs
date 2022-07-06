@@ -11,10 +11,17 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Xml.Linq;
-using Microsoft.PowerFx.Core.Utils;
 
-namespace Microsoft.PowerFx.Core.ContractsUtils
+namespace Microsoft.PowerFx.Core.Utils
 {
+    /// <summary>
+    /// Implement this interface to add AssertValid/CheckValid validation capabilities to your class.
+    /// </summary>
+    public interface ICheckable
+    {
+        bool IsValid { get; }
+    }
+
     internal static class Contracts
     {
         #region Check contracts for public APIs

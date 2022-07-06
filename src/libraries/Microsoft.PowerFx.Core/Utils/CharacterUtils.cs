@@ -5,7 +5,6 @@ using System;
 using System.Globalization;
 using System.Runtime.CompilerServices;
 using System.Text;
-using Microsoft.PowerFx.Core.ContractsUtils;
 using StringBuilderCache = Microsoft.PowerFx.Core.Utils.StringBuilderCache<Microsoft.PowerFx.Core.Utils.CharacterUtils>;
 
 namespace Microsoft.PowerFx.Core.Utils

@@ -4,7 +4,6 @@
 using System;
 using System.Globalization;
 using Microsoft.PowerFx.Core.Binding;
-using Microsoft.PowerFx.Core.ContractsUtils;
 using Microsoft.PowerFx.Core.Parser;
 using Microsoft.PowerFx.Core.UtilityDataStructures;
 using Microsoft.PowerFx.Core.Utils;
