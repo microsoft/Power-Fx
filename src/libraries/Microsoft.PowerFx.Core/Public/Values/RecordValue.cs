@@ -56,7 +56,7 @@ namespace Microsoft.PowerFx.Types
 
         public static RecordValue Empty()
         {
-            var type = new RecordType();
+            var type = new KnownRecordType();
             return new InMemoryRecordValue(IRContext.NotInSource(type), new Dictionary<string, FormulaValue>());
         }
 

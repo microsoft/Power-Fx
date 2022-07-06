@@ -1,19 +1,18 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System.Diagnostics.Contracts;
 using System.Linq;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Types
 {
-    public class TableType : AggregateType
+    public abstract class TableType : AggregateType
     {
         internal TableType(DType type)
             : base(type)
         {
-            Contract.Assert(type.IsTable);
+            Contracts.Assert(type.IsTable);
         }
 
         public TableType()

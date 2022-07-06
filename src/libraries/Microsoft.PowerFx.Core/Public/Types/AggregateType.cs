@@ -17,31 +17,25 @@ namespace Microsoft.PowerFx.Types
         {
         }
 
-        public FormulaType MaybeGetFieldType(string fieldName)
-        {
-            // $$$ Better lookup
-            foreach (var field in GetNames())
-            {
-                if (field.Name == fieldName)
-                {
-                    return field.Type;
-                }
-            }
-
-            return null;
-        }
-
         public FormulaType GetFieldType(string fieldName)
         {
-            return MaybeGetFieldType(fieldName) ??
+            return TryGetFieldType(fieldName, out var type) ? 
+                type :
                 throw new InvalidOperationException($"No field {fieldName}");
         }
 
-        // Enumerate fields
-        public IEnumerable<NamedFormulaType> GetNames()
+        public virtual IEnumerable<string> FieldNames => _type.GetNames(DPath.Root).Select(typedName => typedName.Name.Value);
+
+        public virtual bool TryGetFieldType(string name, out FormulaType type)
         {
-            var names = _type.GetAllNames(DPath.Root);
-            return from name in names select new NamedFormulaType(name);
+            if (!_type.TryGetType(new DName(name), out var dType))
+            {
+                type = Blank;
+                return false;
+            }
+
+            type = Build(dType);
+            return true;
         }
 
         private protected DType AddFieldToType(NamedFormulaType field)
