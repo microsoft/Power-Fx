@@ -6,10 +6,10 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AppMagic.Authoring;
 using Microsoft.OpenApi.Models;
-using Microsoft.PowerFx.Core.ContractsUtils;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Types;
+using Contracts = Microsoft.PowerFx.Core.Utils.Contracts;
 
 namespace Microsoft.PowerFx.Connectors
 {

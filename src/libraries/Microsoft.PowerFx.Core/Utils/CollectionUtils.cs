@@ -4,7 +4,6 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
-using Microsoft.PowerFx.Core.ContractsUtils;
 
 namespace Microsoft.PowerFx.Core.Utils
 {

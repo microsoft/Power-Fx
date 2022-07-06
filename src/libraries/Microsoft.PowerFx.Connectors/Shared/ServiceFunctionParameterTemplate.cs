@@ -4,8 +4,8 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using Microsoft.PowerFx.Core.ContractsUtils;
 using Microsoft.PowerFx.Core.Types;
+using Contracts = Microsoft.PowerFx.Core.Utils.Contracts;
 
 namespace Microsoft.AppMagic.Authoring
 {
