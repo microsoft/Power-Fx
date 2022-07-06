@@ -497,6 +497,39 @@
   <data name="AboutBoolean_text" xml:space="preserve">
     <value>Tekstiväärtus loogiliseks väärtuseks teisendamise jaoks.</value>
   </data>
+  <data name="AboutBooleanT" xml:space="preserve">
+    <value>Converts a column of text values to a column of boolean values.</value>
+    
+  </data>
+  <data name="BooleanTArg1" xml:space="preserve">
+    <value>input</value>
+    
+  </data>
+  <data name="AboutBooleanT_input" xml:space="preserve">
+    <value>A column of text values to process.</value>
+  </data>
+  <data name="AboutBooleanN" xml:space="preserve">
+    <value>Converts a 'number' to a boolean value.</value>
+    
+  </data>
+  <data name="BooleanNArg1" xml:space="preserve">
+    <value>number</value>
+    
+  </data>
+  <data name="AboutBooleanN_number" xml:space="preserve">
+    <value>The number value to convert to a boolean value.</value>
+  </data>
+  <data name="AboutBooleanNT" xml:space="preserve">
+    <value>Converts a column of numeric values to a column of boolean values.</value>
+    
+  </data>
+  <data name="BooleanNTArg1" xml:space="preserve">
+    <value>input</value>
+    
+  </data>
+  <data name="AboutBooleanNT_input" xml:space="preserve">
+    <value>A column of number values to process.</value>
+  </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Tagastab esimese mittetühja argumendi</value>
     
@@ -4359,7 +4392,7 @@
     <value>Võib juhtuda, et andmeallikas ei saa valemit töödelda ja võib tagastada pooliku andmehulga. Kui andmehulk on poolik, võib teie rakendus tagastada valed tulemid või käituda valesti.</value>
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_HowToFix_1" xml:space="preserve">
-    <value>Kui teie andmehulk ületab 500 kirje piirmäära, kuid sisaldab vähem kui 2000 kirjet, proovige piirmäära lähtestada.</value>
+    <value>Kui teie andmekogum ületab 500 kirje piirangu, kuid sisaldab alla 2000 kirje, proovige piirang lähtestada.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_HowToFix_2" xml:space="preserve">
@@ -4371,11 +4404,11 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_Link_1" xml:space="preserve">
-    <value>Artikkel: lõuendirakenduse delegeerimise mõistmine</value>
+    <value>Artikkel: lõuendirakenduse delegeerimise selgitus</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_Link_2" xml:space="preserve">
-    <value>Ajaveeb: delegeerimise andmerea piirangud</value>
+    <value>Ajaveeb: delegeerimise andmereapiirangud</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_ShortMessage" xml:space="preserve">
@@ -4386,7 +4419,7 @@
     <value>Võib juhtuda, et andmeallikas ei saa valemit töödelda ja võib tagastada pooliku andmehulga. Kui andmehulk on poolik, võib teie rakendus tagastada valed tulemid või käituda valesti.</value>
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_HowToFix_1" xml:space="preserve">
-    <value>Kui teie andmehulk ületab 500 kirje piirmäära, kuid sisaldab vähem kui 2000 kirjet, proovige piirmäära lähtestada.</value>
+    <value>Kui teie andmekogum ületab 500 kirje piirangu, kuid sisaldab alla 2000 kirje, proovige piirang lähtestada.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_HowToFix_2" xml:space="preserve">
@@ -4398,11 +4431,11 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_Link_1" xml:space="preserve">
-    <value>Artikkel: lõuendirakenduse delegeerimise mõistmine</value>
+    <value>Artikkel: lõuendirakenduse delegeerimise selgitus</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_Link_2" xml:space="preserve">
-    <value>Ajaveeb: delegeerimise andmerea piirangud</value>
+    <value>Ajaveeb: delegeerimise andmereapiirangud</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_ShortMessage" xml:space="preserve">
@@ -4417,7 +4450,7 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_2" xml:space="preserve">
-    <value>Kui teie andmehulk ületab 500 kirje piirmäära, kuid sisaldab vähem kui 2000 kirjet, proovige piirmäära lähtestada.</value>
+    <value>Kui teie andmekogum ületab 500 kirje piirangu, kuid sisaldab alla 2000 kirje, proovige piirang lähtestada.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_3" xml:space="preserve">
@@ -4429,11 +4462,11 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_Link_1" xml:space="preserve">
-    <value>Artikkel: lõuendirakenduse delegeerimise mõistmine</value>
+    <value>Artikkel: lõuendirakenduse delegeerimise selgitus</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_Link_2" xml:space="preserve">
-    <value>Ajaveeb: delegeerimise andmerea piirangud</value>
+    <value>Ajaveeb: delegeerimise andmereapiirangud</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_ShortMessage" xml:space="preserve">
@@ -4462,11 +4495,11 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_Link_1" xml:space="preserve">
-    <value>Artikkel: lõuendirakenduse delegeerimise mõistmine</value>
+    <value>Artikkel: lõuendirakenduse delegeerimise selgitus</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_Link_2" xml:space="preserve">
-    <value>Ajaveeb: delegeerimise andmerea piirangud</value>
+    <value>Ajaveeb: delegeerimise andmereapiirangud</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_ShortMessage" xml:space="preserve">
@@ -4478,7 +4511,7 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_HowToFix_1" xml:space="preserve">
-    <value>Kui teie andmehulk ületab 500 kirje piirmäära, kuid sisaldab vähem kui 2000 kirjet, proovige piirmäära lähtestada.</value>
+    <value>Kui teie andmekogum ületab 500 kirje piirangu, kuid sisaldab alla 2000 kirje, proovige piirang lähtestada.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_HowToFix_2" xml:space="preserve">
@@ -4490,11 +4523,11 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_Link_1" xml:space="preserve">
-    <value>Artikkel: lõuendirakenduse delegeerimise mõistmine</value>
+    <value>Artikkel: lõuendirakenduse delegeerimise selgitus</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_Link_2" xml:space="preserve">
-    <value>Ajaveeb: delegeerimise andmerea piirangud</value>
+    <value>Ajaveeb: delegeerimise andmereapiirangud</value>
     
   </data>
   <data name="ErrorResource_ErrOnlyOneViewExpected_ShortMessage" xml:space="preserve">
@@ -4551,6 +4584,10 @@
   </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula '{0}' on juba olemas.</value>
+  </data>
+  <data name="ErrorResource_NameConflict" xml:space="preserve">
+    <value>Ei saa luua üksust {0} nimega '{1}', kuna üks {2} juba kasutab seda nime.</value>
+    
   </data>
   <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
     <value>Üksuse '{0}' esimene argument peab olema kehtiv muutuja nimi ja see ei tohi olla vastuolus ühegi olemasoleva juhtelemendi, ekraani, kogumi või andmeallika nimega. Leitud tüüp '{1}'</value>

@@ -441,7 +441,7 @@
     <value>लौटाई जाने वाली पंक्तियों की संख्या.</value>
   </data>
   <data name="AboutText" xml:space="preserve">
-    <value>किसी 'मान' को विशिष्ट संख्या 'प्रारूप _पाठ' में टेक्स्ट में बदलता है.</value>
+    <value>किसी 'मान' को विशिष्ट संख्या 'प्रारूप_पाठ' में टेक्स्ट में बदलता है.</value>
     
   </data>
   <data name="TextArg1" xml:space="preserve">
@@ -449,7 +449,7 @@
     
   </data>
   <data name="TextArg2" xml:space="preserve">
-    <value>प्रारूप _पाठ</value>
+    <value>प्रारूप_पाठ</value>
     
   </data>
   <data name="TextArg3" xml:space="preserve">
@@ -496,6 +496,39 @@
   </data>
   <data name="AboutBoolean_text" xml:space="preserve">
     <value>बूलियन मान में बदला जाने वाला टेक्स्ट मान.</value>
+  </data>
+  <data name="AboutBooleanT" xml:space="preserve">
+    <value>पाठ मानों के कॉलम को बूलियन मानों के कॉलम में परिवर्तित करता है.</value>
+    
+  </data>
+  <data name="BooleanTArg1" xml:space="preserve">
+    <value>इनपुट</value>
+    
+  </data>
+  <data name="AboutBooleanT_input" xml:space="preserve">
+    <value>संसाधित किए जाने वाले पाठ मानों का स्तंभ.</value>
+  </data>
+  <data name="AboutBooleanN" xml:space="preserve">
+    <value>एक 'संख्या' को एक बूलियन मान में परिवर्तित करता है.</value>
+    
+  </data>
+  <data name="BooleanNArg1" xml:space="preserve">
+    <value>संख्या</value>
+    
+  </data>
+  <data name="AboutBooleanN_number" xml:space="preserve">
+    <value>बूलियन मान में कनवर्ट करने के लिए संख्या मान.</value>
+  </data>
+  <data name="AboutBooleanNT" xml:space="preserve">
+    <value>संख्यात्मक मानों के कॉलम को बूलियन मानों के कॉलम में परिवर्तित करता है.</value>
+    
+  </data>
+  <data name="BooleanNTArg1" xml:space="preserve">
+    <value>इनपुट</value>
+    
+  </data>
+  <data name="AboutBooleanNT_input" xml:space="preserve">
+    <value>संसाधित किए जाने वाले संख्या मानों का स्तंभ.</value>
   </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>पहला गैर रिक्त तर्क वापस करता है</value>
@@ -3977,7 +4010,7 @@
     <value>अप्रत्याशित चरित्र को हटा दें या बदलें.</value>
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_Link_1" xml:space="preserve">
-    <value>लेख: Power Apps के लिए सूत्र संदर्भ</value>
+    <value>आलेख: Power Apps के लिए सूत्र संदर्भ</value>
     
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_ShortMessage" xml:space="preserve">
@@ -4015,7 +4048,7 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidName_LongMessage" xml:space="preserve">
-    <value>यह त्रुटि सामान्यतः सबसे अधिक तब आती है जब कोई सूत्र किसी ऐसी चीज़ को संदर्भित करता है जो अब मौजूद नहीं है (उदाहरण के लिए, आपके द्वारा हटाया गया कोई नियंत्रण).</value>
+    <value>यह त्रुटि सामान्यतः सबसे अधिक तब आती है जब कोई फॉर्मूला किसी ऐसी चीज़ को संदर्भित करता है जो अब मौजूद नहीं है (उदाहरण के लिए, आपके द्वारा हटाया गया कोई नियंत्रण).</value>
   </data>
   <data name="ErrorResource_ErrInvalidName_HowToFix_1" xml:space="preserve">
     <value>उस नाम का संदर्भ निकालें या उसे ठीक करें जो मान्य नहीं है.</value>
@@ -4037,7 +4070,7 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidIdentifier_Link_1" xml:space="preserve">
-    <value>लेख: Power Apps के लिए फॉर्मूला संदर्भ</value>
+    <value>आलेख: Power Apps के लिए सूत्र संदर्भ</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_ShortMessage" xml:space="preserve">
@@ -4363,7 +4396,7 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_HowToFix_2" xml:space="preserve">
-    <value>सूत्र को सरल बनाने का प्रयास करें.</value>
+    <value>फॉर्मूले को सरल बनाने का प्रयास करें.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_HowToFix_3" xml:space="preserve">
@@ -4390,7 +4423,7 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_HowToFix_2" xml:space="preserve">
-    <value>सूत्र को सरल बनाने का प्रयास करें.</value>
+    <value>फॉर्मूले को सरल बनाने का प्रयास करें.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_HowToFix_3" xml:space="preserve">
@@ -4421,7 +4454,7 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_3" xml:space="preserve">
-    <value>सूत्र को सरल बनाने का प्रयास करें.</value>
+    <value>फॉर्मूले को सरल बनाने का प्रयास करें.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_4" xml:space="preserve">
@@ -4449,12 +4482,12 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_2" xml:space="preserve">
-    <value>यदि आपका डेटा सेट 500 रिकॉर्ड सीमा से अधिक है, लेकिन उसमें 2,000 से कम रिकॉर्ड शामिल हैं, तो सीमा रीसेट करने का प्रयास करें
+    <value>यदि आपका डेटा सेट 500 रिकॉर्ड सीमा से अधिक है, लेकिन उसमें 2,000 से कम रिकॉर्ड शामिल हैं, तो सीमा रीसेट करने का प्रयास करें.
       </value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_3" xml:space="preserve">
-    <value>सूत्र को सरल बनाने का प्रयास करें.</value>
+    <value>फॉर्मूले को सरल बनाने का प्रयास करें.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_4" xml:space="preserve">
@@ -4482,7 +4515,7 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_HowToFix_2" xml:space="preserve">
-    <value>सूत्र को सरल बनाने का प्रयास करें.</value>
+    <value>फॉर्मूले को सरल बनाने का प्रयास करें.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_HowToFix_3" xml:space="preserve">
@@ -4551,6 +4584,10 @@
   </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula '{0}' पहले से मौजूद है.</value>
+  </data>
+  <data name="ErrorResource_NameConflict" xml:space="preserve">
+    <value>'{1}' नाम का एक {0} नहीं बनाया जा सकता क्योंकि वह नाम पहले से ही {2} के लिए उपयोग किया जा रहा है.</value>
+    
   </data>
   <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
     <value>'{0}' का पहला तर्क कोई मान्य चर नाम होना चाहिए और इसका किसी मौजूदा नियंत्रण, स्क्रीन, संग्रहण या डेटा स्रोत नामों से विरोध नहीं हो सकता. प्रकार '{1}' ढ़ूंढ़ा गया</value>

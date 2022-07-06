@@ -29,6 +29,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 "DType._kindToSuperkindMapping",
                 "DTypeSpecParser._types",
                 "BuiltinFunctionsCore._library",
+                "BuiltinFunctionsCore._featureGateFunctions",
                 "ArgumentSuggestions._languageCodeSuggestions",
                 "IntellisenseProvider.SuggestionHandlers",
                 "DateAddFunction.SubDayStringList",
