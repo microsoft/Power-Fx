@@ -33,7 +33,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.ErrorKind",
                 "Microsoft.PowerFx.ErrorSeverity",
                 "Microsoft.PowerFx.ExpressionError",
-                "Microsoft.PowerFx.Feature",
+                "Microsoft.PowerFx.Features",
                 "Microsoft.PowerFx.FormulaWithParameters",
                 "Microsoft.PowerFx.FunctionInfo",
                 "Microsoft.PowerFx.IExpression",

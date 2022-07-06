@@ -24,20 +24,24 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
             Converters = { new FormulaTypeJsonConverter() }
         };
-      
+
+        protected List<string> sendToClientData;
+        protected TestPowerFxScopeFactory scopeFactory;
+        protected TestLanguageServer testServer;
+
         public LanguageServerTests()
             : base()
-        {            
+        {
+            Init();
         }
 
-        private (List<string> sendToClientData, TestPowerFxScopeFactory scopeFactory, TestLanguageServer testServer) Init(Features features = Features.None)
+        private void Init(Features features = Features.None)
         {
             var engine = new Engine(new PowerFxConfig(features: features));
-            var sendToClientData = new List<string>();
-            var scopeFactory = new TestPowerFxScopeFactory((string documentUri) => RecalcEngineScope.FromUri(engine, documentUri));
-            var testServer = new TestLanguageServer(sendToClientData.Add, scopeFactory);
-
-            return (sendToClientData, scopeFactory, testServer);
+            
+            sendToClientData = new List<string>();
+            scopeFactory = new TestPowerFxScopeFactory((string documentUri) => RecalcEngineScope.FromUri(engine, documentUri));
+            testServer = new TestLanguageServer(sendToClientData.Add, scopeFactory);           
         }
 
         // From JPC spec: https://microsoft.github.io/language-server-protocol/specifications/specification-3-14/
@@ -54,7 +58,6 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
         [Fact]
         public void TestTopParseError()
         {
-            (var sendToClientData, var scopeFactory, var testServer) = Init();
             var list = new List<Exception>();
 
             testServer.LogUnhandledExceptionHandler += (ex) =>
@@ -87,7 +90,6 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
         [Fact]
         public void TestLogCallbackExceptions()
         {
-            (var sendToClientData, var _, var _) = Init();
             var scopeFactory = new ErrorScopeFactory();
             var testServer = new TestLanguageServer(sendToClientData.Add, scopeFactory);
 
@@ -125,9 +127,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
 
         [Fact]
         public void TestLanguageServerCommunication()
-        {
-            (var sendToClientData, var scopeFactory, var testServer) = Init();
-            
+        {            
             // bad payload
             testServer.OnDataReceived(JsonSerializer.Serialize(new { }));
 
@@ -179,9 +179,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
 
         [Fact]
         public void TestDidChange()
-        {
-            (var sendToClientData, var scopeFactory, var testServer) = Init();
-            
+        {            
             // test good formula
             sendToClientData.Clear();
             testServer.OnDataReceived(JsonSerializer.Serialize(new
@@ -272,7 +270,6 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
 
         private void TestPublishDiagnostics(string uri, string method, string formula, Diagnostic[] expectedDiagnostics)
         {
-            (var sendToClientData, var scopeFactory, var testServer) = Init();
             testServer.OnDataReceived(JsonSerializer.Serialize(new
             {
                 jsonrpc = "2.0",
@@ -352,7 +349,6 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
         [Fact]
         public void TestDidOpenWithErrors()
         {
-            (var sendToClientData, var scopeFactory, var testServer) = Init();
             testServer.OnDataReceived(JsonSerializer.Serialize(new
             {
                 jsonrpc = "2.0",
@@ -376,9 +372,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
 
         [Fact]
         public void TestCompletion()
-        {
-            (var sendToClientData, var scopeFactory, var testServer) = Init();
-            
+        {            
             // test good formula
             testServer.OnDataReceived(JsonSerializer.Serialize(new
             {
@@ -499,7 +493,6 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
         [Fact]
         public void TestCodeAction()
         {
-            (var sendToClientData, var _, var _) = Init();
             var scopeFactory = new TestPowerFxScopeFactory((string documentUri) => new MockSqlEngine());
             var testServer = new TestLanguageServer(sendToClientData.Add, scopeFactory);
             var documentUri = "powerfx://test?expression=IsBlank(&context={\"A\":1,\"B\":[1,2,3]}";
@@ -555,7 +548,6 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
         [InlineData("123\n567{\n}890", 3)]
         public void TestGetCharPosition(string expression, int expected)
         {
-            (var sendToClientData, var scopeFactory, var testServer) = Init();
             var pattern = @"\{[0-9|\n]\}";
             var re = new Regex(pattern);
             var matches = re.Matches(expression);
@@ -570,7 +562,6 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
         [Fact]
         public void TestGetPosition()
         {
-            (var sendToClientData, var scopeFactory, var testServer) = Init();
             Assert.Equal(0, testServer.TestGetPosition("123", 0, 0));
             Assert.Equal(1, testServer.TestGetPosition("123", 0, 1));
             Assert.Equal(2, testServer.TestGetPosition("123", 0, 2));
@@ -583,9 +574,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
 
         [Fact]
         public void TestSignatureHelp()
-        {
-            (var sendToClientData, var scopeFactory, var testServer) = Init();
-            
+        {            
             // test good formula
             testServer.OnDataReceived(JsonSerializer.Serialize(new
             {
@@ -690,9 +679,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
 
         [Fact]
         public void TestPublishTokens()
-        {
-            (var sendToClientData, var scopeFactory, var testServer) = Init();
-            
+        {            
             // getTokensFlags = 0x0 (none), 0x1 (tokens inside expression), 0x2 (all functions)
             var documentUri = "powerfx://app?context={\"A\":1,\"B\":[1,2,3]}&getTokensFlags=1";
             testServer.OnDataReceived(JsonSerializer.Serialize(new
@@ -792,7 +779,6 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
         [InlineData("{}", "true", typeof(BooleanType))]
         public void TestPublishExpressionType(string context, string expression, System.Type expectedType)
         {
-            (var sendToClientData, var scopeFactory, var testServer) = Init();
             var documentUri = $"powerfx://app?context={context}&getExpressionType=true";
             testServer.OnDataReceived(JsonSerializer.Serialize(new
             {
@@ -823,7 +809,6 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
         [InlineData("{}", "+")]
         public void TestPublishExpressionType_Null(string context, string expression)
         {
-            (var sendToClientData, var scopeFactory, var testServer) = Init();
             var documentUri = $"powerfx://app?context={context}&getExpressionType=true";
             testServer.OnDataReceived(JsonSerializer.Serialize(new
             {
@@ -857,10 +842,9 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
         [InlineData(false, "{}", "{ type: 123 }", @"{""Type"":""Record"",""Fields"":{""type"":{""Type"":""Number""}}}")]
         public void TestPublishExpressionType_AggregateShapes(bool tableSyntaxDoesntWrapRecords, string context, string expression, string expectedTypeJson)
         {
-            (var sendToClientData, var scopeFactory, var tServer) = Init(tableSyntaxDoesntWrapRecords ? Features.TableSyntaxDoesntWrapRecords : Features.None);
-
+            Init(tableSyntaxDoesntWrapRecords ? Features.TableSyntaxDoesntWrapRecords : Features.None);
             var documentUri = $"powerfx://app?context={context}&getExpressionType=true";
-            tServer.OnDataReceived(JsonSerializer.Serialize(new
+            testServer.OnDataReceived(JsonSerializer.Serialize(new
             {
                 jsonrpc = "2.0",
                 method = "textDocument/didOpen",
@@ -886,7 +870,6 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
         [Fact]
         public void TestInitialFixup()
         {
-            (var sendToClientData, var _, var _) = Init();
             var scopeFactory = new TestPowerFxScopeFactory((string documentUri) => new MockSqlEngine());
             var testServer = new TestLanguageServer(sendToClientData.Add, scopeFactory);
             var documentUri = "powerfx://app?context={\"A\":1,\"B\":[1,2,3]}";
