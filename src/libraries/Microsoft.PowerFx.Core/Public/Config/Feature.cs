@@ -3,7 +3,7 @@
 
 using System;
 
-namespace Microsoft.PowerFx.Core.Public.Config
+namespace Microsoft.PowerFx
 {
     [Flags]
     public enum Feature : int

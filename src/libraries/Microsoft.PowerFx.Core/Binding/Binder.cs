@@ -18,7 +18,6 @@ using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Functions.Delegation;
 using Microsoft.PowerFx.Core.Glue;
 using Microsoft.PowerFx.Core.Localization;
-using Microsoft.PowerFx.Core.Public.Config;
 using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
@@ -136,6 +135,7 @@ namespace Microsoft.PowerFx.Core.Binding
         public Feature Feature { get; }
 
         // Property to which current rule is being bound to. It could be null in the absence of NameResolver.
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0025:Use expression body for properties", Justification = "n/a")]
         public IExternalControlProperty Property
         {
             get
@@ -151,6 +151,7 @@ namespace Microsoft.PowerFx.Core.Binding
         }
 
         // Control to which current rule is being bound to. It could be null in the absence of NameResolver.
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0025:Use expression body for properties", Justification = "n/a")]
         public IExternalControl Control
         {
             get

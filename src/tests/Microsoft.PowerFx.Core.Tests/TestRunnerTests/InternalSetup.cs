@@ -4,7 +4,6 @@
 using System;
 using System.Linq;
 using Microsoft.PowerFx.Core.Parser;
-using Microsoft.PowerFx.Core.Public.Config;
 
 namespace Microsoft.PowerFx.Core.Tests
 {
