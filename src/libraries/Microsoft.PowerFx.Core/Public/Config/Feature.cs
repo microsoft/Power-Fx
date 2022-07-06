@@ -6,7 +6,7 @@ using System;
 namespace Microsoft.PowerFx.Core.Public.Config
 {
     [Flags]
-    public enum Feature : ulong
+    public enum Feature : int
     {
         None = 0x0,
 
@@ -14,6 +14,6 @@ namespace Microsoft.PowerFx.Core.Public.Config
         /// Enable Table syntax to not add "Value:" extra layer.
         /// Added on 1st July 2022.
         /// </summary>
-        TableSyntaxDoesntWrapRecords = 0x1ul      
+        TableSyntaxDoesntWrapRecords = 0x1      
     }
 }

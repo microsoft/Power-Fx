@@ -98,14 +98,18 @@ namespace Microsoft.PowerFx.Core.Tests
         /// <param name="test">test case to run.</param>
         /// <returns>status from running.</returns>
         public (TestResult result, string message) RunTestCase(TestCase testCase)
-        {           
-            var t = Task.Factory.StartNew(() =>
-            {
-                var t = RunAsync2(testCase);
-                t.ConfigureAwait(false);
+        {
+            var t = Task.Factory.StartNew(
+                () => 
+                {
+                    var t = RunAsync2(testCase);
+                    t.ConfigureAwait(false);
 
-                return t.Result;
-            });
+                    return t.Result;
+                }, 
+                new CancellationToken(), 
+                TaskCreationOptions.None, 
+                TaskScheduler.Default);
 
             while (true)
             {
