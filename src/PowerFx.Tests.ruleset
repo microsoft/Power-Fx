@@ -199,17 +199,13 @@
     <Rule Id="SA1618" Action="None" />
     <Rule Id="SA1622" Action="None" />
     <Rule Id="SA1623" Action="None" />
-    <Rule Id="SA1625" Action="None" />
-                                             <!-- End XM Documentation Warnings-->
-                                             <!-- File/Class Naming Guidelines: These conflict with our function files mostly -->
-    <Rule Id="SA1402" Action="None" />
-    <Rule Id="SA1649" Action="None" />
-                                             <!-- End File/Class Naming Guidelines-->
+    <Rule Id="SA1625" Action="None" />       <!-- End XM Documentation Warnings-->                                             
+    <Rule Id="SA1402" Action="None" />       <!-- File/Class Naming Guidelines: These conflict with our function files mostly -->
+    <Rule Id="SA1649" Action="None" />       <!-- End File/Class Naming Guidelines-->
   </Rules>
   <Rules AnalyzerId="Microsoft.CodeAnalysis.CSharp.NetAnalyzers" RuleNamespace="Microsoft.CodeAnalysis.CSharp.NetAnalyzers">
     <Rule Id="CA1001" Action="None" />       <!-- REQUIRED * CA1001: Types that own disposable fields should be disposable -->
-    <Rule Id="CA1032" Action="None" />
-                                             <!-- Add the following constructor to -->
+    <Rule Id="CA1032" Action="None" />       <!-- Add the following constructor to -->
     <Rule Id="CA1200" Action="Warning" />
     <Rule Id="CA1309" Action="None" />       <!-- REQUIRED * CA1309: Use ordinal StringComparison -->
     <Rule Id="CA1507" Action="None" />       <!-- REQUIRED * CA1507: Use nameof in place of string -->
