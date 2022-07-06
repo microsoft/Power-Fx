@@ -82,3 +82,27 @@ true
 
 >> "'" in "SQL literal '"
 true
+
+>> "Jane" in ["Jane", "John"]
+true
+
+>> "John" in ["Jane", "John"]
+true
+
+>> "JANE" in ["Jane", "John"]
+true
+
+>> "jOHN" in ["Jane", "John"]
+true
+
+>> "Jane" exactin ["Jane", "John"]
+true
+
+>> "John" exactin ["Jane", "John"]
+true
+
+>> "JANE" exactin ["Jane", "John"]
+false
+
+>> "jOHN" exactin ["Jane", "John"]
+false
