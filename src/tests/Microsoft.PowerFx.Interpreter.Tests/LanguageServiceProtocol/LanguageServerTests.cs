@@ -25,9 +25,9 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             Converters = { new FormulaTypeJsonConverter() }
         };
 
-        protected List<string> sendToClientData;
-        protected TestPowerFxScopeFactory scopeFactory;
-        protected TestLanguageServer testServer;
+        protected List<string> _sendToClientData;
+        protected TestPowerFxScopeFactory _scopeFactory;
+        protected TestLanguageServer _testServer;
 
         public LanguageServerTests()
             : base()
@@ -39,9 +39,9 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
         {
             var engine = new Engine(new PowerFxConfig(features: features));
             
-            sendToClientData = new List<string>();
-            scopeFactory = new TestPowerFxScopeFactory((string documentUri) => RecalcEngineScope.FromUri(engine, documentUri));
-            testServer = new TestLanguageServer(sendToClientData.Add, scopeFactory);           
+            _sendToClientData = new List<string>();
+            _scopeFactory = new TestPowerFxScopeFactory((string documentUri) => RecalcEngineScope.FromUri(engine, documentUri));
+            _testServer = new TestLanguageServer(_sendToClientData.Add, _scopeFactory);           
         }
 
         // From JPC spec: https://microsoft.github.io/language-server-protocol/specifications/specification-3-14/
@@ -60,16 +60,16 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
         {
             var list = new List<Exception>();
 
-            testServer.LogUnhandledExceptionHandler += (ex) =>
+            _testServer.LogUnhandledExceptionHandler += (ex) =>
             {
                 list.Add(ex);
             };
-            testServer.OnDataReceived("parse error");
+            _testServer.OnDataReceived("parse error");
 
             Assert.Single(list); // ensure handler was invoked. 
 
-            Assert.Single(sendToClientData);
-            var errorResponse = JsonSerializer.Deserialize<JsonRpcErrorResponse>(sendToClientData[0], _jsonSerializerOptions);
+            Assert.Single(_sendToClientData);
+            var errorResponse = JsonSerializer.Deserialize<JsonRpcErrorResponse>(_sendToClientData[0], _jsonSerializerOptions);
             Assert.Equal("2.0", errorResponse.Jsonrpc);
             Assert.Null(errorResponse.Id);
             Assert.Equal(InternalError, errorResponse.Error.Code);
@@ -91,7 +91,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
         public void TestLogCallbackExceptions()
         {
             var scopeFactory = new ErrorScopeFactory();
-            var testServer = new TestLanguageServer(sendToClientData.Add, scopeFactory);
+            var testServer = new TestLanguageServer(_sendToClientData.Add, scopeFactory);
 
             var list = new List<Exception>();
 
@@ -118,7 +118,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
 
             Assert.Single(list); // ensure handler was invoked. 
 
-            var errorResponse = JsonSerializer.Deserialize<JsonRpcErrorResponse>(sendToClientData[0], _jsonSerializerOptions);
+            var errorResponse = JsonSerializer.Deserialize<JsonRpcErrorResponse>(_sendToClientData[0], _jsonSerializerOptions);
             Assert.Equal("2.0", errorResponse.Jsonrpc);
             Assert.Null(errorResponse.Id);
             Assert.Equal(InternalError, errorResponse.Error.Code);
@@ -129,16 +129,16 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
         public void TestLanguageServerCommunication()
         {            
             // bad payload
-            testServer.OnDataReceived(JsonSerializer.Serialize(new { }));
+            _testServer.OnDataReceived(JsonSerializer.Serialize(new { }));
 
             // bad jsonrpc payload
-            testServer.OnDataReceived(JsonSerializer.Serialize(new
+            _testServer.OnDataReceived(JsonSerializer.Serialize(new
             {
                 jsonrpc = "2.0"
             }));
 
             // bad notification payload
-            testServer.OnDataReceived(JsonSerializer.Serialize(new
+            _testServer.OnDataReceived(JsonSerializer.Serialize(new
             {
                 jsonrpc = "2.0",
                 method = "unknown",
@@ -146,7 +146,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             }));
 
             // bad request payload
-            testServer.OnDataReceived(JsonSerializer.Serialize(new
+            _testServer.OnDataReceived(JsonSerializer.Serialize(new
             {
                 jsonrpc = "2.0",
                 id = "abc",
@@ -155,23 +155,23 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             }));
 
             // verify we have 4 json rpc responeses
-            Assert.Equal(4, sendToClientData.Count);
-            var errorResponse = JsonSerializer.Deserialize<JsonRpcErrorResponse>(sendToClientData[0], _jsonSerializerOptions);
+            Assert.Equal(4, _sendToClientData.Count);
+            var errorResponse = JsonSerializer.Deserialize<JsonRpcErrorResponse>(_sendToClientData[0], _jsonSerializerOptions);
             Assert.Equal("2.0", errorResponse.Jsonrpc);
             Assert.Null(errorResponse.Id);
             Assert.Equal(InvalidRequest, errorResponse.Error.Code);
 
-            errorResponse = JsonSerializer.Deserialize<JsonRpcErrorResponse>(sendToClientData[1], _jsonSerializerOptions);
+            errorResponse = JsonSerializer.Deserialize<JsonRpcErrorResponse>(_sendToClientData[1], _jsonSerializerOptions);
             Assert.Equal("2.0", errorResponse.Jsonrpc);
             Assert.Null(errorResponse.Id);
             Assert.Equal(InvalidRequest, errorResponse.Error.Code);
 
-            errorResponse = JsonSerializer.Deserialize<JsonRpcErrorResponse>(sendToClientData[2], _jsonSerializerOptions);
+            errorResponse = JsonSerializer.Deserialize<JsonRpcErrorResponse>(_sendToClientData[2], _jsonSerializerOptions);
             Assert.Equal("2.0", errorResponse.Jsonrpc);
             Assert.Null(errorResponse.Id);
             Assert.Equal(MethodNotFound, errorResponse.Error.Code);
 
-            errorResponse = JsonSerializer.Deserialize<JsonRpcErrorResponse>(sendToClientData[3], _jsonSerializerOptions);
+            errorResponse = JsonSerializer.Deserialize<JsonRpcErrorResponse>(_sendToClientData[3], _jsonSerializerOptions);
             Assert.Equal("2.0", errorResponse.Jsonrpc);
             Assert.Equal("abc", errorResponse.Id);
             Assert.Equal(MethodNotFound, errorResponse.Error.Code);
@@ -181,8 +181,8 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
         public void TestDidChange()
         {            
             // test good formula
-            sendToClientData.Clear();
-            testServer.OnDataReceived(JsonSerializer.Serialize(new
+            _sendToClientData.Clear();
+            _testServer.OnDataReceived(JsonSerializer.Serialize(new
             {
                 jsonrpc = "2.0",
                 method = "textDocument/didChange",
@@ -199,16 +199,16 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
                     }
                 }
             }));
-            Assert.Single(sendToClientData);
-            var notification = JsonSerializer.Deserialize<JsonRpcPublishDiagnosticsNotification>(sendToClientData[0], _jsonSerializerOptions);
+            Assert.Single(_sendToClientData);
+            var notification = JsonSerializer.Deserialize<JsonRpcPublishDiagnosticsNotification>(_sendToClientData[0], _jsonSerializerOptions);
             Assert.Equal("2.0", notification.Jsonrpc);
             Assert.Equal("textDocument/publishDiagnostics", notification.Method);
             Assert.Equal("powerfx://app?context={\"A\":1,\"B\":[1,2,3]}", notification.Params.Uri);
             Assert.Empty(notification.Params.Diagnostics);
 
             // test bad formula
-            sendToClientData.Clear();
-            testServer.OnDataReceived(JsonSerializer.Serialize(new
+            _sendToClientData.Clear();
+            _testServer.OnDataReceived(JsonSerializer.Serialize(new
             {
                 jsonrpc = "2.0",
                 method = "textDocument/didChange",
@@ -225,8 +225,8 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
                     }
                 }
             }));
-            Assert.Single(sendToClientData);
-            notification = JsonSerializer.Deserialize<JsonRpcPublishDiagnosticsNotification>(sendToClientData[0], _jsonSerializerOptions);
+            Assert.Single(_sendToClientData);
+            notification = JsonSerializer.Deserialize<JsonRpcPublishDiagnosticsNotification>(_sendToClientData[0], _jsonSerializerOptions);
             Assert.Equal("2.0", notification.Jsonrpc);
             Assert.Equal("textDocument/publishDiagnostics", notification.Method);
             Assert.Equal("powerfx://app", notification.Params.Uri);
@@ -234,35 +234,35 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             Assert.Equal("Name isn't valid. 'AA' isn't recognized.", notification.Params.Diagnostics[0].Message);
 
             // some invalid cases
-            sendToClientData.Clear();
-            testServer.OnDataReceived(JsonSerializer.Serialize(new { }));
-            Assert.Single(sendToClientData);
-            var errorResponse = JsonSerializer.Deserialize<JsonRpcErrorResponse>(sendToClientData[0], _jsonSerializerOptions);
+            _sendToClientData.Clear();
+            _testServer.OnDataReceived(JsonSerializer.Serialize(new { }));
+            Assert.Single(_sendToClientData);
+            var errorResponse = JsonSerializer.Deserialize<JsonRpcErrorResponse>(_sendToClientData[0], _jsonSerializerOptions);
             Assert.Equal("2.0", errorResponse.Jsonrpc);
             Assert.Null(errorResponse.Id);
             Assert.Equal(InvalidRequest, errorResponse.Error.Code);
 
-            sendToClientData.Clear();
-            testServer.OnDataReceived(JsonSerializer.Serialize(new
+            _sendToClientData.Clear();
+            _testServer.OnDataReceived(JsonSerializer.Serialize(new
             {
                 jsonrpc = "2.0",
                 method = "textDocument/didChange"
             }));
-            Assert.Single(sendToClientData);
-            errorResponse = JsonSerializer.Deserialize<JsonRpcErrorResponse>(sendToClientData[0], _jsonSerializerOptions);
+            Assert.Single(_sendToClientData);
+            errorResponse = JsonSerializer.Deserialize<JsonRpcErrorResponse>(_sendToClientData[0], _jsonSerializerOptions);
             Assert.Equal("2.0", errorResponse.Jsonrpc);
             Assert.Null(errorResponse.Id);
             Assert.Equal(InvalidRequest, errorResponse.Error.Code);
 
-            sendToClientData.Clear();
-            testServer.OnDataReceived(JsonSerializer.Serialize(new
+            _sendToClientData.Clear();
+            _testServer.OnDataReceived(JsonSerializer.Serialize(new
             {
                 jsonrpc = "2.0",
                 method = "textDocument/didChange",
                 @params = string.Empty
             }));
-            Assert.Single(sendToClientData);
-            errorResponse = JsonSerializer.Deserialize<JsonRpcErrorResponse>(sendToClientData[0], _jsonSerializerOptions);
+            Assert.Single(_sendToClientData);
+            errorResponse = JsonSerializer.Deserialize<JsonRpcErrorResponse>(_sendToClientData[0], _jsonSerializerOptions);
             Assert.Equal("2.0", errorResponse.Jsonrpc);
             Assert.Null(errorResponse.Id);
             Assert.Equal(ParseError, errorResponse.Error.Code);
@@ -270,7 +270,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
 
         private void TestPublishDiagnostics(string uri, string method, string formula, Diagnostic[] expectedDiagnostics)
         {
-            testServer.OnDataReceived(JsonSerializer.Serialize(new
+            _testServer.OnDataReceived(JsonSerializer.Serialize(new
             {
                 jsonrpc = "2.0",
                 method,
@@ -285,8 +285,8 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
                     }
                 }
             }));
-            Assert.Single(sendToClientData);
-            var notification = JsonSerializer.Deserialize<JsonRpcPublishDiagnosticsNotification>(sendToClientData[0], _jsonSerializerOptions);
+            Assert.Single(_sendToClientData);
+            var notification = JsonSerializer.Deserialize<JsonRpcPublishDiagnosticsNotification>(_sendToClientData[0], _jsonSerializerOptions);
             Assert.Equal("2.0", notification.Jsonrpc);
             Assert.Equal("textDocument/publishDiagnostics", notification.Method);
             Assert.Equal(uri, notification.Params.Uri);
@@ -349,7 +349,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
         [Fact]
         public void TestDidOpenWithErrors()
         {
-            testServer.OnDataReceived(JsonSerializer.Serialize(new
+            _testServer.OnDataReceived(JsonSerializer.Serialize(new
             {
                 jsonrpc = "2.0",
                 method = "textDocument/didOpen",
@@ -364,7 +364,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
                     }
                 }
             }));
-            var diag = JsonSerializer.Deserialize<JsonRpcPublishDiagnosticsNotification>(sendToClientData[0], _jsonSerializerOptions).Params.Diagnostics.First(d => d.Message == "Unexpected characters. The formula contains 'ParenClose' where 'Eof' is expected.");
+            var diag = JsonSerializer.Deserialize<JsonRpcPublishDiagnosticsNotification>(_sendToClientData[0], _jsonSerializerOptions).Params.Diagnostics.First(d => d.Message == "Unexpected characters. The formula contains 'ParenClose' where 'Eof' is expected.");
 
             Assert.Equal(12, diag.Range.Start.Character);
             Assert.Equal(12, diag.Range.End.Character);
@@ -374,7 +374,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
         public void TestCompletion()
         {            
             // test good formula
-            testServer.OnDataReceived(JsonSerializer.Serialize(new
+            _testServer.OnDataReceived(JsonSerializer.Serialize(new
             {
                 jsonrpc = "2.0",
                 id = "123",
@@ -393,15 +393,15 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
                     Context = new CompletionContext()
                 }
             }));
-            Assert.Single(sendToClientData);
-            var response = JsonSerializer.Deserialize<JsonRpcCompletionResponse>(sendToClientData[0], _jsonSerializerOptions);
+            Assert.Single(_sendToClientData);
+            var response = JsonSerializer.Deserialize<JsonRpcCompletionResponse>(_sendToClientData[0], _jsonSerializerOptions);
             Assert.Equal("2.0", response.Jsonrpc);
             Assert.Equal("123", response.Id);
             var foundItems = response.Result.Items.Where(item => item.Label == "AliceBlue");
             Assert.True(Enumerable.Count(foundItems) == 1, "AliceBlue should be found from suggestion result");
 
-            sendToClientData.Clear();
-            testServer.OnDataReceived(JsonSerializer.Serialize(new
+            _sendToClientData.Clear();
+            _testServer.OnDataReceived(JsonSerializer.Serialize(new
             {
                 jsonrpc = "2.0",
                 id = "123",
@@ -420,16 +420,16 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
                     Context = new CompletionContext()
                 }
             }));
-            Assert.Single(sendToClientData);
-            response = JsonSerializer.Deserialize<JsonRpcCompletionResponse>(sendToClientData[0], _jsonSerializerOptions);
+            Assert.Single(_sendToClientData);
+            response = JsonSerializer.Deserialize<JsonRpcCompletionResponse>(_sendToClientData[0], _jsonSerializerOptions);
             Assert.Equal("2.0", response.Jsonrpc);
             Assert.Equal("123", response.Id);
             foundItems = response.Result.Items.Where(item => item.Label == "AliceBlue");
             Assert.Equal(CompletionItemKind.Variable, foundItems.First().Kind);
             Assert.True(Enumerable.Count(foundItems) == 1, "AliceBlue should be found from suggestion result");
 
-            sendToClientData.Clear();
-            testServer.OnDataReceived(JsonSerializer.Serialize(new
+            _sendToClientData.Clear();
+            _testServer.OnDataReceived(JsonSerializer.Serialize(new
             {
                 jsonrpc = "2.0",
                 id = "123",
@@ -448,8 +448,8 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
                     Context = new CompletionContext()
                 }
             }));
-            Assert.Single(sendToClientData);
-            response = JsonSerializer.Deserialize<JsonRpcCompletionResponse>(sendToClientData[0], _jsonSerializerOptions);
+            Assert.Single(_sendToClientData);
+            response = JsonSerializer.Deserialize<JsonRpcCompletionResponse>(_sendToClientData[0], _jsonSerializerOptions);
             Assert.Equal("2.0", response.Jsonrpc);
             Assert.Equal("123", response.Id);
             foundItems = response.Result.Items.Where(item => item.Label == "a");
@@ -463,8 +463,8 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             Assert.Equal(CompletionItemKind.Variable, foundItems.First().Kind);
 
             // missing 'expression' in documentUri
-            sendToClientData.Clear();
-            testServer.OnDataReceived(JsonSerializer.Serialize(new
+            _sendToClientData.Clear();
+            _testServer.OnDataReceived(JsonSerializer.Serialize(new
             {
                 jsonrpc = "2.0",
                 id = "123",
@@ -483,8 +483,8 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
                     Context = new CompletionContext()
                 }
             }));
-            Assert.Single(sendToClientData);
-            var errorResponse = JsonSerializer.Deserialize<JsonRpcErrorResponse>(sendToClientData[0], _jsonSerializerOptions);
+            Assert.Single(_sendToClientData);
+            var errorResponse = JsonSerializer.Deserialize<JsonRpcErrorResponse>(_sendToClientData[0], _jsonSerializerOptions);
             Assert.Equal("2.0", errorResponse.Jsonrpc);
             Assert.Equal("123", errorResponse.Id);
             Assert.Equal(InvalidParams, errorResponse.Error.Code);
@@ -494,7 +494,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
         public void TestCodeAction()
         {
             var scopeFactory = new TestPowerFxScopeFactory((string documentUri) => new MockSqlEngine());
-            var testServer = new TestLanguageServer(sendToClientData.Add, scopeFactory);
+            var testServer = new TestLanguageServer(_sendToClientData.Add, scopeFactory);
             var documentUri = "powerfx://test?expression=IsBlank(&context={\"A\":1,\"B\":[1,2,3]}";
 
             testServer.OnDataReceived(JsonSerializer.Serialize(new
@@ -524,8 +524,8 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
                     Context = new CodeActionContext() { Only = new[] { CodeActionKind.QuickFix } }
                 }
             }));
-            Assert.Single(sendToClientData);
-            var response = JsonSerializer.Deserialize<JsonRpcCodeActionResponse>(sendToClientData[0], _jsonSerializerOptions);
+            Assert.Single(_sendToClientData);
+            var response = JsonSerializer.Deserialize<JsonRpcCodeActionResponse>(_sendToClientData[0], _jsonSerializerOptions);
             Assert.Equal("2.0", response.Jsonrpc);
             Assert.Equal("testDocument1", response.Id);
             Assert.NotEmpty(response.Result);
@@ -556,27 +556,27 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             var position = matches[0].Index;
             expression = expression.Substring(0, position) + expression[position + 1] + expression.Substring(position + 3);
 
-            Assert.Equal(expected, testServer.TestGetCharPosition(expression, position));
+            Assert.Equal(expected, _testServer.TestGetCharPosition(expression, position));
         }
 
         [Fact]
         public void TestGetPosition()
         {
-            Assert.Equal(0, testServer.TestGetPosition("123", 0, 0));
-            Assert.Equal(1, testServer.TestGetPosition("123", 0, 1));
-            Assert.Equal(2, testServer.TestGetPosition("123", 0, 2));
-            Assert.Equal(4, testServer.TestGetPosition("123\n123456\n12345", 1, 0));
-            Assert.Equal(5, testServer.TestGetPosition("123\n123456\n12345", 1, 1));
-            Assert.Equal(11, testServer.TestGetPosition("123\n123456\n12345", 2, 0));
-            Assert.Equal(13, testServer.TestGetPosition("123\n123456\n12345", 2, 2));
-            Assert.Equal(3, testServer.TestGetPosition("123", 0, 999));
+            Assert.Equal(0, _testServer.TestGetPosition("123", 0, 0));
+            Assert.Equal(1, _testServer.TestGetPosition("123", 0, 1));
+            Assert.Equal(2, _testServer.TestGetPosition("123", 0, 2));
+            Assert.Equal(4, _testServer.TestGetPosition("123\n123456\n12345", 1, 0));
+            Assert.Equal(5, _testServer.TestGetPosition("123\n123456\n12345", 1, 1));
+            Assert.Equal(11, _testServer.TestGetPosition("123\n123456\n12345", 2, 0));
+            Assert.Equal(13, _testServer.TestGetPosition("123\n123456\n12345", 2, 2));
+            Assert.Equal(3, _testServer.TestGetPosition("123", 0, 999));
         }
 
         [Fact]
         public void TestSignatureHelp()
         {            
             // test good formula
-            testServer.OnDataReceived(JsonSerializer.Serialize(new
+            _testServer.OnDataReceived(JsonSerializer.Serialize(new
             {
                 jsonrpc = "2.0",
                 id = "123",
@@ -599,8 +599,8 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
                     }
                 }
             }));
-            Assert.Single(sendToClientData);
-            var response = JsonSerializer.Deserialize<JsonRpcSignatureHelpResponse>(sendToClientData[0], _jsonSerializerOptions);
+            Assert.Single(_sendToClientData);
+            var response = JsonSerializer.Deserialize<JsonRpcSignatureHelpResponse>(_sendToClientData[0], _jsonSerializerOptions);
             Assert.Equal("2.0", response.Jsonrpc);
             Assert.Equal("123", response.Id);
             Assert.Equal(0U, response.Result.ActiveSignature);
@@ -612,8 +612,8 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             Assert.Equal("base", foundItems.First().Parameters[0].Label);
             Assert.Equal("exponent", foundItems.First().Parameters[1].Label);
 
-            sendToClientData.Clear();
-            testServer.OnDataReceived(JsonSerializer.Serialize(new
+            _sendToClientData.Clear();
+            _testServer.OnDataReceived(JsonSerializer.Serialize(new
             {
                 jsonrpc = "2.0",
                 id = "123",
@@ -636,8 +636,8 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
                     }
                 }
             }));
-            Assert.Single(sendToClientData);
-            response = JsonSerializer.Deserialize<JsonRpcSignatureHelpResponse>(sendToClientData[0], _jsonSerializerOptions);
+            Assert.Single(_sendToClientData);
+            response = JsonSerializer.Deserialize<JsonRpcSignatureHelpResponse>(_sendToClientData[0], _jsonSerializerOptions);
             Assert.Equal("2.0", response.Jsonrpc);
             Assert.Equal("123", response.Id);
             Assert.Equal(0U, response.Result.ActiveSignature);
@@ -650,8 +650,8 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             Assert.Equal("exponent", foundItems.First().Parameters[1].Label);
 
             // missing 'expression' in documentUri
-            sendToClientData.Clear();
-            testServer.OnDataReceived(JsonSerializer.Serialize(new
+            _sendToClientData.Clear();
+            _testServer.OnDataReceived(JsonSerializer.Serialize(new
             {
                 jsonrpc = "2.0",
                 id = "123",
@@ -670,8 +670,8 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
                     Context = new CompletionContext()
                 }
             }));
-            Assert.Single(sendToClientData);
-            var errorResponse = JsonSerializer.Deserialize<JsonRpcErrorResponse>(sendToClientData[0], _jsonSerializerOptions);
+            Assert.Single(_sendToClientData);
+            var errorResponse = JsonSerializer.Deserialize<JsonRpcErrorResponse>(_sendToClientData[0], _jsonSerializerOptions);
             Assert.Equal("2.0", errorResponse.Jsonrpc);
             Assert.Equal("123", errorResponse.Id);
             Assert.Equal(InvalidParams, errorResponse.Error.Code);
@@ -682,7 +682,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
         {            
             // getTokensFlags = 0x0 (none), 0x1 (tokens inside expression), 0x2 (all functions)
             var documentUri = "powerfx://app?context={\"A\":1,\"B\":[1,2,3]}&getTokensFlags=1";
-            testServer.OnDataReceived(JsonSerializer.Serialize(new
+            _testServer.OnDataReceived(JsonSerializer.Serialize(new
             {
                 jsonrpc = "2.0",
                 method = "textDocument/didOpen",
@@ -697,8 +697,8 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
                     }
                 }
             }));
-            Assert.Equal(2, sendToClientData.Count);
-            var response = JsonSerializer.Deserialize<JsonRpcPublishTokensNotification>(sendToClientData[1], _jsonSerializerOptions);
+            Assert.Equal(2, _sendToClientData.Count);
+            var response = JsonSerializer.Deserialize<JsonRpcPublishTokensNotification>(_sendToClientData[1], _jsonSerializerOptions);
             Assert.Equal("$/publishTokens", response.Method);
             Assert.Equal(documentUri, response.Params.Uri);
             Assert.Equal(3, response.Params.Tokens.Count);
@@ -707,9 +707,9 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             Assert.Equal(TokenResultType.Function, response.Params.Tokens["CountRows"]);
 
             // getTokensFlags = 0x0 (none), 0x1 (tokens inside expression), 0x2 (all functions)
-            sendToClientData.Clear();
+            _sendToClientData.Clear();
             documentUri = "powerfx://app?context={\"A\":1,\"B\":[1,2,3]}&getTokensFlags=2";
-            testServer.OnDataReceived(JsonSerializer.Serialize(new
+            _testServer.OnDataReceived(JsonSerializer.Serialize(new
             {
                 jsonrpc = "2.0",
                 method = "textDocument/didChange",
@@ -726,8 +726,8 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
                     }
                 }
             }));
-            Assert.Equal(2, sendToClientData.Count);
-            response = JsonSerializer.Deserialize<JsonRpcPublishTokensNotification>(sendToClientData[1], _jsonSerializerOptions);
+            Assert.Equal(2, _sendToClientData.Count);
+            response = JsonSerializer.Deserialize<JsonRpcPublishTokensNotification>(_sendToClientData[1], _jsonSerializerOptions);
             Assert.Equal("$/publishTokens", response.Method);
             Assert.Equal(documentUri, response.Params.Uri);
             Assert.Equal(0, Enumerable.Count(response.Params.Tokens.Where(it => it.Value != TokenResultType.Function)));
@@ -738,9 +738,9 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             Assert.Equal(TokenResultType.Function, response.Params.Tokens["Year"]);
 
             // getTokensFlags = 0x0 (none), 0x1 (tokens inside expression), 0x2 (all functions)
-            sendToClientData.Clear();
+            _sendToClientData.Clear();
             documentUri = "powerfx://app?context={\"A\":1,\"B\":[1,2,3]}&getTokensFlags=3";
-            testServer.OnDataReceived(JsonSerializer.Serialize(new
+            _testServer.OnDataReceived(JsonSerializer.Serialize(new
             {
                 jsonrpc = "2.0",
                 method = "textDocument/didChange",
@@ -757,8 +757,8 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
                     }
                 }
             }));
-            Assert.Equal(2, sendToClientData.Count);
-            response = JsonSerializer.Deserialize<JsonRpcPublishTokensNotification>(sendToClientData[1], _jsonSerializerOptions);
+            Assert.Equal(2, _sendToClientData.Count);
+            response = JsonSerializer.Deserialize<JsonRpcPublishTokensNotification>(_sendToClientData[1], _jsonSerializerOptions);
             Assert.Equal("$/publishTokens", response.Method);
             Assert.Equal(documentUri, response.Params.Uri);
             Assert.Equal(TokenResultType.Variable, response.Params.Tokens["A"]);
@@ -780,7 +780,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
         public void TestPublishExpressionType(string context, string expression, System.Type expectedType)
         {
             var documentUri = $"powerfx://app?context={context}&getExpressionType=true";
-            testServer.OnDataReceived(JsonSerializer.Serialize(new
+            _testServer.OnDataReceived(JsonSerializer.Serialize(new
             {
                 jsonrpc = "2.0",
                 method = "textDocument/didOpen",
@@ -796,8 +796,8 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
                 }
             }));
 
-            Assert.Equal(2, sendToClientData.Count);
-            var response = JsonSerializer.Deserialize<JsonRpcPublishExpressionTypeNotification>(sendToClientData[1], _jsonSerializerOptions);
+            Assert.Equal(2, _sendToClientData.Count);
+            var response = JsonSerializer.Deserialize<JsonRpcPublishExpressionTypeNotification>(_sendToClientData[1], _jsonSerializerOptions);
             Assert.Equal("$/publishExpressionType", response.Method);
             Assert.Equal(documentUri, response.Params.Uri);
             Assert.IsType(expectedType, response.Params.Type);
@@ -810,7 +810,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
         public void TestPublishExpressionType_Null(string context, string expression)
         {
             var documentUri = $"powerfx://app?context={context}&getExpressionType=true";
-            testServer.OnDataReceived(JsonSerializer.Serialize(new
+            _testServer.OnDataReceived(JsonSerializer.Serialize(new
             {
                 jsonrpc = "2.0",
                 method = "textDocument/didOpen",
@@ -826,8 +826,8 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
                 }
             }));
 
-            Assert.Equal(2, sendToClientData.Count);
-            var response = JsonSerializer.Deserialize<JsonRpcPublishExpressionTypeNotification>(sendToClientData[1], _jsonSerializerOptions);
+            Assert.Equal(2, _sendToClientData.Count);
+            var response = JsonSerializer.Deserialize<JsonRpcPublishExpressionTypeNotification>(_sendToClientData[1], _jsonSerializerOptions);
             Assert.Equal("$/publishExpressionType", response.Method);
             Assert.Equal(documentUri, response.Params.Uri);
             Assert.Null(response.Params.Type);
@@ -844,7 +844,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
         {
             Init(tableSyntaxDoesntWrapRecords ? Features.TableSyntaxDoesntWrapRecords : Features.None);
             var documentUri = $"powerfx://app?context={context}&getExpressionType=true";
-            testServer.OnDataReceived(JsonSerializer.Serialize(new
+            _testServer.OnDataReceived(JsonSerializer.Serialize(new
             {
                 jsonrpc = "2.0",
                 method = "textDocument/didOpen",
@@ -860,8 +860,8 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
                 }
             }));
 
-            Assert.Equal(2, sendToClientData.Count);
-            var response = JsonSerializer.Deserialize<JsonRpcPublishExpressionTypeNotification>(sendToClientData[1], _jsonSerializerOptions);
+            Assert.Equal(2, _sendToClientData.Count);
+            var response = JsonSerializer.Deserialize<JsonRpcPublishExpressionTypeNotification>(_sendToClientData[1], _jsonSerializerOptions);
             Assert.Equal("$/publishExpressionType", response.Method);
             Assert.Equal(documentUri, response.Params.Uri);
             Assert.Equal(expectedTypeJson, JsonSerializer.Serialize(response.Params.Type, _jsonSerializerOptions));
@@ -871,7 +871,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
         public void TestInitialFixup()
         {
             var scopeFactory = new TestPowerFxScopeFactory((string documentUri) => new MockSqlEngine());
-            var testServer = new TestLanguageServer(sendToClientData.Add, scopeFactory);
+            var testServer = new TestLanguageServer(_sendToClientData.Add, scopeFactory);
             var documentUri = "powerfx://app?context={\"A\":1,\"B\":[1,2,3]}";
             testServer.OnDataReceived(JsonSerializer.Serialize(new
             {
@@ -889,14 +889,14 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
                     }
                 }
             }));
-            Assert.Single(sendToClientData);
-            var response = JsonSerializer.Deserialize<JsonRpcInitialFixupResponse>(sendToClientData[0], _jsonSerializerOptions);
+            Assert.Single(_sendToClientData);
+            var response = JsonSerializer.Deserialize<JsonRpcInitialFixupResponse>(_sendToClientData[0], _jsonSerializerOptions);
             Assert.Equal("123", response.Id);
             Assert.Equal(documentUri, response.Result.Uri);
             Assert.Equal("Price * Quantity", response.Result.Text);
 
             // no change
-            sendToClientData.Clear();
+            _sendToClientData.Clear();
             testServer.OnDataReceived(JsonSerializer.Serialize(new
             {
                 jsonrpc = "2.0",
@@ -913,8 +913,8 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
                     }
                 }
             }));
-            Assert.Single(sendToClientData);
-            response = JsonSerializer.Deserialize<JsonRpcInitialFixupResponse>(sendToClientData[0], _jsonSerializerOptions);
+            Assert.Single(_sendToClientData);
+            response = JsonSerializer.Deserialize<JsonRpcInitialFixupResponse>(_sendToClientData[0], _jsonSerializerOptions);
             Assert.Equal("123", response.Id);
             Assert.Equal(documentUri, response.Result.Uri);
             Assert.Equal("Price * Quantity", response.Result.Text);
