@@ -1,7 +1,9 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using Microsoft.PowerFx.Core.ContractsUtils;
+using System.Collections.Generic;
+using System.Diagnostics;
+using Microsoft.PowerFx.Core.App;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 
