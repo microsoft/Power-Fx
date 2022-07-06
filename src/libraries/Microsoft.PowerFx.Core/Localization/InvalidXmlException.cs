@@ -3,6 +3,7 @@
 
 using System.Xml;
 using System.Xml.Linq;
+using Microsoft.PowerFx.Core.ContractsUtils;
 using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Core.Localization

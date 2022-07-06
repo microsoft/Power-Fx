@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using Microsoft.PowerFx.Core.ContractsUtils;
 
 namespace Microsoft.PowerFx.Core.Utils
 {
