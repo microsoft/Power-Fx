@@ -1,6 +1,8 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using Microsoft.PowerFx.Core.ContractsUtils;
+
 namespace Microsoft.PowerFx.Core.Utils
 {
     internal static class Hashing

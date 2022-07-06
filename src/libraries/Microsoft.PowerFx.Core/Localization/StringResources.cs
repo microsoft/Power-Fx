@@ -7,9 +7,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Resources;
-using System.Text.RegularExpressions;
-using System.Xml.Linq;
-using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Core.ContractsUtils;
 
 namespace Microsoft.PowerFx.Core.Localization
 {

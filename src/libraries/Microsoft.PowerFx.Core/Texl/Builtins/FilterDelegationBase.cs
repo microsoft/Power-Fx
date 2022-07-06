@@ -3,11 +3,11 @@
 
 using System.Numerics;
 using Microsoft.PowerFx.Core.Binding;
+using Microsoft.PowerFx.Core.ContractsUtils;
 using Microsoft.PowerFx.Core.Functions.Delegation;
 using Microsoft.PowerFx.Core.Functions.Delegation.DelegationMetadata;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
-using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
 
 #pragma warning disable SA1402 // File may only contain a single type

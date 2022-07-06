@@ -6,6 +6,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
+using Microsoft.PowerFx.Core.ContractsUtils;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Functions.FunctionArgValidators;

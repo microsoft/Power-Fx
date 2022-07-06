@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using Microsoft.PowerFx.Core.ContractsUtils;
 using Microsoft.PowerFx.Syntax;
 using Conditional = System.Diagnostics.ConditionalAttribute;
 
