@@ -74,7 +74,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 Message = "The Date/Time could not be parsed",
                 Span = irContext.SourceContext,
-                Kind = ErrorKind.BadLanguageCode
+                Kind = ErrorKind.InvalidArgument
             });
         }
 

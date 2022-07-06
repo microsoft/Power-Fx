@@ -371,6 +371,16 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: DateParse)
             },
             {
+                BuiltinFunctionsCore.DateValue_UO,
+                StandardErrorHandling<UntypedObjectValue>(
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<UntypedObjectValue>,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: DateValue_UO)
+            },
+            {
                 BuiltinFunctionsCore.DateTimeValue,
                 StandardErrorHandling<StringValue>(
                     expandArguments: NoArgExpansion,
@@ -379,6 +389,16 @@ namespace Microsoft.PowerFx.Functions
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
                     targetFunction: DateTimeParse)
+            },
+            {
+                BuiltinFunctionsCore.DateTimeValue_UO,
+                StandardErrorHandling<UntypedObjectValue>(
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<UntypedObjectValue>,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: DateTimeValue_UO)
             },
             {
                 BuiltinFunctionsCore.Day,
