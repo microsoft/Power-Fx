@@ -23,11 +23,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using System.Text;
-using Contracts = Microsoft.PowerFx.Core.Utils.Contracts;
 using Microsoft.PowerFx;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Types;
 using System.Threading;
+using Microsoft.PowerFx.Core.ContractsUtils;
 
 namespace Microsoft.AppMagic.Authoring.Texl.Builtins
 {

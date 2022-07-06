@@ -5,7 +5,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Core.ContractsUtils;
 
 namespace Microsoft.PowerFx.Intellisense
 {

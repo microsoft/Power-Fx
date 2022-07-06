@@ -162,9 +162,9 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Core.FormulaTypeSchema",
                 "Microsoft.PowerFx.Core.FormulaTypeToSchemaConverter",
                 "Microsoft.PowerFx.Core.Utils.DName",
-                "Microsoft.PowerFx.Core.Utils.DPath",
-                "Microsoft.PowerFx.Core.Utils.ICheckable",
-                "Microsoft.PowerFx.Core.Localization.ErrorResourceKey"
+                "Microsoft.PowerFx.Core.Utils.DPath",                
+                "Microsoft.PowerFx.Core.Localization.ErrorResourceKey",
+                "Microsoft.PowerFx.Core.Utils.ICheckable"
             };
 
             var sb = new StringBuilder();
