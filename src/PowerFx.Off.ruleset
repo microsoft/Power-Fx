@@ -358,7 +358,7 @@
     <Rule Id="CA2245" Action="Warning" />
     <Rule Id="CA2246" Action="Warning" />
     <Rule Id="CA2247" Action="Warning" />
-    <Rule Id="CA2248" Action="Warning" />
+    <Rule Id="CA2248" Action="None" />       <!-- REQUIRED * CA2248: Provide correct enum argument to Enum.HasFlag -->
     <Rule Id="CA2249" Action="Warning" />
     <Rule Id="CA2300" Action="Warning" />
     <Rule Id="CA2301" Action="Warning" />
