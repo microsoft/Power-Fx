@@ -138,22 +138,22 @@ Errors: Error 0-14: Invalid argument type. Expecting one of the following: Numbe
 15
 
 >> DateValue(ParseJSON("""2011-1-15"""))
-#Error(Kind=BadLanguageCode)
+#Error(Kind=InvalidArgument)
 
 >> DateValue(ParseJSON("null"))
 Blank()
 
 >> DateValue(ParseJSON("""abcdef"""))
-#Error(Kind=BadLanguageCode)
+#Error(Kind=InvalidArgument)
 
 >> DateDiff(DateTimeValue(ParseJSON("""2011-01-15T08:00:00.000Z""")), DateTimeValue(ParseJSON("""2011-01-30T08:00:00.000Z""")))
 15
 
 >> DateTimeValue(ParseJSON("""2011-01-15T08:0:00.000Z"""))
-#Error(Kind=BadLanguageCode)
+#Error(Kind=InvalidArgument)
 
 >> DateTimeValue(ParseJSON("null"))
 Blank()
 
 >> DateTimeValue(ParseJSON("""abcdef"""))
-#Error(Kind=BadLanguageCode)
+#Error(Kind=InvalidArgument)
