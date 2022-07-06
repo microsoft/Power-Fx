@@ -204,6 +204,8 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction BooleanN_T = _featureGateFunctions.Append(new BooleanNFunction_T());
         public static readonly TexlFunction Boolean_UO = _featureGateFunctions.Append(new BooleanFunction_UO());
         public static readonly TexlFunction CountRows_UO = _featureGateFunctions.Append(new CountRowsFunction_UO());
+        public static readonly TexlFunction DateValue_UO = _featureGateFunctions.Append(new DateValueFunction_UO());
+        public static readonly TexlFunction DateTimeValue_UO = _featureGateFunctions.Append(new DateTimeValueFunction_UO());
 
         public static readonly TexlFunction IsUTCToday = _featureGateFunctions.Append(new IsUTCTodayFunction());
         public static readonly TexlFunction UTCNow = _featureGateFunctions.Append(new UTCNowFunction());
