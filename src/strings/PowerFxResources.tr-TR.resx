@@ -497,6 +497,39 @@
   <data name="AboutBoolean_text" xml:space="preserve">
     <value>Boole değerine dönüştürülecek metin değeri.</value>
   </data>
+  <data name="AboutBooleanT" xml:space="preserve">
+    <value>Metin değerleri sütununu boole değerleri sütununa dönüştürür.</value>
+    
+  </data>
+  <data name="BooleanTArg1" xml:space="preserve">
+    <value>giriş</value>
+    
+  </data>
+  <data name="AboutBooleanT_input" xml:space="preserve">
+    <value>İşlenecek metin değerlerini içeren bir sütun.</value>
+  </data>
+  <data name="AboutBooleanN" xml:space="preserve">
+    <value>Bir "sayıyı" boole değerine dönüştürür.</value>
+    
+  </data>
+  <data name="BooleanNArg1" xml:space="preserve">
+    <value>sayı</value>
+    
+  </data>
+  <data name="AboutBooleanN_number" xml:space="preserve">
+    <value>Boole değerine dönüştürülecek sayı değeri.</value>
+  </data>
+  <data name="AboutBooleanNT" xml:space="preserve">
+    <value>Sayısal değerler sütununu boole değerleri sütununa dönüştürür.</value>
+    
+  </data>
+  <data name="BooleanNTArg1" xml:space="preserve">
+    <value>giriş</value>
+    
+  </data>
+  <data name="AboutBooleanNT_input" xml:space="preserve">
+    <value>İşlenecek sayı değerlerini içeren bir sütun.</value>
+  </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Boş olmayan ilk bağımsız değişkeni döndürür</value>
     
@@ -4359,7 +4392,7 @@
     <value>Veri kaynağı, formülü işleyemeyebilir ve eksik bir veri kümesi döndürebilir. Veri kümesi eksikse uygulamanız doğru sonuçlar döndürmeyebilir veya düzgün çalışmayabilir.</value>
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_HowToFix_1" xml:space="preserve">
-    <value>Veri kümeniz 500 kayıt sınırını aşıyor ancak 2000'den az kayıt içeriyorsa sınırı sıfırlamayı deneyin.</value>
+    <value>Veri kümeniz, 500 kayıt sınırını aşıyor ancak 2000'den az kayıt içeriyorsa sınırı sıfırlamayı deneyin.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_HowToFix_2" xml:space="preserve">
@@ -4371,11 +4404,11 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_Link_1" xml:space="preserve">
-    <value>Makale: Tuval uygulamasında temsilciyi anlama</value>
+    <value>Makale: Tuval uygulamasında temsilci atamayı anlama</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_Link_2" xml:space="preserve">
-    <value>Blog: Temsilciye yönelik veri satırı sınırları</value>
+    <value>Blog: Temsilci atamaya yönelik veri satırı sınırları</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_ShortMessage" xml:space="preserve">
@@ -4386,7 +4419,7 @@
     <value>Veri kaynağı, formülü işleyemeyebilir ve eksik bir veri kümesi döndürebilir. Veri kümesi eksikse uygulamanız doğru sonuçlar döndürmeyebilir veya düzgün çalışmayabilir.</value>
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_HowToFix_1" xml:space="preserve">
-    <value>Veri kümeniz 500 kayıt sınırını aşıyor ancak 2000'den az kayıt içeriyorsa sınırı sıfırlamayı deneyin.</value>
+    <value>Veri kümeniz, 500 kayıt sınırını aşıyor ancak 2000'den az kayıt içeriyorsa sınırı sıfırlamayı deneyin.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_HowToFix_2" xml:space="preserve">
@@ -4398,11 +4431,11 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_Link_1" xml:space="preserve">
-    <value>Makale: Tuval uygulamasında temsilciyi anlama</value>
+    <value>Makale: Tuval uygulamasında temsilci atamayı anlama</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_Link_2" xml:space="preserve">
-    <value>Blog: Temsilciye yönelik veri satırı sınırları</value>
+    <value>Blog: Temsilci atamaya yönelik veri satırı sınırları</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_ShortMessage" xml:space="preserve">
@@ -4417,7 +4450,7 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_2" xml:space="preserve">
-    <value>Veri kümeniz 500 kayıt sınırını aşıyor ancak 2000'den az kayıt içeriyorsa sınırı sıfırlamayı deneyin.</value>
+    <value>Veri kümeniz, 500 kayıt sınırını aşıyor ancak 2000'den az kayıt içeriyorsa sınırı sıfırlamayı deneyin.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_3" xml:space="preserve">
@@ -4429,11 +4462,11 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_Link_1" xml:space="preserve">
-    <value>Makale: Tuval uygulamasında temsilciyi anlama</value>
+    <value>Makale: Tuval uygulamasında temsilci atamayı anlama</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_Link_2" xml:space="preserve">
-    <value>Blog: Temsilciye yönelik veri satırı sınırları</value>
+    <value>Blog: Temsilci atamaya yönelik veri satırı sınırları</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_ShortMessage" xml:space="preserve">
@@ -4462,11 +4495,11 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_Link_1" xml:space="preserve">
-    <value>Makale: Tuval uygulamasında temsilciyi anlama</value>
+    <value>Makale: Tuval uygulamasında temsilci atamayı anlama</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_Link_2" xml:space="preserve">
-    <value>Blog: Temsilciye yönelik veri satırı sınırları</value>
+    <value>Blog: Temsilci atamaya yönelik veri satırı sınırları</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_ShortMessage" xml:space="preserve">
@@ -4478,7 +4511,7 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_HowToFix_1" xml:space="preserve">
-    <value>Veri kümeniz 500 kayıt sınırını aşıyor ancak 2000'den az kayıt içeriyorsa sınırı sıfırlamayı deneyin.</value>
+    <value>Veri kümeniz, 500 kayıt sınırını aşıyor ancak 2000'den az kayıt içeriyorsa sınırı sıfırlamayı deneyin.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_HowToFix_2" xml:space="preserve">
@@ -4490,11 +4523,11 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_Link_1" xml:space="preserve">
-    <value>Makale: Tuval uygulamasında temsilciyi anlama</value>
+    <value>Makale: Tuval uygulamasında temsilci atamayı anlama</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_Link_2" xml:space="preserve">
-    <value>Blog: Temsilciye yönelik veri satırı sınırları</value>
+    <value>Blog: Temsilci atamaya yönelik veri satırı sınırları</value>
     
   </data>
   <data name="ErrorResource_ErrOnlyOneViewExpected_ShortMessage" xml:space="preserve">
@@ -4551,6 +4584,10 @@
   </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula '{0}' zaten var.</value>
+  </data>
+  <data name="ErrorResource_NameConflict" xml:space="preserve">
+    <value>'{1}' adında bir {0} oluşturulamıyor çünkü bu ad zaten bir {2} için kullanılıyor.</value>
+    
   </data>
   <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
     <value>'{0}' için ilk bağımsız değişken, geçerli bir değişken adı olmalı ve mevcut denetim, ekran, koleksiyon veya veri kaynağı adlarıyla çakışmamalıdır. Bulunan tür: '{1}'</value>
