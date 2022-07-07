@@ -157,3 +157,21 @@ Blank()
 
 >> DateTimeValue(ParseJSON("""abcdef"""))
 #Error(Kind=InvalidArgument)
+
+>> ColorValue(ParseJSON("""#808080ff"""))
+Color [Gray]
+
+>> ColorValue(ParseJSON("""#808080"""))
+Color [Gray]
+
+>> ColorValue(ParseJSON("""Blue"""))
+Color [Blue]
+
+>> ColorValue(ParseJSON("""x"""))
+#Error(Kind=InvalidArgument)
+
+>> ColorValue(ParseJSON(Blank()))
+Blank()
+
+>> ColorValue(ParseJSON("}{"))
+#Error(Kind=InvalidFunctionUsage)
