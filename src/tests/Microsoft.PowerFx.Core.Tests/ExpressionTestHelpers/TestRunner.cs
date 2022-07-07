@@ -382,6 +382,10 @@ namespace Microsoft.PowerFx.Core.Tests
             {
                 sb.Append(cv.Value.ToString());
             }
+            else if (result is GuidValue gv)
+            {
+                sb.Append(gv.Value.ToString());
+            }
             else if (result is ErrorValue)
             {
                 sb.Append(result);

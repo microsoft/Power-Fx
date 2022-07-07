@@ -566,6 +566,16 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: ForAll)
             },
             {
+                BuiltinFunctionsCore.GUIDPure,
+                StandardErrorHandling<StringValue>(
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<StringValue>,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: Guid)
+            },
+            {
                 BuiltinFunctionsCore.IsBlank,
                 StandardErrorHandling<FormulaValue>(
                     expandArguments: NoArgExpansion,

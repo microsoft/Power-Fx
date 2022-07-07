@@ -573,5 +573,20 @@ namespace Microsoft.PowerFx.Functions
                 return CommonErrors.InvalidColorFormatError(irContext);
             }
         }
+
+        public static FormulaValue Guid(IRContext irContext, StringValue[] args)
+        {
+            var text = args[0].Value;
+            try
+            {
+                var guid = new Guid(text);
+
+                return new GuidValue(irContext, guid);
+            }
+            catch
+            {
+                return CommonErrors.GenericInvalidArgument(irContext);
+            }
+        }
     }
 }
