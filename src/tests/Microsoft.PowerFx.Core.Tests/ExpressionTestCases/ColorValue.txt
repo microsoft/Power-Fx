@@ -1,0 +1,17 @@
+﻿>> ColorValue("#808080ff")
+Color [Gray]
+
+>> ColorValue("#808080")
+Color [Gray]
+
+>> ColorValue("Blue")
+Color [Blue]
+
+>> ColorValue("x")
+#Error(Kind=InvalidArgument)
+
+>> ColorValue(Blank())
+Blank()
+
+>> ColorValue(Text(1/0))
+#Error(Kind=Div0)

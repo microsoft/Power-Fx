@@ -378,6 +378,10 @@ namespace Microsoft.PowerFx.Core.Tests
             {
                 sb.Append($"{opt.Type.OptionSetName}.{opt.Option}");
             }
+            else if (result is ColorValue cv)
+            {
+                sb.Append(cv.Value.ToString());
+            }
             else if (result is ErrorValue)
             {
                 sb.Append(result);

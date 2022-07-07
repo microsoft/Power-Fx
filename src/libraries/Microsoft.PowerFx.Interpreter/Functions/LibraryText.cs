@@ -534,13 +534,33 @@ namespace Microsoft.PowerFx.Functions
             return new StringValue(irContext, result);
         }
 
+        private static readonly Regex Hex6 = new Regex("^#[0-9a-fA-F]{6,6}$");
+        private static readonly Regex Hex8 = new Regex("^#[0-9a-fA-F]{8,8}$");
+
         public static FormulaValue ColorValue(IRContext irContext, StringValue[] args)
         {
-            var text = args[0];
+            var text = args[0].Value;
 
             try
             {
-                var result = ColorTranslator.FromHtml(text.Value);
+                string html;
+                if (Hex6.IsMatch(text))
+                {
+                    // Prefix with Alpha
+                    html = $"#ff{text.Substring(1)}";
+                }
+                else if (Hex8.IsMatch(text))
+                {
+                    // C# uses ARGB, but the PowerFx language expects RGBA
+                    // so we need to move the Alpha channel to the front
+                    html = $"#{text.Substring(7)}{text.Substring(1, 6)}";
+                }
+                else
+                {
+                    html = text;
+                }
+
+                var result = ColorTranslator.FromHtml(html);
                 return new ColorValue(irContext, result);
             }
             catch
