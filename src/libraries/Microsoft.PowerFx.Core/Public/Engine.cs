@@ -49,7 +49,7 @@ namespace Microsoft.PowerFx
         /// Returns the maximum number of recursive function calls.
         /// </summary>
         /// <returns></returns>
-        public int GetMaxCallDepth()
+        internal int GetMaxCallDepth()
         {
             return Config.GetMaxCallDepth();
         }

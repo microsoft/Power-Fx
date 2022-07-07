@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Functions;
@@ -14,6 +15,7 @@ using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Interpreter;
 using Microsoft.PowerFx.Types;
 using Xunit;
 using Xunit.Sdk;
@@ -331,21 +333,14 @@ namespace Microsoft.PowerFx.Tests
         }
 
         [Fact]
-        public void RedefinitionError()
+        public async void RedefinitionError()
         {
             var config = new PowerFxConfig(null);
             var recalcEngine = new RecalcEngine(config);
             Assert.True(recalcEngine.DefineFunctions(
                 new UDFDefinition("foo", "foo()", FormulaType.Blank),
                 new UDFDefinition("foo", "x+1", FormulaType.Number)).Any());
-            try
-            {
-                recalcEngine.Eval("foo()");
-                Assert.True(false);
-            }
-            catch (System.AggregateException)
-            {
-            }
+            await Assert.ThrowsAsync<InvalidOperationException>(() => recalcEngine.EvalAsync("foo()", CancellationToken.None));
         }
 
         [Fact]
@@ -362,23 +357,9 @@ namespace Microsoft.PowerFx.Tests
             var config = new PowerFxConfig(null);
             var recalcEngine = new RecalcEngine(config);
             Assert.False(recalcEngine.DefineFunctions(new UDFDefinition("foo", "x+1", FormulaType.Number, new NamedFormulaType("x", FormulaType.Number))).Any());
-            try
-            {
-                var result = recalcEngine.Eval("foo(false)");
-                Assert.True(false);
-            }
-            catch (AggregateException)
-            {
-            }
-
-            try
-            {
-                var result = recalcEngine.Eval("foo(1)");
-            }
-            catch (AggregateException)
-            {
-                Assert.True(false);
-            }
+            Assert.False(recalcEngine.Check("foo(False)").IsSuccess);
+            Assert.False(recalcEngine.Check("foo(Table( { Value: \"Strawberry\" }, { Value: \"Vanilla\" } ))").IsSuccess);
+            Assert.True(recalcEngine.Check("foo(1)").IsSuccess);
         }
 
         [Fact]

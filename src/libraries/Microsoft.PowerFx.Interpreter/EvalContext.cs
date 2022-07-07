@@ -15,8 +15,6 @@ namespace Microsoft.PowerFx.Interpreter
         // We can set this up to read from powerfx config, but it isn't nessecary yet.
         private readonly int _maxCallDepth;
 
-        private readonly Mutex _mutex = new Mutex();
-
         internal EvalContext(int maxCallDepth = 100)
         {
             _maxCallDepth = maxCallDepth;

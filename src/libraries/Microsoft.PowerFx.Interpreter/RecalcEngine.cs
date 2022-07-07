@@ -13,6 +13,7 @@ using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Interpreter;
+using Microsoft.PowerFx.Interpreter.UDF;
 using Microsoft.PowerFx.Types;
 using static Microsoft.PowerFx.Interpreter.UDFHelper;
 
@@ -21,7 +22,7 @@ namespace Microsoft.PowerFx
     /// <summary>
     /// Holds a set of Power Fx variables and formulas. Formulas are recalculated when their dependent variables change.
     /// </summary>
-    public sealed partial class RecalcEngine : Engine, IScope, IPowerFxEngine
+    public sealed class RecalcEngine : Engine, IScope, IPowerFxEngine
     {
         internal Dictionary<string, RecalcFormulaInfo> Formulas { get; } = new Dictionary<string, RecalcFormulaInfo>();
 
@@ -91,7 +92,7 @@ namespace Microsoft.PowerFx
             result.ThrowOnErrors();            
 
             (var irnode, var ruleScopeSymbol) = IRTranslator.Translate(result._binding);
-            return new ParsedExpression(irnode, ruleScopeSymbol, new Interpreter.EvalContext(maxCallDepth));
+            return new ParsedExpression(irnode, ruleScopeSymbol, new EvalContext(maxCallDepth));
         }
 
         // This handles lookups in the global scope. 
@@ -177,29 +178,20 @@ namespace Microsoft.PowerFx
         /// <summary>
         /// For private use because we don't want anyone defining a function without binding it.
         /// </summary>
-        /// <param name="name"></param>
-        /// <param name="body"></param>
-        /// <param name="returnType"></param>
-        /// <param name="parameters"></param>
         /// <returns></returns>
-        private UDFLazyBinder DefineFunction(string name, string body, FormulaType returnType, params NamedFormulaType[] parameters)
+        private UDFLazyBinder DefineFunction(UDFDefinition definition)
         {
             // $$$ Would be a good helper function 
             var record = new RecordType();
-            foreach (var p in parameters)
+            foreach (var p in definition.Parameters)
             {
                 record = record.Add(p);
             }
 
-            var check = new LazyCheck(this, body, record);
+            var check = new CheckWrapper(this, definition.Body, record);
 
-            var func = new UDFTexlFunction(name, returnType, parameters.Select(x => x.Type).ToArray())
-            {
-                _parameterNames = parameters,
-                _check = check,
-            };
-
-            if (_customFuncs.ContainsKey(name))
+            var func = new UserDefinedTexlFunction(definition.Name, definition.ReturnType, definition.Parameters, check);
+            if (_customFuncs.ContainsKey(definition.Name))
             {
                 return new UDFLazyBinder(
                     new ExpressionError()
@@ -207,11 +199,11 @@ namespace Microsoft.PowerFx
                     Message = "Function name already defined",
                     Span = null,
                     Kind = ErrorKind.Internal, //Todo: change this out for a new kind of ErrorKind error.
-                }, name);
+                }, definition.Name);
             }
 
-            _customFuncs[name] = func;
-            return new UDFLazyBinder(func, name);
+            _customFuncs[definition.Name] = func;
+            return new UDFLazyBinder(func, definition.Name);
         }
 
         private void RemoveFunction(string name)
@@ -225,14 +217,14 @@ namespace Microsoft.PowerFx
         /// </summary>
         /// <param name="udfDefinitions"></param>
         /// <returns></returns>
-        internal IEnumerable<ExpressionError> DefineFunctions(params UDFDefinition[] udfDefinitions)
+        internal IEnumerable<ExpressionError> DefineFunctions(IEnumerable<UDFDefinition> udfDefinitions)
         {
             var expressionErrors = new List<ExpressionError>();
 
             var binders = new List<UDFLazyBinder>();
             foreach (UDFDefinition definition in udfDefinitions)
             {
-                binders.Add(DefineFunction(definition._name, definition._body, definition._returnType, definition._parameters));
+                binders.Add(DefineFunction(definition));
             }
             
             foreach (UDFLazyBinder lazyBinder in binders)
@@ -248,11 +240,16 @@ namespace Microsoft.PowerFx
             {
                 foreach (UDFLazyBinder lazyBinder in binders)
                 {
-                    RemoveFunction(lazyBinder._name);
+                    RemoveFunction(lazyBinder.Name);
                 }
             }
 
             return expressionErrors;
+        }
+
+        internal IEnumerable<ExpressionError> DefineFunctions(params UDFDefinition[] udfDefinitions)
+        {
+            return DefineFunctions(udfDefinitions.AsEnumerable());
         }
 
         // Invoke onUpdate() each time this formula is changed, passing in the new value. 
