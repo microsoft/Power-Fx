@@ -217,7 +217,7 @@ namespace Microsoft.PowerFx.Functions
 
             if (impl.Type == FormulaType.String)
             {
-                var str = new StringValue(irContext, impl.GetString());
+                var str = new StringValue(IRContext.NotInSource(FormulaType.String), impl.GetString());
                 return Guid(irContext, new StringValue[] { str });
             }
 
