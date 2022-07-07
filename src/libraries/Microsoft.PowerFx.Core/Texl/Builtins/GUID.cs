@@ -15,6 +15,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // GUID()
     internal sealed class GUIDNoArgFunction : BuiltinFunction
     {
+        public const string GUIDFunctionInvariantName = "GUID";
+
         // Multiple invocations may produce different return values.
         public override bool IsStateless => false;
 
@@ -23,7 +25,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override bool SupportsParamCoercion => true;
 
         public GUIDNoArgFunction()
-            : base("GUID", TexlStrings.AboutGUID, FunctionCategories.Text, DType.Guid, 0, 0, 0)
+            : base(GUIDFunctionInvariantName, TexlStrings.AboutGUID, FunctionCategories.Text, DType.Guid, 0, 0, 0)
         {
         }
 
@@ -41,7 +43,25 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override bool SupportsParamCoercion => false;
 
         public GUIDPureFunction()
-            : base("GUID", TexlStrings.AboutGUID, FunctionCategories.Text, DType.Guid, 0, 1, 1, DType.String)
+            : base(GUIDNoArgFunction.GUIDFunctionInvariantName, TexlStrings.AboutGUID, FunctionCategories.Text, DType.Guid, 0, 1, 1, DType.String)
+        {
+        }
+
+        public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
+        {
+            yield return new[] { TexlStrings.GUIDArg };
+        }
+    }
+
+    // GUID(GuidString:uo)
+    internal sealed class GUIDPureFunction_UO : BuiltinFunction
+    {
+        public override bool IsSelfContained => true;
+
+        public override bool SupportsParamCoercion => false;
+
+        public GUIDPureFunction_UO()
+            : base(GUIDNoArgFunction.GUIDFunctionInvariantName, TexlStrings.AboutGUID, FunctionCategories.Text, DType.Guid, 0, 1, 1, DType.UntypedObject)
         {
         }
 

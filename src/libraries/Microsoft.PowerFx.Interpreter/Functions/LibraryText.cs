@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -531,6 +532,21 @@ namespace Microsoft.PowerFx.Functions
             var result = text.Value.Trim();
 
             return new StringValue(irContext, result);
+        }
+
+        public static FormulaValue ColorValue(IRContext irContext, StringValue[] args)
+        {
+            var text = args[0];
+
+            try
+            {
+                var result = ColorTranslator.FromHtml(text.Value);
+                return new ColorValue(irContext, result);
+            }
+            catch
+            {
+                return CommonErrors.InvalidColorFormatError(irContext);
+            }
         }
     }
 }

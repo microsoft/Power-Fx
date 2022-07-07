@@ -331,12 +331,14 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // TimeValue(time_text:s, [languageCode:s]) : T
     internal sealed class TimeValueFunction : DateTimeGenericFunction
     {
+        public const string TimeValueFunctionInvariantName = "TimeValue";
+
         public override bool HasPreciseErrors => true;
 
         public override bool SupportsParamCoercion => true;
 
         public TimeValueFunction()
-            : base("TimeValue", TexlStrings.AboutTimeValue, DType.Time)
+            : base(TimeValueFunctionInvariantName, TexlStrings.AboutTimeValue, DType.Time)
         {
         }
 
@@ -710,6 +712,26 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override string GetUniqueTexlRuntimeName(bool isPrefetching = false)
         {
             return GetUniqueTexlRuntimeName(suffix: "_UO");
+        }
+    }
+
+    // TimeValue(time_text:uo) : T
+    internal sealed class TimeValueFunction_UO : BuiltinFunction
+    {
+        public override bool HasPreciseErrors => true;
+
+        public override bool SupportsParamCoercion => false;
+
+        public override bool IsSelfContained => true;
+
+        public TimeValueFunction_UO()
+            : base(TimeValueFunction.TimeValueFunctionInvariantName, TexlStrings.AboutTimeValue, FunctionCategories.DateTime, DType.Time, 0, 1, 1, DType.UntypedObject)
+        {
+        }
+
+        public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
+        {
+            yield return new[] { TexlStrings.TimeValueArg1 };
         }
     }
 
