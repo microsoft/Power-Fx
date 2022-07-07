@@ -534,8 +534,8 @@ namespace Microsoft.PowerFx.Functions
             return new StringValue(irContext, result);
         }
 
-        private static readonly Regex Hex6 = new Regex("^#[0-9a-fA-F]{6,6}$");
-        private static readonly Regex Hex8 = new Regex("^#[0-9a-fA-F]{8,8}$");
+        private static readonly Regex Hex6 = new Regex("^#[0-9a-fA-F]{6,6}$", RegexOptions.Compiled);
+        private static readonly Regex Hex8 = new Regex("^#[0-9a-fA-F]{8,8}$", RegexOptions.Compiled);
 
         public static FormulaValue ColorValue(IRContext irContext, StringValue[] args)
         {
