@@ -192,8 +192,8 @@
     <Rule Id="SA1651" Action="None" />
   </Rules>
   <Rules AnalyzerId="Microsoft.CodeAnalysis.CSharp.NetAnalyzers" RuleNamespace="Microsoft.CodeAnalysis.CSharp.NetAnalyzers">
-    <Rule Id="CA1001" Action="None" />       <!-- REQUIRED * CA1001: Types that own disposable fields should be disposable -->
-    <Rule Id="CA1032" Action="None" />
+    <Rule Id="CA1001" Action="Info" />       <!-- CA1001: Types that own disposable fields should be disposable -->
+    <Rule Id="CA1032" Action="None" />       <!-- REQUIRED * CA1032: Implement standard exception constructors -->
     <Rule Id="CA1200" Action="Warning" />
     <Rule Id="CA1309" Action="None" />       <!-- REQUIRED * CA1309: Use ordinal StringComparison -->
     <Rule Id="CA1507" Action="None" />       <!-- REQUIRED * CA1507: Use nameof in place of string -->
@@ -319,7 +319,7 @@
     <Rule Id="CA1836" Action="Warning" />
     <Rule Id="CA1837" Action="Warning" />
     <Rule Id="CA1838" Action="Warning" />
-    <Rule Id="CA2000" Action="None" />       <!-- REQUIRED * CA2000: Dispose objects before losing scope -->
+    <Rule Id="CA2000" Action="Info" />      <!-- CA2000: Dispose objects before losing scope -->
     <Rule Id="CA2002" Action="Warning" />
     <Rule Id="CA2007" Action="None" />       <!-- REQUIRED * CA2007: Do not directly await a Task -->
     <Rule Id="CA2008" Action="Warning" />

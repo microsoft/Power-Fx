@@ -54,10 +54,9 @@ namespace Microsoft.PowerFx.Connectors
                 
         public override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
-            HttpRequestMessage req = Transform(request);
+            using HttpRequestMessage req = Transform(request);
 
-            var response = await _client.SendAsync(req, cancellationToken);
-            return response;
+            return await _client.SendAsync(req, cancellationToken);            
         }
 
         public HttpRequestMessage Transform(HttpRequestMessage request)
