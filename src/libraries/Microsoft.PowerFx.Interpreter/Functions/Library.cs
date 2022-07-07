@@ -576,6 +576,16 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: Guid)
             },
             {
+                BuiltinFunctionsCore.GUID_UO,
+                StandardErrorHandling<UntypedObjectValue>(
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<UntypedObjectValue>,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: Guid_UO)
+            },
+            {
                 BuiltinFunctionsCore.IsBlank,
                 StandardErrorHandling<FormulaValue>(
                     expandArguments: NoArgExpansion,

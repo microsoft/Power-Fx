@@ -210,5 +210,18 @@ namespace Microsoft.PowerFx.Functions
 
             return CommonErrors.RuntimeTypeMismatch(irContext);
         }
+
+        public static FormulaValue Guid_UO(IRContext irContext, UntypedObjectValue[] args)
+        {
+            var impl = args[0].Impl;
+
+            if (impl.Type == FormulaType.String)
+            {
+                var str = new StringValue(irContext, impl.GetString());
+                return Guid(irContext, new StringValue[] { str });
+            }
+
+            return CommonErrors.RuntimeTypeMismatch(irContext);
+        }
     }
 }

@@ -161,20 +161,11 @@ Blank()
 >> ColorValue(ParseJSON("""#808080ff"""))
 Color [Gray]
 
->> ColorValue(ParseJSON("""#808080"""))
-Color [Gray]
-
->> ColorValue(ParseJSON("""Blue"""))
-Color [Blue]
-
->> ColorValue(ParseJSON("""x"""))
-#Error(Kind=InvalidArgument)
-
->> ColorValue(ParseJSON(""""""))
+>> ColorValue(ParseJSON("null"))
 Blank()
 
->> ColorValue(ParseJSON(Blank()))
-Blank()
+>> GUID(ParseJSON("""5cc45615-f759-4a53-b225-d3a2497f60ad"""))
+5cc45615-f759-4a53-b225-d3a2497f60ad
 
->> ColorValue(ParseJSON("}{"))
-#Error(Kind=InvalidFunctionUsage)
+>> GUID(ParseJSON("null"))
+Blank()
