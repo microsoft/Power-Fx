@@ -160,7 +160,7 @@ namespace Microsoft.PowerFx
             var check = Check(expressionText, (RecordType)parameters.IRContext.ResultType, options);
             check.ThrowOnErrors();
 
-            var newValue = await check.Expression.EvalAsync(parameters, cancel);
+            var newValue = await check.Expression.EvalAsync(parameters, cancel).ConfigureAwait(false);
             return newValue;
         }
 

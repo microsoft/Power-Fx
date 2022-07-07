@@ -146,7 +146,7 @@ namespace Microsoft.PowerFx.Connectors
         public async Task<FormulaValue> DecodeResponseAsync(HttpResponseMessage response)
         {
             // $$$ Do we need to check response media type to confirm that the content is indeed json?
-            var json = await response.Content.ReadAsStringAsync();
+            var json = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 
             if (!response.IsSuccessStatusCode)
             {
@@ -191,10 +191,10 @@ namespace Microsoft.PowerFx.Connectors
 
             var result2 = await _cache.TryGetAsync(cacheScope, key, async () =>
             {
-                var response = await _httpClient.SendAsync(request, cancel);
-                result = await DecodeResponseAsync(response);
+                var response = await _httpClient.SendAsync(request, cancel).ConfigureAwait(false);
+                result = await DecodeResponseAsync(response).ConfigureAwait(false);
                 return result;
-            });
+            }).ConfigureAwait(false);
 
             return result2;
         }

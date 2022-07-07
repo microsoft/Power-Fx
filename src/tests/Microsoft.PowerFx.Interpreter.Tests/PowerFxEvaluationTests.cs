@@ -74,7 +74,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 engine.UpdateVariable("varNumber", 9999);
 
                 // Run in special mode that ensures we're not calling .Result
-                var result = await verify.EvalAsync(engine, expr, options);
+                var result = await verify.EvalAsync(engine, expr, options).ConfigureAwait(false);
                 return result;
             }
 
@@ -87,7 +87,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
                 if (string.Equals(iSetup.HandlerName, "AsyncTestSetup", StringComparison.OrdinalIgnoreCase))
                 {
-                    return new RunResult(await RunVerifyAsync(expr, iSetup.Flags.ToParserOptions()));
+                    return new RunResult(await RunVerifyAsync(expr, iSetup.Flags.ToParserOptions()).ConfigureAwait(false));
                 }
 
                 if (iSetup.HandlerName != null)
@@ -116,7 +116,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                     return new RunResult(check);
                 }
 
-                var newValue = await check.Expression.EvalAsync(parameters, CancellationToken.None);
+                var newValue = await check.Expression.EvalAsync(parameters, CancellationToken.None).ConfigureAwait(false);
 
                 return new RunResult(newValue);
             }          

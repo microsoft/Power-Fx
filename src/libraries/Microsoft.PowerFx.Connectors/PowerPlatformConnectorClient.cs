@@ -56,7 +56,7 @@ namespace Microsoft.PowerFx.Connectors
         {
             HttpRequestMessage req = Transform(request);
 
-            var response = await _client.SendAsync(req, cancellationToken);
+            var response = await _client.SendAsync(req, cancellationToken).ConfigureAwait(false);
             return response;
         }
 

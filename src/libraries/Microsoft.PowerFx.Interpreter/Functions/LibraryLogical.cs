@@ -19,7 +19,7 @@ namespace Microsoft.PowerFx.Functions
         {
             foreach (var arg in args)
             {
-                var res = await runner.EvalArgAsync<BooleanValue>(arg, symbolContext, arg.IRContext);
+                var res = await runner.EvalArgAsync<BooleanValue>(arg, symbolContext, arg.IRContext).ConfigureAwait(false);
 
                 if (res.IsValue)
                 {
@@ -45,7 +45,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 runner.CheckCancel();
 
-                var res = await runner.EvalArgAsync<BooleanValue>(arg, symbolContext, arg.IRContext);
+                var res = await runner.EvalArgAsync<BooleanValue>(arg, symbolContext, arg.IRContext).ConfigureAwait(false);
 
                 if (res.IsValue)
                 {

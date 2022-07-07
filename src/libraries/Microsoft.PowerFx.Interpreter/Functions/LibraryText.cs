@@ -54,7 +54,7 @@ namespace Microsoft.PowerFx.Functions
 
                     var childContext = symbolContext.WithScopeValues(row.Value);
 
-                    var result = await arg1.EvalAsync(runner, childContext);
+                    var result = await arg1.EvalAsync(runner, childContext).ConfigureAwait(false);
 
                     var str = (StringValue)result;
                     sb.Append(str.Value);
@@ -235,7 +235,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 runner.CheckCancel();
 
-                var res = await runner.EvalArgAsync<ValidFormulaValue>(arg, symbolContext, arg.IRContext);
+                var res = await runner.EvalArgAsync<ValidFormulaValue>(arg, symbolContext, arg.IRContext).ConfigureAwait(false);
 
                 if (res.IsValue)
                 {

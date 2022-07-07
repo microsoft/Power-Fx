@@ -46,7 +46,7 @@ namespace Microsoft.PowerFx.Tests
 
             var result = await engine.EvalAsync(
                 "MSNWeather.CurrentWeather(\"Redmond\", \"Imperial\").responses.weather.current.temp",
-                CancellationToken.None);
+                CancellationToken.None).ConfigureAwait(false);
 
             Assert.Equal(53.0, result.ToObject()); // from response
 
@@ -102,7 +102,7 @@ namespace Microsoft.PowerFx.Tests
             var result = await engine.EvalAsync(
                 @"AzureBlobStorage.CreateFile(""container"", ""bora1.txt"", ""abc"").Size",
                 CancellationToken.None, 
-                options: new ParserOptions() { AllowsSideEffects = true });
+                options: new ParserOptions() { AllowsSideEffects = true }).ConfigureAwait(false);
 
             dynamic res = result.ToObject();                       
             var size = (double)res;

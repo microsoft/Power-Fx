@@ -72,7 +72,7 @@ namespace Microsoft.PowerFx.Tests
             var checkResult = engine.Check(fxQuery, options: _optionsPost);
             Assert.True(checkResult.IsSuccess, string.Join("\r\n", checkResult.Errors.Select(er => er.Message)));
 
-            var result = await engine.EvalAsync(fxQuery, CancellationToken.None, options: _optionsPost);
+            var result = await engine.EvalAsync(fxQuery, CancellationToken.None, options: _optionsPost).ConfigureAwait(false);
             Assert.NotNull(result);
 
             var r = (dynamic)result.ToObject();
@@ -106,13 +106,13 @@ namespace Microsoft.PowerFx.Tests
             var engine = new RecalcEngine(config);
 
             testConnector.SetResponse("55");
-            var r1 = await engine.EvalAsync("Test.GetKey(\"Key1\")", CancellationToken.None);
+            var r1 = await engine.EvalAsync("Test.GetKey(\"Key1\")", CancellationToken.None).ConfigureAwait(false);
             Assert.Equal(55.0, r1.ToObject());
 
             AssertLog(testConnector, "GET http://localhost:5000/Keys?keyName=Key1");
            
             // hits the cache
-            var r2 = await engine.EvalAsync("Test.GetKey(\"Key1\")", CancellationToken.None);
+            var r2 = await engine.EvalAsync("Test.GetKey(\"Key1\")", CancellationToken.None).ConfigureAwait(false);
             Assert.Equal(55.0, r2.ToObject()); // Cached value
             AssertLog(testConnector, string.Empty); // not called
 
@@ -121,14 +121,14 @@ namespace Microsoft.PowerFx.Tests
             // POST call is a behavior function.
             // Must be called in a behavior context 
             testConnector.SetResponse("99");
-            await Assert.ThrowsAsync<InvalidOperationException>(async () => await engine.EvalAsync("Test.UpdateKey(\"Key1\", 23)", CancellationToken.None));
+            await Assert.ThrowsAsync<InvalidOperationException>(async () => await engine.EvalAsync("Test.UpdateKey(\"Key1\", 23)", CancellationToken.None).ConfigureAwait(false)).ConfigureAwait(false);
 
-            var r3 = await engine.EvalAsync("Test.UpdateKey(\"Key1\", 23)", CancellationToken.None, options: _optionsPost);
+            var r3 = await engine.EvalAsync("Test.UpdateKey(\"Key1\", 23)", CancellationToken.None, options: _optionsPost).ConfigureAwait(false);
             AssertLog(testConnector, "POST http://localhost:5000/Keys?keyName=Key1&newValue=23");
             
             // GET should hit again
             testConnector.SetResponse("99");
-            var r4 = await engine.EvalAsync("Test.GetKey(\"Key1\")", CancellationToken.None);
+            var r4 = await engine.EvalAsync("Test.GetKey(\"Key1\")", CancellationToken.None).ConfigureAwait(false);
             Assert.Equal(99.0, r4.ToObject()); // Cached value
             AssertLog(testConnector, "GET http://localhost:5000/Keys?keyName=Key1");
         }
@@ -148,7 +148,7 @@ namespace Microsoft.PowerFx.Tests
 
             testConnector.SetResponse("55");
 
-            await Assert.ThrowsAsync<InvalidOperationException>(async () => await engine.EvalAsync("Test.GetKey(\"Key1\")", CancellationToken.None));            
+            await Assert.ThrowsAsync<InvalidOperationException>(async () => await engine.EvalAsync("Test.GetKey(\"Key1\")", CancellationToken.None).ConfigureAwait(false)).ConfigureAwait(false);            
         }
 
         // We can bind without calling.

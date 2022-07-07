@@ -20,7 +20,7 @@ namespace Microsoft.PowerFx.Functions
             var arg1 = (LambdaFormulaValue)args[1];
             var arg2 = (LambdaFormulaValue)(args.Length > 2 ? args[2] : null);
 
-            var rows = await LazyFilterAsync(runner, symbolContext, arg0.Rows, arg1);
+            var rows = await LazyFilterAsync(runner, symbolContext, arg0.Rows, arg1).ConfigureAwait(false);
             var row = rows.FirstOrDefault();
 
             if (row != null)
@@ -32,7 +32,7 @@ namespace Microsoft.PowerFx.Functions
                 else
                 {
                     var childContext = symbolContext.WithScopeValues(row.Value);
-                    var value = await arg2.EvalAsync(runner, childContext);
+                    var value = await arg2.EvalAsync(runner, childContext).ConfigureAwait(false);
 
                     if (value is NumberValue number)
                     {
@@ -109,7 +109,7 @@ namespace Microsoft.PowerFx.Functions
 
             var tableType = (TableType)irContext.ResultType;
             var recordIRContext = new IRContext(irContext.SourceContext, tableType.ToRecord());
-            var rows = await LazyAddColumnsAsync(runner, symbolContext, sourceArg.Rows, recordIRContext, newColumns);
+            var rows = await LazyAddColumnsAsync(runner, symbolContext, sourceArg.Rows, recordIRContext, newColumns).ConfigureAwait(false);
 
             return new InMemoryTableValue(irContext, rows);
         }
@@ -129,7 +129,7 @@ namespace Microsoft.PowerFx.Functions
 
                     foreach (var column in newColumns)
                     {
-                        var value = await column.Lambda.EvalAsync(runner, childContext);
+                        var value = await column.Lambda.EvalAsync(runner, childContext).ConfigureAwait(false);
                         fields.Add(new NamedValue(column.Name, value));
                     }
 
@@ -293,7 +293,7 @@ namespace Microsoft.PowerFx.Functions
                 if (row.IsValue)
                 {
                     var childContext = symbolContext.WithScopeValues(row.Value);
-                    var result = await filter.EvalAsync(runner, childContext);
+                    var result = await filter.EvalAsync(runner, childContext).ConfigureAwait(false);
 
                     if (result is ErrorValue error)
                     {
@@ -340,7 +340,7 @@ namespace Microsoft.PowerFx.Functions
                 });
             }
 
-            var rows = await LazyFilterAsync(runner, symbolContext, arg0.Rows, arg1);
+            var rows = await LazyFilterAsync(runner, symbolContext, arg0.Rows, arg1).ConfigureAwait(false);
 
             return new InMemoryTableValue(irContext, rows);
         }
@@ -376,7 +376,7 @@ namespace Microsoft.PowerFx.Functions
             }
 
             var childContext = symbolContext.WithScopeValues(row.Value);
-            var sortValue = await lambda.EvalAsync(runner, childContext);
+            var sortValue = await lambda.EvalAsync(runner, childContext).ConfigureAwait(false);
 
             return (row, sortValue);
         }
@@ -387,7 +387,7 @@ namespace Microsoft.PowerFx.Functions
             var arg1 = (LambdaFormulaValue)args[1];
             var arg2 = (StringValue)args[2];
 
-            var pairs = (await Task.WhenAll(arg0.Rows.Select(row => ApplySortLambda(runner, symbolContext, row, arg1)))).ToList();
+            var pairs = (await Task.WhenAll(arg0.Rows.Select(row => ApplySortLambda(runner, symbolContext, row, arg1))).ConfigureAwait(false)).ToList();
 
             var errors = new List<ErrorValue>();
             bool allNumbers = true, allStrings = true, allBooleans = true, allDatetimes = true, allDates = true;
@@ -497,7 +497,7 @@ namespace Microsoft.PowerFx.Functions
             }
 
             // Filter evals to a boolean 
-            var result = await filter.EvalAsync(runner, childContext);
+            var result = await filter.EvalAsync(runner, childContext).ConfigureAwait(false);
             var include = false;
             if (result is BooleanValue booleanValue)
             {
@@ -535,7 +535,7 @@ namespace Microsoft.PowerFx.Functions
             }
 
             // WhenAll will allow running tasks in parallel. 
-            var results = await Task.WhenAll(tasks);
+            var results = await Task.WhenAll(tasks).ConfigureAwait(false);
 
             // Remove all nulls. 
             var final = results.Where(x => x != null);

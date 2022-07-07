@@ -1372,7 +1372,7 @@ namespace Microsoft.PowerFx.Functions
 
             var childContext = symbolContext.WithScopeValues(arg0);
 
-            return await arg1.EvalAsync(runner, childContext);
+            return await arg1.EvalAsync(runner, childContext).ConfigureAwait(false);
         }
 
         // https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-if
@@ -1386,7 +1386,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 runner.CheckCancel();
 
-                var res = await runner.EvalArgAsync<BooleanValue>(args[i], symbolContext, args[i].IRContext);
+                var res = await runner.EvalArgAsync<BooleanValue>(args[i], symbolContext, args[i].IRContext).ConfigureAwait(false);
 
                 if (res.IsValue)
                 {
@@ -1395,7 +1395,7 @@ namespace Microsoft.PowerFx.Functions
                     {
                         var trueBranch = args[i + 1];
 
-                        return (await runner.EvalArgAsync<ValidFormulaValue>(trueBranch, symbolContext, trueBranch.IRContext)).ToFormulaValue();
+                        return (await runner.EvalArgAsync<ValidFormulaValue>(trueBranch, symbolContext, trueBranch.IRContext).ConfigureAwait(false)).ToFormulaValue();
                     }
                 }
 
@@ -1411,7 +1411,7 @@ namespace Microsoft.PowerFx.Functions
                 if (i + 2 == args.Length - 1)
                 {
                     var falseBranch = args[i + 2];
-                    return (await runner.EvalArgAsync<ValidFormulaValue>(falseBranch, symbolContext, falseBranch.IRContext)).ToFormulaValue();
+                    return (await runner.EvalArgAsync<ValidFormulaValue>(falseBranch, symbolContext, falseBranch.IRContext).ConfigureAwait(false)).ToFormulaValue();
                 }
 
                 // Else, if there are more values, this is another conditional.
@@ -1428,7 +1428,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 runner.CheckCancel();
 
-                var res = await runner.EvalArgAsync<ValidFormulaValue>(args[i], symbolContext, args[i].IRContext);
+                var res = await runner.EvalArgAsync<ValidFormulaValue>(args[i], symbolContext, args[i].IRContext).ConfigureAwait(false);
 
                 if (res.IsError)
                 {
@@ -1466,7 +1466,7 @@ namespace Microsoft.PowerFx.Functions
                         new InMemoryRecordValue(
                             IRContext.NotInSource(ifErrorScopeParamType),
                             scopeVariables));
-                    return (await runner.EvalArgAsync<ValidFormulaValue>(errorHandlingBranch, childContext, errorHandlingBranch.IRContext)).ToFormulaValue();
+                    return (await runner.EvalArgAsync<ValidFormulaValue>(errorHandlingBranch, childContext, errorHandlingBranch.IRContext).ConfigureAwait(false)).ToFormulaValue();
                 }
 
                 if (i + 1 == args.Length - 1)
@@ -1477,7 +1477,7 @@ namespace Microsoft.PowerFx.Functions
                 if (i + 2 == args.Length - 1)
                 {
                     var falseBranch = args[i + 2];
-                    return (await runner.EvalArgAsync<ValidFormulaValue>(falseBranch, symbolContext, falseBranch.IRContext)).ToFormulaValue();
+                    return (await runner.EvalArgAsync<ValidFormulaValue>(falseBranch, symbolContext, falseBranch.IRContext).ConfigureAwait(false)).ToFormulaValue();
                 }
             }
 
@@ -1543,7 +1543,7 @@ namespace Microsoft.PowerFx.Functions
             for (var i = 1; i < args.Length - 1; i += 2)
             {
                 var match = (LambdaFormulaValue)args[i];
-                var matchValue = await match.EvalAsync(runner, symbolContext);
+                var matchValue = await match.EvalAsync(runner, symbolContext).ConfigureAwait(false);
 
                 if (matchValue is ErrorValue mve)
                 {
@@ -1557,7 +1557,7 @@ namespace Microsoft.PowerFx.Functions
                 if (equal)
                 {
                     var lambda = (LambdaFormulaValue)args[i + 1];
-                    var result = await lambda.EvalAsync(runner, symbolContext);
+                    var result = await lambda.EvalAsync(runner, symbolContext).ConfigureAwait(false);
                     if (errors.Count != 0)
                     {
                         return ErrorValue.Combine(irContext, errors);
@@ -1575,7 +1575,7 @@ namespace Microsoft.PowerFx.Functions
             if ((args.Length - 4) % 2 == 0)
             {
                 var lambda = (LambdaFormulaValue)args[args.Length - 1];
-                var result = await lambda.EvalAsync(runner, symbolContext);
+                var result = await lambda.EvalAsync(runner, symbolContext).ConfigureAwait(false);
                 if (errors.Count != 0)
                 {
                     return ErrorValue.Combine(irContext, errors);
@@ -1606,7 +1606,7 @@ namespace Microsoft.PowerFx.Functions
             var rowsAsync = LazyForAll(runner, symbolContext, arg0.Rows, arg1);
 
             // TODO: verify semantics in the case of heterogeneous record lists
-            var rows = await Task.WhenAll(rowsAsync);
+            var rows = await Task.WhenAll(rowsAsync).ConfigureAwait(false);
 
             return new InMemoryTableValue(irContext, StandardTableNodeRecords(irContext, rows, forceSingleColumn: false));
         }
