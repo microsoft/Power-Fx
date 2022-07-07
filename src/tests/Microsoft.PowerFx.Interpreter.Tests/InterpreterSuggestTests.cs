@@ -5,7 +5,9 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Functions;
+using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Types.Enums;
+using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.Tests.IntellisenseTests;
 using Microsoft.PowerFx.Types;
 using Xunit;
@@ -70,6 +72,23 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             var actualSuggestions = SuggestStrings(expression, config, null);
             Assert.Equal(expectedSuggestions, actualSuggestions);
+        }
+
+        [Fact]
+        public void TestSuggestVariableName()
+        {                      
+            var engine = new RecalcEngine(new PowerFxConfig());
+            engine.UpdateVariable("fileIndex", FormulaValue.New(12));
+
+            var suggestions = engine.Suggest("Fi", null, 2);
+            var s = suggestions.Suggestions.OfType<IntellisenseSuggestion>().FirstOrDefault(su => su.Text == "fileIndex");
+
+            Assert.NotNull(s);
+            Assert.Equal("fileIndex", s.DisplayText.Text);
+            Assert.Null(s.FunctionName);
+            Assert.Equal(SuggestionIconKind.Variable, s.IconKind);
+            Assert.Equal(SuggestionKind.Global, s.Kind);            
+            Assert.Equal(DType.Number, s.Type);
         }
     }
 }

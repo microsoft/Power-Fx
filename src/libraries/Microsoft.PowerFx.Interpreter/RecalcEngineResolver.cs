@@ -1,6 +1,8 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System.Collections.Generic;
+using System.Linq;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Binding.BindInfo;
 using Microsoft.PowerFx.Core.Glue;
@@ -48,6 +50,8 @@ namespace Microsoft.PowerFx
 
             return base.Lookup(name, out nameInfo, preferences);
         }
+
+        public override IDictionary<string, NameLookupInfo> VariableNames => _parent.Formulas.ToDictionary(kv => kv.Key, kv => new NameLookupInfo(BindKind.ScopeVariable, kv.Value._type._type, DPath.Root, 0, kv.Value));
 
         public class ParameterData
         {

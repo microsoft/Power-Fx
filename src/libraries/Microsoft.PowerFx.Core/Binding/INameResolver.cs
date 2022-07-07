@@ -36,6 +36,8 @@ namespace Microsoft.PowerFx.Core.Binding
 
         IEnumerable<TexlFunction> Functions { get; }
 
+        IDictionary<string, NameLookupInfo> VariableNames { get; }
+
         // This advertises whether the INameResolver instance will suggest unqualified enums ("Hours")
         // or only qualified enums ("TimeUnit.Hours").
         // This must be consistent with how the other Lookup functions behave.

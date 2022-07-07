@@ -1672,7 +1672,14 @@ namespace Microsoft.PowerFx.Core.Binding
 
         public IEnumerable<FirstNameInfo> GetFirstNames()
         {
-            return _infoMap.OfType<FirstNameInfo>();
+            var id = 0;            
+            var variableNames = NameResolver.VariableNames.Select(kvp =>
+            {
+                var identTok = new IdentToken(kvp.Key, new Span(0, kvp.Key.Length));
+                return FirstNameInfo.Create(new FirstNameNode(ref id, identTok, new Identifier(identTok)), kvp.Value);
+            }).ToList();
+
+            return _infoMap.OfType<FirstNameInfo>().Union(variableNames);
         }
 
         public IEnumerable<FirstNameInfo> GetGlobalNames()

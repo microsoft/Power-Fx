@@ -642,6 +642,21 @@ namespace Microsoft.PowerFx.Intellisense
             }
         }
 
+        internal static void AddSuggestionsForVariables(IntellisenseData.IntellisenseData intellisenseData)
+        {
+            Contracts.AssertValue(intellisenseData);
+
+            foreach (var variable in intellisenseData.Binding.NameResolver.VariableNames)
+            {         
+                var variableName = variable.Key;
+
+                if (IsMatch(variableName, intellisenseData.MatchingStr))
+                {
+                    CheckAndAddSuggestion(new IntellisenseSuggestion(new UIString(variableName), SuggestionKind.Global, SuggestionIconKind.Variable, variable.Value.Type, -1, $"{variableName} variable", null, null), intellisenseData.Suggestions);
+                }
+            }
+        }
+
         /// <summary>
         /// Based on our current token, determine how much of it should be replaced.
         /// </summary>
@@ -789,6 +804,7 @@ namespace Microsoft.PowerFx.Intellisense
             AddSuggestionsForRuleScope(intellisenseData);
             AddSuggestionsForTopLevel(intellisenseData, node);
             AddSuggestionsForFunctions(intellisenseData);
+            AddSuggestionsForVariables(intellisenseData);
             intellisenseData.AddSuggestionsForConstantKeywords();
             AddSuggestionsForGlobals(intellisenseData);
             intellisenseData.AfterAddSuggestionsForGlobals();
