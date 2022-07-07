@@ -158,6 +158,18 @@ Blank()
 >> DateTimeValue(ParseJSON("""abcdef"""))
 #Error(Kind=InvalidArgument)
 
+>> Text(TimeValue(ParseJSON("""08:03:05.000""")))
+"8:03 AM"
+
+>> TimeValue(ParseJSON("""08:93:05.000"""))
+#Error(Kind=InvalidArgument)
+
+>> TimeValue(ParseJSON("null"))
+Blank()
+
+>> TimeValue(ParseJSON("""abcdef"""))
+#Error(Kind=InvalidArgument)
+
 >> ColorValue(ParseJSON("""#808080ff"""))
 Color [Gray]
 

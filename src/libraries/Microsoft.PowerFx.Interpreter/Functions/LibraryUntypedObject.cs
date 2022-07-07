@@ -164,7 +164,7 @@ namespace Microsoft.PowerFx.Functions
             if (impl.Type == FormulaType.String)
             {
                 var s = impl.GetString();
-                if (TimeSpan.TryParseExact(s, "HH:mm:ss.FFF", CultureInfo.InvariantCulture, out TimeSpan res))
+                if (TimeSpan.TryParseExact(s, @"hh\:mm\:ss\.FFF", CultureInfo.InvariantCulture, TimeSpanStyles.None, out TimeSpan res))
                 {
                     return new TimeValue(irContext, res);
                 }

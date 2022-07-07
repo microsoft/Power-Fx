@@ -1216,6 +1216,16 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: TimeParse)
             },
             {
+                BuiltinFunctionsCore.TimeValue_UO,
+                StandardErrorHandling<UntypedObjectValue>(
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<UntypedObjectValue>,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: TimeValue_UO)
+            },
+            {
                 BuiltinFunctionsCore.TimeZoneOffset,
                 StandardErrorHandling<FormulaValue>(
                     expandArguments: NoArgExpansion,
