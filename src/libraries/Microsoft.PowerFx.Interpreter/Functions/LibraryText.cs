@@ -541,6 +541,11 @@ namespace Microsoft.PowerFx.Functions
         {
             var text = args[0].Value;
 
+            if (text == string.Empty)
+            {
+                return new BlankValue(irContext);
+            }
+
             try
             {
                 string html;
