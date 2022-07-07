@@ -63,7 +63,7 @@ namespace Microsoft.PowerFx.Functions
             try
             {
                 DateTime newDate;
-                switch (units.Value.ToLower())
+                switch (units.Value.ToLowerInvariant())
                 {
                     case "milliseconds":
                         newDate = datetime.AddMilliseconds(delta.Value);
@@ -142,7 +142,7 @@ namespace Microsoft.PowerFx.Functions
             var diff = end - start;
 
             // The function DateDiff only returns a whole number of the units being subtracted, and the precision is given in the unit specified.
-            switch (units.Value.ToLower())
+            switch (units.Value.ToLowerInvariant())
             {
                 case "milliseconds":
                     var milliseconds = Math.Floor(diff.TotalMilliseconds);

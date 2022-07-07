@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
@@ -246,6 +247,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 if (column.Type.IsPrimitive && !column.Type.IsOptionSet)
                 {
                     primitiveColumnsAndComparatorIds.AppendFormat(
+                        CultureInfo.InvariantCulture,
                         "{0}\"{1}\":{2}",
                         separator,
                         CharacterUtils.EscapeString(column.Name),
@@ -282,7 +284,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertValue(metadata);
             Contracts.AssertValid(columnPath);
 
-            order = order.ToLower();
+            order = order.ToLowerInvariant();
 
             // If column is marked as ascending only then return false if order requested is descending.
             return order != LanguageConstants.DescendingSortOrderString || !metadata.IsColumnAscendingOnly(columnPath);

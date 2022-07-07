@@ -1466,8 +1466,8 @@ namespace Microsoft.PowerFx.Syntax
                     _sb.Append(NextChar());
                 }
 
-                Contracts.Assert(_sb.ToString().Equals("/*") || _sb.ToString().Equals("//"));
-                var commentEnd = _sb.ToString().StartsWith("/*") ? "*/" : "\n";
+                Contracts.Assert(_sb.ToString().Equals("/*", StringComparison.OrdinalIgnoreCase) || _sb.ToString().Equals("//", StringComparison.OrdinalIgnoreCase));
+                var commentEnd = _sb.ToString().StartsWith("/*", StringComparison.OrdinalIgnoreCase) ? "*/" : "\n";
 
                 // Comment initiation takes up two chars, so must - 1 to get start
                 var startingPosition = CurrentPos - 1;
@@ -1479,7 +1479,7 @@ namespace Microsoft.PowerFx.Syntax
 
                     // "str.Length >= commentLength + commentEnd.Length"  ensures block comment of "/*/"
                     // does not satisfy starts with "/*" and ends with "*/" conditions
-                    if (str.EndsWith(commentEnd) && str.Length >= commentLength + commentEnd.Length)
+                    if (str.EndsWith(commentEnd, StringComparison.OrdinalIgnoreCase) && str.Length >= commentLength + commentEnd.Length)
                     {
                         break;
                     }
@@ -1525,7 +1525,7 @@ namespace Microsoft.PowerFx.Syntax
                 }
 
                 var commentToken = new CommentToken(_sb.ToString(), GetTextSpan());
-                if (_sb.ToString().Trim().StartsWith("/*") && !_sb.ToString().Trim().EndsWith("*/"))
+                if (_sb.ToString().Trim().StartsWith("/*", StringComparison.OrdinalIgnoreCase) && !_sb.ToString().Trim().EndsWith("*/", StringComparison.OrdinalIgnoreCase))
                 {
                     commentToken.IsOpenBlock = true;
                 }
@@ -1539,7 +1539,7 @@ namespace Microsoft.PowerFx.Syntax
                 if (CurrentChar > 255)
                 {
                     var position = CurrentPos;
-                    var unexpectedChar = Convert.ToUInt16(CurrentChar).ToString("X4");
+                    var unexpectedChar = Convert.ToUInt16(CurrentChar).ToString("X4", CultureInfo.InvariantCulture);
                     NextChar();
                     return new ErrorToken(GetTextSpan(), TexlStrings.UnexpectedCharacterToken, string.Concat("U+", unexpectedChar), position);
                 }

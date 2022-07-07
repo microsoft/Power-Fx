@@ -127,7 +127,7 @@ namespace Microsoft.PowerFx.Core.Utils
                 }
                 else
                 {
-                    UpdateEscapeInternals("_" + ((uint)ch).ToString("X"), name, estimatedLength, i, ref charsToAdd, ref sb);
+                    UpdateEscapeInternals("_" + ((uint)ch).ToString("X", CultureInfo.InvariantCulture), name, estimatedLength, i, ref charsToAdd, ref sb);
                 }
             }
 

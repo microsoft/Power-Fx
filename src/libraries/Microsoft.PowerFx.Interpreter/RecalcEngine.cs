@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Binding;
@@ -75,7 +76,7 @@ namespace Microsoft.PowerFx
         /// <summary>
         /// Create an evaluator over the existing binding. 
         /// </summary>
-        /// <param name="result">A successful binding from a previous call to <see cref="Engine.Check(string, RecordType, ParserOptions)"/>. </param>
+        /// <param name="result">A successful binding from a previous call to <see cref="Engine.Check(string, RecordType, ParserOptions, CultureInfo)"/>. </param>
         /// <returns></returns>
         public static IExpression CreateEvaluatorDirect(CheckResult result)
         {

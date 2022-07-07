@@ -3,14 +3,14 @@
   <Rules AnalyzerId="Microsoft.CodeQuality.Analyzers" RuleNamespace="Microsoft.CodeQuality.Analyzers">
     <Rule Id="CA1054" Action="None" />       <!-- UriParametersShouldNotBeStrings -->
     <Rule Id="CA1062" Action="None" />       <!-- ValidateArgumentsOfPublicMethods -->
-    <Rule Id="CA1308" Action="None" />       <!-- Normalize strings to uppercase (most of our operations are normalized on lowercase -->
+    <Rule Id="CA1308" Action="None" />       <!-- CA1308: Normalize strings to uppercase -->
     <Rule Id="CA1822" Action="None" />       <!-- Ignore Mark members as static -->
   </Rules>
   <Rules AnalyzerId="Microsoft.NetCore.Analyzers" RuleNamespace="Microsoft.NetCore.Analyzers">
-    <Rule Id="CA1303" Action="Warning" />    <!-- DoNotPassLiteralsAsLocalizedParameters -->
+    <Rule Id="CA1303" Action="Info" />       <!-- CA1303: Do not pass literals as localized parameters -->
   </Rules>
   <Rules AnalyzerId="Microsoft.NetCore.CSharp.Analyzers" RuleNamespace="Microsoft.NetCore.CSharp.Analyzers">
-    <Rule Id="CA1309" Action="None" />       <!-- REQUIRED * CA1309: Use ordinal StringComparison -->    
+    <Rule Id="CA1309" Action="Info" />       <!-- CA1309: Use ordinal StringComparison -->    
   </Rules>
   <Rules AnalyzerId="Microsoft.VisualStudio.Threading.Analyzers.CSharp" RuleNamespace="Microsoft.VisualStudio.Threading.Analyzers.CSharp">
     <Rule Id="VSTHRD002" Action="None" />    <!-- Avoid problematic synchronous waits -->
@@ -195,7 +195,7 @@
     <Rule Id="CA1001" Action="None" />       <!-- REQUIRED * CA1001: Types that own disposable fields should be disposable -->
     <Rule Id="CA1032" Action="None" />
     <Rule Id="CA1200" Action="Warning" />
-    <Rule Id="CA1309" Action="None" />       <!-- REQUIRED * CA1309: Use ordinal StringComparison -->
+    <Rule Id="CA1309" Action="Info" />       <!-- CA1309: Use ordinal StringComparison -->
     <Rule Id="CA1507" Action="None" />       <!-- REQUIRED * CA1507: Use nameof in place of string -->
     <Rule Id="CA1802" Action="None" />       <!-- REQUIRED * CA1802: Use Literals Where Appropriate -->
     <Rule Id="CA1805" Action="None" />       <!-- REQUIRED * CA1805: Member 'xxx' is explicitly initialized to its default value -->
@@ -264,12 +264,12 @@
     <Rule Id="CA1068" Action="None" />       <!-- REQUIRED * CA1068: CancellationToken parameters must come last -->
     <Rule Id="CA1069" Action="None" />
     <Rule Id="CA1070" Action="Warning" />
-    <Rule Id="CA1303" Action="Warning" />
-    <Rule Id="CA1304" Action="None" />
-    <Rule Id="CA1305" Action="None" />
-    <Rule Id="CA1307" Action="None" />
-    <Rule Id="CA1308" Action="None" />
-    <Rule Id="CA1310" Action="None" />
+    <Rule Id="CA1303" Action="Info" />       <!-- CA1303: Do not pass literals as localized parameters -->
+    <Rule Id="CA1304" Action="Info" />       <!-- CA1304: Specify CultureInfo -->
+    <Rule Id="CA1305" Action="Info" />       <!-- CA1305: Specify IFormatProvider -->
+    <Rule Id="CA1307" Action="Info" />       <!-- CA1307: Specify StringComparison for clarity -->
+    <Rule Id="CA1308" Action="None" />       <!-- CA1308: Normalize strings to uppercase -->
+    <Rule Id="CA1310" Action="Info" />       <!-- CA1310: Specify StringComparison for correctness -->
     <Rule Id="CA1401" Action="Warning" />
     <Rule Id="CA1416" Action="Warning" />
     <Rule Id="CA1417" Action="Warning" />

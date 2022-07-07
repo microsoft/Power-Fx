@@ -186,7 +186,7 @@ namespace Microsoft.PowerFx.Functions
 
             var info = DateTimeFormatInfo.GetInstance(culture);
 
-            switch (format.ToLower().Trim('\''))
+            switch (format.ToLowerInvariant().Trim('\''))
             {
                 case "shortdatetime24":
                     // TODO: This might be wrong for some cultures
@@ -271,17 +271,17 @@ namespace Microsoft.PowerFx.Functions
 
         public static FormulaValue Lower(IRContext irContext, StringValue[] args)
         {
-            return new StringValue(irContext, args[0].Value.ToLower());
+            return new StringValue(irContext, args[0].Value.ToLower(CultureInfo.CurrentCulture));
         }
 
         public static FormulaValue Upper(IRContext irContext, StringValue[] args)
         {
-            return new StringValue(irContext, args[0].Value.ToUpper());
+            return new StringValue(irContext, args[0].Value.ToUpper(CultureInfo.CurrentCulture));
         }
 
         public static FormulaValue Proper(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, StringValue[] args)
         {
-            return new StringValue(irContext, runner.CultureInfo.TextInfo.ToTitleCase(args[0].Value.ToLower()));
+            return new StringValue(irContext, runner.CultureInfo.TextInfo.ToTitleCase(args[0].Value.ToLowerInvariant()));
         }
 
         // https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-len
@@ -387,7 +387,7 @@ namespace Microsoft.PowerFx.Functions
                 return CommonErrors.ArgumentOutOfRange(irContext);
             }
 
-            var index = withinText.Value.IndexOf(findText.Value, startIndexValue - 1);
+            var index = withinText.Value.IndexOf(findText.Value, startIndexValue - 1, StringComparison.Ordinal);
             return index >= 0 ? new NumberValue(irContext, index + 1)
                               : new BlankValue(irContext);
         }
@@ -451,14 +451,14 @@ namespace Microsoft.PowerFx.Functions
             }
 
             var sourceValue = source.Value;
-            var idx = sourceValue.IndexOf(match.Value);
+            var idx = sourceValue.IndexOf(match.Value, StringComparison.Ordinal);
             if (instanceNum < 0)
             {
                 while (idx >= 0)
                 {
                     var temp = sourceValue.Substring(0, idx) + replacement.Value;
                     sourceValue = sourceValue.Substring(idx + match.Value.Length);
-                    var idx2 = sourceValue.IndexOf(match.Value);
+                    var idx2 = sourceValue.IndexOf(match.Value, StringComparison.Ordinal);
                     if (idx2 < 0)
                     {
                         idx = idx2;
@@ -476,7 +476,7 @@ namespace Microsoft.PowerFx.Functions
                 var num = 0;
                 while (idx >= 0 && ++num < instanceNum)
                 {
-                    var idx2 = sourceValue.Substring(idx + match.Value.Length).IndexOf(match.Value);
+                    var idx2 = sourceValue.Substring(idx + match.Value.Length).IndexOf(match.Value, StringComparison.Ordinal);
                     if (idx2 < 0)
                     {
                         idx = idx2;

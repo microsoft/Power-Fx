@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Net.Http;
 using Microsoft.OpenApi.Any;
@@ -109,13 +110,13 @@ namespace Microsoft.PowerFx.Connectors
 
             if (x is OpenApiInteger intVal)
             {
-                defaultValue = intVal.Value.ToString();
+                defaultValue = intVal.Value.ToString(CultureInfo.InvariantCulture);
                 return true;
             }
 
             if (x is OpenApiDouble dbl)
             {
-                defaultValue = dbl.Value.ToString();
+                defaultValue = dbl.Value.ToString(CultureInfo.InvariantCulture);
                 return true;
             }
 

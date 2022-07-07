@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using Microsoft.PowerFx.Core.Utils;
 
@@ -37,7 +38,7 @@ namespace Microsoft.PowerFx.Core.Types.Enums
         {
             Contracts.Assert(InvariantNameToHexMap.All(x => !CharacterUtils.HasSpaces(x.Key)));
 
-            var colorText = string.Join(", ", InvariantNameToHexMap.Select(x => x.Key + ":#" + string.Format("{0:X6}", x.Value)));
+            var colorText = string.Join(", ", InvariantNameToHexMap.Select(x => x.Key + ":#" + string.Format(CultureInfo.InvariantCulture, "{0:X6}", x.Value)));
             return "%c[" + colorText + "]";
         }
     }

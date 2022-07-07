@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -2953,7 +2954,7 @@ namespace Microsoft.PowerFx.Core.Types
                     }
                     else
                     {
-                        builder.Append(string.Format("\\u{0:x4}", (int)c));
+                        builder.Append(string.Format(CultureInfo.InvariantCulture, "\\u{0:x4}", (int)c));
                     }
                 }
 
@@ -3395,7 +3396,7 @@ namespace Microsoft.PowerFx.Core.Types
 
                     if (value is double double2)
                     {
-                        newValue = double2.ToString("R");
+                        newValue = double2.ToString("R", CultureInfo.CurrentCulture);
                         return true;
                     }
 
@@ -3407,7 +3408,7 @@ namespace Microsoft.PowerFx.Core.Types
 
                     if (value is DateTime time2)
                     {
-                        newValue = time2.ToLocalTime().ToString();
+                        newValue = time2.ToLocalTime().ToString(CultureInfo.CurrentCulture);
                         return true;
                     }
 

@@ -78,7 +78,7 @@ namespace Microsoft.PowerFx.Syntax
 
             var singleQuoteFormat = StringResources.Get("ListItemSingleQuotedFormat");
             var listSeparator = CurrentLocaleListSeparator + " ";
-            return string.Join(listSeparator, listItems.Select(item => string.Format(singleQuoteFormat, item)));
+            return string.Join(listSeparator, listItems.Select(item => string.Format(CultureInfo.InvariantCulture, singleQuoteFormat, item)));
         }
     }
 }

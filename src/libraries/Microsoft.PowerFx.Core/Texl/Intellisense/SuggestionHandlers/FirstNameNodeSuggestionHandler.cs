@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.PowerFx.Core.Types;
@@ -113,7 +114,7 @@ namespace Microsoft.PowerFx.Intellisense
                 var bracketOpenCount = 0;
                 for (var i = begin; i < cursorPos; i++)
                 {
-                    if (TexlLexer.PunctuatorBracketOpen.Equals(script[i].ToString()))
+                    if (TexlLexer.PunctuatorBracketOpen.Equals(script[i].ToString(), StringComparison.OrdinalIgnoreCase))
                     {
                         bracketOpenCount++;
                     }

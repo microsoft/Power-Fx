@@ -1729,7 +1729,7 @@ namespace Microsoft.PowerFx.Core.Binding
             foreach (var info in _infoMap.OfType<FirstNameInfo>())
             {
                 var kind = info.Kind;
-                if (info.Name.Value.Equals(globalName) &&
+                if (info.Name.Value.Equals(globalName, StringComparison.Ordinal) &&
                     (kind == BindKind.Control || kind == BindKind.Data || kind == BindKind.Resource || kind == BindKind.QualifiedValue || kind == BindKind.WebResource))
                 {
                     firstName = info.Node;

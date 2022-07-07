@@ -418,7 +418,7 @@ namespace Microsoft.PowerFx.Functions
             }
 
             var compareToResultModifier = 1;
-            if (arg2.Value.ToLower() == "descending")
+            if (arg2.Value.ToLowerInvariant() == "descending")
             {
                 compareToResultModifier = -1;
             }
