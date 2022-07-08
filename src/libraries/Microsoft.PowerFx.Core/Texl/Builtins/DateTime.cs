@@ -14,9 +14,6 @@ using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
 
-#pragma warning disable SA1402 // File may only contain a single type
-#pragma warning disable SA1649 // File name should match first type name
-
 namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
     // Date()
@@ -331,12 +328,14 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // TimeValue(time_text:s, [languageCode:s]) : T
     internal sealed class TimeValueFunction : DateTimeGenericFunction
     {
+        public const string TimeValueFunctionInvariantName = "TimeValue";
+
         public override bool HasPreciseErrors => true;
 
         public override bool SupportsParamCoercion => true;
 
         public TimeValueFunction()
-            : base("TimeValue", TexlStrings.AboutTimeValue, DType.Time)
+            : base(TimeValueFunctionInvariantName, TexlStrings.AboutTimeValue, DType.Time)
         {
         }
 
@@ -713,6 +712,26 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         }
     }
 
+    // TimeValue(time_text:uo) : T
+    internal sealed class TimeValueFunction_UO : BuiltinFunction
+    {
+        public override bool HasPreciseErrors => true;
+
+        public override bool SupportsParamCoercion => false;
+
+        public override bool IsSelfContained => true;
+
+        public TimeValueFunction_UO()
+            : base(TimeValueFunction.TimeValueFunctionInvariantName, TexlStrings.AboutTimeValue, FunctionCategories.DateTime, DType.Time, 0, 1, 1, DType.UntypedObject)
+        {
+        }
+
+        public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
+        {
+            yield return new[] { TexlStrings.TimeValueArg1 };
+        }
+    }
+
     // DateTimeValue(arg:O) : d
     internal sealed class DateTimeValueFunction_UO : BuiltinFunction
     {
@@ -738,6 +757,3 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         }
     }
 }
-
-#pragma warning restore SA1402 // File may only contain a single type
-#pragma warning restore SA1649 // File name should match first type name
