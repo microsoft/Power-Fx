@@ -49,7 +49,8 @@ namespace Microsoft.PowerFx.Core.Tests
                 "DataTypeInfo.AllowedValuesOnly",
                 "DataTypeInfo._validDataFormatsPerDKind",
 
-                "FeatureFlags._stringInterpolation",
+                "FeatureFlags._stringInterpolation",                
+                "FeatureFlags._inTests",
                 "EmptyEnumerator`1._instance",
                 "Contracts._assertFailExCtor",
                 "CurrentLocaleInfo.<CurrentLocaleName>k__BackingField",

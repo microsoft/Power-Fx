@@ -132,7 +132,10 @@ namespace Microsoft.PowerFx.Core.Binding
         /// </summary>
         internal DName ThisRecordDefaultName => new DName("ThisRecord");
 
+        public Features Features { get; }
+
         // Property to which current rule is being bound to. It could be null in the absence of NameResolver.
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0025:Use expression body for properties", Justification = "n/a")]
         public IExternalControlProperty Property
         {
             get
@@ -148,6 +151,7 @@ namespace Microsoft.PowerFx.Core.Binding
         }
 
         // Control to which current rule is being bound to. It could be null in the absence of NameResolver.
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0025:Use expression body for properties", Justification = "n/a")]
         public IExternalControl Control
         {
             get
@@ -253,7 +257,8 @@ namespace Microsoft.PowerFx.Core.Binding
             DType ruleScope,
             bool updateDisplayNames = false,
             bool forceUpdateDisplayNames = false,
-            IExternalRule rule = null)
+            IExternalRule rule = null,
+            Features features = Features.None)
         {
             Contracts.AssertValue(node);
             Contracts.AssertValue(bindingConfig);
@@ -262,6 +267,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
             BindingConfig = bindingConfig;
             QueryOptions = queryOptions;
+            Features = features;
             _glue = glue;
             Top = node;
             NameResolver = resolver;
@@ -304,7 +310,7 @@ namespace Microsoft.PowerFx.Core.Binding
             HasParentItemReference = false;
 
             ContextScope = ruleScope;
-            BinderNodeMetadataArgTypeVisitor = new BinderNodesMetadataArgTypeVisitor(this, resolver, ruleScope, BindingConfig.UseThisRecordForRuleScope);
+            BinderNodeMetadataArgTypeVisitor = new BinderNodesMetadataArgTypeVisitor(this, resolver, ruleScope, BindingConfig.UseThisRecordForRuleScope, features);
             HasReferenceToAttachment = false;
             NodesToReplace = new List<KeyValuePair<Token, string>>();
             UpdateDisplayNames = updateDisplayNames;
@@ -334,13 +340,14 @@ namespace Microsoft.PowerFx.Core.Binding
             bool updateDisplayNames = false,
             DType ruleScope = null,
             bool forceUpdateDisplayNames = false,
-            IExternalRule rule = null)
+            IExternalRule rule = null,
+            Features features = Features.None)
         {
             Contracts.AssertValue(node);
             Contracts.AssertValueOrNull(resolver);
 
-            var txb = new TexlBinding(glue, scopeResolver, queryOptionsMap, node, resolver, bindingConfig, ruleScope, updateDisplayNames, forceUpdateDisplayNames, rule: rule);
-            var vis = new Visitor(txb, resolver, ruleScope, bindingConfig.UseThisRecordForRuleScope);
+            var txb = new TexlBinding(glue, scopeResolver, queryOptionsMap, node, resolver, bindingConfig, ruleScope, updateDisplayNames, forceUpdateDisplayNames, rule: rule, features: features);
+            var vis = new Visitor(txb, resolver, ruleScope, bindingConfig.UseThisRecordForRuleScope, features);
             vis.Run();
 
             // Determine if a rename has occured at the top level
@@ -360,9 +367,10 @@ namespace Microsoft.PowerFx.Core.Binding
             bool updateDisplayNames = false,
             DType ruleScope = null,
             bool forceUpdateDisplayNames = false,
-            IExternalRule rule = null)
+            IExternalRule rule = null,
+            Features features = Features.None)
         {
-            return Run(glue, null, new DataSourceToQueryOptionsMap(), node, resolver, bindingConfig, updateDisplayNames, ruleScope, forceUpdateDisplayNames, rule);
+            return Run(glue, null, new DataSourceToQueryOptionsMap(), node, resolver, bindingConfig, updateDisplayNames, ruleScope, forceUpdateDisplayNames, rule, features);
         }
 
         public static TexlBinding Run(
@@ -370,9 +378,10 @@ namespace Microsoft.PowerFx.Core.Binding
             TexlNode node,
             INameResolver resolver,
             BindingConfig bindingConfig,
-            DType ruleScope)
+            DType ruleScope,
+            Features features = Features.None)
         {
-            return Run(glue, null, new DataSourceToQueryOptionsMap(), node, resolver, bindingConfig, false, ruleScope, false, null);
+            return Run(glue, null, new DataSourceToQueryOptionsMap(), node, resolver, bindingConfig, false, ruleScope, false, null, features);
         }
 
         public void WidenResultType()
@@ -2433,14 +2442,16 @@ namespace Microsoft.PowerFx.Core.Binding
             private readonly TexlBinding _txb;
             private Scope _currentScope;
             private int _currentScopeDsNodeId;
+            private readonly Features _features;
 
-            public Visitor(TexlBinding txb, INameResolver resolver, DType topScope, bool useThisRecordForRuleScope)
+            public Visitor(TexlBinding txb, INameResolver resolver, DType topScope, bool useThisRecordForRuleScope, Features features)
             {
                 Contracts.AssertValue(txb);
                 Contracts.AssertValueOrNull(resolver);
 
                 _txb = txb;
                 _nameResolver = resolver;
+                _features = features;
 
                 _topScope = new Scope(null, null, topScope ?? DType.Error, useThisRecordForRuleScope ? txb.ThisRecordDefaultName : default);
                 _currentScope = _topScope;
@@ -2869,7 +2880,7 @@ namespace Microsoft.PowerFx.Core.Binding
                     if (DType.TryGetLogicalNameForColumn(updatedDisplayNamesType, ident.Name.Value, out var maybeLogicalName, isThisItem))
                     {
                         logicalNodeName = new DName(maybeLogicalName);
-                        
+
                         // If we're updating display names, we don't want to accidentally rewrite something that hasn't changed to it's logical name. 
                         if (!_txb.UpdateDisplayNames)
                         {
@@ -4747,7 +4758,7 @@ namespace Microsoft.PowerFx.Core.Binding
                     Scope maybeScope = null;
                     var startArg = 0;
 
-                    // Construct a scope if diplay names are enabled and this function requires a data source scope for inline records
+                    // Construct a scope if display names are enabled and this function requires a data source scope for inline records
                     if (_txb.Document != null && _txb.Document.Properties.EnabledFeatures.IsUseDisplayNameMetadataEnabled &&
                         overloads.Where(func => func.RequiresDataSourceScope).Any() && node.Args.Count > 0)
                     {
@@ -5836,9 +5847,13 @@ namespace Microsoft.PowerFx.Core.Binding
                     }
                 }
 
-                _txb.SetType(
-                    node,
-                    exprType.IsValid ? DType.CreateTable(new TypedName(exprType, TableValue.ValueDName)) : DType.EmptyTable);
+                DType tableType = exprType.IsValid
+                    ? (_features.HasTableSyntaxDoesntWrapRecords() && exprType.IsRecord
+                        ? DType.CreateTable(exprType.GetNames(DPath.Root))
+                        : DType.CreateTable(new TypedName(exprType, TableValue.ValueDName)))
+                    : DType.EmptyTable;
+
+                _txb.SetType(node, tableType);
                 SetVariadicNodePurity(node);
                 _txb.SetScopeUseSet(node, JoinScopeUseSets(node.Children));
                 _txb.SetSelfContainedConstant(node, isSelfContainedConstant);

@@ -125,7 +125,7 @@ namespace Microsoft.PowerFx.Core.Tests
                         var countRemoved = Tests.RemoveAll(test => string.Equals(Path.GetFileName(test.SourceFile), fileDisable, StringComparison.OrdinalIgnoreCase));
                     }
                     else if (TryParseDirective(line, "#SETUP:", ref fileSetup) ||
-                      TryParseDirective(line, "#OVERRIDE:", ref fileOveride))
+                             TryParseDirective(line, "#OVERRIDE:", ref fileOveride))
                     {
                         // flag is set, no additional work needed.
                     }
