@@ -8,22 +8,19 @@ using Xunit;
 using static Microsoft.PowerFx.Interpreter.Tests.ExpressionEvaluationTests;
 
 namespace Microsoft.PowerFx.Interpreter.Tests
-{
+{    
     public class FileExpressionEvaluationTests : PowerFxTest
-    {
-        private InterpreterRunner _runner;
-
+    {        
         [InterpreterTheory]
-        [TxtFileData("ExpressionTestCases", "InterpreterExpressionTestCases", nameof(InterpreterRunner))]
+        [TxtFileData("ExpressionTestCases", "InterpreterExpressionTestCases", nameof(InterpreterRunner))]        
         public void InterpreterTestCase(ExpressionTestCase testCase)
         {
             // This is running against embedded resources, so if you're updating the .txt files,
             // make sure they build is actually copying them over. 
             Assert.True(testCase.FailMessage == null, testCase.FailMessage);
 
-            _runner = new InterpreterRunner();
-
-            var (result, msg) = _runner.RunTestCase(testCase);
+            var runner = new InterpreterRunner();            
+            var (result, msg) = runner.RunTestCase(testCase);
 
             var prefix = $"Test {Path.GetFileName(testCase.SourceFile)}:{testCase.SourceLine}: ";
             switch (result)

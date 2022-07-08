@@ -5,6 +5,15 @@
     <Rule Id="CA1062" Action="None" />       <!-- ValidateArgumentsOfPublicMethods -->
     <Rule Id="CA1308" Action="None" />       <!-- CA1308: Normalize strings to uppercase -->
     <Rule Id="CA1822" Action="None" />       <!-- Ignore Mark members as static -->
+    <Rule Id="IDE0004" Action="None" />      <!-- REQUIRED * IDE0004: Cast is redundant -->
+    <Rule Id="IDE0005" Action="None" />      <!-- REQUIRED * IDE0005: Remove unnecessary using directives -->
+    <Rule Id="IDE0052" Action="None" />      <!-- REQUIRED * IDE0052: Remove unread private member -->
+    <Rule Id="IDE0054" Action="None" />      <!-- REQUIRED * IDE0054: Use compound assignment -->
+    <Rule Id="IDE0059" Action="None" />      <!-- REQUIRED * IDE0059: Remove unnecessary value assignment -->
+    <Rule Id="IDE0060" Action="None" />      <!-- REQUIRED * IDE0060: Remove unused parameters -->
+    <Rule Id="IDE0066" Action="None" />      <!-- REQUIRED * IDE0066: Use 'switch' expression -->
+    <Rule Id="IDE0079" Action="None" />      <!-- REQUIRED * IDE0079: Remove unnecessary suppressions -->
+    <Rule Id="IDE0083" Action="None" />      <!-- REQUIRED * IDE0083: Use pattern matching -->
   </Rules>
   <Rules AnalyzerId="Microsoft.NetCore.Analyzers" RuleNamespace="Microsoft.NetCore.Analyzers">
     <Rule Id="CA1303" Action="Info" />       <!-- CA1303: Do not pass literals as localized parameters -->
