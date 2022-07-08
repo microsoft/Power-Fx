@@ -379,7 +379,7 @@ namespace Microsoft.PowerFx.Core.Binding
             INameResolver resolver,
             BindingConfig bindingConfig,
             DType ruleScope,
-            Features features)
+            Features features = Features.None)
         {
             return Run(glue, null, new DataSourceToQueryOptionsMap(), node, resolver, bindingConfig, false, ruleScope, false, null, features);
         }
