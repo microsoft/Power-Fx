@@ -1,13 +1,13 @@
 ﻿>> GUID("5cc45615-f759-4a53-b225-d3a2497f60ad")
-5cc45615-f759-4a53-b225-d3a2497f60ad
+GUID("5cc45615-f759-4a53-b225-d3a2497f60ad")
 
 // No dashes
 >> GUID("5cc45615f7594a53b225d3a2497f60ad")
-5cc45615-f759-4a53-b225-d3a2497f60ad
+GUID("5cc45615-f759-4a53-b225-d3a2497f60ad")
 
 // Upper case
 >> GUID("C203B79B-B985-42F0-B523-C10EB64387C6")
-c203b79b-b985-42f0-b523-c10eb64387c6
+GUID("c203b79b-b985-42f0-b523-c10eb64387c6")
 
 // Correct format, invalid chars
 >> GUID("5zz45615-f759-4a53-b225-d3a2497f60ad")
