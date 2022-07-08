@@ -22,14 +22,10 @@ namespace Microsoft.PowerFx.Types
         {
             get
             {
-                var fields = Type.GetNames();
-                foreach (var kv in fields)
+                var fields = Type.FieldNames;
+                foreach (var fieldName in fields)
                 {
-                    var fieldName = kv.Name;
-                    var fieldType = kv.Type;
-
-                    var value = GetField(fieldType, fieldName);
-                    yield return new NamedValue(fieldName, value);
+                    yield return new NamedValue(fieldName, GetField(fieldName));
                 }
             }
         }
@@ -72,7 +68,10 @@ namespace Microsoft.PowerFx.Types
                 throw new ArgumentNullException(nameof(fieldName));
             }
 
-            var fieldType = Type.MaybeGetFieldType(fieldName) ?? FormulaType.Blank;
+            if (!Type.TryGetFieldType(fieldName, out var fieldType))
+            {
+                fieldType = FormulaType.Blank;
+            }
 
             return GetField(fieldType, fieldName);
         }
@@ -110,7 +109,7 @@ namespace Microsoft.PowerFx.Types
                     {
                         if (result is not ErrorValue && result.Type is not BlankType)
                         {
-                            throw HostException(fieldName, $"Wrong field type. Retuned {result.Type._type}, expected {fieldType._type}.");
+                            throw HostException(fieldName, $"Wrong field type. Retuned {result.Type.Type}, expected {fieldType.Type}.");
                         }
                     }
                 }

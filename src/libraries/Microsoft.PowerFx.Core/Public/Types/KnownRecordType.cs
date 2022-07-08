@@ -9,7 +9,7 @@ using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Types
 {
-    public class KnownRecordType : RecordType
+    public sealed class KnownRecordType : RecordType
     {
         internal KnownRecordType(DType type)
             : base(type)
@@ -28,7 +28,7 @@ namespace Microsoft.PowerFx.Types
 
         public RecordType Add(string logicalName, FormulaType type, string optionalDisplayName = null)
         {
-            return Add(new NamedFormulaType(new TypedName(type._type, new DName(logicalName)), optionalDisplayName));
+            return Add(new NamedFormulaType(new TypedName(type.Type, new DName(logicalName)), optionalDisplayName));
         }
     }
 }

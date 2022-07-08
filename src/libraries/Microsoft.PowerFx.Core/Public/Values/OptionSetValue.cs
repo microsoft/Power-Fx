@@ -49,7 +49,7 @@ namespace Microsoft.PowerFx.Types
         {
             get
             {
-                var info = Type._type.OptionSetInfo;
+                var info = Type.Type.OptionSetInfo;
 
                 var displayNameProvider = info.DisplayNameProvider;
 

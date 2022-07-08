@@ -23,7 +23,7 @@ namespace Microsoft.PowerFx
         public FormulaWithParameters(string expression, RecordType parameterTypes = null)
         {
             _expression = expression;
-            _schema = parameterTypes ?? new RecordType();
+            _schema = parameterTypes ?? new KnownRecordType();
         }
     }
 }

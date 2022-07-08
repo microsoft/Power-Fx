@@ -391,7 +391,7 @@ namespace Microsoft.PowerFx.Tests
         // Example of a host-derived object. 
         private class MyRecordValue : RecordValue
         {
-            private static readonly RecordType _type = new RecordType().Add("field1", FormulaType.Number);
+            private static readonly RecordType _type = new KnownRecordType().Add("field1", FormulaType.Number);
 
             // Ctor to let tests override and provide wrong types.
             public MyRecordValue(RecordType type)
@@ -641,7 +641,7 @@ namespace Microsoft.PowerFx.Tests
             var tm = cache.GetMarshaller(typeof(PocoNotMarshalled));
             var fxType = (RecordType)tm.Type;
 
-            Assert.Empty(fxType.GetNames());
+            Assert.Empty(fxType.GetFieldTypes());
         }
 
         private interface IWidget

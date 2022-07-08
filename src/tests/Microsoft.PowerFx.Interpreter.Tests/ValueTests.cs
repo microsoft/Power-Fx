@@ -277,7 +277,7 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.Equal(typeExpected, type);
 
             // Another way to compare
-            var field1 = type.GetNames().First();
+            var field1 = type.GetFieldTypes().First();
             Assert.Equal("Value", field1.Name);
             Assert.Equal(FormulaType.Number, field1.Type);
 

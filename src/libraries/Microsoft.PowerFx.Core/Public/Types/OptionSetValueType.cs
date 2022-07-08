@@ -16,7 +16,7 @@ namespace Microsoft.PowerFx.Types
         /// <summary>
         /// The name of the source Option Set for this type.
         /// </summary>
-        public DName OptionSetName => _type.OptionSetInfo?.EntityName ?? default;
+        public DName OptionSetName => Type.OptionSetInfo?.EntityName ?? default;
 
         internal OptionSetValueType(IExternalOptionSet optionSet)
             : base(DType.CreateOptionSetValueType(optionSet))
@@ -40,7 +40,7 @@ namespace Microsoft.PowerFx.Types
         /// <summary>
         /// List of logical names within this option set. 
         /// </summary>
-        public IEnumerable<DName> LogicalNames => _type.OptionSetInfo.OptionNames; 
+        public IEnumerable<DName> LogicalNames => Type.OptionSetInfo.OptionNames; 
 
         /// <summary>
         /// Try to get a value given the logical name. 
@@ -50,7 +50,7 @@ namespace Microsoft.PowerFx.Types
         /// <returns>False if logical name is not in the option set. </returns>
         public bool TryGetValue(string logicalName, out OptionSetValue osValue)
         {
-            var info = _type.OptionSetInfo;
+            var info = Type.OptionSetInfo;
 
             // Verify this value exists in the option set. 
             if (info.DisplayNameProvider.TryGetDisplayName(new DName(logicalName), out var displayName))

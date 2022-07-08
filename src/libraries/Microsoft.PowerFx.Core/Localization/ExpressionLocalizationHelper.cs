@@ -32,7 +32,7 @@ namespace Microsoft.PowerFx.Core
                 formula.ParseTree,
                 resolver,
                 config,
-                ruleScope: parameters._type,
+                ruleScope: parameters.Type,
                 updateDisplayNames: toDisplay,
                 forceUpdateDisplayNames: toDisplay);
 

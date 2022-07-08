@@ -18,8 +18,8 @@ namespace Microsoft.PowerFx.Types
     [ThreadSafeImmutable]
     public abstract class FormulaType
     {
-        // protected isn't enough to let derived classes access this.
-        internal readonly DType _type;
+        // Uses init to allow setting from derived constructors. Otherwise, is immutable.
+        internal DType Type { get; private protected init; }
 
         public static FormulaType Blank { get; } = new BlankType();
 
@@ -59,7 +59,7 @@ namespace Microsoft.PowerFx.Types
         // chained by derived type 
         internal FormulaType(DType type)
         {
-            _type = type;
+            Type = type;
         }
 
         // Entites may be recursive and their Dytype is tagged with additional schema metadata. 
@@ -105,8 +105,12 @@ namespace Microsoft.PowerFx.Types
             {
                 case DKind.ObjNull: return Blank;
 
-                case DKind.Record: return new RecordType(type);
-                case DKind.Table: return new TableType(type);
+                case DKind.Record:
+                case DKind.LazyRecord:
+                    return new KnownRecordType(type);
+                case DKind.Table:
+                case DKind.LazyTable:
+                    return new KnownTableType(type);
 
                 case DKind.Number: return Number;
                 case DKind.String: return String;
@@ -136,7 +140,7 @@ namespace Microsoft.PowerFx.Types
 
                 // This isn't quite right, but once we're in the IR, an option set acts more like a record with optionsetvalue fields. 
                 case DKind.OptionSet:
-                    return new RecordType(DType.CreateRecord(type.GetAllNames(DPath.Root)));
+                    return new KnownRecordType(DType.CreateRecord(type.GetAllNames(DPath.Root)));
 
                 case DKind.UntypedObject:
                     return UntypedObject;
@@ -173,7 +177,7 @@ namespace Microsoft.PowerFx.Types
         {
             if (other is FormulaType t)
             {
-                return _type.Equals(t._type);
+                return Type.Equals(t.Type);
             }
 
             return false;
@@ -181,7 +185,7 @@ namespace Microsoft.PowerFx.Types
 
         public override int GetHashCode()
         {
-            return _type.GetHashCode();
+            return Type.GetHashCode();
         }
 
         #endregion // Equality

@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Errors;
@@ -127,8 +126,11 @@ namespace Microsoft.PowerFx.Core.Types
 
         public ValueTree ValueTree { get; }
 
-        // This is only used by attachment type. DocumentDataType is used to workaround the issue of having cycles in struct type.
+        // This is only used by attachment type.
         protected readonly DType _attachmentType;
+
+        // Intended future home of all lazy type expansion (Control, Attachment, Relationship, Other)
+        internal readonly LazyTypeProvider LazyTypeProvider;
 
         internal HashSet<IExternalTabularDataSource> AssociatedDataSources { get; }
 
@@ -159,7 +161,7 @@ namespace Microsoft.PowerFx.Core.Types
         {
         }
 
-        public DType(DKind kind)
+        internal DType(DKind kind)
         {
             Contracts.Assert(kind >= DKind._Min && kind < DKind._Lim);
 
@@ -474,6 +476,28 @@ namespace Microsoft.PowerFx.Core.Types
             AssertValid();
         }
 
+        internal DType(LazyTypeProvider provider, bool isTable)
+        {
+            Contracts.AssertValue(provider);
+
+            LazyTypeProvider = provider;
+            Kind = isTable ? DKind.LazyTable : DKind.LazyRecord;
+
+            TypeTree = default;
+            EnumSuperkind = default;
+            ValueTree = default;
+            ExpandInfo = null;
+            PolymorphicInfo = null;
+            Metadata = null;
+            _attachmentType = null;
+            AssociatedDataSources = new HashSet<IExternalTabularDataSource>();
+            OptionSetInfo = null;
+            ViewInfo = null;
+            NamedValueKind = null;
+
+            AssertValid();
+        }
+
         [Conditional("DEBUG")]
         internal void AssertValid()
         {
@@ -486,6 +510,8 @@ namespace Microsoft.PowerFx.Core.Types
             Contracts.Assert(Kind != DKind.Enum || (EnumSuperkind >= DKind._Min && EnumSuperkind < DKind._Lim && EnumSuperkind != DKind.Enum));
             Contracts.Assert((Metadata != null) == (Kind == DKind.Metadata));
             Contracts.Assert((_attachmentType != null) == (Kind == DKind.Attachment));
+            Contracts.Assert((LazyTypeProvider != null) == (Kind == DKind.LazyRecord || Kind == DKind.LazyTable));
+
 #if DEBUG
             if (ExpandInfo != null)
             {
@@ -509,9 +535,9 @@ namespace Microsoft.PowerFx.Core.Types
 
         public bool IsError => Kind == DKind.Error;
 
-        public bool IsRecord => Kind == DKind.Record || Kind == DKind.ObjNull;
+        public bool IsRecord => Kind == DKind.Record || Kind == DKind.ObjNull || Kind == DKind.LazyRecord;
 
-        public bool IsTable => Kind == DKind.Table || Kind == DKind.ObjNull;
+        public bool IsTable => Kind == DKind.Table || Kind == DKind.ObjNull || Kind == DKind.LazyTable;
 
         public bool IsEnum => Kind == DKind.Enum || Kind == DKind.ObjNull;
 
@@ -531,7 +557,7 @@ namespace Microsoft.PowerFx.Core.Types
 
         public bool IsView => Kind == DKind.View || Kind == DKind.ViewValue;
 
-        public bool IsAggregate => Kind == DKind.Table || Kind == DKind.Record || Kind == DKind.ObjNull;
+        public bool IsAggregate => IsRecord || IsTable;
 
         public bool IsPrimitive => (Kind >= DKind._MinPrimitive && Kind < DKind._LimPrimitive) || Kind == DKind.ObjNull;
 
@@ -571,6 +597,8 @@ namespace Microsoft.PowerFx.Core.Types
         public DType AttachmentType => _attachmentType;
 
         public bool HasExpandInfo => ExpandInfo != null;
+
+        public bool IsLazyType => Kind == DKind.LazyRecord || Kind == DKind.LazyTable;
 
         public bool HasPolymorphicInfo => PolymorphicInfo != null;
 
@@ -945,34 +973,6 @@ namespace Microsoft.PowerFx.Core.Types
             return Kind.ToString();
         }
 
-        public DType ToRecord()
-        {
-            AssertValid();
-
-            switch (Kind)
-            {
-                case DKind.Record:
-                    return this;
-                case DKind.Table:
-                case DKind.Control:
-                case DKind.DataEntity:
-                    if (ExpandInfo != null)
-                    {
-                        return new DType(DKind.Record, ExpandInfo, TypeTree);
-                    }
-                    else
-                    {
-                        return new DType(DKind.Record, TypeTree, AssociatedDataSources, DisplayNameProvider);
-                    }
-
-                case DKind.ObjNull:
-                    return EmptyRecord;
-                default:
-                    Contracts.Assert(false, "Bad source kind for ToRecord");
-                    return EmptyRecord;
-            }
-        }
-
         // WARNING! This method is dangerous, for several reasons (below). Clients need to
         // rethink their strategy, and consider using the proper DType representation with
         // embedded "v" types instead, and dig into those types as needed for additional
@@ -1031,14 +1031,30 @@ namespace Microsoft.PowerFx.Core.Types
             return expands;
         }
 
+        public DType ToRecord()
+        {
+            var fError = false;
+            var type = ToRecord(ref fError);
+
+            if (fError)
+            {
+                Contracts.Assert(false, "Bad source kind for ToRecord");
+            }
+
+            return type;
+        }
+
         public DType ToRecord(ref bool fError)
         {
             AssertValid();
 
             switch (Kind)
             {
+                case DKind.LazyRecord:
                 case DKind.Record:
                     return this;
+                case DKind.LazyTable:
+                    return new DType(LazyTypeProvider, isTable: false);
                 case DKind.Table:
                 case DKind.DataEntity:
                 case DKind.Control:
@@ -1061,30 +1077,15 @@ namespace Microsoft.PowerFx.Core.Types
 
         public DType ToTable()
         {
-            AssertValid();
+            var fError = false;
+            var type = ToTable(ref fError);
 
-            switch (Kind)
+            if (fError)
             {
-                case DKind.Table:
-                    return this;
-                case DKind.Record:
-                case DKind.DataEntity:
-                case DKind.Control:
-                    if (ExpandInfo != null)
-                    {
-                        return new DType(DKind.Table, ExpandInfo, TypeTree);
-                    }
-                    else
-                    {
-                        return new DType(DKind.Table, TypeTree, AssociatedDataSources, DisplayNameProvider);
-                    }
-
-                case DKind.ObjNull:
-                    return EmptyTable;
-                default:
-                    Contracts.Assert(false, "Bad source kind for ToTable");
-                    return EmptyTable;
+                Contracts.Assert(false, "Bad source kind for ToTable");
             }
+
+            return type;
         }
 
         public DType ToTable(ref bool fError)
@@ -1093,8 +1094,11 @@ namespace Microsoft.PowerFx.Core.Types
 
             switch (Kind)
             {
+                case DKind.LazyTable:
                 case DKind.Table:
                     return this;
+                case DKind.LazyRecord:
+                    return new DType(LazyTypeProvider, isTable: true);
                 case DKind.Record:
                 case DKind.DataEntity:
                 case DKind.Control:
@@ -1193,6 +1197,10 @@ namespace Microsoft.PowerFx.Core.Types
                 case DKind.OptionSet:
                 case DKind.View:
                     return TypeTree.TryGetValue(name, out type);
+
+                case DKind.LazyRecord:
+                case DKind.LazyTable:
+                    return LazyTypeProvider.TryGetFieldType(name, out type);
                 case DKind.Enum:
                     if (ValueTree.Contains(name.Value))
                     {
@@ -1328,6 +1336,12 @@ namespace Microsoft.PowerFx.Core.Types
             Contracts.Assert(name.IsValid);
             type.AssertValid();
 
+            var fullType = this;
+            if (IsLazyType)
+            {
+                fullType = LazyTypeProvider.GetExpandedType(IsTable);
+            }
+
             Contracts.Assert(!TypeTree.Contains(name));
             var tree = TypeTree.SetItem(name, type);
             var newType = new DType(Kind, tree, AssociatedDataSources, DisplayNameProvider);
@@ -1345,44 +1359,6 @@ namespace Microsoft.PowerFx.Core.Types
             return Add(typedName.Name, typedName.Type);
         }
 
-        // Return a new type based on this, with additional named member fields of some specified types.
-        public DType AddMulti(ref bool fError, DPath path, params TypedName[] typedNames)
-        {
-            return AddMulti(ref fError, path, (IEnumerable<TypedName>)typedNames);
-        }
-
-        // Return a new type based on this, with additional named member fields of a specified type.
-        public DType AddMulti(ref bool fError, DPath path, IEnumerable<TypedName> typedNames)
-        {
-            AssertValid();
-            Contracts.AssertValue(typedNames);
-
-            fError |= !TryGetType(path, out var typeOuter);
-            if (!typeOuter.IsAggregate)
-            {
-                fError = true;
-                return this;
-            }
-
-            Contracts.Assert(typeOuter.IsRecord || typeOuter.IsTable);
-
-            var tree = typeOuter.TypeTree;
-            foreach (var tn in typedNames)
-            {
-                Contracts.Assert(tn.IsValid);
-                if (tree.TryGetValue(tn.Name, out var typeCur))
-                {
-                    fError = true;
-                }
-
-                tree = tree.SetItem(tn.Name, tn.Type);
-            }
-
-            typeOuter = new DType(typeOuter.Kind, tree, AssociatedDataSources, DisplayNameProvider);
-
-            return SetType(ref fError, path, typeOuter);
-        }
-
         // Drop the specified name/field from path's type, and return the resulting type.
         public DType Drop(ref bool fError, DPath path, DName name)
         {
@@ -1397,6 +1373,12 @@ namespace Microsoft.PowerFx.Core.Types
             }
 
             Contracts.Assert(typeOuter.IsRecord || typeOuter.IsTable);
+            
+            var fullType = this;
+            if (IsLazyType)
+            {
+                fullType = LazyTypeProvider.GetExpandedType(IsTable);
+            }
 
             var tree = typeOuter.TypeTree.RemoveItem(ref fError, name);
             if (fError)
@@ -1527,6 +1509,12 @@ namespace Microsoft.PowerFx.Core.Types
             {
                 fError = true;
                 return this;
+            }            
+
+            var fullType = this;
+            if (IsLazyType)
+            {
+                fullType = LazyTypeProvider.GetExpandedType(IsTable);
             }
 
             Contracts.Assert(typeOuter.IsRecord || typeOuter.IsTable);
@@ -1534,78 +1522,6 @@ namespace Microsoft.PowerFx.Core.Types
             var tree = typeOuter.TypeTree.RemoveItems(ref fError, rgname);
 
             return SetType(ref fError, path, new DType(typeOuter.Kind, tree, AssociatedDataSources, DisplayNameProvider));
-        }
-
-        // Drop everything but the specified names/fields from path's type, and return the resulting type.
-        // If a name/field (that was specified to be kept) is missing, we are returning a new type
-        // with the type for the missing field as Error and fError will be true.
-        public DType KeepMulti(ref bool fError, DPath path, params DName[] rgname)
-        {
-            AssertValid();
-            Contracts.AssertNonEmpty(rgname);
-            Contracts.AssertAllValid(rgname);
-
-            fError |= !TryGetType(path, out var typeOuter);
-            if (!typeOuter.IsAggregate)
-            {
-                fError = true;
-                return this;
-            }
-
-            Contracts.Assert(typeOuter.IsRecord || typeOuter.IsTable);
-
-            var tree = default(TypeTree);
-
-            foreach (var name in rgname)
-            {
-                if (!typeOuter.TryGetType(name, out var typeCur))
-                {
-                    fError = true;
-                    typeCur = Error;
-                }
-
-                tree = tree.SetItem(name, typeCur);
-            }
-
-            return SetType(ref fError, path, new DType(typeOuter.Kind, tree, AssociatedDataSources, DisplayNameProvider));
-        }
-
-        // If a name/field (that was specified to be split) is missing, we are returning a new type
-        // with the type for the missing field as Error and fError will be true.
-        public DType Split(ref bool fError, out DType typeRest, params DName[] rgname)
-        {
-            AssertValid();
-            Contracts.AssertNonEmpty(rgname);
-            Contracts.AssertAllValid(rgname);
-
-            if (!IsAggregate)
-            {
-                fError = true;
-                typeRest = Error;
-                return this;
-            }
-
-            Contracts.Assert(IsRecord || IsTable);
-
-            var treeRest = TypeTree;
-            var treeWith = default(TypeTree);
-
-            foreach (var name in rgname)
-            {
-                if (TypeTree.TryGetValue(name, out var typeCur))
-                {
-                    treeWith = treeWith.SetItem(name, typeCur);
-                    treeRest = treeRest.RemoveItem(ref fError, name);
-                }
-                else
-                {
-                    fError = true;
-                    treeWith = treeWith.SetItem(name, Error);
-                }
-            }
-
-            typeRest = new DType(Kind, treeRest, AssociatedDataSources, DisplayNameProvider);
-            return new DType(Kind, treeWith, AssociatedDataSources, DisplayNameProvider);
         }
 
         // Get ALL the fields/names at the specified path, including hidden meta fields
@@ -1668,6 +1584,7 @@ namespace Microsoft.PowerFx.Core.Types
             AssertValid();
 
             fError |= !TryGetType(path, out var type);
+
             if (!type.IsAggregate && !type.IsEnum)
             {
                 fError = true;
@@ -1735,6 +1652,25 @@ namespace Microsoft.PowerFx.Core.Types
             }
 
             return fValid;
+        }
+
+        private bool AcceptsLazyType(DType other)
+        {
+            Contracts.AssertValid(other);
+            Contracts.Assert(IsLazyType);
+
+            switch (other.Kind)
+            {
+                case DKind.LazyRecord:
+                case DKind.LazyTable:
+                    Contracts.AssertValue(LazyTypeProvider);
+                    return other.LazyTypeProvider.LazyTypeMetadata.Equals(LazyTypeProvider.LazyTypeMetadata) && IsTable == other.IsTable;
+                case DKind.Record:
+                case DKind.Table:
+                    return LazyTypeProvider.GetExpandedType(IsTable).Accepts(other, true);
+                default:
+                    return other.Kind == DKind.Unknown;
+            }
         }
 
         private bool AcceptsEntityType(DType type)
@@ -1869,7 +1805,7 @@ namespace Microsoft.PowerFx.Core.Types
                 case DKind.Record:
                 case DKind.File:
                 case DKind.LargeImage:
-                    if (Kind == type.Kind)
+                    if (Kind == type.Kind || type.IsLazyType)
                     {
                         return TreeAccepts(this, TypeTree, type.TypeTree, out schemaDifference, out schemaDifferenceType, exact, useLegacyDateTimeAccepts);
                     }
@@ -1878,7 +1814,8 @@ namespace Microsoft.PowerFx.Core.Types
                     break;
 
                 case DKind.Table:
-                    if (Kind == type.Kind || type.IsExpandEntity)
+
+                    if (Kind == type.Kind || type.IsLazyType)
                     {
                         return TreeAccepts(this, TypeTree, type.TypeTree, out schemaDifference, out schemaDifferenceType, exact, useLegacyDateTimeAccepts);
                     }
@@ -1997,6 +1934,11 @@ namespace Microsoft.PowerFx.Core.Types
                     break;
                 case DKind.UntypedObject:
                     accepts = type.Kind == DKind.UntypedObject || type.Kind == DKind.Unknown;
+                    break;
+
+                case DKind.LazyTable:
+                case DKind.LazyRecord:
+                    accepts = AcceptsLazyType(type);
                     break;
                 default:
                     Contracts.Assert(false);
@@ -2817,7 +2759,8 @@ namespace Microsoft.PowerFx.Core.Types
                 Hashing.HashInt((int)Kind),
                 Hashing.HashInt((int)EnumSuperkind),
                 TypeTree.GetHashCode(),
-                ValueTree.GetHashCode());
+                ValueTree.GetHashCode(),
+                LazyTypeProvider?.GetHashCode() ?? 0);
         }
 
         public override bool Equals(object obj)
@@ -2828,7 +2771,8 @@ namespace Microsoft.PowerFx.Core.Types
                EnumSuperkind == other.EnumSuperkind &&
                ValueTree == other.ValueTree &&
                HasExpandInfo == other.HasExpandInfo &&
-               NamedValueKind == other.NamedValueKind;
+               NamedValueKind == other.NamedValueKind &&
+               (LazyTypeProvider?.LazyTypeMetadata.Equals(other.LazyTypeProvider?.LazyTypeMetadata) ?? other.LazyTypeProvider == null);
         }
 
         // Viewing DType.Invalid in the debugger should be allowed
@@ -2839,60 +2783,6 @@ namespace Microsoft.PowerFx.Core.Types
             AppendTo(sb);
             return sb.ToString();
         }
-
-        /// <summary>
-        /// Returns a JS representation of this DType.
-        /// </summary>
-        /// <returns>A JS representation of this DType.</returns>
-        /// <remarks>The representation is an object with a required member 't', of type string
-        /// (which maps to the _kind property) and an optional member 'c', of type object, with
-        /// keys named on the children properties for this DType, and values representing their
-        /// respective JS type:
-        /// export interface IJsonFunctionDataDefinition {
-        ///     t: string;   // Type (maps to DType.Kind)
-        ///     c?: HashTable.IJsonFunctionDataDefinition; // optional children
-        /// }.
-        /// </remarks>
-        internal string ToJsType(Func<DName, DType, bool> shouldBeIncluded = null)
-        {
-            var sb = new StringBuilder();
-            ToJsType(sb, shouldBeIncluded);
-            return sb.ToString();
-        }
-
-        public void ToJsType(StringBuilder builder, Func<DName, DType, bool> shouldBeIncluded = null)
-        {
-            if (shouldBeIncluded == null)
-            {
-                shouldBeIncluded = (a, b) => true;
-            }
-
-            var kindStr = MapKindToStr(Kind);
-            switch (Kind)
-            {
-                case DKind.Table:
-                case DKind.Record:
-                    builder.Append("{t:\"").Append(kindStr).Append("\",c:{");
-
-                    var sep = string.Empty;
-                    foreach (var tn in GetNames(DPath.Root).Where(tn => shouldBeIncluded(tn.Name, tn.Type)))
-                    {
-                        builder.Append(sep);
-                        EscapeJSPropertyName(builder, tn.Name);
-                        builder.Append(":");
-                        tn.Type.ToJsType(builder, shouldBeIncluded);
-                        sep = ",";
-                    }
-
-                    builder.Append("}}");
-                    return;
-                default:
-                    builder.Append("{t:\"").Append(kindStr).Append("\"}");
-                    return;
-            }
-        }
-
-        private static readonly Regex NoNeedEscape = new Regex("^[a-zA-Z_][0-9a-zA-Z]*$");
 
         protected DType(
             DKind kind,
@@ -2926,39 +2816,6 @@ namespace Microsoft.PowerFx.Core.Types
             ViewInfo = viewInfo;
             NamedValueKind = namedValueKind;
             DisplayNameProvider = displayNameProvider;
-        }
-
-        private static void EscapeJSPropertyName(StringBuilder builder, string name)
-        {
-            if (NoNeedEscape.IsMatch(name))
-            {
-                builder.Append(name);
-            }
-            else
-            {
-                builder.Append("\"");
-
-                for (var i = 0; i < name.Length; i++)
-                {
-                    var c = name[i];
-                    const string needsEscaping = "\\\"";
-                    if (c >= ' ' && c <= '~')
-                    {
-                        if (needsEscaping.Contains(c))
-                        {
-                            builder.Append("\\");
-                        }
-
-                        builder.Append(c);
-                    }
-                    else
-                    {
-                        builder.Append(string.Format("\\u{0:x4}", (int)c));
-                    }
-                }
-
-                builder.Append("\"");
-            }
         }
 
         public void AppendTo(StringBuilder sb)
@@ -3689,8 +3546,12 @@ namespace Microsoft.PowerFx.Core.Types
                     return "c";
                 case DKind.Record:
                     return "!";
+                case DKind.LazyRecord:
+                    return "r!";
                 case DKind.Table:
                     return "*";
+                case DKind.LazyTable:
+                    return "r*";
                 case DKind.Enum:
                     return "%";
                 case DKind.Media:

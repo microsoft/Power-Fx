@@ -72,7 +72,7 @@ namespace Microsoft.PowerFx.Connectors
                 
                 if (param.Schema.TryGetDefaultValue(out var defaultValue))
                 {
-                    _parameterDefaultValues[name] = Tuple.Create(defaultValue, paramType._type);
+                    _parameterDefaultValues[name] = Tuple.Create(defaultValue, paramType.Type);
                 }
 
                 if (param.IsInternal())
@@ -102,7 +102,7 @@ namespace Microsoft.PowerFx.Connectors
                 var options = param.GetOptions();
                 if (options != null)
                 {
-                    var typedName = new TypedName(paramType._type, new DName(name));
+                    var typedName = new TypedName(paramType.Type, new DName(name));
                     _parameterOptions[typedName] = new List<string>(options);
                 }
             }
@@ -255,7 +255,7 @@ namespace Microsoft.PowerFx.Connectors
 
         private static ServiceFunctionParameterTemplate Convert(OpenApiParameter apiParam)
         {
-            var paramType = apiParam.Schema.ToFormulaType()._type;
+            var paramType = apiParam.Schema.ToFormulaType().Type;
             var typedName = new TypedName(paramType, new DName(apiParam.Name));
 
             apiParam.Schema.TryGetDefaultValue(out var defaultValue);
@@ -265,7 +265,7 @@ namespace Microsoft.PowerFx.Connectors
 
         private static ServiceFunctionParameterTemplate Convert(KeyValuePair<string, OpenApiSchema> apiProperty)
         {
-            var paramType = apiProperty.Value.ToFormulaType()._type;
+            var paramType = apiProperty.Value.ToFormulaType().Type;
             var typedName = new TypedName(paramType, new DName(apiProperty.Key));
 
             apiProperty.Value.TryGetDefaultValue(out var defaultValue);

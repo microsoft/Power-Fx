@@ -28,7 +28,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [Fact]
         public void CollisionsThrow()
         {
-            var r1 = new RecordType()
+            var r1 = new KnownRecordType()
                 .Add(new NamedFormulaType("Num", FormulaType.Number, new DName("DisplayNum")));
 
             Assert.Throws<NameCollisionException>(() => r1.Add(new NamedFormulaType("DisplayNum", FormulaType.Date, "NoCollision")));
@@ -39,7 +39,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [Fact]
         public void ImmutableDisplayNameProvider()
         {
-            var r1 = new RecordType();
+            var r1 = new KnownRecordType();
 
             var r2 = r1.Add(new NamedFormulaType("Logical", FormulaType.String, "Foo"));
             var r3 = r1.Add(new NamedFormulaType("Logical", FormulaType.String, "Bar"));
@@ -50,10 +50,10 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [Fact]
         public void DisableDisplayNames()
         {
-            var r1 = new RecordType()
+            var r1 = new KnownRecordType()
                 .Add(new NamedFormulaType("Logical", FormulaType.String, "Foo"));
 
-            var r2 = new RecordType()
+            var r2 = new KnownRecordType()
                 .Add(new NamedFormulaType("Other", FormulaType.String, "Foo"));
 
             Assert.IsType<SingleSourceDisplayNameProvider>(r1._type.DisplayNameProvider);
@@ -76,7 +76,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [InlineData("Sum(NestedDisplay /* The source */ , InnerDisplay /* Sum over the InnerDisplay column */)", "Sum(Nested /* The source */ , Inner /* Sum over the InnerDisplay column */)", false)]
         public void ValidateDisplayNames(string inputExpression, string outputExpression, bool toDisplay)
         {
-            var r1 = new RecordType()
+            var r1 = new KnownRecordType()
                 .Add(new NamedFormulaType("Num", FormulaType.Number, "DisplayNum"))
                 .Add(new NamedFormulaType("B", FormulaType.Boolean, "DisplayB"))
                 .Add(new NamedFormulaType(
@@ -99,7 +99,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [Fact]
         public void ConvertToDisplayNamesNoNames()
         {
-            var r1 = new RecordType()
+            var r1 = new KnownRecordType()
                 .Add(new NamedFormulaType("Num", FormulaType.Number))
                 .Add(new NamedFormulaType("B", FormulaType.Boolean));
 
@@ -111,7 +111,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [Fact]
         public void ConvertToInvariantNamesNoNames()
         {
-            var r1 = new RecordType()
+            var r1 = new KnownRecordType()
                 .Add(new NamedFormulaType("Num", FormulaType.Number))
                 .Add(new NamedFormulaType("B", FormulaType.Boolean));
 
@@ -143,7 +143,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [InlineData("With({x: RecordNest, y: RecordNest}, x.SomeString & y.SomeString)", "With({x: RecordNest, y: RecordNest}, x.S2 & y.S2)", "RecordNest.SomeString", "S2")]
         public void RenameParameter(string expressionBase, string expectedExpression, string path, string newName)
         {
-            var r1 = new RecordType()
+            var r1 = new KnownRecordType()
                 .Add(new NamedFormulaType("Num", FormulaType.Number, "DisplayNum"))
                 .Add(new NamedFormulaType("B", FormulaType.Boolean, "DisplayB"))
                 .Add(new NamedFormulaType(
@@ -152,9 +152,9 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                         "NestedDisplay"))
                 .Add(new NamedFormulaType(
                         "RecordNest",
-                        new RecordType()
+                        new KnownRecordType()
                             .Add(new NamedFormulaType("SomeString", FormulaType.String, "DisplaySomeString"))
-                            .Add(new NamedFormulaType("nest2", new RecordType().Add(new NamedFormulaType("datetest", FormulaType.DateTime, "DisplayDT")), "DisplayReallyNested")),
+                            .Add(new NamedFormulaType("nest2", new KnownRecordType().Add(new NamedFormulaType("datetest", FormulaType.DateTime, "DisplayDT")), "DisplayReallyNested")),
                         "superrecordnest"));
 
             var dpath = DPath.Root;
@@ -171,7 +171,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [Fact]
         public void ConvertToDisplayNotForced()
         {
-            var r1 = new RecordType()
+            var r1 = new KnownRecordType()
                 .Add(new NamedFormulaType("Num", FormulaType.Number, "SomeDisplayNum"))
                 .Add(new NamedFormulaType("B", FormulaType.Boolean, "SomeDisplayB"));
 
@@ -218,7 +218,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [InlineData("Sum(NestedDisplay /* The source */ ; InnerDisplay /* Sum over the InnerDisplay column */)", "Sum(Nested /* The source */ , Inner /* Sum over the InnerDisplay column */)", false)]
         public void ValidateExpressionConversionCommaSeparatedLocale(string inputExpression, string outputExpression, bool toDisplay)
         {
-            var r1 = new RecordType()
+            var r1 = new KnownRecordType()
                 .Add(new NamedFormulaType("Num", FormulaType.Number, "DisplayNum"))
                 .Add(new NamedFormulaType("B", FormulaType.Boolean, "DisplayB"))
                 .Add(new NamedFormulaType(

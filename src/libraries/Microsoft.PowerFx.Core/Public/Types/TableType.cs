@@ -20,43 +20,25 @@ namespace Microsoft.PowerFx.Types
         {
         }
 
-        internal static TableType FromRecord(RecordType type)
-        {
-            var tableType = type._type.ToTable();
-            return new TableType(tableType);
-        }
-
         public override void Visit(ITypeVisitor vistor)
         {
             vistor.Visit(this);
         }
 
-        public TableType Add(NamedFormulaType field)
-        {
-            return new TableType(AddFieldToType(field));
-        }
-
-        public string SingleColumnFieldName
+        internal string SingleColumnFieldName
         {
             get
             {
-                Contracts.Assert(GetNames().Count() == 1);
-                return GetNames().First().Name;
+                Contracts.Assert(FieldNames.Count() == 1);
+                return FieldNames.First();
             }
         }
 
-        public FormulaType SingleColumnFieldType
-        {
-            get
-            {
-                Contracts.Assert(GetNames().Count() == 1);
-                return GetNames().First().Type;
-            }
-        }
+        internal FormulaType SingleColumnFieldType => GetFieldType(SingleColumnFieldName);
 
         public RecordType ToRecord()
         {
-            return new RecordType(_type.ToRecord());
+            return new KnownRecordType(Type.ToRecord());
         }
     }
 }

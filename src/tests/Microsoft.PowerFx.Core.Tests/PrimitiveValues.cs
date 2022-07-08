@@ -134,7 +134,7 @@ namespace Microsoft.PowerFx.Core.Tests
             var complex = new { x = 15 };
             Assert.Throws<InvalidOperationException>(() => PrimitiveValueConversions.Marshal(complex, complex.GetType()));
 
-            var fxType = new RecordType();
+            var fxType = new KnownRecordType();
             Assert.Throws<InvalidOperationException>(() => PrimitiveValueConversions.Marshal(complex, fxType));
 
             // Verify illegal combinations fail.
