@@ -99,38 +99,40 @@ namespace Microsoft.PowerFx.Core.Tests
         /// <returns>status from running.</returns>
         public (TestResult result, string message) RunTestCase(TestCase testCase)
         {
-            var result = TestResult.Fail;
-            string message = null;
-
-            var t = new Thread(() =>
-            {
-                (result, message) = RunAsync2(testCase).Result;
-            });
-            t.Start();
-            bool success;
-            while (true) 
-            {
-                success = t.Join(Timeout);
-                if (!success && Debugger.IsAttached)
+            var t = Task.Factory.StartNew(
+                () => 
                 {
-                    // Aid in debugging.
-                    Debugger.Log(0, null, $"Test case {testCase} running...\r\n");
-                    
-                    // Debugger.Break();
-                    continue;
+                    var t = RunAsync2(testCase);
+                    t.ConfigureAwait(false);
+
+                    return t.Result;
+                }, 
+                new CancellationToken(), 
+                TaskCreationOptions.None, 
+                TaskScheduler.Default);
+
+            while (true)
+            {
+                Task.WaitAny(t, Task.Delay(Timeout));
+
+                if (t.IsCompletedSuccessfully)
+                {
+                    return t.Result;
                 }
+                else
+                {
+                    // Timeout!!!
+                    if (Debugger.IsAttached && !t.IsCompleted)
+                    {
+                        // Aid in debugging.
+                        Debugger.Log(0, null, $"Test case {testCase} running...\r\n");
 
-                break;
-            }            
+                        // Debugger.Break();
+                        continue;
+                    }
 
-            if (success)
-            {
-                return (result, message);
-            }
-            else
-            {
-                // Timeout!!!
-                return (TestResult.Fail, $"Timeout after {Timeout}");
+                    return (TestResult.Fail, $"Timeout after {Timeout}");
+                }
             }
         }
 
@@ -215,7 +217,7 @@ namespace Microsoft.PowerFx.Core.Tests
             }
             catch (Exception e)
             {
-                return (TestResult.Fail, $"Threw exception: {e.Message}");
+                return (TestResult.Fail, $"Threw exception: {e.Message}, {e.StackTrace}");
             }
 
             // Check for a runtime-error
