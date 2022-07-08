@@ -86,7 +86,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
                 if (string.Equals(iSetup.HandlerName, "AsyncTestSetup", StringComparison.OrdinalIgnoreCase))
                 {
-                    return new RunResult(await RunVerifyAsync(expr, iSetup.Flags.ToParserOptions()).ConfigureAwait(false));
+                    return new RunResult(await RunVerifyAsync(expr, config, iSetup.Flags.ToParserOptions()).ConfigureAwait(false));
                 }
 
                 if (iSetup.HandlerName != null)
