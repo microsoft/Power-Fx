@@ -62,11 +62,12 @@ namespace Microsoft.PowerFx.Tests
                 _ => throw new ArgumentException("Invalid apiFileNumber"),
             };
 
-            var testConnector = new LoggingTestServer(swaggerFile);
+            using var testConnector = new LoggingTestServer(swaggerFile);
             testConnector.SetResponse("0");
                                
             var config = new PowerFxConfig();
-            config.AddService("Test", testConnector._apiDocument, new HttpClient(testConnector) { BaseAddress = _fakeBaseAddress });
+            using var httpClient = new HttpClient(testConnector) { BaseAddress = _fakeBaseAddress };
+            config.AddService("Test", testConnector._apiDocument, httpClient);
             var engine = new RecalcEngine(config);
 
             var checkResult = engine.Check(fxQuery, options: _optionsPost);
@@ -90,9 +91,8 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public async Task BasicHttpCallWithCaching()
         {
-            var testConnector = new LoggingTestServer(@"Swagger\TestOpenAPI.json");
-
-            var httpClient = new HttpClient(testConnector)
+            using var testConnector = new LoggingTestServer(@"Swagger\TestOpenAPI.json");
+            using var httpClient = new HttpClient(testConnector)
             {
                 BaseAddress = _fakeBaseAddress
             };
@@ -137,7 +137,7 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public async Task BasicHttpCallNullInvoker()
         {
-            var testConnector = new LoggingTestServer(@"Swagger\TestOpenAPI.json");
+            using var testConnector = new LoggingTestServer(@"Swagger\TestOpenAPI.json");
 
             var config = new PowerFxConfig();
             var apiDoc = testConnector._apiDocument;
