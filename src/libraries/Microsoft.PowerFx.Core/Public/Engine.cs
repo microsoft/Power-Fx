@@ -139,7 +139,8 @@ namespace Microsoft.PowerFx
                 parse.Root,
                 resolver,
                 bindingConfig,
-                ruleScope: parameterType._type);
+                ruleScope: parameterType._type,
+                features: Config.Features);
 
             var result = new CheckResult(parse, binding);
 
