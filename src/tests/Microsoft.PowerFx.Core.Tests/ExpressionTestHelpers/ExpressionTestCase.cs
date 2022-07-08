@@ -47,7 +47,14 @@ namespace Microsoft.PowerFx.Core.Tests
 
         public override string ToString()
         {
-            return $"{Path.GetFileName(SourceFile)} : {SourceLine.ToString("000")} - {Input} = {Expected}";
+            var str = $"{Path.GetFileName(SourceFile)} : {SourceLine.ToString("000")} - {Input} = {Expected}";
+
+            if (!string.IsNullOrEmpty(SetupHandlerName))
+            {
+                str += " - Setup: " + SetupHandlerName;
+            }
+
+            return str;
         }
 
         public void Deserialize(IXunitSerializationInfo info)
