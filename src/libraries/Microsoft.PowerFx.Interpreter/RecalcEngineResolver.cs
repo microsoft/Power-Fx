@@ -6,6 +6,7 @@ using System.Linq;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Binding.BindInfo;
 using Microsoft.PowerFx.Core.Glue;
+using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx
@@ -51,7 +52,7 @@ namespace Microsoft.PowerFx
             return base.Lookup(name, out nameInfo, preferences);
         }
 
-        public override IDictionary<string, NameLookupInfo> VariableNames => _parent.Formulas.ToDictionary(kv => kv.Key, kv => new NameLookupInfo(BindKind.ScopeVariable, kv.Value._type._type, DPath.Root, 0, kv.Value));
+        public override IReadOnlyDictionary<string, DType> VariableNames => _parent.Formulas.ToDictionary(kv => kv.Key, kv => kv.Value._type._type);
 
         public class ParameterData
         {

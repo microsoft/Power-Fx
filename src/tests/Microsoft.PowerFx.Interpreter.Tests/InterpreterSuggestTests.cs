@@ -86,7 +86,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Assert.NotNull(s);
             Assert.Equal("fileIndex", s.DisplayText.Text);
             Assert.Null(s.FunctionName);
-            Assert.Equal(SuggestionIconKind.Other /* Variable*/ , s.IconKind);
+            Assert.Equal(SuggestionIconKind.Other /* Variable*/, s.IconKind);
             Assert.Equal(SuggestionKind.Global, s.Kind);            
             Assert.Equal(DType.Number, s.Type);
         }
