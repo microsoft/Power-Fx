@@ -48,7 +48,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
         internal static string SerializeJson(Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)> parameters) => Serialize<OpenApiJsonSerializer>(parameters, false);
 
-        internal static string SerializeUrlEncoder(Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)> parameters) => Serialize<OpenApiFormUrlEncoder>(parameters, false);        
+        internal static string SerializeUrlEncoder(Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)> parameters) => Serialize<OpenApiFormUrlEncoder>(parameters, false);
 
         internal static string Serialize<T>(Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)> parameters, bool schemaLessBody)
             where T : FormulaValueSerializer

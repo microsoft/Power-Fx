@@ -13,7 +13,7 @@ namespace Microsoft.PowerFx.Connectors.Execution
     {
         private readonly MemoryStream _stream;
         private readonly Utf8JsonWriter _writer;
-        private bool _topPropertyWritten = false;
+        private bool _topPropertyWritten = false;       
 
         public OpenApiJsonSerializer(bool schemaLessBody)
             : base(schemaLessBody)

@@ -46,7 +46,7 @@ namespace Microsoft.PowerFx.Core.Tests
             // Inputs are case sensitive, so the overall key must be case sensitive. 
             // But filenames are case insensitive, so canon them to lowercase.
             var fileKey = file ?? Path.GetFileName(SourceFile);
-            
+
             return fileKey.ToLower() + ":" + Input;
         }
 

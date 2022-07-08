@@ -16,12 +16,12 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 {
     public class ExpressionEvaluationTests : PowerFxTest
     {
-        internal static Dictionary<string, Func<(RecalcEngine engine, RecordValue parameters)>> SetupHandlers = new Dictionary<string, Func<(RecalcEngine engine, RecordValue parameters)>>() 
+        internal static Dictionary<string, Func<PowerFxConfig, (RecalcEngine engine, RecordValue parameters)>> SetupHandlers = new () 
         {
             { "OptionSetTestSetup", OptionSetTestSetup }
         };
 
-        private static (RecalcEngine engine, RecordValue parameters) OptionSetTestSetup()
+        private static (RecalcEngine engine, RecordValue parameters) OptionSetTestSetup(PowerFxConfig config)
         {            
             var optionSet = new OptionSet("OptionSet", DisplayNameUtility.MakeUnique(new Dictionary<string, string>() 
             {
@@ -36,8 +36,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                     { "35694", "OptionC" },
                     { "123412983", "OptionD" },
             }));
-
-            var config = new PowerFxConfig(null);
+            
             config.AddOptionSet(optionSet);
             config.AddOptionSet(otherOptionSet);
 
@@ -53,13 +52,12 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         }        
 
         internal class InterpreterRunner : BaseRunner
-        {
+        {            
             // For async tests, run in special mode. 
             // This does _not_ change evaluation semantics, but does verify .Result isn't called by checking
             // task completion status.. 
-            private async Task<FormulaValue> RunVerifyAsync(string expr, ParserOptions options)
-            {
-                var config = new PowerFxConfig(null);
+            private async Task<FormulaValue> RunVerifyAsync(string expr, PowerFxConfig config, ParserOptions options)
+            {                
                 var verify = new AsyncVerify();
 
                 // Add Async(),WaitFor() functions 
@@ -84,6 +82,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 RecalcEngine engine;
                 RecordValue parameters;
                 var iSetup = InternalSetup.Parse(setupHandlerName);
+                var config = new PowerFxConfig(features: iSetup.Features);
 
                 if (string.Equals(iSetup.HandlerName, "AsyncTestSetup", StringComparison.OrdinalIgnoreCase))
                 {
@@ -97,11 +96,11 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                         throw new SetupHandlerNotFoundException();
                     }
 
-                    (engine, parameters) = handler();
+                    (engine, parameters) = handler(config);
                 }
                 else
                 {
-                    engine = new RecalcEngine();
+                    engine = new RecalcEngine(config);
                     parameters = null;
                 }
 
