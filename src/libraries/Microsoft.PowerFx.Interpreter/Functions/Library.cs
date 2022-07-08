@@ -172,26 +172,6 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: Boolean_UO)
             },
             {
-                BuiltinFunctionsCore.ColorValue,
-                StandardErrorHandling<StringValue>(
-                    expandArguments: NoArgExpansion,
-                    replaceBlankValues: DoNotReplaceBlank,
-                    checkRuntimeTypes: ExactValueTypeOrBlank<StringValue>,
-                    checkRuntimeValues: DeferRuntimeValueChecking,
-                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
-                    targetFunction: ColorValue)
-            },
-            {
-                BuiltinFunctionsCore.ColorValue_UO,
-                StandardErrorHandling<UntypedObjectValue>(
-                    expandArguments: NoArgExpansion,
-                    replaceBlankValues: DoNotReplaceBlank,
-                    checkRuntimeTypes: ExactValueTypeOrBlank<UntypedObjectValue>,
-                    checkRuntimeValues: DeferRuntimeValueChecking,
-                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
-                    targetFunction: ColorValue_UO)
-            },
-            {
                 BuiltinFunctionsCore.Concat,
                 StandardErrorHandlingAsync<FormulaValue>(
                     expandArguments: NoArgExpansion,
