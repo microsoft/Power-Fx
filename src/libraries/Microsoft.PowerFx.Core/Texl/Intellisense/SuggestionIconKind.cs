@@ -9,6 +9,7 @@ namespace Microsoft.PowerFx.Intellisense
         Function,
         Control,
         DataSource,
-        Variable
+
+        // Variable
     }
 }

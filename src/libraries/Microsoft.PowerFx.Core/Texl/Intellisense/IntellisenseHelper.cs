@@ -652,7 +652,7 @@ namespace Microsoft.PowerFx.Intellisense
 
                 if (IsMatch(variableName, intellisenseData.MatchingStr))
                 {
-                    CheckAndAddSuggestion(new IntellisenseSuggestion(new UIString(variableName), SuggestionKind.Global, SuggestionIconKind.Variable, variable.Value.Type, -1, $"{variableName} variable", null, null), intellisenseData.Suggestions);
+                    CheckAndAddSuggestion(new IntellisenseSuggestion(new UIString(variableName), SuggestionKind.Global, SuggestionIconKind.Other /* Variable */, variable.Value.Type, -1, $"{variableName} variable", null, null), intellisenseData.Suggestions);
                 }
             }
         }
