@@ -50,9 +50,27 @@ namespace Microsoft.PowerFx
         /// Initializes a new instance of the <see cref="PowerFxConfig"/> class.        
         /// </summary>
         /// <param name="cultureInfo">Culture to use.</param>      
+        public PowerFxConfig(CultureInfo cultureInfo = null)
+            : this(cultureInfo, Features.None)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PowerFxConfig"/> class.        
+        /// </summary>
+        /// <param name="cultureInfo">Culture to use.</param>      
         /// <param name="features">Features to use.</param>
-        public PowerFxConfig(CultureInfo cultureInfo = null, Features features = Features.None)
-            : this(cultureInfo, new EnumStoreBuilder().WithRequiredEnums(BuiltinFunctionsCore.BuiltinFunctionsLibrary), features) 
+        public PowerFxConfig(CultureInfo cultureInfo, Features features)
+            : this(cultureInfo, new EnumStoreBuilder().WithRequiredEnums(BuiltinFunctionsCore.BuiltinFunctionsLibrary), features)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PowerFxConfig"/> class.        
+        /// </summary>
+        /// <param name="features">Features to use.</param>
+        public PowerFxConfig(Features features)
+            : this(null, features)
         {
         }
 
