@@ -28,7 +28,7 @@ namespace Microsoft.PowerFx
         }
 
         /// <inheritdoc/>
-        public bool TryGetMarshaller(Type type, TypeMarshallerCache cache, int maxDepth, out ITypeMarshaller marshaler)
+        public bool TryGetMarshaller(Type type, TypeMarshallerCache cache, out ITypeMarshaller marshaler)
         {        
             if (!type.IsClass || 
                 typeof(FormulaValue).IsAssignableFrom(type) ||
@@ -56,7 +56,7 @@ namespace Microsoft.PowerFx
                     continue;
                 }
 
-                var tm = cache.GetMarshaller(prop.PropertyType, maxDepth);
+                var tm = cache.GetMarshaller(prop.PropertyType);
                 var fxFieldType = tm.Type;
 
                 // Basic .net property

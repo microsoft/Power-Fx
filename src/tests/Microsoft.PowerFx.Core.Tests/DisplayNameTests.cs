@@ -44,7 +44,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var r2 = r1.Add(new NamedFormulaType("Logical", FormulaType.String, "Foo"));
             var r3 = r1.Add(new NamedFormulaType("Logical", FormulaType.String, "Bar"));
 
-            Assert.False(ReferenceEquals(r2._type.DisplayNameProvider, r3._type.DisplayNameProvider));
+            Assert.False(ReferenceEquals(r2.Type.DisplayNameProvider, r3.Type.DisplayNameProvider));
         }
 
         [Fact]
@@ -56,9 +56,9 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var r2 = new KnownRecordType()
                 .Add(new NamedFormulaType("Other", FormulaType.String, "Foo"));
 
-            Assert.IsType<SingleSourceDisplayNameProvider>(r1._type.DisplayNameProvider);
+            Assert.IsType<SingleSourceDisplayNameProvider>(r1.Type.DisplayNameProvider);
 
-            var disabledType = DType.AttachOrDisableDisplayNameProvider(r1._type, r2._type.DisplayNameProvider);
+            var disabledType = DType.AttachOrDisableDisplayNameProvider(r1.Type, r2.Type.DisplayNameProvider);
 
             Assert.IsType<DisabledDisplayNameProvider>(disabledType.DisplayNameProvider);
         }
@@ -81,7 +81,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 .Add(new NamedFormulaType("B", FormulaType.Boolean, "DisplayB"))
                 .Add(new NamedFormulaType(
                     "Nested", 
-                    new TableType().Add(new NamedFormulaType("Inner", FormulaType.Number, "InnerDisplay")), 
+                    new KnownTableType().Add(new NamedFormulaType("Inner", FormulaType.Number, "InnerDisplay")), 
                     "NestedDisplay"));
 
             if (toDisplay)
@@ -148,7 +148,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 .Add(new NamedFormulaType("B", FormulaType.Boolean, "DisplayB"))
                 .Add(new NamedFormulaType(
                         "Nested",
-                        new TableType().Add(new NamedFormulaType("Inner", FormulaType.Number, "InnerDisplay")),
+                        new KnownTableType().Add(new NamedFormulaType("Inner", FormulaType.Number, "InnerDisplay")),
                         "NestedDisplay"))
                 .Add(new NamedFormulaType(
                         "RecordNest",
@@ -185,7 +185,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 formula.ParseTree,
                 new SimpleResolver(new PowerFxConfig(CultureInfo.InvariantCulture)),
                 BindingConfig.Default,
-                ruleScope: r1._type,
+                ruleScope: r1.Type,
                 updateDisplayNames: true);
 
             Assert.Empty(binding.NodesToReplace);
@@ -223,7 +223,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 .Add(new NamedFormulaType("B", FormulaType.Boolean, "DisplayB"))
                 .Add(new NamedFormulaType(
                     "Nested",
-                    new TableType().Add(new NamedFormulaType("Inner", FormulaType.Number, "InnerDisplay")),
+                    new KnownTableType().Add(new NamedFormulaType("Inner", FormulaType.Number, "InnerDisplay")),
                     "NestedDisplay"));
 
             if (toDisplay)

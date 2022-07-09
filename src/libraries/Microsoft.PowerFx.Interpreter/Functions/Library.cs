@@ -1452,7 +1452,7 @@ namespace Microsoft.PowerFx.Functions
                         new NamedValue(
                             "AllErrors",
                             new InMemoryTableValue(
-                                IRContext.NotInSource(new TableType(ErrorType.ReifiedErrorTable())),
+                                IRContext.NotInSource(new KnownTableType(ErrorType.ReifiedErrorTable())),
                                 allErrors.Select(e => DValue<RecordValue>.Of(e))))
                     };
 

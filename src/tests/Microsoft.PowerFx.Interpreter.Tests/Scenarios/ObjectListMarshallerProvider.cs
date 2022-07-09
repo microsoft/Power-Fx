@@ -15,7 +15,7 @@ namespace Microsoft.PowerFx.Tests
     /// </summary>
     internal class ObjectListMarshallerProvider : ITypeMarshallerProvider
     {
-        public bool TryGetMarshaller(Type type, TypeMarshallerCache cache, int maxDepth, out ITypeMarshaller marshaller)
+        public bool TryGetMarshaller(Type type, TypeMarshallerCache cache, out ITypeMarshaller marshaller)
         {
             if (type == typeof(List<object>))
             {

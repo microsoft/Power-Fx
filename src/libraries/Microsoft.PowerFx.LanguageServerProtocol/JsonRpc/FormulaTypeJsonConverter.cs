@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Microsoft.PowerFx.Core;
@@ -71,7 +72,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
             var fieldsType = new KnownRecordType();
             foreach (var field in fields)
             {
-                if (fieldsType.MaybeGetFieldType(field.Key) != null)
+                if (fieldsType.FieldNames.Contains(field.Key))
                 {
                     throw new NotSupportedException($"Multiple definitions of {field.Key}");
                 }
@@ -79,7 +80,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
                 fieldsType = fieldsType.Add(field.Key, GetFormulaType(field.Value));
             }
 
-            return isTable ? TableType.FromRecord(fieldsType) : fieldsType;
+            return isTable ? fieldsType.ToTable() : fieldsType;
         }
     }
 }

@@ -91,7 +91,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 }
             }
 
-            public bool TryGetMarshaller(Type type, TypeMarshallerCache cache, int maxDepth, out ITypeMarshaller marshaller)
+            public bool TryGetMarshaller(Type type, TypeMarshallerCache cache, out ITypeMarshaller marshaller)
             {
                 if (!GetElementType(type, typeof(Wrapper<>), out var elementType))
                 {

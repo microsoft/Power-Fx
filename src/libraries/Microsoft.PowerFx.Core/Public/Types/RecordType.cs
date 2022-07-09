@@ -39,7 +39,7 @@ namespace Microsoft.PowerFx.Types
         
         public TableType ToTable()
         {
-            return new KnownTableType(Type.ToRecord());
+            return new KnownTableType(Type.ToTable());
         }
     }
 }

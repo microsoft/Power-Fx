@@ -173,8 +173,7 @@ namespace Microsoft.PowerFx.Functions
                 var tableType = (TableType)irContext.ResultType;
                 var resultType = tableType.ToRecord();
                 var columnNameStr = BuiltinFunction.OneColumnTableResultNameStr;
-                FormulaType itemType = resultType.MaybeGetFieldType(columnNameStr);
-                if (itemType == null)
+                if (!resultType.TryGetFieldType(columnNameStr, out var itemType))
                 {
                     columnNameStr = BuiltinFunction.ColumnName_ValueStr;
                     itemType = resultType.GetFieldType(columnNameStr);

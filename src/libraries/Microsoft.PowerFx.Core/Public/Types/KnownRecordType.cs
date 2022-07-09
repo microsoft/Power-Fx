@@ -26,7 +26,7 @@ namespace Microsoft.PowerFx.Types
             return new KnownRecordType(AddFieldToType(field));
         }
 
-        public RecordType Add(string logicalName, FormulaType type, string optionalDisplayName = null)
+        public KnownRecordType Add(string logicalName, FormulaType type, string optionalDisplayName = null)
         {
             return Add(new NamedFormulaType(new TypedName(type.Type, new DName(logicalName)), optionalDisplayName));
         }

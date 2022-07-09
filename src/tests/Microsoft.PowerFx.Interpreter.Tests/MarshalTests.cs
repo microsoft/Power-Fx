@@ -659,7 +659,7 @@ namespace Microsoft.PowerFx.Tests
         {
             public int _counter = 0;
 
-            public bool TryGetMarshaller(Type type, TypeMarshallerCache cache, int maxDepth, out ITypeMarshaller marshaler)
+            public bool TryGetMarshaller(Type type, TypeMarshallerCache cache, out ITypeMarshaller marshaler)
             {
                 if (type != typeof(IWidget))
                 {
