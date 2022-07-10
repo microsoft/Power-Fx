@@ -180,7 +180,7 @@ namespace Microsoft.PowerFx.Core.Types
             AssertValid();
         }
 
-        private DType(DKind kind, TypeTree tree, HashSet<IExternalTabularDataSource> dataSourceInfo, DisplayNameProvider displayNameProvider = null)
+        internal DType(DKind kind, TypeTree tree, HashSet<IExternalTabularDataSource> dataSourceInfo, DisplayNameProvider displayNameProvider = null)
             : this(kind, tree)
         {
             Contracts.AssertValueOrNull(dataSourceInfo);
@@ -1036,7 +1036,7 @@ namespace Microsoft.PowerFx.Core.Types
             var fError = false;
             var type = ToRecord(ref fError);
 
-            if (fError)
+            if (fError) 
             {
                 Contracts.Assert(false, "Bad source kind for ToRecord");
             }
@@ -1080,7 +1080,7 @@ namespace Microsoft.PowerFx.Core.Types
             var fError = false;
             var type = ToTable(ref fError);
 
-            if (fError)
+            if (fError) 
             {
                 Contracts.Assert(false, "Bad source kind for ToTable");
             }
@@ -1094,15 +1094,20 @@ namespace Microsoft.PowerFx.Core.Types
 
             switch (Kind)
             {
-                case DKind.LazyTable:
                 case DKind.Table:
                     return this;
-                case DKind.LazyRecord:
-                    return new DType(LazyTypeProvider, isTable: true);
                 case DKind.Record:
                 case DKind.DataEntity:
                 case DKind.Control:
-                    return new DType(DKind.Table, TypeTree, AssociatedDataSources, DisplayNameProvider);
+                    if (ExpandInfo != null)
+                    {
+                        return new DType(DKind.Table, ExpandInfo, TypeTree);
+                    }
+                    else
+                    {
+                        return new DType(DKind.Table, TypeTree, AssociatedDataSources, DisplayNameProvider);
+                    }
+
                 case DKind.ObjNull:
                     return EmptyTable;
                 default:
@@ -3154,354 +3159,6 @@ namespace Microsoft.PowerFx.Core.Types
             return TypeTree.First().Value;
         }
 
-        // Attempt to convert values of a base primitive type to another.
-        public static bool TryConvertValue(object value, DType typeDest, out object newValue)
-        {
-            Contracts.AssertValueOrNull(value);
-            Contracts.Assert(typeDest.IsValid);
-
-            newValue = null;
-
-            // No need to do anything for null values.
-            if (value == null)
-            {
-                return true;
-            }
-
-            // No support for converting to aggregate types.
-            if (typeDest.IsAggregate)
-            {
-                return false;
-            }
-
-            switch (typeDest.Kind)
-            {
-                case DKind.Boolean:
-                    if (value is bool boolean)
-                    {
-                        newValue = boolean;
-                        return true;
-                    }
-
-                    if (value is double doubleValue)
-                    {
-                        newValue = doubleValue != 0;
-                        return true;
-                    }
-
-                    if (value is string s)
-                    {
-                        newValue = s.Equals(TexlLexer.KeywordTrue, StringComparison.OrdinalIgnoreCase);
-                        return true;
-                    }
-
-                    // Since DateTime is represented as a numeric value underneath, conversion to boolean
-                    // should simply check if the numeric value is 0 or not.
-                    if (value is DateTime time)
-                    {
-                        var tempNum = time.ToJavaScriptDate();
-                        newValue = tempNum != 0;
-                        return true;
-                    }
-
-                    return false;
-
-                case DKind.Number:
-                case DKind.Currency:
-                    if (value is bool boolValue)
-                    {
-                        newValue = (double)(boolValue ? 1 : 0);
-                        return true;
-                    }
-
-                    if (value is double doubleValue1)
-                    {
-                        newValue = doubleValue1;
-                        return true;
-                    }
-
-                    if (value is string s1)
-                    {
-                        if (!double.TryParse(s1, out var doubleValue2))
-                        {
-                            return false;
-                        }
-
-                        newValue = doubleValue2;
-                        return true;
-                    }
-
-                    if (value is DateTime time1)
-                    {
-                        newValue = time1.ToJavaScriptDate();
-                        return true;
-                    }
-
-                    return false;
-                case DKind.Date:
-                case DKind.Time:
-                case DKind.DateTime:
-                    return TryConvertDateTimeValue(value, typeDest, out newValue);
-
-                case DKind.String:
-                    if (value is bool boolean1)
-                    {
-                        newValue = (string)(boolean1 ? TexlLexer.KeywordTrue : TexlLexer.KeywordFalse);
-                        return true;
-                    }
-
-                    if (value is double double2)
-                    {
-                        newValue = double2.ToString("R");
-                        return true;
-                    }
-
-                    if (value is string newValue1)
-                    {
-                        newValue = newValue1;
-                        return true;
-                    }
-
-                    if (value is DateTime time2)
-                    {
-                        newValue = time2.ToLocalTime().ToString();
-                        return true;
-                    }
-
-                    return false;
-
-                case DKind.Image:
-                case DKind.Media:
-                case DKind.Blob:
-                case DKind.Hyperlink:
-                    // If value is string we can flag it as hyperlink/image
-                    if (value is string value1)
-                    {
-                        newValue = value1;
-                        return true;
-                    }
-
-                    return false;
-
-                case DKind.Color:
-                case DKind.Control:
-                case DKind.DataEntity:
-                default:
-                    return false;
-            }
-        }
-
-        private static bool TryConvertDateTimeValue(object value, DType typeDest, out object newValue)
-        {
-            Contracts.AssertValueOrNull(value);
-            Contracts.Assert(typeDest.Kind == DKind.Date || typeDest.Kind == DKind.Time || typeDest.Kind == DKind.DateTime);
-
-            newValue = null;
-            DateTime dt;
-
-            switch (typeDest.Kind)
-            {
-                case DKind.Date:
-                    {
-                        if (value is bool @boolean)
-                        {
-                            // REVIEW ragru/hekum: Excel specific behaviour. Revisit.
-                            var success = DateTimeExtensions.TryFromOADate(@boolean ? 1 : 0, out var result);
-                            newValue = success ? result.ToLocalTime().Date.ToUniversalTime() : result;
-                            return success;
-                        }
-
-                        if (value is double @double)
-                        {
-                            // REVIEW ragru/hekum: Excel specific behaviour. Revisit.
-                            var success = DateTimeExtensions.TryFromOADate(@double, out var result);
-                            newValue = success ? result.ToLocalTime().Date.ToUniversalTime() : result;
-                            return success;
-                        }
-
-                        if (value is string @string)
-                        {
-                            if (!System.DateTime.TryParse(@string, out dt))
-                            {
-                                return false;
-                            }
-
-                            if (dt.Kind == DateTimeKind.Unspecified)
-                            {
-                                dt = System.DateTime.SpecifyKind(dt, DateTimeKind.Local).ToUniversalTime();
-                            }
-
-                            newValue = dt.ToLocalTime().Date.ToUniversalTime();
-                            return true;
-                        }
-
-                        if (value is DateTime dateTime)
-                        {
-                            dt = dateTime;
-
-                            if (dt.Kind == DateTimeKind.Unspecified)
-                            {
-                                dt = System.DateTime.SpecifyKind(dt, DateTimeKind.Local);
-                            }
-
-                            newValue = dt.ToLocalTime().Date.ToUniversalTime();
-                            return true;
-                        }
-
-                        return false;
-                    }
-
-                case DKind.Time:
-                    {
-                        if (value is bool)
-                        {
-                            // REVIEW ragru/hekum: Excel specific behaviour. Revisit.
-                            var success = DateTimeExtensions.TryFromOADate(0.0, out var result);
-                            newValue = result;
-                            return success;
-                        }
-
-                        if (value is double @double)
-                        {
-                            // REVIEW ragru/hekum: Excel specific behaviour. Revisit.
-
-                            var frac = Math.Abs(@double) - Math.Abs(Math.Truncate(@double));
-                            var success = DateTimeExtensions.TryFromOADate(frac, out var result);
-                            newValue = result;
-                            return success;
-                        }
-
-                        if (value is string @string)
-                        {
-                            if (!System.DateTime.TryParse(@string, out dt))
-                            {
-                                return false;
-                            }
-
-                            newValue = ConvertDateTimeToTime(dt);
-                            return true;
-                        }
-
-                        if (value is DateTime dateTime)
-                        {
-                            newValue = ConvertDateTimeToTime(dateTime);
-                            return true;
-                        }
-
-                        return false;
-                    }
-
-                case DKind.DateTime:
-                    {
-                        if (value is bool boolean)
-                        {
-                            // REVIEW ragru/hekum: Excel specific behaviour. Revisit.
-                            var success = DateTimeExtensions.TryFromOADate(boolean ? 1 : 0, out var result);
-                            newValue = result;
-                            return success;
-                        }
-
-                        if (value is double @double)
-                        {
-                            // REVIEW ragru/hekum: Excel specific behaviour. Revisit.
-                            var success = DateTimeExtensions.TryFromOADate(@double, out var result);
-                            newValue = result;
-                            return success;
-                        }
-
-                        if (value is string @string)
-                        {
-                            if (!System.DateTime.TryParse(@string, out dt))
-                            {
-                                return false;
-                            }
-
-                            if (dt.Kind == DateTimeKind.Unspecified)
-                            {
-                                dt = System.DateTime.SpecifyKind(dt, DateTimeKind.Local).ToUniversalTime();
-                            }
-
-                            newValue = dt;
-                            return true;
-                        }
-
-                        if (value is DateTime dateTime)
-                        {
-                            dt = dateTime;
-
-                            if (dt.Kind == DateTimeKind.Unspecified)
-                            {
-                                newValue = System.DateTime.SpecifyKind(dt, DateTimeKind.Local).ToUniversalTime();
-                            }
-                            else
-                            {
-                                newValue = dt;
-                            }
-
-                            return true;
-                        }
-
-                        return false;
-                    }
-            }
-
-            newValue = null;
-            return false;
-        }
-
-        private static object ConvertDateTimeToTime(DateTime value)
-        {
-            if (value.Kind == DateTimeKind.Unspecified)
-            {
-                value = System.DateTime.SpecifyKind(value, DateTimeKind.Local).ToUniversalTime();
-            }
-
-            var dateValue = value.ToLocalTime().Date.ToUniversalTime();
-            return (DateTimeExtensions.OleAutomationEpoch + (value - dateValue)).ToUniversalTime();
-        }
-
-        public static bool IsAcceptableTypeConversionForTables(DType sourceType, DType destinationType)
-        {
-            Contracts.Assert(sourceType.IsValid);
-            Contracts.Assert(destinationType.IsValid);
-
-            if (sourceType.Kind == DKind.Enum ||
-                sourceType.Kind == DKind.Record ||
-                sourceType.Kind == DKind.Table ||
-                sourceType.Kind == DKind.Unknown ||
-                sourceType.Kind == DKind.Error ||
-                sourceType.Kind == DKind.Control ||
-                sourceType.Kind == DKind.DataEntity ||
-                destinationType.Kind == DKind.Enum ||
-                destinationType.Kind == DKind.Record ||
-                destinationType.Kind == DKind.Table ||
-                destinationType.Kind == DKind.Unknown ||
-                destinationType.Kind == DKind.Control ||
-                destinationType.Kind == DKind.DataEntity ||
-                destinationType.Kind == DKind.Error)
-            {
-                return false;
-            }
-
-            if (sourceType.Kind != DKind.String ||
-                destinationType.Kind == DKind.Hyperlink ||
-                destinationType.Kind == DKind.Image ||
-                destinationType.Kind == DKind.Media ||
-                destinationType.Kind == DKind.Blob)
-            {
-                return sourceType.CoercesTo(destinationType);
-            }
-
-            switch (destinationType.Kind)
-            {
-                case DKind.Boolean:
-                case DKind.String:
-                    return true;
-                default:
-                    return false;
-            }
-        }
-
         internal static bool AreCompatibleTypes(DType type1, DType type2)
         {
             Contracts.Assert(type1.IsValid);
@@ -3661,19 +3318,6 @@ namespace Microsoft.PowerFx.Core.Types
             Contracts.AssertNonEmpty(typeSpec);
 
             return DTypeSpecParser.TryParse(new DTypeSpecLexer(typeSpec), out type);
-        }
-
-        internal static DType ParseOrReturnNull(string typeSpec)
-        {
-            Contracts.AssertNonEmpty(typeSpec);
-
-            TryParse(typeSpec, out var returnValue);
-            return returnValue;
-        }
-
-        public bool HasMetaField()
-        {
-            return TryGetMetaField(out _);
         }
 
         // Fetch the meta field for this DType, if there is one.
