@@ -6,7 +6,6 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.IR.Nodes;
-using Microsoft.PowerFx.Interpreter;
 
 namespace Microsoft.PowerFx.Types
 {
