@@ -127,7 +127,7 @@ namespace Microsoft.PowerFx.Core.Types
 
         public ValueTree ValueTree { get; }
 
-        // This is only used by attachment type. DocumentDataType is used to workaround the issue of having cycles in struct type.
+        // This is only used by attachment type.
         protected readonly DType _attachmentType;
 
         internal HashSet<IExternalTabularDataSource> AssociatedDataSources { get; }
@@ -159,7 +159,7 @@ namespace Microsoft.PowerFx.Core.Types
         {
         }
 
-        public DType(DKind kind)
+        internal DType(DKind kind)
         {
             Contracts.Assert(kind >= DKind._Min && kind < DKind._Lim);
 
@@ -178,7 +178,7 @@ namespace Microsoft.PowerFx.Core.Types
             AssertValid();
         }
 
-        private DType(DKind kind, TypeTree tree, HashSet<IExternalTabularDataSource> dataSourceInfo, DisplayNameProvider displayNameProvider = null)
+        internal DType(DKind kind, TypeTree tree, HashSet<IExternalTabularDataSource> dataSourceInfo, DisplayNameProvider displayNameProvider = null)
             : this(kind, tree)
         {
             Contracts.AssertValueOrNull(dataSourceInfo);
@@ -531,7 +531,7 @@ namespace Microsoft.PowerFx.Core.Types
 
         public bool IsView => Kind == DKind.View || Kind == DKind.ViewValue;
 
-        public bool IsAggregate => Kind == DKind.Table || Kind == DKind.Record || Kind == DKind.ObjNull;
+        public bool IsAggregate => IsRecord || IsTable;
 
         public bool IsPrimitive => (Kind >= DKind._MinPrimitive && Kind < DKind._LimPrimitive) || Kind == DKind.ObjNull;
 
@@ -945,34 +945,6 @@ namespace Microsoft.PowerFx.Core.Types
             return Kind.ToString();
         }
 
-        public DType ToRecord()
-        {
-            AssertValid();
-
-            switch (Kind)
-            {
-                case DKind.Record:
-                    return this;
-                case DKind.Table:
-                case DKind.Control:
-                case DKind.DataEntity:
-                    if (ExpandInfo != null)
-                    {
-                        return new DType(DKind.Record, ExpandInfo, TypeTree);
-                    }
-                    else
-                    {
-                        return new DType(DKind.Record, TypeTree, AssociatedDataSources, DisplayNameProvider);
-                    }
-
-                case DKind.ObjNull:
-                    return EmptyRecord;
-                default:
-                    Contracts.Assert(false, "Bad source kind for ToRecord");
-                    return EmptyRecord;
-            }
-        }
-
         // WARNING! This method is dangerous, for several reasons (below). Clients need to
         // rethink their strategy, and consider using the proper DType representation with
         // embedded "v" types instead, and dig into those types as needed for additional
@@ -1031,6 +1003,19 @@ namespace Microsoft.PowerFx.Core.Types
             return expands;
         }
 
+        public DType ToRecord()
+        {
+            var fError = false;
+            var type = ToRecord(ref fError);
+
+            if (fError) 
+            {
+                Contracts.Assert(false, "Bad source kind for ToRecord");
+            }
+
+            return type;
+        }
+
         public DType ToRecord(ref bool fError)
         {
             AssertValid();
@@ -1061,6 +1046,19 @@ namespace Microsoft.PowerFx.Core.Types
 
         public DType ToTable()
         {
+            var fError = false;
+            var type = ToTable(ref fError);
+
+            if (fError) 
+            {
+                Contracts.Assert(false, "Bad source kind for ToTable");
+            }
+
+            return type;
+        }
+
+        public DType ToTable(ref bool fError)
+        {
             AssertValid();
 
             switch (Kind)
@@ -1079,26 +1077,6 @@ namespace Microsoft.PowerFx.Core.Types
                         return new DType(DKind.Table, TypeTree, AssociatedDataSources, DisplayNameProvider);
                     }
 
-                case DKind.ObjNull:
-                    return EmptyTable;
-                default:
-                    Contracts.Assert(false, "Bad source kind for ToTable");
-                    return EmptyTable;
-            }
-        }
-
-        public DType ToTable(ref bool fError)
-        {
-            AssertValid();
-
-            switch (Kind)
-            {
-                case DKind.Table:
-                    return this;
-                case DKind.Record:
-                case DKind.DataEntity:
-                case DKind.Control:
-                    return new DType(DKind.Table, TypeTree, AssociatedDataSources, DisplayNameProvider);
                 case DKind.ObjNull:
                     return EmptyTable;
                 default:
@@ -1345,44 +1323,6 @@ namespace Microsoft.PowerFx.Core.Types
             return Add(typedName.Name, typedName.Type);
         }
 
-        // Return a new type based on this, with additional named member fields of some specified types.
-        public DType AddMulti(ref bool fError, DPath path, params TypedName[] typedNames)
-        {
-            return AddMulti(ref fError, path, (IEnumerable<TypedName>)typedNames);
-        }
-
-        // Return a new type based on this, with additional named member fields of a specified type.
-        public DType AddMulti(ref bool fError, DPath path, IEnumerable<TypedName> typedNames)
-        {
-            AssertValid();
-            Contracts.AssertValue(typedNames);
-
-            fError |= !TryGetType(path, out var typeOuter);
-            if (!typeOuter.IsAggregate)
-            {
-                fError = true;
-                return this;
-            }
-
-            Contracts.Assert(typeOuter.IsRecord || typeOuter.IsTable);
-
-            var tree = typeOuter.TypeTree;
-            foreach (var tn in typedNames)
-            {
-                Contracts.Assert(tn.IsValid);
-                if (tree.TryGetValue(tn.Name, out var typeCur))
-                {
-                    fError = true;
-                }
-
-                tree = tree.SetItem(tn.Name, tn.Type);
-            }
-
-            typeOuter = new DType(typeOuter.Kind, tree, AssociatedDataSources, DisplayNameProvider);
-
-            return SetType(ref fError, path, typeOuter);
-        }
-
         // Drop the specified name/field from path's type, and return the resulting type.
         public DType Drop(ref bool fError, DPath path, DName name)
         {
@@ -1534,78 +1474,6 @@ namespace Microsoft.PowerFx.Core.Types
             var tree = typeOuter.TypeTree.RemoveItems(ref fError, rgname);
 
             return SetType(ref fError, path, new DType(typeOuter.Kind, tree, AssociatedDataSources, DisplayNameProvider));
-        }
-
-        // Drop everything but the specified names/fields from path's type, and return the resulting type.
-        // If a name/field (that was specified to be kept) is missing, we are returning a new type
-        // with the type for the missing field as Error and fError will be true.
-        public DType KeepMulti(ref bool fError, DPath path, params DName[] rgname)
-        {
-            AssertValid();
-            Contracts.AssertNonEmpty(rgname);
-            Contracts.AssertAllValid(rgname);
-
-            fError |= !TryGetType(path, out var typeOuter);
-            if (!typeOuter.IsAggregate)
-            {
-                fError = true;
-                return this;
-            }
-
-            Contracts.Assert(typeOuter.IsRecord || typeOuter.IsTable);
-
-            var tree = default(TypeTree);
-
-            foreach (var name in rgname)
-            {
-                if (!typeOuter.TryGetType(name, out var typeCur))
-                {
-                    fError = true;
-                    typeCur = Error;
-                }
-
-                tree = tree.SetItem(name, typeCur);
-            }
-
-            return SetType(ref fError, path, new DType(typeOuter.Kind, tree, AssociatedDataSources, DisplayNameProvider));
-        }
-
-        // If a name/field (that was specified to be split) is missing, we are returning a new type
-        // with the type for the missing field as Error and fError will be true.
-        public DType Split(ref bool fError, out DType typeRest, params DName[] rgname)
-        {
-            AssertValid();
-            Contracts.AssertNonEmpty(rgname);
-            Contracts.AssertAllValid(rgname);
-
-            if (!IsAggregate)
-            {
-                fError = true;
-                typeRest = Error;
-                return this;
-            }
-
-            Contracts.Assert(IsRecord || IsTable);
-
-            var treeRest = TypeTree;
-            var treeWith = default(TypeTree);
-
-            foreach (var name in rgname)
-            {
-                if (TypeTree.TryGetValue(name, out var typeCur))
-                {
-                    treeWith = treeWith.SetItem(name, typeCur);
-                    treeRest = treeRest.RemoveItem(ref fError, name);
-                }
-                else
-                {
-                    fError = true;
-                    treeWith = treeWith.SetItem(name, Error);
-                }
-            }
-
-            typeRest = new DType(Kind, treeRest, AssociatedDataSources, DisplayNameProvider);
-            return new DType(Kind, treeWith, AssociatedDataSources, DisplayNameProvider);
         }
 
         // Get ALL the fields/names at the specified path, including hidden meta fields
@@ -2840,60 +2708,6 @@ namespace Microsoft.PowerFx.Core.Types
             return sb.ToString();
         }
 
-        /// <summary>
-        /// Returns a JS representation of this DType.
-        /// </summary>
-        /// <returns>A JS representation of this DType.</returns>
-        /// <remarks>The representation is an object with a required member 't', of type string
-        /// (which maps to the _kind property) and an optional member 'c', of type object, with
-        /// keys named on the children properties for this DType, and values representing their
-        /// respective JS type:
-        /// export interface IJsonFunctionDataDefinition {
-        ///     t: string;   // Type (maps to DType.Kind)
-        ///     c?: HashTable.IJsonFunctionDataDefinition; // optional children
-        /// }.
-        /// </remarks>
-        internal string ToJsType(Func<DName, DType, bool> shouldBeIncluded = null)
-        {
-            var sb = new StringBuilder();
-            ToJsType(sb, shouldBeIncluded);
-            return sb.ToString();
-        }
-
-        public void ToJsType(StringBuilder builder, Func<DName, DType, bool> shouldBeIncluded = null)
-        {
-            if (shouldBeIncluded == null)
-            {
-                shouldBeIncluded = (a, b) => true;
-            }
-
-            var kindStr = MapKindToStr(Kind);
-            switch (Kind)
-            {
-                case DKind.Table:
-                case DKind.Record:
-                    builder.Append("{t:\"").Append(kindStr).Append("\",c:{");
-
-                    var sep = string.Empty;
-                    foreach (var tn in GetNames(DPath.Root).Where(tn => shouldBeIncluded(tn.Name, tn.Type)))
-                    {
-                        builder.Append(sep);
-                        EscapeJSPropertyName(builder, tn.Name);
-                        builder.Append(":");
-                        tn.Type.ToJsType(builder, shouldBeIncluded);
-                        sep = ",";
-                    }
-
-                    builder.Append("}}");
-                    return;
-                default:
-                    builder.Append("{t:\"").Append(kindStr).Append("\"}");
-                    return;
-            }
-        }
-
-        private static readonly Regex NoNeedEscape = new Regex("^[a-zA-Z_][0-9a-zA-Z]*$");
-
         protected DType(
             DKind kind,
             TypeTree typeTree,
@@ -2926,39 +2740,6 @@ namespace Microsoft.PowerFx.Core.Types
             ViewInfo = viewInfo;
             NamedValueKind = namedValueKind;
             DisplayNameProvider = displayNameProvider;
-        }
-
-        private static void EscapeJSPropertyName(StringBuilder builder, string name)
-        {
-            if (NoNeedEscape.IsMatch(name))
-            {
-                builder.Append(name);
-            }
-            else
-            {
-                builder.Append("\"");
-
-                for (var i = 0; i < name.Length; i++)
-                {
-                    var c = name[i];
-                    const string needsEscaping = "\\\"";
-                    if (c >= ' ' && c <= '~')
-                    {
-                        if (needsEscaping.Contains(c))
-                        {
-                            builder.Append("\\");
-                        }
-
-                        builder.Append(c);
-                    }
-                    else
-                    {
-                        builder.Append(string.Format("\\u{0:x4}", (int)c));
-                    }
-                }
-
-                builder.Append("\"");
-            }
         }
 
         public void AppendTo(StringBuilder sb)
@@ -3297,354 +3078,6 @@ namespace Microsoft.PowerFx.Core.Types
             return TypeTree.First().Value;
         }
 
-        // Attempt to convert values of a base primitive type to another.
-        public static bool TryConvertValue(object value, DType typeDest, out object newValue)
-        {
-            Contracts.AssertValueOrNull(value);
-            Contracts.Assert(typeDest.IsValid);
-
-            newValue = null;
-
-            // No need to do anything for null values.
-            if (value == null)
-            {
-                return true;
-            }
-
-            // No support for converting to aggregate types.
-            if (typeDest.IsAggregate)
-            {
-                return false;
-            }
-
-            switch (typeDest.Kind)
-            {
-                case DKind.Boolean:
-                    if (value is bool boolean)
-                    {
-                        newValue = boolean;
-                        return true;
-                    }
-
-                    if (value is double doubleValue)
-                    {
-                        newValue = doubleValue != 0;
-                        return true;
-                    }
-
-                    if (value is string s)
-                    {
-                        newValue = s.Equals(TexlLexer.KeywordTrue, StringComparison.OrdinalIgnoreCase);
-                        return true;
-                    }
-
-                    // Since DateTime is represented as a numeric value underneath, conversion to boolean
-                    // should simply check if the numeric value is 0 or not.
-                    if (value is DateTime time)
-                    {
-                        var tempNum = time.ToJavaScriptDate();
-                        newValue = tempNum != 0;
-                        return true;
-                    }
-
-                    return false;
-
-                case DKind.Number:
-                case DKind.Currency:
-                    if (value is bool boolValue)
-                    {
-                        newValue = (double)(boolValue ? 1 : 0);
-                        return true;
-                    }
-
-                    if (value is double doubleValue1)
-                    {
-                        newValue = doubleValue1;
-                        return true;
-                    }
-
-                    if (value is string s1)
-                    {
-                        if (!double.TryParse(s1, out var doubleValue2))
-                        {
-                            return false;
-                        }
-
-                        newValue = doubleValue2;
-                        return true;
-                    }
-
-                    if (value is DateTime time1)
-                    {
-                        newValue = time1.ToJavaScriptDate();
-                        return true;
-                    }
-
-                    return false;
-                case DKind.Date:
-                case DKind.Time:
-                case DKind.DateTime:
-                    return TryConvertDateTimeValue(value, typeDest, out newValue);
-
-                case DKind.String:
-                    if (value is bool boolean1)
-                    {
-                        newValue = (string)(boolean1 ? TexlLexer.KeywordTrue : TexlLexer.KeywordFalse);
-                        return true;
-                    }
-
-                    if (value is double double2)
-                    {
-                        newValue = double2.ToString("R");
-                        return true;
-                    }
-
-                    if (value is string newValue1)
-                    {
-                        newValue = newValue1;
-                        return true;
-                    }
-
-                    if (value is DateTime time2)
-                    {
-                        newValue = time2.ToLocalTime().ToString();
-                        return true;
-                    }
-
-                    return false;
-
-                case DKind.Image:
-                case DKind.Media:
-                case DKind.Blob:
-                case DKind.Hyperlink:
-                    // If value is string we can flag it as hyperlink/image
-                    if (value is string value1)
-                    {
-                        newValue = value1;
-                        return true;
-                    }
-
-                    return false;
-
-                case DKind.Color:
-                case DKind.Control:
-                case DKind.DataEntity:
-                default:
-                    return false;
-            }
-        }
-
-        private static bool TryConvertDateTimeValue(object value, DType typeDest, out object newValue)
-        {
-            Contracts.AssertValueOrNull(value);
-            Contracts.Assert(typeDest.Kind == DKind.Date || typeDest.Kind == DKind.Time || typeDest.Kind == DKind.DateTime);
-
-            newValue = null;
-            DateTime dt;
-
-            switch (typeDest.Kind)
-            {
-                case DKind.Date:
-                    {
-                        if (value is bool @boolean)
-                        {
-                            // REVIEW ragru/hekum: Excel specific behaviour. Revisit.
-                            var success = DateTimeExtensions.TryFromOADate(@boolean ? 1 : 0, out var result);
-                            newValue = success ? result.ToLocalTime().Date.ToUniversalTime() : result;
-                            return success;
-                        }
-
-                        if (value is double @double)
-                        {
-                            // REVIEW ragru/hekum: Excel specific behaviour. Revisit.
-                            var success = DateTimeExtensions.TryFromOADate(@double, out var result);
-                            newValue = success ? result.ToLocalTime().Date.ToUniversalTime() : result;
-                            return success;
-                        }
-
-                        if (value is string @string)
-                        {
-                            if (!System.DateTime.TryParse(@string, out dt))
-                            {
-                                return false;
-                            }
-
-                            if (dt.Kind == DateTimeKind.Unspecified)
-                            {
-                                dt = System.DateTime.SpecifyKind(dt, DateTimeKind.Local).ToUniversalTime();
-                            }
-
-                            newValue = dt.ToLocalTime().Date.ToUniversalTime();
-                            return true;
-                        }
-
-                        if (value is DateTime dateTime)
-                        {
-                            dt = dateTime;
-
-                            if (dt.Kind == DateTimeKind.Unspecified)
-                            {
-                                dt = System.DateTime.SpecifyKind(dt, DateTimeKind.Local);
-                            }
-
-                            newValue = dt.ToLocalTime().Date.ToUniversalTime();
-                            return true;
-                        }
-
-                        return false;
-                    }
-
-                case DKind.Time:
-                    {
-                        if (value is bool)
-                        {
-                            // REVIEW ragru/hekum: Excel specific behaviour. Revisit.
-                            var success = DateTimeExtensions.TryFromOADate(0.0, out var result);
-                            newValue = result;
-                            return success;
-                        }
-
-                        if (value is double @double)
-                        {
-                            // REVIEW ragru/hekum: Excel specific behaviour. Revisit.
-
-                            var frac = Math.Abs(@double) - Math.Abs(Math.Truncate(@double));
-                            var success = DateTimeExtensions.TryFromOADate(frac, out var result);
-                            newValue = result;
-                            return success;
-                        }
-
-                        if (value is string @string)
-                        {
-                            if (!System.DateTime.TryParse(@string, out dt))
-                            {
-                                return false;
-                            }
-
-                            newValue = ConvertDateTimeToTime(dt);
-                            return true;
-                        }
-
-                        if (value is DateTime dateTime)
-                        {
-                            newValue = ConvertDateTimeToTime(dateTime);
-                            return true;
-                        }
-
-                        return false;
-                    }
-
-                case DKind.DateTime:
-                    {
-                        if (value is bool boolean)
-                        {
-                            // REVIEW ragru/hekum: Excel specific behaviour. Revisit.
-                            var success = DateTimeExtensions.TryFromOADate(boolean ? 1 : 0, out var result);
-                            newValue = result;
-                            return success;
-                        }
-
-                        if (value is double @double)
-                        {
-                            // REVIEW ragru/hekum: Excel specific behaviour. Revisit.
-                            var success = DateTimeExtensions.TryFromOADate(@double, out var result);
-                            newValue = result;
-                            return success;
-                        }
-
-                        if (value is string @string)
-                        {
-                            if (!System.DateTime.TryParse(@string, out dt))
-                            {
-                                return false;
-                            }
-
-                            if (dt.Kind == DateTimeKind.Unspecified)
-                            {
-                                dt = System.DateTime.SpecifyKind(dt, DateTimeKind.Local).ToUniversalTime();
-                            }
-
-                            newValue = dt;
-                            return true;
-                        }
-
-                        if (value is DateTime dateTime)
-                        {
-                            dt = dateTime;
-
-                            if (dt.Kind == DateTimeKind.Unspecified)
-                            {
-                                newValue = System.DateTime.SpecifyKind(dt, DateTimeKind.Local).ToUniversalTime();
-                            }
-                            else
-                            {
-                                newValue = dt;
-                            }
-
-                            return true;
-                        }
-
-                        return false;
-                    }
-            }
-
-            newValue = null;
-            return false;
-        }
-
-        private static object ConvertDateTimeToTime(DateTime value)
-        {
-            if (value.Kind == DateTimeKind.Unspecified)
-            {
-                value = System.DateTime.SpecifyKind(value, DateTimeKind.Local).ToUniversalTime();
-            }
-
-            var dateValue = value.ToLocalTime().Date.ToUniversalTime();
-            return (DateTimeExtensions.OleAutomationEpoch + (value - dateValue)).ToUniversalTime();
-        }
-
-        public static bool IsAcceptableTypeConversionForTables(DType sourceType, DType destinationType)
-        {
-            Contracts.Assert(sourceType.IsValid);
-            Contracts.Assert(destinationType.IsValid);
-
-            if (sourceType.Kind == DKind.Enum ||
-                sourceType.Kind == DKind.Record ||
-                sourceType.Kind == DKind.Table ||
-                sourceType.Kind == DKind.Unknown ||
-                sourceType.Kind == DKind.Error ||
-                sourceType.Kind == DKind.Control ||
-                sourceType.Kind == DKind.DataEntity ||
-                destinationType.Kind == DKind.Enum ||
-                destinationType.Kind == DKind.Record ||
-                destinationType.Kind == DKind.Table ||
-                destinationType.Kind == DKind.Unknown ||
-                destinationType.Kind == DKind.Control ||
-                destinationType.Kind == DKind.DataEntity ||
-                destinationType.Kind == DKind.Error)
-            {
-                return false;
-            }
-
-            if (sourceType.Kind != DKind.String ||
-                destinationType.Kind == DKind.Hyperlink ||
-                destinationType.Kind == DKind.Image ||
-                destinationType.Kind == DKind.Media ||
-                destinationType.Kind == DKind.Blob)
-            {
-                return sourceType.CoercesTo(destinationType);
-            }
-
-            switch (destinationType.Kind)
-            {
-                case DKind.Boolean:
-                case DKind.String:
-                    return true;
-                default:
-                    return false;
-            }
-        }
-
         internal static bool AreCompatibleTypes(DType type1, DType type2)
         {
             Contracts.Assert(type1.IsValid);
@@ -3800,19 +3233,6 @@ namespace Microsoft.PowerFx.Core.Types
             Contracts.AssertNonEmpty(typeSpec);
 
             return DTypeSpecParser.TryParse(new DTypeSpecLexer(typeSpec), out type);
-        }
-
-        internal static DType ParseOrReturnNull(string typeSpec)
-        {
-            Contracts.AssertNonEmpty(typeSpec);
-
-            TryParse(typeSpec, out var returnValue);
-            return returnValue;
-        }
-
-        public bool HasMetaField()
-        {
-            return TryGetMetaField(out _);
         }
 
         // Fetch the meta field for this DType, if there is one.

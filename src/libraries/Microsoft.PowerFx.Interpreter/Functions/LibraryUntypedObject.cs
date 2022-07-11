@@ -157,6 +157,24 @@ namespace Microsoft.PowerFx.Functions
             return CommonErrors.RuntimeTypeMismatch(irContext);
         }
 
+        public static FormulaValue TimeValue_UO(IRContext irContext, UntypedObjectValue[] args)
+        {
+            var impl = args[0].Impl;
+
+            if (impl.Type == FormulaType.String)
+            {
+                var s = impl.GetString();
+                if (TimeSpan.TryParseExact(s, @"hh\:mm\:ss\.FFF", CultureInfo.InvariantCulture, TimeSpanStyles.None, out TimeSpan res))
+                {
+                    return new TimeValue(irContext, res);
+                }
+
+                return CommonErrors.InvalidDateTimeError(irContext);
+            }
+
+            return CommonErrors.RuntimeTypeMismatch(irContext);
+        }
+
         public static FormulaValue DateTimeValue_UO(IRContext irContext, UntypedObjectValue[] args)
         {
             var impl = args[0].Impl;
@@ -175,6 +193,19 @@ namespace Microsoft.PowerFx.Functions
                 }
 
                 return CommonErrors.InvalidDateTimeError(irContext);
+            }
+
+            return CommonErrors.RuntimeTypeMismatch(irContext);
+        }
+
+        public static FormulaValue Guid_UO(IRContext irContext, UntypedObjectValue[] args)
+        {
+            var impl = args[0].Impl;
+
+            if (impl.Type == FormulaType.String)
+            {
+                var str = new StringValue(IRContext.NotInSource(FormulaType.String), impl.GetString());
+                return Guid(irContext, new StringValue[] { str });
             }
 
             return CommonErrors.RuntimeTypeMismatch(irContext);

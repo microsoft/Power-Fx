@@ -17,21 +17,22 @@ namespace Microsoft.PowerFx.Preview
 
         /// <summary>
         /// Enable String Interpolation feature. 
-        /// Added 12/3/2021.
+        /// Added 3rd Dec 2021.
         /// </summary>
         public static bool StringInterpolation
         {
             get => _stringInterpolation;
-            set
-            {
-                // Once flipped, can't unflip. 
-                if (!value) 
-                { 
-                    throw new NotSupportedException("Can't change field after it's set");
-                }
+            set => _stringInterpolation = ProtectedSet(value);
+        }
 
-                _stringInterpolation = value;
+        private static bool ProtectedSet(bool @value)
+        {
+            if (!value)
+            {
+                throw new NotSupportedException("Can't change field after it's set");
             }
+
+            return @value;
         }
     }
 }

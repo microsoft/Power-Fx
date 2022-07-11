@@ -108,6 +108,26 @@ namespace Microsoft.PowerFx.Functions
             });
         }
 
+        public static ErrorValue InvalidColorFormatError(IRContext irContext)
+        {
+            return new ErrorValue(irContext, new ExpressionError()
+            {
+                Message = "The value could not be interpreted as a Color",
+                Span = irContext.SourceContext,
+                Kind = ErrorKind.InvalidArgument
+            });
+        }
+
+        public static ErrorValue InvalidGuidFormatError(IRContext irContext)
+        {
+            return new ErrorValue(irContext, new ExpressionError()
+            {
+                Message = "The value could not be interpreted as a GUID",
+                Span = irContext.SourceContext,
+                Kind = ErrorKind.InvalidArgument
+            });
+        }
+
         public static ErrorValue UnreachableCodeError(IRContext irContext)
         {
             return new ErrorValue(irContext, new ExpressionError()
