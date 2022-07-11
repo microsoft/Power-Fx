@@ -2,6 +2,15 @@
 # Used in PowerFx-CI.
 #
 
+parameters:
+  - name: packageFeed
+    displayName: API compatibility contract feed
+    type: string
+    default: Azure
+    values:
+    - Azure
+    - NuGet
+    
 # "name" here defines the build number format. Build number is accessed via $(Build.BuildNumber)
 name: $(Date:yyyyMMdd).$(Build.BuildId)
 
@@ -17,6 +26,7 @@ variables:
   PackagesToValidate: Microsoft.PowerFx.Core,Microsoft.PowerFx.Interpreter,Microsoft.PowerFx.LanguageServerProtocol,Microsoft.PowerFx.Transport.Attributes
   BuildPlatform: 'any cpu'
   BuildSolution: src/Microsoft.PowerFx.sln
+  PowerFx_daily_feed_Url: 'https://pkgs.dev.azure.com/ConversationalAI/BotFramework/_packaging/SDK/nuget/v3/index.json'
 # BuildConfiguration: define this in Azure
 # DisableApiCompatibityValidation: define this in Azure, settable by user.
 # PowerFxCoverallsToken: define this in Azure
@@ -150,6 +160,30 @@ stages:
       matrix: $[ dependencies.generate_multiconfig_var.outputs['generate_var.MULTICONFIG'] ]
 
     steps:
+    - template: powerfx-feed-setup-steps.yml
+
+    - powershell: |
+        $packageName = $PackagesToValidate[0];
+    
+        #$url = "https://feeds.dev.azure.com/ConversationalAI/BotFramework/_apis/packaging/Feeds/SDK/Packages/26dde74d-6079-401c-a9e0-c6d839e02c18/versions?api-version=5.1-preview.1"
+    
+        Write-Host "Get latest $packageName version number from Azure ConversationalAI SDK feed";
+    
+        $RegistryUrlSource = ${{ parameters.packageFeed }} 
+        $Packagelist = nuget list "$packageName" -Source "$RegistryUrlSource" -PreRelease -AllVersions;
+        " "
+        "Available versions:";
+        $PackageList | Select -First 20;
+        
+        [string]$latestVersion = ($PackageList | Select -First 1).Split(" ")[-1];
+        " "
+        "Latest version:";
+        $packageName;
+        $latestVersion;
+        "##vso[task.setvariable variable=ApiContractVersion;]$latestVersion";
+      displayName: 'From Azure feed get latest package version number - https://dev.azure.com/ConversationalAI/BotFramework/_packaging?_a=feed&feed=SDK'
+      condition: ${{ eq(parameters.packageFeed, 'Azure') }}
+
     - template: ci-api-validation-steps.yml
 
   - job: post_results_to_gitHub
