@@ -30,7 +30,7 @@ namespace Microsoft.PowerFx.Functions
             return new StringValue(irContext, str);
         }
 
-        public static async ValueTask<FormulaValue> Concat(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args)
+        public static async ValueTask<FormulaValue> Concat(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args, StackMarker stackMarker)
         {// Streaming 
             var arg0 = (TableValue)args[0];
             var arg1 = (LambdaFormulaValue)args[1];
@@ -54,7 +54,7 @@ namespace Microsoft.PowerFx.Functions
 
                     var childContext = symbolContext.WithScopeValues(row.Value);
 
-                    var result = await arg1.EvalAsync(runner, childContext);
+                    var result = await arg1.EvalAsync(runner, childContext, stackMarker);
 
                     var str = (StringValue)result;
                     sb.Append(str.Value);
@@ -80,7 +80,7 @@ namespace Microsoft.PowerFx.Functions
 
         // https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-value
         // Convert string to number
-        public static FormulaValue Value(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args)
+        public static FormulaValue Value(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args, StackMarker stackMarker)
         {
             var arg0 = args[0];
 
@@ -122,7 +122,7 @@ namespace Microsoft.PowerFx.Functions
         }
 
         // https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-text
-        public static FormulaValue Text(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args)
+        public static FormulaValue Text(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args, StackMarker stackMarker)
         {
             // only DateValue and DateTimeValue are supported for now with custom format strings.
             if (args.Length > 1 && args[0] is StringValue)
@@ -227,7 +227,7 @@ namespace Microsoft.PowerFx.Functions
 
         // https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-isblank-isempty
         // Take first non-blank value.
-        public static async ValueTask<FormulaValue> Coalesce(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args)
+        public static async ValueTask<FormulaValue> Coalesce(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args, StackMarker stackMarker)
         {
             var errors = new List<ErrorValue>();
 
@@ -235,7 +235,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 runner.CheckCancel();
 
-                var res = await runner.EvalArgAsync<ValidFormulaValue>(arg, symbolContext, arg.IRContext);
+                var res = await runner.EvalArgAsync<ValidFormulaValue>(arg, symbolContext, arg.IRContext, stackMarker);
 
                 if (res.IsValue)
                 {
@@ -279,7 +279,7 @@ namespace Microsoft.PowerFx.Functions
             return new StringValue(irContext, args[0].Value.ToUpper());
         }
 
-        public static FormulaValue Proper(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, StringValue[] args)
+        public static FormulaValue Proper(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, StringValue[] args, StackMarker stackMarker)
         {
             return new StringValue(irContext, runner.CultureInfo.TextInfo.ToTitleCase(args[0].Value.ToLower()));
         }

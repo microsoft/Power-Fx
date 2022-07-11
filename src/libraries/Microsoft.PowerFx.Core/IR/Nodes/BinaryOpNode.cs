@@ -22,9 +22,9 @@ namespace Microsoft.PowerFx.Core.IR.Nodes
             Right = right;
         }
 
-        public override TResult Accept<TResult, TContext>(IRNodeVisitor<TResult, TContext> visitor, TContext context)
+        public override TResult Accept<TResult, TContext>(IRNodeVisitor<TResult, TContext> visitor, TContext context, StackMarker stackMarker)
         {
-            return visitor.Visit(this, context);
+            return visitor.Visit(this, context, stackMarker);
         }
 
         public override string ToString()

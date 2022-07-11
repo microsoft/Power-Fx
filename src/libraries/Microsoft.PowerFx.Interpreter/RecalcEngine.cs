@@ -69,7 +69,15 @@ namespace Microsoft.PowerFx
         /// <inheritdoc/>
         protected override IExpression CreateEvaluator(CheckResult result)
         {
-            return CreateEvaluatorDirect(result);
+            if (result._binding == null)
+            {
+                throw new InvalidOperationException($"Requires successful binding");
+            }
+
+            result.ThrowOnErrors();
+
+            (var irnode, var ruleScopeSymbol) = IRTranslator.Translate(result._binding);
+            return new ParsedExpression(irnode, ruleScopeSymbol, new StackMarker(0, Config.MaxCallDepth));
         }
 
         /// <summary>
@@ -87,7 +95,7 @@ namespace Microsoft.PowerFx
             result.ThrowOnErrors();            
 
             (var irnode, var ruleScopeSymbol) = IRTranslator.Translate(result._binding);
-            return new ParsedExpression(irnode, ruleScopeSymbol);
+            return new ParsedExpression(irnode, ruleScopeSymbol, new StackMarker(0, 20));
         }
 
         // This handles lookups in the global scope. 

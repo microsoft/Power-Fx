@@ -13,14 +13,14 @@ namespace Microsoft.PowerFx.Functions
 {
     internal static partial class Library
     {
-        public static async ValueTask<FormulaValue> LookUp(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args)
+        public static async ValueTask<FormulaValue> LookUp(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args, StackMarker stackMarker)
         {
             // Streaming 
             var arg0 = (TableValue)args[0];
             var arg1 = (LambdaFormulaValue)args[1];
             var arg2 = (LambdaFormulaValue)(args.Length > 2 ? args[2] : null);
 
-            var rows = await LazyFilterAsync(runner, symbolContext, arg0.Rows, arg1);
+            var rows = await LazyFilterAsync(runner, symbolContext, arg0.Rows, arg1, stackMarker);
             var row = rows.FirstOrDefault();
 
             if (row != null)
@@ -32,7 +32,7 @@ namespace Microsoft.PowerFx.Functions
                 else
                 {
                     var childContext = symbolContext.WithScopeValues(row.Value);
-                    var value = await arg2.EvalAsync(runner, childContext);
+                    var value = await arg2.EvalAsync(runner, childContext, stackMarker);
 
                     if (value is NumberValue number)
                     {
@@ -101,7 +101,7 @@ namespace Microsoft.PowerFx.Functions
         }
 
         // Create new table
-        public static async ValueTask<FormulaValue> AddColumns(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args)
+        public static async ValueTask<FormulaValue> AddColumns(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args, StackMarker stackMarker)
         {
             var sourceArg = (TableValue)args[0];
 
@@ -109,12 +109,12 @@ namespace Microsoft.PowerFx.Functions
 
             var tableType = (TableType)irContext.ResultType;
             var recordIRContext = new IRContext(irContext.SourceContext, tableType.ToRecord());
-            var rows = await LazyAddColumnsAsync(runner, symbolContext, sourceArg.Rows, recordIRContext, newColumns);
+            var rows = await LazyAddColumnsAsync(runner, symbolContext, sourceArg.Rows, recordIRContext, newColumns, stackMarker);
 
             return new InMemoryTableValue(irContext, rows);
         }
 
-        private static async Task<IEnumerable<DValue<RecordValue>>> LazyAddColumnsAsync(EvalVisitor runner, SymbolContext context, IEnumerable<DValue<RecordValue>> sources, IRContext recordIRContext, NamedLambda[] newColumns)
+        private static async Task<IEnumerable<DValue<RecordValue>>> LazyAddColumnsAsync(EvalVisitor runner, SymbolContext context, IEnumerable<DValue<RecordValue>> sources, IRContext recordIRContext, NamedLambda[] newColumns, StackMarker stackMarker)
         {
             var list = new List<DValue<RecordValue>>();
 
@@ -129,7 +129,7 @@ namespace Microsoft.PowerFx.Functions
 
                     foreach (var column in newColumns)
                     {
-                        var value = await column.Lambda.EvalAsync(runner, childContext);
+                        var value = await column.Lambda.EvalAsync(runner, childContext, stackMarker);
                         fields.Add(new NamedValue(column.Name, value));
                     }
 
@@ -273,7 +273,7 @@ namespace Microsoft.PowerFx.Functions
             return CommonErrors.RuntimeTypeMismatch(irContext);
         }
 
-        public static async ValueTask<FormulaValue> CountIf(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args)
+        public static async ValueTask<FormulaValue> CountIf(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args, StackMarker stackMarker)
         {
             if (args[0] is BlankValue)
             {
@@ -293,7 +293,7 @@ namespace Microsoft.PowerFx.Functions
                 if (row.IsValue)
                 {
                     var childContext = symbolContext.WithScopeValues(row.Value);
-                    var result = await filter.EvalAsync(runner, childContext);
+                    var result = await filter.EvalAsync(runner, childContext, stackMarker);
 
                     if (result is ErrorValue error)
                     {
@@ -324,7 +324,7 @@ namespace Microsoft.PowerFx.Functions
         }
 
         // Filter ([1,2,3,4,5], Value > 5)
-        public static async ValueTask<FormulaValue> FilterTable(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args)
+        public static async ValueTask<FormulaValue> FilterTable(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args, StackMarker stackMarker)
         {
             // Streaming 
             var arg0 = (TableValue)args[0];
@@ -340,7 +340,7 @@ namespace Microsoft.PowerFx.Functions
                 });
             }
 
-            var rows = await LazyFilterAsync(runner, symbolContext, arg0.Rows, arg1);
+            var rows = await LazyFilterAsync(runner, symbolContext, arg0.Rows, arg1, stackMarker);
 
             return new InMemoryTableValue(irContext, rows);
         }
@@ -368,7 +368,7 @@ namespace Microsoft.PowerFx.Functions
             return new InMemoryTableValue(irContext, shuffledRecords);
         }
 
-        private static async Task<(DValue<RecordValue> row, FormulaValue sortValue)> ApplySortLambda(EvalVisitor runner, SymbolContext symbolContext, DValue<RecordValue> row, LambdaFormulaValue lambda)
+        private static async Task<(DValue<RecordValue> row, FormulaValue sortValue)> ApplySortLambda(EvalVisitor runner, SymbolContext symbolContext, DValue<RecordValue> row, LambdaFormulaValue lambda, StackMarker stackMarker)
         {
             if (!row.IsValue)
             {
@@ -376,18 +376,18 @@ namespace Microsoft.PowerFx.Functions
             }
 
             var childContext = symbolContext.WithScopeValues(row.Value);
-            var sortValue = await lambda.EvalAsync(runner, childContext);
+            var sortValue = await lambda.EvalAsync(runner, childContext, stackMarker);
 
             return (row, sortValue);
         }
 
-        public static async ValueTask<FormulaValue> SortTable(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args)
+        public static async ValueTask<FormulaValue> SortTable(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, FormulaValue[] args, StackMarker stackMarker)
         {
             var arg0 = (TableValue)args[0];
             var arg1 = (LambdaFormulaValue)args[1];
             var arg2 = (StringValue)args[2];
 
-            var pairs = (await Task.WhenAll(arg0.Rows.Select(row => ApplySortLambda(runner, symbolContext, row, arg1)))).ToList();
+            var pairs = (await Task.WhenAll(arg0.Rows.Select(row => ApplySortLambda(runner, symbolContext, row, arg1, stackMarker)))).ToList();
 
             var errors = new List<ErrorValue>();
             bool allNumbers = true, allStrings = true, allBooleans = true, allDatetimes = true, allDates = true;
@@ -478,7 +478,8 @@ namespace Microsoft.PowerFx.Functions
            EvalVisitor runner,
            SymbolContext context,
            DValue<RecordValue> row,
-           LambdaFormulaValue filter)
+           LambdaFormulaValue filter,
+           StackMarker stackMarker)
         {
             SymbolContext childContext;
 
@@ -497,7 +498,7 @@ namespace Microsoft.PowerFx.Functions
             }
 
             // Filter evals to a boolean 
-            var result = await filter.EvalAsync(runner, childContext);
+            var result = await filter.EvalAsync(runner, childContext, stackMarker);
             var include = false;
             if (result is BooleanValue booleanValue)
             {
@@ -521,6 +522,7 @@ namespace Microsoft.PowerFx.Functions
             SymbolContext context,
             IEnumerable<DValue<RecordValue>> sources,
             LambdaFormulaValue filter,
+            StackMarker stackMarker,
             int topN = int.MaxValue)
         {
             var tasks = new List<Task<DValue<RecordValue>>>();
@@ -530,7 +532,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 runner.CheckCancel();
 
-                var task = LazyFilterRowAsync(runner, context, row, filter);
+                var task = LazyFilterRowAsync(runner, context, row, filter, stackMarker);
                 tasks.Add(task);
             }
 

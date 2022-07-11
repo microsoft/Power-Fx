@@ -550,6 +550,26 @@ namespace Microsoft.PowerFx.Tests
             Assert.True(enums.Count() > 0);
         }
 
+        [Fact]
+        public async void MaxRecursionDepthTest()
+        {
+            var config = new PowerFxConfig(null)
+            {
+                MaxCallDepth = 5
+            };
+            var recalcEngine = new RecalcEngine(config);
+            try
+            {
+                await recalcEngine.EvalAsync("Abs(Abs(Abs(Abs(Abs(Abs(1))))))", new System.Threading.CancellationToken());
+                Assert.True(false);
+            }
+            catch (MaxCallDepthException)
+            { 
+            }
+
+            await recalcEngine.EvalAsync("Abs(Abs(Abs(Abs(Abs(1)))))", new System.Threading.CancellationToken());
+        }
+
         #region Test
 
         private readonly StringBuilder _updates = new StringBuilder();

@@ -22,10 +22,10 @@ namespace Microsoft.PowerFx.Types
             _tree = node;
         }
 
-        public async ValueTask<FormulaValue> EvalAsync(EvalVisitor runner, SymbolContext context)
+        public async ValueTask<FormulaValue> EvalAsync(EvalVisitor runner, SymbolContext context, StackMarker stackMarker)
         {
             runner.CheckCancel();
-            var result = await _tree.Accept(runner, context);
+            var result = await _tree.Accept(runner, context, stackMarker);
             return result;
         }
 

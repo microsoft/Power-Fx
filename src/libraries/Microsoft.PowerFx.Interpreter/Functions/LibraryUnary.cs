@@ -253,9 +253,9 @@ namespace Microsoft.PowerFx.Functions
             return new NumberValue(irContext, result);
         }
 
-        public static FormulaValue NumberToText(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, NumberValue[] args)
+        public static FormulaValue NumberToText(EvalVisitor runner, SymbolContext symbolContext, IRContext irContext, NumberValue[] args, StackMarker stackMarker)
         {
-            return Text(runner, symbolContext, irContext, args);
+            return Text(runner, symbolContext, irContext, args, stackMarker);
         }
 
         public static BooleanValue NumberToBoolean(IRContext irContext, NumberValue[] args)

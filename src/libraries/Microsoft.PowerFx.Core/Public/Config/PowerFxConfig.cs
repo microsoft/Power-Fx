@@ -36,6 +36,8 @@ namespace Microsoft.PowerFx
 
         public Features Features { get; }
 
+        public int MaxCallDepth { get; set; }
+
         private PowerFxConfig(CultureInfo cultureInfo, EnumStoreBuilder enumStoreBuilder, Features features = Features.None) 
         {
             CultureInfo = cultureInfo ?? CultureInfo.CurrentCulture;
@@ -44,6 +46,7 @@ namespace Microsoft.PowerFx
             _environmentSymbols = new Dictionary<DName, IExternalEntity>();
             _environmentSymbolDisplayNameProvider = new SingleSourceDisplayNameProvider();
             EnumStoreBuilder = enumStoreBuilder;
+            MaxCallDepth = 20;
         }
 
         /// <summary>

@@ -20,6 +20,7 @@ namespace Microsoft.PowerFx.Core.IR.Nodes
         /// <param name="visitor">Visitor to use.</param>
         /// <param name="context">Context.</param>
         /// <returns></returns>
-        public abstract TResult Accept<TResult, TContext>(IRNodeVisitor<TResult, TContext> visitor, TContext context);
+        /// <param name="stackMarker"></param>
+        public abstract TResult Accept<TResult, TContext>(IRNodeVisitor<TResult, TContext> visitor, TContext context, StackMarker stackMarker);
     }
 }
