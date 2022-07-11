@@ -1,7 +1,9 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text.Json;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.IR;
@@ -132,6 +134,78 @@ namespace Microsoft.PowerFx.Functions
             if (impl.Type is ExternalType externalType && externalType.Kind == ExternalTypeKind.Array)
             {
                 return new NumberValue(irContext, impl.GetArrayLength());
+            }
+
+            return CommonErrors.RuntimeTypeMismatch(irContext);
+        }
+
+        public static FormulaValue DateValue_UO(IRContext irContext, UntypedObjectValue[] args)
+        {
+            var impl = args[0].Impl;
+
+            if (impl.Type == FormulaType.String)
+            {
+                var s = impl.GetString();
+                if (DateTime.TryParseExact(s, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime res))
+                {
+                    return new DateValue(irContext, res.Date);
+                }
+
+                return CommonErrors.InvalidDateTimeError(irContext);
+            }
+
+            return CommonErrors.RuntimeTypeMismatch(irContext);
+        }
+
+        public static FormulaValue TimeValue_UO(IRContext irContext, UntypedObjectValue[] args)
+        {
+            var impl = args[0].Impl;
+
+            if (impl.Type == FormulaType.String)
+            {
+                var s = impl.GetString();
+                if (TimeSpan.TryParseExact(s, @"hh\:mm\:ss\.FFF", CultureInfo.InvariantCulture, TimeSpanStyles.None, out TimeSpan res))
+                {
+                    return new TimeValue(irContext, res);
+                }
+
+                return CommonErrors.InvalidDateTimeError(irContext);
+            }
+
+            return CommonErrors.RuntimeTypeMismatch(irContext);
+        }
+
+        public static FormulaValue DateTimeValue_UO(IRContext irContext, UntypedObjectValue[] args)
+        {
+            var impl = args[0].Impl;
+
+            if (impl.Type == FormulaType.String)
+            {
+                var s = impl.GetString();
+
+                // Year-month-date, the literal T, Hours-minutes-seconds
+                // F is 10ths of a second if non-zero, K is time zone information
+                var iso8601Format = "yyyy-MM-dd'T'HH:mm:ss.FFFK";
+
+                if (DateTime.TryParseExact(s, iso8601Format, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime res))
+                {
+                    return new DateTimeValue(irContext, res);
+                }
+
+                return CommonErrors.InvalidDateTimeError(irContext);
+            }
+
+            return CommonErrors.RuntimeTypeMismatch(irContext);
+        }
+
+        public static FormulaValue Guid_UO(IRContext irContext, UntypedObjectValue[] args)
+        {
+            var impl = args[0].Impl;
+
+            if (impl.Type == FormulaType.String)
+            {
+                var str = new StringValue(IRContext.NotInSource(FormulaType.String), impl.GetString());
+                return Guid(irContext, new StringValue[] { str });
             }
 
             return CommonErrors.RuntimeTypeMismatch(irContext);

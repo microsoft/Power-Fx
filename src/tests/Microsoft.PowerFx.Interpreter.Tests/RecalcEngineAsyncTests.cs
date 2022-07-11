@@ -45,7 +45,7 @@ namespace Microsoft.PowerFx.Tests
             var engine = new RecalcEngine(config);
 
             // Can be invoked. 
-            var cts = new CancellationTokenSource();
+            using var cts = new CancellationTokenSource();
 
             var result = await engine.EvalAsync("CustomAsync(3)", cts.Token);
             Assert.Equal(6.0, result.ToObject());
@@ -66,7 +66,7 @@ namespace Microsoft.PowerFx.Tests
             var engine = new RecalcEngine(config);
 
             // Can be invoked. 
-            var cts = new CancellationTokenSource();
+            using var cts = new CancellationTokenSource();
 
             var result = await engine.EvalAsync("If(CustomAsync(3)=6, CustomAsync(1)+CustomAsync(5), 99)", cts.Token);
             Assert.Equal(12.0, result.ToObject());
@@ -115,7 +115,7 @@ namespace Microsoft.PowerFx.Tests
             var engine = new RecalcEngine(config);
 
             // Can be invoked. 
-            var cts = new CancellationTokenSource();
+            using var cts = new CancellationTokenSource();
 
             var task = engine.EvalAsync("CustomAsync(3)", cts.Token);
             await Task.Yield();
@@ -154,7 +154,7 @@ namespace Microsoft.PowerFx.Tests
             var engine = new RecalcEngine(config);
 
             // Can be invoked. 
-            var cts = new CancellationTokenSource();
+            using var cts = new CancellationTokenSource();
 
             var task = engine.EvalAsync("CustomAsync(3)", cts.Token);
             await Task.Yield();
@@ -179,7 +179,7 @@ namespace Microsoft.PowerFx.Tests
             var engine = new RecalcEngine();
 
             // Can be invoked. 
-            var cts = new CancellationTokenSource();
+            using var cts = new CancellationTokenSource();
 
             cts.CancelAfter(5);
 

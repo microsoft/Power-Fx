@@ -3,9 +3,13 @@
 
 using System.Globalization;
 using Microsoft.PowerFx.Core;
+using Microsoft.PowerFx.Core.Binding;
+using Microsoft.PowerFx.Core.Glue;
+using Microsoft.PowerFx.Core.Parser;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
 using Xunit;
 
@@ -162,6 +166,29 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var renamer = _engine.CreateFieldRenamer(r1, dpath, new DName(newName));
 
             Assert.Equal(expectedExpression, renamer.ApplyRename(expressionBase));
+        }
+
+        [Fact]
+        public void ConvertToDisplayNotForced()
+        {
+            var r1 = new RecordType()
+                .Add(new NamedFormulaType("Num", FormulaType.Number, "SomeDisplayNum"))
+                .Add(new NamedFormulaType("B", FormulaType.Boolean, "SomeDisplayB"));
+
+            var formula = new Formula("If(SomeDisplayB, SomeDisplayNum, 1234)", CultureInfo.InvariantCulture);
+            formula.EnsureParsed(TexlParser.Flags.None);
+
+            var binding = TexlBinding.Run(
+                new Glue2DocumentBinderGlue(),
+                null,
+                new Core.Entities.QueryOptions.DataSourceToQueryOptionsMap(),
+                formula.ParseTree,
+                new SimpleResolver(new PowerFxConfig(CultureInfo.InvariantCulture)),
+                BindingConfig.Default,
+                ruleScope: r1._type,
+                updateDisplayNames: true);
+
+            Assert.Empty(binding.NodesToReplace);
         }
     }
 

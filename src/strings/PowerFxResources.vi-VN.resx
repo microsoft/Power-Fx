@@ -497,6 +497,39 @@
   <data name="AboutBoolean_text" xml:space="preserve">
     <value>Giá trị văn bản để chuyển đổi thành giá trị boolean.</value>
   </data>
+  <data name="AboutBooleanT" xml:space="preserve">
+    <value>Chuyển đổi một cột giá trị văn bản thành một cột gồm các giá trị boolean.</value>
+    
+  </data>
+  <data name="BooleanTArg1" xml:space="preserve">
+    <value>đầu vào</value>
+    
+  </data>
+  <data name="AboutBooleanT_input" xml:space="preserve">
+    <value>Cột chứa các giá trị văn bản cần xử lý.</value>
+  </data>
+  <data name="AboutBooleanN" xml:space="preserve">
+    <value>Chuyển đổi một "số" thành một giá trị boolean.</value>
+    
+  </data>
+  <data name="BooleanNArg1" xml:space="preserve">
+    <value>số</value>
+    
+  </data>
+  <data name="AboutBooleanN_number" xml:space="preserve">
+    <value>Giá trị số để chuyển đổi thành giá trị boolean.</value>
+  </data>
+  <data name="AboutBooleanNT" xml:space="preserve">
+    <value>Chuyển đổi một cột gồm các giá trị số thành một cột gồm các giá trị boolean.</value>
+    
+  </data>
+  <data name="BooleanNTArg1" xml:space="preserve">
+    <value>đầu vào</value>
+    
+  </data>
+  <data name="AboutBooleanNT_input" xml:space="preserve">
+    <value>Cột chứa các giá trị số cần xử lý.</value>
+  </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>Trả về đối số không trống đầu tiên</value>
     
@@ -4359,7 +4392,7 @@
     <value>Nguồn dữ liệu này có thể không xử lý được công thức và có thể trả về một tập hợp dữ liệu không đầy đủ. Ứng dụng của bạn có thể không trả về kết quả đúng hoặc hoạt động đúng cách nếu tập hợp dữ liệu không hoàn chỉnh.</value>
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_HowToFix_1" xml:space="preserve">
-    <value>Nếu bộ dữ liệu vượt quá giới hạn 500 bản ghi nhưng chứa ít hơn 2.000 bản ghi, hãy thử đặt lại giới hạn.</value>
+    <value>Nếu tập hợp dữ liệu của bạn vượt quá giới hạn 500 bản ghi nhưng chứa ít hơn 2.000 bản ghi, hãy thử đặt lại giới hạn.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_HowToFix_2" xml:space="preserve">
@@ -4367,7 +4400,7 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_HowToFix_3" xml:space="preserve">
-    <value>Hãy thử di chuyển dữ liệu của bạn tới nguồn dữ liệu khác.</value>
+    <value>Hãy thử di chuyển dữ liệu của bạn sang một nguồn dữ liệu khác.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_Link_1" xml:space="preserve">
@@ -4386,7 +4419,7 @@
     <value>Nguồn dữ liệu này có thể không xử lý được công thức và có thể trả về một tập hợp dữ liệu không đầy đủ. Ứng dụng của bạn có thể không trả về kết quả đúng hoặc hoạt động đúng cách nếu tập hợp dữ liệu không hoàn chỉnh.</value>
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_HowToFix_1" xml:space="preserve">
-    <value>Nếu bộ dữ liệu vượt quá giới hạn 500 bản ghi nhưng chứa ít hơn 2.000 bản ghi, hãy thử đặt lại giới hạn.</value>
+    <value>Nếu tập hợp dữ liệu của bạn vượt quá giới hạn 500 bản ghi nhưng chứa ít hơn 2.000 bản ghi, hãy thử đặt lại giới hạn.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_HowToFix_2" xml:space="preserve">
@@ -4394,7 +4427,7 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_HowToFix_3" xml:space="preserve">
-    <value>Hãy thử di chuyển dữ liệu của bạn tới nguồn dữ liệu khác.</value>
+    <value>Hãy thử di chuyển dữ liệu của bạn sang một nguồn dữ liệu khác.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_Link_1" xml:space="preserve">
@@ -4417,7 +4450,7 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_2" xml:space="preserve">
-    <value>Nếu bộ dữ liệu vượt quá giới hạn 500 bản ghi nhưng chứa ít hơn 2.000 bản ghi, hãy thử đặt lại giới hạn.</value>
+    <value>Nếu tập hợp dữ liệu của bạn vượt quá giới hạn 500 bản ghi nhưng chứa ít hơn 2.000 bản ghi, hãy thử đặt lại giới hạn.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_3" xml:space="preserve">
@@ -4425,7 +4458,7 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_4" xml:space="preserve">
-    <value>Hãy thử di chuyển dữ liệu của bạn tới nguồn dữ liệu khác.</value>
+    <value>Hãy thử di chuyển dữ liệu của bạn sang một nguồn dữ liệu khác.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_Link_1" xml:space="preserve">
@@ -4458,7 +4491,7 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_4" xml:space="preserve">
-    <value>Hãy thử di chuyển dữ liệu của bạn tới nguồn dữ liệu khác.</value>
+    <value>Hãy thử di chuyển dữ liệu của bạn sang một nguồn dữ liệu khác.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_Link_1" xml:space="preserve">
@@ -4478,7 +4511,7 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_HowToFix_1" xml:space="preserve">
-    <value>Nếu bộ dữ liệu vượt quá giới hạn 500 bản ghi nhưng chứa ít hơn 2.000 bản ghi, hãy thử đặt lại giới hạn.</value>
+    <value>Nếu tập hợp dữ liệu của bạn vượt quá giới hạn 500 bản ghi nhưng chứa ít hơn 2.000 bản ghi, hãy thử đặt lại giới hạn.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_HowToFix_2" xml:space="preserve">
@@ -4486,7 +4519,7 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_HowToFix_3" xml:space="preserve">
-    <value>Hãy thử di chuyển dữ liệu của bạn tới nguồn dữ liệu khác.</value>
+    <value>Hãy thử di chuyển dữ liệu của bạn sang một nguồn dữ liệu khác.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_Link_1" xml:space="preserve">
@@ -4551,6 +4584,10 @@
   </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula "{0}" đã tồn tại.</value>
+  </data>
+  <data name="ErrorResource_NameConflict" xml:space="preserve">
+    <value>Không thể tạo {0} có tên "{1}" vì tên đó đã được sử dụng cho {2}.</value>
+    
   </data>
   <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
     <value>Đối số đầu tiên của '{0}' phải là một tên biến hợp lệ và không được xung đột với bất kỳ điều khiển, màn hình, tuyển tập hoặc tên nguồn dữ liệu nào. Loại tìm được '{1}'</value>

@@ -6,7 +6,7 @@ namespace Microsoft.PowerFx.Types
     /// <summary>
     /// Visitor for walking <see cref="FormulaType"/>.
     /// </summary>
-    public interface ITypeVistor
+    public interface ITypeVisitor
     {
         void Visit(BlankType type);
 

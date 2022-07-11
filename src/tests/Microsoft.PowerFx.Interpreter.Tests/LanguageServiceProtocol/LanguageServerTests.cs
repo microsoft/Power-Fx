@@ -7,19 +7,17 @@ using System.Linq;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using Microsoft.PowerFx.Core;
-using Microsoft.PowerFx.Core.Public;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.LanguageServerProtocol;
 using Microsoft.PowerFx.LanguageServerProtocol.Protocol;
-using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
 using Xunit;
 
 namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
 {
     public class LanguageServerTests : PowerFxTest
-    {       
+    {
         protected static readonly JsonSerializerOptions _jsonSerializerOptions = new JsonSerializerOptions
         {
             PropertyNameCaseInsensitive = true,
@@ -32,14 +30,18 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
         protected TestLanguageServer _testServer;
 
         public LanguageServerTests()
+            : base()
         {
-            // Create an Engine() that has all the builtin symbols by default. 
-            // Note that interpreter has fewer symbols. 
-            var engine = new Engine(new PowerFxConfig());
+            Init();
+        }
 
+        private void Init(Features features = Features.None)
+        {
+            var engine = new Engine(new PowerFxConfig(features: features));
+            
             _sendToClientData = new List<string>();
             _scopeFactory = new TestPowerFxScopeFactory((string documentUri) => RecalcEngineScope.FromUri(engine, documentUri));
-            _testServer = new TestLanguageServer(_sendToClientData.Add, _scopeFactory);
+            _testServer = new TestLanguageServer(_sendToClientData.Add, _scopeFactory);           
         }
 
         // From JPC spec: https://microsoft.github.io/language-server-protocol/specifications/specification-3-14/
@@ -125,7 +127,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
 
         [Fact]
         public void TestLanguageServerCommunication()
-        {
+        {            
             // bad payload
             _testServer.OnDataReceived(JsonSerializer.Serialize(new { }));
 
@@ -177,7 +179,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
 
         [Fact]
         public void TestDidChange()
-        {
+        {            
             // test good formula
             _sendToClientData.Clear();
             _testServer.OnDataReceived(JsonSerializer.Serialize(new
@@ -370,7 +372,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
 
         [Fact]
         public void TestCompletion()
-        {
+        {            
             // test good formula
             _testServer.OnDataReceived(JsonSerializer.Serialize(new
             {
@@ -572,7 +574,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
 
         [Fact]
         public void TestSignatureHelp()
-        {
+        {            
             // test good formula
             _testServer.OnDataReceived(JsonSerializer.Serialize(new
             {
@@ -677,7 +679,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
 
         [Fact]
         public void TestPublishTokens()
-        {
+        {            
             // getTokensFlags = 0x0 (none), 0x1 (tokens inside expression), 0x2 (all functions)
             var documentUri = "powerfx://app?context={\"A\":1,\"B\":[1,2,3]}&getTokensFlags=1";
             _testServer.OnDataReceived(JsonSerializer.Serialize(new
@@ -832,13 +834,15 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
         }
 
         [Theory]
-        [InlineData("{}", "{ A: 1 }", @"{""Type"":""Record"",""Fields"":{""A"":{""Type"":""Number""}}}")]
-        [InlineData("{}", "[1, 2]", @"{""Type"":""Table"",""Fields"":{""Value"":{""Type"":""Number""}}}")]
-        [InlineData("{}", "[{ A: 1 }, { B: true }]", @"{""Type"":""Table"",""Fields"":{""Value"":{""Type"":""Record"",""Fields"":{""A"":{""Type"":""Number""},""B"":{""Type"":""Boolean""}}}}}")]
-        [InlineData("{}", "{A: 1, B: { C: { D: \"Qwerty\" }, E: true } }", @"{""Type"":""Record"",""Fields"":{""A"":{""Type"":""Number""},""B"":{""Type"":""Record"",""Fields"":{""C"":{""Type"":""Record"",""Fields"":{""D"":{""Type"":""String""}}},""E"":{""Type"":""Boolean""}}}}}")]
-        [InlineData("{}", "{ type: 123 }", @"{""Type"":""Record"",""Fields"":{""type"":{""Type"":""Number""}}}")]
-        public void TestPublishExpressionType_AggregateShapes(string context, string expression, string expectedTypeJson)
+        [InlineData(false, "{}", "{ A: 1 }", @"{""Type"":""Record"",""Fields"":{""A"":{""Type"":""Number""}}}")]
+        [InlineData(false, "{}", "[1, 2]", @"{""Type"":""Table"",""Fields"":{""Value"":{""Type"":""Number""}}}")]
+        [InlineData(true, "{}", "[{ A: 1 }, { B: true }]", @"{""Type"":""Table"",""Fields"":{""A"":{""Type"":""Number""},""B"":{""Type"":""Boolean""}}}")]
+        [InlineData(false, "{}", "[{ A: 1 }, { B: true }]", @"{""Type"":""Table"",""Fields"":{""Value"":{""Type"":""Record"",""Fields"":{""A"":{""Type"":""Number""},""B"":{""Type"":""Boolean""}}}}}")]
+        [InlineData(false, "{}", "{A: 1, B: { C: { D: \"Qwerty\" }, E: true } }", @"{""Type"":""Record"",""Fields"":{""A"":{""Type"":""Number""},""B"":{""Type"":""Record"",""Fields"":{""C"":{""Type"":""Record"",""Fields"":{""D"":{""Type"":""String""}}},""E"":{""Type"":""Boolean""}}}}}")]
+        [InlineData(false, "{}", "{ type: 123 }", @"{""Type"":""Record"",""Fields"":{""type"":{""Type"":""Number""}}}")]
+        public void TestPublishExpressionType_AggregateShapes(bool tableSyntaxDoesntWrapRecords, string context, string expression, string expectedTypeJson)
         {
+            Init(tableSyntaxDoesntWrapRecords ? Features.TableSyntaxDoesntWrapRecords : Features.None);
             var documentUri = $"powerfx://app?context={context}&getExpressionType=true";
             _testServer.OnDataReceived(JsonSerializer.Serialize(new
             {

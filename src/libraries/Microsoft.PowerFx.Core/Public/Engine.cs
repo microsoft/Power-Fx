@@ -108,9 +108,7 @@ namespace Microsoft.PowerFx
         public CheckResult Check(string expressionText, RecordType parameterType = null, ParserOptions options = null)
         {
             var parse = Parse(expressionText, options);
-
-            var bindingConfig = new BindingConfig(options?.AllowsSideEffects == true);
-            return CheckInternal(parse, parameterType, bindingConfig);
+            return Check(parse, parameterType, options);
         }
 
         /// <summary>
@@ -118,10 +116,12 @@ namespace Microsoft.PowerFx
         /// </summary>
         /// <param name="parse">the parsed expression. Obtain from <see cref="Parse(string, ParserOptions)"/>.</param>
         /// <param name="parameterType">types of additional args to pass.</param>
+        /// <param name="options">parser options to use.</param>
         /// <returns></returns>
-        public CheckResult Check(ParseResult parse, RecordType parameterType = null)
+        public CheckResult Check(ParseResult parse, RecordType parameterType = null, ParserOptions options = null)
         {
-            return CheckInternal(parse, parameterType, BindingConfig.Default);
+            var bindingConfig = new BindingConfig(options?.AllowsSideEffects == true);
+            return CheckInternal(parse, parameterType, bindingConfig);
         }
 
         private CheckResult CheckInternal(ParseResult parse, RecordType parameterType, BindingConfig bindingConfig)
@@ -139,7 +139,8 @@ namespace Microsoft.PowerFx
                 parse.Root,
                 resolver,
                 bindingConfig,
-                ruleScope: parameterType._type);
+                ruleScope: parameterType._type,
+                features: Config.Features);
 
             var result = new CheckResult(parse, binding);
 

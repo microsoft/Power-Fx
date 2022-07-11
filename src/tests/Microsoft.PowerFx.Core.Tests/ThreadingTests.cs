@@ -29,6 +29,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 "DType._kindToSuperkindMapping",
                 "DTypeSpecParser._types",
                 "BuiltinFunctionsCore._library",
+                "BuiltinFunctionsCore._featureGateFunctions",
                 "ArgumentSuggestions._languageCodeSuggestions",
                 "IntellisenseProvider.SuggestionHandlers",
                 "DateAddFunction.SubDayStringList",
@@ -48,7 +49,8 @@ namespace Microsoft.PowerFx.Core.Tests
                 "DataTypeInfo.AllowedValuesOnly",
                 "DataTypeInfo._validDataFormatsPerDKind",
 
-                "FeatureFlags._stringInterpolation",
+                "FeatureFlags._stringInterpolation",                
+                "FeatureFlags._inTests",
                 "EmptyEnumerator`1._instance",
                 "Contracts._assertFailExCtor",
                 "CurrentLocaleInfo.<CurrentLocaleName>k__BackingField",

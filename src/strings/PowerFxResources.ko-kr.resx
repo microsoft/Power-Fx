@@ -497,6 +497,39 @@
   <data name="AboutBoolean_text" xml:space="preserve">
     <value>부울 값으로 변환할 텍스트 값입니다.</value>
   </data>
+  <data name="AboutBooleanT" xml:space="preserve">
+    <value>Converts a column of text values to a column of boolean values.</value>
+    
+  </data>
+  <data name="BooleanTArg1" xml:space="preserve">
+    <value>입력</value>
+    
+  </data>
+  <data name="AboutBooleanT_input" xml:space="preserve">
+    <value>처리할 텍스트 값의 열입니다.</value>
+  </data>
+  <data name="AboutBooleanN" xml:space="preserve">
+    <value>'숫자'를 부울 값으로 변환합니다.</value>
+    
+  </data>
+  <data name="BooleanNArg1" xml:space="preserve">
+    <value>숫자</value>
+    
+  </data>
+  <data name="AboutBooleanN_number" xml:space="preserve">
+    <value>부울 값으로 변환할 숫자 값입니다.</value>
+  </data>
+  <data name="AboutBooleanNT" xml:space="preserve">
+    <value>Converts a column of numeric values to a column of boolean values.</value>
+    
+  </data>
+  <data name="BooleanNTArg1" xml:space="preserve">
+    <value>입력</value>
+    
+  </data>
+  <data name="AboutBooleanNT_input" xml:space="preserve">
+    <value>처리할 숫자 값 열입니다.</value>
+  </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>공백이 아닌 첫 번째 인수를 반환함</value>
     
@@ -4359,7 +4392,7 @@
     <value>데이터 원본이 수식을 처리하지 못할 수 있으며 불완전한 데이터 세트를 반환할 수도 있습니다. 데이터 세트가 불완전하면 애플리케이션이 올바른 결과를 반환할 수 없거나 제대로 동작하지 않을 수 있습니다.</value>
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_HowToFix_1" xml:space="preserve">
-    <value>데이터 집합이 500개 레코드 제한을 초과하지만 2,000개 레코드 미만인 경우 한계를 재설정합니다.</value>
+    <value>데이터 세트가 레코드 한도 500개를 초과하지만 레코드가 2,000개 미만인 경우 한도를 재설정해 보세요.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_HowToFix_2" xml:space="preserve">
@@ -4386,7 +4419,7 @@
     <value>데이터 원본이 수식을 처리하지 못할 수 있으며 불완전한 데이터 세트를 반환할 수도 있습니다. 데이터 세트가 불완전하면 애플리케이션이 올바른 결과를 반환할 수 없거나 제대로 동작하지 않을 수 있습니다.</value>
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_HowToFix_1" xml:space="preserve">
-    <value>데이터 집합이 500개 레코드 제한을 초과하지만 2,000개 레코드 미만인 경우 한계를 재설정합니다.</value>
+    <value>데이터 세트가 레코드 한도 500개를 초과하지만 레코드가 2,000개 미만인 경우 한도를 재설정해 보세요.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_HowToFix_2" xml:space="preserve">
@@ -4417,7 +4450,7 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_2" xml:space="preserve">
-    <value>데이터 집합이 500개 레코드 제한을 초과하지만 2,000개 레코드 미만인 경우 한계를 재설정합니다.</value>
+    <value>데이터 세트가 레코드 한도 500개를 초과하지만 레코드가 2,000개 미만인 경우 한도를 재설정해 보세요.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_3" xml:space="preserve">
@@ -4478,7 +4511,7 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_HowToFix_1" xml:space="preserve">
-    <value>데이터 집합이 500개 레코드 제한을 초과하지만 2,000개 레코드 미만인 경우 한계를 재설정합니다.</value>
+    <value>데이터 세트가 레코드 한도 500개를 초과하지만 레코드가 2,000개 미만인 경우 한도를 재설정해 보세요.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_HowToFix_2" xml:space="preserve">
@@ -4551,6 +4584,10 @@
   </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula '{0}'이(가) 이미 있습니다.</value>
+  </data>
+  <data name="ErrorResource_NameConflict" xml:space="preserve">
+    <value>같은 이름이 {2}에 이미 사용되어 '{1}' 이름의 {0}을(를) 만들 수 없습니다.</value>
+    
   </data>
   <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
     <value>'{0}'의 첫 번째 인수가 올바른 변수 이름이어야 하며, 기존 컨트롤, 화면, 컬렉션 또는 데이터 원본 이름과 충돌할 수 없습니다. 검색된 유형: '{1}'</value>

@@ -14,9 +14,6 @@ using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
 
-#pragma warning disable SA1402 // File may only contain a single type
-#pragma warning disable SA1649 // File name should match first type name
-
 namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
     // Date()
@@ -310,12 +307,14 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // DateValue(date_text:s, [languageCode:s]) : D
     internal sealed class DateValueFunction : DateTimeGenericFunction
     {
+        public const string DateValueInvariantFunctionName = "DateValue";
+
         public override bool HasPreciseErrors => true;
 
         public override bool SupportsParamCoercion => true;
 
         public DateValueFunction()
-            : base("DateValue", TexlStrings.AboutDateValue, DType.Date)
+            : base(DateValueInvariantFunctionName, TexlStrings.AboutDateValue, DType.Date)
         {
         }
 
@@ -329,12 +328,14 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // TimeValue(time_text:s, [languageCode:s]) : T
     internal sealed class TimeValueFunction : DateTimeGenericFunction
     {
+        public const string TimeValueFunctionInvariantName = "TimeValue";
+
         public override bool HasPreciseErrors => true;
 
         public override bool SupportsParamCoercion => true;
 
         public TimeValueFunction()
-            : base("TimeValue", TexlStrings.AboutTimeValue, DType.Time)
+            : base(TimeValueFunctionInvariantName, TexlStrings.AboutTimeValue, DType.Time)
         {
         }
 
@@ -348,12 +349,14 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // DateTimeValue(time_text:s, [languageCode:s]) : d
     internal sealed class DateTimeValueFunction : DateTimeGenericFunction
     {
+        public const string DateTimeValueInvariantFunctionName = "DateTimeValue";
+
         public override bool HasPreciseErrors => true;
 
         public override bool SupportsParamCoercion => true;
 
         public DateTimeValueFunction()
-            : base("DateTimeValue", TexlStrings.AboutDateTimeValue, DType.DateTime)
+            : base(DateTimeValueInvariantFunctionName, TexlStrings.AboutDateTimeValue, DType.DateTime)
         {
         }
 
@@ -683,7 +686,74 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return fValid;
         }
     }
-}
 
-#pragma warning restore SA1402 // File may only contain a single type
-#pragma warning restore SA1649 // File name should match first type name
+    // DateValue(arg:O) : D
+    internal sealed class DateValueFunction_UO : BuiltinFunction
+    {
+        public override bool HasPreciseErrors => true;
+
+        public override bool SupportsParamCoercion => false;
+
+        public override bool IsSelfContained => true;
+
+        public DateValueFunction_UO()
+            : base(DateValueFunction.DateValueInvariantFunctionName, TexlStrings.AboutDateValue, FunctionCategories.DateTime, DType.Date, 0, 1, 1, DType.UntypedObject)
+        {
+        }
+
+        public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
+        {
+            yield return new[] { TexlStrings.DateValueArg1 };
+        }
+
+        public override string GetUniqueTexlRuntimeName(bool isPrefetching = false)
+        {
+            return GetUniqueTexlRuntimeName(suffix: "_UO");
+        }
+    }
+
+    // TimeValue(time_text:uo) : T
+    internal sealed class TimeValueFunction_UO : BuiltinFunction
+    {
+        public override bool HasPreciseErrors => true;
+
+        public override bool SupportsParamCoercion => false;
+
+        public override bool IsSelfContained => true;
+
+        public TimeValueFunction_UO()
+            : base(TimeValueFunction.TimeValueFunctionInvariantName, TexlStrings.AboutTimeValue, FunctionCategories.DateTime, DType.Time, 0, 1, 1, DType.UntypedObject)
+        {
+        }
+
+        public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
+        {
+            yield return new[] { TexlStrings.TimeValueArg1 };
+        }
+    }
+
+    // DateTimeValue(arg:O) : d
+    internal sealed class DateTimeValueFunction_UO : BuiltinFunction
+    {
+        public override bool HasPreciseErrors => true;
+
+        public override bool SupportsParamCoercion => false;
+
+        public override bool IsSelfContained => true;
+
+        public DateTimeValueFunction_UO()
+            : base(DateTimeValueFunction.DateTimeValueInvariantFunctionName, TexlStrings.AboutDateTimeValue, FunctionCategories.DateTime, DType.DateTime, 0, 1, 1, DType.UntypedObject)
+        {
+        }
+
+        public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
+        {
+            yield return new[] { TexlStrings.DateTimeValueArg1 };
+        }
+
+        public override string GetUniqueTexlRuntimeName(bool isPrefetching = false)
+        {
+            return GetUniqueTexlRuntimeName(suffix: "_UO");
+        }
+    }
+}

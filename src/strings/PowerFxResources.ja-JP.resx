@@ -497,6 +497,39 @@
   <data name="AboutBoolean_text" xml:space="preserve">
     <value>ブール値に変換するテキスト値です。</value>
   </data>
+  <data name="AboutBooleanT" xml:space="preserve">
+    <value>テキスト値の列をブール値の列に変換します。</value>
+    
+  </data>
+  <data name="BooleanTArg1" xml:space="preserve">
+    <value>入力</value>
+    
+  </data>
+  <data name="AboutBooleanT_input" xml:space="preserve">
+    <value>処理するテキスト値の列。</value>
+  </data>
+  <data name="AboutBooleanN" xml:space="preserve">
+    <value>'数値' をブール値に変換します。</value>
+    
+  </data>
+  <data name="BooleanNArg1" xml:space="preserve">
+    <value>数値</value>
+    
+  </data>
+  <data name="AboutBooleanN_number" xml:space="preserve">
+    <value>ブール値に変換する数値。</value>
+  </data>
+  <data name="AboutBooleanNT" xml:space="preserve">
+    <value>数値の列をブール値の列に変換します。</value>
+    
+  </data>
+  <data name="BooleanNTArg1" xml:space="preserve">
+    <value>入力</value>
+    
+  </data>
+  <data name="AboutBooleanNT_input" xml:space="preserve">
+    <value>処理する数値の列。</value>
+  </data>
   <data name="AboutCoalesce" xml:space="preserve">
     <value>空でない最初の引数を返します</value>
     
@@ -1137,10 +1170,10 @@
     
   </data>
   <data name="AboutAbs_number" xml:space="preserve">
-    <value>処理する数値。</value>
+    <value>処理する数値です。</value>
   </data>
   <data name="AboutAbs_input" xml:space="preserve">
-    <value>処理する数値の列。</value>
+    <value>処理する数値の列です。</value>
   </data>
   <data name="AboutSin_number" xml:space="preserve">
     <value>処理する数値 (ラジアン単位)。</value>
@@ -1157,10 +1190,10 @@
     
   </data>
   <data name="AboutAsin_number" xml:space="preserve">
-    <value>処理する数値。</value>
+    <value>処理する数値です。</value>
   </data>
   <data name="AboutAsin_input" xml:space="preserve">
-    <value>処理する数値の列。</value>
+    <value>処理する数値の列です。</value>
   </data>
   <data name="AboutAsin" xml:space="preserve">
     <value>数値のアークサイン値 (ラジアン単位) を返します。</value>
@@ -1189,20 +1222,20 @@
     
   </data>
   <data name="AboutAcos_number" xml:space="preserve">
-    <value>処理する数値。</value>
+    <value>処理する数値です。</value>
   </data>
   <data name="AboutAcosT" xml:space="preserve">
     <value>数値列のアークコサイン値 (ラジアン単位) を返します。</value>
     
   </data>
   <data name="AboutAcos_input" xml:space="preserve">
-    <value>処理する数値の列。</value>
+    <value>処理する数値の列です。</value>
   </data>
   <data name="AboutAcot_number" xml:space="preserve">
-    <value>処理する数値。</value>
+    <value>処理する数値です。</value>
   </data>
   <data name="AboutAcot_input" xml:space="preserve">
-    <value>処理する数値の列。</value>
+    <value>処理する数値の列です。</value>
   </data>
   <data name="AboutAcot" xml:space="preserve">
     <value>数値のアークコタンジェント値 (ラジアン単位) を返します。</value>
@@ -1235,10 +1268,10 @@
     
   </data>
   <data name="AboutAtan_number" xml:space="preserve">
-    <value>処理する数値。</value>
+    <value>処理する数値です。</value>
   </data>
   <data name="AboutAtan_input" xml:space="preserve">
-    <value>処理する数値の列。</value>
+    <value>処理する数値の列です。</value>
   </data>
   <data name="AboutCot" xml:space="preserve">
     <value>数値のコタンジェント値を返します。</value>
@@ -1263,10 +1296,10 @@
     
   </data>
   <data name="AboutLn_number" xml:space="preserve">
-    <value>処理する数値。</value>
+    <value>処理する数値です。</value>
   </data>
   <data name="AboutLn_input" xml:space="preserve">
-    <value>処理する数値の列。</value>
+    <value>処理する数値の列です。</value>
   </data>
   <data name="AboutLog" xml:space="preserve">
     <value>特定の底で数値の対数を返します。既定の底は 10 です。</value>
@@ -1277,10 +1310,10 @@
     
   </data>
   <data name="AboutLog_number" xml:space="preserve">
-    <value>処理する数値。</value>
+    <value>処理する数値です。</value>
   </data>
   <data name="AboutLog_input" xml:space="preserve">
-    <value>処理する数値の列。</value>
+    <value>処理する数値の列です。</value>
   </data>
   <data name="LogBase" xml:space="preserve">
     <value>基底</value>
@@ -1298,10 +1331,10 @@
     
   </data>
   <data name="AboutExp_number" xml:space="preserve">
-    <value>処理する数値。</value>
+    <value>処理する数値です。</value>
   </data>
   <data name="AboutExp_input" xml:space="preserve">
-    <value>処理する数値の列。</value>
+    <value>処理する数値の列です。</value>
   </data>
   <data name="AboutPi" xml:space="preserve">
     <value>円周率の値を返します。</value>
@@ -1360,10 +1393,10 @@
     
   </data>
   <data name="AboutSqrt_number" xml:space="preserve">
-    <value>処理する数値。</value>
+    <value>処理する数値です。</value>
   </data>
   <data name="AboutSqrt_input" xml:space="preserve">
-    <value>処理する数値の列。</value>
+    <value>処理する数値の列です。</value>
   </data>
   <data name="MathFuncArg1" xml:space="preserve">
     <value>数値</value>
@@ -1428,7 +1461,7 @@
     
   </data>
   <data name="AboutIsBlank_expression" xml:space="preserve">
-    <value>テスト対象の式。</value>
+    <value>テスト対象の式です。</value>
   </data>
   <data name="AboutIsBlankOrError" xml:space="preserve">
     <value>式の結果が空白またはエラーかどうかをチェックし、True または False を返します。</value>
@@ -4359,7 +4392,7 @@
     <value>データ ソースは数式を処理できずに、不完全なデータ セットを返すことがあります。データ セットが不完全な場合、アプリケーションは正しい結果を返さないか、正常に機能しない場合があります。</value>
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_HowToFix_1" xml:space="preserve">
-    <value>データ セットが 500 レコードの制限を超えていても、2,000 レコードより少ない場合は、制限を再設定してみてください。</value>
+    <value>データ セットが 500 件のレコードの制限を超えていても、2,000 件のレコードより少ない場合は、制限を再設定してみてください。</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_HowToFix_2" xml:space="preserve">
@@ -4386,7 +4419,7 @@
     <value>データ ソースは数式を処理できずに、不完全なデータ セットを返すことがあります。データ セットが不完全な場合、アプリケーションは正しい結果を返さないか、正常に機能しない場合があります。</value>
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_HowToFix_1" xml:space="preserve">
-    <value>データ セットが 500 レコードの制限を超えていても、2,000 レコードより少ない場合は、制限を再設定してみてください。</value>
+    <value>データ セットが 500 件のレコードの制限を超えていても、2,000 件のレコードより少ない場合は、制限を再設定してみてください。</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_HowToFix_2" xml:space="preserve">
@@ -4417,7 +4450,7 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_2" xml:space="preserve">
-    <value>データ セットが 500 レコードの制限を超えていても、2,000 レコードより少ない場合は、制限を再設定してみてください。</value>
+    <value>データ セットが 500 件のレコードの制限を超えていても、2,000 件のレコードより少ない場合は、制限を再設定してみてください。</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_3" xml:space="preserve">
@@ -4449,8 +4482,8 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_2" xml:space="preserve">
-    <value>データ セットが 500 レコードの制限を超えていても、2,000 レコードより少ない場合は、制限を再設定してください。
-</value>
+    <value>データ セットが 500 件のレコードの制限を超えていても、2,000 件のレコードより少ない場合は、制限を再設定してみてください。
+      </value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_3" xml:space="preserve">
@@ -4478,7 +4511,7 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_HowToFix_1" xml:space="preserve">
-    <value>データ セットが 500 レコードの制限を超えていても、2,000 レコードより少ない場合は、制限を再設定してみてください。</value>
+    <value>データ セットが 500 件のレコードの制限を超えていても、2,000 件のレコードより少ない場合は、制限を再設定してみてください。</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_HowToFix_2" xml:space="preserve">
@@ -4551,6 +4584,10 @@
   </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula '{0}'は既に存在します。</value>
+  </data>
+  <data name="ErrorResource_NameConflict" xml:space="preserve">
+    <value>名前が '{1}' である {0} を作成できません。その名前は {2} で既に使用されています。</value>
+    
   </data>
   <data name="ErrNeedValidVariableName_Arg" xml:space="preserve">
     <value>最初の引数 '{0}' は有効な変数名である必要があります。これは、既存のコントロール、画面、コレクション、またはデータ ソースの名前と競合することができません。見つかった型 '{1}'</value>
