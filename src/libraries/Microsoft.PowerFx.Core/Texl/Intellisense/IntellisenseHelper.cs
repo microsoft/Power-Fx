@@ -642,16 +642,6 @@ namespace Microsoft.PowerFx.Intellisense
             }
         }
 
-        internal static void AddSuggestionsForGlobalSymbols(IntellisenseData.IntellisenseData intellisenseData)
-        {
-            Contracts.AssertValue(intellisenseData);
-
-            foreach (var symbol in intellisenseData.GlobalSymbols.Where(symbol => IsMatch(symbol.Name, intellisenseData.MatchingStr)))
-            {                                         
-                CheckAndAddSuggestion(new IntellisenseSuggestion(new UIString(symbol.Name), SuggestionKind.Global, SuggestionIconKind.Other, symbol.Type._type, -1, symbol.Description, null, null), intellisenseData.Suggestions);                
-            }
-        }
-
         /// <summary>
         /// Based on our current token, determine how much of it should be replaced.
         /// </summary>
@@ -723,6 +713,11 @@ namespace Microsoft.PowerFx.Intellisense
                 }
 
                 AddSuggestion(intellisenseData, funcNamespace.Name, SuggestionKind.Global, SuggestionIconKind.Other, DType.Unknown, requiresSuggestionEscaping: true);
+            }
+
+            foreach (var symbol in intellisenseData.GlobalSymbols.Where(symbol => IsMatch(symbol.Name, intellisenseData.MatchingStr)))
+            {
+                CheckAndAddSuggestion(new IntellisenseSuggestion(new UIString(symbol.Name), SuggestionKind.Global, SuggestionIconKind.Other, symbol.Type._type, -1, symbol.Description, null, null), intellisenseData.Suggestions);
             }
         }
 
@@ -799,7 +794,6 @@ namespace Microsoft.PowerFx.Intellisense
             AddSuggestionsForRuleScope(intellisenseData);
             AddSuggestionsForTopLevel(intellisenseData, node);
             AddSuggestionsForFunctions(intellisenseData);
-            AddSuggestionsForGlobalSymbols(intellisenseData);
             intellisenseData.AddSuggestionsForConstantKeywords();
             AddSuggestionsForGlobals(intellisenseData);
             intellisenseData.AfterAddSuggestionsForGlobals();
