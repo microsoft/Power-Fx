@@ -44,8 +44,6 @@ namespace Microsoft.PowerFx.Core.Glue
 
         public bool SuggestUnqualifiedEnums => false;
 
-        public virtual IReadOnlyDictionary<string, DType> VariableNames => new Dictionary<string, DType>();
-
         /// <summary>
         /// Initializes a new instance of the <see cref="SimpleResolver"/> class.
         /// </summary>

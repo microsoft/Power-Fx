@@ -3,7 +3,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using Microsoft.PowerFx.Core.App;
 using Microsoft.PowerFx.Core.App.Controls;
 using Microsoft.PowerFx.Core.Binding.BindInfo;
@@ -36,8 +35,6 @@ namespace Microsoft.PowerFx.Core.Binding
         DPath CurrentEntityPath { get; }
 
         IEnumerable<TexlFunction> Functions { get; }
-
-        IReadOnlyDictionary<string, DType> VariableNames { get; }
 
         // This advertises whether the INameResolver instance will suggest unqualified enums ("Hours")
         // or only qualified enums ("TimeUnit.Hours").

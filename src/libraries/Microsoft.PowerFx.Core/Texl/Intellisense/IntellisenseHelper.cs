@@ -642,18 +642,13 @@ namespace Microsoft.PowerFx.Intellisense
             }
         }
 
-        internal static void AddSuggestionsForVariables(IntellisenseData.IntellisenseData intellisenseData)
+        internal static void AddSuggestionsForGlobalSymbols(IntellisenseData.IntellisenseData intellisenseData)
         {
             Contracts.AssertValue(intellisenseData);
 
-            foreach (var variable in intellisenseData.Binding.NameResolver.VariableNames)
-            {         
-                var variableName = variable.Key;
-
-                if (IsMatch(variableName, intellisenseData.MatchingStr))
-                {
-                    CheckAndAddSuggestion(new IntellisenseSuggestion(new UIString(variableName), SuggestionKind.Global, SuggestionIconKind.Other /* Variable */, variable.Value, -1, $"{variableName} variable", null, null), intellisenseData.Suggestions);
-                }
+            foreach (var symbol in intellisenseData.GlobalSymbols.Where(symbol => IsMatch(symbol.Name, intellisenseData.MatchingStr)))
+            {                                         
+                CheckAndAddSuggestion(new IntellisenseSuggestion(new UIString(symbol.Name), SuggestionKind.Global, SuggestionIconKind.Other, symbol.Type._type, -1, symbol.Description, null, null), intellisenseData.Suggestions);                
             }
         }
 
@@ -804,7 +799,7 @@ namespace Microsoft.PowerFx.Intellisense
             AddSuggestionsForRuleScope(intellisenseData);
             AddSuggestionsForTopLevel(intellisenseData, node);
             AddSuggestionsForFunctions(intellisenseData);
-            AddSuggestionsForVariables(intellisenseData);
+            AddSuggestionsForGlobalSymbols(intellisenseData);
             intellisenseData.AddSuggestionsForConstantKeywords();
             AddSuggestionsForGlobals(intellisenseData);
             intellisenseData.AfterAddSuggestionsForGlobals();

@@ -6,8 +6,8 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Binding;
-using Microsoft.PowerFx.Core.Glue;
 using Microsoft.PowerFx.Core.IR;
+using Microsoft.PowerFx.Core.IR.Symbols;
 using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Types;
@@ -131,6 +131,7 @@ namespace Microsoft.PowerFx
             else
             {
                 Formulas[name] = new RecalcFormulaInfo { Value = x, _type = x.IRContext.ResultType };
+                Config.AddGlobalSymbol(new GlobalSymbol(name, $"{name} variable", value.Type));
             }
 
             // Could trigger recalcs?
