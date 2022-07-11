@@ -25,7 +25,7 @@ namespace Microsoft.PowerFx.Types
         public async ValueTask<FormulaValue> EvalAsync(EvalVisitor runner, SymbolContext context, StackMarker stackMarker)
         {
             runner.CheckCancel();
-            var result = await _tree.Accept(runner, context, stackMarker);
+            var result = await _tree.Accept(runner, (context, stackMarker));
             return result;
         }
 

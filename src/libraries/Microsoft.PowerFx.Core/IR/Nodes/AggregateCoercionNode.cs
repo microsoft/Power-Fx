@@ -32,9 +32,9 @@ namespace Microsoft.PowerFx.Core.IR.Nodes
             FieldCoercions = fieldCoercions;
         }
 
-        public override TResult Accept<TResult, TContext>(IRNodeVisitor<TResult, TContext> visitor, TContext context, StackMarker stackMarker)
+        public override TResult Accept<TResult, TContext>(IRNodeVisitor<TResult, TContext> visitor, TContext context)
         {
-            return visitor.Visit(this, context, stackMarker);
+            return visitor.Visit(this, context);
         }
 
         public override string ToString()

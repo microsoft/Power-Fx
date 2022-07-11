@@ -21,7 +21,7 @@ namespace Microsoft.PowerFx
     // This used ValueTask for async, https://devblogs.microsoft.com/dotnet/understanding-the-whys-whats-and-whens-of-valuetask/ 
     // Perf comparison of Task vs. ValueTask: https://ladeak.wordpress.com/2019/03/09/valuetask-vs-task 
     // Use Task for public methods, but ValueTask for internal methods that we expect to be mostly sync. 
-    internal class EvalVisitor : IRNodeVisitor<ValueTask<FormulaValue>, SymbolContext>
+    internal class EvalVisitor : IRNodeVisitor<ValueTask<FormulaValue>, (SymbolContext, StackMarker)>
     {
         public CultureInfo CultureInfo { get; }
 
@@ -58,22 +58,22 @@ namespace Microsoft.PowerFx
             };
         }
 
-        public override async ValueTask<FormulaValue> Visit(TextLiteralNode node, SymbolContext context, StackMarker stackMarker)
+        public override async ValueTask<FormulaValue> Visit(TextLiteralNode node, (SymbolContext, StackMarker) fullContext)
         {
             return new StringValue(node.IRContext, node.LiteralValue);
         }
 
-        public override async ValueTask<FormulaValue> Visit(NumberLiteralNode node, SymbolContext context, StackMarker stackMarker)
+        public override async ValueTask<FormulaValue> Visit(NumberLiteralNode node, (SymbolContext, StackMarker) fullContext)
         {
             return new NumberValue(node.IRContext, node.LiteralValue);
         }
 
-        public override async ValueTask<FormulaValue> Visit(BooleanLiteralNode node, SymbolContext context, StackMarker stackMarker)
+        public override async ValueTask<FormulaValue> Visit(BooleanLiteralNode node, (SymbolContext, StackMarker) fullContext)
         {
             return new BooleanValue(node.IRContext, node.LiteralValue);
         }
 
-        public override async ValueTask<FormulaValue> Visit(RecordNode node, SymbolContext context, StackMarker stackMarker)
+        public override async ValueTask<FormulaValue> Visit(RecordNode node, (SymbolContext, StackMarker) fullContext)
         {
             var fields = new List<NamedValue>();
 
@@ -84,16 +84,16 @@ namespace Microsoft.PowerFx
                 var name = field.Key;
                 var value = field.Value;
 
-                var rhsValue = await value.Accept(this, context, stackMarker);
+                var rhsValue = await value.Accept(this, fullContext);
                 fields.Add(new NamedValue(name.Value, rhsValue));
             }
 
             return new InMemoryRecordValue(node.IRContext, fields);
         }
 
-        public override async ValueTask<FormulaValue> Visit(LazyEvalNode node, SymbolContext context, StackMarker stackMarker)
+        public override async ValueTask<FormulaValue> Visit(LazyEvalNode node, (SymbolContext, StackMarker) fullContext)
         {
-            var val = await node.Child.Accept(this, context, stackMarker);
+            var val = await node.Child.Accept(this, fullContext);
             return val;
         }
 
@@ -101,7 +101,7 @@ namespace Microsoft.PowerFx
         // Set is unique because it has an l-value for the first arg. 
         // Async params can't have out-params. 
         // Return null if not handled. Else non-null if handled.
-        private async Task<FormulaValue> TryHandleSet(CallNode node, SymbolContext context, StackMarker stackMarker)
+        private async Task<FormulaValue> TryHandleSet(CallNode node, (SymbolContext, StackMarker) fullContext)
         {
             // Special case Set() calls because they take an LValue. 
             if (node.Function.GetType() != typeof(RecalcEngineSetFunction))
@@ -112,7 +112,7 @@ namespace Microsoft.PowerFx
             var arg0 = node.Args[0];
             var arg1 = node.Args[1];
 
-            var newValue = await arg1.Accept(this, context, stackMarker);
+            var newValue = await arg1.Accept(this, fullContext);
 
             // Binder has already ensured this is a first name node. 
             if (arg0 is ResolvedObjectNode obj)
@@ -130,13 +130,13 @@ namespace Microsoft.PowerFx
             return CommonErrors.UnreachableCodeError(node.IRContext);
         }
 
-        public override async ValueTask<FormulaValue> Visit(CallNode node, SymbolContext context, StackMarker stackMarker)
+        public override async ValueTask<FormulaValue> Visit(CallNode node, (SymbolContext, StackMarker) fullContext)
         {
             CheckCancel();
 
-            stackMarker = stackMarker.Inc();
+            fullContext.Item2 = fullContext.Item2.Inc();
 
-            var setResult = await TryHandleSet(node, context, stackMarker);
+            var setResult = await TryHandleSet(node, fullContext);
             if (setResult != null)
             {
                 return setResult;
@@ -157,7 +157,7 @@ namespace Microsoft.PowerFx
 
                 if (!isLambda)
                 {
-                    args[i] = await child.Accept(this, context, stackMarker);
+                    args[i] = await child.Accept(this, fullContext);
                 }
                 else
                 {
@@ -165,7 +165,7 @@ namespace Microsoft.PowerFx
                 }
             }
 
-            var childContext = context.WithScope(node.Scope);
+            var childContext = fullContext.Item1.WithScope(node.Scope);
 
             if (func is IAsyncTexlFunction asyncFunc)
             {
@@ -181,7 +181,7 @@ namespace Microsoft.PowerFx
             {
                 if (FuncsByName.TryGetValue(func, out var ptr))
                 {
-                    var result = await ptr(this, childContext, node.IRContext, args, stackMarker);
+                    var result = await ptr(this, childContext, node.IRContext, args, fullContext.Item2);
 
                     Contract.Assert(result.IRContext.ResultType == node.IRContext.ResultType || result is ErrorValue || result.IRContext.ResultType is BlankType);
 
@@ -192,12 +192,12 @@ namespace Microsoft.PowerFx
             }
         }
 
-        public override async ValueTask<FormulaValue> Visit(BinaryOpNode node, SymbolContext context, StackMarker stackMarker)
+        public override async ValueTask<FormulaValue> Visit(BinaryOpNode node, (SymbolContext, StackMarker) fullContext)
         {
-            var arg1 = await node.Left.Accept(this, context, stackMarker);
-            var arg2 = await node.Right.Accept(this, context, stackMarker);
+            var arg1 = await node.Left.Accept(this, fullContext);
+            var arg2 = await node.Right.Accept(this, fullContext);
             var args = new FormulaValue[] { arg1, arg2 };
-            return await VisitBinaryOpNode(node, context, args, stackMarker);
+            return await VisitBinaryOpNode(node, fullContext.Item1, args, fullContext.Item2);
         }
 
         private ValueTask<FormulaValue> VisitBinaryOpNode(BinaryOpNode node, SymbolContext context, FormulaValue[] args, StackMarker stackMarker)
@@ -356,22 +356,22 @@ namespace Microsoft.PowerFx
             }
         }
 
-        public override async ValueTask<FormulaValue> Visit(UnaryOpNode node, SymbolContext context, StackMarker stackMarker)
+        public override async ValueTask<FormulaValue> Visit(UnaryOpNode node, (SymbolContext, StackMarker) fullContext)
         {
-            var arg1 = await node.Child.Accept(this, context, stackMarker);
+            var arg1 = await node.Child.Accept(this, fullContext);
             var args = new FormulaValue[] { arg1 };
 
             if (UnaryOps.TryGetValue(node.Op, out var unaryOp))
             {
-                return await unaryOp(this, context, node.IRContext, args, stackMarker);
+                return await unaryOp(this, fullContext.Item1, node.IRContext, args, fullContext.Item2);
             }
 
             return CommonErrors.NotYetImplementedError(node.IRContext, $"Unary op {node.Op}");
         }
 
-        public override async ValueTask<FormulaValue> Visit(AggregateCoercionNode node, SymbolContext context, StackMarker stackMarker)
+        public override async ValueTask<FormulaValue> Visit(AggregateCoercionNode node, (SymbolContext, StackMarker) fullContext)
         {
-            var arg1 = await node.Child.Accept(this, context, stackMarker);
+            var arg1 = await node.Child.Accept(this, fullContext);
 
             if (node.Op == UnaryOpKind.TableToTable)
             {
@@ -385,7 +385,7 @@ namespace Microsoft.PowerFx
                     if (row.IsValue)
                     {
                         var fields = new List<NamedValue>();
-                        var scopeContext = context.WithScope(node.Scope);
+                        var scopeContext = fullContext.Item1.WithScope(node.Scope);
                         foreach (var coercion in node.FieldCoercions)
                         {
                             CheckCancel();
@@ -393,7 +393,7 @@ namespace Microsoft.PowerFx
                             var record = row.Value;
                             var newScope = scopeContext.WithScopeValues(record);
 
-                            var newValue = await coercion.Value.Accept(this, newScope, stackMarker);
+                            var newValue = await coercion.Value.Accept(this, (newScope, fullContext.Item2));
                             var name = coercion.Key;
                             fields.Add(new NamedValue(name.Value, newValue));
                         }
@@ -416,20 +416,20 @@ namespace Microsoft.PowerFx
             return CommonErrors.UnreachableCodeError(node.IRContext);
         }
 
-        public override async ValueTask<FormulaValue> Visit(ScopeAccessNode node, SymbolContext context, StackMarker stackMarker)
+        public override async ValueTask<FormulaValue> Visit(ScopeAccessNode node, (SymbolContext, StackMarker) fullContext)
         {
             if (node.Value is ScopeAccessSymbol s1)
             {
                 var scope = s1.Parent;
 
-                var val = context.GetScopeVar(scope, s1.Name);
+                var val = fullContext.Item1.GetScopeVar(scope, s1.Name);
                 return val;
             }
 
             // Binds to whole scope
             if (node.Value is ScopeSymbol s2)
             {
-                var r = context.ScopeValues[s2.Id];
+                var r = fullContext.Item1.ScopeValues[s2.Id];
                 var r2 = (RecordScope)r;
                 return r2._context;
             }
@@ -437,9 +437,9 @@ namespace Microsoft.PowerFx
             return CommonErrors.UnreachableCodeError(node.IRContext);
         }
 
-        public override async ValueTask<FormulaValue> Visit(RecordFieldAccessNode node, SymbolContext context, StackMarker stackMarker)
+        public override async ValueTask<FormulaValue> Visit(RecordFieldAccessNode node, (SymbolContext, StackMarker) fullContext)
         {
-            var left = await node.From.Accept(this, context, stackMarker);
+            var left = await node.From.Accept(this, fullContext);
 
             if (left is BlankValue)
             {
@@ -457,12 +457,12 @@ namespace Microsoft.PowerFx
             return val;
         }
 
-        public override async ValueTask<FormulaValue> Visit(SingleColumnTableAccessNode node, SymbolContext context, StackMarker stackMarker)
+        public override async ValueTask<FormulaValue> Visit(SingleColumnTableAccessNode node, (SymbolContext, StackMarker) fullContext)
         {
             return CommonErrors.NotYetImplementedError(node.IRContext, "Single column table access");
         }
 
-        public override async ValueTask<FormulaValue> Visit(ErrorNode node, SymbolContext context, StackMarker stackMarker)
+        public override async ValueTask<FormulaValue> Visit(ErrorNode node, (SymbolContext, StackMarker) fullContext)
         {
             return new ErrorValue(node.IRContext, new ExpressionError()
             {
@@ -472,12 +472,12 @@ namespace Microsoft.PowerFx
             });
         }
 
-        public override async ValueTask<FormulaValue> Visit(ColorLiteralNode node, SymbolContext context, StackMarker stackMarker)
+        public override async ValueTask<FormulaValue> Visit(ColorLiteralNode node, (SymbolContext, StackMarker) fullContext)
         {
             return CommonErrors.NotYetImplementedError(node.IRContext, "Color literal");
         }
 
-        public override async ValueTask<FormulaValue> Visit(ChainingNode node, SymbolContext context, StackMarker stackMarker)
+        public override async ValueTask<FormulaValue> Visit(ChainingNode node, (SymbolContext, StackMarker) fullContext)
         {
             CheckCancel();
 
@@ -493,7 +493,7 @@ namespace Microsoft.PowerFx
             {
                 CheckCancel();
 
-                fv = await iNode.Accept(this, context, stackMarker);
+                fv = await iNode.Accept(this, fullContext);
 
                 if (fv is ErrorValue ev)
                 {
@@ -504,7 +504,7 @@ namespace Microsoft.PowerFx
             return errors.Any() ? new ErrorValue(node.IRContext, errors) : fv;
         }
 
-        public override async ValueTask<FormulaValue> Visit(ResolvedObjectNode node, SymbolContext context, StackMarker stackMarker)
+        public override async ValueTask<FormulaValue> Visit(ResolvedObjectNode node, (SymbolContext, StackMarker) fullContext)
         {
             return node.Value switch
             {
